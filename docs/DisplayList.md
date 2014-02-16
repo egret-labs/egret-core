@@ -1,8 +1,7 @@
-理解Egret的显示列表
+理解Egret的显示列表【施工中】
 =================================
 显示列表类结构
 -----------------
-http://help.adobe.com/zh_CN/as3/dev/WS5b3ccc516d4fbf351e63e3d118a9b90204-7e3e.html
 
 
 使用egret开发的应用都会有被称之为“显示列表”的层次。egret的显示列表的概念和API设计模仿了Flash ActionScript3.0的显示列表架构，如下图所示：
