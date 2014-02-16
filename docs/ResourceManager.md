@@ -18,10 +18,11 @@ ResourceLoader类是egret的资源加载类。他封装了：
 ResourceHandler是对ResourceLoader的一层封装，是一个抽象基类，负责对加载成功的资源进行处理，如配置文件序列化、图片缓存等
 
 egret封装了底层资源加载的实现细节，对开发者提供了友好的对外访问接口，如下所示
-
+``
 var resourceLoader = ns_egret.ResourceLoader.create(url);
 resourceLoader.addEventListener(ns_egret.ResourceLoader.LOAD_COMPLETE,callback,this);
 resourceLoader.load();
+``
 
 需要注意的是，ns_egret.ResourceLoader.create(url)方法如果重复调用，当url一致时，返回的是同一对象，这种方式解决了资源重复加载的问题，并且开发者无需关注实现细节。
 
