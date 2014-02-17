@@ -81,11 +81,11 @@ egret的坐标系参考Flash,以左上角为(0,0)点。在游戏初始化时，�
 
 ```
 var stageDelegate = ns_egret.StageDelegate.getInstance();
-  stageDelegate.setResolutionPolicy(2);//todo，这里api设计需要修改
-    var width = window.innerWidth;
-    var height = window.innerHeight;
-    stageDelegate.setFrameSize(width,height);
-    stageDelegate.setDesignSize(480,800,2);
+stageDelegate.setResolutionPolicy(2);//todo，这里api设计需要修改
+var width = window.innerWidth;
+var height = window.innerHeight;
+stageDelegate.setFrameSize(width,height);
+stageDelegate.setDesignSize(480,800,2);
 ```
 上述代码片段会在egret的新项目创建脚本中自动生成。StageDelegate.setFrameSize()方法是设置游戏的**真实尺寸**，StageDelegate.setDesignSize()是设置游戏的**设计尺寸**。
 ####真实尺寸
