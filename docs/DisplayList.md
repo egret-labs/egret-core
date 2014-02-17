@@ -47,7 +47,7 @@ display.touchEnabled = true;
 * 坐标系转换 DisplayObject.localToGlobal() / DisplayObject.globalToLocal()
 
 **由于JavaScript没有自定义命名空间和private关键词，请开发者务必不要调用非API文档中提供的属性和方法**
-## DisplayObjectContainer
+### DisplayObjectContainer
 DisplayObjectContainer继承自DisplayObject，这些显示对象除了有自己的可视表示形式之外，还可以包含也是显示对象的子对象。DisplayObjectContainer会包含以下属性
 * 获取子节点数量 DisplayObjectContainer.numChildren
 同时会提供以下公开方法
@@ -81,3 +81,8 @@ Texture类并不是显示对象，而是一个纯资源对象，非常类似Flas
 
 事件流机制
 -----------------
+
+egret的事件流机制设计思想与FlashAPI一致，分为
+
+
+
