@@ -64,8 +64,15 @@ container.addChild(child);
 ```
 
 ### Bitmap
+Bitmap 类继承自Displayobject,表示用于表示位图图像的显示对象。
+利用 Bitmap() 构造函数，可以创建包含对 Texture 对象的引用的 Bitmap 对象。创建了 Bitmap 对象后，使用父 DisplayObjectContainer 实例的 addChild() 方法将位图放在显示列表中。
+**和Flash不一样的是，由于 touchEnabled是DisplayObject的属性，所以Bitmap同样可以添加鼠标/触摸事件侦听器**
+Bitmap中的图像从Texture类中获取。
 
-
+### Texture
+Texture类并不是显示对象，而是一个纯资源对象，非常类似Flash中的BitmapData。
+【todo:为什么不起名为BitmapData】
+和Flash一样，多个Bitmap 对象可以共享其 Texture 引用，与转换属性或旋转属性无关。由于能够创建引用相同 BitmapData 对象的多个 Bitmap 对象，因此，多个显示对象可以使用相同的复杂 Texture 对象，而不会因为每个显示对象实例使用一个 Texture 对象而产生内存开销。
 
 
 
