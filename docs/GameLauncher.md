@@ -20,7 +20,7 @@ egret和flash一样，采用左上角作为世界坐标系（0,0)点
 
 
 egret有非常简单易懂的屏幕适配策略，核心三个关键词为**游戏尺寸，坐标系尺寸，适配策略**
-### egret的游戏尺寸
+#### egret的游戏尺寸
 egret通过 stageDelegate.setFrameSize( clientWidth , clientHeight ) 来指定游戏尺寸。
 在移动设备中，这个值是移动设备的屏幕像素分辨率。
 **在不同的移动设备中，此值是不一样的。**
