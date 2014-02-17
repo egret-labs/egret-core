@@ -22,5 +22,8 @@ egret建议开发者将此值设置为 480 * 800。
 **在不同的设备中，此值是恒定的。**
 
 ### egret的适配策略
+当 FrameSize 和 DesignSize成等比关系时（例如 FrameSize为 720 * 1200，DesignSize为 480 * 800 ），游戏会进行整体缩放。
+但是当FrameSize的宽高比和DesignSize的宽高比不一致时，如果整体缩放，会导致游戏由于 scaleX / scaleY 不一致导致显示失真，为了解决这个问题，egret引入了适配策略的概念。
 egret默认支持两种适配策略，分别是 FIX\_WIDTH 和 FIX\_HEIHT
+当开发者选择 FIX\_WIDTH策略时，egret会把计算 FrameSize.width / DesignSize.width ， 然后在高度上同样乘以这个比率，使得
 
