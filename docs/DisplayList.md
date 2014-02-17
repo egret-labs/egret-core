@@ -30,6 +30,17 @@ DisplayObject是egret显示对象的基类。任何一个显示对象都会有�
 * 父容器 DisplayObject.parent
 * 是否可以交互 DisplayObject.touchEnabled
 
+
+示例代码
+```
+var display = new ns_egret.DisplayObject();
+display.x = display.y = 100;
+display.rotation = 90;
+display.alpha = .5;
+display.mask = new ns_egret.Rectangle(0,0,100,100);
+display.touchEnabled = true;
+```
+
 同时会提供以下公开方法
 * 缓存 DisplayObject.cache()
 * 显示对象边界 DisplayObject.getBounds() / DisplayObject.setBounds()
@@ -44,6 +55,13 @@ DisplayObjectContainer继承自DisplayObject，这些显示对象除了有自己
 * 获取显示对象 DisplayObject.getChildAt()
 在传统Flash开发中，由于DisplayObjectContainer被设计为了一个抽象类，而egret开发者没有这些限制，无需使用Sprite类来完成DisplayObjectContainer就可以实现的功能。
 在Flash中，Sprite和DisplayObjectContainer相比，多了两个功能，其一是 Sprite.startDrag / stopDrag 方法，这个功能egret将在DragManager里实现，另一个是 Sprite.graphic，这个egret会通过Graphic类来实现。基于以上的原因，**egret并不会提供Sprite类，开发者应使用DisplayObjectContainer来代替**
+
+示例代码
+```
+var child = new ns_egret.DisplayObject();
+var container = new ns_egret.DisplayObjectContainer();
+container.addChild(child);
+```
 
 ### Bitmap
 
