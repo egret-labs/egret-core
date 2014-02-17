@@ -40,9 +40,10 @@ DisplayObjectContainer
 DisplayObjectContainer继承自DisplayObject，这些显示对象除了有自己的可视表示形式之外，还可以包含也是显示对象的子对象。DisplayObjectContainer会包含以下属性
 * 获取子节点数量 DisplayObjectContainer.numChildren
 同时会提供以下公开方法
-* 添加对象 DisplayObject.addChild
-【重要】egret并不会提供Sprite这个类，在Flash开发中，绝大部分情况下，DisplayObjectContainer可以代替Sprite的所有工作，只是由于在FlashAPI设计中，DisplayObjectContainer被设计成了是一个抽象类，而egret开发者没有这些限制，无需使用Sprite类来完成DisplayObjectContainer就可以实现的功能。
-在Flash中，Sprite和DisplayObjectContainer相比，多了两个功能，其一是 Sprite.startDrag / stopDrag 方法，这个功能egret将在DragManager里实现，另一个是 Sprite.graphic，这个egret会通过Graphic类来实现。
+* 添加、移除对象 DisplayObject.addChild(),DisplayObject.removeChild()
+* 获取显示对象 DisplayObject.getChildAt()
+在传统Flash开发中，由于DisplayObjectContainer被设计为了一个抽象类，而egret开发者没有这些限制，无需使用Sprite类来完成DisplayObjectContainer就可以实现的功能。
+在Flash中，Sprite和DisplayObjectContainer相比，多了两个功能，其一是 Sprite.startDrag / stopDrag 方法，这个功能egret将在DragManager里实现，另一个是 Sprite.graphic，这个egret会通过Graphic类来实现。基于以上的原因，**egret并不会提供Sprite类，开发者应使用DisplayObjectContainer来代替**
 
 
 
