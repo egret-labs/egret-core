@@ -74,8 +74,22 @@ Texture类并不是显示对象，而是一个纯资源对象，非常类似Flas
 【todo:为什么不起名为BitmapData】
 和Flash一样，多个Bitmap 对象可以共享其 Texture 引用，与转换属性或旋转属性无关。由于能够创建引用相同 BitmapData 对象的多个 Bitmap 对象，因此，多个显示对象可以使用相同的复杂 Texture 对象，而不会因为每个显示对象实例使用一个 Texture 对象而产生内存开销。
 
+显示坐标系
+--------------------
+//todo:这里改为StageDelegate的类介绍可能更好
+egret的坐标系参考Flash,以左上角为(0,0)点。在游戏初始化时，需要通过以下函数调用设置用户坐标系
 
-
+```
+var stageDelegate = ns_egret.StageDelegate.getInstance();
+  stageDelegate.setResolutionPolicy(2);//todo，这里api设计需要修改
+    var width = window.innerWidth;
+    var height = window.innerHeight;
+    stageDelegate.setFrameSize(width,height);
+    stageDelegate.setDesignSize(480,800,2);
+```
+上述代码片段会在egret的新项目创建脚本中自动生成。StageDelegate.setFrameSize()方法是设置游戏的**真实尺寸**，StageDelegate.setDesignSize()是设置游戏的**设计尺寸**。
+####真实尺寸
+####设计尺寸
 
 
 
