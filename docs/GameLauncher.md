@@ -5,28 +5,27 @@ GameLauncher中需要设置以下内容
 * 设置游戏上下文 MainContext
 * 设置游戏舞台 Stage
 
-MainContext
--------------------------
-
-MainConext是egret的运行时对外暴露的接口，开发人员无需关心egret运行时的实现细节，只需要针对MainContext接口进行API调用即可。
-目前egret的MainContext只有HTML5的实现，之后会添加Native的实现。
-在一个HTML5游戏中，MainContext的创建过程如下所示：
+如题代码实现如下：
 ```
 var canvas = document.getElementById("gameCanvas");
 var context = ns_egret.MainContext.instance;
 context.rendererContext = new ns_egret.HTML5CanvasRenderer(canvas);
-context.touchContext = new ns_egret.TouchContext(canvas);
+context.touchContext = new ns_egret.HTML5TouchContext(canvas);
 context.stage = new ns_egret.Stage();
-container = new ns_egret.DisplayObjectContainer();
-context.stage.addChild(container);
-
-ns_egret.StageDelegate.getInstance().setResolutionPolicy(1);
+var stageDelegate = ns_egret.StageDelegate.getInstance();
+stageDelegate.setResolutionPolicy(1);//todo这里有个常量
 var width = window.innerWidth;
 var height = window.innerHeight;
-ns_egret.StageDelegate.getInstance().setFrameSize(width,height);
-ns_egret.StageDelegate.getInstance().setDesignSize(400,240,1);
+stageDelegate.setFrameSize(width,height);
+stageDelegatesetDesignSize(400,240);
 context.run();
 ```
+
+MainContext
+-------------------------
+
+MainConext是egret的运行时对外暴露的接口，开发人员无需关心egret运行时的实现细节，只需要针对MainContext接口进行API调用即可。目前egret的MainContext只有HTML5的实现，之后会添加Native的实现。
+
 
 
 Stage
