@@ -5,7 +5,7 @@ GameLauncher中需要设置以下内容
 * 设置游戏上下文 MainContext
 * 设置游戏舞台 Stage
 
-如题代码实现如下：
+上述代码实现如下：
 ```
 var canvas = document.getElementById("gameCanvas");
 var context = ns_egret.MainContext.instance;
@@ -20,6 +20,7 @@ stageDelegate.setFrameSize(width,height);
 stageDelegatesetDesignSize(400,240);
 context.run();
 ```
+以上代码通过egret的新项目创建模板
 
 MainContext
 -------------------------
