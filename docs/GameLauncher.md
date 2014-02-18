@@ -23,13 +23,6 @@ context.stage.addChild(container);
 ns_egret.StageDelegate.getInstance().setResolutionPolicy(1);
 var width = window.innerWidth;
 var height = window.innerHeight;
-if (width < height){
-var result = window.confirm("请横屏")
-if (result){
-window.location.reload();
-}
-return;
-}
 ns_egret.StageDelegate.getInstance().setFrameSize(width,height);
 ns_egret.StageDelegate.getInstance().setDesignSize(400,240,1);
 context.run();
