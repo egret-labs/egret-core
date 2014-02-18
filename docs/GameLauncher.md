@@ -3,10 +3,38 @@
 GameLauncher是egret引擎开发的游戏的入口类，开发者需要继承GameLauncher，实现自己的游戏启动逻辑，类似Flash中的文档类。
 GameLauncher中需要设置以下内容
 * 设置游戏上下文 MainContext
-* 设置游戏舞台
+* 设置游戏舞台 Stage
 
 MainContext
 -------------------------
+
+MainConext是egret的运行时对外暴露的接口，开发人员无需关心egret运行时的实现细节，只需要针对MainContext接口进行API调用即可。
+目前egret的MainContext只有HTML5的实现，之后会添加Native的实现。
+在一个HTML5游戏中，MainContext的创建过程如下所示：
+```
+var canvas = document.getElementById("gameCanvas");
+var context = ns_egret.MainContext.instance;
+context.rendererContext = new ns_egret.HTML5CanvasRenderer(canvas);
+context.touchContext = new ns_egret.TouchContext(canvas);
+context.stage = new ns_egret.Stage();
+container = new ns_egret.DisplayObjectContainer();
+context.stage.addChild(container);
+
+ns_egret.StageDelegate.getInstance().setResolutionPolicy(1);
+var width = window.innerWidth;
+var height = window.innerHeight;
+if (width < height){
+var result = window.confirm("请横屏")
+if (result){
+window.location.reload();
+}
+return;
+}
+ns_egret.StageDelegate.getInstance().setFrameSize(width,height);
+ns_egret.StageDelegate.getInstance().setDesignSize(400,240,1);
+context.run();
+```
+
 
 Stage
 -------------------------
