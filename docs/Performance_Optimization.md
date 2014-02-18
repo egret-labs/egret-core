@@ -6,5 +6,11 @@ egret性能优化主要有两个主要部分，JavaScript代码性能优化和�
 JavaScript代码优化
 ------------------------
 开发者首先需要了解JavaScript基础优化知识，推荐内容：【todo】
-* [JavaScript秘密花园]: http://sanshi.me/articles/JavaScript-Garden-CN/html/index.html
+* [JavaScript秘密花园][1]
 * 《高性能JavaScript》, Nicholas C. Zakas ,  电子工业出版社
+
+
+
+
+
+[1]: http://sanshi.me/articles/JavaScript-Garden-CN/html/index.html        "JavaScript秘密花园"
