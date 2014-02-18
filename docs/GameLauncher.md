@@ -20,7 +20,7 @@ stageDelegate.setFrameSize(width,height);
 stageDelegatesetDesignSize(400,240);
 context.run();
 ```
-以上代码通过egret的新项目创建模板
+以上代码通过egret的新项目创建模板生成，egret初学者无需特别关注。
 
 MainContext
 -------------------------
