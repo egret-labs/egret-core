@@ -4,12 +4,11 @@
 -----------------
 
 
-使用egret开发的应用都会有被称之为“显示列表”的层次。egret的显示列表的概念和API设计模仿了Flash ActionScript3.0的显示列表架构。
+使用Egret开发的应用都会有被称之为“显示列表”的层次结构。Egret的显示列表的概念和API设计模仿了Flash ActionScript3.0的显示列表架构。
 
-绝大部分的egret显示对象都会包含在Stage中，只有两个对象例外，StageText和StageView。
+绝大部分的Egret显示对象都会包含在Stage中，只有两个对象例外，StageText和StageView。
 
-
-显示对象分为以下一个或多个组：
+显示对象包括以下类：
 
 ### Stage
 Stage 是包括显示对象的基础容器。每个应用程序都有一个 Stage 对象。Stage是顶级容器，位于显示列表层次的顶部：
