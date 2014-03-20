@@ -1,13 +1,12 @@
-理解Egret的显示列表【施工中】
+理解Egret的显示列表
 =================================
 显示列表类结构
 -----------------
 
 
-使用egret开发的应用都会有被称之为“显示列表”的层次。egret的显示列表的概念和API设计模仿了Flash ActionScript3.0的显示列表架构，如下图所示：
-【todo:图】
+使用egret开发的应用都会有被称之为“显示列表”的层次。egret的显示列表的概念和API设计模仿了Flash ActionScript3.0的显示列表架构。
 
-如图所示，绝大部分的egret显示对象都会包含在Stage中，只有两个对象例外，StageText和StageView。【todo:这两个API的名称可能会修改】
+绝大部分的egret显示对象都会包含在Stage中，只有两个对象例外，StageText和StageView。
 
 
 显示对象分为以下一个或多个组：
