@@ -45,4 +45,4 @@ node ${egret_root}/tools/nodejs/build_typescript.js
 
 
 #### 发布说明
-[Egret Release Notes](/docs/ReleaseNotes.md)
+[Egret Release Notes 2014-3-24](/docs/ReleaseNotes.md)
