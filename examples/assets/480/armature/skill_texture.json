@@ -1,0 +1,86 @@
+{"name": "skill", "imagePath": "texture.png", "SubTexture": [
+    {
+        "height": 202,
+        "y": 0,
+        "name": "fight_skill_1054sc/skillasset_2",
+        "width": 41,
+        "x": 447
+    },
+    {
+        "height": 145,
+        "y": 203,
+        "name": "fight_skill_1054sc/skillasset_21",
+        "width": 41,
+        "x": 447
+    },
+    {
+        "height": 21,
+        "y": 222,
+        "name": "fight_skill_1055sc/attack1",
+        "width": 29,
+        "x": 251
+    },
+    {
+        "height": 44,
+        "y": 222,
+        "name": "fight_skill_1055sc/YANWU",
+        "width": 49,
+        "x": 384
+    },
+    {
+        "height": 220,
+        "y": 0,
+        "name": "fight_skill_1055sc/d2",
+        "width": 147,
+        "x": 298
+    },
+    {
+        "height": 220,
+        "y": 0,
+        "name": "fight_skill_1055sc/d4",
+        "width": 147,
+        "x": 0
+    },
+    {
+        "height": 220,
+        "y": 222,
+        "name": "fight_skill_1055sc/d3",
+        "width": 147,
+        "x": 0
+    },
+    {
+        "height": 220,
+        "y": 0,
+        "name": "fight_skill_1055sc/d1",
+        "width": 147,
+        "x": 149
+    },
+    {
+        "height": 105,
+        "y": 342,
+        "name": "fight_skill_1056sc/yuanjian/d4",
+        "width": 100,
+        "x": 149
+    },
+    {
+        "height": 119,
+        "y": 222,
+        "name": "fight_skill_1056sc/yuanjian/d3",
+        "width": 100,
+        "x": 149
+    },
+    {
+        "height": 106,
+        "y": 334,
+        "name": "fight_skill_1056sc/yuanjian/d2",
+        "width": 100,
+        "x": 251
+    },
+    {
+        "height": 111,
+        "y": 222,
+        "name": "fight_skill_1056sc/yuanjian/d1",
+        "width": 100,
+        "x": 282
+    }
+]}

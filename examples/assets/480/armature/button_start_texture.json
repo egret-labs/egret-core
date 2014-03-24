@@ -1,0 +1,114 @@
+{"imagePath": "texture.png", "SubTexture": [
+    {
+        "height": 117,
+        "x": 317,
+        "width": 118,
+        "name": "buttonstart/anniu",
+        "y": 0
+    },
+    {
+        "height": 54,
+        "x": 437,
+        "width": 70,
+        "name": "buttonstart/fg1",
+        "y": 0
+    },
+    {
+        "height": 68,
+        "x": 426,
+        "width": 76,
+        "name": "buttonstart/fg2",
+        "y": 197
+    },
+    {
+        "height": 77,
+        "x": 426,
+        "width": 83,
+        "name": "buttonstart/fg3",
+        "y": 119
+    },
+    {
+        "height": 87,
+        "x": 0,
+        "width": 93,
+        "name": "buttonstart/fg4",
+        "y": 269
+    },
+    {
+        "height": 93,
+        "x": 374,
+        "width": 98,
+        "name": "buttonstart/fg5",
+        "y": 266
+    },
+    {
+        "height": 98,
+        "x": 104,
+        "width": 100,
+        "name": "buttonstart/fg6",
+        "y": 239
+    },
+    {
+        "height": 102,
+        "x": 271,
+        "width": 102,
+        "name": "buttonstart/bb",
+        "y": 229
+    },
+    {
+        "height": 108,
+        "x": 317,
+        "width": 107,
+        "name": "buttonstart/x1",
+        "y": 119
+    },
+    {
+        "height": 102,
+        "x": 0,
+        "width": 102,
+        "name": "buttonstart/gg1",
+        "y": 165
+    },
+    {
+        "height": 67,
+        "x": 205,
+        "width": 113,
+        "name": "buttonstart/ks2",
+        "y": 332
+    },
+    {
+        "height": 49,
+        "x": 94,
+        "width": 95,
+        "name": "buttonstart/ks",
+        "y": 338
+    },
+    {
+        "height": 102,
+        "x": 166,
+        "width": 103,
+        "name": "buttonstart/red",
+        "y": 135
+    },
+    {
+        "height": 7,
+        "x": 437,
+        "width": 7,
+        "name": "buttonstart/gp",
+        "y": 55
+    },
+    {
+        "height": 163,
+        "x": 0,
+        "width": 164,
+        "name": "buttonstart/wfg",
+        "y": 0
+    },
+    {
+        "height": 133,
+        "x": 166,
+        "width": 149,
+        "name": "buttonstart/didididi",
+        "y": 0
+    }
+], "name": "button_start"}

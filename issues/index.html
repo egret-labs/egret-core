@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <title>egret: HelloWorld</title>
+    <style>
+        BODY {
+            -webkit-user-select: none; /* Chrome all / Safari all */
+            -moz-user-select: none; /* Firefox all */
+            -ms-user-select: none; /* IE 10+ */
+            /* No support for these yet, use at own risk */
+            -o-user-select: none;
+            user-select: none;
+        }
+
+        .finished {
+            text-decoration: line-through
+        }
+
+        .during {
+            color: #FF0000;
+        }
+
+    </style>
+
+    <script>
+        window.applicationCache.addEventListener("updateready", function () {
+            if (alert("本地缓存已被更新,立即刷新")) {
+                //手工更新本地缓存
+                window.applicationCache.swapCache();
+                //重载画面
+                window.location.reload();
+            }
+        }, true);
+
+        onSelectChange = function (value) {
+            var url = location.href;
+            var index = url.indexOf("?");
+            if (index != -1) {
+                url = url.slice(0, index);
+            }
+            if (url.indexOf(".html") == -1) {
+                url += "index.html";
+            }
+            url += "?test=" + value;
+            location.href = url;
+        }
+    </script>
+
+</head>
+<body>
+<div style="width: 1500px">
+    <div style="float: left;width: 200px;">
+        <select style="width:200px;font-size:24px;" onChange="onSelectChange(this.value)">
+            <option id="IssueText_1" value="IssueText_1">IssueText_1</option>
+            <option id="IssueArmature_1" value="IssueArmature_1">Armature_1</option>
+            <option id="IssueProgressBar_1" value="IssueProgressBar_1">ProgressBar_1</option>
+        </select>
+
+        <textarea style="font-size:20px;height:360px;width:190px;" id="testDescription" disabled="false"></textarea>
+    </div>
+    <div id="gameDiv" style="float: left;width: 500px;background: black;">
+        <canvas id="gameCanvas" width="500" height="400"></canvas>
+    </div>
+    <textarea style="font-size:16px;height:400px;width:700px;" id="exampleTextArea" disabled="false"></textarea>
+
+</div>
+
+</body>
+<script type="text/javascript" src="../egret_loader.js"></script>
+<script type="text/javascript" src="../egret_file_list.js"></script>
+<script type="text/javascript" src="TestCaseContainer.js"></script>
+
+<script>
+    var str = location.search;
+    str = str.slice(1, str.length);
+    var totalArray = str.split("&");
+    for (var i = 0; i < totalArray.length; i++) {
+        var itemArray = totalArray[i].split("=");
+        if (itemArray.length == 2) {
+            var key = itemArray[0];
+            var value = itemArray[1];
+            if (key == "test") {
+                window[value].selected = "selected";
+            }
+        }
+    }
+
+
+    var list = jsFileList
+    var appFile = [];
+
+    var hasTest = false;
+    var str = location.search;
+    str = str.slice(1, str.length);
+    var totalArray = str.split("&");
+    for (var i = 0; i < totalArray.length; i++) {
+        var itemArray = totalArray[i].split("=");
+        if (itemArray.length == 2) {
+            var key = itemArray[0];
+            var value = itemArray[1];
+            if (key == "test") {
+                appFile.push(value + ".js");
+                hasTest = true;
+                break;
+            }
+        }
+    }
+    if (!hasTest) {
+        appFile = ["IssueText_1.js"];
+    }
+
+    egret_h5.preloadScript(list, "../src_ts/");
+    egret_h5.preloadScript(appFile, "");
+    egret_h5.startLoading();
+</script>
+
+</html>

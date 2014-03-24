@@ -1,0 +1,128 @@
+{"SubTexture": [
+    {
+        "width": 68,
+        "x": 57,
+        "height": 18,
+        "y": 246,
+        "name": "parts/beardR"
+    },
+    {
+        "width": 60,
+        "x": 330,
+        "height": 18,
+        "y": 228,
+        "name": "parts/beardL"
+    },
+    {
+        "width": 49,
+        "x": 462,
+        "height": 29,
+        "y": 157,
+        "name": "parts/handR"
+    },
+    {
+        "width": 23,
+        "x": 487,
+        "height": 39,
+        "y": 187,
+        "name": "parts/armR"
+    },
+    {
+        "width": 80,
+        "x": 57,
+        "height": 47,
+        "y": 198,
+        "name": "parts/armUpperR"
+    },
+    {
+        "width": 90,
+        "x": 398,
+        "height": 116,
+        "y": 0,
+        "name": "parts/legR"
+    },
+    {
+        "width": 108,
+        "x": 289,
+        "height": 139,
+        "y": 0,
+        "name": "parts/tail"
+    },
+    {
+        "width": 19,
+        "x": 489,
+        "height": 29,
+        "y": 0,
+        "name": "parts/eyeR"
+    },
+    {
+        "width": 14,
+        "x": 489,
+        "height": 23,
+        "y": 30,
+        "name": "parts/eyeL"
+    },
+    {
+        "width": 169,
+        "x": 0,
+        "height": 197,
+        "y": 0,
+        "name": "parts/head"
+    },
+    {
+        "width": 62,
+        "x": 398,
+        "height": 141,
+        "y": 117,
+        "name": "parts/hair"
+    },
+    {
+        "width": 104,
+        "x": 289,
+        "height": 87,
+        "y": 140,
+        "name": "parts/clothes1"
+    },
+    {
+        "width": 118,
+        "x": 170,
+        "height": 174,
+        "y": 0,
+        "name": "parts/body"
+    },
+    {
+        "width": 102,
+        "x": 170,
+        "height": 90,
+        "y": 175,
+        "name": "parts/legL"
+    },
+    {
+        "width": 48,
+        "x": 462,
+        "height": 39,
+        "y": 117,
+        "name": "parts/handL"
+    },
+    {
+        "width": 24,
+        "x": 462,
+        "height": 40,
+        "y": 187,
+        "name": "parts/armL"
+    },
+    {
+        "width": 56,
+        "x": 273,
+        "height": 43,
+        "y": 228,
+        "name": "parts/armUpperL"
+    },
+    {
+        "width": 56,
+        "x": 0,
+        "height": 105,
+        "y": 198,
+        "name": "parts/tailTip"
+    }
+], "name": "Dragon", "imagePath": "texture.png"}

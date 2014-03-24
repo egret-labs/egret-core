@@ -1,0 +1,2154 @@
+{"armature": [
+    {
+        "animation": [
+            {
+                "fadeInTime": 0,
+                "duration": 49,
+                "timeline": [
+                    {
+                        "frame": [
+                            {
+                                "z": 0,
+                                "transform": {
+                                    "skX": 0,
+                                    "skY": 0,
+                                    "x": 1.05,
+                                    "scX": 1,
+                                    "pY": 0,
+                                    "y": -132.65,
+                                    "pX": 0,
+                                    "scY": 1
+                                },
+                                "duration": 1
+                            },
+                            {
+                                "z": 1,
+                                "transform": {
+                                    "skX": 0,
+                                    "skY": 0,
+                                    "x": -5.45,
+                                    "scX": 1,
+                                    "pY": 0,
+                                    "y": -133.15,
+                                    "pX": 0,
+                                    "scY": 1
+                                },
+                                "duration": 1
+                            },
+                            {
+                                "duration": 6,
+                                "displayIndex": -1
+                            },
+                            {
+                                "z": 8,
+                                "transform": {
+                                    "skX": 0,
+                                    "skY": 0,
+                                    "x": -53.3,
+                                    "scX": 1,
+                                    "pY": 0,
+                                    "y": -151.5,
+                                    "pX": 0,
+                                    "scY": 1
+                                },
+                                "duration": 1
+                            },
+                            {
+                                "z": 9,
+                                "transform": {
+                                    "skX": 0,
+                                    "skY": 0,
+                                    "x": -57.5,
+                                    "scX": 1,
+                                    "pY": 0,
+                                    "y": -156.45,
+                                    "pX": 0,
+                                    "scY": 1
+                                },
+                                "duration": 1
+                            },
+                            {
+                                "duration": 7,
+                                "displayIndex": -1
+                            },
+                            {
+                                "z": 17,
+                                "transform": {
+                                    "skX": 0,
+                                    "skY": 0,
+                                    "x": -35.9,
+                                    "scX": 1,
+                                    "pY": 0,
+                                    "y": -196.75,
+                                    "pX": 0,
+                                    "scY": 1
+                                },
+                                "duration": 1
+                            },
+                            {
+                                "z": 18,
+                                "transform": {
+                                    "skX": 0,
+                                    "skY": 0,
+                                    "x": -29.7,
+                                    "scX": 1,
+                                    "pY": 0,
+                                    "y": -199.15,
+                                    "pX": 0,
+                                    "scY": 1
+                                },
+                                "duration": 1
+                            },
+                            {
+                                "duration": 7,
+                                "displayIndex": -1
+                            },
+                            {
+                                "z": 26,
+                                "transform": {
+                                    "skX": 0,
+                                    "skY": 0,
+                                    "x": 22.45,
+                                    "scX": 1,
+                                    "pY": 0,
+                                    "y": -203.75,
+                                    "pX": 0,
+                                    "scY": 1
+                                },
+                                "duration": 1
+                            },
+                            {
+                                "z": 27,
+                                "transform": {
+                                    "skX": 0,
+                                    "skY": 0,
+                                    "x": 28.9,
+                                    "scX": 1,
+                                    "pY": 0,
+                                    "y": -202.8,
+                                    "pX": 0,
+                                    "scY": 1
+                                },
+                                "duration": 1
+                            },
+                            {
+                                "duration": 6,
+                                "displayIndex": -1
+                            },
+                            {
+                                "z": 34,
+                                "transform": {
+                                    "skX": 0,
+                                    "skY": 0,
+                                    "x": 72.65,
+                                    "scX": 1,
+                                    "pY": 0,
+                                    "y": -177.7,
+                                    "pX": 0,
+                                    "scY": 1
+                                },
+                                "duration": 1
+                            },
+                            {
+                                "z": 35,
+                                "transform": {
+                                    "skX": 0,
+                                    "skY": 0,
+                                    "x": 74.5,
+                                    "scX": 1,
+                                    "pY": 0,
+                                    "y": -171.4,
+                                    "pX": 0,
+                                    "scY": 1
+                                },
+                                "duration": 1
+                            },
+                            {
+                                "duration": 7,
+                                "displayIndex": -1
+                            },
+                            {
+                                "z": 43,
+                                "transform": {
+                                    "skX": 0,
+                                    "skY": 0,
+                                    "x": 39.55,
+                                    "scX": 1,
+                                    "pY": 0,
+                                    "y": -137.05,
+                                    "pX": 0,
+                                    "scY": 1
+                                },
+                                "duration": 1
+                            },
+                            {
+                                "z": 44,
+                                "transform": {
+                                    "skX": 0,
+                                    "skY": 0,
+                                    "x": 33.1,
+                                    "scX": 1,
+                                    "pY": 0,
+                                    "y": -135.35,
+                                    "pX": 0,
+                                    "scY": 1
+                                },
+                                "duration": 1
+                            },
+                            {
+                                "duration": 4,
+                                "displayIndex": -1
+                            }
+                        ],
+                        "scale": 1,
+                        "name": "d1",
+                        "offset": 0
+                    },
+                    {
+                        "frame": [
+                            {
+                                "duration": 2,
+                                "displayIndex": -1
+                            },
+                            {
+                                "z": 2,
+                                "transform": {
+                                    "skX": 0,
+                                    "skY": 0,
+                                    "x": -11.95,
+                                    "scX": 1,
+                                    "pY": 0,
+                                    "y": -133.9,
+                                    "pX": 0,
+                                    "scY": 1
+                                },
+                                "duration": 1
+                            },
+                            {
+                                "z": 3,
+                                "transform": {
+                                    "skX": 0,
+                                    "skY": 0,
+                                    "x": -18.35,
+                                    "scX": 1,
+                                    "pY": 0,
+                                    "y": -135.05,
+                                    "pX": 0,
+                                    "scY": 1
+                                },
+                                "duration": 1
+                            },
+                            {
+                                "duration": 6,
+                                "displayIndex": -1
+                            },
+                            {
+                                "z": 10,
+                                "transform": {
+                                    "skX": 0,
+                                    "skY": 0,
+                                    "x": -60.35,
+                                    "scX": 1,
+                                    "pY": 0,
+                                    "y": -162.3,
+                                    "pX": 0,
+                                    "scY": 1
+                                },
+                                "duration": 1
+                            },
+                            {
+                                "z": 11,
+                                "transform": {
+                                    "skX": 0,
+                                    "skY": 0,
+                                    "x": -61.3,
+                                    "scX": 1,
+                                    "pY": 0,
+                                    "y": -168.8,
+                                    "pX": 0,
+                                    "scY": 1
+                                },
+                                "duration": 1
+                            },
+                            {
+                                "duration": 7,
+                                "displayIndex": -1
+                            },
+                            {
+                                "z": 19,
+                                "transform": {
+                                    "skX": 0,
+                                    "skY": 0,
+                                    "x": -23.3,
+                                    "scX": 1,
+                                    "pY": 0,
+                                    "y": -201.05,
+                                    "pX": 0,
+                                    "scY": 1
+                                },
+                                "duration": 1
+                            },
+                            {
+                                "z": 20,
+                                "transform": {
+                                    "skX": 0,
+                                    "skY": 0,
+                                    "x": -16.85,
+                                    "scX": 1,
+                                    "pY": 0,
+                                    "y": -202.55,
+                                    "pX": 0,
+                                    "scY": 1
+                                },
+                                "duration": 1
+                            },
+                            {
+                                "duration": 7,
+                                "displayIndex": -1
+                            },
+                            {
+                                "z": 28,
+                                "transform": {
+                                    "skX": 0,
+                                    "skY": 0,
+                                    "x": 35.3,
+                                    "scX": 1,
+                                    "pY": 0,
+                                    "y": -201.45,
+                                    "pX": 0,
+                                    "scY": 1
+                                },
+                                "duration": 1
+                            },
+                            {
+                                "z": 29,
+                                "transform": {
+                                    "skX": 0,
+                                    "skY": 0,
+                                    "x": 41.6,
+                                    "scX": 1,
+                                    "pY": 0,
+                                    "y": -199.65,
+                                    "pX": 0,
+                                    "scY": 1
+                                },
+                                "duration": 1
+                            },
+                            {
+                                "duration": 6,
+                                "displayIndex": -1
+                            },
+                            {
+                                "z": 36,
+                                "transform": {
+                                    "skX": 0,
+                                    "skY": 0,
+                                    "x": 74.35,
+                                    "scX": 1,
+                                    "pY": 0,
+                                    "y": -164.9,
+                                    "pX": 0,
+                                    "scY": 1
+                                },
+                                "duration": 1
+                            },
+                            {
+                                "z": 37,
+                                "transform": {
+                                    "skX": 0,
+                                    "skY": 0,
+                                    "x": 72.2,
+                                    "scX": 1,
+                                    "pY": 0,
+                                    "y": -158.6,
+                                    "pX": 0,
+                                    "scY": 1
+                                },
+                                "duration": 1
+                            },
+                            {
+                                "duration": 7,
+                                "displayIndex": -1
+                            },
+                            {
+                                "z": 45,
+                                "transform": {
+                                    "skX": 0,
+                                    "skY": 0,
+                                    "x": 26.55,
+                                    "scX": 1,
+                                    "pY": 0,
+                                    "y": -134.1,
+                                    "pX": 0,
+                                    "scY": 1
+                                },
+                                "duration": 1
+                            },
+                            {
+                                "z": 46,
+                                "transform": {
+                                    "skX": 0,
+                                    "skY": 0,
+                                    "x": 20,
+                                    "scX": 1,
+                                    "pY": 0,
+                                    "y": -133.3,
+                                    "pX": 0,
+                                    "scY": 1
+                                },
+                                "duration": 1
+                            },
+                            {
+                                "duration": 2,
+                                "displayIndex": -1
+                            }
+                        ],
+                        "scale": 1,
+                        "name": "d2",
+                        "offset": 0
+                    },
+                    {
+                        "frame": [
+                            {
+                                "duration": 4,
+                                "displayIndex": -1
+                            },
+                            {
+                                "z": 4,
+                                "transform": {
+                                    "skX": 0,
+                                    "skY": 0,
+                                    "x": -24.7,
+                                    "scX": 1,
+                                    "pY": 0,
+                                    "y": -136.6,
+                                    "pX": 0,
+                                    "scY": 1
+                                },
+                                "duration": 1
+                            },
+                            {
+                                "z": 5,
+                                "transform": {
+                                    "skX": 0,
+                                    "skY": 0,
+                                    "x": -30.95,
+                                    "scX": 1,
+                                    "pY": 0,
+                                    "y": -138.6,
+                                    "pX": 0,
+                                    "scY": 1
+                                },
+                                "duration": 1
+                            },
+                            {
+                                "duration": 6,
+                                "displayIndex": -1
+                            },
+                            {
+                                "z": 12,
+                                "transform": {
+                                    "skX": 0,
+                                    "skY": 0,
+                                    "x": -60.25,
+                                    "scX": 1,
+                                    "pY": 0,
+                                    "y": -175.25,
+                                    "pX": 0,
+                                    "scY": 1
+                                },
+                                "duration": 1
+                            },
+                            {
+                                "z": 13,
+                                "transform": {
+                                    "skX": 0,
+                                    "skY": 0,
+                                    "x": -57.2,
+                                    "scX": 1,
+                                    "pY": 0,
+                                    "y": -181.25,
+                                    "pX": 0,
+                                    "scY": 1
+                                },
+                                "duration": 1
+                            },
+                            {
+                                "duration": 7,
+                                "displayIndex": -1
+                            },
+                            {
+                                "z": 21,
+                                "transform": {
+                                    "skX": 0,
+                                    "skY": 0,
+                                    "x": -10.3,
+                                    "scX": 1,
+                                    "pY": 0,
+                                    "y": -203.6,
+                                    "pX": 0,
+                                    "scY": 1
+                                },
+                                "duration": 1
+                            },
+                            {
+                                "z": 22,
+                                "transform": {
+                                    "skX": 0,
+                                    "skY": 0,
+                                    "x": -3.7,
+                                    "scX": 1,
+                                    "pY": 0,
+                                    "y": -204.25,
+                                    "pX": 0,
+                                    "scY": 1
+                                },
+                                "duration": 1
+                            },
+                            {
+                                "duration": 7,
+                                "displayIndex": -1
+                            },
+                            {
+                                "z": 30,
+                                "transform": {
+                                    "skX": 0,
+                                    "skY": 0,
+                                    "x": 47.75,
+                                    "scX": 1,
+                                    "pY": 0,
+                                    "y": -197.4,
+                                    "pX": 0,
+                                    "scY": 1
+                                },
+                                "duration": 1
+                            },
+                            {
+                                "z": 31,
+                                "transform": {
+                                    "skX": 0,
+                                    "skY": 0,
+                                    "x": 53.75,
+                                    "scX": 1,
+                                    "pY": 0,
+                                    "y": -194.65,
+                                    "pX": 0,
+                                    "scY": 1
+                                },
+                                "duration": 1
+                            },
+                            {
+                                "duration": 6,
+                                "displayIndex": -1
+                            },
+                            {
+                                "z": 38,
+                                "transform": {
+                                    "skX": 0,
+                                    "skY": 0,
+                                    "x": 68.25,
+                                    "scX": 1,
+                                    "pY": 0,
+                                    "y": -153.1,
+                                    "pX": 0,
+                                    "scY": 1
+                                },
+                                "duration": 1
+                            },
+                            {
+                                "z": 39,
+                                "transform": {
+                                    "skX": 0,
+                                    "skY": 0,
+                                    "x": 63.3,
+                                    "scX": 1,
+                                    "pY": 0,
+                                    "y": -148.6,
+                                    "pX": 0,
+                                    "scY": 1
+                                },
+                                "duration": 1
+                            },
+                            {
+                                "duration": 7,
+                                "displayIndex": -1
+                            },
+                            {
+                                "z": 47,
+                                "transform": {
+                                    "skX": 0,
+                                    "skY": 0,
+                                    "x": 13.4,
+                                    "scX": 1,
+                                    "pY": 0,
+                                    "y": -132.8,
+                                    "pX": 0,
+                                    "scY": 1
+                                },
+                                "duration": 1
+                            },
+                            {
+                                "z": 48,
+                                "transform": {
+                                    "skX": 0,
+                                    "skY": 0,
+                                    "x": 7.9,
+                                    "scX": 1,
+                                    "pY": 0,
+                                    "y": -130.8,
+                                    "pX": 0,
+                                    "scY": 1
+                                },
+                                "duration": 1
+                            }
+                        ],
+                        "scale": 1,
+                        "name": "d3",
+                        "offset": 0
+                    },
+                    {
+                        "frame": [
+                            {
+                                "duration": 6,
+                                "displayIndex": -1
+                            },
+                            {
+                                "z": 6,
+                                "transform": {
+                                    "skX": 0,
+                                    "skY": 0,
+                                    "x": -37.05,
+                                    "scX": 1,
+                                    "pY": 0,
+                                    "y": -141.05,
+                                    "pX": 0,
+                                    "scY": 1
+                                },
+                                "duration": 1
+                            },
+                            {
+                                "z": 7,
+                                "transform": {
+                                    "skX": 0,
+                                    "skY": 0,
+                                    "x": -42.9,
+                                    "scX": 1,
+                                    "pY": 0,
+                                    "y": -144,
+                                    "pX": 0,
+                                    "scY": 1
+                                },
+                                "duration": 1
+                            },
+                            {
+                                "duration": 6,
+                                "displayIndex": -1
+                            },
+                            {
+                                "z": 14,
+                                "transform": {
+                                    "skX": 0,
+                                    "skY": 0,
+                                    "x": -52.75,
+                                    "scX": 1,
+                                    "pY": 0,
+                                    "y": -186.3,
+                                    "pX": 0,
+                                    "scY": 1
+                                },
+                                "duration": 1
+                            },
+                            {
+                                "z": 15,
+                                "transform": {
+                                    "skX": 0,
+                                    "skY": 0,
+                                    "x": -47.5,
+                                    "scX": 1,
+                                    "pY": 0,
+                                    "y": -190.45,
+                                    "pX": 0,
+                                    "scY": 1
+                                },
+                                "duration": 1
+                            },
+                            {
+                                "z": 16,
+                                "transform": {
+                                    "skX": 0,
+                                    "skY": 0,
+                                    "x": -42.5,
+                                    "scX": 1,
+                                    "pY": 0,
+                                    "y": -193.95,
+                                    "pX": 0,
+                                    "scY": 1
+                                },
+                                "duration": 1
+                            },
+                            {
+                                "duration": 6,
+                                "displayIndex": -1
+                            },
+                            {
+                                "z": 23,
+                                "transform": {
+                                    "skX": 0,
+                                    "skY": 0,
+                                    "x": 2.9,
+                                    "scX": 1,
+                                    "pY": 0,
+                                    "y": -204.6,
+                                    "pX": 0,
+                                    "scY": 1
+                                },
+                                "duration": 1
+                            },
+                            {
+                                "z": 24,
+                                "transform": {
+                                    "skX": 0,
+                                    "skY": 0,
+                                    "x": 9.5,
+                                    "scX": 1,
+                                    "pY": 0,
+                                    "y": -204.6,
+                                    "pX": 0,
+                                    "scY": 1
+                                },
+                                "duration": 1
+                            },
+                            {
+                                "z": 25,
+                                "transform": {
+                                    "skX": 0,
+                                    "skY": 0,
+                                    "x": 13,
+                                    "scX": 1,
+                                    "pY": 0,
+                                    "y": -204.6,
+                                    "pX": 0,
+                                    "scY": 1
+                                },
+                                "duration": 1
+                            },
+                            {
+                                "duration": 6,
+                                "displayIndex": -1
+                            },
+                            {
+                                "z": 32,
+                                "transform": {
+                                    "skX": 0,
+                                    "skY": 0,
+                                    "x": 59.35,
+                                    "scX": 1,
+                                    "pY": 0,
+                                    "y": -191.45,
+                                    "pX": 0,
+                                    "scY": 1
+                                },
+                                "duration": 1
+                            },
+                            {
+                                "z": 33,
+                                "transform": {
+                                    "skX": 0,
+                                    "skY": 0,
+                                    "x": 63.85,
+                                    "scX": 1,
+                                    "pY": 0,
+                                    "y": -186.95,
+                                    "pX": 0,
+                                    "scY": 1
+                                },
+                                "duration": 1
+                            },
+                            {
+                                "duration": 6,
+                                "displayIndex": -1
+                            },
+                            {
+                                "z": 40,
+                                "transform": {
+                                    "skX": 0,
+                                    "skY": 0,
+                                    "x": 57.75,
+                                    "scX": 1,
+                                    "pY": 0,
+                                    "y": -144.9,
+                                    "pX": 0,
+                                    "scY": 1
+                                },
+                                "duration": 1
+                            },
+                            {
+                                "z": 41,
+                                "transform": {
+                                    "skX": 0,
+                                    "skY": 0,
+                                    "x": 51.95,
+                                    "scX": 1,
+                                    "pY": 0,
+                                    "y": -141.8,
+                                    "pX": 0,
+                                    "scY": 1
+                                },
+                                "duration": 1
+                            },
+                            {
+                                "z": 42,
+                                "transform": {
+                                    "skX": 0,
+                                    "skY": 0,
+                                    "x": 46.45,
+                                    "scX": 1,
+                                    "pY": 0,
+                                    "y": -139.3,
+                                    "pX": 0,
+                                    "scY": 1
+                                },
+                                "duration": 1
+                            },
+                            {
+                                "duration": 6,
+                                "displayIndex": -1
+                            }
+                        ],
+                        "scale": 1,
+                        "name": "d4",
+                        "offset": 0
+                    }
+                ],
+                "scale": 1,
+                "tweenEasing": null,
+                "name": 1,
+                "loop": 1
+            }
+        ],
+        "skin": [
+            {
+                "slot": [
+                    {
+                        "z": 0,
+                        "parent": "d1",
+                        "name": "d1",
+                        "display": [
+                            {
+                                "type": "image",
+                                "transform": {
+                                    "skX": 0,
+                                    "skY": 0,
+                                    "x": 0,
+                                    "scX": 1,
+                                    "pY": 10.5,
+                                    "y": 0,
+                                    "pX": 50,
+                                    "scY": 1
+                                },
+                                "name": "fight_skill_1056sc/yuanjian/d1"
+                            }
+                        ]
+                    },
+                    {
+                        "z": 2,
+                        "parent": "d2",
+                        "name": "d2",
+                        "display": [
+                            {
+                                "type": "image",
+                                "transform": {
+                                    "skX": 0,
+                                    "skY": 0,
+                                    "x": 0,
+                                    "scX": 1,
+                                    "pY": 6,
+                                    "y": 0,
+                                    "pX": 50,
+                                    "scY": 1
+                                },
+                                "name": "fight_skill_1056sc/yuanjian/d2"
+                            }
+                        ]
+                    },
+                    {
+                        "z": 4,
+                        "parent": "d3",
+                        "name": "d3",
+                        "display": [
+                            {
+                                "type": "image",
+                                "transform": {
+                                    "skX": 0,
+                                    "skY": 0,
+                                    "x": 0,
+                                    "scX": 1,
+                                    "pY": 18.5,
+                                    "y": 0,
+                                    "pX": 50,
+                                    "scY": 1
+                                },
+                                "name": "fight_skill_1056sc/yuanjian/d3"
+                            }
+                        ]
+                    },
+                    {
+                        "z": 6,
+                        "parent": "d4",
+                        "name": "d4",
+                        "display": [
+                            {
+                                "type": "image",
+                                "transform": {
+                                    "skX": 0,
+                                    "skY": 0,
+                                    "x": 0,
+                                    "scX": 1,
+                                    "pY": 4.5,
+                                    "y": 0,
+                                    "pX": 50,
+                                    "scY": 1
+                                },
+                                "name": "fight_skill_1056sc/yuanjian/d4"
+                            }
+                        ]
+                    }
+                ],
+                "name": 0
+            }
+        ],
+        "name": "fight_skill_1056",
+        "bone": [
+            {
+                "transform": {
+                    "skX": 0,
+                    "skY": 0,
+                    "x": -37.05,
+                    "scX": 1,
+                    "y": -141.05,
+                    "scY": 1
+                },
+                "name": "d4"
+            },
+            {
+                "transform": {
+                    "skX": 0,
+                    "skY": 0,
+                    "x": -24.7,
+                    "scX": 1,
+                    "y": -136.6,
+                    "scY": 1
+                },
+                "name": "d3"
+            },
+            {
+                "transform": {
+                    "skX": 0,
+                    "skY": 0,
+                    "x": -11.95,
+                    "scX": 1,
+                    "y": -133.9,
+                    "scY": 1
+                },
+                "name": "d2"
+            },
+            {
+                "transform": {
+                    "skX": 0,
+                    "skY": 0,
+                    "x": 1.05,
+                    "scX": 1,
+                    "y": -132.65,
+                    "scY": 1
+                },
+                "name": "d1"
+            }
+        ]
+    },
+    {
+        "animation": [
+            {
+                "fadeInTime": 0,
+                "duration": 24,
+                "timeline": [
+                    {
+                        "frame": [
+                            {
+                                "z": 0,
+                                "tweenEasing": 0,
+                                "transform": {
+                                    "skX": 0,
+                                    "skY": 0,
+                                    "x": 7.4,
+                                    "scX": 0.54,
+                                    "pY": 0,
+                                    "y": -62.45,
+                                    "pX": 0,
+                                    "scY": 0.42
+                                },
+                                "duration": 3
+                            },
+                            {
+                                "z": 0,
+                                "transform": {
+                                    "skX": 0,
+                                    "skY": 0,
+                                    "x": 11.45,
+                                    "scX": 1.35,
+                                    "pY": 0,
+                                    "y": -80.05,
+                                    "pX": 0,
+                                    "scY": 1.04
+                                },
+                                "duration": 1
+                            },
+                            {
+                                "duration": 20,
+                                "displayIndex": -1
+                            }
+                        ],
+                        "scale": 1,
+                        "name": "4996策士攻击特效0001.jpg",
+                        "offset": 0
+                    },
+                    {
+                        "frame": [
+                            {
+                                "duration": 4,
+                                "displayIndex": -1
+                            },
+                            {
+                                "z": 1,
+                                "transform": {
+                                    "skX": 0,
+                                    "skY": 0,
+                                    "x": 11.45,
+                                    "scX": 1.35,
+                                    "pY": 0,
+                                    "y": -80.05,
+                                    "pX": 0,
+                                    "scY": 1.04
+                                },
+                                "duration": 2
+                            },
+                            {
+                                "duration": 18,
+                                "displayIndex": -1
+                            }
+                        ],
+                        "scale": 1,
+                        "name": "4996策士攻击特效0003.jpg",
+                        "offset": 0
+                    },
+                    {
+                        "frame": [
+                            {
+                                "duration": 6,
+                                "displayIndex": -1
+                            },
+                            {
+                                "z": 2,
+                                "transform": {
+                                    "skX": 0,
+                                    "skY": 0,
+                                    "x": 11.45,
+                                    "scX": 1.35,
+                                    "pY": 0,
+                                    "y": -80.05,
+                                    "pX": 0,
+                                    "scY": 1.04
+                                },
+                                "duration": 2
+                            },
+                            {
+                                "duration": 16,
+                                "displayIndex": -1
+                            }
+                        ],
+                        "scale": 1,
+                        "name": "4996策士攻击特效0007.jpg",
+                        "offset": 0
+                    },
+                    {
+                        "frame": [
+                            {
+                                "duration": 8,
+                                "displayIndex": -1
+                            },
+                            {
+                                "z": 3,
+                                "tweenEasing": 0,
+                                "transform": {
+                                    "skX": 0,
+                                    "skY": 0,
+                                    "x": 11.45,
+                                    "scX": 1.35,
+                                    "pY": 0,
+                                    "y": -80.05,
+                                    "pX": 0,
+                                    "scY": 1.04
+                                },
+                                "duration": 7
+                            },
+                            {
+                                "z": 3,
+                                "transform": {
+                                    "skX": 0,
+                                    "skY": 0,
+                                    "x": 11.45,
+                                    "scX": 1.35,
+                                    "pY": 0,
+                                    "y": -80.05,
+                                    "pX": 0,
+                                    "scY": 1.04
+                                },
+                                "duration": 9,
+                                "colorTransform": {
+                                    "gO": 0,
+                                    "rO": 0,
+                                    "gM": 100,
+                                    "aM": 0,
+                                    "rM": 100,
+                                    "aO": 0,
+                                    "bM": 100,
+                                    "bO": 0
+                                }
+                            }
+                        ],
+                        "scale": 1,
+                        "name": "4996策士攻击特效0005.jpg",
+                        "offset": 0
+                    },
+                    {
+                        "frame": [
+                            {
+                                "z": 4,
+                                "tweenEasing": 0,
+                                "transform": {
+                                    "skX": 0,
+                                    "skY": 0,
+                                    "x": 20.05,
+                                    "scX": 1.54,
+                                    "pY": 0,
+                                    "y": -44.95,
+                                    "pX": 0,
+                                    "scY": 1.54
+                                },
+                                "duration": 3,
+                                "colorTransform": {
+                                    "gO": 0,
+                                    "rO": 0,
+                                    "gM": 100,
+                                    "aM": 77,
+                                    "rM": 100,
+                                    "aO": 0,
+                                    "bM": 100,
+                                    "bO": 0
+                                }
+                            },
+                            {
+                                "z": 4,
+                                "tweenEasing": 0,
+                                "transform": {
+                                    "skX": 0,
+                                    "skY": 0,
+                                    "x": 22.65,
+                                    "scX": 1.63,
+                                    "pY": 0,
+                                    "y": -47.6,
+                                    "pX": 0,
+                                    "scY": 1.63
+                                },
+                                "duration": 10,
+                                "colorTransform": {
+                                    "gO": 0,
+                                    "rO": 0,
+                                    "gM": 100,
+                                    "aM": 77,
+                                    "rM": 100,
+                                    "aO": 0,
+                                    "bM": 100,
+                                    "bO": 0
+                                }
+                            },
+                            {
+                                "z": 4,
+                                "tweenEasing": 0,
+                                "transform": {
+                                    "skX": 0,
+                                    "skY": 0,
+                                    "x": 22.65,
+                                    "scX": 1.63,
+                                    "pY": 0,
+                                    "y": -47.55,
+                                    "pX": 0,
+                                    "scY": 1.63
+                                },
+                                "duration": 10,
+                                "colorTransform": {
+                                    "gO": 0,
+                                    "rO": 0,
+                                    "gM": 100,
+                                    "aM": 76,
+                                    "rM": 100,
+                                    "aO": 0,
+                                    "bM": 100,
+                                    "bO": 0
+                                }
+                            },
+                            {
+                                "z": 4,
+                                "transform": {
+                                    "skX": 0,
+                                    "skY": 0,
+                                    "x": 22.65,
+                                    "scX": 1.63,
+                                    "pY": 0,
+                                    "y": -47.6,
+                                    "pX": 0,
+                                    "scY": 1.63
+                                },
+                                "duration": 1,
+                                "colorTransform": {
+                                    "gO": 0,
+                                    "rO": 0,
+                                    "gM": 100,
+                                    "aM": 0,
+                                    "rM": 100,
+                                    "aO": 0,
+                                    "bM": 100,
+                                    "bO": 0
+                                }
+                            }
+                        ],
+                        "scale": 1,
+                        "name": "YANWU",
+                        "offset": 0
+                    },
+                    {
+                        "frame": [
+                            {
+                                "z": 5,
+                                "tweenEasing": 0,
+                                "transform": {
+                                    "skX": 0,
+                                    "skY": 0,
+                                    "x": -19.25,
+                                    "scX": 1.54,
+                                    "pY": 0,
+                                    "y": -34.55,
+                                    "pX": 0,
+                                    "scY": 1.54
+                                },
+                                "duration": 3,
+                                "colorTransform": {
+                                    "gO": 0,
+                                    "rO": 0,
+                                    "gM": 100,
+                                    "aM": 77,
+                                    "rM": 100,
+                                    "aO": 0,
+                                    "bM": 100,
+                                    "bO": 0
+                                }
+                            },
+                            {
+                                "z": 5,
+                                "tweenEasing": 0,
+                                "transform": {
+                                    "skX": 0,
+                                    "skY": 0,
+                                    "x": -35.05,
+                                    "scX": 1.63,
+                                    "pY": 0,
+                                    "y": -41.6,
+                                    "pX": 0,
+                                    "scY": 1.63
+                                },
+                                "duration": 10,
+                                "colorTransform": {
+                                    "gO": 0,
+                                    "rO": 0,
+                                    "gM": 100,
+                                    "aM": 77,
+                                    "rM": 100,
+                                    "aO": 0,
+                                    "bM": 100,
+                                    "bO": 0
+                                }
+                            },
+                            {
+                                "z": 5,
+                                "tweenEasing": 0,
+                                "transform": {
+                                    "skX": 0,
+                                    "skY": 0,
+                                    "x": -40.55,
+                                    "scX": 1.71,
+                                    "pY": 0,
+                                    "y": -43.9,
+                                    "pX": 0,
+                                    "scY": 1.71
+                                },
+                                "duration": 10,
+                                "colorTransform": {
+                                    "gO": 0,
+                                    "rO": 0,
+                                    "gM": 100,
+                                    "aM": 76,
+                                    "rM": 100,
+                                    "aO": 0,
+                                    "bM": 100,
+                                    "bO": 0
+                                }
+                            },
+                            {
+                                "z": 5,
+                                "transform": {
+                                    "skX": 0,
+                                    "skY": 0,
+                                    "x": -46.05,
+                                    "scX": 1.79,
+                                    "pY": 0,
+                                    "y": -46.1,
+                                    "pX": 0,
+                                    "scY": 1.79
+                                },
+                                "duration": 1,
+                                "colorTransform": {
+                                    "gO": 0,
+                                    "rO": 0,
+                                    "gM": 100,
+                                    "aM": 0,
+                                    "rM": 100,
+                                    "aO": 0,
+                                    "bM": 100,
+                                    "bO": 0
+                                }
+                            }
+                        ],
+                        "scale": 1,
+                        "name": "YANWU0",
+                        "offset": 0
+                    },
+                    {
+                        "frame": [
+                            {
+                                "z": 6,
+                                "tweenEasing": 0,
+                                "transform": {
+                                    "skX": 0,
+                                    "skY": 0,
+                                    "x": 1.6,
+                                    "scX": 1.54,
+                                    "pY": 0,
+                                    "y": -50.6,
+                                    "pX": 0,
+                                    "scY": 1.54
+                                },
+                                "duration": 3,
+                                "colorTransform": {
+                                    "gO": 0,
+                                    "rO": 0,
+                                    "gM": 100,
+                                    "aM": 77,
+                                    "rM": 100,
+                                    "aO": 0,
+                                    "bM": 100,
+                                    "bO": 0
+                                }
+                            },
+                            {
+                                "z": 6,
+                                "tweenEasing": 0,
+                                "transform": {
+                                    "skX": 0,
+                                    "skY": 0,
+                                    "x": 3.05,
+                                    "scX": 1.63,
+                                    "pY": 0,
+                                    "y": -73.6,
+                                    "pX": 0,
+                                    "scY": 1.63
+                                },
+                                "duration": 10,
+                                "colorTransform": {
+                                    "gO": 0,
+                                    "rO": 0,
+                                    "gM": 100,
+                                    "aM": 77,
+                                    "rM": 100,
+                                    "aO": 0,
+                                    "bM": 100,
+                                    "bO": 0
+                                }
+                            },
+                            {
+                                "z": 6,
+                                "tweenEasing": 0,
+                                "transform": {
+                                    "skX": 0,
+                                    "skY": 0,
+                                    "x": 3.1,
+                                    "scX": 1.71,
+                                    "pY": 0,
+                                    "y": -78.65,
+                                    "pX": 0,
+                                    "scY": 1.71
+                                },
+                                "duration": 10,
+                                "colorTransform": {
+                                    "gO": 0,
+                                    "rO": 0,
+                                    "gM": 100,
+                                    "aM": 76,
+                                    "rM": 100,
+                                    "aO": 0,
+                                    "bM": 100,
+                                    "bO": 0
+                                }
+                            },
+                            {
+                                "z": 6,
+                                "transform": {
+                                    "skX": 0,
+                                    "skY": 0,
+                                    "x": 3.05,
+                                    "scX": 1.79,
+                                    "pY": 0,
+                                    "y": -83.6,
+                                    "pX": 0,
+                                    "scY": 1.79
+                                },
+                                "duration": 1,
+                                "colorTransform": {
+                                    "gO": 0,
+                                    "rO": 0,
+                                    "gM": 100,
+                                    "aM": 0,
+                                    "rM": 100,
+                                    "aO": 0,
+                                    "bM": 100,
+                                    "bO": 0
+                                }
+                            }
+                        ],
+                        "scale": 1,
+                        "name": "YANWU1",
+                        "offset": 0
+                    },
+                    {
+                        "frame": [
+                            {
+                                "z": 7,
+                                "tweenEasing": 0,
+                                "transform": {
+                                    "skX": 0,
+                                    "skY": 0,
+                                    "x": 21.45,
+                                    "scX": 1.54,
+                                    "pY": 0,
+                                    "y": -40.2,
+                                    "pX": 0,
+                                    "scY": 1.54
+                                },
+                                "duration": 3,
+                                "colorTransform": {
+                                    "gO": 0,
+                                    "rO": 0,
+                                    "gM": 100,
+                                    "aM": 77,
+                                    "rM": 100,
+                                    "aO": 0,
+                                    "bM": 100,
+                                    "bO": 0
+                                }
+                            },
+                            {
+                                "z": 7,
+                                "tweenEasing": 0,
+                                "transform": {
+                                    "skX": 0,
+                                    "skY": 0,
+                                    "x": 61.1,
+                                    "scX": 1.63,
+                                    "pY": 0,
+                                    "y": -42.55,
+                                    "pX": 0,
+                                    "scY": 1.63
+                                },
+                                "duration": 10,
+                                "colorTransform": {
+                                    "gO": 0,
+                                    "rO": 0,
+                                    "gM": 100,
+                                    "aM": 77,
+                                    "rM": 100,
+                                    "aO": 0,
+                                    "bM": 100,
+                                    "bO": 0
+                                }
+                            },
+                            {
+                                "z": 7,
+                                "tweenEasing": 0,
+                                "transform": {
+                                    "skX": 0,
+                                    "skY": 0,
+                                    "x": 64.6,
+                                    "scX": 1.71,
+                                    "pY": 0,
+                                    "y": -42.55,
+                                    "pX": 0,
+                                    "scY": 1.71
+                                },
+                                "duration": 10,
+                                "colorTransform": {
+                                    "gO": 0,
+                                    "rO": 0,
+                                    "gM": 100,
+                                    "aM": 76,
+                                    "rM": 100,
+                                    "aO": 0,
+                                    "bM": 100,
+                                    "bO": 0
+                                }
+                            },
+                            {
+                                "z": 7,
+                                "transform": {
+                                    "skX": 0,
+                                    "skY": 0,
+                                    "x": 68.1,
+                                    "scX": 1.79,
+                                    "pY": 0,
+                                    "y": -42.55,
+                                    "pX": 0,
+                                    "scY": 1.79
+                                },
+                                "duration": 1,
+                                "colorTransform": {
+                                    "gO": 0,
+                                    "rO": 0,
+                                    "gM": 100,
+                                    "aM": 0,
+                                    "rM": 100,
+                                    "aO": 0,
+                                    "bM": 100,
+                                    "bO": 0
+                                }
+                            }
+                        ],
+                        "scale": 1,
+                        "name": "YANWU2",
+                        "offset": 0
+                    },
+                    {
+                        "frame": [
+                            {
+                                "z": 8,
+                                "tweenEasing": 0,
+                                "transform": {
+                                    "skX": 0,
+                                    "skY": 0,
+                                    "x": 12.25,
+                                    "scX": 1.54,
+                                    "pY": 0,
+                                    "y": -34.95,
+                                    "pX": 0,
+                                    "scY": 1.54
+                                },
+                                "duration": 3,
+                                "colorTransform": {
+                                    "gO": 0,
+                                    "rO": 0,
+                                    "gM": 100,
+                                    "aM": 77,
+                                    "rM": 100,
+                                    "aO": 0,
+                                    "bM": 100,
+                                    "bO": 0
+                                }
+                            },
+                            {
+                                "z": 8,
+                                "tweenEasing": 0,
+                                "transform": {
+                                    "skX": 0,
+                                    "skY": 0,
+                                    "x": 14.35,
+                                    "scX": 1.63,
+                                    "pY": 0,
+                                    "y": -20,
+                                    "pX": 0,
+                                    "scY": 1.63
+                                },
+                                "duration": 10,
+                                "colorTransform": {
+                                    "gO": 0,
+                                    "rO": 0,
+                                    "gM": 100,
+                                    "aM": 77,
+                                    "rM": 100,
+                                    "aO": 0,
+                                    "bM": 100,
+                                    "bO": 0
+                                }
+                            },
+                            {
+                                "z": 8,
+                                "tweenEasing": 0,
+                                "transform": {
+                                    "skX": 0,
+                                    "skY": 0,
+                                    "x": 14.35,
+                                    "scX": 1.71,
+                                    "pY": 0,
+                                    "y": -14.5,
+                                    "pX": 0,
+                                    "scY": 1.71
+                                },
+                                "duration": 10,
+                                "colorTransform": {
+                                    "gO": 0,
+                                    "rO": 0,
+                                    "gM": 100,
+                                    "aM": 76,
+                                    "rM": 100,
+                                    "aO": 0,
+                                    "bM": 100,
+                                    "bO": 0
+                                }
+                            },
+                            {
+                                "z": 8,
+                                "transform": {
+                                    "skX": 0,
+                                    "skY": 0,
+                                    "x": 14.35,
+                                    "scX": 1.79,
+                                    "pY": 0,
+                                    "y": -9,
+                                    "pX": 0,
+                                    "scY": 1.79
+                                },
+                                "duration": 1,
+                                "colorTransform": {
+                                    "gO": 0,
+                                    "rO": 0,
+                                    "gM": 100,
+                                    "aM": 0,
+                                    "rM": 100,
+                                    "aO": 0,
+                                    "bM": 100,
+                                    "bO": 0
+                                }
+                            }
+                        ],
+                        "scale": 1,
+                        "name": "YANWU3",
+                        "offset": 0
+                    },
+                    {
+                        "frame": [
+                            {
+                                "duration": 5,
+                                "displayIndex": -1
+                            },
+                            {
+                                "z": 9,
+                                "event": "attack1",
+                                "transform": {
+                                    "skX": 0,
+                                    "skY": 0,
+                                    "x": 3.25,
+                                    "scX": 1.5,
+                                    "pY": 0,
+                                    "y": -75.8,
+                                    "pX": 0,
+                                    "scY": 1.5
+                                },
+                                "duration": 19
+                            }
+                        ],
+                        "scale": 1,
+                        "name": "attack1",
+                        "offset": 0
+                    }
+                ],
+                "scale": 0.54,
+                "tweenEasing": null,
+                "name": 1,
+                "loop": 1
+            }
+        ],
+        "skin": [
+            {
+                "slot": [
+                    {
+                        "z": 0,
+                        "parent": "4996策士攻击特效0001.jpg",
+                        "name": "4996策士攻击特效0001.jpg",
+                        "display": [
+                            {
+                                "type": "image",
+                                "transform": {
+                                    "skX": 0,
+                                    "skY": 0,
+                                    "x": 0,
+                                    "scX": 1,
+                                    "pY": 110,
+                                    "y": 0,
+                                    "pX": 73.5,
+                                    "scY": 1
+                                },
+                                "name": "fight_skill_1055sc/d1"
+                            }
+                        ]
+                    },
+                    {
+                        "z": 1,
+                        "parent": "4996策士攻击特效0003.jpg",
+                        "name": "4996策士攻击特效0003.jpg",
+                        "display": [
+                            {
+                                "type": "image",
+                                "transform": {
+                                    "skX": 0,
+                                    "skY": 0,
+                                    "x": 0,
+                                    "scX": 1,
+                                    "pY": 110,
+                                    "y": 0,
+                                    "pX": 73.5,
+                                    "scY": 1
+                                },
+                                "name": "fight_skill_1055sc/d3"
+                            }
+                        ]
+                    },
+                    {
+                        "z": 2,
+                        "parent": "4996策士攻击特效0007.jpg",
+                        "name": "4996策士攻击特效0007.jpg",
+                        "display": [
+                            {
+                                "type": "image",
+                                "transform": {
+                                    "skX": 0,
+                                    "skY": 0,
+                                    "x": 0,
+                                    "scX": 1,
+                                    "pY": 110,
+                                    "y": 0,
+                                    "pX": 73.5,
+                                    "scY": 1
+                                },
+                                "name": "fight_skill_1055sc/d4"
+                            }
+                        ]
+                    },
+                    {
+                        "z": 3,
+                        "parent": "4996策士攻击特效0005.jpg",
+                        "name": "4996策士攻击特效0005.jpg",
+                        "display": [
+                            {
+                                "type": "image",
+                                "transform": {
+                                    "skX": 0,
+                                    "skY": 0,
+                                    "x": 0,
+                                    "scX": 1,
+                                    "pY": 110,
+                                    "y": 0,
+                                    "pX": 73.5,
+                                    "scY": 1
+                                },
+                                "name": "fight_skill_1055sc/d2"
+                            }
+                        ]
+                    },
+                    {
+                        "z": 4,
+                        "parent": "YANWU",
+                        "name": "YANWU",
+                        "display": [
+                            {
+                                "type": "image",
+                                "transform": {
+                                    "skX": 0,
+                                    "skY": 0,
+                                    "x": 0,
+                                    "scX": 1,
+                                    "pY": 21.75,
+                                    "y": 0,
+                                    "pX": 24.1,
+                                    "scY": 1
+                                },
+                                "name": "fight_skill_1055sc/YANWU"
+                            }
+                        ]
+                    },
+                    {
+                        "z": 5,
+                        "parent": "YANWU0",
+                        "name": "YANWU0",
+                        "display": [
+                            {
+                                "type": "image",
+                                "transform": {
+                                    "skX": 0,
+                                    "skY": 0,
+                                    "x": 0,
+                                    "scX": 1,
+                                    "pY": 21.75,
+                                    "y": 0,
+                                    "pX": 24.1,
+                                    "scY": 1
+                                },
+                                "name": "fight_skill_1055sc/YANWU"
+                            }
+                        ]
+                    },
+                    {
+                        "z": 6,
+                        "parent": "YANWU1",
+                        "name": "YANWU1",
+                        "display": [
+                            {
+                                "type": "image",
+                                "transform": {
+                                    "skX": 0,
+                                    "skY": 0,
+                                    "x": 0,
+                                    "scX": 1,
+                                    "pY": 21.75,
+                                    "y": 0,
+                                    "pX": 24.1,
+                                    "scY": 1
+                                },
+                                "name": "fight_skill_1055sc/YANWU"
+                            }
+                        ]
+                    },
+                    {
+                        "z": 7,
+                        "parent": "YANWU2",
+                        "name": "YANWU2",
+                        "display": [
+                            {
+                                "type": "image",
+                                "transform": {
+                                    "skX": 0,
+                                    "skY": 0,
+                                    "x": 0,
+                                    "scX": 1,
+                                    "pY": 21.75,
+                                    "y": 0,
+                                    "pX": 24.1,
+                                    "scY": 1
+                                },
+                                "name": "fight_skill_1055sc/YANWU"
+                            }
+                        ]
+                    },
+                    {
+                        "z": 8,
+                        "parent": "YANWU3",
+                        "name": "YANWU3",
+                        "display": [
+                            {
+                                "type": "image",
+                                "transform": {
+                                    "skX": 0,
+                                    "skY": 0,
+                                    "x": 0,
+                                    "scX": 1,
+                                    "pY": 21.75,
+                                    "y": 0,
+                                    "pX": 24.1,
+                                    "scY": 1
+                                },
+                                "name": "fight_skill_1055sc/YANWU"
+                            }
+                        ]
+                    },
+                    {
+                        "z": 9,
+                        "parent": "attack1",
+                        "name": "attack1",
+                        "display": [
+                            {
+                                "type": "image",
+                                "transform": {
+                                    "skX": 0,
+                                    "skY": 0,
+                                    "x": 0,
+                                    "scX": 1,
+                                    "pY": 10.3,
+                                    "y": 0,
+                                    "pX": 14.5,
+                                    "scY": 1
+                                },
+                                "name": "fight_skill_1055sc/attack1"
+                            }
+                        ]
+                    }
+                ],
+                "name": 0
+            }
+        ],
+        "name": "fight_skill_1055",
+        "bone": [
+            {
+                "transform": {
+                    "skX": 0,
+                    "skY": 0,
+                    "x": 3.25,
+                    "scX": 1.5,
+                    "y": -75.8,
+                    "scY": 1.5
+                },
+                "name": "attack1"
+            },
+            {
+                "transform": {
+                    "skX": 0,
+                    "skY": 0,
+                    "x": 12.25,
+                    "scX": 1.54,
+                    "y": -34.95,
+                    "scY": 1.54
+                },
+                "name": "YANWU3"
+            },
+            {
+                "transform": {
+                    "skX": 0,
+                    "skY": 0,
+                    "x": 21.45,
+                    "scX": 1.54,
+                    "y": -40.2,
+                    "scY": 1.54
+                },
+                "name": "YANWU2"
+            },
+            {
+                "transform": {
+                    "skX": 0,
+                    "skY": 0,
+                    "x": 1.6,
+                    "scX": 1.54,
+                    "y": -50.6,
+                    "scY": 1.54
+                },
+                "name": "YANWU1"
+            },
+            {
+                "transform": {
+                    "skX": 0,
+                    "skY": 0,
+                    "x": -19.25,
+                    "scX": 1.54,
+                    "y": -34.55,
+                    "scY": 1.54
+                },
+                "name": "YANWU0"
+            },
+            {
+                "transform": {
+                    "skX": 0,
+                    "skY": 0,
+                    "x": 20.05,
+                    "scX": 1.54,
+                    "y": -44.95,
+                    "scY": 1.54
+                },
+                "name": "YANWU"
+            },
+            {
+                "transform": {
+                    "skX": 0,
+                    "skY": 0,
+                    "x": 11.45,
+                    "scX": 1.35,
+                    "y": -80.05,
+                    "scY": 1.04
+                },
+                "name": "4996策士攻击特效0005.jpg"
+            },
+            {
+                "transform": {
+                    "skX": 0,
+                    "skY": 0,
+                    "x": 11.45,
+                    "scX": 1.35,
+                    "y": -80.05,
+                    "scY": 1.04
+                },
+                "name": "4996策士攻击特效0007.jpg"
+            },
+            {
+                "transform": {
+                    "skX": 0,
+                    "skY": 0,
+                    "x": 11.45,
+                    "scX": 1.35,
+                    "y": -80.05,
+                    "scY": 1.04
+                },
+                "name": "4996策士攻击特效0003.jpg"
+            },
+            {
+                "transform": {
+                    "skX": 0,
+                    "skY": 0,
+                    "x": 7.4,
+                    "scX": 0.54,
+                    "y": -62.45,
+                    "scY": 0.42
+                },
+                "name": "4996策士攻击特效0001.jpg"
+            }
+        ]
+    },
+    {
+        "animation": [
+            {
+                "fadeInTime": 0,
+                "duration": 4,
+                "timeline": [
+                    {
+                        "frame": [
+                            {
+                                "duration": 2,
+                                "displayIndex": -1
+                            },
+                            {
+                                "z": 0,
+                                "transform": {
+                                    "skX": 0,
+                                    "skY": 0,
+                                    "x": -2.5,
+                                    "scX": 1,
+                                    "pY": 0,
+                                    "y": -122.55,
+                                    "pX": 0,
+                                    "scY": 1
+                                },
+                                "duration": 2
+                            }
+                        ],
+                        "scale": 1,
+                        "name": 3,
+                        "offset": 0
+                    },
+                    {
+                        "frame": [
+                            {
+                                "z": 1,
+                                "transform": {
+                                    "skX": 0,
+                                    "skY": 0,
+                                    "x": -2.5,
+                                    "scX": 1,
+                                    "pY": 0,
+                                    "y": -122.55,
+                                    "pX": 0,
+                                    "scY": 1
+                                },
+                                "duration": 2
+                            },
+                            {
+                                "duration": 2,
+                                "displayIndex": -1
+                            }
+                        ],
+                        "scale": 1,
+                        "name": 2,
+                        "offset": 0
+                    }
+                ],
+                "scale": 2,
+                "tweenEasing": null,
+                "name": 1,
+                "loop": 1
+            }
+        ],
+        "skin": [
+            {
+                "slot": [
+                    {
+                        "z": 0,
+                        "parent": 3,
+                        "name": 3,
+                        "display": [
+                            {
+                                "type": "image",
+                                "transform": {
+                                    "skX": 0,
+                                    "skY": 0,
+                                    "x": 0,
+                                    "scX": 1,
+                                    "pY": 62.15,
+                                    "y": 0,
+                                    "pX": 20.5,
+                                    "scY": 1
+                                },
+                                "name": "fight_skill_1054sc/skillasset_21"
+                            }
+                        ]
+                    },
+                    {
+                        "z": 1,
+                        "parent": 2,
+                        "name": 2,
+                        "display": [
+                            {
+                                "type": "image",
+                                "transform": {
+                                    "skX": 0,
+                                    "skY": 0,
+                                    "x": 0,
+                                    "scX": 1,
+                                    "pY": 62.15,
+                                    "y": 0,
+                                    "pX": 20.5,
+                                    "scY": 1
+                                },
+                                "name": "fight_skill_1054sc/skillasset_2"
+                            }
+                        ]
+                    }
+                ],
+                "name": 0
+            }
+        ],
+        "name": "fight_skill_1054",
+        "bone": [
+            {
+                "transform": {
+                    "skX": 0,
+                    "skY": 0,
+                    "x": -2.5,
+                    "scX": 1,
+                    "y": -122.55,
+                    "scY": 1
+                },
+                "name": 2
+            },
+            {
+                "transform": {
+                    "skX": 0,
+                    "skY": 0,
+                    "x": -2.5,
+                    "scX": 1,
+                    "y": -122.55,
+                    "scY": 1
+                },
+                "name": 3
+            }
+        ]
+    }
+], "name": "skill", "version": 2.3, "frameRate": 24}
