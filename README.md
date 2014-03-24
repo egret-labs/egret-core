@@ -31,7 +31,7 @@ Egret Framework是一款使用JavaScript(TypeScript)编写的HTML5开源免费�
 -------------------------
 配置环境参见 [如何配置egret开发环境](https://github.com/egret-team/egret/wiki)
 
-配置编译脚本的依赖库
+配置编译脚本的依赖库 （执行此步骤之前，必须先配置第一步）
 ```
 ${egret_root}/tools/nodejs/npm install async
 ${egret_root}/tools/nodejs/npm install crc32
