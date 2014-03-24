@@ -41,3 +41,8 @@ ${egret_root}/tools/nodejs/npm install crc32
 ```
 node ${egret_root}/tools/nodejs/build_typescript.js
 ```
+
+
+
+#### 发布说明
+[Egret Release Notes](/docs/ReleaseNotes.md)
