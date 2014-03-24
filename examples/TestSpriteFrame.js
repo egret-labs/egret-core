@@ -3,7 +3,7 @@ function getResourceList(){
 }
 
 function getDescription(){
-    return "这个项目展示了box2d";
+    return "SpriteFrame";
 }
 
 function createExample(){

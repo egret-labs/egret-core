@@ -10,7 +10,7 @@ function getResourceList(){
 }
 
 function getDescription(){
-    return "这个项目展示了TabView的操作";
+    return "Simple-GUI-TabView";
 }
 
 

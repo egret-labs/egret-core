@@ -104,5 +104,5 @@ function getResourceList(){
 }
 
 function getDescription(){
-    return "在第一次 运行tween时 会'闪'一下";
+    return "在第一次 运行tween时 会'闪'一下\n已解决";
 }

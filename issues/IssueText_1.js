@@ -48,5 +48,5 @@ function getResourceList(){
 }
 
 function getDescription(){
-    return "在创建TextField的瞬间，如果anchorPoint不为0，TextField会'抖动'一下";
+    return "在创建TextField的瞬间，如果anchorPoint不为0，TextField会'抖动'一下\n已解决";
 }

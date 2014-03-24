@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-    <title>egret: HelloWorld</title>
+    <title>egret: Issues</title>
     <style>
         BODY {
             -webkit-user-select: none; /* Chrome all / Safari all */
@@ -24,14 +24,6 @@
     </style>
 
     <script>
-        window.applicationCache.addEventListener("updateready", function () {
-            if (alert("本地缓存已被更新,立即刷新")) {
-                //手工更新本地缓存
-                window.applicationCache.swapCache();
-                //重载画面
-                window.location.reload();
-            }
-        }, true);
 
         onSelectChange = function (value) {
             var url = location.href;

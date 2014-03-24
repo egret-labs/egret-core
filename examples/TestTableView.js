@@ -9,7 +9,7 @@ function getResourceList() {
 }
 
 function getDescription() {
-    return "这个项目展示了Bitmap的正常显示、位移、缩放、旋转、斜切";
+    return "Simple-GUI-TableView";
 }
 
 

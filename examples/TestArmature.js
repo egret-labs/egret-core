@@ -37,7 +37,6 @@ function createExample() {
     var armatureDisplay = armature.getDisplay();
     dragonBones.animation.WorldClock.clock.add(armature);
     container.addChild(armatureDisplay);
-    container.blendMode = ns_egret.BlendMode.NORMAL;
     armatureDisplay.x = 300;
     armatureDisplay.y = 350;
     armature.animation.gotoAndPlay("walk");
