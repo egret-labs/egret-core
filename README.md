@@ -52,4 +52,8 @@ Egret引擎有以下三大核心理念
 -------------------------
 配置环境参见 [如何配置egret开发环境](https://github.com/egret-team/egret/wiki)
 
-egret_root/tools/nodejs/node buildTS.js
+```
+${egret_root}/tools/nodejs/npm install async
+${egret_root}/tools/nodejs/npm install crc32
+node egret_root/tools/nodejs/build_typescript.js
+```

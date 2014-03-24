@@ -9,9 +9,8 @@ var sourcePath = process.argv[2];
 if (!sourcePath) {
     sourcePath = "../../src";
 }
-//console.log (__dirname)
-sourcePath = __dirname +"/" + sourcePath;
-
+var path = require("path");
+sourcePath = path.join(__dirname,sourcePath);
 
 var fileExtension = require("./FileExtension");
 var _path = [];
