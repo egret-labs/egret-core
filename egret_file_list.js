@@ -48,10 +48,10 @@ var temp = [
 
     //扩展
     //tileMap start
-    "extension/tileMap/TMXTileMap.js",
-    "extension/tileMap/TMXLayer.js",
-    "extension/tileMap/TMXConst.js",
-    "extension/tileMap/TMXMapInfo.js",
+    "extension/tilemap/TMXTileMap.js",
+    "extension/tilemap/TMXLayer.js",
+    "extension/tilemap/TMXConst.js",
+    "extension/tilemap/TMXMapInfo.js",
     //tileMap end
     "extension/gameInput/VirtualJoystick.js",
     "extension/gui/component/TabView.js",
