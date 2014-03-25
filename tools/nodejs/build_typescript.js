@@ -22,6 +22,7 @@ outPath = path.join(__dirname,outPath);
 
 
 var allFileList = generateAllTypeScriptFileList(sourcePath);
+
 var cp_exec = require('child_process').exec;
 var async = require('async');
 var crc32 = require("crc32");
@@ -111,12 +112,10 @@ function buildAllTypeScript(allFileList){
  */
 
 function generateAllTypeScriptFileList(sourcePath){
-    var result = [];
-    var fileExtension = require("./FileExtension");
-    fileExtension.run(sourcePath, function (path) {
-        if (path.indexOf(".ts") == path.length - 3 && path.indexOf(".d.ts") == -1) {
-            result.push(path);
-        }
-    });
-    return result;
+    var libs = require("./egret_nodejs_libs");
+    return libs.loopFileSync(sourcePath,filter);
+
+    function filter(path){
+        return  path.indexOf(".ts") == path.length - 3 && path.indexOf(".d.ts") == -1
+    }
 }
