@@ -1,5 +1,4 @@
-var libs = {};
-libs.loopFileSync = function (dir, filter) {
+var loopFileSync = function (dir, filter) {
 
     var fs = require("fs");
     var path = require("path");
@@ -16,15 +15,31 @@ libs.loopFileSync = function (dir, filter) {
             });
         }
         else {
-            if (callback.call(libs, filePath)){
+            if (callback.call(this, filePath)){
 
                 result.push(path.relative(dir,filePath));
             }
-
         }
     }
     return result;
 
 }
 
-exports.loopFileSync = libs.loopFileSync;
+
+var _require = function(moduleName){
+
+    var module;
+    try{
+        module = require(moduleName)
+    }
+    catch(e) {
+        var errorMessage = "加载模块 " + moduleName + " 失败\n请确认在" + process.argv[1] + "所在目录下已执行 npm install " + moduleName
+        console.log (errorMessage);
+        process.exit([1])
+    }
+    return module;
+
+}
+
+exports.loopFileSync = loopFileSync;
+exports.require = _require;

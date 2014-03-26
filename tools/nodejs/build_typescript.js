@@ -6,7 +6,7 @@
  *
  * @param source_path:编译路径，默认为引擎代码
  */
-
+var libs = require("./egret_nodejs_libs");
 var sourcePath = process.argv[2];
 if (!sourcePath) {
     sourcePath = "../../src";
@@ -23,8 +23,8 @@ outPath = path.join(__dirname, outPath);
 var allFileList = generateAllTypeScriptFileList(sourcePath);
 
 var cp_exec = require('child_process').exec;
-var async = require('async');
-var crc32 = require("crc32");
+var async = libs.require('async');
+var crc32 = libs.require('crc32');
 var fs = require("fs");
 var CRC32BuildTS = "buildTS.local";
 var crc32Data;
@@ -36,7 +36,6 @@ else {
     crc32Data = JSON.parse(txt);
 }
 
-
 var checkTypeScriptCompiler = "tsc";
 var tsc = cp_exec(checkTypeScriptCompiler);
 tsc.on('exit', function (code) {
@@ -44,11 +43,11 @@ tsc.on('exit', function (code) {
         buildAllTypeScript(allFileList);
     }
     else {
-        throw new Error("TypeScript编译器尚未安装，请执行 npm install -g typescript 进行安装");
+        console.log ("TypeScript编译器尚未安装，请执行 npm install -g typescript 进行安装");
+        process.exit(1);
     }
 });
 
-console.log(path)
 /**
  * 编译单个TypeScript文件
  * @param file
@@ -81,9 +80,9 @@ function build(file, callback) {
 function buildAllTypeScript(allFileList) {
     async.forEachLimit(allFileList, 2, function (file, callback) {
         //console.log(path);
-        var content = fs.readFileSync(path.join(sourcePath,file), "utf8");
+        var content = fs.readFileSync(path.join(sourcePath, file), "utf8");
         var data = crc32(content);
-        if (crc32Data[path] == data) {
+        if (crc32Data[file] == data) {
             //不需要重新编译
             callback(null, file);
         }
@@ -117,7 +116,7 @@ function buildAllTypeScript(allFileList) {
  */
 
 function generateAllTypeScriptFileList(sourcePath) {
-    var libs = require("./egret_nodejs_libs");
+
     return libs.loopFileSync(sourcePath, filter);
 
     function filter(path) {

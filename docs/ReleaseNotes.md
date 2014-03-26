@@ -4,11 +4,39 @@ Egret Release Notes
 
 欢迎您使用Egret
 
-最近更新时间：2014年3月24日
+
+
+### Egret 0.9.1 Prerelease Release Notes
+
+最近更新时间：2014年3月27日
+
+#### 概述
+Egret 0.9.1着重于改善开发者配置的过程和降低不必要的复杂度
+
+#### 修正问题
+* 解决 [ISSUE_1](https://github.com/egret-team/egret/issues/1) ，目前当tsc编译器未安装时，控制台会输出
+```
+TypeScript编译器尚未安装，请执行 npm install -g typescript 进行安装
+```
+* 解决 [ISSUE_2](https://github.com/egret-team/egret/issues/2) ，目前当未安装指定的nodejs模块时，控制台会输出
+```
+加载模块 ${moduleName} 失败
+请确认在 build_typescript.js 所在目录下已执行 npm install ${moduleName}
+```
+
+* 解决部分Example运行报错的问题，涉及 BitmapTest,ScrollViewTest,TableViewTest,Box2dTest
+* 重构项目文件结构，将引擎依赖的部分js库移至src/jslib文件夹，并修改对应加载路径
+* 优化.gitignore文件，确保通过TypeScript生成的JavaScript代码不会被Git自动标记
+*
+
 
 
 ### Egret 0.9 Prerelease Release Notes
 
+最近更新时间：2014年3月24日
+
+#### 概述
+此版本为Egret的初始版本
 
 #### 功能特性
 
