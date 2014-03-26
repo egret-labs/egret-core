@@ -24,7 +24,7 @@ function createExample() {
     scroll.y = 100;
     scroll.setContentSize(200, 240);
     scroll.direction = ns_egret.Direction.HORIZONTAL;
-    scroll.touchEnabled = false;
+    scroll.touchEnabled = true;
 
     var child = new ns_egret.DisplayObjectContainer();
     var texture = ns_egret.TextureCache.getInstance().getTexture("sprite_sheet.png");

@@ -31,10 +31,10 @@ var temp = [
     "egret/context/net/NetContext.js",
     "egret/context/net/HTML5NetContext.js",
     //utils start
-    "egret/utils/ZipUtils.js",
-    "egret/utils/base64.js",
-    "egret/utils/gzip.js",
-    "egret/utils/zlib.min.js",
+    "jslib/ZipUtils.js",
+    "jslib/base64.js",
+    "jslib/gzip.js",
+    "jslib/zlib.min.js",
     "egret/utils/SAXParser.js",
     "egret/utils/DOMUtils.js",
     "egret/utils/FrameworkUtils.js",
@@ -64,8 +64,8 @@ var temp = [
     "extension/gui/component/DynamicBitmap.js",
     "extension/dragonbones/dragonBones.js",
     "extension/dragonbones/DragonBonesEgretBridge.js",
-    "egret/debug/DEBUG.js"
-//    "extension/box2d/box2d.js"
+    "egret/debug/DEBUG.js",
+    "jslib/box2d.js"
 ]
 
 

@@ -1,9 +1,12 @@
-/// <reference path="DisplayObject.ts"/>
-/// <reference path="DisplayObjectContainer.ts"/>
+/// <reference path="../../../egret/display/DisplayObject.ts"/>
 /// <reference path="ScrollView.ts"/>
-/// <reference path="../tween/Tween.ts"/>
-/// <reference path="../core/Constant.ts"/>
-/// <reference path="../tween/Ease.ts"/>
+/// <reference path="../../../egret/tween/Tween.ts"/>
+/// <reference path="../../../egret/core/Constant.ts"/>
+/// <reference path="../../../egret/tween/Ease.ts"/>
+/// <reference path="../../../egret/display/DisplayObjectContainer.ts"/>
+/// <reference path="../../../egret/display/Bitmap.ts"/>
+/// <reference path="../../../egret/texture/Texture.ts"/>
+/// <reference path="../../../egret/texture/TextureCache.ts"/>
 /**
  * Copyright (c) Egret-Labs.org. Permission is hereby granted, free of charge,
  * to any person obtaining a copy of this software and associated documentation
@@ -22,7 +25,7 @@
  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-module ns_egret{
+module ns_egret {
     /**
      * MovieClip是位图动画序列类，由FlashPro + egret插件生成配置文件
      */
@@ -103,7 +106,7 @@ module ns_egret{
                     var tw = ns_egret.Tween.get(child);
                     child.x = this._itemWidth;
                     tw.wait(100 * count + 10);
-                    tw.to({"x":0}, 200);
+                    tw.to({"x": 0}, 200);
                     count++;
                 }
             }
@@ -120,7 +123,7 @@ module ns_egret{
                     var tw = ns_egret.Tween.get(child);
                     child.x = 0;
                     tw.wait(100 * count + 10);
-                    tw.to({"x":this._itemWidth}, 200);
+                    tw.to({"x": this._itemWidth}, 200);
                     count++;
                 }
             }
@@ -146,8 +149,7 @@ module ns_egret{
         }
 
         private initItemList() {
-            if (this._itemWidth == 0 || this._itemHeight == 0 || this._viewWidth == 0 || this._viewHeight == 0)
-            {//有值没有付
+            if (this._itemWidth == 0 || this._itemHeight == 0 || this._viewWidth == 0 || this._viewHeight == 0) {//有值没有付
                 return;
             }
             var num = 0;

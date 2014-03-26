@@ -3,13 +3,13 @@ function getResourceList(){
 }
 
 function getDescription(){
-    return "这个项目展示了box2d";
+    return "这个项目展示了box2d，如果运行这个项目，请确定加载box2d.js文件";
 }
 
 function createExample(){
     var container = new ns_egret.DisplayObjectContainer();
     context.stage.addChild(container);
-
+ns_egret.Profiler.getInstance().run();
     var b2Vec2 = Box2D.Common.Math.b2Vec2
         , b2BodyDef = Box2D.Dynamics.b2BodyDef
         , b2Body = Box2D.Dynamics.b2Body
@@ -31,7 +31,7 @@ function createExample(){
     fixDef.shape = new b2PolygonShape;
     fixDef.shape.SetAsBox(20, 2);
     // upper
-    bodyDef.position.Set(10, ns_egret.StageDelegate.getInstance().getDesignHeight() / PTM_RATIO + 1.8);
+    bodyDef.position.Set(10,300 / PTM_RATIO + 1.8);
     world.CreateBody(bodyDef).CreateFixture(fixDef);
     // bottom
     bodyDef.position.Set(10, -1.8);
@@ -48,12 +48,12 @@ function createExample(){
     rectContainer = new ns_egret.DisplayObjectContainer();
     container.addChild(rectContainer);
 
-    addNewSpriteWithCoords(ns_egret.StageDelegate.getInstance().getDesignWidth() / 2, ns_egret.StageDelegate.getInstance().getDesignHeight() / 2);
+    addNewSpriteWithCoords(400 / 2, 300 / 2);
 
     var label = new ns_egret.TextField();
     label.size = 32;
     label.text = "Click";
-    label.x = ns_egret.StageDelegate.getInstance().getDesignWidth() / 2 - 40;
+    label.x = 400 / 2 - 40;
     label.y = 40;
     container.addChild(label);
     ns_egret.Ticker.getInstance().register(box2dUpdate,this);

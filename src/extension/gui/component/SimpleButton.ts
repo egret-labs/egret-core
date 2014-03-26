@@ -1,7 +1,4 @@
-/// <reference path="DisplayObjectContainer.ts"/>
-/// <reference path="Bitmap.ts"/>
-/// <reference path="../texture/Texture.ts"/>
-/// <reference path="../texture/TextureCache.ts"/>
+
 /**
  * Copyright (c) Egret-Labs.org. Permission is hereby granted, free of charge,
  * to any person obtaining a copy of this software and associated documentation
@@ -19,7 +16,10 @@
  * FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-
+/// <reference path="../../../egret/display/DisplayObjectContainer.ts"/>
+/// <reference path="../../../egret/display/Bitmap.ts"/>
+/// <reference path="../../../egret/texture/Texture.ts"/>
+/// <reference path="../../../egret/texture/TextureCache.ts"/>
 module ns_egret{
     /**
      * MovieClip是位图动画序列类，由FlashPro + egret插件生成配置文件

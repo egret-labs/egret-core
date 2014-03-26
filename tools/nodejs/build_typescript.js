@@ -2,10 +2,9 @@
  * 将TypeScript编译为JavaScript
  * 会忽略TS2000+的错误，只会抛出TS1000+的错误
  * @example
- *   node build_typescript.js [source_path] [target_path]
+ *   node build_typescript.js [source_path]
  *
  * @param source_path:编译路径，默认为引擎代码
- * @param target_path:输出路径，默认和编译路径一致
  */
 
 var sourcePath = process.argv[2];
@@ -13,12 +12,12 @@ if (!sourcePath) {
     sourcePath = "../../src";
 }
 var outPath = process.argv[3];
-if (!outPath){
+if (!outPath) {
     outPath = sourcePath;
 }
 var path = require("path");
-sourcePath = path.join(__dirname,sourcePath);
-outPath = path.join(__dirname,outPath);
+sourcePath = path.join(__dirname, sourcePath);
+outPath = path.join(__dirname, outPath);
 
 
 var allFileList = generateAllTypeScriptFileList(sourcePath);
@@ -41,21 +40,27 @@ else {
 var checkTypeScriptCompiler = "tsc";
 var tsc = cp_exec(checkTypeScriptCompiler);
 tsc.on('exit', function (code) {
-   if (code == 0){
+    if (code == 0) {
         buildAllTypeScript(allFileList);
-   }
-    else{
-       throw new Error("TypeScript编译器尚未安装，请执行 npm install -g typescript 进行安装");
-   }
+    }
+    else {
+        throw new Error("TypeScript编译器尚未安装，请执行 npm install -g typescript 进行安装");
+    }
 });
 
+console.log(path)
 /**
  * 编译单个TypeScript文件
- * @param path
+ * @param file
  * @param callback
  */
-function build(path, callback) {
-    var cmd = "tsc " + path + " -t ES5 --outdir " +  outPath;
+function build(file, callback) {
+    var source = path.join(sourcePath, file);
+    var dirname = path.dirname(file);
+    var out = path.join(outPath, dirname);
+//    var target = path.join(outPath,file).replace(".ts",".js");
+    var cmd = "tsc " + source + " -t ES5" //这个特性暂时关闭 //--outDir " +  out;
+
     var ts = cp_exec(cmd);
     ts.stderr.on("data", function (data) {
         if (data.indexOf("error TS1") >= 0) {
@@ -64,8 +69,8 @@ function build(path, callback) {
     })
 
     ts.on('exit', function (code) {
-        console.log("[success]" + path);
-        callback(null, path);
+        console.log("[success]" + file);
+        callback(null, file);
     });
 }
 
@@ -73,19 +78,19 @@ function build(path, callback) {
  * 编译全部TypeScript文件
  * @param allFileList
  */
-function buildAllTypeScript(allFileList){
-    async.forEachLimit(allFileList, 2, function (path, callback) {
+function buildAllTypeScript(allFileList) {
+    async.forEachLimit(allFileList, 2, function (file, callback) {
         //console.log(path);
-        var content = fs.readFileSync(path, "utf8");
+        var content = fs.readFileSync(path.join(sourcePath,file), "utf8");
         var data = crc32(content);
         if (crc32Data[path] == data) {
             //不需要重新编译
-            callback(null, path);
+            callback(null, file);
         }
         else {
-            crc32Data[path] = data;
+            crc32Data[file] = data;
             //需要重新编译一下
-            build(path, callback);
+            build(file, callback);
         }
     }, function (err) {
         if (err == undefined) {
@@ -111,11 +116,11 @@ function buildAllTypeScript(allFileList){
  * @returns {Array}
  */
 
-function generateAllTypeScriptFileList(sourcePath){
+function generateAllTypeScriptFileList(sourcePath) {
     var libs = require("./egret_nodejs_libs");
-    return libs.loopFileSync(sourcePath,filter);
+    return libs.loopFileSync(sourcePath, filter);
 
-    function filter(path){
+    function filter(path) {
         return  path.indexOf(".ts") == path.length - 3 && path.indexOf(".d.ts") == -1
     }
 }

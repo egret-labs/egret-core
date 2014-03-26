@@ -1,7 +1,3 @@
-/// <reference path="DisplayObjectContainer.ts"/>
-/// <reference path="../tween/Tween.ts"/>
-/// <reference path="../core/Constant.ts"/>
-/// <reference path="../tween/Ease.ts"/>
 /**
  * Copyright (c) Egret-Labs.org. Permission is hereby granted, free of charge,
  * to any person obtaining a copy of this software and associated documentation
@@ -19,8 +15,15 @@
  * FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
+/// <reference path="../../../egret/display/DisplayObjectContainer.ts"/>
+/// <reference path="../../../egret/display/Bitmap.ts"/>
+/// <reference path="../../../egret/texture/Texture.ts"/>
+/// <reference path="../../../egret/texture/TextureCache.ts"/>
+/// <reference path="../../../egret/tween/Tween.ts"/>
+/// <reference path="../../../egret/core/Constant.ts"/>
+/// <reference path="../../../egret/tween/Ease.ts"/>
 
-module ns_egret{
+module ns_egret {
     /**
      * MovieClip是位图动画序列类，由FlashPro + egret插件生成配置文件
      */
@@ -110,8 +113,7 @@ module ns_egret{
             this._endX = 0;
             this._endY = 0;
 
-            if (this._container.parent != null)
-            {
+            if (this._container.parent != null) {
                 if (this._container.parent != this) {
                     this._container.removeFromParent();
                 }
@@ -173,7 +175,7 @@ module ns_egret{
                 var delay = Math.max(100 * num, 100);
                 delay = Math.min(delay, 300);
 
-                var tw = Tween.get(this._container, {onChange:this.moveList, onChangeObj:this});
+                var tw = Tween.get(this._container, {onChange: this.moveList, onChangeObj: this});
                 tw.to({"x": this._endX, "y": this._endY}, delay);
                 tw.call(this._backToPosition, this);
             }
@@ -230,7 +232,7 @@ module ns_egret{
                 }
             }
             if (isChange) {
-                var tw = Tween.get(this._container, {onChange:this.moveList, onChangeObj:this});
+                var tw = Tween.get(this._container, {onChange: this.moveList, onChangeObj: this});
                 tw.to({"x": this._endX, "y": this._endY}, 200);
             }
         }

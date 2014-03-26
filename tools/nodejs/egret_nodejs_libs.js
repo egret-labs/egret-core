@@ -1,9 +1,10 @@
 var libs = {};
-libs.loopFileSync = function (filePath, filter) {
+libs.loopFileSync = function (dir, filter) {
 
     var fs = require("fs");
+    var path = require("path");
     var result = [];
-    loop(filePath, filter);
+    loop(dir, filter);
 
     function loop(filePath, callback) {
         if (filePath.indexOf(".svn") >= 0) return;
@@ -16,7 +17,8 @@ libs.loopFileSync = function (filePath, filter) {
         }
         else {
             if (callback.call(libs, filePath)){
-                result.push(filePath);
+
+                result.push(path.relative(dir,filePath));
             }
 
         }

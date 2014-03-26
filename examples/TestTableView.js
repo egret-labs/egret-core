@@ -35,3 +35,7 @@ function createItemRenderer() {
     return item;
 }
 
+function updateItemRenderer(){
+
+}
+
