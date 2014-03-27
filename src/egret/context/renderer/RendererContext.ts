@@ -82,7 +82,7 @@ module ns_egret {
          * @param matrix
          * @stable A
          */
-        public transform(matrix:ns_egret.Matrix2D) {
+        public setTransform(matrix:ns_egret.Matrix2D) {
 
         }
 

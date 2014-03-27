@@ -46,19 +46,15 @@ module ns_egret {
         }
 
         drawImage(texture:Texture, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight) {
-
             sourceX = sourceX / ns_egret.MainContext.instance.rendererContext.texture_scale_factor;
             sourceY = sourceY / ns_egret.MainContext.instance.rendererContext.texture_scale_factor;
             sourceWidth = sourceWidth / ns_egret.MainContext.instance.rendererContext.texture_scale_factor;
             sourceHeight = sourceHeight / ns_egret.MainContext.instance.rendererContext.texture_scale_factor;
-            var beforeDraw = Ticker.now();
             if (DEBUG && DEBUG.DRAW_IMAGE) {
                 DEBUG.checkDrawImage(texture, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight);
             }
+            var beforeDraw = Ticker.now();
             var image = texture._bitmapData;
-//            var scale = this.texture_scale_factor;
-//            destWidth = destWidth * scale + .5;
-//            destHeight = destHeight * scale + .5;
             this.canvasContext.drawImage(image, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight);
             super.drawImage(image, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight);
 
@@ -66,18 +62,8 @@ module ns_egret {
         }
 
 
-        transform(matrix:ns_egret.Matrix2D) {
-//            return;
-//            if (matrix.a == 1 && matrix.b == 0 && matrix.c == 0 && matrix.d == 1 && matrix.tx == 0 && matrix.ty == 0){
-//                return;
-//            }
-//            if (matrix.a == 1 && matrix.b == 0 && matrix.c == 0 && matrix.d == 1){
-//                this.translate(matrix.tx,matrix.ty);
-//                return;
-//            }
-//            var stageDelegate:StageDelegate = StageDelegate.getInstance();
-//            this.canvasContext.translate(matrix.tx,matrix.ty);
-            this.canvasContext.transform(matrix.a, matrix.b, matrix.c, matrix.d, matrix.tx, matrix.ty);
+        setTransform(matrix:ns_egret.Matrix2D) {
+            this.canvasContext.setTransform(matrix.a, matrix.b, matrix.c, matrix.d, matrix.tx, matrix.ty);
         }
 
         translate(x:number, y:number){
@@ -97,13 +83,16 @@ module ns_egret {
         }
 
         setAlpha(alpha:number, blendMode:ns_egret.BlendMode) {
-            if (alpha != 1) {
-                this.canvasContext.globalAlpha *= alpha;
+            if (alpha != this.canvasContext.globalAlpha) {
+                this.canvasContext.globalAlpha = alpha;
             }
             if (blendMode) {
                 this.canvasContext.globalCompositeOperation = blendMode.value;
             }
-
+            else
+            {
+                this.canvasContext.globalCompositeOperation = ns_egret.BlendMode.NORMAL.value;
+            }
         }
 
         setupFont(font:string, textAlign:string, textBaseline:string) {
@@ -140,7 +129,6 @@ module ns_egret {
         }
 
         clip(x, y, w, h) {
-            var stageDelegate:StageDelegate = StageDelegate.getInstance();
             this.canvasContext.beginPath();
             this.canvasContext.rect(x, y, w, h);
             this.canvasContext.clip();

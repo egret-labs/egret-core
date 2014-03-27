@@ -112,11 +112,16 @@ module ns_egret {
          */
         public mask:Rectangle;
 
+        public worldTransform:ns_egret.Matrix2D;
+        public worldAlpha:number;
+
 
         constructor() {
             super();
             this.x = this.y = 0;
             this.visible = true;
+            this.worldTransform = new ns_egret.Matrix2D();
+            this.worldAlpha = 1;
         }
 
         /**
@@ -129,7 +134,6 @@ module ns_egret {
             }
             this.preDraw();
             this.draw(renderContext);
-//        renderContext.globalAlpha *= .5;
         }
 
         /**
@@ -150,11 +154,18 @@ module ns_egret {
             if (hasDrawCache) {
                 return;
             }
-
-            renderContext.save();
             this.updateTransform(renderContext);
+            var o = this;
+            renderContext.setAlpha(o.worldAlpha, o.blendMode);
+            renderContext.setTransform(o.worldTransform);
+            if (o.mask) {
+                renderContext.save();
+                renderContext.clip(o.mask.x, o.mask.y, o.mask.width, o.mask.height);
+            }
             this.render(renderContext);
-            renderContext.restore();
+            if (o.mask) {
+                renderContext.restore();
+            }
         }
 
 
@@ -164,12 +175,23 @@ module ns_egret {
          */
             updateTransform(renderContext:RendererContext) {
             var o = this;
-            var mtx = Matrix2D.identity.appendTransformFromDisplay(this);
-            renderContext.setAlpha(o.alpha, o.blendMode);
-            renderContext.transform(mtx);
-            if (o.mask) {
-                renderContext.clip(o.mask.x, o.mask.y, o.mask.width, o.mask.height);
+            o.worldTransform.identity();
+            o.worldTransform = o.worldTransform.appendMatrix(o.parent.worldTransform);
+            var anchorX, anchorY;
+            if (o.relativeAnchorPointX != 0 || o.relativeAnchorPointY != 0) {
+                var bounds = o.getBounds();
+                anchorX = bounds.width * o.relativeAnchorPointX;
+                anchorY = bounds.height * o.relativeAnchorPointY;
             }
+            else {
+                anchorX = o.anchorPointX;
+                anchorY = o.anchorPointY;
+            }
+            o.worldTransform.appendTransform(o.x, o.y, o.scaleX, o.scaleY, o.rotation,
+                o.skewX, o.skewY, anchorX, anchorY);
+
+            o.worldAlpha = o.parent.worldAlpha * o.alpha;
+
         }
 
         /**
@@ -178,6 +200,15 @@ module ns_egret {
          */
             render(renderContext:RendererContext) {
 
+        }
+
+        public ignoreRender():Boolean {
+            var bounds = DisplayObject.getTransformBounds(this.getBounds(), this.worldTransform);
+            if (bounds.x + bounds.width <= 0 || bounds.x >= ns_egret.MainContext.instance.stage.stageWidth
+                || bounds.y + bounds.height <= 0 || bounds.y >= ns_egret.MainContext.instance.stage.stageHeight) {
+                return true;
+            }
+            return false;
         }
 
         /**
@@ -222,7 +253,6 @@ module ns_egret {
             var matrix = Matrix2D.identity.identity();
             var o = this;
             while (o != null) {
-//            matrix.prependTransform(o.x, o.y, o.scaleX, o.scaleY, o.rotation, o.skewX, o.skewY, o.regX, o.regY).prependProperties(o.alpha, o.shadow, o.compositeOperation);
                 if (o.relativeAnchorPointX != 0 || o.relativeAnchorPointY != 0) {
                     var bounds = o.getBounds();
                     matrix.prependTransform(o.x, o.y, o.scaleX, o.scaleY, o.rotation, o.skewX, o.skewY,
@@ -276,9 +306,7 @@ module ns_egret {
                 return null;
             }
             var bound:Rectangle = this.getBounds();
-
-            if (0 < x && x < bound.width
-                && 0 < y && y < bound.height) {
+            if (0 < x && x < bound.width && 0 < y && y < bound.height) {
                 if (this.mask) {
                     if (this.mask.x < x && x < this.mask.x + this.mask.width && this.mask.y < y && y < this.mask.y + this.mask.height) {
                         return this;
@@ -361,9 +389,7 @@ module ns_egret {
         }
 
 
-        static getTransformBounds(displayObject:DisplayObject) {
-            var bounds = displayObject.getBounds();
-            var mtx = displayObject.getMatrix();
+        static getTransformBounds(bounds:ns_egret.Rectangle, mtx:ns_egret.Matrix2D) {
             var x = bounds.x, y = bounds.y, width = bounds.width, height = bounds.height;
 
 //            if (x || y) {
@@ -429,30 +455,35 @@ unstable.cache_api = {};
 unstable.cache_api.cacheAsBitmap = function (bool) {
     var display:ns_egret.DisplayObject = this;
     if (bool) {
-
-
         var renderTexture = new ns_egret.RenderTexture();
         renderTexture.drawToTexture(display);
         display.renderTexture = renderTexture;
     }
 }
 unstable.cache_api.draw = function (renderContext) {
-    var display = this;
+    var display:ns_egret.DisplayObject = this;
     if (display.renderTexture) {
-        renderContext.save();
-        this.updateTransform(renderContext);
         var renderTexture = display.renderTexture;
-        var width = renderTexture.getTextureWidth();
-        var height = renderTexture.getTextureHeight();
         var offsetX = renderTexture.offsetX;
         var offsetY = renderTexture.offsetY;
-        renderContext.drawImage(display.renderTexture, 0, 0, width, height, offsetX, offsetY, width, height);
-        renderContext.restore();
+        var width = renderTexture.getTextureWidth();
+        var height = renderTexture.getTextureHeight();
+        display.updateTransform(renderContext);
+        renderContext.setAlpha(display.alpha, display.blendMode);
+        renderContext.setTransform(display.worldTransform);
+        if (display.mask) {
+            renderContext.save();
+            renderContext.clip(display.mask.x, display.mask.y, display.mask.width, display.mask.height);
+        }
+        renderContext.drawImage(display.renderTexture, 0, 0, width, height,
+            offsetX, offsetY, width / ns_egret.MainContext.instance.rendererContext.texture_scale_factor, height / ns_egret.MainContext.instance.rendererContext.texture_scale_factor);
+        if (display.mask) {
+            renderContext.restore();
+        }
         return true;
     }
     else {
         return false;
     }
 }
-
 ns_egret.DisplayObject.prototype.cacheAsBitmap = unstable.cache_api.cacheAsBitmap;

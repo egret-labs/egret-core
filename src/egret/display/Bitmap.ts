@@ -76,6 +76,10 @@ module ns_egret {
          * @param renderContext
          */
             render(renderContext:RendererContext) {
+            if(super.ignoreRender())
+            {
+                return;
+            }
             var locTexture = this.texture;
             if (locTexture == null || locTexture._bitmapData == null) {
                 return;

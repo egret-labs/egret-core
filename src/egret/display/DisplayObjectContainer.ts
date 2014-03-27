@@ -174,7 +174,7 @@ module ns_egret {
 //            renderContext.restore();
 //        }
 
-        public render(renderContext) {
+        public render(renderContext:RendererContext) {
             for (var i = 0 , length = this._children.length; i < length; i++) {
                 var child:DisplayObject = this._children[i];
                 child.visit(renderContext);
@@ -194,7 +194,7 @@ module ns_egret {
             for (var i = 0; i < l; i++) {
                 var child = this._children[i];
                 var bounds:Rectangle;
-                if (!child.visible || !(bounds = DisplayObject.getTransformBounds(child))) {//child.getBounds())) {
+                if (!child.visible || !(bounds = DisplayObject.getTransformBounds(child.getBounds(), child.getMatrix()))) {//child.getBounds())) {
                     continue;
                 }
                 var x1 = bounds.x , y1 = bounds.y,

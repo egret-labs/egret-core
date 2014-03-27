@@ -78,30 +78,27 @@ module ns_egret {
         }
 
         public drawToTexture(displayObject:ns_egret.DisplayObject):void {
-
-            var scale = this.texture_scale_factor;
-//            this.texture_scale_factor = 1;
-
             var scale = 1 / ns_egret.MainContext.instance.rendererContext.texture_scale_factor;
             var cacheCanvas = this.cacheCanvas;
-            var bounds = displayObject.getBounds()
+            var bounds = displayObject.getBounds();
             cacheCanvas.width = bounds.width;
             cacheCanvas.height = bounds.height;
             this.offsetX = bounds.x;
             this.offsetY = bounds.y;
             var canvasContext = cacheCanvas.getContext("2d");
             canvasContext.scale(scale,scale);
-            canvasContext.translate(-bounds.x, -bounds.y);
+            displayObject.worldTransform.identity();
+            displayObject.worldTransform.append(1,0,0,1,-bounds.x, -bounds.y);
 
             var renderContext = new ns_egret.HTML5CanvasRenderer(cacheCanvas);
             renderContext.texture_scale_factor = 1 /  scale;
-            renderContext.save();
+            displayObject.worldAlpha = 1;
             displayObject.render(renderContext);
-            renderContext.restore();
 
             this.bitmapData = this.cacheCanvas;
 
-//            this.texture_scale_factor = scale;
+//            renderContext.strokeRect(-bounds.x, -bounds.y,cacheCanvas.width,cacheCanvas.height,"#ff0000");
+//            document.documentElement.appendChild(cacheCanvas);
         }
     }
 }

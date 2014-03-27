@@ -32,6 +32,9 @@ module ns_egret{
             super();
             this.touchEnabled = true;
             this._isRunning = true;
+            var canvas:HTMLCanvasElement = document.getElementById(StageDelegate.canvas_name);
+            this.stageWidth = canvas.width;
+            this.stageHeight = canvas.height;
         }
 
         /**
@@ -83,6 +86,10 @@ module ns_egret{
             //todo
             return Rectangle.identity.initialize(0, 0, 100000, 100000);
 //            return Rectangle.identity.initialize(0, 0, this.stageWidth, this.stageHeight);
+        }
+
+        updateTransform(renderContext:RendererContext) {
+
         }
     }
 }
