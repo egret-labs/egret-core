@@ -34,22 +34,18 @@ module ns_egret {
             this.inputElement.value = value;
         }
 
-        public open(x:number, y:number, width:number = 100, height:number = 20) {
-
-//            return;
-            var div = ns_egret.Browser.getInstance().$new("div");
+        public open(x:number, y:number, width:number = 160, height:number = 21) {
             var inputElement = document.createElement("input");
             inputElement.type = "text";
             inputElement.style.fontSize = "20px";
             inputElement.style.color = "#FFFFFF";
-            inputElement.style.border = 0;
-            inputElement.style.background = "transparent";
-            inputElement.style.width = "100%";
-            inputElement.style.height = "100%";
-            inputElement.style.active = 0;
-
+            inputElement.style.borderStyle = "none";
+            inputElement.style.background = "none";
+            inputElement.style.width = width * ns_egret.StageDelegate.getInstance().getScaleX() + "px";
+            inputElement.style.height = height * ns_egret.StageDelegate.getInstance().getScaleY() + "px";
             inputElement.style.outline = "medium";
 
+            var div = ns_egret.Browser.getInstance().$new("div");
             div.style.position = 'absolute';
             div.position.x = x * ns_egret.StageDelegate.getInstance().getScaleX();
             div.style.width = width * ns_egret.StageDelegate.getInstance().getScaleX() + "px";
@@ -61,8 +57,8 @@ module ns_egret {
             var stageDelegateDiv = ns_egret.Browser.getInstance().$("#StageDelegateDiv");
             if (!stageDelegateDiv) {
                 var container = document.getElementById(ns_egret.StageDelegate.canvas_div_name);
-                var height = container.style.height.split("px")[0];//todo
-                var width = container.style.width.split("px")[0];
+                var height = container.clientHeight;
+                var width = container.clientWidth;
                 stageDelegateDiv = ns_egret.Browser.getInstance().$new("div");
                 stageDelegateDiv.id = "StageDelegateDiv";
                 stageDelegateDiv.style.position = 'absolute';
