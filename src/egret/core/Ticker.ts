@@ -76,7 +76,7 @@ module ns_egret {
                     continue;
                 }
                 if (obj.eventName == "enterFrame"
-                    && (!(this instanceof DisplayObject) || this.isUseCapture == obj.useCapture)) {
+                    && (!(this instanceof DisplayObject) || this._isUseCapture == obj.useCapture)) {
                     var dt = thisTime - this._time;
                     dt *= this._timeScale;
                     obj.func.apply(obj.thisObj, [dt]);

@@ -184,10 +184,10 @@ module ns_egret {
             for (i = 0; i < l; i++) {
                 target = arr[i];
                 if (i < l / 2) {
-                    target.isUseCapture = true;
+                    target._isUseCapture = true;
                 }
                 else {
-                    target.isUseCapture = false;
+                    target._isUseCapture = false;
                 }
                 locTouchEventHelperData.currentTarget = target;
                 var isStop = target.dispatchEvent(eventName, locTouchEventHelperData);

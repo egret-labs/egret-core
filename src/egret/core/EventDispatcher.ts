@@ -27,15 +27,16 @@ module ns_egret{
     export class EventDispatcher {
 
         /**
-         * @private 引擎内部调用
+         * 引擎内部调用
+         * @private
          */
         public _eventDataList;
 
         /**
-         * @private 引擎内部调用
-         * todo:所有内部调用的public方法需要标记_前缀 【@林超捷】
+         * 引擎内部调用
+         * @private
          */
-        public isUseCapture:Boolean = false;
+        public _isUseCapture:Boolean = false;
 
         /**
          * 添加事件侦听器
@@ -134,7 +135,7 @@ module ns_egret{
                 }
                 //显示对象需要判断一下捕获还是冒泡
                 if (obj.eventName == eventName
-                    && (!(this instanceof DisplayObject) || this.isUseCapture == obj.useCapture)) {
+                    && (!(this instanceof DisplayObject) || this._isUseCapture == obj.useCapture)) {
                     isStop = obj.func.apply(obj.thisObj, arguments);
                     result = result || isStop;
                 }
