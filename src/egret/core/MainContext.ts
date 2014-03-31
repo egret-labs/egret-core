@@ -79,7 +79,8 @@ module ns_egret{
             var context = this.rendererContext;
             context.clearScreen();
             this.dispatchEvent(MainContext.EVENT_START_RENDER);
-            this.stage.visit(context);
+            this.stage.updateTransform();
+            this.stage.draw(context);
             this.dispatchEvent(MainContext.EVENT_FINISH_RENDER);
         }
 

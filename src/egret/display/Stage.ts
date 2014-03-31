@@ -88,8 +88,11 @@ module ns_egret{
 //            return Rectangle.identity.initialize(0, 0, this.stageWidth, this.stageHeight);
         }
 
-        updateTransform(renderContext:RendererContext) {
-
+        public updateTransform() {
+            for (var i = 0 , length = this._children.length; i < length; i++) {
+                var child:DisplayObject = this._children[i];
+                child.updateTransform();
+            }
         }
     }
 }

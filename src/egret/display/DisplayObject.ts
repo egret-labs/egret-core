@@ -128,33 +128,15 @@ module ns_egret {
          * @private
          * @param renderContext
          */
-            visit(renderContext:RendererContext) {
-            if (!this.visible) {
-                return;
-            }
-            this.preDraw();
-            this.draw(renderContext);
-        }
-
-        /**
-         * @private
-         */
-            preDraw() {
-
-        }
-
-        /**
-         * @private
-         * @param renderContext
-         */
             draw(renderContext:RendererContext) {
-
-
+            if(!this.visible)
+            {
+               return;
+            }
             var hasDrawCache = unstable.cache_api.draw.call(this, renderContext);
             if (hasDrawCache) {
                 return;
             }
-            this.updateTransform(renderContext);
             var o = this;
             renderContext.setAlpha(o.worldAlpha, o.blendMode);
             renderContext.setTransform(o.worldTransform);
@@ -173,7 +155,7 @@ module ns_egret {
          * @private
          * @param renderContext
          */
-            updateTransform(renderContext:RendererContext) {
+            updateTransform() {
             var o = this;
             o.worldTransform.identity();
             o.worldTransform = o.worldTransform.appendMatrix(o.parent.worldTransform);
@@ -191,7 +173,6 @@ module ns_egret {
                 o.skewX, o.skewY, anchorX, anchorY);
 
             o.worldAlpha = o.parent.worldAlpha * o.alpha;
-
         }
 
         /**
@@ -468,8 +449,8 @@ unstable.cache_api.draw = function (renderContext) {
         var offsetY = renderTexture.offsetY;
         var width = renderTexture.getTextureWidth();
         var height = renderTexture.getTextureHeight();
-        display.updateTransform(renderContext);
-        renderContext.setAlpha(display.alpha, display.blendMode);
+        display.updateTransform();
+        renderContext.setAlpha(display.worldAlpha, display.blendMode);
         renderContext.setTransform(display.worldTransform);
         if (display.mask) {
             renderContext.save();

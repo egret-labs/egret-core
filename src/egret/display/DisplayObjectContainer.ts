@@ -158,26 +158,24 @@ module ns_egret {
             this.numChildren = 0;
         }
 
-//          这个方法经过重构，已经可以无需重写了
-//        /**
-//         * @see egret.DisplayObject.draw
-//         * @param renderContext
-//         */
-//        public draw(renderContext:RendererContext) {
-//            var hasDrawCache = unstable.cache_api.draw.call(this,renderContext);
-//            if (hasDrawCache){
-//                return;
-//            }
-//            renderContext.save();
-//            this.updateTransform(renderContext);
-//            this.render(renderContext);
-//            renderContext.restore();
-//        }
-
-        public render(renderContext:RendererContext) {
+        public updateTransform() {
+            if (!this.visible) {
+                return;
+            }
+            super.updateTransform();
             for (var i = 0 , length = this._children.length; i < length; i++) {
                 var child:DisplayObject = this._children[i];
-                child.visit(renderContext);
+                child.updateTransform();
+            }
+        }
+
+        public render(renderContext:RendererContext) {
+            if (!this.visible) {
+                return;
+            }
+            for (var i = 0 , length = this._children.length; i < length; i++) {
+                var child:DisplayObject = this._children[i];
+                child.draw(renderContext);
             }
         }
 
@@ -277,7 +275,6 @@ module ns_egret {
                 child._onRemoveFromStage();
             }
         }
-
     }
 }
 
