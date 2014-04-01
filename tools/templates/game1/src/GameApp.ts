@@ -6,7 +6,10 @@ class GameApp {
 
     public startGame():void {
         ns_egret.SoundContext.context = new ns_egret.HTML5SoundContext();
-        ns_egret.StageDelegate.getInstance().setDesignSize(480, 800, 2);
+        var container = new ns_egret.EqualToFrame();
+        var content = ns_egret.Browser.getInstance().isMobile ? new ns_egret.FixedWidth() : new ns_egret.FixedSize(480, 800);
+        var policy = new ns_egret.ResolutionPolicy(container, content);
+        ns_egret.StageDelegate.getInstance().setDesignSize(480, 800, policy);
         var canvas:HTMLCanvasElement = document.getElementById(ns_egret.StageDelegate.canvas_name);
         ns_egret.MainContext.instance.stage.stageWidth = canvas.width;
         ns_egret.MainContext.instance.stage.stageHeight = canvas.height;
