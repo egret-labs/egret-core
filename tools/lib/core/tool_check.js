@@ -38,6 +38,8 @@ function getTool(name){
 		case "export_packer":
 			fileName = "export_texture_packer";
 			break;
+		default:
+			fileName = "help";
 	}
 
     var pluginPath = path.join(__dirname, "../tools", fileName + ".js");
