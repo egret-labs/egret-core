@@ -15,10 +15,15 @@ function run(currDir, args, opts) {
     }
 
     var configPath = path.join(currDir, "config.json");
+    var engine = opts["-e"] || opts["-engine"];
+
     var callback = function () {
         var txt = fs.readFileSync(configPath, "utf8");
         var gameData = JSON.parse(txt);
         gameData["game"][projName] = path.join(projName, "/");
+        if (engine && engine.length > 0) {
+            gameData["engine"] = path.join("engine", "/");
+        }
 
         var str = JSON.stringify(gameData, "\t", "\r");
         fs.writeFile(configPath, str, function (err) {
@@ -33,14 +38,15 @@ function run(currDir, args, opts) {
         callback();
     }
 
+    //创建 引擎目录
+    if (engine && engine.length > 0) {
+        libs.copy(engine[0], path.join(currDir, "engine"));
+    }
+    
     var projPath = path.join(currDir, projName);
     //创建 游戏目录
     libs.copy(path.join(source, "game1"), projPath); 
-
-    //创建 引擎目录
-    if (opts["-a"]) {//所有
-        libs.copy(path.join(source, "engine"), path.join(currDir, "engine"));
-    }
+    
 
     console.log("创建成功!");
 }
