@@ -24,9 +24,11 @@ $ npm install -g
 创建项目
 ```
 $ cd ${egret_workspace}
-$ egret c HelloEgret -a | egret c HelloEgret
+$ egret c HelloEgret -e ${egret_root}/src   同时生成引擎目录，创建第一个项目时使用
+$ egret c HelloEgret                        仅生成游戏目录，非第一项目时使用
 ```
-> 同一个工作目录可以有多个游戏项目（共享一个egret引擎）。当创建第一项目时，切记加上 '-a'（同时生成引擎目录），之后的几个都不需要加 '-a'
+> 同一个工作目录可以有多个游戏项目（共享一个egret引擎）。
+下面俩个命令为创建项目的俩种方式。
 
 编译代码
 ```
