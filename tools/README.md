@@ -30,12 +30,12 @@ $ egret c HelloEgret -a | egret c HelloEgret
 
 编译代码
 ```
-$ egret b | egret b -e | egret b -g | egret b -g HelloEgret
+$ egret b  同时编译引擎代码和所有的游戏项目代码
+$ egret b -e 仅编译引擎代码
+$ egret b -g 编译所有的游戏项目代码
+$ egret b -g HelloEgret 编译特定的 某个游戏项目（HelloEgret）代码
 ```
-> egret b 同时编译 引擎代码和所有的游戏项目代码
-  egret b -e 仅编译引擎代码
-  egret b -g 编译所有的游戏项目代码
-  egret b -g HelloEgret 编译特定的 某个游戏项目代码
+
 
 运行项目（如HelloEgret）
 > 以浏览器站点形式 查看 ${egret_workspace}/output/HelloEgret/launcher/index.html
