@@ -7,6 +7,12 @@
     },
     "dependencies": {
         "crc32": "*",
+        "plist": "*",
+        "cp-r": "*",
+        "rm-r": "*",
         "async": "*"
+    },
+    "bin": {
+        "egret": "./bin/egret"
     }
 }

@@ -1,3 +1,5 @@
+var copy = require('cp-r')
+
 var loopFileSync = function (dir, filter) {
 
     var fs = require("fs");
@@ -41,5 +43,10 @@ var _require = function(moduleName){
 
 }
 
+var _copy = function(sourceFile, outputFile, callback) {
+    copy(sourceFile, outputFile).read(callback);
+}
+
 exports.loopFileSync = loopFileSync;
 exports.require = _require;
+exports.copy = _copy;
