@@ -17,11 +17,12 @@
  */
 module ns_egret{
     /**
-     * @class SpriteSheet类是位图SpriteSheet的配置文件。包括一组SpriteSheetFrame
+     * SpriteSheet类是位图SpriteSheet的配置文件。包括一组SpriteSheetFrame
      * 每一个Bitmap对象都可以设置其SpriteSheetFrame，实现显示纹理的特定区域
      * 在WebGL / OpenGL上，这种做法可以显著提升性能
      * 同时，SpriteSheet可以很方便的进行素材整合，降低HTTP请求数量
      * todo: GitHub egret的SpriteSheet
+     * @class ns_egret.SpriteSheet
      */
     export class SpriteSheet {
 
@@ -96,5 +97,10 @@ module ns_egret{
          * 表示这个Frame显示了之后需要在x方向的渲染偏移量
          */
         public offX:number;
+
+        /**
+         * 表示这个Frame显示了之后需要在y方向的渲染偏移量
+         */
+        public offY:number;
     }
 }
