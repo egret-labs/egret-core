@@ -29,6 +29,15 @@ function getTool(name){
 		case "help":
 			fileName = "help";
 			break;
+		case "export_font":
+			fileName = "export_bitmapfont";
+			break;
+		case "export_ccb":
+			fileName = "export_cocos_builder";
+			break;
+		case "export_packer":
+			fileName = "export_texture_packer";
+			break;
 	}
 
     var pluginPath = path.join(__dirname, "../tools", fileName + ".js");
