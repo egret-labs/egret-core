@@ -42,7 +42,7 @@ $ egret b -g HelloEgret 编译特定的 某个游戏项目（HelloEgret）代码
 
 项目结构
 ```
-your_workspace
+egret_workspace
   |-- engine //引擎源代码目录（src）
   |-- your_project   //游戏逻辑目录
         |-- src //游戏代码目录
