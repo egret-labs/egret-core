@@ -48,8 +48,13 @@ your_workspace
         |-- src //游戏代码目录
         |-- assets //游戏资源目录
         |-- launcher //游戏入口的代码目录
+  |-- your_project_2
+  |-- your_project_3
   |-- output //最终发布目录，由assets、launcher、src和engine通过脚本编译或拷贝至此目录
-        |-- launcher/index.html 最终发布入口
+        |-- your_project
+              |-- launcher/index.html 最终发布入口
+        |-- your_project_2
+        |-- your_project_3
 ```
 
 
