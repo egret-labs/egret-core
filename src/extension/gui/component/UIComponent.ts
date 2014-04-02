@@ -18,7 +18,9 @@
 module ns_egret {
 
 
-    export class UIComponent {
+    export class UIComponent extends DisplayObject{
+
+
 
     }
 
