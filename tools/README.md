@@ -1,31 +1,34 @@
-Egret Tools
+Egret Command Line Tools
 ================================================
-Current Version: v0.9.2
+Current Version: 0.9.2
 
 
 
 简介
 -------------------
 
-Egret Tools是用于创建、编译Egret项目，包含一系列命名操作。
+Egret Command Line Tools简称简称Egret CLT，是用于创建、编译Egret项目，包含一系列命名操作的脚本集合。
+
+Egret 0.9.2废弃了之前分散的脚本执行方式，改为将一个脚本作为入口，集中调用其他脚本。
 
 
 
 如何使用
--------------------------
-到对应网站下载
+------------------------
 
 配置全局编译脚本
 ```
-$ cd ${egret_root}/tools
+$ cd ${egret_root}/tools // ${egret_root}指下载后本地的egret文件夹
 $ npm install -g
 ```
 
+> 如果上述命令执行失败，请先查看系统当前用户是否有管理员权限
+
 创建项目
 ```
-$ cd ${egret_workspace}
-$ egret c HelloEgret -e ${egret_root}/src   同时生成引擎目录，创建第一个项目时使用
-$ egret c HelloEgret                        仅生成游戏目录，非第一项目时使用
+$ cd ${egret_workspace} // ${egret_workspace}指你的工作目录，注意，此目录请务必可以被你的WebServer访问到
+$ egret c HelloEgret -e ${egret_root}/src   生成引擎项目和游戏项目，创建第一个项目时使用
+$ egret c HelloEgret                        仅生成游戏项目，非第一项目时使用
 ```
 > 综上所述，同一个工作目录下可以创建多个游戏项目，并共享同一份egret代码库。
 
