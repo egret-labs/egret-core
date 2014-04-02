@@ -40,6 +40,18 @@ $ egret b -g 编译所有的游戏项目代码
 $ egret b -g HelloEgret 编译特定的 某个游戏项目（HelloEgret）代码
 ```
 
+项目结构
+```
+your_workspace
+  |-- engine //引擎源代码目录（src）
+  |-- your_project   //游戏逻辑目录
+        |-- src //游戏代码目录
+        |-- assets //游戏资源目录
+        |-- launcher //游戏入口的代码目录
+  |-- output //最终发布目录，由assets、launcher、src和engine通过脚本编译或拷贝至此目录
+        |-- launcher/index.html 最终发布入口
+```
+
 
 运行项目（如HelloEgret）
 > 以浏览器站点形式 查看 http://${your_website_localhost}/${egret_workspace}/output/HelloEgret/launcher/index.html
