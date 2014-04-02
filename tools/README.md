@@ -18,7 +18,8 @@ Egret 0.9.2废弃了之前分散的脚本执行方式，改为将一个脚本作
 
 配置全局编译脚本
 ```
-$ cd ${egret_root}/tools // ${egret_root}指下载后本地的egret文件夹
+# {egret_root}指下载后本地的egret文件夹
+$ cd {egret_root}/tools 
 $ npm install -g
 ```
 
@@ -26,8 +27,9 @@ $ npm install -g
 
 创建项目
 ```
-$ cd ${egret_workspace} // ${egret_workspace}指你的工作目录，注意，此目录请务必可以被你的WebServer访问到
-$ egret c HelloEgret -e ${egret_root}/src   生成引擎项目和游戏项目，创建第一个项目时使用
+# {egret_workspace}指你的工作目录，注意，此目录请务必可以被你的WebServer访问到
+$ cd {egret_workspace} // 
+$ egret c HelloEgret -e {egret_root}/src   生成引擎项目和游戏项目，创建第一个项目时使用
 $ egret c HelloEgret                        仅生成游戏项目，非第一项目时使用
 ```
 > 综上所述，同一个工作目录下可以创建多个游戏项目，并共享同一份egret代码库。
