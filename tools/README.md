@@ -28,7 +28,7 @@ $ npm install -g
 创建项目
 ```
 # {egret_workspace}指你的工作目录，注意，此目录请务必可以被你的WebServer访问到
-$ cd {egret_workspace} // 
+$ cd {egret_workspace} 
 $ egret c HelloEgret -e {egret_root}/src   生成引擎项目和游戏项目，创建第一个项目时使用
 $ egret c HelloEgret                        仅生成游戏项目，非第一项目时使用
 ```
