@@ -1,6 +1,7 @@
 /// <reference path="RendererContext.ts"/>
 /// <reference path="../../core/Geometry.ts"/>
 /// <reference path="../../core/StageDelegate.ts"/>
+/// <reference path="../../core/RenderFilter.ts"/>
 /// <reference path="../../debug/DEBUG.ts"/>
 /**
  * Copyright (c) Egret-Labs.org. Permission is hereby granted, free of charge,
@@ -32,12 +33,12 @@ module ns_egret {
         }
 
         clearScreen() {
-            var canvas = this.canvas;
-            //todo:temp
             this.canvasContext.setTransform(1, 0, 0, 1, 0, 0);
-            this.clearRect(0, 0, canvas.width, canvas.height);
-
-
+            var list = RenderFilter.getInstance().getDrawAreaList();
+            for (var i:number = 0 , l:number = list.length; i < l; i++) {
+                var area = list[i];
+                this.clearRect(area.x, area.y, area.width, area.height);
+            }
             this.renderCost = 0;
         }
 
@@ -53,12 +54,11 @@ module ns_egret {
             if (DEBUG && DEBUG.DRAW_IMAGE) {
                 DEBUG.checkDrawImage(texture, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight);
             }
-            var beforeDraw = Ticker.now();
             var image = texture._bitmapData;
+            var beforeDraw = ns_egret.Ticker.now();
             this.canvasContext.drawImage(image, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight);
             super.drawImage(image, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight);
-
-            this.renderCost += Ticker.now() - beforeDraw;
+            this.renderCost += ns_egret.Ticker.now() - beforeDraw;
         }
 
 
@@ -66,7 +66,7 @@ module ns_egret {
             this.canvasContext.setTransform(matrix.a, matrix.b, matrix.c, matrix.d, matrix.tx, matrix.ty);
         }
 
-        translate(x:number, y:number){
+        translate(x:number, y:number) {
 //            return;
 //            if (x == 0 && y == 0) return;
             this.canvasContext.translate(x, y);
@@ -89,8 +89,7 @@ module ns_egret {
             if (blendMode) {
                 this.canvasContext.globalCompositeOperation = blendMode.value;
             }
-            else
-            {
+            else {
                 this.canvasContext.globalCompositeOperation = ns_egret.BlendMode.NORMAL.value;
             }
         }
@@ -112,7 +111,7 @@ module ns_egret {
         }
 
 
-        drawText(textField:ns_egret.TextField,text:string, x:number, y:number, maxWidth:number) {
+        drawText(textField:ns_egret.TextField, text:string, x:number, y:number, maxWidth:number) {
 //            return;
             var textColor = textField.textColor;
             var strokeColor = textField.strokeColor;

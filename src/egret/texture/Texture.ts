@@ -26,8 +26,8 @@ module ns_egret {
     export class Texture {
 
         private _path:string;
-        private _textureWidth:number = 0;
-        private _textureHeight:number = 0;
+        public _textureWidth:number = 0;
+        public _textureHeight:number = 0;
 
         public _bitmapData;
 
@@ -71,6 +71,7 @@ module ns_egret {
 
         public offsetX = 0;
         public offsetY = 0;
+        private cacheCanvas;
 
         constructor() {
             this.cacheCanvas = document.createElement("canvas");
@@ -78,13 +79,10 @@ module ns_egret {
         }
 
         public drawToTexture(displayObject:ns_egret.DisplayObject):void {
-            var scale = 1 / ns_egret.MainContext.instance.rendererContext.texture_scale_factor;
             var cacheCanvas = this.cacheCanvas;
             var bounds = displayObject.getBounds();
             cacheCanvas.width = bounds.width;
             cacheCanvas.height = bounds.height;
-            var canvasContext = cacheCanvas.getContext("2d");
-            canvasContext.scale(scale, scale);
 
             displayObject.worldTransform.identity();
             displayObject.worldAlpha = 1;
@@ -100,10 +98,15 @@ module ns_egret {
             }
 
             var renderContext = new ns_egret.HTML5CanvasRenderer(cacheCanvas);
-            renderContext.texture_scale_factor = 1 / scale;
+            var list = ns_egret.RenderFilter.getInstance()._drawAreaList.concat();
+            ns_egret.RenderFilter.getInstance()._drawAreaList.length = 0;
             displayObject.render(renderContext);
-            this.bitmapData = this.cacheCanvas;
+            ns_egret.RenderFilter.getInstance()._drawAreaList = list;
+            this._bitmapData = this.cacheCanvas;
+            this._textureWidth = this.cacheCanvas.width;
+            this._textureHeight = this.cacheCanvas.height;
 
+            //测试代码
 //            renderContext.canvasContext.setTransform(1, 0, 0, 1, 0, 0);
 //            renderContext.strokeRect(0, 0,cacheCanvas.width,cacheCanvas.height,"#ff0000");
 //            document.documentElement.appendChild(cacheCanvas);

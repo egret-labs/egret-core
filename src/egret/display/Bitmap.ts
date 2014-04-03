@@ -76,10 +76,6 @@ module ns_egret {
          * @param renderContext
          */
             render(renderContext:RendererContext) {
-            if(super.ignoreRender())
-            {
-                return;
-            }
             var locTexture = this.texture;
             if (locTexture == null || locTexture._bitmapData == null) {
                 return;
@@ -98,10 +94,8 @@ module ns_egret {
                 w = locTexture.getTextureWidth();
                 h = locTexture.getTextureHeight();
             }
-            renderContext.drawImage(locTexture, x, y, w, h, 0, 0, w, h);
-            if (Bitmap.debug || this.debug) {
-                renderContext.strokeRect(x, y, w, h, this.debugColor);
-            }
+
+            RenderFilter.getInstance().drawImage(renderContext, this, x, y, w, h, 0, 0, w, h);
         }
 
         /**

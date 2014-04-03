@@ -1,5 +1,6 @@
 /// <reference path="../context/renderer/RendererContext.ts"/>
 /// <reference path="../core/Geometry.ts"/>
+/// <reference path="../core/RenderFilter.ts"/>
 /// <reference path="DisplayObjectContainer.ts"/>
 /// <reference path="../interactive/TouchContext.ts"/>
 /**
@@ -113,6 +114,7 @@ module ns_egret {
         public mask:Rectangle;
 
         public worldTransform:ns_egret.Matrix2D;
+        public worldBounds:ns_egret.Rectangle;
         public worldAlpha:number;
 
 
@@ -121,6 +123,7 @@ module ns_egret {
             this.x = this.y = 0;
             this.visible = true;
             this.worldTransform = new ns_egret.Matrix2D();
+            this.worldBounds = new ns_egret.Rectangle(0, 0, 0, 0);
             this.worldAlpha = 1;
         }
 
@@ -129,9 +132,8 @@ module ns_egret {
          * @param renderContext
          */
             draw(renderContext:RendererContext) {
-            if(!this.visible)
-            {
-               return;
+            if (!this.visible) {
+                return;
             }
             var hasDrawCache = unstable.cache_api.draw.call(this, renderContext);
             if (hasDrawCache) {
@@ -171,7 +173,8 @@ module ns_egret {
             }
             o.worldTransform.appendTransform(o.x, o.y, o.scaleX, o.scaleY, o.rotation,
                 o.skewX, o.skewY, anchorX, anchorY);
-
+            var bounds:ns_egret.Rectangle = DisplayObject.getTransformBounds(o.getBounds(), o.worldTransform);
+            o.worldBounds.initialize(bounds.x, bounds.y, bounds.width, bounds.height);
             o.worldAlpha = o.parent.worldAlpha * o.alpha;
         }
 
@@ -181,15 +184,6 @@ module ns_egret {
          */
             render(renderContext:RendererContext) {
 
-        }
-
-        public ignoreRender():Boolean {
-            var bounds = DisplayObject.getTransformBounds(this.getBounds(), this.worldTransform);
-            if (bounds.x + bounds.width <= 0 || bounds.x >= ns_egret.MainContext.instance.stage.stageWidth
-                || bounds.y + bounds.height <= 0 || bounds.y >= ns_egret.MainContext.instance.stage.stageHeight) {
-                return true;
-            }
-            return false;
         }
 
         /**
@@ -456,8 +450,10 @@ unstable.cache_api.draw = function (renderContext) {
             renderContext.save();
             renderContext.clip(display.mask.x, display.mask.y, display.mask.width, display.mask.height);
         }
-        renderContext.drawImage(display.renderTexture, 0, 0, width, height,
-            offsetX, offsetY, width / ns_egret.MainContext.instance.rendererContext.texture_scale_factor, height / ns_egret.MainContext.instance.rendererContext.texture_scale_factor);
+        ns_egret.RenderFilter.getInstance().drawImage(renderContext, display, 0, 0,
+            width * ns_egret.MainContext.instance.rendererContext.texture_scale_factor,
+            height * ns_egret.MainContext.instance.rendererContext.texture_scale_factor,
+            offsetX, offsetY, width, height);
         if (display.mask) {
             renderContext.restore();
         }
