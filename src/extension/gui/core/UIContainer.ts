@@ -18,9 +18,20 @@
 module ns_egret {
 
 
-    export class UIComponent {
+    export class UIContainer extends DisplayObjectContainer{
 
     }
 
 
 }
+
+module ns_internal {
+
+    export function mixin(to:any,from:any){
+        for (var key in from.prototype){
+            to.prototype[key] = from.prototype[key];
+        }
+    }
+}
+
+ns_internal.mixin(ns_egret.UIContainer,ns_egret.UIComponent);
