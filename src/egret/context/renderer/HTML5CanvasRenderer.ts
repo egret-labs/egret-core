@@ -85,7 +85,8 @@ module ns_egret {
 
         setTransform(matrix:ns_egret.Matrix2D) {
             //在没有旋转缩放斜切的情况下，先不进行矩阵偏移，等下次绘制的时候偏移
-            if (matrix.a == 1 && matrix.b == 0 && matrix.c == 0 && matrix.d == 1) {
+            if (matrix.a == 1 && matrix.b == 0 && matrix.c == 0 && matrix.d == 1
+                && this._matrixA == 1 && this._matrixB == 0 && this._matrixC == 0 && this._matrixD == 1) {
                 this._transformTx = matrix.tx;
                 this._transformTy = matrix.ty;
                 return;
