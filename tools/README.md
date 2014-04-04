@@ -43,7 +43,8 @@ $ egret b -g HelloEgret 编译特定的 某个游戏项目（HelloEgret）代码
 
 
 #### 步骤四：运行项目（如HelloEgret）
-> 以浏览器站点形式 查看 http://${your_website_localhost}/${egret_workspace}/output/HelloEgret/launcher/index.html
+打开浏览器，输入 http://${your_website_localhost}/${egret_workspace}/output/HelloEgret/launcher/index.html
+> 注意url中存在output文件夹，请勿疏忽
 
 
 
