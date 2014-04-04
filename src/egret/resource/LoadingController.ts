@@ -16,7 +16,7 @@
  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-/// <reference path="../../egret/core/EventDispatcher.ts"/>
+/// <reference path="../../egret/events/EventDispatcher.ts"/>
 /// <reference path="../../egret/core/Logger.ts"/>
 /// <reference path="ResourceLoader.ts"/>
 

@@ -16,7 +16,7 @@
  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-/// <reference path="../core/EventDispatcher.ts"/>
+/// <reference path="../events/EventDispatcher.ts"/>
 /// <reference path="../texture/TextureCache.ts"/>
 /// <reference path="../context/net/NetContext.ts"/>
 module ns_egret {
