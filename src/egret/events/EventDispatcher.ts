@@ -18,13 +18,14 @@
 
 /// <reference path="../display/DisplayObject.ts"/>
 /// <reference path="../debug/DEBUG.ts"/>
+/// <reference path="IEventDispatcher.ts"/>
 module ns_egret{
     /**
      * @class EventDispatcher
      * EventDispatcher是egret的事件派发器类，负责进行事件的发送和侦听。
      * @stable A
      */
-    export class EventDispatcher {
+    export class EventDispatcher implements IEventDispatcher{
 
         /**
          * 引擎内部调用
@@ -49,7 +50,7 @@ module ns_egret{
          * @stable A
          * todo:GitHub文档
          */
-        public addEventListener(eventName:string, func:Function, thisObj, useCapture:Boolean = false, priority:number = 0) {
+        public addEventListener(eventName:string, func:Function, thisObj, useCapture:Boolean = false, priority:number = 0):void {
             if(DEBUG && DEBUG.ADD_EVENT_LISTENER)
             {
                 DEBUG.checkAddEventListener(eventName, func, thisObj, useCapture, priority);
@@ -84,7 +85,7 @@ module ns_egret{
          * @param thisObj 侦听函数绑定的this对象
          * @param useCapture 是否使用捕获，这个属性只在显示列表中生效。
          */
-        public removeEventListener(eventName:string, func:Function, thisObj, useCapture:Boolean = false) {
+        public removeEventListener(eventName:string, func:Function, thisObj, useCapture:Boolean = false):void {
             if (!this._eventDataList) return;
             var l:number = this._eventDataList.length;
             for (var i:number = 0; i < l; i++) {
@@ -104,7 +105,7 @@ module ns_egret{
          * @returns {*}
          * @stable B,需要讨论下是否需要判断thisObj【@陈仁建】
          */
-        public hasEventListener(eventName:string, thisObj) {
+        public hasEventListener(eventName:string, thisObj):boolean{
             if (!this._eventDataList) return false;
             var boo:Boolean = false;
             var l = this._eventDataList.length;
@@ -123,7 +124,7 @@ module ns_egret{
          * @param arg 数据对象
          * @returns {*}
          */
-        public dispatchEvent(eventName:string, ...arg):Boolean {
+        public dispatchEvent(eventName:string, ...arg):boolean {
             if (!this._eventDataList) return false;
             var result:Boolean = false;
             var isStop:Boolean = false;
