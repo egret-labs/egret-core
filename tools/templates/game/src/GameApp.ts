@@ -1,32 +1,37 @@
 /**
- * Created by apple on 14-3-20.
+ * 游戏入口类
  */
 class GameApp {
 
+    private textContainer:ns_egret.DisplayObjectContainer;
 
+    /**
+     * 游戏启动后，会自动执行此方法
+     */
     public startGame():void {
-        ns_egret.SoundContext.context = new ns_egret.HTML5SoundContext();
+
+        //设置屏幕适配策略
         var container = new ns_egret.EqualToFrame();
+        ns_egret.NetContext.context = new ns_egret.HTML5NetContext();
+        ns_egret.ResourceLoader.prefix = "assets/480/";
         var content = ns_egret.Browser.getInstance().isMobile ? new ns_egret.FixedWidth() : new ns_egret.FixedSize(480, 800);
         var policy = new ns_egret.ResolutionPolicy(container, content);
         ns_egret.StageDelegate.getInstance().setDesignSize(480, 800, policy);
-        var canvas:HTMLCanvasElement = document.getElementById(ns_egret.StageDelegate.canvas_name);
-        ns_egret.MainContext.instance.stage.stageWidth = canvas.width;
-        ns_egret.MainContext.instance.stage.stageHeight = canvas.height;
-        ns_egret.NetContext.context = new ns_egret.HTML5NetContext();
-        ns_egret.ResourceLoader.prefix = "assets/400/";
-        var res = new ns_egret.LoadingController();
-        res.addResource("bg.jpg", ns_egret.ResourceLoader.DATA_TYPE_IMAGE);
-        res.addResource("egret_icon.png", ns_egret.ResourceLoader.DATA_TYPE_IMAGE);
 
-        res.setLoadingView(new LoadingUI());
-        res.addEventListener(ns_egret.ResourceLoader.LOAD_COMPLETE, this.resourceLoadComplete, this);
-        res.load();
+        var loadingController = new ns_egret.LoadingController();
+        loadingController.addResource("bg.jpg", ns_egret.ResourceLoader.DATA_TYPE_IMAGE);
+        loadingController.addResource("egret_icon.png", ns_egret.ResourceLoader.DATA_TYPE_IMAGE);
+        loadingController.setLoadingView(new LoadingUI());
+        loadingController.addEventListener(ns_egret.ResourceLoader.LOAD_COMPLETE, this.onResourceLoadComplete, this);
+        loadingController.load();
     }
 
-    public stateMachine:StateMachine;
+    private onResourceLoadComplete():void {
+        this.createGameScene();
+        this.startAnimation();
+    }
 
-    private resourceLoadComplete():void {
+    private createGameScene():void{
         var stage = ns_egret.MainContext.instance.stage;
         var sky = utils.createBitmap("bg.jpg");
         stage.addChild(sky);
@@ -70,8 +75,13 @@ class GameApp {
         textContainer.y = stageH / 2 + 100;
         textContainer.alpha = 0;
 
-        var count = -1;
-        var result = this.getDes();
+        this.textContainer = textContainer;
+    }
+
+    private startAnimation():void{
+        var textContainer = this.textContainer;
+            var count = -1;
+        var result = this.getDescription();
         var self = this;
         var change = function() {
             count++;
@@ -110,7 +120,7 @@ class GameApp {
         }
     }
 
-    private getDes() {
+    private getDescription() {
         var result = [];
         var lineArr = [];
         lineArr.push({"text" : "开源", "textColor":"#F1C40F"});
