@@ -95,6 +95,11 @@ module ns_egret{
         /**
          * 表示这个Frame显示了之后需要在x方向的渲染偏移量
          */
-        public offX:number;
+        public offX:number = 0;
+
+        /**
+         * 表示这个Frame显示了之后需要在y方向的渲染偏移量
+         */
+        public offY:number = 0;
     }
 }

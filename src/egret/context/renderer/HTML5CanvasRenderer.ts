@@ -26,14 +26,33 @@ module ns_egret {
         private canvas;
         private canvasContext;
 
+        private _matrixA:number;
+        private _matrixB:number;
+        private _matrixC:number;
+        private _matrixD:number;
+        private _matrixTx:number;
+        private _matrixTy:number;
+
+        private _transformTx:number;
+        private _transformTy:number;
+
         constructor(canvas) {
             this.canvas = canvas;
             this.canvasContext = canvas.getContext("2d");
+            this._matrixA = 1;
+            this._matrixB = 0;
+            this._matrixC = 0;
+            this._matrixD = 1;
+            this._matrixTx = 0;
+            this._matrixTy = 0;
+
+            this._transformTx = 0;
+            this._transformTy = 0;
             super();
         }
 
         clearScreen() {
-            this.canvasContext.setTransform(1, 0, 0, 1, 0, 0);
+            this.setTransform(ns_egret.Matrix2D.identity.identity());
             var list = RenderFilter.getInstance().getDrawAreaList();
             for (var i:number = 0 , l:number = list.length; i < l; i++) {
                 var area = list[i];
@@ -56,6 +75,8 @@ module ns_egret {
             }
             var image = texture._bitmapData;
             var beforeDraw = ns_egret.Ticker.now();
+            destX += this._transformTx;
+            destY += this._transformTy;
             this.canvasContext.drawImage(image, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight);
             super.drawImage(image, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight);
             this.renderCost += ns_egret.Ticker.now() - beforeDraw;
@@ -63,13 +84,23 @@ module ns_egret {
 
 
         setTransform(matrix:ns_egret.Matrix2D) {
-            this.canvasContext.setTransform(matrix.a, matrix.b, matrix.c, matrix.d, matrix.tx, matrix.ty);
-        }
-
-        translate(x:number, y:number) {
-//            return;
-//            if (x == 0 && y == 0) return;
-            this.canvasContext.translate(x, y);
+            //在没有旋转缩放斜切的情况下，先不进行矩阵偏移，等下次绘制的时候偏移
+            if (matrix.a == 1 && matrix.b == 0 && matrix.c == 0 && matrix.d == 1) {
+                this._transformTx = matrix.tx;
+                this._transformTy = matrix.ty;
+                return;
+            }
+            this._transformTx = this._transformTy = 0;
+            if (this._matrixA != matrix.a || this._matrixB != matrix.b || this._matrixC != matrix.c
+                || this._matrixD != matrix.d || this._matrixTx != matrix.tx || this._matrixTy != matrix.ty) {
+                this._matrixA = matrix.a;
+                this._matrixB = matrix.b;
+                this._matrixC = matrix.c;
+                this._matrixD = matrix.d;
+                this._matrixTx = matrix.tx;
+                this._matrixTy = matrix.ty;
+                this.canvasContext.setTransform(matrix.a, matrix.b, matrix.c, matrix.d, matrix.tx, matrix.ty);
+            }
         }
 
         save() {
@@ -123,7 +154,7 @@ module ns_egret {
                 renderContext.lineWidth = outline * 2;
                 renderContext.strokeText(text, x, y, maxWidth || 0xFFFF);
             }
-            renderContext.fillText(text, x, y, maxWidth || 0xFFFF);
+            renderContext.fillText(text, x + this._transformTx, y + this._transformTy, maxWidth || 0xFFFF);
             super.drawText(text, x, y, maxWidth, outline, textColor, strokeColor);
         }
 

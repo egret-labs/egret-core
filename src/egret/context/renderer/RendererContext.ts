@@ -87,16 +87,6 @@ module ns_egret {
         }
 
         /**
-         * 平移当前渲染矩阵
-         * @param x
-         * @param y
-         * @stable A
-         */
-        public translate(x:number, y:number) {
-
-        }
-
-        /**
          * @stable C 这个方法以后会和restore一起删除，移动到HTML5CanvasContext的具体实现中，而不是作为一个接口
          */
         public save() {
