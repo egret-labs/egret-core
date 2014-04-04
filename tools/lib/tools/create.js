@@ -1,54 +1,73 @@
-
 var path = require("path");
 var libs = require("../core/normal_libs");
 var fs = require("fs");
 
-function run(currDir, args, opts) {
+/**
+ * 创建新项目
+ * @param currentDir 当前文件夹
+ * @param args
+ * @param opts
+ */
+function run(currentDir, args, opts) {
     var source = path.join(__dirname, "../../templates");
-    var projName = args[0];
-
-    if (opts["-u"] && opts["-u"].length > 0) {
-        if (!fs.existsSync(opts["-u"][0])) {
-            fs.mkdirSync(opts["-u"][0]);
-        }
-        currDir = opts["-u"][0];
+    var projectName = args[0];
+    if (!projectName) {
+        console.log("请输入项目名");
+        return;
     }
 
-    var configPath = path.join(currDir, "config.json");
+//    更改导出文件夹，此功能暂时屏蔽
+//    if (opts["-u"] && opts["-u"].length > 0) {
+//        if (!fs.existsSync(opts["-u"][0])) {
+//            fs.mkdirSync(opts["-u"][0]);
+//        }
+//        currentDir = opts["-u"][0];
+//    }
+
+
     var engine = opts["-e"] || opts["-engine"];
 
-    var callback = function () {
-        var txt = fs.readFileSync(configPath, "utf8");
-        var gameData = JSON.parse(txt);
-        gameData["game"][projName] = path.join(projName, "/");
-        if (engine && engine.length > 0) {
-            gameData["engine"] = path.join("engine", "/");
-        }
-
-        var str = JSON.stringify(gameData, "\t", "\r");
-        fs.writeFile(configPath, str, function (err) {
-            if (err) throw err;
-        });
-    }
-    
-    if (!fs.existsSync(configPath)) {
-        libs.copy(path.join(source, "config.json"), configPath, callback);
-    }
-    else {
-        callback();
-    }
+    generateConfigJson(currentDir,engine,projectName);
 
     //创建 引擎目录
     if (engine && engine.length > 0) {
-        libs.copy(engine[0], path.join(currDir, "engine"));
+        var engine_root = path.join(currentDir, "egret");
+        fs.mkdirSync(engine_root);
+        var target_src = path.join(engine_root, "src");
+        var source_src = path.join(engine[0], "src");
+        libs.copy(source_src, target_src);
     }
-    
-    var projPath = path.join(currDir, projName);
+    var projPath = path.join(currentDir, projectName);
     //创建 游戏目录
-    libs.copy(path.join(source, "game1"), projPath); 
-    
-
+    libs.copy(path.join(source, "game"), projPath);
     console.log("创建成功!");
+}
+
+/**
+ * 生成config.json文件
+ * @param currentDir
+ * @param engine
+ * @param projectName
+ */
+function generateConfigJson(currentDir,engine,projectName) {
+    var configPath = path.join(currentDir, "config.json");
+    if (!fs.existsSync(configPath)) {
+        var gameData = {};
+        gameData.game = {};
+    }
+    else {
+        var txt = fs.readFileSync(configPath, "utf8");
+        var gameData = JSON.parse(txt);
+    }
+    gameData["game"][projectName] = projectName + "/";
+    if (engine && engine.length > 0) {
+        gameData["engine"] = "egret/src/";
+    }
+
+    var str = JSON.stringify(gameData, "\t", "\r");
+    fs.writeFile(configPath, str, function (err) {
+        if (err) throw err;
+    });
 }
 
 exports.run = run;

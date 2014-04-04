@@ -9,40 +9,38 @@
 
 var path = require("path");
 var fs = require("fs");
-var async = require('async');
-var crc32 = require('crc32');
+var async = require('../core/async');
+var crc32 = require('../core/crc32');
 var cp_exec = require('child_process').exec;
 var CRC32BuildTS = "buildTS.local";
 var libs = require("../core/normal_libs");
-var rm = require('rm-r');
 
 function run(currDir, args, opts) {
     var u = opts["-u"];
     if (u && u.length > 0) {
         currDir = u[0];
     }
-
     //获得需要编译的文件夹
     var dir = getAllDir(currDir, args, opts);
     var count = 0;
-    var buildOver = function() {
+    var buildOver = function () {
         if (count >= dir.length) {
             clearTS();
             return;
         }
-
         var sourcePath = path.join(currDir, dir[count]);
         var outPath = path.join(currDir, "output", dir[count]);
         execute(sourcePath, outPath, buildOver);
         count++;
     }
 
-    var clearTS = function() {
+    var clearTS = function () {
         for (var key in dir) {
             var outPath = path.join(currDir, "output", dir[key]);
             var allFileList = generateAllTypeScriptFileList(outPath);
             for (var i = 0; i < allFileList.length; i++) {
-                rm.file(path.join(outPath, allFileList[i]));
+                var fileToDelete = path.join(outPath, allFileList[i]);
+                libs.deleteFileSync(fileToDelete);
             }
         }
     }
@@ -63,31 +61,44 @@ function getLocalContent() {
 }
 
 function execute(source, output, buildOver) {
-    var callback = function() {
-        var allFileList = generateAllTypeScriptFileList(output);
 
-        var checkTypeScriptCompiler = "tsc";
-        var tsc = cp_exec(checkTypeScriptCompiler);
-        tsc.on('exit', function (code) {
-            if (code == 0) {
-                var crc32Data = getLocalContent();
-                buildAllTypeScript(crc32Data, allFileList, output, output, buildOver);
-            }
-            else {
-                console.log ("TypeScript编译器尚未安装，请执行 npm install -g typescript 进行安装");
-                process.exit(1);
-            }
-        });
-
-    }
-    libs.copy(source, output, callback);
+    libs.copy(source, output);
+    var allFileList = generateAllTypeScriptFileList(output);
+    var checkTypeScriptCompiler = "tsc";
+    var tsc = cp_exec(checkTypeScriptCompiler);
+    tsc.on('exit', function (code) {
+        if (code == 0) {
+            var crc32Data = getLocalContent();
+            buildAllTypeScript(crc32Data, allFileList, output, output, buildOver);
+        }
+        else {
+            console.log("TypeScript编译器尚未安装，请执行 npm install -g typescript 进行安装");
+            process.exit(1);
+        }
+    });
 }
 
 function getAllDir(currDir, args, opts) {
+
+
+    function addToDir(filePath) {
+
+        if (!filePath) {
+            console.log ("config.json中存在空编译路径，请检查");
+            return;
+        }
+        var realPath = path.join(currDir, filePath);
+        if (!fs.existsSync(realPath)) {
+            throw new Error("config.json中存在错误的编译路径,无法编译：" + filePath);
+        }
+
+        gameArr.push(filePath);
+    }
+
     var configPath = path.join(currDir, 'config.json');
     if (!fs.existsSync(configPath)) {
         var errorMessage = "配置文件不存在";
-        console.log (errorMessage);
+        console.log(errorMessage);
         process.exit([1]);
         return;
     }
@@ -96,35 +107,37 @@ function getAllDir(currDir, args, opts) {
     var configObj = JSON.parse(configStr);
 
     var gameArr = [];
-    var isHas = false;
-    if (opts["-e"]) {//编译 引擎代码
-        isHas = true;
-        gameArr.push(configObj["engine"]);
+
+    var needEngine = false;
+    var needGame = false;
+
+    if (opts["-e"]) {
+        needEngine = true;
     }
-    
-    if (opts["-g"]) {//编译 游戏代码
+    else if (opts["-g"]) {
+        needGame = true;
+    }
+    else {
+        needEngine = true;
+        needGame = true;
+    }
+
+    if (needEngine) {//编译 引擎代码
+        addToDir(configObj["engine"]);
+    }
+
+    if (needGame) {//编译 游戏代码
         var arr = opts["-g"];
         var gameObj = configObj["game"];
-        if (arr.length == 0) {
+        if (!arr || arr.length == 0) {
             for (var key in gameObj) {
-                gameArr.push(gameObj[key]);
+                addToDir(gameObj[key]);
             }
         }
         else {
             for (var key1 in arr) {
-                if (gameObj[arr[key1]]) {
-                    gameArr.push(gameObj[arr[key1]]);
-                }
+                addToDir(gameObj[arr[key1]]);
             }
-        }
-        isHas = true;
-    }
-
-    if (!isHas) {//编译全部
-        gameArr.push(configObj["engine"]); 
-        var gameObj = configObj["game"];
-        for (var key in gameObj) {
-            gameArr.push(gameObj[key]);
         }
     }
     return gameArr;

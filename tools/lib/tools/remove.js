@@ -2,7 +2,6 @@
 var path = require("path");
 var libs = require("../core/normal_libs");
 var fs = require("fs");
-var rm = require('rm-r');
 
 function run(currDir, args, opts) {
     var projName = args[0];
@@ -33,9 +32,7 @@ function run(currDir, args, opts) {
     }
 
     var projPath = path.join(currDir, projName);
-    console.log(projPath);
-    rm.dir(projPath);
-
+    libs.deleteFileSync(projPath);
     console.log("删除成功!");
 }
 

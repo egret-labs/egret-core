@@ -1,11 +1,10 @@
 #! /usr/bin/env node
 
 var path = require("path");
-process.on('uncaughtException', function(err){
-    console.error(err);
-});
+//process.on('uncaughtException', function(err){
+//    console.error(err);
+//});
 
 var analysis = require("../lib/core/params_analyze.js");
 var check = require("../lib/core/tool_check.js");
-
 check.run(analysis.getArgv());

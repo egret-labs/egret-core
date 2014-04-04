@@ -43,13 +43,14 @@ function getTool(name){
 	}
 
     var pluginPath = path.join(__dirname, "../tools", fileName + ".js");
+
     if(!fs.existsSync(pluginPath)) return null;
     return require(pluginPath);
 }
 
 function run(option){
     var tool = getTool(option.name);
-    
+
     tool.run(option.currDir, option.args, option.opts);
 }
 
