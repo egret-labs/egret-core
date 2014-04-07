@@ -4,9 +4,22 @@ Egret Release Notes
 
 欢迎您使用Egret
 
+### Egret 0.9.2 Release Note ( Prerelease )
+
+最近更新时间：2014年4月2日
+
+#### 概述
+Egret 0.9.2主要添加了Egret Command Line Tool来集成Egret现有脚本，并帮助开发者更方便的创建新项目
+
+#### 修正问题
+* 解决 [ISSUE_3](https://github.com/egret-team/egret/issues/3) ，通过新的项目创建模板，由TypeScript生成的JavaScript代码现在会移动至output目录
+* 解决 [ISSUE_4](https://github.com/egret-team/egret/issues/4)，目前可以通过Egret Command Line Tool实现此功能，原有脚本已经被废弃
+
+#### 文档更新
+* 关于Egret Command Line Tool的使用文档，参见[这里](/tools/README.md)
 
 
-### Egret 0.9.1 Prerelease Release Notes
+### Egret 0.9.1 Release Note ( Prerelease )
 
 最近更新时间：2014年3月27日
 
@@ -31,7 +44,7 @@ TypeScript编译器尚未安装，请执行 npm install -g typescript 进行安�
 
 
 
-### Egret 0.9 Prerelease Release Notes
+### Egret 0.9 Release Note ( Prerelease )
 
 最近更新时间：2014年3月24日
 

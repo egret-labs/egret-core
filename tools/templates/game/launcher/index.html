@@ -1,0 +1,43 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="baidu-tc-cerfication" content="bb5e4ac079a479fb5ddcd76557a48ed3"/>
+    <title>HelloWorld</title>
+    <meta name="viewport"
+          content="width=device-width,initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no,target-densitydpi=device-dpi"/>
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+
+    <meta name="full-screen" content="true"/>
+    <meta name="screen-orientation" content="portrait"/>
+    <meta name="x5-fullscreen" content="true"/>
+    <meta name="360-fullscreen" content="true"/>
+    <base href="../"/>
+
+    <style>
+        body {
+            text-align: center;
+            background: #000000;
+            padding: 0;
+            border: 0;
+            margin: 0;
+            height: 100%;
+        }
+    </style>
+</head>
+<body>
+<div style="display:inline-block;width:100%; height:100%;margin: 0 auto; background: black; position:relative;"
+     id="gameDiv">
+    <canvas id="gameCanvas" width="480" height="800" style="background-color: #000000"></canvas>
+</div>
+<script src="../egret/src/egret_file_list.js"></script>
+<script src="launcher/egret_loader.js"></script>
+<script src="src/game_file_list.js"></script>
+
+<script>
+    egret_h5.preloadScript(egret_file_list, "../egret/src/");
+    egret_h5.preloadScript(game_file_list, "src/");
+    egret_h5.startLoading();
+</script>
+</body>
+</html>

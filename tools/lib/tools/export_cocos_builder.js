@@ -37,35 +37,33 @@
 var fs = require("fs");
 var path = require("path");
 var plist = require("plist");
-var ccbFilePath = process.argv[2];
-if (!ccbFilePath) {
-    console.log("missing arguments .ccb file");
-    var cmdName = process.argv[1];
-    cmdName = cmdName.substring(cmdName.lastIndexOf("/") + 1);
-    console.log("format:  node " + cmdName + " [.ccb file]");
-    return;
-}
-
-
-var stat = fs.existsSync(ccbFilePath);
-if (!stat) {
-    console.log("can't open .ccb file");
-    return;
-}
-
-
-var config = plist.parseFileSync(ccbFilePath);
 
 var totalData = {};
 var sourceArr = [];
-totalData.children = [];
-loop(config.nodeGraph, null, totalData);
-console.log ("输出ViewData文件:\n");
-console.log(JSON.stringify(totalData.children[0], null, ""));
-console.log ("输出资源文件:\n")
-var sourceTxt = JSON.stringify(sourceArr);
-console.log(sourceTxt.slice(1, sourceTxt.length - 1));
+    
+function run(currDir, args, opts) {
+    var ccbFilePath = args[0];
+    if (!ccbFilePath) {
+        console.log("missing arguments .ccb file");
+        return;
+    }
 
+    var stat = fs.existsSync(ccbFilePath);
+    if (!stat) {
+        console.log("can't open .ccb file");
+        return;
+    }
+
+    var config = plist.parseFileSync(ccbFilePath);
+
+    totalData.children = [];
+    loop(config.nodeGraph, null, totalData);
+    console.log ("输出ViewData文件:\n");
+    console.log(JSON.stringify(totalData.children[0], null, ""));
+    console.log ("输出资源文件:\n")
+    var sourceTxt = JSON.stringify(sourceArr);
+    console.log(sourceTxt.slice(1, sourceTxt.length - 1));
+}
 
 function loop(container, parent, parentData) {
     var data = build(container, parent);
@@ -297,17 +295,17 @@ function ConfigBuilder() {
     }
 
     this.withPosition = function (x, y) {
-        this.data.x = Number(x.toFixed(2));
-        this.data.y = Number(y.toFixed(2));
+        this.data.x = Number(x);
+        this.data.y = Number(y);
         return this;
     }
 
     this.withScale = function (scaleX, scaleY) {
         if (scaleX != 1) {
-            this.data.scaleX = Number(scaleX.toFixed(2));
+            this.data.scaleX = Number(scaleX);
         }
         if (scaleY != 1) {
-            this.data.scaleY = Number(scaleY.toFixed(2));
+            this.data.scaleY = Number(scaleY);
         }
         return this;
     }
@@ -394,4 +392,5 @@ function ConfigBuilder() {
         }
     }
 }
+exports.run = run;
 
