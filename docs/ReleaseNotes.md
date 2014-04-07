@@ -6,7 +6,7 @@ Egret Release Notes
 
 ### Egret 0.9.2 Release Note ( Prerelease )
 
-最近更新时间：2014年4月2日
+最近更新时间：2014年4月7日
 
 #### 概述
 Egret 0.9.2主要添加了Egret Command Line Tool来集成Egret现有脚本，并帮助开发者更方便的创建新项目
