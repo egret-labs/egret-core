@@ -18,10 +18,9 @@
 /// <reference path="TMXTileMap.ts"/>
 /// <reference path="TMXConst.ts"/>
 /// <reference path="../../egret/core/Logger.ts"/>
-/// <reference path="../../egret/utils/Utils.d.ts"/>
 /// <reference path="../../egret/resource/ResourceLoader.ts"/>
 /// <reference path="../../egret/utils/SAXParser.ts"/>
-module ns_egret{
+module ns_egret {
     export class TMXMapInfo {
         private _orientation = null;
         private _mapWidth:number = null;
@@ -63,8 +62,7 @@ module ns_egret{
 
         private parseXMXFile(tmxFile:string) {
             var xml = ResourceLoader.create(tmxFile).data;
-            if(xml == null)
-            {
+            if (xml == null) {
                 ns_egret.Logger.fatal("tmx文件没有加载：" + tmxFile);
             }
             var mapXML = SAXParser.getInstance().tmxParse(xml, true);
@@ -393,7 +391,6 @@ module ns_egret{
             return this._mapHeight;
         }
     }
-
 
 
     export class TMXTilesetInfo {

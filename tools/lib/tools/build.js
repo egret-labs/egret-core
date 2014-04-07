@@ -1,12 +1,6 @@
 /**
  * 将TypeScript编译为JavaScript
- * 会忽略TS2000+的错误，只会抛出TS1000+的错误
- * @example
- *   node build_typescript.js [source_path]
- *
- * @param source_path:编译路径，默认为引擎代码
  */
-
 var path = require("path");
 var fs = require("fs");
 var async = require('../core/async');
@@ -156,7 +150,7 @@ function build(file, callback, source, output) {
 
     var ts = cp_exec(cmd);
     ts.stderr.on("data", function (data) {
-        if (data.indexOf("error TS1") >= 0) {
+        if (data.indexOf("error TS1") >= 0 || data.indexOf("error TS5") >= 0) {
             console.log(data);
         }
     })
