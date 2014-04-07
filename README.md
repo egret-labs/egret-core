@@ -38,6 +38,9 @@ Egret Framework是一款使用JavaScript(TypeScript)编写的HTML5开源免费�
 
 
 #### 发布说明
+
+[Egret Release Notes 2014-4-7](/docs/ReleaseNotes.md)
+
 [Egret Release Notes 2014-3-27](/docs/ReleaseNotes.md)
 
 [Egret Release Notes 2014-3-24](/docs/ReleaseNotes.md)

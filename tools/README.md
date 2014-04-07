@@ -67,6 +67,8 @@ egret_workspace
         |-- your_project_3
 ```
 
+如果您使用WebStorm作为开发环境，Egret团队建议您以egret_workspace目录作为Project目录
+
 
 其他操作
 -------------------------
