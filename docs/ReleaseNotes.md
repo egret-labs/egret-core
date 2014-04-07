@@ -14,9 +14,14 @@ Egret 0.9.2主要添加了Egret Command Line Tool来集成Egret现有脚本，�
 #### 修正问题
 * 解决 [ISSUE_3](https://github.com/egret-team/egret/issues/3) ，通过新的项目创建模板，由TypeScript生成的JavaScript代码现在会移动至output目录
 * 解决 [ISSUE_4](https://github.com/egret-team/egret/issues/4)，目前可以通过Egret Command Line Tool实现此功能，原有脚本已经被废弃
+* 解决 [ISSUE_7](https://github.com/egret-team/egret/issues/7)
 
 #### 文档更新
 * 关于Egret Command Line Tool的使用文档，参见[这里](/tools/README.md)
+
+#### 向下兼容性变更
+
+* 原有的tools脚本调用方式已经修改，具体内容见【文档更新】一节
 
 
 ### Egret 0.9.1 Release Note ( Prerelease )
