@@ -1,4 +1,4 @@
-/// <reference path="../core/EventDispatcher.ts"/>
+/// <reference path="../events/EventDispatcher.ts"/>
 /**
  * Copyright (c) Egret-Labs.org. Permission is hereby granted, free of charge,
  * to any person obtaining a copy of this software and associated documentation

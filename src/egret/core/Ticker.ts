@@ -15,7 +15,7 @@
  * FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-/// <reference path="EventDispatcher.ts"/>
+/// <reference path="../events/EventDispatcher.ts"/>
 
 module ns_egret {
     /**
@@ -76,7 +76,7 @@ module ns_egret {
                     continue;
                 }
                 if (obj.eventName == "enterFrame"
-                    && (!(this instanceof DisplayObject) || this.isUseCapture == obj.useCapture)) {
+                    && (!(this instanceof DisplayObject) || this._isUseCapture == obj.useCapture)) {
                     var dt = thisTime - this._time;
                     dt *= this._timeScale;
                     obj.func.apply(obj.thisObj, [dt]);

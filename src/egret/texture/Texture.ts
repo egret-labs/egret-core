@@ -35,7 +35,7 @@ module ns_egret {
             return this._bitmapData;
         }
 
-        public set bitmapData(value) {
+        public set bitmapData(value:any) {
             this._bitmapData = value;
             this._textureWidth = value.width * ns_egret.MainContext.instance.rendererContext.texture_scale_factor;
             this._textureHeight = value.height * ns_egret.MainContext.instance.rendererContext.texture_scale_factor;

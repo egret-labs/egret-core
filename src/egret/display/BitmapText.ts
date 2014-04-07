@@ -21,8 +21,8 @@
 
 module ns_egret{
     /**
-     * @class BitmapText
      * 位图字体采用了Bitmap+SpriteSheet的方式来渲染文字
+     * @class ns_egret.BitmapText
      */
     export class BitmapText extends DisplayObject {
 
@@ -46,37 +46,7 @@ module ns_egret{
             super();
         }
 
-//        preDraw() {
-//            if (this.current_rendered_text === this.text) {
-//                return;
-//            }
-//            this._updateText();
-//        }
-//
-//        private _updateText() {
-//
-//            this.removeAllChildren();
-//            var characterX = 0;
-//            for (var i = 0, l = this.text.length; i < l; i++) {
-//                var character = this.text.charAt(i);
-//                var spriteFrame = this.bitmapFontData[character];
-//                var offsetX = spriteFrame.offX;
-//                var offsetY = spriteFrame.offY;
-//                if (spriteFrame == null) {
-//                    ns_egret.Logger.fatal("BitmapText：异常的bitmapFontData");
-//                }
-//                var characterWidth = spriteFrame.w;
-//                var bitmap = Bitmap.initWithTexture(this.texture);
-//                bitmap.spriteFrame = spriteFrame;
-//                bitmap.x = characterX + offsetX;
-//                bitmap.y = offsetY;
-//                this.addChild(bitmap);
-//                characterX += characterWidth + offsetX;
-//            }
-//            this.current_rendered_text = this.text;
-//        }
-
-        render(renderContext:RendererContext) {
+        public render(renderContext:RendererContext) {
             if(!this.text)
             {
                 return;
@@ -86,7 +56,7 @@ module ns_egret{
         }
 
         //todo:这里对bounds的处理和TextField非常类似，以后考虑重构
-        _renderText(renderContext:RendererContext,forMeasureContentSize:boolean = false){
+        private _renderText(renderContext:RendererContext,forMeasureContentSize:boolean = false){
             this._contentWidth = 0;
             this._contentHeight = 0;
             for (var i = 0, l = this.text.length; i < l; i++) {

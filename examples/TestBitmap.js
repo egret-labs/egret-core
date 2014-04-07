@@ -20,7 +20,6 @@ function createExample(){
     var container = new ns_egret.DisplayObjectContainer();
     context.stage.addChild(container);
     var texture = ns_egret.TextureCache.getInstance().getTexture("daisy.png");
-//    container.setContentSize(10, 1
 
     var bitmap1 = ns_egret.Bitmap.initWithTexture(texture);
     container.addChild(bitmap1);
@@ -33,20 +32,19 @@ function createExample(){
     container.addChild(bitmap2);
     bitmap2.x = 150;
     bitmap2.y = 50;
-//    bitmap2.scaleX = bitmap2.scaleY = 0.5;
+    bitmap2.scaleX = bitmap2.scaleY = 0.5;
 
     var bitmap3 = ns_egret.Bitmap.initWithTexture(texture);
     container.addChild(bitmap3);
     bitmap3.x = 50;
     bitmap3.y = 150;
-//    bitmap3.rotation = 45;
+    bitmap3.rotation = 45;
 
     var bitmap4 = ns_egret.Bitmap.initWithTexture(texture);
     container.addChild(bitmap4);
     bitmap4.x = 150;
     bitmap4.y = 150;
-//    bitmap4.cacheAsBitmap(true);
-//    bitmap4.skewX = 45;
+    bitmap4.skewX = 45;
 
     container.cacheAsBitmap(true);
 
