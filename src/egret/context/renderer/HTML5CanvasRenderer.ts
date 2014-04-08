@@ -39,6 +39,17 @@ module ns_egret {
         constructor(canvas) {
             this.canvas = canvas;
             this.canvasContext = canvas.getContext("2d");
+            var f = this.canvasContext.setTransform;
+            var that = this;
+            this.canvasContext.setTransform = function (a,b,c,d,tx,ty){
+                that._matrixA = a;
+                that._matrixB = b;
+                that._matrixC = c;
+                that._matrixD = d;
+                that._matrixTx = tx;
+                that._matrixTy = ty;
+                f.call(that.canvasContext,a, b, c, d, tx, ty);
+            };
             this._matrixA = 1;
             this._matrixB = 0;
             this._matrixC = 0;
@@ -52,11 +63,11 @@ module ns_egret {
         }
 
         clearScreen() {
-            this.canvasContext.setTransform(1, 0, 0, 1, 0, 0);
+            this.setTransform(ns_egret.Matrix2D.identity.identity());
             var list = RenderFilter.getInstance().getDrawAreaList();
             for (var i:number = 0 , l:number = list.length; i < l; i++) {
                 var area = list[i];
-                this.clearRect(area.x, area.y, area.width, area.height);
+                this.clearRect(area.x + this._transformTx, area.y + this._transformTy, area.width, area.height);
             }
             this.renderCost = 0;
         }
@@ -77,11 +88,17 @@ module ns_egret {
             var beforeDraw = ns_egret.Ticker.now();
             destX += this._transformTx;
             destY += this._transformTy;
+            if(this._transformTx != 0 || this._transformTy != 0)
+            {
+                if(this._matrixA!=1||this._matrixB!=0||this._matrixC!=0||this._matrixD!=1)
+                {
+                    console.log(11)
+                }
+            }
             this.canvasContext.drawImage(image, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight);
             super.drawImage(image, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight);
             this.renderCost += ns_egret.Ticker.now() - beforeDraw;
         }
-
 
         setTransform(matrix:ns_egret.Matrix2D) {
             //在没有旋转缩放斜切的情况下，先不进行矩阵偏移，等下次绘制的时候偏移
@@ -92,16 +109,11 @@ module ns_egret {
                 return;
             }
             this._transformTx = this._transformTy = 0;
-            if (this._matrixA != matrix.a || this._matrixB != matrix.b || this._matrixC != matrix.c
-                || this._matrixD != matrix.d || this._matrixTx != matrix.tx || this._matrixTy != matrix.ty) {
-                this._matrixA = matrix.a;
-                this._matrixB = matrix.b;
-                this._matrixC = matrix.c;
-                this._matrixD = matrix.d;
-                this._matrixTx = matrix.tx;
-                this._matrixTy = matrix.ty;
-                this.canvasContext.setTransform(matrix.a, matrix.b, matrix.c, matrix.d, matrix.tx, matrix.ty);
-            }
+//            if (this._matrixA != matrix.a || this._matrixB != matrix.b || this._matrixC != matrix.c
+//                || this._matrixD != matrix.d || this._matrixTx != matrix.tx || this._matrixTy != matrix.ty) {
+//                this.canvasContext.setTransform(matrix.a, matrix.b, matrix.c, matrix.d, matrix.tx, matrix.ty);
+//            }
+            this.canvasContext.setTransform(matrix.a, matrix.b, matrix.c, matrix.d, matrix.tx, matrix.ty);
         }
 
         save() {
@@ -112,6 +124,7 @@ module ns_egret {
         restore() {
 //            return;
             this.canvasContext.restore();
+            this.canvasContext.setTransform(1,0,0,1,0,0);
         }
 
         setAlpha(alpha:number, blendMode:ns_egret.BlendMode) {
@@ -161,7 +174,7 @@ module ns_egret {
 
         clip(x, y, w, h) {
             this.canvasContext.beginPath();
-            this.canvasContext.rect(x, y, w, h);
+            this.canvasContext.rect(x + this._transformTx, y + this._transformTy, w, h);
             this.canvasContext.clip();
             this.canvasContext.closePath();
         }

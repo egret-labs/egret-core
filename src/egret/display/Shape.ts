@@ -68,9 +68,9 @@ module ns_egret {
                 this._colorStr = "rgba(" + this._colorRed + "," + this._colorGreen + "," + this._colorBlue + "," + this._alpha + ")";
                 this._colorDirty = false;
             }
-            var context = renderContext.canvas.getContext("2d");
+            var context = renderContext.canvasContext;
             context.fillStyle = this._colorStr;
-            context.fillRect(0, 0, this._contentWidth, this._contentHeight);
+            context.fillRect(renderContext._transformTx, renderContext._transformTy, this._contentWidth, this._contentHeight);
 
         }
     }
