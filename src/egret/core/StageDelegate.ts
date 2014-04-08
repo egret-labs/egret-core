@@ -39,23 +39,18 @@ module ns_egret {
         public static canvas_name:string = "gameCanvas";
         public static canvas_div_name:string = "gameDiv";
 
-        private _frameWidth:number = null;
-        private _frameHeight:number = null;
-        private _designWidth:number = null;
-        private _designHeight:number = null;
-        private _originalDesignWidth:number = null;
-        private _originalDesignHeight:number = null;
-        private _scaleX = 1;
-        private _scaleY = 1;
-        private _frame = null;
+        private _designWidth:number = 0;
+        private _designHeight:number = 0;
+        private _originalDesignWidth:number = 0;
+        private _originalDesignHeight:number = 0;
+        public _scaleX = 1;
+        public _scaleY = 1;
+        private _frame:HTMLElement;
 
-        private _resolutionPolicy = null;
+        private _resolutionPolicy;
 
         constructor() {
             this._frame = document.getElementById(StageDelegate.canvas_div_name);
-            this._frameWidth = this._frame.style.width;
-            this._frameHeight = this._frame.style.height;
-
             var canvas:any = document.getElementById(StageDelegate.canvas_name);
             var w = canvas.width, h = canvas.height;
             this._designWidth = w;
@@ -66,22 +61,7 @@ module ns_egret {
         }
 
         public setFrameSize(width, height) {
-            this._frameWidth = width;
-            this._frameHeight = height;
-            this._frame.style.width = width + "px";
-            this._frame.style.height = height + "px";
-            this._resizeEvent();
-        }
-
-        private _resizeEvent() {
-            var width = this._originalDesignWidth;
-            var height = this._originalDesignHeight;
-//    if (this._resizeCallback) {
-//        this._initFrameSize();
-//        this._resizeCallback.call();
-//    }
-            if (width > 0)
-                this.setDesignSize(width, height, this._resolutionPolicy);
+            throw new Error("该方法已经被废弃，会在下个版本中删除")
         }
 
         public setDesignSize(width, height, resolutionPolicy) {
@@ -92,11 +72,6 @@ module ns_egret {
             }
             this.setResolutionPolicy(resolutionPolicy);
 
-
-            var frameW = this._frameWidth, frameH = this._frameHeight;
-//        if (ns_egret.Browser.getInstance().isMobile) {
-//            this._setViewPortMeta(this._frameWidth, this._frameHeight);
-//        }
 
             this._designWidth = width;
             this._designHeight = height;
@@ -142,8 +117,8 @@ module ns_egret {
         public static FIXED_HEIGHT = 1;
         public static FIXED_WIDTH = 2;
 
-        private _containerStrategy = null;
-        private _contentStrategy = null;
+        private _containerStrategy;
+        private _contentStrategy;
 
         constructor(containerStg, contentStg) {
             this.setContainerStrategy(containerStg);
@@ -172,7 +147,7 @@ module ns_egret {
     }
 
     export class ContainerStrategy {
-        public static EQUAL_TO_FRAME = null;
+        public static EQUAL_TO_FRAME;
 
         public static initialize() {
             ContainerStrategy.EQUAL_TO_FRAME = new EqualToFrame();
@@ -185,17 +160,7 @@ module ns_egret {
         public apply(view, designedWidth, designedHeight) {
         }
 
-        public _setupContainer(frame, w, h) {
-//        if (cc.Browser.isMobile && frame == document.documentElement) {
-//            cc.Screen.getInstance().autoFullScreen(cc.canvas);
-//        }
-
-            var canvas:any = document.getElementById(StageDelegate.canvas_name), locContainer = document.getElementById(StageDelegate.canvas_div_name);
-//            canvas.width = w;
-//            canvas.height = h;
-//            locContainer.style.width = w + "px";
-//            locContainer.style.height = h + "px";
-
+        public _setupContainer() {
             var body = document.body, style;
             if (body && (style = body.style)) {
                 style.paddingTop = style.paddingTop || "0px";
@@ -211,43 +176,27 @@ module ns_egret {
                 style.marginBottom = style.marginBottom || "0px";
                 style.marginLeft = style.marginLeft || "0px";
             }
-        }
-
-        private _fixContainer() {
-            document.body.insertBefore(document.getElementById(StageDelegate.canvas_div_name), document.body.firstChild);
-            var bs = document.body.style;
-            bs.width = window.innerWidth + "px";
-            bs.height = window.innerHeight + "px";
-            bs.overflow = "hidden";
-            var contStyle = document.getElementById(StageDelegate.canvas_div_name).style;
-            contStyle.position = "fixed";
-            contStyle.left = contStyle.top = "0px";
-            document.body.scrollTop = 0;
+//            var contStyle = document.getElementById(ns_egret.StageDelegate.canvas_div_name).style;
+//            contStyle.position = "fixed";
+//            contStyle.left = contStyle.top = "0px";
+//            document.body.scrollTop = 0;
         }
     }
 
     export class EqualToFrame extends ContainerStrategy {
         apply(view) {
-            this._setupContainer(view._frame, view._frameWidth, view._frameHeight);
+            this._setupContainer();
         }
     }
 
     export class ContentStrategy {
-        public static FIXED_HEIGHT = null;
-        public static FIXED_WIDTH = null;
+        public static FIXED_HEIGHT:ContentStrategy = null;
+        public static FIXED_WIDTH:ContentStrategy = null;
 
         public static initialize() {
             ContentStrategy.FIXED_HEIGHT = new FixedHeight();
             ContentStrategy.FIXED_WIDTH = new FixedWidth();
         }
-
-        _result = {
-            scale: [1, 1],
-            x: null,
-            y: null,
-            w: null,
-            h: null
-        };
 
         public init(view) {
 
@@ -283,8 +232,8 @@ module ns_egret {
 
     export class FixedWidth extends ContentStrategy {
         public apply(delegate:ns_egret.StageDelegate, designedResolutionWidth, designedResolutionHeight) {
-            var canvas:HTMLCanvasElement = document.getElementById(StageDelegate.canvas_name);
-            var container:HTMLDivElement = document.getElementById(StageDelegate.canvas_div_name);
+            var canvas:HTMLCanvasElement = <HTMLCanvasElement>document.getElementById(StageDelegate.canvas_name);
+            var container:HTMLElement = document.getElementById(StageDelegate.canvas_div_name);
             var viewPortWidth = document.documentElement.clientWidth;
             var viewPortHeight = document.documentElement.clientHeight;
             var scale = viewPortWidth / designedResolutionWidth;
@@ -311,8 +260,8 @@ module ns_egret {
         }
 
         public apply(delegate:ns_egret.StageDelegate, designedResolutionWidth, designedResolutionHeight) {
-            var canvas:HTMLCanvasElement = document.getElementById(StageDelegate.canvas_name);
-            var container:HTMLDivElement = document.getElementById(StageDelegate.canvas_div_name);
+            var canvas:HTMLCanvasElement = <HTMLCanvasElement>document.getElementById(StageDelegate.canvas_name);
+            var container:HTMLDivElement = <HTMLDivElement>document.getElementById(StageDelegate.canvas_div_name);
             var viewPortWidth = this.width;
             var viewPortHeight = this.height;
             var scale = viewPortWidth / designedResolutionWidth;
