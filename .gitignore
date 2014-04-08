@@ -2,6 +2,8 @@
 .idea/
 tools/nodejs/node_modules
 src/egret/**/*.js
+src/egret/**/**/*.js
 src/extension/**/*.js
+src/extension/**/**/*.js
 
 tools/nodejs/buildTS.local
