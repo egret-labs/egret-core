@@ -52,7 +52,7 @@ module ns_egret {
         }
 
         clearScreen() {
-            this.setTransform(ns_egret.Matrix2D.identity.identity());
+            this.canvasContext.setTransform(1, 0, 0, 1, 0, 0);
             var list = RenderFilter.getInstance().getDrawAreaList();
             for (var i:number = 0 , l:number = list.length; i < l; i++) {
                 var area = list[i];
@@ -87,8 +87,8 @@ module ns_egret {
             //在没有旋转缩放斜切的情况下，先不进行矩阵偏移，等下次绘制的时候偏移
             if (matrix.a == 1 && matrix.b == 0 && matrix.c == 0 && matrix.d == 1
                 && this._matrixA == 1 && this._matrixB == 0 && this._matrixC == 0 && this._matrixD == 1) {
-                this._transformTx = matrix.tx;
-                this._transformTy = matrix.ty;
+                this._transformTx = matrix.tx - this._matrixTx;
+                this._transformTy = matrix.ty - this._matrixTy;
                 return;
             }
             this._transformTx = this._transformTy = 0;
