@@ -45,7 +45,7 @@ module ns_egret {
                 this._passTime -= this._actionInterval;
                 this.dispatchEvent(Timer.ON_TIMER);
                 this._actionTimes++;
-                if (this._actionTimes != -1 && this._actionTimes >= this._totalActionTimes) {
+                if (this._totalActionTimes != -1 && this._actionTimes >= this._totalActionTimes) {
                     this.stop();
                     break;
                 }
