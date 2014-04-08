@@ -24,16 +24,8 @@
     </style>
 
     <script>
-        window.applicationCache.addEventListener("updateready", function () {
-            if (alert("本地缓存已被更新,立即刷新")) {
-                //手工更新本地缓存
-                window.applicationCache.swapCache();
-                //重载画面
-                window.location.reload();
-            }
-        }, true);
 
-        onSelectChange = function (value) {
+        function onSelectChange(value) {
             var url = location.href;
             var index = url.indexOf("?");
             if (index != -1) {
@@ -82,7 +74,7 @@
 
 </body>
 <script type="text/javascript" src="../egret_loader.js"></script>
-<script type="text/javascript" src="../egret_file_list.js"></script>
+<script type="text/javascript" src="../src/egret_file_list.js"></script>
 <script type="text/javascript" src="TestCaseContainer.js"></script>
 
 <script>
@@ -124,7 +116,7 @@
         appFile = ["TestBitmap.js"];
     }
 
-    egret_h5.preloadScript(list, "../src/");
+    egret_h5.preloadScript(list, "../../output/egret/src/");
     egret_h5.preloadScript(appFile, "");
     egret_h5.startLoading();
 </script>

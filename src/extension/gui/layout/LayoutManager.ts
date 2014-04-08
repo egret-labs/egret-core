@@ -1,4 +1,4 @@
-///<reference path="../../../egret/core/EventDispatcher.ts" />
+///<reference path="../../../egret/events/EventDispatcher.ts" />
 
 module ns_egret{
     export class LayoutManager extends EventDispatcher {

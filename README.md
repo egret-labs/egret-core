@@ -1,5 +1,6 @@
 Egret Framework
 ================================================
+Current Version: v0.9.2 (prerelease)
 
 
 
@@ -29,22 +30,17 @@ Egret Framework是一款使用JavaScript(TypeScript)编写的HTML5开源免费�
 
 如何构建
 -------------------------
-配置环境参见 [如何配置egret开发环境](https://github.com/egret-team/egret/wiki)
+配置环境参见 [如何配置Egret开发环境](https://github.com/egret-team/egret/wiki)
 
-配置编译脚本的依赖库 （执行此步骤之前，必须先配置第一步）
-```
-cd ${egret_root}/tools/nodejs
-npm install 
-```
+构建代码和创建项目参见 [如何使用Egret Command Line Tool](/tools/README.md)
 
-编译代码
-```
-node ${egret_root}/tools/nodejs/build_typescript.js
-```
 
 
 
 #### 发布说明
+
+[Egret Release Notes 2014-4-7](/docs/ReleaseNotes.md)
+
 [Egret Release Notes 2014-3-27](/docs/ReleaseNotes.md)
 
 [Egret Release Notes 2014-3-24](/docs/ReleaseNotes.md)

@@ -1,0 +1,11 @@
+{
+    "name": "egret",
+    "version": "0.0.1",
+    "private": true,
+    "scripts": {
+        "start": "node app"
+    },
+    "bin": {
+        "egret": "./bin/egret"
+    }
+}
