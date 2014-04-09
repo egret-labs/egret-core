@@ -19,22 +19,30 @@ module ns_egret {
 
     export class StageText {
 
-        private div;
-        private inputElement;
+        private div:HTMLDivElement;
+        private inputElement:HTMLInputElement;
 
         constructor() {
 
         }
 
-        public getText() {
+        public getText():string {
             return this.inputElement.value;
         }
 
-        public setText(value) {
+        public setText(value:string):void {
             this.inputElement.value = value;
         }
 
-        public open(x:number, y:number, width:number = 160, height:number = 21) {
+        public setTextType(type:string):void {
+            this.inputElement.type = type;
+        }
+
+        public getTextType():string {
+            return this.inputElement.type;
+        }
+
+        public open(x:number, y:number, width:number = 160, height:number = 21):void {
 
 
             var scaleX = ns_egret.StageDelegate.getInstance().getScaleX();
@@ -81,7 +89,7 @@ module ns_egret {
             this.inputElement = inputElement;
         }
 
-        public remove() {
+        public remove():void {
             var div = this.div;
             if (div && div.parentNode) {
                 div.parentNode.removeChild(div);
