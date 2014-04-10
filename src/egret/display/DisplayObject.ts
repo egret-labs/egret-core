@@ -39,6 +39,8 @@ module ns_egret {
      * draw()</br> (beta)
      */
     export class DisplayObject extends EventDispatcher {
+
+        public name:string;
         /**
          * @description {Sting} 表示包含此显示对象的 DisplayObjectContainer 对象
          */
@@ -123,7 +125,7 @@ module ns_egret {
          * @private
          * @param renderContext
          */
-            visit(renderContext:RendererContext) {
+        visit(renderContext:RendererContext) {
             if (!this.visible) {
                 return;
             }
@@ -135,7 +137,7 @@ module ns_egret {
         /**
          * @private
          */
-            preDraw() {
+        preDraw() {
 
         }
 
@@ -143,7 +145,7 @@ module ns_egret {
          * @private
          * @param renderContext
          */
-            draw(renderContext:RendererContext) {
+        draw(renderContext:RendererContext) {
 
 
             var hasDrawCache = unstable.cache_api.draw.call(this, renderContext);
@@ -162,7 +164,7 @@ module ns_egret {
          * @private
          * @param renderContext
          */
-            updateTransform(renderContext:RendererContext) {
+        updateTransform(renderContext:RendererContext) {
             var o = this;
             var mtx = Matrix2D.identity.appendTransformFromDisplay(this);
             renderContext.setAlpha(o.alpha, o.blendMode);
@@ -176,7 +178,7 @@ module ns_egret {
          * @private
          * @param renderContext
          */
-            render(renderContext:RendererContext) {
+        render(renderContext:RendererContext) {
 
         }
 
@@ -184,7 +186,7 @@ module ns_egret {
          * 获取显示对象的测量边界
          * @returns {Rectangle}
          */
-            getBounds() {
+        getBounds() {
             if (this._contentWidth !== undefined) { //这里严格意义上只用_contentWidth判断是不严谨的，但是为了性能考虑，暂时这样
                 var anchorX, anchorY;
                 if (this.relativeAnchorPointX != 0 || this.relativeAnchorPointY != 0) {
@@ -208,7 +210,7 @@ module ns_egret {
          * @param contentWidth
          * @param contentHeight
          */
-            setContentSize(contentWidth:number, contentHeight:number) {
+        setContentSize(contentWidth:number, contentHeight:number) {
             this._contentWidth = contentWidth;
             this._contentHeight = contentHeight;
         }
@@ -218,7 +220,7 @@ module ns_egret {
          * @private
          * @returns {Matrix2D}
          */
-            getConcatenatedMatrix() {
+        getConcatenatedMatrix() {
             var matrix = Matrix2D.identity.identity();
             var o = this;
             while (o != null) {
@@ -226,7 +228,7 @@ module ns_egret {
                 if (o.relativeAnchorPointX != 0 || o.relativeAnchorPointY != 0) {
                     var bounds = o.getBounds();
                     matrix.prependTransform(o.x, o.y, o.scaleX, o.scaleY, o.rotation, o.skewX, o.skewY,
-                        bounds.width * o.relativeAnchorPointX, bounds.height * o.relativeAnchorPointY);
+                            bounds.width * o.relativeAnchorPointX, bounds.height * o.relativeAnchorPointY);
                 }
                 else {
                     matrix.prependTransform(o.x, o.y, o.scaleX, o.scaleY, o.rotation, o.skewX, o.skewY, o.anchorPointX, o.anchorPointY);
@@ -240,7 +242,7 @@ module ns_egret {
          * 将 point 对象从显示对象的（本地）坐标转换为舞台（全局）坐标。
          * @returns {ns_egret.Point}
          */
-            localToGlobal(x = 0, y = 0):ns_egret.Point {
+        localToGlobal(x = 0, y = 0):ns_egret.Point {
             var mtx = this.getConcatenatedMatrix();
             mtx.append(1, 0, 0, 1, x, y);
             var result = Point.identity;
@@ -253,7 +255,7 @@ module ns_egret {
          * 将 point 对象从舞台（全局坐标转换为显示对象（本地）坐标。
          * @returns {ns_egret.Point}
          */
-            globalToLocal(x = 0, y = 0):ns_egret.Point {
+        globalToLocal(x = 0, y = 0):ns_egret.Point {
 //            todo,现在的实现是错误的
             var mtx = this.getConcatenatedMatrix();
             mtx.invert();
@@ -271,7 +273,7 @@ module ns_egret {
          * @param ignoreTouchEnabled 是否忽略TouchEnabled
          * @returns {*}
          */
-            hitTest(x, y, ignoreTouchEnabled:Boolean = false) {
+        hitTest(x, y, ignoreTouchEnabled:Boolean = false) {
             if (!this.visible || (!ignoreTouchEnabled && !this.touchEnabled)) {
                 return null;
             }
@@ -302,7 +304,7 @@ module ns_egret {
          * @returns {ns_egret.Rectangle}
          * @private
          */
-            _measureBounds():ns_egret.Rectangle {
+        _measureBounds():ns_egret.Rectangle {
             ns_egret.Logger.fatal("子类需要实现的方法");
             return ns_egret.Rectangle.identity;
         }
@@ -348,12 +350,12 @@ module ns_egret {
 
         public _onAddToStage() {
             this._isRunning = true;
-            this.dispatchEvent(DisplayListEvent.ADD_TO_STAGE);
+            this.dispatchEvent(Event.ADD_TO_STAGE);
         }
 
         public _onRemoveFromStage() {
             this._isRunning = false;
-            this.dispatchEvent(DisplayListEvent.REMOVE_FROM_STAGE);
+            this.dispatchEvent(Event.REMOVE_FROM_STAGE);
         }
 
         public isRunning() {
@@ -412,14 +414,6 @@ module ns_egret {
             return bounds.initialize(minX, minY, maxX - minX, maxY - minY);
 
         }
-    }
-
-    export class DisplayListEvent {
-
-        public static ADD_TO_STAGE:string = "addToStage";
-        public static REMOVE_FROM_STAGE:string = "removeFromStage";
-
-
     }
 
 }

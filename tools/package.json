@@ -5,8 +5,7 @@
     "scripts": {
         "start": "node app"
     },
-    "dependencies": {
-        "crc32": "*",
-        "async": "*"
+    "bin": {
+        "egret": "./bin/egret"
     }
 }

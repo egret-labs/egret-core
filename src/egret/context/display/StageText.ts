@@ -19,38 +19,51 @@ module ns_egret {
 
     export class StageText {
 
-        private div;
-        private inputElement;
+        private div:HTMLDivElement;
+        private inputElement:HTMLInputElement;
 
         constructor() {
 
         }
 
-        public getText() {
+        public getText():string {
             return this.inputElement.value;
         }
 
-        public setText(value) {
+        public setText(value:string):void {
             this.inputElement.value = value;
         }
 
-        public open(x:number, y:number, width:number = 160, height:number = 21) {
+        public setTextType(type:string):void {
+            this.inputElement.type = type;
+        }
+
+        public getTextType():string {
+            return this.inputElement.type;
+        }
+
+        public open(x:number, y:number, width:number = 160, height:number = 21):void {
+
+
+            var scaleX = ns_egret.StageDelegate.getInstance().getScaleX();
+            var scaleY = ns_egret.StageDelegate.getInstance().getScaleY();
+
             var inputElement = document.createElement("input");
             inputElement.type = "text";
             inputElement.style.fontSize = "20px";
             inputElement.style.color = "#FFFFFF";
             inputElement.style.borderStyle = "none";
             inputElement.style.background = "none";
-            inputElement.style.width = width * ns_egret.StageDelegate.getInstance().getScaleX() + "px";
-            inputElement.style.height = height * ns_egret.StageDelegate.getInstance().getScaleY() + "px";
+            inputElement.style.width = width * scaleX + "px";
+            inputElement.style.height = height * scaleY + "px";
             inputElement.style.outline = "medium";
 
             var div = ns_egret.Browser.getInstance().$new("div");
             div.style.position = 'absolute';
-            div.position.x = x * ns_egret.StageDelegate.getInstance().getScaleX();
-            div.style.width = width * ns_egret.StageDelegate.getInstance().getScaleX() + "px";
-            div.style.height = height * ns_egret.StageDelegate.getInstance().getScaleY() + "px";
-            div.position.y = y * ns_egret.StageDelegate.getInstance().getScaleY();
+            div.position.x = x * scaleX;
+            div.style.width = width * scaleX + "px";
+            div.style.height = height * scaleY + "px";
+            div.position.y = y * scaleY;
             div.transforms();
             div.appendChild(inputElement);
 
@@ -64,7 +77,7 @@ module ns_egret {
                 stageDelegateDiv.style.position = 'absolute';
                 stageDelegateDiv.style.width = width + "px";
                 stageDelegateDiv.style.maxHeight = height + "px";
-                stageDelegateDiv.style.margin = 0;
+                stageDelegateDiv.style.margin = 0 + "px";
 
                 var canvas = document.getElementById(ns_egret.StageDelegate.canvas_div_name);
                 canvas.appendChild(stageDelegateDiv);
@@ -76,7 +89,7 @@ module ns_egret {
             this.inputElement = inputElement;
         }
 
-        public remove() {
+        public remove():void {
             var div = this.div;
             if (div && div.parentNode) {
                 div.parentNode.removeChild(div);

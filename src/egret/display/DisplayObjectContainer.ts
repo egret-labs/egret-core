@@ -77,12 +77,14 @@ module ns_egret {
             else {
                 ns_egret.Logger.fatal("提供的索引超出范围");
             }
+            this.numChildren++;
             child.parent = this;
+            child.dispatchEvent(Event.ADDED);
             if (this.isRunning()) {//当前容器在舞台
                 child._onAddToStage();
             }
 
-            this.numChildren++;
+
         }
 
         /**
@@ -93,7 +95,7 @@ module ns_egret {
             var locChildren = this._children;
             var index = locChildren.indexOf(child);
             if (index >= 0) {
-                this.removeChildAt(index);
+                this.childRemoved(index);
             }
             else {
                 ns_egret.Logger.fatal("child未被addChild到该parent");
@@ -101,18 +103,24 @@ module ns_egret {
         }
 
         public removeChildAt(index:number) {
-            var locChildren = this._children;
-            if (index >= 0 && index < locChildren.length) {
-                var child:DisplayObject = locChildren.splice(index, 1)[0];
-                child.parent = null;
-                if (this.isRunning()) {//在舞台上
-                    child._onRemoveFromStage();
-                }
-                this.numChildren--;
+            if (index >= 0 && index < this._children.length) {
+                this.childRemoved(index);
             }
             else {
                 ns_egret.Logger.fatal("child未被addChild到该parent");
             }
+        }
+
+        private childRemoved(index:number):void{
+            var locChildren = this._children;
+            var child:DisplayObject = locChildren[index];
+            child.dispatchEvent(Event.REMOVED)
+            if (this.isRunning()) {//在舞台上
+                child._onRemoveFromStage();
+            }
+            child.parent = null;
+            locChildren.splice(index, 1);
+            this.numChildren--;
         }
 
         /**
@@ -148,14 +156,10 @@ module ns_egret {
          */
         public removeAllChildren() {
             var locChildren = this._children;
-            while (locChildren.length > 0) {
-                var child:DisplayObject = locChildren.pop();
-                child.parent = null;
-                if (this.isRunning()) {//在舞台上
-                    child._onRemoveFromStage();
-                }
+            for(var i:number=locChildren.length-1;i>=0;i--)
+            {
+                this.childRemoved(i);
             }
-            this.numChildren = 0;
         }
 
 //          这个方法经过重构，已经可以无需重写了

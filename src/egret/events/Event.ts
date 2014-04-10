@@ -15,3 +15,14 @@
  * FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
+
+module ns_egret{
+
+    export class Event {
+
+        public static ADDED_TO_STAGE:string = "addedToStage";
+        public static REMOVED_FROM_STAGE:string = "removedFromStage";
+        public static ADDED:string = "added";
+        public static REMOVED:string = "removed";
+    }
+}
