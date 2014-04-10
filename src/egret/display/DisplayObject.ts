@@ -1,5 +1,4 @@
 /// <reference path="../context/renderer/RendererContext.ts"/>
-/// <reference path="../core/Geometry.ts"/>
 /// <reference path="DisplayObjectContainer.ts"/>
 /// <reference path="../interactive/TouchContext.ts"/>
 /**
