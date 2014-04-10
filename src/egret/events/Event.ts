@@ -20,8 +20,8 @@ module ns_egret{
 
     export class Event {
 
-        public static ADD_TO_STAGE:string = "addToStage";
-        public static REMOVE_FROM_STAGE:string = "removeFromStage";
+        public static ADDED_TO_STAGE:string = "addedToStage";
+        public static REMOVED_FROM_STAGE:string = "removedFromStage";
         public static ADDED:string = "added";
         public static REMOVED:string = "removed";
     }

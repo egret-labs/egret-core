@@ -3,3 +3,4 @@ tools/nodejs/node_modules
 *.js
 *.local
 *.map
+.idea
