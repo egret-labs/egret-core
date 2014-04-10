@@ -33,16 +33,13 @@ $ npm install egret/tools -g
 #### 步骤四：创建项目
 ```
 $ cd {egret_workspace} 
-$ egret c HelloEgret  创建新项目
+$ egret c HelloEgret    #创建新项目
 ```
 > 综上所述，同一个工作目录下可以创建多个游戏项目，并共享同一份egret代码库。
 
 #### 步骤五：编译代码
 ```
-$ egret b  同时编译引擎代码和所有的游戏项目代码
-$ egret b -e 仅编译引擎代码
-$ egret b -g 编译所有的游戏项目代码
-$ egret b -g HelloEgret 编译特定的 某个游戏项目（HelloEgret）代码
+$ egret b  #根据创建项目脚本生成的config.local文件，编译全部TypeScript文件
 ```
 
 
