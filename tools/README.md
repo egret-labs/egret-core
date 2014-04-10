@@ -19,7 +19,7 @@ Egret 0.9.2废弃了之前分散的脚本执行方式，改为将一个脚本作
 #### 步骤一：创建工作空间
 在本机WebServer可以访问到的位置创建一个新的文件夹，该文件夹在下文被称为 {egret_workspace}
 
-如果您使用WebStorm作为开发环境，请以egret_workspace目录作为Project目录
+如果您使用WebStorm作为开发环境，请以 {egret_workspace} 目录作为Project目录
 
 #### 步骤二：创建egret
 将egret复制到 {egret_workspace} 下，并确认该文件夹名为egret
@@ -56,7 +56,8 @@ $ egret b  #根据创建项目脚本生成的config.local文件，编译全部Ty
 上述脚本执行成功后，游戏项目的结构如下所示
 ```
 egret_workspace
-  |-- engine //引擎源代码目录（src）
+  |-- egret //引擎目录
+        |-- src 引擎代码目录
   |-- your_project   //游戏逻辑目录
         |-- src //游戏代码目录
         |-- assets //游戏资源目录
