@@ -1,6 +1,10 @@
 /// <reference path="../context/renderer/RendererContext.ts"/>
 /// <reference path="DisplayObjectContainer.ts"/>
 /// <reference path="../interactive/TouchContext.ts"/>
+/// <reference path="../geom/Matrix2D.ts"/>
+/// <reference path="../geom/Point.ts"/>
+/// <reference path="../geom/Rectangle.ts"/>
+/// <reference path="../interactive/TouchContext.ts"/>
 /**
  * Copyright (c) Egret-Labs.org. Permission is hereby granted, free of charge,
  * to any person obtaining a copy of this software and associated documentation

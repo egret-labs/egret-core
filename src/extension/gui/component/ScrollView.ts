@@ -22,6 +22,7 @@
 /// <reference path="../../../egret/tween/Tween.ts"/>
 /// <reference path="../../../egret/core/Constant.ts"/>
 /// <reference path="../../../egret/tween/Ease.ts"/>
+/// <reference path="../../../egret/geom/Rectangle.ts"/>
 
 module ns_egret {
     /**
