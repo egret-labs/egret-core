@@ -18,6 +18,7 @@ Egret 0.9.2废弃了之前分散的脚本执行方式，改为将一个脚本作
 
 #### 步骤一：创建工作空间
 在本机WebServer可以访问到的位置创建一个新的文件夹，该文件夹在下文被称为 {egret_workspace}
+
 如果您使用WebStorm作为开发环境，请以egret_workspace目录作为Project目录
 
 #### 步骤二：创建egret
