@@ -30,6 +30,7 @@
 /// <reference path="../managers/ISystemManager.ts"/>
 /// <reference path="../managers/IToolTipManagerClient.ts"/>
 /// <reference path="../managers/ToolTipManager.ts"/>
+/// <reference path="UIGlobals.ts"/>
 
 module ns_egret {
 
@@ -51,7 +52,7 @@ module ns_egret {
 		private onAddedToStage(e:Event):void{
 			this.removeEventListener(Event.ADDED_TO_STAGE,this.onAddedToStage);
 			this.initialize();
-			DomGlobals.initlize(this.stage);
+			UIGlobals.initlize(this.stage);
 			if(this._nestLevel>0)
 				this.checkInvalidateFlag();
 		}
@@ -222,7 +223,7 @@ module ns_egret {
 		public initialize():void{
 			if(this.initializeCalled)
 				return;
-			if(DomGlobals.stage){
+			if(UIGlobals.stage){
 				this.removeEventListener(Event.ADDED_TO_STAGE,this.onAddedToStage);
 			}
 			this.initializeCalled = true;
@@ -346,19 +347,19 @@ module ns_egret {
 		 * 检查属性失效标记并应用
 		 */		
 		private checkInvalidateFlag(event:Event=null):void{
-			if(!DomGlobals.layoutManager)
+			if(!UIGlobals.layoutManager)
 				return;
 			if(this.invalidatePropertiesFlag){
-				DomGlobals.layoutManager.invalidateProperties(this);
+				UIGlobals.layoutManager.invalidateProperties(this);
 			}
 			if(this.invalidateSizeFlag){
-				DomGlobals.layoutManager.invalidateSize(this);
+				UIGlobals.layoutManager.invalidateSize(this);
 			}
 			if(this.invalidateDisplayListFlag){
-				DomGlobals.layoutManager.invalidateDisplayList(this);
+				UIGlobals.layoutManager.invalidateDisplayList(this);
 			}
 			if(this.validateNowFlag){
-				DomGlobals.layoutManager.validateClient(this);
+				UIGlobals.layoutManager.validateClient(this);
 				this.validateNowFlag = false;
 			}
 		}
@@ -620,8 +621,8 @@ module ns_egret {
 			if (!this.invalidatePropertiesFlag){
 				this.invalidatePropertiesFlag = true;
 				
-				if (this.parent&&DomGlobals.layoutManager)
-					DomGlobals.layoutManager.invalidateProperties(this);
+				if (this.parent&&UIGlobals.layoutManager)
+					UIGlobals.layoutManager.invalidateProperties(this);
 			}
 		}
 		/**
@@ -644,8 +645,8 @@ module ns_egret {
 			if (!this.invalidateSizeFlag){
 				this.invalidateSizeFlag = true;
 				
-				if (this.parent&&DomGlobals.layoutManager)
-					DomGlobals.layoutManager.invalidateSize(this);
+				if (this.parent&&UIGlobals.layoutManager)
+					UIGlobals.layoutManager.invalidateSize(this);
 			}
 		}
 		
@@ -724,8 +725,8 @@ module ns_egret {
 			if (!this.invalidateDisplayListFlag){
 				this.invalidateDisplayListFlag = true;
 				
-				if (this.parent&&DomGlobals.layoutManager)
-					DomGlobals.layoutManager.invalidateDisplayList(this);
+				if (this.parent&&UIGlobals.layoutManager)
+					UIGlobals.layoutManager.invalidateDisplayList(this);
 			}
 		}
 		
@@ -770,8 +771,8 @@ module ns_egret {
 		 * @inheritDoc
 		 */	
 		public validateNow(skipDisplayList:boolean = false):void{
-			if(!this.validateNowFlag&&DomGlobals.layoutManager!=null)
-				DomGlobals.layoutManager.validateClient(this,skipDisplayList);
+			if(!this.validateNowFlag&&UIGlobals.layoutManager!=null)
+				UIGlobals.layoutManager.validateClient(this,skipDisplayList);
 			else
 				this.validateNowFlag = true;
 		}
@@ -1141,8 +1142,8 @@ module ns_egret {
 		 * @inheritDoc
 		 */		
 		public setFocus():void{
-			if(DomGlobals.stage){
-				DomGlobals.stage.focus = this;
+			if(UIGlobals.stage){
+				UIGlobals.stage.focus = this;
 			}
 		}
 		
