@@ -8,18 +8,20 @@ var crc32 = require('../core/crc32');
 var cp_exec = require('child_process').exec;
 var CRC32BuildTS = "buildTS.local";
 var libs = require("../core/normal_libs");
-
+var currDir_global;
 function run(currDir, args, opts) {
     var u = opts["-u"];
     if (u && u.length > 0) {
         currDir = u[0];
     }
+    currDir_global = currDir;
     //获得需要编译的文件夹
     var dir = getAllDir(currDir, args, opts);
     var count = 0;
     var buildOver = function () {
         if (count >= dir.length) {
             clearTS();
+            copyExample();
             return;
         }
         var sourcePath = path.join(currDir, dir[count]);
@@ -37,6 +39,15 @@ function run(currDir, args, opts) {
                 libs.deleteFileSync(fileToDelete);
             }
         }
+    }
+
+    var copyExample = function(){
+        var engine_root = getConfig()["engine"];
+        var target_src = path.join(currDir, "output","examples");
+        var source_src = path.join(currDir,engine_root, "../","examples");
+        console.log (target_src)
+        console.log (source_src)
+        libs.copy(source_src, target_src);
     }
 
     buildOver();
@@ -72,6 +83,20 @@ function execute(source, output, buildOver) {
     });
 }
 
+function getConfig(){
+    var configPath = path.join(currDir_global, 'config.json');
+    if (!fs.existsSync(configPath)) {
+        var errorMessage = "配置文件不存在";
+        console.log(errorMessage);
+        process.exit([1]);
+        return;
+    }
+
+    var configStr = fs.readFileSync(configPath, "utf-8");
+    var configObj = JSON.parse(configStr);
+    return configObj;
+}
+
 function getAllDir(currDir, args, opts) {
 
 
@@ -89,16 +114,7 @@ function getAllDir(currDir, args, opts) {
         gameArr.push(filePath);
     }
 
-    var configPath = path.join(currDir, 'config.json');
-    if (!fs.existsSync(configPath)) {
-        var errorMessage = "配置文件不存在";
-        console.log(errorMessage);
-        process.exit([1]);
-        return;
-    }
-
-    var configStr = fs.readFileSync(configPath, "utf-8");
-    var configObj = JSON.parse(configStr);
+    var configObj = getConfig();
 
     var gameArr = [];
 
