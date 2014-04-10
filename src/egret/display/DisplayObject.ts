@@ -41,10 +41,20 @@ module ns_egret {
     export class DisplayObject extends EventDispatcher {
 
         public name:string;
+
+        private _parent:DisplayObjectContainer = null;
         /**
          * @description {Sting} 表示包含此显示对象的 DisplayObjectContainer 对象
          */
-        public parent:ns_egret.DisplayObjectContainer = null;
+        public get parent():DisplayObjectContainer{
+            return this._parent;
+        }
+        /**
+         * 仅供框架内部调用。
+         */
+        public _parentChanged(parent:DisplayObjectContainer):void{
+            this._parent = parent;
+        }
 
         /**
          * 表示 DisplayObject 实例相对于父级 DisplayObjectContainer 本地坐标的 x 坐标。
@@ -350,12 +360,12 @@ module ns_egret {
 
         public _onAddToStage() {
             this._isRunning = true;
-            this.dispatchEvent(Event.ADD_TO_STAGE);
+            this.dispatchEvent(Event.ADDED_TO_STAGE);
         }
 
         public _onRemoveFromStage() {
             this._isRunning = false;
-            this.dispatchEvent(Event.REMOVE_FROM_STAGE);
+            this.dispatchEvent(Event.REMOVED_FROM_STAGE);
         }
 
         public isRunning() {
