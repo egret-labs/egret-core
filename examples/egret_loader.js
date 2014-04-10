@@ -3,7 +3,6 @@
  */
 
 egret_h5 = {};
-
 egret_h5.prefix = "";
 
 egret_h5.loadScript = function (list, callback) {
