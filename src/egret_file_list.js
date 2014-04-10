@@ -1,6 +1,7 @@
 
 var temp = [
     "egret/events/EventDispatcher.js",
+    "egret/events/Event.js",
     "egret/core/MainContext.js",
     "egret/core/Profiler.js",
     "egret/core/Ticker.js",
