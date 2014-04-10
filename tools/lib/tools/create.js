@@ -82,6 +82,9 @@ function generateConfigJson(currentDir,engine,projectName) {
     }
     gameData["game"][projectName] = projectName + "/";
     if (engine && engine.length > 0) {
+        gameData["engine"] = engine;
+    }
+    else if (!gameData["engine"]){
         gameData["engine"] = "egret/src/";
     }
 
