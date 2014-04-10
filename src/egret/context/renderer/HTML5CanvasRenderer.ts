@@ -1,5 +1,5 @@
 /// <reference path="RendererContext.ts"/>
-/// <reference path="../../core/Geometry.ts"/>
+/// <reference path="../../geom/Matrix2D.ts"/>
 /// <reference path="../../core/StageDelegate.ts"/>
 /// <reference path="../../debug/DEBUG.ts"/>
 /**

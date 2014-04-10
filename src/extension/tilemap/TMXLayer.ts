@@ -22,7 +22,6 @@
 /// <reference path="../../egret/core/Logger.ts"/>
 /// <reference path="../../egret/display/Bitmap.ts"/>
 /// <reference path="../../egret/texture/TextureCache.ts"/>
-/// <reference path="../../egret/core/Geometry.ts"/>
 module ns_egret{
     export class TMXLayer extends DisplayObjectContainer {
         private _texture:Texture = null;
