@@ -25,7 +25,7 @@ Egret 0.9.2废弃了之前分散的脚本执行方式，改为将一个脚本作
 #### 步骤三：配置全局命令行工具
 ```
 $ cd {egret_workspace}
-$ npm install tools -g
+$ npm install egret/tools -g
 ```
 
 > 如果上述命令执行失败，请先查看系统当前用户是否有管理员权限
