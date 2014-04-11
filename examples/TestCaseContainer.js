@@ -57,6 +57,8 @@ var app = {
         })
         loadingController.addEventListener(ns_egret.ResourceLoader.LOAD_COMPLETE, this.handleComplete, this);
         loadingController.load();
+
+        ns_egret.Profiler.getInstance().run();
     },
 
 

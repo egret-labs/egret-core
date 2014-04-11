@@ -82,17 +82,7 @@ module ns_egret {
          * @param matrix
          * @stable A
          */
-        public transform(matrix:ns_egret.Matrix2D) {
-
-        }
-
-        /**
-         * 平移当前渲染矩阵
-         * @param x
-         * @param y
-         * @stable A
-         */
-        public translate(x:number, y:number) {
+        public setTransform(matrix:ns_egret.Matrix2D) {
 
         }
 

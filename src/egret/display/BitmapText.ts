@@ -19,12 +19,12 @@
 ///<reference path="DisplayObject.ts" />
 ///<reference path="Bitmap.ts" />
 
-module ns_egret{
+module ns_egret {
     /**
+     * @class BitmapText
      * 位图字体采用了Bitmap+SpriteSheet的方式来渲染文字
-     * @class ns_egret.BitmapText
      */
-    export class BitmapText extends DisplayObject {
+    export class BitmapText extends DisplayObjectContainer {
 
         /**
          * 设置文本
@@ -42,49 +42,53 @@ module ns_egret{
          */
         public bitmapFontData;
 
+        private _bitmapPool:Array;
+
         constructor() {
             super();
+            this._bitmapPool = [];
         }
 
-        public render(renderContext:RendererContext) {
-            if(!this.text)
-            {
+        public updateTransform() {
+            if (!this.visible) {
                 return;
             }
-            this.text = this.text.toString();
-            this._renderText(renderContext);
+            this._renderText();
+            super.updateTransform();
         }
 
         //todo:这里对bounds的处理和TextField非常类似，以后考虑重构
-        private _renderText(renderContext:RendererContext,forMeasureContentSize:boolean = false){
+        _renderText(forMeasureContentSize:boolean = false) {
             this._contentWidth = 0;
             this._contentHeight = 0;
             for (var i = 0, l = this.text.length; i < l; i++) {
                 var character = this.text.charAt(i);
                 var spriteFrame = this.bitmapFontData[character];
                 if (spriteFrame == null) {
-                    ns_egret.Logger.fatal("BitmapText：异常的bitmapFontData: ",character);
+                    ns_egret.Logger.fatal("BitmapText：异常的bitmapFontData: ", character);
                 }
                 var offsetX = spriteFrame.offX;
                 var offsetY = spriteFrame.offY;
                 var characterWidth = spriteFrame.w;
-                if (!forMeasureContentSize){
-                    renderContext.drawImage(this.texture,
-                        spriteFrame.x, spriteFrame.y, spriteFrame.w, spriteFrame.h,
-                        offsetX, offsetY, spriteFrame.w, spriteFrame.h);
-                    renderContext.translate(characterWidth, 0);//todo，不支持换行
+                if (!forMeasureContentSize) {//todo，不支持换行
+                    var bitmap = this._bitmapPool[i];
+                    if (!bitmap) {
+                        bitmap = Bitmap.initWithTexture(this.texture);
+                        this._bitmapPool.push(bitmap);
+                        this.addChild(bitmap);
+                    }
+                    bitmap.spriteFrame = spriteFrame;
+                    bitmap.x = this._contentWidth;
                 }
                 this._contentWidth += characterWidth + offsetX;
-                if(offsetY + spriteFrame.h > this._contentHeight)
-                {
+                if (offsetY + spriteFrame.h > this._contentHeight) {
                     this._contentHeight = offsetY + spriteFrame.h;
                 }
             }
         }
 
         public getBounds():ns_egret.Rectangle {
-            var renderContext = ns_egret.MainContext.instance.rendererContext;
-            this._renderText(renderContext, true);
+            this._renderText(true);
             var anchorX, anchorY;
             if (this.relativeAnchorPointX != 0 || this.relativeAnchorPointY != 0) {
                 anchorX = this._contentWidth * this.relativeAnchorPointX;

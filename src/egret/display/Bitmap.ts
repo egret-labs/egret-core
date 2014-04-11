@@ -83,24 +83,26 @@ module ns_egret {
             if (locTexture == null || locTexture._bitmapData == null) {
                 return;
             }
-            var x, y, w, h;
+            var x, y, w, h, offsetX, offsetY;
             if (this.spriteFrame) {
                 var rect:ns_egret.SpriteSheetFrame = this.spriteFrame;
                 x = rect.x;
                 y = rect.y;
                 w = rect.w;
                 h = rect.h;
+                offsetX = rect.offX;
+                offsetY = rect.offY;
             }
             else {
                 x = 0;
                 y = 0;
                 w = locTexture.getTextureWidth();
                 h = locTexture.getTextureHeight();
+                offsetX = 0;
+                offsetY = 0;
             }
-            renderContext.drawImage(locTexture, x, y, w, h, 0, 0, w, h);
-            if (Bitmap.debug || this.debug) {
-                renderContext.strokeRect(x, y, w, h, this.debugColor);
-            }
+
+            RenderFilter.getInstance().drawImage(renderContext, this, x, y, w, h, offsetX, offsetY, w, h);
         }
 
         /**

@@ -79,7 +79,9 @@ module ns_egret{
             var context = this.rendererContext;
             context.clearScreen();
             this.dispatchEvent(MainContext.EVENT_START_RENDER);
-            this.stage.visit(context);
+            this.stage.updateTransform();
+            this.dispatchEvent(MainContext.EVENT_FINISH_UPDATE_TRANSFORM);
+            this.stage.draw(context);
             this.dispatchEvent(MainContext.EVENT_FINISH_RENDER);
         }
 
@@ -97,6 +99,10 @@ module ns_egret{
          * @event 主循环：渲染完毕
          */
         public static EVENT_FINISH_RENDER:string = "finish_render";
+        /**
+         * @event 主循环：updateTransform完毕
+         */
+        public static EVENT_FINISH_UPDATE_TRANSFORM:string = "finish_updateTransform";
     }
 }
 

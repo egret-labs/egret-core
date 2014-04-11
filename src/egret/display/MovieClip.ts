@@ -37,7 +37,7 @@ module ns_egret {
 
         constructor(public data:string, public texture:Texture) {
             super();
-            this._frameData = JSON.parse(data);
+            this._frameData = data;
         }
 
         /**
@@ -136,12 +136,7 @@ module ns_egret {
             else {
                 var resData = this._frameData.res[name];
                 result = Bitmap.initWithTexture(this.texture);
-                var spriteframe:SpriteSheetFrame = new SpriteSheetFrame();
-                spriteframe.x = resData.resX;
-                spriteframe.y = resData.resY;
-                spriteframe.w = resData.resW;
-                spriteframe.h = resData.resH;
-                result.spriteFrame = spriteframe;
+                result.spriteFrame = resData;
                 this._resPool[name] = result;
             }
             return result;

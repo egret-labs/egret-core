@@ -17,7 +17,7 @@
  */
 /// <reference path="Ticker.ts"/>
 /// <reference path="../display/TextField.ts"/>
-module ns_egret{
+module ns_egret {
     /**
      * Profiler是egret的性能检测分析类
      * @todo GitHub文档，如何使用Profiler
@@ -25,6 +25,7 @@ module ns_egret{
     export class Profiler {
 
         private static instance:Profiler;
+
         static getInstance():Profiler {
             if (Profiler.instance == null) {
                 Profiler.instance = new Profiler();
@@ -38,6 +39,7 @@ module ns_egret{
 
         private _logicPerformanceCost:number = 0;
         private _renderPerformanceCost:number = 0;
+        private _updateTransformPerformanceCost:number = 0;
         private _preDrawCount:number = 0;
 
         private _txt:TextField;
@@ -59,7 +61,7 @@ module ns_egret{
             context.addEventListener(MainContext.EVENT_ENTER_FRAME, this.onEnterFrame, this);
             context.addEventListener(MainContext.EVENT_START_RENDER, this.onStartRender, this);
             context.addEventListener(MainContext.EVENT_FINISH_RENDER, this.onFinishRender, this);
-
+            context.addEventListener(MainContext.EVENT_FINISH_UPDATE_TRANSFORM, this.onFinishUpdateTransform, this);
         }
 
         /**
@@ -76,7 +78,12 @@ module ns_egret{
             var now:number = Ticker.now();
             this._logicPerformanceCost = now - this._lastTime;
             this._lastTime = now;
+        }
 
+        private onFinishUpdateTransform() {
+            var now:number = Ticker.now();
+            this._updateTransformPerformanceCost = now - this._lastTime;
+            this._lastTime = now;
         }
 
         /**
@@ -100,8 +107,10 @@ module ns_egret{
             if (this._tick == 6) {
                 this._tick = 0;
                 var drawStr = (this._preDrawCount - 1).toString();
-                var renderStr = MainContext.instance.rendererContext.renderCost.toString();
-                var timeStr = Math.ceil(this._logicPerformanceCost).toString() + "," + Math.ceil(this._renderPerformanceCost).toString() + "," + renderStr;
+                var timeStr = Math.ceil(this._logicPerformanceCost).toString() + ","
+                    + Math.ceil(this._updateTransformPerformanceCost).toString() + ","
+                    + Math.ceil(this._renderPerformanceCost).toString() + ","
+                    + Math.ceil(ns_egret.MainContext.instance.rendererContext.renderCost).toString();
                 var frameStr = Math.floor(1000 / delta).toString();
 
                 this._txt.text = drawStr + "\n" + timeStr + "\n" + frameStr;

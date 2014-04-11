@@ -1,4 +1,5 @@
 /// <reference path="../context/renderer/RendererContext.ts"/>
+/// <reference path="../core/RenderFilter.ts"/>
 /// <reference path="DisplayObjectContainer.ts"/>
 /// <reference path="../interactive/TouchContext.ts"/>
 /// <reference path="../geom/Matrix2D.ts"/>
@@ -127,71 +128,76 @@ module ns_egret {
          */
         public mask:Rectangle;
 
+        public worldTransform:ns_egret.Matrix2D;
+        public worldBounds:ns_egret.Rectangle;
+        public worldAlpha:number;
+
 
         constructor() {
             super();
             this.x = this.y = 0;
             this.visible = true;
+            this.worldTransform = new ns_egret.Matrix2D();
+            this.worldBounds = new ns_egret.Rectangle(0, 0, 0, 0);
+            this.worldAlpha = 1;
         }
 
         /**
          * @private
          * @param renderContext
          */
-        visit(renderContext:RendererContext) {
+            draw(renderContext:RendererContext) {
             if (!this.visible) {
                 return;
             }
-            this.preDraw();
-            this.draw(renderContext);
-//        renderContext.globalAlpha *= .5;
-        }
-
-        /**
-         * @private
-         */
-        preDraw() {
-
-        }
-
-        /**
-         * @private
-         * @param renderContext
-         */
-        draw(renderContext:RendererContext) {
-
-
             var hasDrawCache = unstable.cache_api.draw.call(this, renderContext);
             if (hasDrawCache) {
                 return;
             }
-
-            renderContext.save();
-            this.updateTransform(renderContext);
-            this.render(renderContext);
-            renderContext.restore();
-        }
-
-
-        /**
-         * @private
-         * @param renderContext
-         */
-        updateTransform(renderContext:RendererContext) {
             var o = this;
-            var mtx = Matrix2D.identity.appendTransformFromDisplay(this);
-            renderContext.setAlpha(o.alpha, o.blendMode);
-            renderContext.transform(mtx);
+            renderContext.setAlpha(o.worldAlpha, o.blendMode);
+            renderContext.setTransform(o.worldTransform);
             if (o.mask) {
+                renderContext.save();
                 renderContext.clip(o.mask.x, o.mask.y, o.mask.width, o.mask.height);
+            }
+            this.render(renderContext);
+            if (o.mask) {
+                renderContext.restore();
             }
         }
 
+
         /**
          * @private
          * @param renderContext
          */
-        render(renderContext:RendererContext) {
+            updateTransform() {
+            var o = this;
+            o.worldTransform.identity();
+            o.worldTransform = o.worldTransform.appendMatrix(o.parent.worldTransform);
+            var anchorX, anchorY;
+            if (o.relativeAnchorPointX != 0 || o.relativeAnchorPointY != 0) {
+                var bounds = o.getBounds();
+                anchorX = bounds.width * o.relativeAnchorPointX;
+                anchorY = bounds.height * o.relativeAnchorPointY;
+            }
+            else {
+                anchorX = o.anchorPointX;
+                anchorY = o.anchorPointY;
+            }
+            o.worldTransform.appendTransform(o.x, o.y, o.scaleX, o.scaleY, o.rotation,
+                o.skewX, o.skewY, anchorX, anchorY);
+            var bounds:ns_egret.Rectangle = DisplayObject.getTransformBounds(o.getBounds(), o.worldTransform);
+            o.worldBounds.initialize(bounds.x, bounds.y, bounds.width, bounds.height);
+            o.worldAlpha = o.parent.worldAlpha * o.alpha;
+        }
+
+        /**
+         * @private
+         * @param renderContext
+         */
+            render(renderContext:RendererContext) {
 
         }
 
@@ -199,7 +205,7 @@ module ns_egret {
          * 获取显示对象的测量边界
          * @returns {Rectangle}
          */
-        getBounds() {
+            getBounds() {
             if (this._contentWidth !== undefined) { //这里严格意义上只用_contentWidth判断是不严谨的，但是为了性能考虑，暂时这样
                 var anchorX, anchorY;
                 if (this.relativeAnchorPointX != 0 || this.relativeAnchorPointY != 0) {
@@ -223,7 +229,7 @@ module ns_egret {
          * @param contentWidth
          * @param contentHeight
          */
-        setContentSize(contentWidth:number, contentHeight:number) {
+            setContentSize(contentWidth:number, contentHeight:number) {
             this._contentWidth = contentWidth;
             this._contentHeight = contentHeight;
         }
@@ -233,15 +239,14 @@ module ns_egret {
          * @private
          * @returns {Matrix2D}
          */
-        getConcatenatedMatrix() {
+            getConcatenatedMatrix() {
             var matrix = Matrix2D.identity.identity();
             var o = this;
             while (o != null) {
-//            matrix.prependTransform(o.x, o.y, o.scaleX, o.scaleY, o.rotation, o.skewX, o.skewY, o.regX, o.regY).prependProperties(o.alpha, o.shadow, o.compositeOperation);
                 if (o.relativeAnchorPointX != 0 || o.relativeAnchorPointY != 0) {
                     var bounds = o.getBounds();
                     matrix.prependTransform(o.x, o.y, o.scaleX, o.scaleY, o.rotation, o.skewX, o.skewY,
-                            bounds.width * o.relativeAnchorPointX, bounds.height * o.relativeAnchorPointY);
+                        bounds.width * o.relativeAnchorPointX, bounds.height * o.relativeAnchorPointY);
                 }
                 else {
                     matrix.prependTransform(o.x, o.y, o.scaleX, o.scaleY, o.rotation, o.skewX, o.skewY, o.anchorPointX, o.anchorPointY);
@@ -255,7 +260,7 @@ module ns_egret {
          * 将 point 对象从显示对象的（本地）坐标转换为舞台（全局）坐标。
          * @returns {ns_egret.Point}
          */
-        localToGlobal(x = 0, y = 0):ns_egret.Point {
+            localToGlobal(x = 0, y = 0):ns_egret.Point {
             var mtx = this.getConcatenatedMatrix();
             mtx.append(1, 0, 0, 1, x, y);
             var result = Point.identity;
@@ -268,7 +273,7 @@ module ns_egret {
          * 将 point 对象从舞台（全局坐标转换为显示对象（本地）坐标。
          * @returns {ns_egret.Point}
          */
-        globalToLocal(x = 0, y = 0):ns_egret.Point {
+            globalToLocal(x = 0, y = 0):ns_egret.Point {
 //            todo,现在的实现是错误的
             var mtx = this.getConcatenatedMatrix();
             mtx.invert();
@@ -286,14 +291,12 @@ module ns_egret {
          * @param ignoreTouchEnabled 是否忽略TouchEnabled
          * @returns {*}
          */
-        hitTest(x, y, ignoreTouchEnabled:Boolean = false) {
+            hitTest(x, y, ignoreTouchEnabled:Boolean = false) {
             if (!this.visible || (!ignoreTouchEnabled && !this.touchEnabled)) {
                 return null;
             }
             var bound:Rectangle = this.getBounds();
-
-            if (0 < x && x < bound.width
-                && 0 < y && y < bound.height) {
+            if (0 < x && x < bound.width && 0 < y && y < bound.height) {
                 if (this.mask) {
                     if (this.mask.x < x && x < this.mask.x + this.mask.width && this.mask.y < y && y < this.mask.y + this.mask.height) {
                         return this;
@@ -317,7 +320,7 @@ module ns_egret {
          * @returns {ns_egret.Rectangle}
          * @private
          */
-        _measureBounds():ns_egret.Rectangle {
+            _measureBounds():ns_egret.Rectangle {
             ns_egret.Logger.fatal("子类需要实现的方法");
             return ns_egret.Rectangle.identity;
         }
@@ -376,9 +379,7 @@ module ns_egret {
         }
 
 
-        static getTransformBounds(displayObject:DisplayObject) {
-            var bounds = displayObject.getBounds();
-            var mtx = displayObject.getMatrix();
+        static getTransformBounds(bounds:ns_egret.Rectangle, mtx:ns_egret.Matrix2D) {
             var x = bounds.x, y = bounds.y, width = bounds.width, height = bounds.height;
 
 //            if (x || y) {
@@ -436,30 +437,37 @@ unstable.cache_api = {};
 unstable.cache_api.cacheAsBitmap = function (bool) {
     var display:ns_egret.DisplayObject = this;
     if (bool) {
-
-
         var renderTexture = new ns_egret.RenderTexture();
         renderTexture.drawToTexture(display);
         display.renderTexture = renderTexture;
     }
 }
 unstable.cache_api.draw = function (renderContext) {
-    var display = this;
+    var display:ns_egret.DisplayObject = this;
     if (display.renderTexture) {
-        renderContext.save();
-        this.updateTransform(renderContext);
         var renderTexture = display.renderTexture;
-        var width = renderTexture.getTextureWidth();
-        var height = renderTexture.getTextureHeight();
         var offsetX = renderTexture.offsetX;
         var offsetY = renderTexture.offsetY;
-        renderContext.drawImage(display.renderTexture, 0, 0, width, height, offsetX, offsetY, width, height);
-        renderContext.restore();
+        var width = renderTexture.getTextureWidth();
+        var height = renderTexture.getTextureHeight();
+        display.updateTransform();
+        renderContext.setAlpha(display.worldAlpha, display.blendMode);
+        renderContext.setTransform(display.worldTransform);
+        if (display.mask) {
+            renderContext.save();
+            renderContext.clip(display.mask.x, display.mask.y, display.mask.width, display.mask.height);
+        }
+        ns_egret.RenderFilter.getInstance().drawImage(renderContext, display, 0, 0,
+            width * ns_egret.MainContext.instance.rendererContext.texture_scale_factor,
+            height * ns_egret.MainContext.instance.rendererContext.texture_scale_factor,
+            offsetX, offsetY, width, height);
+        if (display.mask) {
+            renderContext.restore();
+        }
         return true;
     }
     else {
         return false;
     }
 }
-
 ns_egret.DisplayObject.prototype.cacheAsBitmap = unstable.cache_api.cacheAsBitmap;

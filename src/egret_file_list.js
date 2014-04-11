@@ -13,6 +13,7 @@ var temp = [
     "egret/core/Constant.js",
     "egret/core/ComponentBase.js",
     "egret/core/StageDelegate.js",
+    "egret/core/RenderFilter.js",
     "egret/display/DisplayObject.js",
     "egret/display/DisplayObjectContainer.js",
     "egret/display/Stage.js",

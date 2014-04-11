@@ -20,9 +20,9 @@ module ns_egret {
         public static ON_TIMER:string = "onTimer";
         private _preTime:number;
         private _passTime:number;
-        private _totalActionTimes:number;
+        private _actionTimes:number;
 
-        constructor(private _actionInterval:number = 1000, private _actionTimes:number = -1) {
+        constructor(private _actionInterval:number = 1000, private _totalActionTimes:number = -1) {
             super();
         }
 
@@ -30,8 +30,8 @@ module ns_egret {
             this._preTime = ns_egret.Ticker.now();
             if (this._actionTimes != 0) {
                 this._actionTimes = 0;
-                ns_egret.Ticker.getInstance().register(this.onEnterFrame, this);
             }
+            ns_egret.Ticker.getInstance().register(this.onEnterFrame, this);
         }
 
         public stop() {
