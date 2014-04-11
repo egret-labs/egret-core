@@ -18,6 +18,7 @@
 
 ///<reference path="DisplayObject.ts" />
 ///<reference path="Bitmap.ts" />
+/// <reference path="../geom/Rectangle.ts"/>
 
 module ns_egret {
     /**

@@ -3,7 +3,6 @@
 /// <reference path="../../core/StageDelegate.ts"/>
 /// <reference path="../../core/RenderFilter.ts"/>
 /// <reference path="../../debug/DEBUG.ts"/>
-/// <reference path="../../geom/Matrix2D.ts"/>
 /// <reference path="../../geom/Point.ts"/>
 /// <reference path="../../geom/Rectangle.ts"/>
 /**

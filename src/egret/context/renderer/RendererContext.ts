@@ -17,6 +17,7 @@
  */
 /// <reference path="../../core/Profiler.ts"/>
 /// <reference path="../../geom/Matrix2D.ts"/>
+/// <reference path="../../geom/Rectangle.ts"/>
 /// <reference path="../../texture/Texture.ts"/>
 module ns_egret {
     /**

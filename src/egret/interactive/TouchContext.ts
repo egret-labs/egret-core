@@ -21,6 +21,8 @@
  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+/// <reference path="../geom/Point.ts"/>
+
 module ns_egret {
     /**
      * @class TouchContext是egret的触摸Context
