@@ -1,8 +1,11 @@
 /// <reference path="RendererContext.ts"/>
-/// <reference path="../../core/Geometry.ts"/>
+/// <reference path="../../geom/Matrix2D.ts"/>
 /// <reference path="../../core/StageDelegate.ts"/>
 /// <reference path="../../core/RenderFilter.ts"/>
 /// <reference path="../../debug/DEBUG.ts"/>
+/// <reference path="../../geom/Matrix2D.ts"/>
+/// <reference path="../../geom/Point.ts"/>
+/// <reference path="../../geom/Rectangle.ts"/>
 /**
  * Copyright (c) Egret-Labs.org. Permission is hereby granted, free of charge,
  * to any person obtaining a copy of this software and associated documentation

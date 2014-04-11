@@ -1,11 +1,14 @@
 
 var temp = [
     "egret/events/EventDispatcher.js",
+    "egret/events/Event.js",
     "egret/core/MainContext.js",
     "egret/core/Profiler.js",
     "egret/core/Ticker.js",
     "egret/core/Timer.js",
-    "egret/core/Geometry.js",
+    "egret/geom/Matrix2D.js",
+    "egret/geom/Point.js",
+    "egret/geom/Rectangle.js",
     "egret/core/Logger.js",
     "egret/core/Constant.js",
     "egret/core/ComponentBase.js",

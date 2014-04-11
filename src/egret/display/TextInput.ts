@@ -1,3 +1,6 @@
+/// <reference path="DisplayObjectContainer.ts"/>
+/// <reference path="../utils/DOMUtils.ts"/>
+/// <reference path="../context/display/StageText.ts"/>
 /**
  * Copyright (c) Egret-Labs.org. Permission is hereby granted, free of charge,
  * to any person obtaining a copy of this software and associated documentation
@@ -16,8 +19,6 @@
  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-/// <reference path="DisplayObjectContainer.ts"/>
-/// <reference path="../utils/DOMUtils.ts"/>
 module ns_egret {
     export class TextInput extends DisplayObject {
 
@@ -36,7 +37,7 @@ module ns_egret {
 
         private stageText:ns_egret.StageText;
 
-        public _onAddToStage() {
+        public _onAddToStage():void {
             super._onAddToStage();
             var point = this.localToGlobal();
             var stageText = new ns_egret.StageText();
@@ -45,13 +46,22 @@ module ns_egret {
             this.stageText = stageText;
         }
 
-        public setText(value) {
+        public setText(value:string):void {
             this.stageText.setText(value);
         }
 
-        public getText() {
+        public getText():string {
             return this.stageText.getText();
         }
+
+        public setTextType(type:string):void {
+            this.stageText.setTextType(type);
+        }
+
+        public getTextType():string {
+            return this.stageText.getTextType();
+        }
+
 
 
         private onMouseDownHandler() {

@@ -1,7 +1,10 @@
 /// <reference path="../context/renderer/RendererContext.ts"/>
-/// <reference path="../core/Geometry.ts"/>
 /// <reference path="../core/RenderFilter.ts"/>
 /// <reference path="DisplayObjectContainer.ts"/>
+/// <reference path="../interactive/TouchContext.ts"/>
+/// <reference path="../geom/Matrix2D.ts"/>
+/// <reference path="../geom/Point.ts"/>
+/// <reference path="../geom/Rectangle.ts"/>
 /// <reference path="../interactive/TouchContext.ts"/>
 /**
  * Copyright (c) Egret-Labs.org. Permission is hereby granted, free of charge,
@@ -40,10 +43,22 @@ module ns_egret {
      * draw()</br> (beta)
      */
     export class DisplayObject extends EventDispatcher {
+
+        public name:string;
+
+        private _parent:DisplayObjectContainer = null;
         /**
          * @description {Sting} 表示包含此显示对象的 DisplayObjectContainer 对象
          */
-        public parent:ns_egret.DisplayObjectContainer = null;
+        public get parent():DisplayObjectContainer{
+            return this._parent;
+        }
+        /**
+         * 仅供框架内部调用。
+         */
+        public _parentChanged(parent:DisplayObjectContainer):void{
+            this._parent = parent;
+        }
 
         /**
          * 表示 DisplayObject 实例相对于父级 DisplayObjectContainer 本地坐标的 x 坐标。
@@ -351,12 +366,12 @@ module ns_egret {
 
         public _onAddToStage() {
             this._isRunning = true;
-            this.dispatchEvent(DisplayListEvent.ADD_TO_STAGE);
+            this.dispatchEvent(Event.ADDED_TO_STAGE);
         }
 
         public _onRemoveFromStage() {
             this._isRunning = false;
-            this.dispatchEvent(DisplayListEvent.REMOVE_FROM_STAGE);
+            this.dispatchEvent(Event.REMOVED_FROM_STAGE);
         }
 
         public isRunning() {
@@ -413,14 +428,6 @@ module ns_egret {
             return bounds.initialize(minX, minY, maxX - minX, maxY - minY);
 
         }
-    }
-
-    export class DisplayListEvent {
-
-        public static ADD_TO_STAGE:string = "addToStage";
-        public static REMOVE_FROM_STAGE:string = "removeFromStage";
-
-
     }
 
 }

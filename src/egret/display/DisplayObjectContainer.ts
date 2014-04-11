@@ -24,13 +24,16 @@ module ns_egret {
      */
     export class DisplayObjectContainer extends DisplayObject {
 
-        public _children;
-        public numChildren:number;
-
         constructor() {
             this._children = [];
-            this.numChildren = 0;
             super();
+        }
+
+
+        public _children:Array;
+
+        public get numChildren():number{
+            return this._children.length;
         }
 
         /**
@@ -38,7 +41,11 @@ module ns_egret {
          * @param child 容器的子元件
          * @param index 新的层级 <0或者>=元件数量，都加入到最上层
          */
-        public setChildIndex(child:DisplayObject, index:number) {
+        public setChildIndex(child:DisplayObject, index:number):void {
+            this.doSetChildIndex(child,index);
+        }
+
+        private doSetChildIndex(child:DisplayObject,index:number):void{
             var lastIdx = this._children.indexOf(child);
             if (lastIdx < 0) {
                 ns_egret.Logger.fatal("child不在当前容器内");
@@ -55,34 +62,57 @@ module ns_egret {
         }
 
         /**
+         * @inheritDoc
+         */
+        public addChild(child:DisplayObject):DisplayObject{
+            var index:number = this.numChildren;
+
+            if (child.parent == this)
+                index--;
+
+            return this.childAdded(child, index);
+        }
+
+
+        /**
          * 将一个 DisplayObject 子实例添加到该 DisplayObjectContainer 实例中。
          * todo:GitHub 显示列表
          * @param child 子显示对象
          * @param index 加载的顺序，默认为-1，加载到最前面
          */
-        public addChild(child:DisplayObject, index:number = -1) {
+        public addChildAt(child:DisplayObject, index:number):DisplayObject {
 
-            if (child.parent != null) {//
-                ns_egret.Logger.fatal("child已经被添加到显示列表");
-            }
-            else if (this._children.length < index) {
+            return this.childAdded(child,index);
+        }
+
+        private childAdded(child:DisplayObject,index:number):DisplayObject{
+            if (child == this)
+                return child;
+
+            if (index<0||index > this._children.length) {
                 ns_egret.Logger.fatal("提供的索引超出范围");
+                return child;
             }
-            if (index == -1) {
-                this._children.push(child);
+
+            var host:DisplayObjectContainer = child.parent;
+            if (host == this)
+            {
+                this.doSetChildIndex(child,index);
+                return child;
             }
-            else if (index >= 0) {
-                this._children.splice(index, 0, child);
+            if (host)
+            {
+                host.removeChild(child);
             }
-            else {
-                ns_egret.Logger.fatal("提供的索引超出范围");
-            }
-            child.parent = this;
+
+            this._children.splice(index, 0, child);
+            child._parentChanged(this);
+            child.dispatchEvent(Event.ADDED);
             if (this.isRunning()) {//当前容器在舞台
                 child._onAddToStage();
             }
 
-            this.numChildren++;
+            return child;
         }
 
         /**
@@ -90,10 +120,9 @@ module ns_egret {
          * @param child
          */
         public removeChild(child:DisplayObject) {
-            var locChildren = this._children;
-            var index = locChildren.indexOf(child);
+            var index = this._children.indexOf(child);
             if (index >= 0) {
-                this.removeChildAt(index);
+                this.childRemoved(index);
             }
             else {
                 ns_egret.Logger.fatal("child未被addChild到该parent");
@@ -101,19 +130,25 @@ module ns_egret {
         }
 
         public removeChildAt(index:number) {
-            var locChildren = this._children;
-            if (index >= 0 && index < locChildren.length) {
-                var child:DisplayObject = locChildren.splice(index, 1)[0];
-                child.parent = null;
-                if (this.isRunning()) {//在舞台上
-                    child._onRemoveFromStage();
-                }
-                this.numChildren--;
+            if (index >= 0 && index < this._children.length) {
+                this.childRemoved(index);
             }
             else {
                 ns_egret.Logger.fatal("child未被addChild到该parent");
             }
         }
+
+        private childRemoved(index:number):void{
+            var locChildren = this._children;
+            var child:DisplayObject = locChildren[index];
+            child.dispatchEvent(Event.REMOVED)
+            if (this.isRunning()) {//在舞台上
+                child._onRemoveFromStage();
+            }
+            child._parentChanged(null);
+            locChildren.splice(index, 1);
+        }
+
 
         /**
          * 通过索引获取显示对象
@@ -148,14 +183,10 @@ module ns_egret {
          */
         public removeAllChildren() {
             var locChildren = this._children;
-            while (locChildren.length > 0) {
-                var child:DisplayObject = locChildren.pop();
-                child.parent = null;
-                if (this.isRunning()) {//在舞台上
-                    child._onRemoveFromStage();
-                }
+            for(var i:number=locChildren.length-1;i>=0;i--)
+            {
+                this.childRemoved(i);
             }
-            this.numChildren = 0;
         }
 
         public updateTransform() {
@@ -259,7 +290,8 @@ module ns_egret {
 
         public _onAddToStage() {
             super._onAddToStage();
-            for (var i = 0; i < this.numChildren; i++) {
+            var length:number = this.numChildren;
+            for (var i = 0; i < length; i++) {
                 var child:DisplayObject = this._children[i];
                 child._onAddToStage();
             }
@@ -267,7 +299,8 @@ module ns_egret {
 
         public _onRemoveFromStage() {
             super._onRemoveFromStage();
-            for (var i = 0; i < this.numChildren; i++) {
+            var length:number = this.numChildren;
+            for (var i = 0; i < length; i++) {
                 var child:DisplayObject = this._children[i];
                 child._onRemoveFromStage();
             }
