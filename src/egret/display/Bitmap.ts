@@ -3,7 +3,7 @@
 /// <reference path="SpriteSheet.ts"/>
 /// <reference path="../texture/Texture.ts"/>
 /// <reference path="../core/StageDelegate.ts"/>
-/// <reference path="../geom/Matrix2D.ts"/>
+/// <reference path="../geom/Matrix.ts"/>
 /// <reference path="../geom/Point.ts"/>
 /// <reference path="../geom/Rectangle.ts"/>
 /**

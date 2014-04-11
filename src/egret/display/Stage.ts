@@ -64,10 +64,10 @@ module ns_egret{
                 var child = children[i];
                 var o = child;
                 var offsetPoint = o.getOffsetPoint();
-                var mtx = Matrix2D.identity.identity().prependTransform(o.x, o.y, o.scaleX, o.scaleY, o.rotation,
+                var mtx = Matrix.identity.identity().prependTransform(o.x, o.y, o.scaleX, o.scaleY, o.rotation,
                     0, 0,  offsetPoint.x,  offsetPoint.y);
                 mtx.invert();
-                var point = Matrix2D.transformCoords(mtx, x, y);
+                var point = Matrix.transformCoords(mtx, x, y);
                 result = child.hitTest(point.x, point.y,true);
                 if (result) {
                     if(result.touchEnabled)

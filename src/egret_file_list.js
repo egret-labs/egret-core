@@ -6,7 +6,7 @@ var temp = [
     "egret/core/Profiler.js",
     "egret/core/Ticker.js",
     "egret/core/Timer.js",
-    "egret/geom/Matrix2D.js",
+    "egret/geom/Matrix.js",
     "egret/geom/Point.js",
     "egret/geom/Rectangle.js",
     "egret/core/Logger.js",

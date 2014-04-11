@@ -16,6 +16,7 @@
  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 /// <reference path="../geom/Rectangle.ts"/>
+/// <reference path="../geom/Matrix.ts"/>
 
 module ns_egret {
     export class RenderFilter {
@@ -147,7 +148,7 @@ module ns_egret {
     }
 
     export interface RenderData {
-        worldTransform:ns_egret.Matrix2D;
+        worldTransform:ns_egret.Matrix;
         worldBounds:ns_egret.Rectangle;
         texture:ns_egret.Texture;
         renderTexture;

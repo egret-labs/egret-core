@@ -2,7 +2,7 @@
 /// <reference path="../core/RenderFilter.ts"/>
 /// <reference path="DisplayObjectContainer.ts"/>
 /// <reference path="../interactive/TouchContext.ts"/>
-/// <reference path="../geom/Matrix2D.ts"/>
+/// <reference path="../geom/Matrix.ts"/>
 /// <reference path="../geom/Point.ts"/>
 /// <reference path="../geom/Rectangle.ts"/>
 /// <reference path="../interactive/TouchContext.ts"/>
@@ -128,7 +128,7 @@ module ns_egret {
          */
         public mask:Rectangle;
 
-        public worldTransform:ns_egret.Matrix2D;
+        public worldTransform:ns_egret.Matrix;
         public worldBounds:ns_egret.Rectangle;
         public worldAlpha:number;
 
@@ -137,7 +137,7 @@ module ns_egret {
             super();
             this.x = this.y = 0;
             this.visible = true;
-            this.worldTransform = new ns_egret.Matrix2D();
+            this.worldTransform = new ns_egret.Matrix();
             this.worldBounds = new ns_egret.Rectangle(0, 0, 0, 0);
             this.worldAlpha = 1;
         }
@@ -237,10 +237,10 @@ module ns_egret {
 
         /**
          * @private
-         * @returns {Matrix2D}
+         * @returns {Matrix}
          */
             getConcatenatedMatrix() {
-            var matrix = Matrix2D.identity.identity();
+            var matrix = Matrix.identity.identity();
             var o = this;
             while (o != null) {
                 if (o.relativeAnchorPointX != 0 || o.relativeAnchorPointY != 0) {
@@ -312,7 +312,7 @@ module ns_egret {
 
 
         getMatrix() {
-            return Matrix2D.identity.identity().appendTransformFromDisplay(this);
+            return Matrix.identity.identity().appendTransformFromDisplay(this);
         }
 
         /**
@@ -381,7 +381,7 @@ module ns_egret {
         }
 
 
-        static getTransformBounds(bounds:ns_egret.Rectangle, mtx:ns_egret.Matrix2D) {
+        static getTransformBounds(bounds:ns_egret.Rectangle, mtx:ns_egret.Matrix) {
             var x = bounds.x, y = bounds.y, width = bounds.width, height = bounds.height;
 
 //            if (x || y) {

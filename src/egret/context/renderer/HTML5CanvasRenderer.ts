@@ -1,5 +1,5 @@
 /// <reference path="RendererContext.ts"/>
-/// <reference path="../../geom/Matrix2D.ts"/>
+/// <reference path="../../geom/Matrix.ts"/>
 /// <reference path="../../core/StageDelegate.ts"/>
 /// <reference path="../../core/RenderFilter.ts"/>
 /// <reference path="../../debug/DEBUG.ts"/>
@@ -65,7 +65,7 @@ module ns_egret {
         }
 
         clearScreen() {
-            this.setTransform(ns_egret.Matrix2D.identity.identity());
+            this.setTransform(ns_egret.Matrix.identity.identity());
             var list = RenderFilter.getInstance().getDrawAreaList();
             for (var i:number = 0 , l:number = list.length; i < l; i++) {
                 var area = list[i];
@@ -95,7 +95,7 @@ module ns_egret {
             this.renderCost += ns_egret.Ticker.now() - beforeDraw;
         }
 
-        setTransform(matrix:ns_egret.Matrix2D) {
+        setTransform(matrix:ns_egret.Matrix) {
             //在没有旋转缩放斜切的情况下，先不进行矩阵偏移，等下次绘制的时候偏移
             if (matrix.a == 1 && matrix.b == 0 && matrix.c == 0 && matrix.d == 1
                 && this._matrixA == 1 && this._matrixB == 0 && this._matrixC == 0 && this._matrixD == 1) {

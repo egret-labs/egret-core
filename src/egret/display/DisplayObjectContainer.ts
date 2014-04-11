@@ -169,6 +169,7 @@ module ns_egret {
         public getChildByName(name:string):ns_egret.DisplayObject {
             //todo
             return null;
+            this.getChildAt()
         }
 
         /**
@@ -269,10 +270,10 @@ module ns_egret {
                 var o = child;
 
                 var offsetPoint = o.getOffsetPoint();
-                var mtx = Matrix2D.identity.identity().prependTransform(o.x, o.y, o.scaleX, o.scaleY, o.rotation,
+                var mtx = Matrix.identity.identity().prependTransform(o.x, o.y, o.scaleX, o.scaleY, o.rotation,
                     0, 0, offsetPoint.x, offsetPoint.y);
                 mtx.invert();
-                var point = Matrix2D.transformCoords(mtx, x, y);
+                var point = Matrix.transformCoords(mtx, x, y);
                 var childHitTestResult = child.hitTest(point.x, point.y, true);
                 if (childHitTestResult) {
                     if (childHitTestResult.touchEnabled) {

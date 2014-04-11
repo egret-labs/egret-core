@@ -16,7 +16,7 @@
  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 /// <reference path="../../core/Profiler.ts"/>
-/// <reference path="../../geom/Matrix2D.ts"/>
+/// <reference path="../../geom/Matrix.ts"/>
 /// <reference path="../../geom/Rectangle.ts"/>
 /// <reference path="../../texture/Texture.ts"/>
 module ns_egret {
@@ -83,7 +83,7 @@ module ns_egret {
          * @param matrix
          * @stable A
          */
-        public setTransform(matrix:ns_egret.Matrix2D) {
+        public setTransform(matrix:ns_egret.Matrix) {
 
         }
 
