@@ -90,13 +90,6 @@ module ns_egret {
             var beforeDraw = ns_egret.Ticker.now();
             destX += this._transformTx;
             destY += this._transformTy;
-            if(this._transformTx != 0 || this._transformTy != 0)
-            {
-                if(this._matrixA!=1||this._matrixB!=0||this._matrixC!=0||this._matrixD!=1)
-                {
-                    console.log(11)
-                }
-            }
             this.canvasContext.drawImage(image, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight);
             super.drawImage(image, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight);
             this.renderCost += ns_egret.Ticker.now() - beforeDraw;
@@ -111,11 +104,10 @@ module ns_egret {
                 return;
             }
             this._transformTx = this._transformTy = 0;
-//            if (this._matrixA != matrix.a || this._matrixB != matrix.b || this._matrixC != matrix.c
-//                || this._matrixD != matrix.d || this._matrixTx != matrix.tx || this._matrixTy != matrix.ty) {
-//                this.canvasContext.setTransform(matrix.a, matrix.b, matrix.c, matrix.d, matrix.tx, matrix.ty);
-//            }
-            this.canvasContext.setTransform(matrix.a, matrix.b, matrix.c, matrix.d, matrix.tx, matrix.ty);
+            if (this._matrixA != matrix.a || this._matrixB != matrix.b || this._matrixC != matrix.c
+                || this._matrixD != matrix.d || this._matrixTx != matrix.tx || this._matrixTy != matrix.ty) {
+                this.canvasContext.setTransform(matrix.a, matrix.b, matrix.c, matrix.d, matrix.tx, matrix.ty);
+            }
         }
 
         save() {
