@@ -122,7 +122,6 @@ module ns_egret {
 
         public _contentWidth:number;
         public _contentHeight:number;
-        public _isRunning:boolean = false;
 
         /**
          * 调用显示对象被指定的 mask 对象遮罩
@@ -366,17 +365,19 @@ module ns_egret {
         }
 
         public _onAddToStage() {
-            this._isRunning = true;
+            this._stage = MainContext.instance.stage;
             this.dispatchEvent(Event.ADDED_TO_STAGE);
         }
 
         public _onRemoveFromStage() {
-            this._isRunning = false;
+            this._stage = MainContext.instance.stage;
             this.dispatchEvent(Event.REMOVED_FROM_STAGE);
         }
 
-        public isRunning() {
-            return this._isRunning;
+        public _stage:Stage;
+
+        public stage():Stage {
+            return this._stage;
         }
 
 

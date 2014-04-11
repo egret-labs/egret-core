@@ -32,7 +32,7 @@ module ns_egret{
         constructor() {
             super();
             this.touchEnabled = true;
-            this._isRunning = true;
+            this._stage = this;
             var canvas:HTMLCanvasElement = document.getElementById(StageDelegate.canvas_name);
             this.stageWidth = canvas.width;
             this.stageHeight = canvas.height;
