@@ -96,8 +96,8 @@ module ns_egret {
             else {
                 x = 0;
                 y = 0;
-                w = locTexture.getTextureWidth();
-                h = locTexture.getTextureHeight();
+                w = locTexture._textureWidth;
+                h = locTexture._textureHeight;
                 offsetX = 0;
                 offsetY = 0;
             }
@@ -118,8 +118,8 @@ module ns_egret {
                 h = rect.h;
             }
             else if (this.texture) {
-                w = this.texture.getTextureWidth();
-                h = this.texture.getTextureHeight();
+                w = this.texture._textureWidth;
+                h = this.texture._textureHeight;
             }
             else {
                 ns_egret.Logger.fatal("获取BitmapBounds失败");

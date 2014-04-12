@@ -16,6 +16,8 @@
  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 ///<reference path="../core/Logger.ts"/>
+///<reference path="../core/Ticker.ts"/>
+///<reference path="../texture/Texture.ts"/>
 module ns_egret {
     export class DEBUG {
         /**
@@ -27,7 +29,7 @@ module ns_egret {
             if (texture == null) {
                 Logger.fatal("texture为空");
             }
-            if (texture.getTextureWidth() < sourceX + sourceWidth || texture.getTextureHeight() < sourceY + sourceHeight) {
+            if (texture._textureWidth < sourceX + sourceWidth || texture._textureHeight < sourceY + sourceHeight) {
                 Logger.fatal("提供的尺寸超出texture尺寸");
             }
         }
@@ -49,10 +51,10 @@ module ns_egret {
             if (parseInt(top) < 0 || parseInt(bottom) < 0 || parseInt(left) < 0 || parseInt(right) < 0) {
                 Logger.fatal("传入的值不能为负数");
             }
-            if (texture.getTextureWidth() < left + right) {
+            if (texture._textureWidth < left + right) {
                 Logger.fatal("传入的宽度超出范围");
             }
-            if (texture.getTextureHeight() < top + bottom) {
+            if (texture._textureHeight < top + bottom) {
                 Logger.fatal("传入的高度超出范围");
             }
         }
@@ -63,7 +65,7 @@ module ns_egret {
          * @param command 0,停止主循环; 1,执行一次主循环 2,正常循环渲染
          * @constructor
          */
-        static TRACE_RENDER_LOOP(command:int = 0):void {
+        static TRACE_RENDER_LOOP(command:number = 0):void {
             var ticker:ns_egret.Ticker = ns_egret.Ticker.getInstance();
             var context =  ns_egret.MainContext.instance;
             switch (command) {

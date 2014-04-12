@@ -48,10 +48,10 @@ module ns_egret{
                 this.addChild(this._bg);
             }
             var texture = TextureCache.getInstance().getTexture(barTextureName);
-            this._barWidth = texture.getTextureWidth();
+            this._barWidth = texture._textureWidth;
             this._bar = Bitmap.initWithTexture(texture);
             this.addChild(this._bar);
-            var mask:any = {x:0, y:0, width:this._barWidth, height:texture.getTextureHeight()};
+            var mask:any = {x:0, y:0, width:this._barWidth, height:texture._textureHeight};
             this._bar.mask = mask;
         }
 
