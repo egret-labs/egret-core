@@ -36,9 +36,10 @@ module ns_egret {
         }
 
         public set bitmapData(value:any) {
+            var scale = ns_egret.MainContext.instance.rendererContext.texture_scale_factor;
             this._bitmapData = value;
-            this._textureWidth = value.width * ns_egret.MainContext.instance.rendererContext.texture_scale_factor;
-            this._textureHeight = value.height * ns_egret.MainContext.instance.rendererContext.texture_scale_factor;
+            this._textureWidth = value.width * scale;
+            this._textureHeight = value.height * scale;
         }
 
         public getTextureWidth():number {
@@ -48,7 +49,6 @@ module ns_egret {
         public getTextureHeight():number {
             return this._textureHeight;
         }
-
 
         public static create(path:string):Texture {
             var texture:Texture = new Texture();
@@ -91,8 +91,9 @@ module ns_egret {
                 this.offsetX = bounds.x;
                 this.offsetY = bounds.y;
                 displayObject.worldTransform.append(1, 0, 0, 1, -bounds.x, -bounds.y);
-                for (var i = 0 , length = displayObject._children.length; i < length; i++) {
-                    var child:DisplayObject = displayObject._children[i];
+                var list = (<ns_egret.DisplayObjectContainer>displayObject)._children;
+                for (var i = 0 , length = list.length; i < length; i++) {
+                    var child:DisplayObject = list[i];
                     child.updateTransform();
                 }
             }

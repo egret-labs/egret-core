@@ -483,8 +483,8 @@ unstable.cache_api.draw = function (renderContext) {
         var renderTexture = display.renderTexture;
         var offsetX = renderTexture.offsetX;
         var offsetY = renderTexture.offsetY;
-        var width = renderTexture.getTextureWidth();
-        var height = renderTexture.getTextureHeight();
+        var width = renderTexture._textureWidth;
+        var height = renderTexture._textureHeight;
         display.updateTransform();
         renderContext.setAlpha(display.worldAlpha, display.blendMode);
         renderContext.setTransform(display.worldTransform);

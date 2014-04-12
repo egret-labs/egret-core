@@ -88,8 +88,8 @@ module ns_egret{
         }
 
         public setupTiles() {
-            this._tileSet.imageWidth = this._texture.getTextureWidth();
-            this._tileSet.imageHeight = this._texture.getTextureHeight();
+            this._tileSet.imageWidth = this._texture._textureWidth;
+            this._tileSet.imageHeight = this._texture._textureHeight;
 
             var locLayerHeight = this._layerHeight, locLayerWidth = this._layerWidth;
             for (var y = 0; y < locLayerHeight; y++) {

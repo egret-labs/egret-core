@@ -113,8 +113,8 @@ module ns_egret {
                 return;
             }
             var locTexture = this.texture;
-            var textureWidth = locTexture.getTextureWidth();
-            var textureHeight = locTexture.getTextureHeight();
+            var textureWidth = locTexture._textureWidth;
+            var textureHeight = locTexture._textureHeight;
             var contentWidth = this._scaleWidth;
             var contentHeight = this._scaleHeight;
             if (!locTexture || contentWidth == 0 || contentHeight == 0) {
