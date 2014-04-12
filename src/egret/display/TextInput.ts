@@ -1,5 +1,4 @@
 /// <reference path="DisplayObjectContainer.ts"/>
-/// <reference path="../utils/DOMUtils.ts"/>
 /// <reference path="../context/display/StageText.ts"/>
 /**
  * Copyright (c) Egret-Labs.org. Permission is hereby granted, free of charge,
