@@ -58,10 +58,10 @@ module ns_egret {
                 MainContext.instance.stage.addChild(this._txt);
             }
             var context = MainContext.instance;
-            context.addEventListener(MainContext.EVENT_ENTER_FRAME, this.onEnterFrame, this);
-            context.addEventListener(MainContext.EVENT_START_RENDER, this.onStartRender, this);
-            context.addEventListener(MainContext.EVENT_FINISH_RENDER, this.onFinishRender, this);
-            context.addEventListener(MainContext.EVENT_FINISH_UPDATE_TRANSFORM, this.onFinishUpdateTransform, this);
+            context.addEventListener(Event.ENTER_FRAME, this.onEnterFrame, this);
+            context.addEventListener(Event.RENDER, this.onStartRender, this);
+            context.addEventListener(Event.FINISH_RENDER, this.onFinishRender, this);
+            context.addEventListener(Event.FINISH_UPDATE_TRANSFORM, this.onFinishUpdateTransform, this);
         }
 
         /**

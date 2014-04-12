@@ -273,7 +273,7 @@ module ns_egret {
          * 将 point 对象从舞台（全局坐标转换为显示对象（本地）坐标。
          * @returns {ns_egret.Point}
          */
-            globalToLocal(x = 0, y = 0):ns_egret.Point {
+            globalToLocal(x:number = 0, y:number = 0):Point {
 //            todo,现在的实现是错误的
             var mtx = this.getConcatenatedMatrix();
             mtx.invert();
@@ -366,12 +366,12 @@ module ns_egret {
 
         public _onAddToStage() {
             this._stage = MainContext.instance.stage;
-            this.dispatchEvent(Event.ADDED_TO_STAGE);
+            this.dispatchEventWith(Event.ADDED_TO_STAGE);
         }
 
         public _onRemoveFromStage() {
             this._stage = MainContext.instance.stage;
-            this.dispatchEvent(Event.REMOVED_FROM_STAGE);
+            this.dispatchEventWith(Event.REMOVED_FROM_STAGE);
         }
 
         public _stage:Stage;
@@ -380,6 +380,38 @@ module ns_egret {
             return this._stage;
         }
 
+
+        public dispatchEvent(event:Event):boolean{
+            event._reset();
+            var list:Array = [];
+            var target:DisplayObject = this;
+            while(target){
+                list.unshift(target);
+                target = target.parent;
+            }
+
+            var length:number = list.length;
+            for (var i:number = length - 2; i >= 0; i--) {
+                list.push(list[i]);
+            }
+            length = list.length;
+            var targetIndex:number = (length-1)*0.5;
+            for(var i:number=0;i<length;i++){
+                event._setCurrentTarget(list[i]);
+                event._target = this;
+                if(i<targetIndex)
+                    event._eventPhase = 1;
+                else if(i==targetIndex)
+                    event._eventPhase = 2;
+                else
+                    event._eventPhase = 3;
+                this._notifyListener(event);
+                if(event._isPropagationStopped||event._isPropagationImmediateStopped){
+                    break;
+                }
+            }
+            return !event.isDefaultPrevented();
+        }
 
         static getTransformBounds(bounds:ns_egret.Rectangle, mtx:ns_egret.Matrix) {
             var x = bounds.x, y = bounds.y, width = bounds.width, height = bounds.height;
@@ -430,6 +462,7 @@ module ns_egret {
             return bounds.initialize(minX, minY, maxX - minX, maxY - minY);
 
         }
+
     }
 
 }

@@ -119,7 +119,7 @@ module ns_egret {
             }
 
             if (frameData.action != null) {
-                this.dispatchEvent(frameData.action);
+                this.dispatchEventWith(frameData.action);
             }
 
             this._currentFrameIndex++;

@@ -78,7 +78,7 @@ module ns_egret{
         private onComplete(){
             this._state = LoadingController.LOAD_STATE_IDLE;
             this.destroy();
-            this.dispatchEvent(ResourceLoader.LOAD_COMPLETE);
+            this.dispatchEventWith(ResourceLoader.LOAD_COMPLETE);
 
         }
 

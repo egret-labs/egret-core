@@ -19,14 +19,24 @@
 module ns_egret {
 
     /**
-     * egret的点对象
+     * Point 对象表示二维坐标系统中的某个位置，其中 x 表示水平轴，y 表示垂直轴。
      */
     export class Point {
 
-        constructor(public x, public y) {
-
-        }
-
         static identity = new Point(0, 0);
+
+        public constructor(x:number=0, y:number=0) {
+            super();
+            this.x = x;
+            this.y = y;
+        }
+        /**
+         * 该点的水平坐标。默认值为 0。
+         */
+        public x:number;
+        /**
+         * 该点的垂直坐标。默认值为 0。
+         */
+        public y:number;
     }
 }

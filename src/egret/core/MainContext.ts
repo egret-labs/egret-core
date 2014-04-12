@@ -20,6 +20,9 @@
  * FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
+
+/// <reference path="../events/EventDispatcher.ts"/>
+
 module ns_egret{
     /**
      * MainContext是游戏的核心跨平台接口，组合了多个功能Context，并是游戏启动的主入口
@@ -69,7 +72,7 @@ module ns_egret{
          * 滑动跑道模型，逻辑计算部分
          */
         private enterFrame() {
-            this.dispatchEvent(MainContext.EVENT_ENTER_FRAME);
+            this.dispatchEventWith(Event.ENTER_FRAME);
         }
 
         /**
@@ -78,31 +81,15 @@ module ns_egret{
         private renderLoop() {
             var context = this.rendererContext;
             context.clearScreen();
-            this.dispatchEvent(MainContext.EVENT_START_RENDER);
+            this.dispatchEventWith(Event.RENDER);
             this.stage.updateTransform();
-            this.dispatchEvent(MainContext.EVENT_FINISH_UPDATE_TRANSFORM);
+            this.dispatchEventWith(Event.FINISH_UPDATE_TRANSFORM);
             this.stage.draw(context);
-            this.dispatchEvent(MainContext.EVENT_FINISH_RENDER);
+            this.dispatchEventWith(Event.FINISH_RENDER);
         }
 
         public static instance:ns_egret.MainContext;
 
-        /**
-         * @event 主循环：进入新的一帧
-         */
-        public static EVENT_ENTER_FRAME:string = "enter_frame";
-        /**
-         * @event 主循环：开始渲染
-         */
-        public static EVENT_START_RENDER:string = "start_render";
-        /**
-         * @event 主循环：渲染完毕
-         */
-        public static EVENT_FINISH_RENDER:string = "finish_render";
-        /**
-         * @event 主循环：updateTransform完毕
-         */
-        public static EVENT_FINISH_UPDATE_TRANSFORM:string = "finish_updateTransform";
     }
 }
 

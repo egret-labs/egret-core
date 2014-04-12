@@ -17,7 +17,6 @@
  */
 module ns_egret {
     export class Timer extends ns_egret.EventDispatcher {
-        public static ON_TIMER:string = "onTimer";
         private _preTime:number;
         private _passTime:number;
         private _actionTimes:number;
@@ -38,15 +37,24 @@ module ns_egret {
             ns_egret.Ticker.getInstance().unregister(this.onEnterFrame, this);
         }
 
+        private static timerEvent:TimerEvent;
+
         private onEnterFrame() {
+            if(!Timer.timerEvent){
+                Timer.timerEvent = new TimerEvent(TimerEvent.TIMER);
+            }
+            var timerEvent:TimerEvent = Timer.timerEvent;
             var now = ns_egret.Ticker.now();
             this._passTime = now - this._preTime;
             while (this._passTime > this._actionInterval) {
                 this._passTime -= this._actionInterval;
-                this.dispatchEvent(Timer.ON_TIMER);
+                timerEvent._type = TimerEvent.TIMER;
+                this.dispatchEvent(timerEvent);
                 this._actionTimes++;
                 if (this._totalActionTimes != -1 && this._actionTimes >= this._totalActionTimes) {
                     this.stop();
+                    timerEvent._type = TimerEvent.TIMER_COMPLETE;
+                    this.dispatchEvent(timerEvent);
                     break;
                 }
                 this._preTime = now;

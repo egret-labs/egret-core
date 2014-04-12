@@ -100,7 +100,7 @@ module ns_egret {
                 var obj = this.getTouchData(event, x, y);
                 obj.target = result;
                 obj.beginTarget = result;
-                TouchContext.dispachEvent(TouchEvent.TOUCH_BEGAN, obj);
+                this.dispatchEvent(TouchEvent.TOUCH_BEGAN, obj);
 //                console.log(result);
             }
         }
@@ -114,7 +114,7 @@ module ns_egret {
             if (result) {
                 var obj = this.getTouchData(event, x, y);
                 obj.target = result;
-                TouchContext.dispachEvent(TouchEvent.TOUCH_MOVE, obj);
+                this.dispatchEvent(TouchEvent.TOUCH_MOVE, obj);
             }
         }
 
@@ -131,13 +131,13 @@ module ns_egret {
                 if(oldTarget)
                 {
                     obj.target = obj.beginTarget;
-                    TouchContext.dispachEvent(TouchEvent.TOUCH_CANCEL, obj);
+                    this.dispatchEvent(TouchEvent.TOUCH_CANCEL, obj);
                 }
 
                 obj.target = result;
-                TouchContext.dispachEvent(TouchEvent.TOUCH_END, obj);
+                this.dispatchEvent(TouchEvent.TOUCH_END, obj);
                 if (oldTarget === result) {
-                    TouchContext.dispachEvent(TouchEvent.TOUCH_TAP, obj);
+                    this.dispatchEvent(TouchEvent.TOUCH_TAP, obj);
                 }
                 delete this._currentTouchTarget[obj.identifier];
             }
@@ -159,43 +159,16 @@ module ns_egret {
             return obj;
         }
 
-        static dispachEvent(eventName:string, obj) {
-            var resultDisplayObject = obj.target;
-            //CANCEL事件有可能没有这个
-            var locTouchEventHelperData = TouchEvent.identity;
-            locTouchEventHelperData.touchId = obj.identifier;
-            locTouchEventHelperData.stageX = obj.stageX;
-            locTouchEventHelperData.stageY = obj.stageY;
-            locTouchEventHelperData.target = resultDisplayObject;
+        private static touchEvent:TouchEvent = new TouchEvent("");
 
-            //todo
-            //在这里算出整个事件流，数组的前一半是捕获阶段目标，后一般是冒泡阶段目标
-            var arr = [];
-            var target:any = resultDisplayObject;
-            while (target.parent) {
-                arr.unshift(target.parent);
-                target = target.parent;
-            }
-            arr.push(resultDisplayObject);
-            var l = arr.length;
-            for (var i:number = l - 1; i >= 0; i--) {
-                arr.push(arr[i]);
-            }
-            l = arr.length;
-            for (i = 0; i < l; i++) {
-                target = arr[i];
-                if (i < l / 2) {
-                    target._isUseCapture = true;
-                }
-                else {
-                    target._isUseCapture = false;
-                }
-                locTouchEventHelperData.currentTarget = target;
-                var isStop = target.dispatchEvent(eventName, locTouchEventHelperData);
-                if (isStop) {
-                    break;
-                }
-            }
+        private dispatchEvent(type:string, data:any) {
+            var target:DisplayObject = data.target;
+            var event:TouchEvent = TouchContext.touchEvent;
+            event._type = type;
+            event.touchPointID = data.identifier;
+            event._stageX = data.stageX;
+            event._stageY = data.stageY;
+            target.dispatchEvent(event);
         }
 
         static getLocation(canvas, event) {
@@ -230,63 +203,6 @@ module ns_egret {
             result.y = (ty - top) / StageDelegate.getInstance().getScaleY();
             return result;
 
-        }
-    }
-
-    /**
-     * Touch数据类
-     */
-    export class TouchEvent {
-
-        /**
-         * 开始触摸,参考Flash MouseDown
-         */
-        static TOUCH_BEGAN:string = "touchBegan";
-
-        /**
-         * 结束触摸,参考Flash MouseUp
-         */
-        static TOUCH_END:string = "touchEnd";
-
-        /**
-         * 取消触摸,touchBegan目标会派发此事件
-         */
-        static TOUCH_CANCEL:string = "touchCancel";
-
-        /**
-         * 轻触，参考Flash MouseClick
-         */
-        static TOUCH_TAP:string = "touchTap";
-
-        /**
-         * 移动，参考FLash MouseMove
-         */
-        static TOUCH_MOVE:string = "touchMove";
-
-        static identity = new TouchEvent();
-
-        /**
-         * 事件的stageX坐标
-         */
-        public stageX:number;
-
-        /**
-         * 事件的stageY坐标
-         */
-        public stageY:number;
-
-
-        /**
-         * touchId，多点触控需要
-         */
-        public touchId:number;
-
-        public currentTarget:DisplayObject;
-
-        public target:DisplayObject;
-
-        public getLocalPoint():Point{
-            return this.currentTarget.globalToLocal(this.stageX, this.stageY);
         }
     }
 }

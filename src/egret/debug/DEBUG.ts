@@ -63,18 +63,18 @@ module ns_egret {
          * @param command 0,停止主循环; 1,执行一次主循环 2,正常循环渲染
          * @constructor
          */
-        static TRACE_RENDER_LOOP(command:int = 0):void {
+        static TRACE_RENDER_LOOP(command:number = 0):void {
             var ticker:ns_egret.Ticker = ns_egret.Ticker.getInstance();
             var context =  ns_egret.MainContext.instance;
             switch (command) {
                 case 0:
-                    ticker.unregister(context.renderLoop,context);
+                    ticker.unregister(context["renderLoop"],context);
                     break;
                 case 1:
-                    context.renderLoop();
+                    context["renderLoop"]();
                     break;
                 case 2:
-                    ticker.register(context.renderLoop,context);
+                    ticker.register(context["renderLoop"],context);
                     break;
             }
         }

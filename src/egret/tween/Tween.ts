@@ -206,7 +206,7 @@ module ns_egret{
                 this.setPaused(true);
             }
 
-            this.dispatchEvent("change");
+            this.dispatchEventWith("change");
             return end;
         }
 
