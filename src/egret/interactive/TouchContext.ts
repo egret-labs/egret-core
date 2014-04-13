@@ -1,6 +1,7 @@
 /// <reference path="../core/MainContext.ts"/>
 /// <reference path="../display/DisplayObjectContainer.ts"/>
 /// <reference path="../core/StageDelegate.ts"/>
+/// <reference path="../events/TouchEvent.ts"/>
 
 
 /**

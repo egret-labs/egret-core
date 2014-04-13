@@ -1,6 +1,7 @@
 /**
  * Created by DOM on 2014/4/12.
  */
+///<reference path="Event.ts"/>
 module ns_egret{
     /**
      * Touch数据类

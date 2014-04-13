@@ -21,7 +21,7 @@ module ns_egret {
     /**
      * Point 对象表示二维坐标系统中的某个位置，其中 x 表示水平轴，y 表示垂直轴。
      */
-    export class Point {
+    export class Point extends ns_egret.HashObject{
 
         static identity = new Point(0, 0);
 
