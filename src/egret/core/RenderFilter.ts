@@ -31,6 +31,7 @@ module ns_egret {
 
         public _drawAreaList:Array = [];
         private _defaultDrawAreaList:Array;
+        private _originalData:any = {};
 
         public addDrawArea(area:ns_egret.Rectangle):void {
             this._drawAreaList.push(area);
@@ -44,17 +45,25 @@ module ns_egret {
          * 先检查有没有不需要绘制的区域，再把需要绘制的区域绘制出来
          */
         public drawImage(renderContext, data:RenderData, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight):void {
+            destX = destX || 0;
+            destY = destY || 0;
             var locTexture = data.renderTexture || data.texture;
             if (locTexture == null || locTexture._bitmapData == null) {
                 return;
             }
-            var originalData = {sourceX: sourceX, sourceY: sourceY, sourceWidth: sourceWidth, sourceHeight: sourceHeight,
-                destX: destX, destY: destY, destWidth: destWidth, destHeight: destHeight};
+            this._originalData.sourceX = sourceX;
+            this._originalData.sourceY = sourceY;
+            this._originalData.sourceWidth = sourceWidth;
+            this._originalData.sourceHeight = sourceHeight;
+            this._originalData.destX = destX;
+            this._originalData.destY = destY;
+            this._originalData.destWidth = destWidth;
+            this._originalData.destHeight = destHeight;
 
             var locDrawAreaList = this.getDrawAreaList();
             for (var j:number = 0; j < locDrawAreaList.length; j++) {
                 var drawArea:ns_egret.Rectangle = locDrawAreaList[j];
-                if (this.ignoreRender(data, drawArea, originalData.destX, originalData.destY)) {
+                if (this.ignoreRender(data, drawArea, this._originalData.destX, this._originalData.destY)) {
                     continue;
                 }
 
@@ -63,10 +72,10 @@ module ns_egret {
                     //不能允许有旋转和斜切的显示对象跨过重绘区域
                     if (data.worldTransform.b != 0 || data.worldTransform.c != 0) {
                         //之前已经判断过是否出了重绘区域了
-                        if (data.worldBounds.x + originalData.destX < drawArea.x
-                            || data.worldBounds.y + originalData.destY < drawArea.y
-                            || data.worldBounds.x + data.worldBounds.width + originalData.destX > drawArea.x + drawArea.width
-                            || data.worldBounds.y + data.worldBounds.height + originalData.destY > drawArea.y + drawArea.height) {
+                        if (data.worldBounds.x + this._originalData.destX < drawArea.x
+                            || data.worldBounds.y + this._originalData.destY < drawArea.y
+                            || data.worldBounds.x + data.worldBounds.width + this._originalData.destX > drawArea.x + drawArea.width
+                            || data.worldBounds.y + data.worldBounds.height + this._originalData.destY > drawArea.y + drawArea.height) {
                             ns_egret.Logger.fatal("请不要让带有旋转和斜切的显示对象跨过重绘区域");
                             return;
                         }
@@ -76,27 +85,27 @@ module ns_egret {
                         var scaleX = data.worldTransform.a;
                         var scaleY = data.worldTransform.d;
                         var offset;
-                        if (data.worldBounds.x + originalData.destX < drawArea.x) {
-                            offset = (drawArea.x - data.worldBounds.x) / scaleX - originalData.destX;
+                        if (data.worldBounds.x + this._originalData.destX < drawArea.x) {
+                            offset = (drawArea.x - data.worldBounds.x) / scaleX - this._originalData.destX;
                             sourceX += offset / (destWidth / sourceWidth);
                             sourceWidth -= offset / (destWidth / sourceWidth);
                             destWidth -= offset;
                             destX += offset;
                         }
-                        if (data.worldBounds.y + originalData.destY < drawArea.y) {
-                            offset = (drawArea.y - data.worldBounds.y) / scaleY - originalData.destY;
+                        if (data.worldBounds.y + this._originalData.destY < drawArea.y) {
+                            offset = (drawArea.y - data.worldBounds.y) / scaleY - this._originalData.destY;
                             sourceY += offset / (destHeight / sourceHeight);
                             sourceHeight -= offset / (destHeight / sourceHeight);
                             destHeight -= offset;
                             destY += offset;
                         }
-                        if (data.worldBounds.x + data.worldBounds.width + originalData.destX > drawArea.x + drawArea.width) {
-                            offset = (data.worldBounds.x + data.worldBounds.width - drawArea.x - drawArea.width) / scaleX + originalData.destX;
+                        if (data.worldBounds.x + data.worldBounds.width + this._originalData.destX > drawArea.x + drawArea.width) {
+                            offset = (data.worldBounds.x + data.worldBounds.width - drawArea.x - drawArea.width) / scaleX + this._originalData.destX;
                             sourceWidth -= offset / (destWidth / sourceWidth);
                             destWidth -= offset;
                         }
-                        if (data.worldBounds.y + data.worldBounds.height + originalData.destY > drawArea.y + drawArea.height) {
-                            offset = (data.worldBounds.y + data.worldBounds.height - drawArea.y - drawArea.height) / scaleY + originalData.destY;
+                        if (data.worldBounds.y + data.worldBounds.height + this._originalData.destY > drawArea.y + drawArea.height) {
+                            offset = (data.worldBounds.y + data.worldBounds.height - drawArea.y - drawArea.height) / scaleY + this._originalData.destY;
                             sourceHeight -= offset / (destHeight / sourceHeight);
                             destHeight -= offset;
                         }
@@ -108,14 +117,14 @@ module ns_egret {
                 //测试代码，把画出来的区域用红框标出来
 //                renderContext.strokeRect(destX, destY, destWidth, destHeight, "#ff0000");
 
-                sourceX = originalData.sourceX;
-                sourceY = originalData.sourceY;
-                sourceWidth = originalData.sourceWidth;
-                sourceHeight = originalData.sourceHeight;
-                destX = originalData.destX;
-                destY = originalData.destY;
-                destWidth = originalData.destWidth;
-                destHeight = originalData.destHeight;
+                sourceX = this._originalData.sourceX;
+                sourceY = this._originalData.sourceY;
+                sourceWidth = this._originalData.sourceWidth;
+                sourceHeight = this._originalData.sourceHeight;
+                destX = this._originalData.destX;
+                destY = this._originalData.destY;
+                destWidth = this._originalData.destWidth;
+                destHeight = this._originalData.destHeight;
             }
         }
 
