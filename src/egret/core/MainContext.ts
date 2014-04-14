@@ -22,7 +22,7 @@
  */
 
 /// <reference path="../events/EventDispatcher.ts"/>
-
+/// <reference path="../display/DisplayObject.ts"/>
 module ns_egret{
     /**
      * MainContext是游戏的核心跨平台接口，组合了多个功能Context，并是游戏启动的主入口
@@ -64,15 +64,26 @@ module ns_egret{
         public run() {
             Ticker.getInstance().run();
             Ticker.getInstance().register(this.renderLoop, this, Number.MAX_VALUE);
-            Ticker.getInstance().register(this.enterFrame, this, Number.MIN_VALUE);
+            Ticker.getInstance().register(this.broadcastEnterFrame, this, Number.MIN_VALUE);
             this.touchContext.run();
         }
 
+        private reuseEvent:Event = new Event("")
         /**
-         * 滑动跑道模型，逻辑计算部分
+         * 广播EnterFrame事件。
          */
-        private enterFrame() {
-            this.dispatchEventWith(Event.ENTER_FRAME);
+        private broadcastEnterFrame() {
+
+            var event:Event = this.reuseEvent;
+            event._type = Event.ENTER_FRAME;
+            var list:Array = DisplayObject._enterFrameCallBackList;
+            var length:number = list.length;
+            for(var i:number = 0;i<length;i++){
+                var eventBin:any = list[i];
+                event._target = eventBin.display;
+                event._setCurrentTarget(eventBin.display);
+                eventBin.listener.apply(eventBin.thisObject,[event]);
+            }
         }
 
         /**

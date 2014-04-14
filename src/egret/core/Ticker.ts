@@ -16,6 +16,7 @@
  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 /// <reference path="../events/EventDispatcher.ts"/>
+/// <reference path="../events/Event.ts"/>
 
 module ns_egret {
     /**
@@ -63,71 +64,88 @@ module ns_egret {
         private enterFrame() {
             Ticker.requestAnimationFrame.call(window, Ticker.instance.enterFrame)
             Ticker.instance.update();
-
         }
 
         private update() {
-            if (!this._eventDataList || this._paused) return;
-            var thisTime = Ticker.now();
-            var l = this._eventDataList.length;
-            for (var i:number = 0; i < l; i++) {
-                var obj = this._eventDataList[i];
-                if (!obj) {
-                    continue;
-                }
-                if (obj.eventName == "enterFrame"
-                    && (!(this instanceof DisplayObject) || this._isUseCapture == obj.useCapture)) {
-                    var dt = thisTime - this._time;
-                    dt *= this._timeScale;
-                    obj.func.apply(obj.thisObj, [dt]);
-                }
+            var list:Array = this.callBackList;
+            var length:number = list.length;
+            for(var i:number = 0;i<length;i++){
+                var eventBin:any = list[i];
+                eventBin.listener.apply(eventBin.thisObject);
             }
-            this._time = thisTime;
         }
 
+        private callBackList:Array = [];
         /**
-         * 注册侦听enterFrame事件，这是对EventDispatcher.addEventListener("enterFrame")的一层封装
-         * @param func 事件侦听函数
-         * @param thisObj 侦听函数的this对象
+         * 注册侦听enterFrame事件，重复的监听会被过滤。
+         * @param listener 事件侦听回调函数,参数列表必须为空，示例：onEnterFrame()
+         * @param thisObject 侦听函数的this对象
          * @param priority 事件优先级，开发者请勿传递 Number.MAX_VALUE 和 Number.MIN_VALUE
          * @stable A-
          */
-        public register(func:Function, thisObj, priority = 0) {
-            super.addEventListener("enterFrame", func, thisObj, false, priority);
+        public register(listener:Function, thisObject:any, priority = 0) {
+            var list:Array = this.callBackList;
+            var insertIndex:number = -1;
+            var length:number = list.length;
+            for (var i:number = 0; i < length; i++) {
+                var bin:any = list[i];
+                if (bin.listener === listener) {
+                    return;
+                }
+                if (insertIndex == -1 && bin.priority <= priority) {
+                    insertIndex = i;
+                }
+            }
+
+            var eventBin = {listener: listener, thisObject: thisObject, priority: priority};
+            if (insertIndex != -1) {
+                list.splice(insertIndex, 0, eventBin);
+            }
+            else {
+                list.push(eventBin);
+            }
         }
 
         /**
          * 取消侦听enterFrame事件
-         * @param func 事件侦听函数
-         * @param thisObj 侦听函数的this对象
+         * @param listener 事件侦听函数
+         * @param thisObject 侦听函数的this对象
          * @stable A-
          */
-        public unregister(func:Function, thisObj) {
-            super.removeEventListener("enterFrame", func, thisObj, false);
+        public unregister(listener:Function, thisObject:any) {
+            var list:Array = this.callBackList;
+            var length:number = list.length;
+            for (var i:number = 0; i < length; i++) {
+                var bin:any = list[i];
+                if (bin.listener === listener) {
+                    list.splice(i, 1);
+                    break;
+                }
+            }
         }
 
         /**
          * 在一帧之后调用指定函数
-         * @param func 事件侦听函数
-         * @param thisObj 侦听函数的this对象
+         * @param listener 事件侦听函数
+         * @param thisObject 侦听函数的this对象
          */
-        public callLater(func:Function, thisObj, time:number = 0) {
+        public callLater(listener:Function, thisObject, time:number = 0) {
             var that = this;
             var passTime = 0;
             this.register(function (dt) {
                 if (time == 0) {
-                    that.unregister(arguments.callee, thisObj);
-                    func.apply(thisObj);
+                    that.unregister(arguments.callee, thisObject);
+                    listener.apply(thisObject);
 
                 }
                 else {
                     passTime += dt;
                     if (passTime >= time) {
-                        that.unregister(arguments.callee, thisObj);
-                        func.apply(thisObj);
+                        that.unregister(arguments.callee, thisObject);
+                        listener.apply(thisObject);
                     }
                 }
-            }, thisObj)
+            }, thisObject)
         }
 
         public setTimeScale(timeScale) {

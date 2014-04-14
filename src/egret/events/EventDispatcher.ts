@@ -18,6 +18,7 @@
 
 /// <reference path="../debug/DEBUG.ts"/>
 /// <reference path="IEventDispatcher.ts"/>
+/// <reference path="Event.ts"/>
 
 module ns_egret {
     /**
@@ -78,6 +79,10 @@ module ns_egret {
             if (DEBUG && DEBUG.ADD_EVENT_LISTENER) {
                 DEBUG.checkAddEventListener(type, listener, thisObject, useCapture, priority);
             }
+            this._addEventListener(type,listener,thisObject,useCapture,priority);
+        }
+
+        public _addEventListener(type:string, listener:Function, thisObject:any, useCapture:Boolean = false, priority:number = 0):boolean {
             var eventMap:Object = useCapture ? this._captureEventsMap : this._eventsMap;
             var list:Array = eventMap[type];
             var insertIndex:number = -1;
@@ -86,7 +91,7 @@ module ns_egret {
                 for (var i:number = 0; i < length; i++) {
                     var bin:any = list[i];
                     if (bin.listener === listener) {
-                        return;
+                        return false;
                     }
                     if (insertIndex == -1 && bin.priority <= priority) {
                         insertIndex = i;
@@ -104,6 +109,7 @@ module ns_egret {
             else {
                 list.push(eventBin);
             }
+            return true;
         }
 
         /**
@@ -115,10 +121,14 @@ module ns_egret {
          * @stable A
          */
         public removeEventListener(type:string, listener:Function, useCapture:Boolean = false):void {
+            this._removeEventListener(type,listener,useCapture);
+        }
+
+        public _removeEventListener(type:string, listener:Function, useCapture:Boolean = false):boolean {
             var eventMap:Object = useCapture ? this._captureEventsMap : this._eventsMap;
             var list:Array = eventMap[type];
             if (!list) {
-                return;
+                return false;
             }
             var length:number = list.length;
             for (var i:number = 0; i < length; i++) {
@@ -131,6 +141,7 @@ module ns_egret {
             if(list.length==0){
                 delete eventMap[type];
             }
+            return true;
         }
 
         /**
@@ -158,7 +169,7 @@ module ns_egret {
 
         public _notifyListener(event:Event):boolean{
             var eventMap:Object = event._eventPhase==1 ? this._captureEventsMap : this._eventsMap;
-            var list:Array = eventMap[type];
+            var list:Array = eventMap[event.type];
             if (!list) {
                 return true;
             }

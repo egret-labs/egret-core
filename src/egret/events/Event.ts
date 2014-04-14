@@ -168,7 +168,8 @@ module ns_egret{
          * 注意：此方法不会取消与此事件相关联的行为；有关此功能的信息，请参阅 preventDefault()。
          */
         public stopPropagation():void{
-            this._isPropagationStopped = true;
+            if(this._bubbles)
+                this._isPropagationStopped = true;
         }
 
         public _isPropagationImmediateStopped:boolean = false;
@@ -178,7 +179,8 @@ module ns_egret{
          * 注意：此方法不会取消与此事件相关联的行为；有关此功能的信息，请参阅 preventDefault()。
          */
         public stopImmediatePropagation():void{
-            this._isPropagationImmediateStopped = true;
+            if(this._bubbles)
+                this._isPropagationImmediateStopped = true;
         }
 
         private isNew:boolean = true;
