@@ -218,7 +218,7 @@ module ns_egret{
             return result;
         }
 
-        private onLeftTouchBegin(eventName:string, touchEvent:TouchEvent) {
+        private onLeftTouchBegin(touchEvent:TouchEvent) {
             this.leftTouchPointID = touchEvent.touchPointID;
             this.leftTouchPointX = touchEvent.localX;
             this.leftTouchPointY = touchEvent.localY;
@@ -237,12 +237,12 @@ module ns_egret{
             return false;
         }
 
-        private onLeftTouchMoved(eventName:string, touchEvent:TouchEvent) {
+        private onLeftTouchMoved(touchEvent:TouchEvent) {
             this.leftTouchPointX = touchEvent.localX;
             this.leftTouchPointY = touchEvent.localY;
         }
 
-        private onTouchEnded(eventName:string, touchEvent:TouchEvent) {
+        private onTouchEnded(touchEvent:TouchEvent) {
             if(this.leftTouchPointID == null || this.leftTouchPointID == touchEvent.touchPointID)
             {
                 if (this.isLeftTouching) {
@@ -339,7 +339,7 @@ module ns_egret{
             }
         }
 
-        private onRightTouchBegin(eventName:string, touchEvent:TouchEvent) {
+        private onRightTouchBegin(touchEvent:TouchEvent) {
             this.rightTouchPointID = touchEvent.touchPointID;
             this.rightTouchPointX = touchEvent.localX;
             this.rightTouchPointY = touchEvent.localY;
@@ -358,7 +358,7 @@ module ns_egret{
             return false;
         }
 
-        private onRightTouchMoved(eventName:string, touchEvent:TouchEvent) {
+        private onRightTouchMoved(touchEvent:TouchEvent) {
             this.rightTouchPointX = touchEvent.localX;
             this.rightTouchPointY = touchEvent.localY;
         }

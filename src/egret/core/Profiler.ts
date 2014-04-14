@@ -17,6 +17,7 @@
  */
 /// <reference path="Ticker.ts"/>
 /// <reference path="../display/TextField.ts"/>
+/// <reference path="../events/Event.ts"/>
 module ns_egret {
     /**
      * Profiler是egret的性能检测分析类
@@ -67,20 +68,20 @@ module ns_egret {
         /**
          * @private
          */
-        private onEnterFrame() {
+        private onEnterFrame(event:Event) {
             this._lastTime = Ticker.now();
         }
 
         /**
          * @private
          */
-        private onStartRender() {
+        private onStartRender(event:Event) {
             var now:number = Ticker.now();
             this._logicPerformanceCost = now - this._lastTime;
             this._lastTime = now;
         }
 
-        private onFinishUpdateTransform() {
+        private onFinishUpdateTransform(event:Event) {
             var now:number = Ticker.now();
             this._updateTransformPerformanceCost = now - this._lastTime;
             this._lastTime = now;
@@ -89,7 +90,7 @@ module ns_egret {
         /**
          * @private
          */
-        private onFinishRender() {
+        private onFinishRender(event:Event) {
             var now:number = Ticker.now();
             this._renderPerformanceCost = now - this._lastTime;
             this._lastTime = now;

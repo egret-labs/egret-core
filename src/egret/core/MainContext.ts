@@ -76,6 +76,7 @@ module ns_egret{
 
             var event:Event = this.reuseEvent;
             event._type = Event.ENTER_FRAME;
+            dispatchEvent(event);
             var list:Array = DisplayObject._enterFrameCallBackList;
             var length:number = list.length;
             for(var i:number = 0;i<length;i++){

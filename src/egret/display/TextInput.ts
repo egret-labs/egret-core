@@ -19,6 +19,7 @@
  */
 
 /// <reference path="../geom/Rectangle.ts"/>
+/// <reference path="../events/Event.ts"/>
 
 module ns_egret {
     export class TextInput extends DisplayObject {
@@ -65,7 +66,7 @@ module ns_egret {
 
 
 
-        private onMouseDownHandler() {
+        private onMouseDownHandler(event:TouchEvent) {
 
         }
 
