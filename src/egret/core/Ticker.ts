@@ -69,9 +69,12 @@ module ns_egret {
         private update() {
             var list:Array = this.callBackList;
             var length:number = list.length;
+            var thisTime = Ticker.now();
             for(var i:number = 0;i<length;i++){
                 var eventBin:any = list[i];
-                eventBin.listener.apply(eventBin.thisObject);
+                var dt = thisTime - this._time;
+                dt *= this._timeScale;
+                eventBin.listener.apply(eventBin.thisObject,[dt]);
             }
         }
 

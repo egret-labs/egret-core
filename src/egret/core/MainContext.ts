@@ -90,7 +90,7 @@ module ns_egret{
         /**
          * 滑动跑道模型，渲染部分
          */
-        private renderLoop() {
+        private renderLoop(dt:number) {
             var context = this.rendererContext;
             context.clearScreen();
             this.dispatchEventWith(Event.RENDER);
