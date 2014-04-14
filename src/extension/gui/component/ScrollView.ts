@@ -122,7 +122,7 @@ module ns_egret {
                     return;
                 }
             }
-            this.addChild(this._container, 0);
+            this.addChildAt(this._container, 0);
         }
 
         private mouseDown(name, touch) {
