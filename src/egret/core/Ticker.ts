@@ -82,7 +82,7 @@ module ns_egret {
         private callBackList:Array = [];
         /**
          * 注册帧回调事件，同一函数的重复监听会被忽略。
-         * @param listener 帧回调函数,参数返回上一帧和这帧的间隔时间。示例：onEnterFrame(duration:number):void
+         * @param listener 帧回调函数,参数返回上一帧和这帧的间隔时间。示例：onEnterFrame(frameTime:number):void
          * @param thisObject 帧回调函数的this对象
          * @param priority 事件优先级，开发者请勿传递 Number.MAX_VALUE 和 Number.MIN_VALUE
          * @stable A-

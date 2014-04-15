@@ -126,20 +126,18 @@ module ns_egret {
             var stage = MainContext.instance.stage;
             var result = stage.hitTest(x, y);
             if (result) {
-                //发一个cancel事件
                 var obj = this.getTouchData(event, x, y);
                 var oldTarget = obj.beginTarget;
-                if(oldTarget)
-                {
+                if(oldTarget==result){
                     obj.target = obj.beginTarget;
-                    this.dispatchEvent(TouchEvent.TOUCH_CANCEL, obj);
+                    this.dispatchEvent(TouchEvent.TOUCH_RELEASE_OUTSIDE, obj);
                 }
-
-                obj.target = result;
-                this.dispatchEvent(TouchEvent.TOUCH_END, obj);
-                if (oldTarget === result) {
+                else{
+                    obj.target = result;
+                    this.dispatchEvent(TouchEvent.TOUCH_END, obj);
                     this.dispatchEvent(TouchEvent.TOUCH_TAP, obj);
                 }
+
                 delete this._currentTouchTarget[obj.identifier];
             }
         }

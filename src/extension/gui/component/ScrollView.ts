@@ -134,7 +134,7 @@ module ns_egret {
             }
             this._isMoved = false;
             MainContext.instance.stage.addEventListener(TouchEvent.TOUCH_END, this.mouseUp, this);
-            MainContext.instance.stage.addEventListener(TouchEvent.TOUCH_CANCEL, this.mouseUp, this);
+            MainContext.instance.stage.addEventListener(TouchEvent.TOUCH_RELEASE_OUTSIDE, this.mouseUp, this);
             MainContext.instance.stage.addEventListener(TouchEvent.TOUCH_MOVE, this.mouseMove, this);
             console.log("begin")
 
@@ -152,7 +152,7 @@ module ns_egret {
 
         private mouseUp(name, touch) {
             MainContext.instance.stage.removeEventListener(TouchEvent.TOUCH_END, this.mouseUp, this);
-            MainContext.instance.stage.removeEventListener(TouchEvent.TOUCH_CANCEL, this.mouseUp, this);
+            MainContext.instance.stage.removeEventListener(TouchEvent.TOUCH_RELEASE_OUTSIDE, this.mouseUp, this);
             MainContext.instance.stage.removeEventListener(TouchEvent.TOUCH_MOVE, this.mouseMove, this);
             console.log("end")
 
@@ -255,7 +255,7 @@ module ns_egret {
          */
         private removeListeners() {
             this.removeEventListener(TouchEvent.TOUCH_BEGAN, this.mouseDown, this);
-            MainContext.instance.stage.removeEventListener(TouchEvent.TOUCH_CANCEL, this.mouseUp, this);
+            MainContext.instance.stage.removeEventListener(TouchEvent.TOUCH_RELEASE_OUTSIDE, this.mouseUp, this);
             MainContext.instance.stage.removeEventListener(TouchEvent.TOUCH_END, this.mouseUp, this);
             MainContext.instance.stage.removeEventListener(TouchEvent.TOUCH_MOVE, this.mouseMove, this);
             console.log("remove")

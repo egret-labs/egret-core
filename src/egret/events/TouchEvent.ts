@@ -9,29 +9,49 @@ module ns_egret{
     export class TouchEvent extends Event{
 
         /**
-         * 开始触摸,参考Flash MouseDown
-         */
-        static TOUCH_BEGAN:string = "touchBegan";
-
-        /**
-         * 结束触摸,参考Flash MouseUp
-         */
-        static TOUCH_END:string = "touchEnd";
-
-        /**
-         * 取消触摸,touchBegan目标会派发此事件
-         */
-        static TOUCH_CANCEL:string = "touchCancel";
-
-        /**
-         * 轻触，参考Flash MouseClick
+         * 轻触，参考Flash的MouseEvent.CLICK
          */
         static TOUCH_TAP:string = "touchTap";
 
         /**
-         * 移动，参考FLash MouseMove
+         * 移动，参考FLash的MouseEvent.MOVE
          */
         static TOUCH_MOVE:string = "touchMove";
+
+        /**
+         * 开始触摸,参考Flash的MouseEvent.MOUSE_DOWN
+         */
+        static TOUCH_BEGAN:string = "touchBegan";
+
+        /**
+         * 在同一对象上结束触摸,参考Flash的MouseEvent.MOUSE_UP
+         */
+        static TOUCH_END:string = "touchEnd";
+
+        /**
+         * 在对象外部结束触摸，参考Flash的MouseEvent.RELEASE_OUTSIDE
+         */
+        static TOUCH_RELEASE_OUTSIDE:string = "touchReleaseOutside";
+
+        /**
+         * 移动，参考FLash的MouseEvent.MOVE
+         */
+        static TOUCH_ROLL_OUT:string = "touchRollOut";
+
+        /**
+         * 移动，参考FLash的MouseEvent.MOVE
+         */
+        static TOUCH_ROLL_OVER:string = "touchRollOver";
+
+        /**
+         * 移动，参考FLash的MouseEvent.MOVE
+         */
+        static TOUCH_OUT:string = "touchOut";
+
+        /**
+         * 移动，参考FLash的MouseEvent.MOVE
+         */
+        static TOUCH_OVER:string = "touchOver";
 
         /**
          * 创建一个作为参数传递给事件侦听器的 Event 对象。
@@ -94,7 +114,7 @@ module ns_egret{
             }
         }
         /**
-         * todo 调用渲染接口
+         * 立即刷新屏幕，此方法主要使用在当用户执行拖拽等操作过程中，强制立即刷新屏幕已提高流畅程度。
          */
         public updateAfterEvent():void{
 

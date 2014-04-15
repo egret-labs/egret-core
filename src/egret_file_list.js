@@ -1,15 +1,11 @@
 
 var temp = [
-	"egret/ui/Multitouch.js",
-	"egret/ui/MultitouchInputMode.js",
 	"egret/core/HashObject.js",
     "egret/events/Event.js",
     "egret/events/TouchEvent.js",
 	"egret/events/TimerEvent.js",
 	"egret/events/EventPhase.js",
-
 	"egret/events/EventDispatcher.js",
-
     "egret/core/MainContext.js",
     "egret/core/Profiler.js",
     "egret/core/Ticker.js",
