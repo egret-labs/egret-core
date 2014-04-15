@@ -103,6 +103,14 @@ module ns_egret{
          * 分配给触摸点的唯一标识号
          */
         public touchPointID:number;
+        /**
+         * 事件发生时ctrl键是否被按下。 (Mac OS下为 Cmd 或 Ctrl)
+         */
+        public ctrlKey:boolean;
+        /**
+         * 事件发生时shift键是否被按下。
+         */
+        public shiftKey:boolean;
 
         public _setCurrentTarget(target:any):void{
             super._setCurrentTarget(target);
