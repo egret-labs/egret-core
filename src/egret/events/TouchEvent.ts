@@ -111,6 +111,10 @@ module ns_egret{
          * 事件发生时shift键是否被按下。
          */
         public shiftKey:boolean;
+        /**
+         * 事件发生时alt键是否被按下。
+         */
+        public altKey:boolean;
 
         public _setCurrentTarget(target:any):void{
             super._setCurrentTarget(target);
