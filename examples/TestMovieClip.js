@@ -16,22 +16,20 @@
  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 function getResourceList(){
-    return ["daisy.png"];
+    return ["monkey.png","monkey.json"];
 }
 
 function getDescription(){
-    return "这个项目展示了box2d";
+    return "MovieClip";
 }
 
 function createExample(){
-    var container = new ns_egret.DisplayObjectContainer();
-    context.stage.addChild(container);
-
-    var texture = ns_egret.TextureCache.getInstance().getTexture("daisy.png");
-    var scaleBitmap = new ns_egret.Scale9Bitmap(texture);
-    scaleBitmap.setScaleGrid(5,5,5,5);
-    scaleBitmap.setContentSize(200,200);
-    scaleBitmap.x = 200;
-    scaleBitmap.y = 200;
-    container.addChild(scaleBitmap);
+    var data = ns_egret.ResourceLoader.create("monkey.json").data;
+    var texture = ns_egret.TextureCache.getInstance().getTexture("monkey.png");
+    var monkey = new ns_egret.MovieClip(data, texture);
+    monkey.x = 200;
+    monkey.y = 200;
+    context.stage.addChild(monkey);
+    monkey.setInterval(3);
+    monkey.gotoAndPlay("banana");
 }

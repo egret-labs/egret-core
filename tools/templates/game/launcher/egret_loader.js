@@ -53,14 +53,14 @@ egret_h5.startGame = function () {
     var canvas = document.getElementById(ns_egret.StageDelegate.canvas_name);
     context = ns_egret.MainContext.instance;
     context.rendererContext = new ns_egret.HTML5CanvasRenderer(canvas);
-
+    context.netContext = new ns_egret.HTML5NetContext();
+    context.soundContext = new ns_egret.SoundContext();
     context.touchContext = new ns_egret.TouchContext(canvas);
     context.stage = new ns_egret.Stage();
 
     ns_egret.ResourceLoader.prefix = "assets/480/";
     ns_egret.RendererContext.CONTENT_SCALE_FACTOR = 1;
 
-    ns_egret.NetContext.context = new ns_egret.HTML5NetContext();
 //    ns_egret.StageDelegate.getInstance().setResolutionPolicy(1);
 //    ns_egret.StageDelegate.getInstance().setFrameSize(480,400);
 //    ns_egret.StageDelegate.getInstance().setDesignSize(480,400,2);

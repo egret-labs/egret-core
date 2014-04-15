@@ -3,6 +3,8 @@
 /// <reference path="../interactive/TouchContext.ts"/>
 /// <reference path="../display/Stage.ts"/>
 /// <reference path="../events/EventDispatcher.ts"/>
+/// <reference path="../context/net/NetContext.ts"/>
+/// <reference path="../context/sound/SoundContext.ts"/>
 /**
  * Copyright (c) Egret-Labs.org. Permission is hereby granted, free of charge,
  * to any person obtaining a copy of this software and associated documentation
@@ -40,15 +42,15 @@ module ns_egret{
          */
         public touchContext:TouchContext;
 
-//        /**
-//         * 声音Context
-//         */
-//        public soundContext:SoundContext;
-//
-//        /**
-//         * 网络Context
-//         */
-//        public netContext:NetContxt;
+        /**
+         * 声音Context
+         */
+        public soundContext:SoundContext;
+
+        /**
+         * 网络Context
+         */
+        public netContext:NetContext;
 
         /**
          * 舞台
@@ -79,7 +81,9 @@ module ns_egret{
             var context = this.rendererContext;
             context.clearScreen();
             this.dispatchEvent(MainContext.EVENT_START_RENDER);
-            this.stage.visit(context);
+            this.stage.updateTransform();
+            this.dispatchEvent(MainContext.EVENT_FINISH_UPDATE_TRANSFORM);
+            this.stage.draw(context);
             this.dispatchEvent(MainContext.EVENT_FINISH_RENDER);
         }
 
@@ -97,6 +101,10 @@ module ns_egret{
          * @event 主循环：渲染完毕
          */
         public static EVENT_FINISH_RENDER:string = "finish_render";
+        /**
+         * @event 主循环：updateTransform完毕
+         */
+        public static EVENT_FINISH_UPDATE_TRANSFORM:string = "finish_updateTransform";
     }
 }
 

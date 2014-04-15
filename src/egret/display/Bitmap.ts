@@ -3,6 +3,9 @@
 /// <reference path="SpriteSheet.ts"/>
 /// <reference path="../texture/Texture.ts"/>
 /// <reference path="../core/StageDelegate.ts"/>
+/// <reference path="../geom/Matrix.ts"/>
+/// <reference path="../geom/Point.ts"/>
+/// <reference path="../geom/Rectangle.ts"/>
 /**
  * Copyright (c) Egret-Labs.org. Permission is hereby granted, free of charge,
  * to any person obtaining a copy of this software and associated documentation
@@ -80,24 +83,26 @@ module ns_egret {
             if (locTexture == null || locTexture._bitmapData == null) {
                 return;
             }
-            var x, y, w, h;
+            var x, y, w, h, offsetX, offsetY;
             if (this.spriteFrame) {
                 var rect:ns_egret.SpriteSheetFrame = this.spriteFrame;
                 x = rect.x;
                 y = rect.y;
                 w = rect.w;
                 h = rect.h;
+                offsetX = rect.offX;
+                offsetY = rect.offY;
             }
             else {
                 x = 0;
                 y = 0;
-                w = locTexture.getTextureWidth();
-                h = locTexture.getTextureHeight();
+                w = locTexture._textureWidth;
+                h = locTexture._textureHeight;
+                offsetX = 0;
+                offsetY = 0;
             }
-            renderContext.drawImage(locTexture, x, y, w, h, 0, 0, w, h);
-            if (Bitmap.debug || this.debug) {
-                renderContext.strokeRect(x, y, w, h, this.debugColor);
-            }
+
+            RenderFilter.getInstance().drawImage(renderContext, this, x, y, w, h, offsetX, offsetY, w, h);
         }
 
         /**
@@ -113,8 +118,8 @@ module ns_egret {
                 h = rect.h;
             }
             else if (this.texture) {
-                w = this.texture.getTextureWidth();
-                h = this.texture.getTextureHeight();
+                w = this.texture._textureWidth;
+                h = this.texture._textureHeight;
             }
             else {
                 ns_egret.Logger.fatal("获取BitmapBounds失败");

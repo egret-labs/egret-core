@@ -15,23 +15,32 @@
  * FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-function getResourceList(){
-    return ["daisy.png"];
-}
 
-function getDescription(){
-    return "这个项目展示了box2d";
-}
+module ns_egret {
 
-function createExample(){
-    var container = new ns_egret.DisplayObjectContainer();
-    context.stage.addChild(container);
+    /**
+     * 哈希对象。引擎内所有对象的基类，为对象实例提供唯一的hashCode值,提高对象比较的性能。
+     */
+    export class HashObject{
 
-    var texture = ns_egret.TextureCache.getInstance().getTexture("daisy.png");
-    var scaleBitmap = new ns_egret.Scale9Bitmap(texture);
-    scaleBitmap.setScaleGrid(5,5,5,5);
-    scaleBitmap.setContentSize(200,200);
-    scaleBitmap.x = 200;
-    scaleBitmap.y = 200;
-    container.addChild(scaleBitmap);
+        /**
+         * 构造函数
+         */
+        public constructor(){
+            this._hashCode = HashObject.hashCount++;
+        }
+
+        /**
+         * 哈希计数
+         */
+        private static hashCount:number = 1;
+
+        private _hashCode:number = 1;
+        /**
+         * 返回此对象唯一的哈希值,用于唯一确定一个对象。
+         */
+        public get hashCode():number{
+            return this._hashCode;
+        }
+    }
 }

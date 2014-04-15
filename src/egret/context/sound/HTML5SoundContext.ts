@@ -64,7 +64,6 @@ module ns_egret{
         }
 
         public preloadSound(path) {
-            return;
             if (this._soundSupported) {
                 var extName = this._getExtFromFullPath(path);
                 if (this.isFormatSupported(extName) && !this._soundList.hasOwnProperty(path)) {
@@ -123,7 +122,6 @@ module ns_egret{
         }
 
         public playMusic(path, loop = true) {
-            return;
             if (!this._soundSupported)
                 return;
             var audio;

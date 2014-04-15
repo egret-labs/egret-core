@@ -24,5 +24,42 @@ module ns_egret{
         public static REMOVED_FROM_STAGE:string = "removedFromStage";
         public static ADDED:string = "added";
         public static REMOVED:string = "removed";
+
+        /**
+         * 创建一个作为参数传递给事件侦听器的 Event 对象。
+         * @param type 事件的类型，可以作为 Event.type 访问。
+         * @param bubbles 确定 Event 对象是否参与事件流的冒泡阶段。默认值为 false。
+         * @param cancelable 确定是否可以取消 Event 对象。默认值为 false。
+         */
+        public constructor(type:string, bubbles:boolean, cancelable:boolean){
+            this._type = type;
+            this._bubbles = bubbles;
+            this._cancelable = cancelable;
+        }
+
+        private _type:string;
+        /**
+         * 事件的类型。类型区分大小写。
+         */
+        public get type():string{
+            return this._type;
+        }
+
+        private _bubbles:boolean;
+        /**
+         * 表示事件是否为冒泡事件。如果事件可以冒泡，则此值为 true；否则为 false。
+         */
+        public get bubbles():boolean{
+            return this.bubbles;
+        }
+
+        private _cancelable:boolean;
+        /**
+         * 表示是否可以阻止与事件相关联的行为。如果可以取消该行为，则此值为 true；否则为 false。
+         */
+        public get cancelable():boolean{
+            return this._cancelable;
+        }
+
     }
 }

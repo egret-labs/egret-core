@@ -15,6 +15,7 @@
  * FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
+/// <reference path="../geom/Rectangle.ts"/>
 ///<reference path="DisplayObjectContainer.ts" />
 ///<reference path="../core/StageDelegate.ts" />
 module ns_egret{
@@ -31,7 +32,10 @@ module ns_egret{
         constructor() {
             super();
             this.touchEnabled = true;
-            this._isRunning = true;
+            this._stage = this;
+            var canvas:HTMLCanvasElement = document.getElementById(StageDelegate.canvas_name);
+            this.stageWidth = canvas.width;
+            this.stageHeight = canvas.height;
         }
 
         /**
@@ -60,10 +64,10 @@ module ns_egret{
                 var child = children[i];
                 var o = child;
                 var offsetPoint = o.getOffsetPoint();
-                var mtx = Matrix2D.identity.identity().prependTransform(o.x, o.y, o.scaleX, o.scaleY, o.rotation,
+                var mtx = Matrix.identity.identity().prependTransform(o.x, o.y, o.scaleX, o.scaleY, o.rotation,
                     0, 0,  offsetPoint.x,  offsetPoint.y);
                 mtx.invert();
-                var point = Matrix2D.transformCoords(mtx, x, y);
+                var point = Matrix.transformCoords(mtx, x, y);
                 result = child.hitTest(point.x, point.y,true);
                 if (result) {
                     if(result.touchEnabled)
@@ -83,6 +87,13 @@ module ns_egret{
             //todo
             return Rectangle.identity.initialize(0, 0, 100000, 100000);
 //            return Rectangle.identity.initialize(0, 0, this.stageWidth, this.stageHeight);
+        }
+
+        public updateTransform() {
+            for (var i = 0 , length = this._children.length; i < length; i++) {
+                var child:DisplayObject = this._children[i];
+                child.updateTransform();
+            }
         }
     }
 }

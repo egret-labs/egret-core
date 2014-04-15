@@ -18,7 +18,7 @@
 
 /// <reference path="../events/EventDispatcher.ts"/>
 /// <reference path="../texture/TextureCache.ts"/>
-/// <reference path="../context/net/NetContext.ts"/>
+/// <reference path="../core/MainContext.ts"/>
 module ns_egret {
     /**
      * @class ResourceLoader是egret的资源加载核心
@@ -32,10 +32,18 @@ module ns_egret {
         state:number = ResourceLoader.LOAD_STATE_INIT;
         data = null;
         onLoadComplete:Function;
+        fixedUrl:string = null;
 
         constructor(url:string, type:string) {
             super();
             this.url = url;
+            var index =  url.indexOf("?");
+            if (index > -1){
+                this.fixedUrl = url.substring(0,index);
+            }
+            else{
+                this.fixedUrl = url;
+            }
             this.type = type;
         }
 
@@ -79,7 +87,7 @@ module ns_egret {
             var selfPointer = this;
             var request = new ns_egret.URLRequest(fileUrl, onLoadComplete, this);
             request.type = this.type;
-            ns_egret.NetContext.getInstance().send(request);
+            MainContext.instance.netContext.send(request);
             function onLoadComplete(xhr) {
                 var fileContents = selfPointer._processXMLHttpResponse(xhr);
                 selfPointer._executeAllCallback(fileContents);
@@ -92,16 +100,15 @@ module ns_egret {
             var fileUrl = ResourceLoader.prefix + this.url;
             var that = this;
             var onLoadComplete = function () {
-                var texture:Texture = Texture.create(that.url);
+                var texture:Texture = Texture.create(that.fixedUrl);
                 texture.bitmapData = image;
-                TextureCache.getInstance().addTexture(that.url, texture);
+                TextureCache.getInstance().addTexture(that.fixedUrl, texture);
                 image.removeEventListener('load', onLoadComplete);
                 image.removeEventListener('error', onLoadComplete);
                 that._executeAllCallback(image);
 
             };
             var onLoadError = function () {
-                TextureCache.getInstance().removeTexture(that.url);
                 image.removeEventListener('error', onLoadError);
             };
             image.addEventListener("load", onLoadComplete);

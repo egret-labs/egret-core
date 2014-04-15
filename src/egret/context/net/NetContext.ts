@@ -21,13 +21,9 @@ module ns_egret {
         public static STATE_COMPLETE:string = "XHRLoaderComplete";
         public static GET:string = "GET";
         public static POST:string = "POST";
-        public static context:NetContext = null;
 
         public static getInstance():ns_egret.NetContext {
-            if (NetContext.context == null) {
-                NetContext.context = new NetContext();
-            }
-            return NetContext.context;
+            return ns_egret.MainContext.instance.netContext;
         }
 
         public send(request:URLRequest) {

@@ -17,6 +17,8 @@
  * FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
+/// <reference path="../events/Event.ts"/>
+/// <reference path="../geom/Rectangle.ts"/>
 
 module ns_egret {
     /**
@@ -108,7 +110,7 @@ module ns_egret {
             this._children.splice(index, 0, child);
             child._parentChanged(this);
             child.dispatchEvent(Event.ADDED);
-            if (this.isRunning()) {//当前容器在舞台
+            if (this._stage) {//当前容器在舞台
                 child._onAddToStage();
             }
 
@@ -142,7 +144,7 @@ module ns_egret {
             var locChildren = this._children;
             var child:DisplayObject = locChildren[index];
             child.dispatchEvent(Event.REMOVED)
-            if (this.isRunning()) {//在舞台上
+            if (this._stage) {//在舞台上
                 child._onRemoveFromStage();
             }
             child._parentChanged(null);
@@ -167,6 +169,7 @@ module ns_egret {
         public getChildByName(name:string):ns_egret.DisplayObject {
             //todo
             return null;
+            this.getChildAt()
         }
 
         /**
@@ -189,11 +192,21 @@ module ns_egret {
             }
         }
 
-
-        public render(renderContext) {
+        public updateTransform() {
+            if (!this.visible) {
+                return;
+            }
+            super.updateTransform();
             for (var i = 0 , length = this._children.length; i < length; i++) {
                 var child:DisplayObject = this._children[i];
-                child.visit(renderContext);
+                child.updateTransform();
+            }
+        }
+
+        public render(renderContext:RendererContext) {
+            for (var i = 0 , length = this._children.length; i < length; i++) {
+                var child:DisplayObject = this._children[i];
+                child.draw(renderContext);
             }
         }
 
@@ -210,7 +223,7 @@ module ns_egret {
             for (var i = 0; i < l; i++) {
                 var child = this._children[i];
                 var bounds:Rectangle;
-                if (!child.visible || !(bounds = DisplayObject.getTransformBounds(child))) {//child.getBounds())) {
+                if (!child.visible || !(bounds = DisplayObject.getTransformBounds(child.getBounds(), child.getMatrix()))) {
                     continue;
                 }
                 var x1 = bounds.x , y1 = bounds.y,
@@ -239,7 +252,7 @@ module ns_egret {
          * @param y
          * @returns {DisplayObject}
          */
-        hitTest(x, y) {
+            hitTest(x, y) {
             var result:DisplayObject;
             if (!this.visible) {
                 return null;
@@ -257,10 +270,10 @@ module ns_egret {
                 var o = child;
 
                 var offsetPoint = o.getOffsetPoint();
-                var mtx = Matrix2D.identity.identity().prependTransform(o.x, o.y, o.scaleX, o.scaleY, o.rotation,
+                var mtx = Matrix.identity.identity().prependTransform(o.x, o.y, o.scaleX, o.scaleY, o.rotation,
                     0, 0, offsetPoint.x, offsetPoint.y);
                 mtx.invert();
-                var point = Matrix2D.transformCoords(mtx, x, y);
+                var point = Matrix.transformCoords(mtx, x, y);
                 var childHitTestResult = child.hitTest(point.x, point.y, true);
                 if (childHitTestResult) {
                     if (childHitTestResult.touchEnabled) {
@@ -295,7 +308,6 @@ module ns_egret {
                 child._onRemoveFromStage();
             }
         }
-
     }
 }
 
