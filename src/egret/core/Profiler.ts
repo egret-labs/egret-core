@@ -100,7 +100,7 @@ module ns_egret {
         /**
          * @private
          */
-        private update() {
+        private update(frameTime:number) {
             var now:number = Ticker.now();
             var delta = now - this._lastFrameTime;
             this._lastFrameTime = now;

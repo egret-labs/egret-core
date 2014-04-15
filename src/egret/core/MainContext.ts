@@ -25,6 +25,7 @@
 
 /// <reference path="../events/EventDispatcher.ts"/>
 /// <reference path="../display/DisplayObject.ts"/>
+/// <reference path="../display/Stage.ts"/>
 module ns_egret{
     /**
      * MainContext是游戏的核心跨平台接口，组合了多个功能Context，并是游戏启动的主入口
@@ -70,15 +71,32 @@ module ns_egret{
             this.touchContext.run();
         }
 
+        /**
+         * 滑动跑道模型，渲染部分
+         */
+        private renderLoop(frameTime:number) {
+            var context = this.rendererContext;
+            context.clearScreen();
+            this.dispatchEventWith(Event.RENDER);
+            if(Stage._invalidateRenderFlag){
+                this.broadcastRender();
+                Stage._invalidateRenderFlag = false;
+            }
+            this.stage.updateTransform();
+            this.dispatchEventWith(Event.FINISH_UPDATE_TRANSFORM);
+            this.stage.draw(context);
+            this.dispatchEventWith(Event.FINISH_RENDER);
+        }
+
         private reuseEvent:Event = new Event("")
         /**
          * 广播EnterFrame事件。
          */
-        private broadcastEnterFrame() {
+        private broadcastEnterFrame(frameTime:number):void {
 
             var event:Event = this.reuseEvent;
             event._type = Event.ENTER_FRAME;
-            dispatchEvent(event);
+            this.dispatchEvent(event);
             var list:Array = DisplayObject._enterFrameCallBackList;
             var length:number = list.length;
             for(var i:number = 0;i<length;i++){
@@ -88,18 +106,20 @@ module ns_egret{
                 eventBin.listener.apply(eventBin.thisObject,[event]);
             }
         }
-
         /**
-         * 滑动跑道模型，渲染部分
+         * 广播Render事件。
          */
-        private renderLoop(dt:number) {
-            var context = this.rendererContext;
-            context.clearScreen();
-            this.dispatchEventWith(Event.RENDER);
-            this.stage.updateTransform();
-            this.dispatchEventWith(Event.FINISH_UPDATE_TRANSFORM);
-            this.stage.draw(context);
-            this.dispatchEventWith(Event.FINISH_RENDER);
+        private broadcastRender():void{
+            var event:Event = this.reuseEvent;
+            event._type = Event.RENDER;
+            var list:Array = DisplayObject._renderCallBackList;
+            var length:number = list.length;
+            for(var i:number = 0;i<length;i++){
+                var eventBin:any = list[i];
+                event._target = eventBin.display;
+                event._setCurrentTarget(eventBin.display);
+                eventBin.listener.apply(eventBin.thisObject,[event]);
+            }
         }
 
         public static instance:ns_egret.MainContext;

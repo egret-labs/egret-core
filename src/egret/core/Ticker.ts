@@ -72,17 +72,18 @@ module ns_egret {
             var thisTime = Ticker.now();
             for(var i:number = 0;i<length;i++){
                 var eventBin:any = list[i];
-                var dt = thisTime - this._time;
-                dt *= this._timeScale;
-                eventBin.listener.apply(eventBin.thisObject,[dt]);
+                var frameTime:number = thisTime - this._time;
+                frameTime *= this._timeScale;
+                eventBin.listener.apply(eventBin.thisObject,[frameTime]);
             }
+            this._time = thisTime;
         }
 
         private callBackList:Array = [];
         /**
-         * 注册侦听enterFrame事件，重复的监听会被过滤。
-         * @param listener 事件侦听回调函数,参数列表必须为空，示例：onEnterFrame()
-         * @param thisObject 侦听函数的this对象
+         * 注册帧回调事件，同一函数的重复监听会被忽略。
+         * @param listener 帧回调函数,参数返回上一帧和这帧的间隔时间。示例：onEnterFrame(duration:number):void
+         * @param thisObject 帧回调函数的this对象
          * @param priority 事件优先级，开发者请勿传递 Number.MAX_VALUE 和 Number.MIN_VALUE
          * @stable A-
          */
@@ -135,14 +136,14 @@ module ns_egret {
         public callLater(listener:Function, thisObject, time:number = 0) {
             var that = this;
             var passTime = 0;
-            this.register(function (dt) {
+            this.register(function (frameTime) {
                 if (time == 0) {
                     that.unregister(arguments.callee, thisObject);
                     listener.apply(thisObject);
 
                 }
                 else {
-                    passTime += dt;
+                    passTime += frameTime;
                     if (passTime >= time) {
                         that.unregister(arguments.callee, thisObject);
                         listener.apply(thisObject);

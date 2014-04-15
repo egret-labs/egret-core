@@ -20,9 +20,13 @@ module ns_egret {
         private _preTime:number;
         private _passTime:number;
         private _actionTimes:number;
+        private _delay:number = 1000;
+        private _repeatCount:number = -1;
 
-        constructor(private _actionInterval:number = 1000, private _totalActionTimes:number = -1) {
+        constructor(delay:number = 1000, repeatCount:number = -1) {
             super();
+            this._delay = delay;
+            this._repeatCount = repeatCount;
         }
 
         public start() {
@@ -39,19 +43,19 @@ module ns_egret {
 
         private static timerEvent:TimerEvent;
 
-        private onEnterFrame() {
+        private onEnterFrame(frameTime:number) {
             if(!Timer.timerEvent){
                 Timer.timerEvent = new TimerEvent(TimerEvent.TIMER);
             }
             var timerEvent:TimerEvent = Timer.timerEvent;
             var now = ns_egret.Ticker.now();
             this._passTime = now - this._preTime;
-            while (this._passTime > this._actionInterval) {
-                this._passTime -= this._actionInterval;
+            while (this._passTime > this._delay) {
+                this._passTime -= this._delay;
                 timerEvent._type = TimerEvent.TIMER;
                 this.dispatchEvent(timerEvent);
                 this._actionTimes++;
-                if (this._totalActionTimes != -1 && this._actionTimes >= this._totalActionTimes) {
+                if (this._repeatCount != -1 && this._actionTimes >= this._repeatCount) {
                     this.stop();
                     timerEvent._type = TimerEvent.TIMER_COMPLETE;
                     this.dispatchEvent(timerEvent);

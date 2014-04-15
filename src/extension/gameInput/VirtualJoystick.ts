@@ -147,7 +147,7 @@ module ns_egret{
             Ticker.getInstance().register(this.update, this);
         }
 
-        private update() {
+        private update(frameTime:number) {
             if (!isNaN(this.leftTouchPointX) && !isNaN(this.leftTouchPointY) && this.isLeftTouching) {
                 if (this.checkIsLeftTouchInside()) {
                     this.sendLeftTouchEvent();
