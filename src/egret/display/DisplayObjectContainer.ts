@@ -109,7 +109,7 @@ module ns_egret {
 
             this._children.splice(index, 0, child);
             child._parentChanged(this);
-            child.dispatchEvent(Event.ADDED);
+            child.dispatchEventWith(Event.ADDED,true);
             if (this._stage) {//当前容器在舞台
                 child._onAddToStage();
             }
@@ -143,7 +143,7 @@ module ns_egret {
         private childRemoved(index:number):void{
             var locChildren = this._children;
             var child:DisplayObject = locChildren[index];
-            child.dispatchEvent(Event.REMOVED)
+            child.dispatchEventWith(Event.REMOVED,true)
             if (this._stage) {//在舞台上
                 child._onRemoveFromStage();
             }
@@ -169,7 +169,6 @@ module ns_egret {
         public getChildByName(name:string):ns_egret.DisplayObject {
             //todo
             return null;
-            this.getChildAt()
         }
 
         /**

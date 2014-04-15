@@ -20,6 +20,15 @@
 ///<reference path="../core/StageDelegate.ts" />
 module ns_egret{
     export class Stage extends DisplayObjectContainer {
+
+        public static _invalidateRenderFlag:boolean = false;
+        /**
+         * 调用 invalidate() 方法后，在显示列表下次呈现时，Egret 会向每个已注册侦听 render 事件的显示对象发送一个 render 事件。
+         * 每次您希望 Egret 发送 render 事件时，都必须调用 invalidate() 方法。
+         */
+        public invalidate():void{
+            Stage._invalidateRenderFlag = true;
+        }
         /**
          * 舞台宽度（坐标系宽度，非设备宽度）
          */
@@ -29,7 +38,7 @@ module ns_egret{
          */
         public stageHeight:number;
 
-        constructor() {
+        public constructor() {
             super();
             this.touchEnabled = true;
             this._stage = this;
@@ -44,14 +53,13 @@ module ns_egret{
          * @param y
          * @returns {DisplayObject}
          */
-        hitTest(x, y) {
+        public hitTest(x, y) {
 //            var result = super.hitTest(x, y);
 //            if (result == null) {
 //                result = this;
 //            }
 //            return result;
-            if(!this.touchEnabled)
-            {
+            if (!this.touchEnabled) {
                 return null;
             }
             var result:DisplayObject;
@@ -65,13 +73,12 @@ module ns_egret{
                 var o = child;
                 var offsetPoint = o.getOffsetPoint();
                 var mtx = Matrix.identity.identity().prependTransform(o.x, o.y, o.scaleX, o.scaleY, o.rotation,
-                    0, 0,  offsetPoint.x,  offsetPoint.y);
+                    0, 0, offsetPoint.x, offsetPoint.y);
                 mtx.invert();
                 var point = Matrix.transformCoords(mtx, x, y);
-                result = child.hitTest(point.x, point.y,true);
+                result = child.hitTest(point.x, point.y, true);
                 if (result) {
-                    if(result.touchEnabled)
-                    {
+                    if (result.touchEnabled) {
                         return result;
                     }
                 }
@@ -83,7 +90,7 @@ module ns_egret{
          * @see egret.DisplayObject.getBounds
          * @returns {Rectangle}
          */
-        getBounds() {
+        public getBounds() {
             //todo
             return Rectangle.identity.initialize(0, 0, 100000, 100000);
 //            return Rectangle.identity.initialize(0, 0, this.stageWidth, this.stageHeight);
@@ -95,5 +102,6 @@ module ns_egret{
                 child.updateTransform();
             }
         }
+
     }
 }

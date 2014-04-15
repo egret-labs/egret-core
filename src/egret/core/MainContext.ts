@@ -22,6 +22,10 @@
  * FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
+
+/// <reference path="../events/EventDispatcher.ts"/>
+/// <reference path="../display/DisplayObject.ts"/>
+/// <reference path="../display/Stage.ts"/>
 module ns_egret{
     /**
      * MainContext是游戏的核心跨平台接口，组合了多个功能Context，并是游戏启动的主入口
@@ -63,48 +67,63 @@ module ns_egret{
         public run() {
             Ticker.getInstance().run();
             Ticker.getInstance().register(this.renderLoop, this, Number.MAX_VALUE);
-            Ticker.getInstance().register(this.enterFrame, this, Number.MIN_VALUE);
+            Ticker.getInstance().register(this.broadcastEnterFrame, this, Number.MIN_VALUE);
             this.touchContext.run();
-        }
-
-        /**
-         * 滑动跑道模型，逻辑计算部分
-         */
-        private enterFrame() {
-            this.dispatchEvent(MainContext.EVENT_ENTER_FRAME);
         }
 
         /**
          * 滑动跑道模型，渲染部分
          */
-        private renderLoop() {
+        private renderLoop(frameTime:number) {
             var context = this.rendererContext;
             context.clearScreen();
-            this.dispatchEvent(MainContext.EVENT_START_RENDER);
+            this.dispatchEventWith(Event.RENDER);
+            if(Stage._invalidateRenderFlag){
+                this.broadcastRender();
+                Stage._invalidateRenderFlag = false;
+            }
             this.stage.updateTransform();
-            this.dispatchEvent(MainContext.EVENT_FINISH_UPDATE_TRANSFORM);
+            this.dispatchEventWith(Event.FINISH_UPDATE_TRANSFORM);
             this.stage.draw(context);
-            this.dispatchEvent(MainContext.EVENT_FINISH_RENDER);
+            this.dispatchEventWith(Event.FINISH_RENDER);
+        }
+
+        private reuseEvent:Event = new Event("")
+        /**
+         * 广播EnterFrame事件。
+         */
+        private broadcastEnterFrame(frameTime:number):void {
+
+            var event:Event = this.reuseEvent;
+            event._type = Event.ENTER_FRAME;
+            this.dispatchEvent(event);
+            var list:Array = DisplayObject._enterFrameCallBackList;
+            var length:number = list.length;
+            for(var i:number = 0;i<length;i++){
+                var eventBin:any = list[i];
+                event._target = eventBin.display;
+                event._setCurrentTarget(eventBin.display);
+                eventBin.listener.apply(eventBin.thisObject,[event]);
+            }
+        }
+        /**
+         * 广播Render事件。
+         */
+        private broadcastRender():void{
+            var event:Event = this.reuseEvent;
+            event._type = Event.RENDER;
+            var list:Array = DisplayObject._renderCallBackList;
+            var length:number = list.length;
+            for(var i:number = 0;i<length;i++){
+                var eventBin:any = list[i];
+                event._target = eventBin.display;
+                event._setCurrentTarget(eventBin.display);
+                eventBin.listener.apply(eventBin.thisObject,[event]);
+            }
         }
 
         public static instance:ns_egret.MainContext;
 
-        /**
-         * @event 主循环：进入新的一帧
-         */
-        public static EVENT_ENTER_FRAME:string = "enter_frame";
-        /**
-         * @event 主循环：开始渲染
-         */
-        public static EVENT_START_RENDER:string = "start_render";
-        /**
-         * @event 主循环：渲染完毕
-         */
-        public static EVENT_FINISH_RENDER:string = "finish_render";
-        /**
-         * @event 主循环：updateTransform完毕
-         */
-        public static EVENT_FINISH_UPDATE_TRANSFORM:string = "finish_updateTransform";
     }
 }
 

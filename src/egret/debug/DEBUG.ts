@@ -70,13 +70,13 @@ module ns_egret {
             var context =  ns_egret.MainContext.instance;
             switch (command) {
                 case 0:
-                    ticker.unregister(context.renderLoop,context);
+                    ticker.unregister(context["renderLoop"],context);
                     break;
                 case 1:
-                    context.renderLoop();
+                    context["renderLoop"]();
                     break;
                 case 2:
-                    ticker.register(context.renderLoop,context);
+                    ticker.register(context["renderLoop"],context);
                     break;
             }
         }

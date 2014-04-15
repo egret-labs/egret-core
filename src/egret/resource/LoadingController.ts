@@ -19,6 +19,7 @@
 /// <reference path="../../egret/events/EventDispatcher.ts"/>
 /// <reference path="../../egret/core/Logger.ts"/>
 /// <reference path="ResourceLoader.ts"/>
+/// <reference path="../events/Event.ts"/>
 
 module ns_egret{
 
@@ -78,7 +79,7 @@ module ns_egret{
         private onComplete(){
             this._state = LoadingController.LOAD_STATE_IDLE;
             this.destroy();
-            this.dispatchEvent(ResourceLoader.LOAD_COMPLETE);
+            this.dispatchEventWith(ResourceLoader.LOAD_COMPLETE);
 
         }
 
@@ -90,7 +91,7 @@ module ns_egret{
             return false;
         }
 
-        private next() {
+        private next(event:Event) {
             this.removeResourceEvent();
             this.onProgress();
             if (this._resourceUrlList.length > this._currentIndex) {

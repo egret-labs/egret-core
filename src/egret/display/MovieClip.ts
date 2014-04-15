@@ -84,14 +84,14 @@ module ns_egret {
             Ticker.getInstance().unregister(this.update, this);
         }
 
-        private update(dt) {
+        private update(frameTime:number) {
             //设置间隔之后，间隔不到则不处理
             if (this._interval != this._currentInterval) {
                 this._currentInterval++;
                 return;
             }
             var last = this._passTime % this._oneFrameTime;
-            var num = Math.floor((last + dt) / this._oneFrameTime);
+            var num = Math.floor((last + frameTime) / this._oneFrameTime);
             while (num >= 1) {
                 if(num == 1)
                 {
@@ -103,7 +103,7 @@ module ns_egret {
                 }
                 num--;
             }
-            this._passTime += dt;
+            this._passTime += frameTime;
         }
 
         private playNextFrame(needShow:Boolean = true) {
@@ -119,7 +119,7 @@ module ns_egret {
             }
 
             if (frameData.action != null) {
-                this.dispatchEvent(frameData.action);
+                this.dispatchEventWith(frameData.action);
             }
 
             this._currentFrameIndex++;

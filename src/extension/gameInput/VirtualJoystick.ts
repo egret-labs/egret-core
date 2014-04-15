@@ -57,10 +57,10 @@ module ns_egret{
         private rightImageDownName:string = null;
         private bottomImageDownName:string = null;
 
-        private leftTouchPointX = null;
-        private leftTouchPointY = null;
+        private leftTouchPointX:number = NaN;
+        private leftTouchPointY:number = NaN;
         private isLeftTouching:Boolean = false;
-        private leftTouchId;
+        private leftTouchPointID:number;
 
         private rightButtonNode:ns_egret.DisplayObjectContainer;
         //右边皮肤
@@ -70,10 +70,10 @@ module ns_egret{
         private rightButtonImageDownName:string = null;
 
         private rightButtonWidth:number = 0;
-        private rightTouchPointX = null;
-        private rightTouchPointY = null;
+        private rightTouchPointX:number = NaN;
+        private rightTouchPointY:number = NaN;
         private isRightTouching:Boolean = false;
-        private rightTouchId;
+        private rightTouchPointID;
 
         public static DIRECTION_LEFT:number = 1;
         public static DIRECTION_TOP:number = 2;
@@ -147,19 +147,19 @@ module ns_egret{
             Ticker.getInstance().register(this.update, this);
         }
 
-        private update() {
-            if (this.leftTouchPointX != null && this.leftTouchPointY != null && this.isLeftTouching) {
+        private update(frameTime:number) {
+            if (!isNaN(this.leftTouchPointX) && !isNaN(this.leftTouchPointY) && this.isLeftTouching) {
                 if (this.checkIsLeftTouchInside()) {
                     this.sendLeftTouchEvent();
                 }
                 else {
-//                    this.dispatchEvent(VirtualJoystick.STOP_TOUCH_LEFT);
+//                    this.dispatchEventWith(VirtualJoystick.STOP_TOUCH_LEFT);
                 }
             }
-            if (this.rightTouchPointX != null && this.rightTouchPointY != null && this.isRightTouching) {
+            if (!isNaN(this.rightTouchPointX) && !isNaN(this.rightTouchPointY)&& this.isRightTouching) {
                 if (this.checkIsRightTouchInside()) {
                     this.changeBtnState(this.rightButtonNode, "Down");
-                    this.dispatchEvent(VirtualJoystick.ON_TOUCH_RIGHT);
+                    this.dispatchEventWith(VirtualJoystick.ON_TOUCH_RIGHT);
                 }
             }
         }
@@ -218,11 +218,10 @@ module ns_egret{
             return result;
         }
 
-        private onLeftTouchBegin(eventName:string, touchEvent:TouchEvent) {
-            this.leftTouchId = touchEvent.touchId;
-            var localPoint = touchEvent.getLocalPoint();
-            this.leftTouchPointX = localPoint.x;
-            this.leftTouchPointY = localPoint.y;
+        private onLeftTouchBegin(touchEvent:TouchEvent) {
+            this.leftTouchPointID = touchEvent.touchPointID;
+            this.leftTouchPointX = touchEvent.localX;
+            this.leftTouchPointY = touchEvent.localY;
             if (this.checkIsLeftTouchInside()) {
                 this.isLeftTouching = true;
             }
@@ -238,31 +237,30 @@ module ns_egret{
             return false;
         }
 
-        private onLeftTouchMoved(eventName:string, touchEvent:TouchEvent) {
-            var localPoint = touchEvent.getLocalPoint();
-            this.leftTouchPointX = localPoint.x;
-            this.leftTouchPointY = localPoint.y;
+        private onLeftTouchMoved(touchEvent:TouchEvent) {
+            this.leftTouchPointX = touchEvent.localX;
+            this.leftTouchPointY = touchEvent.localY;
         }
 
-        private onTouchEnded(eventName:string, touchEvent:TouchEvent) {
-            if(this.leftTouchId == null || this.leftTouchId == touchEvent.touchId)
+        private onTouchEnded(touchEvent:TouchEvent) {
+            if(this.leftTouchPointID == null || this.leftTouchPointID == touchEvent.touchPointID)
             {
                 if (this.isLeftTouching) {
                     this.isLeftTouching = false;
                     this.resetLeft();
-                    this.dispatchEvent(VirtualJoystick.STOP_TOUCH_LEFT);
+                    this.dispatchEventWith(VirtualJoystick.STOP_TOUCH_LEFT);
                 }
-                this.leftTouchId = null;
+                this.leftTouchPointID = null;
             }
-//            alert(this.rightTouchId + "+" + touchEvent.touchId)
-            if(this.rightTouchId == null || this.rightTouchId == touchEvent.touchId)
+//            alert(this.rightTouchPointID + "+" + touchEvent.touchPointID)
+            if(this.rightTouchPointID == null || this.rightTouchPointID == touchEvent.touchPointID)
             {
                 if (this.isRightTouching) {
                     this.isRightTouching = false;
                     this.resetRight();
-                    this.dispatchEvent(VirtualJoystick.STOP_TOUCH_RIGHT);
+                    this.dispatchEventWith(VirtualJoystick.STOP_TOUCH_RIGHT);
                 }
-                this.rightTouchId = null;
+                this.rightTouchPointID = null;
             }
         }
 
@@ -336,16 +334,15 @@ module ns_egret{
                         this.changeBtnState(this.bottomNode, "Normal");
                         directionList.push(VirtualJoystick.DIRECTION_TOP, VirtualJoystick.DIRECTION_RIGHT);
                     }
-                    this.dispatchEvent(VirtualJoystick.ON_TOUCH_LEFT, directionList);
+                    this.dispatchEventWith(VirtualJoystick.ON_TOUCH_LEFT, directionList);
                 }
             }
         }
 
-        private onRightTouchBegin(eventName:string, touchEvent:TouchEvent) {
-            this.rightTouchId = touchEvent.touchId;
-            var localPoint = touchEvent.getLocalPoint();
-            this.rightTouchPointX = localPoint.x;
-            this.rightTouchPointY = localPoint.y;
+        private onRightTouchBegin(touchEvent:TouchEvent) {
+            this.rightTouchPointID = touchEvent.touchPointID;
+            this.rightTouchPointX = touchEvent.localX;
+            this.rightTouchPointY = touchEvent.localY;
             if (this.checkIsRightTouchInside()) {
                 this.isRightTouching = true;
             }
@@ -361,10 +358,9 @@ module ns_egret{
             return false;
         }
 
-        private onRightTouchMoved(eventName:string, touchEvent:TouchEvent) {
-            var localPoint = touchEvent.getLocalPoint();
-            this.rightTouchPointX = localPoint.x;
-            this.rightTouchPointY = localPoint.y;
+        private onRightTouchMoved(touchEvent:TouchEvent) {
+            this.rightTouchPointX = touchEvent.localX;
+            this.rightTouchPointY = touchEvent.localY;
         }
 
         setBtnVisible(direction:number, visible:Boolean) {
