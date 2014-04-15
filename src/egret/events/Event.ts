@@ -153,13 +153,6 @@ module ns_egret{
                 this._isDefaultPrevented = true;
         }
 
-        /**
-         * 复制 Event 子类的实例。
-         */
-        public clone():Event{
-            return new Event(this._type,this._bubbles,this._cancelable);
-        }
-
         public _isPropagationStopped:boolean = false;
         /**
          * 防止对事件流中当前节点的后续节点中的所有事件侦听器进行处理。此方法不会影响当前节点 (currentTarget) 中的任何事件侦听器。
