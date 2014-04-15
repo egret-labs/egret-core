@@ -23,6 +23,7 @@
  */
 
 /// <reference path="../geom/Point.ts"/>
+/// <reference path="../display/DisplayObject.ts"/>
 
 module ns_egret {
     /**
@@ -129,13 +130,13 @@ module ns_egret {
                 var obj = this.getTouchData(event, x, y);
                 var oldTarget = obj.beginTarget;
                 if(oldTarget==result){
-                    obj.target = obj.beginTarget;
-                    this.dispatchEvent(TouchEvent.TOUCH_RELEASE_OUTSIDE, obj);
-                }
-                else{
                     obj.target = result;
                     this.dispatchEvent(TouchEvent.TOUCH_END, obj);
                     this.dispatchEvent(TouchEvent.TOUCH_TAP, obj);
+                }
+                else{
+                    obj.target = obj.beginTarget;
+                    this.dispatchEvent(TouchEvent.TOUCH_RELEASE_OUTSIDE, obj);
                 }
 
                 delete this._currentTouchTarget[obj.identifier];
