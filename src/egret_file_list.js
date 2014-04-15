@@ -49,6 +49,7 @@ var temp = [
     "jslib/zlib.min.js",
     "egret/utils/SAXParser.js",
     "egret/utils/FrameworkUtils.js",
+    "egret/utils/XML.js",
     //utils end
     //tween start
     "egret/tween/Tween.js",

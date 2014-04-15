@@ -3,6 +3,8 @@
 /// <reference path="../interactive/TouchContext.ts"/>
 /// <reference path="../display/Stage.ts"/>
 /// <reference path="../events/EventDispatcher.ts"/>
+/// <reference path="../context/net/NetContext.ts"/>
+/// <reference path="../context/sound/SoundContext.ts"/>
 /**
  * Copyright (c) Egret-Labs.org. Permission is hereby granted, free of charge,
  * to any person obtaining a copy of this software and associated documentation
@@ -43,15 +45,15 @@ module ns_egret{
          */
         public touchContext:TouchContext;
 
-//        /**
-//         * 声音Context
-//         */
-//        public soundContext:SoundContext;
-//
-//        /**
-//         * 网络Context
-//         */
-//        public netContext:NetContxt;
+        /**
+         * 声音Context
+         */
+        public soundContext:SoundContext;
+
+        /**
+         * 网络Context
+         */
+        public netContext:NetContext;
 
         /**
          * 舞台

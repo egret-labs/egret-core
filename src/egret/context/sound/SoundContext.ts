@@ -19,14 +19,10 @@
 
 module ns_egret{
     export class SoundContext {
-        public static context:SoundContext = null;
-
         public static getInstance():SoundContext {
-            if (SoundContext.context == null) {
-                SoundContext.context = new SoundContext();
-            }
-            return SoundContext.context;
+            return ns_egret.MainContext.instance.soundContext;
         }
+
         public static isMusicPlaying:Boolean = false;
 
         constructor() {

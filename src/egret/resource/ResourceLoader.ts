@@ -18,7 +18,7 @@
 
 /// <reference path="../events/EventDispatcher.ts"/>
 /// <reference path="../texture/TextureCache.ts"/>
-/// <reference path="../context/net/NetContext.ts"/>
+/// <reference path="../core/MainContext.ts"/>
 module ns_egret {
     /**
      * @class ResourceLoader是egret的资源加载核心
@@ -87,7 +87,7 @@ module ns_egret {
             var selfPointer = this;
             var request = new ns_egret.URLRequest(fileUrl, onLoadComplete, this);
             request.type = this.type;
-            ns_egret.NetContext.getInstance().send(request);
+            MainContext.instance.netContext.send(request);
             function onLoadComplete(xhr) {
                 var fileContents = selfPointer._processXMLHttpResponse(xhr);
                 selfPointer._executeAllCallback(fileContents);
