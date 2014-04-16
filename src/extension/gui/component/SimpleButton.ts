@@ -89,13 +89,13 @@ module ns_egret{
             MainContext.instance.stage.removeEventListener(ns_egret.TouchEvent.TOUCH_MOVE, this.mouseMove, this);
         }
 
-        private mouseDown(name, touch) {
+        private mouseDown(event:TouchEvent) {
             this._isMoved = false;
             MainContext.instance.stage.addEventListener(ns_egret.TouchEvent.TOUCH_END, this.mouseUp, this);
             MainContext.instance.stage.addEventListener(ns_egret.TouchEvent.TOUCH_MOVE, this.mouseMove, this);
 
-            this._startX = touch.stageX;
-            this._startY = touch.stageY;
+            this._startX = event.stageX;
+            this._startY = event.stageY;
 
             this.setChoose(true);
         }
@@ -109,9 +109,9 @@ module ns_egret{
             MainContext.instance.stage.removeEventListener(ns_egret.TouchEvent.TOUCH_MOVE, this.mouseMove, this);
         }
 
-        private mouseMove(name, touch) {
-            var pointX = touch.stageX;
-            var pointY = touch.stageY;
+        private mouseMove(event:TouchEvent) {
+            var pointX = event.stageX;
+            var pointY = event.stageY;
             if (!(Math.abs(pointX - this._startX) < 10 && Math.abs(pointY - this._startY) < 10)) {
                 this._isMoved = true;
                 this.setChoose(false);
@@ -281,7 +281,7 @@ module ns_egret{
 //                    var btRect = child.getBounds();
 
 
-                    this.addChild(child, curIdx);
+                    this.addChildAt(child, curIdx);
                 }
                 child.visible = true;
 
