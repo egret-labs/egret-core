@@ -370,7 +370,7 @@ module ns_egret {
         }
 
         public _onRemoveFromStage() {
-            this._stage = MainContext.instance.stage;
+            this._stage = null;
             this.dispatchEventWith(Event.REMOVED_FROM_STAGE);
         }
 
