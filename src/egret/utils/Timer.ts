@@ -15,8 +15,11 @@
  * FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
+/// <reference path="../events/TimerEvent.ts"/>
+/// <reference path="../events/EventDispatcher.ts"/>
+/// <reference path="../core/Ticker.ts"/>
 module ns_egret {
-    export class Timer extends ns_egret.EventDispatcher {
+    export class Timer extends EventDispatcher {
         private _preTime:number;
         private _passTime:number;
         private _actionTimes:number;
@@ -30,15 +33,15 @@ module ns_egret {
         }
 
         public start() {
-            this._preTime = ns_egret.Ticker.now();
+            this._preTime = Ticker.now();
             if (this._actionTimes != 0) {
                 this._actionTimes = 0;
             }
-            ns_egret.Ticker.getInstance().register(this.onEnterFrame, this);
+            Ticker.getInstance().register(this.onEnterFrame, this);
         }
 
         public stop() {
-            ns_egret.Ticker.getInstance().unregister(this.onEnterFrame, this);
+            Ticker.getInstance().unregister(this.onEnterFrame, this);
         }
 
         private static timerEvent:TimerEvent;
@@ -48,7 +51,7 @@ module ns_egret {
                 Timer.timerEvent = new TimerEvent(TimerEvent.TIMER);
             }
             var timerEvent:TimerEvent = Timer.timerEvent;
-            var now = ns_egret.Ticker.now();
+            var now = Ticker.now();
             this._passTime = now - this._preTime;
             while (this._passTime > this._delay) {
                 this._passTime -= this._delay;

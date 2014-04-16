@@ -125,7 +125,7 @@ module ns_egret {
             this.addChildAt(this._container, 0);
         }
 
-        private mouseDown(name, touch) {
+        private mouseDown(event:TouchEvent) {
             if (!this.touchEnabled) {
                 return;
             }
@@ -144,13 +144,13 @@ module ns_egret {
             this._initY = this._container.y;
             this._endX = this._container.x;
             this._endY = this._container.y;
-            this._downPX = touch.stageX;
-            this._downPY = touch.stageY;
+            this._downPX = event.stageX;
+            this._downPY = event.stageY;
 
             this._downTime = Ticker.now();
         }
 
-        private mouseUp(name, touch) {
+        private mouseUp(event:TouchEvent) {
             MainContext.instance.stage.removeEventListener(TouchEvent.TOUCH_END, this.mouseUp, this);
             MainContext.instance.stage.removeEventListener(TouchEvent.TOUCH_RELEASE_OUTSIDE, this.mouseUp, this);
             MainContext.instance.stage.removeEventListener(TouchEvent.TOUCH_MOVE, this.mouseMove, this);
@@ -162,8 +162,8 @@ module ns_egret {
             }
             else {//按原来的方向持续 惯性前进
                 //获取 位置变化
-                var deltaX = touch.stageX - this._downPX;
-                var deltaY = touch.stageY - this._downPY;
+                var deltaX = event.stageX - this._downPX;
+                var deltaY = event.stageY - this._downPY;
 
                 var num = Math.floor(this._deltaTime / (endTime - this._downTime)) * 2;
                 if (this.direction == Direction.BOTH || this.direction == Direction.HORIZONTAL) {//水平
@@ -182,9 +182,9 @@ module ns_egret {
             }
         }
 
-        private mouseMove(name, touch) {
-            var deltaX = touch.stageX - this._downPX;
-            var deltaY = touch.stageY - this._downPY;
+        private mouseMove(event:TouchEvent) {
+            var deltaX = event.stageX - this._downPX;
+            var deltaY = event.stageY - this._downPY;
 
             if (this.direction == Direction.BOTH || this.direction == Direction.HORIZONTAL) {//水平
                 this._endX = this._initX + deltaX;

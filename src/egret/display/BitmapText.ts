@@ -62,6 +62,9 @@ module ns_egret {
         _renderText(forMeasureContentSize:boolean = false) {
             this._contentWidth = 0;
             this._contentHeight = 0;
+            if (!forMeasureContentSize) {
+                this.removeAllChildren();
+            }
             for (var i = 0, l = this.text.length; i < l; i++) {
                 var character = this.text.charAt(i);
                 var spriteFrame = this.bitmapFontData[character];
@@ -76,8 +79,8 @@ module ns_egret {
                     if (!bitmap) {
                         bitmap = Bitmap.initWithTexture(this.texture);
                         this._bitmapPool.push(bitmap);
-                        this.addChild(bitmap);
                     }
+                    this.addChild(bitmap);
                     bitmap.spriteFrame = spriteFrame;
                     bitmap.x = this._contentWidth;
                 }

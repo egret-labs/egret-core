@@ -134,7 +134,7 @@ module ns_egret {
                     this.dispatchEvent(TouchEvent.TOUCH_END, obj);
                     this.dispatchEvent(TouchEvent.TOUCH_TAP, obj);
                 }
-                else{
+                else if(obj.beginTarget){
                     obj.target = obj.beginTarget;
                     this.dispatchEvent(TouchEvent.TOUCH_RELEASE_OUTSIDE, obj);
                 }
