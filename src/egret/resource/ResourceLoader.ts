@@ -16,9 +16,13 @@
  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-/// <reference path="../events/EventDispatcher.ts"/>
-/// <reference path="../texture/TextureCache.ts"/>
+/// <reference path="../context/net/NetContext.ts"/>
 /// <reference path="../core/MainContext.ts"/>
+/// <reference path="../core/Ticker.ts"/>
+/// <reference path="../events/EventDispatcher.ts"/>
+/// <reference path="../texture/Texture.ts"/>
+/// <reference path="../texture/TextureCache.ts"/>
+
 module ns_egret {
     /**
      * @class ResourceLoader是egret的资源加载核心

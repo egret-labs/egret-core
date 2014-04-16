@@ -1,10 +1,3 @@
-/// <reference path="../display/DisplayObjectContainer.ts"/>
-/// <reference path="Ticker.ts"/>
-/// <reference path="../interactive/TouchContext.ts"/>
-/// <reference path="../display/Stage.ts"/>
-/// <reference path="../events/EventDispatcher.ts"/>
-/// <reference path="../context/net/NetContext.ts"/>
-/// <reference path="../context/sound/SoundContext.ts"/>
 /**
  * Copyright (c) Egret-Labs.org. Permission is hereby granted, free of charge,
  * to any person obtaining a copy of this software and associated documentation
@@ -23,9 +16,16 @@
  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-/// <reference path="../events/EventDispatcher.ts"/>
+/// <reference path="../context/net/NetContext.ts"/>
+/// <reference path="../context/renderer/RendererContext.ts"/>
+/// <reference path="../context/sound/SoundContext.ts"/>
+/// <reference path="Ticker.ts"/>
 /// <reference path="../display/DisplayObject.ts"/>
 /// <reference path="../display/Stage.ts"/>
+/// <reference path="../events/Event.ts"/>
+/// <reference path="../events/EventDispatcher.ts"/>
+/// <reference path="../interactive/TouchContext.ts"/>
+
 module ns_egret{
     /**
      * MainContext是游戏的核心跨平台接口，组合了多个功能Context，并是游戏启动的主入口

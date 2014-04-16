@@ -1,7 +1,3 @@
-/// <reference path="../core/MainContext.ts"/>
-/// <reference path="../display/DisplayObjectContainer.ts"/>
-/// <reference path="../core/StageDelegate.ts"/>
-/// <reference path="../events/TouchEvent.ts"/>
 
 
 /**
@@ -22,8 +18,11 @@
  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-/// <reference path="../geom/Point.ts"/>
+/// <reference path="../core/MainContext.ts"/>
+/// <reference path="../core/StageDelegate.ts"/>
 /// <reference path="../display/DisplayObject.ts"/>
+/// <reference path="../events/TouchEvent.ts"/>
+/// <reference path="../geom/Point.ts"/>
 
 module ns_egret {
     /**
@@ -134,7 +133,7 @@ module ns_egret {
                     this.dispatchEvent(TouchEvent.TOUCH_END, obj);
                     this.dispatchEvent(TouchEvent.TOUCH_TAP, obj);
                 }
-                else{
+                else if(obj.beginTarget){
                     obj.target = obj.beginTarget;
                     this.dispatchEvent(TouchEvent.TOUCH_RELEASE_OUTSIDE, obj);
                 }

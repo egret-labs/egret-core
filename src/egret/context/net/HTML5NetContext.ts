@@ -1,5 +1,3 @@
-/// <reference path="NetContext.ts"/>
-/// <reference path="../../resource/ResourceLoader.ts"/>
 /**
  * Copyright (c) Egret-Labs.org. Permission is hereby granted, free of charge,
  * to any person obtaining a copy of this software and associated documentation
@@ -17,6 +15,9 @@
  * FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
+
+/// <reference path="NetContext.ts"/>
+/// <reference path="../../resource/ResourceLoader.ts"/>
 
 module ns_egret{
     export class HTML5NetContext extends NetContext{

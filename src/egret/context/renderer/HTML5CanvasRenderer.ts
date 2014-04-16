@@ -1,10 +1,3 @@
-/// <reference path="RendererContext.ts"/>
-/// <reference path="../../geom/Matrix.ts"/>
-/// <reference path="../../core/StageDelegate.ts"/>
-/// <reference path="../../core/RenderFilter.ts"/>
-/// <reference path="../../debug/DEBUG.ts"/>
-/// <reference path="../../geom/Point.ts"/>
-/// <reference path="../../geom/Rectangle.ts"/>
 /**
  * Copyright (c) Egret-Labs.org. Permission is hereby granted, free of charge,
  * to any person obtaining a copy of this software and associated documentation
@@ -22,6 +15,17 @@
  * FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
+
+/// <reference path="RendererContext.ts"/>
+/// <reference path="../../core/MainContext.ts"/>
+/// <reference path="../../core/RenderFilter.ts"/>
+/// <reference path="../../core/Ticker.ts"/>
+/// <reference path="../../debug/DEBUG.ts"/>
+/// <reference path="../../display/TextField.ts"/>
+/// <reference path="../../geom/Matrix.ts"/>
+/// <reference path="../../geom/Rectangle.ts"/>
+/// <reference path="../../texture/Texture.ts"/>
+
 module ns_egret {
     export class HTML5CanvasRenderer extends RendererContext {
 
