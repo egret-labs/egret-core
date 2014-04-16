@@ -124,26 +124,26 @@ module ns_egret {
          * 将一个 DisplayObject 子实例从 DisplayObjectContainer 实例中移除。
          * @param child
          */
-        public removeChild(child:DisplayObject) {
+        public removeChild(child:DisplayObject):DisplayObject {
             var index = this._children.indexOf(child);
             if (index >= 0) {
-                this.childRemoved(index);
+                return this.childRemoved(index);
             }
             else {
                 ns_egret.Logger.fatal("child未被addChild到该parent");
             }
         }
 
-        public removeChildAt(index:number) {
+        public removeChildAt(index:number):DisplayObject {
             if (index >= 0 && index < this._children.length) {
-                this.childRemoved(index);
+               return this.childRemoved(index);
             }
             else {
-                ns_egret.Logger.fatal("child未被addChild到该parent");
+                ns_egret.Logger.fatal("提供的索引超出范围");
             }
         }
 
-        private childRemoved(index:number):void{
+        private childRemoved(index:number):DisplayObject{
             var locChildren = this._children;
             var child:DisplayObject = locChildren[index];
             child.dispatchEventWith(Event.REMOVED,true)
@@ -152,6 +152,7 @@ module ns_egret {
             }
             child._parentChanged(null);
             locChildren.splice(index, 1);
+            return child;
         }
 
 
@@ -160,8 +161,21 @@ module ns_egret {
          * @param index
          * @returns {*}
          */
-        public getChildAt(index:number) {
-            return this._children[index];
+        public getChildAt(index:number):DisplayObject {
+            if (index >= 0 && index < this._children.length) {
+                return this._children[index];
+            }
+            else {
+                ns_egret.Logger.fatal("提供的索引超出范围");
+            }
+        }
+
+        /**
+         *  确定指定显示对象是 DisplayObjectContainer 实例的子项还是该实例本身。搜索包括整个显示列表（其中包括此 DisplayObjectContainer 实例）。孙项、曾孙项等，每项都返回 true。
+         * @param child 要测试的子对象。
+         */
+        public contains(child:DisplayObject):boolean{
+            return this._children.indexOf(child)!=-1;
         }
 
         /**
@@ -172,6 +186,46 @@ module ns_egret {
         public getChildByName(name:string):ns_egret.DisplayObject {
             //todo
             return null;
+        }
+
+        public swapChildrenAt(index1:number, index2:number):void{
+            if (index1 >= 0 && index1 < this._children.length&&index2>=0&&index2<this._children.length) {
+                this._swapChildrenAt(index1,index2);
+            }
+            else {
+                ns_egret.Logger.fatal("提供的索引超出范围");
+            }
+
+        }
+
+        public swapChildren(child1:DisplayObject, child2:DisplayObject):void{
+            var index1:number = this._children.indexOf(child1);
+            var index2:number = this._children.indexOf(child2);
+            if (index1 == -1||index2==-1) {
+                ns_egret.Logger.fatal("child未被addChild到该parent");
+            }
+            else {
+                this._swapChildrenAt(index1,index2);
+            }
+        }
+
+        private _swapChildrenAt(index1:number, index2:number):void{
+            if (index1 > index2){
+                var temp:number = index2;
+                index2 = index1;
+                index1 = temp;
+            }
+            else if (index1 == index2){
+                return;
+            }
+            var list:Array = this._children;
+            var child1:DisplayObject = list[index1];
+            var child2:DisplayObject = list[index2];
+            list.splice(index2, 1);
+            list.splice(index1, 1);
+
+            list.splice(index1, 0, child2);
+            list.splice(index2, 0, child1);
         }
 
         /**
