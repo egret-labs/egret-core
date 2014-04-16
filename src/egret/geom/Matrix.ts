@@ -16,6 +16,7 @@
  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 /// <reference path="Point.ts"/>
+/// <reference path="../display/DisplayObject.ts"/>
 module ns_egret {
     /**
      * 2D矩阵类，包括常见矩阵算法
@@ -42,7 +43,7 @@ module ns_egret {
          * @param ty
          * @returns {ns_egret.Matrix}
          */
-        prepend(a, b, c, d, tx, ty) {
+        public prepend(a, b, c, d, tx, ty) {
             var tx1 = this.tx;
             if (a != 1 || b != 0 || c != 0 || d != 1) {
                 var a1 = this.a;
@@ -68,7 +69,7 @@ module ns_egret {
          * @param ty
          * @returns {ns_egret.Matrix}
          */
-        append(a, b, c, d, tx, ty) {
+        public append(a, b, c, d, tx, ty) {
             var a1 = this.a;
             var b1 = this.b;
             var c1 = this.c;
@@ -89,7 +90,7 @@ module ns_egret {
          * @param matrix
          * @returns {ns_egret.Matrix}
          */
-        prependMatrix(matrix) {
+        public prependMatrix(matrix) {
             this.prepend(matrix.a, matrix.b, matrix.c, matrix.d, matrix.tx, matrix.ty);
 //        this.prependProperties(matrix.alpha, matrix.shadow,  matrix.compositeOperation);
             return this;
@@ -101,7 +102,7 @@ module ns_egret {
          * @param matrix
          * @returns {ns_egret.Matrix}
          */
-        appendMatrix(matrix) {
+        public appendMatrix(matrix) {
             this.append(matrix.a, matrix.b, matrix.c, matrix.d, matrix.tx, matrix.ty);
 //        this.appendProperties(matrix.alpha, matrix.shadow,  matrix.compositeOperation);
             return this;
@@ -113,7 +114,7 @@ module ns_egret {
          * @param matrix
          * @returns {ns_egret.Matrix}
          */
-        prependTransform(x, y, scaleX, scaleY, rotation, skewX, skewY, regX, regY) {
+        public prependTransform(x, y, scaleX, scaleY, rotation, skewX, skewY, regX, regY) {
             if (rotation % 360) {
                 var r = rotation * Matrix.DEG_TO_RAD;
                 var cos = Math.cos(r);
@@ -146,7 +147,7 @@ module ns_egret {
          * @param matrix
          * @returns {ns_egret.Matrix}
          */
-        appendTransform(x, y, scaleX, scaleY, rotation, skewX, skewY, regX, regY) {
+        public appendTransform(x, y, scaleX, scaleY, rotation, skewX, skewY, regX, regY) {
             if (rotation % 360) {
                 var r = rotation * Matrix.DEG_TO_RAD;
                 var cos = Math.cos(r);
@@ -174,17 +175,20 @@ module ns_egret {
             return this;
         }
 
+        /**
+         * todo:这个方法以后会调整到DisplayObject中，以保持Matrix类的独立和简洁
+         * @param target
+         * @returns {ns_egret.Matrix}
+         */
         public appendTransformFromDisplay(target:ns_egret.DisplayObject) {
             var o = target;
-            var anchorX,anchorY;
-            if(o.relativeAnchorPointX != 0 || o.relativeAnchorPointY != 0)
-            {
+            var anchorX, anchorY;
+            if (o.relativeAnchorPointX != 0 || o.relativeAnchorPointY != 0) {
                 var bounds = o.getBounds();
                 anchorX = bounds.width * o.relativeAnchorPointX;
                 anchorY = bounds.height * o.relativeAnchorPointY;
             }
-            else
-            {
+            else {
                 anchorX = o.anchorPointX;
                 anchorY = o.anchorPointY;
             }
@@ -200,7 +204,7 @@ module ns_egret {
          * @param angle
          * @returns {ns_egret.Matrix}
          */
-        rotate(angle) {
+        public rotate(angle) {
             var cos = Math.cos(angle);
             var sin = Math.sin(angle);
 
@@ -224,7 +228,7 @@ module ns_egret {
          * @param skewY
          * @returns {ns_egret.Matrix}
          */
-        skew(skewX, skewY) {
+        public skew(skewX, skewY) {
             skewX = skewX * Matrix.DEG_TO_RAD;
             skewY = skewY * Matrix.DEG_TO_RAD;
             this.append(Math.cos(skewY), Math.sin(skewY), -Math.sin(skewX), Math.cos(skewX), 0, 0);
@@ -238,7 +242,7 @@ module ns_egret {
          * @param y
          * @returns {ns_egret.Matrix}
          */
-        scale(x, y) {
+        public scale(x, y) {
             this.a *= x;
             this.d *= y;
             this.c *= x;
@@ -250,12 +254,12 @@ module ns_egret {
 
 
         /**
-         * 矩阵唯一
+         * 矩阵位移
          * @param x
          * @param y
          * @returns {ns_egret.Matrix}
          */
-        translate(x, y) {
+        public translate(x, y) {
             this.tx += x;
             this.ty += y;
             return this;
@@ -266,7 +270,7 @@ module ns_egret {
          * 矩阵重置
          * @returns {ns_egret.Matrix}
          */
-        identity() {
+        public identity() {
             this.a = this.d = 1;
             this.b = this.c = this.tx = this.ty = 0;
             return this;
@@ -276,7 +280,7 @@ module ns_egret {
         /**
          * 矩阵翻转
          */
-        invert = function () {
+        public invert() {
             var a1 = this.a;
             var b1 = this.b;
             var c1 = this.c;
@@ -291,7 +295,7 @@ module ns_egret {
             this.tx = (c1 * this.ty - d1 * tx1) / n;
             this.ty = -(a1 * this.ty - b1 * tx1) / n;
             return this;
-        };
+        }
 
 
         isIdentity() {
@@ -334,41 +338,6 @@ module ns_egret {
             return target;
         }
 
-
-//        copy(matrix) {
-//            return null;
-//        return this.initialize(matrix.a, matrix.b, matrix.c, matrix.d, matrix.tx, matrix.ty, matrix.alpha, matrix.shadow, matrix.compositeOperation);
-//        }
-
-
-//    appendProperties = function(alpha, shadow, compositeOperation) {
-//        this.alpha *= alpha;
-//        this.shadow = shadow || this.shadow;
-//        this.compositeOperation = compositeOperation || this.compositeOperation;
-//        return this;
-//    };
-//
-//
-//    prependProperties (alpha, shadow, compositeOperation) {
-//        this.alpha *= alpha;
-//        this.shadow = this.shadow || shadow;
-//        this.compositeOperation = this.compositeOperation || compositeOperation;
-//        return this;
-//    };
-
-
-//    p.clone = function() {
-//        return (new Matrix()).copy(this);
-//    };
-//
-//
-//    p.toString = function() {
-//        return "[Matrix (a="+this.a+" b="+this.b+" c="+this.c+" d="+this.d+" tx="+this.tx+" ty="+this.ty+")]";
-//    };
-
-        // this has to be populated after the class is defined:
-
-
         /**
          * 根据一个矩阵，返回某个点在该矩阵上的坐标
          * @param matrix
@@ -377,7 +346,7 @@ module ns_egret {
          * @returns {Point}
          * @stable C 该方法以后可能删除
          */
-        static transformCoords(matrix:Matrix, x:number, y:number) {
+        public static transformCoords(matrix:Matrix, x:number, y:number) {
             var resultPoint:Point = new Point(0, 0);//todo;
             resultPoint.x = matrix.a * x + matrix.c * y + matrix.tx;
             resultPoint.y = matrix.d * y + matrix.b * x + matrix.ty;
