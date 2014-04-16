@@ -130,7 +130,7 @@ module ns_egret{
 
         private onClick() {
             if (this._callBack && this._target) {
-                this._callBack.apply(this._target, []);
+                this._callBack.apply(this._target, [this]);
             }
         }
 
