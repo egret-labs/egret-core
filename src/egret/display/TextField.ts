@@ -15,8 +15,12 @@
  * FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-///<reference path="DisplayObject.ts" />
+
+/// <reference path="../context/renderer/RendererContext.ts"/>
+/// <reference path="../core/MainContext.ts"/>
+/// <reference path="DisplayObject.ts"/>
 /// <reference path="../geom/Rectangle.ts"/>
+
 module ns_egret {
     /**
      * TextField是egret的文本渲染类，采用浏览器/设备的API进行渲染，在不同的浏览器/设备中由于字体渲染方式不一，可能会有渲染差异

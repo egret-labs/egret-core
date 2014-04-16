@@ -1,11 +1,3 @@
-/// <reference path="../context/renderer/RendererContext.ts"/>
-/// <reference path="../core/RenderFilter.ts"/>
-/// <reference path="DisplayObjectContainer.ts"/>
-/// <reference path="../interactive/TouchContext.ts"/>
-/// <reference path="../geom/Matrix.ts"/>
-/// <reference path="../geom/Point.ts"/>
-/// <reference path="../geom/Rectangle.ts"/>
-/// <reference path="../interactive/TouchContext.ts"/>
 /**
  * Copyright (c) Egret-Labs.org. Permission is hereby granted, free of charge,
  * to any person obtaining a copy of this software and associated documentation
@@ -24,8 +16,18 @@
  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-/// <reference path="../display/Stage.ts"/>
+/// <reference path="../context/renderer/RendererContext.ts"/>
+/// <reference path="../core/Logger.ts"/>
+/// <reference path="../core/MainContext.ts"/>
+/// <reference path="../core/RenderFilter.ts"/>
+/// <reference path="DisplayObjectContainer.ts"/>
+/// <reference path="Stage.ts"/>
 /// <reference path="../events/Event.ts"/>
+/// <reference path="../events/EventDispatcher.ts"/>
+/// <reference path="../geom/Matrix.ts"/>
+/// <reference path="../geom/Point.ts"/>
+/// <reference path="../geom/Rectangle.ts"/>
+/// <reference path="../texture/Texture.ts"/>
 
 module ns_egret {
     /**

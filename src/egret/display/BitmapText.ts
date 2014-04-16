@@ -16,9 +16,11 @@
  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-///<reference path="DisplayObject.ts" />
-///<reference path="Bitmap.ts" />
+/// <reference path="../core/Logger.ts"/>
+/// <reference path="Bitmap.ts"/>
+/// <reference path="DisplayObjectContainer.ts"/>
 /// <reference path="../geom/Rectangle.ts"/>
+/// <reference path="../texture/Texture.ts"/>
 
 module ns_egret {
     /**

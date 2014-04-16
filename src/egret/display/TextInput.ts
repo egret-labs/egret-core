@@ -1,5 +1,3 @@
-/// <reference path="DisplayObjectContainer.ts"/>
-/// <reference path="../context/display/StageText.ts"/>
 /**
  * Copyright (c) Egret-Labs.org. Permission is hereby granted, free of charge,
  * to any person obtaining a copy of this software and associated documentation
@@ -18,8 +16,10 @@
  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+/// <reference path="../context/display/StageText.ts"/>
+/// <reference path="DisplayObject.ts"/>
+/// <reference path="../events/TouchEvent.ts"/>
 /// <reference path="../geom/Rectangle.ts"/>
-/// <reference path="../events/Event.ts"/>
 
 module ns_egret {
     export class TextInput extends DisplayObject {

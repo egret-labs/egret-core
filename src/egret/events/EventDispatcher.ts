@@ -17,8 +17,8 @@
  */
 
 /// <reference path="../debug/DEBUG.ts"/>
-/// <reference path="IEventDispatcher.ts"/>
 /// <reference path="Event.ts"/>
+/// <reference path="IEventDispatcher.ts"/>
 
 module ns_egret {
     /**

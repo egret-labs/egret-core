@@ -21,6 +21,8 @@
  *
  */
 
+/// <reference path="SAXParser.ts"/>
+
 module ns_egret{
     export class XML {
         private _xmlStr = "";

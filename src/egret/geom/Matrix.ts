@@ -15,7 +15,10 @@
  * FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
+
+/// <reference path="../display/DisplayObject.ts"/>
 /// <reference path="Point.ts"/>
+
 module ns_egret {
     /**
      * 2D矩阵类，包括常见矩阵算法

@@ -16,10 +16,11 @@
  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-/// <reference path="../../egret/events/EventDispatcher.ts"/>
-/// <reference path="../../egret/core/Logger.ts"/>
-/// <reference path="ResourceLoader.ts"/>
+/// <reference path="../core/Logger.ts"/>
+/// <reference path="../core/Ticker.ts"/>
 /// <reference path="../events/Event.ts"/>
+/// <reference path="../events/EventDispatcher.ts"/>
+/// <reference path="ResourceLoader.ts"/>
 
 module ns_egret{
 
