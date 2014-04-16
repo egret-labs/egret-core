@@ -1,12 +1,12 @@
 /**
  * Copyright (c) Egret-Labs.org. Permission is hereby granted, free of charge,
- * to any person obtaining a copy of this software and associated documentation
+ * to any person obtaining a copy of UIGlobals software and associated documentation
  * files (the "Software"), to deal in the Software without restriction, including
  * without limitation the rights to use, copy, modify, merge, publish, distribute,
  * sublicense, and/or sell copies of the Software, and to permit persons to whom
  * the Software is furnished to do so, subject to the following conditions:
  *
- * The above copyright notice and this permission notice shall be included
+ * The above copyright notice and UIGlobals permission notice shall be included
  * in all copies or substantial portions of the Software.
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
@@ -19,7 +19,6 @@
 /// <reference path="../../../egret/display/Stage.ts"/>
 /// <reference path="../../../egret/events/Event.ts"/>
 /// <reference path="../../../egret/core/Injector.ts"/>
-/// <reference path="../managers/FocusManager.ts"/>
 /// <reference path="../managers/IFocusManager.ts"/>
 /// <reference path="../managers/ISystemManager.ts"/>
 /// <reference path="../managers/LayoutManager.ts"/>
@@ -37,7 +36,7 @@ module ns_egret {
 		 * 舞台引用，当第一个UIComponent添加到舞台时此属性被自动赋值
 		 */		
 		public static get stage():Stage{
-			return this._stage;
+			return UIGlobals._stage;
 		}
 		/**
 		 * 已经初始化完成标志
@@ -47,20 +46,11 @@ module ns_egret {
 		 * 初始化管理器
 		 */		
 		public static initlize(stage:Stage):void{
-			if(this.initlized)
+			if(UIGlobals.initlized)
 				return;
-			this._stage = stage;
-			this.layoutManager = new LayoutManager();
-			try{
-				this.focusManager = Injector.getInstance(IFocusManager);
-			}
-			catch(e:Error){
-				this.focusManager = new FocusManager();
-			}
-			this.focusManager.stage = stage;
-			//屏蔽callLaterError
-			stage.addEventListener("callLaterError",function(event:Event,this):void{});
-			this.initlized = true;
+            UIGlobals._stage = stage;
+            UIGlobals.layoutManager = new LayoutManager();
+            UIGlobals.initlized = true;
 		}
 		/**
 		 * 延迟渲染布局管理器 
@@ -78,16 +68,11 @@ module ns_egret {
 		 * 顶级应用容器
 		 */
 		public static get systemManager():ISystemManager{
-			for(var i:number=this._systemManagers.length-1;i>=0;i--){
-				if(this._systemManagers[i].stage)
-					return this._systemManagers[i];
+			for(var i:number=UIGlobals._systemManagers.length-1;i>=0;i--){
+				if(UIGlobals._systemManagers[i].stage)
+					return UIGlobals._systemManagers[i];
 			}
 			return null;
 		}
-		/**
-		 * 是否屏蔽失效验证阶段和callLater方法延迟调用的所有报错。
-		 * 建议在发行版中启用，避免因为一处报错引起全局的延迟调用失效。
-		 */		
-		public static var catchCallLaterExceptions:boolean = false;
 	}
 }

@@ -28,15 +28,13 @@
 /// <reference path="../events/UIEvent.ts"/>
 /// <reference path="../managers/ILayoutManagerClient.ts"/>
 /// <reference path="../managers/ISystemManager.ts"/>
-/// <reference path="../managers/IToolTipManagerClient.ts"/>
-/// <reference path="../managers/ToolTipManager.ts"/>
 /// <reference path="UIGlobals.ts"/>
 
 module ns_egret {
 
 	export class UIComponent extends DisplayObjectContainer 
 		implements IUIComponent,ILayoutManagerClient,ILayoutElement,
-		IInvalidating,IVisualElement,IToolTipManagerClient{
+		IInvalidating,IVisualElement{
 		/**
 		 * 构造函数
 		 */		
@@ -67,61 +65,6 @@ module ns_egret {
 		
 		public set id(value:string):void{
 			this._id = value;
-		}
-		
-		private _toolTip:any;
-		/**
-		 * @inheritDoc
-		 */
-		public get toolTip():any{
-			return this._toolTip;
-		}
-		public set toolTip(value:any):void{
-			if(value==this._toolTip)
-				return;
-			var oldValue:any = this._toolTip;
-			this._toolTip = value;
-			
-			ToolTipManager.registerToolTip(this, oldValue, value);
-			
-			this.dispatchEvent(new Event("toolTipChanged"));
-		}
-		
-		private _toolTipClass:any;
-		/**
-		 * @inheritDoc
-		 */
-		public get toolTipClass():any{
-			return this._toolTipClass;
-		}
-		public set toolTipClass(value:any):void{
-			if(value==this._toolTipClass)
-				return;
-			this._toolTipClass = value;
-		}
-		
-		private _toolTipOffset:Point;
-		/**
-		 * @inheritDoc
-		 */
-		public get toolTipOffset():Point{
-			return this._toolTipOffset;
-		}
-		
-		public set toolTipOffset(value:Point):void{
-			this._toolTipOffset = value;
-		}
-		
-		private _toolTipPosition:string = "mouse";
-		/**
-		 * @inheritDoc
-		 */
-		public get toolTipPosition():string{
-			return this._toolTipPosition;
-		}
-
-		public set toolTipPosition(value:string):void{
-			this._toolTipPosition = value;
 		}
 
 		private _isPopUp:boolean;
@@ -1127,25 +1070,5 @@ module ns_egret {
 			}
 			return this.escapeNaN(h*this.scaleY);
 		}
-		
-		private _focusEnabled:boolean = false;
-		/**
-		 * @inheritDoc
-		 */		
-		public get focusEnabled():boolean{
-			return this._focusEnabled;
-		}
-		public set focusEnabled(value:boolean):void{
-			this._focusEnabled = value;
-		}
-		/**
-		 * @inheritDoc
-		 */		
-		public setFocus():void{
-			if(UIGlobals.stage){
-				UIGlobals.stage.focus = this;
-			}
-		}
-		
 	}
 }

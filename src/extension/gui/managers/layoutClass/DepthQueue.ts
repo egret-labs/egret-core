@@ -243,15 +243,15 @@ module ns_egret {
 			return this.minDepth > this.maxDepth;
 		}
 	}
+    /**
+     * 列表项
+     */
+    export class DepthBin {
+        public DepthBin(){
+
+        }
+        public length:number;
+        public items:any = {};
+    }
 }
 
-/**
- * 列表项
- */
-class DepthBin {
-	public function DepthBin(){
-		
-	}
-	public length:number;
-	public items:any = {};
-}

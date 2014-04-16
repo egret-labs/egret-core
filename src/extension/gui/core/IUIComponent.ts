@@ -40,14 +40,6 @@ module ns_egret {
 		 */		
 		setActualSize(newWidth:number, newHeight:number):void;
 		/**
-		 * 当鼠标在组件上按下时，是否能够自动获得焦点的标志。注意：UIComponent的此属性默认值为false。
-		 */		
-		focusEnabled:boolean;
-		/**
-		 * 设置当前组件为焦点对象
-		 */		
-		setFocus():void;
-		/**
 		 * 所属的系统管理器
 		 */		
 		systemManager:ISystemManager;

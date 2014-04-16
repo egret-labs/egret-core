@@ -18,7 +18,6 @@
 
 /// <reference path="../../../egret/events/Event.ts"/>
 /// <reference path="../../../egret/events/EventDispatcher.ts"/>
-/// <reference path="../../../egret/events/UncaughtErrorEvent.ts"/>
 /// <reference path="../core/UIGlobals.ts"/>
 /// <reference path="../events/UIEvent.ts"/>
 /// <reference path="layoutClass/DepthQueue.ts"/>
@@ -164,18 +163,7 @@ module ns_egret {
 		private doPhasedInstantiationCallBack(event:Event=null):void{
 			UIGlobals.stage.removeEventListener(Event.ENTER_FRAME,this.doPhasedInstantiationCallBack);
 			UIGlobals.stage.removeEventListener(Event.RENDER, this.doPhasedInstantiationCallBack);
-			if(UIGlobals.catchCallLaterExceptions){
-				try{
-					this.doPhasedInstantiation();
-				}
-				catch(this.e:Error){
-					var errorEvent:UncaughtErrorEvent = new UncaughtErrorEvent("callLaterError",false,true,this.e.getStackTrace());
-					UIGlobals.stage.dispatchEvent(errorEvent);
-				}
-			}
-			else{
-				this.doPhasedInstantiation();
-			}
+			this.doPhasedInstantiation();
 		}
 		
 		private doPhasedInstantiation():void{
@@ -230,7 +218,7 @@ module ns_egret {
 			var done:boolean = false;
 			var oldTargetLevel:number = this.targetLevel;
 			
-			if (this.targetLevel == number.MAX_VALUE)
+			if (this.targetLevel == Number.MAX_VALUE)
 				this.targetLevel = target.nestLevel;
 			
 			while (!done){
@@ -318,8 +306,8 @@ module ns_egret {
 				}
 			}
 			
-			if (oldTargetLevel == number.MAX_VALUE){
-				this.targetLevel = number.MAX_VALUE;
+			if (oldTargetLevel == Number.MAX_VALUE){
+				this.targetLevel = Number.MAX_VALUE;
 				if (!skipDisplayList){
 					obj = <ILayoutManagerClient> (this.updateCompleteQueue.removeLargestChild(target));
 					while (obj){
