@@ -67,7 +67,7 @@ module ns_egret {
         }
 
         private update() {
-            var list:Array = this.callBackList;
+            var list:Array = this.callBackList.concat();
             var length:number = list.length;
             var thisTime = Ticker.now();
             for(var i:number = 0;i<length;i++){
@@ -93,7 +93,7 @@ module ns_egret {
             var length:number = list.length;
             for (var i:number = 0; i < length; i++) {
                 var bin:any = list[i];
-                if (bin.listener === listener) {
+                if (bin.listener === listener&&bin.thisObject===thisObject) {
                     return;
                 }
                 if (insertIndex == -1 && bin.priority <= priority) {
@@ -121,7 +121,7 @@ module ns_egret {
             var length:number = list.length;
             for (var i:number = 0; i < length; i++) {
                 var bin:any = list[i];
-                if (bin.listener === listener) {
+                if (bin.listener === listener&&bin.thisObject===thisObject) {
                     list.splice(i, 1);
                     break;
                 }

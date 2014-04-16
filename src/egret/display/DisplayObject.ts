@@ -370,7 +370,7 @@ module ns_egret {
         }
 
         public _onRemoveFromStage() {
-            this._stage = MainContext.instance.stage;
+            this._stage = null;
             this.dispatchEventWith(Event.REMOVED_FROM_STAGE);
         }
 
@@ -460,7 +460,8 @@ module ns_egret {
             length = list.length;
             var targetIndex:number = (length-1)*0.5;
             for(var i:number=0;i<length;i++){
-                event._setCurrentTarget(list[i]);
+                var currentTarget:DisplayObject = list[i];
+                event._setCurrentTarget(currentTarget);
                 event._target = this;
                 if(i<targetIndex)
                     event._eventPhase = 1;
@@ -468,7 +469,7 @@ module ns_egret {
                     event._eventPhase = 2;
                 else
                     event._eventPhase = 3;
-                this._notifyListener(event);
+                currentTarget._notifyListener(event);
                 if(event._isPropagationStopped||event._isPropagationImmediateStopped){
                     break;
                 }

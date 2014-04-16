@@ -66,8 +66,8 @@ module ns_egret{
          */
         public run() {
             Ticker.getInstance().run();
-            Ticker.getInstance().register(this.renderLoop, this, Number.MAX_VALUE);
-            Ticker.getInstance().register(this.broadcastEnterFrame, this, Number.MIN_VALUE);
+            Ticker.getInstance().register(this.renderLoop, this, Number.MIN_VALUE);
+            Ticker.getInstance().register(this.broadcastEnterFrame, this, Number.MAX_VALUE);
             this.touchContext.run();
         }
 

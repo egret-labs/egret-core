@@ -48,12 +48,12 @@ module ns_egret {
          * 引擎内部调用
          * @private
          */
-        public _eventsMap:Object = {};
+        public _eventsMap:Object;
         /**
          * 引擎内部调用
          * @private
          */
-        public _captureEventsMap:Object = {};
+        public _captureEventsMap:Object;
 
         /**
          * 引擎内部调用
@@ -83,6 +83,10 @@ module ns_egret {
         }
 
         public _addEventListener(type:string, listener:Function, thisObject:any, useCapture:Boolean = false, priority:number = 0):boolean {
+            if(!this._captureEventsMap)
+                this._captureEventsMap = {};
+            if(!this._eventsMap)
+                this._eventsMap = {};
             var eventMap:Object = useCapture ? this._captureEventsMap : this._eventsMap;
             var list:Array = eventMap[type];
             var insertIndex:number = -1;
@@ -90,7 +94,7 @@ module ns_egret {
                 var length:number = list.length;
                 for (var i:number = 0; i < length; i++) {
                     var bin:any = list[i];
-                    if (bin.listener === listener) {
+                    if (bin.listener === listener&&bin.thisObject===thisObject) {
                         return false;
                     }
                     if (insertIndex == -1 && bin.priority <= priority) {
@@ -120,11 +124,13 @@ module ns_egret {
          * @param useCapture 是否使用捕获，这个属性只在显示列表中生效。
          * @stable A
          */
-        public removeEventListener(type:string, listener:Function, useCapture:Boolean = false):void {
-            this._removeEventListener(type,listener,useCapture);
+        public removeEventListener(type:string, listener:Function,thisObject:any,useCapture:Boolean = false):void {
+            this._removeEventListener(type,listener,thisObject,useCapture);
         }
 
-        public _removeEventListener(type:string, listener:Function, useCapture:Boolean = false):boolean {
+        public _removeEventListener(type:string, listener:Function,thisObject:any, useCapture:Boolean = false):boolean {
+            if(!this._captureEventsMap||!this._eventsMap)
+                return false;
             var eventMap:Object = useCapture ? this._captureEventsMap : this._eventsMap;
             var list:Array = eventMap[type];
             if (!list) {
@@ -133,7 +139,7 @@ module ns_egret {
             var length:number = list.length;
             for (var i:number = 0; i < length; i++) {
                 var bin:any = list[i];
-                if (bin.listener === listener) {
+                if (bin.listener === listener&&bin.thisObject===thisObject) {
                     list.splice(i, 1);
                     break;
                 }
@@ -151,7 +157,8 @@ module ns_egret {
          * @stable A
          */
         public hasEventListener(type:string):boolean {
-            return (this._eventsMap[type] || this._captureEventsMap[type]);
+            return (this._eventsMap&&this._eventsMap[type] ||
+                this._captureEventsMap&&this._captureEventsMap[type]);
         }
 
 
@@ -168,11 +175,14 @@ module ns_egret {
         }
 
         public _notifyListener(event:Event):boolean{
+            if(!this._captureEventsMap||!this._eventsMap)
+                return true;
             var eventMap:Object = event._eventPhase==1 ? this._captureEventsMap : this._eventsMap;
             var list:Array = eventMap[event.type];
             if (!list) {
                 return true;
             }
+            list = list.concat();
             var length:number = list.length;
             for(var i:number = 0;i<length;i++){
                 var eventBin:any = list[i];
