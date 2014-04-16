@@ -379,7 +379,7 @@ module ns_egret {
 
         public _stage:Stage;
 
-        public stage():Stage {
+        public get stage():Stage {
             return this._stage;
         }
 
