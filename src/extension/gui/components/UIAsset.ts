@@ -18,8 +18,8 @@
 
 /// <reference path="../../../egret/display/DisplayObject.ts"/>
 /// <reference path="../../../egret/geom/Rectangle.ts"/>
-/// <reference path="../../../../org/flexlite/domCore/IBitmapAsset.ts"/>
-/// <reference path="../../../../org/flexlite/domCore/IInvalidateDisplay.ts"/>
+/// <reference path="../core/IBitmapAsset.ts"/>
+/// <reference path="../core/IInvalidateDisplay.ts"/>
 /// <reference path="../../../egret/core/Injector.ts"/>
 /// <reference path="supportClasses/DefaultSkinAdapter.ts"/>
 /// <reference path="../core/ILayoutElement.ts"/>
