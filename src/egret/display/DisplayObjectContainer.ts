@@ -34,6 +34,10 @@ module ns_egret {
             super();
         }
 
+        /**
+         * 指定此对象的子项以及子孙项是否接收鼠标/触摸事件
+         */
+        public touchChildren:Boolean = true;
 
         public _children:Array;
 
