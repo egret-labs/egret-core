@@ -68,7 +68,7 @@ module ns_egret{
             super(type,bubbles,cancelable);
             this.touchPointID = touchPointID
             this._stageX = stageX;
-            this._stageX = stageY;
+            this._stageY = stageY;
         }
 
         public _stageX:number = 0;
