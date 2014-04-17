@@ -33,7 +33,7 @@ module ns_egret {
 	export class UIAsset extends UIComponent implements ISkinnableClient{
 		public constructor(){
 			super();
-			this.mouseChildren = false;
+			this.touchChildren = false;
 		}
 		
 		private skinNameChanged:boolean = false;
@@ -79,7 +79,8 @@ module ns_egret {
 		 * @param skinName 皮肤标识符
 		 */		
 		public onGetSkin(skin:any,skinName:any):void{
-			if(this._skin!==skin)//如果皮肤是重用的，就不用执行添加和移除操作。{
+			if(this._skin!==skin){//如果皮肤是重用的，就不用执行添加和移除操作。
+
 				if(this._skin&&this._skin.parent==this){
 					super.removeChild(this._skin);
 				}
@@ -88,59 +89,140 @@ module ns_egret {
 					super.addChildAt(this._skin,0);
 				}
 			}
+			this.aspectRatio = NaN;
+			this.invalidateSize();
+			this.invalidateDisplayList();
+			if(this.stage)
+				this.validateNow();
+		}
+		
+		private createChildrenCalled:boolean = false;
+		/**
+		 * @inheritDoc
+		 */
+		public createChildren():void{
 			super.createChildren();
-			if(skinNameChanged){
+			if(this.skinNameChanged){
 				this.parseSkinName();
 			}
-			skinNameChanged = false;
-			adapter:ISkinAdapter = skinAdapter;
+			this.createChildrenCalled = true;
+		}
+		
+		/**
+		 * 皮肤解析适配器
+		 */		
+		private static skinAdapter:ISkinAdapter;
+		/**
+		 * 默认的皮肤解析适配器
+		 */	
+		private static defaultSkinAdapter:DefaultSkinAdapter;
+		
+		private skinReused:boolean = false;
+		/**
+		 * 解析skinName
+		 */		
+		private parseSkinName():void{
+			this.skinNameChanged = false;
+			var adapter:ISkinAdapter = this.skinAdapter;
 			if(!adapter){
 				try{
-					this.adapter = this.skinAdapter = Injector.getInstance(ISkinAdapter);
+					adapter = this.skinAdapter = Injector.getInstance(ISkinAdapter);
 				}
-				catch(this.e:Error){
+				catch(e:Error){
 					if(!this.defaultSkinAdapter)
 						this.defaultSkinAdapter = new DefaultSkinAdapter();
-					this.adapter = this.defaultSkinAdapter;
+					adapter = this.defaultSkinAdapter;
 				}
 			}
-			if(!_skinName){
+			if(!this._skinName){
 				this.skinChnaged(null,this._skinName);
 			}
 			else{
 				var reuseSkin:DisplayObject = this.skinReused?null:this._skin;
 				this.skinReused = true;
-				this.adapter.getSkin(this._skinName,this.skinChnaged,reuseSkin);
+				adapter.getSkin(this._skinName,this.skinChnaged,reuseSkin);
 			}
-			if(skinName!==_skinName)
+		}
+		/**
+		 * 皮肤发生改变
+		 */		
+		private skinChnaged(skin:any,skinName:any):void{
+			if(skinName!==this._skinName)
 				return;
-			onGetSkin(skin,skinName);
-			skinReused = false;
-			if(hasEventListener(UIEvent.SKIN_CHANGED)){
+			this.onGetSkin(skin,skinName);
+			this.skinReused = false;
+			if(this.hasEventListener(UIEvent.SKIN_CHANGED)){
 				var event:UIEvent = new UIEvent(UIEvent.SKIN_CHANGED);
 				this.dispatchEvent(event);
 			}
-			rect:Rectangle = new Rectangle();
-			if(_skin is ILayoutElement){
-				this.rect.width = (<ILayoutElement> (this._skin)).preferredWidth;
-				this.rect.height = (<ILayoutElement> (this._skin)).preferredHeight;
+		}
+		
+		/**
+		 * @inheritDoc
+		 */
+		public measure():void{
+			super.measure();
+			if(!this._skin)
+				return;
+			if(this._skin instanceof ILayoutElement&&!(<ILayoutElement> (this._skin)).includeInLayout)
+				return;
+			var rect:Rectangle = this.getMeasuredSize();
+			this.measuredWidth = rect.width;
+			this.measuredHeight = rect.height;
+		}
+		
+		/**
+		 * 获取测量大小
+		 */		
+		private getMeasuredSize():Rectangle{
+			var rect:Rectangle = new Rectangle();
+			if(this._skin instanceof ILayoutElement){
+				rect.width = (<ILayoutElement> (this._skin)).preferredWidth;
+				rect.height = (<ILayoutElement> (this._skin)).preferredHeight;
 			}
-			else if(_skin is IBitmapAsset){
-				this.rect.width = (<IBitmapAsset> (this._skin)).measuredWidth;
-				this.rect.height = (<IBitmapAsset> (this._skin)).measuredHeight;
+			else if(this._skin instanceof IBitmapAsset){
+				rect.width = (<IBitmapAsset> (this._skin)).measuredWidth;
+				rect.height = (<IBitmapAsset> (this._skin)).measuredHeight;
 			}
 			else{
 				var oldScaleX:number = this._skin.scaleX;
 				var oldScaleY:number = this._skin.scaleY;
 				this._skin.scaleX = 1;
 				this._skin.scaleY = 1;
-				this.rect.width = this._skin.width;
-				this.rect.height = this._skin.height;
+				rect.width = this._skin.width;
+				rect.height = this._skin.height;
 				this._skin.scaleX = oldScaleX;
 				this._skin.scaleY = oldScaleY;
 			}
+			return rect;
+		}
+		
+		private _maintainAspectRatio:boolean = false;
+		/**
+		 * 是否保持皮肤的宽高比,默认为false。
+		 */
+		public get maintainAspectRatio():boolean{
+			return this._maintainAspectRatio;
+		}
+
+		public set maintainAspectRatio(value:boolean):void{
+			if(this._maintainAspectRatio==value)
+				return;
+			this._maintainAspectRatio = value;
+			this.invalidateDisplayList();
+		}
+		
+		/**
+		 * 皮肤宽高比
+		 */		
+		public aspectRatio:number = NaN;
+
+		/**
+		 * @inheritDoc
+		 */
+		public updateDisplayList(unscaledWidth:number, unscaledHeight:number):void{
 			super.updateDisplayList(unscaledWidth,unscaledHeight);
-			if(_skin){
+			if(this._skin){
 				if(this._maintainAspectRatio){
 					var layoutBoundsX:number = 0;
 					var layoutBoundsY:number = 0;
@@ -151,17 +233,17 @@ module ns_egret {
 						else
 							this.aspectRatio = rect.width/rect.height;
 					}
-					if(this.aspectRatio>0&&this.unscaledHeight>0&&this.unscaledWidth>0){
-						var ratio:number = this.unscaledWidth/this.unscaledHeight;
+					if(this.aspectRatio>0&&unscaledHeight>0&&unscaledWidth>0){
+						var ratio:number = unscaledWidth/unscaledHeight;
 						if(ratio>this.aspectRatio){
-							var newWidth:number = this.unscaledHeight*this.aspectRatio;
-							layoutBoundsX = Math.round((this.unscaledWidth-newWidth)*0.5);
-							this.unscaledWidth = newWidth;
+							var newWidth:number = unscaledHeight*this.aspectRatio;
+							layoutBoundsX = Math.round((unscaledWidth-newWidth)*0.5);
+							unscaledWidth = newWidth;
 						}
 						else{
-							var newHeight:number = this.unscaledWidth/this.aspectRatio;
-							layoutBoundsY = Math.round((this.unscaledHeight-newHeight)*0.5);
-							this.unscaledHeight = newHeight;
+							var newHeight:number = unscaledWidth/this.aspectRatio;
+							layoutBoundsY = Math.round((unscaledHeight-newHeight)*0.5);
+							unscaledHeight = newHeight;
 						}
 						
 						if(this._skin instanceof ILayoutElement){
@@ -177,12 +259,12 @@ module ns_egret {
 				}
 				if(this._skin instanceof ILayoutElement){
 					if((<ILayoutElement> (this._skin)).includeInLayout){
-						(<ILayoutElement> (this._skin)).setLayoutBoundsSize(this.unscaledWidth,this.unscaledHeight);
+						(<ILayoutElement> (this._skin)).setLayoutBoundsSize(unscaledWidth,unscaledHeight);
 					}
 				}
 				else{
-					this._skin.width = this.unscaledWidth;
-					this._skin.height = this.unscaledHeight;
+					this._skin.width = unscaledWidth;
+					this._skin.height = unscaledHeight;
 					if(this._skin instanceof IInvalidateDisplay)
 						(<IInvalidateDisplay> (this._skin)).validateNow();
 				}
@@ -191,90 +273,76 @@ module ns_egret {
 		
 		
 		/**
-		 * @inheritDoc
-		 */		
-		final dx_internal function addToDisplayList(child:DisplayObject):DisplayObject{
-			return super.addChild(child);
-		}
-		/**
-		 * 皮肤解析适配器
-		 */		
-		final dx_internal function addToDisplayListAt(child:DisplayObject,index:number):DisplayObject{
-			return super.addChildAt(child,index);
-		}
-		/**
-		 * 默认的皮肤解析适配器
-		 */		
-		final dx_internal function removeFromDisplayList(child:DisplayObject):DisplayObject{
-			return super.removeChild(child);
-		}
-		
-		private static const errorStr:string = /**
-		 * 解析skinName
-		 */;
-		[Deprecated] 
-		/**
-		 * 皮肤发生改变
-		 */		
-		override public function addChild(child:DisplayObject):DisplayObject{
-			throw(new Error(/**
-		 * @inheritDoc
-		 */+errorStr+/**
-		 * 获取测量大小
-		 */));
-		}
-		[Deprecated] 
-		/**
-		 * 是否保持皮肤的宽高比,默认为false。
-		 */		
-		override public function addChildAt(child:DisplayObject, index:number):DisplayObject{
-			throw(new Error(/**
-		 * 皮肤宽高比
-		 */+errorStr+/**
-		 * @inheritDoc
-		 */));
-		}
-		[Deprecated] 
-		/**
 		 * 添加对象到显示列表,此接口仅预留给皮肤不为ISkin而需要内部创建皮肤子部件的情况,
 		 * 如果需要管理子项，若有，请使用容器的addElement()方法，非法使用有可能造成无法自动布局。
 		 */		
-		override public function removeChild(child:DisplayObject):DisplayObject{
-			throw(new Error(/**
+		final public addToDisplayList(child:DisplayObject):DisplayObject{
+			return super.addChild(child);
+		}
+		/**
 		 * 添加对象到指定的索引,此接口仅预留给皮肤不为ISkin而需要内部创建皮肤子部件的情况,
 		 * 如果需要管理子项，若有，请使用容器的addElementAt()方法，非法使用有可能造成无法自动布局。
-		 */+errorStr+/**
+		 */		
+		final public addToDisplayListAt(child:DisplayObject,index:number):DisplayObject{
+			return super.addChildAt(child,index);
+		}
+		/**
 		 * 从显示列表移除对象,此接口仅预留给皮肤不为ISkin而需要内部创建皮肤子部件的情况,
 		 * 如果需要管理子项，若有，请使用容器的removeElement()方法,非法使用有可能造成无法自动布局。
-		 */));
+		 */		
+		final public removeFromDisplayList(child:DisplayObject):DisplayObject{
+			return super.removeChild(child);
 		}
+		
+		private static errorStr:string = "在此组件中不可用，若此组件为容器类，请使用";
 		[Deprecated] 
-		"在此组件中不可用，若此组件为容器类，请使用"		
-		override public function removeChildAt(index:number):DisplayObject{
-			throw(new Error(/**
+		/**
 		 * @copy org.flexlite.domUI.components.Group#addChild()
-		 */+errorStr+"addChild()"));
+		 */		
+		public addChild(child:DisplayObject):DisplayObject{
+			throw(new Error("addChild()"+this.errorStr+"addElement()代替"));
 		}
 		[Deprecated] 
-		"addElement()代替"		
-		override public function setChildIndex(child:DisplayObject, index:number):void{
-			throw(new Error(/**
+		/**
 		 * @copy org.flexlite.domUI.components.Group#addChildAt()
-		 */+errorStr+"addChildAt()"));
+		 */		
+		public addChildAt(child:DisplayObject, index:number):DisplayObject{
+			throw(new Error("addChildAt()"+this.errorStr+"addElementAt()代替"));
 		}
 		[Deprecated] 
-		"addElementAt()代替"		
-		override public function swapChildren(child1:DisplayObject, child2:DisplayObject):void{
-			throw(new Error(/**
+		/**
 		 * @copy org.flexlite.domUI.components.Group#removeChild()
-		 */+errorStr+"removeChild()"));
+		 */		
+		public removeChild(child:DisplayObject):DisplayObject{
+			throw(new Error("removeChild()"+this.errorStr+"removeElement()代替"));
 		}
 		[Deprecated] 
-		"removeElement()代替"		
-		override public function swapChildrenAt(index1:number, index2:number):void{
-			throw(new Error(/**
+		/**
 		 * @copy org.flexlite.domUI.components.Group#removeChildAt()
-		 */+errorStr+"removeChildAt()"));
+		 */		
+		public removeChildAt(index:number):DisplayObject{
+			throw(new Error("removeChildAt()"+this.errorStr+"removeElementAt()代替"));
+		}
+		[Deprecated] 
+		/**
+		 * @copy org.flexlite.domUI.components.Group#setChildIndex()
+		 */		
+		public setChildIndex(child:DisplayObject, index:number):void{
+			throw(new Error("setChildIndex()"+this.errorStr+"setElementIndex()代替"));
+		}
+		[Deprecated] 
+		/**
+		 * @copy org.flexlite.domUI.components.Group#swapChildren()
+		 */		
+		public swapChildren(child1:DisplayObject, child2:DisplayObject):void{
+			throw(new Error("swapChildren()"+this.errorStr+"swapElements()代替"));
+		}
+		[Deprecated] 
+		/**
+		 * @copy org.flexlite.domUI.components.Group#swapChildrenAt()
+		 */		
+		public swapChildrenAt(index1:number, index2:number):void{
+			throw(new Error("swapChildrenAt()"+this.errorStr+"swapElementsAt()代替"));
 		}
 	}
 }
