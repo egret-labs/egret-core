@@ -45,7 +45,8 @@ function copyEngine(currentDir,engine){
         var engine_root = path.join(currentDir, "egret");
         if (fs.existsSync(engine_root)){
             console.error("当前目录下已存在引擎文件夹");
-            process.exit(1);
+
+            return;
         }
         fs.mkdirSync(engine_root);
         var target_src = path.join(engine_root, "src");
@@ -81,10 +82,8 @@ function generateConfigJson(currentDir,engine,projectName) {
 
     }
     gameData["game"][projectName] = projectName + "/";
-    if (engine && engine.length > 0) {
-        gameData["engine"] = engine;
-    }
-    else if (!gameData["engine"]){
+    
+    if (!gameData["engine"]){
         gameData["engine"] = "egret/src/";
     }
 
