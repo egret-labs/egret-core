@@ -16,6 +16,7 @@
  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+/// <reference path="../../../../egret/display/DisplayObject.ts"/>
 /// <reference path="../../core/ISkinAdapter.ts"/>
 
 module ns_egret {
@@ -25,13 +26,14 @@ module ns_egret {
 		 * 构造函数
 		 */		
 		public constructor(){
-			super();
 		}
 		/**
 		 * @inheritDoc
 		 */
-		public getSkin(skinName:any,compFunc:Function,oldSkin:DisplayObject=null):void{
-
-		}
+        public getSkin(skinName:Object,compFunc:Function,thisObject:any,oldSkin:DisplayObject=null):void{
+            if(skinName instanceof DisplayObject){
+                compFunc.call(thisObject,skinName,skinName);
+            }
+        }
 	}
 }

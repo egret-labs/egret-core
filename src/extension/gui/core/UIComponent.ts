@@ -48,7 +48,7 @@ module ns_egret {
 		 * 添加到舞台
 		 */		
 		private onAddedToStage(e:Event):void{
-			this.removeEventListener(Event.ADDED_TO_STAGE,this.onAddedToStage);
+			this.removeEventListener(Event.ADDED_TO_STAGE,this.onAddedToStage,this);
 			this.initialize();
 			UIGlobals.initlize(this.stage);
 			if(this._nestLevel>0)
@@ -63,7 +63,7 @@ module ns_egret {
 			return this._id;
 		}
 		
-		public set id(value:string):void{
+		public set id(value:string){
 			this._id = value;
 		}
 
@@ -74,7 +74,7 @@ module ns_egret {
 		public get isPopUp():boolean{
 			return this._isPopUp;
 		}
-		public set isPopUp(value:boolean):void{
+		public set isPopUp(value:boolean){
 			this._isPopUp = value;
 		}
 		
@@ -98,7 +98,7 @@ module ns_egret {
 		 */
 		public get systemManager():ISystemManager{
 			if(!this._systemManager){
-				if(this instanceof ISystemManager){
+				if("popUpContainer" in this){
 					this._systemManager = <ISystemManager> this;
 				}
 				else{
@@ -109,7 +109,7 @@ module ns_egret {
 							this._systemManager = ui.systemManager;
 							break;
 						}
-						else if (o instanceof ISystemManager){
+						else if ("popUpContainer" in o){
 							this._systemManager = <ISystemManager> o;
 							break;
 						}
@@ -119,7 +119,7 @@ module ns_egret {
 			}
 			return this._systemManager;
 		}
-		public set systemManager(value:ISystemManager):void{
+		public set systemManager(value:ISystemManager){
 			this._systemManager = value;
 			var length:number = this.numChildren;
 			for(var i:number=0;i<length;i++){
@@ -136,7 +136,7 @@ module ns_egret {
 		public get updateCompletePendingFlag():boolean{
 			return this._updateCompletePendingFlag;
 		}		
-		public set updateCompletePendingFlag(value:boolean):void{
+		public set updateCompletePendingFlag(value:boolean){
 			this._updateCompletePendingFlag = value;
 		}
 		
@@ -148,7 +148,7 @@ module ns_egret {
 		public get initialized():boolean{
 			return this._initialized;
 		}
-		public set initialized(value:boolean):void{
+		public set initialized(value:boolean){
 			if(this._initialized==value)
 				return;
 			this._initialized = value;
@@ -167,7 +167,7 @@ module ns_egret {
 			if(this.initializeCalled)
 				return;
 			if(UIGlobals.stage){
-				this.removeEventListener(Event.ADDED_TO_STAGE,this.onAddedToStage);
+				this.removeEventListener(Event.ADDED_TO_STAGE,this.onAddedToStage,this);
 			}
 			this.initializeCalled = true;
 			this.dispatchEvent(new UIEvent(UIEvent.INITIALIZE));
@@ -199,7 +199,7 @@ module ns_egret {
 			return this._nestLevel;
 		}
 		
-		public set nestLevel(value:number):void{
+		public set nestLevel(value:number){
 			if(this._nestLevel==value)
 				return;
 			this._nestLevel = value;
@@ -207,7 +207,7 @@ module ns_egret {
 			if(this._nestLevel==0)
 				this.addEventListener(Event.ADDED_TO_STAGE,this.checkInvalidateFlag,this);
 			else
-				this.removeEventListener(Event.ADDED_TO_STAGE,this.checkInvalidateFlag);
+				this.removeEventListener(Event.ADDED_TO_STAGE,this.checkInvalidateFlag,this);
 			
 			for(var i:number=this.numChildren-1;i>=0;i--){
 				var child:ILayoutManagerClient = <ILayoutManagerClient> (this.getChildAt(i));
@@ -241,7 +241,7 @@ module ns_egret {
 		 * 即将添加一个子项
 		 */		
 		public addingChild(child:DisplayObject):void{
-			if(child instanceof ILayoutManagerClient){
+			if("nestLevel" in child){
 				(<ILayoutManagerClient> child).nestLevel = this._nestLevel+1;
 			}
 		}
@@ -278,10 +278,10 @@ module ns_egret {
 		 * 已经移除一个子项
 		 */		
 		public _childRemoved(child:DisplayObject):void{
-			if(child instanceof ILayoutManagerClient){
+			if("nestLevel" in child){
 				(<ILayoutManagerClient> child).nestLevel = 0;
 			}
-			if(child instanceof IUIComponent){
+			if("systemManager" in child){
 				(<IUIComponent> child).systemManager = null;
 			}
 		}
@@ -316,7 +316,7 @@ module ns_egret {
 			return this._enabled;
 		}
 		
-		public set enabled(value:boolean):void{
+		public set enabled(value:boolean){
 			if(this._enabled==value)
 				return;
 			this._enabled = value;
@@ -341,7 +341,7 @@ module ns_egret {
 		/**
 		 * 组件宽度,默认值为NaN,设置为NaN将使用组件的measure()方法自动计算尺寸
 		 */		
-		public set width(value:number):void{
+		public set width(value:number){
 			if(this._width==value&&this._explicitWidth==value)
 				return;
 			this._width = value;
@@ -379,7 +379,7 @@ module ns_egret {
 		/**
 		 * 组件高度,默认值为NaN,设置为NaN将使用组件的measure()方法自动计算尺寸
 		 */		
-		public set height(value:number):void{
+		public set height(value:number){
 			if(this._height==value&&this._explicitHeight==value)
 				return;
 			this._height = value;
@@ -408,7 +408,7 @@ module ns_egret {
 		/**
 		 * @inheritDoc
 		 */
-		public set scaleX(value:number):void{
+		public set scaleX(value:number){
 			if(super.scaleX == value)
 				return;
 			super.scaleX = value;
@@ -417,7 +417,7 @@ module ns_egret {
 		/**
 		 * @inheritDoc
 		 */
-		public set scaleY(value:number):void{
+		public set scaleY(value:number){
 			if(super.scaleY == value)
 				return;
 			super.scaleY = value;
@@ -431,7 +431,7 @@ module ns_egret {
 		public get minWidth():number{
 			return this._minWidth;
 		}
-		public set minWidth(value:number):void{
+		public set minWidth(value:number){
 			if(this._minWidth==value)
 				return;
 			this._minWidth = value;
@@ -445,7 +445,7 @@ module ns_egret {
 		public get maxWidth():number{
 			return this._maxWidth;
 		}
-		public set maxWidth(value:number):void{
+		public set maxWidth(value:number){
 			if(this._maxWidth==value)
 				return;
 			this._maxWidth = value;
@@ -459,7 +459,7 @@ module ns_egret {
 		public get minHeight():number{
 			return this._minHeight;
 		}
-		public set minHeight(value:number):void{
+		public set minHeight(value:number){
 			if(this._minHeight==value)
 				return;
 			this._minHeight = value;
@@ -473,7 +473,7 @@ module ns_egret {
 		public get maxHeight():number{
 			return this._maxHeight;
 		}
-		public set maxHeight(value:number):void{
+		public set maxHeight(value:number){
 			if(this._maxHeight==value)
 				return;
 			this._maxHeight = value;
@@ -489,7 +489,7 @@ module ns_egret {
 		public get measuredWidth():number{
 			return this._measuredWidth;
 		}
-		public set measuredWidth(value:number):void{
+		public set measuredWidth(value:number){
 			this._measuredWidth = value;
 		}
 		
@@ -500,7 +500,7 @@ module ns_egret {
 		public get measuredHeight():number{
 			return this._measuredHeight;
 		}
-		public set measuredHeight(value:number):void{
+		public set measuredHeight(value:number){
 			this._measuredHeight = value;
 		}
 		/**
@@ -530,7 +530,7 @@ module ns_egret {
 		/**
 		 * @inheritDoc
 		 */
-		public set x(value:number):void{
+		public set x(value:number){
 			if(this.x==value)
 				return;
 			super.x = value;
@@ -547,7 +547,7 @@ module ns_egret {
 		/**
 		 * @inheritDoc
 		 */
-		public set y(value:number):void{
+		public set y(value:number){
 			if(this.y==value)
 				return;
 			super.y = value;
@@ -600,7 +600,7 @@ module ns_egret {
 			if (recursive){
 				for (var i:number = 0; i < this.numChildren; i++){
 					var child:DisplayObject = this.getChildAt(i);
-					if (child instanceof ILayoutManagerClient )
+					if ("validateSize" in child)
 						(<ILayoutManagerClient> child ).validateSize(true);
 				}
 			}
@@ -814,7 +814,7 @@ module ns_egret {
 		public get includeInLayout():boolean{
 			return this._includeInLayout;
 		}
-		public set includeInLayout(value:boolean):void{
+		public set includeInLayout(value:boolean){
 			if(this._includeInLayout==value)
 				return;
 			this._includeInLayout = true;
@@ -831,7 +831,7 @@ module ns_egret {
 		public get left():number{
 			return this._left;
 		}
-		public set left(value:number):void{
+		public set left(value:number){
 			if(this._left == value)
 				return;
 			this._left = value;
@@ -845,7 +845,7 @@ module ns_egret {
 		public get right():number{
 			return this._right;
 		}
-		public set right(value:number):void{
+		public set right(value:number){
 			if(this._right == value)
 				return;
 			this._right = value;
@@ -859,7 +859,7 @@ module ns_egret {
 		public get top():number{
 			return this._top;
 		}
-		public set top(value:number):void{
+		public set top(value:number){
 			if(this._top == value)
 				return;
 			this._top = value;
@@ -873,7 +873,7 @@ module ns_egret {
 		public get bottom():number{
 			return this._bottom;
 		}
-		public set bottom(value:number):void{
+		public set bottom(value:number){
 			if(this._bottom == value)
 				return;
 			this._bottom = value;
@@ -888,7 +888,7 @@ module ns_egret {
 		public get horizontalCenter():number{
 			return this._horizontalCenter;
 		}
-		public set horizontalCenter(value:number):void{
+		public set horizontalCenter(value:number){
 			if(this._horizontalCenter == value)
 				return;
 			this._horizontalCenter = value;
@@ -902,7 +902,7 @@ module ns_egret {
 		public get verticalCenter():number{
 			return this._verticalCenter;
 		}
-		public set verticalCenter(value:number):void{
+		public set verticalCenter(value:number){
 			if(this._verticalCenter == value)
 				return;
 			this._verticalCenter = value;
@@ -917,7 +917,7 @@ module ns_egret {
 		public get percentWidth():number{
 			return this._percentWidth;
 		}
-		public set percentWidth(value:number):void{
+		public set percentWidth(value:number){
 			if(this._percentWidth == value)
 				return;
 			this._percentWidth = value;
@@ -933,7 +933,7 @@ module ns_egret {
 		public get percentHeight():number{
 			return this._percentHeight;
 		}
-		public set percentHeight(value:number):void{
+		public set percentHeight(value:number){
 			if(this._percentHeight == value)
 				return;
 			this._percentHeight = value;

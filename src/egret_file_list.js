@@ -62,6 +62,21 @@ var temp = [
     "extension/tilemap/TMXConst.js",
     "extension/tilemap/TMXMapInfo.js",
     //tileMap end
+    //GUI start
+    "extension/gui/managers/LayoutManager.js",
+    "extension/gui/managers/layoutClass/DepthQueue.js",
+    "extension/gui/core/UIGlobals.js",
+    "extension/gui/core/UIComponent.js",
+    "extension/gui/core/PopUpPosition.js",
+    "extension/gui/components/supportClasses/DefaultSkinAdapter.js",
+    "extension/gui/components/UIAsset.js",
+    "extension/gui/events/UIEvent.js",
+    "extension/gui/events/PropertyChangeEvent.js",
+    "extension/gui/events/PropertyChangeEventKind.js",
+    "extension/gui/events/MoveEvent.js",
+    "extension/gui/events/ResizeEvent.js",
+    "extension/gui/events/SkinPartEvent.js",
+    //GUI end
     "extension/gameInput/VirtualJoystick.js",
     "extension/gui/component/TabView.js",
     "extension/gui/component/SimpleButton.js",

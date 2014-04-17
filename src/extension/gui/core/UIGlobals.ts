@@ -19,7 +19,6 @@
 /// <reference path="../../../egret/display/Stage.ts"/>
 /// <reference path="../../../egret/events/Event.ts"/>
 /// <reference path="../../../egret/core/Injector.ts"/>
-/// <reference path="../managers/IFocusManager.ts"/>
 /// <reference path="../managers/ISystemManager.ts"/>
 /// <reference path="../managers/LayoutManager.ts"/>
 
@@ -56,10 +55,6 @@ module ns_egret {
 		 * 延迟渲染布局管理器 
 		 */		
 		public static layoutManager:LayoutManager;
-		/**
-		 * 焦点管理器
-		 */		
-		public static focusManager:IFocusManager;
 		/**
 		 * 系统管理器列表
 		 */		

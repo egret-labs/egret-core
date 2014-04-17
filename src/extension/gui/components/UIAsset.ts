@@ -18,7 +18,6 @@
 
 /// <reference path="../../../egret/display/DisplayObject.ts"/>
 /// <reference path="../../../egret/geom/Rectangle.ts"/>
-/// <reference path="../core/IBitmapAsset.ts"/>
 /// <reference path="../core/IInvalidateDisplay.ts"/>
 /// <reference path="../../../egret/core/Injector.ts"/>
 /// <reference path="supportClasses/DefaultSkinAdapter.ts"/>
@@ -52,7 +51,7 @@ module ns_egret {
 			return this._skinName;
 		}
 
-		public set skinName(value:any):void{
+		public set skinName(value:any){
 			if(this._skinName==value)
 				return;
 			this._skinName = value;
@@ -123,15 +122,15 @@ module ns_egret {
 		 */		
 		private parseSkinName():void{
 			this.skinNameChanged = false;
-			var adapter:ISkinAdapter = this.skinAdapter;
+			var adapter:ISkinAdapter = UIAsset.skinAdapter;
 			if(!adapter){
 				try{
-					adapter = this.skinAdapter = Injector.getInstance(ISkinAdapter);
+					adapter = UIAsset.skinAdapter = Injector.getInstance(ISkinAdapter);
 				}
-				catch(e:Error){
-					if(!this.defaultSkinAdapter)
-						this.defaultSkinAdapter = new DefaultSkinAdapter();
-					adapter = this.defaultSkinAdapter;
+				catch(e){
+					if(!UIAsset.defaultSkinAdapter)
+						UIAsset.defaultSkinAdapter = new DefaultSkinAdapter();
+					adapter = UIAsset.defaultSkinAdapter;
 				}
 			}
 			if(!this._skinName){
@@ -140,7 +139,7 @@ module ns_egret {
 			else{
 				var reuseSkin:DisplayObject = this.skinReused?null:this._skin;
 				this.skinReused = true;
-				adapter.getSkin(this._skinName,this.skinChnaged,reuseSkin);
+				adapter.getSkin(this._skinName,this.skinChnaged,this,reuseSkin);
 			}
 		}
 		/**
@@ -180,10 +179,6 @@ module ns_egret {
 				rect.width = (<ILayoutElement> (this._skin)).preferredWidth;
 				rect.height = (<ILayoutElement> (this._skin)).preferredHeight;
 			}
-			else if(this._skin instanceof IBitmapAsset){
-				rect.width = (<IBitmapAsset> (this._skin)).measuredWidth;
-				rect.height = (<IBitmapAsset> (this._skin)).measuredHeight;
-			}
 			else{
 				var oldScaleX:number = this._skin.scaleX;
 				var oldScaleY:number = this._skin.scaleY;
@@ -205,7 +200,7 @@ module ns_egret {
 			return this._maintainAspectRatio;
 		}
 
-		public set maintainAspectRatio(value:boolean):void{
+		public set maintainAspectRatio(value:boolean){
 			if(this._maintainAspectRatio==value)
 				return;
 			this._maintainAspectRatio = value;
@@ -276,73 +271,66 @@ module ns_egret {
 		 * 添加对象到显示列表,此接口仅预留给皮肤不为ISkin而需要内部创建皮肤子部件的情况,
 		 * 如果需要管理子项，若有，请使用容器的addElement()方法，非法使用有可能造成无法自动布局。
 		 */		
-		final public addToDisplayList(child:DisplayObject):DisplayObject{
+		public addToDisplayList(child:DisplayObject):DisplayObject{
 			return super.addChild(child);
 		}
 		/**
 		 * 添加对象到指定的索引,此接口仅预留给皮肤不为ISkin而需要内部创建皮肤子部件的情况,
 		 * 如果需要管理子项，若有，请使用容器的addElementAt()方法，非法使用有可能造成无法自动布局。
 		 */		
-		final public addToDisplayListAt(child:DisplayObject,index:number):DisplayObject{
+		public addToDisplayListAt(child:DisplayObject,index:number):DisplayObject{
 			return super.addChildAt(child,index);
 		}
 		/**
 		 * 从显示列表移除对象,此接口仅预留给皮肤不为ISkin而需要内部创建皮肤子部件的情况,
 		 * 如果需要管理子项，若有，请使用容器的removeElement()方法,非法使用有可能造成无法自动布局。
 		 */		
-		final public removeFromDisplayList(child:DisplayObject):DisplayObject{
+		public removeFromDisplayList(child:DisplayObject):DisplayObject{
 			return super.removeChild(child);
 		}
 		
 		private static errorStr:string = "在此组件中不可用，若此组件为容器类，请使用";
-		[Deprecated] 
 		/**
 		 * @copy org.flexlite.domUI.components.Group#addChild()
 		 */		
 		public addChild(child:DisplayObject):DisplayObject{
-			throw(new Error("addChild()"+this.errorStr+"addElement()代替"));
+			throw(new Error("addChild()"+UIAsset.errorStr+"addElement()代替"));
 		}
-		[Deprecated] 
 		/**
 		 * @copy org.flexlite.domUI.components.Group#addChildAt()
 		 */		
 		public addChildAt(child:DisplayObject, index:number):DisplayObject{
-			throw(new Error("addChildAt()"+this.errorStr+"addElementAt()代替"));
+			throw(new Error("addChildAt()"+UIAsset.errorStr+"addElementAt()代替"));
 		}
-		[Deprecated] 
 		/**
 		 * @copy org.flexlite.domUI.components.Group#removeChild()
 		 */		
 		public removeChild(child:DisplayObject):DisplayObject{
-			throw(new Error("removeChild()"+this.errorStr+"removeElement()代替"));
+			throw(new Error("removeChild()"+UIAsset.errorStr+"removeElement()代替"));
 		}
-		[Deprecated] 
 		/**
 		 * @copy org.flexlite.domUI.components.Group#removeChildAt()
 		 */		
 		public removeChildAt(index:number):DisplayObject{
-			throw(new Error("removeChildAt()"+this.errorStr+"removeElementAt()代替"));
+			throw(new Error("removeChildAt()"+UIAsset.errorStr+"removeElementAt()代替"));
 		}
-		[Deprecated] 
 		/**
 		 * @copy org.flexlite.domUI.components.Group#setChildIndex()
 		 */		
 		public setChildIndex(child:DisplayObject, index:number):void{
-			throw(new Error("setChildIndex()"+this.errorStr+"setElementIndex()代替"));
+			throw(new Error("setChildIndex()"+UIAsset.errorStr+"setElementIndex()代替"));
 		}
-		[Deprecated] 
 		/**
 		 * @copy org.flexlite.domUI.components.Group#swapChildren()
 		 */		
 		public swapChildren(child1:DisplayObject, child2:DisplayObject):void{
-			throw(new Error("swapChildren()"+this.errorStr+"swapElements()代替"));
+			throw(new Error("swapChildren()"+UIAsset.errorStr+"swapElements()代替"));
 		}
-		[Deprecated] 
 		/**
 		 * @copy org.flexlite.domUI.components.Group#swapChildrenAt()
 		 */		
 		public swapChildrenAt(index1:number, index2:number):void{
-			throw(new Error("swapChildrenAt()"+this.errorStr+"swapElementsAt()代替"));
+			throw(new Error("swapChildrenAt()"+UIAsset.errorStr+"swapElementsAt()代替"));
 		}
 	}
 }

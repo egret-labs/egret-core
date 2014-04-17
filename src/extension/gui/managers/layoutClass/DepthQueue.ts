@@ -24,7 +24,6 @@ module ns_egret {
 
 	export class DepthQueue{
 		public constructor(){
-			super();
 		}
 		
 		/**
