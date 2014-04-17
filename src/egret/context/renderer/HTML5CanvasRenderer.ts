@@ -167,7 +167,7 @@ module ns_egret {
                 renderContext.strokeText(text, x, y, maxWidth || 0xFFFF);
             }
             renderContext.fillText(text, x + this._transformTx, y + this._transformTy, maxWidth || 0xFFFF);
-            super.drawText(text, x, y, maxWidth, outline, textColor, strokeColor);
+            super.drawText(textField,text, x, y, maxWidth);
         }
 
         clip(x, y, w, h) {
