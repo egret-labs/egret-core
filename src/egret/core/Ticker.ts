@@ -79,7 +79,7 @@ module ns_egret {
                     && (!(this instanceof DisplayObject) || this._isUseCapture == obj.useCapture)) {
                     var dt = thisTime - this._time;
                     dt *= this._timeScale;
-                    obj.func.apply(obj.thisObj, [dt]);
+                    obj.func.call(obj.thisObj, dt);
                 }
             }
             this._time = thisTime;
