@@ -403,7 +403,7 @@ module ns_egret {
                     }
                 }
 
-                var eventBin = {listener: listener, thisObject: thisObject, priority: priority};
+                var eventBin = {target:this,listener: listener, thisObject: thisObject, priority: priority};
                 if (insertIndex != -1) {
                     list.splice(insertIndex, 0, eventBin);
                 }
@@ -414,8 +414,8 @@ module ns_egret {
             }
         }
 
-        public removeEventListener(type:string, listener:Function, useCapture:Boolean = false):void {
-            var result:boolean = this._removeEventListener(type,listener,useCapture);
+        public removeEventListener(type:string, listener:Function,thisObject:any, useCapture:Boolean = false):void {
+            var result:boolean = this._removeEventListener(type,listener,thisObject,useCapture);
             if(!result)
                 return;
             var isEnterFrame:boolean = (type==Event.ENTER_FRAME);
@@ -424,22 +424,12 @@ module ns_egret {
                 var length:number = list.length;
                 for (var i:number = 0; i < length; i++) {
                     var bin:any = list[i];
-                    if (bin.display===this&&bin.listener === listener) {
+                    if (bin.target===this&&bin.listener === listener&&bin.thisObject==thisObject) {
                         list.splice(i, 1);
                         break;
                     }
                 }
 
-            }
-
-            var eventMap:Object = useCapture ? this._captureEventsMap : this._eventsMap;
-            var list:Array = eventMap[type];
-            if (!list) {
-                return;
-            }
-
-            if(list.length==0){
-                delete eventMap[type];
             }
         }
 
