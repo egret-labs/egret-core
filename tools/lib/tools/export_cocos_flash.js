@@ -56,13 +56,26 @@ function run(currDir, args, opts) {
 
     var config = plist.parseFileSync(ccbFilePath);
 
-    totalData.children = [];
-    loop(config.nodeGraph, null, totalData);
+    linkChildren(config.nodeGraph);
+}
+
+function linkChildren(rootNode) {
+    var viewData = {};
+
+    rootNode.children.forEach(function (item) {
+        var linkName = item.displayName;
+        var data = loop(item, rootNode);
+        data.x = 0;
+        data.y = 0;
+        data.anchorX = 0;
+        data.anchorY = 0;
+        viewData[linkName] = data;
+    });
+
+    //最后 输出的格式
+    var rootData = {"viewData" : viewData, "resourceData" : sourceArr};
     console.log ("输出ViewData文件:\n");
-    console.log(JSON.stringify(totalData.children[0], null, ""));
-    console.log ("输出资源文件:\n")
-    var sourceTxt = JSON.stringify(sourceArr);
-    console.log(sourceTxt.slice(1, sourceTxt.length - 1));
+    console.log(JSON.stringify(rootData, null, ""));
 }
 
 function loop(container, parent, parentData) {
@@ -70,14 +83,16 @@ function loop(container, parent, parentData) {
     if (container.children.length > 0) {
         data.children = [];
     }
-//    console.log (parentData)
-    if (parentData.children) {
+
+    if (parentData && parentData.children) {
         parentData.children.push(data);
     }
 
     container.children.forEach(function (item) {
         loop(item, container, data);
     });
+
+    return data;
 }
 
 function build(data, parent) {
@@ -92,6 +107,10 @@ function build(data, parent) {
             name = "Bitmap";
             break;
         case "CCLabelTTF":
+            if (data.memberVarAssignmentName.match(/Input$/)) {
+                name = "TextInput";
+                break;
+            }
             name = "TextField";
             break;
         case "CCScale9Sprite":
@@ -101,6 +120,7 @@ function build(data, parent) {
             name = "BitmapText";
             break;
         case "CCLayer":
+        case "CCNode":
             if (data.memberVarAssignmentName.match(/Btn$/)) {
                 name = "SimpleButton";
                 break;
@@ -134,12 +154,19 @@ function build(data, parent) {
             var contentSizeHeight = childPropertyConfig.value[1];
         }
     }
+
+    var propertiesInfo = {};
     for (var childPropertyConfigKey in data.properties) {
         var childPropertyConfig = data.properties[childPropertyConfigKey];
-        switch (childPropertyConfig.name) {
+        propertiesInfo[childPropertyConfig.name] = childPropertyConfig.value;
+    }
+
+    for (var key in propertiesInfo) {
+        var propertyValue = propertiesInfo[key];
+        switch (key) {
             case "position":
-                var x = childPropertyConfig.value[0];
-                var y = childPropertyConfig.value[1];
+                var x = propertyValue[0];
+                var y = propertyValue[1];
                 if (x == 701)
                 {
                     console.log(childPropertyConfig);
@@ -169,13 +196,13 @@ function build(data, parent) {
                     }
                 }
 
-                if (childPropertyConfig.value[2] == 0)
+                if (propertyValue[2] == 0)
                 {
                     y = contentHeight - y;
                     // x -= anchorDataX * contentWidth;
                     // y -= anchorDataY * contentHeight;
                 }
-                else if (childPropertyConfig.value[2] == 4) {//百分比
+                else if (propertyValue[2] == 4) {//百分比
                     x = x * contentWidth / 100;
                     y = y * contentHeight / 100;
                     y = contentHeight - y;
@@ -183,15 +210,15 @@ function build(data, parent) {
                 builder.withPosition(x, y);
                 break;
             case "scale":
-                builder.withScale(childPropertyConfig.value[0], childPropertyConfig.value[1]);
+                builder.withScale(propertyValue[0], propertyValue[1]);
                 break;
             case "displayFrame":
             case "spriteFrame":
-                builder.withTexture(childPropertyConfig.value[1]);
+                builder.withTexture(propertyValue[1]);
                 break;
             case "anchorPoint":
-                var anchorPointX = childPropertyConfig.value[0];
-                var anchorPointY = childPropertyConfig.value[1];
+                var anchorPointX = propertyValue[0];
+                var anchorPointY = propertyValue[1];
                 if (!anchorPointX) {
                     anchorPointX = 0;
                 }
@@ -203,56 +230,56 @@ function build(data, parent) {
             case "contentSize":
             case "preferedSize":
             case "dimensions":
-                builder.withContentSize(childPropertyConfig.value[0],childPropertyConfig.value[1]);
+                builder.withContentSize(propertyValue[0],propertyValue[1]);
                 break;
             case "fontName":
-                builder.withFontName(childPropertyConfig.value);
+                builder.withFontName(propertyValue);
                 break;
             case "fontSize":
-                builder.withFontSize(childPropertyConfig.value[0]);
+                builder.withFontSize(propertyValue[0]);
                 break;
             case "color":
-                builder.withFontColor(childPropertyConfig.value[0], childPropertyConfig.value[1], childPropertyConfig.value[2]);
+                builder.withFontColor(propertyValue[0], propertyValue[1], propertyValue[2]);
                 break;
             case "horizontalAlignment":
-                builder.withHorizontalAlignment(childPropertyConfig.value);
+                builder.withHorizontalAlignment(propertyValue);
                 break;
             case "verticalAlignment":
-                builder.withVerticalAlignment(childPropertyConfig.value);
+                builder.withVerticalAlignment(propertyValue);
                 break;
             case "string":
-                builder.withText(childPropertyConfig.value);
+                builder.withText(propertyValue);
                 break;
             case "fntFile":
-                builder.withTexture(childPropertyConfig.value.replace(".fnt", ".png"));
+                builder.withTexture(propertyValue.replace(".fnt", ".png"));
                 break;
             case "tag":
-                builder.withTag(childPropertyConfig.value);
+                builder.withTag(propertyValue);
                 break;
             case "visible":
-                builder.withVisible(childPropertyConfig.value);
+                builder.withVisible(propertyValue);
                 break;
             case "insetTop":
-                builder.withProperty("top", childPropertyConfig.value);
+                builder.withProperty("top", propertyValue);
                 break;
             case "insetBottom":
-                builder.withProperty("bottom", childPropertyConfig.value);
+                builder.withProperty("bottom", propertyValue);
                 break;
             case "insetLeft":
-                builder.withProperty("left", childPropertyConfig.value);
+                builder.withProperty("left", propertyValue);
                 break;
             case "insetRight":
-                builder.withProperty("right", childPropertyConfig.value);
+                builder.withProperty("right", propertyValue);
                 break;
             case "opacity":
-                builder.withProperty("alpha", childPropertyConfig.value / 255);
+                builder.withProperty("alpha", propertyValue / 255);
                 break
-            case "ignoreAnchorPointForPosition":
-                if (childPropertyConfig.value == true) {
-                    throw new Error("有描点被忽略！");
-                }
-                break;
         }
+
+        if (propertiesInfo["ignoreAnchorPointForPosition"] == true) {//描点被忽略
+            builder.withRegPosition(0, 1 - 0);
+        }
+
     }
     return builder.data;
 ////    builder.withPosition(data.properties.x,data.properties.y);
