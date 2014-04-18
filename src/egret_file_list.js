@@ -77,6 +77,7 @@ var temp = [
     "extension/gui/events/ResizeEvent.js",
     "extension/gui/events/SkinPartEvent.js",
     //GUI end
+
     "extension/gameInput/VirtualJoystick.js",
     "extension/gui/component/TabView.js",
     "extension/gui/component/SimpleButton.js",
