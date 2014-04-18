@@ -84,18 +84,16 @@ module ns_egret {
             this.removeListeners();
         }
 
-        /**
-         * 设置 显示宽高
-         * @param width
-         * @param height
-         */
-        public setContentSize(width, height) {
-            super.setContentSize(width, height);
-            this._viewWidth = width;
-            this._viewHeight = height;
+        public set width(value:number){
+            this._explicitWidth = value;
+            this._viewWidth = value;
+            this.mask.width = value;
+        }
 
-            this.mask.width = width;
-            this.mask.height = height;
+        public set height(value:number){
+            this._explicitHeight = value;
+            this._viewHeight = value;
+            this.mask.height = value;
         }
 
         /**

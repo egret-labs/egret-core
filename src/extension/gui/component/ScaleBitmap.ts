@@ -94,15 +94,15 @@ module ns_egret {
             this._right = right;
         }
 
-        public setContentSize(width, height) {
-            super.setContentSize(width, height);
-
-            if (!this.texture) {
-                Logger.fatal("Scale9Bitmap没有纹理");
-            }
+        public set width(value:number){
+            this._explicitWidth = value;
             if (parseInt(width) > 0) {
                 this._scaleWidth = width;
             }
+        }
+
+        public set height(value:number){
+            this._explicitHeight = value;
             if (parseInt(height) > 0) {
                 this._scaleHeight = height;
             }

@@ -38,7 +38,7 @@ module ns_egret {
         private _passTime:number = 0;
         private _oneFrameTime = 1000 / Ticker.getInstance().getFrameRate();
 
-        constructor(public data:string, public texture:Texture) {
+        constructor(public data, public texture:Texture) {
             super();
             this._frameData = data;
         }

@@ -43,7 +43,7 @@ module ns_egret {
             super._onAddToStage();
             var point = this.localToGlobal();
             var stageText = new ns_egret.StageText();
-            stageText.open(point.x, point.y,this._contentWidth,this._contentHeight);
+            stageText.open(point.x, point.y,this._explicitWidth,this._explicitHeight);
             this.addEventListener(ns_egret.TouchEvent.TOUCH_BEGAN, this.onMouseDownHandler, this);
             this.stageText = stageText;
         }

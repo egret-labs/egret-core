@@ -33,7 +33,7 @@ function createExample() {
     container.addChild(scroll);
     scroll.x = 200;
     scroll.y = 100;
-    scroll.setContentSize(200, 240);
+    scroll.width = scroll.height = 200;
     scroll.direction = ns_egret.Direction.HORIZONTAL;
     scroll.touchEnabled = true;
 

@@ -171,7 +171,7 @@ module ns_egret{
         public setFontText(text, size = 30) {
             if (this._textField == null) {
                 this._textField = new ns_egret.TextField();
-                this._textField.setContentSize(0, 0);
+                this._textField.width = this._textField.height = 0;
                 this._textField.textColor = "#ffffff";
                 this._textField.textAlign = "center";
                 this._textField.font = "Courier-Bold";

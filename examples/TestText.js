@@ -24,7 +24,7 @@ function createExample() {
 
 
     var colorLabel = new ns_egret.TextField();
-//    colorLabel.setContentSize(0, 0);
+//    colorLabel.width = colorLabel.height = 0;
     colorLabel.textColor = "#ff0000";
     colorLabel.textAlign = "left";
     colorLabel.text = "这是一段居左的文字\n可以支持多行";
@@ -34,7 +34,8 @@ function createExample() {
     var colorLabel = new ns_egret.TextField();
     colorLabel.x = 0;
     colorLabel.y = 100;
-    colorLabel.setContentSize(120, 0);
+    colorLabel.width = 120;
+    colorLabel.height = 0;
     colorLabel.textColor = "#ff0000";
     colorLabel.textAlign = "center";
     colorLabel.text = "这是一段居中的文字，宽度设置120,字号设置30px,所以正好显示4个";
@@ -44,7 +45,8 @@ function createExample() {
     var colorLabel = new ns_egret.TextField();
     colorLabel.x = 400;
     colorLabel.y = 250;
-    colorLabel.setContentSize(160, 0);
+    colorLabel.width = 160;
+    colorLabel.height = 0;
     colorLabel.relativeAnchorPointX = 1;
     colorLabel.textColor = "#FFFFFF";
     colorLabel.textAlign = "right";
