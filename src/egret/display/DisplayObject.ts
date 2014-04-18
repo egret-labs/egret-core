@@ -274,22 +274,22 @@ module ns_egret {
          * @returns {Rectangle}
          */
          public getBounds() {
-            if (!isNaN(this._explicitWidth)) { //这里严格意义上只用_explicitWidth判断是不严谨的，但是为了性能考虑，暂时这样
-                var anchorX, anchorY;
-                if (this.relativeAnchorPointX != 0 || this.relativeAnchorPointY != 0) {
-                    anchorX = this._explicitWidth * this.relativeAnchorPointX;
-                    anchorY = this._explicitHeight * this.relativeAnchorPointY;
-                }
-                else {
-                    anchorX = this.anchorPointX;
-                    anchorY = this.anchorPointY;
-                }
-                return Rectangle.identity.initialize(-anchorX, -anchorY,
-                    this._explicitWidth, this._explicitHeight);
+            var rect:Rectangle = this._measureBounds();
+            var heightSet:boolean = !isNaN(this._explicitHeight);
+            var w:number = isNaN(this._explicitWidth)?rect.width:this._explicitWidth;
+            var h:number = isNaN(this._explicitHeight)?rect.height:this._explicitHeight;
+            var x:number = rect.x;
+            var y:number = rect.y;
+            var anchorX, anchorY;
+            if (this.relativeAnchorPointX != 0 || this.relativeAnchorPointY != 0) {
+                anchorX = w * this.relativeAnchorPointX;
+                anchorY = h * this.relativeAnchorPointY;
             }
             else {
-                return this._measureBounds();
+                anchorX = this.anchorPointX;
+                anchorY = this.anchorPointY;
             }
+            return Rectangle.identity.initialize(x-anchorX, y-anchorY, w, h);
         }
 
         /**

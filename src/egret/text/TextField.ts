@@ -32,14 +32,6 @@ module ns_egret {
          * 显示文本
          */
         public text:string;
-//        private _text:string;
-//        public get text():string {
-//            return this._text;
-//        }
-//
-//        public set text(value:string) {
-//            this._text = value;
-//        }
 
         /**
          * 字体
@@ -107,6 +99,10 @@ module ns_egret {
 
             renderContext.setupFont(this.size + "px " + this.font, this.textAlign, this.textBaseline);
             this.drawText(renderContext);
+        }
+
+        public _measureBounds():Rectangle {
+
         }
 
         public getBounds():Rectangle {
