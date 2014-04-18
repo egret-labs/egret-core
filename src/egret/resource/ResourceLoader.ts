@@ -83,7 +83,7 @@ module ns_egret {
             if (this.onLoadComplete) {
                 this.onLoadComplete(this.data);
             }
-            this.dispatchEventWith(ResourceLoader.LOAD_COMPLETE, this.data);
+            this.dispatchEventWith(ResourceLoader.LOAD_COMPLETE, false,this.data);
         }
 
         private _loadByAjax() {

@@ -70,7 +70,7 @@ module ns_egret{
                 if (this._loadingView != null) {
                     this._loadingView.addToStage();
                 }
-                this.next();
+                this.next(null);
             }
             else{
                 ns_egret.Ticker.getInstance().callLater(this.onComplete,this);

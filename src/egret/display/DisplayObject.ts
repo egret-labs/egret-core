@@ -124,8 +124,8 @@ module ns_egret {
         public blendMode:BlendMode;
 
 
-        public _contentWidth:number = NaN;
-        public _contentHeight:number = NaN;
+        public _contentWidth:number ;
+        public _contentHeight:number ;
 
 
         /**
