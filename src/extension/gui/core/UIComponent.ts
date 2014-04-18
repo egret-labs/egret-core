@@ -91,43 +91,7 @@ module ns_egret {
 		public ownerChanged(value:any):void{
 			this._owner = value;
 		}
-		
-		private _systemManager:ISystemManager;
-		/**
-		 * @inheritDoc
-		 */
-		public get systemManager():ISystemManager{
-			if(!this._systemManager){
-				if("popUpContainer" in this){
-					this._systemManager = <ISystemManager> this;
-				}
-				else{
-					var o:DisplayObjectContainer = this.parent;
-					while (o){
-						var ui:IUIComponent = <IUIComponent> o;
-						if (ui){
-							this._systemManager = ui.systemManager;
-							break;
-						}
-						else if ("popUpContainer" in o){
-							this._systemManager = <ISystemManager> o;
-							break;
-						}
-						o = o.parent;
-					}
-				}
-			}
-			return this._systemManager;
-		}
-		public set systemManager(value:ISystemManager){
-			this._systemManager = value;
-			var length:number = this.numChildren;
-			for(var i:number=0;i<length;i++){
-				var ui:IUIComponent = <IUIComponent> (this.getChildAt(i));
-				if(ui)
-					ui.systemManager = value;
-			}
-		}
+
 		
 		private _updateCompletePendingFlag:boolean = false;
 		/**
@@ -276,16 +240,13 @@ module ns_egret {
 		
 		/**
 		 * 已经移除一个子项
-		 */		
+		 */
 		public _childRemoved(child:DisplayObject):void{
 			if("nestLevel" in child){
 				(<ILayoutManagerClient> child).nestLevel = 0;
 			}
-			if("systemManager" in child){
-				(<IUIComponent> child).systemManager = null;
-			}
 		}
-		
+
 		/**
 		 * 检查属性失效标记并应用
 		 */		

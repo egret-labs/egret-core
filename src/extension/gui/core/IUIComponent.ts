@@ -39,10 +39,6 @@ module ns_egret {
 		 * 不会影响显式标记尺寸属性widthExplicitlySet,_heightExplicitlySet
 		 */		
 		setActualSize(newWidth:number, newHeight:number):void;
-		/**
-		 * 所属的系统管理器
-		 */		
-		systemManager:ISystemManager;
 	}
 	
 }
