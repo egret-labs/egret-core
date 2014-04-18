@@ -46,7 +46,8 @@ class GameApp {
         var topMask = new ns_egret.ShapeRect();
         topMask.alpha = 0.8;
         topMask.color = 0;
-        topMask.setContentSize(stageW, stageH);
+        topMask.width = stageW;
+        topMask.height = stageH;
         stage.addChild(topMask);
 
         var icon = utils.createBitmap("egret_icon.png");

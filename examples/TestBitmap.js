@@ -36,7 +36,7 @@ function createExample(){
     bitmap1.x = bitmap1.y = 50;
     container.touchEnabled = true;
     bitmap1.touchEnabled = true;
-    bitmap1.setContentSize(100,100)
+    bitmap1.width = bitmap1.height = 100;
 
     var bitmap2 = ns_egret.Bitmap.initWithTexture(texture);
     container.addChild(bitmap2);

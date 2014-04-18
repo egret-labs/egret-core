@@ -124,10 +124,6 @@ module ns_egret {
         public blendMode:BlendMode;
 
 
-        public _contentWidth:number ;
-        public _contentHeight:number ;
-
-
         /**
          * 测量宽度
          * @returns {number}
@@ -144,20 +140,22 @@ module ns_egret {
             return this._measureBounds().height;
         }
 
+        public _explicitWidth:number;
         /**
          * 显式设置宽度
          * @returns {number}
          */
         public get explicitWidth():number {
-            return this._contentWidth;
+            return this._explicitWidth;
         }
 
+        public _explicitHeight:number;
         /**
          * 显式设置高度
          * @returns {number}
          */
         public get explicitHeight():number {
-            return this._contentHeight;
+            return this._explicitHeight;
         }
 
         /**
@@ -181,7 +179,7 @@ module ns_egret {
          * @param value
          */
         public set width(value:number){
-            this._contentWidth = value;
+            this._explicitWidth = value;
         }
 
         
@@ -190,7 +188,7 @@ module ns_egret {
          * @param value
          */
         public set height(value:number) {
-            this._contentHeight = value;
+            this._explicitHeight = value;
         }
 
         /**
@@ -276,34 +274,23 @@ module ns_egret {
          * @returns {Rectangle}
          */
          public getBounds() {
-            if (this._contentWidth !== undefined) { //这里严格意义上只用_contentWidth判断是不严谨的，但是为了性能考虑，暂时这样
+            if (!isNaN(this._explicitWidth)) { //这里严格意义上只用_explicitWidth判断是不严谨的，但是为了性能考虑，暂时这样
                 var anchorX, anchorY;
                 if (this.relativeAnchorPointX != 0 || this.relativeAnchorPointY != 0) {
-                    anchorX = this._contentWidth * this.relativeAnchorPointX;
-                    anchorY = this._contentHeight * this.relativeAnchorPointY;
+                    anchorX = this._explicitWidth * this.relativeAnchorPointX;
+                    anchorY = this._explicitHeight * this.relativeAnchorPointY;
                 }
                 else {
                     anchorX = this.anchorPointX;
                     anchorY = this.anchorPointY;
                 }
                 return Rectangle.identity.initialize(-anchorX, -anchorY,
-                    this._contentWidth, this._contentHeight);
+                    this._explicitWidth, this._explicitHeight);
             }
             else {
                 return this._measureBounds();
             }
         }
-
-        /**
-         * 显式设置显示对象的size
-         * @param contentWidth
-         * @param contentHeight
-         */
-         public setContentSize(contentWidth:number, contentHeight:number) {
-            this._contentWidth = contentWidth;
-            this._contentHeight = contentHeight;
-        }
-
 
         /**
          * @private
@@ -390,7 +377,7 @@ module ns_egret {
          * @returns {ns_egret.Rectangle}
          * @private
          */
-            _measureBounds():ns_egret.Rectangle {
+        public _measureBounds():ns_egret.Rectangle {
             ns_egret.Logger.fatal("子类需要实现的方法");
             return ns_egret.Rectangle.identity;
         }

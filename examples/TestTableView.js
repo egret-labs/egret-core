@@ -33,7 +33,8 @@ function createExample() {
     container.addChild(scroll);
     scroll.x = 200;
     scroll.y = 100;
-    scroll.setContentSize(200, 240);
+    scroll.width = 200;
+    scroll.height = 240;
     scroll.setList([1, 2, 3, 4, 5, 6, 7, 8, 9], ns_egret.Direction.HORIZONTAL, this, 40, 40);
 }
 

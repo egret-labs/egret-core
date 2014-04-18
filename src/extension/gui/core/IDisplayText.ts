@@ -17,10 +17,12 @@
  */
 module ns_egret {
 
-	export interface IDisplayText extends IUIComponent{
-		/**
-		 * 此文本组件所显示的文本。
-		 */		
-		text:string;
-	}
+
+    export class UIComponent extends DisplayObject{
+
+
+
+    }
+
+
 }

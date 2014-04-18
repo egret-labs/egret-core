@@ -109,21 +109,29 @@ module ns_egret {
             this.drawText(renderContext);
         }
 
-        public getBounds():ns_egret.Rectangle {
+        public getBounds():Rectangle {
             var renderContext = ns_egret.MainContext.instance.rendererContext;
             renderContext.setupFont(this.size + "px " + this.font, this.textAlign, this.textBaseline);
             this.drawText(renderContext, true);
             var anchorX, anchorY;
             if (this.relativeAnchorPointX != 0 || this.relativeAnchorPointY != 0) {
-                anchorX = this._contentWidth * this.relativeAnchorPointX;
-                anchorY = this._contentHeight * this.relativeAnchorPointY;
+                anchorX = this._explicitWidth * this.relativeAnchorPointX;
+                anchorY = this._explicitHeight * this.relativeAnchorPointY;
             }
             else {
                 anchorX = this.anchorPointX;
                 anchorY = this.anchorPointY;
             }
             return Rectangle.identity.initialize(-anchorX, -anchorY,
-                this._contentWidth, this._contentHeight);
+                this._explicitWidth, this._explicitHeight);
+        }
+
+        /**
+         * 测量显示对象坐标与大小
+         */
+        public _measureBounds():ns_egret.Rectangle {
+            ns_egret.Logger.fatal("子类需要实现的方法");
+            return ns_egret.Rectangle.identity;
         }
 
         /**
@@ -212,7 +220,8 @@ module ns_egret {
             }
 
             if (forMeasureContentSize) {
-                super.setContentSize(maxW, linesNum * rap);
+                this._explicitWidth = maxW;
+                this._explicitHeight = linesNum * rap;
                 this.__hackIgnoreDrawText = false;
             }
 
@@ -220,14 +229,12 @@ module ns_egret {
         }
 
         /**
-         * 显式设置显示对象的size
-         * @param contentWidth
-         * @param contentHeight
+         * 显式设置宽度
+         * @param value
          */
-            setContentSize(contentWidth:number, contentHeight:number) {
-            super.setContentSize(contentWidth, contentHeight);
-
-            this.lineWidth = contentWidth;
+        public set width(value:number){
+            this._explicitWidth = value;
+            this.lineWidth = value;
         }
 
         /**

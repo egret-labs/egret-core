@@ -17,7 +17,7 @@ function createExample() {
     var colorLabel = new ns_egret.TextField();
     colorLabel.x = 200;
     colorLabel.y = 50;
-//    colorLabel.setContentSize(0, 0);
+//    colorLabel.width = colorLabel.height = 0;
     colorLabel.relativeAnchorPointX = 0.5;
     colorLabel.relativeAnchorPointY = 0.5;
     colorLabel.textColor = "#ff0000";
@@ -31,7 +31,7 @@ function createExample() {
     var colorLabel = new ns_egret.TextField();
     colorLabel.x = 200;
     colorLabel.y = 150;
-//    colorLabel.setContentSize(0, 0);
+//    colorLabel.width = colorLabel.height = 0;
     colorLabel.relativeAnchorPointX = 0;
     colorLabel.relativeAnchorPointY = 0.5;
     colorLabel.textColor = "#ff0000";

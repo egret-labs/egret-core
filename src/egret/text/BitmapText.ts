@@ -62,8 +62,8 @@ module ns_egret {
 
         //todo:这里对bounds的处理和TextField非常类似，以后考虑重构
         _renderText(forMeasureContentSize:boolean = false) {
-            this._contentWidth = 0;
-            this._contentHeight = 0;
+            this._explicitWidth = 0;
+            this._explicitHeight = 0;
             if (!forMeasureContentSize) {
                 this.removeAllChildren();
             }
@@ -84,11 +84,11 @@ module ns_egret {
                     }
                     this.addChild(bitmap);
                     bitmap.spriteFrame = spriteFrame;
-                    bitmap.x = this._contentWidth;
+                    bitmap.x = this._explicitWidth;
                 }
-                this._contentWidth += characterWidth + offsetX;
-                if (offsetY + spriteFrame.h > this._contentHeight) {
-                    this._contentHeight = offsetY + spriteFrame.h;
+                this._explicitWidth += characterWidth + offsetX;
+                if (offsetY + spriteFrame.h > this._explicitHeight) {
+                    this._explicitHeight = offsetY + spriteFrame.h;
                 }
             }
         }
@@ -97,15 +97,15 @@ module ns_egret {
             this._renderText(true);
             var anchorX, anchorY;
             if (this.relativeAnchorPointX != 0 || this.relativeAnchorPointY != 0) {
-                anchorX = this._contentWidth * this.relativeAnchorPointX;
-                anchorY = this._contentHeight * this.relativeAnchorPointY;
+                anchorX = this._explicitWidth * this.relativeAnchorPointX;
+                anchorY = this._explicitHeight * this.relativeAnchorPointY;
             }
             else {
                 anchorX = this.anchorPointX;
                 anchorY = this.anchorPointY;
             }
             return Rectangle.identity.initialize(-anchorX, -anchorY,
-                this._contentWidth, this._contentHeight);
+                this._explicitWidth, this._explicitHeight);
         }
     }
 }

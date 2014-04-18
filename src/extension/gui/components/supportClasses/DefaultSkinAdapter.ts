@@ -15,25 +15,29 @@
  * FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-
-/// <reference path="../../../../egret/display/DisplayObject.ts"/>
-/// <reference path="../../core/ISkinAdapter.ts"/>
-
-module ns_egret {
-
-	export class DefaultSkinAdapter implements ISkinAdapter{
-		/**
-		 * 构造函数
-		 */		
-		public constructor(){
-		}
-		/**
-		 * @inheritDoc
-		 */
-        public getSkin(skinName:Object,compFunc:Function,thisObject:any,oldSkin:DisplayObject=null):void{
-            if(skinName instanceof DisplayObject){
-                compFunc.call(thisObject,skinName,skinName);
-            }
+///<reference path="../../../egret/core/ComponentBase.ts"/>
+///<reference path="../../../egret/display/DisplayObject.ts"/>
+///<reference path="../../../egret/interactive/TouchContext.ts"/>
+module ns_egret{
+    export class Button extends ComponentBase {
+        constructor() {
+            super();
         }
-	}
+
+        onActivity() {
+            super.onActivity();
+            var o:any = this;
+            o.addEventListener(TouchEvent.TOUCH_TAP, o.onTouchTap, o);
+        }
+
+        onCancel() {
+            super.onCancel();
+            var o:any = this;
+            o.removeEventListener(TouchEvent.TOUCH_TAP, o.onTouchTap, o);
+        }
+
+        onTouchTap() {
+            console.log("tap!!");
+        }
+    }
 }
