@@ -38,10 +38,6 @@ module ns_egret {
 		public constructor(){
 			super();
 			this.touchChildren = false;
-			this.buttonMode = true;
-			this.useHandCursor = true;
-			this.focusEnabled = true;
-			this.autoMouseEnabled = false;
 			this.addHandlers();
 		}
 		
@@ -223,7 +219,7 @@ module ns_egret {
 		private addStageMouseHandlers():void{
 			UIGlobals.stage.addEventListener(TouchEvent.TOUCH_END,this.stage_mouseUpHandler,this,false,0,true);
 			
-			UIGlobals.stage.addEventListener(TouchEvent.TOUCH_RELEASE_OUTSIDE,this.stage_mouseUpHandler,this,false,0,true);
+			UIGlobals.stage.addEventListener(Event.LEAVE_STAGE,this.stage_mouseUpHandler,this,false,0,true);
 		}
 		
 		/**
@@ -232,7 +228,7 @@ module ns_egret {
 		private removeStageMouseHandlers():void{
 			UIGlobals.stage.removeEventListener(TouchEvent.TOUCH_END,this.stage_mouseUpHandler,this);
 			
-			UIGlobals.stage.removeEventListener(TouchEvent.TOUCH_RELEASE_OUTSIDE,this.stage_mouseUpHandler,this);
+			UIGlobals.stage.removeEventListener(Event.LEAVE_STAGE,this.stage_mouseUpHandler,this);
 		}
 		
 		/**
