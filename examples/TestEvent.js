@@ -34,7 +34,7 @@ function createExample(){
     var left = ns_egret.Bitmap.initWithTexture(ns_egret.TextureCache.getInstance().getTexture("b1.png"));
     left.x = 100;
     container.addChild(left);
-    left.addEventListener(ns_egret.TouchEvent.TOUCH_TAP,function (){
+    left.addEventListener(ns_egret.TouchEvent.TOUCH_TAP,function (event){
         console.log("点击左侧箭头");
     },left);
     left.touchEnabled = true;
@@ -42,16 +42,16 @@ function createExample(){
     var right = ns_egret.Bitmap.initWithTexture(ns_egret.TextureCache.getInstance().getTexture("b5.png"));
     right.x = 150;
     container.addChild(right);
-    right.addEventListener(ns_egret.TouchEvent.TOUCH_TAP,function (){
+    right.addEventListener(ns_egret.TouchEvent.TOUCH_TAP,function (event){
         console.log("点击右侧箭头");
     },right);
 
-    container.addEventListener(ns_egret.TouchEvent.TOUCH_TAP,function(){
+    container.addEventListener(ns_egret.TouchEvent.TOUCH_TAP,function(event){
         console.log ("容器冒泡侦听");
     },container);
 
 
-    container.addEventListener(ns_egret.TouchEvent.TOUCH_TAP,function(){
+    container.addEventListener(ns_egret.TouchEvent.TOUCH_TAP,function(event){
         console.log ("容器捕获侦听");
     },container,true);
     right.touchEnabled = true;
