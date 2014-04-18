@@ -216,7 +216,7 @@ module ns_egret {
          * @private
          * @param renderContext
          */
-            draw(renderContext:RendererContext) {
+         public draw(renderContext:RendererContext) {
             if (!this.visible) {
                 return;
             }
@@ -242,7 +242,7 @@ module ns_egret {
          * @private
          * @param renderContext
          */
-            updateTransform() {
+         public updateTransform() {
             var o = this;
             o.worldTransform.identity();
             o.worldTransform = o.worldTransform.appendMatrix(o.parent.worldTransform);
@@ -267,7 +267,7 @@ module ns_egret {
          * @private
          * @param renderContext
          */
-            render(renderContext:RendererContext) {
+         public render(renderContext:RendererContext) {
 
         }
 
@@ -275,7 +275,7 @@ module ns_egret {
          * 获取显示对象的测量边界
          * @returns {Rectangle}
          */
-            getBounds() {
+         public getBounds() {
             if (this._contentWidth !== undefined) { //这里严格意义上只用_contentWidth判断是不严谨的，但是为了性能考虑，暂时这样
                 var anchorX, anchorY;
                 if (this.relativeAnchorPointX != 0 || this.relativeAnchorPointY != 0) {
@@ -299,7 +299,7 @@ module ns_egret {
          * @param contentWidth
          * @param contentHeight
          */
-            setContentSize(contentWidth:number, contentHeight:number) {
+         public setContentSize(contentWidth:number, contentHeight:number) {
             this._contentWidth = contentWidth;
             this._contentHeight = contentHeight;
         }
@@ -309,7 +309,7 @@ module ns_egret {
          * @private
          * @returns {Matrix}
          */
-            getConcatenatedMatrix() {
+         public getConcatenatedMatrix() {
             var matrix = Matrix.identity.identity();
             var o = this;
             while (o != null) {
@@ -330,7 +330,7 @@ module ns_egret {
          * 将 point 对象从显示对象的（本地）坐标转换为舞台（全局）坐标。
          * @returns {ns_egret.Point}
          */
-            localToGlobal(x = 0, y = 0):ns_egret.Point {
+         public localToGlobal(x = 0, y = 0):ns_egret.Point {
             var mtx = this.getConcatenatedMatrix();
             mtx.append(1, 0, 0, 1, x, y);
             var result = Point.identity;
@@ -343,7 +343,7 @@ module ns_egret {
          * 将 point 对象从舞台（全局坐标转换为显示对象（本地）坐标。
          * @returns {ns_egret.Point}
          */
-            globalToLocal(x:number = 0, y:number = 0):Point {
+          public globalToLocal(x:number = 0, y:number = 0):Point {
 //            todo,现在的实现是错误的
             var mtx = this.getConcatenatedMatrix();
             mtx.invert();
@@ -361,7 +361,7 @@ module ns_egret {
          * @param ignoreTouchEnabled 是否忽略TouchEnabled
          * @returns {*}
          */
-            hitTest(x, y, ignoreTouchEnabled:Boolean = false) {
+          public hitTest(x, y, ignoreTouchEnabled:Boolean = false) {
             if (!this.visible || (!ignoreTouchEnabled && !this.touchEnabled)) {
                 return null;
             }
@@ -381,7 +381,7 @@ module ns_egret {
         }
 
 
-        getMatrix() {
+        public getMatrix() {
             return Matrix.identity.identity().appendTransformFromDisplay(this);
         }
 
@@ -425,21 +425,12 @@ module ns_egret {
             return result;
         }
 
-        /**
-         * 从显示列表中删除
-         */
-        public removeFromParent() {
-            if (this && this.parent) {
-                this.parent.removeChild(this);
-            }
-        }
-
-        public _onAddToStage() {
+        public _onAddToStage():void {
             this._stage = MainContext.instance.stage;
             this.dispatchEventWith(Event.ADDED_TO_STAGE);
         }
 
-        public _onRemoveFromStage() {
+        public _onRemoveFromStage():void {
             this._stage = null;
             this.dispatchEventWith(Event.REMOVED_FROM_STAGE);
         }

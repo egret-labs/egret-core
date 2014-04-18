@@ -18,8 +18,8 @@
 
 /// <reference path="MainContext.ts"/>
 /// <reference path="Ticker.ts"/>
-/// <reference path="../display/TextField.ts"/>
 /// <reference path="../events/Event.ts"/>
+/// <reference path="../text/TextField.ts"/>
 
 module ns_egret {
     /**

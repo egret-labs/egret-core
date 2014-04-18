@@ -18,7 +18,7 @@
 
 /// <reference path="../context/renderer/RendererContext.ts"/>
 /// <reference path="../core/MainContext.ts"/>
-/// <reference path="DisplayObject.ts"/>
+/// <reference path="../display/DisplayObject.ts"/>
 /// <reference path="../geom/Rectangle.ts"/>
 
 module ns_egret {

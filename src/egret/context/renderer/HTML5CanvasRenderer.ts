@@ -21,9 +21,9 @@
 /// <reference path="../../core/RenderFilter.ts"/>
 /// <reference path="../../core/Ticker.ts"/>
 /// <reference path="../../debug/DEBUG.ts"/>
-/// <reference path="../../display/TextField.ts"/>
 /// <reference path="../../geom/Matrix.ts"/>
 /// <reference path="../../geom/Rectangle.ts"/>
+/// <reference path="../../text/TextField.ts"/>
 /// <reference path="../../texture/Texture.ts"/>
 
 module ns_egret {
