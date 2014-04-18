@@ -46,21 +46,25 @@ module ns_egret{
         public static COMPLETE:string = "complete";
 
         /**
-         * @event 主循环：进入新的一帧
+         * 主循环：进入新的一帧
          */
         public static ENTER_FRAME:string = "enterFrame";
         /**
-         * @event 主循环：开始渲染
+         * 主循环：开始渲染
          */
         public static RENDER:string = "render";
         /**
-         * @event 主循环：渲染完毕
+         * 主循环：渲染完毕
          */
         public static FINISH_RENDER:string = "finishRender";
         /**
-         * @event 主循环：updateTransform完毕
+         * 主循环：updateTransform完毕
          */
         public static FINISH_UPDATE_TRANSFORM:string = "finishUpdateTransform";
+        /**
+         * 离开舞台，参考Flash的Event.MOUSE_LEAVE
+         */
+        public static LEAVE_STAGE:string = "leaveStage";
 
 
 
