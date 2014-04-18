@@ -30,6 +30,8 @@ var temp = [
     "egret/display/TextInput.js",
     "egret/display/MovieClip.js",
     "egret/context/display/StageText.js",
+    "egret/context/devices/DeviceContext.js",
+    "egret/context/devices/HTML5DeviceContext.js",
     "egret/context/renderer/RendererContext.js",
     "egret/context/renderer/HTML5CanvasRenderer.js",
     "egret/interactive/TouchContext.js",

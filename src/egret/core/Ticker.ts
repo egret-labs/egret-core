@@ -58,7 +58,8 @@ module ns_egret {
          */
         public run() {
             this._time = Ticker.now();
-            Ticker.requestAnimationFrame.call(window, this.enterFrame)
+            var context = ns_egret.MainContext.instance.deviceContext;
+            context.executeMainLoop(this.update, this);
         }
 
         private enterFrame() {
@@ -70,16 +71,17 @@ module ns_egret {
             var list:Array = this.callBackList.concat();
             var length:number = list.length;
             var thisTime = Ticker.now();
-            for(var i:number = 0;i<length;i++){
+            for (var i:number = 0; i < length; i++) {
                 var eventBin:any = list[i];
                 var frameTime:number = thisTime - this._time;
                 frameTime *= this._timeScale;
-                eventBin.listener.apply(eventBin.thisObject,[frameTime]);
+                eventBin.listener.apply(eventBin.thisObject, [frameTime]);
             }
             this._time = thisTime;
         }
 
         private callBackList:Array = [];
+
         /**
          * 注册帧回调事件，同一函数的重复监听会被忽略。
          * @param listener 帧回调函数,参数返回上一帧和这帧的间隔时间。示例：onEnterFrame(frameTime:number):void
@@ -93,7 +95,7 @@ module ns_egret {
             var length:number = list.length;
             for (var i:number = 0; i < length; i++) {
                 var bin:any = list[i];
-                if (bin.listener === listener&&bin.thisObject===thisObject) {
+                if (bin.listener === listener && bin.thisObject === thisObject) {
                     return;
                 }
                 if (insertIndex == -1 && bin.priority <= priority) {
@@ -121,7 +123,7 @@ module ns_egret {
             var length:number = list.length;
             for (var i:number = 0; i < length; i++) {
                 var bin:any = list[i];
-                if (bin.listener === listener&&bin.thisObject===thisObject) {
+                if (bin.listener === listener && bin.thisObject === thisObject) {
                     list.splice(i, 1);
                     break;
                 }
@@ -160,21 +162,21 @@ module ns_egret {
             return this._timeScale;
         }
 
-        public pause(){
+        public pause() {
             this._paused = true;
         }
 
-        public resume(){
+        public resume() {
             this._paused = false;
         }
 
-        public getFrameRate(){
+        public getFrameRate() {
             return this._frameRate;
         }
 
 
-
         private static instance:ns_egret.Ticker;
+
         public static getInstance():ns_egret.Ticker {
             if (Ticker.instance == null) {
                 Ticker.instance = new Ticker();

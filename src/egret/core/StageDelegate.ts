@@ -80,8 +80,6 @@ module ns_egret {
             this._originalDesignHeight = height;
 
             this._resolutionPolicy.apply(this, this._designWidth, this._designHeight);
-            ns_egret.MainContext.instance.stage.stageWidth = this._designWidth;
-            ns_egret.MainContext.instance.stage.stageHeight = this._designHeight;
         }
 
         public setResolutionPolicy(resolutionPolicy) {
