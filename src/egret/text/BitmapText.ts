@@ -17,8 +17,8 @@
  */
 
 /// <reference path="../core/Logger.ts"/>
-/// <reference path="Bitmap.ts"/>
-/// <reference path="DisplayObjectContainer.ts"/>
+/// <reference path="../display/Bitmap.ts"/>
+/// <reference path="../display/DisplayObjectContainer.ts"/>
 /// <reference path="../geom/Rectangle.ts"/>
 /// <reference path="../texture/Texture.ts"/>
 
