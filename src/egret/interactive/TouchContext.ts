@@ -128,9 +128,9 @@ module ns_egret {
             if (result) {
                 var obj = this.getTouchData(event, x, y);
                 var oldTarget = obj.beginTarget;
+                obj.target = result;
+                this.dispatchEvent(TouchEvent.TOUCH_END, obj);
                 if(oldTarget==result){
-                    obj.target = result;
-                    this.dispatchEvent(TouchEvent.TOUCH_END, obj);
                     this.dispatchEvent(TouchEvent.TOUCH_TAP, obj);
                 }
                 else if(obj.beginTarget){
