@@ -83,7 +83,7 @@ if (true) {//浏览器
     temp.push("egret/context/devices/HTML5DeviceContext.js");
 }
 else {
-    temp.push("egret/context/devices/DeviceDeviceContext.js");
+    temp.push("egret/context/devices/NativeDeviceContext.js");
 }
 
 
