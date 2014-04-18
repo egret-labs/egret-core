@@ -24,7 +24,7 @@
 /// <reference path="../../core/UIGlobals.ts"/>
 /// <reference path="../../core/IDisplayText.ts"/>
 /// <reference path="../../core/UIComponent.ts"/>
-/// <reference path="../../core/UITextField.ts"/>
+/// <reference path="../../core/TextField.ts"/>
 
 module ns_egret {
 
