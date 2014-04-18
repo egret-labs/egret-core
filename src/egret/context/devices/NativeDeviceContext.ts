@@ -15,3 +15,30 @@
  * FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
+
+module ns_egret {
+
+
+    export class NativeDeviceContext {
+
+        private callback:Function;
+        private thisObject;
+
+        public executeMainLoop(callback:Function, thisObject:any):void {
+
+            this.callback = callback;
+            this.thisObject = thisObject;
+            egret.runGame();
+        }
+
+        public onEnterFrame():void {
+            this.callback.call(this.thisObject);
+        }
+    }
+
+}
+
+egret.mainloop = function (deltatime) {
+    var deviceContext = ns_egret.MainContext.instance.deviceContext;
+    deviceContext.onEnterFrame();
+}

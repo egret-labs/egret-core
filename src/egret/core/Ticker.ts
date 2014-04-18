@@ -35,16 +35,6 @@ module ns_egret {
             return new Date().getTime();
         };
 
-        static requestAnimationFrame:Function = window["requestAnimationFrame"] ||
-            window["webkitRequestAnimationFrame"] ||
-            window["mozRequestAnimationFrame"] ||
-            window["oRequestAnimationFrame"] ||
-            window["msRequestAnimationFrame"] ||
-            //如果全都没有，使用setTimeout实现
-            function (callback) {
-                return window.setTimeout(callback, 1000 / Ticker.getInstance().getFrameRate());
-            };
-
 
         private _time:number;
         private _timeScale:number = 1;
@@ -60,11 +50,6 @@ module ns_egret {
             this._time = Ticker.now();
             var context = ns_egret.MainContext.instance.deviceContext;
             context.executeMainLoop(this.update, this);
-        }
-
-        private enterFrame() {
-            Ticker.requestAnimationFrame.call(window, Ticker.instance.enterFrame)
-            Ticker.instance.update();
         }
 
         private update() {

@@ -1,6 +1,5 @@
-
 var temp = [
-	"egret/core/HashObject.js",
+    "egret/core/HashObject.js",
     "egret/events/Event.js",
     "egret/events/TouchEvent.js",
     "egret/events/TimerEvent.js",
@@ -31,7 +30,7 @@ var temp = [
     "egret/display/MovieClip.js",
     "egret/context/display/StageText.js",
     "egret/context/devices/DeviceContext.js",
-    "egret/context/devices/HTML5DeviceContext.js",
+
     "egret/context/renderer/RendererContext.js",
     "egret/context/renderer/HTML5CanvasRenderer.js",
     "egret/interactive/TouchContext.js",
@@ -77,18 +76,27 @@ var temp = [
     "extension/dragonbones/DragonBonesEgretBridge.js",
     "egret/debug/DEBUG.js",
     "jslib/box2d.js"
-]
+];
+
+
+if (true) {//浏览器
+    temp.push("egret/context/devices/HTML5DeviceContext.js");
+}
+else {
+    temp.push("egret/context/devices/DeviceDeviceContext.js");
+}
 
 
 jsFileList = temp;
 egret_file_list = temp;
 
 
-
-
 var __extends = this.__extends || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
+    function __() {
+        this.constructor = d;
+    }
+
     __.prototype = b.prototype;
     d.prototype = new __();
 };

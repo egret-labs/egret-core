@@ -35,6 +35,7 @@ module ns_egret {
 
         public executeMainLoop(callback:Function, thisObject:any):void {
 
+
             var enterFrame = function () {
                 callback.call(thisObject);
                 HTML5DeviceContext.requestAnimationFrame.call(window, enterFrame);
