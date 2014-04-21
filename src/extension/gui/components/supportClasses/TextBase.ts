@@ -28,6 +28,7 @@ module ns_egret {
 	export class TextBase extends UIComponent implements IDisplayText{
 		public constructor(){
 			super();
+            createte
 		}
 		
 		/**
@@ -42,17 +43,14 @@ module ns_egret {
 		/**
 		 * 呈示此文本的内部 TextField 
 		 */		
-		public textField:TextField;
-		
-
-		public defaultStyleChanged:boolean = true;
+		public _textField:TextField;
 
 		private _fontFamily:string = "SimSun";
-		
 		/**
 		 * 字体名称 。默认值：SimSun
 		 */
 		public get fontFamily():string{
+
 			return this._fontFamily;
 		}
 		
@@ -60,14 +58,14 @@ module ns_egret {
 			if(this._fontFamily==value)
 				return;
 			this._fontFamily = value;
-			this.defaultStyleChanged = true;
+			this.fontFamilyChanged = true;
 			this.invalidateProperties();
 			this.invalidateSize();
 			this.invalidateDisplayList();
 		}
-		
+
+        private sizeChanged:boolean = true;
 		private _size:number = 12;
-		
 		/**
 		 * 字号大小,默认值12 。
 		 */
@@ -79,15 +77,14 @@ module ns_egret {
 			if(this._size==value)
 				return;
 			this._size = value;
-			this.defaultStyleChanged = true;
+			this.sizeChanged = true;
 			this.invalidateProperties();
 			this.invalidateSize();
 			this.invalidateDisplayList();
 		}
-		
+
 
 		private _textAlign:string = TextAlign.LEFT;
-		
 		/**
 		 * 文字的水平对齐方式 ,请使用TextAlign中定义的常量。
 		 * 默认值：TextFormatAlign.LEFT。
@@ -132,7 +129,7 @@ module ns_egret {
             return this._letterSpacing;
         }
 
-        public set hSpacing(value:number){
+        public set letterSpacing(value:number){
             if(this._letterSpacing==value)
                 return;
             this._letterSpacing = value;
@@ -159,114 +156,7 @@ module ns_egret {
             this.invalidateProperties();
 		}
 
-		/**
-		 * 从另外一个文本组件复制默认文字格式信息到自身。<br/>
-		 * 复制的值包含：<br/>
-		 * fontFamily，size，textColor，bold，italic，underline，textAlign，<br/>
-		 * leading，letterSpacing，disabledColor
-		 */		
-		public copyDefaultFormatFrom(textBase:TextBase):void{
-			this.fontFamily = textBase.fontFamily;
-			this.size = textBase.size;
-			this.textColor = textBase.textColor;
-			this.bold = textBase.bold;
-			this.italic = textBase.italic;
-			this.underline = textBase.underline;
-			this.textAlign = textBase.textAlign;
-			this.leading = textBase.leading;
-			this.letterSpacing = textBase.letterSpacing;
-			this.disabledColor = textBase.disabledColor;
-		}
-		
-		/**
-		 * 获取文字的默认格式设置信息对象。
-		 */		
-		public getDefaultTextFormat():TextFormat{
-			var textFormat:TextFormat = new TextFormat(this._fontFamily,this._size, this._textColor, this._bold, this._italic, this._underline, 
-				"", "", this._textAlign, 0, 0, 0, this._leading);
-			if(!isNaN(this.letterSpacing)){
-				textFormat.kerning = true;
-				textFormat.letterSpacing = this.letterSpacing;
-			}
-			else{
-				textFormat.kerning = false;
-				textFormat.letterSpacing = null;
-			}
-			return textFormat;
-		}
-		
-		//===========================字体样式======================end===========================
-		
-		
-		
-		
-		private _htmlText:string = "";
-		
-		public htmlTextChanged:boolean = false;
-		
-		public explicitHTMLText:string = null; 
-		
-		/**
-		 *　HTML文本
-		 */		
-		public get htmlText():string{
-			return this._htmlText;
-		}
-		
-		public set htmlText(value:string):void{
-			if (!value)
-				value = "";
-			
-			if (this.isHTML && value == this.explicitHTMLText)
-				return;
-			
-			this._htmlText = value;
-			if(this.textField)
-				this.textField.$htmlText = this._htmlText;
-			this.htmlTextChanged = true;
-			this._text = null;
-			
-			this.explicitHTMLText = value;
-			
-			this.invalidateProperties();
-			this.invalidateSize();
-			this.invalidateDisplayList();
-		}
-		/**
-		 * 当前是否为html文本
-		 */		
-		public get isHTML():boolean{
-			return <boolean> (this.explicitHTMLText);
-		}
-		
-		private pendingSelectable:boolean = false;
-		
-		private _selectable:boolean = false;
-		
-		private selectableChanged:boolean;
-		
-		/**
-		 * 指定是否可以选择文本。允许选择文本将使您能够从控件中复制文本。 
-		 */		
-		public get selectable():boolean{
-			if(this.enabled)
-				return this._selectable;
-			return this.pendingSelectable;
-		}
-		
-		public set selectable(value:boolean):void{
-			if (value == this.selectable)
-				return;
-			if(this.enabled){
-				this._selectable = value;
-				this.selectableChanged = true;
-				this.invalidateProperties();
-			}
-			else{
-				this.pendingSelectable = value;
-			}
-		}
-		
+
 		public _text:string = "";
 		
 		public textChanged:boolean = false;
@@ -276,20 +166,12 @@ module ns_egret {
 		}
 		
 		public set text(value:string):void{
-			if (value==null)
-				value = "";
-			
-			if (!this.isHTML && value == this._text)
+			if (value == this._text)
 				return;
-			
 			this._text = value;
-			if(this.textField)
-				this.textField.$text = this._text;
+			if(this._textField)
+				this._textField.text = value;
 			this.textChanged = true;
-			this._htmlText = null;
-			
-			this.explicitHTMLText = null;
-			
 			this.invalidateProperties();
 			this.invalidateSize();
 			this.invalidateDisplayList();
@@ -330,7 +212,7 @@ module ns_egret {
 		public createChildren():void{
 			super.createChildren();
 			
-			if (!this.textField){
+			if (!this._textField){
 				this.checkTextField();
 			}
 		}
@@ -341,62 +223,33 @@ module ns_egret {
 		public commitProperties():void{
 			super.commitProperties();
 			
-			if(!this.textField){
+			if(!this._textField){
 				this.checkTextField();
 			}
 			
-			if (this.condenseWhiteChanged){
-				this.textField.condenseWhite = this._condenseWhite;
-				
-				this.condenseWhiteChanged = false;
-			}
-			
-			
-			if (this.selectableChanged){
-				this.textField.selectable = this._selectable;
-				
-				this.selectableChanged = false;
-			}
-			
 			if(this.defaultStyleChanged){
-				this.textField.$setTextFormat(this.defaultTextFormat);
-				this.textField.defaultTextFormat = this.defaultTextFormat;
-				this.textField.embedFonts = this.embedFonts;
+				this._textField.$setTextFormat(this.defaultTextFormat);
+				this._textField.defaultTextFormat = this.defaultTextFormat;
+				this._textField.embedFonts = this.embedFonts;
 				if(this.isHTML)
-					this.textField.$htmlText = this.explicitHTMLText;
+					this._textField.$htmlText = this.explicitHTMLText;
 			}
 			
-			if (this.textChanged || this.htmlTextChanged){
+			if (this.textChanged){
 				this.textFieldChanged(true);
 				this.textChanged = false;
-				this.htmlTextChanged = false;
 			}
 			
 		}
 		
 		/**
-		 * @inheritDoc
-		 */
-		public setFocus():void{
-			if(this.textField&&UIGlobals.stage){
-				UIGlobals.stage.focus = this.textField;
-			}
-		}
-		/**
 		 * 检查是否创建了textField对象，没有就创建一个。
 		 */		
 		private checkTextField():void{
-			if(!this.textField){
+			if(!this._textField){
 				this.createTextField();
-				if (this.isHTML)
-					this.textField.$htmlText = this.explicitHTMLText;
-				else
-					this.textField.$text = this._text;
-				this.textField.leading = this.realLeading;
-				this.condenseWhiteChanged = true;
-				this.selectableChanged = true;
+				this._textField.text = this._text;
 				this.textChanged = true;
-				this.defaultStyleChanged = true;
 				this.invalidateProperties();
 			}
 		}
@@ -404,25 +257,22 @@ module ns_egret {
 		/**
 		 * 创建文本显示对象
 		 */		
-		public createTextField():void{   
-			this.textField = new UITextField;
-			this.textField.selectable = this.selectable;
-			this.textField.antiAliasType = AntiAliasType.ADVANCED; 
-			this.textField.mouseWheelEnabled = false;
-			
-			this.textField.addEventListener("textChanged",
+		private createTextField():void{
+			this._textField = new TextField;
+
+			this._textField.addEventListener("textChanged",
 				this.textField_textModifiedHandler,
 				this);
-			this.textField.addEventListener("widthChanged",
+			this._textField.addEventListener("widthChanged",
 				this.textField_textFieldSizeChangeHandler,
 				this);
-			this.textField.addEventListener("heightChanged",
+			this._textField.addEventListener("heightChanged",
 				this.textField_textFieldSizeChangeHandler,
 				this);
-			this.textField.addEventListener("textFormatChanged",
+			this._textField.addEventListener("textFormatChanged",
 				this.textField_textFormatChangeHandler,
 				this);
-			this.addChild(this.textField);
+			this.addChild(this._textField);
 		}
 		
 		
@@ -448,35 +298,24 @@ module ns_egret {
 		 */
 		public updateDisplayList(unscaledWidth:number, unscaledHeight:number):void{
 			super.updateDisplayList(unscaledWidth,unscaledHeight);
-			this.textField.x = 0;
-			this.textField.y = 0;
-			this.textField.$width = unscaledWidth;
-			this.textField.$height = unscaledHeight;
-			this._textWidth = this.textField.textWidth;
-			this._textHeight = this.textField.textHeight;
+			this._textField.x = 0;
+			this._textField.y = 0;
+			this._textField.width = unscaledWidth;
+			this._textField.height = unscaledHeight;
+			this._textWidth = this._textField.textWidth;
+			this._textHeight = this._textField.textHeight;
 		}
-		
-		/**
-		 * 返回 TextLineMetrics 对象，其中包含控件中文本位置和文本行度量值的相关信息。
-		 * @param lineIndex 要获得其度量值的行的索引（从零开始）。
-		 */		
-		public getLineMetrics(lineIndex:number):TextLineMetrics{
-			this.validateNowIfNeed();
-			return this.textField ? this.textField.getLineMetrics(lineIndex) : null;
-		}
-		
+
 		/**
 		 * 文本显示对象属性改变
 		 */		
 		public textFieldChanged(styleChangeOnly:boolean):void{
 			if (!styleChangeOnly){
-				this._text = this.textField.text;
+				this._text = this._textField.text;
 			}
 			
-			this._htmlText = this.textField.htmlText;
-			
-			this._textWidth = this.textField.textWidth;
-			this._textHeight = this.textField.textHeight;
+			this._textWidth = this._textField.textWidth;
+			this._textHeight = this._textField.textHeight;
 		}
 		
 		/**
