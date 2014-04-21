@@ -36,7 +36,7 @@ module ns_egret {
         /**
          * 字体
          */
-        public font = "Arial";
+        public fontFamily = "Arial";
         /**
          * 字号
          */
@@ -96,7 +96,7 @@ module ns_egret {
                 return;
             }
 
-            renderContext.setupFont(this.size + "px " + this.font, this.textAlign, this.textBaseline);
+            renderContext.setupFont(this.size + "px " + this.fontFamily, this.textAlign, this.textBaseline);
             this.drawText(renderContext);
         }
 
@@ -105,7 +105,7 @@ module ns_egret {
          */
         public _measureBounds():ns_egret.Rectangle {
             var renderContext = ns_egret.MainContext.instance.rendererContext;
-            renderContext.setupFont(this.size + "px " + this.font, this.textAlign, this.textBaseline);
+            renderContext.setupFont(this.size + "px " + this.fontFamily, this.textAlign, this.textBaseline);
             return this.drawText(renderContext, true);
         }
 
