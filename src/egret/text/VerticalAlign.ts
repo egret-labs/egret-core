@@ -18,23 +18,23 @@
 
 module ns_egret {
     /**
-     * 为 TextField 类的 textAlign 属性定义值。这些值描述了文本的水平对齐方式。
+     * 为 TextField 类的 verticalAlign 属性定义值。这些值描述了文本的垂直对齐方式。
      */
-    export class TextAlign{
+    export class VerticalAlign{
 
         /**
-         * 左对齐
+         * 顶对齐
          */
-        public static LEFT:String = "left";
+        public static TOP:String = "top";
 
         /**
-         * 右对齐
+         * 底对齐
          */
-        public static RIGHT:String = "right";
+        public static BOTTOM:String = "bottom";
 
         /**
-         * 水平居中对齐
+         * 垂直居中对齐
          */
-        public static CENTER:String = "center";
+        public static MIDDLE:String = "middle";
     }
 }
