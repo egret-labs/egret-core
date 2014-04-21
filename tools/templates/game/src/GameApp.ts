@@ -123,22 +123,22 @@ class GameApp {
     private getDescription() {
         var result = [];
         var lineArr = [];
-        lineArr.push({"text" : "开源", "textColor":"#F1C40F"});
-        lineArr.push({"text" : "，", "textColor":"#FFFFFF"});
-        lineArr.push({"text" : "免费", "textColor":"#F1C40F"});
-        lineArr.push({"text" : "，", "textColor":"#FFFFFF"});
-        lineArr.push({"text" : "跨平台", "textColor":"#F1C40F"});
+        lineArr.push({"text" : "开源", "textColor":0xF1C40F});
+        lineArr.push({"text" : "，", "textColor":0xFFFFFF});
+        lineArr.push({"text" : "免费", "textColor":0xF1C40F});
+        lineArr.push({"text" : "，", "textColor":0xFFFFFF});
+        lineArr.push({"text" : "跨平台", "textColor":0xF1C40F});
         result.push(lineArr);
 
         lineArr = [];
-        lineArr.push({"text" : "推动", "textColor":"#FFFFFF"});
-        lineArr.push({"text" : "游戏", "textColor":"#F1C40F"});
-        lineArr.push({"text" : "前行", "textColor":"#FFFFFF"});
+        lineArr.push({"text" : "推动", "textColor":0xFFFFFF});
+        lineArr.push({"text" : "游戏", "textColor":0xF1C40F});
+        lineArr.push({"text" : "前行", "textColor":0xFFFFFF});
         result.push(lineArr);
 
         lineArr = [];
-        lineArr.push({"text" : "HTML5", "textColor":"#F1C40F"});
-        lineArr.push({"text" : "游戏框架", "textColor":"#FFFFFF"});
+        lineArr.push({"text" : "HTML5", "textColor":0xF1C40F});
+        lineArr.push({"text" : "游戏框架", "textColor":0xFFFFFF});
         result.push(lineArr);
 
         return result;
