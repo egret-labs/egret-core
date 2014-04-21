@@ -32,14 +32,6 @@ module ns_egret {
          * 显示文本
          */
         public text:string;
-//        private _text:string;
-//        public get text():string {
-//            return this._text;
-//        }
-//
-//        public set text(value:string) {
-//            this._text = value;
-//        }
 
         /**
          * 字体
@@ -72,7 +64,6 @@ module ns_egret {
          * @stable B API名称可能修改
          */
         public textBaseline;
-        public lineWidth;
 
         public maxWidth;
 
@@ -109,42 +100,26 @@ module ns_egret {
             this.drawText(renderContext);
         }
 
-        public getBounds():Rectangle {
-            var renderContext = ns_egret.MainContext.instance.rendererContext;
-            renderContext.setupFont(this.size + "px " + this.font, this.textAlign, this.textBaseline);
-            this.drawText(renderContext, true);
-            var anchorX, anchorY;
-            if (this.relativeAnchorPointX != 0 || this.relativeAnchorPointY != 0) {
-                anchorX = this._explicitWidth * this.relativeAnchorPointX;
-                anchorY = this._explicitHeight * this.relativeAnchorPointY;
-            }
-            else {
-                anchorX = this.anchorPointX;
-                anchorY = this.anchorPointY;
-            }
-            return Rectangle.identity.initialize(-anchorX, -anchorY,
-                this._explicitWidth, this._explicitHeight);
-        }
-
         /**
          * 测量显示对象坐标与大小
          */
         public _measureBounds():ns_egret.Rectangle {
-            ns_egret.Logger.fatal("子类需要实现的方法");
-            return ns_egret.Rectangle.identity;
+            var renderContext = ns_egret.MainContext.instance.rendererContext;
+            renderContext.setupFont(this.size + "px " + this.font, this.textAlign, this.textBaseline);
+            return this.drawText(renderContext, true);
         }
 
         /**
          * @private
          * @param renderContext
-         * @returns {null}
+         * @returns {Rectangle}
          */
-        private drawText(renderContext:RendererContext, forMeasureContentSize:boolean = false) {
+        private drawText(renderContext:RendererContext, forMeasureContentSize:boolean = false):Rectangle {
             if (forMeasureContentSize) {
                 this.__hackIgnoreDrawText = true;
             }
-            var o = null;
 
+            var explicitW:number = this._explicitWidth;
             var maxW = 0;
             //按 行获取数据
             var lines = String(this.text).split(/(?:\r\n|\r|\n)/);
@@ -152,7 +127,7 @@ module ns_egret {
             var rap = this.size + this.vSpacing;
 
             var linesNum = 0;
-            if (this.lineWidth == null || this.lineWidth == 0) {
+            if (isNaN(explicitW)) {
                 //没有设置 宽度
                 linesNum = lines.length;
                 //第一遍，算出 最长寛
@@ -175,7 +150,7 @@ module ns_egret {
                 }
             }
             else {
-                maxW = this.lineWidth;
+                maxW = explicitW;
 
                 //设置宽度
                 for (var i = 0, l = lines.length; i < l; i++) {
@@ -184,13 +159,13 @@ module ns_egret {
 
                     //获取 字符串 真实显示的 寛高
                     var rect = renderContext.measureText(str);
-                    if (rect.width > this.lineWidth) {
+                    if (rect.width > explicitW) {
                         var tempStr = str;
                         var tempLineW = 0;
                         str = "";
                         for (var j = 0; j < tempStr.length; j++) {
                             var wordW = renderContext.measureText(tempStr[j]).width;
-                            if (tempLineW + wordW > this.lineWidth) {
+                            if (tempLineW + wordW > explicitW) {
                                 if (tempLineW == 0) {
                                     tempLineW += wordW;
                                     str += tempStr[j];
@@ -219,22 +194,15 @@ module ns_egret {
                 }
             }
 
+            var rect:Rectangle = Rectangle.identity;
             if (forMeasureContentSize) {
-                this._explicitWidth = maxW;
-                this._explicitHeight = linesNum * rap;
+                rect.x = rect.y = 0;
+                rect.width = maxW;
+                rect.height = linesNum * rap;
                 this.__hackIgnoreDrawText = false;
             }
 
-            return o;
-        }
-
-        /**
-         * 显式设置宽度
-         * @param value
-         */
-        public set width(value:number){
-            this._explicitWidth = value;
-            this.lineWidth = value;
+            return rect;
         }
 
         /**
@@ -245,7 +213,7 @@ module ns_egret {
          * @param y
          * @private
          */
-            _drawTextLine(renderContext:RendererContext, text, y, maxWidth) {
+         public _drawTextLine(renderContext:RendererContext, text, y, maxWidth) {
             if (this.__hackIgnoreDrawText) return;
             var x;
             if (this.textAlign == "left") {

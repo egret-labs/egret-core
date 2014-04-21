@@ -27,7 +27,8 @@ module ns_egret {
     /**
      * DisplayObjectContainer 类是显示列表中显示对象容器。
      */
-    export class DisplayObjectContainer extends DisplayObject {
+    export class DisplayObjectContainer
+    extends DisplayObject {
 
         constructor() {
             this._children = [];

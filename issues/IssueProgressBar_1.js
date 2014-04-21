@@ -74,7 +74,7 @@ function createExample() {
         }
     }
 
-    var click = function () {
+    var click = function (event) {
 
         var per1 = left;
         left -= 10;

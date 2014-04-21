@@ -61,9 +61,8 @@ module ns_egret {
         }
 
         //todo:这里对bounds的处理和TextField非常类似，以后考虑重构
-        _renderText(forMeasureContentSize:boolean = false) {
-            this._explicitWidth = 0;
-            this._explicitHeight = 0;
+        public _renderText(forMeasureContentSize:boolean = false):Rectangle {
+            var rect:Rectangle = Rectangle.identity.initialize(0,0,0,0);
             if (!forMeasureContentSize) {
                 this.removeAllChildren();
             }
@@ -84,28 +83,18 @@ module ns_egret {
                     }
                     this.addChild(bitmap);
                     bitmap.spriteFrame = spriteFrame;
-                    bitmap.x = this._explicitWidth;
+                    bitmap.x = rect.width;
                 }
-                this._explicitWidth += characterWidth + offsetX;
-                if (offsetY + spriteFrame.h > this._explicitHeight) {
-                    this._explicitHeight = offsetY + spriteFrame.h;
+                rect.width += characterWidth + offsetX;
+                if (offsetY + spriteFrame.h > rect.height) {
+                    rect.height = offsetY + spriteFrame.h;
                 }
             }
+            return rect;
         }
 
-        public getBounds():ns_egret.Rectangle {
-            this._renderText(true);
-            var anchorX, anchorY;
-            if (this.relativeAnchorPointX != 0 || this.relativeAnchorPointY != 0) {
-                anchorX = this._explicitWidth * this.relativeAnchorPointX;
-                anchorY = this._explicitHeight * this.relativeAnchorPointY;
-            }
-            else {
-                anchorX = this.anchorPointX;
-                anchorY = this.anchorPointY;
-            }
-            return Rectangle.identity.initialize(-anchorX, -anchorY,
-                this._explicitWidth, this._explicitHeight);
+        public _measureBounds():Rectangle {
+            return this._renderText(true);
         }
     }
 }
