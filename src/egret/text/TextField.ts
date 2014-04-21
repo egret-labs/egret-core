@@ -108,6 +108,14 @@ module ns_egret {
          */
         public letterSpacing:number;
 
+        private _numLines:number = 0;
+        /**
+         * 文本行数
+         */
+        public get numLines():number{
+            return this._numLines;
+        }
+
         private __hackIgnoreDrawText:boolean = false;
 
         constructor() {
@@ -224,6 +232,7 @@ module ns_egret {
                     drawH += rap;
                 }
             }
+            this._numLines = linesNum;
 
             var rect:Rectangle = Rectangle.identity;
             if (forMeasureContentSize) {
