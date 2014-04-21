@@ -28,10 +28,10 @@ module ns_egret {
         private _edTxt;
         private _delegate:TextInputDegelete;
         private _placeholderText:string = "";
-        private _edFontSize = 14;
-        private _textColor = "#ff0000";
+        private _edFontSize:number = 14;
+        private _textColor:number = 0xff0000;
         private _placeholderFontSize = 14;
-        private _placeholderColor = "#ffff00";
+        private _placeholderColor:number = 0xffff00;
 
         private _preX:number = 0;
         private _preY:number = 0;

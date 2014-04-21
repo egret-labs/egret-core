@@ -131,9 +131,8 @@ module ns_egret {
          * @returns {Rectangle}
          * @stable B 参数很可能会需要调整，和setupFont整合
          */
-        public measureText(text):Rectangle {
-            var rect:Rectangle = Rectangle.identity;
-            return rect;
+        public measureText(text):number {
+            return 0;
         }
 
         /**

@@ -43,7 +43,7 @@ module ns_egret {
         /**
          * debug边框颜色，默认值为红色
          */
-        public debugColor:string = "#ff0000";
+        public debugColor:number = 0xff0000;
 
         /**
          * 渲染采用的SpriteFrame，用来渲染纹理中的一部分

@@ -145,19 +145,15 @@ module ns_egret {
         }
 
 
-        measureText(text) {
+        measureText(text):number {
             var result = this.canvasContext.measureText(text);
-            var rect = Rectangle.identity;
-            rect.width = result.width;
-            rect.height = result.height;
-            return rect;
+            return result.width;
         }
 
 
         drawText(textField:ns_egret.TextField, text:string, x:number, y:number, maxWidth:number) {
-//            return;
-            var textColor = textField.textColor;
-            var strokeColor = textField.strokeColor;
+            var textColor:string = textField._textColorString;
+            var strokeColor:string = textField._strokeColorString;
             var outline = textField.stroke;
             var renderContext = this.canvasContext;
             renderContext.fillStyle = textColor;
