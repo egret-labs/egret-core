@@ -19,26 +19,46 @@
 /// <reference path="NetContext.ts"/>
 /// <reference path="../../resource/ResourceLoader.ts"/>
 
-module ns_egret{
-    export class HTML5NetContext extends NetContext{
-        public send (request:URLRequest){
+module ns_egret {
+    export class HTML5NetContext extends NetContext {
+        public send(request:URLRequest) {
+            var self = this;
             var xhr = this._getXMLHttpRequest();
             xhr.open(request.method, request.url);
-            if(request.type != undefined)
-            {
+            if (request.type != undefined) {
                 this._setXMLHttpRequestHeader(xhr, request.type);
             }
             xhr.onreadystatechange = onLoadComplete;
             xhr.send(request.data);
 
-            function onLoadComplete(){
+            function onLoadComplete() {
                 if (xhr.readyState == 4) {
                     if (xhr.status == 200) {
-                        request.callback.apply(request.thisObj, [xhr]);
+                        _processXMLHttpResponse(xhr);
                     } else {
                     }
                 }
             }
+
+            function _processXMLHttpResponse(xhr) {
+                var data = xhr.responseText;
+                if (this.type == ResourceLoader.DATA_TYPE_BINARY) {
+                    data = self._stringConvertToArray(data);
+                }
+                request.callback.call(request.thisObj, data);
+            }
+        }
+
+
+        private _stringConvertToArray(strData) {
+            if (!strData)
+                return null;
+
+            var arrData = new Uint8Array(strData.length);
+            for (var i = 0; i < strData.length; i++) {
+                arrData[i] = strData.charCodeAt(i) & 0xff;
+            }
+            return arrData;
         }
 
         private _setXMLHttpRequestHeader(xhr, type) {
