@@ -22,14 +22,7 @@
 module ns_egret {
     export class HTML5NetContext extends NetContext {
         public send(request:URLRequest) {
-            var self = this;
-            var xhr = this._getXMLHttpRequest();
-            xhr.open(request.method, request.url);
-            if (request.type != undefined) {
-                this._setXMLHttpRequestHeader(xhr, request.type);
-            }
-            xhr.onreadystatechange = onLoadComplete;
-            xhr.send(request.data);
+
 
             function onLoadComplete() {
                 if (xhr.readyState == 4) {
@@ -47,6 +40,39 @@ module ns_egret {
                 }
                 request.callback.call(request.thisObj, data);
             }
+
+
+            if (request.type == ResourceLoader.DATA_TYPE_IMAGE) {
+                this.loadImage(request);
+                return;
+            }
+            var self = this;
+            var xhr = this._getXMLHttpRequest();
+            xhr.open(request.method, request.url);
+            if (request.type != undefined) {
+                this._setXMLHttpRequestHeader(xhr, request.type);
+            }
+            xhr.onreadystatechange = onLoadComplete;
+            xhr.send(request.data);
+        }
+
+        private loadImage(request:ns_egret.URLRequest):void {
+            var image = new Image();
+            image.crossOrigin = "Anonymous";
+            var fileUrl = request.url;
+
+            function onLoadComplete() {
+                image.removeEventListener('load', onLoadComplete);
+                image.removeEventListener('error', onLoadComplete);
+                request.callback.call(request.thisObj, image);
+
+            };
+            function onLoadError() {
+                image.removeEventListener('error', onLoadError);
+            };
+            image.addEventListener("load", onLoadComplete);
+            image.addEventListener("error", onLoadError);
+            image.src = fileUrl;
         }
 
 

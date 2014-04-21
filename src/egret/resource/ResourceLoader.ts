@@ -67,11 +67,18 @@ module ns_egret {
         }
 
         private startLoading() {
-            if (this.type == ResourceLoader.DATA_TYPE_IMAGE) {
-                this._loadByImage();
-            }
-            else {
-                this._loadByAjax();
+            var fileUrl = ResourceLoader.prefix + this.url;
+            var self = this;
+            var request = new ns_egret.URLRequest(fileUrl, onLoadComplete, this);
+            request.type = this.type;
+            MainContext.instance.netContext.send(request);
+            function onLoadComplete(fileContents) {
+                if (self.type == ResourceLoader.DATA_TYPE_IMAGE) {
+                    var texture:Texture = Texture.create(self.url);
+                    texture.bitmapData = fileContents;
+                    TextureCache.getInstance().addTexture(self.url, texture);
+                }
+                self._executeAllCallback(fileContents);
             }
         }
 
@@ -84,40 +91,6 @@ module ns_egret {
                 this.onLoadComplete(this.data);
             }
             this.dispatchEventWith(ResourceLoader.LOAD_COMPLETE, false, this.data);
-        }
-
-        private _loadByAjax() {
-            var fileUrl = ResourceLoader.prefix + this.url;
-            var self = this;
-            var request = new ns_egret.URLRequest(fileUrl, onLoadComplete, this);
-            request.type = this.type;
-            MainContext.instance.netContext.send(request);
-            function onLoadComplete(fileContents) {
-                self._executeAllCallback(fileContents);
-            }
-        }
-
-        private _loadByImage() {
-            var image = new Image();
-            image.crossOrigin = "Anonymous";
-            var fileUrl = ResourceLoader.prefix + this.url;
-            var that = this;
-            var onLoadComplete = function () {
-                var texture:Texture = Texture.create(that.fixedUrl);
-                texture.bitmapData = image;
-                TextureCache.getInstance().addTexture(that.fixedUrl, texture);
-                image.removeEventListener('load', onLoadComplete);
-                image.removeEventListener('error', onLoadComplete);
-                that._executeAllCallback(image);
-
-            };
-            var onLoadError = function () {
-                image.removeEventListener('error', onLoadError);
-            };
-            image.addEventListener("load", onLoadComplete);
-            image.addEventListener("error", onLoadError);
-            image.src = fileUrl;
-            return image;
         }
 
         public static LOAD_COMPLETE = "resource_load_complete";
