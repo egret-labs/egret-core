@@ -35,10 +35,4 @@ module ns_egret {
             this.callback.call(this.thisObject);
         }
     }
-
-}
-
-egret.mainloop = function (deltatime) {
-    var deviceContext = ns_egret.MainContext.instance.deviceContext;
-    deviceContext.onEnterFrame();
 }

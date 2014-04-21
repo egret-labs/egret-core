@@ -74,16 +74,18 @@ var temp = [
     "extension/gui/component/DynamicBitmap.js",
     "extension/dragonbones/dragonBones.js",
     "extension/dragonbones/DragonBonesEgretBridge.js",
-    "egret/debug/DEBUG.js",
-    "jslib/box2d.js"
+    "egret/debug/DEBUG.js"
+//    "jslib/box2d.js"
 ];
 
 
 if (true) {//浏览器
     temp.push("egret/context/devices/HTML5DeviceContext.js");
+    temp.push("egret/context/renderer/NativeRendererContext.js");
 }
 else {
     temp.push("egret/context/devices/NativeDeviceContext.js");
+    temp.push("egret/context/renderer/NativeRendererContext.js");
 }
 
 
