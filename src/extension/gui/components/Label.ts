@@ -17,15 +17,10 @@
  */
 
 /// <reference path="../../../egret/events/Event.ts"/>
-/// <reference path="../../../egret/text/Font.ts"/>
-/// <reference path="../../../egret/text/TextFormat.ts"/>
-/// <reference path="../../../egret/text/TextLineMetrics.ts"/>
-/// <reference path="../../../egret/utils/Dictionary.ts"/>
 /// <reference path="../../../egret/core/Injector.ts"/>
 /// <reference path="supportClasses/TextBase.ts"/>
-/// <reference path="../core/ITranslator.ts"/>
 /// <reference path="../events/UIEvent.ts"/>
-/// <reference path="../layouts/VerticalAlign.ts"/>
+/// <reference path="../../../egret/text/VerticalAlign.ts"/>
 
 module ns_egret {
 
@@ -33,114 +28,14 @@ module ns_egret {
 		public constructor(){
 			super();
 			this.addEventListener(UIEvent.UPDATE_COMPLETE, this.updateCompleteHandler, this);
-			if(Label.isFirstLabel){
-				Label.isFirstLabel = false;
-				try{
-					Label.translator = Injector.getInstance(ITranslator);
-				}
-				catch(e:Error){}
-			}
 		}
-		/**
-		 * 是否只显示嵌入的字体。此属性对只所有Label实例有效。true表示如果指定的fontFamily没有被嵌入，
-		 * 即使用户机上存在该设备字体也不显示。而将使用默认的字体。默认值为false。
-		 */		
-		public static showEmbedFontsOnly:boolean = false;
-		/**
-		 * 是否是第一个创建的Label实例
-		 */		
-		private static isFirstLabel:boolean = true;
-		/**
-		 * 注入的文本翻译对象
-		 */		
-		private static translator:ITranslator;
-		/**
-		 * @inheritDoc
-		 */
-		public set fontFamily(value:string):void{
-			if(this.fontFamily==value)
-				return;
-			var fontList:Array = Font.enumerateFonts(false);
-			this.embedFonts = false;
-			for each(var font:Font in fontList){
-				if(this.font.fontName==value){
-					this.embedFonts = true;
-					break;
-				}
-			}
-			if(!this.embedFonts&&Label.showEmbedFontsOnly)
-				return;
-			super.fontFamily = value;
-		}
-		
-		private toolTipSet:boolean = false;
-		
-		/**
-		 * @inheritDoc
-		 */
-		public set toolTip(value:any):void{
-			super.toolTip = value;
-			this.toolTipSet = (value != null);
-		}
-		
+
 		/**
 		 * 一个验证阶段完成
 		 */		
 		private updateCompleteHandler(event:UIEvent):void{
 			this.lastUnscaledWidth = NaN;
 		}
-		
-		private _verticalAlign:string = VerticalAlign.TOP;
-		/**
-		 * 垂直对齐方式,支持VerticalAlign.TOP,VerticalAlign.BOTTOM,VerticalAlign.MIDDLE和VerticalAlign.JUSTIFY(两端对齐);
-		 * 默认值：VerticalAlign.TOP。
-		 */
-		public get verticalAlign():string{
-			return this._verticalAlign;
-		}
-		public set verticalAlign(value:string):void{
-			if(this._verticalAlign==value)
-				return;
-			this._verticalAlign = value;
-			if(this.textField)
-				this.textField.leading = this.realLeading;
-			this.defaultStyleChanged = true;
-			this.invalidateProperties();
-			this.invalidateSize();
-			this.invalidateDisplayList();
-		}
-		
-		public get realLeading():number{
-			return this._verticalAlign==VerticalAlign.JUSTIFY?0:this.leading;
-		}
-		
-		/**
-		 * @inheritDoc
-		 */
-		public get defaultTextFormat():TextFormat{
-			if(this.defaultStyleChanged){
-				this._textFormat = this.getDefaultTextFormat();
-				//当设置了verticalAlign为VerticalAlign.JUSTIFY时将忽略行高
-				if(this._verticalAlign == VerticalAlign.JUSTIFY)
-					this._textFormat.leading = 0;
-				this.defaultStyleChanged = false;
-			}
-			return this._textFormat;
-		}
-		
-		/**
-		 * 从另外一个文本组件复制默认文字格式信息到自身，不包括对setFormatOfRange()的调用。<br/>
-		 * 复制的值包含：<br/>
-		 * fontFamily，size，textColor，bold，italic，underline，textAlign，<br/>
-		 * leading，letterSpacing，disabledColor,verticalAlign属性。
-		 */	
-		public copyDefaultFormatFrom(textBase:TextBase):void{
-			super.copyDefaultFormatFrom(textBase);
-			if(textBase instanceof Label){
-				this.verticalAlign = (<Label> textBase).verticalAlign;
-			}
-		}
-		
 		
 		private _maxDisplayedLines:number = 0;
 		/**
@@ -158,35 +53,6 @@ module ns_egret {
 			this.invalidateDisplayList();
 		}
 		
-		/**
-		 * @inheritDoc
-		 */
-		public set text(value:string):void{
-			if (value==null)
-				value = "";
-			if (!this.isHTML && value == this._text)
-				return;
-			if(Label.translator)
-				super.text = Label.translator.translate(value);
-			else
-				super.text = value;
-			this.rangeFormatDic = null;
-		}
-		
-		/**
-		 * @inheritDoc
-		 */
-		public set htmlText(value:string):void{
-			if (!value)
-				value = "";
-			
-			if (this.isHTML && value == this.explicitHTMLText)
-				return;
-			
-			super.htmlText = value;
-			
-			this.rangeFormatDic = null;
-		}
 		/**
 		 * 上一次测量的宽度 
 		 */		
@@ -279,24 +145,6 @@ module ns_egret {
 		/**
 		 * @inheritDoc
 		 */
-		public commitProperties():void{
-			var needSetDefaultFormat:boolean = this.defaultStyleChanged||this.textChanged || this.htmlTextChanged;
-			this.rangeFormatChanged = needSetDefaultFormat||this.rangeFormatChanged;
-			
-			super.commitProperties();
-			
-			if(this.rangeFormatChanged){
-				if(!needSetDefaultFormat)//如果样式发生改变，父级会执行样式刷新的过程。这里就不用重复了。
-					this.textField.$setTextFormat(this.defaultTextFormat);
-				this.applyRangeFormat();
-				this.rangeFormatChanged = false;
-			}
-		}
-
-		
-		/**
-		 * @inheritDoc
-		 */
 		public measure():void{
 			//先提交属性，防止样式发生改变导致的测量不准确问题。
 			if(this.invalidatePropertiesFlag)
@@ -336,13 +184,9 @@ module ns_egret {
 		 * 使用指定的宽度进行测量
 		 */	
 		private measureUsingWidth(w:number):void{
-			var originalText:string = this.textField.text;
-			if(this._isTruncated||this.textChanged||this.htmlTextChanged){
-				if (this.isHTML)
-					this.textField.$htmlText = this.explicitHTMLText;
-				else
-					this.textField.$text = this._text;
-				this.applyRangeFormat();
+			var originalText:string = this._textField.text;
+			if(this._isTruncated||this.textChanged){
+				this._textField.text = this._text;
 			}
 			
 			var padding:number = isNaN(this._padding)?0:this._padding;
@@ -351,27 +195,20 @@ module ns_egret {
 			var paddingT:number = isNaN(this._paddingTop)?padding:this._paddingTop;
 			var paddingB:number = isNaN(this._paddingBottom)?padding:this._paddingBottom;
 
-			this.textField.autoSize = "left";
-			
+            this._textField.width = NaN;
+            this._textField.height = NaN;
 			if (!isNaN(w)){
-				this.textField.$width = w - paddingL - paddingR;
-				this.measuredWidth = Math.ceil(this.textField.textWidth);
-				this.measuredHeight = Math.ceil(this.textField.textHeight);
+				this._textField.width = w - paddingL - paddingR;
+				this.measuredWidth = Math.ceil(this._textField.width);
+				this.measuredHeight = Math.ceil(this._textField.height);
 			}
 			else{
-				var oldWordWrap:boolean = this.textField.wordWrap;
-				this.textField.wordWrap = false;
-				
-				this.measuredWidth = Math.ceil(this.textField.textWidth);
-				this.measuredHeight = Math.ceil(this.textField.textHeight);
-				
-				this.textField.wordWrap = oldWordWrap;
+				this.measuredWidth = Math.ceil(this._textField.width);
+				this.measuredHeight = Math.ceil(this._textField.height);
 			}
 			
-			this.textField.autoSize = "none";
-			
-			if(this._maxDisplayedLines>0&&this.textField.numLines>this._maxDisplayedLines){
-				var lineM:TextLineMetrics = this.textField.getLineMetrics(0);
+			if(this._maxDisplayedLines>0&&this._textField.numLines>this._maxDisplayedLines){
+				var lineM:TextLineMetrics = this._textField.getLineMetrics(0);
 				this.measuredHeight = lineM.height*this._maxDisplayedLines-lineM.leading+4;
 			}
 			
@@ -379,7 +216,7 @@ module ns_egret {
 			this.measuredHeight += paddingT + paddingB;
 			
 			if(this._isTruncated){
-				this.textField.$text = originalText;
+				this._textField.$text = originalText;
 				this.applyRangeFormat();
 			}
 		}
@@ -430,7 +267,7 @@ module ns_egret {
 		 */
 		private applyRangeFormat(expLeading:any=null):void{
 			this.rangeFormatChanged = false;
-			if(!this.rangeFormatDic||!this.textField||!this._text)
+			if(!this.rangeFormatDic||!this._textField||!this._text)
 				return;
 			var useLeading:boolean = <boolean> (expLeading!=null);
 			for(var beginIndex:any in this.rangeFormatDic){
@@ -445,10 +282,10 @@ module ns_egret {
 							(<TextFormat> (endDic[index])).leading = expLeading;
 						}
 						var endIndex:number = index;
-						if(endIndex>this.textField.text.length)
-							endIndex = this.textField.text.length;
+						if(endIndex>this._textField.text.length)
+							endIndex = this._textField.text.length;
 						try{
-							this.textField.$setTextFormat(endDic[index],beginIndex,endIndex);
+							this._textField.$setTextFormat(endDic[index],beginIndex,endIndex);
 						}
 						catch(e:Error){}
 						if(useLeading){
@@ -473,8 +310,8 @@ module ns_egret {
 			var paddingT:number = isNaN(this._paddingTop)?padding:this._paddingTop;
 			var paddingB:number = isNaN(this._paddingBottom)?padding:this._paddingBottom;
 			
-			this.textField.x = paddingL;
-			this.textField.y = paddingT;
+			this._textField.x = paddingL;
+			this._textField.y = paddingT;
 			if (this.isSpecialCase()){
 				var firstTime:boolean = isNaN(this.lastUnscaledWidth) ||
 					this.lastUnscaledWidth != unscaledWidth;
@@ -491,35 +328,35 @@ module ns_egret {
 			if(this.invalidateSizeFlag)
 				this.validateSize();
 			
-			if(!this.textField.visible)//解决初始化时文本闪烁问题
-				this.textField.visible = true;
+			if(!this._textField.visible)//解决初始化时文本闪烁问题
+				this._textField.visible = true;
 			if(this._isTruncated){
-				this.textField.$text = this._text;
+				this._textField.$text = this._text;
 				this.applyRangeFormat();
 			}
 			
-			this.textField.scrollH = 0;
-			this.textField.scrollV = 1;
+			this._textField.scrollH = 0;
+			this._textField.scrollV = 1;
 			
-			this.textField.$width = unscaledWidth - paddingL - paddingR;
+			this._textField.$width = unscaledWidth - paddingL - paddingR;
 			var unscaledTextHeight:number = unscaledHeight - paddingT - paddingB;
-			this.textField.$height = unscaledTextHeight;
+			this._textField.$height = unscaledTextHeight;
 			
 			if(this._maxDisplayedLines==1)
-				this.textField.wordWrap = false;
+				this._textField.wordWrap = false;
 			else if (Math.floor(this.width) < Math.floor(this.measuredWidth))
-				this.textField.wordWrap = true;
+				this._textField.wordWrap = true;
 			
-			this._textWidth = this.textField.textWidth;
-			this._textHeight = this.textField.textHeight;
+			this._textWidth = this._textField.textWidth;
+			this._textHeight = this._textField.textHeight;
 			
-			if(this._maxDisplayedLines>0&&this.textField.numLines>this._maxDisplayedLines){
-				var lineM:TextLineMetrics = this.textField.getLineMetrics(0);
+			if(this._maxDisplayedLines>0&&this._textField.numLines>this._maxDisplayedLines){
+				var lineM:TextLineMetrics = this._textField.getLineMetrics(0);
 				var h:number = lineM.height*this._maxDisplayedLines-lineM.leading+4;
-				this.textField.$height = Math.min(unscaledTextHeight,h);
+				this._textField.$height = Math.min(unscaledTextHeight,h);
 			}
 			if(this._verticalAlign==VerticalAlign.JUSTIFY){
-				this.textField.$setTextFormat(this.defaultTextFormat);
+				this._textField.$setTextFormat(this.defaultTextFormat);
 				this.applyRangeFormat(0);
 			}
 			
@@ -528,14 +365,14 @@ module ns_egret {
 				if (!this.toolTipSet)
 					super.toolTip = this._isTruncated ? _text : null;
 			}
-			if(this.textField.textHeight>=unscaledTextHeight)
+			if(this._textField.textHeight>=unscaledTextHeight)
 				return;
 			if(this._verticalAlign==VerticalAlign.JUSTIFY){
-				if(this.textField.numLines > 1){
-					this.textField.$height = unscaledTextHeight;
-					var extHeight:number = Math.max(0,unscaledTextHeight-4 - this.textField.textHeight);
-					this.defaultTextFormat.leading = Math.floor(extHeight/(this.textField.numLines-1));
-					this.textField.$setTextFormat(this.defaultTextFormat);
+				if(this._textField.numLines > 1){
+					this._textField.$height = unscaledTextHeight;
+					var extHeight:number = Math.max(0,unscaledTextHeight-4 - this._textField.textHeight);
+					this.defaultTextFormat.leading = Math.floor(extHeight/(this._textField.numLines-1));
+					this._textField.$setTextFormat(this.defaultTextFormat);
 					this.applyRangeFormat(this.defaultTextFormat.leading);
 					this.defaultTextFormat.leading = 0;
 				}
@@ -546,8 +383,8 @@ module ns_egret {
 					valign = 0.5;
 				else if(this._verticalAlign==VerticalAlign.BOTTOM)
 					valign = 1;
-				this.textField.y += Math.floor((unscaledTextHeight-this.textField.textHeight)*valign);
-				this.textField.$height = unscaledTextHeight-this.textField.y;
+				this._textField.y += Math.floor((unscaledTextHeight-this._textField.textHeight)*valign);
+				this._textField.$height = unscaledTextHeight-this._textField.y;
 			}
 		}
 		
@@ -590,8 +427,8 @@ module ns_egret {
 			var expLeading:any = this.verticalAlign==VerticalAlign.JUSTIFY?0:null;
 			
 			try{
-				var lineM:TextLineMetrics = this.textField.getLineMetrics(0);
-				var realTextHeight:number = this.textField.height-4+this.textField.leading;
+				var lineM:TextLineMetrics = this._textField.getLineMetrics(0);
+				var realTextHeight:number = this._textField.height-4+this._textField.leading;
 				var lastLineIndex:number =<number> (realTextHeight/lineM.height);
 			}
 			catch(e:Error){
@@ -599,14 +436,14 @@ module ns_egret {
 			}
 			if(lastLineIndex<1)
 				lastLineIndex = 1;
-			if(this.textField.numLines>lastLineIndex&&this.textField.textHeight>this.textField.height){
-				var offset:number = this.textField.getLineOffset(lastLineIndex);
+			if(this._textField.numLines>lastLineIndex&&this._textField.textHeight>this._textField.height){
+				var offset:number = this._textField.getLineOffset(lastLineIndex);
 				originalText = originalText.substr(0,offset);
-				this.textField.$text = originalText+truncationIndicator;
+				this._textField.$text = originalText+truncationIndicator;
 				this.applyRangeFormat(expLeading);
-				while (originalText.length > 1 && this.textField.numLines>lastLineIndex){
+				while (originalText.length > 1 && this._textField.numLines>lastLineIndex){
 					originalText = originalText.slice(0, -1);
-					this.textField.$text = originalText+truncationIndicator;
+					this._textField.$text = originalText+truncationIndicator;
 					this.applyRangeFormat(expLeading);
 				}
 				return true;
@@ -619,10 +456,10 @@ module ns_egret {
 		 */
 		public createTextField():void{
 			super.createTextField();
-			this.textField.wordWrap = true;
-			this.textField.multiline = true;
-			this.textField.visible = false;
-			this.textField.mouseWheelEnabled = false;
+			this._textField.wordWrap = true;
+			this._textField.multiline = true;
+			this._textField.visible = false;
+			this._textField.mouseWheelEnabled = false;
 		}
 		
 		/**

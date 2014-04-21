@@ -22,6 +22,7 @@
 /// <reference path="../../core/UIComponent.ts"/>
 /// <reference path="../../../../egret/text/TextField.ts"/>
 /// <reference path="../../../../egret/text/TextAlign.ts"/>
+/// <reference path="../../../../egret/text/VerticalAlign.ts"/>
 
 module ns_egret {
 
