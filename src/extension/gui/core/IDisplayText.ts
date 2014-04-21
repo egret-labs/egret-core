@@ -17,12 +17,16 @@
  */
 module ns_egret {
 
-
-    export class UIComponent extends DisplayObject{
-
-
-
+    /**
+     * 简单文本显示控件接口。
+     * @author DOM
+     */
+    export interface IDisplayText extends IUIComponent
+    {
+        /**
+         * 此文本组件所显示的文本。
+         */
+        text:String;
     }
-
 
 }

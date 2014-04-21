@@ -17,14 +17,10 @@
  */
 
 /// <reference path="../../../../egret/events/Event.ts"/>
-/// <reference path="../../../../egret/text/AntiAliasType.ts"/>
-/// <reference path="../../../../egret/text/TextFormat.ts"/>
-/// <reference path="../../../../egret/text/TextFormatAlign.ts"/>
-/// <reference path="../../../../egret/text/TextLineMetrics.ts"/>
 /// <reference path="../../core/UIGlobals.ts"/>
 /// <reference path="../../core/IDisplayText.ts"/>
 /// <reference path="../../core/UIComponent.ts"/>
-/// <reference path="../../core/TextField.ts"/>
+/// <reference path="../../../../egret/text/TextField.ts"/>
 
 module ns_egret {
 
@@ -45,67 +41,7 @@ module ns_egret {
 		/**
 		 * 呈示此文本的内部 TextField 
 		 */		
-		public textField:UITextField;
-		
-		private _condenseWhite:boolean = false;
-		
-		private condenseWhiteChanged:boolean = false;
-		
-		/**
-		 * 一个布尔值，指定是否删除具有 HTML 文本的文本字段中的额外空白（空格、换行符等等）。
-		 * 默认值为 false。condenseWhite 属性只影响使用 htmlText 属性（而非 text 属性）设置的文本。
-		 * 如果使用 text 属性设置文本，则忽略 condenseWhite。 <p/>
-		 * 如果 condenseWhite 设置为 true，请使用标准 HTML 命令（如 <BR> 和 <P>），将换行符放在文本字段中。<p/>
-		 * 在设置 htmlText 属性之前设置 condenseWhite 属性。
-		 */		
-		public get condenseWhite():boolean{
-			return this._condenseWhite;
-		}
-		
-		public set condenseWhite(value:boolean):void{
-			if (value == this._condenseWhite)
-				return;
-			
-			this._condenseWhite = value;
-			this.condenseWhiteChanged = true;
-			
-			if (this.isHTML)
-				this.htmlTextChanged = true;
-			
-			this.invalidateProperties();
-			this.invalidateSize();
-			this.invalidateDisplayList();
-			
-			this.dispatchEvent(new Event("condenseWhiteChanged"));
-		}
-		
-		/**
-		 * @inheritDoc
-		 */	
-		public set enabled(value:boolean):void{
-			if(super.enabled==value)
-				return;
-			super.enabled = value;
-			if(this.enabled){
-				if(this._selectable != this.pendingSelectable)
-					this.selectableChanged = true;
-				if(this._textColor != this.pendingColor)
-					this.defaultStyleChanged = true;
-				this._selectable = this.pendingSelectable;
-				this._textColor = this.pendingColor;
-			}
-			else{
-				if(this._selectable)
-					this.selectableChanged = true;
-				if(this._textColor != this.disabledColor)
-					this.defaultStyleChanged = true;
-				this.pendingSelectable = this._selectable;
-				this.pendingColor = this._textColor;
-				this._selectable = false;
-				this._textColor = this._disabledColor;
-			}
-			this.invalidateProperties();
-		}
+		public textField:TextField;
 		
 		//===========================字体样式=====================start==========================
 		
