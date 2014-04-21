@@ -48,7 +48,7 @@ module ns_egret {
             }
             var self = this;
             var xhr = this._getXMLHttpRequest();
-            xhr.open(request.method, request.url);
+            xhr.open(request.method, request.prefix + request.url);
             if (request.type != undefined) {
                 this._setXMLHttpRequestHeader(xhr, request.type);
             }
@@ -59,12 +59,15 @@ module ns_egret {
         private loadImage(request:ns_egret.URLRequest):void {
             var image = new Image();
             image.crossOrigin = "Anonymous";
-            var fileUrl = request.url;
+            var fileUrl = request.prefix + request.url;
 
             function onLoadComplete() {
                 image.removeEventListener('load', onLoadComplete);
                 image.removeEventListener('error', onLoadComplete);
-                request.callback.call(request.thisObj, image);
+                var texture:Texture = Texture.create(request.url);
+                texture.bitmapData = image;
+                TextureCache.getInstance().addTexture(request.url, texture);
+                request.callback.call(request.thisObj, texture);
 
             };
             function onLoadError() {

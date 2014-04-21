@@ -67,19 +67,11 @@ module ns_egret {
         }
 
         private startLoading() {
-            var fileUrl = ResourceLoader.prefix + this.url;
             var self = this;
-            var request = new ns_egret.URLRequest(fileUrl, onLoadComplete, this);
+            var request = new ns_egret.URLRequest(this.url, this._executeAllCallback, this);
             request.type = this.type;
+            request.prefix = ResourceLoader.prefix;
             MainContext.instance.netContext.send(request);
-            function onLoadComplete(fileContents) {
-                if (self.type == ResourceLoader.DATA_TYPE_IMAGE) {
-                    var texture:Texture = Texture.create(self.url);
-                    texture.bitmapData = fileContents;
-                    TextureCache.getInstance().addTexture(self.url, texture);
-                }
-                self._executeAllCallback(fileContents);
-            }
         }
 
         private _executeAllCallback(data) {

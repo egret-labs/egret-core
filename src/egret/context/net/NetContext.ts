@@ -35,6 +35,9 @@ module ns_egret {
     export class URLRequest {
         public type:string;
 
+
+        public prefix:string = "";
+
         constructor(public url:string, public callback, public thisObj, public method:string = NetContext.GET, public data = undefined) {
 
         }
