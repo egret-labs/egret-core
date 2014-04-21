@@ -21,6 +21,7 @@
 /// <reference path="../../core/IDisplayText.ts"/>
 /// <reference path="../../core/UIComponent.ts"/>
 /// <reference path="../../../../egret/text/TextField.ts"/>
+/// <reference path="../../../../egret/text/TextAlign.ts"/>
 
 module ns_egret {
 
@@ -43,14 +44,9 @@ module ns_egret {
 		 */		
 		public textField:TextField;
 		
-		//===========================字体样式=====================start==========================
-		
+
 		public defaultStyleChanged:boolean = true;
-		/**
-		 * 是否使用嵌入字体
-		 */		
-		public embedFonts:boolean = false;
-		
+
 		private _fontFamily:string = "SimSun";
 		
 		/**
@@ -89,65 +85,11 @@ module ns_egret {
 			this.invalidateDisplayList();
 		}
 		
-		private _bold:boolean = false;
+
+		private _textAlign:string = TextAlign.LEFT;
 		
 		/**
-		 * 是否为粗体,默认false。
-		 */
-		public get bold():boolean{
-			return this._bold;
-		}
-		
-		public set bold(value:boolean):void{
-			if(this._bold==value)
-				return;
-			this._bold = value;
-			this.defaultStyleChanged = true;
-			this.invalidateProperties();
-			this.invalidateSize();
-			this.invalidateDisplayList();
-		}
-		
-		private _italic:boolean = false;
-		
-		/**
-		 * 是否为斜体,默认false。
-		 */
-		public get italic():boolean{
-			return this._italic;
-		}
-		
-		public set italic(value:boolean):void{
-			if(this._italic==value)
-				return;
-			this._italic = value;
-			this.defaultStyleChanged = true;
-			this.invalidateProperties();
-			this.invalidateSize();
-			this.invalidateDisplayList();
-		}
-		
-		private _underline:boolean = false;
-		
-		/**
-		 * 是否有下划线,默认false。
-		 */
-		public get underline():boolean{
-			return this._underline;
-		}
-		
-		public set underline(value:boolean):void{
-			if(this._underline==value)
-				return;
-			this._underline = value;
-			this.defaultStyleChanged = true;
-			this.invalidateProperties();
-		}
-		
-		private _textAlign:string = TextFormatAlign.LEFT;
-		
-		/**
-		 * 文字的水平对齐方式 ,请使用TextFormatAlign中定义的常量。
+		 * 文字的水平对齐方式 ,请使用TextAlign中定义的常量。
 		 * 默认值：TextFormatAlign.LEFT。
 		 */
 		public get textAlign():string{
@@ -163,122 +105,60 @@ module ns_egret {
 			this.invalidateSize();
 			this.invalidateDisplayList();
 		}
-		
-		
-		private _leading:number = 2;
-		
-		/**
-		 * 行距,默认值为2。
-		 */
-		public get leading():number{
-			return this._leading;
-		}
-		
-		public set leading(value:number):void{
-			if(this._leading==value)
-				return;
-			this._leading = value;
-			if(this.textField)
-				this.textField.leading = this.realLeading;
-			this.defaultStyleChanged = true;
-			this.invalidateProperties();
-			this.invalidateSize();
-			this.invalidateDisplayList();
-		}
-		
-		public get realLeading():number{
-			return this._leading;
-		}
-		
-		/**
-		 * 在enabled属性为false时记录的颜色值 
-		 */		
-		private pendingColor:number = 0x000000;
-		
+
+        private _lineSpacing:number = 0;
+        /**
+         * 行间距
+         */
+        public get lineSpacing():number{
+            return this._lineSpacing;
+        }
+
+        public set lineSpacing(value:number){
+            if(this._lineSpacing==value)
+                return;
+            this._lineSpacing = value;
+            this.defaultStyleChanged = true;
+            this.invalidateProperties();
+            this.invalidateSize();
+            this.invalidateDisplayList();
+        }
+
+        private _letterSpacing:number = 0;
+        /**
+         * 字符间距
+         */
+        public get letterSpacing():number{
+            return this._letterSpacing;
+        }
+
+        public set hSpacing(value:number){
+            if(this._letterSpacing==value)
+                return;
+            this._letterSpacing = value;
+            this.defaultStyleChanged = true;
+            this.invalidateProperties();
+            this.invalidateSize();
+            this.invalidateDisplayList();
+        }
+
+
 		private _textColor:number = 0x000000;
 		/**
 		 * @inheritDoc
 		 */
 		public get textColor():number{
-			if(this.enabled)
-				return this._textColor;
-			return this.pendingColor;
+			return this._textColor;
 		}
 		
 		public set textColor(value:number):void{
 			if(this._textColor==value)
 				return;
-			if(this.enabled){
-				this._textColor = value;
-				this.defaultStyleChanged = true;
-				this.invalidateProperties();
-			}
-			else{
-				this.pendingColor = value;
-			}
+            this._textColor = value;
+            this.defaultStyleChanged = true;
+            this.invalidateProperties();
 		}
-		
-		private _disabledColor:number = 0xaab3b3;
-		/**
-		 * 被禁用时的文字颜色,默认0xaab3b3。
-		 */
-		public get disabledColor():number{
-			return this._disabledColor;
-		}
-		
-		public set disabledColor(value:number):void{
-			if(this._disabledColor==value)
-				return;
-			this._disabledColor = value;
-			if(!this.enabled){
-				this._textColor = value;
-				this.defaultStyleChanged = true;
-				this.invalidateProperties();
-			}
-		}
-		
-		
-		private _letterSpacing:number = NaN;
-		
-		/**
-		 * 字符间距,默认值为NaN。
-		 */
-		public get letterSpacing():number{
-			return this._letterSpacing;
-		}
-		
-		public set letterSpacing(value:number):void{
-			if(this._letterSpacing==value)
-				return;
-			this._letterSpacing = value;
-			this.defaultStyleChanged = true;
-			this.invalidateProperties();
-			this.invalidateSize();
-			this.invalidateDisplayList();
-		}
-		
-		public _textFormat:TextFormat;
-		
-		/**
-		 * 应用到所有文字的默认文字格式设置信息对象
-		 */
-		public get defaultTextFormat():TextFormat{
-			if(this.defaultStyleChanged){
-				this._textFormat = this.getDefaultTextFormat();
-				this.defaultStyleChanged = false;
-			}
-			return this._textFormat;
-		}
-		/**
-		 * 由于设置了默认文本格式后，是延迟一帧才集中应用的，若需要立即应用文本样式，可以手动调用此方法。
-		 */		
-		public applyTextFormatNow():void{
-			if(this.defaultStyleChanged){
-				this.textField.$setTextFormat(this.defaultTextFormat);
-				this.textField.defaultTextFormat = this.defaultTextFormat;
-			}
-		}
-		
+
 		/**
 		 * 从另外一个文本组件复制默认文字格式信息到自身。<br/>
 		 * 复制的值包含：<br/>
