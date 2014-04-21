@@ -20,6 +20,7 @@
 /// <reference path="../core/MainContext.ts"/>
 /// <reference path="../display/DisplayObject.ts"/>
 /// <reference path="../geom/Rectangle.ts"/>
+/// <reference path="../utils/toColorString.ts"/>
 
 module ns_egret {
     /**
@@ -41,14 +42,38 @@ module ns_egret {
          * 字号
          */
         public size:number = 30;
+
+        public _textColorString:string = "#FFFFFF";
+
+        private _textColor:number = 0xFFFFFF;
         /**
          * 文字颜色
          */
-        public textColor = "#ffffff";
+        public get textColor():number{
+            return this._textColor;
+        }
+        public set textColor(value:number){
+            if(this._textColor==value)
+                return;
+            this._textColor = value;
+            this._textColorString = toColorString(value);
+        }
+
+        public _strokeColorString:string = "#000000";
+
+        private _strokeColor:number = 0x000000;
         /**
          * 描边颜色
          */
-        public strokeColor = "#000000";
+        public get strokeColor():number{
+            return this._strokeColor;
+        }
+        public set strokeColor(value:number){
+            if(this._strokeColor==value)
+                return;
+            this._strokeColor = value;
+            this._strokeColorString = toColorString(value);
+        }
 
         /**
          * 描边宽度，0为没有描边
@@ -141,9 +166,9 @@ module ns_egret {
                     //获得 一行数据
                     var str = lines[i];
 
-                    var rect = renderContext.measureText(str);
-                    if (rect.width > maxW) {
-                        maxW = rect.width;
+                    var w:number = renderContext.measureText(str);
+                    if (w > maxW) {
+                        maxW = w;
                     }
                 }
 
@@ -164,13 +189,13 @@ module ns_egret {
                     var str = lines[i];
 
                     //获取 字符串 真实显示的 寛高
-                    var rect = renderContext.measureText(str);
-                    if (rect.width > explicitW) {
+                    var w:number = renderContext.measureText(str);
+                    if (w > explicitW) {
                         var tempStr = str;
                         var tempLineW = 0;
                         str = "";
                         for (var j = 0; j < tempStr.length; j++) {
-                            var wordW = renderContext.measureText(tempStr[j]).width;
+                            var wordW = renderContext.measureText(tempStr[j]);
                             if (tempLineW + wordW > explicitW) {
                                 if (tempLineW == 0) {
                                     tempLineW += wordW;

@@ -20,7 +20,7 @@ function createExample() {
 //    colorLabel.width = colorLabel.height = 0;
     colorLabel.relativeAnchorPointX = 0.5;
     colorLabel.relativeAnchorPointY = 0.5;
-    colorLabel.textColor = "#ff0000";
+    colorLabel.textColor = 0xff0000;
     colorLabel.textAlign = "left";
     colorLabel.text = "这是多行文本\n这个文本会抖动";
     container.addChild(colorLabel);
@@ -34,7 +34,7 @@ function createExample() {
 //    colorLabel.width = colorLabel.height = 0;
     colorLabel.relativeAnchorPointX = 0;
     colorLabel.relativeAnchorPointY = 0.5;
-    colorLabel.textColor = "#ff0000";
+    colorLabel.textColor = 0xff0000;
     colorLabel.textAlign = "left";
     colorLabel.text = "这是多行文本\n这个文本会抖动";
     container.addChild(colorLabel);

@@ -11,6 +11,7 @@ var temp = [
     "egret/core/Ticker.js",
     "egret/utils/Timer.js",
     "egret/utils/getQualifiedClassName.js",
+    "egret/utils/toColorString.js",
     "egret/geom/Matrix.js",
     "egret/geom/Point.js",
     "egret/geom/Rectangle.js",

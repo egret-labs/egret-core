@@ -172,7 +172,7 @@ module ns_egret{
             if (this._textField == null) {
                 this._textField = new ns_egret.TextField();
                 this._textField.width = this._textField.height = 0;
-                this._textField.textColor = "#ffffff";
+                this._textField.textColor = 0xffffff;
                 this._textField.textAlign = "center";
                 this._textField.fontFamily = "Courier-Bold";
                 this._textField.size = size;
