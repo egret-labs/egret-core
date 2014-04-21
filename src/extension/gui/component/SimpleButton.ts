@@ -174,7 +174,7 @@ module ns_egret{
                 this._textField.width = this._textField.height = 0;
                 this._textField.textColor = "#ffffff";
                 this._textField.textAlign = "center";
-                this._textField.font = "Courier-Bold";
+                this._textField.fontFamily = "Courier-Bold";
                 this._textField.size = size;
                 this._textField.stroke = 2;
                 this.addChild(this._textField);
