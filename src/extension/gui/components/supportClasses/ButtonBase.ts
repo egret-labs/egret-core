@@ -20,14 +20,13 @@
 /// <reference path="../../../../egret/events/Event.ts"/>
 /// <reference path="../../../../egret/events/TouchEvent.ts"/>
 /// <reference path="../../../../egret/events/TimerEvent.ts"/>
-/// <reference path="../../../../egret/text/TextFormatAlign.ts"/>
+/// <reference path="../../../../egret/text/TextAlign.ts"/>
 /// <reference path="../../../../egret/utils/Timer.ts"/>
 /// <reference path="../Label.ts"/>
 /// <reference path="../SkinnableComponent.ts"/>
 /// <reference path="../../core/UIGlobals.ts"/>
 /// <reference path="../../core/IDisplayText.ts"/>
 /// <reference path="../../events/UIEvent.ts"/>
-/// <reference path="../../layouts/VerticalAlign.ts"/>
 
 module ns_egret {
 
@@ -217,9 +216,9 @@ module ns_egret {
 		 * 添加舞台鼠标弹起事件监听
 		 */		
 		private addStageMouseHandlers():void{
-			UIGlobals.stage.addEventListener(TouchEvent.TOUCH_END,this.stage_mouseUpHandler,this,false,0,true);
+			UIGlobals.stage.addEventListener(TouchEvent.TOUCH_END,this.stage_mouseUpHandler,this);
 			
-			UIGlobals.stage.addEventListener(Event.LEAVE_STAGE,this.stage_mouseUpHandler,this,false,0,true);
+			UIGlobals.stage.addEventListener(Event.LEAVE_STAGE,this.stage_mouseUpHandler,this);
 		}
 		
 		/**
@@ -440,7 +439,7 @@ module ns_egret {
 				return;
 			this.hasCreatedLabel = true;
 			var text:Label = new Label();
-			text.textAlign = TextFormatAlign.CENTER;
+			text.textAlign = TextAlign.CENTER;
 			text.verticalAlign = VerticalAlign.MIDDLE;
 			text.maxDisplayedLines = 1;
 			text.left = 10;

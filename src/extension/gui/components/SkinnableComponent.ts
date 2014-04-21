@@ -225,7 +225,7 @@ module ns_egret {
 			return this._autoMouseEnabled;
 		}
 		
-		public set autoTouchEnabled(value:boolean):void{
+		public set autoTouchEnabled(value:boolean){
 			if(this._autoMouseEnabled==value)
 				return;
 			this._autoMouseEnabled = value;
@@ -246,7 +246,7 @@ module ns_egret {
 		/**
 		 * @inheritDoc
 		 */		
-		public set touchChildren(value:boolean):void{
+		public set touchChildren(value:boolean){
 			if(this.enabled)
 				super.touchChildren = value;
 			this.explicitMouseChildren = value;
@@ -258,7 +258,7 @@ module ns_egret {
 		/**
 		 * @inheritDoc
 		 */	
-		public set touchEnabled(value:boolean):void{
+		public set touchEnabled(value:boolean){
 			if(this.enabled)
 				super.touchEnabled = value;
 			this.explicitMouseEnabled = value;
@@ -267,7 +267,7 @@ module ns_egret {
 		/**
 		 * @inheritDoc
 		 */
-		public set enabled(value:boolean):void{
+		public set enabled(value:boolean){
 			if(super.enabled==value)
 				return;
 			super.enabled = value;
@@ -302,7 +302,7 @@ module ns_egret {
 		/**
 		 * 启用或禁用组件自身的布局。通常用在当组件的皮肤不是ISkinPartHost，又需要自己创建子项并布局时。
 		 */		
-		public set skinLayoutEnabled(value:boolean):void{
+		public set skinLayoutEnabled(value:boolean){
 			var hasLayout:boolean = (this.layout != null);
 			if(hasLayout==value)
 				return;
@@ -364,7 +364,7 @@ module ns_egret {
 					this.measuredWidth = measuredW;
 					this.measuredHeight = measuredH;
 				}
-				catch(e:Error){}
+				catch(e){}
 			}
 		}
 		

@@ -62,7 +62,7 @@ class GameApp {
         colorLabel.x = stageW / 2;
         colorLabel.y = stageH / 2 + 50;
         colorLabel.relativeAnchorPointX = colorLabel.relativeAnchorPointY = 0.5;
-        colorLabel.textColor = "#ffffff";
+        colorLabel.textColor = 0xffffff;
         colorLabel.textAlign = "center";
         colorLabel.text = "Hello Egret";
         colorLabel.size = 20;

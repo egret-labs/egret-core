@@ -55,7 +55,7 @@ module ns_egret {
 			return this._fontFamily;
 		}
 		
-		public set fontFamily(value:string):void{
+		public set fontFamily(value:string){
 			if(this._fontFamily==value)
 				return;
 			this._fontFamily = value;
@@ -74,7 +74,7 @@ module ns_egret {
 			return this._size;
 		}
 		
-		public set size(value:number):void{
+		public set size(value:number){
 			if(this._size==value)
 				return;
 			this._size = value;
@@ -94,7 +94,7 @@ module ns_egret {
 			return this._textAlign;
 		}
 		
-		public set textAlign(value:string):void{
+		public set textAlign(value:string){
 			if(this._textAlign==value)
 				return;
 			this._textAlign = value;
@@ -114,7 +114,7 @@ module ns_egret {
 			return this._verticalAlign;
 		}
 
-		public set verticalAlign(value:string):void{
+		public set verticalAlign(value:string){
 			if(this._verticalAlign==value)
 				return;
 			this._verticalAlign = value;
@@ -172,7 +172,7 @@ module ns_egret {
 			return this._textColor;
 		}
 		
-		public set textColor(value:number):void{
+		public set textColor(value:number){
 			if(this._textColor==value)
 				return;
             this._textColor = value;
@@ -186,7 +186,7 @@ module ns_egret {
 			return this._text;
 		}
 		
-		public set text(value:string):void{
+		public set text(value:string){
 			if (value == this._text)
 				return;
 			this._text = value;

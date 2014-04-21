@@ -2,7 +2,7 @@
  * Created by apple on 14-3-22.
  */
 
-class LoadingUI implements ILoadingView {
+class LoadingUI implements ns_egret.ILoadingView {
 
     private container;
     private textField;

@@ -35,7 +35,7 @@ module ns_egret {
 			return this._target;
 		}
 
-		public set target(value:SkinnableComponent):void{
+		public set target(value:SkinnableComponent){
 			this._target = value;
 		}
 
