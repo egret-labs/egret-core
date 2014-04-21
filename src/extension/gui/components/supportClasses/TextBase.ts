@@ -28,7 +28,6 @@ module ns_egret {
 	export class TextBase extends UIComponent implements IDisplayText{
 		public constructor(){
 			super();
-            createte
 		}
 		
 		/**
@@ -45,6 +44,7 @@ module ns_egret {
 		 */		
 		public _textField:TextField;
 
+        private fontFamilyChanged:boolean;
 		private _fontFamily:string = "SimSun";
 		/**
 		 * 字体名称 。默认值：SimSun
@@ -64,7 +64,7 @@ module ns_egret {
 			this.invalidateDisplayList();
 		}
 
-        private sizeChanged:boolean = true;
+        private sizeChanged:boolean;
 		private _size:number = 12;
 		/**
 		 * 字号大小,默认值12 。
@@ -83,7 +83,7 @@ module ns_egret {
 			this.invalidateDisplayList();
 		}
 
-
+        private textAlignChanged:boolean;
 		private _textAlign:string = TextAlign.LEFT;
 		/**
 		 * 文字的水平对齐方式 ,请使用TextAlign中定义的常量。
@@ -97,12 +97,33 @@ module ns_egret {
 			if(this._textAlign==value)
 				return;
 			this._textAlign = value;
-			this.defaultStyleChanged = true;
+			this.textAlignChanged = true;
 			this.invalidateProperties();
 			this.invalidateSize();
 			this.invalidateDisplayList();
 		}
 
+        private verticalAlignChanged:boolean;
+		private _verticalAlign:string = VerticalAlign.TOP;
+		/**
+		 * 文字的垂直对齐方式 ,请使用VerticalAlign中定义的常量。
+		 * 默认值：VerticalAlign.TOP。
+		 */
+		public get verticalAlign():string{
+			return this._verticalAlign;
+		}
+
+		public set verticalAlign(value:string):void{
+			if(this._verticalAlign==value)
+				return;
+			this._verticalAlign = value;
+			this.verticalAlignChanged = true;
+			this.invalidateProperties();
+			this.invalidateSize();
+			this.invalidateDisplayList();
+		}
+
+        private lineSpacingChanged:boolean;
         private _lineSpacing:number = 0;
         /**
          * 行间距
@@ -115,12 +136,13 @@ module ns_egret {
             if(this._lineSpacing==value)
                 return;
             this._lineSpacing = value;
-            this.defaultStyleChanged = true;
+            this.lineSpacingChanged = true;
             this.invalidateProperties();
             this.invalidateSize();
             this.invalidateDisplayList();
         }
 
+        private letterSpacingChanged:boolean;
         private _letterSpacing:number = 0;
         /**
          * 字符间距
@@ -133,12 +155,13 @@ module ns_egret {
             if(this._letterSpacing==value)
                 return;
             this._letterSpacing = value;
-            this.defaultStyleChanged = true;
+            this.letterSpacingChanged = true;
             this.invalidateProperties();
             this.invalidateSize();
             this.invalidateDisplayList();
         }
 
+        private textColorChanged:boolean;
 
 		private _textColor:number = 0x000000;
 		/**
@@ -152,16 +175,13 @@ module ns_egret {
 			if(this._textColor==value)
 				return;
             this._textColor = value;
-            this.defaultStyleChanged = true;
+            this.textColorChanged = true;
             this.invalidateProperties();
 		}
 
-
+        public textChanged:boolean;
 		public _text:string = "";
-		
-		public textChanged:boolean = false;
-		
-		public get text():string{
+        public get text():string{
 			return this._text;
 		}
 		
@@ -169,42 +189,11 @@ module ns_egret {
 			if (value == this._text)
 				return;
 			this._text = value;
-			if(this._textField)
-				this._textField.text = value;
 			this.textChanged = true;
 			this.invalidateProperties();
 			this.invalidateSize();
 			this.invalidateDisplayList();
 		}
-		
-		public _textHeight:number;
-		
-		/**
-		 * 文本高度
-		 */		
-		public get textHeight():number{
-			this.validateNowIfNeed();
-			return this._textHeight;
-		}
-		
-		public _textWidth:number;
-		
-		/**
-		 * 文本宽度
-		 */		
-		public get textWidth():number{
-			this.validateNowIfNeed();
-			return this._textWidth;
-		}
-		
-		/**
-		 * 由于组件是延迟应用属性的，若需要在改变文本属性后立即获得正确的值，要先调用validateNow()方法。
-		 */		
-		private validateNowIfNeed():void{
-			if(this.invalidatePropertiesFlag||this.invalidateSizeFlag||this.invalidateDisplayListFlag)
-				this.validateNow();
-		}
-		
 		
 		/**
 		 * @inheritDoc
@@ -226,20 +215,40 @@ module ns_egret {
 			if(!this._textField){
 				this.checkTextField();
 			}
-			
-			if(this.defaultStyleChanged){
-				this._textField.$setTextFormat(this.defaultTextFormat);
-				this._textField.defaultTextFormat = this.defaultTextFormat;
-				this._textField.embedFonts = this.embedFonts;
-				if(this.isHTML)
-					this._textField.$htmlText = this.explicitHTMLText;
+
+			if (this.fontFamilyChanged){
+				this._textField.fontFamily = this._fontFamily;
+				this.fontFamilyChanged = false;
 			}
-			
+			if (this.sizeChanged){
+				this._textField.size = this._size;
+				this.sizeChanged = false;
+			}
+			if (this.textAlignChanged){
+				this._textField.textAlign = this._textAlign;
+				this.textAlignChanged = false;
+			}
+			if (this.verticalAlignChanged){
+				this._textField.verticalAlign = this._verticalAlign;
+				this.verticalAlignChanged = false;
+			}
+			if (this.lineSpacingChanged){
+				this._textField.lineSpacing = this._lineSpacing;
+				this.lineSpacingChanged = false;
+			}
+			if (this.letterSpacingChanged){
+				this._textField.letterSpacing = this._letterSpacing;
+				this.letterSpacingChanged = false;
+			}
+			if (this.textColorChanged){
+				this._textField.textColor = this._textColor;
+				this.textColorChanged = false;
+			}
 			if (this.textChanged){
-				this.textFieldChanged(true);
+				this._textField.text = this._text;
 				this.textChanged = false;
 			}
-			
+
 		}
 		
 		/**
@@ -247,34 +256,13 @@ module ns_egret {
 		 */		
 		private checkTextField():void{
 			if(!this._textField){
-				this.createTextField();
+                this._textField = new TextField;
+                this.addChild(this._textField);
 				this._textField.text = this._text;
 				this.textChanged = true;
 				this.invalidateProperties();
 			}
 		}
-		
-		/**
-		 * 创建文本显示对象
-		 */		
-		private createTextField():void{
-			this._textField = new TextField;
-
-			this._textField.addEventListener("textChanged",
-				this.textField_textModifiedHandler,
-				this);
-			this._textField.addEventListener("widthChanged",
-				this.textField_textFieldSizeChangeHandler,
-				this);
-			this._textField.addEventListener("heightChanged",
-				this.textField_textFieldSizeChangeHandler,
-				this);
-			this._textField.addEventListener("textFormatChanged",
-				this.textField_textFormatChangeHandler,
-				this);
-			this.addChild(this._textField);
-		}
-		
 		
 		/**
 		 * @inheritDoc
@@ -298,49 +286,8 @@ module ns_egret {
 		 */
 		public updateDisplayList(unscaledWidth:number, unscaledHeight:number):void{
 			super.updateDisplayList(unscaledWidth,unscaledHeight);
-			this._textField.x = 0;
-			this._textField.y = 0;
 			this._textField.width = unscaledWidth;
 			this._textField.height = unscaledHeight;
-			this._textWidth = this._textField.textWidth;
-			this._textHeight = this._textField.textHeight;
-		}
-
-		/**
-		 * 文本显示对象属性改变
-		 */		
-		public textFieldChanged(styleChangeOnly:boolean):void{
-			if (!styleChangeOnly){
-				this._text = this._textField.text;
-			}
-			
-			this._textWidth = this._textField.textWidth;
-			this._textHeight = this._textField.textHeight;
-		}
-		
-		/**
-		 * 文字内容发生改变
-		 */		
-		public textField_textModifiedHandler(event:Event):void{
-			this.textFieldChanged(false);
-			this.invalidateSize();
-			this.invalidateDisplayList();
-		}
-		/**
-		 * 标签尺寸发生改变
-		 */		
-		private textField_textFieldSizeChangeHandler(event:Event):void{
-			this.textFieldChanged(true);
-			this.invalidateSize();
-			this.invalidateDisplayList();
-		}   
-		/**
-		 * 文字格式发生改变
-		 */		
-		private textField_textFormatChangeHandler(event:Event):void{
-			this.textFieldChanged(true);
-			this.invalidateSize();
-			this.invalidateDisplayList();
 		}
 	}
 }
