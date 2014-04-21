@@ -47,7 +47,7 @@ module ns_egret {
          * @param height
          * @returns {ns_egret.Rectangle}
          */
-        initialize(x:number, y:number, width:number, height:number) {
+        initialize(x:number, y:number, width:number, height:number):Rectangle {
             this.x = x;
             this.y = y;
             this.width = width;

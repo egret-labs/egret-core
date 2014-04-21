@@ -378,8 +378,7 @@ module ns_egret {
          * @private
          */
         public _measureBounds():ns_egret.Rectangle {
-            ns_egret.Logger.fatal("子类需要实现的方法");
-            return ns_egret.Rectangle.identity;
+            return ns_egret.Rectangle.identity.initialize(0,0,0,0);
         }
 
         public setAnchorPoint(x:number, y:number) {
