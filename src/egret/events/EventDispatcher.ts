@@ -97,7 +97,7 @@ module ns_egret {
                     if (bin.listener === listener&&bin.thisObject===thisObject) {
                         return false;
                     }
-                    if (insertIndex == -1 && bin.priority <= priority) {
+                    if (insertIndex == -1 && bin.priority < priority) {
                         insertIndex = i;
                     }
                 }
