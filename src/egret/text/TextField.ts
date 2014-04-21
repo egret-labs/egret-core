@@ -55,35 +55,41 @@ module ns_egret {
          */
         public stroke:number = 0;
         /**
-         * 文字水平对齐方式
+         * 文本水平对齐方式,使用TextAlign定义的常量，默认值TextAlign.LEFT。
          * @stable B API名称可能修改
          */
-        public textAlign;
+        public textAlign:string;
         /**
-         * 文字垂直对齐方式
+         * 文本垂直对齐方式,使用VerticalAlign定义的常量，默认值VerticalAlign.TOP。
          * @stable B API名称可能修改
+         */
+        public verticalAlign:string;
+
+        /**
+         * 文本基准线
+         * @stable B 可能移除，用户不需要设置这个属性。
          */
         public textBaseline;
 
         public maxWidth;
 
         /**
-         * 垂直 行间距
+         * 行间距
          */
-        public vSpacing:number;
+        public lineSpacing:number;
 
         /**
-         * 水平 字间距
+         * 字符间距
          */
-        public hSpacing:number;
+        public letterSpacing:number;
 
         private __hackIgnoreDrawText:boolean = false;
 
         constructor() {
             super();
 
-            this.vSpacing = 0;
-            this.hSpacing = 0;
+            this.lineSpacing = 0;
+            this.letterSpacing = 0;
             this.textAlign = "left";
         }
 
@@ -124,7 +130,7 @@ module ns_egret {
             //按 行获取数据
             var lines = String(this.text).split(/(?:\r\n|\r|\n)/);
             var drawH = 0;
-            var rap = this.size + this.vSpacing;
+            var rap = this.size + this.lineSpacing;
 
             var linesNum = 0;
             if (isNaN(explicitW)) {
