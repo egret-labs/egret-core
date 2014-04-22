@@ -1,6 +1,7 @@
 
 var temp = [
 	"egret/core/HashObject.js",
+	"egret/core/InteractionMode.js",
     "egret/events/Event.js",
     "egret/events/TouchEvent.js",
     "egret/events/TimerEvent.js",
