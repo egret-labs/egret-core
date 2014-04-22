@@ -285,7 +285,7 @@ module ns_egret {
 			var touchEvent:TouchEvent = <TouchEvent> event;
 			switch (event.type){
 				case TouchEvent.TOUCH_ROLL_OVER:{
-					if (touchEvent.buttonDown && !this.mouseCaptured)
+					if (touchEvent.touchDown && !this.mouseCaptured)
 						return;
 					this.hovered = true;
 					break;
