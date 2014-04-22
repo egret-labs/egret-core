@@ -45,6 +45,7 @@ module ns_egret {
 		 */		
 		public insert(client:ILayoutManagerClient):void{
 			var depth:number = client.nestLevel;
+            var hashCode:number = client.hashCode;
 			if (this.maxDepth < this.minDepth){
 				this.minDepth = this.maxDepth = depth;
 			}
@@ -60,12 +61,12 @@ module ns_egret {
 			if (!bin){
 				bin = new DepthBin();
 				this.depthBins[depth] = bin;
-				bin.items[client] = true;
+				bin.items[hashCode] = client;
 				bin.length++;
 			}
 			else{
-				if (bin.items[client] == null){ 
-					bin.items[client] = true;
+				if (bin.items[hashCode] == null){
+					bin.items[hashCode] = client;
 					bin.length++;
 				}
 			}
@@ -84,9 +85,9 @@ module ns_egret {
 						return null;
 					bin = this.depthBins[this.maxDepth];
 				}
-				
-				for (var key:any in bin.items ){
-					client = <ILayoutManagerClient> key;
+				var items:Array = bin.items;
+				for (var key:any in items ){
+					client = <ILayoutManagerClient> items[key];
 					this.remove(client, this.maxDepth);
 					break;
 				}
@@ -115,10 +116,11 @@ module ns_egret {
 					if (this.minDepth > this.maxDepth)
 						return null;
 					bin = this.depthBins[this.minDepth];
-				}           
-				
-				for (var key:any in bin.items ){
-					client = <ILayoutManagerClient> key;
+				}
+
+                var items:Array = bin.items;
+                for (var key:any in items ){
+                    client = <ILayoutManagerClient> items[key];
 					this.remove(client, this.minDepth);
 					break;
 				}
@@ -140,22 +142,24 @@ module ns_egret {
 		public removeLargestChild(client:ILayoutManagerClient ):any{
 			var max:number = this.maxDepth;
 			var min:number = client.nestLevel;
-			
+			var hashCode:number = client.hashCode;
 			while (min <= max){
 				var bin:DepthBin = this.depthBins[max];
 				if (bin && bin.length > 0){
 					if (max == client.nestLevel){
-						if (bin.items[client]){
+						if (bin.items[hashCode]){
 							this.remove(<ILayoutManagerClient> client, max);
 							return client;
 						}
 					}
 					else{
-						for (var key:any in bin.items ){
-							if ((key instanceof DisplayObject) && (client instanceof DisplayObjectContainer)
-								&&(<DisplayObjectContainer> client).contains(<DisplayObject> key)){
-								this.remove(<ILayoutManagerClient> key, max);
-								return key;
+                        var items:Array = bin.items;
+						for (var key:any in items ){
+                            var value:any = item[key];
+							if ((value instanceof DisplayObject) && (client instanceof DisplayObjectContainer)
+								&&(<DisplayObjectContainer> client).contains(<DisplayObject> value)){
+								this.remove(<ILayoutManagerClient> value, max);
+								return value;
 							}
 						}
 					}
@@ -179,22 +183,24 @@ module ns_egret {
 		 */
 		public removeSmallestChild(client:ILayoutManagerClient ):any{
 			var min:number = client.nestLevel;
-			
+			var hashCode:number = client.hashCode;
 			while (min <= this.maxDepth){
 				var bin:DepthBin = this.depthBins[min];
 				if (bin && bin.length > 0){   
 					if (min == client.nestLevel){
-						if (bin.items[client]){
+						if (bin.items[hashCode]){
 							this.remove(<ILayoutManagerClient> client, min);
 							return client;
 						}
 					}
 					else{
-						for (var key:any in bin.items){
-							if ((key instanceof DisplayObject) && (client instanceof DisplayObjectContainer)
-								&&(<DisplayObjectContainer> client).contains(<DisplayObject> key)){
-								this.remove(<ILayoutManagerClient> key, min);
-								return key;
+                        var items:Array = bin.items;
+						for (var key:any in items){
+                            var value:any = items[key];
+							if ((value instanceof DisplayObject) && (client instanceof DisplayObjectContainer)
+								&&(<DisplayObjectContainer> client).contains(<DisplayObject> value)){
+								this.remove(<ILayoutManagerClient> value, min);
+								return value;
 							}
 						}
 					}
@@ -218,9 +224,10 @@ module ns_egret {
 		 */
 		public remove(client:ILayoutManagerClient,level:number=-1):ILayoutManagerClient{
 			var depth:number = (level >= 0) ? level : client.nestLevel;
+            var hashCode:number = client.hashCode;
 			var bin:DepthBin = this.depthBins[depth];
-			if (bin && bin.items[client] != null){
-				delete bin.items[client];
+			if (bin && bin.items[hashCode] != null){
+				delete bin.items[hashCode];
 				bin.length--;
 				return client;
 			}
@@ -250,7 +257,7 @@ module ns_egret {
 
         }
         public length:number;
-        public items:any = {};
+        public items:any = [];
     }
 }
 

@@ -257,13 +257,25 @@ module ns_egret {
 		 */		
 		private checkTextField():void{
 			if(!this._textField){
-                this._textField = new TextField;
-                this.addChild(this._textField);
+                this.createTextField();
 				this._textField.text = this._text;
 				this.textChanged = true;
 				this.invalidateProperties();
 			}
 		}
+
+        private createTextField():void
+        {
+            this._textField = new TextField;
+            this._textField.fontFamily = this._fontFamily;
+            this._textField.size = this._size;
+            this._textField.textAlign = this._textAlign;
+            this._textField.verticalAlign = this._verticalAlign;
+            this._textField.lineSpacing = this._lineSpacing;
+            this._textField.letterSpacing = this.letterSpacing;
+            this._textField.textColor = this._textColor;
+            this.addChild(this._textField);
+        }
 		
 		/**
 		 * @inheritDoc

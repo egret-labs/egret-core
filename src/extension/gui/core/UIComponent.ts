@@ -684,11 +684,9 @@ module ns_egret {
 		 * 标记父级容器的尺寸和显示列表为失效
 		 */		
 		public invalidateParentSizeAndDisplayList():void{
-			if (!this.parent||!this._includeInLayout)
+			if (!this.parent||!this._includeInLayout||!("invalidateSize" in this.parent))
 				return;
 			var p:IInvalidating = <IInvalidating> (this.parent);
-			if (!p)
-				return;
 			p.invalidateSize();
 			p.invalidateDisplayList();
 		}

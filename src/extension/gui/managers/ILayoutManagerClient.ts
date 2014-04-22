@@ -46,5 +46,9 @@ module ns_egret {
 		 * 父级显示对象
 		 */		
 		parent:DisplayObjectContainer;
+        /**
+         * 返回此对象唯一的哈希值,用于唯一确定一个对象。
+         */
+        hashCode:number;
 	}
 }
