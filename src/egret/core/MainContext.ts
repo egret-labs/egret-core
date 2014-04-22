@@ -103,7 +103,7 @@ module ns_egret{
                 var eventBin:any = list[i];
                 event._target = eventBin.display;
                 event._setCurrentTarget(eventBin.display);
-                eventBin.listener.apply(eventBin.thisObject,[event]);
+                eventBin.listener.call(eventBin.thisObject,event);
             }
         }
         /**
@@ -118,7 +118,7 @@ module ns_egret{
                 var eventBin:any = list[i];
                 event._target = eventBin.display;
                 event._setCurrentTarget(eventBin.display);
-                eventBin.listener.apply(eventBin.thisObject,[event]);
+                eventBin.listener.call(eventBin.thisObject,event);
             }
         }
 

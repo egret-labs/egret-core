@@ -79,33 +79,38 @@ module ns_egret {
             if (DEBUG && DEBUG.ADD_EVENT_LISTENER) {
                 DEBUG.checkAddEventListener(type, listener, thisObject, useCapture, priority);
             }
-            this._addEventListener(type,listener,thisObject,useCapture,priority);
-        }
-
-        public _addEventListener(type:string, listener:Function, thisObject:any, useCapture:Boolean = false, priority:number = 0):boolean {
-            if(!this._captureEventsMap)
-                this._captureEventsMap = {};
-            if(!this._eventsMap)
-                this._eventsMap = {};
-            var eventMap:Object = useCapture ? this._captureEventsMap : this._eventsMap;
-            var list:Array = eventMap[type];
-            var insertIndex:number = -1;
-            if (list) {
-                var length:number = list.length;
-                for (var i:number = 0; i < length; i++) {
-                    var bin:any = list[i];
-                    if (bin.listener === listener&&bin.thisObject===thisObject) {
-                        return false;
-                    }
-                    if (insertIndex == -1 && bin.priority < priority) {
-                        insertIndex = i;
-                    }
-                }
+            var eventMap:Object;
+            if(useCapture){
+                if(!this._captureEventsMap)
+                    this._captureEventsMap = {};
+                eventMap = this._captureEventsMap;
             }
-            else {
+            else{
+                if(!this._eventsMap)
+                    this._eventsMap = {};
+                eventMap = this._eventsMap;
+            }
+            var list:Array = eventMap[type];
+            if(!list){
                 list = eventMap[type] = [];
             }
-
+            this._insertEventBin(list,listener, thisObject,priority)
+        }
+        /**
+         * 在一个事件列表中按优先级插入事件对象
+         */
+        public _insertEventBin(list:Array,listener:Function, thisObject:any,priority:number):boolean{
+            var insertIndex:number = -1;
+            var length:number = list.length;
+            for (var i:number = 0; i < length; i++) {
+                var bin:any = list[i];
+                if (bin.listener === listener&&bin.thisObject===thisObject) {
+                    return false;
+                }
+                if (insertIndex == -1 && bin.priority < priority) {
+                    insertIndex = i;
+                }
+            }
             var eventBin = {listener: listener, thisObject: thisObject, priority: priority};
             if (insertIndex != -1) {
                 list.splice(insertIndex, 0, eventBin);
@@ -125,29 +130,32 @@ module ns_egret {
          * @stable A
          */
         public removeEventListener(type:string, listener:Function,thisObject:any,useCapture:Boolean = false):void {
-            this._removeEventListener(type,listener,thisObject,useCapture);
-        }
 
-        public _removeEventListener(type:string, listener:Function,thisObject:any, useCapture:Boolean = false):boolean {
-            if(!this._captureEventsMap||!this._eventsMap)
-                return false;
             var eventMap:Object = useCapture ? this._captureEventsMap : this._eventsMap;
+            if(!eventMap)
+                return;
             var list:Array = eventMap[type];
             if (!list) {
-                return false;
+                return;
             }
+            this._removeEventBin(list,listener,thisObject);
+            if(list.length==0){
+                delete eventMap[type];
+            }
+        }
+        /**
+         * 在一个事件列表中按优先级插入事件对象
+         */
+        public _removeEventBin(list:Array,listener:Function,thisObject:any):boolean{
             var length:number = list.length;
             for (var i:number = 0; i < length; i++) {
                 var bin:any = list[i];
                 if (bin.listener === listener&&bin.thisObject===thisObject) {
                     list.splice(i, 1);
-                    break;
+                    return true
                 }
             }
-            if(list.length==0){
-                delete eventMap[type];
-            }
-            return true;
+            return false;
         }
 
         /**
@@ -175,9 +183,9 @@ module ns_egret {
         }
 
         public _notifyListener(event:Event):boolean{
-            if(!this._captureEventsMap||!this._eventsMap)
-                return true;
             var eventMap:Object = event._eventPhase==1 ? this._captureEventsMap : this._eventsMap;
+            if(!eventMap)
+                return true;
             var list:Array = eventMap[event.type];
             if (!list) {
                 return true;
@@ -186,7 +194,7 @@ module ns_egret {
             var length:number = list.length;
             for(var i:number = 0;i<length;i++){
                 var eventBin:any = list[i];
-                eventBin.listener.apply(eventBin.thisObject,[event]);
+                eventBin.listener.call(eventBin.thisObject,event);
                 if(event._isPropagationImmediateStopped){
                     break;
                 }
