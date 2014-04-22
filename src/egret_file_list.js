@@ -1,4 +1,3 @@
-
 var temp = [
 	"egret/core/HashObject.js",
     "egret/events/Event.js",
@@ -26,7 +25,7 @@ var temp = [
     "egret/display/Bitmap.js",
     "egret/text/BitmapText.js",
     "egret/display/Shape.js",
-    "egret/text/TextAlign.js",
+	"egret/text/TextAlign.js",
     "egret/text/VerticalAlign.js",
     "egret/text/TextField.js",
     "egret/display/SpriteSheet.js",
@@ -66,7 +65,7 @@ var temp = [
     "extension/tilemap/TMXConst.js",
     "extension/tilemap/TMXMapInfo.js",
     //tileMap end
-    //GUI start
+	 //GUI start
     "extension/gui/managers/LayoutManager.js",
     "extension/gui/managers/layoutClass/DepthQueue.js",
     "extension/gui/core/UIGlobals.js",
@@ -83,7 +82,7 @@ var temp = [
     "extension/gui/events/ResizeEvent.js",
     "extension/gui/events/SkinPartEvent.js",
     //GUI end
-
+	
     "extension/gameInput/VirtualJoystick.js",
     "extension/gui/component/TabView.js",
     "extension/gui/component/SimpleButton.js",
@@ -98,6 +97,18 @@ var temp = [
     "egret/debug/DEBUG.js",
     "jslib/box2d.js"
 ]
+
+
+
+
+if (true) {//浏览器
+    temp.push("egret/context/devices/HTML5DeviceContext.js");
+    temp.push("egret/context/renderer/NativeRendererContext.js");
+}
+else {
+    temp.push("egret/context/devices/NativeDeviceContext.js");
+    temp.push("egret/context/renderer/NativeRendererContext.js");
+}
 
 
 jsFileList = temp;
