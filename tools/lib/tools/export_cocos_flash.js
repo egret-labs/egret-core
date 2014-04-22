@@ -1,19 +1,7 @@
 /**
  * 从CocosBuilder 中导出JSON数据用于egret项目
  * 目前对应的CocosBuilder版本为v3.0-alpha，导出版本为5
- * 本项目依赖于plist库，请执行 npm install plist 安装依赖库
- * 当前依赖的plist库有一个bug，请安装后打开 node_modules/plist/lib/plist.js，第134行
- *   if (res ) new_arr.push( res );
- * 改为
- *   new_arr.push( res );
- *
- * 调用方式
- * <code>
- *     node egret_export_cocos_builder.js [ccb_file_path]
- * </code>
- *
  * 禁止使用的属性：
- *   忽略锚点
  *   翻转
  *   [旋转]（以后会支持）
  *   坐标原点，第二层节点必须左上角，其他节点也尽量在左上角
@@ -27,11 +15,6 @@
  *      和ScrollView类似，以Table结尾
  *  TabView
  *      以Tab结尾，容器里有多个按钮
- *
- *
- * 定制需求：
- *  如果有进一步的定制需求，在 View.ts 里的ViewManager._createView()里进行调整
- *
  *
  */
 var fs = require("fs");
