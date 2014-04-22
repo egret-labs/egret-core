@@ -282,10 +282,10 @@ module ns_egret {
 		 * 鼠标事件处理
 		 */	
 		public mouseEventHandler(event:Event):void{
-			var mouseEvent:TouchEvent = <TouchEvent> event;
+			var touchEvent:TouchEvent = <TouchEvent> event;
 			switch (event.type){
 				case TouchEvent.TOUCH_ROLL_OVER:{
-					if (mouseEvent.buttonDown && !this.mouseCaptured)
+					if (touchEvent.buttonDown && !this.mouseCaptured)
 						return;
 					this.hovered = true;
 					break;
@@ -374,7 +374,7 @@ module ns_egret {
 			if (this.isDown()||this._keepDown)
 				return "down";
 			
-			if (this.hovered || this.mouseCaptured)
+			if (InteractionMode.mode==InteractionMode.MOUSE&&(this.hovered || this.mouseCaptured))
 				return "over";
 			
 			return "up";
