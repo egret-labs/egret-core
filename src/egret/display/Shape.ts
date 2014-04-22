@@ -74,7 +74,7 @@ module ns_egret {
             }
             var context = renderContext.canvasContext;
             context.fillStyle = this._colorStr;
-            context.fillRect(renderContext._transformTx, renderContext._transformTy, this._explicitWidth, this._explicitWidth);
+            context.fillRect(renderContext._transformTx, renderContext._transformTy, this._explicitWidth, this._explicitHeight);
 
         }
     }
