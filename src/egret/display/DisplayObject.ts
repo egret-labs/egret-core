@@ -485,6 +485,16 @@ module ns_egret {
             return !event.isDefaultPrevented();
         }
 
+        public willTrigger(type:string):boolean{
+            var parent:DisplayObject = this;
+            while(parent){
+                if(parent.hasEventListener(type))
+                    return true;
+                parent = parent._parent;
+            }
+            return false;
+        }
+
         static getTransformBounds(bounds:ns_egret.Rectangle, mtx:ns_egret.Matrix) {
             var x = bounds.x, y = bounds.y, width = bounds.width, height = bounds.height;
 

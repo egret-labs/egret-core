@@ -169,6 +169,16 @@ module ns_egret {
             return (this._eventsMap&&this._eventsMap[type] ||
                 this._captureEventsMap&&this._captureEventsMap[type]);
         }
+        /**
+         * 检查是否用此 EventDispatcher 对象或其任何始祖为指定事件类型注册了事件侦听器。将指定类型的事件调度给此
+         * EventDispatcher 对象或其任一后代时，如果在事件流的任何阶段触发了事件侦听器，则此方法返回 true。
+         * hasEventListener() 与 willTrigger() 方法的区别是：hasEventListener() 只检查它所属的对象，
+         * 而 willTrigger() 方法检查整个事件流以查找由 type 参数指定的事件。
+         * @param type 事件名
+         */
+        public willTrigger(type:string):boolean{
+            return this.hasEventListener(type);
+        }
 
 
         /**
