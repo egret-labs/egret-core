@@ -17,7 +17,7 @@
  */
 
 /// <reference path="../../core/Profiler.ts"/>
-/// <reference path="../../display/TextField.ts"/>
+/// <reference path="../../text/TextField.ts"/>
 /// <reference path="../../geom/Matrix.ts"/>
 /// <reference path="../../geom/Rectangle.ts"/>
 /// <reference path="../../texture/Texture.ts"/>
