@@ -42,13 +42,12 @@ module ns_egret{
          */
         public stageHeight:number;
 
-        public constructor() {
+        public constructor(width:number,height:number) {
             super();
             this.touchEnabled = true;
             this._stage = this;
-            var canvas:HTMLCanvasElement = document.getElementById(StageDelegate.canvas_name);
-            this.stageWidth = canvas.width;
-            this.stageHeight = canvas.height;
+            this.stageWidth = width;
+            this.stageHeight = height;
         }
 
         /**

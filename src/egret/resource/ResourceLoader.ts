@@ -41,11 +41,11 @@ module ns_egret {
         constructor(url:string, type:string) {
             super();
             this.url = url;
-            var index =  url.indexOf("?");
-            if (index > -1){
-                this.fixedUrl = url.substring(0,index);
+            var index = url.indexOf("?");
+            if (index > -1) {
+                this.fixedUrl = url.substring(0, index);
             }
-            else{
+            else {
                 this.fixedUrl = url;
             }
             this.type = type;
@@ -67,12 +67,11 @@ module ns_egret {
         }
 
         private startLoading() {
-            if (this.type == ResourceLoader.DATA_TYPE_IMAGE) {
-                this._loadByImage();
-            }
-            else {
-                this._loadByAjax();
-            }
+            var self = this;
+            var request = new ns_egret.URLRequest(this.url, this._executeAllCallback, this);
+            request.type = this.type;
+            request.prefix = ResourceLoader.prefix;
+            MainContext.instance.netContext.send(request);
         }
 
         private _executeAllCallback(data) {
@@ -83,95 +82,8 @@ module ns_egret {
             if (this.onLoadComplete) {
                 this.onLoadComplete(this.data);
             }
-            this.dispatchEventWith(ResourceLoader.LOAD_COMPLETE, false,this.data);
+            this.dispatchEventWith(ResourceLoader.LOAD_COMPLETE, false, this.data);
         }
-
-        private _loadByAjax() {
-            var fileUrl = ResourceLoader.prefix + this.url;
-            var selfPointer = this;
-            var request = new ns_egret.URLRequest(fileUrl, onLoadComplete, this);
-            request.type = this.type;
-            MainContext.instance.netContext.send(request);
-            function onLoadComplete(xhr) {
-                var fileContents = selfPointer._processXMLHttpResponse(xhr);
-                selfPointer._executeAllCallback(fileContents);
-            }
-        }
-
-        private _loadByImage() {
-            var image = new Image();
-            image.crossOrigin = "Anonymous";
-            var fileUrl = ResourceLoader.prefix + this.url;
-            var that = this;
-            var onLoadComplete = function () {
-                var texture:Texture = Texture.create(that.fixedUrl);
-                texture.bitmapData = image;
-                TextureCache.getInstance().addTexture(that.fixedUrl, texture);
-                image.removeEventListener('load', onLoadComplete);
-                image.removeEventListener('error', onLoadComplete);
-                that._executeAllCallback(image);
-
-            };
-            var onLoadError = function () {
-                image.removeEventListener('error', onLoadError);
-            };
-            image.addEventListener("load", onLoadComplete);
-            image.addEventListener("error", onLoadError);
-            image.src = fileUrl;
-            return image;
-        }
-
-
-        private _setXMLHttpRequestHeader(xhr) {
-            if (/msie/i.test(navigator.userAgent) && !/opera/i.test(navigator.userAgent)) {
-                // IE-specific logic here
-                if (this.type == ResourceLoader.DATA_TYPE_BINARY) {
-                    xhr.setRequestHeader("Accept-Charset", "x-user-defined");
-                }
-                else {
-                    xhr.setRequestHeader("Accept-Charset", "utf-8");
-                }
-
-            }
-            else {
-                if (xhr.overrideMimeType) {
-                    if (this.type == ResourceLoader.DATA_TYPE_BINARY) {
-                        xhr.overrideMimeType("text\/plain; charset=x-user-defined");
-                    }
-                    else {
-                        xhr.overrideMimeType("text\/plain; charset=utf-8");
-                    }
-                }
-            }
-        }
-
-        private _processXMLHttpResponse(xhr) {
-            if (this.type == ResourceLoader.DATA_TYPE_TEXT) {
-                return  fileContents = xhr.responseText;
-            }
-            var fileContents;
-            if (/msie/i.test(navigator.userAgent) && !/opera/i.test(navigator.userAgent)) {
-                // IE-specific logic here
-                //fileContents = cc._convertResponseBodyToText(xhr["responseBody"]);
-            }
-            else {
-                fileContents = xhr.responseText;
-            }
-            return this._stringConvertToArray(fileContents);
-        }
-
-
-        private _stringConvertToArray(strData) {
-            if (!strData)
-                return null;
-
-            var arrData = new Uint8Array(strData.length);
-            for (var i = 0; i < strData.length; i++) {
-                arrData[i] = strData.charCodeAt(i) & 0xff;
-            }
-            return arrData;
-        }
-
 
         public static LOAD_COMPLETE = "resource_load_complete";
 

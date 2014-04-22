@@ -35,16 +35,6 @@ module ns_egret {
             return new Date().getTime();
         };
 
-        static requestAnimationFrame:Function = window["requestAnimationFrame"] ||
-            window["webkitRequestAnimationFrame"] ||
-            window["mozRequestAnimationFrame"] ||
-            window["oRequestAnimationFrame"] ||
-            window["msRequestAnimationFrame"] ||
-            //如果全都没有，使用setTimeout实现
-            function (callback) {
-                return window.setTimeout(callback, 1000 / Ticker.getInstance().getFrameRate());
-            };
-
 
         private _time:number;
         private _timeScale:number = 1;
@@ -58,28 +48,25 @@ module ns_egret {
          */
         public run() {
             this._time = Ticker.now();
-            Ticker.requestAnimationFrame.call(window, this.enterFrame)
-        }
-
-        private enterFrame() {
-            Ticker.requestAnimationFrame.call(window, Ticker.instance.enterFrame)
-            Ticker.instance.update();
+            var context = ns_egret.MainContext.instance.deviceContext;
+            context.executeMainLoop(this.update, this);
         }
 
         private update() {
             var list:Array = this.callBackList.concat();
             var length:number = list.length;
             var thisTime = Ticker.now();
-            for(var i:number = 0;i<length;i++){
+            for (var i:number = 0; i < length; i++) {
                 var eventBin:any = list[i];
                 var frameTime:number = thisTime - this._time;
                 frameTime *= this._timeScale;
-                eventBin.listener.call(eventBin.thisObject,frameTime);
+                eventBin.listener.apply(eventBin.thisObject, [frameTime]);
             }
             this._time = thisTime;
         }
 
         private callBackList:Array = [];
+
         /**
          * 注册帧回调事件，同一函数的重复监听会被忽略。
          * @param listener 帧回调函数,参数返回上一帧和这帧的间隔时间。示例：onEnterFrame(frameTime:number):void
@@ -89,7 +76,25 @@ module ns_egret {
          */
         public register(listener:Function, thisObject:any, priority = 0) {
             var list:Array = this.callBackList;
-            this._insertEventBin(list,listener, thisObject,priority);
+            var insertIndex:number = -1;
+            var length:number = list.length;
+            for (var i:number = 0; i < length; i++) {
+                var bin:any = list[i];
+                if (bin.listener === listener && bin.thisObject === thisObject) {
+                    return;
+                }
+                if (insertIndex == -1 && bin.priority <= priority) {
+                    insertIndex = i;
+                }
+            }
+
+            var eventBin = {listener: listener, thisObject: thisObject, priority: priority};
+            if (insertIndex != -1) {
+                list.splice(insertIndex, 0, eventBin);
+            }
+            else {
+                list.push(eventBin);
+            }
         }
 
         /**
@@ -100,7 +105,14 @@ module ns_egret {
          */
         public unregister(listener:Function, thisObject:any) {
             var list:Array = this.callBackList;
-            this._removeEventBin(list,listener,thisObject);
+            var length:number = list.length;
+            for (var i:number = 0; i < length; i++) {
+                var bin:any = list[i];
+                if (bin.listener === listener && bin.thisObject === thisObject) {
+                    list.splice(i, 1);
+                    break;
+                }
+            }
         }
 
         /**
@@ -135,21 +147,21 @@ module ns_egret {
             return this._timeScale;
         }
 
-        public pause(){
+        public pause() {
             this._paused = true;
         }
 
-        public resume(){
+        public resume() {
             this._paused = false;
         }
 
-        public getFrameRate(){
+        public getFrameRate() {
             return this._frameRate;
         }
 
 
-
         private static instance:ns_egret.Ticker;
+
         public static getInstance():ns_egret.Ticker {
             if (Ticker.instance == null) {
                 Ticker.instance = new Ticker();

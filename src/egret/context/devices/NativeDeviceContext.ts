@@ -16,30 +16,23 @@
  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-/// <reference path="../../core/MainContext.ts"/>
-
 module ns_egret {
-    export class NetContext {
-        public static STATE_COMPLETE:string = "XHRLoaderComplete";
-        public static GET:string = "GET";
-        public static POST:string = "POST";
 
-        public static getInstance():ns_egret.NetContext {
-            return ns_egret.MainContext.instance.netContext;
+
+    export class NativeDeviceContext {
+
+        private callback:Function;
+        private thisObject;
+
+        public executeMainLoop(callback:Function, thisObject:any):void {
+
+            this.callback = callback;
+            this.thisObject = thisObject;
+            egret.runGame();
         }
 
-        public send(request:URLRequest) {
-        }
-    }
-
-    export class URLRequest {
-        public type:string;
-
-
-        public prefix:string = "";
-
-        constructor(public url:string, public callback, public thisObj, public method:string = NetContext.GET, public data = undefined) {
-
+        public onEnterFrame():void {
+            this.callback.call(this.thisObject);
         }
     }
 }

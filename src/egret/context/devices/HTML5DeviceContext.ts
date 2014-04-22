@@ -16,30 +16,33 @@
  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-/// <reference path="../../core/MainContext.ts"/>
-
 module ns_egret {
-    export class NetContext {
-        public static STATE_COMPLETE:string = "XHRLoaderComplete";
-        public static GET:string = "GET";
-        public static POST:string = "POST";
 
-        public static getInstance():ns_egret.NetContext {
-            return ns_egret.MainContext.instance.netContext;
-        }
 
-        public send(request:URLRequest) {
+    export class HTML5DeviceContext {
+
+
+        static requestAnimationFrame:Function = window["requestAnimationFrame"] ||
+            window["webkitRequestAnimationFrame"] ||
+            window["mozRequestAnimationFrame"] ||
+            window["oRequestAnimationFrame"] ||
+            window["msRequestAnimationFrame"] ||
+            //如果全都没有，使用setTimeout实现
+            function (callback) {
+                return window.setTimeout(callback, 1000 / Ticker.getInstance().getFrameRate());
+            };
+
+
+        public executeMainLoop(callback:Function, thisObject:any):void {
+
+
+            var enterFrame = function () {
+                callback.call(thisObject);
+                HTML5DeviceContext.requestAnimationFrame.call(window, enterFrame);
+            }
+
+            HTML5DeviceContext.requestAnimationFrame.call(window, enterFrame);
         }
     }
 
-    export class URLRequest {
-        public type:string;
-
-
-        public prefix:string = "";
-
-        constructor(public url:string, public callback, public thisObj, public method:string = NetContext.GET, public data = undefined) {
-
-        }
-    }
 }

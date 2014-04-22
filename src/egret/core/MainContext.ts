@@ -17,6 +17,7 @@
  */
 
 /// <reference path="../context/net/NetContext.ts"/>
+/// <reference path="../context/devices/DeviceContext.ts"/>
 /// <reference path="../context/renderer/RendererContext.ts"/>
 /// <reference path="../context/sound/SoundContext.ts"/>
 /// <reference path="Ticker.ts"/>
@@ -55,6 +56,11 @@ module ns_egret{
          * 网络Context
          */
         public netContext:NetContext;
+
+        /**
+         * 设备divice
+         */
+        public deviceContext:DeviceContext;
 
         /**
          * 舞台
