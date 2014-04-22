@@ -22,31 +22,55 @@
 
 module ns_egret {
     export class Timer extends EventDispatcher {
-        private _preTime:number;
-        private _passTime:number;
-        private _actionTimes:number;
-        private _delay:number = 1000;
-        private _repeatCount:number = -1;
 
-        constructor(delay:number = 1000, repeatCount:number = -1) {
+        constructor(delay:number = 1000, repeatCount:number = 0) {
             super();
-            this._delay = delay;
-            this._repeatCount = repeatCount;
+            this.delay = delay;
+            this.repeatCount = repeatCount;
+        }
+
+        public delay:number;
+
+        public repeatCount:number;
+
+        private _currentCount:number = 0;
+
+        public currentCount():number{
+            return this._currentCount;
+        }
+
+        private _running:boolean;
+
+        public running():boolean{
+            return this._running;
+        }
+
+        public reset():void{
+            this.stop();
+            this._currentCount = 0;
         }
 
         public start() {
-            this._preTime = Ticker.now();
-            if (this._actionTimes != 0) {
-                this._actionTimes = 0;
+            if(this._running)
+                return;
+            this.lastTime = Ticker.now();
+            if (this._currentCount != 0) {
+                this._currentCount = 0;
             }
             Ticker.getInstance().register(this.onEnterFrame, this);
+            this._running = true;
         }
 
         public stop() {
+            if(!this._running)
+                return;
             Ticker.getInstance().unregister(this.onEnterFrame, this);
+            this._running = false;
         }
 
         private static timerEvent:TimerEvent;
+
+        private lastTime:number;
 
         private onEnterFrame(frameTime:number) {
             if(!Timer.timerEvent){
@@ -54,19 +78,17 @@ module ns_egret {
             }
             var timerEvent:TimerEvent = Timer.timerEvent;
             var now = Ticker.now();
-            this._passTime = now - this._preTime;
-            while (this._passTime > this._delay) {
-                this._passTime -= this._delay;
+            var passTime = now - this.lastTime;
+            if(passTime>this.delay){
+                this.lastTime = now;
+                this._currentCount++;
                 timerEvent._type = TimerEvent.TIMER;
                 this.dispatchEvent(timerEvent);
-                this._actionTimes++;
-                if (this._repeatCount != -1 && this._actionTimes >= this._repeatCount) {
+                if (this.repeatCount >0 && this._currentCount >= this.repeatCount) {
                     this.stop();
                     timerEvent._type = TimerEvent.TIMER_COMPLETE;
                     this.dispatchEvent(timerEvent);
-                    break;
                 }
-                this._preTime = now;
             }
         }
     }

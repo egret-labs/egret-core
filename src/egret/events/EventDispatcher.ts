@@ -80,33 +80,38 @@ module ns_egret {
             if (DEBUG && DEBUG.ADD_EVENT_LISTENER) {
                 DEBUG.checkAddEventListener(type, listener, thisObject, useCapture, priority);
             }
-            this._addEventListener(type,listener,thisObject,useCapture,priority);
-        }
-
-        public _addEventListener(type:string, listener:Function, thisObject:any, useCapture:Boolean = false, priority:number = 0):boolean {
-            if(!this._captureEventsMap)
-                this._captureEventsMap = {};
-            if(!this._eventsMap)
-                this._eventsMap = {};
-            var eventMap:Object = useCapture ? this._captureEventsMap : this._eventsMap;
-            var list:Array = eventMap[type];
-            var insertIndex:number = -1;
-            if (list) {
-                var length:number = list.length;
-                for (var i:number = 0; i < length; i++) {
-                    var bin:any = list[i];
-                    if (bin.listener === listener&&bin.thisObject===thisObject) {
-                        return false;
-                    }
-                    if (insertIndex == -1 && bin.priority < priority) {
-                        insertIndex = i;
-                    }
-                }
+            var eventMap:Object;
+            if(useCapture){
+                if(!this._captureEventsMap)
+                    this._captureEventsMap = {};
+                eventMap = this._captureEventsMap;
             }
-            else {
+            else{
+                if(!this._eventsMap)
+                    this._eventsMap = {};
+                eventMap = this._eventsMap;
+            }
+            var list:Array = eventMap[type];
+            if(!list){
                 list = eventMap[type] = [];
             }
-
+            this._insertEventBin(list,listener, thisObject,priority)
+        }
+        /**
+         * 在一个事件列表中按优先级插入事件对象
+         */
+        public _insertEventBin(list:Array,listener:Function, thisObject:any,priority:number):boolean{
+            var insertIndex:number = -1;
+            var length:number = list.length;
+            for (var i:number = 0; i < length; i++) {
+                var bin:any = list[i];
+                if (bin.listener === listener&&bin.thisObject===thisObject) {
+                    return false;
+                }
+                if (insertIndex == -1 && bin.priority < priority) {
+                    insertIndex = i;
+                }
+            }
             var eventBin = {listener: listener, thisObject: thisObject, priority: priority};
             if (insertIndex != -1) {
                 list.splice(insertIndex, 0, eventBin);
@@ -126,29 +131,32 @@ module ns_egret {
          * @stable A
          */
         public removeEventListener(type:string, listener:Function,thisObject:any,useCapture:Boolean = false):void {
-            this._removeEventListener(type,listener,thisObject,useCapture);
-        }
 
-        public _removeEventListener(type:string, listener:Function,thisObject:any, useCapture:Boolean = false):boolean {
-            if(!this._captureEventsMap||!this._eventsMap)
-                return false;
             var eventMap:Object = useCapture ? this._captureEventsMap : this._eventsMap;
+            if(!eventMap)
+                return;
             var list:Array = eventMap[type];
             if (!list) {
-                return false;
+                return;
             }
+            this._removeEventBin(list,listener,thisObject);
+            if(list.length==0){
+                delete eventMap[type];
+            }
+        }
+        /**
+         * 在一个事件列表中按优先级插入事件对象
+         */
+        public _removeEventBin(list:Array,listener:Function,thisObject:any):boolean{
             var length:number = list.length;
             for (var i:number = 0; i < length; i++) {
                 var bin:any = list[i];
                 if (bin.listener === listener&&bin.thisObject===thisObject) {
                     list.splice(i, 1);
-                    break;
+                    return true
                 }
             }
-            if(list.length==0){
-                delete eventMap[type];
-            }
-            return true;
+            return false;
         }
 
         /**
@@ -160,6 +168,16 @@ module ns_egret {
         public hasEventListener(type:string):boolean {
             return (this._eventsMap&&this._eventsMap[type] ||
                 this._captureEventsMap&&this._captureEventsMap[type]);
+        }
+        /**
+         * 检查是否用此 EventDispatcher 对象或其任何始祖为指定事件类型注册了事件侦听器。将指定类型的事件调度给此
+         * EventDispatcher 对象或其任一后代时，如果在事件流的任何阶段触发了事件侦听器，则此方法返回 true。
+         * hasEventListener() 与 willTrigger() 方法的区别是：hasEventListener() 只检查它所属的对象，
+         * 而 willTrigger() 方法检查整个事件流以查找由 type 参数指定的事件。
+         * @param type 事件名
+         */
+        public willTrigger(type:string):boolean{
+            return this.hasEventListener(type);
         }
 
 
@@ -176,9 +194,9 @@ module ns_egret {
         }
 
         public _notifyListener(event:Event):boolean{
-            if(!this._captureEventsMap||!this._eventsMap)
-                return true;
             var eventMap:Object = event._eventPhase==1 ? this._captureEventsMap : this._eventsMap;
+            if(!eventMap)
+                return true;
             var list:Array = eventMap[event.type];
             if (!list) {
                 return true;
@@ -187,7 +205,7 @@ module ns_egret {
             var length:number = list.length;
             for(var i:number = 0;i<length;i++){
                 var eventBin:any = list[i];
-                eventBin.listener.apply(eventBin.thisObject,[event]);
+                eventBin.listener.call(eventBin.thisObject,event);
                 if(event._isPropagationImmediateStopped){
                     break;
                 }

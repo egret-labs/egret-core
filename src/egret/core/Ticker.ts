@@ -74,7 +74,7 @@ module ns_egret {
                 var eventBin:any = list[i];
                 var frameTime:number = thisTime - this._time;
                 frameTime *= this._timeScale;
-                eventBin.listener.apply(eventBin.thisObject,[frameTime]);
+                eventBin.listener.call(eventBin.thisObject,frameTime);
             }
             this._time = thisTime;
         }
@@ -89,25 +89,7 @@ module ns_egret {
          */
         public register(listener:Function, thisObject:any, priority = 0) {
             var list:Array = this.callBackList;
-            var insertIndex:number = -1;
-            var length:number = list.length;
-            for (var i:number = 0; i < length; i++) {
-                var bin:any = list[i];
-                if (bin.listener === listener&&bin.thisObject===thisObject) {
-                    return;
-                }
-                if (insertIndex == -1 && bin.priority <= priority) {
-                    insertIndex = i;
-                }
-            }
-
-            var eventBin = {listener: listener, thisObject: thisObject, priority: priority};
-            if (insertIndex != -1) {
-                list.splice(insertIndex, 0, eventBin);
-            }
-            else {
-                list.push(eventBin);
-            }
+            this._insertEventBin(list,listener, thisObject,priority);
         }
 
         /**
@@ -118,14 +100,7 @@ module ns_egret {
          */
         public unregister(listener:Function, thisObject:any) {
             var list:Array = this.callBackList;
-            var length:number = list.length;
-            for (var i:number = 0; i < length; i++) {
-                var bin:any = list[i];
-                if (bin.listener === listener&&bin.thisObject===thisObject) {
-                    list.splice(i, 1);
-                    break;
-                }
-            }
+            this._removeEventBin(list,listener,thisObject);
         }
 
         /**

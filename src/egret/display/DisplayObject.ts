@@ -431,49 +431,20 @@ module ns_egret {
         public static _renderCallBackList:Array = [];
 
         public addEventListener(type:string, listener:Function, thisObject:any, useCapture:Boolean = false, priority:number = 0):void {
-            var result:boolean = this._addEventListener(type, listener, thisObject, useCapture, priority);
-            if (!result)
-                return;
+            super.addEventListener(type, listener, thisObject, useCapture, priority);
             var isEnterFrame:boolean = (type == Event.ENTER_FRAME);
             if (isEnterFrame || type == Event.RENDER) {
                 var list:Array = isEnterFrame ? DisplayObject._enterFrameCallBackList : DisplayObject._renderCallBackList;
-                var length:number = list.length;
-                var insertIndex:number = -1;
-                for (var i:number = 0; i < length; i++) {
-                    var bin:any = list[i];
-                    if (bin.priority <= priority) {
-                        insertIndex = i;
-                        break;
-                    }
-                }
-
-                var eventBin = {target: this, listener: listener, thisObject: thisObject, priority: priority};
-                if (insertIndex != -1) {
-                    list.splice(insertIndex, 0, eventBin);
-                }
-                else {
-                    list.push(eventBin);
-                }
-
+                this._insertEventBin(list,listener, thisObject,priority);
             }
         }
 
         public removeEventListener(type:string, listener:Function, thisObject:any, useCapture:Boolean = false):void {
-            var result:boolean = this._removeEventListener(type, listener, thisObject, useCapture);
-            if (!result)
-                return;
+            super.removeEventListener(type, listener, thisObject, useCapture);
             var isEnterFrame:boolean = (type == Event.ENTER_FRAME);
             if (isEnterFrame || type == Event.RENDER) {
                 var list:Array = isEnterFrame ? DisplayObject._enterFrameCallBackList : DisplayObject._renderCallBackList;
-                var length:number = list.length;
-                for (var i:number = 0; i < length; i++) {
-                    var bin:any = list[i];
-                    if (bin.target === this && bin.listener === listener && bin.thisObject == thisObject) {
-                        list.splice(i, 1);
-                        break;
-                    }
-                }
-
+                this._removeEventBin(list,listener,thisObject);
             }
         }
 
@@ -512,6 +483,16 @@ module ns_egret {
                 }
             }
             return !event.isDefaultPrevented();
+        }
+
+        public willTrigger(type:string):boolean{
+            var parent:DisplayObject = this;
+            while(parent){
+                if(parent.hasEventListener(type))
+                    return true;
+                parent = parent._parent;
+            }
+            return false;
         }
 
         static getTransformBounds(bounds:ns_egret.Rectangle, mtx:ns_egret.Matrix) {
