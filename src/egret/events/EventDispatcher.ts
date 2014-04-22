@@ -17,6 +17,7 @@
  */
 
 /// <reference path="../debug/DEBUG.ts"/>
+/// <reference path="../core/HashObject.ts"/>
 /// <reference path="Event.ts"/>
 /// <reference path="IEventDispatcher.ts"/>
 
@@ -26,7 +27,7 @@ module ns_egret {
      * EventDispatcher是egret的事件派发器类，负责进行事件的发送和侦听。
      * @stable A
      */
-    export class EventDispatcher implements IEventDispatcher {
+    export class EventDispatcher extends HashObject implements IEventDispatcher {
 
         /**
          * EventDispatcher 类是可调度事件的所有类的基类。EventDispatcher 类实现 IEventDispatcher 接口
