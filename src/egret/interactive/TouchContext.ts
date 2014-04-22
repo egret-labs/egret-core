@@ -30,8 +30,8 @@ module ns_egret {
      * @stable B 需要把部分和HTML5耦合的部分抽离出来
      */
     export class TouchContext {
-        private _currentTouchTarget = {};
-        public maxTouchs:number = 2;
+        private _currentTouchTarget:any = {};
+        public maxTouches:number = 2;
 
         constructor(private canvas:HTMLCanvasElement) {
         }
@@ -42,7 +42,7 @@ module ns_egret {
             if ("ontouchstart" in window) {
                 this.canvas.addEventListener("touchstart", function (event:any) {
                     var l = event.changedTouches.length;
-                    for (var i:number = 0; i < l && i < that.maxTouchs; i++) {
+                    for (var i:number = 0; i < l && i < that.maxTouches; i++) {
                         that.onTouchBegin(event.changedTouches[i]);
                     }
                     event.stopPropagation();
@@ -51,7 +51,7 @@ module ns_egret {
 
                 this.canvas.addEventListener("touchmove", function (event:any) {
                     var l = event.changedTouches.length;
-                    for (var i:number = 0; i < l && i < that.maxTouchs; i++) {
+                    for (var i:number = 0; i < l && i < that.maxTouches; i++) {
                         that.onTouchMove(event.changedTouches[i]);
                     }
                     event.stopPropagation();
@@ -60,7 +60,7 @@ module ns_egret {
 
                 this.canvas.addEventListener("touchend", function (event:any) {
                     var l = event.changedTouches.length;
-                    for (var i:number = 0; i < l && i < that.maxTouchs; i++) {
+                    for (var i:number = 0; i < l && i < that.maxTouches; i++) {
                         that.onTouchEnd(event.changedTouches[i]);
                     }
                     event.stopPropagation();
@@ -69,7 +69,7 @@ module ns_egret {
 
                 this.canvas.addEventListener("touchcancel", function (event:any) {
                     var l = event.changedTouches.length;
-                    for (var i:number = 0; i < l && i < that.maxTouchs; i++) {
+                    for (var i:number = 0; i < l && i < that.maxTouches; i++) {
                         that.onTouchEnd(event.changedTouches[i]);
                     }
                     event.stopPropagation();
@@ -91,6 +91,8 @@ module ns_egret {
             }
         }
 
+        private touchDownTarget:any = {};
+
         private onTouchBegin(event:any) {
             var location = TouchContext.getLocation(this.canvas, event);
             var x = location.x;
@@ -99,10 +101,10 @@ module ns_egret {
             var result:any = stage.hitTest(x, y);
             if (result) {
                 var obj = this.getTouchData(event, x, y);
+                this.touchDownTarget[obj.identifier] = true;
                 obj.target = result;
                 obj.beginTarget = result;
                 this.dispatchEvent(TouchEvent.TOUCH_BEGAN, obj);
-//                console.log(result);
             }
         }
 
@@ -127,6 +129,7 @@ module ns_egret {
             var result = stage.hitTest(x, y);
             if (result) {
                 var obj = this.getTouchData(event, x, y);
+                delete this.touchDownTarget[obj.identifier];
                 var oldTarget = obj.beginTarget;
                 obj.target = result;
                 this.dispatchEvent(TouchEvent.TOUCH_END, obj);
@@ -137,7 +140,6 @@ module ns_egret {
                     obj.target = obj.beginTarget;
                     this.dispatchEvent(TouchEvent.TOUCH_RELEASE_OUTSIDE, obj);
                 }
-
                 delete this._currentTouchTarget[obj.identifier];
             }
         }
@@ -150,8 +152,8 @@ module ns_egret {
             var obj = this._currentTouchTarget[identifier];
             if (obj == null) {
                 obj = {};
+                this._currentTouchTarget[identifier] = obj;
             }
-            this._currentTouchTarget[identifier] = obj;
             obj.stageX = x;
             obj.stageY = y;
             obj.identifier = identifier;
@@ -165,6 +167,7 @@ module ns_egret {
             var event:TouchEvent = TouchContext.touchEvent;
             event._type = type;
             event.touchPointID = data.identifier;
+            event.touchDown = (this.touchDownTarget[data.identifier]==true)
             event._stageX = data.stageX;
             event._stageY = data.stageY;
             target.dispatchEvent(event);

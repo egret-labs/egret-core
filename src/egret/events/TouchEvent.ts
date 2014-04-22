@@ -119,6 +119,10 @@ module ns_egret{
          * 事件发生时alt键是否被按下。
          */
         public altKey:boolean;
+        /**
+         * 表示触摸已按下 (true) 还是未按下 (false)。
+         */
+        public touchDown:boolean;
 
         public _setCurrentTarget(target:any):void{
             super._setCurrentTarget(target);
