@@ -140,7 +140,7 @@ module ns_egret {
 				return 0;  
 			
 			var maxDelta:number = g.contentWidth - scrollRect.right;
-			var minDelta:number = -scrollRect.left;
+			var minDelta:number = -scrollRect.x;
 			var getElementBounds:Rectangle;
 			switch(navigationUnit){
 				case NavigationUnit.LEFT:
@@ -169,7 +169,7 @@ module ns_egret {
 			var delta:number = 0;
 			switch (navigationUnit){
 				case NavigationUnit.LEFT:
-					delta = Math.max(getElementBounds.left - scrollRect.left, -scrollRect.width);
+					delta = Math.max(getElementBounds.x - scrollRect.x, -scrollRect.width);
 					break;    
 				case NavigationUnit.RIGHT:
 					delta = Math.min(getElementBounds.right - scrollRect.right, scrollRect.width);
@@ -178,11 +178,11 @@ module ns_egret {
 					delta = getElementBounds.right - scrollRect.right;
 					
 					if (delta >= 0)
-						delta = Math.max(getElementBounds.left - scrollRect.left, -scrollRect.width);  
+						delta = Math.max(getElementBounds.x - scrollRect.x, -scrollRect.width);  
 				}
 					break;
 				case NavigationUnit.PAGE_RIGHT:{
-					delta = getElementBounds.left - scrollRect.left;
+					delta = getElementBounds.x - scrollRect.x;
 					
 					if (delta <= 0)
 						delta = Math.min(getElementBounds.right - scrollRect.right, scrollRect.width);
@@ -236,7 +236,7 @@ module ns_egret {
 				return 0;  
 			
 			var maxDelta:number = g.contentHeight - scrollRect.bottom;
-			var minDelta:number = -scrollRect.top;
+			var minDelta:number = -scrollRect.y;
 			var getElementBounds:Rectangle;
 			switch(navigationUnit){
 				case NavigationUnit.UP:
@@ -265,7 +265,7 @@ module ns_egret {
 			var delta:number = 0;
 			switch (navigationUnit){
 				case NavigationUnit.UP:
-					delta = Math.max(getElementBounds.top - scrollRect.top, -scrollRect.height);
+					delta = Math.max(getElementBounds.y - scrollRect.y, -scrollRect.height);
 					break;    
 				case NavigationUnit.DOWN:
 					delta = Math.min(getElementBounds.bottom - scrollRect.bottom, scrollRect.height);
@@ -274,11 +274,11 @@ module ns_egret {
 					delta = getElementBounds.bottom - scrollRect.bottom;
 					
 					if (delta >= 0)
-						delta = Math.max(getElementBounds.top - scrollRect.top, -scrollRect.height);  
+						delta = Math.max(getElementBounds.y - scrollRect.y, -scrollRect.height);  
 				}
 					break;
 				case NavigationUnit.PAGE_DOWN:{
-					delta = getElementBounds.top - scrollRect.top;
+					delta = getElementBounds.y - scrollRect.y;
 					
 					if (delta <= 0)
 						delta = Math.min(getElementBounds.bottom - scrollRect.bottom, scrollRect.height);
@@ -305,8 +305,8 @@ module ns_egret {
 		 */		
 		public getElementBoundsLeftOfScrollRect(scrollRect:Rectangle):Rectangle{
 			var bounds:Rectangle = new Rectangle();
-			bounds.left = scrollRect.left - 1;
-			bounds.right = scrollRect.left; 
+			bounds.x = scrollRect.x - 1;
+			bounds.right = scrollRect.x; 
 			return bounds;
 		} 
 		/**
@@ -314,7 +314,7 @@ module ns_egret {
 		 */		
 		public getElementBoundsRightOfScrollRect(scrollRect:Rectangle):Rectangle{
 			var bounds:Rectangle = new Rectangle();
-			bounds.left = scrollRect.right;
+			bounds.x = scrollRect.right;
 			bounds.right = scrollRect.right + 1;
 			return bounds;
 		} 
@@ -323,8 +323,8 @@ module ns_egret {
 		 */
 		public getElementBoundsAboveScrollRect(scrollRect:Rectangle):Rectangle{
 			var bounds:Rectangle = new Rectangle();
-			bounds.top = scrollRect.top - 1;
-			bounds.bottom = scrollRect.top;
+			bounds.y = scrollRect.y - 1;
+			bounds.bottom = scrollRect.y;
 			return bounds;
 		} 
 		/**
@@ -332,7 +332,7 @@ module ns_egret {
 		 */		
 		public getElementBoundsBelowScrollRect(scrollRect:Rectangle):Rectangle{
 			var bounds:Rectangle = new Rectangle();
-			bounds.top = scrollRect.bottom;
+			bounds.y = scrollRect.bottom;
 			bounds.bottom = scrollRect.bottom + 1;
 			return bounds;
 		}
