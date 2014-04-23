@@ -367,8 +367,17 @@ module ns_egret {
             }
             var bound:Rectangle = this.getBounds();
             if (0 < x && x < bound.width && 0 < y && y < bound.height) {
-                if (this.mask) {
-                    if (this.mask.x < x && x < this.mask.x + this.mask.width && this.mask.y < y && y < this.mask.y + this.mask.height) {
+                if (this.mask || this.scrollRect) {
+                    if (this.scrollRect
+                        && x <this.scrollRect.width
+                        && y <this.scrollRect.height) {
+                        return this;
+                    }
+                    else if (this.mask
+                        && this.mask.x < x
+                        && x < this.mask.x + this.mask.width
+                        && this.mask.y < y
+                        && y < this.mask.y + this.mask.height) {
                         return this;
                     }
                     return null;

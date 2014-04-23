@@ -318,8 +318,17 @@ module ns_egret {
             if (!this.visible) {
                 return null;
             }
-            if (this.mask) {
-                if (this.mask.x > x || x > this.mask.x + this.mask.width || this.mask.y > y || y > this.mask.y + this.mask.height) {
+            if (this.scrollRect) {
+                if (x > this.scrollRect.width
+                    || y > this.scrollRect.height) {
+                    return null;
+                }
+            }
+            else if (this.mask) {
+                if (this.mask.x > x
+                    || x > this.mask.x + this.mask.width
+                    || this.mask.y > y
+                    || y > this.mask.y + this.mask.height) {
                     return null;
                 }
             }
@@ -329,9 +338,15 @@ module ns_egret {
                 var child = children[i];
                 //todo 這裡的matrix不符合identity的設計原則，以後需要重構
                 var o = child;
-
                 var offsetPoint = o.getOffsetPoint();
-                var mtx = Matrix.identity.identity().prependTransform(o.x, o.y, o.scaleX, o.scaleY, o.rotation,
+                var childX = o.x;
+                var childY = o.y;
+                if(this.scrollRect)
+                {
+                    childX -= this.scrollRect.x;
+                    childY -= this.scrollRect.y;
+                }
+                var mtx = Matrix.identity.identity().prependTransform(childX, childY, o.scaleX, o.scaleY, o.rotation,
                     0, 0, offsetPoint.x, offsetPoint.y);
                 mtx.invert();
                 var point = Matrix.transformCoords(mtx, x, y);
