@@ -17,32 +17,15 @@
  */
 module ns_egret {
 
-	export class PopUpPosition{	
+	export class TileOrientation{
 		/**
-		 * 在组件上方弹出
+		 * 逐行排列元素。 
 		 */		
-		public static ABOVE:string = "above";
-		/**
-		 * 在组件下方弹出
-		 */		
-		public static BELOW:string = "below";
-		/**
-		 * 在组件中心弹出
-		 */		
-		public static CENTER:string = "center";
-		/**
-		 * 在组件左上角弹出 
-		 */		
-		public static TOP_LEFT:string = "topLeft";
-		/**
-		 * 在组件左边弹出
-		 */		
-		public static LEFT:string = "left";
-		/**
-		 * 在组件右边弹出
-		 */		
-		public static RIGHT:string = "right";
+		public static ROWS:string = "rows";
 		
-		
+		/**
+		 * 逐列排列元素。
+		 */
+		public static COLUMNS:string = "columns";
 	}
 }

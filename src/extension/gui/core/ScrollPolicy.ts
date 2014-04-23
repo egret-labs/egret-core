@@ -17,32 +17,20 @@
  */
 module ns_egret {
 
-	export class PopUpPosition{	
+	export class ScrollPolicy{
 		/**
-		 * 在组件上方弹出
+		 * 如果子项超出所有者的尺寸，则显示滚动栏。在显示滚动条时并不会因滚动条尺寸而调整所有者的尺寸，因此这可能会导致 scrollbar 遮蔽控件或容器的内容。
 		 */		
-		public static ABOVE:string = "above";
-		/**
-		 * 在组件下方弹出
-		 */		
-		public static BELOW:string = "below";
-		/**
-		 * 在组件中心弹出
-		 */		
-		public static CENTER:string = "center";
-		/**
-		 * 在组件左上角弹出 
-		 */		
-		public static TOP_LEFT:string = "topLeft";
-		/**
-		 * 在组件左边弹出
-		 */		
-		public static LEFT:string = "left";
-		/**
-		 * 在组件右边弹出
-		 */		
-		public static RIGHT:string = "right";
+		public static AUTO:string = "auto";
 		
+		/**
+		 * 从不显示滚动栏。 
+		 */		
+		public static OFF:string = "off";
 		
+		/**
+		 * 总是显示滚动栏。scrollbar 的尺寸将自动添加至所有者内容的尺寸，以便在未显式指定所有者尺寸时确定该尺寸。
+		 */		
+		public static ON:string = "on";
 	}
 }

@@ -33,7 +33,10 @@ module ns_egret {
 		}
 		
 		public remove(parent:IContainer):void {
-			
+			if(parent===null)
+            {
+
+            }
 		}
 		/**
 		 * 从对象初始化，这是一个便利方法

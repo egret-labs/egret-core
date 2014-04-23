@@ -17,32 +17,27 @@
  */
 module ns_egret {
 
-	export class PopUpPosition{	
+	export class VerticalAlign{
 		/**
-		 * 在组件上方弹出
+		 * 在容器的中央垂直对齐子项。 
 		 */		
-		public static ABOVE:string = "above";
+		public static TOP:string = "top";
 		/**
-		 * 在组件下方弹出
+		 * 在容器的中央垂直对齐子项。 
 		 */		
-		public static BELOW:string = "below";
+		public static MIDDLE:string = "middle";
 		/**
-		 * 在组件中心弹出
+		 * 在容器的底部垂直对齐子项。 
 		 */		
-		public static CENTER:string = "center";
+		public static BOTTOM:string = "bottom";
 		/**
-		 * 在组件左上角弹出 
+		 * 相对于容器对齐子项。这将会以容器高度为标准，调整所有子项的高度，使其始终填满容器。
 		 */		
-		public static TOP_LEFT:string = "topLeft";
+		public static JUSTIFY:string = "justify";
 		/**
-		 * 在组件左边弹出
+		 * 相对于容器对子项进行内容对齐。这会将所有子项的大小统一调整为容器的内容高度contentHeight。
+		 * 容器的内容高度是最大子项的大小。如果所有子项都小于容器的高度，则会将所有子项的大小调整为容器的高度。 
 		 */		
-		public static LEFT:string = "left";
-		/**
-		 * 在组件右边弹出
-		 */		
-		public static RIGHT:string = "right";
-		
-		
+		public static CONTENT_JUSTIFY:string = "contentJustify";
 	}
 }

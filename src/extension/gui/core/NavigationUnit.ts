@@ -15,34 +15,51 @@
  * FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
+
+/// <reference path="../../../egret/ui/Keyboard.ts"/>
+
 module ns_egret {
 
-	export class PopUpPosition{	
+	export class NavigationUnit{
 		/**
-		 * 在组件上方弹出
+		 * 导航到文档的开头。 
 		 */		
-		public static ABOVE:string = "above";
+		public static HOME:number = Keyboard.HOME;
 		/**
-		 * 在组件下方弹出
+		 * 导航到文档的末尾。 
 		 */		
-		public static BELOW:string = "below";
+		public static END:number = Keyboard.END;
 		/**
-		 * 在组件中心弹出
+		 * 向上导航一行或向上“步进”。 
 		 */		
-		public static CENTER:string = "center";
+		public static UP:number = Keyboard.UP;
 		/**
-		 * 在组件左上角弹出 
+		 * 向上导航一行或向上“步进”。
 		 */		
-		public static TOP_LEFT:string = "topLeft";
+		public static DOWN:number = Keyboard.DOWN;
 		/**
-		 * 在组件左边弹出
+		 * 向上导航一行或向上“步进”。 
 		 */		
-		public static LEFT:string = "left";
+		public static LEFT:number = Keyboard.LEFT;
 		/**
-		 * 在组件右边弹出
+		 * 向右导航一行或向右“步进”。
 		 */		
-		public static RIGHT:string = "right";
-		
-		
+		public static RIGHT:number = Keyboard.RIGHT;
+		/**
+		 * 向上导航一页。
+		 */		
+		public static PAGE_UP:number = Keyboard.PAGE_UP;
+		/**
+		 * 向下导航一页。
+		 */		
+		public static PAGE_DOWN:number = Keyboard.PAGE_DOWN;
+		/**
+		 * 向左导航一页。
+		 */		
+		public static PAGE_LEFT:number = 0x2397;
+		/**
+		 * 向左导航一页。
+		 */		
+		public static PAGE_RIGHT:number = 0x2398;
 	}
 }

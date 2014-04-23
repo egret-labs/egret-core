@@ -17,32 +17,20 @@
  */
 module ns_egret {
 
-	export class PopUpPosition{	
+	export class ColumnAlign{
 		/**
-		 * 在组件上方弹出
-		 */		
-		public static ABOVE:string = "above";
-		/**
-		 * 在组件下方弹出
-		 */		
-		public static BELOW:string = "below";
-		/**
-		 * 在组件中心弹出
-		 */		
-		public static CENTER:string = "center";
-		/**
-		 * 在组件左上角弹出 
-		 */		
-		public static TOP_LEFT:string = "topLeft";
-		/**
-		 * 在组件左边弹出
+		 * 不将行两端对齐。 
 		 */		
 		public static LEFT:string = "left";
+		
 		/**
-		 * 在组件右边弹出
+		 * 通过增大水平间隙将行两端对齐。
+		 */
+		public static JUSTIFY_USING_GAP:string = "justifyUsingGap";
+		
+		/**
+		 * 通过增大行高度将行两端对齐。 
 		 */		
-		public static RIGHT:string = "right";
-		
-		
+		public static JUSTIFY_USING_WIDTH:string = "justifyUsingWidth";
 	}
 }
