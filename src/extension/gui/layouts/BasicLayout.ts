@@ -52,38 +52,38 @@ module ns_egret {
 		 */
 		public getElementBoundsLeftOfScrollRect(scrollRect:Rectangle):Rectangle{
 			var bounds:Rectangle = new Rectangle();
-			bounds.left = scrollRect.left - this._mouseWheelSpeed;
-			bounds.right = scrollRect.left; 
+			bounds.x = scrollRect.x - this._mouseWheelSpeed;
+			bounds.right = scrollRect.x;
 			return bounds;
-		} 
+		}
 		/**
 		 * @inheritDoc
 		 */
 		public getElementBoundsRightOfScrollRect(scrollRect:Rectangle):Rectangle{
 			var bounds:Rectangle = new Rectangle();
-			bounds.left = scrollRect.right;
+			bounds.x = scrollRect.right;
 			bounds.right = scrollRect.right + this._mouseWheelSpeed;
 			return bounds;
-		} 
+		}
 		/**
 		 * @inheritDoc
 		 */
 		public getElementBoundsAboveScrollRect(scrollRect:Rectangle):Rectangle{
 			var bounds:Rectangle = new Rectangle();
-			bounds.top = scrollRect.top - this._mouseWheelSpeed;
-			bounds.bottom = scrollRect.top;
+			bounds.y = scrollRect.y - this._mouseWheelSpeed;
+			bounds.bottom = scrollRect.y;
 			return bounds;
-		} 
+		}
 		/**
 		 * @inheritDoc
 		 */
 		public getElementBoundsBelowScrollRect(scrollRect:Rectangle):Rectangle{
 			var bounds:Rectangle = new Rectangle();
-			bounds.top = scrollRect.bottom;
+			bounds.y = scrollRect.bottom;
 			bounds.bottom = scrollRect.bottom + this._mouseWheelSpeed;
 			return bounds;
 		}
-		
+
 		/**
 		 * @inheritDoc
 		 */
@@ -92,28 +92,28 @@ module ns_egret {
 
 			if (this.target==null)
 				return;
-			
+
 			var width:number = 0;
 			var height:number = 0;
-			
+
 			var count:number = this.target.numElements;
 			for (var i:number = 0; i < count; i++){
 				var layoutElement:ILayoutElement = <ILayoutElement> (this.target.getElementAt(i));
 				if (!layoutElement||!layoutElement.includeInLayout)
 					continue;
-				
+
 				var hCenter:number   = layoutElement.horizontalCenter;
 				var vCenter:number   = layoutElement.verticalCenter;
 				var left:number      = layoutElement.left;
 				var right:number     = layoutElement.right;
 				var top:number       = layoutElement.top;
 				var bottom:number    = layoutElement.bottom;
-				
+
 				var extX:number;
 				var extY:number;
-				
+
 				if (!isNaN(left) && !isNaN(right)){
-					extX = left + right;                
+					extX = left + right;
 				}
 				else if (!isNaN(hCenter)){
 					extX = Math.abs(hCenter) * 2;
@@ -125,9 +125,9 @@ module ns_egret {
 				else{
 					extX = layoutElement.preferredX;
 				}
-				
+
 				if (!isNaN(top) && !isNaN(bottom)){
-					extY = top + bottom;                
+					extY = top + bottom;
 				}
 				else if (!isNaN(vCenter)){
 					extY = Math.abs(vCenter) * 2;
@@ -139,37 +139,37 @@ module ns_egret {
 				else{
 					extY = layoutElement.preferredY;
 				}
-				
+
 				var preferredWidth:number = layoutElement.preferredWidth;
 				var preferredHeight:number = layoutElement.preferredHeight;
-				
+
 				width = Math.ceil(Math.max(width, extX + preferredWidth));
 				height = Math.ceil(Math.max(height, extY + preferredHeight));
 			}
-			
+
 			this.target.measuredWidth = width;
 			this.target.measuredHeight = height;
 		}
-		
-		
+
+
 		/**
 		 * @inheritDoc
 		 */
 		public updateDisplayList(unscaledWidth:number, unscaledHeight:number):void{
 			super.updateDisplayList(unscaledWidth, unscaledHeight);
-			
+
 			if (this.target==null)
 				return;
-			
+
 			var count:number = this.target.numElements;
-			
+
 			var maxX:number = 0;
 			var maxY:number = 0;
 			for (var i:number = 0; i < count; i++){
 				var layoutElement:ILayoutElement = <ILayoutElement> (this.target.getElementAt(i));
 				if (layoutElement==null||!layoutElement.includeInLayout)
 					continue;
-				
+
 				var hCenter:number          = layoutElement.horizontalCenter;
 				var vCenter:number          = layoutElement.verticalCenter;
 				var left:number             = layoutElement.left;
