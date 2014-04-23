@@ -50,56 +50,56 @@ module ns_egret {
         /**
          * 在将显示对象直接添加到舞台显示列表或将包含显示对象的子树添加至舞台显示列表中时调度。
          * 以下方法会触发此事件：DisplayObjectContainer.addChild()、DisplayObjectContainer.addChildAt()。
-         * @constant ns_egret.Event.ADDED_TO_STAGE
+         * @constant {string} ns_egret.Event.ADDED_TO_STAGE
          */
         public static ADDED_TO_STAGE:string = "addedToStage";
         /**
          * 在从显示列表中直接删除显示对象或删除包含显示对象的子树时调度。DisplayObjectContainer 类的以下两个方法会生成此事件：removeChild() 和 removeChildAt()。
          * 如果必须删除某个对象来为新对象提供空间，则 DisplayObjectContainer 对象的下列方法也会生成此事件：addChild()、addChildAt() 和 setChildIndex()。
-         * @constant ns_egret.Event.REMOVED_FROM_STAGE
+         * @constant {string} ns_egret.Event.REMOVED_FROM_STAGE
          */
         public static REMOVED_FROM_STAGE:string = "removedFromStage";
         /**
          * 将显示对象添加到显示列表中时调度。以下方法会触发此事件：
          * DisplayObjectContainer.addChild()、DisplayObjectContainer.addChildAt()。
-         * @constant ns_egret.Event.ADDED
+         * @constant {string} ns_egret.Event.ADDED
          */
         public static ADDED:string = "added";
         /**
          * 将要从显示列表中删除显示对象时调度。DisplayObjectContainer 类的以下两个方法会生成此事件：removeChild() 和 removeChildAt()。
          * 如果必须删除某个对象来为新对象提供空间，则 DisplayObjectContainer 对象的下列方法也会生成此事件：addChild()、addChildAt() 和 setChildIndex()。
-         * @constant ns_egret.Event.REMOVED
+         * @constant {string} ns_egret.Event.REMOVED
          */
         public static REMOVED:string = "removed";
         /**
          * 完成
-         * @constant ns_egret.Event.COMPLETE
+         * @constant {string} ns_egret.Event.COMPLETE
          */
         public static COMPLETE:string = "complete";
 
         /**
          * 主循环：进入新的一帧
-         * @constant ns_egret.Event.ENTER_FRAME
+         * @constant {string} ns_egret.Event.ENTER_FRAME
          */
         public static ENTER_FRAME:string = "enterFrame";
         /**
          * 主循环：开始渲染
-         * @constant ns_egret.Event.RENDER
+         * @constant {string} ns_egret.Event.RENDER
          */
         public static RENDER:string = "render";
         /**
          * 主循环：渲染完毕
-         * @constant ns_egret.Event.FINISH_RENDER
+         * @constant {string} ns_egret.Event.FINISH_RENDER
          */
         public static FINISH_RENDER:string = "finishRender";
         /**
          * 主循环：updateTransform完毕
-         * @constant ns_egret.Event.FINISH_UPDATE_TRANSFORM
+         * @constant {string} ns_egret.Event.FINISH_UPDATE_TRANSFORM
          */
         public static FINISH_UPDATE_TRANSFORM:string = "finishUpdateTransform";
         /**
          * 离开舞台，参考Flash的Event.MOUSE_LEAVE
-         * @constant ns_egret.Event.LEAVE_STAGE
+         * @constant {string} ns_egret.Event.LEAVE_STAGE
          */
         public static LEAVE_STAGE:string = "leaveStage";
 
