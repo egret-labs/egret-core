@@ -38,7 +38,7 @@ module ns_egret {
 			return this._target;
 		}
 		
-		public set target(value:GroupBase):void{
+		public set target(value:GroupBase){
 			if (this._target == value)
 				return;
 			this._target = value;
@@ -53,7 +53,7 @@ module ns_egret {
 			return this._horizontalScrollPosition;
 		}
 		
-		public set horizontalScrollPosition(value:number):void {
+		public set horizontalScrollPosition(value:number) {
 			if (value == this._horizontalScrollPosition) 
 				return;
 			var oldValue:number = this._horizontalScrollPosition;
@@ -71,7 +71,7 @@ module ns_egret {
 			return this._verticalScrollPosition;
 		}
 		
-		public set verticalScrollPosition(value:number):void {
+		public set verticalScrollPosition(value:number) {
 			if (value == this._verticalScrollPosition)
 				return;
 			var oldValue:number = this._verticalScrollPosition;
@@ -89,7 +89,7 @@ module ns_egret {
 			return this._clipAndEnableScrolling;
 		}
 		
-		public set clipAndEnableScrolling(value:boolean):void {
+		public set clipAndEnableScrolling(value:boolean) {
 			if (value == this._clipAndEnableScrolling) 
 				return;
 			
@@ -372,7 +372,7 @@ module ns_egret {
 			return this._useVirtualLayout;
 		}
 		
-		public set useVirtualLayout(value:boolean):void{
+		public set useVirtualLayout(value:boolean){
 			if (this._useVirtualLayout == value)
 				return;
 			
@@ -394,7 +394,7 @@ module ns_egret {
 			return this._typicalLayoutRect;
 		}
 		
-		public set typicalLayoutRect(value:Rectangle):void{
+		public set typicalLayoutRect(value:Rectangle){
 			if(this._typicalLayoutRect==value)
 				return;
 			this._typicalLayoutRect = value;

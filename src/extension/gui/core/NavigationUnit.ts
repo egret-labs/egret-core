@@ -16,43 +16,41 @@
  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-/// <reference path="../../../egret/ui/Keyboard.ts"/>
-
 module ns_egret {
 
 	export class NavigationUnit{
 		/**
 		 * 导航到文档的开头。 
 		 */		
-		public static HOME:number = Keyboard.HOME;
+		public static HOME:number = 36;
 		/**
 		 * 导航到文档的末尾。 
 		 */		
-		public static END:number = Keyboard.END;
+		public static END:number = 35;
 		/**
 		 * 向上导航一行或向上“步进”。 
 		 */		
-		public static UP:number = Keyboard.UP;
+		public static UP:number = 38;
 		/**
 		 * 向上导航一行或向上“步进”。
 		 */		
-		public static DOWN:number = Keyboard.DOWN;
+		public static DOWN:number = 40;
 		/**
 		 * 向上导航一行或向上“步进”。 
 		 */		
-		public static LEFT:number = Keyboard.LEFT;
+		public static LEFT:number = 37;
 		/**
 		 * 向右导航一行或向右“步进”。
 		 */		
-		public static RIGHT:number = Keyboard.RIGHT;
+		public static RIGHT:number = 39;
 		/**
 		 * 向上导航一页。
 		 */		
-		public static PAGE_UP:number = Keyboard.PAGE_UP;
+		public static PAGE_UP:number = 33;
 		/**
 		 * 向下导航一页。
 		 */		
-		public static PAGE_DOWN:number = Keyboard.PAGE_DOWN;
+		public static PAGE_DOWN:number = 34;
 		/**
 		 * 向左导航一页。
 		 */		

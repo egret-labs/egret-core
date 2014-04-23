@@ -17,6 +17,7 @@
  */
 
 /// <reference path="../core/IContainer.ts"/>
+/// <reference path="OverrideBase.ts"/>
 
 module ns_egret {
 

@@ -64,7 +64,7 @@ module ns_egret {
 			return this._autoRepeat;
 		}
 		
-		public set autoRepeat(value:boolean):void{
+		public set autoRepeat(value:boolean){
 			if (value == this._autoRepeat)
 				return;
 			
@@ -80,7 +80,7 @@ module ns_egret {
 			return this._repeatDelay;
 		}
 
-		public set repeatDelay(value:number):void{
+		public set repeatDelay(value:number){
 			this._repeatDelay = value;
 		}
 		
@@ -93,7 +93,7 @@ module ns_egret {
 			return this._repeatInterval;
 		}
 
-		public set repeatInterval(value:number):void{
+		public set repeatInterval(value:number){
 			this._repeatInterval = value;
 		}
 
@@ -106,7 +106,7 @@ module ns_egret {
 			return this._hovered;
 		}
 		
-		public set hovered(value:boolean):void{
+		public set hovered(value:boolean){
 			if (value == this._hovered)
 				return;
 			this._hovered = value;
@@ -132,7 +132,7 @@ module ns_egret {
 		/**
 		 * 要在按钮上显示的文本
 		 */		
-		public set label(value:string):void{
+		public set label(value:string){
 			this._label = value;
 			if(this.labelDisplay){
 				this.labelDisplay.text = value;
@@ -156,7 +156,7 @@ module ns_egret {
 			return this._mouseCaptured;
 		}
 		
-		public set mouseCaptured(value:boolean):void{
+		public set mouseCaptured(value:boolean){
 			if (value == this._mouseCaptured)
 				return;
 			
@@ -176,7 +176,7 @@ module ns_egret {
 			return this._stickyHighlighting
 		}
 		
-		public set stickyHighlighting(value:boolean):void{
+		public set stickyHighlighting(value:boolean){
 			if (value == this._stickyHighlighting)
 				return;
 			
@@ -419,7 +419,7 @@ module ns_egret {
 			return this._createLabelIfNeed;
 		}
 
-		public set createLabelIfNeed(value:boolean):void{
+		public set createLabelIfNeed(value:boolean){
 			if(value==this._createLabelIfNeed)
 				return;
 			this._createLabelIfNeed = value;

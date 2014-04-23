@@ -30,7 +30,7 @@ module ns_egret {
 		/**
 		 * 此布局不支持虚拟布局，设置这个属性无效
 		 */		
-		public set useVirtualLayout(value:boolean):void{
+		public set useVirtualLayout(value:boolean){
 		}
 		
 		private _mouseWheelSpeed:number = 20;
@@ -41,7 +41,7 @@ module ns_egret {
 		public get mouseWheelSpeed():number{
 			return this._mouseWheelSpeed;
 		}
-		public set mouseWheelSpeed(value:number):void{
+		public set mouseWheelSpeed(value:number){
 			if(value==0)
 				value = 1;
 			this._mouseWheelSpeed = value;

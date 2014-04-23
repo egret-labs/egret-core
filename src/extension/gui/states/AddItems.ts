@@ -21,6 +21,7 @@
 /// <reference path="../core/ISkinnableClient.ts"/>
 /// <reference path="../core/IStateClient.ts"/>
 /// <reference path="../core/IVisualElement.ts"/>
+/// <reference path="OverrideBase.ts"/>
 
 module ns_egret {
 
@@ -80,7 +81,7 @@ module ns_egret {
 				try{
 					targetElement[this.INITIALIZE_FUNCTION]();
 				}
-				catch(e:Error){
+				catch(e){
 				}
 			}
 		}
@@ -91,7 +92,7 @@ module ns_egret {
 			try{
 				relative = <IVisualElement> (parent[this.relativeTo]);
 			}
-			catch(e:Error){
+			catch(e){
 			}
 			var targetElement:IVisualElement = <IVisualElement> (parent[this.target]);
 			var dest:IContainer = <IContainer> (this.propertyName?parent[this.propertyName]:parent);

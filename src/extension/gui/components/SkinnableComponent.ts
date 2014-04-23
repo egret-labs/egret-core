@@ -23,6 +23,7 @@
 /// <reference path="../core/ISkin.ts"/>
 /// <reference path="../core/IStateClient.ts"/>
 /// <reference path="../events/SkinPartEvent.ts"/>
+/// <reference path="UIAsset.ts"/>
 
 module ns_egret {
 

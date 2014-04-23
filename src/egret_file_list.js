@@ -72,16 +72,45 @@ var temp = [
     "extension/gui/core/UIGlobals.js",
     "extension/gui/core/UIComponent.js",
     "extension/gui/core/PopUpPosition.js",
+    "extension/gui/core/NavigationUnit.js",
+    "extension/gui/core/ScrollPolicy.js",
     "extension/gui/components/supportClasses/DefaultSkinAdapter.js",
-    "extension/gui/components/supportClasses/TextBase.js",
+    "extension/gui/components/supportClasses/SkinBasicLayout.js",
     "extension/gui/components/UIAsset.js",
+    "extension/gui/components/SkinnableComponent.js",
+    "extension/gui/components/supportClasses/TextBase.js",
+    "extension/gui/components/supportClasses/ButtonBase.js",
+    "extension/gui/components/supportClasses/GroupBase.js",
     "extension/gui/components/Label.js",
+    "extension/gui/components/Button.js",
+    "extension/gui/components/Group.js",
     "extension/gui/events/UIEvent.js",
     "extension/gui/events/PropertyChangeEvent.js",
     "extension/gui/events/PropertyChangeEventKind.js",
     "extension/gui/events/MoveEvent.js",
     "extension/gui/events/ResizeEvent.js",
     "extension/gui/events/SkinPartEvent.js",
+    "extension/gui/events/CloseEvent.js",
+    "extension/gui/events/CollectionEvent.js",
+    "extension/gui/events/ElementExistenceEvent.js",
+    "extension/gui/events/IndexChangeEvent.js",
+    "extension/gui/events/ListEvent.js",
+    "extension/gui/events/PopUpEvent.js",
+    "extension/gui/events/RendererExistenceEvent.js",
+    "extension/gui/events/StateChangeEvent.js",
+    "extension/gui/events/TrackBaseEvent.js",
+    "extension/gui/events/TreeEvent.js",
+    "extension/gui/layouts/supportClasses/LayoutBase.js",
+    "extension/gui/layouts/BasicLayout.js",
+    "extension/gui/layouts/ColumnAlign.js",
+    "extension/gui/layouts/HorizontalAlign.js",
+    "extension/gui/layouts/RowAlign.js",
+    "extension/gui/layouts/TileOrientation.js",
+    "extension/gui/layouts/VerticalAlign.js",
+    "extension/gui/states/OverrideBase.js",
+    "extension/gui/states/AddItems.js",
+    "extension/gui/states/SetProperty.js",
+    "extension/gui/states/State.js",
     //GUI end
 
     "extension/gameInput/VirtualJoystick.js",
@@ -121,6 +150,9 @@ egret_file_list = temp;
 var __extends = this.__extends || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
+    if (!b){
+        console.log(d.toString() + "extends Error");
+    }
     __.prototype = b.prototype;
     d.prototype = new __();
 };

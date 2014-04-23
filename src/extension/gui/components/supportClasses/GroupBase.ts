@@ -91,7 +91,7 @@ module ns_egret {
 			return this._layout;
 		}
 
-		public set layout(value:LayoutBase):void{
+		public set layout(value:LayoutBase){
 			
 			if (this._layout == value)
 				return;
@@ -166,7 +166,7 @@ module ns_egret {
 		/**
 		 * @inheritDoc
 		 */
-		public set clipAndEnableScrolling(value:boolean):void{
+		public set clipAndEnableScrolling(value:boolean){
 			if (this._layout){
 				this._layout.clipAndEnableScrolling = value;
 			}
@@ -210,7 +210,7 @@ module ns_egret {
 		/**
 		 * @inheritDoc
 		 */
-		public set horizontalScrollPosition(value:number):void{
+		public set horizontalScrollPosition(value:number){
 			if (this._layout){
 				this._layout.horizontalScrollPosition = value;
 			}
@@ -240,7 +240,7 @@ module ns_egret {
 		/**
 		 * @inheritDoc
 		 */
-		public set verticalScrollPosition(value:number):void{
+		public set verticalScrollPosition(value:number){
 			if (this._layout){
 				this._layout.verticalScrollPosition = value;
 			}
@@ -408,7 +408,7 @@ module ns_egret {
 		/**
 		 * @inheritDoc
 		 */
-		public set scrollRect(value:Rectangle):void{
+		public set scrollRect(value:Rectangle){
 			super.scrollRect = value;
 			if(this.hasEventListener("scrollRectChange"))
 				this.dispatchEvent(new Event("scrollRectChange"));

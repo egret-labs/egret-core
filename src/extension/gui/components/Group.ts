@@ -66,7 +66,7 @@ module ns_egret {
 		 * 设置容器子对象数组 。数组包含要添加到容器的子项列表，之前的已存在于容器中的子项列表被全部移除后添加列表里的每一项到容器。
 		 * 设置该属性时会对您输入的数组进行一次浅复制操作，所以您之后对该数组的操作不会影响到添加到容器的子项列表数量。
 		 */		
-		public set elementsContent(value:Array):void{
+		public set elementsContent(value:Array){
 			if(value==null)
 				value = [];
 			if(value==this._elementsContent)
@@ -99,9 +99,9 @@ module ns_egret {
 			for (i = 0; i < n; i++){   
 				var elt:IVisualElement = this._elementsContent[i];
 				
-				if(elt.parent instanceof IVisualElementContainer)
+				if(elt.parent&&"removeElement" in elt.parent)
 					(<IVisualElementContainer> (elt.parent)).removeElement(elt);
-				else if(elt.owner instanceof IContainer)
+				else if(elt.owner&&"removeElement" in elt.owner)
 					(<IContainer> (elt.owner)).removeElement(elt);
 				
 				this.elementAdded(elt, i);
@@ -159,10 +159,10 @@ module ns_egret {
 				this.setElementIndex(element, index);
 				return element;
 			}
-			else if (host instanceof IVisualElementContainer){
+			else if (host&&"removeElement" in host){
 				(<IVisualElementContainer> host).removeElement(element);
 			}
-			else if(element.owner instanceof IContainer){
+			else if(element.owner&&"removeElement" in element.owner){
 				(<IContainer> (element.owner)).removeElement(element);
 			}
 			
