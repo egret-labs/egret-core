@@ -123,6 +123,11 @@ module ns_egret {
 
         public blendMode:BlendMode;
 
+        /**
+         * 显示对象的滚动矩形范围。显示对象被裁切为矩形定义的大小，当您更改 scrollRect 对象的 x 和 y 属性时，它会在矩形内滚动。
+         */
+        public scrollRect:Rectangle;
+
 
         /**
          * 测量宽度
@@ -178,11 +183,11 @@ module ns_egret {
          * 显式设置宽度
          * @param value
          */
-        public set width(value:number){
+        public set width(value:number) {
             this._explicitWidth = value;
         }
 
-        
+
         /**
          * 显式设置高度
          * @param value
@@ -214,7 +219,7 @@ module ns_egret {
          * @private
          * @param renderContext
          */
-         public draw(renderContext:RendererContext) {
+        public draw(renderContext:RendererContext) {
             if (!this.visible) {
                 return;
             }
@@ -225,12 +230,17 @@ module ns_egret {
             var o = this;
             renderContext.setAlpha(o.worldAlpha, o.blendMode);
             renderContext.setTransform(o.worldTransform);
-            if (o.mask) {
+            if (o.mask || o.scrollRect) {
                 renderContext.save();
-                renderContext.clip(o.mask.x, o.mask.y, o.mask.width, o.mask.height);
+                if (o.scrollRect) {
+                    renderContext.clip(o.scrollRect.x, o.scrollRect.y, o.scrollRect.width, o.scrollRect.height);
+                }
+                else {
+                    renderContext.clip(o.mask.x, o.mask.y, o.mask.width, o.mask.height);
+                }
             }
             this.render(renderContext);
-            if (o.mask) {
+            if (o.mask || o.scrollRect) {
                 renderContext.restore();
             }
         }
@@ -240,7 +250,7 @@ module ns_egret {
          * @private
          * @param renderContext
          */
-         public updateTransform() {
+        public updateTransform() {
             var o = this;
             o.worldTransform.identity();
             o.worldTransform = o.worldTransform.appendMatrix(o.parent.worldTransform);
@@ -256,6 +266,9 @@ module ns_egret {
             }
             o.worldTransform.appendTransform(o.x, o.y, o.scaleX, o.scaleY, o.rotation,
                 o.skewX, o.skewY, anchorX, anchorY);
+            if (o.scrollRect) {
+                o.worldTransform.append(1, 0, 0, 1, -o.scrollRect.x, -o.scrollRect.y);
+            }
             var bounds:ns_egret.Rectangle = DisplayObject.getTransformBounds(o.getBounds(), o.worldTransform);
             o.worldBounds.initialize(bounds.x, bounds.y, bounds.width, bounds.height);
             o.worldAlpha = o.parent.worldAlpha * o.alpha;
@@ -265,7 +278,7 @@ module ns_egret {
          * @private
          * @param renderContext
          */
-         public render(renderContext:RendererContext) {
+        public render(renderContext:RendererContext) {
 
         }
 
@@ -273,11 +286,11 @@ module ns_egret {
          * 获取显示对象的测量边界
          * @returns {Rectangle}
          */
-         public getBounds() {
+        public getBounds() {
             var rect:Rectangle = this._measureBounds();
             var heightSet:boolean = !isNaN(this._explicitHeight);
-            var w:number = isNaN(this._explicitWidth)?rect.width:this._explicitWidth;
-            var h:number = isNaN(this._explicitHeight)?rect.height:this._explicitHeight;
+            var w:number = isNaN(this._explicitWidth) ? rect.width : this._explicitWidth;
+            var h:number = isNaN(this._explicitHeight) ? rect.height : this._explicitHeight;
             var x:number = rect.x;
             var y:number = rect.y;
             var anchorX, anchorY;
@@ -289,14 +302,14 @@ module ns_egret {
                 anchorX = this.anchorPointX;
                 anchorY = this.anchorPointY;
             }
-            return Rectangle.identity.initialize(x-anchorX, y-anchorY, w, h);
+            return Rectangle.identity.initialize(x - anchorX, y - anchorY, w, h);
         }
 
         /**
          * @private
          * @returns {Matrix}
          */
-         public getConcatenatedMatrix() {
+        public getConcatenatedMatrix() {
             var matrix = Matrix.identity.identity();
             var o = this;
             while (o != null) {
@@ -317,7 +330,7 @@ module ns_egret {
          * 将 point 对象从显示对象的（本地）坐标转换为舞台（全局）坐标。
          * @returns {ns_egret.Point}
          */
-         public localToGlobal(x = 0, y = 0):ns_egret.Point {
+        public localToGlobal(x = 0, y = 0):ns_egret.Point {
             var mtx = this.getConcatenatedMatrix();
             mtx.append(1, 0, 0, 1, x, y);
             var result = Point.identity;
@@ -330,7 +343,7 @@ module ns_egret {
          * 将 point 对象从舞台（全局坐标转换为显示对象（本地）坐标。
          * @returns {ns_egret.Point}
          */
-          public globalToLocal(x:number = 0, y:number = 0):Point {
+        public globalToLocal(x:number = 0, y:number = 0):Point {
 //            todo,现在的实现是错误的
             var mtx = this.getConcatenatedMatrix();
             mtx.invert();
@@ -348,7 +361,7 @@ module ns_egret {
          * @param ignoreTouchEnabled 是否忽略TouchEnabled
          * @returns {*}
          */
-          public hitTest(x, y, ignoreTouchEnabled:Boolean = false) {
+        public hitTest(x, y, ignoreTouchEnabled:Boolean = false) {
             if (!this.visible || (!ignoreTouchEnabled && !this.touchEnabled)) {
                 return null;
             }
@@ -378,7 +391,7 @@ module ns_egret {
          * @private
          */
         public _measureBounds():ns_egret.Rectangle {
-            return ns_egret.Rectangle.identity.initialize(0,0,0,0);
+            return ns_egret.Rectangle.identity.initialize(0, 0, 0, 0);
         }
 
         public setAnchorPoint(x:number, y:number) {
@@ -435,7 +448,7 @@ module ns_egret {
             var isEnterFrame:boolean = (type == Event.ENTER_FRAME);
             if (isEnterFrame || type == Event.RENDER) {
                 var list:Array = isEnterFrame ? DisplayObject._enterFrameCallBackList : DisplayObject._renderCallBackList;
-                this._insertEventBin(list,listener, thisObject,priority);
+                this._insertEventBin(list, listener, thisObject, priority);
             }
         }
 
@@ -444,7 +457,7 @@ module ns_egret {
             var isEnterFrame:boolean = (type == Event.ENTER_FRAME);
             if (isEnterFrame || type == Event.RENDER) {
                 var list:Array = isEnterFrame ? DisplayObject._enterFrameCallBackList : DisplayObject._renderCallBackList;
-                this._removeEventBin(list,listener,thisObject);
+                this._removeEventBin(list, listener, thisObject);
             }
         }
 
@@ -485,10 +498,10 @@ module ns_egret {
             return !event.isDefaultPrevented();
         }
 
-        public willTrigger(type:string):boolean{
+        public willTrigger(type:string):boolean {
             var parent:DisplayObject = this;
-            while(parent){
-                if(parent.hasEventListener(type))
+            while (parent) {
+                if (parent.hasEventListener(type))
                     return true;
                 parent = parent._parent;
             }
