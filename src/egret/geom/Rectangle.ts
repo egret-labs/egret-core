@@ -52,11 +52,17 @@ module ns_egret {
         public get right():number{
             return this.x + this.width;
         }
+        public set right(value:number){
+            this.width = value - this.x;
+        }
         /**
          * y和height的和
          */
         public get bottom():number{
             return this.y + this.height;
+        }
+        public set bottom(value:number){
+            this.height = value - this.y;
         }
         /**
          * 举行类初始化赋值，开发者尽量调用此方法复用Rectangle对象，而不是每次需要的时候都重新创建
