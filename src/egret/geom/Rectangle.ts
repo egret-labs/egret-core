@@ -86,17 +86,31 @@ module ns_egret {
          * @param y
          * @returns {boolean}
          */
-        containPoint(x:number, y:number) {
+        public contains(x:number, y:number):boolean {
             return this.x <= x &&
                 this.x + this.width >= x &&
                 this.y <= y &&
                 this.y + this.height >= y;
-
-
         }
 
         /**
-         * 克隆举行对象
+         * 确定在 toIntersect 参数中指定的对象是否与此 Rectangle 对象相交。此方法检查指定的 Rectangle 对象的 x、y、width 和 height 属性，以查看它是否与此 Rectangle 对象相交。
+         * @param toIntersect 要与此 Rectangle 对象比较的 Rectangle 对象。
+         */
+        public intersects(toIntersect:Rectangle):boolean{
+            if(this.contains(toIntersect.x,toIntersect.y))
+                return true;
+            if(this.contains(toIntersect.x,toIntersect.bottom))
+                return true;
+            if(this.contains(toIntersect.right,toIntersect.y))
+                return true;
+            if(this.contains(toIntersect.right,toIntersect.bottom))
+                return true;
+            return false;
+        }
+
+        /**
+         * 克隆矩形对象
          * @returns {ns_egret.Rectangle}
          * @stable C 倾向于废除此API，方式开发者滥用，降低游戏性能
          */
