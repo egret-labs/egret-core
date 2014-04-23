@@ -31,6 +31,7 @@ module ns_egret {
 	export class GroupBase extends UIComponent implements IViewport{
 		public constructor(){
 			super();
+            this.touchEnabled = false;
 		}
 		
 		private _contentWidth:number = 0;

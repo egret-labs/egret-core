@@ -18,8 +18,6 @@
 
 /// <reference path="../../../egret/display/DisplayObject.ts"/>
 /// <reference path="../../../egret/display/DisplayObjectContainer.ts"/>
-/// <reference path="../../../egret/display/DisplayObject.ts"/>
-/// <reference path="../../../egret/display/DisplayObjectContainer.ts"/>
 /// <reference path="../../../egret/events/Event.ts"/>
 /// <reference path="../../../egret/geom/Point.ts"/>
 /// <reference path="../events/MoveEvent.ts"/>
@@ -32,7 +30,7 @@
 
 module ns_egret {
 
-	export class UIComponent extends DisplayObjectContainer 
+	export class UIComponent extends DisplayObjectContainer
 		implements IUIComponent,ILayoutManagerClient,ILayoutElement,
 		IInvalidating,IVisualElement{
 		/**
@@ -40,6 +38,7 @@ module ns_egret {
 		 */		
 		public constructor(){
 			super();
+            this.touchEnabled = true;
 			this.addEventListener(Event.ADDED_TO_STAGE,this.onAddedToStage,this);
 			this.addEventListener(Event.ADDED_TO_STAGE,this.checkInvalidateFlag,this);
 		}

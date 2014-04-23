@@ -23,7 +23,6 @@
 /// <reference path="../core/IContainer.ts"/>
 /// <reference path="../core/IVisualElement.ts"/>
 /// <reference path="../core/IVisualElementContainer.ts"/>
-/// <reference path="../events/DragEvent.ts"/>
 /// <reference path="../events/ElementExistenceEvent.ts"/>
 
 module ns_egret {
@@ -33,128 +32,6 @@ module ns_egret {
 			super();
 		}
 		
-		private _hasMouseListeners:boolean = false;
-		
-		/**
-		 * 是否添加过鼠标事件监听
-		 */  
-		private set hasMouseListeners(value:boolean):void{
-			if (this._mouseEnabledWhereTransparent){
-				this.invalidateDisplayListExceptLayout();
-			}
-			this._hasMouseListeners = value;
-		}
-		
-		/**
-		 * 鼠标事件的监听个数 
-		 */	
-		private mouseEventReferenceCount:number;
-		
-		private _mouseEnabledWhereTransparent:boolean = true;
-		
-		/**
-		 *  是否允许透明区域也响应鼠标事件,默认true
-		 */
-		public get mouseEnabledWhereTransparent():boolean{
-			return this._mouseEnabledWhereTransparent;
-		}
-		
-		public set mouseEnabledWhereTransparent(value:boolean):void{
-			if (value == this._mouseEnabledWhereTransparent)
-				return;
-			
-			this._mouseEnabledWhereTransparent = value;
-			
-			if (this._hasMouseListeners)
-				this.invalidateDisplayListExceptLayout();
-		}
-		
-		/**
-		 * @inheritDoc
-		 */
-		public addEventListener(type:string, listener:Function,
-												  useCapture:boolean = false, priority:number = 0,
-												  useWeakReference:boolean = false):void{
-			super.addEventListener(type, listener,this, useCapture, priority, 
-				useWeakReference);
-			switch (type){
-				
-				case TouchEvent.TOUCH_TAP:
-				case TouchEvent.DOUBLE_CLICK:
-				case TouchEvent.TOUCH_BEGAN:
-				case TouchEvent.TOUCH_MOVE:
-				case TouchEvent.TOUCH_OVER:
-				case TouchEvent.TOUCH_OUT:
-				case TouchEvent.TOUCH_ROLL_OUT:
-				case TouchEvent.TOUCH_ROLL_OVER:
-				case TouchEvent.TOUCH_END:
-				case TouchEvent.MOUSE_WHEEL:
-				case DragEvent.DRAG_ENTER:
-				case DragEvent.DRAG_OVER:
-				case DragEvent.DRAG_DROP:
-				case DragEvent.DRAG_EXIT:
-					if (++this.mouseEventReferenceCount > 0)
-						this.hasMouseListeners = true;
-			}
-		}
-		
-		/**
-		 * @inheritDoc
-		 */
-		public removeEventListener( type:string, listener:Function,
-													  useCapture:boolean = false):void{
-			super.removeEventListener(type, listener,this, useCapture);
-			
-			switch (type){
-				
-				case TouchEvent.TOUCH_TAP:
-				case TouchEvent.DOUBLE_CLICK:
-				case TouchEvent.TOUCH_BEGAN:
-				case TouchEvent.TOUCH_MOVE:
-				case TouchEvent.TOUCH_OVER:
-				case TouchEvent.TOUCH_OUT:
-				case TouchEvent.TOUCH_ROLL_OUT:
-				case TouchEvent.TOUCH_ROLL_OVER:
-				case TouchEvent.TOUCH_END:
-				case TouchEvent.MOUSE_WHEEL:
-					if (--this.mouseEventReferenceCount == 0)
-						this.hasMouseListeners = false;
-			}
-		}
-		
-		/**
-		 * @inheritDoc
-		 */
-		public updateDisplayList(unscaledWidth:number, unscaledHeight:number):void{
-			super.updateDisplayList(unscaledWidth,unscaledHeight);
-			this.drawBackground();
-		}
-		/**
-		 * 绘制鼠标点击区域
-		 */		
-		private drawBackground():void{
-			if (!this._mouseEnabledWhereTransparent || !this._hasMouseListeners)
-				return;
-			this.graphics.clear();
-			if (this.width==0 || this.height==0)
-				return;
-			this.graphics.beginFill(0xFFFFFF, 0);
-			if (this.layout && this.layout.clipAndEnableScrolling)
-				this.graphics.drawRect(this.layout.horizontalScrollPosition, this.layout.verticalScrollPosition, this.width, this.height);
-			else{
-				const tileSize:number = 4096;
-				for (var x:number = 0; x < this.width; x += this.tileSize)
-					for (var y:number = 0; y < this.height; y += this.tileSize){
-						var tileWidth:number = Math.min(this.width - x, this.tileSize);
-						var tileHeight:number = Math.min(this.height - y, this.tileSize);
-						this.graphics.drawRect(x, y, tileWidth, tileHeight); 
-					}
-			}
-			
-			this.graphics.endFill();
-		}	
-		
-
 		/**
 		 * createChildren()方法已经执行过的标志
 		 */		
@@ -436,49 +313,42 @@ module ns_egret {
 		}
 		
 		private static errorStr:string = "在此组件中不可用，若此组件为容器类，请使用";
-		[Deprecated] 
 		/**
 		 * addChild()在此组件中不可用，若此组件为容器类，请使用addElement()代替
 		 */		
 		public addChild(child:DisplayObject):DisplayObject{
 			throw(new Error("addChild()"+Group.errorStr+"addElement()代替"));
 		}
-		[Deprecated] 
 		/**
 		 * addChildAt()在此组件中不可用，若此组件为容器类，请使用addElementAt()代替
 		 */		
 		public addChildAt(child:DisplayObject, index:number):DisplayObject{
 			throw(new Error("addChildAt()"+Group.errorStr+"addElementAt()代替"));
 		}
-		[Deprecated] 
 		/**
 		 * removeChild()在此组件中不可用，若此组件为容器类，请使用removeElement()代替
 		 */		
 		public removeChild(child:DisplayObject):DisplayObject{
 			throw(new Error("removeChild()"+Group.errorStr+"removeElement()代替"));
 		}
-		[Deprecated] 
 		/**
 		 * removeChildAt()在此组件中不可用，若此组件为容器类，请使用removeElementAt()代替
 		 */		
 		public removeChildAt(index:number):DisplayObject{
 			throw(new Error("removeChildAt()"+Group.errorStr+"removeElementAt()代替"));
 		}
-		[Deprecated] 
 		/**
 		 * setChildIndex()在此组件中不可用，若此组件为容器类，请使用setElementIndex()代替
 		 */		
 		public setChildIndex(child:DisplayObject, index:number):void{
 			throw(new Error("setChildIndex()"+Group.errorStr+"setElementIndex()代替"));
 		}
-		[Deprecated] 
 		/**
 		 * swapChildren()在此组件中不可用，若此组件为容器类，请使用swapElements()代替
 		 */		
 		public swapChildren(child1:DisplayObject, child2:DisplayObject):void{
 			throw(new Error("swapChildren()"+Group.errorStr+"swapElements()代替"));
 		}
-		[Deprecated] 
 		/**
 		 * swapChildrenAt()在此组件中不可用，若此组件为容器类，请使用swapElementsAt()代替
 		 */		
