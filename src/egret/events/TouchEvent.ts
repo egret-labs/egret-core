@@ -1,105 +1,132 @@
 /**
- * Created by DOM on 2014/4/12.
+ * Copyright (c) Egret-Labs.org. Permission is hereby granted, free of charge,
+ * to any person obtaining a copy of this software and associated documentation
+ * files (the "Software"), to deal in the Software without restriction, including
+ * without limitation the rights to use, copy, modify, merge, publish, distribute,
+ * sublicense, and/or sell copies of the Software, and to permit persons to whom
+ * the Software is furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included
+ * in all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
+ * INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR
+ * PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE
+ * FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+ * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
 /// <reference path="../display/DisplayObject.ts"/>
 /// <reference path="Event.ts"/>
 /// <reference path="../geom/Point.ts"/>
 
-module ns_egret{
-    /**
-     * Touch数据类
-     */
-    export class TouchEvent extends Event{
+module ns_egret {
 
-        /**
-         * 轻触，参考Flash的MouseEvent.CLICK
-         */
-        static TOUCH_TAP:string = "touchTap";
-
-        /**
-         * 移动，参考FLash的MouseEvent.MOVE
-         */
-        static TOUCH_MOVE:string = "touchMove";
-
-        /**
-         * 开始触摸,参考Flash的MouseEvent.MOUSE_DOWN
-         */
-        static TOUCH_BEGAN:string = "touchBegan";
-
-        /**
-         * 在同一对象上结束触摸,参考Flash的MouseEvent.MOUSE_UP
-         */
-        static TOUCH_END:string = "touchEnd";
-
-        /**
-         * 在对象外部结束触摸，参考Flash的MouseEvent.RELEASE_OUTSIDE
-         */
-        static TOUCH_RELEASE_OUTSIDE:string = "touchReleaseOutside";
-
-        /**
-         * 移动，参考FLash的MouseEvent.MOVE
-         */
-        static TOUCH_ROLL_OUT:string = "touchRollOut";
-
-        /**
-         * 移动，参考FLash的MouseEvent.MOVE
-         */
-        static TOUCH_ROLL_OVER:string = "touchRollOver";
-
-        /**
-         * 移动，参考FLash的MouseEvent.MOVE
-         */
-        static TOUCH_OUT:string = "touchOut";
-
-        /**
-         * 移动，参考FLash的MouseEvent.MOVE
-         */
-        static TOUCH_OVER:string = "touchOver";
+    export class TouchEvent extends Event {
 
         /**
          * 创建一个作为参数传递给事件侦听器的 Event 对象。
-         * @param type 事件的类型，可以作为 Event.type 访问。
-         * @param bubbles 确定 Event 对象是否参与事件流的冒泡阶段。默认值为 false。
-         * @param cancelable 确定是否可以取消 Event 对象。默认值为 false。
+         * @class ns_egret.TouchEvent
+         * @classdesc TouchEvent数据类
+         * @param type {string} 事件的类型，可以作为 Event.type 访问。
+         * @param bubbles {boolean} 确定 Event 对象是否参与事件流的冒泡阶段。默认值为 false。
+         * @param cancelable {boolean} 确定是否可以取消 Event 对象。默认值为 false。
          */
-        public constructor(type:string, bubbles:boolean=true, cancelable:boolean=true,
-                           touchPointID:number=0,stageX:number=0,stageY:number=0){
-            super(type,bubbles,cancelable);
+        public constructor(type:string, bubbles:boolean = true, cancelable:boolean = true, touchPointID:number = 0, stageX:number = 0, stageY:number = 0) {
+            super(type, bubbles, cancelable);
             this.touchPointID = touchPointID
             this._stageX = stageX;
             this._stageY = stageY;
         }
 
+        /**
+         * 轻触，参考Flash的MouseEvent.CLICK
+         * @constant {string} ns_egret.TouchEvent.TOUCH_TAP
+         */
+        public static TOUCH_TAP:string = "touchTap";
+
+        /**
+         * 移动，参考FLash的MouseEvent.MOVE
+         * @constant {string} ns_egret.TouchEvent.TOUCH_MOVE
+         */
+        public static TOUCH_MOVE:string = "touchMove";
+
+        /**
+         * 开始触摸,参考Flash的MouseEvent.MOUSE_DOWN
+         * @constant {string} ns_egret.TouchEvent.TOUCH_BEGAN
+         */
+        static TOUCH_BEGAN:string = "touchBegan";
+
+        /**
+         * 在同一对象上结束触摸,参考Flash的MouseEvent.MOUSE_UP
+         * @constant {string} ns_egret.TouchEvent.TOUCH_END
+         */
+        static TOUCH_END:string = "touchEnd";
+
+        /**
+         * 在对象外部结束触摸，参考Flash的MouseEvent.RELEASE_OUTSIDE
+         * @constant {string} ns_egret.TouchEvent.TOUCH_RELEASE_OUTSIDE
+         */
+        static TOUCH_RELEASE_OUTSIDE:string = "touchReleaseOutside";
+
+//        todo
+//        /**
+//         * 移动，参考FLash的MouseEvent.MOVE
+//         * @member ns_egret.TouchEvent.TOUCH_MOVE
+//         */
+//        static TOUCH_ROLL_OUT:string = "touchRollOut";
+//
+//        /**
+//         * 移动，参考FLash的MouseEvent.MOVE
+//         * @member ns_egret.TouchEvent.TOUCH_MOVE
+//         */
+//        static TOUCH_ROLL_OVER:string = "touchRollOver";
+//
+//        /**
+//         * 移动，参考FLash的MouseEvent.MOVE
+//         */
+//        static TOUCH_OUT:string = "touchOut";
+//
+//        /**
+//         * 移动，参考FLash的MouseEvent.MOVE
+//         * @member ns_egret.TouchEvent.TOUCH_MOVE
+//         */
+//        static TOUCH_OVER:string = "touchOver";
+
+
         public _stageX:number = 0;
         /**
          * 事件发生点在全局舞台坐标中的水平坐标。
+         * @member {number} ns_egret.TouchEvent#stageX
          */
-        public get stageX():number{
+        public get stageX():number {
             return this._stageX;
         }
 
         public _stageY:number = 0;
         /**
          * 事件发生点在全局舞台坐标中的垂直坐标。
+         * @member {number} ns_egret.TouchEvent#stageY
          */
-        public get stageY():number{
+        public get stageY():number {
             return this._stageY;
         }
 
         private _localX:number = 0;
         /**
          * 事件发生点相对于currentTarget的水平坐标。
+         * @member {number} ns_egret.TouchEvent#localX
          */
-        public get localX():number{
+        public get localX():number {
             return this._localX;
         }
 
         private _localY:number = 0;
         /**
          * 事件发生点相对于currentTarget的垂直坐标。
+         * @member {number} ns_egret.TouchEvent#localY
          */
-        public get localY():number{
+        public get localY():number {
             return this._localY;
         }
 
@@ -124,19 +151,20 @@ module ns_egret{
          */
         public touchDown:boolean;
 
-        public _setCurrentTarget(target:any):void{
+        public _setCurrentTarget(target:any):void {
             super._setCurrentTarget(target);
-            if(target instanceof DisplayObject){
+            if (target instanceof DisplayObject) {
                 var dp:DisplayObject = <DisplayObject> target;
-                var point:Point = dp.globalToLocal(this._stageX,this._stageY);
+                var point:Point = dp.globalToLocal(this._stageX, this._stageY);
                 this._localX = point.x;
                 this._localY = point.y;
             }
         }
+
         /**
          * 立即刷新屏幕，此方法主要使用在当用户执行拖拽等操作过程中，强制立即刷新屏幕已提高流畅程度。
          */
-        public updateAfterEvent():void{
+        public updateAfterEvent():void {
 
         }
 

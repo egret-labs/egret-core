@@ -31,20 +31,23 @@
 
 module ns_egret {
     /**
-     * @class DisplayObject 类是可放在显示列表中的所有对象的基类。该显示列表管理运行时显示的所有对象。使用 DisplayObjectContainer 类排列显示列表中的显示对象。<br>
-     * DisplayObjectContainer 对象可以有子显示对象，而其他显示对象是“叶”节点，只有父级和同级，没有子级。<br>
-     * DisplayObject 类支持基本功能（如对象的 x 和 y 位置），也支持更高级的对象属性（如它的转换矩阵）。<br>
-     * 所有显示对象都继承自 DisplayObject 类。<br>
-     * DisplayObject 类包含若干广播事件。通常，任何特定事件的目标均为一个特定的 DisplayObject 实例。<br>
-     * 若只有一个目标，则会将事件侦听器限制为只能放置到该目标上（在某些情况下，可放置到显示列表中该目标的祖代上）。<br>
-     * 这意味着您可以向任何 DisplayObject 实例添加侦听器来侦听广播事件。<br>
+     * @class ns_egret.DisplayObject
+     * @classdesc 类是可放在显示列表中的所有对象的基类。该显示列表管理运行时显示的所有对象。使用 DisplayObjectContainer 类排列显示列表中的显示对象。
      *
-     * 任何继承自DisplayObject的类都必须实现以下方法<br>
-     * _measureBounds()<br>
-     * 不允许重写以下方法<br>
-     * visit()<br>
-     * updateTransform()<br>
-     * draw()</br> (beta)
+     * DisplayObjectContainer 对象可以有子显示对象，而其他显示对象是“叶”节点，只有父级和同级，没有子级。
+     *
+     * DisplayObject 类支持基本功能（如对象的 x 和 y 位置），也支持更高级的对象属性（如它的转换矩阵），所有显示对象都继承自 DisplayObject 类。
+     *
+     * DisplayObject 类包含若干广播事件。通常，任何特定事件的目标均为一个特定的 DisplayObject 实例。
+     *
+     * 若只有一个目标，则会将事件侦听器限制为只能放置到该目标上（在某些情况下，可放置到显示列表中该目标的祖代上），这意味着您可以向任何 DisplayObject 实例添加侦听器来侦听广播事件。
+     *
+     * 任何继承自DisplayObject的类都必须实现以下方法
+     * render();
+     * _measureBounds()
+     * 不允许重写以下方法
+     * draw();
+     * getBounds();
      */
     export class DisplayObject extends EventDispatcher {
 
@@ -52,7 +55,8 @@ module ns_egret {
 
         private _parent:DisplayObjectContainer = null;
         /**
-         * @description {Sting} 表示包含此显示对象的 DisplayObjectContainer 对象
+         * 表示包含此显示对象的 DisplayObjectContainer 对象
+         * @member {ns_egret.DisplayObjectContainer} ns_egret.DisplayObject#parent
          */
         public get parent():DisplayObjectContainer {
             return this._parent;
@@ -65,23 +69,46 @@ module ns_egret {
             this._parent = parent;
         }
 
+        private _x:number;
+
         /**
          * 表示 DisplayObject 实例相对于父级 DisplayObjectContainer 本地坐标的 x 坐标。
+         * @member {number} ns_egret.DisplayObject#x
          */
-        public x:number;
+        public get x():number {
+            return this._x;
+        }
+
+        public set x(value:number){
+            this._x = value;
+        }
+
+
+        private _y:number;
 
         /**
          * 表示 DisplayObject 实例相对于父级 DisplayObjectContainer 本地坐标的 y 坐标。
+         * @member {number} ns_egret.DisplayObject#y
          */
-        public y:number;
+        public get y():number {
+            return this._y;
+        }
+
+        public set y(value:number){
+            this._y = value;
+        }
 
         /**
          * 表示从注册点开始应用的对象的水平缩放比例（百分比）。
+         * @member {number} ns_egret.DisplayObject#scaleX
+         * @default 1
          */
         public scaleX:number = 1;
 
         /**
          * 表示从对象注册点开始应用的对象的垂直缩放比例（百分比）。
+         * @member {number} ns_egret.DisplayObject#scaleY
+         * @default 1
          */
         public scaleY:number = 1;
 
@@ -95,31 +122,42 @@ module ns_egret {
 
         /**
          * 显示对象是否可见。
+         * @member {boolean} ns_egret.DisplayObject#x
          */
-        public visible:Boolean;
+        public visible:boolean;
         /**
-         * @description 表示 DisplayObject 实例距其原始方向的旋转程度，以度为单位
+         * 表示 DisplayObject 实例距其原始方向的旋转程度，以度为单位
+         * @member {number} ns_egret.DisplayObject#rotation
+         * @default 0
          */
         public rotation:number = 0;
         /**
-         * @description 表示指定对象的 Alpha 透明度值
+         * 表示指定对象的 Alpha 透明度值
+         * @member {number} ns_egret.DisplayObject#alpha
+         *  @default 1
          */
         public alpha:number = 1;
 
         /**
          * 表示DisplayObject的x方向斜切
+         * @member {number} ns_egret.DisplayObject#skewX
+         * @default 0
          */
         public skewX:number = 0;
 
         /**
          * 表示DisplayObject的y方向斜切
+         * @member {number} ns_egret.DisplayObject#skewY
+         * @default 0
          */
         public skewY:number = 0;
 
         /**
          * 指定此对象是否接收鼠标/触摸事件
+         * @member {boolean} ns_egret.DisplayObject#touchEnabled
+         * @default true
          */
-        public touchEnabled:Boolean;
+        public touchEnabled:boolean;
 
         public blendMode:BlendMode;
 
