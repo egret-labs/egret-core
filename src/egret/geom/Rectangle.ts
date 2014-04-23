@@ -23,22 +23,41 @@ module ns_egret {
      */
     export class Rectangle {
 
-        constructor(/**
-                     * 矩形x坐标
-                     */
-                    public x:number, /**
-         * 矩形y坐标
-         */
-                    public y:number, /**
-         * 矩形宽度
-         */
-                    public width:number, /**
-         * 矩形高度
-         */
-                    public height:number) {
-
+        constructor(x:number=0,y:number=0,width:number=0,height=0) {
+            this.x = x;
+            this.y = y;
+            this.width = width;
+            this.height = height;
         }
 
+        /**
+         * 矩形x坐标
+         */
+        public x:number;
+        /**
+         * 矩形y坐标
+         */
+        public y:number;
+        /**
+         * 矩形宽度
+         */
+        public width:number;
+        /**
+         * 矩形高度
+         */
+        public height:number;
+        /**
+         * x和width的和
+         */
+        public get right():number{
+            return this.x + this.width;
+        }
+        /**
+         * y和height的和
+         */
+        public get bottom():number{
+            return this.y + this.height;
+        }
         /**
          * 举行类初始化赋值，开发者尽量调用此方法复用Rectangle对象，而不是每次需要的时候都重新创建
          * @param x

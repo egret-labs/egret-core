@@ -65,6 +65,7 @@ var temp = [
     "extension/tilemap/TMXConst.js",
     "extension/tilemap/TMXMapInfo.js",
     //tileMap end
+
 	 //GUI start
     "extension/gui/managers/LayoutManager.js",
     "extension/gui/managers/layoutClass/DepthQueue.js",
@@ -82,7 +83,7 @@ var temp = [
     "extension/gui/events/ResizeEvent.js",
     "extension/gui/events/SkinPartEvent.js",
     //GUI end
-	
+
     "extension/gameInput/VirtualJoystick.js",
     "extension/gui/component/TabView.js",
     "extension/gui/component/SimpleButton.js",
