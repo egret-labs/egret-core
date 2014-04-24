@@ -27,11 +27,11 @@ module dragonBones {
 
             private _display:ns_egret.DisplayObject;
 
-            public getVisible():Boolean {
+            public getVisible():boolean {
                 return this._display ? this._display.visible : false;
             }
 
-            public setVisible(value:Boolean):void {
+            public setVisible(value:boolean):void {
                 if (this._display) {
                     this._display.visible = value;
                 }

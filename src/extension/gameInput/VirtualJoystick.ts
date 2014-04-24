@@ -59,7 +59,7 @@ module ns_egret{
 
         private leftTouchPointX:number = NaN;
         private leftTouchPointY:number = NaN;
-        private isLeftTouching:Boolean = false;
+        private isLeftTouching:boolean = false;
         private leftTouchPointID:number;
 
         private rightButtonNode:ns_egret.DisplayObjectContainer;
@@ -72,7 +72,7 @@ module ns_egret{
         private rightButtonWidth:number = 0;
         private rightTouchPointX:number = NaN;
         private rightTouchPointY:number = NaN;
-        private isRightTouching:Boolean = false;
+        private isRightTouching:boolean = false;
         private rightTouchPointID;
 
         public static DIRECTION_LEFT:number = 1;
@@ -363,7 +363,7 @@ module ns_egret{
             this.rightTouchPointY = touchEvent.localY;
         }
 
-        setBtnVisible(direction:number, visible:Boolean) {
+        setBtnVisible(direction:number, visible:boolean) {
             switch (direction) {
                 case VirtualJoystick.DIRECTION_LEFT:
             this.leftNode.visible = visible;

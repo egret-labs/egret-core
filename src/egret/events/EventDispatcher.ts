@@ -63,7 +63,7 @@ module ns_egret {
          * 引擎内部调用
          * @private
          */
-        public _isUseCapture:Boolean = false;
+        public _isUseCapture:boolean = false;
 
         /**
          * 添加事件侦听器
@@ -79,7 +79,7 @@ module ns_egret {
          * @stable A
          * todo:GitHub文档
          */
-        public addEventListener(type:string, listener:Function, thisObject:any, useCapture:Boolean = false, priority:number = 0):void {
+        public addEventListener(type:string, listener:Function, thisObject:any, useCapture:boolean = false, priority:number = 0):void {
             if (DEBUG && DEBUG.ADD_EVENT_LISTENER) {
                 DEBUG.checkAddEventListener(type, listener, thisObject, useCapture, priority);
             }
@@ -133,7 +133,7 @@ module ns_egret {
          * @param useCapture 是否使用捕获，这个属性只在显示列表中生效。
          * @stable A
          */
-        public removeEventListener(type:string, listener:Function,thisObject:any,useCapture:Boolean = false):void {
+        public removeEventListener(type:string, listener:Function,thisObject:any,useCapture:boolean = false):void {
 
             var eventMap:Object = useCapture ? this._captureEventsMap : this._eventsMap;
             if(!eventMap)

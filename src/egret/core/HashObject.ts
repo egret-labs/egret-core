@@ -19,6 +19,7 @@
 /**
  * @namespace ns_egret
  */
+
 module ns_egret {
 
     export class HashObject {

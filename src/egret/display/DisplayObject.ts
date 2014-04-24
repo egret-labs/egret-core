@@ -414,7 +414,7 @@ module ns_egret {
          * @param ignoreTouchEnabled 是否忽略TouchEnabled
          * @returns {*}
          */
-        public hitTest(x, y, ignoreTouchEnabled:Boolean = false) {
+        public hitTest(x, y, ignoreTouchEnabled:boolean = false) {
             if (!this.visible || (!ignoreTouchEnabled && !this.touchEnabled)) {
                 return null;
             }
@@ -495,7 +495,7 @@ module ns_egret {
         public static _enterFrameCallBackList:Array<any> = [];
         public static _renderCallBackList:Array<any> = [];
 
-        public addEventListener(type:string, listener:Function, thisObject:any, useCapture:Boolean = false, priority:number = 0):void {
+        public addEventListener(type:string, listener:Function, thisObject:any, useCapture:boolean = false, priority:number = 0):void {
             super.addEventListener(type, listener, thisObject, useCapture, priority);
             var isEnterFrame:boolean = (type == Event.ENTER_FRAME);
             if (isEnterFrame || type == Event.RENDER) {
@@ -504,7 +504,7 @@ module ns_egret {
             }
         }
 
-        public removeEventListener(type:string, listener:Function, thisObject:any, useCapture:Boolean = false):void {
+        public removeEventListener(type:string, listener:Function, thisObject:any, useCapture:boolean = false):void {
             super.removeEventListener(type, listener, thisObject, useCapture);
             var isEnterFrame:boolean = (type == Event.ENTER_FRAME);
             if (isEnterFrame || type == Event.RENDER) {

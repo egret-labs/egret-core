@@ -139,7 +139,7 @@ module ns_egret {
             }
         }
 
-        private ignoreRender(data:RenderData, rect:ns_egret.Rectangle, destX:number, destY:number):Boolean {
+        private ignoreRender(data:RenderData, rect:ns_egret.Rectangle, destX:number, destY:number):boolean {
             var bounds = data.worldBounds;
             var destX = destX * data.worldTransform.a;
             var destY = destY * data.worldTransform.d;

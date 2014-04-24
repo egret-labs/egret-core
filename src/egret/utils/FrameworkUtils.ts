@@ -30,8 +30,8 @@ module ns_egret{
         private type:string;
         private trans:string;
         private ua;
-        private isHD:Boolean;
-        public isMobile:Boolean;
+        private isHD:boolean;
+        public isMobile:boolean;
 
         public static getInstance():Browser {
             if (Browser.instance == null) {

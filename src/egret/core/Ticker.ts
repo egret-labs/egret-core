@@ -16,6 +16,7 @@
  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+/// <reference path="MainContext.ts"/>
 /// <reference path="../events/EventDispatcher.ts"/>
 
 module ns_egret {
@@ -38,7 +39,7 @@ module ns_egret {
 
         private _time:number;
         private _timeScale:number = 1;
-        private _paused:Boolean = false;
+        private _paused:boolean = false;
         private _frameRate:number = 60;
 
         /**

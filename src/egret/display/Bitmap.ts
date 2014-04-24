@@ -31,14 +31,14 @@ module ns_egret {
          * 全部Bitmap是否开启DEBUG模式
          * @stable B 这个API以后可能会被移动到一个单独的负责各种DEBUG参数的枚举类中
          */
-        public static debug:Boolean = false;
+        public static debug:boolean = false;
 
 
         /**
          * 单个Bitmap是否开启DEBUG模式
          * @stable B 这个API以后可能会被移动到一个单独的负责各种DEBUG参数的枚举类中
          */
-        public debug:Boolean = false;
+        public debug:boolean = false;
 
         /**
          * debug边框颜色，默认值为红色

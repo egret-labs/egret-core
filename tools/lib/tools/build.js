@@ -171,6 +171,7 @@ function build(file, callback, source, output) {
              data.indexOf("error TS2105") >= 0) {
             console.log(data);
         }
+        console.log (data);
     })
 
     ts.on('exit', function (code) {

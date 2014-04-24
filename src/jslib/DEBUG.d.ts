@@ -21,15 +21,15 @@ declare module ns_egret {
         /**
          * drawImage时检测传入参数
          */
-        static DRAW_IMAGE:Boolean;
+        static DRAW_IMAGE:boolean;
 
         static checkDrawImage(texture:any, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight)
 
-        static ADD_EVENT_LISTENER:Boolean;
+        static ADD_EVENT_LISTENER:boolean;
 
-        static checkAddEventListener(eventName:string, func:Function, thisObj, useCapture:Boolean, priority:number)
+        static checkAddEventListener(eventName:string, func:Function, thisObj, useCapture:boolean, priority:number)
 
-        static SCALE_BITMAP_SET_SCALE_GRID:Boolean;
+        static SCALE_BITMAP_SET_SCALE_GRID:boolean;
 
         static checkSetScaleGrid(texture, top, bottom, left, right);
 

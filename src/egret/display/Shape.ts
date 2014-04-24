@@ -41,8 +41,9 @@ module ns_egret {
         private _colorDirty:boolean = true;
 
         constructor(){
-            this._color = 0xFFFFFF;
             super();
+            this._color = 0xFFFFFF;
+
         }
 
         public get color():number {

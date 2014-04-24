@@ -96,15 +96,15 @@ module ns_egret {
 
         public set width(value:number){
             this._explicitWidth = value;
-            if (parseInt(width) > 0) {
-                this._scaleWidth = width;
+            if (value > 0 && !isNaN(value)) {
+                this._scaleWidth = value;
             }
         }
 
         public set height(value:number){
             this._explicitHeight = value;
-            if (parseInt(height) > 0) {
-                this._scaleHeight = height;
+            if (value > 0 && !isNaN(value)) {
+                this._scaleHeight = value;
             }
         }
 

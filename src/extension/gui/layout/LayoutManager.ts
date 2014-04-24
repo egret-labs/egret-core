@@ -27,9 +27,9 @@ module ns_egret{
  */
         private updateCompleteQueue:DepthQueue = new DepthQueue();//todo
 
-        private invalidatePropertiesFlag:Boolean = false;
+        private invalidatePropertiesFlag:boolean = false;
 
-        private invalidateClientPropertiesFlag:Boolean = false;
+        private invalidateClientPropertiesFlag:boolean = false;
 
         private invalidatePropertiesQueue:DepthQueue = new DepthQueue();
 
@@ -66,9 +66,9 @@ module ns_egret{
                 this.invalidatePropertiesFlag = false;
         }
 
-        private invalidateSizeFlag:Boolean = false;
+        private invalidateSizeFlag:boolean = false;
 
-        private invalidateClientSizeFlag:Boolean = false;
+        private invalidateClientSizeFlag:boolean = false;
 
         private invalidateSizeQueue:DepthQueue = new DepthQueue();
 
@@ -106,7 +106,7 @@ module ns_egret{
         }
 
 
-        private invalidateDisplayListFlag:Boolean = false;
+        private invalidateDisplayListFlag:boolean = false;
 
         private invalidateDisplayListQueue:DepthQueue = new DepthQueue();
 
@@ -144,7 +144,7 @@ module ns_egret{
         /**
          * 是否已经添加了事件监听
          */
-        private listenersAttached:Boolean = false;
+        private listenersAttached:boolean = false;
 
         /**
          * 添加事件监听
@@ -216,11 +216,11 @@ module ns_egret{
          * @param target 要立即应用属性的组件
          * @param skipDisplayList 是否跳过更新显示列表阶段
          */
-        public validateClient(target:ILayoutManagerClient, skipDisplayList:Boolean = false):void {
+        public validateClient(target:ILayoutManagerClient, skipDisplayList:boolean = false):void {
 
             var obj:ILayoutManagerClient;
             var i:number = 0;
-            var done:Boolean = false;
+            var done:boolean = false;
             var oldTargetLevel:number = this.targetLevel;
 
             if (this.targetLevel == Number.MAX_VALUE)
@@ -577,7 +577,7 @@ module ns_egret{
         /**
          * 队列是否为空
          */
-        public isEmpty():Boolean {
+        public isEmpty():boolean {
             return this.minDepth > this.maxDepth;
         }
     }

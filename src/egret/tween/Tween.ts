@@ -32,21 +32,21 @@ module ns_egret{
         private static _inited = false;
 
         private target = null;
-        private _useTicks:Boolean = false;
-        private ignoreGlobalPause:Boolean = false;
-        private loop:Boolean = false;
+        private _useTicks:boolean = false;
+        private ignoreGlobalPause:boolean = false;
+        private loop:boolean = false;
         private pluginData = null;
         private _curQueueProps = null;
         private _initQueueProps = null;
         private _steps:any[] = null;
         private _actions:any[] = null;
-        private paused:Boolean = false;
+        private paused:boolean = false;
         private duration:number = 0;
         private _prevPos:number = -1;
         private position:number = null;
         private _prevPosition:number = 0;
         private _stepPosition:number = 0;
-        private passive:Boolean = false;
+        private passive:boolean = false;
 
         public static get(target, props = null, pluginData = null, override = false):Tween {
             if (override) {
@@ -81,7 +81,7 @@ module ns_egret{
             }
         }
 
-        private static _register(tween:Tween, value:Boolean):void {
+        private static _register(tween:Tween, value:boolean):void {
             var target = tween.target;
             var tweens:Tween[] = Tween._tweens;
             if (value) {
@@ -150,14 +150,14 @@ module ns_egret{
             }
         }
 
-        private setPosition(value:number, actionsMode:number = 1):Boolean {
+        private setPosition(value:number, actionsMode:number = 1):boolean {
             if (value < 0) {
                 value = 0;
             }
 
             //正常化位置
             var t:number = value;
-            var end:Boolean = false;
+            var end:boolean = false;
             if (t >= this.duration) {
                 if (this.loop) {
                     t = t % this.duration;
@@ -214,7 +214,7 @@ module ns_egret{
             return end;
         }
 
-        private _runActions(startPos:number, endPos:number, includeStart:Boolean = false) {
+        private _runActions(startPos:number, endPos:number, includeStart:boolean = false) {
             var sPos:number = startPos;
             var ePos:number = endPos;
             var i:number = -1;
@@ -287,7 +287,7 @@ module ns_egret{
 
         }
 
-        public setPaused(value:Boolean):Tween {
+        public setPaused(value:boolean):Tween {
             this.paused = value;
             Tween._register(this, !value);
             return this;
