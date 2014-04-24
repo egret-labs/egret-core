@@ -68,7 +68,6 @@ var temp = [
     "extension/gui/component/SimpleButton.js",
     "extension/gui/component/ScrollView.js",
     "extension/gui/component/TableView.js",
-    "extension/gui/component/Button.js",
     "extension/gui/component/ProgressBar.js",
     "extension/gui/component/ScaleBitmap.js",
     "extension/gui/component/DynamicBitmap.js",
