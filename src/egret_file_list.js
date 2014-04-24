@@ -16,7 +16,6 @@ var temp = [
     "egret/geom/Rectangle.js",
     "egret/core/Logger.js",
     "egret/core/Constant.js",
-    "egret/core/ComponentBase.js",
     "egret/core/StageDelegate.js",
     "egret/core/RenderFilter.js",
     "egret/display/DisplayObject.js",
