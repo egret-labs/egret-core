@@ -69,7 +69,7 @@ module ns_egret {
             this._parent = parent;
         }
 
-        private _x:number;
+        public _x:number;
 
         /**
          * 表示 DisplayObject 实例相对于父级 DisplayObjectContainer 本地坐标的 x 坐标。
@@ -84,7 +84,7 @@ module ns_egret {
         }
 
 
-        private _y:number;
+        public _y:number;
 
         /**
          * 表示 DisplayObject 实例相对于父级 DisplayObjectContainer 本地坐标的 y 坐标。
@@ -103,14 +103,28 @@ module ns_egret {
          * @member {number} ns_egret.DisplayObject#scaleX
          * @default 1
          */
-        public scaleX:number = 1;
+        public _scaleX:number = 1;
+
+        public get scaleX():number{
+            return this._scaleX;
+        }
+        public set scaleX(value:number){
+            this._scaleX = value;
+        }
 
         /**
          * 表示从对象注册点开始应用的对象的垂直缩放比例（百分比）。
          * @member {number} ns_egret.DisplayObject#scaleY
          * @default 1
          */
-        public scaleY:number = 1;
+        public _scaleY:number = 1;
+
+        public get scaleY():number{
+            return this._scaleY;
+        }
+        public set scaleY(value:number){
+            this._scaleY = value;
+        }
 
         public anchorPointX:number = 0;
 

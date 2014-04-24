@@ -365,22 +365,30 @@ module ns_egret {
 				return 0;
 			return number;
 		}
+
+        public get scaleX():number{
+            return this._scaleX;
+        }
 		/**
 		 * @inheritDoc
 		 */
 		public set scaleX(value:number){
-			if(super.scaleX == value)
+			if(this._scaleX == value)
 				return;
-			super.scaleX = value;
+			this._scaleX = value;
 			this.invalidateParentSizeAndDisplayList();
 		}
+
+        public get scaleY():number{
+            return this._scaleY;
+        }
 		/**
 		 * @inheritDoc
 		 */
 		public set scaleY(value:number){
-			if(super.scaleY == value)
+			if(this._scaleY == value)
 				return;
-			super.scaleY = value;
+			this._scaleY = value;
 			this.invalidateParentSizeAndDisplayList();
 		}
 		
@@ -486,14 +494,16 @@ module ns_egret {
 		 * 属性提交前组件旧的X
 		 */
 		public oldX:number;
-		
+        public get x():number {
+            return this._x;
+        }
 		/**
 		 * @inheritDoc
 		 */
 		public set x(value:number){
-			if(this.x==value)
+			if(this._x==value)
 				return;
-			super.x = value;
+			this._x = value;
 			this.invalidateProperties();
 			if (this._includeInLayout&&this.parent && this.parent instanceof UIComponent)
 				(<UIComponent> (this.parent)).childXYChanged();
@@ -503,14 +513,16 @@ module ns_egret {
 		 * 属性提交前组件旧的Y
 		 */
 		public oldY:number;
-		
+        public get y():number {
+            return this._y;
+        }
 		/**
 		 * @inheritDoc
 		 */
 		public set y(value:number){
-			if(this.y==value)
+			if(this._y==value)
 				return;
-			super.y = value;
+			this._y = value;
 			this.invalidateProperties();
 			if (this._includeInLayout&&this.parent && this.parent instanceof UIComponent)
 				(<UIComponent> (this.parent)).childXYChanged();
