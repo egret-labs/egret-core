@@ -65,7 +65,6 @@ var temp = [
     "extension/tilemap/TMXConst.js",
     "extension/tilemap/TMXMapInfo.js",
     //tileMap end
-    "extension/gameInput/VirtualJoystick.js",
     "extension/gui/component/TabView.js",
     "extension/gui/component/SimpleButton.js",
     "extension/gui/component/ScrollView.js",
