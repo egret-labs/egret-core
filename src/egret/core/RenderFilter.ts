@@ -58,7 +58,7 @@ module ns_egret {
         public drawImage(renderContext, data:RenderData, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight):void {
             destX = destX || 0;
             destY = destY || 0;
-            var locTexture = data.renderTexture || data.texture;
+            var locTexture = data._texture_to_render;
             if (locTexture == null || locTexture._bitmapData == null) {
                 return;
             }
@@ -170,7 +170,6 @@ module ns_egret {
     export interface RenderData {
         worldTransform:ns_egret.Matrix;
         worldBounds:ns_egret.Rectangle;
-        texture:ns_egret.Texture;
-        renderTexture;
+        _texture_to_render:ns_egret.Texture;
     }
 }

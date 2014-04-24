@@ -80,10 +80,12 @@ module ns_egret {
          * @param renderContext
          */
             render(renderContext:RendererContext) {
+
             var locTexture = this.texture;
             if (locTexture == null || locTexture._bitmapData == null) {
                 return;
             }
+            this._texture_to_render = locTexture;
             var x, y, w, h, offsetX, offsetY;
             if (this.spriteFrame) {
                 var rect:ns_egret.SpriteSheetFrame = this.spriteFrame;

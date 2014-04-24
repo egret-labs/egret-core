@@ -86,3 +86,29 @@ var ns_egret;
     })();
     ns_egret.DEBUG = DEBUG;
 })(ns_egret || (ns_egret = {}));
+
+
+var unstable = unstable || {};
+unstable.modal_api = {};
+unstable.modal_api.setModal = function (value) {
+    if (value == undefined) {
+        value = true;
+    }
+    var container = this;
+    container._modal = value;
+    container.touchEnabled = value;
+}
+
+var hitTest = ns_egret.DisplayObjectContainer.prototype.hitTest;
+ns_egret.DisplayObjectContainer.prototype.hitTest = function (x, y) {
+    var container = this;
+    if (container.visible == false) return null;
+    var result = hitTest.call(this, x, y);
+    if (container._modal) {
+        return result ? result : this;
+    }
+    else {
+        return result;
+    }
+}
+ns_egret.DisplayObjectContainer.prototype.setModal = unstable.modal_api.setModal;

@@ -31,8 +31,9 @@ module ns_egret {
     extends DisplayObject {
 
         constructor() {
-            this._children = [];
             super();
+            this._children = [];
+
         }
 
         /**
@@ -40,7 +41,7 @@ module ns_egret {
          */
         public touchChildren:Boolean = true;
 
-        public _children:Array;
+        public _children:Array<DisplayObject>
 
         public get numChildren():number{
             return this._children.length;
@@ -223,7 +224,7 @@ module ns_egret {
             else if (index1 == index2){
                 return;
             }
-            var list:Array = this._children;
+            var list:Array<DisplayObject> = this._children;
             var child1:DisplayObject = list[index1];
             var child2:DisplayObject = list[index2];
             list.splice(index2, 1);
@@ -386,28 +387,3 @@ module ns_egret {
         }
     }
 }
-
-var unstable = unstable || {};
-unstable.modal_api = {};
-unstable.modal_api.setModal = function (value) {
-    if (value == undefined) {
-        value = true;
-    }
-    var container = this;
-    container._modal = value;
-    container.touchEnabled = value;
-}
-
-var hitTest = ns_egret.DisplayObjectContainer.prototype.hitTest;
-ns_egret.DisplayObjectContainer.prototype.hitTest = function (x, y) {
-    var container = this;
-    if (container.visible == false) return null;
-    var result = hitTest.call(this, x, y);
-    if (container._modal) {
-        return result ? result : this;
-    }
-    else {
-        return result;
-    }
-}
-ns_egret.DisplayObjectContainer.prototype.setModal = unstable.modal_api.setModal;

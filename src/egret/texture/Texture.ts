@@ -32,6 +32,8 @@ module ns_egret {
      */
     export class Texture {
 
+        public offsetX = 0;
+        public offsetY = 0;
         private _path:string;
         public _textureWidth:number = 0;
         public _textureHeight:number = 0;
@@ -76,8 +78,7 @@ module ns_egret {
 
     export class RenderTexture extends Texture {
 
-        public offsetX = 0;
-        public offsetY = 0;
+
         private cacheCanvas:HTMLCanvasElement;
 
         constructor() {
@@ -107,10 +108,11 @@ module ns_egret {
             }
 
             var renderContext = new ns_egret.HTML5CanvasRenderer(cacheCanvas);
-            var list:Array<any> = ns_egret.RenderFilter.getInstance()._drawAreaList.concat();
-            ns_egret.RenderFilter.getInstance()._drawAreaList.length = 0;
+            var renderFilter = ns_egret.RenderFilter.getInstance();
+            var drawAreaList:Array<Rectangle> = renderFilter._drawAreaList.concat();
+            renderFilter._drawAreaList.length = 0;
             displayObject.render(renderContext);
-            ns_egret.RenderFilter.getInstance()._drawAreaList = list;
+            renderFilter._drawAreaList = drawAreaList;
             this._bitmapData = this.cacheCanvas;
             this._textureWidth = this.cacheCanvas.width;
             this._textureHeight = this.cacheCanvas.height;

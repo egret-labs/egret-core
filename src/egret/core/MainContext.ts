@@ -103,7 +103,7 @@ module ns_egret{
             var event:Event = this.reuseEvent;
             event._type = Event.ENTER_FRAME;
             this.dispatchEvent(event);
-            var list:Array = DisplayObject._enterFrameCallBackList;
+            var list:Array<any> = DisplayObject._enterFrameCallBackList;
             var length:number = list.length;
             for(var i:number = 0;i<length;i++){
                 var eventBin:any = list[i];
@@ -118,7 +118,7 @@ module ns_egret{
         private broadcastRender():void{
             var event:Event = this.reuseEvent;
             event._type = Event.RENDER;
-            var list:Array = DisplayObject._renderCallBackList;
+            var list:Array<any> = DisplayObject._renderCallBackList;
             var length:number = list.length;
             for(var i:number = 0;i<length;i++){
                 var eventBin:any = list[i];

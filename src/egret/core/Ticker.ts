@@ -53,7 +53,7 @@ module ns_egret {
         }
 
         private update() {
-            var list:Array = this.callBackList.concat();
+            var list:Array<any> = this.callBackList.concat();
             var length:number = list.length;
             var thisTime = Ticker.now();
             for (var i:number = 0; i < length; i++) {
@@ -65,7 +65,7 @@ module ns_egret {
             this._time = thisTime;
         }
 
-        private callBackList:Array = [];
+        private callBackList:Array<any> = [];
 
         /**
          * 注册帧回调事件，同一函数的重复监听会被忽略。
@@ -75,7 +75,7 @@ module ns_egret {
          * @stable A-
          */
         public register(listener:Function, thisObject:any, priority = 0) {
-            var list:Array = this.callBackList;
+            var list:Array<any> = this.callBackList;
             this._insertEventBin(list,listener,thisObject,priority);
         }
 
@@ -86,7 +86,7 @@ module ns_egret {
          * @stable A-
          */
         public unregister(listener:Function, thisObject:any) {
-            var list:Array = this.callBackList;
+            var list:Array<any> = this.callBackList;
             this._removeEventBin(list,listener,thisObject);
         }
 

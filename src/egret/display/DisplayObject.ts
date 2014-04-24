@@ -49,9 +49,11 @@ module ns_egret {
      * draw();
      * getBounds();
      */
-    export class DisplayObject extends EventDispatcher {
+    export class DisplayObject extends EventDispatcher implements RenderData {
 
         public name:string;
+
+        public _texture_to_render:Texture;
 
         private _parent:DisplayObjectContainer = null;
         /**
@@ -79,7 +81,7 @@ module ns_egret {
             return this._x;
         }
 
-        public set x(value:number){
+        public set x(value:number) {
             this._x = value;
         }
 
@@ -94,7 +96,7 @@ module ns_egret {
             return this._y;
         }
 
-        public set y(value:number){
+        public set y(value:number) {
             this._y = value;
         }
 
@@ -396,7 +398,6 @@ module ns_egret {
          * @returns {ns_egret.Point}
          */
         public globalToLocal(x:number = 0, y:number = 0):Point {
-//            todo,现在的实现是错误的
             var mtx = this.getConcatenatedMatrix();
             mtx.invert();
             mtx.append(1, 0, 0, 1, x, y);
@@ -421,8 +422,8 @@ module ns_egret {
             if (0 < x && x < bound.width && 0 < y && y < bound.height) {
                 if (this.mask || this.scrollRect) {
                     if (this.scrollRect
-                        && x <this.scrollRect.width
-                        && y <this.scrollRect.height) {
+                        && x < this.scrollRect.width
+                        && y < this.scrollRect.height) {
                         return this;
                     }
                     else if (this.mask
@@ -460,16 +461,6 @@ module ns_egret {
             this.anchorPointY = y;
         }
 
-        public setRelativeAnchorPoint(x:number, y:number) {
-            if (x < 0 || x > 1 || y < 0 || y > 1) {
-                ns_egret.Logger.warning("相对锚点只接受0-1之间的值");
-            }
-            else {
-                this.relativeAnchorPointX = x;
-                this.relativeAnchorPointY = y;
-            }
-        }
-
         public getOffsetPoint() {
             var o = this;
             var regX = o.anchorPointX;
@@ -501,14 +492,14 @@ module ns_egret {
             return this._stage;
         }
 
-        public static _enterFrameCallBackList:Array = [];
-        public static _renderCallBackList:Array = [];
+        public static _enterFrameCallBackList:Array<any> = [];
+        public static _renderCallBackList:Array<any> = [];
 
         public addEventListener(type:string, listener:Function, thisObject:any, useCapture:Boolean = false, priority:number = 0):void {
             super.addEventListener(type, listener, thisObject, useCapture, priority);
             var isEnterFrame:boolean = (type == Event.ENTER_FRAME);
             if (isEnterFrame || type == Event.RENDER) {
-                var list:Array = isEnterFrame ? DisplayObject._enterFrameCallBackList : DisplayObject._renderCallBackList;
+                var list:Array<any> = isEnterFrame ? DisplayObject._enterFrameCallBackList : DisplayObject._renderCallBackList;
                 this._insertEventBin(list, listener, thisObject, priority);
             }
         }
@@ -517,7 +508,7 @@ module ns_egret {
             super.removeEventListener(type, listener, thisObject, useCapture);
             var isEnterFrame:boolean = (type == Event.ENTER_FRAME);
             if (isEnterFrame || type == Event.RENDER) {
-                var list:Array = isEnterFrame ? DisplayObject._enterFrameCallBackList : DisplayObject._renderCallBackList;
+                var list:Array<any> = isEnterFrame ? DisplayObject._enterFrameCallBackList : DisplayObject._renderCallBackList;
                 this._removeEventBin(list, listener, thisObject);
             }
         }
@@ -528,7 +519,7 @@ module ns_egret {
             }
 
             event._reset();
-            var list:Array = [];
+            var list:Array<DisplayObject> = [];//todo 这个list可以服用
             var target:DisplayObject = this;
             while (target) {
                 list.unshift(target);
@@ -567,6 +558,14 @@ module ns_egret {
                 parent = parent._parent;
             }
             return false;
+        }
+
+        public cacheAsBitmap(bool:boolean):void {
+            if (bool) {
+                var renderTexture = new ns_egret.RenderTexture();
+                renderTexture.drawToTexture(this);
+                this._texture_to_render = renderTexture;
+            }
         }
 
         static getTransformBounds(bounds:ns_egret.Rectangle, mtx:ns_egret.Matrix) {
@@ -623,20 +622,11 @@ module ns_egret {
 
 }
 
-var unstable = unstable || {};
-unstable.cache_api = {};
-unstable.cache_api.cacheAsBitmap = function (bool) {
-    var display:ns_egret.DisplayObject = this;
-    if (bool) {
-        var renderTexture = new ns_egret.RenderTexture();
-        renderTexture.drawToTexture(display);
-        display.renderTexture = renderTexture;
-    }
-}
+var unstable = unstable || {cache_api:{}};
 unstable.cache_api.draw = function (renderContext) {
     var display:ns_egret.DisplayObject = this;
-    if (display.renderTexture) {
-        var renderTexture = display.renderTexture;
+    if (display._texture_to_render) {
+        var renderTexture = display._texture_to_render;
         var offsetX = renderTexture.offsetX;
         var offsetY = renderTexture.offsetY;
         var width = renderTexture._textureWidth;
@@ -648,10 +638,9 @@ unstable.cache_api.draw = function (renderContext) {
             renderContext.save();
             renderContext.clip(display.mask.x, display.mask.y, display.mask.width, display.mask.height);
         }
-        ns_egret.RenderFilter.getInstance().drawImage(renderContext, display, 0, 0,
-            width * ns_egret.MainContext.instance.rendererContext.texture_scale_factor,
-            height * ns_egret.MainContext.instance.rendererContext.texture_scale_factor,
-            offsetX, offsetY, width, height);
+        var scale_factor = ns_egret.MainContext.instance.rendererContext.texture_scale_factor;
+        var renderFilter = ns_egret.RenderFilter.getInstance();
+        renderFilter.drawImage(renderContext, display, 0, 0, width * scale_factor, height * scale_factor, offsetX, offsetY, width, height);
         if (display.mask) {
             renderContext.restore();
         }
@@ -661,4 +650,3 @@ unstable.cache_api.draw = function (renderContext) {
         return false;
     }
 }
-ns_egret.DisplayObject.prototype.cacheAsBitmap = unstable.cache_api.cacheAsBitmap;
