@@ -163,7 +163,7 @@ module ns_egret {
 			super.measure();
 			if(!this._skin)
 				return;
-			if(this._skin instanceof ILayoutElement&&!(<ILayoutElement> (this._skin)).includeInLayout)
+			if("includeInLayout" in this._skin&&!(<ILayoutElement> (this._skin)).includeInLayout)
 				return;
 			var rect:Rectangle = this.getMeasuredSize();
 			this.measuredWidth = rect.width;
@@ -175,7 +175,7 @@ module ns_egret {
 		 */		
 		private getMeasuredSize():Rectangle{
 			var rect:Rectangle = new Rectangle();
-			if(this._skin instanceof ILayoutElement){
+			if("preferredWidth" in this._skin){
 				rect.width = (<ILayoutElement> (this._skin)).preferredWidth;
 				rect.height = (<ILayoutElement> (this._skin)).preferredHeight;
 			}
@@ -241,7 +241,7 @@ module ns_egret {
 							unscaledHeight = newHeight;
 						}
 						
-						if(this._skin instanceof ILayoutElement){
+						if("setLayoutBoundsPosition" in this._skin){
 							if((<ILayoutElement> (this._skin)).includeInLayout){
 								(<ILayoutElement> (this._skin)).setLayoutBoundsPosition(layoutBoundsX,layoutBoundsY);
 							}
@@ -252,7 +252,7 @@ module ns_egret {
 						}
 					}
 				}
-				if(this._skin instanceof ILayoutElement){
+				if("setLayoutBoundsSize" in this._skin){
 					if((<ILayoutElement> (this._skin)).includeInLayout){
 						(<ILayoutElement> (this._skin)).setLayoutBoundsSize(unscaledWidth,unscaledHeight);
 					}
@@ -260,7 +260,7 @@ module ns_egret {
 				else{
 					this._skin.width = unscaledWidth;
 					this._skin.height = unscaledHeight;
-					if(this._skin instanceof IInvalidateDisplay)
+					if("validateNow" in this._skin)
 						(<IInvalidateDisplay> (this._skin)).validateNow();
 				}
 			}

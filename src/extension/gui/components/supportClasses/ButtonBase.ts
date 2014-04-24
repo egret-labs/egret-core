@@ -27,6 +27,7 @@
 /// <reference path="../../core/UIGlobals.ts"/>
 /// <reference path="../../core/IDisplayText.ts"/>
 /// <reference path="../../events/UIEvent.ts"/>
+/// <reference path="../../../../egret/interactive/InteractionMode.ts"/>
 
 module ns_egret {
 
@@ -97,15 +98,15 @@ module ns_egret {
 			this._repeatInterval = value;
 		}
 
-		
-		private _hovered:boolean = false;    
+
+		private _hovered:boolean = false;
 		/**
 		 * 指示鼠标指针是否位于按钮上。
-		 */		
+		 */
 		public get hovered():boolean{
 			return this._hovered;
 		}
-		
+
 		public set hovered(value:boolean){
 			if (value == this._hovered)
 				return;
@@ -113,7 +114,7 @@ module ns_egret {
 			this.invalidateSkinState();
 			this.checkButtonDownConditions();
 		}
-		
+
 		private _keepDown:boolean = false;
 		
 		/**
@@ -171,21 +172,21 @@ module ns_egret {
 		/**
 		 * 如果为 false，则按钮会在用户按下它时显示其鼠标按下时的外观，但在用户将鼠标拖离它时将改为显示鼠标经过的外观。
 		 * 如果为 true，则按钮会在用户按下它时显示其鼠标按下时的外观，并在用户将鼠标拖离时继续显示此外观。
-		 */		
+		 */
 		public get stickyHighlighting():boolean{
 			return this._stickyHighlighting
 		}
-		
+
 		public set stickyHighlighting(value:boolean){
 			if (value == this._stickyHighlighting)
 				return;
-			
+
 			this._stickyHighlighting = value;
 			this.invalidateSkinState();
 			this.checkButtonDownConditions();
 		}
-		
-		
+
+
 		/**
 		 * 开始抛出buttonDown事件
 		 */		
@@ -290,14 +291,16 @@ module ns_egret {
 					this.hovered = true;
 					break;
 				}
-					
+
 				case TouchEvent.TOUCH_ROLL_OUT:{
 					this.hovered = false;
 					break;
 				}
-					
+
 				case TouchEvent.TOUCH_BEGAN:{
 					this.addStageMouseHandlers();
+                    if(InteractionMode.mode==InteractionMode.TOUCH)
+                        this.hovered = true;
 					this.mouseCaptured = true;
 					break;
 				}
@@ -305,7 +308,7 @@ module ns_egret {
 				case TouchEvent.TOUCH_END:{
 					if (event.target == this){
 						this.hovered = true;
-						
+
 						if (this.mouseCaptured){
 							this.buttonReleased();
 							this.mouseCaptured = false;
@@ -373,10 +376,10 @@ module ns_egret {
 			
 			if (this.isDown()||this._keepDown)
 				return "down";
-			
+
 			if (InteractionMode.mode==InteractionMode.MOUSE&&(this.hovered || this.mouseCaptured))
 				return "over";
-			
+
 			return "up";
 		}
 		

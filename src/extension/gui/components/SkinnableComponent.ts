@@ -85,7 +85,7 @@ module ns_egret {
 		 * 附加皮肤
 		 */		
 		public attachSkin(skin:any):void{
-			if(skin instanceof ISkin){
+			if("hostComponent" in skin){
 				var newSkin:ISkin = <ISkin> skin;
 				newSkin.hostComponent = this;
 				this.findSkinParts();
@@ -96,7 +96,7 @@ module ns_egret {
 					this.hasCreatedSkinParts = true;
 				}
 			}
-			if(skin instanceof ISkin&&skin instanceof DisplayObject)
+			if("hostComponent" in skin&&skin instanceof DisplayObject)
 				this.skinLayoutEnabled = false;
 			else
 				this.skinLayoutEnabled = true;
@@ -107,13 +107,12 @@ module ns_egret {
 		 */	
 		public findSkinParts():void{
 			var curSkin:any = this._skinObject;
-            if(curSkin&&"skinParts" in curSkin.prototype){
-                var skinParts:Array = curSkin.prototype["skinParts"];
+            if(curSkin&&"skinParts" in curSkin){
+                var skinParts:Array = curSkin["skinParts"];
                 var length:number = skinParts.length;
                 for(var i:number=0;i<length;i++){
                     var partName:string = skinParts[i];
-                    if((partName in this)&&(partName in curSkin)&&curSkin[partName] != null
-                        &&this[partName]==null){
+                    if((partName in curSkin)){
                         try{
                             this[partName] = curSkin[partName];
                             this.partAdded(partName,curSkin[partName]);
@@ -210,7 +209,7 @@ module ns_egret {
 			var curState:string = this.getCurrentSkinState();
 			var hasState:boolean = false;
 			var curSkin:any = this._skinObject;
-			if(curSkin instanceof IStateClient){
+			if("hasState" in curSkin){
 				(<IStateClient> curSkin).currentState = curState;
 				hasState = (<IStateClient> curSkin).hasState(curState);
 			}
@@ -264,14 +263,20 @@ module ns_egret {
 				super.touchEnabled = value;
 			this.explicitMouseEnabled = value;
 		}
-		
+
+        /**
+         * @inheritDoc
+         */
+        public get enabled():boolean{
+            return this._enabled;
+        }
 		/**
 		 * @inheritDoc
 		 */
 		public set enabled(value:boolean){
-			if(super.enabled==value)
+			if(this._enabled==value)
 				return;
-			super.enabled = value;
+			this._enabled = value;
 			if(this._autoMouseEnabled){
 				super.touchChildren = value ? this.explicitMouseChildren : false;
 				super.touchEnabled  = value ? this.explicitMouseEnabled  : false;

@@ -268,7 +268,7 @@ module ns_egret {
 		}
 
 		
-		private _enabled:boolean = true;
+		public _enabled:boolean = true;
 		/**
 		 * @inheritDoc
 		 */

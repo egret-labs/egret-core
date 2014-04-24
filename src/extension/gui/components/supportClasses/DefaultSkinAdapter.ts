@@ -34,6 +34,9 @@ module ns_egret {
             if(skinName instanceof DisplayObject){
                 compFunc.call(thisObject,skinName,skinName);
             }
+            else{
+
+            }
         }
     }
 }
