@@ -35,12 +35,15 @@ module ns_egret {
          * 同样允许使用 IEventDispatcher 接口的方法。
          */
         public constructor(target:IEventDispatcher = null) {
-            if (target)
+            super();
+            if (target){
                 this.target = target;
-            else
+            }
+            else{
                 this.target = this;
-        }
+            }
 
+        }
         /**
          * 事件抛出对象
          */
@@ -91,7 +94,7 @@ module ns_egret {
                     this._eventsMap = {};
                 eventMap = this._eventsMap;
             }
-            var list:Array = eventMap[type];
+            var list:Array<any> = eventMap[type];
             if(!list){
                 list = eventMap[type] = [];
             }
@@ -100,7 +103,7 @@ module ns_egret {
         /**
          * 在一个事件列表中按优先级插入事件对象
          */
-        public _insertEventBin(list:Array,listener:Function, thisObject:any,priority:number):boolean{
+        public _insertEventBin(list:Array<any>,listener:Function, thisObject:any,priority:number):boolean{
             var insertIndex:number = -1;
             var length:number = list.length;
             for (var i:number = 0; i < length; i++) {
@@ -135,7 +138,7 @@ module ns_egret {
             var eventMap:Object = useCapture ? this._captureEventsMap : this._eventsMap;
             if(!eventMap)
                 return;
-            var list:Array = eventMap[type];
+            var list:Array<any> = eventMap[type];
             if (!list) {
                 return;
             }
@@ -147,7 +150,7 @@ module ns_egret {
         /**
          * 在一个事件列表中按优先级插入事件对象
          */
-        public _removeEventBin(list:Array,listener:Function,thisObject:any):boolean{
+        public _removeEventBin(list:Array<any>,listener:Function,thisObject:any):boolean{
             var length:number = list.length;
             for (var i:number = 0; i < length; i++) {
                 var bin:any = list[i];
@@ -197,7 +200,7 @@ module ns_egret {
             var eventMap:Object = event._eventPhase==1 ? this._captureEventsMap : this._eventsMap;
             if(!eventMap)
                 return true;
-            var list:Array = eventMap[event.type];
+            var list:Array<any> = eventMap[event.type];
             if (!list) {
                 return true;
             }
@@ -220,7 +223,7 @@ module ns_egret {
          * @param bubbles 是否冒泡，默认false
          * @param data 附加数据(可选)
          */
-        public dispatchEventWith(type:String, bubbles:Boolean = false, data:Object = null):void{
+        public dispatchEventWith(type:string, bubbles:boolean = false, data:Object = null):void{
             var event:Event = EventDispatcher.reuseEvent;
             event._type = type;
             event._bubbles = bubbles;
