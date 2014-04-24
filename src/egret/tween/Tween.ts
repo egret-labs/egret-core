@@ -20,7 +20,7 @@
 /// <reference path="../core/Ticker.ts"/>
 /// <reference path="../events/EventDispatcher.ts"/>
 
-module ns_egret{
+module ns_egret {
     export class Tween extends EventDispatcher {
         public static NONE = 0;
         public static LOOP = 1;
@@ -31,13 +31,13 @@ module ns_egret{
         private static _plugins = {};
         private static _inited = false;
 
-        private target = null;
+        private _target:any = null;
         private _useTicks:boolean = false;
         private ignoreGlobalPause:boolean = false;
         private loop:boolean = false;
         private pluginData = null;
-        private _curQueueProps = null;
-        private _initQueueProps = null;
+        private _curQueueProps;
+        private _initQueueProps;
         private _steps:any[] = null;
         private _actions:any[] = null;
         private paused:boolean = false;
@@ -62,7 +62,7 @@ module ns_egret{
             }
             var tweens:Tween[] = Tween._tweens;
             for (var i = tweens.length - 1; i >= 0; i--) {
-                if (tweens[i].target == target) {
+                if (tweens[i]._target == target) {
                     tweens[i].paused = true;
                     tweens.splice(i, 1);
                 }
@@ -82,7 +82,7 @@ module ns_egret{
         }
 
         private static _register(tween:Tween, value:boolean):void {
-            var target = tween.target;
+            var target:any = tween._target;
             var tweens:Tween[] = Tween._tweens;
             if (value) {
                 if (target) {
@@ -112,7 +112,7 @@ module ns_egret{
             for (var i = 0, l = tweens.length; i < l; i++) {
                 var tween:Tween = tweens[i];
                 tween.paused = true;
-                tween.target.tweenjs_count = 0;
+                tween._target.tweenjs_count = 0;
             }
             tweens.length = 0;
         }
@@ -123,7 +123,7 @@ module ns_egret{
         }
 
         private initialize(target, props:any, pluginData):void {
-            this.target = target;
+            this._target = target;
             if (props) {
                 this._useTicks = props.useTicks;
                 this.ignoreGlobalPause = props.ignoreGlobalPause;
@@ -176,7 +176,7 @@ module ns_egret{
             this.position = this._prevPos = t;
             this._prevPosition = value;
 
-            if (this.target) {
+            if (this._target) {
                 if (end) {
                     //结束
                     this._updateTargetProps(null, 1);
@@ -281,7 +281,7 @@ module ns_egret{
                     }
                 }
                 if (!ignore) {
-                    this.target[n] = v;
+                    this._target[n] = v;
                 }
             }
 
@@ -314,7 +314,7 @@ module ns_egret{
             var arr, oldValue, i, l, injectProps;
             for (var n in o) {
                 if (this._initQueueProps[n] === undefined) {
-                    oldValue = this.target[n];
+                    oldValue = this._target[n];
                     //设置plugins
                     if (arr = Tween._plugins[n]) {
                         for (i = 0, l = arr.length; i < l; i++) {
@@ -373,11 +373,11 @@ module ns_egret{
         }
 
         public call(callback:Function, thisObj = undefined, params = undefined):Tween {
-            return this._addAction({f: callback, p: params ? params : [this], o: thisObj ? thisObj : this.target});
+            return this._addAction({f: callback, p: params ? params : [this], o: thisObj ? thisObj : this._target});
         }
 
         public set(props, target = null):Tween {
-            return this._addAction({f: this._set, o: this, p: [props, target ? target : this.target]});
+            return this._addAction({f: this._set, o: this, p: [props, target ? target : this._target]});
         }
 
         public play(tween:Tween):Tween {
