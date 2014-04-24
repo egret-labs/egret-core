@@ -76,7 +76,7 @@ var temp = [
     "extension/gui/component/DynamicBitmap.js",
     "extension/dragonbones/dragonBones.js",
     "extension/dragonbones/DragonBonesEgretBridge.js",
-    "egret/debug/DEBUG.js",
+    "jslib//DEBUG.js",
     "jslib/box2d.js"
 ]
 

@@ -20,7 +20,7 @@
 /// <reference path="../../core/MainContext.ts"/>
 /// <reference path="../../core/RenderFilter.ts"/>
 /// <reference path="../../core/Ticker.ts"/>
-/// <reference path="../../debug/DEBUG.ts"/>
+/// <reference path="../../../jslib/DEBUG.d.ts"/>
 /// <reference path="../../geom/Matrix.ts"/>
 /// <reference path="../../geom/Rectangle.ts"/>
 /// <reference path="../../text/TextField.ts"/>

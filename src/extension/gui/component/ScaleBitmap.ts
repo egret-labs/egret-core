@@ -19,7 +19,7 @@
 ///<reference path="../../../egret/core/Logger.ts"/>
 ///<reference path="../../../egret/display/DisplayObjectContainer.ts"/>
 ///<reference path="../../../egret/display/Bitmap.ts"/>
-/// <reference path="../../../egret/debug/DEBUG.ts"/>
+/// <reference path="../../../jslib/DEBUG.d.ts"/>
 module ns_egret {
     export class Scale9Bitmap extends DisplayObjectContainer {
         private _defaultPadding:number = 5;
