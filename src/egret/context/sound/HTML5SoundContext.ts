@@ -23,8 +23,8 @@ module ns_egret{
     export class HTML5SoundContext extends SoundContext{
         private _soundList = {};
         private _capabilities;
-        private _soundSupported:Boolean;
-        private _canPlay:Boolean = true;
+        private _soundSupported:boolean;
+        private _canPlay:boolean = true;
         private _supportedFormat = [];
         private _playingMusicName:string;
 

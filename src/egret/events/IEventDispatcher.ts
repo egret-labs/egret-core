@@ -38,9 +38,8 @@ module ns_egret {
          * @param  priority 事件侦听器的优先级。优先级由一个带符号的 32 位整数指定。数字越大，优先级越高。优先级为 n 的所有侦听器会在
          * 优先级为 n -1 的侦听器之前得到处理。如果两个或更多个侦听器共享相同的优先级，则按照它们的添加顺序进行处理。默认优先级为 0。
          * @stable A
-         * todo:GitHub文档
          */
-        addEventListener(type:string, listener:Function, thisObject:any, useCapture:Boolean = false, priority:number = 0):void;
+        addEventListener(type:string, listener:Function, thisObject:any, useCapture:boolean, priority:number):void;
         /**
          * 移除事件侦听器
          * @param type 事件名
@@ -49,7 +48,7 @@ module ns_egret {
          * @param useCapture 是否使用捕获，这个属性只在显示列表中生效。
          * @stable A
          */
-        removeEventListener(type:string, listener:Function, useCapture:Boolean = false):void;
+        removeEventListener(type:string, listener:Function, useCapture:boolean):void;
 
         /**
          * 检测是否存在监听器

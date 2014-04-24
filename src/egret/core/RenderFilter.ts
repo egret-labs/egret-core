@@ -24,6 +24,13 @@
 
 module ns_egret {
     export class RenderFilter {
+        /**
+         * @class ns_egret.RenderFilter
+         */
+        public constructor() {
+            this._drawAreaList = [];
+        }
+
         private static instance:RenderFilter;
 
         public static getInstance():RenderFilter {
@@ -33,8 +40,8 @@ module ns_egret {
             return RenderFilter.instance;
         }
 
-        public _drawAreaList:Array = [];
-        private _defaultDrawAreaList:Array;
+        public _drawAreaList:Array<Rectangle>;
+        private _defaultDrawAreaList:Array<Rectangle>
         private _originalData:any = {};
 
         public addDrawArea(area:ns_egret.Rectangle):void {
@@ -51,7 +58,7 @@ module ns_egret {
         public drawImage(renderContext, data:RenderData, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight):void {
             destX = destX || 0;
             destY = destY || 0;
-            var locTexture = data.renderTexture || data.texture;
+            var locTexture = data._texture_to_render;
             if (locTexture == null || locTexture._bitmapData == null) {
                 return;
             }
@@ -132,7 +139,7 @@ module ns_egret {
             }
         }
 
-        private ignoreRender(data:RenderData, rect:ns_egret.Rectangle, destX, destY):Boolean {
+        private ignoreRender(data:RenderData, rect:ns_egret.Rectangle, destX:number, destY:number):boolean {
             var bounds = data.worldBounds;
             var destX = destX * data.worldTransform.a;
             var destY = destY * data.worldTransform.d;
@@ -143,7 +150,7 @@ module ns_egret {
             return false;
         }
 
-        public getDrawAreaList():Array {
+        public getDrawAreaList():Array<Rectangle> {
             var locDrawAreaList;
             //默认整个舞台都是重绘区域
             if (this._drawAreaList.length == 0) {
@@ -163,7 +170,6 @@ module ns_egret {
     export interface RenderData {
         worldTransform:ns_egret.Matrix;
         worldBounds:ns_egret.Rectangle;
-        texture:ns_egret.Texture;
-        renderTexture;
+        _texture_to_render:ns_egret.Texture;
     }
 }

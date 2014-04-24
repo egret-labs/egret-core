@@ -34,7 +34,7 @@ module ns_egret {
         private _totalFrame:number = 0;
         private _interval = 0;
         private _currentInterval = 0;
-        private _isPlaying:Boolean = false;
+        private _isPlaying:boolean = false;
         private _passTime:number = 0;
         private _oneFrameTime = 1000 / Ticker.getInstance().getFrameRate();
 
@@ -109,7 +109,7 @@ module ns_egret {
             this._passTime += frameTime;
         }
 
-        private playNextFrame(needShow:Boolean = true) {
+        private playNextFrame(needShow:boolean = true) {
             //todo 如果动画只有一帧的性能优化
             this._currentInterval = 0;
             var frameData = this._frameData.frames[this._currentFrameName].childrenFrame[this._currentFrameIndex];
@@ -171,7 +171,7 @@ module ns_egret {
          * @stable D 这个API需要改为 isPlaying()
          * @returns {Boolean}
          */
-        public getIsPlaying():Boolean {
+        public getIsPlaying():boolean {
             return this._isPlaying;
         }
     }

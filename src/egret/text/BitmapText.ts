@@ -45,7 +45,7 @@ module ns_egret {
          */
         public bitmapFontData;
 
-        private _bitmapPool:Array;
+        private _bitmapPool:Array<Bitmap>;
 
         constructor() {
             super();

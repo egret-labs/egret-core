@@ -1136,7 +1136,7 @@ module dragonBones
                 }
             }
 
-            public removeMixingTransform(timelineName:string = null, recursive:Boolean = true):void
+            public removeMixingTransform(timelineName:string = null, recursive:boolean = true):void
             {
                 if(timelineName)
                 {
@@ -1165,7 +1165,7 @@ module dragonBones
 
                     for(var index in this._mixingTransforms)
                     {
-                        var hasMixing:Boolean = true;
+                        var hasMixing:boolean = true;
                         break;
                     }
                     if(!hasMixing)

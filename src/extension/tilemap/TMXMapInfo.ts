@@ -470,7 +470,7 @@ module ns_egret {
         public name:string;
         public layerWidth:number;
         public layerHeight:number;
-        public visible:Boolean;
+        public visible:boolean;
         public opacity:number;
         public _tiles;
         public layerX:number;

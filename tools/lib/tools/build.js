@@ -166,7 +166,9 @@ function build(file, callback, source, output) {
 
     var ts = cp_exec(cmd);
     ts.stderr.on("data", function (data) {
-        if (data.indexOf("error TS1") >= 0 || data.indexOf("error TS5") >= 0) {
+        if ( data.indexOf("error TS1") >= 0 ||
+             data.indexOf("error TS5") >= 0 ||
+             data.indexOf("error TS2105") >= 0) {
             console.log(data);
         }
     })

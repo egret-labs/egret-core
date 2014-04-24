@@ -22,7 +22,7 @@
 /// <reference path="../../egret/core/Logger.ts"/>
 /// <reference path="../../egret/display/Bitmap.ts"/>
 /// <reference path="../../egret/texture/TextureCache.ts"/>
-module ns_egret{
+module ns_egret {
     export class TMXLayer extends DisplayObjectContainer {
         private _texture:Texture = null;
         private _layerWidth:number = null;
@@ -139,30 +139,6 @@ module ns_egret{
 //        sprite.alpha = this._opacity;
             return;
             // 3种翻转，水平、垂直和对角线
-//        if ((gid & ns_egret.TMX.TILE_DIAGONAL_FLAG) >>> 0) {
-//            sprite.setAnchorPoint(0.5, 0.5);
-//            sprite.setPosition(position.x + sprite.getContentSize().height / 2,
-//                position.y + sprite.getContentSize().width / 2);
-//
-//            var flag = (gid & (ns_egret.TMX.TILE_HORIZONTAL_FLAG | ns_egret.TMX.TILE_VERTICAL_FLAG) >>> 0) >>> 0;
-//            if (flag == ns_egret.TMX.TILE_HORIZONTAL_FLAG)
-//                sprite.setRotation(90);
-//            else if (flag == ns_egret.TMX.TILE_VERTICAL_FLAG)
-//                sprite.setRotation(270);
-//            else if (flag == (ns_egret.TMX.TILE_VERTICAL_FLAG | ns_egret.TMX.TILE_HORIZONTAL_FLAG) >>> 0) {
-//                sprite.setRotation(90);
-//                sprite.setFlippedX(true);
-//            } else {
-//                sprite.setRotation(270);
-//                sprite.setFlippedX(true);
-//            }
-//        } else {
-//            if ((gid & ns_egret.TMX.TILE_HORIZONTAL_FLAG) >>> 0)
-//                sprite.setFlippedX(true);
-//
-//            if ((gid & ns_egret.TMX.TILE_VERTICAL_FLAG) >>> 0)
-//                sprite.setFlippedY(true);
-//        }
         }
 
         public getPositionAt(x:number, y:number):Point {
@@ -207,7 +183,7 @@ module ns_egret{
         /**
          * 通过坐标获取GID
          */
-        public getTileGIDAt(x,y) {
+        public getTileGIDAt(x, y) {
             if (x >= this._layerWidth || y >= this._layerHeight || x < 0 || y < 0) {
                 ns_egret.Logger.fatal("TMXLayer.getTileGIDAt():提供的索引超出范围");
             }

@@ -16,8 +16,8 @@
  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-/// <reference path="../context/net/NetContext.ts"/>
 /// <reference path="../context/devices/DeviceContext.ts"/>
+/// <reference path="../context/net/NetContext.ts"/>
 /// <reference path="../context/renderer/RendererContext.ts"/>
 /// <reference path="../context/sound/SoundContext.ts"/>
 /// <reference path="Ticker.ts"/>
@@ -103,7 +103,7 @@ module ns_egret{
             var event:Event = this.reuseEvent;
             event._type = Event.ENTER_FRAME;
             this.dispatchEvent(event);
-            var list:Array = DisplayObject._enterFrameCallBackList;
+            var list:Array<any> = DisplayObject._enterFrameCallBackList;
             var length:number = list.length;
             for(var i:number = 0;i<length;i++){
                 var eventBin:any = list[i];
@@ -118,7 +118,7 @@ module ns_egret{
         private broadcastRender():void{
             var event:Event = this.reuseEvent;
             event._type = Event.RENDER;
-            var list:Array = DisplayObject._renderCallBackList;
+            var list:Array<any> = DisplayObject._renderCallBackList;
             var length:number = list.length;
             for(var i:number = 0;i<length;i++){
                 var eventBin:any = list[i];

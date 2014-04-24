@@ -24,7 +24,7 @@ module ns_egret{
             return ns_egret.MainContext.instance.soundContext;
         }
 
-        public static isMusicPlaying:Boolean = false;
+        public static isMusicPlaying:boolean = false;
 
         constructor() {
 

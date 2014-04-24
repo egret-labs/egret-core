@@ -16,36 +16,24 @@
  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-module ns_egret{
-    export class ComponentBase {
+declare module ns_egret {
+    class DEBUG {
+        /**
+         * drawImage时检测传入参数
+         */
+        static DRAW_IMAGE:boolean;
 
+        static checkDrawImage(texture:any, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight)
 
-        constructor() {
-            throw new Error("can't create a mixin class");
-        }
+        static ADD_EVENT_LISTENER:boolean;
 
-        onActivity() {
+        static checkAddEventListener(eventName:string, func:Function, thisObj, useCapture:boolean, priority:number)
 
-        }
+        static SCALE_BITMAP_SET_SCALE_GRID:boolean;
 
-        onCancel() {
+        static checkSetScaleGrid(texture, top, bottom, left, right);
 
-        }
-    }
+        static TRACE_RENDER_LOOP(command:number):void;
 
-    export class MixIn {
-        static active(target,MixInClass) {
-            var targetPrototype = target.prototype;
-            var mixinPrototype = MixInClass.prototype;
-            for (var funcName in mixinPrototype){
-                if (target[funcName] == null){
-                    target[funcName] = mixinPrototype[funcName];
-                }
-                else{
-                    console.log ("warning",funcName);
-                }
-            }
-            target.onActivity();
-        }
     }
 }

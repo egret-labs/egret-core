@@ -68,7 +68,7 @@ module ns_egret{
         /**
          * 解析tilemap
          */
-        public tmxParse(textxml:string, isXMLString:Boolean = false) {
+        public tmxParse(textxml:string, isXMLString:boolean = false) {
             if (!isXMLString) {
                 textxml = this.getList(textxml);
             }

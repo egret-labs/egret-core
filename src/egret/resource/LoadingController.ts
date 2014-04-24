@@ -85,7 +85,7 @@ module ns_egret{
 
         }
 
-        private checkIsLoading():Boolean {
+        private checkIsLoading():boolean {
             if (this._state == LoadingController.LOAD_STATE_LOADING) {
                 ns_egret.Logger.info("正在加载中");
                 return true;

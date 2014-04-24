@@ -16,7 +16,6 @@ var temp = [
     "egret/geom/Rectangle.js",
     "egret/core/Logger.js",
     "egret/core/Constant.js",
-    "egret/core/ComponentBase.js",
     "egret/core/StageDelegate.js",
     "egret/core/RenderFilter.js",
     "egret/display/DisplayObject.js",
@@ -66,7 +65,8 @@ var temp = [
     "extension/tilemap/TMXMapInfo.js",
     //tileMap end
 
-	 //GUI start
+
+    //GUI start
     "extension/gui/managers/LayoutManager.js",
     "extension/gui/managers/layoutClass/DepthQueue.js",
     "extension/gui/core/UIGlobals.js",
@@ -114,12 +114,11 @@ var temp = [
     "extension/gui/layouts/TileOrientation.js",
     "extension/gui/layouts/VerticalAlign.js",
     //GUI end
-
-    "extension/gameInput/VirtualJoystick.js",
-
+    "extension/gui/component/ScaleBitmap.js",
+    "extension/gui/component/DynamicBitmap.js",
     "extension/dragonbones/dragonBones.js",
     "extension/dragonbones/DragonBonesEgretBridge.js",
-    "egret/debug/DEBUG.js",
+    "jslib//DEBUG.js",
     "jslib/box2d.js"
 ]
 
