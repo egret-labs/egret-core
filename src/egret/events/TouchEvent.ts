@@ -69,29 +69,28 @@ module ns_egret {
          */
         static TOUCH_RELEASE_OUTSIDE:string = "touchReleaseOutside";
 
-//        todo
-//        /**
-//         * 移动，参考FLash的MouseEvent.MOVE
-//         * @member ns_egret.TouchEvent.TOUCH_MOVE
-//         */
-//        static TOUCH_ROLL_OUT:string = "touchRollOut";
-//
-//        /**
-//         * 移动，参考FLash的MouseEvent.MOVE
-//         * @member ns_egret.TouchEvent.TOUCH_MOVE
-//         */
-//        static TOUCH_ROLL_OVER:string = "touchRollOver";
-//
-//        /**
-//         * 移动，参考FLash的MouseEvent.MOVE
-//         */
-//        static TOUCH_OUT:string = "touchOut";
-//
-//        /**
-//         * 移动，参考FLash的MouseEvent.MOVE
-//         * @member ns_egret.TouchEvent.TOUCH_MOVE
-//         */
-//        static TOUCH_OVER:string = "touchOver";
+        /**
+         * 移动，参考FLash的MouseEvent.MOVE
+         * @member ns_egret.TouchEvent.TOUCH_MOVE
+         */
+        static TOUCH_ROLL_OUT:string = "touchRollOut";
+
+        /**
+         * 移动，参考FLash的MouseEvent.MOVE
+         * @member ns_egret.TouchEvent.TOUCH_MOVE
+         */
+        static TOUCH_ROLL_OVER:string = "touchRollOver";
+
+        /**
+         * 移动，参考FLash的MouseEvent.MOVE
+         */
+        static TOUCH_OUT:string = "touchOut";
+
+        /**
+         * 移动，参考FLash的MouseEvent.MOVE
+         * @member ns_egret.TouchEvent.TOUCH_MOVE
+         */
+        static TOUCH_OVER:string = "touchOver";
 
 
         public _stageX:number = 0;
