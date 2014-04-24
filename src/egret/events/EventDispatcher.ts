@@ -35,6 +35,7 @@ module ns_egret {
          * 同样允许使用 IEventDispatcher 接口的方法。
          */
         public constructor(target:IEventDispatcher = null) {
+            super();
             if (target)
                 this.target = target;
             else
