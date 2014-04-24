@@ -25,7 +25,8 @@
 module ns_egret{
 
     /**
-     * @class LoadingController是egret的加载控制器，他包含了一个或者一组ResourceLoader，控制其加载队列和调用加载界面更新进度。
+     * 是egret的加载控制器，他包含了一个或者一组ResourceLoader，控制其加载队列和调用加载界面更新进度。
+     * @class LoadingController
      */
     export class LoadingController extends ns_egret.EventDispatcher {
         static LOAD_STATE_IDLE = 0;
