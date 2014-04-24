@@ -78,15 +78,16 @@ module ns_egret {
 
         public offsetX = 0;
         public offsetY = 0;
-        private cacheCanvas;
+        private cacheCanvas:HTMLCanvasElement;
 
         constructor() {
+            super();
             this.cacheCanvas = document.createElement("canvas");
 
         }
 
         public drawToTexture(displayObject:ns_egret.DisplayObject):void {
-            var cacheCanvas = this.cacheCanvas;
+            var cacheCanvas:HTMLCanvasElement = this.cacheCanvas;
             var bounds = displayObject.getBounds();
             cacheCanvas.width = bounds.width;
             cacheCanvas.height = bounds.height;
@@ -106,7 +107,7 @@ module ns_egret {
             }
 
             var renderContext = new ns_egret.HTML5CanvasRenderer(cacheCanvas);
-            var list = ns_egret.RenderFilter.getInstance()._drawAreaList.concat();
+            var list:Array<any> = ns_egret.RenderFilter.getInstance()._drawAreaList.concat();
             ns_egret.RenderFilter.getInstance()._drawAreaList.length = 0;
             displayObject.render(renderContext);
             ns_egret.RenderFilter.getInstance()._drawAreaList = list;
