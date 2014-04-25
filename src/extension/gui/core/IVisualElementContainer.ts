@@ -35,11 +35,6 @@ module ns_egret {
 		 * @throws RangeError 如果在子列表中不存在该索引位置。
 		 */		
 		swapElementsAt(index1:number, index2:number):void;
-		/**
-		 * 确定指定的 IVisualElement 是否为容器实例的子代或该实例本身。将进行深度搜索，即，如果此元素是该容器的子代、孙代、曾孙代等，它将返回 true。
-		 * @param element 要测试的子对象
-		 */		
-		containsElement(element:IVisualElement):boolean;
 	}
 	
 }

@@ -70,16 +70,14 @@ module ns_egret {
 		 */		
 		public target:string;
 		
-		private INITIALIZE_FUNCTION:string = "initialize";
-
 		public initialize(parent:IStateClient):void{
 			var targetElement:IVisualElement = <IVisualElement> (parent[this.target]);
 			if(!targetElement||targetElement instanceof SkinnableComponent)
 				return;
 			//让UIAsset和UIMovieClip等素材组件立即开始初始化，防止延迟闪一下或首次点击失效的问题。
-			if(targetElement instanceof ISkinnableClient){
+			if("initialize" in targetElement){
 				try{
-					targetElement[this.INITIALIZE_FUNCTION]();
+					targetElement["initialize"]();
 				}
 				catch(e){
 				}

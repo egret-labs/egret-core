@@ -343,24 +343,7 @@ module ns_egret {
 		public getElementIndex(element:IVisualElement):number{
 			return -1;
 		}
-		/**
-		 * 确定指定的 IVisualElement 是否为容器实例的子代或该实例本身。将进行深度搜索，即，如果此元素是该容器的子代、孙代、曾孙代等，它将返回 true。
-		 * @param element 要测试的子对象
-		 */	
-		public containsElement(element:IVisualElement):boolean{
-			while (element){
-				if (element == this)
-					return true;
-				
-				if (element.parent instanceof IVisualElement)
-					element = <IVisualElement> (element.parent);
-				else
-					return false;
-			}
-			
-			return false;
-		}
-		
+
 		/**
 		 * 返回在容器可视区域内的布局元素索引列表,此方法忽略不是布局元素的普通的显示对象
 		 */		
