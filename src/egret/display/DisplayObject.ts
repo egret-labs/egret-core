@@ -492,8 +492,8 @@ module ns_egret {
             return this._stage;
         }
 
-        public static _enterFrameCallBackList:Array<any> = [];
-        public static _renderCallBackList:Array<any> = [];
+        public static _enterFrameCallBackList:Array = [];
+        public static _renderCallBackList:Array = [];
 
         public addEventListener(type:string, listener:Function, thisObject:any, useCapture:boolean = false, priority:number = 0):void {
             super.addEventListener(type, listener, thisObject, useCapture, priority);
