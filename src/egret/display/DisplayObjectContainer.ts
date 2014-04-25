@@ -341,6 +341,16 @@ module ns_egret {
             }
             var children = this._children;
             var l = children.length;
+            if (l == 0) {
+                return result;
+            }
+            //算出touchChildren
+            var touchChildren = this.touchChildren;
+            var target = this;
+            while (target.parent) {
+                touchChildren = touchChildren && target.parent.touchChildren;
+                target = target.parent;
+            }
             for (var i = l - 1; i >= 0; i--) {
                 var child = children[i];
                 //todo 這裡的matrix不符合identity的設計原則，以後需要重構
@@ -359,13 +369,13 @@ module ns_egret {
                 var point = Matrix.transformCoords(mtx, x, y);
                 var childHitTestResult = child.hitTest(point.x, point.y, true);
                 if (childHitTestResult) {
-                    if (childHitTestResult.touchEnabled) {
+                    if (childHitTestResult.touchEnabled && touchChildren) {
                         return childHitTestResult;
                     }
                     else if (this.touchEnabled) {
                         return this;
                     }
-                    if (result == null) {
+                    if (result == null && touchChildren) {
                         result = childHitTestResult;
                     }
                 }
