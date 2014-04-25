@@ -1,26 +1,20 @@
-/** Created with JetBrains WebStorm.
- * User: yjtx
- * Date: 14-4-14
- * Time: 下午4:00
- * Class: XML
- * Summary: 根据 xml格式的字符串 生成可以直接 通过属性 获取值
+/**
+ * Copyright (c) Egret-Labs.org. Permission is hereby granted, free of charge,
+ * to any person obtaining a copy of this software and associated documentation
+ * files (the "Software"), to deal in the Software without restriction, including
+ * without limitation the rights to use, copy, modify, merge, publish, distribute,
+ * sublicense, and/or sell copies of the Software, and to permit persons to whom
+ * the Software is furnished to do so, subject to the following conditions:
  *
-
- <root>
- <egret>
- <item>123</item>
- <item name="yjtx"/>
- </egret>
- </root>
-
- 上面的 字符串 最后解析成 xml文件后，
- 获取 item数组           xml.egret[0].item;               egret[0] 必须加 [0]
- 获取 第一个item的123     xml.egret[0].item[0].value;      egret[0] 必须加 [0]
- 获取 第二个item的yjtx    xml.egret[0].item[1].$name;      egret[0] 必须加 [0]
-
+ * The above copyright notice and this permission notice shall be included
+ * in all copies or substantial portions of the Software.
  *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
+ * INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR
+ * PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE
+ * FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+ * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-
 /// <reference path="SAXParser.ts"/>
 
 module ns_egret{
@@ -28,8 +22,22 @@ module ns_egret{
         private _xmlStr = "";
 
         /**
-         * 必须是 xml格式的字符串
-         * @param xmlStr  xml格式的字符串
+         * @class ns_egret.XML
+         * @classdesc XML类模拟了ActionScript3.0的E4X的部分语法特性，封装了对XML对象的操作
+         *
+         * @example
+         * <xmp>
+         *  <root>
+         *    <egret>
+         *      <item>123</item>
+         *      <item name="yjtx"/>
+         *    </egret>
+         *  </root>
+         *  </xmp>
+         * xml.egret[0].item;    // [ XML,XML ]
+         * xml.egret[0].item[0].value;  // 123
+         * xml.egret[0].item[1].$name;  // yjtx
+         * @param xmlStr  {string} xml格式的字符串
          */
             constructor(xmlStr:string = "") {
             this._xmlStr = xmlStr;
