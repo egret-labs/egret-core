@@ -26,6 +26,7 @@
 /// <reference path="../events/Event.ts"/>
 /// <reference path="../events/EventDispatcher.ts"/>
 /// <reference path="../interactive/TouchContext.ts"/>
+/// <reference path="../utils/Recycler.ts"/>
 
 module ns_egret{
     /**
@@ -110,6 +111,11 @@ module ns_egret{
                 event._target = eventBin.display;
                 event._setCurrentTarget(eventBin.display);
                 eventBin.listener.call(eventBin.thisObject,event);
+            }
+
+            list = Recycler._callBackList;
+            for(i=list.length-1;i>=0;i--){
+                list[i]._checkFrame();
             }
         }
         /**
