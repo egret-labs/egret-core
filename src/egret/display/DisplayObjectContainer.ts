@@ -181,7 +181,13 @@ module ns_egret {
          * @param child 要测试的子对象。
          */
         public contains(child:DisplayObject):boolean{
-            return this._children.indexOf(child)!=-1;
+            while (child){
+                if (child == this){
+                    return true;
+                }
+                child = child.parent;
+            }
+            return false;
         }
 
         /**
