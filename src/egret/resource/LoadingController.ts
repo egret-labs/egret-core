@@ -145,38 +145,4 @@ module ns_egret{
             this._resourceUrlList = null;
         }
     }
-
-    /**
-     * ILoadingView是加载进度条的接口，所有的加载进度条都需要实现如下方法，并通过LoadingController.setLoadingView(view)来调用
-     * @interface
-     * @class ns_egret.ILoadingView
-     */
-    export interface ILoadingView{
-
-        /**
-         * 将进度条添加到舞台
-         * @method ns_egret.ILoadingView#addToStage
-         */
-        addToStage();
-
-        /**
-         * 将进度条从舞台中移除
-         * @method ns_egret.ILoadingView#removeFromStage
-         */
-        removeFromStage();
-
-        /**
-         * 更新进度条
-         * @callback ns_egret.ILoadingView#onProgress
-         * @param current
-         * @param total
-         *
-         */
-        onProgress(current:number, total:number);
-    }
-
-
-    export class LoadingEvent {
-
-    }
 }

@@ -103,7 +103,7 @@ class GameApp {
     }
 
     private changeDescription(textContainer, lineArr) {
-        textContainer.removeAllChildren();
+        textContainer.removeChildren();
         var w = 0;
         for (var i = 0; i < lineArr.length; i++) {
             var info = lineArr[i];

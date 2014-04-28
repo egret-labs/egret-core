@@ -117,7 +117,7 @@ module ns_egret {
                 var bitmap = this.getBitmap(frameData.res);
                 bitmap.x = frameData.x;
                 bitmap.y = frameData.y;
-                this.removeAllChildren();
+                this.removeChildren();
                 this.addChild(bitmap);
             }
 

@@ -22,7 +22,7 @@
 
 module ns_egret {
 
-    export class HashObject {
+    export class HashObject implements IHashObject{
 
         /**
          * @class ns_egret.HashObject
@@ -37,7 +37,7 @@ module ns_egret {
          */
         private static hashCount:number = 1;
 
-        private _hashCode:number = 1;
+        private _hashCode:number;
         /**
          * 返回此对象唯一的哈希值,用于唯一确定一个对象。
          * @method ns_egret.HashObject#hashCode
