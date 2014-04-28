@@ -39,9 +39,8 @@ module ns_egret {
 
         private _hashCode:number;
         /**
-         * 返回此对象唯一的哈希值,用于唯一确定一个对象。
-         * @method ns_egret.HashObject#hashCode
-         * @returns {number} 对象的hashcode值
+         * 返回此对象唯一的哈希值,用于唯一确定一个对象。hashCode为大于等于1的整数。
+         * @member {number} ns_egret.HashObject#hashCode
          */
         public get hashCode():number {
             return this._hashCode;

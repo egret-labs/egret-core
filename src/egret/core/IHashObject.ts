@@ -25,7 +25,7 @@ module ns_egret {
      */
     export interface IHashObject {
         /**
-         * 返回此对象唯一的哈希值,用于唯一确定一个对象。
+         * 返回此对象唯一的哈希值,用于唯一确定一个对象。hashCode为大于等于1的整数。
          * @member {number} ns_egret.IHashObject#hashCode
          */
         hashCode:number;
