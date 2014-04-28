@@ -1,4 +1,5 @@
-var fs = require('fs')
+var fs = require('fs');
+var locale = require("./locale/zh-CN.js");
 
 
 var loopFileSync = function (dir, filter) {
@@ -127,8 +128,14 @@ function mkdirSync(p, mode, made) {
     return made;
 };
 
+function _exit(code){
+    console.log (locale.error_code[code]);
+    process.exit(code);
+}
+
 
 exports.loopFileSync = loopFileSync;
 exports.require = _require;
 exports.copy = copy;
 exports.deleteFileSync = remove;
+exports.exit = _exit;
