@@ -607,12 +607,12 @@ module ns_egret {
 					if(!isNaN(layoutElement.percentHeight)){
 						totalPercentHeight += layoutElement.percentHeight;
 						
-						this.childInfo = new ChildInfo();
-						this.childInfo.layoutElement = layoutElement;
-						this.childInfo.percent    = layoutElement.percentHeight;
-						this.childInfo.min        = layoutElement.minHeight
-						this.childInfo.max        = layoutElement.maxHeight;
-						childInfoArray.push(this.childInfo);
+						childInfo = new ChildInfo();
+						childInfo.layoutElement = layoutElement;
+						childInfo.percent    = layoutElement.percentHeight;
+						childInfo.min        = layoutElement.minHeight
+						childInfo.max        = layoutElement.maxHeight;
+						childInfoArray.push(childInfo);
 					}
 					else{
 						heightToDistribute -= layoutElement.preferredHeight;
@@ -651,11 +651,11 @@ module ns_egret {
 					VerticalLayout.flexChildrenProportionally(targetHeight,heightToDistribute,
 						totalPercentHeight,childInfoArray);
 					var roundOff:number = 0;
-					for each (this.childInfo in childInfoArray){
-						var childSize:number = Math.round(this.childInfo.size + roundOff);
-						roundOff += this.childInfo.size - childSize;
+					for each (childInfo in childInfoArray){
+						var childSize:number = Math.round(childInfo.size + roundOff);
+						roundOff += childInfo.size - childSize;
 						
-						heightDic[this.childInfo.layoutElement] = childSize;
+						heightDic[childInfo.layoutElement] = childSize;
 						heightToDistribute -= childSize;
 					}
 					heightToDistribute = heightToDistribute>0?heightToDistribute:0;

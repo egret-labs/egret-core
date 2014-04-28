@@ -520,14 +520,14 @@ module ns_egret {
 			var oldElementSize:number;
 			var needInvalidateSize:boolean = false;
 			//对可见区域进行布局
-			for(var i:number=this.startIndex;this.i<=this.endIndex;this.i++){
+			for(var i:number=this.startIndex;i<=this.endIndex;i++){
 				var exceesHeight:number = 0;
-				layoutElement = <ILayoutElement> (this.target.getVirtualElementAt(this.i));
+				layoutElement = <ILayoutElement> (this.target.getVirtualElementAt(i));
 				if (!layoutElement){
 					continue;
 				}
 				else if(!layoutElement.includeInLayout){
-					this.elementSizeTable[this.i] = 0;
+					this.elementSizeTable[i] = 0;
 					continue;
 				}
 				if(justify){
@@ -543,14 +543,14 @@ module ns_egret {
 					this.maxElementHeight = Math.max(this.maxElementHeight,layoutElement.preferredHeight);
 				contentHeight = Math.max(contentHeight,layoutElement.layoutBoundsHeight);
 				if(!needInvalidateSize){
-					oldElementSize = isNaN(this.elementSizeTable[this.i])?typicalWidth:this.elementSizeTable[this.i];
+					oldElementSize = isNaN(this.elementSizeTable[i])?typicalWidth:this.elementSizeTable[i];
 					if(oldElementSize!=layoutElement.layoutBoundsWidth)
 						needInvalidateSize = true;
 				}
-				if(this.i==0&&this.elementSizeTable.length>0&&this.elementSizeTable[this.i]!=layoutElement.layoutBoundsWidth)
+				if(i==0&&this.elementSizeTable.length>0&&this.elementSizeTable[i]!=layoutElement.layoutBoundsWidth)
 					this.typicalLayoutRect = null;
-				this.elementSizeTable[this.i] = layoutElement.layoutBoundsWidth;
-				x = this.getStartPosition(this.i);
+				this.elementSizeTable[i] = layoutElement.layoutBoundsWidth;
+				x = this.getStartPosition(i);
 				layoutElement.setLayoutBoundsPosition(Math.round(x),Math.round(y));
 			}
 			
@@ -617,12 +617,12 @@ module ns_egret {
 					if(!isNaN(layoutElement.percentWidth)){
 						totalPercentWidth += layoutElement.percentWidth;
 						
-						this.childInfo = new ChildInfo();
-						this.childInfo.layoutElement = layoutElement;
-						this.childInfo.percent    = layoutElement.percentWidth;
-						this.childInfo.min        = layoutElement.minWidth
-						this.childInfo.max        = layoutElement.maxWidth;
-						childInfoArray.push(this.childInfo);
+						childInfo = new ChildInfo();
+						childInfo.layoutElement = layoutElement;
+						childInfo.percent    = layoutElement.percentWidth;
+						childInfo.min        = layoutElement.minWidth
+						childInfo.max        = layoutElement.maxWidth;
+						childInfoArray.push(childInfo);
 						
 					}
 					else{
@@ -660,11 +660,11 @@ module ns_egret {
 					HorizontalLayout.flexChildrenProportionally(targetWidth,widthToDistribute,
 						totalPercentWidth,childInfoArray);
 					var roundOff:number = 0;
-					for each (this.childInfo in childInfoArray){
-						var childSize:number = Math.round(this.childInfo.size + roundOff);
-						roundOff += this.childInfo.size - childSize;
+					for each (childInfo in childInfoArray){
+						var childSize:number = Math.round(childInfo.size + roundOff);
+						roundOff += childInfo.size - childSize;
 						
-						widthDic[this.childInfo.layoutElement] = childSize;
+						widthDic[childInfo.layoutElement] = childSize;
 						widthToDistribute -= childSize;
 					}
 					widthToDistribute = widthToDistribute>0?widthToDistribute:0;

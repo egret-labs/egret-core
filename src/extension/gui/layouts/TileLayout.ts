@@ -719,11 +719,11 @@ module ns_egret {
 			var rowIndex:number;
 			var orientedByColumns:boolean = (this.orientation == TileOrientation.COLUMNS);
 			var index:number = this.startIndex;
-			for(var i:number = this.startIndex;this.i <= this.endIndex;this.i++){
+			for(var i:number = this.startIndex;i <= this.endIndex;i++){
 				if(this.useVirtualLayout)
-					elt = <ILayoutElement> (this.target.getVirtualElementAt(this.i));
+					elt = <ILayoutElement> (this.target.getVirtualElementAt(i));
 				else
-					elt = <ILayoutElement> (this.target.getElementAt(this.i));
+					elt = <ILayoutElement> (this.target.getElementAt(i));
 				if(elt == null||!elt.includeInLayout)
 					continue;
 				
