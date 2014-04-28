@@ -12,7 +12,7 @@ function run(currentDir, args, opts) {
     var source = path.join(__dirname, "../../templates");
     var projectName = args[0];
     if (!projectName) {
-        console.log("请输入项目名");
+        libs.exit(1001);
         return;
     }
 

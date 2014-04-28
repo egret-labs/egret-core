@@ -128,8 +128,18 @@ function mkdirSync(p, mode, made) {
     return made;
 };
 
+function formatStdoutString(message){
+    return message.split("{color_green}").join("\033[1;32;1m")
+        .split("{color_normal}").join("\033[0m")
+        .split("{color_underline}").join("\033[4;36;1m");
+}
+
 function _exit(code){
-    console.log (locale.error_code[code]);
+    var message = locale.error_code[code];
+    if (!message){
+        _exit(9999,code);
+    }
+    console.log (formatStdoutString(message).replace("{0}",arguments[1]));
     process.exit(code);
 }
 
