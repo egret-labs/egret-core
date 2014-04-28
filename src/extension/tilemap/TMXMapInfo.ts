@@ -20,6 +20,7 @@
 /// <reference path="../../egret/core/Logger.ts"/>
 /// <reference path="../../egret/resource/ResourceLoader.ts"/>
 /// <reference path="../../egret/utils/SAXParser.ts"/>
+/// <reference path="../../jslib/Utils.d.ts"/>
 module ns_egret {
     export class TMXMapInfo {
         private _orientation = null;
@@ -27,15 +28,15 @@ module ns_egret {
         private _mapHeight:number = null;
         private _tileWidth:number = null;
         private _tileHeight:number = null;
-        private _layers:Array = null;
-        private _tileSets:Array = null;
-        private _objectGroups:Array = null;
+        private _layers:Array<TMXLayerInfo> = null;
+        private _tileSets:Array<TMXTilesetInfo> = null;
+        private _objectGroups:Array<any> = null;
         private _parentGID:number = null;
         private _storingCharacters = false;
-        private _properties:Array = null;
+        private _properties:Array<any> = null;
         private _TMXFileName:string = null;
         private  _currentString:string = null;
-        private _tileProperties:Array = null;
+        private _tileProperties:Array<any> = null;
 
         static createWithFile(tmxFile:string) {
             var ret:TMXMapInfo = new TMXMapInfo();
@@ -45,7 +46,7 @@ module ns_egret {
 
         public initWithTMXFile(tmxFile) {
             this.internalInit(tmxFile);
-            this.parseXMXFile(this._TMXFileName);
+            this.parseXMLFile(this._TMXFileName);
         }
 
         private internalInit(tmxFileName) {
@@ -60,7 +61,7 @@ module ns_egret {
             this._storingCharacters = false;
         }
 
-        private parseXMXFile(tmxFile:string) {
+        private parseXMLFile(tmxFile:string) {
             var xml = ResourceLoader.create(tmxFile).data;
             if (xml == null) {
                 ns_egret.Logger.fatal("tmx文件没有加载：" + tmxFile);
@@ -339,7 +340,7 @@ module ns_egret {
             return this._tileSets;
         }
 
-        public setTilesets(value) {
+        public setTilesets(value:TMXTilesetInfo) {
             this._tileSets.push(value);
         }
 
@@ -355,7 +356,7 @@ module ns_egret {
             return this._layers;
         }
 
-        public setLayers(value) {
+        public setLayers(value:TMXLayerInfo) {
             this._layers.push(value);
         }
 
@@ -371,7 +372,7 @@ module ns_egret {
             return this._tileProperties;
         }
 
-        public setTileProperties(value) {
+        public setTileProperties(value:any) {
             this._tileProperties.push(value);
         }
 
@@ -452,7 +453,7 @@ module ns_egret {
             return this._properties;
         }
 
-        public setProperties(value) {
+        public setProperties(value:any) {
             this._properties.push(value);
         }
 

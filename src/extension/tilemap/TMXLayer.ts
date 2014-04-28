@@ -37,7 +37,6 @@ module ns_egret {
         private _opacity:number = 1;
         private _minGID:number = null;
         private _maxGID:number = null;
-        private _atlasIndexArray = null;
 
         public static create(tilesetInfo:TMXTilesetInfo, layerInfo:TMXLayerInfo, mapInfo:TMXMapInfo):TMXLayer {
             var ret:TMXLayer = new TMXLayer();
@@ -64,8 +63,6 @@ module ns_egret {
             var offset = this.calculateLayerOffset(layerInfo.layerX, layerInfo.layerY);
             this.x = offset.x;
             this.y = offset.y;
-
-            this._atlasIndexArray = [];
         }
 
         private calculateLayerOffset(x:number, y:number) {
@@ -111,12 +108,9 @@ module ns_egret {
 
         private appendTileForGID(gid, x, y) {
             var rect:Point = this._tileSet.rectForGID(gid);
-            var z = 0 | (x + y * this._layerWidth);
             var tile = this.reusedTileWithRect(rect);
             this.setupTileSprite(tile, x, y, gid);
-
-            var indexForZ = this._atlasIndexArray.length;
-            super.addChild(tile, indexForZ);
+            super.addChild(tile);
             return tile;
         }
 
@@ -187,7 +181,7 @@ module ns_egret {
             if (x >= this._layerWidth || y >= this._layerHeight || x < 0 || y < 0) {
                 ns_egret.Logger.fatal("TMXLayer.getTileGIDAt():提供的索引超出范围");
             }
-            if (!this._tiles || !this._atlasIndexArray) {
+            if (!this._tiles) {
                 ns_egret.Logger.info("TMXLayer.getTileGIDAt(): tileMap已经被销毁");
                 return null;
             }

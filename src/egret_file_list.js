@@ -49,6 +49,7 @@ var temp = [
     "egret/utils/SAXParser.js",
     "egret/utils/FrameworkUtils.js",
     "egret/utils/XML.js",
+    "egret/utils/Recycler.js",
     //utils end
     //tween start
     "egret/tween/Tween.js",
@@ -73,7 +74,7 @@ var temp = [
     "extension/gui/component/DynamicBitmap.js",
     "extension/dragonbones/dragonBones.js",
     "extension/dragonbones/DragonBonesEgretBridge.js",
-    "jslib//DEBUG.js",
+    "jslib/DEBUG.js",
     "jslib/box2d.js"
 ]
 
