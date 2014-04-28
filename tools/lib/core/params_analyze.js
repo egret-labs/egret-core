@@ -38,4 +38,23 @@ getArgv = function(){
     return result;
 };
 
+function _getEnv(){
+    return process.env;
+}
+
+
+exports.getEnv = _getEnv;
+
+exports.getEgretPath = function(){
+    var obj = _getEnv();
+    if (!obj.EGRET_PATH){
+        console.log ("请先设置环境变量 EGRET_PATH");
+        process.exit();
+    }
+    console.log(obj);
+}
+
+
+
+
 exports.getArgv = getArgv;
