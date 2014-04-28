@@ -49,6 +49,7 @@ var temp = [
     "egret/utils/SAXParser.js",
     "egret/utils/FrameworkUtils.js",
     "egret/utils/XML.js",
+    "egret/utils/Recycler.js",
     //utils end
     //tween start
     "egret/tween/Tween.js",
