@@ -99,7 +99,7 @@ module dragonBones {
                         parent.addChild(this._display);
                     }
                     else {
-                        parent.addChild(this._display, Math.min(index, parent.numChildren));
+                        parent.addChildAt(this._display, Math.min(index, parent.numChildren));
                     }
                 }
             }

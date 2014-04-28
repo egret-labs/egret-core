@@ -22,7 +22,8 @@
 
 module ns_egret {
     /**
-     * @class 纹理的缓存和管理类
+     * 纹理的缓存和管理类
+     * @class ns_egret.TextureCache
      */
     export class TextureCache {
         private static instance:TextureCache;
