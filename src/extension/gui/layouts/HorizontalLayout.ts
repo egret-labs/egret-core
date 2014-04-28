@@ -18,7 +18,6 @@
 
 /// <reference path="../../../egret/events/Event.ts"/>
 /// <reference path="../../../egret/geom/Rectangle.ts"/>
-/// <reference path="../../../egret/utils/Dictionary.ts"/>
 /// <reference path="../core/ILayoutElement.ts"/>
 /// <reference path="../core/IVisualElement.ts"/>
 /// <reference path="supportClasses/LayoutBase.ts"/>
@@ -195,16 +194,18 @@ module ns_egret {
 			var measuredWidth:number = this.getElementTotalSize();
 			var measuredHeight:number = Math.max(this.maxElementHeight,typicalHeight);
 			
-			var visibleIndices:Vector.<number> = this.target.getElementIndicesInView();
-			for each(var i:number in visibleIndices){
-				var layoutElement:ILayoutElement = <ILayoutElement> (this.target.getElementAt(i));
+			var visibleIndices:Array = this.target.getElementIndicesInView();
+            var length:number = visibleIndices.length;
+			for(var i:number=0;i<length;i++){
+                var index:number = visibleIndices[i];
+				var layoutElement:ILayoutElement = <ILayoutElement> (this.target.getElementAt(index));
 				if (layoutElement == null||!layoutElement.includeInLayout)
 					continue;
 				
 				var preferredWidth:number = layoutElement.preferredWidth;
 				var preferredHeight:number = layoutElement.preferredHeight;
 				measuredWidth += preferredWidth;
-				measuredWidth -= isNaN(this.elementSizeTable[i])?typicalWidth:this.elementSizeTable[i];;
+				measuredWidth -= isNaN(this.elementSizeTable[index])?typicalWidth:this.elementSizeTable[index];
 				measuredHeight = Math.max(measuredHeight,preferredHeight);
 			}
 			var padding:number = isNaN(this._padding)?0:this._padding;
@@ -636,7 +637,7 @@ module ns_egret {
 			
 			var averageWidth:number;
 			var largeChildrenCount:number = numElements;
-			var widthDic:Dictionary = new Dictionary;
+			var widthDic:Array = [];
 			if(hJustify){
 				if(excessSpace<0){
 					averageWidth = widthToDistribute / numElements;
@@ -660,11 +661,13 @@ module ns_egret {
 					HorizontalLayout.flexChildrenProportionally(targetWidth,widthToDistribute,
 						totalPercentWidth,childInfoArray);
 					var roundOff:number = 0;
-					for each (childInfo in childInfoArray){
+                    var length:number = childInfoArray.length;
+					for (i=0;i<length;i++){
+                        childInfo = childInfoArray[i];
 						var childSize:number = Math.round(childInfo.size + roundOff);
 						roundOff += childInfo.size - childSize;
 						
-						widthDic[childInfo.layoutElement] = childSize;
+						widthDic[childInfo.layoutElement.hashCode] = childSize;
 						widthToDistribute -= childSize;
 					}
 					widthToDistribute = widthToDistribute>0?widthToDistribute:0;
@@ -708,7 +711,7 @@ module ns_egret {
 					}
 				}
 				else{
-					layoutElementWidth = widthDic[layoutElement];
+					layoutElementWidth = widthDic[layoutElement.hashCode];
 				}
 				if(vJustify){
 					y = paddingT;
@@ -815,29 +818,29 @@ module ns_egret {
 			var padding:number = isNaN(this._padding)?0:this._padding;
 			var paddingL:number = isNaN(this._paddingLeft)?padding:this._paddingLeft;
 			var paddingR:number = isNaN(this._paddingRight)?padding:this._paddingRight;
-			var firstIndex:number = this.findIndexAt(scrollRect.left,0,this.target.numElements-1);
+			var firstIndex:number = this.findIndexAt(scrollRect.x,0,this.target.numElements-1);
 			if(firstIndex==-1){
 				
-				if(scrollRect.left>this.target.contentWidth - paddingR){
-					rect.left = this.target.contentWidth - paddingR;
+				if(scrollRect.x>this.target.contentWidth - paddingR){
+					rect.x = this.target.contentWidth - paddingR;
 					rect.right = this.target.contentWidth;
 				}
 				else{
-					rect.left = 0;
+					rect.x = 0;
 					rect.right = paddingL;
 				}
 				return rect;
 			}
-			rect.left = this.getStartPosition(firstIndex);
-			rect.right = this.getElementSize(firstIndex)+rect.left;
-			if(rect.left==scrollRect.left){
+			rect.x = this.getStartPosition(firstIndex);
+			rect.right = this.getElementSize(firstIndex)+rect.x;
+			if(rect.x==scrollRect.x){
 				firstIndex--;
 				if(firstIndex!=-1){
-					rect.left = this.getStartPosition(firstIndex);
-					rect.right = this.getElementSize(firstIndex)+rect.left;
+					rect.x = this.getStartPosition(firstIndex);
+					rect.right = this.getElementSize(firstIndex)+rect.x;
 				}
 				else{
-					rect.left = 0;
+					rect.x = 0;
 					rect.right = paddingL;
 				}
 			}
@@ -858,25 +861,25 @@ module ns_egret {
 			var lastIndex:number = this.findIndexAt(scrollRect.right,0,numElements-1);
 			if(lastIndex==-1){
 				if(scrollRect.right<paddingL){
-					rect.left = 0;
+					rect.x = 0;
 					rect.right = paddingL;
 				}
 				else{
-					rect.left = this.target.contentWidth - paddingR;
+					rect.x = this.target.contentWidth - paddingR;
 					rect.right = this.target.contentWidth;
 				}
 				return rect;
 			}
-			rect.left = this.getStartPosition(lastIndex);
-			rect.right = this.getElementSize(lastIndex)+rect.left;
+			rect.x = this.getStartPosition(lastIndex);
+			rect.right = this.getElementSize(lastIndex)+rect.x;
 			if(rect.right<=scrollRect.right){
 				lastIndex++;
 				if(lastIndex<numElements){
-					rect.left = this.getStartPosition(lastIndex);
-					rect.right = this.getElementSize(lastIndex)+rect.left;
+					rect.x = this.getStartPosition(lastIndex);
+					rect.right = this.getElementSize(lastIndex)+rect.x;
 				}
 				else{
-					rect.left = this.target.contentWidth - paddingR;
+					rect.x = this.target.contentWidth - paddingR;
 					rect.right = this.target.contentWidth;
 				}
 			}
@@ -884,21 +887,17 @@ module ns_egret {
 		}
 		
 	}
-}
-import org.flexlite.domUI.core.ILayoutElement;
 
-class ChildInfo{
-	public function ChildInfo(){
-		super();
-	}
-	
-	public layoutElement:ILayoutElement;  
-	
-	public size:number = 0;
-	
-	public percent:number;
-	
-	public min:number;
-	
-	public max:number;
+    export class ChildInfo{
+
+        public layoutElement:ILayoutElement;
+
+        public size:number = 0;
+
+        public percent:number;
+
+        public min:number;
+
+        public max:number;
+    }
 }
