@@ -26,17 +26,22 @@
 
 module ns_egret {
     /**
-     * @class TouchContext是egret的触摸Context
-     * @stable B 需要把部分和HTML5耦合的部分抽离出来
+     *
+     * @class ns_egret.TouchContext
+     * @classdesc TouchContext是egret的触摸Context
      */
     export class TouchContext {
         private _currentTouchTarget:any = {};
         public maxTouches:number = 2;
 
-        constructor(private canvas:HTMLCanvasElement) {
+        public constructor(private canvas:HTMLCanvasElement) {
         }
 
-        run() {
+        /**
+         * 启动触摸检测
+         * @method ns_egret.TouchContext#run
+         */
+        public run():void {
 
             var that = this;
             if ("ontouchstart" in window) {
@@ -93,7 +98,7 @@ module ns_egret {
 
         private touchDownTarget:any = {};
 
-        private onTouchBegin(event:any) {
+        private onTouchBegin(event:any):void {
             var location = TouchContext.getLocation(this.canvas, event);
             var x = location.x;
             var y = location.y;
@@ -173,7 +178,7 @@ module ns_egret {
             target.dispatchEvent(event);
         }
 
-        static getLocation(canvas, event) {
+        public static getLocation(canvas, event):Point {
 
             var doc = document.documentElement;
             var win = window;
