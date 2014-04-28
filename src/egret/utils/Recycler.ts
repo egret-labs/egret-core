@@ -30,7 +30,7 @@ module ns_egret {
             this.frameCount = 0;
         }
 
-        public static _callBackList:Array = [];
+        public static _callBackList:Array<any> = [];
         /**
          * 多少帧后自动销毁对象。
          */
@@ -45,13 +45,13 @@ module ns_egret {
             }
         }
 
-        private objectPool:Array = [];
+        private objectPool:Array<any> = [];
         /**
          * 缓存一个对象以复用
          * @param object
          */
         public push(object:any):void{
-            var pool:Array = this.objectPool;
+            var pool:Array<any> = this.objectPool;
             if(pool.indexOf(object)==-1){
                 pool.push(object);
                 if(this.frameCount==0){
@@ -76,7 +76,7 @@ module ns_egret {
                 this.objectPool = [];
             }
             this.frameCount = 0;
-            var list:Array = Recycler._callBackList;
+            var list:Array<any> = Recycler._callBackList;
             var index:number = list.indexOf(this);
             if(index!=-1){
                 list.splice(index,1);
