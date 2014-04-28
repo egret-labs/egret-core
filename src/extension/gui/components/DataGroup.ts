@@ -197,23 +197,14 @@ module ns_egret {
 		private createOneRenderer(rendererFactory:IFactory):IItemRenderer{
 			var renderer:IItemRenderer;
             var hashCode:number = rendererFactory.hashCode;
-			if(this.recyclerDic[hashCode]){
-				var hasExtra:boolean = false;
-				for(var key:any in this.recyclerDic[hashCode]){
-					if(!renderer){
-						renderer = <IItemRenderer> key;
-					}
-					else{
-						hasExtra = true;
-						break;
-					}
-				}
-				delete this.recyclerDic[rendererFactory][renderer];
-				if(!hasExtra)
-					delete this.recyclerDic[rendererFactory];
+            var recycler:Recycler = this.recyclerDic[hashCode];
+			if(recycler){
+                renderer = recycler.pop();
+				if(recycler.length==0)
+					delete this.recyclerDic[hashCode];
 			}
 			if(!renderer){
-				renderer = new <IItemRenderer> (rendererFactory());
+				renderer = <IItemRenderer> (rendererFactory.newInstance());
 				this.rendererToClassMap[renderer.hashCode] = rendererFactory;
 			}
 			if(!renderer||!(renderer instanceof DisplayObject))
@@ -407,12 +398,13 @@ module ns_egret {
 				this.layout.elementAdded(index);
 			
 			if (this.layout && this.layout.useVirtualLayout){
-				if (this.virtualRendererIndices){
-					const virtualRendererIndicesLength:number = this.virtualRendererIndices.length;
-					for (var i:number = 0; i < this.virtualRendererIndicesLength; i++){
-						const vrIndex:number = this.virtualRendererIndices[i];
-						if (this.vrIndex >= index)
-							this.virtualRendererIndices[i] = this.vrIndex + 1;
+                var virtualRendererIndices:Array = this.virtualRendererIndices;
+				if (virtualRendererIndices){
+					var length:number = virtualRendererIndices.length;
+					for (var i:number = 0; i < length; i++){
+						var vrIndex:number = virtualRendererIndices[i];
+						if (vrIndex >= index)
+							virtualRendererIndices[i] = vrIndex + 1;
 					}
 					this.indexToRenderer.splice(index, 0, null); 
 				}
@@ -435,31 +427,32 @@ module ns_egret {
 		private itemRemoved(item:any, index:number):void{
 			if (this.layout)
 				this.layout.elementRemoved(index);
-			if (this.virtualRendererIndices && (this.virtualRendererIndices.length > 0)){
+            var virtualRendererIndices:Array = this.virtualRendererIndices;
+			if (virtualRendererIndices && (virtualRendererIndices.length > 0)){
 				var vrItemIndex:number = -1; 
-				const virtualRendererIndicesLength:number = this.virtualRendererIndices.length;
-				for (var i:number = 0; i < this.virtualRendererIndicesLength; i++){
-					const vrIndex:number = this.virtualRendererIndices[i];
-					if (this.vrIndex == index)
+				var length:number = virtualRendererIndices.length;
+				for (var i:number = 0; i < length; i++){
+					var vrIndex:number = virtualRendererIndices[i];
+					if (vrIndex == index)
 						vrItemIndex = i;
-					else if (this.vrIndex > index)
-						this.virtualRendererIndices[i] = this.vrIndex - 1;
+					else if (vrIndex > index)
+						virtualRendererIndices[i] = vrIndex - 1;
 				}
 				if (vrItemIndex != -1)
-					this.virtualRendererIndices.splice(vrItemIndex, 1);
+					virtualRendererIndices.splice(vrItemIndex, 1);
 			}
-			const oldRenderer:IItemRenderer = this.indexToRenderer[index];
+			var oldRenderer:IItemRenderer = this.indexToRenderer[index];
 			
 			if (this.indexToRenderer.length > index)
 				this.indexToRenderer.splice(index, 1);
 			
 			this.dispatchEvent(new RendererExistenceEvent(
-				RendererExistenceEvent.RENDERER_REMOVE, false, false, this.oldRenderer, index, item));
+				RendererExistenceEvent.RENDERER_REMOVE, false, false, oldRenderer, index, item));
 			
-			if(this.oldRenderer&&this.oldRenderer instanceof DisplayObject){
-				this.recycle(this.oldRenderer);
+			if(oldRenderer&&oldRenderer instanceof DisplayObject){
+				this.recycle(oldRenderer);
 				this.dispatchEvent(new RendererExistenceEvent(RendererExistenceEvent.RENDERER_REMOVE, 
-					false, false, this.oldRenderer, this.oldRenderer.itemIndex, this.oldRenderer.data));
+					false, false, oldRenderer, oldRenderer.itemIndex, oldRenderer.data));
 			}
 		}
 		
@@ -490,12 +483,16 @@ module ns_egret {
 				return;
 			
 			if (this.layout && this.layout.useVirtualLayout){
-				for each (var index:number in this.virtualRendererIndices)
-				this.resetRendererItemIndex(index);
+                var virtualRendererIndices:Array = this.virtualRendererIndices;
+                var length:number =  virtualRendererIndices.length;
+				for(var i:number=0;i<length;i++){
+                    var index:number = virtualRendererIndices[i];
+				    this.resetRendererItemIndex(index);
+                }
 			}
 			else{
-				const indexToRendererLength:number = this.indexToRenderer.length;
-				for (index = 0; index < this.indexToRendererLength; index++)
+				var indexToRendererLength:number = this.indexToRenderer.length;
+				for (index = 0; index < indexToRendererLength; index++)
 					this.resetRendererItemIndex(index);
 			}
 		}
