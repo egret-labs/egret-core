@@ -252,7 +252,7 @@ module ns_egret {
         /**
          * 移除所有显示对象
          */
-        public removeAllChildren() {
+        public removeChildren() {
             var locChildren = this._children;
             for(var i:number=locChildren.length-1;i>=0;i--)
             {
