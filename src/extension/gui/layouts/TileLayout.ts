@@ -861,17 +861,17 @@ module ns_egret {
 			var paddingL:number = isNaN(this._paddingLeft)?padding:this._paddingLeft;
 			var paddingR:number = isNaN(this._paddingRight)?padding:this._paddingRight;
 			var horizontalGap:number = isNaN(this._horizontalGap)?0:this._horizontalGap;
-			if(scrollRect.left>this.target.contentWidth - paddingR){
-				bounds.left = this.target.contentWidth - paddingR;
+			if(scrollRect.x>this.target.contentWidth - paddingR){
+				bounds.x = this.target.contentWidth - paddingR;
 				bounds.right = this.target.contentWidth;
 			}
-			else if(scrollRect.left>paddingL){
-				var column:number = Math.floor((scrollRect.left - 1 - paddingL) / (this._columnWidth + horizontalGap));
-				bounds.left = this.leftEdge(column);
+			else if(scrollRect.x>paddingL){
+				var column:number = Math.floor((scrollRect.x - 1 - paddingL) / (this._columnWidth + horizontalGap));
+				bounds.x = this.leftEdge(column);
 				bounds.right = this.rightEdge(column);
 			}
 			else{
-				bounds.left = 0;
+				bounds.x = 0;
 				bounds.right = paddingL;
 			}
 			return bounds;
@@ -887,16 +887,16 @@ module ns_egret {
 			var horizontalGap:number = isNaN(this._horizontalGap)?0:this._horizontalGap;
 			var bounds:Rectangle = new Rectangle();
 			if(scrollRect.right<paddingL){
-				bounds.left = 0;
+				bounds.x = 0;
 				bounds.right = paddingL;
 			}
 			else if(scrollRect.right<this.target.contentWidth - paddingR){
 				var column:number = Math.floor(((scrollRect.right + 1 + horizontalGap) - paddingL) / (this._columnWidth + horizontalGap));
-				bounds.left = this.leftEdge(column);
+				bounds.x = this.leftEdge(column);
 				bounds.right = this.rightEdge(column);
 			}
 			else{
-				bounds.left = this.target.contentWidth - paddingR;
+				bounds.x = this.target.contentWidth - paddingR;
 				bounds.right = this.target.contentWidth;
 			}
 			return bounds;
@@ -911,17 +911,17 @@ module ns_egret {
 			var paddingB:number = isNaN(this._paddingBottom)?padding:this._paddingBottom;
 			var verticalGap:number = isNaN(this._verticalGap)?0:this._verticalGap;
 			var bounds:Rectangle = new Rectangle();
-			if(scrollRect.top>this.target.contentHeight - paddingB){
-				bounds.top = this.target.contentHeight - paddingB;
+			if(scrollRect.y>this.target.contentHeight - paddingB){
+				bounds.y = this.target.contentHeight - paddingB;
 				bounds.bottom = this.target.contentHeight;
 			}
-			else if(scrollRect.top>paddingT){
-				var row:number = Math.floor((scrollRect.top - 1 - paddingT) / (this._rowHeight + verticalGap));
-				bounds.top = this.topEdge(row);
+			else if(scrollRect.y>paddingT){
+				var row:number = Math.floor((scrollRect.y - 1 - paddingT) / (this._rowHeight + verticalGap));
+				bounds.y = this.topEdge(row);
 				bounds.bottom = this.bottomEdge(row);
 			}
 			else{
-				bounds.top = 0;
+				bounds.y = 0;
 				bounds.bottom = paddingT;
 			}
 			return bounds;
@@ -937,16 +937,16 @@ module ns_egret {
 			var verticalGap:number = isNaN(this._verticalGap)?0:this._verticalGap;
 			var bounds:Rectangle = new Rectangle();
 			if(scrollRect.bottom<paddingT){
-				bounds.top = 0;
+				bounds.y = 0;
 				bounds.bottom = paddingT;
 			}
 			else if(scrollRect.bottom<this.target.contentHeight - paddingB){
 				var row:number = Math.floor(((scrollRect.bottom + 1 + verticalGap) - paddingT) / (this._rowHeight + verticalGap));
-				bounds.top = this.topEdge(row);
+				bounds.y = this.topEdge(row);
 				bounds.bottom = this.bottomEdge(row);
 			}
 			else{
-				bounds.top = this.target.contentHeight - paddingB;
+				bounds.y = this.target.contentHeight - paddingB;
 				bounds.bottom = this.target.contentHeight;
 			}
 			
