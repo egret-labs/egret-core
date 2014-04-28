@@ -1,5 +1,6 @@
 var path = require("path");
 var libs = require("../core/normal_libs");
+var param = require("../core/params_analyze.js");
 var fs = require("fs");
 
 /**
@@ -9,47 +10,36 @@ var fs = require("fs");
  * @param opts
  */
 function run(currentDir, args, opts) {
-    var source = path.join(__dirname, "../../templates");
     var projectName = args[0];
     if (!projectName) {
         libs.exit(1001);
-        return;
     }
 
-//    更改导出文件夹，此功能暂时屏蔽
-//    if (opts["-u"] && opts["-u"].length > 0) {
-//        if (!fs.existsSync(opts["-u"][0])) {
-//            fs.mkdirSync(opts["-u"][0]);
-//        }
-//        currentDir = opts["-u"][0];
-//    }
+//    generateConfigJson(currentDir, engine, projectName);
 
 
-    var engine = opts["-e"] || opts["-engine"];
+    createNewProject(projectName);
+    copyEngine();
 
-    generateConfigJson(currentDir,engine,projectName);
 
+}
 
-    copyEngine(currentDir,engine);
-
-    var projPath = path.join(currentDir, projectName);
-    //创建 游戏目录
-    libs.copy(path.join(source, "game"), projPath);
+//创建 游戏目录
+function createNewProject(projectName) {
+    var template = path.join(param.getEgretPath(), "tools/templates/game");
+    var projPath = path.join(process.cwd(), projectName);
+    libs.copy(template, projPath);
     console.log("创建成功!");
 }
 
 
-function copyEngine(currentDir,engine){
+function copyEngine() {
     //创建 引擎目录
-    if (engine && engine.length > 0) {
-        var engine_root = path.join(currentDir, "egret");
-        if (fs.existsSync(engine_root)){
-            console.error("当前目录下已存在引擎文件夹");
-            process.exit(1);
-        }
+    var engine_root = path.join(process.cwd(), "egret");
+    if (!fs.existsSync(engine_root)) {
         fs.mkdirSync(engine_root);
         var target_src = path.join(engine_root, "src");
-        var source_src = path.join(engine[0], "src");
+        var source_src = path.join(param.getEgretPath(), "src");
         libs.copy(source_src, target_src);
     }
 }
@@ -60,7 +50,7 @@ function copyEngine(currentDir,engine){
  * @param engine
  * @param projectName
  */
-function generateConfigJson(currentDir,engine,projectName) {
+function generateConfigJson(currentDir, engine, projectName) {
     var configPath = path.join(currentDir, "config.json");
     if (!fs.existsSync(configPath)) {
         var gameData = {};
@@ -69,11 +59,11 @@ function generateConfigJson(currentDir,engine,projectName) {
     }
     else {
         var txt = fs.readFileSync(configPath, "utf8");
-        try{
+        try {
             var gameData = JSON.parse(txt);
         }
-        catch(e){
-            console.log ("config.json解析失败，重新生成...");
+        catch (e) {
+            console.log("config.json解析失败，重新生成...");
             var gameData = {};
             gameData.game = {};
             gameData.engine = "";
@@ -84,7 +74,7 @@ function generateConfigJson(currentDir,engine,projectName) {
     if (engine && engine.length > 0) {
         gameData["engine"] = engine;
     }
-    else if (!gameData["engine"]){
+    else if (!gameData["engine"]) {
         gameData["engine"] = "egret/src/";
     }
 
