@@ -120,8 +120,8 @@ module ns_egret {
 				this.indexToRenderer[index] = renderer;
 				this.updateRenderer(renderer,index,item);
 				if(this.createNewRendererFlag){
-					if("validateNow" in renderer)
-                        (<IInvalidating> (renderer)).validateNow();
+					if(renderer instanceof IInvalidating)
+						(<IInvalidating> renderer).validateNow();
 					this.createNewRendererFlag = false;
 					this.dispatchEvent(new RendererExistenceEvent(RendererExistenceEvent.RENDERER_ADD, 
 						false, false, renderer, index, item));
@@ -152,10 +152,10 @@ module ns_egret {
 		private doFreeRenderer(renderer:IItemRenderer):void{
 			var rendererClass:any = this.rendererToClassMap[renderer.hashCode];
 			if(!this.freeRenderers[rendererClass]){
-				this.freeRenderers[rendererClass] = [];
+				this.freeRenderers[rendererClass] = new Vector.<IItemRenderer>();
 			}
 			this.freeRenderers[rendererClass].push(renderer);
-            (<DisplayObject> renderer).visible = false;
+			(<DisplayObject> renderer).visible = false;
 		}
 		
 		/**
@@ -181,7 +181,7 @@ module ns_egret {
 			if(this.freeRenderers[rendererClass]
 				&&this.freeRenderers[rendererClass].length>0){
 				renderer = this.freeRenderers[rendererClass].pop();
-				<DisplayObject> ((renderer)).visible = true;
+				(<DisplayObject> renderer).visible = true;
 				return renderer;
 			}
 			this.createNewRendererFlag = true;
@@ -216,7 +216,7 @@ module ns_egret {
 			if(this._itemRendererSkinName){
 				this.setItemRenderSkinName(renderer);
 			}
-			super.addChild(renderer<DisplayObject> ());
+			super.addChild(<DisplayObject> renderer);
 			renderer.setLayoutBoundsSize(NaN,NaN);
 			return renderer;
 		}
@@ -284,7 +284,7 @@ module ns_egret {
 		public getElementIndicesInView():Vector.<number>{
 			if(this.layout&&this.layout.useVirtualLayout)
 				return this.virtualRendererIndices?
-					virtualRendererIndices:new Vector.<number>(0);
+					this.virtualRendererIndices:new Vector.<number>(0);
 			return super.getElementIndicesInView();
 		}
 		
@@ -412,12 +412,12 @@ module ns_egret {
 			}
 			var rendererClass:any = this.itemToRendererClass(item);
 			var renderer:IItemRenderer = this.createOneRenderer(rendererClass);
-			this.indexToRenderer.splice(index,0,this.renderer);
-			if(!this.renderer)
+			this.indexToRenderer.splice(index,0,renderer);
+			if(!renderer)
 				return;
-			this.updateRenderer(this.renderer,index,item);
+			this.updateRenderer(renderer,index,item);
 			this.dispatchEvent(new RendererExistenceEvent(RendererExistenceEvent.RENDERER_ADD, 
-				false, false, this.renderer, index, item));
+				false, false, renderer, index, item));
 			
 		}
 		
@@ -463,9 +463,9 @@ module ns_egret {
 		 * 回收一个ItemRenderer实例
 		 */		
 		private recycle(renderer:IItemRenderer):void{
-			super.removeChild(rend<DisplayObject> erer);
-			if("ownerChanged" in renderer){
-				<IVisualElement> ((renderer)).ownerChanged(null);
+			super.removeChild(<DisplayObject> renderer);
+			if(renderer instanceof IVisualElement){
+				(<IVisualElement> renderer).ownerChanged(null);
 			}
 			var rendererClass:any = this.rendererToClassMap[renderer.hashCode];
 			if(!this.recyclerDic[rendererClass]){
@@ -727,8 +727,8 @@ module ns_egret {
 			}
 			this.createNewRendererFlag = true;
 			this.updateRenderer(typicalRenderer,0,this.typicalItem);
-			if("validateNow" in typicalRenderer)
-                (<IInvalidating> typicalRenderer).validateNow();
+			if(typicalRenderer instanceof IInvalidating)
+				(<IInvalidating> typicalRenderer).validateNow();
 			var rect:Rectangle = new Rectangle(0,0,typicalRenderer.preferredWidth,
 				typicalRenderer.preferredHeight);
 			this.recycle(typicalRenderer);
@@ -787,16 +787,16 @@ module ns_egret {
 				return;
 			var index:number = 0;
 			var length:number = this._dataProvider.length;
-			for(var i:number=0;this.i<length;this.i++){
-				var item:any = this._dataProvider.getItemAt(this.i);
+			for(var i:number=0;i<length;i++){
+				var item:any = this._dataProvider.getItemAt(i);
 				var rendererClass:any = this.itemToRendererClass(item);
 				var renderer:IItemRenderer = this.createOneRenderer(rendererClass);
-				if(!this.renderer)
+				if(!renderer)
 					continue;
-				this.indexToRenderer[index] = this.renderer;
-				this.updateRenderer(this.renderer,index,item);
+				this.indexToRenderer[index] = renderer;
+				this.updateRenderer(renderer,index,item);
 				this.dispatchEvent(new RendererExistenceEvent(RendererExistenceEvent.RENDERER_ADD, 
-					false, false, this.renderer, index, item));
+					false, false, renderer, index, item));
 				index ++;
 			}
 		}
@@ -815,8 +815,8 @@ module ns_egret {
 				renderer = this._rendererOwner.updateRenderer(renderer,itemIndex,data);
 			}
 			else {
-				if("ownerChanged" in renderer){
-                    (<IVisualElement> renderer).ownerChanged(this);
+				if(renderer instanceof IVisualElement){
+					(<IVisualElement> renderer).ownerChanged(this);
 				}
 				renderer.itemIndex = itemIndex;
 				renderer.label = this.itemToLabel(data);
