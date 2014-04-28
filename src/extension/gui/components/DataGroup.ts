@@ -20,7 +20,6 @@
 /// <reference path="../../../egret/events/Event.ts"/>
 /// <reference path="../../../egret/events/TimerEvent.ts"/>
 /// <reference path="../../../egret/geom/Rectangle.ts"/>
-/// <reference path="../../../egret/utils/Dictionary.ts"/>
 /// <reference path="../../../egret/utils/Timer.ts"/>
 /// <reference path="../collections/ICollection.ts"/>
 /// <reference path="supportClasses/GroupBase.ts"/>
@@ -92,12 +91,12 @@ module ns_egret {
 		/**
 		 * 存储当前可见的项呈示器索引列表 
 		 */		
-		private virtualRendererIndices:Vector.<number>;
+		private virtualRendererIndices:Array;
 		
 		public setVirtualElementIndicesInView(startIndex:number, endIndex:number):void{
 			if(!this.layout||!this.layout.useVirtualLayout)
 				return;
-			this.virtualRendererIndices = new Vector.<number>();
+			this.virtualRendererIndices = [];
 			for(var i:number=startIndex;i<=endIndex;i++){
 				this.virtualRendererIndices.push(i);
 			}
@@ -121,8 +120,8 @@ module ns_egret {
 				this.indexToRenderer[index] = renderer;
 				this.updateRenderer(renderer,index,item);
 				if(this.createNewRendererFlag){
-					if(renderer instanceof IInvalidating)
-						<IInvalidating> ((renderer)).validateNow();
+					if("validateNow" in renderer)
+                        (<IInvalidating> (renderer)).validateNow();
 					this.createNewRendererFlag = false;
 					this.dispatchEvent(new RendererExistenceEvent(RendererExistenceEvent.RENDERER_ADD, 
 						false, false, renderer, index, item));
@@ -132,7 +131,7 @@ module ns_egret {
 			return element;
 		}
 		
-		private rendererToClassMap:Dictionary = new Dictionary(true);
+		private rendererToClassMap:Array = [];
 		private freeRenderers:Dictionary = new Dictionary;
 		
 		/**
@@ -151,12 +150,12 @@ module ns_egret {
 		 * 释放指定的项呈示器
 		 */		
 		private doFreeRenderer(renderer:IItemRenderer):void{
-			var rendererClass:any = this.rendererToClassMap[renderer];
+			var rendererClass:any = this.rendererToClassMap[renderer.hashCode];
 			if(!this.freeRenderers[rendererClass]){
-				this.freeRenderers[rendererClass] = new Vector.<IItemRenderer>();
+				this.freeRenderers[rendererClass] = [];
 			}
 			this.freeRenderers[rendererClass].push(renderer);
-			<DisplayObject> ((renderer)).visible = false;
+            (<DisplayObject> renderer).visible = false;
 		}
 		
 		/**
@@ -210,7 +209,7 @@ module ns_egret {
 			}
 			if(!renderer){
 				renderer = new <IItemRenderer> (rendererClass());
-				this.rendererToClassMap[renderer] = rendererClass;
+				this.rendererToClassMap[renderer.hashCode] = rendererClass;
 			}
 			if(!renderer||!(renderer instanceof DisplayObject))
 				return null;
@@ -465,10 +464,10 @@ module ns_egret {
 		 */		
 		private recycle(renderer:IItemRenderer):void{
 			super.removeChild(rend<DisplayObject> erer);
-			if(renderer instanceof IVisualElement){
+			if("ownerChanged" in renderer){
 				<IVisualElement> ((renderer)).ownerChanged(null);
 			}
-			var rendererClass:any = this.rendererToClassMap[renderer];
+			var rendererClass:any = this.rendererToClassMap[renderer.hashCode];
 			if(!this.recyclerDic[rendererClass]){
 				this.recyclerDic[rendererClass] = new Dictionary(true);
 			}
@@ -728,8 +727,8 @@ module ns_egret {
 			}
 			this.createNewRendererFlag = true;
 			this.updateRenderer(typicalRenderer,0,this.typicalItem);
-			if(typicalRenderer instanceof IInvalidating)
-				<IInvalidating> ((typicalRenderer)).validateNow();
+			if("validateNow" in typicalRenderer)
+                (<IInvalidating> typicalRenderer).validateNow();
 			var rect:Rectangle = new Rectangle(0,0,typicalRenderer.preferredWidth,
 				typicalRenderer.preferredHeight);
 			this.recycle(typicalRenderer);
@@ -816,8 +815,8 @@ module ns_egret {
 				renderer = this._rendererOwner.updateRenderer(renderer,itemIndex,data);
 			}
 			else {
-				if(renderer instanceof IVisualElement){
-					<IVisualElement> ((renderer)).ownerChanged(this);
+				if("ownerChanged" in renderer){
+                    (<IVisualElement> renderer).ownerChanged(this);
 				}
 				renderer.itemIndex = itemIndex;
 				renderer.label = this.itemToLabel(data);
