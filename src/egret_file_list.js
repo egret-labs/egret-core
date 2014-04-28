@@ -75,6 +75,7 @@ var temp = [
     "extension/gui/core/PopUpPosition.js",
     "extension/gui/core/NavigationUnit.js",
     "extension/gui/core/ScrollPolicy.js",
+    "extension/gui/core/ClassFactory.js",
     "extension/gui/states/OverrideBase.js",
     "extension/gui/states/AddItems.js",
     "extension/gui/states/SetProperty.js",

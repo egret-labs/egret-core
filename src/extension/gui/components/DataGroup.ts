@@ -44,6 +44,8 @@ module ns_egret {
 		public constructor(){
 			super();
 		}
+
+        private static defaultRendererFactory:ClassFactory = new ClassFactory(ItemRenderer);
 		
 		private _rendererOwner:IItemRendererOwner;
 		/**
@@ -132,7 +134,7 @@ module ns_egret {
 		}
 		
 		private rendererToClassMap:Array = [];
-		private freeRenderers:Dictionary = new Dictionary;
+		private freeRenderers:Array = [];
 		
 		/**
 		 * 释放指定索引处的项呈示器
@@ -150,11 +152,12 @@ module ns_egret {
 		 * 释放指定的项呈示器
 		 */		
 		private doFreeRenderer(renderer:IItemRenderer):void{
-			var rendererClass:any = this.rendererToClassMap[renderer.hashCode];
-			if(!this.freeRenderers[rendererClass]){
-				this.freeRenderers[rendererClass] = new Vector.<IItemRenderer>();
+			var rendererFactory:IFactory = this.rendererToClassMap[renderer.hashCode];
+            var hashCode:number = rendererFactory.hashCode;
+			if(!this.freeRenderers[hashCode]){
+				this.freeRenderers[hashCode] = [];
 			}
-			this.freeRenderers[rendererClass].push(renderer);
+			this.freeRenderers[hashCode].push(renderer);
 			(<DisplayObject> renderer).visible = false;
 		}
 		
@@ -177,24 +180,26 @@ module ns_egret {
 		private createVirtualRenderer(index:number):IItemRenderer{
 			var item:any = this.dataProvider.getItemAt(index);
 			var renderer:IItemRenderer;
-			var rendererClass:any = this.itemToRendererClass(item);
-			if(this.freeRenderers[rendererClass]
-				&&this.freeRenderers[rendererClass].length>0){
-				renderer = this.freeRenderers[rendererClass].pop();
+			var rendererFactory:IFactory = this.itemToRendererClass(item);
+            var hashCode:number = rendererFactory.hashCode;
+            var freeRenderers:Array = this.freeRenderers;
+			if(freeRenderers[hashCode]&&freeRenderers[hashCode].length>0){
+				renderer = freeRenderers[hashCode].pop();
 				(<DisplayObject> renderer).visible = true;
 				return renderer;
 			}
 			this.createNewRendererFlag = true;
-			return this.createOneRenderer(rendererClass);
+			return this.createOneRenderer(rendererFactory);
 		}
 		/**
 		 * 根据rendererClass创建一个Renderer,并添加到显示列表
 		 */		
-		private createOneRenderer(rendererClass:any):IItemRenderer{
+		private createOneRenderer(rendererFactory:IFactory):IItemRenderer{
 			var renderer:IItemRenderer;
-			if(this.recyclerDic[rendererClass]){
+            var hashCode:number = rendererFactory.hashCode;
+			if(this.recyclerDic[hashCode]){
 				var hasExtra:boolean = false;
-				for(var key:any in this.recyclerDic[rendererClass]){
+				for(var key:any in this.recyclerDic[hashCode]){
 					if(!renderer){
 						renderer = <IItemRenderer> key;
 					}
@@ -203,13 +208,13 @@ module ns_egret {
 						break;
 					}
 				}
-				delete this.recyclerDic[rendererClass][renderer];
+				delete this.recyclerDic[rendererFactory][renderer];
 				if(!hasExtra)
-					delete this.recyclerDic[rendererClass];
+					delete this.recyclerDic[rendererFactory];
 			}
 			if(!renderer){
-				renderer = new <IItemRenderer> (rendererClass());
-				this.rendererToClassMap[renderer.hashCode] = rendererClass;
+				renderer = new <IItemRenderer> (rendererFactory());
+				this.rendererToClassMap[renderer.hashCode] = rendererFactory;
 			}
 			if(!renderer||!(renderer instanceof DisplayObject))
 				return null;
@@ -247,8 +252,8 @@ module ns_egret {
 				return;
 			this.virtualLayoutUnderway = false;
 			var found:boolean = false;
-			for(var clazz:any in this.freeRenderers){
-				if(this.freeRenderers[clazz].length>0){
+			for(var hashCode:number in this.freeRenderers){
+				if(this.freeRenderers[hashCode].length>0){
 					found = true;
 					break;
 				}
@@ -268,23 +273,26 @@ module ns_egret {
 		 */		
 		private cleanAllFreeRenderer(event:TimerEvent=null):void{
 			var renderer:IItemRenderer;
-			for each(var list:Vector.<IItemRenderer> in this.freeRenderers){
-				for each(renderer in list){
+            var freeRenderers:Array = this.freeRenderers;
+            for(var hashCode:number in freeRenderers){
+                var list:Array = freeRenderers[hashCode];
+                var length:number = list.length;
+				for(var i:number=0;i<length;i++){
+                    renderer = list[i];
 					(<DisplayObject> renderer).visible = true;
 					this.recycle(renderer);
 				}
 			}
-			this.freeRenderers = new Dictionary;
+			this.freeRenderers = [];
 			this.cleanFreeRenderer = false;
 		}
 		
 		/**
 		 * @inheritDoc
 		 */
-		public getElementIndicesInView():Vector.<number>{
+		public getElementIndicesInView():Array{
 			if(this.layout&&this.layout.useVirtualLayout)
-				return this.virtualRendererIndices?
-					this.virtualRendererIndices:new Vector.<number>(0);
+				return this.virtualRendererIndices?this.virtualRendererIndices:[];
 			return super.getElementIndicesInView();
 		}
 		
@@ -410,8 +418,8 @@ module ns_egret {
 				}
 				return;
 			}
-			var rendererClass:any = this.itemToRendererClass(item);
-			var renderer:IItemRenderer = this.createOneRenderer(rendererClass);
+			var rendererFactory:IFactory = this.itemToRendererClass(item);
+			var renderer:IItemRenderer = this.createOneRenderer(rendererFactory);
 			this.indexToRenderer.splice(index,0,renderer);
 			if(!renderer)
 				return;
@@ -458,7 +466,7 @@ module ns_egret {
 		/**
 		 * 对象池字典
 		 */		
-		private recyclerDic:Dictionary = new Dictionary();
+		private recyclerDic:Array = [];
 		/**
 		 * 回收一个ItemRenderer实例
 		 */		
@@ -467,11 +475,12 @@ module ns_egret {
 			if(renderer instanceof IVisualElement){
 				(<IVisualElement> renderer).ownerChanged(null);
 			}
-			var rendererClass:any = this.rendererToClassMap[renderer.hashCode];
-			if(!this.recyclerDic[rendererClass]){
-				this.recyclerDic[rendererClass] = new Dictionary(true);
+			var rendererFactory:IFactory = this.rendererToClassMap[renderer.hashCode];
+            var hashCode:number = rendererFactory.hashCode;
+			if(!this.recyclerDic[hashCode]){
+				this.recyclerDic[hashCode] = new Recycler();
 			}
-			this.recyclerDic[rendererClass][renderer] = null;
+			this.recyclerDic[hashCode].push(renderer);
 		}
 		/**
 		 * 更新当前所有项的索引
@@ -516,16 +525,16 @@ module ns_egret {
 		 */		
 		private itemRendererChanged:boolean;
 		
-		private _itemRenderer:any;
+		private _itemRenderer:IFactory;
 		/**
 		 * 用于数据项目的项呈示器。该类必须实现 IItemRenderer 接口。<br/>
 		 * rendererClass获取顺序：itemRendererFunction > itemRenderer > 默认ItemRenerer。
 		 */
-		public get itemRenderer():any{
+		public get itemRenderer():IFactory{
 			return this._itemRenderer;
 		}
 
-		public set itemRenderer(value:any){
+		public set itemRenderer(value:IFactory){
 			if(this._itemRenderer===value)
 				return;
 			this._itemRenderer = value;
@@ -562,7 +571,7 @@ module ns_egret {
 		 * 为某个特定项目返回一个项呈示器Class的函数。<br/>
 		 * rendererClass获取顺序：itemRendererFunction > itemRenderer > 默认ItemRenerer。<br/>
 		 * 应该定义一个与此示例函数类似的呈示器函数： <br/>
-		 * function myItemRendererFunction(item:Object):Class
+		 * function myItemRendererFunction(item:Object):IFactory
 		 */		
 		public get itemRendererFunction():Function{
 			return this._itemRendererFunction;
@@ -579,19 +588,19 @@ module ns_egret {
 			this.invalidateProperties();
 		}
 		/**
-		 * 为特定的数据项返回项呈示器类定义
+		 * 为特定的数据项返回项呈示器的工厂实例
 		 */		
-		private itemToRendererClass(item:any):any{
-			var rendererClass:any;
+		private itemToRendererClass(item:any):IFactory{
+			var rendererFactory:IFactory;
 			if(this._itemRendererFunction!=null){
-				rendererClass = this._itemRendererFunction(item);
-				if(!rendererClass)
-					rendererClass = this._itemRenderer;
+				rendererFactory = this._itemRendererFunction(item);
+				if(!rendererFactory)
+					rendererFactory = this._itemRenderer;
 			}
 			else{
-				rendererClass = this._itemRenderer;
+				rendererFactory = this._itemRenderer;
 			}
-			return rendererClass?rendererClass:ItemRenderer;
+			return rendererFactory?rendererFactory:DataGroup.defaultRendererFactory;
 		}
 		
 		/**
@@ -652,8 +661,9 @@ module ns_egret {
 				for(var i:number=0;i<length;i++){
 					this.setItemRenderSkinName(this.indexToRenderer[i]);
 				}
-				for(var clazz:any in this.freeRenderers){
-					var list:Vector.<IItemRenderer> = this.freeRenderers[clazz];
+                var freeRenderers:Array = this.freeRenderers;
+				for(var hashCode:number in freeRenderers){
+					var list:Array = freeRenderers[hashCode];
 					if(list){
 						length = list.length;
 						for(i=0;i<length;i++){
@@ -719,8 +729,8 @@ module ns_egret {
 				this.setTypicalLayoutRect(null);
 				return;
 			}
-			var rendererClass:any = this.itemToRendererClass(this.typicalItem);
-			var typicalRenderer:IItemRenderer = this.createOneRenderer(rendererClass);
+			var rendererFactory:IFactory = this.itemToRendererClass(this.typicalItem);
+			var typicalRenderer:IItemRenderer = this.createOneRenderer(rendererFactory);
 			if(!typicalRenderer){
 				this.setTypicalLayoutRect(null);
 				return;
@@ -789,8 +799,8 @@ module ns_egret {
 			var length:number = this._dataProvider.length;
 			for(var i:number=0;i<length;i++){
 				var item:any = this._dataProvider.getItemAt(i);
-				var rendererClass:any = this.itemToRendererClass(item);
-				var renderer:IItemRenderer = this.createOneRenderer(rendererClass);
+				var rendererFactory:IFactory = this.itemToRendererClass(item);
+				var renderer:IItemRenderer = this.createOneRenderer(rendererFactory);
 				if(!renderer)
 					continue;
 				this.indexToRenderer[index] = renderer;
