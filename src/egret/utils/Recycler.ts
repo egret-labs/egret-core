@@ -46,6 +46,14 @@ module ns_egret {
         }
 
         private objectPool:Array<any> = [];
+
+        private _length:number = 0;
+        /**
+         * 缓存的对象数量
+         */
+        public get length():number{
+            return this._length;
+        }
         /**
          * 缓存一个对象以复用
          * @param object
@@ -54,6 +62,7 @@ module ns_egret {
             var pool:Array<any> = this.objectPool;
             if(pool.indexOf(object)==-1){
                 pool.push(object);
+                this._length++;
                 if(this.frameCount==0){
                     this.frameCount = this.autoDisposeTime;
                     Recycler._callBackList.push(this);
@@ -64,16 +73,18 @@ module ns_egret {
          * 获取一个缓存的对象
          */
         public pop():any{
-            if(this.objectPool.length==0)
+            if(this._length==0)
                 return null;
+            this._length--;
             return this.objectPool.pop();
         }
         /**
          * 立即清空所有缓存的对象。
          */
         public dispose():void{
-            if(this.objectPool.length>0){
+            if(this._length>0){
                 this.objectPool = [];
+                this._length = 0;
             }
             this.frameCount = 0;
             var list:Array<any> = Recycler._callBackList;
