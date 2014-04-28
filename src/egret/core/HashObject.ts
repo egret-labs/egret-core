@@ -22,7 +22,7 @@
 
 module ns_egret {
 
-    export class HashObject {
+    export class HashObject implements IHashObject{
 
         /**
          * @class ns_egret.HashObject
