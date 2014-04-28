@@ -51,7 +51,7 @@ exports.getEgretPath = function(){
         console.log ("请先设置环境变量 EGRET_PATH");
         process.exit();
     }
-    console.log(obj);
+    return obj.EGRET_PATH;
 }
 
 

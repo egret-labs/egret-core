@@ -56,6 +56,9 @@ module ns_egret {
         public _texture_to_render:Texture;
 
         private _parent:DisplayObjectContainer = null;
+
+        private _cacheAsBitmap:boolean = false;
+
         /**
          * 表示包含此显示对象的 DisplayObjectContainer 对象
          * @member {ns_egret.DisplayObjectContainer} ns_egret.DisplayObject#parent
@@ -107,10 +110,11 @@ module ns_egret {
          */
         public _scaleX:number = 1;
 
-        public get scaleX():number{
+        public get scaleX():number {
             return this._scaleX;
         }
-        public set scaleX(value:number){
+
+        public set scaleX(value:number) {
             this._scaleX = value;
         }
 
@@ -121,10 +125,11 @@ module ns_egret {
          */
         public _scaleY:number = 1;
 
-        public get scaleY():number{
+        public get scaleY():number {
             return this._scaleY;
         }
-        public set scaleY(value:number){
+
+        public set scaleY(value:number) {
             this._scaleY = value;
         }
 
@@ -277,7 +282,7 @@ module ns_egret {
             if (!this.visible) {
                 return;
             }
-            var hasDrawCache = unstable.cache_api.draw.call(this, renderContext);
+            var hasDrawCache = this.drawCacheTexture(renderContext);
             if (hasDrawCache) {
                 return;
             }
@@ -296,6 +301,35 @@ module ns_egret {
             this.render(renderContext);
             if (o.mask || o.scrollRect) {
                 renderContext.restore();
+            }
+        }
+
+
+        private drawCacheTexture(renderContext:RendererContext):boolean {
+            var display:ns_egret.DisplayObject = this;
+            if (display._cacheAsBitmap) {
+                var renderTexture = display._texture_to_render;
+                var offsetX = renderTexture.offsetX;
+                var offsetY = renderTexture.offsetY;
+                var width = renderTexture._textureWidth;
+                var height = renderTexture._textureHeight;
+                display.updateTransform();
+                renderContext.setAlpha(display.worldAlpha, display.blendMode);
+                renderContext.setTransform(display.worldTransform);
+                if (display.mask) {
+                    renderContext.save();
+                    renderContext.clip(display.mask.x, display.mask.y, display.mask.width, display.mask.height);
+                }
+                var scale_factor = ns_egret.MainContext.instance.rendererContext.texture_scale_factor;
+                var renderFilter = ns_egret.RenderFilter.getInstance();
+                renderFilter.drawImage(renderContext, display, 0, 0, width * scale_factor, height * scale_factor, offsetX, offsetY, width, height);
+                if (display.mask) {
+                    renderContext.restore();
+                }
+                return true;
+            }
+            else {
+                return false;
             }
         }
 
@@ -561,6 +595,7 @@ module ns_egret {
         }
 
         public cacheAsBitmap(bool:boolean):void {
+            this._cacheAsBitmap = bool;
             if (bool) {
                 var renderTexture = new ns_egret.RenderTexture();
                 renderTexture.drawToTexture(this);
@@ -618,35 +653,5 @@ module ns_egret {
 
         }
 
-    }
-
-}
-
-var unstable = unstable || {cache_api:{}};
-unstable.cache_api.draw = function (renderContext) {
-    var display:ns_egret.DisplayObject = this;
-    if (display._texture_to_render) {
-        var renderTexture = display._texture_to_render;
-        var offsetX = renderTexture.offsetX;
-        var offsetY = renderTexture.offsetY;
-        var width = renderTexture._textureWidth;
-        var height = renderTexture._textureHeight;
-        display.updateTransform();
-        renderContext.setAlpha(display.worldAlpha, display.blendMode);
-        renderContext.setTransform(display.worldTransform);
-        if (display.mask) {
-            renderContext.save();
-            renderContext.clip(display.mask.x, display.mask.y, display.mask.width, display.mask.height);
-        }
-        var scale_factor = ns_egret.MainContext.instance.rendererContext.texture_scale_factor;
-        var renderFilter = ns_egret.RenderFilter.getInstance();
-        renderFilter.drawImage(renderContext, display, 0, 0, width * scale_factor, height * scale_factor, offsetX, offsetY, width, height);
-        if (display.mask) {
-            renderContext.restore();
-        }
-        return true;
-    }
-    else {
-        return false;
     }
 }
