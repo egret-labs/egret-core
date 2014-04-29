@@ -103,6 +103,7 @@ var temp = [
     "extension/gui/events/SkinPartEvent.js",
     "extension/gui/events/CloseEvent.js",
     "extension/gui/events/CollectionEvent.js",
+    "extension/gui/events/CollectionEventKind.js",
     "extension/gui/events/ElementExistenceEvent.js",
     "extension/gui/events/IndexChangeEvent.js",
     "extension/gui/events/ListEvent.js",
