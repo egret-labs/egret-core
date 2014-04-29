@@ -36,19 +36,18 @@ module ns_egret {
          */
         public constructor(target:IEventDispatcher = null) {
             super();
-            if (target) {
-                this.target = target;
+            if (target){
+                this._eventTarget = target;
             }
-            else {
-                this.target = this;
+            else{
+                this._eventTarget = this;
             }
 
         }
-
         /**
          * 事件抛出对象
          */
-        private target:IEventDispatcher;
+        private _eventTarget:IEventDispatcher;
         /**
          * 引擎内部调用
          * @private
@@ -85,32 +84,31 @@ module ns_egret {
                 DEBUG.checkAddEventListener(type, listener, thisObject, useCapture, priority);
             }
             var eventMap:Object;
-            if (useCapture) {
-                if (!this._captureEventsMap)
+            if(useCapture){
+                if(!this._captureEventsMap)
                     this._captureEventsMap = {};
                 eventMap = this._captureEventsMap;
             }
-            else {
-                if (!this._eventsMap)
+            else{
+                if(!this._eventsMap)
                     this._eventsMap = {};
                 eventMap = this._eventsMap;
             }
             var list:Array<any> = eventMap[type];
-            if (!list) {
+            if(!list){
                 list = eventMap[type] = [];
             }
-            this._insertEventBin(list, listener, thisObject, priority)
+            this._insertEventBin(list,listener, thisObject,priority)
         }
-
         /**
          * 在一个事件列表中按优先级插入事件对象
          */
-        public _insertEventBin(list:Array<any>, listener:Function, thisObject:any, priority:number):boolean {
+        public _insertEventBin(list:Array<any>,listener:Function, thisObject:any,priority:number):boolean{
             var insertIndex:number = -1;
             var length:number = list.length;
             for (var i:number = 0; i < length; i++) {
                 var bin:any = list[i];
-                if (bin.listener === listener && bin.thisObject === thisObject) {
+                if (bin.listener === listener&&bin.thisObject===thisObject) {
                     return false;
                 }
                 if (insertIndex == -1 && bin.priority < priority) {
@@ -135,29 +133,28 @@ module ns_egret {
          * @param useCapture 是否使用捕获，这个属性只在显示列表中生效。
          * @stable A
          */
-        public removeEventListener(type:string, listener:Function, thisObject:any, useCapture:boolean = false):void {
+        public removeEventListener(type:string, listener:Function,thisObject:any,useCapture:boolean = false):void {
 
             var eventMap:Object = useCapture ? this._captureEventsMap : this._eventsMap;
-            if (!eventMap)
+            if(!eventMap)
                 return;
             var list:Array<any> = eventMap[type];
             if (!list) {
                 return;
             }
-            this._removeEventBin(list, listener, thisObject);
-            if (list.length == 0) {
+            this._removeEventBin(list,listener,thisObject);
+            if(list.length==0){
                 delete eventMap[type];
             }
         }
-
         /**
          * 在一个事件列表中按优先级插入事件对象
          */
-        public _removeEventBin(list:Array<any>, listener:Function, thisObject:any):boolean {
+        public _removeEventBin(list:Array<any>,listener:Function,thisObject:any):boolean{
             var length:number = list.length;
             for (var i:number = 0; i < length; i++) {
                 var bin:any = list[i];
-                if (bin.listener === listener && bin.thisObject === thisObject) {
+                if (bin.listener === listener&&bin.thisObject===thisObject) {
                     list.splice(i, 1);
                     return true
                 }
@@ -172,10 +169,9 @@ module ns_egret {
          * @stable A
          */
         public hasEventListener(type:string):boolean {
-            return (this._eventsMap && this._eventsMap[type] ||
-                this._captureEventsMap && this._captureEventsMap[type]);
+            return (this._eventsMap&&this._eventsMap[type] ||
+                this._captureEventsMap&&this._captureEventsMap[type]);
         }
-
         /**
          * 检查是否用此 EventDispatcher 对象或其任何始祖为指定事件类型注册了事件侦听器。将指定类型的事件调度给此
          * EventDispatcher 对象或其任一后代时，如果在事件流的任何阶段触发了事件侦听器，则此方法返回 true。
@@ -183,26 +179,26 @@ module ns_egret {
          * 而 willTrigger() 方法检查整个事件流以查找由 type 参数指定的事件。
          * @param type 事件名
          */
-        public willTrigger(type:string):boolean {
+        public willTrigger(type:string):boolean{
             return this.hasEventListener(type);
         }
 
 
         /**
          * 将事件分派到事件流中。事件目标是对其调用 dispatchEvent() 方法的 EventDispatcher 对象。
-         * @param event 调度到事件流中的 Event 对象。如果正在重新分派事件，则会自动创建此事件的一个克隆。 在调度了事件后，其 target 属性将无法更改，因此您必须创建此事件的一个新副本以能够重新调度。
+         * @param event 调度到事件流中的 Event 对象。如果正在重新分派事件，则会自动创建此事件的一个克隆。 在调度了事件后，其 _eventTarget 属性将无法更改，因此您必须创建此事件的一个新副本以能够重新调度。
          * @return 如果成功调度了事件，则值为 true。值 false 表示失败或对事件调用了 preventDefault()。
          */
         public dispatchEvent(event:Event):boolean {
             event._reset();
-            event._target = this.target;
-            event._setCurrentTarget(this.target);
+            event._target = this._eventTarget;
+            event._setCurrentTarget(this._eventTarget);
             return this._notifyListener(event);
         }
 
-        public _notifyListener(event:Event):boolean {
-            var eventMap:Object = event._eventPhase == 1 ? this._captureEventsMap : this._eventsMap;
-            if (!eventMap)
+        public _notifyListener(event:Event):boolean{
+            var eventMap:Object = event._eventPhase==1 ? this._captureEventsMap : this._eventsMap;
+            if(!eventMap)
                 return true;
             var list:Array<any> = eventMap[event.type];
             if (!list) {
@@ -210,10 +206,10 @@ module ns_egret {
             }
             list = list.concat();
             var length:number = list.length;
-            for (var i:number = 0; i < length; i++) {
+            for(var i:number = 0;i<length;i++){
                 var eventBin:any = list[i];
-                eventBin.listener.call(eventBin.thisObject, event);
-                if (event._isPropagationImmediateStopped) {
+                eventBin.listener.call(eventBin.thisObject,event);
+                if(event._isPropagationImmediateStopped){
                     break;
                 }
             }
@@ -221,14 +217,13 @@ module ns_egret {
         }
 
         private static reuseEvent:Event = new Event("");
-
         /**
          * 派发一个包含了特定参数的事件到所有注册了特定类型侦听器的对象中。 这个方法使用了一个内部的事件对象池因避免重复的分配导致的额外开销。
          * @param type 事件类型
          * @param bubbles 是否冒泡，默认false
          * @param data 附加数据(可选)
          */
-        public dispatchEventWith(type:string, bubbles:boolean = false, data:Object = null):void {
+        public dispatchEventWith(type:string, bubbles:boolean = false, data:Object = null):void{
             var event:Event = EventDispatcher.reuseEvent;
             event._type = type;
             event._bubbles = bubbles;
