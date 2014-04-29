@@ -870,49 +870,42 @@ module ns_egret {
 		}
 		
 		private static errorStr:string = "在此组件中不可用，若此组件为容器类，请使用";
-		[Deprecated] 
 		/**
 		 * addChild()在此组件中不可用，若此组件为容器类，请使用addElement()代替
 		 */		
 		public addChild(child:DisplayObject):DisplayObject{
 			throw(new Error("addChild()"+DataGroup.errorStr+"addElement()代替"));
 		}
-		[Deprecated] 
 		/**
 		 * addChildAt()在此组件中不可用，若此组件为容器类，请使用addElementAt()代替
 		 */		
 		public addChildAt(child:DisplayObject, index:number):DisplayObject{
 			throw(new Error("addChildAt()"+DataGroup.errorStr+"addElementAt()代替"));
 		}
-		[Deprecated] 
 		/**
 		 * removeChild()在此组件中不可用，若此组件为容器类，请使用removeElement()代替
 		 */		
 		public removeChild(child:DisplayObject):DisplayObject{
 			throw(new Error("removeChild()"+DataGroup.errorStr+"removeElement()代替"));
 		}
-		[Deprecated] 
 		/**
 		 * removeChildAt()在此组件中不可用，若此组件为容器类，请使用removeElementAt()代替
 		 */		
 		public removeChildAt(index:number):DisplayObject{
 			throw(new Error("removeChildAt()"+DataGroup.errorStr+"removeElementAt()代替"));
 		}
-		[Deprecated] 
 		/**
 		 * setChildIndex()在此组件中不可用，若此组件为容器类，请使用setElementIndex()代替
 		 */		
 		public setChildIndex(child:DisplayObject, index:number):void{
 			throw(new Error("setChildIndex()"+DataGroup.errorStr+"setElementIndex()代替"));
 		}
-		[Deprecated] 
 		/**
 		 * swapChildren()在此组件中不可用，若此组件为容器类，请使用swapElements()代替
 		 */		
 		public swapChildren(child1:DisplayObject, child2:DisplayObject):void{
 			throw(new Error("swapChildren()"+DataGroup.errorStr+"swapElements()代替"));
 		}
-		[Deprecated] 
 		/**
 		 * swapChildrenAt()在此组件中不可用，若此组件为容器类，请使用swapElementsAt()代替
 		 */		

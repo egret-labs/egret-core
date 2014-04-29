@@ -68,6 +68,7 @@ var temp = [
 
 
     //GUI start
+    "extension/gui/collections/ArrayCollection.js",
     "extension/gui/managers/LayoutManager.js",
     "extension/gui/managers/layoutClass/DepthQueue.js",
     "extension/gui/core/UIGlobals.js",
@@ -83,15 +84,17 @@ var temp = [
     "extension/gui/states/StateClientHelper.js",
     "extension/gui/components/supportClasses/DefaultSkinAdapter.js",
     "extension/gui/components/supportClasses/SkinBasicLayout.js",
-    "extension/gui/components/UIAsset.js",
-    "extension/gui/components/SkinnableComponent.js",
+    "extension/gui/components/supportClasses/ItemRenderer.js",
     "extension/gui/components/supportClasses/TextBase.js",
     "extension/gui/components/supportClasses/ButtonBase.js",
     "extension/gui/components/supportClasses/GroupBase.js",
+    "extension/gui/components/UIAsset.js",
+    "extension/gui/components/SkinnableComponent.js",
     "extension/gui/components/Label.js",
     "extension/gui/components/Button.js",
     "extension/gui/components/Group.js",
     "extension/gui/components/Skin.js",
+    "extension/gui/components/DataGroup.js",
     "extension/gui/events/UIEvent.js",
     "extension/gui/events/PropertyChangeEvent.js",
     "extension/gui/events/PropertyChangeEventKind.js",
@@ -115,6 +118,9 @@ var temp = [
     "extension/gui/layouts/RowAlign.js",
     "extension/gui/layouts/TileOrientation.js",
     "extension/gui/layouts/VerticalAlign.js",
+    "extension/gui/layouts/VerticalLayout.js",
+    "extension/gui/layouts/HorizontalLayout.js",
+    "extension/gui/layouts/TileLayout.js",
     //GUI end
     "extension/gui/component/ScaleBitmap.js",
     "extension/gui/component/DynamicBitmap.js",
