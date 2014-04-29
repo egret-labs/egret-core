@@ -16,6 +16,7 @@
  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+/// <reference path="../core/IHashObject.ts"/>
 /// <reference path="Event.ts"/>
 
 module ns_egret {
@@ -39,7 +40,7 @@ module ns_egret {
          * 优先级为 n -1 的侦听器之前得到处理。如果两个或更多个侦听器共享相同的优先级，则按照它们的添加顺序进行处理。默认优先级为 0。
          * @stable A
          */
-        addEventListener(type:string, listener:Function, thisObject:any, useCapture:boolean=false, priority:number=0):void;
+        addEventListener(type:string, listener:Function, thisObject:any, useCapture?:boolean, priority?:number):void;
         /**
          * 移除事件侦听器
          * @param type 事件名
