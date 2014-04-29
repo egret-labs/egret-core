@@ -18,12 +18,11 @@
 
 /// <reference path="../../../egret/display/DisplayObject.ts"/>
 /// <reference path="../../../egret/events/Event.ts"/>
-/// <reference path="../../../egret/core/Injector.ts"/>
+/// <reference path="UIAsset.ts"/>
 /// <reference path="supportClasses/SkinBasicLayout.ts"/>
 /// <reference path="../core/ISkin.ts"/>
 /// <reference path="../core/IStateClient.ts"/>
 /// <reference path="../events/SkinPartEvent.ts"/>
-/// <reference path="UIAsset.ts"/>
 
 module ns_egret {
 

@@ -20,6 +20,7 @@
 /// <reference path="../../../egret/events/EventDispatcher.ts"/>
 /// <reference path="../core/UIGlobals.ts"/>
 /// <reference path="../events/UIEvent.ts"/>
+/// <reference path="ILayoutManagerClient.ts"/>
 /// <reference path="layoutClass/DepthQueue.ts"/>
 
 module ns_egret {

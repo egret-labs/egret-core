@@ -17,6 +17,7 @@
  */
 
 /// <reference path="../IItemRenderer.ts"/>
+/// <reference path="ButtonBase.ts"/>
 
 module ns_egret {
 

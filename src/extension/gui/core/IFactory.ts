@@ -16,6 +16,8 @@
  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+/// <reference path="../../../egret/core/IHashObject.ts"/>
+
 module ns_egret {
     /**
      * IFactory 接口定义工厂类（如 ClassFactory）必须实现的接口。

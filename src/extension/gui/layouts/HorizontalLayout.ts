@@ -20,6 +20,9 @@
 /// <reference path="../../../egret/geom/Rectangle.ts"/>
 /// <reference path="../core/ILayoutElement.ts"/>
 /// <reference path="../core/IVisualElement.ts"/>
+/// <reference path="HorizontalAlign.ts"/>
+/// <reference path="VerticalAlign.ts"/>
+/// <reference path="VerticalLayout.ts"/>
 /// <reference path="supportClasses/LayoutBase.ts"/>
 
 module ns_egret {

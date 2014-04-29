@@ -16,8 +16,8 @@
  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-/// <reference path="../../../egret/events/Event.ts"/>
 /// <reference path="../../../egret/events/EventDispatcher.ts"/>
+/// <reference path="ICollection.ts"/>
 /// <reference path="../events/CollectionEvent.ts"/>
 /// <reference path="../events/CollectionEventKind.ts"/>
 

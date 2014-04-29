@@ -16,11 +16,8 @@
  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-/// <reference path="../../../egret/events/Event.ts"/>
-/// <reference path="../../../egret/core/Injector.ts"/>
 /// <reference path="supportClasses/TextBase.ts"/>
 /// <reference path="../events/UIEvent.ts"/>
-/// <reference path="../../../egret/text/VerticalAlign.ts"/>
 
 module ns_egret {
 

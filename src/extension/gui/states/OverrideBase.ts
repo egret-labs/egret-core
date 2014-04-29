@@ -18,6 +18,7 @@
 
 /// <reference path="../core/IContainer.ts"/>
 /// <reference path="../core/IStateClient.ts"/>
+/// <reference path="IOverride.ts"/>
 
 module ns_egret {
 

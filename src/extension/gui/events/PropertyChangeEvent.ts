@@ -17,6 +17,7 @@
  */
 
 /// <reference path="../../../egret/events/Event.ts"/>
+/// <reference path="PropertyChangeEventKind.ts"/>
 
 module ns_egret {
 

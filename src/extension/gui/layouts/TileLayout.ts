@@ -19,6 +19,11 @@
 /// <reference path="../../../egret/events/Event.ts"/>
 /// <reference path="../../../egret/geom/Rectangle.ts"/>
 /// <reference path="../core/ILayoutElement.ts"/>
+/// <reference path="ColumnAlign.ts"/>
+/// <reference path="HorizontalAlign.ts"/>
+/// <reference path="RowAlign.ts"/>
+/// <reference path="TileOrientation.ts"/>
+/// <reference path="VerticalAlign.ts"/>
 /// <reference path="supportClasses/LayoutBase.ts"/>
 
 module ns_egret {

@@ -18,7 +18,6 @@
 
 /// <reference path="../components/SkinnableComponent.ts"/>
 /// <reference path="../core/IContainer.ts"/>
-/// <reference path="../core/ISkinnableClient.ts"/>
 /// <reference path="../core/IStateClient.ts"/>
 /// <reference path="../core/IVisualElement.ts"/>
 /// <reference path="OverrideBase.ts"/>

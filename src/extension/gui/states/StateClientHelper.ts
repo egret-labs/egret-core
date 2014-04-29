@@ -19,6 +19,7 @@
 /// <reference path="../core/IContainer.ts"/>
 /// <reference path="../core/IStateClient.ts"/>
 /// <reference path="../events/StateChangeEvent.ts"/>
+/// <reference path="State.ts"/>
 
 module ns_egret {
 

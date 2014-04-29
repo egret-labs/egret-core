@@ -16,11 +16,11 @@
  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+/// <reference path="../../../egret/core/Injector.ts"/>
 /// <reference path="../../../egret/display/DisplayObject.ts"/>
 /// <reference path="../../../egret/geom/Rectangle.ts"/>
-/// <reference path="../core/IInvalidateDisplay.ts"/>
-/// <reference path="../../../egret/core/Injector.ts"/>
 /// <reference path="supportClasses/DefaultSkinAdapter.ts"/>
+/// <reference path="../core/IInvalidateDisplay.ts"/>
 /// <reference path="../core/ILayoutElement.ts"/>
 /// <reference path="../core/ISkinAdapter.ts"/>
 /// <reference path="../core/ISkinnableClient.ts"/>

@@ -17,8 +17,6 @@
  */
 
 /// <reference path="../../../egret/display/Stage.ts"/>
-/// <reference path="../../../egret/events/Event.ts"/>
-/// <reference path="../../../egret/core/Injector.ts"/>
 /// <reference path="../managers/ISystemManager.ts"/>
 /// <reference path="../managers/LayoutManager.ts"/>
 

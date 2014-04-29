@@ -17,7 +17,6 @@
  */
 
 /// <reference path="../../../egret/events/Event.ts"/>
-/// <reference path="../components/IItemRenderer.ts"/>
 /// <reference path="../components/ITreeItemRenderer.ts"/>
 
 module ns_egret {

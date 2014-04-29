@@ -19,14 +19,16 @@
 /// <reference path="../../../egret/display/DisplayObject.ts"/>
 /// <reference path="../../../egret/display/DisplayObjectContainer.ts"/>
 /// <reference path="../../../egret/events/Event.ts"/>
-/// <reference path="../../../egret/geom/Point.ts"/>
+/// <reference path="IInvalidating.ts"/>
+/// <reference path="ILayoutElement.ts"/>
+/// <reference path="IUIComponent.ts"/>
+/// <reference path="IVisualElement.ts"/>
+/// <reference path="UIGlobals.ts"/>
 /// <reference path="../events/MoveEvent.ts"/>
 /// <reference path="../events/PropertyChangeEvent.ts"/>
 /// <reference path="../events/ResizeEvent.ts"/>
 /// <reference path="../events/UIEvent.ts"/>
 /// <reference path="../managers/ILayoutManagerClient.ts"/>
-/// <reference path="../managers/ISystemManager.ts"/>
-/// <reference path="UIGlobals.ts"/>
 
 module ns_egret {
 

@@ -260,4 +260,3 @@ module ns_egret {
         public items:any = [];
     }
 }
-

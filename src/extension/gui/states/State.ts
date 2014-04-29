@@ -18,8 +18,8 @@
 
 /// <reference path="../../../egret/events/Event.ts"/>
 /// <reference path="../../../egret/events/EventDispatcher.ts"/>
-/// <reference path="../core/IContainer.ts"/>
 /// <reference path="../core/IStateClient.ts"/>
+/// <reference path="IOverride.ts"/>
 
 module ns_egret {
 
