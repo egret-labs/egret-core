@@ -97,11 +97,27 @@ module ns_egret {
             this._right = right;
         }
 
+        /**
+         * 宽度，优先顺序为 显式设置宽度 > 测量宽度
+         * @returns {number}
+         */
+        public get width():number {
+            return this.getBounds().width;
+        }
+
         public set width(value:number){
             this._explicitWidth = value;
             if (value > 0 && !isNaN(value)) {
                 this._scaleWidth = value;
             }
+        }
+
+        /**
+         * 高度，优先顺序为 显式设置高度 > 测量高度
+         * @returns {number}
+         */
+        public get height():number {
+            return this.getBounds().height;
         }
 
         public set height(value:number){

@@ -242,24 +242,32 @@ module ns_egret {
 		 * 外部显式设置的mouseChildren属性值 
 		 */		
 		private explicitMouseChildren:boolean = true;
+
+        public get touchChildren():boolean{
+            return this._touchChildren;
+        }
 		/**
 		 * @inheritDoc
 		 */		
 		public set touchChildren(value:boolean){
 			if(this.enabled)
-				super.touchChildren = value;
+				this._touchChildren = value;
 			this.explicitMouseChildren = value;
 		}
 		/**
 		 * 外部显式设置的mouseEnabled属性值
 		 */		
 		private explicitMouseEnabled:boolean = true;
+
+        public get touchEnabled():boolean{
+            return this._touchEnabled;
+        }
 		/**
 		 * @inheritDoc
 		 */	
 		public set touchEnabled(value:boolean){
 			if(this.enabled)
-				super.touchEnabled = value;
+				this._touchEnabled = value;
 			this.explicitMouseEnabled = value;
 		}
 
@@ -277,8 +285,8 @@ module ns_egret {
 				return;
 			this._enabled = value;
 			if(this._autoMouseEnabled){
-				super.touchChildren = value ? this.explicitMouseChildren : false;
-				super.touchEnabled  = value ? this.explicitMouseEnabled  : false;
+				this._touchChildren = value ? this.explicitMouseChildren : false;
+				this._touchEnabled  = value ? this.explicitMouseEnabled  : false;
 			}
 			this.invalidateSkinState();
 		}
@@ -303,21 +311,21 @@ module ns_egret {
 			}
 		}
 		
-		private layout:SkinBasicLayout;
+		private skinLayout:SkinBasicLayout;
 		/**
 		 * 启用或禁用组件自身的布局。通常用在当组件的皮肤不是ISkinPartHost，又需要自己创建子项并布局时。
 		 */		
 		public set skinLayoutEnabled(value:boolean){
-			var hasLayout:boolean = (this.layout != null);
+			var hasLayout:boolean = (this.skinLayout != null);
 			if(hasLayout==value)
 				return;
 			if(value){
-				this.layout = new SkinBasicLayout();
-				this.layout.target = this;
+				this.skinLayout = new SkinBasicLayout();
+				this.skinLayout.target = this;
 			}
 			else{
-				this.layout.target = null;
- 				this.layout = null;
+				this.skinLayout.target = null;
+ 				this.skinLayout = null;
 			}
 			this.invalidateSize();
 			this.invalidateDisplayList();
@@ -327,7 +335,7 @@ module ns_egret {
 		 * @inheritDoc
 		 */
 		public childXYChanged():void{
-			if(this.layout){
+			if(this.skinLayout){
 				this.invalidateSize();
 				this.invalidateDisplayList();
 			}
@@ -338,8 +346,8 @@ module ns_egret {
 		 */
 		public measure():void{
 			super.measure();
-			if(this.layout){
-				this.layout.measure();
+			if(this.skinLayout){
+				this.skinLayout.measure();
 			}
 			var skinObject:any = this._skinObject;
 			if(!this._skin&&skinObject){//为非显示对象的皮肤测量
@@ -378,8 +386,8 @@ module ns_egret {
 		 */
 		public updateDisplayList(unscaledWidth:number, unscaledHeight:number):void{
 			super.updateDisplayList(unscaledWidth,unscaledHeight);
-			if(this.layout){
-				this.layout.updateDisplayList(unscaledWidth,unscaledHeight);
+			if(this.skinLayout){
+				this.skinLayout.updateDisplayList(unscaledWidth,unscaledHeight);
 			}
 		}
 	}
