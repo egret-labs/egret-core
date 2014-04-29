@@ -1,6 +1,6 @@
 
 .idea/
-tools/nodejs/node_modules
+tools/node_modules
 src/egret/**/*.js
 src/egret/**/**/*.js
 src/extension/**/*.js
