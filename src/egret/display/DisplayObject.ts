@@ -173,19 +173,31 @@ module ns_egret {
          */
         public skewY:number = 0;
 
+        public _touchEnabled:boolean;
         /**
          * 指定此对象是否接收鼠标/触摸事件
          * @member {boolean} ns_egret.DisplayObject#touchEnabled
          * @default true
          */
-        public touchEnabled:boolean;
+        public get touchEnabled():boolean{
+            return this._touchEnabled;
+        }
+        public set touchEnabled(value:boolean){
+            this._touchEnabled = value;
+        }
 
         public blendMode:BlendMode;
 
+        public _scrollRect:Rectangle;
         /**
          * 显示对象的滚动矩形范围。显示对象被裁切为矩形定义的大小，当您更改 scrollRect 对象的 x 和 y 属性时，它会在矩形内滚动。
          */
-        public scrollRect:Rectangle;
+        public get scrollRect():Rectangle{
+            return this._scrollRect;
+        }
+        public set scrollRect(value:Rectangle){
+            this._scrollRect = value;
+        }
 
 
         /**
