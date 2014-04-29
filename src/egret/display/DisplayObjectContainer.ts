@@ -36,10 +36,16 @@ module ns_egret {
 
         }
 
+        public _touchChildren:boolean = true;
         /**
          * 指定此对象的子项以及子孙项是否接收鼠标/触摸事件
          */
-        public touchChildren:boolean = true;
+        public get touchChildren():boolean{
+            return this._touchChildren;
+        }
+        public set touchChildren(value:boolean){
+            this._touchChildren = value;
+        }
 
         public _children:Array<DisplayObject>
 
