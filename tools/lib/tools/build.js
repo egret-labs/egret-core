@@ -8,6 +8,7 @@ var crc32 = require('../core/crc32');
 var cp_exec = require('child_process').exec;
 var CRC32BuildTS = "buildTS.local";
 var libs = require("../core/normal_libs");
+var param = require("../core/params_analyze.js");
 var currDir_global;
 function run(currDir, args, opts) {
     var u = opts["-u"];
@@ -15,20 +16,7 @@ function run(currDir, args, opts) {
         currDir = u[0];
     }
     currDir_global = currDir;
-    //获得需要编译的文件夹
-    var dir = getAllDir(currDir, args, opts);
-    var count = 0;
-    var buildOver = function () {
-        if (count >= dir.length) {
-            clearTS();
-            copyExample();
-            return;
-        }
-        var sourcePath = path.join(currDir, dir[count]);
-        var outPath = path.join(currDir, "output", dir[count]);
-        execute(sourcePath, outPath, buildOver);
-        count++;
-    }
+
 
     var clearTS = function () {
         for (var key in dir) {
@@ -41,16 +29,23 @@ function run(currDir, args, opts) {
         }
     }
 
-    var copyExample = function(){
-        var engine_root = getConfig()["engine"];
-        var target_src = path.join(currDir, "output","examples");
-        var source_src = path.join(currDir,engine_root, "../","examples");
-        console.log (target_src)
-        console.log (source_src)
+    var copyExample = function () {
+        var engine_root = param.getEgretPath();
+        var target_src = path.join(currDir, "output", "examples");
+        var source_src = path.join(engine_root, "examples");
         libs.copy(source_src, target_src);
     }
 
-    buildOver();
+    //获得需要编译的文件夹
+    var dir = getAllDir(currDir, args, opts);
+    async.forEachSeries(dir, function (item, callback) {
+        var sourcePath = path.join(currDir, item);
+        var outPath = path.join(currDir, "output", item);
+        buildAllFile(sourcePath, outPath, callback);
+    }, function () {
+        clearTS();
+        copyExample();
+    })
 }
 
 function getLocalContent() {
@@ -65,25 +60,23 @@ function getLocalContent() {
     return tempData;
 }
 
-function execute(source, output, buildOver) {
-
-    libs.copy(source, output);
-    var allFileList = generateAllTypeScriptFileList(output);
+function buildAllFile(source, output, buildOver) {
     var checkTypeScriptCompiler = "tsc";
     var tsc = cp_exec(checkTypeScriptCompiler);
     tsc.on('exit', function (code) {
         if (code == 0) {
+            libs.copy(source, output);
+            var allFileList = generateAllTypeScriptFileList(output);
             var crc32Data = getLocalContent();
-            buildAllTypeScript(crc32Data, allFileList, output, output, buildOver);
+            compileAllTypeScript(crc32Data, allFileList, output, output, buildOver);
         }
         else {
-            console.log("TypeScript编译器尚未安装，请执行 npm install -g typescript 进行安装");
-            process.exit(1);
+            libs.exit(2);
         }
     });
 }
 
-function getConfig(){
+function getConfig() {
     var configPath = path.join(currDir_global, 'config.json');
     if (!fs.existsSync(configPath)) {
         var errorMessage = "配置文件不存在";
@@ -103,7 +96,7 @@ function getAllDir(currDir, args, opts) {
     function addToDir(filePath) {
 
         if (!filePath) {
-            console.log ("config.json中存在空编译路径，请检查");
+            console.log("config.json中存在空编译路径，请检查");
             return;
         }
         var realPath = path.join(currDir, filePath);
@@ -166,9 +159,9 @@ function build(file, callback, source, output) {
 
     var ts = cp_exec(cmd);
     ts.stderr.on("data", function (data) {
-        if ( data.indexOf("error TS1") >= 0 ||
-             data.indexOf("error TS5") >= 0 ||
-             data.indexOf("error TS2105") >= 0) {
+        if (data.indexOf("error TS1") >= 0 ||
+            data.indexOf("error TS5") >= 0 ||
+            data.indexOf("error TS2105") >= 0) {
             console.log(data);
         }
     })
@@ -183,8 +176,8 @@ function build(file, callback, source, output) {
  * 编译全部TypeScript文件
  * @param allFileList
  */
-function buildAllTypeScript(crc32Data, allFileList, source, output, buildOver) {
-    async.forEachLimit(allFileList, 2, function (file, callback) {
+function compileAllTypeScript(crc32Data, allFileList, source, output, buildOver) {
+    async.forEachSeries(allFileList, function (file, callback) {
         //console.log(path);
         var content = fs.readFileSync(path.join(source, file), "utf8");
         var data = crc32(content);
