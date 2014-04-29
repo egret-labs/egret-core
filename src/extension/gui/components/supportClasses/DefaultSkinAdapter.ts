@@ -30,12 +30,12 @@ module ns_egret {
         /**
          * @inheritDoc
          */
-        public getSkin(skinName:Object,compFunc:Function,thisObject:any,oldSkin:DisplayObject=null):void{
+        public getSkin(skinName:any,compFunc:Function,thisObject:any,oldSkin:DisplayObject=null):void{
             if(skinName instanceof DisplayObject){
                 compFunc.call(thisObject,skinName,skinName);
             }
             else{
-
+                compFunc.call(thisObject,(new skinName()),skinName);
             }
         }
     }

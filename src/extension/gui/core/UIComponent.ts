@@ -950,12 +950,12 @@ module ns_egret {
 		 */	
 		public setLayoutBoundsPosition(x:number,y:number):void{
 			var changed:boolean = false;
-			if(this.x!=x){
-				super.x = x;
+			if(this._x!=x){
+				this._x = x;
 				changed = true;
 			}
-			if(this.y!=y){
-				super.y = y;
+			if(this._y!=y){
+				this._y = y;
 				changed = true;
 			}
 			if(changed){
@@ -987,26 +987,26 @@ module ns_egret {
 		 * @inheritDoc
 		 */	
 		public get preferredX():number{
-			return super.x;
+			return this._x;
 		}
 		
 		/**
 		 * @inheritDoc
 		 */
 		public get preferredY():number{
-			return super.y;
+			return this._y;
 		}
 		/**
 		 * @inheritDoc
 		 */
 		public get layoutBoundsX():number{
-			return super.x;
+			return this._x;
 		}
 		/**
 		 * @inheritDoc
 		 */
 		public get layoutBoundsY():number{
-			return super.y;
+			return this._y;
 		}
 		
 		/**

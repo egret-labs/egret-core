@@ -83,7 +83,7 @@ module ns_egret {
 		 */		
 		private _layoutProperties:any;
 		
-		private _layout:LayoutBase;
+		public _layout:LayoutBase;
 		/**
 		 * 此容器的布局对象
 		 */

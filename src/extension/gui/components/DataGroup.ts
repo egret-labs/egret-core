@@ -66,7 +66,10 @@ module ns_egret {
 		
 		
 		private useVirtualLayoutChanged:boolean = false;
-		
+
+        public get layout():LayoutBase{
+            return this._layout;
+        }
 		/**
 		 * @inheritDoc
 		 */

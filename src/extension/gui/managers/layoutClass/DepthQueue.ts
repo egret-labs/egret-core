@@ -155,7 +155,7 @@ module ns_egret {
 					else{
                         var items:Array = bin.items;
 						for (var key:any in items ){
-                            var value:any = item[key];
+                            var value:any = items[key];
 							if ((value instanceof DisplayObject) && (client instanceof DisplayObjectContainer)
 								&&(<DisplayObjectContainer> client).contains(<DisplayObject> value)){
 								this.remove(<ILayoutManagerClient> value, max);
@@ -253,10 +253,7 @@ module ns_egret {
      * 列表项
      */
     export class DepthBin {
-        public DepthBin(){
-
-        }
-        public length:number;
+        public length:number = 0;
         public items:any = [];
     }
 }

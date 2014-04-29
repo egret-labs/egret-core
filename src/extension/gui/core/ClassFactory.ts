@@ -28,6 +28,7 @@ module ns_egret {
          * @param generator{any} newInstance() 方法根据工厂对象生成对象时使用的 Class。
          */
         public constructor(generator:any = null){
+            super();
             this.generator = generator;
         }
         /**
