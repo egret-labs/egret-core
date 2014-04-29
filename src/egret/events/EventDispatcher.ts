@@ -37,17 +37,17 @@ module ns_egret {
         public constructor(target:IEventDispatcher = null) {
             super();
             if (target){
-                this.target = target;
+                this._eventTarget = target;
             }
             else{
-                this.target = this;
+                this._eventTarget = this;
             }
 
         }
         /**
          * 事件抛出对象
          */
-        private target:IEventDispatcher;
+        private _eventTarget:IEventDispatcher;
         /**
          * 引擎内部调用
          * @private
@@ -186,13 +186,13 @@ module ns_egret {
 
         /**
          * 将事件分派到事件流中。事件目标是对其调用 dispatchEvent() 方法的 EventDispatcher 对象。
-         * @param event 调度到事件流中的 Event 对象。如果正在重新分派事件，则会自动创建此事件的一个克隆。 在调度了事件后，其 target 属性将无法更改，因此您必须创建此事件的一个新副本以能够重新调度。
+         * @param event 调度到事件流中的 Event 对象。如果正在重新分派事件，则会自动创建此事件的一个克隆。 在调度了事件后，其 _eventTarget 属性将无法更改，因此您必须创建此事件的一个新副本以能够重新调度。
          * @return 如果成功调度了事件，则值为 true。值 false 表示失败或对事件调用了 preventDefault()。
          */
         public dispatchEvent(event:Event):boolean {
             event._reset();
-            event._target = this.target;
-            event._setCurrentTarget(this.target);
+            event._target = this._eventTarget;
+            event._setCurrentTarget(this._eventTarget);
             return this._notifyListener(event);
         }
 
