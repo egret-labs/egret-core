@@ -92,37 +92,40 @@ module ns_egret {
 		}
 
 		public set layout(value:LayoutBase){
-			
-			if (this._layout == value)
-				return;
-			if (this._layout){
-				this._layout.target = null;
-				this._layout.removeEventListener(PropertyChangeEvent.PROPERTY_CHANGE, this.redispatchLayoutEvent, this);
-				this._layoutProperties = {"clipAndEnableScrolling": this._layout.clipAndEnableScrolling};
-			}
-			
-			this._layout = value; 
-			
-			if (this._layout){
-				this._layout.target = this;
-				this._layout.addEventListener(PropertyChangeEvent.PROPERTY_CHANGE, this.redispatchLayoutEvent, this);
-				if (this._layoutProperties){
-					if (this._layoutProperties.clipAndEnableScrolling !== undefined)
-						value.clipAndEnableScrolling = this._layoutProperties.clipAndEnableScrolling;
-					
-					if (this._layoutProperties.verticalScrollPosition !== undefined)
-						value.verticalScrollPosition = this._layoutProperties.verticalScrollPosition;
-					
-					if (this._layoutProperties.horizontalScrollPosition !== undefined)
-						value.horizontalScrollPosition = this._layoutProperties.horizontalScrollPosition;
-					
-					this._layoutProperties = null;
-				}
-			}
-			this.invalidateSize();
-			this.invalidateDisplayList();
-			this.dispatchEvent(new Event("layoutChanged"));
+			this._setLayout(value);
 		}
+
+        public _setLayout(value:LayoutBase):void{
+            if (this._layout == value)
+                return;
+            if (this._layout){
+                this._layout.target = null;
+                this._layout.removeEventListener(PropertyChangeEvent.PROPERTY_CHANGE, this.redispatchLayoutEvent, this);
+                this._layoutProperties = {"clipAndEnableScrolling": this._layout.clipAndEnableScrolling};
+            }
+
+            this._layout = value;
+
+            if (this._layout){
+                this._layout.target = this;
+                this._layout.addEventListener(PropertyChangeEvent.PROPERTY_CHANGE, this.redispatchLayoutEvent, this);
+                if (this._layoutProperties){
+                    if (this._layoutProperties.clipAndEnableScrolling !== undefined)
+                        value.clipAndEnableScrolling = this._layoutProperties.clipAndEnableScrolling;
+
+                    if (this._layoutProperties.verticalScrollPosition !== undefined)
+                        value.verticalScrollPosition = this._layoutProperties.verticalScrollPosition;
+
+                    if (this._layoutProperties.horizontalScrollPosition !== undefined)
+                        value.horizontalScrollPosition = this._layoutProperties.horizontalScrollPosition;
+
+                    this._layoutProperties = null;
+                }
+            }
+            this.invalidateSize();
+            this.invalidateDisplayList();
+            this.dispatchEvent(new Event("layoutChanged"));
+        }
 		
 		/**
 		 * 抛出滚动条位置改变事件

@@ -84,7 +84,7 @@ module ns_egret {
 			
 			if (this.layout && value && (this.layout.useVirtualLayout != value.useVirtualLayout))
 				this.changeUseVirtualLayout();
-			super.layout = value;    
+			this._setLayout(value);
 			if (value){
 				value.typicalLayoutRect = this.typicalLayoutRect;
 				value.addEventListener("useVirtualLayoutChanged", this.layout_useVirtualLayoutChangedHandler, this);
