@@ -381,7 +381,7 @@ module ns_egret {
                     else if (this.touchEnabled) {
                         return this;
                     }
-                    if (result == null && touchChildren) {
+                    if (result == null) {
                         result = childHitTestResult;
                     }
                 }
