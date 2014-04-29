@@ -127,7 +127,7 @@ module ns_egret {
 				this.indexToRenderer[index] = renderer;
 				this.updateRenderer(renderer,index,item);
 				if(this.createNewRendererFlag){
-					if(renderer instanceof IInvalidating)
+					if("validateNow" in renderer)
 						(<IInvalidating> renderer).validateNow();
 					this.createNewRendererFlag = false;
 					this.dispatchEvent(new RendererExistenceEvent(RendererExistenceEvent.RENDERER_ADD, 
@@ -470,7 +470,7 @@ module ns_egret {
 		 */		
 		private recycle(renderer:IItemRenderer):void{
 			super.removeChild(<DisplayObject> renderer);
-			if(renderer instanceof IVisualElement){
+			if("ownerChanged" in renderer){
 				(<IVisualElement> renderer).ownerChanged(null);
 			}
 			var rendererFactory:IFactory = this.rendererToClassMap[renderer.hashCode];
@@ -739,7 +739,7 @@ module ns_egret {
 			}
 			this.createNewRendererFlag = true;
 			this.updateRenderer(typicalRenderer,0,this.typicalItem);
-			if(typicalRenderer instanceof IInvalidating)
+			if("validateNow" in typicalRenderer)
 				(<IInvalidating> typicalRenderer).validateNow();
 			var rect:Rectangle = new Rectangle(0,0,typicalRenderer.preferredWidth,
 				typicalRenderer.preferredHeight);
@@ -827,7 +827,7 @@ module ns_egret {
 				renderer = this._rendererOwner.updateRenderer(renderer,itemIndex,data);
 			}
 			else {
-				if(renderer instanceof IVisualElement){
+				if("ownerChanged" in renderer){
 					(<IVisualElement> renderer).ownerChanged(this);
 				}
 				renderer.itemIndex = itemIndex;
