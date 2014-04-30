@@ -24,7 +24,7 @@ Egret 0.9.3在听取了众位参与了Prerelease的开发者的反馈之后对 E
 
 如果您使用WebStorm作为开发环境，请以 {egret_workspace} 目录作为Project目录
 
-#### 步骤二：创建egret
+#### 步骤二：创建egret项目
 将egret复制到 {egret_workspace} 下，并确认该文件夹名为egret
 
 #### 步骤三：配置全局命令行工具
@@ -44,7 +44,7 @@ $ egret c HelloEgret    #创建新项目
 
 #### 步骤五：编译代码
 ```
-$ egret b  #根据创建项目脚本生成的config.local文件，编译全部TypeScript文件
+$ egret b HelloEgret 
 ```
 
 
