@@ -1,6 +1,6 @@
 Egret Command Line Tools
 ================================================
-Current Version: 0.9.2
+Current Version: 0.9.3
 
 
 
@@ -11,12 +11,15 @@ Egret Command Line Tools简称简称Egret CLT，是用于创建、编译Egret项
 
 Egret 0.9.2废弃了之前分散的脚本执行方式，改为将一个脚本作为入口，集中调用其他脚本。
 
+Egret 0.9.3在听取了众位参与了Prerelease的开发者的反馈之后对 Egret CLT进行了进一步的优化。
+
 
 
 如何使用Egret Command Line Tools创建新项目
 ------------------------
 
-#### 步骤一：创建工作空间
+#### 步骤一：下载及配置环境变量
+将Egret下载并解压至操作系统中的任意位置，并修改操作系统的环境变量，将 EGRET_PATH 赋值为Egret所在的路径
 在本机WebServer可以访问到的位置创建一个新的文件夹，该文件夹在下文被称为 {egret_workspace}
 
 如果您使用WebStorm作为开发环境，请以 {egret_workspace} 目录作为Project目录

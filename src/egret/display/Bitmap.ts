@@ -1,11 +1,3 @@
-/// <reference path="../context/renderer/RendererContext.ts"/>
-/// <reference path="DisplayObject.ts"/>
-/// <reference path="SpriteSheet.ts"/>
-/// <reference path="../texture/Texture.ts"/>
-/// <reference path="../core/StageDelegate.ts"/>
-/// <reference path="../geom/Matrix.ts"/>
-/// <reference path="../geom/Point.ts"/>
-/// <reference path="../geom/Rectangle.ts"/>
 /**
  * Copyright (c) Egret-Labs.org. Permission is hereby granted, free of charge,
  * to any person obtaining a copy of this software and associated documentation
@@ -23,6 +15,15 @@
  * FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
+
+/// <reference path="../context/renderer/RendererContext.ts"/>
+/// <reference path="../core/Logger.ts"/>
+/// <reference path="../core/RenderFilter.ts"/>
+/// <reference path="DisplayObject.ts"/>
+/// <reference path="SpriteSheet.ts"/>
+/// <reference path="../geom/Rectangle.ts"/>
+/// <reference path="../texture/Texture.ts"/>
+
 module ns_egret {
     export class Bitmap extends DisplayObject {
 
@@ -30,19 +31,19 @@ module ns_egret {
          * 全部Bitmap是否开启DEBUG模式
          * @stable B 这个API以后可能会被移动到一个单独的负责各种DEBUG参数的枚举类中
          */
-        public static debug:Boolean = false;
+        public static debug:boolean = false;
 
 
         /**
          * 单个Bitmap是否开启DEBUG模式
          * @stable B 这个API以后可能会被移动到一个单独的负责各种DEBUG参数的枚举类中
          */
-        public debug:Boolean = false;
+        public debug:boolean = false;
 
         /**
          * debug边框颜色，默认值为红色
          */
-        public debugColor:string = "#ff0000";
+        public debugColor:number = 0xff0000;
 
         /**
          * 渲染采用的SpriteFrame，用来渲染纹理中的一部分
@@ -79,10 +80,12 @@ module ns_egret {
          * @param renderContext
          */
             render(renderContext:RendererContext) {
+
             var locTexture = this.texture;
             if (locTexture == null || locTexture._bitmapData == null) {
                 return;
             }
+            this._texture_to_render = locTexture;
             var x, y, w, h, offsetX, offsetY;
             if (this.spriteFrame) {
                 var rect:ns_egret.SpriteSheetFrame = this.spriteFrame;

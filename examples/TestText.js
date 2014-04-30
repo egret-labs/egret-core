@@ -24,8 +24,13 @@ function createExample() {
 
 
     var colorLabel = new ns_egret.TextField();
+<<<<<<< HEAD
 //    colorLabel.setContentSize(0, 0);
     colorLabel.textColor = "#ff0000";
+=======
+//    colorLabel.width = colorLabel.height = 0;
+    colorLabel.textColor = 0xff0000;
+>>>>>>> refactor
     colorLabel.textAlign = "left";
     colorLabel.text = "这是一段居左的文字\n可以支持多行";
     container.addChild(colorLabel);
@@ -34,8 +39,14 @@ function createExample() {
     var colorLabel = new ns_egret.TextField();
     colorLabel.x = 0;
     colorLabel.y = 100;
+<<<<<<< HEAD
     colorLabel.setContentSize(120, 0);
     colorLabel.textColor = "#ff0000";
+=======
+    colorLabel.width = 120;
+    colorLabel.height = 0;
+    colorLabel.textColor = 0xff0000;
+>>>>>>> refactor
     colorLabel.textAlign = "center";
     colorLabel.text = "这是一段居中的文字，宽度设置120,字号设置30px,所以正好显示4个";
     container.addChild(colorLabel);
@@ -44,9 +55,16 @@ function createExample() {
     var colorLabel = new ns_egret.TextField();
     colorLabel.x = 400;
     colorLabel.y = 250;
+<<<<<<< HEAD
     colorLabel.setContentSize(160, 0);
     colorLabel.relativeAnchorPointX = 1;
     colorLabel.textColor = "#FFFFFF";
+=======
+    colorLabel.width = 160;
+    colorLabel.height = 0;
+    colorLabel.relativeAnchorPointX = 1;
+    colorLabel.textColor = 0xFFFFFF;
+>>>>>>> refactor
     colorLabel.textAlign = "right";
     colorLabel.text = "这个文字居右对齐";
     container.addChild(colorLabel);
@@ -56,9 +74,15 @@ function createExample() {
     var strokeLabel = new ns_egret.TextField();
     strokeLabel.x = 400;
     strokeLabel.y = 20;
+<<<<<<< HEAD
     strokeLabel.textColor = "#FFFFFF";
     strokeLabel.text = "描边";
     strokeLabel.strokeColor = "#FF0000";
+=======
+    strokeLabel.textColor = 0xFFFFFF;
+    strokeLabel.text = "描边";
+    strokeLabel.strokeColor = 0xFF0000;
+>>>>>>> refactor
     strokeLabel.stroke = 2;
     container.addChild(strokeLabel);
 

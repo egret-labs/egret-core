@@ -30,7 +30,7 @@ function createExample(){
     var texture = ns_egret.TextureCache.getInstance().getTexture("daisy.png");
     var scaleBitmap = new ns_egret.Scale9Bitmap(texture);
     scaleBitmap.setScaleGrid(5,5,5,5);
-    scaleBitmap.setContentSize(200,200);
+    scaleBitmap.width = scaleBitmap.height = 200;
     scaleBitmap.x = 200;
     scaleBitmap.y = 200;
     container.addChild(scaleBitmap);

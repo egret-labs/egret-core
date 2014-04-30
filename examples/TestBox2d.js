@@ -74,7 +74,7 @@ ns_egret.Profiler.getInstance().run();
     label.y = 40;
     container.addChild(label);
     ns_egret.Ticker.getInstance().register(box2dUpdate,this);
-    context.stage.addEventListener(ns_egret.TouchEvent.TOUCH_END,onBox2dTouch);
+    context.stage.addEventListener(ns_egret.TouchEvent.TOUCH_END,onBox2dTouch,this);
 }
 
 function box2dUpdate(dt){
@@ -132,7 +132,7 @@ function addNewSpriteWithCoords (x,y) {
     body.CreateFixture(fixtureDef);
 }
 
-function onBox2dTouch(name, touch){
+function onBox2dTouch(touch){
     this.addNewSpriteWithCoords(touch.stageX, touch.stageY);
 }
 

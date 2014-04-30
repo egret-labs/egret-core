@@ -2,7 +2,7 @@
  * Created by apple on 14-3-22.
  */
 
-class LoadingUI implements ILoadingView {
+class LoadingUI implements ns_egret.ILoadingView {
 
     private container;
     private textField;
@@ -14,7 +14,8 @@ class LoadingUI implements ILoadingView {
         this.container.addChild(this.textField);
         this.textField.x = 120;
         this.textField.y = 300;
-        this.textField.setContentSize(480, 100);
+        this.textField.witdh = 480;
+        this.textField.height = 100;
         this.textField.align = "middle";
     }
 

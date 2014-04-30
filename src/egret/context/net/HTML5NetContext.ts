@@ -1,5 +1,3 @@
-/// <reference path="NetContext.ts"/>
-/// <reference path="../../resource/ResourceLoader.ts"/>
 /**
  * Copyright (c) Egret-Labs.org. Permission is hereby granted, free of charge,
  * to any person obtaining a copy of this software and associated documentation
@@ -18,26 +16,84 @@
  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-module ns_egret{
-    export class HTML5NetContext extends NetContext{
-        public send (request:URLRequest){
-            var xhr = this._getXMLHttpRequest();
-            xhr.open(request.method, request.url);
-            if(request.type != undefined)
-            {
-                this._setXMLHttpRequestHeader(xhr, request.type);
-            }
-            xhr.onreadystatechange = onLoadComplete;
-            xhr.send(request.data);
+/// <reference path="NetContext.ts"/>
+/// <reference path="../../resource/ResourceLoader.ts"/>
 
-            function onLoadComplete(){
+module ns_egret {
+    export class HTML5NetContext extends NetContext {
+        public send(request:URLRequest) {
+
+
+            function onLoadComplete() {
                 if (xhr.readyState == 4) {
                     if (xhr.status == 200) {
-                        request.callback.apply(request.thisObj, [xhr]);
+                        _processXMLHttpResponse(xhr);
                     } else {
                     }
                 }
             }
+
+            function _processXMLHttpResponse(xhr) {
+                var data = xhr.responseText;
+                if (this.type == ResourceLoader.DATA_TYPE_BINARY) {
+                    data = self._stringConvertToArray(data);
+                }
+                request.callback.call(request.thisObj, data);
+            }
+
+
+            if (request.type == ResourceLoader.DATA_TYPE_IMAGE) {
+                this.loadImage(request);
+                return;
+            }
+            var self = this;
+            var xhr = this._getXMLHttpRequest();
+            xhr.open(request.method, request.prefix + request.url);
+            if(request.method != "GET")
+            {
+                xhr.setRequestHeader("Content-Type","application/x-www-form-urlencoded");
+            }
+
+            if (request.type != undefined) {
+                this._setXMLHttpRequestHeader(xhr, request.type);
+            }
+            xhr.onreadystatechange = onLoadComplete;
+            xhr.send(request.method != "GET" ? request.data : null);
+
+        }
+
+        private loadImage(request:ns_egret.URLRequest):void {
+            var image = new Image();
+            image.crossOrigin = "Anonymous";
+            var fileUrl = request.prefix + request.url;
+
+            function onLoadComplete() {
+                image.removeEventListener('load', onLoadComplete);
+                image.removeEventListener('error', onLoadComplete);
+                var texture:Texture = Texture.create(request.url);
+                texture.bitmapData = image;
+                TextureCache.getInstance().addTexture(request.url, texture);
+                request.callback.call(request.thisObj, texture);
+
+            };
+            function onLoadError() {
+                image.removeEventListener('error', onLoadError);
+            };
+            image.addEventListener("load", onLoadComplete);
+            image.addEventListener("error", onLoadError);
+            image.src = fileUrl;
+        }
+
+
+        private _stringConvertToArray(strData) {
+            if (!strData)
+                return null;
+
+            var arrData = new Uint8Array(strData.length);
+            for (var i = 0; i < strData.length; i++) {
+                arrData[i] = strData.charCodeAt(i) & 0xff;
+            }
+            return arrData;
         }
 
         private _setXMLHttpRequestHeader(xhr, type) {

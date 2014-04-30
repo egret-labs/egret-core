@@ -64,7 +64,7 @@ function createExample(){
 //    {
 //        scaleBitmap = new ns_egret.Scale9Bitmap(texture);
 //        scaleBitmap.setScaleGrid(15,15,35,35);
-//        scaleBitmap.setContentSize(190,190);
+//        scaleBitmap.width = scaleBitmap.height = 190;
 //        scaleBitmap.x = 40;
 //        scaleBitmap.y = 100;
 //        container.addChild(scaleBitmap);

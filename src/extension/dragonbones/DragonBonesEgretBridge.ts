@@ -27,11 +27,11 @@ module dragonBones {
 
             private _display:ns_egret.DisplayObject;
 
-            public getVisible():Boolean {
+            public getVisible():boolean {
                 return this._display ? this._display.visible : false;
             }
 
-            public setVisible(value:Boolean):void {
+            public setVisible(value:boolean):void {
                 if (this._display) {
                     this._display.visible = value;
                 }
@@ -99,7 +99,7 @@ module dragonBones {
                         parent.addChild(this._display);
                     }
                     else {
-                        parent.addChild(this._display, Math.min(index, parent.numChildren));
+                        parent.addChildAt(this._display, Math.min(index, parent.numChildren));
                     }
                 }
             }
@@ -166,8 +166,8 @@ module dragonBones {
                 var bitmap1:ns_egret.Bitmap = ns_egret.Bitmap.initWithTexture(textureAtlas.texture);
                 var frame = textureAtlas.spriteSheet.getFrame(fullName);
                 bitmap1.spriteFrame = frame;
-                bitmap1.setAnchorPoint(pivotX, pivotY);
-
+                bitmap1.anchorPointX = pivotX;
+                bitmap1.anchorPointY = pivotY;
                 return bitmap1;
             }
         }

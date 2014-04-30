@@ -1,3 +1,7 @@
+var libs = require("./normal_libs.js");
+
+
+
 getArgv = function(){
     var arr = process.argv.slice(2);
 
@@ -37,5 +41,24 @@ getArgv = function(){
 
     return result;
 };
+
+function _getEnv(){
+    return process.env;
+}
+
+
+exports.getEnv = _getEnv;
+
+exports.getEgretPath = function(){
+    var obj = _getEnv();
+
+    if (!obj.EGRET_PATH){
+        libs.exit(1);
+    }
+    return obj.EGRET_PATH;
+}
+
+
+
 
 exports.getArgv = getArgv;

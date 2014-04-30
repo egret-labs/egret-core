@@ -84,18 +84,16 @@ module ns_egret {
             this.removeListeners();
         }
 
-        /**
-         * 设置 显示宽高
-         * @param width
-         * @param height
-         */
-        public setContentSize(width, height) {
-            super.setContentSize(width, height);
-            this._viewWidth = width;
-            this._viewHeight = height;
+        public set width(value:number){
+            this._explicitWidth = value;
+            this._viewWidth = value;
+            this.mask.width = value;
+        }
 
-            this.mask.width = width;
-            this.mask.height = height;
+        public set height(value:number){
+            this._explicitHeight = value;
+            this._viewHeight = value;
+            this.mask.height = value;
         }
 
         /**
@@ -105,8 +103,8 @@ module ns_egret {
          * @param initHeight
          */
         public setContainer(container, initWidth, initHeight) {
-            if (this._container) {
-                this._container.removeFromParent();
+            if (this._container && this._container.parent) {
+                this._container.parent.removeChild(this._container);
             }
             this._container = container;
             this._initWidth = initWidth;
@@ -116,7 +114,7 @@ module ns_egret {
 
             if (this._container.parent != null) {
                 if (this._container.parent != this) {
-                    this._container.removeFromParent();
+                    this._container.parent.removeChild(this._container);
                 }
                 else {
                     return;
@@ -125,7 +123,7 @@ module ns_egret {
             this.addChildAt(this._container, 0);
         }
 
-        private mouseDown(name, touch) {
+        private mouseDown(event:ns_egret.TouchEvent) {
             if (!this.touchEnabled) {
                 return;
             }
@@ -133,9 +131,9 @@ module ns_egret {
                 return;
             }
             this._isMoved = false;
-            MainContext.instance.stage.addEventListener(TouchEvent.TOUCH_END, this.mouseUp, this);
-            MainContext.instance.stage.addEventListener(TouchEvent.TOUCH_CANCEL, this.mouseUp, this);
-            MainContext.instance.stage.addEventListener(TouchEvent.TOUCH_MOVE, this.mouseMove, this);
+            MainContext.instance.stage.addEventListener(ns_egret.TouchEvent.TOUCH_END, this.mouseUp, this);
+            MainContext.instance.stage.addEventListener(ns_egret.TouchEvent.TOUCH_RELEASE_OUTSIDE, this.mouseUp, this);
+            MainContext.instance.stage.addEventListener(ns_egret.TouchEvent.TOUCH_MOVE, this.mouseMove, this);
             console.log("begin")
 
 
@@ -144,16 +142,16 @@ module ns_egret {
             this._initY = this._container.y;
             this._endX = this._container.x;
             this._endY = this._container.y;
-            this._downPX = touch.stageX;
-            this._downPY = touch.stageY;
+            this._downPX = event.stageX;
+            this._downPY = event.stageY;
 
             this._downTime = Ticker.now();
         }
 
-        private mouseUp(name, touch) {
-            MainContext.instance.stage.removeEventListener(TouchEvent.TOUCH_END, this.mouseUp, this);
-            MainContext.instance.stage.removeEventListener(TouchEvent.TOUCH_CANCEL, this.mouseUp, this);
-            MainContext.instance.stage.removeEventListener(TouchEvent.TOUCH_MOVE, this.mouseMove, this);
+        private mouseUp(event:ns_egret.TouchEvent) {
+            MainContext.instance.stage.removeEventListener(ns_egret.TouchEvent.TOUCH_END, this.mouseUp, this);
+            MainContext.instance.stage.removeEventListener(ns_egret.TouchEvent.TOUCH_RELEASE_OUTSIDE, this.mouseUp, this);
+            MainContext.instance.stage.removeEventListener(ns_egret.TouchEvent.TOUCH_MOVE, this.mouseMove, this);
             console.log("end")
 
             var endTime = Ticker.now();
@@ -162,8 +160,8 @@ module ns_egret {
             }
             else {//按原来的方向持续 惯性前进
                 //获取 位置变化
-                var deltaX = touch.stageX - this._downPX;
-                var deltaY = touch.stageY - this._downPY;
+                var deltaX = event.stageX - this._downPX;
+                var deltaY = event.stageY - this._downPY;
 
                 var num = Math.floor(this._deltaTime / (endTime - this._downTime)) * 2;
                 if (this.direction == Direction.BOTH || this.direction == Direction.HORIZONTAL) {//水平
@@ -182,9 +180,9 @@ module ns_egret {
             }
         }
 
-        private mouseMove(name, touch) {
-            var deltaX = touch.stageX - this._downPX;
-            var deltaY = touch.stageY - this._downPY;
+        private mouseMove(event:ns_egret.TouchEvent) {
+            var deltaX = event.stageX - this._downPX;
+            var deltaY = event.stageY - this._downPY;
 
             if (this.direction == Direction.BOTH || this.direction == Direction.HORIZONTAL) {//水平
                 this._endX = this._initX + deltaX;
@@ -290,7 +288,7 @@ module ns_egret {
          */
         private removeListeners() {
             this.removeEventListener(TouchEvent.TOUCH_BEGAN, this.mouseDown, this);
-            MainContext.instance.stage.removeEventListener(TouchEvent.TOUCH_CANCEL, this.mouseUp, this);
+            MainContext.instance.stage.removeEventListener(TouchEvent.TOUCH_RELEASE_OUTSIDE, this.mouseUp, this);
             MainContext.instance.stage.removeEventListener(TouchEvent.TOUCH_END, this.mouseUp, this);
             MainContext.instance.stage.removeEventListener(TouchEvent.TOUCH_MOVE, this.mouseMove, this);
             console.log("remove")

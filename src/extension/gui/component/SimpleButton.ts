@@ -89,13 +89,13 @@ module ns_egret{
             MainContext.instance.stage.removeEventListener(ns_egret.TouchEvent.TOUCH_MOVE, this.mouseMove, this);
         }
 
-        private mouseDown(name, touch) {
+        private mouseDown(event:ns_egret.TouchEvent) {
             this._isMoved = false;
             MainContext.instance.stage.addEventListener(ns_egret.TouchEvent.TOUCH_END, this.mouseUp, this);
             MainContext.instance.stage.addEventListener(ns_egret.TouchEvent.TOUCH_MOVE, this.mouseMove, this);
 
-            this._startX = touch.stageX;
-            this._startY = touch.stageY;
+            this._startX = event.stageX;
+            this._startY = event.stageY;
 
             this.setChoose(true);
         }
@@ -109,9 +109,9 @@ module ns_egret{
             MainContext.instance.stage.removeEventListener(ns_egret.TouchEvent.TOUCH_MOVE, this.mouseMove, this);
         }
 
-        private mouseMove(name, touch) {
-            var pointX = touch.stageX;
-            var pointY = touch.stageY;
+        private mouseMove(event:ns_egret.TouchEvent) {
+            var pointX = event.stageX;
+            var pointY = event.stageY;
             if (!(Math.abs(pointX - this._startX) < 10 && Math.abs(pointY - this._startY) < 10)) {
                 this._isMoved = true;
                 this.setChoose(false);
@@ -159,7 +159,10 @@ module ns_egret{
                 if (textfield.parent == this) {
                     return;
                 }
-                textfield.removeFromParent();
+
+                if ( textfield && textfield.parent) {
+                    textfield.parent.removeChild(textfield);
+                }
             }
             this.addChild(textfield);
         }
@@ -171,10 +174,9 @@ module ns_egret{
         public setFontText(text, size = 30) {
             if (this._textField == null) {
                 this._textField = new ns_egret.TextField();
-                this._textField.setContentSize(0, 0);
-                this._textField.textColor = "#ffffff";
+                this._textField.textColor = 0xffffff;
                 this._textField.textAlign = "center";
-                this._textField.font = "Courier-Bold";
+                this._textField.fontFamily = "Courier-Bold";
                 this._textField.size = size;
                 this._textField.stroke = 2;
                 this.addChild(this._textField);
@@ -281,7 +283,7 @@ module ns_egret{
 //                    var btRect = child.getBounds();
 
 
-                    this.addChild(child, curIdx);
+                    this.addChildAt(child, curIdx);
                 }
                 child.visible = true;
 

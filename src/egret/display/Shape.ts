@@ -15,6 +15,10 @@
  * FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
+
+/// <reference path="../context/renderer/RendererContext.ts"/>
+/// <reference path="DisplayObject.ts"/>
+
 module ns_egret {
 
     export class Shape extends ns_egret.DisplayObject {
@@ -37,8 +41,9 @@ module ns_egret {
         private _colorDirty:boolean = true;
 
         constructor(){
-            this._color = 0xFFFFFF;
             super();
+            this._color = 0xFFFFFF;
+
         }
 
         public get color():number {
@@ -70,7 +75,7 @@ module ns_egret {
             }
             var context = renderContext.canvasContext;
             context.fillStyle = this._colorStr;
-            context.fillRect(renderContext._transformTx, renderContext._transformTy, this._contentWidth, this._contentHeight);
+            context.fillRect(renderContext._transformTx, renderContext._transformTy, this._explicitWidth, this._explicitHeight);
 
         }
     }

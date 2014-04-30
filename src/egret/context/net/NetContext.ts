@@ -15,7 +15,9 @@
  * FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-/// <reference path="../../events/EventDispatcher.ts"/>
+
+/// <reference path="../../core/MainContext.ts"/>
+
 module ns_egret {
     export class NetContext {
         public static STATE_COMPLETE:string = "XHRLoaderComplete";
@@ -32,6 +34,9 @@ module ns_egret {
 
     export class URLRequest {
         public type:string;
+
+
+        public prefix:string = "";
 
         constructor(public url:string, public callback, public thisObj, public method:string = NetContext.GET, public data = undefined) {
 

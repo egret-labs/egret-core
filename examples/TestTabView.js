@@ -42,7 +42,8 @@ function createExample(){
         frame1.relativeAnchorPointX = 0.5;
         frame1.relativeAnchorPointY = 0.5;
         var rect = frame1.getBounds();
-        btn.setContentSize(rect.width, rect.height);
+        btn.width = rect.width;
+        btn.height = rect.height;
         frame1.x = rect.width / 2;
         frame1.y = rect.height / 2;
         btn.addChild(frame1);

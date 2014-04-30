@@ -15,15 +15,15 @@
  * FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-function getResourceList(){
-    return ["b1.png","b5.png"];
+function getResourceList() {
+    return ["b1.png", "b5.png"];
 }
 
-function getDescription(){
+function getDescription() {
     return "这个项目展示了多个显示对象（包含复杂嵌套）的事件触发，事件机制参考Flash显示列表事件流";
 }
 
-function createExample(){
+function createExample() {
 
 
     var container = new ns_egret.DisplayObjectContainer();
@@ -34,25 +34,26 @@ function createExample(){
     var left = ns_egret.Bitmap.initWithTexture(ns_egret.TextureCache.getInstance().getTexture("b1.png"));
     left.x = 100;
     container.addChild(left);
-    left.addEventListener(ns_egret.TouchEvent.TOUCH_TAP,function (){
+    left.addEventListener(ns_egret.TouchEvent.TOUCH_TAP, function (event) {
         console.log("点击左侧箭头");
-    },left);
+    }, left);
     left.touchEnabled = true;
 
     var right = ns_egret.Bitmap.initWithTexture(ns_egret.TextureCache.getInstance().getTexture("b5.png"));
     right.x = 150;
     container.addChild(right);
-    right.addEventListener(ns_egret.TouchEvent.TOUCH_TAP,function (){
+
+    right.addEventListener(ns_egret.TouchEvent.TOUCH_TAP, function (event) {
         console.log("点击右侧箭头");
-    },right);
+    }, right);
 
-    container.addEventListener(ns_egret.TouchEvent.TOUCH_TAP,function(){
-        console.log ("容器冒泡侦听");
-    },container);
+    container.addEventListener(ns_egret.TouchEvent.TOUCH_TAP, function (event) {
+        console.log("容器冒泡侦听");
+    }, container);
 
 
-    container.addEventListener(ns_egret.TouchEvent.TOUCH_TAP,function(){
-        console.log ("容器捕获侦听");
-    },container,true);
+    container.addEventListener(ns_egret.TouchEvent.TOUCH_TAP, function (event) {
+        console.log("容器捕获侦听");
+    }, container, true);
     right.touchEnabled = true;
 }

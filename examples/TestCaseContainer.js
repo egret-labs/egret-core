@@ -79,7 +79,7 @@ var app = {
     },
 
 
-    handleComplete: function () {
+    handleComplete: function (event) {
         createExample();
     }
 

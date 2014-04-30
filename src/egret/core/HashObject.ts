@@ -16,17 +16,19 @@
  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+/**
+ * @namespace ns_egret
+ */
+
 module ns_egret {
 
-    /**
-     * 哈希对象。引擎内所有对象的基类，为对象实例提供唯一的hashCode值,提高对象比较的性能。
-     */
-    export class HashObject{
+    export class HashObject implements IHashObject{
 
         /**
-         * 构造函数
+         * @class ns_egret.HashObject
+         * @classdesc 哈希对象。引擎内所有对象的基类，为对象实例提供唯一的hashCode值,提高对象比较的性能。
          */
-        public constructor(){
+        public constructor() {
             this._hashCode = HashObject.hashCount++;
         }
 
@@ -35,11 +37,12 @@ module ns_egret {
          */
         private static hashCount:number = 1;
 
-        private _hashCode:number = 1;
+        private _hashCode:number;
         /**
-         * 返回此对象唯一的哈希值,用于唯一确定一个对象。
+         * 返回此对象唯一的哈希值,用于唯一确定一个对象。hashCode为大于等于1的整数。
+         * @member {number} ns_egret.HashObject#hashCode
          */
-        public get hashCode():number{
+        public get hashCode():number {
             return this._hashCode;
         }
     }

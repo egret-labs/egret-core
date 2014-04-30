@@ -49,17 +49,6 @@ module ns_egret {
             this.addChild(this.disappearContainer);
         }
 
-        /**
-         * 设置 显示宽高
-         * @param width
-         * @param height
-         */
-        public setContentSize(width, height) {
-            super.setContentSize(width, height);
-
-//            this.initItemList();
-        }
-
         public reloadData(dataArr:Array) {
             this._dataArr = dataArr || [];
 

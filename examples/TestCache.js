@@ -30,14 +30,14 @@ function createExample(){
     var container = new ns_egret.DisplayObjectContainer();
     context.stage.addChild(container);
     var texture = ns_egret.TextureCache.getInstance().getTexture("daisy.png");
-//    container.setContentSize(1000, 1000);
+//    container.width = container.height = 1000;
 
 
     var text = new ns_egret.TextField();
     text.text = "HelloWorld";
 //    container.addChild(text);
     text.x = text.y = 150;
-    text.setContentSize(100,100);
+    text.width = text.height = 100;
 
 
 

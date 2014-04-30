@@ -15,10 +15,13 @@
  * FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
+
 /// <reference path="../../core/Profiler.ts"/>
 /// <reference path="../../geom/Matrix.ts"/>
 /// <reference path="../../geom/Rectangle.ts"/>
+/// <reference path="../../text/TextField.ts"/>
 /// <reference path="../../texture/Texture.ts"/>
+
 module ns_egret {
     /**
      * RenderContext是游戏的渲染上下文。
@@ -128,9 +131,8 @@ module ns_egret {
          * @returns {Rectangle}
          * @stable B 参数很可能会需要调整，和setupFont整合
          */
-        public measureText(text):Rectangle {
-            var rect:Rectangle = Rectangle.identity;
-            return rect;
+        public measureText(text):number {
+            return 0;
         }
 
         /**

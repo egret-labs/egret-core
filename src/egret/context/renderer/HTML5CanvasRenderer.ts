@@ -1,10 +1,3 @@
-/// <reference path="RendererContext.ts"/>
-/// <reference path="../../geom/Matrix.ts"/>
-/// <reference path="../../core/StageDelegate.ts"/>
-/// <reference path="../../core/RenderFilter.ts"/>
-/// <reference path="../../debug/DEBUG.ts"/>
-/// <reference path="../../geom/Point.ts"/>
-/// <reference path="../../geom/Rectangle.ts"/>
 /**
  * Copyright (c) Egret-Labs.org. Permission is hereby granted, free of charge,
  * to any person obtaining a copy of this software and associated documentation
@@ -22,6 +15,17 @@
  * FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
+
+/// <reference path="RendererContext.ts"/>
+/// <reference path="../../core/MainContext.ts"/>
+/// <reference path="../../core/RenderFilter.ts"/>
+/// <reference path="../../core/Ticker.ts"/>
+/// <reference path="../../../jslib/DEBUG.d.ts"/>
+/// <reference path="../../geom/Matrix.ts"/>
+/// <reference path="../../geom/Rectangle.ts"/>
+/// <reference path="../../text/TextField.ts"/>
+/// <reference path="../../texture/Texture.ts"/>
+
 module ns_egret {
     export class HTML5CanvasRenderer extends RendererContext {
 
@@ -141,19 +145,15 @@ module ns_egret {
         }
 
 
-        measureText(text) {
+        measureText(text):number {
             var result = this.canvasContext.measureText(text);
-            var rect = Rectangle.identity;
-            rect.width = result.width;
-            rect.height = result.height;
-            return rect;
+            return result.width;
         }
 
 
         drawText(textField:ns_egret.TextField, text:string, x:number, y:number, maxWidth:number) {
-//            return;
-            var textColor = textField.textColor;
-            var strokeColor = textField.strokeColor;
+            var textColor:string = textField._textColorString;
+            var strokeColor:string = textField._strokeColorString;
             var outline = textField.stroke;
             var renderContext = this.canvasContext;
             renderContext.fillStyle = textColor;
@@ -163,7 +163,7 @@ module ns_egret {
                 renderContext.strokeText(text, x, y, maxWidth || 0xFFFF);
             }
             renderContext.fillText(text, x + this._transformTx, y + this._transformTy, maxWidth || 0xFFFF);
-            super.drawText(text, x, y, maxWidth, outline, textColor, strokeColor);
+            super.drawText(textField,text, x, y, maxWidth);
         }
 
         clip(x, y, w, h) {

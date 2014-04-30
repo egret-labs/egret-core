@@ -19,7 +19,7 @@
 ///<reference path="../../../egret/core/Logger.ts"/>
 ///<reference path="../../../egret/display/DisplayObjectContainer.ts"/>
 ///<reference path="../../../egret/display/Bitmap.ts"/>
-/// <reference path="../../../egret/debug/DEBUG.ts"/>
+/// <reference path="../../../jslib/DEBUG.d.ts"/>
 module ns_egret {
     export class Scale9Bitmap extends DisplayObjectContainer {
         private _defaultPadding:number = 5;
@@ -94,17 +94,17 @@ module ns_egret {
             this._right = right;
         }
 
-        public setContentSize(width, height) {
-            super.setContentSize(width, height);
+        public set width(value:number){
+            this._explicitWidth = value;
+            if (value > 0 && !isNaN(value)) {
+                this._scaleWidth = value;
+            }
+        }
 
-            if (!this.texture) {
-                Logger.fatal("Scale9Bitmap没有纹理");
-            }
-            if (parseInt(width) > 0) {
-                this._scaleWidth = width;
-            }
-            if (parseInt(height) > 0) {
-                this._scaleHeight = height;
+        public set height(value:number){
+            this._explicitHeight = value;
+            if (value > 0 && !isNaN(value)) {
+                this._scaleHeight = value;
             }
         }
 
