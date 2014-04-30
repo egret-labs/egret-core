@@ -409,8 +409,9 @@ module ns_egret {
          * @private
          * @returns {Matrix}
          */
+        private static identityMatrixForGetConcatenated = new Matrix();
         public getConcatenatedMatrix() {
-            var matrix = Matrix.identity.identity();
+            var matrix = DisplayObject.identityMatrixForGetConcatenated.identity();
             var o = this;
             while (o != null) {
                 if (o.relativeAnchorPointX != 0 || o.relativeAnchorPointY != 0) {
