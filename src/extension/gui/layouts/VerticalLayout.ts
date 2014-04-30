@@ -880,7 +880,7 @@ module ns_egret {
         }
     }
 
-    export class ChildInfo{
+    class ChildInfo{
 
         public layoutElement:ILayoutElement;
 

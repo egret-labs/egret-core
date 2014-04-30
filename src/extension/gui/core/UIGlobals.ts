@@ -56,16 +56,12 @@ module ns_egret {
 		/**
 		 * 系统管理器列表
 		 */		
-		public static _systemManagers:Array<ISystemManager> = new Array<ISystemManager>();
+		public static _systemManager:ISystemManager;
 		/**
 		 * 顶级应用容器
 		 */
 		public static get systemManager():ISystemManager{
-			for(var i:number=UIGlobals._systemManagers.length-1;i>=0;i--){
-				if(UIGlobals._systemManagers[i].stage)
-					return UIGlobals._systemManagers[i];
-			}
-			return null;
+			return this._systemManager;
 		}
 	}
 }

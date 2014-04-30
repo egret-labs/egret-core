@@ -73,9 +73,8 @@ module ns_egret {
 		 * @param center 是否居中窗口。等效于在外部调用centerPopUp()来居中。默认true。
 		 * @param systemManager 要弹出到的系统管理器。若项目中只含有一个系统管理器，可以留空。
 		 */		
-		public static addPopUp(popUp:IVisualElement,modal:boolean=false,
-										center:boolean=true,systemManager:ISystemManager=null):void{
-			PopUpManager.impl.addPopUp(popUp,modal,center,systemManager);
+		public static addPopUp(popUp:IVisualElement,modal:boolean=false,center:boolean=true):void{
+			PopUpManager.impl.addPopUp(popUp,modal,center);
 			PopUpManager.impl.dispatchEvent(new PopUpEvent(PopUpEvent.ADD_POPUP,false,false,popUp,modal));
 		}
 		
@@ -115,19 +114,15 @@ module ns_egret {
 		 * 添加事件监听,参考PopUpEvent定义的常量。
 		 * @see org.flexlite.domUI.events.PopUpEvent
 		 */		
-		public static addEventListener(type:string, listener:Function,
-												useCapture:boolean = false,
-												priority:number = 0,
-												useWeakReference:boolean = true):void{
-			PopUpManager.impl.addEventListener(type,listener,this,useCapture,priority,useWeakReference);
+		public static addEventListener(type:string,listener:Function,thisObject:any,useCapture:boolean = false,priority:number = 0):void{
+			PopUpManager.impl.addEventListener(type,listener,this,useCapture,priority);
 		}
 		/**
 		 * 移除事件监听,参考PopUpEvent定义的常量。
 		 * @see org.flexlite.domUI.events.PopUpEvent
 		 */	
-		public static removeEventListener(type:string, listener:Function,
-															useCapture:boolean = false):void{
-			PopUpManager.impl.removeEventListener(type,listener,this,useCapture);
+		public static removeEventListener(type:string,listener:Function,thisObject:any,useCapture:boolean = false):void{
+			PopUpManager.impl.removeEventListener(type,listener,thisObject,useCapture);
 		}
 	}
 }

@@ -26,8 +26,8 @@ module ns_egret {
 		 * 构造函数
 		 */		
 		public constructor(owner:ISystemManager,
-										lowerBoundReference:QName,
-										upperBoundReference:QName){
+										lowerBoundReference:string,
+										upperBoundReference:string){
 			this.owner = owner;
 			this.lowerBoundReference = lowerBoundReference;
 			this.upperBoundReference = upperBoundReference;
@@ -40,12 +40,12 @@ module ns_egret {
 		/**
 		 * 容器下边界属性
 		 */		
-		private lowerBoundReference:QName;
+		private lowerBoundReference:string;
 		
 		/**
 		 * 容器上边界属性
 		 */		
-		private upperBoundReference:QName;
+		private upperBoundReference:string;
 		/**
 		 * @inheritDoc
 		 */
@@ -53,12 +53,12 @@ module ns_egret {
 			return this.owner[this.upperBoundReference] - this.owner[this.lowerBoundReference];
 		}
 		
-		private raw_getElementAt:QName = new QName(dx_internal, "raw_getElementAt");
-		private raw_addElementAt:QName = new QName(dx_internal, "raw_addElementAt");
-		private raw_getElementIndex:QName = new QName(dx_internal, "raw_getElementIndex");
-		private raw_removeElement:QName = new QName(dx_internal, "raw_removeElement");
-		private raw_removeElementAt:QName = new QName(dx_internal, "raw_removeElementAt");
-		private raw_setElementIndex:QName = new QName(dx_internal, "raw_setElementIndex");
+		private raw_getElementAt:string = "raw_getElementAt";
+		private raw_addElementAt:string = "raw_addElementAt";
+		private raw_getElementIndex:string = "raw_getElementIndex";
+		private raw_removeElement:string = "raw_removeElement";
+		private raw_removeElementAt:string = "raw_removeElementAt";
+		private raw_setElementIndex:string = "raw_setElementIndex";
 		/**
 		 * @inheritDoc
 		 */
@@ -73,7 +73,7 @@ module ns_egret {
 		 */
 		public addElement(element:IVisualElement):IVisualElement{
 			var index:number = this.owner[this.upperBoundReference];
-			if(element.parent==this.owner)
+			if(element.parent===(<DisplayObjectContainer> this.owner))
 				index--;
 			this.owner[this.upperBoundReference]++;
 			this.owner[this.raw_addElementAt](element,index);
