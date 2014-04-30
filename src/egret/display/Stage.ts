@@ -33,22 +33,43 @@ module ns_egret{
         public invalidate():void{
             Stage._invalidateRenderFlag = true;
         }
-        /**
-         * 舞台宽度（坐标系宽度，非设备宽度）
-         */
-        public stageWidth:number;
-        /**
-         * 舞台高度（坐标系高度，非设备高度）
-         */
-        public stageHeight:number;
 
         public constructor(width:number,height:number) {
             super();
             this.touchEnabled = true;
             this._stage = this;
-            this.stageWidth = width;
-            this.stageHeight = height;
+            this._stageWidth = width;
+            this._stageHeight = height;
         }
+        /**
+         * 设置舞台宽高
+         */
+        public _setStageSize(width:number,height:number):void{
+            if(this._stageWidth==width&&this._stageHeight==height){
+                return;
+            }
+            this._stageWidth = width;
+            this._stageHeight = height;
+            this.dispatchEventWith(Event.RESIZE);
+        }
+
+        private _stageWidth:number;
+        /**
+         * 舞台宽度（坐标系宽度，非设备宽度）
+         */
+        public get stageWidth():number{
+            return this._stageWidth;
+        }
+
+        private _stageHeight:number;
+        /**
+         * 舞台高度（坐标系高度，非设备高度）
+         */
+        public get stageHeight():number{
+            return this._stageHeight;
+        }
+
+
 
         /**
          * @see egret.DisplayObject.hitTest

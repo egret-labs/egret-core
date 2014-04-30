@@ -102,7 +102,11 @@ module ns_egret {
          * @constant {string} ns_egret.Event.LEAVE_STAGE
          */
         public static LEAVE_STAGE:string = "leaveStage";
-
+        /**
+         * 舞台尺寸发生改变
+         * @constant {string} ns_egret.Event.RESIZE
+         */
+        public static RESIZE:string = "resize";
 
         public data:any;
 
