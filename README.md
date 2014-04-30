@@ -1,6 +1,6 @@
 Egret Framework
 ================================================
-Current Version: v0.9.2 (prerelease)
+Current Version: v0.9.3 (prerelease)
 
 
 
@@ -38,6 +38,8 @@ Egret Framework是一款使用JavaScript(TypeScript)编写的HTML5开源免费�
 
 
 #### 发布说明
+
+[Egret Release Notes 2014-4-30](/docs/ReleaseNotes.md)
 
 [Egret Release Notes 2014-4-7](/docs/ReleaseNotes.md)
 
