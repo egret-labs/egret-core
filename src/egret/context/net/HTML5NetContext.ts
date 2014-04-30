@@ -49,11 +49,17 @@ module ns_egret {
             var self = this;
             var xhr = this._getXMLHttpRequest();
             xhr.open(request.method, request.prefix + request.url);
+            if(request.method != "GET")
+            {
+                xhr.setRequestHeader("Content-Type","application/x-www-form-urlencoded");
+            }
+
             if (request.type != undefined) {
                 this._setXMLHttpRequestHeader(xhr, request.type);
             }
             xhr.onreadystatechange = onLoadComplete;
-            xhr.send(request.data);
+            xhr.send(request.method != "GET" ? request.data : null);
+
         }
 
         private loadImage(request:ns_egret.URLRequest):void {

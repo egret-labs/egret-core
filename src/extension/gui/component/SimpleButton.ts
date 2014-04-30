@@ -89,7 +89,7 @@ module ns_egret{
             MainContext.instance.stage.removeEventListener(ns_egret.TouchEvent.TOUCH_MOVE, this.mouseMove, this);
         }
 
-        private mouseDown(event:TouchEvent) {
+        private mouseDown(event:ns_egret.TouchEvent) {
             this._isMoved = false;
             MainContext.instance.stage.addEventListener(ns_egret.TouchEvent.TOUCH_END, this.mouseUp, this);
             MainContext.instance.stage.addEventListener(ns_egret.TouchEvent.TOUCH_MOVE, this.mouseMove, this);
@@ -109,7 +109,7 @@ module ns_egret{
             MainContext.instance.stage.removeEventListener(ns_egret.TouchEvent.TOUCH_MOVE, this.mouseMove, this);
         }
 
-        private mouseMove(event:TouchEvent) {
+        private mouseMove(event:ns_egret.TouchEvent) {
             var pointX = event.stageX;
             var pointY = event.stageY;
             if (!(Math.abs(pointX - this._startX) < 10 && Math.abs(pointY - this._startY) < 10)) {
@@ -130,7 +130,7 @@ module ns_egret{
 
         private onClick() {
             if (this._callBack && this._target) {
-                this._callBack.apply(this._target, []);
+                this._callBack.apply(this._target, [this]);
             }
         }
 
@@ -159,7 +159,10 @@ module ns_egret{
                 if (textfield.parent == this) {
                     return;
                 }
-                textfield.removeFromParent();
+
+                if ( textfield && textfield.parent) {
+                    textfield.parent.removeChild(textfield);
+                }
             }
             this.addChild(textfield);
         }
@@ -171,7 +174,6 @@ module ns_egret{
         public setFontText(text, size = 30) {
             if (this._textField == null) {
                 this._textField = new ns_egret.TextField();
-                this._textField.width = this._textField.height = 0;
                 this._textField.textColor = 0xffffff;
                 this._textField.textAlign = "center";
                 this._textField.fontFamily = "Courier-Bold";

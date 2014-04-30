@@ -38,6 +38,8 @@ module ns_egret {
         onLoadComplete:Function;
         fixedUrl:string = null;
 
+        preFixUrl:string = "";
+
         constructor(url:string, type:string) {
             super();
             this.url = url;
@@ -67,10 +69,23 @@ module ns_egret {
         }
 
         private startLoading() {
+            var fileUrl = "";
+//            if (this.preFixUrl == "") {
+//                fileUrl = ResourceLoader.prefix + this.url;
+//            }
+//            else {
+//                fileUrl = this.preFixUrl + this.url;
+//            }
+
             var self = this;
             var request = new ns_egret.URLRequest(this.url, this._executeAllCallback, this);
             request.type = this.type;
-            request.prefix = ResourceLoader.prefix;
+            if (this.preFixUrl == "") {
+                request.prefix = ResourceLoader.prefix;
+            }
+            else {
+                request.prefix = this.preFixUrl;
+            }
             MainContext.instance.netContext.send(request);
         }
 

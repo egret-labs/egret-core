@@ -103,8 +103,8 @@ module ns_egret {
          * @param initHeight
          */
         public setContainer(container, initWidth, initHeight) {
-            if (this._container) {
-                this._container.removeFromParent();
+            if (this._container && this._container.parent) {
+                this._container.parent.removeChild(this._container);
             }
             this._container = container;
             this._initWidth = initWidth;
@@ -114,7 +114,7 @@ module ns_egret {
 
             if (this._container.parent != null) {
                 if (this._container.parent != this) {
-                    this._container.removeFromParent();
+                    this._container.parent.removeChild(this._container);
                 }
                 else {
                     return;
@@ -123,7 +123,7 @@ module ns_egret {
             this.addChildAt(this._container, 0);
         }
 
-        private mouseDown(event:TouchEvent) {
+        private mouseDown(event:ns_egret.TouchEvent) {
             if (!this.touchEnabled) {
                 return;
             }
@@ -131,9 +131,9 @@ module ns_egret {
                 return;
             }
             this._isMoved = false;
-            MainContext.instance.stage.addEventListener(TouchEvent.TOUCH_END, this.mouseUp, this);
-            MainContext.instance.stage.addEventListener(TouchEvent.TOUCH_RELEASE_OUTSIDE, this.mouseUp, this);
-            MainContext.instance.stage.addEventListener(TouchEvent.TOUCH_MOVE, this.mouseMove, this);
+            MainContext.instance.stage.addEventListener(ns_egret.TouchEvent.TOUCH_END, this.mouseUp, this);
+            MainContext.instance.stage.addEventListener(ns_egret.TouchEvent.TOUCH_RELEASE_OUTSIDE, this.mouseUp, this);
+            MainContext.instance.stage.addEventListener(ns_egret.TouchEvent.TOUCH_MOVE, this.mouseMove, this);
             console.log("begin")
 
 
@@ -148,10 +148,10 @@ module ns_egret {
             this._downTime = Ticker.now();
         }
 
-        private mouseUp(event:TouchEvent) {
-            MainContext.instance.stage.removeEventListener(TouchEvent.TOUCH_END, this.mouseUp, this);
-            MainContext.instance.stage.removeEventListener(TouchEvent.TOUCH_RELEASE_OUTSIDE, this.mouseUp, this);
-            MainContext.instance.stage.removeEventListener(TouchEvent.TOUCH_MOVE, this.mouseMove, this);
+        private mouseUp(event:ns_egret.TouchEvent) {
+            MainContext.instance.stage.removeEventListener(ns_egret.TouchEvent.TOUCH_END, this.mouseUp, this);
+            MainContext.instance.stage.removeEventListener(ns_egret.TouchEvent.TOUCH_RELEASE_OUTSIDE, this.mouseUp, this);
+            MainContext.instance.stage.removeEventListener(ns_egret.TouchEvent.TOUCH_MOVE, this.mouseMove, this);
             console.log("end")
 
             var endTime = Ticker.now();
@@ -180,7 +180,7 @@ module ns_egret {
             }
         }
 
-        private mouseMove(event:TouchEvent) {
+        private mouseMove(event:ns_egret.TouchEvent) {
             var deltaX = event.stageX - this._downPX;
             var deltaY = event.stageY - this._downPY;
 

@@ -76,6 +76,15 @@ module ns_egret{
         }
 
         private parserXML(textxml:string) {
+            var i = 0;
+            while (textxml.charAt(i) == "\n" || textxml.charAt(i) == "\t" || textxml.charAt(i) == "\r" || textxml.charAt(i) == " ") {
+                i++;
+            }
+
+            if (i != 0) {
+                textxml = textxml.substring(i, textxml.length);
+            }
+
             var xmlDoc;
             if (this._isSupportDOMParser) {
                 xmlDoc = this._parser.parseFromString(textxml, "text/xml");
