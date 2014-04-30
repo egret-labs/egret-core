@@ -18,34 +18,46 @@ function run(currDir, args, opts) {
     currDir_global = currDir;
 
 
-    var clearTS = function () {
-        for (var key in dir) {
-            var outPath = path.join(currDir, "output", dir[key]);
-            var allFileList = generateAllTypeScriptFileList(outPath);
-            for (var i = 0; i < allFileList.length; i++) {
-                var fileToDelete = path.join(outPath, allFileList[i]);
-                libs.deleteFileSync(fileToDelete);
-            }
+    var clearTS = function (callback) {
+        var outPath = path.join(currDir, "output");
+        var allFileList = generateAllTypeScriptFileList(outPath);
+        for (var i = 0; i < allFileList.length; i++) {
+            var fileToDelete = path.join(outPath, allFileList[i]);
+            libs.deleteFileSync(fileToDelete);
+            callback();
         }
     }
 
-    var copyExample = function () {
+    var copyExample = function (callback) {
         var engine_root = param.getEgretPath();
         var target_src = path.join(currDir, "output", "examples");
         var source_src = path.join(engine_root, "examples");
         libs.copy(source_src, target_src);
+        callback();
     }
 
-    //获得需要编译的文件夹
-    var dir = getAllDir(currDir, args, opts);
-    async.forEachSeries(dir, function (item, callback) {
-        var sourcePath = path.join(currDir, item);
-        var outPath = path.join(currDir, "output", item);
-        buildAllFile(sourcePath, outPath, callback);
-    }, function () {
-        clearTS();
-        copyExample();
-    })
+    var tasks = [
+        function (callback) {
+            buildAllFile(path.join(param.getEgretPath(), "src"), path.join(currDir, "output/egret/src"), callback);
+        }
+    ];
+
+    var game_path = args[0];
+    if (game_path) {
+        tasks.push(
+
+            function (callback) {
+                buildAllFile(path.join(currDir, game_path), path.join(currDir, "output", game_path), callback);
+            }
+
+        )
+    }
+
+    tasks.push(copyExample);
+    tasks.push(clearTS);
+
+    async.series(tasks
+    )
 }
 
 function getLocalContent() {
@@ -76,75 +88,6 @@ function buildAllFile(source, output, buildOver) {
     });
 }
 
-function getConfig() {
-    var configPath = path.join(currDir_global, 'config.json');
-    if (!fs.existsSync(configPath)) {
-        var errorMessage = "配置文件不存在";
-        console.log(errorMessage);
-        process.exit([1]);
-        return;
-    }
-
-    var configStr = fs.readFileSync(configPath, "utf-8");
-    var configObj = JSON.parse(configStr);
-    return configObj;
-}
-
-function getAllDir(currDir, args, opts) {
-
-
-    function addToDir(filePath) {
-
-        if (!filePath) {
-            console.log("config.json中存在空编译路径，请检查");
-            return;
-        }
-        var realPath = path.join(currDir, filePath);
-        if (!fs.existsSync(realPath)) {
-            throw new Error("config.json中存在错误的编译路径,无法编译：" + filePath);
-        }
-
-        gameArr.push(filePath);
-    }
-
-    var configObj = getConfig();
-
-    var gameArr = [];
-
-    var needEngine = false;
-    var needGame = false;
-
-    if (opts["-e"]) {
-        needEngine = true;
-    }
-    else if (opts["-g"]) {
-        needGame = true;
-    }
-    else {
-        needEngine = true;
-        needGame = true;
-    }
-
-    if (needEngine) {//编译 引擎代码
-        addToDir(configObj["engine"]);
-    }
-
-    if (needGame) {//编译 游戏代码
-        var arr = opts["-g"];
-        var gameObj = configObj["game"];
-        if (!arr || arr.length == 0) {
-            for (var key in gameObj) {
-                addToDir(gameObj[key]);
-            }
-        }
-        else {
-            for (var key1 in arr) {
-                addToDir(gameObj[arr[key1]]);
-            }
-        }
-    }
-    return gameArr;
-}
 /**
  * 编译单个TypeScript文件
  * @param file
@@ -179,14 +122,15 @@ function build(file, callback, source, output) {
 function compileAllTypeScript(crc32Data, allFileList, source, output, buildOver) {
     async.forEachSeries(allFileList, function (file, callback) {
         //console.log(path);
-        var content = fs.readFileSync(path.join(source, file), "utf8");
+        var fullname = path.join(source, file)
+        var content = fs.readFileSync(fullname, "utf8");
         var data = crc32(content);
-        if (crc32Data[file] == data) {
+        if (crc32Data[fullname] == data) {
             //不需要重新编译
             callback(null, file);
         }
         else {
-            crc32Data[file] = data;
+            crc32Data[fullname] = data;
             //需要重新编译一下
             build(file, callback, source, output);
         }
