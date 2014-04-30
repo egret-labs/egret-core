@@ -710,6 +710,7 @@ module ns_egret {
 			}
 			if(this.useVirtualLayout){
 				this.calculateRowAndColumn(width,height);
+                this.adjustForJustify(width,height);
 			}
 			
 			if(this.startIndex == -1||this.endIndex==-1){
