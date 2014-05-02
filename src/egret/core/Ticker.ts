@@ -15,6 +15,8 @@
  * FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
+
+/// <reference path="MainContext.ts"/>
 /// <reference path="../events/EventDispatcher.ts"/>
 
 module ns_egret {
@@ -34,20 +36,10 @@ module ns_egret {
             return new Date().getTime();
         };
 
-        static requestAnimationFrame:Function = window["requestAnimationFrame"] ||
-            window["webkitRequestAnimationFrame"] ||
-            window["mozRequestAnimationFrame"] ||
-            window["oRequestAnimationFrame"] ||
-            window["msRequestAnimationFrame"] ||
-            //如果全都没有，使用setTimeout实现
-            function (callback) {
-                return window.setTimeout(callback, 1000 / Ticker.getInstance().getFrameRate());
-            };
-
 
         private _time:number;
         private _timeScale:number = 1;
-        private _paused:Boolean = false;
+        private _paused:boolean = false;
         private _frameRate:number = 60;
 
         /**
@@ -57,77 +49,70 @@ module ns_egret {
          */
         public run() {
             this._time = Ticker.now();
-            Ticker.requestAnimationFrame.call(window, this.enterFrame)
-        }
-
-        private enterFrame() {
-            Ticker.requestAnimationFrame.call(window, Ticker.instance.enterFrame)
-            Ticker.instance.update();
-
+            var context = ns_egret.MainContext.instance.deviceContext;
+            context.executeMainLoop(this.update, this);
         }
 
         private update() {
-            if (!this._eventDataList || this._paused) return;
+            var list:Array<any> = this.callBackList.concat();
+            var length:number = list.length;
             var thisTime = Ticker.now();
-            var l = this._eventDataList.length;
-            for (var i:number = 0; i < l; i++) {
-                var obj = this._eventDataList[i];
-                if (!obj) {
-                    continue;
-                }
-                if (obj.eventName == "enterFrame"
-                    && (!(this instanceof DisplayObject) || this._isUseCapture == obj.useCapture)) {
-                    var dt = thisTime - this._time;
-                    dt *= this._timeScale;
-                    obj.func.call(obj.thisObj, dt);
-                }
+            for (var i:number = 0; i < length; i++) {
+                var eventBin:any = list[i];
+                var frameTime:number = thisTime - this._time;
+                frameTime *= this._timeScale;
+                eventBin.listener.call(eventBin.thisObject, frameTime);
             }
             this._time = thisTime;
         }
 
+        private callBackList:Array<any> = [];
+
         /**
-         * 注册侦听enterFrame事件，这是对EventDispatcher.addEventListener("enterFrame")的一层封装
-         * @param func 事件侦听函数
-         * @param thisObj 侦听函数的this对象
+         * 注册帧回调事件，同一函数的重复监听会被忽略。
+         * @param listener 帧回调函数,参数返回上一帧和这帧的间隔时间。示例：onEnterFrame(frameTime:number):void
+         * @param thisObject 帧回调函数的this对象
          * @param priority 事件优先级，开发者请勿传递 Number.MAX_VALUE 和 Number.MIN_VALUE
          * @stable A-
          */
-        public register(func:Function, thisObj, priority = 0) {
-            super.addEventListener("enterFrame", func, thisObj, false, priority);
+        public register(listener:Function, thisObject:any, priority = 0) {
+            var list:Array<any> = this.callBackList;
+            this._insertEventBin(list,listener,thisObject,priority);
         }
 
         /**
          * 取消侦听enterFrame事件
-         * @param func 事件侦听函数
-         * @param thisObj 侦听函数的this对象
+         * @param listener 事件侦听函数
+         * @param thisObject 侦听函数的this对象
          * @stable A-
          */
-        public unregister(func:Function, thisObj) {
-            super.removeEventListener("enterFrame", func, thisObj, false);
+        public unregister(listener:Function, thisObject:any) {
+            var list:Array<any> = this.callBackList;
+            this._removeEventBin(list,listener,thisObject);
         }
 
         /**
          * 在一帧之后调用指定函数
-         * @param func 事件侦听函数
-         * @param thisObj 侦听函数的this对象
+         * @param listener 事件侦听函数
+         * @param thisObject 侦听函数的this对象
          */
-        public callLater(func:Function, thisObj, time:number = 0) {
+        public callLater(listener:Function, thisObject, time:number = 0) {
             var that = this;
             var passTime = 0;
-            this.register(function (dt) {
+            this.register(function (frameTime) {
                 if (time == 0) {
-                    that.unregister(arguments.callee, thisObj);
-                    func.apply(thisObj);
+                    that.unregister(arguments.callee, thisObject);
+                    listener.apply(thisObject);
 
                 }
                 else {
-                    passTime += dt;
+                    passTime += frameTime;
                     if (passTime >= time) {
-                        that.unregister(arguments.callee, thisObj);
-                        func.apply(thisObj);
+                        that.unregister(arguments.callee, thisObject);
+                        listener.apply(thisObject);
                     }
                 }
-            }, thisObj)
+            }, thisObject)
         }
 
         public setTimeScale(timeScale) {
@@ -138,21 +123,21 @@ module ns_egret {
             return this._timeScale;
         }
 
-        public pause(){
+        public pause() {
             this._paused = true;
         }
 
-        public resume(){
+        public resume() {
             this._paused = false;
         }
 
-        public getFrameRate(){
+        public getFrameRate() {
             return this._frameRate;
         }
 
 
-
         private static instance:ns_egret.Ticker;
+
         public static getInstance():ns_egret.Ticker {
             if (Ticker.instance == null) {
                 Ticker.instance = new Ticker();

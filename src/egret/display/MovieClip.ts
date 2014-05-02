@@ -1,6 +1,3 @@
-/// <reference path="DisplayObjectContainer.ts"/>
-/// <reference path="Bitmap.ts"/>
-/// <reference path="../texture/Texture.ts"/>
 /**
  * Copyright (c) Egret-Labs.org. Permission is hereby granted, free of charge,
  * to any person obtaining a copy of this software and associated documentation
@@ -19,6 +16,12 @@
  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+/// <reference path="../core/Logger.ts"/>
+/// <reference path="../core/Ticker.ts"/>
+/// <reference path="Bitmap.ts"/>
+/// <reference path="DisplayObjectContainer.ts"/>
+/// <reference path="../texture/Texture.ts"/>
+
 module ns_egret {
     /**
      * MovieClip是位图动画序列类，由FlashPro + egret插件生成配置文件
@@ -31,7 +34,7 @@ module ns_egret {
         private _totalFrame:number = 0;
         private _interval = 0;
         private _currentInterval = 0;
-        private _isPlaying:Boolean = false;
+        private _isPlaying:boolean = false;
         private _passTime:number = 0;
         private _oneFrameTime = 1000 / Ticker.getInstance().getFrameRate();
 
@@ -84,14 +87,14 @@ module ns_egret {
             Ticker.getInstance().unregister(this.update, this);
         }
 
-        private update(dt) {
+        private update(frameTime:number) {
             //设置间隔之后，间隔不到则不处理
             if (this._interval != this._currentInterval) {
                 this._currentInterval++;
                 return;
             }
             var last = this._passTime % this._oneFrameTime;
-            var num = Math.floor((last + dt) / this._oneFrameTime);
+            var num = Math.floor((last + frameTime) / this._oneFrameTime);
             while (num >= 1) {
                 if(num == 1)
                 {
@@ -103,10 +106,10 @@ module ns_egret {
                 }
                 num--;
             }
-            this._passTime += dt;
+            this._passTime += frameTime;
         }
 
-        private playNextFrame(needShow:Boolean = true) {
+        private playNextFrame(needShow:boolean = true) {
             //todo 如果动画只有一帧的性能优化
             this._currentInterval = 0;
             var frameData = this._frameData.frames[this._currentFrameName].childrenFrame[this._currentFrameIndex];
@@ -114,12 +117,12 @@ module ns_egret {
                 var bitmap = this.getBitmap(frameData.res);
                 bitmap.x = frameData.x;
                 bitmap.y = frameData.y;
-                this.removeAllChildren();
+                this.removeChildren();
                 this.addChild(bitmap);
             }
 
             if (frameData.action != null) {
-                this.dispatchEvent(frameData.action);
+                this.dispatchEventWith(frameData.action);
             }
 
             this._currentFrameIndex++;
@@ -168,9 +171,8 @@ module ns_egret {
          * @stable D 这个API需要改为 isPlaying()
          * @returns {Boolean}
          */
-        public getIsPlaying():Boolean {
+        public getIsPlaying():boolean {
             return this._isPlaying;
         }
     }
 }
-

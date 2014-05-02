@@ -23,22 +23,47 @@ module ns_egret {
      */
     export class Rectangle {
 
-        constructor(/**
-                     * 矩形x坐标
-                     */
-                    public x:number, /**
-         * 矩形y坐标
-         */
-                    public y:number, /**
-         * 矩形宽度
-         */
-                    public width:number, /**
-         * 矩形高度
-         */
-                    public height:number) {
-
+        constructor(x:number=0,y:number=0,width:number=0,height=0) {
+            this.x = x;
+            this.y = y;
+            this.width = width;
+            this.height = height;
         }
 
+        /**
+         * 矩形x坐标
+         */
+        public x:number;
+        /**
+         * 矩形y坐标
+         */
+        public y:number;
+        /**
+         * 矩形宽度
+         */
+        public width:number;
+        /**
+         * 矩形高度
+         */
+        public height:number;
+        /**
+         * x和width的和
+         */
+        public get right():number{
+            return this.x + this.width;
+        }
+        public set right(value:number){
+            this.width = value - this.x;
+        }
+        /**
+         * y和height的和
+         */
+        public get bottom():number{
+            return this.y + this.height;
+        }
+        public set bottom(value:number){
+            this.height = value - this.y;
+        }
         /**
          * 举行类初始化赋值，开发者尽量调用此方法复用Rectangle对象，而不是每次需要的时候都重新创建
          * @param x
@@ -47,7 +72,7 @@ module ns_egret {
          * @param height
          * @returns {ns_egret.Rectangle}
          */
-        initialize(x:number, y:number, width:number, height:number) {
+        initialize(x:number, y:number, width:number, height:number):Rectangle {
             this.x = x;
             this.y = y;
             this.width = width;
@@ -61,17 +86,31 @@ module ns_egret {
          * @param y
          * @returns {boolean}
          */
-        containPoint(x:number, y:number) {
+        public contains(x:number, y:number):boolean {
             return this.x <= x &&
                 this.x + this.width >= x &&
                 this.y <= y &&
                 this.y + this.height >= y;
-
-
         }
 
         /**
-         * 克隆举行对象
+         * 确定在 toIntersect 参数中指定的对象是否与此 Rectangle 对象相交。此方法检查指定的 Rectangle 对象的 x、y、width 和 height 属性，以查看它是否与此 Rectangle 对象相交。
+         * @param toIntersect 要与此 Rectangle 对象比较的 Rectangle 对象。
+         */
+        public intersects(toIntersect:Rectangle):boolean{
+            if(this.contains(toIntersect.x,toIntersect.y))
+                return true;
+            if(this.contains(toIntersect.x,toIntersect.bottom))
+                return true;
+            if(this.contains(toIntersect.right,toIntersect.y))
+                return true;
+            if(this.contains(toIntersect.right,toIntersect.bottom))
+                return true;
+            return false;
+        }
+
+        /**
+         * 克隆矩形对象
          * @returns {ns_egret.Rectangle}
          * @stable C 倾向于废除此API，方式开发者滥用，降低游戏性能
          */

@@ -15,11 +15,15 @@
  * FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-/// <reference path="Texture.ts"/>
+
 /// <reference path="../core/Logger.ts"/>
+/// <reference path="../display/SpriteSheet.ts"/>
+/// <reference path="Texture.ts"/>
+
 module ns_egret {
     /**
-     * @class 纹理的缓存和管理类
+     * 纹理的缓存和管理类
+     * @class ns_egret.TextureCache
      */
     export class TextureCache {
         private static instance:TextureCache;

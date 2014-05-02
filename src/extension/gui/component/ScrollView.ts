@@ -236,41 +236,6 @@ module ns_egret {
             }
         }
 
-        /**
-         * 设置滚动内容位置
-         * @param x
-         * @param y
-         */
-        public setContainerPosition(x, y) {
-            if (x > 0) {
-                x = 0;
-            }
-            else if (x < this._viewWidth - this._initWidth) {
-                if (this._viewWidth >= this._initWidth) {
-                    x = 0;
-                }
-                else {
-                    x = this._viewWidth - this._initWidth;
-                }
-            }
-
-            if (y > 0) {
-                y = 0;
-            }
-            else if (y < this._viewHeight - this._initHeight) {
-                if (this._viewHeight >= this._initHeight) {
-                    y = 0;
-                }
-                else {
-                    y = this._viewHeight - this._initHeight;
-                }
-            }
-            this._container.x = x;
-            this._container.y = y;
-
-            this.moveList();
-        }
-
         //每帧 移动 时调用
         private moveList() {
 

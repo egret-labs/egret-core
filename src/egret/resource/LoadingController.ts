@@ -16,14 +16,17 @@
  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-/// <reference path="../../egret/events/EventDispatcher.ts"/>
-/// <reference path="../../egret/core/Logger.ts"/>
+/// <reference path="../core/Logger.ts"/>
+/// <reference path="../core/Ticker.ts"/>
+/// <reference path="../events/Event.ts"/>
+/// <reference path="../events/EventDispatcher.ts"/>
 /// <reference path="ResourceLoader.ts"/>
 
 module ns_egret{
 
     /**
-     * @class LoadingController是egret的加载控制器，他包含了一个或者一组ResourceLoader，控制其加载队列和调用加载界面更新进度。
+     * 是egret的加载控制器，他包含了一个或者一组ResourceLoader，控制其加载队列和调用加载界面更新进度。
+     * @class ns_egret.LoadingController
      */
     export class LoadingController extends ns_egret.EventDispatcher {
         static LOAD_STATE_IDLE = 0;
@@ -37,10 +40,11 @@ module ns_egret{
 
         /**
          * 添加资源
-         * @param url
-         * @param type
+         * @method ns_egret.LoadingController#addResource
+         * @param url {string} 加载url
+         * @param type {string} 加载类型
          */
-        public addResource(url:string, type:string = null) {
+        public addResource(url:string, type:string = null, prefix:string = ""):void {
             if (this.checkIsLoading()) {
                 return;
             }
@@ -49,6 +53,8 @@ module ns_egret{
                 this._resourceUrlList = [];
             }
             var resource = ns_egret.ResourceLoader.create(url,type);
+            resource.preFixUrl = prefix;
+
             if (this._resourceUrlList.indexOf(resource) == -1 && resource.state != ns_egret.ResourceLoader.LOAD_STATE_LOADED){
                 this._resourceUrlList.push(resource);
             }
@@ -56,8 +62,9 @@ module ns_egret{
 
         /**
          * 开始加载
+         * @method ns_egret.LoadingController#load
          */
-        public load() {
+        public load():void {
             if (this.checkIsLoading()) {
                 return;
             }
@@ -68,7 +75,7 @@ module ns_egret{
                 if (this._loadingView != null) {
                     this._loadingView.addToStage();
                 }
-                this.next();
+                this.next(null);
             }
             else{
                 ns_egret.Ticker.getInstance().callLater(this.onComplete,this);
@@ -78,11 +85,11 @@ module ns_egret{
         private onComplete(){
             this._state = LoadingController.LOAD_STATE_IDLE;
             this.destroy();
-            this.dispatchEvent(ResourceLoader.LOAD_COMPLETE);
+            this.dispatchEventWith(ResourceLoader.LOAD_COMPLETE);
 
         }
 
-        private checkIsLoading():Boolean {
+        private checkIsLoading():boolean {
             if (this._state == LoadingController.LOAD_STATE_LOADING) {
                 ns_egret.Logger.info("正在加载中");
                 return true;
@@ -90,18 +97,18 @@ module ns_egret{
             return false;
         }
 
-        private next() {
+        private next(event:Event) {
             this.removeResourceEvent();
             this.onProgress();
             if (this._resourceUrlList.length > this._currentIndex) {
                 this._currentResource = this._resourceUrlList[this._currentIndex];
+                this._currentIndex++;
                 this._currentResource.addEventListener(ns_egret.ResourceLoader.LOAD_COMPLETE, this.next, this);
                 this._currentResource.load();
             }
             else {
                 this.onComplete();
             }
-            this._currentIndex++;
         }
 
         private removeResourceEvent(){
@@ -120,14 +127,15 @@ module ns_egret{
 
         /**
          * 设置加载进度界面
-         * @param value
+         * @method ns_egret.LoadingController#setLoadingView
+         * @param view {ns_egret.ILoadingView}
          */
-        public setLoadingView(value:ILoadingView) {
+        public setLoadingView(view:ILoadingView) {
             if (this._loadingView != null) {
                 this._loadingView.removeFromStage();
                 this._loadingView = null;
             }
-            this._loadingView = value;
+            this._loadingView = view;
         }
 
         private destroy() {
@@ -138,33 +146,5 @@ module ns_egret{
             }
             this._resourceUrlList = null;
         }
-    }
-
-    /**
-     * @interface ILoadingView是加载进度条的接口，所有的加载进度条都需要实现如下方法，并通过LoadingController.setLoadingView(view)来调用
-     */
-    export interface ILoadingView{
-
-        /**
-         * 将进度条添加到舞台
-         */
-        addToStage();
-
-        /**
-         * 将进度条从舞台中移除
-         */
-        removeFromStage();
-
-        /**
-         * 更新进度条
-         * @param current
-         * @param total
-         */
-        onProgress(current:number, total:number);
-    }
-
-
-    export class LoadingEvent {
-
     }
 }

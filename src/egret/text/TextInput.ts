@@ -1,5 +1,3 @@
-/// <reference path="DisplayObjectContainer.ts"/>
-/// <reference path="../context/display/StageText.ts"/>
 /**
  * Copyright (c) Egret-Labs.org. Permission is hereby granted, free of charge,
  * to any person obtaining a copy of this software and associated documentation
@@ -18,6 +16,9 @@
  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+/// <reference path="../context/display/StageText.ts"/>
+/// <reference path="../display/DisplayObject.ts"/>
+/// <reference path="../events/TouchEvent.ts"/>
 /// <reference path="../geom/Rectangle.ts"/>
 
 module ns_egret {
@@ -27,10 +28,10 @@ module ns_egret {
         private _edTxt;
         private _delegate:TextInputDegelete;
         private _placeholderText:string = "";
-        private _edFontSize = 14;
-        private _textColor = "#ff0000";
+        private _edFontSize:number = 14;
+        private _textColor:number = 0xff0000;
         private _placeholderFontSize = 14;
-        private _placeholderColor = "#ffff00";
+        private _placeholderColor:number = 0xffff00;
 
         private _preX:number = 0;
         private _preY:number = 0;
@@ -42,7 +43,7 @@ module ns_egret {
             super._onAddToStage();
             var point = this.localToGlobal();
             var stageText = new ns_egret.StageText();
-            stageText.open(point.x, point.y,this._contentWidth,this._contentHeight);
+            stageText.open(point.x, point.y,this._explicitWidth,this._explicitHeight);
             this.addEventListener(ns_egret.TouchEvent.TOUCH_BEGAN, this.onMouseDownHandler, this);
             this.stageText = stageText;
         }
@@ -65,7 +66,7 @@ module ns_egret {
 
 
 
-        private onMouseDownHandler() {
+        private onMouseDownHandler(event:TouchEvent) {
 
         }
 

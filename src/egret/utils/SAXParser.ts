@@ -15,7 +15,9 @@
  * FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
+
 /// <reference path="../core/Logger.ts"/>
+
 module ns_egret{
     export class SAXParser {
         static _instance:SAXParser = null;
@@ -66,7 +68,7 @@ module ns_egret{
         /**
          * 解析tilemap
          */
-        public tmxParse(textxml:string, isXMLString:Boolean = false) {
+        public tmxParse(textxml:string, isXMLString:boolean = false) {
             if (!isXMLString) {
                 textxml = this.getList(textxml);
             }
@@ -74,6 +76,15 @@ module ns_egret{
         }
 
         private parserXML(textxml:string) {
+            var i = 0;
+            while (textxml.charAt(i) == "\n" || textxml.charAt(i) == "\t" || textxml.charAt(i) == "\r" || textxml.charAt(i) == " ") {
+                i++;
+            }
+
+            if (i != 0) {
+                textxml = textxml.substring(i, textxml.length);
+            }
+
             var xmlDoc;
             if (this._isSupportDOMParser) {
                 xmlDoc = this._parser.parseFromString(textxml, "text/xml");

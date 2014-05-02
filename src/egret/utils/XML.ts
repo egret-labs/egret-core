@@ -56,26 +56,21 @@ module ns_egret{
          * @private
          */
         public _ansXML(xmlDoc) {
-            var num = 0;
-            if (xmlDoc.childNodes.length > 0) {
-                for (var i = 0; i < xmlDoc.childNodes.length; i++) {
-                    var childXMLDoc = xmlDoc.childNodes[i];
-                    if (childXMLDoc.nodeType == 1) {
-                        var xml = new XML("");
-                        xml._ansXML(childXMLDoc);
+            if (xmlDoc.childElementCount > 0) {//拥有子 节点
+                for (var i = 0; i < xmlDoc.childElementCount; i++) {
+                    var childXMLDoc = xmlDoc.children[i];
 
-                        var name = childXMLDoc.nodeName;
-                        if (this[name] == null) {
-                            this[name] = [];
-                        }
-                        this[name].push(xml);
+                    var xml = new XML("");
+                    xml._ansXML(childXMLDoc);
 
-                        num++;
+                    var name = childXMLDoc.nodeName;
+                    if (this[name] == null) {
+                        this[name] = [];
                     }
+                    this[name].push(xml);
                 }
             }
-
-            if (num == 0) {
+            else {
                 this["value"] = xmlDoc.textContent;
             }
 

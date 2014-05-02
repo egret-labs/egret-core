@@ -1,4 +1,3 @@
-/// <reference path="../../resource/ResourceLoader.ts"/>
 /**
  * Copyright (c) Egret-Labs.org. Permission is hereby granted, free of charge,
  * to any person obtaining a copy of this software and associated documentation
@@ -17,13 +16,15 @@
  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+/// <reference path="../../core/MainContext.ts"/>
+
 module ns_egret{
     export class SoundContext {
         public static getInstance():SoundContext {
             return ns_egret.MainContext.instance.soundContext;
         }
 
-        public static isMusicPlaying:Boolean = false;
+        public static isMusicPlaying:boolean = false;
 
         constructor() {
 

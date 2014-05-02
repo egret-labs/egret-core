@@ -15,9 +15,9 @@
  * FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
+
 /// <reference path="Logger.ts"/>
-/// <reference path="../utils/FrameworkUtils.ts"/>
-/// <reference path="MainContext.ts"/>
+
 module ns_egret {
     /**
      * StageDelegate负责处理屏幕适配策略
@@ -49,7 +49,7 @@ module ns_egret {
 
         private _resolutionPolicy;
 
-        constructor() {
+        public constructor() {
             this._frame = document.getElementById(StageDelegate.canvas_div_name);
             var canvas:any = document.getElementById(StageDelegate.canvas_name);
             var w = canvas.width, h = canvas.height;
@@ -200,8 +200,7 @@ module ns_egret {
 
         }
 
-        public apply(view, designedResolutionWidth, designedResolutionHeight) {
-            return {"scale": [1, 1]};
+        public apply(delegate:ns_egret.StageDelegate, designedResolutionWidth:number, designedResolutionHeight:number):void{
         }
     }
 
@@ -253,11 +252,12 @@ module ns_egret {
         private height;
 
         constructor(width, height) {
+            super();
             this.width = width;
             this.height = height;
         }
 
-        public apply(delegate:ns_egret.StageDelegate, designedResolutionWidth, designedResolutionHeight) {
+        public apply(delegate:ns_egret.StageDelegate, designedResolutionWidth:number, designedResolutionHeight:number) {
             var canvas:HTMLCanvasElement = <HTMLCanvasElement>document.getElementById(StageDelegate.canvas_name);
             var container:HTMLDivElement = <HTMLDivElement>document.getElementById(StageDelegate.canvas_div_name);
             var viewPortWidth = this.width;
