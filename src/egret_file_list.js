@@ -1,5 +1,6 @@
 var temp = [
 	"egret/core/HashObject.js",
+    "egret/utils/Recycler.js",
     "egret/events/Event.js",
     "egret/events/TouchEvent.js",
     "egret/events/TimerEvent.js",
@@ -49,7 +50,6 @@ var temp = [
     "egret/utils/SAXParser.js",
     "egret/utils/FrameworkUtils.js",
     "egret/utils/XML.js",
-    "egret/utils/Recycler.js",
     //utils end
     //tween start
     "egret/tween/Tween.js",
