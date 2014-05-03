@@ -23,7 +23,7 @@ module ns_egret{
      * 这个类是HTML5的WebWrapper的第一个版本
      * @stable C 目前只是实现需求，大部分API需要考虑重新设计
      */
-    export class Browser {
+    export class Browser extends ns_egret.HashObject{
 
         private static instance:Browser;
         private pfx:string;
@@ -41,6 +41,7 @@ module ns_egret{
         }
 
         constructor() {
+            super();
             this.ua = navigator.userAgent.toLowerCase();
             var browserTypes = this.ua.match(/micromessenger|qqbrowser|mqqbrowser|ucbrowser|360browser|baidubrowser|maxthon|ie|opera|firefox/) || this.ua.match(/chrome|safari/);
             if (browserTypes && browserTypes.length > 0) {

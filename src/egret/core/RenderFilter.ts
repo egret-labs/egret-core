@@ -23,11 +23,12 @@
 /// <reference path="../texture/Texture.ts"/>
 
 module ns_egret {
-    export class RenderFilter {
+    export class RenderFilter extends ns_egret.HashObject{
         /**
          * @class ns_egret.RenderFilter
          */
         public constructor() {
+            super();
             this._drawAreaList = [];
         }
 

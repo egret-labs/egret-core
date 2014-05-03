@@ -21,9 +21,10 @@ module ns_egret {
     /**
      * 矩形类
      */
-    export class Rectangle {
+    export class Rectangle extends ns_egret.HashObject{
 
         constructor(x:number=0,y:number=0,width:number=0,height=0) {
+            super();
             this.x = x;
             this.y = y;
             this.width = width;

@@ -19,10 +19,14 @@
 module ns_egret {
 
 
-    export class NativeDeviceContext {
+    export class NativeDeviceContext extends ns_egret.HashObject{
 
         private callback:Function;
         private thisObject;
+
+        public constructor(){
+            super();
+        }
 
         public executeMainLoop(callback:Function, thisObject:any):void {
 

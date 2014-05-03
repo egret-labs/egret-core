@@ -19,8 +19,11 @@
 module ns_egret {
 
 
-    export class DeviceContext {
+    export class DeviceContext extends ns_egret.HashObject{
 
+        public constructor(){
+            super();
+        }
 
         public executeMainLoop(callback:Function,thisObject:any):void {
 

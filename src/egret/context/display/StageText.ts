@@ -21,13 +21,13 @@
 
 module ns_egret {
 
-    export class StageText {
+    export class StageText extends ns_egret.HashObject{
 
         private div:HTMLDivElement;
         private inputElement:HTMLInputElement;
 
         constructor() {
-
+            super();
         }
 
         public getText():string {

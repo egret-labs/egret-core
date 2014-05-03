@@ -19,15 +19,15 @@
 /// <reference path="../../core/MainContext.ts"/>
 
 module ns_egret{
-    export class SoundContext {
+    export class SoundContext extends ns_egret.HashObject{
         public static getInstance():SoundContext {
             return ns_egret.MainContext.instance.soundContext;
         }
 
         public static isMusicPlaying:boolean = false;
 
-        constructor() {
-
+        public constructor() {
+            super();
         }
 
         public preloadSound(path) {

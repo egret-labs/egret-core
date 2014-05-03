@@ -18,7 +18,7 @@
 
 module ns_egret {
 
-    export class Event {
+    export class Event extends ns_egret.HashObject{
 
 
         /**
@@ -41,6 +41,7 @@ module ns_egret {
          * @param cancelable{boolean} 确定是否可以取消 Event 对象。默认值为 false。
          */
         public constructor(type:string, bubbles:boolean = false, cancelable:boolean = false) {
+            super();
             this._type = type;
             this._bubbles = bubbles;
             this._cancelable = cancelable;

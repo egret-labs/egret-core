@@ -30,11 +30,12 @@ module ns_egret {
      * @class ns_egret.TouchContext
      * @classdesc TouchContext是egret的触摸Context
      */
-    export class TouchContext {
+    export class TouchContext extends ns_egret.HashObject{
         private _currentTouchTarget:any = {};
         public maxTouches:number = 2;
 
         public constructor(private canvas:HTMLCanvasElement) {
+            super();
         }
 
         /**

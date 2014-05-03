@@ -21,9 +21,11 @@
 module ns_egret {
 
 
-    export class HTML5DeviceContext {
+    export class HTML5DeviceContext extends ns_egret.HashObject{
 
-
+        public constructor(){
+            super();
+        }
         static requestAnimationFrame:Function = window["requestAnimationFrame"] ||
             window["webkitRequestAnimationFrame"] ||
             window["mozRequestAnimationFrame"] ||
