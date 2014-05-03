@@ -19,12 +19,12 @@ Egret 0.9.3在听取了众位参与了Prerelease的开发者的反馈之后对 E
 ------------------------
 
 #### 步骤一：下载及配置环境变量
-将Egret下载并解压至操作系统中的任意位置，并修改操作系统的环境变量，将 EGRET_PATH 赋值为Egret所在的路径
+将Egret下载并解压至操作系统中的任意位置，并修改操作系统的环境变量，将 EGRET_PATH 赋值为Egret文件夹的路径
 
 执行以下脚本，安装egret
 
 ```
-$ npm install {EGRET_PATH}/egret/tools -g
+$ npm install {EGRET_PATH}/tools -g
 ```
 > 如果上述命令执行失败，请先查看系统当前用户是否有管理员权限
 
