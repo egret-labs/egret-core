@@ -15,13 +15,13 @@
  * FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-/// <reference path="../../jslib/DEBUG.d.ts"/>
 
 /// <reference path="../core/Logger.ts"/>
 /// <reference path="Bitmap.ts"/>
 /// <reference path="DisplayObjectContainer.ts"/>
 /// <reference path="SpriteSheet.ts"/>
 /// <reference path="../texture/Texture.ts"/>
+/// <reference path="../../jslib/DEBUG.d.ts"/>
 
 module ns_egret {
     export class Scale9Bitmap extends DisplayObjectContainer {

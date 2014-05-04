@@ -16,13 +16,13 @@
  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-/// <reference path="../../../egret/core/Constant.ts"/>
 /// <reference path="../../../egret/core/MainContext.ts"/>
 /// <reference path="../../../egret/core/Ticker.ts"/>
 /// <reference path="../../../egret/display/DisplayObjectContainer.ts"/>
 /// <reference path="../../../egret/events/TouchEvent.ts"/>
 /// <reference path="../../../egret/geom/Rectangle.ts"/>
 /// <reference path="../../../egret/tween/Tween.ts"/>
+/// <reference path="Constant.ts"/>
 
 module ns_egret {
     /**
