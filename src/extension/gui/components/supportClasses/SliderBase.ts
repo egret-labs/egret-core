@@ -159,7 +159,7 @@ module ns_egret {
 			if(!this.track)
 				return;
 			
-			var pos:Point = this.track.globalToLocal(new Point(UIGlobals.stage.mouseX, UIGlobals.stage.mouseY));
+			var pos:Point = this.track.globalToLocal(UIGlobals.stage.mouseX, UIGlobals.stage.mouseY);
 			var newValue:number = this.pointToValue(pos.x - this.clickOffset.x,pos.y - this.clickOffset.y);
 			newValue = this.nearestValidValue(newValue, this.snapInterval);
 			
@@ -196,7 +196,7 @@ module ns_egret {
 			var thumbH:number = (this.thumb) ? this.thumb.height : 0;
 			var offsetX:number = event.stageX - (thumbW / 2);
 			var offsetY:number = event.stageY - (thumbH / 2);
-			var p:Point = this.track.globalToLocal(new Point(offsetX, offsetY));
+			var p:Point = this.track.globalToLocal(offsetX, offsetY);
 			
 			var newValue:number = this.pointToValue(p.x, p.y);
 			newValue = this.nearestValidValue(newValue, this.snapInterval);
@@ -206,17 +206,13 @@ module ns_egret {
 					if (!this.animator){
 						this.animator = new Animation(this.animationUpdateHandler);
 						this.animator.endFunction = this.animationEndHandler;
-						
-						this.animator.easer = new Sine(0);
 					}
 					if (this.animator.isPlaying)
 						this.stopAnimation();
 					this.slideToValue = newValue;
 					this.animator.duration = this.slideDuration * 
 						(Math.abs(this.pendingValue - this.slideToValue) / (this.maximum - this.minimum));
-					this.animator.motionPaths = new <MotionPath>[
-						new MotionPath("value", this.pendingValue, this.slideToValue)];
-					
+					this.animator.motionPaths = [{p:"value", f:this.pendingValue, t:this.slideToValue}];
 					this.dispatchEvent(new UIEvent(UIEvent.CHANGE_START));
 					this.animator.play();
 				}

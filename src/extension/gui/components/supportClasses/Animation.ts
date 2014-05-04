@@ -85,7 +85,7 @@ module ns_egret {
 			this._repeatDelay = value;
 		}
         /**
-         * 随着时间的推移Animation将设置动画的属性和值的列表。
+         * 随着时间的推移Animation将设置动画的属性和值的列表。对象示例:{p:"x",f:10,t:100}表示，属性名"x"从10改变到100。
          */
 		public motionPaths:Array = [];
 
@@ -293,7 +293,7 @@ module ns_egret {
             var length:number = paths.length;
             for(var i:number=0;i<length;i++){
                 var motion:any = paths[i];
-                this.currentValue[motion.property] = motion.valueFrom+(motion.valueTo-motion.valueFrom)*fraction;
+                this.currentValue[motion.p] = motion.f+(motion.t-motion.f)*fraction;
             }
 		}
 
