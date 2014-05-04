@@ -13,55 +13,13 @@
             user-select: none;
         }
 
-        .finished {
-            text-decoration: line-through
-        }
-
-        .during {
-            color: #FF0000;
-        }
-
     </style>
-
-    <script>
-
-        function onSelectChange(value) {
-            var url = location.href;
-            var index = url.indexOf("?");
-            if (index != -1) {
-                url = url.slice(0, index);
-            }
-            if (url.indexOf(".html") == -1) {
-                url += "index.html";
-            }
-            url += "?test=" + value;
-            location.href = url;
-        }
-    </script>
 
 </head>
 <body>
 <div style="width: 1500px">
     <div style="float: left;width: 200px;">
-        <!--这个select tag需要优化-->
-        <select style="width:200px;font-size:24px;" onChange="onSelectChange(this.value)">
-            <option id="TestBitmap" value="TestBitmap">Bitmap</option>
-            <option id="TestBitmapText" value="TestBitmapText">BitmapText</option>
-            <option id="TestEvent" value="TestEvent">Event</option>
-            <option id="TestText" value="TestText">Text</option>
-            <option id="TestTween" value="TestTween">Tween</option>
-            <option id="TestArmature" value="TestArmature">Armature</option>
-            <option id="TestBox2d" value="TestBox2d">Box2d</option>
-            <option id="TestNet" value="TestNet">Net</option>
-            <option id="TestScrollView" value="TestScrollView">ScrollView</option>
-            <option id="TestTableView" value="TestTableView">TableView</option>
-            <option id="TestProgressBar" value="TestProgressBar">ProgressBar</option>
-            <option id="TestCache" value="TestCache">Cache</option>
-            <option id="TestSpriteFrame" value="TestSpriteFrame">SpriteFrame</option>
-            <option id="TestTicker" value="TestTicker">Ticker</option>
-            <option id="TestTabView" value="TestTabView">TabView</option>
-            <option id="TestDisplayList" value="TestDisplayList">DisplayList</option>
-            <option id="TestMovieClip" value="TestMovieClip">MovieClip</option>
+        <select id="examples_menu" style="width:200px;font-size:24px;" onChange="onSelectChange(this.value)">
         </select>
 
         <textarea style="font-size:20px;height:360px;width:190px;" id="testDescription" disabled="false"></textarea>
@@ -79,6 +37,50 @@
 <script type="text/javascript" src="TestCaseContainer.js"></script>
 
 <script>
+
+    function onSelectChange(value) {
+        var url = location.href;
+        var index = url.indexOf("?");
+        if (index != -1) {
+            url = url.slice(0, index);
+        }
+        if (url.indexOf(".html") == -1) {
+            url += "index.html";
+        }
+        url += "?test=" + value;
+        location.href = url;
+    }
+
+    var list = [
+        "TestBitmap",
+        "TestBitmapText",
+        "TestEvent",
+        "TestText",
+        "TestTween",
+        "TestArmature",
+        "TestBox2d",
+        "TestNet",
+        "TestScrollView",
+        "TestTableView",
+        "TestProgressBar",
+        "TestCache",
+        "TestSpriteFrame",
+        "TestTicker",
+        "TestTabView",
+        "TestDisplayList",
+        "TestShape"
+    ];
+    var menu = document.getElementById("examples_menu");
+    list.forEach(function(item){
+        var option = document.createElement("option");
+        option.setAttribute("id",item);
+        option.setAttribute("value",item);
+        option.innerText = item;
+        menu.appendChild(option);
+    })
+
+
+
     var str = location.search;
     str = str.slice(1, str.length);
     var totalArray = str.split("&");
