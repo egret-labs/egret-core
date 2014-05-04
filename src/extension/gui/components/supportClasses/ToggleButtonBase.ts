@@ -64,7 +64,7 @@ module ns_egret {
 			if(!this.autoSelected||!this.enabled)
 				return;
 			this.selected = !this.selected;
-			this.dispatchEvent(new Event(Event.CHANGE));
+			this.dispatchEventWith(Event.CHANGE);
 		}
 	}
 	

@@ -197,15 +197,26 @@ module ns_egret {
 			this.dispatchCoEvent(CollectionEventKind.MOVE,newIndex,oldIndex,[item]);
 			return item;
 		}
-		
+
+        private static coEventRecycler:Recycler = new Recycler();
 		/**
 		 * 抛出事件
 		 */		
 		private dispatchCoEvent(kind:string = null, location:number = -1,
 										 oldLocation:number = -1, items:Array = null,oldItems:Array=null):void{
-			var event:CollectionEvent = new CollectionEvent(CollectionEvent.COLLECTION_CHANGE,false,false,
-				kind,location,oldLocation,items,oldItems);
-			this.dispatchEvent(event);
+
+            var recycler:Recycler = ArrayCollection.coEventRecycler;
+            var event:CollectionEvent = recycler.pop();
+            if(!event){
+                event = new CollectionEvent(CollectionEvent.COLLECTION_CHANGE);
+            }
+            event.kind = kind;
+            event.location = location;
+            event.oldLocation = oldLocation;
+            event.items = items;
+            event.oldItems = oldItems;
+            this.dispatchEvent(event);
+            recycler.push(event);
 		}
 	}
 }
