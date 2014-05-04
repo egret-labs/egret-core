@@ -80,7 +80,7 @@ module ns_egret {
          */
         public stroke:number = 0;
         /**
-         * 文本水平对齐方式,使用TextAlign定义的常量，默认值TextAlign.LEFT。
+         * 文本水平对齐方式,使用HorizontalAlign定义的常量，默认值HorizontalAlign.LEFT。
          * @stable B API名称可能修改
          */
         public textAlign:string;

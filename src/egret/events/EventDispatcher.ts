@@ -16,12 +16,11 @@
  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-/// <reference path="../../jslib/DEBUG.d.ts"/>
-
 /// <reference path="../core/HashObject.ts"/>
 /// <reference path="Event.ts"/>
 /// <reference path="IEventDispatcher.ts"/>
 /// <reference path="../utils/Recycler.ts"/>
+/// <reference path="../../jslib/DEBUG.d.ts"/>
 
 module ns_egret {
     /**

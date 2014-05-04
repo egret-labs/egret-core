@@ -17,11 +17,8 @@
  */
 
 module ns_egret {
-    /**
-     * 为 TextField 类的 textAlign 属性定义值。这些值描述了文本的水平对齐方式。
-     */
-    export class TextAlign{
 
+	export class HorizontalAlign{
         /**
          * 左对齐
          */
@@ -36,5 +33,17 @@ module ns_egret {
          * 水平居中对齐
          */
         public static CENTER:String = "center";
-    }
+
+		/**
+		 * 水平两端对齐
+		 */
+		public static JUSTIFY:string = "justify";
+
+		/**
+		 * 相对于容器对子项进行内容对齐。这会将所有子项的大小统一调整为容器的"内容宽度"。
+		 * 容器的"内容宽度"是最大子项的大小,如果所有子项都小于容器的宽度，则会将所有子项的大小调整为容器的宽度。
+         * 注意：TextFiled不支持此对齐方式。
+		 */
+		public static CONTENT_JUSTIFY:string = "contentJustify";
+	}
 }

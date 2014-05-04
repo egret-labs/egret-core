@@ -17,7 +17,7 @@
  */
 
 declare module ns_egret {
-    class DEBUG {
+    export class DEBUG {
         /**
          * drawImage时检测传入参数
          */
