@@ -166,8 +166,8 @@ module dragonBones {
                 var bitmap1:ns_egret.Bitmap = ns_egret.Bitmap.initWithTexture(textureAtlas.texture);
                 var frame = textureAtlas.spriteSheet.getFrame(fullName);
                 bitmap1.spriteFrame = frame;
-                bitmap1.pivotOffsetX = pivotX;
-                bitmap1.pivotOffsetY = pivotY;
+                bitmap1.anchorOffsetX = pivotX;
+                bitmap1.anchorOffsetY = pivotY;
                 return bitmap1;
             }
         }

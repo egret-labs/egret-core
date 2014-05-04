@@ -133,8 +133,8 @@ module ns_egret {
                 anchorY = h * this.anchorY;
             }
             else {
-                anchorX = this.pivotOffsetX;
-                anchorY = this.pivotOffsetY;
+                anchorX = this.anchorOffsetX;
+                anchorY = this.anchorOffsetY;
             }
             return Rectangle.identity.initialize(-anchorX, -anchorY, w, h);
         }

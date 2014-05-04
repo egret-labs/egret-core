@@ -152,13 +152,13 @@ module ns_egret {
          * @member {number} ns_egret.DisplayObject#anchorPointX
          * @default 0
          */
-        private _pivotOffsetX:number = 0;
+        private _anchorOffsetX:number = 0;
 
         /**
          * @deprecated
          */
         public get anchorPointX():number {
-            return this._pivotOffsetX;
+            return this._anchorOffsetX;
         }
 
         /**
@@ -166,17 +166,17 @@ module ns_egret {
          */
         public set anchorPointX(value:number) {
             if (NumberUtils.isNumber(value)) {
-                this._pivotOffsetX = value;
+                this._anchorOffsetX = value;
             }
         }
 
-        public get pivotOffsetX():number {
-            return this._pivotOffsetX;
+        public get anchorOffsetX():number {
+            return this._anchorOffsetX;
         }
 
-        public set pivotOffsetX(value:number) {
+        public set anchorOffsetX(value:number) {
             if (NumberUtils.isNumber(value)) {
-                this._pivotOffsetX = value;
+                this._anchorOffsetX = value;
             }
         }
 
@@ -185,13 +185,13 @@ module ns_egret {
          * @member {number} ns_egret.DisplayObject#anchorPointY
          * @default 0
          */
-        private _pivotOffsetY:number = 0;
+        private _anchorOffsetY:number = 0;
 
         /**
          * @deprecated
          */
         public get anchorPointY():number {
-            return this._pivotOffsetY;
+            return this._anchorOffsetY;
         }
 
         /**
@@ -199,17 +199,17 @@ module ns_egret {
          */
         public set anchorPointY(value:number) {
             if (NumberUtils.isNumber(value)) {
-                this._pivotOffsetY = value;
+                this._anchorOffsetY = value;
             }
         }
 
-        public get pivotOffsetY():number {
-            return this._pivotOffsetY;
+        public get anchorOffsetY():number {
+            return this._anchorOffsetY;
         }
 
-        public set pivotOffsetY(value:number) {
+        public set anchorOffsetY(value:number) {
             if (NumberUtils.isNumber(value)) {
-                this._pivotOffsetY = value;
+                this._anchorOffsetY = value;
             }
         }
 
@@ -532,8 +532,8 @@ module ns_egret {
                 anchorY = bounds.height * o.anchorY;
             }
             else {
-                anchorX = o.pivotOffsetX;
-                anchorY = o.pivotOffsetY;
+                anchorX = o.anchorOffsetX;
+                anchorY = o.anchorOffsetY;
             }
             o.worldTransform.appendTransform(o.x, o.y, o.scaleX, o.scaleY, o.rotation,
                 o.skewX, o.skewY, anchorX, anchorY);
@@ -570,8 +570,8 @@ module ns_egret {
                 anchorY = h * this.anchorY;
             }
             else {
-                anchorX = this.pivotOffsetX;
-                anchorY = this.pivotOffsetY;
+                anchorX = this.anchorOffsetX;
+                anchorY = this.anchorOffsetY;
             }
             return Rectangle.identity.initialize(x - anchorX, y - anchorY, w, h);
         }
@@ -592,7 +592,7 @@ module ns_egret {
                         bounds.width * o.anchorX, bounds.height * o.anchorY);
                 }
                 else {
-                    matrix.prependTransform(o.x, o.y, o.scaleX, o.scaleY, o.rotation, o.skewX, o.skewY, o.pivotOffsetX, o.pivotOffsetY);
+                    matrix.prependTransform(o.x, o.y, o.scaleX, o.scaleY, o.rotation, o.skewX, o.skewY, o.anchorOffsetX, o.anchorOffsetY);
                 }
                 o = o.parent;
             }
@@ -677,8 +677,8 @@ module ns_egret {
 
         public getOffsetPoint() {
             var o = this;
-            var regX = o.pivotOffsetX;
-            var regY = o.pivotOffsetY;
+            var regX = o.anchorOffsetX;
+            var regY = o.anchorOffsetY;
             if (o.anchorX != 0 || o.anchorY != 0) {
                 var bounds = o.getBounds();
                 regX = o.anchorX * bounds.width;
