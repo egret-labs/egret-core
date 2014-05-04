@@ -16,11 +16,13 @@
  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+/// <reference path="../core/HashObject.ts"/>
+
 module ns_egret {
     /**
      * 对象缓存复用工具类，可用于构建对象池，一段时间后会自动回收对象。
      */
-    export class Recycler extends ns_egret.HashObject{
+    export class Recycler extends HashObject{
 
         public constructor(autoDisposeTime:number = 300){
             super();

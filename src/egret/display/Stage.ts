@@ -16,9 +16,9 @@
  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-/// <reference path="../core/StageDelegate.ts"/>
 /// <reference path="DisplayObject.ts"/>
 /// <reference path="DisplayObjectContainer.ts"/>
+/// <reference path="../events/Event.ts"/>
 /// <reference path="../geom/Matrix.ts"/>
 /// <reference path="../geom/Rectangle.ts"/>
 

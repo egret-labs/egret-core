@@ -17,10 +17,11 @@
  */
 
 /// <reference path="../../jslib/DEBUG.d.ts"/>
+
 /// <reference path="../core/HashObject.ts"/>
-/// <reference path="../utils/Recycler.ts"/>
 /// <reference path="Event.ts"/>
 /// <reference path="IEventDispatcher.ts"/>
+/// <reference path="../utils/Recycler.ts"/>
 
 module ns_egret {
     /**

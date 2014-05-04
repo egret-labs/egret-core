@@ -16,6 +16,7 @@
  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+/// <reference path="../core/HashObject.ts"/>
 /// <reference path="../core/MainContext.ts"/>
 
 module ns_egret{
@@ -23,7 +24,7 @@ module ns_egret{
      * 这个类是HTML5的WebWrapper的第一个版本
      * @stable C 目前只是实现需求，大部分API需要考虑重新设计
      */
-    export class Browser extends ns_egret.HashObject{
+    export class Browser extends HashObject{
 
         private static instance:Browser;
         private pfx:string;

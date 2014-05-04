@@ -16,6 +16,7 @@
  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+/// <reference path="../core/HashObject.ts"/>
 /// <reference path="../core/Logger.ts"/>
 
 module ns_egret{
@@ -26,7 +27,7 @@ module ns_egret{
      * 同时，SpriteSheet可以很方便的进行素材整合，降低HTTP请求数量
      * todo: GitHub egret的SpriteSheet
      */
-    export class SpriteSheet extends ns_egret.HashObject{
+    export class SpriteSheet extends HashObject{
 
         private frames:Object;
         public constructor(data) {

@@ -16,10 +16,11 @@
  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+/// <reference path="../core/HashObject.ts"/>
 /// <reference path="../core/Logger.ts"/>
 
 module ns_egret{
-    export class SAXParser extends ns_egret.HashObject{
+    export class SAXParser extends HashObject{
         static _instance:SAXParser = null;
 
         static getInstance() {
@@ -29,9 +30,9 @@ module ns_egret{
             return SAXParser._instance;
         }
 
-        private _parser = null;
-        private _xmlDict = null;
-        private _isSupportDOMParser = null;
+        private _parser:any = null;
+        private _xmlDict:any = null;
+        private _isSupportDOMParser:any = null;
 
         public constructor() {
             super();
@@ -102,7 +103,7 @@ module ns_egret{
         }
 
         private parseNode(node) {
-            var data = null;
+            var data:any = null;
             switch (node.tagName) {
                 case 'dict':
                     data = this.parseDict(node);

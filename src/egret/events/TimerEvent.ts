@@ -16,8 +16,10 @@
  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-/// <reference path="Event.ts"/>
 /** @namespace ns_egret */
+
+/// <reference path="Event.ts"/>
+
 module ns_egret {
 
     export class TimerEvent extends Event{

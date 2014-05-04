@@ -16,12 +16,13 @@
  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+/// <reference path="../../core/HashObject.ts"/>
 /// <reference path="../../core/StageDelegate.ts"/>
 /// <reference path="../../utils/FrameworkUtils.ts"/>
 
 module ns_egret {
 
-    export class StageText extends ns_egret.HashObject{
+    export class StageText extends HashObject{
 
         private div:HTMLDivElement;
         private inputElement:HTMLInputElement;

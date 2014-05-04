@@ -18,6 +18,7 @@
  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+/// <reference path="../core/HashObject.ts"/>
 /// <reference path="../core/MainContext.ts"/>
 /// <reference path="../core/StageDelegate.ts"/>
 /// <reference path="../display/DisplayObject.ts"/>
@@ -30,7 +31,7 @@ module ns_egret {
      * @class ns_egret.TouchContext
      * @classdesc TouchContext是egret的触摸Context
      */
-    export class TouchContext extends ns_egret.HashObject{
+    export class TouchContext extends HashObject{
         private _currentTouchTarget:any = {};
         public maxTouches:number = 2;
 

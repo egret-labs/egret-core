@@ -16,6 +16,7 @@
  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+/// <reference path="HashObject.ts"/>
 /// <reference path="Logger.ts"/>
 /// <reference path="MainContext.ts"/>
 /// <reference path="../geom/Matrix.ts"/>
@@ -23,7 +24,7 @@
 /// <reference path="../texture/Texture.ts"/>
 
 module ns_egret {
-    export class RenderFilter extends ns_egret.HashObject{
+    export class RenderFilter extends HashObject{
         /**
          * @class ns_egret.RenderFilter
          */

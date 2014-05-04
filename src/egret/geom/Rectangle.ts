@@ -16,12 +16,14 @@
  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+/// <reference path="../core/HashObject.ts"/>
+
 module ns_egret {
 
     /**
      * 矩形类
      */
-    export class Rectangle extends ns_egret.HashObject{
+    export class Rectangle extends HashObject{
 
         constructor(x:number=0,y:number=0,width:number=0,height=0) {
             super();

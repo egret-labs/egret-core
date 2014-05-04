@@ -16,12 +16,13 @@
  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+/// <reference path="../../core/HashObject.ts"/>
 /// <reference path="../../core/Ticker.ts"/>
 
 module ns_egret {
 
 
-    export class HTML5DeviceContext extends ns_egret.HashObject{
+    export class HTML5DeviceContext extends HashObject{
 
         public constructor(){
             super();

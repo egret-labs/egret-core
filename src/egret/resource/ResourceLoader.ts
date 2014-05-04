@@ -20,8 +20,6 @@
 /// <reference path="../core/MainContext.ts"/>
 /// <reference path="../core/Ticker.ts"/>
 /// <reference path="../events/EventDispatcher.ts"/>
-/// <reference path="../texture/Texture.ts"/>
-/// <reference path="../texture/TextureCache.ts"/>
 
 module ns_egret {
     /**

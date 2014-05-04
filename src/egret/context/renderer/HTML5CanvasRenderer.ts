@@ -16,13 +16,13 @@
  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+/// <reference path="../../../jslib/DEBUG.d.ts"/>
+
 /// <reference path="RendererContext.ts"/>
 /// <reference path="../../core/MainContext.ts"/>
 /// <reference path="../../core/RenderFilter.ts"/>
 /// <reference path="../../core/Ticker.ts"/>
-/// <reference path="../../../jslib/DEBUG.d.ts"/>
 /// <reference path="../../geom/Matrix.ts"/>
-/// <reference path="../../geom/Rectangle.ts"/>
 /// <reference path="../../text/TextField.ts"/>
 /// <reference path="../../texture/Texture.ts"/>
 

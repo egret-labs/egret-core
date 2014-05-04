@@ -16,12 +16,16 @@
  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-/// <reference path="../../egret/display/DisplayObjectContainer.ts"/>
-/// <reference path="TMXTileMap.ts"/>
-/// <reference path="TMXConst.ts"/>
 /// <reference path="../../egret/core/Logger.ts"/>
 /// <reference path="../../egret/display/Bitmap.ts"/>
+/// <reference path="../../egret/display/DisplayObjectContainer.ts"/>
+/// <reference path="../../egret/display/SpriteSheet.ts"/>
+/// <reference path="../../egret/geom/Point.ts"/>
+/// <reference path="../../egret/texture/Texture.ts"/>
 /// <reference path="../../egret/texture/TextureCache.ts"/>
+/// <reference path="TMXConst.ts"/>
+/// <reference path="TMXMapInfo.ts"/>
+
 module ns_egret {
     export class TMXLayer extends DisplayObjectContainer {
         private _texture:Texture = null;
