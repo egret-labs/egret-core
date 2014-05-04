@@ -20,12 +20,13 @@
 /// <reference path="../../../../egret/display/DisplayObjectContainer.ts"/>
 /// <reference path="../../../../egret/events/Event.ts"/>
 /// <reference path="../../../../egret/events/EventDispatcher.ts"/>
-/// <reference path="../../core/UIGlobals.ts"/>
 /// <reference path="../../core/IContainer.ts"/>
 /// <reference path="../../core/IInvalidating.ts"/>
 /// <reference path="../../core/IUIComponent.ts"/>
 /// <reference path="../../core/IVisualElement.ts"/>
 /// <reference path="../../core/IVisualElementContainer.ts"/>
+/// <reference path="../../core/UIComponent.ts"/>
+/// <reference path="../../core/UIGlobals.ts"/>
 /// <reference path="../IPopUpManager.ts"/>
 /// <reference path="../ISystemManager.ts"/>
 
@@ -256,4 +257,3 @@ module ns_egret {
         public modal:boolean;
     }
 }
-

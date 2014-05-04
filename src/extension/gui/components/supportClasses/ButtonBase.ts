@@ -16,19 +16,18 @@
  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+/// <reference path="../../../../egret/core/VerticalAlign.ts"/>
 /// <reference path="../../../../egret/display/DisplayObject.ts"/>
 /// <reference path="../../../../egret/events/Event.ts"/>
 /// <reference path="../../../../egret/events/TimerEvent.ts"/>
 /// <reference path="../../../../egret/events/TouchEvent.ts"/>
 /// <reference path="../../../../egret/interactive/InteractionMode.ts"/>
-/// <reference path="../../../../egret/text/TextAlign.ts"/>
 /// <reference path="../../../../egret/utils/Timer.ts"/>
 /// <reference path="../Label.ts"/>
 /// <reference path="../SkinnableComponent.ts"/>
 /// <reference path="../../core/IDisplayText.ts"/>
 /// <reference path="../../core/UIGlobals.ts"/>
 /// <reference path="../../events/UIEvent.ts"/>
-/// <reference path="../../layouts/VerticalAlign.ts"/>
 
 module ns_egret {
 

@@ -16,11 +16,10 @@
  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-/// <reference path="../../../../egret/text/TextAlign.ts"/>
+/// <reference path="../../../../egret/core/VerticalAlign.ts"/>
 /// <reference path="../../../../egret/text/TextField.ts"/>
 /// <reference path="../../core/IDisplayText.ts"/>
 /// <reference path="../../core/UIComponent.ts"/>
-/// <reference path="../../layouts/VerticalAlign.ts"/>
 
 module ns_egret {
 

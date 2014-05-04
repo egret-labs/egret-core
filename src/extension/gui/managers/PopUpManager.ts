@@ -19,6 +19,7 @@
 /// <reference path="../../../egret/core/Injector.ts"/>
 /// <reference path="../core/IVisualElement.ts"/>
 /// <reference path="../events/PopUpEvent.ts"/>
+/// <reference path="IPopUpManager.ts"/>
 /// <reference path="impl/PopUpManagerImpl.ts"/>
 
 module ns_egret {

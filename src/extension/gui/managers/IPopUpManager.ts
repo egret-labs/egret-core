@@ -18,7 +18,6 @@
 
 /// <reference path="../../../egret/events/IEventDispatcher.ts"/>
 /// <reference path="../core/IVisualElement.ts"/>
-/// <reference path="ISystemManager.ts"/>
 
 module ns_egret {
 

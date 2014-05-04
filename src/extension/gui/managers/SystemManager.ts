@@ -17,15 +17,14 @@
  */
 
 /// <reference path="../../../egret/events/Event.ts"/>
-/// <reference path="../../../egret/events/EventPhase.ts"/>
-/// <reference path="../../../egret/events/TouchEvent.ts"/>
 /// <reference path="../components/Group.ts"/>
-/// <reference path="../core/UIGlobals.ts"/>
 /// <reference path="../core/IContainer.ts"/>
 /// <reference path="../core/IVisualElement.ts"/>
-/// <reference path="../core/IVisualElementContainer.ts"/>
+/// <reference path="../core/UIGlobals.ts"/>
 /// <reference path="../layouts/BasicLayout.ts"/>
 /// <reference path="../layouts/supportClasses/LayoutBase.ts"/>
+/// <reference path="ISystemManager.ts"/>
+/// <reference path="SystemContainer.ts"/>
 
 module ns_egret {
 
