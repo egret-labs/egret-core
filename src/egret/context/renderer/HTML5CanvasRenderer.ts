@@ -159,7 +159,7 @@ module ns_egret {
             renderContext.strokeStyle = strokeColor;
             if (outline) {
                 renderContext.lineWidth = outline * 2;
-                renderContext.strokeText(text, x, y, maxWidth || 0xFFFF);
+                renderContext.strokeText(text, x + this._transformTx, y + this._transformTy, maxWidth || 0xFFFF);
             }
             renderContext.fillText(text, x + this._transformTx, y + this._transformTy, maxWidth || 0xFFFF);
             super.drawText(textField,text, x, y, maxWidth);

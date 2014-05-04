@@ -27,6 +27,7 @@
 /// <reference path="../geom/Point.ts"/>
 /// <reference path="../geom/Rectangle.ts"/>
 /// <reference path="../texture/Texture.ts"/>
+/// <reference path="../../jslib/NumberUtils.ts"/>
 
 module ns_egret {
     /**
@@ -49,6 +50,12 @@ module ns_egret {
      * getBounds();
      */
     export class DisplayObject extends EventDispatcher implements RenderData {
+
+        public constructor(){
+            super();
+            this.worldTransform = new ns_egret.Matrix();
+            this.worldBounds = new ns_egret.Rectangle(0, 0, 0, 0);
+        }
 
         public name:string;
 
@@ -73,7 +80,7 @@ module ns_egret {
             this._parent = parent;
         }
 
-        public _x:number;
+        public _x:number = 0;
 
         /**
          * 表示 DisplayObject 实例相对于父级 DisplayObjectContainer 本地坐标的 x 坐标。
@@ -84,11 +91,13 @@ module ns_egret {
         }
 
         public set x(value:number) {
-            this._x = value;
+            if (NumberUtils.isNumber(value)) {
+                this._x = value;
+            }
         }
 
 
-        public _y:number;
+        public _y:number = 0;
 
         /**
          * 表示 DisplayObject 实例相对于父级 DisplayObjectContainer 本地坐标的 y 坐标。
@@ -99,7 +108,9 @@ module ns_egret {
         }
 
         public set y(value:number) {
-            this._y = value;
+            if (NumberUtils.isNumber(value)) {
+                this._y = value;
+            }
         }
 
         /**
@@ -114,7 +125,9 @@ module ns_egret {
         }
 
         public set scaleX(value:number) {
-            this._scaleX = value;
+            if (NumberUtils.isNumber(value)) {
+                this._scaleX = value;
+            }
         }
 
         /**
@@ -129,48 +142,214 @@ module ns_egret {
         }
 
         public set scaleY(value:number) {
-            this._scaleY = value;
+            if (NumberUtils.isNumber(value)) {
+                this._scaleY = value;
+            }
         }
 
-        public anchorPointX:number = 0;
+        /**
+         * 表示从对象绝对锚点X。
+         * @member {number} ns_egret.DisplayObject#anchorPointX
+         * @default 0
+         */
+        private _pivotOffsetX:number = 0;
 
-        public anchorPointY:number = 0;
+        /**
+         * @deprecated
+         */
+        public get anchorPointX():number {
+            return this._pivotOffsetX;
+        }
 
-        public relativeAnchorPointX:number = 0;
+        /**
+         * @deprecated
+         */
+        public set anchorPointX(value:number) {
+            if (NumberUtils.isNumber(value)) {
+                this._pivotOffsetX = value;
+            }
+        }
 
-        public relativeAnchorPointY:number = 0;
+        public get pivotOffsetX():number {
+            return this._pivotOffsetX;
+        }
+
+        public set pivotOffsetX(value:number) {
+            if (NumberUtils.isNumber(value)) {
+                this._pivotOffsetX = value;
+            }
+        }
+
+        /**
+         * 表示从对象绝对锚点Y。
+         * @member {number} ns_egret.DisplayObject#anchorPointY
+         * @default 0
+         */
+        private _pivotOffsetY:number = 0;
+
+        /**
+         * @deprecated
+         */
+        public get anchorPointY():number {
+            return this._pivotOffsetY;
+        }
+
+        /**
+         * @deprecated
+         */
+        public set anchorPointY(value:number) {
+            if (NumberUtils.isNumber(value)) {
+                this._pivotOffsetY = value;
+            }
+        }
+
+        public get pivotOffsetY():number {
+            return this._pivotOffsetY;
+        }
+
+        public set pivotOffsetY(value:number) {
+            if (NumberUtils.isNumber(value)) {
+                this._pivotOffsetY = value;
+            }
+        }
+
+        /**
+         * 表示从对象相对锚点X。
+         * @member {number} ns_egret.DisplayObject#anchorX
+         * @default 0
+         */
+        private _anchorX:number = 0;
+
+        /**
+         * @deprecated
+         */
+        public get relativeAnchorPointX():number {
+            return this._anchorX;
+        }
+
+        /**
+         * @deprecated
+         */
+        public set relativeAnchorPointX(value:number) {
+            if (NumberUtils.isNumber(value)) {
+                this._anchorX = value;
+            }
+        }
+
+        public get anchorX():number {
+            return this._anchorX;
+        }
+
+        public set anchorX(value:number) {
+            if (NumberUtils.isNumber(value)) {
+                this._anchorX = value;
+            }
+        }
+
+        /**
+         * 表示从对象相对锚点Y。
+         * @member {number} ns_egret.DisplayObject#anchorY
+         * @default 0
+         */
+        private _anchorY:number = 0;
+
+        /**
+         * @deprecated
+         */
+        public get relativeAnchorPointY():number {
+            return this._anchorY;
+        }
+
+        /**
+         * @deprecated
+         */
+        public set relativeAnchorPointY(value:number) {
+            if (NumberUtils.isNumber(value)) {
+                this._anchorY = value;
+            }
+        }
+
+        public get anchorY():number {
+            return this._anchorY;
+        }
+
+        public set anchorY(value:number) {
+            if (NumberUtils.isNumber(value)) {
+                this._anchorY = value;
+            }
+        }
 
         /**
          * 显示对象是否可见。
          * @member {boolean} ns_egret.DisplayObject#x
          */
-        public visible:boolean;
+        public visible:boolean = true;
         /**
          * 表示 DisplayObject 实例距其原始方向的旋转程度，以度为单位
          * @member {number} ns_egret.DisplayObject#rotation
          * @default 0
          */
-        public rotation:number = 0;
+        private _rotation:number = 0;
+
+        public get rotation():number {
+            return this._rotation;
+        }
+
+        public set rotation(value:number) {
+            if (NumberUtils.isNumber(value)) {
+                this._rotation = value;
+            }
+        }
         /**
          * 表示指定对象的 Alpha 透明度值
          * @member {number} ns_egret.DisplayObject#alpha
          *  @default 1
          */
-        public alpha:number = 1;
+        private _alpha:number = 1;
+
+        public get alpha():number {
+            return this._alpha;
+        }
+
+        public set alpha(value:number) {
+            if (NumberUtils.isNumber(value)) {
+                this._alpha = value;
+            }
+        }
 
         /**
          * 表示DisplayObject的x方向斜切
          * @member {number} ns_egret.DisplayObject#skewX
          * @default 0
          */
-        public skewX:number = 0;
+        private _skewX:number = 0;
+
+        public get skewX():number {
+            return this._skewX;
+        }
+
+        public set skewX(value:number) {
+            if (NumberUtils.isNumber(value)) {
+                this._skewX = value;
+            }
+        }
 
         /**
          * 表示DisplayObject的y方向斜切
          * @member {number} ns_egret.DisplayObject#skewY
          * @default 0
          */
-        public skewY:number = 0;
+        private _skewY:number = 0;
+
+        public get skewY():number {
+            return this._skewY;
+        }
+
+        public set skewY(value:number) {
+            if (NumberUtils.isNumber(value)) {
+                this._skewY = value;
+            }
+        }
 
         public _touchEnabled:boolean;
         /**
@@ -178,10 +357,11 @@ module ns_egret {
          * @member {boolean} ns_egret.DisplayObject#touchEnabled
          * @default true
          */
-        public get touchEnabled():boolean{
+        public get touchEnabled():boolean {
             return this._touchEnabled;
         }
-        public set touchEnabled(value:boolean){
+
+        public set touchEnabled(value:boolean) {
             this._touchEnabled = value;
         }
 
@@ -191,10 +371,11 @@ module ns_egret {
         /**
          * 显示对象的滚动矩形范围。显示对象被裁切为矩形定义的大小，当您更改 scrollRect 对象的 x 和 y 属性时，它会在矩形内滚动。
          */
-        public get scrollRect():Rectangle{
+        public get scrollRect():Rectangle {
             return this._scrollRect;
         }
-        public set scrollRect(value:Rectangle){
+
+        public set scrollRect(value:Rectangle) {
             this._scrollRect = value;
         }
 
@@ -273,17 +454,8 @@ module ns_egret {
 
         public worldTransform:ns_egret.Matrix;
         public worldBounds:ns_egret.Rectangle;
-        public worldAlpha:number;
+        public worldAlpha:number = 1;
 
-
-        constructor() {
-            super();
-            this.x = this.y = 0;
-            this.visible = true;
-            this.worldTransform = new ns_egret.Matrix();
-            this.worldBounds = new ns_egret.Rectangle(0, 0, 0, 0);
-            this.worldAlpha = 1;
-        }
 
         /**
          * @private
@@ -354,14 +526,14 @@ module ns_egret {
             o.worldTransform.identity();
             o.worldTransform = o.worldTransform.appendMatrix(o.parent.worldTransform);
             var anchorX, anchorY;
-            if (o.relativeAnchorPointX != 0 || o.relativeAnchorPointY != 0) {
+            if (o.anchorX != 0 || o.anchorY != 0) {
                 var bounds = o.getBounds();
-                anchorX = bounds.width * o.relativeAnchorPointX;
-                anchorY = bounds.height * o.relativeAnchorPointY;
+                anchorX = bounds.width * o.anchorX;
+                anchorY = bounds.height * o.anchorY;
             }
             else {
-                anchorX = o.anchorPointX;
-                anchorY = o.anchorPointY;
+                anchorX = o.pivotOffsetX;
+                anchorY = o.pivotOffsetY;
             }
             o.worldTransform.appendTransform(o.x, o.y, o.scaleX, o.scaleY, o.rotation,
                 o.skewX, o.skewY, anchorX, anchorY);
@@ -393,13 +565,13 @@ module ns_egret {
             var x:number = rect.x;
             var y:number = rect.y;
             var anchorX, anchorY;
-            if (this.relativeAnchorPointX != 0 || this.relativeAnchorPointY != 0) {
-                anchorX = w * this.relativeAnchorPointX;
-                anchorY = h * this.relativeAnchorPointY;
+            if (this.anchorX != 0 || this.anchorY != 0) {
+                anchorX = w * this.anchorX;
+                anchorY = h * this.anchorY;
             }
             else {
-                anchorX = this.anchorPointX;
-                anchorY = this.anchorPointY;
+                anchorX = this.pivotOffsetX;
+                anchorY = this.pivotOffsetY;
             }
             return Rectangle.identity.initialize(x - anchorX, y - anchorY, w, h);
         }
@@ -409,17 +581,18 @@ module ns_egret {
          * @returns {Matrix}
          */
         private static identityMatrixForGetConcatenated = new Matrix();
+
         public getConcatenatedMatrix() {
             var matrix = DisplayObject.identityMatrixForGetConcatenated.identity();
             var o = this;
             while (o != null) {
-                if (o.relativeAnchorPointX != 0 || o.relativeAnchorPointY != 0) {
+                if (o.anchorX != 0 || o.anchorY != 0) {
                     var bounds = o.getBounds();
                     matrix.prependTransform(o.x, o.y, o.scaleX, o.scaleY, o.rotation, o.skewX, o.skewY,
-                        bounds.width * o.relativeAnchorPointX, bounds.height * o.relativeAnchorPointY);
+                        bounds.width * o.anchorX, bounds.height * o.anchorY);
                 }
                 else {
-                    matrix.prependTransform(o.x, o.y, o.scaleX, o.scaleY, o.rotation, o.skewX, o.skewY, o.anchorPointX, o.anchorPointY);
+                    matrix.prependTransform(o.x, o.y, o.scaleX, o.scaleY, o.rotation, o.skewX, o.skewY, o.pivotOffsetX, o.pivotOffsetY);
                 }
                 o = o.parent;
             }
@@ -502,19 +675,14 @@ module ns_egret {
             return ns_egret.Rectangle.identity.initialize(0, 0, 0, 0);
         }
 
-        public setAnchorPoint(x:number, y:number) {
-            this.anchorPointX = x;
-            this.anchorPointY = y;
-        }
-
         public getOffsetPoint() {
             var o = this;
-            var regX = o.anchorPointX;
-            var regY = o.anchorPointY;
-            if (o.relativeAnchorPointX != 0 || o.relativeAnchorPointY != 0) {
+            var regX = o.pivotOffsetX;
+            var regY = o.pivotOffsetY;
+            if (o.anchorX != 0 || o.anchorY != 0) {
                 var bounds = o.getBounds();
-                regX = o.relativeAnchorPointX * bounds.width;
-                regY = o.relativeAnchorPointY * bounds.height;
+                regX = o.anchorX * bounds.width;
+                regY = o.anchorY * bounds.height;
             }
             var result = Point.identity;
             result.x = regX;

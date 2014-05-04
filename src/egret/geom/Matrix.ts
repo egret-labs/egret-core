@@ -182,16 +182,16 @@ module ns_egret {
         public appendTransformFromDisplay(target:ns_egret.DisplayObject) {
             var o = target;
             var anchorX,anchorY;
-            if(o.relativeAnchorPointX != 0 || o.relativeAnchorPointY != 0)
+            if(o.anchorX != 0 || o.anchorY != 0)
             {
                 var bounds = o.getBounds();
-                anchorX = bounds.width * o.relativeAnchorPointX;
-                anchorY = bounds.height * o.relativeAnchorPointY;
+                anchorX = bounds.width * o.anchorX;
+                anchorY = bounds.height * o.anchorY;
             }
             else
             {
-                anchorX = o.anchorPointX;
-                anchorY = o.anchorPointY;
+                anchorX = o.pivotOffsetX;
+                anchorY = o.pivotOffsetY;
             }
             this.identity();
             this.appendTransform(o.x, o.y, o.scaleX, o.scaleY, o.rotation,
