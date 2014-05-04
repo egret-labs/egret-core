@@ -18,7 +18,6 @@ var temp = [
     "egret/geom/Point.js",
     "egret/geom/Rectangle.js",
     "egret/core/Logger.js",
-    "egret/core/Constant.js",
     "egret/core/StageDelegate.js",
     "egret/core/RenderFilter.js",
     "egret/display/DisplayObject.js",
@@ -66,6 +65,7 @@ var temp = [
     "extension/tilemap/TMXConst.js",
     "extension/tilemap/TMXMapInfo.js",
     //tileMap end
+    "extension/gui/component/Constant.js",
     "extension/gui/component/TabView.js",
     "extension/gui/component/SimpleButton.js",
     "extension/gui/component/ScrollView.js",
