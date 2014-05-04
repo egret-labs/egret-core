@@ -42,7 +42,7 @@ module ns_egret {
 		 */		
 		private onAddToStage(event:Event=null):void{
             if(UIGlobals._systemManager){
-                throw new Error("只能有一个SystemManager实例在显示列表中！");
+                throw new Error("SystemManager是GUI根容器，只能有一个此实例在显示列表中！");
                 return;
             }
             UIGlobals._systemManager = this;

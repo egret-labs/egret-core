@@ -291,43 +291,43 @@ module ns_egret {
 		
 		private static errorStr:string = "在此组件中不可用，若此组件为容器类，请使用";
 		/**
-		 * @copy org.flexlite.domUI.components.Group#addChild()
+         * @deprecated
 		 */		
 		public addChild(child:DisplayObject):DisplayObject{
 			throw(new Error("addChild()"+UIAsset.errorStr+"addElement()代替"));
 		}
 		/**
-		 * @copy org.flexlite.domUI.components.Group#addChildAt()
+		 * @deprecated
 		 */		
 		public addChildAt(child:DisplayObject, index:number):DisplayObject{
 			throw(new Error("addChildAt()"+UIAsset.errorStr+"addElementAt()代替"));
 		}
 		/**
-		 * @copy org.flexlite.domUI.components.Group#removeChild()
+		 * @deprecated
 		 */		
 		public removeChild(child:DisplayObject):DisplayObject{
 			throw(new Error("removeChild()"+UIAsset.errorStr+"removeElement()代替"));
 		}
 		/**
-		 * @copy org.flexlite.domUI.components.Group#removeChildAt()
+		 * @deprecated
 		 */		
 		public removeChildAt(index:number):DisplayObject{
 			throw(new Error("removeChildAt()"+UIAsset.errorStr+"removeElementAt()代替"));
 		}
 		/**
-		 * @copy org.flexlite.domUI.components.Group#setChildIndex()
+		 * @deprecated
 		 */		
 		public setChildIndex(child:DisplayObject, index:number):void{
 			throw(new Error("setChildIndex()"+UIAsset.errorStr+"setElementIndex()代替"));
 		}
 		/**
-		 * @copy org.flexlite.domUI.components.Group#swapChildren()
+		 * @deprecated
 		 */		
 		public swapChildren(child1:DisplayObject, child2:DisplayObject):void{
 			throw(new Error("swapChildren()"+UIAsset.errorStr+"swapElements()代替"));
 		}
 		/**
-		 * @copy org.flexlite.domUI.components.Group#swapChildrenAt()
+		 * @deprecated
 		 */		
 		public swapChildrenAt(index1:number, index2:number):void{
 			throw(new Error("swapChildrenAt()"+UIAsset.errorStr+"swapElementsAt()代替"));
