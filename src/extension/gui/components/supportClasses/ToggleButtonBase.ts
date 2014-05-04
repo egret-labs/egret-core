@@ -53,15 +53,15 @@ module ns_egret {
 				return super.getCurrentSkinState() + "AndSelected";
 		}
 		/**
-		 * 是否根据鼠标事件自动变换选中状态,默认true。
+		 * 是否根据鼠标事件自动变换选中状态,默认true。仅框架内使用。
 		 */		
-		public autoSelected:boolean = true;
+		public _autoSelected:boolean = true;
 		/**
 		 * @inheritDoc
 		 */
 		public buttonReleased():void{
 			super.buttonReleased();
-			if(!this.autoSelected||!this.enabled)
+			if(!this._autoSelected||!this.enabled)
 				return;
 			this.selected = !this.selected;
 			this.dispatchEventWith(Event.CHANGE);
