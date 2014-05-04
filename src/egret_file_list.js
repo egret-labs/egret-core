@@ -75,7 +75,8 @@ var temp = [
     "extension/dragonbones/dragonBones.js",
     "extension/dragonbones/DragonBonesEgretBridge.js",
     "jslib/DEBUG.js",
-    "jslib/box2d.js"
+    "jslib/box2d.js",
+    "jslib/NumberUtils.js"
 ]
 
 

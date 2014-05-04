@@ -186,8 +186,8 @@ module ns_egret{
                 this._textField.size = size;
                 this._textField.stroke = 2;
                 this.addChild(this._textField);
-                this._textField.relativeAnchorPointX = 0.5;
-                this._textField.relativeAnchorPointY = 0.5;
+                this._textField.anchorX = 0.5;
+                this._textField.anchorY = 0.5;
                 var rect = this.getBounds();
                 this._textField.x = rect.width / 2;
                 this._textField.y = rect.height / 2;
@@ -280,8 +280,8 @@ module ns_egret{
                     var texture1 = ns_egret.TextureCache.getInstance().getTexture(newRes);
                     child = ns_egret.Bitmap.initWithTexture(texture1);
                     this._frames[frame - 1] = child;
-                    child.relativeAnchorPointX = 0.5;
-                    child.relativeAnchorPointY = 0.5;
+                    child.anchorX = 0.5;
+                    child.anchorY = 0.5;
 
                     var rect = this.getBounds();
                     child.x = rect.width / 2;

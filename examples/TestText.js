@@ -47,7 +47,7 @@ function createExample() {
     colorLabel.y = 250;
     colorLabel.width = 160;
     colorLabel.height = 0;
-    colorLabel.relativeAnchorPointX = 1;
+    colorLabel.anchorX = 1;
     colorLabel.textColor = 0xFFFFFF;
     colorLabel.textAlign = "right";
     colorLabel.text = "这个文字居右对齐";

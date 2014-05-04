@@ -33,14 +33,14 @@ function createExample(){
     var tab = new ns_egret.TabView();
     for (var i = 0; i < 5; i++) {
         var btn = new ns_egret.SimpleButton();
-        btn.relativeAnchorPointX = 0.5;
-        btn.relativeAnchorPointY = 0.5;
+        btn.anchorX = 0.5;
+        btn.anchorY = 0.5;
 
         tab.addChild(btn);
         var texture1 = ns_egret.TextureCache.getInstance().getTexture("b_1.png");
         var frame1 = ns_egret.Bitmap.initWithTexture(texture1);
-        frame1.relativeAnchorPointX = 0.5;
-        frame1.relativeAnchorPointY = 0.5;
+        frame1.anchorX = 0.5;
+        frame1.anchorY = 0.5;
         var rect = frame1.getBounds();
         btn.width = rect.width;
         btn.height = rect.height;
