@@ -16,10 +16,11 @@
  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+/// <reference path="../../core/HashObject.ts"/>
 /// <reference path="../../core/MainContext.ts"/>
 
 module ns_egret {
-    export class NetContext extends ns_egret.HashObject{
+    export class NetContext extends HashObject{
         public static STATE_COMPLETE:string = "XHRLoaderComplete";
         public static GET:string = "GET";
         public static POST:string = "POST";

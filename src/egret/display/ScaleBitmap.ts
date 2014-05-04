@@ -15,13 +15,13 @@
  * FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-/// <reference path="../../../jslib/DEBUG.d.ts"/>
+/// <reference path="../../jslib/DEBUG.d.ts"/>
 
-/// <reference path="../../../egret/core/Logger.ts"/>
-/// <reference path="../../../egret/display/Bitmap.ts"/>
-/// <reference path="../../../egret/display/DisplayObjectContainer.ts"/>
-/// <reference path="../../../egret/display/SpriteSheet.ts"/>
-/// <reference path="../../../egret/texture/Texture.ts"/>
+/// <reference path="../core/Logger.ts"/>
+/// <reference path="Bitmap.ts"/>
+/// <reference path="DisplayObjectContainer.ts"/>
+/// <reference path="SpriteSheet.ts"/>
+/// <reference path="../texture/Texture.ts"/>
 
 module ns_egret {
     export class Scale9Bitmap extends DisplayObjectContainer {
@@ -97,27 +97,11 @@ module ns_egret {
             this._right = right;
         }
 
-        /**
-         * 宽度，优先顺序为 显式设置宽度 > 测量宽度
-         * @returns {number}
-         */
-        public get width():number {
-            return this.getBounds().width;
-        }
-
         public set width(value:number){
             this._explicitWidth = value;
             if (value > 0 && !isNaN(value)) {
                 this._scaleWidth = value;
             }
-        }
-
-        /**
-         * 高度，优先顺序为 显式设置高度 > 测量高度
-         * @returns {number}
-         */
-        public get height():number {
-            return this.getBounds().height;
         }
 
         public set height(value:number){

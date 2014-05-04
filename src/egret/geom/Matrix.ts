@@ -16,6 +16,7 @@
  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+/// <reference path="../core/HashObject.ts"/>
 /// <reference path="../display/DisplayObject.ts"/>
 /// <reference path="Point.ts"/>
 
@@ -23,7 +24,7 @@ module ns_egret {
     /**
      * 2D矩阵类，包括常见矩阵算法
      */
-    export class Matrix extends ns_egret.HashObject{
+    export class Matrix extends HashObject{
         constructor(public a = 1, public b = 0, public c = 0, public d = 1, public tx = 0, public ty = 0) {
             super();
         }

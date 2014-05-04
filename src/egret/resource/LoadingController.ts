@@ -20,6 +20,7 @@
 /// <reference path="../core/Ticker.ts"/>
 /// <reference path="../events/Event.ts"/>
 /// <reference path="../events/EventDispatcher.ts"/>
+/// <reference path="ILoadingView.ts"/>
 /// <reference path="ResourceLoader.ts"/>
 
 module ns_egret{
@@ -28,11 +29,11 @@ module ns_egret{
      * 是egret的加载控制器，他包含了一个或者一组ResourceLoader，控制其加载队列和调用加载界面更新进度。
      * @class ns_egret.LoadingController
      */
-    export class LoadingController extends ns_egret.EventDispatcher {
+    export class LoadingController extends EventDispatcher {
         static LOAD_STATE_IDLE = 0;
         static LOAD_STATE_LOADING = 1;
 
-        private _resourceUrlList:Array<ns_egret.ResourceLoader> = null;
+        private _resourceUrlList:Array<ResourceLoader> = null;
         private _currentIndex:number = 0;
         private _loadingView:ILoadingView;
         private _state = ns_egret.LoadingController.LOAD_STATE_IDLE;

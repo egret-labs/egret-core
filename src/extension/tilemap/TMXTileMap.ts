@@ -15,11 +15,15 @@
  * FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-/// <reference path="../../egret/display/DisplayObjectContainer.ts"/>
-/// <reference path="TMXMapInfo.ts"/>
-/// <reference path="TMXLayer.ts"/>
-/// <reference path="TMXConst.ts"/>
+
 /// <reference path="../../egret/core/Logger.ts"/>
+/// <reference path="../../egret/display/DisplayObject.ts"/>
+/// <reference path="../../egret/display/DisplayObjectContainer.ts"/>
+/// <reference path="../../egret/geom/Rectangle.ts"/>
+/// <reference path="TMXConst.ts"/>
+/// <reference path="TMXLayer.ts"/>
+/// <reference path="TMXMapInfo.ts"/>
+
 module ns_egret {
     export class TMXTiledMap extends DisplayObjectContainer {
 

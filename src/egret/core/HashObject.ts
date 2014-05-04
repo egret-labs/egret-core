@@ -20,6 +20,8 @@
  * @namespace ns_egret
  */
 
+/// <reference path="IHashObject.ts"/>
+
 module ns_egret {
 
     export class HashObject implements IHashObject{

@@ -42,6 +42,7 @@ var temp = [
     "egret/texture/TextureCache.js",
     "egret/context/net/NetContext.js",
     "egret/context/net/HTML5NetContext.js",
+	"egret/display/ScaleBitmap.js",
     //utils start
     "jslib/ZipUtils.js",
     "jslib/base64.js",
@@ -122,8 +123,7 @@ var temp = [
     "extension/gui/layouts/VerticalLayout.js",
     "extension/gui/layouts/HorizontalLayout.js",
     "extension/gui/layouts/TileLayout.js",
-    //GUI end
-    "extension/gui/component/ScaleBitmap.js",
+    //GUI end    
     "extension/gui/component/DynamicBitmap.js",
     "extension/dragonbones/dragonBones.js",
     "extension/dragonbones/DragonBonesEgretBridge.js",

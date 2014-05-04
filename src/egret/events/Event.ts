@@ -16,9 +16,11 @@
  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+/// <reference path="../core/HashObject.ts"/>
+
 module ns_egret {
 
-    export class Event extends ns_egret.HashObject{
+    export class Event extends HashObject{
 
 
         /**

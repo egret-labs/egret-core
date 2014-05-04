@@ -18,6 +18,8 @@
 
 /// <reference path="NetContext.ts"/>
 /// <reference path="../../resource/ResourceLoader.ts"/>
+/// <reference path="../../texture/Texture.ts"/>
+/// <reference path="../../texture/TextureCache.ts"/>
 
 module ns_egret {
     export class HTML5NetContext extends NetContext {

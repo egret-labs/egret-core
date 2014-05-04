@@ -25,7 +25,7 @@ module ns_egret {
      * @stable A
      * todo:GitHub文档，介绍心跳控制器的作用
      */
-    export class Ticker extends ns_egret.EventDispatcher {
+    export class Ticker extends EventDispatcher {
 
 
         /**

@@ -17,7 +17,6 @@
  */
 
 /// <reference path="../context/renderer/RendererContext.ts"/>
-/// <reference path="../core/Logger.ts"/>
 /// <reference path="../core/MainContext.ts"/>
 /// <reference path="../core/RenderFilter.ts"/>
 /// <reference path="DisplayObjectContainer.ts"/>
