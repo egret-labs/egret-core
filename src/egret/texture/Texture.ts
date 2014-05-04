@@ -30,7 +30,7 @@ module ns_egret {
      * 在OpenGL / WebGL中，资源是一个提交GPU后获取的纹理id
      * Texture类封装了这些底层实现的细节，开发者只需要关心接口即可
      */
-    export class Texture {
+    export class Texture extends ns_egret.HashObject{
 
         public offsetX = 0;
         public offsetY = 0;

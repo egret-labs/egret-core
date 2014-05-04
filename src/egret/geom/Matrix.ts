@@ -23,8 +23,9 @@ module ns_egret {
     /**
      * 2D矩阵类，包括常见矩阵算法
      */
-    export class Matrix {
+    export class Matrix extends ns_egret.HashObject{
         constructor(public a = 1, public b = 0, public c = 0, public d = 1, public tx = 0, public ty = 0) {
+            super();
         }
 
 // static public properties:

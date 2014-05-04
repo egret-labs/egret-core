@@ -19,7 +19,7 @@
 /// <reference path="../core/Logger.ts"/>
 
 module ns_egret{
-    export class SAXParser {
+    export class SAXParser extends ns_egret.HashObject{
         static _instance:SAXParser = null;
 
         static getInstance() {
@@ -33,7 +33,8 @@ module ns_egret{
         private _xmlDict = null;
         private _isSupportDOMParser = null;
 
-        constructor() {
+        public constructor() {
+            super();
             this._xmlDict = {};
             if (window["DOMParser"]) {
                 this._isSupportDOMParser = true;
@@ -76,6 +77,15 @@ module ns_egret{
         }
 
         private parserXML(textxml:string) {
+            var i = 0;
+            while (textxml.charAt(i) == "\n" || textxml.charAt(i) == "\t" || textxml.charAt(i) == "\r" || textxml.charAt(i) == " ") {
+                i++;
+            }
+
+            if (i != 0) {
+                textxml = textxml.substring(i, textxml.length);
+            }
+
             var xmlDoc;
             if (this._isSupportDOMParser) {
                 xmlDoc = this._parser.parseFromString(textxml, "text/xml");

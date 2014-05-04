@@ -26,10 +26,11 @@ module ns_egret{
      * 同时，SpriteSheet可以很方便的进行素材整合，降低HTTP请求数量
      * todo: GitHub egret的SpriteSheet
      */
-    export class SpriteSheet {
+    export class SpriteSheet extends ns_egret.HashObject{
 
         private frames:Object;
-        constructor(data) {
+        public constructor(data) {
+            super();
             this.frames = data.frames;
         }
 

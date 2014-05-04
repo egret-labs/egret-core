@@ -18,7 +18,7 @@
 /// <reference path="SAXParser.ts"/>
 
 module ns_egret{
-    export class XML {
+    export class XML extends ns_egret.HashObject{
         private _xmlStr = "";
 
         /**
@@ -39,7 +39,8 @@ module ns_egret{
          * xml.egret[0].item[1].$name;  // yjtx
          * @param xmlStr  {string} xml格式的字符串
          */
-            constructor(xmlStr:string = "") {
+        public constructor(xmlStr:string = "") {
+            super();
             this._xmlStr = xmlStr;
             if (xmlStr != "") {
                 var xmlDoc = ns_egret.SAXParser.getInstance().tmxParse(xmlStr, true);

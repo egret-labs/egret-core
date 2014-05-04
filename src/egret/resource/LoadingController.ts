@@ -44,7 +44,7 @@ module ns_egret{
          * @param url {string} 加载url
          * @param type {string} 加载类型
          */
-        public addResource(url:string, type:string = null):void {
+        public addResource(url:string, type:string = null, prefix:string = ""):void {
             if (this.checkIsLoading()) {
                 return;
             }
@@ -53,6 +53,8 @@ module ns_egret{
                 this._resourceUrlList = [];
             }
             var resource = ns_egret.ResourceLoader.create(url,type);
+            resource.preFixUrl = prefix;
+
             if (this._resourceUrlList.indexOf(resource) == -1 && resource.state != ns_egret.ResourceLoader.LOAD_STATE_LOADED){
                 this._resourceUrlList.push(resource);
             }
@@ -100,13 +102,13 @@ module ns_egret{
             this.onProgress();
             if (this._resourceUrlList.length > this._currentIndex) {
                 this._currentResource = this._resourceUrlList[this._currentIndex];
+                this._currentIndex++;
                 this._currentResource.addEventListener(ns_egret.ResourceLoader.LOAD_COMPLETE, this.next, this);
                 this._currentResource.load();
             }
             else {
                 this.onComplete();
             }
-            this._currentIndex++;
         }
 
         private removeResourceEvent(){

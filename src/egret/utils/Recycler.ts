@@ -20,7 +20,7 @@ module ns_egret {
     /**
      * 对象缓存复用工具类，可用于构建对象池，一段时间后会自动回收对象。
      */
-    export class Recycler extends HashObject{
+    export class Recycler extends ns_egret.HashObject{
 
         public constructor(autoDisposeTime:number = 300){
             super();

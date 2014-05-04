@@ -18,6 +18,7 @@
 
 /// <reference path="../../jslib/DEBUG.d.ts"/>
 /// <reference path="../core/HashObject.ts"/>
+/// <reference path="../utils/Recycler.ts"/>
 /// <reference path="Event.ts"/>
 /// <reference path="IEventDispatcher.ts"/>
 
@@ -216,7 +217,7 @@ module ns_egret {
             return !event.isDefaultPrevented();
         }
 
-        private static reuseEvent:Event = new Event("");
+        private static eventRecycler:Recycler = new Recycler();
         /**
          * 派发一个包含了特定参数的事件到所有注册了特定类型侦听器的对象中。 这个方法使用了一个内部的事件对象池因避免重复的分配导致的额外开销。
          * @param type 事件类型
@@ -224,11 +225,16 @@ module ns_egret {
          * @param data 附加数据(可选)
          */
         public dispatchEventWith(type:string, bubbles:boolean = false, data:Object = null):void{
-            var event:Event = EventDispatcher.reuseEvent;
+            var recycler:Recycler = EventDispatcher.eventRecycler;
+            var event:Event = recycler.pop();
+            if(!event){
+                event = new Event("");
+            }
             event._type = type;
             event._bubbles = bubbles;
             event.data = data;
             this.dispatchEvent(event);
+            recycler.push(event);
         }
     }
 }
