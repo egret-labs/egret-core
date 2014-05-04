@@ -19,7 +19,10 @@ Egret 0.9.3在听取了众位参与了Prerelease的开发者的反馈之后对 E
 ------------------------
 
 #### 步骤一：下载及配置环境变量
-将Egret下载并解压至操作系统中的任意位置，并修改操作系统的环境变量，将 EGRET_PATH 赋值为Egret文件夹的路径
+将Egret下载并解压至操作系统中的任意位置，并修改操作系统的环境变量，将 EGRET_PATH 赋值为Egret文件夹的路径。
+您可以参考 [这篇文章](https://github.com/egret-team/egret/wiki/Setting-environment-variables) 了解如何设置环境变量
+
+#### 步骤二：下载及配置环境变量
 
 执行以下脚本，安装egret
 
@@ -32,27 +35,27 @@ $ npm install {EGRET_PATH}/tools -g
 
 
 
-#### 步骤二：创建egret工作空间
+#### 步骤三：创建egret工作空间
 
 在本机WebServer可以访问到的位置创建一个新的文件夹，该文件夹在下文被称为 {egret_workspace}
 
 如果您使用WebStorm作为开发环境，请以 {egret_workspace} 目录作为Project目录
 
 
-#### 步骤三：创建新项目
+#### 步骤四：创建新项目
 ```
 $ cd {egret_workspace} 
 $ egret c HelloEgret    #创建新项目HelloEgret，并将Egret/src拷贝至同级目录下
 ```
 > 综上所述，同一个工作目录下可以创建多个游戏项目，并共享同一份egret代码库。
 
-#### 步骤四：编译代码
+#### 步骤五：编译代码
 ```
 $ egret b HelloEgret 
 ```
 
 
-#### 步骤五：运行项目（如HelloEgret）
+#### 步骤六：运行项目（如HelloEgret）
 打开浏览器，输入 http://${your_website_localhost}/${egret_workspace}/output/HelloEgret/launcher/index.html
 > 注意url中存在output文件夹，请勿疏忽
 
