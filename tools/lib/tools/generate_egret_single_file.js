@@ -8,7 +8,7 @@ var path = require("path");
 
 function run(currDir, args, opts) {
 
-    var egret_path = path.join(param.getEgretPath(),"src/egret");
+    var egret_path = path.join(param.getEgretPath(),"src");
     var list = generateAllTypeScriptFileList(egret_path);
     list = list.map(function(item){
         return path.join(egret_path,item);

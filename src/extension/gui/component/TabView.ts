@@ -17,6 +17,7 @@
  */
 
 /// <reference path="../../../egret/display/DisplayObjectContainer.ts"/>
+/// <reference path="SimpleButton.ts"/>
 
 module ns_egret{
     /**
@@ -37,7 +38,7 @@ module ns_egret{
             this._callArr = [];
             this._currentTag = 0;
             for (var i = 0; i < this.numChildren; i++) {
-                var btn = this.getChildAt(i);
+                var btn = <SimpleButton>this.getChildAt(i);
 
                 var self = this;
                 var call = function()
@@ -54,7 +55,7 @@ module ns_egret{
         chooseIdx (idx) {
             this._currentTag = idx + 1;
             for (var i = 0; i < this.numChildren; i++) {
-                var btn = this.getChildAt(i);
+                var btn = <SimpleButton>this.getChildAt(i);
                 if (i == idx) {
                     btn.setChoose(true);
 //                    btn.setEnabled(false);
@@ -88,7 +89,7 @@ module ns_egret{
 
         public useZoomOut(use) {
             for (var i = 0; i < this.numChildren; i++) {
-                var btn = this.getChildAt(i);
+                var btn = <SimpleButton>this.getChildAt(i);
                 btn.useZoomOut(use);
             }
         }

@@ -34,8 +34,8 @@ module ns_egret {
         public _viewWidth:number;
         public _viewHeight:number;
 
-        private _initWidth;
-        private _initHeight;
+        public _initWidth:number;
+        public _initHeight:number;
 
         private _isMoved:boolean;
 
@@ -237,7 +237,7 @@ module ns_egret {
         }
 
         //每帧 移动 时调用
-        private moveList() {
+        public moveList() {
 
         }
 

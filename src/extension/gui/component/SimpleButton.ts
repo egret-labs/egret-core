@@ -31,7 +31,7 @@ module ns_egret{
      * MovieClip是位图动画序列类，由FlashPro + egret插件生成配置文件
      */
     export class SimpleButton extends DisplayObjectContainer {
-        private _frames:Array = [];
+        private _frames:Array<any> = [];
         private _frameRes:string;
         private _currentFrame:number = 1;
 

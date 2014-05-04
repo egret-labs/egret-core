@@ -35,6 +35,10 @@ module ns_egret {
             return super.hitTest(x, y);
         }
 
+        render(renderContext:RendererContext) {
+            this.graphic._draw();
+        }
+
     }
 
 
@@ -158,6 +162,9 @@ module ns_egret {
 
         public clear():void {
             this.commandQueue.length = 0;
+        }
+
+        public endFill():void {
         }
 
         public _draw():void {

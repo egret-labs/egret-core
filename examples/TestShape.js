@@ -31,4 +31,11 @@ function createExample(){
     shape.width = shape.height = 100;
     container.addChild(shape);
 
+
+    var shape1 = new ns_egret.Shape();
+    shape1.graphic.beginFill(0xff0000,.5);
+    shape1.graphic.drawRect(200,200,100,100);
+    shape1.graphic.endFill();
+    container.addChild(shape1);
+
 }

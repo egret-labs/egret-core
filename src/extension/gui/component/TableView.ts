@@ -29,8 +29,8 @@ module ns_egret {
 
         private disappearContainer;//item消失时 可能用到的容器
 
-        private _itemArr:Array;//item元件 数组
-        private _dataArr:Array;//数据
+        private _itemArr:Array<any>;//item元件 数组
+        private _dataArr:Array<any>;//数据
         private _delegate:any;
 
         private _currentIndex:number = 0;
@@ -45,7 +45,7 @@ module ns_egret {
             this.addChild(this.disappearContainer);
         }
 
-        public reloadData(dataArr:Array) {
+        public reloadData(dataArr:Array<any>) {
             this._dataArr = dataArr || [];
 
             var list = new ns_egret.DisplayObjectContainer();
@@ -114,7 +114,7 @@ module ns_egret {
             }
         }
 
-        public setList(dataArr:Array, direction, delegate, width:number, height:number) {
+        public setList(dataArr:Array<any>, direction, delegate, width:number, height:number) {
             this._dataArr = dataArr || [];
             this._delegate = delegate;
             this._itemWidth = width;
@@ -176,7 +176,7 @@ module ns_egret {
         }
 
         //container 位置有变动
-        private moveList() {
+        public moveList() {
             var current = this.getCurrent();
 
             if (current != this._currentIndex) {//需要刷新
