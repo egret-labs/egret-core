@@ -84,20 +84,10 @@ module ns_egret {
 		public set repeatDelay(value:number){
 			this._repeatDelay = value;
 		}
-		
-		private _motionPaths:Array;
-		/**
-		 * 随着时间的推移Animation将设置动画的属性和值的列表。
-		 */
-		public get motionPaths():Array{
-			if(this._motionPaths==null)
-				this._motionPaths = [];
-			return this._motionPaths;
-		}
-
-		public set motionPaths(value:Array){
-			this._motionPaths = value;
-		}
+        /**
+         * 随着时间的推移Animation将设置动画的属性和值的列表。
+         */
+		public motionPaths:Array = [];
 
 		private _currentValue:any = {};
 
@@ -142,7 +132,7 @@ module ns_egret {
 			runningTime = Math.min(runningTime,this.duration);
 			var fraction:number = runningTime/this.duration;
 			this.caculateCurrentValue(fraction);
-			this.startTime = this.getTimer() - runningTime - this._startDelay;
+			this.startTime = Ticker.now() - runningTime - this._startDelay;
 			if(this.updateFunction!=null)
 				this.updateFunction(this);
 		}
@@ -156,8 +146,8 @@ module ns_egret {
 			this._isPlaying = false;
 			this._currentValue = {};
 			this.caculateCurrentValue(0);
-			this.startTime = this.getTimer();
-			Animation.currentTime = this.getTimer();
+			this.startTime = Ticker.now();
+			Animation.currentTime = this.startTime;
 			this.doInterval();
 			Animation.addAnimation(this);
 		}
@@ -213,9 +203,7 @@ module ns_egret {
 		public get isPaused():boolean{
 			return this._isPaused;
 		}
-		
-		
-		
+
 		/**
 		 * 暂停播放
 		 */		
@@ -223,7 +211,7 @@ module ns_egret {
 			if(!this._started)
 				return;
 			this._isPaused = true;
-			this.pauseTime = this.getTimer();
+			this.pauseTime = Ticker.now();
 			this._isPlaying = false;
 			Animation.removeAnimation(this);
 		}
@@ -234,7 +222,7 @@ module ns_egret {
 			if(!this._started||!this._isPaused)
 				return;
 			this._isPaused = false;
-			this.startTime += this.getTimer()-this.pauseTime;
+			this.startTime += Ticker.now()-this.pauseTime;
 			this.pauseTime = -1;
 			Animation.addAnimation(this);
 		}
@@ -361,7 +349,7 @@ module ns_egret {
 		 * 计时器触发函数
 		 */		
 		private static onEnterFrame(frameTime:number,currentTime:number):void{
-			Animation.currentTime = currentTime;
+			Animation.currentTime = Ticker.now();
 			Animation.currentIntervalIndex = 0;
 			while(Animation.currentIntervalIndex<Animation.activeAnimations.length){
 				var animation:Animation = Animation.activeAnimations[Animation.currentIntervalIndex];
