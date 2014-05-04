@@ -284,9 +284,6 @@ module ns_egret {
 				this._isPlaying = false;
 				this.startTime =  Animation.currentTime;
 				if(this._repeatCount==0||this.playedTimes<this._repeatCount){
-					if(this._repeatBehavior=="reverse"){
-						this._isReverse = !this._isReverse;
-					}
 					isEnded = false;
 				}
 				else{
@@ -304,17 +301,14 @@ module ns_egret {
 		 * 计算当前值
 		 */		
 		private caculateCurrentValue(fraction:number):void{
-			if(this._isReverse){
-				fraction = 1-fraction;
-			}
-			var finalFraction:number = fraction;
-			if(this.easer)
-				finalFraction = this.easer.ease(fraction);
-			for each(var motionPath:MotionPath in this.motionPaths){
-				this.currentValue[motionPath.property] = motionPath.valueFrom+(motionPath.valueTo-motionPath.valueFrom)*finalFraction;
-			}
+            var paths:Array = this.motionPaths;
+            var length:number = paths.length;
+            for(var i:number=0;i<length;i++){
+                var motion:any = paths[i];
+                this.currentValue[motion.property] = motion.valueFrom+(motion.valueTo-motion.valueFrom)*fraction;
+            }
 		}
-		
+
 		/**
 		 * 总时间轴的当前时间
 		 */		
@@ -366,8 +360,8 @@ module ns_egret {
 		/**
 		 * 计时器触发函数
 		 */		
-		private static onEnterFrame(frameTime:number):void{
-			Animation.currentTime += frameTime;
+		private static onEnterFrame(frameTime:number,currentTime:number):void{
+			Animation.currentTime = currentTime;
 			Animation.currentIntervalIndex = 0;
 			while(Animation.currentIntervalIndex<Animation.activeAnimations.length){
 				var animation:Animation = Animation.activeAnimations[Animation.currentIntervalIndex];
