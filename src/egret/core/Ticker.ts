@@ -54,30 +54,29 @@ module ns_egret {
         }
 
         private update() {
-            var list:Array = this.callBackList.concat();
+            var list:Array<any> = this.callBackList.concat();
             var length:number = list.length;
-            var currentTime:number = Ticker.now();
-            var frameTime:number = currentTime - this._time;
+            var thisTime:number = Ticker.now();
+            var frameTime:number = thisTime - this._time;
             frameTime *= this._timeScale;
             for (var i:number = 0; i < length; i++) {
                 var eventBin:any = list[i];
-                eventBin.listener.call(eventBin.thisObject, frameTime , currentTime);
+                eventBin.listener.call(eventBin.thisObject, frameTime);
             }
-            this._time = currentTime;
+            this._time = thisTime;
         }
 
-        private callBackList:Array = [];
+        private callBackList:Array<any> = [];
 
         /**
          * 注册帧回调事件，同一函数的重复监听会被忽略。
-         * @param listener 帧回调函数,示例：onEnterFrame(frameTime:number,currentTime:number):void
-         * 参数:frameTime:上一帧和这帧的时间间隔，currentTime:当前运行的绝对时间。
+         * @param listener 帧回调函数,参数返回上一帧和这帧的间隔时间。示例：onEnterFrame(frameTime:number):void
          * @param thisObject 帧回调函数的this对象
          * @param priority 事件优先级，开发者请勿传递 Number.MAX_VALUE 和 Number.MIN_VALUE
          * @stable A-
          */
         public register(listener:Function, thisObject:any, priority = 0) {
-            var list:Array = this.callBackList;
+            var list:Array<any> = this.callBackList;
             this._insertEventBin(list,listener,thisObject,priority);
         }
 
