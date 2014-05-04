@@ -65,62 +65,62 @@ module ns_egret {
 			this._setHeight(this.stage.stageHeight);
 		}
 
-//		//==========================================================================
-//		//                            禁止外部布局顶级容器
-//		//==========================================================================
-//        public get x():number{
-//            return this._x;
-//        }
-//		/**
-//		 * @inheritDoc
-//		 */
-//		public set x(value:number){
-//		}
-//
-//        public get y():number{
-//            return this._y;
-//        }
-//		/**
-//		 * @inheritDoc
-//		 */
-//		public set y(value:number){
-//		}
-//
-//        public get width():number{
-//            return this._width;
-//        }
-//		/**
-//		 * @inheritDoc
-//		 */
-//		public set width(value:number){
-//		}
-//
-//        public get height():number{
-//            return this._height;
-//        }
-//		/**
-//		 * @inheritDoc
-//		 */
-//		public set height(value:number){
-//		}
-//
-//        public get scaleX():number{
-//            return this._scaleX;
-//        }
-//		/**
-//		 * @inheritDoc
-//		 */
-//		public set scaleX(value:number){
-//		}
-//
-//        public get scaleY():number{
-//            return this._scaleY;
-//        }
-//		/**
-//		 * @inheritDoc
-//		 */
-//		public set scaleY(value:number){
-//		}
+		//==========================================================================
+		//                            禁止外部布局顶级容器
+		//==========================================================================
+        public get x():number{
+            return this._x;
+        }
+		/**
+		 * @inheritDoc
+		 */
+		public set x(value:number){
+		}
+
+        public get y():number{
+            return this._y;
+        }
+		/**
+		 * @inheritDoc
+		 */
+		public set y(value:number){
+		}
+
+        public get width():number{
+            return this._width;
+        }
+		/**
+		 * @inheritDoc
+		 */
+		public set width(value:number){
+		}
+
+        public get height():number{
+            return this._height;
+        }
+		/**
+		 * @inheritDoc
+		 */
+		public set height(value:number){
+		}
+
+        public get scaleX():number{
+            return this._scaleX;
+        }
+		/**
+		 * @inheritDoc
+		 */
+		public set scaleX(value:number){
+		}
+
+        public get scaleY():number{
+            return this._scaleY;
+        }
+		/**
+		 * @inheritDoc
+		 */
+		public set scaleY(value:number){
+		}
 		/**
 		 * @inheritDoc
 		 */
