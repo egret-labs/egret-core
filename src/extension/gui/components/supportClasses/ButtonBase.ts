@@ -17,6 +17,7 @@
  */
 
 /// <reference path="../../../../egret/core/VerticalAlign.ts"/>
+/// <reference path="../../../../egret/core/HorizontalAlign.ts"/>
 /// <reference path="../../../../egret/display/DisplayObject.ts"/>
 /// <reference path="../../../../egret/events/Event.ts"/>
 /// <reference path="../../../../egret/events/TimerEvent.ts"/>
@@ -442,7 +443,7 @@ module ns_egret {
 				return;
 			this.hasCreatedLabel = true;
 			var text:Label = new Label();
-			text.textAlign = TextAlign.CENTER;
+			text.textAlign = HorizontalAlign.CENTER;
 			text.verticalAlign = VerticalAlign.MIDDLE;
 			text.maxDisplayedLines = 1;
 			text.left = 10;

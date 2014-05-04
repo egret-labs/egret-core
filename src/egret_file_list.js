@@ -123,7 +123,11 @@ var temp = [
     "extension/gui/layouts/VerticalLayout.js",
     "extension/gui/layouts/HorizontalLayout.js",
     "extension/gui/layouts/TileLayout.js",
-    //GUI end    
+    "extension/gui/managers/SystemContainer.js",
+    "extension/gui/managers/SystemManager.js",
+    "extension/gui/managers/impl/PopUpManagerImpl.js",
+    "extension/gui/managers/PopUpManager.js",
+    //GUI end
     "extension/gui/component/DynamicBitmap.js",
     "extension/dragonbones/dragonBones.js",
     "extension/dragonbones/DragonBonesEgretBridge.js",

@@ -17,6 +17,7 @@
  */
 
 /// <reference path="../../../../egret/core/VerticalAlign.ts"/>
+/// <reference path="../../../../egret/core/HorizontalAlign.ts"/>
 /// <reference path="../../../../egret/text/TextField.ts"/>
 /// <reference path="../../core/IDisplayText.ts"/>
 /// <reference path="../../core/UIComponent.ts"/>
@@ -82,7 +83,7 @@ module ns_egret {
 		}
 
         private textAlignChanged:boolean;
-		private _textAlign:string = TextAlign.LEFT;
+		private _textAlign:string = HorizontalAlign.LEFT;
 		/**
 		 * 文字的水平对齐方式 ,请使用TextAlign中定义的常量。
 		 * 默认值：TextFormatAlign.LEFT。

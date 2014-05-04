@@ -279,10 +279,7 @@ module ns_egret {
 		}
 		
 		public set enabled(value:boolean){
-			if(this._enabled==value)
-				return;
 			this._enabled = value;
-			this.dispatchEvent(new Event("enabledChanged"));
 		}
 		
 		/**
@@ -304,16 +301,20 @@ module ns_egret {
 		 * 组件宽度,默认值为NaN,设置为NaN将使用组件的measure()方法自动计算尺寸
 		 */		
 		public set width(value:number){
-			if(this._width==value&&this._explicitWidth==value)
-				return;
-			this._width = value;
-			this._explicitWidth = value;
-			this.invalidateProperties();
-			this.invalidateDisplayList();
-			this.invalidateParentSizeAndDisplayList();
-			if(isNaN(value))
-				this.invalidateSize();
+			this._setWidth(value);
 		}
+
+        public _setWidth(value:number):void{
+            if(this._width==value&&this._explicitWidth==value)
+                return;
+            this._width = value;
+            this._explicitWidth = value;
+            this.invalidateProperties();
+            this.invalidateDisplayList();
+            this.invalidateParentSizeAndDisplayList();
+            if(isNaN(value))
+                this.invalidateSize();
+        }
 		
 		/**
 		 * @inheritDoc
@@ -342,16 +343,20 @@ module ns_egret {
 		 * 组件高度,默认值为NaN,设置为NaN将使用组件的measure()方法自动计算尺寸
 		 */		
 		public set height(value:number){
-			if(this._height==value&&this._explicitHeight==value)
-				return;
-			this._height = value;
-			this._explicitHeight = value;
-			this.invalidateProperties();
-			this.invalidateDisplayList();
-			this.invalidateParentSizeAndDisplayList();
-			if(isNaN(value))
-				this.invalidateSize();
+			this._setHeight(value);
 		}
+
+        public _setHeight(value:number):void{
+            if(this._height==value&&this._explicitHeight==value)
+                return;
+            this._height = value;
+            this._explicitHeight = value;
+            this.invalidateProperties();
+            this.invalidateDisplayList();
+            this.invalidateParentSizeAndDisplayList();
+            if(isNaN(value))
+                this.invalidateSize();
+        }
 		
 		/**
 		 * @inheritDoc
@@ -375,11 +380,15 @@ module ns_egret {
 		 * @inheritDoc
 		 */
 		public set scaleX(value:number){
-			if(this._scaleX == value)
-				return;
-			this._scaleX = value;
-			this.invalidateParentSizeAndDisplayList();
+			this._setScaleX(value);
 		}
+
+        public _setScaleX(value:number):void{
+            if(this._scaleX == value)
+                return;
+            this._scaleX = value;
+            this.invalidateParentSizeAndDisplayList();
+        }
 
         public get scaleY():number{
             return this._scaleY;
@@ -388,11 +397,15 @@ module ns_egret {
 		 * @inheritDoc
 		 */
 		public set scaleY(value:number){
-			if(this._scaleY == value)
-				return;
-			this._scaleY = value;
-			this.invalidateParentSizeAndDisplayList();
+			this._setScaleY(value);
 		}
+
+        public _setScaleY(value:number):void{
+            if(this._scaleY == value)
+                return;
+            this._scaleY = value;
+            this.invalidateParentSizeAndDisplayList();
+        }
 		
 		private _minWidth:number = 0;
 		/**
