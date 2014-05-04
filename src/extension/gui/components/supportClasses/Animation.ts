@@ -273,10 +273,6 @@ module ns_egret {
 					if(this.startFunction!=null)
 						this.startFunction(this);
 				}
-				else{
-					if(this.repeatFunction!=null)
-						this.repeatFunction(this);
-				}
 			}
 			var fraction:number = this._duration==0?1:Math.min(runningTime,this._duration)/this._duration;
 			this.caculateCurrentValue(fraction);
@@ -324,15 +320,14 @@ module ns_egret {
 		 */		
 		private static currentTime:number = 0;
 		
-		
 		private static TIMER_RESOLUTION:number = 1000 / 60;	// 60 fps
 		
-		private static timer:Timer;
+		private static registered:boolean;
 		
 		/**
 		 * 正在活动的动画
 		 */		
-		private static activeAnimations:Vector.<Animation> = new Vector.<Animation>();
+		private static activeAnimations:Array = [];
 		
 		/**
 		 * 添加动画到队列
@@ -340,12 +335,10 @@ module ns_egret {
 		private static addAnimation(animation:Animation):void{
 			if(Animation.activeAnimations.indexOf(animation)==-1){
 				Animation.activeAnimations.push(animation);
-				if (Animation.timer==null){
-					Animation.timer = new Timer(Animation.TIMER_RESOLUTION);
-					Animation.timer.addEventListener(TimerEvent.TIMER, Animation.timerHandler, Animation);
+				if (!Animation.registered){
+                    Animation.registered = true;
+                    Ticker.getInstance().register(Animation.onEnterFrame, null);
 				}
-				if(!Animation.timer.running)
-					Animation.timer.start();
 			}
 		}
 		
@@ -359,8 +352,9 @@ module ns_egret {
 				if(index<=Animation.currentIntervalIndex)
 					Animation.currentIntervalIndex--;
 			}
-			if(Animation.activeAnimations.length==0&&Animation.timer&&Animation.timer.running){
-				Animation.timer.stop();
+			if(Animation.activeAnimations.length==0&&Animation.registered){
+                Animation.registered = false;
+                Ticker.getInstance().unregister(Animation.onEnterFrame, null);
 			}
 		}
 		
@@ -372,8 +366,8 @@ module ns_egret {
 		/**
 		 * 计时器触发函数
 		 */		
-		private static timerHandler(event:TimerEvent):void{
-			Animation.currentTime = this.getTimer();
+		private static onEnterFrame(frameTime:number):void{
+			Animation.currentTime += frameTime;
 			Animation.currentIntervalIndex = 0;
 			while(Animation.currentIntervalIndex<Animation.activeAnimations.length){
 				var animation:Animation = Animation.activeAnimations[Animation.currentIntervalIndex];
@@ -381,11 +375,10 @@ module ns_egret {
 				Animation.currentIntervalIndex++;
 			}
 			Animation.currentIntervalIndex = -1;
-			if(Animation.activeAnimations.length==0&&Animation.timer.running){
-				Animation.timer.stop();
+			if(Animation.activeAnimations.length==0&&Animation.registered){
+                Animation.registered = false;
+                Ticker.getInstance().unregister(Animation.onEnterFrame, null);
 			}
-			if(UIGlobals.useUpdateAfterEvent)
-				event.updateAfterEvent();
 		}
 		
 	}
