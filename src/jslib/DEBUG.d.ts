@@ -23,11 +23,11 @@ declare module ns_egret {
          */
         static DRAW_IMAGE:boolean;
 
-        static checkDrawImage(texture:any, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight)
+        static checkDrawImage(texture:any, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight);
 
         static ADD_EVENT_LISTENER:boolean;
 
-        static checkAddEventListener(eventName:string, func:Function, thisObj, useCapture:boolean, priority:number)
+        static checkAddEventListener(eventName:string, func:Function, thisObj, useCapture:boolean, priority:number);
 
         static SCALE_BITMAP_SET_SCALE_GRID:boolean;
 
