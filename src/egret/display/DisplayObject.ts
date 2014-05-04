@@ -51,6 +51,12 @@ module ns_egret {
      */
     export class DisplayObject extends EventDispatcher implements RenderData {
 
+        public constructor(){
+            super();
+            this.worldTransform = new ns_egret.Matrix();
+            this.worldBounds = new ns_egret.Rectangle(0, 0, 0, 0);
+        }
+
         public name:string;
 
         public _texture_to_render:Texture;
@@ -74,7 +80,7 @@ module ns_egret {
             this._parent = parent;
         }
 
-        public _x:number;
+        public _x:number = 0;
 
         /**
          * 表示 DisplayObject 实例相对于父级 DisplayObjectContainer 本地坐标的 x 坐标。
@@ -91,7 +97,7 @@ module ns_egret {
         }
 
 
-        public _y:number;
+        public _y:number = 0;
 
         /**
          * 表示 DisplayObject 实例相对于父级 DisplayObjectContainer 本地坐标的 y 坐标。
@@ -277,7 +283,7 @@ module ns_egret {
          * 显示对象是否可见。
          * @member {boolean} ns_egret.DisplayObject#x
          */
-        public visible:boolean;
+        public visible:boolean = true;
         /**
          * 表示 DisplayObject 实例距其原始方向的旋转程度，以度为单位
          * @member {number} ns_egret.DisplayObject#rotation
@@ -448,17 +454,8 @@ module ns_egret {
 
         public worldTransform:ns_egret.Matrix;
         public worldBounds:ns_egret.Rectangle;
-        public worldAlpha:number;
+        public worldAlpha:number = 1;
 
-
-        constructor() {
-            super();
-            this.x = this.y = 0;
-            this.visible = true;
-            this.worldTransform = new ns_egret.Matrix();
-            this.worldBounds = new ns_egret.Rectangle(0, 0, 0, 0);
-            this.worldAlpha = 1;
-        }
 
         /**
          * @private
