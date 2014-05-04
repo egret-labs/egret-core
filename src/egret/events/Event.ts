@@ -110,6 +110,11 @@ module ns_egret {
          * @constant {string} ns_egret.Event.RESIZE
          */
         public static RESIZE:string = "resize";
+        /**
+         * 状态改变
+         * @constant {string} ns_egret.Event.CHANGE
+         */
+        public static CHANGE:string = "change";
 
         public data:any;
 

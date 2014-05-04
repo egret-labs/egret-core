@@ -160,7 +160,7 @@ module ns_egret {
                 }
                 else {
                     var bounds:ns_egret.Rectangle = layer.getBounds();
-                    if (layer.x + bounds.width - layer.pivotOffsetX < -this.x || layer.x - layer.pivotOffsetX > -this.x + this.viewPortWidth) {
+                    if (layer.x + bounds.width - layer.anchorOffsetX < -this.x || layer.x - layer.anchorOffsetX > -this.x + this.viewPortWidth) {
                         layer.visible = false;
                     }
                     else {

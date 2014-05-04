@@ -104,8 +104,8 @@ function addNewSpriteWithCoords (x,y) {
     spriteFrame.w = PTM_RATIO;
     spriteFrame.h = PTM_RATIO;
     bitmap.spriteFrame = spriteFrame;
-    bitmap.pivotOffsetX = PTM_RATIO / 2;
-    bitmap.pivotOffsetY = PTM_RATIO / 2;
+    bitmap.anchorOffsetX = PTM_RATIO / 2;
+    bitmap.anchorOffsetY = PTM_RATIO / 2;
     rectContainer.addChild(bitmap);
 
     bitmap.x = x;

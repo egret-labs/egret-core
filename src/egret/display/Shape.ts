@@ -23,8 +23,20 @@ module ns_egret {
 
     export class Shape extends ns_egret.DisplayObject {
 
-        hitTest(x,y){
-            return super.hitTest(x,y);
+        public graphic:Graphic;
+
+        constructor() {
+            super();
+            var rendererContext = ns_egret.MainContext.instance.rendererContext;
+            this.graphic = new Graphic(rendererContext);
+        }
+
+        hitTest(x, y) {
+            return super.hitTest(x, y);
+        }
+
+        render(renderContext:RendererContext) {
+            this.graphic._draw();
         }
 
     }
@@ -33,14 +45,11 @@ module ns_egret {
     export class ShapeRect extends ns_egret.Shape {
 
         private _color:number;
-        private _colorRed:number;
-        private _colorBlue:number;
-        private _colorGreen:number;
         private _alpha:number;
-        private _colorStr:string;
         private _colorDirty:boolean = true;
+        private _sizeDirty:boolean = false;
 
-        constructor(){
+        constructor() {
             super();
             this._color = 0xFFFFFF;
 
@@ -64,20 +73,115 @@ module ns_egret {
             this._alpha = value;
         }
 
+        /**
+         * 宽度，优先顺序为 显式设置宽度 > 测量宽度
+         * @returns {number}
+         */
+        public get width():number {
+            return this.getBounds().width;
+        }
+
+        /**
+         * 高度，优先顺序为 显式设置高度 > 测量高度
+         * @returns {number}
+         */
+        public get height():number {
+            return this.getBounds().height;
+        }
+
+        /**
+         * 显式设置宽度
+         * @param value
+         */
+        public set width(value:number) {
+            this._explicitWidth = value
+            this._sizeDirty = true;
+        }
+
+
+        /**
+         * 显式设置高度
+         * @param value
+         */
+        public set height(value:number) {
+            this._explicitHeight = value;
+            this._sizeDirty = true;
+        }
+
         render(renderContext:RendererContext) {
-            if (this._colorDirty) {
-                var value = this._color;
-                this._colorBlue = value & 0x0000FF;
-                this._colorGreen = (value & 0x00ff00) >> 8;
-                this._colorRed = value >> 16;
-                this._colorStr = "rgba(" + this._colorRed + "," + this._colorGreen + "," + this._colorBlue + "," + this._alpha + ")";
+            if (this._colorDirty || this._sizeDirty) {
                 this._colorDirty = false;
+                this._sizeDirty = false;
+
+                this.graphic.clear();
+                this.graphic.beginFill(this._color, this._alpha);
+                this.graphic.drawRect(0, 0, this._explicitWidth, this._explicitHeight);
+
             }
-            var context = renderContext.canvasContext;
-            context.fillStyle = this._colorStr;
-            context.fillRect(renderContext._transformTx, renderContext._transformTy, this._explicitWidth, this._explicitHeight);
+            this.graphic._draw();
+        }
+    }
+
+
+    export class Graphic {
+
+
+        private canvasContext:CanvasRenderingContext2D;
+        private commandQueue:Array<Command>;
+
+        constructor(private renderContext:RendererContext) {
+            this.canvasContext = (<HTML5CanvasRenderer>renderContext).canvasContext;
+            this.commandQueue = [];
 
         }
+
+        public beginFill(color:number, alpha:number):void {
+            var _colorBlue = color & 0x0000FF;
+            var _colorGreen = (color & 0x00ff00) >> 8;
+            var _colorRed = color >> 16;
+            var _colorStr = "rgba(" + _colorRed + "," + _colorGreen + "," + _colorBlue + "," + alpha + ")";
+
+            this.commandQueue.push(new Command(this._setStyle, this, [_colorStr]))
+
+        }
+
+        private _setStyle(colorStr:string):void {
+            this.canvasContext.fillStyle = colorStr;
+        }
+
+        public drawRect(x:number, y:number, width:number, height:number):void {
+
+            var rendererContext = <HTML5CanvasRenderer>this.renderContext;
+            this.commandQueue.push(new Command(this.canvasContext.fillRect, this.canvasContext,
+                [rendererContext._transformTx + x,
+                    rendererContext._transformTy + y,
+                    width,
+                    height])
+            );
+        }
+
+        public clear():void {
+            this.commandQueue.length = 0;
+        }
+
+        public endFill():void {
+        }
+
+        public _draw():void {
+            for (var i = 0 , length = this.commandQueue.length; i < length; i++) {
+                var command:Command = this.commandQueue[i];
+                command.method.apply(command.thisObject, command.args);
+            }
+        }
+    }
+
+    class Command {
+
+        constructor(public method:Function, public thisObject:any, public args:Array<any>) {
+
+        }
+
+
     }
 
 }

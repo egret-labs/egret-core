@@ -29,7 +29,7 @@ module ns_egret {
     export class HTML5CanvasRenderer extends RendererContext {
 
         private canvas;
-        private canvasContext;
+        public canvasContext;
 
         private _matrixA:number;
         private _matrixB:number;
@@ -38,8 +38,8 @@ module ns_egret {
         private _matrixTx:number;
         private _matrixTy:number;
 
-        private _transformTx:number;
-        private _transformTy:number;
+        public _transformTx:number;
+        public _transformTy:number;
 
         constructor(canvas) {
             this.canvas = canvas;

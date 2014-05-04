@@ -190,8 +190,8 @@ module ns_egret {
             }
             else
             {
-                anchorX = o.pivotOffsetX;
-                anchorY = o.pivotOffsetY;
+                anchorX = o.anchorOffsetX;
+                anchorY = o.anchorOffsetY;
             }
             this.identity();
             this.appendTransform(o.x, o.y, o.scaleX, o.scaleY, o.rotation,

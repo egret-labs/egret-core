@@ -49,7 +49,7 @@ module ns_egret {
          * @param useCapture 是否使用捕获，这个属性只在显示列表中生效。
          * @stable A
          */
-        removeEventListener(type:string, listener:Function, thisObject:any, useCapture:boolean=false):void;
+        removeEventListener(type:string, listener:Function, thisObject:any, useCapture?:boolean):void;
 
         /**
          * 检测是否存在监听器
