@@ -8,19 +8,19 @@
 
 declare module ns_egret{
     export class Utils {
-        static unzip()
-        static unzipBase64AsArray(input, bytes)
-        static uint8ArrayToUint32Array(uint8Arr)
+        static unzip();
+        static unzipBase64AsArray(input, bytes);
+        static uint8ArrayToUint32Array(uint8Arr);
     }
 }
 
 declare module ns_egret.Codec{
     export class Base64 {
-        static decodeAsArray(input, bytes)
+        static decodeAsArray(input, bytes);
     }
 }
 
 declare class Zlib{
 
-    static Inflate(obj):void
+    static Inflate(obj):void;
 }
