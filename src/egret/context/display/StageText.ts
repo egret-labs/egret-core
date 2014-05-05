@@ -18,7 +18,7 @@
 
 /// <reference path="../../core/HashObject.ts"/>
 /// <reference path="../../core/StageDelegate.ts"/>
-/// <reference path="../../utils/FrameworkUtils.ts"/>
+/// <reference path="../../utils/Browser.ts"/>
 
 module ns_egret {
 
