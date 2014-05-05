@@ -173,8 +173,9 @@ module ns_egret {
 		/**
 		 * 记录鼠标在thumb上按下的位置
 		 */		
-		public clickOffset:Point;
-		
+		public _clickOffsetX:number;
+		public _clickOffsetY:number;
+
 		/**
 		 * 更新皮肤部件（通常为滑块）的大小和可见性。<br/>
 		 * 子类覆盖此方法以基于 minimum、maximum 和 value 属性更新滑块的大小、位置和可见性。 
@@ -211,24 +212,19 @@ module ns_egret {
 			this.thumb.removeEventListener(UIEvent.UPDATE_COMPLETE, this.thumb_updateCompleteHandler, this);
 		}
 		
-		
 		/**
 		 * 滑块按下事件
 		 */		
 		public thumb_mouseDownHandler(event:TouchEvent):void{        
-			UIGlobals.stage.addEventListener(TouchEvent.TOUCH_MOVE, 
-				this.stage_mouseMoveHandler, 
-				this, false,0,true);
-			UIGlobals.stage.addEventListener(TouchEvent.TOUCH_END, 
-				this.stage_mouseUpHandler, 
-				this, false,0,true);
-			UIGlobals.stage.addEventListener(Event.LEAVE_STAGE,
-				this.stage_mouseUpHandler,
-				this, false,0,true);
+			UIGlobals.stage.addEventListener(TouchEvent.TOUCH_MOVE,this.stage_mouseMoveHandler,this);
+			UIGlobals.stage.addEventListener(TouchEvent.TOUCH_END,this.stage_mouseUpHandler,this);
+			UIGlobals.stage.addEventListener(Event.LEAVE_STAGE,this.stage_mouseUpHandler,this);
 			this.addEventListener(Event.ENTER_FRAME,this.onEnterFrame,this);
 			
-			this.clickOffset = this.thumb.globalToLocal(new Point(event.stageX, event.stageY));
-			
+			var clickOffset:Point = this.thumb.globalToLocal(event.stageX, event.stageY);
+            this._clickOffsetX = clickOffset.x;
+            this._clickOffsetY = clickOffset.y;
+
 			this.dispatchEvent(new TrackBaseEvent(TrackBaseEvent.THUMB_PRESS));
 			this.dispatchEvent(new UIEvent(UIEvent.CHANGE_START));
 		}
@@ -253,22 +249,27 @@ module ns_egret {
 		public updateWhenMouseMove():void{
 			if(!this.track)
 				return;
-			var p:Point = this.track.globalToLocal(new Point(UIGlobals.stage.mouseX, UIGlobals.stage.mouseY));
-			var newValue:number = this.pointToValue(p.x - this.clickOffset.x, p.y - this.clickOffset.y);
+			var p:Point = this.track.globalToLocal(this._moveStageX, this._moveStageY);
+			var newValue:number = this.pointToValue(p.x - this._clickOffsetX, p.y - this._clickOffsetY);
 			newValue = this.nearestValidValue(newValue, this.snapInterval);
 			
 			if (newValue != this.value){
 				this.setValue(newValue); 
 				this.validateDisplayList();
 				this.dispatchEvent(new TrackBaseEvent(TrackBaseEvent.THUMB_DRAG));
-				this.dispatchEvent(new Event(Event.CHANGE));
+				this.dispatchEventWith(Event.CHANGE);
 			}
 		}
-		
+
+        public _moveStageX:number;
+        public _moveStageY:number;
+
 		/**
 		 * 鼠标移动事件
 		 */		
 		public stage_mouseMoveHandler(event:TouchEvent):void{
+            this._moveStageX = event.stageX;
+            this._moveStageY = event.stageY;
 			if (this.needUpdateValue)
 				return;
 			this.needUpdateValue = true;
@@ -308,12 +309,8 @@ module ns_egret {
 		 * 当在组件上按下鼠标时记录被按下的子显示对象
 		 */		
 		private mouseDownHandler(event:TouchEvent):void{
-			UIGlobals.stage.addEventListener(TouchEvent.TOUCH_END, 
-				this.system_mouseUpSomewhereHandler, 
-				this, false,0,true);
-			UIGlobals.stage.addEventListener(Event.LEAVE_STAGE, 
-				this.system_mouseUpSomewhereHandler, 
-				this, false,0,true);
+			UIGlobals.stage.addEventListener(TouchEvent.TOUCH_END, this.system_mouseUpSomewhereHandler, this);
+			UIGlobals.stage.addEventListener(Event.LEAVE_STAGE, this.system_mouseUpSomewhereHandler, this);
 			
 			this.mouseDownTarget = <DisplayObject> (event.target);      
 		}
@@ -322,21 +319,20 @@ module ns_egret {
 		 * 当鼠标弹起时，若不是在mouseDownTarget上弹起，而是另外的子显示对象上弹起时，额外抛出一个鼠标单击事件。
 		 */		
 		private system_mouseUpSomewhereHandler(event:Event):void{
-			UIGlobals.stage.removeEventListener(TouchEvent.TOUCH_END, 
-				this.system_mouseUpSomewhereHandler, 
-				this);
-			UIGlobals.stage.removeEventListener(Event.LEAVE_STAGE,
-				this.system_mouseUpSomewhereHandler,
-				this);
+			UIGlobals.stage.removeEventListener(TouchEvent.TOUCH_END, this.system_mouseUpSomewhereHandler, this);
+			UIGlobals.stage.removeEventListener(Event.LEAVE_STAGE,this.system_mouseUpSomewhereHandler,this);
 			if (this.mouseDownTarget != event.target && event instanceof TouchEvent && this.contains(<DisplayObject> (event.target))){ 
 				var mEvent:TouchEvent = <TouchEvent> event;
-				
-				var mousePoint:Point = new Point(mEvent.localX, mEvent.localY);
-				mousePoint = this.globalToLocal((<DisplayObject> (event.target)).localToGlobal(mousePoint));
-				
-				this.dispatchEvent(new TouchEvent(TouchEvent.TOUCH_TAP, mEvent.bubbles, mEvent.cancelable, mousePoint.x,
-					mousePoint.y, mEvent.relatedObject, mEvent.ctrlKey, mEvent.altKey,
-					mEvent.shiftKey, mEvent.touchDown, mEvent.delta));
+
+                var mousePoint:Point = (<DisplayObject> (event.target)).localToGlobal(mEvent.localX, mEvent.localY);
+
+                var touchEvent:TouchEvent = new TouchEvent(TouchEvent.TOUCH_TAP, mEvent.bubbles,mEvent.cancelable,
+                    mEvent.touchPointID,mousePoint.x,mousePoint.y);
+                touchEvent.ctrlKey = mEvent.ctrlKey;
+                touchEvent.altKey = mEvent.altKey;
+                touchEvent.shiftKey = mEvent.shiftKey;
+                touchEvent.touchDown = mEvent.touchDown;
+				this.dispatchEvent(touchEvent);
 			}
 			
 			this.mouseDownTarget = null;
