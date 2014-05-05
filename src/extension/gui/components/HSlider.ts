@@ -32,13 +32,6 @@ module ns_egret {
 		/**
 		 * @inheritDoc
 		 */
-		public get hostComponentKey():any{
-			return HSlider;
-		}
-		
-		/**
-		 * @inheritDoc
-		 */
 		public pointToValue(x:number, y:number):number{
 			if (!this.thumb || !this.track)
 				return 0;
@@ -58,12 +51,14 @@ module ns_egret {
 			var thumbRange:number = this.track.layoutBoundsWidth - this.thumb.layoutBoundsWidth;
 			var range:number = this.maximum - this.minimum;
 			var thumbPosTrackX:number = (range > 0) ? ((this.pendingValue - this.minimum) / range) * thumbRange : 0;
-			var thumbPos:Point = this.track.localToGlobal(new Point(thumbPosTrackX, 0));
-			var thumbPosParentX:number = this.thumb.parent.globalToLocal(thumbPos).x;
+			var thumbPos:Point = this.track.localToGlobal(thumbPosTrackX, 0);
+            var thumbPosX:number = thumbPos.x;
+            var thumbPosY:number = thumbPos.y;
+			var thumbPosParentX:number = this.thumb.parent.globalToLocal(thumbPosX,thumbPosY).x;
 			
 			this.thumb.setLayoutBoundsPosition(Math.round(thumbPosParentX), this.thumb.layoutBoundsY);
 			if(this.showTrackHighlight&&this.trackHighlight&&this.trackHighlight.parent){
-				var trackHighlightX:number = this.trackHighlight.parent.globalToLocal(thumbPos).x-thumbPosTrackX;
+				var trackHighlightX:number = this.trackHighlight.parent.globalToLocal(thumbPosX,thumbPosY).x-thumbPosTrackX;
 				this.trackHighlight.x = Math.round(trackHighlightX);
 				this.trackHighlight.width = Math.round(thumbPosTrackX);
 			}
