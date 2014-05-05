@@ -1,3 +1,5 @@
+///<reference path="egret.d.ts"/>
+///<reference path="GameApp.ts"/>
 /**
  * Created by apple on 14-3-22.
  */

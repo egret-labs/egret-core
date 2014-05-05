@@ -305,7 +305,7 @@ module ns_egret {
          * @member {number} ns_egret.DisplayObject#alpha
          *  @default 1
          */
-        private _alpha:number = 1;
+        public _alpha:number = 1;
 
         public get alpha():number {
             return this._alpha;
