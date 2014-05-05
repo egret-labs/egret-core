@@ -44,7 +44,6 @@ module ns_egret {
         /**
          * 克隆点对象
          * @returns {ns_egret.Point}
-         * @stable C 倾向于废除此API，方式开发者滥用，降低游戏性能
          */
         public clone():Point{
             return new Point(this.x, this.y);
