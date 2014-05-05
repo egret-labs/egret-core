@@ -45,7 +45,6 @@ module ns_egret {
     export class ShapeRect extends ns_egret.Shape {
 
         private _color:number;
-        private _alpha:number;
         private _colorDirty:boolean = true;
         private _sizeDirty:boolean = false;
 

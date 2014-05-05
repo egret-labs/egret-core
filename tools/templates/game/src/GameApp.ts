@@ -1,3 +1,5 @@
+///<reference path="egret.d.ts"/>
+///<reference path="GameUI.ts"/>
 /**
  * 游戏入口类
  */

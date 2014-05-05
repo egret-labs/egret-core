@@ -18,16 +18,6 @@ function run(currDir, args, opts) {
     currDir_global = currDir;
 
 
-    var clearTS = function (callback) {
-        var outPath = path.join(currDir, "output");
-        var allFileList = generateAllTypeScriptFileList(outPath);
-        for (var i = 0; i < allFileList.length; i++) {
-            var fileToDelete = path.join(outPath, allFileList[i]);
-            libs.deleteFileSync(fileToDelete);
-            callback();
-        }
-    }
-
     var copyExample = function (callback) {
         var engine_root = param.getEgretPath();
         var target_src = path.join(currDir, "output", "examples");
@@ -36,24 +26,32 @@ function run(currDir, args, opts) {
         callback();
     }
 
+
+    var game_path = args[0];
+    if (!game_path) {
+        libs.exit(1101);
+    }
+
+    var clearTS = function (callback) {
+        var outPath = path.join(currDir, game_path, "bin-debug");
+        var allFileList = generateAllTypeScriptFileList(outPath);
+        for (var i = 0; i < allFileList.length; i++) {
+            var fileToDelete = path.join(outPath, allFileList[i]);
+            libs.deleteFileSync(fileToDelete);
+            callback();
+        }
+    }
+
     var tasks = [
         function (callback) {
-            buildAllFile(path.join(param.getEgretPath(), "src"), path.join(currDir, "output/egret/src"), callback);
+            buildAllFile(path.join(param.getEgretPath(), "src"), path.join(currDir, game_path, "bin-debug/lib"), callback);
+        },
+
+        function (callback) {
+            buildAllFile(path.join(currDir, game_path, "src"), path.join(currDir, game_path, "bin-debug/src"), callback);
         }
     ];
 
-    var game_path = args[0];
-    if (game_path) {
-        tasks.push(
-
-            function (callback) {
-                buildAllFile(path.join(currDir, game_path), path.join(currDir, "output", game_path), callback);
-            }
-
-        )
-    }
-
-    tasks.push(copyExample);
     tasks.push(clearTS);
 
     async.series(tasks
@@ -72,20 +70,103 @@ function getLocalContent() {
     return tempData;
 }
 
-function buildAllFile(source, output, buildOver) {
+function buildAllFile(source, output, callback) {
+
+    async.waterfall([
+        checkCompilerInstalled,
+
+        function (callback) {
+            compile_temp(callback, source)
+        },
+
+        function (filepath,callback){
+
+            build(callback,filepath,output);
+        },
+
+
+
+        function(result,callback){
+
+            var all_js_file = libs.loopFileSync(source, filter);
+            all_js_file.forEach(function(item){
+                libs.copy(path.join(source,item),path.join(output,item));
+            })
+
+            callback(null);
+
+            function filter(path) {
+                return  path.indexOf(".js") > -1
+            }
+        }
+
+
+
+
+
+
+    ], function (err) {
+
+        if (err) {
+            libs.exit(err);
+        }
+        callback();
+    })
+
+
+}
+
+function compile_temp(callback, source) {
+    var file = path.join(source, "egret_file_list.js");
+    if (fs.existsSync(file)) {
+        var js_content = fs.readFileSync(file, "utf-8");
+        eval(js_content);
+        var output_content = egret_file_list.map(function (item) {
+
+            if (item.indexOf("jslib") >= 0) return "";
+            if (item.indexOf("Native") >= 0) return "";
+            return "///\<reference path=\"" + item.replace(".js", ".ts") + "\"/>";
+
+
+        }).join("\n");
+        var output_path = path.join(source,"temp.ts");
+        fs.writeFileSync(output_path, output_content, "utf-8");
+    }
+    //todo  refactor
+    var file = path.join(source, "game_file_list.js");
+    if (fs.existsSync(file)) {
+        var js_content = fs.readFileSync(file, "utf-8");
+        eval(js_content);
+        var output_content = game_file_list.map(function (item) {
+
+            if (item.indexOf("jslib") >= 0) return "";
+            if (item.indexOf("Native") >= 0) return "";
+            return "///\<reference path=\"" + item.replace(".js", ".ts") + "\"/>";
+
+
+        }).join("\n");
+        var output_path = path.join(source,"temp.ts");
+        fs.writeFileSync(output_path, output_content, "utf-8");
+    }
+
+
+    callback(null,output_path);
+
+}
+
+
+function checkCompilerInstalled(callback) {
     var checkTypeScriptCompiler = "tsc";
     var tsc = cp_exec(checkTypeScriptCompiler);
     tsc.on('exit', function (code) {
-        if (code == 0) {
-            libs.copy(source, output);
-            var allFileList = generateAllTypeScriptFileList(output);
-            var crc32Data = getLocalContent();
-            compileAllTypeScript(crc32Data, allFileList, output, output, buildOver);
+            if (code == 0) {
+                callback();
+            }
+            else {
+                libs.exit(2);
+            }
         }
-        else {
-            libs.exit(2);
-        }
-    });
+    );
 }
 
 /**
@@ -93,12 +174,9 @@ function buildAllFile(source, output, buildOver) {
  * @param file
  * @param callback
  */
-function build(file, callback, source, output) {
-    var source = path.join(source, file);
-    var dirname = path.dirname(file);
-    var out = path.join(output, dirname);
+function build(callback, source, output) {
 //    var target = path.join(output,file).replace(".ts",".js");
-    var cmd = "tsc " + source + " -t ES5" //这个特性暂时关闭 //--outDir " +  out;
+    var cmd = "tsc " + source + " -t ES5 --outDir " +  output;
 
     var ts = cp_exec(cmd);
     ts.stderr.on("data", function (data) {
@@ -110,8 +188,9 @@ function build(file, callback, source, output) {
     })
 
     ts.on('exit', function (code) {
-        console.log("[success]" + file);
-        callback(null, file);
+        fs.unlinkSync(source)
+        fs.unlinkSync(path.join(output,"temp.js"));
+        callback(null, source);
     });
 }
 

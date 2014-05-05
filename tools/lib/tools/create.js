@@ -19,7 +19,7 @@ function run(currentDir, args, opts) {
 
 
     createNewProject(projectName);
-    copyEngine();
+//    copyEngine();
 
 
 }
