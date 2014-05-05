@@ -636,11 +636,9 @@ module ns_egret {
 
 			var listEvent:ListEvent = new ListEvent(type, false, false,
                 touchEvent.touchPointID,touchEvent.stageX,touchEvent.stageY,
+                touchEvent.ctrlKey,touchEvent.altKey,touchEvent.shiftKey,touchEvent.touchDown,
 				itemIndex,this.dataProvider.getItemAt(itemIndex),itemRenderer);
-            listEvent.ctrlKey = touchEvent.ctrlKey,
-            listEvent.altKey = touchEvent.altKey,
-            listEvent.shiftKey = touchEvent.shiftKey,
-            listEvent.touchDown = touchEvent.touchDown,
+
 			this.dispatchEvent(listEvent);
 		}
 		

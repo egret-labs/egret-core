@@ -209,7 +209,7 @@ module ns_egret {
 					this.slideToValue = newValue;
 					this.animator.duration = this.slideDuration * 
 						(Math.abs(this.pendingValue - this.slideToValue) / (this.maximum - this.minimum));
-					this.animator.motionPaths = [{p:"value", f:this.pendingValue, t:this.slideToValue}];
+					this.animator.motionPaths = [{prop:"value", from:this.pendingValue, to:this.slideToValue}];
 					this.dispatchEvent(new UIEvent(UIEvent.CHANGE_START));
 					this.animator.play();
 				}

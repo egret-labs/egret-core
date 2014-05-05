@@ -293,7 +293,7 @@ module ns_egret {
             var length:number = paths.length;
             for(var i:number=0;i<length;i++){
                 var motion:any = paths[i];
-                this.currentValue[motion.p] = motion.f+(motion.t-motion.f)*fraction;
+                this.currentValue[motion.prop] = motion.from+(motion.to-motion.from)*fraction;
             }
 		}
 
