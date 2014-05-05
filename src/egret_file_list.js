@@ -32,7 +32,7 @@ var temp = [
     "egret/display/MovieClip.js",
     "egret/context/display/StageText.js",
     "egret/context/renderer/RendererContext.js",
-    "egret/context/renderer/HTML5CanvasRenderer.js",
+
 	"egret/interactive/InteractionMode.js",
     "egret/interactive/TouchContext.js",
     "egret/resource/ResourceLoader.js",
@@ -56,7 +56,7 @@ var temp = [
     "egret/tween/Ease.js",
     //tween end
     "egret/context/sound/SoundContext.js",
-    "egret/context/sound/HTML5SoundContext.js",
+
 
     //扩展
     //tileMap start
@@ -136,20 +136,26 @@ var temp = [
 ]
 
 
-
+var context_list;
 
 if (true) {//浏览器
-    temp.push("egret/context/devices/HTML5DeviceContext.js");
-    temp.push("egret/context/renderer/NativeRendererContext.js");
+
+    context_list = [
+        "egret/context/devices/HTML5DeviceContext.js",
+        "egret/context/renderer/HTML5CanvasRenderer.js",
+        "egret/context/sound/HTML5SoundContext.js"
+
+    ]
 }
 else {
-    temp.push("egret/context/devices/NativeDeviceContext.js");
-    temp.push("egret/context/renderer/NativeRendererContext.js");
+    context_list = [
+        "egret/context/devices/NativeDeviceContext.js",
+        "egret/context/renderer/NativeRendererContext.js"
+    ]
 }
 
 
-jsFileList = temp;
-egret_file_list = temp;
+egret_file_list = temp.concat(context_list);
 
 
 
