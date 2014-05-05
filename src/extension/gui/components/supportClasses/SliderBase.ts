@@ -22,9 +22,6 @@
 /// <reference path="../../../../egret/events/TouchEvent.ts"/>
 /// <reference path="../../../../egret/geom/Point.ts"/>
 /// <reference path="../../core/UIGlobals.ts"/>
-/// <reference path="../../effects/animation/Animation.ts"/>
-/// <reference path="../../effects/animation/MotionPath.ts"/>
-/// <reference path="../../effects/easing/Sine.ts"/>
 /// <reference path="../../events/TrackBaseEvent.ts"/>
 /// <reference path="../../events/UIEvent.ts"/>
 
@@ -159,8 +156,8 @@ module ns_egret {
 			if(!this.track)
 				return;
 			
-			var pos:Point = this.track.globalToLocal(UIGlobals.stage.mouseX, UIGlobals.stage.mouseY);
-			var newValue:number = this.pointToValue(pos.x - this.clickOffset.x,pos.y - this.clickOffset.y);
+			var pos:Point = this.track.globalToLocal(this._moveStageX, this._moveStageY);
+			var newValue:number = this.pointToValue(pos.x - this._clickOffsetX,pos.y - this._clickOffsetY);
 			newValue = this.nearestValidValue(newValue, this.snapInterval);
 			
 			if (newValue != this.pendingValue){
