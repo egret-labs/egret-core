@@ -1,4 +1,4 @@
-
+bin-debug/
 .idea/
 tools/node_modules
 src/egret/**/*.js
