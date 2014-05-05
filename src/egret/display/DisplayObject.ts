@@ -430,21 +430,24 @@ module ns_egret {
             return this.getBounds().height;
         }
 
+        private _hasWidthSet:Boolean = false;
         /**
          * 显式设置宽度
          * @param value
          */
         public set width(value:number) {
             this._explicitWidth = value;
+            this._hasWidthSet = NumberUtils.isNumber(value);
         }
 
-
+        private _hasHeightSet:Boolean = false;
         /**
          * 显式设置高度
          * @param value
          */
         public set height(value:number) {
             this._explicitHeight = value;
+            this._hasHeightSet = NumberUtils.isNumber(value);
         }
 
         /**
@@ -559,9 +562,8 @@ module ns_egret {
          */
         public getBounds() {
             var rect:Rectangle = this._measureBounds();
-            var heightSet:boolean = !isNaN(this._explicitHeight);
-            var w:number = isNaN(this._explicitWidth) ? rect.width : this._explicitWidth;
-            var h:number = isNaN(this._explicitHeight) ? rect.height : this._explicitHeight;
+            var w:number = this._hasWidthSet ? this._explicitWidth : rect.width;
+            var h:number = this._hasHeightSet ? this._explicitHeight : rect.height;
             var x:number = rect.x;
             var y:number = rect.y;
             var anchorX, anchorY;

@@ -32,11 +32,16 @@ module ns_egret {
          * @param bubbles {boolean} 确定 Event 对象是否参与事件流的冒泡阶段。默认值为 false。
          * @param cancelable {boolean} 确定是否可以取消 Event 对象。默认值为 false。
          */
-        public constructor(type:string, bubbles:boolean = true, cancelable:boolean = true, touchPointID:number = 0, stageX:number = 0, stageY:number = 0) {
+        public constructor(type:string, bubbles:boolean = true, cancelable:boolean = true,
+                           touchPointID:number = 0, stageX:number = 0, stageY:number = 0,
+                           ctrlKey:boolean=false,altKey:boolean=false,shiftKey:boolean=false,touchDown:boolean=false) {
             super(type, bubbles, cancelable);
             this.touchPointID = touchPointID
             this._stageX = stageX;
             this._stageY = stageY;
+            this.ctrlKey = ctrlKey;
+            this.altKey = altKey;
+            this.touchDown = touchDown;
         }
 
         /**
