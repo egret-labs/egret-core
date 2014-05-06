@@ -145,7 +145,7 @@ module ns_egret {
             this._downPX = event.stageX;
             this._downPY = event.stageY;
 
-            this._downTime = Ticker.now();
+            this._downTime = getTimer();
         }
 
         private mouseUp(event:ns_egret.TouchEvent) {
@@ -154,7 +154,7 @@ module ns_egret {
             MainContext.instance.stage.removeEventListener(ns_egret.TouchEvent.TOUCH_MOVE, this.mouseMove, this);
             console.log("end")
 
-            var endTime = Ticker.now();
+            var endTime = getTimer();
             if (endTime - this._downTime > this._deltaTime) {//超过间隔时间，则不需要做 惯性缓动
                 this._backToPosition();
             }

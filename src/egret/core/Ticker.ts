@@ -29,15 +29,15 @@ module ns_egret {
 
 
         /**
-         * 获取当前系统时间的时间戳
-         * @stable A
+         * 使用全局函数getTimer()代替
+         * @deprecated
          */
         public static now = function () {
-            return new Date().getTime();
+            return getTimer();
         };
 
 
-        private _time:number;
+        private _time:number = 0;
         private _timeScale:number = 1;
         private _paused:boolean = false;
         private _frameRate:number = 60;
@@ -48,7 +48,7 @@ module ns_egret {
          * @stable A
          */
         public run() {
-            this._time = Ticker.now();
+            _startTime = new Date().getTime();
             var context = ns_egret.MainContext.instance.deviceContext;
             context.executeMainLoop(this.update, this);
         }
@@ -56,7 +56,7 @@ module ns_egret {
         private update() {
             var list:Array<any> = this.callBackList.concat();
             var length:number = list.length;
-            var thisTime:number = Ticker.now();
+            var thisTime:number = getTimer();
             var frameTime:number = thisTime - this._time;
             frameTime *= this._timeScale;
             for (var i:number = 0; i < length; i++) {

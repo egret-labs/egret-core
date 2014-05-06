@@ -53,7 +53,7 @@ module ns_egret {
         public start() {
             if(this._running)
                 return;
-            this.lastTime = Ticker.now();
+            this.lastTime = getTimer();
             if (this._currentCount != 0) {
                 this._currentCount = 0;
             }
@@ -77,7 +77,7 @@ module ns_egret {
                 Timer.timerEvent = new TimerEvent(TimerEvent.TIMER);
             }
             var timerEvent:TimerEvent = Timer.timerEvent;
-            var now = Ticker.now();
+            var now = getTimer();
             var passTime = now - this.lastTime;
             if(passTime>this.delay){
                 this.lastTime = now;
