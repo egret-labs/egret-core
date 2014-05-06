@@ -77,6 +77,8 @@ var temp = [
     "extension/gui/core/NavigationUnit.js",
     "extension/gui/core/ScrollPolicy.js",
     "extension/gui/core/ClassFactory.js",
+    "extension/gui/core/IContainer.js",
+    "extension/gui/core/IVisualElementContainer.js",
     "extension/gui/states/OverrideBase.js",
     "extension/gui/states/AddItems.js",
     "extension/gui/states/SetProperty.js",
@@ -95,6 +97,10 @@ var temp = [
     "extension/gui/components/Group.js",
     "extension/gui/components/Skin.js",
     "extension/gui/components/DataGroup.js",
+    "extension/gui/components/SkinnableContainer.js",
+    "extension/gui/components/Panel.js",
+
+
     "extension/gui/events/UIEvent.js",
     "extension/gui/events/PropertyChangeEvent.js",
     "extension/gui/events/PropertyChangeEventKind.js",
@@ -125,7 +131,7 @@ var temp = [
     "extension/gui/managers/impl/PopUpManagerImpl.js",
     "extension/gui/managers/PopUpManager.js",
     //GUI end
-    "extension/gui/component/DynamicBitmap.js",
+//    "extension/gui/component/DynamicBitmap.js",
     "extension/dragonbones/dragonBones.js",
     "extension/dragonbones/DragonBonesEgretBridge.js",
     "jslib/DEBUG.js",

@@ -20,52 +20,50 @@
 
 module ns_egret {
 
-	export class Panel extends SkinnableContainer{
-		/**
-		 * 构造函数
-		 */		
-		public constructor(){
-			super();
-			this.touchEnabled = false;
-			//当面板覆盖在会运动的场景上时，将会导致不断被触发重绘，而如果含有较多矢量子项，
-			//就会消耗非常多的渲染时间。设置位图缓存将能极大提高这种情况下的性能。
-			this.cacheAsBitmap = true;
-		}
-		
-		/**
-		 * [SkinPart]标题显示对象 
-		 */
-		public titleDisplay:IDisplayText;
+    export class Panel extends SkinnableContainer {
+        /**
+         * 构造函数
+         */
+        public constructor() {
+            super();
+            this.touchEnabled = false;
+        }
 
-		private _title:string = "";
-		/**
-		 * 标题内容改变 
-		 */		
-		private titleChanged:boolean;
-		/**
-		 * 标题文本内容
-		 */		
-		public get title():string {
-			return this._title;
-		}
-		
-		public set title(value:string) {
-			this._title = value;
-			
-			if (this.titleDisplay)
-				this.titleDisplay.text = this.title;
-		}
-		
-		/**
-		 * @inheritDoc
-		 */
-		public partAdded(partName:string, instance:any):void{
-			super.partAdded(partName, instance);
-			
-			if (instance == this.titleDisplay){
-				this.titleDisplay.text = this.title;
-			}
-		}
-		
-	}
+        /**
+         * [SkinPart]标题显示对象
+         */
+        public titleDisplay:IDisplayText;
+
+        private _title:string = "";
+        /**
+         * 标题内容改变
+         */
+        private titleChanged:boolean;
+
+        /**
+         * 标题文本内容
+         */
+        public get title():string {
+            return this._title;
+        }
+
+        public set title(value:string) {
+            this._title = value;
+
+            if (this.titleDisplay)
+                this.titleDisplay.text = this.title;
+        }
+
+        /**
+         * @inheritDoc
+         */
+        public partAdded(partName:string, instance:any):void {
+            super.partAdded(partName, instance);
+
+            if (instance == this.titleDisplay) {
+                this.titleDisplay.text = this.title;
+            }
+        }
+
+    }
 }
