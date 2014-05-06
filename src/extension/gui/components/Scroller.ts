@@ -83,13 +83,7 @@ module ns_egret {
 		public updateDisplayList(unscaledWidth:number, unscaledHeight:number):void{
 			this.contentGroup.setLayoutBoundsSize(unscaledWidth,unscaledHeight);
 		}
-		/**
-		 * @inheritDoc
-		 */
-		public get hostComponentKey():any{
-			return Scroller;
-		}
-		
+
 		private _verticalScrollPolicy:string = "auto";
 
 		/**

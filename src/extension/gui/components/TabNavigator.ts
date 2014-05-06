@@ -31,9 +31,6 @@ module ns_egret {
 			super();
 		}
 		
-		public get hostComponentKey():any{
-			return TabNavigator;
-		}
 		/**
 		 * [SkinPart]选项卡组件
 		 */

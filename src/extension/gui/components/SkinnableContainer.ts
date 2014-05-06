@@ -29,13 +29,6 @@ module ns_egret {
 		}
 		
 		/**
-		 * @inheritDoc
-		 */
-		public get hostComponentKey():any{
-			return SkinnableContainer;
-		}
-		
-		/**
 		 * [SkinPart]实体容器
 		 */
 		public contentGroup:Group;

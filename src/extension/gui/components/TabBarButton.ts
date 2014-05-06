@@ -27,13 +27,6 @@ module ns_egret {
 			super();
 		}
 		
-		/**
-		 * @inheritDoc
-		 */
-		public get hostComponentKey():any{
-			return TabBarButton;
-		}
-		
 		private _allowDeselection:boolean = true;
 		/**
 		 * 如果为 true，用户单击当前选定的按钮时即会将其取消选择。

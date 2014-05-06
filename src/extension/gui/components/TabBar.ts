@@ -43,12 +43,6 @@ module ns_egret {
 		}
 		
 		/**
-		 * @inheritDoc
-		 */
-		public get hostComponentKey():any{
-			return TabBar;
-		}
-		/**
 		 * requireSelection改变标志
 		 */
 		private requireSelectionChanged:boolean;

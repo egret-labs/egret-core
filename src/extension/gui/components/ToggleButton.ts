@@ -28,11 +28,5 @@ module ns_egret {
 			super();
 		}
 		
-		/**
-		 * @inheritDoc
-		 */
-		public get hostComponentKey():any{
-			return ToggleButton;
-		}
 	}
 }

@@ -39,13 +39,6 @@ module ns_egret {
 			}
 		}
 		/**
-		 * @inheritDoc
-		 */
-		public get hostComponentKey():any{
-			return TreeItemRenderer;
-		}
-		
-		/**
 		 * [SkinPart]图标显示对象
 		 */
 		public iconDisplay:ISkinnableClient;

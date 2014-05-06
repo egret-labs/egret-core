@@ -31,10 +31,7 @@ module ns_egret {
 			super();
 			this.groupName = "radioGroup";
 		}
-		
-		public get hostComponentKey():any{
-			return RadioButton;
-		}
+
 		/**
 		 * 在RadioButtonGroup中的索引
 		 */		

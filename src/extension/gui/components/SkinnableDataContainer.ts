@@ -35,12 +35,6 @@ module ns_egret {
 		/**
 		 * @inheritDoc
 		 */
-		public get hostComponentKey():any{
-			return SkinnableDataContainer;
-		}
-		/**
-		 * @inheritDoc
-		 */
 		public updateRenderer(renderer:IItemRenderer, itemIndex:number, data:any):IItemRenderer{
 			if(renderer is IVisualElement){
 				(<IVisualElement> renderer).ownerChanged(this);

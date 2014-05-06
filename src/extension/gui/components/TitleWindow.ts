@@ -43,12 +43,6 @@ module ns_egret {
 		}
 		
 		/**
-		 * @inheritDoc
-		 */
-		public get hostComponentKey():any{
-			return TitleWindow;
-		}
-		/**
 		 * [SkinPart]关闭按钮
 		 */	
 		public closeButton:Button;

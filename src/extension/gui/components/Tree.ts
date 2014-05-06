@@ -45,13 +45,6 @@ module ns_egret {
 		/**
 		 * @inheritDoc
 		 */
-		public get hostComponentKey():any{
-			return Tree;
-		}
-		
-		/**
-		 * @inheritDoc
-		 */
 		public updateRenderer(renderer:IItemRenderer, itemIndex:number, data:any):IItemRenderer{
 			if(renderer is ITreeItemRenderer&&this.dataProvider is ITreeCollection){
 				var treeCollection:ITreeCollection = <ITreeCollection> (this.dataProvider);

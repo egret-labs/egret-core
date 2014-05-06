@@ -33,13 +33,6 @@ module ns_egret {
 		}
 		
 		/**
-		 * @inheritDoc
-		 */
-		public get hostComponentKey():any{
-			return Panel;
-		}
-		
-		/**
 		 * [SkinPart]标题显示对象 
 		 */
 		public titleDisplay:IDisplayText;

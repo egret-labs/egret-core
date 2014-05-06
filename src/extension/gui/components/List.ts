@@ -46,13 +46,6 @@ module ns_egret {
 		}
 		
 		/**
-		 * @inheritDoc
-		 */
-		public get hostComponentKey():any{
-			return List;
-		}
-		
-		/**
 		 * 是否使用虚拟布局,默认true
 		 */		
 		public get useVirtualLayout():boolean{

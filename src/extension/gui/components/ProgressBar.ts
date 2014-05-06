@@ -36,13 +36,6 @@ module ns_egret {
 		}
 		
 		/**
-		 * @inheritDoc
-		 */
-		public get hostComponentKey():any{
-			return ProgressBar;
-		}
-		
-		/**
 		 * [SkinPart]进度高亮显示对象。
 		 */		
 		public thumb:DisplayObject;
@@ -74,7 +67,7 @@ module ns_egret {
 		 */		
 		public valueToLabel(value:number,maximum:number):string{
 			if(this.labelFunction!=null){
-				return this.labelFunction(value,maximum);
+				return this._labelFunction(value,maximum);
 			}
 			return value+" / "+maximum;
 		}

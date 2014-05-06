@@ -27,13 +27,6 @@ module ns_egret {
 			this.touchChildren = true;
 		}
 		
-		/**
-		 * @inheritDoc
-		 */
-		public get hostComponentKey():any{
-			return ItemRenderer;
-		}
-		
 		private dataChangedFlag:boolean = false;
 		private _data:any;
 		/**

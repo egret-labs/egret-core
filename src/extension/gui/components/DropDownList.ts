@@ -29,13 +29,7 @@ module ns_egret {
 			super();
 		}
 		
-		/**
-		 * @inheritDoc
-		 */
-		public get hostComponentKey():any{
-			return DropDownList;
-		}
-		
+
 		/**
 		 * [SkinPart]选中项文本
 		 */		

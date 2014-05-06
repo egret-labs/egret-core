@@ -67,12 +67,6 @@ module ns_egret {
 		public constructor(){
 			super();
 		}
-		/**
-		 * @inheritDoc
-		 */
-		public get hostComponentKey():any{
-			return Alert;
-		}
 		private _firstButtonLabel:string = "";
 		/**
 		 * 第一个按钮上显示的文本
