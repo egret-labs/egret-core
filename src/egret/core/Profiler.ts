@@ -20,6 +20,7 @@
 /// <reference path="Ticker.ts"/>
 /// <reference path="../events/Event.ts"/>
 /// <reference path="../text/TextField.ts"/>
+/// <reference path="../utils/getTimer.ts"/>
 
 module ns_egret {
     /**

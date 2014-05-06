@@ -19,6 +19,7 @@
 /// <reference path="../core/Ticker.ts"/>
 /// <reference path="../events/EventDispatcher.ts"/>
 /// <reference path="../events/TimerEvent.ts"/>
+/// <reference path="getTimer.ts"/>
 
 module ns_egret {
     export class Timer extends EventDispatcher {
