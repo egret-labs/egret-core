@@ -258,8 +258,8 @@ module ns_egret {
 					}
 				}
 				else{
-					this._skin.width = unscaledWidth;
-					this._skin.height = unscaledHeight;
+					this._skin.scaleX = unscaledWidth/this._skin.width;
+					this._skin.scaleY = unscaledHeight/this._skin.height;
 					if("validateNow" in this._skin)
 						(<IInvalidateDisplay> (this._skin)).validateNow();
 				}
