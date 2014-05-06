@@ -84,4 +84,16 @@ function generateConfigJson(currentDir, engine, projectName) {
     });
 }
 
+
+function help_title(){
+    return "创建新项目";
+}
+
+
+function help_example(){
+    return "egret create [project_name]";
+}
+
 exports.run = run;
+exports.help_title = help_title;
+exports.help_example = help_example;

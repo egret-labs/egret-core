@@ -74,3 +74,17 @@ function onGet(request, response) {
 }
 
 exports.run = run;
+
+
+function help_title(){
+    return "启动HttpServer,并在默认浏览器中打开指定项目";
+}
+
+
+function help_example(){
+    return "egret startserver [project_name]";
+}
+
+exports.run = run;
+exports.help_title = help_title;
+exports.help_example = help_example;
