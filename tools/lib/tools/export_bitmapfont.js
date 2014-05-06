@@ -24,20 +24,23 @@ function run(currDir, args, opts) {
 
     var fntText = fs.readFileSync(fntFilePath,"utf-8");
 
+    fntText = fntText.split("\r\n").join("\n");
     var lines = fntText.split("\n");
     var config = lines[0];
 
-
-
     var charsCount = parseInt(getConfigByKey(lines[3],"count"));
 
+    //获取 png图 
+    var pngLine = lines[2];
+    var pngStr = getConfigByKey(pngLine, "file");
 
     var egret_obj = {};
     for (var i = 4 ; i < 4 + charsCount ; i++){
         var charText = lines[i];
-        var letter = getConfigByKey(charText,"letter");
+        var letter = String.fromCharCode(getConfigByKey(charText,"id"));
         var obj = {};
         egret_obj[letter] = obj;
+
         obj["x"] =  parseInt(getConfigByKey(charText,"x"));
         obj["y"] = parseInt(getConfigByKey(charText,"y"));
         obj["w"] = parseInt(getConfigByKey(charText,"width"));
@@ -46,12 +49,14 @@ function run(currDir, args, opts) {
         obj["offY"] = parseInt(getConfigByKey(charText,"yoffset"));
     }
 
-    exportEgretObject(egret_obj);
+    exportEgretObject({"data" : egret_obj, "texturePath" : pngStr});
 }
 
 function exportEgretObject(obj){
-    var str = JSON.stringify(obj,null,"");
+    var str = JSON.stringify(obj);
     str = str.replace(/\\\"/gi,"");
+
+    console.log("输出Jfnt Data文件:");
     console.log(str);
     // str = "var data =" + str.replace(/\\\"/gi,"") + ";";
     // var writePath = fntFilePath.replace(".fnt",".egf");
