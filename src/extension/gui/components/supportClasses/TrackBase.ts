@@ -62,38 +62,55 @@ module ns_egret {
 		/**
 		 * [SkinPart]实体轨道组件
 		 */
-		public track:Button; 
-		
+		public track:Button;
+
+        /**
+         * 最大有效值
+         */
+        public get maximum():number {
+            return this._maximum;
+        }
 		/**
 		 * @inheritDoc
 		 */
 		public set maximum(value:number){
-			if (value == super.maximum)
+			if (value == this._maximum)
 				return;
 			
-			super.maximum = value;
+			this._setMaximun(value);
 			this.invalidateDisplayList();
 		}
-		
-		/**
+        /**
+         * 最小有效值
+         */
+        public get minimum():number {
+            return this._minimum;
+        }
+
+        /**
 		 * @inheritDoc
 		 */
 		public set minimum(value:number){
-			if (value == super.minimum)
+			if (value == this._minimum)
 				return;
 			
-			super.minimum = value;
+			this._setMinimun(value);
 			this.invalidateDisplayList();
 		}
-		
+        /**
+         * 此范围的当前值。
+         */
+        public get value():number {
+            return this._getValue();
+        }
 		/**
 		 * @inheritDoc
 		 */
 		public set value(newValue:number){
-			if (newValue == super.value)
+			if (newValue == this._getValue())
 				return;
 			
-			super.value = newValue;
+			this._setValue(newValue);
 			this.invalidateDisplayList();
 		}
 		

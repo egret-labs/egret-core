@@ -23,9 +23,12 @@ module ns_egret {
 		 * 构造函数
 		 * @param updateFunction 动画更新时的回调函数,updateFunction(animation:Animation):void
 		 */		
-		public constructor(updateFunction:Function){
+		public constructor(updateFunction:Function,thisObject:any){
 			this.updateFunction = updateFunction;
-		}
+		    this.thisObject = thisObject;
+        }
+
+        private thisObject:any;
 		
 		private _isPlaying:boolean
 		/**
@@ -134,7 +137,7 @@ module ns_egret {
 			this.caculateCurrentValue(fraction);
 			this.startTime = Ticker.now() - runningTime - this._startDelay;
 			if(this.updateFunction!=null)
-				this.updateFunction(this);
+                this.updateFunction.call(this.thisObject,this);
 		}
 		
 		/**
@@ -159,19 +162,19 @@ module ns_egret {
 			if(!this._started){
 				this.caculateCurrentValue(0);
 				if(this.startFunction!=null){
-					this.startFunction(this);
+					this.startFunction.call(this.thisObject,this);
 				}
 				if(this.updateFunction!=null){
-					this.updateFunction(this);
+					this.updateFunction.call(this.thisObject,this);
 				}
 			}
 			this.caculateCurrentValue(1);
 			if(this.updateFunction!=null){
-				this.updateFunction(this);
+				this.updateFunction.call(this.thisObject,this);
 			}
 			this.stopAnimation();
 			if(this.endFunction!=null){
-				this.endFunction(this);
+				this.endFunction.call(this.thisObject,this);
 			}
 		}
 		
@@ -181,7 +184,7 @@ module ns_egret {
 		public stop():void{
 			this.stopAnimation();
 			if(this.stopFunction!=null)
-				this.stopFunction(this);
+				this.stopFunction.call(this.thisObject,this);
 		}
 		/**
 		 * 仅停止播放动画，而不调用stopFunction。
@@ -259,13 +262,13 @@ module ns_egret {
 				this._isPlaying = true;
 				if(this.playedTimes==0){
 					if(this.startFunction!=null)
-						this.startFunction(this);
+						this.startFunction.call(this.thisObject,this);
 				}
 			}
 			var fraction:number = this._duration==0?1:Math.min(runningTime,this._duration)/this._duration;
 			this.caculateCurrentValue(fraction);
 			if(this.updateFunction!=null)
-				this.updateFunction(this);
+				this.updateFunction.call(this.thisObject,this);
 			var isEnded:boolean = runningTime>=this._duration;
 			if(isEnded){
 				this.playedTimes++;
@@ -281,7 +284,7 @@ module ns_egret {
 				}
 			}
 			if(isEnded&&this.endFunction!=null){
-				this.endFunction(this);
+				this.endFunction.call(this.thisObject,this);
 			}
 			return isEnded;
 		}

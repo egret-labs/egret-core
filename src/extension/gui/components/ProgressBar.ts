@@ -109,7 +109,7 @@ module ns_egret {
         /**
          * 动画实例
          */
-        private animator:Animation = null;
+        private animator:Animation;
         /**
          * 动画播放结束时要到达的value。
          */
@@ -136,7 +136,7 @@ module ns_egret {
                 if (this.slideToValue == this._getValue())
                     return;
                 if (!this.animator) {
-                    this.animator = new Animation(this.animationUpdateHandler);
+                    this.animator = new Animation(this.animationUpdateHandler,this);
                 }
                 if (this.animator.isPlaying) {
                     this.setValue(this.nearestValidValue(this.animator.motionPaths[0].valueTo, this.snapInterval));

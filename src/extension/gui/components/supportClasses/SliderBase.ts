@@ -64,14 +64,7 @@ module ns_egret {
 		/**
 		 * 动画实例
 		 */	
-		private animator:Animation = null;
-		
-		/**
-		 * @inheritDoc
-		 */
-		public get maximum():number{
-			return super.maximum;
-		}
+		private animator:Animation;
 		
 		private _pendingValue:number = 0;
 		/**
@@ -201,7 +194,7 @@ module ns_egret {
 			if (newValue != this.pendingValue){
 				if (this.slideDuration != 0){
 					if (!this.animator){
-						this.animator = new Animation(this.animationUpdateHandler);
+						this.animator = new Animation(this.animationUpdateHandler,this);
 						this.animator.endFunction = this.animationEndHandler;
 					}
 					if (this.animator.isPlaying)

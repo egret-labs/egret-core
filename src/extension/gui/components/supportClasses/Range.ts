@@ -28,8 +28,7 @@ module ns_egret {
             super();
         }
 
-        private _maximum:number = 100;
-
+        public _maximum:number = 100;
         /**
          * 最大有效值改变标志
          */
@@ -43,6 +42,10 @@ module ns_egret {
         }
 
         public set maximum(value:number) {
+           this._setMaximun(value);
+        }
+
+        public _setMaximun(value:number):void{
             if (value == this._maximum)
                 return;
 
@@ -52,7 +55,7 @@ module ns_egret {
             this.invalidateProperties();
         }
 
-        private _minimum:number = 0;
+        public _minimum:number = 0;
 
         /**
          * 最小有效值改变标志
@@ -67,6 +70,10 @@ module ns_egret {
         }
 
         public set minimum(value:number) {
+            this._setMinimun(value);
+        }
+
+        public _setMinimun(value:number):void{
             if (value == this._minimum)
                 return;
 
