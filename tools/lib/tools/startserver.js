@@ -2,6 +2,7 @@ var http = require('http');
 var url = require('url');
 var fs = require('fs');
 var path = require('path');
+var libs = require("../core/normal_libs");
 
 var mine = {
     "css": "text/css",
@@ -28,8 +29,12 @@ function run(currDir, args, opts) {
     var PORT = 3000;
     var server = http.createServer(onGet);
     server.listen(PORT);
-    var open = require("open");
-    var url = "http://localhost:3000";
+    var open = require("../core/open");
+    var project_name = args[0];
+    if (!project_name){
+        libs.exit(1201);
+    }
+    var url = "http://localhost:3000/" + project_name + "/launcher/index.html";
     open(url);
     console.log("Server runing at port: " + PORT + ".");
 }
@@ -69,3 +74,17 @@ function onGet(request, response) {
 }
 
 exports.run = run;
+
+
+function help_title(){
+    return "启动HttpServer,并在默认浏览器中打开指定项目";
+}
+
+
+function help_example(){
+    return "egret startserver [project_name]";
+}
+
+exports.run = run;
+exports.help_title = help_title;
+exports.help_example = help_example;

@@ -21,9 +21,10 @@
 
 module ns_egret {
     /**
-     * @class IEventDispatcher
-     * IEventDispatcher是egret的事件派发器接口，负责进行事件的发送和侦听。
-     * @stable A
+     *
+     * @class ns_egret.IEventDispatcher
+     * @interface
+     * @classdesc IEventDispatcher是egret的事件派发器接口，负责进行事件的发送和侦听。
      */
     export interface IEventDispatcher extends IHashObject{
 

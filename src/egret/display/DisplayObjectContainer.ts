@@ -331,9 +331,9 @@ module ns_egret {
             if (!this.visible) {
                 return null;
             }
-            if (this.scrollRect) {
-                if (x > this.scrollRect.width
-                    || y > this.scrollRect.height) {
+            if (this._scrollRect) {
+                if (x > this._scrollRect.width
+                    || y > this._scrollRect.height) {
                     return null;
                 }
             }
@@ -351,34 +351,34 @@ module ns_egret {
                 return result;
             }
             //算出touchChildren
-            var touchChildren = this.touchChildren;
+            var touchChildren = this._touchChildren;
             var target = this;
-            while (target.parent) {
-                touchChildren = touchChildren && target.parent.touchChildren;
-                target = target.parent;
+            while (target._parent) {
+                touchChildren = touchChildren && target._parent._touchChildren;
+                target = target._parent;
             }
             for (var i = l - 1; i >= 0; i--) {
                 var child = children[i];
                 //todo 這裡的matrix不符合identity的設計原則，以後需要重構
                 var o = child;
                 var offsetPoint = o.getOffsetPoint();
-                var childX = o.x;
-                var childY = o.y;
-                if(this.scrollRect)
+                var childX = o._x;
+                var childY = o._y;
+                if(this._scrollRect)
                 {
-                    childX -= this.scrollRect.x;
-                    childY -= this.scrollRect.y;
+                    childX -= this._scrollRect.x;
+                    childY -= this._scrollRect.y;
                 }
-                var mtx = Matrix.identity.identity().prependTransform(childX, childY, o.scaleX, o.scaleY, o.rotation,
+                var mtx = Matrix.identity.identity().prependTransform(childX, childY, o._scaleX, o._scaleY, o._rotation,
                     0, 0, offsetPoint.x, offsetPoint.y);
                 mtx.invert();
                 var point = Matrix.transformCoords(mtx, x, y);
                 var childHitTestResult = child.hitTest(point.x, point.y, true);
                 if (childHitTestResult) {
-                    if (childHitTestResult.touchEnabled && touchChildren) {
+                    if (childHitTestResult._touchEnabled && touchChildren) {
                         return childHitTestResult;
                     }
-                    else if (this.touchEnabled) {
+                    else if (this._touchEnabled) {
                         return this;
                     }
                     if (result == null) {

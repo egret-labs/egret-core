@@ -1,19 +1,7 @@
 /**
  * 从CocosBuilder 中导出JSON数据用于egret项目
  * 目前对应的CocosBuilder版本为v3.0-alpha，导出版本为5
- * 本项目依赖于plist库，请执行 npm install plist 安装依赖库
- * 当前依赖的plist库有一个bug，请安装后打开 node_modules/plist/lib/plist.js，第134行
- *   if (res ) new_arr.push( res );
- * 改为
- *   new_arr.push( res );
- *
- * 调用方式
- * <code>
- *     node egret_export_cocos_builder.js [ccb_file_path]
- * </code>
- *
  * 禁止使用的属性：
- *   忽略锚点
  *   翻转
  *   [旋转]（以后会支持）
  *   坐标原点，第二层节点必须左上角，其他节点也尽量在左上角
@@ -27,11 +15,6 @@
  *      和ScrollView类似，以Table结尾
  *  TabView
  *      以Tab结尾，容器里有多个按钮
- *
- *
- * 定制需求：
- *  如果有进一步的定制需求，在 View.ts 里的ViewManager._createView()里进行调整
- *
  *
  */
 var fs = require("fs");
@@ -56,13 +39,27 @@ function run(currDir, args, opts) {
 
     var config = plist.parseFileSync(ccbFilePath);
 
-    totalData.children = [];
-    loop(config.nodeGraph, null, totalData);
+    linkChildren(config.nodeGraph);
+}
+
+function linkChildren(rootNode) {
+    var viewData = {};
+
+    rootNode.children.forEach(function (item) {
+        var linkName = item.displayName;
+        var data = loop(item, rootNode);
+        data.x = 0;
+        data.y = 0;
+        data.anchorX = 0;
+        data.anchorY = 0;
+        checkProperties(data);
+        viewData[linkName] = data;
+    });
+
+    //最后 输出的格式
+    var rootData = {"viewData" : viewData, "resourceData" : sourceArr};
     console.log ("输出ViewData文件:\n");
-    console.log(JSON.stringify(totalData.children[0], null, ""));
-    console.log ("输出资源文件:\n")
-    var sourceTxt = JSON.stringify(sourceArr);
-    console.log(sourceTxt.slice(1, sourceTxt.length - 1));
+    console.log(JSON.stringify(rootData, null, ""));
 }
 
 function loop(container, parent, parentData) {
@@ -70,14 +67,16 @@ function loop(container, parent, parentData) {
     if (container.children.length > 0) {
         data.children = [];
     }
-//    console.log (parentData)
-    if (parentData.children) {
+
+    if (parentData && parentData.children) {
         parentData.children.push(data);
     }
 
     container.children.forEach(function (item) {
         loop(item, container, data);
     });
+
+    return data;
 }
 
 function build(data, parent) {
@@ -92,6 +91,10 @@ function build(data, parent) {
             name = "Bitmap";
             break;
         case "CCLabelTTF":
+            if (data.memberVarAssignmentName.match(/Input$/)) {
+                name = "TextInput";
+                break;
+            }
             name = "TextField";
             break;
         case "CCScale9Sprite":
@@ -101,6 +104,7 @@ function build(data, parent) {
             name = "BitmapText";
             break;
         case "CCLayer":
+        case "CCNode":
             if (data.memberVarAssignmentName.match(/Btn$/)) {
                 name = "SimpleButton";
                 break;
@@ -134,12 +138,19 @@ function build(data, parent) {
             var contentSizeHeight = childPropertyConfig.value[1];
         }
     }
+
+    var propertiesInfo = {};
     for (var childPropertyConfigKey in data.properties) {
         var childPropertyConfig = data.properties[childPropertyConfigKey];
-        switch (childPropertyConfig.name) {
+        propertiesInfo[childPropertyConfig.name] = childPropertyConfig.value;
+    }
+
+    for (var key in propertiesInfo) {
+        var propertyValue = propertiesInfo[key];
+        switch (key) {
             case "position":
-                var x = childPropertyConfig.value[0];
-                var y = childPropertyConfig.value[1];
+                var x = propertyValue[0];
+                var y = propertyValue[1];
                 if (x == 701)
                 {
                     console.log(childPropertyConfig);
@@ -169,13 +180,13 @@ function build(data, parent) {
                     }
                 }
 
-                if (childPropertyConfig.value[2] == 0)
+                if (propertyValue[2] == 0)
                 {
                     y = contentHeight - y;
                     // x -= anchorDataX * contentWidth;
                     // y -= anchorDataY * contentHeight;
                 }
-                else if (childPropertyConfig.value[2] == 4) {//百分比
+                else if (propertyValue[2] == 4) {//百分比
                     x = x * contentWidth / 100;
                     y = y * contentHeight / 100;
                     y = contentHeight - y;
@@ -183,15 +194,15 @@ function build(data, parent) {
                 builder.withPosition(x, y);
                 break;
             case "scale":
-                builder.withScale(childPropertyConfig.value[0], childPropertyConfig.value[1]);
+                builder.withScale(propertyValue[0], propertyValue[1]);
                 break;
             case "displayFrame":
             case "spriteFrame":
-                builder.withTexture(childPropertyConfig.value[1]);
+                builder.withTexture(propertyValue[1]);
                 break;
             case "anchorPoint":
-                var anchorPointX = childPropertyConfig.value[0];
-                var anchorPointY = childPropertyConfig.value[1];
+                var anchorPointX = propertyValue[0];
+                var anchorPointY = propertyValue[1];
                 if (!anchorPointX) {
                     anchorPointX = 0;
                 }
@@ -203,61 +214,127 @@ function build(data, parent) {
             case "contentSize":
             case "preferedSize":
             case "dimensions":
-                builder.withContentSize(childPropertyConfig.value[0],childPropertyConfig.value[1]);
+                builder.withContentSize(propertyValue[0],propertyValue[1]);
                 break;
             case "fontName":
-                builder.withFontName(childPropertyConfig.value);
+                builder.withFontName(propertyValue);
                 break;
             case "fontSize":
-                builder.withFontSize(childPropertyConfig.value[0]);
+                builder.withFontSize(propertyValue[0]);
                 break;
             case "color":
-                builder.withFontColor(childPropertyConfig.value[0], childPropertyConfig.value[1], childPropertyConfig.value[2]);
+                builder.withFontColor(propertyValue[0], propertyValue[1], propertyValue[2]);
                 break;
             case "horizontalAlignment":
-                builder.withHorizontalAlignment(childPropertyConfig.value);
+                builder.withHorizontalAlignment(propertyValue);
                 break;
             case "verticalAlignment":
-                builder.withVerticalAlignment(childPropertyConfig.value);
+                builder.withVerticalAlignment(propertyValue);
                 break;
             case "string":
-                builder.withText(childPropertyConfig.value);
+                builder.withText(propertyValue);
                 break;
             case "fntFile":
-                builder.withTexture(childPropertyConfig.value.replace(".fnt", ".png"));
+                builder.withTexture(propertyValue);
                 break;
             case "tag":
-                builder.withTag(childPropertyConfig.value);
+                builder.withTag(propertyValue);
                 break;
             case "visible":
-                builder.withVisible(childPropertyConfig.value);
+                builder.withVisible(propertyValue);
+                break;
+            case "rotation":
+                builder.withProperty("rotation", propertyValue);
                 break;
             case "insetTop":
-                builder.withProperty("top", childPropertyConfig.value);
+                builder.withProperty("top", propertyValue);
                 break;
             case "insetBottom":
-                builder.withProperty("bottom", childPropertyConfig.value);
+                builder.withProperty("bottom", propertyValue);
                 break;
             case "insetLeft":
-                builder.withProperty("left", childPropertyConfig.value);
+                builder.withProperty("left", propertyValue);
                 break;
             case "insetRight":
-                builder.withProperty("right", childPropertyConfig.value);
+                builder.withProperty("right", propertyValue);
                 break;
             case "opacity":
-                builder.withProperty("alpha", childPropertyConfig.value / 255);
+                builder.withProperty("alpha", propertyValue / 255);
                 break
-            case "ignoreAnchorPointForPosition":
-                if (childPropertyConfig.value == true) {
-                    throw new Error("有描点被忽略！");
-                }
-                break;
         }
+
+        if (propertiesInfo["ignoreAnchorPointForPosition"] == true) {//描点被忽略
+            builder.withRegPosition(0, 1 - 0);
+        }
+
     }
+    checkProperties(builder.data);
     return builder.data;
 ////    builder.withPosition(data.properties.x,data.properties.y);
 }
 
+
+function checkProperties(data) {
+    var properties = ["name", "class", "children", "x", "y", "width", "height", "anchorX", "anchorY", "visible", "alpha", "scaleX", "scaleY", "rotation"];
+
+    switch (data.class) {
+        case "DisplayObjectContainer":
+        case "SimpleButton":
+            deleteExtraProperties(data, properties);
+            break;
+        case "Bitmap":
+            properties = properties.concat(["texturePath", "frame"]);
+            deleteExtraProperties(data, properties);
+            break;
+        case "BitmapText":
+            properties = properties.concat(["configPath", "frame", "text"]);
+            deleteExtraProperties(data, properties);
+            break;
+
+    }
+
+    if (data["x"] == 0) {
+        delete(data["x"]);
+    }
+    if (data["y"] == 0) {
+        delete(data["y"]);
+    }
+    if (data["width"] == 0) {
+        delete(data["width"]);
+    }
+    if (data["height"] == 0) {
+        delete(data["height"]);
+    }
+    if (data["anchorX"] == 0) {
+        delete(data["anchorX"]);
+    }
+    if (data["anchorY"] == 0) {
+        delete(data["anchorY"]);
+    }
+    if (data["rotation"] == 0) {
+        delete(data["rotation"]);
+    }
+    if (data["visible"] == true) {
+        delete(data["visible"]);
+    }
+    if (data["alpha"] == 1) {
+        delete(data["alpha"]);
+    }
+    if (data["scaleX"] == 1) {
+        delete(data["scaleX"]);
+    }
+    if (data["scaleY"] == 1) {
+        delete(data["scaleY"]);
+    }
+}
+
+function deleteExtraProperties(data, properties) {
+    for (var key in data) {
+        if (properties.indexOf(key) < 0) {
+            delete(data[key]);
+        }
+    }
+}
 
 function getProperty(data, propertyName) {
     for (var childPropertyConfigKey in data.properties) {
@@ -295,26 +372,37 @@ function ConfigBuilder() {
     }
 
     this.withPosition = function (x, y) {
-        this.data.x = Number(x);
-        this.data.y = Number(y);
+        this.data.x = Number(x.toFixed(2));
+        this.data.y = Number(y.toFixed(2));
         return this;
     }
 
     this.withScale = function (scaleX, scaleY) {
         if (scaleX != 1) {
-            this.data.scaleX = Number(scaleX);
+            this.data.scaleX = Number(scaleX.toFixed(2));
         }
         if (scaleY != 1) {
-            this.data.scaleY = Number(scaleY);
+            this.data.scaleY = Number(scaleY.toFixed(2));
         }
         return this;
     }
 
     this.withTexture = function (texturePath) {
-        this.data.texturePath = texturePath;
-        if (sourceArr.indexOf(texturePath) < 0) {
-            sourceArr.push(texturePath);
+        if (texturePath.lastIndexOf(".fnt") >= 0) {//字体
+            this.data.configPath = texturePath.replace(".fnt", ".jfnt");
+
+            if (sourceArr.indexOf(this.data.configPath) < 0) {
+                sourceArr.push(this.data.configPath);
+            }
         }
+        else {//图片
+            this.data.texturePath = texturePath;
+
+            if (sourceArr.indexOf(this.data.texturePath) < 0) {
+                sourceArr.push(this.data.texturePath);
+            }
+        }
+
         return this;
     }
 
@@ -337,7 +425,7 @@ function ConfigBuilder() {
     }
 
     this.withFontName = function (name) {
-        this.data.font = name;
+        this.data.fontFamily = name;
     }
 
     this.withFontSize = function (size) {
@@ -345,6 +433,7 @@ function ConfigBuilder() {
     }
 
     this.withFontColor = function (r, g, b) {
+
         r = r.toString(16);
         if(r.length == 1)
         {
@@ -360,7 +449,7 @@ function ConfigBuilder() {
         {
             b = "0" + b;
         }
-        this.data.textColor = "#" + r + "" + g + "" + b;
+        this.data.textColor = parseInt("0x" + r + "" + g + "" + b);
     }
 
     this.withHorizontalAlignment = function (dirt) {
