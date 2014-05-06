@@ -61,7 +61,7 @@ module ns_egret {
 
         public _texture_to_render:Texture;
 
-        private _parent:DisplayObjectContainer = null;
+        public _parent:DisplayObjectContainer = null;
 
         private _cacheAsBitmap:boolean = false;
 
@@ -152,7 +152,7 @@ module ns_egret {
          * @member {number} ns_egret.DisplayObject#anchorPointX
          * @default 0
          */
-        private _anchorOffsetX:number = 0;
+        public _anchorOffsetX:number = 0;
 
         /**
          * @deprecated
@@ -185,7 +185,7 @@ module ns_egret {
          * @member {number} ns_egret.DisplayObject#anchorPointY
          * @default 0
          */
-        private _anchorOffsetY:number = 0;
+        public _anchorOffsetY:number = 0;
 
         /**
          * @deprecated
@@ -218,7 +218,7 @@ module ns_egret {
          * @member {number} ns_egret.DisplayObject#anchorX
          * @default 0
          */
-        private _anchorX:number = 0;
+        public _anchorX:number = 0;
 
         /**
          * @deprecated
@@ -251,7 +251,7 @@ module ns_egret {
          * @member {number} ns_egret.DisplayObject#anchorY
          * @default 0
          */
-        private _anchorY:number = 0;
+        public _anchorY:number = 0;
 
         /**
          * @deprecated
@@ -289,7 +289,7 @@ module ns_egret {
          * @member {number} ns_egret.DisplayObject#rotation
          * @default 0
          */
-        private _rotation:number = 0;
+        public _rotation:number = 0;
 
         public get rotation():number {
             return this._rotation;
@@ -475,17 +475,17 @@ module ns_egret {
             var o = this;
             renderContext.setAlpha(o.worldAlpha, o.blendMode);
             renderContext.setTransform(o.worldTransform);
-            if (o.mask || o.scrollRect) {
+            if (o.mask || o._scrollRect) {
                 renderContext.save();
-                if (o.scrollRect) {
-                    renderContext.clip(o.scrollRect.x, o.scrollRect.y, o.scrollRect.width, o.scrollRect.height);
+                if (o._scrollRect) {
+                    renderContext.clip(o._scrollRect.x, o._scrollRect.y, o._scrollRect.width, o._scrollRect.height);
                 }
                 else {
                     renderContext.clip(o.mask.x, o.mask.y, o.mask.width, o.mask.height);
                 }
             }
             this.render(renderContext);
-            if (o.mask || o.scrollRect) {
+            if (o.mask || o._scrollRect) {
                 renderContext.restore();
             }
         }
@@ -527,25 +527,25 @@ module ns_egret {
         public updateTransform() {
             var o = this;
             o.worldTransform.identity();
-            o.worldTransform = o.worldTransform.appendMatrix(o.parent.worldTransform);
+            o.worldTransform = o.worldTransform.appendMatrix(o._parent.worldTransform);
             var anchorX, anchorY;
-            if (o.anchorX != 0 || o.anchorY != 0) {
+            if (o._anchorX != 0 || o._anchorY != 0) {
                 var bounds = o.getBounds();
-                anchorX = bounds.width * o.anchorX;
-                anchorY = bounds.height * o.anchorY;
+                anchorX = bounds.width * o._anchorX;
+                anchorY = bounds.height * o._anchorY;
             }
             else {
-                anchorX = o.anchorOffsetX;
-                anchorY = o.anchorOffsetY;
+                anchorX = o._anchorOffsetX;
+                anchorY = o._anchorOffsetY;
             }
-            o.worldTransform.appendTransform(o.x, o.y, o.scaleX, o.scaleY, o.rotation,
-                o.skewX, o.skewY, anchorX, anchorY);
-            if (o.scrollRect) {
-                o.worldTransform.append(1, 0, 0, 1, -o.scrollRect.x, -o.scrollRect.y);
+            o.worldTransform.appendTransform(o._x, o._y, o._scaleX, o._scaleY, o._rotation,
+                o._skewX, o._skewY, anchorX, anchorY);
+            if (o._scrollRect) {
+                o.worldTransform.append(1, 0, 0, 1, -o._scrollRect.x, -o._scrollRect.y);
             }
             var bounds:ns_egret.Rectangle = DisplayObject.getTransformBounds(o.getBounds(), o.worldTransform);
             o.worldBounds.initialize(bounds.x, bounds.y, bounds.width, bounds.height);
-            o.worldAlpha = o.parent.worldAlpha * o.alpha;
+            o.worldAlpha = o._parent.worldAlpha * o._alpha;
         }
 
         /**
@@ -567,13 +567,13 @@ module ns_egret {
             var x:number = rect.x;
             var y:number = rect.y;
             var anchorX, anchorY;
-            if (this.anchorX != 0 || this.anchorY != 0) {
-                anchorX = w * this.anchorX;
-                anchorY = h * this.anchorY;
+            if (this._anchorX != 0 || this._anchorY != 0) {
+                anchorX = w * this._anchorX;
+                anchorY = h * this._anchorY;
             }
             else {
-                anchorX = this.anchorOffsetX;
-                anchorY = this.anchorOffsetY;
+                anchorX = this._anchorOffsetX;
+                anchorY = this._anchorOffsetY;
             }
             return Rectangle.identity.initialize(x - anchorX, y - anchorY, w, h);
         }
@@ -636,15 +636,15 @@ module ns_egret {
          * @returns {*}
          */
         public hitTest(x, y, ignoreTouchEnabled:boolean = false) {
-            if (!this.visible || (!ignoreTouchEnabled && !this.touchEnabled)) {
+            if (!this.visible || (!ignoreTouchEnabled && !this._touchEnabled)) {
                 return null;
             }
             var bound:Rectangle = this.getBounds();
             if (0 < x && x < bound.width && 0 < y && y < bound.height) {
-                if (this.mask || this.scrollRect) {
-                    if (this.scrollRect
-                        && x < this.scrollRect.width
-                        && y < this.scrollRect.height) {
+                if (this.mask || this._scrollRect) {
+                    if (this._scrollRect
+                        && x < this._scrollRect.width
+                        && y < this._scrollRect.height) {
                         return this;
                     }
                     else if (this.mask
