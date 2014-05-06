@@ -17,16 +17,6 @@ function run(currDir, args, opts) {
     }
     currDir_global = currDir;
 
-
-    var copyExample = function (callback) {
-        var engine_root = param.getEgretPath();
-        var target_src = path.join(currDir, "output", "examples");
-        var source_src = path.join(engine_root, "examples");
-        libs.copy(source_src, target_src);
-        callback();
-    }
-
-
     var game_path = args[0];
     if (!game_path) {
         libs.exit(1101);
