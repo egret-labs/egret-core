@@ -32,6 +32,7 @@
 module ns_egret {
     /**
      * @class ns_egret.DisplayObject
+     * @extends ns_egret.EventDispatcher
      * @classdesc 类是可放在显示列表中的所有对象的基类。该显示列表管理运行时显示的所有对象。使用 DisplayObjectContainer 类排列显示列表中的显示对象。
      *
      * DisplayObjectContainer 对象可以有子显示对象，而其他显示对象是“叶”节点，只有父级和同级，没有子级。
@@ -149,7 +150,7 @@ module ns_egret {
 
         /**
          * 表示从对象绝对锚点X。
-         * @member {number} ns_egret.DisplayObject#anchorPointX
+         * @member {number} ns_egret.DisplayObject#anchorOffsetX
          * @default 0
          */
         public _anchorOffsetX:number = 0;
@@ -182,7 +183,7 @@ module ns_egret {
 
         /**
          * 表示从对象绝对锚点Y。
-         * @member {number} ns_egret.DisplayObject#anchorPointY
+         * @member {number} ns_egret.DisplayObject#anchorOffsetY
          * @default 0
          */
         public _anchorOffsetY:number = 0;
@@ -370,6 +371,7 @@ module ns_egret {
         public _scrollRect:Rectangle;
         /**
          * 显示对象的滚动矩形范围。显示对象被裁切为矩形定义的大小，当您更改 scrollRect 对象的 x 和 y 属性时，它会在矩形内滚动。
+         *  @member {ns_egret.Rectangle} ns_egret.DisplayObject#scrollRect
          */
         public get scrollRect():Rectangle {
             return this._scrollRect;
@@ -704,6 +706,10 @@ module ns_egret {
 
         public _stage:Stage;
 
+        /**
+         * 获取舞台对象。当该显示对象不在舞台上时，此属性返回 undefined
+         * @returns {ns_egret.Stage}
+         */
         public get stage():Stage {
             return this._stage;
         }
