@@ -92,6 +92,8 @@ var temp = [
     "extension/gui/components/supportClasses/TextBase.js",
     "extension/gui/components/supportClasses/GroupBase.js",
     "extension/gui/components/supportClasses/ItemRenderer.js",
+    "extension/gui/components/supportClasses/Range.js",
+    "extension/gui/components/supportClasses/Animation.js",
     "extension/gui/components/Label.js",
     "extension/gui/components/Button.js",
     "extension/gui/components/Group.js",
@@ -99,6 +101,8 @@ var temp = [
     "extension/gui/components/DataGroup.js",
     "extension/gui/components/SkinnableContainer.js",
     "extension/gui/components/Panel.js",
+    "extension/gui/components/ProgressBar.js",
+    "extension/gui/components/ProgressBarDirection.js",
 
 
     "extension/gui/events/UIEvent.js",
