@@ -32,6 +32,7 @@
 module ns_egret {
     /**
      * @class ns_egret.DisplayObject
+     * @extends ns_egret.EventDispatcher
      * @classdesc 类是可放在显示列表中的所有对象的基类。该显示列表管理运行时显示的所有对象。使用 DisplayObjectContainer 类排列显示列表中的显示对象。
      *
      * DisplayObjectContainer 对象可以有子显示对象，而其他显示对象是“叶”节点，只有父级和同级，没有子级。
@@ -48,6 +49,7 @@ module ns_egret {
      * 不允许重写以下方法
      * draw();
      * getBounds();
+     *
      */
     export class DisplayObject extends EventDispatcher implements RenderData {
 
@@ -61,8 +63,12 @@ module ns_egret {
 
         public _texture_to_render:Texture;
 
-        private _parent:DisplayObjectContainer = null;
+        public _parent:DisplayObjectContainer = null;
 
+        /**
+         * 11111
+         * @event ns_egret.Event.event:ADDED_TO_STAGE
+         */
         private _cacheAsBitmap:boolean = false;
 
         /**
@@ -149,10 +155,10 @@ module ns_egret {
 
         /**
          * 表示从对象绝对锚点X。
-         * @member {number} ns_egret.DisplayObject#anchorPointX
+         * @member {number} ns_egret.DisplayObject#anchorOffsetX
          * @default 0
          */
-        private _anchorOffsetX:number = 0;
+        public _anchorOffsetX:number = 0;
 
         /**
          * @deprecated
@@ -182,10 +188,10 @@ module ns_egret {
 
         /**
          * 表示从对象绝对锚点Y。
-         * @member {number} ns_egret.DisplayObject#anchorPointY
+         * @member {number} ns_egret.DisplayObject#anchorOffsetY
          * @default 0
          */
-        private _anchorOffsetY:number = 0;
+        public _anchorOffsetY:number = 0;
 
         /**
          * @deprecated
@@ -218,7 +224,7 @@ module ns_egret {
          * @member {number} ns_egret.DisplayObject#anchorX
          * @default 0
          */
-        private _anchorX:number = 0;
+        public _anchorX:number = 0;
 
         /**
          * @deprecated
@@ -251,7 +257,7 @@ module ns_egret {
          * @member {number} ns_egret.DisplayObject#anchorY
          * @default 0
          */
-        private _anchorY:number = 0;
+        public _anchorY:number = 0;
 
         /**
          * @deprecated
@@ -289,7 +295,7 @@ module ns_egret {
          * @member {number} ns_egret.DisplayObject#rotation
          * @default 0
          */
-        private _rotation:number = 0;
+        public _rotation:number = 0;
 
         public get rotation():number {
             return this._rotation;
@@ -370,6 +376,7 @@ module ns_egret {
         public _scrollRect:Rectangle;
         /**
          * 显示对象的滚动矩形范围。显示对象被裁切为矩形定义的大小，当您更改 scrollRect 对象的 x 和 y 属性时，它会在矩形内滚动。
+         *  @member {ns_egret.Rectangle} ns_egret.DisplayObject#scrollRect
          */
         public get scrollRect():Rectangle {
             return this._scrollRect;
@@ -475,17 +482,17 @@ module ns_egret {
             var o = this;
             renderContext.setAlpha(o.worldAlpha, o.blendMode);
             renderContext.setTransform(o.worldTransform);
-            if (o.mask || o.scrollRect) {
+            if (o.mask || o._scrollRect) {
                 renderContext.save();
-                if (o.scrollRect) {
-                    renderContext.clip(o.scrollRect.x, o.scrollRect.y, o.scrollRect.width, o.scrollRect.height);
+                if (o._scrollRect) {
+                    renderContext.clip(o._scrollRect.x, o._scrollRect.y, o._scrollRect.width, o._scrollRect.height);
                 }
                 else {
                     renderContext.clip(o.mask.x, o.mask.y, o.mask.width, o.mask.height);
                 }
             }
             this.render(renderContext);
-            if (o.mask || o.scrollRect) {
+            if (o.mask || o._scrollRect) {
                 renderContext.restore();
             }
         }
@@ -527,25 +534,25 @@ module ns_egret {
         public updateTransform() {
             var o = this;
             o.worldTransform.identity();
-            o.worldTransform = o.worldTransform.appendMatrix(o.parent.worldTransform);
+            o.worldTransform = o.worldTransform.appendMatrix(o._parent.worldTransform);
             var anchorX, anchorY;
-            if (o.anchorX != 0 || o.anchorY != 0) {
+            if (o._anchorX != 0 || o._anchorY != 0) {
                 var bounds = o.getBounds();
-                anchorX = bounds.width * o.anchorX;
-                anchorY = bounds.height * o.anchorY;
+                anchorX = bounds.width * o._anchorX;
+                anchorY = bounds.height * o._anchorY;
             }
             else {
-                anchorX = o.anchorOffsetX;
-                anchorY = o.anchorOffsetY;
+                anchorX = o._anchorOffsetX;
+                anchorY = o._anchorOffsetY;
             }
-            o.worldTransform.appendTransform(o.x, o.y, o.scaleX, o.scaleY, o.rotation,
-                o.skewX, o.skewY, anchorX, anchorY);
-            if (o.scrollRect) {
-                o.worldTransform.append(1, 0, 0, 1, -o.scrollRect.x, -o.scrollRect.y);
+            o.worldTransform.appendTransform(o._x, o._y, o._scaleX, o._scaleY, o._rotation,
+                o._skewX, o._skewY, anchorX, anchorY);
+            if (o._scrollRect) {
+                o.worldTransform.append(1, 0, 0, 1, -o._scrollRect.x, -o._scrollRect.y);
             }
             var bounds:ns_egret.Rectangle = DisplayObject.getTransformBounds(o.getBounds(), o.worldTransform);
             o.worldBounds.initialize(bounds.x, bounds.y, bounds.width, bounds.height);
-            o.worldAlpha = o.parent.worldAlpha * o.alpha;
+            o.worldAlpha = o._parent.worldAlpha * o._alpha;
         }
 
         /**
@@ -567,13 +574,13 @@ module ns_egret {
             var x:number = rect.x;
             var y:number = rect.y;
             var anchorX, anchorY;
-            if (this.anchorX != 0 || this.anchorY != 0) {
-                anchorX = w * this.anchorX;
-                anchorY = h * this.anchorY;
+            if (this._anchorX != 0 || this._anchorY != 0) {
+                anchorX = w * this._anchorX;
+                anchorY = h * this._anchorY;
             }
             else {
-                anchorX = this.anchorOffsetX;
-                anchorY = this.anchorOffsetY;
+                anchorX = this._anchorOffsetX;
+                anchorY = this._anchorOffsetY;
             }
             return Rectangle.identity.initialize(x - anchorX, y - anchorY, w, h);
         }
@@ -615,7 +622,10 @@ module ns_egret {
         }
 
         /**
-         * 将 point 对象从舞台（全局坐标转换为显示对象（本地）坐标。
+         * 将指定舞台坐标（全局）转换为显示对象（本地）坐标。
+         * @method ns_egret.DisplayObject#globalToLocal
+         * @param x {number}
+         * @param y {number}
          * @returns {ns_egret.Point}
          */
         public globalToLocal(x:number = 0, y:number = 0):Point {
@@ -630,21 +640,22 @@ module ns_egret {
 
         /**
          * 检测指定坐标是否在显示对象内
-         * @param x
-         * @param y
+         * @method ns_egret.DisplayObject#hitTest
+         * @param x {number}
+         * @param y {number}
          * @param ignoreTouchEnabled 是否忽略TouchEnabled
          * @returns {*}
          */
         public hitTest(x, y, ignoreTouchEnabled:boolean = false) {
-            if (!this.visible || (!ignoreTouchEnabled && !this.touchEnabled)) {
+            if (!this.visible || (!ignoreTouchEnabled && !this._touchEnabled)) {
                 return null;
             }
             var bound:Rectangle = this.getBounds();
             if (0 < x && x < bound.width && 0 < y && y < bound.height) {
-                if (this.mask || this.scrollRect) {
-                    if (this.scrollRect
-                        && x < this.scrollRect.width
-                        && y < this.scrollRect.height) {
+                if (this.mask || this._scrollRect) {
+                    if (this._scrollRect
+                        && x < this._scrollRect.width
+                        && y < this._scrollRect.height) {
                         return this;
                     }
                     else if (this.mask
@@ -704,6 +715,10 @@ module ns_egret {
 
         public _stage:Stage;
 
+        /**
+         * 获取舞台对象。当该显示对象不在舞台上时，此属性返回 undefined
+         * @returns {ns_egret.Stage}
+         */
         public get stage():Stage {
             return this._stage;
         }

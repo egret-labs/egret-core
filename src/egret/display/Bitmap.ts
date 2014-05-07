@@ -128,13 +128,13 @@ module ns_egret {
                 ns_egret.Logger.fatal("获取BitmapBounds失败");
             }
             var anchorX, anchorY;
-            if (this.anchorX != 0 || this.anchorY != 0) {
-                anchorX = w * this.anchorX;
-                anchorY = h * this.anchorY;
+            if (this._anchorX != 0 || this._anchorY != 0) {
+                anchorX = w * this._anchorX;
+                anchorY = h * this._anchorY;
             }
             else {
-                anchorX = this.anchorOffsetX;
-                anchorY = this.anchorOffsetY;
+                anchorX = this._anchorOffsetX;
+                anchorY = this._anchorOffsetY;
             }
             return Rectangle.identity.initialize(-anchorX, -anchorY, w, h);
         }

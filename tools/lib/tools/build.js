@@ -17,16 +17,6 @@ function run(currDir, args, opts) {
     }
     currDir_global = currDir;
 
-
-    var copyExample = function (callback) {
-        var engine_root = param.getEgretPath();
-        var target_src = path.join(currDir, "output", "examples");
-        var source_src = path.join(engine_root, "examples");
-        libs.copy(source_src, target_src);
-        callback();
-    }
-
-
     var game_path = args[0];
     if (!game_path) {
         libs.exit(1101);
@@ -38,8 +28,8 @@ function run(currDir, args, opts) {
         for (var i = 0; i < allFileList.length; i++) {
             var fileToDelete = path.join(outPath, allFileList[i]);
             libs.deleteFileSync(fileToDelete);
-            callback();
         }
+        callback();
     }
 
     var tasks = [
@@ -49,25 +39,18 @@ function run(currDir, args, opts) {
 
         function (callback) {
             buildAllFile(path.join(currDir, game_path, "src"), path.join(currDir, game_path, "bin-debug/src"), callback);
+        },
+
+
+        clearTS,
+
+        function (callback){
+            console.log ("编译成功");
+            callback();
         }
     ];
 
-    tasks.push(clearTS);
-
-    async.series(tasks
-    )
-}
-
-function getLocalContent() {
-    var tempData;
-    if (!fs.existsSync(CRC32BuildTS)) {
-        tempData = {};
-    }
-    else {
-        var txt = fs.readFileSync(CRC32BuildTS, "utf8");
-        tempData = JSON.parse(txt);
-    }
-    return tempData;
+    async.series(tasks)
 }
 
 function buildAllFile(source, output, callback) {
@@ -195,47 +178,6 @@ function build(callback, source, output) {
 }
 
 /**
- * 编译全部TypeScript文件
- * @param allFileList
- */
-function compileAllTypeScript(crc32Data, allFileList, source, output, buildOver) {
-    async.forEachSeries(allFileList, function (file, callback) {
-        //console.log(path);
-        var fullname = path.join(source, file)
-        var content = fs.readFileSync(fullname, "utf8");
-        var data = crc32(content);
-        if (crc32Data[fullname] == data) {
-            //不需要重新编译
-            callback(null, file);
-        }
-        else {
-            crc32Data[fullname] = data;
-            //需要重新编译一下
-            build(file, callback, source, output);
-        }
-
-
-    }, function (err) {
-        if (err == undefined) {
-            console.log(source + " AllComplete");
-        }
-        else {
-            console.log("出错了" + err);
-        }
-        //保存一下crc32文件
-        txt = JSON.stringify(crc32Data);
-        if (fs.existsSync(CRC32BuildTS)) {
-            fs.unlinkSync(CRC32BuildTS);
-        }
-        fs.writeFileSync(CRC32BuildTS, txt);
-
-        buildOver();
-    });
-
-}
-
-
-/**
  * 生成source下的所有TypeScript文件列表
  * @param source
  * @returns {Array}
@@ -250,4 +192,15 @@ function generateAllTypeScriptFileList(source) {
     }
 }
 
+function help_title(){
+    return "编译指定项目";
+}
+
+
+function help_example(){
+    return "egret build [project_name]";
+}
+
 exports.run = run;
+exports.help_title = help_title;
+exports.help_example = help_example;
