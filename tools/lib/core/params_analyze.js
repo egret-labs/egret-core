@@ -50,12 +50,13 @@ function _getEnv(){
 exports.getEnv = _getEnv;
 
 exports.getEgretPath = function(){
+    var path = require("path");
     var obj = _getEnv();
-
-    if (!obj.EGRET_PATH){
-        libs.exit(1);
+    var egret_path// = _getEnv().EGRET_PATH;
+    if (!egret_path){
+        egret_path = path.join(process.argv[1],"../../../");
     }
-    return obj.EGRET_PATH;
+    return egret_path;
 }
 
 
