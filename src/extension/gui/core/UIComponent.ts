@@ -175,7 +175,7 @@ module ns_egret {
 				this.removeEventListener(Event.ADDED_TO_STAGE,this.checkInvalidateFlag,this);
 			
 			for(var i:number=this.numChildren-1;i>=0;i--){
-				var child:ILayoutManagerClient = <ILayoutManagerClient> (this.getChildAt(i));
+				var child:ILayoutManagerClient = <ILayoutManagerClient><any> (this.getChildAt(i));
 				if(child!=null){
 					child.nestLevel = this._nestLevel+1;
 				}
@@ -207,7 +207,7 @@ module ns_egret {
 		 */		
 		public addingChild(child:DisplayObject):void{
 			if("nestLevel" in child){
-				(<ILayoutManagerClient> child).nestLevel = this._nestLevel+1;
+				(<ILayoutManagerClient><any>child).nestLevel = this._nestLevel+1;
 			}
 		}
 		
@@ -216,8 +216,8 @@ module ns_egret {
 		 */		
 		public _childAdded(child:DisplayObject):void{
 			if(child instanceof UIComponent){
-				(<UIComponent> child).initialize();
-				(<UIComponent> child).checkInvalidateFlag();
+				(<UIComponent><any> child).initialize();
+				(<UIComponent><any> child).checkInvalidateFlag();
 			}
 		}
 		
@@ -244,7 +244,7 @@ module ns_egret {
 		 */
 		public _childRemoved(child:DisplayObject):void{
 			if("nestLevel" in child){
-				(<ILayoutManagerClient> child).nestLevel = 0;
+				(<ILayoutManagerClient> <any>child).nestLevel = 0;
 			}
 		}
 
@@ -286,16 +286,7 @@ module ns_egret {
 		 * 属性提交前组件旧的宽度
 		 */	
 		public oldWidth:number;
-			
-		private _explicitWidth:number = NaN;
-		/**
-		 * @inheritDoc
-		 */
-		public get explicitWidth():number{
-			return this._explicitWidth;
-		}
-		
-		
+
 		public _width:number;
 		/**
 		 * 组件宽度,默认值为NaN,设置为NaN将使用组件的measure()方法自动计算尺寸
@@ -328,15 +319,6 @@ module ns_egret {
 		 * 属性提交前组件旧的高度
 		 */
 		public oldHeight:number;
-		
-		private _explicitHeight:number = NaN;
-		/**
-		 * @inheritDoc
-		 */	
-		public get explicitHeight():number{
-			return this._explicitHeight;
-		}
-		
 		
 		public _height:number;
 		/**
@@ -521,7 +503,7 @@ module ns_egret {
 			this._x = value;
 			this.invalidateProperties();
 			if (this._includeInLayout&&this.parent && this.parent instanceof UIComponent)
-				(<UIComponent> (this.parent)).childXYChanged();
+				(<UIComponent><any> (this.parent)).childXYChanged();
 		}
 		
 		/**
@@ -588,7 +570,7 @@ module ns_egret {
 				for (var i:number = 0; i < this.numChildren; i++){
 					var child:DisplayObject = this.getChildAt(i);
 					if ("validateSize" in child)
-						(<ILayoutManagerClient> child ).validateSize(true);
+						(<ILayoutManagerClient> <any>child ).validateSize(true);
 				}
 			}
 			if (this.invalidateSizeFlag){
@@ -712,7 +694,7 @@ module ns_egret {
 		public invalidateParentSizeAndDisplayList():void{
 			if (!this.parent||!this._includeInLayout||!("invalidateSize" in this.parent))
 				return;
-			var p:IInvalidating = <IInvalidating> (this.parent);
+			var p:IInvalidating = <IInvalidating><any>(this.parent);
 			p.invalidateSize();
 			p.invalidateDisplayList();
 		}

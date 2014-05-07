@@ -29,7 +29,7 @@ module ns_egret {
 		/**
 		 * 验证组件的尺寸
 		 */		
-		validateSize(recursive:boolean = false):void;
+		validateSize(recursive?:boolean):void;
 		/**
 		 * 验证子项的位置和大小，并绘制其他可视内容
 		 */		

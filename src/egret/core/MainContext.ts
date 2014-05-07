@@ -142,11 +142,11 @@ module ns_egret{
             if(__callLaterFunctionList.length==0){
                 return;
             }
-            var funcList:Array = __callLaterFunctionList;
+            var funcList:Array<any> = __callLaterFunctionList;
             __callLaterFunctionList = [];
-            var thisList:Array = __callLaterThisList;
+            var thisList:Array<any> = __callLaterThisList;
             __callLaterThisList = [];
-            var argsList:Array = __callLaterArgsList;
+            var argsList:Array<any> = __callLaterArgsList;
             __callLaterArgsList = [];
             var length:number = funcList.length;
             for(var i:number=0;i<length;i++){

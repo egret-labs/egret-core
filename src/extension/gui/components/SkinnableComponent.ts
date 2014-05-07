@@ -60,7 +60,7 @@ module ns_egret {
 			var oldSkin:any = this._skinObject;
 			this.detachSkin(oldSkin);
 			if(this._skin){
-				if(this._skin.parent==this){
+				if(this._skin.parent==<DisplayObjectContainer><any>this){
 					this.removeFromDisplayList(this._skin); 
 				}
 			}
@@ -107,7 +107,7 @@ module ns_egret {
 		public findSkinParts():void{
 			var curSkin:any = this._skinObject;
             if(curSkin&&"skinParts" in curSkin){
-                var skinParts:Array = curSkin["skinParts"];
+                var skinParts:Array<any> = curSkin["skinParts"];
                 var length:number = skinParts.length;
                 for(var i:number=0;i<length;i++){
                     var partName:string = skinParts[i];
@@ -150,7 +150,7 @@ module ns_egret {
 				this.hasCreatedSkinParts = false;
 			}
             if(skin&&"skinParts" in skin.prototype){
-                var skinParts:Array = skin.prototype["skinParts"];
+                var skinParts:Array<any> = skin.prototype["skinParts"];
                 var length:number = skinParts.length;
 				for(var i:number=0;i<length;i++){
                     var partName:string = skinParts[i];
@@ -229,12 +229,12 @@ module ns_egret {
 				return;
 			this._autoMouseEnabled = value;
 			if(this._autoMouseEnabled){
-				super.touchChildren = this.enabled ? this.explicitMouseChildren : false;
-				super.touchEnabled  = this.enabled ? this.explicitMouseEnabled  : false;
+				this._touchChildren = this.enabled ? this.explicitMouseChildren : false;
+				this._touchEnabled  = this.enabled ? this.explicitMouseEnabled  : false;
 			}
 			else{
-				super.touchChildren = this.explicitMouseChildren;
-				super.touchEnabled  = this.explicitMouseEnabled;
+				this._touchChildren = this.explicitMouseChildren;
+                this._touchEnabled  = this.explicitMouseEnabled;
 			}
 		}
 		

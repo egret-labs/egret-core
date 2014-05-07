@@ -29,7 +29,7 @@ module ns_egret {
 		/**
 		 * 深度队列
 		 */
-		private depthBins:Array = [];
+		private depthBins:Array<any> = [];
 		
 		/**
 		 * 最小深度
@@ -85,8 +85,8 @@ module ns_egret {
 						return null;
 					bin = this.depthBins[this.maxDepth];
 				}
-				var items:Array = bin.items;
-				for (var key:any in items ){
+				var items:Array<any> = bin.items;
+				for (var key in items ){
 					client = <ILayoutManagerClient> items[key];
 					this.remove(client, this.maxDepth);
 					break;
@@ -118,8 +118,8 @@ module ns_egret {
 					bin = this.depthBins[this.minDepth];
 				}
 
-                var items:Array = bin.items;
-                for (var key:any in items ){
+                var items:Array<any> = bin.items;
+                for (var key in items ){
                     client = <ILayoutManagerClient> items[key];
 					this.remove(client, this.minDepth);
 					break;
@@ -153,12 +153,12 @@ module ns_egret {
 						}
 					}
 					else{
-                        var items:Array = bin.items;
-						for (var key:any in items ){
+                        var items:Array<any> = bin.items;
+						for (var key in items ){
                             var value:any = items[key];
 							if ((value instanceof DisplayObject) && (client instanceof DisplayObjectContainer)
-								&&(<DisplayObjectContainer> client).contains(<DisplayObject> value)){
-								this.remove(<ILayoutManagerClient> value, max);
+								&&(<DisplayObjectContainer><any> client).contains(<DisplayObject><any> value)){
+								this.remove(<ILayoutManagerClient><any> value, max);
 								return value;
 							}
 						}
@@ -194,12 +194,12 @@ module ns_egret {
 						}
 					}
 					else{
-                        var items:Array = bin.items;
-						for (var key:any in items){
-                            var value:any = items[key];
+                        var items:Array<any> = bin.items;
+						for (var key in items){
+                            var value = items[key];
 							if ((value instanceof DisplayObject) && (client instanceof DisplayObjectContainer)
-								&&(<DisplayObjectContainer> client).contains(<DisplayObject> value)){
-								this.remove(<ILayoutManagerClient> value, min);
+								&&(<DisplayObjectContainer> <any>client).contains(<DisplayObject> <any>value)){
+								this.remove(<ILayoutManagerClient> <any>value, min);
 								return value;
 							}
 						}

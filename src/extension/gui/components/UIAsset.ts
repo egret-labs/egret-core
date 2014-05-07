@@ -80,7 +80,7 @@ module ns_egret {
 		public onGetSkin(skin:any,skinName:any):void{
 			if(this._skin!==skin){//如果皮肤是重用的，就不用执行添加和移除操作。
 
-				if(this._skin&&this._skin.parent==this){
+				if(this._skin&&this._skin.parent==<DisplayObjectContainer><any>this){
 					super.removeChild(this._skin);
 				}
 				this._skin = <DisplayObject> skin;
@@ -125,7 +125,7 @@ module ns_egret {
 			var adapter:ISkinAdapter = UIAsset.skinAdapter;
 			if(!adapter){
 				try{
-					adapter = UIAsset.skinAdapter = Injector.getInstance(ISkinAdapter);
+					adapter = UIAsset.skinAdapter = Injector.getInstance("ISkinAdapter");
 				}
 				catch(e){
 					if(!UIAsset.defaultSkinAdapter)
@@ -163,7 +163,7 @@ module ns_egret {
 			super.measure();
 			if(!this._skin)
 				return;
-			if("includeInLayout" in this._skin&&!(<ILayoutElement> (this._skin)).includeInLayout)
+			if("includeInLayout" in this._skin&&!(<ILayoutElement><any> (this._skin)).includeInLayout)
 				return;
 			var rect:Rectangle = this.getMeasuredSize();
 			this.measuredWidth = rect.width;
@@ -176,8 +176,8 @@ module ns_egret {
 		private getMeasuredSize():Rectangle{
 			var rect:Rectangle = new Rectangle();
 			if("preferredWidth" in this._skin){
-				rect.width = (<ILayoutElement> (this._skin)).preferredWidth;
-				rect.height = (<ILayoutElement> (this._skin)).preferredHeight;
+				rect.width = (<ILayoutElement><any> (this._skin)).preferredWidth;
+				rect.height = (<ILayoutElement><any> (this._skin)).preferredHeight;
 			}
 			else{
 				var oldScaleX:number = this._skin.scaleX;
@@ -242,8 +242,8 @@ module ns_egret {
 						}
 						
 						if("setLayoutBoundsPosition" in this._skin){
-							if((<ILayoutElement> (this._skin)).includeInLayout){
-								(<ILayoutElement> (this._skin)).setLayoutBoundsPosition(layoutBoundsX,layoutBoundsY);
+							if((<ILayoutElement><any> (this._skin)).includeInLayout){
+								(<ILayoutElement> <any>(this._skin)).setLayoutBoundsPosition(layoutBoundsX,layoutBoundsY);
 							}
 						}
 						else{
@@ -253,15 +253,15 @@ module ns_egret {
 					}
 				}
 				if("setLayoutBoundsSize" in this._skin){
-					if((<ILayoutElement> (this._skin)).includeInLayout){
-						(<ILayoutElement> (this._skin)).setLayoutBoundsSize(unscaledWidth,unscaledHeight);
+					if((<ILayoutElement><any> (this._skin)).includeInLayout){
+						(<ILayoutElement><any> (this._skin)).setLayoutBoundsSize(unscaledWidth,unscaledHeight);
 					}
 				}
 				else{
 					this._skin.scaleX = unscaledWidth/this._skin.width;
 					this._skin.scaleY = unscaledHeight/this._skin.height;
 					if("validateNow" in this._skin)
-						(<IInvalidateDisplay> (this._skin)).validateNow();
+						(<IInvalidateDisplay><any> (this._skin)).validateNow();
 				}
 			}
 		}

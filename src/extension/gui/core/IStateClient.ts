@@ -29,7 +29,7 @@ module ns_egret {
 		/**
 		 * 为此组件定义的视图状态。
 		 */		
-		states:Array;
+		states:Array<any>;
 		
 		/**
 		 * 返回是否含有指定名称的视图状态

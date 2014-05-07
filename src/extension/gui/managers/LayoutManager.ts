@@ -162,8 +162,8 @@ module ns_egret {
 		 * 执行属性应用
 		 */		
 		private doPhasedInstantiationCallBack(event:Event=null):void{
-			UIGlobals.stage.removeEventListener(Event.ENTER_FRAME,this.doPhasedInstantiationCallBack);
-			UIGlobals.stage.removeEventListener(Event.RENDER, this.doPhasedInstantiationCallBack);
+			UIGlobals.stage.removeEventListener(Event.ENTER_FRAME,this.doPhasedInstantiationCallBack,this);
+			UIGlobals.stage.removeEventListener(Event.RENDER, this.doPhasedInstantiationCallBack,this);
 			this.doPhasedInstantiation();
 		}
 		

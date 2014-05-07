@@ -35,6 +35,6 @@ module ns_egret {
 		 * 立即应用组件及其子项的所有属性 
 		 * @param skipDisplayList 是否跳过显示列表验证阶段,默认false
 		 */		
-		validateNow(skipDisplayList:boolean = false):void;
+		validateNow(skipDisplayList?:boolean):void;
 	}
 }
