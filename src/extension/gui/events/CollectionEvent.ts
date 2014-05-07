@@ -29,7 +29,7 @@ module ns_egret {
 		public constructor(type:string, bubbles:boolean = false,
 										cancelable:boolean = false,
 										kind:string = null, location:number = -1,
-										oldLocation:number = -1, items:Array = null,oldItems:Array=null){
+										oldLocation:number = -1, items:Array<any> = null,oldItems:Array<any>=null){
 			super(type, bubbles, cancelable);
 			
 			this.kind = kind;
@@ -45,11 +45,11 @@ module ns_egret {
 		/**
 		 * 受事件影响的项目的列表
 		 */		
-		public items:Array;
+		public items:Array<any>;
 		/**
 		 * 仅当kind的值为CollectionEventKind.REPLACE时，表示替换前的项目列表
 		 */		
-		public oldItems:Array;
+		public oldItems:Array<any>;
 		/**
 		 * 如果 kind 值为 CollectionEventKind.ADD、 CollectionEventKind.MOVE、
 		 * CollectionEventKind.REMOVE 或 CollectionEventKind.REPLACE，

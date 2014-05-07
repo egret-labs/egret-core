@@ -17,6 +17,7 @@
  */
 
 /// <reference path="../../../egret/events/Event.ts"/>
+/// <reference path="IItemRenderer.ts"/>
 /// <reference path="supportClasses/ToggleButtonBase.ts"/>
 
 module ns_egret {

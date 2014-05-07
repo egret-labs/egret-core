@@ -18,13 +18,13 @@
 
 /// <reference path="../../../egret/display/DisplayObject.ts"/>
 /// <reference path="../../../egret/events/EventDispatcher.ts"/>
+/// <reference path="SkinnableComponent.ts"/>
 /// <reference path="../core/IContainer.ts"/>
 /// <reference path="../core/ISkin.ts"/>
 /// <reference path="../core/IStateClient.ts"/>
 /// <reference path="../core/IVisualElement.ts"/>
 /// <reference path="../core/IVisualElementContainer.ts"/>
 /// <reference path="../events/ElementExistenceEvent.ts"/>
-/// <reference path="../events/StateChangeEvent.ts"/>
 /// <reference path="../states/StateClientHelper.ts"/>
 
 module ns_egret {

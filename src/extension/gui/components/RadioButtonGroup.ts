@@ -20,7 +20,7 @@
 /// <reference path="../../../egret/display/DisplayObjectContainer.ts"/>
 /// <reference path="../../../egret/events/Event.ts"/>
 /// <reference path="../../../egret/events/EventDispatcher.ts"/>
-/// <reference path="../core/UIGlobals.ts"/>
+/// <reference path="RadioButton.ts"/>
 /// <reference path="../core/IVisualElement.ts"/>
 /// <reference path="../core/IVisualElementContainer.ts"/>
 /// <reference path="../core/UIComponent.ts"/>

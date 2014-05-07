@@ -75,7 +75,7 @@ module ns_egret {
 		 */
 		public addElement(element:IVisualElement):IVisualElement{
 			var index:number = this.owner[this.upperBoundReference];
-			if(element.parent===(<DisplayObjectContainer> this.owner))
+			if(element.parent===(<DisplayObjectContainer><any> this.owner))
 				index--;
 			this.owner[this.upperBoundReference]++;
 			this.owner[this.raw_addElementAt](element,index);

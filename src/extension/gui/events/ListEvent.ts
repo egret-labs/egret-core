@@ -39,8 +39,8 @@ module ns_egret {
 		
 		
 		public constructor(type:string, bubbles:boolean=true, cancelable:boolean=true,
-                           touchPointID:number=0,stageX:number=0,stageY:number=0,ctrlKey:Boolean = false,
-                           altKey:Boolean = false,shiftKey:Boolean = false,buttonDown:Boolean = false,
+                           touchPointID:number=0,stageX:number=0,stageY:number=0,ctrlKey:boolean = false,
+                           altKey:boolean = false,shiftKey:boolean = false,buttonDown:boolean = false,
 						   itemIndex:number = -1,item:any = null,itemRenderer:IItemRenderer = null){
 			super(type, bubbles, cancelable, touchPointID, stageX, stageY,ctrlKey,altKey,shiftKey,buttonDown);
 			

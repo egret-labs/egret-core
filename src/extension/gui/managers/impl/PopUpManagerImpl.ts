@@ -40,22 +40,22 @@ module ns_egret {
             super();
         }
 
-        private _popUpList:Array = [];
+        private _popUpList:Array<any> = [];
         /**
          * 已经弹出的窗口列表
          */
-        public get popUpList():Array{
+        public get popUpList():Array<any>{
             return this._popUpList.concat();
         }
         /**
          * 模态窗口列表
          */
-        private popUpDataList:Array = [];
+        private popUpDataList:Array<any> = [];
         /**
          * 根据popUp获取对应的popUpData
          */
         private findPopUpData(popUp:IVisualElement):PopUpData{
-            var list:Array = this.popUpDataList;
+            var list:Array<any> = this.popUpDataList;
             var length:number = list.length;
             for(var i:number=0;i<length;i++){
                 var data:PopUpData = list[i];
@@ -100,7 +100,7 @@ module ns_egret {
          */
         private onRemoved(event:Event):void{
             var index:number = 0;
-            var list:Array = this.popUpDataList;
+            var list:Array<any> = this.popUpDataList;
             var length:number = list.length;
             for(var i:number=0;i<length;i++){
                 var data:PopUpData = list[i];
@@ -189,7 +189,7 @@ module ns_egret {
                 }
                // (<Rect> modalMask).fillColor = this._modalColor;
                 this.modalMask.alpha = this._modalAlpha;
-                if(this.modalMask.parent==(<DisplayObjectContainer> systemManager)){
+                if(this.modalMask.parent==(<DisplayObjectContainer><any>systemManager)){
                     if(popUpContainer.getElementIndex(this.modalMask)<i)
                         i--;
                     popUpContainer.setElementIndex(this.modalMask,i);
@@ -198,7 +198,7 @@ module ns_egret {
                     popUpContainer.addElementAt(this.modalMask,i);
                 }
             }
-            else if(this.modalMask&&this.modalMask.parent==(<DisplayObjectContainer> systemManager)){
+            else if(this.modalMask&&this.modalMask.parent==(<DisplayObjectContainer><any>systemManager)){
                 popUpContainer.removeElement(this.modalMask);
             }
         }
@@ -210,9 +210,9 @@ module ns_egret {
         public removePopUp(popUp:IVisualElement):void{
             if(popUp && popUp.parent&&this.findPopUpData(popUp)){
                 if("removeElement" in popUp.parent)
-                (<IVisualElementContainer> (popUp.parent)).removeElement(popUp);
+                (<IVisualElementContainer><any> (popUp.parent)).removeElement(popUp);
             else if(popUp instanceof DisplayObject)
-                    popUp.parent.removeChild(<DisplayObject> popUp);
+                    popUp.parent.removeChild(<DisplayObject><any>popUp);
             }
         }
 
@@ -226,7 +226,7 @@ module ns_egret {
             var parent:DisplayObjectContainer = popUp.parent;
             if(parent){
                 if("validateNow" in popUp)
-                (<IInvalidating> popUp).validateNow();
+                (<IInvalidating><any>popUp).validateNow();
                 popUp.x = (parent.width-popUp.layoutBoundsWidth)*0.5;
                 popUp.y = (parent.height-popUp.layoutBoundsHeight)*0.5;
             }
@@ -239,7 +239,7 @@ module ns_egret {
         public bringToFront(popUp:IVisualElement):void{
             var data:PopUpData = this.findPopUpData(popUp);
             if(data&&"popUpContainer" in popUp.parent){
-                var sm:ISystemManager = <ISystemManager> (popUp.parent);
+                var sm:ISystemManager = <ISystemManager><any>(popUp.parent);
                 sm.popUpContainer.setElementIndex(popUp,sm.popUpContainer.numElements-1);
                 this.invalidateModal();
             }

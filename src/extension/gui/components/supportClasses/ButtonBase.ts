@@ -16,8 +16,8 @@
  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-/// <reference path="../../../../egret/core/VerticalAlign.ts"/>
 /// <reference path="../../../../egret/core/HorizontalAlign.ts"/>
+/// <reference path="../../../../egret/core/VerticalAlign.ts"/>
 /// <reference path="../../../../egret/display/DisplayObject.ts"/>
 /// <reference path="../../../../egret/events/Event.ts"/>
 /// <reference path="../../../../egret/events/TimerEvent.ts"/>

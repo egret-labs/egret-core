@@ -17,6 +17,7 @@
  */
 
 /// <reference path="../../../../egret/events/Event.ts"/>
+/// <reference path="ButtonBase.ts"/>
 /// <reference path="../../events/UIEvent.ts"/>
 
 module ns_egret {

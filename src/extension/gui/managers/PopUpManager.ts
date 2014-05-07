@@ -38,7 +38,7 @@ module ns_egret {
 		private static get impl():IPopUpManager{
 			if (!PopUpManager._impl){
 				try{
-					PopUpManager._impl = Injector.getInstance(IPopUpManager);
+					PopUpManager._impl = Injector.getInstance("IPopUpManager");
 				}
 				catch(e){
 					PopUpManager._impl = new PopUpManagerImpl();
@@ -107,7 +107,7 @@ module ns_egret {
 		/**
 		 * 已经弹出的窗口列表
 		 */		
-		public static get popUpList():Array{
+		public static get popUpList():Array<any>{
 			return PopUpManager.impl.popUpList;
 		}
 		

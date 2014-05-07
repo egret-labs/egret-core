@@ -196,7 +196,7 @@ module ns_egret {
 			var measuredWidth:number = this.getElementTotalSize();
 			var measuredHeight:number = Math.max(this.maxElementHeight,typicalHeight);
 			
-			var visibleIndices:Array = this.target.getElementIndicesInView();
+			var visibleIndices:Array<any> = this.target.getElementIndicesInView();
             var length:number = visibleIndices.length;
 			for(var i:number=0;i<length;i++){
                 var index:number = visibleIndices[i];
@@ -273,7 +273,7 @@ module ns_egret {
 		/**
 		 * 虚拟布局使用的子对象尺寸缓存 
 		 */		
-		private elementSizeTable:Array = [];
+		private elementSizeTable:Array<any> = [];
 		
 		/**
 		 * 获取指定索引的起始位置
@@ -603,7 +603,7 @@ module ns_egret {
 			
 			var totalPreferredWidth:number = 0;
 			var totalPercentWidth:number = 0;
-			var childInfoArray:Array = [];
+			var childInfoArray:Array<any> = [];
 			var childInfo:ChildInfo;
 			var widthToDistribute:number = targetWidth;
 			for (i = 0; i < count; i++){
@@ -639,7 +639,7 @@ module ns_egret {
 			
 			var averageWidth:number;
 			var largeChildrenCount:number = numElements;
-			var widthDic:Array = [];
+			var widthDic:Array<any> = [];
 			if(hJustify){
 				if(excessSpace<0){
 					averageWidth = widthToDistribute / numElements;
@@ -744,7 +744,7 @@ module ns_egret {
 		 * 为每个可变尺寸的子项分配空白区域
 		 */		
 		public static flexChildrenProportionally(spaceForChildren:number,spaceToDistribute:number,
-															totalPercent:number,childInfoArray:Array):void{
+															totalPercent:number,childInfoArray:Array<any>):void{
 			
 			var numChildren:number = childInfoArray.length;
 			var done:boolean;

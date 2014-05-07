@@ -17,10 +17,11 @@
  */
 
 /// <reference path="../../../egret/display/DisplayObject.ts"/>
-/// <reference path="../../../egret/display/DisplayObject.ts"/>
 /// <reference path="../../../egret/events/Event.ts"/>
 /// <reference path="../../../egret/events/TouchEvent.ts"/>
 /// <reference path="../../../egret/geom/Point.ts"/>
+/// <reference path="Button.ts"/>
+/// <reference path="Panel.ts"/>
 /// <reference path="../core/UIGlobals.ts"/>
 /// <reference path="../events/CloseEvent.ts"/>
 /// <reference path="../managers/PopUpManager.ts"/>

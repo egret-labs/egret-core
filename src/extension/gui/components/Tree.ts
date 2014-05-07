@@ -16,7 +16,11 @@
  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+/// <reference path="../../../egret/utils/XML.ts"/>
 /// <reference path="../collections/ITreeCollection.ts"/>
+/// <reference path="IItemRenderer.ts"/>
+/// <reference path="ITreeItemRenderer.ts"/>
+/// <reference path="List.ts"/>
 /// <reference path="supportClasses/TreeItemRenderer.ts"/>
 /// <reference path="../events/CollectionEvent.ts"/>
 /// <reference path="../events/CollectionEventKind.ts"/>

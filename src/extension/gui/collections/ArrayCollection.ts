@@ -28,7 +28,7 @@ module ns_egret {
 		 * 构造函数
 		 * @param source 数据源
 		 */		
-		public constructor(source:Array = null){
+		public constructor(source:Array<any> = null){
 			super();
 			if(source){
 				this._source = source;
@@ -38,17 +38,17 @@ module ns_egret {
 			}
 		}
 		
-		private _source:Array;
+		private _source:Array<any>;
 		/**
 		 * 数据源
 		 * 通常情况下请不要直接调用Array的方法操作数据源，否则对应的视图无法收到数据改变的通知。
 		 * 若对数据源进行了排序或过滤等操作，请手动调用refresh()方法刷新数据。<br/>
 		 */
-		public get source():Array{
+		public get source():Array<any>{
 			return this._source;
 		}
 
-		public set source(value:Array){
+		public set source(value:Array<any>){
 			if(!value)
 				value = [];
 			this._source = value;
@@ -137,7 +137,7 @@ module ns_egret {
 		 * 删除列表中的所有项目。
 		 */
 		public removeAll():void{
-			var items:Array = this._source.concat();
+			var items:Array<any> = this._source.concat();
 			this._source.length = 0;
 			this.dispatchCoEvent(CollectionEventKind.REMOVE,0,-1,items);
 		}
@@ -165,7 +165,7 @@ module ns_egret {
 		 * 用新数据源替换原始数据源，此方法与直接设置source不同，它不会导致目标视图重置滚动位置。
 		 * @param newSource 新的数据源
 		 */		
-		public replaceAll(newSource:Array):void{
+		public replaceAll(newSource:Array<any>):void{
 			if(!newSource)
 				newSource = [];
 			var newLength:number = newSource.length;
@@ -203,7 +203,7 @@ module ns_egret {
 		 * 抛出事件
 		 */		
 		private dispatchCoEvent(kind:string = null, location:number = -1,
-										 oldLocation:number = -1, items:Array = null,oldItems:Array=null):void{
+										 oldLocation:number = -1, items:Array<any> = null,oldItems:Array<any>=null):void{
 
             var recycler:Recycler = ArrayCollection.coEventRecycler;
             var event:CollectionEvent = recycler.pop();

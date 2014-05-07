@@ -16,6 +16,10 @@
  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+/// <reference path="Group.ts"/>
+/// <reference path="SkinnableContainer.ts"/>
+/// <reference path="TabBar.ts"/>
+/// <reference path="ViewStack.ts"/>
 /// <reference path="../core/IViewStack.ts"/>
 /// <reference path="../core/IVisualElement.ts"/>
 /// <reference path="../events/ElementExistenceEvent.ts"/>

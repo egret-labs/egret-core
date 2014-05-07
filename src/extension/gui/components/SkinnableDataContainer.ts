@@ -17,6 +17,10 @@
  */
 
 /// <reference path="../collections/ICollection.ts"/>
+/// <reference path="DataGroup.ts"/>
+/// <reference path="IItemRenderer.ts"/>
+/// <reference path="IItemRendererOwner.ts"/>
+/// <reference path="SkinnableComponent.ts"/>
 /// <reference path="../core/IVisualElement.ts"/>
 /// <reference path="../events/RendererExistenceEvent.ts"/>
 /// <reference path="../layouts/VerticalLayout.ts"/>

@@ -21,6 +21,9 @@
 /// <reference path="../../collections/ICollection.ts"/>
 /// <reference path="../IItemRenderer.ts"/>
 /// <reference path="../List.ts"/>
+/// <reference path="ButtonBase.ts"/>
+/// <reference path="DropDownController.ts"/>
+/// <reference path="ListBase.ts"/>
 /// <reference path="../../events/CollectionEvent.ts"/>
 /// <reference path="../../events/ListEvent.ts"/>
 /// <reference path="../../events/UIEvent.ts"/>

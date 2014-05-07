@@ -16,6 +16,8 @@
  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+/// <reference path="Group.ts"/>
+/// <reference path="SkinnableComponent.ts"/>
 /// <reference path="../core/IVisualElement.ts"/>
 /// <reference path="../core/IVisualElementContainer.ts"/>
 /// <reference path="../events/ElementExistenceEvent.ts"/>
@@ -37,7 +39,7 @@ module ns_egret {
          * 实体容器实例化之前缓存子对象的容器
          */
         public _placeHolderGroup:Group;
-
+a
         /**
          * 获取当前的实体容器
          */
@@ -46,7 +48,7 @@ module ns_egret {
                 if (this._placeHolderGroup == null) {
                     this._placeHolderGroup = new Group();
                     this._placeHolderGroup.visible = false;
-                    this.addToDisplayList(this._placeHolderGroup);
+                    this.addToDisplayList(<DisplayObject><any>this._placeHolderGroup);
                 }
                 this._placeHolderGroup.addEventListener(
                     ElementExistenceEvent.ELEMENT_ADD, this.contentGroup_elementAddedHandler, this);
@@ -63,7 +65,7 @@ module ns_egret {
          * 设置容器子对象数组 。数组包含要添加到容器的子项列表，之前的已存在于容器中的子项列表被全部移除后添加列表里的每一项到容器。
          * 设置该属性时会对您输入的数组进行一次浅复制操作，所以您之后对该数组的操作不会影响到添加到容器的子项列表数量。
          */
-        public set elementsContent(value:Array) {
+        public set elementsContent(value:Array<any>) {
             this.currentContentGroup.elementsContent = value;
         }
 
@@ -181,12 +183,12 @@ module ns_egret {
                         ElementExistenceEvent.ELEMENT_ADD, this.contentGroup_elementAddedHandler, this);
                     this._placeHolderGroup.removeEventListener(
                         ElementExistenceEvent.ELEMENT_REMOVE, this.contentGroup_elementRemovedHandler, this);
-                    var sourceContent:Array = this._placeHolderGroup.getElementsContent().concat();
+                    var sourceContent:Array<any> = this._placeHolderGroup.getElementsContent().concat();
                     for (var i:number = this._placeHolderGroup.numElements; i > 0; i--) {
                         var element:IVisualElement = this._placeHolderGroup.removeElementAt(0);
                         element.ownerChanged(null);
                     }
-                    this.removeFromDisplayList(this._placeHolderGroup);
+                    this.removeFromDisplayList(<DisplayObject><any>this._placeHolderGroup);
                     this.contentGroup.elementsContent = sourceContent;
                     for (i = sourceContent.length - 1; i >= 0; i--) {
                         element = sourceContent[i];
@@ -250,7 +252,7 @@ module ns_egret {
             this.contentGroup = new Group();
             this.contentGroup.percentWidth = 100;
             this.contentGroup.percentHeight = 100;
-            this.addToDisplayList(this.contentGroup);
+            this.addToDisplayList(<DisplayObject><any>this.contentGroup);
             this.partAdded("contentGroup", this.contentGroup);
         }
 
@@ -259,7 +261,7 @@ module ns_egret {
          */
         public removeSkinParts():void {
             this.partRemoved("contentGroup", this.contentGroup);
-            this.removeFromDisplayList(this.contentGroup);
+            this.removeFromDisplayList(<DisplayObject><any>this.contentGroup);
             this.contentGroup = null;
         }
     }

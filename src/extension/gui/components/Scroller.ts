@@ -18,7 +18,8 @@
 
 /// <reference path="../../../egret/events/Event.ts"/>
 /// <reference path="../../../egret/events/TouchEvent.ts"/>
-/// <reference path="supportClasses/ScrollerLayout.ts"/>
+/// <reference path="Group.ts"/>
+/// <reference path="SkinnableComponent.ts"/>
 /// <reference path="../core/IInvalidating.ts"/>
 /// <reference path="../core/IViewport.ts"/>
 /// <reference path="../core/IVisualElement.ts"/>

@@ -16,17 +16,21 @@
  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+/// <reference path="../../../egret/core/HorizontalAlign.ts"/>
+/// <reference path="../../../egret/core/VerticalAlign.ts"/>
 /// <reference path="../../../egret/events/Event.ts"/>
 /// <reference path="../../../egret/events/TouchEvent.ts"/>
 /// <reference path="../collections/ICollection.ts"/>
+/// <reference path="DataGroup.ts"/>
+/// <reference path="IItemRenderer.ts"/>
+/// <reference path="TabBarButton.ts"/>
+/// <reference path="ViewStack.ts"/>
 /// <reference path="supportClasses/ListBase.ts"/>
 /// <reference path="../core/IVisualElement.ts"/>
 /// <reference path="../events/IndexChangeEvent.ts"/>
 /// <reference path="../events/ListEvent.ts"/>
 /// <reference path="../events/RendererExistenceEvent.ts"/>
-/// <reference path="../layouts/HorizontalAlign.ts"/>
 /// <reference path="../layouts/HorizontalLayout.ts"/>
-/// <reference path="../layouts/VerticalAlign.ts"/>
 
 module ns_egret {
 

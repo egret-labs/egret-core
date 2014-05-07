@@ -39,7 +39,7 @@ module ns_egret {
 		 * @param center 是否居中窗口。等效于在外部调用centerPopUp()来居中。默认true。
 		 * @param systemManager 要弹出到的系统管理器。若项目中只含有一个系统管理器，可以留空。
 		 */		
-		addPopUp(popUp:IVisualElement,modal:boolean=false,center:boolean=true):void;
+		addPopUp(popUp:IVisualElement,modal?:boolean,center?:boolean):void;
 		
 		/**
 		 * 移除由addPopUp()方法弹出的窗口。
@@ -62,6 +62,6 @@ module ns_egret {
 		/**
 		 * 已经弹出的窗口列表
 		 */		
-		popUpList:Array;
+		popUpList:Array<any>;
 	}
 }

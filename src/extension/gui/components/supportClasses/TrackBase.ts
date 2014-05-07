@@ -21,6 +21,7 @@
 /// <reference path="../../../../egret/events/TouchEvent.ts"/>
 /// <reference path="../../../../egret/geom/Point.ts"/>
 /// <reference path="../Button.ts"/>
+/// <reference path="Range.ts"/>
 /// <reference path="../../core/UIGlobals.ts"/>
 /// <reference path="../../events/ResizeEvent.ts"/>
 /// <reference path="../../events/TrackBaseEvent.ts"/>

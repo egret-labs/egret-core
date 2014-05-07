@@ -20,9 +20,10 @@
 /// <reference path="../../../../egret/display/DisplayObjectContainer.ts"/>
 /// <reference path="../../../../egret/events/Event.ts"/>
 /// <reference path="../../../../egret/events/EventDispatcher.ts"/>
-/// <reference path="../../../../egret/events/TouchEvent.ts"/>
 /// <reference path="../../../../egret/events/TimerEvent.ts"/>
+/// <reference path="../../../../egret/events/TouchEvent.ts"/>
 /// <reference path="../../../../egret/utils/Timer.ts"/>
+/// <reference path="ButtonBase.ts"/>
 /// <reference path="../../core/UIGlobals.ts"/>
 /// <reference path="../../events/UIEvent.ts"/>
 

@@ -16,12 +16,13 @@
  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-/// <reference path="../../../../egret/display/DisplayObjectContainer.ts"/>
 /// <reference path="../../../../egret/display/DisplayObject.ts"/>
+/// <reference path="../../../../egret/display/DisplayObjectContainer.ts"/>
 /// <reference path="../../../../egret/events/Event.ts"/>
 /// <reference path="../../../../egret/events/TouchEvent.ts"/>
 /// <reference path="../../../../egret/geom/Point.ts"/>
-/// <reference path="../../core/UIGlobals.ts"/>
+/// <reference path="Animation.ts"/>
+/// <reference path="TrackBase.ts"/>
 /// <reference path="../../events/TrackBaseEvent.ts"/>
 /// <reference path="../../events/UIEvent.ts"/>
 

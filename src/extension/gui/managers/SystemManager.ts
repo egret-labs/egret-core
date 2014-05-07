@@ -246,7 +246,7 @@ module ns_egret {
 		 */
 		public addElement(element:IVisualElement):IVisualElement{
 			var addIndex:number = this._noTopMostIndex;
-			if (element.parent == this)
+			if (element.parent == <DisplayObjectContainer><any>this)
 				addIndex--;
 			return this.addElementAt(element, addIndex);
 		}
@@ -255,7 +255,7 @@ module ns_egret {
 		 * @inheritDoc
 		 */
 		public addElementAt(element:IVisualElement,index:number):IVisualElement{
-			if (element.parent==this){
+			if (element.parent==<DisplayObjectContainer><any>this){
 				var oldIndex:number = this.getElementIndex(element);
 				if(oldIndex<this._noTopMostIndex)
 					this.noTopMostIndex--;
@@ -327,13 +327,13 @@ module ns_egret {
 			return super.getElementAt(index);
 		}
 		private raw_addElement(element:IVisualElement):IVisualElement{
-			var index:number = super.numElements;
-			if (element.parent == this)
+			var index:number = this.numElements;
+			if (element.parent == <DisplayObjectContainer><any>this)
 				index--;
 			return this.raw_addElementAt(element, index);
 		}
 		private raw_addElementAt(element:IVisualElement, index:number):IVisualElement{
-			if (element.parent==this){
+			if (element.parent==<DisplayObjectContainer><any>this){
 				var oldIndex:number = this.getElementIndex(element);
 				if(oldIndex<this._noTopMostIndex)
 					this.noTopMostIndex--;
@@ -353,7 +353,7 @@ module ns_egret {
 			return super.removeElementAt(index);
 		}
 		private raw_removeAllElements():void{
-			while(super.numElements>0){
+			while(this.numElements>0){
 				super.removeElementAt(0);
 			}
 		}

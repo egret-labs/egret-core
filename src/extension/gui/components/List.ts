@@ -19,10 +19,11 @@
 /// <reference path="../../../egret/display/DisplayObject.ts"/>
 /// <reference path="../../../egret/events/Event.ts"/>
 /// <reference path="../../../egret/events/TouchEvent.ts"/>
+/// <reference path="IItemRenderer.ts"/>
 /// <reference path="supportClasses/ItemRenderer.ts"/>
 /// <reference path="supportClasses/ListBase.ts"/>
-/// <reference path="../core/UIGlobals.ts"/>
 /// <reference path="../core/IVisualElement.ts"/>
+/// <reference path="../core/UIGlobals.ts"/>
 /// <reference path="../events/IndexChangeEvent.ts"/>
 /// <reference path="../events/ListEvent.ts"/>
 /// <reference path="../events/RendererExistenceEvent.ts"/>

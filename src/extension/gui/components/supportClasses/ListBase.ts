@@ -17,8 +17,8 @@
  */
 
 /// <reference path="../../../../egret/display/DisplayObject.ts"/>
-/// <reference path="../../../../egret/events/Event.ts"/>
 /// <reference path="../../../../egret/events/TouchEvent.ts"/>
+/// <reference path="../../../../egret/utils/XML.ts"/>
 /// <reference path="../../collections/ICollection.ts"/>
 /// <reference path="../IItemRenderer.ts"/>
 /// <reference path="../SkinnableDataContainer.ts"/>
