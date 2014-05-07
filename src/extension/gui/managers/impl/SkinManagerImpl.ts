@@ -78,6 +78,8 @@ module ns_egret {
 
         private parseObject(data:Object):any{
             var className:string = data["name"];
+            if(!className)
+                return null;
             var clazz:any = ns_egret[className];
             var target:any = new clazz();
             var prop:Object = data["prop"];
