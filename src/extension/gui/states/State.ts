@@ -26,7 +26,7 @@ module ns_egret {
 	export class State extends EventDispatcher{
 		public constructor(properties:any=null){
 			super();
-			for (var p:string in properties){
+			for (var p in properties){
 				this[p] = properties[p];
 			}
 		}
@@ -50,11 +50,11 @@ module ns_egret {
 		 * 该视图状态的覆盖，表现为实现 IOverride 接口的对象的数组。
 		 * 这些覆盖在进入状态时按顺序应用，在退出状态时按相反的顺序删除。 
 		 */		
-		public overrides:Array  = [];
+		public overrides:Array<any>  = [];
 		/**
 		 * 此视图状态作为 String 数组所属的状态组。 
 		 */		
-		public stateGroups:Array  = [];
+		public stateGroups:Array<any>  = [];
 		/**
 		 * 初始化视图
 		 */		

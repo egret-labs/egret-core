@@ -237,7 +237,7 @@ module ns_egret {
 
             value -= this.minimum;
             if (interval != Math.round(interval)) {
-                var parts:Array = ((1 + interval).toString()).split(".");
+                var parts:Array<any> = ((1 + interval).toString()).split(".");
                 scale = Math.pow(10, parts[1].length);
                 maxValue *= scale;
                 value = Math.round(value * scale);

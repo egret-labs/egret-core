@@ -36,14 +36,14 @@ module ns_egret {
 		 */		
 		private target:IStateClient;
 		
-		private _states:Array = [];
+		private _states:Array<any> = [];
 		/**
 		 * 为此组件定义的视图状态。
 		 */
-		public get states():Array{
+		public get states():Array<any>{
 			return this._states;
 		}
-		public set states(value:Array){
+		public set states(value:Array<any>){
 			if(this._states == value)
 				return;
 			this._states = value;
@@ -184,8 +184,8 @@ module ns_egret {
 			if (!firstState.basedOn && !secondState.basedOn)
 				return "";
 			
-			var firstBaseStates:Array = this.getBaseStates(firstState);
-			var secondBaseStates:Array = this.getBaseStates(secondState);
+			var firstBaseStates:Array<any> = this.getBaseStates(firstState);
+			var secondBaseStates:Array<any> = this.getBaseStates(secondState);
 			var commonBase:string = "";
 			
 			while (firstBaseStates[firstBaseStates.length - 1] ==
@@ -212,8 +212,8 @@ module ns_egret {
 		/**
 		 * 获取指定视图状态的所有父级状态列表
 		 */		
-		private getBaseStates(state:State):Array{
-			var baseStates:Array = [];
+		private getBaseStates(state:State):Array<any>{
+			var baseStates:Array<any> = [];
 			
 			while (state && state.basedOn){
 				baseStates.push(state.basedOn);
@@ -235,7 +235,7 @@ module ns_egret {
 			if (state){
 				state.dispatchExitState();
 				
-				var overrides:Array = state.overrides;
+				var overrides:Array<any> = state.overrides;
 				
 				for (var i:number = overrides.length; i; i--)
 					overrides[i-1].remove(this.target);
@@ -258,10 +258,10 @@ module ns_egret {
 				if (state.basedOn != lastState)
 					this.applyState(state.basedOn, lastState);
 				
-				var overrides:Array = state.overrides;
+				var overrides:Array<any> = state.overrides;
 				
 				for (var i:number = 0; i < overrides.length; i++)
-					overrides[i].apply(<IContainer> (this.target));
+					overrides[i].apply(<IContainer><any>(this.target));
 				
 				state.dispatchEnterState();
 			}

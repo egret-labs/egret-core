@@ -92,7 +92,7 @@ module ns_egret {
         /**
          * 随着时间的推移Animation将设置动画的属性和值的列表。对象示例:{p:"x",f:10,t:100}表示，属性名"x"从10改变到100。
          */
-		public motionPaths:Array = [];
+		public motionPaths:Array<any> = [];
 
 		private _currentValue:any = {};
 
@@ -294,7 +294,7 @@ module ns_egret {
 		 * 计算当前值
 		 */		
 		private caculateCurrentValue(fraction:number):void{
-            var paths:Array = this.motionPaths;
+            var paths:Array<any> = this.motionPaths;
             var length:number = paths.length;
             for(var i:number=0;i<length;i++){
                 var motion:any = paths[i];
@@ -314,7 +314,7 @@ module ns_egret {
 		/**
 		 * 正在活动的动画
 		 */		
-		private static activeAnimations:Array = [];
+		private static activeAnimations:Array<any> = [];
 		
 		/**
 		 * 添加动画到队列

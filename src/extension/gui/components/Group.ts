@@ -52,11 +52,11 @@ module ns_egret {
 		 */		
 		private  elementsContentChanged:boolean = false;
 		
-		private _elementsContent:Array = [];
+		private _elementsContent:Array<any> = [];
 		/**
 		 * 返回子元素列表
 		 */		
-		public getElementsContent():Array{
+		public getElementsContent():Array<any>{
 			return this._elementsContent;
 		}
 
@@ -64,7 +64,7 @@ module ns_egret {
 		 * 设置容器子对象数组 。数组包含要添加到容器的子项列表，之前的已存在于容器中的子项列表被全部移除后添加列表里的每一项到容器。
 		 * 设置该属性时会对您输入的数组进行一次浅复制操作，所以您之后对该数组的操作不会影响到添加到容器的子项列表数量。
 		 */		
-		public set elementsContent(value:Array){
+		public set elementsContent(value:Array<any>){
 			if(value==null)
 				value = [];
 			if(value==this._elementsContent)
@@ -84,7 +84,7 @@ module ns_egret {
 		/**
 		 * 设置容器子对象列表
 		 */		
-		private setElementsContent(value:Array):void{
+		private setElementsContent(value:Array<any>):void{
 			var i:number;
 			
 			for (i = this._elementsContent.length - 1; i >= 0; i--){
@@ -98,7 +98,7 @@ module ns_egret {
 				var elt:IVisualElement = this._elementsContent[i];
 				
 				if(elt.parent&&"removeElement" in elt.parent)
-					(<IVisualElementContainer> (elt.parent)).removeElement(elt);
+					(<IVisualElementContainer><any> (elt.parent)).removeElement(elt);
 				else if(elt.owner&&"removeElement" in elt.owner)
 					(<IContainer> (elt.owner)).removeElement(elt);
 				
@@ -138,7 +138,7 @@ module ns_egret {
 		public addElement(element:IVisualElement):IVisualElement{
 			var index:number = this.numElements;
 			
-			if (element.parent == this)
+			if (element.parent ==<DisplayObjectContainer><any>this)
 				index = this.numElements-1;
 			
 			return this.addElementAt(element, index);
@@ -153,12 +153,12 @@ module ns_egret {
 			this.checkForRangeError(index, true);
 			
 			var host:DisplayObject = element.parent; 
-			if (host == this){
+			if (host == <DisplayObject><any>this){
 				this.setElementIndex(element, index);
 				return element;
 			}
 			else if (host&&"removeElement" in host){
-				(<IVisualElementContainer> host).removeElement(element);
+				(<IVisualElementContainer><any>host).removeElement(element);
 			}
 			else if(element.owner&&"removeElement" in element.owner){
 				(<IContainer> (element.owner)).removeElement(element);
@@ -270,7 +270,7 @@ module ns_egret {
 		 */		
 		public elementAdded(element:IVisualElement, index:number, notifyListeners:boolean = true):void{
 			if(element instanceof DisplayObject)
-				this.addToDisplayList(<DisplayObject> element, index);
+				this.addToDisplayList(<DisplayObject><any>element, index);
 			
 			if (notifyListeners){
 				if (this.hasEventListener(ElementExistenceEvent.ELEMENT_ADD))
@@ -291,8 +291,8 @@ module ns_egret {
 						ElementExistenceEvent.ELEMENT_REMOVE, false, false, element, index));
 			}
 			
-			var childDO:DisplayObject = <DisplayObject> element; 
-			if (childDO && childDO.parent == this){
+			var childDO:DisplayObject = <DisplayObject><any> element;
+			if (childDO && childDO.parent == <DisplayObjectContainer><any>this){
 				super.removeChild(childDO);
 			}
 			
@@ -304,10 +304,10 @@ module ns_egret {
 		 * 添加对象到显示列表
 		 */		
 		public addToDisplayList(child:DisplayObject, index:number = -1):void{
-			if (child.parent == this)
-				super.setChildIndex(child, index != -1 ? index : super.numChildren - 1);
+			if (child.parent ==<DisplayObjectContainer><any> this)
+				super.setChildIndex(child, index != -1 ? index : this.numChildren - 1);
 			else
-				super.addChildAt(child, index != -1 ? index : super.numChildren);
+				super.addChildAt(child, index != -1 ? index : this.numChildren);
 		}
 		
 		private static errorStr:string = "在此组件中不可用，若此组件为容器类，请使用";

@@ -350,8 +350,8 @@ module ns_egret {
         /**
          * 返回在容器可视区域内的布局元素索引列表,此方法忽略不是布局元素的普通的显示对象
          */
-        public getElementIndicesInView():Array{
-            var visibleIndices:Array = [];
+        public getElementIndicesInView():Array<any>{
+            var visibleIndices:Array<any> = [];
             var index:number
             if(!this.scrollRect){
                 for(index = 0;index < this.numChildren;index++){
@@ -360,7 +360,7 @@ module ns_egret {
             }
             else{
                 for(index = 0;index < this.numChildren;index++){
-                    var layoutElement:ILayoutElement = <ILayoutElement> (this.getChildAt(index));
+                    var layoutElement:ILayoutElement = <ILayoutElement><any> (this.getChildAt(index));
                     if (!layoutElement)
                         continue;
                     var eltR:Rectangle = new Rectangle();

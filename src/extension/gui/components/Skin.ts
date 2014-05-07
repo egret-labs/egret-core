@@ -66,11 +66,11 @@ module ns_egret {
 		/**
 		 * 为此组件定义的视图状态。
 		 */
-		public get states():Array{
+		public get states():Array<any>{
 			return this.stateClientHelper.states;
 		}
 		
-		public set states(value:Array){
+		public set states(value:Array<any>){
 			this.stateClientHelper.states = value;
 		}
 		

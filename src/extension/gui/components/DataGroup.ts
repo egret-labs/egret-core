@@ -101,7 +101,7 @@ module ns_egret {
 		/**
 		 * 存储当前可见的项呈示器索引列表 
 		 */		
-		private virtualRendererIndices:Array;
+		private virtualRendererIndices:Array<any>;
 		
 		public setVirtualElementIndicesInView(startIndex:number, endIndex:number):void{
 			if(!this.layout||!this.layout.useVirtualLayout)
@@ -110,7 +110,7 @@ module ns_egret {
 			for(var i:number=startIndex;i<=endIndex;i++){
 				this.virtualRendererIndices.push(i);
 			}
-			for(var index:any in this.indexToRenderer){
+			for(var index in this.indexToRenderer){
 				if(this.virtualRendererIndices.indexOf(index)==-1){
 					this.freeRendererByIndex(index);
 				}
@@ -131,18 +131,18 @@ module ns_egret {
 				this.updateRenderer(renderer,index,item);
 				if(this.createNewRendererFlag){
 					if("validateNow" in renderer)
-						(<IInvalidating> renderer).validateNow();
+						(<IInvalidating><any> renderer).validateNow();
 					this.createNewRendererFlag = false;
 					this.dispatchEvent(new RendererExistenceEvent(RendererExistenceEvent.RENDERER_ADD, 
 						false, false, renderer, index, item));
 				}
-				element = <IVisualElement> renderer;
+				element = <IVisualElement><any>renderer;
 			}
 			return element;
 		}
 		
-		private rendererToClassMap:Array = [];
-		private freeRenderers:Array = [];
+		private rendererToClassMap:Array<any> = [];
+		private freeRenderers:Array<any> = [];
 		
 		/**
 		 * 释放指定索引处的项呈示器
@@ -166,7 +166,7 @@ module ns_egret {
 				this.freeRenderers[hashCode] = [];
 			}
 			this.freeRenderers[hashCode].push(renderer);
-			(<DisplayObject> renderer).visible = false;
+			(<DisplayObject><any>renderer).visible = false;
 		}
 		
 		/**
@@ -190,10 +190,10 @@ module ns_egret {
 			var renderer:IItemRenderer;
 			var rendererFactory:IFactory = this.itemToRendererClass(item);
             var hashCode:number = rendererFactory.hashCode;
-            var freeRenderers:Array = this.freeRenderers;
+            var freeRenderers:Array<any> = this.freeRenderers;
 			if(freeRenderers[hashCode]&&freeRenderers[hashCode].length>0){
 				renderer = freeRenderers[hashCode].pop();
-				(<DisplayObject> renderer).visible = true;
+				(<DisplayObject><any> renderer).visible = true;
 				return renderer;
 			}
 			this.createNewRendererFlag = true;
@@ -220,7 +220,7 @@ module ns_egret {
 			if(this._itemRendererSkinName){
 				this.setItemRenderSkinName(renderer);
 			}
-			super.addChild(<DisplayObject> renderer);
+			super.addChild(<DisplayObject><any>renderer);
 			renderer.setLayoutBoundsSize(NaN,NaN);
 			return renderer;
 		}
@@ -230,13 +230,13 @@ module ns_egret {
 		private setItemRenderSkinName(renderer:IItemRenderer):void{
 			if(!renderer)
 				return;
-			var comp:SkinnableComponent = <SkinnableComponent> renderer;
+			var comp:SkinnableComponent = <SkinnableComponent> <any>renderer;
 			if(comp){
 				if(!comp.skinNameExplicitlySet)
 					comp.skinName = this._itemRendererSkinName;
 			}
 			else{
-				var client:ISkinnableClient = <ISkinnableClient> renderer;
+				var client:ISkinnableClient = <ISkinnableClient> <any>renderer;
 				if(client&&!client.skinName)
 					client.skinName = this._itemRendererSkinName;
 			}
@@ -251,7 +251,7 @@ module ns_egret {
 				return;
 			this.virtualLayoutUnderway = false;
 			var found:boolean = false;
-			for(var hashCode:number in this.freeRenderers){
+			for(var hashCode in this.freeRenderers){
 				if(this.freeRenderers[hashCode].length>0){
 					found = true;
 					break;
@@ -272,13 +272,13 @@ module ns_egret {
 		 */		
 		private cleanAllFreeRenderer(event:TimerEvent=null):void{
 			var renderer:IItemRenderer;
-            var freeRenderers:Array = this.freeRenderers;
-            for(var hashCode:number in freeRenderers){
-                var list:Array = freeRenderers[hashCode];
+            var freeRenderers:Array<any> = this.freeRenderers;
+            for(var hashCode in freeRenderers){
+                var list:Array<any> = freeRenderers[hashCode];
                 var length:number = list.length;
 				for(var i:number=0;i<length;i++){
                     renderer = list[i];
-					(<DisplayObject> renderer).visible = true;
+					(<DisplayObject> <any>renderer).visible = true;
 					this.recycle(renderer);
 				}
 			}
@@ -289,7 +289,7 @@ module ns_egret {
 		/**
 		 * @inheritDoc
 		 */
-		public getElementIndicesInView():Array{
+		public getElementIndicesInView():Array<any>{
 			if(this.layout&&this.layout.useVirtualLayout)
 				return this.virtualRendererIndices?this.virtualRendererIndices:[];
 			return super.getElementIndicesInView();
@@ -357,8 +357,8 @@ module ns_egret {
 				case CollectionEventKind.RESET:
 				case CollectionEventKind.REFRESH:
 					if(this.layout&&this.layout.useVirtualLayout){
-						for(var index:any in this.indexToRenderer){
-							this.freeRendererByIndex(index);
+						for(var index in this.indexToRenderer){
+							this.freeRendererByIndex(<number>index);
 						}
 					}
 					this.dataProviderChanged = true;
@@ -372,7 +372,7 @@ module ns_egret {
 		/**
 		 * 数据源添加项目事件处理
 		 */		
-		private itemAddedHandler(items:Array,index:number):void{
+		private itemAddedHandler(items:Array<any>,index:number):void{
 			var length:number = items.length;
 			for (var i:number = 0; i < length; i++){
 				this.itemAdded(items[i], index + i);
@@ -390,7 +390,7 @@ module ns_egret {
 		/**
 		 * 数据源移除项目事件处理
 		 */		
-		private itemRemovedHandler(items:Array,location:number):void{
+		private itemRemovedHandler(items:Array<any>,location:number):void{
 			var length:number = items.length;
 			for (var i:number = length-1; i >= 0; i--){
 				this.itemRemoved(items[i], location + i);
@@ -406,7 +406,7 @@ module ns_egret {
 				this.layout.elementAdded(index);
 			
 			if (this.layout && this.layout.useVirtualLayout){
-                var virtualRendererIndices:Array = this.virtualRendererIndices;
+                var virtualRendererIndices:Array<any> = this.virtualRendererIndices;
 				if (virtualRendererIndices){
 					var length:number = virtualRendererIndices.length;
 					for (var i:number = 0; i < length; i++){
@@ -435,7 +435,7 @@ module ns_egret {
 		private itemRemoved(item:any, index:number):void{
 			if (this.layout)
 				this.layout.elementRemoved(index);
-            var virtualRendererIndices:Array = this.virtualRendererIndices;
+            var virtualRendererIndices:Array<any> = this.virtualRendererIndices;
 			if (virtualRendererIndices && (virtualRendererIndices.length > 0)){
 				var vrItemIndex:number = -1; 
 				var length:number = virtualRendererIndices.length;
@@ -467,14 +467,14 @@ module ns_egret {
 		/**
 		 * 对象池字典
 		 */		
-		private recyclerDic:Array = [];
+		private recyclerDic:Array<any> = [];
 		/**
 		 * 回收一个ItemRenderer实例
 		 */		
 		private recycle(renderer:IItemRenderer):void{
-			super.removeChild(<DisplayObject> renderer);
+			super.removeChild(<DisplayObject><any> renderer);
 			if("ownerChanged" in renderer){
-				(<IVisualElement> renderer).ownerChanged(null);
+				(<IVisualElement> <any>renderer).ownerChanged(null);
 			}
 			var rendererFactory:IFactory = this.rendererToClassMap[renderer.hashCode];
             var hashCode:number = rendererFactory.hashCode;
@@ -491,7 +491,7 @@ module ns_egret {
 				return;
 			
 			if (this.layout && this.layout.useVirtualLayout){
-                var virtualRendererIndices:Array = this.virtualRendererIndices;
+                var virtualRendererIndices:Array<any> = this.virtualRendererIndices;
                 var length:number =  virtualRendererIndices.length;
 				for(var i:number=0;i<length;i++){
                     var index:number = virtualRendererIndices[i];
@@ -666,9 +666,9 @@ module ns_egret {
 				for(var i:number=0;i<length;i++){
 					this.setItemRenderSkinName(this.indexToRenderer[i]);
 				}
-                var freeRenderers:Array = this.freeRenderers;
-				for(var hashCode:number in freeRenderers){
-					var list:Array = freeRenderers[hashCode];
+                var freeRenderers:Array<any> = this.freeRenderers;
+				for(var hashCode in freeRenderers){
+					var list:Array<any> = freeRenderers[hashCode];
 					if(list){
 						length = list.length;
 						for(i=0;i<length;i++){
@@ -743,7 +743,7 @@ module ns_egret {
 			this.createNewRendererFlag = true;
 			this.updateRenderer(typicalRenderer,0,this.typicalItem);
 			if("validateNow" in typicalRenderer)
-				(<IInvalidating> typicalRenderer).validateNow();
+				(<IInvalidating> <any>typicalRenderer).validateNow();
 			var rect:Rectangle = new Rectangle(0,0,typicalRenderer.preferredWidth,
 				typicalRenderer.preferredHeight);
 			this.recycle(typicalRenderer);
@@ -768,7 +768,7 @@ module ns_egret {
 		/**
 		 * 索引到项呈示器的转换数组 
 		 */		
-		private indexToRenderer:Array = [];
+		private indexToRenderer:Array<any> = [];
 		/**
 		 * 清理freeRenderer标志
 		 */		
@@ -831,7 +831,7 @@ module ns_egret {
 			}
 			else {
 				if("ownerChanged" in renderer){
-					(<IVisualElement> renderer).ownerChanged(this);
+					(<IVisualElement><any> renderer).ownerChanged(this);
 				}
 				renderer.itemIndex = itemIndex;
 				renderer.label = this.itemToLabel(data);

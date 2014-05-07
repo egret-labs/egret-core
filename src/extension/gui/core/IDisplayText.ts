@@ -29,7 +29,7 @@ module ns_egret {
         /**
          * 此文本组件所显示的文本。
          */
-        text:String;
+        text:string;
     }
 
 }
