@@ -43,27 +43,27 @@ module ns_egret {
          * @param key 皮肤的关键字
          */
         public getSkin(key:string):any{
-            return this.createSkin(key);
+            return this.parseSkin(key);
         }
         /**
          * 根据关键字创建一个皮肤实例
          * @param key 皮肤的关键字
          */
-        private createSkin(key:string):any{
+        private parseSkin(key:string):any{
             var skinData:any = this.skinDataList[key];
             if(!skinData)
                 return null;
-            return this.parseData(skinData);
+            return this.parseValue(skinData);
         }
 
-        private parseData(data:any):any{
+        private parseValue(data:any):any{
             var value:any;
             if(data instanceof Array){
                 value = [];
                 var list:Array = <Array> data;
                 var length:number = list.length;
                 for(var i:number=0;i<length;i++){
-                    var child:any = this.parseData(list[i]);
+                    var child:any = this.parseValue(list[i]);
                     value.push(child);
                 }
             }
@@ -79,14 +79,18 @@ module ns_egret {
         private parseObject(data:Object):any{
             var className:string = data["name"];
             var clazz:any = ns_egret[className];
-            var value:any = new clazz();
+            var target:any = new clazz();
             var prop:Object = data["prop"];
             if(!prop)
-                return value;
+                return target;
             for(var key:string in prop){
-                value[key] = this.parseData(prop[key]);
+                var value:any = prop[key];
+                if(key=="skinName")
+                    target[key] = this.parseSkin(<string> value);
+                else
+                    target[key] = this.parseValue(value);
             }
-            return value;
+            return target;
         }
     }
 }
