@@ -50,7 +50,7 @@ module ns_egret {
 			super();
 		}
 
-        private static defaultRendererFactory:ClassFactory = new ClassFactory(ItemRenderer);
+        public static defaultRendererFactory:ClassFactory = new ClassFactory(ItemRenderer);
 		
 		private _rendererOwner:IItemRendererOwner;
 		/**
@@ -101,7 +101,7 @@ module ns_egret {
 		/**
 		 * 存储当前可见的项呈示器索引列表 
 		 */		
-		private virtualRendererIndices:Array<any>;
+		private virtualRendererIndices:Array<number>;
 		
 		public setVirtualElementIndicesInView(startIndex:number, endIndex:number):void{
 			if(!this.layout||!this.layout.useVirtualLayout)
@@ -289,7 +289,7 @@ module ns_egret {
 		/**
 		 * @inheritDoc
 		 */
-		public getElementIndicesInView():Array<any>{
+		public getElementIndicesInView():Array<number>{
 			if(this.layout&&this.layout.useVirtualLayout)
 				return this.virtualRendererIndices?this.virtualRendererIndices:[];
 			return super.getElementIndicesInView();

@@ -84,7 +84,7 @@ module ns_egret {
 		 * 附加皮肤
 		 */		
 		public attachSkin(skin:any):void{
-			if("hostComponent" in skin){
+			if(skin&&"hostComponent" in skin){
 				var newSkin:ISkin = <ISkin> skin;
 				newSkin.hostComponent = this;
 				this.findSkinParts();
@@ -95,7 +95,7 @@ module ns_egret {
 					this.hasCreatedSkinParts = true;
 				}
 			}
-			if("hostComponent" in skin&&skin instanceof DisplayObject)
+			if(skin&&"hostComponent" in skin&&skin instanceof DisplayObject)
 				this.skinLayoutEnabled = false;
 			else
 				this.skinLayoutEnabled = true;
@@ -208,7 +208,7 @@ module ns_egret {
 			var curState:string = this.getCurrentSkinState();
 			var hasState:boolean = false;
 			var curSkin:any = this._skinObject;
-			if("hasState" in curSkin){
+			if(curSkin&&"hasState" in curSkin){
 				(<IStateClient> curSkin).currentState = curState;
 				hasState = (<IStateClient> curSkin).hasState(curState);
 			}

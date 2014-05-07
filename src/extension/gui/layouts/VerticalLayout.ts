@@ -198,7 +198,7 @@ module ns_egret {
             var measuredWidth:number = Math.max(this.maxElementWidth,typicalWidth);
             var measuredHeight:number = this.getElementTotalSize();
 
-            var visibleIndices:Array<any> = this.target.getElementIndicesInView();
+            var visibleIndices:Array<number> = this.target.getElementIndicesInView();
             var length:number = visibleIndices.length;
             for(var i:number=0;i<length;i++){
                 var index:number = visibleIndices[i];

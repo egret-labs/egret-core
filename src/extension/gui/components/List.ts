@@ -42,7 +42,7 @@ module ns_egret {
 		 */
 		public createChildren():void{
 			if(!this.itemRenderer)
-				this.itemRenderer = ItemRenderer;
+				this.itemRenderer = DataGroup.defaultRendererFactory;
 			super.createChildren();
 		}
 		
@@ -291,7 +291,7 @@ module ns_egret {
 		public dataGroup_rendererAddHandler(event:RendererExistenceEvent):void{
 			super.dataGroup_rendererAddHandler(event);
 
-			var renderer:DisplayObject = <DisplayObject> (event.renderer);
+			var renderer:DisplayObject = <DisplayObject><any> (event.renderer);
 			if (renderer == null)
 				return;
 
@@ -307,7 +307,7 @@ module ns_egret {
 		public dataGroup_rendererRemoveHandler(event:RendererExistenceEvent):void{
 			super.dataGroup_rendererRemoveHandler(event);
 
-			var renderer:DisplayObject = <DisplayObject> (event.renderer);
+			var renderer:DisplayObject = <DisplayObject><any> (event.renderer);
 			if (renderer == null)
 				return;
 

@@ -163,7 +163,7 @@ module ns_egret {
 			super.measure();
 			if(!this._skin)
 				return;
-			if("includeInLayout" in this._skin&&!(<ILayoutElement><any> (this._skin)).includeInLayout)
+			if(this._skin&&"includeInLayout" in this._skin&&!(<ILayoutElement><any> (this._skin)).includeInLayout)
 				return;
 			var rect:Rectangle = this.getMeasuredSize();
 			this.measuredWidth = rect.width;
@@ -175,7 +175,7 @@ module ns_egret {
 		 */		
 		private getMeasuredSize():Rectangle{
 			var rect:Rectangle = new Rectangle();
-			if("preferredWidth" in this._skin){
+			if(this._skin&&"preferredWidth" in this._skin){
 				rect.width = (<ILayoutElement><any> (this._skin)).preferredWidth;
 				rect.height = (<ILayoutElement><any> (this._skin)).preferredHeight;
 			}

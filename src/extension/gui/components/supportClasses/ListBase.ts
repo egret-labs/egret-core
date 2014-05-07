@@ -351,7 +351,7 @@ module ns_egret {
 					var itemIndex:number;
 					
 					if (this.layout && this.layout.useVirtualLayout){
-                        var list:Array = this.dataGroup.getElementIndicesInView();
+                        var list:Array<number> = this.dataGroup.getElementIndicesInView();
                         var length:number = list.length;
 						for (var i:number = 0;i<length;i++){
                             var itemIndex:number = list[i];
@@ -374,7 +374,7 @@ module ns_egret {
 		 *  更新项呈示器文字标签
 		 */
 		private updateRendererLabelProperty(itemIndex:number):void{
-			var renderer:IItemRenderer = <IItemRenderer> (this.dataGroup.getElementAt(itemIndex)); 
+			var renderer:IItemRenderer = <IItemRenderer><any> (this.dataGroup.getElementAt(itemIndex));
 			if (renderer)
 				renderer.label = this.itemToLabel(renderer.data); 
 		}
@@ -466,7 +466,7 @@ module ns_egret {
 		public itemSelected(index:number, selected:boolean):void{
 			if(!this.dataGroup)
 				return;
-			var renderer:IItemRenderer = <IItemRenderer> (this.dataGroup.getElementAt(index));
+			var renderer:IItemRenderer = <IItemRenderer><any> (this.dataGroup.getElementAt(index));
 			if(renderer==null)
 				return;
 			renderer.selected = selected;
@@ -629,7 +629,7 @@ module ns_egret {
 			var type:string = event.type;
 			type = ListBase.TYPE_MAP[type];
 			if (this.hasEventListener(type)){
-				var itemRenderer:IItemRenderer = <IItemRenderer> (event.currentTarget);
+				var itemRenderer:IItemRenderer = <IItemRenderer><any> (event.currentTarget);
 				this.dispatchListEvent(event,type,itemRenderer);
 			}
 		}
@@ -658,7 +658,7 @@ module ns_egret {
 		 * 数据源发生改变
 		 */
 		public dataProvider_collectionChangeHandler(event:CollectionEvent):void{
-			var items:Array = event.items;
+			var items:Array<any> = event.items;
 			if (event.kind == CollectionEventKind.ADD){
 				var length:number = items.length;
 				for (var i:number = 0; i < length; i++){

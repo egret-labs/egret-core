@@ -104,11 +104,14 @@ var temp = [
     "extension/gui/components/Skin.js",
     "extension/gui/components/DataGroup.js",
     "extension/gui/components/SkinnableContainer.js",
+    "extension/gui/components/SkinnableDataContainer.js",
+    "extension/gui/components/supportClasses/ListBase.js",
     "extension/gui/components/Panel.js",
     "extension/gui/components/ProgressBar.js",
     "extension/gui/components/ProgressBarDirection.js",
     "extension/gui/components/HSlider.js",
     "extension/gui/components/VSlider.js",
+    "extension/gui/components/List.js",
 
 
     "extension/gui/events/UIEvent.js",

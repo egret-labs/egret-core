@@ -134,7 +134,7 @@ module ns_egret {
 		 * 为某个特定项目返回一个项呈示器Class的函数。 <br/>
 		 * rendererClass获取顺序：itemRendererFunction > itemRenderer > 默认ItemRenerer。 <br/>
 		 * 应该定义一个与此示例函数类似的呈示器函数： <br/>
-		 * function myItemRendererFunction(item:Object):Class
+		 * function myItemRendererFunction(item:Object):IFactory
 		 */		
 		public get itemRendererFunction():Function{
 			return (this.dataGroup) 
@@ -255,7 +255,7 @@ module ns_egret {
 		/**
 		 * @inheritDoc
 		 */
-		public addEventListener(type:string, thisObject:any, listener:Function, useCapture:boolean=false, priority:number=0) : void{
+		public addEventListener(type:string, listener:Function,thisObject:any,  useCapture:boolean=false, priority:number=0) : void{
 			super.addEventListener(type, listener,thisObject, useCapture, priority);
 			
 			if (type == RendererExistenceEvent.RENDERER_ADD && this.dataGroup){

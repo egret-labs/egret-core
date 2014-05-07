@@ -350,8 +350,8 @@ module ns_egret {
         /**
          * 返回在容器可视区域内的布局元素索引列表,此方法忽略不是布局元素的普通的显示对象
          */
-        public getElementIndicesInView():Array<any>{
-            var visibleIndices:Array<any> = [];
+        public getElementIndicesInView():Array<number>{
+            var visibleIndices:Array<number> = [];
             var index:number
             if(!this.scrollRect){
                 for(index = 0;index < this.numChildren;index++){
