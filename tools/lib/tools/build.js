@@ -28,8 +28,8 @@ function run(currDir, args, opts) {
         for (var i = 0; i < allFileList.length; i++) {
             var fileToDelete = path.join(outPath, allFileList[i]);
             libs.deleteFileSync(fileToDelete);
-            callback();
         }
+        callback();
     }
 
     var tasks = [
@@ -39,13 +39,18 @@ function run(currDir, args, opts) {
 
         function (callback) {
             buildAllFile(path.join(currDir, game_path, "src"), path.join(currDir, game_path, "bin-debug/src"), callback);
+        },
+
+
+        clearTS,
+
+        function (callback){
+            console.log ("编译成功");
+            callback();
         }
     ];
 
-    tasks.push(clearTS);
-
-    async.series(tasks
-    )
+    async.series(tasks)
 }
 
 function buildAllFile(source, output, callback) {

@@ -49,6 +49,7 @@ module ns_egret {
      * 不允许重写以下方法
      * draw();
      * getBounds();
+     *
      */
     export class DisplayObject extends EventDispatcher implements RenderData {
 
@@ -64,6 +65,10 @@ module ns_egret {
 
         public _parent:DisplayObjectContainer = null;
 
+        /**
+         * 11111
+         * @event ns_egret.Event.event:ADDED_TO_STAGE
+         */
         private _cacheAsBitmap:boolean = false;
 
         /**
@@ -617,7 +622,10 @@ module ns_egret {
         }
 
         /**
-         * 将 point 对象从舞台（全局坐标转换为显示对象（本地）坐标。
+         * 将指定舞台坐标（全局）转换为显示对象（本地）坐标。
+         * @method ns_egret.DisplayObject#globalToLocal
+         * @param x {number}
+         * @param y {number}
          * @returns {ns_egret.Point}
          */
         public globalToLocal(x:number = 0, y:number = 0):Point {
@@ -632,8 +640,9 @@ module ns_egret {
 
         /**
          * 检测指定坐标是否在显示对象内
-         * @param x
-         * @param y
+         * @method ns_egret.DisplayObject#hitTest
+         * @param x {number}
+         * @param y {number}
          * @param ignoreTouchEnabled 是否忽略TouchEnabled
          * @returns {*}
          */
