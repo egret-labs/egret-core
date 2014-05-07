@@ -5,19 +5,32 @@ var cp_exec = require('child_process').exec;
 var libs = require("../core/normal_libs");
 var param = require("../core/params_analyze.js");
 var path = require("path");
+var fs = require("fs");
 
 function run(currDir, args, opts) {
 
-    var egret_path = path.join(param.getEgretPath(),"src");
+    var egret_path = path.join(param.getEgretPath(), "src");
     var list = generateAllTypeScriptFileList(egret_path);
-    list = list.map(function(item){
-        return path.join(egret_path,item);
+    list = list.map(function (item) {
+        return path.join(egret_path, item);
     })
-    var source = list.join(" ");
+
+
+    var file = path.join(param.getEgretPath(), "src/egret_file_list.js");
+
+    var js_content = fs.readFileSync(file, "utf-8");
+    eval(js_content);
+    var output_content = egret_file_list.map(function (item) {
+
+        if (item.indexOf("jslib") >= 0) return "";
+        if (item.indexOf("Native") >= 0) return "";
+        return path.join(param.getEgretPath(),"src",item.replace(".js",".ts"));
+
+    }).join(" ");
 
     var out = "test.d.ts";
-    var cmd = "tsc " + source + " -t ES5 -d --out " +  out;
-    console.log (cmd);
+    var cmd = "tsc " + output_content + " -t ES5 -d --out " + out;
+    console.log(cmd);
 //    return;
 
     var ts = cp_exec(cmd);
@@ -32,7 +45,6 @@ function run(currDir, args, opts) {
 //        callback(null, file);
     });
 }
-
 
 
 /**
