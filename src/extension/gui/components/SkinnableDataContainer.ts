@@ -40,8 +40,8 @@ module ns_egret {
 		 * @inheritDoc
 		 */
 		public updateRenderer(renderer:IItemRenderer, itemIndex:number, data:any):IItemRenderer{
-			if(renderer is IVisualElement){
-				(<IVisualElement> renderer).ownerChanged(this);
+			if("ownerChanged" in renderer){
+				(<IVisualElement> <any> renderer).ownerChanged(this);
 			}
 			renderer.itemIndex = itemIndex;
 			renderer.label = this.itemToLabel(data);
@@ -255,9 +255,8 @@ module ns_egret {
 		/**
 		 * @inheritDoc
 		 */
-		public addEventListener(
-			type:string, listener:Function, useCapture:boolean=false, priority:number=0, useWeakReference:boolean=false) : void{
-			super.addEventListener(type, listener,this, useCapture, priority, useWeakReference);
+		public addEventListener(type:string, thisObject:any, listener:Function, useCapture:boolean=false, priority:number=0) : void{
+			super.addEventListener(type, listener,thisObject, useCapture, priority);
 			
 			if (type == RendererExistenceEvent.RENDERER_ADD && this.dataGroup){
 				this.dataGroup.addEventListener(
@@ -273,8 +272,8 @@ module ns_egret {
 		/**
 		 * @inheritDoc
 		 */
-		public removeEventListener(type:string, listener:Function, useCapture:boolean=false) : void{
-			super.removeEventListener(type, listener,this, useCapture);
+		public removeEventListener(type:string, listener:Function, thisObject:any, useCapture:boolean=false) : void{
+			super.removeEventListener(type, listener,thisObject, useCapture);
 			
 			if (type == RendererExistenceEvent.RENDERER_ADD && this.dataGroup){
 				if (!this.hasEventListener(RendererExistenceEvent.RENDERER_ADD)){

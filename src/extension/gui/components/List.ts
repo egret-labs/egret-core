@@ -50,14 +50,14 @@ module ns_egret {
 		 * 是否使用虚拟布局,默认true
 		 */		
 		public get useVirtualLayout():boolean{
-			return super.useVirtualLayout;
+			return this._getUseVirtualLayout();
 		}
 		
 		/**
 		 * @inheritDoc
 		 */
 		public set useVirtualLayout(value:boolean){
-			super.useVirtualLayout = value;
+			this._setUseVirtualLayout(value);
 		}
 		
 		
@@ -73,20 +73,20 @@ module ns_egret {
 			this._allowMultipleSelection = value;
 		}
 
-		private _selectedIndices:Vector.<number> = new Vector.<number>();
+		private _selectedIndices:Array<number> = [];
 		
-		private _proposedSelectedIndices:Vector.<number>; 
+		private _proposedSelectedIndices:Array<number>;
 		/**
 		 * 当前选中的一个或多个项目的索引列表
 		 */		
-		public get selectedIndices():Vector.<number>{
+		public get selectedIndices():Array<number>{
 			if(this._proposedSelectedIndices)
 				return this._proposedSelectedIndices;
 			return this._selectedIndices;
 		}
 
-		public set selectedIndices(value:Vector.<number>){
-			this.setSelectedIndices(value, false);
+		public set selectedIndices(value:Array<number>){
+			this._setSelectedIndices(value, false);
 		}
 		/**
 		 * @inheritDoc
@@ -97,58 +97,62 @@ module ns_egret {
 					return this._proposedSelectedIndices[0];
 				return -1;
 			}
-			return super.selectedIndex;
+			return this._getSelectedIndex();
 		}
+
+        public set selectedIndex(value:number){
+            this._setSelectedIndex(value);
+        }
 		
 		/**
 		 * 当前选中的一个或多个项目的数据源列表
 		 */		
-		public get selectedItems():Vector.<Object>{
-			var result:Vector.<Object> = new Vector.<Object>();
-			var list:Vector.<number> = this.selectedIndices;
+		public get selectedItems():Array<Object>{
+			var result:Array<Object> = [];
+			var list:Array<number> = this.selectedIndices;
 			if (list){
 				var count:number = list.length;
-				
+
 				for (var i:number = 0; i < count; i++)
-					result[i] = this.dataProvider.getItemAt(list[i]);  
+					result[i] = this.dataProvider.getItemAt(list[i]);
 			}
-			
+
 			return result;
 		}
-		
-		public set selectedItems(value:Vector.<Object>){
-			var indices:Vector.<number> = new Vector.<number>();
-			
+
+		public set selectedItems(value:Array<Object>){
+			var indices:Array<number> = [];
+
 			if (value){
 				var count:number = value.length;
-				
+
 				for (var i:number = 0; i < count; i++){
 					var index:number = this.dataProvider.getItemIndex(value[i]);
-					if (index != -1){ 
-						indices.splice(0, 0, index);   
+					if (index != -1){
+						indices.splice(0, 0, index);
 					}
 					if (index == -1){
-						indices = new Vector.<number>();
-						break;  
+						indices = [];
+						break;
 					}
 				}
 			}
-			this.setSelectedIndices(indices,false);
+			this._setSelectedIndices(indices,false);
 		}
 		/**
 		 * 设置多个选中项
 		 */
-		public setSelectedIndices(value:Vector.<number>, dispatchChangeEvent:boolean = false):void{
+		public _setSelectedIndices(value:Array<number>, dispatchChangeEvent:boolean = false):void{
 			if (dispatchChangeEvent)
 				this.dispatchChangeAfterSelection = (this.dispatchChangeAfterSelection || dispatchChangeEvent);
-			
+
 			if (value)
 				this._proposedSelectedIndices = value;
 			else
-				this._proposedSelectedIndices = new Vector.<number>();
+				this._proposedSelectedIndices = [];
 			this.invalidateProperties();
 		}
-		
+
 		/**
 		 * @inheritDoc
 		 */
@@ -165,11 +169,11 @@ module ns_egret {
 			var oldSelectedIndex:number = this._selectedIndex;
 			if(this._proposedSelectedIndices){
 				this._proposedSelectedIndices = this._proposedSelectedIndices.filter(this.isValidIndex);
-				
+
 				if (!this.allowMultipleSelection && this._proposedSelectedIndices.length>0){
-					var temp:Vector.<number> = new Vector.<number>(); 
-					temp.push(this._proposedSelectedIndices[0]); 
-					this._proposedSelectedIndices = temp;  
+					var temp:Array<number> = [];
+					temp.push(this._proposedSelectedIndices[0]);
+					this._proposedSelectedIndices = temp;
 				}
 				if (this._proposedSelectedIndices.length>0){
 					this._proposedSelectedIndex = this._proposedSelectedIndices[0];
@@ -178,33 +182,33 @@ module ns_egret {
 					this._proposedSelectedIndex = -1;
 				}
 			}
-			
-			var retVal:boolean = super.commitSelection(false); 
-			
+
+			var retVal:boolean = super.commitSelection(false);
+
 			if (!retVal){
 				this._proposedSelectedIndices = null;
-				return false; 
+				return false;
 			}
-			
-			if (this.selectedIndex > this.NO_SELECTION){
+
+			if (this.selectedIndex > ListBase.NO_SELECTION){
 				if (this._proposedSelectedIndices){
 					if(this._proposedSelectedIndices.indexOf(this.selectedIndex) == -1)
 						this._proposedSelectedIndices.push(this.selectedIndex);
 				}
 				else{
-					this._proposedSelectedIndices = new <number>[this.selectedIndex];
+					this._proposedSelectedIndices = [this.selectedIndex];
 				}
 			}
-			
+
 			if(this._proposedSelectedIndices){
 				if(this._proposedSelectedIndices.indexOf(oldSelectedIndex)!=-1)
 					this.itemSelected(oldSelectedIndex,true);
-				this.commitMultipleSelection(); 
+				this.commitMultipleSelection();
 			}
-			
+
 			if (dispatchChangedEvents && retVal){
-				var e:IndexChangeEvent; 
-				
+				var e:IndexChangeEvent;
+
 				if (this.dispatchChangeAfterSelection){
 					e = new IndexChangeEvent(IndexChangeEvent.CHANGE);
 					e.oldIndex = oldSelectedIndex;
@@ -212,34 +216,34 @@ module ns_egret {
 					this.dispatchEvent(e);
 					this.dispatchChangeAfterSelection = false;
 				}
-				
+
 				this.dispatchEvent(new UIEvent(UIEvent.VALUE_COMMIT));
 			}
-			
-			return retVal; 
+
+			return retVal;
 		}
 		/**
 		 * 是否是有效的索引
-		 */		
-		private isValidIndex(item:number, index:number, v:Vector.<number>):boolean{
-			return this.dataProvider && (item >= 0) && (item < this.dataProvider.length); 
+		 */
+		private isValidIndex(item:number, index:number, v:Array<number>):boolean{
+			return this.dataProvider && (item >= 0) && (item < this.dataProvider.length);
 		}
 		/**
 		 * 提交多项选中项属性
-		 */			
+		 */
 		public commitMultipleSelection():void{
-			var removedItems:Vector.<number> = new Vector.<number>();
-			var addedItems:Vector.<number> = new Vector.<number>();
+			var removedItems:Array<number> = [];
+			var addedItems:Array<number> = [];
 			var i:number;
 			var count:number;
-			
+
 			if (this._selectedIndices.length>0&& this._proposedSelectedIndices.length>0){
 				count = this._proposedSelectedIndices.length;
 				for (i = 0; i < count; i++){
 					if (this._selectedIndices.indexOf(this._proposedSelectedIndices[i]) == -1)
 						addedItems.push(this._proposedSelectedIndices[i]);
 				}
-				count = this._selectedIndices.length; 
+				count = this._selectedIndices.length;
 				for (i = 0; i < count; i++){
 					if (this._proposedSelectedIndices.indexOf(this._selectedIndices[i]) == -1)
 						removedItems.push(this._selectedIndices[i]);
@@ -251,33 +255,33 @@ module ns_egret {
 			else if (this._proposedSelectedIndices.length>0){
 				addedItems = this._proposedSelectedIndices;
 			}
-			
+
 			this._selectedIndices = this._proposedSelectedIndices;
-			
+
 			if (removedItems.length > 0){
 				count = removedItems.length;
 				for (i = 0; i < count; i++){
 					this.itemSelected(removedItems[i], false);
 				}
 			}
-			
+
 			if (addedItems.length>0){
 				count = addedItems.length;
 				for (i = 0; i < count; i++){
 					this.itemSelected(addedItems[i], true);
 				}
 			}
-			
+
 			this._proposedSelectedIndices = null;
 		}
-		
+
 		/**
 		 * @inheritDoc
 		 */
 		public isItemIndexSelected(index:number):boolean{
 			if (this._allowMultipleSelection)
 				return this._selectedIndices.indexOf(index) != -1;
-			
+
 			return super.isItemIndexSelected(index);
 		}
 
@@ -286,67 +290,67 @@ module ns_egret {
 		 */
 		public dataGroup_rendererAddHandler(event:RendererExistenceEvent):void{
 			super.dataGroup_rendererAddHandler(event);
-			
+
 			var renderer:DisplayObject = <DisplayObject> (event.renderer);
 			if (renderer == null)
 				return;
-			
+
 			renderer.addEventListener(TouchEvent.TOUCH_BEGAN, this.item_mouseDownHandler, this);
 			//由于ItemRenderer.mouseChildren有可能不为false，在鼠标按下时会出现切换素材的情况，
 			//导致target变化而无法抛出原生的click事件,所以此处监听MouseUp来抛出ItemClick事件。
 			renderer.addEventListener(TouchEvent.TOUCH_END, this.item_mouseUpHandler, this);
 		}
-		
+
 		/**
 		 * @inheritDoc
 		 */
 		public dataGroup_rendererRemoveHandler(event:RendererExistenceEvent):void{
 			super.dataGroup_rendererRemoveHandler(event);
-			
+
 			var renderer:DisplayObject = <DisplayObject> (event.renderer);
 			if (renderer == null)
 				return;
-			
+
 			renderer.removeEventListener(TouchEvent.TOUCH_BEGAN, this.item_mouseDownHandler, this);
 			renderer.removeEventListener(TouchEvent.TOUCH_END, this.item_mouseUpHandler, this);
 		}
 		/**
 		 * 是否捕获ItemRenderer以便在MouseUp时抛出ItemClick事件
-		 */		
+		 */
 		public captureItemRenderer:boolean = true;
-		
+
 		private mouseDownItemRenderer:IItemRenderer;
 		/**
 		 * 鼠标在项呈示器上按下
-		 */		
+		 */
 		public item_mouseDownHandler(event:TouchEvent):void{
 			if (event.isDefaultPrevented())
 				return;
-			
+
 			var itemRenderer:IItemRenderer = <IItemRenderer> (event.currentTarget);
-			var newIndex:number
+			var newIndex:number;
 			if (itemRenderer)
 				newIndex = itemRenderer.itemIndex;
 			else
 				newIndex = this.dataGroup.getElementIndex(<IVisualElement> (event.currentTarget));
 			if(this._allowMultipleSelection){
-				this.setSelectedIndices(this.calculateSelectedIndices(newIndex, event.shiftKey, event.ctrlKey), true);
+				this._setSelectedIndices(this.calculateSelectedIndices(newIndex, event.shiftKey, event.ctrlKey), true);
 			}
 			else{
-				this.setSelectedIndex(newIndex, true);
+				this._setSelectedIndex(newIndex, true);
 			}
 			if(!this.captureItemRenderer)
 				return;
 			this.mouseDownItemRenderer = itemRenderer;
-			UIGlobals.stage.addEventListener(TouchEvent.TOUCH_END,this.stage_mouseUpHandler,this,false,0,true);
-			UIGlobals.stage.addEventListener(Event.LEAVE_STAGE,this.stage_mouseUpHandler,this,false,0,true);
+			UIGlobals.stage.addEventListener(TouchEvent.TOUCH_END,this.stage_mouseUpHandler,this);
+			UIGlobals.stage.addEventListener(Event.LEAVE_STAGE,this.stage_mouseUpHandler,this);
 		}
 		/**
 		 * 计算当前的选中项列表
-		 */		
-		private calculateSelectedIndices(index:number, shiftKey:boolean, ctrlKey:boolean):Vector.<number>{
-			var i:number; 
-			var interval:Vector.<number> = new Vector.<number>();  
+		 */
+		private calculateSelectedIndices(index:number, shiftKey:boolean, ctrlKey:boolean):Array<number>{
+			var i:number;
+			var interval:Array<number> = [];
 			if (!shiftKey){
 				if(ctrlKey){
 					if (this._selectedIndices.length>0){

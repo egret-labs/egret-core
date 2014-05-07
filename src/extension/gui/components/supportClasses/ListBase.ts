@@ -119,7 +119,7 @@ module ns_egret {
 		
 		public set labelField(value:string){
 			if (value == this._labelField)
-				return 
+				return;
 				
 				this._labelField = value;
 			this.labelFieldOrFunctionChanged = true;
@@ -138,7 +138,7 @@ module ns_egret {
 		
 		public set labelFunction(value:Function){
 			if (value == this._labelFunction)
-				return 
+				return;
 				
 			this._labelFunction = value;
 			this.labelFieldOrFunctionChanged = true;
@@ -183,14 +183,18 @@ module ns_egret {
 		 * 当以编程方式更改 selectedIndex 属性的值时，此控件不分派 change 和 changing 事件。
 		 */		
 		public get selectedIndex():number{
-			if (this._proposedSelectedIndex != ListBase.NO_PROPOSED_SELECTION)
-				return this._proposedSelectedIndex;
-			
-			return this._selectedIndex;
+			return this._getSelectedIndex();
 		}
+
+        public _getSelectedIndex():number{
+            if (this._proposedSelectedIndex != ListBase.NO_PROPOSED_SELECTION)
+                return this._proposedSelectedIndex;
+
+            return this._selectedIndex;
+        }
 		
 		public set selectedIndex(value:number){
-			this.setSelectedIndex(value, false);
+			this._setSelectedIndex(value, false);
 		}
 		
 		/**
@@ -205,7 +209,7 @@ module ns_egret {
 		/**
 		 * 设置选中项
 		 */
-		public setSelectedIndex(value:number, dispatchChangeEvent:boolean = false):void{
+		public _setSelectedIndex(value:number, dispatchChangeEvent:boolean = false):void{
 			if (value == this.selectedIndex){
 				return;
 			}
@@ -266,17 +270,25 @@ module ns_egret {
 		 * 是否使用虚拟布局,默认flase
 		 */
 		public get useVirtualLayout():boolean{
-			return (this.layout) ? this.layout.useVirtualLayout : this._useVirtualLayout;
+			return this._getUseVirtualLayout();
 		}
+
+        public _getUseVirtualLayout():boolean{
+            return (this.layout) ? this.layout.useVirtualLayout : this._useVirtualLayout;
+        }
 		
 		public set useVirtualLayout(value:boolean){
-			if (value == this.useVirtualLayout)
-				return;
-			
-			this._useVirtualLayout = value;
-			if (this.layout)
-				this.layout.useVirtualLayout = value;
+            this._setUseVirtualLayout(value);
 		}
+
+        public _setUseVirtualLayout(value:boolean):void{
+            if (value == this.useVirtualLayout)
+                return;
+
+            this._useVirtualLayout = value;
+            if (this.layout)
+                this.layout.useVirtualLayout = value;
+        }
 		
 		
 		/**
@@ -294,7 +306,7 @@ module ns_egret {
 				else if (this.requireSelection)
 					this._proposedSelectedIndex = 0;
 				else
-					this.setSelectedIndex(-1, false);
+					this._setSelectedIndex(-1, false);
 			}
 			
 			if (this.requireSelectionChanged){
@@ -571,7 +583,7 @@ module ns_egret {
 						this.invalidateProperties();
 					}
 					else 
-						this.setSelectedIndex(0, false);
+						this._setSelectedIndex(0, false);
 				}
 				else
 					this.adjustSelection(-1,false);
@@ -665,7 +677,7 @@ module ns_egret {
 			}
 			else if (event.kind == CollectionEventKind.RESET){
 				if (this.dataProvider.length == 0){
-					this.setSelectedIndex(ListBase.NO_SELECTION, false);
+					this._setSelectedIndex(ListBase.NO_SELECTION, false);
 				}
 				else{
 					this.dataProviderChanged = true; 
@@ -673,7 +685,7 @@ module ns_egret {
 				}
 			}
 			else if (event.kind == CollectionEventKind.REFRESH){
-				this.setSelectedIndex(ListBase.NO_SELECTION, false);
+				this._setSelectedIndex(ListBase.NO_SELECTION, false);
 			}
 		}
 	}
