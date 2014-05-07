@@ -18,11 +18,20 @@
 
 module ns_egret {
 
-    export var __START_TIME:number;
+    export var __callLaterFunctionList:Array = [];
+    export var __callLaterThisList:Array = [];
+    export var __callLaterArgsList:Array = [];
     /**
-     * 用于计算相对时间。此方法返回自启动 Egret 引擎以来经过的毫秒数。
+     * 延迟函数到屏幕重绘前执行。
+     * @param method 要延迟执行的函数
+     * @param thisObject 回调函数的this引用
+     * @param args 函数参数列表
      */
-    export function getTimer():number {
-        return new Date().getTime() - __START_TIME;
+    export function callLater(method:Function,thisObject:any,...args):void
+    {
+        __callLaterFunctionList.push(method);
+        __callLaterThisList.push(thisObject);
+        __callLaterArgsList.push(args);
     }
+
 }

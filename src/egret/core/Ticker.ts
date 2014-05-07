@@ -18,6 +18,7 @@
 
 /// <reference path="MainContext.ts"/>
 /// <reference path="../events/EventDispatcher.ts"/>
+/// <reference path="../utils/callLater.ts"/>
 /// <reference path="../utils/getTimer.ts"/>
 
 module ns_egret {
@@ -49,7 +50,7 @@ module ns_egret {
          * @stable A
          */
         public run() {
-            _startTime = new Date().getTime();
+            __START_TIME = new Date().getTime();
             var context = ns_egret.MainContext.instance.deviceContext;
             context.executeMainLoop(this.update, this);
         }
@@ -93,9 +94,8 @@ module ns_egret {
         }
 
         /**
-         * 在一帧之后调用指定函数
-         * @param listener 事件侦听函数
-         * @param thisObject 侦听函数的this对象
+         * 使用全局函数callLater()代替
+         * @deprecated
          */
         public callLater(listener:Function, thisObject, time:number = 0) {
             var that = this;
@@ -111,6 +111,28 @@ module ns_egret {
                     if (passTime >= time) {
                         that.unregister(arguments.callee, thisObject);
                         listener.apply(thisObject);
+                    }
+                }
+            }, thisObject)
+        }
+
+        /**
+         * 在指定的延迟（以毫秒为单位）后运行指定的函数。
+         */
+        public setTimeout(listener:Function, thisObject, delay:Number, ...parameters) {
+            var that = this;
+            var passTime = 0;
+            this.register(function (frameTime) {
+                if (delay == 0) {
+                    that.unregister(arguments.callee, thisObject);
+                    listener.apply(thisObject,parameters);
+
+                }
+                else {
+                    passTime += frameTime;
+                    if (passTime >= delay) {
+                        that.unregister(arguments.callee, thisObject);
+                        listener.apply(thisObject,parameters);
                     }
                 }
             }, thisObject)

@@ -17,11 +17,11 @@
  */
 
 /// <reference path="../core/Logger.ts"/>
-/// <reference path="../core/Ticker.ts"/>
 /// <reference path="../events/Event.ts"/>
 /// <reference path="../events/EventDispatcher.ts"/>
 /// <reference path="ILoadingView.ts"/>
 /// <reference path="ResourceLoader.ts"/>
+/// <reference path="../utils/callLater.ts"/>
 
 module ns_egret{
 
@@ -79,7 +79,7 @@ module ns_egret{
                 this.next(null);
             }
             else{
-                ns_egret.Ticker.getInstance().callLater(this.onComplete,this);
+                ns_egret.callLater(this.onComplete,this);
             }
         }
 

@@ -27,7 +27,7 @@ function createExample(){
     var container = ns_egret.MainContext.instance.stage;
     var label = new ns_egret.TextField();
     container.addChild(label);
-    ns_egret.Ticker.getInstance().callLater(function (){
+    ns_egret.Ticker.getInstance().setTimeout(function (){
         label.text = "Ticker";
     },this,3000);
 }
