@@ -52,7 +52,7 @@ exports.getEnv = _getEnv;
 exports.getEgretPath = function(){
     var path = require("path");
     var obj = _getEnv();
-    var egret_path// = _getEnv().EGRET_PATH;
+    var egret_path = _getEnv().EGRET_PATH;
     if (!egret_path){
         egret_path = path.join(process.argv[1],"../../../");
     }
