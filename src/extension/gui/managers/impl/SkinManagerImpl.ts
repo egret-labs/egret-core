@@ -85,7 +85,7 @@ module ns_egret {
                 return target;
             for(var key:string in prop){
                 var value:any = prop[key];
-                if(key=="skinName")
+                if(key=="skinName"||key=="itemRendererSkinName")
                     target[key] = this.parseSkin(<string> value);
                 else
                     target[key] = this.parseValue(value);
