@@ -27,6 +27,7 @@
 /// <reference path="../events/EventDispatcher.ts"/>
 /// <reference path="../interactive/TouchContext.ts"/>
 /// <reference path="../utils/Recycler.ts"/>
+/// <reference path="../utils/callLater.ts"/>
 
 module ns_egret{
     /**
@@ -89,6 +90,7 @@ module ns_egret{
                 this.broadcastRender();
                 Stage._invalidateRenderFlag = false;
             }
+            this.doCallLaterList();
             this.stage.updateTransform();
             this.dispatchEventWith(Event.FINISH_UPDATE_TRANSFORM);
             this.stage.draw(context);
@@ -131,6 +133,27 @@ module ns_egret{
                 event._target = eventBin.display;
                 event._setCurrentTarget(eventBin.display);
                 eventBin.listener.call(eventBin.thisObject,event);
+            }
+        }
+        /**
+         * 执行callLater回调函数列表
+         */
+        private doCallLaterList():void{
+            if(__callLaterFunctionList.length==0){
+                return;
+            }
+            var funcList:Array = __callLaterFunctionList;
+            __callLaterFunctionList = [];
+            var thisList:Array = __callLaterThisList;
+            __callLaterThisList = [];
+            var argsList:Array = __callLaterArgsList;
+            __callLaterArgsList = [];
+            var length:number = funcList.length;
+            for(var i:number=0;i<length;i++){
+                var func:Function = funcList[i];
+                if(func!=null){
+                    func.apply(thisList[i],argsList[i]);
+                }
             }
         }
 

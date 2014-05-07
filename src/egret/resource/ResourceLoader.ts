@@ -18,8 +18,8 @@
 
 /// <reference path="../context/net/NetContext.ts"/>
 /// <reference path="../core/MainContext.ts"/>
-/// <reference path="../core/Ticker.ts"/>
 /// <reference path="../events/EventDispatcher.ts"/>
+/// <reference path="../utils/callLater.ts"/>
 
 module ns_egret {
     /**
@@ -60,7 +60,7 @@ module ns_egret {
                     this.startLoading();
                     break;
                 case ResourceLoader.LOAD_STATE_LOADED:
-                    ns_egret.Ticker.getInstance().callLater(this._executeAllCallback, this);
+                    ns_egret.callLater(this._executeAllCallback, this);
                     break;
             }
 

@@ -19,10 +19,10 @@
 /// <reference path="RendererContext.ts"/>
 /// <reference path="../../core/MainContext.ts"/>
 /// <reference path="../../core/RenderFilter.ts"/>
-/// <reference path="../../core/Ticker.ts"/>
 /// <reference path="../../geom/Matrix.ts"/>
 /// <reference path="../../text/TextField.ts"/>
 /// <reference path="../../texture/Texture.ts"/>
+/// <reference path="../../utils/getTimer.ts"/>
 /// <reference path="../../../jslib/DEBUG.d.ts"/>
 
 module ns_egret {
@@ -90,12 +90,12 @@ module ns_egret {
                 DEBUG.checkDrawImage(texture, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight);
             }
             var image = texture._bitmapData;
-            var beforeDraw = ns_egret.Ticker.now();
+            var beforeDraw = ns_egret.getTimer();
             destX += this._transformTx;
             destY += this._transformTy;
             this.canvasContext.drawImage(image, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight);
             super.drawImage(image, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight);
-            this.renderCost += ns_egret.Ticker.now() - beforeDraw;
+            this.renderCost += ns_egret.getTimer() - beforeDraw;
         }
 
         setTransform(matrix:ns_egret.Matrix) {

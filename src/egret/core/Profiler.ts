@@ -20,6 +20,7 @@
 /// <reference path="Ticker.ts"/>
 /// <reference path="../events/Event.ts"/>
 /// <reference path="../text/TextField.ts"/>
+/// <reference path="../utils/getTimer.ts"/>
 
 module ns_egret {
     /**
@@ -72,20 +73,20 @@ module ns_egret {
          * @private
          */
         private onEnterFrame(event:Event) {
-            this._lastTime = Ticker.now();
+            this._lastTime = getTimer();
         }
 
         /**
          * @private
          */
         private onStartRender(event:Event) {
-            var now:number = Ticker.now();
+            var now:number = getTimer();
             this._logicPerformanceCost = now - this._lastTime;
             this._lastTime = now;
         }
 
         private onFinishUpdateTransform(event:Event) {
-            var now:number = Ticker.now();
+            var now:number = getTimer();
             this._updateTransformPerformanceCost = now - this._lastTime;
             this._lastTime = now;
         }
@@ -94,7 +95,7 @@ module ns_egret {
          * @private
          */
         private onFinishRender(event:Event) {
-            var now:number = Ticker.now();
+            var now:number = getTimer();
             this._renderPerformanceCost = now - this._lastTime;
             this._lastTime = now;
 
@@ -104,7 +105,7 @@ module ns_egret {
          * @private
          */
         private update(frameTime:number) {
-            var now:number = Ticker.now();
+            var now:number = getTimer();
             var delta = now - this._lastFrameTime;
             this._lastFrameTime = now;
             this._tick++;

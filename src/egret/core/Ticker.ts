@@ -18,6 +18,8 @@
 
 /// <reference path="MainContext.ts"/>
 /// <reference path="../events/EventDispatcher.ts"/>
+/// <reference path="../utils/callLater.ts"/>
+/// <reference path="../utils/getTimer.ts"/>
 
 module ns_egret {
     /**
@@ -29,15 +31,15 @@ module ns_egret {
 
 
         /**
-         * 获取当前系统时间的时间戳
-         * @stable A
+         * 使用全局函数getTimer()代替
+         * @deprecated
          */
         public static now = function () {
-            return new Date().getTime();
+            return getTimer();
         };
 
 
-        private _time:number;
+        private _time:number = 0;
         private _timeScale:number = 1;
         private _paused:boolean = false;
         private _frameRate:number = 60;
@@ -48,7 +50,7 @@ module ns_egret {
          * @stable A
          */
         public run() {
-            this._time = Ticker.now();
+            __START_TIME = new Date().getTime();
             var context = ns_egret.MainContext.instance.deviceContext;
             context.executeMainLoop(this.update, this);
         }
@@ -56,7 +58,7 @@ module ns_egret {
         private update() {
             var list:Array<any> = this.callBackList.concat();
             var length:number = list.length;
-            var thisTime:number = Ticker.now();
+            var thisTime:number = getTimer();
             var frameTime:number = thisTime - this._time;
             frameTime *= this._timeScale;
             for (var i:number = 0; i < length; i++) {
@@ -92,9 +94,8 @@ module ns_egret {
         }
 
         /**
-         * 在一帧之后调用指定函数
-         * @param listener 事件侦听函数
-         * @param thisObject 侦听函数的this对象
+         * 使用全局函数callLater()代替
+         * @deprecated
          */
         public callLater(listener:Function, thisObject, time:number = 0) {
             var that = this;
@@ -110,6 +111,28 @@ module ns_egret {
                     if (passTime >= time) {
                         that.unregister(arguments.callee, thisObject);
                         listener.apply(thisObject);
+                    }
+                }
+            }, thisObject)
+        }
+
+        /**
+         * 在指定的延迟（以毫秒为单位）后运行指定的函数。
+         */
+        public setTimeout(listener:Function, thisObject, delay:Number, ...parameters) {
+            var that = this;
+            var passTime = 0;
+            this.register(function (frameTime) {
+                if (delay == 0) {
+                    that.unregister(arguments.callee, thisObject);
+                    listener.apply(thisObject,parameters);
+
+                }
+                else {
+                    passTime += frameTime;
+                    if (passTime >= delay) {
+                        that.unregister(arguments.callee, thisObject);
+                        listener.apply(thisObject,parameters);
                     }
                 }
             }, thisObject)
