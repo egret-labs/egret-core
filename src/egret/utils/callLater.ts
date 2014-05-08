@@ -18,9 +18,9 @@
 
 module ns_egret {
 
-    export var __callLaterFunctionList:Array<any> = [];
-    export var __callLaterThisList:Array<any> = [];
-    export var __callLaterArgsList:Array<any> = [];
+    export var __callLaterFunctionList:Array = [];
+    export var __callLaterThisList:Array = [];
+    export var __callLaterArgsList:Array = [];
     /**
      * 延迟函数到屏幕重绘前执行。
      * @param method 要延迟执行的函数
