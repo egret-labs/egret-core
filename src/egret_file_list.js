@@ -108,6 +108,7 @@ var temp = [
     "extension/gui/components/SkinnableDataContainer.js",
     "extension/gui/components/supportClasses/ListBase.js",
     "extension/gui/components/Panel.js",
+    "extension/gui/components/TitleWindow.js",
     "extension/gui/components/ProgressBar.js",
     "extension/gui/components/ProgressBarDirection.js",
     "extension/gui/components/HSlider.js",
