@@ -101,6 +101,7 @@ var temp = [
     "extension/gui/components/Label.js",
     "extension/gui/components/Button.js",
     "extension/gui/components/Group.js",
+    "extension/gui/components/ViewStack.js",
     "extension/gui/components/Skin.js",
     "extension/gui/components/DataGroup.js",
     "extension/gui/components/SkinnableContainer.js",
@@ -112,8 +113,6 @@ var temp = [
     "extension/gui/components/HSlider.js",
     "extension/gui/components/VSlider.js",
     "extension/gui/components/List.js",
-
-
     "extension/gui/events/UIEvent.js",
     "extension/gui/events/PropertyChangeEvent.js",
     "extension/gui/events/PropertyChangeEventKind.js",
