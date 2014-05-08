@@ -27,7 +27,7 @@ module ns_egret {
 			super();
 		}
 		
-		private _selected:boolean;
+		public _selected:boolean;
 		/**
 		 * 按钮处于按下状态时为 true，而按钮处于弹起状态时为 false。
 		 */		
@@ -36,13 +36,17 @@ module ns_egret {
 		}
 		
 		public set selected(value:boolean){
-			if (value == this._selected)
-				return;
-			
-			this._selected = value;            
-			this.dispatchEvent(new UIEvent(UIEvent.VALUE_COMMIT));
-			this.invalidateSkinState();
+			this._setSelected(value);
 		}
+
+        public _setSelected(value:boolean):void{
+            if (value == this._selected)
+                return;
+
+            this._selected = value;
+            this.dispatchEvent(new UIEvent(UIEvent.VALUE_COMMIT));
+            this.invalidateSkinState();
+        }
 		
 		/**
 		 * @inheritDoc

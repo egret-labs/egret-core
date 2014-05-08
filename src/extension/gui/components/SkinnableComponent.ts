@@ -282,15 +282,19 @@ module ns_egret {
 		 * @inheritDoc
 		 */
 		public set enabled(value:boolean){
-			if(this._enabled==value)
-				return;
-			this._enabled = value;
-			if(this._autoMouseEnabled){
-				this._touchChildren = value ? this.explicitMouseChildren : false;
-				this._touchEnabled  = value ? this.explicitMouseEnabled  : false;
-			}
-			this.invalidateSkinState();
+			this._setEnabled(value);
 		}
+
+        public _setEnabled(value:boolean):void{
+            if(this._enabled==value)
+                return;
+            this._enabled = value;
+            if(this._autoMouseEnabled){
+                this._touchChildren = value ? this.explicitMouseChildren : false;
+                this._touchEnabled  = value ? this.explicitMouseEnabled  : false;
+            }
+            this.invalidateSkinState();
+        }
 		
 		/**
 		 * 返回组件当前的皮肤状态名称,子类覆盖此方法定义各种状态名

@@ -103,6 +103,8 @@ var temp = [
     "extension/gui/components/Button.js",
     "extension/gui/components/ToggleButton.js",
     "extension/gui/components/CheckBox.js",
+    "extension/gui/components/RadioButtonGroup.js",
+    "extension/gui/components/RadioButton.js",
     "extension/gui/components/Group.js",
     "extension/gui/components/ViewStack.js",
     "extension/gui/components/Skin.js",
