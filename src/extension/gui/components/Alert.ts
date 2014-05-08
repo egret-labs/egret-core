@@ -17,6 +17,8 @@
  */
 
 /// <reference path="../../../egret/events/TouchEvent.ts"/>
+/// <reference path="Button.ts"/>
+/// <reference path="TitleWindow.ts"/>
 /// <reference path="../core/IDisplayText.ts"/>
 /// <reference path="../events/CloseEvent.ts"/>
 /// <reference path="../managers/PopUpManager.ts"/>
