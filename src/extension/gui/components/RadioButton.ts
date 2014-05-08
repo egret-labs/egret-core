@@ -41,7 +41,7 @@ module ns_egret {
 		public radioButtonGroup:RadioButtonGroup = null;
 		
 		public get enabled():boolean{
-			if (!super.enabled)
+			if (!this._enabled)
 				return false;
 			return !this.radioButtonGroup || 
 				this.radioButtonGroup.enabled;
