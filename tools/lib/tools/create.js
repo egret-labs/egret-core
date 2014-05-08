@@ -30,6 +30,12 @@ function run(currDir, args, opts) {
             compiler.compile(path.join(param.getEgretPath(), "src"), path.join(currDir, projectName, "bin-debug/lib"), callback);
         },
 
+
+        function(callback) {
+            compiler.exportHeader(callback, path.join(currDir, projectName, "src","egret.d.ts"));
+
+        },
+
         function (callback) {
             compiler.compile(path.join(currDir, projectName, "src"), path.join(currDir, projectName, "bin-debug/src"), callback);
         },

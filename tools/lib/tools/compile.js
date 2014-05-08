@@ -164,15 +164,50 @@ function build(callback, source, output) {
  * @param source
  * @returns {Array}
  */
+//function generateAllTypeScriptFileList(source) {
+//
+//    return libs.loopFileSync(source, filter);
+//
+//    function filter(path) {
+//        return  path.indexOf(".ts") == path.length - 3 && path.indexOf(".d.ts") == -1
+//    }
+//}
+
 
 function generateAllTypeScriptFileList(source) {
 
     return libs.loopFileSync(source, filter);
 
     function filter(path) {
-        return  path.indexOf(".ts") == path.length - 3 && path.indexOf(".d.ts") == -1
+        return  path.indexOf(".ts") == path.length - 3 && path.indexOf(".d.ts") == -1 &&
+            path.indexOf("Native") == -1
     }
 }
 
+
+
+function exportHeader(callback,output_file){
+    var egret_path = path.join(param.getEgretPath(),"src");
+    var list = generateAllTypeScriptFileList(egret_path);
+    list = list.map(function(item){
+        return path.join(egret_path,item);
+    })
+    var source = list.join(" ");
+    var cmd = "tsc " + source + " -t ES5 -d --out " +  output_file;
+
+    var ts = cp_exec(cmd);
+    ts.stderr.on("data", function (data) {
+        console.log(data);
+    })
+
+    ts.on('exit', function (code) {
+        console.log("[success]");
+        if (callback){
+            callback();
+        }
+    });
+}
+
 exports.compile = buildAllFile;
+exports.exportHeader = exportHeader;
 exports.run = run;
