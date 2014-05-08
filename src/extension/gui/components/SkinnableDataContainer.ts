@@ -305,7 +305,7 @@ module ns_egret {
 			this.dataGroup.layout = temp;
 			temp.gap = 0;
 			temp.horizontalAlign = "contentJustify";
-			this.addToDisplayList(this.dataGroup);
+			this._addToDisplayList(this.dataGroup);
 			this.partAdded("dataGroup",this.dataGroup);
 		}
 		

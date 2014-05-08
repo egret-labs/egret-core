@@ -459,7 +459,7 @@ module ns_egret {
 			text.right = 10;
 			text.top = 2;
 			text.bottom = 2;
-			this.addToDisplayList(<DisplayObject><any>text);
+			this._addToDisplayList(<DisplayObject><any>text);
 			this.labelDisplay = text;
 			this.partAdded("labelDisplay",this.labelDisplay);
 		}

@@ -49,7 +49,7 @@ a
                 if (this._placeHolderGroup == null) {
                     this._placeHolderGroup = new Group();
                     this._placeHolderGroup.visible = false;
-                    this.addToDisplayList(<DisplayObject><any>this._placeHolderGroup);
+                    this._addToDisplayList(<DisplayObject><any>this._placeHolderGroup);
                 }
                 this._placeHolderGroup.addEventListener(
                     ElementExistenceEvent.ELEMENT_ADD, this.contentGroup_elementAddedHandler, this);
@@ -253,7 +253,7 @@ a
             this.contentGroup = new Group();
             this.contentGroup.percentWidth = 100;
             this.contentGroup.percentHeight = 100;
-            this.addToDisplayList(<DisplayObject><any>this.contentGroup);
+            this._addToDisplayList(<DisplayObject><any>this.contentGroup);
             this.partAdded("contentGroup", this.contentGroup);
         }
 

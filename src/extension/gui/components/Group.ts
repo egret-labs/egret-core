@@ -271,7 +271,7 @@ module ns_egret {
 		 */		
 		public elementAdded(element:IVisualElement, index:number, notifyListeners:boolean = true):void{
 			if(element instanceof DisplayObject)
-				this.addToDisplayList(<DisplayObject><any>element, index);
+				this._addToDisplayList(<DisplayObject><any>element, index);
 			
 			if (notifyListeners){
 				if (this.hasEventListener(ElementExistenceEvent.ELEMENT_ADD))
@@ -304,7 +304,7 @@ module ns_egret {
 		/**
 		 * 添加对象到显示列表
 		 */		
-		public addToDisplayList(child:DisplayObject, index:number = -1):void{
+		public _addToDisplayList(child:DisplayObject, index:number = -1):void{
 			if (child.parent ==<DisplayObjectContainer><any> this)
 				super.setChildIndex(child, index != -1 ? index : this.numChildren - 1);
 			else

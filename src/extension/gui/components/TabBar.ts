@@ -162,7 +162,7 @@ module ns_egret {
 			layout.horizontalAlign = HorizontalAlign.JUSTIFY;
 			layout.verticalAlign = VerticalAlign.CONTENT_JUSTIFY;
 			this.dataGroup.layout = layout;
-			this.addToDisplayList(this.dataGroup);
+			this._addToDisplayList(this.dataGroup);
 			this.partAdded("dataGroup",this.dataGroup);
 		}
 	}

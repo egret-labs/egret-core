@@ -272,7 +272,7 @@ module ns_egret {
 		 * 添加对象到显示列表,此接口仅预留给皮肤不为ISkin而需要内部创建皮肤子部件的情况,
 		 * 如果需要管理子项，若有，请使用容器的addElement()方法，非法使用有可能造成无法自动布局。
 		 */		
-		public addToDisplayList(child:DisplayObject):DisplayObject{
+		public _addToDisplayList(child:DisplayObject):DisplayObject{
 			return super.addChild(child);
 		}
 		/**

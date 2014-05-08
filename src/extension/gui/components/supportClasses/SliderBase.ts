@@ -191,7 +191,7 @@ module ns_egret {
 			
 			var newValue:number = this.pointToValue(p.x, p.y);
 			newValue = this.nearestValidValue(newValue, this.snapInterval);
-			
+
 			if (newValue != this.pendingValue){
 				if (this.slideDuration != 0){
 					if (!this.animator){
@@ -201,7 +201,7 @@ module ns_egret {
 					if (this.animator.isPlaying)
 						this.stopAnimation();
 					this.slideToValue = newValue;
-					this.animator.duration = this.slideDuration * 
+					this.animator.duration = this.slideDuration *
 						(Math.abs(this.pendingValue - this.slideToValue) / (this.maximum - this.minimum));
 					this.animator.motionPaths = [{prop:"value", from:this.pendingValue, to:this.slideToValue}];
 					this.dispatchEvent(new UIEvent(UIEvent.CHANGE_START));
@@ -212,7 +212,7 @@ module ns_egret {
 					this.dispatchEvent(new Event(Event.CHANGE));
 				}
 			}
-			
+
 		}
 		
 		/**

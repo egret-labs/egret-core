@@ -130,6 +130,7 @@ var temp = [
     "extension/gui/components/DropDownList.js",
     "extension/gui/components/TabBarButton.js",
     "extension/gui/components/TabBar.js",
+    "extension/gui/components/Scroller.js",
     "extension/gui/events/UIEvent.js",
     "extension/gui/events/PropertyChangeEvent.js",
     "extension/gui/events/PropertyChangeEventKind.js",
