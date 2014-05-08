@@ -74,6 +74,8 @@ function copy(sourceFile, outputFile) {
 }
 
 function _copy_file(source_file, output_file) {
+    var path = require("path");
+    mkdirSync(path.dirname(output_file))
     var byteArray = fs.readFileSync(source_file);
     fs.writeFileSync(output_file, byteArray);
 }
