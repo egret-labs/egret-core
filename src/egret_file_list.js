@@ -71,6 +71,7 @@ var temp = [
 
     //GUI start
     "extension/gui/collections/ArrayCollection.js",
+    "extension/gui/collections/ObjectCollection.js",
     "extension/gui/managers/LayoutManager.js",
     "extension/gui/managers/layoutClass/DepthQueue.js",
     "extension/gui/core/UIGlobals.js",
@@ -95,6 +96,7 @@ var temp = [
     "extension/gui/components/supportClasses/TextBase.js",
     "extension/gui/components/supportClasses/GroupBase.js",
     "extension/gui/components/supportClasses/ItemRenderer.js",
+    "extension/gui/components/supportClasses/TreeItemRenderer.js",
     "extension/gui/components/supportClasses/Animation.js",
     "extension/gui/components/supportClasses/Range.js",
     "extension/gui/components/supportClasses/TrackBase.js",
@@ -121,6 +123,7 @@ var temp = [
     "extension/gui/components/HSlider.js",
     "extension/gui/components/VSlider.js",
     "extension/gui/components/List.js",
+    "extension/gui/components/Tree.js",
     "extension/gui/components/TabBarButton.js",
     "extension/gui/components/TabBar.js",
     "extension/gui/events/UIEvent.js",
