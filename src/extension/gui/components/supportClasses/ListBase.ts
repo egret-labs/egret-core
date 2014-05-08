@@ -597,7 +597,7 @@ module ns_egret {
 		 * 项呈示器被添加
 		 */
 		public dataGroup_rendererAddHandler(event:RendererExistenceEvent):void{
-			var renderer:DisplayObject = <DisplayObject> (event.renderer);
+			var renderer:DisplayObject = <DisplayObject><any> (event.renderer);
 			
 			if (renderer == null)
 				return;
@@ -609,7 +609,7 @@ module ns_egret {
 		 * 项呈示器被移除
 		 */		
 		public dataGroup_rendererRemoveHandler(event:RendererExistenceEvent):void{
-			var renderer:DisplayObject = <DisplayObject> (event.renderer);
+			var renderer:DisplayObject = <DisplayObject> <any>(event.renderer);
 			
 			if (renderer == null)
 				return;

@@ -63,7 +63,7 @@ module ns_egret {
             var value:any;
             if(data instanceof Array){
                 value = [];
-                var list:Array = <Array> data;
+                var list:Array<any> =  data;
                 var length:number = list.length;
                 for(var i:number=0;i<length;i++){
                     var child:any = this.parseValue(list[i]);
@@ -88,7 +88,7 @@ module ns_egret {
             var prop:Object = data["prop"];
             if(!prop)
                 return target;
-            for(var key:string in prop){
+            for(var key in prop){
                 var value:any = prop[key];
                 if(key=="skinName"||key=="itemRendererSkinName")
                     target[key] = this.parseSkin(<string> value);

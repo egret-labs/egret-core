@@ -68,7 +68,7 @@ module ns_egret {
                     var element:IVisualElement = elements[i];
 					if(element instanceof DisplayObject&&element.parent!=this){
 						this.childOrderingChanged = true;
-						this.addToDisplayList(<DisplayObject> element);
+						this.addToDisplayList(<DisplayObject> <any>element);
 					}
 				}
 				if(this.childOrderingChanged)
@@ -135,7 +135,7 @@ module ns_egret {
 		public elementAdded(element:IVisualElement, index:number, notifyListeners:boolean=true):void{
 			if(this._createAllChildren){
 				if(element instanceof DisplayObject)
-					this.addToDisplayList(<DisplayObject> element, index);
+					this.addToDisplayList(<DisplayObject> <any>element, index);
 			}
 			if (notifyListeners){
 				if (this.hasEventListener(ElementExistenceEvent.ELEMENT_ADD))
