@@ -123,6 +123,7 @@ var temp = [
     "extension/gui/components/HSlider.js",
     "extension/gui/components/VSlider.js",
     "extension/gui/components/List.js",
+    "extension/gui/components/PopUpAnchor.js",
     "extension/gui/components/supportClasses/DropDownController.js",
     "extension/gui/components/supportClasses/DropDownListBase.js",
     "extension/gui/components/Tree.js",
