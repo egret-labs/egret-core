@@ -57,7 +57,7 @@ module ns_egret{
             this._canScale = true;
         }
 
-        public hitTest(x, y) {
+        public hitTest(x, y, ignoreTouchEnabled:boolean = false):DisplayObject {
             return ns_egret.DisplayObject.prototype.hitTest.call(this, x, y);
         }
 
