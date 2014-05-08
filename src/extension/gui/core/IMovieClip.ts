@@ -32,7 +32,7 @@ module ns_egret {
 		/**
 		 * 返回由FrameLabel对象组成的数组。数组包括整个Dxr动画实例的所有帧标签。
 		 */		
-		frameLabels:Array;
+		frameLabels:Array<any>;
 		/**
 		 * 是否循环播放,默认为true。
 		 */		

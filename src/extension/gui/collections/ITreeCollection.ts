@@ -37,7 +37,7 @@ module ns_egret {
 		 * @param item 要打开或关闭的节点
 		 * @param open true表示打开节点，反之关闭。
 		 */		
-		expandItem(item:any,open:boolean=true):void;
+		expandItem(item:any,open?:boolean):void;
 
 		/**
 		 * 获取节点的深度

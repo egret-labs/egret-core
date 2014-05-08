@@ -646,7 +646,7 @@ module ns_egret {
          * @param ignoreTouchEnabled 是否忽略TouchEnabled
          * @returns {*}
          */
-        public hitTest(x, y, ignoreTouchEnabled:boolean = false) {
+        public hitTest(x, y, ignoreTouchEnabled:boolean = false):DisplayObject {
             if (!this.visible || (!ignoreTouchEnabled && !this._touchEnabled)) {
                 return null;
             }
