@@ -17,11 +17,11 @@
  */
 
 /// <reference path="../../../egret/core/MainContext.ts"/>
-/// <reference path="../../../egret/core/Ticker.ts"/>
 /// <reference path="../../../egret/display/DisplayObjectContainer.ts"/>
 /// <reference path="../../../egret/events/TouchEvent.ts"/>
 /// <reference path="../../../egret/geom/Rectangle.ts"/>
 /// <reference path="../../../egret/tween/Tween.ts"/>
+/// <reference path="../../../egret/utils/getTimer.ts"/>
 /// <reference path="Constant.ts"/>
 
 module ns_egret {
