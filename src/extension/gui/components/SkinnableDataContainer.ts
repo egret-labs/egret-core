@@ -71,10 +71,14 @@ module ns_egret {
 		 * 列表数据源，请使用实现了ICollection接口的数据类型，例如ArrayCollection
 		 */		
 		public get dataProvider():ICollection{
+           return this._getDataProvider();
+		}
+
+        public _getDataProvider():ICollection{
             return this.dataGroup!=null
                 ? this.dataGroup.dataProvider
                 : this._dataGroupProperties.dataProvider;
-		}
+        }
 
 		public set dataProvider(value:ICollection){
 			this._setDataProvider(value);

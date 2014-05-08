@@ -19,7 +19,6 @@
 /// <reference path="../../../../egret/display/DisplayObject.ts"/>
 /// <reference path="../../../../egret/events/TouchEvent.ts"/>
 /// <reference path="../../../../egret/utils/XML.ts"/>
-/// <reference path="../../collections/ICollection.ts"/>
 /// <reference path="../IItemRenderer.ts"/>
 /// <reference path="../SkinnableDataContainer.ts"/>
 /// <reference path="../../core/IVisualElement.ts"/>
@@ -59,32 +58,21 @@ module ns_egret {
 		
 		private dataProviderChanged:boolean;
 
-        /**
-         * 列表数据源，请使用实现了ICollection接口的数据类型，例如ArrayCollection
-         */
-        public get dataProvider():ICollection{
-            return this.dataGroup!=null
-                ? this.dataGroup.dataProvider
-                : this._dataGroupProperties.dataProvider;
-        }
-		/**
-		 * @inheritDoc
-		 */
-		public set dataProvider(value:ICollection){
-			if (this.dataProvider)
-				this.dataProvider.removeEventListener(CollectionEvent.COLLECTION_CHANGE, 
-					this.dataProvider_collectionChangeHandler,this);
-			
-			this.dataProviderChanged = true;
-			this.doingWholesaleChanges = true;
-			
-			if (value)
-				value.addEventListener(CollectionEvent.COLLECTION_CHANGE, 
-					this.dataProvider_collectionChangeHandler,this);
+        public _setDataProvider(value):void{
+            if (this.dataProvider)
+                this.dataProvider.removeEventListener(CollectionEvent.COLLECTION_CHANGE,
+                    this.dataProvider_collectionChangeHandler,this);
 
-            this._setDataProvider(value);
-			this.invalidateProperties();
-		}
+            this.dataProviderChanged = true;
+            this.doingWholesaleChanges = true;
+
+            if (value)
+                value.addEventListener(CollectionEvent.COLLECTION_CHANGE,
+                    this.dataProvider_collectionChangeHandler,this);
+
+            super._setDataProvider(value);
+            this.invalidateProperties();
+        }
 
         /**
          * 布局对象
@@ -145,7 +133,7 @@ module ns_egret {
 			this.invalidateProperties(); 
 		}
 		
-		private _requireSelection:boolean = false;
+		public _requireSelection:boolean = false;
 		
 		private requireSelectionChanged:boolean = false;
 		
@@ -158,16 +146,20 @@ module ns_egret {
 		}
 		
 		public set requireSelection(value:boolean){
-			if (value == this._requireSelection)
-				return;
-			
-			this._requireSelection = value;
-			
-			if (value){
-				this.requireSelectionChanged = true;
-				this.invalidateProperties();
-			}
+			this._setRequireSelection(value);
 		}
+
+        public _setRequireSelection(value:boolean):void{
+            if (value == this._requireSelection)
+                return;
+
+            this._requireSelection = value;
+
+            if (value){
+                this.requireSelectionChanged = true;
+                this.invalidateProperties();
+            }
+        }
 		
 		/**
 		 * 在属性提交前缓存真实的选中项的值

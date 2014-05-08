@@ -131,24 +131,33 @@ module ns_egret {
 		
 		
 		private _label:string = "";
-		/**
-		 * 要在按钮上显示的文本
-		 */		
-		public set label(value:string){
-			this._label = value;
-			if(this.labelDisplay){
-				this.labelDisplay.text = value;
-			}
+        /**
+         * 要在按钮上显示的文本
+         */
+		public get label():string{
+            return this._getLabel();
 		}
-		
-		public get label():string          {
-			if(this.labelDisplay){
-				return this.labelDisplay.text;
-			}
-			else{
-				return this._label;
-			}
-		}
+
+        public _getLabel():string{
+            if(this.labelDisplay){
+                return this.labelDisplay.text;
+            }
+            else{
+                return this._label;
+            }
+        }
+
+        public set label(value:string){
+            this._setLabel(value);
+        }
+
+        public _setLabel(value:string):void{
+            this._label = value;
+            if(this.labelDisplay){
+                this.labelDisplay.text = value;
+            }
+        }
+
 		
 		private _mouseCaptured:boolean = false; 
 		/**
