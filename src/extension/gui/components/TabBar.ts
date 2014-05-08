@@ -46,16 +46,16 @@ module ns_egret {
 		/**
 		 * requireSelection改变标志
 		 */
-		private requireSelectionChanged:boolean;
+		private requireSelectionChanged_tabBar:boolean;
 		/**
 		 * @inheritDoc
 		 */
-		public _setRequireSelection(value:boolean){
+		public c(value:boolean){
 			if (value == this._requireSelection)
 				return;
 			
 			super._setRequireSelection(value);
-			this.requireSelectionChanged = true;
+			this.requireSelectionChanged_tabBar = true;
 			this.invalidateProperties();
 		}
 
@@ -95,8 +95,8 @@ module ns_egret {
 		public commitProperties():void{
 			super.commitProperties();
 			
-			if (this.requireSelectionChanged && this.dataGroup){
-				this.requireSelectionChanged = false;
+			if (this.requireSelectionChanged_tabBar && this.dataGroup){
+				this.requireSelectionChanged_tabBar = false;
 				var n:number = this.dataGroup.numElements;
 				for (var i:number = 0; i < n; i++){
 					var renderer:TabBarButton = <TabBarButton><any> (this.dataGroup.getElementAt(i));

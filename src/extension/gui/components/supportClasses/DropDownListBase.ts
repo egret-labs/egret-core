@@ -55,7 +55,7 @@ module ns_egret {
 		/**
 		 * 文本改变标志
 		 */		
-		private labelChanged:boolean = false;
+		public _labelChanged:boolean = false;
 		
 		/**
 		 * @inheritDoc
@@ -65,7 +65,7 @@ module ns_egret {
 				return;
 			
 			super._setDataProvider(value);
-			this.labelChanged = true;
+			this._labelChanged = true;
 			this.invalidateProperties();
 		}
 		/**
@@ -76,7 +76,7 @@ module ns_egret {
 				return;
 			
 			super._setLabelField(value);
-			this.labelChanged = true;
+			this._labelChanged = true;
 			this.invalidateProperties();
 		}
 		/**
@@ -87,7 +87,7 @@ module ns_egret {
 				return;
 			
 			super._setLabelFunction(value);
-			this.labelChanged = true;
+			this._labelChanged = true;
 			this.invalidateProperties();
 		}
 		
@@ -139,8 +139,8 @@ module ns_egret {
 		public commitProperties():void{
 			super.commitProperties();
 			
-			if (this.labelChanged){
-				this.labelChanged = false;
+			if (this._labelChanged){
+				this._labelChanged = false;
 				this.updateLabelDisplay();
 			}
 		}
@@ -230,7 +230,7 @@ module ns_egret {
 		public dataProvider_collectionChangeHandler(event:CollectionEvent):void{       
 			super.dataProvider_collectionChangeHandler(event);
 			
-			this.labelChanged = true;
+			this._labelChanged = true;
 			this.invalidateProperties();
 		}
 		

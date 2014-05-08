@@ -33,10 +33,6 @@ module ns_egret {
 		 * [SkinPart]选中项文本
 		 */		
 		public labelDisplay:IDisplayText;
-		/**
-		 * label发生改变标志
-		 */		
-		private labelChanged:boolean = false;
 		
 		private _prompt:string = "";
 		/**
@@ -51,19 +47,8 @@ module ns_egret {
 				return;
 			
 			this._prompt = value;
-			this.labelChanged = true;
+			this._labelChanged = true;
 			this.invalidateProperties();
-		}
-		/**
-		 * @inheritDoc
-		 */
-		public commitProperties():void{
-			super.commitProperties();
-			
-			if (this.labelChanged){
-				this.labelChanged = false;
-				this.updateLabelDisplay();
-			}
 		}
 		
 		/**
@@ -73,7 +58,7 @@ module ns_egret {
 			super.partAdded(partName, instance);
 			
 			if (instance == this.labelDisplay){
-				this.labelChanged = true;
+				this._labelChanged = true;
 				this.invalidateProperties();
 			}
 		}
