@@ -160,7 +160,7 @@ module ns_egret {
             }
             if (!this.animator){
                 this.animator = new Animation(this.animationUpdateHandler,this);
-                this.animator.duration = 200;
+                this.animator.duration = 300;
             }
             if (this.animator.isPlaying)
                 this.animator.stop();
