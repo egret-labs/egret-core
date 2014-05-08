@@ -17,6 +17,7 @@
  */
 
 /// <reference path="../../../egret/events/EventDispatcher.ts"/>
+/// <reference path="../../../egret/utils/Recycler.ts"/>
 /// <reference path="ICollection.ts"/>
 /// <reference path="../events/CollectionEvent.ts"/>
 /// <reference path="../events/CollectionEventKind.ts"/>

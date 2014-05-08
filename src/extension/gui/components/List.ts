@@ -19,8 +19,8 @@
 /// <reference path="../../../egret/display/DisplayObject.ts"/>
 /// <reference path="../../../egret/events/Event.ts"/>
 /// <reference path="../../../egret/events/TouchEvent.ts"/>
+/// <reference path="DataGroup.ts"/>
 /// <reference path="IItemRenderer.ts"/>
-/// <reference path="supportClasses/ItemRenderer.ts"/>
 /// <reference path="supportClasses/ListBase.ts"/>
 /// <reference path="../core/IVisualElement.ts"/>
 /// <reference path="../core/UIGlobals.ts"/>

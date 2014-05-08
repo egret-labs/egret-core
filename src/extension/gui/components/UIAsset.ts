@@ -18,6 +18,7 @@
 
 /// <reference path="../../../egret/core/Injector.ts"/>
 /// <reference path="../../../egret/display/DisplayObject.ts"/>
+/// <reference path="../../../egret/display/DisplayObjectContainer.ts"/>
 /// <reference path="../../../egret/geom/Rectangle.ts"/>
 /// <reference path="supportClasses/DefaultSkinAdapter.ts"/>
 /// <reference path="../core/IInvalidateDisplay.ts"/>

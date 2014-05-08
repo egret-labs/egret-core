@@ -17,6 +17,7 @@
  */
 
 /// <reference path="../../../egret/display/DisplayObject.ts"/>
+/// <reference path="../../../egret/display/DisplayObjectContainer.ts"/>
 /// <reference path="supportClasses/GroupBase.ts"/>
 /// <reference path="../core/IContainer.ts"/>
 /// <reference path="../core/IVisualElement.ts"/>

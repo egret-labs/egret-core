@@ -17,6 +17,7 @@
  */
 
 /// <reference path="../../../egret/display/DisplayObject.ts"/>
+/// <reference path="../../../egret/display/DisplayObjectContainer.ts"/>
 /// <reference path="../../../egret/events/Event.ts"/>
 /// <reference path="UIAsset.ts"/>
 /// <reference path="supportClasses/SkinBasicLayout.ts"/>

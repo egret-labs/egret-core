@@ -17,6 +17,7 @@
  */
 
 /// <reference path="../../../../egret/core/Ticker.ts"/>
+/// <reference path="../../../../egret/utils/getTimer.ts"/>
 
 module ns_egret {
 
@@ -137,7 +138,7 @@ module ns_egret {
 			runningTime = Math.min(runningTime,this.duration);
 			var fraction:number = runningTime/this.duration;
 			this.caculateCurrentValue(fraction);
-			this.startTime = Ticker.now() - runningTime - this._startDelay;
+			this.startTime = getTimer() - runningTime - this._startDelay;
 			if(this.updateFunction!=null)
                 this.updateFunction.call(this.thisObject,this);
 		}
@@ -151,7 +152,7 @@ module ns_egret {
 			this._isPlaying = false;
 			this._currentValue = {};
 			this.caculateCurrentValue(0);
-			this.startTime = Ticker.now();
+			this.startTime = getTimer();
 			Animation.currentTime = this.startTime;
 			this.doInterval();
 			Animation.addAnimation(this);
@@ -216,7 +217,7 @@ module ns_egret {
 			if(!this._started)
 				return;
 			this._isPaused = true;
-			this.pauseTime = Ticker.now();
+			this.pauseTime = getTimer();
 			this._isPlaying = false;
 			Animation.removeAnimation(this);
 		}
@@ -227,7 +228,7 @@ module ns_egret {
 			if(!this._started||!this._isPaused)
 				return;
 			this._isPaused = false;
-			this.startTime += Ticker.now()-this.pauseTime;
+			this.startTime += getTimer()-this.pauseTime;
 			this.pauseTime = -1;
 			Animation.addAnimation(this);
 		}
@@ -354,7 +355,7 @@ module ns_egret {
 		 * 计时器触发函数
 		 */		
 		private static onEnterFrame(frameTime:number,currentTime:number):void{
-			Animation.currentTime = Ticker.now();
+			Animation.currentTime = getTimer();
 			Animation.currentIntervalIndex = 0;
 			while(Animation.currentIntervalIndex<Animation.activeAnimations.length){
 				var animation:Animation = Animation.activeAnimations[Animation.currentIntervalIndex];

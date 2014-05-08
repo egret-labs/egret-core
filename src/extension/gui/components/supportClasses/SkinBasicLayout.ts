@@ -16,9 +16,9 @@
  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+/// <reference path="../../../../egret/core/HashObject.ts"/>
 /// <reference path="../SkinnableComponent.ts"/>
 /// <reference path="../../core/ILayoutElement.ts"/>
-    /// <reference path="../../../../egret/core/HashObject.ts"/>
 
 module ns_egret {
 
