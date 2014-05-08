@@ -466,7 +466,7 @@ module ns_egret {
 				return;
 			this._label = this.labelDisplay.text;
 			this.partRemoved("labelDisplay",this.labelDisplay);
-			this.removeFromDisplayList(<DisplayObject><any> (this.labelDisplay));
+			this._removeFromDisplayList(<DisplayObject><any> (this.labelDisplay));
 			this.labelDisplay = null;
 		}
 		

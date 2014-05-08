@@ -62,13 +62,13 @@ module ns_egret {
 			this.detachSkin(oldSkin);
 			if(this._skin){
 				if(this._skin.parent==<DisplayObjectContainer><any>this){
-					this.removeFromDisplayList(this._skin); 
+					this._removeFromDisplayList(this._skin); 
 				}
 			}
 			
 			if(skin instanceof DisplayObject){
 				this._skin = <DisplayObject> skin;
-				this.addToDisplayListAt(this._skin,0);
+				this._addToDisplayListAt(this._skin,0);
 			}
 			else{
 				this._skin = null;

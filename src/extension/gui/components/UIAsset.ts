@@ -279,14 +279,14 @@ module ns_egret {
 		 * 添加对象到指定的索引,此接口仅预留给皮肤不为ISkin而需要内部创建皮肤子部件的情况,
 		 * 如果需要管理子项，若有，请使用容器的addElementAt()方法，非法使用有可能造成无法自动布局。
 		 */		
-		public addToDisplayListAt(child:DisplayObject,index:number):DisplayObject{
+		public _addToDisplayListAt(child:DisplayObject,index:number):DisplayObject{
 			return super.addChildAt(child,index);
 		}
 		/**
 		 * 从显示列表移除对象,此接口仅预留给皮肤不为ISkin而需要内部创建皮肤子部件的情况,
 		 * 如果需要管理子项，若有，请使用容器的removeElement()方法,非法使用有可能造成无法自动布局。
 		 */		
-		public removeFromDisplayList(child:DisplayObject):DisplayObject{
+		public _removeFromDisplayList(child:DisplayObject):DisplayObject{
 			return super.removeChild(child);
 		}
 		

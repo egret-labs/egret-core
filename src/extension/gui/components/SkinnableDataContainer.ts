@@ -312,7 +312,7 @@ module ns_egret {
 			if(!this.dataGroup)
 				return;
 			this.partRemoved("dataGroup",this.dataGroup);
-			this.removeFromDisplayList(this.dataGroup);
+			this._removeFromDisplayList(this.dataGroup);
 			this.dataGroup = null;
 		}
 	}

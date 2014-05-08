@@ -189,7 +189,7 @@ a
                         var element:IVisualElement = this._placeHolderGroup.removeElementAt(0);
                         element.ownerChanged(null);
                     }
-                    this.removeFromDisplayList(<DisplayObject><any>this._placeHolderGroup);
+                    this._removeFromDisplayList(<DisplayObject><any>this._placeHolderGroup);
                     this.contentGroup.elementsContent = sourceContent;
                     for (i = sourceContent.length - 1; i >= 0; i--) {
                         element = sourceContent[i];
@@ -262,7 +262,7 @@ a
          */
         public removeSkinParts():void {
             this.partRemoved("contentGroup", this.contentGroup);
-            this.removeFromDisplayList(<DisplayObject><any>this.contentGroup);
+            this._removeFromDisplayList(<DisplayObject><any>this.contentGroup);
             this.contentGroup = null;
         }
     }

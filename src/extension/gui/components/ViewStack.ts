@@ -199,7 +199,7 @@ module ns_egret {
                 for(var i:number=0;i<length;i++){
                     var element:IVisualElement = elements[i];
 					if(element instanceof DisplayObject&&element.parent==this){
-						this.addToDisplayList(<DisplayObject> element);
+						this.addToDisplayList(<DisplayObject><any> element);
 					}
 				}
 			}
@@ -222,7 +222,7 @@ module ns_egret {
 				this._selectedChild.visible = true;
 				this._selectedChild.includeInLayout = true;
 				if(this._selectedChild.parent!=this&&this._selectedChild instanceof DisplayObject){
-					this.addToDisplayList(<DisplayObject> (this._selectedChild));
+					this.addToDisplayList(<DisplayObject><any> (this._selectedChild));
 					if(!this.childOrderingChanged){
 						this.childOrderingChanged = true;
 					}
