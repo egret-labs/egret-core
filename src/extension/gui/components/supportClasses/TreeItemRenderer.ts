@@ -19,6 +19,8 @@
 /// <reference path="../../../../egret/display/DisplayObject.ts"/>
 /// <reference path="../../../../egret/events/TouchEvent.ts"/>
 /// <reference path="../ITreeItemRenderer.ts"/>
+/// <reference path="ItemRenderer.ts"/>
+/// <reference path="ToggleButtonBase.ts"/>
 /// <reference path="../../core/ISkinnableClient.ts"/>
 /// <reference path="../../events/TreeEvent.ts"/>
 

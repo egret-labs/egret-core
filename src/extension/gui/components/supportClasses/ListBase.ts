@@ -106,14 +106,17 @@ module ns_egret {
 		}
 		
 		public set labelField(value:string){
-			if (value == this._labelField)
-				return;
-				
-				this._labelField = value;
-			this.labelFieldOrFunctionChanged = true;
-			this.invalidateProperties();
+            this._setLabelField(value);
 		}
-		
+
+        public _setLabelField(value:string){
+            if (value == this._labelField)
+                return;
+            this._labelField = value;
+            this.labelFieldOrFunctionChanged = true;
+            this.invalidateProperties();
+        }
+
 		private _labelFunction:Function; 
 		
 		/**
@@ -125,13 +128,17 @@ module ns_egret {
 		}
 		
 		public set labelFunction(value:Function){
-			if (value == this._labelFunction)
-				return;
-				
-			this._labelFunction = value;
-			this.labelFieldOrFunctionChanged = true;
-			this.invalidateProperties(); 
+			this._setLabelFunction(value);
 		}
+
+        public _setLabelFunction(value:Function):void{
+            if (value == this._labelFunction)
+                return;
+
+            this._labelFunction = value;
+            this.labelFieldOrFunctionChanged = true;
+            this.invalidateProperties();
+        }
 		
 		public _requireSelection:boolean = false;
 		
