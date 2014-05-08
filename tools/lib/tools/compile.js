@@ -146,8 +146,9 @@ function build(callback, source, output) {
         if (data.indexOf("error TS1") >= 0 ||
             data.indexOf("error TS5") >= 0 ||
             data.indexOf("error TS2105") >= 0) {
-            console.log(data);
+
         }
+        console.log(data);
     })
 
 
