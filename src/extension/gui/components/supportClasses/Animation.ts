@@ -17,6 +17,7 @@
  */
 
 /// <reference path="../../../../egret/core/Ticker.ts"/>
+/// <reference path="../../../../egret/tween/Ease.ts"/>
 /// <reference path="../../../../egret/utils/getTimer.ts"/>
 
 module ns_egret {
