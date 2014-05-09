@@ -206,7 +206,7 @@ module ns_egret {
 		 * 即将添加一个子项
 		 */		
 		public addingChild(child:DisplayObject):void{
-			if("nestLevel" in child){
+			if(child&&"nestLevel" in child){
 				(<ILayoutManagerClient><any>child).nestLevel = this._nestLevel+1;
 			}
 		}
@@ -243,7 +243,7 @@ module ns_egret {
 		 * 已经移除一个子项
 		 */
 		public _childRemoved(child:DisplayObject):void{
-			if("nestLevel" in child){
+			if(child&&"nestLevel" in child){
 				(<ILayoutManagerClient> <any>child).nestLevel = 0;
 			}
 		}

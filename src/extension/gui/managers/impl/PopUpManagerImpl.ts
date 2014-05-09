@@ -238,7 +238,7 @@ module ns_egret {
          */
         public bringToFront(popUp:IVisualElement):void{
             var data:PopUpData = this.findPopUpData(popUp);
-            if(data&&"popUpContainer" in popUp.parent){
+            if(data&&popUp.parent&&"popUpContainer" in popUp.parent){
                 var sm:ISystemManager = <ISystemManager><any>(popUp.parent);
                 sm.popUpContainer.setElementIndex(popUp,sm.popUpContainer.numElements-1);
                 this.invalidateModal();
