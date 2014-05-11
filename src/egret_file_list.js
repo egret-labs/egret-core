@@ -42,7 +42,7 @@ var temp = [
     "egret/texture/Texture.js",
     "egret/texture/TextureCache.js",
     "egret/context/net/NetContext.js",
-    "egret/context/net/HTML5NetContext.js",
+    "egret/context/devices/DeviceContext.js",
     "egret/display/ScaleBitmap.js",
     //utils start
     "jslib/ZipUtils.js",
@@ -89,7 +89,9 @@ if (true) {//浏览器
     context_list = [
         "egret/context/devices/HTML5DeviceContext.js",
         "egret/context/renderer/HTML5CanvasRenderer.js",
-        "egret/context/sound/HTML5SoundContext.js"
+        "egret/context/sound/HTML5SoundContext.js",
+        "egret/context/net/HTML5NetContext.js",
+        "egret/interactive/HTML5TouchContext.js"
 
     ]
 }
@@ -109,6 +111,9 @@ egret_file_list = temp.concat(context_list);
 var __extends = this.__extends || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
+    if (!b){
+        console.log ("what?")
+    }
     __.prototype = b.prototype;
     d.prototype = new __();
 };

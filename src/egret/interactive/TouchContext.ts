@@ -32,10 +32,10 @@ module ns_egret {
      * @classdesc TouchContext是egret的触摸Context
      */
     export class TouchContext extends HashObject{
-        private _currentTouchTarget:any = {};
+        public _currentTouchTarget:any = {};
         public maxTouches:number = 2;
 
-        public constructor(private canvas:HTMLCanvasElement) {
+        public constructor() {
             super();
         }
 
@@ -45,113 +45,14 @@ module ns_egret {
          */
         public run():void {
 
-            var that = this;
-            if ("ontouchstart" in window) {
-                this.canvas.addEventListener("touchstart", function (event:any) {
-                    var l = event.changedTouches.length;
-                    for (var i:number = 0; i < l && i < that.maxTouches; i++) {
-                        that.onTouchBegin(event.changedTouches[i]);
-                    }
-                    event.stopPropagation();
-                    event.preventDefault();
-                }, false);
 
-                this.canvas.addEventListener("touchmove", function (event:any) {
-                    var l = event.changedTouches.length;
-                    for (var i:number = 0; i < l && i < that.maxTouches; i++) {
-                        that.onTouchMove(event.changedTouches[i]);
-                    }
-                    event.stopPropagation();
-                    event.preventDefault();
-                }, false);
-
-                this.canvas.addEventListener("touchend", function (event:any) {
-                    var l = event.changedTouches.length;
-                    for (var i:number = 0; i < l && i < that.maxTouches; i++) {
-                        that.onTouchEnd(event.changedTouches[i]);
-                    }
-                    event.stopPropagation();
-                    event.preventDefault();
-                }, false);
-
-                this.canvas.addEventListener("touchcancel", function (event:any) {
-                    var l = event.changedTouches.length;
-                    for (var i:number = 0; i < l && i < that.maxTouches; i++) {
-                        that.onTouchEnd(event.changedTouches[i]);
-                    }
-                    event.stopPropagation();
-                    event.preventDefault();
-                }, false);
-            }
-            else {
-                this.canvas.addEventListener("mousedown", function (event) {
-                    that.onTouchBegin(event);
-                })
-
-                this.canvas.addEventListener("mousemove", function (event) {
-                    that.onTouchMove(event);
-                })
-
-                this.canvas.addEventListener("mouseup", function (event) {
-                    that.onTouchEnd(event);
-                })
-            }
         }
 
-        private touchDownTarget:any = {};
+        public touchDownTarget:any = {};
 
-        private onTouchBegin(event:any):void {
-            var location = TouchContext.getLocation(this.canvas, event);
-            var x = location.x;
-            var y = location.y;
-            var stage = MainContext.instance.stage;
-            var result:any = stage.hitTest(x, y);
-            if (result) {
-                var obj = this.getTouchData(event, x, y);
-                this.touchDownTarget[obj.identifier] = true;
-                obj.target = result;
-                obj.beginTarget = result;
-                this.dispatchEvent(TouchEvent.TOUCH_BEGAN, obj);
-            }
-        }
 
-        private onTouchMove(event:any) {
-            var location = TouchContext.getLocation(this.canvas, event);
-            var x = location.x;
-            var y = location.y;
-            var stage = MainContext.instance.stage;
-            var result = stage.hitTest(x, y);
-            if (result) {
-                var obj = this.getTouchData(event, x, y);
-                obj.target = result;
-                this.dispatchEvent(TouchEvent.TOUCH_MOVE, obj);
-            }
-        }
 
-        private onTouchEnd(event:any) {
-            var location = TouchContext.getLocation(this.canvas, event);
-            var x = location.x;
-            var y = location.y;
-            var stage = MainContext.instance.stage;
-            var result = stage.hitTest(x, y);
-            if (result) {
-                var obj = this.getTouchData(event, x, y);
-                delete this.touchDownTarget[obj.identifier];
-                var oldTarget = obj.beginTarget;
-                obj.target = result;
-                this.dispatchEvent(TouchEvent.TOUCH_END, obj);
-                if(oldTarget==result){
-                    this.dispatchEvent(TouchEvent.TOUCH_TAP, obj);
-                }
-                else if(obj.beginTarget){
-                    obj.target = obj.beginTarget;
-                    this.dispatchEvent(TouchEvent.TOUCH_RELEASE_OUTSIDE, obj);
-                }
-                delete this._currentTouchTarget[obj.identifier];
-            }
-        }
-
-        private getTouchData(event, x, y) {
+        public getTouchData(event, x, y) {
             var identifier = -1;
             if (event.hasOwnProperty("identifier")) {
                 identifier = event.identifier;
@@ -169,7 +70,7 @@ module ns_egret {
 
         private static touchEvent:TouchEvent = new TouchEvent("");
 
-        private dispatchEvent(type:string, data:any) {
+        public dispatchEvent(type:string, data:any) {
             var target:DisplayObject = data.target;
             var event:TouchEvent = TouchContext.touchEvent;
             event._type = type;
