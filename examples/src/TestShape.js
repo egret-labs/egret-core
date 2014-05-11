@@ -26,7 +26,7 @@ function getDescription(){
 function createExample(){
     var container = new ns_egret.DisplayObjectContainer();
     context.stage.addChild(container);
-
+/*
     var shape = new ns_egret.ShapeRect();
     shape.width = shape.height = 100;
     container.addChild(shape);
@@ -37,5 +37,13 @@ function createExample(){
     shape1.graphic.drawRect(200,200,100,100);
     shape1.graphic.endFill();
     container.addChild(shape1);
+*/
+
+    var shape2 = new ns_egret.Shape();
+    shape2.graphic.lineStyle(5,0xffff00,1);
+    shape2.graphic.lineTo(300,300);
+    shape2.graphic.endFill();
+    container.addChild(shape2);
+    shape2.x = 100;
 
 }

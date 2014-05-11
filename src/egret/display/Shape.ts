@@ -184,9 +184,13 @@ module ns_egret {
             this.commandQueue.push(new Command(
 
                 function (thinkness, color) {
-                    this.canvasContext.stroke();
+                    var _colorBlue = color & 0x0000FF;
+                    var _colorGreen = (color & 0x00ff00) >> 8;
+                    var _colorRed = color >> 16;
+                    var _colorStr = "rgba(" + _colorRed + "," + _colorGreen + "," + _colorBlue + "," + alpha + ")";
                     this.canvasContext.lineWidth = thickness;
-                    this.canvasContext.strokeStyle = color;
+                    this.canvasContext.strokeStyle = _colorStr;
+//                    this.canvasContext.stroke = color;
                 },
                 this,
                 [thickness, color]
@@ -200,11 +204,16 @@ module ns_egret {
          * @param y
          */
         public lineTo(x:number, y:number):void {
-
+            var rendererContext = <HTML5CanvasRenderer>this.renderContext;
             this.commandQueue.push(new Command(
-
                 function (x, y) {
-                    this.canvasContext.lineTo(x, y);
+                    var canvasContext:CanvasRenderingContext2D = this.canvasContext;
+
+                    canvasContext.beginPath();
+                    canvasContext.moveTo(rendererContext._transformTx, rendererContext._transformTx)
+                    canvasContext.lineTo(rendererContext._transformTx + x, rendererContext._transformTx + y)
+                    canvasContext.stroke();
+
                 },
                 this,
                 [x, y]
