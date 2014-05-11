@@ -32,7 +32,7 @@ module ns_egret {
                 this.canvas.addEventListener("touchstart", function (event:any) {
                     var l = event.changedTouches.length;
                     for (var i:number = 0; i < l && i < that.maxTouches; i++) {
-                        that.onTouchBegin(event.changedTouches[i]);
+                        that._onTouchBegin(event.changedTouches[i]);
                     }
                     event.stopPropagation();
                     event.preventDefault();
@@ -41,7 +41,7 @@ module ns_egret {
                 this.canvas.addEventListener("touchmove", function (event:any) {
                     var l = event.changedTouches.length;
                     for (var i:number = 0; i < l && i < that.maxTouches; i++) {
-                        that.onTouchMove(event.changedTouches[i]);
+                        that._onTouchMove(event.changedTouches[i]);
                     }
                     event.stopPropagation();
                     event.preventDefault();
@@ -50,7 +50,7 @@ module ns_egret {
                 this.canvas.addEventListener("touchend", function (event:any) {
                     var l = event.changedTouches.length;
                     for (var i:number = 0; i < l && i < that.maxTouches; i++) {
-                        that.onTouchEnd(event.changedTouches[i]);
+                        that._onTouchEnd(event.changedTouches[i]);
                     }
                     event.stopPropagation();
                     event.preventDefault();
@@ -59,7 +59,7 @@ module ns_egret {
                 this.canvas.addEventListener("touchcancel", function (event:any) {
                     var l = event.changedTouches.length;
                     for (var i:number = 0; i < l && i < that.maxTouches; i++) {
-                        that.onTouchEnd(event.changedTouches[i]);
+                        that._onTouchEnd(event.changedTouches[i]);
                     }
                     event.stopPropagation();
                     event.preventDefault();
@@ -67,69 +67,83 @@ module ns_egret {
             }
             else {
                 this.canvas.addEventListener("mousedown", function (event) {
-                    that.onTouchBegin(event);
+                    that._onTouchBegin(event);
                 })
 
                 this.canvas.addEventListener("mousemove", function (event) {
-                    that.onTouchMove(event);
+                    that._onTouchMove(event);
                 })
 
                 this.canvas.addEventListener("mouseup", function (event) {
-                    that.onTouchEnd(event);
+                    that._onTouchEnd(event);
                 })
             }
         }
 
 
-        private onTouchBegin(event:any):void {
-            var location = TouchContext.getLocation(this.canvas, event);
-            var x = location.x;
-            var y = location.y;
-            var stage = MainContext.instance.stage;
-            var result:any = stage.hitTest(x, y);
-            if (result) {
-                var obj = this.getTouchData(event, x, y);
-                this.touchDownTarget[obj.identifier] = true;
-                obj.target = result;
-                obj.beginTarget = result;
-                this.dispatchEvent(TouchEvent.TOUCH_BEGAN, obj);
+        private _onTouchBegin(event:any):void {
+            var location = this.getLocation(this.canvas, event);
+            var identifier = -1;
+            if (event.hasOwnProperty("identifier")) {
+                identifier = event.identifier;
             }
+            this.onTouchBegan(location.x,location.y,identifier);
         }
 
-        private onTouchMove(event:any) {
-            var location = TouchContext.getLocation(this.canvas, event);
-            var x = location.x;
-            var y = location.y;
-            var stage = MainContext.instance.stage;
-            var result = stage.hitTest(x, y);
-            if (result) {
-                var obj = this.getTouchData(event, x, y);
-                obj.target = result;
-                this.dispatchEvent(TouchEvent.TOUCH_MOVE, obj);
+        private _onTouchMove(event:any) {
+            var location = this.getLocation(this.canvas, event);
+            var identifier = -1;
+            if (event.hasOwnProperty("identifier")) {
+                identifier = event.identifier;
             }
+            this.onTouchMove(location.x,location.y,identifier);
+
         }
 
-        private onTouchEnd(event:any) {
-            var location = TouchContext.getLocation(this.canvas, event);
-            var x = location.x;
-            var y = location.y;
-            var stage = MainContext.instance.stage;
-            var result = stage.hitTest(x, y);
-            if (result) {
-                var obj = this.getTouchData(event, x, y);
-                delete this.touchDownTarget[obj.identifier];
-                var oldTarget = obj.beginTarget;
-                obj.target = result;
-                this.dispatchEvent(TouchEvent.TOUCH_END, obj);
-                if (oldTarget == result) {
-                    this.dispatchEvent(TouchEvent.TOUCH_TAP, obj);
-                }
-                else if (obj.beginTarget) {
-                    obj.target = obj.beginTarget;
-                    this.dispatchEvent(TouchEvent.TOUCH_RELEASE_OUTSIDE, obj);
-                }
-                delete this._currentTouchTarget[obj.identifier];
+        private _onTouchEnd(event:any) {
+
+            var location = this.getLocation(this.canvas, event);
+            var identifier = -1;
+            if (event.hasOwnProperty("identifier")) {
+                identifier = event.identifier;
             }
+            this.onTouchEnd(location.x,location.y,identifier);
+        }
+
+
+
+        private getLocation(canvas, event):Point {
+
+            var doc = document.documentElement;
+            var win = window;
+            var left, top, tx, ty;
+
+            if (typeof canvas.getBoundingClientRect === 'function') {
+                var box = canvas.getBoundingClientRect();
+                left = box.left;
+                top = box.top;
+            } else {
+                left = 0;
+                top = 0;
+            }
+
+            left += win.pageXOffset - doc.clientLeft;
+            top += win.pageYOffset - doc.clientTop;
+
+            if (event.pageX != null) { //not avalable in <= IE8
+                tx = event.pageX;
+                ty = event.pageY;
+            } else {
+                left -= document.body.scrollLeft;
+                top -= document.body.scrollTop;
+                tx = event.clientX;
+                ty = event.clientY;
+            }
+            var result = Point.identity;
+            result.x = (tx - left) / StageDelegate.getInstance().getScaleX();
+            result.y = (ty - top) / StageDelegate.getInstance().getScaleY();
+            return result;
+
         }
 
     }

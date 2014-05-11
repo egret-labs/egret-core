@@ -54,7 +54,7 @@ egret_h5.startGame = function () {
     context.rendererContext = new ns_egret.HTML5CanvasRenderer(canvas);
     context.netContext = new ns_egret.HTML5NetContext();
     context.soundContext = new ns_egret.SoundContext();
-    context.touchContext = new ns_egret.TouchContext(canvas);
+    context.touchContext = new ns_egret.HTML5TouchContext(canvas);
     context.deviceContext = new ns_egret.HTML5DeviceContext();
     context.stage = new ns_egret.Stage(canvas.width,canvas.height);
 

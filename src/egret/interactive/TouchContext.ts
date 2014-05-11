@@ -1,5 +1,3 @@
-
-
 /**
  * Copyright (c) Egret-Labs.org. Permission is hereby granted, free of charge,
  * to any person obtaining a copy of this software and associated documentation
@@ -31,9 +29,10 @@ module ns_egret {
      * @class ns_egret.TouchContext
      * @classdesc TouchContext是egret的触摸Context
      */
-    export class TouchContext extends HashObject{
-        public _currentTouchTarget:any = {};
+    export class TouchContext extends HashObject {
+        private _currentTouchTarget:any = {};
         public maxTouches:number = 2;
+        private touchDownTarget:any = {};
 
         public constructor() {
             super();
@@ -48,15 +47,7 @@ module ns_egret {
 
         }
 
-        public touchDownTarget:any = {};
-
-
-
-        public getTouchData(event, x, y) {
-            var identifier = -1;
-            if (event.hasOwnProperty("identifier")) {
-                identifier = event.identifier;
-            }
+        public getTouchData(identifier, x, y) {
             var obj = this._currentTouchTarget[identifier];
             if (obj == null) {
                 obj = {};
@@ -75,44 +66,52 @@ module ns_egret {
             var event:TouchEvent = TouchContext.touchEvent;
             event._type = type;
             event.touchPointID = data.identifier;
-            event.touchDown = (this.touchDownTarget[data.identifier]==true)
+            event.touchDown = (this.touchDownTarget[data.identifier] == true)
             event._stageX = data.stageX;
             event._stageY = data.stageY;
             target.dispatchEvent(event);
         }
 
-        public static getLocation(canvas, event):Point {
-
-            var doc = document.documentElement;
-            var win = window;
-            var left, top, tx, ty;
-
-            if (typeof canvas.getBoundingClientRect === 'function') {
-                var box = canvas.getBoundingClientRect();
-                left = box.left;
-                top = box.top;
-            } else {
-                left = 0;
-                top = 0;
+        public onTouchBegan(x:number, y:number, identifier:number):void {
+            var stage = MainContext.instance.stage;
+            var result:any = stage.hitTest(x, y);
+            if (result) {
+                var obj = this.getTouchData(identifier, x, y);
+                this.touchDownTarget[identifier] = true;
+                obj.target = result;
+                obj.beginTarget = result;
+                this.dispatchEvent(TouchEvent.TOUCH_BEGAN, obj);
             }
+        }
 
-            left += win.pageXOffset - doc.clientLeft;
-            top += win.pageYOffset - doc.clientTop;
-
-            if (event.pageX != null) { //not avalable in <= IE8
-                tx = event.pageX;
-                ty = event.pageY;
-            } else {
-                left -= document.body.scrollLeft;
-                top -= document.body.scrollTop;
-                tx = event.clientX;
-                ty = event.clientY;
+        public onTouchMove(x:number, y:number, identifier:number):void {
+            var stage = MainContext.instance.stage;
+            var result = stage.hitTest(x, y);
+            if (result) {
+                var obj = this.getTouchData(identifier, x, y);
+                obj.target = result;
+                this.dispatchEvent(TouchEvent.TOUCH_MOVE, obj);
             }
-            var result = Point.identity;
-            result.x = (tx - left) / StageDelegate.getInstance().getScaleX();
-            result.y = (ty - top) / StageDelegate.getInstance().getScaleY();
-            return result;
+        }
 
+        public onTouchEnd(x:number, y:number, identifier:number):void {
+            var stage = MainContext.instance.stage;
+            var result = stage.hitTest(x, y);
+            if (result) {
+                var obj = this.getTouchData(identifier, x, y);
+                delete this.touchDownTarget[identifier];
+                var oldTarget = obj.beginTarget;
+                obj.target = result;
+                this.dispatchEvent(TouchEvent.TOUCH_END, obj);
+                if (oldTarget == result) {
+                    this.dispatchEvent(TouchEvent.TOUCH_TAP, obj);
+                }
+                else if (obj.beginTarget) {
+                    obj.target = obj.beginTarget;
+                    this.dispatchEvent(TouchEvent.TOUCH_RELEASE_OUTSIDE, obj);
+                }
+                delete this._currentTouchTarget[obj.identifier];
+            }
         }
     }
 }
