@@ -23,6 +23,9 @@ module ns_egret {
 
     export class DeviceContext extends HashObject{
 
+
+        public frameRate:number = 60;
+
         public constructor(){
             super();
         }

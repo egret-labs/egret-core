@@ -18,15 +18,22 @@
 
 /// <reference path="../../core/HashObject.ts"/>
 /// <reference path="../../core/Ticker.ts"/>
+/// <reference path="DeviceContext.ts" />
 
 module ns_egret {
 
 
-    export class HTML5DeviceContext extends HashObject{
+    export class HTML5DeviceContext extends DeviceContext {
 
-        public constructor(){
+
+        private _time:number = 0;
+
+        public frameRate:number = 60;s
+
+        public constructor() {
             super();
         }
+
         static requestAnimationFrame:Function = window["requestAnimationFrame"] ||
             window["webkitRequestAnimationFrame"] ||
             window["mozRequestAnimationFrame"] ||
@@ -34,15 +41,20 @@ module ns_egret {
             window["msRequestAnimationFrame"] ||
             //如果全都没有，使用setTimeout实现
             function (callback) {
-                return window.setTimeout(callback, 1000 / Ticker.getInstance().getFrameRate());
+                return window.setTimeout(callback, 1000 / 60);
             };
 
 
         public executeMainLoop(callback:Function, thisObject:any):void {
 
 
+            var self = this;
+
             var enterFrame = function () {
-                callback.call(thisObject);
+                var thisTime:number = getTimer();
+                var advancedTime = thisTime - self._time;
+                callback.call(thisObject, advancedTime);
+                self._time = thisTime;
                 HTML5DeviceContext.requestAnimationFrame.call(window, enterFrame);
             }
 

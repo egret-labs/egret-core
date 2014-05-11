@@ -39,10 +39,8 @@ module ns_egret {
         };
 
 
-        private _time:number = 0;
         private _timeScale:number = 1;
         private _paused:boolean = false;
-        private _frameRate:number = 60;
 
         /**
          * 启动心跳控制器。
@@ -55,17 +53,17 @@ module ns_egret {
             context.executeMainLoop(this.update, this);
         }
 
-        private update() {
+        private update(advancedTime:number) {
             var list:Array<any> = this.callBackList.concat();
             var length:number = list.length;
-            var thisTime:number = getTimer();
-            var frameTime:number = thisTime - this._time;
+
+            var frameTime:number = advancedTime * this._timeScale;
+
             frameTime *= this._timeScale;
             for (var i:number = 0; i < length; i++) {
                 var eventBin:any = list[i];
                 eventBin.listener.call(eventBin.thisObject, frameTime);
             }
-            this._time = thisTime;
         }
 
         private callBackList:Array<any> = [];
@@ -79,7 +77,7 @@ module ns_egret {
          */
         public register(listener:Function, thisObject:any, priority = 0) {
             var list:Array<any> = this.callBackList;
-            this._insertEventBin(list,listener,thisObject,priority);
+            this._insertEventBin(list, listener, thisObject, priority);
         }
 
         /**
@@ -90,7 +88,7 @@ module ns_egret {
          */
         public unregister(listener:Function, thisObject:any) {
             var list:Array<any> = this.callBackList;
-            this._removeEventBin(list,listener,thisObject);
+            this._removeEventBin(list, listener, thisObject);
         }
 
         /**
@@ -125,14 +123,14 @@ module ns_egret {
             this.register(function (frameTime) {
                 if (delay == 0) {
                     that.unregister(arguments.callee, thisObject);
-                    listener.apply(thisObject,parameters);
+                    listener.apply(thisObject, parameters);
 
                 }
                 else {
                     passTime += frameTime;
                     if (passTime >= delay) {
                         that.unregister(arguments.callee, thisObject);
-                        listener.apply(thisObject,parameters);
+                        listener.apply(thisObject, parameters);
                     }
                 }
             }, thisObject)
@@ -153,11 +151,6 @@ module ns_egret {
         public resume() {
             this._paused = false;
         }
-
-        public getFrameRate() {
-            return this._frameRate;
-        }
-
 
         private static instance:ns_egret.Ticker;
 
