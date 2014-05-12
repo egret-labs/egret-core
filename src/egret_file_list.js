@@ -102,6 +102,7 @@ var temp = [
     "extension/gui/components/supportClasses/TrackBase.js",
     "extension/gui/components/supportClasses/SliderBase.js",
     "extension/gui/components/Label.js",
+    "extension/gui/components/Rect.js",
     "extension/gui/components/Button.js",
     "extension/gui/components/ToggleButton.js",
     "extension/gui/components/CheckBox.js",
