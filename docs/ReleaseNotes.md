@@ -1,8 +1,40 @@
 Egret Release Notes
 ===============================
 
+最近更新时间：2014年4月30日
 
 欢迎您使用Egret
+
+### Egret 0.9.3 Release Note ( Prerelease )
+
+#### 概述
+Egret 0.9.3主要进行了一系列代码重构，使其与Flash风格API更加相似，包括
+* 优化事件流的底层实现机制和API
+* 重构DisplayList，并调整部分API命名
+
+
+
+#### 向下兼容性变更
+
+* DisplayObject.addChild 改为只能传入一个child参数，并增加 DisplayObject.addChildAt 方法
+* EventDispatcher.addEventListener(type,listener,thisObject)中的listener的回调参数变更为一个Event对象
+
+```
+this.addEventListener(ns_egret.Event.ENTER_FRAME, this.enterFrame, this);
+private enterFrame(event:ns_egret.Event):void {
+    // your logic
+}
+```
+* DisplayObject.isRunning()被重定义为了DisplayObject.stage
+* 调整部分文件的包结构，如 egret/core/Event.ts 被移动至了 egret/events/Events.ts
+* 删除DisplayObject.getBounds()方法，添加DisplayObject.width / height属性取代
+* Stage构造函数现在需要传递参数 stageWidth,stageHeight，基于Egret0.9.2的项目请参见新模板进行修改
+* Egret命令行工具的编译命令调整为
+
+```
+egret b project_name
+```
+
 
 ### Egret 0.9.2 Release Note ( Prerelease )
 
