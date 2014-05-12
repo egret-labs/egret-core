@@ -105,7 +105,7 @@ function compileFileList(source, file_list) {
     var output_content = file_list.map(function (item) {
 
         if (item.indexOf("jslib") >= 0) return "";
-        if (item.indexOf("Native") >= 0) return "";
+//        if (item.indexOf("Native") >= 0) return "";
         return "///\<reference path=\"" + item.replace(".js", ".ts") + "\"/>";
 
 

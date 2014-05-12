@@ -1,5 +1,5 @@
 var temp = [
-	"egret/core/HashObject.js",
+    "egret/core/HashObject.js",
     "egret/utils/Recycler.js",
     "egret/utils/getTimer.js",
     "egret/utils/callLater.js",
@@ -36,7 +36,7 @@ var temp = [
     "egret/context/display/StageText.js",
     "egret/context/renderer/RendererContext.js",
 
-	"egret/interactive/InteractionMode.js",
+    "egret/interactive/InteractionMode.js",
     "egret/interactive/TouchContext.js",
     "egret/resource/ResourceLoader.js",
     "egret/resource/LoadingController.js",
@@ -68,7 +68,7 @@ var temp = [
     "extension/tilemap/TMXConst.js",
     "extension/tilemap/TMXMapInfo.js",
     //tileMap end
-	
+
     //GUI start
     "extension/gui/collections/ArrayCollection.js",
     "extension/gui/collections/ObjectCollection.js",
@@ -189,7 +189,8 @@ if (true) {//浏览器
 else {
     context_list = [
         "egret/context/devices/NativeDeviceContext.js",
-        "egret/context/renderer/NativeRendererContext.js"
+        "egret/context/renderer/NativeRendererContext.js",
+        "egret/interactive/NativeTouchContext.js"
     ]
 }
 
