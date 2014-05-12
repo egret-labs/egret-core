@@ -59,21 +59,21 @@ module ns_egret {
 		/**
 		 * 编译指定的XML对象为ActionScript类。
 		 * 注意:编译前要先注入flexlite-manifest.xml清单文件给manifestData属性。 清单文件可以用ManifestUtil类生成。
-		 * @param xmlData 要编译的dxml文件内容
+		 * @param skinData 要编译的dxml文件内容
 		 * @param className 要编译成的完整类名，包括包名。
 		 */		
-		public compile(xmlData:XML,className:string):string{
-			if(!xmlData||!className)
-				return "";
+		public parse(skinData:Object):any{
+			if(!skinData)
+				return null;
 			if(!this.skinConfig){
 				try{
 					this.skinConfig = Injector.getInstance("ISkinConfig");
 				}
 				catch(e){
-					this.skinConfig = new skinConfig(DXMLCompiler.configData);
+					this.skinConfig = new SkinConfig();
 				}
 			}
-			this.currentXML = new XML(xmlData);	
+			this.currentXML = new XML(skinData);	
 			this.delayAssignmentDic = {};
 			className = className.split("::").join(".");
 			this.currentClassName = className;

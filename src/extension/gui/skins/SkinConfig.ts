@@ -22,7 +22,7 @@
 
 module ns_egret {
 
-	export class DXMLConfig implements IDXMLConfig{
+	export class SkinConfig implements ISkinConfig{
 		/**
 		 * 构造函数
 		 */		
