@@ -27,6 +27,7 @@ var temp = [
     "egret/display/Stage.js",
     "egret/display/Bitmap.js",
     "egret/text/BitmapText.js",
+    "egret/display/Graphics.js",
     "egret/display/Shape.js",
     "egret/text/TextField.js",
     "egret/display/SpriteSheet.js",
