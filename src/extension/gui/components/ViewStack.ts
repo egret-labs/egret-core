@@ -135,7 +135,7 @@ module ns_egret {
 		public elementAdded(element:IVisualElement, index:number, notifyListeners:boolean=true):void{
 			if(this._createAllChildren){
 				if(element instanceof DisplayObject)
-					this._addToDisplayList(<DisplayObject> element, index);
+					this._addToDisplayList(<DisplayObject><any> element, index);
 			}
 			if (notifyListeners){
 				if (this.hasEventListener(ElementExistenceEvent.ELEMENT_ADD))

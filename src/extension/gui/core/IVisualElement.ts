@@ -30,7 +30,7 @@ module ns_egret {
 		 * 3.当此对象作为ItemRenderer时，owner指向DataGroup或者主机组件SkinnableDataContainer<br/>
 		 * 4.当此对象作为非显示对象容器IContainer的子项时,owner指向IContainer。
 		 */		
-		owner:Object;
+		owner:any;
 		/**
 		 * owner属性由框架内部管理，请不要自行改变它的值，否则可能引发未知的问题。
 		 */		

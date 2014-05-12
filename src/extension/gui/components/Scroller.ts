@@ -247,7 +247,7 @@ module ns_egret {
 
         private static easeOut(ratio:number):number
         {
-            var invRatio:Number = ratio - 1.0;
+            var invRatio:number = ratio - 1.0;
             return invRatio * invRatio * invRatio + 1;
         }
 
