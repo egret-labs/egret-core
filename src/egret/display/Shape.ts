@@ -114,12 +114,12 @@ module ns_egret {
                 this._colorDirty = false;
                 this._sizeDirty = false;
 
-                this.graphic.clear();
-                this.graphic.beginFill(this._color, this._alpha);
-                this.graphic.drawRect(0, 0, this._explicitWidth, this._explicitHeight);
+                this.graphics.clear();
+                this.graphics.beginFill(this._color, this._alpha);
+                this.graphics.drawRect(0, 0, this._explicitWidth, this._explicitHeight);
 
             }
-            this.graphic._draw();
+            this.graphics._draw();
         }
     }
 }
