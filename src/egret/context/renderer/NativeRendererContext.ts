@@ -94,7 +94,7 @@ module ns_egret {
          */
         public setTransform(matrix:ns_egret.Matrix) {
             console.log ("setTransform");
-            egret.Graphics.setMainMatix(matrix.a,matrix.b,matrix.c,matrix.d,matrix.tx,matrix.ty);
+            egret.Graphics.setMainMatrix(matrix.a,matrix.b,matrix.c,matrix.d,matrix.tx,matrix.ty);
         }
 
         /**
