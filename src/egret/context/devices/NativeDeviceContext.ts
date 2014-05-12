@@ -21,12 +21,12 @@
 module ns_egret {
 
 
-    export class NativeDeviceContext extends HashObject{
+    export class NativeDeviceContext extends HashObject {
 
         private callback:Function;
-        private thisObject;
+        private thisObject:any;
 
-        public constructor(){
+        public constructor() {
             super();
         }
 
@@ -37,8 +37,20 @@ module ns_egret {
             egret.runGame();
         }
 
-        public onEnterFrame():void {
-            this.callback.call(this.thisObject);
+        public onEnterFrame(advancedTime:number):void {
+            this.callback.call(this.thisObject,advancedTime);
         }
     }
+
+
+}
+
+module egret {
+
+    export function mainloop(advancedTime) {
+        var deviceContext = ns_egret.MainContext.instance.deviceContext;
+        deviceContext.onEnterFrame(advancedTime);
+    }
+
+
 }

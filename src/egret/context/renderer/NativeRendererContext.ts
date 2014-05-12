@@ -81,7 +81,6 @@ module ns_egret {
          */
         public drawImage(texture:Texture, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight) {
 
-            console.log ("draw");
             egret.Graphics.drawImage(texture,sourceX,sourceY,sourceWidth,sourceHeight,destX,destY,destWidth,destHeight);
 
             Profiler.getInstance().onDrawImage();
@@ -93,7 +92,6 @@ module ns_egret {
          * @stable A
          */
         public setTransform(matrix:ns_egret.Matrix) {
-            console.log ("setTransform");
             egret.Graphics.setMainMatrix(matrix.a,matrix.b,matrix.c,matrix.d,matrix.tx,matrix.ty);
         }
 
