@@ -166,7 +166,7 @@ module ns_egret {
             this.updateModal(UIGlobals.systemManager);
         }
 
-        private modalMask:UIComponent;
+        private modalMask:Rect;
         /**
          * 更新窗口模态效果
          */
@@ -183,11 +183,11 @@ module ns_egret {
             }
             if(found){
                 if(!this.modalMask){
-                    this.modalMask = new UIComponent();
+                    this.modalMask = new Rect();
                     this.modalMask.touchEnabled = true;
                     this.modalMask.top = this.modalMask.left = this.modalMask.right = this.modalMask.bottom = 0;
                 }
-               // (<Rect> modalMask).fillColor = this._modalColor;
+                this.modalMask.fillColor = this._modalColor;
                 this.modalMask.alpha = this._modalAlpha;
                 if(this.modalMask.parent==(<DisplayObjectContainer><any>systemManager)){
                     if(popUpContainer.getElementIndex(this.modalMask)<i)
