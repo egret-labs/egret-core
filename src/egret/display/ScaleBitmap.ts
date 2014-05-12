@@ -46,6 +46,8 @@ module ns_egret {
         private _bottomMiddleBitmap:ns_egret.Bitmap;
         private _bottomRightBitmap:ns_egret.Bitmap;
 
+        public spriteFrame:SpriteSheetFrame;
+
         constructor(private texture:Texture) {
             super();
             this._top = this._bottom = this._left = this._right = this._defaultPadding;
@@ -116,8 +118,20 @@ module ns_egret {
                 return;
             }
             var locTexture = this.texture;
-            var textureWidth = locTexture._textureWidth;
-            var textureHeight = locTexture._textureHeight;
+            var textureWidth;
+            var textureHeight;
+            if (this.spriteFrame){
+                textureWidth = this.spriteFrame.w;
+                textureHeight = this.spriteFrame.h;
+            }
+            else{
+                textureWidth = locTexture._textureWidth;
+                textureHeight = locTexture._textureHeight;
+            }
+            var offsetX = this.spriteFrame ? this.spriteFrame.x : 0;
+            var offsetY = this.spriteFrame ? this.spriteFrame.y : 0;
+
+
             var contentWidth = this._scaleWidth;
             var contentHeight = this._scaleHeight;
             if (!locTexture || contentWidth == 0 || contentHeight == 0) {
@@ -134,37 +148,37 @@ module ns_egret {
             var contentHorizontal = contentWidth - this._left - this._right;
 
             //左上块
-            this._topLeftBitmap.spriteFrame.x = 0;
-            this._topLeftBitmap.spriteFrame.y = 0;
+            this._topLeftBitmap.spriteFrame.x = 0 + offsetX;
+            this._topLeftBitmap.spriteFrame.y = 0 + offsetY;
             this._topLeftBitmap.spriteFrame.w = this._left;
             this._topLeftBitmap.spriteFrame.h = this._top;
 
             //中上块
-            this._topMiddleBitmap.spriteFrame.x = this._left;
-            this._topMiddleBitmap.spriteFrame.y = 0;
+            this._topMiddleBitmap.spriteFrame.x = this._left + offsetX;
+            this._topMiddleBitmap.spriteFrame.y = 0 + offsetY;
             this._topMiddleBitmap.spriteFrame.w = textureHorizontal;
             this._topMiddleBitmap.spriteFrame.h = this._top;
             this.setChildScaleX(this._topMiddleBitmap, contentHorizontal / textureHorizontal);
             this._topMiddleBitmap.x = this._left;
 
             //右上块
-            this._topRightBitmap.spriteFrame.x = textureWidth - this._right;
-            this._topRightBitmap.spriteFrame.y = 0;
+            this._topRightBitmap.spriteFrame.x = textureWidth - this._right + offsetX;
+            this._topRightBitmap.spriteFrame.y = 0 + offsetY;
             this._topRightBitmap.spriteFrame.w = this._right;
             this._topRightBitmap.spriteFrame.h = this._top;
             this._topRightBitmap.x = this._left + contentHorizontal;
 
             //左中块
-            this._middleLeftBitmap.spriteFrame.x = 0;
-            this._middleLeftBitmap.spriteFrame.y = this._top;
+            this._middleLeftBitmap.spriteFrame.x = 0 + offsetX;
+            this._middleLeftBitmap.spriteFrame.y = this._top + offsetY;
             this._middleLeftBitmap.spriteFrame.w = this._left;
             this._middleLeftBitmap.spriteFrame.h = textureVertical;
             this.setChildScaleY(this._middleLeftBitmap, contentVertical / textureVertical);
             this._middleLeftBitmap.y = this._top;
 
             //正中块
-            this._middleMiddleBitmap.spriteFrame.x = this._left;
-            this._middleMiddleBitmap.spriteFrame.y = this._top;
+            this._middleMiddleBitmap.spriteFrame.x = this._left + offsetX;
+            this._middleMiddleBitmap.spriteFrame.y = this._top + offsetY;
             this._middleMiddleBitmap.spriteFrame.w = textureHorizontal;
             this._middleMiddleBitmap.spriteFrame.h = textureVertical;
             this.setChildScaleX(this._middleMiddleBitmap, contentHorizontal / textureHorizontal);
@@ -173,8 +187,8 @@ module ns_egret {
             this._middleMiddleBitmap.y = this._top;
 
             //右中块
-            this._middleRightBitmap.spriteFrame.x = textureWidth - this._right;
-            this._middleRightBitmap.spriteFrame.y = this._top;
+            this._middleRightBitmap.spriteFrame.x = textureWidth - this._right + offsetX;
+            this._middleRightBitmap.spriteFrame.y = this._top + offsetY;
             this._middleRightBitmap.spriteFrame.w = this._right;
             this._middleRightBitmap.spriteFrame.h = textureVertical;
             this.setChildScaleY(this._middleRightBitmap, contentVertical / textureVertical);
@@ -182,15 +196,15 @@ module ns_egret {
             this._middleRightBitmap.y = this._top;
 
             //左下块
-            this._bottomLeftBitmap.spriteFrame.x = 0;
-            this._bottomLeftBitmap.spriteFrame.y = textureHeight - this._bottom;
+            this._bottomLeftBitmap.spriteFrame.x = 0 + offsetX;
+            this._bottomLeftBitmap.spriteFrame.y = textureHeight - this._bottom + offsetY;
             this._bottomLeftBitmap.spriteFrame.w = this._left;
             this._bottomLeftBitmap.spriteFrame.h = this._bottom;
             this._bottomLeftBitmap.y = this._top + contentVertical;
 
             //中下块
-            this._bottomMiddleBitmap.spriteFrame.x = this._left;
-            this._bottomMiddleBitmap.spriteFrame.y = textureHeight - this._bottom;
+            this._bottomMiddleBitmap.spriteFrame.x = this._left + offsetX;
+            this._bottomMiddleBitmap.spriteFrame.y = textureHeight - this._bottom + offsetY;
             this._bottomMiddleBitmap.spriteFrame.w = textureHorizontal;
             this._bottomMiddleBitmap.spriteFrame.h = this._bottom;
             this.setChildScaleX(this._bottomMiddleBitmap, contentHorizontal / textureHorizontal);
@@ -198,8 +212,8 @@ module ns_egret {
             this._bottomMiddleBitmap.y = this._top + contentVertical;
 
             //右下块
-            this._bottomRightBitmap.spriteFrame.x = textureWidth - this._right;
-            this._bottomRightBitmap.spriteFrame.y = textureHeight - this._bottom;
+            this._bottomRightBitmap.spriteFrame.x = textureWidth - this._right + offsetX;
+            this._bottomRightBitmap.spriteFrame.y = textureHeight - this._bottom + offsetY;
             this._bottomRightBitmap.spriteFrame.w = this._right;
             this._bottomRightBitmap.spriteFrame.h = this._bottom;
             this._bottomRightBitmap.x = this._left + contentHorizontal;
