@@ -27,6 +27,7 @@ var temp = [
     "egret/display/Stage.js",
     "egret/display/Bitmap.js",
     "egret/text/BitmapText.js",
+    "egret/display/Graphics.js",
     "egret/display/Shape.js",
     "egret/text/TextField.js",
     "egret/display/SpriteSheet.js",
@@ -42,8 +43,8 @@ var temp = [
     "egret/texture/Texture.js",
     "egret/texture/TextureCache.js",
     "egret/context/net/NetContext.js",
-    "egret/context/net/HTML5NetContext.js",
-	"egret/display/ScaleBitmap.js",
+    "egret/context/devices/DeviceContext.js",
+    "egret/display/ScaleBitmap.js",
     //utils start
     "jslib/ZipUtils.js",
     "jslib/base64.js",
@@ -67,8 +68,7 @@ var temp = [
     "extension/tilemap/TMXConst.js",
     "extension/tilemap/TMXMapInfo.js",
     //tileMap end
-
-
+	
     //GUI start
     "extension/gui/collections/ArrayCollection.js",
     "extension/gui/collections/ObjectCollection.js",
@@ -179,7 +179,9 @@ if (true) {//浏览器
     context_list = [
         "egret/context/devices/HTML5DeviceContext.js",
         "egret/context/renderer/HTML5CanvasRenderer.js",
-        "egret/context/sound/HTML5SoundContext.js"
+        "egret/context/sound/HTML5SoundContext.js",
+        "egret/context/net/HTML5NetContext.js",
+        "egret/interactive/HTML5TouchContext.js"
 
     ]
 }
@@ -200,7 +202,7 @@ var __extends = this.__extends || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
     if (!b){
-        console.log(d.toString() + "extends Error");
+        console.log ("what?")
     }
     __.prototype = b.prototype;
     d.prototype = new __();

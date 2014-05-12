@@ -63,8 +63,10 @@ function onGet(request, response) {
                 } else {
                     var contentType = mine[ext] || "text/plain";
                     response.writeHead(200, {
-                        'Content-Type': contentType
+                        'Content-Type': contentType,
+                        'Access-Control-Allow-Origin': '*'
                     });
+//                    response.setHeader();
                     response.write(file, "binary");
                     response.end();
                 }

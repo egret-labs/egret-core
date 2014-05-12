@@ -36,11 +36,12 @@ module ns_egret {
         private _currentInterval = 0;
         private _isPlaying:boolean = false;
         private _passTime:number = 0;
-        private _oneFrameTime = 1000 / Ticker.getInstance().getFrameRate();
+        private _oneFrameTime = 1000 / 60;
 
         constructor(public data, public texture:Texture) {
             super();
             this._frameData = data;
+            this._oneFrameTime = 1000 / ns_egret.MainContext.instance.deviceContext.frameRate;
         }
 
         /**

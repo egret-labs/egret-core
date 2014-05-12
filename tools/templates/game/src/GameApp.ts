@@ -39,8 +39,8 @@ class GameApp {
 
         var stageW = stage.stageWidth;
         var stageH = stage.stageHeight;
-        var skyW = sky.getBounds().width;
-        var skyH = sky.getBounds().height;
+        var skyW = sky.width;
+        var skyH = sky.height;
 
         sky.scaleX = stageW / skyW;
         sky.scaleY = stageH / skyH;
@@ -118,7 +118,7 @@ class GameApp {
             colorLabel.size = 40;
             textContainer.addChild(colorLabel);
 
-            w += colorLabel.getBounds().width;
+            w += colorLabel.width;
         }
     }
 
