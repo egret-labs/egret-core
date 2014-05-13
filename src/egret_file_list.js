@@ -22,6 +22,7 @@ var temp = [
     "egret/core/Logger.js",
     "egret/core/StageDelegate.js",
     "egret/core/RenderFilter.js",
+    "egret/core/Injector.js",
     "egret/display/DisplayObject.js",
     "egret/display/DisplayObjectContainer.js",
     "egret/display/Stage.js",
@@ -38,6 +39,7 @@ var temp = [
 
 	"egret/interactive/InteractionMode.js",
     "egret/interactive/TouchContext.js",
+    "egret/context/assets/AssetsContext.js",
     "egret/resource/ResourceLoader.js",
     "egret/resource/LoadingController.js",
     "egret/texture/Texture.js",
@@ -92,7 +94,8 @@ if (true) {//浏览器
         "egret/context/renderer/HTML5CanvasRenderer.js",
         "egret/context/sound/HTML5SoundContext.js",
         "egret/context/net/HTML5NetContext.js",
-        "egret/interactive/HTML5TouchContext.js"
+        "egret/interactive/HTML5TouchContext.js",
+        "egret/context/assets/HTML5AssetsContext.js",
 
     ]
 }
