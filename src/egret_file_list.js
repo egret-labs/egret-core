@@ -175,8 +175,17 @@ var temp = [
 
 var context_list;
 
-if (true) {//浏览器
+if (this.hasOwnProperty("egret") && egret.config && egret.config.runtime == 1) {
 
+
+    context_list = [
+        "egret/context/devices/NativeDeviceContext.js",
+        "egret/context/renderer/NativeRendererContext.js",
+        "egret/interactive/NativeTouchContext.js"
+    ]
+
+}
+else {//浏览器
     context_list = [
         "egret/context/devices/HTML5DeviceContext.js",
         "egret/context/renderer/HTML5CanvasRenderer.js",
@@ -184,13 +193,6 @@ if (true) {//浏览器
         "egret/context/net/HTML5NetContext.js",
         "egret/interactive/HTML5TouchContext.js"
 
-    ]
-}
-else {
-    context_list = [
-        "egret/context/devices/NativeDeviceContext.js",
-        "egret/context/renderer/NativeRendererContext.js",
-        "egret/interactive/NativeTouchContext.js"
     ]
 }
 
