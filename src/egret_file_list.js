@@ -160,9 +160,7 @@ var temp = [
     "extension/gui/managers/SystemContainer.js",
     "extension/gui/managers/SystemManager.js",
     "extension/gui/managers/impl/PopUpManagerImpl.js",
-    "extension/gui/managers/impl/SkinManagerImpl.js",
     "extension/gui/managers/PopUpManager.js",
-    "extension/gui/managers/SkinManager.js",
     //GUI end
 //    "extension/gui/component/DynamicBitmap.js",
     "extension/dragonbones/dragonBones.js",
