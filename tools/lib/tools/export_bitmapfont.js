@@ -9,20 +9,21 @@
 var fs = require("fs");
 var path = require("path");
 
+var sourceFile;
 
 function run(currDir, args, opts) {
-    var fntFilePath = args[0];
-    if (!fntFilePath){
+    sourceFile = args[0];
+    if (!sourceFile){
         console.log ("missing arguments .fnt file");
         return;
     }
-    var stat = fs.existsSync(fntFilePath);
+    var stat = fs.existsSync(sourceFile);
     if (!stat){
         console.log ("can't open .fnt file");
         return;
     }
 
-    var fntText = fs.readFileSync(fntFilePath,"utf-8");
+    var fntText = fs.readFileSync(sourceFile,"utf-8");
 
     fntText = fntText.split("\r\n").join("\n");
     var lines = fntText.split("\n");
@@ -56,11 +57,10 @@ function exportEgretObject(obj){
     var str = JSON.stringify(obj);
     str = str.replace(/\\\"/gi,"");
 
-    console.log("输出Jfnt Data文件:");
-    console.log(str);
-    // str = "var data =" + str.replace(/\\\"/gi,"") + ";";
-    // var writePath = fntFilePath.replace(".fnt",".egf");
-    // fs.writeFileSync(writePath,str,"utf-8");
+    console.log("自定义字体生成完毕！");
+
+    var saveFile = sourceFile.replace(".fnt", ".jfnt");
+    fs.writeFile(saveFile, str);
 }
 
 
