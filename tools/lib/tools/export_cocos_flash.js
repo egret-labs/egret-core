@@ -24,20 +24,22 @@ var plist = require('../core/plist');
 var totalData = {};
 var sourceArr = [];
     
+var sourceFile;
+
 function run(currDir, args, opts) {
-    var ccbFilePath = args[0];
-    if (!ccbFilePath) {
+    sourceFile = args[0];
+    if (!sourceFile) {
         console.log("missing arguments .ccb file");
         return;
     }
 
-    var stat = fs.existsSync(ccbFilePath);
+    var stat = fs.existsSync(sourceFile);
     if (!stat) {
         console.log("can't open .ccb file");
         return;
     }
 
-    var config = plist.parseFileSync(ccbFilePath);
+    var config = plist.parseFileSync(sourceFile);
 
     linkChildren(config.nodeGraph);
 }
@@ -56,10 +58,14 @@ function linkChildren(rootNode) {
         viewData[linkName] = data;
     });
 
+
     //最后 输出的格式
     var rootData = {"viewData" : viewData, "resourceData" : sourceArr};
-    console.log ("输出ViewData文件:\n");
-    console.log(JSON.stringify(rootData, null, ""));
+
+    console.log("jmc生成完毕！");
+
+    var saveFile = sourceFile.replace(".ccb", ".jmc");
+    fs.writeFile(saveFile, JSON.stringify(rootData, null, ""));
 }
 
 function loop(container, parent, parentData) {
