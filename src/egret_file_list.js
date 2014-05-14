@@ -15,6 +15,8 @@ var temp = [
     "egret/core/VerticalAlign.js",
     "egret/utils/Timer.js",
     "egret/utils/getQualifiedClassName.js",
+    "egret/utils/getDefinitionByName.js",
+    "egret/utils/hasDefinition.js",
     "egret/utils/toColorString.js",
     "egret/geom/Matrix.js",
     "egret/geom/Point.js",
