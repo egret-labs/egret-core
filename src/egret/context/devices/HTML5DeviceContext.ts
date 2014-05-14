@@ -16,9 +16,8 @@
  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-/// <reference path="../../core/HashObject.ts"/>
-/// <reference path="../../core/Ticker.ts"/>
-/// <reference path="DeviceContext.ts" />
+/// <reference path="DeviceContext.ts"/>
+/// <reference path="../../utils/getTimer.ts"/>
 
 module ns_egret {
 

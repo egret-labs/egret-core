@@ -18,10 +18,8 @@
 
 /// <reference path="../core/HashObject.ts"/>
 /// <reference path="../core/MainContext.ts"/>
-/// <reference path="../core/StageDelegate.ts"/>
 /// <reference path="../display/DisplayObject.ts"/>
 /// <reference path="../events/TouchEvent.ts"/>
-/// <reference path="../geom/Point.ts"/>
 
 module ns_egret {
     /**
