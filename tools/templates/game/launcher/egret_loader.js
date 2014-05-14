@@ -1,5 +1,19 @@
 /**
- * Created by apple on 14-2-27.
+ * Copyright (c) Egret-Labs.org. Permission is hereby granted, free of charge,
+ * to any person obtaining a copy of this software and associated documentation
+ * files (the "Software"), to deal in the Software without restriction, including
+ * without limitation the rights to use, copy, modify, merge, publish, distribute,
+ * sublicense, and/or sell copies of the Software, and to permit persons to whom
+ * the Software is furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included
+ * in all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
+ * INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR
+ * PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE
+ * FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+ * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
 egret_h5 = {};
@@ -8,32 +22,18 @@ egret_h5.prefix = "";
 
 egret_h5.loadScript = function (list, callback) {
     var loaded = 0;
-    if (navigator.userAgent.indexOf("Trident/5") > -1) {
-        //ie9
-        var loadNext = function () {
-            egret_h5.loadSingleScript(egret_h5.prefix + list[loaded], function () {
-                loaded++;
-                if (loaded >= list.length) {
-                    callback();
-                }
-                else {
-                    loadNext();
-                }
-            })
-        };
-        loadNext();
-    }
-    else {
-        list.forEach(function (f, i) {
-
-            egret_h5.loadSingleScript(egret_h5.prefix + f, function () {
-                loaded++;
-                if (loaded >= list.length) {
-                    callback();
-                }
-            })
-        });
-    }
+    var loadNext = function () {
+        egret_h5.loadSingleScript(egret_h5.prefix + list[loaded], function () {
+            loaded++;
+            if (loaded >= list.length) {
+                callback();
+            }
+            else {
+                loadNext();
+            }
+        })
+    };
+    loadNext();
 }
 
 egret_h5.loadSingleScript = function (src, callback) {
@@ -57,7 +57,7 @@ egret_h5.startGame = function () {
     context.soundContext = new ns_egret.SoundContext();
     context.touchContext = new ns_egret.HTML5TouchContext(canvas);
     context.deviceContext = new ns_egret.HTML5DeviceContext();
-    context.stage = new ns_egret.Stage(canvas.width,canvas.height);
+    context.stage = new ns_egret.Stage(canvas.width, canvas.height);
 
     ns_egret.ResourceLoader.prefix = "assets/480/";
     ns_egret.RendererContext.CONTENT_SCALE_FACTOR = 1;
