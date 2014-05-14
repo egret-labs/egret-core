@@ -17,6 +17,7 @@
  */
 
 /// <reference path="../core/Logger.ts"/>
+/// <reference path="../core/MainContext.ts"/>
 /// <reference path="../core/Ticker.ts"/>
 /// <reference path="Bitmap.ts"/>
 /// <reference path="DisplayObjectContainer.ts"/>

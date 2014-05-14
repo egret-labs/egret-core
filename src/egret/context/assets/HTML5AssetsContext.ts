@@ -19,7 +19,6 @@
 /// <reference path="AssetsContext.ts"/>
 /// <reference path="../../resource/LoadingController.ts"/>
 /// <reference path="../../resource/ResourceLoader.ts"/>
-/// <reference path="../../texture/TextureCache.ts"/>
 
 module ns_egret {
 
