@@ -49,7 +49,7 @@ module ns_egret {
     }
 
 
-    var __getQualifiedClassName__cache = {};
+    var __getQualifiedClassName__cache:Object = {};
 
 
 }

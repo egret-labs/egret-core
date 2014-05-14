@@ -15,7 +15,11 @@
  * FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-///<reference path="TouchContext.ts" />
+
+/// <reference path="../core/StageDelegate.ts"/>
+/// <reference path="../geom/Point.ts"/>
+/// <reference path="TouchContext.ts"/>
+
 module ns_egret {
 
 
@@ -65,18 +69,35 @@ module ns_egret {
                     event.preventDefault();
                 }, false);
             }
+            else if (window.navigator.msPointerEnabled) {
+                this.canvas.addEventListener("MSPointerDown", function (event:any) {
+                    that._onTouchBegin(event);
+                    event.stopPropagation();
+                    event.preventDefault();
+                }, false);
+                this.canvas.addEventListener("MSPointerMove", function (event:any) {
+                    that._onTouchMove(event);
+                    event.stopPropagation();
+                    event.preventDefault();
+                }, false);
+                this.canvas.addEventListener("MSPointerUp", function (event:any) {
+                    that._onTouchEnd(event);
+                    event.stopPropagation();
+                    event.preventDefault();
+                }, false);
+            }
             else {
                 this.canvas.addEventListener("mousedown", function (event) {
                     that._onTouchBegin(event);
-                })
+                });
 
                 this.canvas.addEventListener("mousemove", function (event) {
                     that._onTouchMove(event);
-                })
+                });
 
                 this.canvas.addEventListener("mouseup", function (event) {
                     that._onTouchEnd(event);
-                })
+                });
             }
         }
 
@@ -87,7 +108,7 @@ module ns_egret {
             if (event.hasOwnProperty("identifier")) {
                 identifier = event.identifier;
             }
-            this.onTouchBegan(location.x,location.y,identifier);
+            this.onTouchBegan(location.x, location.y, identifier);
         }
 
         private _onTouchMove(event:any) {
@@ -96,20 +117,18 @@ module ns_egret {
             if (event.hasOwnProperty("identifier")) {
                 identifier = event.identifier;
             }
-            this.onTouchMove(location.x,location.y,identifier);
+            this.onTouchMove(location.x, location.y, identifier);
 
         }
 
         private _onTouchEnd(event:any) {
-
             var location = this.getLocation(this.canvas, event);
             var identifier = -1;
             if (event.hasOwnProperty("identifier")) {
                 identifier = event.identifier;
             }
-            this.onTouchEnd(location.x,location.y,identifier);
+            this.onTouchEnd(location.x, location.y, identifier);
         }
-
 
 
         private getLocation(canvas, event):Point {

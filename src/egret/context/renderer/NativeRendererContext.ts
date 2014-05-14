@@ -19,6 +19,7 @@
 /// <reference path="RendererContext.ts"/>
 /// <reference path="../../core/HashObject.ts"/>
 /// <reference path="../../core/Profiler.ts"/>
+/// <reference path="../../display/Graphics.ts"/>
 /// <reference path="../../geom/Matrix.ts"/>
 /// <reference path="../../geom/Rectangle.ts"/>
 /// <reference path="../../text/TextField.ts"/>
