@@ -18,30 +18,30 @@
 
 module ns_egret {
 
-    var __getDefinitionByName__cache = {};
+    var __getDefinitionByName__cache:Object = {};
     /**
      * 返回 name 参数指定的类的类对象引用。
      * @param name 类的名称。
      * @returns {any} 返回 name 参数指定的类的类对象引用。
      */
-    export function getDefinitionByName(name:String):any{
+    export function getDefinitionByName(name:string):any{
         if(!name)
             return null;
-        var target:any = __getDefinitionByName__cache[name];
-        if(target){
-            return target;
+        var definition:any = __getDefinitionByName__cache[name];
+        if(definition){
+            return definition;
         }
         var paths:Array<string> = name.split(".");
         var length:number = paths.length;
-        target = window;
+        definition = window;
         for(var i:number=0;i<length;i++){
             var path:string = paths[i];
-            target = target[path];
-            if(!target){
+            definition = definition[path];
+            if(!definition){
                 return null;
             }
         }
-        __getDefinitionByName__cache[name] = target;
-        return target;
+        __getDefinitionByName__cache[name] = definition;
+        return definition;
     }
 }
