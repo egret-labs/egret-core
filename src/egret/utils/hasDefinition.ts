@@ -24,6 +24,8 @@ module ns_egret {
       * 检查指定的应用程序域之内是否存在一个公共定义。该定义可以是一个类、一个命名空间或一个函数的定义。
       * @param name 定义的名称。
       * @returns {boolean} 如果指定的定义存在，则返回 true 值；否则，返回 false。
+      * @example
+      * ns_egret.hasDefinition("ns_egret.DisplayObject") //返回 true
       */
     export function hasDefinition(name:string):boolean{
         var definition:any = getDefinitionByName(name);

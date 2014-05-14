@@ -23,6 +23,8 @@ module ns_egret {
      * 返回 name 参数指定的类的类对象引用。
      * @param name 类的名称。
      * @returns {any} 返回 name 参数指定的类的类对象引用。
+     * @example
+     * ns_egret.getDefinitionByName("ns_egret.DisplayObject") //返回 DisplayObject类定义
      */
     export function getDefinitionByName(name:string):any{
         if(!name)
