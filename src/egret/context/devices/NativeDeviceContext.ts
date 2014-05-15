@@ -17,6 +17,7 @@
  */
 
 /// <reference path="../../core/HashObject.ts"/>
+/// <reference path="../../core/MainContext.ts"/>
 
 module ns_egret {
 

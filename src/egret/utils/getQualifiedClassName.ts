@@ -16,8 +16,6 @@
  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-/// <reference path="getTimer.ts"/>
-
 module ns_egret {
     /**
      * 在window上需要读取的命名空间属性列表

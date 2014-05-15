@@ -17,6 +17,7 @@
  */
 
 /// <reference path="../../../egret/display/Graphics.ts"/>
+/// <reference path="../../../egret/display/Shape.ts"/>
 /// <reference path="../core/UIComponent.ts"/>
 
 module ns_egret {
