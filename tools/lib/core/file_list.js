@@ -100,6 +100,7 @@ exports.html5 = [
 
 exports.native = [
     "egret/context/devices/NativeDeviceContext.js",
-    "egret/context/renderer/NativeRendererContext.js"
+    "egret/context/renderer/NativeRendererContext.js",
+    "egret/interactive/NativeTouchContext.js"
 
 ]

@@ -24,6 +24,7 @@
 /// <reference path="../../geom/Rectangle.ts"/>
 /// <reference path="../../text/TextField.ts"/>
 /// <reference path="../../texture/Texture.ts"/>
+/// <reference path="../NativeContext.d.ts"/>
 
 module ns_egret {
     /**
@@ -54,7 +55,7 @@ module ns_egret {
          * @private
          */
         public clearScreen() {
-            egret.Graphics.clearScreen(255,255,255);
+            egret_native.Graphics.clearScreen(255,255,255);
         }
 
 
@@ -83,7 +84,7 @@ module ns_egret {
         public drawImage(texture:Texture, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight) {
 
             console.log ("draw");
-            egret.Graphics.drawImage(texture,sourceX,sourceY,sourceWidth,sourceHeight,destX,destY,destWidth,destHeight);
+            egret_native.Graphics.drawImage(texture,sourceX,sourceY,sourceWidth,sourceHeight,destX,destY,destWidth,destHeight);
 
             Profiler.getInstance().onDrawImage();
         }
@@ -95,7 +96,7 @@ module ns_egret {
          */
         public setTransform(matrix:ns_egret.Matrix) {
             console.log ("setTransform");
-            egret.Graphics.setMainMatix(matrix.a,matrix.b,matrix.c,matrix.d,matrix.tx,matrix.ty);
+            egret_native.Graphics.setTransform(matrix.a,matrix.b,matrix.c,matrix.d,matrix.tx,matrix.ty);
         }
 
         /**
