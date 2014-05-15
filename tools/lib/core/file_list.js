@@ -1,5 +1,8 @@
-var temp = [
-	"egret/core/HashObject.js",
+/**
+ * Created by apple on 14-5-15.
+ */
+exports.core = [
+    "egret/core/HashObject.js",
     "egret/utils/Recycler.js",
     "egret/utils/getTimer.js",
     "egret/utils/callLater.js",
@@ -39,7 +42,7 @@ var temp = [
     "egret/context/display/StageText.js",
     "egret/context/renderer/RendererContext.js",
 
-	"egret/interactive/InteractionMode.js",
+    "egret/interactive/InteractionMode.js",
     "egret/interactive/TouchContext.js",
     "egret/context/assets/AssetsContext.js",
     "egret/resource/ResourceLoader.js",
@@ -82,44 +85,21 @@ var temp = [
     "extension/dragonbones/dragonBones.js",
     "extension/dragonbones/DragonBonesEgretBridge.js",
     "jslib/DEBUG.js",
-    "jslib/box2d.js",
+//    "jslib/box2d.js",
     "jslib/NumberUtils.js"
 ]
 
+exports.html5 = [
+    "egret/context/devices/HTML5DeviceContext.js",
+    "egret/context/renderer/HTML5CanvasRenderer.js",
+    "egret/context/sound/HTML5SoundContext.js",
+    "egret/context/net/HTML5NetContext.js",
+    "egret/interactive/HTML5TouchContext.js",
+    "egret/context/assets/HTML5AssetsContext.js"
+]
 
-var context_list;
+exports.native = [
+    "egret/context/devices/NativeDeviceContext.js",
+    "egret/context/renderer/NativeRendererContext.js"
 
-if (true) {//浏览器
-
-    context_list = [
-        "egret/context/devices/HTML5DeviceContext.js",
-        "egret/context/renderer/HTML5CanvasRenderer.js",
-        "egret/context/sound/HTML5SoundContext.js",
-        "egret/context/net/HTML5NetContext.js",
-        "egret/interactive/HTML5TouchContext.js",
-        "egret/context/assets/HTML5AssetsContext.js",
-
-    ]
-}
-else {
-    context_list = [
-        "egret/context/devices/NativeDeviceContext.js",
-        "egret/context/renderer/NativeRendererContext.js"
-    ]
-}
-
-
-egret_file_list = temp.concat(context_list);
-
-
-
-
-var __extends = this.__extends || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    if (!b){
-        console.log ("what?")
-    }
-    __.prototype = b.prototype;
-    d.prototype = new __();
-};
+]

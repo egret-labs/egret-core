@@ -151,3 +151,4 @@ exports.require = _require;
 exports.copy = copy;
 exports.deleteFileSync = remove;
 exports.exit = _exit;
+exports.mkdir = mkdirSync;
