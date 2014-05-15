@@ -70,7 +70,13 @@ function buildAllFile(callback, source, output, file_list) {
 
 
             ts.on('exit', function (code) {
-                callback(null, source);
+                if (code == 0){
+                    callback(null, source);
+                }
+                else{
+                    console.log("编译失败");
+                }
+
             });
         }
 
