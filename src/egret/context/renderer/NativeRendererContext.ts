@@ -119,7 +119,7 @@ module ns_egret {
          * @stable A
          */
         public setAlpha(value:number, blendMode:ns_egret.BlendMode) {
-
+            egret_native.Graphics.setGlobalAlpha(value);
         }
 
 

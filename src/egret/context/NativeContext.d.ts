@@ -43,6 +43,8 @@ declare module egret_native {
 
         function setTransform(a:number, b:number, c:number, d:number, tx:number, ty:number):void;
 
+        function setGlobalAlpha(alpha:number):void;
+
 
     }
 }
