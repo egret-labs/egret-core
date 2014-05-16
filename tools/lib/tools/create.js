@@ -18,6 +18,7 @@ function run(currDir, args, opts) {
         libs.exit(1001);
     }
 
+    var runtime = param.getOption(opts,"--runtime",["html5","native"]);
     var egret_file = path.join(currDir, projectName, "bin-debug/lib/egret_file_list.js");
 
     async.series([
@@ -29,7 +30,7 @@ function run(currDir, args, opts) {
 
         function (callback) {
 
-            compiler.generateEgretFileList(callback,egret_file);
+            compiler.generateEgretFileList(callback,egret_file,runtime);
 
         },
 

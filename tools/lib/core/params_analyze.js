@@ -46,6 +46,18 @@ function _getEnv(){
     return process.env;
 }
 
+function getOption(option,key,enumList){
+    if (!option[key]){
+        return enumList[0];
+    }
+
+    var value = option[key][0]
+    if (!value || enumList.indexOf(value) == -1){
+        libs.exit(8001,key,enumList);
+    }
+    return value;
+}
+
 
 exports.getEnv = _getEnv;
 
@@ -63,3 +75,5 @@ exports.getEgretPath = function(){
 
 
 exports.getArgv = getArgv;
+
+exports.getOption = getOption;

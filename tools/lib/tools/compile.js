@@ -70,10 +70,10 @@ function buildAllFile(callback, source, output, file_list) {
 
 
             ts.on('exit', function (code) {
-                if (code == 0){
+                if (code == 0) {
                     callback(null, source);
                 }
-                else{
+                else {
                     console.log("编译失败");
                 }
 
@@ -147,9 +147,10 @@ function build(callback, source, output) {
     });
 }
 
-function generateEgretFileList(callback, egret_file) {
+function generateEgretFileList(callback, egret_file, runtime) {
     var file_list = require("../core/file_list.js");
-    var required_file_list = file_list.core.concat(file_list.html5);
+    var required_file_list = file_list.core.concat(file_list[runtime]);
+
     var content = required_file_list.map(function (item) {
         return "\"" + item + "\""
     }).join(",\n")

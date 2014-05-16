@@ -141,7 +141,7 @@ function _exit(code){
     if (!message){
         _exit(9999,code);
     }
-    console.log (formatStdoutString(message).replace("{0}",arguments[1]));
+    console.log (formatStdoutString(message).replace("{0}",arguments[1]).replace("{1}",arguments[2]));
     process.exit(code);
 }
 
