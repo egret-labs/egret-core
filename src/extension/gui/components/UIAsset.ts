@@ -30,7 +30,19 @@
 
 module ns_egret {
 
+	/**
+	 * @class ns_egret.UIAsset
+	 * @classdesc
+	 * 素材包装器。<p/>
+	 * 注意：UIAsset仅在添skin时测量一次初始尺寸， 请不要在外部直接修改skin尺寸，
+	 * 若做了引起skin尺寸发生变化的操作, 需手动调用UIAsset的invalidateSize()进行重新测量。
+	 * @extends ns_egret.UIComponent
+	 * @implements ns_egret.ISkinnableClient
+	 */
 	export class UIAsset extends UIComponent implements ISkinnableClient{
+		/**
+		 * @method ns_egret.UIAsset#constructor
+		 */
 		public constructor(){
 			super();
 			this.touchChildren = false;
@@ -39,6 +51,7 @@ module ns_egret {
 		private skinNameChanged:boolean = false;
 		/**
 		 * 外部显式设置了皮肤名
+		 * @member ns_egret.UIAsset#skinNameExplicitlySet
 		 */		
 		public skinNameExplicitlySet:any = false;
 		
@@ -47,6 +60,7 @@ module ns_egret {
 		/**
 		 * 皮肤标识符。可以为Class,String,或DisplayObject实例等任意类型，具体规则由项目注入的素材适配器决定，
 		 * 适配器根据此属性值解析获取对应的显示对象，并赋值给skin属性。
+		 * @member ns_egret.UIAsset#skinName
 		 */	
 		public get skinName():any{
 			return this._skinName;
@@ -68,6 +82,7 @@ module ns_egret {
 		public _skin:DisplayObject;
 		/**
 		 * 显示对象皮肤。
+		 * @member ns_egret.UIAsset#skin
 		 */
 		public get skin():DisplayObject{
 			return this._skin;
@@ -75,8 +90,9 @@ module ns_egret {
 		
 		/**
 		 * 皮肤适配器解析skinName后回调函数
-		 * @param skin 皮肤显示对象
-		 * @param skinName 皮肤标识符
+		 * @method ns_egret.UIAsset#onGetSkin
+		 * @param skin {any} 皮肤显示对象
+		 * @param skinName {any} 皮肤标识符
 		 */		
 		public onGetSkin(skin:any,skinName:any):void{
 			if(this._skin!==skin){//如果皮肤是重用的，就不用执行添加和移除操作。
@@ -98,7 +114,7 @@ module ns_egret {
 		
 		private createChildrenCalled:boolean = false;
 		/**
-		 * @inheritDoc
+		 * @method ns_egret.UIAsset#createChildren
 		 */
 		public createChildren():void{
 			super.createChildren();
@@ -158,7 +174,7 @@ module ns_egret {
 		}
 		
 		/**
-		 * @inheritDoc
+		 * @method ns_egret.UIAsset#measure
 		 */
 		public measure():void{
 			super.measure();
@@ -196,6 +212,7 @@ module ns_egret {
 		private _maintainAspectRatio:boolean = false;
 		/**
 		 * 是否保持皮肤的宽高比,默认为false。
+		 * @member ns_egret.UIAsset#maintainAspectRatio
 		 */
 		public get maintainAspectRatio():boolean{
 			return this._maintainAspectRatio;
@@ -210,11 +227,14 @@ module ns_egret {
 		
 		/**
 		 * 皮肤宽高比
+		 * @member ns_egret.UIAsset#aspectRatio
 		 */		
 		public aspectRatio:number = NaN;
 
 		/**
-		 * @inheritDoc
+		 * @method ns_egret.UIAsset#updateDisplayList
+		 * @param unscaledWidth {number} 
+		 * @param unscaledHeight {number} 
 		 */
 		public updateDisplayList(unscaledWidth:number, unscaledHeight:number):void{
 			super.updateDisplayList(unscaledWidth,unscaledHeight);
@@ -292,43 +312,65 @@ module ns_egret {
 		
 		private static errorStr:string = "在此组件中不可用，若此组件为容器类，请使用";
 		/**
+		 * @method ns_egret.UIAsset#addChild
          * @deprecated
+		 * @param child {DisplayObject} 
+		 * @returns {DisplayObject}
 		 */		
 		public addChild(child:DisplayObject):DisplayObject{
 			throw(new Error("addChild()"+UIAsset.errorStr+"addElement()代替"));
 		}
 		/**
+		 * @method ns_egret.UIAsset#addChildAt
 		 * @deprecated
+		 * @param child {DisplayObject} 
+		 * @param index {number} 
+		 * @returns {DisplayObject}
 		 */		
 		public addChildAt(child:DisplayObject, index:number):DisplayObject{
 			throw(new Error("addChildAt()"+UIAsset.errorStr+"addElementAt()代替"));
 		}
 		/**
+		 * @method ns_egret.UIAsset#removeChild
 		 * @deprecated
+		 * @param child {DisplayObject} 
+		 * @returns {DisplayObject}
 		 */		
 		public removeChild(child:DisplayObject):DisplayObject{
 			throw(new Error("removeChild()"+UIAsset.errorStr+"removeElement()代替"));
 		}
 		/**
+		 * @method ns_egret.UIAsset#removeChildAt
 		 * @deprecated
+		 * @param index {number} 
+		 * @returns {DisplayObject}
 		 */		
 		public removeChildAt(index:number):DisplayObject{
 			throw(new Error("removeChildAt()"+UIAsset.errorStr+"removeElementAt()代替"));
 		}
 		/**
+		 * @method ns_egret.UIAsset#setChildIndex
 		 * @deprecated
+		 * @param child {DisplayObject} 
+		 * @param index {number} 
 		 */		
 		public setChildIndex(child:DisplayObject, index:number):void{
 			throw(new Error("setChildIndex()"+UIAsset.errorStr+"setElementIndex()代替"));
 		}
 		/**
+		 * @method ns_egret.UIAsset#swapChildren
 		 * @deprecated
+		 * @param child1 {DisplayObject} 
+		 * @param child2 {DisplayObject} 
 		 */		
 		public swapChildren(child1:DisplayObject, child2:DisplayObject):void{
 			throw(new Error("swapChildren()"+UIAsset.errorStr+"swapElements()代替"));
 		}
 		/**
+		 * @method ns_egret.UIAsset#swapChildrenAt
 		 * @deprecated
+		 * @param index1 {number} 
+		 * @param index2 {number} 
 		 */		
 		public swapChildrenAt(index1:number, index2:number):void{
 			throw(new Error("swapChildrenAt()"+UIAsset.errorStr+"swapElementsAt()代替"));

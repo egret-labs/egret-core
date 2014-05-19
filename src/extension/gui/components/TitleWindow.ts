@@ -29,7 +29,16 @@
 
 module ns_egret {
 
+	/**
+	 * @class ns_egret.TitleWindow
+	 * @classdesc
+	 * 可移动窗口组件。注意，此窗口必须使用PopUpManager.addPopUp()弹出之后才能移动。
+	 * @extends ns_egret.Panel
+	 */
 	export class TitleWindow extends Panel{
+		/**
+		 * @method ns_egret.TitleWindow#constructor
+		 */
 		public constructor(){
 			super();
 			this.addEventListener(TouchEvent.TOUCH_BEGAN,this.onWindowMouseDown,this,true,100);
@@ -45,17 +54,20 @@ module ns_egret {
 		
 		/**
 		 * [SkinPart]关闭按钮
+		 * @member ns_egret.TitleWindow#closeButton
 		 */	
 		public closeButton:Button;
 		
 		/**
 		 * [SkinPart]可移动区域
+		 * @member ns_egret.TitleWindow#moveArea
 		 */		
 		public moveArea:DisplayObject;
 		
 		private _showCloseButton:boolean = true;
 		/**
 		 * 是否显示关闭按钮,默认true。
+		 * @member ns_egret.TitleWindow#showCloseButton
 		 */
 		public get showCloseButton():boolean{
 			return this._showCloseButton;
@@ -74,6 +86,7 @@ module ns_egret {
 		 * 在拖拽窗口时，有可能把窗口完全拖出屏幕外，导致无法点中moveArea而不能拖回屏幕。
 		 * 此属性为true时，将会在拖拽结束时，自动调整窗口位置，使moveArea可以被再次点中。
 		 * 反之不调整。默认值为true。
+		 * @member ns_egret.TitleWindow#autoBackToStage
 		 */
 		public get autoBackToStage():boolean{
 			return this._autoBackToStage;
@@ -84,7 +97,9 @@ module ns_egret {
 
 
 		/**
-		 * @inheritDoc
+		 * @method ns_egret.TitleWindow#partAdded
+		 * @param partName {string} 
+		 * @param instance {any} 
 		 */
 		public partAdded(partName:string, instance:any) : void{
 			super.partAdded(partName, instance);
@@ -99,7 +114,9 @@ module ns_egret {
 		}
 		
 		/**
-		 * @inheritDoc
+		 * @method ns_egret.TitleWindow#partRemoved
+		 * @param partName {string} 
+		 * @param instance {any} 
 		 */
 		public partRemoved(partName:string, instance:any):void{
 			super.partRemoved(partName, instance);
@@ -111,6 +128,10 @@ module ns_egret {
 				this.closeButton.removeEventListener(TouchEvent.TOUCH_TAP, this.closeButton_clickHandler, this);
 		}
 		
+		/**
+		 * @method ns_egret.TitleWindow#closeButton_clickHandler
+		 * @param event {TouchEvent} 
+		 */
 		public closeButton_clickHandler(event:TouchEvent):void{
 			this.dispatchEvent(new CloseEvent(CloseEvent.CLOSE));
 		}
@@ -122,6 +143,8 @@ module ns_egret {
 		private _offsetPointY:number;
 		/**
 		 * 鼠标在可移动区域按下
+		 * @method ns_egret.TitleWindow#moveArea_mouseDownHandler
+		 * @param event {TouchEvent} 
 		 */		
 		public moveArea_mouseDownHandler(event:TouchEvent):void{
 			if (this.enabled && this.isPopUp){
@@ -139,6 +162,8 @@ module ns_egret {
 		}
 		/**
 		 * 鼠标拖拽时的移动事件
+		 * @method ns_egret.TitleWindow#moveArea_mouseMoveHandler
+		 * @param event {TouchEvent} 
 		 */		
 		public moveArea_mouseMoveHandler(event:TouchEvent):void{
 			var pos:Point = this.globalToLocal(event.stageX,event.stageY);
@@ -149,6 +174,8 @@ module ns_egret {
 		}
 		/**
 		 * 鼠标在舞台上弹起事件
+		 * @method ns_egret.TitleWindow#moveArea_mouseUpHandler
+		 * @param event {Event} 
 		 */		
 		public moveArea_mouseUpHandler(event:Event):void{
 			UIGlobals.stage.removeEventListener(

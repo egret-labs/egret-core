@@ -25,7 +25,16 @@
 
 module ns_egret {
 
+	/**
+	 * @class ns_egret.LayoutBase
+	 * @classdesc
+	 * 容器布局基类
+	 * @extends ns_egret.EventDispatcher
+	 */
 	export class LayoutBase extends EventDispatcher{
+		/**
+		 * @method ns_egret.LayoutBase#constructor
+		 */
 		public constructor(){
 			super();
 		}
@@ -33,6 +42,7 @@ module ns_egret {
 		private _target:GroupBase;
 		/**
 		 * 目标容器
+		 * @member ns_egret.LayoutBase#target
 		 */		
 		public get target():GroupBase{
 			return this._target;
@@ -48,6 +58,7 @@ module ns_egret {
 		private _horizontalScrollPosition:number = 0;
 		/**
 		 * 可视区域水平方向起始点
+		 * @member ns_egret.LayoutBase#horizontalScrollPosition
 		 */		
 		public get horizontalScrollPosition():number {
 			return this._horizontalScrollPosition;
@@ -66,6 +77,7 @@ module ns_egret {
 		private _verticalScrollPosition:number = 0;
 		/**
 		 * 可视区域竖直方向起始点
+		 * @member ns_egret.LayoutBase#verticalScrollPosition
 		 */		
 		public get verticalScrollPosition():number {
 			return this._verticalScrollPosition;
@@ -84,6 +96,7 @@ module ns_egret {
 		private _clipAndEnableScrolling:boolean = false;
 		/**
 		 * 如果为 true，指定将子代剪切到视区的边界。如果为 false，则容器子代会从容器边界扩展过去，而不管组件的大小规范。
+		 * @member ns_egret.LayoutBase#clipAndEnableScrolling
 		 */	
 		public get clipAndEnableScrolling():boolean {
 			return this._clipAndEnableScrolling;
@@ -100,7 +113,8 @@ module ns_egret {
 		/**
 		 * 返回对水平滚动位置的更改以处理不同的滚动选项。
 		 * 下列选项是由 NavigationUnit 类定义的：END、HOME、LEFT、PAGE_LEFT、PAGE_RIGHT 和 RIGHT。 
-		 * @param navigationUnit 采用以下值： 
+		 * @method ns_egret.LayoutBase#getHorizontalScrollPositionDelta
+		 * @param navigationUnit {number} 采用以下值： 
 		 *  <li> 
 		 *  <code>END</code>
 		 *  返回滚动 delta，它将使 scrollRect 与内容区域右对齐。 
@@ -126,6 +140,7 @@ module ns_egret {
 		 *  返回滚动 delta，它将使 scrollRect 与跨越 scrollRect 的右边或在其右边右侧的第一个元素右对齐。 
 		 *  </li>
 		 *  </ul>
+		 * @returns {number}
 		 */		
 		public getHorizontalScrollPositionDelta(navigationUnit:number):number{
 			var g:GroupBase = this.target;
@@ -195,7 +210,8 @@ module ns_egret {
 		/**
 		 * 返回对垂直滚动位置的更改以处理不同的滚动选项。
 		 * 下列选项是由 NavigationUnit 类定义的：DOWN、END、HOME、PAGE_DOWN、PAGE_UP 和 UP。
-		 * @param navigationUnit 采用以下值： DOWN 
+		 * @method ns_egret.LayoutBase#getVerticalScrollPositionDelta
+		 * @param navigationUnit {number} 采用以下值： DOWN 
 		 *  <ul>
 		 *  <li> 
 		 *  <code>DOWN</code>
@@ -222,6 +238,7 @@ module ns_egret {
 		 *  返回滚动 delta，它将使 scrollRect 与跨越 scrollRect 的顶边或在其顶边之上的第一个元素顶对齐。 
 		 *  </li>
 		 *  </ul>
+		 * @returns {number}
 		 */		
 		public getVerticalScrollPositionDelta(navigationUnit:number):number{
 			var g:GroupBase = this.target;
@@ -291,6 +308,8 @@ module ns_egret {
 		
 		/**
 		 * 返回布局坐标中目标的滚动矩形的界限。
+		 * @method ns_egret.LayoutBase#getScrollRect
+		 * @returns {Rectangle}
 		 */		
 		public getScrollRect():Rectangle{
 			var g:GroupBase = this.target;
@@ -302,6 +321,9 @@ module ns_egret {
 		}
 		/**
 		 * 返回跨越 scrollRect 的左边或在其左边左侧的第一个布局元素的界限。 
+		 * @method ns_egret.LayoutBase#getElementBoundsLeftOfScrollRect
+		 * @param scrollRect {Rectangle} 
+		 * @returns {Rectangle}
 		 */		
 		public getElementBoundsLeftOfScrollRect(scrollRect:Rectangle):Rectangle{
 			var bounds:Rectangle = new Rectangle();
@@ -311,6 +333,9 @@ module ns_egret {
 		} 
 		/**
 		 * 返回跨越 scrollRect 的右边或在其右边右侧的第一个布局元素的界限。 
+		 * @method ns_egret.LayoutBase#getElementBoundsRightOfScrollRect
+		 * @param scrollRect {Rectangle} 
+		 * @returns {Rectangle}
 		 */		
 		public getElementBoundsRightOfScrollRect(scrollRect:Rectangle):Rectangle{
 			var bounds:Rectangle = new Rectangle();
@@ -320,6 +345,9 @@ module ns_egret {
 		} 
 		/**
 		 * 返回跨越 scrollRect 的顶边或在其顶边之上的第一个布局元素的界限。
+		 * @method ns_egret.LayoutBase#getElementBoundsAboveScrollRect
+		 * @param scrollRect {Rectangle} 
+		 * @returns {Rectangle}
 		 */
 		public getElementBoundsAboveScrollRect(scrollRect:Rectangle):Rectangle{
 			var bounds:Rectangle = new Rectangle();
@@ -329,6 +357,9 @@ module ns_egret {
 		} 
 		/**
 		 * 返回跨越 scrollRect 的底边或在其底边之下的第一个布局元素的界限。 
+		 * @method ns_egret.LayoutBase#getElementBoundsBelowScrollRect
+		 * @param scrollRect {Rectangle} 
+		 * @returns {Rectangle}
 		 */		
 		public getElementBoundsBelowScrollRect(scrollRect:Rectangle):Rectangle{
 			var bounds:Rectangle = new Rectangle();
@@ -339,6 +370,7 @@ module ns_egret {
 		
 		/**
 		 * 滚动条位置改变
+		 * @method ns_egret.LayoutBase#scrollPositionChanged
 		 */		
 		public scrollPositionChanged():void{
 			if (this.target==null)
@@ -348,6 +380,9 @@ module ns_egret {
 		}
 		/**
 		 * 更新可视区域
+		 * @method ns_egret.LayoutBase#updateScrollRect
+		 * @param w {number} 
+		 * @param h {number} 
 		 */		
 		public updateScrollRect(w:number, h:number):void{
 			if (this.target==null)
@@ -367,6 +402,7 @@ module ns_egret {
 		 * 只有布局设置为 VerticalLayout、HorizontalLayout 
 		 * 或 TileLayout 的 DataGroup 或 SkinnableDataContainer 
 		 * 才支持虚拟布局。不支持虚拟化的布局子类必须禁止更改此属性。
+		 * @member ns_egret.LayoutBase#useVirtualLayout
 		 */
 		public get useVirtualLayout():boolean{
 			return this._useVirtualLayout;
@@ -389,6 +425,7 @@ module ns_egret {
 		
 		/**
 		 * 由虚拟布局所使用，以估计尚未滚动到视图中的布局元素的大小。 
+		 * @member ns_egret.LayoutBase#typicalLayoutRect
 		 */
 		public get typicalLayoutRect():Rectangle{
 			return this._typicalLayoutRect;
@@ -406,29 +443,38 @@ module ns_egret {
 		
 		/**
 		 * 清理虚拟布局缓存的数据
+		 * @method ns_egret.LayoutBase#clearVirtualLayoutCache
 		 */		
 		public clearVirtualLayoutCache():void{
 		}
 		/**
 		 * 在已添加布局元素之后且在验证目标的大小和显示列表之前，由目标调用。
 		 * 按元素状态缓存的布局（比如虚拟布局）可以覆盖此方法以更新其缓存。 
+		 * @method ns_egret.LayoutBase#elementAdded
+		 * @param index {number} 
 		 */		
 		public elementAdded(index:number):void{
 		}
 		/**
 		 * 必须在已删除布局元素之后且在验证目标的大小和显示列表之前，由目标调用此方法。
 		 * 按元素状态缓存的布局（比如虚拟布局）可以覆盖此方法以更新其缓存。 
+		 * @method ns_egret.LayoutBase#elementRemoved
+		 * @param index {number} 
 		 */		
 		public elementRemoved(index:number):void{
 		}
 		
 		/**
 		 * 测量组件尺寸大小
+		 * @method ns_egret.LayoutBase#measure
 		 */		
 		public measure():void{
 		}
 		/**
 		 * 更新显示列表
+		 * @method ns_egret.LayoutBase#updateDisplayList
+		 * @param width {number} 
+		 * @param height {number} 
 		 */		
 		public updateDisplayList(width:number, height:number):void{
 		} 

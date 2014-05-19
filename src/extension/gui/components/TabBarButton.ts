@@ -22,8 +22,18 @@
 
 module ns_egret {
 
+	/**
+	 * @class ns_egret.TabBarButton
+	 * @classdesc
+	 * 选项卡组件的按钮条目
+	 * @extends ns_egret.ToggleButtonBase
+	 * @implements ns_egret.IItemRenderer
+	 */	
 	export class TabBarButton extends ToggleButtonBase implements IItemRenderer{
 		
+		/**
+		 * @method ns_egret.TabBarButton#constructor
+		 */
 		public constructor(){
 			super();
 		}
@@ -32,6 +42,7 @@ module ns_egret {
 		/**
 		 * 如果为 true，用户单击当前选定的按钮时即会将其取消选择。
 		 * 如果为 false，用户必须选择不同的按钮才可取消选择当前选定的按钮。
+		 * @member ns_egret.TabBarButton#allowDeselection
 		 */		
 		public get allowDeselection():boolean{
 			return this._allowDeselection;
@@ -43,7 +54,7 @@ module ns_egret {
 		
 		private _data:any;
 		/**
-		 * @inheritDoc
+		 * @member ns_egret.TabBarButton#data
 		 */
 		public get data():any{
 			return this._data;
@@ -56,7 +67,7 @@ module ns_egret {
 		
 		private _itemIndex:number;
 		/**
-		 * @inheritDoc
+		 * @member ns_egret.TabBarButton#itemIndex
 		 */
 		public get itemIndex():number{
 			return this._itemIndex;
@@ -79,7 +90,7 @@ module ns_egret {
 		}
 		
 		/**
-		 * @inheritDoc
+		 * @method ns_egret.TabBarButton#buttonReleased
 		 */
 		public buttonReleased():void{
 			if (this.selected && !this.allowDeselection)

@@ -29,16 +29,24 @@
 
 module ns_egret {
 
+	/**
+	 * @class ns_egret.Scroller
+	 * @classdesc
+	 * 滚动条组件
+	 * @extends ns_egret.UIComponent
+	 * @implements ns_egret.IVisualElementContainer
+	 */	
     export class Scroller extends UIComponent implements IVisualElementContainer{
         /**
          * 构造函数
+		 * @method ns_egret.Scroller#constructor
          */
         public constructor(){
             super();
         }
 
         /**
-         * @inheritDoc
+		 * @method ns_egret.Scroller#measure
          */
         public measure():void{
             if(!this._viewport)
@@ -47,7 +55,9 @@ module ns_egret {
             this.measuredHeight = this._viewport.preferredHeight;
         }
         /**
-         * @inheritDoc
+		 * @method ns_egret.Scroller#updateDisplayList
+		 * @param unscaledWidth {number} 
+		 * @param unscaledHeight {number} 
          */
         public updateDisplayList(unscaledWidth:number, unscaledHeight:number):void{
             this._viewport.setLayoutBoundsSize(unscaledWidth,unscaledHeight);
@@ -57,6 +67,7 @@ module ns_egret {
 
         /**
          * 垂直滚动条显示策略，参见ScrollPolicy类定义的常量。
+		 * @member ns_egret.Scroller#verticalScrollPolicy
          */
         public get verticalScrollPolicy():string
         {
@@ -71,6 +82,7 @@ module ns_egret {
 
         /**
          * 水平滚动条显示策略，参见ScrollPolicy类定义的常量。
+		 * @member ns_egret.Scroller#horizontalScrollPolicy
          */
         public get horizontalScrollPolicy():string
         {
@@ -84,6 +96,7 @@ module ns_egret {
 
         /**
          * 要滚动的视域组件。
+		 * @member ns_egret.Scroller#viewport
          */
         public get viewport():IViewport{
             return this._viewport;
@@ -403,6 +416,9 @@ module ns_egret {
 
         /**
          * 缓动到水平滚动位置
+		 * @method ns_egret.Scroller#throwHorizontally
+		 * @param hspTo {number} 
+		 * @param duration {number} 
          */
         public throwHorizontally(hspTo:number,duration:number=500):void{
             var hsp:number = this._viewport.horizontalScrollPosition;
@@ -447,6 +463,9 @@ module ns_egret {
         }
         /**
          * 缓动到垂直滚动位置
+		 * @method ns_egret.Scroller#throwVertically
+		 * @param vspTo {number} 
+		 * @param duration {number} 
          */
         public throwVertically(vspTo:number,duration:number=500):void{
             var vsp:number = this._viewport.verticalScrollPosition;
@@ -473,6 +492,9 @@ module ns_egret {
         }
 
 
+		/**
+		 * @member ns_egret.Scroller#numElements
+		 */
         public get numElements():number{
             return this.viewport ? 1 : 0;
         }
@@ -484,7 +506,9 @@ module ns_egret {
             throw new RangeError("索引:\""+index+"\"超出可视元素索引范围");
         }
         /**
-         * @inheritDoc
+		 * @method ns_egret.Scroller#getElementAt
+		 * @param index {number} 
+		 * @returns {IVisualElement}
          */
         public getElementAt(index:number):IVisualElement{
             if (this.viewport && index == 0)
@@ -495,7 +519,9 @@ module ns_egret {
         }
 
         /**
-         * @inheritDoc
+		 * @method ns_egret.Scroller#getElementIndex
+		 * @param element {IVisualElement} 
+		 * @returns {number}
          */
         public getElementIndex(element:IVisualElement):number{
             if (element != null && element == this.viewport)
@@ -504,7 +530,9 @@ module ns_egret {
                 return -1;
         }
         /**
-         * @inheritDoc
+		 * @method ns_egret.Scroller#containsElement
+		 * @param element {IVisualElement} 
+		 * @returns {boolean}
          */
         public containsElement(element:IVisualElement):boolean{
             if (element != null && element == this.viewport)
@@ -516,100 +544,145 @@ module ns_egret {
             throw new Error("此方法在Scroller组件内不可用!");
         }
         /**
+		 * @method ns_egret.Scroller#addElement
          * @deprecated
+		 * @param element {IVisualElement} 
+		 * @returns {IVisualElement}
          */
         public addElement(element:IVisualElement):IVisualElement{
             this.throwNotSupportedError();
             return null;
         }
         /**
+		 * @method ns_egret.Scroller#addElementAt
          * @deprecated
+		 * @param element {IVisualElement} 
+		 * @param index {number} 
+		 * @returns {IVisualElement}
          */
         public addElementAt(element:IVisualElement, index:number):IVisualElement{
             this.throwNotSupportedError();
             return null;
         }
         /**
+		 * @method ns_egret.Scroller#removeElement
          * @deprecated
+		 * @param element {IVisualElement} 
+		 * @returns {IVisualElement}
          */
         public removeElement(element:IVisualElement):IVisualElement{
             this.throwNotSupportedError();
             return null;
         }
         /**
+		 * @method ns_egret.Scroller#removeElementAt
          * @deprecated
+		 * @param index {number} 
+		 * @returns {IVisualElement}
          */
         public removeElementAt(index:number):IVisualElement{
             this.throwNotSupportedError();
             return null;
         }
         /**
+		 * @method ns_egret.Scroller#removeAllElements
          * @deprecated
          */
         public removeAllElements():void{
             this.throwNotSupportedError();
         }
         /**
+		 * @method ns_egret.Scroller#setElementIndex
          * @deprecated
+		 * @param element {IVisualElement} 
+		 * @param index {number} 
          */
         public setElementIndex(element:IVisualElement, index:number):void{
             this.throwNotSupportedError();
         }
         /**
+		 * @method ns_egret.Scroller#swapElements
          * @deprecated
+		 * @param element1 {IVisualElement} 
+		 * @param element2 {IVisualElement} 
          */
         public swapElements(element1:IVisualElement, element2:IVisualElement):void{
             this.throwNotSupportedError();
         }
         /**
+		 * @method ns_egret.Scroller#swapElementsAt
          * @deprecated
+		 * @param index1 {number} 
+		 * @param index2 {number} 
          */
         public swapElementsAt(index1:number, index2:number):void{
             this.throwNotSupportedError();
         }
 
         /**
+		 * @method ns_egret.Scroller#addChild
          * @deprecated
+		 * @param child {DisplayObject} 
+		 * @returns {DisplayObject}
          */
         public addChild(child:DisplayObject):DisplayObject{
             this.throwNotSupportedError();
             return null;
         }
         /**
+		 * @method ns_egret.Scroller#addChildAt
          * @deprecated
+		 * @param child {DisplayObject} 
+		 * @param index {number} 
+		 * @returns {DisplayObject}
          */
         public addChildAt(child:DisplayObject, index:number):DisplayObject{
             this.throwNotSupportedError();
             return null;
         }
         /**
+		 * @method ns_egret.Scroller#removeChild
          * @deprecated
+		 * @param child {DisplayObject} 
+		 * @returns {DisplayObject}
          */
         public removeChild(child:DisplayObject):DisplayObject{
             this.throwNotSupportedError();
             return null;
         }
         /**
+		 * @method ns_egret.Scroller#removeChildAt
          * @deprecated
+		 * @param index {number} 
+		 * @returns {DisplayObject}
          */
         public removeChildAt(index:number):DisplayObject{
             this.throwNotSupportedError();
             return null;
         }
         /**
+		 * @method ns_egret.Scroller#setChildIndex
          * @deprecated
+		 * @param child {DisplayObject} 
+		 * @param index {number} 
          */
         public setChildIndex(child:DisplayObject, index:number):void{
             this.throwNotSupportedError();
         }
         /**
+		 * @method ns_egret.Scroller#swapChildren
          * @deprecated
+		 * @param child1 {DisplayObject} 
+		 * @param child2 {DisplayObject} 
          */
         public swapChildren(child1:DisplayObject, child2:DisplayObject):void{
             this.throwNotSupportedError();
         }
         /**
+		 * @method ns_egret.Scroller#swapChildrenAt
          * @deprecated
+		 * @param index1 {number} 
+		 * @param index2 {number} 
          */
         public swapChildrenAt(index1:number, index2:number):void{
             this.throwNotSupportedError();

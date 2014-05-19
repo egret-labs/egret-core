@@ -20,20 +20,31 @@
 
 module ns_egret {
 
+	/**
+	 * @class ns_egret.IStateClient
+	 * @interface
+	 * @classdesc
+	 * 具有视图状态的组件接口
+	 * @extends ns_egret.IEventDispatcher
+	 */
 	export interface IStateClient extends IEventDispatcher{
 		/**
 		 * 组件的当前视图状态。将其设置为 "" 或 null 可将组件重置回其基本状态。 
+		 * @member ns_egret.IStateClient#currentState
 		 */		
 		currentState:string;
 		
 		/**
 		 * 为此组件定义的视图状态。
+		 * @member ns_egret.IStateClient#states
 		 */		
 		states:Array<any>;
 		
 		/**
 		 * 返回是否含有指定名称的视图状态
-		 * @param stateName 要检测的视图状态名称
+		 * @method ns_egret.IStateClient#hasState
+		 * @param stateName {string} 要检测的视图状态名称
+		 * @returns {boolean}
 		 */			
 		hasState(stateName:string):boolean
 	}

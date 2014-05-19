@@ -31,14 +31,23 @@
 
 module ns_egret {
 
+	/**
+	 * @class ns_egret.List
+	 * @classdesc
+	 * 列表组件
+	 * @extends ns_egret.ListBase
+	 */
 	export class List extends ListBase{
+		/**
+		 * @method ns_egret.List#constructor
+		 */
 		public constructor(){
 			super();
 			this.useVirtualLayout = true;
 		}
 		
 		/**
-		 * @inheritDoc
+		 * @method ns_egret.List#createChildren
 		 */
 		public createChildren():void{
 			if(!this.itemRenderer)
@@ -48,6 +57,7 @@ module ns_egret {
 		
 		/**
 		 * 是否使用虚拟布局,默认true
+		 * @member ns_egret.List#useVirtualLayout
 		 */		
 		public get useVirtualLayout():boolean{
 			return this._getUseVirtualLayout();
@@ -64,6 +74,7 @@ module ns_egret {
 		private _allowMultipleSelection:boolean = false;
 		/**
 		 * 是否允许同时选中多项
+		 * @member ns_egret.List#allowMultipleSelection
 		 */
 		public get allowMultipleSelection():boolean{
 			return this._allowMultipleSelection;
@@ -78,6 +89,7 @@ module ns_egret {
 		private _proposedSelectedIndices:Array<number>;
 		/**
 		 * 当前选中的一个或多个项目的索引列表
+		 * @member ns_egret.List#selectedIndices
 		 */		
 		public get selectedIndices():Array<number>{
 			if(this._proposedSelectedIndices)
@@ -89,7 +101,7 @@ module ns_egret {
 			this._setSelectedIndices(value, false);
 		}
 		/**
-		 * @inheritDoc
+		 * @member ns_egret.List#selectedIndex
 		 */
 		public get selectedIndex():number{
 			if(this._proposedSelectedIndices){
@@ -106,6 +118,7 @@ module ns_egret {
 		
 		/**
 		 * 当前选中的一个或多个项目的数据源列表
+		 * @member ns_egret.List#selectedItems
 		 */		
 		public get selectedItems():Array<Object>{
 			var result:Array<Object> = [];
@@ -154,7 +167,7 @@ module ns_egret {
 		}
 
 		/**
-		 * @inheritDoc
+		 * @method ns_egret.List#commitProperties
 		 */
 		public commitProperties():void{
 			super.commitProperties();
@@ -163,7 +176,9 @@ module ns_egret {
 			}
 		}
 		/**
-		 * @inheritDoc
+		 * @method ns_egret.List#commitSelection
+		 * @param dispatchChangedEvents {boolean} 
+		 * @returns {boolean}
 		 */
 		public commitSelection(dispatchChangedEvents:boolean = true):boolean{
 			var oldSelectedIndex:number = this._selectedIndex;
@@ -230,6 +245,7 @@ module ns_egret {
 		}
 		/**
 		 * 提交多项选中项属性
+		 * @method ns_egret.List#commitMultipleSelection
 		 */
 		public commitMultipleSelection():void{
 			var removedItems:Array<number> = [];
@@ -276,7 +292,9 @@ module ns_egret {
 		}
 
 		/**
-		 * @inheritDoc
+		 * @method ns_egret.List#isItemIndexSelected
+		 * @param index {number} 
+		 * @returns {boolean}
 		 */
 		public isItemIndexSelected(index:number):boolean{
 			if (this._allowMultipleSelection)
@@ -286,7 +304,8 @@ module ns_egret {
 		}
 
 		/**
-		 * @inheritDoc
+		 * @method ns_egret.List#dataGroup_rendererAddHandler
+		 * @param event {RendererExistenceEvent} 
 		 */
 		public dataGroup_rendererAddHandler(event:RendererExistenceEvent):void{
 			super.dataGroup_rendererAddHandler(event);
@@ -302,7 +321,8 @@ module ns_egret {
 		}
 
 		/**
-		 * @inheritDoc
+		 * @method ns_egret.List#dataGroup_rendererRemoveHandler
+		 * @param event {RendererExistenceEvent} 
 		 */
 		public dataGroup_rendererRemoveHandler(event:RendererExistenceEvent):void{
 			super.dataGroup_rendererRemoveHandler(event);
@@ -316,12 +336,15 @@ module ns_egret {
 		}
 		/**
 		 * 是否捕获ItemRenderer以便在MouseUp时抛出ItemClick事件
+		 * @member ns_egret.List#captureItemRenderer
 		 */
 		public captureItemRenderer:boolean = true;
 
 		private mouseDownItemRenderer:IItemRenderer;
 		/**
 		 * 鼠标在项呈示器上按下
+		 * @method ns_egret.List#item_mouseDownHandler
+		 * @param event {TouchEvent} 
 		 */
 		public item_mouseDownHandler(event:TouchEvent):void{
 			if (event.isDefaultPrevented())

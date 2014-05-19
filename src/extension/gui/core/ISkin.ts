@@ -20,9 +20,16 @@
 
 module ns_egret {
 
+	/**
+	 * @class ns_egret.ISkin
+	 * @interface
+	 * @classdesc
+	 * 皮肤对象接口。只有实现此接口的皮肤会被匹配公开同名变量,并注入到主机组件上。
+	 */
 	export interface ISkin{
 		/**
 		 * 主机组件引用,仅当皮肤被应用后才会对此属性赋值 
+		 * @member ns_egret.ISkin#hostComponent
 		 */		
 		hostComponent:SkinnableComponent;
 	}

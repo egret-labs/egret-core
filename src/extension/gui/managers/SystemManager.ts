@@ -29,9 +29,19 @@
 
 module ns_egret {
 
+	/**
+	 * @class ns_egret.SystemManager
+	 * @classdesc
+	 * 系统管理器，应用程序顶级容器。
+	 * 通常情况下，一个程序应该只含有唯一的系统管理器,并且所有的组件都包含在它内部。
+	 * 它负责管理弹窗，鼠标样式，工具提示的显示层级，以及过滤鼠标和键盘事件为可以取消的。
+	 * @extends ns_egret.Group
+	 * @implements ns_egret.ISystemManager
+	 */	
 	export class SystemManager extends Group implements ISystemManager{
 		/**
 		 * 构造函数
+		 * @method ns_egret.SystemManager#constructor
 		 */		
 		public constructor(){
 			super();
@@ -69,6 +79,9 @@ module ns_egret {
 		//==========================================================================
 		//                            禁止外部布局顶级容器
 		//==========================================================================
+		/**
+		 * @constant ns_egret.SystemManager#x
+		 */
         public get x():number{
             return this._x;
         }
@@ -78,6 +91,9 @@ module ns_egret {
 		public set x(value:number){
 		}
 
+		/**
+		 * @constant ns_egret.SystemManager#y
+		 */
         public get y():number{
             return this._y;
         }
@@ -87,6 +103,9 @@ module ns_egret {
 		public set y(value:number){
 		}
 
+		/**
+		 * @member ns_egret.SystemManager#width
+		 */
         public get width():number{
             return this._width;
         }
@@ -96,6 +115,9 @@ module ns_egret {
 		public set width(value:number){
 		}
 
+		/**
+		 * @member ns_egret.SystemManager#height
+		 */
         public get height():number{
             return this._height;
         }
@@ -105,6 +127,9 @@ module ns_egret {
 		public set height(value:number){
 		}
 
+		/**
+		 * @member ns_egret.SystemManager#scaleX
+		 */
         public get scaleX():number{
             return this._scaleX;
         }
@@ -114,6 +139,9 @@ module ns_egret {
 		public set scaleX(value:number){
 		}
 
+		/**
+		 * @member ns_egret.SystemManager#scaleY
+		 */
         public get scaleY():number{
             return this._scaleY;
         }
@@ -123,22 +151,29 @@ module ns_egret {
 		public set scaleY(value:number){
 		}
 		/**
-		 * @inheritDoc
+		 * @method ns_egret.SystemManager#setActualSize
+		 * @param w {number} 
+		 * @param h {number} 
 		 */
 		public setActualSize(w:number, h:number):void{
 		}
 		/**
-		 * @inheritDoc
+		 * @method ns_egret.SystemManager#setLayoutBoundsPosition
+		 * @param x {number} 
+		 * @param y {number} 
 		 */
 		public setLayoutBoundsPosition(x:number, y:number):void{
 		}
 		/**
-		 * @inheritDoc
+		 * @method ns_egret.SystemManager#setLayoutBoundsSize
+		 * @param layoutWidth {number} 
+		 * @param layoutHeight {number} 
 		 */
 		public setLayoutBoundsSize(layoutWidth:number, layoutHeight:number):void{
 		}
 		/**
 		 * 布局对象,SystemManager只接受BasicLayout
+		 * @member ns_egret.SystemManager#layout
 		 */		
 		public get layout():LayoutBase{
 			return this._layout;
@@ -151,6 +186,7 @@ module ns_egret {
 		private _popUpContainer:SystemContainer;
 		/**
 		 * 弹出窗口层容器。
+		 * @member ns_egret.SystemManager#popUpContainer
 		 */		
 		public get popUpContainer():IContainer{
 			if (!this._popUpContainer){
@@ -163,6 +199,7 @@ module ns_egret {
 		private _toolTipContainer:SystemContainer;
 		/**
 		 * 工具提示层容器。
+		 * @member ns_egret.SystemManager#toolTipContainer
 		 */		
 		public get toolTipContainer():IContainer{
 			if (!this._toolTipContainer){
@@ -175,6 +212,7 @@ module ns_egret {
 		private _cursorContainer:SystemContainer;
 		/**
 		 * 鼠标样式层容器。
+		 * @member ns_egret.SystemManager#cursorContainer
 		 */		
 		public get cursorContainer():IContainer{
 			if (!this._cursorContainer){
@@ -243,7 +281,9 @@ module ns_egret {
 		//                                复写容器操作方法
 		//==========================================================================
 		/**
-		 * @inheritDoc
+		 * @method ns_egret.SystemManager#addElement
+		 * @param element {IVisualElement} 
+		 * @returns {IVisualElement}
 		 */
 		public addElement(element:IVisualElement):IVisualElement{
 			var addIndex:number = this._noTopMostIndex;
@@ -253,7 +293,10 @@ module ns_egret {
 		}
 		
 		/**
-		 * @inheritDoc
+		 * @method ns_egret.SystemManager#addElementAt
+		 * @param element {IVisualElement} 
+		 * @param index {number} 
+		 * @returns {IVisualElement}
 		 */
 		public addElementAt(element:IVisualElement,index:number):IVisualElement{
 			if (element.parent==<DisplayObjectContainer><any>this){
@@ -281,14 +324,18 @@ module ns_egret {
 		}
 		
 		/**
-		 * @inheritDoc
+		 * @method ns_egret.SystemManager#removeElement
+		 * @param element {IVisualElement} 
+		 * @returns {IVisualElement}
 		 */
 		public removeElement(element:IVisualElement):IVisualElement{
 			return this.removeElementAt(super.getElementIndex(element));
 		}
 		
 		/**
-		 * @inheritDoc
+		 * @method ns_egret.SystemManager#removeElementAt
+		 * @param index {number} 
+		 * @returns {IVisualElement}
 		 */
 		public removeElementAt(index:number):IVisualElement{
 			var element:IVisualElement = super.removeElementAt(index);
@@ -304,7 +351,7 @@ module ns_egret {
 		}
 		
 		/**
-		 * @inheritDoc
+		 * @method ns_egret.SystemManager#removeAllElements
 		 */
 		public removeAllElements():void{
 			while(this._noTopMostIndex>0){
@@ -313,6 +360,12 @@ module ns_egret {
 			}
 		}
 		
+		/**
+		 * @method ns_egret.SystemManager#elementRemoved
+		 * @param element {IVisualElement} 
+		 * @param index {number} 
+		 * @param notifyListeners {boolean} 
+		 */
 		public elementRemoved(element:IVisualElement, index:number, notifyListeners:boolean=true):void{
 			if(notifyListeners){
 				//PopUpManager需要监听这个事件

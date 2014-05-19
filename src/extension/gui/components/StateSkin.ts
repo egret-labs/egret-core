@@ -29,10 +29,21 @@
 
 module ns_egret {
 
+	/**
+	 * @class ns_egret.StateSkin
+	 * @classdesc
+	 * 含有视图状态功能的皮肤基类。注意：为了减少嵌套层级，此皮肤没有继承显示对象，若需要显示对象版本皮肤，请使用Skin。
+	 * @see org.flexlite.domUI.components.supportClasses.Skin
+	 * @extends ns_egret.EventDispatcher
+	 * @implements ns_egret.IStateClient
+	 * @implements ns_egret.ISkin
+	 * @implements ns_egret.IContainer
+	 */
 	export class StateSkin extends EventDispatcher 
 		implements IStateClient, ISkin, IContainer{
 		/**
 		 * 构造函数
+		 * @method ns_egret.StateSkin#constructor
 		 */		
 		public constructor(){
 			super();
@@ -41,40 +52,54 @@ module ns_egret {
 		
 		/**
 		 * 组件的最大测量宽度,仅影响measuredWidth属性的取值范围。
+		 * @member ns_egret.StateSkin#maxWidth
 		 */	
 		public maxWidth:number = 10000;
 		/**
 		 * 组件的最小测量宽度,此属性设置为大于maxWidth的值时无效。仅影响measuredWidth属性的取值范围。
+		 * @member ns_egret.StateSkin#minWidth
 		 */
 		public minWidth:number = 0;
 		/**
 		 * 组件的最大测量高度,仅影响measuredHeight属性的取值范围。
+		 * @member ns_egret.StateSkin#maxHeight
 		 */
 		public maxHeight:number = 10000;
 		/**
 		 * 组件的最小测量高度,此属性设置为大于maxHeight的值时无效。仅影响measuredHeight属性的取值范围。
+		 * @member ns_egret.StateSkin#minHeight
 		 */
 		public minHeight:number = 0;
 		/**
 		 * 组件宽度
+		 * @member ns_egret.StateSkin#width
 		 */
 		public width:number = NaN;
 		/**
 		 * 组件高度
+		 * @member ns_egret.StateSkin#height
 		 */
 		public height:number = NaN;
 		
 		/**
 		 * x坐标
+		 * @constant ns_egret.StateSkin#x
 		 */		
 		public x:number = 0;
 		/**
 		 * y坐标 
+		 * @constant ns_egret.StateSkin#y
 		 */		
 		public y:number = 0;
 		
 		//以下这两个属性无效，仅用于防止DXML编译器报错。
+		/**
+		 * @member ns_egret.StateSkin#percentWidth
+		 */
 		public percentWidth:number = NaN;
+		/**
+		 * @member ns_egret.StateSkin#percentHeight
+		 */
 		public percentHeight:number = NaN;
 		
 		//========================state相关函数===============start=========================
@@ -82,7 +107,7 @@ module ns_egret {
 		private stateClientHelper:StateClientHelper;
 		
 		/**
-		 * @inheritDoc
+		 * @member ns_egret.StateSkin#states
 		 */
 		public get states():Array<any>{
 			return this.stateClientHelper.states;
@@ -93,7 +118,7 @@ module ns_egret {
 		}
 		
 		/**
-		 * @inheritDoc
+		 * @member ns_egret.StateSkin#currentState
 		 */
 		public get currentState():string{
 			return this.stateClientHelper.currentState;
@@ -108,7 +133,9 @@ module ns_egret {
 		}
 		
 		/**
-		 * @inheritDoc
+		 * @method ns_egret.StateSkin#hasState
+		 * @param stateName {string} 
+		 * @returns {boolean}
 		 */
 		public hasState(stateName:string):boolean{
 			return this.stateClientHelper.hasState(stateName); 
@@ -116,6 +143,7 @@ module ns_egret {
 		
 		/**
 		 * 应用当前的视图状态。子类覆盖此方法在视图状态发生改变时执行相应更新操作。
+		 * @method ns_egret.StateSkin#commitCurrentState
 		 */
 		public commitCurrentState():void{
 			
@@ -124,7 +152,7 @@ module ns_egret {
 		
 		private _hostComponent:SkinnableComponent;
 		/**
-		 * @inheritDoc
+		 * @member ns_egret.StateSkin#hostComponent
 		 */
 		public get hostComponent():SkinnableComponent{
 			return this._hostComponent;
@@ -167,6 +195,8 @@ module ns_egret {
 		private _elementsContent:Array<any> = [];
 		/**
 		 * 返回子元素列表
+		 * @method ns_egret.StateSkin#getElementsContent
+		 * @returns {any}
 		 */		
 		public getElementsContent():Array<any>{
 			return this._elementsContent;
@@ -206,14 +236,16 @@ module ns_egret {
 		}
 		
 		/**
-		 * @inheritDoc
+		 * @member ns_egret.StateSkin#numElements
 		 */
 		public get numElements():number{
 			return this._elementsContent.length;
 		}
 		
 		/**
-		 * @inheritDoc
+		 * @method ns_egret.StateSkin#getElementAt
+		 * @param index {number} 
+		 * @returns {IVisualElement}
 		 */
 		public getElementAt(index:number):IVisualElement{
 			this.checkForRangeError(index);
@@ -230,7 +262,9 @@ module ns_egret {
 				throw new RangeError("索引:\""+index+"\"超出可视元素索引范围");
 		}
 		/**
-		 * @inheritDoc
+		 * @method ns_egret.StateSkin#addElement
+		 * @param element {IVisualElement} 
+		 * @returns {IVisualElement}
 		 */
 		public addElement(element:IVisualElement):IVisualElement{
 			var index:number = this.numElements;
@@ -241,7 +275,10 @@ module ns_egret {
 			return this.addElementAt(element, index);
 		}
 		/**
-		 * @inheritDoc
+		 * @method ns_egret.StateSkin#addElementAt
+		 * @param element {IVisualElement} 
+		 * @param index {number} 
+		 * @returns {IVisualElement}
 		 */
 		public addElementAt(element:IVisualElement, index:number):IVisualElement{
 			this.checkForRangeError(index, true);
@@ -266,13 +303,17 @@ module ns_egret {
 			return element;
 		}
 		/**
-		 * @inheritDoc
+		 * @method ns_egret.StateSkin#removeElement
+		 * @param element {IVisualElement} 
+		 * @returns {IVisualElement}
 		 */
 		public removeElement(element:IVisualElement):IVisualElement{
 			return this.removeElementAt(this.getElementIndex(element));
 		}
 		/**
-		 * @inheritDoc
+		 * @method ns_egret.StateSkin#removeElementAt
+		 * @param index {number} 
+		 * @returns {IVisualElement}
 		 */
 		public removeElementAt(index:number):IVisualElement{
 			this.checkForRangeError(index);
@@ -288,13 +329,17 @@ module ns_egret {
 		}
 			
 		/**
-		 * @inheritDoc
+		 * @method ns_egret.StateSkin#getElementIndex
+		 * @param element {IVisualElement} 
+		 * @returns {number}
 		 */
 		public getElementIndex(element:IVisualElement):number{
 			return this._elementsContent.indexOf(element);
 		}
 		/**
-		 * @inheritDoc
+		 * @method ns_egret.StateSkin#setElementIndex
+		 * @param element {IVisualElement} 
+		 * @param index {number} 
 		 */
 		public setElementIndex(element:IVisualElement, index:number):void{
 			this.checkForRangeError(index);
@@ -315,6 +360,10 @@ module ns_egret {
 		
 		/**
 		 * 添加一个显示元素到容器
+		 * @method ns_egret.StateSkin#elementAdded
+		 * @param element {IVisualElement} 
+		 * @param index {number} 
+		 * @param notifyListeners {boolean} 
 		 */		
 		public elementAdded(element:IVisualElement, index:number, notifyListeners:boolean = true):void{
 			element.ownerChanged(this);
@@ -332,6 +381,10 @@ module ns_egret {
 		}
 		/**
 		 * 从容器移除一个显示元素
+		 * @method ns_egret.StateSkin#elementRemoved
+		 * @param element {IVisualElement} 
+		 * @param index {number} 
+		 * @param notifyListeners {boolean} 
 		 */		
 		public elementRemoved(element:IVisualElement, index:number, notifyListeners:boolean = true):void{
 			if (notifyListeners){        

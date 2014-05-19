@@ -26,13 +26,24 @@
 
 module ns_egret {
 
+	/**
+	 * @class ns_egret.SkinnableContainer
+	 * @classdesc
+	 * 可设置外观的容器的基类
+	 * @extends ns_egret.SkinnableComponent
+	 * @implements ns_egret.IVisualElementContainer
+	 */
     export class SkinnableContainer extends SkinnableComponent implements IVisualElementContainer {
+		/**
+		 * @method ns_egret.SkinnableContainer#constructor
+		 */
         public constructor() {
             super();
         }
 
         /**
          * [SkinPart]实体容器
+		 * @member ns_egret.SkinnableContainer#contentGroup
          */
         public contentGroup:Group;
 
@@ -43,6 +54,7 @@ module ns_egret {
 a
         /**
          * 获取当前的实体容器
+		 * @member ns_egret.SkinnableContainer#currentContentGroup
          */
         public get currentContentGroup():Group {
             if (this.contentGroup == null) {
@@ -71,77 +83,96 @@ a
         }
 
         /**
-         * @inheritDoc
+		 * @member ns_egret.SkinnableContainer#numElements
          */
         public get numElements():number {
             return this.currentContentGroup.numElements;
         }
 
         /**
-         * @inheritDoc
+		 * @method ns_egret.SkinnableContainer#getElementAt
+		 * @param index {number} 
+		 * @returns {IVisualElement}
          */
         public getElementAt(index:number):IVisualElement {
             return this.currentContentGroup.getElementAt(index);
         }
 
         /**
-         * @inheritDoc
+		 * @method ns_egret.SkinnableContainer#addElement
+		 * @param element {IVisualElement} 
+		 * @returns {IVisualElement}
          */
         public addElement(element:IVisualElement):IVisualElement {
             return this.currentContentGroup.addElement(element);
         }
 
         /**
-         * @inheritDoc
+		 * @method ns_egret.SkinnableContainer#addElementAt
+		 * @param element {IVisualElement} 
+		 * @param index {number} 
+		 * @returns {IVisualElement}
          */
         public addElementAt(element:IVisualElement, index:number):IVisualElement {
             return this.currentContentGroup.addElementAt(element, index);
         }
 
         /**
-         * @inheritDoc
+		 * @method ns_egret.SkinnableContainer#removeElement
+		 * @param element {IVisualElement} 
+		 * @returns {IVisualElement}
          */
         public removeElement(element:IVisualElement):IVisualElement {
             return this.currentContentGroup.removeElement(element);
         }
 
         /**
-         * @inheritDoc
+		 * @method ns_egret.SkinnableContainer#removeElementAt
+		 * @param index {number} 
+		 * @returns {IVisualElement}
          */
         public removeElementAt(index:number):IVisualElement {
             return this.currentContentGroup.removeElementAt(index);
         }
 
         /**
-         * @inheritDoc
+		 * @method ns_egret.SkinnableContainer#removeAllElements
          */
         public removeAllElements():void {
             this.currentContentGroup.removeAllElements();
         }
 
         /**
-         * @inheritDoc
+		 * @method ns_egret.SkinnableContainer#getElementIndex
+		 * @param element {IVisualElement} 
+		 * @returns {number}
          */
         public getElementIndex(element:IVisualElement):number {
             return this.currentContentGroup.getElementIndex(element);
         }
 
         /**
-         * @inheritDoc
+		 * @method ns_egret.SkinnableContainer#setElementIndex
+		 * @param element {IVisualElement} 
+		 * @param index {number} 
          */
         public setElementIndex(element:IVisualElement, index:number):void {
             this.currentContentGroup.setElementIndex(element, index);
         }
 
         /**
-         * @inheritDoc
+		 * @method ns_egret.SkinnableContainer#swapElements
+		 * @param element1 {IVisualElement} 
+		 * @param element2 {IVisualElement} 
          */
         public swapElements(element1:IVisualElement, element2:IVisualElement):void {
             this.currentContentGroup.swapElements(element1, element2);
         }
 
         /**
-         * @inheritDoc
+		 * @method ns_egret.SkinnableContainer#swapElementsAt
+		 * @param index1 {number} 
+		 * @param index2 {number} 
          */
         public swapElementsAt(index1:number, index2:number):void {
             this.currentContentGroup.swapElementsAt(index1, index2);
@@ -154,6 +185,7 @@ a
 
         /**
          * 此容器的布局对象
+		 * @member ns_egret.SkinnableContainer#layout
          */
         public get layout():LayoutBase {
             return this.contentGroup != null ?
@@ -170,7 +202,9 @@ a
         }
 
         /**
-         * @inheritDoc
+		 * @method ns_egret.SkinnableContainer#partAdded
+		 * @param partName {string} 
+		 * @param instance {any} 
          */
         public partAdded(partName:string, instance:any):void {
             super.partAdded(partName, instance);
@@ -205,7 +239,9 @@ a
         }
 
         /**
-         * @inheritDoc
+		 * @method ns_egret.SkinnableContainer#partRemoved
+		 * @param partName {string} 
+		 * @param instance {any} 
          */
         public partRemoved(partName:string, instance:any):void {
             super.partRemoved(partName, instance);
@@ -232,6 +268,8 @@ a
 
         /**
          * 容器添加元素事件
+		 * @method ns_egret.SkinnableContainer#contentGroup_elementAddedHandler
+		 * @param event {ElementExistenceEvent} 
          */
         public contentGroup_elementAddedHandler(event:ElementExistenceEvent):void {
             event.element.ownerChanged(this);
@@ -240,6 +278,8 @@ a
 
         /**
          * 容器移除元素事件
+		 * @method ns_egret.SkinnableContainer#contentGroup_elementRemovedHandler
+		 * @param event {ElementExistenceEvent} 
          */
         public contentGroup_elementRemovedHandler(event:ElementExistenceEvent):void {
             event.element.ownerChanged(null);
@@ -247,7 +287,7 @@ a
         }
 
         /**
-         * @inheritDoc
+		 * @method ns_egret.SkinnableContainer#createSkinParts
          */
         public createSkinParts():void {
             this.contentGroup = new Group();
@@ -258,7 +298,7 @@ a
         }
 
         /**
-         * @inheritDoc
+		 * @method ns_egret.SkinnableContainer#removeSkinParts
          */
         public removeSkinParts():void {
             this.partRemoved("contentGroup", this.contentGroup);

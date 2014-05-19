@@ -22,21 +22,31 @@
 
 module ns_egret {
 
+	/**
+	 * @class ns_egret.ISystemManager
+	 * @interface
+	 * @classdesc
+	 * @extends ns_egret.IEventDispatcher
+	 */
 	export interface ISystemManager extends IEventDispatcher{
 		/**
 		 * 弹出窗口层容器。
+		 * @member ns_egret.ISystemManager#popUpContainer
 		 */	
 		popUpContainer:IContainer;
 		/**
 		 * 工具提示层容器。
+		 * @member ns_egret.ISystemManager#toolTipContainer
 		 */		
 		toolTipContainer:IContainer;
 		/**
 		 * 鼠标样式层容器。
+		 * @member ns_egret.ISystemManager#cursorContainer
 		 */		
 		cursorContainer:IContainer;
 		/**
 		 * 舞台引用
+		 * @member ns_egret.ISystemManager#stage
 		 */		
 		stage:Stage;
 	}

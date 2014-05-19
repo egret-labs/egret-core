@@ -22,10 +22,17 @@
 
 module ns_egret {
 
+	/**
+	 * @class ns_egret.Animation
+	 * @classdesc
+	 * 数值缓动工具类
+	 */
     export class Animation{
         /**
          * 构造函数
-         * @param updateFunction 动画更新时的回调函数,updateFunction(animation:Animation):void
+		 * @method ns_egret.Animation#constructor
+         * @param updateFunction {Function} 动画更新时的回调函数,updateFunction(animation:Animation):void
+		 * @param thisObject {an} 
          */
         public constructor(updateFunction:Function,thisObject:any){
             this.updateFunction = updateFunction;
@@ -34,6 +41,7 @@ module ns_egret {
 
         /**
          * 此动画的缓动行为。设置为null意味着不使用缓动，默认值为Ease.sineInOut()
+		 * @member ns_egret.Animation#easerFunction
          */
         public easerFunction:Function = Ease.sineInOut;
 
@@ -42,6 +50,7 @@ module ns_egret {
         private _isPlaying:boolean
         /**
          * 是否正在播放动画，不包括延迟等待和暂停的阶段
+		 * @member ns_egret.Animation#isPlaying
          */
         public get isPlaying():boolean{
             return this._isPlaying;
@@ -51,6 +60,7 @@ module ns_egret {
         private _duration:number = 500;
         /**
          * 动画持续时间,单位毫秒，默认值500
+		 * @member ns_egret.Animation#duration
          */
         public get duration():number{
             return this._duration;
@@ -64,6 +74,7 @@ module ns_egret {
 
         /**
          * 动画开始播放前的延时时间,单位毫秒,默认0。
+		 * @member ns_egret.Animation#startDelay
          */
         public get startDelay():number{
             return this._startDelay;
@@ -76,6 +87,7 @@ module ns_egret {
         private _repeatCount:number = 1;
         /**
          * 动画重复的次数，0代表无限制重复。默认值为1。
+		 * @member ns_egret.Animation#repeatCount
          */
         public get repeatCount():number{
             return this._repeatCount;
@@ -88,6 +100,7 @@ module ns_egret {
         private _repeatDelay:number = 0;
         /**
          * 每次重复播放之间的间隔。第二次及以后的播放开始之前的延迟毫秒数。若要设置第一次之前的延迟时间，请使用startDelay属性。
+		 * @member ns_egret.Animation#repeatDelay
          */
         public get repeatDelay():number{
             return this._repeatDelay;
@@ -98,6 +111,7 @@ module ns_egret {
         }
         /**
          * 随着时间的推移Animation将设置动画的属性和值的列表。对象示例:{p:"x",f:10,t:100}表示，属性名"x"从10改变到100。
+		 * @member ns_egret.Animation#motionPaths
          */
         public motionPaths:Array<any> = [];
 
@@ -105,6 +119,7 @@ module ns_egret {
 
         /**
          * 动画到当前时间对应的值。以MotionPath.property为键存储各个MotionPath的当前值。
+		 * @member ns_egret.Animation#currentValue
          */
         public get currentValue():any{
             return this._currentValue;
@@ -112,25 +127,30 @@ module ns_egret {
 
         /**
          * 动画开始播放时的回调函数,只会在首次延迟等待结束时触发一次,若有重复播放，之后将触发repeatFunction。startFunction(animation:Animation):void
+		 * @member ns_egret.Animation#startFunction
          */
         public startFunction:Function;
         /**
          * 动画播放结束时的回调函数,可以是正常播放结束，也可以是被调用了end()方法导致结束。注意：stop()方法被调用不会触发这个函数。endFunction(animation:Animation):void
+		 * @member ns_egret.Animation#endFunction
          */
         public endFunction:Function;
 
         /**
          * 动画更新时的回调函数,updateFunction(animation:Animation):void
+		 * @member ns_egret.Animation#updateFunction
          */
         public updateFunction:Function;
 
         /**
          * 动画被停止的回调函数，即stop()方法被调用。stopFunction(animation:Animation):void
+		 * @member ns_egret.Animation#stopFunction
          */
         public stopFunction:Function;
 
         /**
          * 开始正向播放动画,无论何时调用都重新从零时刻开始，若设置了延迟会首先进行等待。
+		 * @method ns_egret.Animation#play
          */
         public play():void{
             this.stopAnimation();
@@ -166,6 +186,7 @@ module ns_egret {
 
         /**
          * 直接跳到动画结尾
+		 * @method ns_egret.Animation#end
          */
         public end():void{
             if(!this._started){
@@ -189,6 +210,7 @@ module ns_egret {
 
         /**
          * 停止播放动画
+		 * @method ns_egret.Animation#stop
          */
         public stop():void{
             this.stopAnimation();
@@ -211,6 +233,7 @@ module ns_egret {
         private _isPaused:boolean = false;
         /**
          * 正在暂停中
+		 * @member ns_egret.Animation#isPaused
          */
         public get isPaused():boolean{
             return this._isPaused;
@@ -218,6 +241,7 @@ module ns_egret {
 
         /**
          * 暂停播放
+		 * @method ns_egret.Animation#pause
          */
         public pause():void{
             if(!this._started)
@@ -229,6 +253,7 @@ module ns_egret {
         }
         /**
          * 继续播放
+		 * @method ns_egret.Animation#resume
          */
         public resume():void{
             if(!this._started||!this._isPaused)
@@ -248,6 +273,7 @@ module ns_egret {
 
         /**
          * 动画已经开始的标志，包括延迟等待和暂停的阶段。
+		 * @member ns_egret.Animation#started
          */
         public get started():boolean{
             return this._started;

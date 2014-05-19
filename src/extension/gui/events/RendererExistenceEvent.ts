@@ -21,16 +21,33 @@
 
 module ns_egret {
 
+	/**
+	 * @class ns_egret.RendererExistenceEvent
+	 * @classdesc
+	 * 在DataGroup添加或删除项呈示器时分派的事件。
+	 * @extends ns_egret.Event
+	 */	
 	export class RendererExistenceEvent extends Event{
 		/**
 		 * 添加了项呈示器 
+		 * @constant ns_egret.RendererExistenceEvent.RENDERER_ADD
 		 */		
 		public static RENDERER_ADD:string = "rendererAdd";
 		/**
 		 * 移除了项呈示器 
+		 * @constant ns_egret.RendererExistenceEvent.RENDERER_REMOVE
 		 */		
 		public static RENDERER_REMOVE:string = "rendererRemove";
 
+		/**
+		 * @method ns_egret.RendererExistenceEvent#constructor
+		 * @param type {string} 
+		 * @param bubbles {boolean} 
+		 * @param cancelable {boolean} 
+		 * @param renderer {IItemRenderer} 
+		 * @param index {number} 
+		 * @param data {any} 
+		 */
 		public constructor(type:string, bubbles:boolean = false,
 											   cancelable:boolean = false,renderer:IItemRenderer = null, 
 											   index:number = -1, data:any = null){
@@ -43,16 +60,19 @@ module ns_egret {
 		
 		/**
 		 * 呈示器的数据项目。 
+		 * @member ns_egret.RendererExistenceEvent#data
 		 */		
 		public data:any;
 		
 		/**
 		 * 指向已添加或删除项呈示器的位置的索引。 
+		 * @member ns_egret.RendererExistenceEvent#index
 		 */		
 		public index:number;
 		
 		/**
 		 * 对已添加或删除的项呈示器的引用。 
+		 * @member ns_egret.RendererExistenceEvent#renderer
 		 */		
 		public renderer:IItemRenderer;
 	}

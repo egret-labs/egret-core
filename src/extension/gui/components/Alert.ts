@@ -25,31 +25,41 @@
 
 module ns_egret {
 
+	/**
+	 * @class ns_egret.Alert
+	 * @classdesc
+	 * 弹出对话框，可能包含消息、标题、按钮（“确定”、“取消”、“是”和“否”的任意组合)。
+	 * @extends ns_egret.TitleWindow
+	 */
 	export class Alert extends TitleWindow{
 		/**
 		 * 当对话框关闭时，closeEvent.detail的值若等于此属性,表示被点击的按钮为firstButton。
+		 * @constant ns_egret.Alert.FIRST_BUTTON
 		 */		
 		public static FIRST_BUTTON:string = "firstButton";
 		/**
 		 * 当对话框关闭时，closeEvent.detail的值若等于此属性,表示被点击的按钮为secondButton。
+		 * @constant ns_egret.Alert.SECOND_BUTTON
 		 */		
 		public static SECOND_BUTTON:string = "secondButton";
 		/**
 		 * 当对话框关闭时，closeEvent.detail的值若等于此属性,表示被点击的按钮为closeButton。
+		 * @constant ns_egret.Alert.CLOSE_BUTTON
 		 */		
 		public static CLOSE_BUTTON:string = "closeButton";
 		
 		/**
 		 * 弹出Alert控件的静态方法。在Alert控件中选择一个按钮，将关闭该控件。
-		 * @param text 要显示的文本内容字符串。
-		 * @param title 对话框标题
-		 * @param closeHandler 按下Alert控件上的任意按钮时的回调函数。示例:closeHandler(event:CloseEvent);
+		 * @method ns_egret.Alert.show
+		 * @param text {string} 要显示的文本内容字符串。
+		 * @param title {string} 对话框标题
+		 * @param closeHandler {Function} 按下Alert控件上的任意按钮时的回调函数。示例:closeHandler(event:CloseEvent);
 		 * event的detail属性包含 Alert.FIRST_BUTTON、Alert.SECOND_BUTTON和Alert.CLOSE_BUTTON。
-		 * @param firstButtonLabel 第一个按钮上显示的文本。
-		 * @param secondButtonLabel 第二个按钮上显示的文本，若为null，则不显示第二个按钮。
-		 * @param modal 是否启用模态。即禁用弹出框以下的鼠标事件。默认true。
-		 * @param center 是否居中。默认true。
-		 * @return 弹出的对话框实例的引用
+		 * @param firstButtonLabel {string} 第一个按钮上显示的文本。
+		 * @param secondButtonLabel {string} 第二个按钮上显示的文本，若为null，则不显示第二个按钮。
+		 * @param modal {boolean} 是否启用模态。即禁用弹出框以下的鼠标事件。默认true。
+		 * @param center {boolean} 是否居中。默认true。
+		 * @returns {Alert}
 		 */		
 		public static show(text:string="",title:string="",closeHandler:Function=null,
 									firstButtonLabel:string="确定",secondButtonLabel:string="",
@@ -65,6 +75,7 @@ module ns_egret {
 		}
 		/**
 		 * 构造函数，请通过静态方法Alert.show()来创建对象实例。
+		 * @method ns_egret.Alert#constructor
 		 */		
 		public constructor(){
 			super();
@@ -73,6 +84,7 @@ module ns_egret {
 		private _firstButtonLabel:string = "";
 		/**
 		 * 第一个按钮上显示的文本
+		 * @member ns_egret.Alert#firstButtonLabel
 		 */
 		public get firstButtonLabel():string{
 			return this._firstButtonLabel;
@@ -88,6 +100,7 @@ module ns_egret {
 		private _secondButtonLabel:string = "";
 		/**
 		 * 第二个按钮上显示的文本
+		 * @member ns_egret.Alert#secondButtonLabel
 		 */
 		public get secondButtonLabel():string{
 			return this._secondButtonLabel;
@@ -107,6 +120,7 @@ module ns_egret {
 		private _contentText:string = "";
 		/**
 		 * 文本内容
+		 * @member ns_egret.Alert#contentText
 		 */
 		public get contentText():string{
 			return this._contentText;
@@ -141,7 +155,8 @@ module ns_egret {
 			}
 		}
 		/**
-		 * @inheritDoc
+		 * @method ns_egret.Alert#closeButton_clickHandler
+		 * @param event {TouchEvent} 
 		 */
 		public closeButton_clickHandler(event:TouchEvent):void{
 			super.closeButton_clickHandler(event);
@@ -153,18 +168,23 @@ module ns_egret {
 		
 		/**
 		 * [SkinPart]文本内容显示对象
+		 * @member ns_egret.Alert#contentDisplay
 		 */		
 		public contentDisplay:IDisplayText;
 		/**
 		 * [SkinPart]第一个按钮，通常是"确定"。
+		 * @member ns_egret.Alert#firstButton
 		 */		
 		public firstButton:Button;
 		/**
 		 * [SkinPart]第二个按钮，通常是"取消"。
+		 * @member ns_egret.Alert#secondButton
 		 */		
 		public secondButton:Button;
 		/**
-		 * @inheritDoc
+		 * @method ns_egret.Alert#partAdded
+		 * @param partName {string} 
+		 * @param instance {any} 
 		 */
 		public partAdded(partName:string, instance:any):void{
 			super.partAdded(partName,instance);
@@ -183,7 +203,9 @@ module ns_egret {
 			}
 		}
 		/**
-		 * @inheritDoc
+		 * @method ns_egret.Alert#partRemoved
+		 * @param partName {string} 
+		 * @param instance {any} 
 		 */		
 		public partRemoved(partName:string, instance:any):void{
 			super.partRemoved(partName,instance);

@@ -22,7 +22,16 @@
 
 module ns_egret {
 
+	/**
+	 * @class ns_egret.SkinBasicLayout
+	 * @classdesc
+	 * 皮肤简单布局类。当SkinnableComponent的皮肤不是ISkinPartHost对象时启用。以提供子项的简单布局。
+	 * @extends ns_egret.HashObject
+	 */
     export class SkinBasicLayout extends HashObject{
+		/**
+		 * @method ns_egret.SkinBasicLayout#constructor
+		 */
         public constructor() {
             super();
         }
@@ -31,6 +40,7 @@ module ns_egret {
 
         /**
          * 目标布局对象
+		 * @member ns_egret.SkinBasicLayout#target
          */
         public get target():SkinnableComponent {
             return this._target;
@@ -43,6 +53,7 @@ module ns_egret {
 
         /**
          * 测量组件尺寸大小
+		 * @method ns_egret.SkinBasicLayout#measure
          */
         public measure():void {
             if (this.target == null)
@@ -109,6 +120,9 @@ module ns_egret {
 
         /**
          * 更新显示列表
+		 * @method ns_egret.SkinBasicLayout#updateDisplayList
+		 * @param unscaledWidth {number} 
+		 * @param unscaledHeight {number} 
          */
         public updateDisplayList(unscaledWidth:number, unscaledHeight:number):void {
             if (this.target == null)

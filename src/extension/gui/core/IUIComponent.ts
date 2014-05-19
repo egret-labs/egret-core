@@ -20,26 +20,40 @@
 
 module ns_egret {
 
+	/**
+	 * @class ns_egret.IUIComponent
+	 * @interface
+	 * @classdesc
+	 * UI组件接口
+	 * @extends ns_egret.IVisualElement
+	 */	
 	export interface IUIComponent extends IVisualElement{
 		/**
 		 * 组件是否可以接受用户交互。
+		 * @member ns_egret.IUIComponent#enabled
 		 */
 		enabled:boolean;
 		/**
 		 * PopUpManager将其设置为true,以指示已弹出该组件。
+		 * @member ns_egret.IUIComponent#isPopUp
 		 */
 		isPopUp:boolean;
 		/**
 		 * 外部显式指定的高度
+		 * @member ns_egret.IUIComponent#explicitHeight
 		 */
 		explicitHeight:number;
 		/**
 		 * 外部显式指定的宽度
+		 * @member ns_egret.IUIComponent#explicitWidth
 		 */
 		explicitWidth:number;
 		/**
 		 * 设置组件的宽高，w,h均不包含scale值。此方法不同于直接设置width,height属性，
 		 * 不会影响显式标记尺寸属性widthExplicitlySet,_heightExplicitlySet
+		 * @method ns_egret.IUIComponent#setActualSize
+		 * @param newWidth {number} 
+		 * @param newHeight {number} 
 		 */		
 		setActualSize(newWidth:number, newHeight:number):void;
 	}

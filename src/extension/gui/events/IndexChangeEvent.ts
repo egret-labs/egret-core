@@ -20,17 +20,33 @@
 
 module ns_egret {
 
+	/**
+	 * @class ns_egret.IndexChangeEvent
+	 * @classdesc
+	 * 索引改变事件
+	 * @extends ns_egret.Event
+	 */	
 	export class IndexChangeEvent extends Event{
 		/**
 		 * 指示索引已更改 
+		 * @constant ns_egret.IndexChangeEvent.CHANGE
 		 */		
 		public static CHANGE:string = "change";
 		
 		/**
 		 * 指示索引即将更改,可以通过调用preventDefault()方法阻止索引发生更改
+		 * @constant ns_egret.IndexChangeEvent.CHANGING
 		 */
 		public static CHANGING:string = "changing";
 		
+		/**
+		 * @method ns_egret.IndexChangeEvent#constructor
+		 * @param type {string} 
+		 * @param bubbles {boolean} 
+		 * @param cancelable {boolean} 
+		 * @param oldIndex {number} 
+		 * @param newIndex {number} 
+		 */
 		public constructor(type:string, bubbles:boolean = false,
 										 cancelable:boolean = false,
 										 oldIndex:number = -1,
@@ -43,11 +59,13 @@ module ns_egret {
 		
 		/**
 		 * 进行更改之后的从零开始的索引。
+		 * @member ns_egret.IndexChangeEvent#newIndex
 		 */
 		public newIndex:number;
 		
 		/**
 		 * 进行更改之前的从零开始的索引。
+		 * @member ns_egret.IndexChangeEvent#oldIndex
 		 */		
 		public oldIndex:number;
 	}

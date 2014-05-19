@@ -22,7 +22,16 @@
 
 module ns_egret {
 
+	/**
+	 * @class ns_egret.ToggleButtonBase
+	 * @classdesc
+	 * 切换按钮组件基类
+	 * @extends ns_egret.ButtonBase
+	 */	
 	export class ToggleButtonBase extends ButtonBase{
+		/**
+		 * @method ns_egret.ToggleButtonBase#constructor
+		 */
 		public constructor(){
 			super();
 		}
@@ -30,6 +39,7 @@ module ns_egret {
 		public _selected:boolean;
 		/**
 		 * 按钮处于按下状态时为 true，而按钮处于弹起状态时为 false。
+		 * @member ns_egret.ToggleButtonBase#selected
 		 */		
 		public get selected():boolean{
 			return this._selected;
@@ -49,7 +59,8 @@ module ns_egret {
         }
 		
 		/**
-		 * @inheritDoc
+		 * @method ns_egret.ToggleButtonBase#getCurrentSkinState
+		 * @returns {string}
 		 */
 		public getCurrentSkinState():string{
 			if (!this.selected)
@@ -62,7 +73,7 @@ module ns_egret {
 		 */		
 		public _autoSelected:boolean = true;
 		/**
-		 * @inheritDoc
+		 * @method ns_egret.ToggleButtonBase#buttonReleased
 		 */
 		public buttonReleased():void{
 			super.buttonReleased();

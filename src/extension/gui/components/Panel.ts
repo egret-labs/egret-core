@@ -21,9 +21,16 @@
 
 module ns_egret {
 
+	/**
+	 * @class ns_egret.Panel
+	 * @classdesc
+	 * 带有标题，内容区域的面板组件
+	 * @extends ns_egret.SkinnableContainer
+	 */	
     export class Panel extends SkinnableContainer {
         /**
          * 构造函数
+		 * @method ns_egret.Panel#constructor
          */
         public constructor() {
             super();
@@ -32,6 +39,7 @@ module ns_egret {
 
         /**
          * [SkinPart]标题显示对象
+		 * @member ns_egret.Panel#titleDisplay
          */
         public titleDisplay:IDisplayText;
 
@@ -43,6 +51,7 @@ module ns_egret {
 
         /**
          * 标题文本内容
+		 * @member ns_egret.Panel#title
          */
         public get title():string {
             return this._title;
@@ -56,7 +65,9 @@ module ns_egret {
         }
 
         /**
-         * @inheritDoc
+		 * @method ns_egret.Panel#partAdded
+		 * @param partName {string} 
+		 * @param instance {any} 
          */
         public partAdded(partName:string, instance:any):void {
             super.partAdded(partName, instance);

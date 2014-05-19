@@ -22,9 +22,16 @@
 
 module ns_egret {
 
+	/**
+	 * @class ns_egret.Rect
+	 * @classdesc
+	 * 矩形绘图元素。矩形的角可以是圆角,此组件可响应鼠标事件。
+	 * @extends ns_egret.UIComponent
+	 */
 	export class Rect extends UIComponent{
 		/**
 		 * 构造函数
+		 * @method ns_egret.Rect#constructor
 		 */		
 		public constructor(){
 			super();
@@ -33,6 +40,9 @@ module ns_egret {
 
         private shapeRect:Shape;
 
+		/**
+		 * @method ns_egret.Rect#createChildren
+		 */
         public createChildren():void{
             super.createChildren();
             this.shapeRect = new Shape();
@@ -42,6 +52,7 @@ module ns_egret {
 		private _fillColor:number = 0xFFFFFF;
 		/**
 		 * 填充颜色
+		 * @member ns_egret.Rect#fillColor
 		 */
 		public get fillColor():number{
 			return this._fillColor;
@@ -56,6 +67,7 @@ module ns_egret {
 		private _fillAlpha:number = 1;
 		/**
 		 * 填充透明度,默认值为0。
+		 * @member ns_egret.Rect#fillAlpha
 		 */
 		public get fillAlpha():number{
 			return this._fillAlpha;
@@ -70,6 +82,7 @@ module ns_egret {
 		private _strokeColor:number = 0x444444;
 		/**
 		 * 边框颜色,注意：当strokeAlpha为0时，不显示边框。
+		 * @member ns_egret.Rect#strokeColor
 		 */
 		public get strokeColor():number{
 			return this._strokeColor;
@@ -85,6 +98,7 @@ module ns_egret {
 		private _strokeAlpha:number = 0;
 		/**
 		 * 边框透明度，默认值为0。
+		 * @member ns_egret.Rect#strokeAlpha
 		 */
 		public get strokeAlpha():number{
 			return this._strokeAlpha;
@@ -99,6 +113,7 @@ module ns_egret {
 		private _strokeWeight:number = 1;
 		/**
 		 * 边框粗细(像素),注意：当strokeAlpha为0时，不显示边框。
+		 * @member ns_egret.Rect#strokeWeight
 		 */
 		public get strokeWeight():number{
 			return this._strokeWeight;
@@ -111,7 +126,9 @@ module ns_egret {
 		}
 
 		/**
-		 * @inheritDoc
+		 * @method ns_egret.Rect#updateDisplayList
+		 * @param unscaledWidth {number} 
+		 * @param unscaledHeight {number} 
 		 */
 		public updateDisplayList(unscaledWidth:number, unscaledHeight:number):void{
 			super.updateDisplayList(unscaledWidth,unscaledWidth);

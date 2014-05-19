@@ -31,9 +31,18 @@
 
 module ns_egret {
 
+	/**
+	 * @class ns_egret.ViewStack
+	 * @classdesc
+	 * 层级堆叠容器,一次只显示一个子对象。
+	 * @extends ns_egret.Group
+	 * @implements ns_egret.IViewStack
+	 * @implements ns_egret.ICollection
+	 */
 	export class ViewStack extends Group implements IViewStack,ICollection{
 		/**
 		 * 构造函数
+		 * @method ns_egret.ViewStack#constructor
 		 */		
 		public constructor(){
 			super();
@@ -42,6 +51,7 @@ module ns_egret {
 
 		/**
 		 * 此容器的布局对象为只读,默认限制为BasicLayout。
+		 * @member ns_egret.ViewStack#layout
 		 */		
 		public get layout():LayoutBase{
 			return this._layout;
@@ -52,6 +62,7 @@ module ns_egret {
 		private _createAllChildren:boolean = false;
 		/**
 		 * 是否立即初始化化所有子项。false表示当子项第一次被显示时再初始化它。默认值false。
+		 * @member ns_egret.ViewStack#createAllChildren
 		 */
 		public get createAllChildren():boolean{
 			return this._createAllChildren;
@@ -79,7 +90,7 @@ module ns_egret {
 
 		private _selectedChild:IVisualElement;
 		/**
-		 * @inheritDoc
+		 * @member ns_egret.ViewStack#selectedChild
 		 */	
 		public get selectedChild():IVisualElement{
 			var index:number = this.selectedIndex;
@@ -104,7 +115,7 @@ module ns_egret {
 		
 		public _selectedIndex:number = -1;
 		/**
-		 * @inheritDoc
+		 * @member ns_egret.ViewStack#selectedIndex
 		 */	
 		public get selectedIndex():number{
 			return this.proposedSelectedIndex!=ViewStack.NO_PROPOSED_SELECTION?this.proposedSelectedIndex:this._selectedIndex;
@@ -116,6 +127,9 @@ module ns_egret {
 		private notifyTabBar:boolean = false;
 		/**
 		 * 设置选中项索引
+		 * @method ns_egret.ViewStack#setSelectedIndex
+		 * @param value {number} 
+		 * @param notifyListeners {boolean} 
 		 */		
 		public setSelectedIndex(value:number,notifyListeners:boolean=true):void{
 			if (value == this.selectedIndex){
@@ -131,6 +145,10 @@ module ns_egret {
 		
 		/**
 		 * 添加一个显示元素到容器
+		 * @method ns_egret.ViewStack#elementAdded
+		 * @param element {IVisualElement} 
+		 * @param index {number} 
+		 * @param notifyListeners {boolean} 
 		 */		
 		public elementAdded(element:IVisualElement, index:number, notifyListeners:boolean=true):void{
 			if(this._createAllChildren){
@@ -157,6 +175,10 @@ module ns_egret {
 		
 		/**
 		 * 从容器移除一个显示元素
+		 * @method ns_egret.ViewStack#elementRemoved
+		 * @param element {IVisualElement} 
+		 * @param index {number} 
+		 * @param notifyListeners {boolean} 
 		 */		
 		public elementRemoved(element:IVisualElement, index:number, notifyListeners:boolean=true):void{
 			super.elementRemoved(element,index,notifyListeners);
@@ -185,6 +207,9 @@ module ns_egret {
 		 */		
 		private childOrderingChanged:boolean = false;
 		
+		/**
+		 * @method ns_egret.ViewStack#commitProperties
+		 */
 		public commitProperties():void{
 			super.commitProperties();
 			if (this.proposedSelectedIndex != ViewStack.NO_PROPOSED_SELECTION){
@@ -236,13 +261,15 @@ module ns_egret {
 			this.invalidateDisplayList();
 		}
 		/**
-		 * @inheritDoc
+		 * @member ns_egret.ViewStack#length
 		 */	
 		public get length():number{
 			return this.numElements;
 		}
 		/**
-		 * @inheritDoc
+		 * @method ns_egret.ViewStack#getItemAt
+		 * @param index {number} 
+		 * @returns {any}
 		 */			
 		public getItemAt(index:number):any{
 			var element:IVisualElement = this.getElementAt(index);
@@ -251,7 +278,9 @@ module ns_egret {
 			return "";
 		}
 		/**
-		 * @inheritDoc
+		 * @method ns_egret.ViewStack#getItemIndex
+		 * @param item {any} 
+		 * @returns {number}
 		 */		
 		public getItemIndex(item:any):number{
 			var list:Array<any> = this.getElementsContent();

@@ -18,29 +18,41 @@
 
 module ns_egret {
 
+	/**
+	 * @class ns_egret.PopUpPosition
+	 * @classdesc
+	 * 定义弹出位置的常量值。
+	 * 该常量决定目标对象相对于父级组件的弹出位置。
+	 */	
 	export class PopUpPosition{	
 		/**
 		 * 在组件上方弹出
+		 * @constant ns_egret.PopUpPosition.ABOVE
 		 */		
 		public static ABOVE:string = "above";
 		/**
 		 * 在组件下方弹出
+		 * @constant ns_egret.PopUpPosition.BELOW
 		 */		
 		public static BELOW:string = "below";
 		/**
 		 * 在组件中心弹出
+		 * @constant ns_egret.PopUpPosition.CENTER
 		 */		
 		public static CENTER:string = "center";
 		/**
 		 * 在组件左上角弹出 
+		 * @constant ns_egret.PopUpPosition.TOP_LEFT
 		 */		
 		public static TOP_LEFT:string = "topLeft";
 		/**
 		 * 在组件左边弹出
+		 * @constant ns_egret.PopUpPosition.LEFT
 		 */		
 		public static LEFT:string = "left";
 		/**
 		 * 在组件右边弹出
+		 * @constant ns_egret.PopUpPosition.RIGHT
 		 */		
 		public static RIGHT:string = "right";
 		

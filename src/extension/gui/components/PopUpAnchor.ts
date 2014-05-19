@@ -31,9 +31,16 @@
 
 module ns_egret {
 
+	/**
+	 * @class ns_egret.PopUpAnchor
+	 * @classdesc
+	 * PopUpAnchor组件用于定位布局中的弹出控件或下拉控件
+	 * @extends ns_egret.UIComponent
+	 */	
 	export class PopUpAnchor extends UIComponent{
 		/**
 		 * 构造函数
+		 * @method ns_egret.PopUpAnchor#constructor
 		 */		
 		public constructor(){
 			super();
@@ -52,6 +59,7 @@ module ns_egret {
 		private _popUpHeightMatchesAnchorHeight:boolean = false;
 		/**
 		 * 如果为 true，则将popUp控件的高度设置为 PopUpAnchor的高度值。
+		 * @member ns_egret.PopUpAnchor#popUpHeightMatchesAnchorHeight
 		 */
 		public get popUpHeightMatchesAnchorHeight():boolean{
 			return this._popUpHeightMatchesAnchorHeight;
@@ -68,6 +76,7 @@ module ns_egret {
 		private _popUpWidthMatchesAnchorWidth:boolean = false;
 		/**
 		 * 如果为true，则将popUp控件的宽度设置为PopUpAnchor的宽度值。
+		 * @member ns_egret.PopUpAnchor#popUpWidthMatchesAnchorWidth
 		 */		
 		public get popUpWidthMatchesAnchorWidth():boolean{
 			return this._popUpWidthMatchesAnchorWidth;
@@ -84,6 +93,7 @@ module ns_egret {
 		private _displayPopUp:boolean = false;
 		/**
 		 * 如果为 true，则将popUp对象弹出。若为false，关闭弹出的popUp。
+		 * @member ns_egret.PopUpAnchor#displayPopUp
 		 */		
 		public get displayPopUp():boolean{
 			return this._displayPopUp;
@@ -100,6 +110,7 @@ module ns_egret {
 		private _popUp:IVisualElement;
 		/**
 		 * 要弹出或移除的目标显示对象。
+		 * @member ns_egret.PopUpAnchor#popUp
 		 */		
 		public get popUp():IVisualElement{ 
 			return this._popUp 
@@ -117,6 +128,7 @@ module ns_egret {
 		/**
 		 * popUp相对于PopUpAnchor的弹出位置。请使用PopUpPosition里定义的常量。默认值TOP_LEFT。
 		 * @see org.flexlite.domUI.core.PopUpPosition
+		 * @member ns_egret.PopUpAnchor#popUpPosition
 		 */		
 		public get popUpPosition():string{
 			return this._popUpPosition;
@@ -130,7 +142,9 @@ module ns_egret {
 		}
 		
 		/**
-		 * @inheritDoc
+		 * @method ns_egret.PopUpAnchor#updateDisplayList
+		 * @param unscaledWidth {number} 
+		 * @param unscaledHeight {number} 
 		 */
 		public updateDisplayList(unscaledWidth:number, unscaledHeight:number):void{
 			super.updateDisplayList(unscaledWidth, unscaledHeight);                
@@ -138,6 +152,7 @@ module ns_egret {
 		}
 		/**
 		 * 手动刷新popUp的弹出位置和尺寸。
+		 * @method ns_egret.PopUpAnchor#updatePopUpTransform
 		 */		
 		public updatePopUpTransform():void{
 			this.applyPopUpTransform(this.width, this.height);
@@ -197,6 +212,7 @@ module ns_egret {
 		private _openDuration:number = 250;
 		/**
 		 * 窗口弹出的动画时间(以毫秒为单位)，设置为0则直接弹出窗口而不播放动画效果。默认值250。
+		 * @member ns_egret.PopUpAnchor#openDuration
 		 */
 		public get openDuration():number{
 			return this._openDuration;
@@ -209,6 +225,7 @@ module ns_egret {
 		private _closeDuration:number = 150;
 		/**
 		 * 窗口关闭的动画时间(以毫秒为单位)，设置为0则直接关闭窗口而不播放动画效果。默认值150。
+		 * @member ns_egret.PopUpAnchor#closeDuration
 		 */
 		public get closeDuration():number{
 			return this._closeDuration;

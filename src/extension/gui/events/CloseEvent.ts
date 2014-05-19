@@ -20,10 +20,24 @@
 
 module ns_egret {
 
+	/**
+	 * @class ns_egret.CloseEvent
+	 * @classdesc
+	 * 窗口关闭事件
+	 * @extends ns_egret.Event
+	 */	
 	export class CloseEvent extends Event{
+		/**
+		 * @constant ns_egret.CloseEvent.CLOSE
+		 */
 		public static CLOSE:string = "close";
 		/**
 		 * 构造函数
+		 * @method ns_egret.CloseEvent#constructor
+		 * @param type {string} 
+		 * @param bubbles {boolean} 
+		 * @param cancelable {boolean} 
+		 * @param detail {any} 
 		 */		
 		public constructor(type:string, bubbles:boolean = false,
 								   cancelable:boolean = false, detail:any = -1){
@@ -33,6 +47,7 @@ module ns_egret {
 		}
 		/**
 		 * 触发关闭事件的细节。某些窗口组件用此属性来区分窗口中被点击的按钮。
+		 * @member ns_egret.CloseEvent#detail
 		 */		
 		public detail:any;
 	}

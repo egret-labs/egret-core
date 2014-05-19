@@ -21,7 +21,16 @@
 
 module ns_egret {
 
+	/**
+	 * @class ns_egret.Label
+	 * @classdesc
+	 * 一行或多行不可编辑的文本控件
+	 * @extends ns_egret.TextBase
+	 */
 	export class Label extends TextBase{
+		/**
+		 * @method ns_egret.Label#constructor
+		 */
 		public constructor(){
 			super();
 			this.addEventListener(UIEvent.UPDATE_COMPLETE, this.updateCompleteHandler, this);
@@ -37,6 +46,7 @@ module ns_egret {
 		private _maxDisplayedLines:number = 0;
 		/**
 		 * 最大显示行数,0或负值代表不限制。
+		 * @member ns_egret.Label#maxDisplayedLines
 		 */
 		public get maxDisplayedLines():number{
 			return this._maxDisplayedLines;
@@ -59,6 +69,7 @@ module ns_egret {
 		/**
 		 * 四个边缘的共同内边距。若单独设置了任一边缘的内边距，则该边缘的内边距以单独设置的值为准。
 		 * 此属性主要用于快速设置多个边缘的相同内边距。默认值：0。
+		 * @member ns_egret.Label#padding
 		 */
 		public get padding():number{
 			return this._padding;
@@ -74,6 +85,7 @@ module ns_egret {
 		private _paddingLeft:number = NaN;
 		/**
 		 * 文字距离左边缘的空白像素,若为NaN将使用padding的值，默认值：NaN。
+		 * @member ns_egret.Label#paddingLeft
 		 */
 		public get paddingLeft():number{
 			return this._paddingLeft;
@@ -91,6 +103,7 @@ module ns_egret {
 		private _paddingRight:number = NaN;
 		/**
 		 * 文字距离右边缘的空白像素,若为NaN将使用padding的值，默认值：NaN。
+		 * @member ns_egret.Label#paddingRight
 		 */
 		public get paddingRight():number{
 			return this._paddingRight;
@@ -108,6 +121,7 @@ module ns_egret {
 		private _paddingTop:number = NaN;
 		/**
 		 * 文字距离顶部边缘的空白像素,若为NaN将使用padding的值，默认值：NaN。
+		 * @member ns_egret.Label#paddingTop
 		 */
 		public get paddingTop():number{
 			return this._paddingTop;
@@ -125,6 +139,7 @@ module ns_egret {
 		private _paddingBottom:number = NaN;
 		/**
 		 * 文字距离底部边缘的空白像素,若为NaN将使用padding的值，默认值：NaN。
+		 * @member ns_egret.Label#paddingBottom
 		 */
 		public get paddingBottom():number{
 			return this._paddingBottom;
@@ -140,7 +155,7 @@ module ns_egret {
 		}    
 		
 		/**
-		 * @inheritDoc
+		 * @method ns_egret.Label#measure
 		 */
 		public measure():void{
 			//先提交属性，防止样式发生改变导致的测量不准确问题。
@@ -217,7 +232,9 @@ module ns_egret {
 		}
 		
 		/**
-		 * @inheritDoc
+		 * @method ns_egret.Label#updateDisplayList
+		 * @param unscaledWidth {number} 
+		 * @param unscaledHeight {number} 
 		 */
 		public updateDisplayList(unscaledWidth:number,unscaledHeight:number):void{
 			this.$updateDisplayList(unscaledWidth,unscaledHeight);

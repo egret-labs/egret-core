@@ -23,7 +23,17 @@
 
 module ns_egret {
 
+	/**
+	 * @class ns_egret.State
+	 * @classdesc
+	 * State 类定义视图状态，即组件的特定视图。
+	 * @extends ns_egret.EventDispatcher
+	 */
 	export class State extends EventDispatcher{
+		/**
+		 * @method ns_egret.State#constructor
+		 * @param properties {any} 
+		 */
 		public constructor(properties:any=null){
 			super();
 			for (var p in properties){
@@ -38,25 +48,31 @@ module ns_egret {
 		 * 该视图状态所基于的视图状态的名称；
 		 * 如果该视图状态不是基于已命名的视图状态，则为 null。
 		 * 如果该值为 null，则该视图状态基于根状态（包括不是使用 State 类为组件定义的属性、样式、事件处理函数和子项）。 
+		 * @member ns_egret.State#basedOn
 		 */		
 		public basedOn:string;
 		
 		/**
 		 * 视图状态的名称。给定组件的状态名称必须唯一。必须设置此属性。
+		 * @member ns_egret.State#name
 		 */		
 		public name:string;
 		
 		/**
 		 * 该视图状态的覆盖，表现为实现 IOverride 接口的对象的数组。
 		 * 这些覆盖在进入状态时按顺序应用，在退出状态时按相反的顺序删除。 
+		 * @member ns_egret.State#overrides
 		 */		
 		public overrides:Array<any>  = [];
 		/**
 		 * 此视图状态作为 String 数组所属的状态组。 
+		 * @member ns_egret.State#stateGroups
 		 */		
 		public stateGroups:Array<any>  = [];
 		/**
 		 * 初始化视图
+		 * @method ns_egret.State#initialize
+		 * @param parent {IStateClient} 
 		 */		
 		public initialize(parent:IStateClient):void{
 			if (!this.initialized){
@@ -68,6 +84,7 @@ module ns_egret {
 		}
 		/**
 		 * 抛出进入视图状态事件
+		 * @method ns_egret.State#dispatchEnterState
 		 */		
 		public dispatchEnterState():void{
 			if (this.hasEventListener("enterState"))
@@ -75,6 +92,7 @@ module ns_egret {
 		}
 		/**
 		 * 抛出即将退出视图状态事件
+		 * @method ns_egret.State#dispatchExitState
 		 */		
 		public dispatchExitState():void{
 			if (this.hasEventListener("exitState"))

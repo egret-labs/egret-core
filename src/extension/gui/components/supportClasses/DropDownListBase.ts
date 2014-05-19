@@ -30,9 +30,16 @@
 
 module ns_egret {
 
+	/**
+	 * @class ns_egret.DropDownListBase
+	 * @classdesc
+	 * 下拉列表控件基类
+	 * @extends ns_egret.List
+	 */	
 	export class DropDownListBase extends List{
 		/**
 		 * 构造函数
+		 * @method ns_egret.DropDownListBase#constructor
 		 */		
 		public constructor(){
 			super();
@@ -42,14 +49,19 @@ module ns_egret {
 		
 		/**
 		 * [SkinPart]下拉区域显示对象
+		 * @member ns_egret.DropDownListBase#dropDown
 		 */		
 		public dropDown:DisplayObject;
 		/**
 		 * [SkinPart]下拉触发按钮
+		 * @member ns_egret.DropDownListBase#openButton
 		 */		
 		public openButton:ButtonBase;
 		
 		
+		/**
+		 * @constant ns_egret.DropDownListBase.PAGE_SIZE
+		 */
 		public static PAGE_SIZE:number = 5;
 		
 		/**
@@ -94,6 +106,7 @@ module ns_egret {
 		private _dropDownController:DropDownController; 
 		/**
 		 * 下拉控制器
+		 * @member ns_egret.DropDownListBase#dropDownController
 		 */		
 		public get dropDownController():DropDownController{
 			return this._dropDownController;
@@ -115,6 +128,7 @@ module ns_egret {
 		}
 		/**
 		 * 下拉列表是否已经已打开
+		 * @member ns_egret.DropDownListBase#isDropDownOpen
 		 */		
 		public get isDropDownOpen():boolean{
 			if (this.dropDownController)
@@ -129,12 +143,15 @@ module ns_egret {
 			this._userProposedSelectedIndex = value;
 		}
 		
+		/**
+		 * @member ns_egret.DropDownListBase#userProposedSelectedIndex
+		 */
 		public get userProposedSelectedIndex():number{
 			return this._userProposedSelectedIndex;
 		}
 		
 		/**
-		 * @inheritDoc
+		 * @method ns_egret.DropDownListBase#commitProperties
 		 */
 		public commitProperties():void{
 			super.commitProperties();
@@ -146,7 +163,9 @@ module ns_egret {
 		}
 		
 		/**
-		 * @inheritDoc
+		 * @method ns_egret.DropDownListBase#partAdded
+		 * @param partName {string} 
+		 * @param instance {any} 
 		 */
 		public partAdded(partName:string, instance:any):void{
 			super.partAdded(partName, instance);
@@ -161,7 +180,9 @@ module ns_egret {
 		}
 		
 		/**
-		 * @inheritDoc
+		 * @method ns_egret.DropDownListBase#partRemoved
+		 * @param partName {string} 
+		 * @param instance {any} 
 		 */
 		public partRemoved(partName:string, instance:any):void{
 			if (this.dropDownController){
@@ -176,14 +197,17 @@ module ns_egret {
 		}
 		
 		/**
-		 * @inheritDoc
+		 * @method ns_egret.DropDownListBase#getCurrentSkinState
+		 * @returns {string}
 		 */
 		public getCurrentSkinState():string{
 			return !this.enabled ? "disabled" : this.isDropDownOpen ? "open" : "normal";
 		}   
 		
 		/**
-		 * @inheritDoc
+		 * @method ns_egret.DropDownListBase#commitSelection
+		 * @param dispatchChangedEvents {boolean} 
+		 * @returns {boolean}
 		 */
 		public commitSelection(dispatchChangedEvents:boolean = true):boolean{
 			var retVal:boolean = super.commitSelection(dispatchChangedEvents);
@@ -192,31 +216,41 @@ module ns_egret {
 		}
 		
 		/**
-		 * @inheritDoc
+		 * @method ns_egret.DropDownListBase#isItemIndexSelected
+		 * @param index {number} 
+		 * @returns {boolean}
 		 */
 		public isItemIndexSelected(index:number):boolean{
 			return this.userProposedSelectedIndex == index;
 		}
 		/**
 		 * 打开下拉列表并抛出UIEvent.OPEN事件。
+		 * @method ns_egret.DropDownListBase#openDropDown
 		 */		
 		public openDropDown():void{
 			this.dropDownController.openDropDown();
 		}
 		/**
 		 * 关闭下拉列表并抛出UIEvent.CLOSE事件。
+		 * @method ns_egret.DropDownListBase#closeDropDown
+		 * @param commit {boolean} 
 		 */		
 		public closeDropDown(commit:boolean):void{
 			this.dropDownController.closeDropDown(commit);
 		}
 		/**
 		 * 更新选中项的提示文本
+		 * @method ns_egret.DropDownListBase#updateLabelDisplay
+		 * @param displayItem {any} 
 		 */		
 		public updateLabelDisplay(displayItem:any = undefined):void{
 			
 		}
 		/**
 		 * 改变高亮的选中项
+		 * @method ns_egret.DropDownListBase#changeHighlightedSelection
+		 * @param newIndex {number} 
+		 * @param scrollToTop {boolean} 
 		 */		
 		public changeHighlightedSelection(newIndex:number, scrollToTop:boolean = false):void{
 			this.itemSelected(this.userProposedSelectedIndex, false);
@@ -225,7 +259,8 @@ module ns_egret {
 		}
 		
 		/**
-		 * @inheritDoc
+		 * @method ns_egret.DropDownListBase#dataProvider_collectionChangeHandler
+		 * @param event {CollectionEvent} 
 		 */
 		public dataProvider_collectionChangeHandler(event:CollectionEvent):void{       
 			super.dataProvider_collectionChangeHandler(event);
@@ -235,7 +270,8 @@ module ns_egret {
 		}
 		
 		/**
-		 * @inheritDoc
+		 * @method ns_egret.DropDownListBase#item_mouseDownHandler
+		 * @param event {TouchEvent} 
 		 */
 		public item_mouseDownHandler(event:TouchEvent):void{
 			super.item_mouseDownHandler(event);
@@ -248,6 +284,8 @@ module ns_egret {
 		}
 		/**
 		 * 控制器抛出打开列表事件
+		 * @method ns_egret.DropDownListBase#dropDownController_openHandler
+		 * @param event {UIEvent} 
 		 */		
 		public dropDownController_openHandler(event:UIEvent):void{
 			this.addEventListener(UIEvent.UPDATE_COMPLETE, this.open_updateCompleteHandler, this);
@@ -256,6 +294,8 @@ module ns_egret {
 		}
 		/**
 		 * 打开列表后组件一次失效验证全部完成
+		 * @method ns_egret.DropDownListBase#open_updateCompleteHandler
+		 * @param event {UIEvent} 
 		 */		
 		public open_updateCompleteHandler(event:UIEvent):void{   
 			this.removeEventListener(UIEvent.UPDATE_COMPLETE, this.open_updateCompleteHandler, this);
@@ -264,6 +304,8 @@ module ns_egret {
 		}
 		/**
 		 * 控制器抛出关闭列表事件
+		 * @method ns_egret.DropDownListBase#dropDownController_closeHandler
+		 * @param event {UIEvent} 
 		 */		
 		public dropDownController_closeHandler(event:UIEvent):void{
 			this.addEventListener(UIEvent.UPDATE_COMPLETE, this.close_updateCompleteHandler, this);
