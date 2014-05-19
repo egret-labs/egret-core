@@ -47,13 +47,5 @@ module ns_egret {
          * @constant {string} ns_egret.TimerEvent.TIMER_COMPLETE
          */
         public static TIMER_COMPLETE:string = "timerComplete";
-
-        /**
-         * 立即刷新屏幕，此方法主要使用在当用户执行拖拽等操作过程中，强制立即刷新屏幕已提高流畅程度。
-         */
-        public updateAfterEvent():void{
-
-        }
-
     }
 }
