@@ -15,24 +15,33 @@ function run(currentDir, args, opts) {
     var source = path.resolve(param.getEgretPath(), "");
     var source = opts["--source"];
     var output = opts["--output"];
-    if (!source || !output){
+    if (!source || !output) {
         libs.exit(1302);
     }
     source = source[0];
     output = output[0];
-    if (!source || !output){
+    if (!source || !output) {
         libs.exit(1302);
     }
-    buildAllFile(source, output, function () {
+    buildAllFile(function () {
         console.log("编译成功");
-    })
+    }, source, output)
 }
 
-function buildAllFile(source, output, callback) {
+/**
+ * 编译指定的代码
+ *
+ * @param callback 回调函数
+ * @param source 源文件所在的文件夹
+ * @param output 输出地址
+ * @param file_list 文件名称，默认为source/src/game_file_list.js或 source/src/egret_file_list.js
+ */
+function buildAllFile(callback, source, output, file_list) {
 
     async.waterfall([
         checkCompilerInstalled,
 
+        //cp所有js文件
         function (callback) {
             var all_js_file = libs.loopFileSync(source, filter);
             all_js_file.forEach(function (item) {
@@ -46,21 +55,29 @@ function buildAllFile(source, output, callback) {
         },
 
         function (callback) {
-            compile_temp(callback, source)
-        },
+            var sourceList = getFileList(file_list);
+            sourceList = sourceList.map(function (item) {
+                return path.join(source, item).replace(".js", ".ts");
+            }).filter(function (item) {
+                    return fs.existsSync(item);
+                });
 
-        function (filepath, callback) {
-            build(callback, filepath, output);
-        },
+            var cmd = "tsc " + sourceList.join(" ") + " -t ES5 --outDir " + output;
+            var ts = cp_exec(cmd);
+            ts.stderr.on("data", function (data) {
+                console.log(data);
+            })
 
 
-        function (result, callback) {
-            var allFileList = generateAllTypeScriptFileList(output);
-            for (var i = 0; i < allFileList.length; i++) {
-                var fileToDelete = path.join(output, allFileList[i]);
-                libs.deleteFileSync(fileToDelete);
-            }
-            callback();
+            ts.on('exit', function (code) {
+                if (code == 0) {
+                    callback(null, source);
+                }
+                else {
+                    console.log("编译失败");
+                }
+
+            });
         }
 
 
@@ -76,47 +93,18 @@ function buildAllFile(source, output, callback) {
 
 }
 
-function compile_temp(callback, source) {
-
-
-    var check_list = ["egret_file_list.js", "game_file_list.js"];
-    var exist_flag = false;
-
-    for (var i = 0 , length = check_list.length; i < length; i++) {
-        var file = path.join(source, check_list[i]);
-        if (fs.existsSync(file)) {
-            exist_flag = true;
-            var js_content = fs.readFileSync(file, "utf-8");
-            eval(js_content);
-            var output_path = compileFileList(source, eval(check_list[i].split(".js")[0]));
-        }
-    }
-
-    if (exist_flag) {
-        callback(null, output_path);
+function getFileList(file_list) {
+    if (fs.existsSync(file_list)) {
+        var js_content = fs.readFileSync(file_list, "utf-8");
+        eval(js_content);
+        var path = require("path");
+        var varname = path.basename(file_list).split(".js")[0];
+        return eval(varname);
     }
     else {
-        libs.exit(1301, source);
+        libs.exit(1301, file_list);
     }
 }
-
-
-function compileFileList(source, file_list) {
-    var output_content = file_list.map(function (item) {
-
-        if (item.indexOf("jslib") >= 0) return "";
-//        if (item.indexOf("Native") >= 0) return "";
-        return "///\<reference path=\"" + item.replace(".js", ".ts") + "\"/>";
-
-
-    }).join("\n");
-    var output_path = path.join(source, "temp.ts");
-    fs.writeFileSync(output_path, output_content, "utf-8");
-    return output_path;
-
-
-}
-
 
 function checkCompilerInstalled(callback) {
     var checkTypeScriptCompiler = "tsc";
@@ -159,41 +147,30 @@ function build(callback, source, output) {
     });
 }
 
-/**
- * 生成source下的所有TypeScript文件列表
- * @param source
- * @returns {Array}
- */
-//function generateAllTypeScriptFileList(source) {
-//
-//    return libs.loopFileSync(source, filter);
-//
-//    function filter(path) {
-//        return  path.indexOf(".ts") == path.length - 3 && path.indexOf(".d.ts") == -1
-//    }
-//}
+function generateEgretFileList(callback, egret_file, runtime) {
+    var file_list = require("../core/file_list.js");
+    var required_file_list = file_list.core.concat(file_list[runtime]);
 
+    var content = required_file_list.map(function (item) {
+        return "\"" + item + "\""
+    }).join(",\n")
+    content = "var egret_file_list = [\n" + content + "\n]";
+    libs.mkdir(path.dirname(egret_file));
+    fs.writeFileSync(egret_file, content, "utf-8");
+    callback();
 
-function generateAllTypeScriptFileList(source) {
-
-    return libs.loopFileSync(source, filter);
-
-    function filter(path) {
-        return  path.indexOf(".ts") == path.length - 3 && path.indexOf(".d.ts") == -1 &&
-            path.indexOf("Native") == -1
-    }
 }
 
 
-
-function exportHeader(callback,output_file){
-    var egret_path = path.join(param.getEgretPath(),"src");
-    var list = generateAllTypeScriptFileList(egret_path);
-    list = list.map(function(item){
-        return path.join(egret_path,item);
-    })
+function exportHeader(callback, source, output, file_list) {
+    var list = getFileList(file_list);
+    list = list.map(function (item) {
+        return path.join(source, item).replace(".js", ".ts");
+    }).filter(function (item) {
+            return fs.existsSync(item);
+        });
     var source = list.join(" ");
-    var cmd = "tsc " + source + " -t ES5 -d --out " +  output_file;
+    var cmd = "tsc " + source + " -t ES5 -d --out " + output;
 
     var ts = cp_exec(cmd);
     ts.stderr.on("data", function (data) {
@@ -202,7 +179,7 @@ function exportHeader(callback,output_file){
 
     ts.on('exit', function (code) {
         console.log("[success]");
-        if (callback){
+        if (callback) {
             callback();
         }
     });
@@ -210,4 +187,5 @@ function exportHeader(callback,output_file){
 
 exports.compile = buildAllFile;
 exports.exportHeader = exportHeader;
+exports.generateEgretFileList = generateEgretFileList;
 exports.run = run;

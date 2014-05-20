@@ -47,6 +47,5 @@ module ns_egret {
          * @constant {string} ns_egret.TimerEvent.TIMER_COMPLETE
          */
         public static TIMER_COMPLETE:string = "timerComplete";
-
     }
 }

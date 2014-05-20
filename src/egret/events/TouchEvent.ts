@@ -164,6 +164,5 @@ module ns_egret {
                 this._localY = point.y;
             }
         }
-
     }
 }

@@ -1,4 +1,7 @@
-var temp = [
+/**
+ * Created by apple on 14-5-15.
+ */
+exports.core = [
     "egret/core/HashObject.js",
     "egret/utils/Recycler.js",
     "egret/utils/getTimer.js",
@@ -72,8 +75,7 @@ var temp = [
     "extension/tilemap/TMXConst.js",
     "extension/tilemap/TMXMapInfo.js",
     //tileMap end
-
-    //GUI start
+     //GUI start
     "extension/gui/collections/ArrayCollection.js",
     "extension/gui/collections/ObjectCollection.js",
     "extension/gui/managers/LayoutManager.js",
@@ -166,51 +168,25 @@ var temp = [
     "extension/gui/managers/impl/PopUpManagerImpl.js",
     "extension/gui/managers/PopUpManager.js",
     //GUI end
-//    "extension/gui/component/DynamicBitmap.js",
     "extension/dragonbones/dragonBones.js",
     "extension/dragonbones/DragonBonesEgretBridge.js",
     "jslib/DEBUG.js",
-    "jslib/box2d.js",
+//    "jslib/box2d.js",
     "jslib/NumberUtils.js"
 ]
 
+exports.html5 = [
+    "egret/context/devices/HTML5DeviceContext.js",
+    "egret/context/renderer/HTML5CanvasRenderer.js",
+    "egret/context/sound/HTML5SoundContext.js",
+    "egret/context/net/HTML5NetContext.js",
+    "egret/interactive/HTML5TouchContext.js",
+    "egret/context/assets/HTML5AssetsContext.js"
+]
 
-var context_list;
+exports.native = [
+    "egret/context/devices/NativeDeviceContext.js",
+    "egret/context/renderer/NativeRendererContext.js",
+    "egret/interactive/NativeTouchContext.js"
 
-if (this.hasOwnProperty("egret") && egret.config && egret.config.runtime == 1) {
-
-
-    context_list = [
-        "egret/context/devices/NativeDeviceContext.js",
-        "egret/context/renderer/NativeRendererContext.js",
-        "egret/interactive/NativeTouchContext.js"
-    ]
-
-}
-else {//浏览器
-    context_list = [
-        "egret/context/devices/HTML5DeviceContext.js",
-        "egret/context/renderer/HTML5CanvasRenderer.js",
-        "egret/context/sound/HTML5SoundContext.js",
-        "egret/context/net/HTML5NetContext.js",
-        "egret/interactive/HTML5TouchContext.js",
-        "egret/context/assets/HTML5AssetsContext.js",
-
-    ]
-}
-
-
-egret_file_list = temp.concat(context_list);
-
-
-
-
-var __extends = this.__extends || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    if (!b){
-        console.log ("what?")
-    }
-    __.prototype = b.prototype;
-    d.prototype = new __();
-};
+]

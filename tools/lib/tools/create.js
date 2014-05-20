@@ -6,7 +6,6 @@ var async = require('../core/async');
 var compiler = require("./compile.js")
 
 
-
 /**
  * 创建新项目
  * @param currentDir 当前文件夹
@@ -19,6 +18,9 @@ function run(currDir, args, opts) {
         libs.exit(1001);
     }
 
+    var runtime = param.getOption(opts,"--runtime",["html5","native"]);
+    var egret_file = path.join(currDir, projectName, "bin-debug/lib/egret_file_list.js");
+
     async.series([
 
         function (callback) {
@@ -27,21 +29,39 @@ function run(currDir, args, opts) {
         },
 
         function (callback) {
-            compiler.compile(path.join(param.getEgretPath(), "src"), path.join(currDir, projectName, "bin-debug/lib"), callback);
-        },
 
-
-        function(callback) {
-            compiler.exportHeader(callback, path.join(currDir, projectName, "src","egret.d.ts"));
+            compiler.generateEgretFileList(callback,egret_file,runtime);
 
         },
 
         function (callback) {
-            compiler.compile(path.join(currDir, projectName, "src"), path.join(currDir, projectName, "bin-debug/src"), callback);
+            compiler.compile(callback,
+                path.join(param.getEgretPath(), "src"),
+                path.join(currDir, projectName, "bin-debug/lib"),
+                egret_file
+            );
+        },
+
+
+        function (callback) {
+            compiler.exportHeader(callback,
+                path.join(param.getEgretPath(), "src"),
+                path.join(currDir, projectName, "src", "egret.d.ts"),
+                egret_file
+            );
+
         },
 
         function (callback) {
-            console.log ("创建成功");
+            compiler.compile(callback,
+                path.join(currDir, projectName, "src"),
+                path.join(currDir, projectName, "bin-debug/src"),
+                path.join(currDir, projectName, "src/game_file_list.js")
+            );
+        },
+
+        function (callback) {
+            console.log("创建成功");
         }
     ])
 
@@ -55,12 +75,12 @@ function createNewProject(projectName) {
     libs.copy(template, projPath);
 }
 
-function help_title(){
+function help_title() {
     return "创建新项目";
 }
 
 
-function help_example(){
+function help_example() {
     return "egret create [project_name]";
 }
 

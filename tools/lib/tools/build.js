@@ -12,23 +12,36 @@ function run(currDir, args, opts) {
     currDir_global = currDir;
     var needCompileEngine = opts["-e"];
 
-    var game_path = args[0];
-    if (!game_path) {
+    var projectName = args[0];
+    if (!projectName) {
         libs.exit(1101);
     }
-
+    var egret_file = path.join(currDir, projectName, "bin-debug/lib/egret_file_list.js");
     var task = [];
     if (needCompileEngine) {
         task.push(
             function (callback) {
-                compiler.compile(path.join(param.getEgretPath(), "src"), path.join(currDir, game_path, "bin-debug/lib"), callback);
+
+                compiler.generateEgretFileList(callback,egret_file);
+
+            },
+            function (callback) {
+                compiler.compile(callback,
+                    path.join(param.getEgretPath(), "src"),
+                    path.join(currDir, projectName, "bin-debug/lib"),
+                    egret_file
+                );
             }
         );
     }
 
     task.push(
         function (callback) {
-            compiler.compile(path.join(currDir, game_path, "src"), path.join(currDir, game_path, "bin-debug/src"), callback);
+            compiler.compile(callback,
+                path.join(currDir, projectName, "src"),
+                path.join(currDir, projectName, "bin-debug/src"),
+                path.join(currDir, projectName, "src/game_file_list.js")
+            );
         }
     )
 

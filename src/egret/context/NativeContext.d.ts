@@ -16,31 +16,35 @@
  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-/// <reference path="../../core/HashObject.ts"/>
-/// <reference path="../../core/MainContext.ts"/>
-/// <reference path="../NativeContext.d.ts"/>
-
-module ns_egret {
 
 
-    export class NativeDeviceContext extends HashObject {
+declare module egret_native {
 
-        private callback:Function;
-        private thisObject:any;
+    /**
+     * 游戏启动
+     * @private
+     */
+    function startGame():void
 
-        public constructor() {
-            super();
-        }
+    /**
+     * 启动主循环
+     * @param callback 主循环回调函数
+     * @param thisObject
+     */
+    function executeMainLoop(callback:Function, thisObject:any):void
 
-        public executeMainLoop(callback:Function, thisObject:any):void {
 
-            this.callback = callback;
-            this.thisObject = thisObject;
-            egret_native.executeMainLoop(this.onEnterFrame, this);
-        }
+    module Graphics {
 
-        private onEnterFrame(advancedTime:number):void {
-            this.callback.call(this.thisObject, advancedTime);
-        }
+
+        function clearScreen(r:number, g:number, b:number):void;
+
+        function drawImage(texture:any, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight):void;
+
+        function setTransform(a:number, b:number, c:number, d:number, tx:number, ty:number):void;
+
+        function setGlobalAlpha(alpha:number):void;
+
+
     }
 }

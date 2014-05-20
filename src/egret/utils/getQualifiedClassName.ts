@@ -21,6 +21,7 @@ module ns_egret {
      * 在window上需要读取的命名空间属性列表
      */
     export var __moduleNameList:Array<string> = ["ns_egret","dragonBones"];
+
     /**
      * 需要重新刷新类名的标志
      */
@@ -54,6 +55,8 @@ module ns_egret {
         return className;
     }
 
+
+
     function getFunctionName(constructorFunction:Function):string{
         var constructorString:string = constructorFunction.toString();
         var index:number = constructorString.indexOf("(");
@@ -62,11 +65,11 @@ module ns_egret {
 
     function updateModules():void{
 //      var t:number = getTimer();
-        var list:Array<string> = __moduleNameList;
+        var list:Array<string> = ns_egret.__moduleNameList;
         var length:number = list.length;
         for(var i:number=0;i<length;i++){
             var key:string = list[i];
-            var value:any = window[key];
+            var value:any = __global[key];
             if(value&&typeof(value)=="object"&&value.__proto__&&
                 getFunctionName(value.__proto__.constructor)=="Object"){
                 setModuleName(value,key);
@@ -98,3 +101,5 @@ module ns_egret {
 
 
 }
+
+var __global = __global || this;
