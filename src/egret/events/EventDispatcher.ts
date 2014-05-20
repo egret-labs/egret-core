@@ -232,17 +232,11 @@ module ns_egret {
          * @param bubbles {boolean} 是否冒泡，默认false
          * @param data {any}附加数据(可选)
          */
-        public dispatchEventWith(type:string, bubbles:boolean = false, data:Object = null):void{
-            var recycler:Recycler = EventDispatcher.eventRecycler;
-            var event:Event = recycler.pop();
-            if(!event){
-                event = new Event("");
-            }
-            event._type = type;
-            event._bubbles = bubbles;
-            event.data = data;
-            this.dispatchEvent(event);
-            recycler.push(event);
+        public dispatchEventWith(type:string, bubbles:boolean = false, data?:Object):void{
+           if(data){
+               data = {data:data};
+           }
+           Event.dispathByTarget(this,type,bubbles,data);
         }
     }
 }

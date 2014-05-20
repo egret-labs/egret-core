@@ -245,6 +245,34 @@ module ns_egret {
             this._eventPhase = 2;
         }
 
+        public static _dispathByTarget(EventClass:any,target:IEventDispatcher,type:string,bubbles:boolean=false,data?:Object){
+            var recycler:Recycler = EventClass.eventRecycler;
+            var event:Event = recycler.pop();
+            if(!event){
+                event = new EventClass(type);
+            }
+            else{
+                event._type = type;
+            }
+            event._bubbles = bubbles;
+            if(data){
+                for(var key:string in data){
+                    event[key] = data[key];
+                }
+            }
+            target.dispatchEvent(event);
+            recycler.push(event);
+        }
+
+
+        private static eventRecycler:Recycler = new Recycler();
+        /**
+         * 使用指定的EventDispatcher对象来抛出Event事件对象。抛出的对象将会缓存在对象池上，供下次循环复用。
+         * @method ns_egret.Event.dispathByTarget
+         */
+        public static dispathByTarget(target:IEventDispatcher,type:string,bubbles:boolean=false,data?:Object):void{
+            Event._dispathByTarget(Event,target,type,bubbles,data)
+        }
 
     }
 }
