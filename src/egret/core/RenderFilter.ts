@@ -24,7 +24,7 @@
 /// <reference path="../texture/Texture.ts"/>
 
 module ns_egret {
-    export class RenderFilter extends HashObject{
+    export class RenderFilter extends HashObject {
         /**
          * @class ns_egret.RenderFilter
          */
@@ -61,7 +61,7 @@ module ns_egret {
             destX = destX || 0;
             destY = destY || 0;
             var locTexture = data._texture_to_render;
-            if (locTexture == null || locTexture._bitmapData == null) {
+            if (locTexture == null) {
                 return;
             }
             this._originalData.sourceX = sourceX;

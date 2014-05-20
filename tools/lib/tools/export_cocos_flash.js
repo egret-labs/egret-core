@@ -110,6 +110,7 @@ function build(data, parent) {
             name = "BitmapText";
             break;
         case "CCLayer":
+        case "CCLayerColor":
         case "CCNode":
             if (data.memberVarAssignmentName.match(/Btn$/)) {
                 name = "SimpleButton";

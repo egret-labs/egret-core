@@ -23,17 +23,17 @@ module ns_egret {
         /**
          * 顶对齐
          */
-        public static TOP:String = "top";
+        public static TOP:string = "top";
 
         /**
          * 底对齐
          */
-        public static BOTTOM:String = "bottom";
+        public static BOTTOM:string = "bottom";
 
         /**
          * 垂直居中对齐
          */
-        public static MIDDLE:String = "middle";
+        public static MIDDLE:string = "middle";
 
 		/**
 		 * 垂直两端对齐

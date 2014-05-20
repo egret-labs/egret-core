@@ -45,7 +45,6 @@ function run(currDir, args, opts) {
         }
     )
 
-
     async.series(task, function (err) {
         console.log("编译成功");
     })

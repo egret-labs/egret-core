@@ -22,17 +22,17 @@ module ns_egret {
         /**
          * 左对齐
          */
-        public static LEFT:String = "left";
+        public static LEFT:string = "left";
 
         /**
          * 右对齐
          */
-        public static RIGHT:String = "right";
+        public static RIGHT:string = "right";
 
         /**
          * 水平居中对齐
          */
-        public static CENTER:String = "center";
+        public static CENTER:string = "center";
 
 		/**
 		 * 水平两端对齐

@@ -82,7 +82,7 @@ module ns_egret {
             render(renderContext:RendererContext) {
 
             var locTexture = this.texture;
-            if (locTexture == null || locTexture._bitmapData == null) {
+            if (locTexture == null) {
                 return;
             }
             this._texture_to_render = locTexture;
