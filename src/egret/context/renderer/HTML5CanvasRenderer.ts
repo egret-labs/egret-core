@@ -41,6 +41,8 @@ module ns_egret {
         public _transformTx:number;
         public _transformTy:number;
 
+        private blendValue:string;
+
         constructor(canvas) {
             this.canvas = canvas;
             this.canvasContext = canvas.getContext("2d");
@@ -90,9 +92,9 @@ module ns_egret {
                 DEBUG.checkDrawImage(texture, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight);
             }
             var image = texture._bitmapData;
-            var beforeDraw = ns_egret.getTimer();
             destX += this._transformTx;
             destY += this._transformTy;
+            var beforeDraw = ns_egret.getTimer();
             this.canvasContext.drawImage(image, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight);
             super.drawImage(image, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight);
             this.renderCost += ns_egret.getTimer() - beforeDraw;
@@ -124,14 +126,17 @@ module ns_egret {
             this.canvasContext.setTransform(1,0,0,1,0,0);
         }
 
+
         setAlpha(alpha:number, blendMode:ns_egret.BlendMode) {
             if (alpha != this.canvasContext.globalAlpha) {
                 this.canvasContext.globalAlpha = alpha;
             }
             if (blendMode) {
+                this.blendValue = blendMode.value;
                 this.canvasContext.globalCompositeOperation = blendMode.value;
             }
-            else {
+            else if(this.blendValue != ns_egret.BlendMode.NORMAL.value){
+                this.blendValue = ns_egret.BlendMode.NORMAL.value;
                 this.canvasContext.globalCompositeOperation = ns_egret.BlendMode.NORMAL.value;
             }
         }
