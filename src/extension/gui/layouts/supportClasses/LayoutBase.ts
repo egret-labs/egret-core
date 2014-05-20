@@ -72,7 +72,7 @@ module ns_egret {
 				return;
 			
 			this._useVirtualLayout = value;
-			this.dispatchEvent(new Event("useVirtualLayoutChanged"));
+			this.dispatchEventWith("useVirtualLayoutChanged");
 			
 			if (this._useVirtualLayout && !value) 
 				this.clearVirtualLayoutCache();
@@ -102,7 +102,6 @@ module ns_egret {
          * @method ns_egret.LayoutBase#scrollPositionChanged
          */
         public scrollPositionChanged():void{
-
         }
 		
 		/**

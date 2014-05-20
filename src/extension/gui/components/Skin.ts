@@ -16,73 +16,98 @@
  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-/// <reference path="Group.ts"/>
+/// <reference path="../../../egret/display/DisplayObject.ts"/>
+/// <reference path="../../../egret/events/EventDispatcher.ts"/>
 /// <reference path="SkinnableComponent.ts"/>
+/// <reference path="../core/IContainer.ts"/>
 /// <reference path="../core/ISkin.ts"/>
 /// <reference path="../core/IStateClient.ts"/>
+/// <reference path="../core/IVisualElement.ts"/>
+/// <reference path="../core/IVisualElementContainer.ts"/>
+/// <reference path="../events/ElementExistenceEvent.ts"/>
 /// <reference path="../states/StateClientHelper.ts"/>
 
 module ns_egret {
 
 	/**
-	 * @class ns_egret.Skin
+	 * @class ns_egret.StateSkin
 	 * @classdesc
-	 * 皮肤布局基类<br/>
-	 * Skin及其子类中定义的公开属性,会在初始化完成后被直接当做SkinPart并将引用赋值到宿主组件的同名属性上，
-	 * 若有延迟创建的部件，请在加载完成后手动调用hostComponent.findSkinParts()方法应用部件。<br/>
-	 * @extends ns_egret.Group
+	 * 含有视图状态功能的皮肤基类。注意：为了减少嵌套层级，此皮肤没有继承显示对象，若需要显示对象版本皮肤，请使用Skin。
+	 * @see org.flexlite.domUI.components.supportClasses.Skin
+	 * @extends ns_egret.EventDispatcher
 	 * @implements ns_egret.IStateClient
 	 * @implements ns_egret.ISkin
+	 * @implements ns_egret.IContainer
 	 */
-	export class Skin extends Group 
-		implements IStateClient,ISkin{
+	export class Skin extends EventDispatcher
+		implements IStateClient, ISkin, IContainer{
 		/**
-		 * @method ns_egret.Skin#constructor
-		 */
+		 * 构造函数
+		 * @method ns_egret.StateSkin#constructor
+		 */		
 		public constructor(){
 			super();
 			this.stateClientHelper = new StateClientHelper(this);
 		}
 		
-		private _hostComponent:SkinnableComponent;
-
 		/**
-		 * 主机组件引用,仅当皮肤被应用后才会对此属性赋值 
-		 * @member ns_egret.Skin#hostComponent
+		 * 组件的最大测量宽度,仅影响measuredWidth属性的取值范围。
+		 * @member ns_egret.StateSkin#maxWidth
+		 */	
+		public maxWidth:number = 10000;
+		/**
+		 * 组件的最小测量宽度,此属性设置为大于maxWidth的值时无效。仅影响measuredWidth属性的取值范围。
+		 * @member ns_egret.StateSkin#minWidth
 		 */
-		public get hostComponent():SkinnableComponent{
-			return this._hostComponent;
-		}
-
-		public set hostComponent(value:SkinnableComponent){
-			this._hostComponent = value;
-		}
+		public minWidth:number = 0;
+		/**
+		 * 组件的最大测量高度,仅影响measuredHeight属性的取值范围。
+		 * @member ns_egret.StateSkin#maxHeight
+		 */
+		public maxHeight:number = 10000;
+		/**
+		 * 组件的最小测量高度,此属性设置为大于maxHeight的值时无效。仅影响measuredHeight属性的取值范围。
+		 * @member ns_egret.StateSkin#minHeight
+		 */
+		public minHeight:number = 0;
+		/**
+		 * 组件宽度
+		 * @member ns_egret.StateSkin#width
+		 */
+		public width:number = NaN;
+		/**
+		 * 组件高度
+		 * @member ns_egret.StateSkin#height
+		 */
+		public height:number = NaN;
 		
 		/**
-		 * @method ns_egret.Skin#createChildren
-		 */
-		public createChildren():void{
-			super.createChildren();
-			this.stateClientHelper.initializeStates();
-		}
-		
+		 * x坐标
+		 * @constant ns_egret.StateSkin#x
+		 */		
+		public x:number = 0;
 		/**
-		 * @method ns_egret.Skin#commitProperties
+		 * y坐标 
+		 * @constant ns_egret.StateSkin#y
+		 */		
+		public y:number = 0;
+		
+		//以下这两个属性无效，仅用于防止DXML编译器报错。
+		/**
+		 * @member ns_egret.StateSkin#percentWidth
 		 */
-		public commitProperties():void{
-			super.commitProperties();
-			if(this.stateClientHelper.currentStateChanged){
-				this.stateClientHelper.commitCurrentState();
-				this.commitCurrentState();
-			}
-		}
+		public percentWidth:number = NaN;
+		/**
+		 * @member ns_egret.StateSkin#percentHeight
+		 */
+		public percentHeight:number = NaN;
 		
 		//========================state相关函数===============start=========================
-		
+
 		private stateClientHelper:StateClientHelper;
+		
 		/**
-		 * 为此组件定义的视图状态。
-		 * @member ns_egret.Skin#states
+		 * @member ns_egret.StateSkin#states
 		 */
 		public get states():Array<any>{
 			return this.stateClientHelper.states;
@@ -93,45 +118,289 @@ module ns_egret {
 		}
 		
 		/**
-		 * 组件的当前视图状态。
-		 * @member ns_egret.Skin#currentState
+		 * @member ns_egret.StateSkin#currentState
 		 */
 		public get currentState():string{
 			return this.stateClientHelper.currentState;
 		}
+		
 		public set currentState(value:string){
 			this.stateClientHelper.currentState = value;
-
-			if(this.stateClientHelper.currentStateChanged){
-				if(this.initialized||this.parent){
-					this.stateClientHelper.commitCurrentState();
-					this.commitCurrentState();
-				}
-				else{
-					this.invalidateProperties();
-				}
+			if (this._hostComponent&&this.stateClientHelper.currentStateChanged){
+				this.stateClientHelper.commitCurrentState();
+				this.commitCurrentState();
 			}
 		}
 		
 		/**
-		 * 返回是否含有指定名称的视图状态
-		 * @method ns_egret.Skin#hasState
-		 * @param stateName {string} 要检测的视图状态名称
+		 * @method ns_egret.StateSkin#hasState
+		 * @param stateName {string} 
 		 * @returns {boolean}
-		 */				
+		 */
 		public hasState(stateName:string):boolean{
-			return this.stateClientHelper.hasState(stateName);
+			return this.stateClientHelper.hasState(stateName); 
 		}
 		
 		/**
-		 * 应用当前的视图状态
-		 * @method ns_egret.Skin#commitCurrentState
-		 */		
+		 * 应用当前的视图状态。子类覆盖此方法在视图状态发生改变时执行相应更新操作。
+		 * @method ns_egret.StateSkin#commitCurrentState
+		 */
 		public commitCurrentState():void{
 			
 		}
-		
 		//========================state相关函数===============end=========================
 		
+		private _hostComponent:SkinnableComponent;
+		/**
+		 * @member ns_egret.StateSkin#hostComponent
+		 */
+		public get hostComponent():SkinnableComponent{
+			return this._hostComponent;
+		}
+		/**
+		 * @inheritDoc
+		 */
+		public set hostComponent(value:SkinnableComponent){
+			if(this._hostComponent==value)
+				return;
+			var i:number;
+			if(this._hostComponent){
+				for(i = this._elementsContent.length - 1; i >= 0; i--){
+					this._elementRemoved(this._elementsContent[i], i);
+				}
+			}
+			
+			this._hostComponent = value;
+			
+			if(this._hostComponent){			
+				var n:number = this._elementsContent.length;
+				for (i = 0; i < n; i++){   
+					var elt:IVisualElement = this._elementsContent[i];
+					if (elt.parent&&"removeElement" in elt.parent)
+						(<IVisualElementContainer><any> (elt.parent)).removeElement(elt);
+					else if(elt.owner&&"removeElement" in elt.owner)
+						(<IContainer><any> (elt.owner)).removeElement(elt);
+					this._elementAdded(elt, i);
+				}
+				
+				this.stateClientHelper.initializeStates();
+				
+				if(this.stateClientHelper.currentStateChanged){
+					this.stateClientHelper.commitCurrentState();
+					this.commitCurrentState();
+				}
+			}
+		}
+		
+		private _elementsContent:Array<any> = [];
+		/**
+		 * 返回子元素列表
+		 * @method ns_egret.StateSkin#getElementsContent
+		 * @returns {any}
+		 */		
+		public getElementsContent():Array<any>{
+			return this._elementsContent;
+		}
+		
+		/**
+		 * 设置容器子对象数组 。数组包含要添加到容器的子项列表，之前的已存在于容器中的子项列表被全部移除后添加列表里的每一项到容器。
+		 * 设置该属性时会对您输入的数组进行一次浅复制操作，所以您之后对该数组的操作不会影响到添加到容器的子项列表数量。
+		 */		
+		public set elementsContent(value:Array<any>){
+			if(value==null)
+				value = [];
+			if(value==this._elementsContent)
+				return;
+			if(this._hostComponent){
+				var i:number;
+				for (i = this._elementsContent.length - 1; i >= 0; i--){
+					this._elementRemoved(this._elementsContent[i], i);
+				}
+				
+				this._elementsContent = value.concat();
+				
+				var n:number = this._elementsContent.length;
+				for (i = 0; i < n; i++){   
+					var elt:IVisualElement = this._elementsContent[i];
+					
+					if(elt.parent&&"removeElement" in elt.parent)
+						(<IVisualElementContainer><any> (elt.parent)).removeElement(elt);
+					else if(elt.owner&&"removeElement" in elt.owner)
+						(<IContainer><any> (elt.owner)).removeElement(elt);
+					this._elementAdded(elt, i);
+				}
+			}
+			else{
+				this._elementsContent = value.concat();
+			}
+		}
+		
+		/**
+		 * @member ns_egret.StateSkin#numElements
+		 */
+		public get numElements():number{
+			return this._elementsContent.length;
+		}
+		
+		/**
+		 * @method ns_egret.StateSkin#getElementAt
+		 * @param index {number} 
+		 * @returns {IVisualElement}
+		 */
+		public getElementAt(index:number):IVisualElement{
+			this.checkForRangeError(index);
+			return this._elementsContent[index];
+		}
+		
+		private checkForRangeError(index:number, addingElement:boolean = false):void{
+			var maxIndex:number = this._elementsContent.length - 1;
+			
+			if (addingElement)
+				maxIndex++;
+			
+			if (index < 0 || index > maxIndex)
+				throw new RangeError("索引:\""+index+"\"超出可视元素索引范围");
+		}
+		/**
+		 * @method ns_egret.StateSkin#addElement
+		 * @param element {IVisualElement} 
+		 * @returns {IVisualElement}
+		 */
+		public addElement(element:IVisualElement):IVisualElement{
+			var index:number = this.numElements;
+			
+			if (element.owner == this)
+				index = this.numElements-1;
+			
+			return this.addElementAt(element, index);
+		}
+		/**
+		 * @method ns_egret.StateSkin#addElementAt
+		 * @param element {IVisualElement} 
+		 * @param index {number} 
+		 * @returns {IVisualElement}
+		 */
+		public addElementAt(element:IVisualElement, index:number):IVisualElement{
+			this.checkForRangeError(index, true);
+			
+			var host:any = element.owner; 
+			if (host == this){
+				this.setElementIndex(element, index);
+				return element;
+			}
+			else if (element.parent&&"removeElement" in element.parent){
+				(<IVisualElementContainer><any> (element.parent)).removeElement(element);
+			}
+			else if(host&&"removeElement" in host){
+				(<IContainer><any> host).removeElement(element);
+			}
+			
+			this._elementsContent.splice(index, 0, element);
+			
+			if(this._hostComponent)
+				this._elementAdded(element, index);
+			
+			return element;
+		}
+		/**
+		 * @method ns_egret.StateSkin#removeElement
+		 * @param element {IVisualElement} 
+		 * @returns {IVisualElement}
+		 */
+		public removeElement(element:IVisualElement):IVisualElement{
+			return this.removeElementAt(this.getElementIndex(element));
+		}
+		/**
+		 * @method ns_egret.StateSkin#removeElementAt
+		 * @param index {number} 
+		 * @returns {IVisualElement}
+		 */
+		public removeElementAt(index:number):IVisualElement{
+			this.checkForRangeError(index);
+			
+			var element:IVisualElement = this._elementsContent[index];
+			
+			if(this._hostComponent)
+				this._elementRemoved(element, index);
+			
+			this._elementsContent.splice(index, 1);
+			
+			return element;
+		}
+			
+		/**
+		 * @method ns_egret.StateSkin#getElementIndex
+		 * @param element {IVisualElement} 
+		 * @returns {number}
+		 */
+		public getElementIndex(element:IVisualElement):number{
+			return this._elementsContent.indexOf(element);
+		}
+		/**
+		 * @method ns_egret.StateSkin#setElementIndex
+		 * @param element {IVisualElement} 
+		 * @param index {number} 
+		 */
+		public setElementIndex(element:IVisualElement, index:number):void{
+			this.checkForRangeError(index);
+			
+			var oldIndex:number = this.getElementIndex(element);
+			if (oldIndex==-1||oldIndex == index)
+				return;
+			
+			if(this._hostComponent)
+				this._elementRemoved(element, oldIndex, false);
+			
+			this._elementsContent.splice(oldIndex, 1);
+			this._elementsContent.splice(index, 0, element);
+			
+			if(this._hostComponent)
+				this._elementAdded(element, index, false);
+		}
+		
+		/**
+		 * 添加一个显示元素到容器
+		 * @method ns_egret.StateSkin#_elementAdded
+		 * @param element {IVisualElement} 
+		 * @param index {number} 
+		 * @param notifyListeners {boolean} 
+		 */		
+		public _elementAdded(element:IVisualElement, index:number, notifyListeners:boolean = true):void{
+			element.ownerChanged(this);
+			if(element instanceof DisplayObject)
+				this._hostComponent._addToDisplayListAt(<DisplayObject><any> element, index);
+			
+			if (notifyListeners){
+				if (this.hasEventListener(ElementExistenceEvent.ELEMENT_ADD))
+					this.dispatchEvent(new ElementExistenceEvent(
+						ElementExistenceEvent.ELEMENT_ADD, false, false, element, index));
+			}
+			
+			this._hostComponent.invalidateSize();
+			this._hostComponent.invalidateDisplayList();
+		}
+		/**
+		 * 从容器移除一个显示元素
+		 * @method ns_egret.StateSkin#elementRemoved
+		 * @param element {IVisualElement} 
+		 * @param index {number} 
+		 * @param notifyListeners {boolean} 
+		 */		
+		public _elementRemoved(element:IVisualElement, index:number, notifyListeners:boolean = true):void{
+			if (notifyListeners){        
+				if (this.hasEventListener(ElementExistenceEvent.ELEMENT_REMOVE))
+					this.dispatchEvent(new ElementExistenceEvent(
+						ElementExistenceEvent.ELEMENT_REMOVE, false, false, element, index));
+			}
+			
+			var childDO:DisplayObject = <DisplayObject><any> element; 
+			if (childDO && childDO.parent == this._hostComponent){
+				this._hostComponent._removeFromDisplayList(<DisplayObject><any> element);
+			}
+			
+			element.ownerChanged(null);
+			this._hostComponent.invalidateSize();
+			this._hostComponent.invalidateDisplayList();
+		}
 	}
 }

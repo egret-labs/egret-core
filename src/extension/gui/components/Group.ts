@@ -88,7 +88,7 @@ module ns_egret {
 			else{
 				this.elementsContentChanged = true;
 				for (var i:number = this._elementsContent.length - 1; i >= 0; i--){
-					this.elementRemoved(this._elementsContent[i], i);
+					this._elementRemoved(this._elementsContent[i], i);
 				}
 				this._elementsContent = value;
 			}
@@ -101,7 +101,7 @@ module ns_egret {
 			var i:number;
 			
 			for (i = this._elementsContent.length - 1; i >= 0; i--){
-				this.elementRemoved(this._elementsContent[i], i);
+				this._elementRemoved(this._elementsContent[i], i);
 			}
 			
 			this._elementsContent = value.concat();
@@ -115,7 +115,7 @@ module ns_egret {
 				else if(elt.owner&&"removeElement" in elt.owner)
 					(<IContainer> (elt.owner)).removeElement(elt);
 				
-				this.elementAdded(elt, i);
+				this._elementAdded(elt, i);
 			}
 		}
 		
@@ -187,7 +187,7 @@ module ns_egret {
 			this._elementsContent.splice(index, 0, element);
 			
 			if (!this.elementsContentChanged)
-				this.elementAdded(element, index);
+				this._elementAdded(element, index);
 			
 			return element;
 		}
@@ -210,7 +210,7 @@ module ns_egret {
 			var element:IVisualElement = this._elementsContent[index];
 			
 			if (!this.elementsContentChanged)
-				this.elementRemoved(element, index);
+				this._elementRemoved(element, index);
 			
 			this._elementsContent.splice(index, 1);
 			
@@ -246,13 +246,13 @@ module ns_egret {
 				return;
 			
 			if (!this.elementsContentChanged)
-				this.elementRemoved(element, oldIndex, false);
+				this._elementRemoved(element, oldIndex, false);
 			
 			this._elementsContent.splice(oldIndex, 1);
 			this._elementsContent.splice(index, 0, element);
 			
 			if (!this.elementsContentChanged)
-				this.elementAdded(element, index, false);
+				this._elementAdded(element, index, false);
 		}
 		/**
 		 * @method ns_egret.Group#swapElements
@@ -282,8 +282,8 @@ module ns_egret {
 			var element1:IVisualElement = this._elementsContent[index1];
 			var element2:IVisualElement = this._elementsContent[index2];
 			if (!this.elementsContentChanged){
-				this.elementRemoved(element1, index1, false);
-				this.elementRemoved(element2, index2, false);
+				this._elementRemoved(element1, index1, false);
+				this._elementRemoved(element2, index2, false);
 			}
 			
 			this._elementsContent.splice(index2, 1);
@@ -293,18 +293,18 @@ module ns_egret {
 			this._elementsContent.splice(index2, 0, element1);
 			
 			if (!this.elementsContentChanged){
-				this.elementAdded(element2, index1, false);
-				this.elementAdded(element1, index2, false);
+				this._elementAdded(element2, index1, false);
+				this._elementAdded(element1, index2, false);
 			}
 		}
 		/**
 		 * 添加一个显示元素到容器
-		 * @method ns_egret.Group#elementAdded
+		 * @method ns_egret.Group#_elementAdded
 		 * @param element {IVisualElement} 
 		 * @param index {number} 
 		 * @param notifyListeners {boolean} 
 		 */		
-		public elementAdded(element:IVisualElement, index:number, notifyListeners:boolean = true):void{
+		public _elementAdded(element:IVisualElement, index:number, notifyListeners:boolean = true):void{
 			if(element instanceof DisplayObject)
 				this._addToDisplayList(<DisplayObject><any>element, index);
 			
@@ -319,12 +319,12 @@ module ns_egret {
 		}
 		/**
 		 * 从容器移除一个显示元素
-		 * @method ns_egret.Group#elementRemoved
+		 * @method ns_egret.Group#_elementRemoved
 		 * @param element {IVisualElement} 
 		 * @param index {number} 
 		 * @param notifyListeners {boolean} 
 		 */		
-		public elementRemoved(element:IVisualElement, index:number, notifyListeners:boolean = true):void{
+		public _elementRemoved(element:IVisualElement, index:number, notifyListeners:boolean = true):void{
 			if (notifyListeners){        
 				if (this.hasEventListener(ElementExistenceEvent.ELEMENT_REMOVE))
 					this.dispatchEvent(new ElementExistenceEvent(

@@ -113,7 +113,6 @@ exports.core = [
     "extension/gui/components/Group.js",
     "extension/gui/components/ViewStack.js",
     "extension/gui/components/Skin.js",
-    "extension/gui/components/StateSkin.js",
     "extension/gui/components/DataGroup.js",
     "extension/gui/components/SkinnableContainer.js",
     "extension/gui/components/SkinnableDataContainer.js",

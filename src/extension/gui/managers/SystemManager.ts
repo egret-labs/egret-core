@@ -361,17 +361,17 @@ module ns_egret {
 		}
 		
 		/**
-		 * @method ns_egret.SystemManager#elementRemoved
+		 * @method ns_egret.SystemManager#_elementRemoved
 		 * @param element {IVisualElement} 
 		 * @param index {number} 
 		 * @param notifyListeners {boolean} 
 		 */
-		public elementRemoved(element:IVisualElement, index:number, notifyListeners:boolean=true):void{
+		public _elementRemoved(element:IVisualElement, index:number, notifyListeners:boolean=true):void{
 			if(notifyListeners){
 				//PopUpManager需要监听这个事件
 				element.dispatchEvent(new Event("removeFromSystemManager"));
 			}
-			super.elementRemoved(element,index,notifyListeners);
+			super._elementRemoved(element,index,notifyListeners);
 		}
 		
 		//==========================================================================

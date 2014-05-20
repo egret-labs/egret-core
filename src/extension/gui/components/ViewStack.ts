@@ -150,7 +150,7 @@ module ns_egret {
 		 * @param index {number} 
 		 * @param notifyListeners {boolean} 
 		 */		
-		public elementAdded(element:IVisualElement, index:number, notifyListeners:boolean=true):void{
+		public _elementAdded(element:IVisualElement, index:number, notifyListeners:boolean=true):void{
 			if(this._createAllChildren){
 				if(element instanceof DisplayObject)
 					this._addToDisplayList(<DisplayObject><any> element, index);
@@ -175,13 +175,13 @@ module ns_egret {
 		
 		/**
 		 * 从容器移除一个显示元素
-		 * @method ns_egret.ViewStack#elementRemoved
+		 * @method ns_egret.ViewStack#_elementRemoved
 		 * @param element {IVisualElement} 
 		 * @param index {number} 
 		 * @param notifyListeners {boolean} 
 		 */		
-		public elementRemoved(element:IVisualElement, index:number, notifyListeners:boolean=true):void{
-			super.elementRemoved(element,index,notifyListeners);
+		public _elementRemoved(element:IVisualElement, index:number, notifyListeners:boolean=true):void{
+			super._elementRemoved(element,index,notifyListeners);
 			element.visible = true;
 			element.includeInLayout = true;
 			if (index == this.selectedIndex){
