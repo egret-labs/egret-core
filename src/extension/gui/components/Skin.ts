@@ -29,7 +29,7 @@
 module ns_egret {
 
 	/**
-	 * @class ns_egret.StateSkin
+	 * @class ns_egret.Skin
 	 * @classdesc
 	 * 含有视图状态功能的皮肤基类。注意：为了减少嵌套层级，此皮肤没有继承显示对象，若需要显示对象版本皮肤，请使用Skin。
 	 * @see org.flexlite.domUI.components.supportClasses.Skin
@@ -42,7 +42,7 @@ module ns_egret {
 		implements IStateClient, ISkin, IContainer{
 		/**
 		 * 构造函数
-		 * @method ns_egret.StateSkin#constructor
+		 * @method ns_egret.Skin#constructor
 		 */		
 		public constructor(){
 			super();
@@ -50,32 +50,32 @@ module ns_egret {
 		
 		/**
 		 * 组件的最大测量宽度,仅影响measuredWidth属性的取值范围。
-		 * @member ns_egret.StateSkin#maxWidth
+		 * @member ns_egret.Skin#maxWidth
 		 */	
 		public maxWidth:number = 10000;
 		/**
 		 * 组件的最小测量宽度,此属性设置为大于maxWidth的值时无效。仅影响measuredWidth属性的取值范围。
-		 * @member ns_egret.StateSkin#minWidth
+		 * @member ns_egret.Skin#minWidth
 		 */
 		public minWidth:number = 0;
 		/**
 		 * 组件的最大测量高度,仅影响measuredHeight属性的取值范围。
-		 * @member ns_egret.StateSkin#maxHeight
+		 * @member ns_egret.Skin#maxHeight
 		 */
 		public maxHeight:number = 10000;
 		/**
 		 * 组件的最小测量高度,此属性设置为大于maxHeight的值时无效。仅影响measuredHeight属性的取值范围。
-		 * @member ns_egret.StateSkin#minHeight
+		 * @member ns_egret.Skin#minHeight
 		 */
 		public minHeight:number = 0;
 		/**
 		 * 组件宽度
-		 * @member ns_egret.StateSkin#width
+		 * @member ns_egret.Skin#width
 		 */
 		public width:number = NaN;
 		/**
 		 * 组件高度
-		 * @member ns_egret.StateSkin#height
+		 * @member ns_egret.Skin#height
 		 */
 		public height:number = NaN;
 
@@ -91,7 +91,7 @@ module ns_egret {
 
 		private _hostComponent:SkinnableComponent;
 		/**
-		 * @member ns_egret.StateSkin#hostComponent
+		 * @member ns_egret.Skin#hostComponent
 		 */
 		public get hostComponent():SkinnableComponent{
 			return this._hostComponent;
@@ -100,44 +100,48 @@ module ns_egret {
 		 * @inheritDoc
 		 */
 		public set hostComponent(value:SkinnableComponent){
-			if(this._hostComponent==value)
-				return;
+			this._setHostComponent(value);
+		}
+
+        public _setHostComponent(value:SkinnableComponent){
+            if(this._hostComponent==value)
+                return;
             if(!this._initialized){
                 this._initialized = true;
                 this.createChildren();
             }
-			var i:number;
-			if(this._hostComponent){
-				for(i = this._elementsContent.length - 1; i >= 0; i--){
-					this._elementRemoved(this._elementsContent[i], i);
-				}
-			}
-			
-			this._hostComponent = value;
-			
-			if(this._hostComponent){			
-				var n:number = this._elementsContent.length;
-				for (i = 0; i < n; i++){   
-					var elt:IVisualElement = this._elementsContent[i];
-					if (elt.parent&&"removeElement" in elt.parent)
-						(<IVisualElementContainer><any> (elt.parent)).removeElement(elt);
-					else if(elt.owner&&"removeElement" in elt.owner)
-						(<IContainer><any> (elt.owner)).removeElement(elt);
-					this._elementAdded(elt, i);
-				}
-				
-				this.initializeStates();
-				
-				if(this.currentStateChanged){
-					this.commitCurrentState();
-				}
-			}
-		}
+            var i:number;
+            if(this._hostComponent){
+                for(i = this._elementsContent.length - 1; i >= 0; i--){
+                    this._elementRemoved(this._elementsContent[i], i);
+                }
+            }
+
+            this._hostComponent = value;
+
+            if(this._hostComponent){
+                var n:number = this._elementsContent.length;
+                for (i = 0; i < n; i++){
+                    var elt:IVisualElement = this._elementsContent[i];
+                    if (elt.parent&&"removeElement" in elt.parent)
+                        (<IVisualElementContainer><any> (elt.parent)).removeElement(elt);
+                    else if(elt.owner&&"removeElement" in elt.owner)
+                        (<IContainer><any> (elt.owner)).removeElement(elt);
+                    this._elementAdded(elt, i);
+                }
+
+                this.initializeStates();
+
+                if(this.currentStateChanged){
+                    this.commitCurrentState();
+                }
+            }
+        }
 
 		private _elementsContent:Array<any> = [];
 		/**
 		 * 返回子元素列表
-		 * @method ns_egret.StateSkin#getElementsContent
+		 * @method ns_egret.Skin#getElementsContent
 		 * @returns {any}
 		 */		
 		public getElementsContent():Array<any>{
@@ -178,14 +182,14 @@ module ns_egret {
 		}
 		
 		/**
-		 * @member ns_egret.StateSkin#numElements
+		 * @member ns_egret.Skin#numElements
 		 */
 		public get numElements():number{
 			return this._elementsContent.length;
 		}
 		
 		/**
-		 * @method ns_egret.StateSkin#getElementAt
+		 * @method ns_egret.Skin#getElementAt
 		 * @param index {number} 
 		 * @returns {IVisualElement}
 		 */
@@ -204,7 +208,7 @@ module ns_egret {
 				throw new RangeError("索引:\""+index+"\"超出可视元素索引范围");
 		}
 		/**
-		 * @method ns_egret.StateSkin#addElement
+		 * @method ns_egret.Skin#addElement
 		 * @param element {IVisualElement} 
 		 * @returns {IVisualElement}
 		 */
@@ -217,7 +221,7 @@ module ns_egret {
 			return this.addElementAt(element, index);
 		}
 		/**
-		 * @method ns_egret.StateSkin#addElementAt
+		 * @method ns_egret.Skin#addElementAt
 		 * @param element {IVisualElement} 
 		 * @param index {number} 
 		 * @returns {IVisualElement}
@@ -245,7 +249,7 @@ module ns_egret {
 			return element;
 		}
 		/**
-		 * @method ns_egret.StateSkin#removeElement
+		 * @method ns_egret.Skin#removeElement
 		 * @param element {IVisualElement} 
 		 * @returns {IVisualElement}
 		 */
@@ -253,7 +257,7 @@ module ns_egret {
 			return this.removeElementAt(this.getElementIndex(element));
 		}
 		/**
-		 * @method ns_egret.StateSkin#removeElementAt
+		 * @method ns_egret.Skin#removeElementAt
 		 * @param index {number} 
 		 * @returns {IVisualElement}
 		 */
@@ -271,7 +275,7 @@ module ns_egret {
 		}
 			
 		/**
-		 * @method ns_egret.StateSkin#getElementIndex
+		 * @method ns_egret.Skin#getElementIndex
 		 * @param element {IVisualElement} 
 		 * @returns {number}
 		 */
@@ -279,7 +283,7 @@ module ns_egret {
 			return this._elementsContent.indexOf(element);
 		}
 		/**
-		 * @method ns_egret.StateSkin#setElementIndex
+		 * @method ns_egret.Skin#setElementIndex
 		 * @param element {IVisualElement} 
 		 * @param index {number} 
 		 */
@@ -302,7 +306,7 @@ module ns_egret {
 		
 		/**
 		 * 添加一个显示元素到容器
-		 * @method ns_egret.StateSkin#_elementAdded
+		 * @method ns_egret.Skin#_elementAdded
 		 * @param element {IVisualElement} 
 		 * @param index {number} 
 		 * @param notifyListeners {boolean} 
@@ -323,7 +327,7 @@ module ns_egret {
 		}
 		/**
 		 * 从容器移除一个显示元素
-		 * @method ns_egret.StateSkin#elementRemoved
+		 * @method ns_egret.Skin#elementRemoved
 		 * @param element {IVisualElement} 
 		 * @param index {number} 
 		 * @param notifyListeners {boolean} 
@@ -356,8 +360,21 @@ module ns_egret {
             return this._states;
         }
         public set states(value:Array<any>){
-            if(this._states == value)
-                return;
+            this._setStates(value);
+        }
+
+        public _setStates(value:Array<any>){
+            if(!value)
+                value = [];
+            if(typeof(value[0]) == "string"){
+                var length:number = value.length;
+                for(var i:number=0;i<length;i++){
+                    var state:State = new State();
+                    state.name = value[i];
+                    value[i] = state;
+                }
+            }
+
             this._states = value;
             this.currentStateChanged = true;
             this.requestedCurrentState = this._currentState;
@@ -400,15 +417,11 @@ module ns_egret {
 
         /**
          * 返回是否含有指定名称的视图状态
-         * @method ns_egret.StateSkin#hasState
+         * @method ns_egret.Skin#hasState
          * @param stateName {string}
          * @returns {boolean}
          */
         public hasState(stateName:string):boolean{
-            if(!this._states)
-                return false;
-            if(typeof(this._states[0]) == "string")
-                return this._states.indexOf(stateName)!=-1;
             return (this.getState(stateName) != null);
         }
 
@@ -416,29 +429,19 @@ module ns_egret {
          * 返回默认状态
          */
         private getDefaultState():string{
-            if(this._states&&this._states.length>0){
-                var state:any = this._states[0];
-                if(typeof(state) == "string")
-                    return state;
-                return state.name;
+            if(this._states.length>0){
+                return this._states[0].name;
             }
             return null;
         }
         /**
          * 应用当前的视图状态。子类覆盖此方法在视图状态发生改变时执行相应更新操作。
-         * @method ns_egret.StateSkin#commitCurrentState
+         * @method ns_egret.Skin#commitCurrentState
          */
         public commitCurrentState():void{
             if(!this.currentStateChanged)
                 return;
             this.currentStateChanged = false;
-            if(typeof(this.states&&this.states[0]) == "string"){
-                if(this.states.indexOf(this.requestedCurrentState)==-1)
-                    this._currentState = this.getDefaultState();
-                else
-                    this._currentState = this.requestedCurrentState;
-                return;
-            }
             var destination:State = this.getState(this.requestedCurrentState);
             if(!destination){
                 this.requestedCurrentState = this.getDefaultState();
@@ -465,7 +468,6 @@ module ns_egret {
                 event.newState = this._currentState ? this._currentState : "";
                 this.dispatchEvent(event);
             }
-
         }
 
 
@@ -473,14 +475,15 @@ module ns_egret {
          * 通过名称返回视图状态
          */
         private getState(stateName:string):State{
-            if (!this._states || !stateName)
+            if (!stateName)
                 return null;
-
-            for (var i:number = 0; i < this._states.length; i++){
-                if (this._states[i].name == stateName)
-                    return this._states[i];
+            var states:Array<any> = this._states;
+            var length:number = states.length;
+            for (var i:number = 0; i < length; i++){
+                var state:State = states[i];
+                if (state.name == stateName)
+                    return state;
             }
-
             return null;
         }
 
@@ -490,12 +493,9 @@ module ns_egret {
         private removeState(stateName:string):void{
             var state:State = this.getState(stateName);
             if (state){
-                state.dispatchExitState();
-
                 var overrides:Array<any> = state.overrides;
-
-                for (var i:number = overrides.length; i; i--)
-                    overrides[i-1].remove(this);
+                for (var i:number = overrides.length-1; i>=0; i--)
+                    overrides[i].remove(this);
             }
         }
 
@@ -506,9 +506,9 @@ module ns_egret {
             var state:State = this.getState(stateName);
             if (state){
                 var overrides:Array<any> = state.overrides;
-                for (var i:number = 0; i < overrides.length; i++)
+                var length:number = overrides.length;
+                for (var i:number = 0; i < length; i++)
                     overrides[i].apply(<IContainer><any>(this));
-                state.dispatchEnterState();
             }
         }
 
@@ -521,12 +521,10 @@ module ns_egret {
             if(this.initialized)
                 return;
             this.initialized = true;
-            if (typeof (this._states[0]) == "string")
-                return;
-            for (var i:number = 0; i < this._states.length; i++){
-                var state:State = <State> (this._states[i]);
-                if(!state)
-                    break;
+            var states:Array<any> = this._states;
+            var length:number = states.length;
+            for (var i:number = 0; i < length; i++){
+                var state:State = <State> (states[i]);
                 state.initialize(this);
             }
         }

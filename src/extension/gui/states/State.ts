@@ -27,9 +27,9 @@ module ns_egret {
 	 * @class ns_egret.State
 	 * @classdesc
 	 * State 类定义视图状态，即组件的特定视图。
-	 * @extends ns_egret.EventDispatcher
+	 * @extends ns_egret.HashObject
 	 */
-	export class State extends EventDispatcher{
+	export class State extends HashObject{
 		/**
 		 * @method ns_egret.State#constructor
 		 * @param properties {any} 
@@ -74,22 +74,6 @@ module ns_egret {
 					(<IOverride> (this.overrides[i])).initialize(parent);
 				}
 			}
-		}
-		/**
-		 * 抛出进入视图状态事件
-		 * @method ns_egret.State#dispatchEnterState
-		 */		
-		public dispatchEnterState():void{
-			if (this.hasEventListener("enterState"))
-				this.dispatchEventWith("enterState");
-		}
-		/**
-		 * 抛出即将退出视图状态事件
-		 * @method ns_egret.State#dispatchExitState
-		 */		
-		public dispatchExitState():void{
-			if (this.hasEventListener("exitState"))
-				this.dispatchEventWith("exitState");
 		}
 	}
 	
