@@ -1,6 +1,3 @@
-/**
- * Created by apple on 14-5-15.
- */
 exports.core = [
     "egret/core/HashObject.js",
     "egret/utils/Recycler.js",
@@ -83,7 +80,6 @@ exports.core = [
     "extension/gui/core/UIGlobals.js",
     "extension/gui/core/UIComponent.js",
     "extension/gui/core/PopUpPosition.js",
-    "extension/gui/core/NavigationUnit.js",
     "extension/gui/core/ScrollPolicy.js",
     "extension/gui/core/ClassFactory.js",
     "extension/gui/core/IContainer.js",

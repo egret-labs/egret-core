@@ -240,31 +240,27 @@ module ns_egret {
 		 */		
 		private animationStartHandler(animation:Animation):void{
 			this.inAnimation = true;
-			this.popUp.addEventListener("scrollRectChange",this.onScrollRectChange,this);
 			if(this.popUp&&"enabled" in this.popUp)
 				(<IUIComponent><any> (this.popUp)).enabled = false;
 		}
-		/**
-		 * 防止外部修改popUp的scrollRect属性
-		 */		
-		private onScrollRectChange(event:Event):void{
-			if(this.inUpdating)
-				return;
-			this.inUpdating = true;
-			(<DisplayObject><any> (this.popUp)).scrollRect = new Rectangle(Math.round(this.animator.currentValue["x"]),
-				Math.round(this.animator.currentValue["y"]),this.popUp.width, this.popUp.height);
-			this.inUpdating = false;
-		}
-		
-		private inUpdating:boolean = false;
+
 		/**
 		 * 动画播放过程中触发的更新数值函数
 		 */		
 		private animationUpdateHandler(animation:Animation):void{
-			this.inUpdating = true;
-			(<DisplayObject><any> (this.popUp)).scrollRect = new Rectangle(Math.round(animation.currentValue["x"]),
-				Math.round(animation.currentValue["y"]),this.popUp.width, this.popUp.height);
-			this.inUpdating = false;
+            var rect:Rectangle = (<DisplayObject><any> (this.popUp))._scrollRect;
+            var x:number = Math.round(animation.currentValue["x"]);
+            var y:number = Math.round(animation.currentValue["y"]);
+            if(rect){
+                rect.x = x;
+                rect.y = y;
+                rect.width = this.popUp.width;
+                rect.height = this.popUp.height;
+            }
+            else{
+                (<DisplayObject><any> (this.popUp))._scrollRect = new Rectangle(x,y,
+                    this.popUp.width, this.popUp.height)
+            }
 		}
 		
 		/**
@@ -272,7 +268,6 @@ module ns_egret {
 		 */		
 		private animationEndHandler(animation:Animation):void{
 			this.inAnimation = false;
-			this.popUp.removeEventListener("scrollRectChange",this.onScrollRectChange,this);
 			if(this.popUp&&"enabled" in this.popUp)
 				(<IUIComponent><any> (this.popUp)).enabled = true;
 			(<DisplayObject><any> (this.popUp)).scrollRect = null;

@@ -33,7 +33,8 @@ module ns_egret {
 		 * @constant ns_egret.PropertyChangeEvent.PROPERTY_CHANGE
 		 */		
 		public static PROPERTY_CHANGE:string = "propertyChange";
-		
+
+        private static reuseEvent:PropertyChangeEvent;
 		/**
 		 * 返回使用指定属性构建的 PropertyChangeEventKind.UPDATE 类型的新 PropertyChangeEvent。 
 		 * @param source 发生更改的对象。
@@ -47,9 +48,11 @@ module ns_egret {
 			property:any,
 			oldValue:any,
 			newValue:any):PropertyChangeEvent{
-			var event:PropertyChangeEvent =
-				new PropertyChangeEvent(this.PROPERTY_CHANGE);
-			
+			var event:PropertyChangeEvent = PropertyChangeEvent.reuseEvent;
+            if(!event){
+                event = PropertyChangeEvent.reuseEvent =
+                    new PropertyChangeEvent(PropertyChangeEvent.PROPERTY_CHANGE);
+            }
 			event.kind = PropertyChangeEventKind.UPDATE;
 			event.oldValue = oldValue;
 			event.newValue = newValue;

@@ -59,22 +59,6 @@ module ns_egret {
 		verticalScrollPosition:number;
 		
 		/**
-		 * 返回要添加到视域的当前 horizontalScrollPosition 的数量，以按请求的滚动单位进行滚动。
-		 * @method ns_egret.IViewport#getHorizontalScrollPositionDelta
-		 * @param navigationUnit {number} 要滚动的数量。该值必须是NavigationUnit 常量之一
-		 * @returns {number}
-		 */		
-		getHorizontalScrollPositionDelta(navigationUnit:number):number;
-		
-		/**
-		 * 回要添加到视域的当前 verticalScrollPosition 的数量，以按请求的滚动单位进行滚动。
-		 * @method ns_egret.IViewport#getVerticalScrollPositionDelta
-		 * @param navigationUnit {number} 要滚动的数量。该值必须是NavigationUnit 常量之一
-		 * @returns {number}
-		 */		
-		getVerticalScrollPositionDelta(navigationUnit:number):number;
-		
-		/**
 		 * 如果为 true，指定将子代剪切到视区的边界。如果为 false，则容器子代会从容器边界扩展过去，而不管组件的大小规范。默认false
 		 * @member ns_egret.IViewport#clipAndEnableScrolling
 		 */		

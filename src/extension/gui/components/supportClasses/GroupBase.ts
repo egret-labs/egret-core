@@ -44,6 +44,16 @@ module ns_egret {
             this.touchEnabled = false;
         }
 
+        /**
+         * @method ns_egret.GroupBase#createChildren
+         */
+        public createChildren():void{
+            super.createChildren();
+            if(!this._layout){
+                this.layout = new BasicLayout;
+            }
+        }
+
         private _contentWidth:number = 0;
 
         /**
@@ -92,11 +102,6 @@ module ns_egret {
             this.setContentHeight(height);
         }
 
-        /**
-         * 布局发生改变时传递的参数
-         */
-        private _layoutProperties:any;
-
         public _layout:LayoutBase;
         /**
          * 此容器的布局对象
@@ -115,167 +120,118 @@ module ns_egret {
                 return;
             if (this._layout){
                 this._layout.target = null;
-                this._layout.removeEventListener(PropertyChangeEvent.PROPERTY_CHANGE, this.redispatchLayoutEvent, this);
-                this._layoutProperties = {"clipAndEnableScrolling": this._layout.clipAndEnableScrolling};
             }
 
             this._layout = value;
 
             if (this._layout){
                 this._layout.target = this;
-                this._layout.addEventListener(PropertyChangeEvent.PROPERTY_CHANGE, this.redispatchLayoutEvent, this);
-                if (this._layoutProperties){
-                    if (this._layoutProperties.clipAndEnableScrolling !== undefined)
-                        value.clipAndEnableScrolling = this._layoutProperties.clipAndEnableScrolling;
-
-                    if (this._layoutProperties.verticalScrollPosition !== undefined)
-                        value.verticalScrollPosition = this._layoutProperties.verticalScrollPosition;
-
-                    if (this._layoutProperties.horizontalScrollPosition !== undefined)
-                        value.horizontalScrollPosition = this._layoutProperties.horizontalScrollPosition;
-
-                    this._layoutProperties = null;
-                }
             }
             this.invalidateSize();
             this.invalidateDisplayList();
-            this.dispatchEvent(new Event("layoutChanged"));
+            this.dispatchEventWith("layoutChanged");
         }
 
-        /**
-         * 抛出滚动条位置改变事件
-         */
-        private redispatchLayoutEvent(event:Event):void{
-            var pce:PropertyChangeEvent = <PropertyChangeEvent> event;
-            if (pce)
-                switch (pce.property){
-                    case "verticalScrollPosition":
-                    case "horizontalScrollPosition":
-                        this.dispatchEvent(event);
-                        break;
-                }
-        }
-
-        /**
-		 * @method ns_egret.GroupBase#createChildren
-         */
-        public createChildren():void{
-            super.createChildren();
-            if(!this._layout){
-                this.layout = new BasicLayout;
-            }
-        }
-
+        private _clipAndEnableScrolling:boolean = false;
         /**
          * 如果为 true，指定将子代剪切到视区的边界。如果为 false，则容器子代会从容器边界扩展过去，而不管组件的大小规范。默认false
-		 * @member ns_egret.GroupBase#clipAndEnableScrolling
+         * @member ns_egret.GroupBase#clipAndEnableScrolling
          */
-        public get clipAndEnableScrolling():boolean{
-            if (this._layout){
-                return this._layout.clipAndEnableScrolling;
-            }
-            else if (this._layoutProperties &&
-                this._layoutProperties.clipAndEnableScrolling !== undefined){
-                return this._layoutProperties.clipAndEnableScrolling;
-            }
-            else{
-                return false;
-            }
-        }
-        /**
-         * @inheritDoc
-         */
-        public set clipAndEnableScrolling(value:boolean){
-            if (this._layout){
-                this._layout.clipAndEnableScrolling = value;
-            }
-            else if (this._layoutProperties){
-                this._layoutProperties.clipAndEnableScrolling = value;
-            }
-            else{
-                this._layoutProperties = {clipAndEnableScrolling: value};
-            }
-
-            this.invalidateSize();
-        }
-        /**
-		 * @method ns_egret.GroupBase#getHorizontalScrollPositionDelta
-		 * @param navigationUnit {number} 
-		 * @returns {number}
-         */
-        public getHorizontalScrollPositionDelta(navigationUnit:number):number{
-            return (this.layout) ? this.layout.getHorizontalScrollPositionDelta(navigationUnit) : 0;
-        }
-        /**
-		 * @method ns_egret.GroupBase#getVerticalScrollPositionDelta
-		 * @param navigationUnit {number} 
-		 * @returns {number}
-         */
-        public getVerticalScrollPositionDelta(navigationUnit:number):number{
-            return (this.layout) ? this.layout.getVerticalScrollPositionDelta(navigationUnit) : 0;
+        public get clipAndEnableScrolling():boolean {
+            return this._clipAndEnableScrolling;
         }
 
+        public set clipAndEnableScrolling(value:boolean) {
+            if (value == this._clipAndEnableScrolling)
+                return;
+            this._clipAndEnableScrolling = value;
+            if (this._clipAndEnableScrolling){
+                this.scrollRect = new Rectangle(this._horizontalScrollPosition,
+                    this._verticalScrollPosition, this.width, this.height);
+            }
+            else{
+                this.scrollRect = null;
+            }
+        }
+
+
+        private _horizontalScrollPosition:number = 0;
         /**
          * 可视区域水平方向起始点
-		 * @member ns_egret.GroupBase#horizontalScrollPosition
+         * @member ns_egret.GroupBase#horizontalScrollPosition
          */
-        public get horizontalScrollPosition():number{
-            if (this._layout){
-                return this._layout.horizontalScrollPosition;
-            }
-            else if (this._layoutProperties &&
-                this._layoutProperties.horizontalScrollPosition !== undefined){
-                return this._layoutProperties.horizontalScrollPosition;
-            }
-            else{
-                return 0;
-            }
+        public get horizontalScrollPosition():number {
+            return this._horizontalScrollPosition;
         }
+
+        public set horizontalScrollPosition(value:number) {
+            if (value == this._horizontalScrollPosition)
+                return;
+            var oldValue:number = this._horizontalScrollPosition;
+            this._horizontalScrollPosition = value;
+            this.scrollPositionChanged();
+            this.dispatchEvent(PropertyChangeEvent.createUpdateEvent(
+                this, "horizontalScrollPosition", oldValue, value));
+        }
+
+        private _verticalScrollPosition:number = 0;
         /**
-         * @inheritDoc
+         * 可视区域竖直方向起始点
+         * @member ns_egret.GroupBase#verticalScrollPosition
          */
-        public set horizontalScrollPosition(value:number){
-            if (this._layout){
-                this._layout.horizontalScrollPosition = value;
-            }
-            else if (this._layoutProperties){
-                this._layoutProperties.horizontalScrollPosition = value;
-            }
-            else{
-                this._layoutProperties = {horizontalScrollPosition: value};
-            }
+        public get verticalScrollPosition():number {
+            return this._verticalScrollPosition;
+        }
+
+        public set verticalScrollPosition(value:number) {
+            if (value == this._verticalScrollPosition)
+                return;
+            var oldValue:number = this._verticalScrollPosition;
+            this._verticalScrollPosition = value;
+            this.scrollPositionChanged();
+            this.dispatchEvent(PropertyChangeEvent.createUpdateEvent(
+                this, "verticalScrollPosition", oldValue, value));
         }
 
         /**
-         * 可视区域竖直方向起始点
-		 * @member ns_egret.GroupBase#verticalScrollPosition
+         * 滚动条位置改变
+         * @method ns_egret.LayoutBase#scrollPositionChanged
          */
-        public get verticalScrollPosition():number{
-            if (this._layout){
-                return this._layout.verticalScrollPosition;
+        private scrollPositionChanged():void{
+            if(!this._clipAndEnableScrolling){
+                return;
             }
-            else if (this._layoutProperties &&
-                this._layoutProperties.verticalScrollPosition !== undefined){
-                return this._layoutProperties.verticalScrollPosition;
-            }
-            else{
-                return 0;
-            }
+            this.updateScrollRect(this.width,this.height);
+            this.invalidateDisplayListExceptLayout();
         }
+
         /**
-         * @inheritDoc
+         * 更新可视区域
+         * @method ns_egret.LayoutBase#updateScrollRect
+         * @param w {number}
+         * @param h {number}
          */
-        public set verticalScrollPosition(value:number){
-            if (this._layout){
-                this._layout.verticalScrollPosition = value;
+        private updateScrollRect(w:number, h:number):void{
+
+            var rect:Rectangle = this._scrollRect;
+            if(this._clipAndEnableScrolling){
+                if(rect){
+                    rect.x = this._horizontalScrollPosition;
+                    rect.y = this._verticalScrollPosition;
+                    rect.width = w;
+                    rect.height = h;
+                }
+                else{
+                    this._scrollRect = new Rectangle(this._horizontalScrollPosition,
+                        this._verticalScrollPosition, w, h)
+                }
             }
-            else if (this._layoutProperties){
-                this._layoutProperties.verticalScrollPosition = value;
+            else if(rect){
+                this._scrollRect = null;
             }
-            else{
-                this._layoutProperties = {verticalScrollPosition: value};
-            }
+
         }
+
         /**
 		 * @method ns_egret.GroupBase#measure
          */
@@ -348,7 +304,7 @@ module ns_egret {
             if (this.layoutInvalidateDisplayListFlag&&this._layout){
                 this.layoutInvalidateDisplayListFlag = false;
                 this._layout.updateDisplayList(unscaledWidth, unscaledHeight);
-                this._layout.updateScrollRect(unscaledWidth, unscaledHeight);
+                this.updateScrollRect(unscaledWidth, unscaledHeight);
             }
         }
         /**
@@ -428,21 +384,6 @@ module ns_egret {
          */
         public getVirtualElementAt(index:number):IVisualElement{
             return this.getElementAt(index);
-        }
-
-		/**
-		 * @member ns_egret.GroupBase#scrollRect
-		 */
-        public get scrollRect():Rectangle{
-            return this._scrollRect;
-        }
-        /**
-         * @inheritDoc
-         */
-        public set scrollRect(value:Rectangle){
-            this._scrollRect = value;
-            if(this.hasEventListener("scrollRectChange"))
-                this.dispatchEvent(new Event("scrollRectChange"));
         }
     }
 }
