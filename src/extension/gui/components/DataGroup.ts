@@ -638,8 +638,9 @@ module ns_egret {
 		
 		/**
 		 * @method ns_egret.DataGroup#createChildren
+         * 设置默认的ItemRenderer
 		 * @private
-		 * 设置默认的ItemRenderer
+		 *
 		 */		
 		public createChildren():void{
 			if(!this.layout){
