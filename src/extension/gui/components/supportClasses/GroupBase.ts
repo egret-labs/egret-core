@@ -78,9 +78,10 @@ module ns_egret {
             this.dispatchPropertyChangeEvent("contentHeight", oldValue, value);
         }
         /**
+         * 设置 contentWidth 和 contentHeight 属性，此方法由Layout类调用
 		 * @method ns_egret.GroupBase#setContentSize
          * @private
-         * 设置 contentWidth 和 contentHeight 属性，此方法由Layout类调用
+         *
 		 * @param width {number} 
 		 * @param height {number} 
          */
