@@ -28,9 +28,16 @@
 
 module ns_egret {
 
+	/**
+	 * @class ns_egret.RadioButtonGroup
+	 * @classdesc
+	 * 单选按钮组
+	 * @extends ns_egret.EventDispatcher
+	 */
 	export class RadioButtonGroup extends EventDispatcher{
 		/**
 		 * 构造函数
+		 * @method ns_egret.RadioButtonGroup#constructor
 		 */		
 		public constructor(){
 			super();
@@ -41,6 +48,7 @@ module ns_egret {
 		private static groupCount:number = 0;
 		/**
 		 * 组名
+		 * @member ns_egret.RadioButtonGroup#name
 		 */		
 		public name:string;
 		/**
@@ -51,6 +59,7 @@ module ns_egret {
 		private _enabled:boolean = true;
 		/**
 		 * 组件是否可以接受用户交互。默认值为true。设置此属性将影响组内所有单选按钮。
+		 * @member ns_egret.RadioButtonGroup#enabled
 		 */	
 		public get enabled():boolean{
 			return this._enabled;
@@ -65,6 +74,7 @@ module ns_egret {
 		}
 		/**
 		 * 组内单选按钮数量
+		 * @member ns_egret.RadioButtonGroup#numRadioButtons
 		 */		
 		public get numRadioButtons():number{
 			return this.radioButtons.length;
@@ -73,6 +83,7 @@ module ns_egret {
 		private _selectedValue:any;
 		/**
 		 * 当前被选中的单选按钮的value属性值。注意，此属性仅当目标RadioButton在显示列表时有效。
+		 * @member ns_egret.RadioButtonGroup#selectedValue
 		 */		
 		public get selectedValue():any{
 			if (this.selection){
@@ -106,6 +117,7 @@ module ns_egret {
 		private _selection:RadioButton;
 		/**
 		 * 当前被选中的单选按钮引用,注意，此属性仅当目标RadioButton在显示列表时有效。
+		 * @member ns_egret.RadioButtonGroup#selection
 		 */		
 		public get selection():RadioButton{
 			return this._selection;
@@ -117,7 +129,9 @@ module ns_egret {
 		}
 		/**
 		 * 获取指定索引的单选按钮
-		 * @param index 单选按钮的索引
+		 * @method ns_egret.RadioButtonGroup#getRadioButtonAt
+		 * @param index {number} 单选按钮的索引
+		 * @returns {RadioButton}
 		 */		
 		public getRadioButtonAt(index:number):RadioButton{
 			if (index >= 0 && index < this.numRadioButtons)
@@ -127,6 +141,8 @@ module ns_egret {
 		}
 		/**
 		 * 添加单选按钮到组内
+		 * @method ns_egret.RadioButtonGroup#addInstance
+		 * @param instance {RadioButton} 
 		 */
 		public addInstance(instance:RadioButton):void{
 			instance.addEventListener(Event.REMOVED, this.radioButton_removedHandler, this);
@@ -147,6 +163,8 @@ module ns_egret {
 		}
 		/**
 		 * 从组里移除单选按钮
+		 * @method ns_egret.RadioButtonGroup#removeInstance
+		 * @param instance {RadioButton} 
 		 */		
 		public removeInstance(instance:RadioButton):void{
 			this.doRemoveInstance(instance,false);
@@ -184,6 +202,9 @@ module ns_egret {
 		}
 		/**
 		 * 设置选中的单选按钮
+		 * @method ns_egret.RadioButtonGroup#setSelection
+		 * @param value {RadioButton} 
+		 * @param fireChange {boolean} 
 		 */		
 		public setSelection(value:RadioButton, fireChange:boolean = true):void{
 			if (this._selection == value)

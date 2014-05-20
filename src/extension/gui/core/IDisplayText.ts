@@ -21,13 +21,17 @@
 module ns_egret {
 
     /**
+	 * @class ns_egret.IDisplayText
+	 * @interface
+	 * @classdesc
      * 简单文本显示控件接口。
-     * @author DOM
+	 * @extends ns_egret.IUIComponent
      */
     export interface IDisplayText extends IUIComponent
     {
         /**
          * 此文本组件所显示的文本。
+		 * @member ns_egret.IDisplayText#text
          */
         text:string;
     }

@@ -20,9 +20,16 @@
 
 module ns_egret {
 
+	/**
+	 * @class ns_egret.ToggleButton
+	 * @classdesc
+	 * 切换按钮
+	 * @extends ns_egret.ToggleButtonBase
+	 */	
 	export class ToggleButton extends ToggleButtonBase{
 		/**
 		 * 构造函数
+		 * @method ns_egret.ToggleButton#constructor
 		 */		
 		public constructor(){
 			super();

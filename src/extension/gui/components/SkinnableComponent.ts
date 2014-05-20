@@ -27,9 +27,20 @@
 
 module ns_egret {
 
+	/**
+	 * @class ns_egret.SkinnableComponent
+	 * @classdesc
+	 * 复杂可设置外观组件的基类，接受ISkin类或任何显示对象作为皮肤。
+	 * 当皮肤为ISkin时，将自动匹配两个实例内同名的公开属性(显示对象)，
+	 * 并将皮肤的属性引用赋值到此类定义的同名属性(必须没有默认值)上,
+	 * 如果要对公共属性添加事件监听或其他操作，
+	 * 请覆盖partAdded()和partRemoved()方法
+	 * @extends ns_egret.UIAsset
+	 */
 	export class SkinnableComponent extends UIAsset{
 		/**
 		 * 构造函数
+		 * @method ns_egret.SkinnableComponent#constructor
 		 */		
 		public constructor(){
 			super();
@@ -37,7 +48,7 @@ module ns_egret {
 		}
 		
 		/**
-		 * @inheritDoc
+		 * @method ns_egret.SkinnableComponent#createChildren
 		 */
 		public createChildren():void{
 			if(this.skinName==null){//让部分组件在没有皮肤的情况下创建默认的子部件。
@@ -49,13 +60,16 @@ module ns_egret {
 		private _skinObject:any
 		/**
 		 * 存储皮肤适配器解析skinName得到的原始皮肤对象，包括非显示对象皮肤的实例。
+		 * @member ns_egret.SkinnableComponent#skinObject
 		 */
 		public get skinObject():any{
 			return this._skinObject;
 		}
 		
 		/**
-		 * @inheritDoc
+		 * @method ns_egret.SkinnableComponent#onGetSkin
+		 * @param skin {any} 
+		 * @param skinName {any} 
 		 */
 		public onGetSkin(skin:any,skinName:any):void{
 			var oldSkin:any = this._skinObject;
@@ -83,6 +97,8 @@ module ns_egret {
 		
 		/**
 		 * 附加皮肤
+		 * @method ns_egret.SkinnableComponent#attachSkin
+		 * @param skin {any} 
 		 */		
 		public attachSkin(skin:any):void{
 			if(skin&&"hostComponent" in skin){
@@ -104,6 +120,7 @@ module ns_egret {
 		/**
 		 * 匹配皮肤和主机组件的公共变量，并完成实例的注入。此方法在附加皮肤时会自动执行一次。
 		 * 若皮肤中含有延迟实例化的子部件，在子部件实例化完成时需要从外部再次调用此方法,完成注入。
+		 * @method ns_egret.SkinnableComponent#findSkinParts
 		 */	
 		public findSkinParts():void{
 			var curSkin:any = this._skinObject;
@@ -133,17 +150,21 @@ module ns_egret {
 		private hasCreatedSkinParts:boolean = false;
 		/**
 		 * 由组件自身来创建必要的SkinPart，通常是皮肤为空或皮肤不是ISkinPart时调用。
+		 * @method ns_egret.SkinnableComponent#createSkinParts
 		 */		
 		public createSkinParts():void{
 		}
 		/**
 		 * 删除组件自身创建的SkinPart
+		 * @method ns_egret.SkinnableComponent#removeSkinParts
 		 */		
 		public removeSkinParts():void{
 		}
 		
 		/**
 		 * 卸载皮肤
+		 * @method ns_egret.SkinnableComponent#detachSkin
+		 * @param skin {any} 
 		 */		
 		public detachSkin(skin:any):void{       
 			if(this.hasCreatedSkinParts){
@@ -168,6 +189,9 @@ module ns_egret {
 		
 		/**
 		 * 若皮肤是ISkinPartHost,则调用此方法附加皮肤中的公共部件
+		 * @method ns_egret.SkinnableComponent#partAdded
+		 * @param partName {string} 
+		 * @param instance {any} 
 		 */		
 		public partAdded(partName:string,instance:any):void{
 			var event:SkinPartEvent = new SkinPartEvent(SkinPartEvent.PART_ADDED);
@@ -177,6 +201,9 @@ module ns_egret {
 		}
 		/**
 		 * 若皮肤是ISkinPartHost，则调用此方法卸载皮肤之前注入的公共部件
+		 * @method ns_egret.SkinnableComponent#partRemoved
+		 * @param partName {string} 
+		 * @param instance {any} 
 		 */		
 		public partRemoved(partName:string,instance:any):void{       
 			var event:SkinPartEvent = new SkinPartEvent(SkinPartEvent.PART_REMOVED);
@@ -193,6 +220,7 @@ module ns_egret {
 		
 		/**
 		 * 标记当前需要重新验证皮肤状态
+		 * @method ns_egret.SkinnableComponent#invalidateSkinState
 		 */		
 		public invalidateSkinState():void{
 			if (this.stateIsDirty)
@@ -204,6 +232,7 @@ module ns_egret {
 		
 		/**
 		 * 子类覆盖此方法,应用当前的皮肤状态
+		 * @method ns_egret.SkinnableComponent#validateSkinState
 		 */		
 		public validateSkinState():void{
 			var curState:string = this.getCurrentSkinState();
@@ -220,6 +249,7 @@ module ns_egret {
 		private _autoMouseEnabled:boolean = true;
 		/**
 		 * 在enabled属性发生改变时是否自动开启或禁用鼠标事件的响应。默认值为true。
+		 * @member ns_egret.SkinnableComponent#autoTouchEnabled
 		 */
 		public get autoTouchEnabled():boolean{
 			return this._autoMouseEnabled;
@@ -244,6 +274,9 @@ module ns_egret {
 		 */		
 		private explicitMouseChildren:boolean = true;
 
+		/**
+		 * @member ns_egret.SkinnableComponent#touchChildren
+		 */
         public get touchChildren():boolean{
             return this._touchChildren;
         }
@@ -260,6 +293,9 @@ module ns_egret {
 		 */		
 		private explicitMouseEnabled:boolean = true;
 
+		/**
+		 * @member ns_egret.SkinnableComponent#touchEnabled
+		 */
         public get touchEnabled():boolean{
             return this._touchEnabled;
         }
@@ -273,7 +309,7 @@ module ns_egret {
 		}
 
         /**
-         * @inheritDoc
+		 * @member ns_egret.SkinnableComponent#enabled
          */
         public get enabled():boolean{
             return this._enabled;
@@ -298,6 +334,8 @@ module ns_egret {
 		
 		/**
 		 * 返回组件当前的皮肤状态名称,子类覆盖此方法定义各种状态名
+		 * @method ns_egret.SkinnableComponent#getCurrentSkinState
+		 * @returns {string}
 		 */		
 		public getCurrentSkinState():string {
 			return this.enabled?"normal":"disabled"
@@ -306,7 +344,7 @@ module ns_egret {
 		//========================皮肤视图状态===================end========================
 		
 		/**
-		 * @inheritDoc
+		 * @method ns_egret.SkinnableComponent#commitProperties
 		 */
 		public commitProperties():void{
 			super.commitProperties();
@@ -337,7 +375,7 @@ module ns_egret {
 		}
 		
 		/**
-		 * @inheritDoc
+		 * @method ns_egret.SkinnableComponent#childXYChanged
 		 */
 		public childXYChanged():void{
 			if(this.skinLayout){
@@ -347,7 +385,7 @@ module ns_egret {
 		}
 		
 		/**
-		 * @inheritDoc
+		 * @method ns_egret.SkinnableComponent#measure
 		 */
 		public measure():void{
 			super.measure();
@@ -387,7 +425,9 @@ module ns_egret {
 		}
 		
 		/**
-		 * @inheritDoc
+		 * @method ns_egret.SkinnableComponent#updateDisplayList
+		 * @param unscaledWidth {number} 
+		 * @param unscaledHeight {number} 
 		 */
 		public updateDisplayList(unscaledWidth:number, unscaledHeight:number):void{
 			super.updateDisplayList(unscaledWidth,unscaledHeight);

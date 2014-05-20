@@ -21,9 +21,16 @@
 
 module ns_egret {
 
+	/**
+	 * @class ns_egret.SetProperty
+	 * @classdesc
+	 * 设置属性
+	 * @extends ns_egret.OverrideBase
+	 */	
 	export class SetProperty extends OverrideBase{
 		/**
 		 * 构造函数
+		 * @method ns_egret.SetProperty#constructor
 		 */		
 		public constructor(){
 			super();
@@ -31,16 +38,19 @@ module ns_egret {
 		
 		/**
 		 * 要修改的属性名
+		 * @member ns_egret.SetProperty#name
 		 */		
 		public name:string;
 		
 		/**
 		 * 目标实例名
+		 * @member ns_egret.SetProperty#target
 		 */		
 		public target:string;
 		
 		/**
 		 * 属性值 
+		 * @member ns_egret.SetProperty#value
 		 */		
 		public value:any;
 		
@@ -49,6 +59,10 @@ module ns_egret {
 		 */		
 		private oldValue:any;
 		
+		/**
+		 * @method ns_egret.SetProperty#apply
+		 * @param parent {IContainer} 
+		 */
 		public apply(parent:IContainer):void{   
 			var obj:any = this.target==null||this.target==""?parent:parent[this.target];
 			if(obj==null)
@@ -57,6 +71,10 @@ module ns_egret {
 			this.setPropertyValue(obj, this.name, this.value, this.oldValue);
 		}
 		
+		/**
+		 * @method ns_egret.SetProperty#remove
+		 * @param parent {IContainer} 
+		 */
 		public remove(parent:IContainer):void{   
 			var obj:any = this.target==null||this.target==""?parent:parent[this.target];
 			if(obj==null)

@@ -24,12 +24,21 @@
 
 module ns_egret {
 
+	/**
+	 * @class ns_egret.ObjectCollection
+	 * @classdesc
+	 * Object的集合类数据结构包装器,通常作为Tree组件的数据源。
+	 * @extends ns_egret.EventDispatcher
+	 * @implements ns_egret.ICollection
+	 * @implements ns_egret.ITreeCollection
+	 */
 	export class ObjectCollection extends EventDispatcher 
 		implements ICollection,ITreeCollection{
 		/**
 		 * 构造函数
-		 * @param childrenKey 要从item中获取子项列表的属性名,属性值为一个数组或Vector。
-		 * @param parentKey 要从item中获取父级项的属性名
+		 * @method ns_egret.ObjectCollection#constructor
+		 * @param childrenKey {string} 要从item中获取子项列表的属性名,属性值为一个数组或Vector。
+		 * @param parentKey {string} 要从item中获取父级项的属性名
 		 */		
 		public constructor(childrenKey:string="children",parentKey:string="parent"){
 			super();
@@ -48,6 +57,7 @@ module ns_egret {
 		private _source:any;
 		/**
 		 * 数据源。注意：设置source会同时清空openNodes。
+		 * @member ns_egret.ObjectCollection#source
 		 */
 		public get source():any{
 			return this._source;
@@ -77,6 +87,7 @@ module ns_egret {
 		private _openNodes:Array<any> = [];
 		/**
 		 * 处于展开状态的节点列表
+		 * @member ns_egret.ObjectCollection#openNodes
 		 */
 		public get openNodes():Array<any>{
 			return this._openNodes.concat();
@@ -87,19 +98,23 @@ module ns_egret {
 		}
 		
 		/**
-		 * @inheritDoc
+		 * @member ns_egret.ObjectCollection#length
 		 */
 		public get length():number{
 			return this.nodeList.length;
 		}
 		/**
-		 * @inheritDoc
+		 * @method ns_egret.ObjectCollection#getItemAt
+		 * @param index {number} 
+		 * @returns {any}
 		 */
 		public getItemAt(index:number):any{
 			return this.nodeList[index];
 		}
 		/**
-		 * @inheritDoc
+		 * @method ns_egret.ObjectCollection#getItemIndex
+		 * @param item {any} 
+		 * @returns {number}
 		 */
 		public getItemIndex(item:any):number{
 			var length:number = this.nodeList.length;
@@ -113,6 +128,8 @@ module ns_egret {
 		
 		/**
 		 * 通知视图，某个项目的属性已更新。
+		 * @method ns_egret.ObjectCollection#itemUpdated
+		 * @param item {any} 
 		 */
 		public itemUpdated(item:any):void{
 			var index:number = this.getItemIndex(item);
@@ -123,6 +140,8 @@ module ns_egret {
 		
 		/**
 		 * 删除指定节点
+		 * @method ns_egret.ObjectCollection#removeItem
+		 * @param item {any} 
 		 */
 		public removeItem(item:any):void{
 			if(this.isItemOpen(item))
@@ -150,6 +169,7 @@ module ns_egret {
 		private _showRoot:boolean = false;
 		/**
 		 * 是否显示根节点,默认false。
+		 * @member ns_egret.ObjectCollection#showRoot
 		 */
 		public get showRoot():boolean{
 			return this._showRoot;
@@ -186,7 +206,9 @@ module ns_egret {
 			}
 		}
 		/**
-		 * @inheritDoc
+		 * @method ns_egret.ObjectCollection#hasChildren
+		 * @param item {any} 
+		 * @returns {boolean}
 		 */		
 		public hasChildren(item:any):boolean{
 			if(item.hasOwnProperty(this.childrenKey))
@@ -194,13 +216,17 @@ module ns_egret {
 			return false;
 		}
 		/**
-		 * @inheritDoc
+		 * @method ns_egret.ObjectCollection#isItemOpen
+		 * @param item {any} 
+		 * @returns {boolean}
 		 */	
 		public isItemOpen(item:any):boolean{
 			return this._openNodes.indexOf(item)!=-1;
 		}	
 		/**
-		 * @inheritDoc
+		 * @method ns_egret.ObjectCollection#expandItem
+		 * @param item {any} 
+		 * @param open {boolean} 
 		 */	
 		public expandItem(item:any,open:boolean=true):void{
 			if(open)
@@ -252,7 +278,9 @@ module ns_egret {
 			}
 		}
 		/**
-		 * @inheritDoc
+		 * @method ns_egret.ObjectCollection#getDepth
+		 * @param item {any} 
+		 * @returns {number}
 		 */	
 		public getDepth(item:any):number{
 			var depth:number = 0;
@@ -267,6 +295,7 @@ module ns_egret {
 		}
 		/**
 		 * 刷新数据源。
+		 * @method ns_egret.ObjectCollection#refresh
 		 */		
 		public refresh():void{
 			this.nodeList = [];
@@ -290,9 +319,10 @@ module ns_egret {
 		}
 		/**
 		 * 一个工具方法，给parent的子项以及子孙项赋值父级引用。
-		 * @param parent 要遍历子项的parent对象。
-		 * @param childrenKey 要从parent中获取子项列表的属性名,属性值为一个数组或Vector。
-		 * @param parentKey 要给子项赋值父级引用的属性名。
+		 * @method ns_egret.ObjectCollection.assignParent
+		 * @param parent {any} 要遍历子项的parent对象。
+		 * @param childrenKey {string} 要从parent中获取子项列表的属性名,属性值为一个数组或Vector。
+		 * @param parentKey {string} 要给子项赋值父级引用的属性名。
 		 */
 		public static assignParent(parent:any,childrenKey:string="children",parentKey:string="parent"):void{
 			if(!parent.hasOwnProperty(childrenKey))

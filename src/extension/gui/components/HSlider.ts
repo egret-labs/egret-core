@@ -21,16 +21,26 @@
 
 module ns_egret {
 
+	/**
+	 * @class ns_egret.HSlider
+	 * @classdesc
+	 * 水平滑块控件
+	 * @extends ns_egret.SliderBase
+	 */	
 	export class HSlider extends SliderBase{
 		/**
 		 * 构造函数
+		 * @method ns_egret.HSlider#constructor
 		 */	
 		public constructor(){
 			super();
 		}
 		
 		/**
-		 * @inheritDoc
+		 * @method ns_egret.HSlider#pointToValue
+		 * @param x {number} 
+		 * @param y {number} 
+		 * @returns {number}
 		 */
 		public pointToValue(x:number, y:number):number{
 			if (!this.thumb || !this.track)
@@ -42,7 +52,7 @@ module ns_egret {
 		}
 		
 		/**
-		 * @inheritDoc
+		 * @method ns_egret.HSlider#updateSkinDisplayList
 		 */
 		public updateSkinDisplayList():void{
 			if (!this.thumb || !this.track)

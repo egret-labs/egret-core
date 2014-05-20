@@ -20,9 +20,16 @@
 
 module ns_egret {
 
+	/**
+	 * @class ns_egret.CheckBox
+	 * @classdesc
+	 * 复选框
+	 * @extends ns_egret.ToggleButtonBase
+	 */	
 	export class CheckBox extends ToggleButtonBase{
 		/**
 		 * 构造函数
+		 * @method ns_egret.CheckBox#constructor
 		 */		
 		public constructor(){
 			super();

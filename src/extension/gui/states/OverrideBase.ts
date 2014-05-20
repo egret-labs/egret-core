@@ -23,17 +23,39 @@
 
 module ns_egret {
 
+	/**
+	 * @class ns_egret.OverrideBase
+	 * @classdesc
+	 * OverrideBase 类是视图状态所用的 override 类的基类。
+	 * @extends ns_egret.HashObject
+	 * @implements ns_egret.IOverride
+	 */	
 	export class OverrideBase extends HashObject implements IOverride{
+		/**
+		 * @method ns_egret.OverrideBase#constructor
+		 */
 		public constructor() {
             super();
         }
+		/**
+		 * @method ns_egret.OverrideBase#initialize
+		 * @param parent {IStateClient} 
+		 */
 		public initialize(parent:IStateClient):void {
 		}
 		
+		/**
+		 * @method ns_egret.OverrideBase#apply
+		 * @param parent {IContainer} 
+		 */
 		public apply(parent:IContainer):void {
 			
 		}
 		
+		/**
+		 * @method ns_egret.OverrideBase#remove
+		 * @param parent {IContainer} 
+		 */
 		public remove(parent:IContainer):void {
 			if(parent===null)
             {
@@ -42,6 +64,9 @@ module ns_egret {
 		}
 		/**
 		 * 从对象初始化，这是一个便利方法
+		 * @method ns_egret.OverrideBase#initializeFromObject
+		 * @param properties {any} 
+		 * @returns {any}
 		 */		
 		public initializeFromObject(properties:any):any{
 			for (var p in properties){

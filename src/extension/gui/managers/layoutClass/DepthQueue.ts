@@ -22,7 +22,15 @@
 
 module ns_egret {
 
+	/**
+	 * @class ns_egret.DepthQueue
+	 * @classdesc
+	 * 显示列表嵌套深度排序队列
+	 */
 	export class DepthQueue{
+		/**
+		 * @method ns_egret.DepthQueue#constructor
+		 */
 		public constructor(){
 		}
 		
@@ -42,6 +50,8 @@ module ns_egret {
 		private maxDepth:number = -1;
 		/**
 		 * 插入一个元素
+		 * @method ns_egret.DepthQueue#insert
+		 * @param client {ILayoutManagerClient} 
 		 */		
 		public insert(client:ILayoutManagerClient):void{
 			var depth:number = client.nestLevel;
@@ -73,6 +83,8 @@ module ns_egret {
 		}
 		/**
 		 * 从队列尾弹出深度最大的一个对象
+		 * @method ns_egret.DepthQueue#pop
+		 * @returns {ILayoutManagerClient}
 		 */		
 		public pop():ILayoutManagerClient{
 			var client:ILayoutManagerClient = null;
@@ -105,6 +117,8 @@ module ns_egret {
 		}
 		/**
 		 * 从队列首弹出深度最小的一个对象
+		 * @method ns_egret.DepthQueue#shift
+		 * @returns {ILayoutManagerClient}
 		 */		
 		public shift():ILayoutManagerClient{
 			var client:ILayoutManagerClient = null;
@@ -138,6 +152,9 @@ module ns_egret {
 		
 		/**
 		 * 移除大于等于指定组件层级的元素中最大的元素
+		 * @method ns_egret.DepthQueue#removeLargestChild
+		 * @param client {ILayoutManagerClient} 
+		 * @returns {any}
 		 */
 		public removeLargestChild(client:ILayoutManagerClient ):any{
 			var max:number = this.maxDepth;
@@ -180,6 +197,9 @@ module ns_egret {
 		
 		/**
 		 * 移除大于等于指定组件层级的元素中最小的元素
+		 * @method ns_egret.DepthQueue#removeSmallestChild
+		 * @param client {ILayoutManagerClient} 
+		 * @returns {any}
 		 */
 		public removeSmallestChild(client:ILayoutManagerClient ):any{
 			var min:number = client.nestLevel;
@@ -221,6 +241,10 @@ module ns_egret {
 		
 		/**
 		 * 移除一个元素
+		 * @method ns_egret.DepthQueue#remove
+		 * @param client {ILayoutManagerClient} 
+		 * @param level {number} 
+		 * @returns {ILayoutManagerClient}
 		 */
 		public remove(client:ILayoutManagerClient,level:number=-1):ILayoutManagerClient{
 			var depth:number = (level >= 0) ? level : client.nestLevel;
@@ -236,6 +260,7 @@ module ns_egret {
 		
 		/**
 		 * 清空队列
+		 * @method ns_egret.DepthQueue#removeAll
 		 */		
 		public removeAll():void{
 			this.depthBins.length = 0;
@@ -244,16 +269,26 @@ module ns_egret {
 		}
 		/**
 		 * 队列是否为空
+		 * @method ns_egret.DepthQueue#isEmpty
+		 * @returns {boolean}
 		 */		
 		public isEmpty():boolean{
 			return this.minDepth > this.maxDepth;
 		}
 	}
     /**
+	 * @class ns_egret.DepthBin
+	 * @classdesc
      * 列表项
      */
     export class DepthBin {
+		/**
+		 * @member ns_egret.DepthBin#length
+		 */
         public length:number = 0;
+		/**
+		 * @member ns_egret.DepthBin#items
+		 */
         public items:any = [];
     }
 }

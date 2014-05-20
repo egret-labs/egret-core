@@ -20,16 +20,32 @@
 
 module ns_egret {
 
+	/**
+	 * @class ns_egret.StateChangeEvent
+	 * @classdesc
+	 * 视图状态改变事件
+	 * @extends ns_egret.Event
+	 */	
 	export class StateChangeEvent extends Event{
 		/**
 		 * 当前视图状态已经改变 
+		 * @constant ns_egret.StateChangeEvent.CURRENT_STATE_CHANGE
 		 */		
 		public static CURRENT_STATE_CHANGE:string = "currentStateChange";
 		/**
 		 * 当前视图状态即将改变
+		 * @constant ns_egret.StateChangeEvent.CURRENT_STATE_CHANGING
 		 */		
 		public static CURRENT_STATE_CHANGING:string = "currentStateChanging";
 		
+		/**
+		 * @method ns_egret.StateChangeEvent#constructor
+		 * @param type {string} 
+		 * @param bubbles {boolean} 
+		 * @param cancelable {boolean} 
+		 * @param oldState {string} 
+		 * @param newState {string} 
+		 */
 		public constructor(type:string, bubbles:boolean = false,
 										 cancelable:boolean = false,
 										 oldState:string = null,
@@ -41,11 +57,13 @@ module ns_egret {
 		}
 		/**
 		 * 组件正在进入的视图状态的名称。
+		 * @member ns_egret.StateChangeEvent#newState
 		 */		
 		public newState:string;
 		
 		/**
 		 * 组件正在退出的视图状态的名称。
+		 * @member ns_egret.StateChangeEvent#oldState
 		 */		
 		public oldState:string;
 	}

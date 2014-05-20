@@ -24,9 +24,18 @@
 
 module ns_egret {
 
+	/**
+	 * @class ns_egret.PopUpManager
+	 * @classdesc
+	 * 窗口弹出管理器<p/>
+	 * 若项目需要自定义弹出框管理器，请实现IPopUpManager接口，
+	 * 并在项目初始化前调用Injector.mapClass(IPopUpManager,YourPopUpManager)，
+	 * 注入自定义的弹出框管理器类。
+	 */	
 	export class PopUpManager{
 		/**
 		 * 构造函数
+		 * @method ns_egret.PopUpManager#constructor
 		 */		
 		public constructor(){
 		}
@@ -49,6 +58,7 @@ module ns_egret {
 		
 		/**
 		 * 模态遮罩的填充颜色
+		 * @member ns_egret.PopUpManager#modalColor
 		 */
 		public get modalColor():number{
 			return PopUpManager.impl.modalColor;
@@ -59,6 +69,7 @@ module ns_egret {
 		
 		/**
 		 * 模态遮罩的透明度
+		 * @member ns_egret.PopUpManager#modalAlpha
 		 */
 		public get modalAlpha():number{
 			return PopUpManager.impl.modalAlpha;
@@ -69,10 +80,10 @@ module ns_egret {
 		
 		/**
 		 * 弹出一个窗口。<br/>
-		 * @param popUp 要弹出的窗口
-		 * @param modal 是否启用模态。即禁用弹出窗口所在层以下的鼠标事件。默认false。
-		 * @param center 是否居中窗口。等效于在外部调用centerPopUp()来居中。默认true。
-		 * @param systemManager 要弹出到的系统管理器。若项目中只含有一个系统管理器，可以留空。
+		 * @method ns_egret.PopUpManager.addPopUp
+		 * @param popUp {IVisualElement} 要弹出的窗口
+		 * @param modal {boolean} 是否启用模态。即禁用弹出窗口所在层以下的鼠标事件。默认false。
+		 * @param center {boolean} 是否居中窗口。等效于在外部调用centerPopUp()来居中。默认true。
 		 */		
 		public static addPopUp(popUp:IVisualElement,modal:boolean=false,center:boolean=true):void{
 			PopUpManager.impl.addPopUp(popUp,modal,center);
@@ -81,7 +92,8 @@ module ns_egret {
 		
 		/**
 		 * 移除由addPopUp()方法弹出的窗口。
-		 * @param popUp 要移除的窗口
+		 * @method ns_egret.PopUpManager.removePopUp
+		 * @param popUp {IVisualElement} 要移除的窗口
 		 */		
 		public static removePopUp(popUp:IVisualElement):void{
 			PopUpManager.impl.removePopUp(popUp);
@@ -90,7 +102,8 @@ module ns_egret {
 		
 		/**
 		 * 将指定窗口居中显示
-		 * @param popUp 要居中显示的窗口
+		 * @method ns_egret.PopUpManager.centerPopUp
+		 * @param popUp {IVisualElement} 要居中显示的窗口
 		 */
 		public static centerPopUp(popUp:IVisualElement):void{
 			PopUpManager.impl.centerPopUp(popUp);
@@ -98,7 +111,8 @@ module ns_egret {
 		
 		/**
 		 * 将指定窗口的层级调至最前
-		 * @param popUp 要最前显示的窗口
+		 * @method ns_egret.PopUpManager.bringToFront
+		 * @param popUp {IVisualElement} 要最前显示的窗口
 		 */		
 		public static bringToFront(popUp:IVisualElement):void{
 			PopUpManager.impl.bringToFront(popUp);
@@ -106,6 +120,7 @@ module ns_egret {
 		}
 		/**
 		 * 已经弹出的窗口列表
+		 * @member ns_egret.PopUpManager.popUpList
 		 */		
 		public static get popUpList():Array<any>{
 			return PopUpManager.impl.popUpList;
@@ -113,14 +128,25 @@ module ns_egret {
 		
 		/**
 		 * 添加事件监听,参考PopUpEvent定义的常量。
+		 * @method ns_egret.PopUpManager.addEventListener
 		 * @see org.flexlite.domUI.events.PopUpEvent
+		 * @param type {string} 
+		 * @param listener {Function} 
+		 * @param thisObject {any} 
+		 * @param useCapture {boolean} 
+		 * @param priority {number} 
 		 */		
 		public static addEventListener(type:string,listener:Function,thisObject:any,useCapture:boolean = false,priority:number = 0):void{
 			PopUpManager.impl.addEventListener(type,listener,this,useCapture,priority);
 		}
 		/**
 		 * 移除事件监听,参考PopUpEvent定义的常量。
+		 * @method ns_egret.PopUpManager.removeEventListener
 		 * @see org.flexlite.domUI.events.PopUpEvent
+		 * @param type {string} 
+		 * @param listener {Function} 
+		 * @param thisObject {any} 
+		 * @param useCapture {boolean} 
 		 */	
 		public static removeEventListener(type:string,listener:Function,thisObject:any,useCapture:boolean = false):void{
 			PopUpManager.impl.removeEventListener(type,listener,thisObject,useCapture);

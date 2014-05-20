@@ -24,8 +24,21 @@
 
 module ns_egret {
 
+	/**
+	 * @class ns_egret.Skin
+	 * @classdesc
+	 * 皮肤布局基类<br/>
+	 * Skin及其子类中定义的公开属性,会在初始化完成后被直接当做SkinPart并将引用赋值到宿主组件的同名属性上，
+	 * 若有延迟创建的部件，请在加载完成后手动调用hostComponent.findSkinParts()方法应用部件。<br/>
+	 * @extends ns_egret.Group
+	 * @implements ns_egret.IStateClient
+	 * @implements ns_egret.ISkin
+	 */
 	export class Skin extends Group 
 		implements IStateClient,ISkin{
+		/**
+		 * @method ns_egret.Skin#constructor
+		 */
 		public constructor(){
 			super();
 			this.stateClientHelper = new StateClientHelper(this);
@@ -35,6 +48,7 @@ module ns_egret {
 
 		/**
 		 * 主机组件引用,仅当皮肤被应用后才会对此属性赋值 
+		 * @member ns_egret.Skin#hostComponent
 		 */
 		public get hostComponent():SkinnableComponent{
 			return this._hostComponent;
@@ -44,13 +58,16 @@ module ns_egret {
 			this._hostComponent = value;
 		}
 		
+		/**
+		 * @method ns_egret.Skin#createChildren
+		 */
 		public createChildren():void{
 			super.createChildren();
 			this.stateClientHelper.initializeStates();
 		}
 		
 		/**
-		 * @inheritDoc
+		 * @method ns_egret.Skin#commitProperties
 		 */
 		public commitProperties():void{
 			super.commitProperties();
@@ -65,6 +82,7 @@ module ns_egret {
 		private stateClientHelper:StateClientHelper;
 		/**
 		 * 为此组件定义的视图状态。
+		 * @member ns_egret.Skin#states
 		 */
 		public get states():Array<any>{
 			return this.stateClientHelper.states;
@@ -76,6 +94,7 @@ module ns_egret {
 		
 		/**
 		 * 组件的当前视图状态。
+		 * @member ns_egret.Skin#currentState
 		 */
 		public get currentState():string{
 			return this.stateClientHelper.currentState;
@@ -96,7 +115,9 @@ module ns_egret {
 		
 		/**
 		 * 返回是否含有指定名称的视图状态
-		 * @param stateName 要检测的视图状态名称
+		 * @method ns_egret.Skin#hasState
+		 * @param stateName {string} 要检测的视图状态名称
+		 * @returns {boolean}
 		 */				
 		public hasState(stateName:string):boolean{
 			return this.stateClientHelper.hasState(stateName);
@@ -104,6 +125,7 @@ module ns_egret {
 		
 		/**
 		 * 应用当前的视图状态
+		 * @method ns_egret.Skin#commitCurrentState
 		 */		
 		public commitCurrentState():void{
 			

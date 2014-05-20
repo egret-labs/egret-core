@@ -34,9 +34,16 @@
 
 module ns_egret {
 
+	/**
+	 * @class ns_egret.TabBar
+	 * @classdesc
+	 * 选项卡组件
+	 * @extends ns_egret.ListBase
+	 */	
 	export class TabBar extends ListBase{
 		/**
 		 * 构造函数
+		 * @method ns_egret.TabBar#constructor
 		 */		
 		public constructor(){
 			super();
@@ -48,7 +55,8 @@ module ns_egret {
 		 */
 		private requireSelectionChanged_tabBar:boolean;
 		/**
-		 * @inheritDoc
+		 * @method ns_egret.TabBar#c
+		 * @param value {boolea} 
 		 */
 		public c(value:boolean){
 			if (value == this._requireSelection)
@@ -90,7 +98,7 @@ module ns_egret {
 		
 		
 		/**
-		 * @inheritDoc
+		 * @method ns_egret.TabBar#commitProperties
 		 */
 		public commitProperties():void{
 			super.commitProperties();
@@ -107,7 +115,8 @@ module ns_egret {
 		}  
 		
 		/**
-		 * @inheritDoc
+		 * @method ns_egret.TabBar#dataGroup_rendererAddHandler
+		 * @param event {RendererExistenceEvent} 
 		 */
 		public dataGroup_rendererAddHandler(event:RendererExistenceEvent):void{
 			super.dataGroup_rendererAddHandler(event);
@@ -121,7 +130,8 @@ module ns_egret {
 		}
 		
 		/**
-		 * @inheritDoc
+		 * @method ns_egret.TabBar#dataGroup_rendererRemoveHandler
+		 * @param event {RendererExistenceEvent} 
 		 */
 		public dataGroup_rendererRemoveHandler(event:RendererExistenceEvent):void{   
 			super.dataGroup_rendererRemoveHandler(event);
@@ -151,7 +161,7 @@ module ns_egret {
 		}
 		
 		/**
-		 * @inheritDoc
+		 * @method ns_egret.TabBar#createSkinParts
 		 */
 		public createSkinParts():void{
 			this.dataGroup = new DataGroup();

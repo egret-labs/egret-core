@@ -28,16 +28,28 @@
 
 module ns_egret {
 
+	/**
+	 * @class ns_egret.SkinnableDataContainer
+	 * @classdesc
+	 * 可设置外观的数据项目容器基类
+	 * @extends ns_egret.SkinnableComponent
+	 * @implements ns_egret.IItemRendererOwner
+	 */
 	export class SkinnableDataContainer extends SkinnableComponent implements IItemRendererOwner{
 		/**
 		 * 构造函数
+		 * @method ns_egret.SkinnableDataContainer#constructor
 		 */		
 		public constructor(){
 			super();
 		}
 		
 		/**
-		 * @inheritDoc
+		 * @method ns_egret.SkinnableDataContainer#updateRenderer
+		 * @param renderer {IItemRenderer} 
+		 * @param itemIndex {number} 
+		 * @param data {any} 
+		 * @returns {IItemRenderer}
 		 */
 		public updateRenderer(renderer:IItemRenderer, itemIndex:number, data:any):IItemRenderer{
 			if("ownerChanged" in renderer){
@@ -51,6 +63,9 @@ module ns_egret {
 		
 		/**
 		 * 返回可在项呈示器中显示的 String 
+		 * @method ns_egret.SkinnableDataContainer#itemToLabel
+		 * @param item {any} 
+		 * @returns {string}
 		 */		
 		public itemToLabel(item:any):string{
 			if (item !== null)
@@ -60,6 +75,7 @@ module ns_egret {
 		
 		/**
 		 * [SkinPart]数据项目容器实体
+		 * @member ns_egret.SkinnableDataContainer#dataGroup
 		 */		
 		public dataGroup:DataGroup;
 		/**
@@ -69,6 +85,7 @@ module ns_egret {
 		
 		/**
 		 * 列表数据源，请使用实现了ICollection接口的数据类型，例如ArrayCollection
+		 * @member ns_egret.SkinnableDataContainer#dataProvider
 		 */		
 		public get dataProvider():ICollection{
            return this._getDataProvider();
@@ -97,6 +114,7 @@ module ns_egret {
 		/**
 		 * 用于数据项目的项呈示器。该类必须实现 IItemRenderer 接口。 <br/>
 		 * rendererClass获取顺序：itemRendererFunction > itemRenderer > 默认ItemRenerer。
+		 * @member ns_egret.SkinnableDataContainer#itemRenderer
 		 */		
 		public get itemRenderer():any{
 			return (this.dataGroup) 
@@ -117,6 +135,7 @@ module ns_egret {
 		/**
 		 * 条目渲染器的可选皮肤标识符。在实例化itemRenderer时，若其内部没有设置过skinName,则将此属性的值赋值给它的skinName。
 		 * 注意:若itemRenderer不是ISkinnableClient，则此属性无效。
+		 * @member ns_egret.SkinnableDataContainer#itemRendererSkinName
 		 */	
 		public get itemRendererSkinName():any{
 			return (this.dataGroup) 
@@ -139,6 +158,7 @@ module ns_egret {
 		 * rendererClass获取顺序：itemRendererFunction > itemRenderer > 默认ItemRenerer。 <br/>
 		 * 应该定义一个与此示例函数类似的呈示器函数： <br/>
 		 * function myItemRendererFunction(item:Object):IFactory
+		 * @member ns_egret.SkinnableDataContainer#itemRendererFunction
 		 */		
 		public get itemRendererFunction():Function{
 			return (this.dataGroup) 
@@ -158,6 +178,7 @@ module ns_egret {
 		
 		/**
 		 * 布局对象
+		 * @member ns_egret.SkinnableDataContainer#layout
 		 */	
 		public get layout():LayoutBase{
 			return (this.dataGroup) 
@@ -180,7 +201,9 @@ module ns_egret {
         }
 		
 		/**
-		 * @inheritDoc
+		 * @method ns_egret.SkinnableDataContainer#partAdded
+		 * @param partName {string} 
+		 * @param instance {any} 
 		 */
 		public partAdded(partName:string, instance:any):void{
 			super.partAdded(partName, instance);
@@ -228,7 +251,9 @@ module ns_egret {
 		}
 		
 		/**
-		 * @inheritDoc
+		 * @method ns_egret.SkinnableDataContainer#partRemoved
+		 * @param partName {string} 
+		 * @param instance {any} 
 		 */
 		public partRemoved(partName:string, instance:any):void{
 			super.partRemoved(partName, instance);
@@ -257,7 +282,12 @@ module ns_egret {
 		}
 		
 		/**
-		 * @inheritDoc
+		 * @method ns_egret.SkinnableDataContainer#addEventListener
+		 * @param type {string} 
+		 * @param listener {Function} 
+		 * @param thisObject {any} 
+		 * @param useCapture {boolean} 
+		 * @param priority {number} 
 		 */
 		public addEventListener(type:string, listener:Function,thisObject:any,  useCapture:boolean=false, priority:number=0) : void{
 			super.addEventListener(type, listener,thisObject, useCapture, priority);
@@ -274,7 +304,11 @@ module ns_egret {
 		}
 		
 		/**
-		 * @inheritDoc
+		 * @method ns_egret.SkinnableDataContainer#removeEventListener
+		 * @param type {string} 
+		 * @param listener {Function} 
+		 * @param thisObject {any} 
+		 * @param useCapture {boolean} 
 		 */
 		public removeEventListener(type:string, listener:Function, thisObject:any, useCapture:boolean=false) : void{
 			super.removeEventListener(type, listener,thisObject, useCapture);
@@ -295,7 +329,7 @@ module ns_egret {
 		}
 		
 		/**
-		 * @inheritDoc
+		 * @method ns_egret.SkinnableDataContainer#createSkinParts
 		 */
 		public createSkinParts():void{
 			this.dataGroup = new DataGroup();
@@ -310,7 +344,7 @@ module ns_egret {
 		}
 		
 		/**
-		 * @inheritDoc
+		 * @method ns_egret.SkinnableDataContainer#removeSkinParts
 		 */
 		public removeSkinParts():void{
 			if(!this.dataGroup)

@@ -21,7 +21,17 @@
 
 module ns_egret {
 
+	/**
+	 * @class ns_egret.ItemRenderer
+	 * @classdesc
+	 * 项呈示器基类
+	 * @extends ns_egret.ButtonBase
+	 * @implements ns_egret.IItemRenderer
+	 */
 	export class ItemRenderer extends ButtonBase implements IItemRenderer{
+		/**
+		 * @method ns_egret.ItemRenderer#constructor
+		 */
 		public constructor(){
 			super();
 			this.touchChildren = true;
@@ -30,7 +40,7 @@ module ns_egret {
 		private dataChangedFlag:boolean = false;
 		private _data:any;
 		/**
-		 * @inheritDoc
+		 * @member ns_egret.ItemRenderer#data
 		 */
 		public get data():any{
 			return this._data;
@@ -53,6 +63,7 @@ module ns_egret {
 		/**
 		 * 子类复写此方法以在data数据源发生改变时跟新显示列表。
 		 * 与直接复写data的setter方法不同，它会确保在皮肤已经附加完成后再被调用。
+		 * @method ns_egret.ItemRenderer#dataChanged
 		 */		
 		public dataChanged():void{
 			
@@ -60,7 +71,7 @@ module ns_egret {
 		
 		private _selected:boolean = false;
 		/**
-		 * @inheritDoc
+		 * @member ns_egret.ItemRenderer#selected
 		 */
 		public get selected():boolean{
 			return this._selected;
@@ -75,7 +86,7 @@ module ns_egret {
 		
 		private _itemIndex:number = -1;
 		/**
-		 * @inheritDoc
+		 * @member ns_egret.ItemRenderer#itemIndex
 		 */
 		public get itemIndex():number{
 			return this._itemIndex;
@@ -86,7 +97,7 @@ module ns_egret {
 		}
 		
 		/**
-		 * @inheritDoc
+		 * @method ns_egret.ItemRenderer#commitProperties
 		 */
 		public commitProperties():void{
 			super.commitProperties();
@@ -97,7 +108,8 @@ module ns_egret {
 		}
 		
 		/**
-		 * @inheritDoc
+		 * @method ns_egret.ItemRenderer#getCurrentSkinState
+		 * @returns {string}
 		 */
 		public getCurrentSkinState():string{
 			if(this._selected)

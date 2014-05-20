@@ -20,9 +20,26 @@
 
 module ns_egret {
 
+	/**
+	 * @class ns_egret.MoveEvent
+	 * @classdesc
+	 * 移动事件
+	 * @extends ns_egret.Event
+	 */
 	export class MoveEvent extends Event{
+		/**
+		 * @constant ns_egret.MoveEvent.MOVE
+		 */
 		public static MOVE:string = "move";
 		
+		/**
+		 * @method ns_egret.MoveEvent#constructor
+		 * @param type {string} 
+		 * @param oldX {number} 
+		 * @param oldY {number} 
+		 * @param bubbles {boolean} 
+		 * @param cancelable {boolean} 
+		 */
 		public constructor(type:string, oldX:number = NaN, oldY:number = NaN, 
 								  bubbles:boolean = false,
 								  cancelable:boolean = false){
@@ -34,11 +51,13 @@ module ns_egret {
 		
 		/**
 		 * 旧的组件X
+		 * @member ns_egret.MoveEvent#oldX
 		 */
 		public oldX:number;
 		
 		/**
 		 * 旧的组件Y
+		 * @member ns_egret.MoveEvent#oldY
 		 */
 		public oldY:number;
 	}

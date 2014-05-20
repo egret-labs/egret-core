@@ -18,45 +18,61 @@
 
 module ns_egret {
 
+	/**
+	 * @class ns_egret.NavigationUnit
+	 * @classdesc
+	 * NavigationUnit 类为 IViewport 类的getVerticalScrollPositionDelta() 
+	 * 和 getHorizontalScrollPositionDelta() 方法定义可能的值。 
+	 */	
 	export class NavigationUnit{
 		/**
 		 * 导航到文档的开头。 
+		 * @constant ns_egret.NavigationUnit.HOME
 		 */		
 		public static HOME:number = 36;
 		/**
 		 * 导航到文档的末尾。 
+		 * @constant ns_egret.NavigationUnit.END
 		 */		
 		public static END:number = 35;
 		/**
 		 * 向上导航一行或向上“步进”。 
+		 * @constant ns_egret.NavigationUnit.UP
 		 */		
 		public static UP:number = 38;
 		/**
 		 * 向上导航一行或向上“步进”。
+		 * @constant ns_egret.NavigationUnit.DOWN
 		 */		
 		public static DOWN:number = 40;
 		/**
 		 * 向上导航一行或向上“步进”。 
+		 * @constant ns_egret.NavigationUnit.LEFT
 		 */		
 		public static LEFT:number = 37;
 		/**
 		 * 向右导航一行或向右“步进”。
+		 * @constant ns_egret.NavigationUnit.RIGHT
 		 */		
 		public static RIGHT:number = 39;
 		/**
 		 * 向上导航一页。
+		 * @constant ns_egret.NavigationUnit.PAGE_UP
 		 */		
 		public static PAGE_UP:number = 33;
 		/**
 		 * 向下导航一页。
+		 * @constant ns_egret.NavigationUnit.PAGE_DOWN
 		 */		
 		public static PAGE_DOWN:number = 34;
 		/**
 		 * 向左导航一页。
+		 * @constant ns_egret.NavigationUnit.PAGE_LEFT
 		 */		
 		public static PAGE_LEFT:number = 0x2397;
 		/**
 		 * 向左导航一页。
+		 * @constant ns_egret.NavigationUnit.PAGE_RIGHT
 		 */		
 		public static PAGE_RIGHT:number = 0x2398;
 	}

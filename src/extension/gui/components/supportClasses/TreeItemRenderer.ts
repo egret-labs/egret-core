@@ -26,9 +26,17 @@
 
 module ns_egret {
 
+	/**
+	 * @class ns_egret.TreeItemRenderer
+	 * @classdesc
+	 * Tree组件的项呈示器基类
+	 * @extends ns_egret.ItemRenderer
+	 * @implements ns_egret.ITreeItemRenderer
+	 */
 	export class TreeItemRenderer extends ItemRenderer implements ITreeItemRenderer{
 		/**
 		 * 构造函数
+		 * @method ns_egret.TreeItemRenderer#constructor
 		 */		
 		public constructor(){
 			super();
@@ -43,20 +51,24 @@ module ns_egret {
 
 		/**
 		 * [SkinPart]图标显示对象
+		 * @member ns_egret.TreeItemRenderer#iconDisplay
 		 */
 		public iconDisplay:ISkinnableClient;
 		/**
 		 * [SkinPart]子节点开启按钮
+		 * @member ns_egret.TreeItemRenderer#disclosureButton
 		 */
 		public disclosureButton:ToggleButtonBase;
 		/**
 		 * [SkinPart]用于调整缩进值的容器对象。
+		 * @member ns_egret.TreeItemRenderer#contentGroup
 		 */
 		public contentGroup:DisplayObject;
 		
 		private _indentation:number = 17;
 		/**
 		 * 子节点相对父节点的缩进值，以像素为单位。默认17。
+		 * @member ns_egret.TreeItemRenderer#indentation
 		 */
 		public get indentation():number{
 			return this._indentation;
@@ -67,7 +79,7 @@ module ns_egret {
 		
 		private _iconSkinName:any;
 		/**
-		 * @inheritDoc
+		 * @member ns_egret.TreeItemRenderer#iconSkinName
 		 */
 		public get iconSkinName():any{
 			return this._iconSkinName;
@@ -83,7 +95,7 @@ module ns_egret {
 
 		private _depth:number = 0;
 		/**
-		 * @inheritDoc
+		 * @member ns_egret.TreeItemRenderer#depth
 		 */
 		public get depth():number{
 			return this._depth;
@@ -99,7 +111,7 @@ module ns_egret {
 		
 		private _hasChildren:boolean = false;
 		/**
-		 * @inheritDoc
+		 * @member ns_egret.TreeItemRenderer#hasChildren
 		 */
 		public get hasChildren():boolean{
 			return this._hasChildren;
@@ -115,7 +127,7 @@ module ns_egret {
 		
 		private _isOpen:boolean = false;
 		/**
-		 * @inheritDoc
+		 * @member ns_egret.TreeItemRenderer#opened
 		 */
 		public get opened():boolean{
 			return this._isOpen;
@@ -129,6 +141,11 @@ module ns_egret {
 			}
 		}
 
+		/**
+		 * @method ns_egret.TreeItemRenderer#partAdded
+		 * @param partName {string} 
+		 * @param instance {any} 
+		 */
 		public partAdded(partName:string, instance:any):void{
 			super.partAdded(partName,instance);
 			if(instance==this.iconDisplay){
@@ -147,6 +164,11 @@ module ns_egret {
 			}
 		}
 		
+		/**
+		 * @method ns_egret.TreeItemRenderer#partRemoved
+		 * @param partName {string} 
+		 * @param instance {any} 
+		 */
 		public partRemoved(partName:string, instance:any):void{
 			super.partRemoved(partName,instance);
 			if(instance==this.iconDisplay){
@@ -162,6 +184,8 @@ module ns_egret {
 		}
 		/**
 		 * 鼠标在disclosureButton上按下
+		 * @method ns_egret.TreeItemRenderer#disclosureButton_mouseDownHandler
+		 * @param event {TouchEvent} 
 		 */		
 		public disclosureButton_mouseDownHandler(event:TouchEvent):void{
 			var evt:TreeEvent = new TreeEvent(TreeEvent.ITEM_OPENING,

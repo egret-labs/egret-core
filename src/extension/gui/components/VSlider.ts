@@ -21,16 +21,26 @@
 
 module ns_egret {
 
+	/**
+	 * @class ns_egret.VSlider
+	 * @classdesc
+	 * 垂直滑块控件
+	 * @extends ns_egret.SliderBase
+	 */
 	export class VSlider extends SliderBase{
 		/**
 		 * 构造函数
+		 * @method ns_egret.VSlider#constructor
 		 */		
 		public constructor(){
 			super();
 		}
 		
 		/**
-		 * @inheritDoc
+		 * @method ns_egret.VSlider#pointToValue
+		 * @param x {number} 
+		 * @param y {number} 
+		 * @returns {number}
 		 */
 		public pointToValue(x:number, y:number):number{
 			if (!this.thumb || !this.track)
@@ -42,7 +52,7 @@ module ns_egret {
 		}
 		
 		/**
-		 * @inheritDoc
+		 * @method ns_egret.VSlider#updateSkinDisplayList
 		 */
 		public updateSkinDisplayList():void{
 			if (!this.thumb || !this.track)

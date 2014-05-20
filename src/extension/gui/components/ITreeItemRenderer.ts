@@ -20,24 +20,35 @@
 
 module ns_egret {
 
+	/**
+	 * @class ns_egret.ITreeItemRenderer
+	 * @interface
+	 * @classdesc
+	 * 树状列表组件的项呈示器接口
+	 * @extends ns_egret.IItemRenderer
+	 */
 	export interface ITreeItemRenderer extends IItemRenderer{
 		/**
 		 * 图标的皮肤名
+		 * @member ns_egret.ITreeItemRenderer#iconSkinName
 		 */
 		iconSkinName:any;
 		
 		/**
 		 * 缩进深度。0表示顶级节点，1表示第一层子节点，以此类推。
+		 * @member ns_egret.ITreeItemRenderer#depth
 		 */
 		depth:number;
 		
 		/**
 		 * 是否含有子节点。
+		 * @member ns_egret.ITreeItemRenderer#hasChildren
 		 */
 		hasChildren:boolean;
 
 		/**
 		 * 节点是否处于开启状态。
+		 * @member ns_egret.ITreeItemRenderer#opened
 		 */
 		opened:boolean;
 	}

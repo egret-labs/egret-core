@@ -23,9 +23,19 @@
 
 module ns_egret {
 
+	/**
+	 * @class ns_egret.SystemContainer
+	 * @classdesc
+	 * SystemManager的虚拟子容器
+	 * @implements ns_egret.IContainer
+	 */
 	export class SystemContainer implements IContainer{
 		/**
 		 * 构造函数
+		 * @method ns_egret.SystemContainer#constructor
+		 * @param owner {ISystemManager} 
+		 * @param lowerBoundReference {string} 
+		 * @param upperBoundReference {strin} 
 		 */		
 		public constructor(owner:ISystemManager,
 										lowerBoundReference:string,
@@ -49,7 +59,7 @@ module ns_egret {
 		 */		
 		private upperBoundReference:string;
 		/**
-		 * @inheritDoc
+		 * @member ns_egret.SystemContainer#numElements
 		 */
 		public get numElements():number{
 			return this.owner[this.upperBoundReference] - this.owner[this.lowerBoundReference];
@@ -62,7 +72,9 @@ module ns_egret {
 		private raw_removeElementAt:string = "raw_removeElementAt";
 		private raw_setElementIndex:string = "raw_setElementIndex";
 		/**
-		 * @inheritDoc
+		 * @method ns_egret.SystemContainer#getElementAt
+		 * @param index {number} 
+		 * @returns {IVisualElement}
 		 */
 		public getElementAt(index:number):IVisualElement{
 			var retval:IVisualElement =
@@ -71,7 +83,9 @@ module ns_egret {
 			return retval;
 		}
 		/**
-		 * @inheritDoc
+		 * @method ns_egret.SystemContainer#addElement
+		 * @param element {IVisualElement} 
+		 * @returns {IVisualElement}
 		 */
 		public addElement(element:IVisualElement):IVisualElement{
 			var index:number = this.owner[this.upperBoundReference];
@@ -83,7 +97,10 @@ module ns_egret {
 			return element;
 		}
 		/**
-		 * @inheritDoc
+		 * @method ns_egret.SystemContainer#addElementAt
+		 * @param element {IVisualElement} 
+		 * @param index {number} 
+		 * @returns {IVisualElement}
 		 */
 		public addElementAt(element:IVisualElement, index:number):IVisualElement{
 			this.owner[this.upperBoundReference]++;
@@ -93,7 +110,9 @@ module ns_egret {
 			return element;
 		}
 		/**
-		 * @inheritDoc
+		 * @method ns_egret.SystemContainer#removeElement
+		 * @param element {IVisualElement} 
+		 * @returns {IVisualElement}
 		 */
 		public removeElement(element:IVisualElement):IVisualElement{
 			var index:number = this.owner[this.raw_getElementIndex](element);
@@ -106,7 +125,9 @@ module ns_egret {
 			return element;
 		}
 		/**
-		 * @inheritDoc
+		 * @method ns_egret.SystemContainer#removeElementAt
+		 * @param index {number} 
+		 * @returns {IVisualElement}
 		 */
 		public removeElementAt(index:number):IVisualElement{
 			index += this.owner[this.lowerBoundReference];
@@ -120,7 +141,9 @@ module ns_egret {
 			return element;
 		}
 		/**
-		 * @inheritDoc
+		 * @method ns_egret.SystemContainer#getElementIndex
+		 * @param element {IVisualElement} 
+		 * @returns {number}
 		 */
 		public getElementIndex(element:IVisualElement):number{
 			var retval:number = this.owner[this.raw_getElementIndex](element);
@@ -128,7 +151,9 @@ module ns_egret {
 			return retval;
 		}
 		/**
-		 * @inheritDoc
+		 * @method ns_egret.SystemContainer#setElementIndex
+		 * @param element {IVisualElement} 
+		 * @param index {number} 
 		 */
 		public setElementIndex(element:IVisualElement, index:number):void{
 			this.owner[this.raw_setElementIndex](

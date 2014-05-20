@@ -42,19 +42,32 @@
 
 module ns_egret {
 
+	/**
+	 * @class ns_egret.DataGroup
+	 * @classdesc
+	 * 数据项目的容器基类
+	 * 将数据项目转换为可视元素以进行显示。
+	 * @extends ns_egret.GroupBase
+	 */
 	export class DataGroup extends GroupBase{
 		/**
 		 * 构造函数
+		 * @method ns_egret.DataGroup#constructor
 		 */		
 		public constructor(){
 			super();
 		}
 
+		/**
+		 * @method ns_egret.DataGroup.defaultRendererFactory
+		 * @param ClassFactory {any} 
+		 */
         public static defaultRendererFactory:ClassFactory = new ClassFactory(ItemRenderer);
 		
 		private _rendererOwner:IItemRendererOwner;
 		/**
 		 * 项呈示器的主机组件
+		 * @member ns_egret.DataGroup#rendererOwner
 		 */
 		public get rendererOwner():IItemRendererOwner{
 			return this._rendererOwner;
@@ -67,6 +80,9 @@ module ns_egret {
 		
 		private useVirtualLayoutChanged:boolean = false;
 
+		/**
+		 * @member ns_egret.DataGroup#layout
+		 */
         public get layout():LayoutBase{
             return this._layout;
         }
@@ -103,6 +119,11 @@ module ns_egret {
 		 */		
 		private virtualRendererIndices:Array<number>;
 		
+		/**
+		 * @method ns_egret.DataGroup#setVirtualElementIndicesInView
+		 * @param startIndex {number} 
+		 * @param endIndex {number} 
+		 */
 		public setVirtualElementIndicesInView(startIndex:number, endIndex:number):void{
 			if(!this.layout||!this.layout.useVirtualLayout)
 				return;
@@ -118,7 +139,9 @@ module ns_egret {
 		}
 		
 		/**
-		 * @inheritDoc
+		 * @method ns_egret.DataGroup#getVirtualElementAt
+		 * @param index {number} 
+		 * @returns {IVisualElement}
 		 */
 		public getVirtualElementAt(index:number):IVisualElement{
 			if(index<0||index>=this.dataProvider.length)
@@ -175,7 +198,7 @@ module ns_egret {
 		private createNewRendererFlag:boolean = false;
 		
 		/**
-		 * @inheritDoc
+		 * @method ns_egret.DataGroup#invalidateSize
 		 */
 		public invalidateSize():void{
 			if(!this.createNewRendererFlag)//虚拟布局时创建子项不需要重新验证
@@ -287,7 +310,8 @@ module ns_egret {
 		}
 		
 		/**
-		 * @inheritDoc
+		 * @method ns_egret.DataGroup#getElementIndicesInView
+		 * @returns {number}
 		 */
 		public getElementIndicesInView():Array<number>{
 			if(this.layout&&this.layout.useVirtualLayout)
@@ -310,6 +334,7 @@ module ns_egret {
 		private _dataProvider:ICollection;
 		/**
 		 * 列表数据源，请使用实现了ICollection接口的数据类型，例如ArrayCollection
+		 * @member ns_egret.DataGroup#dataProvider
 		 */
 		public get dataProvider():ICollection{
 			return this._dataProvider;
@@ -534,6 +559,7 @@ module ns_egret {
 		/**
 		 * 用于数据项目的项呈示器。该类必须实现 IItemRenderer 接口。<br/>
 		 * rendererClass获取顺序：itemRendererFunction > itemRenderer > 默认ItemRenerer。
+		 * @member ns_egret.DataGroup#itemRenderer
 		 */
 		public get itemRenderer():IFactory{
 			return this._itemRenderer;
@@ -556,6 +582,7 @@ module ns_egret {
 		/**
 		 * 条目渲染器的可选皮肤标识符。在实例化itemRenderer时，若其内部没有设置过skinName,则将此属性的值赋值给它的skinName。
 		 * 注意:若itemRenderer不是ISkinnableClient，则此属性无效。
+		 * @member ns_egret.DataGroup#itemRendererSkinName
 		 */
 		public get itemRendererSkinName():any{
 			return this._itemRendererSkinName;
@@ -577,6 +604,7 @@ module ns_egret {
 		 * rendererClass获取顺序：itemRendererFunction > itemRenderer > 默认ItemRenerer。<br/>
 		 * 应该定义一个与此示例函数类似的呈示器函数： <br/>
 		 * function myItemRendererFunction(item:Object):IFactory
+		 * @member ns_egret.DataGroup#itemRendererFunction
 		 */		
 		public get itemRendererFunction():Function{
 			return this._itemRendererFunction;
@@ -609,6 +637,7 @@ module ns_egret {
 		}
 		
 		/**
+		 * @method ns_egret.DataGroup#createChildren
 		 * @private
 		 * 设置默认的ItemRenderer
 		 */		
@@ -624,7 +653,7 @@ module ns_egret {
 		
 		
 		/**
-		 * @inheritDoc
+		 * @method ns_egret.DataGroup#commitProperties
 		 */
 		public commitProperties():void{
 			if(this.itemRendererChanged||this.dataProviderChanged||this.useVirtualLayoutChanged){
@@ -680,7 +709,7 @@ module ns_egret {
 		}
 		
 		/**
-		 * @inheritDoc
+		 * @method ns_egret.DataGroup#measure
 		 */
 		public measure():void{
 			if(this.layout&&this.layout.useVirtualLayout){
@@ -695,7 +724,9 @@ module ns_egret {
 		private virtualLayoutUnderway:boolean = false;
 		
 		/**
-		 * @inheritDoc
+		 * @method ns_egret.DataGroup#updateDisplayList
+		 * @param unscaledWidth {number} 
+		 * @param unscaledHeight {number} 
 		 */
 		public updateDisplayList(unscaledWidth:number, unscaledHeight:number):void{
 			if(this.layoutInvalidateDisplayListFlag&&this.layout&&this.layout.useVirtualLayout){
@@ -822,6 +853,11 @@ module ns_egret {
 		
 		/**
 		 * 更新项呈示器
+		 * @method ns_egret.DataGroup#updateRenderer
+		 * @param renderer {IItemRenderer} 
+		 * @param itemIndex {number} 
+		 * @param data {any} 
+		 * @returns {IItemRenderer}
 		 */		
 		public updateRenderer(renderer:IItemRenderer, itemIndex:number, data:any):IItemRenderer{
 			this.renderersBeingUpdated = true;
@@ -845,6 +881,9 @@ module ns_egret {
 		/**
 		 * 返回可在项呈示器中显示的 String。
 		 * 若DataGroup被作为SkinnableDataContainer的皮肤组件,此方法将不会执行，被SkinnableDataContainer.itemToLabel()所替代。 
+		 * @method ns_egret.DataGroup#itemToLabel
+		 * @param item {any} 
+		 * @returns {string}
 		 */		
 		public itemToLabel(item:any):string{
 			if (item)
@@ -853,14 +892,18 @@ module ns_egret {
 		}
 		
 		/**
-		 * @inheritDoc
+		 * @method ns_egret.DataGroup#getElementAt
+		 * @param index {number} 
+		 * @returns {IVisualElement}
 		 */
 		public getElementAt(index:number):IVisualElement{
 			return this.indexToRenderer[index];
 		}
 		
 		/**
-		 * @inheritDoc
+		 * @method ns_egret.DataGroup#getElementIndex
+		 * @param element {IVisualElement} 
+		 * @returns {number}
 		 */
 		public getElementIndex(element:IVisualElement):number{
 			if(!element)
@@ -869,7 +912,7 @@ module ns_egret {
 		}
 		
 		/**
-		 * @inheritDoc
+		 * @member ns_egret.DataGroup#numElements
 		 */
 		public get numElements():number{
 			if(!this._dataProvider)
@@ -879,43 +922,65 @@ module ns_egret {
 		
 		private static errorStr:string = "在此组件中不可用，若此组件为容器类，请使用";
 		/**
+		 * @method ns_egret.DataGroup#addChild
 		 * @deprecated
+		 * @param child {DisplayObject} 
+		 * @returns {DisplayObject}
 		 */		
 		public addChild(child:DisplayObject):DisplayObject{
 			throw(new Error("addChild()"+DataGroup.errorStr+"addElement()代替"));
 		}
 		/**
+		 * @method ns_egret.DataGroup#addChildAt
 		 * @deprecated
+		 * @param child {DisplayObject} 
+		 * @param index {number} 
+		 * @returns {DisplayObject}
 		 */		
 		public addChildAt(child:DisplayObject, index:number):DisplayObject{
 			throw(new Error("addChildAt()"+DataGroup.errorStr+"addElementAt()代替"));
 		}
 		/**
+		 * @method ns_egret.DataGroup#removeChild
 		 * @deprecated
+		 * @param child {DisplayObject} 
+		 * @returns {DisplayObject}
 		 */		
 		public removeChild(child:DisplayObject):DisplayObject{
 			throw(new Error("removeChild()"+DataGroup.errorStr+"removeElement()代替"));
 		}
 		/**
+		 * @method ns_egret.DataGroup#removeChildAt
 		 * @deprecated
+		 * @param index {number} 
+		 * @returns {DisplayObject}
 		 */		
 		public removeChildAt(index:number):DisplayObject{
 			throw(new Error("removeChildAt()"+DataGroup.errorStr+"removeElementAt()代替"));
 		}
 		/**
+		 * @method ns_egret.DataGroup#setChildIndex
 		 * @deprecated
+		 * @param child {DisplayObject} 
+		 * @param index {number} 
 		 */		
 		public setChildIndex(child:DisplayObject, index:number):void{
 			throw(new Error("setChildIndex()"+DataGroup.errorStr+"setElementIndex()代替"));
 		}
 		/**
+		 * @method ns_egret.DataGroup#swapChildren
 		 * @deprecated
+		 * @param child1 {DisplayObject} 
+		 * @param child2 {DisplayObject} 
 		 */		
 		public swapChildren(child1:DisplayObject, child2:DisplayObject):void{
 			throw(new Error("swapChildren()"+DataGroup.errorStr+"swapElements()代替"));
 		}
 		/**
+		 * @method ns_egret.DataGroup#swapChildrenAt
 		 * @deprecated
+		 * @param index1 {number} 
+		 * @param index2 {number} 
 		 */		
 		public swapChildrenAt(index1:number, index2:number):void{
 			throw(new Error("swapChildrenAt()"+DataGroup.errorStr+"swapElementsAt()代替"));

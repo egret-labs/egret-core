@@ -20,9 +20,20 @@
 
 module ns_egret {
 
+	/**
+	 * @class ns_egret.IItemRendererOwner
+	 * @interface
+	 * @classdesc
+	 * 项呈示器的主机组件接口
+	 */	
 	export interface IItemRendererOwner{
 		/**
 		 * 更新项呈示器数据
+		 * @method ns_egret.IItemRendererOwner#updateRenderer
+		 * @param renderer {IItemRenderer} 
+		 * @param itemIndex {number} 
+		 * @param data {any} 
+		 * @returns {IItemRenderer}
 		 */		
 		updateRenderer(renderer:IItemRenderer, itemIndex:number, data:any):IItemRenderer; 
 	}

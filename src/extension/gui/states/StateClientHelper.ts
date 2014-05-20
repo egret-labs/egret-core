@@ -23,9 +23,16 @@
 
 module ns_egret {
 
+	/**
+	 * @class ns_egret.StateClientHelper
+	 * @classdesc
+	 * 视图状态组件辅助工具类
+	 */
 	export class StateClientHelper{
 		/**
 		 * 构造函数
+		 * @method ns_egret.StateClientHelper#constructor
+		 * @param target {IStateClien} 
 		 */		
 		public constructor(target:IStateClient){
 			this.target = target;
@@ -39,6 +46,7 @@ module ns_egret {
 		private _states:Array<any> = [];
 		/**
 		 * 为此组件定义的视图状态。
+		 * @member ns_egret.StateClientHelper#states
 		 */
 		public get states():Array<any>{
 			return this._states;
@@ -58,6 +66,7 @@ module ns_egret {
 		private _currentStateChanged:boolean;
 		/**
 		 * 当前视图状态发生改变的标志
+		 * @member ns_egret.StateClientHelper#currentStateChanged
 		 */
 		public get currentStateChanged():boolean{
 			return this._currentStateChanged;
@@ -71,6 +80,7 @@ module ns_egret {
 		private requestedCurrentState:string;
 		/**
 		 * 组件的当前视图状态。将其设置为 "" 或 null 可将组件重置回其基本状态。 
+		 * @member ns_egret.StateClientHelper#currentState
 		 */	
 		public get currentState():string{
 			if(this._currentStateChanged)
@@ -89,7 +99,9 @@ module ns_egret {
 		
 		/**
 		 * 返回是否含有指定名称的视图状态
-		 * @param stateName 要检测的视图状态名称
+		 * @method ns_egret.StateClientHelper#hasState
+		 * @param stateName {string} 要检测的视图状态名称
+		 * @returns {boolean}
 		 */	
 		public hasState(stateName:string):boolean{
 			if(!this._states)
@@ -113,6 +125,7 @@ module ns_egret {
 		}
 		/**
 		 * 应用当前的视图状态
+		 * @method ns_egret.StateClientHelper#commitCurrentState
 		 */
 		public commitCurrentState():void{
 			if(!this.currentStateChanged)
@@ -270,6 +283,7 @@ module ns_egret {
 		private initialized:boolean = false;
 		/**
 		 * 初始化所有视图状态
+		 * @method ns_egret.StateClientHelper#initializeStates
 		 */
 		public initializeStates():void{
 			if(this.initialized)

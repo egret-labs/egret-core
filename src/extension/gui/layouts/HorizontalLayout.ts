@@ -26,7 +26,16 @@
 
 module ns_egret {
 
+	/**
+	 * @class ns_egret.HorizontalLayout
+	 * @classdesc
+	 * 水平布局
+	 * @extends ns_egret.LayoutBase
+	 */
 	export class HorizontalLayout extends LayoutBase{
+		/**
+		 * @method ns_egret.HorizontalLayout#constructor
+		 */
 		public constructor(){
 			super();
 		}
@@ -35,6 +44,7 @@ module ns_egret {
 		/**
 		 * 布局元素的水平对齐策略。参考HorizontalAlign定义的常量。
 		 * 注意：此属性设置为CONTENT_JUSTIFY始终无效。当useVirtualLayout为true时，设置JUSTIFY也无效。
+		 * @member ns_egret.HorizontalLayout#horizontalAlign
 		 */
 		public get horizontalAlign():string{
 			return this._horizontalAlign;
@@ -51,6 +61,7 @@ module ns_egret {
 		private _verticalAlign:string = VerticalAlign.TOP;
 		/**
 		 * 布局元素的竖直对齐策略。参考VerticalAlign定义的常量。
+		 * @member ns_egret.HorizontalLayout#verticalAlign
 		 */
 		public get verticalAlign():string{
 			return this._verticalAlign;
@@ -67,6 +78,7 @@ module ns_egret {
 		private _gap:number = 6;
 		/**
 		 * 布局元素之间的水平空间（以像素为单位）
+		 * @member ns_egret.HorizontalLayout#gap
 		 */
 		public get gap():number{
 			return this._gap;
@@ -85,6 +97,7 @@ module ns_egret {
 		/**
 		 * 四个边缘的共同内边距。若单独设置了任一边缘的内边距，则该边缘的内边距以单独设置的值为准。
 		 * 此属性主要用于快速设置多个边缘的相同内边距。默认值：0。
+		 * @member ns_egret.HorizontalLayout#padding
 		 */
 		public get padding():number{
 			return this._padding;
@@ -100,6 +113,7 @@ module ns_egret {
 		private _paddingLeft:number = NaN;
 		/**
 		 * 容器的左边缘与布局元素的左边缘之间的最少像素数,若为NaN将使用padding的值，默认值：NaN。
+		 * @member ns_egret.HorizontalLayout#paddingLeft
 		 */
 		public get paddingLeft():number{
 			return this._paddingLeft;
@@ -116,6 +130,7 @@ module ns_egret {
 		private _paddingRight:number = NaN;
 		/**
 		 * 容器的右边缘与布局元素的右边缘之间的最少像素数,若为NaN将使用padding的值，默认值：NaN。
+		 * @member ns_egret.HorizontalLayout#paddingRight
 		 */
 		public get paddingRight():number{
 			return this._paddingRight;
@@ -132,6 +147,7 @@ module ns_egret {
 		private _paddingTop:number = NaN;
 		/**
 		 * 容器的顶边缘与第一个布局元素的顶边缘之间的像素数,若为NaN将使用padding的值，默认值：NaN。
+		 * @member ns_egret.HorizontalLayout#paddingTop
 		 */
 		public get paddingTop():number{
 			return this._paddingTop;
@@ -148,6 +164,7 @@ module ns_egret {
 		private _paddingBottom:number = NaN;
 		/**
 		 * 容器的底边缘与最后一个布局元素的底边缘之间的像素数,若为NaN将使用padding的值，默认值：NaN。
+		 * @member ns_egret.HorizontalLayout#paddingBottom
 		 */
 		public get paddingBottom():number{
 			return this._paddingBottom;
@@ -172,7 +189,7 @@ module ns_egret {
 		}
 
 		/**
-		 * @inheritDoc
+		 * @method ns_egret.HorizontalLayout#measure
 		 */
 		public measure():void{
 			super.measure();
@@ -255,7 +272,9 @@ module ns_egret {
 		}
 		
 		/**
-		 * @inheritDoc
+		 * @method ns_egret.HorizontalLayout#updateDisplayList
+		 * @param width {number} 
+		 * @param height {number} 
 		 */
 		public updateDisplayList(width:number, height:number):void{
 			super.updateDisplayList(width, height);
@@ -338,7 +357,8 @@ module ns_egret {
 		}
 		
 		/**
-		 * @inheritDoc
+		 * @method ns_egret.HorizontalLayout#elementAdded
+		 * @param index {number} 
 		 */
 		public elementAdded(index:number):void{
 			if(!this.useVirtualLayout)
@@ -349,7 +369,8 @@ module ns_egret {
 		}
 		
 		/**
-		 * @inheritDoc
+		 * @method ns_egret.HorizontalLayout#elementRemoved
+		 * @param index {number} 
 		 */
 		public elementRemoved(index:number):void{
 			if(!this.useVirtualLayout)
@@ -359,7 +380,7 @@ module ns_egret {
 		}
 		
 		/**
-		 * @inheritDoc
+		 * @method ns_egret.HorizontalLayout#clearVirtualLayoutCache
 		 */
 		public clearVirtualLayoutCache():void{
 			if(!this.useVirtualLayout)
@@ -403,7 +424,7 @@ module ns_egret {
 		private indexInViewCalculated:boolean = false;
 		
 		/**
-		 * @inheritDoc
+		 * @method ns_egret.HorizontalLayout#scrollPositionChanged
 		 */
 		public scrollPositionChanged():void{
 			super.scrollPositionChanged();
@@ -742,6 +763,11 @@ module ns_egret {
 		
 		/**
 		 * 为每个可变尺寸的子项分配空白区域
+		 * @method ns_egret.HorizontalLayout.flexChildrenProportionally
+		 * @param spaceForChildren {number} 
+		 * @param spaceToDistribute {number} 
+		 * @param totalPercent {number} 
+		 * @param childInfoArray {Array<any>} 
 		 */		
 		public static flexChildrenProportionally(spaceForChildren:number,spaceToDistribute:number,
 															totalPercent:number,childInfoArray:Array<any>):void{
@@ -811,7 +837,9 @@ module ns_egret {
 		}
 		
 		/**
-		 * @inheritDoc
+		 * @method ns_egret.HorizontalLayout#getElementBoundsLeftOfScrollRect
+		 * @param scrollRect {Rectangle} 
+		 * @returns {Rectangle}
 		 */
 		public getElementBoundsLeftOfScrollRect(scrollRect:Rectangle):Rectangle{
 			var rect:Rectangle = new Rectangle;
@@ -850,7 +878,9 @@ module ns_egret {
 		}
 		
 		/**
-		 * @inheritDoc
+		 * @method ns_egret.HorizontalLayout#getElementBoundsRightOfScrollRect
+		 * @param scrollRect {Rectangle} 
+		 * @returns {Rectangle}
 		 */
 		public getElementBoundsRightOfScrollRect(scrollRect:Rectangle):Rectangle{
 			var rect:Rectangle = new Rectangle;
@@ -892,14 +922,29 @@ module ns_egret {
 
     class ChildInfo{
 
+		/**
+		 * @member ns_egret.ChildInfo#layoutElement
+		 */
         public layoutElement:ILayoutElement;
 
+		/**
+		 * @member ns_egret.ChildInfo#size
+		 */
         public size:number = 0;
 
+		/**
+		 * @member ns_egret.ChildInfo#percent
+		 */
         public percent:number;
 
+		/**
+		 * @member ns_egret.ChildInfo#min
+		 */
         public min:number;
 
+		/**
+		 * @member ns_egret.ChildInfo#max
+		 */
         public max:number;
     }
 }

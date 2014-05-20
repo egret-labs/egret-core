@@ -24,26 +24,37 @@
 
 module ns_egret {
 
+	/**
+	 * @class ns_egret.AddItems
+	 * @classdesc
+	 * 添加显示元素
+	 * @extends ns_egret.OverrideBase
+	 */	
 	export class AddItems extends OverrideBase {
 		/**
 		 * 添加父级容器的底层
+		 * @constant ns_egret.AddItems.FIRST
 		 */		
 		public static FIRST:string = "first";
 		/**
 		 * 添加在父级容器的顶层 
+		 * @constant ns_egret.AddItems.LAST
 		 */		
 		public static LAST:string = "last";
 		/**
 		 * 添加在相对对象之前 
+		 * @constant ns_egret.AddItems.BEFORE
 		 */		
 		public static BEFORE:string = "before";
 		/**
 		 * 添加在相对对象之后 
+		 * @constant ns_egret.AddItems.AFTER
 		 */		
 		public static AFTER:string = "after";
 		
 		/**
 		 * 构造函数
+		 * @method ns_egret.AddItems#constructor
 		 */		
 		public constructor(){
 			super();
@@ -51,24 +62,32 @@ module ns_egret {
 		
 		/**
 		 * 要添加到的属性 
+		 * @member ns_egret.AddItems#propertyName
 		 */		
 		public propertyName:string = "";
 		
 		/**
 		 * 添加的位置 
+		 * @member ns_egret.AddItems#position
 		 */		
 		public position:string = AddItems.LAST;
 		
 		/**
 		 * 相对的显示元素的实例名
+		 * @member ns_egret.AddItems#relativeTo
 		 */		
 		public relativeTo:string;
 		
 		/**
 		 * 目标实例名
+		 * @member ns_egret.AddItems#target
 		 */		
 		public target:string;
 		
+		/**
+		 * @method ns_egret.AddItems#initialize
+		 * @param parent {IStateClient} 
+		 */
 		public initialize(parent:IStateClient):void{
 			var targetElement:IVisualElement = <IVisualElement> (parent[this.target]);
 			if(!targetElement||targetElement instanceof SkinnableComponent)
@@ -83,6 +102,10 @@ module ns_egret {
 			}
 		}
 		
+		/**
+		 * @method ns_egret.AddItems#apply
+		 * @param parent {IContainer} 
+		 */
 		public apply(parent:IContainer):void{
 			var index:number;
 			var relative:IVisualElement;
@@ -114,6 +137,10 @@ module ns_egret {
 			dest.addElementAt(targetElement,index);
 		}
 		
+		/**
+		 * @method ns_egret.AddItems#remove
+		 * @param parent {IContainer} 
+		 */
 		public remove(parent:IContainer):void{
 			var dest:IContainer = this.propertyName==null||this.propertyName==""?
 				<IContainer> parent:parent[this.propertyName];

@@ -22,15 +22,21 @@
 
 module ns_egret {
 
+	/**
+	 * @class ns_egret.UIGlobals
+	 * @classdesc
+	 */
 	export class UIGlobals{
 		/**
 		 * 一个全局标志，控制在某些鼠标操作或动画特效播放时，是否开启updateAfterEvent()，开启时能增加平滑的体验感,但是会提高屏幕渲染(Render事件)的频率。默认为true。
+		 * @member ns_egret.UIGlobals.useUpdateAfterEvent
 		 */		
 		public static useUpdateAfterEvent:boolean = true;
 		
 		private static _stage:Stage;
 		/**
 		 * 舞台引用，当第一个UIComponent添加到舞台时此属性被自动赋值
+		 * @member ns_egret.UIGlobals.stage
 		 */		
 		public static get stage():Stage{
 			return UIGlobals._stage;
@@ -41,6 +47,8 @@ module ns_egret {
 		private static initlized:boolean = false;
 		/**
 		 * 初始化管理器
+		 * @method ns_egret.UIGlobals.initlize
+		 * @param stage {Stage} 
 		 */		
 		public static initlize(stage:Stage):void{
 			if(UIGlobals.initlized)
@@ -51,6 +59,7 @@ module ns_egret {
 		}
 		/**
 		 * 延迟渲染布局管理器 
+		 * @member ns_egret.UIGlobals.layoutManager
 		 */		
 		public static layoutManager:LayoutManager;
 		/**
@@ -59,6 +68,7 @@ module ns_egret {
 		public static _systemManager:ISystemManager;
 		/**
 		 * 顶级应用容器
+		 * @member ns_egret.UIGlobals.systemManager
 		 */
 		public static get systemManager():ISystemManager{
 			return this._systemManager;
