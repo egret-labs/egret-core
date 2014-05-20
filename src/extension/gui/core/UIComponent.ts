@@ -166,7 +166,7 @@ module ns_egret {
 		 * 子项创建完成
 		 * @method ns_egret.UIComponent#childrenCreated
 		 */		
-		public childrenCreated():void{
+		private childrenCreated():void{
 			this.invalidateProperties();
 			this.invalidateSize();
 			this.invalidateDisplayList();

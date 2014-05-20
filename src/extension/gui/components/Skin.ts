@@ -80,29 +80,18 @@ module ns_egret {
 		 * @member ns_egret.StateSkin#height
 		 */
 		public height:number = NaN;
-		
-		/**
-		 * x坐标
-		 * @constant ns_egret.StateSkin#x
-		 */		
-		public x:number = 0;
-		/**
-		 * y坐标 
-		 * @constant ns_egret.StateSkin#y
-		 */		
-		public y:number = 0;
-		
-		//以下这两个属性无效，仅用于防止DXML编译器报错。
-		/**
-		 * @member ns_egret.StateSkin#percentWidth
-		 */
-		public percentWidth:number = NaN;
-		/**
-		 * @member ns_egret.StateSkin#percentHeight
-		 */
-		public percentHeight:number = NaN;
-		
-		//========================state相关函数===============start=========================
+
+        private _initialized:boolean = false;
+        /**
+         * 创建子项,子类覆盖此方法以完成组件子项的初始化操作，
+         * 请务必调用super.createChildren()以完成父类组件的初始化
+         * @method ns_egret.Skin#createChildren
+         */
+        public createChildren():void{
+
+        }
+
+        //========================state相关函数===============start=========================
 
 		private stateClientHelper:StateClientHelper;
 		
@@ -190,8 +179,12 @@ module ns_egret {
 					this.commitCurrentState();
 				}
 			}
+            if(!this._initialized){
+                this._initialized = true;
+                this.createChildren();
+            }
 		}
-		
+
 		private _elementsContent:Array<any> = [];
 		/**
 		 * 返回子元素列表
