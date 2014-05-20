@@ -169,8 +169,6 @@ module ns_egret {
 			var pos:Point = this.globalToLocal(event.stageX,event.stageY);
 			this.x += pos.x - this._offsetPointX;
 			this.y += pos.y - this._offsetPointY;
-			if(UIGlobals.useUpdateAfterEvent)
-				event.updateAfterEvent();
 		}
 		/**
 		 * 鼠标在舞台上弹起事件

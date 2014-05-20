@@ -27,12 +27,7 @@ module ns_egret {
 	 * @classdesc
 	 */
 	export class UIGlobals{
-		/**
-		 * 一个全局标志，控制在某些鼠标操作或动画特效播放时，是否开启updateAfterEvent()，开启时能增加平滑的体验感,但是会提高屏幕渲染(Render事件)的频率。默认为true。
-		 * @member ns_egret.UIGlobals.useUpdateAfterEvent
-		 */		
-		public static useUpdateAfterEvent:boolean = true;
-		
+
 		private static _stage:Stage;
 		/**
 		 * 舞台引用，当第一个UIComponent添加到舞台时此属性被自动赋值

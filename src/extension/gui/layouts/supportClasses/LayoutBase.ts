@@ -97,8 +97,13 @@ module ns_egret {
 			if (this.target)
 				this.target.invalidateSize();
 		}
-		
-		
+        /**
+         * 滚动条位置改变
+         * @method ns_egret.LayoutBase#scrollPositionChanged
+         */
+        public scrollPositionChanged():void{
+
+        }
 		
 		/**
 		 * 清理虚拟布局缓存的数据

@@ -195,7 +195,6 @@ module ns_egret {
 
         /**
          * 滚动条位置改变
-         * @method ns_egret.LayoutBase#scrollPositionChanged
          */
         private scrollPositionChanged():void{
             if(!this._clipAndEnableScrolling){
@@ -203,11 +202,13 @@ module ns_egret {
             }
             this.updateScrollRect(this.width,this.height);
             this.invalidateDisplayListExceptLayout();
+            if(this._layout){
+                this._layout.scrollPositionChanged();
+            }
         }
 
         /**
          * 更新可视区域
-         * @method ns_egret.LayoutBase#updateScrollRect
          * @param w {number}
          * @param h {number}
          */
