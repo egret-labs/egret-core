@@ -44,14 +44,7 @@ module ns_egret {
 		 * 已经初始化标志 
 		 */		
 		private initialized:boolean = false;
-		/**
-		 * 该视图状态所基于的视图状态的名称；
-		 * 如果该视图状态不是基于已命名的视图状态，则为 null。
-		 * 如果该值为 null，则该视图状态基于根状态（包括不是使用 State 类为组件定义的属性、样式、事件处理函数和子项）。 
-		 * @member ns_egret.State#basedOn
-		 */		
-		public basedOn:string;
-		
+
 		/**
 		 * 视图状态的名称。给定组件的状态名称必须唯一。必须设置此属性。
 		 * @member ns_egret.State#name
@@ -88,7 +81,7 @@ module ns_egret {
 		 */		
 		public dispatchEnterState():void{
 			if (this.hasEventListener("enterState"))
-				this.dispatchEvent(new Event("enterState"));
+				this.dispatchEventWith("enterState");
 		}
 		/**
 		 * 抛出即将退出视图状态事件
@@ -96,7 +89,7 @@ module ns_egret {
 		 */		
 		public dispatchExitState():void{
 			if (this.hasEventListener("exitState"))
-				this.dispatchEvent(new Event("exitState"));
+				this.dispatchEventWith("exitState");
 		}
 	}
 	

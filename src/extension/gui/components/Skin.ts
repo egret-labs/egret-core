@@ -25,7 +25,6 @@
 /// <reference path="../core/IVisualElement.ts"/>
 /// <reference path="../core/IVisualElementContainer.ts"/>
 /// <reference path="../events/ElementExistenceEvent.ts"/>
-/// <reference path="../states/StateClientHelper.ts"/>
 
 module ns_egret {
 
@@ -47,7 +46,6 @@ module ns_egret {
 		 */		
 		public constructor(){
 			super();
-			this.stateClientHelper = new StateClientHelper(this);
 		}
 		
 		/**
@@ -91,54 +89,6 @@ module ns_egret {
 
         }
 
-        //========================state相关函数===============start=========================
-
-		private stateClientHelper:StateClientHelper;
-		
-		/**
-		 * @member ns_egret.StateSkin#states
-		 */
-		public get states():Array<any>{
-			return this.stateClientHelper.states;
-		}
-		
-		public set states(value:Array<any>){
-			this.stateClientHelper.states = value;
-		}
-		
-		/**
-		 * @member ns_egret.StateSkin#currentState
-		 */
-		public get currentState():string{
-			return this.stateClientHelper.currentState;
-		}
-		
-		public set currentState(value:string){
-			this.stateClientHelper.currentState = value;
-			if (this._hostComponent&&this.stateClientHelper.currentStateChanged){
-				this.stateClientHelper.commitCurrentState();
-				this.commitCurrentState();
-			}
-		}
-		
-		/**
-		 * @method ns_egret.StateSkin#hasState
-		 * @param stateName {string} 
-		 * @returns {boolean}
-		 */
-		public hasState(stateName:string):boolean{
-			return this.stateClientHelper.hasState(stateName); 
-		}
-		
-		/**
-		 * 应用当前的视图状态。子类覆盖此方法在视图状态发生改变时执行相应更新操作。
-		 * @method ns_egret.StateSkin#commitCurrentState
-		 */
-		public commitCurrentState():void{
-			
-		}
-		//========================state相关函数===============end=========================
-		
 		private _hostComponent:SkinnableComponent;
 		/**
 		 * @member ns_egret.StateSkin#hostComponent
@@ -152,6 +102,10 @@ module ns_egret {
 		public set hostComponent(value:SkinnableComponent){
 			if(this._hostComponent==value)
 				return;
+            if(!this._initialized){
+                this._initialized = true;
+                this.createChildren();
+            }
 			var i:number;
 			if(this._hostComponent){
 				for(i = this._elementsContent.length - 1; i >= 0; i--){
@@ -172,17 +126,12 @@ module ns_egret {
 					this._elementAdded(elt, i);
 				}
 				
-				this.stateClientHelper.initializeStates();
+				this.initializeStates();
 				
-				if(this.stateClientHelper.currentStateChanged){
-					this.stateClientHelper.commitCurrentState();
+				if(this.currentStateChanged){
 					this.commitCurrentState();
 				}
 			}
-            if(!this._initialized){
-                this._initialized = true;
-                this.createChildren();
-            }
 		}
 
 		private _elementsContent:Array<any> = [];
@@ -395,5 +344,192 @@ module ns_egret {
 			this._hostComponent.invalidateSize();
 			this._hostComponent.invalidateDisplayList();
 		}
+
+        //========================state相关函数===============start=========================
+
+        private _states:Array<any> = [];
+        /**
+         * 为此组件定义的视图状态。
+         * @member ns_egret.StateClientHelper#states
+         */
+        public get states():Array<any>{
+            return this._states;
+        }
+        public set states(value:Array<any>){
+            if(this._states == value)
+                return;
+            this._states = value;
+            this.currentStateChanged = true;
+            this.requestedCurrentState = this._currentState;
+            if(!this.hasState(this.requestedCurrentState)){
+                this.requestedCurrentState = this.getDefaultState();
+            }
+        }
+
+        /**
+         * 当前视图状态发生改变的标志
+         */
+        private currentStateChanged:boolean;
+
+        private _currentState:string;
+        /**
+         * 存储还未验证的视图状态
+         */
+        private requestedCurrentState:string;
+        /**
+         * 组件的当前视图状态。将其设置为 "" 或 null 可将组件重置回其基本状态。
+         * @member ns_egret.StateClientHelper#currentState
+         */
+        public get currentState():string{
+            if(this.currentStateChanged)
+                return this.requestedCurrentState;
+            return this._currentState?this._currentState:this.getDefaultState();
+        }
+
+        public set currentState(value:string){
+            if(!value)
+                value = this.getDefaultState();
+            if (value != this.currentState &&value&&this.currentState){
+                this.requestedCurrentState = value;
+                this.currentStateChanged = true;
+                if (this._hostComponent){
+                    this.commitCurrentState();
+                }
+            }
+        }
+
+        /**
+         * 返回是否含有指定名称的视图状态
+         * @method ns_egret.StateSkin#hasState
+         * @param stateName {string}
+         * @returns {boolean}
+         */
+        public hasState(stateName:string):boolean{
+            if(!this._states)
+                return false;
+            if(typeof(this._states[0]) == "string")
+                return this._states.indexOf(stateName)!=-1;
+            return (this.getState(stateName) != null);
+        }
+
+        /**
+         * 返回默认状态
+         */
+        private getDefaultState():string{
+            if(this._states&&this._states.length>0){
+                var state:any = this._states[0];
+                if(typeof(state) == "string")
+                    return state;
+                return state.name;
+            }
+            return null;
+        }
+        /**
+         * 应用当前的视图状态。子类覆盖此方法在视图状态发生改变时执行相应更新操作。
+         * @method ns_egret.StateSkin#commitCurrentState
+         */
+        public commitCurrentState():void{
+            if(!this.currentStateChanged)
+                return;
+            this.currentStateChanged = false;
+            if(typeof(this.states&&this.states[0]) == "string"){
+                if(this.states.indexOf(this.requestedCurrentState)==-1)
+                    this._currentState = this.getDefaultState();
+                else
+                    this._currentState = this.requestedCurrentState;
+                return;
+            }
+            var destination:State = this.getState(this.requestedCurrentState);
+            if(!destination){
+                this.requestedCurrentState = this.getDefaultState();
+            }
+            var event:StateChangeEvent;
+            var oldState:string = this._currentState ? this._currentState : "";
+            if (this.hasEventListener(StateChangeEvent.CURRENT_STATE_CHANGING)) {
+                event = new StateChangeEvent(StateChangeEvent.CURRENT_STATE_CHANGING);
+                event.oldState = oldState;
+                event.newState = this.requestedCurrentState ? this.requestedCurrentState : "";
+                this.dispatchEvent(event);
+            }
+
+            this.removeState(this._currentState);
+            this._currentState = this.requestedCurrentState;
+
+            if (this._currentState) {
+                this.applyState(this._currentState);
+            }
+
+            if (this.hasEventListener(StateChangeEvent.CURRENT_STATE_CHANGE)){
+                event = new StateChangeEvent(StateChangeEvent.CURRENT_STATE_CHANGE);
+                event.oldState = oldState;
+                event.newState = this._currentState ? this._currentState : "";
+                this.dispatchEvent(event);
+            }
+
+        }
+
+
+        /**
+         * 通过名称返回视图状态
+         */
+        private getState(stateName:string):State{
+            if (!this._states || !stateName)
+                return null;
+
+            for (var i:number = 0; i < this._states.length; i++){
+                if (this._states[i].name == stateName)
+                    return this._states[i];
+            }
+
+            return null;
+        }
+
+        /**
+         * 移除指定的视图状态以及所依赖的所有父级状态，除了与新状态的共同状态外
+         */
+        private removeState(stateName:string):void{
+            var state:State = this.getState(stateName);
+            if (state){
+                state.dispatchExitState();
+
+                var overrides:Array<any> = state.overrides;
+
+                for (var i:number = overrides.length; i; i--)
+                    overrides[i-1].remove(this);
+            }
+        }
+
+        /**
+         * 应用新状态
+         */
+        private applyState(stateName:string):void{
+            var state:State = this.getState(stateName);
+            if (state){
+                var overrides:Array<any> = state.overrides;
+                for (var i:number = 0; i < overrides.length; i++)
+                    overrides[i].apply(<IContainer><any>(this));
+                state.dispatchEnterState();
+            }
+        }
+
+        private initialized:boolean = false;
+        /**
+         * 初始化所有视图状态
+         * @method ns_egret.StateClientHelper#initializeStates
+         */
+        public initializeStates():void{
+            if(this.initialized)
+                return;
+            this.initialized = true;
+            if (typeof (this._states[0]) == "string")
+                return;
+            for (var i:number = 0; i < this._states.length; i++){
+                var state:State = <State> (this._states[i]);
+                if(!state)
+                    break;
+                state.initialize(this);
+            }
+        }
+        //========================state相关函数===============end=========================
 	}
 }

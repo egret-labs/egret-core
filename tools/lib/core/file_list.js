@@ -88,7 +88,6 @@ exports.core = [
     "extension/gui/states/AddItems.js",
     "extension/gui/states/SetProperty.js",
     "extension/gui/states/State.js",
-    "extension/gui/states/StateClientHelper.js",
     "extension/gui/components/UIAsset.js",
     "extension/gui/components/SkinnableComponent.js",
     "extension/gui/components/supportClasses/DefaultSkinAdapter.js",

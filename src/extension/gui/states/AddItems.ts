@@ -92,7 +92,7 @@ module ns_egret {
 			var targetElement:IVisualElement = <IVisualElement> (parent[this.target]);
 			if(!targetElement||targetElement instanceof SkinnableComponent)
 				return;
-			//让UIAsset和UIMovieClip等素材组件立即开始初始化，防止延迟闪一下或首次点击失效的问题。
+			//让UIAsset等素材组件立即开始初始化，防止延迟闪一下或首次点击失效的问题。
 			if("initialize" in targetElement){
 				try{
 					targetElement["initialize"]();
