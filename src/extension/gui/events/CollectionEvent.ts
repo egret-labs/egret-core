@@ -85,5 +85,14 @@ module ns_egret {
 		 * @member ns_egret.CollectionEvent#oldLocation
 		 */		
 		public oldLocation:number;
+
+        private static eventRecycler:Recycler = new Recycler();
+        /**
+         * 使用指定的EventDispatcher对象来抛出CollectionEvent事件对象。抛出的对象将会缓存在对象池上，供下次循环复用。
+         * @method ns_egret.CollectionEvent.dispathByTarget
+         */
+        public static dispathByTarget(target:IEventDispatcher,type:string,bubbles:boolean=false,data?:Object):void{
+            Event._dispathByTarget(CollectionEvent,target,type,bubbles,data)
+        }
 	}
 }
