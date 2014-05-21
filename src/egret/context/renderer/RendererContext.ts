@@ -24,17 +24,16 @@
 
 module ns_egret {
     /**
+     * @class ns_egret.RendererContext
+     * @classdesc
      * RenderContext是游戏的渲染上下文。
      * 这是一个抽象基类，制定主要的接口
-     * @stable B 当编写WebGLContext和OpenGLContext时，RendererContext的接口有可能会发生变化，以兼容基于GPU模式的渲染方式，一些设计理念会参考PIXI.js
-     * @roadmap 这个接口的重构和实现其他Context是引擎的重点工作
      */
     export class RendererContext extends HashObject{
 
 
         /**
          * 渲染全部纹理的时间开销
-         * @readonly
          */
         public renderCost:number = 0;
 
@@ -67,6 +66,7 @@ module ns_egret {
 
         /**
          * 绘制图片
+         * @method ns_egret.RendererContext#drawImage
          * @param texture
          * @param sourceX
          * @param sourceY
@@ -83,8 +83,8 @@ module ns_egret {
 
         /**
          * 变换Context的当前渲染矩阵
-         * @param matrix
-         * @stable A
+         * @method ns_egret.RendererContext#setTransform
+         * @param matrix {ns_egret.Matrix}
          */
         public setTransform(matrix:ns_egret.Matrix) {
 
@@ -106,8 +106,8 @@ module ns_egret {
 
         /**
          * 设置渲染alpha
+         * @method ns_egret.RendererContext#setAlpha
          * @param value
-         * @stable A
          */
         public setAlpha(value:number, blendMode:ns_egret.BlendMode) {
 
