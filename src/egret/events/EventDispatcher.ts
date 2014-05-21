@@ -233,9 +233,6 @@ module ns_egret {
          * @param data {any}附加数据(可选)
          */
         public dispatchEventWith(type:string, bubbles:boolean = false, data?:Object):void{
-           if(data){
-               data = {data:data};
-           }
            Event.dispathByTarget(this,type,bubbles,data);
         }
     }
