@@ -379,9 +379,9 @@ module ns_egret {
 
                 var mousePoint:Point = (<DisplayObject> (event.target)).localToGlobal(mEvent.localX, mEvent.localY);
 
-                var touchEvent:TouchEvent = new TouchEvent(TouchEvent.TOUCH_TAP, mEvent.bubbles,mEvent.cancelable,
-                    mEvent.touchPointID,mousePoint.x,mousePoint.y,mEvent.ctrlKey,mEvent.altKey,mEvent.shiftKey,mEvent.touchDown);
-				this.dispatchEvent(touchEvent);
+                TouchEvent.dispatchTouchEvent(this,
+                    TouchEvent.TOUCH_TAP,mEvent.touchPointID,mousePoint.x,mousePoint.y,
+                    mEvent.ctrlKey,mEvent.altKey,mEvent.shiftKey,mEvent.touchDown);
 			}
 			
 			this.mouseDownTarget = null;
