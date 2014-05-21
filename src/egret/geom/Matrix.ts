@@ -22,19 +22,37 @@
 
 module ns_egret {
     /**
+	 * @class ns_egret.Matrix
+	 * @classdesc
      * 2D矩阵类，包括常见矩阵算法
+	 * @extends ns_egret.HashObject
      */
     export class Matrix extends HashObject{
+		/**
+		 * @constructor
+		 * @param public a {any} 
+		 * @param public b {any} 
+		 * @param public c {any} 
+		 * @param public d {any} 
+		 * @param public tx {any} 
+		 * @param public ty {any} 
+		 */
         constructor(public a = 1, public b = 0, public c = 0, public d = 1, public tx = 0, public ty = 0) {
             super();
         }
 
+/**
+ * @member ns_egret.Matrix.
+ */
 // static public properties:
 
         static identity = new Matrix();
 
         static DEG_TO_RAD = Math.PI / 180;
 
+/**
+ * @member ns_egret.Matrix#
+ */
 // public methods:
 
         /**
@@ -179,6 +197,10 @@ module ns_egret {
             return this;
         }
 
+		/**
+		 * @method ns_egret.Matrix#appendTransformFromDisplay
+		 * @param target {ns_egret.DisplayObjec} 
+		 */
         public appendTransformFromDisplay(target:ns_egret.DisplayObject) {
             var o = target;
             var anchorX,anchorY;
