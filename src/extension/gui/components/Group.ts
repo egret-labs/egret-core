@@ -308,8 +308,8 @@ module ns_egret {
 			
 			if (notifyListeners){
 				if (this.hasEventListener(ElementExistenceEvent.ELEMENT_ADD))
-					this.dispatchEvent(new ElementExistenceEvent(
-						ElementExistenceEvent.ELEMENT_ADD, false, false, element, index));
+                    ElementExistenceEvent.dispatchElementExistenceEvent(this,
+                        ElementExistenceEvent.ELEMENT_ADD, element, index)
 			}
 			
 			this.invalidateSize();
@@ -325,8 +325,8 @@ module ns_egret {
 		public _elementRemoved(element:IVisualElement, index:number, notifyListeners:boolean = true):void{
 			if (notifyListeners){        
 				if (this.hasEventListener(ElementExistenceEvent.ELEMENT_REMOVE))
-					this.dispatchEvent(new ElementExistenceEvent(
-						ElementExistenceEvent.ELEMENT_REMOVE, false, false, element, index));
+                    ElementExistenceEvent.dispatchElementExistenceEvent(this,
+                        ElementExistenceEvent.ELEMENT_REMOVE, element, index)
 			}
 			
 			var childDO:DisplayObject = <DisplayObject><any> element;

@@ -87,12 +87,12 @@ module ns_egret {
         public oldLocation:number;
 
         /**
-         * 使用指定的EventDispatcher对象来抛出CollectionEvent事件对象。抛出的对象将会缓存在对象池上，供下次循环复用。
-         * @method ns_egret.CollectionEvent.dispathByTarget
+         * 使用指定的EventDispatcher对象来抛出事件对象。抛出的对象将会缓存在对象池上，供下次循环复用。
+         * @method ns_egret.CollectionEvent.dispatchCollectionEvent
          */
-        public static dispathCollectionEvent(target:IEventDispatcher,type:string,kind:string, location:number,
-                                      oldLocation:number, items:Array<any>,oldItems:Array<any>):void{
-            var eventClass:any = Event;
+        public static dispatchCollectionEvent(target:IEventDispatcher,type:string,kind:string = null, location:number = -1,
+                                             oldLocation:number = -1, items:Array<any> = null,oldItems:Array<any>=null):void{
+            var eventClass:any = CollectionEvent;
             var props:any = eventClass._props;
             if(!props)
                 props = eventClass._props = {};

@@ -222,17 +222,12 @@ module ns_egret {
 			}
 
 			if (dispatchChangedEvents && retVal){
-				var e:IndexChangeEvent;
-
 				if (this._dispatchChangeAfterSelection){
-					e = new IndexChangeEvent(IndexChangeEvent.CHANGE);
-					e.oldIndex = oldSelectedIndex;
-					e.newIndex = this._selectedIndex;
-					this.dispatchEvent(e);
+                    IndexChangeEvent.dispatchIndexChangeEvent(this,
+                        IndexChangeEvent.CHANGE,oldSelectedIndex,this._selectedIndex)
 					this._dispatchChangeAfterSelection = false;
 				}
-
-				this.dispatchEvent(new UIEvent(UIEvent.VALUE_COMMIT));
+                UIEvent.dispatchUIEvent(this,UIEvent.VALUE_COMMIT);
 			}
 
 			return retVal;

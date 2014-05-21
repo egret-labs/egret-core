@@ -68,5 +68,20 @@ module ns_egret {
 		 * @member ns_egret.IndexChangeEvent#oldIndex
 		 */		
 		public oldIndex:number;
+
+        /**
+         * 使用指定的EventDispatcher对象来抛出事件对象。抛出的对象将会缓存在对象池上，供下次循环复用。
+         * @method ns_egret.IndexChangeEvent.dispatchIndexChangeEvent
+         */
+        public static dispatchIndexChangeEvent(target:IEventDispatcher,type:string,
+                                               oldIndex:number = -1,newIndex:number = -1):void{
+            var eventClass:any = IndexChangeEvent;
+            var props:any = eventClass._props;
+            if(!props)
+                props = eventClass._props = {};
+            props.oldIndex = oldIndex;
+            props.newIndex = newIndex;
+            Event._dispatchByTarget(eventClass,target,type,false,props)
+        }
 	}
 }

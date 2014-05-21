@@ -64,6 +64,21 @@ module ns_egret {
 		 * @member ns_egret.ElementExistenceEvent#element
 		 */		
 		public element:IVisualElement;
+
+        /**
+         * 使用指定的EventDispatcher对象来抛出事件对象。抛出的对象将会缓存在对象池上，供下次循环复用。
+         * @method ns_egret.ElementExistenceEvent.dispatchElementExistenceEvent
+         */
+        public static dispatchElementExistenceEvent(target:IEventDispatcher,type:string,
+                                                    element:IVisualElement = null,index:number = -1):void{
+            var eventClass:any = ElementExistenceEvent;
+            var props:any = eventClass._props;
+            if(!props)
+                props = eventClass._props = {};
+            props.element = element;
+            props.index = index;
+            Event._dispatchByTarget(eventClass,target,type,false,props)
+        }
 	}
 	
 }

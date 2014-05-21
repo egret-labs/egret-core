@@ -106,9 +106,8 @@ module ns_egret {
 					radioButton.label == value){
 					this.changeSelection(i, false);
 					this._selectedValue = null;
-					
-					this.dispatchEvent(new UIEvent(UIEvent.VALUE_COMMIT));
-					
+                    UIEvent.dispatchUIEvent(this,UIEvent.VALUE_COMMIT);
+
 					break;
 				}
 			}
@@ -159,7 +158,7 @@ module ns_egret {
 			instance._radioButtonGroup = this;
 			instance.invalidateSkinState();
 			
-			this.dispatchEvent(new Event("numRadioButtonsChanged"));
+			this.dispatchEventWith("numRadioButtonsChanged");
 		}
 		/**
 		 * 从组里移除单选按钮
@@ -197,7 +196,7 @@ module ns_egret {
 				}
 				
 				if (foundInstance)
-					this.dispatchEvent(new Event("numRadioButtonsChanged"));
+					this.dispatchEventWith("numRadioButtonsChanged");
 			}
 		}
 		/**
@@ -215,7 +214,7 @@ module ns_egret {
 					this._selection.selected = false;
 					this._selection = null;
 					if (fireChange)
-						this.dispatchEvent(new Event(Event.CHANGE));
+						this.dispatchEventWith(Event.CHANGE);
 				}
 			}
 			else{
@@ -227,7 +226,7 @@ module ns_egret {
 					}
 				}
 			}
-			this.dispatchEvent(new UIEvent(UIEvent.VALUE_COMMIT));
+            UIEvent.dispatchUIEvent(this,UIEvent.VALUE_COMMIT);
 		}
 		/**
 		 * 改变选中项
@@ -241,7 +240,7 @@ module ns_egret {
 				this._selection = rb;
 				this._selection.selected = true;
 				if (fireChange)
-					this.dispatchEvent(new Event(Event.CHANGE));
+					this.dispatchEventWith(Event.CHANGE);
 			}
 		}
 		

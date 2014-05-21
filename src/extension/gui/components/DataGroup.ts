@@ -146,8 +146,8 @@ module ns_egret {
 					if("validateNow" in renderer)
 						(<IInvalidating><any> renderer).validateNow();
 					this.createNewRendererFlag = false;
-					this.dispatchEvent(new RendererExistenceEvent(RendererExistenceEvent.RENDERER_ADD, 
-						false, false, renderer, index, item));
+                    RendererExistenceEvent.dispatchRendererExistenceEvent(this,
+                        RendererExistenceEvent.RENDERER_ADD,renderer, index, item);
 				}
 				element = <IVisualElement><any>renderer;
 			}
@@ -439,9 +439,8 @@ module ns_egret {
 			if(!renderer)
 				return;
 			this.updateRenderer(renderer,index,item);
-			this.dispatchEvent(new RendererExistenceEvent(RendererExistenceEvent.RENDERER_ADD, 
-				false, false, renderer, index, item));
-			
+            RendererExistenceEvent.dispatchRendererExistenceEvent(this,
+                RendererExistenceEvent.RENDERER_ADD,renderer, index, item);
 		}
 		
 		/**
@@ -468,14 +467,14 @@ module ns_egret {
 			
 			if (this.indexToRenderer.length > index)
 				this.indexToRenderer.splice(index, 1);
-			
-			this.dispatchEvent(new RendererExistenceEvent(
-				RendererExistenceEvent.RENDERER_REMOVE, false, false, oldRenderer, index, item));
-			
+
+            RendererExistenceEvent.dispatchRendererExistenceEvent(this,
+                RendererExistenceEvent.RENDERER_REMOVE,oldRenderer, index, item);
+
 			if(oldRenderer&&oldRenderer instanceof DisplayObject){
 				this.recycle(oldRenderer);
-				this.dispatchEvent(new RendererExistenceEvent(RendererExistenceEvent.RENDERER_REMOVE, 
-					false, false, oldRenderer, oldRenderer.itemIndex, oldRenderer.data));
+                RendererExistenceEvent.dispatchRendererExistenceEvent(this,
+                    RendererExistenceEvent.RENDERER_REMOVE,oldRenderer, oldRenderer.itemIndex, oldRenderer.data);
 			}
 		}
 		
@@ -805,8 +804,8 @@ module ns_egret {
 				renderer = this.indexToRenderer[i];
 				if(renderer){
 					this.recycle(renderer);
-					this.dispatchEvent(new RendererExistenceEvent(RendererExistenceEvent.RENDERER_REMOVE, 
-						false, false, renderer, renderer.itemIndex, renderer.data));
+                    RendererExistenceEvent.dispatchRendererExistenceEvent(this,
+                        RendererExistenceEvent.RENDERER_REMOVE,renderer, renderer.itemIndex, renderer.data);
 				}
 			}
 			this.indexToRenderer = [];
@@ -832,8 +831,8 @@ module ns_egret {
 					continue;
 				this.indexToRenderer[index] = renderer;
 				this.updateRenderer(renderer,index,item);
-				this.dispatchEvent(new RendererExistenceEvent(RendererExistenceEvent.RENDERER_ADD, 
-					false, false, renderer, index, item));
+                RendererExistenceEvent.dispatchRendererExistenceEvent(this,
+                    RendererExistenceEvent.RENDERER_ADD,renderer, index, item);
 				index ++;
 			}
 		}

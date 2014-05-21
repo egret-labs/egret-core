@@ -150,7 +150,7 @@ module ns_egret {
 			this._value = value;
 			
 			if (this.selected && this.group)
-				this.group.dispatchEvent(new UIEvent(UIEvent.VALUE_COMMIT));
+                UIEvent.dispatchUIEvent(this.group,UIEvent.VALUE_COMMIT);
 		}
 		/**
 		 * @method ns_egret.RadioButton#commitProperties

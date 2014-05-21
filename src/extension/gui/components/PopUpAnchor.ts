@@ -121,7 +121,7 @@ module ns_egret {
 			
 			this._popUp = value;
 			
-			this.dispatchEvent(new Event("popUpChanged"));
+			this.dispatchEventWith("popUpChanged");
 		}
 		
 		private _popUpPosition:string = PopUpPosition.TOP_LEFT;

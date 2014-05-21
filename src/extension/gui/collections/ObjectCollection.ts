@@ -313,9 +313,8 @@ module ns_egret {
 		 */		
 		private dispatchCoEvent(kind:string = null, location:number = -1,
 										 oldLocation:number = -1, items:Array<any> = null,oldItems:Array<any>=null):void{
-			var event:CollectionEvent = new CollectionEvent(CollectionEvent.COLLECTION_CHANGE,false,false,
-				kind,location,oldLocation,items,oldItems);
-			this.dispatchEvent(event);
+			CollectionEvent.dispatchCollectionEvent(this,CollectionEvent.COLLECTION_CHANGE,
+                kind,location,oldLocation,items,oldItems)
 		}
 		/**
 		 * 一个工具方法，给parent的子项以及子孙项赋值父级引用。
