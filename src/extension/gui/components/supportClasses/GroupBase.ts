@@ -201,7 +201,7 @@ module ns_egret {
                 return;
             }
             this.updateScrollRect(this.width,this.height);
-            this.invalidateDisplayListExceptLayout();
+            this._invalidateDisplayListExceptLayout();
             if(this._layout){
                 this._layout.scrollPositionChanged();
             }
@@ -237,7 +237,7 @@ module ns_egret {
 		 * @method ns_egret.GroupBase#measure
          */
         public measure():void{
-            if(!this._layout||!this.layoutInvalidateSizeFlag)
+            if(!this._layout||!this._layoutInvalidateSizeFlag)
                 return;
             super.measure();
             this._layout.measure();
@@ -245,15 +245,15 @@ module ns_egret {
 
         /**
          * 在更新显示列表时是否需要更新布局标志
-		 * @member ns_egret.GroupBase#layoutInvalidateDisplayListFlag
+		 * @member ns_egret.GroupBase#_layoutInvalidateDisplayListFlag
          */
-        public layoutInvalidateDisplayListFlag:boolean = false;
+        public _layoutInvalidateDisplayListFlag:boolean = false;
 
         /**
          * 标记需要更新显示列表但不需要更新布局
-		 * @method ns_egret.GroupBase#invalidateDisplayListExceptLayout
+		 * @method ns_egret.GroupBase#_invalidateDisplayListExceptLayout
          */
-        public invalidateDisplayListExceptLayout():void{
+        public _invalidateDisplayListExceptLayout():void{
             super.invalidateDisplayList();
         }
 
@@ -262,28 +262,28 @@ module ns_egret {
          */
         public invalidateDisplayList():void{
             super.invalidateDisplayList();
-            this.layoutInvalidateDisplayListFlag = true;
+            this._layoutInvalidateDisplayListFlag = true;
         }
 
         /**
-		 * @method ns_egret.GroupBase#childXYChanged
+		 * @method ns_egret.GroupBase#_childXYChanged
          */
-        public childXYChanged():void{
+        public _childXYChanged():void{
             this.invalidateSize();
             this.invalidateDisplayList();
         }
 
         /**
          * 在测量尺寸时是否需要测量布局的标志
-		 * @member ns_egret.GroupBase#layoutInvalidateSizeFlag
+		 * @member ns_egret.GroupBase#_layoutInvalidateSizeFlag
          */
-        public layoutInvalidateSizeFlag:boolean = false;
+        public _layoutInvalidateSizeFlag:boolean = false;
 
         /**
          * 标记需要更新显示列表但不需要更新布局
-		 * @method ns_egret.GroupBase#invalidateSizeExceptLayout
+		 * @method ns_egret.GroupBase#_invalidateSizeExceptLayout
          */
-        public invalidateSizeExceptLayout():void{
+        public _invalidateSizeExceptLayout():void{
             super.invalidateSize();
         }
 
@@ -292,7 +292,7 @@ module ns_egret {
          */
         public invalidateSize():void{
             super.invalidateSize();
-            this.layoutInvalidateSizeFlag = true;
+            this._layoutInvalidateSizeFlag = true;
         }
 
         /**
@@ -302,8 +302,8 @@ module ns_egret {
          */
         public updateDisplayList(unscaledWidth:number, unscaledHeight:number):void{
             super.updateDisplayList(unscaledWidth, unscaledHeight);
-            if (this.layoutInvalidateDisplayListFlag&&this._layout){
-                this.layoutInvalidateDisplayListFlag = false;
+            if (this._layoutInvalidateDisplayListFlag&&this._layout){
+                this._layoutInvalidateDisplayListFlag = false;
                 this._layout.updateDisplayList(unscaledWidth, unscaledHeight);
                 this.updateScrollRect(unscaledWidth, unscaledHeight);
             }

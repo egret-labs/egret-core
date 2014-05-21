@@ -32,9 +32,9 @@ module ns_egret {
 		 * @method ns_egret.IItemRendererOwner#updateRenderer
 		 * @param renderer {IItemRenderer} 
 		 * @param itemIndex {number} 
-		 * @param data {any} 
+		 * @param data {any}
 		 * @returns {IItemRenderer}
 		 */		
-		updateRenderer(renderer:IItemRenderer, itemIndex:number, data:any):IItemRenderer; 
+		updateRenderer(renderer:IItemRenderer, itemIndex:number, data:any):IItemRenderer;
 	}
 }

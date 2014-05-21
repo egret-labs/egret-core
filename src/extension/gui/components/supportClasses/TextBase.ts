@@ -197,9 +197,9 @@ module ns_egret {
 		}
 
 		/**
-		 * @member ns_egret.TextBase#textChanged
+		 * @member ns_egret.TextBase#_textChanged
 		 */
-        public textChanged:boolean;
+        public _textChanged:boolean;
 		public _text:string = "";
 		/**
 		 * @member ns_egret.TextBase#text
@@ -212,7 +212,7 @@ module ns_egret {
 			if (value == this._text)
 				return;
 			this._text = value;
-			this.textChanged = true;
+			this._textChanged = true;
 			this.invalidateProperties();
 			this.invalidateSize();
 			this.invalidateDisplayList();
@@ -267,9 +267,9 @@ module ns_egret {
 				this._textField.textColor = this._textColor;
 				this.textColorChanged = false;
 			}
-			if (this.textChanged){
+			if (this._textChanged){
 				this._textField.text = this._text;
-				this.textChanged = false;
+				this._textChanged = false;
 			}
 
 		}
@@ -281,7 +281,7 @@ module ns_egret {
 			if(!this._textField){
                 this.createTextField();
 				this._textField.text = this._text;
-				this.textChanged = true;
+				this._textChanged = true;
 				this.invalidateProperties();
 			}
 		}

@@ -43,7 +43,7 @@ module ns_egret {
 		 */		
 		public constructor(){
 			super();
-			this.captureItemRenderer = false;
+			this._captureItemRenderer = false;
 			this.dropDownController = new DropDownController();
 		}
 		
@@ -118,7 +118,7 @@ module ns_egret {
 			
 			this._dropDownController = value;
 			
-			this._dropDownController.addEventListener(UIEvent.OPEN, this.dropDownController_openHandler, this);
+			this._dropDownController.addEventListener(UIEvent.OPEN, this._dropDownController_openHandler, this);
 			this._dropDownController.addEventListener(UIEvent.CLOSE, this.dropDownController_closeHandler, this);
 			
 			if (this.openButton)
@@ -139,17 +139,6 @@ module ns_egret {
 		
 		private _userProposedSelectedIndex:number = ListBase.NO_SELECTION;
 				
-		public set userProposedSelectedIndex(value:number){
-			this._userProposedSelectedIndex = value;
-		}
-		
-		/**
-		 * @member ns_egret.DropDownListBase#userProposedSelectedIndex
-		 */
-		public get userProposedSelectedIndex():number{
-			return this._userProposedSelectedIndex;
-		}
-		
 		/**
 		 * @method ns_egret.DropDownListBase#commitProperties
 		 */
@@ -216,12 +205,12 @@ module ns_egret {
 		}
 		
 		/**
-		 * @method ns_egret.DropDownListBase#isItemIndexSelected
+		 * @method ns_egret.DropDownListBase#_isItemIndexSelected
 		 * @param index {number} 
 		 * @returns {boolean}
 		 */
-		public isItemIndexSelected(index:number):boolean{
-			return this.userProposedSelectedIndex == index;
+		public _isItemIndexSelected(index:number):boolean{
+			return this._userProposedSelectedIndex == index;
 		}
 		/**
 		 * 打开下拉列表并抛出UIEvent.OPEN事件。
@@ -248,14 +237,14 @@ module ns_egret {
 		}
 		/**
 		 * 改变高亮的选中项
-		 * @method ns_egret.DropDownListBase#changeHighlightedSelection
+		 * @method ns_egret.DropDownListBase#_changeHighlightedSelection
 		 * @param newIndex {number} 
 		 * @param scrollToTop {boolean} 
 		 */		
-		public changeHighlightedSelection(newIndex:number, scrollToTop:boolean = false):void{
-			this.itemSelected(this.userProposedSelectedIndex, false);
-			this.userProposedSelectedIndex = newIndex;
-			this.itemSelected(this.userProposedSelectedIndex, true);
+		public _changeHighlightedSelection(newIndex:number, scrollToTop:boolean = false):void{
+			this.itemSelected(this._userProposedSelectedIndex, false);
+			this._userProposedSelectedIndex = newIndex;
+			this.itemSelected(this._userProposedSelectedIndex, true);
 		}
 		
 		/**
@@ -277,28 +266,28 @@ module ns_egret {
 			super.item_mouseDownHandler(event);
 			
 			var itemRenderer:IItemRenderer = <IItemRenderer><any> (event.currentTarget);
-			this.dispatchListEvent(event,ListEvent.ITEM_CLICK,itemRenderer);
+			this._dispatchListEvent(event,ListEvent.ITEM_CLICK,itemRenderer);
 			
-			this.userProposedSelectedIndex = this.selectedIndex;
+			this._userProposedSelectedIndex = this.selectedIndex;
 			this.closeDropDown(true);
 		}
 		/**
 		 * 控制器抛出打开列表事件
-		 * @method ns_egret.DropDownListBase#dropDownController_openHandler
+		 * @method ns_egret.DropDownListBase#_dropDownController_openHandler
 		 * @param event {UIEvent} 
 		 */		
-		public dropDownController_openHandler(event:UIEvent):void{
-			this.addEventListener(UIEvent.UPDATE_COMPLETE, this.open_updateCompleteHandler, this);
-			this.userProposedSelectedIndex = this.selectedIndex;
+		public _dropDownController_openHandler(event:UIEvent):void{
+			this.addEventListener(UIEvent.UPDATE_COMPLETE, this._open_updateCompleteHandler, this);
+			this._userProposedSelectedIndex = this.selectedIndex;
 			this.invalidateSkinState();  
 		}
 		/**
 		 * 打开列表后组件一次失效验证全部完成
-		 * @method ns_egret.DropDownListBase#open_updateCompleteHandler
+		 * @method ns_egret.DropDownListBase#_open_updateCompleteHandler
 		 * @param event {UIEvent} 
 		 */		
-		public open_updateCompleteHandler(event:UIEvent):void{   
-			this.removeEventListener(UIEvent.UPDATE_COMPLETE, this.open_updateCompleteHandler, this);
+		public _open_updateCompleteHandler(event:UIEvent):void{   
+			this.removeEventListener(UIEvent.UPDATE_COMPLETE, this._open_updateCompleteHandler, this);
 			
 			this.dispatchEvent(new UIEvent(UIEvent.OPEN));
 		}
@@ -312,10 +301,10 @@ module ns_egret {
 			this.invalidateSkinState();
 			
 			if (!event.isDefaultPrevented()){
-				this._setSelectedIndex(this.userProposedSelectedIndex, true);
+				this._setSelectedIndex(this._userProposedSelectedIndex, true);
 			}
 			else{
-				this.changeHighlightedSelection(this.selectedIndex);
+				this._changeHighlightedSelection(this.selectedIndex);
 			}
 		}
 		/**

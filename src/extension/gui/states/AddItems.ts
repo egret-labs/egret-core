@@ -93,9 +93,9 @@ module ns_egret {
 			if(!targetElement||targetElement instanceof SkinnableComponent)
 				return;
 			//让UIAsset等素材组件立即开始初始化，防止延迟闪一下或首次点击失效的问题。
-			if("initialize" in targetElement){
+			if("_initialize" in targetElement){
 				try{
-					targetElement["initialize"]();
+					targetElement["_initialize"]();
 				}
 				catch(e){
 				}

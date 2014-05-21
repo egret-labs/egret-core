@@ -34,7 +34,7 @@ module ns_egret {
 		 * @param skinName {any} 待解析的新皮肤标识符
 		 * @param compFunc {Function} 解析完成回调函数，示例：compFunc(skin:any,skinName:any):void;
          * 回调参数skin若为显示对象，将直接被添加到显示列表,其他对象根据项目自定义组件的具体规则解析。
-         * @param thisObject {any} 待解析的新皮肤标识符 compFunc的this引用
+         * @param thisObject {any} 待解析的新皮肤标识符 _compFunc的this引用
          * @param oldSkin? {DisplayObject} 旧的皮肤显示对象,传入值有可能为null。对于某些类型素材，例如Bitmap，可以重用传入的显示对象,只修改其数据再返回。
 		 */		
 		getSkin(skinName:any,compFunc:Function,thisObject:any,oldSkin?:DisplayObject):void;

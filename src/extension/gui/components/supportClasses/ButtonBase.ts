@@ -132,10 +132,10 @@ module ns_egret {
 		
 		/**
 		 * 强制让按钮停在鼠标按下状态,此方法不会导致重复抛出buttonDown事件,仅影响皮肤State。
-		 * @method ns_egret.ButtonBase#keepDown
+		 * @method ns_egret.ButtonBase#_keepDown
 		 * @param down {boolean} 是否按下
 		 */				
-		public keepDown(down:boolean):void{
+		public _setKeepDown(down:boolean):void{
 			if (this._keepDown == down)
 				return;
 			this._keepDown = down;
@@ -437,12 +437,12 @@ module ns_egret {
 			if(this.createLabelIfNeedChanged){
 				this.createLabelIfNeedChanged = false;
 				if(this.createLabelIfNeed){
-					this.createSkinParts();
+					this._createSkinParts();
 					this.invalidateSize();
 					this.invalidateDisplayList();
 				}
 				else{
-					this.removeSkinParts();
+					this._removeSkinParts();
 				}
 			}
 		}
@@ -471,9 +471,9 @@ module ns_egret {
 		private hasCreatedLabel:boolean = false;
 		
 		/**
-		 * @method ns_egret.ButtonBase#createSkinParts
+		 * @method ns_egret.ButtonBase#_createSkinParts
 		 */
-		public createSkinParts():void{
+		public _createSkinParts():void{
 			if(this.hasCreatedLabel||!this._createLabelIfNeed)
 				return;
 			this.hasCreatedLabel = true;
@@ -491,9 +491,9 @@ module ns_egret {
 		}
 		
 		/**
-		 * @method ns_egret.ButtonBase#removeSkinParts
+		 * @method ns_egret.ButtonBase#_removeSkinParts
 		 */
-		public removeSkinParts():void{
+		public _removeSkinParts():void{
 			if(!this.hasCreatedLabel)
 				return;
 			this.hasCreatedLabel = false;

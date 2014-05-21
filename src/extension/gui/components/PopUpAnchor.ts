@@ -195,20 +195,11 @@ module ns_egret {
 		 * 正在播放动画的标志
 		 */		
 		private inAnimation:boolean = false;
-		
-		private _animator:Animation = null;
-		/**
-		 * 动画类实例
-		 */		
-		private get animator():Animation{
-			if (this._animator)
-				return this._animator;
-			this._animator = new Animation(this.animationUpdateHandler,this);
-			this._animator.endFunction = this.animationEndHandler;
-			this._animator.startFunction = this.animationStartHandler;
-			return this._animator;
-		}
-		
+        /**
+         * 动画类实例
+         */
+        private animator:Animation = null;
+
 		private _openDuration:number = 250;
 		/**
 		 * 窗口弹出的动画时间(以毫秒为单位)，设置为0则直接弹出窗口而不播放动画效果。默认值250。
@@ -341,6 +332,11 @@ module ns_egret {
 		 * 开始播放动画
 		 */		
 		private startAnimation():void{
+            if(!this.animator){
+                this.animator = new Animation(this.animationUpdateHandler,this);
+                this.animator.endFunction = this.animationEndHandler;
+                this.animator.startFunction = this.animationStartHandler;
+            }
 			this.animator.motionPaths = this.createMotionPath();
 			if(this.popUpIsDisplayed){
 				this.animator.duration = this._openDuration;

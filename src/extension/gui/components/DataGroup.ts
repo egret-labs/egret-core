@@ -63,21 +63,11 @@ module ns_egret {
 		 * @param ClassFactory {any} 
 		 */
         public static defaultRendererFactory:ClassFactory = new ClassFactory(ItemRenderer);
-		
-		private _rendererOwner:IItemRendererOwner;
-		/**
-		 * 项呈示器的主机组件
-		 * @member ns_egret.DataGroup#rendererOwner
-		 */
-		public get rendererOwner():IItemRendererOwner{
-			return this._rendererOwner;
-		}
+        /**
+         * 项呈示器的主机组件
+         */
+		public _rendererOwner:IItemRendererOwner;
 
-		public set rendererOwner(value:IItemRendererOwner){
-			this._rendererOwner = value;
-		}
-		
-		
 		private useVirtualLayoutChanged:boolean = false;
 
 		/**
@@ -255,7 +245,7 @@ module ns_egret {
 				return;
 			var comp:SkinnableComponent = <SkinnableComponent> <any>renderer;
 			if(comp){
-				if(!comp.skinNameExplicitlySet)
+				if(!comp._skinNameExplicitlySet)
 					comp.skinName = this._itemRendererSkinName;
 			}
 			else{
@@ -730,7 +720,7 @@ module ns_egret {
 		 * @param unscaledHeight {number} 
 		 */
 		public updateDisplayList(unscaledWidth:number, unscaledHeight:number):void{
-			if(this.layoutInvalidateDisplayListFlag&&this.layout&&this.layout.useVirtualLayout){
+			if(this._layoutInvalidateDisplayListFlag&&this.layout&&this.layout.useVirtualLayout){
 				this.virtualLayoutUnderway = true;
 				this.ensureTypicalLayoutElement();
 			}

@@ -235,7 +235,7 @@ module ns_egret {
 					this.dataGroup.itemRendererFunction = this._dataGroupProperties.itemRendererFunction;
 					newDataGroupProperties.itemRendererFunction = true;
 				}
-				this.dataGroup.rendererOwner = this;
+				this.dataGroup._rendererOwner = this;
 				this._dataGroupProperties = newDataGroupProperties;
 				
 				if (this.hasEventListener(RendererExistenceEvent.RENDERER_ADD)){
@@ -275,7 +275,7 @@ module ns_egret {
 				if(this._dataGroupProperties.itemRendererFunction)
 					newDataGroupProperties.itemRendererFunction = this.dataGroup.itemRendererFunction;
 				this._dataGroupProperties = newDataGroupProperties
-				this.dataGroup.rendererOwner = null;
+				this.dataGroup._rendererOwner = null;
 				this.dataGroup.dataProvider = null;
 				this.dataGroup.layout = null;
 			}
@@ -329,9 +329,9 @@ module ns_egret {
 		}
 		
 		/**
-		 * @method ns_egret.SkinnableDataContainer#createSkinParts
+		 * @method ns_egret.SkinnableDataContainer#_createSkinParts
 		 */
-		public createSkinParts():void{
+		public _createSkinParts():void{
 			this.dataGroup = new DataGroup();
 			this.dataGroup.percentHeight = this.dataGroup.percentWidth = 100;
 			this.dataGroup.clipAndEnableScrolling = true;
@@ -344,9 +344,9 @@ module ns_egret {
 		}
 		
 		/**
-		 * @method ns_egret.SkinnableDataContainer#removeSkinParts
+		 * @method ns_egret.SkinnableDataContainer#_removeSkinParts
 		 */
-		public removeSkinParts():void{
+		public _removeSkinParts():void{
 			if(!this.dataGroup)
 				return;
 			this.partRemoved("dataGroup",this.dataGroup);

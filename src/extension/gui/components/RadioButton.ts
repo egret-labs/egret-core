@@ -40,14 +40,14 @@ module ns_egret {
 		
 		/**
 		 * 在RadioButtonGroup中的索引
-		 * @member ns_egret.RadioButton#indexNumber
+		 * @member ns_egret.RadioButton#_indexNumber
 		 */		
-		public indexNumber:number = 0;
+		public _indexNumber:number = 0;
 		/**
 		 * 所属的RadioButtonGroup
-		 * @member ns_egret.RadioButton#radioButtonGroup
+		 * @member ns_egret.RadioButton#_radioButtonGroup
 		 */		
-		public radioButtonGroup:RadioButtonGroup = null;
+		public _radioButtonGroup:RadioButtonGroup = null;
 		
 		/**
 		 * @member ns_egret.RadioButton#enabled
@@ -55,8 +55,8 @@ module ns_egret {
 		public get enabled():boolean{
 			if (!this._enabled)
 				return false;
-			return !this.radioButtonGroup || 
-				this.radioButtonGroup.enabled;
+			return !this._radioButtonGroup || 
+				this._radioButtonGroup.enabled;
 		}
         /**
          * @inheritDoc
@@ -83,7 +83,7 @@ module ns_egret {
 				var g:RadioButtonGroup = RadioButton.automaticRadioButtonGroups[this._groupName];
 				if (!g){
 					g = new RadioButtonGroup();
-					g.name = this._groupName;
+					g._name = this._groupName;
 					RadioButton.automaticRadioButtonGroups[this._groupName] = g;
 				}
 				this._group = g;
@@ -93,10 +93,10 @@ module ns_egret {
 		public set group(value:RadioButtonGroup){
 			if (this._group == value)
 				return;
-			if(this.radioButtonGroup)
-				this.radioButtonGroup.removeInstance(this);
+			if(this._radioButtonGroup)
+				this._radioButtonGroup._removeInstance(this);
 			this._group = value;  
-			this._groupName = value ? this.group.name : "radioGroup";    
+			this._groupName = value ? this.group._name : "radioGroup";    
 			this.groupChanged = true;
 			
 			this.invalidateProperties();
@@ -118,8 +118,8 @@ module ns_egret {
 			if (!value || value == "")
 				return;
 			this._groupName = value;
-			if(this.radioButtonGroup)
-				this.radioButtonGroup.removeInstance(this);
+			if(this._radioButtonGroup)
+				this._radioButtonGroup._removeInstance(this);
 			this._group = null;
 			this.groupChanged = true;
 			
@@ -183,10 +183,10 @@ module ns_egret {
 		public buttonReleased():void{
 			if(!this.enabled || this.selected)
 				return; 
-			if (!this.radioButtonGroup)
+			if (!this._radioButtonGroup)
 				this.addToGroup();
 			super.buttonReleased();
-			this.group.setSelection(this);
+			this.group._setSelection(this);
 		}
 		/**
 		 * 添此单选按钮加到组
@@ -194,7 +194,7 @@ module ns_egret {
 		private addToGroup():RadioButtonGroup{        
 			var g:RadioButtonGroup = this.group; 
 			if (g)
-				g.addInstance(this);
+				g._addInstance(this);
 			return g;
 		}
 	}

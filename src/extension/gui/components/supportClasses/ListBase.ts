@@ -65,9 +65,9 @@ module ns_egret {
 		
 		/**
 		 * 正在进行所有数据源的刷新操作
-		 * @member ns_egret.ListBase#doingWholesaleChanges
+		 * @member ns_egret.ListBase#_doingWholesaleChanges
 		 */		
-		public doingWholesaleChanges:boolean = false;
+		public _doingWholesaleChanges:boolean = false;
 		
 		private dataProviderChanged:boolean;
 
@@ -77,7 +77,7 @@ module ns_egret {
                     this.dataProvider_collectionChangeHandler,this);
 
             this.dataProviderChanged = true;
-            this.doingWholesaleChanges = true;
+            this._doingWholesaleChanges = true;
 
             if (value)
                 value.addEventListener(CollectionEvent.COLLECTION_CHANGE,
@@ -216,14 +216,14 @@ module ns_egret {
 		
 		/**
 		 * 是否允许自定义的选中项
-		 * @member ns_egret.ListBase#allowCustomSelectedItem
+		 * @member ns_egret.ListBase#_allowCustomSelectedItem
 		 */		
-		public allowCustomSelectedItem:boolean = false;
+		public _allowCustomSelectedItem:boolean = false;
 		/**
 		 * 索引改变后是否需要抛出事件 
-		 * @member ns_egret.ListBase#dispatchChangeAfterSelection
+		 * @member ns_egret.ListBase#_dispatchChangeAfterSelection
 		 */		
-		public dispatchChangeAfterSelection:boolean = false;
+		public _dispatchChangeAfterSelection:boolean = false;
 		
 		/**
 		 * 设置选中项
@@ -234,7 +234,7 @@ module ns_egret {
 			}
 			
 			if (dispatchChangeEvent)
-				this.dispatchChangeAfterSelection = (this.dispatchChangeAfterSelection || dispatchChangeEvent);
+				this._dispatchChangeAfterSelection = (this._dispatchChangeAfterSelection || dispatchChangeEvent);
 			this._proposedSelectedIndex = value;
 			this.invalidateProperties();
 		}
@@ -257,7 +257,7 @@ module ns_egret {
 			if (this._pendingSelectedItem !== undefined)
 				return this._pendingSelectedItem;
 			
-			if (this.allowCustomSelectedItem && this.selectedIndex == ListBase.CUSTOM_SELECTED_ITEM)
+			if (this._allowCustomSelectedItem && this.selectedIndex == ListBase.CUSTOM_SELECTED_ITEM)
 				return this._selectedItem;
 			
 			if (this.selectedIndex == ListBase.NO_SELECTION || this.dataProvider == null)
@@ -267,21 +267,21 @@ module ns_egret {
 		}
 		
 		public set selectedItem(value:any){
-			this.setSelectedItem(value, false);
+			this._setSelectedItem(value, false);
 		}
 		
 		/**
 		 * 设置选中项数据源
-		 * @method ns_egret.ListBase#setSelectedItem
+		 * @method ns_egret.ListBase#_setSelectedItem
 		 * @param value {any} 
 		 * @param dispatchChangeEvent {boolean} 
 		 */
-		public setSelectedItem(value:any, dispatchChangeEvent:boolean = false):void{
+		public _setSelectedItem(value:any, dispatchChangeEvent:boolean = false):void{
 			if (this.selectedItem === value)
 				return;
 			
 			if (dispatchChangeEvent)
-				this.dispatchChangeAfterSelection = (this.dispatchChangeAfterSelection || dispatchChangeEvent);
+				this._dispatchChangeAfterSelection = (this._dispatchChangeAfterSelection || dispatchChangeEvent);
 			
 			this._pendingSelectedItem = value;
 			this.invalidateProperties();
@@ -323,7 +323,7 @@ module ns_egret {
 			
 			if (this.dataProviderChanged){
 				this.dataProviderChanged = false;
-				this.doingWholesaleChanges = false;
+				this._doingWholesaleChanges = false;
 				
 				if (this.selectedIndex >= 0 && this.dataProvider && this.selectedIndex < this.dataProvider.length)
 					this.itemSelected(this.selectedIndex, true);
@@ -351,7 +351,7 @@ module ns_egret {
 					this._proposedSelectedIndex = ListBase.NO_SELECTION;
 				
 				
-				if (this.allowCustomSelectedItem && this._proposedSelectedIndex == -1){
+				if (this._allowCustomSelectedItem && this._proposedSelectedIndex == -1){
 					this._proposedSelectedIndex = ListBase.CUSTOM_SELECTED_ITEM;
 					this._selectedItem = this._pendingSelectedItem;
 				}
@@ -446,7 +446,7 @@ module ns_egret {
 		 * @returns {IItemRenderer}
 		 */
 		public updateRenderer(renderer:IItemRenderer, itemIndex:number, data:any):IItemRenderer{
-			this.itemSelected(itemIndex, this.isItemIndexSelected(itemIndex));
+			this.itemSelected(itemIndex, this._isItemIndexSelected(itemIndex));
 			return super.updateRenderer(renderer, itemIndex, data); 
 		}
 		
@@ -509,11 +509,8 @@ module ns_egret {
 		
 		/**
 		 * 返回指定索引是否等于当前选中索引
-		 * @method ns_egret.ListBase#isItemIndexSelected
-		 * @param index {number} 
-		 * @returns {boolean}
 		 */
-		public isItemIndexSelected(index:number):boolean{        
+		public _isItemIndexSelected(index:number):boolean{        
 			return index == this.selectedIndex;
 		}
 		
@@ -528,7 +525,7 @@ module ns_egret {
 			var oldSelectedIndex:number = this._selectedIndex;
 			var e:IndexChangeEvent;
 			
-			if (!this.allowCustomSelectedItem || this._proposedSelectedIndex != ListBase.CUSTOM_SELECTED_ITEM){
+			if (!this._allowCustomSelectedItem || this._proposedSelectedIndex != ListBase.CUSTOM_SELECTED_ITEM){
 				if (this._proposedSelectedIndex < ListBase.NO_SELECTION)
 					this._proposedSelectedIndex = ListBase.NO_SELECTION;
 				if (this._proposedSelectedIndex > maxIndex)
@@ -536,21 +533,21 @@ module ns_egret {
 				if (this.requireSelection && this._proposedSelectedIndex == ListBase.NO_SELECTION && 
 					this.dataProvider && this.dataProvider.length > 0){
 					this._proposedSelectedIndex = ListBase.NO_PROPOSED_SELECTION;
-					this.dispatchChangeAfterSelection = false;
+					this._dispatchChangeAfterSelection = false;
 					return false;
 				}
 			}
 			
 			var tmpProposedIndex:number = this._proposedSelectedIndex;
 			
-			if (this.dispatchChangeAfterSelection){
+			if (this._dispatchChangeAfterSelection){
 				e = new IndexChangeEvent(IndexChangeEvent.CHANGING, false, true);
 				e.oldIndex = this._selectedIndex;
 				e.newIndex = this._proposedSelectedIndex;
 				if (!this.dispatchEvent(e)){
 					this.itemSelected(this._proposedSelectedIndex, false);
 					this._proposedSelectedIndex = ListBase.NO_PROPOSED_SELECTION;
-					this.dispatchChangeAfterSelection = false;
+					this._dispatchChangeAfterSelection = false;
 					return false;
 				}
 				
@@ -566,12 +563,12 @@ module ns_egret {
 		
 			//子类若需要自身抛出Change事件，而不是在此处抛出，可以设置dispatchChangedEvents为false
 			if (dispatchChangedEvents){
-				if (this.dispatchChangeAfterSelection){
+				if (this._dispatchChangeAfterSelection){
 					e = new IndexChangeEvent(IndexChangeEvent.CHANGE);
 					e.oldIndex = oldSelectedIndex;
 					e.newIndex = this._selectedIndex;
 					this.dispatchEvent(e);
-					this.dispatchChangeAfterSelection = false;
+					this._dispatchChangeAfterSelection = false;
 				}
 				this.dispatchEvent(new UIEvent(UIEvent.VALUE_COMMIT));
 			}
@@ -601,7 +598,7 @@ module ns_egret {
 		 * @param index {number} 
 		 */
 		public itemAdded(index:number):void{
-			if (this.doingWholesaleChanges)
+			if (this._doingWholesaleChanges)
 				return;
 			
 			if (this.selectedIndex == ListBase.NO_SELECTION){
@@ -619,7 +616,7 @@ module ns_egret {
 		 * @param index {number} 
 		 */
 		public itemRemoved(index:number):void{
-			if (this.selectedIndex == ListBase.NO_SELECTION || this.doingWholesaleChanges)
+			if (this.selectedIndex == ListBase.NO_SELECTION || this._doingWholesaleChanges)
 				return;
 			
 			if (index == this.selectedIndex){
@@ -680,17 +677,17 @@ module ns_egret {
 			type = ListBase.TYPE_MAP[type];
 			if (this.hasEventListener(type)){
 				var itemRenderer:IItemRenderer = <IItemRenderer><any> (event.currentTarget);
-				this.dispatchListEvent(event,type,itemRenderer);
+				this._dispatchListEvent(event,type,itemRenderer);
 			}
 		}
 		/**
 		 * 抛出列表事件
-		 * @method ns_egret.ListBase#dispatchListEvent
+		 * @method ns_egret.ListBase#_dispatchListEvent
 		 * @param touchEvent {TouchEvent} 相关联的鼠标事件
 		 * @param type {string} 事件名称
 		 * @param itemRenderer {IItemRenderer} 关联的条目渲染器实例
 		 */		
-		public dispatchListEvent(touchEvent:TouchEvent,type:string,itemRenderer:IItemRenderer):void{
+		public _dispatchListEvent(touchEvent:TouchEvent,type:string,itemRenderer:IItemRenderer):void{
 			var itemIndex:number = -1;
 			if (itemRenderer)
 				itemIndex = itemRenderer.itemIndex;

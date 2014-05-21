@@ -144,9 +144,9 @@ module ns_egret {
 		private addOpenTriggers():void{
 			if (this.openButton){
 				if (isNaN(this.rollOverOpenDelay))
-					this.openButton.addEventListener(UIEvent.BUTTON_DOWN, this.openButton_buttonDownHandler, this);
+					this.openButton.addEventListener(UIEvent.BUTTON_DOWN, this._openButton_buttonDownHandler, this);
 				else
-					this.openButton.addEventListener(TouchEvent.TOUCH_ROLL_OVER, this.openButton_rollOverHandler, this);
+					this.openButton.addEventListener(TouchEvent.TOUCH_ROLL_OVER, this._openButton_rollOverHandler, this);
 			}
 		}
 		/**
@@ -155,9 +155,9 @@ module ns_egret {
 		private removeOpenTriggers():void{
 			if (this.openButton){
 				if (isNaN(this.rollOverOpenDelay))
-					this.openButton.removeEventListener(UIEvent.BUTTON_DOWN, this.openButton_buttonDownHandler, this);
+					this.openButton.removeEventListener(UIEvent.BUTTON_DOWN, this._openButton_buttonDownHandler, this);
 				else
-					this.openButton.removeEventListener(TouchEvent.TOUCH_ROLL_OVER, this.openButton_rollOverHandler, this);
+					this.openButton.removeEventListener(TouchEvent.TOUCH_ROLL_OVER, this._openButton_rollOverHandler, this);
 			}
 		}
 		/**
@@ -254,7 +254,7 @@ module ns_egret {
 				this._isOpen = true;
 				
 				if (this.openButton)
-					this.openButton.keepDown(true); 
+					this.openButton._setKeepDown(true);
 				
 				this.dispatchEvent(new UIEvent(UIEvent.OPEN));
 			}
@@ -268,7 +268,7 @@ module ns_egret {
 			if (this.isOpen){   
 				this._isOpen = false;
 				if (this.openButton)
-					this.openButton.keepDown(false);
+					this.openButton._setKeepDown(false);
 				
 				var dde:UIEvent = new UIEvent(UIEvent.CLOSE, false, true);
 				
@@ -282,10 +282,10 @@ module ns_egret {
 		}   
 		/**
 		 * openButton上按下鼠标事件
-		 * @method ns_egret.DropDownController#openButton_buttonDownHandler
+		 * @method ns_egret.DropDownController#_openButton_buttonDownHandler
 		 * @param event {Event} 
 		 */		
-		public openButton_buttonDownHandler(event:Event):void{
+		public _openButton_buttonDownHandler(event:Event):void{
 			if (this.isOpen)
 				this.closeDropDown(true);
 			else{
@@ -295,10 +295,10 @@ module ns_egret {
 		}
 		/**
 		 * openButton上鼠标经过事件
-		 * @method ns_egret.DropDownController#openButton_rollOverHandler
+		 * @method ns_egret.DropDownController#_openButton_rollOverHandler
 		 * @param event {TouchEvent} 
 		 */		
-		public openButton_rollOverHandler(event:TouchEvent):void{
+		public _openButton_rollOverHandler(event:TouchEvent):void{
 			if (this.rollOverOpenDelay == 0)
 				this.openDropDownHelper();
 			else{

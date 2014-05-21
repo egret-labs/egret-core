@@ -51,9 +51,9 @@ module ns_egret {
 		private skinNameChanged:boolean = false;
 		/**
 		 * 外部显式设置了皮肤名
-		 * @member ns_egret.UIAsset#skinNameExplicitlySet
+		 * @member ns_egret.UIAsset#_skinNameExplicitlySet
 		 */		
-		public skinNameExplicitlySet:any = false;
+		public _skinNameExplicitlySet:any = false;
 		
 		public _skinName:any;
 
@@ -70,7 +70,7 @@ module ns_egret {
 			if(this._skinName==value)
 				return;
 			this._skinName = value;
-			this.skinNameExplicitlySet = true;
+			this._skinNameExplicitlySet = true;
 			if(this.createChildrenCalled){
 				this.parseSkinName();
 			}
@@ -105,7 +105,7 @@ module ns_egret {
 					super.addChildAt(this._skin,0);
 				}
 			}
-			this.aspectRatio = NaN;
+			this._aspectRatio = NaN;
 			this.invalidateSize();
 			this.invalidateDisplayList();
 			if(this.stage)
@@ -227,9 +227,8 @@ module ns_egret {
 		
 		/**
 		 * 皮肤宽高比
-		 * @member ns_egret.UIAsset#aspectRatio
-		 */		
-		public aspectRatio:number = NaN;
+		 */
+		public _aspectRatio:number = NaN;
 
 		/**
 		 * @method ns_egret.UIAsset#updateDisplayList
@@ -242,22 +241,22 @@ module ns_egret {
 				if(this._maintainAspectRatio){
 					var layoutBoundsX:number = 0;
 					var layoutBoundsY:number = 0;
-					if(isNaN(this.aspectRatio)){
+					if(isNaN(this._aspectRatio)){
 						var rect:Rectangle = this.getMeasuredSize();
 						if(rect.width==0||rect.height==0)
-							this.aspectRatio = 0;
+							this._aspectRatio = 0;
 						else
-							this.aspectRatio = rect.width/rect.height;
+							this._aspectRatio = rect.width/rect.height;
 					}
-					if(this.aspectRatio>0&&unscaledHeight>0&&unscaledWidth>0){
+					if(this._aspectRatio>0&&unscaledHeight>0&&unscaledWidth>0){
 						var ratio:number = unscaledWidth/unscaledHeight;
-						if(ratio>this.aspectRatio){
-							var newWidth:number = unscaledHeight*this.aspectRatio;
+						if(ratio>this._aspectRatio){
+							var newWidth:number = unscaledHeight*this._aspectRatio;
 							layoutBoundsX = Math.round((unscaledWidth-newWidth)*0.5);
 							unscaledWidth = newWidth;
 						}
 						else{
-							var newHeight:number = unscaledWidth/this.aspectRatio;
+							var newHeight:number = unscaledWidth/this._aspectRatio;
 							layoutBoundsY = Math.round((unscaledHeight-newHeight)*0.5);
 							unscaledHeight = newHeight;
 						}

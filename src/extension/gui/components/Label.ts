@@ -159,12 +159,12 @@ module ns_egret {
 		 */
 		public measure():void{
 			//先提交属性，防止样式发生改变导致的测量不准确问题。
-			if(this.invalidatePropertiesFlag)
+			if(this._invalidatePropertiesFlag)
 				this.validateProperties();
 			if (this.isSpecialCase()){
 				if (isNaN(this.lastUnscaledWidth)){
-					this.oldPreferWidth = NaN;
-					this.oldPreferHeight = NaN;
+					this._oldPreferWidth = NaN;
+					this._oldPreferHeight = NaN;
 				}
 				else{
 					this.measureUsingWidth(this.lastUnscaledWidth);
@@ -197,7 +197,7 @@ module ns_egret {
 		 */	
 		private measureUsingWidth(w:number):void{
 			var originalText:string = this._textField.text;
-			if(this.textChanged){
+			if(this._textChanged){
 				this._textField.text = this._text;
 			}
 			
@@ -252,15 +252,15 @@ module ns_egret {
 					this.lastUnscaledWidth != unscaledWidth;
 				this.lastUnscaledWidth = unscaledWidth;
 				if (firstTime){
-					this.oldPreferWidth = NaN;
-					this.oldPreferHeight = NaN;
+					this._oldPreferWidth = NaN;
+					this._oldPreferHeight = NaN;
 					this.invalidateSize();
 					return;
 				}
 			}
 			//防止在父级validateDisplayList()阶段改变的text属性值，
 			//接下来直接调用自身的updateDisplayList()而没有经过measure(),使用的测量尺寸是上一次的错误值。
-			if(this.invalidateSizeFlag)
+			if(this._invalidateSizeFlag)
 				this.validateSize();
 			
 			if(!this._textField.visible)//解决初始化时文本闪烁问题

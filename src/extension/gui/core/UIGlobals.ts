@@ -42,21 +42,21 @@ module ns_egret {
 		private static initlized:boolean = false;
 		/**
 		 * 初始化管理器
-		 * @method ns_egret.UIGlobals.initlize
+		 * @method ns_egret.UIGlobals._initlize
 		 * @param stage {Stage} 
 		 */		
-		public static initlize(stage:Stage):void{
+		public static _initlize(stage:Stage):void{
 			if(UIGlobals.initlized)
 				return;
             UIGlobals._stage = stage;
-            UIGlobals.layoutManager = new LayoutManager();
+            UIGlobals._layoutManager = new LayoutManager();
             UIGlobals.initlized = true;
 		}
 		/**
 		 * 延迟渲染布局管理器 
-		 * @member ns_egret.UIGlobals.layoutManager
+		 * @member ns_egret.UIGlobals._layoutManager
 		 */		
-		public static layoutManager:LayoutManager;
+		public static _layoutManager:LayoutManager;
 		/**
 		 * 系统管理器列表
 		 */		

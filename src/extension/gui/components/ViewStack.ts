@@ -73,7 +73,7 @@ module ns_egret {
 				return;
 			this._createAllChildren = value;
 			if(this._createAllChildren){
-				var elements:Array<any> = this.getElementsContent();
+				var elements:Array<any> = this._getElementsContent();
                 var length:number = elements.length;
 				for(var i:number=0;i<length;i++){
                     var element:IVisualElement = elements[i];
@@ -101,7 +101,7 @@ module ns_egret {
 		public set selectedChild(value:IVisualElement){
 			var index:number = this.getElementIndex(value);
 			if(index>=0&&index<this.numElements)
-				this.setSelectedIndex(index);
+				this._setSelectedIndex(index);
 		}
 		/**
 		 * 未设置缓存选中项的值
@@ -121,17 +121,17 @@ module ns_egret {
 			return this.proposedSelectedIndex!=ViewStack.NO_PROPOSED_SELECTION?this.proposedSelectedIndex:this._selectedIndex;
 		}
 		public set selectedIndex(value:number){
-			this.setSelectedIndex(value);
+			this._setSelectedIndex(value);
 		}
 		
 		private notifyTabBar:boolean = false;
 		/**
 		 * 设置选中项索引
-		 * @method ns_egret.ViewStack#setSelectedIndex
+		 * @method ns_egret.ViewStack#_setSelectedIndex
 		 * @param value {number} 
 		 * @param notifyListeners {boolean} 
 		 */		
-		public setSelectedIndex(value:number,notifyListeners:boolean=true):void{
+		public _setSelectedIndex(value:number,notifyListeners:boolean=true):void{
 			if (value == this.selectedIndex){
 				return;
 			}
@@ -145,7 +145,7 @@ module ns_egret {
 		
 		/**
 		 * 添加一个显示元素到容器
-		 * @method ns_egret.ViewStack#elementAdded
+		 * @method ns_egret.ViewStack#_elementAdded
 		 * @param element {IVisualElement} 
 		 * @param index {number} 
 		 * @param notifyListeners {boolean} 
@@ -164,10 +164,10 @@ module ns_egret {
 			element.visible = false;
 			element.includeInLayout = false;
 			if (this.selectedIndex == -1){
-				this.setSelectedIndex(index,false);
+				this._setSelectedIndex(index,false);
 			}
 			else if (index <= this.selectedIndex&&this.initialized){
-				this.setSelectedIndex(this.selectedIndex + 1);
+				this._setSelectedIndex(this.selectedIndex + 1);
 			}
 			this.dispatchCoEvent(CollectionEventKind.ADD,index,-1,[element.name]);
 		}
@@ -191,13 +191,13 @@ module ns_egret {
 						this.invalidateProperties();
 					}
 					else
-						this.setSelectedIndex(0, false);
+						this._setSelectedIndex(0, false);
 				}
 				else
-					this.setSelectedIndex(-1);
+					this._setSelectedIndex(-1);
 			}
 			else if (index < this.selectedIndex){
-				this.setSelectedIndex(this.selectedIndex - 1);
+				this._setSelectedIndex(this.selectedIndex - 1);
 			}
 			this.dispatchCoEvent(CollectionEventKind.REMOVE,index,-1,[element.name]);
 		}
@@ -219,7 +219,7 @@ module ns_egret {
 			
 			if(this.childOrderingChanged){
 				this.childOrderingChanged = false;
-				var elements:Array<any> = this.getElementsContent();
+				var elements:Array<any> = this._getElementsContent();
                 var length:number = elements.length;
                 for(var i:number=0;i<length;i++){
                     var element:IVisualElement = elements[i];
@@ -283,7 +283,7 @@ module ns_egret {
 		 * @returns {number}
 		 */		
 		public getItemIndex(item:any):number{
-			var list:Array<any> = this.getElementsContent();
+			var list:Array<any> = this._getElementsContent();
 			var length:number = list.length;
 			for(var i:number=0;i<length;i++){
 				if(list[i].name===item){

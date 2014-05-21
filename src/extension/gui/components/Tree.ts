@@ -86,16 +86,7 @@ module ns_egret {
 				return this._iconFunction(data);
 			
 			var skinName:any;
-			if(data instanceof XML){
-				try{
-					if(data[this.iconField].length() != 0){
-						skinName = <string><any> (data[this.iconField]);
-					}
-				}
-				catch(e){
-				}
-			}
-			else if(data instanceof Object){
+			if(data instanceof Object){
 				try{
 					if(data[this.iconField]){
 						skinName = data[this.iconField];

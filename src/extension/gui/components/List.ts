@@ -157,7 +157,7 @@ module ns_egret {
 		 */
 		public _setSelectedIndices(value:Array<number>, dispatchChangeEvent:boolean = false):void{
 			if (dispatchChangeEvent)
-				this.dispatchChangeAfterSelection = (this.dispatchChangeAfterSelection || dispatchChangeEvent);
+				this._dispatchChangeAfterSelection = (this._dispatchChangeAfterSelection || dispatchChangeEvent);
 
 			if (value)
 				this._proposedSelectedIndices = value;
@@ -224,12 +224,12 @@ module ns_egret {
 			if (dispatchChangedEvents && retVal){
 				var e:IndexChangeEvent;
 
-				if (this.dispatchChangeAfterSelection){
+				if (this._dispatchChangeAfterSelection){
 					e = new IndexChangeEvent(IndexChangeEvent.CHANGE);
 					e.oldIndex = oldSelectedIndex;
 					e.newIndex = this._selectedIndex;
 					this.dispatchEvent(e);
-					this.dispatchChangeAfterSelection = false;
+					this._dispatchChangeAfterSelection = false;
 				}
 
 				this.dispatchEvent(new UIEvent(UIEvent.VALUE_COMMIT));
@@ -291,16 +291,11 @@ module ns_egret {
 			this._proposedSelectedIndices = null;
 		}
 
-		/**
-		 * @method ns_egret.List#isItemIndexSelected
-		 * @param index {number} 
-		 * @returns {boolean}
-		 */
-		public isItemIndexSelected(index:number):boolean{
+		public _isItemIndexSelected(index:number):boolean{
 			if (this._allowMultipleSelection)
 				return this._selectedIndices.indexOf(index) != -1;
 
-			return super.isItemIndexSelected(index);
+			return super._isItemIndexSelected(index);
 		}
 
 		/**
@@ -336,9 +331,8 @@ module ns_egret {
 		}
 		/**
 		 * 是否捕获ItemRenderer以便在MouseUp时抛出ItemClick事件
-		 * @member ns_egret.List#captureItemRenderer
 		 */
-		public captureItemRenderer:boolean = true;
+		public _captureItemRenderer:boolean = true;
 
 		private mouseDownItemRenderer:IItemRenderer;
 		/**
@@ -362,7 +356,7 @@ module ns_egret {
 			else{
 				this._setSelectedIndex(newIndex, true);
 			}
-			if(!this.captureItemRenderer)
+			if(!this._captureItemRenderer)
 				return;
 			this.mouseDownItemRenderer = itemRenderer;
 			UIGlobals.stage.addEventListener(TouchEvent.TOUCH_END,this.stage_mouseUpHandler,this);
@@ -432,7 +426,7 @@ module ns_egret {
 			var itemRenderer:IItemRenderer = <IItemRenderer> (event.currentTarget);
 			if(itemRenderer!=this.mouseDownItemRenderer)
 				return;
-			this.dispatchListEvent(event,ListEvent.ITEM_CLICK,itemRenderer);
+			this._dispatchListEvent(event,ListEvent.ITEM_CLICK,itemRenderer);
 		}
 		
 		/**

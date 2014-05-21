@@ -41,16 +41,16 @@ module ns_egret {
 		 */		
 		public constructor(){
 			super();
-			this.name = "radioButtonGroup"+RadioButtonGroup.groupCount;
+			this._name = "_radioButtonGroup"+RadioButtonGroup.groupCount;
 			RadioButtonGroup.groupCount++;
 		}
 		
 		private static groupCount:number = 0;
 		/**
 		 * 组名
-		 * @member ns_egret.RadioButtonGroup#name
+		 * @member ns_egret.RadioButtonGroup#_name
 		 */		
-		public name:string;
+		public _name:string;
 		/**
 		 * 单选按钮列表
 		 */		
@@ -96,7 +96,7 @@ module ns_egret {
 		public set selectedValue(value:any){
 			this._selectedValue = value;
 			if (value==null){
-				this.setSelection(null, false);
+				this._setSelection(null, false);
 				return;
 			}
 			var n:number = this.numRadioButtons;
@@ -125,7 +125,7 @@ module ns_egret {
 		public set selection(value:RadioButton){
 			if ( this._selection == value)
 				return;
-			this.setSelection(value, false);
+			this._setSelection(value, false);
 		}
 		/**
 		 * 获取指定索引的单选按钮
@@ -141,32 +141,32 @@ module ns_egret {
 		}
 		/**
 		 * 添加单选按钮到组内
-		 * @method ns_egret.RadioButtonGroup#addInstance
+		 * @method ns_egret.RadioButtonGroup#_addInstance
 		 * @param instance {RadioButton} 
 		 */
-		public addInstance(instance:RadioButton):void{
+		public _addInstance(instance:RadioButton):void{
 			instance.addEventListener(Event.REMOVED, this.radioButton_removedHandler, this);
 			
 			this.radioButtons.push(instance);
 			this.radioButtons.sort(this.breadthOrderCompare);
 			for (var i:number = 0; i < this.radioButtons.length; i++)
-				this.radioButtons[i].indexNumber = i;
+				this.radioButtons[i]._indexNumber = i;
 			if (this._selectedValue)
 				this.selectedValue = this._selectedValue;
 			if (instance.selected == true)
 				this.selection = instance;
 			
-			instance.radioButtonGroup = this;
+			instance._radioButtonGroup = this;
 			instance.invalidateSkinState();
 			
 			this.dispatchEvent(new Event("numRadioButtonsChanged"));
 		}
 		/**
 		 * 从组里移除单选按钮
-		 * @method ns_egret.RadioButtonGroup#removeInstance
+		 * @method ns_egret.RadioButtonGroup#_removeInstance
 		 * @param instance {RadioButton} 
 		 */		
-		public removeInstance(instance:RadioButton):void{
+		public _removeInstance(instance:RadioButton):void{
 			this.doRemoveInstance(instance,false);
 		}
 		/**
@@ -180,7 +180,7 @@ module ns_egret {
 					
 					if (foundInstance){
 						
-						rb.indexNumber = rb.indexNumber - 1;
+						rb._indexNumber = rb._indexNumber - 1;
 					}
 					else if (rb == instance){
 						if(addListener)
@@ -188,7 +188,7 @@ module ns_egret {
 						if (instance == this._selection)
 							this._selection = null;
 						
-						instance.radioButtonGroup = null;
+						instance._radioButtonGroup = null;
 						instance.invalidateSkinState();
 						this.radioButtons.splice(i,1);
 						foundInstance = true;
@@ -202,11 +202,11 @@ module ns_egret {
 		}
 		/**
 		 * 设置选中的单选按钮
-		 * @method ns_egret.RadioButtonGroup#setSelection
+		 * @method ns_egret.RadioButtonGroup#_setSelection
 		 * @param value {RadioButton} 
 		 * @param fireChange {boolean} 
 		 */		
-		public setSelection(value:RadioButton, fireChange:boolean = true):void{
+		public _setSelection(value:RadioButton, fireChange:boolean = true):void{
 			if (this._selection == value)
 				return;
 			
@@ -289,7 +289,7 @@ module ns_egret {
 			var rb:RadioButton = <RadioButton><any> (event.target);
 			if (rb){
 				rb.removeEventListener(Event.ADDED, this.radioButton_addedHandler, this);
-				this.addInstance(rb);
+				this._addInstance(rb);
 			}
 		}
 		/**

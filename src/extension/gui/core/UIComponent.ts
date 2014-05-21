@@ -62,8 +62,8 @@ module ns_egret {
 		 */		
 		private onAddedToStage(e:Event):void{
 			this.removeEventListener(Event.ADDED_TO_STAGE,this.onAddedToStage,this);
-			this.initialize();
-			UIGlobals.initlize(this.stage);
+			this._initialize();
+			UIGlobals._initlize(this.stage);
 			if(this._nestLevel>0)
 				this.checkInvalidateFlag();
 		}
@@ -136,14 +136,14 @@ module ns_egret {
 			}
 		}
 		/**
-		 * initialize()方法被调用过的标志。
+		 * _initialize()方法被调用过的标志。
 		 */		
 		private initializeCalled:boolean = false;
 		/**
 		 * 初始化组件
-		 * @method ns_egret.UIComponent#initialize
+		 * @method ns_egret.UIComponent#_initialize
 		 */
-		public initialize():void{
+		public _initialize():void{
 			if(this.initializeCalled)
 				return;
 			if(UIGlobals.stage){
@@ -205,7 +205,7 @@ module ns_egret {
 		 * @returns {DisplayObject}
 		 */
 		public addChild(child:DisplayObject):DisplayObject{
-			this.addingChild(child);
+			this._addingChild(child);
 			super.addChild(child);
 			this._childAdded(child);
 			return child;
@@ -218,7 +218,7 @@ module ns_egret {
 		 * @returns {DisplayObject}
 		 */
 		public addChildAt(child:DisplayObject, index:number):DisplayObject{
-			this.addingChild(child);
+			this._addingChild(child);
 			super.addChildAt(child,index);
 			this._childAdded(child);
 			return child;
@@ -226,10 +226,10 @@ module ns_egret {
 		
 		/**
 		 * 即将添加一个子项
-		 * @method ns_egret.UIComponent#addingChild
+		 * @method ns_egret.UIComponent#_addingChild
 		 * @param child {DisplayObject} 
 		 */		
-		public addingChild(child:DisplayObject):void{
+		public _addingChild(child:DisplayObject):void{
 			if(child&&"nestLevel" in child){
 				(<ILayoutManagerClient><any>child).nestLevel = this._nestLevel+1;
 			}
@@ -240,7 +240,7 @@ module ns_egret {
 		 */		
 		public _childAdded(child:DisplayObject):void{
 			if(child instanceof UIComponent){
-				(<UIComponent><any> child).initialize();
+				(<UIComponent><any> child)._initialize();
 				(<UIComponent><any> child).checkInvalidateFlag();
 			}
 		}
@@ -280,20 +280,20 @@ module ns_egret {
 		 * 检查属性失效标记并应用
 		 */		
 		private checkInvalidateFlag(event:Event=null):void{
-			if(!UIGlobals.layoutManager)
+			if(!UIGlobals._layoutManager)
 				return;
-			if(this.invalidatePropertiesFlag){
-				UIGlobals.layoutManager.invalidateProperties(this);
+			if(this._invalidatePropertiesFlag){
+				UIGlobals._layoutManager.invalidateProperties(this);
 			}
-			if(this.invalidateSizeFlag){
-				UIGlobals.layoutManager.invalidateSize(this);
+			if(this._invalidateSizeFlag){
+				UIGlobals._layoutManager.invalidateSize(this);
 			}
-			if(this.invalidateDisplayListFlag){
-				UIGlobals.layoutManager.invalidateDisplayList(this);
+			if(this._invalidateDisplayListFlag){
+				UIGlobals._layoutManager.invalidateDisplayList(this);
 			}
-			if(this.validateNowFlag){
-				UIGlobals.layoutManager.validateClient(this);
-				this.validateNowFlag = false;
+			if(this._validateNowFlag){
+				UIGlobals._layoutManager.validateClient(this);
+				this._validateNowFlag = false;
 			}
 		}
 
@@ -312,9 +312,8 @@ module ns_egret {
 		
 		/**
 		 * 属性提交前组件旧的宽度
-		 * @member ns_egret.UIComponent#oldWidth
 		 */	
-		public oldWidth:number;
+		private oldWidth:number;
 
 		public _width:number;
 		/**
@@ -346,9 +345,8 @@ module ns_egret {
 		
 		/**
 		 * 属性提交前组件旧的高度
-		 * @member ns_egret.UIComponent#oldHeight
 		 */
-		public oldHeight:number;
+		private oldHeight:number;
 		
 		public _height:number;
 		/**
@@ -531,7 +529,7 @@ module ns_egret {
 		 * 属性提交前组件旧的X
 		 * @member ns_egret.UIComponent#oldX
 		 */
-		public oldX:number;
+		private oldX:number;
 		/**
 		 * @constant ns_egret.UIComponent#x
 		 */
@@ -547,14 +545,14 @@ module ns_egret {
 			this._x = value;
 			this.invalidateProperties();
 			if (this._includeInLayout&&this.parent && this.parent instanceof UIComponent)
-				(<UIComponent><any> (this.parent)).childXYChanged();
+				(<UIComponent><any> (this.parent))._childXYChanged();
 		}
 		
 		/**
 		 * 属性提交前组件旧的Y
 		 * @member ns_egret.UIComponent#oldY
 		 */
-		public oldY:number;
+		private oldY:number;
 		/**
 		 * @constant ns_egret.UIComponent#y
 		 */
@@ -570,49 +568,49 @@ module ns_egret {
 			this._y = value;
 			this.invalidateProperties();
 			if (this._includeInLayout&&this.parent && this.parent instanceof UIComponent)
-				(<UIComponent> (this.parent)).childXYChanged();
+				(<UIComponent> (this.parent))._childXYChanged();
 		}
 		
 		/**
-		 * @member ns_egret.UIComponent#invalidatePropertiesFlag
+		 * @member ns_egret.UIComponent#_invalidatePropertiesFlag
 		 */
-		public invalidatePropertiesFlag:boolean = false;
+		public _invalidatePropertiesFlag:boolean = false;
 		/**
 		 * @method ns_egret.UIComponent#invalidateProperties
 		 */		
 		public invalidateProperties():void{
-			if (!this.invalidatePropertiesFlag){
-				this.invalidatePropertiesFlag = true;
+			if (!this._invalidatePropertiesFlag){
+				this._invalidatePropertiesFlag = true;
 				
-				if (this.parent&&UIGlobals.layoutManager)
-					UIGlobals.layoutManager.invalidateProperties(this);
+				if (this.parent&&UIGlobals._layoutManager)
+					UIGlobals._layoutManager.invalidateProperties(this);
 			}
 		}
 		/**
 		 * @method ns_egret.UIComponent#validateProperties
 		 */		
 		public validateProperties():void{
-			if (this.invalidatePropertiesFlag){
+			if (this._invalidatePropertiesFlag){
 				this.commitProperties();
 				
-				this.invalidatePropertiesFlag = false;
+				this._invalidatePropertiesFlag = false;
 			}
 		}
 		
 		/**
-		 * @member ns_egret.UIComponent#invalidateSizeFlag
+		 * @member ns_egret.UIComponent#_invalidateSizeFlag
 		 */
-		public invalidateSizeFlag:boolean = false;
+		public _invalidateSizeFlag:boolean = false;
 		
 		/**
 		 * @method ns_egret.UIComponent#invalidateSize
 		 */	
 		public invalidateSize():void{
-			if (!this.invalidateSizeFlag){
-				this.invalidateSizeFlag = true;
+			if (!this._invalidateSizeFlag){
+				this._invalidateSizeFlag = true;
 				
-				if (this.parent&&UIGlobals.layoutManager)
-					UIGlobals.layoutManager.invalidateSize(this);
+				if (this.parent&&UIGlobals._layoutManager)
+					UIGlobals._layoutManager.invalidateSize(this);
 			}
 		}
 		
@@ -628,32 +626,32 @@ module ns_egret {
 						(<ILayoutManagerClient> <any>child ).validateSize(true);
 				}
 			}
-			if (this.invalidateSizeFlag){
+			if (this._invalidateSizeFlag){
 				var changed:boolean = this.measureSizes();
 				if(changed){
 					this.invalidateDisplayList();
 					this.invalidateParentSizeAndDisplayList();
 				}
-				this.invalidateSizeFlag = false;
+				this._invalidateSizeFlag = false;
 			}
 		}
 		/**
 		 * 上一次测量的首选宽度
-		 * @member ns_egret.UIComponent#oldPreferWidth
+		 * @member ns_egret.UIComponent#_oldPreferWidth
 		 */		
-		public oldPreferWidth:number;
+		public _oldPreferWidth:number;
 		/**
 		 * 上一次测量的首选高度
-		 * @member ns_egret.UIComponent#oldPreferHeight
+		 * @member ns_egret.UIComponent#_oldPreferHeight
 		 */		
-		public oldPreferHeight:number;
+		public _oldPreferHeight:number;
 		/**
 		 * 测量组件尺寸，返回尺寸是否发生变化
 		 */		
 		private measureSizes():boolean{
 			var changed:boolean = false;
 			
-			if (!this.invalidateSizeFlag)
+			if (!this._invalidateSizeFlag)
 				return changed;
 			
 			if (!this.canSkipMeasurement()){
@@ -671,34 +669,34 @@ module ns_egret {
 					this.measuredHeight = this.maxHeight
 				}
 			}
-			if(isNaN(this.oldPreferWidth)){
-				this.oldPreferWidth = this.preferredWidth;
-				this.oldPreferHeight = this.preferredHeight;
+			if(isNaN(this._oldPreferWidth)){
+				this._oldPreferWidth = this.preferredWidth;
+				this._oldPreferHeight = this.preferredHeight;
 				changed = true;
 			}
 			else{
-				if(this.preferredWidth!=this.oldPreferWidth||this.preferredHeight!=this.oldPreferHeight)
+				if(this.preferredWidth!=this._oldPreferWidth||this.preferredHeight!=this._oldPreferHeight)
 					changed = true;
-				this.oldPreferWidth = this.preferredWidth;
-				this.oldPreferHeight = this.preferredHeight;
+				this._oldPreferWidth = this.preferredWidth;
+				this._oldPreferHeight = this.preferredHeight;
 			}
 			return changed;
 		}
 		
 		/**
-		 * @member ns_egret.UIComponent#invalidateDisplayListFlag
+		 * @member ns_egret.UIComponent#_invalidateDisplayListFlag
 		 */
-		public invalidateDisplayListFlag:boolean = false;
+		public _invalidateDisplayListFlag:boolean = false;
 		
 		/**
 		 * @method ns_egret.UIComponent#invalidateDisplayList
 		 */		
 		public invalidateDisplayList():void{
-			if (!this.invalidateDisplayListFlag){
-				this.invalidateDisplayListFlag = true;
+			if (!this._invalidateDisplayListFlag){
+				this._invalidateDisplayListFlag = true;
 				
-				if (this.parent&&UIGlobals.layoutManager)
-					UIGlobals.layoutManager.invalidateDisplayList(this);
+				if (this.parent&&UIGlobals._layoutManager)
+					UIGlobals._layoutManager.invalidateDisplayList(this);
 			}
 		}
 		
@@ -706,10 +704,10 @@ module ns_egret {
 		 * @method ns_egret.UIComponent#validateDisplayList
 		 */		
 		public validateDisplayList():void{
-			if (this.invalidateDisplayListFlag){
+			if (this._invalidateDisplayListFlag){
 				var unscaledWidth:number = 0;
 				var unscaledHeight:number = 0;
-				if(this.layoutWidthExplicitlySet){
+				if(this._layoutWidthExplicitlySet){
 					unscaledWidth = this._width;
 				}
 				else if(!isNaN(this.explicitWidth)){
@@ -718,7 +716,7 @@ module ns_egret {
 				else{
 					unscaledWidth = this.measuredWidth;
 				}
-				if(this.layoutHeightExplicitlySet){
+				if(this._layoutHeightExplicitlySet){
 					unscaledHeight = this._height;
 				}
 				else if(!isNaN(this.explicitHeight)){
@@ -733,24 +731,24 @@ module ns_egret {
 					unscaledHeight = 0;
 				this.setActualSize(unscaledWidth,unscaledHeight);
 				this.updateDisplayList(unscaledWidth,unscaledHeight);
-				this.invalidateDisplayListFlag = false;
+				this._invalidateDisplayListFlag = false;
 			}
 		}
 		
 		/**
-		 * @member ns_egret.UIComponent#validateNowFlag
+		 * @member ns_egret.UIComponent#_validateNowFlag
 		 */
-		public validateNowFlag:boolean = false;
+		public _validateNowFlag:boolean = false;
 		
 		/**
 		 * @method ns_egret.UIComponent#validateNow
 		 * @param skipDisplayList {boolean} 
 		 */	
 		public validateNow(skipDisplayList:boolean = false):void{
-			if(!this.validateNowFlag&&UIGlobals.layoutManager!=null)
-				UIGlobals.layoutManager.validateClient(this,skipDisplayList);
+			if(!this._validateNowFlag&&UIGlobals._layoutManager!=null)
+				UIGlobals._layoutManager.validateClient(this,skipDisplayList);
 			else
-				this.validateNowFlag = true;
+				this._validateNowFlag = true;
 		}
 		/**
 		 * 标记父级容器的尺寸和显示列表为失效
@@ -816,9 +814,9 @@ module ns_egret {
 		
 		/**
 		 * 子项的xy位置发生改变
-		 * @method ns_egret.UIComponent#childXYChanged
+		 * @method ns_egret.UIComponent#_childXYChanged
 		 */		
-		public childXYChanged():void{
+		public _childXYChanged():void{
 			
 		}
 		
@@ -983,15 +981,15 @@ module ns_egret {
 		
 		/**
 		 * 父级布局管理器设置了组件的宽度标志，尺寸设置优先级：自动布局>显式设置>自动测量
-		 * @member ns_egret.UIComponent#layoutWidthExplicitlySet
+		 * @member ns_egret.UIComponent#_layoutWidthExplicitlySet
 		 */
-		public layoutWidthExplicitlySet:boolean = false;
+		public _layoutWidthExplicitlySet:boolean = false;
 		
 		/**
 		 * 父级布局管理器设置了组件的高度标志，尺寸设置优先级：自动布局>显式设置>自动测量
-		 * @member ns_egret.UIComponent#layoutHeightExplicitlySet
+		 * @member ns_egret.UIComponent#_layoutHeightExplicitlySet
 		 */
-		public layoutHeightExplicitlySet:boolean = false;
+		public _layoutHeightExplicitlySet:boolean = false;
 		
 		/**
 		 * @method ns_egret.UIComponent#setLayoutBoundsSize
@@ -1002,18 +1000,18 @@ module ns_egret {
 			layoutWidth /= this.scaleX;
 			layoutHeight /= this.scaleY;
 			if(isNaN(layoutWidth)){
-				this.layoutWidthExplicitlySet = false;
+				this._layoutWidthExplicitlySet = false;
 				layoutWidth = this.preferredWidth;
 			}
 			else{
-				this.layoutWidthExplicitlySet = true;
+				this._layoutWidthExplicitlySet = true;
 			}
 			if(isNaN(layoutHeight)){
-				this.layoutHeightExplicitlySet = false;
+				this._layoutHeightExplicitlySet = false;
 				layoutHeight = this.preferredHeight;
 			}
 			else{
-				this.layoutHeightExplicitlySet = true;
+				this._layoutHeightExplicitlySet = true;
 			}
 			
 			this.setActualSize(layoutWidth,layoutHeight);
@@ -1089,7 +1087,7 @@ module ns_egret {
 		 */	
 		public get layoutBoundsWidth():number{
 			var w:number =  0;
-			if(this.layoutWidthExplicitlySet){
+			if(this._layoutWidthExplicitlySet){
 				w = this._width;
 			}
 			else if(!isNaN(this.explicitWidth)){
@@ -1107,7 +1105,7 @@ module ns_egret {
 		 */		
 		public get layoutBoundsHeight():number{
 			var h:number =  0
-			if(this.layoutHeightExplicitlySet){
+			if(this._layoutHeightExplicitlySet){
 				h = this._height;
 			}
 			else if(!isNaN(this.explicitHeight)){

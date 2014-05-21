@@ -66,10 +66,8 @@ module ns_egret {
 		private _elementsContent:Array<any> = [];
 		/**
 		 * 返回子元素列表
-		 * @method ns_egret.Group#getElementsContent
-		 * @returns {any}
-		 */		
-		public getElementsContent():Array<any>{
+		 */
+		public _getElementsContent():Array<any>{
 			return this._elementsContent;
 		}
 

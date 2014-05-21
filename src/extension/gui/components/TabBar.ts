@@ -86,7 +86,7 @@ module ns_egret {
 		 * 鼠标点击的选中项改变
 		 */		
 		private onIndexChanged(event:IndexChangeEvent):void{
-			(<ViewStack><any> (this.dataProvider)).setSelectedIndex(event.newIndex,false);
+			(<ViewStack><any> (this.dataProvider))._setSelectedIndex(event.newIndex,false);
 		}
 		
 		/**
@@ -157,13 +157,13 @@ module ns_egret {
 			}
 			else
 				this._setSelectedIndex(newIndex, true);
-			this.dispatchListEvent(event,ListEvent.ITEM_CLICK,itemRenderer);
+			this._dispatchListEvent(event,ListEvent.ITEM_CLICK,itemRenderer);
 		}
 		
 		/**
-		 * @method ns_egret.TabBar#createSkinParts
+		 * @method ns_egret.TabBar#_createSkinParts
 		 */
-		public createSkinParts():void{
+		public _createSkinParts():void{
 			this.dataGroup = new DataGroup();
 			this.dataGroup.percentHeight = this.dataGroup.percentWidth = 100;
 			this.dataGroup.clipAndEnableScrolling = true;

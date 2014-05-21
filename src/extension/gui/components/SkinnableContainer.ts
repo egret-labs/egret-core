@@ -54,9 +54,8 @@ module ns_egret {
 a
         /**
          * 获取当前的实体容器
-		 * @member ns_egret.SkinnableContainer#currentContentGroup
          */
-        public get currentContentGroup():Group {
+        public _getCurrentContentGroup():Group {
             if (this.contentGroup == null) {
                 if (this._placeHolderGroup == null) {
                     this._placeHolderGroup = new Group();
@@ -64,9 +63,9 @@ a
                     this._addToDisplayList(<DisplayObject><any>this._placeHolderGroup);
                 }
                 this._placeHolderGroup.addEventListener(
-                    ElementExistenceEvent.ELEMENT_ADD, this.contentGroup_elementAddedHandler, this);
+                    ElementExistenceEvent.ELEMENT_ADD, this._contentGroup_elementAddedHandler, this);
                 this._placeHolderGroup.addEventListener(
-                    ElementExistenceEvent.ELEMENT_REMOVE, this.contentGroup_elementRemovedHandler, this);
+                    ElementExistenceEvent.ELEMENT_REMOVE, this._contentGroup_elementRemovedHandler, this);
                 return this._placeHolderGroup;
             }
             else {
@@ -79,14 +78,14 @@ a
          * 设置该属性时会对您输入的数组进行一次浅复制操作，所以您之后对该数组的操作不会影响到添加到容器的子项列表数量。
          */
         public set elementsContent(value:Array<any>) {
-            this.currentContentGroup.elementsContent = value;
+            this._getCurrentContentGroup().elementsContent = value;
         }
 
         /**
 		 * @member ns_egret.SkinnableContainer#numElements
          */
         public get numElements():number {
-            return this.currentContentGroup.numElements;
+            return this._getCurrentContentGroup().numElements;
         }
 
         /**
@@ -95,7 +94,7 @@ a
 		 * @returns {IVisualElement}
          */
         public getElementAt(index:number):IVisualElement {
-            return this.currentContentGroup.getElementAt(index);
+            return this._getCurrentContentGroup().getElementAt(index);
         }
 
         /**
@@ -104,7 +103,7 @@ a
 		 * @returns {IVisualElement}
          */
         public addElement(element:IVisualElement):IVisualElement {
-            return this.currentContentGroup.addElement(element);
+            return this._getCurrentContentGroup().addElement(element);
         }
 
         /**
@@ -114,7 +113,7 @@ a
 		 * @returns {IVisualElement}
          */
         public addElementAt(element:IVisualElement, index:number):IVisualElement {
-            return this.currentContentGroup.addElementAt(element, index);
+            return this._getCurrentContentGroup().addElementAt(element, index);
         }
 
         /**
@@ -123,7 +122,7 @@ a
 		 * @returns {IVisualElement}
          */
         public removeElement(element:IVisualElement):IVisualElement {
-            return this.currentContentGroup.removeElement(element);
+            return this._getCurrentContentGroup().removeElement(element);
         }
 
         /**
@@ -132,14 +131,14 @@ a
 		 * @returns {IVisualElement}
          */
         public removeElementAt(index:number):IVisualElement {
-            return this.currentContentGroup.removeElementAt(index);
+            return this._getCurrentContentGroup().removeElementAt(index);
         }
 
         /**
 		 * @method ns_egret.SkinnableContainer#removeAllElements
          */
         public removeAllElements():void {
-            this.currentContentGroup.removeAllElements();
+            this._getCurrentContentGroup().removeAllElements();
         }
 
         /**
@@ -148,7 +147,7 @@ a
 		 * @returns {number}
          */
         public getElementIndex(element:IVisualElement):number {
-            return this.currentContentGroup.getElementIndex(element);
+            return this._getCurrentContentGroup().getElementIndex(element);
         }
 
         /**
@@ -157,7 +156,7 @@ a
 		 * @param index {number} 
          */
         public setElementIndex(element:IVisualElement, index:number):void {
-            this.currentContentGroup.setElementIndex(element, index);
+            this._getCurrentContentGroup().setElementIndex(element, index);
         }
 
         /**
@@ -166,7 +165,7 @@ a
 		 * @param element2 {IVisualElement} 
          */
         public swapElements(element1:IVisualElement, element2:IVisualElement):void {
-            this.currentContentGroup.swapElements(element1, element2);
+            this._getCurrentContentGroup().swapElements(element1, element2);
         }
 
         /**
@@ -175,7 +174,7 @@ a
 		 * @param index2 {number} 
          */
         public swapElementsAt(index1:number, index2:number):void {
-            this.currentContentGroup.swapElementsAt(index1, index2);
+            this._getCurrentContentGroup().swapElementsAt(index1, index2);
         }
 
         /**
@@ -215,10 +214,10 @@ a
                 }
                 if (this._placeHolderGroup) {
                     this._placeHolderGroup.removeEventListener(
-                        ElementExistenceEvent.ELEMENT_ADD, this.contentGroup_elementAddedHandler, this);
+                        ElementExistenceEvent.ELEMENT_ADD, this._contentGroup_elementAddedHandler, this);
                     this._placeHolderGroup.removeEventListener(
-                        ElementExistenceEvent.ELEMENT_REMOVE, this.contentGroup_elementRemovedHandler, this);
-                    var sourceContent:Array<any> = this._placeHolderGroup.getElementsContent().concat();
+                        ElementExistenceEvent.ELEMENT_REMOVE, this._contentGroup_elementRemovedHandler, this);
+                    var sourceContent:Array<any> = this._placeHolderGroup._getElementsContent().concat();
                     for (var i:number = this._placeHolderGroup.numElements; i > 0; i--) {
                         var element:IVisualElement = this._placeHolderGroup.removeElementAt(0);
                         element.ownerChanged(null);
@@ -232,9 +231,9 @@ a
                     this._placeHolderGroup = null;
                 }
                 this.contentGroup.addEventListener(
-                    ElementExistenceEvent.ELEMENT_ADD, this.contentGroup_elementAddedHandler, this);
+                    ElementExistenceEvent.ELEMENT_ADD, this._contentGroup_elementAddedHandler, this);
                 this.contentGroup.addEventListener(
-                    ElementExistenceEvent.ELEMENT_REMOVE, this.contentGroup_elementRemovedHandler, this);
+                    ElementExistenceEvent.ELEMENT_REMOVE, this._contentGroup_elementRemovedHandler, this);
             }
         }
 
@@ -247,9 +246,9 @@ a
             super.partRemoved(partName, instance);
             if (instance == this.contentGroup) {
                 this.contentGroup.removeEventListener(
-                    ElementExistenceEvent.ELEMENT_ADD, this.contentGroup_elementAddedHandler, this);
+                    ElementExistenceEvent.ELEMENT_ADD, this._contentGroup_elementAddedHandler, this);
                 this.contentGroup.removeEventListener(
-                    ElementExistenceEvent.ELEMENT_REMOVE, this.contentGroup_elementRemovedHandler, this);
+                    ElementExistenceEvent.ELEMENT_REMOVE, this._contentGroup_elementRemovedHandler, this);
                 this.contentGroupProperties.layout = this.contentGroup.layout;
                 this.contentGroup.layout = null;
                 if (this.contentGroup.numElements > 0) {
@@ -259,37 +258,37 @@ a
                         this._placeHolderGroup.addElement(this.contentGroup.getElementAt(0));
                     }
                     this._placeHolderGroup.addEventListener(
-                        ElementExistenceEvent.ELEMENT_ADD, this.contentGroup_elementAddedHandler, this);
+                        ElementExistenceEvent.ELEMENT_ADD, this._contentGroup_elementAddedHandler, this);
                     this._placeHolderGroup.addEventListener(
-                        ElementExistenceEvent.ELEMENT_REMOVE, this.contentGroup_elementRemovedHandler, this);
+                        ElementExistenceEvent.ELEMENT_REMOVE, this._contentGroup_elementRemovedHandler, this);
                 }
             }
         }
 
         /**
          * 容器添加元素事件
-		 * @method ns_egret.SkinnableContainer#contentGroup_elementAddedHandler
+		 * @method ns_egret.SkinnableContainer#_contentGroup_elementAddedHandler
 		 * @param event {ElementExistenceEvent} 
          */
-        public contentGroup_elementAddedHandler(event:ElementExistenceEvent):void {
+        public _contentGroup_elementAddedHandler(event:ElementExistenceEvent):void {
             event.element.ownerChanged(this);
             this.dispatchEvent(event);
         }
 
         /**
          * 容器移除元素事件
-		 * @method ns_egret.SkinnableContainer#contentGroup_elementRemovedHandler
+		 * @method ns_egret.SkinnableContainer#_contentGroup_elementRemovedHandler
 		 * @param event {ElementExistenceEvent} 
          */
-        public contentGroup_elementRemovedHandler(event:ElementExistenceEvent):void {
+        public _contentGroup_elementRemovedHandler(event:ElementExistenceEvent):void {
             event.element.ownerChanged(null);
             this.dispatchEvent(event);
         }
 
         /**
-		 * @method ns_egret.SkinnableContainer#createSkinParts
+		 * @method ns_egret.SkinnableContainer#_createSkinParts
          */
-        public createSkinParts():void {
+        public _createSkinParts():void {
             this.contentGroup = new Group();
             this.contentGroup.percentWidth = 100;
             this.contentGroup.percentHeight = 100;
@@ -298,9 +297,9 @@ a
         }
 
         /**
-		 * @method ns_egret.SkinnableContainer#removeSkinParts
+		 * @method ns_egret.SkinnableContainer#_removeSkinParts
          */
-        public removeSkinParts():void {
+        public _removeSkinParts():void {
             this.partRemoved("contentGroup", this.contentGroup);
             this._removeFromDisplayList(<DisplayObject><any>this.contentGroup);
             this.contentGroup = null;

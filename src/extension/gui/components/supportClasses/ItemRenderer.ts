@@ -45,9 +45,7 @@ module ns_egret {
 		public get data():any{
 			return this._data;
 		}
-		/**
-		 * @inheritDoc
-		 */
+
 		public set data(value:any){
 			//这里不能加if(_data==value)return;的判断，会导致数据源无法刷新的问题
 			this._data = value;
@@ -62,7 +60,7 @@ module ns_egret {
 		}
 		/**
 		 * 子类复写此方法以在data数据源发生改变时跟新显示列表。
-		 * 与直接复写data的setter方法不同，它会确保在皮肤已经附加完成后再被调用。
+		 * 与直接复写_data的setter方法不同，它会确保在皮肤已经附加完成后再被调用。
 		 * @method ns_egret.ItemRenderer#dataChanged
 		 */		
 		public dataChanged():void{

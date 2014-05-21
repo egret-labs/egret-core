@@ -89,7 +89,7 @@ module ns_egret {
 			}
 			this._skinObject = skin;
 			this.attachSkin(this._skinObject);
-			this.aspectRatio = NaN;
+			this._aspectRatio = NaN;
 			this.invalidateSkinState();
 			this.invalidateSize();
 			this.invalidateDisplayList();
@@ -108,14 +108,14 @@ module ns_egret {
 			}
 			else{
 				if(!this.hasCreatedSkinParts){
-					this.createSkinParts();
+					this._createSkinParts();
 					this.hasCreatedSkinParts = true;
 				}
 			}
 			if(skin&&"hostComponent" in skin&&skin instanceof DisplayObject)
-				this.skinLayoutEnabled = false;
+				this._skinLayoutEnabled = false;
 			else
-				this.skinLayoutEnabled = true;
+				this._skinLayoutEnabled = true;
 		}
 		/**
 		 * 匹配皮肤和主机组件的公共变量，并完成实例的注入。此方法在附加皮肤时会自动执行一次。
@@ -150,15 +150,15 @@ module ns_egret {
 		private hasCreatedSkinParts:boolean = false;
 		/**
 		 * 由组件自身来创建必要的SkinPart，通常是皮肤为空或皮肤不是ISkinPart时调用。
-		 * @method ns_egret.SkinnableComponent#createSkinParts
+		 * @method ns_egret.SkinnableComponent#_createSkinParts
 		 */		
-		public createSkinParts():void{
+		public _createSkinParts():void{
 		}
 		/**
 		 * 删除组件自身创建的SkinPart
-		 * @method ns_egret.SkinnableComponent#removeSkinParts
+		 * @method ns_egret.SkinnableComponent#_removeSkinParts
 		 */		
-		public removeSkinParts():void{
+		public _removeSkinParts():void{
 		}
 		
 		/**
@@ -168,7 +168,7 @@ module ns_egret {
 		 */		
 		public detachSkin(skin:any):void{       
 			if(this.hasCreatedSkinParts){
-				this.removeSkinParts();
+				this._removeSkinParts();
 				this.hasCreatedSkinParts = false;
 			}
             if(skin&&"skinParts" in skin.prototype){
@@ -358,7 +358,7 @@ module ns_egret {
 		/**
 		 * 启用或禁用组件自身的布局。通常用在当组件的皮肤不是ISkinPartHost，又需要自己创建子项并布局时。
 		 */		
-		public set skinLayoutEnabled(value:boolean){
+		public set _skinLayoutEnabled(value:boolean){
 			var hasLayout:boolean = (this.skinLayout != null);
 			if(hasLayout==value)
 				return;
@@ -375,9 +375,9 @@ module ns_egret {
 		}
 		
 		/**
-		 * @method ns_egret.SkinnableComponent#childXYChanged
+		 * @method ns_egret.SkinnableComponent#_childXYChanged
 		 */
-		public childXYChanged():void{
+		public _childXYChanged():void{
 			if(this.skinLayout){
 				this.invalidateSize();
 				this.invalidateDisplayList();
