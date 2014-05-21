@@ -64,11 +64,12 @@ module ns_egret {
          * 使用指定的EventDispatcher对象来抛出事件对象。抛出的对象将会缓存在对象池上，供下次循环复用。
          * @method ns_egret.ResizeEvent.dispatchResizeEvent
          */
-        public static dispatchResizeEvent(target:IEventDispatcher,oldWidth:number = NaN, oldHeight:number = NaN):void{
+        public static dispatchResizeEvent(target:IEventDispatcher,oldWidth:number = NaN, oldHeight:number = NaN):void {
             var eventClass:any = ResizeEvent;
             var props:any = Event._getPropertyData(eventClass);
             props.oldWidth = oldWidth;
             props.oldHeight = oldHeight;
-            Event._dispatchByTarget(eventClass,target,ResizeEvent.RESIZE,props);
+            Event._dispatchByTarget(eventClass, target, ResizeEvent.RESIZE, props);
+        }
 	}
 }
