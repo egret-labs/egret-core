@@ -95,7 +95,7 @@ module ns_egret {
          * @param value
          */
         public set width(value:number) {
-            this._explicitWidth = value
+            super._setWidth(value);
             this._sizeDirty = true;
         }
 
@@ -105,7 +105,7 @@ module ns_egret {
          * @param value
          */
         public set height(value:number) {
-            this._explicitHeight = value;
+            super._setHeight(value);
             this._sizeDirty = true;
         }
 

@@ -245,8 +245,11 @@ module ns_egret {
             this._eventPhase = 2;
         }
 
-        public static _dispathByTarget(EventClass:any,target:IEventDispatcher,type:string,bubbles:boolean=false,data?:Object){
+        public static _dispatchByTarget(EventClass:any,target:IEventDispatcher,type:string,bubbles:boolean=false,props?:Object){
             var recycler:Recycler = EventClass.eventRecycler;
+            if(!recycler){
+                recycler = EventClass.eventRecycler = new Recycler();
+            }
             var event:Event = recycler.pop();
             if(!event){
                 event = new EventClass(type);
@@ -255,23 +258,38 @@ module ns_egret {
                 event._type = type;
             }
             event._bubbles = bubbles;
-            if(data){
-                for(var key:string in data){
-                    event[key] = data[key];
+            if(props){
+                for(var key in props){
+                    event[key] = props[key];
+                    if(event[key]!==null){
+                        props[key] = null;
+                    }
+
                 }
             }
             target.dispatchEvent(event);
             recycler.push(event);
         }
 
+        public static _getPropertyData(EventClass:any):any{
+            var props:any = EventClass._props;
+            if(!props)
+                props = EventClass._props = {};
+            return props;
+        }
 
-        private static eventRecycler:Recycler = new Recycler();
+
         /**
          * 使用指定的EventDispatcher对象来抛出Event事件对象。抛出的对象将会缓存在对象池上，供下次循环复用。
          * @method ns_egret.Event.dispathByTarget
          */
-        public static dispathByTarget(target:IEventDispatcher,type:string,bubbles:boolean=false,data?:Object):void{
-            Event._dispathByTarget(Event,target,type,bubbles,data)
+        public static dispatchEvent(target:IEventDispatcher,type:string,bubbles:boolean=false,data?:any):void{
+            var eventClass:any = Event;
+            var props:any = Event._getPropertyData(eventClass);
+            if(data){
+                props.data = data;
+            }
+            Event._dispatchByTarget(eventClass,target,type,bubbles,props);
         }
 
     }
