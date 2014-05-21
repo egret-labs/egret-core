@@ -168,8 +168,7 @@ module ns_egret {
 			this.onGetSkin(skin,skinName);
 			this.skinReused = false;
 			if(this.hasEventListener(UIEvent.SKIN_CHANGED)){
-				var event:UIEvent = new UIEvent(UIEvent.SKIN_CHANGED);
-				this.dispatchEvent(event);
+                UIEvent.dispatchUIEvent(this,UIEvent.SKIN_CHANGED);
 			}
 		}
 		

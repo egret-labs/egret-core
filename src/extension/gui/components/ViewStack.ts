@@ -138,8 +138,7 @@ module ns_egret {
 			
 			this.proposedSelectedIndex = value;
 			this.invalidateProperties();
-			
-			this.dispatchEvent(new UIEvent(UIEvent.VALUE_COMMIT));
+			UIEvent.dispatchUIEvent(this,UIEvent.VALUE_COMMIT);
 			this.notifyTabBar = this.notifyTabBar||notifyListeners;
 		}
 		
@@ -157,8 +156,8 @@ module ns_egret {
 			}
 			if (notifyListeners){
 				if (this.hasEventListener(ElementExistenceEvent.ELEMENT_ADD))
-					this.dispatchEvent(new ElementExistenceEvent(
-						ElementExistenceEvent.ELEMENT_ADD, false, false, element, index));
+                    ElementExistenceEvent.dispatchElementExistenceEvent(this,
+                        ElementExistenceEvent.ELEMENT_ADD,element,index);
 			}
 			
 			element.visible = false;
@@ -231,7 +230,7 @@ module ns_egret {
 			
 			if(this.notifyTabBar){
 				this.notifyTabBar = true;
-				this.dispatchEvent(new Event("IndexChanged"));//通知TabBar自己的选中项发生改变
+				this.dispatchEventWith("IndexChanged");//通知TabBar自己的选中项发生改变
 			}
 		}
 		
@@ -298,9 +297,8 @@ module ns_egret {
 		 */		
 		private dispatchCoEvent(kind:string = null, location:number = -1,
 										 oldLocation:number = -1, items:Array<any> = null,oldItems:Array<any>=null):void{
-			var event:CollectionEvent = new CollectionEvent(CollectionEvent.COLLECTION_CHANGE,false,false,
-				kind,location,oldLocation,items,oldItems);
-			this.dispatchEvent(event);
+            CollectionEvent.dispatchCollectionEvent(this,
+                CollectionEvent.COLLECTION_CHANGE,kind,location,oldLocation,items,oldItems);
 		}
 
 	}

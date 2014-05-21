@@ -133,7 +133,7 @@ module ns_egret {
 		 * @param event {TouchEvent} 
 		 */
 		public closeButton_clickHandler(event:TouchEvent):void{
-			this.dispatchEvent(new CloseEvent(CloseEvent.CLOSE));
+            CloseEvent.dispatchCloseEvent(this,CloseEvent.CLOSE);
 		}
 		
 		/**

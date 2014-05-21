@@ -288,8 +288,7 @@ module ns_egret {
 		 */		
 		public _open_updateCompleteHandler(event:UIEvent):void{   
 			this.removeEventListener(UIEvent.UPDATE_COMPLETE, this._open_updateCompleteHandler, this);
-			
-			this.dispatchEvent(new UIEvent(UIEvent.OPEN));
+			UIEvent.dispatchUIEvent(this,UIEvent.OPEN);
 		}
 		/**
 		 * 控制器抛出关闭列表事件
@@ -312,8 +311,7 @@ module ns_egret {
 		 */		
 		private close_updateCompleteHandler(event:UIEvent):void{   
 			this.removeEventListener(UIEvent.UPDATE_COMPLETE, this.close_updateCompleteHandler, this);
-			
-			this.dispatchEvent(new UIEvent(UIEvent.CLOSE));
+			UIEvent.dispatchUIEvent(this,UIEvent.CLOSE);
 		}
 	}
 	

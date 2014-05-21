@@ -62,7 +62,7 @@ module ns_egret {
 		
 		public set data(value:any){
 			this._data = value;
-			this.dispatchEvent(new Event("dataChange"));
+			this.dispatchEventWith("dataChange");
 		}
 		
 		private _itemIndex:number;

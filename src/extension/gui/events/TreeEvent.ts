@@ -82,5 +82,19 @@ module ns_egret {
 		 * @member ns_egret.TreeEvent#opening
 		 */		
 		public opening:boolean;
+
+        /**
+         * 使用指定的EventDispatcher对象来抛出事件对象。抛出的对象将会缓存在对象池上，供下次循环复用。
+         * @method ns_egret.TreeEvent.dispatchTreeEvent
+         */
+        public static dispatchTreeEvent(target:IEventDispatcher,type:string,itemIndex:number = -1,
+                                         item:any = null,itemRenderer:ITreeItemRenderer = null):void{
+            var eventClass:any = TreeEvent;
+            var props:any = Event._getPropertyData(eventClass);
+            props.itemIndex = itemIndex;
+            props.item = item;
+            props.itemRenderer = itemRenderer;
+            Event._dispatchByTarget(eventClass,target,type,false,props)
+        }
 	}
 }

@@ -194,10 +194,8 @@ module ns_egret {
 		 * @param instance {any} 
 		 */		
 		public partAdded(partName:string,instance:any):void{
-			var event:SkinPartEvent = new SkinPartEvent(SkinPartEvent.PART_ADDED);
-			event.partName = partName;
-			event.instance = instance;
-			this.dispatchEvent(event);
+            SkinPartEvent.dispatchSkinPartEvent(this,
+                SkinPartEvent.PART_ADDED,partName,instance);
 		}
 		/**
 		 * 若皮肤是ISkinPartHost，则调用此方法卸载皮肤之前注入的公共部件
@@ -205,11 +203,9 @@ module ns_egret {
 		 * @param partName {string} 
 		 * @param instance {any} 
 		 */		
-		public partRemoved(partName:string,instance:any):void{       
-			var event:SkinPartEvent = new SkinPartEvent(SkinPartEvent.PART_REMOVED);
-			event.partName = partName;
-			event.instance = instance;
-			this.dispatchEvent(event);
+		public partRemoved(partName:string,instance:any):void{
+            SkinPartEvent.dispatchSkinPartEvent(this,
+                SkinPartEvent.PART_REMOVED,partName,instance);
 		}
 		
 		
@@ -243,7 +239,7 @@ module ns_egret {
 				hasState = (<IStateClient> curSkin).hasState(curState);
 			}
 			if(this.hasEventListener("stateChanged"))
-				this.dispatchEvent(new Event("stateChanged"));
+				this.dispatchEventWith("stateChanged");
 		}
 		
 		private _autoMouseEnabled:boolean = true;

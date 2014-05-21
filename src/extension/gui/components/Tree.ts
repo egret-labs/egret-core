@@ -120,8 +120,7 @@ module ns_egret {
 				var opend:boolean = !renderer.opened;
 				(<ITreeCollection><any> dp).expandItem(item,opend);
 				var type:string = opend?TreeEvent.ITEM_OPEN:TreeEvent.ITEM_CLOSE;
-				var evt:TreeEvent = new TreeEvent(type,false,false,renderer.itemIndex,item,renderer);
-				this.dispatchEvent(evt);
+                TreeEvent.dispatchTreeEvent(this,type,renderer.itemIndex,item,renderer);
 			}
 		}
 		

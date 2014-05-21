@@ -255,8 +255,7 @@ module ns_egret {
 				
 				if (this.openButton)
 					this.openButton._setKeepDown(true);
-				
-				this.dispatchEvent(new UIEvent(UIEvent.OPEN));
+				UIEvent.dispatchUIEvent(this,UIEvent.OPEN);
 			}
 		}
 		/**

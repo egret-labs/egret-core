@@ -50,6 +50,17 @@ module ns_egret {
 		 * @member ns_egret.CloseEvent#detail
 		 */		
 		public detail:any;
+
+        /**
+         * 使用指定的EventDispatcher对象来抛出事件对象。抛出的对象将会缓存在对象池上，供下次循环复用。
+         * @method ns_egret.CloseEvent.dispatchCloseEvent
+         */
+        public static dispatchCloseEvent(target:IEventDispatcher,type:string,detail:any = -1):void{
+            var eventClass:any = CloseEvent;
+            var props:any = Event._getPropertyData(eventClass);
+            props.detail = detail;
+            Event._dispatchByTarget(eventClass,target,type,false,props)
+        }
 	}
 	
 }

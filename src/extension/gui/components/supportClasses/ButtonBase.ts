@@ -220,7 +220,7 @@ module ns_egret {
 			var isCurrentlyDown:boolean = this.isDown();
 			if (this._downEventFired != isCurrentlyDown){
 				if (isCurrentlyDown){
-					this.dispatchEvent(new UIEvent(UIEvent.BUTTON_DOWN));
+                    UIEvent.dispatchUIEvent(this,UIEvent.BUTTON_DOWN);
 				}
 				
 				this._downEventFired = isCurrentlyDown;
@@ -396,7 +396,7 @@ module ns_egret {
 		 * 自动重发buttonDown事件
 		 */		
 		private autoRepeat_timerHandler(event:TimerEvent):void{
-			this.dispatchEvent(new UIEvent(UIEvent.BUTTON_DOWN));
+            UIEvent.dispatchUIEvent(this,UIEvent.BUTTON_DOWN);
 		}
 		
 		/**
