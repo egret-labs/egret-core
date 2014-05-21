@@ -22,13 +22,24 @@
 module ns_egret {
 
 
+	/**
+	 * @class ns_egret.HTML5DeviceContext
+	 * @classdesc
+	 * @extends ns_egret.DeviceContext
+	 */
     export class HTML5DeviceContext extends DeviceContext {
 
 
         private _time:number = 0;
 
+		/**
+		 * @member ns_egret.HTML5DeviceContext#frameRate
+		 */
         public frameRate:number = 60;s
 
+		/**
+		 * @method ns_egret.HTML5DeviceContext#constructor
+		 */
         public constructor() {
             super();
         }
@@ -44,6 +55,11 @@ module ns_egret {
             };
 
 
+		/**
+		 * @method ns_egret.HTML5DeviceContext#executeMainLoop
+		 * @param callback {Function} 
+		 * @param thisObject {any} 
+		 */
         public executeMainLoop(callback:Function, thisObject:any):void {
 
 

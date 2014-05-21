@@ -23,9 +23,16 @@
 module ns_egret {
 
 
+	/**
+	 * @class ns_egret.AssetsContext
+	 * @classdesc
+	 */
     export class AssetsContext {
 
 
+		/**
+		 * @member ns_egret.AssetsContext#textureCache
+		 */
         public textureCache:TextureCache;
 
         constructor() {
@@ -33,19 +40,39 @@ module ns_egret {
         }
 
 
+		/**
+		 * @method ns_egret.AssetsContext#load
+		 * @param filePath {string} 
+		 * @param callback {Function} 
+		 * @param thisObject {any} 
+		 */
         public load(filePath:string, callback:Function, thisObject):void {
 
         }
 
 
+		/**
+		 * @method ns_egret.AssetsContext#createLoadingController
+		 * @returns {LoadingController}
+		 */
         public createLoadingController():LoadingController {
             return null;
         }
 
+		/**
+		 * @method ns_egret.AssetsContext#getAssets
+		 * @param url {string} 
+		 * @returns {any}
+		 */
         public getAssets(url:string):any {
             return null;
         }
 
+		/**
+		 * @method ns_egret.AssetsContext#getTexture
+		 * @param url {string} 
+		 * @returns {Texture}
+		 */
         public getTexture(url:string):Texture {
             return this.textureCache.getTexture(url);
         }

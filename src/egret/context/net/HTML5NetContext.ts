@@ -22,7 +22,16 @@
 /// <reference path="../../texture/TextureCache.ts"/>
 
 module ns_egret {
+	/**
+	 * @class ns_egret.HTML5NetContext
+	 * @classdesc
+	 * @extends ns_egret.NetContext
+	 */
     export class HTML5NetContext extends NetContext {
+		/**
+		 * @method ns_egret.HTML5NetContext#send
+		 * @param request {URLReques} 
+		 */
         public send(request:URLRequest) {
 
 

@@ -26,9 +26,17 @@
 /// <reference path="../../../jslib/DEBUG.d.ts"/>
 
 module ns_egret {
+	/**
+	 * @class ns_egret.HTML5CanvasRenderer
+	 * @classdesc
+	 * @extends ns_egret.RendererContext
+	 */
     export class HTML5CanvasRenderer extends RendererContext {
 
         private canvas;
+		/**
+		 * @member ns_egret.HTML5CanvasRenderer#canvasContext
+		 */
         public canvasContext;
 
         private _matrixA:number;

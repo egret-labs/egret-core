@@ -28,10 +28,13 @@
 
 module ns_egret {
     /**
+	 * @class ns_egret.NativeRendererContext
+	 * @classdesc
      * RenderContext是游戏的渲染上下文。
      * 这是一个抽象基类，制定主要的接口
      * @stable B 当编写WebGLContext和OpenGLContext时，RendererContext的接口有可能会发生变化，以兼容基于GPU模式的渲染方式，一些设计理念会参考PIXI.js
      * @roadmap 这个接口的重构和实现其他Context是引擎的重点工作
+	 * @extends ns_egret.HashObject
      */
     export class NativeRendererContext extends HashObject{
 
@@ -39,19 +42,25 @@ module ns_egret {
         /**
          * 渲染全部纹理的时间开销
          * @readonly
+		 * @member ns_egret.NativeRendererContext#renderCost
          */
         public renderCost:number = 0;
 
         /**
          * 绘制纹理的缩放比率，默认值为1
+		 * @member ns_egret.NativeRendererContext#texture_scale_factor
          */
         public texture_scale_factor:number = 1;
 
+		/**
+		 * @method ns_egret.NativeRendererContext#constructor
+		 */
         public constructor() {
             super();
         }
 
         /**
+		 * @method ns_egret.NativeRendererContext#clearScreen
          * @private
          */
         public clearScreen() {
@@ -61,25 +70,27 @@ module ns_egret {
 
         /**
          * 清除Context的渲染区域
-         * @param x
-         * @param y
-         * @param w
-         * @param h
+		 * @method ns_egret.NativeRendererContext#clearRect
+         * @param x {number} 
+         * @param y {number} 
+         * @param w {number} 
+         * @param h {numbe} 
          */
         public clearRect(x:number, y:number, w:number, h:number) {
         }
 
         /**
          * 绘制图片
-         * @param texture
-         * @param sourceX
-         * @param sourceY
-         * @param sourceWidth
-         * @param sourceHeight
-         * @param destX
-         * @param destY
-         * @param destWidth
-         * @param destHeight
+		 * @method ns_egret.NativeRendererContext#drawImage
+         * @param texture {Texture} 
+         * @param sourceX {any} 
+         * @param sourceY {any} 
+         * @param sourceWidth {any} 
+         * @param sourceHeight {any} 
+         * @param destX {any} 
+         * @param destY {any} 
+         * @param destWidth {any} 
+         * @param destHeigh {any} 
          */
         public drawImage(texture:Texture, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight) {
 
@@ -90,7 +101,8 @@ module ns_egret {
 
         /**
          * 变换Context的当前渲染矩阵
-         * @param matrix
+		 * @method ns_egret.NativeRendererContext#setTransform
+         * @param matrix {ns_egret.Matri} 
          * @stable A
          */
         public setTransform(matrix:ns_egret.Matrix) {
@@ -98,6 +110,7 @@ module ns_egret {
         }
 
         /**
+		 * @method ns_egret.NativeRendererContext#save
          * @stable C 这个方法以后会和restore一起删除，移动到HTML5CanvasContext的具体实现中，而不是作为一个接口
          */
         public save() {
@@ -105,6 +118,7 @@ module ns_egret {
         }
 
         /**
+		 * @method ns_egret.NativeRendererContext#restore
          * @stable C 这个方法以后会和save一起删除，移动到HTML5CanvasContext的具体实现中，而不是作为一个接口
          */
         public restore() {
@@ -113,8 +127,10 @@ module ns_egret {
 
         /**
          * 设置渲染alpha
-         * @param value
+		 * @method ns_egret.NativeRendererContext#setAlpha
+         * @param value {number} 
          * @stable A
+		 * @param blendMode {ns_egret.BlendMod} 
          */
         public setAlpha(value:number, blendMode:ns_egret.BlendMode) {
             egret_native.Graphics.setGlobalAlpha(value);
@@ -123,9 +139,8 @@ module ns_egret {
 
         /**
          * 设置渲染文本参数
-         * @param font
-         * @param textAlign
-         * @param textBaseline
+		 * @method ns_egret.NativeRendererContext#setupFont
+         * @param textField {TextField} 
          */
         public setupFont(textField:TextField):void {
 //            egret_native.Label.createLable("/system/fonts/DroidSansFallback.ttf",textField.size,"");
@@ -134,8 +149,9 @@ module ns_egret {
 
         /**
          * 测量文本
-         * @param text
-         * @returns {Rectangle}
+		 * @method ns_egret.NativeRendererContext#measureText
+         * @param text {any} 
+		 * @returns {Rectangle}
          * @stable B 参数很可能会需要调整，和setupFont整合
          */
         public measureText(text):Rectangle {
@@ -145,10 +161,12 @@ module ns_egret {
 
         /**
          * 绘制文本
-         * @param text
-         * @param x
-         * @param y
-         * @param maxWidth
+		 * @method ns_egret.NativeRendererContext#drawText
+         * @param textField {ns_egret.TextField} 
+         * @param text {string} 
+         * @param x {number} 
+         * @param y {number} 
+		 * @param maxWidth {numbe} 
          */
         public drawText(textField:ns_egret.TextField,text:string, x:number, y:number, maxWidth:number) {
             Profiler.getInstance().onDrawImage();
@@ -156,10 +174,10 @@ module ns_egret {
 
         /**
          * 矩形遮罩
-         * @param x
-         * @param y
-         * @param w
-         * @param h
+		 * @method ns_egret.NativeRendererContext#clip
+         * @param x {any} 
+         * @param y {any} 
+         * @param w {any} 
          */
         public clip(x, y, w, h) {
         }

@@ -20,24 +20,52 @@
 /// <reference path="../../core/MainContext.ts"/>
 
 module ns_egret{
+	/**
+	 * @class ns_egret.SoundContext
+	 * @classdesc
+	 * @extends ns_egret.HashObject
+	 */
     export class SoundContext extends HashObject{
+		/**
+		 * @method ns_egret.SoundContext.getInstance
+		 * @returns {SoundContext}
+		 */
         public static getInstance():SoundContext {
             return ns_egret.MainContext.instance.soundContext;
         }
 
+		/**
+		 * @member ns_egret.SoundContext.isMusicPlaying
+		 */
         public static isMusicPlaying:boolean = false;
 
+		/**
+		 * @method ns_egret.SoundContext#constructor
+		 */
         public constructor() {
             super();
         }
 
+		/**
+		 * @method ns_egret.SoundContext#preloadSound
+		 * @param pat {any} 
+		 */
         public preloadSound(path) {
 
         }
 
+		/**
+		 * @method ns_egret.SoundContext#playMusic
+		 * @param path {any} 
+		 * @param loop {any} 
+		 */
         public playMusic(path, loop = true) {
         }
 
+		/**
+		 * @method ns_egret.SoundContext#stopMusic
+		 * @param releaseDat {any} 
+		 */
         public stopMusic(releaseData) {
         }
     }

@@ -23,16 +23,30 @@
 module ns_egret {
 
 
+	/**
+	 * @class ns_egret.HTML5AssetsContext
+	 * @classdesc
+	 * @extends ns_egret.AssetsContext
+	 */
     export class HTML5AssetsContext extends AssetsContext {
 
         constructor() {
             super();
         }
 
+		/**
+		 * @method ns_egret.HTML5AssetsContext#createLoadingController
+		 * @returns {LoadingController}
+		 */
         public createLoadingController():LoadingController {
             return new LoadingController();
         }
 
+		/**
+		 * @method ns_egret.HTML5AssetsContext#getAssets
+		 * @param url {string} 
+		 * @returns {any}
+		 */
         public getAssets(url:string):any {
             return ResourceLoader.create(url).data;
         }

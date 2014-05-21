@@ -21,15 +21,31 @@
 module ns_egret {
 
 
+	/**
+	 * @class ns_egret.DeviceContext
+	 * @classdesc
+	 * @extends ns_egret.HashObject
+	 */
     export class DeviceContext extends HashObject{
 
 
+		/**
+		 * @member ns_egret.DeviceContext#frameRate
+		 */
         public frameRate:number = 60;
 
+		/**
+		 * @method ns_egret.DeviceContext#constructor
+		 */
         public constructor(){
             super();
         }
 
+		/**
+		 * @method ns_egret.DeviceContext#executeMainLoop
+		 * @param callback {Function} 
+		 * @param thisObject {any} 
+		 */
         public executeMainLoop(callback:Function,thisObject:any):void {
 
 

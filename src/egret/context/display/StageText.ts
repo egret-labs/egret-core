@@ -22,6 +22,11 @@
 
 module ns_egret {
 
+	/**
+	 * @class ns_egret.StageText
+	 * @classdesc
+	 * @extends ns_egret.HashObject
+	 */
     export class StageText extends HashObject{
 
         private div:HTMLDivElement;
@@ -31,22 +36,45 @@ module ns_egret {
             super();
         }
 
+		/**
+		 * @method ns_egret.StageText#getText
+		 * @returns {string}
+		 */
         public getText():string {
             return this.inputElement.value;
         }
 
+		/**
+		 * @method ns_egret.StageText#setText
+		 * @param value {string} 
+		 */
         public setText(value:string):void {
             this.inputElement.value = value;
         }
 
+		/**
+		 * @method ns_egret.StageText#setTextType
+		 * @param type {string} 
+		 */
         public setTextType(type:string):void {
             this.inputElement.type = type;
         }
 
+		/**
+		 * @method ns_egret.StageText#getTextType
+		 * @returns {string}
+		 */
         public getTextType():string {
             return this.inputElement.type;
         }
 
+		/**
+		 * @method ns_egret.StageText#open
+		 * @param x {number} 
+		 * @param y {number} 
+		 * @param width {number} 
+		 * @param height {number} 
+		 */
         public open(x:number, y:number, width:number = 160, height:number = 21):void {
 
 
@@ -94,6 +122,9 @@ module ns_egret {
             this.inputElement = inputElement;
         }
 
+		/**
+		 * @method ns_egret.StageText#remove
+		 */
         public remove():void {
             var div = this.div;
             if (div && div.parentNode) {

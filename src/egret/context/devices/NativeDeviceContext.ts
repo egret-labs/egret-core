@@ -23,15 +23,28 @@
 module ns_egret {
 
 
+	/**
+	 * @class ns_egret.NativeDeviceContext
+	 * @classdesc
+	 * @extends ns_egret.HashObject
+	 */
     export class NativeDeviceContext extends HashObject {
 
         private callback:Function;
         private thisObject:any;
 
+		/**
+		 * @method ns_egret.NativeDeviceContext#constructor
+		 */
         public constructor() {
             super();
         }
 
+		/**
+		 * @method ns_egret.NativeDeviceContext#executeMainLoop
+		 * @param callback {Function} 
+		 * @param thisObject {any} 
+		 */
         public executeMainLoop(callback:Function, thisObject:any):void {
 
             this.callback = callback;

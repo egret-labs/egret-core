@@ -20,6 +20,11 @@
 /// <reference path="../../resource/ResourceLoader.ts"/>
 
 module ns_egret{
+	/**
+	 * @class ns_egret.HTML5SoundContext
+	 * @classdesc
+	 * @extends ns_egret.SoundContext
+	 */
     export class HTML5SoundContext extends SoundContext{
         private _soundList = {};
         private _capabilities;
@@ -64,6 +69,10 @@ module ns_egret{
             }
         }
 
+		/**
+		 * @method ns_egret.HTML5SoundContext#preloadSound
+		 * @param pat {any} 
+		 */
         public preloadSound(path) {
             if (this._soundSupported) {
                 var extName = this._getExtFromFullPath(path);
@@ -122,6 +131,11 @@ module ns_egret{
             return "";
         }
 
+		/**
+		 * @method ns_egret.HTML5SoundContext#playMusic
+		 * @param path {any} 
+		 * @param loop {any} 
+		 */
         public playMusic(path, loop = true) {
             if (!this._soundSupported)
                 return;
@@ -156,6 +170,10 @@ module ns_egret{
             SoundContext.isMusicPlaying = true;
         }
 
+		/**
+		 * @method ns_egret.HTML5SoundContext#stopMusic
+		 * @param releaseDat {any} 
+		 */
         public stopMusic(releaseData) {
             var locSoundList = this._soundList, locPlayingMusic = this._playingMusicName;
             if (locSoundList.hasOwnProperty(locPlayingMusic)) {
