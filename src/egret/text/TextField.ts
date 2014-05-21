@@ -135,7 +135,7 @@ module ns_egret {
                 return;
             }
 
-            renderContext.setupFont(this.size + "px " + this.fontFamily, this.textAlign, this.textBaseline);
+            renderContext.setupFont(this);
             this.drawText(renderContext);
         }
 
@@ -144,7 +144,7 @@ module ns_egret {
          */
         public _measureBounds():ns_egret.Rectangle {
             var renderContext = ns_egret.MainContext.instance.rendererContext;
-            renderContext.setupFont(this.size + "px " + this.fontFamily, this.textAlign, this.textBaseline);
+            renderContext.setupFont(this);
             return this.drawText(renderContext, true);
         }
 

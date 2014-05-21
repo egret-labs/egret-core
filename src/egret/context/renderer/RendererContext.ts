@@ -120,7 +120,7 @@ module ns_egret {
          * @param textAlign
          * @param textBaseline
          */
-        public setupFont(font:string, textAlign:string, textBaseline:string) {
+        public setupFont(textField:TextField):void {
 
         }
 
