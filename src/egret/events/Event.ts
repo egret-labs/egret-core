@@ -260,8 +260,8 @@ module ns_egret {
             event._bubbles = bubbles;
             if(props){
                 for(var key in props){
+                    event[key] = props[key];
                     if(event[key]!==null){
-                        event[key] = props[key];
                         props[key] = null;
                     }
 
