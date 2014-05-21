@@ -31,6 +31,15 @@ function run(currDir, args, opts) {
                     path.join(currDir, projectName, "bin-debug/lib"),
                     egret_file
                 );
+            },
+
+            function (callback) {
+                compiler.exportHeader(callback,
+                    path.join(param.getEgretPath(), "src"),
+                    path.join(currDir, projectName, "src", "egret.d.ts"),
+                    egret_file
+                );
+
             }
         );
     }
