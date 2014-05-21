@@ -93,9 +93,7 @@ module ns_egret {
         public static dispatchCollectionEvent(target:IEventDispatcher,type:string,kind:string = null, location:number = -1,
                                              oldLocation:number = -1, items:Array<any> = null,oldItems:Array<any>=null):void{
             var eventClass:any = CollectionEvent;
-            var props:any = eventClass._props;
-            if(!props)
-                props = eventClass._props = {};
+            var props:any = Event._getPropertyData(eventClass);
             props.kind = kind;
             props.location = location;
             props.oldLocation = oldLocation;

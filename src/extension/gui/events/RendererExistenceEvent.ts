@@ -83,9 +83,7 @@ module ns_egret {
         public static dispatchRendererExistenceEvent(target:IEventDispatcher,type:string,renderer:IItemRenderer = null,
                                              index:number = -1, data:any = null):void{
             var eventClass:any = RendererExistenceEvent;
-            var props:any = eventClass._props;
-            if(!props)
-                props = eventClass._props = {};
+            var props:any = Event._getPropertyData(eventClass);
             props.renderer = renderer;
             props.index = index;
             props.data = data;

@@ -67,5 +67,18 @@ module ns_egret {
 		 * @member ns_egret.SkinPartEvent#partName
 		 */   
 		public partName:string;
+
+        /**
+         * 使用指定的EventDispatcher对象来抛出事件对象。抛出的对象将会缓存在对象池上，供下次循环复用。
+         * @method ns_egret.SkinPartEvent.dispatchSkinPartEvent
+         */
+        public static dispatchSkinPartEvent(target:IEventDispatcher,type:string,
+                                            partName:string = null,instance:any = null):void{
+            var eventClass:any = SkinPartEvent;
+            var props:any = Event._getPropertyData(eventClass);
+            props.partName = partName;
+            props.instance = instance;
+            Event._dispatchByTarget(eventClass,target,type,false,props)
+        }
 	}
 }

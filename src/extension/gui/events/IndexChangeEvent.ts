@@ -76,9 +76,7 @@ module ns_egret {
         public static dispatchIndexChangeEvent(target:IEventDispatcher,type:string,
                                                oldIndex:number = -1,newIndex:number = -1):void{
             var eventClass:any = IndexChangeEvent;
-            var props:any = eventClass._props;
-            if(!props)
-                props = eventClass._props = {};
+            var props:any = Event._getPropertyData(eventClass);
             props.oldIndex = oldIndex;
             props.newIndex = newIndex;
             Event._dispatchByTarget(eventClass,target,type,false,props)

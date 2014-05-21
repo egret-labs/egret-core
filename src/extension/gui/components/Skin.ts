@@ -444,13 +444,11 @@ module ns_egret {
             if(!destination){
                 this.requestedCurrentState = this.getDefaultState();
             }
-            var event:StateChangeEvent;
             var oldState:string = this._currentState ? this._currentState : "";
             if (this.hasEventListener(StateChangeEvent.CURRENT_STATE_CHANGING)) {
-                event = new StateChangeEvent(StateChangeEvent.CURRENT_STATE_CHANGING);
-                event.oldState = oldState;
-                event.newState = this.requestedCurrentState ? this.requestedCurrentState : "";
-                this.dispatchEvent(event);
+                StateChangeEvent.dispatchStateChangeEvent(this,
+                    StateChangeEvent.CURRENT_STATE_CHANGING,oldState,
+                    this.requestedCurrentState ? this.requestedCurrentState : "");
             }
 
             this.removeState(this._currentState);
@@ -461,10 +459,8 @@ module ns_egret {
             }
 
             if (this.hasEventListener(StateChangeEvent.CURRENT_STATE_CHANGE)){
-                event = new StateChangeEvent(StateChangeEvent.CURRENT_STATE_CHANGE);
-                event.oldState = oldState;
-                event.newState = this._currentState ? this._currentState : "";
-                this.dispatchEvent(event);
+                StateChangeEvent.dispatchStateChangeEvent(this,StateChangeEvent.CURRENT_STATE_CHANGE,oldState,
+                    this._currentState ? this._currentState : "")
             }
         }
 

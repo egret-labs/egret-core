@@ -74,9 +74,7 @@ module ns_egret {
         public static dispatchStateChangeEvent(target:IEventDispatcher,type:string,
                                                oldState:string = null,newState:string = null):void{
             var eventClass:any = StateChangeEvent;
-            var props:any = eventClass._props;
-            if(!props)
-                props = eventClass._props = {};
+            var props:any = Event._getPropertyData(eventClass);
             props.element = element;
             props.index = index;
             Event._dispatchByTarget(eventClass,target,type,false,props)

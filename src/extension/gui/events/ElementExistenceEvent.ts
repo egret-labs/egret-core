@@ -72,9 +72,7 @@ module ns_egret {
         public static dispatchElementExistenceEvent(target:IEventDispatcher,type:string,
                                                     element:IVisualElement = null,index:number = -1):void{
             var eventClass:any = ElementExistenceEvent;
-            var props:any = eventClass._props;
-            if(!props)
-                props = eventClass._props = {};
+            var props:any = Event._getPropertyData(eventClass);
             props.element = element;
             props.index = index;
             Event._dispatchByTarget(eventClass,target,type,false,props)
