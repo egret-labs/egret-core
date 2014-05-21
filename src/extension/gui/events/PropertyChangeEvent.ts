@@ -34,34 +34,6 @@ module ns_egret {
 		 */		
 		public static PROPERTY_CHANGE:string = "propertyChange";
 
-        private static reuseEvent:PropertyChangeEvent;
-		/**
-		 * 返回使用指定属性构建的 PropertyChangeEventKind.UPDATE 类型的新 PropertyChangeEvent。 
-		 * @param source 发生更改的对象。
-		 * @param property 指定已更改属性的 String、QName 或 int。
-		 * @param oldValue 更改前的属性的值。
-		 * @param newValue 更改后的属性的值。
-		 * @member ns_egret.PropertyChangeEvent.createUpdateEvent
-		 */		
-		public static createUpdateEvent(
-			source:any,
-			property:any,
-			oldValue:any,
-			newValue:any):PropertyChangeEvent{
-			var event:PropertyChangeEvent = PropertyChangeEvent.reuseEvent;
-            if(!event){
-                event = PropertyChangeEvent.reuseEvent =
-                    new PropertyChangeEvent(PropertyChangeEvent.PROPERTY_CHANGE);
-            }
-			event.kind = PropertyChangeEventKind.UPDATE;
-			event.oldValue = oldValue;
-			event.newValue = newValue;
-			event.source = source;
-			event.property = property;
-			
-			return event;
-		}
-		
 		/**
 		 * 构造函数
 		 * @method ns_egret.PropertyChangeEvent#constructor
@@ -119,5 +91,22 @@ module ns_egret {
 		 * @member ns_egret.PropertyChangeEvent#source
 		 */		
 		public source:any;
+
+        /**
+         * 使用指定的EventDispatcher对象来抛出事件对象。抛出的对象将会缓存在对象池上，供下次循环复用。
+         * @method ns_egret.PropertyChangeEvent.dispatchPropertyChangeEvent
+         */
+        public static dispatchPropertyChangeEvent(target:IEventDispatcher,kind:string = null,
+                                                  property:any = null,oldValue:any = null,
+                                                  newValue:any = null,source:any = null):void{
+            var eventClass:any = PropertyChangeEvent;
+            var props:any = Event._getPropertyData(eventClass);
+            props.kind = kind;
+            props.property = property;
+            props.oldValue = oldValue;
+            props.newValue = newValue;
+            props.source = source;
+            Event._dispatchByTarget(eventClass,target,PropertyChangeEvent.PROPERTY_CHANGE,false,props)
+        }
 	}
 }

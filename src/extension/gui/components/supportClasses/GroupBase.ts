@@ -170,8 +170,8 @@ module ns_egret {
             var oldValue:number = this._horizontalScrollPosition;
             this._horizontalScrollPosition = value;
             this.scrollPositionChanged();
-            this.dispatchEvent(PropertyChangeEvent.createUpdateEvent(
-                this, "horizontalScrollPosition", oldValue, value));
+            PropertyChangeEvent.dispatchPropertyChangeEvent(this,
+                PropertyChangeEventKind.UPDATE,"horizontalScrollPosition",oldValue,value,this);
         }
 
         private _verticalScrollPosition:number = 0;
@@ -189,8 +189,8 @@ module ns_egret {
             var oldValue:number = this._verticalScrollPosition;
             this._verticalScrollPosition = value;
             this.scrollPositionChanged();
-            this.dispatchEvent(PropertyChangeEvent.createUpdateEvent(
-                this, "verticalScrollPosition", oldValue, value));
+            PropertyChangeEvent.dispatchPropertyChangeEvent(this,
+                PropertyChangeEventKind.UPDATE,"verticalScrollPosition",oldValue,value,this);
         }
 
         /**

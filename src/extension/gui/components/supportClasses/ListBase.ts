@@ -366,7 +366,7 @@ module ns_egret {
 			if (this.selectedIndexAdjusted){
 				this.selectedIndexAdjusted = false;
 				if (!changedSelection){
-					this.dispatchEvent(new UIEvent(UIEvent.VALUE_COMMIT));
+                    UIEvent.dispatchUIEvent(this,UIEvent.VALUE_COMMIT);
 				}
 			}
 			
@@ -570,7 +570,7 @@ module ns_egret {
 					this.dispatchEvent(e);
 					this._dispatchChangeAfterSelection = false;
 				}
-				this.dispatchEvent(new UIEvent(UIEvent.VALUE_COMMIT));
+                UIEvent.dispatchUIEvent(this,UIEvent.VALUE_COMMIT);;
 			}
 			
 			return true;

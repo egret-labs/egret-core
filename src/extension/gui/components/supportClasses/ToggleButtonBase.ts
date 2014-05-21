@@ -54,7 +54,7 @@ module ns_egret {
                 return;
 
             this._selected = value;
-            this.dispatchEvent(new UIEvent(UIEvent.VALUE_COMMIT));
+            UIEvent.dispatchUIEvent(this,UIEvent.VALUE_COMMIT);;
             this.invalidateSkinState();
         }
 		
