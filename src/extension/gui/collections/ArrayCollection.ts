@@ -243,13 +243,7 @@ module ns_egret {
         private dispatchCoEvent(kind:string = null, location:number = -1,
                                 oldLocation:number = -1, items:Array<any> = null,oldItems:Array<any>=null):void{
 
-            var data:Object = {
-                kind:kind,
-                location:location,
-                oldLocation:oldLocation,
-                items:items,
-                oldItems:oldItems};
-            CollectionEvent.dispathByTarget(this,CollectionEvent.COLLECTION_CHANGE,false,data)
+            CollectionEvent.dispathByTarget(this,CollectionEvent.COLLECTION_CHANGE,kind,location,oldLocation,items,oldItems);
         }
     }
 }
