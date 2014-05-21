@@ -245,7 +245,7 @@ module ns_egret {
             this._eventPhase = 2;
         }
 
-        public static _dispatchByTarget(EventClass:any,target:IEventDispatcher,type:string,bubbles:boolean=false,props?:Object){
+        public static _dispatchByTarget(EventClass:any,target:IEventDispatcher,type:string,bubbles:boolean=false,props?:Object):boolean{
             var recycler:Recycler = EventClass.eventRecycler;
             if(!recycler){
                 recycler = EventClass.eventRecycler = new Recycler();
@@ -267,8 +267,9 @@ module ns_egret {
 
                 }
             }
-            target.dispatchEvent(event);
+            var result:boolean = target.dispatchEvent(event);
             recycler.push(event);
+            return result;
         }
 
         public static _getPropertyData(EventClass:any):any{
