@@ -245,7 +245,7 @@ module ns_egret {
             this._eventPhase = 2;
         }
 
-        public static _dispathByTarget(EventClass:any,target:IEventDispatcher,type:string,bubbles:boolean=false,props?:Object){
+        public static _dispatchByTarget(EventClass:any,target:IEventDispatcher,type:string,bubbles:boolean=false,props?:Object){
             var recycler:Recycler = EventClass.eventRecycler;
             if(!recycler){
                 recycler = EventClass.eventRecycler = new Recycler();
@@ -276,7 +276,7 @@ module ns_egret {
          * 使用指定的EventDispatcher对象来抛出Event事件对象。抛出的对象将会缓存在对象池上，供下次循环复用。
          * @method ns_egret.Event.dispathByTarget
          */
-        public static dispathByTarget(target:IEventDispatcher,type:string,bubbles:boolean=false,data?:any):void{
+        public static dispatchEvent(target:IEventDispatcher,type:string,bubbles:boolean=false,data?:any):void{
             var eventClass:any = Event;
             var props:any;
             if(data){
@@ -285,7 +285,7 @@ module ns_egret {
                     props = eventClass._props = {};
                 props.data = data;
             }
-            Event._dispathByTarget(eventClass,target,type,bubbles,props);
+            Event._dispatchByTarget(eventClass,target,type,bubbles,props);
         }
 
     }
