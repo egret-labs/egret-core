@@ -443,6 +443,13 @@ module ns_egret {
          * @param value
          */
         public set width(value:number) {
+            this._setWidth(value);
+        }
+
+        /**
+         * @inheritDoc
+         */
+        public _setWidth(value:number){
             this._explicitWidth = value;
             this._hasWidthSet = NumberUtils.isNumber(value);
         }
@@ -453,6 +460,13 @@ module ns_egret {
          * @param value
          */
         public set height(value:number) {
+            this._setHeight(value);
+        }
+
+        /**
+         * @inheritDoc
+         */
+        public _setHeight(value:number){
             this._explicitHeight = value;
             this._hasHeightSet = NumberUtils.isNumber(value);
         }
