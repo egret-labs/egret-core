@@ -90,7 +90,7 @@ module ns_egret {
          * 使用指定的EventDispatcher对象来抛出CollectionEvent事件对象。抛出的对象将会缓存在对象池上，供下次循环复用。
          * @method ns_egret.CollectionEvent.dispathByTarget
          */
-        public static dispathByTarget(target:IEventDispatcher,type:string,kind:string, location:number,
+        public static dispathCollectionEvent(target:IEventDispatcher,type:string,kind:string, location:number,
                                       oldLocation:number, items:Array<any>,oldItems:Array<any>):void{
             var eventClass:any = Event;
             var props:any = eventClass._props;
