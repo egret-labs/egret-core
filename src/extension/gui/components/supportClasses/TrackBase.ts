@@ -161,7 +161,7 @@ module ns_egret {
 			super.changeValueByStep(increase);
 			
 			if (this.value != prevValue)
-				this.dispatchEvent(new Event(Event.CHANGE));
+				this.dispatchEventWith(Event.CHANGE);
 		}
 		
 		/**

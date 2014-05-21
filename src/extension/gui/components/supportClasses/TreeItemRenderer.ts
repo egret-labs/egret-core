@@ -188,10 +188,8 @@ module ns_egret {
 		 * @param event {TouchEvent} 
 		 */		
 		public disclosureButton_mouseDownHandler(event:TouchEvent):void{
-			var evt:TreeEvent = new TreeEvent(TreeEvent.ITEM_OPENING,
-				false,true,this.itemIndex,this.data,this);
-			evt.opening = !this._isOpen;
-			this.dispatchEvent(evt);
+            TreeEvent.dispatchTreeEvent(this,
+                TreeEvent.ITEM_OPENING,this.itemIndex,this.data,this,!this._isOpen);
 		}
 	}
 }

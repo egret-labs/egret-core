@@ -74,12 +74,12 @@ module ns_egret {
          * @method ns_egret.IndexChangeEvent.dispatchIndexChangeEvent
          */
         public static dispatchIndexChangeEvent(target:IEventDispatcher,type:string,
-                                               oldIndex:number = -1,newIndex:number = -1):void{
+                                               oldIndex:number = -1,newIndex:number = -1,cancelable:boolean = false):boolean{
             var eventClass:any = IndexChangeEvent;
             var props:any = Event._getPropertyData(eventClass);
             props.oldIndex = oldIndex;
             props.newIndex = newIndex;
-            Event._dispatchByTarget(eventClass,target,type,false,props)
+            return Event._dispatchByTarget(eventClass,target,type,false,props)
         }
 	}
 }

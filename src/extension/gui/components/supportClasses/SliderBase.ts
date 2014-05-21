@@ -117,8 +117,8 @@ module ns_egret {
 		private animationEndHandler(animation:Animation):void{
 			this.setValue(this.slideToValue);
 			
-			this.dispatchEvent(new Event(Event.CHANGE));
-			this.dispatchEvent(new UIEvent(UIEvent.CHANGE_END));
+			this.dispatchEventWith(Event.CHANGE);
+            UIEvent.dispatchUIEvent(this,UIEvent.CHANGE_END);
 		}
 		/**
 		 * 停止播放动画
@@ -224,7 +224,7 @@ module ns_egret {
 				}
 				else{
 					this.setValue(newValue);
-					this.dispatchEvent(new Event(Event.CHANGE));
+					this.dispatchEventWith(Event.CHANGE);
 				}
 			}
 

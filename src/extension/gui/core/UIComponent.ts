@@ -132,7 +132,7 @@ module ns_egret {
 				return;
 			this._initialized = value;
 			if (value){
-				this.dispatchEvent(new UIEvent(UIEvent.CREATION_COMPLETE));
+                UIEvent.dispatchUIEvent(this,UIEvent.CREATION_COMPLETE);
 			}
 		}
 		/**
@@ -150,7 +150,7 @@ module ns_egret {
 				this.removeEventListener(Event.ADDED_TO_STAGE,this.onAddedToStage,this);
 			}
 			this.initializeCalled = true;
-			this.dispatchEvent(new UIEvent(UIEvent.INITIALIZE));
+            UIEvent.dispatchUIEvent(this,UIEvent.INITIALIZE);
 			this.createChildren();
 			this.childrenCreated();
 		}

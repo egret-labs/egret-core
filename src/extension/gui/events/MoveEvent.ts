@@ -60,5 +60,17 @@ module ns_egret {
 		 * @member ns_egret.MoveEvent#oldY
 		 */
 		public oldY:number;
+
+        /**
+         * 使用指定的EventDispatcher对象来抛出事件对象。抛出的对象将会缓存在对象池上，供下次循环复用。
+         * @method ns_egret.MoveEvent.dispatchMoveEvent
+         */
+        public static dispatchMoveEvent(target:IEventDispatcher,oldX:number = NaN, oldY:number = NaN):void{
+            var eventClass:any = MoveEvent;
+            var props:any = Event._getPropertyData(eventClass);
+            props.oldX = oldX;
+            props.oldY = oldY;
+            Event._dispatchByTarget(eventClass,target,MoveEvent.MOVE,false,props);
+        }
 	}
 }

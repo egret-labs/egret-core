@@ -541,10 +541,9 @@ module ns_egret {
 			var tmpProposedIndex:number = this._proposedSelectedIndex;
 			
 			if (this._dispatchChangeAfterSelection){
-				e = new IndexChangeEvent(IndexChangeEvent.CHANGING, false, true);
-				e.oldIndex = this._selectedIndex;
-				e.newIndex = this._proposedSelectedIndex;
-				if (!this.dispatchEvent(e)){
+                var result:boolean = IndexChangeEvent.dispatchIndexChangeEvent(this,
+                    IndexChangeEvent.CHANGING,this._selectedIndex,this._proposedSelectedIndex,true);
+				if (!result){
 					this.itemSelected(this._proposedSelectedIndex, false);
 					this._proposedSelectedIndex = ListBase.NO_PROPOSED_SELECTION;
 					this._dispatchChangeAfterSelection = false;
@@ -564,10 +563,8 @@ module ns_egret {
 			//子类若需要自身抛出Change事件，而不是在此处抛出，可以设置dispatchChangedEvents为false
 			if (dispatchChangedEvents){
 				if (this._dispatchChangeAfterSelection){
-					e = new IndexChangeEvent(IndexChangeEvent.CHANGE);
-					e.oldIndex = oldSelectedIndex;
-					e.newIndex = this._selectedIndex;
-					this.dispatchEvent(e);
+                    IndexChangeEvent.dispatchIndexChangeEvent(this,
+                        IndexChangeEvent.CHANGE,oldSelectedIndex,this._selectedIndex);
 					this._dispatchChangeAfterSelection = false;
 				}
                 UIEvent.dispatchUIEvent(this,UIEvent.VALUE_COMMIT);;
@@ -694,12 +691,9 @@ module ns_egret {
 			else
 				itemIndex = this.dataGroup.getElementIndex(<IVisualElement> (touchEvent.currentTarget));
 
-			var listEvent:ListEvent = new ListEvent(type, false, false,
-                touchEvent.touchPointID,touchEvent.stageX,touchEvent.stageY,
-                touchEvent.ctrlKey,touchEvent.altKey,touchEvent.shiftKey,touchEvent.touchDown,
-				itemIndex,this.dataProvider.getItemAt(itemIndex),itemRenderer);
-
-			this.dispatchEvent(listEvent);
+            var item:any = this.dataProvider.getItemAt(itemIndex);
+            ListEvent.dispatchListEvent(this,
+                type,touchEvent,itemIndex,item,itemRenderer);
 		}
 		
 		/**
