@@ -141,11 +141,11 @@ module ns_egret {
             }
         }
 
-        setupFont(font:string, textAlign:string, textBaseline:string) {
+        setupFont(textField:TextField):void {
             var ctx = this.canvasContext;
-            ctx.font = font;
-            ctx.textAlign = textAlign || "left";
-            ctx.textBaseline = textBaseline || "top";
+            ctx.font = textField.size + "px " + textField.fontFamily;
+            ctx.textAlign = textField.textAlign || "left";
+            ctx.textBaseline = textField.textBaseline || "top";
         }
 
 

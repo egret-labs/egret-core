@@ -83,7 +83,6 @@ module ns_egret {
          */
         public drawImage(texture:Texture, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight) {
 
-            console.log ("draw");
             egret_native.Graphics.drawImage(texture,sourceX,sourceY,sourceWidth,sourceHeight,destX,destY,destWidth,destHeight);
 
             Profiler.getInstance().onDrawImage();
@@ -95,7 +94,6 @@ module ns_egret {
          * @stable A
          */
         public setTransform(matrix:ns_egret.Matrix) {
-            console.log ("setTransform");
             egret_native.Graphics.setTransform(matrix.a,matrix.b,matrix.c,matrix.d,matrix.tx,matrix.ty);
         }
 
@@ -129,8 +127,8 @@ module ns_egret {
          * @param textAlign
          * @param textBaseline
          */
-        public setupFont(font:string, textAlign:string, textBaseline:string) {
-
+        public setupFont(textField:TextField):void {
+//            egret_native.Label.createLable("/system/fonts/DroidSansFallback.ttf",textField.size,"");
         }
 
 
