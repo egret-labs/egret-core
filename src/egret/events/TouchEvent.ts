@@ -164,5 +164,22 @@ module ns_egret {
                 this._localY = point.y;
             }
         }
+
+        /**
+         * 使用指定的EventDispatcher对象来抛出Event事件对象。抛出的对象将会缓存在对象池上，供下次循环复用。
+         * @method ns_egret.TouchEvent.dispathTouchEvent
+         */
+        public static dispatchTouchEvent(target:IEventDispatcher,type:string,touchPointID:number = 0, stageX:number = 0, stageY:number = 0,
+                                         ctrlKey:boolean=false,altKey:boolean=false,shiftKey:boolean=false,touchDown:boolean=false):void{
+            var eventClass:any = TouchEvent;
+            var props:any = Event._getPropertyData(eventClass);
+            props.touchPointID = touchPointID
+            props._stageX = stageX;
+            props._stageY = stageY;
+            props.ctrlKey = ctrlKey;
+            props.altKey = altKey;
+            props.touchDown = touchDown;
+            Event._dispatchByTarget(eventClass,target,type,props,true,true);
+        }
     }
 }

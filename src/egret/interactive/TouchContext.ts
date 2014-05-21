@@ -57,17 +57,10 @@ module ns_egret {
             return obj;
         }
 
-        private static touchEvent:TouchEvent = new TouchEvent("");
-
         public dispatchEvent(type:string, data:any) {
-            var target:DisplayObject = data.target;
-            var event:TouchEvent = TouchContext.touchEvent;
-            event._type = type;
-            event.touchPointID = data.identifier;
-            event.touchDown = (this.touchDownTarget[data.identifier] == true)
-            event._stageX = data.stageX;
-            event._stageY = data.stageY;
-            target.dispatchEvent(event);
+            var touchDown:boolean = (this.touchDownTarget[data.identifier] == true)
+            TouchEvent.dispatchTouchEvent(data.target,type,data.identifier,
+                data.stageX,data.stageY,false,false,false,touchDown);
         }
 
         public onTouchBegan(x:number, y:number, identifier:number):void {

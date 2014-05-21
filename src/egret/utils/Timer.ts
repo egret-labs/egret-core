@@ -69,26 +69,18 @@ module ns_egret {
             this._running = false;
         }
 
-        private static timerEvent:TimerEvent;
-
         private lastTime:number;
 
         private onEnterFrame(frameTime:number) {
-            if(!Timer.timerEvent){
-                Timer.timerEvent = new TimerEvent(TimerEvent.TIMER);
-            }
-            var timerEvent:TimerEvent = Timer.timerEvent;
             var now = getTimer();
             var passTime = now - this.lastTime;
             if(passTime>this.delay){
                 this.lastTime = now;
                 this._currentCount++;
-                timerEvent._type = TimerEvent.TIMER;
-                this.dispatchEvent(timerEvent);
+                TimerEvent.dispatchTimerEvent(this,TimerEvent.TIMER);
                 if (this.repeatCount >0 && this._currentCount >= this.repeatCount) {
                     this.stop();
-                    timerEvent._type = TimerEvent.TIMER_COMPLETE;
-                    this.dispatchEvent(timerEvent);
+                    TimerEvent.dispatchTimerEvent(this,TimerEvent.TIMER_COMPLETE);
                 }
             }
         }
