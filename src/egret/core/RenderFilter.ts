@@ -24,10 +24,13 @@
 /// <reference path="../texture/Texture.ts"/>
 
 module ns_egret {
+	/**
+	 * @class ns_egret.RenderFilter
+	 * @classdesc
+	 * @extends ns_egret.HashObject
+	 */
     export class RenderFilter extends HashObject {
-        /**
-         * @class ns_egret.RenderFilter
-         */
+
         public constructor() {
             super();
             this._drawAreaList = [];
@@ -35,6 +38,10 @@ module ns_egret {
 
         private static instance:RenderFilter;
 
+		/**
+		 * @method ns_egret.ns_egret.getInstance
+		 * @returns {RenderFilter}
+		 */
         public static getInstance():RenderFilter {
             if (RenderFilter.instance == null) {
                 RenderFilter.instance = new RenderFilter();
@@ -46,16 +53,34 @@ module ns_egret {
         private _defaultDrawAreaList:Array<Rectangle>
         private _originalData:any = {};
 
+		/**
+		 * @method ns_egret.ns_egret#addDrawArea
+		 * @param area {ns_egret.Rectangle} 
+		 */
         public addDrawArea(area:ns_egret.Rectangle):void {
             this._drawAreaList.push(area);
         }
 
+		/**
+		 * @method ns_egret.ns_egret#clearDrawArea
+		 */
         public clearDrawArea():void {
             this._drawAreaList = [];
         }
 
         /**
          * 先检查有没有不需要绘制的区域，再把需要绘制的区域绘制出来
+		 * @method ns_egret.ns_egret#drawImage
+		 * @param renderContext {any} 
+		 * @param data {RenderData} 
+		 * @param sourceX {any} 
+		 * @param sourceY {any} 
+		 * @param sourceWidth {any} 
+		 * @param sourceHeight {any} 
+		 * @param destX {any} 
+		 * @param destY {any} 
+		 * @param destWidth {any} 
+		 * @param destHeight {any} 
          */
         public drawImage(renderContext, data:RenderData, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight):void {
             destX = destX || 0;
@@ -152,6 +177,10 @@ module ns_egret {
             return false;
         }
 
+		/**
+		 * @method ns_egret.ns_egret#getDrawAreaList
+		 * @returns {Rectangle}
+		 */
         public getDrawAreaList():Array<Rectangle> {
             var locDrawAreaList;
             //默认整个舞台都是重绘区域
@@ -169,8 +198,19 @@ module ns_egret {
         }
     }
 
+	/**
+	 * @class ns_egret.RenderData
+	 * @interface
+	 * @classdesc
+	 */
     export interface RenderData {
+		/**
+		 * @member ns_egret.RenderData#worldTransform
+		 */
         worldTransform:ns_egret.Matrix;
+		/**
+		 * @member ns_egret.RenderData#worldBounds
+		 */
         worldBounds:ns_egret.Rectangle;
         _texture_to_render:ns_egret.Texture;
     }

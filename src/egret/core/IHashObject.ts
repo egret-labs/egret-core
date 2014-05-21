@@ -18,15 +18,16 @@
 
 module ns_egret {
     /**
+	 * @classdesc
      * IHashObject是哈希对象接口。引擎内所有接口的基类,为对象实例提供唯一的hashCode值,提高对象比较的性能。
      * 注意：自定义对象请直接继承HashObject，而不是实现此接口。否则会导致hashCode不唯一。
      * @interface
-     * @class ns_egret.IHashObject
+	 * @class ns_egret.IHashObject
      */
     export interface IHashObject {
         /**
          * 返回此对象唯一的哈希值,用于唯一确定一个对象。hashCode为大于等于1的整数。
-         * @member {number} ns_egret.IHashObject#hashCode
+		 * @member {number} ns_egret.IHashObject#hashCode
          */
         hashCode:number;
     }

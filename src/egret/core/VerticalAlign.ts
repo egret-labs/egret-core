@@ -18,25 +18,33 @@
 
 module ns_egret {
 
+	/**
+	 * @class ns_egret.VerticalAlign
+	 * @classdesc
+	 */
 	export class VerticalAlign{
 
         /**
          * 顶对齐
+		 * @constant ns_egret.VerticalAlign.TOP
          */
         public static TOP:string = "top";
 
         /**
          * 底对齐
+		 * @constant ns_egret.VerticalAlign.BOTTOM
          */
         public static BOTTOM:string = "bottom";
 
         /**
          * 垂直居中对齐
+		 * @constant ns_egret.VerticalAlign.MIDDLE
          */
         public static MIDDLE:string = "middle";
 
 		/**
 		 * 垂直两端对齐
+		 * @constant ns_egret.VerticalAlign.JUSTIFY
 		 */
 		public static JUSTIFY:string = "justify";
 
@@ -44,6 +52,7 @@ module ns_egret {
 		 * 相对于容器对子项进行内容对齐。这会将所有子项的大小统一调整为容器的"内容高度"。
 		 * 容器的"内容高度"是最大子项的大小,如果所有子项都小于容器的高度，则会将所有子项的大小调整为容器的高度。
          * 注意：TextFiled不支持此对齐方式。
+		 * @constant ns_egret.VerticalAlign.CONTENT_JUSTIFY
 		 */
 		public static CONTENT_JUSTIFY:string = "contentJustify";
 	}

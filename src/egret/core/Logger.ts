@@ -18,6 +18,8 @@
 
 module ns_egret {
     /**
+	 * @class ns_egret.Logger
+	 * @classdesc
      * Logger是引擎的日志处理模块入口
      * @stable B 目前Logger的接口设计没有问题，但是考虑到跨平台，需要将其改为一个Context，并且允许开发者自由扩展以实现自身游戏的日志分析收集需求
      * todo:GitHub文档，如何利用日志帮助游戏持续改进
@@ -25,8 +27,9 @@ module ns_egret {
     export class Logger {
         /**
          * 表示出现了致命错误，开发者必须修复错误
-         * @param actionCode
-         * @param value
+		 * @method ns_egret.Logger.fatal
+         * @param actionCode {string} 
+         * @param value {Object} 
          */
         public static fatal(actionCode:string, value:Object = null){
             ns_egret.Logger.traceToConsole("Fatal",actionCode,value);
@@ -35,8 +38,9 @@ module ns_egret {
 
         /**
          * 记录正常的Log信息
-         * @param actionCode
-         * @param value
+		 * @method ns_egret.Logger.info
+         * @param actionCode {string} 
+         * @param value {Object} 
          */
         public static info(actionCode:string, value:Object = null){
             ns_egret.Logger.traceToConsole("Info",actionCode,value);
@@ -44,8 +48,9 @@ module ns_egret {
 
         /**
          * 记录可能会出现问题的Log信息
-         * @param actionCode
-         * @param value
+		 * @method ns_egret.Logger.warning
+         * @param actionCode {string} 
+         * @param value {Object} 
          */
         public static warning(actionCode:string, value:Object = null){
             ns_egret.Logger.traceToConsole("Warning",actionCode,value);

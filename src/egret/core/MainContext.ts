@@ -31,7 +31,10 @@
 
 module ns_egret{
     /**
+	 * @class ns_egret.MainContext
+	 * @classdesc
      * MainContext是游戏的核心跨平台接口，组合了多个功能Context，并是游戏启动的主入口
+	 * @extends ns_egret.EventDispatcher
      */
     export class MainContext extends EventDispatcher {
 
@@ -41,36 +44,43 @@ module ns_egret{
 
         /**
          * 渲染Context
+		 * @member ns_egret.MainContext#rendererContext
          */
         public rendererContext:RendererContext;
 
         /**
          * 触摸Context
+		 * @member ns_egret.MainContext#touchContext
          */
         public touchContext:TouchContext;
 
         /**
          * 声音Context
+		 * @member ns_egret.MainContext#soundContext
          */
         public soundContext:SoundContext;
 
         /**
          * 网络Context
+		 * @member ns_egret.MainContext#netContext
          */
         public netContext:NetContext;
 
         /**
          * 设备divice
+		 * @member ns_egret.MainContext#deviceContext
          */
         public deviceContext:DeviceContext;
 
         /**
          * 舞台
+		 * @member ns_egret.MainContext#stage
          */
         public stage:Stage;
 
         /**
          * 游戏启动，开启主循环，参考Flash的滑动跑道模型
+		 * @method ns_egret.MainContext#run
          */
         public run() {
             Ticker.getInstance().run();
@@ -157,6 +167,9 @@ module ns_egret{
             }
         }
 
+		/**
+		 * @member ns_egret.MainContext.instance
+		 */
         public static instance:ns_egret.MainContext;
 
     }

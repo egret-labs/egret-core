@@ -24,6 +24,8 @@
 
 module ns_egret {
     /**
+	 * @class ns_egret.Profiler
+	 * @classdesc
      * Profiler是egret的性能检测分析类
      * @todo GitHub文档，如何使用Profiler
      */
@@ -52,6 +54,7 @@ module ns_egret {
 
         /**
          * 启动Profiler
+		 * @method ns_egret.Profiler#run
          */
         public run() {
             //todo 加入debug参数
@@ -124,6 +127,7 @@ module ns_egret {
         }
 
         /**
+		 * @method ns_egret.Profiler#onDrawImage
          * @private
          */
         public onDrawImage() {
