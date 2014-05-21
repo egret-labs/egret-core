@@ -245,7 +245,8 @@ module ns_egret {
             this._eventPhase = 2;
         }
 
-        public static _dispatchByTarget(EventClass:any,target:IEventDispatcher,type:string,bubbles:boolean=false,props?:Object):boolean{
+        public static _dispatchByTarget(EventClass:any,target:IEventDispatcher,type:string,props?:Object,
+                                        bubbles:boolean=false,cancelable:boolean = false):boolean{
             var recycler:Recycler = EventClass.eventRecycler;
             if(!recycler){
                 recycler = EventClass.eventRecycler = new Recycler();
@@ -258,6 +259,7 @@ module ns_egret {
                 event._type = type;
             }
             event._bubbles = bubbles;
+            event._cancelable = cancelable;
             if(props){
                 for(var key in props){
                     event[key] = props[key];
@@ -290,7 +292,7 @@ module ns_egret {
             if(data){
                 props.data = data;
             }
-            Event._dispatchByTarget(eventClass,target,type,bubbles,props);
+            Event._dispatchByTarget(eventClass,target,type,props,bubbles);
         }
 
     }
