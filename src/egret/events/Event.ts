@@ -285,7 +285,7 @@ module ns_egret {
                     props = eventClass._props = {};
                 props.data = data;
             }
-            Event._dispathByTarget(eventClass,target,type,bubbles,props)
+            Event._dispathByTarget(eventClass,target,type,bubbles,props);
         }
 
     }
