@@ -107,7 +107,7 @@ module ns_egret {
          */
         public static dispatchUIEvent(target:IEventDispatcher,type:string):void{
             var eventClass:any = UIEvent;
-            Event._dispatchByTarget(eventClass,target,type)
+            Event._dispatchByTarget(eventClass,target,type);
         }
 	}
 }

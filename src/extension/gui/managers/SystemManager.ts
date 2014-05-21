@@ -369,7 +369,7 @@ module ns_egret {
 		public _elementRemoved(element:IVisualElement, index:number, notifyListeners:boolean=true):void{
 			if(notifyListeners){
 				//PopUpManager需要监听这个事件
-				element.dispatchEvent(new Event("removeFromSystemManager"));
+                Event.dispatchEvent(element,"removeFromSystemManager")
 			}
 			super._elementRemoved(element,index,notifyListeners);
 		}

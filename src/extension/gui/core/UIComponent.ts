@@ -805,8 +805,7 @@ module ns_egret {
 		 */
 		private dispatchMoveEvent():void{
 			if (this.hasEventListener(MoveEvent.MOVE)){
-				var moveEvent:MoveEvent = new MoveEvent(MoveEvent.MOVE,this.oldX,this.oldY);
-				this.dispatchEvent(moveEvent);
+                MoveEvent.dispatchMoveEvent(this,this.oldX,this.oldY);
 			}
 			this.oldX = this.x;
 			this.oldY = this.y;
@@ -825,8 +824,7 @@ module ns_egret {
 		 */
 		private dispatchResizeEvent():void{
 			if (this.hasEventListener(ResizeEvent.RESIZE)){
-				var resizeEvent:ResizeEvent = new ResizeEvent(ResizeEvent.RESIZE,this.oldWidth,this.oldHeight);
-				this.dispatchEvent(resizeEvent);
+                ResizeEvent.dispatchResizeEvent(this,this.oldWidth,this.oldHeight);
 			}
 			this.oldWidth = this._width;
 			this.oldHeight = this._height;
@@ -842,8 +840,8 @@ module ns_egret {
 		public dispatchPropertyChangeEvent(prop:string, oldValue:any,
 													   value:any):void{
 			if (this.hasEventListener("propertyChange"))
-				this.dispatchEvent(PropertyChangeEvent.createUpdateEvent(
-					this, prop, oldValue, value));
+                PropertyChangeEvent.dispatchPropertyChangeEvent(this,
+                    PropertyChangeEventKind.UPDATE,prop,oldValue,value,this);
 		}
 		
 		public _includeInLayout:boolean = true;

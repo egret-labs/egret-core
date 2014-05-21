@@ -90,7 +90,7 @@ module ns_egret {
 			this._gap = value;
 			this.invalidateTargetSizeAndDisplayList();
 			if(this.hasEventListener("gapChanged"))
-				this.dispatchEvent(new Event("gapChanged"));
+				this.dispatchEventWith("gapChanged");
 		}
 		
 		private _padding:number = 0;

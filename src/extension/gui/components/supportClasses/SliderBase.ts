@@ -128,8 +128,8 @@ module ns_egret {
 			
 			this.setValue(this.nearestValidValue(this.pendingValue, this.snapInterval));
 			
-			this.dispatchEvent(new Event(Event.CHANGE));
-			this.dispatchEvent(new UIEvent(UIEvent.CHANGE_END));
+			this.dispatchEventWith(Event.CHANGE);
+            UIEvent.dispatchUIEvent(this,UIEvent.CHANGE_END);
 		}
 		
 		/**
@@ -168,10 +168,10 @@ module ns_egret {
 			newValue = this.nearestValidValue(newValue, this.snapInterval);
 			
 			if (newValue != this.pendingValue){
-				this.dispatchEvent(new TrackBaseEvent(TrackBaseEvent.THUMB_DRAG));
+                TrackBaseEvent.dispatchTrackBaseEvent(this,TrackBaseEvent.THUMB_DRAG);
 				if (this.liveDragging == true){
 					this.setValue(newValue);
-					this.dispatchEvent(new Event(Event.CHANGE));
+					this.dispatchEventWith(Event.CHANGE);
 				}
 				else{
 					this.pendingValue = newValue;
@@ -187,7 +187,7 @@ module ns_egret {
 			super.stage_mouseUpHandler(event);
 			if ((this.liveDragging == false) && (this.value != this.pendingValue)){
 				this.setValue(this.pendingValue);
-				this.dispatchEvent(new Event(Event.CHANGE));
+				this.dispatchEventWith(Event.CHANGE);
 			}
 		}
 		
@@ -219,7 +219,7 @@ module ns_egret {
 					this.animator.duration = this.slideDuration *
 						(Math.abs(this.pendingValue - this.slideToValue) / (this.maximum - this.minimum));
 					this.animator.motionPaths = [{prop:"value", from:this.pendingValue, to:this.slideToValue}];
-					this.dispatchEvent(new UIEvent(UIEvent.CHANGE_START));
+					UIEvent.dispatchUIEvent(this,UIEvent.CHANGE_START);
 					this.animator.play();
 				}
 				else{

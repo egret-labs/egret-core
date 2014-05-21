@@ -78,7 +78,7 @@ module ns_egret {
             var props:any = Event._getPropertyData(eventClass);
             props.partName = partName;
             props.instance = instance;
-            Event._dispatchByTarget(eventClass,target,type,false,props)
+            Event._dispatchByTarget(eventClass,target,type,props);
         }
 	}
 }

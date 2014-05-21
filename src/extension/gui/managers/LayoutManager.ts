@@ -206,12 +206,11 @@ module ns_egret {
 					if (!client.initialized)
 						client.initialized = true;
 					if (client.hasEventListener(UIEvent.UPDATE_COMPLETE))
-						client.dispatchEvent(new UIEvent(UIEvent.UPDATE_COMPLETE));
+                        UIEvent.dispatchUIEvent(client,UIEvent.UPDATE_COMPLETE);
 					client.updateCompletePendingFlag = false;
 					client = this.updateCompleteQueue.pop();
 				}
-				
-				this.dispatchEvent(new UIEvent(UIEvent.UPDATE_COMPLETE));
+				UIEvent.dispatchUIEvent(this,UIEvent.UPDATE_COMPLETE);
 			}
 		}
 		/**
@@ -333,7 +332,7 @@ module ns_egret {
 							obj.initialized = true;
 						
 						if (obj.hasEventListener(UIEvent.UPDATE_COMPLETE))
-							obj.dispatchEvent(new UIEvent(UIEvent.UPDATE_COMPLETE));
+                            UIEvent.dispatchUIEvent(obj,UIEvent.UPDATE_COMPLETE);
 						obj.updateCompletePendingFlag = false;
 						obj = <ILayoutManagerClient> (this.updateCompleteQueue.removeLargestChild(target));
 					}

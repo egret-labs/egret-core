@@ -44,7 +44,7 @@ module ns_egret {
 		/**
 		 * 获取单例
 		 */		
-		private static get impl():IPopUpManager{
+		private static getImpl():IPopUpManager{
 			if (!PopUpManager._impl){
 				try{
 					PopUpManager._impl = Injector.getInstance("IPopUpManager");
@@ -61,10 +61,10 @@ module ns_egret {
 		 * @member ns_egret.PopUpManager#modalColor
 		 */
 		public get modalColor():number{
-			return PopUpManager.impl.modalColor;
+			return PopUpManager.getImpl().modalColor;
 		}
 		public set modalColor(value:number){
-			PopUpManager.impl.modalColor = value;
+			PopUpManager.getImpl().modalColor = value;
 		}
 		
 		/**
@@ -72,10 +72,10 @@ module ns_egret {
 		 * @member ns_egret.PopUpManager#modalAlpha
 		 */
 		public get modalAlpha():number{
-			return PopUpManager.impl.modalAlpha;
+			return PopUpManager.getImpl().modalAlpha;
 		}
 		public set modalAlpha(value:number){
-			PopUpManager.impl.modalAlpha = value;
+			PopUpManager.getImpl().modalAlpha = value;
 		}
 		
 		/**
@@ -86,8 +86,8 @@ module ns_egret {
 		 * @param center {boolean} 是否居中窗口。等效于在外部调用centerPopUp()来居中。默认true。
 		 */		
 		public static addPopUp(popUp:IVisualElement,modal:boolean=false,center:boolean=true):void{
-			PopUpManager.impl.addPopUp(popUp,modal,center);
-			PopUpManager.impl.dispatchEvent(new PopUpEvent(PopUpEvent.ADD_POPUP,false,false,popUp,modal));
+			PopUpManager.getImpl().addPopUp(popUp,modal,center);
+            PopUpEvent.dispatchPopUpEvent(PopUpManager.getImpl(),PopUpEvent.ADD_POPUP,popUp,modal);
 		}
 		
 		/**
@@ -96,8 +96,8 @@ module ns_egret {
 		 * @param popUp {IVisualElement} 要移除的窗口
 		 */		
 		public static removePopUp(popUp:IVisualElement):void{
-			PopUpManager.impl.removePopUp(popUp);
-			PopUpManager.impl.dispatchEvent(new PopUpEvent(PopUpEvent.REMOVE_POPUP,false,false,popUp));
+			PopUpManager.getImpl().removePopUp(popUp);
+            PopUpEvent.dispatchPopUpEvent(PopUpManager.getImpl(),PopUpEvent.REMOVE_POPUP,popUp);
 		}
 		
 		/**
@@ -106,7 +106,7 @@ module ns_egret {
 		 * @param popUp {IVisualElement} 要居中显示的窗口
 		 */
 		public static centerPopUp(popUp:IVisualElement):void{
-			PopUpManager.impl.centerPopUp(popUp);
+			PopUpManager.getImpl().centerPopUp(popUp);
 		}
 		
 		/**
@@ -115,15 +115,15 @@ module ns_egret {
 		 * @param popUp {IVisualElement} 要最前显示的窗口
 		 */		
 		public static bringToFront(popUp:IVisualElement):void{
-			PopUpManager.impl.bringToFront(popUp);
-			PopUpManager.impl.dispatchEvent(new PopUpEvent(PopUpEvent.BRING_TO_FRONT,false,false,popUp));
+			PopUpManager.getImpl().bringToFront(popUp);
+            PopUpEvent.dispatchPopUpEvent(PopUpManager.getImpl(),PopUpEvent.BRING_TO_FRONT,popUp);
 		}
 		/**
 		 * 已经弹出的窗口列表
 		 * @member ns_egret.PopUpManager.popUpList
 		 */		
 		public static get popUpList():Array<any>{
-			return PopUpManager.impl.popUpList;
+			return PopUpManager.getImpl().popUpList;
 		}
 		
 		/**
@@ -137,7 +137,7 @@ module ns_egret {
 		 * @param priority {number} 
 		 */		
 		public static addEventListener(type:string,listener:Function,thisObject:any,useCapture:boolean = false,priority:number = 0):void{
-			PopUpManager.impl.addEventListener(type,listener,this,useCapture,priority);
+			PopUpManager.getImpl().addEventListener(type,listener,this,useCapture,priority);
 		}
 		/**
 		 * 移除事件监听,参考PopUpEvent定义的常量。
@@ -149,7 +149,7 @@ module ns_egret {
 		 * @param useCapture {boolean} 
 		 */	
 		public static removeEventListener(type:string,listener:Function,thisObject:any,useCapture:boolean = false):void{
-			PopUpManager.impl.removeEventListener(type,listener,thisObject,useCapture);
+			PopUpManager.getImpl().removeEventListener(type,listener,thisObject,useCapture);
 		}
 	}
 }

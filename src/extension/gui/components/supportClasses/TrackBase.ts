@@ -271,8 +271,8 @@ module ns_egret {
             this._clickOffsetX = clickOffset.x;
             this._clickOffsetY = clickOffset.y;
 
-			this.dispatchEvent(new TrackBaseEvent(TrackBaseEvent.THUMB_PRESS));
-			this.dispatchEvent(new UIEvent(UIEvent.CHANGE_START));
+            TrackBaseEvent.dispatchTrackBaseEvent(this,TrackBaseEvent.THUMB_PRESS);
+            UIEvent.dispatchUIEvent(this,UIEvent.CHANGE_START);
 		}
 		
 		/**
@@ -303,7 +303,7 @@ module ns_egret {
 			if (newValue != this.value){
 				this.setValue(newValue); 
 				this.validateDisplayList();
-				this.dispatchEvent(new TrackBaseEvent(TrackBaseEvent.THUMB_DRAG));
+                TrackBaseEvent.dispatchTrackBaseEvent(this,TrackBaseEvent.THUMB_DRAG);
 				this.dispatchEventWith(Event.CHANGE);
 			}
 		}
@@ -344,8 +344,8 @@ module ns_egret {
 				this.updateWhenMouseMove();
 				this.needUpdateValue = false;
 			}
-			this.dispatchEvent(new TrackBaseEvent(TrackBaseEvent.THUMB_RELEASE));
-			this.dispatchEvent(new UIEvent(UIEvent.CHANGE_END));
+            TrackBaseEvent.dispatchTrackBaseEvent(this,TrackBaseEvent.THUMB_RELEASE);
+            UIEvent.dispatchUIEvent(this,UIEvent.CHANGE_END)
 		}
 		
 		/**

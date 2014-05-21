@@ -87,7 +87,7 @@ module ns_egret {
             props.renderer = renderer;
             props.index = index;
             props.data = data;
-            Event._dispatchByTarget(eventClass,target,type,false,props)
+            Event._dispatchByTarget(eventClass,target,type,props);
         }
 	}
 }

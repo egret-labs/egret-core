@@ -70,7 +70,7 @@ module ns_egret {
             var props:any = Event._getPropertyData(eventClass);
             props.oldX = oldX;
             props.oldY = oldY;
-            Event._dispatchByTarget(eventClass,target,MoveEvent.MOVE,false,props);
+            Event._dispatchByTarget(eventClass,target,MoveEvent.MOVE,props);
         }
 	}
 }

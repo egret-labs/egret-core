@@ -99,7 +99,7 @@ module ns_egret {
             props.oldLocation = oldLocation;
             props.items = items;
             props.oldItems = oldItems;
-            Event._dispatchByTarget(eventClass,target,type,false,props)
+            Event._dispatchByTarget(eventClass,target,type,props);
         }
     }
 }

@@ -111,7 +111,7 @@ module ns_egret {
             props.itemIndex = itemIndex;
             props.item = item;
             props.itemRenderer = itemRenderer;
-            Event._dispatchByTarget(eventClass,target,type,false,props);
+            Event._dispatchByTarget(eventClass,target,type,props);
         }
 	}
 }

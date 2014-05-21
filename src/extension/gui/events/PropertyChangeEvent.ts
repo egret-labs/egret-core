@@ -106,7 +106,7 @@ module ns_egret {
             props.oldValue = oldValue;
             props.newValue = newValue;
             props.source = source;
-            Event._dispatchByTarget(eventClass,target,PropertyChangeEvent.PROPERTY_CHANGE,false,props)
+            Event._dispatchByTarget(eventClass,target,PropertyChangeEvent.PROPERTY_CHANGE,props);
         }
 	}
 }

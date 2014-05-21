@@ -64,7 +64,7 @@ module ns_egret {
 			this._horizontalGap = value;
 			this.invalidateTargetSizeAndDisplayList();
 			if(this.hasEventListener("gapChanged"))
-				this.dispatchEvent(new Event("gapChanged"));
+				this.dispatchEventWith("gapChanged");
 		}
 		
 		/**
@@ -90,7 +90,7 @@ module ns_egret {
 			this._verticalGap = value;
 			this.invalidateTargetSizeAndDisplayList();
 			if(this.hasEventListener("gapChanged"))
-				this.dispatchEvent(new Event("gapChanged"));
+				this.dispatchEventWith("gapChanged");
 		}
 		
 		
@@ -398,7 +398,7 @@ module ns_egret {
 			this._orientation = value;
 			this.invalidateTargetSizeAndDisplayList();
 			if(this.hasEventListener("orientationChanged"))
-				this.dispatchEvent(new Event("orientationChanged"));
+				this.dispatchEventWith("orientationChanged");
 		}
 		
 		/**
