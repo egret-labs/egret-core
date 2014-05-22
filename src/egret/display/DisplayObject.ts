@@ -53,10 +53,11 @@ module ns_egret {
      */
     export class DisplayObject extends EventDispatcher implements RenderData {
 
-        public constructor(){
+        public constructor() {
             super();
             this.worldTransform = new ns_egret.Matrix();
             this.worldBounds = new ns_egret.Rectangle(0, 0, 0, 0);
+            this._cacheBounds = new ns_egret.Rectangle(0, 0, 0, 0);
         }
 
         public name:string;
@@ -306,6 +307,7 @@ module ns_egret {
                 this._rotation = value;
             }
         }
+
         /**
          * 表示指定对象的 Alpha 透明度值
          * @member {number} ns_egret.DisplayObject#alpha
@@ -438,6 +440,7 @@ module ns_egret {
         }
 
         private _hasWidthSet:Boolean = false;
+
         /**
          * 显式设置宽度
          * @param value
@@ -449,12 +452,13 @@ module ns_egret {
         /**
          * @inheritDoc
          */
-        public _setWidth(value:number){
+        public _setWidth(value:number) {
             this._explicitWidth = value;
             this._hasWidthSet = NumberUtils.isNumber(value);
         }
 
         private _hasHeightSet:Boolean = false;
+
         /**
          * 显式设置高度
          * @param value
@@ -466,7 +470,7 @@ module ns_egret {
         /**
          * @inheritDoc
          */
-        public _setHeight(value:number){
+        public _setHeight(value:number) {
             this._explicitHeight = value;
             this._hasHeightSet = NumberUtils.isNumber(value);
         }
@@ -487,10 +491,12 @@ module ns_egret {
          */
         public draw(renderContext:RendererContext) {
             if (!this.visible) {
+                this.destroyCacheBounds();
                 return;
             }
             var hasDrawCache = this.drawCacheTexture(renderContext);
             if (hasDrawCache) {
+                this.destroyCacheBounds();
                 return;
             }
             var o = this;
@@ -509,6 +515,7 @@ module ns_egret {
             if (o.mask || o._scrollRect) {
                 renderContext.restore();
             }
+            this.destroyCacheBounds();
         }
 
 
@@ -577,26 +584,38 @@ module ns_egret {
 
         }
 
+        private _cacheBounds:ns_egret.Rectangle;
+
         /**
          * 获取显示对象的测量边界
          * @returns {Rectangle}
          */
         public getBounds() {
-            var rect:Rectangle = this._measureBounds();
-            var w:number = this._hasWidthSet ? this._explicitWidth : rect.width;
-            var h:number = this._hasHeightSet ? this._explicitHeight : rect.height;
-            var x:number = rect.x;
-            var y:number = rect.y;
-            var anchorX, anchorY;
-            if (this._anchorX != 0 || this._anchorY != 0) {
-                anchorX = w * this._anchorX;
-                anchorY = h * this._anchorY;
+            if (this._cacheBounds.x == 0 && this._cacheBounds.y == 0 && this._cacheBounds.width == 0 && this._cacheBounds.height == 0) {
+                var rect:Rectangle = this._measureBounds();
+                var w:number = this._hasWidthSet ? this._explicitWidth : rect.width;
+                var h:number = this._hasHeightSet ? this._explicitHeight : rect.height;
+                var x:number = rect.x;
+                var y:number = rect.y;
+                var anchorX, anchorY;
+                if (this._anchorX != 0 || this._anchorY != 0) {
+                    anchorX = w * this._anchorX;
+                    anchorY = h * this._anchorY;
+                }
+                else {
+                    anchorX = this._anchorOffsetX;
+                    anchorY = this._anchorOffsetY;
+                }
+                this._cacheBounds.initialize(x - anchorX, y - anchorY, w, h);
             }
-            else {
-                anchorX = this._anchorOffsetX;
-                anchorY = this._anchorOffsetY;
-            }
-            return Rectangle.identity.initialize(x - anchorX, y - anchorY, w, h);
+            return this._cacheBounds;
+        }
+
+        private destroyCacheBounds():void {
+            this._cacheBounds.x = 0;
+            this._cacheBounds.y = 0;
+            this._cacheBounds.width = 0;
+            this._cacheBounds.height = 0;
         }
 
         /**

@@ -52,9 +52,11 @@ declare module egret_native {
 
         function createLabel(font:string,size:number,defaultString:string):void;
 
-        function setCurTextColor(color:number):void;
+        function setTextColor(color:number):void;
 
         function drawText(text:string,x:number,y:number):void;
+
+        function setTextAlignment(type:string):void;
 
 
 

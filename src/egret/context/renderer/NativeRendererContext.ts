@@ -102,7 +102,7 @@ module ns_egret {
         /**
          * 变换Context的当前渲染矩阵
 		 * @method ns_egret.NativeRendererContext#setTransform
-         * @param matrix {ns_egret.Matri} 
+         * @param matrix {ns_egret.Matrix}
          * @stable A
          */
         public setTransform(matrix:ns_egret.Matrix) {
@@ -130,7 +130,7 @@ module ns_egret {
 		 * @method ns_egret.NativeRendererContext#setAlpha
          * @param value {number} 
          * @stable A
-		 * @param blendMode {ns_egret.BlendMod} 
+		 * @param blendMode {ns_egret.BlendMode}
          */
         public setAlpha(value:number, blendMode:ns_egret.BlendMode) {
             egret_native.Graphics.setGlobalAlpha(value);
@@ -144,6 +144,7 @@ module ns_egret {
          */
         public setupFont(textField:TextField):void {
             egret_native.Label.createLabel("/system/fonts/DroidSansFallback.ttf",textField.size,"");
+            egret_native.Label.setTextAlignment(textField.textAlign);
             this.__hackTextFieldSize = textField.size;
         }
 
@@ -171,7 +172,7 @@ module ns_egret {
          */
         public drawText(textField:ns_egret.TextField,text:string, x:number, y:number, maxWidth:number) {
             Profiler.getInstance().onDrawImage();
-            egret_native.Label.setCurTextColor(0xffff0000);
+            egret_native.Label.setTextColor(textField.textColor);
             egret_native.Label.drawText(text,x,y);
         }
 
