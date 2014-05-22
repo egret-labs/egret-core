@@ -33,10 +33,6 @@ module ns_egret {
             this.graphics = new Graphics(rendererContext);
         }
 
-        hitTest(x, y) {
-            return super.hitTest(x, y);
-        }
-
         render(renderContext:RendererContext) {
             this.graphics._draw();
         }
