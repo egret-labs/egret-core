@@ -608,7 +608,8 @@ module ns_egret {
                 }
                 this._cacheBounds.initialize(x - anchorX, y - anchorY, w, h);
             }
-            return this._cacheBounds;
+            var result:ns_egret.Rectangle = this._cacheBounds;
+            return ns_egret.Rectangle.identity.initialize(result.x, result.y, result.width, result.height);
         }
 
         private destroyCacheBounds():void {
@@ -631,7 +632,7 @@ module ns_egret {
                 if (o.anchorX != 0 || o.anchorY != 0) {
                     var bounds = o.getBounds();
                     matrix.prependTransform(o.x, o.y, o.scaleX, o.scaleY, o.rotation, o.skewX, o.skewY,
-                        bounds.width * o.anchorX, bounds.height * o.anchorY);
+                            bounds.width * o.anchorX, bounds.height * o.anchorY);
                 }
                 else {
                     matrix.prependTransform(o.x, o.y, o.scaleX, o.scaleY, o.rotation, o.skewX, o.skewY, o.anchorOffsetX, o.anchorOffsetY);
