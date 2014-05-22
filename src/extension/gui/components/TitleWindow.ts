@@ -41,6 +41,7 @@ module ns_egret {
 		 */
 		public constructor(){
 			super();
+            this.hostComponentKey = "ns_egret.TitleWindow";
 			this.addEventListener(TouchEvent.TOUCH_BEGAN,this.onWindowMouseDown,this,true,100);
 		}
 		/**

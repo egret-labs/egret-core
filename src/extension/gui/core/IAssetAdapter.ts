@@ -33,9 +33,9 @@ module ns_egret {
          * @param compFunc {Function} 解析完成回调函数，示例：compFunc(content:any,source:any):void;
          * 回调参数content接受两种类型：DisplayObject或Texture。
          * @param thisObject {any} compFunc的this引用
-         * @param oldDisplay {DisplayObject} 旧的内容显示对象,传入值有可能为null。
+         * @param oldContent any 旧的内容对象,传入值有可能为null。
          * 对于某些类型素材，例如MovieClip，可以重用传入的显示对象,只修改其数据再返回。
          */
-        getAsset(source:any,compFunc:Function,thisObject:any,oldDisplay:DisplayObject):void;
+        getAsset(source:any,compFunc:Function,thisObject:any,oldContent:any):void;
     }
 }

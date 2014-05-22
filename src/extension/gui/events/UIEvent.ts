@@ -79,11 +79,17 @@ module ns_egret {
 		 */		
 		public static VALUE_COMMIT:string = "valueCommit";
 		/**
-		 * 皮肤发生改变
+		 * SkinnableComponent皮肤发生改变
 		 * @constant ns_egret.UIEvent.SKIN_CHANGED
 		 */		
 		public static SKIN_CHANGED:string = "skinChanged";
-		
+
+		/**
+		 * UIAsset的content属性解析完成
+		 * @constant ns_egret.UIEvent.CONTENT_CHANGED
+		 */
+		public static CONTENT_CHANGED:string = "contentChanged";
+
 		/**
 		 * 下拉框弹出事件
 		 * @constant ns_egret.UIEvent.OPEN

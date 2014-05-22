@@ -47,6 +47,7 @@ module ns_egret {
 		 */		
 		public constructor(){
 			super();
+            this.hostComponentKey = "ns_egret.TabBar";
 			this.requireSelection = true;
 		}
 		
@@ -160,20 +161,5 @@ module ns_egret {
 			this._dispatchListEvent(event,ListEvent.ITEM_CLICK,itemRenderer);
 		}
 		
-		/**
-		 * @method ns_egret.TabBar#_createSkinParts
-		 */
-		public _createSkinParts():void{
-			this.dataGroup = new DataGroup();
-			this.dataGroup.percentHeight = this.dataGroup.percentWidth = 100;
-			this.dataGroup.clipAndEnableScrolling = true;
-			var layout:HorizontalLayout = new HorizontalLayout();
-			layout.gap = -1;
-			layout.horizontalAlign = HorizontalAlign.JUSTIFY;
-			layout.verticalAlign = VerticalAlign.CONTENT_JUSTIFY;
-			this.dataGroup.layout = layout;
-			this._addToDisplayList(this.dataGroup);
-			this.partAdded("dataGroup",this.dataGroup);
-		}
 	}
 }

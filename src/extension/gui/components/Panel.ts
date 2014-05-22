@@ -34,6 +34,7 @@ module ns_egret {
          */
         public constructor() {
             super();
+            this.hostComponentKey = "ns_egret.Panel";
             this.touchEnabled = false;
         }
 

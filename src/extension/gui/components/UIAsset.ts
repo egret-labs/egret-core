@@ -20,11 +20,10 @@
 /// <reference path="../../../egret/display/DisplayObject.ts"/>
 /// <reference path="../../../egret/display/DisplayObjectContainer.ts"/>
 /// <reference path="../../../egret/geom/Rectangle.ts"/>
-/// <reference path="supportClasses/DefaultSkinAdapter.ts"/>
+/// <reference path="supportClasses/DefaultAssetAdapter.ts"/>
 /// <reference path="../core/IInvalidateDisplay.ts"/>
 /// <reference path="../core/ILayoutElement.ts"/>
-/// <reference path="../core/ISkinAdapter.ts"/>
-/// <reference path="../core/ISkinnableClient.ts"/>
+/// <reference path="../core/IAssetAdapter.ts"/>
 /// <reference path="../core/UIComponent.ts"/>
 /// <reference path="../events/UIEvent.ts"/>
 
@@ -34,12 +33,12 @@ module ns_egret {
 	 * @class ns_egret.UIAsset
 	 * @classdesc
 	 * 素材包装器。<p/>
-	 * 注意：UIAsset仅在添skin时测量一次初始尺寸， 请不要在外部直接修改skin尺寸，
-	 * 若做了引起skin尺寸发生变化的操作, 需手动调用UIAsset的invalidateSize()进行重新测量。
+	 * 注意：UIAsset仅在添content时测量一次初始尺寸， 请不要在外部直接修改content尺寸，
+	 * 若做了引起content尺寸发生变化的操作, 需手动调用UIAsset的invalidateSize()进行重新测量。
 	 * @extends ns_egret.UIComponent
 	 * @implements ns_egret.ISkinnableClient
 	 */
-	export class UIAsset extends UIComponent implements ISkinnableClient{
+	export class UIAsset extends UIComponent{
 		/**
 		 * @method ns_egret.UIAsset#constructor
 		 */
@@ -48,68 +47,37 @@ module ns_egret {
 			this.touchChildren = false;
 		}
 		
-		private skinNameChanged:boolean = false;
-		/**
-		 * 外部显式设置了皮肤名
-		 * @member ns_egret.UIAsset#_skinNameExplicitlySet
-		 */		
-		public _skinNameExplicitlySet:any = false;
-		
-		public _skinName:any;
+		private sourceChanged:boolean = false;
 
+		public _source:any;
 		/**
 		 * 皮肤标识符。可以为Class,String,或DisplayObject实例等任意类型，具体规则由项目注入的素材适配器决定，
-		 * 适配器根据此属性值解析获取对应的显示对象，并赋值给skin属性。
-		 * @member ns_egret.UIAsset#skinName
+		 * 适配器根据此属性值解析获取对应的显示对象，并赋值给content属性。
+		 * @member ns_egret.UIAsset#source
 		 */	
-		public get skinName():any{
-			return this._skinName;
+		public get source():any{
+			return this._source;
 		}
 
-		public set skinName(value:any){
-			if(this._skinName==value)
+		public set source(value:any){
+			if(this._source==value)
 				return;
-			this._skinName = value;
-			this._skinNameExplicitlySet = true;
+			this._source = value;
 			if(this.createChildrenCalled){
 				this.parseSkinName();
 			}
 			else{
-				this.skinNameChanged = true;
+				this.sourceChanged = true;
 			}
 		}
-		
-		public _skin:DisplayObject;
+        
+		public _content:any;
 		/**
-		 * 显示对象皮肤。
-		 * @member ns_egret.UIAsset#skin
+		 * 解析source得到的对象，通常为显示对象或Texture。
+		 * @member ns_egret.UIAsset#content
 		 */
-		public get skin():DisplayObject{
-			return this._skin;
-		}
-		
-		/**
-		 * 皮肤适配器解析skinName后回调函数
-		 * @method ns_egret.UIAsset#onGetSkin
-		 * @param skin {any} 皮肤显示对象
-		 * @param skinName {any} 皮肤标识符
-		 */		
-		public onGetSkin(skin:any,skinName:any):void{
-			if(this._skin!==skin){//如果皮肤是重用的，就不用执行添加和移除操作。
-
-				if(this._skin&&this._skin.parent==<DisplayObjectContainer><any>this){
-					super.removeChild(this._skin);
-				}
-				this._skin = <DisplayObject> skin;
-				if(this._skin){
-					super.addChildAt(this._skin,0);
-				}
-			}
-			this._aspectRatio = NaN;
-			this.invalidateSize();
-			this.invalidateDisplayList();
-			if(this.stage)
-				this.validateNow();
+		public get content():any{
+			return this._content;
 		}
 		
 		private createChildrenCalled:boolean = false;
@@ -118,7 +86,7 @@ module ns_egret {
 		 */
 		public createChildren():void{
 			super.createChildren();
-			if(this.skinNameChanged){
+			if(this.sourceChanged){
 				this.parseSkinName();
 			}
 			this.createChildrenCalled = true;
@@ -127,108 +95,83 @@ module ns_egret {
 		/**
 		 * 皮肤解析适配器
 		 */		
-		private static skinAdapter:ISkinAdapter;
+		private static assetAdapter:IAssetAdapter;
+		private contentReused:boolean = false;
 		/**
-		 * 默认的皮肤解析适配器
-		 */	
-		private static defaultSkinAdapter:DefaultSkinAdapter;
-		
-		private skinReused:boolean = false;
-		/**
-		 * 解析skinName
+		 * 解析source
 		 */		
 		private parseSkinName():void{
-			this.skinNameChanged = false;
-			var adapter:ISkinAdapter = UIAsset.skinAdapter;
+			this.sourceChanged = false;
+			var adapter:IAssetAdapter = UIAsset.assetAdapter;
 			if(!adapter){
-				try{
-					adapter = UIAsset.skinAdapter = Injector.getInstance("ISkinAdapter");
-				}
-				catch(e){
-					if(!UIAsset.defaultSkinAdapter)
-						UIAsset.defaultSkinAdapter = new DefaultSkinAdapter();
-					adapter = UIAsset.defaultSkinAdapter;
-				}
+                adapter = this.getAdapter();
 			}
-			if(!this._skinName){
-				this.skinChnaged(null,this._skinName);
+			if(!this._source){
+				this.contentChanged(null,null);
 			}
 			else{
-				var reuseSkin:DisplayObject = this.skinReused?null:this._skin;
-				this.skinReused = true;
-				adapter.getSkin(this._skinName,this.skinChnaged,this,reuseSkin);
+				var reuseContent:DisplayObject = this.contentReused?null:this._content;
+				this.contentReused = true;
+				adapter.getAsset(this._source,this.contentChanged,this,reuseContent);
 			}
 		}
+        /**
+         * 获取资源适配器
+         */
+        private getAdapter():IAssetAdapter{
+            var adapter:IAssetAdapter;
+            try{
+                adapter = Injector.getInstance("ns_egret.IAssetAdapter");
+            }
+            catch(e){
+                adapter = new DefaultAssetAdapter();
+            }
+            UIAsset.assetAdapter = adapter;
+            return adapter;
+        }
 		/**
 		 * 皮肤发生改变
-		 */		
-		private skinChnaged(skin:any,skinName:any):void{
-			if(skinName!==this._skinName)
+		 */
+		private contentChanged(content:any,source:any):void{
+			if(source!==this._source)
 				return;
-			this.onGetSkin(skin,skinName);
-			this.skinReused = false;
-			if(this.hasEventListener(UIEvent.SKIN_CHANGED)){
-                UIEvent.dispatchUIEvent(this,UIEvent.SKIN_CHANGED);
+            var oldContent:any = this._content;
+            this._content = content;
+            if(oldContent!==content) {
+                if(oldContent instanceof DisplayObject){
+                    super.removeChild(<DisplayObjectContainer> oldContent);
+                }
+                if(content instanceof  DisplayObject){
+                    super.addChildAt(<DisplayObjectContainer> content,0);
+                }
+            }
+            this.invalidateSize();
+            this.invalidateDisplayList();
+			this.contentReused = false;
+			if(this.hasEventListener(UIEvent.CONTENT_CHANGED)){
+                UIEvent.dispatchUIEvent(this,UIEvent.CONTENT_CHANGED);
 			}
 		}
-		
-		/**
-		 * @method ns_egret.UIAsset#measure
-		 */
+
 		public measure():void{
 			super.measure();
-			if(!this._skin)
-				return;
-			if(this._skin&&"includeInLayout" in this._skin&&!(<ILayoutElement><any> (this._skin)).includeInLayout)
-				return;
-			var rect:Rectangle = this.getMeasuredSize();
-			this.measuredWidth = rect.width;
-			this.measuredHeight = rect.height;
+            var content:any = this._content;
+			if(content instanceof DisplayObject){
+                if("preferredWidth" in content){
+                    this.measuredWidth = (<ILayoutElement><any> (content)).preferredWidth;
+                    this.measuredHeight = (<ILayoutElement><any> (content)).preferredHeight;
+                }
+                else{
+                    this.measuredWidth = content.width;
+                    this.measuredHeight = content.height;
+                }
+            }
+            else if(content instanceof Texture){
+                this.measuredWidth = (<Texture> content)._textureWidth;
+                this.measuredHeight = (<Texture> content)._textureHeight;
+            }
 		}
 		
-		/**
-		 * 获取测量大小
-		 */		
-		private getMeasuredSize():Rectangle{
-			var rect:Rectangle = new Rectangle();
-			if(this._skin&&"preferredWidth" in this._skin){
-				rect.width = (<ILayoutElement><any> (this._skin)).preferredWidth;
-				rect.height = (<ILayoutElement><any> (this._skin)).preferredHeight;
-			}
-			else{
-				var oldScaleX:number = this._skin.scaleX;
-				var oldScaleY:number = this._skin.scaleY;
-				this._skin.scaleX = 1;
-				this._skin.scaleY = 1;
-				rect.width = this._skin.width;
-				rect.height = this._skin.height;
-				this._skin.scaleX = oldScaleX;
-				this._skin.scaleY = oldScaleY;
-			}
-			return rect;
-		}
-		
-		private _maintainAspectRatio:boolean = false;
-		/**
-		 * 是否保持皮肤的宽高比,默认为false。
-		 * @member ns_egret.UIAsset#maintainAspectRatio
-		 */
-		public get maintainAspectRatio():boolean{
-			return this._maintainAspectRatio;
-		}
-
-		public set maintainAspectRatio(value:boolean){
-			if(this._maintainAspectRatio==value)
-				return;
-			this._maintainAspectRatio = value;
-			this.invalidateDisplayList();
-		}
-		
-		/**
-		 * 皮肤宽高比
-		 */
-		public _aspectRatio:number = NaN;
-
 		/**
 		 * @method ns_egret.UIAsset#updateDisplayList
 		 * @param unscaledWidth {number} 
@@ -236,78 +179,21 @@ module ns_egret {
 		 */
 		public updateDisplayList(unscaledWidth:number, unscaledHeight:number):void{
 			super.updateDisplayList(unscaledWidth,unscaledHeight);
-			if(this._skin){
-				if(this._maintainAspectRatio){
-					var layoutBoundsX:number = 0;
-					var layoutBoundsY:number = 0;
-					if(isNaN(this._aspectRatio)){
-						var rect:Rectangle = this.getMeasuredSize();
-						if(rect.width==0||rect.height==0)
-							this._aspectRatio = 0;
-						else
-							this._aspectRatio = rect.width/rect.height;
-					}
-					if(this._aspectRatio>0&&unscaledHeight>0&&unscaledWidth>0){
-						var ratio:number = unscaledWidth/unscaledHeight;
-						if(ratio>this._aspectRatio){
-							var newWidth:number = unscaledHeight*this._aspectRatio;
-							layoutBoundsX = Math.round((unscaledWidth-newWidth)*0.5);
-							unscaledWidth = newWidth;
-						}
-						else{
-							var newHeight:number = unscaledWidth/this._aspectRatio;
-							layoutBoundsY = Math.round((unscaledHeight-newHeight)*0.5);
-							unscaledHeight = newHeight;
-						}
-						
-						if("setLayoutBoundsPosition" in this._skin){
-							if((<ILayoutElement><any> (this._skin)).includeInLayout){
-								(<ILayoutElement> <any>(this._skin)).setLayoutBoundsPosition(layoutBoundsX,layoutBoundsY);
-							}
-						}
-						else{
-							this._skin.x = layoutBoundsX;
-							this._skin.y = layoutBoundsY;
-						}
-					}
-				}
-				if("setLayoutBoundsSize" in this._skin){
-					if((<ILayoutElement><any> (this._skin)).includeInLayout){
-						(<ILayoutElement><any> (this._skin)).setLayoutBoundsSize(unscaledWidth,unscaledHeight);
-					}
+            var content:any = this._content;
+			if(content instanceof DisplayObject){
+				if("setLayoutBoundsSize" in content){
+                    (<ILayoutElement><any> (content)).setLayoutBoundsSize(unscaledWidth,unscaledHeight);
 				}
 				else{
-					this._skin.scaleX = unscaledWidth/this._skin.width;
-					this._skin.scaleY = unscaledHeight/this._skin.height;
-					if("validateNow" in this._skin)
-						(<IInvalidateDisplay><any> (this._skin)).validateNow();
+					content.scaleX = content.width==0?1:unscaledWidth/content.width;
+					content.scaleY = content.height==0?1:unscaledHeight/content.height;
 				}
 			}
+            else if(content instanceof Texture){
+
+            }
 		}
-		
-		
-		/**
-		 * 添加对象到显示列表,此接口仅预留给皮肤不为ISkin而需要内部创建皮肤子部件的情况,
-		 * 如果需要管理子项，若有，请使用容器的addElement()方法，非法使用有可能造成无法自动布局。
-		 */		
-		public _addToDisplayList(child:DisplayObject):DisplayObject{
-			return super.addChild(child);
-		}
-		/**
-		 * 添加对象到指定的索引,此接口仅预留给皮肤不为ISkin而需要内部创建皮肤子部件的情况,
-		 * 如果需要管理子项，若有，请使用容器的addElementAt()方法，非法使用有可能造成无法自动布局。
-		 */		
-		public _addToDisplayListAt(child:DisplayObject,index:number):DisplayObject{
-			return super.addChildAt(child,index);
-		}
-		/**
-		 * 从显示列表移除对象,此接口仅预留给皮肤不为ISkin而需要内部创建皮肤子部件的情况,
-		 * 如果需要管理子项，若有，请使用容器的removeElement()方法,非法使用有可能造成无法自动布局。
-		 */		
-		public _removeFromDisplayList(child:DisplayObject):DisplayObject{
-			return super.removeChild(child);
-		}
-		
+
 		private static errorStr:string = "在此组件中不可用，若此组件为容器类，请使用";
 		/**
 		 * @method ns_egret.UIAsset#addChild

@@ -42,6 +42,7 @@ module ns_egret {
 		 */		
 		public constructor(){
 			super();
+            this.hostComponentKey = "ns_egret.SkinnableDataContainer";
 		}
 		
 		/**
@@ -326,32 +327,6 @@ module ns_egret {
 						RendererExistenceEvent.RENDERER_REMOVE, this.dispatchEvent, this);
 				}
 			}
-		}
-		
-		/**
-		 * @method ns_egret.SkinnableDataContainer#_createSkinParts
-		 */
-		public _createSkinParts():void{
-			this.dataGroup = new DataGroup();
-			this.dataGroup.percentHeight = this.dataGroup.percentWidth = 100;
-			this.dataGroup.clipAndEnableScrolling = true;
-			var temp:VerticalLayout = new VerticalLayout();
-			this.dataGroup.layout = temp;
-			temp.gap = 0;
-			temp.horizontalAlign = "contentJustify";
-			this._addToDisplayList(this.dataGroup);
-			this.partAdded("dataGroup",this.dataGroup);
-		}
-		
-		/**
-		 * @method ns_egret.SkinnableDataContainer#_removeSkinParts
-		 */
-		public _removeSkinParts():void{
-			if(!this.dataGroup)
-				return;
-			this.partRemoved("dataGroup",this.dataGroup);
-			this._removeFromDisplayList(this.dataGroup);
-			this.dataGroup = null;
 		}
 	}
 }

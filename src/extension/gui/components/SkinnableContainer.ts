@@ -39,6 +39,7 @@ module ns_egret {
 		 */
         public constructor() {
             super();
+            this.hostComponentKey = "ns_egret.SkinnableContainer";
         }
 
         /**
@@ -285,24 +286,5 @@ a
             this.dispatchEvent(event);
         }
 
-        /**
-		 * @method ns_egret.SkinnableContainer#_createSkinParts
-         */
-        public _createSkinParts():void {
-            this.contentGroup = new Group();
-            this.contentGroup.percentWidth = 100;
-            this.contentGroup.percentHeight = 100;
-            this._addToDisplayList(<DisplayObject><any>this.contentGroup);
-            this.partAdded("contentGroup", this.contentGroup);
-        }
-
-        /**
-		 * @method ns_egret.SkinnableContainer#_removeSkinParts
-         */
-        public _removeSkinParts():void {
-            this.partRemoved("contentGroup", this.contentGroup);
-            this._removeFromDisplayList(<DisplayObject><any>this.contentGroup);
-            this.contentGroup = null;
-        }
     }
 }
