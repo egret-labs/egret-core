@@ -21,42 +21,43 @@
 module ns_egret {
 
     /**
-	 * @class ns_egret.Point
-	 * @classdesc
+     * @class ns_egret.Point
+     * @classdesc
      * Point 对象表示二维坐标系统中的某个位置，其中 x 表示水平轴，y 表示垂直轴。
-	 * @extends ns_egret.HashObject
+     * @extends ns_egret.HashObject
      */
-    export class Point extends HashObject{
+    export class Point extends HashObject {
 
         static identity = new Point(0, 0);
 
-		/**
-		 * @method ns_egret.Point#constructor
-		 * @param x {number} 
-		 * @param y {number} 
-		 */
-        public constructor(x:number=0, y:number=0) {
+        /**
+         * @method ns_egret.Point#constructor
+         * @param x {number}
+         * @param y {number}
+         */
+        public constructor(x:number = 0, y:number = 0) {
             super();
             this.x = x;
             this.y = y;
         }
+
         /**
          * 该点的水平坐标。默认值为 0。
-		 * @constant ns_egret.Point#x
+         * @constant ns_egret.Point#x
          */
         public x:number;
         /**
          * 该点的垂直坐标。默认值为 0。
-		 * @constant ns_egret.Point#y
+         * @constant ns_egret.Point#y
          */
         public y:number;
 
         /**
          * 克隆点对象
-		 * @method ns_egret.Point#clone
-		 * @returns {Point}
+         * @method ns_egret.Point#clone
+         * @returns {Point}
          */
-        public clone():Point{
+        public clone():Point {
             return new Point(this.x, this.y);
         }
     }

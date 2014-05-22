@@ -43,25 +43,25 @@ module ns_egret {
             super._onAddToStage();
             var point = this.localToGlobal();
             var stageText = new ns_egret.StageText();
-            stageText.open(point.x, point.y,this._explicitWidth,this._explicitHeight);
+            stageText._open(point.x, point.y,this._explicitWidth,this._explicitHeight);
             this.addEventListener(ns_egret.TouchEvent.TOUCH_BEGAN, this.onMouseDownHandler, this);
             this.stageText = stageText;
         }
 
         public setText(value:string):void {
-            this.stageText.setText(value);
+            this.stageText._setText(value);
         }
 
         public getText():string {
-            return this.stageText.getText();
+            return this.stageText._getText();
         }
 
         public setTextType(type:string):void {
-            this.stageText.setTextType(type);
+            this.stageText._setTextType(type);
         }
 
         public getTextType():string {
-            return this.stageText.getTextType();
+            return this.stageText._getTextType();
         }
 
 
@@ -71,10 +71,10 @@ module ns_egret {
         }
 
         public _onRemoveFromStage() {
-            this.stageText.remove();
+            this.stageText._remove();
         }
 
-        _measureBounds():ns_egret.Rectangle {
+        public _measureBounds():ns_egret.Rectangle {
             return ns_egret.Rectangle.identity;
         }
 

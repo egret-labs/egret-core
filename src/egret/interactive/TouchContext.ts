@@ -45,7 +45,7 @@ module ns_egret {
 
         }
 
-        public getTouchData(identifier, x, y) {
+        public getTouchData(identifier, x, y):any {
             var obj = this._currentTouchTarget[identifier];
             if (obj == null) {
                 obj = {};
@@ -57,7 +57,7 @@ module ns_egret {
             return obj;
         }
 
-        public dispatchEvent(type:string, data:any) {
+        public dispatchEvent(type:string, data:any):void {
             var touchDown:boolean = (this.touchDownTarget[data.identifier] == true)
             TouchEvent.dispatchTouchEvent(data.target,type,data.identifier,
                 data.stageX,data.stageY,false,false,false,touchDown);
