@@ -101,9 +101,9 @@ module ns_egret{
                 Stage._invalidateRenderFlag = false;
             }
             this.doCallLaterList();
-            this.stage.updateTransform();
+            this.stage._updateTransform();
             this.dispatchEventWith(Event.FINISH_UPDATE_TRANSFORM);
-            this.stage.draw(context);
+            this.stage._draw(context);
             this.dispatchEventWith(Event.FINISH_RENDER);
         }
 

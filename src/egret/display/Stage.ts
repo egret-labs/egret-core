@@ -95,7 +95,7 @@ module ns_egret{
             for (var i = l - 1; i >= 0; i--) {
                 var child = children[i];
                 var o = child;
-                var offsetPoint = o.getOffsetPoint();
+                var offsetPoint = o._getOffsetPoint();
                 var mtx = Matrix.identity.identity().prependTransform(o.x, o.y, o.scaleX, o.scaleY, o.rotation,
                     0, 0, offsetPoint.x, offsetPoint.y);
                 mtx.invert();
@@ -120,10 +120,10 @@ module ns_egret{
 //            return Rectangle.identity.initialize(0, 0, this.stageWidth, this.stageHeight);
         }
 
-        public updateTransform() {
+        public _updateTransform():void {
             for (var i = 0 , length = this._children.length; i < length; i++) {
                 var child:DisplayObject = this._children[i];
-                child.updateTransform();
+                child._updateTransform();
             }
         }
 

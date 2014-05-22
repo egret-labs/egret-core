@@ -130,7 +130,7 @@ module ns_egret {
          * @see egret.DisplayObject.render
          * @param renderContext
          */
-        public render(renderContext:RendererContext) {
+        public _render(renderContext:RendererContext):void {
             if (!this.text) {
                 return;
             }

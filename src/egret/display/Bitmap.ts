@@ -79,8 +79,7 @@ module ns_egret {
          * @see egret.DisplayObject.render
          * @param renderContext
          */
-            render(renderContext:RendererContext) {
-
+        public _render(renderContext:RendererContext):void {
             var locTexture = this.texture;
             if (locTexture == null) {
                 return;
@@ -113,7 +112,7 @@ module ns_egret {
          * @returns {Rectangle}
          * @private
          */
-            _measureBounds():ns_egret.Rectangle {
+        public _measureBounds():ns_egret.Rectangle {
             var rect:ns_egret.SpriteSheetFrame = this.spriteFrame;
             var w, h;
             if (rect) {

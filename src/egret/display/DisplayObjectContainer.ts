@@ -268,21 +268,21 @@ module ns_egret {
             }
         }
 
-        public updateTransform() {
+        public _updateTransform():void {
             if (!this.visible) {
                 return;
             }
-            super.updateTransform();
+            super._updateTransform();
             for (var i = 0 , length = this._children.length; i < length; i++) {
                 var child:DisplayObject = this._children[i];
-                child.updateTransform();
+                child._updateTransform();
             }
         }
 
-        public render(renderContext:RendererContext) {
+        public _render(renderContext:RendererContext):void {
             for (var i = 0 , length = this._children.length; i < length; i++) {
                 var child:DisplayObject = this._children[i];
-                child.draw(renderContext);
+                child._draw(renderContext);
             }
         }
 
@@ -299,7 +299,7 @@ module ns_egret {
             for (var i = 0; i < l; i++) {
                 var child = this._children[i];
                 var bounds:Rectangle;
-                if (!child.visible || !(bounds = DisplayObject.getTransformBounds(child.getBounds(), child.getMatrix()))) {
+                if (!child.visible || !(bounds = DisplayObject.getTransformBounds(child.getBounds(), child._getMatrix()))) {
                     continue;
                 }
                 var x1 = bounds.x , y1 = bounds.y,
@@ -363,7 +363,7 @@ module ns_egret {
                 var child = children[i];
                 //todo 這裡的matrix不符合identity的設計原則，以後需要重構
                 var o = child;
-                var offsetPoint = o.getOffsetPoint();
+                var offsetPoint = o._getOffsetPoint();
                 var childX = o._x;
                 var childY = o._y;
                 if(this._scrollRect)

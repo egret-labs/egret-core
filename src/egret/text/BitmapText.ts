@@ -52,12 +52,12 @@ module ns_egret {
             this._bitmapPool = [];
         }
 
-        public updateTransform() {
+        public _updateTransform():void {
             if (!this.visible) {
                 return;
             }
             this._renderText();
-            super.updateTransform();
+            super._updateTransform();
         }
 
         //todo:这里对bounds的处理和TextField非常类似，以后考虑重构

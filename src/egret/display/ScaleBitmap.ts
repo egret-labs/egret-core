@@ -113,7 +113,7 @@ module ns_egret {
             }
         }
 
-        public updateTransform() {
+        public _updateTransform():void {
             if (!this.visible) {
                 return;
             }
@@ -218,7 +218,7 @@ module ns_egret {
             this._bottomRightBitmap.spriteFrame.h = this._bottom;
             this._bottomRightBitmap.x = this._left + contentHorizontal;
             this._bottomRightBitmap.y = this._top + contentVertical;
-            super.updateTransform();
+            super._updateTransform();
         }
 
         private setChildScaleX(child:ns_egret.Bitmap, scaleX:number):void {

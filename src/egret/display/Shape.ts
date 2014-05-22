@@ -33,7 +33,7 @@ module ns_egret {
             this.graphics = new Graphics(rendererContext);
         }
 
-        render(renderContext:RendererContext) {
+        public _render(renderContext:RendererContext):void {
             this.graphics._draw();
         }
 
@@ -105,7 +105,7 @@ module ns_egret {
             this._sizeDirty = true;
         }
 
-        render(renderContext:RendererContext) {
+        public _render(renderContext:RendererContext):void {
             if (this._colorDirty || this._sizeDirty) {
                 this._colorDirty = false;
                 this._sizeDirty = false;

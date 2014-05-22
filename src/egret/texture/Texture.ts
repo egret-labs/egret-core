@@ -105,7 +105,7 @@ module ns_egret {
                 var list = (<ns_egret.DisplayObjectContainer>displayObject)._children;
                 for (var i = 0 , length = list.length; i < length; i++) {
                     var child:DisplayObject = list[i];
-                    child.updateTransform();
+                    child._updateTransform();
                 }
             }
 
@@ -113,7 +113,7 @@ module ns_egret {
             var renderFilter = ns_egret.RenderFilter.getInstance();
             var drawAreaList:Array<Rectangle> = renderFilter._drawAreaList.concat();
             renderFilter._drawAreaList.length = 0;
-            displayObject.render(renderContext);
+            displayObject._render(renderContext);
             renderFilter._drawAreaList = drawAreaList;
             this._bitmapData = this.cacheCanvas;
             this._textureWidth = this.cacheCanvas.width;

@@ -44,10 +44,10 @@ module ns_egret {
      * 若只有一个目标，则会将事件侦听器限制为只能放置到该目标上（在某些情况下，可放置到显示列表中该目标的祖代上），这意味着您可以向任何 DisplayObject 实例添加侦听器来侦听广播事件。
      *
      * 任何继承自DisplayObject的类都必须实现以下方法
-     * render();
+     * _render();
      * _measureBounds()
      * 不允许重写以下方法
-     * draw();
+     * _draw();
      * getBounds();
      *
      */
@@ -489,7 +489,7 @@ module ns_egret {
          * @private
          * @param renderContext
          */
-        public draw(renderContext:RendererContext) {
+        public _draw(renderContext:RendererContext):void {
             if (!this.visible) {
                 this.destroyCacheBounds();
                 return;
@@ -511,7 +511,7 @@ module ns_egret {
                     renderContext.clip(o.mask.x, o.mask.y, o.mask.width, o.mask.height);
                 }
             }
-            this.render(renderContext);
+            this._render(renderContext);
             if (o.mask || o._scrollRect) {
                 renderContext.restore();
             }
@@ -527,7 +527,7 @@ module ns_egret {
                 var offsetY = renderTexture.offsetY;
                 var width = renderTexture._textureWidth;
                 var height = renderTexture._textureHeight;
-                display.updateTransform();
+                display._updateTransform();
                 renderContext.setAlpha(display.worldAlpha, display.blendMode);
                 renderContext.setTransform(display.worldTransform);
                 if (display.mask) {
@@ -552,7 +552,7 @@ module ns_egret {
          * @private
          * @param renderContext
          */
-        public updateTransform() {
+        public _updateTransform():void {
             var o = this;
             o.worldTransform.identity();
             o.worldTransform = o.worldTransform.appendMatrix(o._parent.worldTransform);
@@ -580,7 +580,7 @@ module ns_egret {
          * @private
          * @param renderContext
          */
-        public render(renderContext:RendererContext) {
+        public _render(renderContext:RendererContext):void {
 
         }
 
@@ -590,7 +590,7 @@ module ns_egret {
          * 获取显示对象的测量边界
          * @returns {Rectangle}
          */
-        public getBounds() {
+        public getBounds():ns_egret.Rectangle {
             if (this._cacheBounds.x == 0 && this._cacheBounds.y == 0 && this._cacheBounds.width == 0 && this._cacheBounds.height == 0) {
                 var rect:Rectangle = this._measureBounds();
                 var w:number = this._hasWidthSet ? this._explicitWidth : rect.width;
@@ -624,7 +624,7 @@ module ns_egret {
          */
         private static identityMatrixForGetConcatenated = new Matrix();
 
-        public getConcatenatedMatrix() {
+        public _getConcatenatedMatrix():ns_egret.Matrix {
             var matrix = DisplayObject.identityMatrixForGetConcatenated.identity();
             var o = this;
             while (o != null) {
@@ -646,7 +646,7 @@ module ns_egret {
          * @returns {ns_egret.Point}
          */
         public localToGlobal(x = 0, y = 0):ns_egret.Point {
-            var mtx = this.getConcatenatedMatrix();
+            var mtx = this._getConcatenatedMatrix();
             mtx.append(1, 0, 0, 1, x, y);
             var result = Point.identity;
             result.x = mtx.tx;
@@ -662,7 +662,7 @@ module ns_egret {
          * @returns {ns_egret.Point}
          */
         public globalToLocal(x:number = 0, y:number = 0):Point {
-            var mtx = this.getConcatenatedMatrix();
+            var mtx = this._getConcatenatedMatrix();
             mtx.invert();
             mtx.append(1, 0, 0, 1, x, y);
             var result = Point.identity;
@@ -708,7 +708,7 @@ module ns_egret {
         }
 
 
-        public getMatrix() {
+        public _getMatrix():ns_egret.Matrix {
             return Matrix.identity.identity().appendTransformFromDisplay(this);
         }
 
@@ -721,7 +721,7 @@ module ns_egret {
             return ns_egret.Rectangle.identity.initialize(0, 0, 0, 0);
         }
 
-        public getOffsetPoint() {
+        public _getOffsetPoint():ns_egret.Point {
             var o = this;
             var regX = o.anchorOffsetX;
             var regY = o.anchorOffsetY;
@@ -833,7 +833,7 @@ module ns_egret {
             }
         }
 
-        static getTransformBounds(bounds:ns_egret.Rectangle, mtx:ns_egret.Matrix) {
+        public static getTransformBounds(bounds:ns_egret.Rectangle, mtx:ns_egret.Matrix):ns_egret.Rectangle {
             var x = bounds.x, y = bounds.y, width = bounds.width, height = bounds.height;
 
 //            if (x || y) {
