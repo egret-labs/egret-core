@@ -24,14 +24,17 @@ declare module egret_native {
      * 游戏启动
      * @private
      */
-    function startGame():void
+    function startGame():void;
 
     /**
      * 启动主循环
      * @param callback 主循环回调函数
      * @param thisObject
      */
-    function executeMainLoop(callback:Function, thisObject:any):void
+    function executeMainLoop(callback:Function, thisObject:any):void;
+
+
+    function readXML(filepath:string):any;
 
 
     module Graphics {

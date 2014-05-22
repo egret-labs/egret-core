@@ -32,8 +32,10 @@
  */
 
 /// <reference path="SAXParser.ts"/>
+/// <reference path="../texture/TextureCache.ts"/>
+/// <reference path="../context/NativeContext.d.ts"/>
 
-module ns_egret{
+module ns_egret {
     export class XML {
         private _xmlStr = "";
 
@@ -41,15 +43,7 @@ module ns_egret{
          * 必须是 xml格式的字符串
          * @param xmlStr  xml格式的字符串
          */
-            constructor(xmlStr:string = "") {
-            this._xmlStr = xmlStr;
-            if (xmlStr != "") {
-                var xmlDoc = ns_egret.SAXParser.getInstance().tmxParse(xmlStr, true);
-                if (xmlDoc == null) {
-
-                }
-                this._ansXML(xmlDoc.documentElement);
-            }
+        public constructor() {
         }
 
         /**
@@ -63,7 +57,7 @@ module ns_egret{
                 for (var i = 0; i < xmlDoc.childNodes.length; i++) {
                     var childXMLDoc = xmlDoc.childNodes[i];
                     if (childXMLDoc.nodeType == 1) {
-                        var xml = new XML("");
+                        var xml = new XML();
                         xml._ansXML(childXMLDoc);
 
                         var name = childXMLDoc.nodeName;
@@ -87,6 +81,21 @@ module ns_egret{
                     this["$" + attr.name] = attr.value;
                 }
             }
+        }
+
+
+        public static create(url):XML {
+            var xml:XML = new XML();
+            var xmldoc:any;
+            if (ns_egret.SAXParser) {
+                var content = ns_egret.TextureCache.getInstance().getTextData(url);
+                xmldoc = ns_egret.SAXParser.getInstance().tmxParse(content, true).documentElement;
+            }
+            else {
+                xmldoc = egret_native.readXML(url);
+            }
+            xml._ansXML(xmldoc);
+            return xml;
         }
     }
 }
