@@ -311,9 +311,14 @@ module ns_egret {
 		 */		
 		public _elementAdded(element:IVisualElement, index:number, notifyListeners:boolean = true):void{
 			element.ownerChanged(this);
-			if(element instanceof DisplayObject)
-				this._hostComponent._addToDisplayListAt(<DisplayObject><any> element, index);
-			
+            if(element instanceof DisplayObject){
+                var childDO:DisplayObject = <DisplayObject><any> element;
+                var index:number = this._hostComponent.numChildren;
+                if (childDO.parent == this._hostComponent)
+                    index--;
+                this._hostComponent._childAdded(childDO,index,notifyListeners);
+            }
+
 			if (notifyListeners){
 				if (this.hasEventListener(ElementExistenceEvent.ELEMENT_ADD))
                     ElementExistenceEvent.dispatchElementExistenceEvent(this,
@@ -336,12 +341,15 @@ module ns_egret {
                     ElementExistenceEvent.dispatchElementExistenceEvent(this,
                         ElementExistenceEvent.ELEMENT_REMOVE,element,index);
 			}
-			
-			var childDO:DisplayObject = <DisplayObject><any> element; 
-			if (childDO && childDO.parent == this._hostComponent){
-				this._hostComponent._removeFromDisplayList(<DisplayObject><any> element);
-			}
-			
+
+            if(element instanceof DisplayObject){
+                var childDO:DisplayObject = <DisplayObject><any> element;
+                var index:number = this._hostComponent._children.indexOf(childDO);
+                if(index!=-1){
+                    this._hostComponent._childRemoved(index,notifyListeners);
+                }
+            }
+
 			element.ownerChanged(null);
 			this._hostComponent.invalidateSize();
 			this._hostComponent.invalidateDisplayList();

@@ -303,9 +303,14 @@ module ns_egret {
 		 * @param notifyListeners {boolean} 
 		 */		
 		public _elementAdded(element:IVisualElement, index:number, notifyListeners:boolean = true):void{
-			if(element instanceof DisplayObject)
-				this._addToDisplayList(<DisplayObject><any>element, index);
-			
+            if(element instanceof DisplayObject){
+                var childDO:DisplayObject = <DisplayObject><any> element;
+                var addIndex:number = this.numChildren;
+                if (childDO.parent == this)
+                    addIndex--;
+                this._childAdded(childDO,addIndex,notifyListeners);
+            }
+
 			if (notifyListeners){
 				if (this.hasEventListener(ElementExistenceEvent.ELEMENT_ADD))
                     ElementExistenceEvent.dispatchElementExistenceEvent(this,
@@ -326,14 +331,17 @@ module ns_egret {
 			if (notifyListeners){        
 				if (this.hasEventListener(ElementExistenceEvent.ELEMENT_REMOVE))
                     ElementExistenceEvent.dispatchElementExistenceEvent(this,
-                        ElementExistenceEvent.ELEMENT_REMOVE, element, index)
+                        ElementExistenceEvent.ELEMENT_REMOVE, element, index);
 			}
-			
-			var childDO:DisplayObject = <DisplayObject><any> element;
-			if (childDO && childDO.parent == <DisplayObjectContainer><any>this){
-				super.removeChild(childDO);
-			}
-			
+
+            if(element instanceof DisplayObject){
+                var childDO:DisplayObject = <DisplayObject><any> element;
+                var removeIndex:number = this._children.indexOf(childDO);
+                if(removeIndex!=-1){
+                    this._childRemoved(removeIndex,notifyListeners);
+                }
+            }
+
 			this.invalidateSize();
 			this.invalidateDisplayList();
 		}
