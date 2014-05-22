@@ -50,9 +50,8 @@ module ns_egret {
 
         private _txt:TextField;
         private _tick:number = 0;
-        private _maxTick:number = 30;
-
-        private _totalDelta:number = 0;
+        private _maxDeltaTime:number = 500;
+        private _totalDeltaTime:number = 0;
 
 
         /**
@@ -112,18 +111,18 @@ module ns_egret {
          */
         private update(frameTime:number) {
             this._tick++;
-            this._totalDelta += frameTime;
-            if (this._tick == this._maxTick) {
+            this._totalDeltaTime += frameTime;
+            if (this._totalDeltaTime >= this._maxDeltaTime) {
                 var drawStr = (this._preDrawCount - 1).toString();
                 var timeStr = Math.ceil(this._logicPerformanceCost).toString() + ","
                     + Math.ceil(this._updateTransformPerformanceCost).toString() + ","
                     + Math.ceil(this._renderPerformanceCost).toString() + ","
                     + Math.ceil(ns_egret.MainContext.instance.rendererContext.renderCost).toString();
-                var frameStr = Math.floor(this._maxTick * 1000 / this._totalDelta).toString();
+                var frameStr = Math.floor(this._tick * 1000 / this._totalDeltaTime).toString();
 
                 this._txt.text = drawStr + "\n" + timeStr + "\n" + frameStr;
 
-                this._totalDelta = 0;
+                this._totalDeltaTime = 0;
                 this._tick = 0;
             }
             this._preDrawCount = 0;
