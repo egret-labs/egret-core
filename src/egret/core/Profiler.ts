@@ -42,7 +42,6 @@ module ns_egret {
 
 
         private _lastTime:number = 0;
-        private _lastFrameTime:number = 0;
 
         private _logicPerformanceCost:number = 0;
         private _renderPerformanceCost:number = 0;
@@ -51,6 +50,10 @@ module ns_egret {
 
         private _txt:TextField;
         private _tick:number = 0;
+        private _maxTick:number = 6;
+
+        private _totalDelta:number = 0;
+
 
         /**
          * 启动Profiler
@@ -108,20 +111,20 @@ module ns_egret {
          * @private
          */
         private update(frameTime:number) {
-            var now:number = getTimer();
-            var delta = now - this._lastFrameTime;
-            this._lastFrameTime = now;
             this._tick++;
-            if (this._tick == 6) {
-                this._tick = 0;
+            this._totalDelta += frameTime;
+            if (this._tick == this._maxTick) {
                 var drawStr = (this._preDrawCount - 1).toString();
                 var timeStr = Math.ceil(this._logicPerformanceCost).toString() + ","
                     + Math.ceil(this._updateTransformPerformanceCost).toString() + ","
                     + Math.ceil(this._renderPerformanceCost).toString() + ","
                     + Math.ceil(ns_egret.MainContext.instance.rendererContext.renderCost).toString();
-                var frameStr = Math.floor(1000 / delta).toString();
+                var frameStr = Math.floor(this._maxTick * 1000 / this._totalDelta).toString();
 
                 this._txt.text = drawStr + "\n" + timeStr + "\n" + frameStr;
+
+                this._totalDelta = 0;
+                this._tick = 0;
             }
             this._preDrawCount = 0;
         }
