@@ -326,7 +326,7 @@ module ns_egret {
         public _setWidth(value:number):void{
             if(this._width==value&&this._explicitWidth==value)
                 return;
-            this._width = value;
+            super._setWidth(value);
             this._explicitWidth = value;
             this.invalidateProperties();
             this.invalidateDisplayList();
@@ -359,7 +359,7 @@ module ns_egret {
         public _setHeight(value:number):void{
             if(this._height==value&&this._explicitHeight==value)
                 return;
-            this._height = value;
+            super._setHeight(value);
             this._explicitHeight = value;
             this.invalidateProperties();
             this.invalidateDisplayList();

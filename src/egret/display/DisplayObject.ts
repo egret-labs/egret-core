@@ -452,7 +452,7 @@ module ns_egret {
         /**
          * @inheritDoc
          */
-        public _setWidth(value:number) {
+        public _setWidth(value:number):void{
             this._explicitWidth = value;
             this._hasWidthSet = NumberUtils.isNumber(value);
         }
@@ -470,7 +470,7 @@ module ns_egret {
         /**
          * @inheritDoc
          */
-        public _setHeight(value:number) {
+        public _setHeight(value:number):void{
             this._explicitHeight = value;
             this._hasHeightSet = NumberUtils.isNumber(value);
         }

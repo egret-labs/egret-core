@@ -35,18 +35,27 @@ module ns_egret {
         public constructor(){
         }
         /**
-		 * @method ns_egret.DefaultSkinAdapter#getSkin
-		 * @param skinName {any} 
-		 * @param compFunc {Function} 
-		 * @param thisObject {any} 
-		 * @param oldSkin {DisplayObject} 
+         * 获取皮肤显示对象
+         * @method ns_egret.ISkinAdapter#getSkin
+         * @param skinName {any} 待解析的皮肤标识符
+         * @param hostComponentKey {string} 主机组件标识符
+         * @returns {any} 皮肤对象实例
          */
-        public getSkin(skinName:any,compFunc:Function,thisObject:any,oldSkin:DisplayObject=null):void{
-            if(skinName instanceof DisplayObject){
-                compFunc.call(thisObject,skinName,skinName);
+        public getSkin(skinName:any,hostComponentKey:string):any{
+            if(skinName instanceof DisplayObject||skinName instanceof Skin){
+                return skinName;
+            }
+            else if(typeof(skinName)=="string"){
+                var clazz:any = getDefinitionByName(<string><any> skinName);
+                if(clazz){
+                    return new clazz();
+                }
+                else{
+                    return null;
+                }
             }
             else{
-                compFunc.call(thisObject,(new skinName()),skinName);
+                return new skinName();
             }
         }
     }
