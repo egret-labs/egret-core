@@ -178,6 +178,7 @@ module ns_egret {
             props._stageY = stageY;
             props.ctrlKey = ctrlKey;
             props.altKey = altKey;
+            props.shiftKey = shiftKey;
             props.touchDown = touchDown;
             Event._dispatchByTarget(eventClass,target,type,props,true,true);
         }
