@@ -55,22 +55,6 @@ module ns_egret {
          */
         public texture:Texture;
 
-
-        /**
-         * 这个API是cocos2d-x风格的，和egret设计思路不统一，会最快时间内删除
-         * @stable D
-         * @param texture
-         * @returns {Bitmap}
-         */
-        public static initWithTexture(texture:Texture):Bitmap {
-            if (texture == null) {
-                throw new Error("texture 取不到 ");
-            }
-            var ret:Bitmap = new Bitmap();
-            ret.texture = texture;
-            return ret;
-        }
-
         constructor() {
             super();
         }

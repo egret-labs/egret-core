@@ -62,7 +62,7 @@ module ns_egret {
 
         //todo:这里对bounds的处理和TextField非常类似，以后考虑重构
         public _renderText(forMeasureContentSize:boolean = false):Rectangle {
-            var rect:Rectangle = Rectangle.identity.initialize(0,0,0,0);
+            var rect:Rectangle = Rectangle.identity.initialize(0, 0, 0, 0);
             if (!forMeasureContentSize) {
                 this.removeChildren();
             }
@@ -78,7 +78,8 @@ module ns_egret {
                 if (!forMeasureContentSize) {//todo，不支持换行
                     var bitmap = this._bitmapPool[i];
                     if (!bitmap) {
-                        bitmap = Bitmap.initWithTexture(this.texture);
+                        bitmap = new Bitmap();
+                        bitmap.texture = this.texture;
                         this._bitmapPool.push(bitmap);
                     }
                     this.addChild(bitmap);

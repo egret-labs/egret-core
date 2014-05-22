@@ -119,7 +119,8 @@ module ns_egret {
         }
 
         private reusedTileWithRect(rect:Point) {
-            var tile = Bitmap.initWithTexture(TextureCache.getInstance().getTexture(this._tileSet.sourceImage));
+            var tile = new Bitmap();
+            tile.texture = TextureCache.getInstance().getTexture(this._tileSet.sourceImage);
             var spriteframe:SpriteSheetFrame = new SpriteSheetFrame();
             spriteframe.x = rect.x;
             spriteframe.y = rect.y;

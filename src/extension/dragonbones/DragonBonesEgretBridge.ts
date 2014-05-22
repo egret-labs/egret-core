@@ -81,9 +81,9 @@ module dragonBones {
                 }
             }
 
-            public updateBlendMode(blendMode:string){
+            public updateBlendMode(blendMode:string) {
 //                console.log (blendMode);
-                if (this._display){
+                if (this._display) {
                     this._display.blendMode = ns_egret.BlendMode.getBlendMode(blendMode);
                 }
             }
@@ -163,7 +163,8 @@ module dragonBones {
             /** @private */
             public _generateDisplay(textureAtlas:textures.EgretTextureAtlas, fullName:string, pivotX:number, pivotY:number):any {
 
-                var bitmap1:ns_egret.Bitmap = ns_egret.Bitmap.initWithTexture(textureAtlas.texture);
+                var bitmap1:ns_egret.Bitmap = new ns_egret.Bitmap();
+                bitmap1.texture = textureAtlas.texture;
                 var frame = textureAtlas.spriteSheet.getFrame(fullName);
                 bitmap1.spriteFrame = frame;
                 bitmap1.anchorOffsetX = pivotX;

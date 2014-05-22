@@ -52,42 +52,25 @@ module ns_egret {
             super();
             this._top = this._bottom = this._left = this._right = this._defaultPadding;
 
-            this._topLeftBitmap = Bitmap.initWithTexture(texture);
-            this._topLeftBitmap.spriteFrame = new ns_egret.SpriteSheetFrame();
-            this.addChild(this._topLeftBitmap);
-
-            this._topMiddleBitmap = Bitmap.initWithTexture(texture);
-            this._topMiddleBitmap.spriteFrame = new ns_egret.SpriteSheetFrame();
-            this.addChild(this._topMiddleBitmap);
-
-            this._topRightBitmap = Bitmap.initWithTexture(texture);
-            this._topRightBitmap.spriteFrame = new ns_egret.SpriteSheetFrame();
-            this.addChild(this._topRightBitmap);
-
-            this._middleLeftBitmap = Bitmap.initWithTexture(texture);
-            this._middleLeftBitmap.spriteFrame = new ns_egret.SpriteSheetFrame();
-            this.addChild(this._middleLeftBitmap);
-
-            this._middleMiddleBitmap = Bitmap.initWithTexture(texture);
-            this._middleMiddleBitmap.spriteFrame = new ns_egret.SpriteSheetFrame();
-            this.addChild(this._middleMiddleBitmap);
-
-            this._middleRightBitmap = Bitmap.initWithTexture(texture);
-            this._middleRightBitmap.spriteFrame = new ns_egret.SpriteSheetFrame();
-            this.addChild(this._middleRightBitmap);
-
-            this._bottomLeftBitmap = Bitmap.initWithTexture(texture);
-            this._bottomLeftBitmap.spriteFrame = new ns_egret.SpriteSheetFrame();
-            this.addChild(this._bottomLeftBitmap);
-
-            this._bottomMiddleBitmap = Bitmap.initWithTexture(texture);
-            this._bottomMiddleBitmap.spriteFrame = new ns_egret.SpriteSheetFrame();
-            this.addChild(this._bottomMiddleBitmap);
-
-            this._bottomRightBitmap = Bitmap.initWithTexture(texture);
-            this._bottomRightBitmap.spriteFrame = new ns_egret.SpriteSheetFrame();
-            this.addChild(this._bottomRightBitmap);
+            this._topLeftBitmap = this._createBitmap();
+            this._topMiddleBitmap = this._createBitmap();
+            this._topRightBitmap = this._createBitmap();
+            this._middleLeftBitmap = this._createBitmap();
+            this._middleMiddleBitmap = this._createBitmap();
+            this._middleRightBitmap = this._createBitmap();
+            this._bottomLeftBitmap = this._createBitmap();
+            this._bottomMiddleBitmap = this._createBitmap();
+            this._bottomRightBitmap = this._createBitmap();
         }
+
+        private _createBitmap():Bitmap {
+            var bitmap = new Bitmap();
+            bitmap.texture = this.texture;
+            bitmap.spriteFrame = new ns_egret.SpriteSheetFrame();
+            this.addChild(bitmap);
+            return bitmap;
+        }
+
 
         public setScaleGrid(top:number = this._defaultPadding, bottom:number = this._defaultPadding, left:number = this._defaultPadding, right:number = this._defaultPadding) {
             if (DEBUG && DEBUG.SCALE_BITMAP_SET_SCALE_GRID) {
@@ -99,14 +82,14 @@ module ns_egret {
             this._right = right;
         }
 
-        public set width(value:number){
+        public set width(value:number) {
             this._explicitWidth = value;
             if (value > 0 && !isNaN(value)) {
                 this._scaleWidth = value;
             }
         }
 
-        public set height(value:number){
+        public set height(value:number) {
             this._explicitHeight = value;
             if (value > 0 && !isNaN(value)) {
                 this._scaleHeight = value;
@@ -120,11 +103,11 @@ module ns_egret {
             var locTexture = this.texture;
             var textureWidth;
             var textureHeight;
-            if (this.spriteFrame){
+            if (this.spriteFrame) {
                 textureWidth = this.spriteFrame.w;
                 textureHeight = this.spriteFrame.h;
             }
-            else{
+            else {
                 textureWidth = locTexture._textureWidth;
                 textureHeight = locTexture._textureHeight;
             }

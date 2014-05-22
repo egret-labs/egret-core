@@ -98,12 +98,10 @@ module ns_egret {
             var last = this._passTime % this._oneFrameTime;
             var num = Math.floor((last + frameTime) / this._oneFrameTime);
             while (num >= 1) {
-                if(num == 1)
-                {
+                if (num == 1) {
                     this.playNextFrame();
                 }
-                else
-                {
+                else {
                     this.playNextFrame(false);
                 }
                 num--;
@@ -140,7 +138,8 @@ module ns_egret {
             }
             else {
                 var resData = this._frameData.res[name];
-                result = Bitmap.initWithTexture(this.texture);
+                result = new Bitmap();
+                result.texture = this.texture;
                 result.spriteFrame = resData;
                 this._resPool[name] = result;
             }
