@@ -63,7 +63,7 @@ function buildAllFile(callback, source, output, file_list) {
                 });
 
             var cmd = "" + sourceList.join(" ") + " -t ES5 --outDir " + output;
-            fs.writeFileSync("tsc_config_temp.txt",cmd,"utf-8");
+            fs.writeFileSync("tsc_config_temp.txt", cmd, "utf-8");
 
             var ts = cp_exec("tsc @tsc_config_temp.txt");
             ts.stderr.on("data", function (data) {
@@ -172,9 +172,9 @@ function exportHeader(callback, source, output, file_list) {
             return fs.existsSync(item);
         });
     var source = list.join(" ");
-    var cmd = "tsc " + source + " -t ES5 -d --out " + output;
-
-    var ts = cp_exec(cmd);
+    var cmd = source + " -t ES5 -d --out " + output;
+    fs.writeFileSync("tsc_config_temp.txt", cmd, "utf-8");
+    var ts = cp_exec("tsc @tsc_config_temp.txt");
     ts.stderr.on("data", function (data) {
         console.log(data);
     })
