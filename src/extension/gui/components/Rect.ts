@@ -132,6 +132,8 @@ module ns_egret {
 		 */
 		public updateDisplayList(unscaledWidth:number, unscaledHeight:number):void{
 			super.updateDisplayList(unscaledWidth,unscaledWidth);
+            this.shapeRect.width = unscaledWidth;
+            this.shapeRect.height = unscaledHeight;
 			var g:Graphics = this.shapeRect.graphics;
 			g.clear();
 			g.beginFill(this._fillColor,this._fillAlpha);
