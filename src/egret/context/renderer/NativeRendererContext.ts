@@ -144,19 +144,20 @@ module ns_egret {
          */
         public setupFont(textField:TextField):void {
             egret_native.Label.createLabel("/system/fonts/DroidSansFallback.ttf",textField.size,"");
+            this.__hackTextFieldSize = textField.size;
         }
+
+        private __hackTextFieldSize:number = 0;
 
 
         /**
          * 测量文本
 		 * @method ns_egret.NativeRendererContext#measureText
-         * @param text {any} 
-		 * @returns {Rectangle}
-         * @stable B 参数很可能会需要调整，和setupFont整合
+         * @param text {string}
+		 * @returns {number}
          */
-        public measureText(text):Rectangle {
-            var rect:Rectangle = Rectangle.identity;
-            return rect;
+        public measureText(text:string):number {
+            return text.length * this.__hackTextFieldSize;
         }
 
         /**

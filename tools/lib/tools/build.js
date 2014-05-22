@@ -21,8 +21,8 @@ function run(currDir, args, opts) {
     if (needCompileEngine) {
         task.push(
             function (callback) {
-
-                compiler.generateEgretFileList(callback,egret_file);
+                var runtime = param.getOption(opts,"--runtime",["html5","native"]);
+                compiler.generateEgretFileList(callback,egret_file,runtime);
 
             },
             function (callback) {
