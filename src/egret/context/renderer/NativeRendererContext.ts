@@ -143,7 +143,7 @@ module ns_egret {
          * @param textField {TextField} 
          */
         public setupFont(textField:TextField):void {
-//            egret_native.Label.createLable("/system/fonts/DroidSansFallback.ttf",textField.size,"");
+            egret_native.Label.createLabel("/system/fonts/DroidSansFallback.ttf",textField.size,"");
         }
 
 
@@ -170,6 +170,8 @@ module ns_egret {
          */
         public drawText(textField:ns_egret.TextField,text:string, x:number, y:number, maxWidth:number) {
             Profiler.getInstance().onDrawImage();
+            egret_native.Label.setCurTextColor(0xffff0000);
+            egret_native.Label.drawText(text,x,y);
         }
 
         /**
