@@ -29,7 +29,7 @@ module ns_egret {
 	 * @classdesc
 	 * 窗口弹出管理器<p/>
 	 * 若项目需要自定义弹出框管理器，请实现IPopUpManager接口，
-	 * 并在项目初始化前调用Injector.mapClass(IPopUpManager,YourPopUpManager)，
+	 * 并在项目初始化前调用Injector.mapClass("ns_egret.IPopUpManager",YourPopUpManager)，
 	 * 注入自定义的弹出框管理器类。
 	 */	
 	export class PopUpManager{
@@ -47,7 +47,7 @@ module ns_egret {
 		private static getImpl():IPopUpManager{
 			if (!PopUpManager._impl){
 				try{
-					PopUpManager._impl = Injector.getInstance("IPopUpManager");
+					PopUpManager._impl = Injector.getInstance("ns_egret.IPopUpManager");
 				}
 				catch(e){
 					PopUpManager._impl = new PopUpManagerImpl();

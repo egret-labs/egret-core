@@ -813,8 +813,7 @@ module ns_egret {
 		
 		/**
 		 * 子项的xy位置发生改变
-		 * @method ns_egret.UIComponent#_childXYChanged
-		 */		
+		 */
 		public _childXYChanged():void{
 			
 		}
