@@ -87,7 +87,7 @@ module ns_egret {
             if (child.parent == this)
                 index--;
 
-            return this._childAdded(child, index);
+            return this._doAddChild(child, index);
         }
 
 
@@ -99,10 +99,10 @@ module ns_egret {
          */
         public addChildAt(child:DisplayObject, index:number):DisplayObject {
 
-            return this._childAdded(child,index);
+            return this._doAddChild(child,index);
         }
 
-        public _childAdded(child:DisplayObject,index:number,notifyListeners:boolean = true):DisplayObject{
+        public _doAddChild(child:DisplayObject,index:number,notifyListeners:boolean = true):DisplayObject{
             if (child == this)
                 return child;
 
@@ -140,7 +140,7 @@ module ns_egret {
         public removeChild(child:DisplayObject):DisplayObject {
             var index = this._children.indexOf(child);
             if (index >= 0) {
-                return this._childRemoved(index);
+                return this._doRemoveChild(index);
             }
             else {
                 ns_egret.Logger.fatal("child未被addChild到该parent");
@@ -149,14 +149,14 @@ module ns_egret {
 
         public removeChildAt(index:number):DisplayObject {
             if (index >= 0 && index < this._children.length) {
-               return this._childRemoved(index);
+               return this._doRemoveChild(index);
             }
             else {
                 ns_egret.Logger.fatal("提供的索引超出范围");
             }
         }
 
-        public _childRemoved(index:number,notifyListeners:boolean = true):DisplayObject{
+        public _doRemoveChild(index:number,notifyListeners:boolean = true):DisplayObject{
             var locChildren = this._children;
             var child:DisplayObject = locChildren[index];
             if(notifyListeners)
@@ -264,7 +264,7 @@ module ns_egret {
             var locChildren = this._children;
             for(var i:number=locChildren.length-1;i>=0;i--)
             {
-                this._childRemoved(i);
+                this._doRemoveChild(i);
             }
         }
 
