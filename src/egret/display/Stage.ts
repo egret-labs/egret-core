@@ -78,12 +78,7 @@ module ns_egret{
          * @returns {DisplayObject}
          */
         public hitTest(x, y) {
-//            var result = super.hitTest(x, y);
-//            if (result == null) {
-//                result = this;
-//            }
-//            return result;
-            if (!this.touchEnabled) {
+            if (!this._touchEnabled) {
                 return null;
             }
             var result:DisplayObject;
@@ -96,13 +91,13 @@ module ns_egret{
                 var child = children[i];
                 var o = child;
                 var offsetPoint = o.getOffsetPoint();
-                var mtx = Matrix.identity.identity().prependTransform(o.x, o.y, o.scaleX, o.scaleY, o.rotation,
+                var mtx = Matrix.identity.identity().prependTransform(o._x, o._y, o._scaleX, o._scaleY, o._rotation,
                     0, 0, offsetPoint.x, offsetPoint.y);
                 mtx.invert();
                 var point = Matrix.transformCoords(mtx, x, y);
                 result = child.hitTest(point.x, point.y, true);
                 if (result) {
-                    if (result.touchEnabled) {
+                    if (result._touchEnabled) {
                         return result;
                     }
                 }
