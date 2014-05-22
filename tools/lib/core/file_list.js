@@ -55,7 +55,7 @@ exports.core = [
     "jslib/base64.js",
     "jslib/gzip.js",
     "jslib/zlib.min.js",
-    "egret/utils/SAXParser.js",
+
     "egret/utils/Browser.js",
     "egret/utils/XML.js",
     //utils end
@@ -175,12 +175,14 @@ exports.html5 = [
     "egret/context/sound/HTML5SoundContext.js",
     "egret/context/net/HTML5NetContext.js",
     "egret/interactive/HTML5TouchContext.js",
-    "egret/context/assets/HTML5AssetsContext.js"
+    "egret/context/assets/HTML5AssetsContext.js",
+    "egret/utils/SAXParser.js"
 ]
 
 exports.native = [
     "egret/context/devices/NativeDeviceContext.js",
     "egret/context/renderer/NativeRendererContext.js",
-    "egret/interactive/NativeTouchContext.js"
+    "egret/interactive/NativeTouchContext.js",
+    "egret/interactive/NativeNetContext.js"
 
 ]
