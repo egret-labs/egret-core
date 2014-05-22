@@ -62,8 +62,10 @@ function buildAllFile(callback, source, output, file_list) {
                     return fs.existsSync(item);
                 });
 
-            var cmd = "tsc " + sourceList.join(" ") + " -t ES5 --outDir " + output;
-            var ts = cp_exec(cmd);
+            var cmd = "" + sourceList.join(" ") + " -t ES5 --outDir " + output;
+            fs.writeFileSync("tsc_config_temp.txt",cmd,"utf-8");
+
+            var ts = cp_exec("tsc @tsc_config_temp.txt");
             ts.stderr.on("data", function (data) {
                 console.log(data);
             })
