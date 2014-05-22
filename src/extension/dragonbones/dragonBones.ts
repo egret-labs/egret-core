@@ -3627,7 +3627,7 @@ module dragonBones {
         /** @private */
         public _arriveAtFrame(frame:objects.Frame, timelineState:animation.TimelineState, animationState:animation.AnimationState, isCross:boolean):void {
             if (frame) {
-                var mixingType:number = animationState.getMixingTransform(name);
+                var mixingType:number = animationState.getMixingTransform(this.name);
                 if (animationState.displayControl && (mixingType == 2 || mixingType == -1)) {
                     if (
                         !this.displayController ||
