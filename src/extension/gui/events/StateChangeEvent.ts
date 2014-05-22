@@ -75,8 +75,8 @@ module ns_egret {
                                                oldState:string = null,newState:string = null):void{
             var eventClass:any = StateChangeEvent;
             var props:any = Event._getPropertyData(eventClass);
-            props.element = element;
-            props.index = index;
+            props.oldState = oldState;
+            props.newState = newState;
             Event._dispatchByTarget(eventClass,target,type,props);
         }
 	}
