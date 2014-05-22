@@ -253,7 +253,7 @@ module ns_egret {
          * @param y
          * @private
          */
-         public _drawTextLine(renderContext:RendererContext, text, y, maxWidth) {
+         public _drawTextLine(renderContext:RendererContext, text, y, maxWidth):void {
             if (this.__hackIgnoreDrawText) return;
             var x;
             if (this.textAlign == "left") {

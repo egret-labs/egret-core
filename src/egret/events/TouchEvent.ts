@@ -60,42 +60,42 @@ module ns_egret {
          * 开始触摸,参考Flash的MouseEvent.MOUSE_DOWN
          * @constant {string} ns_egret.TouchEvent.TOUCH_BEGAN
          */
-        static TOUCH_BEGAN:string = "touchBegan";
+        public static TOUCH_BEGAN:string = "touchBegan";
 
         /**
          * 在同一对象上结束触摸,参考Flash的MouseEvent.MOUSE_UP
          * @constant {string} ns_egret.TouchEvent.TOUCH_END
          */
-        static TOUCH_END:string = "touchEnd";
+        public static TOUCH_END:string = "touchEnd";
 
         /**
          * 在对象外部结束触摸，参考Flash的MouseEvent.RELEASE_OUTSIDE
          * @constant {string} ns_egret.TouchEvent.TOUCH_RELEASE_OUTSIDE
          */
-        static TOUCH_RELEASE_OUTSIDE:string = "touchReleaseOutside";
+        public static TOUCH_RELEASE_OUTSIDE:string = "touchReleaseOutside";
 
         /**
          * 移动，参考FLash的MouseEvent.MOVE
          * @member ns_egret.TouchEvent.TOUCH_MOVE
          */
-        static TOUCH_ROLL_OUT:string = "touchRollOut";
+        public static TOUCH_ROLL_OUT:string = "touchRollOut";
 
         /**
          * 移动，参考FLash的MouseEvent.MOVE
          * @member ns_egret.TouchEvent.TOUCH_MOVE
          */
-        static TOUCH_ROLL_OVER:string = "touchRollOver";
+        public static TOUCH_ROLL_OVER:string = "touchRollOver";
 
         /**
          * 移动，参考FLash的MouseEvent.MOVE
          */
-        static TOUCH_OUT:string = "touchOut";
+        public static TOUCH_OUT:string = "touchOut";
 
         /**
          * 移动，参考FLash的MouseEvent.MOVE
          * @member ns_egret.TouchEvent.TOUCH_MOVE
          */
-        static TOUCH_OVER:string = "touchOver";
+        public static TOUCH_OVER:string = "touchOver";
 
 
         public _stageX:number = 0;

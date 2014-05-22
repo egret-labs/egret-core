@@ -111,7 +111,7 @@ module ns_egret {
             this.onTouchBegan(location.x, location.y, identifier);
         }
 
-        private _onTouchMove(event:any) {
+        private _onTouchMove(event:any):void {
             var location = this.getLocation(this.canvas, event);
             var identifier = -1;
             if (event.hasOwnProperty("identifier")) {
@@ -121,7 +121,7 @@ module ns_egret {
 
         }
 
-        private _onTouchEnd(event:any) {
+        private _onTouchEnd(event:any):void {
             var location = this.getLocation(this.canvas, event);
             var identifier = -1;
             if (event.hasOwnProperty("identifier")) {
@@ -132,7 +132,6 @@ module ns_egret {
 
 
         private getLocation(canvas, event):Point {
-
             var doc = document.documentElement;
             var win = window;
             var left, top, tx, ty;
@@ -164,8 +163,5 @@ module ns_egret {
             return result;
 
         }
-
     }
-
-
 }

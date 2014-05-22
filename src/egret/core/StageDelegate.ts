@@ -91,9 +91,9 @@ module ns_egret {
 		 * @method ns_egret.StageDelegate#setDesignSize
 		 * @param width {any} 
 		 * @param height {any} 
-		 * @param resolutionPolic {any} 
+		 * @param resolutionPolicy {any}
 		 */
-        public setDesignSize(width, height, resolutionPolicy) {
+        public setDesignSize(width, height, resolutionPolicy):void {
             // Defensive code
             if (isNaN(width) || width == 0 || isNaN(height) || height == 0) {
                 ns_egret.Logger.info("Resolution Error");
@@ -107,14 +107,14 @@ module ns_egret {
             this._originalDesignWidth = width;
             this._originalDesignHeight = height;
 
-            this._resolutionPolicy.apply(this, this._designWidth, this._designHeight);
+            this._resolutionPolicy._apply(this, this._designWidth, this._designHeight);
         }
 
 		/**
 		 * @method ns_egret.StageDelegate#setResolutionPolicy
 		 * @param resolutionPolic {any} 
 		 */
-        public setResolutionPolicy(resolutionPolicy) {
+        public setResolutionPolicy(resolutionPolicy):void {
             if (resolutionPolicy instanceof ResolutionPolicy) {
                 this._resolutionPolicy = resolutionPolicy;
             }
@@ -138,14 +138,14 @@ module ns_egret {
 		/**
 		 * @method ns_egret.StageDelegate#getScaleX
 		 */
-        public getScaleX() {
+        public getScaleX():number {
             return this._scaleX;
         }
 
 		/**
 		 * @method ns_egret.StageDelegate#getScaleY
 		 */
-        public getScaleY() {
+        public getScaleY():number {
             return this._scaleY;
         }
     }
@@ -176,27 +176,27 @@ module ns_egret {
 		 * @method ns_egret.ResolutionPolicy#init
 		 * @param vie {any} 
 		 */
-        public init(view) {
+        public init(view):void {
             this._containerStrategy.init(view);
             this._contentStrategy.init(view);
         }
 
 		/**
-		 * @method ns_egret.ResolutionPolicy#apply
+		 * @method ns_egret.ResolutionPolicy#_apply
 		 * @param view {any} 
 		 * @param designedResolutionWidth {any} 
 		 * @param designedResolutionHeigh {any} 
 		 */
-        public apply(view, designedResolutionWidth, designedResolutionHeight) {
-            this._containerStrategy.apply(view, designedResolutionWidth, designedResolutionHeight);
-            return this._contentStrategy.apply(view, designedResolutionWidth, designedResolutionHeight);
+        public _apply(view, designedResolutionWidth, designedResolutionHeight) {
+            this._containerStrategy._apply(view, designedResolutionWidth, designedResolutionHeight);
+            this._contentStrategy._apply(view, designedResolutionWidth, designedResolutionHeight);
         }
 
 		/**
 		 * @method ns_egret.ResolutionPolicy#setContainerStrategy
 		 * @param containerSt {any} 
 		 */
-        public setContainerStrategy(containerStg) {
+        public setContainerStrategy(containerStg):void {
             if (containerStg instanceof ContainerStrategy)
                 this._containerStrategy = containerStg;
         }
@@ -205,7 +205,7 @@ module ns_egret {
 		 * @method ns_egret.ResolutionPolicy#setContentStrategy
 		 * @param contentSt {any} 
 		 */
-        public setContentStrategy(contentStg) {
+        public setContentStrategy(contentStg):void {
             if (contentStg instanceof ContentStrategy)
                 this._contentStrategy = contentStg;
         }
@@ -224,7 +224,7 @@ module ns_egret {
 		/**
 		 * @method ns_egret.ContainerStrategy.initialize
 		 */
-        public static initialize() {
+        public static initialize():void {
             ContainerStrategy.EQUAL_TO_FRAME = new EqualToFrame();
         }
 
@@ -232,20 +232,20 @@ module ns_egret {
 		 * @method ns_egret.ContainerStrategy#init
 		 * @param vie {any} 
 		 */
-        public init(view) {
+        public init(view):void {
 
         }
 
 		/**
-		 * @method ns_egret.ContainerStrategy#apply
+		 * @method ns_egret.ContainerStrategy#_apply
 		 * @param view {any} 
 		 * @param designedWidth {any} 
 		 * @param designedHeigh {any} 
 		 */
-        public apply(view, designedWidth, designedHeight) {
+        public _apply(view, designedWidth, designedHeight):void {
         }
 
-        public _setupContainer() {
+        public _setupContainer():void {
             var body = document.body, style;
             if (body && (style = body.style)) {
                 style.paddingTop = style.paddingTop || "0px";
@@ -274,7 +274,7 @@ module ns_egret {
 	 * @extends ns_egret.ContainerStrategy
 	 */
     export class EqualToFrame extends ContainerStrategy {
-        apply(view) {
+        public _apply(view) {
             this._setupContainer();
         }
     }
@@ -296,7 +296,7 @@ module ns_egret {
 		/**
 		 * @method ns_egret.ContentStrategy.initialize
 		 */
-        public static initialize() {
+        public static initialize():void {
             ContentStrategy.FIXED_HEIGHT = new FixedHeight();
             ContentStrategy.FIXED_WIDTH = new FixedWidth();
         }
@@ -305,17 +305,17 @@ module ns_egret {
 		 * @method ns_egret.ContentStrategy#init
 		 * @param vie {any} 
 		 */
-        public init(view) {
+        public init(view):void {
 
         }
 
 		/**
-		 * @method ns_egret.ContentStrategy#apply
+		 * @method ns_egret.ContentStrategy#_apply
 		 * @param delegate {ns_egret.StageDelegate} 
 		 * @param designedResolutionWidth {number} 
 		 * @param designedResolutionHeight {number} 
 		 */
-        public apply(delegate:ns_egret.StageDelegate, designedResolutionWidth:number, designedResolutionHeight:number):void{
+        public _apply(delegate:ns_egret.StageDelegate, designedResolutionWidth:number, designedResolutionHeight:number):void{
         }
     }
 
@@ -326,12 +326,12 @@ module ns_egret {
 	 */
     export class FixedHeight extends ContentStrategy {
 		/**
-		 * @method ns_egret.FixedHeight#apply
+		 * @method ns_egret.FixedHeight#_apply
 		 * @param delegate {any} 
 		 * @param designedResolutionWidth {any} 
-		 * @param designedResolutionHeigh {any} 
+		 * @param designedResolutionHeight {any}
 		 */
-        public apply(delegate, designedResolutionWidth, designedResolutionHeight) {
+        public _apply(delegate, designedResolutionWidth, designedResolutionHeight):void {
             var canvas:any = document.getElementById(StageDelegate.canvas_name);
             var container:any = document.getElementById(StageDelegate.canvas_div_name);
             var containerW = canvas.width, containerH = canvas.height,
@@ -360,12 +360,12 @@ module ns_egret {
 	 */
     export class FixedWidth extends ContentStrategy {
 		/**
-		 * @method ns_egret.FixedWidth#apply
+		 * @method ns_egret.FixedWidth#_apply
 		 * @param delegate {ns_egret.StageDelegate} 
 		 * @param designedResolutionWidth {any} 
-		 * @param designedResolutionHeigh {any} 
+		 * @param designedResolutionHeight {any}
 		 */
-        public apply(delegate:ns_egret.StageDelegate, designedResolutionWidth, designedResolutionHeight) {
+        public _apply(delegate:ns_egret.StageDelegate, designedResolutionWidth, designedResolutionHeight):void {
             var canvas:HTMLCanvasElement = <HTMLCanvasElement>document.getElementById(StageDelegate.canvas_name);
             var container:HTMLElement = document.getElementById(StageDelegate.canvas_div_name);
             var viewPortWidth = document.documentElement.clientWidth;
@@ -400,12 +400,12 @@ module ns_egret {
         }
 
 		/**
-		 * @method ns_egret.FixedSize#apply
+		 * @method ns_egret.FixedSize#_apply
 		 * @param delegate {ns_egret.StageDelegate} 
 		 * @param designedResolutionWidth {number} 
-		 * @param designedResolutionHeight {numbe} 
+		 * @param designedResolutionHeight {number}
 		 */
-        public apply(delegate:ns_egret.StageDelegate, designedResolutionWidth:number, designedResolutionHeight:number) {
+        public _apply(delegate:ns_egret.StageDelegate, designedResolutionWidth:number, designedResolutionHeight:number):void {
             var canvas:HTMLCanvasElement = <HTMLCanvasElement>document.getElementById(StageDelegate.canvas_name);
             var container:HTMLDivElement = <HTMLDivElement>document.getElementById(StageDelegate.canvas_div_name);
             var viewPortWidth = this.width;

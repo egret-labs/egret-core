@@ -40,7 +40,7 @@ module ns_egret {
 		 * @method ns_egret.StageText#getText
 		 * @returns {string}
 		 */
-        public getText():string {
+        public _getText():string {
             return this.inputElement.value;
         }
 
@@ -48,7 +48,7 @@ module ns_egret {
 		 * @method ns_egret.StageText#setText
 		 * @param value {string} 
 		 */
-        public setText(value:string):void {
+        public _setText(value:string):void {
             this.inputElement.value = value;
         }
 
@@ -56,7 +56,7 @@ module ns_egret {
 		 * @method ns_egret.StageText#setTextType
 		 * @param type {string} 
 		 */
-        public setTextType(type:string):void {
+        public _setTextType(type:string):void {
             this.inputElement.type = type;
         }
 
@@ -64,7 +64,7 @@ module ns_egret {
 		 * @method ns_egret.StageText#getTextType
 		 * @returns {string}
 		 */
-        public getTextType():string {
+        public _getTextType():string {
             return this.inputElement.type;
         }
 
@@ -75,7 +75,7 @@ module ns_egret {
 		 * @param width {number} 
 		 * @param height {number} 
 		 */
-        public open(x:number, y:number, width:number = 160, height:number = 21):void {
+        public _open(x:number, y:number, width:number = 160, height:number = 21):void {
 
 
             var scaleX = ns_egret.StageDelegate.getInstance().getScaleX();
@@ -125,7 +125,7 @@ module ns_egret {
 		/**
 		 * @method ns_egret.StageText#remove
 		 */
-        public remove():void {
+        public _remove():void {
             var div = this.div;
             if (div && div.parentNode) {
                 div.parentNode.removeChild(div);

@@ -23,7 +23,7 @@
 /// <reference path="ResourceLoader.ts"/>
 /// <reference path="../utils/callLater.ts"/>
 
-module ns_egret{
+module ns_egret {
 
     /**
      * 是egret的加载控制器，他包含了一个或者一组ResourceLoader，控制其加载队列和调用加载界面更新进度。
@@ -53,10 +53,10 @@ module ns_egret{
             if (this._resourceUrlList == null) {
                 this._resourceUrlList = [];
             }
-            var resource = ns_egret.ResourceLoader.create(url,type);
+            var resource = ns_egret.ResourceLoader.create(url, type);
             resource.preFixUrl = prefix;
 
-            if (this._resourceUrlList.indexOf(resource) == -1 && resource.state != ns_egret.ResourceLoader.LOAD_STATE_LOADED){
+            if (this._resourceUrlList.indexOf(resource) == -1 && resource.state != ns_egret.ResourceLoader.LOAD_STATE_LOADED) {
                 this._resourceUrlList.push(resource);
             }
         }
@@ -78,12 +78,12 @@ module ns_egret{
                 }
                 this.next(null);
             }
-            else{
-                ns_egret.callLater(this.onComplete,this);
+            else {
+                ns_egret.callLater(this.onComplete, this);
             }
         }
 
-        private onComplete(){
+        private onComplete():void {
             this._state = LoadingController.LOAD_STATE_IDLE;
             this.destroy();
             this.dispatchEventWith(ResourceLoader.LOAD_COMPLETE);
@@ -98,7 +98,7 @@ module ns_egret{
             return false;
         }
 
-        private next(event:Event) {
+        private next(event:Event):void {
             this.removeResourceEvent();
             this.onProgress();
             if (this._resourceUrlList.length > this._currentIndex) {
@@ -112,15 +112,14 @@ module ns_egret{
             }
         }
 
-        private removeResourceEvent(){
-            if(this._currentResource)
-            {
+        private removeResourceEvent():void {
+            if (this._currentResource) {
                 this._currentResource.removeEventListener(ns_egret.ResourceLoader.LOAD_COMPLETE, this.next, this);
                 this._currentResource = null;
             }
         }
 
-        private onProgress() {
+        private onProgress():void {
             if (this._loadingView != null) {
                 this._loadingView.onProgress(this._currentIndex, this._resourceUrlList.length);
             }
@@ -131,7 +130,7 @@ module ns_egret{
          * @method ns_egret.LoadingController#setLoadingView
          * @param view {ns_egret.ILoadingView}
          */
-        public setLoadingView(view:ILoadingView) {
+        public setLoadingView(view:ILoadingView):void {
             if (this._loadingView != null) {
                 this._loadingView.removeFromStage();
                 this._loadingView = null;
@@ -139,7 +138,7 @@ module ns_egret{
             this._loadingView = view;
         }
 
-        private destroy() {
+        private destroy():void {
             this.removeResourceEvent();
             if (this._loadingView != null) {
                 this._loadingView.removeFromStage();

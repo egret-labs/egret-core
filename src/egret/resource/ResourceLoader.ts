@@ -29,14 +29,14 @@ module ns_egret {
     export class ResourceLoader extends EventDispatcher {
 
 
-        url:string = null;
-        type:string = null;
-        state:number = ResourceLoader.LOAD_STATE_INIT;
-        data = null;
-        onLoadComplete:Function;
-        fixedUrl:string = null;
+        public url:string = null;
+        public type:string = null;
+        public state:number = ResourceLoader.LOAD_STATE_INIT;
+        public data = null;
+        public onLoadComplete:Function;
+        public fixedUrl:string = null;
 
-        preFixUrl:string = "";
+        public preFixUrl:string = "";
 
         constructor(url:string, type:string) {
             super();
@@ -54,7 +54,7 @@ module ns_egret {
         /**
          * 加载资源，会根据当前资源状态决定是否要发送网络请求
          */
-        public load() {
+        public load():void {
             switch (this.state) {
                 case ResourceLoader.LOAD_STATE_INIT:
                     this.startLoading();
@@ -66,7 +66,7 @@ module ns_egret {
 
         }
 
-        private startLoading() {
+        private startLoading():void {
             var fileUrl = "";
 //            if (this.preFixUrl == "") {
 //                fileUrl = ResourceLoader.prefix + this.url;
@@ -87,7 +87,7 @@ module ns_egret {
             MainContext.instance.netContext.send(request);
         }
 
-        private _executeAllCallback(data) {
+        private _executeAllCallback(data):void {
             this.state = ResourceLoader.LOAD_STATE_LOADED;
             if (data) {
                 this.data = data;
@@ -128,7 +128,7 @@ module ns_egret {
          */
         public static prefix:string = "";
 
-        public static create(src:string, type:string = "") {
+        public static create(src:string, type:string = ""):ResourceLoader {
             if (ResourceLoader.__pool[src] == null) {
                 var ext:string = src.substring(src.lastIndexOf(".") + 1);
                 var handlerClass = ResourceLoader.__registerMap[ext];
@@ -142,7 +142,7 @@ module ns_egret {
 
         private static __registerMap = {};
 
-        public static registerHandler(ext:string, handlerClass:Function) {
+        public static registerHandler(ext:string, handlerClass:Function):void {
             ResourceLoader.__registerMap[ext] = handlerClass;
         }
     }
