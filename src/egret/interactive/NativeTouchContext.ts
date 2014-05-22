@@ -34,7 +34,7 @@ module ns_egret {
 
 }
 
-module egret {
+module egret_native {
 
 
     export function onTouchesBegin(num:number, ids:Array<any>, xs_array:Array<any>, ys_array:Array<any>) {
@@ -59,9 +59,6 @@ module egret {
             var x = xs_array[i];
             var y = ys_array[i];
             callback.call(ns_egret.MainContext.instance.touchContext,x, y,id);
-            console.log(ids[i]);
-            console.log(xs_array[i]);
-            console.log(ys_array[i]);
         }
     }
 
