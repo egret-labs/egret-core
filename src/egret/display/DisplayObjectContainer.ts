@@ -80,7 +80,7 @@ module ns_egret {
             if (child.parent == this)
                 index--;
 
-            return this.childAdded(child, index);
+            return this._childAdded(child, index);
         }
 
 
@@ -92,10 +92,10 @@ module ns_egret {
          */
         public addChildAt(child:DisplayObject, index:number):DisplayObject {
 
-            return this.childAdded(child,index);
+            return this._childAdded(child,index);
         }
 
-        private childAdded(child:DisplayObject,index:number):DisplayObject{
+        public _childAdded(child:DisplayObject,index:number,notifyListeners:boolean = true):DisplayObject{
             if (child == this)
                 return child;
 
@@ -117,7 +117,8 @@ module ns_egret {
 
             this._children.splice(index, 0, child);
             child._parentChanged(this);
-            child.dispatchEventWith(Event.ADDED,true);
+            if(notifyListeners)
+                child.dispatchEventWith(Event.ADDED,true);
             if (this._stage) {//当前容器在舞台
                 child._onAddToStage();
             }
@@ -132,7 +133,7 @@ module ns_egret {
         public removeChild(child:DisplayObject):DisplayObject {
             var index = this._children.indexOf(child);
             if (index >= 0) {
-                return this.childRemoved(index);
+                return this._childRemoved(index);
             }
             else {
                 ns_egret.Logger.fatal("child未被addChild到该parent");
@@ -141,17 +142,18 @@ module ns_egret {
 
         public removeChildAt(index:number):DisplayObject {
             if (index >= 0 && index < this._children.length) {
-               return this.childRemoved(index);
+               return this._childRemoved(index);
             }
             else {
                 ns_egret.Logger.fatal("提供的索引超出范围");
             }
         }
 
-        private childRemoved(index:number):DisplayObject{
+        public _childRemoved(index:number,notifyListeners:boolean = true):DisplayObject{
             var locChildren = this._children;
             var child:DisplayObject = locChildren[index];
-            child.dispatchEventWith(Event.REMOVED,true)
+            if(notifyListeners)
+                child.dispatchEventWith(Event.REMOVED,true)
             if (this._stage) {//在舞台上
                 child._onRemoveFromStage();
             }
@@ -249,7 +251,7 @@ module ns_egret {
             var locChildren = this._children;
             for(var i:number=locChildren.length-1;i>=0;i--)
             {
-                this.childRemoved(i);
+                this._childRemoved(i);
             }
         }
 
