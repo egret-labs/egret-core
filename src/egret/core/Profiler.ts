@@ -50,7 +50,7 @@ module ns_egret {
 
         private _txt:TextField;
         private _tick:number = 0;
-        private _maxTick:number = 6;
+        private _maxTick:number = 30;
 
         private _totalDelta:number = 0;
 
