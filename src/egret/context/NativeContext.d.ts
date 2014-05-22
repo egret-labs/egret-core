@@ -47,4 +47,17 @@ declare module egret_native {
 
 
     }
+
+    module Label {
+
+        function createLabel(font:string,size:number,defaultString:string):void;
+
+        function setCurTextColor(color:number):void;
+
+        function drawText(text:string,x:number,y:number):void;
+
+
+
+
+    }
 }
