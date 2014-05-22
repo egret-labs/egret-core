@@ -37,12 +37,12 @@ module ns_egret{
         }
 
         private _textures;
-        private _spritesheets;
+        private _data;
 
         constructor() {
             super();
             this._textures = {};
-            this._spritesheets = {};
+            this._data = {};
         }
 
         /**
@@ -85,18 +85,16 @@ module ns_egret{
          * @param texture
          * @stable B 由于SpriteSheet和纹理往往是对应的，正在考虑将addSpriteSheet和addTexture合并
          */
-        public addSpriteSheet(key:string, spriteSheet:ns_egret.SpriteSheet, texture:ns_egret.Texture) {
-            this.addTexture(key, texture);
-            this._spritesheets[key] = spriteSheet;
+        public addTextData(key:string, data:string) {
+            this._data[key] = data;
         }
 
         /**
          * 移除SpriteSheet
          * @param key
          */
-        public removeSpriteSheet(key:string):void {
-            this.removeTexture(key);
-            delete this._spritesheets[key];
+        public removeTextData(key:string):void {
+            delete this._data[key];
         }
 
         /**
@@ -104,8 +102,8 @@ module ns_egret{
          * @param key
          * @returns {*}
          */
-        public getSpriteSheet(key:string) {
-            return this._spritesheets[key];
+        public getTextData(key:string) {
+            return this._data[key];
         }
     }
 }

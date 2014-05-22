@@ -19,6 +19,7 @@
 /// <reference path="../core/Logger.ts"/>
 /// <reference path="../events/Event.ts"/>
 /// <reference path="../events/EventDispatcher.ts"/>
+/// <reference path="../net/URLLoader.ts"/>
 /// <reference path="ILoadingView.ts"/>
 /// <reference path="ResourceLoader.ts"/>
 /// <reference path="../utils/callLater.ts"/>
@@ -33,11 +34,11 @@ module ns_egret{
         static LOAD_STATE_IDLE = 0;
         static LOAD_STATE_LOADING = 1;
 
-        private _resourceUrlList:Array<ResourceLoader> = null;
+        private _resourceUrlList:Array<URLLoader> = null;
         private _currentIndex:number = 0;
         private _loadingView:ILoadingView;
         private _state = ns_egret.LoadingController.LOAD_STATE_IDLE;
-        private _currentResource:ResourceLoader;
+        private _currentResource:URLLoader;
 
         /**
          * 添加资源
@@ -53,7 +54,7 @@ module ns_egret{
             if (this._resourceUrlList == null) {
                 this._resourceUrlList = [];
             }
-            var resource = ns_egret.ResourceLoader.create(url,type);
+            var resource = new ns_egret.URLLoader(url,type);
             resource.preFixUrl = prefix;
 
             if (this._resourceUrlList.indexOf(resource) == -1 && resource.state != ns_egret.ResourceLoader.LOAD_STATE_LOADED){
