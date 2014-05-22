@@ -153,10 +153,7 @@ module ns_egret {
 			if(this._createAllChildren){
                 if(element instanceof DisplayObject){
                     var childDO:DisplayObject = <DisplayObject><any> element;
-                    var addIndex:number = this.numChildren;
-                    if (childDO.parent == this)
-                        addIndex--;
-                    this._childAdded(childDO,addIndex,notifyListeners);
+                    this._doAddChild(childDO,index,notifyListeners);
                 }
 			}
 			if (notifyListeners){

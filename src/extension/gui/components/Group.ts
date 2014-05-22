@@ -305,10 +305,7 @@ module ns_egret {
 		public _elementAdded(element:IVisualElement, index:number, notifyListeners:boolean = true):void{
             if(element instanceof DisplayObject){
                 var childDO:DisplayObject = <DisplayObject><any> element;
-                var addIndex:number = this.numChildren;
-                if (childDO.parent == this)
-                    addIndex--;
-                this._childAdded(childDO,addIndex,notifyListeners);
+                this._doAddChild(childDO,index,notifyListeners);
             }
 
 			if (notifyListeners){
@@ -338,7 +335,7 @@ module ns_egret {
                 var childDO:DisplayObject = <DisplayObject><any> element;
                 var removeIndex:number = this._children.indexOf(childDO);
                 if(removeIndex!=-1){
-                    this._childRemoved(removeIndex,notifyListeners);
+                    this._doRemoveChild(removeIndex,notifyListeners);
                 }
             }
 
