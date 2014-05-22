@@ -16,23 +16,32 @@
  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+/// <reference path="../../../../egret/core/HorizontalAlign.ts"/>
+/// <reference path="../../../../egret/core/VerticalAlign.ts"/>
 /// <reference path="../../../../egret/display/DisplayObject.ts"/>
 /// <reference path="../../../../egret/events/Event.ts"/>
-/// <reference path="../../../../egret/events/TouchEvent.ts"/>
 /// <reference path="../../../../egret/events/TimerEvent.ts"/>
-/// <reference path="../../../../egret/text/TextAlign.ts"/>
+/// <reference path="../../../../egret/events/TouchEvent.ts"/>
+/// <reference path="../../../../egret/interactive/InteractionMode.ts"/>
 /// <reference path="../../../../egret/utils/Timer.ts"/>
 /// <reference path="../Label.ts"/>
 /// <reference path="../SkinnableComponent.ts"/>
-/// <reference path="../../core/UIGlobals.ts"/>
 /// <reference path="../../core/IDisplayText.ts"/>
+/// <reference path="../../core/UIGlobals.ts"/>
 /// <reference path="../../events/UIEvent.ts"/>
 
 module ns_egret {
 
+	/**
+	 * @class ns_egret.ButtonBase
+	 * @classdesc
+	 * 按钮组件基类
+	 * @extends ns_egret.SkinnableComponent
+	 */	
 	export class ButtonBase extends SkinnableComponent{
 		/**
 		 * 构造函数
+		 * @method ns_egret.ButtonBase#constructor
 		 */		
 		public constructor(){
 			super();
@@ -52,6 +61,7 @@ module ns_egret {
 		
 		/**
 		 * [SkinPart]按钮上的文本标签
+		 * @member ns_egret.ButtonBase#labelDisplay
 		 */
 		public labelDisplay:IDisplayText;
 
@@ -59,12 +69,13 @@ module ns_egret {
 		private _autoRepeat:boolean = false;
 		/**
 		 * 指定在用户按住鼠标按键时是否重复分派 buttonDown 事件。
+		 * @member ns_egret.ButtonBase#autoRepeat
 		 */		
 		public get autoRepeat():boolean{
 			return this._autoRepeat;
 		}
 		
-		public set autoRepeat(value:boolean):void{
+		public set autoRepeat(value:boolean){
 			if (value == this._autoRepeat)
 				return;
 			
@@ -75,12 +86,13 @@ module ns_egret {
 		private _repeatDelay:number = 35;
 		/**
 		 * 在第一个 buttonDown 事件之后，以及相隔每个 repeatInterval 重复一次 buttonDown 事件之前，需要等待的毫秒数。
+		 * @member ns_egret.ButtonBase#repeatDelay
 		 */
 		public get repeatDelay():number{
 			return this._repeatDelay;
 		}
 
-		public set repeatDelay(value:number):void{
+		public set repeatDelay(value:number){
 			this._repeatDelay = value;
 		}
 		
@@ -88,37 +100,40 @@ module ns_egret {
 
 		/**
 		 * 用户在按钮上按住鼠标时，buttonDown 事件之间相隔的毫秒数。
+		 * @member ns_egret.ButtonBase#repeatInterval
 		 */		
 		public get repeatInterval():number{
 			return this._repeatInterval;
 		}
 
-		public set repeatInterval(value:number):void{
+		public set repeatInterval(value:number){
 			this._repeatInterval = value;
 		}
 
-		
-		private _hovered:boolean = false;    
+
+		private _hovered:boolean = false;
 		/**
 		 * 指示鼠标指针是否位于按钮上。
-		 */		
+		 * @member ns_egret.ButtonBase#hovered
+		 */
 		public get hovered():boolean{
 			return this._hovered;
 		}
-		
-		public set hovered(value:boolean):void{
+
+		public set hovered(value:boolean){
 			if (value == this._hovered)
 				return;
 			this._hovered = value;
 			this.invalidateSkinState();
 			this.checkButtonDownConditions();
 		}
-		
+
 		private _keepDown:boolean = false;
 		
 		/**
 		 * 强制让按钮停在鼠标按下状态,此方法不会导致重复抛出buttonDown事件,仅影响皮肤State。
-		 * @param down 是否按下
+		 * @method ns_egret.ButtonBase#keepDown
+		 * @param down {boolean} 是否按下
 		 */				
 		public keepDown(down:boolean):void{
 			if (this._keepDown == down)
@@ -129,34 +144,45 @@ module ns_egret {
 		
 		
 		private _label:string = "";
-		/**
-		 * 要在按钮上显示的文本
-		 */		
-		public set label(value:string):void{
-			this._label = value;
-			if(this.labelDisplay){
-				this.labelDisplay.text = value;
-			}
+        /**
+         * 要在按钮上显示的文本
+		 * @member ns_egret.ButtonBase#label
+         */
+		public get label():string{
+            return this._getLabel();
 		}
-		
-		public get label():string          {
-			if(this.labelDisplay){
-				return this.labelDisplay.text;
-			}
-			else{
-				return this._label;
-			}
-		}
+
+        public _getLabel():string{
+            if(this.labelDisplay){
+                return this.labelDisplay.text;
+            }
+            else{
+                return this._label;
+            }
+        }
+
+        public set label(value:string){
+            this._setLabel(value);
+        }
+
+        public _setLabel(value:string):void{
+            this._label = value;
+            if(this.labelDisplay){
+                this.labelDisplay.text = value;
+            }
+        }
+
 		
 		private _mouseCaptured:boolean = false; 
 		/**
 		 * 指示第一次分派 MouseEvent.MOUSE_DOWN 时，是否按下鼠标以及鼠标指针是否在按钮上。
+		 * @member ns_egret.ButtonBase#mouseCaptured
 		 */		
 		public get mouseCaptured():boolean{
 			return this._mouseCaptured;
 		}
 		
-		public set mouseCaptured(value:boolean):void{
+		public set mouseCaptured(value:boolean){
 			if (value == this._mouseCaptured)
 				return;
 			
@@ -171,21 +197,22 @@ module ns_egret {
 		/**
 		 * 如果为 false，则按钮会在用户按下它时显示其鼠标按下时的外观，但在用户将鼠标拖离它时将改为显示鼠标经过的外观。
 		 * 如果为 true，则按钮会在用户按下它时显示其鼠标按下时的外观，并在用户将鼠标拖离时继续显示此外观。
-		 */		
+		 * @member ns_egret.ButtonBase#stickyHighlighting
+		 */
 		public get stickyHighlighting():boolean{
 			return this._stickyHighlighting
 		}
-		
-		public set stickyHighlighting(value:boolean):void{
+
+		public set stickyHighlighting(value:boolean){
 			if (value == this._stickyHighlighting)
 				return;
-			
+
 			this._stickyHighlighting = value;
 			this.invalidateSkinState();
 			this.checkButtonDownConditions();
 		}
-		
-		
+
+
 		/**
 		 * 开始抛出buttonDown事件
 		 */		
@@ -203,6 +230,7 @@ module ns_egret {
 		
 		/**
 		 * 添加鼠标事件监听
+		 * @method ns_egret.ButtonBase#addHandlers
 		 */		
 		public addHandlers():void{
 			this.addEventListener(TouchEvent.TOUCH_ROLL_OVER, this.mouseEventHandler, this);
@@ -280,6 +308,8 @@ module ns_egret {
 		
 		/**
 		 * 鼠标事件处理
+		 * @method ns_egret.ButtonBase#mouseEventHandler
+		 * @param event {Event} 
 		 */	
 		public mouseEventHandler(event:Event):void{
 			var touchEvent:TouchEvent = <TouchEvent> event;
@@ -290,14 +320,16 @@ module ns_egret {
 					this.hovered = true;
 					break;
 				}
-					
+
 				case TouchEvent.TOUCH_ROLL_OUT:{
 					this.hovered = false;
 					break;
 				}
-					
+
 				case TouchEvent.TOUCH_BEGAN:{
 					this.addStageMouseHandlers();
+                    if(InteractionMode.mode==InteractionMode.TOUCH)
+                        this.hovered = true;
 					this.mouseCaptured = true;
 					break;
 				}
@@ -305,7 +337,7 @@ module ns_egret {
 				case TouchEvent.TOUCH_END:{
 					if (event.target == this){
 						this.hovered = true;
-						
+
 						if (this.mouseCaptured){
 							this.buttonReleased();
 							this.mouseCaptured = false;
@@ -325,12 +357,15 @@ module ns_egret {
 		
 		/**
 		 * 按钮弹起事件
+		 * @method ns_egret.ButtonBase#buttonReleased
 		 */		
 		public buttonReleased():void{
 		}
 		
 		/**
 		 * 按钮点击事件
+		 * @method ns_egret.ButtonBase#clickHandler
+		 * @param event {TouchEvent} 
 		 */		
 		public clickHandler(event:TouchEvent):void{
 		}
@@ -365,7 +400,8 @@ module ns_egret {
 		}
 		
 		/**
-		 * @inheritDoc
+		 * @method ns_egret.ButtonBase#getCurrentSkinState
+		 * @returns {string}
 		 */
 		public getCurrentSkinState():string{
 			if (!this.enabled)
@@ -373,15 +409,17 @@ module ns_egret {
 			
 			if (this.isDown()||this._keepDown)
 				return "down";
-			
+
 			if (InteractionMode.mode==InteractionMode.MOUSE&&(this.hovered || this.mouseCaptured))
 				return "over";
-			
+
 			return "up";
 		}
 		
 		/**
-		 * @inheritDoc
+		 * @method ns_egret.ButtonBase#partAdded
+		 * @param partName {string} 
+		 * @param instance {any} 
 		 */
 		public partAdded(partName:string, instance:any):void{
 			super.partAdded(partName, instance);
@@ -392,7 +430,7 @@ module ns_egret {
 		}
 		
 		/**
-		 * @inheritDoc
+		 * @method ns_egret.ButtonBase#commitProperties
 		 */
 		public commitProperties():void{
 			super.commitProperties();
@@ -414,12 +452,13 @@ module ns_egret {
 		private createLabelIfNeedChanged:boolean = false;
 		/**
 		 * 如果皮肤不提供labelDisplay子项，自己是否创建一个，默认为true。
+		 * @member ns_egret.ButtonBase#createLabelIfNeed
 		 */
 		public get createLabelIfNeed():boolean{
 			return this._createLabelIfNeed;
 		}
 
-		public set createLabelIfNeed(value:boolean):void{
+		public set createLabelIfNeed(value:boolean){
 			if(value==this._createLabelIfNeed)
 				return;
 			this._createLabelIfNeed = value;
@@ -432,27 +471,27 @@ module ns_egret {
 		private hasCreatedLabel:boolean = false;
 		
 		/**
-		 * @inheritDoc
+		 * @method ns_egret.ButtonBase#createSkinParts
 		 */
 		public createSkinParts():void{
 			if(this.hasCreatedLabel||!this._createLabelIfNeed)
 				return;
 			this.hasCreatedLabel = true;
 			var text:Label = new Label();
-			text.textAlign = TextAlign.CENTER;
+			text.textAlign = HorizontalAlign.CENTER;
 			text.verticalAlign = VerticalAlign.MIDDLE;
 			text.maxDisplayedLines = 1;
 			text.left = 10;
 			text.right = 10;
 			text.top = 2;
 			text.bottom = 2;
-			this.addToDisplayList(text);
+			this._addToDisplayList(<DisplayObject><any>text);
 			this.labelDisplay = text;
 			this.partAdded("labelDisplay",this.labelDisplay);
 		}
 		
 		/**
-		 * @inheritDoc
+		 * @method ns_egret.ButtonBase#removeSkinParts
 		 */
 		public removeSkinParts():void{
 			if(!this.hasCreatedLabel)
@@ -462,7 +501,7 @@ module ns_egret {
 				return;
 			this._label = this.labelDisplay.text;
 			this.partRemoved("labelDisplay",this.labelDisplay);
-			this.removeFromDisplayList(<DisplayObject> (this.labelDisplay));
+			this._removeFromDisplayList(<DisplayObject><any> (this.labelDisplay));
 			this.labelDisplay = null;
 		}
 		

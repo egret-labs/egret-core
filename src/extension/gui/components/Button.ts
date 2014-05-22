@@ -20,7 +20,16 @@
 
 module ns_egret {
 
+	/**
+	 * @class ns_egret.Button
+	 * @classdesc
+	 * 按钮控件
+	 * @extends ns_egret.ButtonBase
+	 */	
 	export class Button extends ButtonBase{
+		/**
+		 * @method ns_egret.Button#constructor
+		 */
 		public constructor(){
 			super();
 		}

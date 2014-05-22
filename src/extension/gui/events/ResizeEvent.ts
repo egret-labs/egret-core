@@ -20,9 +20,26 @@
 
 module ns_egret {
 
+	/**
+	 * @class ns_egret.ResizeEvent
+	 * @classdesc
+	 * 尺寸改变事件
+	 * @extends ns_egret.Event
+	 */
 	export class ResizeEvent extends Event{
+		/**
+		 * @constant ns_egret.ResizeEvent.RESIZE
+		 */
 		public static RESIZE:string = "resize";
 		
+		/**
+		 * @method ns_egret.ResizeEvent#constructor
+		 * @param type {string} 
+		 * @param oldWidth {number} 
+		 * @param oldHeight {number} 
+		 * @param bubbles {boolean} 
+		 * @param cancelable {boolean} 
+		 */
 		public constructor(type:string,oldWidth:number = NaN, oldHeight:number = NaN,
 									bubbles:boolean = false, cancelable:boolean = false){
 			super(type, bubbles, cancelable);
@@ -33,11 +50,13 @@ module ns_egret {
 		
 		/**
 		 * 旧的高度 
+		 * @member ns_egret.ResizeEvent#oldHeight
 		 */
 		public oldHeight:number;
 		
 		/**
 		 * 旧的宽度 
+		 * @member ns_egret.ResizeEvent#oldWidth
 		 */
 		public oldWidth:number;
 	}

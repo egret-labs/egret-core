@@ -20,24 +20,37 @@
 
 module ns_egret {
 
+	/**
+	 * @class ns_egret.TrackBaseEvent
+	 * @classdesc
+	 * 从TrackBase组件分派的事件。
+	 * @extends ns_egret.Event
+	 */	
 	export class TrackBaseEvent extends Event{
 		/**
 		 * 正在拖拽滑块
+		 * @constant ns_egret.TrackBaseEvent.THUMB_DRAG
 		 */		
 		public static THUMB_DRAG:string = "thumbDrag";
 		
 		/**
 		 * 滑块被按下 
+		 * @constant ns_egret.TrackBaseEvent.THUMB_PRESS
 		 */		
 		public static THUMB_PRESS:string = "thumbPress";
 		
 		/**
 		 * 滑块被放开
+		 * @constant ns_egret.TrackBaseEvent.THUMB_RELEASE
 		 */		
 		public static THUMB_RELEASE:string = "thumbRelease";
 		
 		/**
 		 * 构造函数
+		 * @method ns_egret.TrackBaseEvent#constructor
+		 * @param type {string} 
+		 * @param bubbles {boolean} 
+		 * @param cancelable {boolean} 
 		 */		
 		public constructor(type:string, bubbles:boolean = false,cancelable:boolean = false){
 			super(type, bubbles, cancelable);

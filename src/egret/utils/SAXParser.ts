@@ -16,10 +16,11 @@
  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+/// <reference path="../core/HashObject.ts"/>
 /// <reference path="../core/Logger.ts"/>
 
 module ns_egret{
-    export class SAXParser {
+    export class SAXParser extends HashObject{
         static _instance:SAXParser = null;
 
         static getInstance() {
@@ -29,11 +30,12 @@ module ns_egret{
             return SAXParser._instance;
         }
 
-        private _parser = null;
-        private _xmlDict = null;
-        private _isSupportDOMParser = null;
+        private _parser:any = null;
+        private _xmlDict:any = null;
+        private _isSupportDOMParser:any = null;
 
-        constructor() {
+        public constructor() {
+            super();
             this._xmlDict = {};
             if (window["DOMParser"]) {
                 this._isSupportDOMParser = true;
@@ -68,7 +70,7 @@ module ns_egret{
         /**
          * 解析tilemap
          */
-        public tmxParse(textxml:string, isXMLString:Boolean = false) {
+        public tmxParse(textxml:string, isXMLString:boolean = false) {
             if (!isXMLString) {
                 textxml = this.getList(textxml);
             }
@@ -76,6 +78,15 @@ module ns_egret{
         }
 
         private parserXML(textxml:string) {
+            var i = 0;
+            while (textxml.charAt(i) == "\n" || textxml.charAt(i) == "\t" || textxml.charAt(i) == "\r" || textxml.charAt(i) == " ") {
+                i++;
+            }
+
+            if (i != 0) {
+                textxml = textxml.substring(i, textxml.length);
+            }
+
             var xmlDoc;
             if (this._isSupportDOMParser) {
                 xmlDoc = this._parser.parseFromString(textxml, "text/xml");
@@ -92,7 +103,7 @@ module ns_egret{
         }
 
         private parseNode(node) {
-            var data = null;
+            var data:any = null;
             switch (node.tagName) {
                 case 'dict':
                     data = this.parseDict(node);

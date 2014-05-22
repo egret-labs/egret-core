@@ -16,7 +16,10 @@
  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+/// <reference path="MainContext.ts"/>
 /// <reference path="../events/EventDispatcher.ts"/>
+/// <reference path="../utils/callLater.ts"/>
+/// <reference path="../utils/getTimer.ts"/>
 
 module ns_egret {
     /**
@@ -24,22 +27,20 @@ module ns_egret {
      * @stable A
      * todo:GitHub文档，介绍心跳控制器的作用
      */
-    export class Ticker extends ns_egret.EventDispatcher {
+    export class Ticker extends EventDispatcher {
 
 
         /**
-         * 获取当前系统时间的时间戳
-         * @stable A
+         * 使用全局函数getTimer()代替
+         * @deprecated
          */
         public static now = function () {
-            return new Date().getTime();
+            return getTimer();
         };
 
 
-        private _time:number;
         private _timeScale:number = 1;
-        private _paused:Boolean = false;
-        private _frameRate:number = 60;
+        private _paused:boolean = false;
 
         /**
          * 启动心跳控制器。
@@ -47,25 +48,25 @@ module ns_egret {
          * @stable A
          */
         public run() {
-            this._time = Ticker.now();
+            __START_TIME = new Date().getTime();
             var context = ns_egret.MainContext.instance.deviceContext;
             context.executeMainLoop(this.update, this);
         }
 
-        private update() {
-            var list:Array = this.callBackList.concat();
+        private update(advancedTime:number) {
+            var list:Array<any> = this.callBackList.concat();
             var length:number = list.length;
-            var thisTime = Ticker.now();
+
+            var frameTime:number = advancedTime * this._timeScale;
+
+            frameTime *= this._timeScale;
             for (var i:number = 0; i < length; i++) {
                 var eventBin:any = list[i];
-                var frameTime:number = thisTime - this._time;
-                frameTime *= this._timeScale;
                 eventBin.listener.call(eventBin.thisObject, frameTime);
             }
-            this._time = thisTime;
         }
 
-        private callBackList:Array = [];
+        private callBackList:Array<any> = [];
 
         /**
          * 注册帧回调事件，同一函数的重复监听会被忽略。
@@ -75,8 +76,8 @@ module ns_egret {
          * @stable A-
          */
         public register(listener:Function, thisObject:any, priority = 0) {
-            var list:Array = this.callBackList;
-            this._insertEventBin(list,listener,thisObject,priority);
+            var list:Array<any> = this.callBackList;
+            this._insertEventBin(list, listener, thisObject, priority);
         }
 
         /**
@@ -86,14 +87,13 @@ module ns_egret {
          * @stable A-
          */
         public unregister(listener:Function, thisObject:any) {
-            var list:Array = this.callBackList;
-            this._removeEventBin(list,listener,thisObject);
+            var list:Array<any> = this.callBackList;
+            this._removeEventBin(list, listener, thisObject);
         }
 
         /**
-         * 在一帧之后调用指定函数
-         * @param listener 事件侦听函数
-         * @param thisObject 侦听函数的this对象
+         * 使用全局函数callLater()代替
+         * @deprecated
          */
         public callLater(listener:Function, thisObject, time:number = 0) {
             var that = this;
@@ -114,6 +114,28 @@ module ns_egret {
             }, thisObject)
         }
 
+        /**
+         * 在指定的延迟（以毫秒为单位）后运行指定的函数。
+         */
+        public setTimeout(listener:Function, thisObject, delay:Number, ...parameters) {
+            var that = this;
+            var passTime = 0;
+            this.register(function (frameTime) {
+                if (delay == 0) {
+                    that.unregister(arguments.callee, thisObject);
+                    listener.apply(thisObject, parameters);
+
+                }
+                else {
+                    passTime += frameTime;
+                    if (passTime >= delay) {
+                        that.unregister(arguments.callee, thisObject);
+                        listener.apply(thisObject, parameters);
+                    }
+                }
+            }, thisObject)
+        }
+
         public setTimeScale(timeScale) {
             this._timeScale = timeScale;
         }
@@ -129,11 +151,6 @@ module ns_egret {
         public resume() {
             this._paused = false;
         }
-
-        public getFrameRate() {
-            return this._frameRate;
-        }
-
 
         private static instance:ns_egret.Ticker;
 

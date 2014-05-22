@@ -16,11 +16,15 @@
  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+/// <reference path="RendererContext.ts"/>
+/// <reference path="../../core/HashObject.ts"/>
 /// <reference path="../../core/Profiler.ts"/>
-/// <reference path="../../text/TextField.ts"/>
+/// <reference path="../../display/Graphics.ts"/>
 /// <reference path="../../geom/Matrix.ts"/>
 /// <reference path="../../geom/Rectangle.ts"/>
+/// <reference path="../../text/TextField.ts"/>
 /// <reference path="../../texture/Texture.ts"/>
+/// <reference path="../NativeContext.d.ts"/>
 
 module ns_egret {
     /**
@@ -29,7 +33,7 @@ module ns_egret {
      * @stable B 当编写WebGLContext和OpenGLContext时，RendererContext的接口有可能会发生变化，以兼容基于GPU模式的渲染方式，一些设计理念会参考PIXI.js
      * @roadmap 这个接口的重构和实现其他Context是引擎的重点工作
      */
-    export class NativeRendererContext {
+    export class NativeRendererContext extends HashObject{
 
 
         /**
@@ -43,15 +47,15 @@ module ns_egret {
          */
         public texture_scale_factor:number = 1;
 
-        constructor() {
-
+        public constructor() {
+            super();
         }
 
         /**
          * @private
          */
         public clearScreen() {
-            egret.Graphics.clearScreen(255,255,255);
+            egret_native.Graphics.clearScreen(255,255,255);
         }
 
 
@@ -80,7 +84,7 @@ module ns_egret {
         public drawImage(texture:Texture, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight) {
 
             console.log ("draw");
-            egret.Graphics.drawImage(texture,sourceX,sourceY,sourceWidth,sourceHeight,destX,destY,destWidth,destHeight);
+            egret_native.Graphics.drawImage(texture,sourceX,sourceY,sourceWidth,sourceHeight,destX,destY,destWidth,destHeight);
 
             Profiler.getInstance().onDrawImage();
         }
@@ -92,7 +96,7 @@ module ns_egret {
          */
         public setTransform(matrix:ns_egret.Matrix) {
             console.log ("setTransform");
-            egret.Graphics.setMainMatix(matrix.a,matrix.b,matrix.c,matrix.d,matrix.tx,matrix.ty);
+            egret_native.Graphics.setTransform(matrix.a,matrix.b,matrix.c,matrix.d,matrix.tx,matrix.ty);
         }
 
         /**
@@ -115,7 +119,7 @@ module ns_egret {
          * @stable A
          */
         public setAlpha(value:number, blendMode:ns_egret.BlendMode) {
-
+            egret_native.Graphics.setGlobalAlpha(value);
         }
 
 

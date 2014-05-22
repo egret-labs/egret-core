@@ -36,7 +36,7 @@
  */
 var fs = require("fs");
 var path = require("path");
-var plist = require("plist");
+var plist = require('../core/plist');
 
 var totalData = {};
 var sourceArr = [];

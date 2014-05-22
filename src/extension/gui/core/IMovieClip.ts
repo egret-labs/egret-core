@@ -20,45 +20,61 @@
 
 module ns_egret {
 
+	/**
+	 * @class ns_egret.IMovieClip
+	 * @interface
+	 * @classdesc
+	 * 影片剪辑接口
+	 * @extends ns_egret.IEventDispatcher
+	 */
 	export interface IMovieClip extends IEventDispatcher{
 		/**
 		 * 当前播放到的帧索引,从0开始
+		 * @member ns_egret.IMovieClip#currentFrame
 		 */
 		currentFrame:number;
 		/**
 		 * 动画总帧数
+		 * @member ns_egret.IMovieClip#totalFrames
 		 */
 		totalFrames:number;
 		/**
 		 * 返回由FrameLabel对象组成的数组。数组包括整个Dxr动画实例的所有帧标签。
+		 * @member ns_egret.IMovieClip#frameLabels
 		 */		
-		frameLabels:Array;
+		frameLabels:Array<any>;
 		/**
 		 * 是否循环播放,默认为true。
+		 * @member ns_egret.IMovieClip#repeatPlay
 		 */		
 		repeatPlay:boolean;
 		/**
 		 * 跳到指定帧并播放
-		 * @param frame 可以是帧索引或者帧标签，帧索引从0开始。
+		 * @method ns_egret.IMovieClip#gotoAndPlay
+		 * @param frame {any} 可以是帧索引或者帧标签，帧索引从0开始。
 		 */
 		gotoAndPlay(frame:any):void;
 		/**
 		 * 跳到指定帧并停止
-		 * @param frame 可以是帧索引或者帧标签，帧索引从0开始。
+		 * @method ns_egret.IMovieClip#gotoAndStop
+		 * @param frame {any} 可以是帧索引或者帧标签，帧索引从0开始。
 		 */
 		gotoAndStop(frame:any):void;
 		/**
 		 * 从当期帧开始播放
+		 * @method ns_egret.IMovieClip#play
 		 */		
 		play():void;
 		/**
 		 * 在当前帧停止播放
+		 * @method ns_egret.IMovieClip#stop
 		 */		
 		stop():void;
 		/**
 		 * 为指定帧添加回调函数。注意：同一帧只能添加一个回调函数。后添加的回调函数将会覆盖之前的。
-		 * @param frame 要添加回调的帧索引，从0开始。
-		 * @param callBack 回调函数。设置为null，将取消之前添加的回调函数。
+		 * @method ns_egret.IMovieClip#addFrameScript
+		 * @param frame {number} 要添加回调的帧索引，从0开始。
+		 * @param callBack {Function} 回调函数。设置为null，将取消之前添加的回调函数。
 		 */		
 		addFrameScript(frame:number,callBack:Function):void;
 	}

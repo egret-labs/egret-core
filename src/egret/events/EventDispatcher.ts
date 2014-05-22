@@ -16,16 +16,21 @@
  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-/// <reference path="../debug/DEBUG.ts"/>
 /// <reference path="../core/HashObject.ts"/>
 /// <reference path="Event.ts"/>
 /// <reference path="IEventDispatcher.ts"/>
+/// <reference path="../utils/Recycler.ts"/>
+/// <reference path="../../jslib/DEBUG.d.ts"/>
 
 module ns_egret {
     /**
-     * @class EventDispatcher
+     *
+     * @class ns_egret.EventDispatcher
+     * @classdesc
      * EventDispatcher是egret的事件派发器类，负责进行事件的发送和侦听。
-     * @stable A
+     * @extends ns_egret.HashObject
+     * @implements ns_egret.IEventDispatcher
+     *
      */
     export class EventDispatcher extends HashObject implements IEventDispatcher {
 
@@ -35,16 +40,19 @@ module ns_egret {
          * 同样允许使用 IEventDispatcher 接口的方法。
          */
         public constructor(target:IEventDispatcher = null) {
-            if (target)
-                this.target = target;
-            else
-                this.target = this;
-        }
+            super();
+            if (target){
+                this._eventTarget = target;
+            }
+            else{
+                this._eventTarget = this;
+            }
 
+        }
         /**
          * 事件抛出对象
          */
-        private target:IEventDispatcher;
+        private _eventTarget:IEventDispatcher;
         /**
          * 引擎内部调用
          * @private
@@ -60,23 +68,22 @@ module ns_egret {
          * 引擎内部调用
          * @private
          */
-        public _isUseCapture:Boolean = false;
+        public _isUseCapture:boolean = false;
 
         /**
          * 添加事件侦听器
-         * @param type 事件的类型。
-         * @param listener 处理事件的侦听器函数。此函数必须接受 Event 对象作为其唯一的参数，并且不能返回任何结果，
+         * @method ns_egret.EventDispatcher#addEventListener
+         * @param type {string} 事件的类型。
+         * @param listener {Function} 处理事件的侦听器函数。此函数必须接受 Event 对象作为其唯一的参数，并且不能返回任何结果，
          * 如下面的示例所示： function(evt:Event):void 函数可以有任何名称。
-         * @param thisObject 侦听函数绑定的this对象
-         * @param useCapture 确定侦听器是运行于捕获阶段还是运行于目标和冒泡阶段。如果将 useCapture 设置为 true，
+         * @param thisObject {any} 侦听函数绑定的this对象
+         * @param useCapture {boolean} 确定侦听器是运行于捕获阶段还是运行于目标和冒泡阶段。如果将 useCapture 设置为 true，
          * 则侦听器只在捕获阶段处理事件，而不在目标或冒泡阶段处理事件。如果 useCapture 为 false，则侦听器只在目标或冒泡阶段处理事件。
          * 要在所有三个阶段都侦听事件，请调用 addEventListener 两次：一次将 useCapture 设置为 true，一次将 useCapture 设置为 false。
-         * @param  priority 事件侦听器的优先级。优先级由一个带符号的 32 位整数指定。数字越大，优先级越高。优先级为 n 的所有侦听器会在
+         * @param  priority {number} 事件侦听器的优先级。优先级由一个带符号的 32 位整数指定。数字越大，优先级越高。优先级为 n 的所有侦听器会在
          * 优先级为 n -1 的侦听器之前得到处理。如果两个或更多个侦听器共享相同的优先级，则按照它们的添加顺序进行处理。默认优先级为 0。
-         * @stable A
-         * todo:GitHub文档
          */
-        public addEventListener(type:string, listener:Function, thisObject:any, useCapture:Boolean = false, priority:number = 0):void {
+        public addEventListener(type:string, listener:Function, thisObject:any, useCapture:boolean = false, priority:number = 0):void {
             if (DEBUG && DEBUG.ADD_EVENT_LISTENER) {
                 DEBUG.checkAddEventListener(type, listener, thisObject, useCapture, priority);
             }
@@ -91,7 +98,7 @@ module ns_egret {
                     this._eventsMap = {};
                 eventMap = this._eventsMap;
             }
-            var list:Array = eventMap[type];
+            var list:Array<any> = eventMap[type];
             if(!list){
                 list = eventMap[type] = [];
             }
@@ -100,7 +107,7 @@ module ns_egret {
         /**
          * 在一个事件列表中按优先级插入事件对象
          */
-        public _insertEventBin(list:Array,listener:Function, thisObject:any,priority:number):boolean{
+        public _insertEventBin(list:Array<any>,listener:Function, thisObject:any,priority:number):boolean{
             var insertIndex:number = -1;
             var length:number = list.length;
             for (var i:number = 0; i < length; i++) {
@@ -124,18 +131,18 @@ module ns_egret {
 
         /**
          * 移除事件侦听器
-         * @param type 事件名
-         * @param listener 侦听函数
-         * @param thisObject 侦听函数绑定的this对象
-         * @param useCapture 是否使用捕获，这个属性只在显示列表中生效。
-         * @stable A
+         * @method ns_egret.EventDispatcher#removeEventListener
+         * @param type {string} 事件名
+         * @param listener {Function} 侦听函数
+         * @param thisObject {any} 侦听函数绑定的this对象
+         * @param useCapture {boolean} 是否使用捕获，这个属性只在显示列表中生效。
          */
-        public removeEventListener(type:string, listener:Function,thisObject:any,useCapture:Boolean = false):void {
+        public removeEventListener(type:string, listener:Function,thisObject:any,useCapture:boolean = false):void {
 
             var eventMap:Object = useCapture ? this._captureEventsMap : this._eventsMap;
             if(!eventMap)
                 return;
-            var list:Array = eventMap[type];
+            var list:Array<any> = eventMap[type];
             if (!list) {
                 return;
             }
@@ -147,7 +154,7 @@ module ns_egret {
         /**
          * 在一个事件列表中按优先级插入事件对象
          */
-        public _removeEventBin(list:Array,listener:Function,thisObject:any):boolean{
+        public _removeEventBin(list:Array<any>,listener:Function,thisObject:any):boolean{
             var length:number = list.length;
             for (var i:number = 0; i < length; i++) {
                 var bin:any = list[i];
@@ -161,8 +168,9 @@ module ns_egret {
 
         /**
          * 检测是否存在监听器
+         * @method ns_egret.EventDispatcher#hasEventListener
          * @param type 事件名
-         * @returns {*}
+         * @returns {boolean}
          * @stable A
          */
         public hasEventListener(type:string):boolean {
@@ -174,7 +182,9 @@ module ns_egret {
          * EventDispatcher 对象或其任一后代时，如果在事件流的任何阶段触发了事件侦听器，则此方法返回 true。
          * hasEventListener() 与 willTrigger() 方法的区别是：hasEventListener() 只检查它所属的对象，
          * 而 willTrigger() 方法检查整个事件流以查找由 type 参数指定的事件。
+         * @method ns_egret.EventDispatcher#willTrigger
          * @param type 事件名
+         * @returns {boolean}
          */
         public willTrigger(type:string):boolean{
             return this.hasEventListener(type);
@@ -183,13 +193,14 @@ module ns_egret {
 
         /**
          * 将事件分派到事件流中。事件目标是对其调用 dispatchEvent() 方法的 EventDispatcher 对象。
-         * @param event 调度到事件流中的 Event 对象。如果正在重新分派事件，则会自动创建此事件的一个克隆。 在调度了事件后，其 target 属性将无法更改，因此您必须创建此事件的一个新副本以能够重新调度。
-         * @return 如果成功调度了事件，则值为 true。值 false 表示失败或对事件调用了 preventDefault()。
+         * @method ns_egret.EventDispatcher#dispatchEvent
+         * @param event {ns_egret.Event} 调度到事件流中的 Event 对象。如果正在重新分派事件，则会自动创建此事件的一个克隆。 在调度了事件后，其 _eventTarget 属性将无法更改，因此您必须创建此事件的一个新副本以能够重新调度。
+         * @returns {boolean} 如果成功调度了事件，则值为 true。值 false 表示失败或对事件调用了 preventDefault()。
          */
         public dispatchEvent(event:Event):boolean {
             event._reset();
-            event._target = this.target;
-            event._setCurrentTarget(this.target);
+            event._target = this._eventTarget;
+            event._setCurrentTarget(this._eventTarget);
             return this._notifyListener(event);
         }
 
@@ -197,7 +208,7 @@ module ns_egret {
             var eventMap:Object = event._eventPhase==1 ? this._captureEventsMap : this._eventsMap;
             if(!eventMap)
                 return true;
-            var list:Array = eventMap[event.type];
+            var list:Array<any> = eventMap[event.type];
             if (!list) {
                 return true;
             }
@@ -213,19 +224,16 @@ module ns_egret {
             return !event.isDefaultPrevented();
         }
 
-        private static reuseEvent:Event = new Event("");
+        private static eventRecycler:Recycler = new Recycler();
         /**
          * 派发一个包含了特定参数的事件到所有注册了特定类型侦听器的对象中。 这个方法使用了一个内部的事件对象池因避免重复的分配导致的额外开销。
-         * @param type 事件类型
-         * @param bubbles 是否冒泡，默认false
-         * @param data 附加数据(可选)
+         * @method ns_egret.EventDispatcher#dispatchEventWith
+         * @param type {string} 事件类型
+         * @param bubbles {boolean} 是否冒泡，默认false
+         * @param data {any}附加数据(可选)
          */
-        public dispatchEventWith(type:String, bubbles:Boolean = false, data:Object = null):void{
-            var event:Event = EventDispatcher.reuseEvent;
-            event._type = type;
-            event._bubbles = bubbles;
-            event.data = data;
-            this.dispatchEvent(event);
+        public dispatchEventWith(type:string, bubbles:boolean = false, data?:Object):void{
+           Event.dispatchEvent(this,type,bubbles,data);
         }
     }
 }

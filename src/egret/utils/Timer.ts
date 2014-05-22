@@ -19,6 +19,7 @@
 /// <reference path="../core/Ticker.ts"/>
 /// <reference path="../events/EventDispatcher.ts"/>
 /// <reference path="../events/TimerEvent.ts"/>
+/// <reference path="getTimer.ts"/>
 
 module ns_egret {
     export class Timer extends EventDispatcher {
@@ -53,7 +54,7 @@ module ns_egret {
         public start() {
             if(this._running)
                 return;
-            this.lastTime = Ticker.now();
+            this.lastTime = getTimer();
             if (this._currentCount != 0) {
                 this._currentCount = 0;
             }
@@ -68,26 +69,18 @@ module ns_egret {
             this._running = false;
         }
 
-        private static timerEvent:TimerEvent;
-
         private lastTime:number;
 
         private onEnterFrame(frameTime:number) {
-            if(!Timer.timerEvent){
-                Timer.timerEvent = new TimerEvent(TimerEvent.TIMER);
-            }
-            var timerEvent:TimerEvent = Timer.timerEvent;
-            var now = Ticker.now();
+            var now = getTimer();
             var passTime = now - this.lastTime;
             if(passTime>this.delay){
                 this.lastTime = now;
                 this._currentCount++;
-                timerEvent._type = TimerEvent.TIMER;
-                this.dispatchEvent(timerEvent);
+                TimerEvent.dispatchTimerEvent(this,TimerEvent.TIMER);
                 if (this.repeatCount >0 && this._currentCount >= this.repeatCount) {
                     this.stop();
-                    timerEvent._type = TimerEvent.TIMER_COMPLETE;
-                    this.dispatchEvent(timerEvent);
+                    TimerEvent.dispatchTimerEvent(this,TimerEvent.TIMER_COMPLETE);
                 }
             }
         }

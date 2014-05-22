@@ -1,11 +1,22 @@
-/** Created with JetBrains WebStorm.
- * User: yjtx
- * Date: 14-4-14
- * Time: 下午4:00
- * Class: XML
- * Summary: 根据 xml格式的字符串 生成可以直接 通过属性 获取值
+/**
+ * Copyright (c) Egret-Labs.org. Permission is hereby granted, free of charge,
+ * to any person obtaining a copy of this software and associated documentation
+ * files (the "Software"), to deal in the Software without restriction, including
+ * without limitation the rights to use, copy, modify, merge, publish, distribute,
+ * sublicense, and/or sell copies of the Software, and to permit persons to whom
+ * the Software is furnished to do so, subject to the following conditions:
  *
+ * The above copyright notice and this permission notice shall be included
+ * in all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
+ * INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR
+ * PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE
+ * FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+ * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
 
+/**
  <root>
  <egret>
  <item>123</item>
@@ -17,7 +28,6 @@
  获取 item数组           xml.egret[0].item;               egret[0] 必须加 [0]
  获取 第一个item的123     xml.egret[0].item[0].value;      egret[0] 必须加 [0]
  获取 第二个item的yjtx    xml.egret[0].item[1].$name;      egret[0] 必须加 [0]
-
  *
  */
 
@@ -48,21 +58,26 @@ module ns_egret{
          * @private
          */
         public _ansXML(xmlDoc) {
-            if (xmlDoc.childElementCount > 0) {//拥有子 节点
-                for (var i = 0; i < xmlDoc.childElementCount; i++) {
-                    var childXMLDoc = xmlDoc.children[i];
+            var num = 0;
+            if (xmlDoc.childNodes.length > 0) {
+                for (var i = 0; i < xmlDoc.childNodes.length; i++) {
+                    var childXMLDoc = xmlDoc.childNodes[i];
+                    if (childXMLDoc.nodeType == 1) {
+                        var xml = new XML("");
+                        xml._ansXML(childXMLDoc);
 
-                    var xml = new XML("");
-                    xml._ansXML(childXMLDoc);
+                        var name = childXMLDoc.nodeName;
+                        if (this[name] == null) {
+                            this[name] = [];
+                        }
+                        this[name].push(xml);
 
-                    var name = childXMLDoc.nodeName;
-                    if (this[name] == null) {
-                        this[name] = [];
+                        num++;
                     }
-                    this[name].push(xml);
                 }
             }
-            else {
+
+            if (num == 0) {
                 this["value"] = xmlDoc.textContent;
             }
 

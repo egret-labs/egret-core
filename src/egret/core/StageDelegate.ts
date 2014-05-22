@@ -16,8 +16,8 @@
  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+/// <reference path="HashObject.ts"/>
 /// <reference path="Logger.ts"/>
-/// <reference path="MainContext.ts"/>
 
 module ns_egret {
     /**
@@ -25,7 +25,7 @@ module ns_egret {
      * 有关屏幕适配策略，更多信息请了解 GitHub:理解egret的GameLauncher
      * @stable B 目前StageDelegate和HTML5有一定的耦合关系，之后会对其解耦，保证NativeApp的正确运行
      */
-    export class StageDelegate {
+    export class StageDelegate extends HashObject{
         private static instance:StageDelegate;
 
         public static getInstance():StageDelegate {
@@ -50,7 +50,8 @@ module ns_egret {
 
         private _resolutionPolicy;
 
-        constructor() {
+        public constructor() {
+            super();
             this._frame = document.getElementById(StageDelegate.canvas_div_name);
             var canvas:any = document.getElementById(StageDelegate.canvas_name);
             var w = canvas.width, h = canvas.height;
@@ -201,8 +202,7 @@ module ns_egret {
 
         }
 
-        public apply(view, designedResolutionWidth, designedResolutionHeight) {
-            return {"scale": [1, 1]};
+        public apply(delegate:ns_egret.StageDelegate, designedResolutionWidth:number, designedResolutionHeight:number):void{
         }
     }
 
@@ -254,11 +254,12 @@ module ns_egret {
         private height;
 
         constructor(width, height) {
+            super();
             this.width = width;
             this.height = height;
         }
 
-        public apply(delegate:ns_egret.StageDelegate, designedResolutionWidth, designedResolutionHeight) {
+        public apply(delegate:ns_egret.StageDelegate, designedResolutionWidth:number, designedResolutionHeight:number) {
             var canvas:HTMLCanvasElement = <HTMLCanvasElement>document.getElementById(StageDelegate.canvas_name);
             var container:HTMLDivElement = <HTMLDivElement>document.getElementById(StageDelegate.canvas_div_name);
             var viewPortWidth = this.width;

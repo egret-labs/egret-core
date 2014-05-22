@@ -15,16 +15,24 @@
  * FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
+
 module ns_egret {
 
+	/**
+	 * @class ns_egret.PropertyChangeEventKind
+	 * @classdesc
+	 * PropertyChangeEventKind 类定义 PropertyChangeEvent 类的 kind 属性的常量值。
+	 */
 	export class PropertyChangeEventKind{
 		/**
 		 * 指示该属性的值已更改。 
+		 * @constant ns_egret.PropertyChangeEventKind.UPDATE
 		 */		
 		public static UPDATE:string = "update";
 		
 		/**
 		 * 指示该属性已从此对象中删除。
+		 * @constant ns_egret.PropertyChangeEventKind.DELETE
 		 */
 		public static DELETE:string = "delete";
 	}

@@ -15,18 +15,25 @@
  * FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
+
+/// <reference path="IUIComponent.ts"/>
+
 module ns_egret {
 
     /**
+	 * @class ns_egret.IDisplayText
+	 * @interface
+	 * @classdesc
      * 简单文本显示控件接口。
-     * @author DOM
+	 * @extends ns_egret.IUIComponent
      */
     export interface IDisplayText extends IUIComponent
     {
         /**
          * 此文本组件所显示的文本。
+		 * @member ns_egret.IDisplayText#text
          */
-        text:String;
+        text:string;
     }
 
 }

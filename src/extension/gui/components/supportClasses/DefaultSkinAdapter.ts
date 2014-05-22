@@ -21,18 +21,32 @@
 
 module ns_egret {
 
+	/**
+	 * @class ns_egret.DefaultSkinAdapter
+	 * @classdesc
+	 * 默认的ISkinAdapter接口实现
+	 * @implements ns_egret.ISkinAdapter
+	 */
     export class DefaultSkinAdapter implements ISkinAdapter{
         /**
          * 构造函数
+		 * @method ns_egret.DefaultSkinAdapter#constructor
          */
         public constructor(){
         }
         /**
-         * @inheritDoc
+		 * @method ns_egret.DefaultSkinAdapter#getSkin
+		 * @param skinName {any} 
+		 * @param compFunc {Function} 
+		 * @param thisObject {any} 
+		 * @param oldSkin {DisplayObject} 
          */
-        public getSkin(skinName:Object,compFunc:Function,thisObject:any,oldSkin:DisplayObject=null):void{
+        public getSkin(skinName:any,compFunc:Function,thisObject:any,oldSkin:DisplayObject=null):void{
             if(skinName instanceof DisplayObject){
                 compFunc.call(thisObject,skinName,skinName);
+            }
+            else{
+                compFunc.call(thisObject,(new skinName()),skinName);
             }
         }
     }

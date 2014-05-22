@@ -15,11 +15,19 @@
  * FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
+
 module ns_egret {
 
+	/**
+	 * @class ns_egret.IInvalidateDisplay
+	 * @interface
+	 * @classdesc
+	 * 具有延迟应用属性功能的显示对象接口
+	 */
 	export interface IInvalidateDisplay{
 		/**
 		 * 立即应用所有标记为延迟验证的属性
+		 * @method ns_egret.IInvalidateDisplay#validateNow
 		 */		
 		validateNow():void;
 	}

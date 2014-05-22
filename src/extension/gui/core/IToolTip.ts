@@ -15,11 +15,22 @@
  * FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
+
+/// <reference path="IUIComponent.ts"/>
+
 module ns_egret {
 
+	/**
+	 * @class ns_egret.IToolTip
+	 * @interface
+	 * @classdesc
+	 * 工具提示组件接口
+	 * @extends ns_egret.IUIComponent
+	 */
 	export interface IToolTip extends IUIComponent{
 		/**
 		 * 工具提示的数据对象，通常为一个字符串。
+		 * @member ns_egret.IToolTip#toolTipData
 		 */		
 		toolTipData:Object;
 	}

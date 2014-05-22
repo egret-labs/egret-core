@@ -16,34 +16,58 @@
  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-/// <reference path="../../../egret/display/DisplayObject.ts"/>
-/// <reference path="../../../egret/events/Event.ts"/>
 /// <reference path="../../../egret/events/TouchEvent.ts"/>
 /// <reference path="../components/IItemRenderer.ts"/>
 
 module ns_egret {
 
+	/**
+	 * @class ns_egret.ListEvent
+	 * @classdesc
+	 * 列表事件
+	 * @extends ns_egret.TouchEvent
+	 */	
 	export class ListEvent extends TouchEvent{
 		/**
 		 * 指示用户执行了将鼠标指针从控件中某个项呈示器上移开的操作 
+		 * @constant ns_egret.ListEvent.ITEM_ROLL_OUT
 		 */		
 		public static ITEM_ROLL_OUT:string = "itemRollOut";
 		
 		/**
 		 * 指示用户执行了将鼠标指针滑过控件中某个项呈示器的操作。 
+		 * @constant ns_egret.ListEvent.ITEM_ROLL_OVER
 		 */
 		public static ITEM_ROLL_OVER:string = "itemRollOver";
 		
 		/**
 		 * 指示用户执行了将鼠标在某个项呈示器上单击的操作。 
+		 * @constant ns_egret.ListEvent.ITEM_CLICK
 		 */		
 		public static ITEM_CLICK:string = "itemClick";
 		
 		
+		/**
+		 * @method ns_egret.ListEvent#constructor
+		 * @param type {string} 
+		 * @param bubbles {boolean} 
+		 * @param cancelable {boolean} 
+		 * @param touchPointID {number} 
+		 * @param stageX {number} 
+		 * @param stageY {number} 
+		 * @param ctrlKey {boolean} 
+		 * @param altKey {boolean} 
+		 * @param shiftKey {boolean} 
+		 * @param buttonDown {boolean} 
+		 * @param itemIndex {number} 
+		 * @param item {any} 
+		 * @param itemRenderer {IItemRenderer} 
+		 */
 		public constructor(type:string, bubbles:boolean=true, cancelable:boolean=true,
-                           touchPointID:number=0,stageX:number=0,stageY:number=0,
+                           touchPointID:number=0,stageX:number=0,stageY:number=0,ctrlKey:boolean = false,
+                           altKey:boolean = false,shiftKey:boolean = false,buttonDown:boolean = false,
 						   itemIndex:number = -1,item:any = null,itemRenderer:IItemRenderer = null){
-			super(type, bubbles, cancelable, touchPointID, stageX, stageY);
+			super(type, bubbles, cancelable, touchPointID, stageX, stageY,ctrlKey,altKey,shiftKey,buttonDown);
 			
 			this.itemIndex = itemIndex;
 			this.item = item;
@@ -53,16 +77,19 @@ module ns_egret {
 		
 		/**
 		 * 触发鼠标事件的项呈示器数据源项。
+		 * @member ns_egret.ListEvent#item
 		 */
 		public item:any;
 		
 		/**
 		 * 触发鼠标事件的项呈示器。 
+		 * @member ns_egret.ListEvent#itemRenderer
 		 */		
 		public itemRenderer:IItemRenderer;
 		
 		/**
 		 * 触发鼠标事件的项索引
+		 * @member ns_egret.ListEvent#itemIndex
 		 */		
 		public itemIndex:number;
 	}

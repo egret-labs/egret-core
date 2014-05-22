@@ -19,18 +19,17 @@
 /// <reference path="RendererContext.ts"/>
 /// <reference path="../../core/MainContext.ts"/>
 /// <reference path="../../core/RenderFilter.ts"/>
-/// <reference path="../../core/Ticker.ts"/>
-/// <reference path="../../debug/DEBUG.ts"/>
 /// <reference path="../../geom/Matrix.ts"/>
-/// <reference path="../../geom/Rectangle.ts"/>
 /// <reference path="../../text/TextField.ts"/>
 /// <reference path="../../texture/Texture.ts"/>
+/// <reference path="../../utils/getTimer.ts"/>
+/// <reference path="../../../jslib/DEBUG.d.ts"/>
 
 module ns_egret {
     export class HTML5CanvasRenderer extends RendererContext {
 
         private canvas;
-        private canvasContext;
+        public canvasContext;
 
         private _matrixA:number;
         private _matrixB:number;
@@ -39,8 +38,10 @@ module ns_egret {
         private _matrixTx:number;
         private _matrixTy:number;
 
-        private _transformTx:number;
-        private _transformTy:number;
+        public _transformTx:number;
+        public _transformTy:number;
+
+        private blendValue:string;
 
         constructor(canvas) {
             this.canvas = canvas;
@@ -91,12 +92,12 @@ module ns_egret {
                 DEBUG.checkDrawImage(texture, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight);
             }
             var image = texture._bitmapData;
-            var beforeDraw = ns_egret.Ticker.now();
             destX += this._transformTx;
             destY += this._transformTy;
+            var beforeDraw = ns_egret.getTimer();
             this.canvasContext.drawImage(image, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight);
             super.drawImage(image, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight);
-            this.renderCost += ns_egret.Ticker.now() - beforeDraw;
+            this.renderCost += ns_egret.getTimer() - beforeDraw;
         }
 
         setTransform(matrix:ns_egret.Matrix) {
@@ -125,14 +126,17 @@ module ns_egret {
             this.canvasContext.setTransform(1,0,0,1,0,0);
         }
 
+
         setAlpha(alpha:number, blendMode:ns_egret.BlendMode) {
             if (alpha != this.canvasContext.globalAlpha) {
                 this.canvasContext.globalAlpha = alpha;
             }
             if (blendMode) {
+                this.blendValue = blendMode.value;
                 this.canvasContext.globalCompositeOperation = blendMode.value;
             }
-            else {
+            else if(this.blendValue != ns_egret.BlendMode.NORMAL.value){
+                this.blendValue = ns_egret.BlendMode.NORMAL.value;
                 this.canvasContext.globalCompositeOperation = ns_egret.BlendMode.NORMAL.value;
             }
         }
@@ -160,7 +164,7 @@ module ns_egret {
             renderContext.strokeStyle = strokeColor;
             if (outline) {
                 renderContext.lineWidth = outline * 2;
-                renderContext.strokeText(text, x, y, maxWidth || 0xFFFF);
+                renderContext.strokeText(text, x + this._transformTx, y + this._transformTy, maxWidth || 0xFFFF);
             }
             renderContext.fillText(text, x + this._transformTx, y + this._transformTy, maxWidth || 0xFFFF);
             super.drawText(textField,text, x, y, maxWidth);

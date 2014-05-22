@@ -1,6 +1,6 @@
 Egret Framework
 ================================================
-Current Version: v0.9.2 (prerelease)
+Current Version: v0.9.4 (prerelease)
 
 
 
@@ -16,16 +16,12 @@ Egret Framework是一款使用JavaScript(TypeScript)编写的HTML5开源免费�
 * Chrome
 * Safari
 * FireFox
-* IE9
+* IE9+
 
-#### Mobile
-* iOS Safari
-* Android 4.0 Chrome
-* Android 2.3+ 内置浏览器
-* Android 2.3+ UC浏览器、百度浏览器、腾讯浏览器
-* App 微信WebView，百度轻应用
-
-> 以上内容为Egret当前版本的核心支持内容，其他浏览器暂不保证兼容性
+#### Mobile Browsers / WebView
+* iOS 5.0+
+* Android 2.3+
+* Windows Phone 8
 
 
 如何构建
@@ -39,8 +35,10 @@ Egret Framework是一款使用JavaScript(TypeScript)编写的HTML5开源免费�
 
 #### 发布说明
 
-[Egret Release Notes 2014-4-7](/docs/ReleaseNotes.md)
+[Egret 0.9.4 Release Notes 2014-5-15](/docs/ReleaseNotes_0_9_4.md)
 
-[Egret Release Notes 2014-3-27](/docs/ReleaseNotes.md)
+[Egret 0.9.3  Release Notes 2014-4-30](/docs/ReleaseNotes.md)
 
-[Egret Release Notes 2014-3-24](/docs/ReleaseNotes.md)
+[Egret 0.9.2  Release Notes 2014-3-27](/docs/ReleaseNotes.md)
+
+[Egret 0.9.1  Release Notes 2014-3-24](/docs/ReleaseNotes.md)

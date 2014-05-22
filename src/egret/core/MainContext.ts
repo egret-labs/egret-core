@@ -16,8 +16,8 @@
  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-/// <reference path="../context/net/NetContext.ts"/>
 /// <reference path="../context/devices/DeviceContext.ts"/>
+/// <reference path="../context/net/NetContext.ts"/>
 /// <reference path="../context/renderer/RendererContext.ts"/>
 /// <reference path="../context/sound/SoundContext.ts"/>
 /// <reference path="Ticker.ts"/>
@@ -26,6 +26,8 @@
 /// <reference path="../events/Event.ts"/>
 /// <reference path="../events/EventDispatcher.ts"/>
 /// <reference path="../interactive/TouchContext.ts"/>
+/// <reference path="../utils/Recycler.ts"/>
+/// <reference path="../utils/callLater.ts"/>
 
 module ns_egret{
     /**
@@ -88,6 +90,7 @@ module ns_egret{
                 this.broadcastRender();
                 Stage._invalidateRenderFlag = false;
             }
+            this.doCallLaterList();
             this.stage.updateTransform();
             this.dispatchEventWith(Event.FINISH_UPDATE_TRANSFORM);
             this.stage.draw(context);
@@ -103,7 +106,27 @@ module ns_egret{
             var event:Event = this.reuseEvent;
             event._type = Event.ENTER_FRAME;
             this.dispatchEvent(event);
-            var list:Array = DisplayObject._enterFrameCallBackList;
+            var list:Array<any> = DisplayObject._enterFrameCallBackList.concat();
+            var length:number = list.length;
+            for(var i:number = 0;i<length;i++){
+                var eventBin:any = list[i];
+                event._target = eventBin.display;
+                event._setCurrentTarget(eventBin.display);
+                eventBin.listener.call(eventBin.thisObject,event);
+            }
+
+            list = Recycler._callBackList;
+            for(i=list.length-1;i>=0;i--){
+                list[i]._checkFrame();
+            }
+        }
+        /**
+         * 广播Render事件。
+         */
+        private broadcastRender():void{
+            var event:Event = this.reuseEvent;
+            event._type = Event.RENDER;
+            var list:Array<any> = DisplayObject._renderCallBackList.concat();
             var length:number = list.length;
             for(var i:number = 0;i<length;i++){
                 var eventBin:any = list[i];
@@ -113,18 +136,24 @@ module ns_egret{
             }
         }
         /**
-         * 广播Render事件。
+         * 执行callLater回调函数列表
          */
-        private broadcastRender():void{
-            var event:Event = this.reuseEvent;
-            event._type = Event.RENDER;
-            var list:Array = DisplayObject._renderCallBackList;
-            var length:number = list.length;
-            for(var i:number = 0;i<length;i++){
-                var eventBin:any = list[i];
-                event._target = eventBin.display;
-                event._setCurrentTarget(eventBin.display);
-                eventBin.listener.call(eventBin.thisObject,event);
+        private doCallLaterList():void{
+            if(__callLaterFunctionList.length==0){
+                return;
+            }
+            var funcList:Array<any> = __callLaterFunctionList;
+            __callLaterFunctionList = [];
+            var thisList:Array<any> = __callLaterThisList;
+            __callLaterThisList = [];
+            var argsList:Array<any> = __callLaterArgsList;
+            __callLaterArgsList = [];
+            var length:number = funcList.length;
+            for(var i:number=0;i<length;i++){
+                var func:Function = funcList[i];
+                if(func!=null){
+                    func.apply(thisList[i],argsList[i]);
+                }
             }
         }
 

@@ -16,6 +16,7 @@
  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+/// <reference path="../core/HashObject.ts"/>
 /// <reference path="../display/DisplayObject.ts"/>
 /// <reference path="Point.ts"/>
 
@@ -23,8 +24,9 @@ module ns_egret {
     /**
      * 2D矩阵类，包括常见矩阵算法
      */
-    export class Matrix {
+    export class Matrix extends HashObject{
         constructor(public a = 1, public b = 0, public c = 0, public d = 1, public tx = 0, public ty = 0) {
+            super();
         }
 
 // static public properties:
@@ -180,16 +182,16 @@ module ns_egret {
         public appendTransformFromDisplay(target:ns_egret.DisplayObject) {
             var o = target;
             var anchorX,anchorY;
-            if(o.relativeAnchorPointX != 0 || o.relativeAnchorPointY != 0)
+            if(o.anchorX != 0 || o.anchorY != 0)
             {
                 var bounds = o.getBounds();
-                anchorX = bounds.width * o.relativeAnchorPointX;
-                anchorY = bounds.height * o.relativeAnchorPointY;
+                anchorX = bounds.width * o.anchorX;
+                anchorY = bounds.height * o.anchorY;
             }
             else
             {
-                anchorX = o.anchorPointX;
-                anchorY = o.anchorPointY;
+                anchorX = o.anchorOffsetX;
+                anchorY = o.anchorOffsetY;
             }
             this.identity();
             this.appendTransform(o.x, o.y, o.scaleX, o.scaleY, o.rotation,

@@ -23,7 +23,7 @@ module ns_egret {
     /**
      * Point 对象表示二维坐标系统中的某个位置，其中 x 表示水平轴，y 表示垂直轴。
      */
-    export class Point extends ns_egret.HashObject{
+    export class Point extends HashObject{
 
         static identity = new Point(0, 0);
 
@@ -40,5 +40,13 @@ module ns_egret {
          * 该点的垂直坐标。默认值为 0。
          */
         public y:number;
+
+        /**
+         * 克隆点对象
+         * @returns {ns_egret.Point}
+         */
+        public clone():Point{
+            return new Point(this.x, this.y);
+        }
     }
 }

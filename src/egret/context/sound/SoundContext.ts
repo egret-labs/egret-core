@@ -16,18 +16,19 @@
  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+/// <reference path="../../core/HashObject.ts"/>
 /// <reference path="../../core/MainContext.ts"/>
 
 module ns_egret{
-    export class SoundContext {
+    export class SoundContext extends HashObject{
         public static getInstance():SoundContext {
             return ns_egret.MainContext.instance.soundContext;
         }
 
-        public static isMusicPlaying:Boolean = false;
+        public static isMusicPlaying:boolean = false;
 
-        constructor() {
-
+        public constructor() {
+            super();
         }
 
         public preloadSound(path) {

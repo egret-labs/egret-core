@@ -16,15 +16,17 @@
  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+/// <reference path="../core/HashObject.ts"/>
 /// <reference path="../core/Logger.ts"/>
 /// <reference path="../display/SpriteSheet.ts"/>
 /// <reference path="Texture.ts"/>
 
-module ns_egret {
+module ns_egret{
     /**
-     * @class 纹理的缓存和管理类
+     * 纹理的缓存和管理类
+     * @class ns_egret.TextureCache
      */
-    export class TextureCache {
+    export class TextureCache extends HashObject{
         private static instance:TextureCache;
 
         public static getInstance():TextureCache {
@@ -38,6 +40,7 @@ module ns_egret {
         private _spritesheets;
 
         constructor() {
+            super();
             this._textures = {};
             this._spritesheets = {};
         }
@@ -47,7 +50,7 @@ module ns_egret {
          * @param key
          * @param texture
          */
-        public addTexture(key, texture:Texture) {
+        public addTexture(key:any, texture:Texture) {
             if (!this._textures[key]) {
                 this._textures[key] = texture;
             }

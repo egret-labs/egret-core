@@ -16,22 +16,46 @@
  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+/// <reference path="../../../egret/core/HashObject.ts"/>
 /// <reference path="../core/IContainer.ts"/>
 /// <reference path="../core/IStateClient.ts"/>
+/// <reference path="IOverride.ts"/>
 
 module ns_egret {
 
-	export class OverrideBase implements IOverride{
+	/**
+	 * @class ns_egret.OverrideBase
+	 * @classdesc
+	 * OverrideBase 类是视图状态所用的 override 类的基类。
+	 * @extends ns_egret.HashObject
+	 * @implements ns_egret.IOverride
+	 */	
+	export class OverrideBase extends HashObject implements IOverride{
+		/**
+		 * @method ns_egret.OverrideBase#constructor
+		 */
 		public constructor() {
             super();
         }
+		/**
+		 * @method ns_egret.OverrideBase#initialize
+		 * @param parent {IStateClient} 
+		 */
 		public initialize(parent:IStateClient):void {
 		}
 		
+		/**
+		 * @method ns_egret.OverrideBase#apply
+		 * @param parent {IContainer} 
+		 */
 		public apply(parent:IContainer):void {
 			
 		}
 		
+		/**
+		 * @method ns_egret.OverrideBase#remove
+		 * @param parent {IContainer} 
+		 */
 		public remove(parent:IContainer):void {
 			if(parent===null)
             {
@@ -40,9 +64,12 @@ module ns_egret {
 		}
 		/**
 		 * 从对象初始化，这是一个便利方法
+		 * @method ns_egret.OverrideBase#initializeFromObject
+		 * @param properties {any} 
+		 * @returns {any}
 		 */		
 		public initializeFromObject(properties:any):any{
-			for (var p:string in properties){
+			for (var p in properties){
 				this[p] = properties[p];
 			}
 			return this;

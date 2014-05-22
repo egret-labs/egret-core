@@ -15,11 +15,25 @@
  * FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
+
+/// <reference path="IItemRenderer.ts"/>
+
 module ns_egret {
 
+	/**
+	 * @class ns_egret.IItemRendererOwner
+	 * @interface
+	 * @classdesc
+	 * 项呈示器的主机组件接口
+	 */	
 	export interface IItemRendererOwner{
 		/**
 		 * 更新项呈示器数据
+		 * @method ns_egret.IItemRendererOwner#updateRenderer
+		 * @param renderer {IItemRenderer} 
+		 * @param itemIndex {number} 
+		 * @param data {any} 
+		 * @returns {IItemRenderer}
 		 */		
 		updateRenderer(renderer:IItemRenderer, itemIndex:number, data:any):IItemRenderer; 
 	}

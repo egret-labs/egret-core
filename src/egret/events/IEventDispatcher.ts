@@ -16,15 +16,17 @@
  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+/// <reference path="../core/IHashObject.ts"/>
 /// <reference path="Event.ts"/>
 
 module ns_egret {
     /**
-     * @class IEventDispatcher
-     * IEventDispatcher是egret的事件派发器接口，负责进行事件的发送和侦听。
-     * @stable A
+     *
+     * @class ns_egret.IEventDispatcher
+     * @interface
+     * @classdesc IEventDispatcher是egret的事件派发器接口，负责进行事件的发送和侦听。
      */
-    export interface IEventDispatcher {
+    export interface IEventDispatcher extends IHashObject{
 
         /**
          * 添加事件侦听器
@@ -38,9 +40,8 @@ module ns_egret {
          * @param  priority 事件侦听器的优先级。优先级由一个带符号的 32 位整数指定。数字越大，优先级越高。优先级为 n 的所有侦听器会在
          * 优先级为 n -1 的侦听器之前得到处理。如果两个或更多个侦听器共享相同的优先级，则按照它们的添加顺序进行处理。默认优先级为 0。
          * @stable A
-         * todo:GitHub文档
          */
-        addEventListener(type:string, listener:Function, thisObject:any, useCapture:Boolean = false, priority:number = 0):void;
+        addEventListener(type:string, listener:Function, thisObject:any, useCapture?:boolean, priority?:number):void;
         /**
          * 移除事件侦听器
          * @param type 事件名
@@ -49,7 +50,7 @@ module ns_egret {
          * @param useCapture 是否使用捕获，这个属性只在显示列表中生效。
          * @stable A
          */
-        removeEventListener(type:string, listener:Function, useCapture:Boolean = false):void;
+        removeEventListener(type:string, listener:Function, thisObject:any, useCapture?:boolean):void;
 
         /**
          * 检测是否存在监听器
@@ -66,5 +67,14 @@ module ns_egret {
          * @returns {*}
          */
         dispatchEvent(event:Event):boolean;
+
+        /**
+         * 检查是否用此 EventDispatcher 对象或其任何始祖为指定事件类型注册了事件侦听器。将指定类型的事件调度给此
+         * EventDispatcher 对象或其任一后代时，如果在事件流的任何阶段触发了事件侦听器，则此方法返回 true。
+         * hasEventListener() 与 willTrigger() 方法的区别是：hasEventListener() 只检查它所属的对象，
+         * 而 willTrigger() 方法检查整个事件流以查找由 type 参数指定的事件。
+         * @param type 事件名
+         */
+        willTrigger(type:string):boolean;
     }
 }

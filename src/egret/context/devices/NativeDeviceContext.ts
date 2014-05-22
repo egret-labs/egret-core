@@ -16,23 +16,31 @@
  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+/// <reference path="../../core/HashObject.ts"/>
+/// <reference path="../../core/MainContext.ts"/>
+/// <reference path="../NativeContext.d.ts"/>
+
 module ns_egret {
 
 
-    export class NativeDeviceContext {
+    export class NativeDeviceContext extends HashObject {
 
         private callback:Function;
-        private thisObject;
+        private thisObject:any;
+
+        public constructor() {
+            super();
+        }
 
         public executeMainLoop(callback:Function, thisObject:any):void {
 
             this.callback = callback;
             this.thisObject = thisObject;
-            egret.runGame();
+            egret_native.executeMainLoop(this.onEnterFrame, this);
         }
 
-        public onEnterFrame():void {
-            this.callback.call(this.thisObject);
+        private onEnterFrame(advancedTime:number):void {
+            this.callback.call(this.thisObject, advancedTime);
         }
     }
 }

@@ -45,7 +45,7 @@ module ns_egret {
          */
         public bitmapFontData;
 
-        private _bitmapPool:Array;
+        private _bitmapPool:Array<Bitmap>;
 
         constructor() {
             super();
@@ -64,7 +64,7 @@ module ns_egret {
         public _renderText(forMeasureContentSize:boolean = false):Rectangle {
             var rect:Rectangle = Rectangle.identity.initialize(0,0,0,0);
             if (!forMeasureContentSize) {
-                this.removeAllChildren();
+                this.removeChildren();
             }
             for (var i = 0, l = this.text.length; i < l; i++) {
                 var character = this.text.charAt(i);

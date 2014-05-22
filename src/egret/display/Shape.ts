@@ -17,14 +17,28 @@
  */
 
 /// <reference path="../context/renderer/RendererContext.ts"/>
+/// <reference path="../core/MainContext.ts"/>
 /// <reference path="DisplayObject.ts"/>
+/// <reference path="Graphics.ts"/>
 
 module ns_egret {
 
     export class Shape extends ns_egret.DisplayObject {
 
-        hitTest(x,y){
-            return super.hitTest(x,y);
+        public graphics:Graphics;
+
+        constructor() {
+            super();
+            var rendererContext = ns_egret.MainContext.instance.rendererContext;
+            this.graphics = new Graphics(rendererContext);
+        }
+
+        hitTest(x, y) {
+            return super.hitTest(x, y);
+        }
+
+        render(renderContext:RendererContext) {
+            this.graphics._draw();
         }
 
     }
@@ -33,16 +47,13 @@ module ns_egret {
     export class ShapeRect extends ns_egret.Shape {
 
         private _color:number;
-        private _colorRed:number;
-        private _colorBlue:number;
-        private _colorGreen:number;
-        private _alpha:number;
-        private _colorStr:string;
         private _colorDirty:boolean = true;
+        private _sizeDirty:boolean = false;
 
-        constructor(){
-            this._color = 0xFFFFFF;
+        constructor() {
             super();
+            this._color = 0xFFFFFF;
+
         }
 
         public get color():number {
@@ -63,20 +74,52 @@ module ns_egret {
             this._alpha = value;
         }
 
-        render(renderContext:RendererContext) {
-            if (this._colorDirty) {
-                var value = this._color;
-                this._colorBlue = value & 0x0000FF;
-                this._colorGreen = (value & 0x00ff00) >> 8;
-                this._colorRed = value >> 16;
-                this._colorStr = "rgba(" + this._colorRed + "," + this._colorGreen + "," + this._colorBlue + "," + this._alpha + ")";
-                this._colorDirty = false;
-            }
-            var context = renderContext.canvasContext;
-            context.fillStyle = this._colorStr;
-            context.fillRect(renderContext._transformTx, renderContext._transformTy, this._explicitWidth, this._explicitHeight);
+        /**
+         * 宽度，优先顺序为 显式设置宽度 > 测量宽度
+         * @returns {number}
+         */
+        public get width():number {
+            return this.getBounds().width;
+        }
 
+        /**
+         * 高度，优先顺序为 显式设置高度 > 测量高度
+         * @returns {number}
+         */
+        public get height():number {
+            return this.getBounds().height;
+        }
+
+        /**
+         * 显式设置宽度
+         * @param value
+         */
+        public set width(value:number) {
+            super._setWidth(value);
+            this._sizeDirty = true;
+        }
+
+
+        /**
+         * 显式设置高度
+         * @param value
+         */
+        public set height(value:number) {
+            super._setHeight(value);
+            this._sizeDirty = true;
+        }
+
+        render(renderContext:RendererContext) {
+            if (this._colorDirty || this._sizeDirty) {
+                this._colorDirty = false;
+                this._sizeDirty = false;
+
+                this.graphics.clear();
+                this.graphics.beginFill(this._color, this._alpha);
+                this.graphics.drawRect(0, 0, this._explicitWidth, this._explicitHeight);
+
+            }
+            this.graphics._draw();
         }
     }
-
 }

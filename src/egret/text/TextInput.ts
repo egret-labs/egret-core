@@ -78,7 +78,7 @@ module ns_egret {
             return ns_egret.Rectangle.identity;
         }
 
-        hitTest(x, y){
+        public hitTest(x, y, ignoreTouchEnabled:boolean = false):DisplayObject {
             //它不能被点击
             return null;
         }

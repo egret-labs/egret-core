@@ -22,7 +22,16 @@
 
 module ns_egret {
 
+	/**
+	 * @class ns_egret.BasicLayout
+	 * @classdesc
+	 * 基本布局
+	 * @extends ns_egret.LayoutBase
+	 */
 	export class BasicLayout extends LayoutBase{
+		/**
+		 * @method ns_egret.BasicLayout#constructor
+		 */
 		public constructor(){
 			super();
 		}
@@ -30,25 +39,28 @@ module ns_egret {
 		/**
 		 * 此布局不支持虚拟布局，设置这个属性无效
 		 */		
-		public set useVirtualLayout(value:boolean):void{
+		public set useVirtualLayout(value:boolean){
 		}
 		
 		private _mouseWheelSpeed:number = 20;
 		/**
 		 * 鼠标滚轮每次滚动时目标容器的verticalScrollPosition
 		 * 或horizontalScrollPosition改变的像素距离。必须大于0， 默认值20。
+		 * @member ns_egret.BasicLayout#mouseWheelSpeed
 		 */
 		public get mouseWheelSpeed():number{
 			return this._mouseWheelSpeed;
 		}
-		public set mouseWheelSpeed(value:number):void{
+		public set mouseWheelSpeed(value:number){
 			if(value==0)
 				value = 1;
 			this._mouseWheelSpeed = value;
 		}
 
 		/**
-		 * @inheritDoc
+		 * @method ns_egret.BasicLayout#getElementBoundsLeftOfScrollRect
+		 * @param scrollRect {Rectangle} 
+		 * @returns {Rectangle}
 		 */
 		public getElementBoundsLeftOfScrollRect(scrollRect:Rectangle):Rectangle{
 			var bounds:Rectangle = new Rectangle();
@@ -57,7 +69,9 @@ module ns_egret {
 			return bounds;
 		}
 		/**
-		 * @inheritDoc
+		 * @method ns_egret.BasicLayout#getElementBoundsRightOfScrollRect
+		 * @param scrollRect {Rectangle} 
+		 * @returns {Rectangle}
 		 */
 		public getElementBoundsRightOfScrollRect(scrollRect:Rectangle):Rectangle{
 			var bounds:Rectangle = new Rectangle();
@@ -66,7 +80,9 @@ module ns_egret {
 			return bounds;
 		}
 		/**
-		 * @inheritDoc
+		 * @method ns_egret.BasicLayout#getElementBoundsAboveScrollRect
+		 * @param scrollRect {Rectangle} 
+		 * @returns {Rectangle}
 		 */
 		public getElementBoundsAboveScrollRect(scrollRect:Rectangle):Rectangle{
 			var bounds:Rectangle = new Rectangle();
@@ -75,7 +91,9 @@ module ns_egret {
 			return bounds;
 		}
 		/**
-		 * @inheritDoc
+		 * @method ns_egret.BasicLayout#getElementBoundsBelowScrollRect
+		 * @param scrollRect {Rectangle} 
+		 * @returns {Rectangle}
 		 */
 		public getElementBoundsBelowScrollRect(scrollRect:Rectangle):Rectangle{
 			var bounds:Rectangle = new Rectangle();
@@ -85,7 +103,7 @@ module ns_egret {
 		}
 
 		/**
-		 * @inheritDoc
+		 * @method ns_egret.BasicLayout#measure
 		 */
 		public measure():void{
 			super.measure();
@@ -153,7 +171,9 @@ module ns_egret {
 
 
 		/**
-		 * @inheritDoc
+		 * @method ns_egret.BasicLayout#updateDisplayList
+		 * @param unscaledWidth {number} 
+		 * @param unscaledHeight {number} 
 		 */
 		public updateDisplayList(unscaledWidth:number, unscaledHeight:number):void{
 			super.updateDisplayList(unscaledWidth, unscaledHeight);

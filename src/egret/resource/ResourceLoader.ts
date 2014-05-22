@@ -18,10 +18,8 @@
 
 /// <reference path="../context/net/NetContext.ts"/>
 /// <reference path="../core/MainContext.ts"/>
-/// <reference path="../core/Ticker.ts"/>
 /// <reference path="../events/EventDispatcher.ts"/>
-/// <reference path="../texture/Texture.ts"/>
-/// <reference path="../texture/TextureCache.ts"/>
+/// <reference path="../utils/callLater.ts"/>
 
 module ns_egret {
     /**
@@ -37,6 +35,8 @@ module ns_egret {
         data = null;
         onLoadComplete:Function;
         fixedUrl:string = null;
+
+        preFixUrl:string = "";
 
         constructor(url:string, type:string) {
             super();
@@ -60,17 +60,30 @@ module ns_egret {
                     this.startLoading();
                     break;
                 case ResourceLoader.LOAD_STATE_LOADED:
-                    ns_egret.Ticker.getInstance().callLater(this._executeAllCallback, this);
+                    ns_egret.callLater(this._executeAllCallback, this);
                     break;
             }
 
         }
 
         private startLoading() {
+            var fileUrl = "";
+//            if (this.preFixUrl == "") {
+//                fileUrl = ResourceLoader.prefix + this.url;
+//            }
+//            else {
+//                fileUrl = this.preFixUrl + this.url;
+//            }
+
             var self = this;
             var request = new ns_egret.URLRequest(this.url, this._executeAllCallback, this);
             request.type = this.type;
-            request.prefix = ResourceLoader.prefix;
+            if (this.preFixUrl == "") {
+                request.prefix = ResourceLoader.prefix;
+            }
+            else {
+                request.prefix = this.preFixUrl;
+            }
             MainContext.instance.netContext.send(request);
         }
 

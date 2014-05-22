@@ -31,14 +31,14 @@ module ns_egret {
          * 全部Bitmap是否开启DEBUG模式
          * @stable B 这个API以后可能会被移动到一个单独的负责各种DEBUG参数的枚举类中
          */
-        public static debug:Boolean = false;
+        public static debug:boolean = false;
 
 
         /**
          * 单个Bitmap是否开启DEBUG模式
          * @stable B 这个API以后可能会被移动到一个单独的负责各种DEBUG参数的枚举类中
          */
-        public debug:Boolean = false;
+        public debug:boolean = false;
 
         /**
          * debug边框颜色，默认值为红色
@@ -80,10 +80,12 @@ module ns_egret {
          * @param renderContext
          */
             render(renderContext:RendererContext) {
+
             var locTexture = this.texture;
-            if (locTexture == null || locTexture._bitmapData == null) {
+            if (locTexture == null) {
                 return;
             }
+            this._texture_to_render = locTexture;
             var x, y, w, h, offsetX, offsetY;
             if (this.spriteFrame) {
                 var rect:ns_egret.SpriteSheetFrame = this.spriteFrame;
@@ -126,13 +128,13 @@ module ns_egret {
                 ns_egret.Logger.fatal("获取BitmapBounds失败");
             }
             var anchorX, anchorY;
-            if (this.relativeAnchorPointX != 0 || this.relativeAnchorPointY != 0) {
-                anchorX = w * this.relativeAnchorPointX;
-                anchorY = h * this.relativeAnchorPointY;
+            if (this._anchorX != 0 || this._anchorY != 0) {
+                anchorX = w * this._anchorX;
+                anchorY = h * this._anchorY;
             }
             else {
-                anchorX = this.anchorPointX;
-                anchorY = this.anchorPointY;
+                anchorX = this._anchorOffsetX;
+                anchorY = this._anchorOffsetY;
             }
             return Rectangle.identity.initialize(-anchorX, -anchorY, w, h);
         }

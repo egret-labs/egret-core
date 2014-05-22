@@ -20,11 +20,21 @@
 /// <reference path="../../../egret/events/EventDispatcher.ts"/>
 /// <reference path="../core/UIGlobals.ts"/>
 /// <reference path="../events/UIEvent.ts"/>
+/// <reference path="ILayoutManagerClient.ts"/>
 /// <reference path="layoutClass/DepthQueue.ts"/>
 
 module ns_egret {
 
+	/**
+	 * @class ns_egret.LayoutManager
+	 * @classdesc
+	 * 布局管理器
+	 * @extends ns_egret.EventDispatcher
+	 */
 	export class LayoutManager extends EventDispatcher{
+		/**
+		 * @method ns_egret.LayoutManager#constructor
+		 */
 		public constructor(){
 			super();
 		}
@@ -42,6 +52,8 @@ module ns_egret {
 		private invalidatePropertiesQueue:DepthQueue = new DepthQueue();
 		/**
 		 * 标记组件提交过属性
+		 * @method ns_egret.LayoutManager#invalidateProperties
+		 * @param client {ILayoutManagerClient} 
 		 */		
 		public invalidateProperties(client:ILayoutManagerClient):void{
 			if(!this.invalidatePropertiesFlag){
@@ -80,6 +92,8 @@ module ns_egret {
 		private invalidateSizeQueue:DepthQueue = new DepthQueue();
 		/**
 		 * 标记需要重新测量尺寸
+		 * @method ns_egret.LayoutManager#invalidateSize
+		 * @param client {ILayoutManagerClient} 
 		 */		
 		public invalidateSize(client:ILayoutManagerClient ):void{
 			if(!this.invalidateSizeFlag){
@@ -116,6 +130,8 @@ module ns_egret {
 		private invalidateDisplayListQueue:DepthQueue = new DepthQueue();
 		/**
 		 * 标记需要重新测量尺寸
+		 * @method ns_egret.LayoutManager#invalidateDisplayList
+		 * @param client {ILayoutManagerClient} 
 		 */		
 		public invalidateDisplayList(client:ILayoutManagerClient ):void{
 			if(!this.invalidateDisplayListFlag){
@@ -161,8 +177,8 @@ module ns_egret {
 		 * 执行属性应用
 		 */		
 		private doPhasedInstantiationCallBack(event:Event=null):void{
-			UIGlobals.stage.removeEventListener(Event.ENTER_FRAME,this.doPhasedInstantiationCallBack);
-			UIGlobals.stage.removeEventListener(Event.RENDER, this.doPhasedInstantiationCallBack);
+			UIGlobals.stage.removeEventListener(Event.ENTER_FRAME,this.doPhasedInstantiationCallBack,this);
+			UIGlobals.stage.removeEventListener(Event.RENDER, this.doPhasedInstantiationCallBack,this);
 			this.doPhasedInstantiation();
 		}
 		
@@ -200,6 +216,7 @@ module ns_egret {
 		}
 		/**
 		 * 立即应用所有延迟的属性
+		 * @method ns_egret.LayoutManager#validateNow
 		 */		
 		public validateNow():void{
 			var infiniteLoopGuard:number = 0;
@@ -208,8 +225,9 @@ module ns_egret {
 		}
 		/**
 		 * 使大于等于指定组件层级的元素立即应用属性 
-		 * @param target 要立即应用属性的组件
-		 * @param skipDisplayList 是否跳过更新显示列表阶段
+		 * @method ns_egret.LayoutManager#validateClient
+		 * @param target {ILayoutManagerClient} 要立即应用属性的组件
+		 * @param skipDisplayList {boolean} 是否跳过更新显示列表阶段
 		 */			
 		public validateClient(target:ILayoutManagerClient, skipDisplayList:boolean = false):void{
 			

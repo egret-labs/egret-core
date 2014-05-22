@@ -17,6 +17,7 @@
  */
 
 /// <reference path="../core/Logger.ts"/>
+/// <reference path="../core/MainContext.ts"/>
 /// <reference path="../core/Ticker.ts"/>
 /// <reference path="Bitmap.ts"/>
 /// <reference path="DisplayObjectContainer.ts"/>
@@ -34,13 +35,14 @@ module ns_egret {
         private _totalFrame:number = 0;
         private _interval = 0;
         private _currentInterval = 0;
-        private _isPlaying:Boolean = false;
+        private _isPlaying:boolean = false;
         private _passTime:number = 0;
-        private _oneFrameTime = 1000 / Ticker.getInstance().getFrameRate();
+        private _oneFrameTime = 1000 / 60;
 
         constructor(public data, public texture:Texture) {
             super();
             this._frameData = data;
+            this._oneFrameTime = 1000 / ns_egret.MainContext.instance.deviceContext.frameRate;
         }
 
         /**
@@ -109,7 +111,7 @@ module ns_egret {
             this._passTime += frameTime;
         }
 
-        private playNextFrame(needShow:Boolean = true) {
+        private playNextFrame(needShow:boolean = true) {
             //todo 如果动画只有一帧的性能优化
             this._currentInterval = 0;
             var frameData = this._frameData.frames[this._currentFrameName].childrenFrame[this._currentFrameIndex];
@@ -117,7 +119,7 @@ module ns_egret {
                 var bitmap = this.getBitmap(frameData.res);
                 bitmap.x = frameData.x;
                 bitmap.y = frameData.y;
-                this.removeAllChildren();
+                this.removeChildren();
                 this.addChild(bitmap);
             }
 
@@ -171,7 +173,7 @@ module ns_egret {
          * @stable D 这个API需要改为 isPlaying()
          * @returns {Boolean}
          */
-        public getIsPlaying():Boolean {
+        public getIsPlaying():boolean {
             return this._isPlaying;
         }
     }

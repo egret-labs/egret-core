@@ -17,10 +17,12 @@
  */
 
 /// <reference path="../context/renderer/HTML5CanvasRenderer.ts"/>
+/// <reference path="../core/HashObject.ts"/>
 /// <reference path="../core/MainContext.ts"/>
 /// <reference path="../core/RenderFilter.ts"/>
 /// <reference path="../display/DisplayObject.ts"/>
 /// <reference path="../display/DisplayObjectContainer.ts"/>
+/// <reference path="../geom/Rectangle.ts"/>
 
 module ns_egret {
     /**
@@ -30,8 +32,10 @@ module ns_egret {
      * 在OpenGL / WebGL中，资源是一个提交GPU后获取的纹理id
      * Texture类封装了这些底层实现的细节，开发者只需要关心接口即可
      */
-    export class Texture {
+    export class Texture extends HashObject{
 
+        public offsetX = 0;
+        public offsetY = 0;
         private _path:string;
         public _textureWidth:number = 0;
         public _textureHeight:number = 0;
@@ -76,17 +80,17 @@ module ns_egret {
 
     export class RenderTexture extends Texture {
 
-        public offsetX = 0;
-        public offsetY = 0;
-        private cacheCanvas;
+
+        private cacheCanvas:HTMLCanvasElement;
 
         constructor() {
+            super();
             this.cacheCanvas = document.createElement("canvas");
 
         }
 
         public drawToTexture(displayObject:ns_egret.DisplayObject):void {
-            var cacheCanvas = this.cacheCanvas;
+            var cacheCanvas:HTMLCanvasElement = this.cacheCanvas;
             var bounds = displayObject.getBounds();
             cacheCanvas.width = bounds.width;
             cacheCanvas.height = bounds.height;
@@ -106,10 +110,11 @@ module ns_egret {
             }
 
             var renderContext = new ns_egret.HTML5CanvasRenderer(cacheCanvas);
-            var list = ns_egret.RenderFilter.getInstance()._drawAreaList.concat();
-            ns_egret.RenderFilter.getInstance()._drawAreaList.length = 0;
+            var renderFilter = ns_egret.RenderFilter.getInstance();
+            var drawAreaList:Array<Rectangle> = renderFilter._drawAreaList.concat();
+            renderFilter._drawAreaList.length = 0;
             displayObject.render(renderContext);
-            ns_egret.RenderFilter.getInstance()._drawAreaList = list;
+            renderFilter._drawAreaList = drawAreaList;
             this._bitmapData = this.cacheCanvas;
             this._textureWidth = this.cacheCanvas.width;
             this._textureHeight = this.cacheCanvas.height;

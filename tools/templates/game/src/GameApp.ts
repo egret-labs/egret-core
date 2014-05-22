@@ -1,3 +1,5 @@
+///<reference path="egret.d.ts"/>
+///<reference path="GameUI.ts"/>
 /**
  * 游戏入口类
  */
@@ -37,8 +39,8 @@ class GameApp {
 
         var stageW = stage.stageWidth;
         var stageH = stage.stageHeight;
-        var skyW = sky.getBounds().width;
-        var skyH = sky.getBounds().height;
+        var skyW = sky.width;
+        var skyH = sky.height;
 
         sky.scaleX = stageW / skyW;
         sky.scaleY = stageH / skyH;
@@ -51,7 +53,7 @@ class GameApp {
         stage.addChild(topMask);
 
         var icon = utils.createBitmap("egret_icon.png");
-        icon.relativeAnchorPointX = icon.relativeAnchorPointY = 0.5;
+        icon.anchorX = icon.anchorY = 0.5;
         stage.addChild(icon);
         icon.x = stageW / 2;
         icon.y = stageH / 2 - 60;
@@ -61,7 +63,7 @@ class GameApp {
         var colorLabel = new ns_egret.TextField();
         colorLabel.x = stageW / 2;
         colorLabel.y = stageH / 2 + 50;
-        colorLabel.relativeAnchorPointX = colorLabel.relativeAnchorPointY = 0.5;
+        colorLabel.anchorX = colorLabel.anchorY = 0.5;
         colorLabel.textColor = 0xffffff;
         colorLabel.textAlign = "center";
         colorLabel.text = "Hello Egret";
@@ -69,7 +71,7 @@ class GameApp {
         stage.addChild(colorLabel);
 
         var textContainer = new ns_egret.DisplayObjectContainer();
-        textContainer.relativeAnchorPointX = textContainer.relativeAnchorPointY = 0.5;
+        textContainer.anchorX = textContainer.anchorY = 0.5;
         stage.addChild(textContainer);
         textContainer.x = stageW / 2;
         textContainer.y = stageH / 2 + 100;
@@ -103,20 +105,20 @@ class GameApp {
     }
 
     private changeDescription(textContainer, lineArr) {
-        textContainer.removeAllChildren();
+        textContainer.removeChildren();
         var w = 0;
         for (var i = 0; i < lineArr.length; i++) {
             var info = lineArr[i];
             var colorLabel = new ns_egret.TextField();
             colorLabel.x = w;
-            colorLabel.relativeAnchorPointX = colorLabel.relativeAnchorPointY = 0;
+            colorLabel.anchorX = colorLabel.anchorY = 0;
             colorLabel.textColor = info["textColor"];
             colorLabel.text = info["text"];
             colorLabel.textAlign = "left";
             colorLabel.size = 40;
             textContainer.addChild(colorLabel);
 
-            w += colorLabel.getBounds().width;
+            w += colorLabel.width;
         }
     }
 

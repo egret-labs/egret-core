@@ -19,22 +19,36 @@
 /// <reference path="../../../egret/display/DisplayObject.ts"/>
 /// <reference path="../../../egret/display/DisplayObjectContainer.ts"/>
 /// <reference path="../../../egret/events/Event.ts"/>
-/// <reference path="../../../egret/geom/Point.ts"/>
+/// <reference path="IInvalidating.ts"/>
+/// <reference path="ILayoutElement.ts"/>
+/// <reference path="IUIComponent.ts"/>
+/// <reference path="IVisualElement.ts"/>
+/// <reference path="UIGlobals.ts"/>
 /// <reference path="../events/MoveEvent.ts"/>
 /// <reference path="../events/PropertyChangeEvent.ts"/>
 /// <reference path="../events/ResizeEvent.ts"/>
 /// <reference path="../events/UIEvent.ts"/>
 /// <reference path="../managers/ILayoutManagerClient.ts"/>
-/// <reference path="../managers/ISystemManager.ts"/>
-/// <reference path="UIGlobals.ts"/>
 
 module ns_egret {
 
+	/**
+	 * @class ns_egret.UIComponent
+	 * @classdesc
+	 * 显示对象基类
+	 * @extends ns_egret.DisplayObjectContainer
+	 * @implements ns_egret.IUIComponent
+	 * @implements ns_egret.ILayoutManagerClient
+	 * @implements ns_egret.ILayoutElement
+	 * @implements ns_egret.IInvalidating
+	 * @implements ns_egret.IVisualElement
+	 */
 	export class UIComponent extends DisplayObjectContainer
 		implements IUIComponent,ILayoutManagerClient,ILayoutElement,
 		IInvalidating,IVisualElement{
 		/**
 		 * 构造函数
+		 * @method ns_egret.UIComponent#constructor
 		 */		
 		public constructor(){
 			super();
@@ -57,6 +71,7 @@ module ns_egret {
 		private _id:string;
 		/**
 		 * 组件 ID。此值将作为对象的实例名称，因此不应包含任何空格或特殊字符。应用程序中的每个组件都应具有唯一的 ID。 
+		 * @constant ns_egret.UIComponent#id
 		 */		
 		public get id():string{
 			return this._id;
@@ -68,7 +83,7 @@ module ns_egret {
 
 		private _isPopUp:boolean;
 		/**
-		 * @inheritDoc
+		 * @member ns_egret.UIComponent#isPopUp
 		 */
 		public get isPopUp():boolean{
 			return this._isPopUp;
@@ -79,13 +94,14 @@ module ns_egret {
 		
 		private _owner:any;
 		/**
-		 * @inheritDoc
+		 * @member ns_egret.UIComponent#owner
 		 */
 		public get owner():any{
 			return this._owner? this._owner : this.parent;
 		}
 		/**
-		 * @inheritDoc
+		 * @method ns_egret.UIComponent#ownerChanged
+		 * @param value {any} 
 		 */
 		public ownerChanged(value:any):void{
 			this._owner = value;
@@ -94,7 +110,7 @@ module ns_egret {
 		
 		private _updateCompletePendingFlag:boolean = false;
 		/**
-		 * @inheritDoc
+		 * @member ns_egret.UIComponent#updateCompletePendingFlag
 		 */		
 		public get updateCompletePendingFlag():boolean{
 			return this._updateCompletePendingFlag;
@@ -106,7 +122,7 @@ module ns_egret {
 		private _initialized:boolean = false;
 		
 		/**
-		 * @inheritDoc
+		 * @member ns_egret.UIComponent#initialized
 		 */
 		public get initialized():boolean{
 			return this._initialized;
@@ -125,6 +141,7 @@ module ns_egret {
 		private initializeCalled:boolean = false;
 		/**
 		 * 初始化组件
+		 * @method ns_egret.UIComponent#initialize
 		 */
 		public initialize():void{
 			if(this.initializeCalled)
@@ -140,14 +157,16 @@ module ns_egret {
 		/**
 		 * 创建子项,子类覆盖此方法以完成组件子项的初始化操作，
 		 * 请务必调用super.createChildren()以完成父类组件的初始化
+		 * @method ns_egret.UIComponent#createChildren
 		 */		
 		public createChildren():void{
 			
 		}		
 		/**
 		 * 子项创建完成
+		 * @method ns_egret.UIComponent#childrenCreated
 		 */		
-		public childrenCreated():void{
+		private childrenCreated():void{
 			this.invalidateProperties();
 			this.invalidateSize();
 			this.invalidateDisplayList();
@@ -156,7 +175,7 @@ module ns_egret {
 		
 		private _nestLevel:number = 0;
 		/**
-		 * @inheritDoc
+		 * @member ns_egret.UIComponent#nestLevel
 		 */	
 		public get nestLevel():number{
 			return this._nestLevel;
@@ -173,7 +192,7 @@ module ns_egret {
 				this.removeEventListener(Event.ADDED_TO_STAGE,this.checkInvalidateFlag,this);
 			
 			for(var i:number=this.numChildren-1;i>=0;i--){
-				var child:ILayoutManagerClient = <ILayoutManagerClient> (this.getChildAt(i));
+				var child:ILayoutManagerClient = <ILayoutManagerClient><any> (this.getChildAt(i));
 				if(child!=null){
 					child.nestLevel = this._nestLevel+1;
 				}
@@ -181,7 +200,9 @@ module ns_egret {
 		}
 		
 		/**
-		 * @inheritDoc
+		 * @method ns_egret.UIComponent#addChild
+		 * @param child {DisplayObject} 
+		 * @returns {DisplayObject}
 		 */
 		public addChild(child:DisplayObject):DisplayObject{
 			this.addingChild(child);
@@ -191,7 +212,10 @@ module ns_egret {
 		}
 		
 		/**
-		 * @inheritDoc
+		 * @method ns_egret.UIComponent#addChildAt
+		 * @param child {DisplayObject} 
+		 * @param index {number} 
+		 * @returns {DisplayObject}
 		 */
 		public addChildAt(child:DisplayObject, index:number):DisplayObject{
 			this.addingChild(child);
@@ -202,10 +226,12 @@ module ns_egret {
 		
 		/**
 		 * 即将添加一个子项
+		 * @method ns_egret.UIComponent#addingChild
+		 * @param child {DisplayObject} 
 		 */		
 		public addingChild(child:DisplayObject):void{
-			if("nestLevel" in child){
-				(<ILayoutManagerClient> child).nestLevel = this._nestLevel+1;
+			if(child&&"nestLevel" in child){
+				(<ILayoutManagerClient><any>child).nestLevel = this._nestLevel+1;
 			}
 		}
 		
@@ -214,13 +240,15 @@ module ns_egret {
 		 */		
 		public _childAdded(child:DisplayObject):void{
 			if(child instanceof UIComponent){
-				(<UIComponent> child).initialize();
-				(<UIComponent> child).checkInvalidateFlag();
+				(<UIComponent><any> child).initialize();
+				(<UIComponent><any> child).checkInvalidateFlag();
 			}
 		}
 		
 		/**
-		 * @inheritDoc
+		 * @method ns_egret.UIComponent#removeChild
+		 * @param child {DisplayObject} 
+		 * @returns {DisplayObject}
 		 */
 		public removeChild(child:DisplayObject):DisplayObject{
 			super.removeChild(child);
@@ -229,7 +257,9 @@ module ns_egret {
 		}
 		
 		/**
-		 * @inheritDoc
+		 * @method ns_egret.UIComponent#removeChildAt
+		 * @param index {number} 
+		 * @returns {DisplayObject}
 		 */
 		public removeChildAt(index:number):DisplayObject{
 			var child:DisplayObject = super.removeChildAt(index);
@@ -241,8 +271,8 @@ module ns_egret {
 		 * 已经移除一个子项
 		 */
 		public _childRemoved(child:DisplayObject):void{
-			if("nestLevel" in child){
-				(<ILayoutManagerClient> child).nestLevel = 0;
+			if(child&&"nestLevel" in child){
+				(<ILayoutManagerClient> <any>child).nestLevel = 0;
 			}
 		}
 
@@ -268,53 +298,46 @@ module ns_egret {
 		}
 
 		
-		private _enabled:boolean = true;
+		public _enabled:boolean = true;
 		/**
-		 * @inheritDoc
+		 * @member ns_egret.UIComponent#enabled
 		 */
 		public get enabled():boolean{
 			return this._enabled;
 		}
 		
 		public set enabled(value:boolean){
-			if(this._enabled==value)
-				return;
 			this._enabled = value;
-			this.dispatchEvent(new Event("enabledChanged"));
 		}
 		
 		/**
 		 * 属性提交前组件旧的宽度
+		 * @member ns_egret.UIComponent#oldWidth
 		 */	
 		public oldWidth:number;
-			
-		private _explicitWidth:number = NaN;
-		/**
-		 * @inheritDoc
-		 */
-		public get explicitWidth():number{
-			return this._explicitWidth;
-		}
-		
-		
+
 		public _width:number;
 		/**
 		 * 组件宽度,默认值为NaN,设置为NaN将使用组件的measure()方法自动计算尺寸
 		 */		
 		public set width(value:number){
-			if(this._width==value&&this._explicitWidth==value)
-				return;
-			this._width = value;
-			this._explicitWidth = value;
-			this.invalidateProperties();
-			this.invalidateDisplayList();
-			this.invalidateParentSizeAndDisplayList();
-			if(isNaN(value))
-				this.invalidateSize();
+			this._setWidth(value);
 		}
+
+        public _setWidth(value:number):void{
+            if(this._width==value&&this._explicitWidth==value)
+                return;
+            this._width = value;
+            this._explicitWidth = value;
+            this.invalidateProperties();
+            this.invalidateDisplayList();
+            this.invalidateParentSizeAndDisplayList();
+            if(isNaN(value))
+                this.invalidateSize();
+        }
 		
 		/**
-		 * @inheritDoc
+		 * @member ns_egret.UIComponent#width
 		 */
 		public get width():number{
 			return this.escapeNaN(this._width);
@@ -323,36 +346,32 @@ module ns_egret {
 		
 		/**
 		 * 属性提交前组件旧的高度
+		 * @member ns_egret.UIComponent#oldHeight
 		 */
 		public oldHeight:number;
-		
-		private _explicitHeight:number = NaN;
-		/**
-		 * @inheritDoc
-		 */	
-		public get explicitHeight():number{
-			return this._explicitHeight;
-		}
-		
 		
 		public _height:number;
 		/**
 		 * 组件高度,默认值为NaN,设置为NaN将使用组件的measure()方法自动计算尺寸
 		 */		
 		public set height(value:number){
-			if(this._height==value&&this._explicitHeight==value)
-				return;
-			this._height = value;
-			this._explicitHeight = value;
-			this.invalidateProperties();
-			this.invalidateDisplayList();
-			this.invalidateParentSizeAndDisplayList();
-			if(isNaN(value))
-				this.invalidateSize();
+			this._setHeight(value);
 		}
+
+        public _setHeight(value:number):void{
+            if(this._height==value&&this._explicitHeight==value)
+                return;
+            this._height = value;
+            this._explicitHeight = value;
+            this.invalidateProperties();
+            this.invalidateDisplayList();
+            this.invalidateParentSizeAndDisplayList();
+            if(isNaN(value))
+                this.invalidateSize();
+        }
 		
 		/**
-		 * @inheritDoc
+		 * @member ns_egret.UIComponent#height
 		 */
 		public get height():number{
 			return this.escapeNaN(this._height);
@@ -365,28 +384,50 @@ module ns_egret {
 				return 0;
 			return number;
 		}
+
+		/**
+		 * @member ns_egret.UIComponent#scaleX
+		 */
+        public get scaleX():number{
+            return this._scaleX;
+        }
 		/**
 		 * @inheritDoc
 		 */
 		public set scaleX(value:number){
-			if(super.scaleX == value)
-				return;
-			super.scaleX = value;
-			this.invalidateParentSizeAndDisplayList();
+			this._setScaleX(value);
 		}
+
+        public _setScaleX(value:number):void{
+            if(this._scaleX == value)
+                return;
+            this._scaleX = value;
+            this.invalidateParentSizeAndDisplayList();
+        }
+
+		/**
+		 * @member ns_egret.UIComponent#scaleY
+		 */
+        public get scaleY():number{
+            return this._scaleY;
+        }
 		/**
 		 * @inheritDoc
 		 */
 		public set scaleY(value:number){
-			if(super.scaleY == value)
-				return;
-			super.scaleY = value;
-			this.invalidateParentSizeAndDisplayList();
+			this._setScaleY(value);
 		}
+
+        public _setScaleY(value:number):void{
+            if(this._scaleY == value)
+                return;
+            this._scaleY = value;
+            this.invalidateParentSizeAndDisplayList();
+        }
 		
 		private _minWidth:number = 0;
 		/**
-		 * @inheritDoc
+		 * @member ns_egret.UIComponent#minWidth
 		 */
 		public get minWidth():number{
 			return this._minWidth;
@@ -400,7 +441,7 @@ module ns_egret {
 		
 		private _maxWidth:number = 10000;
 		/**
-		 * @inheritDoc
+		 * @member ns_egret.UIComponent#maxWidth
 		 */
 		public get maxWidth():number{
 			return this._maxWidth;
@@ -414,7 +455,7 @@ module ns_egret {
 		
 		private _minHeight:number = 0;
 		/**
-		 * @inheritDoc
+		 * @member ns_egret.UIComponent#minHeight
 		 */
 		public get minHeight():number{
 			return this._minHeight;
@@ -428,7 +469,7 @@ module ns_egret {
 		
 		private _maxHeight:number = 10000;
 		/**
-		 * @inheritDoc
+		 * @member ns_egret.UIComponent#maxHeight
 		 */
 		public get maxHeight():number{
 			return this._maxHeight;
@@ -445,6 +486,7 @@ module ns_egret {
 		private _measuredWidth:number = 0;
 		/**
 		 * 组件的默认宽度（以像素为单位）。此值由 measure() 方法设置。
+		 * @member ns_egret.UIComponent#measuredWidth
 		 */		
 		public get measuredWidth():number{
 			return this._measuredWidth;
@@ -456,6 +498,7 @@ module ns_egret {
 		private _measuredHeight:number = 0;
 		/**
 		 * 组件的默认高度（以像素为单位）。此值由 measure() 方法设置。
+		 * @member ns_egret.UIComponent#measuredHeight
 		 */
 		public get measuredHeight():number{
 			return this._measuredHeight;
@@ -464,7 +507,9 @@ module ns_egret {
 			this._measuredHeight = value;
 		}
 		/**
-		 * @inheritDoc
+		 * @method ns_egret.UIComponent#setActualSize
+		 * @param w {number} 
+		 * @param h {number} 
 		 */
 		public setActualSize(w:number, h:number):void{
 			var change:boolean = false;
@@ -484,41 +529,56 @@ module ns_egret {
 		
 		/**
 		 * 属性提交前组件旧的X
+		 * @member ns_egret.UIComponent#oldX
 		 */
 		public oldX:number;
-		
+		/**
+		 * @constant ns_egret.UIComponent#x
+		 */
+        public get x():number {
+            return this._x;
+        }
 		/**
 		 * @inheritDoc
 		 */
 		public set x(value:number){
-			if(this.x==value)
+			if(this._x==value)
 				return;
-			super.x = value;
+			this._x = value;
 			this.invalidateProperties();
 			if (this._includeInLayout&&this.parent && this.parent instanceof UIComponent)
-				(<UIComponent> (this.parent)).childXYChanged();
+				(<UIComponent><any> (this.parent)).childXYChanged();
 		}
 		
 		/**
 		 * 属性提交前组件旧的Y
+		 * @member ns_egret.UIComponent#oldY
 		 */
 		public oldY:number;
-		
+		/**
+		 * @constant ns_egret.UIComponent#y
+		 */
+        public get y():number {
+            return this._y;
+        }
 		/**
 		 * @inheritDoc
 		 */
 		public set y(value:number){
-			if(this.y==value)
+			if(this._y==value)
 				return;
-			super.y = value;
+			this._y = value;
 			this.invalidateProperties();
 			if (this._includeInLayout&&this.parent && this.parent instanceof UIComponent)
 				(<UIComponent> (this.parent)).childXYChanged();
 		}
 		
+		/**
+		 * @member ns_egret.UIComponent#invalidatePropertiesFlag
+		 */
 		public invalidatePropertiesFlag:boolean = false;
 		/**
-		 * @inheritDoc
+		 * @method ns_egret.UIComponent#invalidateProperties
 		 */		
 		public invalidateProperties():void{
 			if (!this.invalidatePropertiesFlag){
@@ -529,7 +589,7 @@ module ns_egret {
 			}
 		}
 		/**
-		 * @inheritDoc
+		 * @method ns_egret.UIComponent#validateProperties
 		 */		
 		public validateProperties():void{
 			if (this.invalidatePropertiesFlag){
@@ -539,10 +599,13 @@ module ns_egret {
 			}
 		}
 		
+		/**
+		 * @member ns_egret.UIComponent#invalidateSizeFlag
+		 */
 		public invalidateSizeFlag:boolean = false;
 		
 		/**
-		 * @inheritDoc
+		 * @method ns_egret.UIComponent#invalidateSize
 		 */	
 		public invalidateSize():void{
 			if (!this.invalidateSizeFlag){
@@ -554,14 +617,15 @@ module ns_egret {
 		}
 		
 		/**
-		 * @inheritDoc
+		 * @method ns_egret.UIComponent#validateSize
+		 * @param recursive {boolean} 
 		 */	
 		public validateSize(recursive:boolean = false):void{
 			if (recursive){
 				for (var i:number = 0; i < this.numChildren; i++){
 					var child:DisplayObject = this.getChildAt(i);
 					if ("validateSize" in child)
-						(<ILayoutManagerClient> child ).validateSize(true);
+						(<ILayoutManagerClient> <any>child ).validateSize(true);
 				}
 			}
 			if (this.invalidateSizeFlag){
@@ -575,10 +639,12 @@ module ns_egret {
 		}
 		/**
 		 * 上一次测量的首选宽度
+		 * @member ns_egret.UIComponent#oldPreferWidth
 		 */		
 		public oldPreferWidth:number;
 		/**
 		 * 上一次测量的首选高度
+		 * @member ns_egret.UIComponent#oldPreferHeight
 		 */		
 		public oldPreferHeight:number;
 		/**
@@ -619,10 +685,13 @@ module ns_egret {
 			return changed;
 		}
 		
+		/**
+		 * @member ns_egret.UIComponent#invalidateDisplayListFlag
+		 */
 		public invalidateDisplayListFlag:boolean = false;
 		
 		/**
-		 * @inheritDoc
+		 * @method ns_egret.UIComponent#invalidateDisplayList
 		 */		
 		public invalidateDisplayList():void{
 			if (!this.invalidateDisplayListFlag){
@@ -634,7 +703,7 @@ module ns_egret {
 		}
 		
 		/**
-		 * @inheritDoc
+		 * @method ns_egret.UIComponent#validateDisplayList
 		 */		
 		public validateDisplayList():void{
 			if (this.invalidateDisplayListFlag){
@@ -668,10 +737,14 @@ module ns_egret {
 			}
 		}
 		
+		/**
+		 * @member ns_egret.UIComponent#validateNowFlag
+		 */
 		public validateNowFlag:boolean = false;
 		
 		/**
-		 * @inheritDoc
+		 * @method ns_egret.UIComponent#validateNow
+		 * @param skipDisplayList {boolean} 
 		 */	
 		public validateNow(skipDisplayList:boolean = false):void{
 			if(!this.validateNowFlag&&UIGlobals.layoutManager!=null)
@@ -681,23 +754,29 @@ module ns_egret {
 		}
 		/**
 		 * 标记父级容器的尺寸和显示列表为失效
+		 * @method ns_egret.UIComponent#invalidateParentSizeAndDisplayList
 		 */		
 		public invalidateParentSizeAndDisplayList():void{
 			if (!this.parent||!this._includeInLayout||!("invalidateSize" in this.parent))
 				return;
-			var p:IInvalidating = <IInvalidating> (this.parent);
+			var p:IInvalidating = <IInvalidating><any>(this.parent);
 			p.invalidateSize();
 			p.invalidateDisplayList();
 		}
 		
 		/**
 		 * 更新显示列表
+		 * @method ns_egret.UIComponent#updateDisplayList
+		 * @param unscaledWidth {number} 
+		 * @param unscaledHeight {number} 
 		 */		
 		public updateDisplayList(unscaledWidth:number, unscaledHeight:number):void{
 		}
 		
 		/**
 		 * 是否可以跳过测量尺寸阶段,返回true则不执行measure()方法
+		 * @method ns_egret.UIComponent#canSkipMeasurement
+		 * @returns {boolean}
 		 */		
 		public canSkipMeasurement():boolean{
 			return !isNaN(this._explicitWidth) && !isNaN(this._explicitHeight);
@@ -705,6 +784,7 @@ module ns_egret {
 		
 		/**
 		 * 提交属性，子类在调用完invalidateProperties()方法后，应覆盖此方法以应用属性
+		 * @method ns_egret.UIComponent#commitProperties
 		 */		
 		public commitProperties():void{
 			if(this.oldWidth != this._width||this.oldHeight != this._height){
@@ -716,6 +796,7 @@ module ns_egret {
 		}
 		/**
 		 * 测量组件尺寸
+		 * @method ns_egret.UIComponent#measure
 		 */		
 		public measure():void{
 			this._measuredHeight = 0;
@@ -735,6 +816,7 @@ module ns_egret {
 		
 		/**
 		 * 子项的xy位置发生改变
+		 * @method ns_egret.UIComponent#childXYChanged
 		 */		
 		public childXYChanged():void{
 			
@@ -754,9 +836,10 @@ module ns_egret {
 		
 		/**
 		 * 抛出属性值改变事件
-		 * @param prop 改变的属性名
-		 * @param oldValue 属性的原始值
-		 * @param value 属性的新值
+		 * @method ns_egret.UIComponent#dispatchPropertyChangeEvent
+		 * @param prop {string} 改变的属性名
+		 * @param oldValue {any} 属性的原始值
+		 * @param value {any} 属性的新值
 		 */		
 		public dispatchPropertyChangeEvent(prop:string, oldValue:any,
 													   value:any):void{
@@ -767,7 +850,7 @@ module ns_egret {
 		
 		public _includeInLayout:boolean = true;
 		/**
-		 * @inheritDoc
+		 * @member ns_egret.UIComponent#includeInLayout
 		 */
 		public get includeInLayout():boolean{
 			return this._includeInLayout;
@@ -784,7 +867,7 @@ module ns_egret {
 		private _left:number;
 		
 		/**
-		 * @inheritDoc
+		 * @member ns_egret.UIComponent#left
 		 */
 		public get left():number{
 			return this._left;
@@ -798,7 +881,7 @@ module ns_egret {
 		
 		private _right:number;
 		/**
-		 * @inheritDoc
+		 * @member ns_egret.UIComponent#right
 		 */
 		public get right():number{
 			return this._right;
@@ -812,7 +895,7 @@ module ns_egret {
 		
 		private _top:number;
 		/**
-		 * @inheritDoc
+		 * @member ns_egret.UIComponent#top
 		 */
 		public get top():number{
 			return this._top;
@@ -826,7 +909,7 @@ module ns_egret {
 		
 		private _bottom:number;
 		/**
-		 * @inheritDoc
+		 * @member ns_egret.UIComponent#bottom
 		 */	
 		public get bottom():number{
 			return this._bottom;
@@ -841,7 +924,7 @@ module ns_egret {
 		
 		private _horizontalCenter:number;
 		/**
-		 * @inheritDoc
+		 * @member ns_egret.UIComponent#horizontalCenter
 		 */
 		public get horizontalCenter():number{
 			return this._horizontalCenter;
@@ -855,7 +938,7 @@ module ns_egret {
 		
 		private _verticalCenter:number;
 		/**
-		 * @inheritDoc
+		 * @member ns_egret.UIComponent#verticalCenter
 		 */
 		public get verticalCenter():number{
 			return this._verticalCenter;
@@ -870,7 +953,7 @@ module ns_egret {
 		
 		private _percentWidth:number;
 		/**
-		 * @inheritDoc
+		 * @member ns_egret.UIComponent#percentWidth
 		 */
 		public get percentWidth():number{
 			return this._percentWidth;
@@ -886,7 +969,7 @@ module ns_egret {
 		private _percentHeight:number;
 		
 		/**
-		 * @inheritDoc
+		 * @member ns_egret.UIComponent#percentHeight
 		 */
 		public get percentHeight():number{
 			return this._percentHeight;
@@ -900,16 +983,20 @@ module ns_egret {
 		
 		/**
 		 * 父级布局管理器设置了组件的宽度标志，尺寸设置优先级：自动布局>显式设置>自动测量
+		 * @member ns_egret.UIComponent#layoutWidthExplicitlySet
 		 */
 		public layoutWidthExplicitlySet:boolean = false;
 		
 		/**
 		 * 父级布局管理器设置了组件的高度标志，尺寸设置优先级：自动布局>显式设置>自动测量
+		 * @member ns_egret.UIComponent#layoutHeightExplicitlySet
 		 */
 		public layoutHeightExplicitlySet:boolean = false;
 		
 		/**
-		 * @inheritDoc
+		 * @method ns_egret.UIComponent#setLayoutBoundsSize
+		 * @param layoutWidth {number} 
+		 * @param layoutHeight {number} 
 		 */	
 		public setLayoutBoundsSize(layoutWidth:number,layoutHeight:number):void{
 			layoutWidth /= this.scaleX;
@@ -932,16 +1019,18 @@ module ns_egret {
 			this.setActualSize(layoutWidth,layoutHeight);
 		}
 		/**
-		 * @inheritDoc
+		 * @method ns_egret.UIComponent#setLayoutBoundsPosition
+		 * @param x {number} 
+		 * @param y {number} 
 		 */	
 		public setLayoutBoundsPosition(x:number,y:number):void{
 			var changed:boolean = false;
-			if(this.x!=x){
-				super.x = x;
+			if(this._x!=x){
+				this._x = x;
 				changed = true;
 			}
-			if(this.y!=y){
-				super.y = y;
+			if(this._y!=y){
+				this._y = y;
 				changed = true;
 			}
 			if(changed){
@@ -950,7 +1039,7 @@ module ns_egret {
 		}
 		
 		/**
-		 * @inheritDoc
+		 * @member ns_egret.UIComponent#preferredWidth
 		 */		
 		public get preferredWidth():number{
 			var w:number = isNaN(this._explicitWidth) ? this.measuredWidth:this._explicitWidth;
@@ -960,7 +1049,7 @@ module ns_egret {
 		}
 		
 		/**
-		 * @inheritDoc
+		 * @member ns_egret.UIComponent#preferredHeight
 		 */
 		public get preferredHeight():number{
 			var h:number = isNaN(this._explicitHeight) ? this.measuredHeight : this._explicitHeight;
@@ -970,33 +1059,33 @@ module ns_egret {
 		}
 		
 		/**
-		 * @inheritDoc
+		 * @member ns_egret.UIComponent#preferredX
 		 */	
 		public get preferredX():number{
-			return super.x;
+			return this._x;
 		}
 		
 		/**
-		 * @inheritDoc
+		 * @member ns_egret.UIComponent#preferredY
 		 */
 		public get preferredY():number{
-			return super.y;
+			return this._y;
 		}
 		/**
-		 * @inheritDoc
+		 * @member ns_egret.UIComponent#layoutBoundsX
 		 */
 		public get layoutBoundsX():number{
-			return super.x;
+			return this._x;
 		}
 		/**
-		 * @inheritDoc
+		 * @member ns_egret.UIComponent#layoutBoundsY
 		 */
 		public get layoutBoundsY():number{
-			return super.y;
+			return this._y;
 		}
 		
 		/**
-		 * @inheritDoc
+		 * @member ns_egret.UIComponent#layoutBoundsWidth
 		 */	
 		public get layoutBoundsWidth():number{
 			var w:number =  0;
@@ -1014,6 +1103,7 @@ module ns_egret {
 		/**
 		 * 组件的布局高度,常用于父级的updateDisplayList()方法中
 		 * 按照：布局高度>外部显式设置高度>测量高度 的优先级顺序返回高度
+		 * @member ns_egret.UIComponent#layoutBoundsHeight
 		 */		
 		public get layoutBoundsHeight():number{
 			var h:number =  0

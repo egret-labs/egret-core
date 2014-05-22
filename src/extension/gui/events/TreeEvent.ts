@@ -17,25 +17,42 @@
  */
 
 /// <reference path="../../../egret/events/Event.ts"/>
-/// <reference path="../components/IItemRenderer.ts"/>
 /// <reference path="../components/ITreeItemRenderer.ts"/>
 
 module ns_egret {
 
+	/**
+	 * @class ns_egret.TreeEvent
+	 * @classdesc
+	 * Tree事件
+	 * @extends ns_egret.Event
+	 */
 	export class TreeEvent extends Event{
 		/**
 		 * 节点关闭,注意：只有通过交互操作引起的节点关闭才会抛出此事件。
+		 * @constant ns_egret.TreeEvent.ITEM_CLOSE
 		 */		
 		public static ITEM_CLOSE:string = "itemClose";
 		/**
 		 * 节点打开,注意：只有通过交互操作引起的节点打开才会抛出此事件。
+		 * @constant ns_egret.TreeEvent.ITEM_OPEN
 		 */		
 		public static ITEM_OPEN:string = "itemOpen";
 		/**
 		 * 子节点打开或关闭前一刻分派。可以调用preventDefault()方法阻止节点的状态改变。
+		 * @constant ns_egret.TreeEvent.ITEM_OPENING
 		 */		
 		public static ITEM_OPENING:string = "itemOpening";
 		
+		/**
+		 * @method ns_egret.TreeEvent#constructor
+		 * @param type {string} 
+		 * @param bubbles {boolean} 
+		 * @param cancelable {boolean} 
+		 * @param itemIndex {number} 
+		 * @param item {any} 
+		 * @param itemRenderer {ITreeItemRenderer} 
+		 */
 		public constructor(type:string, bubbles:boolean=false, cancelable:boolean=true,
 								  itemIndex:number = -1,item:any = null,itemRenderer:ITreeItemRenderer = null){
 			super(type, bubbles, cancelable);
@@ -46,19 +63,23 @@ module ns_egret {
 		
 		/**
 		 * 触发鼠标事件的项呈示器数据源项。
+		 * @member ns_egret.TreeEvent#item
 		 */
 		public item:any;
 		
 		/**
 		 * 触发鼠标事件的项呈示器。 
+		 * @member ns_egret.TreeEvent#itemRenderer
 		 */		
 		public itemRenderer:ITreeItemRenderer;
 		/**
 		 * 触发鼠标事件的项索引
+		 * @member ns_egret.TreeEvent#itemIndex
 		 */		
 		public itemIndex:number;
 		/**
 		 * 当事件类型为ITEM_OPENING时，true表示即将打开节点，反之关闭。
+		 * @member ns_egret.TreeEvent#opening
 		 */		
 		public opening:boolean;
 	}
