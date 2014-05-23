@@ -1,11 +1,11 @@
 var fs = require('fs');
 var locale = require("./locale/zh-CN.js");
+var param = require("../core/params_analyze.js");
 
+var path = require("path");
 
 var loopFileSync = function (dir, filter) {
 
-    var fs = require("fs");
-    var path = require("path");
     var result = [];
     loop(dir, filter);
 
