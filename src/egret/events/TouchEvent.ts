@@ -159,7 +159,7 @@ module ns_egret {
             super._setCurrentTarget(target);
             if (target instanceof DisplayObject) {
                 var dp:DisplayObject = <DisplayObject> target;
-                var point:Point = dp.globalToLocal(this._stageX, this._stageY);
+                var point:Point = dp.globalToLocal(this._stageX, this._stageY,Point.identity);
                 this._localX = point.x;
                 this._localY = point.y;
             }

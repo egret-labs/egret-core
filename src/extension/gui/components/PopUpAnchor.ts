@@ -161,7 +161,7 @@ module ns_egret {
 		 * 计算popUp的弹出位置
 		 */		
 		private calculatePopUpPosition():Point{
-			var registrationPoint:Point = new Point();
+			var registrationPoint:Point = Point.identity;
 			switch(this._popUpPosition){
 				case PopUpPosition.BELOW:
 					registrationPoint.x = 0;
@@ -186,8 +186,8 @@ module ns_egret {
 				case PopUpPosition.TOP_LEFT:
 					break;
 			}
-			registrationPoint = this.localToGlobal(registrationPoint.x,registrationPoint.y);
-			registrationPoint = this.popUp.parent.globalToLocal(registrationPoint.x,registrationPoint.y);
+			registrationPoint = this.localToGlobal(registrationPoint.x,registrationPoint.y,registrationPoint);
+			registrationPoint = this.popUp.parent.globalToLocal(registrationPoint.x,registrationPoint.y,registrationPoint);
 			return registrationPoint;
 		}
 		

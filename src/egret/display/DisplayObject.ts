@@ -644,32 +644,40 @@ module ns_egret {
 
         /**
          * 将 point 对象从显示对象的（本地）坐标转换为舞台（全局）坐标。
+         * @param x {number} 本地x坐标
+         * @param y {number} 本地y坐标
+         * @param resultPoint {Point} 可选参数，传入用于保存结果的Point对象，避免重复创建对象。
          * @returns {ns_egret.Point}
          */
-        public localToGlobal(x = 0, y = 0):ns_egret.Point {
+        public localToGlobal(x:number = 0, y:number = 0,resultPoint?:Point):Point {
             var mtx = this._getConcatenatedMatrix();
             mtx.append(1, 0, 0, 1, x, y);
-            var result = Point.identity;
-            result.x = mtx.tx;
-            result.y = mtx.ty;
-            return result;
+            if(!resultPoint){
+                resultPoint = new Point();
+            }
+            resultPoint.x = mtx.tx;
+            resultPoint.y = mtx.ty;
+            return resultPoint;
         }
 
         /**
          * 将指定舞台坐标（全局）转换为显示对象（本地）坐标。
          * @method ns_egret.DisplayObject#globalToLocal
-         * @param x {number}
-         * @param y {number}
+         * @param x {number} 全局x坐标
+         * @param y {number} 全局y坐标
+         * @param resultPoint {Point} 可选参数，传入用于保存结果的Point对象，避免重复创建对象。
          * @returns {ns_egret.Point}
          */
-        public globalToLocal(x:number = 0, y:number = 0):Point {
+        public globalToLocal(x:number = 0, y:number = 0,resultPoint?:Point):Point {
             var mtx = this._getConcatenatedMatrix();
             mtx.invert();
             mtx.append(1, 0, 0, 1, x, y);
-            var result = Point.identity;
-            result.x = mtx.tx;
-            result.y = mtx.ty;
-            return result;
+            if(!resultPoint){
+                resultPoint = new Point();
+            }
+            resultPoint.x = mtx.tx;
+            resultPoint.y = mtx.ty;
+            return resultPoint;
         }
 
         /**

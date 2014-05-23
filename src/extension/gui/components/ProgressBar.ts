@@ -269,7 +269,7 @@ module ns_egret {
                     thumbHeight = 0;
 
                 var p:Point = this.track.localToGlobal(0, 0);
-                var thumbPos:Point = this.globalToLocal(p.x, p.y);
+                var thumbPos:Point = this.globalToLocal(p.x, p.y,Point.identity);
                 var thumbPosX:number = thumbPos.x;
                 var thumbPosY:number = thumbPos.y;
 
