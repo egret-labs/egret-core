@@ -81,6 +81,11 @@ module ns_egret {
          * @constant {string} ns_egret.Event.COMPLETE
          */
         public static COMPLETE:string = "complete";
+        /**
+         * URLLoader开始加载
+         * @constant {string} ns_egret.Event.OPEN
+         */
+        public static OPEN:string = "open";
 
         /**
          * 主循环：进入新的一帧

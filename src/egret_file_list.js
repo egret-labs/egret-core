@@ -1,11 +1,9 @@
-exports.core = [
+var egret_file_list = [
     "egret/core/HashObject.js",
     "egret/utils/Recycler.js",
     "egret/utils/getTimer.js",
     "egret/utils/callLater.js",
     "egret/events/Event.js",
-    "egret/events/IOErrorEvent.js",
-    "egret/events/ProgressEvent.js",
     "egret/events/TouchEvent.js",
     "egret/events/TimerEvent.js",
     "egret/events/EventPhase.js",
@@ -44,14 +42,9 @@ exports.core = [
     "egret/interactive/InteractionMode.js",
     "egret/interactive/TouchContext.js",
     "egret/context/assets/AssetsContext.js",
-    "egret/net/URLRequestMethod.js",
-    "egret/net/URLLoaderDataFormat.js",
-    "egret/net/URLVariables.js",
-    "egret/net/URLRequest.js",
-    "egret/net/URLLoader.js",
+    "egret/resource/ResourceLoader.js",
     "egret/resource/LoadingController.js",
     "egret/texture/Texture.js",
-    "egret/texture/RenderTexture.js",
     "egret/texture/TextureCache.js",
     "egret/context/net/NetContext.js",
     "egret/context/devices/DeviceContext.js",
@@ -61,7 +54,7 @@ exports.core = [
     "jslib/base64.js",
     "jslib/gzip.js",
     "jslib/zlib.min.js",
-
+    "egret/utils/SAXParser.js",
     "egret/utils/Browser.js",
     "egret/utils/XML.js",
     //utils end
@@ -89,6 +82,8 @@ exports.core = [
     "extension/gui/core/PopUpPosition.js",
     "extension/gui/core/ScrollPolicy.js",
     "extension/gui/core/ClassFactory.js",
+    "extension/gui/core/IContainer.js",
+    "extension/gui/core/IVisualElementContainer.js",
     "extension/gui/states/OverrideBase.js",
     "extension/gui/states/AddItems.js",
     "extension/gui/states/SetProperty.js",
@@ -96,7 +91,6 @@ exports.core = [
     "extension/gui/components/UIAsset.js",
     "extension/gui/components/SkinnableComponent.js",
     "extension/gui/components/supportClasses/DefaultSkinAdapter.js",
-    "extension/gui/components/supportClasses/DefaultAssetAdapter.js",
     "extension/gui/components/supportClasses/SkinBasicLayout.js",
     "extension/gui/components/supportClasses/ButtonBase.js",
     "extension/gui/components/supportClasses/ToggleButtonBase.js",
@@ -172,23 +166,11 @@ exports.core = [
     "extension/dragonbones/DragonBonesEgretBridge.js",
     "jslib/DEBUG.js",
 //    "jslib/box2d.js",
-    "jslib/NumberUtils.js"
-]
-
-exports.html5 = [
-    "egret/context/devices/HTML5DeviceContext.js",
+    "jslib/NumberUtils.js",
+	"egret/context/devices/HTML5DeviceContext.js",
     "egret/context/renderer/HTML5CanvasRenderer.js",
     "egret/context/sound/HTML5SoundContext.js",
     "egret/context/net/HTML5NetContext.js",
     "egret/interactive/HTML5TouchContext.js",
-    "egret/context/assets/HTML5AssetsContext.js",
-    "egret/utils/SAXParser.js"
-]
-
-exports.native = [
-    "egret/context/devices/NativeDeviceContext.js",
-    "egret/context/renderer/NativeRendererContext.js",
-    "egret/interactive/NativeTouchContext.js",
-    "egret/context/net/NativeNetContext.js"
-
+    "egret/context/assets/HTML5AssetsContext.js"
 ]

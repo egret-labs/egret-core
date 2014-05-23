@@ -22,120 +22,149 @@
 /// <reference path="../../texture/TextureCache.ts"/>
 
 module ns_egret {
-	/**
-	 * @class ns_egret.HTML5NetContext
-	 * @classdesc
-	 * @extends ns_egret.NetContext
-	 */
+    /**
+     * @class ns_egret.HTML5NetContext
+     * @classdesc
+     * @extends ns_egret.NetContext
+     */
     export class HTML5NetContext extends NetContext {
-		/**
-		 * @method ns_egret.HTML5NetContext#send
-		 * @param request {URLReques} 
-		 */
-        public send(request:URLRequest) {
 
-
-            function onLoadComplete() {
-                if (xhr.readyState == 4) {
-                    if (xhr.status == 200) {
-                        _processXMLHttpResponse(xhr);
-                    } else {
-                    }
-                }
-            }
-
-            function _processXMLHttpResponse(xhr) {
-                var data = xhr.responseText;
-                if (this.type == URLLoader.DATA_TYPE_BINARY) {
-                    data = self._stringConvertToArray(data);
-                }
-                request.callback.call(request.thisObj, data);
-            }
-
-
-            if (request.type == URLLoader.DATA_TYPE_IMAGE) {
-                this.loadImage(request);
-                return;
-            }
-            var self = this;
-            var xhr = this._getXMLHttpRequest();
-            xhr.open(request.method, request.prefix + request.url);
-            if(request.method != "GET")
-            {
-                xhr.setRequestHeader("Content-Type","application/x-www-form-urlencoded");
-            }
-
-            if (request.type != undefined) {
-                this._setXMLHttpRequestHeader(xhr, request.type);
-            }
-            xhr.onreadystatechange = onLoadComplete;
-            xhr.send(request.method != "GET" ? request.data : null);
-
+        public constructor(target:IEventDispatcher){
+            super(target);
+            this.eventTarget = target;
         }
 
-        private loadImage(request:ns_egret.URLRequest):void {
-            var image = new Image();
-            image.crossOrigin = "Anonymous";
-            var fileUrl = request.prefix + request.url;
+        private dataFormat:string;
+        private _loadError:boolean = false;
+        private _XHR:XMLHttpRequest;
+        private eventTarget:IEventDispatcher;
 
-            function onLoadComplete() {
-                image.removeEventListener('load', onLoadComplete);
-                image.removeEventListener('error', onLoadComplete);
-                var texture:Texture = Texture.create(request.url);
-                texture.bitmapData = image;
-                TextureCache.getInstance().addTexture(request.url, texture);
-                request.callback.call(request.thisObj, texture);
-
-            };
-            function onLoadError() {
-                image.removeEventListener('error', onLoadError);
-            };
-            image.addEventListener("load", onLoadComplete);
-            image.addEventListener("error", onLoadError);
-            image.src = fileUrl;
-        }
-
-
-        private _stringConvertToArray(strData) {
-            if (!strData)
-                return null;
-
-            var arrData = new Uint8Array(strData.length);
-            for (var i = 0; i < strData.length; i++) {
-                arrData[i] = strData.charCodeAt(i) & 0xff;
+        public load(request:URLRequest,dataFormat:string):void{
+            this.dataFormat = dataFormat;
+            this.initXHR();
+            this._loadError = false;
+            try {
+                if (request.method === URLRequestMethod.POST)
+                    this.postRequest(request);
+                else
+                    this.getRequest(request);
             }
-            return arrData;
+            catch (e){
+            }
         }
 
-        private _setXMLHttpRequestHeader(xhr, type) {
-            if (/msie/i.test(navigator.userAgent) && !/opera/i.test(navigator.userAgent)) {
-                // IE-specific logic here
-                if (type == URLLoader.DATA_TYPE_BINARY) {
-                    xhr.setRequestHeader("Accept-Charset", "x-user-defined");
+        public close():void{
+            this._XHR.abort();
+            this.disposeXHR();
+        }
+
+        private initXHR(){
+            if (!this._XHR) {
+                this._XHR = new XMLHttpRequest();
+
+                this._XHR.onloadstart = (event) => this.onLoadStart(event);
+                this._XHR.onprogress = (event) => this.onProgress(event);
+                this._XHR.onerror = (event) => this.onLoadError(event);
+                this._XHR.onload = (event) => this.onLoadComplete(event);
+            }
+        }
+
+        private disposeXHR(){
+            if (this._XHR !== null) {
+                this._XHR.onloadstart = null;
+                this._XHR.onprogress = null;
+                this._XHR.onerror = null;
+                this._XHR.onload = null;
+                this._XHR = null;
+            }
+        }
+
+        private getRequest(request:URLRequest):void{
+            this._XHR.open(request.method, request.url);
+            this.setResponseType(this._XHR, this.dataFormat);
+            this._XHR.send();
+        }
+
+        private postRequest(request:URLRequest):void{
+            this._XHR.open(request.method, request.url);
+            this.setResponseType(this._XHR, this.dataFormat);
+            if (request.data != null) {
+                if (request.data instanceof URLVariables) {
+                    this._XHR.setRequestHeader("Content-Type","application/x-www-form-urlencoded");
+                    var urlVars:URLVariables = <URLVariables> request.data;
+                    this._XHR.send(urlVars.toString());
                 }
                 else {
-                    xhr.setRequestHeader("Accept-Charset", "utf-8");
+                    if (request.data){
+                        this._XHR.setRequestHeader("Content-Type","multipart/form-data");
+                        this._XHR.send(request.data);
+                    }
+                    else{
+                        this._XHR.send();
+                    }
                 }
-
             }
             else {
-                if (xhr.overrideMimeType) {
-                    if (type == URLLoader.DATA_TYPE_BINARY) {
-                        xhr.overrideMimeType("text\/plain; charset=x-user-defined");
-                    }
-                    else {
-                        xhr.overrideMimeType("text\/plain; charset=utf-8");
-                    }
-                }
+                this._XHR.send();
+            }
+
+        }
+
+        private setResponseType(xhr:XMLHttpRequest, responseType:string):void{
+            switch (responseType) {
+                case URLLoaderDataFormat.TEXT:
+                    xhr.responseType = responseType;
+                    break;
+
+                case URLLoaderDataFormat.VARIABLES:
+                    xhr.responseType = URLLoaderDataFormat.TEXT;
+                    break;
+
+                case URLLoaderDataFormat.BINARY:
+                    xhr.responseType = '';
+                    break;
+
+                default:
             }
         }
 
-        private _getXMLHttpRequest() {
-            if (window["XMLHttpRequest"]) {
-                return new window["XMLHttpRequest"]();
-            } else {
-                return new ActiveXObject("MSXML2.XMLHTTP");
-            }
+        private onLoadStart(event){
+            Event.dispatchEvent(this.eventTarget,Event.OPEN);
         }
+
+        private onProgress(event){
+            ProgressEvent.dispatchProgressEvent(this.eventTarget,event.loaded,event.total);
+        }
+
+        private onLoadError(event){
+            this._loadError = true;
+            IOErrorEvent.dispatchIOErrorEvent(this.eventTarget);
+        }
+
+        private onLoadComplete(event){
+            if (this._loadError === true)
+                return;
+
+            switch (this.dataFormat) {
+                case URLLoaderDataFormat.TEXT:
+                    this.data = this._XHR.responseText;
+                    break;
+
+                case URLLoaderDataFormat.VARIABLES:
+                    this.data = new URLVariables(this._XHR.responseText);
+                    break;
+
+                case URLLoaderDataFormat.BINARY:
+                    this.data = this._XHR.response;
+                    break;
+
+                default:
+                    this.data = this._XHR.responseText;
+                    break;
+            }
+
+            Event.dispatchEvent(this.eventTarget,Event.COMPLETE);
+        }
+
     }
 }

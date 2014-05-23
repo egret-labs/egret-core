@@ -26,68 +26,22 @@ module ns_egret {
 	 * @extends ns_egret.HashObject
 	 */
     export class NetContext extends HashObject{
-		/**
-		 * @constant ns_egret.NetContext.STATE_COMPLETE
-		 */
-        public static STATE_COMPLETE:string = "XHRLoaderComplete";
-		/**
-		 * @constant ns_egret.NetContext.GET
-		 */
-        public static GET:string = "GET";
-		/**
-		 * @constant ns_egret.NetContext.POST
-		 */
-        public static POST:string = "POST";
 
-		/**
-		 * @method ns_egret.NetContext#constructor
-		 */
-        public constructor(){
+        public constructor(target:IEventDispatcher){
             super();
         }
 
-		/**
-		 * @method ns_egret.NetContext.getInstance
-		 * @returns {NetContext}
-		 */
-        public static getInstance():ns_egret.NetContext {
-            return ns_egret.MainContext.instance.netContext;
+        public bytesLoaded:number = 0;
+
+        public bytesTotal:number = 0;
+
+        public data:any;
+
+        public load(request:URLRequest,dataFormat:string):void{
+
         }
 
-		/**
-		 * @method ns_egret.NetContext#send
-		 * @param request {URLReques} 
-		 */
-        public send(request:URLRequest) {
-        }
-    }
-
-	/**
-	 * @class ns_egret.URLRequest
-	 * @classdesc
-	 */
-    export class URLRequest {
-		/**
-		 * @member ns_egret.URLRequest#type
-		 */
-        public type:string;
-
-
-		/**
-		 * @member ns_egret.URLRequest#prefix
-		 */
-        public prefix:string = "";
-
-		/**
-		 * @method ns_egret.URLRequest#constructor
-		 * @param public url {string} 
-		 * @param public callback {any} 
-		 * @param public thisObj {any} 
-		 * @param public method {string} 
-		 * @param public data {any} 
-		 */
-        constructor(public url:string, public callback, public thisObj, public method:string = NetContext.GET, public data = undefined) {
-
+        public close():void{
         }
     }
 }

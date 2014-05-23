@@ -26,92 +26,91 @@
 module ns_egret {
 
 
+	/**
+	 * @class ns_egret.URLLoader
+	 * @classdesc
+     * URLLoader 类以文本、二进制数据或 URL 编码变量的形式从 URL 下载数据。在下载文本文件、XML 或其他用于动态数据驱动应用程序的信息时，它很有用。
+     * URLLoader 对象会先从 URL 中下载所有数据，然后才将数据用于应用程序中的代码。它会发出有关下载进度的通知，
+     * 通过 bytesLoaded 和 bytesTotal 属性以及已调度的事件，可以监视下载进度。
+	 * @extends ns_egret.EventDispatcher
+	 */
     export class URLLoader extends EventDispatcher {
 
-
-
-
-        /**
-         * 二进制数据
-         */
-        public static DATA_TYPE_BINARY = "binary";
-        /**
-         * 文本数据
-         */
-        public static DATA_TYPE_TEXT = "text";
-        /**
-         * 图片数据
-         */
-        public static DATA_TYPE_IMAGE = "image";
-
-        /**
-         * 加载状态：未开始
-         */
-        public static LOAD_STATE_INIT = 0;
-        /**
-         * 加载状态：已完成
-         */
-        public static LOAD_STATE_LOADED = 1;
-
-        state:number = URLLoader.LOAD_STATE_INIT;
-        data = null;
-        onLoadComplete:Function;
-        fixedUrl:string = null;
-
-        preFixUrl:string = "";
-
-        constructor(public url:string,public type:string) {
+        private static netContextClass:any;
+		/**
+		 * @method ns_egret.URLLoader#constructor
+		 * @param request {URLRequest} 一个 URLRequest 对象，指定要下载的 URL。
+         * 如果省略该参数，则不开始加载操作。如果已指定参数，则立即开始加载操作
+		 */
+        public constructor(request:URLRequest=null) {
             super();
-        }
-
-        public load():void {
-            switch (this.state) {
-                case URLLoader.LOAD_STATE_INIT:
-                    this.startLoading();
-                    break;
-                case URLLoader.LOAD_STATE_LOADED:
-                    ns_egret.callLater(this._executeAllCallback, this);
-                    break;
+            if(!URLLoader.netContextClass){
+                URLLoader.netContextClass = Injector.getInstance("ns_egret.NetContext");
+            }
+            var contextClass:any = URLLoader.netContextClass;
+            this.netContext = <NetContext> new contextClass(this);
+            if(request){
+                this.load(request);
             }
         }
 
-        private startLoading() {
-            var request = new ns_egret.URLRequest(this.url, this._executeAllCallback, this);
-            request.type = this.type;
-            if (this.preFixUrl == "") {
-                request.prefix = TextureCache.getInstance().prefix;
-            }
-            else {
-                request.prefix = this.preFixUrl;
-            }
-            MainContext.instance.netContext.send(request);
-        }
+        private netContext:NetContext;
 
-        private _executeAllCallback(data) {
-            switch (this.type) {
-                case URLLoader.DATA_TYPE_IMAGE:
-                    TextureCache.getInstance().addTexture(this.url, data);
-                    break;
-                case URLLoader.DATA_TYPE_TEXT:
-                    TextureCache.getInstance().addTextData(this.url, data);
-                    break;
-            }
+		/**
+         * 控制是以文本 (URLLoaderDataFormat.TEXT)、原始二进制数据 (URLLoaderDataFormat.BINARY) 还是 URL 编码变量 (URLLoaderDataFormat.VARIABLES) 接收下载的数据。
+         * 如果 dataFormat 属性的值是 URLLoaderDataFormat.TEXT，则所接收的数据是一个包含已加载文件文本的字符串。
+         * 如果 dataFormat 属性的值是 URLLoaderDataFormat.BINARY，则所接收的数据是一个包含原始二进制数据的 ByteArray 对象。
+         * 如果 dataFormat 属性的值是 URLLoaderDataFormat.IMAGE，则所接收的数据是一个包含位图数据的Texture对象。
+         * 如果 dataFormat 属性的值是 URLLoaderDataFormat.VARIABLES，则所接收的数据是一个包含 URL 编码变量的 URLVariables 对象。
+         * 默认值:URLLoaderDataFormat.TEXT
+		 * @member {string} ns_egret.URLLoader#dataFormat
+		 */
+        public dataFormat:string = URLLoaderDataFormat.TEXT;
 
-            this.state = URLLoader.LOAD_STATE_LOADED;
-            if (data) {
-                this.data = data;
-            }
-            if (this.onLoadComplete) {
-                this.onLoadComplete(this.data);
-            }
-            this.dispatchEventWith(Event.COMPLETE, false, this.data);
+		/**
+         * 从加载操作接收的数据。只有完成加载操作时，才会填充该属性。该数据的格式取决于 dataFormat 属性的设置：
+         * 如果 dataFormat 属性是 URLLoaderDataFormat.TEXT，则所接收的数据是一个包含已加载文件文本的字符串。
+         * 如果 dataFormat 属性是 URLLoaderDataFormat.BINARY，则所接收的数据是一个包含原始二进制数据的 ByteArray 对象。
+         * 如果 dataFormat 属性是 URLLoaderDataFormat.IMAGE，则所接收的数据是一个包含位图数据的Texture对象。
+         * 如果 dataFormat 属性是 URLLoaderDataFormat.VARIABLES，则所接收的数据是一个包含 URL 编码变量的 URLVariables 对象。
+		 * @member {any} ns_egret.URLLoader#data
+		 */
+        public get data():any{
+            return this.netContext.data;
         }
 
         /**
-         * 资源加载前缀
+         * 表示所下载数据中的字节总数。正在进行加载操作时该属性为 0，完成操作时会填充该属性。另外，丢失的 Content-Length 标题将会导致 bytesTotal 不确定。
+		 * @member {number} ns_egret.URLLoader#bytesTotal
          */
-        public static prefix:string = "";
+        public get bytesTotal():number{
+            return this.netContext.bytesTotal;
+        }
 
+        /**
+         * 表示加载操作期间到目前为止加载的字节数。
+		 * @member {number} ns_egret.URLLoader#bytesLoaded
+         */
+        public get bytesLoaded():number{
+            return this.netContext.bytesLoaded;
+        }
+
+		/**
+         * 从指定的 URL 发送和加载数据。可以以文本、原始二进制数据或 URL 编码变量格式接收数据，这取决于为 dataFormat 属性所设置的值。
+         * 请注意 dataFormat 属性的默认值为文本。如果想将数据发送至指定的 URL，则可以在 URLRequest 对象中设置 data 属性。
+		 * @method ns_egret.URLLoader#load
+		 * @param request {URLRequest} 
+		 */
+        public load(request:URLRequest):void {
+            this.netContext.load(request,this.dataFormat);
+        }
+        /**
+         * 关闭进行中的加载操作。任何正在进行中的加载操作将立即终止。
+		 * @method ns_egret.URLLoader#close
+         */
+        public close():void{
+            this.netContext.close();
+        }
     }
 
 
