@@ -188,10 +188,49 @@ module ns_egret {
 					content.scaleY = content.height==0?1:unscaledHeight/content.height;
 				}
 			}
-            else if(content instanceof Texture){
-
-            }
 		}
+
+        public _render(renderContext:RendererContext):void {
+            if(this._content instanceof Texture){
+                var texture:Texture = <Texture> this._content;
+                this._texture_to_render = texture;
+                var w:number = texture._textureWidth;
+                var h:number = texture._textureHeight;
+                var offsetX:number = 0;
+                var offsetY:number = 0;
+                RenderFilter.getInstance().drawImage(renderContext, this, 0, 0, w, h,
+                    offsetX, offsetY,this.width,this.height);
+            }
+            super._render(renderContext);
+        }
+
+        /**
+         * @see egret.DisplayObject.measureBounds
+         * @returns {Rectangle}
+         * @private
+         */
+        public _measureBounds():ns_egret.Rectangle {
+            var bounds:Rectangle = super._measureBounds();
+            if(this._content instanceof Texture){
+                var x:number = 0;
+                var y:number = 0;
+                var w:number = this.width;
+                var h:number = this.height;
+                if(x<bounds.x){
+                    bounds.x = x;
+                }
+                if(y<bounds.y){
+                    bounds.y = y;
+                }
+                if(x+w>bounds.right){
+                    bounds.right = x+w;
+                }
+                if(y+h>bounds.bottom){
+                    bounds.bottom = y+h;
+                }
+            }
+            return bounds;
+        }
 
 		private static errorStr:string = "在此组件中不可用，若此组件为容器类，请使用";
 		/**

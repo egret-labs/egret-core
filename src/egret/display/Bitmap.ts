@@ -59,10 +59,6 @@ module ns_egret {
             super();
         }
 
-        /**
-         * @see egret.DisplayObject.render
-         * @param renderContext
-         */
         public _render(renderContext:RendererContext):void {
             var locTexture = this.texture;
             if (locTexture == null) {
@@ -98,8 +94,13 @@ module ns_egret {
          */
         public _measureBounds():ns_egret.Rectangle {
             var rect:ns_egret.SpriteSheetFrame = this.spriteFrame;
-            var w, h;
+            var x:number = 0;
+            var y:number = 0;
+            var w:number = 0;
+            var h:number = 0;
             if (rect) {
+                x = rect.offX;
+                y = rect.offY;
                 w = rect.w;
                 h = rect.h;
             }
@@ -107,19 +108,7 @@ module ns_egret {
                 w = this.texture._textureWidth;
                 h = this.texture._textureHeight;
             }
-            else {
-                ns_egret.Logger.fatal("获取BitmapBounds失败");
-            }
-            var anchorX, anchorY;
-            if (this._anchorX != 0 || this._anchorY != 0) {
-                anchorX = w * this._anchorX;
-                anchorY = h * this._anchorY;
-            }
-            else {
-                anchorX = this._anchorOffsetX;
-                anchorY = this._anchorOffsetY;
-            }
-            return Rectangle.identity.initialize(-anchorX, -anchorY, w, h);
+            return Rectangle.identity.initialize(x,y, w, h);
         }
     }
 }

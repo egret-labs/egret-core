@@ -328,7 +328,7 @@ module ns_egret {
          * @param y
          * @returns {DisplayObject}
          */
-            hitTest(x, y) {
+        public hitTest(x:number, y:number, ignoreTouchEnabled:boolean = false):DisplayObject{
             var result:DisplayObject;
             if (!this.visible) {
                 return null;
@@ -349,16 +349,7 @@ module ns_egret {
             }
             var children = this._children;
             var l = children.length;
-            if (l == 0) {
-                return result;
-            }
-            //算出touchChildren
-            var touchChildren = this._touchChildren;
-            var target = this;
-            while (target._parent) {
-                touchChildren = touchChildren && target._parent._touchChildren;
-                target = target._parent;
-            }
+            var touchChildren = this._touchChildren;//这里不用考虑父级的touchChildren，从父级调用下来过程中已经判断过了。
             for (var i = l - 1; i >= 0; i--) {
                 var child = children[i];
                 //todo 這裡的matrix不符合identity的設計原則，以後需要重構
@@ -386,6 +377,11 @@ module ns_egret {
                     if (result == null) {
                         result = childHitTestResult;
                     }
+                }
+            }
+            if(!result){
+                if(this._texture_to_render||this["_graphics"]){
+                    return super.hitTest(x,y);
                 }
             }
             return result;
