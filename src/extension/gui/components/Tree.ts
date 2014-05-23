@@ -16,7 +16,6 @@
  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-/// <reference path="../../../egret/utils/XML.ts"/>
 /// <reference path="../collections/ICollection.ts"/>
 /// <reference path="../collections/ITreeCollection.ts"/>
 /// <reference path="IItemRenderer.ts"/>

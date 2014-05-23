@@ -18,6 +18,7 @@
 
 /// <reference path="../display/DisplayObject.ts"/>
 /// <reference path="Event.ts"/>
+/// <reference path="IEventDispatcher.ts"/>
 /// <reference path="../geom/Point.ts"/>
 
 module ns_egret {

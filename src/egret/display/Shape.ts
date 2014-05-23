@@ -20,21 +20,29 @@
 /// <reference path="../core/MainContext.ts"/>
 /// <reference path="DisplayObject.ts"/>
 /// <reference path="Graphics.ts"/>
+/// <reference path="../geom/Rectangle.ts"/>
 
 module ns_egret {
 
     export class Shape extends ns_egret.DisplayObject {
 
-        public graphics:Graphics;
-
-        constructor() {
+        public constructor() {
             super();
-            var rendererContext = ns_egret.MainContext.instance.rendererContext;
-            this.graphics = new Graphics(rendererContext);
+        }
+
+        private _graphics:Graphics;
+
+        public get graphics():Graphics{
+            if(!this._graphics){
+                var rendererContext = ns_egret.MainContext.instance.rendererContext;
+                this._graphics = new Graphics(rendererContext);
+            }
+            return this._graphics;
         }
 
         public _render(renderContext:RendererContext):void {
-            this.graphics._draw();
+            if(this._graphics)
+                this._graphics._draw();
         }
 
     }

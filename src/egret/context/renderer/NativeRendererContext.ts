@@ -21,10 +21,9 @@
 /// <reference path="../../core/Profiler.ts"/>
 /// <reference path="../../display/Graphics.ts"/>
 /// <reference path="../../geom/Matrix.ts"/>
-/// <reference path="../../geom/Rectangle.ts"/>
 /// <reference path="../../text/TextField.ts"/>
 /// <reference path="../../texture/Texture.ts"/>
-/// <reference path="../NativeContext.d.ts"/>
+/// <reference path="../../../extension/gui/components/Label.ts"/>
 
 module ns_egret {
     /**

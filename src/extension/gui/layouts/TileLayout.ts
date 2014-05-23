@@ -18,8 +18,6 @@
 
 /// <reference path="../../../egret/core/HorizontalAlign.ts"/>
 /// <reference path="../../../egret/core/VerticalAlign.ts"/>
-/// <reference path="../../../egret/events/Event.ts"/>
-/// <reference path="../../../egret/geom/Rectangle.ts"/>
 /// <reference path="../core/ILayoutElement.ts"/>
 /// <reference path="ColumnAlign.ts"/>
 /// <reference path="RowAlign.ts"/>

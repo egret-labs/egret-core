@@ -16,11 +16,9 @@
  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-/// <reference path="../../../../egret/events/Event.ts"/>
 /// <reference path="../../../../egret/events/EventDispatcher.ts"/>
 /// <reference path="../../../../egret/geom/Rectangle.ts"/>
 /// <reference path="../../components/supportClasses/GroupBase.ts"/>
-/// <reference path="../../events/PropertyChangeEvent.ts"/>
 
 module ns_egret {
 

@@ -25,6 +25,8 @@
 /// <reference path="../core/IVisualElement.ts"/>
 /// <reference path="../core/IVisualElementContainer.ts"/>
 /// <reference path="../events/ElementExistenceEvent.ts"/>
+/// <reference path="../events/StateChangeEvent.ts"/>
+/// <reference path="../states/State.ts"/>
 
 module ns_egret {
 

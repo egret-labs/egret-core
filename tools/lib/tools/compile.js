@@ -150,7 +150,11 @@ function build(callback, source, output) {
 }
 
 function generateEgretFileList(callback, egret_file, runtime) {
+<<<<<<< HEAD
     var file_list = require("../core/file_list.js");
+=======
+    var file_list = libs.require("tools/lib/core/file_list.js");
+>>>>>>> FETCH_HEAD
     var required_file_list = file_list.core.concat(file_list[runtime]);
 
     var content = required_file_list.map(function (item) {

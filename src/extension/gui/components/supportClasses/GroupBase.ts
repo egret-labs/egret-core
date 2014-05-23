@@ -16,13 +16,13 @@
  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-/// <reference path="../../../../egret/events/Event.ts"/>
 /// <reference path="../../../../egret/geom/Rectangle.ts"/>
 /// <reference path="../../core/ILayoutElement.ts"/>
 /// <reference path="../../core/IViewport.ts"/>
 /// <reference path="../../core/IVisualElement.ts"/>
 /// <reference path="../../core/UIComponent.ts"/>
 /// <reference path="../../events/PropertyChangeEvent.ts"/>
+/// <reference path="../../events/PropertyChangeEventKind.ts"/>
 /// <reference path="../../layouts/BasicLayout.ts"/>
 /// <reference path="../../layouts/supportClasses/LayoutBase.ts"/>
 

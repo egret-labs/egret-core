@@ -17,8 +17,6 @@
  */
 
 /// <reference path="../../core/HashObject.ts"/>
-/// <reference path="../../core/MainContext.ts"/>
-/// <reference path="../NativeContext.d.ts"/>
 
 module ns_egret {
 
