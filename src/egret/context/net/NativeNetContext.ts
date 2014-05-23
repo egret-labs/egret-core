@@ -18,15 +18,15 @@
 
 /// <reference path="NetContext.ts"/>
 /// <reference path="../../resource/ResourceLoader.ts"/>
-/// <reference path="../../texture/Texture.ts"/>
 /// <reference path="../../texture/TextureCache.ts"/>
+/// <reference path="../../utils/callLater.ts"/>
 
 module ns_egret {
 
-    export class NativeNetContext extends NetContext{
+    export class NativeNetContext extends NetContext {
 
         public constructor() {
-
+            super();
         }
 
 
@@ -36,111 +36,33 @@ module ns_egret {
          */
         public send(request:URLRequest) {
 
-
             function onLoadComplete() {
-                if (xhr.readyState == 4) {
-                    if (xhr.status == 200) {
-                        _processXMLHttpResponse(xhr);
-                    } else {
-                    }
-                }
+                var content = egret_native.readFileSync(request.url);
+                ns_egret.TextureCache.getInstance().addTextData(request.url, content);
+                request.callback.call(request.thisObj, content);
             }
-
-            function _processXMLHttpResponse(xhr) {
-                var data = xhr.responseText;
-                if (this.type == ResourceLoader.DATA_TYPE_BINARY) {
-                    data = self._stringConvertToArray(data);
-                }
-                request.callback.call(request.thisObj, data);
-            }
-
 
             if (request.type == ResourceLoader.DATA_TYPE_IMAGE) {
                 this.loadImage(request);
                 return;
             }
-            var self = this;
-            var xhr = this._getXMLHttpRequest();
-            xhr.open(request.method, request.prefix + request.url);
-            if(request.method != "GET")
-            {
-                xhr.setRequestHeader("Content-Type","application/x-www-form-urlencoded");
-            }
 
-            if (request.type != undefined) {
-                this._setXMLHttpRequestHeader(xhr, request.type);
-            }
-            xhr.onreadystatechange = onLoadComplete;
-            xhr.send(request.method != "GET" ? request.data : null);
+            callLater(onLoadComplete, this)
 
         }
 
         private loadImage(request:ns_egret.URLRequest):void {
-            var image = new Image();
-            image.crossOrigin = "Anonymous";
-            var fileUrl = request.prefix + request.url;
 
             function onLoadComplete() {
-                image.removeEventListener('load', onLoadComplete);
-                image.removeEventListener('error', onLoadComplete);
-                var texture:Texture = Texture.create(request.url);
-                texture.bitmapData = image;
-                TextureCache.getInstance().addTexture(request.url, texture);
-                request.callback.call(request.thisObj, texture);
+                var _texture = egret_native.EGTTextureCatche.addTexture(request.url);
+                ns_egret.TextureCache.getInstance().addTexture(request.url, _texture);
+                request.callback.call(request.thisObj, _texture);
 
             };
-            function onLoadError() {
-                image.removeEventListener('error', onLoadError);
-            };
-            image.addEventListener("load", onLoadComplete);
-            image.addEventListener("error", onLoadError);
-            image.src = fileUrl;
+
+
+            callLater(onLoadComplete, this);
         }
-
-
-        private _stringConvertToArray(strData) {
-            if (!strData)
-                return null;
-
-            var arrData = new Uint8Array(strData.length);
-            for (var i = 0; i < strData.length; i++) {
-                arrData[i] = strData.charCodeAt(i) & 0xff;
-            }
-            return arrData;
-        }
-
-        private _setXMLHttpRequestHeader(xhr, type) {
-            if (/msie/i.test(navigator.userAgent) && !/opera/i.test(navigator.userAgent)) {
-                // IE-specific logic here
-                if (type == ResourceLoader.DATA_TYPE_BINARY) {
-                    xhr.setRequestHeader("Accept-Charset", "x-user-defined");
-                }
-                else {
-                    xhr.setRequestHeader("Accept-Charset", "utf-8");
-                }
-
-            }
-            else {
-                if (xhr.overrideMimeType) {
-                    if (type == ResourceLoader.DATA_TYPE_BINARY) {
-                        xhr.overrideMimeType("text\/plain; charset=x-user-defined");
-                    }
-                    else {
-                        xhr.overrideMimeType("text\/plain; charset=utf-8");
-                    }
-                }
-            }
-        }
-
-        private _getXMLHttpRequest() {
-            if (window["XMLHttpRequest"]) {
-                return new window["XMLHttpRequest"]();
-            } else {
-                return new ActiveXObject("MSXML2.XMLHTTP");
-            }
-        }
-
-
     }
 
 

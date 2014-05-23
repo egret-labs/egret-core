@@ -42,7 +42,7 @@ exports.core = [
     "egret/interactive/InteractionMode.js",
     "egret/interactive/TouchContext.js",
     "egret/context/assets/AssetsContext.js",
-    "egret/resource/ResourceLoader.js",
+//    "egret/resource/ResourceLoader.js",
     "egret/resource/LoadingController.js",
     "egret/net/URLLoader.js",
     "egret/texture/Texture.js",
@@ -183,6 +183,6 @@ exports.native = [
     "egret/context/devices/NativeDeviceContext.js",
     "egret/context/renderer/NativeRendererContext.js",
     "egret/interactive/NativeTouchContext.js",
-    "egret/interactive/NativeNetContext.js"
+    "egret/context/net/NativeNetContext.js"
 
 ]

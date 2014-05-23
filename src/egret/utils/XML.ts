@@ -53,7 +53,7 @@ module ns_egret {
          */
         public _ansXML(xmlDoc) {
             var num = 0;
-            if (xmlDoc.childNodes.length > 0) {
+            if (xmlDoc.childNodes && xmlDoc.childNodes.length > 0) {
                 for (var i = 0; i < xmlDoc.childNodes.length; i++) {
                     var childXMLDoc = xmlDoc.childNodes[i];
                     if (childXMLDoc.nodeType == 1) {
@@ -75,10 +75,11 @@ module ns_egret {
                 this["value"] = xmlDoc.textContent;
             }
 
-            if (xmlDoc.attributes.length > 0) {//拥有 属性
+            if (xmlDoc.attributes && xmlDoc.attributes.length > 0) {//拥有 属性
                 for (var j = 0; j < xmlDoc.attributes.length; j++) {
                     var attr = xmlDoc.attributes[j];
-                    this["$" + attr.name] = attr.value;
+                    this["$" + attr.id] = attr.value;//todo:
+                    this["$" + attr.name] = attr.value;//todo:
                 }
             }
         }
@@ -92,7 +93,7 @@ module ns_egret {
                 xmldoc = ns_egret.SAXParser.getInstance().tmxParse(content, true).documentElement;
             }
             else {
-                xmldoc = egret_native.readXML(url);
+                xmldoc = egret_native.EGTXML.readXML(url);
             }
             xml._ansXML(xmldoc);
             return xml;

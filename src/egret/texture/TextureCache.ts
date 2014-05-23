@@ -36,6 +36,8 @@ module ns_egret{
             return TextureCache.instance;
         }
 
+        public prefix:string;
+
         private _textures;
         private _data;
 
