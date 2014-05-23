@@ -133,7 +133,9 @@ function mkdirSync(p, mode, made) {
 
 function formatStdoutString(message) {
     return message.split("{color_green}").join("\033[1;32;1m")
+        .split("{color_red}").join("\033[0;31m")
         .split("{color_normal}").join("\033[0m")
+        .split("{color_gray}").join("\033[0;37m")
         .split("{color_underline}").join("\033[4;36;1m");
 }
 
