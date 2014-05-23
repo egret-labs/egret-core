@@ -17,7 +17,6 @@
  */
 
 /// <reference path="../../../egret/display/DisplayObject.ts"/>
-/// <reference path="../../../egret/events/Event.ts"/>
 /// <reference path="../collections/ICollection.ts"/>
 /// <reference path="Group.ts"/>
 /// <reference path="../core/IViewStack.ts"/>

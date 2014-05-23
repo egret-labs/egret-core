@@ -18,7 +18,6 @@
 
 /// <reference path="../core/HashObject.ts"/>
 /// <reference path="../core/Logger.ts"/>
-/// <reference path="../display/SpriteSheet.ts"/>
 /// <reference path="Texture.ts"/>
 
 module ns_egret{

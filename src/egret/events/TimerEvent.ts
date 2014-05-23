@@ -19,6 +19,7 @@
 /** @namespace ns_egret */
 
 /// <reference path="Event.ts"/>
+/// <reference path="IEventDispatcher.ts"/>
 
 module ns_egret {
 

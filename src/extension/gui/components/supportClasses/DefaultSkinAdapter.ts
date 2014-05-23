@@ -16,7 +16,7 @@
  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-/// <reference path="../../../../egret/display/DisplayObject.ts"/>
+/// <reference path="../../../../egret/utils/getDefinitionByName.ts"/>
 /// <reference path="../../core/ISkinAdapter.ts"/>
 
 module ns_egret {

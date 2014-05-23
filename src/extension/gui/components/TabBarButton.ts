@@ -16,7 +16,6 @@
  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-/// <reference path="../../../egret/events/Event.ts"/>
 /// <reference path="IItemRenderer.ts"/>
 /// <reference path="supportClasses/ToggleButtonBase.ts"/>
 

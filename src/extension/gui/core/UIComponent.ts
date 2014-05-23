@@ -26,6 +26,7 @@
 /// <reference path="UIGlobals.ts"/>
 /// <reference path="../events/MoveEvent.ts"/>
 /// <reference path="../events/PropertyChangeEvent.ts"/>
+/// <reference path="../events/PropertyChangeEventKind.ts"/>
 /// <reference path="../events/ResizeEvent.ts"/>
 /// <reference path="../events/UIEvent.ts"/>
 /// <reference path="../managers/ILayoutManagerClient.ts"/>

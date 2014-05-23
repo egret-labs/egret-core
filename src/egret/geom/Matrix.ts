@@ -19,6 +19,7 @@
 /// <reference path="../core/HashObject.ts"/>
 /// <reference path="../display/DisplayObject.ts"/>
 /// <reference path="Point.ts"/>
+/// <reference path="Rectangle.ts"/>
 
 module ns_egret {
     /**

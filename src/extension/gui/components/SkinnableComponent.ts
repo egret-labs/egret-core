@@ -16,14 +16,18 @@
  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+/// <reference path="../../../egret/core/Injector.ts"/>
 /// <reference path="../../../egret/display/DisplayObject.ts"/>
 /// <reference path="../../../egret/display/DisplayObjectContainer.ts"/>
-/// <reference path="../../../egret/events/Event.ts"/>
+/// <reference path="supportClasses/DefaultSkinAdapter.ts"/>
 /// <reference path="supportClasses/SkinBasicLayout.ts"/>
-/// <reference path="../core/UIComponent.ts"/>
+/// <reference path="../core/ILayoutElement.ts"/>
 /// <reference path="../core/ISkin.ts"/>
+/// <reference path="../core/ISkinAdapter.ts"/>
 /// <reference path="../core/IStateClient.ts"/>
+/// <reference path="../core/UIComponent.ts"/>
 /// <reference path="../events/SkinPartEvent.ts"/>
+/// <reference path="../events/UIEvent.ts"/>
 
 module ns_egret {
 

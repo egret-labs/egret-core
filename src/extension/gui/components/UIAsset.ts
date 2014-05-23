@@ -19,11 +19,10 @@
 /// <reference path="../../../egret/core/Injector.ts"/>
 /// <reference path="../../../egret/display/DisplayObject.ts"/>
 /// <reference path="../../../egret/display/DisplayObjectContainer.ts"/>
-/// <reference path="../../../egret/geom/Rectangle.ts"/>
+/// <reference path="../../../egret/texture/Texture.ts"/>
 /// <reference path="supportClasses/DefaultAssetAdapter.ts"/>
-/// <reference path="../core/IInvalidateDisplay.ts"/>
-/// <reference path="../core/ILayoutElement.ts"/>
 /// <reference path="../core/IAssetAdapter.ts"/>
+/// <reference path="../core/ILayoutElement.ts"/>
 /// <reference path="../core/UIComponent.ts"/>
 /// <reference path="../events/UIEvent.ts"/>
 

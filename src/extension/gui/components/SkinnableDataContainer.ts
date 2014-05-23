@@ -23,7 +23,6 @@
 /// <reference path="SkinnableComponent.ts"/>
 /// <reference path="../core/IVisualElement.ts"/>
 /// <reference path="../events/RendererExistenceEvent.ts"/>
-/// <reference path="../layouts/VerticalLayout.ts"/>
 /// <reference path="../layouts/supportClasses/LayoutBase.ts"/>
 
 module ns_egret {
