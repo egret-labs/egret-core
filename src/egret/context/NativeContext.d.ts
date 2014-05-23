@@ -62,7 +62,13 @@ declare module egret_native {
         function setTextAlignment(type:string):void;
 
 
+    }
 
 
+    module EGTXML {
+
+
+
+        function readXML(filepath:string):void;
     }
 }

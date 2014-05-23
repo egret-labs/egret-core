@@ -18,7 +18,7 @@
 
 /// <reference path="AssetsContext.ts"/>
 /// <reference path="../../resource/LoadingController.ts"/>
-/// <reference path="../../resource/ResourceLoader.ts"/>
+/// <reference path="../../net/URLLoader.ts"/>
 
 module ns_egret {
 
@@ -32,23 +32,6 @@ module ns_egret {
 
         constructor() {
             super();
-        }
-
-		/**
-		 * @method ns_egret.HTML5AssetsContext#createLoadingController
-		 * @returns {LoadingController}
-		 */
-        public createLoadingController():LoadingController {
-            return new LoadingController();
-        }
-
-		/**
-		 * @method ns_egret.HTML5AssetsContext#getAssets
-		 * @param url {string} 
-		 * @returns {any}
-		 */
-        public getAssets(url:string):any {
-            return ResourceLoader.create(url).data;
         }
     }
 

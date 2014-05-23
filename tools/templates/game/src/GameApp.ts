@@ -14,16 +14,15 @@ class GameApp {
 
         //设置屏幕适配策略
         var container = new ns_egret.EqualToFrame();
-        ns_egret.ResourceLoader.prefix = "assets/480/";
         var content = ns_egret.Browser.getInstance().isMobile ? new ns_egret.FixedWidth() : new ns_egret.FixedSize(480, 800);
         var policy = new ns_egret.ResolutionPolicy(container, content);
         ns_egret.StageDelegate.getInstance().setDesignSize(480, 800, policy);
 
         var loadingController = new ns_egret.LoadingController();
-        loadingController.addResource("bg.jpg", ns_egret.ResourceLoader.DATA_TYPE_IMAGE);
-        loadingController.addResource("egret_icon.png", ns_egret.ResourceLoader.DATA_TYPE_IMAGE);
+        loadingController.addResource("bg.jpg", ns_egret.URLLoader.DATA_TYPE_IMAGE);
+        loadingController.addResource("egret_icon.png", ns_egret.URLLoader.DATA_TYPE_IMAGE);
         loadingController.setLoadingView(new LoadingUI());
-        loadingController.addEventListener(ns_egret.ResourceLoader.LOAD_COMPLETE, this.onResourceLoadComplete, this);
+        loadingController.addEventListener(ns_egret.Event.COMPLETE, this.onResourceLoadComplete, this);
         loadingController.load();
     }
 

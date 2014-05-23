@@ -23,7 +23,7 @@ var app = {
         var ImageResourceLoader = (function (_super) {
             __extends(ImageResourceLoader, _super);
             function ImageResourceLoader(src) {
-                _super.call(this, src, ns_egret.ResourceLoader.DATA_TYPE_IMAGE);
+                _super.call(this, src, ns_egret.URLLoader.DATA_TYPE_IMAGE);
             }
 
             ImageResourceLoader.prototype.onLoadComplete = function (data) {
@@ -34,7 +34,7 @@ var app = {
         var JsonResourceLoader = (function (_super) {
             __extends(JsonResourceLoader, _super);
             function JsonResourceLoader(src) {
-                _super.call(this, src, ns_egret.ResourceLoader.DATA_TYPE_TEXT);
+                _super.call(this, src, ns_egret.URLLoader.DATA_TYPE_TEXT);
             }
 
             JsonResourceLoader.prototype.onLoadComplete = function (data) {
@@ -70,7 +70,7 @@ var app = {
         var loadingController = new ns_egret.LoadingController();
         var list = getResourceList();
         list.forEach(function (url) {
-            loadingController.addResource(url, ns_egret.ResourceLoader.DATA_TYPE_IMAGE);
+            loadingController.addResource(url, ns_egret.URLLoader.DATA_TYPE_IMAGE);
         })
         loadingController.addEventListener(ns_egret.ResourceLoader.LOAD_COMPLETE, this.handleComplete, this);
         loadingController.load();

@@ -18,7 +18,7 @@
 
 /// <reference path="../../egret/core/Logger.ts"/>
 /// <reference path="../../egret/geom/Point.ts"/>
-/// <reference path="../../egret/resource/ResourceLoader.ts"/>
+/// <reference path="../../egret/net/URLLoader.ts"/>
 /// <reference path="../../egret/utils/SAXParser.ts"/>
 /// <reference path="TMXConst.ts"/>
 /// <reference path="../../jslib/Utils.d.ts"/>
@@ -64,7 +64,7 @@ module ns_egret {
         }
 
         private parseXMLFile(tmxFile:string) {
-            var xml = ResourceLoader.create(tmxFile).data;
+            var xml = TextureCache.getInstance().getTextData(tmxFile);
             if (xml == null) {
                 ns_egret.Logger.fatal("tmx文件没有加载：" + tmxFile);
             }
