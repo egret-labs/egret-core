@@ -36,6 +36,7 @@ module ns_egret {
         public _render(renderContext:RendererContext):void {
             if(this._graphics)
                 this._graphics._draw();
+            super._render(renderContext);
         }
 
     }
