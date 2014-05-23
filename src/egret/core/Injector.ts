@@ -16,8 +16,6 @@
  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-/// <reference path="../utils/getQualifiedClassName.ts"/>
-
 module ns_egret {
 
     /**
@@ -39,18 +37,9 @@ module ns_egret {
 		 * @param instantiateClass {any} instantiateClass 传递类作为需要映射的值，它的构造函数必须为空。若不为空，请使用Injector.mapValue()方法直接注入实例。
 		 * @param named {string} named 可选参数，在同一个类作为键需要映射多条规则时，可以传入此参数区分不同的映射。在调用getInstance()方法时要传入同样的参数。
 		 */
-		public static mapClass(whenAskedFor:any,instantiateClass:any,named:string=""):void{
-			var requestName:string = this.getKey(whenAskedFor)+"#"+named;
+		public static mapClass(whenAskedFor:string,instantiateClass:any,named:string=""):void{
+			var requestName:string = whenAskedFor+"#"+named;
 			this.mapClassDic[requestName] = instantiateClass;
-		}
-		
-		/**
-		 * 获取完全限定类名
-		 */		
-		private static getKey(hostComponentKey:any):string{
-			if(typeof(hostComponentKey)=="string")
-				return <string> hostComponentKey;
-			return getQualifiedClassName(hostComponentKey);
 		}
 		
 		private static mapValueDic:any = {};
@@ -62,8 +51,8 @@ module ns_egret {
 		 * @param useValue {any} 传递对象实例作为需要映射的值。
 		 * @param named {string} 可选参数，在同一个类作为键需要映射多条规则时，可以传入此参数区分不同的映射。在调用getInstance()方法时要传入同样的参数。
 		 */		
-		public static mapValue(whenAskedFor:any,useValue:any,named:string=""):void{
-			var requestName:string = this.getKey(whenAskedFor)+"#"+named;
+		public static mapValue(whenAskedFor:string,useValue:any,named:string=""):void{
+			var requestName:string = whenAskedFor+"#"+named;
 			this.mapValueDic[requestName] = useValue;
 		}
 
@@ -74,8 +63,8 @@ module ns_egret {
 		 * @param named {string} 可选参数，在同一个类作为键需要映射多条规则时，可以传入此参数区分不同的映射。
 		 * @returns {boolean}
 		 */
-		public static hasMapRule(whenAskedFor:any,named:string=""):boolean{
-			var requestName:string = this.getKey(whenAskedFor)+"#"+named;
+		public static hasMapRule(whenAskedFor:string,named:string=""):boolean{
+			var requestName:string = whenAskedFor+"#"+named;
 			if(this.mapValueDic[requestName]||this.mapClassDic[requestName]){
 				return true;
 			}
@@ -88,8 +77,8 @@ module ns_egret {
 		 * @param named {string} 可选参数，若在调用mapClass()映射时设置了这个值，则要传入同样的字符串才能获取对应的单例
 		 * @returns {any}
 		 */		
-		public static getInstance(clazz:any,named:string=""):any{
-			var requestName:string = this.getKey(clazz)+"#"+named;
+		public static getInstance(whenAskedFor:string,named:string=""):any{
+			var requestName:string = whenAskedFor+"#"+named;
 			if(this.mapValueDic[requestName])
 				return this.mapValueDic[requestName];
 			var returnClass:any = <any> (this.mapClassDic[requestName]);
@@ -99,7 +88,7 @@ module ns_egret {
 				delete this.mapClassDic[requestName];
 				return instance;
 			}
-			throw new Error("调用了未配置的注入规则！any#named:"+requestName+"。 请先在项目初始化里配置指定的注入规则，再调用对应单例。");
+			throw new Error("调用了未配置的注入规则！whenAskedFor#named:"+requestName+"。 请先在项目初始化里配置指定的注入规则，再调用对应单例。");
 		}
 	}
 }
