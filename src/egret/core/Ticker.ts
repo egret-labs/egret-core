@@ -31,17 +31,6 @@ module ns_egret {
     export class Ticker extends EventDispatcher {
 
 
-        /**
-         * 使用全局函数getTimer()代替
-         * @method ns_egret.Ticker.now
-         * @deprecated
-         * @param functio {any}
-         */
-        public static now = function () {
-            return getTimer();
-        };
-
-
         private _timeScale:number = 1;
         private _paused:boolean = false;
 
@@ -95,33 +84,6 @@ module ns_egret {
         public unregister(listener:Function, thisObject:any):void {
             var list:Array<any> = this.callBackList;
             this._removeEventBin(list, listener, thisObject);
-        }
-
-        /**
-         * 使用全局函数callLater()代替
-         * @method ns_egret.Ticker#callLater
-         * @deprecated
-         * @param listener {Function}
-         * @param thisObject {any}
-         * @param time {number}
-         */
-        public callLater(listener:Function, thisObject, time:number = 0):void {
-            var that = this;
-            var passTime = 0;
-            this.register(function (frameTime) {
-                if (time == 0) {
-                    that.unregister(arguments.callee, thisObject);
-                    listener.apply(thisObject);
-
-                }
-                else {
-                    passTime += frameTime;
-                    if (passTime >= time) {
-                        that.unregister(arguments.callee, thisObject);
-                        listener.apply(thisObject);
-                    }
-                }
-            }, thisObject)
         }
 
         /**

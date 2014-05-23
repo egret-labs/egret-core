@@ -162,22 +162,6 @@ module ns_egret {
          */
         public _anchorOffsetX:number = 0;
 
-        /**
-         * @deprecated
-         */
-        public get anchorPointX():number {
-            return this._anchorOffsetX;
-        }
-
-        /**
-         * @deprecated
-         */
-        public set anchorPointX(value:number) {
-            if (NumberUtils.isNumber(value)) {
-                this._anchorOffsetX = value;
-            }
-        }
-
         public get anchorOffsetX():number {
             return this._anchorOffsetX;
         }
@@ -194,22 +178,6 @@ module ns_egret {
          * @default 0
          */
         public _anchorOffsetY:number = 0;
-
-        /**
-         * @deprecated
-         */
-        public get anchorPointY():number {
-            return this._anchorOffsetY;
-        }
-
-        /**
-         * @deprecated
-         */
-        public set anchorPointY(value:number) {
-            if (NumberUtils.isNumber(value)) {
-                this._anchorOffsetY = value;
-            }
-        }
 
         public get anchorOffsetY():number {
             return this._anchorOffsetY;
@@ -228,22 +196,6 @@ module ns_egret {
          */
         public _anchorX:number = 0;
 
-        /**
-         * @deprecated
-         */
-        public get relativeAnchorPointX():number {
-            return this._anchorX;
-        }
-
-        /**
-         * @deprecated
-         */
-        public set relativeAnchorPointX(value:number) {
-            if (NumberUtils.isNumber(value)) {
-                this._anchorX = value;
-            }
-        }
-
         public get anchorX():number {
             return this._anchorX;
         }
@@ -260,22 +212,6 @@ module ns_egret {
          * @default 0
          */
         public _anchorY:number = 0;
-
-        /**
-         * @deprecated
-         */
-        public get relativeAnchorPointY():number {
-            return this._anchorY;
-        }
-
-        /**
-         * @deprecated
-         */
-        public set relativeAnchorPointY(value:number) {
-            if (NumberUtils.isNumber(value)) {
-                this._anchorY = value;
-            }
-        }
 
         public get anchorY():number {
             return this._anchorY;
