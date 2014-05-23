@@ -72,6 +72,8 @@ function buildAllFile(callback, source, output, file_list) {
 
 
             ts.on('exit', function (code) {
+                 fs.unlinkSync("tsc_config_temp.txt");
+
                 if (code == 0) {
                     callback(null, source);
                 }
