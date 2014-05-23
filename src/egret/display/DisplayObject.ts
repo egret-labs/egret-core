@@ -26,6 +26,7 @@
 /// <reference path="../geom/Matrix.ts"/>
 /// <reference path="../geom/Point.ts"/>
 /// <reference path="../geom/Rectangle.ts"/>
+/// <reference path="../texture/RenderTexture.ts"/>
 /// <reference path="../texture/Texture.ts"/>
 /// <reference path="../../jslib/NumberUtils.ts"/>
 

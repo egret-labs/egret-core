@@ -18,7 +18,7 @@
 
 /// <reference path="../../egret/core/Logger.ts"/>
 /// <reference path="../../egret/geom/Point.ts"/>
-/// <reference path="../../egret/net/URLLoader.ts"/>
+/// <reference path="../../egret/texture/TextureCache.ts"/>
 /// <reference path="../../egret/utils/SAXParser.ts"/>
 /// <reference path="TMXConst.ts"/>
 /// <reference path="../../jslib/Utils.d.ts"/>

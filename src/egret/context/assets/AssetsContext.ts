@@ -16,10 +16,6 @@
  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-/// <reference path="../../resource/LoadingController.ts"/>
-/// <reference path="../../texture/Texture.ts"/>
-/// <reference path="../../texture/TextureCache.ts"/>
-
 module ns_egret {
 
 

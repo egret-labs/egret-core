@@ -18,9 +18,8 @@
 
 /// <reference path="../context/net/NetContext.ts"/>
 /// <reference path="../core/MainContext.ts"/>
-/// <reference path="../texture/TextureCache.ts"/>
+/// <reference path="../events/Event.ts"/>
 /// <reference path="../events/EventDispatcher.ts"/>
-/// <reference path="../resource/ResourceLoader.ts"/>
 /// <reference path="../texture/TextureCache.ts"/>
 /// <reference path="../utils/callLater.ts"/>
 

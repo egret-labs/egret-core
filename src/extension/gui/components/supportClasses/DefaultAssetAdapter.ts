@@ -17,7 +17,10 @@
  */
 
 /// <reference path="../../../../egret/display/DisplayObject.ts"/>
+/// <reference path="../../../../egret/events/Event.ts"/>
+/// <reference path="../../../../egret/net/URLLoader.ts"/>
 /// <reference path="../../../../egret/texture/Texture.ts"/>
+/// <reference path="../../../../egret/texture/TextureCache.ts"/>
 /// <reference path="../../core/IAssetAdapter.ts"/>
 
 module ns_egret {
@@ -53,7 +56,13 @@ module ns_egret {
                 compFunc.call(thisObject,content,source);
             }
             else if(typeof(source)=="string"){
-                //加载资源
+                var url:string = <string>source;
+                var loader:URLLoader = new URLLoader(url,URLLoader.DATA_TYPE_IMAGE);
+                loader.addEventListener(Event.COMPLETE, function(event:Event){
+                    content = TextureCache.getInstance().getTexture(url);
+                    compFunc.call(thisObject,content,source);
+                }, this);
+                loader.load();
             }
             else{
                 compFunc.call(thisObject,content,source);
