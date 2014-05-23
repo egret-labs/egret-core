@@ -267,7 +267,7 @@ module ns_egret {
 			UIGlobals.stage.addEventListener(Event.LEAVE_STAGE,this.stage_mouseUpHandler,this);
 			this.addEventListener(Event.ENTER_FRAME,this.onEnterFrame,this);
 			
-			var clickOffset:Point = this.thumb.globalToLocal(event.stageX, event.stageY);
+			var clickOffset:Point = this.thumb.globalToLocal(event.stageX, event.stageY,Point.identity);
             this._clickOffsetX = clickOffset.x;
             this._clickOffsetY = clickOffset.y;
 
@@ -296,7 +296,7 @@ module ns_egret {
 		public updateWhenMouseMove():void{
 			if(!this.track)
 				return;
-			var p:Point = this.track.globalToLocal(this._moveStageX, this._moveStageY);
+			var p:Point = this.track.globalToLocal(this._moveStageX, this._moveStageY,Point.identity);
 			var newValue:number = this.pointToValue(p.x - this._clickOffsetX, p.y - this._clickOffsetY);
 			newValue = this.nearestValidValue(newValue, this.snapInterval);
 			

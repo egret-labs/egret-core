@@ -33,6 +33,7 @@ module ns_egret {
 		 */		
 		public constructor(){
 			super();
+            this.hostComponentKey = "ns_egret.ToggleButton";
 		}
 		
 	}

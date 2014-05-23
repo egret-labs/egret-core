@@ -42,8 +42,8 @@ module ns_egret {
          * @returns {any} 皮肤对象实例
          */
         public getSkin(skinName:any,hostComponentKey:string):any{
-            if(skinName instanceof DisplayObject||skinName instanceof Skin){
-                return skinName;
+            if(skinName.prototype){
+                return new skinName();
             }
             else if(typeof(skinName)=="string"){
                 var clazz:any = getDefinitionByName(<string><any> skinName);
@@ -55,7 +55,7 @@ module ns_egret {
                 }
             }
             else{
-                return new skinName();
+                return skinName;
             }
         }
     }

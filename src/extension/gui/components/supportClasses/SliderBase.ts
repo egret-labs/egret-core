@@ -163,7 +163,7 @@ module ns_egret {
 			if(!this.track)
 				return;
 			
-			var pos:Point = this.track.globalToLocal(this._moveStageX, this._moveStageY);
+			var pos:Point = this.track.globalToLocal(this._moveStageX, this._moveStageY,Point.identity);
 			var newValue:number = this.pointToValue(pos.x - this._clickOffsetX,pos.y - this._clickOffsetY);
 			newValue = this.nearestValidValue(newValue, this.snapInterval);
 			
@@ -202,7 +202,7 @@ module ns_egret {
 			var thumbH:number = (this.thumb) ? this.thumb.height : 0;
 			var offsetX:number = event.stageX - (thumbW / 2);
 			var offsetY:number = event.stageY - (thumbH / 2);
-			var p:Point = this.track.globalToLocal(offsetX, offsetY);
+			var p:Point = this.track.globalToLocal(offsetX, offsetY,Point.identity);
 			
 			var newValue:number = this.pointToValue(p.x, p.y);
 			newValue = this.nearestValidValue(newValue, this.snapInterval);

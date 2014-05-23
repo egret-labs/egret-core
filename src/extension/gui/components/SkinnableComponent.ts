@@ -53,6 +53,11 @@ module ns_egret {
          */
         public hostComponentKey:string = "ns_egret.SkinnableComponent"
 
+        /**
+         * 外部显式设置了皮肤名
+         */
+        public _skinNameExplicitlySet:any = false;
+
         public _skinName:any;
         /**
          * 皮肤标识符。可以为Class,String,或DisplayObject实例等任意类型，具体规则由项目注入的素材适配器决定，
@@ -67,6 +72,7 @@ module ns_egret {
             if(this._skinName==value)
                 return;
             this._skinName = value;
+            this._skinNameExplicitlySet = true;
             if(this.createChildrenCalled){
                 this.parseSkinName();
             }
@@ -402,8 +408,8 @@ module ns_egret {
                     this.measuredHeight = (<ILayoutElement> (skin)).preferredHeight;
                 }
                 else{
-                    this.measuredWidth = skin.width*skin.scaleX;
-                    this.measuredHeight = skin.height*skin.scaleY;
+                    this.measuredWidth = skin.width;
+                    this.measuredHeight = skin.height;
                 }
             }
 			if(this.skinLayout){
@@ -453,8 +459,8 @@ module ns_egret {
                     (<ILayoutElement><any> (skin)).setLayoutBoundsSize(unscaledWidth, unscaledHeight);
                 }
                 else {
-                    skin.width = unscaledWidth / skin.scaleX;
-                    skin.height = unscaledHeight / skin.scaleY;
+                    skin.scaleX = skin.width==0?1:unscaledWidth/skin.width;
+                    skin.scaleY = skin.height==0?1:unscaledHeight/skin.height;
                 }
             }
 			if(this.skinLayout){

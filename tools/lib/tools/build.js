@@ -7,28 +7,37 @@ var async = require('../core/async');
 var libs = require("../core/normal_libs");
 var param = require("../core/params_analyze.js");
 var compiler = require("./compile.js")
-var currDir_global;
-function run(currDir, args, opts) {
-    currDir_global = currDir;
+function run(dir, args, opts) {
     var needCompileEngine = opts["-e"];
 
+    var currDir = dir;
     var projectName = args[0];
-    if (!projectName) {
-        libs.exit(1101);
+    if (projectName) {
+        currDir = path.join(currDir, projectName);
     }
-    var egret_file = path.join(currDir, projectName, "bin-debug/lib/egret_file_list.js");
+
+    var stat1 = fs.existsSync(path.join(currDir, "bin-debug"));
+    var stat2 = fs.existsSync(path.join(currDir, "assets"));
+    var stat3 = fs.existsSync(path.join(currDir, "src"));
+    var stat4 = fs.existsSync(path.join(currDir, "launcher"));
+    if (!stat1 || !stat2 || !stat3 || !stat4) {//存在egret项目缺少的文件目录
+        libs.exit(8002);
+    }
+
+
+    var egret_file = path.join(currDir, "bin-debug/lib/egret_file_list.js");
     var task = [];
     if (needCompileEngine) {
         task.push(
             function (callback) {
-                var runtime = param.getOption(opts,"--runtime",["html5","native"]);
-                compiler.generateEgretFileList(callback,egret_file,runtime);
+                var runtime = param.getOption(opts, "--runtime", ["html5", "native"]);
+                compiler.generateEgretFileList(callback, egret_file, runtime);
 
             },
             function (callback) {
                 compiler.compile(callback,
                     path.join(param.getEgretPath(), "src"),
-                    path.join(currDir, projectName, "bin-debug/lib"),
+                    path.join(currDir, "bin-debug/lib"),
                     egret_file
                 );
             },
@@ -36,7 +45,7 @@ function run(currDir, args, opts) {
             function (callback) {
                 compiler.exportHeader(callback,
                     path.join(param.getEgretPath(), "src"),
-                    path.join(currDir, projectName, "src", "egret.d.ts"),
+                    path.join(currDir, "src", "egret.d.ts"),
                     egret_file
                 );
 
@@ -47,9 +56,9 @@ function run(currDir, args, opts) {
     task.push(
         function (callback) {
             compiler.compile(callback,
-                path.join(currDir, projectName, "src"),
-                path.join(currDir, projectName, "bin-debug/src"),
-                path.join(currDir, projectName, "src/game_file_list.js")
+                path.join(currDir, "src"),
+                path.join(currDir, "bin-debug/src"),
+                path.join(currDir, "src/game_file_list.js")
             );
         }
     )

@@ -17,7 +17,8 @@
  */
 
 /// <reference path="SoundContext.ts"/>
-/// <reference path="../../resource/ResourceLoader.ts"/>
+/// <reference path="../../net/URLLoader.ts"/>
+/// <reference path="../../texture/TextureCache.ts"/>
 
 module ns_egret{
 	/**
@@ -78,7 +79,7 @@ module ns_egret{
                 var extName = this._getExtFromFullPath(path);
                 if (this.isFormatSupported(extName) && !this._soundList.hasOwnProperty(path)) {
                     if (this._canPlay) {
-                        var audio = new Audio(ResourceLoader.prefix + path);
+                        var audio = new Audio(TextureCache.getInstance().prefix + path);
                         audio.preload = 'auto';
                         var soundPreloadCanplayHandler = function (e) {
                             this.removeEventListener('canplaythrough', soundPreloadCanplayHandler, false);
@@ -148,7 +149,7 @@ module ns_egret{
             if (locSoundList.hasOwnProperty(this._playingMusicName)) {
                 audio = locSoundList[this._playingMusicName];
             } else {
-                audio = new Audio(ResourceLoader.prefix + path);
+                audio = new Audio(TextureCache.getInstance().prefix + path);
                 audio.preload = 'auto';
                 locSoundList[path] = audio;
                 audio.load();

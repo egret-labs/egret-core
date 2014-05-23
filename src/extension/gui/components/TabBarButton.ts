@@ -36,6 +36,7 @@ module ns_egret {
 		 */
 		public constructor(){
 			super();
+            this.hostComponentKey = "ns_egret.TabBarButton";
 		}
 		
 		private _allowDeselection:boolean = true;

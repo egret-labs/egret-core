@@ -17,7 +17,7 @@
  */
 
 /// <reference path="NetContext.ts"/>
-/// <reference path="../../resource/ResourceLoader.ts"/>
+/// <reference path="../../net/URLLoader.ts"/>
 /// <reference path="../../texture/Texture.ts"/>
 /// <reference path="../../texture/TextureCache.ts"/>
 
@@ -46,14 +46,14 @@ module ns_egret {
 
             function _processXMLHttpResponse(xhr) {
                 var data = xhr.responseText;
-                if (this.type == ResourceLoader.DATA_TYPE_BINARY) {
+                if (this.type == URLLoader.DATA_TYPE_BINARY) {
                     data = self._stringConvertToArray(data);
                 }
                 request.callback.call(request.thisObj, data);
             }
 
 
-            if (request.type == ResourceLoader.DATA_TYPE_IMAGE) {
+            if (request.type == URLLoader.DATA_TYPE_IMAGE) {
                 this.loadImage(request);
                 return;
             }
@@ -110,7 +110,7 @@ module ns_egret {
         private _setXMLHttpRequestHeader(xhr, type) {
             if (/msie/i.test(navigator.userAgent) && !/opera/i.test(navigator.userAgent)) {
                 // IE-specific logic here
-                if (type == ResourceLoader.DATA_TYPE_BINARY) {
+                if (type == URLLoader.DATA_TYPE_BINARY) {
                     xhr.setRequestHeader("Accept-Charset", "x-user-defined");
                 }
                 else {
@@ -120,7 +120,7 @@ module ns_egret {
             }
             else {
                 if (xhr.overrideMimeType) {
-                    if (type == ResourceLoader.DATA_TYPE_BINARY) {
+                    if (type == URLLoader.DATA_TYPE_BINARY) {
                         xhr.overrideMimeType("text\/plain; charset=x-user-defined");
                     }
                     else {

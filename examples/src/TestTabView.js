@@ -41,7 +41,7 @@ function createExample(){
         var frame1 = ns_egret.Bitmap.initWithTexture(texture1);
         frame1.anchorX = 0.5;
         frame1.anchorY = 0.5;
-        var rect = frame1.getBounds();
+        var rect = frame1.getBounds(ns_egret.Rectangle.identity);
         btn.width = rect.width;
         btn.height = rect.height;
         frame1.x = rect.width / 2;

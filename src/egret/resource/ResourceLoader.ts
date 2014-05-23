@@ -31,7 +31,7 @@ module ns_egret {
 
         public url:string = null;
         public type:string = null;
-        public state:number = ResourceLoader.LOAD_STATE_INIT;
+        public state:number = URLLoader.LOAD_STATE_INIT;
         public data = null;
         public onLoadComplete:Function;
         public fixedUrl:string = null;
@@ -56,10 +56,10 @@ module ns_egret {
          */
         public load():void {
             switch (this.state) {
-                case ResourceLoader.LOAD_STATE_INIT:
+                case URLLoader.LOAD_STATE_INIT:
                     this.startLoading();
                     break;
-                case ResourceLoader.LOAD_STATE_LOADED:
+                case URLLoader.LOAD_STATE_LOADED:
                     ns_egret.callLater(this._executeAllCallback, this);
                     break;
             }
@@ -88,7 +88,7 @@ module ns_egret {
         }
 
         private _executeAllCallback(data):void {
-            this.state = ResourceLoader.LOAD_STATE_LOADED;
+            this.state = URLLoader.LOAD_STATE_LOADED;
             if (data) {
                 this.data = data;
             }
@@ -100,27 +100,6 @@ module ns_egret {
 
         public static LOAD_COMPLETE = "resource_load_complete";
 
-        /**
-         * 二进制数据
-         */
-        public static DATA_TYPE_BINARY = "binary";
-        /**
-         * 文本数据
-         */
-        public static DATA_TYPE_TEXT = "text";
-        /**
-         * 图片数据
-         */
-        public static DATA_TYPE_IMAGE = "image";
-
-        /**
-         * 加载状态：未开始
-         */
-        public static LOAD_STATE_INIT = 0;
-        /**
-         * 加载状态：已完成
-         */
-        public static LOAD_STATE_LOADED = 1;
 
         private static __pool = {};
         /**

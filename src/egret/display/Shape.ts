@@ -75,7 +75,7 @@ module ns_egret {
          * @returns {number}
          */
         public get width():number {
-            return this.getBounds().width;
+            return this.getBounds(Rectangle.identity).width;
         }
 
         /**
@@ -83,7 +83,7 @@ module ns_egret {
          * @returns {number}
          */
         public get height():number {
-            return this.getBounds().height;
+            return this.getBounds(Rectangle.identity).height;
         }
 
         /**

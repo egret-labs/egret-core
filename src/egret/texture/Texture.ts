@@ -91,7 +91,7 @@ module ns_egret {
 
         public drawToTexture(displayObject:ns_egret.DisplayObject):void {
             var cacheCanvas:HTMLCanvasElement = this.cacheCanvas;
-            var bounds = displayObject.getBounds();
+            var bounds = displayObject.getBounds(Rectangle.identity);
             cacheCanvas.width = bounds.width;
             cacheCanvas.height = bounds.height;
 

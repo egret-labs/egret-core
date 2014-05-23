@@ -17,7 +17,7 @@
  */
 
 /// <reference path="NetContext.ts"/>
-/// <reference path="../../resource/ResourceLoader.ts"/>
+/// <reference path="../../net/URLLoader.ts"/>
 /// <reference path="../../texture/TextureCache.ts"/>
 /// <reference path="../../utils/callLater.ts"/>
 
@@ -42,7 +42,7 @@ module ns_egret {
                 request.callback.call(request.thisObj, content);
             }
 
-            if (request.type == ResourceLoader.DATA_TYPE_IMAGE) {
+            if (request.type == URLLoader.DATA_TYPE_IMAGE) {
                 this.loadImage(request);
                 return;
             }

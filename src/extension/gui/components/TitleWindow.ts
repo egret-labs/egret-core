@@ -41,6 +41,7 @@ module ns_egret {
 		 */
 		public constructor(){
 			super();
+            this.hostComponentKey = "ns_egret.TitleWindow";
 			this.addEventListener(TouchEvent.TOUCH_BEGAN,this.onWindowMouseDown,this,true,100);
 		}
 		/**
@@ -148,7 +149,7 @@ module ns_egret {
 		 */		
 		public moveArea_mouseDownHandler(event:TouchEvent):void{
 			if (this.enabled && this.isPopUp){
-				var offsetPoint:Point = this.globalToLocal(event.stageX, event.stageY);
+				var offsetPoint:Point = this.globalToLocal(event.stageX, event.stageY,Point.identity);
                 this._offsetPointX = offsetPoint.x;
                 this._offsetPointY = offsetPoint.y;
 				this._includeInLayout = false;
@@ -166,7 +167,7 @@ module ns_egret {
 		 * @param event {TouchEvent} 
 		 */		
 		public moveArea_mouseMoveHandler(event:TouchEvent):void{
-			var pos:Point = this.globalToLocal(event.stageX,event.stageY);
+			var pos:Point = this.globalToLocal(event.stageX,event.stageY,Point.identity);
 			this.x += pos.x - this._offsetPointX;
 			this.y += pos.y - this._offsetPointY;
 		}

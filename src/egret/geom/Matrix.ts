@@ -206,7 +206,7 @@ module ns_egret {
             var anchorX,anchorY;
             if(o.anchorX != 0 || o.anchorY != 0)
             {
-                var bounds = o.getBounds();
+                var bounds = o.getBounds(Rectangle.identity);
                 anchorX = bounds.width * o.anchorX;
                 anchorY = bounds.height * o.anchorY;
             }

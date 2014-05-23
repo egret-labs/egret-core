@@ -21,13 +21,12 @@
 /// <reference path="../events/EventDispatcher.ts"/>
 /// <reference path="../net/URLLoader.ts"/>
 /// <reference path="ILoadingView.ts"/>
-/// <reference path="ResourceLoader.ts"/>
 /// <reference path="../utils/callLater.ts"/>
 
 module ns_egret {
 
     /**
-     * 是egret的加载控制器，他包含了一个或者一组ResourceLoader，控制其加载队列和调用加载界面更新进度。
+     * 是egret的加载控制器，他包含了一个或者一组URLLoader，控制其加载队列和调用加载界面更新进度。
      * @class ns_egret.LoadingController
      */
     export class LoadingController extends EventDispatcher {
@@ -57,7 +56,7 @@ module ns_egret {
             var resource = new ns_egret.URLLoader(url,type);
             resource.preFixUrl = prefix;
 
-            if (this._resourceUrlList.indexOf(resource) == -1 && resource.state != ns_egret.ResourceLoader.LOAD_STATE_LOADED) {
+            if (this._resourceUrlList.indexOf(resource) == -1 && resource.state != ns_egret.URLLoader.LOAD_STATE_LOADED) {
                 this._resourceUrlList.push(resource);
             }
         }
@@ -87,7 +86,7 @@ module ns_egret {
         private onComplete():void {
             this._state = LoadingController.LOAD_STATE_IDLE;
             this.destroy();
-            this.dispatchEventWith(ResourceLoader.LOAD_COMPLETE);
+            this.dispatchEventWith(Event.COMPLETE);
 
         }
 
@@ -105,7 +104,7 @@ module ns_egret {
             if (this._resourceUrlList.length > this._currentIndex) {
                 this._currentResource = this._resourceUrlList[this._currentIndex];
                 this._currentIndex++;
-                this._currentResource.addEventListener(ns_egret.ResourceLoader.LOAD_COMPLETE, this.next, this);
+                this._currentResource.addEventListener(Event.COMPLETE, this.next, this);
                 this._currentResource.load();
             }
             else {
@@ -115,7 +114,7 @@ module ns_egret {
 
         private removeResourceEvent():void {
             if (this._currentResource) {
-                this._currentResource.removeEventListener(ns_egret.ResourceLoader.LOAD_COMPLETE, this.next, this);
+                this._currentResource.removeEventListener(Event.COMPLETE, this.next, this);
                 this._currentResource = null;
             }
         }

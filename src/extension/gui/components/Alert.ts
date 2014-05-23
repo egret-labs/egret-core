@@ -79,6 +79,7 @@ module ns_egret {
 		 */		
 		public constructor(){
 			super();
+            this.hostComponentKey = "ns_egret.Alert";
 		}
 
 		private _firstButtonLabel:string = "";

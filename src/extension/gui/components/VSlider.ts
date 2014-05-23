@@ -34,6 +34,7 @@ module ns_egret {
 		 */		
 		public constructor(){
 			super();
+            this.hostComponentKey = "ns_egret.VSlider";
 		}
 		
 		/**
@@ -64,11 +65,11 @@ module ns_egret {
 			var thumbPos:Point = this.track.localToGlobal(0, thumbPosTrackY);
             var thumbPosX:number = thumbPos.x;
             var thumbPosY:number = thumbPos.y;
-			var thumbPosParentY:number = this.thumb.parent.globalToLocal(thumbPosX,thumbPosY).y;
+			var thumbPosParentY:number = this.thumb.parent.globalToLocal(thumbPosX,thumbPosY,Point.identity).y;
 			
 			this.thumb.setLayoutBoundsPosition(this.thumb.layoutBoundsX, Math.round(thumbPosParentY));
 			if(this.showTrackHighlight&&this.trackHighlight&&this.trackHighlight.parent){
-				var trackHighlightY:number = this.trackHighlight.parent.globalToLocal(thumbPosX,thumbPosY).y-thumbPosTrackY;
+				var trackHighlightY:number = this.trackHighlight.parent.globalToLocal(thumbPosX,thumbPosY,Point.identity).y-thumbPosTrackY;
 				this.trackHighlight.y = Math.round(trackHighlightY);
 				this.trackHighlight.height = Math.round(thumbPosTrackY);
 			}

@@ -2,7 +2,6 @@
 ///<reference path="../../egret/display/DisplayObject.ts" />
 ///<reference path="../../egret/display/DisplayObjectContainer.ts" />
 ///<reference path="../../egret/display/Bitmap.ts" />
-///<reference path="../../egret/resource/ResourceLoader.ts" />
 /**
  * Copyright (c) Egret-Labs.org. Permission is hereby granted, free of charge,
  * to any person obtaining a copy of this software and associated documentation

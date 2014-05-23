@@ -25,6 +25,7 @@ var loopFileSync = function (dir, filter) {
             }
         }
     }
+
     return result;
 }
 
@@ -33,7 +34,7 @@ var _require = function (moduleName) {
 
     var module;
     try {
-        module = require(moduleName)
+        module = require(path.join(param.getEgretPath(), moduleName));
     }
     catch (e) {
         var errorMessage = "加载模块 " + moduleName + " 失败\n请确认在" + process.argv[1] + "所在目录下已执行 npm install " + moduleName
@@ -130,18 +131,20 @@ function mkdirSync(p, mode, made) {
     return made;
 };
 
-function formatStdoutString(message){
+function formatStdoutString(message) {
     return message.split("{color_green}").join("\033[1;32;1m")
+        .split("{color_red}").join("\033[0;31m")
         .split("{color_normal}").join("\033[0m")
+        .split("{color_gray}").join("\033[0;37m")
         .split("{color_underline}").join("\033[4;36;1m");
 }
 
-function _exit(code){
+function _exit(code) {
     var message = locale.error_code[code];
-    if (!message){
-        _exit(9999,code);
+    if (!message) {
+        _exit(9999, code);
     }
-    console.log (formatStdoutString(message).replace("{0}",arguments[1]).replace("{1}",arguments[2]));
+    console.log(formatStdoutString(message).replace("{0}", arguments[1]).replace("{1}", arguments[2]));
     process.exit(code);
 }
 
