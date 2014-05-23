@@ -428,7 +428,7 @@ module ns_egret {
          * @returns {number}
          */
         public get width():number {
-            return this.getBounds().width;
+            return this.getBounds(Rectangle.identity).width;
         }
 
         /**
@@ -436,7 +436,7 @@ module ns_egret {
          * @returns {number}
          */
         public get height():number {
-            return this.getBounds().height;
+            return this.getBounds(Rectangle.identity).height;
         }
 
         private _hasWidthSet:Boolean = false;
@@ -558,7 +558,7 @@ module ns_egret {
             o.worldTransform = o.worldTransform.appendMatrix(o._parent.worldTransform);
             var anchorX, anchorY;
             if (o._anchorX != 0 || o._anchorY != 0) {
-                var bounds = o.getBounds();
+                var bounds = o.getBounds(Rectangle.identity);
                 anchorX = bounds.width * o._anchorX;
                 anchorY = bounds.height * o._anchorY;
             }
@@ -571,7 +571,7 @@ module ns_egret {
             if (o._scrollRect) {
                 o.worldTransform.append(1, 0, 0, 1, -o._scrollRect.x, -o._scrollRect.y);
             }
-            var bounds:ns_egret.Rectangle = DisplayObject.getTransformBounds(o.getBounds(), o.worldTransform);
+            var bounds:ns_egret.Rectangle = DisplayObject.getTransformBounds(o.getBounds(Rectangle.identity), o.worldTransform);
             o.worldBounds.initialize(bounds.x, bounds.y, bounds.width, bounds.height);
             o.worldAlpha = o._parent.worldAlpha * o._alpha;
         }
@@ -588,9 +588,11 @@ module ns_egret {
 
         /**
          * 获取显示对象的测量边界
+         * @method ns_egret.DisplayObject#getBounds
+         * @param resultRect {Rectangle} 可选参数，传入用于保存结果的Rectangle对象，避免重复创建对象。
          * @returns {Rectangle}
          */
-        public getBounds():ns_egret.Rectangle {
+        public getBounds(resultRect?:Rectangle):ns_egret.Rectangle {
             if (this._cacheBounds.x == 0 && this._cacheBounds.y == 0 && this._cacheBounds.width == 0 && this._cacheBounds.height == 0) {
                 var rect:Rectangle = this._measureBounds();
                 var w:number = this._hasWidthSet ? this._explicitWidth : rect.width;
@@ -609,7 +611,10 @@ module ns_egret {
                 this._cacheBounds.initialize(x - anchorX, y - anchorY, w, h);
             }
             var result:ns_egret.Rectangle = this._cacheBounds;
-            return ns_egret.Rectangle.identity.initialize(result.x, result.y, result.width, result.height);
+            if(!resultRect){
+                resultRect = new Rectangle();
+            }
+            return resultRect.initialize(result.x, result.y, result.width, result.height);
         }
 
         private destroyCacheBounds():void {
@@ -630,7 +635,7 @@ module ns_egret {
             var o = this;
             while (o != null) {
                 if (o.anchorX != 0 || o.anchorY != 0) {
-                    var bounds = o.getBounds();
+                    var bounds = o.getBounds(Rectangle.identity);
                     matrix.prependTransform(o.x, o.y, o.scaleX, o.scaleY, o.rotation, o.skewX, o.skewY,
                             bounds.width * o.anchorX, bounds.height * o.anchorY);
                 }
@@ -644,6 +649,7 @@ module ns_egret {
 
         /**
          * 将 point 对象从显示对象的（本地）坐标转换为舞台（全局）坐标。
+         * @method ns_egret.DisplayObject#localToGlobal
          * @param x {number} 本地x坐标
          * @param y {number} 本地y坐标
          * @param resultPoint {Point} 可选参数，传入用于保存结果的Point对象，避免重复创建对象。
@@ -692,7 +698,7 @@ module ns_egret {
             if (!this.visible || (!ignoreTouchEnabled && !this._touchEnabled)) {
                 return null;
             }
-            var bound:Rectangle = this.getBounds();
+            var bound:Rectangle = this.getBounds(Rectangle.identity);
             if (0 < x && x < bound.width && 0 < y && y < bound.height) {
                 if (this.mask || this._scrollRect) {
                     if (this._scrollRect
@@ -735,7 +741,7 @@ module ns_egret {
             var regX = o.anchorOffsetX;
             var regY = o.anchorOffsetY;
             if (o.anchorX != 0 || o.anchorY != 0) {
-                var bounds = o.getBounds();
+                var bounds = o.getBounds(Rectangle.identity);
                 regX = o.anchorX * bounds.width;
                 regY = o.anchorY * bounds.height;
             }

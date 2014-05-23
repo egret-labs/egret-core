@@ -112,11 +112,15 @@ module ns_egret{
 
         /**
          * @see egret.DisplayObject.getBounds
+         * @param resultRect {Rectangle} 可选参数，传入用于保存结果的Rectangle对象，避免重复创建对象。
          * @returns {Rectangle}
          */
-        public getBounds() {
+        public getBounds(resultRect?:Rectangle):Rectangle{
             //todo
-            return Rectangle.identity.initialize(0, 0, 100000, 100000);
+            if(!resultRect){
+                resultRect = new Rectangle();
+            }
+            return resultRect.initialize(0, 0, 100000, 100000);
 //            return Rectangle.identity.initialize(0, 0, this.stageWidth, this.stageHeight);
         }
 
