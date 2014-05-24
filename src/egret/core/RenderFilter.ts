@@ -16,9 +16,9 @@
  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+/// <reference path="../context/MainContext.ts"/>
 /// <reference path="HashObject.ts"/>
 /// <reference path="Logger.ts"/>
-/// <reference path="MainContext.ts"/>
 /// <reference path="../geom/Matrix.ts"/>
 /// <reference path="../geom/Rectangle.ts"/>
 /// <reference path="../texture/Texture.ts"/>

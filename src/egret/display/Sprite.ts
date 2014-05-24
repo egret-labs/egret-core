@@ -16,8 +16,8 @@
  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+/// <reference path="../context/MainContext.ts"/>
 /// <reference path="../context/renderer/RendererContext.ts"/>
-/// <reference path="../core/MainContext.ts"/>
 /// <reference path="DisplayObjectContainer.ts"/>
 /// <reference path="Graphics.ts"/>
 

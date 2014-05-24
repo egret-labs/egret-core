@@ -16,8 +16,8 @@
  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+/// <reference path="../MainContext.ts"/>
 /// <reference path="RendererContext.ts"/>
-/// <reference path="../../core/MainContext.ts"/>
 /// <reference path="../../core/RenderFilter.ts"/>
 /// <reference path="../../geom/Matrix.ts"/>
 /// <reference path="../../text/TextField.ts"/>

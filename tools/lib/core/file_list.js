@@ -9,7 +9,7 @@ exports.core = [
     "egret/events/TimerEvent.js",
     "egret/events/EventPhase.js",
     "egret/events/EventDispatcher.js",
-    "egret/core/MainContext.js",
+    "egret/context/MainContext.js",
     "egret/core/Profiler.js",
     "egret/core/Ticker.js",
     "egret/core/HorizontalAlign.js",

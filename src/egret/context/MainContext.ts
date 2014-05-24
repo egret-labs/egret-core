@@ -16,12 +16,12 @@
  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-/// <reference path="../context/devices/DeviceContext.ts"/>
-/// <reference path="../context/interactive/TouchContext.ts"/>
-/// <reference path="../context/net/NetContext.ts"/>
-/// <reference path="../context/renderer/RendererContext.ts"/>
-/// <reference path="../context/sound/SoundContext.ts"/>
-/// <reference path="Ticker.ts"/>
+/// <reference path="devices/DeviceContext.ts"/>
+/// <reference path="interactive/TouchContext.ts"/>
+/// <reference path="net/NetContext.ts"/>
+/// <reference path="renderer/RendererContext.ts"/>
+/// <reference path="sound/SoundContext.ts"/>
+/// <reference path="../core/Ticker.ts"/>
 /// <reference path="../display/DisplayObject.ts"/>
 /// <reference path="../display/Stage.ts"/>
 /// <reference path="../events/Event.ts"/>
