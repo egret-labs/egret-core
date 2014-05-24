@@ -16,9 +16,9 @@
  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-/// <reference path="../core/StageDelegate.ts"/>
-/// <reference path="../geom/Point.ts"/>
 /// <reference path="TouchContext.ts"/>
+/// <reference path="../../core/StageDelegate.ts"/>
+/// <reference path="../../geom/Point.ts"/>
 
 module ns_egret {
 

@@ -38,11 +38,7 @@ exports.core = [
     "egret/text/TextInput.js",
     "egret/display/MovieClip.js",
     "egret/context/display/StageText.js",
-    "egret/context/renderer/RendererContext.js",
 
-    "egret/interactive/InteractionMode.js",
-    "egret/interactive/TouchContext.js",
-    "egret/context/assets/AssetsContext.js",
     "egret/net/URLRequestMethod.js",
     "egret/net/URLLoaderDataFormat.js",
     "egret/net/URLVariables.js",
@@ -51,6 +47,9 @@ exports.core = [
     "egret/texture/Texture.js",
     "egret/texture/RenderTexture.js",
     "egret/texture/TextureCache.js",
+    "egret/context/renderer/RendererContext.js",
+    "egret/context/interactive/InteractionMode.js",
+    "egret/context/interactive/TouchContext.js",
     "egret/context/net/NetContext.js",
     "egret/context/devices/DeviceContext.js",
     "egret/display/ScaleBitmap.js",
@@ -178,15 +177,14 @@ exports.html5 = [
     "egret/context/renderer/HTML5CanvasRenderer.js",
     "egret/context/sound/HTML5SoundContext.js",
     "egret/context/net/HTML5NetContext.js",
-    "egret/interactive/HTML5TouchContext.js",
-    "egret/context/assets/HTML5AssetsContext.js",
+    "egret/context/interactive/HTML5TouchContext.js",
     "egret/utils/SAXParser.js"
 ]
 
 exports.native = [
     "egret/context/devices/NativeDeviceContext.js",
     "egret/context/renderer/NativeRendererContext.js",
-    "egret/interactive/NativeTouchContext.js",
+    "egret/context/interactive/NativeTouchContext.js",
     "egret/context/net/NativeNetContext.js"
 
 ]

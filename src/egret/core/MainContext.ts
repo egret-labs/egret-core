@@ -17,6 +17,7 @@
  */
 
 /// <reference path="../context/devices/DeviceContext.ts"/>
+/// <reference path="../context/interactive/TouchContext.ts"/>
 /// <reference path="../context/net/NetContext.ts"/>
 /// <reference path="../context/renderer/RendererContext.ts"/>
 /// <reference path="../context/sound/SoundContext.ts"/>
@@ -25,7 +26,6 @@
 /// <reference path="../display/Stage.ts"/>
 /// <reference path="../events/Event.ts"/>
 /// <reference path="../events/EventDispatcher.ts"/>
-/// <reference path="../interactive/TouchContext.ts"/>
 /// <reference path="../utils/Recycler.ts"/>
 /// <reference path="../utils/callLater.ts"/>
 
