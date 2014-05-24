@@ -17,9 +17,14 @@
  */
 
 /// <reference path="NetContext.ts"/>
-/// <reference path="../../net/URLLoader.ts"/>
-/// <reference path="../../texture/Texture.ts"/>
-/// <reference path="../../texture/TextureCache.ts"/>
+/// <reference path="../../events/Event.ts"/>
+/// <reference path="../../events/IEventDispatcher.ts"/>
+/// <reference path="../../events/IOErrorEvent.ts"/>
+/// <reference path="../../events/ProgressEvent.ts"/>
+/// <reference path="../../net/URLLoaderDataFormat.ts"/>
+/// <reference path="../../net/URLRequest.ts"/>
+/// <reference path="../../net/URLRequestMethod.ts"/>
+/// <reference path="../../net/URLVariables.ts"/>
 
 module ns_egret {
     /**

@@ -18,6 +18,7 @@
 
 /// <reference path="NetContext.ts"/>
 /// <reference path="../../net/URLLoader.ts"/>
+/// <reference path="../../net/URLRequest.ts"/>
 /// <reference path="../../texture/TextureCache.ts"/>
 /// <reference path="../../utils/callLater.ts"/>
 

@@ -18,7 +18,6 @@
 
 /// <reference path="MainContext.ts"/>
 /// <reference path="../events/EventDispatcher.ts"/>
-/// <reference path="../utils/callLater.ts"/>
 /// <reference path="../utils/getTimer.ts"/>
 
 module ns_egret {

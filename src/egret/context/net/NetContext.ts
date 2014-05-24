@@ -17,7 +17,8 @@
  */
 
 /// <reference path="../../core/HashObject.ts"/>
-/// <reference path="../../core/MainContext.ts"/>
+/// <reference path="../../events/IEventDispatcher.ts"/>
+/// <reference path="../../net/URLRequest.ts"/>
 
 module ns_egret {
 	/**

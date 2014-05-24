@@ -17,11 +17,10 @@
  */
 
 /// <reference path="../context/net/NetContext.ts"/>
-/// <reference path="../core/MainContext.ts"/>
-/// <reference path="../events/Event.ts"/>
+/// <reference path="../core/Injector.ts"/>
 /// <reference path="../events/EventDispatcher.ts"/>
-/// <reference path="../texture/TextureCache.ts"/>
-/// <reference path="../utils/callLater.ts"/>
+/// <reference path="URLLoaderDataFormat.ts"/>
+/// <reference path="URLRequest.ts"/>
 
 module ns_egret {
 
