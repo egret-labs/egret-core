@@ -57,12 +57,13 @@ module ns_egret {
             }
             else if(typeof(source)=="string"){
                 var url:string = <string>source;
-                var loader:URLLoader = new URLLoader(url,URLLoader.DATA_TYPE_IMAGE);
+                var loader:URLLoader = new URLLoader();
+                loader.dataFormat = URLLoaderDataFormat.TEXTURE;
                 loader.addEventListener(Event.COMPLETE, function(event:Event){
-                    content = TextureCache.getInstance().getTexture(url);
+                    content = loader.data;
                     compFunc.call(thisObject,content,source);
                 }, this);
-                loader.load();
+                loader.load(new URLRequest(url));
             }
             else{
                 compFunc.call(thisObject,content,source);

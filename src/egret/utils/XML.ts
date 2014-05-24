@@ -92,7 +92,7 @@ module ns_egret {
                 xmldoc = ns_egret.SAXParser.getInstance().tmxParse(content, true).documentElement;
             }
             else {
-                xmldoc = egret_native.EGTXML.readXML(url);
+//                xmldoc = egret_native.EGTXML.readXML(url);
             }
             xml._ansXML(xmldoc);
             return xml;

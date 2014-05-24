@@ -40,14 +40,16 @@ module ns_egret {
         }
 
         private dataFormat:string;
-        private _loadError:boolean = false;
-        private _XHR:XMLHttpRequest;
+        private xhr:XMLHttpRequest;
         private eventTarget:IEventDispatcher;
 
         public load(request:URLRequest,dataFormat:string):void{
             this.dataFormat = dataFormat;
+            if(dataFormat==URLLoaderDataFormat.TEXTURE){
+                this.loadImage(request);
+                return;
+            }
             this.initXHR();
-            this._loadError = false;
             try {
                 if (request.method === URLRequestMethod.POST)
                     this.postRequest(request);
@@ -59,58 +61,65 @@ module ns_egret {
         }
 
         public close():void{
-            this._XHR.abort();
+            if(this.xhr){
+                this.xhr.abort();
+            }
             this.disposeXHR();
+            this.currentImage = null;
+            this.data = null;
         }
 
         private initXHR(){
-            if (!this._XHR) {
-                this._XHR = new XMLHttpRequest();
-
-                this._XHR.onloadstart = (event) => this.onLoadStart(event);
-                this._XHR.onprogress = (event) => this.onProgress(event);
-                this._XHR.onerror = (event) => this.onLoadError(event);
-                this._XHR.onload = (event) => this.onLoadComplete(event);
+            if (!this.xhr) {
+                if (window["XMLHttpRequest"]) {
+                    this.xhr = new window["XMLHttpRequest"]();
+                } else {
+                    this.xhr = new ActiveXObject("MSXML2.XMLHTTP");
+                }
+                this.xhr.onloadstart = (event) => this.onLoadStart(event);
+                this.xhr.onprogress = (event) => this.onProgress(event);
+                this.xhr.onerror = (event) => this.onLoadError(event);
+                this.xhr.onload = (event) => this.onLoadComplete(event);
             }
         }
 
         private disposeXHR(){
-            if (this._XHR !== null) {
-                this._XHR.onloadstart = null;
-                this._XHR.onprogress = null;
-                this._XHR.onerror = null;
-                this._XHR.onload = null;
-                this._XHR = null;
+            if (this.xhr) {
+                this.xhr.onloadstart = null;
+                this.xhr.onprogress = null;
+                this.xhr.onerror = null;
+                this.xhr.onload = null;
+                this.xhr = null;
             }
         }
 
         private getRequest(request:URLRequest):void{
-            this._XHR.open(request.method, request.url);
-            this.setResponseType(this._XHR, this.dataFormat);
-            this._XHR.send();
+            this.xhr.open(request.method, request.url,true);
+            this.setResponseType(this.xhr, this.dataFormat);
+            this.xhr.send();
         }
 
         private postRequest(request:URLRequest):void{
-            this._XHR.open(request.method, request.url);
-            this.setResponseType(this._XHR, this.dataFormat);
+            this.xhr.open(request.method, request.url,true);
+            this.setResponseType(this.xhr, this.dataFormat);
             if (request.data != null) {
                 if (request.data instanceof URLVariables) {
-                    this._XHR.setRequestHeader("Content-Type","application/x-www-form-urlencoded");
+                    this.xhr.setRequestHeader("Content-Type","application/x-www-form-urlencoded");
                     var urlVars:URLVariables = <URLVariables> request.data;
-                    this._XHR.send(urlVars.toString());
+                    this.xhr.send(urlVars.toString());
                 }
                 else {
                     if (request.data){
-                        this._XHR.setRequestHeader("Content-Type","multipart/form-data");
-                        this._XHR.send(request.data);
+                        this.xhr.setRequestHeader("Content-Type","multipart/form-data");
+                        this.xhr.send(request.data);
                     }
                     else{
-                        this._XHR.send();
+                        this.xhr.send();
                     }
                 }
             }
             else {
-                this._XHR.send();
+                this.xhr.send();
             }
 
         }
@@ -118,18 +127,17 @@ module ns_egret {
         private setResponseType(xhr:XMLHttpRequest, responseType:string):void{
             switch (responseType) {
                 case URLLoaderDataFormat.TEXT:
-                    xhr.responseType = responseType;
-                    break;
-
                 case URLLoaderDataFormat.VARIABLES:
                     xhr.responseType = URLLoaderDataFormat.TEXT;
                     break;
 
                 case URLLoaderDataFormat.BINARY:
-                    xhr.responseType = '';
+                    xhr.responseType = "arraybuffer";
                     break;
 
                 default:
+                    xhr.responseType = responseType;
+                    break;
             }
         }
 
@@ -142,33 +150,61 @@ module ns_egret {
         }
 
         private onLoadError(event){
-            this._loadError = true;
+            if(this.currentImage){
+                this.currentImage = null;
+            }
             IOErrorEvent.dispatchIOErrorEvent(this.eventTarget);
         }
 
         private onLoadComplete(event){
-            if (this._loadError === true)
-                return;
-
             switch (this.dataFormat) {
                 case URLLoaderDataFormat.TEXT:
-                    this.data = this._XHR.responseText;
+                    this.data = this.xhr.responseText;
                     break;
 
                 case URLLoaderDataFormat.VARIABLES:
-                    this.data = new URLVariables(this._XHR.responseText);
+                    this.data = new URLVariables(this.xhr.responseText);
                     break;
 
                 case URLLoaderDataFormat.BINARY:
-                    this.data = this._XHR.response;
+                    this.data = this.xhr.response;
                     break;
 
                 default:
-                    this.data = this._XHR.responseText;
+                    this.data = this.xhr.responseText;
                     break;
             }
+            callLater(this.dispatchCompleteEvent,this);
+        }
 
+        private dispatchCompleteEvent():void{
             Event.dispatchEvent(this.eventTarget,Event.COMPLETE);
+        }
+
+        private currentImage;
+        private loadImage(request:URLRequest):void {
+            var image = new Image();
+            this.currentImage = image;
+            image.crossOrigin = "Anonymous";
+            image.addEventListener("load", this.onImageLoadComplete);
+            image.addEventListener("error", this.onLoadError);
+            try{
+                image.src = request.url;
+            }
+            catch (e){
+            }
+        }
+
+        private onImageLoadComplete(event) {
+            var image = this.currentImage;
+            image.close()
+            this.currentImage = null;
+            image.removeEventListener('load', this.onLoadComplete);
+            image.removeEventListener('error', this.onLoadComplete);
+            var texture:Texture = new Texture();
+            texture.bitmapData = image;
+            this.data = texture;
+            callLater(this.dispatchCompleteEvent,this);
         }
 
     }

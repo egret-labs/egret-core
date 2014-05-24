@@ -29,9 +29,12 @@ module ns_egret {
      */
     export class Texture extends HashObject{
 
+        public constructor(){
+            super();
+        }
+
         public offsetX = 0;
         public offsetY = 0;
-        private _path:string;
         public _textureWidth:number = 0;
         public _textureHeight:number = 0;
 
@@ -54,12 +57,6 @@ module ns_egret {
 
         public getTextureHeight():number {
             return this._textureHeight;
-        }
-
-        public static create(path:string):Texture {
-            var texture:Texture = new Texture();
-            texture._path = path;
-            return texture;
         }
 
         public static createWithBase64(base64:string):Texture {

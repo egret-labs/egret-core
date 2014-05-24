@@ -33,7 +33,7 @@ module ns_egret {
 		 * @method ns_egret.URLVariables#constructor
 		 * @param source {String} 包含名称/值对的 URL 编码的字符串。
 		 */
-        public constructor(source:String = null) {
+        public constructor(source:string = null) {
             super();
             if (source !== null) {
 

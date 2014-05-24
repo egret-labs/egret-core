@@ -58,7 +58,7 @@ egret_h5.startGame = function () {
     context.deviceContext = new ns_egret.HTML5DeviceContext();
     ns_egret.Injector.mapClass(ns_egret.NetContext,ns_egret.HTML5NetContext);
     context.stage = new ns_egret.Stage(canvas.width, canvas.height);
-
+;
     ns_egret.TextureCache.getInstance().prefix = "assets/480/";
     ns_egret.RendererContext.CONTENT_SCALE_FACTOR = 1;
     context.run();

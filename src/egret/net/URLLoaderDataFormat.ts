@@ -44,9 +44,9 @@ module ns_egret {
 
 		/**
          * 指定以位图纹理形式接收已下载的数据。
-		 * @constant {string} ns_egret.URLLoaderDataFormat.IMAGE
+		 * @constant {string} ns_egret.URLLoaderDataFormat.TEXTURE
 		 */
-        public static IMAGE:string = "image";
+        public static TEXTURE:string = "texture";
 
     }
 }

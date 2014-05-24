@@ -25,8 +25,8 @@ module ns_egret {
 
         public static PROGRESS:string = "progress";
 
-        public constructor(type:String, bubbles:Boolean = false, cancelable:Boolean = false,
-                           bytesLoaded:Number = 0, bytesTotal:Number = 0) {
+        public constructor(type:string, bubbles:boolean = false, cancelable:boolean = false,
+                           bytesLoaded:number = 0, bytesTotal:number = 0) {
             super(type, bubbles, cancelable);
             this.bytesLoaded = bytesLoaded;
             this.bytesTotal = bytesTotal;
