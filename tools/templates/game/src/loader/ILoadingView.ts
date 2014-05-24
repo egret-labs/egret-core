@@ -16,23 +16,33 @@
  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-/// <reference path="../../core/HashObject.ts"/>
-/// <reference path="../../net/URLLoader.ts"/>
-
 module ns_egret {
-	/**
-	 * @class ns_egret.NetContext
-	 * @classdesc
-	 * @extends ns_egret.HashObject
-	 */
-    export class NetContext extends HashObject{
+    /**
+     * ILoadingView是加载进度条的接口，所有的加载进度条都需要实现如下方法，并通过LoadingController.setLoadingView(view)来调用
+     * @interface
+     * @class ns_egret.ILoadingView
+     */
+    export interface ILoadingView{
 
-        public constructor(){
-            super();
-        }
+        /**
+         * 将进度条添加到舞台
+         * @method ns_egret.ILoadingView#addToStage
+         */
+        addToStage();
 
-        public proceed(loader:URLLoader):void{
+        /**
+         * 将进度条从舞台中移除
+         * @method ns_egret.ILoadingView#removeFromStage
+         */
+        removeFromStage();
 
-        }
+        /**
+         * 更新进度条
+         * @callback ns_egret.ILoadingView#onProgress
+         * @param current
+         * @param total
+         *
+         */
+        onProgress(current:number, total:number);
     }
 }

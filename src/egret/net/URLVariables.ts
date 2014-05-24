@@ -40,17 +40,25 @@ module ns_egret {
                 this.decode(source);
             }
         }
+        /**
+         * 此 URLVariables 储存的键值对数据对象。
+         * @member ns_egret.URLVariables#variables
+         */
+        public variables:Object;
 
 		/**
-         * 将变量字符串转换为此 URLVariables 对象的属性。
+         * 将变量字符串转换为此 URLVariables.variables 对象的属性。
          * @method ns_egret.URLVariables#decode
 		 * @param source {string} 
 		 */
         public decode(source:string):void {
+            if(!this.variables){
+                this.variables = {};
+            }
             source = source.split("+").join(" ");
             var tokens, re = /[?&]?([^=]+)=([^&]*)/g;
             while (tokens = re.exec(source)) {
-                this[decodeURIComponent(tokens[1])] = decodeURIComponent(tokens[2]);
+                this.variables[decodeURIComponent(tokens[1])] = decodeURIComponent(tokens[2]);
             }
         }
 
@@ -59,19 +67,20 @@ module ns_egret {
          * @method ns_egret.URLVariables#toString
          */
         public toString():string{
+            if(!this.variables){
+                return "";
+            }
+            var variables:any = this.variables;
             var str:string = "";
             var isFirst:boolean = true;
-            for(var key in this){
-                if(key=="toString"||key=="decode"){
-                    continue;
-                }
+            for(var key in variables){
                 if(isFirst){
                     isFirst = false;
                 }
                 else{
                     str += "&";
                 }
-                str += key+"="+this[key];
+                str += key+"="+variables[key];
             }
             return str;
         }

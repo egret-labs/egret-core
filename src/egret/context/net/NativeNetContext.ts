@@ -17,9 +17,10 @@
  */
 
 /// <reference path="NetContext.ts"/>
+/// <reference path="../../events/Event.ts"/>
 /// <reference path="../../net/URLLoader.ts"/>
+/// <reference path="../../net/URLLoaderDataFormat.ts"/>
 /// <reference path="../../net/URLRequest.ts"/>
-/// <reference path="../../texture/TextureCache.ts"/>
 /// <reference path="../../utils/callLater.ts"/>
 
 module ns_egret {
@@ -32,37 +33,36 @@ module ns_egret {
 
 
         /**
-         * @method ns_egret.HTML5NetContext#send
-         * @param request {URLReques}
+         * @method ns_egret.HTML5NetContext#proceed
+         * @param loader {URLLoader}
          */
-        public send(request:URLRequest) {
+        public proceed(loader:URLLoader):void{
 
-            function onLoadComplete() {
-                var content = egret_native.readFileSync(request.url);
-                ns_egret.TextureCache.getInstance().addTextData(request.url, content);
-                request.callback.call(request.thisObj, content);
-            }
-
-            if (request.type == URLLoader.DATA_TYPE_IMAGE) {
-                this.loadImage(request);
+            if (loader.dataFormat == URLLoaderDataFormat.TEXTURE) {
+                this.loadTexture(loader);
                 return;
             }
 
-            callLater(onLoadComplete, this)
-
-        }
-
-        private loadImage(request:ns_egret.URLRequest):void {
+            callLater(onLoadComplete, this);
 
             function onLoadComplete() {
-                var _texture = egret_native.EGTTextureCatche.addTexture(request.url);
-                ns_egret.TextureCache.getInstance().addTexture(request.url, _texture);
-                request.callback.call(request.thisObj, _texture);
-
+                var request:URLRequest = loader._request;
+                var content = egret_native.readFileSync(request.url);
+                loader.data = content;
+                Event.dispatchEvent(loader,Event.COMPLETE);
             };
+        }
 
+        private loadTexture(loader:URLLoader):void {
 
             callLater(onLoadComplete, this);
+
+            function onLoadComplete() {
+                var request:URLRequest = loader._request;
+                var texture = egret_native.EGTTextureCatche.addTexture(request.url);
+                loader.data = texture;
+                Event.dispatchEvent(loader,Event.COMPLETE);
+            };
         }
     }
 

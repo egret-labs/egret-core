@@ -16,8 +16,7 @@
  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-/// <reference path="../context/net/NetContext.ts"/>
-/// <reference path="../core/Injector.ts"/>
+/// <reference path="../core/MainContext.ts"/>
 /// <reference path="../events/EventDispatcher.ts"/>
 /// <reference path="URLLoaderDataFormat.ts"/>
 /// <reference path="URLRequest.ts"/>
@@ -35,7 +34,6 @@ module ns_egret {
 	 */
     export class URLLoader extends EventDispatcher {
 
-        private static netContextClass:any;
 		/**
 		 * @method ns_egret.URLLoader#constructor
 		 * @param request {URLRequest} 一个 URLRequest 对象，指定要下载的 URL。
@@ -43,23 +41,16 @@ module ns_egret {
 		 */
         public constructor(request:URLRequest=null) {
             super();
-            if(!URLLoader.netContextClass){
-                URLLoader.netContextClass = Injector.getInstance("ns_egret.NetContext");
-            }
-            var contextClass:any = URLLoader.netContextClass;
-            this.netContext = <NetContext> new contextClass(this);
             if(request){
                 this.load(request);
             }
         }
 
-        private netContext:NetContext;
-
 		/**
          * 控制是以文本 (URLLoaderDataFormat.TEXT)、原始二进制数据 (URLLoaderDataFormat.BINARY) 还是 URL 编码变量 (URLLoaderDataFormat.VARIABLES) 接收下载的数据。
          * 如果 dataFormat 属性的值是 URLLoaderDataFormat.TEXT，则所接收的数据是一个包含已加载文件文本的字符串。
          * 如果 dataFormat 属性的值是 URLLoaderDataFormat.BINARY，则所接收的数据是一个包含原始二进制数据的 ByteArray 对象。
-         * 如果 dataFormat 属性的值是 URLLoaderDataFormat.IMAGE，则所接收的数据是一个包含位图数据的Texture对象。
+         * 如果 dataFormat 属性的值是 URLLoaderDataFormat.TEXTURE，则所接收的数据是一个包含位图数据的Texture对象。
          * 如果 dataFormat 属性的值是 URLLoaderDataFormat.VARIABLES，则所接收的数据是一个包含 URL 编码变量的 URLVariables 对象。
          * 默认值:URLLoaderDataFormat.TEXT
 		 * @member {string} ns_egret.URLLoader#dataFormat
@@ -70,30 +61,13 @@ module ns_egret {
          * 从加载操作接收的数据。只有完成加载操作时，才会填充该属性。该数据的格式取决于 dataFormat 属性的设置：
          * 如果 dataFormat 属性是 URLLoaderDataFormat.TEXT，则所接收的数据是一个包含已加载文件文本的字符串。
          * 如果 dataFormat 属性是 URLLoaderDataFormat.BINARY，则所接收的数据是一个包含原始二进制数据的 ByteArray 对象。
-         * 如果 dataFormat 属性是 URLLoaderDataFormat.IMAGE，则所接收的数据是一个包含位图数据的Texture对象。
+         * 如果 dataFormat 属性是 URLLoaderDataFormat.TEXTURE，则所接收的数据是一个包含位图数据的Texture对象。
          * 如果 dataFormat 属性是 URLLoaderDataFormat.VARIABLES，则所接收的数据是一个包含 URL 编码变量的 URLVariables 对象。
 		 * @member {any} ns_egret.URLLoader#data
 		 */
-        public get data():any{
-            return this.netContext.data;
-        }
+        public data:any;
 
-        /**
-         * 表示所下载数据中的字节总数。正在进行加载操作时该属性为 0，完成操作时会填充该属性。另外，丢失的 Content-Length 标题将会导致 bytesTotal 不确定。
-		 * @member {number} ns_egret.URLLoader#bytesTotal
-         */
-        public get bytesTotal():number{
-            return this.netContext.bytesTotal;
-        }
-
-        /**
-         * 表示加载操作期间到目前为止加载的字节数。
-		 * @member {number} ns_egret.URLLoader#bytesLoaded
-         */
-        public get bytesLoaded():number{
-            return this.netContext.bytesLoaded;
-        }
-
+        public _request:URLRequest;
 		/**
          * 从指定的 URL 发送和加载数据。可以以文本、原始二进制数据或 URL 编码变量格式接收数据，这取决于为 dataFormat 属性所设置的值。
          * 请注意 dataFormat 属性的默认值为文本。如果想将数据发送至指定的 URL，则可以在 URLRequest 对象中设置 data 属性。
@@ -101,14 +75,8 @@ module ns_egret {
 		 * @param request {URLRequest} 
 		 */
         public load(request:URLRequest):void {
-            this.netContext.load(request,this.dataFormat);
-        }
-        /**
-         * 关闭进行中的加载操作。任何正在进行中的加载操作将立即终止。
-		 * @method ns_egret.URLLoader#close
-         */
-        public close():void{
-            this.netContext.close();
+            this._request = request;
+            MainContext.instance.netContext.proceed(this);
         }
     }
 

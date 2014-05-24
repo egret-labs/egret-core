@@ -1,5 +1,6 @@
 ///<reference path="egret.d.ts"/>
 ///<reference path="GameUI.ts"/>
+///<reference path="loader/LoadingController.ts"/>
 /**
  * 游戏入口类
  */
@@ -19,8 +20,9 @@ class GameApp {
         ns_egret.StageDelegate.getInstance().setDesignSize(480, 800, policy);
 
         var loadingController = new ns_egret.LoadingController();
-        loadingController.addResource("bg.jpg", ns_egret.URLLoader.DATA_TYPE_IMAGE);
-        loadingController.addResource("egret_icon.png", ns_egret.URLLoader.DATA_TYPE_IMAGE);
+        loadingController.prefix = "assets/480/";
+        loadingController.addResource("bg.jpg", ns_egret.URLLoaderDataFormat.TEXTURE);
+        loadingController.addResource("egret_icon.png", ns_egret.URLLoaderDataFormat.TEXTURE);
         loadingController.setLoadingView(new LoadingUI());
         loadingController.addEventListener(ns_egret.Event.COMPLETE, this.onResourceLoadComplete, this);
         loadingController.load();

@@ -18,15 +18,13 @@
 
 /// <reference path="NetContext.ts"/>
 /// <reference path="../../events/Event.ts"/>
-/// <reference path="../../events/IEventDispatcher.ts"/>
 /// <reference path="../../events/IOErrorEvent.ts"/>
-/// <reference path="../../events/ProgressEvent.ts"/>
+/// <reference path="../../net/URLLoader.ts"/>
 /// <reference path="../../net/URLLoaderDataFormat.ts"/>
 /// <reference path="../../net/URLRequest.ts"/>
 /// <reference path="../../net/URLRequestMethod.ts"/>
 /// <reference path="../../net/URLVariables.ts"/>
 /// <reference path="../../texture/Texture.ts"/>
-/// <reference path="../../utils/callLater.ts"/>
 
 module ns_egret {
     /**
@@ -36,94 +34,67 @@ module ns_egret {
      */
     export class HTML5NetContext extends NetContext {
 
-        public constructor(target:IEventDispatcher){
-            super(target);
-            this.eventTarget = target;
+        public constructor(){
+            super();
         }
 
-        private dataFormat:string;
-        private xhr:XMLHttpRequest;
-        private eventTarget:IEventDispatcher;
-
-        public load(request:URLRequest,dataFormat:string):void{
-            this.dataFormat = dataFormat;
-            if(dataFormat==URLLoaderDataFormat.TEXTURE){
-                this.loadImage(request);
+        public proceed(loader:URLLoader):void{
+            if(loader.dataFormat==URLLoaderDataFormat.TEXTURE){
+                this.loadTexture(loader);
                 return;
             }
-            this.initXHR();
-            try {
-                if (request.method === URLRequestMethod.POST)
-                    this.postRequest(request);
-                else
-                    this.getRequest(request);
-            }
-            catch (e){
-            }
-        }
 
-        public close():void{
-            if(this.xhr){
-                this.xhr.abort();
+            var request:URLRequest = loader._request;
+            var xhr = this.getXHR();
+            xhr.onerror = onLoadError;
+            xhr.onload = onLoadComplete;
+            xhr.open(request.method, request.url,true);
+            this.setResponseType(xhr, loader.dataFormat);
+            if (request.method == URLRequestMethod.GET||!request.data){
+                xhr.send();
             }
-            this.disposeXHR();
-            this.currentImage = null;
-            this.data = null;
-        }
-
-        private initXHR(){
-            if (!this.xhr) {
-                if (window["XMLHttpRequest"]) {
-                    this.xhr = new window["XMLHttpRequest"]();
-                } else {
-                    this.xhr = new ActiveXObject("MSXML2.XMLHTTP");
-                }
-                this.xhr.onloadstart = (event) => this.onLoadStart(event);
-                this.xhr.onprogress = (event) => this.onProgress(event);
-                this.xhr.onerror = (event) => this.onLoadError(event);
-                this.xhr.onload = (event) => this.onLoadComplete(event);
-            }
-        }
-
-        private disposeXHR(){
-            if (this.xhr) {
-                this.xhr.onloadstart = null;
-                this.xhr.onprogress = null;
-                this.xhr.onerror = null;
-                this.xhr.onload = null;
-                this.xhr = null;
-            }
-        }
-
-        private getRequest(request:URLRequest):void{
-            this.xhr.open(request.method, request.url,true);
-            this.setResponseType(this.xhr, this.dataFormat);
-            this.xhr.send();
-        }
-
-        private postRequest(request:URLRequest):void{
-            this.xhr.open(request.method, request.url,true);
-            this.setResponseType(this.xhr, this.dataFormat);
-            if (request.data != null) {
-                if (request.data instanceof URLVariables) {
-                    this.xhr.setRequestHeader("Content-Type","application/x-www-form-urlencoded");
-                    var urlVars:URLVariables = <URLVariables> request.data;
-                    this.xhr.send(urlVars.toString());
-                }
-                else {
-                    if (request.data){
-                        this.xhr.setRequestHeader("Content-Type","multipart/form-data");
-                        this.xhr.send(request.data);
-                    }
-                    else{
-                        this.xhr.send();
-                    }
-                }
+            else if (request.data instanceof URLVariables) {
+                xhr.setRequestHeader("Content-Type","application/x-www-form-urlencoded");
+                var urlVars:URLVariables = <URLVariables> request.data;
+                xhr.send(urlVars.toString());
             }
             else {
-                this.xhr.send();
+                xhr.setRequestHeader("Content-Type","multipart/form-data");
+                xhr.send(request.data);
             }
 
+            function onLoadError(event) {
+                IOErrorEvent.dispatchIOErrorEvent(loader);
+            };
+
+            function onLoadComplete(event){
+                switch (this.dataFormat) {
+                    case URLLoaderDataFormat.TEXT:
+                        loader.data = xhr.responseText;
+                        break;
+
+                    case URLLoaderDataFormat.VARIABLES:
+                        loader.data = new URLVariables(xhr.responseText);
+                        break;
+
+                    case URLLoaderDataFormat.BINARY:
+                        loader.data = xhr.response;
+                        break;
+
+                    default:
+                        loader.data = xhr.responseText;
+                        break;
+                }
+                Event.dispatchEvent(loader,Event.COMPLETE);
+            };
+        }
+
+        private getXHR():any{
+            if (window["XMLHttpRequest"]) {
+                return new window["XMLHttpRequest"]();
+            } else {
+                return new ActiveXObject("MSXML2.XMLHTTP");
+            }
         }
 
         private setResponseType(xhr:XMLHttpRequest, responseType:string):void{
@@ -143,71 +114,29 @@ module ns_egret {
             }
         }
 
-        private onLoadStart(event){
-            Event.dispatchEvent(this.eventTarget,Event.OPEN);
-        }
+        private loadTexture(loader:URLLoader):void {
 
-        private onProgress(event){
-            ProgressEvent.dispatchProgressEvent(this.eventTarget,event.loaded,event.total);
-        }
-
-        private onLoadError(event){
-            if(this.currentImage){
-                this.currentImage = null;
-            }
-            IOErrorEvent.dispatchIOErrorEvent(this.eventTarget);
-        }
-
-        private onLoadComplete(event){
-            switch (this.dataFormat) {
-                case URLLoaderDataFormat.TEXT:
-                    this.data = this.xhr.responseText;
-                    break;
-
-                case URLLoaderDataFormat.VARIABLES:
-                    this.data = new URLVariables(this.xhr.responseText);
-                    break;
-
-                case URLLoaderDataFormat.BINARY:
-                    this.data = this.xhr.response;
-                    break;
-
-                default:
-                    this.data = this.xhr.responseText;
-                    break;
-            }
-            callLater(this.dispatchCompleteEvent,this);
-        }
-
-        private dispatchCompleteEvent():void{
-            Event.dispatchEvent(this.eventTarget,Event.COMPLETE);
-        }
-
-        private currentImage;
-        private loadImage(request:URLRequest):void {
+            var request:URLRequest = loader._request;
             var image = new Image();
-            this.currentImage = image;
             image.crossOrigin = "Anonymous";
-            image.addEventListener("load", this.onImageLoadComplete);
-            image.addEventListener("error", this.onLoadError);
-            try{
-                image.src = request.url;
-            }
-            catch (e){
-            }
-        }
+            image.onload = onImageComplete;
+            image.onerror = onLoadError;
+            image.src = request.url;
 
-        private onImageLoadComplete(event) {
-            var image = this.currentImage;
-            image.close()
-            this.currentImage = null;
-            image.removeEventListener('load', this.onLoadComplete);
-            image.removeEventListener('error', this.onLoadComplete);
-            var texture:Texture = new Texture();
-            texture.bitmapData = image;
-            this.data = texture;
-            callLater(this.dispatchCompleteEvent,this);
-        }
+            function onImageComplete(event) {
+                image.onerror = null;
+                image.onload = null;
+                var texture:Texture = new Texture();
+                texture.bitmapData = image;
+                loader.data = texture;
+                Event.dispatchEvent(loader,Event.COMPLETE);
+            };
 
+            function onLoadError(event) {
+                image.onerror = null;
+                image.onload = null;
+                IOErrorEvent.dispatchIOErrorEvent(loader);
+            };
+        }
     }
 }
