@@ -19,8 +19,9 @@
 /// <reference path="../../../../egret/display/DisplayObject.ts"/>
 /// <reference path="../../../../egret/events/Event.ts"/>
 /// <reference path="../../../../egret/net/URLLoader.ts"/>
+/// <reference path="../../../../egret/net/URLLoaderDataFormat.ts"/>
+/// <reference path="../../../../egret/net/URLRequest.ts"/>
 /// <reference path="../../../../egret/texture/Texture.ts"/>
-/// <reference path="../../../../egret/texture/TextureCache.ts"/>
 /// <reference path="../../core/IAssetAdapter.ts"/>
 
 module ns_egret {
