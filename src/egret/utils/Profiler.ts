@@ -17,10 +17,10 @@
  */
 
 /// <reference path="../context/MainContext.ts"/>
-/// <reference path="Ticker.ts"/>
+/// <reference path="../context/Ticker.ts"/>
 /// <reference path="../events/Event.ts"/>
 /// <reference path="../text/TextField.ts"/>
-/// <reference path="../utils/getTimer.ts"/>
+/// <reference path="getTimer.ts"/>
 
 module ns_egret {
     /**

@@ -16,12 +16,12 @@
  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+/// <reference path="../context/renderer/RenderFilter.ts"/>
 /// <reference path="../context/renderer/RendererContext.ts"/>
-/// <reference path="../core/RenderFilter.ts"/>
 /// <reference path="DisplayObject.ts"/>
 /// <reference path="SpriteSheet.ts"/>
+/// <reference path="Texture.ts"/>
 /// <reference path="../geom/Rectangle.ts"/>
-/// <reference path="../texture/Texture.ts"/>
 
 module ns_egret {
     export class Bitmap extends DisplayObject {

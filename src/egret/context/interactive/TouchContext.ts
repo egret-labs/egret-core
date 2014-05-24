@@ -17,8 +17,8 @@
  */
 
 /// <reference path="../MainContext.ts"/>
-/// <reference path="../../core/HashObject.ts"/>
 /// <reference path="../../events/TouchEvent.ts"/>
+/// <reference path="../../utils/HashObject.ts"/>
 
 module ns_egret {
     /**

@@ -16,10 +16,10 @@
  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-/// <reference path="../core/HashObject.ts"/>
 /// <reference path="../display/DisplayObject.ts"/>
 /// <reference path="Point.ts"/>
 /// <reference path="Rectangle.ts"/>
+/// <reference path="../utils/HashObject.ts"/>
 
 module ns_egret {
     /**

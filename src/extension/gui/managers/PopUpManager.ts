@@ -16,7 +16,7 @@
  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-/// <reference path="../../../egret/core/Injector.ts"/>
+/// <reference path="../../../egret/utils/Injector.ts"/>
 /// <reference path="../core/IVisualElement.ts"/>
 /// <reference path="../events/PopUpEvent.ts"/>
 /// <reference path="IPopUpManager.ts"/>

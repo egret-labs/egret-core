@@ -16,8 +16,8 @@
  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-/// <reference path="../core/HashObject.ts"/>
-/// <reference path="../core/Logger.ts"/>
+/// <reference path="HashObject.ts"/>
+/// <reference path="Logger.ts"/>
 
 module ns_egret{
     export class SAXParser extends HashObject{

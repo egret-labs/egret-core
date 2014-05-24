@@ -17,11 +17,11 @@
  */
 
 /// <reference path="../MainContext.ts"/>
+/// <reference path="RenderFilter.ts"/>
 /// <reference path="RendererContext.ts"/>
-/// <reference path="../../core/RenderFilter.ts"/>
+/// <reference path="../../display/Texture.ts"/>
 /// <reference path="../../geom/Matrix.ts"/>
 /// <reference path="../../text/TextField.ts"/>
-/// <reference path="../../texture/Texture.ts"/>
 /// <reference path="../../utils/getTimer.ts"/>
 /// <reference path="../../../jslib/DEBUG.d.ts"/>
 

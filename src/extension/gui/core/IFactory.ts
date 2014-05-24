@@ -16,7 +16,7 @@
  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-/// <reference path="../../../egret/core/IHashObject.ts"/>
+/// <reference path="../../../egret/utils/IHashObject.ts"/>
 
 module ns_egret {
     /**

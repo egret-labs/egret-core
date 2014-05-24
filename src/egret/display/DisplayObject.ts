@@ -17,17 +17,17 @@
  */
 
 /// <reference path="../context/MainContext.ts"/>
+/// <reference path="../context/renderer/RenderFilter.ts"/>
 /// <reference path="../context/renderer/RendererContext.ts"/>
-/// <reference path="../core/RenderFilter.ts"/>
 /// <reference path="DisplayObjectContainer.ts"/>
+/// <reference path="RenderTexture.ts"/>
 /// <reference path="Stage.ts"/>
+/// <reference path="Texture.ts"/>
 /// <reference path="../events/Event.ts"/>
 /// <reference path="../events/EventDispatcher.ts"/>
 /// <reference path="../geom/Matrix.ts"/>
 /// <reference path="../geom/Point.ts"/>
 /// <reference path="../geom/Rectangle.ts"/>
-/// <reference path="../texture/RenderTexture.ts"/>
-/// <reference path="../texture/Texture.ts"/>
 /// <reference path="../../jslib/NumberUtils.ts"/>
 
 module ns_egret {

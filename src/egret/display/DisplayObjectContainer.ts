@@ -17,11 +17,11 @@
  */
 
 /// <reference path="../context/renderer/RendererContext.ts"/>
-/// <reference path="../core/Logger.ts"/>
 /// <reference path="DisplayObject.ts"/>
 /// <reference path="../events/Event.ts"/>
 /// <reference path="../geom/Matrix.ts"/>
 /// <reference path="../geom/Rectangle.ts"/>
+/// <reference path="../utils/Logger.ts"/>
 
 module ns_egret {
     /**

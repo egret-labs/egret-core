@@ -17,12 +17,12 @@
  */
 
 /// <reference path="RendererContext.ts"/>
-/// <reference path="../../core/HashObject.ts"/>
-/// <reference path="../../core/Profiler.ts"/>
 /// <reference path="../../display/Graphics.ts"/>
+/// <reference path="../../display/Texture.ts"/>
 /// <reference path="../../geom/Matrix.ts"/>
 /// <reference path="../../text/TextField.ts"/>
-/// <reference path="../../texture/Texture.ts"/>
+/// <reference path="../../utils/HashObject.ts"/>
+/// <reference path="../../utils/Profiler.ts"/>
 /// <reference path="../../../extension/gui/components/Label.ts"/>
 
 module ns_egret {

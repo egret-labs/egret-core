@@ -17,11 +17,11 @@
  */
 
 /// <reference path="../context/MainContext.ts"/>
-/// <reference path="../core/Logger.ts"/>
-/// <reference path="../core/Ticker.ts"/>
+/// <reference path="../context/Ticker.ts"/>
 /// <reference path="Bitmap.ts"/>
 /// <reference path="DisplayObjectContainer.ts"/>
-/// <reference path="../texture/Texture.ts"/>
+/// <reference path="Texture.ts"/>
+/// <reference path="../utils/Logger.ts"/>
 
 module ns_egret {
     /**

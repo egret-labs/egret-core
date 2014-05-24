@@ -31,8 +31,8 @@
  *
  */
 
-/// <reference path="../texture/TextureCache.ts"/>
 /// <reference path="SAXParser.ts"/>
+/// <reference path="TextureCache.ts"/>
 
 module ns_egret {
     export class XML {

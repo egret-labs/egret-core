@@ -16,7 +16,7 @@
  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-/// <reference path="../core/Ticker.ts"/>
+/// <reference path="../context/Ticker.ts"/>
 /// <reference path="../events/EventDispatcher.ts"/>
 /// <reference path="../events/TimerEvent.ts"/>
 /// <reference path="getTimer.ts"/>

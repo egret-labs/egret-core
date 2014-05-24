@@ -17,11 +17,11 @@
  */
 
 /// <reference path="../context/renderer/HTML5CanvasRenderer.ts"/>
-/// <reference path="../core/RenderFilter.ts"/>
-/// <reference path="../display/DisplayObject.ts"/>
-/// <reference path="../display/DisplayObjectContainer.ts"/>
-/// <reference path="../geom/Rectangle.ts"/>
+/// <reference path="../context/renderer/RenderFilter.ts"/>
+/// <reference path="DisplayObject.ts"/>
+/// <reference path="DisplayObjectContainer.ts"/>
 /// <reference path="Texture.ts"/>
+/// <reference path="../geom/Rectangle.ts"/>
 
 module ns_egret {
     export class RenderTexture extends Texture {

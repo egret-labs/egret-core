@@ -16,13 +16,13 @@
  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+/// <reference path="../../../egret/context/renderer/RenderFilter.ts"/>
 /// <reference path="../../../egret/context/renderer/RendererContext.ts"/>
-/// <reference path="../../../egret/core/Injector.ts"/>
-/// <reference path="../../../egret/core/RenderFilter.ts"/>
 /// <reference path="../../../egret/display/DisplayObject.ts"/>
 /// <reference path="../../../egret/display/DisplayObjectContainer.ts"/>
+/// <reference path="../../../egret/display/Texture.ts"/>
 /// <reference path="../../../egret/geom/Rectangle.ts"/>
-/// <reference path="../../../egret/texture/Texture.ts"/>
+/// <reference path="../../../egret/utils/Injector.ts"/>
 /// <reference path="supportClasses/DefaultAssetAdapter.ts"/>
 /// <reference path="../core/IAssetAdapter.ts"/>
 /// <reference path="../core/ILayoutElement.ts"/>

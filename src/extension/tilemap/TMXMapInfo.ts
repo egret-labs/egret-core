@@ -16,10 +16,10 @@
  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-/// <reference path="../../egret/core/Logger.ts"/>
 /// <reference path="../../egret/geom/Point.ts"/>
-/// <reference path="../../egret/texture/TextureCache.ts"/>
+/// <reference path="../../egret/utils/Logger.ts"/>
 /// <reference path="../../egret/utils/SAXParser.ts"/>
+/// <reference path="../../egret/utils/TextureCache.ts"/>
 /// <reference path="TMXConst.ts"/>
 /// <reference path="../../jslib/Utils.d.ts"/>
 

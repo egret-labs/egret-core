@@ -17,6 +17,7 @@
  */
 
 /// <reference path="NetContext.ts"/>
+/// <reference path="../../display/Texture.ts"/>
 /// <reference path="../../events/Event.ts"/>
 /// <reference path="../../events/IOErrorEvent.ts"/>
 /// <reference path="../../net/URLLoader.ts"/>
@@ -24,7 +25,6 @@
 /// <reference path="../../net/URLRequest.ts"/>
 /// <reference path="../../net/URLRequestMethod.ts"/>
 /// <reference path="../../net/URLVariables.ts"/>
-/// <reference path="../../texture/Texture.ts"/>
 
 module ns_egret {
     /**

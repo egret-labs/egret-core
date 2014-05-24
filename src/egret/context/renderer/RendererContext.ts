@@ -16,11 +16,11 @@
  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-/// <reference path="../../core/HashObject.ts"/>
-/// <reference path="../../core/Profiler.ts"/>
+/// <reference path="../../display/Texture.ts"/>
 /// <reference path="../../geom/Matrix.ts"/>
 /// <reference path="../../text/TextField.ts"/>
-/// <reference path="../../texture/Texture.ts"/>
+/// <reference path="../../utils/HashObject.ts"/>
+/// <reference path="../../utils/Profiler.ts"/>
 
 module ns_egret {
     /**

@@ -16,9 +16,9 @@
  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-/// <reference path="../../../egret/core/Injector.ts"/>
 /// <reference path="../../../egret/display/DisplayObject.ts"/>
 /// <reference path="../../../egret/display/DisplayObjectContainer.ts"/>
+/// <reference path="../../../egret/utils/Injector.ts"/>
 /// <reference path="supportClasses/DefaultSkinAdapter.ts"/>
 /// <reference path="supportClasses/SkinBasicLayout.ts"/>
 /// <reference path="../core/ILayoutElement.ts"/>

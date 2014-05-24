@@ -17,7 +17,7 @@
  */
 
 /// <reference path="SoundContext.ts"/>
-/// <reference path="../../texture/TextureCache.ts"/>
+/// <reference path="../../utils/TextureCache.ts"/>
 
 module ns_egret{
 	/**

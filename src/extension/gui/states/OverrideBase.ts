@@ -16,7 +16,7 @@
  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-/// <reference path="../../../egret/core/HashObject.ts"/>
+/// <reference path="../../../egret/utils/HashObject.ts"/>
 /// <reference path="../core/IContainer.ts"/>
 /// <reference path="../core/IStateClient.ts"/>
 /// <reference path="IOverride.ts"/>
