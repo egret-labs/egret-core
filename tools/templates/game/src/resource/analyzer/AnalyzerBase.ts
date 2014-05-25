@@ -16,11 +16,16 @@
  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+/// <reference path="../../egret.d.ts"/>
 /// <reference path="../core/ResourceItem.ts"/>
 
 module ns_egret {
 
-    export class AnalyzerBase {
+    export class AnalyzerBase extends HashObject{
+
+        public constructor(){
+            super();
+        }
         /**
          * 加载一个资源文件
          * @param resItem 加载项信息

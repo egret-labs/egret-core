@@ -65,7 +65,7 @@ module ns_egret {
          * @method ns_egret.Ticker#register
          * @param listener {Function} 帧回调函数,参数返回上一帧和这帧的间隔时间。示例：onEnterFrame(frameTime:number):void
          * @param thisObject {any} 帧回调函数的this对象
-         * @param priority {any} 事件优先级，开发者请勿传递 Number.MAX_VALUE 和 Number.MIN_VALUE
+         * @param priority {any} 事件优先级，开发者请勿传递 Number.NEGATIVE_INFINITY 和 Number.POSITIVE_INFINITY
          * @stable A-
          */
         public register(listener:Function, thisObject:any, priority = 0):void {
