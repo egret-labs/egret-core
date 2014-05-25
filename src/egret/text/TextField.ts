@@ -88,7 +88,7 @@ module ns_egret {
          * 文本垂直对齐方式,使用VerticalAlign定义的常量，默认值VerticalAlign.TOP。
          * @stable B API名称可能修改
          */
-        public verticalAlign:string;
+        public verticalAlign:string = "top";
 
         /**
          * 文本基准线
@@ -101,12 +101,12 @@ module ns_egret {
         /**
          * 行间距
          */
-        public lineSpacing:number;
+        public lineSpacing:number = 0;
 
         /**
          * 字符间距
          */
-        public letterSpacing:number;
+        public letterSpacing:number = 0;
 
         private _numLines:number = 0;
         /**
@@ -120,10 +120,6 @@ module ns_egret {
 
         constructor() {
             super();
-
-            this.lineSpacing = 0;
-            this.letterSpacing = 0;
-            this.textAlign = "left";
         }
 
         /**
