@@ -83,7 +83,7 @@ module ns_egret {
          * 文本水平对齐方式,使用HorizontalAlign定义的常量，默认值HorizontalAlign.LEFT。
          * @stable B API名称可能修改
          */
-        public textAlign:string;
+        public textAlign:string = "left";
         /**
          * 文本垂直对齐方式,使用VerticalAlign定义的常量，默认值VerticalAlign.TOP。
          * @stable B API名称可能修改
