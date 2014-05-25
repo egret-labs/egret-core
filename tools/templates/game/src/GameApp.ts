@@ -1,15 +1,18 @@
 ///<reference path="egret.d.ts"/>
-///<reference path="GameUI.ts"/>
-///<reference path="loader/LoadingController.ts"/>
+///<reference path="LoadingUI.ts"/>
+///<reference path="resource/Resource.ts"/>
 /**
  * 游戏入口类
  */
 class GameApp {
 
     private textContainer:ns_egret.DisplayObjectContainer;
-
     /**
-     * 游戏启动后，会自动执行此方法
+     * 加载进度界面
+     */
+    private loadingView:LoadingUI;
+    /**
+     * 游戏启动后，外部会自动调用此方法
      */
     public startGame():void {
 
@@ -19,23 +22,38 @@ class GameApp {
         var policy = new ns_egret.ResolutionPolicy(container, content);
         ns_egret.StageDelegate.getInstance().setDesignSize(480, 800, policy);
 
-        var loadingController = new ns_egret.LoadingController();
-        loadingController.prefix = "assets/480/";
-        loadingController.addResource("bg.jpg", ns_egret.URLLoaderDataFormat.TEXTURE);
-        loadingController.addResource("egret_icon.png", ns_egret.URLLoaderDataFormat.TEXTURE);
-        loadingController.setLoadingView(new LoadingUI());
-        loadingController.addEventListener(ns_egret.Event.COMPLETE, this.onResourceLoadComplete, this);
-        loadingController.load();
-    }
+        //设置加载进度界面
+        this.loadingView  = new LoadingUI();
+        this.loadingView.addToStage();
 
-    private onResourceLoadComplete():void {
-        this.createGameScene();
-        this.startAnimation();
+        //初始化Resource资源加载库，提示：Resource资源加载库是可选模块，不在egret-core项目里，最新代码请到github上的egret-game-library项目检出。
+        ns_egret.Resource.eventDispatcher.addEventListener(ns_egret.ResourceEvent.GROUP_COMPLETE,this.onResourceLoadComplete,this);
+        ns_egret.Resource.eventDispatcher.addEventListener(ns_egret.ResourceEvent.GROUP_PROGRESS,this.onResourceProgress,this);
+        ns_egret.Resource.loadConfig("resources/resource.json","resources/");
+        ns_egret.Resource.loadGroup("preload");
     }
-
+    /**
+     * preload资源组加载完成
+     */
+    private onResourceLoadComplete(event:ns_egret.ResourceEvent):void {
+        if(event.groupName=="preload"){
+            this.createGameScene();
+        }
+    }
+    /**
+     * preload资源组加载进度
+     */
+    private onResourceProgress(event:ns_egret.ResourceEvent):void {
+        if(event.groupName=="preload"){
+            this.loadingView.onProgress(event.itemsLoaded,event.itemsTotal);
+        }
+    }
+    /**
+     * 创建游戏场景
+     */
     private createGameScene():void{
         var stage = ns_egret.MainContext.instance.stage;
-        var sky = utils.createBitmap("bg.jpg");
+        var sky = this.createBitmapByName("bgImage");
         stage.addChild(sky);
 
         var stageW = stage.stageWidth;
@@ -53,7 +71,7 @@ class GameApp {
         topMask.height = stageH;
         stage.addChild(topMask);
 
-        var icon = utils.createBitmap("egret_icon.png");
+        var icon = this.createBitmapByName("egretIcon");
         icon.anchorX = icon.anchorY = 0.5;
         stage.addChild(icon);
         icon.x = stageW / 2;
@@ -79,12 +97,25 @@ class GameApp {
         textContainer.alpha = 0;
 
         this.textContainer = textContainer;
-    }
 
-    private startAnimation():void{
+        //根据name关键字，异步获取一个json配置文件，name属性请参考resources/resource.json配置文件的内容。
+        ns_egret.Resource.getResAsync("description",this.startAnimation,this)
+    }
+    /**
+     * 根据name关键字创建一个Bitmap对象。name属性请参考resources/resource.json配置文件的内容。
+     */
+    private createBitmapByName(name:string):ns_egret.Bitmap {
+        var result:ns_egret.Bitmap = new ns_egret.Bitmap();
+        var texture:ns_egret.Texture = ns_egret.Resource.getRes(name);
+        result.texture = texture;
+        return result;
+    }
+    /**
+     * 描述文件加载成功，开始播放动画
+     */
+    private startAnimation(result:Array<any>):void{
         var textContainer = this.textContainer;
-            var count = -1;
-        var result = this.getDescription();
+        var count = -1;
         var self = this;
         var change = function() {
             count++;
@@ -104,7 +135,9 @@ class GameApp {
 
         change();
     }
-
+    /**
+     * 切换描述内容
+     */
     private changeDescription(textContainer, lineArr) {
         textContainer.removeChildren();
         var w = 0;
@@ -113,51 +146,17 @@ class GameApp {
             var colorLabel = new ns_egret.TextField();
             colorLabel.x = w;
             colorLabel.anchorX = colorLabel.anchorY = 0;
-            colorLabel.textColor = info["textColor"];
+            colorLabel.textColor = parseInt(info["textColor"]);
             colorLabel.text = info["text"];
-            colorLabel.textAlign = "left";
             colorLabel.size = 40;
             textContainer.addChild(colorLabel);
 
             w += colorLabel.width;
         }
     }
-
-    private getDescription() {
-        var result = [];
-        var lineArr = [];
-        lineArr.push({"text" : "开源", "textColor":0xF1C40F});
-        lineArr.push({"text" : "，", "textColor":0xFFFFFF});
-        lineArr.push({"text" : "免费", "textColor":0xF1C40F});
-        lineArr.push({"text" : "，", "textColor":0xFFFFFF});
-        lineArr.push({"text" : "跨平台", "textColor":0xF1C40F});
-        result.push(lineArr);
-
-        lineArr = [];
-        lineArr.push({"text" : "推动", "textColor":0xFFFFFF});
-        lineArr.push({"text" : "游戏", "textColor":0xF1C40F});
-        lineArr.push({"text" : "前行", "textColor":0xFFFFFF});
-        result.push(lineArr);
-
-        lineArr = [];
-        lineArr.push({"text" : "HTML5", "textColor":0xF1C40F});
-        lineArr.push({"text" : "游戏框架", "textColor":0xFFFFFF});
-        result.push(lineArr);
-
-        return result;
-    }
 }
 
-module utils {
-    export function createBitmap(url):ns_egret.Bitmap {
-        var result:ns_egret.Bitmap = new ns_egret.Bitmap();
-        var texture:ns_egret.Texture = ns_egret.TextureCache.getInstance().getTexture(url);
-        result.texture = texture;
-        return result;
-    }
-
-}
-
+//声明一个全局的app属性，以便在launcher/egret_loader.js调用它的startGame()方法。
 var app = new GameApp();
 
 

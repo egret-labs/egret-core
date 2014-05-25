@@ -1,0 +1,12 @@
+{
+"preload":
+	[
+		{"name":"bgImage","type":"img","url":"assets/bg.jpg"},
+		{"name":"egretIcon","type":"img","url":"assets/egret_icon.png"}
+	],
+
+"lazyload":
+	[
+		{"name":"description","type":"json","url":"json/description.json"}
+	]
+}

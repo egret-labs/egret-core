@@ -4,7 +4,7 @@
  * Created by apple on 14-3-22.
  */
 
-class LoadingUI implements ns_egret.ILoadingView {
+class LoadingUI{
 
     private container;
     private textField;
