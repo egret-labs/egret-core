@@ -148,6 +148,16 @@ function _exit(code) {
     process.exit(code);
 }
 
+function _log(){
+    var opt = param.getArgv().opts;
+    var vebose = opt.hasOwnProperty("-v");
+    if (vebose){
+        console.log.apply(console,arguments);
+    }
+
+
+}
+
 
 exports.loopFileSync = loopFileSync;
 exports.require = _require;
@@ -155,3 +165,4 @@ exports.copy = copy;
 exports.deleteFileSync = remove;
 exports.exit = _exit;
 exports.mkdir = mkdirSync;
+exports.log = _log;

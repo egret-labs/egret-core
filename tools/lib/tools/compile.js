@@ -64,7 +64,6 @@ function buildAllFile(callback, source, output, file_list) {
 
             var cmd = "" + sourceList.join(" ") + " -t ES5 --outDir " + output;
             fs.writeFileSync("tsc_config_temp.txt", cmd, "utf-8");
-
             var ts = cp_exec("tsc @tsc_config_temp.txt");
             ts.stderr.on("data", function (data) {
                 console.log(data);
@@ -72,13 +71,14 @@ function buildAllFile(callback, source, output, file_list) {
 
 
             ts.on('exit', function (code) {
-                 fs.unlinkSync("tsc_config_temp.txt");
+                fs.unlinkSync("tsc_config_temp.txt");
 
                 if (code == 0) {
+                    libs.log("编译 " + file_list + " 成功");
                     callback(null, source);
                 }
                 else {
-                    console.log("编译失败");
+                    libs.log(1303)
                 }
 
             });
@@ -124,33 +124,6 @@ function checkCompilerInstalled(callback) {
     );
 }
 
-/**
- * 编译单个TypeScript文件
- * @param file
- * @param callback
- */
-function build(callback, source, output) {
-//    var target = path.join(output,file).replace(".ts",".js");
-    var cmd = "tsc " + source + " -t ES5 --outDir " + output;
-
-    var ts = cp_exec(cmd);
-    ts.stderr.on("data", function (data) {
-        if (data.indexOf("error TS1") >= 0 ||
-            data.indexOf("error TS5") >= 0 ||
-            data.indexOf("error TS2105") >= 0) {
-
-        }
-        console.log(data);
-    })
-
-
-    ts.on('exit', function (code) {
-        fs.unlinkSync(source)
-        fs.unlinkSync(path.join(output, "temp.js"));
-        callback(null, source);
-    });
-}
-
 function generateEgretFileList(callback, egret_file, runtime) {
     var file_list = libs.require("tools/lib/core/file_list.js");
     var required_file_list = file_list.core.concat(file_list[runtime]);
@@ -182,10 +155,16 @@ function exportHeader(callback, source, output, file_list) {
     })
 
     ts.on('exit', function (code) {
-        console.log("[success]");
-        if (callback) {
-            callback();
+        if (code == 0) {
+            libs.log(".d.ts文件导出成功");
+            if (callback) {
+                callback();
+            }
         }
+        else {
+            libs.exit(1303);
+        }
+
     });
 }
 

@@ -61,7 +61,7 @@ function run(currDir, args, opts) {
         },
 
         function (callback) {
-            console.log("创建成功");
+            libs.log("创建成功");
         }
     ])
 
@@ -81,7 +81,7 @@ function help_title() {
 
 
 function help_example() {
-    return "egret create [project_name]";
+    return "egret create [project_name] [--runtime html5|native]";
 }
 
 exports.run = run;

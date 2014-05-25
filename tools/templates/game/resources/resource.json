@@ -7,6 +7,6 @@
 
 "lazyload":
 	[
-		{"name":"description","type":"json","url":"json/description.json"}
+		{"name":"description","type":"json","url":"config/description.json"}
 	]
 }

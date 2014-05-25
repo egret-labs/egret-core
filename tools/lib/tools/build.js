@@ -63,18 +63,18 @@ function run(dir, args, opts) {
     )
 
     async.series(task, function (err) {
-        console.log("编译成功");
+        libs.log("构建成功");
     })
 }
 
 
 function help_title() {
-    return "编译指定项目";
+    return "构建指定项目";
 }
 
 
 function help_example() {
-    return "egret build [project_name]";
+    return "egret build [project_name] [--runtime html5|native]";
 }
 
 exports.run = run;
