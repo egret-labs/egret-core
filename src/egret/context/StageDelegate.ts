@@ -59,7 +59,6 @@ module ns_egret {
         private _originalDesignHeight:number = 0;
         public _scaleX = 1;
         public _scaleY = 1;
-        private _frame:HTMLElement;
 
         private _resolutionPolicy;
 
@@ -68,7 +67,6 @@ module ns_egret {
 		 */
         public constructor() {
             super();
-            this._frame = document.getElementById(StageDelegate.canvas_div_name);
             var canvas:any = document.getElementById(StageDelegate.canvas_name);
             var w = canvas.width, h = canvas.height;
             this._designWidth = w;
@@ -79,21 +77,12 @@ module ns_egret {
         }
 
 		/**
-		 * @method ns_egret.StageDelegate#setFrameSize
-		 * @param width {any} 
-		 * @param heigh {any} 
-		 */
-        public setFrameSize(width, height) {
-            throw new Error("该方法已经被废弃，会在下个版本中删除")
-        }
-
-		/**
 		 * @method ns_egret.StageDelegate#setDesignSize
-		 * @param width {any} 
-		 * @param height {any} 
+		 * @param width {number}
+		 * @param height {{number}}
 		 * @param resolutionPolicy {any}
 		 */
-        public setDesignSize(width, height, resolutionPolicy):void {
+        public setDesignSize(width:number, height:number, resolutionPolicy):void {
             // Defensive code
             if (isNaN(width) || width == 0 || isNaN(height) || height == 0) {
                 ns_egret.Logger.info("Resolution Error");
@@ -174,7 +163,7 @@ module ns_egret {
 
 		/**
 		 * @method ns_egret.ResolutionPolicy#init
-		 * @param vie {any} 
+		 * @param view {any}
 		 */
         public init(view):void {
             this._containerStrategy.init(view);
@@ -194,7 +183,7 @@ module ns_egret {
 
 		/**
 		 * @method ns_egret.ResolutionPolicy#setContainerStrategy
-		 * @param containerSt {any} 
+		 * @param containerStg {any}
 		 */
         public setContainerStrategy(containerStg):void {
             if (containerStg instanceof ContainerStrategy)
@@ -203,7 +192,7 @@ module ns_egret {
 
 		/**
 		 * @method ns_egret.ResolutionPolicy#setContentStrategy
-		 * @param contentSt {any} 
+		 * @param contentStg {any}
 		 */
         public setContentStrategy(contentStg):void {
             if (contentStg instanceof ContentStrategy)
