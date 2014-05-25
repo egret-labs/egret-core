@@ -61,7 +61,7 @@ function run(currDir, args, opts) {
         },
 
         function (callback) {
-            console.log("创建成功");
+            libs.log("创建成功");
         }
     ])
 

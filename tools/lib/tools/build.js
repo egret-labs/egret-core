@@ -63,7 +63,7 @@ function run(dir, args, opts) {
     )
 
     async.series(task, function (err) {
-        console.log("编译成功");
+        libs.log("构建成功");
     })
 }
 
