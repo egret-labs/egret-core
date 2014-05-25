@@ -24,33 +24,42 @@
 /// <reference path="../geom/Rectangle.ts"/>
 
 module ns_egret {
+	/**
+	 * @class ns_egret.Bitmap
+	 * @classdesc
+     * Bitmap 类表示用于表示位图图像的显示对象。
+	 * @extends ns_egret.DisplayObject
+	 */
     export class Bitmap extends DisplayObject {
 
         /**
          * 全部Bitmap是否开启DEBUG模式
-         * @stable B 这个API以后可能会被移动到一个单独的负责各种DEBUG参数的枚举类中
+		 * @member {boolean} ns_egret.Bitmap.debug
          */
         public static debug:boolean = false;
 
 
         /**
          * 单个Bitmap是否开启DEBUG模式
-         * @stable B 这个API以后可能会被移动到一个单独的负责各种DEBUG参数的枚举类中
+		 * @member {boolean} ns_egret.Bitmap#debug
          */
         public debug:boolean = false;
 
         /**
          * debug边框颜色，默认值为红色
+		 * @member {number} ns_egret.Bitmap#debugColor
          */
         public debugColor:number = 0xff0000;
 
         /**
          * 渲染采用的SpriteFrame，用来渲染纹理中的一部分
+		 * @member {ns_egret.SpriteSheetFrame} ns_egret.Bitmap#spriteFrame
          */
         public spriteFrame:ns_egret.SpriteSheetFrame;
 
         /**
          * 渲染纹理
+		 * @member {ns_egret.Texture} ns_egret.Bitmap#texture
          */
         public texture:Texture;
 
@@ -88,7 +97,7 @@ module ns_egret {
 
         /**
          * @see egret.DisplayObject.measureBounds
-         * @returns {Rectangle}
+         * @returns {ns_egret.Rectangle}
          * @private
          */
         public _measureBounds():ns_egret.Rectangle {
