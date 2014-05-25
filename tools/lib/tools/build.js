@@ -74,7 +74,7 @@ function help_title() {
 
 
 function help_example() {
-    return "egret build [project_name]";
+    return "egret build [project_name] [--runtime html5|native]";
 }
 
 exports.run = run;
