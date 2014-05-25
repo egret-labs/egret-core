@@ -15,22 +15,32 @@ function run(currDir, args, opts) {
 
 
     var list = fs.readdirSync(__dirname);
-    console.log ("egret 子命令")
-    list.forEach(function(item){
+    console.log("用法: egret <command>\n");
+    console.log("command 列表:")
+    list.forEach(function (item) {
 
         var tool = require("./" + item);
         var tool_name = item.split(".")[0];
-        console.log ("  " + tool_name + ":");
-        if (tool.help_title){
-            console.log ("    " + tool.help_title());
+
+
+        if (tool.help_title) {
+            var title = tool.help_title();
+            console.log("  " + tool_name + getSpace(30 - tool_name.length) + title);
         }
-        if (tool.help_example){
-            console.log ("    例: " + tool.help_example());
-        }
+
+
 
 
     })
+    console.log ("");
+}
 
+function getSpace(num) {
+    var result = "";
+    for (var i = 0; i < num; i++) {
+        result += " ";
+    }
+    return result;
 }
 
 exports.run = run;

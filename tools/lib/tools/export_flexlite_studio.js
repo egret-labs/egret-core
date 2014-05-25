@@ -34,6 +34,8 @@
  *
  *
  */
+    return;
+//解析FlexLiteStudio的功能暂时屏蔽掉
 var DOMParser = require("../core/xmldom/dom-parser").DOMParser;
 
 var fs = require("fs");

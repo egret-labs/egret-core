@@ -69,7 +69,7 @@ function run(dir, args, opts) {
 
 
 function help_title() {
-    return "编译指定项目";
+    return "构建指定项目";
 }
 
 
