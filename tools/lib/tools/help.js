@@ -27,7 +27,7 @@ function run(currDir, args, opts) {
     }
 
     var list = fs.readdirSync(__dirname);
-    console.log("用法: egret <command>\n");
+    console.log("用法: egret <command> [-v]\n");
     console.log("command 列表:")
     list.forEach(function (item) {
         var tool = require("./" + item);
@@ -36,13 +36,11 @@ function run(currDir, args, opts) {
 
         if (tool.help_title) {
             var title = tool.help_title();
-            console.log("    " + tool_name + getSpace(30 - tool_name.length) + title);
+            console.log(getSpace(4) + tool_name + getSpace(30 - tool_name.length) + title);
         }
-
-
-
-
     })
+    console.log ("参数列表:");
+    console.log (getSpace(4) + "-v" + getSpace(30 - 2) + "打印详细日志");
     console.log ("");
     console.log ("使用 egret help <command> 了解各个 command 的细节")
 }
