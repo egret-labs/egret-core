@@ -10,18 +10,7 @@ var compiler = require("./compile.js")
 function run(dir, args, opts) {
     var needCompileEngine = opts["-e"];
 
-    var currDir = dir;
-    var projectName = args[0];
-    if (projectName) {
-        currDir = path.join(currDir, projectName);
-    }
-
-    var stat2 = fs.existsSync(path.join(currDir, "src"));
-    var stat3 = fs.existsSync(path.join(currDir, "launcher"));
-    if (!stat2 || !stat3) {//存在egret项目缺少的文件目录
-        libs.exit(8002);
-    }
-
+    var currDir = libs.joinEgretDir(dir, args[0]);
 
     var egret_file = path.join(currDir, "bin-debug/lib/egret_file_list.js");
     var task = [];

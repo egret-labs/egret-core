@@ -158,6 +158,20 @@ function _log(){
 
 }
 
+function _joinEgretDir(dir, projectName) {
+    var currDir = dir;
+    if (projectName) {
+        currDir = path.join(currDir, projectName);
+    }
+
+    var stat2 = fs.existsSync(path.join(currDir, "src"));
+    var stat3 = fs.existsSync(path.join(currDir, "launcher"));
+    if (!stat2 || !stat3) {//存在egret项目缺少的文件目录
+        _exit(8002);
+    }
+
+    return currDir;
+}
 
 exports.loopFileSync = loopFileSync;
 exports.require = _require;
@@ -166,3 +180,4 @@ exports.deleteFileSync = remove;
 exports.exit = _exit;
 exports.mkdir = mkdirSync;
 exports.log = _log;
+exports.joinEgretDir = _joinEgretDir;
