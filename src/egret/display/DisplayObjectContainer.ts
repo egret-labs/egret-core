@@ -221,17 +221,6 @@ module ns_egret {
             return false;
         }
 
-        /**
-         * 根据子对象的name属性获取对象
-		 * @method ns_egret.DisplayObjectContainer#getChildByName
-         * @param name {string} 
-		 * @returns {ns_egret.DisplayObject}
-         */
-        public getChildByName(name:string):ns_egret.DisplayObject {
-            //todo
-            return null;
-        }
-
 		/**
 		 * @method ns_egret.DisplayObjectContainer#swapChildrenAt
 		 * @param index1 {number} 

@@ -138,11 +138,11 @@ module ns_egret {
         /**
          * 测量文本
 		 * @method ns_egret.RendererContext#measureText
-         * @param text {any} 
+         * @param text {string}
 		 * @returns {number}
          * @stable B 参数很可能会需要调整，和setupFont整合
          */
-        public measureText(text):number {
+        public measureText(text:string):number {
             return 0;
         }
 

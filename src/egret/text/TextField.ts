@@ -24,22 +24,27 @@
 
 module ns_egret {
     /**
+	 * @class ns_egret.TextField
+	 * @classdesc
      * TextField是egret的文本渲染类，采用浏览器/设备的API进行渲染，在不同的浏览器/设备中由于字体渲染方式不一，可能会有渲染差异
      * 如果开发者希望所有平台完全无差异，请使用BitmapText
-     * @todo GitHub 为什么文本渲染存在差异以及如何规避
+	 * @extends ns_egret.DisplayObject
      */
     export class TextField extends DisplayObject {
         /**
          * 显示文本
+		 * @member {string} ns_egret.TextField#text
          */
         public text:string;
 
         /**
          * 字体
+		 * @member {any} ns_egret.TextField#fontFamily
          */
         public fontFamily = "Arial";
         /**
          * 字号
+		 * @member {number} ns_egret.TextField#size
          */
         public size:number = 30;
 
@@ -48,6 +53,7 @@ module ns_egret {
         private _textColor:number = 0xFFFFFF;
         /**
          * 文字颜色
+		 * @member {number} ns_egret.TextField#textColor
          */
         public get textColor():number{
             return this._textColor;
@@ -64,6 +70,7 @@ module ns_egret {
         private _strokeColor:number = 0x000000;
         /**
          * 描边颜色
+		 * @member {number} ns_egret.TextField#strokeColor
          */
         public get strokeColor():number{
             return this._strokeColor;
@@ -77,40 +84,47 @@ module ns_egret {
 
         /**
          * 描边宽度，0为没有描边
+		 * @member {number} ns_egret.TextField#stroke
          */
         public stroke:number = 0;
         /**
          * 文本水平对齐方式,使用HorizontalAlign定义的常量，默认值HorizontalAlign.LEFT。
-         * @stable B API名称可能修改
+		 * @member {string} ns_egret.TextField#textAlign
          */
         public textAlign:string = "left";
         /**
          * 文本垂直对齐方式,使用VerticalAlign定义的常量，默认值VerticalAlign.TOP。
-         * @stable B API名称可能修改
+		 * @member {string} ns_egret.TextField#verticalAlign
          */
         public verticalAlign:string = "top";
 
         /**
          * 文本基准线
-         * @stable B 可能移除，用户不需要设置这个属性。
+		 * @member {any} ns_egret.TextField#textBaseline
          */
         public textBaseline;
 
+		/**
+		 * @member {any} ns_egret.TextField#maxWidth
+		 */
         public maxWidth;
 
         /**
          * 行间距
+		 * @member {number} ns_egret.TextField#lineSpacing
          */
         public lineSpacing:number = 0;
 
         /**
          * 字符间距
+		 * @member {number} ns_egret.TextField#letterSpacing
          */
         public letterSpacing:number = 0;
 
         private _numLines:number = 0;
         /**
          * 文本行数
+		 * @member {number} ns_egret.TextField#numLines
          */
         public get numLines():number{
             return this._numLines;
@@ -123,7 +137,7 @@ module ns_egret {
         }
 
         /**
-         * @see egret.DisplayObject.render
+         * @see egret.DisplayObject._render
          * @param renderContext
          */
         public _render(renderContext:RendererContext):void {

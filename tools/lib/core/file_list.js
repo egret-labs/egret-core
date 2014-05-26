@@ -34,6 +34,7 @@ exports.core = [
     "egret/display/Graphics.js",
     "egret/display/Shape.js",
     "egret/text/TextField.js",
+    "egret/text/TextFieldType.js",
     "egret/display/SpriteSheet.js",
     "egret/text/TextInput.js",
     "egret/display/MovieClip.js",
