@@ -21,9 +21,9 @@
 /// <reference path="ResourceItem.ts"/>
 /// <reference path="../events/ResourceEvent.ts"/>
 
-module ns_egret {
+module RES {
 
-	export class ResourceLoader extends EventDispatcher{
+	export class ResourceLoader extends ns_egret.EventDispatcher{
 		/**
 		 * 构造函数
 		 */
@@ -122,9 +122,8 @@ module ns_egret {
             else{
                 var analyzer:AnalyzerBase = this.analyzerDic[resItem.type];
                 if(!analyzer){
-                    analyzer = this.analyzerDic[resItem.type] = Injector.getInstance(AnalyzerBase,resItem.type);
+                    analyzer = this.analyzerDic[resItem.type] = ns_egret.Injector.getInstance(AnalyzerBase,resItem.type);
                 }
-                var url:string = resItem.url;
                 analyzer.loadFile(resItem,this.onItemComplete,this);
             }
 		}

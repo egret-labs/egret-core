@@ -20,7 +20,7 @@
 /// <reference path="AnalyzerBase.ts"/>
 /// <reference path="../core/ResourceItem.ts"/>
 
-module ns_egret {
+module RES {
 
 	export class BinAnalyzer extends AnalyzerBase{
 		/**
@@ -46,40 +46,40 @@ module ns_egret {
 				compFunc.call(thisObject,resItem);
 				return;
 			}
-			var loader:URLLoader = this.getLoader();
+			var loader:ns_egret.URLLoader = this.getLoader();
 			this.resItemDic[loader.hashCode] = {item:resItem,func:compFunc,thisObject:thisObject};
-			loader.load(new URLRequest(resItem.url));
+			loader.load(new ns_egret.URLRequest(resItem.url));
 		}
 
-        public _dataFormat:string = URLLoaderDataFormat.BINARY;
+        public _dataFormat:string = ns_egret.URLLoaderDataFormat.BINARY;
 		/**
 		 * URLLoader对象池
 		 */		
-		public recycler:Recycler = new Recycler();
+		public recycler:ns_egret.Recycler = new ns_egret.Recycler();
 		/**
 		 * 获取一个URLLoader对象
 		 */		
-		private getLoader():URLLoader{
-			var loader:URLLoader = this.recycler.pop();
+		private getLoader():ns_egret.URLLoader{
+			var loader:ns_egret.URLLoader = this.recycler.pop();
 			if(!loader){
-				loader = new URLLoader();
+				loader = new ns_egret.URLLoader();
 				loader.dataFormat = this._dataFormat;
-				loader.addEventListener(Event.COMPLETE,this.onLoadFinish,this);
-				loader.addEventListener(IOErrorEvent.IO_ERROR,this.onLoadFinish,this);
+				loader.addEventListener(ns_egret.Event.COMPLETE,this.onLoadFinish,this);
+				loader.addEventListener(ns_egret.IOErrorEvent.IO_ERROR,this.onLoadFinish,this);
 			}
 			return loader;
 		}
 		/**
 		 * 一项加载结束
 		 */		
-		private onLoadFinish(event:Event):void{
-			var loader:URLLoader = <URLLoader> (event.target);
+		private onLoadFinish(event:ns_egret.Event):void{
+			var loader:ns_egret.URLLoader = <ns_egret.URLLoader> (event.target);
 			var data:any = this.resItemDic[loader.hashCode];
 			delete this.resItemDic[loader.hashCode];
 			this.recycler.push(loader);
 			var resItem:ResourceItem = data.item;
 			var compFunc:Function = data.func;
-			resItem.loaded = (event.type==Event.COMPLETE);
+			resItem.loaded = (event.type==ns_egret.Event.COMPLETE);
 			if(resItem.loaded){
                 this.onLoadComplete(resItem.name,loader.data)
 			}

@@ -19,9 +19,9 @@
 /// <reference path="../../egret.d.ts"/>
 /// <reference path="../core/ResourceItem.ts"/>
 
-module ns_egret {
+module RES {
 
-    export class AnalyzerBase extends HashObject{
+    export class AnalyzerBase extends ns_egret.HashObject{
 
         public constructor(){
             super();

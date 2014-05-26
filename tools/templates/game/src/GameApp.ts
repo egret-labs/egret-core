@@ -27,15 +27,15 @@ class GameApp {
         this.loadingView.addToStage();
 
         //初始化Resource资源加载库，提示：Resource资源加载库是可选模块，不在egret-core项目里，最新代码请到github上的egret-game-library项目检出。
-        ns_egret.Resource.eventDispatcher.addEventListener(ns_egret.ResourceEvent.GROUP_COMPLETE,this.onResourceLoadComplete,this);
-        ns_egret.Resource.eventDispatcher.addEventListener(ns_egret.ResourceEvent.GROUP_PROGRESS,this.onResourceProgress,this);
-        ns_egret.Resource.loadConfig("resources/resource.json","resources/");
-        ns_egret.Resource.loadGroup("preload");
+        RES.addEventListener(RES.ResourceEvent.GROUP_COMPLETE,this.onResourceLoadComplete,this);
+        RES.addEventListener(RES.ResourceEvent.GROUP_PROGRESS,this.onResourceProgress,this);
+        RES.loadConfig("resources/resource.json","resources/");
+        RES.loadGroup("preload");
     }
     /**
      * preload资源组加载完成
      */
-    private onResourceLoadComplete(event:ns_egret.ResourceEvent):void {
+    private onResourceLoadComplete(event:RES.ResourceEvent):void {
         if(event.groupName=="preload"){
             this.createGameScene();
         }
@@ -43,7 +43,7 @@ class GameApp {
     /**
      * preload资源组加载进度
      */
-    private onResourceProgress(event:ns_egret.ResourceEvent):void {
+    private onResourceProgress(event:RES.ResourceEvent):void {
         if(event.groupName=="preload"){
             this.loadingView.onProgress(event.itemsLoaded,event.itemsTotal);
         }
@@ -99,14 +99,14 @@ class GameApp {
         this.textContainer = textContainer;
 
         //根据name关键字，异步获取一个json配置文件，name属性请参考resources/resource.json配置文件的内容。
-        ns_egret.Resource.getResAsync("description",this.startAnimation,this)
+        RES.getResAsync("description",this.startAnimation,this)
     }
     /**
      * 根据name关键字创建一个Bitmap对象。name属性请参考resources/resource.json配置文件的内容。
      */
     private createBitmapByName(name:string):ns_egret.Bitmap {
         var result:ns_egret.Bitmap = new ns_egret.Bitmap();
-        var texture:ns_egret.Texture = ns_egret.Resource.getRes(name);
+        var texture:ns_egret.Texture = RES.getRes(name);
         result.texture = texture;
         return result;
     }

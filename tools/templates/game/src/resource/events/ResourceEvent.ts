@@ -19,9 +19,9 @@
 /// <reference path="../../egret.d.ts"/>
 /// <reference path="../core/ResourceItem.ts"/>
 
-module ns_egret {
+module RES {
 
-	export class ResourceEvent extends Event{
+	export class ResourceEvent extends ns_egret.Event{
 		/**
 		 * 一个加载项加载失败事件。
 		 */
@@ -65,15 +65,15 @@ module ns_egret {
          * 使用指定的EventDispatcher对象来抛出事件对象。抛出的对象将会缓存在对象池上，供下次循环复用。
          * @method ns_egret.ResourceEvent.dispatchResourceEvent
          */
-        public static dispatchResourceEvent(target:IEventDispatcher,type:string,
+        public static dispatchResourceEvent(target:ns_egret.IEventDispatcher,type:string,
                                                     groupName:string="",resItem:ResourceItem=null,itemsLoaded:number=0,itemsTotal:number=0):void{
             var eventClass:any = ResourceEvent;
-            var props:any = Event._getPropertyData(eventClass);
+            var props:any = ns_egret.Event._getPropertyData(eventClass);
             props.groupName = groupName;
             props.resItem = resItem;
             props.itemsLoaded = itemsLoaded;
             props.itemsTotal = itemsTotal;
-            Event._dispatchByTarget(eventClass,target,type,props);
+            ns_egret.Event._dispatchByTarget(eventClass,target,type,props);
         }
 	}
 }

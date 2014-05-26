@@ -18,7 +18,7 @@
 
 /// <reference path="ResourceItem.ts"/>
 
-module ns_egret {
+module RES {
 
     export class ResourceConfig{
         /**

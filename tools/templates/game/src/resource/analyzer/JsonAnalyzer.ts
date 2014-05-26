@@ -19,13 +19,13 @@
 /// <reference path="../../egret.d.ts"/>
 /// <reference path="BinAnalyzer.ts"/>
 
-module ns_egret {
+module RES {
 
     export class JsonAnalyzer extends BinAnalyzer{
 
         public constructor(){
             super();
-            this._dataFormat = URLLoaderDataFormat.TEXT;
+            this._dataFormat = ns_egret.URLLoaderDataFormat.TEXT;
         }
 
         /**
