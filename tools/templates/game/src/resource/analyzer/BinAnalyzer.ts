@@ -81,14 +81,15 @@ module RES {
 			var compFunc:Function = data.func;
 			resItem.loaded = (event.type==ns_egret.Event.COMPLETE);
 			if(resItem.loaded){
-                this.onLoadComplete(resItem.name,loader.data)
+                this.analyzeData(resItem,loader.data)
 			}
 			compFunc.call(data.thisObject,resItem);
 		}
         /**
-         * 一项加载成功
+         * 解析并缓存加载成功的数据
          */
-        public onLoadComplete(name:string,data:any):void{
+        public analyzeData(resItem:ResourceItem,data:any):void{
+            var name:string = resItem.name;
             if(this.fileDic[name]||!data){
                 return;
             }

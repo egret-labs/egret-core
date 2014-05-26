@@ -29,9 +29,10 @@ module RES {
         }
 
         /**
-         * 一项加载成功
+         * 解析并缓存加载成功的数据
          */
-        public onLoadComplete(name:string,data:any):void{
+        public analyzeData(resItem:ResourceItem,data:any):void{
+            var name:string = resItem.name;
             if(this.fileDic[name]||!data){
                 return;
             }
