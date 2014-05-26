@@ -38,6 +38,9 @@ module ns_egret {
          */
         public static debug:boolean = false;
 
+        public constructor() {
+            super();
+        }
 
         /**
          * 单个Bitmap是否开启DEBUG模式
@@ -51,11 +54,25 @@ module ns_egret {
          */
         public debugColor:number = 0xff0000;
 
+        private _spriteFrame:ns_egret.SpriteSheetFrame;
         /**
-         * 渲染采用的SpriteFrame，用来渲染纹理中的一部分
-		 * @member {ns_egret.SpriteSheetFrame} ns_egret.Bitmap#spriteFrame
+         * 这个API已废弃,将删除SpriteSheetFrame类。
+         * @deprecated
          */
-        public spriteFrame:ns_egret.SpriteSheetFrame;
+        public get spriteFrame():ns_egret.SpriteSheetFrame{
+            return this._spriteFrame;
+        }
+        public set spriteFrame(value:SpriteSheetFrame){
+            this._spriteFrame = value;
+            if(this.texture){
+                this.texture._startX = value.x;
+                this.texture._startY = value.y;
+                this.texture._textureHeight = value.h;
+                this.texture._textureWidth = value.w;
+                this.texture._offsetX = value.offX;
+                this.texture._offsetY = value.offY;
+            }
+        }
 
         /**
          * 渲染纹理
@@ -63,36 +80,16 @@ module ns_egret {
          */
         public texture:Texture;
 
-        constructor() {
-            super();
-        }
-
         public _render(renderContext:RendererContext):void {
-            var locTexture = this.texture;
-            if (locTexture == null) {
+            var texture = this.texture;
+            if (!texture) {
                 return;
             }
-            this._texture_to_render = locTexture;
-            var x, y, w, h, offsetX, offsetY;
-            if (this.spriteFrame) {
-                var rect:ns_egret.SpriteSheetFrame = this.spriteFrame;
-                x = rect.x;
-                y = rect.y;
-                w = rect.w;
-                h = rect.h;
-                offsetX = rect.offX;
-                offsetY = rect.offY;
-            }
-            else {
-                x = 0;
-                y = 0;
-                w = locTexture._textureWidth;
-                h = locTexture._textureHeight;
-                offsetX = 0;
-                offsetY = 0;
-            }
-
-            RenderFilter.getInstance().drawImage(renderContext, this, x, y, w, h, offsetX, offsetY, w, h);
+            this._texture_to_render = texture;
+            var w:number = texture._textureWidth;
+            var h:number = texture._textureHeight;
+            RenderFilter.getInstance().drawImage(renderContext, this, texture._startX, texture._startY,
+                w, h, texture._offsetX, texture._offsetY, w, h);
         }
 
         /**
@@ -101,21 +98,14 @@ module ns_egret {
          * @private
          */
         public _measureBounds():ns_egret.Rectangle {
-            var rect:ns_egret.SpriteSheetFrame = this.spriteFrame;
-            var x:number = 0;
-            var y:number = 0;
-            var w:number = 0;
-            var h:number = 0;
-            if (rect) {
-                x = rect.offX;
-                y = rect.offY;
-                w = rect.w;
-                h = rect.h;
+            var texture:Texture = this.texture;
+            if(!texture){
+                return super._measureBounds();
             }
-            else if (this.texture) {
-                w = this.texture._textureWidth;
-                h = this.texture._textureHeight;
-            }
+            var x:number = texture._offsetX;
+            var y:number = texture._offsetY;
+            var w:number = texture._textureWidth;
+            var h:number = texture._textureHeight;
             return Rectangle.identity.initialize(x,y, w, h);
         }
     }

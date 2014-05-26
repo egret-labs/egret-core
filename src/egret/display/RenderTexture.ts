@@ -44,8 +44,8 @@ module ns_egret {
             displayObject.worldAlpha = 1;
             //todo container不能改变自己的worldTransform
             if (displayObject instanceof ns_egret.DisplayObjectContainer) {
-                this.offsetX = bounds.x;
-                this.offsetY = bounds.y;
+                this._offsetX = bounds.x;
+                this._offsetY = bounds.y;
                 displayObject.worldTransform.append(1, 0, 0, 1, -bounds.x, -bounds.y);
                 var list = (<ns_egret.DisplayObjectContainer>displayObject)._children;
                 for (var i = 0 , length = list.length; i < length; i++) {

@@ -21,28 +21,29 @@
 
 module ns_egret{
     /**
-     * @class SpriteSheet类是位图SpriteSheet的配置文件。包括一组SpriteSheetFrame
-     * 每一个Bitmap对象都可以设置其SpriteSheetFrame，实现显示纹理的特定区域
+     * @class SpriteSheet是一张由多个子位图拼接而成的集合位图，它包含多个Texture对象。
+     * 每一个Texture都共享SpriteSheet的集合位图，但是指向它的不同的区域。
      * 在WebGL / OpenGL上，这种做法可以显著提升性能
      * 同时，SpriteSheet可以很方便的进行素材整合，降低HTTP请求数量
-     * todo: GitHub egret的SpriteSheet
      */
     export class SpriteSheet extends HashObject{
 
-        private frames:Object;
-        public constructor(data) {
+        public constructor(bitmapData:any) {
             super();
-            this.frames = data.frames;
+            if(bitmapData.frames)//to-do 这段代码是为了兼容SpriteSheetFrame的配置，要删除。
+                this.textureMap = bitmapData.frames;
+            else{
+                this.bitmapData = bitmapData;
+                this.textureMap = {};
+            }
+
         }
-
-
         /**
-         * 获取指定的SpriteFrame
-         * @param spriteFrameName
-         * @returns {*}
+         * 这个接口即将废弃
+         * @deprecated
          */
         public getFrame(spriteFrameName) {
-            var frame = this.frames[spriteFrameName];
+            var frame = this.textureMap[spriteFrameName];
             if(frame == null)
             {
                 ns_egret.Logger.fatal("没有找到相应的frame：", spriteFrameName);
@@ -50,35 +51,51 @@ module ns_egret{
             return frame;
         }
 
+        /**
+         * 共享的位图数据
+         */
+        private bitmapData:any;
+        /**
+         * 纹理缓存字典
+         */
+        private textureMap:Object;
+        /**
+         * 根据指定纹理名称获取一个缓存的Textrue对象
+         * @method ns_egret.SpriteSheet#getTexture
+         * @param name {string} 缓存这个Texture对象所使用的名称，如果名称已存在，将会覆盖之前的Texture对象
+         * @returns {ns_egret.Texture} 创建的Texture对象
+         */
+        public getTexture(name:string):Texture{
+            return this.textureMap[name];
+        }
 
         /**
-         * 这个API已经被完全废弃，会尽快删除
-         * @param data
-         * @returns {SpriteSheet}
-         * @stable D
+         * 为SpriteSheet上的指定区域创建一个新的Texture对象并缓存它
+         * @method ns_egret.SpriteSheet#createTexture
+         * @param name {string} 缓存这个Texture对象所使用的名称，如果名称已存在，将会覆盖之前的Texture对象
+         * @param startX {number} 指定位图区域在SpriteSheet上的起始坐标x
+         * @param startY {number} 指定位图区域在SpriteSheet上的起始坐标y
+         * @param width {number} 指定位图区域在SpriteSheet上的宽度
+         * @param height {number} 指定位图区域在SpriteSheet上的高度
+         * @returns {ns_egret.Texture} 创建的Texture对象
          */
-        static parseFromDragonBones(data):SpriteSheet {
-
-            var spriteSheet:SpriteSheet = new SpriteSheet(data);
-            spriteSheet.frames = {};
-            var list = data.SubTexture
-
-            for (var key in list) {
-                var frameData = list[key];
-                var rect = new SpriteSheetFrame();
-                rect.w = frameData.width;
-                rect.h = frameData.height;
-                rect.x = frameData.x;
-                rect.y = frameData.y;
-                spriteSheet.frames[frameData.name] = rect;
-//            console.log (rect);
-            }
-            return spriteSheet;
+        public createTexture(name:string,startX:number,startY:number,width:number,height:number):Texture{
+            var texture:Texture = new Texture();
+            texture._bitmapData = this.bitmapData;
+            texture._startX = startX;
+            texture._startY = startY;
+            texture._textureWidth = width;
+            texture._textureHeight = height;
+            this.textureMap[name] = texture;
+            return texture;
         }
 
 
     }
-
+    /**
+     * 这个类即将废弃
+     * @deprecated
+     */
     export class SpriteSheetFrame {
         /**
          * 表示这个Frame在Sheet上的x位置

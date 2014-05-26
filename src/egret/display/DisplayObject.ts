@@ -460,8 +460,8 @@ module ns_egret {
             var display:ns_egret.DisplayObject = this;
             if (display._cacheAsBitmap) {
                 var renderTexture = display._texture_to_render;
-                var offsetX = renderTexture.offsetX;
-                var offsetY = renderTexture.offsetY;
+                var offsetX = renderTexture._offsetX;
+                var offsetY = renderTexture._offsetY;
                 var width = renderTexture._textureWidth;
                 var height = renderTexture._textureHeight;
                 display._updateTransform();

@@ -134,7 +134,32 @@ module dragonBones {
 
             private parseData(textureAtlasRawData:any):void {
                 this.name = textureAtlasRawData[utils.ConstValues.A_NAME];
-                this.spriteSheet = ns_egret.SpriteSheet.parseFromDragonBones(textureAtlasRawData);
+                this.spriteSheet = this.parseFromDragonBones(textureAtlasRawData);
+            }
+
+            /**
+             * 这个API已经被完全废弃，会尽快删除
+             * @param data
+             * @returns {SpriteSheet}
+             * @stable D
+             */
+            private parseFromDragonBones(data):ns_egret.SpriteSheet {
+
+                var spriteSheet:ns_egret.SpriteSheet = new ns_egret.SpriteSheet(data);
+                spriteSheet["textureMap"] = {};
+                var list = data.SubTexture
+
+                for (var key in list) {
+                    var frameData = list[key];
+                    var rect = new ns_egret.SpriteSheetFrame();
+                    rect.w = frameData.width;
+                    rect.h = frameData.height;
+                    rect.x = frameData.x;
+                    rect.y = frameData.y;
+                    spriteSheet["textureMap"][frameData.name] = rect;
+//            console.log (rect);
+                }
+                return spriteSheet;
             }
         }
     }

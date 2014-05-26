@@ -199,10 +199,10 @@ module ns_egret {
                 this._texture_to_render = texture;
                 var w:number = texture._textureWidth;
                 var h:number = texture._textureHeight;
-                var offsetX:number = 0;
-                var offsetY:number = 0;
-                RenderFilter.getInstance().drawImage(renderContext, this, 0, 0, w, h,
-                    offsetX, offsetY,this.width,this.height);
+                var offsetX:number = Math.floor(texture._offsetX*this.width/w);
+                var offsetY:number = Math.floor(texture._offsetY*this.height/h);
+                RenderFilter.getInstance().drawImage(renderContext, this, texture._startX, texture._startY,
+                    w, h,offsetX, offsetY,this.width,this.height);
             }
             super._render(renderContext);
         }
@@ -215,10 +215,13 @@ module ns_egret {
         public _measureBounds():ns_egret.Rectangle {
             var bounds:Rectangle = super._measureBounds();
             if(this._content instanceof Texture){
-                var x:number = 0;
-                var y:number = 0;
+                var texture:Texture = <Texture> this._content;
+                var textureW:number = texture._textureWidth;
+                var textureH:number = texture._textureHeight;
                 var w:number = this.width;
                 var h:number = this.height;
+                var x:number = Math.floor(texture._offsetX*w/textureW);
+                var y:number = Math.floor(texture._offsetY*h/textureH);
                 if(x<bounds.x){
                     bounds.x = x;
                 }

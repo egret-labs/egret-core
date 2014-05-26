@@ -33,10 +33,39 @@ module ns_egret {
             super();
         }
 
-        public offsetX = 0;
-        public offsetY = 0;
+        /**
+         * 表示这个纹理在原始位图上的起始位置
+         */
+        public _startX:number = 0;
+        /**
+         * 表示这个纹理在原始位图上的y起始位置
+         */
+        public _startY:number = 0;
+        /**
+         * 表示这个纹理显示了之后在x方向的渲染偏移量
+         */
+        public _offsetX = 0;
+        /**
+         * 表示这个纹理显示了之后在y方向的渲染偏移量
+         */
+        public _offsetY = 0;
+
+
         public _textureWidth:number = 0;
+        /**
+         * 纹理宽度
+         */
+        public get textureWidth():number {
+            return this._textureWidth;
+        }
+
         public _textureHeight:number = 0;
+        /**
+         * 纹理高度
+         */
+        public get textureHeight():number {
+            return this._textureHeight;
+        }
 
         public _bitmapData;
 
@@ -51,14 +80,6 @@ module ns_egret {
             this._textureHeight = value.height * scale;
         }
 
-        public getTextureWidth():number {
-            return this._textureWidth;
-        }
-
-        public getTextureHeight():number {
-            return this._textureHeight;
-        }
-
         public static createWithBase64(base64:string):Texture {
             var texture:Texture = new Texture();
             var img = new Image();
@@ -66,7 +87,5 @@ module ns_egret {
             texture.bitmapData = img;
             return texture;
         }
-
-
     }
 }
