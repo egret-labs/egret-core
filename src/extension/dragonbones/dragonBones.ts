@@ -2634,7 +2634,7 @@ module dragonBones {
                 this._currentTextureAtlasName = null;
             }
 
-            public buildArmature(armatureName:string, animationName:string, skeletonName:string, textureAtlasName:string, skinName:string):Armature {
+            public buildArmature(armatureName:string, animationName?:string, skeletonName?:string, textureAtlasName?:string, skinName?:string):Armature {
                 if (skeletonName) {
                     var data:objects.SkeletonData = this._dataDic[skeletonName];
                     if (data) {
