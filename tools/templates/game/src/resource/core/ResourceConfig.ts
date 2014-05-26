@@ -44,6 +44,30 @@ module ns_egret {
             return group;
         }
         /**
+         * 创建自定义的加载资源组,注意：此方法仅在资源配置文件加载完成后执行才有效。
+         * 可以监听ResourceEvent.CONFIG_COMPLETE事件来确认配置加载完成。
+         * @param name 要创建的加载资源组的组名
+         * @param keys 要包含的键名列表，key对应配置文件里的name属性或sbuKeys属性的一项。
+         * @param override 是否覆盖已经存在的同名资源组,默认false。
+         * @return 是否创建成功，如果传入的keys为空，或keys全部无效，则创建失败。
+         */
+        public createGroup(name:string,keys:Array<string>,override:boolean=false):boolean{
+            if((!override&&this.groupDic[name])||!keys||keys.length==0)
+                return false;
+            var group:Array<any> = [];
+            var length:number = keys.length;
+            for(var i:number=0;i<length;i++){
+                var key:string = keys[i];
+                var item:any = this.keyMap[key];
+                if(item&&group.indexOf(item)==-1)
+                    group.push(item);
+            }
+            if(group.length==0)
+                return false;
+            this.groupDic[name] = group;
+            return true;
+        }
+        /**
          * 一级键名字典
          */
         private keyMap:any = {};

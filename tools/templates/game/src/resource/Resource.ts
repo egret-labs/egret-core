@@ -80,6 +80,17 @@ module ns_egret {
         public static getGroupByName(name:string):Array<ResourceItem>{
             return Resource._instance.getGroupByName(name);
         }
+        /**
+         * 创建自定义的加载资源组,注意：此方法仅在资源配置文件加载完成后执行才有效。
+         * 可以监听ResourceEvent.CONFIG_COMPLETE事件来确认配置加载完成。
+         * @param name 要创建的加载资源组的组名
+         * @param keys 要包含的键名列表，key对应配置文件里的name属性或sbuKeys属性的一项。
+         * @param override 是否覆盖已经存在的同名资源组,默认false。
+         * @return 是否创建成功，如果传入的keys为空，或keys全部无效，则创建失败。
+         */
+        public static createGroup(name:string,keys:Array<string>,override:boolean = false):boolean{
+            return Resource._instance.createGroup(name,keys,override);
+        }
 		/**
 		 * 检查配置文件里是否含有指定的资源
 		 * @param name 对应配置文件里的name属性。
@@ -202,7 +213,7 @@ module ns_egret {
 		 * 根据组名加载一组资源
 		 * @param name 要加载资源组的组名
 		 * @param priority 加载优先级,低优先级的组必须等待高优先级组完全加载结束才能开始，同一优先级的组同时加载。
-		 */		
+		 */
 		private loadGroup(name:string,priority:number=0):void{
 			if(this.loadedGroups.indexOf(name)!=-1||this.resLoader.isGroupInLoading(name))
 				return;
@@ -214,6 +225,17 @@ module ns_egret {
 				this.groupNameList.push({name:name,priority:priority});
 			}
 		}
+        /**
+         * 创建自定义的加载资源组,注意：此方法仅在资源配置文件加载完成后执行才有效。
+         * 可以监听ResourceEvent.CONFIG_COMPLETE事件来确认配置加载完成。
+         * @param name 要创建的加载资源组的组名
+         * @param keys 要包含的键名列表，key对应配置文件里的name属性或sbuKeys属性的一项。
+         * @param override 是否覆盖已经存在的同名资源组,默认false。
+         * @return 是否创建成功，如果传入的keys为空，或keys全部无效，则创建失败。
+         */
+        private createGroup(name:string,keys:Array<string>,override:boolean=false):boolean{
+            return this.resConfig.createGroup(name,keys,override);
+        }
 		/**
 		 * res配置数据
 		 */		
@@ -228,6 +250,7 @@ module ns_egret {
                 analyzer.destroyRes(this.configURL);
                 this.resConfig.parseConfig(data,this.configFolder);
 				this.configComplete = true;
+                ResourceEvent.dispatchResourceEvent(this,ResourceEvent.CONFIG_COMPLETE);
                 var groupNameList:Array<any> = this.groupNameList;
                 var length:number = groupNameList.length;
                 for(var i:number=0;i<length;i++){
@@ -235,7 +258,6 @@ module ns_egret {
 					this.loadGroup(item.name,item.priority);
 				}
 				this.groupNameList = [];
-                ResourceEvent.dispatchResourceEvent(this,ResourceEvent.CONFIG_COMPLETE);
 			}
 			else{
 				this.loadedGroups.push(event.groupName);
