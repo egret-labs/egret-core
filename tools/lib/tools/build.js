@@ -16,10 +16,9 @@ function run(dir, args, opts) {
         currDir = path.join(currDir, projectName);
     }
 
-    var stat1 = fs.existsSync(path.join(currDir, "bin-debug"));
     var stat2 = fs.existsSync(path.join(currDir, "src"));
     var stat3 = fs.existsSync(path.join(currDir, "launcher"));
-    if (!stat1 || !stat2 || !stat3) {//存在egret项目缺少的文件目录
+    if (!stat2 || !stat3) {//存在egret项目缺少的文件目录
         libs.exit(8002);
     }
 
