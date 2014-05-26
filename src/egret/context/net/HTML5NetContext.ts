@@ -85,7 +85,7 @@ module ns_egret {
                         loader.data = xhr.responseText;
                         break;
                 }
-                Event.dispatchEvent(loader,Event.COMPLETE);
+                callLater(Event.dispatchEvent,Event,loader,Event.COMPLETE);
             };
         }
 
@@ -129,7 +129,7 @@ module ns_egret {
                 var texture:Texture = new Texture();
                 texture.bitmapData = image;
                 loader.data = texture;
-                Event.dispatchEvent(loader,Event.COMPLETE);
+                callLater(Event.dispatchEvent,Event,loader,Event.COMPLETE);
             };
 
             function onLoadError(event) {
