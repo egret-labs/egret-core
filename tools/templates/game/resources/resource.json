@@ -1,12 +1,13 @@
 {
-"preload":
+"resources":
 	[
 		{"name":"bgImage","type":"img","url":"assets/bg.jpg"},
-		{"name":"egretIcon","type":"img","url":"assets/egret_icon.png"}
+		{"name":"egretIcon","type":"img","url":"assets/egret_icon.png"},
+        {"name":"description","type":"json","url":"config/description.json"}
 	],
 
-"lazyload":
+"groups":
 	[
-		{"name":"description","type":"json","url":"config/description.json"}
+        {"name":"preload","keys":"bgImage,egretIcon"}
 	]
 }

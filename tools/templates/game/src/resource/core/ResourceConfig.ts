@@ -59,26 +59,33 @@ module ns_egret {
         public parseConfig(data:any,folder:string):void{
             if(!data)
                 return;
-            var group:Array<any>;
-            for(var name in data){
-                group = this.groupDic[name];
-                if(!group){
-                    group = this.groupDic[name] = [];
+            var resources:Array<any> = data["resources"];
+            if(resources){
+                var length:number = resources.length;
+                for(var i:number=0;i<length;i++){
+                    var item:any = resources[i];
+                    item.url = folder+item.url;
+                    if(!this.keyMap[item.name])
+                        this.keyMap[item.name] = item;
                 }
-                this.getItemFromObject(data[name],folder,group);
             }
-        }
-        /**
-         * 从Object里解析加载项
-         */
-        private getItemFromObject(list:Array<any>,folder:string,group:Array<any>):void{
-            var length:number = list.length;
-            for(var i:number=0;i<length;i++){
-                var item:any = list[i];
-                item.url = folder+item.url;
-                if(!this.keyMap[item.name])
-                    this.keyMap[item.name] = item;
-                group.push(item);
+            var groups:Array<any> = data["groups"];
+            if(groups){
+                length = groups.length;
+                for(i=0;i<length;i++){
+                    var group:any = groups[i];
+                    var list:Array<any> = [];
+                    var keys:Array<string> = (<string> group.keys).split(",");
+                    length = keys.length;
+                    for(i=0;i<length;i++){
+                        var name:string = this.trim(keys[i]);
+                        item = this.keyMap[name];
+                        if(item&&list.indexOf(item)==-1){
+                            list.push(item);
+                        }
+                    }
+                    this.groupDic[group.name] = list;
+                }
             }
         }
         /**
@@ -108,5 +115,27 @@ module ns_egret {
             return resItem;
         }
 
+        /**
+         * 去掉字符串两端所有连续的不可见字符。
+         * 注意：若目标字符串为null或不含有任何可见字符,将输出空字符串""。
+         * @param str 要格式化的字符串
+         */
+        private trim(str:string):string{
+            if(!str)
+                return "";
+            var char:string = str.charAt(0);
+            while(str.length>0&&
+                (char==" "||char=="\t"||char=="\n"||char=="\r"||char=="\f")){
+                str = str.substr(1);
+                char = str.charAt(0);
+            }
+            char = str.charAt(str.length-1);
+            while(str.length>0&&
+                (char==" "||char=="\t"||char=="\n"||char=="\r"||char=="\f")){
+                str = str.substr(0,str.length-1);
+                char = str.charAt(str.length-1);
+            }
+            return str;
+        }
     }
 }
