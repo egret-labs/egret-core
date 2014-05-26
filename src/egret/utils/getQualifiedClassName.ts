@@ -20,7 +20,7 @@ module ns_egret {
     /**
      * 在window上需要读取的命名空间属性列表
      */
-    export var __moduleNameList:Array<string> = ["ns_egret","dragonBones"];
+    export var __moduleNameList:Array<string> = ["ns_egret","RES","dragonBones"];
 
     /**
      * 需要重新刷新类名的标志
