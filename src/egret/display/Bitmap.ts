@@ -83,6 +83,7 @@ module ns_egret {
         public _render(renderContext:RendererContext):void {
             var texture = this.texture;
             if (!texture) {
+                this._texture_to_render = null;
                 return;
             }
             this._texture_to_render = texture;
