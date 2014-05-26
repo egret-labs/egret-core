@@ -157,7 +157,7 @@ module ns_egret {
         }
 
 
-        measureText(text):number {
+        measureText(text:string):number {
             var result = this.canvasContext.measureText(text);
             return result.width;
         }
