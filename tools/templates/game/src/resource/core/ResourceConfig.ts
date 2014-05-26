@@ -100,9 +100,9 @@ module RES {
                     var group:any = groups[i];
                     var list:Array<any> = [];
                     var keys:Array<string> = (<string> group.keys).split(",");
-                    length = keys.length;
-                    for(i=0;i<length;i++){
-                        var name:string = this.trim(keys[i]);
+                    var l:number = keys.length;
+                    for(var j:number=0;j<l;j++){
+                        var name:string = this.trim(keys[j]);
                         item = this.keyMap[name];
                         if(item&&list.indexOf(item)==-1){
                             list.push(item);
