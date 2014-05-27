@@ -45,21 +45,9 @@ module ns_egret {
 //        private current_rendered_text:string;
 
         /**
-         * 纹理对象
-         */
-        public texture:Texture;
-
-        /**
          * BitmapTextSpriteSheet对象，缓存了所有文本的位图纹理
          */
         public spriteSheet:BitmapTextSpriteSheet;
-
-
-        /**
-         * 已经废弃
-         * SpriteFrame配置文件，通过egret的Node.js工具生成
-         */
-        public bitmapFontData;
 
         private _bitmapPool:Array<Bitmap>;
 
@@ -84,27 +72,23 @@ module ns_egret {
             }
             for (var i = 0, l = this.text.length; i < l; i++) {
                 var character = this.text.charAt(i);
-                var spriteFrame = this.bitmapFontData[character];
-                if (spriteFrame == null) {
-                    ns_egret.Logger.fatal("BitmapText：异常的bitmapFontData: ", character);
-                }
-                var offsetX = spriteFrame.offX;
-                var offsetY = spriteFrame.offY;
-                var characterWidth = spriteFrame.w;
+                var texture = this.spriteSheet.getTexture(character);
+                var offsetX = texture._offsetX;
+                var offsetY = texture._offsetY;
+                var characterWidth = texture._textureWidth;
                 if (!forMeasureContentSize) {//todo，不支持换行
                     var bitmap = this._bitmapPool[i];
                     if (!bitmap) {
                         bitmap = new Bitmap();
-                        bitmap.texture = this.texture;
+                        bitmap.texture = texture;
                         this._bitmapPool.push(bitmap);
                     }
                     this.addChild(bitmap);
-                    bitmap.spriteFrame = spriteFrame;
                     bitmap.x = rect.width;
                 }
                 rect.width += characterWidth + offsetX;
-                if (offsetY + spriteFrame.h > rect.height) {
-                    rect.height = offsetY + spriteFrame.h;
+                if (offsetY + texture._textureHeight > rect.height) {
+                    rect.height = offsetY + texture._textureHeight;
                 }
             }
             return rect;
