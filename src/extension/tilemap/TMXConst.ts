@@ -25,7 +25,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-module ns_egret{
+module egret{
     export class TMX {
         static TILE_HORIZONTAL_FLAG = 0x80000000;
         static TILE_VERTICAL_FLAG = 0x40000000;

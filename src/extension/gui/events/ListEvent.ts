@@ -30,36 +30,36 @@
 /// <reference path="../../../egret/events/TouchEvent.ts"/>
 /// <reference path="../components/IItemRenderer.ts"/>
 
-module ns_egret {
+module egret {
 
 	/**
-	 * @class ns_egret.ListEvent
+	 * @class egret.ListEvent
 	 * @classdesc
 	 * 列表事件
-	 * @extends ns_egret.TouchEvent
+	 * @extends egret.TouchEvent
 	 */	
 	export class ListEvent extends TouchEvent{
 		/**
 		 * 指示用户执行了将鼠标指针从控件中某个项呈示器上移开的操作 
-		 * @constant ns_egret.ListEvent.ITEM_ROLL_OUT
+		 * @constant egret.ListEvent.ITEM_ROLL_OUT
 		 */		
 		public static ITEM_ROLL_OUT:string = "itemRollOut";
 		
 		/**
 		 * 指示用户执行了将鼠标指针滑过控件中某个项呈示器的操作。 
-		 * @constant ns_egret.ListEvent.ITEM_ROLL_OVER
+		 * @constant egret.ListEvent.ITEM_ROLL_OVER
 		 */
 		public static ITEM_ROLL_OVER:string = "itemRollOver";
 		
 		/**
 		 * 指示用户执行了将鼠标在某个项呈示器上单击的操作。 
-		 * @constant ns_egret.ListEvent.ITEM_CLICK
+		 * @constant egret.ListEvent.ITEM_CLICK
 		 */		
 		public static ITEM_CLICK:string = "itemClick";
 		
 		
 		/**
-		 * @method ns_egret.ListEvent#constructor
+		 * @method egret.ListEvent#constructor
 		 * @param type {string} 
 		 * @param bubbles {boolean} 
 		 * @param cancelable {boolean} 
@@ -88,25 +88,25 @@ module ns_egret {
 		
 		/**
 		 * 触发鼠标事件的项呈示器数据源项。
-		 * @member ns_egret.ListEvent#item
+		 * @member egret.ListEvent#item
 		 */
 		public item:any;
 		
 		/**
 		 * 触发鼠标事件的项呈示器。 
-		 * @member ns_egret.ListEvent#itemRenderer
+		 * @member egret.ListEvent#itemRenderer
 		 */		
 		public itemRenderer:IItemRenderer;
 		
 		/**
 		 * 触发鼠标事件的项索引
-		 * @member ns_egret.ListEvent#itemIndex
+		 * @member egret.ListEvent#itemIndex
 		 */		
 		public itemIndex:number;
 
         /**
          * 使用指定的EventDispatcher对象来抛出事件对象。抛出的对象将会缓存在对象池上，供下次循环复用。
-         * @method ns_egret.ListEvent.dispatchListEvent
+         * @method egret.ListEvent.dispatchListEvent
          */
         public static dispatchListEvent(target:IEventDispatcher,type:string,touchEvent:TouchEvent=null,
                                         itemIndex:number = -1,item:any = null,itemRenderer:IItemRenderer = null):void{

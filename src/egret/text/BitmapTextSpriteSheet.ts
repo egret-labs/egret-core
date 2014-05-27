@@ -28,7 +28,7 @@
 /// <reference path="../display/SpriteSheet.ts"/>
 /// <reference path="../display/Texture.ts"/>
 
-module ns_egret {
+module egret {
 
     export class BitmapTextSpriteSheet extends SpriteSheet{
 

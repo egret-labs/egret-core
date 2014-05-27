@@ -25,7 +25,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-declare module ns_egret {
+declare module egret {
     export class DEBUG {
         /**
          * drawImage时检测传入参数

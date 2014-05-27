@@ -36,17 +36,17 @@
 /// <reference path="../../events/TrackBaseEvent.ts"/>
 /// <reference path="../../events/UIEvent.ts"/>
 
-module ns_egret {
+module egret {
 
 	/**
-	 * @class ns_egret.TrackBase
+	 * @class egret.TrackBase
 	 * @classdesc
 	 * TrackBase类是具有一个轨道和一个或多个滑块按钮的组件的一个基类，如 Slider 和 ScrollBar。
-	 * @extends ns_egret.Range
+	 * @extends egret.Range
 	 */	
 	export class TrackBase extends Range{
 		/**
-		 * @method ns_egret.TrackBase#constructor
+		 * @method egret.TrackBase#constructor
 		 */
 		public constructor(){
 			super();
@@ -63,7 +63,7 @@ module ns_egret {
 		 * 未按下 Shift 键时单击 ScrollBar 轨道将导致出现分页行为。<br/>
 		 * 按住 Shift 键并单击时，必须也对 ScrollBar 设置 smoothScrolling 属性才可以实现动画行为。<br/>
 		 * 此持续时间是整个滑过轨道的总时间，实际滚动会根据距离相应缩短。
-		 * @member ns_egret.TrackBase#slideDuration
+		 * @member egret.TrackBase#slideDuration
 		 */		
 		public get slideDuration():number{
 			return this._slideDuration;
@@ -76,19 +76,19 @@ module ns_egret {
 		
 		/**
 		 * [SkinPart]实体滑块组件
-		 * @member ns_egret.TrackBase#thumb
+		 * @member egret.TrackBase#thumb
 		 */		
 		public thumb:Button;
 		
 		/**
 		 * [SkinPart]实体轨道组件
-		 * @member ns_egret.TrackBase#track
+		 * @member egret.TrackBase#track
 		 */
 		public track:Button;
 
         /**
          * 最大有效值
-		 * @member ns_egret.TrackBase#maximum
+		 * @member egret.TrackBase#maximum
          */
         public get maximum():number {
             return this._maximum;
@@ -105,7 +105,7 @@ module ns_egret {
 		}
         /**
          * 最小有效值
-		 * @member ns_egret.TrackBase#minimum
+		 * @member egret.TrackBase#minimum
          */
         public get minimum():number {
             return this._minimum;
@@ -123,7 +123,7 @@ module ns_egret {
 		}
         /**
          * 此范围的当前值。
-		 * @member ns_egret.TrackBase#value
+		 * @member egret.TrackBase#value
          */
         public get value():number {
             return this._getValue();
@@ -140,7 +140,7 @@ module ns_egret {
 		}
 		
 		/**
-		 * @method ns_egret.TrackBase#setValue
+		 * @method egret.TrackBase#setValue
 		 * @param value {number} 
 		 */
 		public setValue(value:number):void{
@@ -150,7 +150,7 @@ module ns_egret {
 		
 		/**
 		 * 将相对于轨道的 x,y 像素位置转换为介于最小值和最大值（包括两者）之间的一个值。 
-		 * @method ns_egret.TrackBase#pointToValue
+		 * @method egret.TrackBase#pointToValue
 		 * @param x {number} 相对于轨道原点的位置的x坐标。
 		 * @param y {number} 相对于轨道原点的位置的y坐标。
 		 * @returns {number}
@@ -161,7 +161,7 @@ module ns_egret {
 		
 		
 		/**
-		 * @method ns_egret.TrackBase#changeValueByStep
+		 * @method egret.TrackBase#changeValueByStep
 		 * @param increase {boolean} 
 		 */
 		public changeValueByStep(increase:boolean = true):void{
@@ -174,7 +174,7 @@ module ns_egret {
 		}
 		
 		/**
-		 * @method ns_egret.TrackBase#partAdded
+		 * @method egret.TrackBase#partAdded
 		 * @param partName {string} 
 		 * @param instance {any} 
 		 */
@@ -194,7 +194,7 @@ module ns_egret {
 		}
 		
 		/**
-		 * @method ns_egret.TrackBase#partRemoved
+		 * @method egret.TrackBase#partRemoved
 		 * @param partName {string} 
 		 * @param instance {any} 
 		 */
@@ -213,7 +213,7 @@ module ns_egret {
 		}
 		
 		/**
-		 * @method ns_egret.TrackBase#updateDisplayList
+		 * @method egret.TrackBase#updateDisplayList
 		 * @param w {number} 
 		 * @param h {number} 
 		 */
@@ -231,7 +231,7 @@ module ns_egret {
 		/**
 		 * 更新皮肤部件（通常为滑块）的大小和可见性。<br/>
 		 * 子类覆盖此方法以基于 minimum、maximum 和 value 属性更新滑块的大小、位置和可见性。 
-		 * @method ns_egret.TrackBase#updateSkinDisplayList
+		 * @method egret.TrackBase#updateSkinDisplayList
 		 */		
 		public updateSkinDisplayList():void {
 		}
@@ -267,7 +267,7 @@ module ns_egret {
 		
 		/**
 		 * 滑块按下事件
-		 * @method ns_egret.TrackBase#thumb_mouseDownHandler
+		 * @method egret.TrackBase#thumb_mouseDownHandler
 		 * @param event {TouchEvent} 
 		 */		
 		public thumb_mouseDownHandler(event:TouchEvent):void{        
@@ -300,7 +300,7 @@ module ns_egret {
 		
 		/**
 		 * 当thumb被拖动时更新值，此方法每帧只被调用一次，比直接在鼠标移动事件里更新性能更高。
-		 * @method ns_egret.TrackBase#updateWhenMouseMove
+		 * @method egret.TrackBase#updateWhenMouseMove
 		 */		
 		public updateWhenMouseMove():void{
 			if(!this.track)
@@ -322,7 +322,7 @@ module ns_egret {
 
 		/**
 		 * 鼠标移动事件
-		 * @method ns_egret.TrackBase#stage_mouseMoveHandler
+		 * @method egret.TrackBase#stage_mouseMoveHandler
 		 * @param event {TouchEvent} 
 		 */		
 		public stage_mouseMoveHandler(event:TouchEvent):void{
@@ -335,7 +335,7 @@ module ns_egret {
 		
 		/**
 		 * 鼠标弹起事件
-		 * @method ns_egret.TrackBase#stage_mouseUpHandler
+		 * @method egret.TrackBase#stage_mouseUpHandler
 		 * @param event {Event} 
 		 */		
 		public stage_mouseUpHandler(event:Event):void{
@@ -359,7 +359,7 @@ module ns_egret {
 		
 		/**
 		 * 轨道被按下事件
-		 * @method ns_egret.TrackBase#track_mouseDownHandler
+		 * @method egret.TrackBase#track_mouseDownHandler
 		 * @param event {TouchEvent} 
 		 */		
 		public track_mouseDownHandler(event:TouchEvent):void { 

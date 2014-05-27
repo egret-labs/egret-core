@@ -28,24 +28,24 @@
 /// <reference path="../../../../egret/utils/getDefinitionByName.ts"/>
 /// <reference path="../../core/ISkinAdapter.ts"/>
 
-module ns_egret {
+module egret {
 
 	/**
-	 * @class ns_egret.DefaultSkinAdapter
+	 * @class egret.DefaultSkinAdapter
 	 * @classdesc
 	 * 默认的ISkinAdapter接口实现
-	 * @implements ns_egret.ISkinAdapter
+	 * @implements egret.ISkinAdapter
 	 */
     export class DefaultSkinAdapter implements ISkinAdapter{
         /**
          * 构造函数
-		 * @method ns_egret.DefaultSkinAdapter#constructor
+		 * @method egret.DefaultSkinAdapter#constructor
          */
         public constructor(){
         }
         /**
          * 获取皮肤显示对象
-         * @method ns_egret.ISkinAdapter#getSkin
+         * @method egret.ISkinAdapter#getSkin
          * @param skinName {any} 待解析的皮肤标识符
          * @param hostComponentKey {string} 主机组件标识符
          * @returns {any} 皮肤对象实例

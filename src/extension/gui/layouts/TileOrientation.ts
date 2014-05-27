@@ -25,23 +25,23 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-module ns_egret {
+module egret {
 
 	/**
-	 * @class ns_egret.TileOrientation
+	 * @class egret.TileOrientation
 	 * @classdesc
 	 * TileOrientation 类为 TileLayout 类的 orientation 属性定义可能的值。
 	 */
 	export class TileOrientation{
 		/**
 		 * 逐行排列元素。 
-		 * @constant ns_egret.TileOrientation.ROWS
+		 * @constant egret.TileOrientation.ROWS
 		 */		
 		public static ROWS:string = "rows";
 		
 		/**
 		 * 逐列排列元素。
-		 * @constant ns_egret.TileOrientation.COLUMNS
+		 * @constant egret.TileOrientation.COLUMNS
 		 */
 		public static COLUMNS:string = "columns";
 	}

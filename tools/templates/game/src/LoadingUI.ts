@@ -33,9 +33,9 @@ class LoadingUI{
     private textField;
 
     addToStage():void {
-        this.container = new ns_egret.DisplayObjectContainer();
-        this.textField = new ns_egret.TextField();
-        ns_egret.MainContext.instance.stage.addChild(this.container);
+        this.container = new egret.DisplayObjectContainer();
+        this.textField = new egret.TextField();
+        egret.MainContext.instance.stage.addChild(this.container);
         this.container.addChild(this.textField);
         this.textField.x = 120;
         this.textField.y = 300;

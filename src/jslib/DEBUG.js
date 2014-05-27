@@ -28,17 +28,17 @@
 /// <reference path="../core/MainContext.ts"/>
 /// <reference path="../core/Ticker.ts"/>
 /// <reference path="../texture/Texture.ts"/>
-var ns_egret;
-(function (ns_egret) {
+var egret;
+(function (egret) {
     var DEBUG = (function () {
         function DEBUG() {
         }
         DEBUG.checkDrawImage = function (texture, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight) {
             if (texture == null) {
-                ns_egret.Logger.fatal("texture为空");
+                egret.Logger.fatal("texture为空");
             }
             if (texture._textureWidth < sourceX + sourceWidth || texture._textureHeight < sourceY + sourceHeight) {
-                ns_egret.Logger.fatal("提供的尺寸超出texture尺寸");
+                egret.Logger.fatal("提供的尺寸超出texture尺寸");
             }
         };
 
@@ -46,22 +46,22 @@ var ns_egret;
             if (typeof useCapture === "undefined") { useCapture = false; }
             if (typeof priority === "undefined") { priority = 0; }
             if (func == null || func == undefined) {
-                ns_egret.Logger.fatal("addEventListener侦听函数不能为空");
+                egret.Logger.fatal("addEventListener侦听函数不能为空");
             }
         };
 
         DEBUG.checkSetScaleGrid = function (texture, top, bottom, left, right) {
             if (!texture) {
-                ns_egret.Logger.fatal("Scale9Bitmap没有纹理");
+                egret.Logger.fatal("Scale9Bitmap没有纹理");
             }
             if (parseInt(top) < 0 || parseInt(bottom) < 0 || parseInt(left) < 0 || parseInt(right) < 0) {
-                ns_egret.Logger.fatal("传入的值不能为负数");
+                egret.Logger.fatal("传入的值不能为负数");
             }
             if (texture._textureWidth < left + right) {
-                ns_egret.Logger.fatal("传入的宽度超出范围");
+                egret.Logger.fatal("传入的宽度超出范围");
             }
             if (texture._textureHeight < top + bottom) {
-                ns_egret.Logger.fatal("传入的高度超出范围");
+                egret.Logger.fatal("传入的高度超出范围");
             }
         };
 
@@ -72,8 +72,8 @@ var ns_egret;
         */
         DEBUG.TRACE_RENDER_LOOP = function (command) {
             if (typeof command === "undefined") { command = 0; }
-            var ticker = ns_egret.Ticker.getInstance();
-            var context = ns_egret.MainContext.instance;
+            var ticker = egret.Ticker.getInstance();
+            var context = egret.MainContext.instance;
             switch (command) {
                 case 0:
                     ticker.unregister(context["renderLoop"], context);
@@ -93,8 +93,8 @@ var ns_egret;
         DEBUG.SCALE_BITMAP_SET_SCALE_GRID = true;
         return DEBUG;
     })();
-    ns_egret.DEBUG = DEBUG;
-})(ns_egret || (ns_egret = {}));
+    egret.DEBUG = DEBUG;
+})(egret || (egret = {}));
 
 
 var unstable = unstable || {};
@@ -108,8 +108,8 @@ unstable.modal_api.setModal = function (value) {
     container.touchEnabled = value;
 }
 
-var hitTest = ns_egret.DisplayObjectContainer.prototype.hitTest;
-ns_egret.DisplayObjectContainer.prototype.hitTest = function (x, y) {
+var hitTest = egret.DisplayObjectContainer.prototype.hitTest;
+egret.DisplayObjectContainer.prototype.hitTest = function (x, y) {
     var container = this;
     if (container.visible == false) return null;
     var result = hitTest.call(this, x, y);
@@ -120,4 +120,4 @@ ns_egret.DisplayObjectContainer.prototype.hitTest = function (x, y) {
         return result;
     }
 }
-ns_egret.DisplayObjectContainer.prototype.setModal = unstable.modal_api.setModal;
+egret.DisplayObjectContainer.prototype.setModal = unstable.modal_api.setModal;

@@ -29,38 +29,38 @@
 /// <reference path="supportClasses/ToggleButtonBase.ts"/>
 /// <reference path="../events/UIEvent.ts"/>
 
-module ns_egret {
+module egret {
 
 	/**
-	 * @class ns_egret.RadioButton
+	 * @class egret.RadioButton
 	 * @classdesc
 	 * 单选按钮
-	 * @extends ns_egret.ToggleButtonBase
+	 * @extends egret.ToggleButtonBase
 	 */
 	export class RadioButton extends ToggleButtonBase{
 		/**
 		 * 构造函数
-		 * @method ns_egret.RadioButton#constructor
+		 * @method egret.RadioButton#constructor
 		 */
 		public constructor(){
 			super();
-            this.hostComponentKey = "ns_egret.RadioButton";
+            this.hostComponentKey = "egret.RadioButton";
 			this.groupName = "radioGroup";
 		}
 		
 		/**
 		 * 在RadioButtonGroup中的索引
-		 * @member ns_egret.RadioButton#_indexNumber
+		 * @member egret.RadioButton#_indexNumber
 		 */		
 		public _indexNumber:number = 0;
 		/**
 		 * 所属的RadioButtonGroup
-		 * @member ns_egret.RadioButton#_radioButtonGroup
+		 * @member egret.RadioButton#_radioButtonGroup
 		 */		
 		public _radioButtonGroup:RadioButtonGroup = null;
 		
 		/**
-		 * @member ns_egret.RadioButton#enabled
+		 * @member egret.RadioButton#enabled
 		 */
 		public get enabled():boolean{
 			if (!this._enabled)
@@ -84,7 +84,7 @@ module ns_egret {
 		/**
 		 * 此单选按钮所属的组。同一个组的多个单选按钮之间互斥。
 		 * 若不设置此属性，则根据groupName属性自动创建一个唯一的RadioButtonGroup。
-		 * @member ns_egret.RadioButton#group
+		 * @member egret.RadioButton#group
 		 */		
 		public get group():RadioButtonGroup{
 			if (!this._group&&this._groupName){
@@ -119,7 +119,7 @@ module ns_egret {
 		/**
 		 * 所属组的名称,具有相同组名的多个单选按钮之间互斥。默认值:"radioGroup"。
 		 * 可以把此属性当做设置组的一个简便方式，作用与设置group属性相同,。
-		 * @member ns_egret.RadioButton#groupName
+		 * @member egret.RadioButton#groupName
 		 */		
 		public get groupName():string{
 			return this._groupName;
@@ -148,7 +148,7 @@ module ns_egret {
 		/**
 		 * 与此单选按钮关联的自定义数据。
 		 * 当被点击时，所属的RadioButtonGroup对象会把此属性赋值给ItemClickEvent.item属性并抛出事件。
-		 * @member ns_egret.RadioButton#value
+		 * @member egret.RadioButton#value
 		 */		
 		public get value():any{
 			return this._value;
@@ -163,7 +163,7 @@ module ns_egret {
                 UIEvent.dispatchUIEvent(this.group,UIEvent.VALUE_COMMIT);
 		}
 		/**
-		 * @method ns_egret.RadioButton#commitProperties
+		 * @method egret.RadioButton#commitProperties
 		 */
 		public commitProperties():void{
 			if (this.groupChanged){
@@ -173,7 +173,7 @@ module ns_egret {
 			super.commitProperties();
 		}
 		/**
-		 * @method ns_egret.RadioButton#updateDisplayList
+		 * @method egret.RadioButton#updateDisplayList
 		 * @param unscaledWidth {number} 
 		 * @param unscaledHeight {number} 
 		 */
@@ -188,7 +188,7 @@ module ns_egret {
 			}
 		}
 		/**
-		 * @method ns_egret.RadioButton#buttonReleased
+		 * @method egret.RadioButton#buttonReleased
 		 */
 		public buttonReleased():void{
 			if(!this.enabled || this.selected)

@@ -27,22 +27,22 @@
 
 /// <reference path="supportClasses/ToggleButtonBase.ts"/>
 
-module ns_egret {
+module egret {
 
 	/**
-	 * @class ns_egret.ToggleButton
+	 * @class egret.ToggleButton
 	 * @classdesc
 	 * 切换按钮
-	 * @extends ns_egret.ToggleButtonBase
+	 * @extends egret.ToggleButtonBase
 	 */	
 	export class ToggleButton extends ToggleButtonBase{
 		/**
 		 * 构造函数
-		 * @method ns_egret.ToggleButton#constructor
+		 * @method egret.ToggleButton#constructor
 		 */		
 		public constructor(){
 			super();
-            this.hostComponentKey = "ns_egret.ToggleButton";
+            this.hostComponentKey = "egret.ToggleButton";
 		}
 		
 	}

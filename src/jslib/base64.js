@@ -1,19 +1,19 @@
-ns_egret.Codec.Base64 = {name:'Jacob__Codec__Base64'};
+egret.Codec.Base64 = {name:'Jacob__Codec__Base64'};
 
-ns_egret.Codec.Base64._keyStr = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=";
+egret.Codec.Base64._keyStr = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=";
 
 /**
  * <p>
- *    ns_egret.Codec.Base64.decode(input[, unicode=false]) -> String (http://en.wikipedia.org/wiki/Base64).
+ *    egret.Codec.Base64.decode(input[, unicode=false]) -> String (http://en.wikipedia.org/wiki/Base64).
  * </p>
  * @function
  * @param {String} input The base64 encoded string to decode
  * @return {String} Decodes a base64 encoded String
  * @example
  * //decode string
- * ns_egret.Codec.Base64.decode("U29tZSBTdHJpbmc="); // => "Some String"
+ * egret.Codec.Base64.decode("U29tZSBTdHJpbmc="); // => "Some String"
  */
-ns_egret.Codec.Base64.decode = function Jacob__Codec__Base64__decode(input) {
+egret.Codec.Base64.decode = function Jacob__Codec__Base64__decode(input) {
     var output = [],
         chr1, chr2, chr3,
         enc1, enc2, enc3, enc4,
@@ -57,9 +57,9 @@ ns_egret.Codec.Base64.decode = function Jacob__Codec__Base64__decode(input) {
  * @return {Array}
  * @example
  * //decode string to array
- * var decodeArr = ns_egret.Codec.Base64.decodeAsArray("U29tZSBTdHJpbmc=");
+ * var decodeArr = egret.Codec.Base64.decodeAsArray("U29tZSBTdHJpbmc=");
  */
-ns_egret.Codec.Base64.decodeAsArray = function Jacob__Codec__Base64___decodeAsArray(input, bytes) {
+egret.Codec.Base64.decodeAsArray = function Jacob__Codec__Base64___decodeAsArray(input, bytes) {
     var dec = this.decode(input),
         ar = [], i, j, len;
     for (i = 0, len = dec.length / bytes; i < len; i++) {
@@ -72,7 +72,7 @@ ns_egret.Codec.Base64.decodeAsArray = function Jacob__Codec__Base64___decodeAsAr
     return ar;
 };
 
-ns_egret.Utils.uint8ArrayToUint32Array = function(uint8Arr){
+egret.Utils.uint8ArrayToUint32Array = function(uint8Arr){
     if(uint8Arr.length % 4 != 0)
         return null;
 

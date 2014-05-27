@@ -31,21 +31,21 @@
 /// <reference path="../events/CollectionEvent.ts"/>
 /// <reference path="../events/CollectionEventKind.ts"/>
 
-module ns_egret {
+module egret {
 
 	/**
-	 * @class ns_egret.ObjectCollection
+	 * @class egret.ObjectCollection
 	 * @classdesc
 	 * Object的集合类数据结构包装器,通常作为Tree组件的数据源。
-	 * @extends ns_egret.EventDispatcher
-	 * @implements ns_egret.ICollection
-	 * @implements ns_egret.ITreeCollection
+	 * @extends egret.EventDispatcher
+	 * @implements egret.ICollection
+	 * @implements egret.ITreeCollection
 	 */
 	export class ObjectCollection extends EventDispatcher 
 		implements ICollection,ITreeCollection{
 		/**
 		 * 构造函数
-		 * @method ns_egret.ObjectCollection#constructor
+		 * @method egret.ObjectCollection#constructor
 		 * @param childrenKey {string} 要从item中获取子项列表的属性名,属性值为一个数组或Vector。
 		 * @param parentKey {string} 要从item中获取父级项的属性名
 		 */		
@@ -66,7 +66,7 @@ module ns_egret {
 		private _source:any;
 		/**
 		 * 数据源。注意：设置source会同时清空openNodes。
-		 * @member ns_egret.ObjectCollection#source
+		 * @member egret.ObjectCollection#source
 		 */
 		public get source():any{
 			return this._source;
@@ -96,7 +96,7 @@ module ns_egret {
 		private _openNodes:Array<any> = [];
 		/**
 		 * 处于展开状态的节点列表
-		 * @member ns_egret.ObjectCollection#openNodes
+		 * @member egret.ObjectCollection#openNodes
 		 */
 		public get openNodes():Array<any>{
 			return this._openNodes.concat();
@@ -107,13 +107,13 @@ module ns_egret {
 		}
 		
 		/**
-		 * @member ns_egret.ObjectCollection#length
+		 * @member egret.ObjectCollection#length
 		 */
 		public get length():number{
 			return this.nodeList.length;
 		}
 		/**
-		 * @method ns_egret.ObjectCollection#getItemAt
+		 * @method egret.ObjectCollection#getItemAt
 		 * @param index {number} 
 		 * @returns {any}
 		 */
@@ -121,7 +121,7 @@ module ns_egret {
 			return this.nodeList[index];
 		}
 		/**
-		 * @method ns_egret.ObjectCollection#getItemIndex
+		 * @method egret.ObjectCollection#getItemIndex
 		 * @param item {any} 
 		 * @returns {number}
 		 */
@@ -137,7 +137,7 @@ module ns_egret {
 		
 		/**
 		 * 通知视图，某个项目的属性已更新。
-		 * @method ns_egret.ObjectCollection#itemUpdated
+		 * @method egret.ObjectCollection#itemUpdated
 		 * @param item {any} 
 		 */
 		public itemUpdated(item:any):void{
@@ -149,7 +149,7 @@ module ns_egret {
 		
 		/**
 		 * 删除指定节点
-		 * @method ns_egret.ObjectCollection#removeItem
+		 * @method egret.ObjectCollection#removeItem
 		 * @param item {any} 
 		 */
 		public removeItem(item:any):void{
@@ -178,7 +178,7 @@ module ns_egret {
 		private _showRoot:boolean = false;
 		/**
 		 * 是否显示根节点,默认false。
-		 * @member ns_egret.ObjectCollection#showRoot
+		 * @member egret.ObjectCollection#showRoot
 		 */
 		public get showRoot():boolean{
 			return this._showRoot;
@@ -215,7 +215,7 @@ module ns_egret {
 			}
 		}
 		/**
-		 * @method ns_egret.ObjectCollection#hasChildren
+		 * @method egret.ObjectCollection#hasChildren
 		 * @param item {any} 
 		 * @returns {boolean}
 		 */		
@@ -225,7 +225,7 @@ module ns_egret {
 			return false;
 		}
 		/**
-		 * @method ns_egret.ObjectCollection#isItemOpen
+		 * @method egret.ObjectCollection#isItemOpen
 		 * @param item {any} 
 		 * @returns {boolean}
 		 */	
@@ -233,7 +233,7 @@ module ns_egret {
 			return this._openNodes.indexOf(item)!=-1;
 		}	
 		/**
-		 * @method ns_egret.ObjectCollection#expandItem
+		 * @method egret.ObjectCollection#expandItem
 		 * @param item {any} 
 		 * @param open {boolean} 
 		 */	
@@ -287,7 +287,7 @@ module ns_egret {
 			}
 		}
 		/**
-		 * @method ns_egret.ObjectCollection#getDepth
+		 * @method egret.ObjectCollection#getDepth
 		 * @param item {any} 
 		 * @returns {number}
 		 */	
@@ -304,7 +304,7 @@ module ns_egret {
 		}
 		/**
 		 * 刷新数据源。
-		 * @method ns_egret.ObjectCollection#refresh
+		 * @method egret.ObjectCollection#refresh
 		 */		
 		public refresh():void{
 			this.nodeList = [];
@@ -327,7 +327,7 @@ module ns_egret {
 		}
 		/**
 		 * 一个工具方法，给parent的子项以及子孙项赋值父级引用。
-		 * @method ns_egret.ObjectCollection.assignParent
+		 * @method egret.ObjectCollection.assignParent
 		 * @param parent {any} 要遍历子项的parent对象。
 		 * @param childrenKey {string} 要从parent中获取子项列表的属性名,属性值为一个数组或Vector。
 		 * @param parentKey {string} 要给子项赋值父级引用的属性名。

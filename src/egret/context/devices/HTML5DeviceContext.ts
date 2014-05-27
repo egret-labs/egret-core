@@ -28,13 +28,13 @@
 /// <reference path="DeviceContext.ts"/>
 /// <reference path="../../utils/getTimer.ts"/>
 
-module ns_egret {
+module egret {
 
 
 	/**
-	 * @class ns_egret.HTML5DeviceContext
+	 * @class egret.HTML5DeviceContext
 	 * @classdesc
-	 * @extends ns_egret.DeviceContext
+	 * @extends egret.DeviceContext
 	 */
     export class HTML5DeviceContext extends DeviceContext {
 
@@ -42,12 +42,12 @@ module ns_egret {
         private _time:number = 0;
 
 		/**
-		 * @member ns_egret.HTML5DeviceContext#frameRate
+		 * @member egret.HTML5DeviceContext#frameRate
 		 */
         public frameRate:number = 60;s
 
 		/**
-		 * @method ns_egret.HTML5DeviceContext#constructor
+		 * @method egret.HTML5DeviceContext#constructor
 		 */
         public constructor() {
             super();
@@ -65,7 +65,7 @@ module ns_egret {
 
 
 		/**
-		 * @method ns_egret.HTML5DeviceContext#executeMainLoop
+		 * @method egret.HTML5DeviceContext#executeMainLoop
 		 * @param callback {Function} 
 		 * @param thisObject {any} 
 		 */

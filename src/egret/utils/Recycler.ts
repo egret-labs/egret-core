@@ -27,7 +27,7 @@
 
 /// <reference path="HashObject.ts"/>
 
-module ns_egret {
+module egret {
     /**
      * 对象缓存复用工具类，可用于构建对象池，一段时间后会自动回收对象。
      */

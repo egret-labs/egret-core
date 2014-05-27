@@ -29,10 +29,10 @@
 /// <reference path="../../events/TouchEvent.ts"/>
 /// <reference path="../../utils/HashObject.ts"/>
 
-module ns_egret {
+module egret {
     /**
      *
-     * @class ns_egret.TouchContext
+     * @class egret.TouchContext
      * @classdesc TouchContext是egret的触摸Context
      */
     export class TouchContext extends HashObject {
@@ -46,7 +46,7 @@ module ns_egret {
 
         /**
          * 启动触摸检测
-         * @method ns_egret.TouchContext#run
+         * @method egret.TouchContext#run
          */
         public run():void {
 

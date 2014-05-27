@@ -27,13 +27,13 @@
 
 /// <reference path="../utils/HashObject.ts"/>
 
-module ns_egret {
+module egret {
 
     /**
-     * @class ns_egret.Rectangle
+     * @class egret.Rectangle
      * @classdesc
      * 矩形类
-     * @extends ns_egret.HashObject
+     * @extends egret.HashObject
      */
     export class Rectangle extends HashObject {
 
@@ -47,28 +47,28 @@ module ns_egret {
 
         /**
          * 矩形x坐标
-         * @constant ns_egret.Rectangle#x
+         * @constant egret.Rectangle#x
          */
         public x:number;
         /**
          * 矩形y坐标
-         * @constant ns_egret.Rectangle#y
+         * @constant egret.Rectangle#y
          */
         public y:number;
         /**
          * 矩形宽度
-         * @member ns_egret.Rectangle#width
+         * @member egret.Rectangle#width
          */
         public width:number;
         /**
          * 矩形高度
-         * @member ns_egret.Rectangle#height
+         * @member egret.Rectangle#height
          */
         public height:number;
 
         /**
          * x和width的和
-         * @member ns_egret.Rectangle#right
+         * @member egret.Rectangle#right
          */
         public get right():number {
             return this.x + this.width;
@@ -80,7 +80,7 @@ module ns_egret {
 
         /**
          * y和height的和
-         * @member ns_egret.Rectangle#bottom
+         * @member egret.Rectangle#bottom
          */
         public get bottom():number {
             return this.y + this.height;
@@ -96,7 +96,7 @@ module ns_egret {
          * @param y
          * @param width
          * @param height
-         * @returns {ns_egret.Rectangle}
+         * @returns {egret.Rectangle}
          */
         public initialize(x:number, y:number, width:number, height:number):Rectangle {
             this.x = x;
@@ -108,7 +108,7 @@ module ns_egret {
 
         /**
          * 判断某坐标点是否存在于矩形内
-         * @method ns_egret.Rectangle#contains
+         * @method egret.Rectangle#contains
          * @param x {number}
          * @param y {number}
          * @returns {boolean}
@@ -122,7 +122,7 @@ module ns_egret {
 
         /**
          * 确定在 toIntersect 参数中指定的对象是否与此 Rectangle 对象相交。此方法检查指定的 Rectangle 对象的 x、y、width 和 height 属性，以查看它是否与此 Rectangle 对象相交。
-         * @method ns_egret.Rectangle#intersects
+         * @method egret.Rectangle#intersects
          * @param toIntersect {Rectangle} 要与此 Rectangle 对象比较的 Rectangle 对象。
          * @returns {boolean}
          */
@@ -140,7 +140,7 @@ module ns_egret {
 
         /**
          * 克隆矩形对象
-         * @method ns_egret.Rectangle#clone
+         * @method egret.Rectangle#clone
          * @stable C 倾向于废除此API，方式开发者滥用，降低游戏性能
          */
         public clone() {
@@ -149,7 +149,7 @@ module ns_egret {
 
         /**
          * 引擎内部用于函数传递返回值的全局矩形对象，开发者请勿随意修改此对象
-         * @method ns_egret.Rectangle.identity
+         * @method egret.Rectangle.identity
          * @param new Rectangle(0 {any}
          * @param 0 {any}
          * @param 0 {any}

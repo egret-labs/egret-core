@@ -31,39 +31,39 @@
 /// <reference path="../core/IVisualElement.ts"/>
 /// <reference path="OverrideBase.ts"/>
 
-module ns_egret {
+module egret {
 
 	/**
-	 * @class ns_egret.AddItems
+	 * @class egret.AddItems
 	 * @classdesc
 	 * 添加显示元素
-	 * @extends ns_egret.OverrideBase
+	 * @extends egret.OverrideBase
 	 */	
 	export class AddItems extends OverrideBase {
 		/**
 		 * 添加父级容器的底层
-		 * @constant ns_egret.AddItems.FIRST
+		 * @constant egret.AddItems.FIRST
 		 */		
 		public static FIRST:string = "first";
 		/**
 		 * 添加在父级容器的顶层 
-		 * @constant ns_egret.AddItems.LAST
+		 * @constant egret.AddItems.LAST
 		 */		
 		public static LAST:string = "last";
 		/**
 		 * 添加在相对对象之前 
-		 * @constant ns_egret.AddItems.BEFORE
+		 * @constant egret.AddItems.BEFORE
 		 */		
 		public static BEFORE:string = "before";
 		/**
 		 * 添加在相对对象之后 
-		 * @constant ns_egret.AddItems.AFTER
+		 * @constant egret.AddItems.AFTER
 		 */		
 		public static AFTER:string = "after";
 		
 		/**
 		 * 构造函数
-		 * @method ns_egret.AddItems#constructor
+		 * @method egret.AddItems#constructor
 		 */		
 		public constructor(){
 			super();
@@ -71,30 +71,30 @@ module ns_egret {
 		
 		/**
 		 * 要添加到的属性 
-		 * @member ns_egret.AddItems#propertyName
+		 * @member egret.AddItems#propertyName
 		 */		
 		public propertyName:string = "";
 		
 		/**
 		 * 添加的位置 
-		 * @member ns_egret.AddItems#position
+		 * @member egret.AddItems#position
 		 */		
 		public position:string = AddItems.LAST;
 		
 		/**
 		 * 相对的显示元素的实例名
-		 * @member ns_egret.AddItems#relativeTo
+		 * @member egret.AddItems#relativeTo
 		 */		
 		public relativeTo:string;
 		
 		/**
 		 * 目标实例名
-		 * @member ns_egret.AddItems#target
+		 * @member egret.AddItems#target
 		 */		
 		public target:string;
 		
 		/**
-		 * @method ns_egret.AddItems#initialize
+		 * @method egret.AddItems#initialize
 		 * @param parent {IStateClient} 
 		 */
 		public initialize(parent:IStateClient):void{
@@ -112,7 +112,7 @@ module ns_egret {
 		}
 		
 		/**
-		 * @method ns_egret.AddItems#apply
+		 * @method egret.AddItems#apply
 		 * @param parent {IContainer} 
 		 */
 		public apply(parent:IContainer):void{
@@ -147,7 +147,7 @@ module ns_egret {
 		}
 		
 		/**
-		 * @method ns_egret.AddItems#remove
+		 * @method egret.AddItems#remove
 		 * @param parent {IContainer} 
 		 */
 		public remove(parent:IContainer):void{

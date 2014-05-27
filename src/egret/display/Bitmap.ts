@@ -32,18 +32,18 @@
 /// <reference path="Texture.ts"/>
 /// <reference path="../geom/Rectangle.ts"/>
 
-module ns_egret {
+module egret {
 	/**
-	 * @class ns_egret.Bitmap
+	 * @class egret.Bitmap
 	 * @classdesc
      * Bitmap 类表示用于表示位图图像的显示对象。
-	 * @extends ns_egret.DisplayObject
+	 * @extends egret.DisplayObject
 	 */
     export class Bitmap extends DisplayObject {
 
         /**
          * 全部Bitmap是否开启DEBUG模式
-		 * @member {boolean} ns_egret.Bitmap.debug
+		 * @member {boolean} egret.Bitmap.debug
          */
         public static debug:boolean = false;
 
@@ -56,22 +56,22 @@ module ns_egret {
 
         /**
          * 单个Bitmap是否开启DEBUG模式
-		 * @member {boolean} ns_egret.Bitmap#debug
+		 * @member {boolean} egret.Bitmap#debug
          */
         public debug:boolean = false;
 
         /**
          * debug边框颜色，默认值为红色
-		 * @member {number} ns_egret.Bitmap#debugColor
+		 * @member {number} egret.Bitmap#debugColor
          */
         public debugColor:number = 0xff0000;
 
-        private _spriteFrame:ns_egret.SpriteSheetFrame;
+        private _spriteFrame:egret.SpriteSheetFrame;
         /**
          * 这个API已废弃,将删除SpriteSheetFrame类。
          * @deprecated
          */
-        public get spriteFrame():ns_egret.SpriteSheetFrame{
+        public get spriteFrame():egret.SpriteSheetFrame{
             return this._spriteFrame;
         }
         public set spriteFrame(value:SpriteSheetFrame){
@@ -88,7 +88,7 @@ module ns_egret {
 
         /**
          * 渲染纹理
-		 * @member {ns_egret.Texture} ns_egret.Bitmap#texture
+		 * @member {egret.Texture} egret.Bitmap#texture
          */
         public texture:Texture;
 
@@ -107,10 +107,10 @@ module ns_egret {
 
         /**
          * @see egret.DisplayObject.measureBounds
-         * @returns {ns_egret.Rectangle}
+         * @returns {egret.Rectangle}
          * @private
          */
-        public _measureBounds():ns_egret.Rectangle {
+        public _measureBounds():egret.Rectangle {
             var texture:Texture = this.texture;
             if(!texture){
                 return super._measureBounds();

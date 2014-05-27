@@ -28,20 +28,20 @@
 /// <reference path="../utils/HashObject.ts"/>
 /// <reference path="../utils/Logger.ts"/>
 
-module ns_egret {
+module egret {
     /**
-	 * @class ns_egret.StageDelegate
+	 * @class egret.StageDelegate
 	 * @classdesc
      * StageDelegate负责处理屏幕适配策略
      * 有关屏幕适配策略，更多信息请了解 GitHub:理解egret的GameLauncher
      * @stable B 目前StageDelegate和HTML5有一定的耦合关系，之后会对其解耦，保证NativeApp的正确运行
-	 * @extends ns_egret.HashObject
+	 * @extends egret.HashObject
      */
     export class StageDelegate extends HashObject{
         private static instance:StageDelegate;
 
 		/**
-		 * @method ns_egret.StageDelegate.getInstance
+		 * @method egret.StageDelegate.getInstance
 		 * @returns {StageDelegate}
 		 */
         public static getInstance():StageDelegate {
@@ -54,11 +54,11 @@ module ns_egret {
         }
 
 		/**
-		 * @member ns_egret.StageDelegate.canvas_name
+		 * @member egret.StageDelegate.canvas_name
 		 */
         public static canvas_name:string = "gameCanvas";
 		/**
-		 * @member ns_egret.StageDelegate.canvas_div_name
+		 * @member egret.StageDelegate.canvas_div_name
 		 */
         public static canvas_div_name:string = "gameDiv";
 
@@ -72,7 +72,7 @@ module ns_egret {
         private _resolutionPolicy;
 
 		/**
-		 * @method ns_egret.StageDelegate#constructor
+		 * @method egret.StageDelegate#constructor
 		 */
         public constructor() {
             super();
@@ -86,7 +86,7 @@ module ns_egret {
         }
 
 		/**
-		 * @method ns_egret.StageDelegate#setDesignSize
+		 * @method egret.StageDelegate#setDesignSize
 		 * @param width {number}
 		 * @param height {{number}}
 		 * @param resolutionPolicy {any}
@@ -94,7 +94,7 @@ module ns_egret {
         public setDesignSize(width:number, height:number, resolutionPolicy):void {
             // Defensive code
             if (isNaN(width) || width == 0 || isNaN(height) || height == 0) {
-                ns_egret.Logger.info("Resolution Error");
+                egret.Logger.info("Resolution Error");
                 return;
             }
             this.setResolutionPolicy(resolutionPolicy);
@@ -109,7 +109,7 @@ module ns_egret {
         }
 
 		/**
-		 * @method ns_egret.StageDelegate#setResolutionPolicy
+		 * @method egret.StageDelegate#setResolutionPolicy
 		 * @param resolutionPolic {any} 
 		 */
         public setResolutionPolicy(resolutionPolicy):void {
@@ -129,19 +129,19 @@ module ns_egret {
             if (this._resolutionPolicy != null)
                 this._resolutionPolicy.init(this);
             else {
-                ns_egret.Logger.fatal("需要先设置resolutionPolicy");
+                egret.Logger.fatal("需要先设置resolutionPolicy");
             }
         }
 
 		/**
-		 * @method ns_egret.StageDelegate#getScaleX
+		 * @method egret.StageDelegate#getScaleX
 		 */
         public getScaleX():number {
             return this._scaleX;
         }
 
 		/**
-		 * @method ns_egret.StageDelegate#getScaleY
+		 * @method egret.StageDelegate#getScaleY
 		 */
         public getScaleY():number {
             return this._scaleY;
@@ -149,16 +149,16 @@ module ns_egret {
     }
 
 	/**
-	 * @class ns_egret.ResolutionPolicy
+	 * @class egret.ResolutionPolicy
 	 * @classdesc
 	 */
     export class ResolutionPolicy {
 		/**
-		 * @constant ns_egret.ResolutionPolicy.FIXED_HEIGHT
+		 * @constant egret.ResolutionPolicy.FIXED_HEIGHT
 		 */
         public static FIXED_HEIGHT = 1;
 		/**
-		 * @constant ns_egret.ResolutionPolicy.FIXED_WIDTH
+		 * @constant egret.ResolutionPolicy.FIXED_WIDTH
 		 */
         public static FIXED_WIDTH = 2;
 
@@ -171,7 +171,7 @@ module ns_egret {
         }
 
 		/**
-		 * @method ns_egret.ResolutionPolicy#init
+		 * @method egret.ResolutionPolicy#init
 		 * @param view {any}
 		 */
         public init(view):void {
@@ -180,7 +180,7 @@ module ns_egret {
         }
 
 		/**
-		 * @method ns_egret.ResolutionPolicy#_apply
+		 * @method egret.ResolutionPolicy#_apply
 		 * @param view {any} 
 		 * @param designedResolutionWidth {any} 
 		 * @param designedResolutionHeigh {any} 
@@ -191,7 +191,7 @@ module ns_egret {
         }
 
 		/**
-		 * @method ns_egret.ResolutionPolicy#setContainerStrategy
+		 * @method egret.ResolutionPolicy#setContainerStrategy
 		 * @param containerStg {any}
 		 */
         public setContainerStrategy(containerStg):void {
@@ -200,7 +200,7 @@ module ns_egret {
         }
 
 		/**
-		 * @method ns_egret.ResolutionPolicy#setContentStrategy
+		 * @method egret.ResolutionPolicy#setContentStrategy
 		 * @param contentStg {any}
 		 */
         public setContentStrategy(contentStg):void {
@@ -210,24 +210,24 @@ module ns_egret {
     }
 
 	/**
-	 * @class ns_egret.ContainerStrategy
+	 * @class egret.ContainerStrategy
 	 * @classdesc
 	 */
     export class ContainerStrategy {
 		/**
-		 * @constant ns_egret.ContainerStrategy.EQUAL_TO_FRAME
+		 * @constant egret.ContainerStrategy.EQUAL_TO_FRAME
 		 */
         public static EQUAL_TO_FRAME;
 
 		/**
-		 * @method ns_egret.ContainerStrategy.initialize
+		 * @method egret.ContainerStrategy.initialize
 		 */
         public static initialize():void {
             ContainerStrategy.EQUAL_TO_FRAME = new EqualToFrame();
         }
 
 		/**
-		 * @method ns_egret.ContainerStrategy#init
+		 * @method egret.ContainerStrategy#init
 		 * @param vie {any} 
 		 */
         public init(view):void {
@@ -235,7 +235,7 @@ module ns_egret {
         }
 
 		/**
-		 * @method ns_egret.ContainerStrategy#_apply
+		 * @method egret.ContainerStrategy#_apply
 		 * @param view {any} 
 		 * @param designedWidth {any} 
 		 * @param designedHeigh {any} 
@@ -259,7 +259,7 @@ module ns_egret {
                 style.marginBottom = style.marginBottom || "0px";
                 style.marginLeft = style.marginLeft || "0px";
             }
-//            var contStyle = document.getElementById(ns_egret.StageDelegate.canvas_div_name).style;
+//            var contStyle = document.getElementById(egret.StageDelegate.canvas_div_name).style;
 //            contStyle.position = "fixed";
 //            contStyle.left = contStyle.top = "0px";
 //            document.body.scrollTop = 0;
@@ -267,9 +267,9 @@ module ns_egret {
     }
 
 	/**
-	 * @class ns_egret.EqualToFrame
+	 * @class egret.EqualToFrame
 	 * @classdesc
-	 * @extends ns_egret.ContainerStrategy
+	 * @extends egret.ContainerStrategy
 	 */
     export class EqualToFrame extends ContainerStrategy {
         public _apply(view) {
@@ -278,21 +278,21 @@ module ns_egret {
     }
 
 	/**
-	 * @class ns_egret.ContentStrategy
+	 * @class egret.ContentStrategy
 	 * @classdesc
 	 */
     export class ContentStrategy {
 		/**
-		 * @constant ns_egret.ContentStrategy.FIXED_HEIGHT
+		 * @constant egret.ContentStrategy.FIXED_HEIGHT
 		 */
         public static FIXED_HEIGHT:ContentStrategy = null;
 		/**
-		 * @constant ns_egret.ContentStrategy.FIXED_WIDTH
+		 * @constant egret.ContentStrategy.FIXED_WIDTH
 		 */
         public static FIXED_WIDTH:ContentStrategy = null;
 
 		/**
-		 * @method ns_egret.ContentStrategy.initialize
+		 * @method egret.ContentStrategy.initialize
 		 */
         public static initialize():void {
             ContentStrategy.FIXED_HEIGHT = new FixedHeight();
@@ -300,7 +300,7 @@ module ns_egret {
         }
 
 		/**
-		 * @method ns_egret.ContentStrategy#init
+		 * @method egret.ContentStrategy#init
 		 * @param vie {any} 
 		 */
         public init(view):void {
@@ -308,23 +308,23 @@ module ns_egret {
         }
 
 		/**
-		 * @method ns_egret.ContentStrategy#_apply
-		 * @param delegate {ns_egret.StageDelegate} 
+		 * @method egret.ContentStrategy#_apply
+		 * @param delegate {egret.StageDelegate}
 		 * @param designedResolutionWidth {number} 
 		 * @param designedResolutionHeight {number} 
 		 */
-        public _apply(delegate:ns_egret.StageDelegate, designedResolutionWidth:number, designedResolutionHeight:number):void{
+        public _apply(delegate:egret.StageDelegate, designedResolutionWidth:number, designedResolutionHeight:number):void{
         }
     }
 
 	/**
-	 * @class ns_egret.FixedHeight
+	 * @class egret.FixedHeight
 	 * @classdesc
-	 * @extends ns_egret.ContentStrategy
+	 * @extends egret.ContentStrategy
 	 */
     export class FixedHeight extends ContentStrategy {
 		/**
-		 * @method ns_egret.FixedHeight#_apply
+		 * @method egret.FixedHeight#_apply
 		 * @param delegate {any} 
 		 * @param designedResolutionWidth {any} 
 		 * @param designedResolutionHeight {any}
@@ -352,18 +352,18 @@ module ns_egret {
     }
 
 	/**
-	 * @class ns_egret.FixedWidth
+	 * @class egret.FixedWidth
 	 * @classdesc
-	 * @extends ns_egret.ContentStrategy
+	 * @extends egret.ContentStrategy
 	 */
     export class FixedWidth extends ContentStrategy {
 		/**
-		 * @method ns_egret.FixedWidth#_apply
-		 * @param delegate {ns_egret.StageDelegate} 
+		 * @method egret.FixedWidth#_apply
+		 * @param delegate {egret.StageDelegate}
 		 * @param designedResolutionWidth {any} 
 		 * @param designedResolutionHeight {any}
 		 */
-        public _apply(delegate:ns_egret.StageDelegate, designedResolutionWidth, designedResolutionHeight):void {
+        public _apply(delegate:egret.StageDelegate, designedResolutionWidth, designedResolutionHeight):void {
             var canvas:HTMLCanvasElement = <HTMLCanvasElement>document.getElementById(StageDelegate.canvas_name);
             var container:HTMLElement = document.getElementById(StageDelegate.canvas_div_name);
             var viewPortWidth = document.documentElement.clientWidth;
@@ -382,9 +382,9 @@ module ns_egret {
     }
 
 	/**
-	 * @class ns_egret.FixedSize
+	 * @class egret.FixedSize
 	 * @classdesc
-	 * @extends ns_egret.ContentStrategy
+	 * @extends egret.ContentStrategy
 	 */
     export class FixedSize extends ContentStrategy {
 
@@ -398,12 +398,12 @@ module ns_egret {
         }
 
 		/**
-		 * @method ns_egret.FixedSize#_apply
-		 * @param delegate {ns_egret.StageDelegate} 
+		 * @method egret.FixedSize#_apply
+		 * @param delegate {egret.StageDelegate}
 		 * @param designedResolutionWidth {number} 
 		 * @param designedResolutionHeight {number}
 		 */
-        public _apply(delegate:ns_egret.StageDelegate, designedResolutionWidth:number, designedResolutionHeight:number):void {
+        public _apply(delegate:egret.StageDelegate, designedResolutionWidth:number, designedResolutionHeight:number):void {
             var canvas:HTMLCanvasElement = <HTMLCanvasElement>document.getElementById(StageDelegate.canvas_name);
             var container:HTMLDivElement = <HTMLDivElement>document.getElementById(StageDelegate.canvas_div_name);
             var viewPortWidth = this.width;

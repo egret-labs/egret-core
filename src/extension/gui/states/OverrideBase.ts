@@ -30,31 +30,31 @@
 /// <reference path="../core/IStateClient.ts"/>
 /// <reference path="IOverride.ts"/>
 
-module ns_egret {
+module egret {
 
 	/**
-	 * @class ns_egret.OverrideBase
+	 * @class egret.OverrideBase
 	 * @classdesc
 	 * OverrideBase 类是视图状态所用的 override 类的基类。
-	 * @extends ns_egret.HashObject
-	 * @implements ns_egret.IOverride
+	 * @extends egret.HashObject
+	 * @implements egret.IOverride
 	 */	
 	export class OverrideBase extends HashObject implements IOverride{
 		/**
-		 * @method ns_egret.OverrideBase#constructor
+		 * @method egret.OverrideBase#constructor
 		 */
 		public constructor() {
             super();
         }
 		/**
-		 * @method ns_egret.OverrideBase#initialize
+		 * @method egret.OverrideBase#initialize
 		 * @param parent {IStateClient} 
 		 */
 		public initialize(parent:IStateClient):void {
 		}
 		
 		/**
-		 * @method ns_egret.OverrideBase#apply
+		 * @method egret.OverrideBase#apply
 		 * @param parent {IContainer} 
 		 */
 		public apply(parent:IContainer):void {
@@ -62,7 +62,7 @@ module ns_egret {
 		}
 		
 		/**
-		 * @method ns_egret.OverrideBase#remove
+		 * @method egret.OverrideBase#remove
 		 * @param parent {IContainer} 
 		 */
 		public remove(parent:IContainer):void {
@@ -73,7 +73,7 @@ module ns_egret {
 		}
 		/**
 		 * 从对象初始化，这是一个便利方法
-		 * @method ns_egret.OverrideBase#initializeFromObject
+		 * @method egret.OverrideBase#initializeFromObject
 		 * @param properties {any} 
 		 * @returns {any}
 		 */		

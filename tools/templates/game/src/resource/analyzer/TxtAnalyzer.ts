@@ -25,7 +25,7 @@ module RES {
 
         public constructor(){
             super();
-            this._dataFormat = ns_egret.URLLoaderDataFormat.TEXT;
+            this._dataFormat = egret.URLLoaderDataFormat.TEXT;
         }
     }
 }

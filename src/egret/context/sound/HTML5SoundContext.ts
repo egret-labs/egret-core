@@ -28,11 +28,11 @@
 /// <reference path="SoundContext.ts"/>
 /// <reference path="../../utils/TextureCache.ts"/>
 
-module ns_egret{
+module egret{
 	/**
-	 * @class ns_egret.HTML5SoundContext
+	 * @class egret.HTML5SoundContext
 	 * @classdesc
-	 * @extends ns_egret.SoundContext
+	 * @extends egret.SoundContext
 	 */
     export class HTML5SoundContext extends SoundContext{
         private _soundList = {};
@@ -79,7 +79,7 @@ module ns_egret{
         }
 
 		/**
-		 * @method ns_egret.HTML5SoundContext#preloadSound
+		 * @method egret.HTML5SoundContext#preloadSound
 		 * @param pat {any} 
 		 */
         public preloadSound(path) {
@@ -141,7 +141,7 @@ module ns_egret{
         }
 
 		/**
-		 * @method ns_egret.HTML5SoundContext#playMusic
+		 * @method egret.HTML5SoundContext#playMusic
 		 * @param path {any} 
 		 * @param loop {any} 
 		 */
@@ -180,7 +180,7 @@ module ns_egret{
         }
 
 		/**
-		 * @method ns_egret.HTML5SoundContext#stopMusic
+		 * @method egret.HTML5SoundContext#stopMusic
 		 * @param releaseDat {any} 
 		 */
         public stopMusic(releaseData) {

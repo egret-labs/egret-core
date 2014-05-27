@@ -31,7 +31,7 @@
 /// <reference path="../geom/Matrix.ts"/>
 /// <reference path="../geom/Rectangle.ts"/>
 
-module ns_egret{
+module egret{
     export class Stage extends DisplayObjectContainer {
 
         public static _invalidateRenderFlag:boolean = false;

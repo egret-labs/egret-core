@@ -28,18 +28,18 @@
 /// <reference path="../core/IContainer.ts"/>
 /// <reference path="OverrideBase.ts"/>
 
-module ns_egret {
+module egret {
 
 	/**
-	 * @class ns_egret.SetProperty
+	 * @class egret.SetProperty
 	 * @classdesc
 	 * 设置属性
-	 * @extends ns_egret.OverrideBase
+	 * @extends egret.OverrideBase
 	 */	
 	export class SetProperty extends OverrideBase{
 		/**
 		 * 构造函数
-		 * @method ns_egret.SetProperty#constructor
+		 * @method egret.SetProperty#constructor
 		 */		
 		public constructor(){
 			super();
@@ -47,19 +47,19 @@ module ns_egret {
 		
 		/**
 		 * 要修改的属性名
-		 * @member ns_egret.SetProperty#name
+		 * @member egret.SetProperty#name
 		 */		
 		public name:string;
 		
 		/**
 		 * 目标实例名
-		 * @member ns_egret.SetProperty#target
+		 * @member egret.SetProperty#target
 		 */		
 		public target:string;
 		
 		/**
 		 * 属性值 
-		 * @member ns_egret.SetProperty#value
+		 * @member egret.SetProperty#value
 		 */		
 		public value:any;
 		
@@ -69,7 +69,7 @@ module ns_egret {
 		private oldValue:any;
 		
 		/**
-		 * @method ns_egret.SetProperty#apply
+		 * @method egret.SetProperty#apply
 		 * @param parent {IContainer} 
 		 */
 		public apply(parent:IContainer):void{   
@@ -81,7 +81,7 @@ module ns_egret {
 		}
 		
 		/**
-		 * @method ns_egret.SetProperty#remove
+		 * @method egret.SetProperty#remove
 		 * @param parent {IContainer} 
 		 */
 		public remove(parent:IContainer):void{   

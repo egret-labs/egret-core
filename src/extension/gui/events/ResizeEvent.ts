@@ -28,22 +28,22 @@
 /// <reference path="../../../egret/events/Event.ts"/>
 /// <reference path="../../../egret/events/IEventDispatcher.ts"/>
 
-module ns_egret {
+module egret {
 
 	/**
-	 * @class ns_egret.ResizeEvent
+	 * @class egret.ResizeEvent
 	 * @classdesc
 	 * 尺寸改变事件
-	 * @extends ns_egret.Event
+	 * @extends egret.Event
 	 */
 	export class ResizeEvent extends Event{
 		/**
-		 * @constant ns_egret.ResizeEvent.RESIZE
+		 * @constant egret.ResizeEvent.RESIZE
 		 */
 		public static RESIZE:string = "resize";
 		
 		/**
-		 * @method ns_egret.ResizeEvent#constructor
+		 * @method egret.ResizeEvent#constructor
 		 * @param type {string} 
 		 * @param oldWidth {number} 
 		 * @param oldHeight {number} 
@@ -60,19 +60,19 @@ module ns_egret {
 		
 		/**
 		 * 旧的高度 
-		 * @member ns_egret.ResizeEvent#oldHeight
+		 * @member egret.ResizeEvent#oldHeight
 		 */
 		public oldHeight:number;
 		
 		/**
 		 * 旧的宽度 
-		 * @member ns_egret.ResizeEvent#oldWidth
+		 * @member egret.ResizeEvent#oldWidth
 		 */
 		public oldWidth:number;
 
         /**
          * 使用指定的EventDispatcher对象来抛出事件对象。抛出的对象将会缓存在对象池上，供下次循环复用。
-         * @method ns_egret.ResizeEvent.dispatchResizeEvent
+         * @method egret.ResizeEvent.dispatchResizeEvent
          */
         public static dispatchResizeEvent(target:IEventDispatcher,oldWidth:number = NaN, oldHeight:number = NaN):void {
             var eventClass:any = ResizeEvent;

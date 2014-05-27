@@ -28,10 +28,10 @@
 /// <reference path="Event.ts"/>
 /// <reference path="../utils/IHashObject.ts"/>
 
-module ns_egret {
+module egret {
     /**
      *
-     * @class ns_egret.IEventDispatcher
+     * @class egret.IEventDispatcher
      * @interface
      * @classdesc IEventDispatcher是egret的事件派发器接口，负责进行事件的发送和侦听。
      */

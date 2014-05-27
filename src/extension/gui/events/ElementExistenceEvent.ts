@@ -29,28 +29,28 @@
 /// <reference path="../../../egret/events/IEventDispatcher.ts"/>
 /// <reference path="../core/IVisualElement.ts"/>
 
-module ns_egret {
+module egret {
 
 	/**
-	 * @class ns_egret.ElementExistenceEvent
+	 * @class egret.ElementExistenceEvent
 	 * @classdesc
 	 * Group添加或移除元素时分派的事件。
-	 * @extends ns_egret.Event
+	 * @extends egret.Event
 	 */	
 	export class ElementExistenceEvent extends Event{
 		/**
 		 * 元素添加 
-		 * @constant ns_egret.ElementExistenceEvent.ELEMENT_ADD
+		 * @constant egret.ElementExistenceEvent.ELEMENT_ADD
 		 */		
 		public static ELEMENT_ADD:string = "elementAdd";
 		/**
 		 * 元素移除 
-		 * @constant ns_egret.ElementExistenceEvent.ELEMENT_REMOVE
+		 * @constant egret.ElementExistenceEvent.ELEMENT_REMOVE
 		 */		
 		public static ELEMENT_REMOVE:string = "elementRemove";
 
 		/**
-		 * @member ns_egret.ElementExistenceEvent#constructor
+		 * @member egret.ElementExistenceEvent#constructor
 		 */
 		public constructor(
 			type:string, bubbles:boolean = false,
@@ -65,19 +65,19 @@ module ns_egret {
 		
 		/**
 		 * 指向已添加或删除元素的位置的索引。 
-		 * @member ns_egret.ElementExistenceEvent#index
+		 * @member egret.ElementExistenceEvent#index
 		 */		
 		public index:number;
 		
 		/**
 		 * 对已添加或删除的视觉元素的引用。 
-		 * @member ns_egret.ElementExistenceEvent#element
+		 * @member egret.ElementExistenceEvent#element
 		 */		
 		public element:IVisualElement;
 
         /**
          * 使用指定的EventDispatcher对象来抛出事件对象。抛出的对象将会缓存在对象池上，供下次循环复用。
-         * @method ns_egret.ElementExistenceEvent.dispatchElementExistenceEvent
+         * @method egret.ElementExistenceEvent.dispatchElementExistenceEvent
          */
         public static dispatchElementExistenceEvent(target:IEventDispatcher,type:string,
                                                     element:IVisualElement = null,index:number = -1):void{

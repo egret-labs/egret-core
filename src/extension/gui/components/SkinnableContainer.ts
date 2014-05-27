@@ -33,27 +33,27 @@
 /// <reference path="../events/ElementExistenceEvent.ts"/>
 /// <reference path="../layouts/supportClasses/LayoutBase.ts"/>
 
-module ns_egret {
+module egret {
 
 	/**
-	 * @class ns_egret.SkinnableContainer
+	 * @class egret.SkinnableContainer
 	 * @classdesc
 	 * 可设置外观的容器的基类
-	 * @extends ns_egret.SkinnableComponent
-	 * @implements ns_egret.IVisualElementContainer
+	 * @extends egret.SkinnableComponent
+	 * @implements egret.IVisualElementContainer
 	 */
     export class SkinnableContainer extends SkinnableComponent implements IVisualElementContainer {
 		/**
-		 * @method ns_egret.SkinnableContainer#constructor
+		 * @method egret.SkinnableContainer#constructor
 		 */
         public constructor() {
             super();
-            this.hostComponentKey = "ns_egret.SkinnableContainer";
+            this.hostComponentKey = "egret.SkinnableContainer";
         }
 
         /**
          * [SkinPart]实体容器
-		 * @member ns_egret.SkinnableContainer#contentGroup
+		 * @member egret.SkinnableContainer#contentGroup
          */
         public contentGroup:Group;
 
@@ -92,14 +92,14 @@ a
         }
 
         /**
-		 * @member ns_egret.SkinnableContainer#numElements
+		 * @member egret.SkinnableContainer#numElements
          */
         public get numElements():number {
             return this._getCurrentContentGroup().numElements;
         }
 
         /**
-		 * @method ns_egret.SkinnableContainer#getElementAt
+		 * @method egret.SkinnableContainer#getElementAt
 		 * @param index {number} 
 		 * @returns {IVisualElement}
          */
@@ -108,7 +108,7 @@ a
         }
 
         /**
-		 * @method ns_egret.SkinnableContainer#addElement
+		 * @method egret.SkinnableContainer#addElement
 		 * @param element {IVisualElement} 
 		 * @returns {IVisualElement}
          */
@@ -117,7 +117,7 @@ a
         }
 
         /**
-		 * @method ns_egret.SkinnableContainer#addElementAt
+		 * @method egret.SkinnableContainer#addElementAt
 		 * @param element {IVisualElement} 
 		 * @param index {number} 
 		 * @returns {IVisualElement}
@@ -127,7 +127,7 @@ a
         }
 
         /**
-		 * @method ns_egret.SkinnableContainer#removeElement
+		 * @method egret.SkinnableContainer#removeElement
 		 * @param element {IVisualElement} 
 		 * @returns {IVisualElement}
          */
@@ -136,7 +136,7 @@ a
         }
 
         /**
-		 * @method ns_egret.SkinnableContainer#removeElementAt
+		 * @method egret.SkinnableContainer#removeElementAt
 		 * @param index {number} 
 		 * @returns {IVisualElement}
          */
@@ -145,14 +145,14 @@ a
         }
 
         /**
-		 * @method ns_egret.SkinnableContainer#removeAllElements
+		 * @method egret.SkinnableContainer#removeAllElements
          */
         public removeAllElements():void {
             this._getCurrentContentGroup().removeAllElements();
         }
 
         /**
-		 * @method ns_egret.SkinnableContainer#getElementIndex
+		 * @method egret.SkinnableContainer#getElementIndex
 		 * @param element {IVisualElement} 
 		 * @returns {number}
          */
@@ -161,7 +161,7 @@ a
         }
 
         /**
-		 * @method ns_egret.SkinnableContainer#setElementIndex
+		 * @method egret.SkinnableContainer#setElementIndex
 		 * @param element {IVisualElement} 
 		 * @param index {number} 
          */
@@ -170,7 +170,7 @@ a
         }
 
         /**
-		 * @method ns_egret.SkinnableContainer#swapElements
+		 * @method egret.SkinnableContainer#swapElements
 		 * @param element1 {IVisualElement} 
 		 * @param element2 {IVisualElement} 
          */
@@ -179,7 +179,7 @@ a
         }
 
         /**
-		 * @method ns_egret.SkinnableContainer#swapElementsAt
+		 * @method egret.SkinnableContainer#swapElementsAt
 		 * @param index1 {number} 
 		 * @param index2 {number} 
          */
@@ -194,7 +194,7 @@ a
 
         /**
          * 此容器的布局对象
-		 * @member ns_egret.SkinnableContainer#layout
+		 * @member egret.SkinnableContainer#layout
          */
         public get layout():LayoutBase {
             return this.contentGroup != null ?
@@ -211,7 +211,7 @@ a
         }
 
         /**
-		 * @method ns_egret.SkinnableContainer#partAdded
+		 * @method egret.SkinnableContainer#partAdded
 		 * @param partName {string} 
 		 * @param instance {any} 
          */
@@ -248,7 +248,7 @@ a
         }
 
         /**
-		 * @method ns_egret.SkinnableContainer#partRemoved
+		 * @method egret.SkinnableContainer#partRemoved
 		 * @param partName {string} 
 		 * @param instance {any} 
          */
@@ -277,7 +277,7 @@ a
 
         /**
          * 容器添加元素事件
-		 * @method ns_egret.SkinnableContainer#_contentGroup_elementAddedHandler
+		 * @method egret.SkinnableContainer#_contentGroup_elementAddedHandler
 		 * @param event {ElementExistenceEvent} 
          */
         public _contentGroup_elementAddedHandler(event:ElementExistenceEvent):void {
@@ -287,7 +287,7 @@ a
 
         /**
          * 容器移除元素事件
-		 * @method ns_egret.SkinnableContainer#_contentGroup_elementRemovedHandler
+		 * @method egret.SkinnableContainer#_contentGroup_elementRemovedHandler
 		 * @param event {ElementExistenceEvent} 
          */
         public _contentGroup_elementRemovedHandler(event:ElementExistenceEvent):void {

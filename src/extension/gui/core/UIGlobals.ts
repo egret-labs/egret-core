@@ -29,10 +29,10 @@
 /// <reference path="IUIStage.ts"/>
 /// <reference path="../managers/LayoutManager.ts"/>
 
-module ns_egret {
+module egret {
 
 	/**
-	 * @class ns_egret.UIGlobals
+	 * @class egret.UIGlobals
 	 * @classdesc
 	 */
 	export class UIGlobals{
@@ -40,7 +40,7 @@ module ns_egret {
 		private static _stage:Stage;
 		/**
 		 * 舞台引用，当第一个UIComponent添加到舞台时此属性被自动赋值
-		 * @member ns_egret.UIGlobals.stage
+		 * @member egret.UIGlobals.stage
 		 */		
 		public static get stage():Stage{
 			return UIGlobals._stage;
@@ -51,7 +51,7 @@ module ns_egret {
 		private static initlized:boolean = false;
 		/**
 		 * 初始化管理器
-		 * @method ns_egret.UIGlobals._initlize
+		 * @method egret.UIGlobals._initlize
 		 * @param stage {Stage} 
 		 */		
 		public static _initlize(stage:Stage):void{
@@ -63,7 +63,7 @@ module ns_egret {
 		}
 		/**
 		 * 延迟渲染布局管理器 
-		 * @member ns_egret.UIGlobals._layoutManager
+		 * @member egret.UIGlobals._layoutManager
 		 */		
 		public static _layoutManager:LayoutManager;
 		/**
@@ -72,7 +72,7 @@ module ns_egret {
 		public static _uiStage:IUIStage;
 		/**
 		 * 顶级应用容器
-		 * @member ns_egret.UIGlobals.uiStage
+		 * @member egret.UIGlobals.uiStage
 		 */
 		public static get uiStage():IUIStage{
 			return UIGlobals._uiStage;

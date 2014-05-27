@@ -27,14 +27,14 @@
 
 /// <reference path="IVisualElement.ts"/>
 
-module ns_egret {
+module egret {
 
 	/**
-	 * @class ns_egret.IViewport
+	 * @class egret.IViewport
 	 * @interface
 	 * @classdesc
 	 * 支持视区的组件接口
-	 * @extends ns_egret.IVisualElement
+	 * @extends egret.IVisualElement
 	 */	
 	export interface IViewport extends IVisualElement{
 		/**
@@ -42,7 +42,7 @@ module ns_egret {
 		 * 如果 clipAndEnabledScrolling 为 true， 则视域的 contentWidth 为水平滚动定义限制，
 		 * 且视域的实际宽度定义可见的内容量。要在内容中水平滚动， 请在 0 和 contentWidth - width 
 		 * 之间更改 horizontalScrollPosition。 
-		 * @member ns_egret.IViewport#contentWidth
+		 * @member egret.IViewport#contentWidth
 		 */		
 		contentWidth:number;
 		
@@ -51,25 +51,25 @@ module ns_egret {
 		 * 如果 clipAndEnabledScrolling 为 true，则视域的 contentHeight 为垂直滚动定义限制，
 		 * 且视域的实际高度定义可见的内容量。要在内容中垂直滚动，请在 0 和 contentHeight - height 
 		 * 之间更改 verticalScrollPosition。
-		 * @member ns_egret.IViewport#contentHeight
+		 * @member egret.IViewport#contentHeight
 		 */		
 		contentHeight:number;
 		
 		/**
 		 * 可视区域水平方向起始点
-		 * @member ns_egret.IViewport#horizontalScrollPosition
+		 * @member egret.IViewport#horizontalScrollPosition
 		 */		
 		horizontalScrollPosition:number;
 		
 		/**
 		 * 可视区域竖直方向起始点
-		 * @member ns_egret.IViewport#verticalScrollPosition
+		 * @member egret.IViewport#verticalScrollPosition
 		 */		
 		verticalScrollPosition:number;
 		
 		/**
 		 * 如果为 true，指定将子代剪切到视区的边界。如果为 false，则容器子代会从容器边界扩展过去，而不管组件的大小规范。默认false
-		 * @member ns_egret.IViewport#clipAndEnableScrolling
+		 * @member egret.IViewport#clipAndEnableScrolling
 		 */		
 		clipAndEnableScrolling:boolean;
 	}

@@ -30,13 +30,13 @@
 /// <reference path="IEventDispatcher.ts"/>
 /// <reference path="../geom/Point.ts"/>
 
-module ns_egret {
+module egret {
 
     export class TouchEvent extends Event {
 
         /**
          * 创建一个作为参数传递给事件侦听器的 Event 对象。
-         * @class ns_egret.TouchEvent
+         * @class egret.TouchEvent
          * @classdesc TouchEvent数据类
          * @param type {string} 事件的类型，可以作为 Event.type 访问。
          * @param bubbles {boolean} 确定 Event 对象是否参与事件流的冒泡阶段。默认值为 false。
@@ -56,43 +56,43 @@ module ns_egret {
 
         /**
          * 轻触，参考Flash的MouseEvent.CLICK
-         * @constant {string} ns_egret.TouchEvent.TOUCH_TAP
+         * @constant {string} egret.TouchEvent.TOUCH_TAP
          */
         public static TOUCH_TAP:string = "touchTap";
 
         /**
          * 移动，参考FLash的MouseEvent.MOVE
-         * @constant {string} ns_egret.TouchEvent.TOUCH_MOVE
+         * @constant {string} egret.TouchEvent.TOUCH_MOVE
          */
         public static TOUCH_MOVE:string = "touchMove";
 
         /**
          * 开始触摸,参考Flash的MouseEvent.MOUSE_DOWN
-         * @constant {string} ns_egret.TouchEvent.TOUCH_BEGAN
+         * @constant {string} egret.TouchEvent.TOUCH_BEGAN
          */
         public static TOUCH_BEGAN:string = "touchBegan";
 
         /**
          * 在同一对象上结束触摸,参考Flash的MouseEvent.MOUSE_UP
-         * @constant {string} ns_egret.TouchEvent.TOUCH_END
+         * @constant {string} egret.TouchEvent.TOUCH_END
          */
         public static TOUCH_END:string = "touchEnd";
 
         /**
          * 在对象外部结束触摸，参考Flash的MouseEvent.RELEASE_OUTSIDE
-         * @constant {string} ns_egret.TouchEvent.TOUCH_RELEASE_OUTSIDE
+         * @constant {string} egret.TouchEvent.TOUCH_RELEASE_OUTSIDE
          */
         public static TOUCH_RELEASE_OUTSIDE:string = "touchReleaseOutside";
 
         /**
          * 移动，参考FLash的MouseEvent.MOVE
-         * @member ns_egret.TouchEvent.TOUCH_MOVE
+         * @member egret.TouchEvent.TOUCH_MOVE
          */
         public static TOUCH_ROLL_OUT:string = "touchRollOut";
 
         /**
          * 移动，参考FLash的MouseEvent.MOVE
-         * @member ns_egret.TouchEvent.TOUCH_MOVE
+         * @member egret.TouchEvent.TOUCH_MOVE
          */
         public static TOUCH_ROLL_OVER:string = "touchRollOver";
 
@@ -103,7 +103,7 @@ module ns_egret {
 
         /**
          * 移动，参考FLash的MouseEvent.MOVE
-         * @member ns_egret.TouchEvent.TOUCH_MOVE
+         * @member egret.TouchEvent.TOUCH_MOVE
          */
         public static TOUCH_OVER:string = "touchOver";
 
@@ -111,7 +111,7 @@ module ns_egret {
         public _stageX:number = 0;
         /**
          * 事件发生点在全局舞台坐标中的水平坐标。
-         * @member {number} ns_egret.TouchEvent#stageX
+         * @member {number} egret.TouchEvent#stageX
          */
         public get stageX():number {
             return this._stageX;
@@ -120,7 +120,7 @@ module ns_egret {
         public _stageY:number = 0;
         /**
          * 事件发生点在全局舞台坐标中的垂直坐标。
-         * @member {number} ns_egret.TouchEvent#stageY
+         * @member {number} egret.TouchEvent#stageY
          */
         public get stageY():number {
             return this._stageY;
@@ -129,7 +129,7 @@ module ns_egret {
         private _localX:number = 0;
         /**
          * 事件发生点相对于currentTarget的水平坐标。
-         * @member {number} ns_egret.TouchEvent#localX
+         * @member {number} egret.TouchEvent#localX
          */
         public get localX():number {
             return this._localX;
@@ -138,7 +138,7 @@ module ns_egret {
         private _localY:number = 0;
         /**
          * 事件发生点相对于currentTarget的垂直坐标。
-         * @member {number} ns_egret.TouchEvent#localY
+         * @member {number} egret.TouchEvent#localY
          */
         public get localY():number {
             return this._localY;
@@ -177,7 +177,7 @@ module ns_egret {
 
         /**
          * 使用指定的EventDispatcher对象来抛出Event事件对象。抛出的对象将会缓存在对象池上，供下次循环复用。
-         * @method ns_egret.TouchEvent.dispathTouchEvent
+         * @method egret.TouchEvent.dispathTouchEvent
          */
         public static dispatchTouchEvent(target:IEventDispatcher,type:string,touchPointID:number = 0, stageX:number = 0, stageY:number = 0,
                                          ctrlKey:boolean=false,altKey:boolean=false,shiftKey:boolean=false,touchDown:boolean=false):void{

@@ -28,23 +28,23 @@
 /// <reference path="../../../egret/events/Event.ts"/>
 /// <reference path="../../../egret/events/IEventDispatcher.ts"/>
 
-module ns_egret {
+module egret {
 
     /**
-     * @class ns_egret.CollectionEvent
+     * @class egret.CollectionEvent
      * @classdesc
      * 集合类型数据改变事件
-     * @extends ns_egret.Event
+     * @extends egret.Event
      */
     export class CollectionEvent extends Event{
         /**
          * 集合类数据发生改变
-         * @constant ns_egret.CollectionEvent.COLLECTION_CHANGE
+         * @constant egret.CollectionEvent.COLLECTION_CHANGE
          */
         public static COLLECTION_CHANGE:string = "collectionChange";
 
         /**
-         * @method ns_egret.CollectionEvent#constructor
+         * @method egret.CollectionEvent#constructor
          * @param type {string}
          * @param bubbles {boolean}
          * @param cancelable {boolean}
@@ -68,17 +68,17 @@ module ns_egret {
         }
         /**
          * 指示发生的事件类型。此属性值可以是 CollectionEventKind 类中的一个值，也可以是 null，用于指示类型未知。
-         * @member ns_egret.CollectionEvent#kind
+         * @member egret.CollectionEvent#kind
          */
         public kind:string;
         /**
          * 受事件影响的项目的列表
-         * @member ns_egret.CollectionEvent#items
+         * @member egret.CollectionEvent#items
          */
         public items:Array<any>;
         /**
          * 仅当kind的值为CollectionEventKind.REPLACE时，表示替换前的项目列表
-         * @member ns_egret.CollectionEvent#oldItems
+         * @member egret.CollectionEvent#oldItems
          */
         public oldItems:Array<any>;
         /**
@@ -86,19 +86,19 @@ module ns_egret {
          * CollectionEventKind.REMOVE 或 CollectionEventKind.REPLACE，
          * CollectionEventKind.UPDATE
          * 则此属性为 items 属性中指定的项目集合中零号元素的的索引。
-         * @member ns_egret.CollectionEvent#location
+         * @member egret.CollectionEvent#location
          */
         public location:number;
         /**
          * 如果 kind 的值为 CollectionEventKind.MOVE，
          * 则此属性为 items 属性中指定的项目在目标集合中原来位置的从零开始的索引。
-         * @member ns_egret.CollectionEvent#oldLocation
+         * @member egret.CollectionEvent#oldLocation
          */
         public oldLocation:number;
 
         /**
          * 使用指定的EventDispatcher对象来抛出事件对象。抛出的对象将会缓存在对象池上，供下次循环复用。
-         * @method ns_egret.CollectionEvent.dispatchCollectionEvent
+         * @method egret.CollectionEvent.dispatchCollectionEvent
          */
         public static dispatchCollectionEvent(target:IEventDispatcher,type:string,kind:string = null, location:number = -1,
                                              oldLocation:number = -1, items:Array<any> = null,oldItems:Array<any>=null):void{

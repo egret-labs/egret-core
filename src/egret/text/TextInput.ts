@@ -30,7 +30,7 @@
 /// <reference path="../events/TouchEvent.ts"/>
 /// <reference path="../geom/Rectangle.ts"/>
 
-module ns_egret {
+module egret {
     export class TextInput extends DisplayObject {
 
         private _domInputSprite;
@@ -46,14 +46,14 @@ module ns_egret {
         private _preY:number = 0;
 
 
-        private stageText:ns_egret.StageText;
+        private stageText:egret.StageText;
 
         public _onAddToStage():void {
             super._onAddToStage();
             var point = this.localToGlobal();
-            var stageText = new ns_egret.StageText();
+            var stageText = new egret.StageText();
             stageText._open(point.x, point.y,this._explicitWidth,this._explicitHeight);
-            this.addEventListener(ns_egret.TouchEvent.TOUCH_BEGAN, this.onMouseDownHandler, this);
+            this.addEventListener(egret.TouchEvent.TOUCH_BEGAN, this.onMouseDownHandler, this);
             this.stageText = stageText;
         }
 
@@ -83,8 +83,8 @@ module ns_egret {
             this.stageText._remove();
         }
 
-        public _measureBounds():ns_egret.Rectangle {
-            return ns_egret.Rectangle.identity;
+        public _measureBounds():egret.Rectangle {
+            return egret.Rectangle.identity;
         }
 
         public hitTest(x, y, ignoreTouchEnabled:boolean = false):DisplayObject {

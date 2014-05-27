@@ -20,8 +20,8 @@ Egret 0.9.3主要进行了一系列代码重构，使其与Flash风格API更加�
 * EventDispatcher.addEventListener(type,listener,thisObject)中的listener的回调参数变更为一个Event对象
 
 ```
-this.addEventListener(ns_egret.Event.ENTER_FRAME, this.enterFrame, this);
-private enterFrame(event:ns_egret.Event):void {
+this.addEventListener(egret.Event.ENTER_FRAME, this.enterFrame, this);
+private enterFrame(event:egret.Event):void {
     // your logic
 }
 ```

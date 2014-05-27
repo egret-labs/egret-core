@@ -29,33 +29,33 @@
 /// <reference path="../../../egret/events/IEventDispatcher.ts"/>
 /// <reference path="../core/IVisualElement.ts"/>
 
-module ns_egret {
+module egret {
 
 	/**
-	 * @class ns_egret.PopUpEvent
+	 * @class egret.PopUpEvent
 	 * @classdesc
 	 * 弹出管理器事件
-	 * @extends ns_egret.Event
+	 * @extends egret.Event
 	 */
 	export class PopUpEvent extends Event{
 		/**
 		 * 添加一个弹出框，在执行完添加之后抛出。
-		 * @constant ns_egret.PopUpEvent.ADD_POPUP
+		 * @constant egret.PopUpEvent.ADD_POPUP
 		 */		
 		public static ADD_POPUP:string = "addPopUp";
 		/**
 		 * 移除一个弹出框，在执行完移除之后抛出。
-		 * @constant ns_egret.PopUpEvent.REMOVE_POPUP
+		 * @constant egret.PopUpEvent.REMOVE_POPUP
 		 */		
 		public static REMOVE_POPUP:string = "removePopUp";
 		/**
 		 * 移动弹出框到最前，在执行完前置之后抛出。
-		 * @constant ns_egret.PopUpEvent.BRING_TO_FRONT
+		 * @constant egret.PopUpEvent.BRING_TO_FRONT
 		 */		
 		public static BRING_TO_FRONT:string = "bringToFront";
 		/**
 		 * 构造函数
-		 * @method ns_egret.PopUpEvent#constructor
+		 * @method egret.PopUpEvent#constructor
 		 * @param type {string} 
 		 * @param bubbles {boolean} 
 		 * @param cancelable {boolean} 
@@ -71,18 +71,18 @@ module ns_egret {
 		}
 		/**
 		 * 弹出框对象
-		 * @member ns_egret.PopUpEvent#popUp
+		 * @member egret.PopUpEvent#popUp
 		 */		
 		public popUp:IVisualElement;
 		/**
 		 * 弹出窗口是否为模态，此属性仅在事件类型为ADD_POPUP时有效。
-		 * @member ns_egret.PopUpEvent#modal
+		 * @member egret.PopUpEvent#modal
 		 */		
 		public modal:boolean;
 
         /**
          * 使用指定的EventDispatcher对象来抛出事件对象。抛出的对象将会缓存在对象池上，供下次循环复用。
-         * @method ns_egret.PopUpEvent.dispatchPopUpEvent
+         * @method egret.PopUpEvent.dispatchPopUpEvent
          */
         public static dispatchPopUpEvent(target:IEventDispatcher,type:string,
                                          popUp:IVisualElement=null,modal:boolean = false):void{

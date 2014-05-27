@@ -25,7 +25,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-module ns_egret {
+module egret {
 
     var __getDefinitionByName__cache:Object = {};
     /**
@@ -33,7 +33,7 @@ module ns_egret {
      * @param name 类的名称。
      * @returns {any} 返回 name 参数指定的类的类对象引用。
      * @example
-     * ns_egret.getDefinitionByName("ns_egret.DisplayObject") //返回 DisplayObject类定义
+     * egret.getDefinitionByName("egret.DisplayObject") //返回 DisplayObject类定义
      */
     export function getDefinitionByName(name:string):any{
         if(!name)

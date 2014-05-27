@@ -29,28 +29,28 @@
 /// <reference path="../../../egret/events/IEventDispatcher.ts"/>
 /// <reference path="../components/IItemRenderer.ts"/>
 
-module ns_egret {
+module egret {
 
 	/**
-	 * @class ns_egret.RendererExistenceEvent
+	 * @class egret.RendererExistenceEvent
 	 * @classdesc
 	 * 在DataGroup添加或删除项呈示器时分派的事件。
-	 * @extends ns_egret.Event
+	 * @extends egret.Event
 	 */	
 	export class RendererExistenceEvent extends Event{
 		/**
 		 * 添加了项呈示器 
-		 * @constant ns_egret.RendererExistenceEvent.RENDERER_ADD
+		 * @constant egret.RendererExistenceEvent.RENDERER_ADD
 		 */		
 		public static RENDERER_ADD:string = "rendererAdd";
 		/**
 		 * 移除了项呈示器 
-		 * @constant ns_egret.RendererExistenceEvent.RENDERER_REMOVE
+		 * @constant egret.RendererExistenceEvent.RENDERER_REMOVE
 		 */		
 		public static RENDERER_REMOVE:string = "rendererRemove";
 
 		/**
-		 * @method ns_egret.RendererExistenceEvent#constructor
+		 * @method egret.RendererExistenceEvent#constructor
 		 * @param type {string} 
 		 * @param bubbles {boolean} 
 		 * @param cancelable {boolean} 
@@ -70,25 +70,25 @@ module ns_egret {
 		
 		/**
 		 * 呈示器的数据项目。 
-		 * @member ns_egret.RendererExistenceEvent#data
+		 * @member egret.RendererExistenceEvent#data
 		 */		
 		public data:any;
 		
 		/**
 		 * 指向已添加或删除项呈示器的位置的索引。 
-		 * @member ns_egret.RendererExistenceEvent#index
+		 * @member egret.RendererExistenceEvent#index
 		 */		
 		public index:number;
 		
 		/**
 		 * 对已添加或删除的项呈示器的引用。 
-		 * @member ns_egret.RendererExistenceEvent#renderer
+		 * @member egret.RendererExistenceEvent#renderer
 		 */		
 		public renderer:IItemRenderer;
 
         /**
          * 使用指定的EventDispatcher对象来抛出事件对象。抛出的对象将会缓存在对象池上，供下次循环复用。
-         * @method ns_egret.RendererExistenceEvent.dispatchRendererExistenceEvent
+         * @method egret.RendererExistenceEvent.dispatchRendererExistenceEvent
          */
         public static dispatchRendererExistenceEvent(target:IEventDispatcher,type:string,renderer:IItemRenderer = null,
                                              index:number = -1, data:any = null):void{

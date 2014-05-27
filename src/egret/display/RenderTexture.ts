@@ -32,7 +32,7 @@
 /// <reference path="Texture.ts"/>
 /// <reference path="../geom/Rectangle.ts"/>
 
-module ns_egret {
+module egret {
     export class RenderTexture extends Texture {
 
         private cacheCanvas:HTMLCanvasElement;
@@ -43,7 +43,7 @@ module ns_egret {
 
         }
 
-        public drawToTexture(displayObject:ns_egret.DisplayObject):void {
+        public drawToTexture(displayObject:egret.DisplayObject):void {
             var cacheCanvas:HTMLCanvasElement = this.cacheCanvas;
             var bounds = displayObject.getBounds(Rectangle.identity);
             cacheCanvas.width = bounds.width;
@@ -52,19 +52,19 @@ module ns_egret {
             displayObject.worldTransform.identity();
             displayObject.worldAlpha = 1;
             //todo container不能改变自己的worldTransform
-            if (displayObject instanceof ns_egret.DisplayObjectContainer) {
+            if (displayObject instanceof egret.DisplayObjectContainer) {
                 this._offsetX = bounds.x;
                 this._offsetY = bounds.y;
                 displayObject.worldTransform.append(1, 0, 0, 1, -bounds.x, -bounds.y);
-                var list = (<ns_egret.DisplayObjectContainer>displayObject)._children;
+                var list = (<egret.DisplayObjectContainer>displayObject)._children;
                 for (var i = 0 , length = list.length; i < length; i++) {
                     var child:DisplayObject = list[i];
                     child._updateTransform();
                 }
             }
 
-            var renderContext = new ns_egret.HTML5CanvasRenderer(cacheCanvas);
-            var renderFilter = ns_egret.RenderFilter.getInstance();
+            var renderContext = new egret.HTML5CanvasRenderer(cacheCanvas);
+            var renderFilter = egret.RenderFilter.getInstance();
             var drawAreaList:Array<Rectangle> = renderFilter._drawAreaList.concat();
             renderFilter._drawAreaList.length = 0;
             displayObject._render(renderContext);

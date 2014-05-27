@@ -27,31 +27,31 @@
 
 /// <reference path="../../utils/HashObject.ts"/>
 
-module ns_egret {
+module egret {
 
 
 	/**
-	 * @class ns_egret.DeviceContext
+	 * @class egret.DeviceContext
 	 * @classdesc
-	 * @extends ns_egret.HashObject
+	 * @extends egret.HashObject
 	 */
     export class DeviceContext extends HashObject{
 
 
 		/**
-		 * @member ns_egret.DeviceContext#frameRate
+		 * @member egret.DeviceContext#frameRate
 		 */
         public frameRate:number = 60;
 
 		/**
-		 * @method ns_egret.DeviceContext#constructor
+		 * @method egret.DeviceContext#constructor
 		 */
         public constructor(){
             super();
         }
 
 		/**
-		 * @method ns_egret.DeviceContext#executeMainLoop
+		 * @method egret.DeviceContext#executeMainLoop
 		 * @param callback {Function} 
 		 * @param thisObject {any} 
 		 */

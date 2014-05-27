@@ -27,22 +27,22 @@
 
 /// <reference path="supportClasses/ToggleButtonBase.ts"/>
 
-module ns_egret {
+module egret {
 
 	/**
-	 * @class ns_egret.CheckBox
+	 * @class egret.CheckBox
 	 * @classdesc
 	 * 复选框
-	 * @extends ns_egret.ToggleButtonBase
+	 * @extends egret.ToggleButtonBase
 	 */	
 	export class CheckBox extends ToggleButtonBase{
 		/**
 		 * 构造函数
-		 * @method ns_egret.CheckBox#constructor
+		 * @method egret.CheckBox#constructor
 		 */		
 		public constructor(){
 			super();
-            this.hostComponentKey = "ns_egret.CheckBox";
+            this.hostComponentKey = "egret.CheckBox";
 		}
 	}
 	

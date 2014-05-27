@@ -27,19 +27,19 @@
 
 /// <reference path="IDisplayText.ts"/>
 
-module ns_egret {
+module egret {
 
 	/**
-	 * @class ns_egret.IEditableText
+	 * @class egret.IEditableText
 	 * @interface
 	 * @classdesc
 	 * 可编辑文本控件接口
-	 * @extends ns_egret.IDisplayText
+	 * @extends egret.IDisplayText
 	 */	
 	export interface IEditableText extends IDisplayText{ 
 		/**
 		 * 文本颜色。
-		 * @member ns_egret.IEditableText#textColor
+		 * @member egret.IEditableText#textColor
 		 */
 		textColor:number;
 		/**
@@ -47,25 +47,25 @@ module ns_egret {
 		 * 并使用星号而不是实际字符来隐藏输入的字符。如果为 false，则不会将文本字段视为密码文本字段。
 		 * 启用密码模式时，“剪切”和“复制”命令及其对应的键盘快捷键将不起作用。
 		 * 此安全机制可防止不良用户使用快捷键在无人看管的计算机上破译密码。
-		 * @member ns_egret.IEditableText#displayAsPassword
+		 * @member egret.IEditableText#displayAsPassword
 		 */		
 		displayAsPassword:boolean;
 		
 		/**
 		 * 文本是否可编辑的标志。
-		 * @member ns_egret.IEditableText#editable
+		 * @member egret.IEditableText#editable
 		 */		
 		editable:boolean;
 		
 		/**
 		 * 可视区域水平方向起始点
-		 * @member ns_egret.IEditableText#horizontalScrollPosition
+		 * @member egret.IEditableText#horizontalScrollPosition
 		 */		
 		horizontalScrollPosition:number;
 		
 		/**
 		 * 可视区域竖直方向起始点
-		 * @member ns_egret.IEditableText#verticalScrollPosition
+		 * @member egret.IEditableText#verticalScrollPosition
 		 */
 		verticalScrollPosition:number;
 		
@@ -73,7 +73,7 @@ module ns_egret {
 		 * 文本字段中最多可包含的字符数（即用户输入的字符数）。
 		 * 脚本可以插入比 maxChars 允许的字符数更多的文本；maxChars 属性仅表示用户可以输入多少文本。
 		 * 如果此属性的值为 0，则用户可以输入无限数量的文本。
-		 * @member ns_egret.IEditableText#maxChars
+		 * @member egret.IEditableText#maxChars
 		 */		
 		maxChars:number;
 		
@@ -82,7 +82,7 @@ module ns_egret {
 		 * 如果值为 false，则文本字段为单行文本字段。在类型为 TextFieldType.INPUT 的字段中，
 		 * multiline 值将确定 Enter 键是否创建新行（如果值为 false，则将忽略 Enter 键）。
 		 * 如果将文本粘贴到其 multiline 值为 false 的 TextField 中，则文本中将除去新行。
-		 * @member ns_egret.IEditableText#multiline
+		 * @member egret.IEditableText#multiline
 		 */		
 		multiline:boolean;
 		
@@ -93,7 +93,7 @@ module ns_egret {
 		 * 只限制用户交互；脚本可将任何文本放入文本字段中。此属性不与属性检查器中的“嵌入字体”选项同步。 <p/>
 		 * 如果字符串以尖号 (ˆ) 开头，则先接受所有字符，然后从接受字符集中排除字符串中 ˆ 之后的字符。
 		 * 如果字符串不以尖号 (ˆ) 开头，则最初不接受任何字符，然后将字符串中的字符包括在接受字符集中。
-		 * @member ns_egret.IEditableText#restrict
+		 * @member egret.IEditableText#restrict
 		 */	
 		restrict:string;
 		
@@ -104,21 +104,21 @@ module ns_egret {
 		 * 如果 selectable 设置为 false，则文本字段中的文本不响应来自鼠标或键盘的选择命令，
 		 * 并且不能使用“复制”命令复制文本。如果 selectable 设置为 true，则可以使用鼠标或键盘选择文本字段中的文本，
 		 * 并且可以使用“复制”命令复制文本。即使文本字段是动态文本字段而不是输入文本字段，您也可以用这种方式选择文本。 
-		 * @member ns_egret.IEditableText#selectable
+		 * @member egret.IEditableText#selectable
 		 */
 		selectable:boolean;
 		
 		/**
 		 * 当前所选内容中第一个字符从零开始的字符索引值。例如，第一个字符的索引值是 0，第二个字符的索引值是 1，
 		 * 依此类推。如果未选定任何文本，此属性为 caretIndex 的值。
-		 * @member ns_egret.IEditableText#selectionBeginIndex
+		 * @member egret.IEditableText#selectionBeginIndex
 		 */		
 		selectionBeginIndex:number;
 		
 		/**
 		 * 当前所选内容中最后一个字符从零开始的字符索引值。例如，第一个字符的索引值是 0，第二个字符的索引值是 1，
 		 * 依此类推。如果未选定任何文本，此属性为 caretIndex 的值。
-		 * @member ns_egret.IEditableText#selectionEndIndex
+		 * @member egret.IEditableText#selectionEndIndex
 		 */		
 		selectionEndIndex:number;
 		
@@ -126,14 +126,14 @@ module ns_egret {
 		 * 插入点（尖号）位置的索引。如果没有显示任何插入点，则在将焦点恢复到字段时，
 		 * 值将为插入点所在的位置（通常为插入点上次所在的位置，如果字段不曾具有焦点，则为 0）。<p/>
 		 * 选择范围索引是从零开始的（例如，第一个位置为 0、第二个位置为 1，依此类推）。
-		 * @member ns_egret.IEditableText#caretIndex
+		 * @member egret.IEditableText#caretIndex
 		 */	
 		caretIndex:number;
 		
 		/**
 		 * 将第一个字符和最后一个字符的索引值（使用 beginIndex 和 endIndex 参数指定）指定的文本设置为所选内容。
 		 * 如果两个参数值相同，则此方法会设置插入点，就如同设置 caretIndex 属性一样。
-		 * @method ns_egret.IEditableText#setSelection
+		 * @method egret.IEditableText#setSelection
 		 * @param beginIndex {number} 所选内容中第一个字符从零开始的索引值（例如，第一个字符的索引值是 0，第二个字符的索引值是 1，依此类推）。
 		 * @param endIndex {number} 所选内容中最后一个字符从零开始的索引值。
 		 */			
@@ -141,19 +141,19 @@ module ns_egret {
 		
 		/**
 		 * 选中所有文本。
-		 * @method ns_egret.IEditableText#selectAll
+		 * @method egret.IEditableText#selectAll
 		 */		
 		selectAll():void;
 		
 		/**
 		 * 控件的默认宽度（使用字号：size为单位测量）。 若同时设置了maxChars属性，将会根据两者测量结果的最小值作为测量宽度。
-		 * @member ns_egret.IEditableText#widthInChars
+		 * @member egret.IEditableText#widthInChars
 		 */		
 		widthInChars:number;
 		
 		/**
 		 * 控件的默认高度（以行为单位测量）。 若设置了multiline属性为false，则忽略此属性。
-		 * @member ns_egret.IEditableText#heightInLines
+		 * @member egret.IEditableText#heightInLines
 		 */		
 		heightInLines:number;
 	}

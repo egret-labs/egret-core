@@ -38,20 +38,20 @@
 /// <reference path="../core/UIComponent.ts"/>
 /// <reference path="../events/UIEvent.ts"/>
 
-module ns_egret {
+module egret {
 
 	/**
-	 * @class ns_egret.UIAsset
+	 * @class egret.UIAsset
 	 * @classdesc
 	 * 素材包装器。<p/>
 	 * 注意：UIAsset仅在添content时测量一次初始尺寸， 请不要在外部直接修改content尺寸，
 	 * 若做了引起content尺寸发生变化的操作, 需手动调用UIAsset的invalidateSize()进行重新测量。
-	 * @extends ns_egret.UIComponent
-	 * @implements ns_egret.ISkinnableClient
+	 * @extends egret.UIComponent
+	 * @implements egret.ISkinnableClient
 	 */
 	export class UIAsset extends UIComponent{
 		/**
-		 * @method ns_egret.UIAsset#constructor
+		 * @method egret.UIAsset#constructor
 		 */
 		public constructor(){
 			super();
@@ -64,7 +64,7 @@ module ns_egret {
 		/**
 		 * 皮肤标识符。可以为Class,String,或DisplayObject实例等任意类型，具体规则由项目注入的素材适配器决定，
 		 * 适配器根据此属性值解析获取对应的显示对象，并赋值给content属性。
-		 * @member ns_egret.UIAsset#source
+		 * @member egret.UIAsset#source
 		 */	
 		public get source():any{
 			return this._source;
@@ -85,7 +85,7 @@ module ns_egret {
 		public _content:any;
 		/**
 		 * 解析source得到的对象，通常为显示对象或Texture。
-		 * @member ns_egret.UIAsset#content
+		 * @member egret.UIAsset#content
 		 */
 		public get content():any{
 			return this._content;
@@ -93,7 +93,7 @@ module ns_egret {
 		
 		private createChildrenCalled:boolean = false;
 		/**
-		 * @method ns_egret.UIAsset#createChildren
+		 * @method egret.UIAsset#createChildren
 		 */
 		public createChildren():void{
 			super.createChildren();
@@ -132,7 +132,7 @@ module ns_egret {
         private getAdapter():IAssetAdapter{
             var adapter:IAssetAdapter;
             try{
-                adapter = Injector.getInstance("ns_egret.IAssetAdapter");
+                adapter = Injector.getInstance("egret.IAssetAdapter");
             }
             catch(e){
                 adapter = new DefaultAssetAdapter();
@@ -184,7 +184,7 @@ module ns_egret {
 		}
 		
 		/**
-		 * @method ns_egret.UIAsset#updateDisplayList
+		 * @method egret.UIAsset#updateDisplayList
 		 * @param unscaledWidth {number} 
 		 * @param unscaledHeight {number} 
 		 */
@@ -224,7 +224,7 @@ module ns_egret {
          * @returns {Rectangle}
          * @private
          */
-        public _measureBounds():ns_egret.Rectangle {
+        public _measureBounds():egret.Rectangle {
             var bounds:Rectangle = super._measureBounds();
             if(this._content instanceof Texture){
                 var texture:Texture = <Texture> this._content;
@@ -252,7 +252,7 @@ module ns_egret {
 
 		private static errorStr:string = "在此组件中不可用，若此组件为容器类，请使用";
 		/**
-		 * @method ns_egret.UIAsset#addChild
+		 * @method egret.UIAsset#addChild
          * @deprecated
 		 * @param child {DisplayObject} 
 		 * @returns {DisplayObject}
@@ -261,7 +261,7 @@ module ns_egret {
 			throw(new Error("addChild()"+UIAsset.errorStr+"addElement()代替"));
 		}
 		/**
-		 * @method ns_egret.UIAsset#addChildAt
+		 * @method egret.UIAsset#addChildAt
 		 * @deprecated
 		 * @param child {DisplayObject} 
 		 * @param index {number} 
@@ -271,7 +271,7 @@ module ns_egret {
 			throw(new Error("addChildAt()"+UIAsset.errorStr+"addElementAt()代替"));
 		}
 		/**
-		 * @method ns_egret.UIAsset#removeChild
+		 * @method egret.UIAsset#removeChild
 		 * @deprecated
 		 * @param child {DisplayObject} 
 		 * @returns {DisplayObject}
@@ -280,7 +280,7 @@ module ns_egret {
 			throw(new Error("removeChild()"+UIAsset.errorStr+"removeElement()代替"));
 		}
 		/**
-		 * @method ns_egret.UIAsset#removeChildAt
+		 * @method egret.UIAsset#removeChildAt
 		 * @deprecated
 		 * @param index {number} 
 		 * @returns {DisplayObject}
@@ -289,7 +289,7 @@ module ns_egret {
 			throw(new Error("removeChildAt()"+UIAsset.errorStr+"removeElementAt()代替"));
 		}
 		/**
-		 * @method ns_egret.UIAsset#setChildIndex
+		 * @method egret.UIAsset#setChildIndex
 		 * @deprecated
 		 * @param child {DisplayObject} 
 		 * @param index {number} 
@@ -298,7 +298,7 @@ module ns_egret {
 			throw(new Error("setChildIndex()"+UIAsset.errorStr+"setElementIndex()代替"));
 		}
 		/**
-		 * @method ns_egret.UIAsset#swapChildren
+		 * @method egret.UIAsset#swapChildren
 		 * @deprecated
 		 * @param child1 {DisplayObject} 
 		 * @param child2 {DisplayObject} 
@@ -307,7 +307,7 @@ module ns_egret {
 			throw(new Error("swapChildren()"+UIAsset.errorStr+"swapElements()代替"));
 		}
 		/**
-		 * @method ns_egret.UIAsset#swapChildrenAt
+		 * @method egret.UIAsset#swapChildrenAt
 		 * @deprecated
 		 * @param index1 {number} 
 		 * @param index2 {number} 

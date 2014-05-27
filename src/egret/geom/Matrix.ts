@@ -30,12 +30,12 @@
 /// <reference path="Rectangle.ts"/>
 /// <reference path="../utils/HashObject.ts"/>
 
-module ns_egret {
+module egret {
     /**
-	 * @class ns_egret.Matrix
+	 * @class egret.Matrix
 	 * @classdesc
      * 2D矩阵类，包括常见矩阵算法
-	 * @extends ns_egret.HashObject
+	 * @extends egret.HashObject
      */
     export class Matrix extends HashObject{
 		/**
@@ -52,7 +52,7 @@ module ns_egret {
         }
 
 /**
- * @member ns_egret.Matrix.
+ * @member egret.Matrix.
  */
 // static public properties:
 
@@ -61,7 +61,7 @@ module ns_egret {
         static DEG_TO_RAD = Math.PI / 180;
 
 /**
- * @member ns_egret.Matrix#
+ * @member egret.Matrix#
  */
 // public methods:
 
@@ -73,7 +73,7 @@ module ns_egret {
          * @param d
          * @param tx
          * @param ty
-         * @returns {ns_egret.Matrix}
+         * @returns {egret.Matrix}
          */
         public prepend(a, b, c, d, tx, ty):Matrix {
             var tx1 = this.tx;
@@ -99,7 +99,7 @@ module ns_egret {
          * @param d
          * @param tx
          * @param ty
-         * @returns {ns_egret.Matrix}
+         * @returns {egret.Matrix}
          */
         public append(a, b, c, d, tx, ty):Matrix {
             var a1 = this.a;
@@ -120,7 +120,7 @@ module ns_egret {
         /**
          * 前置矩阵
          * @param matrix
-         * @returns {ns_egret.Matrix}
+         * @returns {egret.Matrix}
          */
         public prependMatrix(matrix):Matrix {
             this.prepend(matrix.a, matrix.b, matrix.c, matrix.d, matrix.tx, matrix.ty);
@@ -132,7 +132,7 @@ module ns_egret {
         /**
          * 后置矩阵
          * @param matrix
-         * @returns {ns_egret.Matrix}
+         * @returns {egret.Matrix}
          */
         public appendMatrix(matrix):Matrix {
             this.append(matrix.a, matrix.b, matrix.c, matrix.d, matrix.tx, matrix.ty);
@@ -144,7 +144,7 @@ module ns_egret {
         /**
          * 前置矩阵
          * @param matrix
-         * @returns {ns_egret.Matrix}
+         * @returns {egret.Matrix}
          */
         public prependTransform(x, y, scaleX, scaleY, rotation, skewX, skewY, regX, regY):Matrix {
             if (rotation % 360) {
@@ -177,7 +177,7 @@ module ns_egret {
         /**
          * 后置矩阵
          * @param matrix
-         * @returns {ns_egret.Matrix}
+         * @returns {egret.Matrix}
          */
         public appendTransform(x, y, scaleX, scaleY, rotation, skewX, skewY, regX, regY):Matrix {
             if (rotation % 360) {
@@ -208,10 +208,10 @@ module ns_egret {
         }
 
 		/**
-		 * @method ns_egret.Matrix#appendTransformFromDisplay
-		 * @param target {ns_egret.DisplayObjec} 
+		 * @method egret.Matrix#appendTransformFromDisplay
+		 * @param target {egret.DisplayObjec}
 		 */
-        public appendTransformFromDisplay(target:ns_egret.DisplayObject):Matrix {
+        public appendTransformFromDisplay(target:egret.DisplayObject):Matrix {
             var o = target;
             var anchorX,anchorY;
             if(o.anchorX != 0 || o.anchorY != 0)
@@ -235,7 +235,7 @@ module ns_egret {
         /**
          * 矩阵旋转，以角度制为单位
          * @param angle
-         * @returns {ns_egret.Matrix}
+         * @returns {egret.Matrix}
          */
         public rotate(angle):Matrix {
             var cos = Math.cos(angle);
@@ -259,7 +259,7 @@ module ns_egret {
          * 矩阵斜切，以角度值为单位
          * @param skewX
          * @param skewY
-         * @returns {ns_egret.Matrix}
+         * @returns {egret.Matrix}
          */
         public skew(skewX, skewY):Matrix {
             skewX = skewX * Matrix.DEG_TO_RAD;
@@ -273,7 +273,7 @@ module ns_egret {
          * 矩阵缩放
          * @param x
          * @param y
-         * @returns {ns_egret.Matrix}
+         * @returns {egret.Matrix}
          */
         public scale(x, y):Matrix {
             this.a *= x;
@@ -290,7 +290,7 @@ module ns_egret {
          * 矩阵唯一
          * @param x
          * @param y
-         * @returns {ns_egret.Matrix}
+         * @returns {egret.Matrix}
          */
         public translate(x, y):Matrix {
             this.tx += x;
@@ -301,7 +301,7 @@ module ns_egret {
 
         /**
          * 矩阵重置
-         * @returns {ns_egret.Matrix}
+         * @returns {egret.Matrix}
          */
         public identity():Matrix {
             this.a = this.d = 1;

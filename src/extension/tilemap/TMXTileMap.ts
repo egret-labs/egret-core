@@ -33,10 +33,10 @@
 /// <reference path="TMXLayer.ts"/>
 /// <reference path="TMXMapInfo.ts"/>
 
-module ns_egret {
+module egret {
     export class TMXTiledMap extends DisplayObjectContainer {
 
-        public mapInfo:ns_egret.TMXMapInfo;
+        public mapInfo:egret.TMXMapInfo;
         public viewPortWidth:number = 400;
 
         public static createWithFile(tmxFile:string):TMXTiledMap {
@@ -47,7 +47,7 @@ module ns_egret {
 
         public initWithTMXFile(tmxFile:string) {
             if (!tmxFile || tmxFile.length == 0) {
-                ns_egret.Logger.fatal("TMXTiledMap.initWithTMXFile(): tmxFile应该是不为null的string");
+                egret.Logger.fatal("TMXTiledMap.initWithTMXFile(): tmxFile应该是不为null的string");
             }
             var mapInfo:TMXMapInfo = TMXMapInfo.createWithFile(tmxFile);
             if (!mapInfo) {
@@ -56,7 +56,7 @@ module ns_egret {
 
             var locTilesets:Array<any> = mapInfo.getTilesets();
             if (!locTilesets || locTilesets.length === 0) {
-                ns_egret.Logger.info("TMXTiledMap.initWithTMXFile(): Map没有", tmxFile);
+                egret.Logger.info("TMXTiledMap.initWithTMXFile(): Map没有", tmxFile);
             }
             this.buildWithMapInfo(mapInfo);
         }
@@ -66,7 +66,7 @@ module ns_egret {
             var idx:number = 0;
             var layers:Array<TMXLayerInfo> = mapInfo.getLayers();
             if (layers) {
-                var layerInfo:ns_egret.TMXLayerInfo = null;
+                var layerInfo:egret.TMXLayerInfo = null;
                 for (var i:number = 0, len:number = layers.length; i < len; i++) {
                     layerInfo = layers[i];
                     if (layerInfo && layerInfo.visible) {
@@ -99,7 +99,7 @@ module ns_egret {
                                 var pos:number = x + layerWidth * y;
                                 var gid:number = layerInfo._tiles[pos];
                                 if (gid != 0) {
-                                    if (((gid & ns_egret.TMX.TILE_FLIPPED_MASK) >>> 0) >= tileset.firstGid) {
+                                    if (((gid & egret.TMX.TILE_FLIPPED_MASK) >>> 0) >= tileset.firstGid) {
                                         return tileset;
                                     }
                                 }
@@ -108,13 +108,13 @@ module ns_egret {
                     }
                 }
             }
-            ns_egret.Logger.warning("TMXLayer" + layerInfo.name + "没有tiles");
+            egret.Logger.warning("TMXLayer" + layerInfo.name + "没有tiles");
             return null;
         }
 
         public getLayer(layerName:string):TMXLayer {
             if (!layerName || layerName.length === 0) {
-                ns_egret.Logger.fatal("TMXTiledMap.getLayer(): layerName应该是不为null的string");
+                egret.Logger.fatal("TMXTiledMap.getLayer(): layerName应该是不为null的string");
             }
             var l:number = this.numChildren;
             for (var i = 0; i < l; i++) {
@@ -127,7 +127,7 @@ module ns_egret {
 
         public getObjectGroup(groupName:string) {
             if (!groupName || groupName.length === 0)
-                ns_egret.Logger.fatal("TMXTiledMap.getObjectGroup(): groupName应该是不为null的string");
+                egret.Logger.fatal("TMXTiledMap.getObjectGroup(): groupName应该是不为null的string");
             var groups:Array<any> = this.mapInfo.getObjectGroups();
             if (groups) {
                 for (var i:number = 0, len:number = groups.length; i < len; i++) {
@@ -168,7 +168,7 @@ module ns_egret {
                     }
                 }
                 else {
-                    var bounds:ns_egret.Rectangle = layer.getBounds(Rectangle.identity);
+                    var bounds:egret.Rectangle = layer.getBounds(Rectangle.identity);
                     if (layer.x + bounds.width - layer.anchorOffsetX < -this.x || layer.x - layer.anchorOffsetX > -this.x + this.viewPortWidth) {
                         layer.visible = false;
                     }

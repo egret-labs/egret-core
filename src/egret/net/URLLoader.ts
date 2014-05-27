@@ -30,21 +30,21 @@
 /// <reference path="URLLoaderDataFormat.ts"/>
 /// <reference path="URLRequest.ts"/>
 
-module ns_egret {
+module egret {
 
 
 	/**
-	 * @class ns_egret.URLLoader
+	 * @class egret.URLLoader
 	 * @classdesc
      * URLLoader 类以文本、二进制数据或 URL 编码变量的形式从 URL 下载数据。在下载文本文件、XML 或其他用于动态数据驱动应用程序的信息时，它很有用。
      * URLLoader 对象会先从 URL 中下载所有数据，然后才将数据用于应用程序中的代码。它会发出有关下载进度的通知，
      * 通过 bytesLoaded 和 bytesTotal 属性以及已调度的事件，可以监视下载进度。
-	 * @extends ns_egret.EventDispatcher
+	 * @extends egret.EventDispatcher
 	 */
     export class URLLoader extends EventDispatcher {
 
 		/**
-		 * @method ns_egret.URLLoader#constructor
+		 * @method egret.URLLoader#constructor
 		 * @param request {URLRequest} 一个 URLRequest 对象，指定要下载的 URL。
          * 如果省略该参数，则不开始加载操作。如果已指定参数，则立即开始加载操作
 		 */
@@ -62,7 +62,7 @@ module ns_egret {
          * 如果 dataFormat 属性的值是 URLLoaderDataFormat.TEXTURE，则所接收的数据是一个包含位图数据的Texture对象。
          * 如果 dataFormat 属性的值是 URLLoaderDataFormat.VARIABLES，则所接收的数据是一个包含 URL 编码变量的 URLVariables 对象。
          * 默认值:URLLoaderDataFormat.TEXT
-		 * @member {string} ns_egret.URLLoader#dataFormat
+		 * @member {string} egret.URLLoader#dataFormat
 		 */
         public dataFormat:string = URLLoaderDataFormat.TEXT;
 
@@ -72,7 +72,7 @@ module ns_egret {
          * 如果 dataFormat 属性是 URLLoaderDataFormat.BINARY，则所接收的数据是一个包含原始二进制数据的 ByteArray 对象。
          * 如果 dataFormat 属性是 URLLoaderDataFormat.TEXTURE，则所接收的数据是一个包含位图数据的Texture对象。
          * 如果 dataFormat 属性是 URLLoaderDataFormat.VARIABLES，则所接收的数据是一个包含 URL 编码变量的 URLVariables 对象。
-		 * @member {any} ns_egret.URLLoader#data
+		 * @member {any} egret.URLLoader#data
 		 */
         public data:any;
 
@@ -80,7 +80,7 @@ module ns_egret {
 		/**
          * 从指定的 URL 发送和加载数据。可以以文本、原始二进制数据或 URL 编码变量格式接收数据，这取决于为 dataFormat 属性所设置的值。
          * 请注意 dataFormat 属性的默认值为文本。如果想将数据发送至指定的 URL，则可以在 URLRequest 对象中设置 data 属性。
-		 * @method ns_egret.URLLoader#load
+		 * @method egret.URLLoader#load
 		 * @param request {URLRequest} 
 		 */
         public load(request:URLRequest):void {

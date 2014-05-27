@@ -25,29 +25,29 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-module ns_egret {
+module egret {
 
 	/**
-	 * @class ns_egret.ColumnAlign
+	 * @class egret.ColumnAlign
 	 * @classdesc
 	 * ColumnAlign 类为 TileLayout 类的 columnAlign 属性定义可能的值。
 	 */
 	export class ColumnAlign{
 		/**
 		 * 不将行两端对齐。 
-		 * @constant ns_egret.ColumnAlign.LEFT
+		 * @constant egret.ColumnAlign.LEFT
 		 */		
 		public static LEFT:string = "left";
 		
 		/**
 		 * 通过增大水平间隙将行两端对齐。
-		 * @constant ns_egret.ColumnAlign.JUSTIFY_USING_GAP
+		 * @constant egret.ColumnAlign.JUSTIFY_USING_GAP
 		 */
 		public static JUSTIFY_USING_GAP:string = "justifyUsingGap";
 		
 		/**
 		 * 通过增大行高度将行两端对齐。 
-		 * @constant ns_egret.ColumnAlign.JUSTIFY_USING_WIDTH
+		 * @constant egret.ColumnAlign.JUSTIFY_USING_WIDTH
 		 */		
 		public static JUSTIFY_USING_WIDTH:string = "justifyUsingWidth";
 	}

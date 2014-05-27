@@ -39,34 +39,34 @@
 /// <reference path="../../events/UIEvent.ts"/>
 /// <reference path="../../layouts/supportClasses/LayoutBase.ts"/>
 
-module ns_egret {
+module egret {
 
 	/**
-	 * @class ns_egret.ListBase
+	 * @class egret.ListBase
 	 * @classdesc
 	 * 支持选择内容的所有组件的基类。 
-	 * @extends ns_egret.SkinnableDataContainer
+	 * @extends egret.SkinnableDataContainer
 	 */
 	export class ListBase extends SkinnableDataContainer{
 		/**
 		 * 未选中任何项时的索引值 
-		 * @constant ns_egret.ListBase.NO_SELECTION
+		 * @constant egret.ListBase.NO_SELECTION
 		 */		
 		public static NO_SELECTION:number = -1;
 		
 		/**
 		 * 未设置缓存选中项的值
-		 * @constant ns_egret.ListBase.NO_PROPOSED_SELECTION
+		 * @constant egret.ListBase.NO_PROPOSED_SELECTION
 		 */
 		public static NO_PROPOSED_SELECTION:number = -2;
 		/**
 		 * 自定义的选中项
-		 * @constant ns_egret.ListBase.CUSTOM_SELECTED_ITEM
+		 * @constant egret.ListBase.CUSTOM_SELECTED_ITEM
 		 */		
 		public static CUSTOM_SELECTED_ITEM:number = -3;
 		
 		/**
-		 * @method ns_egret.ListBase#constructor
+		 * @method egret.ListBase#constructor
 		 */
 		public constructor(){
 			super();
@@ -74,7 +74,7 @@ module ns_egret {
 		
 		/**
 		 * 正在进行所有数据源的刷新操作
-		 * @member ns_egret.ListBase#_doingWholesaleChanges
+		 * @member egret.ListBase#_doingWholesaleChanges
 		 */		
 		public _doingWholesaleChanges:boolean = false;
 		
@@ -98,7 +98,7 @@ module ns_egret {
 
         /**
          * 布局对象
-		 * @member ns_egret.ListBase#layout
+		 * @member egret.ListBase#layout
          */
         public get layout():LayoutBase{
             return (this.dataGroup)
@@ -123,7 +123,7 @@ module ns_egret {
 		/**
 		 * 数据项如果是一个对象，此属性为数据项中用来显示标签文字的字段名称。
 		 * 若设置了labelFunction，则设置此属性无效。
-		 * @member ns_egret.ListBase#labelField
+		 * @member egret.ListBase#labelField
 		 */		
 		public get labelField():string{
 			return this._labelField;
@@ -146,7 +146,7 @@ module ns_egret {
 		/**
 		 * 用户提供的函数，在每个项目上运行以确定其标签。
 		 * 示例：function labelFunc(item:Object):String 。
-		 * @member ns_egret.ListBase#labelFunction
+		 * @member egret.ListBase#labelFunction
 		 */		
 		public get labelFunction():Function{
 			return this._labelFunction;
@@ -172,7 +172,7 @@ module ns_egret {
 		/**
 		 * 如果为 true，则必须始终在控件中选中数据项目。<br/>
 		 * 如果该值为 true，则始终将 selectedIndex 属性设置为 0 和 (dataProvider.length - 1) 之间的一个值。 
-		 * @member ns_egret.ListBase#requireSelection
+		 * @member egret.ListBase#requireSelection
 		 */		
 		public get requireSelection():boolean{
 			return this._requireSelection;
@@ -206,7 +206,7 @@ module ns_egret {
 		 * 或者如果未选中项目，则为-1。设置 selectedIndex 属性会取消选择当前选定的项目并选择指定索引位置的数据项目。 <br/>
 		 * 当用户通过与控件交互来更改 selectedIndex 属性时，此控件将分派 change 和 changing 事件。<br/>
 		 * 当以编程方式更改 selectedIndex 属性的值时，此控件不分派 change 和 changing 事件。
-		 * @member ns_egret.ListBase#selectedIndex
+		 * @member egret.ListBase#selectedIndex
 		 */		
 		public get selectedIndex():number{
 			return this._getSelectedIndex();
@@ -225,12 +225,12 @@ module ns_egret {
 		
 		/**
 		 * 是否允许自定义的选中项
-		 * @member ns_egret.ListBase#_allowCustomSelectedItem
+		 * @member egret.ListBase#_allowCustomSelectedItem
 		 */		
 		public _allowCustomSelectedItem:boolean = false;
 		/**
 		 * 索引改变后是否需要抛出事件 
-		 * @member ns_egret.ListBase#_dispatchChangeAfterSelection
+		 * @member egret.ListBase#_dispatchChangeAfterSelection
 		 */		
 		public _dispatchChangeAfterSelection:boolean = false;
 		
@@ -260,7 +260,7 @@ module ns_egret {
 		 * 当前已选中的项目。设置此属性会取消选中当前选定的项目并选择新指定的项目。<br/>
 		 * 当用户通过与控件交互来更改 selectedItem 属性时，此控件将分派 change 和 changing 事件。<br/>
 		 * 当以编程方式更改 selectedItem 属性的值时，此控件不分派 change 和 changing 事件。
-		 * @member ns_egret.ListBase#selectedItem
+		 * @member egret.ListBase#selectedItem
 		 */		
 		public get selectedItem():any{
 			if (this._pendingSelectedItem !== undefined)
@@ -281,7 +281,7 @@ module ns_egret {
 		
 		/**
 		 * 设置选中项数据源
-		 * @method ns_egret.ListBase#_setSelectedItem
+		 * @method egret.ListBase#_setSelectedItem
 		 * @param value {any} 
 		 * @param dispatchChangeEvent {boolean} 
 		 */
@@ -300,7 +300,7 @@ module ns_egret {
 		
 		/**
 		 * 是否使用虚拟布局,默认flase
-		 * @member ns_egret.ListBase#useVirtualLayout
+		 * @member egret.ListBase#useVirtualLayout
 		 */
 		public get useVirtualLayout():boolean{
 			return this._getUseVirtualLayout();
@@ -325,7 +325,7 @@ module ns_egret {
 		
 		
 		/**
-		 * @method ns_egret.ListBase#commitProperties
+		 * @method egret.ListBase#commitProperties
 		 */
 		public commitProperties():void{
 			super.commitProperties();
@@ -413,7 +413,7 @@ module ns_egret {
 		}
 		
 		/**
-		 * @method ns_egret.ListBase#partAdded
+		 * @method egret.ListBase#partAdded
 		 * @param partName {string} 
 		 * @param instance {any} 
 		 */
@@ -432,7 +432,7 @@ module ns_egret {
 		}
 		
 		/**
-		 * @method ns_egret.ListBase#partRemoved
+		 * @method egret.ListBase#partRemoved
 		 * @param partName {string} 
 		 * @param instance {any} 
 		 */
@@ -448,7 +448,7 @@ module ns_egret {
 		}
 		
 		/**
-		 * @method ns_egret.ListBase#updateRenderer
+		 * @method egret.ListBase#updateRenderer
 		 * @param renderer {IItemRenderer} 
 		 * @param itemIndex {number} 
 		 * @param data {any} 
@@ -460,7 +460,7 @@ module ns_egret {
 		}
 		
 		/**
-		 * @method ns_egret.ListBase#itemToLabel
+		 * @method egret.ListBase#itemToLabel
 		 * @param item {any} 
 		 * @returns {string}
 		 */
@@ -503,7 +503,7 @@ module ns_egret {
 		
 		/**
 		 * 选中或取消选中项目时调用。子类必须覆盖此方法才可设置选中项。 
-		 * @method ns_egret.ListBase#itemSelected
+		 * @method egret.ListBase#itemSelected
 		 * @param index {number} 已选中的项目索引。
 		 * @param selected {boolean} true为选中，false取消选中
 		 */		
@@ -525,7 +525,7 @@ module ns_egret {
 		
 		/**
 		 * 提交选中项属性，返回是否成功提交，false表示被取消
-		 * @method ns_egret.ListBase#commitSelection
+		 * @method egret.ListBase#commitSelection
 		 * @param dispatchChangedEvents {boolean} 
 		 * @returns {boolean}
 		 */		
@@ -585,7 +585,7 @@ module ns_egret {
 		private selectedIndexAdjusted:boolean = false;
 		/**
 		 * 仅调整选中索引值而不更新选中项,即在提交属性阶段itemSelected方法不会被调用，也不会触发changing和change事件。
-		 * @method ns_egret.ListBase#adjustSelection
+		 * @method egret.ListBase#adjustSelection
 		 * @param newIndex {number} 新索引。
 		 * @param add {boolean} 如果已将项目添加到组件，则为 true；如果已删除项目，则为 false。
 		 */		
@@ -600,7 +600,7 @@ module ns_egret {
 		
 		/**
 		 * 数据项添加
-		 * @method ns_egret.ListBase#itemAdded
+		 * @method egret.ListBase#itemAdded
 		 * @param index {number} 
 		 */
 		public itemAdded(index:number):void{
@@ -618,7 +618,7 @@ module ns_egret {
 		
 		/**
 		 * 数据项移除
-		 * @method ns_egret.ListBase#itemRemoved
+		 * @method egret.ListBase#itemRemoved
 		 * @param index {number} 
 		 */
 		public itemRemoved(index:number):void{
@@ -645,7 +645,7 @@ module ns_egret {
 		
 		/**
 		 * 项呈示器被添加
-		 * @method ns_egret.ListBase#dataGroup_rendererAddHandler
+		 * @method egret.ListBase#dataGroup_rendererAddHandler
 		 * @param event {RendererExistenceEvent} 
 		 */
 		public dataGroup_rendererAddHandler(event:RendererExistenceEvent):void{
@@ -659,7 +659,7 @@ module ns_egret {
 		}
 		/**
 		 * 项呈示器被移除
-		 * @method ns_egret.ListBase#dataGroup_rendererRemoveHandler
+		 * @method egret.ListBase#dataGroup_rendererRemoveHandler
 		 * @param event {RendererExistenceEvent} 
 		 */		
 		public dataGroup_rendererRemoveHandler(event:RendererExistenceEvent):void{
@@ -688,7 +688,7 @@ module ns_egret {
 		}
 		/**
 		 * 抛出列表事件
-		 * @method ns_egret.ListBase#_dispatchListEvent
+		 * @method egret.ListBase#_dispatchListEvent
 		 * @param touchEvent {TouchEvent} 相关联的鼠标事件
 		 * @param type {string} 事件名称
 		 * @param itemRenderer {IItemRenderer} 关联的条目渲染器实例
@@ -707,7 +707,7 @@ module ns_egret {
 		
 		/**
 		 * 数据源发生改变
-		 * @method ns_egret.ListBase#dataProvider_collectionChangeHandler
+		 * @method egret.ListBase#dataProvider_collectionChangeHandler
 		 * @param event {CollectionEvent} 
 		 */
 		public dataProvider_collectionChangeHandler(event:CollectionEvent):void{

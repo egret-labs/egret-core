@@ -1,12 +1,12 @@
-ns_egret.Codec = {name:'Jacob__Codec'};
-ns_egret.Utils = {};
+egret.Codec = {name:'Jacob__Codec'};
+egret.Utils = {};
 /**
  * Unpack a gzipped byte array
  * @param {Array} input Byte array
  * @returns {String} Unpacked byte string
  */
-ns_egret.Utils.unzip = function () {
-    return ns_egret.Codec.GZip.gunzip.apply(ns_egret.Codec.GZip, arguments);
+egret.Utils.unzip = function () {
+    return egret.Codec.GZip.gunzip.apply(egret.Codec.GZip, arguments);
 };
 
 /**
@@ -14,9 +14,9 @@ ns_egret.Utils.unzip = function () {
  * @param {String} input Byte string encoded as base64
  * @returns {String} Unpacked byte string
  */
-ns_egret.Utils.unzipBase64 = function () {
-    var tmpInput = ns_egret.Codec.Base64.decode.apply(ns_egret.Codec.Base64, arguments);
-    return   ns_egret.Codec.GZip.gunzip.apply(ns_egret.Codec.GZip, [tmpInput]);
+egret.Utils.unzipBase64 = function () {
+    var tmpInput = egret.Codec.Base64.decode.apply(egret.Codec.Base64, arguments);
+    return   egret.Codec.GZip.gunzip.apply(egret.Codec.GZip, [tmpInput]);
 };
 
 /**
@@ -25,7 +25,7 @@ ns_egret.Utils.unzipBase64 = function () {
  * @param {Number} bytes Bytes per array item
  * @returns {Array} Unpacked byte array
  */
-ns_egret.Utils.unzipBase64AsArray = function (input, bytes) {
+egret.Utils.unzipBase64AsArray = function (input, bytes) {
     bytes = bytes || 1;
 
     var dec = this.unzipBase64(input),
@@ -45,7 +45,7 @@ ns_egret.Utils.unzipBase64AsArray = function (input, bytes) {
  * @param {Number} bytes Bytes per array item
  * @returns {Array} Unpacked byte array
  */
-ns_egret.Utils.unzipAsArray = function (input, bytes) {
+egret.Utils.unzipAsArray = function (input, bytes) {
     bytes = bytes || 1;
 
     var dec = this.unzip(input),
@@ -64,7 +64,7 @@ ns_egret.Utils.unzipAsArray = function (input, bytes) {
  * @param {String} input
  * @returns {Array} array
  */
-ns_egret.Utils.StringToArray = function (input) {
+egret.Utils.StringToArray = function (input) {
     var tmp = input.split(","), ar = [], i;
     for (i = 0; i < tmp.length; i++) {
         ar.push(parseInt(tmp[i]));

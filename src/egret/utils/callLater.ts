@@ -25,7 +25,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-module ns_egret {
+module egret {
 
     export var __callLaterFunctionList:Array<any> = [];
     export var __callLaterThisList:Array<any> = [];

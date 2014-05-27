@@ -25,18 +25,18 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/** @namespace ns_egret */
+/** @namespace egret */
 
 /// <reference path="Event.ts"/>
 /// <reference path="IEventDispatcher.ts"/>
 
-module ns_egret {
+module egret {
 
     export class TimerEvent extends Event{
 
         /**
          * 创建一个 Event 对象，其中包含有关 timer 事件的特定信息。
-         * @class ns_egret.TimerEvent
+         * @class egret.TimerEvent
          * @classdesc 每当 Timer 对象达到由 Timer.delay 属性指定的间隔时，Timer 对象即会调度 TimerEvent 对象。
          * @param type {string} 事件的类型。事件侦听器可以通过继承的 type 属性访问此信息。
          * @param bubbles {string} 确定 Event 对象是否冒泡。事件侦听器可以通过继承的 bubbles 属性访问此信息。
@@ -48,19 +48,19 @@ module ns_egret {
 
         /**
          * 每当 Timer 对象达到根据 Timer.delay 属性指定的间隔时调度。
-         * @constant {string} ns_egret.TimerEvent.TIMER
+         * @constant {string} egret.TimerEvent.TIMER
          */
         public static TIMER:string = "timer";
 
         /**
          * 每当它完成 Timer.repeatCount 设置的请求数后调度。
-         * @constant {string} ns_egret.TimerEvent.TIMER_COMPLETE
+         * @constant {string} egret.TimerEvent.TIMER_COMPLETE
          */
         public static TIMER_COMPLETE:string = "timerComplete";
 
         /**
          * 使用指定的EventDispatcher对象来抛出Event事件对象。抛出的对象将会缓存在对象池上，供下次循环复用。
-         * @method ns_egret.TimerEvent.dispathTimerEvent
+         * @method egret.TimerEvent.dispathTimerEvent
          */
         public static dispatchTimerEvent(target:IEventDispatcher,type:string):void{
             var eventClass:any = TimerEvent;

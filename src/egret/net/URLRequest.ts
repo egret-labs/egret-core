@@ -28,17 +28,17 @@
 /// <reference path="URLRequestMethod.ts"/>
 /// <reference path="../utils/HashObject.ts"/>
 
-module ns_egret {
+module egret {
 
 	/**
-	 * @class ns_egret.URLRequest
+	 * @class egret.URLRequest
 	 * @classdesc
-	 * @extends ns_egret.HashObject
+	 * @extends egret.HashObject
 	 */
     export class URLRequest extends HashObject{
 
 		/**
-		 * @method ns_egret.URLRequest#constructor
+		 * @method egret.URLRequest#constructor
 		 * @param url {string} 
 		 */
         public constructor(url:string=null){
@@ -56,19 +56,19 @@ module ns_egret {
          * 如果该对象是 URLVariables 对象，并且该方法是 POST，则使用 x-www-form-urlencoded 格式对变量进行编码，并且生成的字符串会用作 POST 数据。
          * 如果该对象是 URLVariables 对象，并且该方法是 GET，则 URLVariables 对象将定义要随 URLRequest 对象一起发送的变量。
          * 否则，该对象会转换为字符串，并且该字符串会用作 POST 或 GET 数据。
-		 * @member {any} ns_egret.URLRequest#data
+		 * @member {any} egret.URLRequest#data
 		 */
         public data:any;
 
 		/**
          * 请求方式，有效值为URLRequestMethod.GET 或 URLRequestMethod.POST。
-		 * @member {string} ns_egret.URLRequest#method
+		 * @member {string} egret.URLRequest#method
 		 */
         public method:string = URLRequestMethod.GET;
 
 		/**
          * 所请求的 URL。
-		 * @member {string} ns_egret.URLRequest#url
+		 * @member {string} egret.URLRequest#url
 		 */
         public url:string;
     }

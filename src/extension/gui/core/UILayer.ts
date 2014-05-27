@@ -30,18 +30,18 @@
 /// <reference path="IUIStage.ts"/>
 /// <reference path="IVisualElement.ts"/>
 
-module ns_egret {
+module egret {
 
 	/**
-	 * @class ns_egret.UILayer
+	 * @class egret.UILayer
 	 * @classdesc
 	 * UIStage的虚拟子容器
-	 * @implements ns_egret.IContainer
+	 * @implements egret.IContainer
 	 */
 	export class UILayer implements IContainer{
 		/**
 		 * 构造函数
-		 * @method ns_egret.UILayer#constructor
+		 * @method egret.UILayer#constructor
 		 * @param owner {IUIStage} 
 		 * @param lowerBoundReference {string} 
 		 * @param upperBoundReference {strin} 
@@ -68,7 +68,7 @@ module ns_egret {
 		 */		
 		private upperBoundReference:string;
 		/**
-		 * @member ns_egret.UILayer#numElements
+		 * @member egret.UILayer#numElements
 		 */
 		public get numElements():number{
 			return this.owner[this.upperBoundReference] - this.owner[this.lowerBoundReference];
@@ -81,7 +81,7 @@ module ns_egret {
 		private raw_removeElementAt:string = "raw_removeElementAt";
 		private raw_setElementIndex:string = "raw_setElementIndex";
 		/**
-		 * @method ns_egret.UILayer#getElementAt
+		 * @method egret.UILayer#getElementAt
 		 * @param index {number} 
 		 * @returns {IVisualElement}
 		 */
@@ -92,7 +92,7 @@ module ns_egret {
 			return retval;
 		}
 		/**
-		 * @method ns_egret.UILayer#addElement
+		 * @method egret.UILayer#addElement
 		 * @param element {IVisualElement} 
 		 * @returns {IVisualElement}
 		 */
@@ -106,7 +106,7 @@ module ns_egret {
 			return element;
 		}
 		/**
-		 * @method ns_egret.UILayer#addElementAt
+		 * @method egret.UILayer#addElementAt
 		 * @param element {IVisualElement} 
 		 * @param index {number} 
 		 * @returns {IVisualElement}
@@ -119,7 +119,7 @@ module ns_egret {
 			return element;
 		}
 		/**
-		 * @method ns_egret.UILayer#removeElement
+		 * @method egret.UILayer#removeElement
 		 * @param element {IVisualElement} 
 		 * @returns {IVisualElement}
 		 */
@@ -134,7 +134,7 @@ module ns_egret {
 			return element;
 		}
 		/**
-		 * @method ns_egret.UILayer#removeElementAt
+		 * @method egret.UILayer#removeElementAt
 		 * @param index {number} 
 		 * @returns {IVisualElement}
 		 */
@@ -150,7 +150,7 @@ module ns_egret {
 			return element;
 		}
 		/**
-		 * @method ns_egret.UILayer#getElementIndex
+		 * @method egret.UILayer#getElementIndex
 		 * @param element {IVisualElement} 
 		 * @returns {number}
 		 */
@@ -160,7 +160,7 @@ module ns_egret {
 			return retval;
 		}
 		/**
-		 * @method ns_egret.UILayer#setElementIndex
+		 * @method egret.UILayer#setElementIndex
 		 * @param element {IVisualElement} 
 		 * @param index {number} 
 		 */

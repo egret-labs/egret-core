@@ -39,10 +39,10 @@
 /// <reference path="../geom/Rectangle.ts"/>
 /// <reference path="../../jslib/NumberUtils.ts"/>
 
-module ns_egret {
+module egret {
     /**
-     * @class ns_egret.DisplayObject
-     * @extends ns_egret.EventDispatcher
+     * @class egret.DisplayObject
+     * @extends egret.EventDispatcher
      * @classdesc 类是可放在显示列表中的所有对象的基类。该显示列表管理运行时显示的所有对象。使用 DisplayObjectContainer 类排列显示列表中的显示对象。
      *
      * DisplayObjectContainer 对象可以有子显示对象，而其他显示对象是“叶”节点，只有父级和同级，没有子级。
@@ -65,9 +65,9 @@ module ns_egret {
 
         public constructor() {
             super();
-            this.worldTransform = new ns_egret.Matrix();
-            this.worldBounds = new ns_egret.Rectangle(0, 0, 0, 0);
-            this._cacheBounds = new ns_egret.Rectangle(0, 0, 0, 0);
+            this.worldTransform = new egret.Matrix();
+            this.worldBounds = new egret.Rectangle(0, 0, 0, 0);
+            this._cacheBounds = new egret.Rectangle(0, 0, 0, 0);
         }
 
         public name:string;
@@ -78,13 +78,13 @@ module ns_egret {
 
         /**
          * 11111
-         * @event ns_egret.Event.event:ADDED_TO_STAGE
+         * @event egret.Event.event:ADDED_TO_STAGE
          */
         private _cacheAsBitmap:boolean = false;
 
         /**
          * 表示包含此显示对象的 DisplayObjectContainer 对象
-         * @member {ns_egret.DisplayObjectContainer} ns_egret.DisplayObject#parent
+         * @member {egret.DisplayObjectContainer} egret.DisplayObject#parent
          */
         public get parent():DisplayObjectContainer {
             return this._parent;
@@ -101,7 +101,7 @@ module ns_egret {
 
         /**
          * 表示 DisplayObject 实例相对于父级 DisplayObjectContainer 本地坐标的 x 坐标。
-         * @member {number} ns_egret.DisplayObject#x
+         * @member {number} egret.DisplayObject#x
          */
         public get x():number {
             return this._x;
@@ -118,7 +118,7 @@ module ns_egret {
 
         /**
          * 表示 DisplayObject 实例相对于父级 DisplayObjectContainer 本地坐标的 y 坐标。
-         * @member {number} ns_egret.DisplayObject#y
+         * @member {number} egret.DisplayObject#y
          */
         public get y():number {
             return this._y;
@@ -132,7 +132,7 @@ module ns_egret {
 
         /**
          * 表示从注册点开始应用的对象的水平缩放比例（百分比）。
-         * @member {number} ns_egret.DisplayObject#scaleX
+         * @member {number} egret.DisplayObject#scaleX
          * @default 1
          */
         public _scaleX:number = 1;
@@ -149,7 +149,7 @@ module ns_egret {
 
         /**
          * 表示从对象注册点开始应用的对象的垂直缩放比例（百分比）。
-         * @member {number} ns_egret.DisplayObject#scaleY
+         * @member {number} egret.DisplayObject#scaleY
          * @default 1
          */
         public _scaleY:number = 1;
@@ -166,7 +166,7 @@ module ns_egret {
 
         /**
          * 表示从对象绝对锚点X。
-         * @member {number} ns_egret.DisplayObject#anchorOffsetX
+         * @member {number} egret.DisplayObject#anchorOffsetX
          * @default 0
          */
         public _anchorOffsetX:number = 0;
@@ -183,7 +183,7 @@ module ns_egret {
 
         /**
          * 表示从对象绝对锚点Y。
-         * @member {number} ns_egret.DisplayObject#anchorOffsetY
+         * @member {number} egret.DisplayObject#anchorOffsetY
          * @default 0
          */
         public _anchorOffsetY:number = 0;
@@ -200,7 +200,7 @@ module ns_egret {
 
         /**
          * 表示从对象相对锚点X。
-         * @member {number} ns_egret.DisplayObject#anchorX
+         * @member {number} egret.DisplayObject#anchorX
          * @default 0
          */
         public _anchorX:number = 0;
@@ -217,7 +217,7 @@ module ns_egret {
 
         /**
          * 表示从对象相对锚点Y。
-         * @member {number} ns_egret.DisplayObject#anchorY
+         * @member {number} egret.DisplayObject#anchorY
          * @default 0
          */
         public _anchorY:number = 0;
@@ -234,12 +234,12 @@ module ns_egret {
 
         /**
          * 显示对象是否可见。
-         * @member {boolean} ns_egret.DisplayObject#x
+         * @member {boolean} egret.DisplayObject#x
          */
         public visible:boolean = true;
         /**
          * 表示 DisplayObject 实例距其原始方向的旋转程度，以度为单位
-         * @member {number} ns_egret.DisplayObject#rotation
+         * @member {number} egret.DisplayObject#rotation
          * @default 0
          */
         public _rotation:number = 0;
@@ -256,7 +256,7 @@ module ns_egret {
 
         /**
          * 表示指定对象的 Alpha 透明度值
-         * @member {number} ns_egret.DisplayObject#alpha
+         * @member {number} egret.DisplayObject#alpha
          *  @default 1
          */
         public _alpha:number = 1;
@@ -273,7 +273,7 @@ module ns_egret {
 
         /**
          * 表示DisplayObject的x方向斜切
-         * @member {number} ns_egret.DisplayObject#skewX
+         * @member {number} egret.DisplayObject#skewX
          * @default 0
          */
         private _skewX:number = 0;
@@ -290,7 +290,7 @@ module ns_egret {
 
         /**
          * 表示DisplayObject的y方向斜切
-         * @member {number} ns_egret.DisplayObject#skewY
+         * @member {number} egret.DisplayObject#skewY
          * @default 0
          */
         private _skewY:number = 0;
@@ -308,7 +308,7 @@ module ns_egret {
         public _touchEnabled:boolean;
         /**
          * 指定此对象是否接收鼠标/触摸事件
-         * @member {boolean} ns_egret.DisplayObject#touchEnabled
+         * @member {boolean} egret.DisplayObject#touchEnabled
          * @default true
          */
         public get touchEnabled():boolean {
@@ -324,7 +324,7 @@ module ns_egret {
         public _scrollRect:Rectangle;
         /**
          * 显示对象的滚动矩形范围。显示对象被裁切为矩形定义的大小，当您更改 scrollRect 对象的 x 和 y 属性时，它会在矩形内滚动。
-         *  @member {ns_egret.Rectangle} ns_egret.DisplayObject#scrollRect
+         *  @member {egret.Rectangle} egret.DisplayObject#scrollRect
          */
         public get scrollRect():Rectangle {
             return this._scrollRect;
@@ -426,8 +426,8 @@ module ns_egret {
          */
         public mask:Rectangle;
 
-        public worldTransform:ns_egret.Matrix;
-        public worldBounds:ns_egret.Rectangle;
+        public worldTransform:egret.Matrix;
+        public worldBounds:egret.Rectangle;
         public worldAlpha:number = 1;
 
 
@@ -466,7 +466,7 @@ module ns_egret {
 
 
         private drawCacheTexture(renderContext:RendererContext):boolean {
-            var display:ns_egret.DisplayObject = this;
+            var display:egret.DisplayObject = this;
             if (display._cacheAsBitmap) {
                 var renderTexture = display._texture_to_render;
                 var offsetX = renderTexture._offsetX;
@@ -480,8 +480,8 @@ module ns_egret {
                     renderContext.save();
                     renderContext.clip(display.mask.x, display.mask.y, display.mask.width, display.mask.height);
                 }
-                var scale_factor = ns_egret.MainContext.instance.rendererContext.texture_scale_factor;
-                var renderFilter = ns_egret.RenderFilter.getInstance();
+                var scale_factor = egret.MainContext.instance.rendererContext.texture_scale_factor;
+                var renderFilter = egret.RenderFilter.getInstance();
                 renderFilter.drawImage(renderContext, display, 0, 0, width * scale_factor, height * scale_factor, offsetX, offsetY, width, height);
                 if (display.mask) {
                     renderContext.restore();
@@ -517,7 +517,7 @@ module ns_egret {
             if (o._scrollRect) {
                 o.worldTransform.append(1, 0, 0, 1, -o._scrollRect.x, -o._scrollRect.y);
             }
-            var bounds:ns_egret.Rectangle = DisplayObject.getTransformBounds(o.getBounds(Rectangle.identity), o.worldTransform);
+            var bounds:egret.Rectangle = DisplayObject.getTransformBounds(o.getBounds(Rectangle.identity), o.worldTransform);
             o.worldBounds.initialize(bounds.x, bounds.y, bounds.width, bounds.height);
             o.worldAlpha = o._parent.worldAlpha * o._alpha;
         }
@@ -530,15 +530,15 @@ module ns_egret {
 
         }
 
-        private _cacheBounds:ns_egret.Rectangle;
+        private _cacheBounds:egret.Rectangle;
 
         /**
          * 获取显示对象的测量边界
-         * @method ns_egret.DisplayObject#getBounds
+         * @method egret.DisplayObject#getBounds
          * @param resultRect {Rectangle} 可选参数，传入用于保存结果的Rectangle对象，避免重复创建对象。
          * @returns {Rectangle}
          */
-        public getBounds(resultRect?:Rectangle):ns_egret.Rectangle {
+        public getBounds(resultRect?:Rectangle):egret.Rectangle {
             if (this._cacheBounds.x == 0 && this._cacheBounds.y == 0 && this._cacheBounds.width == 0 && this._cacheBounds.height == 0) {
                 var rect:Rectangle = this._measureBounds();
                 var w:number = this._hasWidthSet ? this._explicitWidth : rect.width;
@@ -556,7 +556,7 @@ module ns_egret {
                 }
                 this._cacheBounds.initialize(x - anchorX, y - anchorY, w, h);
             }
-            var result:ns_egret.Rectangle = this._cacheBounds;
+            var result:egret.Rectangle = this._cacheBounds;
             if(!resultRect){
                 resultRect = new Rectangle();
             }
@@ -576,7 +576,7 @@ module ns_egret {
          */
         private static identityMatrixForGetConcatenated = new Matrix();
 
-        public _getConcatenatedMatrix():ns_egret.Matrix {
+        public _getConcatenatedMatrix():egret.Matrix {
             var matrix = DisplayObject.identityMatrixForGetConcatenated.identity();
             var o = this;
             while (o != null) {
@@ -595,11 +595,11 @@ module ns_egret {
 
         /**
          * 将 point 对象从显示对象的（本地）坐标转换为舞台（全局）坐标。
-         * @method ns_egret.DisplayObject#localToGlobal
+         * @method egret.DisplayObject#localToGlobal
          * @param x {number} 本地x坐标
          * @param y {number} 本地y坐标
          * @param resultPoint {Point} 可选参数，传入用于保存结果的Point对象，避免重复创建对象。
-         * @returns {ns_egret.Point}
+         * @returns {egret.Point}
          */
         public localToGlobal(x:number = 0, y:number = 0,resultPoint?:Point):Point {
             var mtx = this._getConcatenatedMatrix();
@@ -614,11 +614,11 @@ module ns_egret {
 
         /**
          * 将指定舞台坐标（全局）转换为显示对象（本地）坐标。
-         * @method ns_egret.DisplayObject#globalToLocal
+         * @method egret.DisplayObject#globalToLocal
          * @param x {number} 全局x坐标
          * @param y {number} 全局y坐标
          * @param resultPoint {Point} 可选参数，传入用于保存结果的Point对象，避免重复创建对象。
-         * @returns {ns_egret.Point}
+         * @returns {egret.Point}
          */
         public globalToLocal(x:number = 0, y:number = 0,resultPoint?:Point):Point {
             var mtx = this._getConcatenatedMatrix();
@@ -634,7 +634,7 @@ module ns_egret {
 
         /**
          * 检测指定坐标是否在显示对象内
-         * @method ns_egret.DisplayObject#hitTest
+         * @method egret.DisplayObject#hitTest
          * @param x {number}
          * @param y {number}
          * @param ignoreTouchEnabled 是否忽略TouchEnabled
@@ -669,20 +669,20 @@ module ns_egret {
         }
 
 
-        public _getMatrix():ns_egret.Matrix {
+        public _getMatrix():egret.Matrix {
             return Matrix.identity.identity().appendTransformFromDisplay(this);
         }
 
         /**
          * 测量显示对象坐标，这个方法需要子类重写
-         * @returns {ns_egret.Rectangle}
+         * @returns {egret.Rectangle}
          * @private
          */
-        public _measureBounds():ns_egret.Rectangle {
-            return ns_egret.Rectangle.identity.initialize(0, 0, 0, 0);
+        public _measureBounds():egret.Rectangle {
+            return egret.Rectangle.identity.initialize(0, 0, 0, 0);
         }
 
-        public _getOffsetPoint():ns_egret.Point {
+        public _getOffsetPoint():egret.Point {
             var o = this;
             var regX = o.anchorOffsetX;
             var regY = o.anchorOffsetY;
@@ -711,7 +711,7 @@ module ns_egret {
 
         /**
          * 获取舞台对象。当该显示对象不在舞台上时，此属性返回 undefined
-         * @returns {ns_egret.Stage}
+         * @returns {egret.Stage}
          */
         public get stage():Stage {
             return this._stage;
@@ -788,13 +788,13 @@ module ns_egret {
         public cacheAsBitmap(bool:boolean):void {
             this._cacheAsBitmap = bool;
             if (bool) {
-                var renderTexture = new ns_egret.RenderTexture();
+                var renderTexture = new egret.RenderTexture();
                 renderTexture.drawToTexture(this);
                 this._texture_to_render = renderTexture;
             }
         }
 
-        public static getTransformBounds(bounds:ns_egret.Rectangle, mtx:ns_egret.Matrix):ns_egret.Rectangle {
+        public static getTransformBounds(bounds:egret.Rectangle, mtx:egret.Matrix):egret.Rectangle {
             var x = bounds.x, y = bounds.y, width = bounds.width, height = bounds.height;
 
 //            if (x || y) {

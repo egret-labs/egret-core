@@ -35,7 +35,7 @@
 /// <reference path="TMXConst.ts"/>
 /// <reference path="TMXMapInfo.ts"/>
 
-module ns_egret {
+module egret {
     export class TMXLayer extends DisplayObjectContainer {
         private _texture:Texture = null;
         private _layerWidth:number = null;
@@ -81,17 +81,17 @@ module ns_egret {
         private calculateLayerOffset(x:number, y:number) {
             var ret:Point = Point.identity;
             switch (this._layerOrientation) {
-                case ns_egret.TMX.ORIENTATION_ORTHO:
+                case egret.TMX.ORIENTATION_ORTHO:
                     ret.x = x * this._mapTileWidth;
                     ret.y = -y * this._mapTileHeight;
                     break;
-                case ns_egret.TMX.ORIENTATION_ISO:
+                case egret.TMX.ORIENTATION_ISO:
                     ret.x = (this._mapTileWidth / 2) * (x - y);
                     ret.y = (this._mapTileHeight / 2 ) * (-x - y);
                     break;
-                case ns_egret.TMX.ORIENTATION_HEX:
+                case egret.TMX.ORIENTATION_HEX:
                     if (x !== 0 || y !== 0)
-                        ns_egret.Logger.info("hexagonal map还没有完成");
+                        egret.Logger.info("hexagonal map还没有完成");
                     break;
             }
             return ret;
@@ -115,7 +115,7 @@ module ns_egret {
             }
 
             if (!((this._maxGID >= this._tileSet.firstGid) && (this._minGID >= this._tileSet.firstGid))) {
-                ns_egret.Logger.warning("每个layer只支持1个tileset");
+                egret.Logger.warning("每个layer只支持1个tileset");
             }
         }
 
@@ -152,13 +152,13 @@ module ns_egret {
         public getPositionAt(x:number, y:number):Point {
             var ret:Point = Point.identity;
             switch (this._layerOrientation) {
-                case ns_egret.TMX.ORIENTATION_ORTHO:
+                case egret.TMX.ORIENTATION_ORTHO:
                     ret = this.positionForOrthoAt(x, y);
                     break;
-                case ns_egret.TMX.ORIENTATION_ISO:
+                case egret.TMX.ORIENTATION_ISO:
                     ret = this.positionForIsoAt(x, y);
                     break;
-                case ns_egret.TMX.ORIENTATION_HEX:
+                case egret.TMX.ORIENTATION_HEX:
                     ret = this.positionForHexAt(x, y);
                     break;
                 default:
@@ -193,17 +193,17 @@ module ns_egret {
          */
         public getTileGIDAt(x, y) {
             if (x >= this._layerWidth || y >= this._layerHeight || x < 0 || y < 0) {
-                ns_egret.Logger.fatal("TMXLayer.getTileGIDAt():提供的索引超出范围");
+                egret.Logger.fatal("TMXLayer.getTileGIDAt():提供的索引超出范围");
             }
             if (!this._tiles) {
-                ns_egret.Logger.info("TMXLayer.getTileGIDAt(): tileMap已经被销毁");
+                egret.Logger.info("TMXLayer.getTileGIDAt(): tileMap已经被销毁");
                 return null;
             }
 
             var idx = 0 | (x + y * this._layerWidth);
             var tile = this._tiles[idx];
 
-            return (tile & ns_egret.TMX.TILE_FLIPPED_MASK) >>> 0;
+            return (tile & egret.TMX.TILE_FLIPPED_MASK) >>> 0;
         }
 
         public getProperties() {

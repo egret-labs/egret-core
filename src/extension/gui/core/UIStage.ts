@@ -36,21 +36,21 @@
 /// <reference path="../layouts/BasicLayout.ts"/>
 /// <reference path="../layouts/supportClasses/LayoutBase.ts"/>
 
-module ns_egret {
+module egret {
 
 	/**
-	 * @class ns_egret.UIStage
+	 * @class egret.UIStage
 	 * @classdesc
 	 * 系统管理器，应用程序顶级容器。
 	 * 通常情况下，一个程序应该只含有唯一的系统管理器,并且所有的组件都包含在它内部。
 	 * 它负责管理弹窗，鼠标样式，工具提示的显示层级，以及过滤鼠标和键盘事件为可以取消的。
-	 * @extends ns_egret.Group
-	 * @implements ns_egret.IUIStage
+	 * @extends egret.Group
+	 * @implements egret.IUIStage
 	 */	
 	export class UIStage extends Group implements IUIStage{
 		/**
 		 * 构造函数
-		 * @method ns_egret.UIStage#constructor
+		 * @method egret.UIStage#constructor
 		 */		
 		public constructor(){
 			super();
@@ -89,7 +89,7 @@ module ns_egret {
 		//                            禁止外部布局顶级容器
 		//==========================================================================
 		/**
-		 * @constant ns_egret.UIStage#x
+		 * @constant egret.UIStage#x
 		 */
         public get x():number{
             return this._x;
@@ -101,7 +101,7 @@ module ns_egret {
 		}
 
 		/**
-		 * @constant ns_egret.UIStage#y
+		 * @constant egret.UIStage#y
 		 */
         public get y():number{
             return this._y;
@@ -113,7 +113,7 @@ module ns_egret {
 		}
 
 		/**
-		 * @member ns_egret.UIStage#width
+		 * @member egret.UIStage#width
 		 */
         public get width():number{
             return this._width;
@@ -125,7 +125,7 @@ module ns_egret {
 		}
 
 		/**
-		 * @member ns_egret.UIStage#height
+		 * @member egret.UIStage#height
 		 */
         public get height():number{
             return this._height;
@@ -137,7 +137,7 @@ module ns_egret {
 		}
 
 		/**
-		 * @member ns_egret.UIStage#scaleX
+		 * @member egret.UIStage#scaleX
 		 */
         public get scaleX():number{
             return this._scaleX;
@@ -149,7 +149,7 @@ module ns_egret {
 		}
 
 		/**
-		 * @member ns_egret.UIStage#scaleY
+		 * @member egret.UIStage#scaleY
 		 */
         public get scaleY():number{
             return this._scaleY;
@@ -160,21 +160,21 @@ module ns_egret {
 		public set scaleY(value:number){
 		}
 		/**
-		 * @method ns_egret.UIStage#setActualSize
+		 * @method egret.UIStage#setActualSize
 		 * @param w {number} 
 		 * @param h {number} 
 		 */
 		public setActualSize(w:number, h:number):void{
 		}
 		/**
-		 * @method ns_egret.UIStage#setLayoutBoundsPosition
+		 * @method egret.UIStage#setLayoutBoundsPosition
 		 * @param x {number} 
 		 * @param y {number} 
 		 */
 		public setLayoutBoundsPosition(x:number, y:number):void{
 		}
 		/**
-		 * @method ns_egret.UIStage#setLayoutBoundsSize
+		 * @method egret.UIStage#setLayoutBoundsSize
 		 * @param layoutWidth {number} 
 		 * @param layoutHeight {number} 
 		 */
@@ -182,7 +182,7 @@ module ns_egret {
 		}
 		/**
 		 * 布局对象,UIStage只接受BasicLayout
-		 * @member ns_egret.UIStage#layout
+		 * @member egret.UIStage#layout
 		 */		
 		public get layout():LayoutBase{
 			return this._layout;
@@ -195,7 +195,7 @@ module ns_egret {
 		private _popUpContainer:UILayer;
 		/**
 		 * 弹出窗口层容器。
-		 * @member ns_egret.UIStage#popUpContainer
+		 * @member egret.UIStage#popUpContainer
 		 */		
 		public get popUpContainer():IContainer{
 			if (!this._popUpContainer){
@@ -208,7 +208,7 @@ module ns_egret {
 		private _toolTipContainer:UILayer;
 		/**
 		 * 工具提示层容器。
-		 * @member ns_egret.UIStage#toolTipContainer
+		 * @member egret.UIStage#toolTipContainer
 		 */		
 		public get toolTipContainer():IContainer{
 			if (!this._toolTipContainer){
@@ -221,7 +221,7 @@ module ns_egret {
 		private _cursorContainer:UILayer;
 		/**
 		 * 鼠标样式层容器。
-		 * @member ns_egret.UIStage#cursorContainer
+		 * @member egret.UIStage#cursorContainer
 		 */		
 		public get cursorContainer():IContainer{
 			if (!this._cursorContainer){
@@ -290,7 +290,7 @@ module ns_egret {
 		//                                复写容器操作方法
 		//==========================================================================
 		/**
-		 * @method ns_egret.UIStage#addElement
+		 * @method egret.UIStage#addElement
 		 * @param element {IVisualElement} 
 		 * @returns {IVisualElement}
 		 */
@@ -302,7 +302,7 @@ module ns_egret {
 		}
 		
 		/**
-		 * @method ns_egret.UIStage#addElementAt
+		 * @method egret.UIStage#addElementAt
 		 * @param element {IVisualElement} 
 		 * @param index {number} 
 		 * @returns {IVisualElement}
@@ -333,7 +333,7 @@ module ns_egret {
 		}
 		
 		/**
-		 * @method ns_egret.UIStage#removeElement
+		 * @method egret.UIStage#removeElement
 		 * @param element {IVisualElement} 
 		 * @returns {IVisualElement}
 		 */
@@ -342,7 +342,7 @@ module ns_egret {
 		}
 		
 		/**
-		 * @method ns_egret.UIStage#removeElementAt
+		 * @method egret.UIStage#removeElementAt
 		 * @param index {number} 
 		 * @returns {IVisualElement}
 		 */
@@ -360,7 +360,7 @@ module ns_egret {
 		}
 		
 		/**
-		 * @method ns_egret.UIStage#removeAllElements
+		 * @method egret.UIStage#removeAllElements
 		 */
 		public removeAllElements():void{
 			while(this._noTopMostIndex>0){
@@ -370,7 +370,7 @@ module ns_egret {
 		}
 		
 		/**
-		 * @method ns_egret.UIStage#_elementRemoved
+		 * @method egret.UIStage#_elementRemoved
 		 * @param element {IVisualElement} 
 		 * @param index {number} 
 		 * @param notifyListeners {boolean} 

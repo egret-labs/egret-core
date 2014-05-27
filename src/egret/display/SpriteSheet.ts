@@ -29,7 +29,7 @@
 /// <reference path="../utils/HashObject.ts"/>
 /// <reference path="../utils/Logger.ts"/>
 
-module ns_egret{
+module egret{
     /**
      * @class SpriteSheet是一张由多个子位图拼接而成的集合位图，它包含多个Texture对象。
      * 每一个Texture都共享SpriteSheet的集合位图，但是指向它的不同的区域。
@@ -56,7 +56,7 @@ module ns_egret{
             var frame = this._textureMap[spriteFrameName];
             if(frame == null)
             {
-                ns_egret.Logger.fatal("没有找到相应的frame：", spriteFrameName);
+                egret.Logger.fatal("没有找到相应的frame：", spriteFrameName);
             }
             return frame;
         }
@@ -71,9 +71,9 @@ module ns_egret{
         public _textureMap:Object;
         /**
          * 根据指定纹理名称获取一个缓存的Textrue对象
-         * @method ns_egret.SpriteSheet#getTexture
+         * @method egret.SpriteSheet#getTexture
          * @param name {string} 缓存这个Texture对象所使用的名称，如果名称已存在，将会覆盖之前的Texture对象
-         * @returns {ns_egret.Texture} 创建的Texture对象
+         * @returns {egret.Texture} 创建的Texture对象
          */
         public getTexture(name:string):Texture{
             return this._textureMap[name];
@@ -81,13 +81,13 @@ module ns_egret{
 
         /**
          * 为SpriteSheet上的指定区域创建一个新的Texture对象并缓存它
-         * @method ns_egret.SpriteSheet#createTexture
+         * @method egret.SpriteSheet#createTexture
          * @param name {string} 缓存这个Texture对象所使用的名称，如果名称已存在，将会覆盖之前的Texture对象
          * @param startX {number} 指定位图区域在SpriteSheet上的起始坐标x
          * @param startY {number} 指定位图区域在SpriteSheet上的起始坐标y
          * @param width {number} 指定位图区域在SpriteSheet上的宽度
          * @param height {number} 指定位图区域在SpriteSheet上的高度
-         * @returns {ns_egret.Texture} 创建的Texture对象
+         * @returns {egret.Texture} 创建的Texture对象
          */
         public createTexture(name:string,startX:number,startY:number,width:number,height:number):Texture{
             var texture:Texture = new Texture();

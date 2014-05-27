@@ -25,9 +25,9 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-module ns_egret {
+module egret {
     /**
-	 * @class ns_egret.Logger
+	 * @class egret.Logger
 	 * @classdesc
      * Logger是引擎的日志处理模块入口
      * @stable B 目前Logger的接口设计没有问题，但是考虑到跨平台，需要将其改为一个Context，并且允许开发者自由扩展以实现自身游戏的日志分析收集需求
@@ -36,33 +36,33 @@ module ns_egret {
     export class Logger {
         /**
          * 表示出现了致命错误，开发者必须修复错误
-		 * @method ns_egret.Logger.fatal
+		 * @method egret.Logger.fatal
          * @param actionCode {string} 
          * @param value {Object} 
          */
         public static fatal(actionCode:string, value:Object = null){
-            ns_egret.Logger.traceToConsole("Fatal",actionCode,value);
-            throw new Error(ns_egret.Logger.getTraceCode("Fatal", actionCode, value));
+            egret.Logger.traceToConsole("Fatal",actionCode,value);
+            throw new Error(egret.Logger.getTraceCode("Fatal", actionCode, value));
         }
 
         /**
          * 记录正常的Log信息
-		 * @method ns_egret.Logger.info
+		 * @method egret.Logger.info
          * @param actionCode {string} 
          * @param value {Object} 
          */
         public static info(actionCode:string, value:Object = null){
-            ns_egret.Logger.traceToConsole("Info",actionCode,value);
+            egret.Logger.traceToConsole("Info",actionCode,value);
         }
 
         /**
          * 记录可能会出现问题的Log信息
-		 * @method ns_egret.Logger.warning
+		 * @method egret.Logger.warning
          * @param actionCode {string} 
          * @param value {Object} 
          */
         public static warning(actionCode:string, value:Object = null){
-            ns_egret.Logger.traceToConsole("Warning",actionCode,value);
+            egret.Logger.traceToConsole("Warning",actionCode,value);
         }
 
         /**
@@ -72,7 +72,7 @@ module ns_egret {
          * @param value
          */
         private static traceToConsole(type:String,actionCode:String,value:Object){
-            console.log(ns_egret.Logger.getTraceCode(type, actionCode, value));
+            console.log(egret.Logger.getTraceCode(type, actionCode, value));
         }
 
         /**

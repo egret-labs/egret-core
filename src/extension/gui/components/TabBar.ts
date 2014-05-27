@@ -37,22 +37,22 @@
 /// <reference path="../events/ListEvent.ts"/>
 /// <reference path="../events/RendererExistenceEvent.ts"/>
 
-module ns_egret {
+module egret {
 
 	/**
-	 * @class ns_egret.TabBar
+	 * @class egret.TabBar
 	 * @classdesc
 	 * 选项卡组件
-	 * @extends ns_egret.ListBase
+	 * @extends egret.ListBase
 	 */	
 	export class TabBar extends ListBase{
 		/**
 		 * 构造函数
-		 * @method ns_egret.TabBar#constructor
+		 * @method egret.TabBar#constructor
 		 */		
 		public constructor(){
 			super();
-            this.hostComponentKey = "ns_egret.TabBar";
+            this.hostComponentKey = "egret.TabBar";
 			this.requireSelection = true;
 		}
 		
@@ -61,7 +61,7 @@ module ns_egret {
 		 */
 		private requireSelectionChanged_tabBar:boolean;
 		/**
-		 * @method ns_egret.TabBar#c
+		 * @method egret.TabBar#c
 		 * @param value {boolea} 
 		 */
 		public c(value:boolean){
@@ -104,7 +104,7 @@ module ns_egret {
 		
 		
 		/**
-		 * @method ns_egret.TabBar#commitProperties
+		 * @method egret.TabBar#commitProperties
 		 */
 		public commitProperties():void{
 			super.commitProperties();
@@ -121,7 +121,7 @@ module ns_egret {
 		}  
 		
 		/**
-		 * @method ns_egret.TabBar#dataGroup_rendererAddHandler
+		 * @method egret.TabBar#dataGroup_rendererAddHandler
 		 * @param event {RendererExistenceEvent} 
 		 */
 		public dataGroup_rendererAddHandler(event:RendererExistenceEvent):void{
@@ -136,7 +136,7 @@ module ns_egret {
 		}
 		
 		/**
-		 * @method ns_egret.TabBar#dataGroup_rendererRemoveHandler
+		 * @method egret.TabBar#dataGroup_rendererRemoveHandler
 		 * @param event {RendererExistenceEvent} 
 		 */
 		public dataGroup_rendererRemoveHandler(event:RendererExistenceEvent):void{   

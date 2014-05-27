@@ -33,23 +33,23 @@
 /// <reference path="../../../../egret/net/URLRequest.ts"/>
 /// <reference path="../../core/IAssetAdapter.ts"/>
 
-module ns_egret {
+module egret {
     /**
-     * @class ns_egret.DefaultAssetAdapter
+     * @class egret.DefaultAssetAdapter
      * @classdesc
      * 默认的IAssetAdapter接口实现
-     * @implements ns_egret.IAssetAdapter
+     * @implements egret.IAssetAdapter
      */
     export class DefaultAssetAdapter implements IAssetAdapter{
         /**
          * 构造函数
-         * @method ns_egret.DefaultSkinAdapter#constructor
+         * @method egret.DefaultSkinAdapter#constructor
          */
         public constructor(){
         }
         /**
          * 解析素材
-         * @method ns_egret.DefaultAssetAdapter#getAsset
+         * @method egret.DefaultAssetAdapter#getAsset
          * @param source {any} 待解析的新素材标识符
          * @param compFunc {Function} 解析完成回调函数，示例：compFunc(content:any,source:any):void;
          * 回调参数content接受两种类型：DisplayObject或Texture。

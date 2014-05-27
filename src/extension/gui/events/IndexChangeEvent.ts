@@ -28,29 +28,29 @@
 /// <reference path="../../../egret/events/Event.ts"/>
 /// <reference path="../../../egret/events/IEventDispatcher.ts"/>
 
-module ns_egret {
+module egret {
 
 	/**
-	 * @class ns_egret.IndexChangeEvent
+	 * @class egret.IndexChangeEvent
 	 * @classdesc
 	 * 索引改变事件
-	 * @extends ns_egret.Event
+	 * @extends egret.Event
 	 */	
 	export class IndexChangeEvent extends Event{
 		/**
 		 * 指示索引已更改 
-		 * @constant ns_egret.IndexChangeEvent.CHANGE
+		 * @constant egret.IndexChangeEvent.CHANGE
 		 */		
 		public static CHANGE:string = "change";
 		
 		/**
 		 * 指示索引即将更改,可以通过调用preventDefault()方法阻止索引发生更改
-		 * @constant ns_egret.IndexChangeEvent.CHANGING
+		 * @constant egret.IndexChangeEvent.CHANGING
 		 */
 		public static CHANGING:string = "changing";
 		
 		/**
-		 * @method ns_egret.IndexChangeEvent#constructor
+		 * @method egret.IndexChangeEvent#constructor
 		 * @param type {string} 
 		 * @param bubbles {boolean} 
 		 * @param cancelable {boolean} 
@@ -69,19 +69,19 @@ module ns_egret {
 		
 		/**
 		 * 进行更改之后的从零开始的索引。
-		 * @member ns_egret.IndexChangeEvent#newIndex
+		 * @member egret.IndexChangeEvent#newIndex
 		 */
 		public newIndex:number;
 		
 		/**
 		 * 进行更改之前的从零开始的索引。
-		 * @member ns_egret.IndexChangeEvent#oldIndex
+		 * @member egret.IndexChangeEvent#oldIndex
 		 */		
 		public oldIndex:number;
 
         /**
          * 使用指定的EventDispatcher对象来抛出事件对象。抛出的对象将会缓存在对象池上，供下次循环复用。
-         * @method ns_egret.IndexChangeEvent.dispatchIndexChangeEvent
+         * @method egret.IndexChangeEvent.dispatchIndexChangeEvent
          */
         public static dispatchIndexChangeEvent(target:IEventDispatcher,type:string,
                                                oldIndex:number = -1,newIndex:number = -1,cancelable:boolean = false):boolean{

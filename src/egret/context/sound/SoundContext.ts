@@ -28,35 +28,35 @@
 /// <reference path="../MainContext.ts"/>
 /// <reference path="../../utils/HashObject.ts"/>
 
-module ns_egret{
+module egret{
 	/**
-	 * @class ns_egret.SoundContext
+	 * @class egret.SoundContext
 	 * @classdesc
-	 * @extends ns_egret.HashObject
+	 * @extends egret.HashObject
 	 */
     export class SoundContext extends HashObject{
 		/**
-		 * @method ns_egret.SoundContext.getInstance
+		 * @method egret.SoundContext.getInstance
 		 * @returns {SoundContext}
 		 */
         public static getInstance():SoundContext {
-            return ns_egret.MainContext.instance.soundContext;
+            return egret.MainContext.instance.soundContext;
         }
 
 		/**
-		 * @member ns_egret.SoundContext.isMusicPlaying
+		 * @member egret.SoundContext.isMusicPlaying
 		 */
         public static isMusicPlaying:boolean = false;
 
 		/**
-		 * @method ns_egret.SoundContext#constructor
+		 * @method egret.SoundContext#constructor
 		 */
         public constructor() {
             super();
         }
 
 		/**
-		 * @method ns_egret.SoundContext#preloadSound
+		 * @method egret.SoundContext#preloadSound
 		 * @param pat {any} 
 		 */
         public preloadSound(path) {
@@ -64,7 +64,7 @@ module ns_egret{
         }
 
 		/**
-		 * @method ns_egret.SoundContext#playMusic
+		 * @method egret.SoundContext#playMusic
 		 * @param path {any} 
 		 * @param loop {any} 
 		 */
@@ -72,7 +72,7 @@ module ns_egret{
         }
 
 		/**
-		 * @method ns_egret.SoundContext#stopMusic
+		 * @method egret.SoundContext#stopMusic
 		 * @param releaseDat {any} 
 		 */
         public stopMusic(releaseData) {

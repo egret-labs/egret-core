@@ -28,7 +28,7 @@
 /// <reference path="../context/MainContext.ts"/>
 /// <reference path="../utils/HashObject.ts"/>
 
-module ns_egret {
+module egret {
     /**
      * @class Texture
      * 纹理类是对不同平台不同的图片资源的封装
@@ -83,7 +83,7 @@ module ns_egret {
         }
 
         public set bitmapData(value:any) {
-            var scale = ns_egret.MainContext.instance.rendererContext.texture_scale_factor;
+            var scale = egret.MainContext.instance.rendererContext.texture_scale_factor;
             this._bitmapData = value;
             this._textureWidth = value.width * scale;
             this._textureHeight = value.height * scale;

@@ -28,32 +28,32 @@
 /// <reference path="IContainer.ts"/>
 /// <reference path="IVisualElement.ts"/>
 
-module ns_egret {
+module egret {
 
 	/**
-	 * @class ns_egret.IVisualElementContainer
+	 * @class egret.IVisualElementContainer
 	 * @interface
 	 * @classdesc
 	 * 具有管理IVisualElement子显示对象的容器接口
-	 * @extends ns_egret.IVisualElement
-	 * @extends ns_egret.IContainer
+	 * @extends egret.IVisualElement
+	 * @extends egret.IContainer
 	 */	
 	export interface IVisualElementContainer extends IVisualElement,IContainer{
 		/**
 		 * 从容器中删除所有可视元素。
-		 * @method ns_egret.IVisualElementContainer#removeAllElements
+		 * @method egret.IVisualElementContainer#removeAllElements
 		 */		
 		removeAllElements():void;
 		/**
 		 * 交换两个指定可视元素的索引。所有其他元素仍位于相同的索引位置。
-		 * @method ns_egret.IVisualElementContainer#swapElements
+		 * @method egret.IVisualElementContainer#swapElements
 		 * @param element1 {IVisualElement} 第一个可视元素。
 		 * @param element2 {IVisualElement} 第二个可视元素。
 		 */		
 		swapElements(element1:IVisualElement, element2:IVisualElement):void;
 		/**
 		 * 交换容器中位于两个指定索引位置的可视元素。所有其他可视元素仍位于相同的索引位置。
-		 * @method ns_egret.IVisualElementContainer#swapElementsAt
+		 * @method egret.IVisualElementContainer#swapElementsAt
 		 * @param index1 {number} 第一个元素的索引。
 		 * @param index2 {number} 第二个元素的索引。
 		 * @throws RangeError 如果在子列表中不存在该索引位置。

@@ -27,10 +27,10 @@
 
 /// <reference path="IItemRenderer.ts"/>
 
-module ns_egret {
+module egret {
 
 	/**
-	 * @class ns_egret.IItemRendererOwner
+	 * @class egret.IItemRendererOwner
 	 * @interface
 	 * @classdesc
 	 * 项呈示器的主机组件接口
@@ -38,7 +38,7 @@ module ns_egret {
 	export interface IItemRendererOwner{
 		/**
 		 * 更新项呈示器数据
-		 * @method ns_egret.IItemRendererOwner#updateRenderer
+		 * @method egret.IItemRendererOwner#updateRenderer
 		 * @param renderer {IItemRenderer} 
 		 * @param itemIndex {number} 
 		 * @param data {any}

@@ -27,17 +27,17 @@
 
 /// <reference path="../../../egret/utils/HashObject.ts"/>
 
-module ns_egret {
+module egret {
 	/**
-	 * @class ns_egret.ClassFactory
+	 * @class egret.ClassFactory
 	 * @classdesc
-	 * @extends ns_egret.HashObject
+	 * @extends egret.HashObject
 	 */
     export class ClassFactory extends HashObject{
 
         /**
-		 * @method ns_egret.ClassFactory#constructor
-         * @class ns_egret.ClassFactory
+		 * @method egret.ClassFactory#constructor
+         * @class egret.ClassFactory
          * @classdesc
          * ClassFactory 实例是一个“工厂对象”，Egret 可用其生成其他类的实例，每个实例拥有相同的属性。
          * @param generator {any} newInstance() 方法根据工厂对象生成对象时使用的 Class。
@@ -48,12 +48,12 @@ module ns_egret {
         }
         /**
          * newInstance() 方法根据工厂对象生成对象时使用的 Class。
-		 * @member ns_egret.ns_egret#generator
+		 * @member egret.egret#generator
          */
         public generator:any;
         /**
          * 生产一个新的实例
-		 * @method ns_egret.ns_egret#newInstance
+		 * @method egret.egret#newInstance
 		 * @returns {any}
          */
         public newInstance():any{

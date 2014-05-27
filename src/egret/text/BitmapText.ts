@@ -30,7 +30,7 @@
 /// <reference path="../geom/Rectangle.ts"/>
 /// <reference path="BitmapTextSpriteSheet.ts"/>
 
-module ns_egret {
+module egret {
     /**
      * @class BitmapText
      * 位图字体采用了Bitmap+SpriteSheet的方式来渲染文字

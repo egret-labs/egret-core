@@ -29,17 +29,17 @@
 /// <reference path="../core/IStateClient.ts"/>
 /// <reference path="IOverride.ts"/>
 
-module ns_egret {
+module egret {
 
 	/**
-	 * @class ns_egret.State
+	 * @class egret.State
 	 * @classdesc
 	 * State 类定义视图状态，即组件的特定视图。
-	 * @extends ns_egret.HashObject
+	 * @extends egret.HashObject
 	 */
 	export class State extends HashObject{
 		/**
-		 * @method ns_egret.State#constructor
+		 * @method egret.State#constructor
 		 * @param properties {any} 
 		 */
 		public constructor(properties:any=null){
@@ -55,24 +55,24 @@ module ns_egret {
 
 		/**
 		 * 视图状态的名称。给定组件的状态名称必须唯一。必须设置此属性。
-		 * @member ns_egret.State#name
+		 * @member egret.State#name
 		 */		
 		public name:string;
 		
 		/**
 		 * 该视图状态的覆盖，表现为实现 IOverride 接口的对象的数组。
 		 * 这些覆盖在进入状态时按顺序应用，在退出状态时按相反的顺序删除。 
-		 * @member ns_egret.State#overrides
+		 * @member egret.State#overrides
 		 */		
 		public overrides:Array<any>  = [];
 		/**
 		 * 此视图状态作为 String 数组所属的状态组。 
-		 * @member ns_egret.State#stateGroups
+		 * @member egret.State#stateGroups
 		 */		
 		public stateGroups:Array<any>  = [];
 		/**
 		 * 初始化视图
-		 * @method ns_egret.State#initialize
+		 * @method egret.State#initialize
 		 * @param parent {IStateClient} 
 		 */		
 		public initialize(parent:IStateClient):void{

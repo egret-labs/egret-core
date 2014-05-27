@@ -29,7 +29,7 @@
 /// <reference path="../events/EventDispatcher.ts"/>
 /// <reference path="../utils/Logger.ts"/>
 
-module ns_egret {
+module egret {
     export class Tween extends EventDispatcher {
         public static NONE = 0;
         public static LOOP = 1;
@@ -66,7 +66,7 @@ module ns_egret {
 
         public static removeTweens(target):void {
             if (!target.tween_count) {
-                ns_egret.Logger.warning("target没有正在执行tween");
+                egret.Logger.warning("target没有正在执行tween");
                 return;
             }
             var tweens:Tween[] = Tween._tweens;

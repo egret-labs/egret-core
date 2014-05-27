@@ -28,17 +28,17 @@
 /// <reference path="../../../egret/display/DisplayObjectContainer.ts"/>
 /// <reference path="../core/IVisualElement.ts"/>
 
-module ns_egret {
+module egret {
 
 	/**
-	 * @class ns_egret.LayoutUtil
+	 * @class egret.LayoutUtil
 	 * @classdesc
 	 * 布局工具类
 	 */
 	export class LayoutUtil{
 		/**
 		 * 根据对象当前的xy坐标调整其相对位置属性，使其在下一次的父级布局中过程中保持当前位置不变。
-		 * @method ns_egret.LayoutUtil.adjustRelativeByXY
+		 * @method egret.LayoutUtil.adjustRelativeByXY
 		 * @param element {IVisualElement} 要调整相对位置属性的对象
 		 * @param parent {DisplayObjectContainer} element的父级容器。若不设置，则取element.parent的值。若两者的值都为空，则放弃调整。
 		 */		

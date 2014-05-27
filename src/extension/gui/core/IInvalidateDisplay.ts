@@ -25,10 +25,10 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-module ns_egret {
+module egret {
 
 	/**
-	 * @class ns_egret.IInvalidateDisplay
+	 * @class egret.IInvalidateDisplay
 	 * @interface
 	 * @classdesc
 	 * 具有延迟应用属性功能的显示对象接口
@@ -36,7 +36,7 @@ module ns_egret {
 	export interface IInvalidateDisplay{
 		/**
 		 * 立即应用所有标记为延迟验证的属性
-		 * @method ns_egret.IInvalidateDisplay#validateNow
+		 * @method egret.IInvalidateDisplay#validateNow
 		 */		
 		validateNow():void;
 	}

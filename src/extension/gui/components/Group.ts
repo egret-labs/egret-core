@@ -33,18 +33,18 @@
 /// <reference path="../core/IVisualElementContainer.ts"/>
 /// <reference path="../events/ElementExistenceEvent.ts"/>
 
-module ns_egret {
+module egret {
 
 	/**
-	 * @class ns_egret.Group
+	 * @class egret.Group
 	 * @classdesc
 	 * 自动布局容器
-	 * @extends ns_egret.GroupBase
-	 * @implements ns_egret.IVisualElementContainer
+	 * @extends egret.GroupBase
+	 * @implements egret.IVisualElementContainer
 	 */
 	export class Group extends GroupBase implements IVisualElementContainer{
 		/**
-		 * @method ns_egret.Group#constructor
+		 * @method egret.Group#constructor
 		 */
 		public constructor(){
 			super();
@@ -56,7 +56,7 @@ module ns_egret {
 		private createChildrenCalled:boolean = false;
 		
 		/**
-		 * @method ns_egret.Group#createChildren
+		 * @method egret.Group#createChildren
 		 */
 		public createChildren():void{
 			super.createChildren();
@@ -129,14 +129,14 @@ module ns_egret {
 		
 		
 		/**
-		 * @member ns_egret.Group#numElements
+		 * @member egret.Group#numElements
 		 */
 		public get numElements():number{
 			return this._elementsContent.length;
 		}
 		
 		/**
-		 * @method ns_egret.Group#getElementAt
+		 * @method egret.Group#getElementAt
 		 * @param index {number} 
 		 * @returns {IVisualElement}
 		 */
@@ -155,7 +155,7 @@ module ns_egret {
 				throw new RangeError("索引:\""+index+"\"超出可视元素索引范围");
 		}
 		/**
-		 * @method ns_egret.Group#addElement
+		 * @method egret.Group#addElement
 		 * @param element {IVisualElement} 
 		 * @returns {IVisualElement}
 		 */
@@ -168,7 +168,7 @@ module ns_egret {
 			return this.addElementAt(element, index);
 		}
 		/**
-		 * @method ns_egret.Group#addElementAt
+		 * @method egret.Group#addElementAt
 		 * @param element {IVisualElement} 
 		 * @param index {number} 
 		 * @returns {IVisualElement}
@@ -199,7 +199,7 @@ module ns_egret {
 			return element;
 		}
 		/**
-		 * @method ns_egret.Group#removeElement
+		 * @method egret.Group#removeElement
 		 * @param element {IVisualElement} 
 		 * @returns {IVisualElement}
 		 */
@@ -207,7 +207,7 @@ module ns_egret {
 			return this.removeElementAt(this.getElementIndex(element));
 		}
 		/**
-		 * @method ns_egret.Group#removeElementAt
+		 * @method egret.Group#removeElementAt
 		 * @param index {number} 
 		 * @returns {IVisualElement}
 		 */
@@ -224,7 +224,7 @@ module ns_egret {
 			return element;
 		}
 		/**
-		 * @method ns_egret.Group#removeAllElements
+		 * @method egret.Group#removeAllElements
 		 */
 		public removeAllElements():void{
 			for (var i:number = this.numElements - 1; i >= 0; i--){
@@ -233,7 +233,7 @@ module ns_egret {
 		}
 		
 		/**
-		 * @method ns_egret.Group#getElementIndex
+		 * @method egret.Group#getElementIndex
 		 * @param element {IVisualElement} 
 		 * @returns {number}
 		 */
@@ -241,7 +241,7 @@ module ns_egret {
 			return this._elementsContent.indexOf(element);
 		}
 		/**
-		 * @method ns_egret.Group#setElementIndex
+		 * @method egret.Group#setElementIndex
 		 * @param element {IVisualElement} 
 		 * @param index {number} 
 		 */
@@ -262,7 +262,7 @@ module ns_egret {
 				this._elementAdded(element, index, false);
 		}
 		/**
-		 * @method ns_egret.Group#swapElements
+		 * @method egret.Group#swapElements
 		 * @param element1 {IVisualElement} 
 		 * @param element2 {IVisualElement} 
 		 */
@@ -270,7 +270,7 @@ module ns_egret {
 			this.swapElementsAt(this.getElementIndex(element1), this.getElementIndex(element2));
 		}
 		/**
-		 * @method ns_egret.Group#swapElementsAt
+		 * @method egret.Group#swapElementsAt
 		 * @param index1 {number} 
 		 * @param index2 {number} 
 		 */
@@ -306,7 +306,7 @@ module ns_egret {
 		}
 		/**
 		 * 添加一个显示元素到容器
-		 * @method ns_egret.Group#_elementAdded
+		 * @method egret.Group#_elementAdded
 		 * @param element {IVisualElement} 
 		 * @param index {number} 
 		 * @param notifyListeners {boolean} 
@@ -328,7 +328,7 @@ module ns_egret {
 		}
 		/**
 		 * 从容器移除一个显示元素
-		 * @method ns_egret.Group#_elementRemoved
+		 * @method egret.Group#_elementRemoved
 		 * @param element {IVisualElement} 
 		 * @param index {number} 
 		 * @param notifyListeners {boolean} 
@@ -351,7 +351,7 @@ module ns_egret {
 		
 		private static errorStr:string = "在此组件中不可用，若此组件为容器类，请使用";
 		/**
-		 * @method ns_egret.Group#addChild
+		 * @method egret.Group#addChild
 		 * @deprecated
 		 * @param child {DisplayObject} 
 		 * @returns {DisplayObject}
@@ -360,7 +360,7 @@ module ns_egret {
 			throw(new Error("addChild()"+Group.errorStr+"addElement()代替"));
 		}
 		/**
-		 * @method ns_egret.Group#addChildAt
+		 * @method egret.Group#addChildAt
 		 * @deprecated
 		 * @param child {DisplayObject} 
 		 * @param index {number} 
@@ -370,7 +370,7 @@ module ns_egret {
 			throw(new Error("addChildAt()"+Group.errorStr+"addElementAt()代替"));
 		}
 		/**
-		 * @method ns_egret.Group#removeChild
+		 * @method egret.Group#removeChild
 		 * @deprecated
 		 * @param child {DisplayObject} 
 		 * @returns {DisplayObject}
@@ -379,7 +379,7 @@ module ns_egret {
 			throw(new Error("removeChild()"+Group.errorStr+"removeElement()代替"));
 		}
 		/**
-		 * @method ns_egret.Group#removeChildAt
+		 * @method egret.Group#removeChildAt
 		 * @deprecated
 		 * @param index {number} 
 		 * @returns {DisplayObject}
@@ -388,7 +388,7 @@ module ns_egret {
 			throw(new Error("removeChildAt()"+Group.errorStr+"removeElementAt()代替"));
 		}
 		/**
-		 * @method ns_egret.Group#setChildIndex
+		 * @method egret.Group#setChildIndex
 		 * @deprecated
 		 * @param child {DisplayObject} 
 		 * @param index {number} 
@@ -397,7 +397,7 @@ module ns_egret {
 			throw(new Error("setChildIndex()"+Group.errorStr+"setElementIndex()代替"));
 		}
 		/**
-		 * @method ns_egret.Group#swapChildren
+		 * @method egret.Group#swapChildren
 		 * @deprecated
 		 * @param child1 {DisplayObject} 
 		 * @param child2 {DisplayObject} 
@@ -406,7 +406,7 @@ module ns_egret {
 			throw(new Error("swapChildren()"+Group.errorStr+"swapElements()代替"));
 		}
 		/**
-		 * @method ns_egret.Group#swapChildrenAt
+		 * @method egret.Group#swapChildrenAt
 		 * @deprecated
 		 * @param index1 {number} 
 		 * @param index2 {number} 

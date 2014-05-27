@@ -25,11 +25,11 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-module ns_egret {
+module egret {
     /**
      * 在window上需要读取的命名空间属性列表
      */
-    export var __moduleNameList:Array<string> = ["ns_egret","RES","dragonBones"];
+    export var __moduleNameList:Array<string> = ["egret","RES","dragonBones"];
 
     /**
      * 需要重新刷新类名的标志
@@ -42,7 +42,7 @@ module ns_egret {
      * @param value 需要完全限定类名称的对象，可以将任何 TypeScript / JavaScript值传递给此方法，包括所有可用的TypeScript / JavaScript类型、对象实例、原始类型（如number）和类对象
      * @returns {string} 包含完全限定类名称的字符串<br />
      * @example
-     *  ns_egret.getQualifiedClassName(ns_egret.DisplayObject) //返回 "ns_egret.DisplayObject"
+     *  egret.getQualifiedClassName(egret.DisplayObject) //返回 "egret.DisplayObject"
      */
     export function getQualifiedClassName(value:any):string {
         var constructorFunction:any = value.prototype ? value.prototype.constructor : value.__proto__.constructor;
@@ -74,7 +74,7 @@ module ns_egret {
 
     function updateModules():void{
 //      var t:number = getTimer();
-        var list:Array<string> = ns_egret.__moduleNameList;
+        var list:Array<string> = egret.__moduleNameList;
         var length:number = list.length;
         for(var i:number=0;i<length;i++){
             var key:string = list[i];

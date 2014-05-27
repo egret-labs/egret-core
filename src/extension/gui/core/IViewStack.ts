@@ -27,10 +27,10 @@
 
 /// <reference path="IVisualElement.ts"/>
 
-module ns_egret {
+module egret {
 
 	/**
-	 * @class ns_egret.IViewStack
+	 * @class egret.IViewStack
 	 * @interface
 	 * @classdesc
 	 * 层级堆叠容器接口
@@ -38,13 +38,13 @@ module ns_egret {
 	export interface IViewStack{
 		/**
 		 * 当前可见子元素的索引。索引从0开始。
-		 * @member ns_egret.IViewStack#selectedIndex
+		 * @member egret.IViewStack#selectedIndex
 		 */			
 		selectedIndex:number;
 		
 		/**
 		 * 当前可见的子元素。
-		 * @member ns_egret.IViewStack#selectedChild
+		 * @member egret.IViewStack#selectedChild
 		 */
 		selectedChild:IVisualElement;
 	}

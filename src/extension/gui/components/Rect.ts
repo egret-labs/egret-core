@@ -31,18 +31,18 @@
 /// <reference path="../../../egret/geom/Rectangle.ts"/>
 /// <reference path="../core/UIComponent.ts"/>
 
-module ns_egret {
+module egret {
 
 	/**
-	 * @class ns_egret.Rect
+	 * @class egret.Rect
 	 * @classdesc
 	 * 矩形绘图元素。此组件可响应鼠标事件。
-	 * @extends ns_egret.UIComponent
+	 * @extends egret.UIComponent
 	 */
 	export class Rect extends UIComponent{
 		/**
 		 * 构造函数
-		 * @method ns_egret.Rect#constructor
+		 * @method egret.Rect#constructor
 		 */		
 		public constructor(){
 			super();
@@ -53,7 +53,7 @@ module ns_egret {
 
         public get graphics():Graphics{
             if(!this._graphics){
-                var rendererContext = ns_egret.MainContext.instance.rendererContext;
+                var rendererContext = egret.MainContext.instance.rendererContext;
                 this._graphics = new Graphics(rendererContext);
             }
             return this._graphics;
@@ -68,7 +68,7 @@ module ns_egret {
 		private _fillColor:number = 0xFFFFFF;
 		/**
 		 * 填充颜色
-		 * @member ns_egret.Rect#fillColor
+		 * @member egret.Rect#fillColor
 		 */
 		public get fillColor():number{
 			return this._fillColor;
@@ -83,7 +83,7 @@ module ns_egret {
 		private _fillAlpha:number = 1;
 		/**
 		 * 填充透明度,默认值为0。
-		 * @member ns_egret.Rect#fillAlpha
+		 * @member egret.Rect#fillAlpha
 		 */
 		public get fillAlpha():number{
 			return this._fillAlpha;
@@ -98,7 +98,7 @@ module ns_egret {
 		private _strokeColor:number = 0x444444;
 		/**
 		 * 边框颜色,注意：当strokeAlpha为0时，不显示边框。
-		 * @member ns_egret.Rect#strokeColor
+		 * @member egret.Rect#strokeColor
 		 */
 		public get strokeColor():number{
 			return this._strokeColor;
@@ -114,7 +114,7 @@ module ns_egret {
 		private _strokeAlpha:number = 0;
 		/**
 		 * 边框透明度，默认值为0。
-		 * @member ns_egret.Rect#strokeAlpha
+		 * @member egret.Rect#strokeAlpha
 		 */
 		public get strokeAlpha():number{
 			return this._strokeAlpha;
@@ -129,7 +129,7 @@ module ns_egret {
 		private _strokeWeight:number = 1;
 		/**
 		 * 边框粗细(像素),注意：当strokeAlpha为0时，不显示边框。
-		 * @member ns_egret.Rect#strokeWeight
+		 * @member egret.Rect#strokeWeight
 		 */
 		public get strokeWeight():number{
 			return this._strokeWeight;
@@ -146,7 +146,7 @@ module ns_egret {
          * @returns {Rectangle}
          * @private
          */
-        public _measureBounds():ns_egret.Rectangle {
+        public _measureBounds():egret.Rectangle {
             var bounds:Rectangle = super._measureBounds();
             var w:number = this.width;
             var h:number = this.height;
@@ -168,7 +168,7 @@ module ns_egret {
         }
 
 		/**
-		 * @method ns_egret.Rect#updateDisplayList
+		 * @method egret.Rect#updateDisplayList
 		 * @param unscaledWidth {number} 
 		 * @param unscaledHeight {number} 
 		 */

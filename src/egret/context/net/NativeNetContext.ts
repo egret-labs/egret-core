@@ -32,7 +32,7 @@
 /// <reference path="../../net/URLRequest.ts"/>
 /// <reference path="../../utils/callLater.ts"/>
 
-module ns_egret {
+module egret {
 
     export class NativeNetContext extends NetContext {
 
@@ -42,7 +42,7 @@ module ns_egret {
 
 
         /**
-         * @method ns_egret.HTML5NetContext#proceed
+         * @method egret.HTML5NetContext#proceed
          * @param loader {URLLoader}
          */
         public proceed(loader:URLLoader):void{

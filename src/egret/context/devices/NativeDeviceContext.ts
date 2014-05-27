@@ -27,13 +27,13 @@
 
 /// <reference path="../../utils/HashObject.ts"/>
 
-module ns_egret {
+module egret {
 
 
 	/**
-	 * @class ns_egret.NativeDeviceContext
+	 * @class egret.NativeDeviceContext
 	 * @classdesc
-	 * @extends ns_egret.HashObject
+	 * @extends egret.HashObject
 	 */
     export class NativeDeviceContext extends HashObject {
 
@@ -41,14 +41,14 @@ module ns_egret {
         private thisObject:any;
 
 		/**
-		 * @method ns_egret.NativeDeviceContext#constructor
+		 * @method egret.NativeDeviceContext#constructor
 		 */
         public constructor() {
             super();
         }
 
 		/**
-		 * @method ns_egret.NativeDeviceContext#executeMainLoop
+		 * @method egret.NativeDeviceContext#executeMainLoop
 		 * @param callback {Function} 
 		 * @param thisObject {any} 
 		 */

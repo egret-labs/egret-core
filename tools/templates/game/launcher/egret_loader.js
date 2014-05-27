@@ -59,17 +59,17 @@ egret_h5.loadSingleScript = function (src, callback) {
 }
 
 egret_h5.startGame = function () {
-    var canvas = document.getElementById(ns_egret.StageDelegate.canvas_name);
-    context = ns_egret.MainContext.instance;
-    context.rendererContext = new ns_egret.HTML5CanvasRenderer(canvas);
-    context.soundContext = new ns_egret.HTML5SoundContext();
-    context.touchContext = new ns_egret.HTML5TouchContext(canvas);
-    context.deviceContext = new ns_egret.HTML5DeviceContext();
-    context.netContext = new ns_egret.HTML5NetContext();
-    context.stage = new ns_egret.Stage(canvas.width, canvas.height);
+    var canvas = document.getElementById(egret.StageDelegate.canvas_name);
+    context = egret.MainContext.instance;
+    context.rendererContext = new egret.HTML5CanvasRenderer(canvas);
+    context.soundContext = new egret.HTML5SoundContext();
+    context.touchContext = new egret.HTML5TouchContext(canvas);
+    context.deviceContext = new egret.HTML5DeviceContext();
+    context.netContext = new egret.HTML5NetContext();
+    context.stage = new egret.Stage(canvas.width, canvas.height);
 ;
-    ns_egret.TextureCache.getInstance().prefix = "assets/480/";
-    ns_egret.RendererContext.CONTENT_SCALE_FACTOR = 1;
+    egret.TextureCache.getInstance().prefix = "assets/480/";
+    egret.RendererContext.CONTENT_SCALE_FACTOR = 1;
     context.run();
 
     if (app && app.startGame) {

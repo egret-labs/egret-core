@@ -28,7 +28,7 @@
 /// <reference path="MainContext.ts"/>
 /// <reference path="../utils/HashObject.ts"/>
 
-module ns_egret{
+module egret{
     /**
      * 这个类是HTML5的WebWrapper的第一个版本
      * @stable C 目前只是实现需求，大部分API需要考虑重新设计

@@ -28,22 +28,22 @@
 /// <reference path="../../../egret/events/Event.ts"/>
 /// <reference path="../../../egret/events/IEventDispatcher.ts"/>
 
-module ns_egret {
+module egret {
 
 	/**
-	 * @class ns_egret.MoveEvent
+	 * @class egret.MoveEvent
 	 * @classdesc
 	 * 移动事件
-	 * @extends ns_egret.Event
+	 * @extends egret.Event
 	 */
 	export class MoveEvent extends Event{
 		/**
-		 * @constant ns_egret.MoveEvent.MOVE
+		 * @constant egret.MoveEvent.MOVE
 		 */
 		public static MOVE:string = "move";
 		
 		/**
-		 * @method ns_egret.MoveEvent#constructor
+		 * @method egret.MoveEvent#constructor
 		 * @param type {string} 
 		 * @param oldX {number} 
 		 * @param oldY {number} 
@@ -61,19 +61,19 @@ module ns_egret {
 		
 		/**
 		 * 旧的组件X
-		 * @member ns_egret.MoveEvent#oldX
+		 * @member egret.MoveEvent#oldX
 		 */
 		public oldX:number;
 		
 		/**
 		 * 旧的组件Y
-		 * @member ns_egret.MoveEvent#oldY
+		 * @member egret.MoveEvent#oldY
 		 */
 		public oldY:number;
 
         /**
          * 使用指定的EventDispatcher对象来抛出事件对象。抛出的对象将会缓存在对象池上，供下次循环复用。
-         * @method ns_egret.MoveEvent.dispatchMoveEvent
+         * @method egret.MoveEvent.dispatchMoveEvent
          */
         public static dispatchMoveEvent(target:IEventDispatcher,oldX:number = NaN, oldY:number = NaN):void{
             var eventClass:any = MoveEvent;

@@ -28,7 +28,7 @@
 /// <reference path="HashObject.ts"/>
 /// <reference path="Logger.ts"/>
 
-module ns_egret{
+module egret{
     export class SAXParser extends HashObject{
         static _instance:SAXParser = null;
 
@@ -63,7 +63,7 @@ module ns_egret{
             var xmlDoc = this.parserXML(textxml);
             var plist = xmlDoc.documentElement;
             if (plist.tagName != 'plist')
-                ns_egret.Logger.fatal(path + "不是plist或者没有预加载plist");
+                egret.Logger.fatal(path + "不是plist或者没有预加载plist");
 
             //获得第一个节点
             var node = null;
@@ -106,7 +106,7 @@ module ns_egret{
             }
 
             if (xmlDoc == null) {
-                ns_egret.Logger.info("xml not found!");
+                egret.Logger.info("xml not found!");
             }
             return xmlDoc;
         }

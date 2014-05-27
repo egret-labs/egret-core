@@ -32,7 +32,7 @@
 /// <reference path="TMXConst.ts"/>
 /// <reference path="../../jslib/Utils.d.ts"/>
 
-module ns_egret {
+module egret {
     export class TMXMapInfo {
         private _orientation = null;
         private _mapWidth:number = null;
@@ -75,7 +75,7 @@ module ns_egret {
         private parseXMLFile(tmxFile:string) {
             var xml = TextureCache.getInstance().getTextData(tmxFile);
             if (xml == null) {
-                ns_egret.Logger.fatal("tmx文件没有加载：" + tmxFile);
+                egret.Logger.fatal("tmx文件没有加载：" + tmxFile);
             }
             var mapXML = SAXParser.getInstance().tmxParse(xml, true);
             var i, j;
@@ -86,13 +86,13 @@ module ns_egret {
 
             if (map.nodeName == "map") {
                 if (orientationStr == "orthogonal")
-                    this.setOrientation(ns_egret.TMX.ORIENTATION_ORTHO);
+                    this.setOrientation(egret.TMX.ORIENTATION_ORTHO);
                 else if (orientationStr == "isometric")
-                    this.setOrientation(ns_egret.TMX.ORIENTATION_ISO);
+                    this.setOrientation(egret.TMX.ORIENTATION_ISO);
                 else if (orientationStr == "hexagonal")
-                    this.setOrientation(ns_egret.TMX.ORIENTATION_HEX);
+                    this.setOrientation(egret.TMX.ORIENTATION_HEX);
                 else if (orientationStr !== null)
-                    ns_egret.Logger.info("TMXFomat: Unsupported orientation:" + this.getOrientation());
+                    egret.Logger.info("TMXFomat: Unsupported orientation:" + this.getOrientation());
 
                 this._mapWidth = parseFloat(map.getAttribute('width'));
                 this._mapHeight = parseFloat(map.getAttribute('height'));
@@ -206,21 +206,21 @@ module ns_egret {
                     var compression = data.getAttribute('compression');
                     var encoding = data.getAttribute('encoding');
                     if (compression && compression !== "gzip" && compression !== "zlib") {
-                        ns_egret.Logger.fatal("TMXMapInfo.parseXMLFile(): unsupported compression method");
+                        egret.Logger.fatal("TMXMapInfo.parseXMLFile(): unsupported compression method");
                         return null;
                     }
                     switch (compression) {
                         case 'gzip':
-                            layer._tiles = ns_egret.Utils.unzipBase64AsArray(nodeValue, 4);
+                            layer._tiles = egret.Utils.unzipBase64AsArray(nodeValue, 4);
                             break;
                         case 'zlib':
-                            var inflator = new Zlib.Inflate(ns_egret.Codec.Base64.decodeAsArray(nodeValue, 1));
-                            layer._tiles = ns_egret.Utils.uint8ArrayToUint32Array(inflator.decompress());
+                            var inflator = new Zlib.Inflate(egret.Codec.Base64.decodeAsArray(nodeValue, 1));
+                            layer._tiles = egret.Utils.uint8ArrayToUint32Array(inflator.decompress());
                             break;
                         case null:
                         case '':
                             if (encoding == "base64") {
-                                layer._tiles = ns_egret.Codec.Base64.decodeAsArray(nodeValue, 4);
+                                layer._tiles = egret.Codec.Base64.decodeAsArray(nodeValue, 4);
                             }
                             else if (encoding === "csv") {
                                 layer._tiles = [];
@@ -237,7 +237,7 @@ module ns_egret {
                             }
                             break;
                         default:
-                            ns_egret.Logger.info("TMXMapInfo.parseXMLFile(): Only base64 and/or gzip/zlib maps are supported");
+                            egret.Logger.info("TMXMapInfo.parseXMLFile(): Only base64 and/or gzip/zlib maps are supported");
                             break;
                     }
 
@@ -419,7 +419,7 @@ module ns_egret {
 
         rectForGID(gid):Point {
             var rect = Point.identity;
-            gid &= ns_egret.TMX.TILE_FLIPPED_MASK;
+            gid &= egret.TMX.TILE_FLIPPED_MASK;
             gid = gid - parseInt(this.firstGid, 10);
             var max_x = Math.floor((this.imageWidth - this.margin * 2 + this.spacing) / (this.tileWidth + this.spacing));
             rect.x = parseInt((gid % max_x) * (this.tileWidth + this.spacing) + this.margin, 10);

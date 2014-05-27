@@ -36,26 +36,26 @@
 /// <reference path="../core/UIComponent.ts"/>
 /// <reference path="../core/UIGlobals.ts"/>
 
-module ns_egret {
+module egret {
 
 	/**
-	 * @class ns_egret.Scroller
+	 * @class egret.Scroller
 	 * @classdesc
 	 * 滚动条组件
-	 * @extends ns_egret.UIComponent
-	 * @implements ns_egret.IVisualElementContainer
+	 * @extends egret.UIComponent
+	 * @implements egret.IVisualElementContainer
 	 */	
     export class Scroller extends UIComponent implements IVisualElementContainer{
         /**
          * 构造函数
-		 * @method ns_egret.Scroller#constructor
+		 * @method egret.Scroller#constructor
          */
         public constructor(){
             super();
         }
 
         /**
-		 * @method ns_egret.Scroller#measure
+		 * @method egret.Scroller#measure
          */
         public measure():void{
             if(!this._viewport)
@@ -64,7 +64,7 @@ module ns_egret {
             this.measuredHeight = this._viewport.preferredHeight;
         }
         /**
-		 * @method ns_egret.Scroller#updateDisplayList
+		 * @method egret.Scroller#updateDisplayList
 		 * @param unscaledWidth {number} 
 		 * @param unscaledHeight {number} 
          */
@@ -76,7 +76,7 @@ module ns_egret {
 
         /**
          * 垂直滚动条显示策略，参见ScrollPolicy类定义的常量。
-		 * @member ns_egret.Scroller#verticalScrollPolicy
+		 * @member egret.Scroller#verticalScrollPolicy
          */
         public get verticalScrollPolicy():string
         {
@@ -91,7 +91,7 @@ module ns_egret {
 
         /**
          * 水平滚动条显示策略，参见ScrollPolicy类定义的常量。
-		 * @member ns_egret.Scroller#horizontalScrollPolicy
+		 * @member egret.Scroller#horizontalScrollPolicy
          */
         public get horizontalScrollPolicy():string
         {
@@ -105,7 +105,7 @@ module ns_egret {
 
         /**
          * 要滚动的视域组件。
-		 * @member ns_egret.Scroller#viewport
+		 * @member egret.Scroller#viewport
          */
         public get viewport():IViewport{
             return this._viewport;
@@ -425,7 +425,7 @@ module ns_egret {
 
         /**
          * 缓动到水平滚动位置
-		 * @method ns_egret.Scroller#throwHorizontally
+		 * @method egret.Scroller#throwHorizontally
 		 * @param hspTo {number} 
 		 * @param duration {number} 
          */
@@ -472,7 +472,7 @@ module ns_egret {
         }
         /**
          * 缓动到垂直滚动位置
-		 * @method ns_egret.Scroller#throwVertically
+		 * @method egret.Scroller#throwVertically
 		 * @param vspTo {number} 
 		 * @param duration {number} 
          */
@@ -502,7 +502,7 @@ module ns_egret {
 
 
 		/**
-		 * @member ns_egret.Scroller#numElements
+		 * @member egret.Scroller#numElements
 		 */
         public get numElements():number{
             return this.viewport ? 1 : 0;
@@ -515,7 +515,7 @@ module ns_egret {
             throw new RangeError("索引:\""+index+"\"超出可视元素索引范围");
         }
         /**
-		 * @method ns_egret.Scroller#getElementAt
+		 * @method egret.Scroller#getElementAt
 		 * @param index {number} 
 		 * @returns {IVisualElement}
          */
@@ -528,7 +528,7 @@ module ns_egret {
         }
 
         /**
-		 * @method ns_egret.Scroller#getElementIndex
+		 * @method egret.Scroller#getElementIndex
 		 * @param element {IVisualElement} 
 		 * @returns {number}
          */
@@ -539,7 +539,7 @@ module ns_egret {
                 return -1;
         }
         /**
-		 * @method ns_egret.Scroller#containsElement
+		 * @method egret.Scroller#containsElement
 		 * @param element {IVisualElement} 
 		 * @returns {boolean}
          */
@@ -553,7 +553,7 @@ module ns_egret {
             throw new Error("此方法在Scroller组件内不可用!");
         }
         /**
-		 * @method ns_egret.Scroller#addElement
+		 * @method egret.Scroller#addElement
          * @deprecated
 		 * @param element {IVisualElement} 
 		 * @returns {IVisualElement}
@@ -563,7 +563,7 @@ module ns_egret {
             return null;
         }
         /**
-		 * @method ns_egret.Scroller#addElementAt
+		 * @method egret.Scroller#addElementAt
          * @deprecated
 		 * @param element {IVisualElement} 
 		 * @param index {number} 
@@ -574,7 +574,7 @@ module ns_egret {
             return null;
         }
         /**
-		 * @method ns_egret.Scroller#removeElement
+		 * @method egret.Scroller#removeElement
          * @deprecated
 		 * @param element {IVisualElement} 
 		 * @returns {IVisualElement}
@@ -584,7 +584,7 @@ module ns_egret {
             return null;
         }
         /**
-		 * @method ns_egret.Scroller#removeElementAt
+		 * @method egret.Scroller#removeElementAt
          * @deprecated
 		 * @param index {number} 
 		 * @returns {IVisualElement}
@@ -594,14 +594,14 @@ module ns_egret {
             return null;
         }
         /**
-		 * @method ns_egret.Scroller#removeAllElements
+		 * @method egret.Scroller#removeAllElements
          * @deprecated
          */
         public removeAllElements():void{
             this.throwNotSupportedError();
         }
         /**
-		 * @method ns_egret.Scroller#setElementIndex
+		 * @method egret.Scroller#setElementIndex
          * @deprecated
 		 * @param element {IVisualElement} 
 		 * @param index {number} 
@@ -610,7 +610,7 @@ module ns_egret {
             this.throwNotSupportedError();
         }
         /**
-		 * @method ns_egret.Scroller#swapElements
+		 * @method egret.Scroller#swapElements
          * @deprecated
 		 * @param element1 {IVisualElement} 
 		 * @param element2 {IVisualElement} 
@@ -619,7 +619,7 @@ module ns_egret {
             this.throwNotSupportedError();
         }
         /**
-		 * @method ns_egret.Scroller#swapElementsAt
+		 * @method egret.Scroller#swapElementsAt
          * @deprecated
 		 * @param index1 {number} 
 		 * @param index2 {number} 
@@ -629,7 +629,7 @@ module ns_egret {
         }
 
         /**
-		 * @method ns_egret.Scroller#addChild
+		 * @method egret.Scroller#addChild
          * @deprecated
 		 * @param child {DisplayObject} 
 		 * @returns {DisplayObject}
@@ -639,7 +639,7 @@ module ns_egret {
             return null;
         }
         /**
-		 * @method ns_egret.Scroller#addChildAt
+		 * @method egret.Scroller#addChildAt
          * @deprecated
 		 * @param child {DisplayObject} 
 		 * @param index {number} 
@@ -650,7 +650,7 @@ module ns_egret {
             return null;
         }
         /**
-		 * @method ns_egret.Scroller#removeChild
+		 * @method egret.Scroller#removeChild
          * @deprecated
 		 * @param child {DisplayObject} 
 		 * @returns {DisplayObject}
@@ -660,7 +660,7 @@ module ns_egret {
             return null;
         }
         /**
-		 * @method ns_egret.Scroller#removeChildAt
+		 * @method egret.Scroller#removeChildAt
          * @deprecated
 		 * @param index {number} 
 		 * @returns {DisplayObject}
@@ -670,7 +670,7 @@ module ns_egret {
             return null;
         }
         /**
-		 * @method ns_egret.Scroller#setChildIndex
+		 * @method egret.Scroller#setChildIndex
          * @deprecated
 		 * @param child {DisplayObject} 
 		 * @param index {number} 
@@ -679,7 +679,7 @@ module ns_egret {
             this.throwNotSupportedError();
         }
         /**
-		 * @method ns_egret.Scroller#swapChildren
+		 * @method egret.Scroller#swapChildren
          * @deprecated
 		 * @param child1 {DisplayObject} 
 		 * @param child2 {DisplayObject} 
@@ -688,7 +688,7 @@ module ns_egret {
             this.throwNotSupportedError();
         }
         /**
-		 * @method ns_egret.Scroller#swapChildrenAt
+		 * @method egret.Scroller#swapChildrenAt
          * @deprecated
 		 * @param index1 {number} 
 		 * @param index2 {number} 

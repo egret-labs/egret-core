@@ -25,10 +25,10 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-module ns_egret {
+module egret {
 
 	/**
-	 * @class ns_egret.TextFieldType
+	 * @class egret.TextFieldType
 	 * @classdesc
      * TextFieldType 类是在设置 TextField 类的 type 属性时使用的常数值的枚举。
 	 */
@@ -36,13 +36,13 @@ module ns_egret {
 
 		/**
          * 用于指定动态文本
-		 * @constant {string} ns_egret.TextFieldType.DYNAMIC
+		 * @constant {string} egret.TextFieldType.DYNAMIC
 		 */
         public static DYNAMIC:string = "dynamic";
 
 		/**
          * 用于指定输入文本
-		 * @constant {string} ns_egret.TextFieldType.INPUT
+		 * @constant {string} egret.TextFieldType.INPUT
 		 */
         public static INPUT:string = "input";
 

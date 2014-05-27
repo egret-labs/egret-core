@@ -25,7 +25,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-declare module ns_egret{
+declare module egret{
     export class Utils {
         static unzip();
         static unzipBase64AsArray(input, bytes);
@@ -33,7 +33,7 @@ declare module ns_egret{
     }
 }
 
-declare module ns_egret.Codec{
+declare module egret.Codec{
     export class Base64 {
         static decodeAsArray(input, bytes);
     }

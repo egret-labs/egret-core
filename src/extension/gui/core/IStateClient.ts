@@ -27,31 +27,31 @@
 
 /// <reference path="../../../egret/events/IEventDispatcher.ts"/>
 
-module ns_egret {
+module egret {
 
 	/**
-	 * @class ns_egret.IStateClient
+	 * @class egret.IStateClient
 	 * @interface
 	 * @classdesc
 	 * 具有视图状态的组件接口
-	 * @extends ns_egret.IEventDispatcher
+	 * @extends egret.IEventDispatcher
 	 */
 	export interface IStateClient extends IEventDispatcher{
 		/**
 		 * 组件的当前视图状态。将其设置为 "" 或 null 可将组件重置回其基本状态。 
-		 * @member ns_egret.IStateClient#currentState
+		 * @member egret.IStateClient#currentState
 		 */		
 		currentState:string;
 		
 		/**
 		 * 为此组件定义的视图状态。
-		 * @member ns_egret.IStateClient#states
+		 * @member egret.IStateClient#states
 		 */		
 		states:Array<any>;
 		
 		/**
 		 * 返回是否含有指定名称的视图状态
-		 * @method ns_egret.IStateClient#hasState
+		 * @method egret.IStateClient#hasState
 		 * @param stateName {string} 要检测的视图状态名称
 		 * @returns {boolean}
 		 */			

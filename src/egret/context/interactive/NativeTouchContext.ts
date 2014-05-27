@@ -28,7 +28,7 @@
 /// <reference path="../MainContext.ts"/>
 /// <reference path="TouchContext.ts"/>
 
-module ns_egret {
+module egret {
 
 
     export class NativeTouchContext extends TouchContext {
@@ -50,15 +50,15 @@ module egret_native {
 
 
     export function onTouchesBegin(num:number, ids:Array<any>, xs_array:Array<any>, ys_array:Array<any>) {
-        this.executeTouchCallback(num,ids,xs_array,ys_array,ns_egret.MainContext.instance.touchContext.onTouchBegan);
+        this.executeTouchCallback(num,ids,xs_array,ys_array,egret.MainContext.instance.touchContext.onTouchBegan);
     }
 
     export function onTouchesMove(num:number, ids:Array<any>, xs_array:Array<any>, ys_array:Array<any>) {
-        this.executeTouchCallback(num,ids,xs_array,ys_array,ns_egret.MainContext.instance.touchContext.onTouchMove);
+        this.executeTouchCallback(num,ids,xs_array,ys_array,egret.MainContext.instance.touchContext.onTouchMove);
     }
 
     export function onTouchesEnd(num:number, ids:Array<any>, xs_array:Array<any>, ys_array:Array<any>) {
-        this.executeTouchCallback(num,ids,xs_array,ys_array,ns_egret.MainContext.instance.touchContext.onTouchEnd);
+        this.executeTouchCallback(num,ids,xs_array,ys_array,egret.MainContext.instance.touchContext.onTouchEnd);
     }
 
     export function onTouchesCancel(num:number, ids:Array<any>, xs_array:Array<any>, ys_array:Array<any>) {
@@ -70,7 +70,7 @@ module egret_native {
             var id = ids[i];
             var x = xs_array[i];
             var y = ys_array[i];
-            callback.call(ns_egret.MainContext.instance.touchContext,x, y,id);
+            callback.call(egret.MainContext.instance.touchContext,x, y,id);
         }
     }
 

@@ -27,11 +27,11 @@
 
 /// <reference path="RendererContext.ts"/>
 
-module ns_egret{
+module egret{
 	/**
-	 * @class ns_egret.WebGLRenderer
+	 * @class egret.WebGLRenderer
 	 * @classdesc
-	 * @extends ns_egret.RendererContext
+	 * @extends egret.RendererContext
 	 */
     export class WebGLRenderer extends RendererContext {
         private _list = [];

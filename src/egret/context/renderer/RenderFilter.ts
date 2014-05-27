@@ -32,11 +32,11 @@
 /// <reference path="../../utils/HashObject.ts"/>
 /// <reference path="../../utils/Logger.ts"/>
 
-module ns_egret {
+module egret {
 	/**
-	 * @class ns_egret.RenderFilter
+	 * @class egret.RenderFilter
 	 * @classdesc
-	 * @extends ns_egret.HashObject
+	 * @extends egret.HashObject
 	 */
     export class RenderFilter extends HashObject {
 
@@ -48,7 +48,7 @@ module ns_egret {
         private static instance:RenderFilter;
 
 		/**
-		 * @method ns_egret.ns_egret.getInstance
+		 * @method egret.egret.getInstance
 		 * @returns {RenderFilter}
 		 */
         public static getInstance():RenderFilter {
@@ -63,15 +63,15 @@ module ns_egret {
         private _originalData:any = {};
 
 		/**
-		 * @method ns_egret.ns_egret#addDrawArea
-		 * @param area {ns_egret.Rectangle} 
+		 * @method egret.egret#addDrawArea
+		 * @param area {egret.Rectangle}
 		 */
-        public addDrawArea(area:ns_egret.Rectangle):void {
+        public addDrawArea(area:egret.Rectangle):void {
             this._drawAreaList.push(area);
         }
 
 		/**
-		 * @method ns_egret.ns_egret#clearDrawArea
+		 * @method egret.egret#clearDrawArea
 		 */
         public clearDrawArea():void {
             this._drawAreaList = [];
@@ -79,7 +79,7 @@ module ns_egret {
 
         /**
          * 先检查有没有不需要绘制的区域，再把需要绘制的区域绘制出来
-		 * @method ns_egret.ns_egret#drawImage
+		 * @method egret.egret#drawImage
 		 * @param renderContext {any} 
 		 * @param data {RenderData} 
 		 * @param sourceX {any} 
@@ -109,7 +109,7 @@ module ns_egret {
 
             var locDrawAreaList = this.getDrawAreaList();
             for (var j:number = 0; j < locDrawAreaList.length; j++) {
-                var drawArea:ns_egret.Rectangle = locDrawAreaList[j];
+                var drawArea:egret.Rectangle = locDrawAreaList[j];
                 if (this.ignoreRender(data, drawArea, this._originalData.destX, this._originalData.destY)) {
                     continue;
                 }
@@ -123,7 +123,7 @@ module ns_egret {
                             || data.worldBounds.y + this._originalData.destY < drawArea.y
                             || data.worldBounds.x + data.worldBounds.width + this._originalData.destX > drawArea.x + drawArea.width
                             || data.worldBounds.y + data.worldBounds.height + this._originalData.destY > drawArea.y + drawArea.height) {
-                            ns_egret.Logger.fatal("请不要让带有旋转和斜切的显示对象跨过重绘区域");
+                            egret.Logger.fatal("请不要让带有旋转和斜切的显示对象跨过重绘区域");
                             return;
                         }
                     }
@@ -175,7 +175,7 @@ module ns_egret {
             }
         }
 
-        private ignoreRender(data:RenderData, rect:ns_egret.Rectangle, destX:number, destY:number):boolean {
+        private ignoreRender(data:RenderData, rect:egret.Rectangle, destX:number, destY:number):boolean {
             var bounds = data.worldBounds;
             var destX = destX * data.worldTransform.a;
             var destY = destY * data.worldTransform.d;
@@ -187,7 +187,7 @@ module ns_egret {
         }
 
 		/**
-		 * @method ns_egret.ns_egret#getDrawAreaList
+		 * @method egret.egret#getDrawAreaList
 		 * @returns {Rectangle}
 		 */
         public getDrawAreaList():Array<Rectangle> {
@@ -195,8 +195,8 @@ module ns_egret {
             //默认整个舞台都是重绘区域
             if (this._drawAreaList.length == 0) {
                 if (!this._defaultDrawAreaList) {
-                    this._defaultDrawAreaList = [new ns_egret.Rectangle(0, 0,
-                        ns_egret.MainContext.instance.stage.stageWidth, ns_egret.MainContext.instance.stage.stageHeight)];
+                    this._defaultDrawAreaList = [new egret.Rectangle(0, 0,
+                        egret.MainContext.instance.stage.stageWidth, egret.MainContext.instance.stage.stageHeight)];
                 }
                 locDrawAreaList = this._defaultDrawAreaList;
             }
@@ -208,19 +208,19 @@ module ns_egret {
     }
 
 	/**
-	 * @class ns_egret.RenderData
+	 * @class egret.RenderData
 	 * @interface
 	 * @classdesc
 	 */
     export interface RenderData {
 		/**
-		 * @member ns_egret.RenderData#worldTransform
+		 * @member egret.RenderData#worldTransform
 		 */
-        worldTransform:ns_egret.Matrix;
+        worldTransform:egret.Matrix;
 		/**
-		 * @member ns_egret.RenderData#worldBounds
+		 * @member egret.RenderData#worldBounds
 		 */
-        worldBounds:ns_egret.Rectangle;
-        _texture_to_render:ns_egret.Texture;
+        worldBounds:egret.Rectangle;
+        _texture_to_render:egret.Texture;
     }
 }

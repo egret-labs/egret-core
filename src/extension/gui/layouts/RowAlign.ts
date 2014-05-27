@@ -25,28 +25,28 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-module ns_egret {
+module egret {
 
 	/**
-	 * @class ns_egret.RowAlign
+	 * @class egret.RowAlign
 	 * @classdesc
 	 * RowAlign 类为 TileLayout 类的 rowAlign 属性定义可能的值。
 	 */
 	export class RowAlign{
 		/**
 		 * 不进行两端对齐。
-		 * @constant ns_egret.RowAlign.TOP
+		 * @constant egret.RowAlign.TOP
 		 */
 		public static TOP:string = "top";
 		/**
 		 * 通过增大垂直间隙将行两端对齐。 
-		 * @constant ns_egret.RowAlign.JUSTIFY_USING_GAP
+		 * @constant egret.RowAlign.JUSTIFY_USING_GAP
 		 */		
 		public static JUSTIFY_USING_GAP:string = "justifyUsingGap";
 		
 		/**
 		 * 通过增大行高度将行两端对齐。
-		 * @constant ns_egret.RowAlign.JUSTIFY_USING_HEIGHT
+		 * @constant egret.RowAlign.JUSTIFY_USING_HEIGHT
 		 */
 		public static JUSTIFY_USING_HEIGHT:string = "justifyUsingHeight";
 	}

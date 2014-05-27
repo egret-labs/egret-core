@@ -37,23 +37,23 @@
 /// <reference path="../events/StateChangeEvent.ts"/>
 /// <reference path="../states/State.ts"/>
 
-module ns_egret {
+module egret {
 
 	/**
-	 * @class ns_egret.Skin
+	 * @class egret.Skin
 	 * @classdesc
 	 * 含有视图状态功能的皮肤基类。注意：为了减少嵌套层级，此皮肤没有继承显示对象，若需要显示对象版本皮肤，请使用Skin。
 	 * @see org.flexlite.domUI.components.supportClasses.Skin
-	 * @extends ns_egret.EventDispatcher
-	 * @implements ns_egret.IStateClient
-	 * @implements ns_egret.ISkin
-	 * @implements ns_egret.IContainer
+	 * @extends egret.EventDispatcher
+	 * @implements egret.IStateClient
+	 * @implements egret.ISkin
+	 * @implements egret.IContainer
 	 */
 	export class Skin extends EventDispatcher
 		implements IStateClient, ISkin, IContainer{
 		/**
 		 * 构造函数
-		 * @method ns_egret.Skin#constructor
+		 * @method egret.Skin#constructor
 		 */		
 		public constructor(){
 			super();
@@ -61,32 +61,32 @@ module ns_egret {
 		
 		/**
 		 * 组件的最大测量宽度,仅影响measuredWidth属性的取值范围。
-		 * @member ns_egret.Skin#maxWidth
+		 * @member egret.Skin#maxWidth
 		 */	
 		public maxWidth:number = 10000;
 		/**
 		 * 组件的最小测量宽度,此属性设置为大于maxWidth的值时无效。仅影响measuredWidth属性的取值范围。
-		 * @member ns_egret.Skin#minWidth
+		 * @member egret.Skin#minWidth
 		 */
 		public minWidth:number = 0;
 		/**
 		 * 组件的最大测量高度,仅影响measuredHeight属性的取值范围。
-		 * @member ns_egret.Skin#maxHeight
+		 * @member egret.Skin#maxHeight
 		 */
 		public maxHeight:number = 10000;
 		/**
 		 * 组件的最小测量高度,此属性设置为大于maxHeight的值时无效。仅影响measuredHeight属性的取值范围。
-		 * @member ns_egret.Skin#minHeight
+		 * @member egret.Skin#minHeight
 		 */
 		public minHeight:number = 0;
 		/**
 		 * 组件宽度
-		 * @member ns_egret.Skin#width
+		 * @member egret.Skin#width
 		 */
 		public width:number = NaN;
 		/**
 		 * 组件高度
-		 * @member ns_egret.Skin#height
+		 * @member egret.Skin#height
 		 */
 		public height:number = NaN;
 
@@ -94,7 +94,7 @@ module ns_egret {
         /**
          * 创建子项,子类覆盖此方法以完成组件子项的初始化操作，
          * 请务必调用super.createChildren()以完成父类组件的初始化
-         * @method ns_egret.Skin#createChildren
+         * @method egret.Skin#createChildren
          */
         public createChildren():void{
 
@@ -102,7 +102,7 @@ module ns_egret {
 
 		private _hostComponent:SkinnableComponent;
 		/**
-		 * @member ns_egret.Skin#hostComponent
+		 * @member egret.Skin#hostComponent
 		 */
 		public get hostComponent():SkinnableComponent{
 			return this._hostComponent;
@@ -191,14 +191,14 @@ module ns_egret {
 		}
 		
 		/**
-		 * @member ns_egret.Skin#numElements
+		 * @member egret.Skin#numElements
 		 */
 		public get numElements():number{
 			return this._elementsContent.length;
 		}
 		
 		/**
-		 * @method ns_egret.Skin#getElementAt
+		 * @method egret.Skin#getElementAt
 		 * @param index {number} 
 		 * @returns {IVisualElement}
 		 */
@@ -217,7 +217,7 @@ module ns_egret {
 				throw new RangeError("索引:\""+index+"\"超出可视元素索引范围");
 		}
 		/**
-		 * @method ns_egret.Skin#addElement
+		 * @method egret.Skin#addElement
 		 * @param element {IVisualElement} 
 		 * @returns {IVisualElement}
 		 */
@@ -230,7 +230,7 @@ module ns_egret {
 			return this.addElementAt(element, index);
 		}
 		/**
-		 * @method ns_egret.Skin#addElementAt
+		 * @method egret.Skin#addElementAt
 		 * @param element {IVisualElement} 
 		 * @param index {number} 
 		 * @returns {IVisualElement}
@@ -258,7 +258,7 @@ module ns_egret {
 			return element;
 		}
 		/**
-		 * @method ns_egret.Skin#removeElement
+		 * @method egret.Skin#removeElement
 		 * @param element {IVisualElement} 
 		 * @returns {IVisualElement}
 		 */
@@ -266,7 +266,7 @@ module ns_egret {
 			return this.removeElementAt(this.getElementIndex(element));
 		}
 		/**
-		 * @method ns_egret.Skin#removeElementAt
+		 * @method egret.Skin#removeElementAt
 		 * @param index {number} 
 		 * @returns {IVisualElement}
 		 */
@@ -284,7 +284,7 @@ module ns_egret {
 		}
 			
 		/**
-		 * @method ns_egret.Skin#getElementIndex
+		 * @method egret.Skin#getElementIndex
 		 * @param element {IVisualElement} 
 		 * @returns {number}
 		 */
@@ -292,7 +292,7 @@ module ns_egret {
 			return this._elementsContent.indexOf(element);
 		}
 		/**
-		 * @method ns_egret.Skin#setElementIndex
+		 * @method egret.Skin#setElementIndex
 		 * @param element {IVisualElement} 
 		 * @param index {number} 
 		 */
@@ -315,7 +315,7 @@ module ns_egret {
 		
 		/**
 		 * 添加一个显示元素到容器
-		 * @method ns_egret.Skin#_elementAdded
+		 * @method egret.Skin#_elementAdded
 		 * @param element {IVisualElement} 
 		 * @param index {number} 
 		 * @param notifyListeners {boolean} 
@@ -338,7 +338,7 @@ module ns_egret {
 		}
 		/**
 		 * 从容器移除一个显示元素
-		 * @method ns_egret.Skin#_elementRemoved
+		 * @method egret.Skin#_elementRemoved
 		 * @param element {IVisualElement} 
 		 * @param index {number} 
 		 * @param notifyListeners {boolean} 
@@ -365,7 +365,7 @@ module ns_egret {
         private _states:Array<any> = [];
         /**
          * 为此组件定义的视图状态。
-         * @member ns_egret.StateClientHelper#states
+         * @member egret.StateClientHelper#states
          */
         public get states():Array<any>{
             return this._states;
@@ -406,7 +406,7 @@ module ns_egret {
         private requestedCurrentState:string;
         /**
          * 组件的当前视图状态。将其设置为 "" 或 null 可将组件重置回其基本状态。
-         * @member ns_egret.StateClientHelper#currentState
+         * @member egret.StateClientHelper#currentState
          */
         public get currentState():string{
             if(this.currentStateChanged)
@@ -428,7 +428,7 @@ module ns_egret {
 
         /**
          * 返回是否含有指定名称的视图状态
-         * @method ns_egret.Skin#hasState
+         * @method egret.Skin#hasState
          * @param stateName {string}
          * @returns {boolean}
          */
@@ -447,7 +447,7 @@ module ns_egret {
         }
         /**
          * 应用当前的视图状态。子类覆盖此方法在视图状态发生改变时执行相应更新操作。
-         * @method ns_egret.Skin#commitCurrentState
+         * @method egret.Skin#commitCurrentState
          */
         public commitCurrentState():void{
             if(!this.currentStateChanged)
@@ -522,7 +522,7 @@ module ns_egret {
         private initialized:boolean = false;
         /**
          * 初始化所有视图状态
-         * @method ns_egret.StateClientHelper#initializeStates
+         * @method egret.StateClientHelper#initializeStates
          */
         public initializeStates():void{
             if(this.initialized)

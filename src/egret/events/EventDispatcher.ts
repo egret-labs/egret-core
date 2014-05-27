@@ -31,14 +31,14 @@
 /// <reference path="../utils/Recycler.ts"/>
 /// <reference path="../../jslib/DEBUG.d.ts"/>
 
-module ns_egret {
+module egret {
     /**
      *
-     * @class ns_egret.EventDispatcher
+     * @class egret.EventDispatcher
      * @classdesc
      * EventDispatcher是egret的事件派发器类，负责进行事件的发送和侦听。
-     * @extends ns_egret.HashObject
-     * @implements ns_egret.IEventDispatcher
+     * @extends egret.HashObject
+     * @implements egret.IEventDispatcher
      *
      */
     export class EventDispatcher extends HashObject implements IEventDispatcher {
@@ -81,7 +81,7 @@ module ns_egret {
 
         /**
          * 添加事件侦听器
-         * @method ns_egret.EventDispatcher#addEventListener
+         * @method egret.EventDispatcher#addEventListener
          * @param type {string} 事件的类型。
          * @param listener {Function} 处理事件的侦听器函数。此函数必须接受 Event 对象作为其唯一的参数，并且不能返回任何结果，
          * 如下面的示例所示： function(evt:Event):void 函数可以有任何名称。
@@ -140,7 +140,7 @@ module ns_egret {
 
         /**
          * 移除事件侦听器
-         * @method ns_egret.EventDispatcher#removeEventListener
+         * @method egret.EventDispatcher#removeEventListener
          * @param type {string} 事件名
          * @param listener {Function} 侦听函数
          * @param thisObject {any} 侦听函数绑定的this对象
@@ -177,7 +177,7 @@ module ns_egret {
 
         /**
          * 检测是否存在监听器
-         * @method ns_egret.EventDispatcher#hasEventListener
+         * @method egret.EventDispatcher#hasEventListener
          * @param type 事件名
          * @returns {boolean}
          * @stable A
@@ -191,7 +191,7 @@ module ns_egret {
          * EventDispatcher 对象或其任一后代时，如果在事件流的任何阶段触发了事件侦听器，则此方法返回 true。
          * hasEventListener() 与 willTrigger() 方法的区别是：hasEventListener() 只检查它所属的对象，
          * 而 willTrigger() 方法检查整个事件流以查找由 type 参数指定的事件。
-         * @method ns_egret.EventDispatcher#willTrigger
+         * @method egret.EventDispatcher#willTrigger
          * @param type 事件名
          * @returns {boolean}
          */
@@ -202,8 +202,8 @@ module ns_egret {
 
         /**
          * 将事件分派到事件流中。事件目标是对其调用 dispatchEvent() 方法的 EventDispatcher 对象。
-         * @method ns_egret.EventDispatcher#dispatchEvent
-         * @param event {ns_egret.Event} 调度到事件流中的 Event 对象。如果正在重新分派事件，则会自动创建此事件的一个克隆。 在调度了事件后，其 _eventTarget 属性将无法更改，因此您必须创建此事件的一个新副本以能够重新调度。
+         * @method egret.EventDispatcher#dispatchEvent
+         * @param event {egret.Event} 调度到事件流中的 Event 对象。如果正在重新分派事件，则会自动创建此事件的一个克隆。 在调度了事件后，其 _eventTarget 属性将无法更改，因此您必须创建此事件的一个新副本以能够重新调度。
          * @returns {boolean} 如果成功调度了事件，则值为 true。值 false 表示失败或对事件调用了 preventDefault()。
          */
         public dispatchEvent(event:Event):boolean {
@@ -236,7 +236,7 @@ module ns_egret {
         private static eventRecycler:Recycler = new Recycler();
         /**
          * 派发一个包含了特定参数的事件到所有注册了特定类型侦听器的对象中。 这个方法使用了一个内部的事件对象池因避免重复的分配导致的额外开销。
-         * @method ns_egret.EventDispatcher#dispatchEventWith
+         * @method egret.EventDispatcher#dispatchEventWith
          * @param type {string} 事件类型
          * @param bubbles {boolean} 是否冒泡，默认false
          * @param data {any}附加数据(可选)

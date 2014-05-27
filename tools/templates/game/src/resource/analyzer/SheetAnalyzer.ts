@@ -26,7 +26,7 @@ module RES {
 
         public constructor(){
             super();
-            this._dataFormat = ns_egret.URLLoaderDataFormat.TEXT;
+            this._dataFormat = egret.URLLoaderDataFormat.TEXT;
         }
 
         /**
@@ -39,7 +39,7 @@ module RES {
                 res = this.fileDic[prefix];
                 if(res){
                     var tail:string = RES.AnalyzerBase.getStringTail(name);
-                    res = (<ns_egret.SpriteSheet> res).getTexture(tail);
+                    res = (<egret.SpriteSheet> res).getTexture(tail);
                 }
             }
             return res;
@@ -47,21 +47,21 @@ module RES {
         /**
          * 一项加载结束
          */
-        public onLoadFinish(event:ns_egret.Event):void{
-            var loader:ns_egret.URLLoader = <ns_egret.URLLoader> (event.target);
+        public onLoadFinish(event:egret.Event):void{
+            var loader:egret.URLLoader = <egret.URLLoader> (event.target);
             var data:any = this.resItemDic[loader.hashCode];
             delete this.resItemDic[loader.hashCode];
             this.recycler.push(loader);
             var resItem:ResourceItem = data.item;
             var compFunc:Function = data.func;
-            resItem.loaded = (event.type==ns_egret.Event.COMPLETE);
+            resItem.loaded = (event.type==egret.Event.COMPLETE);
             if(resItem.loaded){
                 this.analyzeData(resItem,loader.data)
             }
             if(typeof(loader.data)=="string"){
-                this._dataFormat = ns_egret.URLLoaderDataFormat.TEXTURE;
+                this._dataFormat = egret.URLLoaderDataFormat.TEXTURE;
                 this.loadFile(resItem,compFunc,data.thisObject);
-                this._dataFormat = ns_egret.URLLoaderDataFormat.TEXT;
+                this._dataFormat = egret.URLLoaderDataFormat.TEXT;
             }
             else{
                 compFunc.call(data.thisObject,resItem);
@@ -93,11 +93,11 @@ module RES {
                 resItem.url = this.getRelativePath(resItem.url,config["file"]);
             }
             else{
-                var texture:ns_egret.Texture = data;
+                var texture:egret.Texture = data;
                 config = this.sheetMap[name];
                 delete this.sheetMap[name];
                 if(texture){
-                    var spriteSheet:ns_egret.SpriteSheet = this.parseSpriteSheet(texture,config);
+                    var spriteSheet:egret.SpriteSheet = this.parseSpriteSheet(texture,config);
                     this.fileDic[name] = spriteSheet;
                 }
             }
@@ -115,12 +115,12 @@ module RES {
             return url;
         }
 
-        private parseSpriteSheet(texture:ns_egret.Texture,data:any):ns_egret.SpriteSheet{
+        private parseSpriteSheet(texture:egret.Texture,data:any):egret.SpriteSheet{
             var frames:any = data.frames;
             if(!frames){
                 return;
             }
-            var spriteSheet:ns_egret.SpriteSheet = new ns_egret.SpriteSheet(texture._bitmapData);
+            var spriteSheet:egret.SpriteSheet = new egret.SpriteSheet(texture._bitmapData);
             for(var name in frames){
                 var config:any = frames[name];
                 spriteSheet.createTexture(name,config.x,config.y,config.w,config.h);

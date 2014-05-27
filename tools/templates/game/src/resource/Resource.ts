@@ -130,7 +130,7 @@ module RES {
     }
     /**
      * 移除事件侦听器,参考ResourceEvent定义的常量。
-     * @method ns_egret.EventDispatcher#removeEventListener
+     * @method egret.EventDispatcher#removeEventListener
      * @param type {string} 事件名
      * @param listener {Function} 侦听函数
      * @param thisObject {any} 侦听函数绑定的this对象
@@ -142,7 +142,7 @@ module RES {
 
 
 
-    class Resource extends ns_egret.EventDispatcher{
+    class Resource extends egret.EventDispatcher{
         /**
          * 构造函数
          */
@@ -161,7 +161,7 @@ module RES {
         private getAnalyzerByType(type:string):AnalyzerBase{
             var analyzer:AnalyzerBase = this.analyzerDic[type];
             if(!analyzer){
-                analyzer = this.analyzerDic[type] = ns_egret.Injector.getInstance(AnalyzerBase,type);
+                analyzer = this.analyzerDic[type] = egret.Injector.getInstance(AnalyzerBase,type);
             }
             return analyzer;
         }
@@ -174,18 +174,18 @@ module RES {
          * 初始化
          */
         private init():void{
-            if(!ns_egret.Injector.hasMapRule(AnalyzerBase,ResourceItem.TYPE_BIN))
-                ns_egret.Injector.mapClass(AnalyzerBase,BinAnalyzer,ResourceItem.TYPE_BIN);
-            if(!ns_egret.Injector.hasMapRule(AnalyzerBase,ResourceItem.TYPE_IMG))
-                ns_egret.Injector.mapClass(AnalyzerBase,ImgAnalyzer,ResourceItem.TYPE_IMG);
-            if(!ns_egret.Injector.hasMapRule(AnalyzerBase,ResourceItem.TYPE_TXT))
-                ns_egret.Injector.mapClass(AnalyzerBase,TxtAnalyzer,ResourceItem.TYPE_TXT);
-            if(!ns_egret.Injector.hasMapRule(AnalyzerBase,ResourceItem.TYPE_JSON))
-                ns_egret.Injector.mapClass(AnalyzerBase,JsonAnalyzer,ResourceItem.TYPE_JSON);
-            if(!ns_egret.Injector.hasMapRule(AnalyzerBase,ResourceItem.TYPE_SHEET))
-                ns_egret.Injector.mapClass(AnalyzerBase,SheetAnalyzer,ResourceItem.TYPE_SHEET);
-            if(!ns_egret.Injector.hasMapRule(AnalyzerBase,ResourceItem.TYPE_FONT))
-                ns_egret.Injector.mapClass(AnalyzerBase,FontAnalyzer,ResourceItem.TYPE_FONT);
+            if(!egret.Injector.hasMapRule(AnalyzerBase,ResourceItem.TYPE_BIN))
+                egret.Injector.mapClass(AnalyzerBase,BinAnalyzer,ResourceItem.TYPE_BIN);
+            if(!egret.Injector.hasMapRule(AnalyzerBase,ResourceItem.TYPE_IMG))
+                egret.Injector.mapClass(AnalyzerBase,ImgAnalyzer,ResourceItem.TYPE_IMG);
+            if(!egret.Injector.hasMapRule(AnalyzerBase,ResourceItem.TYPE_TXT))
+                egret.Injector.mapClass(AnalyzerBase,TxtAnalyzer,ResourceItem.TYPE_TXT);
+            if(!egret.Injector.hasMapRule(AnalyzerBase,ResourceItem.TYPE_JSON))
+                egret.Injector.mapClass(AnalyzerBase,JsonAnalyzer,ResourceItem.TYPE_JSON);
+            if(!egret.Injector.hasMapRule(AnalyzerBase,ResourceItem.TYPE_SHEET))
+                egret.Injector.mapClass(AnalyzerBase,SheetAnalyzer,ResourceItem.TYPE_SHEET);
+            if(!egret.Injector.hasMapRule(AnalyzerBase,ResourceItem.TYPE_FONT))
+                egret.Injector.mapClass(AnalyzerBase,FontAnalyzer,ResourceItem.TYPE_FONT);
             this.resConfig = new ResourceConfig();
             this.resLoader = new ResourceLoader();
             this.resLoader.callBack = this.onResourceItemComp;

@@ -27,20 +27,20 @@
 
 /// <reference path="IUIComponent.ts"/>
 
-module ns_egret {
+module egret {
 
     /**
-	 * @class ns_egret.IDisplayText
+	 * @class egret.IDisplayText
 	 * @interface
 	 * @classdesc
      * 简单文本显示控件接口。
-	 * @extends ns_egret.IUIComponent
+	 * @extends egret.IUIComponent
      */
     export interface IDisplayText extends IUIComponent
     {
         /**
          * 此文本组件所显示的文本。
-		 * @member ns_egret.IDisplayText#text
+		 * @member egret.IDisplayText#text
          */
         text:string;
     }

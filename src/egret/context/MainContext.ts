@@ -38,12 +38,12 @@
 /// <reference path="../utils/Recycler.ts"/>
 /// <reference path="../utils/callLater.ts"/>
 
-module ns_egret{
+module egret{
     /**
-	 * @class ns_egret.MainContext
+	 * @class egret.MainContext
 	 * @classdesc
      * MainContext是游戏的核心跨平台接口，组合了多个功能Context，并是游戏启动的主入口
-	 * @extends ns_egret.EventDispatcher
+	 * @extends egret.EventDispatcher
      */
     export class MainContext extends EventDispatcher {
 
@@ -53,43 +53,43 @@ module ns_egret{
 
         /**
          * 渲染Context
-		 * @member ns_egret.MainContext#rendererContext
+		 * @member egret.MainContext#rendererContext
          */
         public rendererContext:RendererContext;
 
         /**
          * 触摸Context
-		 * @member ns_egret.MainContext#touchContext
+		 * @member egret.MainContext#touchContext
          */
         public touchContext:TouchContext;
 
         /**
          * 声音Context
-		 * @member ns_egret.MainContext#soundContext
+		 * @member egret.MainContext#soundContext
          */
         public soundContext:SoundContext;
 
         /**
          * 网络Context
-		 * @member ns_egret.MainContext#netContext
+		 * @member egret.MainContext#netContext
          */
         public netContext:NetContext;
 
         /**
          * 设备divice
-		 * @member ns_egret.MainContext#deviceContext
+		 * @member egret.MainContext#deviceContext
          */
         public deviceContext:DeviceContext;
 
         /**
          * 舞台
-		 * @member ns_egret.MainContext#stage
+		 * @member egret.MainContext#stage
          */
         public stage:Stage;
 
         /**
          * 游戏启动，开启主循环，参考Flash的滑动跑道模型
-		 * @method ns_egret.MainContext#run
+		 * @method egret.MainContext#run
          */
         public run() {
             Ticker.getInstance().run();
@@ -177,11 +177,11 @@ module ns_egret{
         }
 
 		/**
-		 * @member ns_egret.MainContext.instance
+		 * @member egret.MainContext.instance
 		 */
-        public static instance:ns_egret.MainContext;
+        public static instance:egret.MainContext;
 
     }
 }
 
-ns_egret.MainContext.instance = new ns_egret.MainContext();
+egret.MainContext.instance = new egret.MainContext();

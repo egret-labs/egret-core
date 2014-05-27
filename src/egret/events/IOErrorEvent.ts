@@ -28,7 +28,7 @@
 /// <reference path="Event.ts"/>
 /// <reference path="IEventDispatcher.ts"/>
 
-module ns_egret {
+module egret {
 
     export class IOErrorEvent extends Event{
 
@@ -40,7 +40,7 @@ module ns_egret {
 
         /**
          * 使用指定的EventDispatcher对象来抛出Event事件对象。抛出的对象将会缓存在对象池上，供下次循环复用。
-         * @method ns_egret.IOErrorEvent.dispathIOErrorEvent
+         * @method egret.IOErrorEvent.dispathIOErrorEvent
          */
         public static dispatchIOErrorEvent(target:IEventDispatcher):void{
             var eventClass:any = IOErrorEvent;

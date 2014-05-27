@@ -22,8 +22,8 @@ Egret 0.9.4 主要包括以下优化
 * 初始化项目模板进行更改，旧项目请修改 ```launcher/egret_loader.js``` 文件
 
 ```
-   // context.touchContext = new ns_egret.TouchContext(canvas);
+   // context.touchContext = new egret.TouchContext(canvas);
    // 修改为
-    context.touchContext = new ns_egret.HTML5TouchContext(canvas);
+    context.touchContext = new egret.HTML5TouchContext(canvas);
 
 ```

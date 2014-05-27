@@ -43,7 +43,7 @@
 /// <reference path="SAXParser.ts"/>
 /// <reference path="TextureCache.ts"/>
 
-module ns_egret {
+module egret {
     export class XML {
         private _xmlStr = "";
 
@@ -96,9 +96,9 @@ module ns_egret {
         public static create(url):XML {
             var xml:XML = new XML();
             var xmldoc:any;
-            if (ns_egret.SAXParser) {
-                var content = ns_egret.TextureCache.getInstance().getTextData(url);
-                xmldoc = ns_egret.SAXParser.getInstance().tmxParse(content, true).documentElement;
+            if (egret.SAXParser) {
+                var content = egret.TextureCache.getInstance().getTextData(url);
+                xmldoc = egret.SAXParser.getInstance().tmxParse(content, true).documentElement;
             }
             else {
 //                xmldoc = egret_native.EGTXML.readXML(url);

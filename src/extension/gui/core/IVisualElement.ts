@@ -28,14 +28,14 @@
 /// <reference path="../../../egret/display/DisplayObjectContainer.ts"/>
 /// <reference path="ILayoutElement.ts"/>
 
-module ns_egret {
+module egret {
 
 	/**
-	 * @class ns_egret.IVisualElement
+	 * @class egret.IVisualElement
 	 * @interface
 	 * @classdesc
 	 * 可视元素接口
-	 * @extends ns_egret.ILayoutElement
+	 * @extends egret.ILayoutElement
 	 */	
 	export interface IVisualElement extends ILayoutElement{
 		/**
@@ -45,18 +45,18 @@ module ns_egret {
 		 * 2.当此对象作为皮肤内contentGroup的子项时，owner指向主机组件SkinnableContainer<br/>
 		 * 3.当此对象作为ItemRenderer时，owner指向DataGroup或者主机组件SkinnableDataContainer<br/>
 		 * 4.当此对象作为非显示对象容器IContainer的子项时,owner指向IContainer。
-		 * @member ns_egret.IVisualElement#owner
+		 * @member egret.IVisualElement#owner
 		 */		
 		owner:any;
 		/**
 		 * owner属性由框架内部管理，请不要自行改变它的值，否则可能引发未知的问题。
-		 * @method ns_egret.IVisualElement#ownerChanged
+		 * @method egret.IVisualElement#ownerChanged
 		 * @param value {Object} 
 		 */		
 		ownerChanged(value:Object):void;
 		/**
 		 * 元素名称。此属性在TabNavigator里作为选项卡显示的字符串。
-		 * @member ns_egret.IVisualElement#name
+		 * @member egret.IVisualElement#name
 		 */		
 		name:string;
 		/**
@@ -64,30 +64,30 @@ module ns_egret {
 		 * 只有可视元素应该具有 parent 属性。
 		 * 非可视项目应该使用其他属性引用其所属对象。
 		 * 一般而言，非可视对象使用 owner 属性引用其所属对象。
-		 * @member ns_egret.IVisualElement#parent
+		 * @member egret.IVisualElement#parent
 		 */
 		parent:DisplayObjectContainer;
 		
 		/**
 		 * 控制此可视元素的可见性。如果为 true，则对象可见。 
-		 * @member ns_egret.IVisualElement#visible
+		 * @member egret.IVisualElement#visible
 		 */		
 		visible:boolean;
 		
 		/**
 		 * 表示指定对象的 Alpha 透明度值。有效值为 0（完全透明）到 1（完全不透明）。默认值为 1。alpha 设置为 0 的显示对象是活动的，即使它们不可见。
-		 * @member ns_egret.IVisualElement#alpha
+		 * @member egret.IVisualElement#alpha
 		 */		
 		alpha:number;
 		/**
 		 * 组件宽度
-		 * @member ns_egret.IVisualElement#width
+		 * @member egret.IVisualElement#width
 		 */		
 		width:number;
 		
 		/**
 		 * 组件高度
-		 * @member ns_egret.IVisualElement#height
+		 * @member egret.IVisualElement#height
 		 */		
 		height:number;
 		
@@ -96,7 +96,7 @@ module ns_egret {
 		 * 如果该对象位于具有变形的 DisplayObjectContainer 内，则它也位于包含 DisplayObjectContainer 
 		 * 的本地坐标系中。因此，对于逆时针旋转 90 度的 DisplayObjectContainer，该 DisplayObjectContainer 
 		 * 的子级将继承逆时针旋转 90 度的坐标系。对象的坐标指的是注册点的位置。
-		 * @constant ns_egret.IVisualElement#x
+		 * @constant egret.IVisualElement#x
 		 */		
 		x:number;
 		/**
@@ -104,7 +104,7 @@ module ns_egret {
 		 * 如果该对象位于具有变形的 DisplayObjectContainer 内，则它也位于包含 DisplayObjectContainer 
 		 * 的本地坐标系中。因此，对于逆时针旋转 90 度的 DisplayObjectContainer，该 DisplayObjectContainer 
 		 * 的子级将继承逆时针旋转 90 度的坐标系。对象的坐标指的是注册点的位置。
-		 * @constant ns_egret.IVisualElement#y
+		 * @constant egret.IVisualElement#y
 		 */		
 		y:number;
 	}

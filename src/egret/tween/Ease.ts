@@ -27,10 +27,10 @@
 
 /// <reference path="../utils/Logger.ts"/>
 
-module ns_egret{
+module egret{
     export class Ease {
         constructor() {
-            ns_egret.Logger.fatal("Ease不能被实例化");
+            egret.Logger.fatal("Ease不能被实例化");
         }
 
         public static get(amount):Function {

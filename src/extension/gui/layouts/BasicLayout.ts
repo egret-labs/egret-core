@@ -29,17 +29,17 @@
 /// <reference path="../core/ILayoutElement.ts"/>
 /// <reference path="supportClasses/LayoutBase.ts"/>
 
-module ns_egret {
+module egret {
 
 	/**
-	 * @class ns_egret.BasicLayout
+	 * @class egret.BasicLayout
 	 * @classdesc
 	 * 基本布局
-	 * @extends ns_egret.LayoutBase
+	 * @extends egret.LayoutBase
 	 */
 	export class BasicLayout extends LayoutBase{
 		/**
-		 * @method ns_egret.BasicLayout#constructor
+		 * @method egret.BasicLayout#constructor
 		 */
 		public constructor(){
 			super();
@@ -55,7 +55,7 @@ module ns_egret {
 		/**
 		 * 鼠标滚轮每次滚动时目标容器的verticalScrollPosition
 		 * 或horizontalScrollPosition改变的像素距离。必须大于0， 默认值20。
-		 * @member ns_egret.BasicLayout#mouseWheelSpeed
+		 * @member egret.BasicLayout#mouseWheelSpeed
 		 */
 		public get mouseWheelSpeed():number{
 			return this._mouseWheelSpeed;
@@ -67,7 +67,7 @@ module ns_egret {
 		}
 
 		/**
-		 * @method ns_egret.BasicLayout#getElementBoundsLeftOfScrollRect
+		 * @method egret.BasicLayout#getElementBoundsLeftOfScrollRect
 		 * @param scrollRect {Rectangle} 
 		 * @returns {Rectangle}
 		 */
@@ -78,7 +78,7 @@ module ns_egret {
 			return bounds;
 		}
 		/**
-		 * @method ns_egret.BasicLayout#getElementBoundsRightOfScrollRect
+		 * @method egret.BasicLayout#getElementBoundsRightOfScrollRect
 		 * @param scrollRect {Rectangle} 
 		 * @returns {Rectangle}
 		 */
@@ -89,7 +89,7 @@ module ns_egret {
 			return bounds;
 		}
 		/**
-		 * @method ns_egret.BasicLayout#getElementBoundsAboveScrollRect
+		 * @method egret.BasicLayout#getElementBoundsAboveScrollRect
 		 * @param scrollRect {Rectangle} 
 		 * @returns {Rectangle}
 		 */
@@ -100,7 +100,7 @@ module ns_egret {
 			return bounds;
 		}
 		/**
-		 * @method ns_egret.BasicLayout#getElementBoundsBelowScrollRect
+		 * @method egret.BasicLayout#getElementBoundsBelowScrollRect
 		 * @param scrollRect {Rectangle} 
 		 * @returns {Rectangle}
 		 */
@@ -112,7 +112,7 @@ module ns_egret {
 		}
 
 		/**
-		 * @method ns_egret.BasicLayout#measure
+		 * @method egret.BasicLayout#measure
 		 */
 		public measure():void{
 			super.measure();
@@ -180,7 +180,7 @@ module ns_egret {
 
 
 		/**
-		 * @method ns_egret.BasicLayout#updateDisplayList
+		 * @method egret.BasicLayout#updateDisplayList
 		 * @param unscaledWidth {number} 
 		 * @param unscaledHeight {number} 
 		 */

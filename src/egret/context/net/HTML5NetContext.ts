@@ -36,11 +36,11 @@
 /// <reference path="../../net/URLVariables.ts"/>
 /// <reference path="../../utils/callLater.ts"/>
 
-module ns_egret {
+module egret {
     /**
-     * @class ns_egret.HTML5NetContext
+     * @class egret.HTML5NetContext
      * @classdesc
-     * @extends ns_egret.NetContext
+     * @extends egret.NetContext
      */
     export class HTML5NetContext extends NetContext {
 

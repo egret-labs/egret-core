@@ -34,27 +34,27 @@
 /// <reference path="../events/RendererExistenceEvent.ts"/>
 /// <reference path="../layouts/supportClasses/LayoutBase.ts"/>
 
-module ns_egret {
+module egret {
 
 	/**
-	 * @class ns_egret.SkinnableDataContainer
+	 * @class egret.SkinnableDataContainer
 	 * @classdesc
 	 * 可设置外观的数据项目容器基类
-	 * @extends ns_egret.SkinnableComponent
-	 * @implements ns_egret.IItemRendererOwner
+	 * @extends egret.SkinnableComponent
+	 * @implements egret.IItemRendererOwner
 	 */
 	export class SkinnableDataContainer extends SkinnableComponent implements IItemRendererOwner{
 		/**
 		 * 构造函数
-		 * @method ns_egret.SkinnableDataContainer#constructor
+		 * @method egret.SkinnableDataContainer#constructor
 		 */		
 		public constructor(){
 			super();
-            this.hostComponentKey = "ns_egret.SkinnableDataContainer";
+            this.hostComponentKey = "egret.SkinnableDataContainer";
 		}
 		
 		/**
-		 * @method ns_egret.SkinnableDataContainer#updateRenderer
+		 * @method egret.SkinnableDataContainer#updateRenderer
 		 * @param renderer {IItemRenderer} 
 		 * @param itemIndex {number} 
 		 * @param data {any} 
@@ -72,7 +72,7 @@ module ns_egret {
 		
 		/**
 		 * 返回可在项呈示器中显示的 String 
-		 * @method ns_egret.SkinnableDataContainer#itemToLabel
+		 * @method egret.SkinnableDataContainer#itemToLabel
 		 * @param item {any} 
 		 * @returns {string}
 		 */		
@@ -84,7 +84,7 @@ module ns_egret {
 		
 		/**
 		 * [SkinPart]数据项目容器实体
-		 * @member ns_egret.SkinnableDataContainer#dataGroup
+		 * @member egret.SkinnableDataContainer#dataGroup
 		 */		
 		public dataGroup:DataGroup;
 		/**
@@ -94,7 +94,7 @@ module ns_egret {
 		
 		/**
 		 * 列表数据源，请使用实现了ICollection接口的数据类型，例如ArrayCollection
-		 * @member ns_egret.SkinnableDataContainer#dataProvider
+		 * @member egret.SkinnableDataContainer#dataProvider
 		 */		
 		public get dataProvider():ICollection{
            return this._getDataProvider();
@@ -123,7 +123,7 @@ module ns_egret {
 		/**
 		 * 用于数据项目的项呈示器。该类必须实现 IItemRenderer 接口。 <br/>
 		 * rendererClass获取顺序：itemRendererFunction > itemRenderer > 默认ItemRenerer。
-		 * @member ns_egret.SkinnableDataContainer#itemRenderer
+		 * @member egret.SkinnableDataContainer#itemRenderer
 		 */		
 		public get itemRenderer():any{
 			return (this.dataGroup) 
@@ -144,7 +144,7 @@ module ns_egret {
 		/**
 		 * 条目渲染器的可选皮肤标识符。在实例化itemRenderer时，若其内部没有设置过skinName,则将此属性的值赋值给它的skinName。
 		 * 注意:若itemRenderer不是ISkinnableClient，则此属性无效。
-		 * @member ns_egret.SkinnableDataContainer#itemRendererSkinName
+		 * @member egret.SkinnableDataContainer#itemRendererSkinName
 		 */	
 		public get itemRendererSkinName():any{
 			return (this.dataGroup) 
@@ -167,7 +167,7 @@ module ns_egret {
 		 * rendererClass获取顺序：itemRendererFunction > itemRenderer > 默认ItemRenerer。 <br/>
 		 * 应该定义一个与此示例函数类似的呈示器函数： <br/>
 		 * function myItemRendererFunction(item:Object):IFactory
-		 * @member ns_egret.SkinnableDataContainer#itemRendererFunction
+		 * @member egret.SkinnableDataContainer#itemRendererFunction
 		 */		
 		public get itemRendererFunction():Function{
 			return (this.dataGroup) 
@@ -187,7 +187,7 @@ module ns_egret {
 		
 		/**
 		 * 布局对象
-		 * @member ns_egret.SkinnableDataContainer#layout
+		 * @member egret.SkinnableDataContainer#layout
 		 */	
 		public get layout():LayoutBase{
 			return (this.dataGroup) 
@@ -210,7 +210,7 @@ module ns_egret {
         }
 		
 		/**
-		 * @method ns_egret.SkinnableDataContainer#partAdded
+		 * @method egret.SkinnableDataContainer#partAdded
 		 * @param partName {string} 
 		 * @param instance {any} 
 		 */
@@ -260,7 +260,7 @@ module ns_egret {
 		}
 		
 		/**
-		 * @method ns_egret.SkinnableDataContainer#partRemoved
+		 * @method egret.SkinnableDataContainer#partRemoved
 		 * @param partName {string} 
 		 * @param instance {any} 
 		 */
@@ -291,7 +291,7 @@ module ns_egret {
 		}
 		
 		/**
-		 * @method ns_egret.SkinnableDataContainer#addEventListener
+		 * @method egret.SkinnableDataContainer#addEventListener
 		 * @param type {string} 
 		 * @param listener {Function} 
 		 * @param thisObject {any} 
@@ -313,7 +313,7 @@ module ns_egret {
 		}
 		
 		/**
-		 * @method ns_egret.SkinnableDataContainer#removeEventListener
+		 * @method egret.SkinnableDataContainer#removeEventListener
 		 * @param type {string} 
 		 * @param listener {Function} 
 		 * @param thisObject {any} 

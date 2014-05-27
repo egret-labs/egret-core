@@ -28,26 +28,26 @@
 /// <reference path="../../../egret/geom/Point.ts"/>
 /// <reference path="supportClasses/SliderBase.ts"/>
 
-module ns_egret {
+module egret {
 
 	/**
-	 * @class ns_egret.VSlider
+	 * @class egret.VSlider
 	 * @classdesc
 	 * 垂直滑块控件
-	 * @extends ns_egret.SliderBase
+	 * @extends egret.SliderBase
 	 */
 	export class VSlider extends SliderBase{
 		/**
 		 * 构造函数
-		 * @method ns_egret.VSlider#constructor
+		 * @method egret.VSlider#constructor
 		 */		
 		public constructor(){
 			super();
-            this.hostComponentKey = "ns_egret.VSlider";
+            this.hostComponentKey = "egret.VSlider";
 		}
 		
 		/**
-		 * @method ns_egret.VSlider#pointToValue
+		 * @method egret.VSlider#pointToValue
 		 * @param x {number} 
 		 * @param y {number} 
 		 * @returns {number}
@@ -62,7 +62,7 @@ module ns_egret {
 		}
 		
 		/**
-		 * @method ns_egret.VSlider#updateSkinDisplayList
+		 * @method egret.VSlider#updateSkinDisplayList
 		 */
 		public updateSkinDisplayList():void{
 			if (!this.thumb || !this.track)

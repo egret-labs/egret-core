@@ -29,17 +29,17 @@
 /// <reference path="../../../../egret/geom/Rectangle.ts"/>
 /// <reference path="../../components/supportClasses/GroupBase.ts"/>
 
-module ns_egret {
+module egret {
 
 	/**
-	 * @class ns_egret.LayoutBase
+	 * @class egret.LayoutBase
 	 * @classdesc
 	 * 容器布局基类
-	 * @extends ns_egret.EventDispatcher
+	 * @extends egret.EventDispatcher
 	 */
 	export class LayoutBase extends EventDispatcher{
 		/**
-		 * @method ns_egret.LayoutBase#constructor
+		 * @method egret.LayoutBase#constructor
 		 */
 		public constructor(){
 			super();
@@ -48,7 +48,7 @@ module ns_egret {
 		private _target:GroupBase;
 		/**
 		 * 目标容器
-		 * @member ns_egret.LayoutBase#target
+		 * @member egret.LayoutBase#target
 		 */		
 		public get target():GroupBase{
 			return this._target;
@@ -68,7 +68,7 @@ module ns_egret {
 		 * 只有布局设置为 VerticalLayout、HorizontalLayout 
 		 * 或 TileLayout 的 DataGroup 或 SkinnableDataContainer 
 		 * 才支持虚拟布局。不支持虚拟化的布局子类必须禁止更改此属性。
-		 * @member ns_egret.LayoutBase#useVirtualLayout
+		 * @member egret.LayoutBase#useVirtualLayout
 		 */
 		public get useVirtualLayout():boolean{
 			return this._useVirtualLayout;
@@ -91,7 +91,7 @@ module ns_egret {
 		
 		/**
 		 * 由虚拟布局所使用，以估计尚未滚动到视图中的布局元素的大小。 
-		 * @member ns_egret.LayoutBase#typicalLayoutRect
+		 * @member egret.LayoutBase#typicalLayoutRect
 		 */
 		public get typicalLayoutRect():Rectangle{
 			return this._typicalLayoutRect;
@@ -106,21 +106,21 @@ module ns_egret {
 		}
         /**
          * 滚动条位置改变
-         * @method ns_egret.LayoutBase#scrollPositionChanged
+         * @method egret.LayoutBase#scrollPositionChanged
          */
         public scrollPositionChanged():void{
         }
 		
 		/**
 		 * 清理虚拟布局缓存的数据
-		 * @method ns_egret.LayoutBase#clearVirtualLayoutCache
+		 * @method egret.LayoutBase#clearVirtualLayoutCache
 		 */		
 		public clearVirtualLayoutCache():void{
 		}
 		/**
 		 * 在已添加布局元素之后且在验证目标的大小和显示列表之前，由目标调用。
 		 * 按元素状态缓存的布局（比如虚拟布局）可以覆盖此方法以更新其缓存。 
-		 * @method ns_egret.LayoutBase#elementAdded
+		 * @method egret.LayoutBase#elementAdded
 		 * @param index {number} 
 		 */		
 		public elementAdded(index:number):void{
@@ -128,7 +128,7 @@ module ns_egret {
 		/**
 		 * 必须在已删除布局元素之后且在验证目标的大小和显示列表之前，由目标调用此方法。
 		 * 按元素状态缓存的布局（比如虚拟布局）可以覆盖此方法以更新其缓存。 
-		 * @method ns_egret.LayoutBase#elementRemoved
+		 * @method egret.LayoutBase#elementRemoved
 		 * @param index {number} 
 		 */		
 		public elementRemoved(index:number):void{
@@ -136,13 +136,13 @@ module ns_egret {
 		
 		/**
 		 * 测量组件尺寸大小
-		 * @method ns_egret.LayoutBase#measure
+		 * @method egret.LayoutBase#measure
 		 */		
 		public measure():void{
 		}
 		/**
 		 * 更新显示列表
-		 * @method ns_egret.LayoutBase#updateDisplayList
+		 * @method egret.LayoutBase#updateDisplayList
 		 * @param width {number} 
 		 * @param height {number} 
 		 */		

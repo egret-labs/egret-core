@@ -28,28 +28,28 @@
 /// <reference path="SkinnableContainer.ts"/>
 /// <reference path="../core/IDisplayText.ts"/>
 
-module ns_egret {
+module egret {
 
 	/**
-	 * @class ns_egret.Panel
+	 * @class egret.Panel
 	 * @classdesc
 	 * 带有标题，内容区域的面板组件
-	 * @extends ns_egret.SkinnableContainer
+	 * @extends egret.SkinnableContainer
 	 */	
     export class Panel extends SkinnableContainer {
         /**
          * 构造函数
-		 * @method ns_egret.Panel#constructor
+		 * @method egret.Panel#constructor
          */
         public constructor() {
             super();
-            this.hostComponentKey = "ns_egret.Panel";
+            this.hostComponentKey = "egret.Panel";
             this.touchEnabled = false;
         }
 
         /**
          * [SkinPart]标题显示对象
-		 * @member ns_egret.Panel#titleDisplay
+		 * @member egret.Panel#titleDisplay
          */
         public titleDisplay:IDisplayText;
 
@@ -61,7 +61,7 @@ module ns_egret {
 
         /**
          * 标题文本内容
-		 * @member ns_egret.Panel#title
+		 * @member egret.Panel#title
          */
         public get title():string {
             return this._title;
@@ -75,7 +75,7 @@ module ns_egret {
         }
 
         /**
-		 * @method ns_egret.Panel#partAdded
+		 * @method egret.Panel#partAdded
 		 * @param partName {string} 
 		 * @param instance {any} 
          */

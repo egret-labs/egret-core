@@ -33,18 +33,18 @@
 /// <reference path="TileOrientation.ts"/>
 /// <reference path="supportClasses/LayoutBase.ts"/>
 
-module ns_egret {
+module egret {
 
 	/**
-	 * @class ns_egret.TileLayout
+	 * @class egret.TileLayout
 	 * @classdesc
 	 * 格子布局
-	 * @extends ns_egret.LayoutBase
+	 * @extends egret.LayoutBase
 	 */
 	export class TileLayout extends LayoutBase{
 		/**
 		 * 构造函数
-		 * @method ns_egret.TileLayout#constructor
+		 * @method egret.TileLayout#constructor
 		 */		
 		public constructor(){
 			super();
@@ -57,7 +57,7 @@ module ns_egret {
 		private _horizontalGap:number = 6;
 		/**
 		 * 列之间的水平空间（以像素为单位）。
-		 * @member ns_egret.TileLayout#horizontalGap
+		 * @member egret.TileLayout#horizontalGap
 		 */		
 		public get horizontalGap():number{
 			return this._horizontalGap;
@@ -83,7 +83,7 @@ module ns_egret {
 		
 		/**
 		 * 行之间的垂直空间（以像素为单位）。
-		 * @member ns_egret.TileLayout#verticalGap
+		 * @member egret.TileLayout#verticalGap
 		 */		
 		public get verticalGap():number{
 			return this._verticalGap;
@@ -104,7 +104,7 @@ module ns_egret {
 		private _columnCount:number = -1;
 		/**
 		 * 实际列计数。
-		 * @member ns_egret.TileLayout#columnCount
+		 * @member egret.TileLayout#columnCount
 		 */		
 		public get columnCount():number{
 			return this._columnCount;
@@ -114,7 +114,7 @@ module ns_egret {
 		/**
 		 * 要显示的列数。设置为0表示自动确定列计数,默认值0。<br/>
 		 * 注意:当orientation为TileOrientation.COLUMNS(逐列排列元素)且taget被显式设置宽度时，此属性无效。
-		 * @member ns_egret.TileLayout#requestedColumnCount
+		 * @member egret.TileLayout#requestedColumnCount
 		 */
 		public get requestedColumnCount():number{
 			return this._requestedColumnCount;
@@ -132,7 +132,7 @@ module ns_egret {
 		private _rowCount:number = -1;
 		/**
 		 * 实际行计数。
-		 * @member ns_egret.TileLayout#rowCount
+		 * @member egret.TileLayout#rowCount
 		 */		
 		public get rowCount():number{
 			return this._rowCount;
@@ -142,7 +142,7 @@ module ns_egret {
 		/**
 		 * 要显示的行数。设置为0表示自动确定行计数,默认值0。<br/>
 		 * 注意:当orientation为TileOrientation.ROWS(即逐行排列元素,此为默认值)且target被显式设置高度时，此属性无效。
-		 * @member ns_egret.TileLayout#requestedRowCount
+		 * @member egret.TileLayout#requestedRowCount
 		 */
 		public get requestedRowCount():number{
 			return this._requestedRowCount;
@@ -165,7 +165,7 @@ module ns_egret {
 		private _columnWidth:number = NaN;
 		/**
 		 * 实际列宽（以像素为单位）。 若未显式设置，则从根据最宽的元素的宽度确定列宽度。
-		 * @member ns_egret.TileLayout#columnWidth
+		 * @member egret.TileLayout#columnWidth
 		 */		
 		public get columnWidth():number{
 			return this._columnWidth;
@@ -190,7 +190,7 @@ module ns_egret {
 		private _rowHeight:number = NaN;
 		/**
 		 * 行高（以像素为单位）。 如果未显式设置，则从元素的高度的最大值确定行高度。
-		 * @member ns_egret.TileLayout#rowHeight
+		 * @member egret.TileLayout#rowHeight
 		 */		
 		public get rowHeight():number{
 			return this._rowHeight;
@@ -211,7 +211,7 @@ module ns_egret {
 		/**
 		 * 四个边缘的共同内边距。若单独设置了任一边缘的内边距，则该边缘的内边距以单独设置的值为准。
 		 * 此属性主要用于快速设置多个边缘的相同内边距。默认值：0。
-		 * @member ns_egret.TileLayout#padding
+		 * @member egret.TileLayout#padding
 		 */
 		public get padding():number{
 			return this._padding;
@@ -227,7 +227,7 @@ module ns_egret {
 		private _paddingLeft:number = NaN;
 		/**
 		 * 容器的左边缘与布局元素的左边缘之间的最少像素数,若为NaN将使用padding的值，默认值：NaN。
-		 * @member ns_egret.TileLayout#paddingLeft
+		 * @member egret.TileLayout#paddingLeft
 		 */
 		public get paddingLeft():number{
 			return this._paddingLeft;
@@ -244,7 +244,7 @@ module ns_egret {
 		private _paddingRight:number = NaN;
 		/**
 		 * 容器的右边缘与布局元素的右边缘之间的最少像素数,若为NaN将使用padding的值，默认值：NaN。
-		 * @member ns_egret.TileLayout#paddingRight
+		 * @member egret.TileLayout#paddingRight
 		 */
 		public get paddingRight():number{
 			return this._paddingRight;
@@ -261,7 +261,7 @@ module ns_egret {
 		private _paddingTop:number = NaN;
 		/**
 		 * 容器的顶边缘与第一个布局元素的顶边缘之间的像素数,若为NaN将使用padding的值，默认值：NaN。
-		 * @member ns_egret.TileLayout#paddingTop
+		 * @member egret.TileLayout#paddingTop
 		 */
 		public get paddingTop():number{
 			return this._paddingTop;
@@ -278,7 +278,7 @@ module ns_egret {
 		private _paddingBottom:number = NaN;
 		/**
 		 * 容器的底边缘与最后一个布局元素的底边缘之间的像素数,若为NaN将使用padding的值，默认值：NaN。
-		 * @member ns_egret.TileLayout#paddingBottom
+		 * @member egret.TileLayout#paddingBottom
 		 */
 		public get paddingBottom():number{
 			return this._paddingBottom;
@@ -299,7 +299,7 @@ module ns_egret {
 		 * 支持的值有 HorizontalAlign.LEFT、HorizontalAlign.CENTER、
 		 * HorizontalAlign.RIGHT、HorizontalAlign.JUSTIFY。
 		 * 默认值：HorizontalAlign.JUSTIFY
-		 * @member ns_egret.TileLayout#horizontalAlign
+		 * @member egret.TileLayout#horizontalAlign
 		 */		
 		public get horizontalAlign():string{
 			return this._horizontalAlign;
@@ -320,7 +320,7 @@ module ns_egret {
 		 * 支持的值有 VerticalAlign.TOP、VerticalAlign.MIDDLE、
 		 * VerticalAlign.BOTTOM、VerticalAlign.JUSTIFY。 
 		 * 默认值：VerticalAlign.JUSTIFY。
-		 * @member ns_egret.TileLayout#verticalAlign
+		 * @member egret.TileLayout#verticalAlign
 		 */		
 		public get verticalAlign():string{
 			return this._verticalAlign;
@@ -346,7 +346,7 @@ module ns_egret {
 		 * 设置为 ColumnAlign.JUSTIFY_USING_WIDTH 时，columnWidth 的实际值将增大，
 		 * 这样最后一个完全可见列右边缘会与容器的右边缘对齐。请注意显式设置 columnWidth 属性不会关闭两端对齐。
 		 * 它仅确定初始列宽度值。两端对齐可能会增大它。
-		 * @member ns_egret.TileLayout#columnAlign
+		 * @member egret.TileLayout#columnAlign
 		 */		
 		public get columnAlign():string{
 			return this._columnAlign;
@@ -363,7 +363,7 @@ module ns_egret {
 		private _rowAlign:string = RowAlign.TOP;
 		
 		/**
-		 * @member ns_egret.TileLayout#rowAlign
+		 * @member egret.TileLayout#rowAlign
 		 */
 		public get rowAlign():string{
 			return this._rowAlign;
@@ -392,7 +392,7 @@ module ns_egret {
 		private _orientation:string = TileOrientation.ROWS;
 		/**
 		 * 指定是逐行还是逐列排列元素。
-		 * @member ns_egret.TileLayout#orientation
+		 * @member egret.TileLayout#orientation
 		 */		
 		public get orientation():string{
 			return this._orientation;
@@ -419,7 +419,7 @@ module ns_egret {
 		}
 		
 		/**
-		 * @method ns_egret.TileLayout#measure
+		 * @method egret.TileLayout#measure
 		 */
 		public measure():void{
 			if (!this.target)
@@ -611,7 +611,7 @@ module ns_egret {
 		}
 		
 		/**
-		 * @method ns_egret.TileLayout#clearVirtualLayoutCache
+		 * @method egret.TileLayout#clearVirtualLayoutCache
 		 */
 		public clearVirtualLayoutCache():void{
 			super.clearVirtualLayoutCache();
@@ -633,7 +633,7 @@ module ns_egret {
 		private indexInViewCalculated:boolean = false;
 		
 		/**
-		 * @method ns_egret.TileLayout#scrollPositionChanged
+		 * @method egret.TileLayout#scrollPositionChanged
 		 */
 		public scrollPositionChanged():void{
 			super.scrollPositionChanged();
@@ -715,7 +715,7 @@ module ns_egret {
 		}
 		
 		/**
-		 * @method ns_egret.TileLayout#updateDisplayList
+		 * @method egret.TileLayout#updateDisplayList
 		 * @param width {number} 
 		 * @param height {number} 
 		 */

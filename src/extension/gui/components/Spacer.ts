@@ -27,19 +27,19 @@
 
 /// <reference path="../core/UIComponent.ts"/>
 
-module ns_egret {
+module egret {
 
 	/**
-	 * @class ns_egret.Spacer
+	 * @class egret.Spacer
 	 * @classdesc
 	 * 占位组件,一个布局辅助类。
 	 * 自身完全不可见，但可以在父级容器的布局中分配空间，通常用于垂直和水平布局中，推挤其他组件。
-	 * @extends ns_egret.UIComponent
+	 * @extends egret.UIComponent
 	 */	
 	export class Spacer extends UIComponent{
 		/**
 		 * 构造函数
-		 * @method ns_egret.Spacer#constructor
+		 * @method egret.Spacer#constructor
 		 */		
 		public constructor(){
 			super();

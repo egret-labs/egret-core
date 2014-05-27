@@ -23,7 +23,7 @@
 
 module RES {
 
-	export class ResourceLoader extends ns_egret.EventDispatcher{
+	export class ResourceLoader extends egret.EventDispatcher{
 		/**
 		 * 构造函数
 		 */
@@ -122,7 +122,7 @@ module RES {
             else{
                 var analyzer:AnalyzerBase = this.analyzerDic[resItem.type];
                 if(!analyzer){
-                    analyzer = this.analyzerDic[resItem.type] = ns_egret.Injector.getInstance(AnalyzerBase,resItem.type);
+                    analyzer = this.analyzerDic[resItem.type] = egret.Injector.getInstance(AnalyzerBase,resItem.type);
                 }
                 analyzer.loadFile(resItem,this.onItemComplete,this);
             }

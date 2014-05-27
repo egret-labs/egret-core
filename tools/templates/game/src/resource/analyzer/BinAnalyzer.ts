@@ -46,25 +46,25 @@ module RES {
 				compFunc.call(thisObject,resItem);
 				return;
 			}
-			var loader:ns_egret.URLLoader = this.getLoader();
+			var loader:egret.URLLoader = this.getLoader();
 			this.resItemDic[loader.hashCode] = {item:resItem,func:compFunc,thisObject:thisObject};
-			loader.load(new ns_egret.URLRequest(resItem.url));
+			loader.load(new egret.URLRequest(resItem.url));
 		}
 
-        public _dataFormat:string = ns_egret.URLLoaderDataFormat.BINARY;
+        public _dataFormat:string = egret.URLLoaderDataFormat.BINARY;
 		/**
 		 * URLLoader对象池
 		 */		
-		public recycler:ns_egret.Recycler = new ns_egret.Recycler();
+		public recycler:egret.Recycler = new egret.Recycler();
 		/**
 		 * 获取一个URLLoader对象
 		 */		
-		private getLoader():ns_egret.URLLoader{
-			var loader:ns_egret.URLLoader = this.recycler.pop();
+		private getLoader():egret.URLLoader{
+			var loader:egret.URLLoader = this.recycler.pop();
 			if(!loader){
-				loader = new ns_egret.URLLoader();
-				loader.addEventListener(ns_egret.Event.COMPLETE,this.onLoadFinish,this);
-				loader.addEventListener(ns_egret.IOErrorEvent.IO_ERROR,this.onLoadFinish,this);
+				loader = new egret.URLLoader();
+				loader.addEventListener(egret.Event.COMPLETE,this.onLoadFinish,this);
+				loader.addEventListener(egret.IOErrorEvent.IO_ERROR,this.onLoadFinish,this);
 			}
             loader.dataFormat = this._dataFormat;
 			return loader;
@@ -72,14 +72,14 @@ module RES {
 		/**
 		 * 一项加载结束
 		 */		
-		public onLoadFinish(event:ns_egret.Event):void{
-			var loader:ns_egret.URLLoader = <ns_egret.URLLoader> (event.target);
+		public onLoadFinish(event:egret.Event):void{
+			var loader:egret.URLLoader = <egret.URLLoader> (event.target);
 			var data:any = this.resItemDic[loader.hashCode];
 			delete this.resItemDic[loader.hashCode];
 			this.recycler.push(loader);
 			var resItem:ResourceItem = data.item;
 			var compFunc:Function = data.func;
-			resItem.loaded = (event.type==ns_egret.Event.COMPLETE);
+			resItem.loaded = (event.type==egret.Event.COMPLETE);
 			if(resItem.loaded){
                 this.analyzeData(resItem,loader.data)
 			}

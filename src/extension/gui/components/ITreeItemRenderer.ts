@@ -27,37 +27,37 @@
 
 /// <reference path="IItemRenderer.ts"/>
 
-module ns_egret {
+module egret {
 
 	/**
-	 * @class ns_egret.ITreeItemRenderer
+	 * @class egret.ITreeItemRenderer
 	 * @interface
 	 * @classdesc
 	 * 树状列表组件的项呈示器接口
-	 * @extends ns_egret.IItemRenderer
+	 * @extends egret.IItemRenderer
 	 */
 	export interface ITreeItemRenderer extends IItemRenderer{
 		/**
 		 * 图标的皮肤名
-		 * @member ns_egret.ITreeItemRenderer#iconSkinName
+		 * @member egret.ITreeItemRenderer#iconSkinName
 		 */
 		iconSkinName:any;
 		
 		/**
 		 * 缩进深度。0表示顶级节点，1表示第一层子节点，以此类推。
-		 * @member ns_egret.ITreeItemRenderer#depth
+		 * @member egret.ITreeItemRenderer#depth
 		 */
 		depth:number;
 		
 		/**
 		 * 是否含有子节点。
-		 * @member ns_egret.ITreeItemRenderer#hasChildren
+		 * @member egret.ITreeItemRenderer#hasChildren
 		 */
 		hasChildren:boolean;
 
 		/**
 		 * 节点是否处于开启状态。
-		 * @member ns_egret.ITreeItemRenderer#opened
+		 * @member egret.ITreeItemRenderer#opened
 		 */
 		opened:boolean;
 	}

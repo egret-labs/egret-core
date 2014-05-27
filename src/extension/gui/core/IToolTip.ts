@@ -27,19 +27,19 @@
 
 /// <reference path="IUIComponent.ts"/>
 
-module ns_egret {
+module egret {
 
 	/**
-	 * @class ns_egret.IToolTip
+	 * @class egret.IToolTip
 	 * @interface
 	 * @classdesc
 	 * 工具提示组件接口
-	 * @extends ns_egret.IUIComponent
+	 * @extends egret.IUIComponent
 	 */
 	export interface IToolTip extends IUIComponent{
 		/**
 		 * 工具提示的数据对象，通常为一个字符串。
-		 * @member ns_egret.IToolTip#toolTipData
+		 * @member egret.IToolTip#toolTipData
 		 */		
 		toolTipData:Object;
 	}

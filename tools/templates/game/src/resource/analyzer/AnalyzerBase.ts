@@ -21,7 +21,7 @@
 
 module RES {
 
-    export class AnalyzerBase extends ns_egret.HashObject{
+    export class AnalyzerBase extends egret.HashObject{
 
         public constructor(){
             super();

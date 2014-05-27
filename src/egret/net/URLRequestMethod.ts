@@ -25,23 +25,23 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-module ns_egret {
+module egret {
 
 	/**
-	 * @class ns_egret.URLRequestMethod
+	 * @class egret.URLRequestMethod
 	 * @classdesc
 	 */
     export class URLRequestMethod {
 
 		/**
          * 表示 URLRequest 对象是一个 GET。
-		 * @constant {string} ns_egret.URLRequestMethod.GET
+		 * @constant {string} egret.URLRequestMethod.GET
 		 */
         public static GET:string = "GET";
 
 		/**
          * 表示 URLRequest 对象是一个 POST。
-		 * @constant {string} ns_egret.URLRequestMethod.POST
+		 * @constant {string} egret.URLRequestMethod.POST
 		 */
         public static POST:string = "POST";
     }

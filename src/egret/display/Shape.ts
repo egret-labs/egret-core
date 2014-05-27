@@ -30,9 +30,9 @@
 /// <reference path="DisplayObject.ts"/>
 /// <reference path="Graphics.ts"/>
 
-module ns_egret {
+module egret {
 
-    export class Shape extends ns_egret.DisplayObject {
+    export class Shape extends egret.DisplayObject {
 
         public constructor() {
             super();
@@ -42,7 +42,7 @@ module ns_egret {
 
         public get graphics():Graphics{
             if(!this._graphics){
-                var rendererContext = ns_egret.MainContext.instance.rendererContext;
+                var rendererContext = egret.MainContext.instance.rendererContext;
                 this._graphics = new Graphics(rendererContext);
             }
             return this._graphics;

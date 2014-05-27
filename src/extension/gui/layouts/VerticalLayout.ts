@@ -31,17 +31,17 @@
 /// <reference path="../core/IVisualElement.ts"/>
 /// <reference path="supportClasses/LayoutBase.ts"/>
 
-module ns_egret {
+module egret {
 
 	/**
-	 * @class ns_egret.VerticalLayout
+	 * @class egret.VerticalLayout
 	 * @classdesc
 	 * 垂直布局
-	 * @extends ns_egret.LayoutBase
+	 * @extends egret.LayoutBase
 	 */
     export class VerticalLayout extends LayoutBase{
 		/**
-		 * @method ns_egret.VerticalLayout#constructor
+		 * @method egret.VerticalLayout#constructor
 		 */
         public constructor(){
             super();
@@ -50,7 +50,7 @@ module ns_egret {
         private _horizontalAlign:string = HorizontalAlign.LEFT;
         /**
          * 布局元素的水平对齐策略。参考HorizontalAlign定义的常量。
-		 * @member ns_egret.VerticalLayout#horizontalAlign
+		 * @member egret.VerticalLayout#horizontalAlign
          */
         public get horizontalAlign():string{
             return this._horizontalAlign;
@@ -68,7 +68,7 @@ module ns_egret {
         /**
          * 布局元素的竖直对齐策略。参考VerticalAlign定义的常量。
          * 注意：此属性设置为CONTENT_JUSTIFY始终无效。当useVirtualLayout为true时，设置JUSTIFY也无效。
-		 * @member ns_egret.VerticalLayout#verticalAlign
+		 * @member egret.VerticalLayout#verticalAlign
          */
         public get verticalAlign():string{
             return this._verticalAlign;
@@ -85,7 +85,7 @@ module ns_egret {
         private _gap:number = 6;
         /**
          * 布局元素之间的垂直空间（以像素为单位）
-		 * @member ns_egret.VerticalLayout#gap
+		 * @member egret.VerticalLayout#gap
          */
         public get gap():number{
             return this._gap;
@@ -104,7 +104,7 @@ module ns_egret {
         /**
          * 四个边缘的共同内边距。若单独设置了任一边缘的内边距，则该边缘的内边距以单独设置的值为准。
          * 此属性主要用于快速设置多个边缘的相同内边距。默认值：0。
-		 * @member ns_egret.VerticalLayout#padding
+		 * @member egret.VerticalLayout#padding
          */
         public get padding():number{
             return this._padding;
@@ -120,7 +120,7 @@ module ns_egret {
         private _paddingLeft:number = NaN;
         /**
          * 容器的左边缘与布局元素的左边缘之间的最少像素数,若为NaN将使用padding的值，默认值：NaN。
-		 * @member ns_egret.VerticalLayout#paddingLeft
+		 * @member egret.VerticalLayout#paddingLeft
          */
         public get paddingLeft():number{
             return this._paddingLeft;
@@ -137,7 +137,7 @@ module ns_egret {
         private _paddingRight:number = NaN;
         /**
          * 容器的右边缘与布局元素的右边缘之间的最少像素数,若为NaN将使用padding的值，默认值：NaN。
-		 * @member ns_egret.VerticalLayout#paddingRight
+		 * @member egret.VerticalLayout#paddingRight
          */
         public get paddingRight():number{
             return this._paddingRight;
@@ -154,7 +154,7 @@ module ns_egret {
         private _paddingTop:number = NaN;
         /**
          * 容器的顶边缘与第一个布局元素的顶边缘之间的像素数,若为NaN将使用padding的值，默认值：NaN。
-		 * @member ns_egret.VerticalLayout#paddingTop
+		 * @member egret.VerticalLayout#paddingTop
          */
         public get paddingTop():number{
             return this._paddingTop;
@@ -171,7 +171,7 @@ module ns_egret {
         private _paddingBottom:number = NaN;
         /**
          * 容器的底边缘与最后一个布局元素的底边缘之间的像素数,若为NaN将使用padding的值，默认值：NaN。
-		 * @member ns_egret.VerticalLayout#paddingBottom
+		 * @member egret.VerticalLayout#paddingBottom
          */
         public get paddingBottom():number{
             return this._paddingBottom;
@@ -198,7 +198,7 @@ module ns_egret {
 
 
         /**
-		 * @method ns_egret.VerticalLayout#measure
+		 * @method egret.VerticalLayout#measure
          */
         public measure():void{
             super.measure();
@@ -280,7 +280,7 @@ module ns_egret {
         }
 
         /**
-		 * @method ns_egret.VerticalLayout#updateDisplayList
+		 * @method egret.VerticalLayout#updateDisplayList
 		 * @param width {number} 
 		 * @param height {number} 
          */
@@ -365,7 +365,7 @@ module ns_egret {
         }
 
         /**
-		 * @method ns_egret.VerticalLayout#elementAdded
+		 * @method egret.VerticalLayout#elementAdded
 		 * @param index {number} 
          */
         public elementAdded(index:number):void{
@@ -375,7 +375,7 @@ module ns_egret {
         }
 
         /**
-		 * @method ns_egret.VerticalLayout#elementRemoved
+		 * @method egret.VerticalLayout#elementRemoved
 		 * @param index {number} 
          */
         public elementRemoved(index:number):void{
@@ -384,7 +384,7 @@ module ns_egret {
         }
 
         /**
-		 * @method ns_egret.VerticalLayout#clearVirtualLayoutCache
+		 * @method egret.VerticalLayout#clearVirtualLayoutCache
          */
         public clearVirtualLayoutCache():void{
             super.clearVirtualLayoutCache();
@@ -426,7 +426,7 @@ module ns_egret {
         private indexInViewCalculated:boolean = false;
 
         /**
-		 * @method ns_egret.VerticalLayout#scrollPositionChanged
+		 * @method egret.VerticalLayout#scrollPositionChanged
          */
         public scrollPositionChanged():void{
             super.scrollPositionChanged();
@@ -761,7 +761,7 @@ module ns_egret {
 
         /**
          * 为每个可变尺寸的子项分配空白区域
-		 * @method ns_egret.VerticalLayout.flexChildrenProportionally
+		 * @method egret.VerticalLayout.flexChildrenProportionally
 		 * @param spaceForChildren {number} 
 		 * @param spaceToDistribute {number} 
 		 * @param totalPercent {number} 
@@ -838,27 +838,27 @@ module ns_egret {
     class ChildInfo{
 
 		/**
-		 * @member ns_egret.ChildInfo#layoutElement
+		 * @member egret.ChildInfo#layoutElement
 		 */
         public layoutElement:ILayoutElement;
 
 		/**
-		 * @member ns_egret.ChildInfo#size
+		 * @member egret.ChildInfo#size
 		 */
         public size:number = 0;
 
 		/**
-		 * @member ns_egret.ChildInfo#percent
+		 * @member egret.ChildInfo#percent
 		 */
         public percent:number;
 
 		/**
-		 * @member ns_egret.ChildInfo#min
+		 * @member egret.ChildInfo#min
 		 */
         public min:number;
 
 		/**
-		 * @member ns_egret.ChildInfo#max
+		 * @member egret.ChildInfo#max
 		 */
         public max:number;
     }

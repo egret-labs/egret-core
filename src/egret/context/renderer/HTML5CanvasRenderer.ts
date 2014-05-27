@@ -33,17 +33,17 @@
 /// <reference path="../../text/TextField.ts"/>
 /// <reference path="../../utils/getTimer.ts"/>
 
-module ns_egret {
+module egret {
 	/**
-	 * @class ns_egret.HTML5CanvasRenderer
+	 * @class egret.HTML5CanvasRenderer
 	 * @classdesc
-	 * @extends ns_egret.RendererContext
+	 * @extends egret.RendererContext
 	 */
     export class HTML5CanvasRenderer extends RendererContext {
 
         private canvas;
 		/**
-		 * @member ns_egret.HTML5CanvasRenderer#canvasContext
+		 * @member egret.HTML5CanvasRenderer#canvasContext
 		 */
         public canvasContext;
 
@@ -86,7 +86,7 @@ module ns_egret {
         }
 
         clearScreen() {
-            this.setTransform(ns_egret.Matrix.identity.identity());
+            this.setTransform(egret.Matrix.identity.identity());
             var list = RenderFilter.getInstance().getDrawAreaList();
             for (var i:number = 0 , l:number = list.length; i < l; i++) {
                 var area = list[i];
@@ -100,23 +100,23 @@ module ns_egret {
         }
 
         drawImage(texture:Texture, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight) {
-            sourceX = sourceX / ns_egret.MainContext.instance.rendererContext.texture_scale_factor;
-            sourceY = sourceY / ns_egret.MainContext.instance.rendererContext.texture_scale_factor;
-            sourceWidth = sourceWidth / ns_egret.MainContext.instance.rendererContext.texture_scale_factor;
-            sourceHeight = sourceHeight / ns_egret.MainContext.instance.rendererContext.texture_scale_factor;
+            sourceX = sourceX / egret.MainContext.instance.rendererContext.texture_scale_factor;
+            sourceY = sourceY / egret.MainContext.instance.rendererContext.texture_scale_factor;
+            sourceWidth = sourceWidth / egret.MainContext.instance.rendererContext.texture_scale_factor;
+            sourceHeight = sourceHeight / egret.MainContext.instance.rendererContext.texture_scale_factor;
 //            if (DEBUG && DEBUG.DRAW_IMAGE) {
 //                DEBUG.checkDrawImage(texture, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight);
 //            }
             var image = texture._bitmapData;
             destX += this._transformTx;
             destY += this._transformTy;
-            var beforeDraw = ns_egret.getTimer();
+            var beforeDraw = egret.getTimer();
             this.canvasContext.drawImage(image, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight);
             super.drawImage(image, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight);
-            this.renderCost += ns_egret.getTimer() - beforeDraw;
+            this.renderCost += egret.getTimer() - beforeDraw;
         }
 
-        setTransform(matrix:ns_egret.Matrix) {
+        setTransform(matrix:egret.Matrix) {
             //在没有旋转缩放斜切的情况下，先不进行矩阵偏移，等下次绘制的时候偏移
             if (matrix.a == 1 && matrix.b == 0 && matrix.c == 0 && matrix.d == 1
                 && this._matrixA == 1 && this._matrixB == 0 && this._matrixC == 0 && this._matrixD == 1) {
@@ -143,7 +143,7 @@ module ns_egret {
         }
 
 
-        setAlpha(alpha:number, blendMode:ns_egret.BlendMode) {
+        setAlpha(alpha:number, blendMode:egret.BlendMode) {
             if (alpha != this.canvasContext.globalAlpha) {
                 this.canvasContext.globalAlpha = alpha;
             }
@@ -151,9 +151,9 @@ module ns_egret {
                 this.blendValue = blendMode.value;
                 this.canvasContext.globalCompositeOperation = blendMode.value;
             }
-            else if(this.blendValue != ns_egret.BlendMode.NORMAL.value){
-                this.blendValue = ns_egret.BlendMode.NORMAL.value;
-                this.canvasContext.globalCompositeOperation = ns_egret.BlendMode.NORMAL.value;
+            else if(this.blendValue != egret.BlendMode.NORMAL.value){
+                this.blendValue = egret.BlendMode.NORMAL.value;
+                this.canvasContext.globalCompositeOperation = egret.BlendMode.NORMAL.value;
             }
         }
 
@@ -171,7 +171,7 @@ module ns_egret {
         }
 
 
-        drawText(textField:ns_egret.TextField, text:string, x:number, y:number, maxWidth:number) {
+        drawText(textField:egret.TextField, text:string, x:number, y:number, maxWidth:number) {
             var textColor:string = textField._textColorString;
             var strokeColor:string = textField._strokeColorString;
             var outline = textField.stroke;

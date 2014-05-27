@@ -32,17 +32,17 @@
 /// <reference path="ILayoutManagerClient.ts"/>
 /// <reference path="layoutClass/DepthQueue.ts"/>
 
-module ns_egret {
+module egret {
 
 	/**
-	 * @class ns_egret.LayoutManager
+	 * @class egret.LayoutManager
 	 * @classdesc
 	 * 布局管理器
-	 * @extends ns_egret.EventDispatcher
+	 * @extends egret.EventDispatcher
 	 */
 	export class LayoutManager extends EventDispatcher{
 		/**
-		 * @method ns_egret.LayoutManager#constructor
+		 * @method egret.LayoutManager#constructor
 		 */
 		public constructor(){
 			super();
@@ -61,7 +61,7 @@ module ns_egret {
 		private invalidatePropertiesQueue:DepthQueue = new DepthQueue();
 		/**
 		 * 标记组件提交过属性
-		 * @method ns_egret.LayoutManager#invalidateProperties
+		 * @method egret.LayoutManager#invalidateProperties
 		 * @param client {ILayoutManagerClient} 
 		 */		
 		public invalidateProperties(client:ILayoutManagerClient):void{
@@ -101,7 +101,7 @@ module ns_egret {
 		private invalidateSizeQueue:DepthQueue = new DepthQueue();
 		/**
 		 * 标记需要重新测量尺寸
-		 * @method ns_egret.LayoutManager#invalidateSize
+		 * @method egret.LayoutManager#invalidateSize
 		 * @param client {ILayoutManagerClient} 
 		 */		
 		public invalidateSize(client:ILayoutManagerClient ):void{
@@ -139,7 +139,7 @@ module ns_egret {
 		private invalidateDisplayListQueue:DepthQueue = new DepthQueue();
 		/**
 		 * 标记需要重新测量尺寸
-		 * @method ns_egret.LayoutManager#invalidateDisplayList
+		 * @method egret.LayoutManager#invalidateDisplayList
 		 * @param client {ILayoutManagerClient} 
 		 */		
 		public invalidateDisplayList(client:ILayoutManagerClient ):void{
@@ -224,7 +224,7 @@ module ns_egret {
 		}
 		/**
 		 * 立即应用所有延迟的属性
-		 * @method ns_egret.LayoutManager#validateNow
+		 * @method egret.LayoutManager#validateNow
 		 */		
 		public validateNow():void{
 			var infiniteLoopGuard:number = 0;
@@ -233,7 +233,7 @@ module ns_egret {
 		}
 		/**
 		 * 使大于等于指定组件层级的元素立即应用属性 
-		 * @method ns_egret.LayoutManager#validateClient
+		 * @method egret.LayoutManager#validateClient
 		 * @param target {ILayoutManagerClient} 要立即应用属性的组件
 		 * @param skipDisplayList {boolean} 是否跳过更新显示列表阶段
 		 */			

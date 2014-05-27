@@ -32,9 +32,9 @@
 /// <reference path="../geom/Rectangle.ts"/>
 /// <reference path="../utils/Logger.ts"/>
 
-module ns_egret {
+module egret {
     /**
-	 * @class ns_egret.DisplayObjectContainer
+	 * @class egret.DisplayObjectContainer
 	 * @classdesc
      * DisplayObjectContainer 类是显示列表中显示对象容器。
      */
@@ -50,7 +50,7 @@ module ns_egret {
         public _touchChildren:boolean = true;
         /**
          * 指定此对象的子项以及子孙项是否接收鼠标/触摸事件
-		 * @member {boolean} ns_egret.DisplayObjectContainer#touchChildren
+		 * @member {boolean} egret.DisplayObjectContainer#touchChildren
          */
         public get touchChildren():boolean{
             return this._touchChildren;
@@ -62,7 +62,7 @@ module ns_egret {
         public _children:Array<DisplayObject>
 
 		/**
-		 * @member {number} ns_egret.DisplayObjectContainer#numChildren
+		 * @member {number} egret.DisplayObjectContainer#numChildren
 		 */
         public get numChildren():number{
             return this._children.length;
@@ -70,8 +70,8 @@ module ns_egret {
 
         /**
          * 修改容器内子元件的层级
-		 * @method ns_egret.DisplayObjectContainer#setChildIndex
-         * @param child {ns_egret.DisplayObject} 容器的子元件
+		 * @method egret.DisplayObjectContainer#setChildIndex
+         * @param child {egret.DisplayObject} 容器的子元件
          * @param index {number} 新的层级 <0或者>=元件数量，都加入到最上层
          */
         public setChildIndex(child:DisplayObject, index:number):void {
@@ -81,7 +81,7 @@ module ns_egret {
         private doSetChildIndex(child:DisplayObject,index:number):void{
             var lastIdx = this._children.indexOf(child);
             if (lastIdx < 0) {
-                ns_egret.Logger.fatal("child不在当前容器内");
+                egret.Logger.fatal("child不在当前容器内");
             }
             //从原来的位置删除
             this._children.splice(lastIdx, 1);
@@ -95,9 +95,9 @@ module ns_egret {
         }
 
         /**
-		 * @method ns_egret.DisplayObjectContainer#addChild
-		 * @param child {ns_egret.DisplayObject}
-		 * @returns {ns_egret.DisplayObject}
+		 * @method egret.DisplayObjectContainer#addChild
+		 * @param child {egret.DisplayObject}
+		 * @returns {egret.DisplayObject}
          */
         public addChild(child:DisplayObject):DisplayObject{
             var index:number = this.numChildren;
@@ -111,10 +111,10 @@ module ns_egret {
 
         /**
          * 将一个 DisplayObject 子实例添加到该 DisplayObjectContainer 实例中。
-		 * @method ns_egret.DisplayObjectContainer#addChildAt
-         * @param child {ns_egret.DisplayObject} 子显示对象
+		 * @method egret.DisplayObjectContainer#addChildAt
+         * @param child {egret.DisplayObject} 子显示对象
          * @param index {number} 加载的顺序，默认为-1，加载到最前面
-		 * @returns {ns_egret.DisplayObject}
+		 * @returns {egret.DisplayObject}
          */
         public addChildAt(child:DisplayObject, index:number):DisplayObject {
 
@@ -126,7 +126,7 @@ module ns_egret {
                 return child;
 
             if (index<0||index > this._children.length) {
-                ns_egret.Logger.fatal("提供的索引超出范围");
+                egret.Logger.fatal("提供的索引超出范围");
                 return child;
             }
 
@@ -154,9 +154,9 @@ module ns_egret {
 
         /**
          * 将一个 DisplayObject 子实例从 DisplayObjectContainer 实例中移除。
-		 * @method ns_egret.DisplayObjectContainer#removeChild
-         * @param child {ns_egret.DisplayObject} 
-		 * @returns {ns_egret.DisplayObject}
+		 * @method egret.DisplayObjectContainer#removeChild
+         * @param child {egret.DisplayObject}
+		 * @returns {egret.DisplayObject}
          */
         public removeChild(child:DisplayObject):DisplayObject {
             var index = this._children.indexOf(child);
@@ -164,22 +164,22 @@ module ns_egret {
                 return this._doRemoveChild(index);
             }
             else {
-                ns_egret.Logger.fatal("child未被addChild到该parent");
+                egret.Logger.fatal("child未被addChild到该parent");
                 return null;
             }
         }
 
 		/**
-		 * @method ns_egret.DisplayObjectContainer#removeChildAt
+		 * @method egret.DisplayObjectContainer#removeChildAt
 		 * @param index {number} 
-		 * @returns {ns_egret.DisplayObject}
+		 * @returns {egret.DisplayObject}
 		 */
         public removeChildAt(index:number):DisplayObject {
             if (index >= 0 && index < this._children.length) {
                return this._doRemoveChild(index);
             }
             else {
-                ns_egret.Logger.fatal("提供的索引超出范围");
+                egret.Logger.fatal("提供的索引超出范围");
                 return null;
             }
         }
@@ -200,24 +200,24 @@ module ns_egret {
 
         /**
          * 通过索引获取显示对象
-		 * @method ns_egret.DisplayObjectContainer#getChildAt
+		 * @method egret.DisplayObjectContainer#getChildAt
          * @param index {number} 
-		 * @returns {ns_egret.DisplayObject}
+		 * @returns {egret.DisplayObject}
          */
         public getChildAt(index:number):DisplayObject {
             if (index >= 0 && index < this._children.length) {
                 return this._children[index];
             }
             else {
-                ns_egret.Logger.fatal("提供的索引超出范围");
+                egret.Logger.fatal("提供的索引超出范围");
                 return null;
             }
         }
 
         /**
          *  确定指定显示对象是 DisplayObjectContainer 实例的子项还是该实例本身。搜索包括整个显示列表（其中包括此 DisplayObjectContainer 实例）。孙项、曾孙项等，每项都返回 true。
-		 * @method ns_egret.DisplayObjectContainer#contains
-         * @param child {ns_egret.DisplayObject} 要测试的子对象。
+		 * @method egret.DisplayObjectContainer#contains
+         * @param child {egret.DisplayObject} 要测试的子对象。
 		 * @returns {boolean}
          */
         public contains(child:DisplayObject):boolean{
@@ -231,7 +231,7 @@ module ns_egret {
         }
 
 		/**
-		 * @method ns_egret.DisplayObjectContainer#swapChildrenAt
+		 * @method egret.DisplayObjectContainer#swapChildrenAt
 		 * @param index1 {number} 
 		 * @param index2 {number} 
 		 */
@@ -240,21 +240,21 @@ module ns_egret {
                 this._swapChildrenAt(index1,index2);
             }
             else {
-                ns_egret.Logger.fatal("提供的索引超出范围");
+                egret.Logger.fatal("提供的索引超出范围");
             }
 
         }
 
 		/**
-		 * @method ns_egret.DisplayObjectContainer#swapChildren
-		 * @param child1 {ns_egret.DisplayObject} 
-		 * @param child2 {ns_egret.DisplayObject} 
+		 * @method egret.DisplayObjectContainer#swapChildren
+		 * @param child1 {egret.DisplayObject}
+		 * @param child2 {egret.DisplayObject}
 		 */
         public swapChildren(child1:DisplayObject, child2:DisplayObject):void{
             var index1:number = this._children.indexOf(child1);
             var index2:number = this._children.indexOf(child2);
             if (index1 == -1||index2==-1) {
-                ns_egret.Logger.fatal("child未被addChild到该parent");
+                egret.Logger.fatal("child未被addChild到该parent");
             }
             else {
                 this._swapChildrenAt(index1,index2);
@@ -282,17 +282,17 @@ module ns_egret {
 
         /**
          * 获得 容器内元件的层级
-		 * @method ns_egret.DisplayObjectContainer#getChildIndex
-         * @param child {ns_egret.DisplayObject} 
+		 * @method egret.DisplayObjectContainer#getChildIndex
+         * @param child {egret.DisplayObject}
 		 * @returns {number}
          */
-        public getChildIndex(child:ns_egret.DisplayObject):number {
+        public getChildIndex(child:egret.DisplayObject):number {
             return this._children.indexOf(child);
         }
 
         /**
          * 移除所有显示对象
-		 * @method ns_egret.DisplayObjectContainer#removeChildren
+		 * @method egret.DisplayObjectContainer#removeChildren
          */
         public removeChildren() {
             var locChildren = this._children;
@@ -326,7 +326,7 @@ module ns_egret {
          * @returns {null}
          * @private
          */
-        public _measureBounds():ns_egret.Rectangle {
+        public _measureBounds():egret.Rectangle {
 
             var minX = 0, maxX = 0, minY = 0, maxY = 0;
             var l = this._children.length;
@@ -357,12 +357,12 @@ module ns_egret {
         }
 
         /**
-		 * @method ns_egret.DisplayObjectContainer#hitTest
+		 * @method egret.DisplayObjectContainer#hitTest
          * @see egret.DisplayObject.hitTest
          * @param x {number} 
          * @param y {number} 
 		 * @param ignoreTouchEnabled {boolean} 
-		 * @returns {ns_egret.DisplayObject}
+		 * @returns {egret.DisplayObject}
          */
         public hitTest(x:number, y:number, ignoreTouchEnabled:boolean = false):DisplayObject{
             var result:DisplayObject;

@@ -27,10 +27,10 @@
 
 /// <reference path="getQualifiedClassName.ts"/>
 
-module ns_egret {
+module egret {
 
     /**
-     * @class ns_egret.Injector
+     * @class egret.Injector
      */
 	export class Injector{
 		/**
@@ -40,7 +40,7 @@ module ns_egret {
 		
 		/**
 		 * 以类定义为值进行映射注入，当第一次用getInstance()请求它的单例时才会被实例化。
-         * @method ns_egret.Injector.mapClass
+         * @method egret.Injector.mapClass
 		 * @param {any} whenAskedFor 传递类定义或类完全限定名作为需要映射的键。
 		 * @param {any} instantiateClass 传递类作为需要映射的值，它的构造函数必须为空。若不为空，请使用Injector.mapValue()方法直接注入实例。
 		 * @param {string} named 可选参数，在同一个类作为键需要映射多条规则时，可以传入此参数区分不同的映射。在调用getInstance()方法时要传入同样的参数。
@@ -63,7 +63,7 @@ module ns_egret {
 		
 		/**
 		 * 以实例为值进行映射注入,当用getInstance()请求单例时始终返回注入的这个实例。
-         * @method ns_egret.Injector.mapValue
+         * @method egret.Injector.mapValue
 		 * @param whenAskedFor {any} 传递类定义或类的完全限定名作为需要映射的键。
 		 * @param useValue {any} 传递对象实例作为需要映射的值。
 		 * @param named {string} 可选参数，在同一个类作为键需要映射多条规则时，可以传入此参数区分不同的映射。在调用getInstance()方法时要传入同样的参数。
@@ -75,7 +75,7 @@ module ns_egret {
 
 		/**
 		 * 检查指定的映射规则是否存在
-         * @method ns_egret.Injector.hasMapRule
+         * @method egret.Injector.hasMapRule
 		 * @param whenAskedFor {any} 传递类定义或类的完全限定名作为需要映射的键。
 		 * @param named {string} 可选参数，在同一个类作为键需要映射多条规则时，可以传入此参数区分不同的映射。
 		 */
@@ -88,7 +88,7 @@ module ns_egret {
 		}
 		/**
 		 * 获取指定类映射的单例，注意:这个方法总是返回全局唯一的实例，不会重复创建。
-         * @method ns_egret.Injector.getInstance
+         * @method egret.Injector.getInstance
 		 * @param clazz {any} 类定义或类的完全限定名
 		 * @param named {string} 可选参数，若在调用mapClass()映射时设置了这个值，则要传入同样的字符串才能获取对应的单例
 		 */		

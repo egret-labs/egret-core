@@ -29,17 +29,17 @@
 /// <reference path="ButtonBase.ts"/>
 /// <reference path="../../events/UIEvent.ts"/>
 
-module ns_egret {
+module egret {
 
 	/**
-	 * @class ns_egret.ToggleButtonBase
+	 * @class egret.ToggleButtonBase
 	 * @classdesc
 	 * 切换按钮组件基类
-	 * @extends ns_egret.ButtonBase
+	 * @extends egret.ButtonBase
 	 */	
 	export class ToggleButtonBase extends ButtonBase{
 		/**
-		 * @method ns_egret.ToggleButtonBase#constructor
+		 * @method egret.ToggleButtonBase#constructor
 		 */
 		public constructor(){
 			super();
@@ -48,7 +48,7 @@ module ns_egret {
 		public _selected:boolean;
 		/**
 		 * 按钮处于按下状态时为 true，而按钮处于弹起状态时为 false。
-		 * @member ns_egret.ToggleButtonBase#selected
+		 * @member egret.ToggleButtonBase#selected
 		 */		
 		public get selected():boolean{
 			return this._selected;
@@ -68,7 +68,7 @@ module ns_egret {
         }
 		
 		/**
-		 * @method ns_egret.ToggleButtonBase#getCurrentSkinState
+		 * @method egret.ToggleButtonBase#getCurrentSkinState
 		 * @returns {string}
 		 */
 		public getCurrentSkinState():string{
@@ -82,7 +82,7 @@ module ns_egret {
 		 */		
 		public _autoSelected:boolean = true;
 		/**
-		 * @method ns_egret.ToggleButtonBase#buttonReleased
+		 * @method egret.ToggleButtonBase#buttonReleased
 		 */
 		public buttonReleased():void{
 			super.buttonReleased();

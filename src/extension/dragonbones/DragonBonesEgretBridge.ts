@@ -33,7 +33,7 @@ module dragonBones {
         export class DragonBonesEgretBridge implements IDisplayBridge {
             private static RADIAN_TO_ANGLE:number = 180 / Math.PI;
 
-            private _display:ns_egret.DisplayObject;
+            private _display:egret.DisplayObject;
 
             public getVisible():boolean {
                 return this._display ? this._display.visible : false;
@@ -54,13 +54,13 @@ module dragonBones {
                     return;
                 }
                 if (this._display) {
-                    var parent:ns_egret.DisplayObjectContainer = this._display.parent;
+                    var parent:egret.DisplayObjectContainer = this._display.parent;
                     if (parent) {
                         var index:number = -1;//todo this._display.parent.getChildIndex(this._display);
                     }
                     this.removeDisplay();
                 }
-                this._display = <ns_egret.DisplayObject> value;
+                this._display = <egret.DisplayObject> value;
                 this.addDisplay(parent, index);
             }
 
@@ -92,12 +92,12 @@ module dragonBones {
             public updateBlendMode(blendMode:string) {
 //                console.log (blendMode);
                 if (this._display) {
-                    this._display.blendMode = ns_egret.BlendMode.getBlendMode(blendMode);
+                    this._display.blendMode = egret.BlendMode.getBlendMode(blendMode);
                 }
             }
 
             public addDisplay(container:any, index:number):void {
-                var parent:ns_egret.DisplayObjectContainer = <ns_egret.DisplayObjectContainer> container;
+                var parent:egret.DisplayObjectContainer = <egret.DisplayObjectContainer> container;
                 if (parent && this._display) {
                     if (this._display.parent) {
                         this._display.parent.removeChild(this._display);
@@ -124,7 +124,7 @@ module dragonBones {
         export class EgretTextureAtlas implements ITextureAtlas {
             public name:string;
             public scale:number;
-            public spriteSheet:ns_egret.SpriteSheet;
+            public spriteSheet:egret.SpriteSheet;
 
             constructor(public texture:any, textureAtlasRawData:any, scale:number = 1) {
                 this.scale = scale;
@@ -152,15 +152,15 @@ module dragonBones {
              * @returns {SpriteSheet}
              * @stable D
              */
-            private parseFromDragonBones(data):ns_egret.SpriteSheet {
+            private parseFromDragonBones(data):egret.SpriteSheet {
 
-                var spriteSheet:ns_egret.SpriteSheet = new ns_egret.SpriteSheet(data);
+                var spriteSheet:egret.SpriteSheet = new egret.SpriteSheet(data);
                 spriteSheet["textureMap"] = {};
                 var list = data.SubTexture
 
                 for (var key in list) {
                     var frameData = list[key];
-                    var rect = new ns_egret.SpriteSheetFrame();
+                    var rect = new egret.SpriteSheetFrame();
                     rect.w = frameData.width;
                     rect.h = frameData.height;
                     rect.x = frameData.x;
@@ -183,7 +183,7 @@ module dragonBones {
 
             /** @private */
             public _generateArmature():Armature {
-                var armature:Armature = new Armature(new ns_egret.DisplayObjectContainer());
+                var armature:Armature = new Armature(new egret.DisplayObjectContainer());
                 return armature;
             }
 
@@ -196,7 +196,7 @@ module dragonBones {
             /** @private */
             public _generateDisplay(textureAtlas:textures.EgretTextureAtlas, fullName:string, pivotX:number, pivotY:number):any {
 
-                var bitmap1:ns_egret.Bitmap = new ns_egret.Bitmap();
+                var bitmap1:egret.Bitmap = new egret.Bitmap();
                 bitmap1.texture = textureAtlas.texture;
                 var frame = textureAtlas.spriteSheet.getFrame(fullName);
                 bitmap1.spriteFrame = frame;

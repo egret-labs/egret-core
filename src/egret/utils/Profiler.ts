@@ -31,9 +31,9 @@
 /// <reference path="../text/TextField.ts"/>
 /// <reference path="getTimer.ts"/>
 
-module ns_egret {
+module egret {
     /**
-	 * @class ns_egret.Profiler
+	 * @class egret.Profiler
 	 * @classdesc
      * Profiler是egret的性能检测分析类
      * @todo GitHub文档，如何使用Profiler
@@ -65,7 +65,7 @@ module ns_egret {
 
         /**
          * 启动Profiler
-		 * @method ns_egret.Profiler#run
+		 * @method egret.Profiler#run
          */
         public run() {
             //todo 加入debug参数
@@ -126,7 +126,7 @@ module ns_egret {
                 var timeStr = Math.ceil(this._logicPerformanceCost).toString() + ","
                     + Math.ceil(this._updateTransformPerformanceCost).toString() + ","
                     + Math.ceil(this._renderPerformanceCost).toString() + ","
-                    + Math.ceil(ns_egret.MainContext.instance.rendererContext.renderCost).toString();
+                    + Math.ceil(egret.MainContext.instance.rendererContext.renderCost).toString();
                 var frameStr = Math.floor(this._tick * 1000 / this._totalDeltaTime).toString();
 
                 this._txt.text = drawStr + "\n" + timeStr + "\n" + frameStr;
@@ -138,7 +138,7 @@ module ns_egret {
         }
 
         /**
-		 * @method ns_egret.Profiler#onDrawImage
+		 * @method egret.Profiler#onDrawImage
          * @private
          */
         public onDrawImage() {

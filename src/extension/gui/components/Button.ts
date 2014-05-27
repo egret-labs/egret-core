@@ -27,21 +27,21 @@
 
 /// <reference path="supportClasses/ButtonBase.ts"/>
 
-module ns_egret {
+module egret {
 
 	/**
-	 * @class ns_egret.Button
+	 * @class egret.Button
 	 * @classdesc
 	 * 按钮控件
-	 * @extends ns_egret.ButtonBase
+	 * @extends egret.ButtonBase
 	 */	
 	export class Button extends ButtonBase{
 		/**
-		 * @method ns_egret.Button#constructor
+		 * @method egret.Button#constructor
 		 */
 		public constructor(){
 			super();
-            this.hostComponentKey = "ns_egret.Button";
+            this.hostComponentKey = "egret.Button";
 		}
 	}
 }

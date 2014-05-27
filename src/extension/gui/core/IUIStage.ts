@@ -29,33 +29,33 @@
 /// <reference path="../../../egret/events/IEventDispatcher.ts"/>
 /// <reference path="IContainer.ts"/>
 
-module ns_egret {
+module egret {
 
 	/**
-	 * @class ns_egret.IUIStage
+	 * @class egret.IUIStage
 	 * @interface
 	 * @classdesc
-	 * @extends ns_egret.IEventDispatcher
+	 * @extends egret.IEventDispatcher
 	 */
 	export interface IUIStage extends IEventDispatcher{
 		/**
 		 * 弹出窗口层容器。
-		 * @member ns_egret.IUIStage#popUpContainer
+		 * @member egret.IUIStage#popUpContainer
 		 */	
 		popUpContainer:IContainer;
 		/**
 		 * 工具提示层容器。
-		 * @member ns_egret.IUIStage#toolTipContainer
+		 * @member egret.IUIStage#toolTipContainer
 		 */		
 		toolTipContainer:IContainer;
 		/**
 		 * 鼠标样式层容器。
-		 * @member ns_egret.IUIStage#cursorContainer
+		 * @member egret.IUIStage#cursorContainer
 		 */		
 		cursorContainer:IContainer;
 		/**
 		 * 舞台引用
-		 * @member ns_egret.IUIStage#stage
+		 * @member egret.IUIStage#stage
 		 */		
 		stage:Stage;
 	}

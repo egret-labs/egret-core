@@ -28,28 +28,28 @@
 /// <reference path="../../../egret/events/Event.ts"/>
 /// <reference path="../../../egret/events/IEventDispatcher.ts"/>
 
-module ns_egret {
+module egret {
 
 	/**
-	 * @class ns_egret.StateChangeEvent
+	 * @class egret.StateChangeEvent
 	 * @classdesc
 	 * 视图状态改变事件
-	 * @extends ns_egret.Event
+	 * @extends egret.Event
 	 */	
 	export class StateChangeEvent extends Event{
 		/**
 		 * 当前视图状态已经改变 
-		 * @constant ns_egret.StateChangeEvent.CURRENT_STATE_CHANGE
+		 * @constant egret.StateChangeEvent.CURRENT_STATE_CHANGE
 		 */		
 		public static CURRENT_STATE_CHANGE:string = "currentStateChange";
 		/**
 		 * 当前视图状态即将改变
-		 * @constant ns_egret.StateChangeEvent.CURRENT_STATE_CHANGING
+		 * @constant egret.StateChangeEvent.CURRENT_STATE_CHANGING
 		 */		
 		public static CURRENT_STATE_CHANGING:string = "currentStateChanging";
 		
 		/**
-		 * @method ns_egret.StateChangeEvent#constructor
+		 * @method egret.StateChangeEvent#constructor
 		 * @param type {string} 
 		 * @param bubbles {boolean} 
 		 * @param cancelable {boolean} 
@@ -67,19 +67,19 @@ module ns_egret {
 		}
 		/**
 		 * 组件正在进入的视图状态的名称。
-		 * @member ns_egret.StateChangeEvent#newState
+		 * @member egret.StateChangeEvent#newState
 		 */		
 		public newState:string;
 		
 		/**
 		 * 组件正在退出的视图状态的名称。
-		 * @member ns_egret.StateChangeEvent#oldState
+		 * @member egret.StateChangeEvent#oldState
 		 */		
 		public oldState:string;
 
         /**
          * 使用指定的EventDispatcher对象来抛出事件对象。抛出的对象将会缓存在对象池上，供下次循环复用。
-         * @method ns_egret.StateChangeEvent.dispatchStateChangeEvent
+         * @method egret.StateChangeEvent.dispatchStateChangeEvent
          */
         public static dispatchStateChangeEvent(target:IEventDispatcher,type:string,
                                                oldState:string = null,newState:string = null):void{

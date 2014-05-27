@@ -25,35 +25,35 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-module ns_egret {
+module egret {
 
 	/**
-	 * @class ns_egret.URLLoaderDataFormat
+	 * @class egret.URLLoaderDataFormat
 	 * @classdesc
 	 */
     export class URLLoaderDataFormat {
 
 		/**
          * 指定以原始二进制数据形式接收下载的数据。
-		 * @constant {string} ns_egret.URLLoaderDataFormat.BINARY
+		 * @constant {string} egret.URLLoaderDataFormat.BINARY
 		 */
         public static BINARY:string = "binary";
 
 		/**
          * 指定以文本形式接收已下载的数据。
-		 * @constant {string} ns_egret.URLLoaderDataFormat.TEXT
+		 * @constant {string} egret.URLLoaderDataFormat.TEXT
 		 */
         public static TEXT:string = "text";
 
 		/**
          * 指定以 URL 编码变量形式接收下载的数据。
-		 * @constant {string} ns_egret.URLLoaderDataFormat.VARIABLES
+		 * @constant {string} egret.URLLoaderDataFormat.VARIABLES
 		 */
         public static VARIABLES:string = "variables";
 
 		/**
          * 指定以位图纹理形式接收已下载的数据。
-		 * @constant {string} ns_egret.URLLoaderDataFormat.TEXTURE
+		 * @constant {string} egret.URLLoaderDataFormat.TEXTURE
 		 */
         public static TEXTURE:string = "texture";
 

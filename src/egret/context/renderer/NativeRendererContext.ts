@@ -34,15 +34,15 @@
 /// <reference path="../../utils/Profiler.ts"/>
 /// <reference path="../../../extension/gui/components/Label.ts"/>
 
-module ns_egret {
+module egret {
     /**
-	 * @class ns_egret.NativeRendererContext
+	 * @class egret.NativeRendererContext
 	 * @classdesc
      * RenderContext是游戏的渲染上下文。
      * 这是一个抽象基类，制定主要的接口
      * @stable B 当编写WebGLContext和OpenGLContext时，RendererContext的接口有可能会发生变化，以兼容基于GPU模式的渲染方式，一些设计理念会参考PIXI.js
      * @roadmap 这个接口的重构和实现其他Context是引擎的重点工作
-	 * @extends ns_egret.HashObject
+	 * @extends egret.HashObject
      */
     export class NativeRendererContext extends HashObject{
 
@@ -50,25 +50,25 @@ module ns_egret {
         /**
          * 渲染全部纹理的时间开销
          * @readonly
-		 * @member ns_egret.NativeRendererContext#renderCost
+		 * @member egret.NativeRendererContext#renderCost
          */
         public renderCost:number = 0;
 
         /**
          * 绘制纹理的缩放比率，默认值为1
-		 * @member ns_egret.NativeRendererContext#texture_scale_factor
+		 * @member egret.NativeRendererContext#texture_scale_factor
          */
         public texture_scale_factor:number = 1;
 
 		/**
-		 * @method ns_egret.NativeRendererContext#constructor
+		 * @method egret.NativeRendererContext#constructor
 		 */
         public constructor() {
             super();
         }
 
         /**
-		 * @method ns_egret.NativeRendererContext#clearScreen
+		 * @method egret.NativeRendererContext#clearScreen
          * @private
          */
         public clearScreen() {
@@ -78,7 +78,7 @@ module ns_egret {
 
         /**
          * 清除Context的渲染区域
-		 * @method ns_egret.NativeRendererContext#clearRect
+		 * @method egret.NativeRendererContext#clearRect
          * @param x {number} 
          * @param y {number} 
          * @param w {number} 
@@ -89,7 +89,7 @@ module ns_egret {
 
         /**
          * 绘制图片
-		 * @method ns_egret.NativeRendererContext#drawImage
+		 * @method egret.NativeRendererContext#drawImage
          * @param texture {Texture} 
          * @param sourceX {any} 
          * @param sourceY {any} 
@@ -109,16 +109,16 @@ module ns_egret {
 
         /**
          * 变换Context的当前渲染矩阵
-		 * @method ns_egret.NativeRendererContext#setTransform
-         * @param matrix {ns_egret.Matrix}
+		 * @method egret.NativeRendererContext#setTransform
+         * @param matrix {egret.Matrix}
          * @stable A
          */
-        public setTransform(matrix:ns_egret.Matrix) {
+        public setTransform(matrix:egret.Matrix) {
             egret_native.Graphics.setTransform(matrix.a,matrix.b,matrix.c,matrix.d,matrix.tx,matrix.ty);
         }
 
         /**
-		 * @method ns_egret.NativeRendererContext#save
+		 * @method egret.NativeRendererContext#save
          * @stable C 这个方法以后会和restore一起删除，移动到HTML5CanvasContext的具体实现中，而不是作为一个接口
          */
         public save() {
@@ -126,7 +126,7 @@ module ns_egret {
         }
 
         /**
-		 * @method ns_egret.NativeRendererContext#restore
+		 * @method egret.NativeRendererContext#restore
          * @stable C 这个方法以后会和save一起删除，移动到HTML5CanvasContext的具体实现中，而不是作为一个接口
          */
         public restore() {
@@ -135,19 +135,19 @@ module ns_egret {
 
         /**
          * 设置渲染alpha
-		 * @method ns_egret.NativeRendererContext#setAlpha
+		 * @method egret.NativeRendererContext#setAlpha
          * @param value {number} 
          * @stable A
-		 * @param blendMode {ns_egret.BlendMode}
+		 * @param blendMode {egret.BlendMode}
          */
-        public setAlpha(value:number, blendMode:ns_egret.BlendMode) {
+        public setAlpha(value:number, blendMode:egret.BlendMode) {
             egret_native.Graphics.setGlobalAlpha(value);
         }
 
 
         /**
          * 设置渲染文本参数
-		 * @method ns_egret.NativeRendererContext#setupFont
+		 * @method egret.NativeRendererContext#setupFont
          * @param textField {TextField} 
          */
         public setupFont(textField:TextField):void {
@@ -161,7 +161,7 @@ module ns_egret {
 
         /**
          * 测量文本
-		 * @method ns_egret.NativeRendererContext#measureText
+		 * @method egret.NativeRendererContext#measureText
          * @param text {string}
 		 * @returns {number}
          */
@@ -171,14 +171,14 @@ module ns_egret {
 
         /**
          * 绘制文本
-		 * @method ns_egret.NativeRendererContext#drawText
-         * @param textField {ns_egret.TextField} 
+		 * @method egret.NativeRendererContext#drawText
+         * @param textField {egret.TextField}
          * @param text {string} 
          * @param x {number} 
          * @param y {number} 
 		 * @param maxWidth {numbe} 
          */
-        public drawText(textField:ns_egret.TextField,text:string, x:number, y:number, maxWidth:number) {
+        public drawText(textField:egret.TextField,text:string, x:number, y:number, maxWidth:number) {
             Profiler.getInstance().onDrawImage();
             egret_native.Label.setTextColor(textField.textColor);
             egret_native.Label.drawText(text,x,y);
@@ -186,7 +186,7 @@ module ns_egret {
 
         /**
          * 矩形遮罩
-		 * @method ns_egret.NativeRendererContext#clip
+		 * @method egret.NativeRendererContext#clip
          * @param x {any} 
          * @param y {any} 
          * @param w {any} 

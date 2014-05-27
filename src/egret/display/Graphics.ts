@@ -28,7 +28,7 @@
 /// <reference path="../context/renderer/HTML5CanvasRenderer.ts"/>
 /// <reference path="../context/renderer/RendererContext.ts"/>
 
-module ns_egret {
+module egret {
     export class Graphics {
 
         private canvasContext:CanvasRenderingContext2D;

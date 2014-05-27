@@ -27,34 +27,34 @@
 
 /// <reference path="../core/ILayoutElement.ts"/>
 
-module ns_egret {
+module egret {
 
 	/**
-	 * @class ns_egret.IItemRenderer
+	 * @class egret.IItemRenderer
 	 * @interface
 	 * @classdesc
 	 * 列表类组件的项呈示器接口
-	 * @extends ns_egret.ILayoutElement
+	 * @extends egret.ILayoutElement
 	 */
 	export interface IItemRenderer extends ILayoutElement{
 		/**
 		 * 要呈示或编辑的数据。
-		 * @member ns_egret.IItemRenderer#data
+		 * @member egret.IItemRenderer#data
 		 */		
 		data:any;
 		/**
 		 * 如果项呈示器可以将其自身显示为已选中，则包含 true。
-		 * @member ns_egret.IItemRenderer#selected
+		 * @member egret.IItemRenderer#selected
 		 */		
 		selected:boolean;
 		/**
 		 * 项呈示器的主机组件的数据提供程序中的项目索引。
-		 * @member ns_egret.IItemRenderer#itemIndex
+		 * @member egret.IItemRenderer#itemIndex
 		 */		
 		itemIndex:number;
 		/**
 		 * 要在项呈示器中显示的 String。 
-		 * @member ns_egret.IItemRenderer#label
+		 * @member egret.IItemRenderer#label
 		 */		
 		label:string;
 	}

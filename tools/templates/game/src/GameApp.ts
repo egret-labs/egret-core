@@ -29,7 +29,7 @@
  */
 class GameApp {
 
-    private textContainer:ns_egret.DisplayObjectContainer;
+    private textContainer:egret.DisplayObjectContainer;
     /**
      * 加载进度界面
      */
@@ -40,10 +40,10 @@ class GameApp {
     public startGame():void {
 
         //设置屏幕适配策略
-        var container = new ns_egret.EqualToFrame();
-        var content = ns_egret.Browser.getInstance().isMobile ? new ns_egret.FixedWidth() : new ns_egret.FixedSize(480, 800);
-        var policy = new ns_egret.ResolutionPolicy(container, content);
-        ns_egret.StageDelegate.getInstance().setDesignSize(480, 800, policy);
+        var container = new egret.EqualToFrame();
+        var content = egret.Browser.getInstance().isMobile ? new egret.FixedWidth() : new egret.FixedSize(480, 800);
+        var policy = new egret.ResolutionPolicy(container, content);
+        egret.StageDelegate.getInstance().setDesignSize(480, 800, policy);
 
         //设置加载进度界面
         this.loadingView  = new LoadingUI();
@@ -75,7 +75,7 @@ class GameApp {
      * 创建游戏场景
      */
     private createGameScene():void{
-        var stage = ns_egret.MainContext.instance.stage;
+        var stage = egret.MainContext.instance.stage;
         var sky = this.createBitmapByName("bgImage");
         stage.addChild(sky);
 
@@ -87,7 +87,7 @@ class GameApp {
         sky.scaleX = stageW / skyW;
         sky.scaleY = stageH / skyH;
 
-        var topMask = new ns_egret.Shape();
+        var topMask = new egret.Shape();
         topMask.graphics.beginFill(0x000000, 0.8);
         topMask.graphics.drawRect(0, 0, stageW, stageH);
         topMask.graphics.endFill();
@@ -103,7 +103,7 @@ class GameApp {
         icon.scaleX = 0.55;
         icon.scaleY = 0.55;
 
-        var colorLabel = new ns_egret.TextField();
+        var colorLabel = new egret.TextField();
         colorLabel.x = stageW / 2;
         colorLabel.y = stageH / 2 + 50;
         colorLabel.anchorX = colorLabel.anchorY = 0.5;
@@ -113,7 +113,7 @@ class GameApp {
         colorLabel.size = 20;
         stage.addChild(colorLabel);
 
-        var textContainer = new ns_egret.DisplayObjectContainer();
+        var textContainer = new egret.DisplayObjectContainer();
         textContainer.anchorX = textContainer.anchorY = 0.5;
         stage.addChild(textContainer);
         textContainer.x = stageW / 2;
@@ -128,9 +128,9 @@ class GameApp {
     /**
      * 根据name关键字创建一个Bitmap对象。name属性请参考resources/resource.json配置文件的内容。
      */
-    private createBitmapByName(name:string):ns_egret.Bitmap {
-        var result:ns_egret.Bitmap = new ns_egret.Bitmap();
-        var texture:ns_egret.Texture = RES.getRes(name);
+    private createBitmapByName(name:string):egret.Bitmap {
+        var result:egret.Bitmap = new egret.Bitmap();
+        var texture:egret.Texture = RES.getRes(name);
         result.texture = texture;
         return result;
     }
@@ -150,7 +150,7 @@ class GameApp {
 
             self.changeDescription(textContainer, lineArr);
 
-            var tw = ns_egret.Tween.get(textContainer);
+            var tw = egret.Tween.get(textContainer);
             tw.to({"alpha":1}, 200);
             tw.wait(2000);
             tw.to({"alpha":0}, 200);
@@ -167,7 +167,7 @@ class GameApp {
         var w = 0;
         for (var i = 0; i < lineArr.length; i++) {
             var info = lineArr[i];
-            var colorLabel = new ns_egret.TextField();
+            var colorLabel = new egret.TextField();
             colorLabel.x = w;
             colorLabel.anchorX = colorLabel.anchorY = 0;
             colorLabel.textColor = parseInt(info["textColor"]);

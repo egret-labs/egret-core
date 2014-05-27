@@ -29,7 +29,7 @@
 /// <reference path="TouchContext.ts"/>
 /// <reference path="../../geom/Point.ts"/>
 
-module ns_egret {
+module egret {
 
 
     export class HTML5TouchContext extends TouchContext {

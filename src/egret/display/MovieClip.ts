@@ -32,7 +32,7 @@
 /// <reference path="Texture.ts"/>
 /// <reference path="../utils/Logger.ts"/>
 
-module ns_egret {
+module egret {
     /**
      * MovieClip是位图动画序列类，由FlashPro + egret插件生成配置文件
      */
@@ -51,7 +51,7 @@ module ns_egret {
         constructor(public data, public texture:Texture) {
             super();
             this._frameData = data;
-            this._oneFrameTime = 1000 / ns_egret.MainContext.instance.deviceContext.frameRate;
+            this._oneFrameTime = 1000 / egret.MainContext.instance.deviceContext.frameRate;
         }
 
         /**
@@ -86,7 +86,7 @@ module ns_egret {
 
         private checkHasFrame(name:string) {
             if (this._frameData.frames[name] == undefined) {
-                ns_egret.Logger.fatal("MovieClip没有对应的frame：", name);
+                egret.Logger.fatal("MovieClip没有对应的frame：", name);
             }
         }
 

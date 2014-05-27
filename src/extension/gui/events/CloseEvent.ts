@@ -28,22 +28,22 @@
 /// <reference path="../../../egret/events/Event.ts"/>
 /// <reference path="../../../egret/events/IEventDispatcher.ts"/>
 
-module ns_egret {
+module egret {
 
 	/**
-	 * @class ns_egret.CloseEvent
+	 * @class egret.CloseEvent
 	 * @classdesc
 	 * 窗口关闭事件
-	 * @extends ns_egret.Event
+	 * @extends egret.Event
 	 */	
 	export class CloseEvent extends Event{
 		/**
-		 * @constant ns_egret.CloseEvent.CLOSE
+		 * @constant egret.CloseEvent.CLOSE
 		 */
 		public static CLOSE:string = "close";
 		/**
 		 * 构造函数
-		 * @method ns_egret.CloseEvent#constructor
+		 * @method egret.CloseEvent#constructor
 		 * @param type {string} 
 		 * @param bubbles {boolean} 
 		 * @param cancelable {boolean} 
@@ -57,13 +57,13 @@ module ns_egret {
 		}
 		/**
 		 * 触发关闭事件的细节。某些窗口组件用此属性来区分窗口中被点击的按钮。
-		 * @member ns_egret.CloseEvent#detail
+		 * @member egret.CloseEvent#detail
 		 */		
 		public detail:any;
 
         /**
          * 使用指定的EventDispatcher对象来抛出事件对象。抛出的对象将会缓存在对象池上，供下次循环复用。
-         * @method ns_egret.CloseEvent.dispatchCloseEvent
+         * @method egret.CloseEvent.dispatchCloseEvent
          */
         public static dispatchCloseEvent(target:IEventDispatcher,type:string,detail:any = -1):void{
             var eventClass:any = CloseEvent;

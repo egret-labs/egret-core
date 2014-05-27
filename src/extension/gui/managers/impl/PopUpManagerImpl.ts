@@ -40,19 +40,19 @@
 /// <reference path="../../core/UIGlobals.ts"/>
 /// <reference path="../IPopUpManager.ts"/>
 
-module ns_egret {
+module egret {
 
     /**
-     * @class ns_egret.PopUpManagerImpl
+     * @class egret.PopUpManagerImpl
      * @classdesc
      * 窗口弹出管理器实现类
-     * @extends ns_egret.EventDispatcher
-     * @implements ns_egret.IPopUpManager
+     * @extends egret.EventDispatcher
+     * @implements egret.IPopUpManager
      */
     export class PopUpManagerImpl extends EventDispatcher implements IPopUpManager{
         /**
          * 构造函数
-         * @method ns_egret.PopUpManagerImpl#constructor
+         * @method egret.PopUpManagerImpl#constructor
          */
         public constructor(){
             super();
@@ -61,7 +61,7 @@ module ns_egret {
         private _popUpList:Array<any> = [];
         /**
          * 已经弹出的窗口列表
-         * @member ns_egret.PopUpManagerImpl#popUpList
+         * @member egret.PopUpManagerImpl#popUpList
          */
         public get popUpList():Array<any>{
             return this._popUpList.concat();
@@ -87,7 +87,7 @@ module ns_egret {
         private static REMOVE_FROM_UISTAGE:string = "removeFromUIStage";
         /**
          * 弹出一个窗口。<br/>
-         * @method ns_egret.PopUpManagerImpl#addPopUp
+         * @method egret.PopUpManagerImpl#addPopUp
          * @param popUp {IVisualElement} 要弹出的窗口
          * @param modal {boolean} 是否启用模态。即禁用弹出窗口所在层以下的鼠标事件。默认false。
          * @param center {boolean} 是否居中窗口。等效于在外部调用centerPopUp()来居中。默认true。
@@ -141,7 +141,7 @@ module ns_egret {
         private _modalColor:number = 0x000000;
         /**
          * 模态遮罩的填充颜色
-         * @member ns_egret.PopUpManagerImpl#modalColor
+         * @member egret.PopUpManagerImpl#modalColor
          */
         public get modalColor():number{
             return this._modalColor;
@@ -156,7 +156,7 @@ module ns_egret {
         private _modalAlpha:number = 0.5;
         /**
          * 模态遮罩的透明度
-         * @member ns_egret.PopUpManagerImpl#modalAlpha
+         * @member egret.PopUpManagerImpl#modalAlpha
          */
         public get modalAlpha():number{
             return this._modalAlpha;
@@ -227,7 +227,7 @@ module ns_egret {
 
         /**
          * 移除由addPopUp()方法弹出的窗口。
-         * @method ns_egret.PopUpManagerImpl#removePopUp
+         * @method egret.PopUpManagerImpl#removePopUp
          * @param popUp {IVisualElement} 要移除的窗口
          */
         public removePopUp(popUp:IVisualElement):void{
@@ -243,7 +243,7 @@ module ns_egret {
 
         /**
          * 将指定窗口居中显示
-         * @method ns_egret.PopUpManagerImpl#centerPopUp
+         * @method egret.PopUpManagerImpl#centerPopUp
          * @param popUp {IVisualElement} 要居中显示的窗口
          */
         public centerPopUp(popUp:IVisualElement):void{
@@ -260,7 +260,7 @@ module ns_egret {
 
         /**
          * 将指定窗口的层级调至最前
-         * @method ns_egret.PopUpManagerImpl#bringToFront
+         * @method egret.PopUpManagerImpl#bringToFront
          * @param popUp {IVisualElement} 要最前显示的窗口
          */
         public bringToFront(popUp:IVisualElement):void{
@@ -275,7 +275,7 @@ module ns_egret {
 
     class PopUpData{
         /**
-         * @method ns_egret.PopUpData#constructor
+         * @method egret.PopUpData#constructor
          * @param popUp {IVisualElement}
          * @param modal {boolea}
          */
@@ -285,12 +285,12 @@ module ns_egret {
         }
 
         /**
-         * @member ns_egret.PopUpData#popUp
+         * @member egret.PopUpData#popUp
          */
         public popUp:IVisualElement;
 
         /**
-         * @member ns_egret.PopUpData#modal
+         * @member egret.PopUpData#modal
          */
         public modal:boolean;
     }

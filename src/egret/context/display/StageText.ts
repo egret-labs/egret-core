@@ -29,12 +29,12 @@
 /// <reference path="../StageDelegate.ts"/>
 /// <reference path="../../utils/HashObject.ts"/>
 
-module ns_egret {
+module egret {
 
 	/**
-	 * @class ns_egret.StageText
+	 * @class egret.StageText
 	 * @classdesc
-	 * @extends ns_egret.HashObject
+	 * @extends egret.HashObject
 	 */
     export class StageText extends HashObject{
 
@@ -46,7 +46,7 @@ module ns_egret {
         }
 
 		/**
-		 * @method ns_egret.StageText#getText
+		 * @method egret.StageText#getText
 		 * @returns {string}
 		 */
         public _getText():string {
@@ -54,7 +54,7 @@ module ns_egret {
         }
 
 		/**
-		 * @method ns_egret.StageText#setText
+		 * @method egret.StageText#setText
 		 * @param value {string} 
 		 */
         public _setText(value:string):void {
@@ -62,7 +62,7 @@ module ns_egret {
         }
 
 		/**
-		 * @method ns_egret.StageText#setTextType
+		 * @method egret.StageText#setTextType
 		 * @param type {string} 
 		 */
         public _setTextType(type:string):void {
@@ -70,7 +70,7 @@ module ns_egret {
         }
 
 		/**
-		 * @method ns_egret.StageText#getTextType
+		 * @method egret.StageText#getTextType
 		 * @returns {string}
 		 */
         public _getTextType():string {
@@ -78,7 +78,7 @@ module ns_egret {
         }
 
 		/**
-		 * @method ns_egret.StageText#open
+		 * @method egret.StageText#open
 		 * @param x {number} 
 		 * @param y {number} 
 		 * @param width {number} 
@@ -87,8 +87,8 @@ module ns_egret {
         public _open(x:number, y:number, width:number = 160, height:number = 21):void {
 
 
-            var scaleX = ns_egret.StageDelegate.getInstance().getScaleX();
-            var scaleY = ns_egret.StageDelegate.getInstance().getScaleY();
+            var scaleX = egret.StageDelegate.getInstance().getScaleX();
+            var scaleY = egret.StageDelegate.getInstance().getScaleY();
 
             var inputElement = document.createElement("input");
             inputElement.type = "text";
@@ -100,7 +100,7 @@ module ns_egret {
             inputElement.style.height = height * scaleY + "px";
             inputElement.style.outline = "medium";
 
-            var div = ns_egret.Browser.getInstance().$new("div");
+            var div = egret.Browser.getInstance().$new("div");
             div.style.position = 'absolute';
             div.position.x = x * scaleX;
             div.style.width = width * scaleX + "px";
@@ -109,19 +109,19 @@ module ns_egret {
             div.transforms();
             div.appendChild(inputElement);
 
-            var stageDelegateDiv = ns_egret.Browser.getInstance().$("#StageDelegateDiv");
+            var stageDelegateDiv = egret.Browser.getInstance().$("#StageDelegateDiv");
             if (!stageDelegateDiv) {
-                var container = document.getElementById(ns_egret.StageDelegate.canvas_div_name);
+                var container = document.getElementById(egret.StageDelegate.canvas_div_name);
                 var height = container.clientHeight;
                 var width = container.clientWidth;
-                stageDelegateDiv = ns_egret.Browser.getInstance().$new("div");
+                stageDelegateDiv = egret.Browser.getInstance().$new("div");
                 stageDelegateDiv.id = "StageDelegateDiv";
                 stageDelegateDiv.style.position = 'absolute';
                 stageDelegateDiv.style.width = width + "px";
                 stageDelegateDiv.style.maxHeight = height + "px";
                 stageDelegateDiv.style.margin = 0 + "px";
 
-                var canvas = document.getElementById(ns_egret.StageDelegate.canvas_div_name);
+                var canvas = document.getElementById(egret.StageDelegate.canvas_div_name);
                 canvas.appendChild(stageDelegateDiv);
                 stageDelegateDiv.position.y = -height;
                 stageDelegateDiv.transforms();
@@ -132,7 +132,7 @@ module ns_egret {
         }
 
 		/**
-		 * @method ns_egret.StageText#remove
+		 * @method egret.StageText#remove
 		 */
         public _remove():void {
             var div = this.div;

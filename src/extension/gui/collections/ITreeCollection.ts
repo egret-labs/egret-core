@@ -27,19 +27,19 @@
 
 /// <reference path="ICollection.ts"/>
 
-module ns_egret {
+module egret {
 
 	/**
-	 * @class ns_egret.ITreeCollection
+	 * @class egret.ITreeCollection
 	 * @interface
 	 * @classdesc
 	 * Tree组件的集合类数据源对象接口 
-	 * @extends ns_egret.ICollection
+	 * @extends egret.ICollection
 	 */
 	export interface ITreeCollection extends ICollection{
 		/**
 		 * 检查指定的节点是否含有子节点
-		 * @method ns_egret.ITreeCollection#hasChildren
+		 * @method egret.ITreeCollection#hasChildren
 		 * @param item {any} 要检查的节点
 		 * @returns {boolean}
 		 */		
@@ -47,7 +47,7 @@ module ns_egret {
 
 		/**
 		 * 指定的节点是否打开
-		 * @method ns_egret.ITreeCollection#isItemOpen
+		 * @method egret.ITreeCollection#isItemOpen
 		 * @param item {any} 
 		 * @returns {boolean}
 		 */		
@@ -55,7 +55,7 @@ module ns_egret {
 
 		/**
 		 * 打开或关闭一个节点
-		 * @method ns_egret.ITreeCollection#expandItem
+		 * @method egret.ITreeCollection#expandItem
 		 * @param item {any} 要打开或关闭的节点
 		 * @param open? {boolean} true表示打开节点，反之关闭。
 		 */		
@@ -63,7 +63,7 @@ module ns_egret {
 
 		/**
 		 * 获取节点的深度
-		 * @method ns_egret.ITreeCollection#getDepth
+		 * @method egret.ITreeCollection#getDepth
 		 * @param item {any} 
 		 * @returns {number}
 		 */		

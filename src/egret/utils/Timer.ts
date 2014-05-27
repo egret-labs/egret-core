@@ -30,7 +30,7 @@
 /// <reference path="../events/TimerEvent.ts"/>
 /// <reference path="getTimer.ts"/>
 
-module ns_egret {
+module egret {
     export class Timer extends EventDispatcher {
 
         constructor(delay:number, repeatCount:number = 0) {

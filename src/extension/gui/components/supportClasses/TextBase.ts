@@ -31,18 +31,18 @@
 /// <reference path="../../core/IDisplayText.ts"/>
 /// <reference path="../../core/UIComponent.ts"/>
 
-module ns_egret {
+module egret {
 
 	/**
-	 * @class ns_egret.TextBase
+	 * @class egret.TextBase
 	 * @classdesc
 	 * 文本基类,实现对文本的自动布局，样式属性设置。
-	 * @extends ns_egret.UIComponent
-	 * @implements ns_egret.IDisplayText
+	 * @extends egret.UIComponent
+	 * @implements egret.IDisplayText
 	 */	
 	export class TextBase extends UIComponent implements IDisplayText{
 		/**
-		 * @method ns_egret.TextBase#constructor
+		 * @method egret.TextBase#constructor
 		 */
 		public constructor(){
 			super();
@@ -50,12 +50,12 @@ module ns_egret {
 		
 		/**
 		 * 默认的文本测量宽度 
-		 * @constant ns_egret.TextBase.DEFAULT_MEASURED_WIDTH
+		 * @constant egret.TextBase.DEFAULT_MEASURED_WIDTH
 		 */		
 		public static DEFAULT_MEASURED_WIDTH:number = 160;
 		/**
 		 * 默认的文本测量高度
-		 * @constant ns_egret.TextBase.DEFAULT_MEASURED_HEIGHT
+		 * @constant egret.TextBase.DEFAULT_MEASURED_HEIGHT
 		 */		
 		public static DEFAULT_MEASURED_HEIGHT:number = 22;
 		
@@ -68,7 +68,7 @@ module ns_egret {
 		private _fontFamily:string = "SimSun";
 		/**
 		 * 字体名称 。默认值：SimSun
-		 * @member ns_egret.TextBase#fontFamily
+		 * @member egret.TextBase#fontFamily
 		 */
 		public get fontFamily():string{
 
@@ -89,7 +89,7 @@ module ns_egret {
 		private _size:number = 12;
 		/**
 		 * 字号大小,默认值12 。
-		 * @member ns_egret.TextBase#size
+		 * @member egret.TextBase#size
 		 */
 		public get size():number{
 			return this._size;
@@ -110,7 +110,7 @@ module ns_egret {
 		/**
 		 * 文字的水平对齐方式 ,请使用TextAlign中定义的常量。
 		 * 默认值：TextFormatAlign.LEFT。
-		 * @member ns_egret.TextBase#textAlign
+		 * @member egret.TextBase#textAlign
 		 */
 		public get textAlign():string{
 			return this._textAlign;
@@ -131,7 +131,7 @@ module ns_egret {
 		/**
 		 * 文字的垂直对齐方式 ,请使用VerticalAlign中定义的常量。
 		 * 默认值：VerticalAlign.TOP。
-		 * @member ns_egret.TextBase#verticalAlign
+		 * @member egret.TextBase#verticalAlign
 		 */
 		public get verticalAlign():string{
 			return this._verticalAlign;
@@ -151,7 +151,7 @@ module ns_egret {
         private _lineSpacing:number = 0;
         /**
          * 行间距
-		 * @member ns_egret.TextBase#lineSpacing
+		 * @member egret.TextBase#lineSpacing
          */
         public get lineSpacing():number{
             return this._lineSpacing;
@@ -171,7 +171,7 @@ module ns_egret {
         private _letterSpacing:number = 0;
         /**
          * 字符间距
-		 * @member ns_egret.TextBase#letterSpacing
+		 * @member egret.TextBase#letterSpacing
          */
         public get letterSpacing():number{
             return this._letterSpacing;
@@ -191,7 +191,7 @@ module ns_egret {
 
 		private _textColor:number = 0x000000;
 		/**
-		 * @member ns_egret.TextBase#textColor
+		 * @member egret.TextBase#textColor
 		 */
 		public get textColor():number{
 			return this._textColor;
@@ -206,12 +206,12 @@ module ns_egret {
 		}
 
 		/**
-		 * @member ns_egret.TextBase#_textChanged
+		 * @member egret.TextBase#_textChanged
 		 */
         public _textChanged:boolean;
 		public _text:string = "";
 		/**
-		 * @member ns_egret.TextBase#text
+		 * @member egret.TextBase#text
 		 */
         public get text():string{
 			return this._text;
@@ -228,7 +228,7 @@ module ns_egret {
 		}
 		
 		/**
-		 * @method ns_egret.TextBase#createChildren
+		 * @method egret.TextBase#createChildren
 		 */
 		public createChildren():void{
 			super.createChildren();
@@ -239,7 +239,7 @@ module ns_egret {
 		}
 		
 		/**
-		 * @method ns_egret.TextBase#commitProperties
+		 * @method egret.TextBase#commitProperties
 		 */
 		public commitProperties():void{
 			super.commitProperties();
@@ -309,7 +309,7 @@ module ns_egret {
         }
 		
 		/**
-		 * @method ns_egret.TextBase#measure
+		 * @method egret.TextBase#measure
 		 */
 		public measure():void{
 			super.measure();
@@ -320,7 +320,7 @@ module ns_egret {
 		
 		/**
 		 * 更新显示列表
-		 * @method ns_egret.TextBase#$updateDisplayList
+		 * @method egret.TextBase#$updateDisplayList
 		 * @param unscaledWidth {number} 
 		 * @param unscaledHeight {number} 
 		 */		
@@ -329,7 +329,7 @@ module ns_egret {
 		}
 		
 		/**
-		 * @method ns_egret.TextBase#updateDisplayList
+		 * @method egret.TextBase#updateDisplayList
 		 * @param unscaledWidth {number} 
 		 * @param unscaledHeight {number} 
 		 */

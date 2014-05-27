@@ -32,7 +32,7 @@
 /// <reference path="../utils/Logger.ts"/>
 /// <reference path="../../jslib/DEBUG.d.ts"/>
 
-module ns_egret {
+module egret {
     export class Scale9Bitmap extends DisplayObjectContainer {
         private _defaultPadding:number = 5;
         private _top:number;
@@ -43,17 +43,17 @@ module ns_egret {
         private _scaleWidth:number = 0;
         private _scaleHeight:number = 0;
 
-        private _topLeftBitmap:ns_egret.Bitmap;
-        private _topMiddleBitmap:ns_egret.Bitmap;
-        private _topRightBitmap:ns_egret.Bitmap;
+        private _topLeftBitmap:egret.Bitmap;
+        private _topMiddleBitmap:egret.Bitmap;
+        private _topRightBitmap:egret.Bitmap;
 
-        private _middleLeftBitmap:ns_egret.Bitmap;
-        private _middleMiddleBitmap:ns_egret.Bitmap;
-        private _middleRightBitmap:ns_egret.Bitmap;
+        private _middleLeftBitmap:egret.Bitmap;
+        private _middleMiddleBitmap:egret.Bitmap;
+        private _middleRightBitmap:egret.Bitmap;
 
-        private _bottomLeftBitmap:ns_egret.Bitmap;
-        private _bottomMiddleBitmap:ns_egret.Bitmap;
-        private _bottomRightBitmap:ns_egret.Bitmap;
+        private _bottomLeftBitmap:egret.Bitmap;
+        private _bottomMiddleBitmap:egret.Bitmap;
+        private _bottomRightBitmap:egret.Bitmap;
 
         public spriteFrame:SpriteSheetFrame;
 
@@ -75,7 +75,7 @@ module ns_egret {
         private _createBitmap():Bitmap {
             var bitmap = new Bitmap();
             bitmap.texture = this.texture;
-            bitmap.spriteFrame = new ns_egret.SpriteSheetFrame();
+            bitmap.spriteFrame = new egret.SpriteSheetFrame();
             this.addChild(bitmap);
             return bitmap;
         }
@@ -213,14 +213,14 @@ module ns_egret {
             super._updateTransform();
         }
 
-        private setChildScaleX(child:ns_egret.Bitmap, scaleX:number):void {
+        private setChildScaleX(child:egret.Bitmap, scaleX:number):void {
             if (scaleX < 0) {
                 scaleX = 0;
             }
             child.scaleX = scaleX;
         }
 
-        private setChildScaleY(child:ns_egret.Bitmap, scaleY:number):void {
+        private setChildScaleY(child:egret.Bitmap, scaleY:number):void {
             if (scaleY < 0) {
                 scaleY = 0;
             }

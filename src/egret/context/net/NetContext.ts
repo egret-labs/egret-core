@@ -28,11 +28,11 @@
 /// <reference path="../../net/URLLoader.ts"/>
 /// <reference path="../../utils/HashObject.ts"/>
 
-module ns_egret {
+module egret {
 	/**
-	 * @class ns_egret.NetContext
+	 * @class egret.NetContext
 	 * @classdesc
-	 * @extends ns_egret.HashObject
+	 * @extends egret.HashObject
 	 */
     export class NetContext extends HashObject{
 

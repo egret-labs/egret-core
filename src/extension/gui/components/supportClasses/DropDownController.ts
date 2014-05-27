@@ -36,18 +36,18 @@
 /// <reference path="../../core/UIGlobals.ts"/>
 /// <reference path="../../events/UIEvent.ts"/>
 
-module ns_egret {
+module egret {
 
 	/**
-	 * @class ns_egret.DropDownController
+	 * @class egret.DropDownController
 	 * @classdesc
 	 * 用于处理因用户交互而打开和关闭下拉列表的操作的控制器
-	 * @extends ns_egret.EventDispatcher
+	 * @extends egret.EventDispatcher
 	 */	
 	export class DropDownController extends EventDispatcher{
 		/**
 		 * 构造函数
-		 * @method ns_egret.DropDownController#constructor
+		 * @method egret.DropDownController#constructor
 		 */		
 		public constructor(){
 			super();
@@ -60,7 +60,7 @@ module ns_egret {
 		private _openButton:ButtonBase;
 		/**
 		 * 下拉按钮实例
-		 * @member ns_egret.DropDownController#openButton
+		 * @member egret.DropDownController#openButton
 		 */	
 		public get openButton():ButtonBase{
 			return this._openButton;
@@ -76,14 +76,14 @@ module ns_egret {
 		/**
 		 * 要考虑作为下拉列表的点击区域的一部分的显示对象列表。
 		 * 在包含项列出的任何组件内进行鼠标单击不会自动关闭下拉列表。
-		 * @member ns_egret.DropDownController#hitAreaAdditions
+		 * @member egret.DropDownController#hitAreaAdditions
 		 */		
 		public hitAreaAdditions:Array<DisplayObject>;
 		
 		private _dropDown:DisplayObject;
 		/**
 		 * 下拉区域显示对象
-		 * @member ns_egret.DropDownController#dropDown
+		 * @member egret.DropDownController#dropDown
 		 */		
 		public get dropDown():DisplayObject{
 			return this._dropDown;
@@ -99,7 +99,7 @@ module ns_egret {
 		private _isOpen:boolean = false;
 		/**
 		 * 下拉列表已经打开的标志
-		 * @member ns_egret.DropDownController#isOpen
+		 * @member egret.DropDownController#isOpen
 		 */		
 		public get isOpen():boolean{
 			return this._isOpen;
@@ -108,7 +108,7 @@ module ns_egret {
 		private _closeOnResize:boolean = true;
 		/**
 		 * 如果为 true，则在调整舞台大小时会关闭下拉列表。
-		 * @member ns_egret.DropDownController#closeOnResize
+		 * @member egret.DropDownController#closeOnResize
 		 */		
 		public get closeOnResize():boolean{
 			return this._closeOnResize;
@@ -131,7 +131,7 @@ module ns_egret {
 		/**
 		 * 指定滑过锚点按钮时打开下拉列表要等待的延迟（以毫秒为单位）。
 		 * 如果设置为 NaN，则下拉列表会在单击时打开，而不是在滑过时打开。默认值NaN
-		 * @member ns_egret.DropDownController#rollOverOpenDelay
+		 * @member egret.DropDownController#rollOverOpenDelay
 		 */		
 		public get rollOverOpenDelay():number{
 			return this._rollOverOpenDelay;
@@ -248,7 +248,7 @@ module ns_egret {
 		}
 		/**
 		 * 打开下拉列表
-		 * @method ns_egret.DropDownController#openDropDown
+		 * @method egret.DropDownController#openDropDown
 		 */		
 		public openDropDown():void{
 			this.openDropDownHelper();
@@ -269,7 +269,7 @@ module ns_egret {
 		}
 		/**
 		 * 关闭下拉列表
-		 * @method ns_egret.DropDownController#closeDropDown
+		 * @method egret.DropDownController#closeDropDown
 		 * @param commit {boolean} 
 		 */	
 		public closeDropDown(commit:boolean):void{
@@ -290,7 +290,7 @@ module ns_egret {
 		}   
 		/**
 		 * openButton上按下鼠标事件
-		 * @method ns_egret.DropDownController#_openButton_buttonDownHandler
+		 * @method egret.DropDownController#_openButton_buttonDownHandler
 		 * @param event {Event} 
 		 */		
 		public _openButton_buttonDownHandler(event:Event):void{
@@ -303,7 +303,7 @@ module ns_egret {
 		}
 		/**
 		 * openButton上鼠标经过事件
-		 * @method ns_egret.DropDownController#_openButton_rollOverHandler
+		 * @method egret.DropDownController#_openButton_rollOverHandler
 		 * @param event {TouchEvent} 
 		 */		
 		public _openButton_rollOverHandler(event:TouchEvent):void{
@@ -338,7 +338,7 @@ module ns_egret {
 		}
 		/**
 		 * 舞台上鼠标按下事件
-		 * @method ns_egret.DropDownController#stage_mouseDownHandler
+		 * @method egret.DropDownController#stage_mouseDownHandler
 		 * @param event {Event} 
 		 */		
 		public stage_mouseDownHandler(event:Event):void{
@@ -371,7 +371,7 @@ module ns_egret {
 		}
 		/**
 		 * 舞台上鼠标移动事件
-		 * @method ns_egret.DropDownController#stage_mouseMoveHandler
+		 * @method egret.DropDownController#stage_mouseMoveHandler
 		 * @param event {Event} 
 		 */		
 		public stage_mouseMoveHandler(event:Event):void{
@@ -389,7 +389,7 @@ module ns_egret {
 		}
 		/**
 		 * 舞台上鼠标弹起事件
-		 * @method ns_egret.DropDownController#stage_mouseUpHandler_noRollOverOpenDelay
+		 * @method egret.DropDownController#stage_mouseUpHandler_noRollOverOpenDelay
 		 * @param event {Event} 
 		 */		
 		public stage_mouseUpHandler_noRollOverOpenDelay(event:Event):void{
@@ -401,7 +401,7 @@ module ns_egret {
 		}
 		/**
 		 * 舞台上鼠标弹起事件
-		 * @method ns_egret.DropDownController#stage_mouseUpHandler
+		 * @method egret.DropDownController#stage_mouseUpHandler
 		 * @param event {Event} 
 		 */	
 		public stage_mouseUpHandler(event:Event):void{
@@ -417,7 +417,7 @@ module ns_egret {
 		}
 		/**
 		 * 舞台尺寸改变事件
-		 * @method ns_egret.DropDownController#stage_resizeHandler
+		 * @method egret.DropDownController#stage_resizeHandler
 		 * @param event {Event} 
 		 */		
 		public stage_resizeHandler(event:Event):void{

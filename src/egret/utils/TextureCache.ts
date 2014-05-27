@@ -29,10 +29,10 @@
 /// <reference path="HashObject.ts"/>
 /// <reference path="Logger.ts"/>
 
-module ns_egret{
+module egret{
     /**
      * 纹理的缓存和管理类
-     * @class ns_egret.TextureCache
+     * @class egret.TextureCache
      */
     export class TextureCache extends HashObject{
         private static instance:TextureCache;
@@ -83,7 +83,7 @@ module ns_egret{
             var result = this._textures[key];
             if(!result)
             {
-                ns_egret.Logger.warning("texture为空",key);
+                egret.Logger.warning("texture为空",key);
             }
             return result;
         }

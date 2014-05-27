@@ -50,12 +50,12 @@ module RES {
                 resItem.url = this.getTexturePath(resItem.url,config);
             }
             else{
-                var texture:ns_egret.Texture = data;
+                var texture:egret.Texture = data;
                 config = this.sheetMap[name];
                 delete this.sheetMap[name];
                 if(texture){
-                    var spriteSheet:ns_egret.BitmapTextSpriteSheet =
-                        new ns_egret.BitmapTextSpriteSheet(texture._bitmapData,config);
+                    var spriteSheet:egret.BitmapTextSpriteSheet =
+                        new egret.BitmapTextSpriteSheet(texture._bitmapData,config);
                     this.fileDic[name] = spriteSheet;
                 }
             }

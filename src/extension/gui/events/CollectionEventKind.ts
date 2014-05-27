@@ -25,10 +25,10 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-module ns_egret {
+module egret {
 
 	/**
-	 * @class ns_egret.CollectionEventKind
+	 * @class egret.CollectionEventKind
 	 * @classdesc
 	 * 定义  CollectionEvent 类 kind 属性的有效值的常量。
 	 * 这些常量指示对集合进行的更改类型。
@@ -36,47 +36,47 @@ module ns_egret {
 	export class CollectionEventKind{
 		/**
 		 * 指示集合添加了一个或多个项目。 
-		 * @constant ns_egret.CollectionEventKind.ADD
+		 * @constant egret.CollectionEventKind.ADD
 		 */		
 		public static ADD:string = "add";
 		/**
 		 * 指示项目已从 CollectionEvent.oldLocation确定的位置移动到 location确定的位置。 
-		 * @constant ns_egret.CollectionEventKind.MOVE
+		 * @constant egret.CollectionEventKind.MOVE
 		 */		
 		public static MOVE:string = "move";
 		/**
 		 * 指示集合应用了排序或/和筛选。
-		 * @constant ns_egret.CollectionEventKind.REFRESH
+		 * @constant egret.CollectionEventKind.REFRESH
 		 */		
 		public static REFRESH:string = "refresh";
 		/**
 		 * 指示集合删除了一个或多个项目。 
-		 * @constant ns_egret.CollectionEventKind.REMOVE
+		 * @constant egret.CollectionEventKind.REMOVE
 		 */		
 		public static REMOVE:string = "remove";
 		/**
 		 * 指示已替换由 CollectionEvent.location 属性确定的位置处的项目。 
-		 * @constant ns_egret.CollectionEventKind.REPLACE
+		 * @constant egret.CollectionEventKind.REPLACE
 		 */		
 		public static REPLACE:string = "replace";
 		/**
 		 * 指示集合已彻底更改，需要进行重置。 
-		 * @constant ns_egret.CollectionEventKind.RESET
+		 * @constant egret.CollectionEventKind.RESET
 		 */		
 		public static RESET:string = "reset";
 		/**
 		 * 指示集合中一个或多个项目进行了更新。受影响的项目将存储在  CollectionEvent.items 属性中。 
-		 * @constant ns_egret.CollectionEventKind.UPDATE
+		 * @constant egret.CollectionEventKind.UPDATE
 		 */		
 		public static UPDATE:string = "update";
 		/**
 		 * 指示集合中某个节点的子项列表已打开，通常应用于Tree的数据源XMLCollection。
-		 * @constant ns_egret.CollectionEventKind.OPEN
+		 * @constant egret.CollectionEventKind.OPEN
 		 */		
 		public static OPEN:string = "open";
 		/**
 		 * 指示集合中某个节点的子项列表已关闭，通常应用于Tree的数据源XMLCollection。
-		 * @constant ns_egret.CollectionEventKind.CLOSE
+		 * @constant egret.CollectionEventKind.CLOSE
 		 */		
 		public static CLOSE:string = "close";
 	}
