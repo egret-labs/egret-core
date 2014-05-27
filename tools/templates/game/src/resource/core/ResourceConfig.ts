@@ -88,7 +88,19 @@ module RES {
                 var length:number = resources.length;
                 for(var i:number=0;i<length;i++){
                     var item:any = resources[i];
-                    item.url = folder+item.url;
+                    var url:string = item.url;
+                    if(url.indexOf(",")==-1){
+                        url = folder+item.url;
+                    }
+                    else{
+                        var urls:Array<string> = url.split(",");
+                        var urlLength:number = urls.length;
+                        for(var k:number=0;k<urlLength;k++){
+                            urls[k] = folder+urls[k];
+                        }
+                        url = urls.join(",");
+                    }
+                    item.url = url;
                     if(!this.keyMap[item.name])
                         this.keyMap[item.name] = item;
                 }
@@ -136,6 +148,10 @@ module RES {
         private parseResourceItem(data:any):ResourceItem{
             var resItem:ResourceItem = new ResourceItem(data.name,data.url,data.type);
             resItem.data = data;
+            if(data.url.indexOf(",")!=-1){
+                resItem.urls = data.url.split(",");
+                resItem.url = resItem.urls[0];
+            }
             return resItem;
         }
 

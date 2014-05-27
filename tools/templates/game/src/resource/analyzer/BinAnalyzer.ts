@@ -63,16 +63,16 @@ module RES {
 			var loader:ns_egret.URLLoader = this.recycler.pop();
 			if(!loader){
 				loader = new ns_egret.URLLoader();
-				loader.dataFormat = this._dataFormat;
 				loader.addEventListener(ns_egret.Event.COMPLETE,this.onLoadFinish,this);
 				loader.addEventListener(ns_egret.IOErrorEvent.IO_ERROR,this.onLoadFinish,this);
 			}
+            loader.dataFormat = this._dataFormat;
 			return loader;
 		}
 		/**
 		 * 一项加载结束
 		 */		
-		private onLoadFinish(event:ns_egret.Event):void{
+		public onLoadFinish(event:ns_egret.Event):void{
 			var loader:ns_egret.URLLoader = <ns_egret.URLLoader> (event.target);
 			var data:any = this.resItemDic[loader.hashCode];
 			delete this.resItemDic[loader.hashCode];

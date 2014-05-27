@@ -89,6 +89,8 @@ module ns_egret {
             };
         }
 
+
+
         private getXHR():any{
             if (window["XMLHttpRequest"]) {
                 return new window["XMLHttpRequest"]();

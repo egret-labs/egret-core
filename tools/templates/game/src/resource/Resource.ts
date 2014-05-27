@@ -22,6 +22,7 @@
 /// <reference path="analyzer/ImgAnalyzer.ts"/>
 /// <reference path="analyzer/JsonAnalyzer.ts"/>
 /// <reference path="analyzer/TxtAnalyzer.ts"/>
+/// <reference path="analyzer/SheetAnalyzer.ts"/>
 /// <reference path="core/ResourceConfig.ts"/>
 /// <reference path="core/ResourceItem.ts"/>
 /// <reference path="core/ResourceLoader.ts"/>
@@ -181,6 +182,8 @@ module RES {
                 ns_egret.Injector.mapClass(AnalyzerBase,TxtAnalyzer,ResourceItem.TYPE_TXT);
             if(!ns_egret.Injector.hasMapRule(AnalyzerBase,ResourceItem.TYPE_JSON))
                 ns_egret.Injector.mapClass(AnalyzerBase,JsonAnalyzer,ResourceItem.TYPE_JSON);
+            if(!ns_egret.Injector.hasMapRule(AnalyzerBase,ResourceItem.TYPE_SHEET))
+                ns_egret.Injector.mapClass(AnalyzerBase,SheetAnalyzer,ResourceItem.TYPE_SHEET);
             this.resConfig = new ResourceConfig();
             this.resLoader = new ResourceLoader();
             this.resLoader.callBack = this.onResourceItemComp;

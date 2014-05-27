@@ -97,7 +97,7 @@ module ns_egret {
             sourceWidth = sourceWidth / ns_egret.MainContext.instance.rendererContext.texture_scale_factor;
             sourceHeight = sourceHeight / ns_egret.MainContext.instance.rendererContext.texture_scale_factor;
             if (DEBUG && DEBUG.DRAW_IMAGE) {
-                DEBUG.checkDrawImage(texture, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight);
+               // DEBUG.checkDrawImage(texture, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight);
             }
             var image = texture._bitmapData;
             destX += this._transformTx;

@@ -39,6 +39,10 @@ module RES {
          * JSON文件
          */
         public static TYPE_JSON:string = "json";
+        /**
+         * SpriteSheet文件
+         */
+        public static TYPE_SHEET:string = "sheet";
 
 		/**
 		 * 构造函数
@@ -64,6 +68,10 @@ module RES {
 		 * 加载项文件类型
 		 */
 		public type:string;
+        /**
+         * 若含有逗号分隔的多个url时，将解析到这个列表里。
+         */
+        public urls:Array<string>
 
         /**
          * 所属组名
