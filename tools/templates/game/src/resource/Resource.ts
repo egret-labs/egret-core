@@ -1,28 +1,19 @@
 /**
- * Copyright (c) 2014,Egret-Labs.org
- * All rights reserved.
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are met:
+ * Copyright (c) Egret-Labs.org. Permission is hereby granted, free of charge,
+ * to any person obtaining a copy of this software and associated documentation
+ * files (the "Software"), to deal in the Software without restriction, including
+ * without limitation the rights to use, copy, modify, merge, publish, distribute,
+ * sublicense, and/or sell copies of the Software, and to permit persons to whom
+ * the Software is furnished to do so, subject to the following conditions:
  *
- *     * Redistributions of source code must retain the above copyright
- *       notice, this list of conditions and the following disclaimer.
- *     * Redistributions in binary form must reproduce the above copyright
- *       notice, this list of conditions and the following disclaimer in the
- *       documentation and/or other materials provided with the distribution.
- *     * Neither the name of the Egret-Labs.org nor the
- *       names of its contributors may be used to endorse or promote products
- *       derived from this software without specific prior written permission.
+ * The above copyright notice and this permission notice shall be included
+ * in all copies or substantial portions of the Software.
  *
- * THIS SOFTWARE IS PROVIDED BY EGRET-LABS.ORG AND CONTRIBUTORS "AS IS" AND ANY
- * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
- * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL EGRET-LABS.ORG AND CONTRIBUTORS BE LIABLE FOR ANY
- * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
- * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
- * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
- * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
- * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
+ * INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR
+ * PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE
+ * FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+ * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
 /// <reference path="../egret.d.ts"/>
@@ -32,6 +23,7 @@
 /// <reference path="analyzer/JsonAnalyzer.ts"/>
 /// <reference path="analyzer/TxtAnalyzer.ts"/>
 /// <reference path="analyzer/SheetAnalyzer.ts"/>
+/// <reference path="analyzer/FontAnalyzer.ts"/>
 /// <reference path="core/ResourceConfig.ts"/>
 /// <reference path="core/ResourceItem.ts"/>
 /// <reference path="core/ResourceLoader.ts"/>
@@ -136,7 +128,6 @@ module RES {
     export function addEventListener(type:string, listener:Function, thisObject:any, useCapture:boolean = false, priority:number = 0):void {
         instance.addEventListener(type,listener,thisObject,useCapture,priority);
     }
-
     /**
      * 移除事件侦听器,参考ResourceEvent定义的常量。
      * @method ns_egret.EventDispatcher#removeEventListener
@@ -193,6 +184,8 @@ module RES {
                 ns_egret.Injector.mapClass(AnalyzerBase,JsonAnalyzer,ResourceItem.TYPE_JSON);
             if(!ns_egret.Injector.hasMapRule(AnalyzerBase,ResourceItem.TYPE_SHEET))
                 ns_egret.Injector.mapClass(AnalyzerBase,SheetAnalyzer,ResourceItem.TYPE_SHEET);
+            if(!ns_egret.Injector.hasMapRule(AnalyzerBase,ResourceItem.TYPE_FONT))
+                ns_egret.Injector.mapClass(AnalyzerBase,FontAnalyzer,ResourceItem.TYPE_FONT);
             this.resConfig = new ResourceConfig();
             this.resLoader = new ResourceLoader();
             this.resLoader.callBack = this.onResourceItemComp;
@@ -305,8 +298,14 @@ module RES {
          */
         public getRes(name:string):any{
             var type:string = this.resConfig.getType(name);
-            if(type=="")
-                return null;
+            if(type==""){
+                var prefix:string = RES.AnalyzerBase.getStringPrefix(name);
+                type = this.resConfig.getType(prefix);
+                if(type==""){
+                    return null;
+                }
+            }
+
             var analyzer:AnalyzerBase = this.getAnalyzerByType(type);
             return analyzer.getRes(name);
         }
@@ -321,8 +320,12 @@ module RES {
         public getResAsync(name:string,compFunc:Function,thisObject:any):void{
             var type:string = this.resConfig.getType(name);
             if(type==""){
-                compFunc.call(thisObject,null);
-                return;
+                var prefix:string = RES.AnalyzerBase.getStringPrefix(name);
+                type = this.resConfig.getType(prefix);
+                if(type==""){
+                    compFunc.call(thisObject,null);
+                    return;
+                }
             }
             var analyzer:AnalyzerBase = this.getAnalyzerByType(type);
             var res:any = analyzer.getRes(name);
