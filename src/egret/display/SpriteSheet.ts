@@ -40,10 +40,10 @@ module ns_egret{
         public constructor(bitmapData:any) {
             super();
             if(bitmapData.frames)//to-do 这段代码是为了兼容SpriteSheetFrame的配置，要删除。
-                this.textureMap = bitmapData.frames;
+                this._textureMap = bitmapData.frames;
             else{
                 this.bitmapData = bitmapData;
-                this.textureMap = {};
+                this._textureMap = {};
             }
 
         }
@@ -52,7 +52,7 @@ module ns_egret{
          * @deprecated
          */
         public getFrame(spriteFrameName) {
-            var frame = this.textureMap[spriteFrameName];
+            var frame = this._textureMap[spriteFrameName];
             if(frame == null)
             {
                 ns_egret.Logger.fatal("没有找到相应的frame：", spriteFrameName);
@@ -67,7 +67,7 @@ module ns_egret{
         /**
          * 纹理缓存字典
          */
-        private textureMap:Object;
+        public _textureMap:Object;
         /**
          * 根据指定纹理名称获取一个缓存的Textrue对象
          * @method ns_egret.SpriteSheet#getTexture
@@ -75,7 +75,7 @@ module ns_egret{
          * @returns {ns_egret.Texture} 创建的Texture对象
          */
         public getTexture(name:string):Texture{
-            return this.textureMap[name];
+            return this._textureMap[name];
         }
 
         /**
@@ -95,7 +95,7 @@ module ns_egret{
             texture._startY = startY;
             texture._textureWidth = width;
             texture._textureHeight = height;
-            this.textureMap[name] = texture;
+            this._textureMap[name] = texture;
             return texture;
         }
 

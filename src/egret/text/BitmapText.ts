@@ -50,6 +50,13 @@ module ns_egret {
         public texture:Texture;
 
         /**
+         * BitmapTextSpriteSheet对象，缓存了所有文本的位图纹理
+         */
+        public spriteSheet:BitmapTextSpriteSheet;
+
+
+        /**
+         * 已经废弃
          * SpriteFrame配置文件，通过egret的Node.js工具生成
          */
         public bitmapFontData;
