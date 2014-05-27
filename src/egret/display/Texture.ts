@@ -88,13 +88,5 @@ module ns_egret {
             this._textureWidth = value.width * scale;
             this._textureHeight = value.height * scale;
         }
-
-        public static createWithBase64(base64:string):Texture {
-            var texture:Texture = new Texture();
-            var img = new Image();
-            img.src = base64;
-            texture.bitmapData = img;
-            return texture;
-        }
     }
 }
