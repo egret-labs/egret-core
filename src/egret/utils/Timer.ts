@@ -33,7 +33,7 @@
 module ns_egret {
     export class Timer extends EventDispatcher {
 
-        constructor(delay:number = 1000, repeatCount:number = 0) {
+        constructor(delay:number, repeatCount:number = 0) {
             super();
             this.delay = delay;
             this.repeatCount = repeatCount;
