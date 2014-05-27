@@ -2,23 +2,31 @@
 ///<reference path="../../egret/display/DisplayObject.ts" />
 ///<reference path="../../egret/display/DisplayObjectContainer.ts" />
 ///<reference path="../../egret/display/Bitmap.ts" />
-///<reference path="../../egret/resource/ResourceLoader.ts" />
 /**
- * Copyright (c) Egret-Labs.org. Permission is hereby granted, free of charge,
- * to any person obtaining a copy of this software and associated documentation
- * files (the "Software"), to deal in the Software without restriction, including
- * without limitation the rights to use, copy, modify, merge, publish, distribute,
- * sublicense, and/or sell copies of the Software, and to permit persons to whom
- * the Software is furnished to do so, subject to the following conditions:
+ * Copyright (c) 2014,Egret-Labs.org
+ * All rights reserved.
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
  *
- * The above copyright notice and this permission notice shall be included
- * in all copies or substantial portions of the Software.
+ *     * Redistributions of source code must retain the above copyright
+ *       notice, this list of conditions and the following disclaimer.
+ *     * Redistributions in binary form must reproduce the above copyright
+ *       notice, this list of conditions and the following disclaimer in the
+ *       documentation and/or other materials provided with the distribution.
+ *     * Neither the name of the Egret-Labs.org nor the
+ *       names of its contributors may be used to endorse or promote products
+ *       derived from this software without specific prior written permission.
  *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
- * INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR
- * PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE
- * FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
- * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ * THIS SOFTWARE IS PROVIDED BY EGRET-LABS.ORG AND CONTRIBUTORS "AS IS" AND ANY
+ * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL EGRET-LABS.ORG AND CONTRIBUTORS BE LIABLE FOR ANY
+ * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+ * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 module dragonBones {
     export module display {
@@ -81,9 +89,9 @@ module dragonBones {
                 }
             }
 
-            public updateBlendMode(blendMode:string){
+            public updateBlendMode(blendMode:string) {
 //                console.log (blendMode);
-                if (this._display){
+                if (this._display) {
                     this._display.blendMode = ns_egret.BlendMode.getBlendMode(blendMode);
                 }
             }
@@ -135,7 +143,32 @@ module dragonBones {
 
             private parseData(textureAtlasRawData:any):void {
                 this.name = textureAtlasRawData[utils.ConstValues.A_NAME];
-                this.spriteSheet = ns_egret.SpriteSheet.parseFromDragonBones(textureAtlasRawData);
+                this.spriteSheet = this.parseFromDragonBones(textureAtlasRawData);
+            }
+
+            /**
+             * 这个API已经被完全废弃，会尽快删除
+             * @param data
+             * @returns {SpriteSheet}
+             * @stable D
+             */
+            private parseFromDragonBones(data):ns_egret.SpriteSheet {
+
+                var spriteSheet:ns_egret.SpriteSheet = new ns_egret.SpriteSheet(data);
+                spriteSheet["textureMap"] = {};
+                var list = data.SubTexture
+
+                for (var key in list) {
+                    var frameData = list[key];
+                    var rect = new ns_egret.SpriteSheetFrame();
+                    rect.w = frameData.width;
+                    rect.h = frameData.height;
+                    rect.x = frameData.x;
+                    rect.y = frameData.y;
+                    spriteSheet["textureMap"][frameData.name] = rect;
+//            console.log (rect);
+                }
+                return spriteSheet;
             }
         }
     }
@@ -163,11 +196,12 @@ module dragonBones {
             /** @private */
             public _generateDisplay(textureAtlas:textures.EgretTextureAtlas, fullName:string, pivotX:number, pivotY:number):any {
 
-                var bitmap1:ns_egret.Bitmap = ns_egret.Bitmap.initWithTexture(textureAtlas.texture);
+                var bitmap1:ns_egret.Bitmap = new ns_egret.Bitmap();
+                bitmap1.texture = textureAtlas.texture;
                 var frame = textureAtlas.spriteSheet.getFrame(fullName);
                 bitmap1.spriteFrame = frame;
-                bitmap1.anchorPointX = pivotX;
-                bitmap1.anchorPointY = pivotY;
+                bitmap1.anchorOffsetX = pivotX;
+                bitmap1.anchorOffsetY = pivotY;
                 return bitmap1;
             }
         }

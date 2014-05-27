@@ -1,11 +1,11 @@
 var fs = require('fs');
 var locale = require("./locale/zh-CN.js");
+var param = require("../core/params_analyze.js");
 
+var path = require("path");
 
 var loopFileSync = function (dir, filter) {
 
-    var fs = require("fs");
-    var path = require("path");
     var result = [];
     loop(dir, filter);
 
@@ -25,6 +25,7 @@ var loopFileSync = function (dir, filter) {
             }
         }
     }
+
     return result;
 }
 
@@ -33,7 +34,7 @@ var _require = function (moduleName) {
 
     var module;
     try {
-        module = require(moduleName)
+        module = require(path.join(param.getEgretPath(), moduleName));
     }
     catch (e) {
         var errorMessage = "加载模块 " + moduleName + " 失败\n请确认在" + process.argv[1] + "所在目录下已执行 npm install " + moduleName
@@ -74,6 +75,8 @@ function copy(sourceFile, outputFile) {
 }
 
 function _copy_file(source_file, output_file) {
+    var path = require("path");
+    mkdirSync(path.dirname(output_file))
     var byteArray = fs.readFileSync(source_file);
     fs.writeFileSync(output_file, byteArray);
 }
@@ -128,24 +131,53 @@ function mkdirSync(p, mode, made) {
     return made;
 };
 
-function formatStdoutString(message){
+function formatStdoutString(message) {
     return message.split("{color_green}").join("\033[1;32;1m")
+        .split("{color_red}").join("\033[0;31m")
         .split("{color_normal}").join("\033[0m")
+        .split("{color_gray}").join("\033[0;37m")
         .split("{color_underline}").join("\033[4;36;1m");
 }
 
-function _exit(code){
+function _exit(code) {
     var message = locale.error_code[code];
-    if (!message){
-        _exit(9999,code);
+    if (!message) {
+        _exit(9999, code);
     }
-    console.log (formatStdoutString(message).replace("{0}",arguments[1]));
+    console.log(formatStdoutString(message).replace("{0}", arguments[1]).replace("{1}", arguments[2]));
     process.exit(code);
 }
 
+function _log(){
+    var opt = param.getArgv().opts;
+    var vebose = opt.hasOwnProperty("-v");
+    if (vebose){
+        console.log.apply(console,arguments);
+    }
+
+
+}
+
+function _joinEgretDir(dir, projectName) {
+    var currDir = dir;
+    if (projectName) {
+        currDir = path.join(currDir, projectName);
+    }
+
+    var stat2 = fs.existsSync(path.join(currDir, "src"));
+    var stat3 = fs.existsSync(path.join(currDir, "launcher"));
+    if (!stat2 || !stat3) {//存在egret项目缺少的文件目录
+        _exit(8002);
+    }
+
+    return currDir;
+}
 
 exports.loopFileSync = loopFileSync;
 exports.require = _require;
 exports.copy = copy;
 exports.deleteFileSync = remove;
 exports.exit = _exit;
+exports.mkdir = mkdirSync;
+exports.log = _log;
+exports.joinEgretDir = _joinEgretDir;

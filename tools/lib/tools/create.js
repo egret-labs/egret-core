@@ -2,6 +2,9 @@ var path = require("path");
 var libs = require("../core/normal_libs");
 var param = require("../core/params_analyze.js");
 var fs = require("fs");
+var async = require('../core/async');
+var compiler = require("./compile.js")
+
 
 /**
  * 创建新项目
@@ -9,17 +12,58 @@ var fs = require("fs");
  * @param args
  * @param opts
  */
-function run(currentDir, args, opts) {
+function run(currDir, args, opts) {
     var projectName = args[0];
     if (!projectName) {
         libs.exit(1001);
     }
 
-//    generateConfigJson(currentDir, engine, projectName);
+    var runtime = param.getOption(opts, "--runtime", ["html5", "native"]);
+    var egret_file = path.join(currDir, projectName, "bin-debug/lib/egret_file_list.js");
+
+    async.series([
+
+        function (callback) {
+            createNewProject(projectName);
+            callback();
+        },
+
+        function (callback) {
+
+            compiler.generateEgretFileList(callback, egret_file, runtime);
+
+        },
+
+        function (callback) {
+            compiler.compile(callback,
+                path.join(param.getEgretPath(), "src"),
+                path.join(currDir, projectName, "bin-debug/lib"),
+                egret_file
+            );
+        },
 
 
-    createNewProject(projectName);
-    copyEngine();
+        function (callback) {
+            compiler.exportHeader(callback,
+                path.join(param.getEgretPath(), "src"),
+                path.join(currDir, projectName, "src", "egret.d.ts"),
+                egret_file
+            );
+
+        },
+
+        function (callback) {
+            compiler.compile(callback,
+                path.join(currDir, projectName, "src"),
+                path.join(currDir, projectName, "bin-debug/src"),
+                path.join(currDir, projectName, "src/game_file_list.js")
+            );
+        },
+
+        function (callback) {
+            libs.log("创建成功");
+        }
+    ])
 
 
 }
@@ -29,59 +73,17 @@ function createNewProject(projectName) {
     var template = path.join(param.getEgretPath(), "tools/templates/game");
     var projPath = path.join(process.cwd(), projectName);
     libs.copy(template, projPath);
-    console.log("创建成功!");
+}
+
+function help_title() {
+    return "创建新项目";
 }
 
 
-function copyEngine() {
-    //创建 引擎目录
-    var engine_root = path.join(process.cwd(), "egret");
-    if (!fs.existsSync(engine_root)) {
-        fs.mkdirSync(engine_root);
-        var target_src = path.join(engine_root, "src");
-        var source_src = path.join(param.getEgretPath(), "src");
-        libs.copy(source_src, target_src);
-    }
-}
-
-/**
- * 生成config.json文件
- * @param currentDir
- * @param engine
- * @param projectName
- */
-function generateConfigJson(currentDir, engine, projectName) {
-    var configPath = path.join(currentDir, "config.json");
-    if (!fs.existsSync(configPath)) {
-        var gameData = {};
-        gameData.game = {};
-        gameData.engine = "";
-    }
-    else {
-        var txt = fs.readFileSync(configPath, "utf8");
-        try {
-            var gameData = JSON.parse(txt);
-        }
-        catch (e) {
-            console.log("config.json解析失败，重新生成...");
-            var gameData = {};
-            gameData.game = {};
-            gameData.engine = "";
-        }
-
-    }
-    gameData["game"][projectName] = projectName + "/";
-    if (engine && engine.length > 0) {
-        gameData["engine"] = engine;
-    }
-    else if (!gameData["engine"]) {
-        gameData["engine"] = "egret/src/";
-    }
-
-    var str = JSON.stringify(gameData, "\t", "\r");
-    fs.writeFile(configPath, str, function (err) {
-        if (err) throw err;
-    });
+function help_example() {
+    return "egret create [project_name] [--runtime html5|native]";
 }
 
 exports.run = run;
+exports.help_title = help_title;
+exports.help_example = help_example;

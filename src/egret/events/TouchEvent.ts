@@ -1,23 +1,33 @@
 /**
- * Copyright (c) Egret-Labs.org. Permission is hereby granted, free of charge,
- * to any person obtaining a copy of this software and associated documentation
- * files (the "Software"), to deal in the Software without restriction, including
- * without limitation the rights to use, copy, modify, merge, publish, distribute,
- * sublicense, and/or sell copies of the Software, and to permit persons to whom
- * the Software is furnished to do so, subject to the following conditions:
+ * Copyright (c) 2014,Egret-Labs.org
+ * All rights reserved.
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
  *
- * The above copyright notice and this permission notice shall be included
- * in all copies or substantial portions of the Software.
+ *     * Redistributions of source code must retain the above copyright
+ *       notice, this list of conditions and the following disclaimer.
+ *     * Redistributions in binary form must reproduce the above copyright
+ *       notice, this list of conditions and the following disclaimer in the
+ *       documentation and/or other materials provided with the distribution.
+ *     * Neither the name of the Egret-Labs.org nor the
+ *       names of its contributors may be used to endorse or promote products
+ *       derived from this software without specific prior written permission.
  *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
- * INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR
- * PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE
- * FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
- * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ * THIS SOFTWARE IS PROVIDED BY EGRET-LABS.ORG AND CONTRIBUTORS "AS IS" AND ANY
+ * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL EGRET-LABS.ORG AND CONTRIBUTORS BE LIABLE FOR ANY
+ * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+ * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
 /// <reference path="../display/DisplayObject.ts"/>
 /// <reference path="Event.ts"/>
+/// <reference path="IEventDispatcher.ts"/>
 /// <reference path="../geom/Point.ts"/>
 
 module ns_egret {
@@ -32,11 +42,16 @@ module ns_egret {
          * @param bubbles {boolean} 确定 Event 对象是否参与事件流的冒泡阶段。默认值为 false。
          * @param cancelable {boolean} 确定是否可以取消 Event 对象。默认值为 false。
          */
-        public constructor(type:string, bubbles:boolean = true, cancelable:boolean = true, touchPointID:number = 0, stageX:number = 0, stageY:number = 0) {
+        public constructor(type:string, bubbles:boolean = true, cancelable:boolean = true,
+                           touchPointID:number = 0, stageX:number = 0, stageY:number = 0,
+                           ctrlKey:boolean=false,altKey:boolean=false,shiftKey:boolean=false,touchDown:boolean=false) {
             super(type, bubbles, cancelable);
             this.touchPointID = touchPointID
             this._stageX = stageX;
             this._stageY = stageY;
+            this.ctrlKey = ctrlKey;
+            this.altKey = altKey;
+            this.touchDown = touchDown;
         }
 
         /**
@@ -55,42 +70,42 @@ module ns_egret {
          * 开始触摸,参考Flash的MouseEvent.MOUSE_DOWN
          * @constant {string} ns_egret.TouchEvent.TOUCH_BEGAN
          */
-        static TOUCH_BEGAN:string = "touchBegan";
+        public static TOUCH_BEGAN:string = "touchBegan";
 
         /**
          * 在同一对象上结束触摸,参考Flash的MouseEvent.MOUSE_UP
          * @constant {string} ns_egret.TouchEvent.TOUCH_END
          */
-        static TOUCH_END:string = "touchEnd";
+        public static TOUCH_END:string = "touchEnd";
 
         /**
          * 在对象外部结束触摸，参考Flash的MouseEvent.RELEASE_OUTSIDE
          * @constant {string} ns_egret.TouchEvent.TOUCH_RELEASE_OUTSIDE
          */
-        static TOUCH_RELEASE_OUTSIDE:string = "touchReleaseOutside";
+        public static TOUCH_RELEASE_OUTSIDE:string = "touchReleaseOutside";
 
         /**
          * 移动，参考FLash的MouseEvent.MOVE
          * @member ns_egret.TouchEvent.TOUCH_MOVE
          */
-        static TOUCH_ROLL_OUT:string = "touchRollOut";
+        public static TOUCH_ROLL_OUT:string = "touchRollOut";
 
         /**
          * 移动，参考FLash的MouseEvent.MOVE
          * @member ns_egret.TouchEvent.TOUCH_MOVE
          */
-        static TOUCH_ROLL_OVER:string = "touchRollOver";
+        public static TOUCH_ROLL_OVER:string = "touchRollOver";
 
         /**
          * 移动，参考FLash的MouseEvent.MOVE
          */
-        static TOUCH_OUT:string = "touchOut";
+        public static TOUCH_OUT:string = "touchOut";
 
         /**
          * 移动，参考FLash的MouseEvent.MOVE
          * @member ns_egret.TouchEvent.TOUCH_MOVE
          */
-        static TOUCH_OVER:string = "touchOver";
+        public static TOUCH_OVER:string = "touchOver";
 
 
         public _stageX:number = 0;
@@ -154,18 +169,28 @@ module ns_egret {
             super._setCurrentTarget(target);
             if (target instanceof DisplayObject) {
                 var dp:DisplayObject = <DisplayObject> target;
-                var point:Point = dp.globalToLocal(this._stageX, this._stageY);
+                var point:Point = dp.globalToLocal(this._stageX, this._stageY,Point.identity);
                 this._localX = point.x;
                 this._localY = point.y;
             }
         }
 
         /**
-         * 立即刷新屏幕，此方法主要使用在当用户执行拖拽等操作过程中，强制立即刷新屏幕已提高流畅程度。
+         * 使用指定的EventDispatcher对象来抛出Event事件对象。抛出的对象将会缓存在对象池上，供下次循环复用。
+         * @method ns_egret.TouchEvent.dispathTouchEvent
          */
-        public updateAfterEvent():void {
-
+        public static dispatchTouchEvent(target:IEventDispatcher,type:string,touchPointID:number = 0, stageX:number = 0, stageY:number = 0,
+                                         ctrlKey:boolean=false,altKey:boolean=false,shiftKey:boolean=false,touchDown:boolean=false):void{
+            var eventClass:any = TouchEvent;
+            var props:any = Event._getPropertyData(eventClass);
+            props.touchPointID = touchPointID
+            props._stageX = stageX;
+            props._stageY = stageY;
+            props.ctrlKey = ctrlKey;
+            props.altKey = altKey;
+            props.shiftKey = shiftKey;
+            props.touchDown = touchDown;
+            Event._dispatchByTarget(eventClass,target,type,props,true,true);
         }
-
     }
 }

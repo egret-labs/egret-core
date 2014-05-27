@@ -1,53 +1,57 @@
 /**
- * Copyright (c) Egret-Labs.org. Permission is hereby granted, free of charge,
- * to any person obtaining a copy of this software and associated documentation
- * files (the "Software"), to deal in the Software without restriction, including
- * without limitation the rights to use, copy, modify, merge, publish, distribute,
- * sublicense, and/or sell copies of the Software, and to permit persons to whom
- * the Software is furnished to do so, subject to the following conditions:
+ * Copyright (c) 2014,Egret-Labs.org
+ * All rights reserved.
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
  *
- * The above copyright notice and this permission notice shall be included
- * in all copies or substantial portions of the Software.
+ *     * Redistributions of source code must retain the above copyright
+ *       notice, this list of conditions and the following disclaimer.
+ *     * Redistributions in binary form must reproduce the above copyright
+ *       notice, this list of conditions and the following disclaimer in the
+ *       documentation and/or other materials provided with the distribution.
+ *     * Neither the name of the Egret-Labs.org nor the
+ *       names of its contributors may be used to endorse or promote products
+ *       derived from this software without specific prior written permission.
  *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
- * INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR
- * PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE
- * FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
- * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ * THIS SOFTWARE IS PROVIDED BY EGRET-LABS.ORG AND CONTRIBUTORS "AS IS" AND ANY
+ * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL EGRET-LABS.ORG AND CONTRIBUTORS BE LIABLE FOR ANY
+ * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+ * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-/// <reference path="SAXParser.ts"/>
 
-module ns_egret{
+/**
+ <root>
+ <egret>
+ <item>123</item>
+ <item name="yjtx"/>
+ </egret>
+ </root>
+
+ 上面的 字符串 最后解析成 xml文件后，
+ 获取 item数组           xml.egret[0].item;               egret[0] 必须加 [0]
+ 获取 第一个item的123     xml.egret[0].item[0].value;      egret[0] 必须加 [0]
+ 获取 第二个item的yjtx    xml.egret[0].item[1].$name;      egret[0] 必须加 [0]
+ *
+ */
+
+/// <reference path="SAXParser.ts"/>
+/// <reference path="TextureCache.ts"/>
+
+module ns_egret {
     export class XML {
         private _xmlStr = "";
 
         /**
-         * @class ns_egret.XML
-         * @classdesc XML类模拟了ActionScript3.0的E4X的部分语法特性，封装了对XML对象的操作
-         *
-         * @example
-         * <xmp>
-         *  <root>
-         *    <egret>
-         *      <item>123</item>
-         *      <item name="yjtx"/>
-         *    </egret>
-         *  </root>
-         *  </xmp>
-         * xml.egret[0].item;    // [ XML,XML ]
-         * xml.egret[0].item[0].value;  // 123
-         * xml.egret[0].item[1].$name;  // yjtx
-         * @param xmlStr  {string} xml格式的字符串
+         * 必须是 xml格式的字符串
+         * @param xmlStr  xml格式的字符串
          */
-            constructor(xmlStr:string = "") {
-            this._xmlStr = xmlStr;
-            if (xmlStr != "") {
-                var xmlDoc = ns_egret.SAXParser.getInstance().tmxParse(xmlStr, true);
-                if (xmlDoc == null) {
-
-                }
-                this._ansXML(xmlDoc.documentElement);
-            }
+        public constructor() {
         }
 
         /**
@@ -56,30 +60,51 @@ module ns_egret{
          * @private
          */
         public _ansXML(xmlDoc) {
-            if (xmlDoc.childElementCount > 0) {//拥有子 节点
-                for (var i = 0; i < xmlDoc.childElementCount; i++) {
-                    var childXMLDoc = xmlDoc.children[i];
+            var num = 0;
+            if (xmlDoc.childNodes && xmlDoc.childNodes.length > 0) {
+                for (var i = 0; i < xmlDoc.childNodes.length; i++) {
+                    var childXMLDoc = xmlDoc.childNodes[i];
+                    if (childXMLDoc.nodeType == 1) {
+                        var xml = new XML();
+                        xml._ansXML(childXMLDoc);
 
-                    var xml = new XML("");
-                    xml._ansXML(childXMLDoc);
+                        var name = childXMLDoc.nodeName;
+                        if (this[name] == null) {
+                            this[name] = [];
+                        }
+                        this[name].push(xml);
 
-                    var name = childXMLDoc.nodeName;
-                    if (this[name] == null) {
-                        this[name] = [];
+                        num++;
                     }
-                    this[name].push(xml);
                 }
             }
-            else {
+
+            if (num == 0) {
                 this["value"] = xmlDoc.textContent;
             }
 
-            if (xmlDoc.attributes.length > 0) {//拥有 属性
+            if (xmlDoc.attributes && xmlDoc.attributes.length > 0) {//拥有 属性
                 for (var j = 0; j < xmlDoc.attributes.length; j++) {
                     var attr = xmlDoc.attributes[j];
-                    this["$" + attr.name] = attr.value;
+                    this["$" + attr.id] = attr.value;//todo:
+                    this["$" + attr.name] = attr.value;//todo:
                 }
             }
+        }
+
+
+        public static create(url):XML {
+            var xml:XML = new XML();
+            var xmldoc:any;
+            if (ns_egret.SAXParser) {
+                var content = ns_egret.TextureCache.getInstance().getTextData(url);
+                xmldoc = ns_egret.SAXParser.getInstance().tmxParse(content, true).documentElement;
+            }
+            else {
+//                xmldoc = egret_native.EGTXML.readXML(url);
+            }
+            xml._ansXML(xmldoc);
+            return xml;
         }
     }
 }

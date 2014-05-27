@@ -1,0 +1,78 @@
+/**
+ * Copyright (c) 2014,Egret-Labs.org
+ * All rights reserved.
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *
+ *     * Redistributions of source code must retain the above copyright
+ *       notice, this list of conditions and the following disclaimer.
+ *     * Redistributions in binary form must reproduce the above copyright
+ *       notice, this list of conditions and the following disclaimer in the
+ *       documentation and/or other materials provided with the distribution.
+ *     * Neither the name of the Egret-Labs.org nor the
+ *       names of its contributors may be used to endorse or promote products
+ *       derived from this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY EGRET-LABS.ORG AND CONTRIBUTORS "AS IS" AND ANY
+ * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL EGRET-LABS.ORG AND CONTRIBUTORS BE LIABLE FOR ANY
+ * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+ * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
+
+/// <reference path="../../../egret/display/DisplayObjectContainer.ts"/>
+/// <reference path="../../../egret/events/IEventDispatcher.ts"/>
+
+module ns_egret {
+
+	/**
+	 * @class ns_egret.ILayoutManagerClient
+	 * @interface
+	 * @classdesc
+	 * 使用布局管理器的组件接口
+	 * @extends ns_egret.IEventDispatcher
+	 */
+	export interface ILayoutManagerClient extends IEventDispatcher{
+		/**
+		 * 验证组件的属性
+		 * @method ns_egret.ILayoutManagerClient#validateProperties
+		 */		
+		validateProperties():void;
+		/**
+		 * 验证组件的尺寸
+		 * @method ns_egret.ILayoutManagerClient#validateSize
+		 * @param recursive? {boolean} 
+		 */		
+		validateSize(recursive?:boolean):void;
+		/**
+		 * 验证子项的位置和大小，并绘制其他可视内容
+		 * @method ns_egret.ILayoutManagerClient#validateDisplayList
+		 */		
+		validateDisplayList():void;
+		/**
+		 * 在显示列表的嵌套深度
+		 * @member ns_egret.ILayoutManagerClient#nestLevel
+		 */		
+		nestLevel:number;
+		/**
+		 * 是否完成初始化。此标志只能由 LayoutManager 修改。
+		 * @member ns_egret.ILayoutManagerClient#initialized
+		 */		
+		initialized:boolean;
+		/**
+		 * 一个标志，用于确定某个对象是否正在等待分派其updateComplete事件。此标志只能由 LayoutManager 修改。
+		 * @member ns_egret.ILayoutManagerClient#updateCompletePendingFlag
+		 */		
+		updateCompletePendingFlag:boolean;
+		/**
+		 * 父级显示对象
+		 * @member ns_egret.ILayoutManagerClient#parent
+		 */		
+		parent:DisplayObjectContainer;
+	}
+}

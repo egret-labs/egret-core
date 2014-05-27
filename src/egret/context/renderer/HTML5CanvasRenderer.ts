@@ -1,36 +1,51 @@
 /**
- * Copyright (c) Egret-Labs.org. Permission is hereby granted, free of charge,
- * to any person obtaining a copy of this software and associated documentation
- * files (the "Software"), to deal in the Software without restriction, including
- * without limitation the rights to use, copy, modify, merge, publish, distribute,
- * sublicense, and/or sell copies of the Software, and to permit persons to whom
- * the Software is furnished to do so, subject to the following conditions:
+ * Copyright (c) 2014,Egret-Labs.org
+ * All rights reserved.
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
  *
- * The above copyright notice and this permission notice shall be included
- * in all copies or substantial portions of the Software.
+ *     * Redistributions of source code must retain the above copyright
+ *       notice, this list of conditions and the following disclaimer.
+ *     * Redistributions in binary form must reproduce the above copyright
+ *       notice, this list of conditions and the following disclaimer in the
+ *       documentation and/or other materials provided with the distribution.
+ *     * Neither the name of the Egret-Labs.org nor the
+ *       names of its contributors may be used to endorse or promote products
+ *       derived from this software without specific prior written permission.
  *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
- * INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR
- * PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE
- * FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
- * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ * THIS SOFTWARE IS PROVIDED BY EGRET-LABS.ORG AND CONTRIBUTORS "AS IS" AND ANY
+ * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL EGRET-LABS.ORG AND CONTRIBUTORS BE LIABLE FOR ANY
+ * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+ * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+/// <reference path="../MainContext.ts"/>
+/// <reference path="RenderFilter.ts"/>
 /// <reference path="RendererContext.ts"/>
-/// <reference path="../../core/MainContext.ts"/>
-/// <reference path="../../core/RenderFilter.ts"/>
-/// <reference path="../../core/Ticker.ts"/>
-/// <reference path="../../../jslib/DEBUG.d.ts"/>
+/// <reference path="../../display/Texture.ts"/>
 /// <reference path="../../geom/Matrix.ts"/>
-/// <reference path="../../geom/Rectangle.ts"/>
 /// <reference path="../../text/TextField.ts"/>
-/// <reference path="../../texture/Texture.ts"/>
+/// <reference path="../../utils/getTimer.ts"/>
 
 module ns_egret {
+	/**
+	 * @class ns_egret.HTML5CanvasRenderer
+	 * @classdesc
+	 * @extends ns_egret.RendererContext
+	 */
     export class HTML5CanvasRenderer extends RendererContext {
 
         private canvas;
-        private canvasContext;
+		/**
+		 * @member ns_egret.HTML5CanvasRenderer#canvasContext
+		 */
+        public canvasContext;
 
         private _matrixA:number;
         private _matrixB:number;
@@ -39,8 +54,10 @@ module ns_egret {
         private _matrixTx:number;
         private _matrixTy:number;
 
-        private _transformTx:number;
-        private _transformTy:number;
+        public _transformTx:number;
+        public _transformTy:number;
+
+        private blendValue:string;
 
         constructor(canvas) {
             this.canvas = canvas;
@@ -87,16 +104,16 @@ module ns_egret {
             sourceY = sourceY / ns_egret.MainContext.instance.rendererContext.texture_scale_factor;
             sourceWidth = sourceWidth / ns_egret.MainContext.instance.rendererContext.texture_scale_factor;
             sourceHeight = sourceHeight / ns_egret.MainContext.instance.rendererContext.texture_scale_factor;
-            if (DEBUG && DEBUG.DRAW_IMAGE) {
-                DEBUG.checkDrawImage(texture, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight);
-            }
+//            if (DEBUG && DEBUG.DRAW_IMAGE) {
+//                DEBUG.checkDrawImage(texture, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight);
+//            }
             var image = texture._bitmapData;
-            var beforeDraw = ns_egret.Ticker.now();
             destX += this._transformTx;
             destY += this._transformTy;
+            var beforeDraw = ns_egret.getTimer();
             this.canvasContext.drawImage(image, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight);
             super.drawImage(image, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight);
-            this.renderCost += ns_egret.Ticker.now() - beforeDraw;
+            this.renderCost += ns_egret.getTimer() - beforeDraw;
         }
 
         setTransform(matrix:ns_egret.Matrix) {
@@ -125,27 +142,30 @@ module ns_egret {
             this.canvasContext.setTransform(1,0,0,1,0,0);
         }
 
+
         setAlpha(alpha:number, blendMode:ns_egret.BlendMode) {
             if (alpha != this.canvasContext.globalAlpha) {
                 this.canvasContext.globalAlpha = alpha;
             }
             if (blendMode) {
+                this.blendValue = blendMode.value;
                 this.canvasContext.globalCompositeOperation = blendMode.value;
             }
-            else {
+            else if(this.blendValue != ns_egret.BlendMode.NORMAL.value){
+                this.blendValue = ns_egret.BlendMode.NORMAL.value;
                 this.canvasContext.globalCompositeOperation = ns_egret.BlendMode.NORMAL.value;
             }
         }
 
-        setupFont(font:string, textAlign:string, textBaseline:string) {
+        setupFont(textField:TextField):void {
             var ctx = this.canvasContext;
-            ctx.font = font;
-            ctx.textAlign = textAlign || "left";
-            ctx.textBaseline = textBaseline || "top";
+            ctx.font = textField.size + "px " + textField.fontFamily;
+            ctx.textAlign = textField.textAlign || "left";
+            ctx.textBaseline = textField.textBaseline || "top";
         }
 
 
-        measureText(text):number {
+        measureText(text:string):number {
             var result = this.canvasContext.measureText(text);
             return result.width;
         }

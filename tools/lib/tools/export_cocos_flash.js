@@ -24,20 +24,22 @@ var plist = require('../core/plist');
 var totalData = {};
 var sourceArr = [];
     
+var sourceFile;
+
 function run(currDir, args, opts) {
-    var ccbFilePath = args[0];
-    if (!ccbFilePath) {
+    sourceFile = args[0];
+    if (!sourceFile) {
         console.log("missing arguments .ccb file");
         return;
     }
 
-    var stat = fs.existsSync(ccbFilePath);
+    var stat = fs.existsSync(sourceFile);
     if (!stat) {
         console.log("can't open .ccb file");
         return;
     }
 
-    var config = plist.parseFileSync(ccbFilePath);
+    var config = plist.parseFileSync(sourceFile);
 
     linkChildren(config.nodeGraph);
 }
@@ -52,13 +54,18 @@ function linkChildren(rootNode) {
         data.y = 0;
         data.anchorX = 0;
         data.anchorY = 0;
+        checkProperties(data);
         viewData[linkName] = data;
     });
 
+
     //最后 输出的格式
     var rootData = {"viewData" : viewData, "resourceData" : sourceArr};
-    console.log ("输出ViewData文件:\n");
-    console.log(JSON.stringify(rootData, null, ""));
+
+    console.log("jmc生成完毕！");
+
+    var saveFile = sourceFile.replace(".ccb", ".jmc");
+    fs.writeFile(saveFile, JSON.stringify(rootData, null, ""));
 }
 
 function loop(container, parent, parentData) {
@@ -103,6 +110,7 @@ function build(data, parent) {
             name = "BitmapText";
             break;
         case "CCLayer":
+        case "CCLayerColor":
         case "CCNode":
             if (data.memberVarAssignmentName.match(/Btn$/)) {
                 name = "SimpleButton";
@@ -234,13 +242,16 @@ function build(data, parent) {
                 builder.withText(propertyValue);
                 break;
             case "fntFile":
-                builder.withTexture(propertyValue.replace(".fnt", ".png"));
+                builder.withTexture(propertyValue);
                 break;
             case "tag":
                 builder.withTag(propertyValue);
                 break;
             case "visible":
                 builder.withVisible(propertyValue);
+                break;
+            case "rotation":
+                builder.withProperty("rotation", propertyValue);
                 break;
             case "insetTop":
                 builder.withProperty("top", propertyValue);
@@ -264,10 +275,73 @@ function build(data, parent) {
         }
 
     }
+    checkProperties(builder.data);
     return builder.data;
 ////    builder.withPosition(data.properties.x,data.properties.y);
 }
 
+
+function checkProperties(data) {
+    var properties = ["name", "class", "children", "x", "y", "width", "height", "anchorX", "anchorY", "visible", "alpha", "scaleX", "scaleY", "rotation"];
+
+    switch (data.class) {
+        case "DisplayObjectContainer":
+        case "SimpleButton":
+            deleteExtraProperties(data, properties);
+            break;
+        case "Bitmap":
+            properties = properties.concat(["texturePath", "frame"]);
+            deleteExtraProperties(data, properties);
+            break;
+        case "BitmapText":
+            properties = properties.concat(["configPath", "frame", "text"]);
+            deleteExtraProperties(data, properties);
+            break;
+
+    }
+
+    if (data["x"] == 0) {
+        delete(data["x"]);
+    }
+    if (data["y"] == 0) {
+        delete(data["y"]);
+    }
+    if (data["width"] == 0) {
+        delete(data["width"]);
+    }
+    if (data["height"] == 0) {
+        delete(data["height"]);
+    }
+    if (data["anchorX"] == 0) {
+        delete(data["anchorX"]);
+    }
+    if (data["anchorY"] == 0) {
+        delete(data["anchorY"]);
+    }
+    if (data["rotation"] == 0) {
+        delete(data["rotation"]);
+    }
+    if (data["visible"] == true) {
+        delete(data["visible"]);
+    }
+    if (data["alpha"] == 1) {
+        delete(data["alpha"]);
+    }
+    if (data["scaleX"] == 1) {
+        delete(data["scaleX"]);
+    }
+    if (data["scaleY"] == 1) {
+        delete(data["scaleY"]);
+    }
+}
+
+function deleteExtraProperties(data, properties) {
+    for (var key in data) {
+        if (properties.indexOf(key) < 0) {
+            delete(data[key]);
+        }
+    }
+}
 
 function getProperty(data, propertyName) {
     for (var childPropertyConfigKey in data.properties) {
@@ -305,26 +379,37 @@ function ConfigBuilder() {
     }
 
     this.withPosition = function (x, y) {
-        this.data.x = Number(x);
-        this.data.y = Number(y);
+        this.data.x = Number(x.toFixed(2));
+        this.data.y = Number(y.toFixed(2));
         return this;
     }
 
     this.withScale = function (scaleX, scaleY) {
         if (scaleX != 1) {
-            this.data.scaleX = Number(scaleX);
+            this.data.scaleX = Number(scaleX.toFixed(2));
         }
         if (scaleY != 1) {
-            this.data.scaleY = Number(scaleY);
+            this.data.scaleY = Number(scaleY.toFixed(2));
         }
         return this;
     }
 
     this.withTexture = function (texturePath) {
-        this.data.texturePath = texturePath;
-        if (sourceArr.indexOf(texturePath) < 0) {
-            sourceArr.push(texturePath);
+        if (texturePath.lastIndexOf(".fnt") >= 0) {//字体
+            this.data.configPath = texturePath.replace(".fnt", ".jfnt");
+
+            if (sourceArr.indexOf(this.data.configPath) < 0) {
+                sourceArr.push(this.data.configPath);
+            }
         }
+        else {//图片
+            this.data.texturePath = texturePath;
+
+            if (sourceArr.indexOf(this.data.texturePath) < 0) {
+                sourceArr.push(this.data.texturePath);
+            }
+        }
+
         return this;
     }
 
@@ -347,7 +432,7 @@ function ConfigBuilder() {
     }
 
     this.withFontName = function (name) {
-        this.data.font = name;
+        this.data.fontFamily = name;
     }
 
     this.withFontSize = function (size) {
@@ -355,6 +440,7 @@ function ConfigBuilder() {
     }
 
     this.withFontColor = function (r, g, b) {
+
         r = r.toString(16);
         if(r.length == 1)
         {
@@ -370,7 +456,7 @@ function ConfigBuilder() {
         {
             b = "0" + b;
         }
-        this.data.textColor = "#" + r + "" + g + "" + b;
+        this.data.textColor = parseInt("0x" + r + "" + g + "" + b);
     }
 
     this.withHorizontalAlignment = function (dirt) {

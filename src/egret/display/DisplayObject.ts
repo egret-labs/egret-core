@@ -1,37 +1,48 @@
 /**
- * Copyright (c) Egret-Labs.org. Permission is hereby granted, free of charge,
- * to any person obtaining a copy of this software and associated documentation
- * files (the "Software"), to deal in the Software without restriction, including
- * without limitation the rights to use, copy, modify, merge, publish, distribute,
- * sublicense, and/or sell copies of the Software, and to permit persons to whom
- * the Software is furnished to do so, subject to the following conditions:
+ * Copyright (c) 2014,Egret-Labs.org
+ * All rights reserved.
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
  *
- * The above copyright notice and this permission notice shall be included
- * in all copies or substantial portions of the Software.
+ *     * Redistributions of source code must retain the above copyright
+ *       notice, this list of conditions and the following disclaimer.
+ *     * Redistributions in binary form must reproduce the above copyright
+ *       notice, this list of conditions and the following disclaimer in the
+ *       documentation and/or other materials provided with the distribution.
+ *     * Neither the name of the Egret-Labs.org nor the
+ *       names of its contributors may be used to endorse or promote products
+ *       derived from this software without specific prior written permission.
  *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
- * INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR
- * PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE
- * FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
- * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ * THIS SOFTWARE IS PROVIDED BY EGRET-LABS.ORG AND CONTRIBUTORS "AS IS" AND ANY
+ * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL EGRET-LABS.ORG AND CONTRIBUTORS BE LIABLE FOR ANY
+ * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+ * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+/// <reference path="../context/MainContext.ts"/>
+/// <reference path="../context/renderer/RenderFilter.ts"/>
 /// <reference path="../context/renderer/RendererContext.ts"/>
-/// <reference path="../core/Logger.ts"/>
-/// <reference path="../core/MainContext.ts"/>
-/// <reference path="../core/RenderFilter.ts"/>
 /// <reference path="DisplayObjectContainer.ts"/>
+/// <reference path="RenderTexture.ts"/>
 /// <reference path="Stage.ts"/>
+/// <reference path="Texture.ts"/>
 /// <reference path="../events/Event.ts"/>
 /// <reference path="../events/EventDispatcher.ts"/>
 /// <reference path="../geom/Matrix.ts"/>
 /// <reference path="../geom/Point.ts"/>
 /// <reference path="../geom/Rectangle.ts"/>
-/// <reference path="../texture/Texture.ts"/>
+/// <reference path="../../jslib/NumberUtils.ts"/>
 
 module ns_egret {
     /**
      * @class ns_egret.DisplayObject
+     * @extends ns_egret.EventDispatcher
      * @classdesc 类是可放在显示列表中的所有对象的基类。该显示列表管理运行时显示的所有对象。使用 DisplayObjectContainer 类排列显示列表中的显示对象。
      *
      * DisplayObjectContainer 对象可以有子显示对象，而其他显示对象是“叶”节点，只有父级和同级，没有子级。
@@ -43,20 +54,32 @@ module ns_egret {
      * 若只有一个目标，则会将事件侦听器限制为只能放置到该目标上（在某些情况下，可放置到显示列表中该目标的祖代上），这意味着您可以向任何 DisplayObject 实例添加侦听器来侦听广播事件。
      *
      * 任何继承自DisplayObject的类都必须实现以下方法
-     * render();
+     * _render();
      * _measureBounds()
      * 不允许重写以下方法
-     * draw();
+     * _draw();
      * getBounds();
+     *
      */
     export class DisplayObject extends EventDispatcher implements RenderData {
+
+        public constructor() {
+            super();
+            this.worldTransform = new ns_egret.Matrix();
+            this.worldBounds = new ns_egret.Rectangle(0, 0, 0, 0);
+            this._cacheBounds = new ns_egret.Rectangle(0, 0, 0, 0);
+        }
 
         public name:string;
 
         public _texture_to_render:Texture;
 
-        private _parent:DisplayObjectContainer = null;
+        public _parent:DisplayObjectContainer = null;
 
+        /**
+         * 11111
+         * @event ns_egret.Event.event:ADDED_TO_STAGE
+         */
         private _cacheAsBitmap:boolean = false;
 
         /**
@@ -74,7 +97,7 @@ module ns_egret {
             this._parent = parent;
         }
 
-        public _x:number;
+        public _x:number = 0;
 
         /**
          * 表示 DisplayObject 实例相对于父级 DisplayObjectContainer 本地坐标的 x 坐标。
@@ -85,11 +108,13 @@ module ns_egret {
         }
 
         public set x(value:number) {
-            this._x = value;
+            if (NumberUtils.isNumber(value)) {
+                this._x = value;
+            }
         }
 
 
-        public _y:number;
+        public _y:number = 0;
 
         /**
          * 表示 DisplayObject 实例相对于父级 DisplayObjectContainer 本地坐标的 y 坐标。
@@ -100,7 +125,9 @@ module ns_egret {
         }
 
         public set y(value:number) {
-            this._y = value;
+            if (NumberUtils.isNumber(value)) {
+                this._y = value;
+            }
         }
 
         /**
@@ -115,7 +142,9 @@ module ns_egret {
         }
 
         public set scaleX(value:number) {
-            this._scaleX = value;
+            if (NumberUtils.isNumber(value)) {
+                this._scaleX = value;
+            }
         }
 
         /**
@@ -130,48 +159,151 @@ module ns_egret {
         }
 
         public set scaleY(value:number) {
-            this._scaleY = value;
+            if (NumberUtils.isNumber(value)) {
+                this._scaleY = value;
+            }
         }
 
-        public anchorPointX:number = 0;
+        /**
+         * 表示从对象绝对锚点X。
+         * @member {number} ns_egret.DisplayObject#anchorOffsetX
+         * @default 0
+         */
+        public _anchorOffsetX:number = 0;
 
-        public anchorPointY:number = 0;
+        public get anchorOffsetX():number {
+            return this._anchorOffsetX;
+        }
 
-        public relativeAnchorPointX:number = 0;
+        public set anchorOffsetX(value:number) {
+            if (NumberUtils.isNumber(value)) {
+                this._anchorOffsetX = value;
+            }
+        }
 
-        public relativeAnchorPointY:number = 0;
+        /**
+         * 表示从对象绝对锚点Y。
+         * @member {number} ns_egret.DisplayObject#anchorOffsetY
+         * @default 0
+         */
+        public _anchorOffsetY:number = 0;
+
+        public get anchorOffsetY():number {
+            return this._anchorOffsetY;
+        }
+
+        public set anchorOffsetY(value:number) {
+            if (NumberUtils.isNumber(value)) {
+                this._anchorOffsetY = value;
+            }
+        }
+
+        /**
+         * 表示从对象相对锚点X。
+         * @member {number} ns_egret.DisplayObject#anchorX
+         * @default 0
+         */
+        public _anchorX:number = 0;
+
+        public get anchorX():number {
+            return this._anchorX;
+        }
+
+        public set anchorX(value:number) {
+            if (NumberUtils.isNumber(value)) {
+                this._anchorX = value;
+            }
+        }
+
+        /**
+         * 表示从对象相对锚点Y。
+         * @member {number} ns_egret.DisplayObject#anchorY
+         * @default 0
+         */
+        public _anchorY:number = 0;
+
+        public get anchorY():number {
+            return this._anchorY;
+        }
+
+        public set anchorY(value:number) {
+            if (NumberUtils.isNumber(value)) {
+                this._anchorY = value;
+            }
+        }
 
         /**
          * 显示对象是否可见。
          * @member {boolean} ns_egret.DisplayObject#x
          */
-        public visible:boolean;
+        public visible:boolean = true;
         /**
          * 表示 DisplayObject 实例距其原始方向的旋转程度，以度为单位
          * @member {number} ns_egret.DisplayObject#rotation
          * @default 0
          */
-        public rotation:number = 0;
+        public _rotation:number = 0;
+
+        public get rotation():number {
+            return this._rotation;
+        }
+
+        public set rotation(value:number) {
+            if (NumberUtils.isNumber(value)) {
+                this._rotation = value;
+            }
+        }
+
         /**
          * 表示指定对象的 Alpha 透明度值
          * @member {number} ns_egret.DisplayObject#alpha
          *  @default 1
          */
-        public alpha:number = 1;
+        public _alpha:number = 1;
+
+        public get alpha():number {
+            return this._alpha;
+        }
+
+        public set alpha(value:number) {
+            if (NumberUtils.isNumber(value)) {
+                this._alpha = value;
+            }
+        }
 
         /**
          * 表示DisplayObject的x方向斜切
          * @member {number} ns_egret.DisplayObject#skewX
          * @default 0
          */
-        public skewX:number = 0;
+        private _skewX:number = 0;
+
+        public get skewX():number {
+            return this._skewX;
+        }
+
+        public set skewX(value:number) {
+            if (NumberUtils.isNumber(value)) {
+                this._skewX = value;
+            }
+        }
 
         /**
          * 表示DisplayObject的y方向斜切
          * @member {number} ns_egret.DisplayObject#skewY
          * @default 0
          */
-        public skewY:number = 0;
+        private _skewY:number = 0;
+
+        public get skewY():number {
+            return this._skewY;
+        }
+
+        public set skewY(value:number) {
+            if (NumberUtils.isNumber(value)) {
+                this._skewY = value;
+            }
+        }
 
         public _touchEnabled:boolean;
         /**
@@ -179,10 +311,11 @@ module ns_egret {
          * @member {boolean} ns_egret.DisplayObject#touchEnabled
          * @default true
          */
-        public get touchEnabled():boolean{
+        public get touchEnabled():boolean {
             return this._touchEnabled;
         }
-        public set touchEnabled(value:boolean){
+
+        public set touchEnabled(value:boolean) {
             this._touchEnabled = value;
         }
 
@@ -191,11 +324,13 @@ module ns_egret {
         public _scrollRect:Rectangle;
         /**
          * 显示对象的滚动矩形范围。显示对象被裁切为矩形定义的大小，当您更改 scrollRect 对象的 x 和 y 属性时，它会在矩形内滚动。
+         *  @member {ns_egret.Rectangle} ns_egret.DisplayObject#scrollRect
          */
-        public get scrollRect():Rectangle{
+        public get scrollRect():Rectangle {
             return this._scrollRect;
         }
-        public set scrollRect(value:Rectangle){
+
+        public set scrollRect(value:Rectangle) {
             this._scrollRect = value;
         }
 
@@ -239,7 +374,7 @@ module ns_egret {
          * @returns {number}
          */
         public get width():number {
-            return this.getBounds().width;
+            return this.getBounds(Rectangle.identity).width;
         }
 
         /**
@@ -247,24 +382,43 @@ module ns_egret {
          * @returns {number}
          */
         public get height():number {
-            return this.getBounds().height;
+            return this.getBounds(Rectangle.identity).height;
         }
+
+        private _hasWidthSet:Boolean = false;
 
         /**
          * 显式设置宽度
          * @param value
          */
         public set width(value:number) {
-            this._explicitWidth = value;
+            this._setWidth(value);
         }
 
+        /**
+         * @inheritDoc
+         */
+        public _setWidth(value:number):void{
+            this._explicitWidth = value;
+            this._hasWidthSet = NumberUtils.isNumber(value);
+        }
+
+        private _hasHeightSet:Boolean = false;
 
         /**
          * 显式设置高度
          * @param value
          */
         public set height(value:number) {
+            this._setHeight(value);
+        }
+
+        /**
+         * @inheritDoc
+         */
+        public _setHeight(value:number):void{
             this._explicitHeight = value;
+            this._hasHeightSet = NumberUtils.isNumber(value);
         }
 
         /**
@@ -274,46 +428,40 @@ module ns_egret {
 
         public worldTransform:ns_egret.Matrix;
         public worldBounds:ns_egret.Rectangle;
-        public worldAlpha:number;
+        public worldAlpha:number = 1;
 
-
-        constructor() {
-            super();
-            this.x = this.y = 0;
-            this.visible = true;
-            this.worldTransform = new ns_egret.Matrix();
-            this.worldBounds = new ns_egret.Rectangle(0, 0, 0, 0);
-            this.worldAlpha = 1;
-        }
 
         /**
          * @private
          * @param renderContext
          */
-        public draw(renderContext:RendererContext) {
+        public _draw(renderContext:RendererContext):void {
             if (!this.visible) {
+                this.destroyCacheBounds();
                 return;
             }
             var hasDrawCache = this.drawCacheTexture(renderContext);
             if (hasDrawCache) {
+                this.destroyCacheBounds();
                 return;
             }
             var o = this;
             renderContext.setAlpha(o.worldAlpha, o.blendMode);
             renderContext.setTransform(o.worldTransform);
-            if (o.mask || o.scrollRect) {
+            if (o.mask || o._scrollRect) {
                 renderContext.save();
-                if (o.scrollRect) {
-                    renderContext.clip(o.scrollRect.x, o.scrollRect.y, o.scrollRect.width, o.scrollRect.height);
+                if (o._scrollRect) {
+                    renderContext.clip(o._scrollRect.x, o._scrollRect.y, o._scrollRect.width, o._scrollRect.height);
                 }
                 else {
                     renderContext.clip(o.mask.x, o.mask.y, o.mask.width, o.mask.height);
                 }
             }
-            this.render(renderContext);
-            if (o.mask || o.scrollRect) {
+            this._render(renderContext);
+            if (o.mask || o._scrollRect) {
                 renderContext.restore();
             }
+            this.destroyCacheBounds();
         }
 
 
@@ -321,11 +469,11 @@ module ns_egret {
             var display:ns_egret.DisplayObject = this;
             if (display._cacheAsBitmap) {
                 var renderTexture = display._texture_to_render;
-                var offsetX = renderTexture.offsetX;
-                var offsetY = renderTexture.offsetY;
+                var offsetX = renderTexture._offsetX;
+                var offsetY = renderTexture._offsetY;
                 var width = renderTexture._textureWidth;
                 var height = renderTexture._textureHeight;
-                display.updateTransform();
+                display._updateTransform();
                 renderContext.setAlpha(display.worldAlpha, display.blendMode);
                 renderContext.setTransform(display.worldTransform);
                 if (display.mask) {
@@ -350,59 +498,76 @@ module ns_egret {
          * @private
          * @param renderContext
          */
-        public updateTransform() {
+        public _updateTransform():void {
             var o = this;
             o.worldTransform.identity();
-            o.worldTransform = o.worldTransform.appendMatrix(o.parent.worldTransform);
+            o.worldTransform = o.worldTransform.appendMatrix(o._parent.worldTransform);
             var anchorX, anchorY;
-            if (o.relativeAnchorPointX != 0 || o.relativeAnchorPointY != 0) {
-                var bounds = o.getBounds();
-                anchorX = bounds.width * o.relativeAnchorPointX;
-                anchorY = bounds.height * o.relativeAnchorPointY;
+            if (o._anchorX != 0 || o._anchorY != 0) {
+                var bounds = o.getBounds(Rectangle.identity);
+                anchorX = bounds.width * o._anchorX;
+                anchorY = bounds.height * o._anchorY;
             }
             else {
-                anchorX = o.anchorPointX;
-                anchorY = o.anchorPointY;
+                anchorX = o._anchorOffsetX;
+                anchorY = o._anchorOffsetY;
             }
-            o.worldTransform.appendTransform(o.x, o.y, o.scaleX, o.scaleY, o.rotation,
-                o.skewX, o.skewY, anchorX, anchorY);
-            if (o.scrollRect) {
-                o.worldTransform.append(1, 0, 0, 1, -o.scrollRect.x, -o.scrollRect.y);
+            o.worldTransform.appendTransform(o._x, o._y, o._scaleX, o._scaleY, o._rotation,
+                o._skewX, o._skewY, anchorX, anchorY);
+            if (o._scrollRect) {
+                o.worldTransform.append(1, 0, 0, 1, -o._scrollRect.x, -o._scrollRect.y);
             }
-            var bounds:ns_egret.Rectangle = DisplayObject.getTransformBounds(o.getBounds(), o.worldTransform);
+            var bounds:ns_egret.Rectangle = DisplayObject.getTransformBounds(o.getBounds(Rectangle.identity), o.worldTransform);
             o.worldBounds.initialize(bounds.x, bounds.y, bounds.width, bounds.height);
-            o.worldAlpha = o.parent.worldAlpha * o.alpha;
+            o.worldAlpha = o._parent.worldAlpha * o._alpha;
         }
 
         /**
          * @private
          * @param renderContext
          */
-        public render(renderContext:RendererContext) {
+        public _render(renderContext:RendererContext):void {
 
         }
 
+        private _cacheBounds:ns_egret.Rectangle;
+
         /**
          * 获取显示对象的测量边界
+         * @method ns_egret.DisplayObject#getBounds
+         * @param resultRect {Rectangle} 可选参数，传入用于保存结果的Rectangle对象，避免重复创建对象。
          * @returns {Rectangle}
          */
-        public getBounds() {
-            var rect:Rectangle = this._measureBounds();
-            var heightSet:boolean = !isNaN(this._explicitHeight);
-            var w:number = isNaN(this._explicitWidth) ? rect.width : this._explicitWidth;
-            var h:number = isNaN(this._explicitHeight) ? rect.height : this._explicitHeight;
-            var x:number = rect.x;
-            var y:number = rect.y;
-            var anchorX, anchorY;
-            if (this.relativeAnchorPointX != 0 || this.relativeAnchorPointY != 0) {
-                anchorX = w * this.relativeAnchorPointX;
-                anchorY = h * this.relativeAnchorPointY;
+        public getBounds(resultRect?:Rectangle):ns_egret.Rectangle {
+            if (this._cacheBounds.x == 0 && this._cacheBounds.y == 0 && this._cacheBounds.width == 0 && this._cacheBounds.height == 0) {
+                var rect:Rectangle = this._measureBounds();
+                var w:number = this._hasWidthSet ? this._explicitWidth : rect.width;
+                var h:number = this._hasHeightSet ? this._explicitHeight : rect.height;
+                var x:number = rect.x;
+                var y:number = rect.y;
+                var anchorX, anchorY;
+                if (this._anchorX != 0 || this._anchorY != 0) {
+                    anchorX = w * this._anchorX;
+                    anchorY = h * this._anchorY;
+                }
+                else {
+                    anchorX = this._anchorOffsetX;
+                    anchorY = this._anchorOffsetY;
+                }
+                this._cacheBounds.initialize(x - anchorX, y - anchorY, w, h);
             }
-            else {
-                anchorX = this.anchorPointX;
-                anchorY = this.anchorPointY;
+            var result:ns_egret.Rectangle = this._cacheBounds;
+            if(!resultRect){
+                resultRect = new Rectangle();
             }
-            return Rectangle.identity.initialize(x - anchorX, y - anchorY, w, h);
+            return resultRect.initialize(result.x, result.y, result.width, result.height);
+        }
+
+        private destroyCacheBounds():void {
+            this._cacheBounds.x = 0;
+            this._cacheBounds.y = 0;
+            this._cacheBounds.width = 0;
+            this._cacheBounds.height = 0;
         }
 
         /**
@@ -410,17 +575,18 @@ module ns_egret {
          * @returns {Matrix}
          */
         private static identityMatrixForGetConcatenated = new Matrix();
-        public getConcatenatedMatrix() {
+
+        public _getConcatenatedMatrix():ns_egret.Matrix {
             var matrix = DisplayObject.identityMatrixForGetConcatenated.identity();
             var o = this;
             while (o != null) {
-                if (o.relativeAnchorPointX != 0 || o.relativeAnchorPointY != 0) {
-                    var bounds = o.getBounds();
+                if (o.anchorX != 0 || o.anchorY != 0) {
+                    var bounds = o.getBounds(Rectangle.identity);
                     matrix.prependTransform(o.x, o.y, o.scaleX, o.scaleY, o.rotation, o.skewX, o.skewY,
-                        bounds.width * o.relativeAnchorPointX, bounds.height * o.relativeAnchorPointY);
+                            bounds.width * o.anchorX, bounds.height * o.anchorY);
                 }
                 else {
-                    matrix.prependTransform(o.x, o.y, o.scaleX, o.scaleY, o.rotation, o.skewX, o.skewY, o.anchorPointX, o.anchorPointY);
+                    matrix.prependTransform(o.x, o.y, o.scaleX, o.scaleY, o.rotation, o.skewX, o.skewY, o.anchorOffsetX, o.anchorOffsetY);
                 }
                 o = o.parent;
             }
@@ -429,48 +595,61 @@ module ns_egret {
 
         /**
          * 将 point 对象从显示对象的（本地）坐标转换为舞台（全局）坐标。
+         * @method ns_egret.DisplayObject#localToGlobal
+         * @param x {number} 本地x坐标
+         * @param y {number} 本地y坐标
+         * @param resultPoint {Point} 可选参数，传入用于保存结果的Point对象，避免重复创建对象。
          * @returns {ns_egret.Point}
          */
-        public localToGlobal(x = 0, y = 0):ns_egret.Point {
-            var mtx = this.getConcatenatedMatrix();
+        public localToGlobal(x:number = 0, y:number = 0,resultPoint?:Point):Point {
+            var mtx = this._getConcatenatedMatrix();
             mtx.append(1, 0, 0, 1, x, y);
-            var result = Point.identity;
-            result.x = mtx.tx;
-            result.y = mtx.ty;
-            return result;
+            if(!resultPoint){
+                resultPoint = new Point();
+            }
+            resultPoint.x = mtx.tx;
+            resultPoint.y = mtx.ty;
+            return resultPoint;
         }
 
         /**
-         * 将 point 对象从舞台（全局坐标转换为显示对象（本地）坐标。
+         * 将指定舞台坐标（全局）转换为显示对象（本地）坐标。
+         * @method ns_egret.DisplayObject#globalToLocal
+         * @param x {number} 全局x坐标
+         * @param y {number} 全局y坐标
+         * @param resultPoint {Point} 可选参数，传入用于保存结果的Point对象，避免重复创建对象。
          * @returns {ns_egret.Point}
          */
-        public globalToLocal(x:number = 0, y:number = 0):Point {
-            var mtx = this.getConcatenatedMatrix();
+        public globalToLocal(x:number = 0, y:number = 0,resultPoint?:Point):Point {
+            var mtx = this._getConcatenatedMatrix();
             mtx.invert();
             mtx.append(1, 0, 0, 1, x, y);
-            var result = Point.identity;
-            result.x = mtx.tx;
-            result.y = mtx.ty;
-            return result;
+            if(!resultPoint){
+                resultPoint = new Point();
+            }
+            resultPoint.x = mtx.tx;
+            resultPoint.y = mtx.ty;
+            return resultPoint;
         }
 
         /**
          * 检测指定坐标是否在显示对象内
-         * @param x
-         * @param y
+         * @method ns_egret.DisplayObject#hitTest
+         * @param x {number}
+         * @param y {number}
          * @param ignoreTouchEnabled 是否忽略TouchEnabled
          * @returns {*}
          */
-        public hitTest(x, y, ignoreTouchEnabled:boolean = false) {
-            if (!this.visible || (!ignoreTouchEnabled && !this.touchEnabled)) {
+        public hitTest(x:number, y:number, ignoreTouchEnabled:boolean = false):DisplayObject {
+            if (!this.visible || (!ignoreTouchEnabled && !this._touchEnabled)) {
                 return null;
             }
-            var bound:Rectangle = this.getBounds();
+            var bound:Rectangle = this.getBounds(Rectangle.identity);
             if (0 < x && x < bound.width && 0 < y && y < bound.height) {
-                if (this.mask || this.scrollRect) {
-                    if (this.scrollRect
-                        && x < this.scrollRect.width
-                        && y < this.scrollRect.height) {
+                if (this.mask || this._scrollRect) {
+                    if (this._scrollRect
+                        && x < this._scrollRect.width
+                        && y < this._scrollRect.height) {
                         return this;
                     }
                     else if (this.mask
@@ -490,7 +669,7 @@ module ns_egret {
         }
 
 
-        public getMatrix() {
+        public _getMatrix():ns_egret.Matrix {
             return Matrix.identity.identity().appendTransformFromDisplay(this);
         }
 
@@ -503,19 +682,14 @@ module ns_egret {
             return ns_egret.Rectangle.identity.initialize(0, 0, 0, 0);
         }
 
-        public setAnchorPoint(x:number, y:number) {
-            this.anchorPointX = x;
-            this.anchorPointY = y;
-        }
-
-        public getOffsetPoint() {
+        public _getOffsetPoint():ns_egret.Point {
             var o = this;
-            var regX = o.anchorPointX;
-            var regY = o.anchorPointY;
-            if (o.relativeAnchorPointX != 0 || o.relativeAnchorPointY != 0) {
-                var bounds = o.getBounds();
-                regX = o.relativeAnchorPointX * bounds.width;
-                regY = o.relativeAnchorPointY * bounds.height;
+            var regX = o.anchorOffsetX;
+            var regY = o.anchorOffsetY;
+            if (o.anchorX != 0 || o.anchorY != 0) {
+                var bounds = o.getBounds(Rectangle.identity);
+                regX = o.anchorX * bounds.width;
+                regY = o.anchorY * bounds.height;
             }
             var result = Point.identity;
             result.x = regX;
@@ -535,6 +709,10 @@ module ns_egret {
 
         public _stage:Stage;
 
+        /**
+         * 获取舞台对象。当该显示对象不在舞台上时，此属性返回 undefined
+         * @returns {ns_egret.Stage}
+         */
         public get stage():Stage {
             return this._stage;
         }
@@ -616,7 +794,7 @@ module ns_egret {
             }
         }
 
-        static getTransformBounds(bounds:ns_egret.Rectangle, mtx:ns_egret.Matrix) {
+        public static getTransformBounds(bounds:ns_egret.Rectangle, mtx:ns_egret.Matrix):ns_egret.Rectangle {
             var x = bounds.x, y = bounds.y, width = bounds.width, height = bounds.height;
 
 //            if (x || y) {

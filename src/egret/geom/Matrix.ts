@@ -1,38 +1,68 @@
 /**
- * Copyright (c) Egret-Labs.org. Permission is hereby granted, free of charge,
- * to any person obtaining a copy of this software and associated documentation
- * files (the "Software"), to deal in the Software without restriction, including
- * without limitation the rights to use, copy, modify, merge, publish, distribute,
- * sublicense, and/or sell copies of the Software, and to permit persons to whom
- * the Software is furnished to do so, subject to the following conditions:
+ * Copyright (c) 2014,Egret-Labs.org
+ * All rights reserved.
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
  *
- * The above copyright notice and this permission notice shall be included
- * in all copies or substantial portions of the Software.
+ *     * Redistributions of source code must retain the above copyright
+ *       notice, this list of conditions and the following disclaimer.
+ *     * Redistributions in binary form must reproduce the above copyright
+ *       notice, this list of conditions and the following disclaimer in the
+ *       documentation and/or other materials provided with the distribution.
+ *     * Neither the name of the Egret-Labs.org nor the
+ *       names of its contributors may be used to endorse or promote products
+ *       derived from this software without specific prior written permission.
  *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
- * INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR
- * PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE
- * FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
- * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ * THIS SOFTWARE IS PROVIDED BY EGRET-LABS.ORG AND CONTRIBUTORS "AS IS" AND ANY
+ * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL EGRET-LABS.ORG AND CONTRIBUTORS BE LIABLE FOR ANY
+ * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+ * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
 /// <reference path="../display/DisplayObject.ts"/>
 /// <reference path="Point.ts"/>
+/// <reference path="Rectangle.ts"/>
+/// <reference path="../utils/HashObject.ts"/>
 
 module ns_egret {
     /**
+	 * @class ns_egret.Matrix
+	 * @classdesc
      * 2D矩阵类，包括常见矩阵算法
+	 * @extends ns_egret.HashObject
      */
-    export class Matrix {
+    export class Matrix extends HashObject{
+		/**
+		 * @constructor
+		 * @param public a {any} 
+		 * @param public b {any} 
+		 * @param public c {any} 
+		 * @param public d {any} 
+		 * @param public tx {any} 
+		 * @param public ty {any} 
+		 */
         constructor(public a = 1, public b = 0, public c = 0, public d = 1, public tx = 0, public ty = 0) {
+            super();
         }
 
+/**
+ * @member ns_egret.Matrix.
+ */
 // static public properties:
 
         static identity = new Matrix();
 
         static DEG_TO_RAD = Math.PI / 180;
 
+/**
+ * @member ns_egret.Matrix#
+ */
 // public methods:
 
         /**
@@ -45,7 +75,7 @@ module ns_egret {
          * @param ty
          * @returns {ns_egret.Matrix}
          */
-        prepend(a, b, c, d, tx, ty) {
+        public prepend(a, b, c, d, tx, ty):Matrix {
             var tx1 = this.tx;
             if (a != 1 || b != 0 || c != 0 || d != 1) {
                 var a1 = this.a;
@@ -71,7 +101,7 @@ module ns_egret {
          * @param ty
          * @returns {ns_egret.Matrix}
          */
-        append(a, b, c, d, tx, ty) {
+        public append(a, b, c, d, tx, ty):Matrix {
             var a1 = this.a;
             var b1 = this.b;
             var c1 = this.c;
@@ -92,7 +122,7 @@ module ns_egret {
          * @param matrix
          * @returns {ns_egret.Matrix}
          */
-        prependMatrix(matrix) {
+        public prependMatrix(matrix):Matrix {
             this.prepend(matrix.a, matrix.b, matrix.c, matrix.d, matrix.tx, matrix.ty);
 //        this.prependProperties(matrix.alpha, matrix.shadow,  matrix.compositeOperation);
             return this;
@@ -104,7 +134,7 @@ module ns_egret {
          * @param matrix
          * @returns {ns_egret.Matrix}
          */
-        appendMatrix(matrix) {
+        public appendMatrix(matrix):Matrix {
             this.append(matrix.a, matrix.b, matrix.c, matrix.d, matrix.tx, matrix.ty);
 //        this.appendProperties(matrix.alpha, matrix.shadow,  matrix.compositeOperation);
             return this;
@@ -116,7 +146,7 @@ module ns_egret {
          * @param matrix
          * @returns {ns_egret.Matrix}
          */
-        prependTransform(x, y, scaleX, scaleY, rotation, skewX, skewY, regX, regY) {
+        public prependTransform(x, y, scaleX, scaleY, rotation, skewX, skewY, regX, regY):Matrix {
             if (rotation % 360) {
                 var r = rotation * Matrix.DEG_TO_RAD;
                 var cos = Math.cos(r);
@@ -149,7 +179,7 @@ module ns_egret {
          * @param matrix
          * @returns {ns_egret.Matrix}
          */
-        appendTransform(x, y, scaleX, scaleY, rotation, skewX, skewY, regX, regY) {
+        public appendTransform(x, y, scaleX, scaleY, rotation, skewX, skewY, regX, regY):Matrix {
             if (rotation % 360) {
                 var r = rotation * Matrix.DEG_TO_RAD;
                 var cos = Math.cos(r);
@@ -177,19 +207,23 @@ module ns_egret {
             return this;
         }
 
-        public appendTransformFromDisplay(target:ns_egret.DisplayObject) {
+		/**
+		 * @method ns_egret.Matrix#appendTransformFromDisplay
+		 * @param target {ns_egret.DisplayObjec} 
+		 */
+        public appendTransformFromDisplay(target:ns_egret.DisplayObject):Matrix {
             var o = target;
             var anchorX,anchorY;
-            if(o.relativeAnchorPointX != 0 || o.relativeAnchorPointY != 0)
+            if(o.anchorX != 0 || o.anchorY != 0)
             {
-                var bounds = o.getBounds();
-                anchorX = bounds.width * o.relativeAnchorPointX;
-                anchorY = bounds.height * o.relativeAnchorPointY;
+                var bounds = o.getBounds(Rectangle.identity);
+                anchorX = bounds.width * o.anchorX;
+                anchorY = bounds.height * o.anchorY;
             }
             else
             {
-                anchorX = o.anchorPointX;
-                anchorY = o.anchorPointY;
+                anchorX = o.anchorOffsetX;
+                anchorY = o.anchorOffsetY;
             }
             this.identity();
             this.appendTransform(o.x, o.y, o.scaleX, o.scaleY, o.rotation,
@@ -203,7 +237,7 @@ module ns_egret {
          * @param angle
          * @returns {ns_egret.Matrix}
          */
-        rotate(angle) {
+        public rotate(angle):Matrix {
             var cos = Math.cos(angle);
             var sin = Math.sin(angle);
 
@@ -227,7 +261,7 @@ module ns_egret {
          * @param skewY
          * @returns {ns_egret.Matrix}
          */
-        skew(skewX, skewY) {
+        public skew(skewX, skewY):Matrix {
             skewX = skewX * Matrix.DEG_TO_RAD;
             skewY = skewY * Matrix.DEG_TO_RAD;
             this.append(Math.cos(skewY), Math.sin(skewY), -Math.sin(skewX), Math.cos(skewX), 0, 0);
@@ -241,7 +275,7 @@ module ns_egret {
          * @param y
          * @returns {ns_egret.Matrix}
          */
-        scale(x, y) {
+        public scale(x, y):Matrix {
             this.a *= x;
             this.d *= y;
             this.c *= x;
@@ -258,7 +292,7 @@ module ns_egret {
          * @param y
          * @returns {ns_egret.Matrix}
          */
-        translate(x, y) {
+        public translate(x, y):Matrix {
             this.tx += x;
             this.ty += y;
             return this;
@@ -269,7 +303,7 @@ module ns_egret {
          * 矩阵重置
          * @returns {ns_egret.Matrix}
          */
-        identity() {
+        public identity():Matrix {
             this.a = this.d = 1;
             this.b = this.c = this.tx = this.ty = 0;
             return this;
@@ -279,7 +313,7 @@ module ns_egret {
         /**
          * 矩阵翻转
          */
-        invert = function () {
+        public invert = function ():Matrix {
             var a1 = this.a;
             var b1 = this.b;
             var c1 = this.c;
@@ -297,12 +331,12 @@ module ns_egret {
         };
 
 
-        isIdentity() {
+        public isIdentity():boolean {
             return this.tx == 0 && this.ty == 0 && this.a == 1 && this.b == 0 && this.c == 0 && this.d == 1;
         }
 
 
-        transformPoint(x, y, pt) {
+        public transformPoint(x, y, pt) {
             pt = pt || {};
             pt.x = x * this.a + y * this.c + this.tx;
             pt.y = x * this.b + y * this.d + this.ty;
@@ -310,7 +344,7 @@ module ns_egret {
         }
 
 
-        decompose(target) {
+        public decompose(target) {
             // TODO: it would be nice to be able to solve for whether the matrix can be decomposed into only scale/rotation
             // even when scale is negative
             if (target == null) {
@@ -380,7 +414,7 @@ module ns_egret {
          * @returns {Point}
          * @stable C 该方法以后可能删除
          */
-        static transformCoords(matrix:Matrix, x:number, y:number) {
+        public static transformCoords(matrix:Matrix, x:number, y:number):Point {
             var resultPoint:Point = new Point(0, 0);//todo;
             resultPoint.x = matrix.a * x + matrix.c * y + matrix.tx;
             resultPoint.y = matrix.d * y + matrix.b * x + matrix.ty;

@@ -1,30 +1,41 @@
 /**
- * Copyright (c) Egret-Labs.org. Permission is hereby granted, free of charge,
- * to any person obtaining a copy of this software and associated documentation
- * files (the "Software"), to deal in the Software without restriction, including
- * without limitation the rights to use, copy, modify, merge, publish, distribute,
- * sublicense, and/or sell copies of the Software, and to permit persons to whom
- * the Software is furnished to do so, subject to the following conditions:
+ * Copyright (c) 2014,Egret-Labs.org
+ * All rights reserved.
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
  *
- * The above copyright notice and this permission notice shall be included
- * in all copies or substantial portions of the Software.
+ *     * Redistributions of source code must retain the above copyright
+ *       notice, this list of conditions and the following disclaimer.
+ *     * Redistributions in binary form must reproduce the above copyright
+ *       notice, this list of conditions and the following disclaimer in the
+ *       documentation and/or other materials provided with the distribution.
+ *     * Neither the name of the Egret-Labs.org nor the
+ *       names of its contributors may be used to endorse or promote products
+ *       derived from this software without specific prior written permission.
  *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
- * INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR
- * PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE
- * FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
- * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ * THIS SOFTWARE IS PROVIDED BY EGRET-LABS.ORG AND CONTRIBUTORS "AS IS" AND ANY
+ * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL EGRET-LABS.ORG AND CONTRIBUTORS BE LIABLE FOR ANY
+ * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+ * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
 /// <reference path="../context/renderer/RendererContext.ts"/>
-/// <reference path="../core/Logger.ts"/>
 /// <reference path="DisplayObject.ts"/>
 /// <reference path="../events/Event.ts"/>
 /// <reference path="../geom/Matrix.ts"/>
 /// <reference path="../geom/Rectangle.ts"/>
+/// <reference path="../utils/Logger.ts"/>
 
 module ns_egret {
     /**
+	 * @class ns_egret.DisplayObjectContainer
+	 * @classdesc
      * DisplayObjectContainer 类是显示列表中显示对象容器。
      */
     export class DisplayObjectContainer
@@ -39,6 +50,7 @@ module ns_egret {
         public _touchChildren:boolean = true;
         /**
          * 指定此对象的子项以及子孙项是否接收鼠标/触摸事件
+		 * @member {boolean} ns_egret.DisplayObjectContainer#touchChildren
          */
         public get touchChildren():boolean{
             return this._touchChildren;
@@ -49,14 +61,18 @@ module ns_egret {
 
         public _children:Array<DisplayObject>
 
+		/**
+		 * @member {number} ns_egret.DisplayObjectContainer#numChildren
+		 */
         public get numChildren():number{
             return this._children.length;
         }
 
         /**
-         * 修改 容器内子元件的 层级
-         * @param child 容器的子元件
-         * @param index 新的层级 <0或者>=元件数量，都加入到最上层
+         * 修改容器内子元件的层级
+		 * @method ns_egret.DisplayObjectContainer#setChildIndex
+         * @param child {ns_egret.DisplayObject} 容器的子元件
+         * @param index {number} 新的层级 <0或者>=元件数量，都加入到最上层
          */
         public setChildIndex(child:DisplayObject, index:number):void {
             this.doSetChildIndex(child,index);
@@ -79,7 +95,9 @@ module ns_egret {
         }
 
         /**
-         * @inheritDoc
+		 * @method ns_egret.DisplayObjectContainer#addChild
+		 * @param child {ns_egret.DisplayObject}
+		 * @returns {ns_egret.DisplayObject}
          */
         public addChild(child:DisplayObject):DisplayObject{
             var index:number = this.numChildren;
@@ -87,22 +105,23 @@ module ns_egret {
             if (child.parent == this)
                 index--;
 
-            return this.childAdded(child, index);
+            return this._doAddChild(child, index);
         }
 
 
         /**
          * 将一个 DisplayObject 子实例添加到该 DisplayObjectContainer 实例中。
-         * todo:GitHub 显示列表
-         * @param child 子显示对象
-         * @param index 加载的顺序，默认为-1，加载到最前面
+		 * @method ns_egret.DisplayObjectContainer#addChildAt
+         * @param child {ns_egret.DisplayObject} 子显示对象
+         * @param index {number} 加载的顺序，默认为-1，加载到最前面
+		 * @returns {ns_egret.DisplayObject}
          */
         public addChildAt(child:DisplayObject, index:number):DisplayObject {
 
-            return this.childAdded(child,index);
+            return this._doAddChild(child,index);
         }
 
-        private childAdded(child:DisplayObject,index:number):DisplayObject{
+        public _doAddChild(child:DisplayObject,index:number,notifyListeners:boolean = true):DisplayObject{
             if (child == this)
                 return child;
 
@@ -124,7 +143,8 @@ module ns_egret {
 
             this._children.splice(index, 0, child);
             child._parentChanged(this);
-            child.dispatchEventWith(Event.ADDED,true);
+            if(notifyListeners)
+                child.dispatchEventWith(Event.ADDED,true);
             if (this._stage) {//当前容器在舞台
                 child._onAddToStage();
             }
@@ -134,31 +154,41 @@ module ns_egret {
 
         /**
          * 将一个 DisplayObject 子实例从 DisplayObjectContainer 实例中移除。
-         * @param child
+		 * @method ns_egret.DisplayObjectContainer#removeChild
+         * @param child {ns_egret.DisplayObject} 
+		 * @returns {ns_egret.DisplayObject}
          */
         public removeChild(child:DisplayObject):DisplayObject {
             var index = this._children.indexOf(child);
             if (index >= 0) {
-                return this.childRemoved(index);
+                return this._doRemoveChild(index);
             }
             else {
                 ns_egret.Logger.fatal("child未被addChild到该parent");
+                return null;
             }
         }
 
+		/**
+		 * @method ns_egret.DisplayObjectContainer#removeChildAt
+		 * @param index {number} 
+		 * @returns {ns_egret.DisplayObject}
+		 */
         public removeChildAt(index:number):DisplayObject {
             if (index >= 0 && index < this._children.length) {
-               return this.childRemoved(index);
+               return this._doRemoveChild(index);
             }
             else {
                 ns_egret.Logger.fatal("提供的索引超出范围");
+                return null;
             }
         }
 
-        private childRemoved(index:number):DisplayObject{
+        public _doRemoveChild(index:number,notifyListeners:boolean = true):DisplayObject{
             var locChildren = this._children;
             var child:DisplayObject = locChildren[index];
-            child.dispatchEventWith(Event.REMOVED,true)
+            if(notifyListeners)
+                child.dispatchEventWith(Event.REMOVED,true)
             if (this._stage) {//在舞台上
                 child._onRemoveFromStage();
             }
@@ -170,8 +200,9 @@ module ns_egret {
 
         /**
          * 通过索引获取显示对象
-         * @param index
-         * @returns {*}
+		 * @method ns_egret.DisplayObjectContainer#getChildAt
+         * @param index {number} 
+		 * @returns {ns_egret.DisplayObject}
          */
         public getChildAt(index:number):DisplayObject {
             if (index >= 0 && index < this._children.length) {
@@ -179,12 +210,15 @@ module ns_egret {
             }
             else {
                 ns_egret.Logger.fatal("提供的索引超出范围");
+                return null;
             }
         }
 
         /**
          *  确定指定显示对象是 DisplayObjectContainer 实例的子项还是该实例本身。搜索包括整个显示列表（其中包括此 DisplayObjectContainer 实例）。孙项、曾孙项等，每项都返回 true。
-         * @param child 要测试的子对象。
+		 * @method ns_egret.DisplayObjectContainer#contains
+         * @param child {ns_egret.DisplayObject} 要测试的子对象。
+		 * @returns {boolean}
          */
         public contains(child:DisplayObject):boolean{
             while (child){
@@ -196,16 +230,11 @@ module ns_egret {
             return false;
         }
 
-        /**
-         * 根据子对象的name属性获取对象
-         * @param name
-         * @returns {null}
-         */
-        public getChildByName(name:string):ns_egret.DisplayObject {
-            //todo
-            return null;
-        }
-
+		/**
+		 * @method ns_egret.DisplayObjectContainer#swapChildrenAt
+		 * @param index1 {number} 
+		 * @param index2 {number} 
+		 */
         public swapChildrenAt(index1:number, index2:number):void{
             if (index1 >= 0 && index1 < this._children.length&&index2>=0&&index2<this._children.length) {
                 this._swapChildrenAt(index1,index2);
@@ -216,6 +245,11 @@ module ns_egret {
 
         }
 
+		/**
+		 * @method ns_egret.DisplayObjectContainer#swapChildren
+		 * @param child1 {ns_egret.DisplayObject} 
+		 * @param child2 {ns_egret.DisplayObject} 
+		 */
         public swapChildren(child1:DisplayObject, child2:DisplayObject):void{
             var index1:number = this._children.indexOf(child1);
             var index2:number = this._children.indexOf(child2);
@@ -248,8 +282,9 @@ module ns_egret {
 
         /**
          * 获得 容器内元件的层级
-         * @param child
-         * @returns -1不在容器内 >=0 在容器里
+		 * @method ns_egret.DisplayObjectContainer#getChildIndex
+         * @param child {ns_egret.DisplayObject} 
+		 * @returns {number}
          */
         public getChildIndex(child:ns_egret.DisplayObject):number {
             return this._children.indexOf(child);
@@ -257,30 +292,31 @@ module ns_egret {
 
         /**
          * 移除所有显示对象
+		 * @method ns_egret.DisplayObjectContainer#removeChildren
          */
         public removeChildren() {
             var locChildren = this._children;
             for(var i:number=locChildren.length-1;i>=0;i--)
             {
-                this.childRemoved(i);
+                this._doRemoveChild(i);
             }
         }
 
-        public updateTransform() {
+        public _updateTransform():void {
             if (!this.visible) {
                 return;
             }
-            super.updateTransform();
+            super._updateTransform();
             for (var i = 0 , length = this._children.length; i < length; i++) {
                 var child:DisplayObject = this._children[i];
-                child.updateTransform();
+                child._updateTransform();
             }
         }
 
-        public render(renderContext:RendererContext) {
+        public _render(renderContext:RendererContext):void {
             for (var i = 0 , length = this._children.length; i < length; i++) {
                 var child:DisplayObject = this._children[i];
-                child.draw(renderContext);
+                child._draw(renderContext);
             }
         }
 
@@ -297,7 +333,7 @@ module ns_egret {
             for (var i = 0; i < l; i++) {
                 var child = this._children[i];
                 var bounds:Rectangle;
-                if (!child.visible || !(bounds = DisplayObject.getTransformBounds(child.getBounds(), child.getMatrix()))) {
+                if (!child.visible || !(bounds = DisplayObject.getTransformBounds(child.getBounds(Rectangle.identity), child._getMatrix()))) {
                     continue;
                 }
                 var x1 = bounds.x , y1 = bounds.y,
@@ -321,19 +357,21 @@ module ns_egret {
         }
 
         /**
+		 * @method ns_egret.DisplayObjectContainer#hitTest
          * @see egret.DisplayObject.hitTest
-         * @param x
-         * @param y
-         * @returns {DisplayObject}
+         * @param x {number} 
+         * @param y {number} 
+		 * @param ignoreTouchEnabled {boolean} 
+		 * @returns {ns_egret.DisplayObject}
          */
-            hitTest(x, y) {
+        public hitTest(x:number, y:number, ignoreTouchEnabled:boolean = false):DisplayObject{
             var result:DisplayObject;
             if (!this.visible) {
                 return null;
             }
-            if (this.scrollRect) {
-                if (x > this.scrollRect.width
-                    || y > this.scrollRect.height) {
+            if (this._scrollRect) {
+                if (x > this._scrollRect.width
+                    || y > this._scrollRect.height) {
                     return null;
                 }
             }
@@ -347,43 +385,39 @@ module ns_egret {
             }
             var children = this._children;
             var l = children.length;
-            if (l == 0) {
-                return result;
-            }
-            //算出touchChildren
-            var touchChildren = this.touchChildren;
-            var target = this;
-            while (target.parent) {
-                touchChildren = touchChildren && target.parent.touchChildren;
-                target = target.parent;
-            }
+            var touchChildren = this._touchChildren;//这里不用考虑父级的touchChildren，从父级调用下来过程中已经判断过了。
             for (var i = l - 1; i >= 0; i--) {
                 var child = children[i];
                 //todo 這裡的matrix不符合identity的設計原則，以後需要重構
                 var o = child;
-                var offsetPoint = o.getOffsetPoint();
-                var childX = o.x;
-                var childY = o.y;
-                if(this.scrollRect)
+                var offsetPoint = o._getOffsetPoint();
+                var childX = o._x;
+                var childY = o._y;
+                if(this._scrollRect)
                 {
-                    childX -= this.scrollRect.x;
-                    childY -= this.scrollRect.y;
+                    childX -= this._scrollRect.x;
+                    childY -= this._scrollRect.y;
                 }
-                var mtx = Matrix.identity.identity().prependTransform(childX, childY, o.scaleX, o.scaleY, o.rotation,
+                var mtx = Matrix.identity.identity().prependTransform(childX, childY, o._scaleX, o._scaleY, o._rotation,
                     0, 0, offsetPoint.x, offsetPoint.y);
                 mtx.invert();
                 var point = Matrix.transformCoords(mtx, x, y);
                 var childHitTestResult = child.hitTest(point.x, point.y, true);
                 if (childHitTestResult) {
-                    if (childHitTestResult.touchEnabled && touchChildren) {
+                    if (childHitTestResult._touchEnabled && touchChildren) {
                         return childHitTestResult;
                     }
-                    else if (this.touchEnabled) {
+                    else if (this._touchEnabled) {
                         return this;
                     }
                     if (result == null) {
                         result = childHitTestResult;
                     }
+                }
+            }
+            if(!result){
+                if(this._texture_to_render||this["_graphics"]){
+                    return super.hitTest(x,y);
                 }
             }
             return result;

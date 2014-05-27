@@ -3,8 +3,7 @@ var fs = require("fs");
 
 var name_map = {
     "c": "create",
-    "b": "build",
-    "r": "remove"
+    "b": "build"
 }
 
 

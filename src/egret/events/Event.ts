@@ -1,24 +1,37 @@
 /**
- * Copyright (c) Egret-Labs.org. Permission is hereby granted, free of charge,
- * to any person obtaining a copy of this software and associated documentation
- * files (the "Software"), to deal in the Software without restriction, including
- * without limitation the rights to use, copy, modify, merge, publish, distribute,
- * sublicense, and/or sell copies of the Software, and to permit persons to whom
- * the Software is furnished to do so, subject to the following conditions:
+ * Copyright (c) 2014,Egret-Labs.org
+ * All rights reserved.
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
  *
- * The above copyright notice and this permission notice shall be included
- * in all copies or substantial portions of the Software.
+ *     * Redistributions of source code must retain the above copyright
+ *       notice, this list of conditions and the following disclaimer.
+ *     * Redistributions in binary form must reproduce the above copyright
+ *       notice, this list of conditions and the following disclaimer in the
+ *       documentation and/or other materials provided with the distribution.
+ *     * Neither the name of the Egret-Labs.org nor the
+ *       names of its contributors may be used to endorse or promote products
+ *       derived from this software without specific prior written permission.
  *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
- * INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR
- * PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE
- * FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
- * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ * THIS SOFTWARE IS PROVIDED BY EGRET-LABS.ORG AND CONTRIBUTORS "AS IS" AND ANY
+ * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL EGRET-LABS.ORG AND CONTRIBUTORS BE LIABLE FOR ANY
+ * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+ * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+
+/// <reference path="IEventDispatcher.ts"/>
+/// <reference path="../utils/HashObject.ts"/>
+/// <reference path="../utils/Recycler.ts"/>
 
 module ns_egret {
 
-    export class Event {
+    export class Event extends HashObject{
 
 
         /**
@@ -41,6 +54,7 @@ module ns_egret {
          * @param cancelable{boolean} 确定是否可以取消 Event 对象。默认值为 false。
          */
         public constructor(type:string, bubbles:boolean = false, cancelable:boolean = false) {
+            super();
             this._type = type;
             this._bubbles = bubbles;
             this._cancelable = cancelable;
@@ -76,7 +90,6 @@ module ns_egret {
          * @constant {string} ns_egret.Event.COMPLETE
          */
         public static COMPLETE:string = "complete";
-
         /**
          * 主循环：进入新的一帧
          * @constant {string} ns_egret.Event.ENTER_FRAME
@@ -107,6 +120,11 @@ module ns_egret {
          * @constant {string} ns_egret.Event.RESIZE
          */
         public static RESIZE:string = "resize";
+        /**
+         * 状态改变
+         * @constant {string} ns_egret.Event.CHANGE
+         */
+        public static CHANGE:string = "change";
 
         public data:any;
 
@@ -237,6 +255,55 @@ module ns_egret {
             this._eventPhase = 2;
         }
 
+        public static _dispatchByTarget(EventClass:any,target:IEventDispatcher,type:string,props?:Object,
+                                        bubbles:boolean=false,cancelable:boolean = false):boolean{
+            var recycler:Recycler = EventClass.eventRecycler;
+            if(!recycler){
+                recycler = EventClass.eventRecycler = new Recycler();
+            }
+            var event:Event = recycler.pop();
+            if(!event){
+                event = new EventClass(type);
+            }
+            else{
+                event._type = type;
+            }
+            event._bubbles = bubbles;
+            event._cancelable = cancelable;
+            if(props){
+                for(var key in props){
+                    event[key] = props[key];
+                    if(event[key]!==null){
+                        props[key] = null;
+                    }
+
+                }
+            }
+            var result:boolean = target.dispatchEvent(event);
+            recycler.push(event);
+            return result;
+        }
+
+        public static _getPropertyData(EventClass:any):any{
+            var props:any = EventClass._props;
+            if(!props)
+                props = EventClass._props = {};
+            return props;
+        }
+
+
+        /**
+         * 使用指定的EventDispatcher对象来抛出Event事件对象。抛出的对象将会缓存在对象池上，供下次循环复用。
+         * @method ns_egret.Event.dispatchEvent
+         */
+        public static dispatchEvent(target:IEventDispatcher,type:string,bubbles:boolean=false,data?:any):void{
+            var eventClass:any = Event;
+            var props:any = Event._getPropertyData(eventClass);
+            if(data){
+                props.data = data;
+            }
+            Event._dispatchByTarget(eventClass,target,type,props,bubbles);
+        }
 
     }
 }

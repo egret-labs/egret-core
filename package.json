@@ -1,0 +1,12 @@
+{
+    "name": "egret",
+    "version": "0.9.4",
+    "private": true,
+    "author":"egret core developer team",
+    "scripts": {
+        "start": "node app"
+    },
+    "bin": {
+        "egret": "./tools/bin/egret"
+    }
+}

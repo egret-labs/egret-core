@@ -2,7 +2,6 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <meta name="baidu-tc-cerfication" content="bb5e4ac079a479fb5ddcd76557a48ed3"/>
     <title>HelloWorld</title>
     <meta name="viewport"
           content="width=device-width,initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no,target-densitydpi=device-dpi"/>
@@ -23,6 +22,9 @@
             margin: 0;
             height: 100%;
         }
+        html {
+            -ms-touch-action: none; /* Direct all pointer events to JavaScript code. */
+        }
     </style>
 </head>
 <body>
@@ -30,13 +32,13 @@
      id="gameDiv">
     <canvas id="gameCanvas" width="480" height="800" style="background-color: #000000"></canvas>
 </div>
-<script src="../egret/src/egret_file_list.js"></script>
+<script src="bin-debug/lib/egret_file_list.js"></script>
 <script src="launcher/egret_loader.js"></script>
-<script src="src/game_file_list.js"></script>
+<script src="bin-debug/src/game_file_list.js"></script>
 
 <script>
-    egret_h5.preloadScript(egret_file_list, "../egret/src/");
-    egret_h5.preloadScript(game_file_list, "src/");
+    egret_h5.preloadScript(egret_file_list, "bin-debug/lib/");
+    egret_h5.preloadScript(game_file_list, "bin-debug/src/");
     egret_h5.startLoading();
 </script>
 </body>
