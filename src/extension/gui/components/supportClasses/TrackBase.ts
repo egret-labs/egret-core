@@ -371,8 +371,8 @@ module ns_egret {
 		 * 当在组件上按下鼠标时记录被按下的子显示对象
 		 */		
 		private mouseDownHandler(event:TouchEvent):void{
-			UIGlobals.stage.addEventListener(TouchEvent.TOUCH_END, this.system_mouseUpSomewhereHandler, this);
-			UIGlobals.stage.addEventListener(Event.LEAVE_STAGE, this.system_mouseUpSomewhereHandler, this);
+			UIGlobals.stage.addEventListener(TouchEvent.TOUCH_END, this.stage_mouseUpSomewhereHandler, this);
+			UIGlobals.stage.addEventListener(Event.LEAVE_STAGE, this.stage_mouseUpSomewhereHandler, this);
 			
 			this.mouseDownTarget = <DisplayObject> (event.target);      
 		}
@@ -380,9 +380,9 @@ module ns_egret {
 		/**
 		 * 当鼠标弹起时，若不是在mouseDownTarget上弹起，而是另外的子显示对象上弹起时，额外抛出一个鼠标单击事件。
 		 */		
-		private system_mouseUpSomewhereHandler(event:Event):void{
-			UIGlobals.stage.removeEventListener(TouchEvent.TOUCH_END, this.system_mouseUpSomewhereHandler, this);
-			UIGlobals.stage.removeEventListener(Event.LEAVE_STAGE,this.system_mouseUpSomewhereHandler,this);
+		private stage_mouseUpSomewhereHandler(event:Event):void{
+			UIGlobals.stage.removeEventListener(TouchEvent.TOUCH_END, this.stage_mouseUpSomewhereHandler, this);
+			UIGlobals.stage.removeEventListener(Event.LEAVE_STAGE,this.stage_mouseUpSomewhereHandler,this);
 			if (this.mouseDownTarget != event.target && event instanceof TouchEvent && this.contains(<DisplayObject> (event.target))){ 
 				var mEvent:TouchEvent = <TouchEvent> event;
 

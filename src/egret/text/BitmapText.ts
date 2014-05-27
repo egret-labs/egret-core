@@ -27,9 +27,8 @@
 
 /// <reference path="../display/Bitmap.ts"/>
 /// <reference path="../display/DisplayObjectContainer.ts"/>
-/// <reference path="../display/Texture.ts"/>
 /// <reference path="../geom/Rectangle.ts"/>
-/// <reference path="../utils/Logger.ts"/>
+/// <reference path="BitmapTextSpriteSheet.ts"/>
 
 module ns_egret {
     /**

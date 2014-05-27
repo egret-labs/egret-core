@@ -26,7 +26,7 @@
  */
 
 /// <reference path="../../../egret/display/Stage.ts"/>
-/// <reference path="../managers/ISystemManager.ts"/>
+/// <reference path="IUIStage.ts"/>
 /// <reference path="../managers/LayoutManager.ts"/>
 
 module ns_egret {
@@ -69,13 +69,13 @@ module ns_egret {
 		/**
 		 * 系统管理器列表
 		 */		
-		public static _systemManager:ISystemManager;
+		public static _uiStage:IUIStage;
 		/**
 		 * 顶级应用容器
-		 * @member ns_egret.UIGlobals.systemManager
+		 * @member ns_egret.UIGlobals.uiStage
 		 */
-		public static get systemManager():ISystemManager{
-			return this._systemManager;
+		public static get uiStage():IUIStage{
+			return UIGlobals._uiStage;
 		}
 	}
 }

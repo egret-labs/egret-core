@@ -29,7 +29,6 @@
 /// <reference path="../context/renderer/RendererContext.ts"/>
 /// <reference path="DisplayObject.ts"/>
 /// <reference path="Graphics.ts"/>
-/// <reference path="../geom/Rectangle.ts"/>
 
 module ns_egret {
 

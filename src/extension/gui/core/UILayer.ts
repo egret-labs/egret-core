@@ -26,27 +26,27 @@
  */
 
 /// <reference path="../../../egret/display/DisplayObjectContainer.ts"/>
-/// <reference path="../core/IContainer.ts"/>
-/// <reference path="../core/IVisualElement.ts"/>
-/// <reference path="ISystemManager.ts"/>
+/// <reference path="IContainer.ts"/>
+/// <reference path="IUIStage.ts"/>
+/// <reference path="IVisualElement.ts"/>
 
 module ns_egret {
 
 	/**
-	 * @class ns_egret.SystemContainer
+	 * @class ns_egret.UILayer
 	 * @classdesc
-	 * SystemManager的虚拟子容器
+	 * UIStage的虚拟子容器
 	 * @implements ns_egret.IContainer
 	 */
-	export class SystemContainer implements IContainer{
+	export class UILayer implements IContainer{
 		/**
 		 * 构造函数
-		 * @method ns_egret.SystemContainer#constructor
-		 * @param owner {ISystemManager} 
+		 * @method ns_egret.UILayer#constructor
+		 * @param owner {IUIStage} 
 		 * @param lowerBoundReference {string} 
 		 * @param upperBoundReference {strin} 
 		 */		
-		public constructor(owner:ISystemManager,
+		public constructor(owner:IUIStage,
 										lowerBoundReference:string,
 										upperBoundReference:string){
 			this.owner = owner;
@@ -56,7 +56,7 @@ module ns_egret {
 		/**
 		 * 实体容器
 		 */		
-		private owner:ISystemManager;
+		private owner:IUIStage;
 		
 		/**
 		 * 容器下边界属性
@@ -68,7 +68,7 @@ module ns_egret {
 		 */		
 		private upperBoundReference:string;
 		/**
-		 * @member ns_egret.SystemContainer#numElements
+		 * @member ns_egret.UILayer#numElements
 		 */
 		public get numElements():number{
 			return this.owner[this.upperBoundReference] - this.owner[this.lowerBoundReference];
@@ -81,7 +81,7 @@ module ns_egret {
 		private raw_removeElementAt:string = "raw_removeElementAt";
 		private raw_setElementIndex:string = "raw_setElementIndex";
 		/**
-		 * @method ns_egret.SystemContainer#getElementAt
+		 * @method ns_egret.UILayer#getElementAt
 		 * @param index {number} 
 		 * @returns {IVisualElement}
 		 */
@@ -92,7 +92,7 @@ module ns_egret {
 			return retval;
 		}
 		/**
-		 * @method ns_egret.SystemContainer#addElement
+		 * @method ns_egret.UILayer#addElement
 		 * @param element {IVisualElement} 
 		 * @returns {IVisualElement}
 		 */
@@ -106,7 +106,7 @@ module ns_egret {
 			return element;
 		}
 		/**
-		 * @method ns_egret.SystemContainer#addElementAt
+		 * @method ns_egret.UILayer#addElementAt
 		 * @param element {IVisualElement} 
 		 * @param index {number} 
 		 * @returns {IVisualElement}
@@ -119,7 +119,7 @@ module ns_egret {
 			return element;
 		}
 		/**
-		 * @method ns_egret.SystemContainer#removeElement
+		 * @method ns_egret.UILayer#removeElement
 		 * @param element {IVisualElement} 
 		 * @returns {IVisualElement}
 		 */
@@ -134,7 +134,7 @@ module ns_egret {
 			return element;
 		}
 		/**
-		 * @method ns_egret.SystemContainer#removeElementAt
+		 * @method ns_egret.UILayer#removeElementAt
 		 * @param index {number} 
 		 * @returns {IVisualElement}
 		 */
@@ -150,7 +150,7 @@ module ns_egret {
 			return element;
 		}
 		/**
-		 * @method ns_egret.SystemContainer#getElementIndex
+		 * @method ns_egret.UILayer#getElementIndex
 		 * @param element {IVisualElement} 
 		 * @returns {number}
 		 */
@@ -160,7 +160,7 @@ module ns_egret {
 			return retval;
 		}
 		/**
-		 * @method ns_egret.SystemContainer#setElementIndex
+		 * @method ns_egret.UILayer#setElementIndex
 		 * @param element {IVisualElement} 
 		 * @param index {number} 
 		 */

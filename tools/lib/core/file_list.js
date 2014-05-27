@@ -162,8 +162,8 @@ exports.core = [
     "extension/gui/layouts/VerticalLayout.js",
     "extension/gui/layouts/HorizontalLayout.js",
     "extension/gui/layouts/TileLayout.js",
-    "extension/gui/managers/SystemContainer.js",
-    "extension/gui/managers/SystemManager.js",
+    "extension/gui/core/UILayer.js",
+    "extension/gui/core/UIStage.js",
     "extension/gui/managers/impl/PopUpManagerImpl.js",
     "extension/gui/managers/PopUpManager.js",
     //GUI end

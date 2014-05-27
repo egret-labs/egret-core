@@ -32,7 +32,6 @@
 /// <reference path="../../geom/Matrix.ts"/>
 /// <reference path="../../text/TextField.ts"/>
 /// <reference path="../../utils/getTimer.ts"/>
-/// <reference path="../../../jslib/DEBUG.d.ts"/>
 
 module ns_egret {
 	/**

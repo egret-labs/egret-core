@@ -34,6 +34,7 @@
 /// <reference path="../../net/URLRequest.ts"/>
 /// <reference path="../../net/URLRequestMethod.ts"/>
 /// <reference path="../../net/URLVariables.ts"/>
+/// <reference path="../../utils/callLater.ts"/>
 
 module ns_egret {
     /**

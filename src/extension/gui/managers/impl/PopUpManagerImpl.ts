@@ -33,11 +33,12 @@
 /// <reference path="../../core/IContainer.ts"/>
 /// <reference path="../../core/IInvalidating.ts"/>
 /// <reference path="../../core/IUIComponent.ts"/>
+/// <reference path="../../core/IUIStage.ts"/>
 /// <reference path="../../core/IVisualElement.ts"/>
 /// <reference path="../../core/IVisualElementContainer.ts"/>
+/// <reference path="../../core/UIComponent.ts"/>
 /// <reference path="../../core/UIGlobals.ts"/>
 /// <reference path="../IPopUpManager.ts"/>
-/// <reference path="../ISystemManager.ts"/>
 
 module ns_egret {
 
@@ -83,7 +84,7 @@ module ns_egret {
             return null;
         }
 
-        private static REMOVE_FROM_SYSTEMMANAGER:string = "removeFromSystemManager";
+        private static REMOVE_FROM_UISTAGE:string = "removeFromUIStage";
         /**
          * 弹出一个窗口。<br/>
          * @method ns_egret.PopUpManagerImpl#addPopUp
@@ -92,18 +93,18 @@ module ns_egret {
          * @param center {boolean} 是否居中窗口。等效于在外部调用centerPopUp()来居中。默认true。
          */
         public addPopUp(popUp:IVisualElement,modal:boolean=false,center:boolean=true):void{
-            var systemManager:ISystemManager = UIGlobals.systemManager;
+            var uiStage:IUIStage = UIGlobals.uiStage;
             var data:PopUpData = this.findPopUpData(popUp);
             if(data){
                 data.modal = modal;
-                popUp.removeEventListener(PopUpManagerImpl.REMOVE_FROM_SYSTEMMANAGER,this.onRemoved,this);
+                popUp.removeEventListener(PopUpManagerImpl.REMOVE_FROM_UISTAGE,this.onRemoved,this);
             }
             else{
                 data = new PopUpData(popUp,modal);
                 this.popUpDataList.push(data);
                 this._popUpList.push(popUp);
             }
-            systemManager.popUpContainer.addElement(popUp);
+            uiStage.popUpContainer.addElement(popUp);
             if(center)
                 this.centerPopUp(popUp);
             if("isPopUp" in popUp)
@@ -111,7 +112,7 @@ module ns_egret {
             if(modal){
                 this.invalidateModal();
             }
-            popUp.addEventListener(PopUpManagerImpl.REMOVE_FROM_SYSTEMMANAGER,this.onRemoved,this);
+            popUp.addEventListener(PopUpManagerImpl.REMOVE_FROM_UISTAGE,this.onRemoved,this);
         }
 
         /**
@@ -126,7 +127,7 @@ module ns_egret {
                 if(data.popUp==event.target){
                     if("isPopUp" in data.popUp)
                         (<IUIComponent> (data.popUp)).isPopUp = false;
-                    data.popUp.removeEventListener(PopUpManagerImpl.REMOVE_FROM_SYSTEMMANAGER,this.onRemoved,this);
+                    data.popUp.removeEventListener(PopUpManagerImpl.REMOVE_FROM_UISTAGE,this.onRemoved,this);
                     this.popUpDataList.splice(index,1);
                     this._popUpList.splice(index,1);
                     this.invalidateModal();
@@ -169,7 +170,7 @@ module ns_egret {
 
         private invalidateModalFlag:boolean = false;
         /**
-         * 标记一个SystemManager的模态层失效
+         * 标记一个UIStage的模态层失效
          */
         private invalidateModal():void{
             if(!this.invalidateModalFlag){
@@ -184,15 +185,15 @@ module ns_egret {
             this.invalidateModalFlag = false;
             UIGlobals.stage.removeEventListener(Event.ENTER_FRAME,this.validateModal,this);
             UIGlobals.stage.removeEventListener(Event.RENDER,this.validateModal,this);
-            this.updateModal(UIGlobals.systemManager);
+            this.updateModal(UIGlobals.uiStage);
         }
 
         private modalMask:Rect;
         /**
          * 更新窗口模态效果
          */
-        private updateModal(systemManager:ISystemManager):void{
-            var popUpContainer:IContainer = systemManager.popUpContainer;
+        private updateModal(uiStage:IUIStage):void{
+            var popUpContainer:IContainer = uiStage.popUpContainer;
             var found:boolean = false;
             for(var i:number = popUpContainer.numElements-1;i>=0;i--){
                 var element:IVisualElement = popUpContainer.getElementAt(i);
@@ -210,7 +211,7 @@ module ns_egret {
                 }
                 this.modalMask.fillColor = this._modalColor;
                 this.modalMask.alpha = this._modalAlpha;
-                if(this.modalMask.parent==(<DisplayObjectContainer><any>systemManager)){
+                if(this.modalMask.parent==(<DisplayObjectContainer><any>uiStage)){
                     if(popUpContainer.getElementIndex(this.modalMask)<i)
                         i--;
                     popUpContainer.setElementIndex(this.modalMask,i);
@@ -219,7 +220,7 @@ module ns_egret {
                     popUpContainer.addElementAt(this.modalMask,i);
                 }
             }
-            else if(this.modalMask&&this.modalMask.parent==(<DisplayObjectContainer><any>systemManager)){
+            else if(this.modalMask&&this.modalMask.parent==(<DisplayObjectContainer><any>uiStage)){
                 popUpContainer.removeElement(this.modalMask);
             }
         }
@@ -265,8 +266,8 @@ module ns_egret {
         public bringToFront(popUp:IVisualElement):void{
             var data:PopUpData = this.findPopUpData(popUp);
             if(data&&popUp.parent&&"popUpContainer" in popUp.parent){
-                var sm:ISystemManager = <ISystemManager><any>(popUp.parent);
-                sm.popUpContainer.setElementIndex(popUp,sm.popUpContainer.numElements-1);
+                var uiStage:IUIStage = <IUIStage><any>(popUp.parent);
+                uiStage.popUpContainer.setElementIndex(popUp,uiStage.popUpContainer.numElements-1);
                 this.invalidateModal();
             }
         }

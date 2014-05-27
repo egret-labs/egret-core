@@ -25,8 +25,10 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+/// <reference path="../../../egret/context/MainContext.ts"/>
+/// <reference path="../../../egret/context/renderer/RendererContext.ts"/>
 /// <reference path="../../../egret/display/Graphics.ts"/>
-/// <reference path="../../../egret/display/Shape.ts"/>
+/// <reference path="../../../egret/geom/Rectangle.ts"/>
 /// <reference path="../core/UIComponent.ts"/>
 
 module ns_egret {

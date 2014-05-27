@@ -27,35 +27,35 @@
 
 /// <reference path="../../../egret/display/Stage.ts"/>
 /// <reference path="../../../egret/events/IEventDispatcher.ts"/>
-/// <reference path="../core/IContainer.ts"/>
+/// <reference path="IContainer.ts"/>
 
 module ns_egret {
 
 	/**
-	 * @class ns_egret.ISystemManager
+	 * @class ns_egret.IUIStage
 	 * @interface
 	 * @classdesc
 	 * @extends ns_egret.IEventDispatcher
 	 */
-	export interface ISystemManager extends IEventDispatcher{
+	export interface IUIStage extends IEventDispatcher{
 		/**
 		 * 弹出窗口层容器。
-		 * @member ns_egret.ISystemManager#popUpContainer
+		 * @member ns_egret.IUIStage#popUpContainer
 		 */	
 		popUpContainer:IContainer;
 		/**
 		 * 工具提示层容器。
-		 * @member ns_egret.ISystemManager#toolTipContainer
+		 * @member ns_egret.IUIStage#toolTipContainer
 		 */		
 		toolTipContainer:IContainer;
 		/**
 		 * 鼠标样式层容器。
-		 * @member ns_egret.ISystemManager#cursorContainer
+		 * @member ns_egret.IUIStage#cursorContainer
 		 */		
 		cursorContainer:IContainer;
 		/**
 		 * 舞台引用
-		 * @member ns_egret.ISystemManager#stage
+		 * @member ns_egret.IUIStage#stage
 		 */		
 		stage:Stage;
 	}

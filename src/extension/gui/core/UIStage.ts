@@ -28,29 +28,29 @@
 /// <reference path="../../../egret/display/DisplayObjectContainer.ts"/>
 /// <reference path="../../../egret/events/Event.ts"/>
 /// <reference path="../components/Group.ts"/>
-/// <reference path="../core/IContainer.ts"/>
-/// <reference path="../core/IVisualElement.ts"/>
-/// <reference path="../core/UIGlobals.ts"/>
+/// <reference path="IContainer.ts"/>
+/// <reference path="IUIStage.ts"/>
+/// <reference path="IVisualElement.ts"/>
+/// <reference path="UIGlobals.ts"/>
+/// <reference path="UILayer.ts"/>
 /// <reference path="../layouts/BasicLayout.ts"/>
 /// <reference path="../layouts/supportClasses/LayoutBase.ts"/>
-/// <reference path="ISystemManager.ts"/>
-/// <reference path="SystemContainer.ts"/>
 
 module ns_egret {
 
 	/**
-	 * @class ns_egret.SystemManager
+	 * @class ns_egret.UIStage
 	 * @classdesc
 	 * 系统管理器，应用程序顶级容器。
 	 * 通常情况下，一个程序应该只含有唯一的系统管理器,并且所有的组件都包含在它内部。
 	 * 它负责管理弹窗，鼠标样式，工具提示的显示层级，以及过滤鼠标和键盘事件为可以取消的。
 	 * @extends ns_egret.Group
-	 * @implements ns_egret.ISystemManager
+	 * @implements ns_egret.IUIStage
 	 */	
-	export class SystemManager extends Group implements ISystemManager{
+	export class UIStage extends Group implements IUIStage{
 		/**
 		 * 构造函数
-		 * @method ns_egret.SystemManager#constructor
+		 * @method ns_egret.UIStage#constructor
 		 */		
 		public constructor(){
 			super();
@@ -61,11 +61,11 @@ module ns_egret {
 		 * 添加到舞台
 		 */		
 		private onAddToStage(event:Event=null):void{
-            if(UIGlobals._systemManager){
-                throw new Error("SystemManager是GUI根容器，只能有一个此实例在显示列表中！");
+            if(UIGlobals._uiStage){
+                throw new Error("UIStage是GUI根容器，只能有一个此实例在显示列表中！");
                 return;
             }
-            UIGlobals._systemManager = this;
+            UIGlobals._uiStage = this;
 			this.stage.addEventListener(Event.RESIZE,this.onResize,this);
 			this.onResize();
 		}
@@ -73,7 +73,7 @@ module ns_egret {
 		 * 从舞台移除
 		 */		
 		private onRemoveFromStage(event:Event):void{
-            UIGlobals._systemManager = null;
+            UIGlobals._uiStage = null;
 			this.stage.removeEventListener(Event.RESIZE,this.onResize,this);
 		}
 		
@@ -89,7 +89,7 @@ module ns_egret {
 		//                            禁止外部布局顶级容器
 		//==========================================================================
 		/**
-		 * @constant ns_egret.SystemManager#x
+		 * @constant ns_egret.UIStage#x
 		 */
         public get x():number{
             return this._x;
@@ -101,7 +101,7 @@ module ns_egret {
 		}
 
 		/**
-		 * @constant ns_egret.SystemManager#y
+		 * @constant ns_egret.UIStage#y
 		 */
         public get y():number{
             return this._y;
@@ -113,7 +113,7 @@ module ns_egret {
 		}
 
 		/**
-		 * @member ns_egret.SystemManager#width
+		 * @member ns_egret.UIStage#width
 		 */
         public get width():number{
             return this._width;
@@ -125,7 +125,7 @@ module ns_egret {
 		}
 
 		/**
-		 * @member ns_egret.SystemManager#height
+		 * @member ns_egret.UIStage#height
 		 */
         public get height():number{
             return this._height;
@@ -137,7 +137,7 @@ module ns_egret {
 		}
 
 		/**
-		 * @member ns_egret.SystemManager#scaleX
+		 * @member ns_egret.UIStage#scaleX
 		 */
         public get scaleX():number{
             return this._scaleX;
@@ -149,7 +149,7 @@ module ns_egret {
 		}
 
 		/**
-		 * @member ns_egret.SystemManager#scaleY
+		 * @member ns_egret.UIStage#scaleY
 		 */
         public get scaleY():number{
             return this._scaleY;
@@ -160,29 +160,29 @@ module ns_egret {
 		public set scaleY(value:number){
 		}
 		/**
-		 * @method ns_egret.SystemManager#setActualSize
+		 * @method ns_egret.UIStage#setActualSize
 		 * @param w {number} 
 		 * @param h {number} 
 		 */
 		public setActualSize(w:number, h:number):void{
 		}
 		/**
-		 * @method ns_egret.SystemManager#setLayoutBoundsPosition
+		 * @method ns_egret.UIStage#setLayoutBoundsPosition
 		 * @param x {number} 
 		 * @param y {number} 
 		 */
 		public setLayoutBoundsPosition(x:number, y:number):void{
 		}
 		/**
-		 * @method ns_egret.SystemManager#setLayoutBoundsSize
+		 * @method ns_egret.UIStage#setLayoutBoundsSize
 		 * @param layoutWidth {number} 
 		 * @param layoutHeight {number} 
 		 */
 		public setLayoutBoundsSize(layoutWidth:number, layoutHeight:number):void{
 		}
 		/**
-		 * 布局对象,SystemManager只接受BasicLayout
-		 * @member ns_egret.SystemManager#layout
+		 * 布局对象,UIStage只接受BasicLayout
+		 * @member ns_egret.UIStage#layout
 		 */		
 		public get layout():LayoutBase{
 			return this._layout;
@@ -192,40 +192,40 @@ module ns_egret {
 				this._setLayout(value);
 		}
 		
-		private _popUpContainer:SystemContainer;
+		private _popUpContainer:UILayer;
 		/**
 		 * 弹出窗口层容器。
-		 * @member ns_egret.SystemManager#popUpContainer
+		 * @member ns_egret.UIStage#popUpContainer
 		 */		
 		public get popUpContainer():IContainer{
 			if (!this._popUpContainer){
-				this._popUpContainer = new SystemContainer(this,"noTopMostIndex","topMostIndex");
+				this._popUpContainer = new UILayer(this,"noTopMostIndex","topMostIndex");
 			}
 			
 			return this._popUpContainer;
 		}
 		
-		private _toolTipContainer:SystemContainer;
+		private _toolTipContainer:UILayer;
 		/**
 		 * 工具提示层容器。
-		 * @member ns_egret.SystemManager#toolTipContainer
+		 * @member ns_egret.UIStage#toolTipContainer
 		 */		
 		public get toolTipContainer():IContainer{
 			if (!this._toolTipContainer){
-				this._toolTipContainer = new SystemContainer(this,"topMostIndex","toolTipIndex");
+				this._toolTipContainer = new UILayer(this,"topMostIndex","toolTipIndex");
 			}
 			
 			return this._toolTipContainer;
 		}
 		
-		private _cursorContainer:SystemContainer;
+		private _cursorContainer:UILayer;
 		/**
 		 * 鼠标样式层容器。
-		 * @member ns_egret.SystemManager#cursorContainer
+		 * @member ns_egret.UIStage#cursorContainer
 		 */		
 		public get cursorContainer():IContainer{
 			if (!this._cursorContainer){
-				this._cursorContainer = new SystemContainer(this,"toolTipIndex","cursorIndex");
+				this._cursorContainer = new UILayer(this,"toolTipIndex","cursorIndex");
 			}
 			
 			return this._cursorContainer;
@@ -290,7 +290,7 @@ module ns_egret {
 		//                                复写容器操作方法
 		//==========================================================================
 		/**
-		 * @method ns_egret.SystemManager#addElement
+		 * @method ns_egret.UIStage#addElement
 		 * @param element {IVisualElement} 
 		 * @returns {IVisualElement}
 		 */
@@ -302,7 +302,7 @@ module ns_egret {
 		}
 		
 		/**
-		 * @method ns_egret.SystemManager#addElementAt
+		 * @method ns_egret.UIStage#addElementAt
 		 * @param element {IVisualElement} 
 		 * @param index {number} 
 		 * @returns {IVisualElement}
@@ -333,7 +333,7 @@ module ns_egret {
 		}
 		
 		/**
-		 * @method ns_egret.SystemManager#removeElement
+		 * @method ns_egret.UIStage#removeElement
 		 * @param element {IVisualElement} 
 		 * @returns {IVisualElement}
 		 */
@@ -342,7 +342,7 @@ module ns_egret {
 		}
 		
 		/**
-		 * @method ns_egret.SystemManager#removeElementAt
+		 * @method ns_egret.UIStage#removeElementAt
 		 * @param index {number} 
 		 * @returns {IVisualElement}
 		 */
@@ -360,7 +360,7 @@ module ns_egret {
 		}
 		
 		/**
-		 * @method ns_egret.SystemManager#removeAllElements
+		 * @method ns_egret.UIStage#removeAllElements
 		 */
 		public removeAllElements():void{
 			while(this._noTopMostIndex>0){
@@ -370,7 +370,7 @@ module ns_egret {
 		}
 		
 		/**
-		 * @method ns_egret.SystemManager#_elementRemoved
+		 * @method ns_egret.UIStage#_elementRemoved
 		 * @param element {IVisualElement} 
 		 * @param index {number} 
 		 * @param notifyListeners {boolean} 
@@ -378,7 +378,7 @@ module ns_egret {
 		public _elementRemoved(element:IVisualElement, index:number, notifyListeners:boolean=true):void{
 			if(notifyListeners){
 				//PopUpManager需要监听这个事件
-                Event.dispatchEvent(element,"removeFromSystemManager")
+                Event.dispatchEvent(element,"removeFromUIStage")
 			}
 			super._elementRemoved(element,index,notifyListeners);
 		}

@@ -28,6 +28,7 @@
 /// <reference path="../../../egret/display/DisplayObject.ts"/>
 /// <reference path="../../../egret/display/DisplayObjectContainer.ts"/>
 /// <reference path="../../../egret/events/Event.ts"/>
+/// <reference path="../../../egret/utils/Logger.ts"/>
 /// <reference path="IInvalidating.ts"/>
 /// <reference path="ILayoutElement.ts"/>
 /// <reference path="IUIComponent.ts"/>

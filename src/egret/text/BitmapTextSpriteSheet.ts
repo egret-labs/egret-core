@@ -25,6 +25,8 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+/// <reference path="../display/SpriteSheet.ts"/>
+/// <reference path="../display/Texture.ts"/>
 
 module ns_egret {
 
