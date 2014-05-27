@@ -124,7 +124,7 @@ module ns_egret {
 
             this._skin = skin;
             if(skin instanceof DisplayObject){
-                this._addToDisplayList(this._skin,0);
+                this._addToDisplayListAt(this._skin,0);
             }
             this.attachSkin(skin);
             this.invalidateSkinState();
@@ -471,24 +471,6 @@ module ns_egret {
 				this.skinLayout.updateDisplayList(unscaledWidth,unscaledHeight);
 			}
 		}
-
-        /**
-         * 添加对象到显示列表，此接口仅框架内部使用,
-         * 如果需要管理子项，若有，请使用容器的addElementAt()方法,非法使用有可能造成无法自动布局。
-         */
-        public _addToDisplayList(child:DisplayObject, index:number = -1):void{
-            if (child.parent ==<DisplayObjectContainer><any> this)
-                super.setChildIndex(child, index != -1 ? index : this.numChildren - 1);
-            else
-                super.addChildAt(child, index != -1 ? index : this.numChildren);
-        }
-        /**
-         * 从显示列表移除对象,此接口仅框架内部使用,
-         * 如果需要管理子项，若有，请使用容器的removeElement()方法,非法使用有可能造成无法自动布局。
-         */
-        public _removeFromDisplayList(child:DisplayObject):DisplayObject{
-            return super.removeChild(child);
-        }
 
         private static errorStr:string = "在此组件中不可用，若此组件为容器类，请使用";
         /**

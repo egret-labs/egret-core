@@ -141,10 +141,10 @@ module ns_egret {
             this._content = content;
             if(oldContent!==content) {
                 if(oldContent instanceof DisplayObject){
-                    super.removeChild(<DisplayObjectContainer> oldContent);
+                    this._removeFromDisplayList(<DisplayObjectContainer> oldContent);
                 }
                 if(content instanceof  DisplayObject){
-                    super.addChildAt(<DisplayObjectContainer> content,0);
+                    this._addToDisplayListAt(<DisplayObjectContainer> content,0);
                 }
             }
             this.invalidateSize();

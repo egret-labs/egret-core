@@ -32,17 +32,17 @@
 
 module ns_egret {
 
-	/**
-	 * @class ns_egret.PopUpManagerImpl
-	 * @classdesc
-	 * 窗口弹出管理器实现类
-	 * @extends ns_egret.EventDispatcher
-	 * @implements ns_egret.IPopUpManager
-	 */
+    /**
+     * @class ns_egret.PopUpManagerImpl
+     * @classdesc
+     * 窗口弹出管理器实现类
+     * @extends ns_egret.EventDispatcher
+     * @implements ns_egret.IPopUpManager
+     */
     export class PopUpManagerImpl extends EventDispatcher implements IPopUpManager{
         /**
          * 构造函数
-		 * @method ns_egret.PopUpManagerImpl#constructor
+         * @method ns_egret.PopUpManagerImpl#constructor
          */
         public constructor(){
             super();
@@ -51,7 +51,7 @@ module ns_egret {
         private _popUpList:Array<any> = [];
         /**
          * 已经弹出的窗口列表
-		 * @member ns_egret.PopUpManagerImpl#popUpList
+         * @member ns_egret.PopUpManagerImpl#popUpList
          */
         public get popUpList():Array<any>{
             return this._popUpList.concat();
@@ -77,7 +77,7 @@ module ns_egret {
         private static REMOVE_FROM_SYSTEMMANAGER:string = "removeFromSystemManager";
         /**
          * 弹出一个窗口。<br/>
-		 * @method ns_egret.PopUpManagerImpl#addPopUp
+         * @method ns_egret.PopUpManagerImpl#addPopUp
          * @param popUp {IVisualElement} 要弹出的窗口
          * @param modal {boolean} 是否启用模态。即禁用弹出窗口所在层以下的鼠标事件。默认false。
          * @param center {boolean} 是否居中窗口。等效于在外部调用centerPopUp()来居中。默认true。
@@ -131,7 +131,7 @@ module ns_egret {
         private _modalColor:number = 0x000000;
         /**
          * 模态遮罩的填充颜色
-		 * @member ns_egret.PopUpManagerImpl#modalColor
+         * @member ns_egret.PopUpManagerImpl#modalColor
          */
         public get modalColor():number{
             return this._modalColor;
@@ -146,7 +146,7 @@ module ns_egret {
         private _modalAlpha:number = 0.5;
         /**
          * 模态遮罩的透明度
-		 * @member ns_egret.PopUpManagerImpl#modalAlpha
+         * @member ns_egret.PopUpManagerImpl#modalAlpha
          */
         public get modalAlpha():number{
             return this._modalAlpha;
@@ -217,21 +217,23 @@ module ns_egret {
 
         /**
          * 移除由addPopUp()方法弹出的窗口。
-		 * @method ns_egret.PopUpManagerImpl#removePopUp
+         * @method ns_egret.PopUpManagerImpl#removePopUp
          * @param popUp {IVisualElement} 要移除的窗口
          */
         public removePopUp(popUp:IVisualElement):void{
             if(popUp && popUp.parent&&this.findPopUpData(popUp)){
                 if("removeElement" in popUp.parent)
-                (<IVisualElementContainer><any> (popUp.parent)).removeElement(popUp);
-            else if(popUp instanceof DisplayObject)
+                    (<IVisualElementContainer><any> (popUp.parent)).removeElement(popUp);
+                else if(popUp.parent instanceof UIComponent)
+                    (<UIComponent><any> (popUp.parent))._removeFromDisplayList(<DisplayObject><any> popUp);
+                else if(popUp instanceof DisplayObject)
                     popUp.parent.removeChild(<DisplayObject><any>popUp);
             }
         }
 
         /**
          * 将指定窗口居中显示
-		 * @method ns_egret.PopUpManagerImpl#centerPopUp
+         * @method ns_egret.PopUpManagerImpl#centerPopUp
          * @param popUp {IVisualElement} 要居中显示的窗口
          */
         public centerPopUp(popUp:IVisualElement):void{
@@ -240,7 +242,7 @@ module ns_egret {
             var parent:DisplayObjectContainer = popUp.parent;
             if(parent){
                 if("validateNow" in popUp)
-                (<IInvalidating><any>popUp).validateNow();
+                    (<IInvalidating><any>popUp).validateNow();
                 popUp.x = (parent.width-popUp.layoutBoundsWidth)*0.5;
                 popUp.y = (parent.height-popUp.layoutBoundsHeight)*0.5;
             }
@@ -248,7 +250,7 @@ module ns_egret {
 
         /**
          * 将指定窗口的层级调至最前
-		 * @method ns_egret.PopUpManagerImpl#bringToFront
+         * @method ns_egret.PopUpManagerImpl#bringToFront
          * @param popUp {IVisualElement} 要最前显示的窗口
          */
         public bringToFront(popUp:IVisualElement):void{
@@ -262,24 +264,24 @@ module ns_egret {
     }
 
     class PopUpData{
-		/**
-		 * @method ns_egret.PopUpData#constructor
-		 * @param popUp {IVisualElement} 
-		 * @param modal {boolea} 
-		 */
+        /**
+         * @method ns_egret.PopUpData#constructor
+         * @param popUp {IVisualElement}
+         * @param modal {boolea}
+         */
         public constructor(popUp:IVisualElement,modal:boolean){
             this.popUp = popUp;
             this.modal = modal;
         }
 
-		/**
-		 * @member ns_egret.PopUpData#popUp
-		 */
+        /**
+         * @member ns_egret.PopUpData#popUp
+         */
         public popUp:IVisualElement;
 
-		/**
-		 * @member ns_egret.PopUpData#modal
-		 */
+        /**
+         * @member ns_egret.PopUpData#modal
+         */
         public modal:boolean;
     }
 }

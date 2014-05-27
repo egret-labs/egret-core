@@ -118,7 +118,7 @@ module ns_egret {
             if (this.viewport){
                 this.viewport.clipAndEnableScrolling = true;
                 this.viewport.addEventListener(TouchEvent.TOUCH_BEGAN,this.onTouchBegan,this)
-                super.addChildAt(<DisplayObject><any> this.viewport,0);
+                this._addToDisplayListAt(<DisplayObject><any> this.viewport,0);
             }
         }
 
@@ -129,7 +129,7 @@ module ns_egret {
             if (this.viewport){
                 this.viewport.clipAndEnableScrolling = false;
                 this.viewport.removeEventListener(TouchEvent.TOUCH_BEGAN,this.onTouchBegan,this)
-                super.removeChild(<DisplayObject><any> this.viewport);
+                this._removeFromDisplayList(<DisplayObject><any> this.viewport);
             }
         }
         /**

@@ -25,7 +25,7 @@ module ns_egret {
 	/**
 	 * @class ns_egret.Rect
 	 * @classdesc
-	 * 矩形绘图元素。矩形的角可以是圆角,此组件可响应鼠标事件。
+	 * 矩形绘图元素。此组件可响应鼠标事件。
 	 * @extends ns_egret.UIComponent
 	 */
 	export class Rect extends UIComponent{
@@ -38,17 +38,22 @@ module ns_egret {
 			this.touchChildren = false;
 		}
 
-        private shapeRect:Shape;
+        private _graphics:Graphics;
 
-		/**
-		 * @method ns_egret.Rect#createChildren
-		 */
-        public createChildren():void{
-            super.createChildren();
-            this.shapeRect = new Shape();
-            this.addChild(this.shapeRect);
+        public get graphics():Graphics{
+            if(!this._graphics){
+                var rendererContext = ns_egret.MainContext.instance.rendererContext;
+                this._graphics = new Graphics(rendererContext);
+            }
+            return this._graphics;
         }
-		
+
+        public _render(renderContext:RendererContext):void {
+            if(this._graphics)
+                this._graphics._draw();
+            super._render(renderContext);
+        }
+
 		private _fillColor:number = 0xFFFFFF;
 		/**
 		 * 填充颜色
@@ -125,6 +130,32 @@ module ns_egret {
 			this.invalidateDisplayList();
 		}
 
+        /**
+         * @see egret.DisplayObject.measureBounds
+         * @returns {Rectangle}
+         * @private
+         */
+        public _measureBounds():ns_egret.Rectangle {
+            var bounds:Rectangle = super._measureBounds();
+            var w:number = this.width;
+            var h:number = this.height;
+            var x:number = 0;
+            var y:number = 0;
+            if(x<bounds.x){
+                bounds.x = x;
+            }
+            if(y<bounds.y){
+                bounds.y = y;
+            }
+            if(x+w>bounds.right){
+                bounds.right = x+w;
+            }
+            if(y+h>bounds.bottom){
+                bounds.bottom = y+h;
+            }
+            return bounds;
+        }
+
 		/**
 		 * @method ns_egret.Rect#updateDisplayList
 		 * @param unscaledWidth {number} 
@@ -132,9 +163,7 @@ module ns_egret {
 		 */
 		public updateDisplayList(unscaledWidth:number, unscaledHeight:number):void{
 			super.updateDisplayList(unscaledWidth,unscaledWidth);
-            this.shapeRect.width = unscaledWidth;
-            this.shapeRect.height = unscaledHeight;
-			var g:Graphics = this.shapeRect.graphics;
+			var g:Graphics = this.graphics;
 			g.clear();
 			g.beginFill(this._fillColor,this._fillAlpha);
 			if(this._strokeAlpha>0){

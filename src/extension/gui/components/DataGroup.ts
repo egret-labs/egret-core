@@ -233,7 +233,7 @@ module ns_egret {
 			if(this._itemRendererSkinName){
 				this.setItemRenderSkinName(renderer);
 			}
-			super.addChild(<DisplayObject><any>renderer);
+			this._addToDisplayList(<DisplayObject><any>renderer);
 			renderer.setLayoutBoundsSize(NaN,NaN);
 			return renderer;
 		}
@@ -486,7 +486,7 @@ module ns_egret {
 		 * 回收一个ItemRenderer实例
 		 */		
 		private recycle(renderer:IItemRenderer):void{
-			super.removeChild(<DisplayObject><any> renderer);
+			this._removeFromDisplayList(<DisplayObject><any> renderer);
 			if("ownerChanged" in renderer){
 				(<IVisualElement> <any>renderer).ownerChanged(null);
 			}

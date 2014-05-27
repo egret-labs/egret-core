@@ -296,7 +296,7 @@ module ns_egret {
             this._textField.lineSpacing = this._lineSpacing;
             this._textField.letterSpacing = this.letterSpacing;
             this._textField.textColor = this._textColor;
-            this.addChild(this._textField);
+            this._addToDisplayList(this._textField);
         }
 		
 		/**

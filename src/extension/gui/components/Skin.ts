@@ -315,7 +315,7 @@ module ns_egret {
 			element.ownerChanged(this);
             if(element instanceof DisplayObject){
                 var childDO:DisplayObject = <DisplayObject><any> element;
-                this._hostComponent._doAddChild(childDO,index,notifyListeners);
+                this._hostComponent._addToDisplayListAt(childDO,index,notifyListeners);
             }
 
 			if (notifyListeners){
@@ -341,12 +341,9 @@ module ns_egret {
                         ElementExistenceEvent.ELEMENT_REMOVE,element,index);
 			}
 
-            if(element instanceof DisplayObject){
+            if(element instanceof DisplayObject&&element.parent==this._hostComponent){
                 var childDO:DisplayObject = <DisplayObject><any> element;
-                var removeIndex:number = this._hostComponent._children.indexOf(childDO);
-                if(removeIndex!=-1){
-                    this._hostComponent._doRemoveChild(removeIndex,notifyListeners);
-                }
+                this._hostComponent._removeFromDisplayList(childDO,notifyListeners);
             }
 
 			element.ownerChanged(null);

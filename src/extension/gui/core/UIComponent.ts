@@ -199,8 +199,66 @@ module ns_egret {
 				}
 			}
 		}
-		
+
+        /**
+         * 添加对象到显示列表,此接口仅预留给框架内部使用
+         * 如果需要管理子项，若有，请使用容器的addElement()方法，非法使用有可能造成无法自动布局。
+         */
+        public _addToDisplayList(child:DisplayObject,notifyListeners:boolean = true):DisplayObject{
+            var index:number = this.numChildren;
+
+            if (child.parent == this)
+                index--;
+            this._addingChild(child);
+            this._doAddChild(child, index,notifyListeners);
+            this._childAdded(child);
+            return child;
+        }
+        /**
+         * 添加对象到显示列表,此接口仅预留给框架内部使用
+         * 如果需要管理子项，若有，请使用容器的addElementAt()方法，非法使用有可能造成无法自动布局。
+         */
+        public _addToDisplayListAt(child:DisplayObject,index:number,notifyListeners:boolean = true):DisplayObject{
+            this._addingChild(child);
+            this._doAddChild(child,index,notifyListeners);
+            this._childAdded(child);
+            return child;
+        }
+        /**
+         * 添加对象到显示列表,此接口仅预留给框架内部使用
+         * 如果需要管理子项，若有，请使用容器的removeElement()方法,非法使用有可能造成无法自动布局。
+         */
+        public _removeFromDisplayList(child:DisplayObject,notifyListeners:boolean = true):DisplayObject{
+            var index = this._children.indexOf(child);
+            if (index >= 0) {
+                return this._doRemoveChild(index,notifyListeners);
+                this._childRemoved(child);
+                return child;
+            }
+            else {
+                ns_egret.Logger.fatal("child未被addChild到该parent");
+                return null;
+            }
+        }
+        /**
+         * 从显示列表移除指定索引的子项,此接口仅预留给框架内部使用
+         * 如果需要管理子项，若有，请使用容器的removeElementAt()方法,非法使用有可能造成无法自动布局。
+         */
+        public _removeFromDisplayListAt(index:number,notifyListeners:boolean = true):DisplayObject{
+            if (index >= 0 && index < this._children.length) {
+                var child:DisplayObject = this._doRemoveChild(index,notifyListeners);
+                this._childRemoved(child);
+                return child;
+            }
+            else {
+                ns_egret.Logger.fatal("提供的索引超出范围");
+                return null;
+            }
+        }
+
 		/**
+         * GUI范围内，请不要调用任何addChild方法，若是容器，请用addElement,若需要包装普通显示对象，请把显示对象赋值给UIAsset.source。
+         * @deprecated
 		 * @method ns_egret.UIComponent#addChild
 		 * @param child {DisplayObject} 
 		 * @returns {DisplayObject}
@@ -213,6 +271,8 @@ module ns_egret {
 		}
 		
 		/**
+         * GUI范围内，请不要调用任何addChildAt方法，若是容器，请用addElementAt,若需要包装普通显示对象，请把显示对象赋值给UIAsset.source。
+         * @deprecated
 		 * @method ns_egret.UIComponent#addChildAt
 		 * @param child {DisplayObject} 
 		 * @param index {number} 
@@ -247,6 +307,8 @@ module ns_egret {
 		}
 		
 		/**
+         * GUI范围内，请不要调用任何removeChild方法，若是容器，请用removeElement
+         * @deprecated
 		 * @method ns_egret.UIComponent#removeChild
 		 * @param child {DisplayObject} 
 		 * @returns {DisplayObject}
@@ -258,6 +320,8 @@ module ns_egret {
 		}
 		
 		/**
+         * GUI范围内，请不要调用任何removeChildAt方法，若是容器，请用removeElementAt
+         * @deprecated
 		 * @method ns_egret.UIComponent#removeChildAt
 		 * @param index {number} 
 		 * @returns {DisplayObject}
@@ -328,7 +392,6 @@ module ns_egret {
             if(this._width==value&&this._explicitWidth==value)
                 return;
             super._setWidth(value);
-            this._explicitWidth = value;
             this.invalidateProperties();
             this.invalidateDisplayList();
             this.invalidateParentSizeAndDisplayList();
@@ -342,8 +405,7 @@ module ns_egret {
 		public get width():number{
 			return this.escapeNaN(this._width);
 		}
-		
-		
+
 		/**
 		 * 属性提交前组件旧的高度
 		 */
@@ -361,7 +423,6 @@ module ns_egret {
             if(this._height==value&&this._explicitHeight==value)
                 return;
             super._setHeight(value);
-            this._explicitHeight = value;
             this.invalidateProperties();
             this.invalidateDisplayList();
             this.invalidateParentSizeAndDisplayList();

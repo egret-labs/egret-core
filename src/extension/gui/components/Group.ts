@@ -305,7 +305,7 @@ module ns_egret {
 		public _elementAdded(element:IVisualElement, index:number, notifyListeners:boolean = true):void{
             if(element instanceof DisplayObject){
                 var childDO:DisplayObject = <DisplayObject><any> element;
-                this._doAddChild(childDO,index,notifyListeners);
+                this._addToDisplayListAt(childDO,index,notifyListeners);
             }
 
 			if (notifyListeners){
@@ -331,26 +331,13 @@ module ns_egret {
                         ElementExistenceEvent.ELEMENT_REMOVE, element, index);
 			}
 
-            if(element instanceof DisplayObject){
+            if(element instanceof DisplayObject&&element.parent==this){
                 var childDO:DisplayObject = <DisplayObject><any> element;
-                var removeIndex:number = this._children.indexOf(childDO);
-                if(removeIndex!=-1){
-                    this._doRemoveChild(removeIndex,notifyListeners);
-                }
+                this._removeFromDisplayList(childDO,notifyListeners);
             }
 
 			this.invalidateSize();
 			this.invalidateDisplayList();
-		}
-		
-		/**
-		 * 添加对象到显示列表
-		 */		
-		public _addToDisplayList(child:DisplayObject, index:number = -1):void{
-			if (child.parent ==<DisplayObjectContainer><any> this)
-				super.setChildIndex(child, index != -1 ? index : this.numChildren - 1);
-			else
-				super.addChildAt(child, index != -1 ? index : this.numChildren);
 		}
 		
 		private static errorStr:string = "在此组件中不可用，若此组件为容器类，请使用";
