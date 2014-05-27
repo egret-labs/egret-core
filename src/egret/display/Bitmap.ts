@@ -38,8 +38,11 @@ module ns_egret {
          */
         public static debug:boolean = false;
 
-        public constructor() {
+        public constructor(texture?:Texture) {
             super();
+            if(texture){
+                this.texture = texture;
+            }
         }
 
         /**
