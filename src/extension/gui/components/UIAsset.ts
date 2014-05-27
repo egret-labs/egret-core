@@ -204,6 +204,9 @@ module ns_egret {
                 RenderFilter.getInstance().drawImage(renderContext, this, texture._startX, texture._startY,
                     w, h,offsetX, offsetY,this.width,this.height);
             }
+            else{
+                this._texture_to_render = null;
+            }
             super._render(renderContext);
         }
 
