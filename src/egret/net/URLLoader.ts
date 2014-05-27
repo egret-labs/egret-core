@@ -76,6 +76,7 @@ module ns_egret {
 		 */
         public load(request:URLRequest):void {
             this._request = request;
+            this.data = null;
             MainContext.instance.netContext.proceed(this);
         }
     }

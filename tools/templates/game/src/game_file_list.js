@@ -12,6 +12,7 @@ var game_file_list = [
     "resource/analyzer/ImgAnalyzer.js",
     "resource/analyzer/JsonAnalyzer.js",
     "resource/analyzer/TxtAnalyzer.js",
+    "resource/analyzer/SheetAnalyzer.js",
     "resource/Resource.js",
     //Resource end
 	
