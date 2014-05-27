@@ -87,9 +87,10 @@ class GameApp {
         sky.scaleX = stageW / skyW;
         sky.scaleY = stageH / skyH;
 
-        var topMask = new ns_egret.ShapeRect();
-        topMask.alpha = 0.8;
-        topMask.color = 0;
+        var topMask = new ns_egret.Shape();
+        topMask.graphics.beginFill(0x000000, 0.8);
+        topMask.graphics.drawRect(0, 0, stageW, stageH);
+        topMask.graphics.endFill();
         topMask.width = stageW;
         topMask.height = stageH;
         stage.addChild(topMask);
