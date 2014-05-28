@@ -91,6 +91,11 @@ module egret {
 		 * @member {egret.Texture} egret.Bitmap#texture
          */
         public texture:Texture;
+        /**
+         * 矩形区域，它定义位图对象的九个缩放区域
+         * @member {egret.Texture} egret.Bitmap#scale9Grid
+         */
+        public scale9Grid:Rectangle;
 
         public _render(renderContext:RendererContext):void {
             var texture = this.texture;
@@ -101,8 +106,14 @@ module egret {
             this._texture_to_render = texture;
             var w:number = texture._textureWidth;
             var h:number = texture._textureHeight;
-            RenderFilter.getInstance().drawImage(renderContext, this, texture._startX, texture._startY,
-                w, h, texture._offsetX, texture._offsetY, w, h);
+            if(this.scale9Grid){
+                RenderFilter.getInstance().drawScale9GridImage(renderContext, this, this.scale9Grid,texture._startX, texture._startY,
+                    w, h, texture._offsetX, texture._offsetY, this.width, this.height);
+            }
+            else{
+                RenderFilter.getInstance().drawImage(renderContext, this, texture._startX, texture._startY,
+                    w, h, texture._offsetX, texture._offsetY, w, h);
+            }
         }
 
         /**

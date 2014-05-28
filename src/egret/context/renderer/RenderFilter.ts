@@ -76,6 +76,55 @@ module egret {
         public clearDrawArea():void {
             this._drawAreaList = [];
         }
+        /**
+         * 绘制九宫格位图
+         */
+        public drawScale9GridImage(renderContext:RendererContext, data:RenderData,scale9Grid:Rectangle,
+                                   sourceX:number, sourceY:number, sourceWidth:number, sourceHeight:number,
+                                   destX:number, destY:number, destWidth:number, destHeight:number):void{
+
+            var texture:Texture = data._texture_to_render;
+            if(!texture||!scale9Grid){
+                return;
+            }
+            var s9g:Rectangle = Rectangle.identity.initialize(
+                    scale9Grid.x-Math.round(destX),scale9Grid.y - Math.round(destX),
+                scale9Grid.width,scale9Grid.height);
+            if(sourceWidth - s9g.width>destWidth||sourceHeight - s9g.height>destHeight){
+
+                this.drawImage(renderContext,data,sourceX,sourceY,sourceWidth, sourceHeight,
+                    destX, destY, destWidth, destHeight)
+                return;
+            }
+            var roundedDrawX:number = Math.round(destX*destWidth/sourceWidth);
+            var roundedDrawY:number = Math.round(destY*destHeight/sourceHeight);
+            //防止空心的情况出现。
+            if(s9g.y==s9g.bottom){
+                if(s9g.bottom<sourceHeight)
+                    s9g.bottom ++;
+                else
+                    s9g.y --;
+            }
+            if(s9g.x==s9g.right){
+                if(s9g.right<sourceWidth)
+                    s9g.right ++;
+                else
+                    s9g.x --;
+            }
+
+            var destScaleGridBottom:number = destHeight - (sourceHeight - s9g.bottom);
+            var destScaleGridRight:number = destWidth - (sourceWidth - s9g.right);
+
+            this.drawImage(renderContext, data, sourceX, sourceY, s9g.x, s9g.y, roundedDrawX, 0, s9g.x, s9g.y);
+            this.drawImage(renderContext, data, sourceX+s9g.x, sourceY, s9g.width, s9g.y, roundedDrawX+s9g.x, 0, destScaleGridRight-s9g.x, s9g.y);
+            this.drawImage(renderContext, data, sourceX+s9g.right, sourceY, sourceWidth-s9g.right, s9g.y, roundedDrawX+destScaleGridRight, 0, destWidth-destScaleGridRight, s9g.y);
+            this.drawImage(renderContext, data, sourceX, sourceY+s9g.y, s9g.x, s9g.height, roundedDrawX, s9g.y, s9g.x, destScaleGridBottom-s9g.y);
+            this.drawImage(renderContext, data, sourceX+s9g.x, sourceY+s9g.y, s9g.width, s9g.height, roundedDrawX+s9g.x, s9g.y, destScaleGridRight-s9g.x, destScaleGridBottom-s9g.y);
+            this.drawImage(renderContext, data, sourceX+s9g.right, sourceY+s9g.y, sourceWidth-s9g.right, s9g.height, roundedDrawX+destScaleGridRight, s9g.y, destWidth-destScaleGridRight, destScaleGridBottom-s9g.y);
+            this.drawImage(renderContext, data, sourceX, sourceY+s9g.bottom, s9g.x, sourceHeight-s9g.bottom, roundedDrawX, destScaleGridBottom, s9g.x, destHeight-destScaleGridBottom);
+            this.drawImage(renderContext, data, sourceX+s9g.x, sourceY+s9g.bottom, s9g.width, sourceHeight-s9g.bottom,roundedDrawX+s9g.x, destScaleGridBottom, destScaleGridRight-s9g.x, destHeight-destScaleGridBottom);
+            this.drawImage(renderContext, data, sourceX+s9g.right, sourceY+s9g.bottom, sourceWidth-s9g.right, sourceHeight-s9g.bottom, roundedDrawX+destScaleGridRight, destScaleGridBottom, destWidth-destScaleGridRight, destHeight-destScaleGridBottom);
+        }
 
         /**
          * 先检查有没有不需要绘制的区域，再把需要绘制的区域绘制出来
