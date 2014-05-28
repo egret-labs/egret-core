@@ -149,7 +149,7 @@ module dragonBones {
 
             public getRegion(subTextureName:string):geom.Rectangle {
                 throw new Error("error");
-                return new geom.Rectangle();
+                //return new geom.Rectangle();
             }
 
             private parseData(textureAtlasRawData:any):void {

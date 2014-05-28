@@ -241,7 +241,7 @@ module egret {
         public _removeFromDisplayList(child:DisplayObject,notifyListeners:boolean = true):DisplayObject{
             var index = this._children.indexOf(child);
             if (index >= 0) {
-                return this._doRemoveChild(index,notifyListeners);
+                this._doRemoveChild(index,notifyListeners);
                 this._childRemoved(child);
                 return child;
             }

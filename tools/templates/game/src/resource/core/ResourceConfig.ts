@@ -147,17 +147,17 @@ module RES {
         private trim(str:string):string{
             if(!str)
                 return "";
-            var char:string = str.charAt(0);
+            var c:string = str.charAt(0);
             while(str.length>0&&
-                (char==" "||char=="\t"||char=="\n"||char=="\r"||char=="\f")){
+                (c==" "||c=="\t"||c=="\n"||c=="\r"||c=="\f")){
                 str = str.substr(1);
-                char = str.charAt(0);
+                c = str.charAt(0);
             }
-            char = str.charAt(str.length-1);
+            c = str.charAt(str.length-1);
             while(str.length>0&&
-                (char==" "||char=="\t"||char=="\n"||char=="\r"||char=="\f")){
+                (c==" "||c=="\t"||c=="\n"||c=="\r"||c=="\f")){
                 str = str.substr(0,str.length-1);
-                char = str.charAt(str.length-1);
+                c = str.charAt(str.length-1);
             }
             return str;
         }
