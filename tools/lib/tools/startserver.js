@@ -33,7 +33,7 @@ function run(dir, args, opts) {
     var open = require("../core/open");
 
     var currDir = libs.joinEgretDir(dir, args[0]);
-    var arr = currDir.split("/");
+    var arr = currDir.split(path.sep);
     if (arr[arr.length - 1] == "") {
         arr.splice(arr.length - 1, 1);
     }
