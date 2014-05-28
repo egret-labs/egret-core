@@ -24,11 +24,9 @@ Egret Framework是一款使用JavaScript(TypeScript)编写的HTML5开源免费�
 * Windows Phone 8
 
 
-如何构建
+文档与教程
 -------------------------
-配置环境参见 [如何配置Egret开发环境](https://github.com/egret-team/egret/wiki)
-
-构建代码和创建项目参见 [如何使用Egret Command Line Tool](/tools/README.md)
+访问 [这里](https://github.com/egret-team/egret/wiki) 获取 Egret 的文档和教程
 
 
 
