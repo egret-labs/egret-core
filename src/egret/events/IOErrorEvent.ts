@@ -30,17 +30,32 @@
 
 module egret {
 
+	/**
+	 * @class egret.IOErrorEvent
+	 * @classdesc
+	 * @extends egret.Event
+	 */
     export class IOErrorEvent extends Event{
 
+		/**
+		 * @constant {string} egret.IOErrorEvent.IO_ERROR
+		 */
         public static IO_ERROR:string = "ioError";
 
+		/**
+		 * @method egret.IOErrorEvent#constructor
+		 * @param type {string} 
+		 * @param bubbles {boolean} 
+		 * @param cancelable {boolean} 
+		 */
         public constructor(type:string, bubbles:boolean=false, cancelable:boolean=false){
             super(type,bubbles,cancelable);
         }
 
         /**
          * 使用指定的EventDispatcher对象来抛出Event事件对象。抛出的对象将会缓存在对象池上，供下次循环复用。
-         * @method egret.IOErrorEvent.dispathIOErrorEvent
+		 * @method egret.IOErrorEvent.dispatchIOErrorEvent
+		 * @param target {egret.IEventDispatcher} 
          */
         public static dispatchIOErrorEvent(target:IEventDispatcher):void{
             var eventClass:any = IOErrorEvent;

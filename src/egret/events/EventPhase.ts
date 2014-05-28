@@ -28,20 +28,25 @@
 module egret {
 
     /**
+	 * @class egret.EventPhase
+	 * @classdesc
      * EventPhase 类可为 Event 类的 eventPhase 属性提供值。
      */
     export class EventPhase{
 
         /**
          * 捕获阶段，是事件流的第一个阶段。
+		 * @constant {number} egret.EventPhase.CAPTURING_PHASE
          */
         public static CAPTURING_PHASE:number = 1;
         /**
          * 目标阶段，是事件流的第二个阶段。
+		 * @constant {number} egret.EventPhase.AT_TARGET
          */
         public static AT_TARGET:number = 2;
         /**
          * 冒泡阶段，是事件流的第三个阶段。
+		 * @constant {number} egret.EventPhase.BUBBLING_PHASE
          */
         public static BUBBLING_PHASE:number = 3;
     }
