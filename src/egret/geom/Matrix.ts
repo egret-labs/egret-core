@@ -32,50 +32,52 @@
 
 module egret {
     /**
-	 * @class egret.Matrix
-	 * @classdesc
+     * @class egret.Matrix
+     * @classdesc
      * 2D矩阵类，包括常见矩阵算法
-	 * @extends egret.HashObject
+     * @extends egret.HashObject
      */
-    export class Matrix extends HashObject{
-		/**
-		 * @constructor
-		 * @param public a {any} 
-		 * @param public b {any} 
-		 * @param public c {any} 
-		 * @param public d {any} 
-		 * @param public tx {any} 
-		 * @param public ty {any} 
-		 */
-        constructor(public a = 1, public b = 0, public c = 0, public d = 1, public tx = 0, public ty = 0) {
+    export class Matrix extends HashObject {
+        /**
+         * @method egret.Matrix#constructor
+         * @constructor
+         * @param a {number}
+         * @param b {number}
+         * @param c {number}
+         * @param d {number}
+         * @param tx {number}
+         * @param ty {number}
+         */
+            constructor(public a = 1, public b = 0, public c = 0, public d = 1, public tx = 0, public ty = 0) {
             super();
         }
 
-/**
- * @member egret.Matrix.
- */
+        /**
+         * @member {any} egret.Matrix.
+         */
 // static public properties:
 
         static identity = new Matrix();
 
         static DEG_TO_RAD = Math.PI / 180;
 
-/**
- * @member egret.Matrix#
- */
+        /**
+         * @member {any} egret.Matrix#
+         */
 // public methods:
 
         /**
          * 前置矩阵
-         * @param a
-         * @param b
-         * @param c
-         * @param d
-         * @param tx
-         * @param ty
-         * @returns {egret.Matrix}
+         * @method egret.Matrix#prepend
+         * @param a {number}
+         * @param b {number}
+         * @param c {number}
+         * @param d {number}
+         * @param tx {number}
+         * @param ty {number}
+         * @returns {ns_egret.Matrix}
          */
-        public prepend(a, b, c, d, tx, ty):Matrix {
+        public prepend(a:number, b:number, c:number, d:number, tx:number, ty:number):Matrix {
             var tx1 = this.tx;
             if (a != 1 || b != 0 || c != 0 || d != 1) {
                 var a1 = this.a;
@@ -93,12 +95,13 @@ module egret {
 
         /**
          * 后置矩阵
-         * @param a
-         * @param b
-         * @param c
-         * @param d
-         * @param tx
-         * @param ty
+         * @method egret.Matrix#append
+         * @param a {number}
+         * @param b {number}
+         * @param c {number}
+         * @param d {number}
+         * @param tx {number}
+         * @param ty {number}
          * @returns {egret.Matrix}
          */
         public append(a, b, c, d, tx, ty):Matrix {
@@ -119,10 +122,11 @@ module egret {
 
         /**
          * 前置矩阵
-         * @param matrix
+         * @method egret.Matrix#prependMatrix
+         * @param matrix {number}
          * @returns {egret.Matrix}
          */
-        public prependMatrix(matrix):Matrix {
+        public prependMatrix(matrix:Matrix):Matrix {
             this.prepend(matrix.a, matrix.b, matrix.c, matrix.d, matrix.tx, matrix.ty);
 //        this.prependProperties(matrix.alpha, matrix.shadow,  matrix.compositeOperation);
             return this;
@@ -131,10 +135,11 @@ module egret {
 
         /**
          * 后置矩阵
-         * @param matrix
+         * @method egret.Matrix#appendMatrix
+         * @param matrix {egret.Matrix}
          * @returns {egret.Matrix}
          */
-        public appendMatrix(matrix):Matrix {
+        public appendMatrix(matrix:Matrix):Matrix {
             this.append(matrix.a, matrix.b, matrix.c, matrix.d, matrix.tx, matrix.ty);
 //        this.appendProperties(matrix.alpha, matrix.shadow,  matrix.compositeOperation);
             return this;
@@ -143,10 +148,19 @@ module egret {
 
         /**
          * 前置矩阵
-         * @param matrix
+         * @method egret.Matrix#prependTransform
+         * @param x {number}
+         * @param y {number}
+         * @param scaleX {number}
+         * @param scaleY {number}
+         * @param rotation {number}
+         * @param skewX {number}
+         * @param skewY {number}
+         * @param regX {number}
+         * @param regY {number}
          * @returns {egret.Matrix}
          */
-        public prependTransform(x, y, scaleX, scaleY, rotation, skewX, skewY, regX, regY):Matrix {
+        public prependTransform(x:number, y:number, scaleX:number, scaleY:number, rotation:number, skewX:number, skewY:number, regX:number, regY:number):Matrix {
             if (rotation % 360) {
                 var r = rotation * Matrix.DEG_TO_RAD;
                 var cos = Math.cos(r);
@@ -176,10 +190,19 @@ module egret {
 
         /**
          * 后置矩阵
-         * @param matrix
+         * @method egret.Matrix#appendTransform
+         * @param x {number}
+         * @param y {number}
+         * @param scaleX {number}
+         * @param scaleY {number}
+         * @param rotation {number}
+         * @param skewX {number}
+         * @param skewY {number}
+         * @param regX {number}
+         * @param regY {number}
          * @returns {egret.Matrix}
          */
-        public appendTransform(x, y, scaleX, scaleY, rotation, skewX, skewY, regX, regY):Matrix {
+        public appendTransform(x:number, y:number, scaleX:number, scaleY:number, rotation:number, skewX:number, skewY:number, regX:number, regY:number):Matrix {
             if (rotation % 360) {
                 var r = rotation * Matrix.DEG_TO_RAD;
                 var cos = Math.cos(r);
@@ -207,21 +230,20 @@ module egret {
             return this;
         }
 
-		/**
-		 * @method egret.Matrix#appendTransformFromDisplay
-		 * @param target {egret.DisplayObjec}
-		 */
+        /**
+         * @method egret.Matrix#appendTransformFromDisplay
+         * @param target {egret.DisplayObject}
+         * @returns {egret.Matrix}
+         */
         public appendTransformFromDisplay(target:egret.DisplayObject):Matrix {
             var o = target;
-            var anchorX,anchorY;
-            if(o.anchorX != 0 || o.anchorY != 0)
-            {
+            var anchorX, anchorY;
+            if (o.anchorX != 0 || o.anchorY != 0) {
                 var bounds = o.getBounds(Rectangle.identity);
                 anchorX = bounds.width * o.anchorX;
                 anchorY = bounds.height * o.anchorY;
             }
-            else
-            {
+            else {
                 anchorX = o.anchorOffsetX;
                 anchorY = o.anchorOffsetY;
             }
@@ -234,7 +256,8 @@ module egret {
 
         /**
          * 矩阵旋转，以角度制为单位
-         * @param angle
+         * @method egret.Matrix#rotate
+         * @param angle {number}
          * @returns {egret.Matrix}
          */
         public rotate(angle):Matrix {
@@ -257,8 +280,9 @@ module egret {
 
         /**
          * 矩阵斜切，以角度值为单位
-         * @param skewX
-         * @param skewY
+         * @method egret.Matrix#skew
+         * @param skewX {number}
+         * @param skewY {number}
          * @returns {egret.Matrix}
          */
         public skew(skewX, skewY):Matrix {
@@ -271,8 +295,9 @@ module egret {
 
         /**
          * 矩阵缩放
-         * @param x
-         * @param y
+         * @method egret.Matrix#scale
+         * @param x {number}
+         * @param y {number}
          * @returns {egret.Matrix}
          */
         public scale(x, y):Matrix {
@@ -288,8 +313,9 @@ module egret {
 
         /**
          * 矩阵唯一
-         * @param x
-         * @param y
+         * @method egret.Matrix#translate
+         * @param x {number}
+         * @param y {number}
          * @returns {egret.Matrix}
          */
         public translate(x, y):Matrix {
@@ -301,6 +327,7 @@ module egret {
 
         /**
          * 矩阵重置
+         * @method egret.Matrix#identity
          * @returns {egret.Matrix}
          */
         public identity():Matrix {
@@ -312,8 +339,10 @@ module egret {
 
         /**
          * 矩阵翻转
+         * @method egret.Matrix#invert
+         * @returns {egret.Matrix}
          */
-        public invert = function ():Matrix {
+        public invert():Matrix {
             var a1 = this.a;
             var b1 = this.b;
             var c1 = this.c;
@@ -328,90 +357,16 @@ module egret {
             this.tx = (c1 * this.ty - d1 * tx1) / n;
             this.ty = -(a1 * this.ty - b1 * tx1) / n;
             return this;
-        };
-
-
-        public isIdentity():boolean {
-            return this.tx == 0 && this.ty == 0 && this.a == 1 && this.b == 0 && this.c == 0 && this.d == 1;
         }
-
-
-        public transformPoint(x, y, pt) {
-            pt = pt || {};
-            pt.x = x * this.a + y * this.c + this.tx;
-            pt.y = x * this.b + y * this.d + this.ty;
-            return pt;
-        }
-
-
-        public decompose(target) {
-            // TODO: it would be nice to be able to solve for whether the matrix can be decomposed into only scale/rotation
-            // even when scale is negative
-            if (target == null) {
-                target = {};
-            }
-            target.x = this.tx;
-            target.y = this.ty;
-            target.scaleX = Math.sqrt(this.a * this.a + this.b * this.b);
-            target.scaleY = Math.sqrt(this.c * this.c + this.d * this.d);
-
-            var skewX = Math.atan2(-this.c, this.d);
-            var skewY = Math.atan2(this.b, this.a);
-
-            if (skewX == skewY) {
-                target.rotation = skewY / Matrix.DEG_TO_RAD;
-                if (this.a < 0 && this.d >= 0) {
-                    target.rotation += (target.rotation <= 0) ? 180 : -180;
-                }
-                target.skewX = target.skewY = 0;
-            } else {
-                target.skewX = skewX / Matrix.DEG_TO_RAD;
-                target.skewY = skewY / Matrix.DEG_TO_RAD;
-            }
-            return target;
-        }
-
-
-//        copy(matrix) {
-//            return null;
-//        return this.initialize(matrix.a, matrix.b, matrix.c, matrix.d, matrix.tx, matrix.ty, matrix.alpha, matrix.shadow, matrix.compositeOperation);
-//        }
-
-
-//    appendProperties = function(alpha, shadow, compositeOperation) {
-//        this.alpha *= alpha;
-//        this.shadow = shadow || this.shadow;
-//        this.compositeOperation = compositeOperation || this.compositeOperation;
-//        return this;
-//    };
-//
-//
-//    prependProperties (alpha, shadow, compositeOperation) {
-//        this.alpha *= alpha;
-//        this.shadow = this.shadow || shadow;
-//        this.compositeOperation = this.compositeOperation || compositeOperation;
-//        return this;
-//    };
-
-
-//    p.clone = function() {
-//        return (new Matrix()).copy(this);
-//    };
-//
-//
-//    p.toString = function() {
-//        return "[Matrix (a="+this.a+" b="+this.b+" c="+this.c+" d="+this.d+" tx="+this.tx+" ty="+this.ty+")]";
-//    };
-
-        // this has to be populated after the class is defined:
 
 
         /**
          * 根据一个矩阵，返回某个点在该矩阵上的坐标
-         * @param matrix
-         * @param x
-         * @param y
-         * @returns {Point}
+         * @method egret.Matrix.transformCoords
+         * @param matrix {egret.Matrix}
+         * @param x {number}
+         * @param y {number}
+         * @returns {numberPoint}
          * @stable C 该方法以后可能删除
          */
         public static transformCoords(matrix:Matrix, x:number, y:number):Point {
