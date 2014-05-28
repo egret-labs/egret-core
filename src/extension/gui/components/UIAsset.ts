@@ -179,8 +179,8 @@ module egret {
                     this.measuredHeight = (<ILayoutElement><any> (content)).preferredHeight;
                 }
                 else{
-                    this.measuredWidth = content.width;
-                    this.measuredHeight = content.height;
+                    this.measuredWidth = content.width*content.scaleX;
+                    this.measuredHeight = content.height*content.scaleY;
                 }
             }
             else if(content instanceof Texture){
@@ -202,8 +202,8 @@ module egret {
                     (<ILayoutElement><any> (content)).setLayoutBoundsSize(unscaledWidth,unscaledHeight);
 				}
 				else{
-					content.width = unscaledWidth;
-					content.height = unscaledHeight;
+					content.width = unscaledWidth/content.scaleX;
+					content.height = unscaledHeight/content.scaleY;
 				}
 			}
 		}

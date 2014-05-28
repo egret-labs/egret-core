@@ -92,17 +92,18 @@ module egret {
             var sourceHeight:number = texture._textureHeight;
             var destX:number = texture._offsetX;
             var destY:number = texture._offsetY;
+            var roundedDrawX:number = Math.round(destX*destWidth/sourceWidth);
+            var roundedDrawY:number = Math.round(destY*destHeight/sourceHeight);
             var s9g:Rectangle = Rectangle.identity.initialize(
                     scale9Grid.x-Math.round(destX),scale9Grid.y - Math.round(destX),
                 scale9Grid.width,scale9Grid.height);
             if(sourceWidth - s9g.width>destWidth||sourceHeight - s9g.height>destHeight){
 
                 this.drawImage(renderContext,data,sourceX,sourceY,sourceWidth, sourceHeight,
-                    destX, destY, destWidth, destHeight)
+                    roundedDrawX, roundedDrawY, destWidth, destHeight)
                 return;
             }
-            var roundedDrawX:number = Math.round(destX*destWidth/sourceWidth);
-            var roundedDrawY:number = Math.round(destY*destHeight/sourceHeight);
+
             //防止空心的情况出现。
             if(s9g.y==s9g.bottom){
                 if(s9g.bottom<sourceHeight)
