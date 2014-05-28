@@ -32,18 +32,10 @@ function run(dir, args, opts) {
     server.listen(PORT);
     var open = require("../core/open");
 
-    var currDir = libs.joinEgretDir(dir, args[0]);
-    var arr = currDir.split(path.sep);
-    if (arr[arr.length - 1] == "") {
-        arr.splice(arr.length - 1, 1);
-    }
-    var tempPN = arr[arr.length - 1];
+    libs.joinEgretDir(dir, args[0]);
 
-    if (args[0] == null || args[0] == "") {
-        projectName = tempPN;
-    }
 
-    var url = path.join("http://localhost:3000", tempPN, "launcher/index.html");
+    var url = path.join("http://localhost:3000", args[0], "launcher/index.html");
     open(url);
     console.log("Server runing at port: " + PORT + ".");
 }
