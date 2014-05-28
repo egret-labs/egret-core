@@ -40,13 +40,13 @@ Egret Framework是一款使用JavaScript(TypeScript)编写的HTML5开源免费�
 
 发布说明
 --------------------
-[Egret 0.9.4 Release Notes 2014-5-15](/docs/ReleaseNotes_0_9_4.md)
+[Egret 0.9.4 Release Notes 2014-5-15](/docs/Prerelease_ReleaseNotes.md)
 
-[Egret 0.9.3  Release Notes 2014-4-30](/docs/ReleaseNotes.md)
+[Egret 0.9.3  Release Notes 2014-4-30](/docs/Prerelease_ReleaseNotes.md)
 
-[Egret 0.9.2  Release Notes 2014-3-27](/docs/ReleaseNotes.md)
+[Egret 0.9.2  Release Notes 2014-3-27](/docs/Prerelease_ReleaseNotes.md)
 
-[Egret 0.9.1  Release Notes 2014-3-24](/docs/ReleaseNotes.md)
+[Egret 0.9.1  Release Notes 2014-3-24](/docs/Prerelease_ReleaseNotes.md)
 
 联系我们
 -------------------
