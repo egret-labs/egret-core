@@ -40,7 +40,7 @@ module egret {
 
         }
 
-        public beginFill(color:number, alpha:number):void {
+        public beginFill(color:number, alpha:number = 1):void {
             var _colorBlue = color & 0x0000FF;
             var _colorGreen = (color & 0x00ff00) >> 8;
             var _colorRed = color >> 16;
