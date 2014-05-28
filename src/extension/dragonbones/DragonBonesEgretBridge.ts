@@ -125,11 +125,22 @@ module dragonBones {
             public name:string;
             public scale:number;
             public spriteSheet:egret.SpriteSheet;
+            private _textureData:any = {};
 
-            constructor(public texture:any, textureAtlasRawData:any, scale:number = 1) {
+            constructor(public texture:any, private textureAtlasRawData:any, scale:number = 1) {
                 this.scale = scale;
-
+                this.name = textureAtlasRawData[utils.ConstValues.A_NAME];
                 this.parseData(textureAtlasRawData);
+                this.spriteSheet = new egret.SpriteSheet(texture.bitmapData);
+            }
+
+            public getTexture(fullName:string):egret.Texture {
+                var result = this.spriteSheet.getTexture(fullName);
+                if (!result) {
+                    var data = this._textureData[fullName];
+                    result = this.spriteSheet.createTexture(fullName, data.x, data.y, data.width, data.height);
+                }
+                return result;
             }
 
             public dispose():void {
@@ -142,33 +153,11 @@ module dragonBones {
             }
 
             private parseData(textureAtlasRawData:any):void {
-                this.name = textureAtlasRawData[utils.ConstValues.A_NAME];
-                this.spriteSheet = this.parseFromDragonBones(textureAtlasRawData);
-            }
-
-            /**
-             * 这个API已经被完全废弃，会尽快删除
-             * @param data
-             * @returns {SpriteSheet}
-             * @stable D
-             */
-            private parseFromDragonBones(data):egret.SpriteSheet {
-
-                var spriteSheet:egret.SpriteSheet = new egret.SpriteSheet(data);
-                spriteSheet["textureMap"] = {};
-                var list = data.SubTexture
-
-                for (var key in list) {
-                    var frameData = list[key];
-                    var rect = new egret.SpriteSheetFrame();
-                    rect.w = frameData.width;
-                    rect.h = frameData.height;
-                    rect.x = frameData.x;
-                    rect.y = frameData.y;
-                    spriteSheet["textureMap"][frameData.name] = rect;
-//            console.log (rect);
+                var l:number = textureAtlasRawData.SubTexture.length;
+                for (var i:number = 0; i < l; i++) {
+                    var data = textureAtlasRawData.SubTexture[i];
+                    this._textureData[data.name] = data;
                 }
-                return spriteSheet;
             }
         }
     }
@@ -197,9 +186,7 @@ module dragonBones {
             public _generateDisplay(textureAtlas:textures.EgretTextureAtlas, fullName:string, pivotX:number, pivotY:number):any {
 
                 var bitmap1:egret.Bitmap = new egret.Bitmap();
-                bitmap1.texture = textureAtlas.texture;
-                var frame = textureAtlas.spriteSheet.getFrame(fullName);
-                bitmap1.spriteFrame = frame;
+                bitmap1.texture = textureAtlas.getTexture(fullName);
                 bitmap1.anchorOffsetX = pivotX;
                 bitmap1.anchorOffsetY = pivotY;
                 return bitmap1;
