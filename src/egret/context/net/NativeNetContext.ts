@@ -68,7 +68,9 @@ module egret {
 
             function onLoadComplete() {
                 var request:URLRequest = loader._request;
-                var texture = egret_native.EGTTextureCatche.addTexture(request.url);
+                var bitmapData = egret_native.EGTTextureCatche.addTexture(request.url);
+                var texture = new Texture();
+                texture.bitmapData = bitmapData;
                 loader.data = texture;
                 Event.dispatchEvent(loader,Event.COMPLETE);
             };
