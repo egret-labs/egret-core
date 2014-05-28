@@ -55,7 +55,6 @@ exports.core = [
     "egret/context/net/NetContext.js",
     "egret/context/devices/DeviceContext.js",
     "egret/context/Browser.js",
-    "egret/display/ScaleBitmap.js",
     //utils start
     "jslib/ZipUtils.js",
     "jslib/base64.js",
