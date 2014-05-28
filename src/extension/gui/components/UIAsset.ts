@@ -57,6 +57,12 @@ module egret {
 			super();
 			this.touchChildren = false;
 		}
+
+        /**
+         * 矩形区域，它定义素材对象的九个缩放区域
+         * @member {egret.Texture} egret.UIAsset#scale9Grid
+         */
+        public scale9Grid:Rectangle;
 		
 		private sourceChanged:boolean = false;
 
@@ -196,8 +202,8 @@ module egret {
                     (<ILayoutElement><any> (content)).setLayoutBoundsSize(unscaledWidth,unscaledHeight);
 				}
 				else{
-					content.scaleX = content.width==0?1:unscaledWidth/content.width;
-					content.scaleY = content.height==0?1:unscaledHeight/content.height;
+					content.width = unscaledWidth;
+					content.height = unscaledHeight;
 				}
 			}
 		}
@@ -206,12 +212,18 @@ module egret {
             if(this._content instanceof Texture){
                 var texture:Texture = <Texture> this._content;
                 this._texture_to_render = texture;
-                var w:number = texture._textureWidth;
-                var h:number = texture._textureHeight;
-                var offsetX:number = Math.floor(texture._offsetX*this.width/w);
-                var offsetY:number = Math.floor(texture._offsetY*this.height/h);
-                RenderFilter.getInstance().drawImage(renderContext, this, texture._startX, texture._startY,
-                    w, h,offsetX, offsetY,this.width,this.height);
+                if(this.scale9Grid){
+                    RenderFilter.getInstance().drawScale9GridImage(renderContext, this, this.scale9Grid,this._width, this._height);
+                }
+                else{
+                    var w:number = texture._textureWidth;
+                    var h:number = texture._textureHeight;
+                    var offsetX:number = Math.floor(texture._offsetX*this.width/w);
+                    var offsetY:number = Math.floor(texture._offsetY*this.height/h);
+                    RenderFilter.getInstance().drawImage(renderContext, this, texture._startX, texture._startY,
+                        w, h,offsetX, offsetY,this._width,this._height);
+                }
+
             }
             else{
                 this._texture_to_render = null;

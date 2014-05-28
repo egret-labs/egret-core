@@ -80,13 +80,18 @@ module egret {
          * 绘制九宫格位图
          */
         public drawScale9GridImage(renderContext:RendererContext, data:RenderData,scale9Grid:Rectangle,
-                                   sourceX:number, sourceY:number, sourceWidth:number, sourceHeight:number,
-                                   destX:number, destY:number, destWidth:number, destHeight:number):void{
+                                   destWidth:number, destHeight:number):void{
 
             var texture:Texture = data._texture_to_render;
             if(!texture||!scale9Grid){
                 return;
             }
+            var sourceX:number = texture._startX;
+            var sourceY:number = texture._startY;
+            var sourceWidth:number = texture._textureWidth;
+            var sourceHeight:number = texture._textureHeight;
+            var destX:number = texture._offsetX;
+            var destY:number = texture._offsetY;
             var s9g:Rectangle = Rectangle.identity.initialize(
                     scale9Grid.x-Math.round(destX),scale9Grid.y - Math.round(destX),
                 scale9Grid.width,scale9Grid.height);
@@ -112,18 +117,27 @@ module egret {
                     s9g.x --;
             }
 
+            var sourceX2:number = sourceX+s9g.x;
+            var sourceX3:number = sourceX+s9g.right;
+            var sourceRightW:number = sourceWidth-s9g.right;
+            var sourceY2:number = sourceY+s9g.y;
+            var sourceY3:number = sourceY+s9g.bottom;
+            var sourceBottomH:number = sourceHeight-s9g.bottom
+
+            var destX1:number = roundedDrawX+s9g.x;
             var destScaleGridBottom:number = destHeight - (sourceHeight - s9g.bottom);
             var destScaleGridRight:number = destWidth - (sourceWidth - s9g.right);
 
+
             this.drawImage(renderContext, data, sourceX, sourceY, s9g.x, s9g.y, roundedDrawX, 0, s9g.x, s9g.y);
-            this.drawImage(renderContext, data, sourceX+s9g.x, sourceY, s9g.width, s9g.y, roundedDrawX+s9g.x, 0, destScaleGridRight-s9g.x, s9g.y);
-            this.drawImage(renderContext, data, sourceX+s9g.right, sourceY, sourceWidth-s9g.right, s9g.y, roundedDrawX+destScaleGridRight, 0, destWidth-destScaleGridRight, s9g.y);
-            this.drawImage(renderContext, data, sourceX, sourceY+s9g.y, s9g.x, s9g.height, roundedDrawX, s9g.y, s9g.x, destScaleGridBottom-s9g.y);
-            this.drawImage(renderContext, data, sourceX+s9g.x, sourceY+s9g.y, s9g.width, s9g.height, roundedDrawX+s9g.x, s9g.y, destScaleGridRight-s9g.x, destScaleGridBottom-s9g.y);
-            this.drawImage(renderContext, data, sourceX+s9g.right, sourceY+s9g.y, sourceWidth-s9g.right, s9g.height, roundedDrawX+destScaleGridRight, s9g.y, destWidth-destScaleGridRight, destScaleGridBottom-s9g.y);
-            this.drawImage(renderContext, data, sourceX, sourceY+s9g.bottom, s9g.x, sourceHeight-s9g.bottom, roundedDrawX, destScaleGridBottom, s9g.x, destHeight-destScaleGridBottom);
-            this.drawImage(renderContext, data, sourceX+s9g.x, sourceY+s9g.bottom, s9g.width, sourceHeight-s9g.bottom,roundedDrawX+s9g.x, destScaleGridBottom, destScaleGridRight-s9g.x, destHeight-destScaleGridBottom);
-            this.drawImage(renderContext, data, sourceX+s9g.right, sourceY+s9g.bottom, sourceWidth-s9g.right, sourceHeight-s9g.bottom, roundedDrawX+destScaleGridRight, destScaleGridBottom, destWidth-destScaleGridRight, destHeight-destScaleGridBottom);
+            this.drawImage(renderContext, data, sourceX2, sourceY, s9g.width, s9g.y, destX1, 0, destScaleGridRight-s9g.x, s9g.y);
+            this.drawImage(renderContext, data, sourceX3, sourceY, sourceRightW, s9g.y, roundedDrawX+destScaleGridRight, 0, destWidth-destScaleGridRight, s9g.y);
+            this.drawImage(renderContext, data, sourceX, sourceY2, s9g.x, s9g.height, roundedDrawX, s9g.y, s9g.x, destScaleGridBottom-s9g.y);
+            this.drawImage(renderContext, data, sourceX2, sourceY2, s9g.width, s9g.height, destX1, s9g.y, destScaleGridRight-s9g.x, destScaleGridBottom-s9g.y);
+            this.drawImage(renderContext, data, sourceX3, sourceY2, sourceRightW, s9g.height, roundedDrawX+destScaleGridRight, s9g.y, destWidth-destScaleGridRight, destScaleGridBottom-s9g.y);
+            this.drawImage(renderContext, data, sourceX, sourceY3, s9g.x, sourceBottomH, roundedDrawX, destScaleGridBottom, s9g.x, destHeight-destScaleGridBottom);
+            this.drawImage(renderContext, data, sourceX2, sourceY3, s9g.width, sourceBottomH,destX1, destScaleGridBottom, destScaleGridRight-s9g.x, destHeight-destScaleGridBottom);
+            this.drawImage(renderContext, data, sourceX3, sourceY3, sourceRightW, sourceBottomH, roundedDrawX+destScaleGridRight, destScaleGridBottom, destWidth-destScaleGridRight, destHeight-destScaleGridBottom);
         }
 
         /**

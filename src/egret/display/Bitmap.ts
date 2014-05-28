@@ -104,15 +104,18 @@ module egret {
                 return;
             }
             this._texture_to_render = texture;
-            var w:number = texture._textureWidth;
-            var h:number = texture._textureHeight;
+            var destW:number = this._hasWidthSet?this._explicitWidth:texture._textureWidth;
+            var destH:number = this._hasHeightSet?this._explicitHeight:texture._textureHeight;
             if(this.scale9Grid){
-                RenderFilter.getInstance().drawScale9GridImage(renderContext, this, this.scale9Grid,texture._startX, texture._startY,
-                    w, h, texture._offsetX, texture._offsetY, this.width, this.height);
+                RenderFilter.getInstance().drawScale9GridImage(renderContext, this, this.scale9Grid, destW, destH);
             }
             else{
+                var w:number = texture._textureWidth;
+                var h:number = texture._textureHeight;
+                var offsetX:number = Math.floor(texture._offsetX*destW/w);
+                var offsetY:number = Math.floor(texture._offsetY*destH/h);
                 RenderFilter.getInstance().drawImage(renderContext, this, texture._startX, texture._startY,
-                    w, h, texture._offsetX, texture._offsetY, w, h);
+                    w, h, offsetX, offsetY, destW,destH);
             }
         }
 

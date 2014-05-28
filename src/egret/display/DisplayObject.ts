@@ -385,7 +385,7 @@ module egret {
             return this.getBounds(Rectangle.identity).height;
         }
 
-        private _hasWidthSet:Boolean = false;
+        public _hasWidthSet:Boolean = false;
 
         /**
          * 显式设置宽度
@@ -403,7 +403,7 @@ module egret {
             this._hasWidthSet = NumberUtils.isNumber(value);
         }
 
-        private _hasHeightSet:Boolean = false;
+        public _hasHeightSet:Boolean = false;
 
         /**
          * 显式设置高度

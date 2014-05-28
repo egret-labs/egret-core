@@ -413,7 +413,7 @@ module egret {
 		 * @member egret.UIComponent#width
 		 */
 		public get width():number{
-			return this.escapeNaN(this._width);
+			return this._width;
 		}
 
 		/**
@@ -444,17 +444,8 @@ module egret {
 		 * @member egret.UIComponent#height
 		 */
 		public get height():number{
-			return this.escapeNaN(this._height);
+			return this._height;
 		}
-		/**
-		 * 过滤NaN数字
-		 */		
-		private escapeNaN(number:number):number{
-			if(isNaN(number))
-				return 0;
-			return number;
-		}
-
 		/**
 		 * @member egret.UIComponent#scaleX
 		 */
@@ -1165,7 +1156,7 @@ module egret {
 			else{
 				w = this.measuredWidth;
 			}
-			return this.escapeNaN(w*this.scaleX);
+			return w*this.scaleX;
 		}
 		/**
 		 * 组件的布局高度,常用于父级的updateDisplayList()方法中
@@ -1183,7 +1174,7 @@ module egret {
 			else{
 				h = this.measuredHeight;
 			}
-			return this.escapeNaN(h*this.scaleY);
+			return h*this.scaleY;
 		}
 	}
 }
