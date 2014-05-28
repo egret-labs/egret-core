@@ -218,8 +218,8 @@ module egret {
                 else{
                     var w:number = texture._textureWidth;
                     var h:number = texture._textureHeight;
-                    var offsetX:number = Math.floor(texture._offsetX*this.width/w);
-                    var offsetY:number = Math.floor(texture._offsetY*this.height/h);
+                    var offsetX:number = Math.round(texture._offsetX*this.width/w);
+                    var offsetY:number = Math.round(texture._offsetY*this.height/h);
                     RenderFilter.getInstance().drawImage(renderContext, this, texture._startX, texture._startY,
                         w, h,offsetX, offsetY,this._width,this._height);
                 }
