@@ -102,7 +102,7 @@ module egret {
          */
         public drawImage(texture:Texture, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight) {
 
-            egret_native.Graphics.drawImage(texture,sourceX,sourceY,sourceWidth,sourceHeight,destX,destY,destWidth,destHeight);
+            egret_native.Graphics.drawImage(texture._bitmapData,sourceX,sourceY,sourceWidth,sourceHeight,destX,destY,destWidth,destHeight);
 
             Profiler.getInstance().onDrawImage();
         }

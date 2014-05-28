@@ -26,7 +26,6 @@
  */
 
 
-
 declare module egret_native {
 
     /**
@@ -62,11 +61,11 @@ declare module egret_native {
 
     module Label {
 
-        function createLabel(font:string,size:number,defaultString:string):void;
+        function createLabel(font:string, size:number, defaultString:string):void;
 
         function setTextColor(color:number):void;
 
-        function drawText(text:string,x:number,y:number):void;
+        function drawText(text:string, x:number, y:number):void;
 
         function setTextAlignment(type:string):void;
 
@@ -77,7 +76,13 @@ declare module egret_native {
     module EGTXML {
 
 
-
         function readXML(filepath:string):void;
+    }
+
+    module Texture {
+
+        function addTexture(filePath:string):any;
+
+        function removeTexture(filePath:string):void;
     }
 }

@@ -165,10 +165,6 @@ module egret{
             audio.addEventListener("pause", function (){
                 SoundContext.isMusicPlaying = false;
                 this.removeEventListener('pause', arguments.callee, false);
-                if(this)
-                {
-
-                }
             } , false);
             if(!isNaN(audio.duration))
             {

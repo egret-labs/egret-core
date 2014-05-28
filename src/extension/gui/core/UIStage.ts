@@ -63,7 +63,6 @@ module egret {
 		private onAddToStage(event:Event=null):void{
             if(UIGlobals._uiStage){
                 throw new Error("UIStage是GUI根容器，只能有一个此实例在显示列表中！");
-                return;
             }
             UIGlobals._uiStage = this;
 			this.stage.addEventListener(Event.RESIZE,this.onResize,this);

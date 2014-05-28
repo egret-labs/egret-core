@@ -42,13 +42,13 @@ module egret {
         public getTexture(name:string):Texture{
             var texture:Texture =  this._textureMap[name];
             if(!texture){
-                var char:any = this.charList[name];
-                if(!char){
+                var c:any = this.charList[name];
+                if(!c){
                     return null;
                 }
-                texture = this.createTexture(name,char.x,char.y,char.width,char.height);
-                texture._offsetX = char.offsetX;
-                texture._offsetY = char.offsetY;
+                texture = this.createTexture(name,c.x,c.y,c.width,c.height);
+                texture._offsetX = c.offsetX;
+                texture._offsetY = c.offsetY;
                 this._textureMap[name] = texture;
             }
             return texture;
@@ -63,14 +63,14 @@ module egret {
             for (var i:number = 4 ; i < 4 + charsCount ; i++){
                 var charText:string = lines[i];
                 var letter:string = String.fromCharCode(this.getConfigByKey(charText,"id"));
-                var char = {};
-                chars[letter] = char;
-                char["x"] = this.getConfigByKey(charText,"x");
-                char["y"] = this.getConfigByKey(charText,"y");
-                char["width"] = this.getConfigByKey(charText,"width");
-                char["height"] = this.getConfigByKey(charText,"height");
-                char["offsetX"] = this.getConfigByKey(charText,"xoffset");
-                char["offsetY"] = this.getConfigByKey(charText,"yoffset");
+                var c = {};
+                chars[letter] = c;
+                c["x"] = this.getConfigByKey(charText,"x");
+                c["y"] = this.getConfigByKey(charText,"y");
+                c["width"] = this.getConfigByKey(charText,"width");
+                c["height"] = this.getConfigByKey(charText,"height");
+                c["offsetX"] = this.getConfigByKey(charText,"xoffset");
+                c["offsetY"] = this.getConfigByKey(charText,"yoffset");
             }
             return chars;
         }
