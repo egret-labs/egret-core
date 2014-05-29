@@ -19,7 +19,7 @@ Egret Release Notes
 * 【改进】  优化主渲染循环在 updateTransform 阶段的性能，根据游戏不同的复杂度，有30%-200%的提升
 * 【改进】  添加 Bitmap.scale9Grid 属性，废除 Scale9Bitmap 类
 * 【重构】  将 examples 文件夹迁移至 egret-examples 项目
-
+* 【重构】  将命名空间从 ns_egret 调整为 egret
 
 #### 许可协议变化
 Egret 在 Public Beta版本中将版权协议修改为 BSD 协议。
