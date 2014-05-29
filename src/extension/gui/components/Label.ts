@@ -255,7 +255,7 @@ module egret {
 			var paddingB:number = isNaN(this._paddingBottom)?padding:this._paddingBottom;
 			
 			this._textField.x = paddingL;
-			this._textField.y = paddingT;
+			this._textField.y = paddingT-4;
 			if (this.isSpecialCase()){
 				var firstTime:boolean = isNaN(this.lastUnscaledWidth) ||
 					this.lastUnscaledWidth != unscaledWidth;
