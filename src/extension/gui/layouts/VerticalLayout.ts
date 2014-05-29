@@ -398,7 +398,7 @@ module egret {
          * 折半查找法寻找指定位置的显示对象索引
          */
         private findIndexAt(y:number, i0:number, i1:number):number{
-            var index:number = (i0 + i1) / 2;
+            var index:number = Math.floor((i0 + i1) * 0.5);
             var elementY:number = this.getStartPosition(index);
             var elementHeight:number = this.getElementSize(index);
             var gap:number = isNaN(this._gap)?0:this._gap;

@@ -131,6 +131,7 @@ module egret {
 				this.virtualRendererIndices.push(i);
 			}
 			for(var index in this.indexToRenderer){
+                index = parseInt(index);
 				if(this.virtualRendererIndices.indexOf(index)==-1){
 					this.freeRendererByIndex(index);
 				}
@@ -382,6 +383,7 @@ module egret {
 				case CollectionEventKind.REFRESH:
 					if(this.layout&&this.layout.useVirtualLayout){
 						for(var index in this.indexToRenderer){
+                            index = parseInt(index);
 							this.freeRendererByIndex(<number>index);
 						}
 					}
