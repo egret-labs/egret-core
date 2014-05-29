@@ -16,13 +16,13 @@
  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+/// <reference path="../../egret/events/EventDispatcher.ts"/>
+/// <reference path="../../egret/utils/Injector.ts"/>
 /// <reference path="analyzer/AnalyzerBase.ts"/>
 /// <reference path="analyzer/BinAnalyzer.ts"/>
 /// <reference path="analyzer/ImgAnalyzer.ts"/>
 /// <reference path="analyzer/JsonAnalyzer.ts"/>
 /// <reference path="analyzer/TxtAnalyzer.ts"/>
-/// <reference path="analyzer/SheetAnalyzer.ts"/>
-/// <reference path="analyzer/FontAnalyzer.ts"/>
 /// <reference path="core/ResourceConfig.ts"/>
 /// <reference path="core/ResourceItem.ts"/>
 /// <reference path="core/ResourceLoader.ts"/>
@@ -389,12 +389,16 @@ module RES {
                 case ResourceItem.TYPE_XML:
                 case ResourceItem.TYPE_TXT:
                 case ResourceItem.TYPE_JSON:
+                case ResourceItem.TYPE_SHEET:
                     type = suffix;
                     break;
                 case "png":
                 case "jpg":
                 case "gif":
                     type = ResourceItem.TYPE_IMG;
+                    break;
+                case "fnt":
+                    type = ResourceItem.TYPE_FONT;
                     break;
                 default:
                     type = ResourceItem.TYPE_BIN;

@@ -16,6 +16,8 @@
  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+/// <reference path="../../../egret/utils/HashObject.ts"/>
+/// <reference path="../Resource.ts"/>
 /// <reference path="../core/ResourceItem.ts"/>
 
 module RES {

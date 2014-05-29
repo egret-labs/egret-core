@@ -16,7 +16,10 @@
  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+/// <reference path="../../../egret/geom/Rectangle.ts"/>
+/// <reference path="../../../egret/net/URLLoaderDataFormat.ts"/>
 /// <reference path="BinAnalyzer.ts"/>
+/// <reference path="../core/ResourceItem.ts"/>
 
 module RES {
 
@@ -37,6 +40,9 @@ module RES {
             }
             this.fileDic[name] = data;
             if(resItem.data["scale9grid"]){
+                var str:string = resItem.data["scale9grid"];
+                var list:Array<string> = str.split(",");
+                data["scale9Grid"] = new egret.Rectangle(parseInt(list[0]),parseInt(list[1]),parseInt(list[2]),parseInt(list[3]));
             }
         }
     }

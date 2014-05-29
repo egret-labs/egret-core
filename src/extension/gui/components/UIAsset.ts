@@ -59,7 +59,7 @@ module egret {
 		}
 
         /**
-         * 矩形区域，它定义素材对象的九个缩放区域
+         * 矩形区域，它定义素材对象的九个缩放区域。此属性仅在source的解析结果为Texture时有效。
          * @member {egret.Texture} egret.UIAsset#scale9Grid
          */
         public scale9Grid:Rectangle;
@@ -161,6 +161,9 @@ module egret {
                 if(content instanceof  DisplayObject){
                     this._addToDisplayListAt(<DisplayObjectContainer> content,0);
                 }
+            }
+            if(content instanceof Texture&&content["scale9Grid"] instanceof Rectangle){
+                this.scale9Grid = content["scale9Grid"];
             }
             this.invalidateSize();
             this.invalidateDisplayList();
