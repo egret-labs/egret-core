@@ -28,27 +28,22 @@
 ///<reference path="egret.d.ts"/>
 ///<reference path="LoadingUI.ts"/>
 
-class GameApp {
+class GameApp extends egret.DisplayObjectContainer{
 
-    private textContainer:egret.DisplayObjectContainer;
     /**
      * 加载进度界面
      */
     private loadingView:LoadingUI;
-    /**
-     * 游戏启动后，外部会自动调用此方法
-     */
-    public startGame():void {
 
-        //设置屏幕适配策略
-        var container = new egret.EqualToFrame();
-        var content = egret.Browser.getInstance().isMobile ? new egret.FixedWidth() : new egret.FixedSize(480, 800);
-        var policy = new egret.ResolutionPolicy(container, content);
-        egret.StageDelegate.getInstance().setDesignSize(480, 800, policy);
+    public constructor() {
+        super();
+        this.addEventListener(egret.Event.ADDED_TO_STAGE,this.onAddToStage,this);
+    }
 
+    private onAddToStage(event:egret.Event){
         //设置加载进度界面
         this.loadingView  = new LoadingUI();
-        this.loadingView.addToStage();
+        this.stage.addChild(this.loadingView);
 
         //初始化Resource资源加载库
         RES.addEventListener(RES.ResourceEvent.GROUP_COMPLETE,this.onResourceLoadComplete,this);
@@ -61,6 +56,7 @@ class GameApp {
      */
     private onResourceLoadComplete(event:RES.ResourceEvent):void {
         if(event.groupName=="preload"){
+            this.stage.removeChild(this.loadingView);
             this.createGameScene();
         }
     }
@@ -69,42 +65,40 @@ class GameApp {
      */
     private onResourceProgress(event:RES.ResourceEvent):void {
         if(event.groupName=="preload"){
-            this.loadingView.onProgress(event.itemsLoaded,event.itemsTotal);
+            this.loadingView.setProgress(event.itemsLoaded,event.itemsTotal);
         }
     }
+
+    private textContainer:egret.Sprite;
     /**
      * 创建游戏场景
      */
     private createGameScene():void{
-        var stage = egret.MainContext.instance.stage;
-        var sky = this.createBitmapByName("bgImage");
-        stage.addChild(sky);
 
-        var stageW = stage.stageWidth;
-        var stageH = stage.stageHeight;
-        var skyW = sky.width;
-        var skyH = sky.height;
+        var sky:egret.Bitmap = this.createBitmapByName("bgImage");
+        this.addChild(sky);
+        var stageW:number = this.stage.stageWidth;
+        var stageH:number = this.stage.stageHeight;
+        sky.width = stageW;
+        sky.height = stageH;
 
-        sky.scaleX = stageW / skyW;
-        sky.scaleY = stageH / skyH;
-
-        var topMask = new egret.Shape();
+        var topMask:egret.Shape = new egret.Shape();
         topMask.graphics.beginFill(0x000000, 0.8);
         topMask.graphics.drawRect(0, 0, stageW, stageH);
         topMask.graphics.endFill();
         topMask.width = stageW;
         topMask.height = stageH;
-        stage.addChild(topMask);
+        this.addChild(topMask);
 
-        var icon = this.createBitmapByName("egretIcon");
+        var icon:egret.Bitmap = this.createBitmapByName("egretIcon");
         icon.anchorX = icon.anchorY = 0.5;
-        stage.addChild(icon);
+        this.addChild(icon);
         icon.x = stageW / 2;
         icon.y = stageH / 2 - 60;
         icon.scaleX = 0.55;
         icon.scaleY = 0.55;
 
-        var colorLabel = new egret.TextField();
+        var colorLabel:egret.TextField = new egret.TextField();
         colorLabel.x = stageW / 2;
         colorLabel.y = stageH / 2 + 50;
         colorLabel.anchorX = colorLabel.anchorY = 0.5;
@@ -112,11 +106,11 @@ class GameApp {
         colorLabel.textAlign = "center";
         colorLabel.text = "Hello Egret";
         colorLabel.size = 20;
-        stage.addChild(colorLabel);
+        this.addChild(colorLabel);
 
-        var textContainer = new egret.DisplayObjectContainer();
+        var textContainer:egret.Sprite = new egret.Sprite();
         textContainer.anchorX = textContainer.anchorY = 0.5;
-        stage.addChild(textContainer);
+        this.addChild(textContainer);
         textContainer.x = stageW / 2;
         textContainer.y = stageH / 2 + 100;
         textContainer.alpha = 0;
@@ -139,10 +133,10 @@ class GameApp {
      * 描述文件加载成功，开始播放动画
      */
     private startAnimation(result:Array<any>):void{
-        var textContainer = this.textContainer;
-        var count = -1;
-        var self = this;
-        var change = function() {
+        var textContainer:egret.Sprite = this.textContainer;
+        var count:number = -1;
+        var self:any = this;
+        var change:Function = function() {
             count++;
             if (count >= result.length) {
                 count = 0;
@@ -163,12 +157,12 @@ class GameApp {
     /**
      * 切换描述内容
      */
-    private changeDescription(textContainer, lineArr) {
+    private changeDescription(textContainer:egret.Sprite, lineArr:Array<any>):void {
         textContainer.removeChildren();
-        var w = 0;
-        for (var i = 0; i < lineArr.length; i++) {
-            var info = lineArr[i];
-            var colorLabel = new egret.TextField();
+        var w:number = 0;
+        for (var i:number = 0; i < lineArr.length; i++) {
+            var info:any = lineArr[i];
+            var colorLabel:egret.TextField = new egret.TextField();
             colorLabel.x = w;
             colorLabel.anchorX = colorLabel.anchorY = 0;
             colorLabel.textColor = parseInt(info["textColor"]);
@@ -180,8 +174,5 @@ class GameApp {
         }
     }
 }
-
-//声明一个全局的app属性，以便在launcher/egret_loader.js调用它的startGame()方法。
-var app = new GameApp();
 
 
