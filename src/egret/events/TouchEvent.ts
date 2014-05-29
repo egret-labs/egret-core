@@ -32,9 +32,6 @@
 
 module egret {
 
-	/**
-	 *
-	 */
     export class TouchEvent extends Event {
 
         /**
