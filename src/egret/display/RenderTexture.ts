@@ -51,7 +51,6 @@ module egret {
 
             displayObject.worldTransform.identity();
             displayObject.worldAlpha = 1;
-            //todo container不能改变自己的worldTransform
             if (displayObject instanceof egret.DisplayObjectContainer) {
                 this._offsetX = bounds.x;
                 this._offsetY = bounds.y;

@@ -38,6 +38,7 @@ module egret {
      */
     export class MovieClip extends DisplayObjectContainer {
         private _frameData;
+        private _spriteSheet:SpriteSheet;
         private _resPool = {};
         private _currentFrameIndex:number = 0;
         private _currentFrameName:string;
@@ -48,9 +49,10 @@ module egret {
         private _passTime:number = 0;
         private _oneFrameTime = 1000 / 60;
 
-        constructor(public data, public texture:Texture) {
+        constructor(public data, texture:Texture) {
             super();
             this._frameData = data;
+            this._spriteSheet = new SpriteSheet(texture._bitmapData);
             this._oneFrameTime = 1000 / egret.MainContext.instance.deviceContext.frameRate;
         }
 
@@ -119,7 +121,6 @@ module egret {
         }
 
         private playNextFrame(needShow:boolean = true) {
-            //todo 如果动画只有一帧的性能优化
             this._currentInterval = 0;
             var frameData = this._frameData.frames[this._currentFrameName].childrenFrame[this._currentFrameIndex];
             if (needShow) {
@@ -148,16 +149,20 @@ module egret {
             else {
                 var resData = this._frameData.res[name];
                 result = new Bitmap();
-                result.texture = this.texture;
-                result.spriteFrame = resData;
+                var texture = this._spriteSheet.getTexture(name);
+                if (!texture) {
+                    texture = this._spriteSheet.createTexture(name, resData.x, resData.y, resData.w, resData.h);
+                }
+                result.texture = texture;
                 this._resPool[name] = result;
             }
             return result;
         }
 
         public release() {
-            //todo,这里没必要创建对象
-            this._resPool = {};
+            for (var key in this._resPool) {
+                delete this._resPool[key];
+            }
         }
 
         public getCurrentFrameIndex():number {

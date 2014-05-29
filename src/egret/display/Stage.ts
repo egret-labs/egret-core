@@ -31,30 +31,32 @@
 /// <reference path="../geom/Matrix.ts"/>
 /// <reference path="../geom/Rectangle.ts"/>
 
-module egret{
+module egret {
     export class Stage extends DisplayObjectContainer {
 
         public static _invalidateRenderFlag:boolean = false;
+
         /**
          * 调用 invalidate() 方法后，在显示列表下次呈现时，Egret 会向每个已注册侦听 render 事件的显示对象发送一个 render 事件。
          * 每次您希望 Egret 发送 render 事件时，都必须调用 invalidate() 方法。
          */
-        public invalidate():void{
+        public invalidate():void {
             Stage._invalidateRenderFlag = true;
         }
 
-        public constructor(width:number,height:number) {
+        public constructor(width:number, height:number) {
             super();
             this.touchEnabled = true;
             this._stage = this;
             this._stageWidth = width;
             this._stageHeight = height;
         }
+
         /**
          * 设置舞台宽高
          */
-        public _setStageSize(width:number,height:number):void{
-            if(this._stageWidth==width&&this._stageHeight==height){
+        public _setStageSize(width:number, height:number):void {
+            if (this._stageWidth == width && this._stageHeight == height) {
                 return;
             }
             this._stageWidth = width;
@@ -66,7 +68,7 @@ module egret{
         /**
          * 舞台宽度（坐标系宽度，非设备宽度）
          */
-        public get stageWidth():number{
+        public get stageWidth():number {
             return this._stageWidth;
         }
 
@@ -74,10 +76,9 @@ module egret{
         /**
          * 舞台高度（坐标系高度，非设备高度）
          */
-        public get stageHeight():number{
+        public get stageHeight():number {
             return this._stageHeight;
         }
-
 
 
         /**
@@ -87,11 +88,6 @@ module egret{
          * @returns {DisplayObject}
          */
         public hitTest(x, y) {
-//            var result = super.hitTest(x, y);
-//            if (result == null) {
-//                result = this;
-//            }
-//            return result;
             if (!this.touchEnabled) {
                 return null;
             }
@@ -124,13 +120,11 @@ module egret{
          * @param resultRect {Rectangle} 可选参数，传入用于保存结果的Rectangle对象，避免重复创建对象。
          * @returns {Rectangle}
          */
-        public getBounds(resultRect?:Rectangle):Rectangle{
-            //todo
-            if(!resultRect){
+        public getBounds(resultRect?:Rectangle):Rectangle {
+            if (!resultRect) {
                 resultRect = new Rectangle();
             }
-            return resultRect.initialize(0, 0, 100000, 100000);
-//            return Rectangle.identity.initialize(0, 0, this.stageWidth, this.stageHeight);
+            return resultRect.initialize(0, 0, this._stageWidth, this._stageHeight);
         }
 
         public _updateTransform():void {
