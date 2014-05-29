@@ -31,7 +31,7 @@ exports.core = [
     "egret/display/Stage.js",
     "egret/display/Bitmap.js",
     "egret/text/BitmapText.js",
-    "egret/display/Graphics.js",
+
     "egret/display/Shape.js",
     "egret/text/TextField.js",
     "egret/text/TextFieldType.js",
@@ -195,7 +195,8 @@ exports.html5 = [
     "egret/context/sound/HTML5SoundContext.js",
     "egret/context/net/HTML5NetContext.js",
     "egret/context/interactive/HTML5TouchContext.js",
-    "egret/utils/SAXParser.js"
+    "egret/utils/SAXParser.js",
+    "egret/display/Graphics.js"
 ]
 
 exports.native = [
