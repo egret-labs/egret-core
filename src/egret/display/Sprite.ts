@@ -39,16 +39,15 @@ module egret {
 
         private _graphics:Graphics;
 
-        public get graphics():Graphics{
-            if(!this._graphics){
-                var rendererContext = egret.MainContext.instance.rendererContext;
-                this._graphics = new Graphics(rendererContext);
+        public get graphics():Graphics {
+            if (!this._graphics) {
+                this._graphics = new Graphics();
             }
             return this._graphics;
         }
 
         public _render(renderContext:RendererContext):void {
-            if(this._graphics)
+            if (this._graphics)
                 this._graphics._draw();
             super._render(renderContext);
         }

@@ -33,9 +33,11 @@ module egret {
 
         private canvasContext:CanvasRenderingContext2D;
         private commandQueue:Array<Command>;
+        private renderContext:RendererContext;
 
-        constructor(private renderContext:RendererContext) {
-            this.canvasContext = (<HTML5CanvasRenderer>renderContext).canvasContext;
+        constructor() {
+            this.renderContext = MainContext.instance.rendererContext;
+            this.canvasContext = (<HTML5CanvasRenderer>this.renderContext).canvasContext;
             this.commandQueue = [];
 
         }
@@ -59,16 +61,16 @@ module egret {
             var rendererContext = <HTML5CanvasRenderer>this.renderContext;
             this.commandQueue.push(new Command(
 
-                    function (x, y, width, height) {
-                        this.canvasContext.fillRect(rendererContext._transformTx + x,
-                                rendererContext._transformTy + y,
-                            width,
-                            height);
-                    },
-                    this,
-                    [ x, y, width, height]
+                function (x, y, width, height) {
+                    this.canvasContext.fillRect(rendererContext._transformTx + x,
+                        rendererContext._transformTy + y,
+                        width,
+                        height);
+                },
+                this,
+                [ x, y, width, height]
 
-                )
+            )
             );
         }
 
