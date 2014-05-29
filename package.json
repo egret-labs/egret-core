@@ -1,8 +1,8 @@
 {
     "name": "egret",
-    "version": "0.9.4",
+    "version": "1.0.0",
     "private": true,
-    "author":"egret core developer team",
+    "author":"egret-labs",
     "scripts": {
         "start": "node app"
     },
