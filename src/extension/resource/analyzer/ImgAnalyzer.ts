@@ -39,6 +39,9 @@ module RES {
             }
             this.fileDic[name] = data;
             if(resItem.data["scale9grid"]){
+                var str:string = resItem.data["scale9grid"];
+                var list:Array<string> = str.split(",");
+                data["scale9Grid"] = new egret.Rectangle(parseInt(list[0]),parseInt(list[1]),parseInt(list[2]),parseInt(list[3]));
             }
         }
     }
