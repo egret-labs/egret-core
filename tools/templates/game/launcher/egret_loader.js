@@ -74,7 +74,6 @@ egret_h5.startGame = function () {
     var policy = new egret.ResolutionPolicy(container, content);
     egret.StageDelegate.getInstance().setDesignSize(480, 800, policy);
 
-    egret.TextureCache.getInstance().prefix = "assets/480/";
     egret.RendererContext.CONTENT_SCALE_FACTOR = 1;
     context.run();
 
