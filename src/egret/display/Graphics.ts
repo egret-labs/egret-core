@@ -136,7 +136,6 @@ module egret {
         }
 
         public _draw():void {
-            return;
             for (var i = 0 , length = this.commandQueue.length; i < length; i++) {
                 var command:Command = this.commandQueue[i];
                 command.method.apply(command.thisObject, command.args);

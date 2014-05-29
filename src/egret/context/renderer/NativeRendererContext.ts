@@ -193,3 +193,5 @@ module egret {
         }
     }
 }
+
+egret.Graphics.prototype._draw = function(){};
