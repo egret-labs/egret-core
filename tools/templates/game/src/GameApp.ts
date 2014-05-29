@@ -1,6 +1,3 @@
-///<reference path="egret.d.ts"/>
-///<reference path="LoadingUI.ts"/>
-///<reference path="resource/Resource.ts"/>
 /**
  * Copyright (c) 2014,Egret-Labs.org
  * All rights reserved.
@@ -27,6 +24,10 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+
+///<reference path="egret.d.ts"/>
+///<reference path="LoadingUI.ts"/>
+
 class GameApp {
 
     private textContainer:egret.DisplayObjectContainer;
