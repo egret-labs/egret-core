@@ -370,7 +370,7 @@ module egret {
          * @stable C 该方法以后可能删除
          */
         public static transformCoords(matrix:Matrix, x:number, y:number):Point {
-            var resultPoint:Point = new Point(0, 0);//todo;
+            var resultPoint:Point = Point.identity;
             resultPoint.x = matrix.a * x + matrix.c * y + matrix.tx;
             resultPoint.y = matrix.d * y + matrix.b * x + matrix.ty;
 

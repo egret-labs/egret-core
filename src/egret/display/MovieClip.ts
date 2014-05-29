@@ -38,6 +38,7 @@ module egret {
      */
     export class MovieClip extends DisplayObjectContainer {
         private _frameData;
+        private _spriteSheet:SpriteSheet;
         private _resPool = {};
         private _currentFrameIndex:number = 0;
         private _currentFrameName:string;
@@ -48,9 +49,10 @@ module egret {
         private _passTime:number = 0;
         private _oneFrameTime = 1000 / 60;
 
-        constructor(public data, public texture:Texture) {
+        constructor(public data, texture:Texture) {
             super();
             this._frameData = data;
+            this._spriteSheet = new SpriteSheet(texture._bitmapData);
             this._oneFrameTime = 1000 / egret.MainContext.instance.deviceContext.frameRate;
         }
 
@@ -147,8 +149,11 @@ module egret {
             else {
                 var resData = this._frameData.res[name];
                 result = new Bitmap();
-                result.texture = this.texture;
-                result.spriteFrame = resData;
+                var texture = this._spriteSheet.getTexture(name);
+                if (!texture) {
+                    texture = this._spriteSheet.createTexture(name, resData.x, resData.y, resData.w, resData.h);
+                }
+                result.texture = texture;
                 this._resPool[name] = result;
             }
             return result;

@@ -88,11 +88,6 @@ module egret {
          * @returns {DisplayObject}
          */
         public hitTest(x, y) {
-//            var result = super.hitTest(x, y);
-//            if (result == null) {
-//                result = this;
-//            }
-//            return result;
             if (!this.touchEnabled) {
                 return null;
             }
