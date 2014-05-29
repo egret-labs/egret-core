@@ -59,7 +59,7 @@ module egret {
 		}
 
         /**
-         * 矩形区域，它定义素材对象的九个缩放区域
+         * 矩形区域，它定义素材对象的九个缩放区域。此属性仅在source的解析结果为Texture时有效。
          * @member {egret.Texture} egret.UIAsset#scale9Grid
          */
         public scale9Grid:Rectangle;
