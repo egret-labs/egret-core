@@ -115,6 +115,9 @@ module egret {
                 if (!that.inOutOfCanvas(event)) {
                     that._isTouchDown = true;
                 }
+                else {
+                    that.dispatchLeaveStageEvent();
+                }
             });
 
             window.addEventListener("mouseup", function (event) {
@@ -133,7 +136,7 @@ module egret {
             return false;
         }
 
-        private dispatchLeaveStageEvent():void{
+        private dispatchLeaveStageEvent():void {
             egret.MainContext.instance.stage.dispatchEventWith(egret.Event.LEAVE_STAGE);
         }
 
