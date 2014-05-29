@@ -96,7 +96,7 @@ module egret {
                 for(var y:number=destY;y<destHeight;y+=sourceHeight){
                     var destW:number = Math.min(sourceWidth,destWidth-x);
                     var destH:number = Math.min(sourceHeight,destHeight-y);
-                    this.drawImage(renderContext, data, sourceX, sourceY, sourceWidth, sourceWidth, x, y, destW, destH);
+                    this.drawImage(renderContext, data, sourceX, sourceY, sourceWidth, sourceHeight, x, y, destW, destH);
                 }
             }
         }
@@ -183,7 +183,7 @@ module egret {
             destX = destX || 0;
             destY = destY || 0;
             var locTexture = data._texture_to_render;
-            if (locTexture == null) {
+            if (locTexture == null||sourceHeight==0||sourceWidth==0||destWidth==0||destHeight==0) {
                 return;
             }
             this._originalData.sourceX = sourceX;
