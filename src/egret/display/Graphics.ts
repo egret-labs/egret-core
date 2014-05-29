@@ -57,11 +57,12 @@ module egret {
         }
 
         public drawRect(x:number, y:number, width:number, height:number):void {
-            this.canvasContext.fill()
+
             var rendererContext = <HTML5CanvasRenderer>this.renderContext;
             this.commandQueue.push(new Command(
 
                 function (x, y, width, height) {
+                    this.canvasContext.fill();
                     this.canvasContext.fillRect(rendererContext._transformTx + x,
                         rendererContext._transformTy + y,
                         width,

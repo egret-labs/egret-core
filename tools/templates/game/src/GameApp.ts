@@ -83,7 +83,7 @@ class GameApp extends egret.DisplayObjectContainer{
         sky.height = stageH;
 
         var topMask:egret.Shape = new egret.Shape();
-        topMask.graphics.beginFill(0x000000, 0.8);
+        topMask.graphics.beginFill(0x000000, 0.5);
         topMask.graphics.drawRect(0, 0, stageW, stageH);
         topMask.graphics.endFill();
         topMask.width = stageW;

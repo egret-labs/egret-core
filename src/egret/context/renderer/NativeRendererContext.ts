@@ -194,45 +194,4 @@ module egret {
     }
 }
 
-
-module egret {
-    export class Graphics {
-
-        constructor() {
-        }
-
-        public beginFill(color:number, alpha:number = 1):void {
-
-        }
-
-        private _setStyle(colorStr:string):void {
-        }
-
-        public drawRect(x:number, y:number, width:number, height:number):void {
-        }
-
-        public lineStyle(thickness:number = NaN, color:number = 0, alpha:number = 1.0, pixelHinting:boolean = false, scaleMode:string = "normal", caps:string = null, joints:string = null, miterLimit:number = 3):void {
-        }
-
-        public lineTo(x:number, y:number):void {
-        }
-
-        public clear():void {
-        }
-
-        public endFill():void {
-        }
-
-        public _draw():void {
-        }
-    }
-
-    class Command {
-
-        constructor(public method:Function, public thisObject:any, public args:Array<any>) {
-
-        }
-
-
-    }
-}
+egret.Graphics.prototype._draw = function(){};

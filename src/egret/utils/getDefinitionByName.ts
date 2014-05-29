@@ -44,7 +44,7 @@ module egret {
         }
         var paths:Array<string> = name.split(".");
         var length:number = paths.length;
-        definition = window;
+        definition = __global;
         for(var i:number=0;i<length;i++){
             var path:string = paths[i];
             definition = definition[path];
@@ -56,3 +56,5 @@ module egret {
         return definition;
     }
 }
+
+var __global = __global || this;
