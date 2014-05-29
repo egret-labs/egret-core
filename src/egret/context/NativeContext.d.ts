@@ -44,6 +44,8 @@ declare module egret_native {
 
     function readXML(filepath:string):any;
 
+    function readFileSync(filepath:string):any;
+
 
     module Graphics {
 

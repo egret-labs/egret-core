@@ -26,7 +26,7 @@
  */
 
 /// <reference path="NetContext.ts"/>
-/// <reference path="../../display/Texture.ts"/>
+/// <reference path="../../context/NativeContext.d.ts"/>
 /// <reference path="../../events/Event.ts"/>
 /// <reference path="../../net/URLLoader.ts"/>
 /// <reference path="../../net/URLLoaderDataFormat.ts"/>

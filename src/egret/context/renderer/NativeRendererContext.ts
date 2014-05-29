@@ -33,90 +33,90 @@
 /// <reference path="../../text/TextField.ts"/>
 /// <reference path="../../utils/HashObject.ts"/>
 /// <reference path="../../utils/Profiler.ts"/>
-/// <reference path="../../../extension/gui/components/Label.ts"/>
+/// <reference path="../../context/NativeContext.d.ts"/>
 
 module egret {
     /**
-	 * @class egret.NativeRendererContext
-	 * @classdesc
+     * @class egret.NativeRendererContext
+     * @classdesc
      * NativeRendererContext 是引擎在Native上的渲染上下文。
-	 * @extends egret.HashObject
+     * @extends egret.HashObject
      */
-    export class NativeRendererContext extends HashObject{
+    export class NativeRendererContext extends HashObject {
 
 
         /**
          * 渲染全部纹理的时间开销
          * @readonly
-		 * @member egret.NativeRendererContext#renderCost
+         * @member egret.NativeRendererContext#renderCost
          */
         public renderCost:number = 0;
 
         /**
          * 绘制纹理的缩放比率，默认值为1
-		 * @member egret.NativeRendererContext#texture_scale_factor
+         * @member egret.NativeRendererContext#texture_scale_factor
          */
         public texture_scale_factor:number = 1;
 
-		/**
-		 * @method egret.NativeRendererContext#constructor
-		 */
+        /**
+         * @method egret.NativeRendererContext#constructor
+         */
         public constructor() {
             super();
         }
 
         /**
-		 * @method egret.NativeRendererContext#clearScreen
+         * @method egret.NativeRendererContext#clearScreen
          * @private
          */
         public clearScreen() {
-            egret_native.Graphics.clearScreen(255,255,255);
+            egret_native.Graphics.clearScreen(255, 255, 255);
         }
 
 
         /**
          * 清除Context的渲染区域
-		 * @method egret.NativeRendererContext#clearRect
-         * @param x {number} 
-         * @param y {number} 
-         * @param w {number} 
-         * @param h {numbe} 
+         * @method egret.NativeRendererContext#clearRect
+         * @param x {number}
+         * @param y {number}
+         * @param w {number}
+         * @param h {numbe}
          */
         public clearRect(x:number, y:number, w:number, h:number) {
         }
 
         /**
          * 绘制图片
-		 * @method egret.NativeRendererContext#drawImage
-         * @param texture {Texture} 
-         * @param sourceX {any} 
-         * @param sourceY {any} 
-         * @param sourceWidth {any} 
-         * @param sourceHeight {any} 
-         * @param destX {any} 
-         * @param destY {any} 
-         * @param destWidth {any} 
-         * @param destHeigh {any} 
+         * @method egret.NativeRendererContext#drawImage
+         * @param texture {Texture}
+         * @param sourceX {any}
+         * @param sourceY {any}
+         * @param sourceWidth {any}
+         * @param sourceHeight {any}
+         * @param destX {any}
+         * @param destY {any}
+         * @param destWidth {any}
+         * @param destHeigh {any}
          */
         public drawImage(texture:Texture, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight) {
 
-            egret_native.Graphics.drawImage(texture._bitmapData,sourceX,sourceY,sourceWidth,sourceHeight,destX,destY,destWidth,destHeight);
+            egret_native.Graphics.drawImage(texture._bitmapData, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight);
 
             Profiler.getInstance().onDrawImage();
         }
 
         /**
          * 变换Context的当前渲染矩阵
-		 * @method egret.NativeRendererContext#setTransform
+         * @method egret.NativeRendererContext#setTransform
          * @param matrix {egret.Matrix}
          * @stable A
          */
         public setTransform(matrix:egret.Matrix) {
-            egret_native.Graphics.setTransform(matrix.a,matrix.b,matrix.c,matrix.d,matrix.tx,matrix.ty);
+            egret_native.Graphics.setTransform(matrix.a, matrix.b, matrix.c, matrix.d, matrix.tx, matrix.ty);
         }
 
         /**
-		 * @method egret.NativeRendererContext#save
+         * @method egret.NativeRendererContext#save
          * @stable C 这个方法以后会和restore一起删除，移动到HTML5CanvasContext的具体实现中，而不是作为一个接口
          */
         public save() {
@@ -124,7 +124,7 @@ module egret {
         }
 
         /**
-		 * @method egret.NativeRendererContext#restore
+         * @method egret.NativeRendererContext#restore
          * @stable C 这个方法以后会和save一起删除，移动到HTML5CanvasContext的具体实现中，而不是作为一个接口
          */
         public restore() {
@@ -133,10 +133,10 @@ module egret {
 
         /**
          * 设置渲染alpha
-		 * @method egret.NativeRendererContext#setAlpha
-         * @param value {number} 
+         * @method egret.NativeRendererContext#setAlpha
+         * @param value {number}
          * @stable A
-		 * @param blendMode {egret.BlendMode}
+         * @param blendMode {egret.BlendMode}
          */
         public setAlpha(value:number, blendMode:egret.BlendMode) {
             egret_native.Graphics.setGlobalAlpha(value);
@@ -145,11 +145,11 @@ module egret {
 
         /**
          * 设置渲染文本参数
-		 * @method egret.NativeRendererContext#setupFont
-         * @param textField {TextField} 
+         * @method egret.NativeRendererContext#setupFont
+         * @param textField {TextField}
          */
         public setupFont(textField:TextField):void {
-            egret_native.Label.createLabel("/system/fonts/DroidSansFallback.ttf",textField.size,"");
+            egret_native.Label.createLabel("/system/fonts/DroidSansFallback.ttf", textField.size, "");
             egret_native.Label.setTextAlignment(textField.textAlign);
             this.__hackTextFieldSize = textField.size;
         }
@@ -159,9 +159,9 @@ module egret {
 
         /**
          * 测量文本
-		 * @method egret.NativeRendererContext#measureText
+         * @method egret.NativeRendererContext#measureText
          * @param text {string}
-		 * @returns {number}
+         * @returns {number}
          */
         public measureText(text:string):number {
             return text.length * this.__hackTextFieldSize;
@@ -169,27 +169,70 @@ module egret {
 
         /**
          * 绘制文本
-		 * @method egret.NativeRendererContext#drawText
+         * @method egret.NativeRendererContext#drawText
          * @param textField {egret.TextField}
-         * @param text {string} 
-         * @param x {number} 
-         * @param y {number} 
-		 * @param maxWidth {numbe} 
+         * @param text {string}
+         * @param x {number}
+         * @param y {number}
+         * @param maxWidth {numbe}
          */
-        public drawText(textField:egret.TextField,text:string, x:number, y:number, maxWidth:number) {
+        public drawText(textField:egret.TextField, text:string, x:number, y:number, maxWidth:number) {
             Profiler.getInstance().onDrawImage();
             egret_native.Label.setTextColor(textField.textColor);
-            egret_native.Label.drawText(text,x,y);
+            egret_native.Label.drawText(text, x, y);
         }
 
         /**
          * 矩形遮罩
-		 * @method egret.NativeRendererContext#clip
-         * @param x {any} 
-         * @param y {any} 
-         * @param w {any} 
+         * @method egret.NativeRendererContext#clip
+         * @param x {any}
+         * @param y {any}
+         * @param w {any}
          */
         public clip(x, y, w, h) {
         }
+    }
+}
+
+
+module egret {
+    export class Graphics {
+
+        constructor() {
+        }
+
+        public beginFill(color:number, alpha:number = 1):void {
+
+        }
+
+        private _setStyle(colorStr:string):void {
+        }
+
+        public drawRect(x:number, y:number, width:number, height:number):void {
+        }
+
+        public lineStyle(thickness:number = NaN, color:number = 0, alpha:number = 1.0, pixelHinting:boolean = false, scaleMode:string = "normal", caps:string = null, joints:string = null, miterLimit:number = 3):void {
+        }
+
+        public lineTo(x:number, y:number):void {
+        }
+
+        public clear():void {
+        }
+
+        public endFill():void {
+        }
+
+        public _draw():void {
+        }
+    }
+
+    class Command {
+
+        constructor(public method:Function, public thisObject:any, public args:Array<any>) {
+
+        }
+
+
     }
 }
