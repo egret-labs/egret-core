@@ -33,36 +33,36 @@
 
 module egret {
     /**
-	 * @class egret.RendererContext
+     * @class egret.RendererContext
      * @classdesc
      * RenderContext是游戏的渲染上下文。
      * 这是一个抽象基类，制定主要的接口
-	 * @extends egret.HashObject
+     * @extends egret.HashObject
      */
-    export class RendererContext extends HashObject{
+    export class RendererContext extends HashObject {
 
 
         /**
          * 渲染全部纹理的时间开销
-		 * @member egret.RendererContext#renderCost
+         * @member egret.RendererContext#renderCost
          */
         public renderCost:number = 0;
 
         /**
          * 绘制纹理的缩放比率，默认值为1
-		 * @member egret.RendererContext#texture_scale_factor
+         * @member egret.RendererContext#texture_scale_factor
          */
         public texture_scale_factor:number = 1;
 
-		/**
-		 * @method egret.RendererContext#constructor
-		 */
+        /**
+         * @method egret.RendererContext#constructor
+         */
         public constructor() {
             super();
         }
 
         /**
-		 * @method egret.RendererContext#clearScreen
+         * @method egret.RendererContext#clearScreen
          * @private
          */
         public clearScreen() {
@@ -71,11 +71,11 @@ module egret {
 
         /**
          * 清除Context的渲染区域
-		 * @method egret.RendererContext#clearRect
-         * @param x {number} 
-         * @param y {number} 
-         * @param w {number} 
-         * @param h {numbe} 
+         * @method egret.RendererContext#clearRect
+         * @param x {number}
+         * @param y {number}
+         * @param w {number}
+         * @param h {numbe}
          */
         public clearRect(x:number, y:number, w:number, h:number) {
 
@@ -83,16 +83,16 @@ module egret {
 
         /**
          * 绘制图片
-		 * @method egret.RendererContext#drawImage
-         * @param texture {Texture} 
-         * @param sourceX {any} 
-         * @param sourceY {any} 
-         * @param sourceWidth {any} 
-         * @param sourceHeight {any} 
-         * @param destX {any} 
-         * @param destY {any} 
-         * @param destWidth {any} 
-         * @param destHeigh {any} 
+         * @method egret.RendererContext#drawImage
+         * @param texture {Texture}
+         * @param sourceX {any}
+         * @param sourceY {any}
+         * @param sourceWidth {any}
+         * @param sourceHeight {any}
+         * @param destX {any}
+         * @param destY {any}
+         * @param destWidth {any}
+         * @param destHeigh {any}
          */
         public drawImage(texture:Texture, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight) {
             Profiler.getInstance().onDrawImage();
@@ -100,7 +100,7 @@ module egret {
 
         /**
          * 变换Context的当前渲染矩阵
-		 * @method egret.RendererContext#setTransform
+         * @method egret.RendererContext#setTransform
          * @param matrix {egret.Matri}
          */
         public setTransform(matrix:egret.Matrix) {
@@ -108,7 +108,7 @@ module egret {
         }
 
         /**
-		 * @method egret.RendererContext#save
+         * @method egret.RendererContext#save
          * @stable C 这个方法以后会和restore一起删除，移动到HTML5CanvasContext的具体实现中，而不是作为一个接口
          */
         public save() {
@@ -116,7 +116,7 @@ module egret {
         }
 
         /**
-		 * @method egret.RendererContext#restore
+         * @method egret.RendererContext#restore
          * @stable C 这个方法以后会和save一起删除，移动到HTML5CanvasContext的具体实现中，而不是作为一个接口
          */
         public restore() {
@@ -125,9 +125,9 @@ module egret {
 
         /**
          * 设置渲染alpha
-		 * @method egret.RendererContext#setAlpha
-         * @param value {number} 
-		 * @param blendMode {egret.BlendMod}
+         * @method egret.RendererContext#setAlpha
+         * @param value {number}
+         * @param blendMode {egret.BlendMod}
          */
         public setAlpha(value:number, blendMode:egret.BlendMode) {
 
@@ -136,8 +136,8 @@ module egret {
 
         /**
          * 设置渲染文本参数
-		 * @method egret.RendererContext#setupFont
-         * @param textField {TextField} 
+         * @method egret.RendererContext#setupFont
+         * @param textField {TextField}
          */
         public setupFont(textField:TextField):void {
 
@@ -146,9 +146,9 @@ module egret {
 
         /**
          * 测量文本
-		 * @method egret.RendererContext#measureText
+         * @method egret.RendererContext#measureText
          * @param text {string}
-		 * @returns {number}
+         * @returns {number}
          * @stable B 参数很可能会需要调整，和setupFont整合
          */
         public measureText(text:string):number {
@@ -157,49 +157,42 @@ module egret {
 
         /**
          * 绘制文本
-		 * @method egret.RendererContext#drawText
+         * @method egret.RendererContext#drawText
          * @param textField {egret.TextField}
-         * @param text {string} 
-         * @param x {number} 
-         * @param y {number} 
-		 * @param maxWidth {numbe} 
+         * @param text {string}
+         * @param x {number}
+         * @param y {number}
+         * @param maxWidth {numbe}
          */
-        public drawText(textField:egret.TextField,text:string, x:number, y:number, maxWidth:number) {
+        public drawText(textField:egret.TextField, text:string, x:number, y:number, maxWidth:number) {
             Profiler.getInstance().onDrawImage();
         }
 
         /**
          * 矩形遮罩
-		 * @method egret.RendererContext#clip
-         * @param x {any} 
-         * @param y {any} 
-         * @param w {any} 
+         * @method egret.RendererContext#clip
+         * @param x {any}
+         * @param y {any}
+         * @param w {any}
          */
         public clip(x, y, w, h) {
         }
 
-        /**
-         * @param x
-         * @param y
-         * @param w
-         * @param h
-         * @param color
-         * @stable D 这个API是个临时添加的，会被尽快删除
-         */
-            strokeRect(x, y, w, h, color) {
+
+        public strokeRect(x, y, w, h, color) {
         }
     }
 
 
-	/**
-	 * @class egret.BlendMode
-	 * @classdesc
-	 */
+    /**
+     * @class egret.BlendMode
+     * @classdesc
+     */
     export class BlendMode {
 
-		/**
-		 * @member egret.BlendMode#value
-		 */
+        /**
+         * @member egret.BlendMode#value
+         */
         public value:string;
 
         constructor(private type) {
@@ -224,10 +217,10 @@ module egret {
         static ADD = new BlendMode("add");
         static LAYER = new BlendMode("layer");
 
-		/**
-		 * @method egret.BlendMode.getBlendMode
-		 * @param typ {any} 
-		 */
+        /**
+         * @method egret.BlendMode.getBlendMode
+         * @param typ {any}
+         */
         public static getBlendMode(type) {
             if (!type) {
                 return egret.BlendMode.NORMAL;
