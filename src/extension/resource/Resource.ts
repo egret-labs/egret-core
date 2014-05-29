@@ -389,12 +389,16 @@ module RES {
                 case ResourceItem.TYPE_XML:
                 case ResourceItem.TYPE_TXT:
                 case ResourceItem.TYPE_JSON:
+                case ResourceItem.TYPE_SHEET:
                     type = suffix;
                     break;
                 case "png":
                 case "jpg":
                 case "gif":
                     type = ResourceItem.TYPE_IMG;
+                    break;
+                case "fnt":
+                    type = ResourceItem.TYPE_FONT;
                     break;
                 default:
                     type = ResourceItem.TYPE_BIN;
