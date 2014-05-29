@@ -26,6 +26,7 @@
  */
 
 /// <reference path="../MainContext.ts"/>
+/// <reference path="RendererContext.ts"/>
 /// <reference path="../../display/Texture.ts"/>
 /// <reference path="../../geom/Matrix.ts"/>
 /// <reference path="../../geom/Rectangle.ts"/>

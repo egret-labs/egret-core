@@ -25,6 +25,9 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+/// <reference path="../../../egret/display/Texture.ts"/>
+/// <reference path="../../../egret/text/BitmapTextSpriteSheet.ts"/>
+/// <reference path="../core/ResourceItem.ts"/>
 
 module RES {
 

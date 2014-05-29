@@ -25,6 +25,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+/// <reference path="../context/NativeContext.d.ts"/>
 /// <reference path="../display/Texture.ts"/>
 /// <reference path="HashObject.ts"/>
 /// <reference path="Logger.ts"/>

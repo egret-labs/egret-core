@@ -16,6 +16,8 @@
  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+/// <reference path="../../../egret/events/Event.ts"/>
+/// <reference path="../../../egret/events/IEventDispatcher.ts"/>
 /// <reference path="../core/ResourceItem.ts"/>
 
 module RES {

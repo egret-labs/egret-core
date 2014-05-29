@@ -16,13 +16,13 @@
  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+/// <reference path="../../egret/events/EventDispatcher.ts"/>
+/// <reference path="../../egret/utils/Injector.ts"/>
 /// <reference path="analyzer/AnalyzerBase.ts"/>
 /// <reference path="analyzer/BinAnalyzer.ts"/>
 /// <reference path="analyzer/ImgAnalyzer.ts"/>
 /// <reference path="analyzer/JsonAnalyzer.ts"/>
 /// <reference path="analyzer/TxtAnalyzer.ts"/>
-/// <reference path="analyzer/SheetAnalyzer.ts"/>
-/// <reference path="analyzer/FontAnalyzer.ts"/>
 /// <reference path="core/ResourceConfig.ts"/>
 /// <reference path="core/ResourceItem.ts"/>
 /// <reference path="core/ResourceLoader.ts"/>
