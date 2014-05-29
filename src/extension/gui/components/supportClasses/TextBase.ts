@@ -218,9 +218,6 @@ module egret {
 		}
 		
 		public set text(value:string){
-            if(value==" "){
-                console.log("字符串为空！");
-            }
 			if (value == this._text)
 				return;
 			this._text = value;
