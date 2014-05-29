@@ -59,10 +59,20 @@ module egret {
 		}
 
         /**
-         * 矩形区域，它定义素材对象的九个缩放区域。此属性仅在source的解析结果为Texture时有效。
+         * 矩形区域，它定义素材对象的九个缩放区域。
+         * 注意:此属性仅在source的解析结果为Texture并且fileMode为BitmapFillMode.SCALE时有效。
          * @member {egret.Texture} egret.UIAsset#scale9Grid
          */
         public scale9Grid:Rectangle;
+
+        /**
+         * 确定位图填充尺寸的方式。默认值：BitmapFillMode.SCALE。
+         * 设置为 BitmapFillMode.REPEAT时，位图将重复以填充区域。
+         * 设置为 BitmapFillMode.SCALE时，位图将拉伸以填充区域。
+         * 注意:此属性仅在source的解析结果为Texture时有效
+         * @member {egret.Texture} egret.Bitmap#fillMode
+         */
+        public fillMode:string = "scale";
 		
 		private sourceChanged:boolean = false;
 
@@ -215,18 +225,7 @@ module egret {
             if(this._content instanceof Texture){
                 var texture:Texture = <Texture> this._content;
                 this._texture_to_render = texture;
-                if(this.scale9Grid){
-                    RenderFilter.getInstance().drawScale9GridImage(renderContext, this, this.scale9Grid,this._width, this._height);
-                }
-                else{
-                    var w:number = texture._textureWidth;
-                    var h:number = texture._textureHeight;
-                    var offsetX:number = Math.round(texture._offsetX*this.width/w);
-                    var offsetY:number = Math.round(texture._offsetY*this.height/h);
-                    RenderFilter.getInstance().drawImage(renderContext, this, texture._startX, texture._startY,
-                        w, h,offsetX, offsetY,this._width,this._height);
-                }
-
+                Bitmap._drawBitmap(renderContext,this._width,this._height,this);
             }
             else{
                 this._texture_to_render = null;

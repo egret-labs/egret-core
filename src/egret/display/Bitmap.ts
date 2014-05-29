@@ -92,10 +92,18 @@ module egret {
          */
         public texture:Texture;
         /**
-         * 矩形区域，它定义位图对象的九个缩放区域
+         * 矩形区域，它定义位图对象的九个缩放区域。此属性仅当fillMode为BitmapFillMode.SCALE时有效。
          * @member {egret.Texture} egret.Bitmap#scale9Grid
          */
         public scale9Grid:Rectangle;
+
+        /**
+         * 确定位图填充尺寸的方式。默认值：BitmapFillMode.SCALE。
+         * 设置为 BitmapFillMode.REPEAT时，位图将重复以填充区域。
+         * 设置为 BitmapFillMode.SCALE时，位图将拉伸以填充区域。
+         * @member {egret.Texture} egret.Bitmap#fillMode
+         */
+        public fillMode:string = "scale";
 
         public _render(renderContext:RendererContext):void {
             var texture = this.texture;
@@ -106,16 +114,29 @@ module egret {
             this._texture_to_render = texture;
             var destW:number = this._hasWidthSet?this._explicitWidth:texture._textureWidth;
             var destH:number = this._hasHeightSet?this._explicitHeight:texture._textureHeight;
-            if(this.scale9Grid){
-                RenderFilter.getInstance().drawScale9GridImage(renderContext, this, this.scale9Grid, destW, destH);
+            Bitmap._drawBitmap(renderContext,destW,destH,this);
+        }
+
+        public static _drawBitmap(renderContext:RendererContext,destW:number, destH:number,thisObject:any):void{
+            var texture = thisObject._texture_to_render;
+            if(!texture){
+                return;
+            }
+            if(thisObject.fillMode=="scale"){
+                if(thisObject.scale9Grid){
+                    RenderFilter.getInstance().drawScale9GridImage(renderContext, thisObject, thisObject.scale9Grid, destW, destH);
+                }
+                else{
+                    var w:number = texture._textureWidth;
+                    var h:number = texture._textureHeight;
+                    var offsetX:number = Math.round(texture._offsetX*destW/w);
+                    var offsetY:number = Math.round(texture._offsetY*destH/h);
+                    RenderFilter.getInstance().drawImage(renderContext, thisObject, texture._startX, texture._startY,
+                        w, h, offsetX, offsetY, destW,destH);
+                }
             }
             else{
-                var w:number = texture._textureWidth;
-                var h:number = texture._textureHeight;
-                var offsetX:number = Math.round(texture._offsetX*destW/w);
-                var offsetY:number = Math.round(texture._offsetY*destH/h);
-                RenderFilter.getInstance().drawImage(renderContext, this, texture._startX, texture._startY,
-                    w, h, offsetX, offsetY, destW,destH);
+                RenderFilter.getInstance().drawRepeatImage(renderContext, thisObject, destW, destH);
             }
         }
 

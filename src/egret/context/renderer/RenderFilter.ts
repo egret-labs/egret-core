@@ -78,6 +78,29 @@ module egret {
             this._drawAreaList = [];
         }
         /**
+         * 绘制平铺位图
+         */
+        public drawRepeatImage(renderContext:RendererContext, data:RenderData,destWidth:number, destHeight:number):void{
+            var texture:Texture = data._texture_to_render;
+            if(!texture){
+                return;
+            }
+            var sourceX:number = texture._startX;
+            var sourceY:number = texture._startY;
+            var sourceWidth:number = texture._textureWidth;
+            var sourceHeight:number = texture._textureHeight;
+            var destX:number = texture._offsetX;
+            var destY:number = texture._offsetY;
+
+            for(var x:number=destX;x<destWidth;x+=sourceWidth){
+                for(var y:number=destY;y<destHeight;y+=sourceHeight){
+                    var destW:number = Math.min(sourceWidth,destWidth-x);
+                    var destH:number = Math.min(sourceHeight,destHeight-y);
+                    this.drawImage(renderContext, data, sourceX, sourceY, sourceWidth, sourceWidth, x, y, destW, destH);
+                }
+            }
+        }
+        /**
          * 绘制九宫格位图
          */
         public drawScale9GridImage(renderContext:RendererContext, data:RenderData,scale9Grid:Rectangle,

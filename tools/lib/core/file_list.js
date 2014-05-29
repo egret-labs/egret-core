@@ -29,6 +29,7 @@ exports.core = [
     "egret/display/DisplayObject.js",
     "egret/display/DisplayObjectContainer.js",
     "egret/display/Stage.js",
+    "egret/display/BitmapFillMode.js",
     "egret/display/Bitmap.js",
     "egret/text/BitmapText.js",
     "egret/display/Graphics.js",
