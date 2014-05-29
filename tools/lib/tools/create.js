@@ -24,17 +24,20 @@ function run(currDir, args, opts) {
     async.series([
 
         function (callback) {
+            libs.log("正在创建新项目文件夹...");
             createNewProject(projectName);
             callback();
         },
 
         function (callback) {
 
+            libs.log ("正在生成egret_file_list...");
             compiler.generateEgretFileList(callback, egret_file, runtime);
 
         },
 
         function (callback) {
+            libs.log("正在编译egret...");
             compiler.compile(callback,
                 path.join(param.getEgretPath(), "src"),
                 path.join(currDir, projectName, "bin-debug/lib"),
@@ -44,6 +47,7 @@ function run(currDir, args, opts) {
 
 
         function (callback) {
+            libs.log ("正在导出 egret.d.ts...");
             compiler.exportHeader(callback,
                 path.join(param.getEgretPath(), "src"),
                 path.join(currDir, projectName, "src", "egret.d.ts"),

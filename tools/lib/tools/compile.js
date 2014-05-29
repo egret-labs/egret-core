@@ -60,9 +60,11 @@ function buildAllFile(callback, source, output, file_list) {
                 return path.join(source, item).replace(".js", ".ts");
             }).filter(function (item) {
                     return fs.existsSync(item);
-                });
+                }).map(function(item){
+                    return "\"" + item + "\"";
+                })
 
-            var cmd = "" + sourceList.join(" ") + " -t ES5 --outDir " + output;
+            var cmd = "" + sourceList.join(" ") + " -t ES5 --outDir " + "\"" + output + "\"";
             fs.writeFileSync("tsc_config_temp.txt", cmd, "utf-8");
             var ts = cp_exec("tsc @tsc_config_temp.txt");
             ts.stderr.on("data", function (data) {
@@ -147,7 +149,7 @@ function exportHeader(callback, source, output, file_list) {
             return fs.existsSync(item);
         });
     var source = list.join(" ");
-    var cmd = source + " -t ES5 -d --out " + output;
+    var cmd = source + " -t ES5 -d --out " + "\"" + output + "\"";
     fs.writeFileSync("tsc_config_temp.txt", cmd, "utf-8");
     var ts = cp_exec("tsc @tsc_config_temp.txt");
     ts.stderr.on("data", function (data) {
