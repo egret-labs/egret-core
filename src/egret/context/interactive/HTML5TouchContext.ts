@@ -34,6 +34,8 @@ module egret {
 
     export class HTML5TouchContext extends TouchContext {
 
+        private _isTouchDown:boolean = false;
+
         constructor(private canvas:HTMLCanvasElement) {
             super();
         }
@@ -108,8 +110,35 @@ module egret {
                     that._onTouchEnd(event);
                 });
             }
+
+            window.addEventListener("mousedown", function (event) {
+                if (!that.inOutOfCanvas(event)) {
+                    that._isTouchDown = true;
+                }
+                else {
+                    that.dispatchLeaveStageEvent();
+                }
+            });
+
+            window.addEventListener("mouseup", function (event) {
+                if (that._isTouchDown && that.inOutOfCanvas(event)) {
+                    that.dispatchLeaveStageEvent();
+                }
+                that._isTouchDown = false;
+            });
         }
 
+        private inOutOfCanvas(event):boolean {
+            var location = this.getLocation(this.canvas, event);
+            if (location.x < 0 || location.y < 0 || location.x > this.canvas.width || location.y > this.canvas.height) {
+                return true;
+            }
+            return false;
+        }
+
+        private dispatchLeaveStageEvent():void {
+            egret.MainContext.instance.stage.dispatchEventWith(egret.Event.LEAVE_STAGE);
+        }
 
         private _onTouchBegin(event:any):void {
             var location = this.getLocation(this.canvas, event);
