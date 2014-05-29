@@ -32,7 +32,7 @@
 /// <reference path="../../text/TextField.ts"/>
 /// <reference path="../../utils/HashObject.ts"/>
 /// <reference path="../../utils/Profiler.ts"/>
-/// <reference path="../../../extension/gui/components/Label.ts"/>
+/// <reference path="../../context/NativeContext.d.ts"/>
 
 module egret {
     /**

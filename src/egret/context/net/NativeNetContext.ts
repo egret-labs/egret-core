@@ -26,6 +26,7 @@
  */
 
 /// <reference path="NetContext.ts"/>
+    /// <reference path="../../context/NativeContext.d.ts"/>
 /// <reference path="../../events/Event.ts"/>
 /// <reference path="../../net/URLLoader.ts"/>
 /// <reference path="../../net/URLLoaderDataFormat.ts"/>
@@ -68,7 +69,7 @@ module egret {
 
             function onLoadComplete() {
                 var request:URLRequest = loader._request;
-                var bitmapData = egret_native.Texture.create(request.url);
+                var bitmapData = egret_native.Texture.addTexture(request.url);
                 var texture = new Texture();
                 texture.bitmapData = bitmapData;
                 loader.data = texture;
