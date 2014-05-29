@@ -77,6 +77,22 @@ exports.core = [
     "extension/tilemap/TMXConst.js",
     "extension/tilemap/TMXMapInfo.js",
     //tileMap end
+
+    //resource start
+    "extension/resource/events/ResourceEvent.js",
+    "extension/resource/core/ResourceItem.js",
+    "extension/resource/core/ResourceConfig.js",
+    "extension/resource/core/ResourceLoader.js",
+    "extension/resource/analyzer/AnalyzerBase.js",
+    "extension/resource/analyzer/BinAnalyzer.js",
+    "extension/resource/analyzer/ImgAnalyzer.js",
+    "extension/resource/analyzer/JsonAnalyzer.js",
+    "extension/resource/analyzer/TxtAnalyzer.js",
+    "extension/resource/analyzer/SheetAnalyzer.js",
+    "extension/resource/analyzer/FontAnalyzer.js",
+    "extension/resource/Resource.js",
+    //resource end
+
      //GUI start
     "extension/gui/collections/ArrayCollection.js",
     "extension/gui/collections/ObjectCollection.js",
