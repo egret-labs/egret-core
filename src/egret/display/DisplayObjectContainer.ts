@@ -338,7 +338,7 @@ module egret {
                 }
                 var x1 = bounds.x , y1 = bounds.y,
                     x2 = bounds.width + bounds.x,
-                    y2 = bounds.height + bounds.y;//todo
+                    y2 = bounds.height + bounds.y;
                 if (x1 < minX || i == 0) {
                     minX = x1;
                 }
@@ -388,7 +388,6 @@ module egret {
             var touchChildren = this._touchChildren;//这里不用考虑父级的touchChildren，从父级调用下来过程中已经判断过了。
             for (var i = l - 1; i >= 0; i--) {
                 var child = children[i];
-                //todo 這裡的matrix不符合identity的設計原則，以後需要重構
                 var o = child;
                 var offsetPoint = o._getOffsetPoint();
                 var childX = o._x;

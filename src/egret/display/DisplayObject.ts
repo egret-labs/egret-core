@@ -398,7 +398,7 @@ module egret {
         /**
          * @inheritDoc
          */
-        public _setWidth(value:number):void{
+        public _setWidth(value:number):void {
             this._explicitWidth = value;
             this._hasWidthSet = NumberUtils.isNumber(value);
         }
@@ -416,7 +416,7 @@ module egret {
         /**
          * @inheritDoc
          */
-        public _setHeight(value:number):void{
+        public _setHeight(value:number):void {
             this._explicitHeight = value;
             this._hasHeightSet = NumberUtils.isNumber(value);
         }
@@ -557,7 +557,7 @@ module egret {
                 this._cacheBounds.initialize(x - anchorX, y - anchorY, w, h);
             }
             var result:egret.Rectangle = this._cacheBounds;
-            if(!resultRect){
+            if (!resultRect) {
                 resultRect = new Rectangle();
             }
             return resultRect.initialize(result.x, result.y, result.width, result.height);
@@ -601,10 +601,10 @@ module egret {
          * @param resultPoint {Point} 可选参数，传入用于保存结果的Point对象，避免重复创建对象。
          * @returns {egret.Point}
          */
-        public localToGlobal(x:number = 0, y:number = 0,resultPoint?:Point):Point {
+        public localToGlobal(x:number = 0, y:number = 0, resultPoint?:Point):Point {
             var mtx = this._getConcatenatedMatrix();
             mtx.append(1, 0, 0, 1, x, y);
-            if(!resultPoint){
+            if (!resultPoint) {
                 resultPoint = new Point();
             }
             resultPoint.x = mtx.tx;
@@ -620,11 +620,11 @@ module egret {
          * @param resultPoint {Point} 可选参数，传入用于保存结果的Point对象，避免重复创建对象。
          * @returns {egret.Point}
          */
-        public globalToLocal(x:number = 0, y:number = 0,resultPoint?:Point):Point {
+        public globalToLocal(x:number = 0, y:number = 0, resultPoint?:Point):Point {
             var mtx = this._getConcatenatedMatrix();
             mtx.invert();
             mtx.append(1, 0, 0, 1, x, y);
-            if(!resultPoint){
+            if (!resultPoint) {
                 resultPoint = new Point();
             }
             resultPoint.x = mtx.tx;
@@ -738,13 +738,22 @@ module egret {
             }
         }
 
+        private _dispatchEventList:Array<DisplayObject>;
+
         public dispatchEvent(event:Event):boolean {
             if (!event._bubbles) {
                 return super.dispatchEvent(event);
             }
 
             event._reset();
-            var list:Array<DisplayObject> = [];//todo 这个list可以服用
+
+            if (!this._dispatchEventList) {
+                this._dispatchEventList = [];
+            }
+            else {
+                this._dispatchEventList.length = 0;
+            }
+            var list:Array<DisplayObject> = this._dispatchEventList;
             var target:DisplayObject = this;
             while (target) {
                 list.unshift(target);
