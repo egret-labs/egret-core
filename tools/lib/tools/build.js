@@ -57,12 +57,19 @@ function run(dir, args, opts) {
 
 
 function help_title() {
-    return "构建指定项目";
+    return "构建指定项目,编译指定项目的 TypeScript 文件\n";
 }
 
 
 function help_example() {
-    return "egret build [project_name] [--runtime html5|native]";
+    var result =  "\n";
+    result += "    egret build [project_name] [-e] [--runtime html5|native]\n";
+    result += "描述:\n";
+    result += "    " + help_title();
+    result += "参数说明:\n";
+    result += "    -e           编译指定项目的同时编译引擎目录\n";
+    result += "    --runtime    设置构建方式为 html5 或者是 native方式，默认值为html5";
+    return result;
 }
 
 exports.run = run;
