@@ -3,39 +3,37 @@
  */
 var libs = require("../core/normal_libs");
 
-var native_folder = "egret_native/EgretFrameworkNative";
-var output = "1.apk";
-var keystore = "egret.keystore";
-var keypass = "185713114";
+var output = "signed_egret.apk";
 var async = require("../core/async.js");
 var fs = require("fs");
-var project = "HelloNative";
 
 
-function run(current,arg,opt) {
+function run(current, arg, opt) {
 
 
-    if (opt["-config"]){
+    if (opt["-config"]) {
         var content = "{\n" +
+            "  \"project\":\"\",\n" +
             "  \"keyfile\":\"\",\n" +
             "  \"password\":\"\",\n" +
             "  \"egret-native\":\"EgretFrameworkNative\"\n" +
             "}";
-        fs.writeFileSync("package_to_native.config",content,"utf-8");
+        fs.writeFileSync("package_to_native.config", content, "utf-8");
         return;
     }
     var config = libs.getConfig(arg[0]);
     var keystore = config.keystore;
     var keypass = config.password;
+    var project = config.project;
     var native_folder = config["egret-native"];
 
     async.series(
         [
 
             function (callback) {
-                libs.copy(project +"/bin-debug","egret_native/EgretFrameworkNative/assets/js/bin-debug")
-                libs.copy(project +"/launcher","egret_native/EgretFrameworkNative/assets/js/launcher")
-                libs.copy(project + "/resources","egret_native/EgretFrameworkNative/assets/js/resources");
+                libs.copy(project + "/bin-debug", "egret_native/EgretFrameworkNative/assets/js/bin-debug")
+                libs.copy(project + "/launcher", "egret_native/EgretFrameworkNative/assets/js/launcher")
+                libs.copy(project + "/resources", "egret_native/EgretFrameworkNative/assets/js/resources");
                 callback();
             },
 
@@ -50,11 +48,15 @@ function run(current,arg,opt) {
             },
 
             function (callback) {
-
+                fs.unlinkSync("a.apk");
+                var cmd = "adb uninstall org.egret.egretframeworknative";
+                executeCommand(callback, cmd)
+                callback();
             },
 
             function (callback) {
-
+                var cmd = "adb install " + output;
+                executeCommand(callback, cmd);
             }
 
         ]
