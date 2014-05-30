@@ -51,7 +51,7 @@ module egret {
 
         private _running:boolean;
 
-        public running():boolean{
+        public get running():boolean{
             return this._running;
         }
 
