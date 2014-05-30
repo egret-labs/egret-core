@@ -62,7 +62,7 @@ module egret {
             this.commandQueue.push(new Command(
 
                 function (x, y, width, height) {
-                    this.canvasContext.fill();
+                    //this.canvasContext.fill();
                     this.canvasContext.fillRect(rendererContext._transformTx + x,
                         rendererContext._transformTy + y,
                         width,

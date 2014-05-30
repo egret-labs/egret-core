@@ -1,6 +1,6 @@
 Egret Framework
 ================================================
-Current Version: v0.9.4 (prerelease)
+Current Version: v1.0.0 (public beta)
 
 
 
@@ -32,14 +32,20 @@ Egret Framework是一款使用JavaScript(TypeScript)编写的HTML5开源免费�
 文档与教程
 -------------------------
 * 访问 [这里](https://github.com/egret-team/egret/wiki) 获取 Egret 的文档和教程
-* 访问 [这里(Coming Soon)](https://www.egret-labs.org) 获取 API 文档
+* 访问 [这里](http://docs.egret-labs.org/apis/) 获取 API 文档
 * 访问 [这里](https://github.com/egret-team/egret-examples) 获取示例项目
+
+工具
+-------------------------
+* [ActionScript to TypeScript Converter ( beta )](http://online.egret-labs.org/down/)
 
 
 
 
 发布说明
 --------------------
+[Egret 1.0.0 beta Release Notes 2014-5-30](/docs/PublicBeta_ReleaseNotes.md)
+
 [Egret 0.9.4 Release Notes 2014-5-15](/docs/Prerelease_ReleaseNotes.md)
 
 [Egret 0.9.3  Release Notes 2014-4-30](/docs/Prerelease_ReleaseNotes.md)
