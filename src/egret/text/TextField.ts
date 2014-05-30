@@ -56,6 +56,16 @@ module egret {
 		 * @member {number} egret.TextField#size
          */
         public size:number = 30;
+        /**
+         * 是否显示为斜体，默认false。
+         * @member {boolean} egret.TextField#italic
+         */
+        public italic:boolean;
+        /**
+         * 是否显示为粗体，默认false。
+         * @member {boolean} egret.TextField#bold
+         */
+        public bold:boolean;
 
         public _textColorString:string = "#FFFFFF";
 

@@ -77,7 +77,9 @@ module egret {
                 return;
             var oldValue:number = this._contentWidth;
             this._contentWidth = value;
-            this.dispatchPropertyChangeEvent("contentWidth", oldValue, value);
+            if (this.hasEventListener("propertyChange"))
+                PropertyChangeEvent.dispatchPropertyChangeEvent(this,
+                    PropertyChangeEventKind.UPDATE,"contentWidth",oldValue,value,this);
         }
 
         private _contentHeight:number = 0;
@@ -94,7 +96,9 @@ module egret {
                 return;
             var oldValue:number = this._contentHeight;
             this._contentHeight = value;
-            this.dispatchPropertyChangeEvent("contentHeight", oldValue, value);
+            if (this.hasEventListener("propertyChange"))
+                PropertyChangeEvent.dispatchPropertyChangeEvent(this,
+                    PropertyChangeEventKind.UPDATE,"contentHeight",oldValue,value,this);
         }
         /**
          * 设置 contentWidth 和 contentHeight 属性，此方法由Layout类调用

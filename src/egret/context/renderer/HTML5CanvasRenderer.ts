@@ -159,7 +159,10 @@ module egret {
 
         setupFont(textField:TextField):void {
             var ctx = this.canvasContext;
-            ctx.font = textField.size + "px " + textField.fontFamily;
+            var font:string = textField.italic?"italic ":"normal ";
+            font += textField.bold?"bold ":"normal ";
+            font += textField.size + "px " + textField.fontFamily;
+            ctx.font = font;
             ctx.textAlign = textField.textAlign || "left";
             ctx.textBaseline = textField.textBaseline || "top";
         }

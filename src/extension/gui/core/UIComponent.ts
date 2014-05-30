@@ -390,7 +390,7 @@ module egret {
 		 */	
 		private oldWidth:number;
 
-		public _width:number;
+		public _width:number = 0;
 		/**
 		 * 组件宽度,默认值为NaN,设置为NaN将使用组件的measure()方法自动计算尺寸
 		 */		
@@ -402,11 +402,13 @@ module egret {
             if(this._width==value&&this._explicitWidth==value)
                 return;
             super._setWidth(value);
+            if(isNaN(value))
+                this.invalidateSize();
+            else
+                this._width = value;
             this.invalidateProperties();
             this.invalidateDisplayList();
             this.invalidateParentSizeAndDisplayList();
-            if(isNaN(value))
-                this.invalidateSize();
         }
 		
 		/**
@@ -421,7 +423,7 @@ module egret {
 		 */
 		private oldHeight:number;
 		
-		public _height:number;
+		public _height:number = 0;
 		/**
 		 * 组件高度,默认值为NaN,设置为NaN将使用组件的measure()方法自动计算尺寸
 		 */		
@@ -433,11 +435,13 @@ module egret {
             if(this._height==value&&this._explicitHeight==value)
                 return;
             super._setHeight(value);
+            if(isNaN(value))
+                this.invalidateSize();
+            else
+                this._height = value;
             this.invalidateProperties();
             this.invalidateDisplayList();
             this.invalidateParentSizeAndDisplayList();
-            if(isNaN(value))
-                this.invalidateSize();
         }
 		
 		/**
@@ -890,20 +894,6 @@ module egret {
 			}
 			this.oldWidth = this._width;
 			this.oldHeight = this._height;
-		}
-		
-		/**
-		 * 抛出属性值改变事件
-		 * @method egret.UIComponent#dispatchPropertyChangeEvent
-		 * @param prop {string} 改变的属性名
-		 * @param oldValue {any} 属性的原始值
-		 * @param value {any} 属性的新值
-		 */		
-		public dispatchPropertyChangeEvent(prop:string, oldValue:any,
-													   value:any):void{
-			if (this.hasEventListener("propertyChange"))
-                PropertyChangeEvent.dispatchPropertyChangeEvent(this,
-                    PropertyChangeEventKind.UPDATE,prop,oldValue,value,this);
 		}
 		
 		public _includeInLayout:boolean = true;

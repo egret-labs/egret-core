@@ -105,6 +105,46 @@ module egret {
 			this.invalidateDisplayList();
 		}
 
+        private boldChanged:boolean;
+		private _bold:boolean;
+		/**
+		 * 是否显示为粗体，默认false。
+		 * @member egret.TextBase#bold
+		 */
+		public get bold():boolean{
+			return this._bold;
+		}
+
+		public set bold(value:boolean){
+			if(this._bold==value)
+				return;
+			this._bold = value;
+			this.boldChanged = true;
+			this.invalidateProperties();
+			this.invalidateSize();
+			this.invalidateDisplayList();
+		}
+
+        private italicChanged:boolean;
+		private _italic:boolean;
+		/**
+		 * 是否显示为粗体，默认false。
+		 * @member egret.TextBase#italic
+		 */
+		public get italic():boolean{
+			return this._italic;
+		}
+
+		public set italic(value:boolean){
+			if(this._italic==value)
+				return;
+			this._italic = value;
+			this.italicChanged = true;
+			this.invalidateProperties();
+			this.invalidateSize();
+			this.invalidateDisplayList();
+		}
+
         private textAlignChanged:boolean;
 		private _textAlign:string = HorizontalAlign.LEFT;
 		/**
@@ -255,6 +295,14 @@ module egret {
 			if (this.sizeChanged){
 				this._textField.size = this._size;
 				this.sizeChanged = false;
+			}
+			if (this.boldChanged){
+				this._textField.bold = this._bold;
+				this.boldChanged = false;
+			}
+			if (this.italic){
+				this._textField.italic = this._italic;
+				this.italicChanged = false;
 			}
 			if (this.textAlignChanged){
 				this._textField.textAlign = this._textAlign;
