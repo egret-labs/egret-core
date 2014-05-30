@@ -148,11 +148,11 @@ function _exit(code) {
     process.exit(code);
 }
 
-function _log(){
+function _log() {
     var opt = param.getArgv().opts;
     var vebose = opt.hasOwnProperty("-v");
-    if (vebose){
-        console.log.apply(console,arguments);
+    if (vebose) {
+        console.log.apply(console, arguments);
     }
 
 
@@ -173,6 +173,16 @@ function _joinEgretDir(dir, projectName) {
     return currDir;
 }
 
+function getConfig(filepath) {
+    var exists = fs.existsSync(filepath);
+    if (!exists){
+        _exit(8003,filepath)
+    }
+    var content = fs.readFileSync(filepath,"utf-8");
+    var obj = JSON.parse(content);
+    return obj;
+}
+
 exports.loopFileSync = loopFileSync;
 exports.require = _require;
 exports.copy = copy;
@@ -181,3 +191,4 @@ exports.exit = _exit;
 exports.mkdir = mkdirSync;
 exports.log = _log;
 exports.joinEgretDir = _joinEgretDir;
+exports.getConfig = getConfig;

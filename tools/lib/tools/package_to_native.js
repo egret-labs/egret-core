@@ -8,11 +8,26 @@ var output = "1.apk";
 var keystore = "egret.keystore";
 var keypass = "185713114";
 var async = require("../core/async.js");
-
+var fs = require("fs");
 var project = "HelloNative";
 
 
-function run() {
+function run(current,arg,opt) {
+
+
+    if (opt["-config"]){
+        var content = "{\n" +
+            "  \"keyfile\":\"\",\n" +
+            "  \"password\":\"\",\n" +
+            "  \"egret-native\":\"EgretFrameworkNative\"\n" +
+            "}";
+        fs.writeFileSync("package_to_native.config",content,"utf-8");
+        return;
+    }
+    var config = libs.getConfig(arg[0]);
+    var keystore = config.keystore;
+    var keypass = config.password;
+    var native_folder = config["egret-native"];
 
     async.series(
         [
