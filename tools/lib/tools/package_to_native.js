@@ -26,14 +26,15 @@ function run(current, arg, opt) {
     var keypass = config.password;
     var project = config.project;
     var native_folder = config["egret-native"];
+    var join = require("path").join;
 
     async.series(
         [
 
             function (callback) {
-                libs.copy(project + "/bin-debug", "egret_native/EgretFrameworkNative/assets/js/bin-debug")
-                libs.copy(project + "/launcher", "egret_native/EgretFrameworkNative/assets/js/launcher")
-                libs.copy(project + "/resources", "egret_native/EgretFrameworkNative/assets/js/resources");
+                libs.copy(join(project,"bin-debug"), join(native_folder,"assets/js/bin-debug"));
+                libs.copy(join(project,"launcher"), join(native_folder,"assets/js/launcher"));
+                libs.copy(join(project,"resources"), join(native_folder,"assets/js/resources"));
                 callback();
             },
 
