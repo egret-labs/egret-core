@@ -32,7 +32,7 @@ Egret Framework是一款使用JavaScript(TypeScript)编写的HTML5开源免费�
 文档与教程
 -------------------------
 * 访问 [这里](https://github.com/egret-team/egret/wiki) 获取 Egret 的文档和教程
-* 访问 [这里(Coming Soon)](http://docs.egret-labs.org/apis/) 获取 API 文档
+* 访问 [这里](http://docs.egret-labs.org/apis/) 获取 API 文档
 * 访问 [这里](https://github.com/egret-team/egret-examples) 获取示例项目
 
 工具
