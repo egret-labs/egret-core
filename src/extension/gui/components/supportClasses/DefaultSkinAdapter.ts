@@ -51,6 +51,8 @@ module egret {
          * @returns {any} 皮肤对象实例
          */
         public getSkin(skinName:any,hostComponentKey:string):any{
+            if(!skinName)
+                return null;
             if(skinName.prototype){
                 return new skinName();
             }
