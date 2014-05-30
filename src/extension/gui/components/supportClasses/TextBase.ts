@@ -353,7 +353,6 @@ module egret {
             this._textField.lineSpacing = this._lineSpacing;
             this._textField.letterSpacing = this.letterSpacing;
             this._textField.textColor = this._textColor;
-            this._textField.textBaseline = "top";
             this._addToDisplayList(this._textField);
         }
 		

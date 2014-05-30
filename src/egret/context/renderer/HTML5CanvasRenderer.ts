@@ -164,7 +164,7 @@ module egret {
             font += textField.size + "px " + textField.fontFamily;
             ctx.font = font;
             ctx.textAlign = textField.textAlign || "left";
-            ctx.textBaseline = textField.textBaseline || "top";
+            ctx.textBaseline = "hanging";
         }
 
 

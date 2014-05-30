@@ -116,13 +116,6 @@ module egret {
 		 * @member {string} egret.TextField#verticalAlign
          */
         public verticalAlign:string = "top";
-
-        /**
-         * 文本基准线
-		 * @member {any} egret.TextField#textBaseline
-         */
-        public textBaseline;
-
 		/**
 		 * @member {any} egret.TextField#maxWidth
 		 */
