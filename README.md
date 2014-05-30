@@ -37,7 +37,7 @@ Egret Framework是一款使用JavaScript(TypeScript)编写的HTML5开源免费�
 
 工具
 -------------------------
-* [ActionScript to TypeScript Converter ( beta )](www.baidu.com)
+* [ActionScript to TypeScript Converter ( beta )](http://update.egret-labs.org/As2TsTool/As2TsTool.air)
 
 
 
