@@ -1,6 +1,6 @@
 Egret Framework
 ================================================
-Current Version: v0.9.4 (prerelease)
+Current Version: v1.0.0 (public beta)
 
 
 
