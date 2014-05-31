@@ -175,7 +175,7 @@ module egret {
 		private addCloseTriggers():void{
 			if (UIGlobals.stage){
 				if (isNaN(this.rollOverOpenDelay)){
-					UIGlobals.stage.addEventListener(TouchEvent.TOUCH_BEGAN, this.stage_mouseDownHandler, this);
+					UIGlobals.stage.addEventListener(TouchEvent.TOUCH_BEGIN, this.stage_mouseDownHandler, this);
 					UIGlobals.stage.addEventListener(TouchEvent.TOUCH_END, this.stage_mouseUpHandler_noRollOverOpenDelay, this);
 				}
 				else{
@@ -192,7 +192,7 @@ module egret {
 		private removeCloseTriggers():void{
 			if (UIGlobals.stage){
 				if (isNaN(this.rollOverOpenDelay)){
-					UIGlobals.stage.removeEventListener(TouchEvent.TOUCH_BEGAN, this.stage_mouseDownHandler, this);
+					UIGlobals.stage.removeEventListener(TouchEvent.TOUCH_BEGIN, this.stage_mouseDownHandler, this);
 					UIGlobals.stage.removeEventListener(TouchEvent.TOUCH_END, this.stage_mouseUpHandler_noRollOverOpenDelay, this);
 				}
 				else{

@@ -126,7 +126,7 @@ module egret {
         private installViewport():void{
             if (this.viewport){
                 this.viewport.clipAndEnableScrolling = true;
-                this.viewport.addEventListener(TouchEvent.TOUCH_BEGAN,this.onTouchBegan,this)
+                this.viewport.addEventListener(TouchEvent.TOUCH_BEGIN,this.onTouchBegan,this)
                 this._addToDisplayListAt(<DisplayObject><any> this.viewport,0);
             }
         }
@@ -137,7 +137,7 @@ module egret {
         private uninstallViewport():void{
             if (this.viewport){
                 this.viewport.clipAndEnableScrolling = false;
-                this.viewport.removeEventListener(TouchEvent.TOUCH_BEGAN,this.onTouchBegan,this)
+                this.viewport.removeEventListener(TouchEvent.TOUCH_BEGIN,this.onTouchBegan,this)
                 this._removeFromDisplayList(<DisplayObject><any> this.viewport);
             }
         }

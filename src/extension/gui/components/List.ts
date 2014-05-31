@@ -314,7 +314,7 @@ module egret {
 			if (renderer == null)
 				return;
 
-			renderer.addEventListener(TouchEvent.TOUCH_BEGAN, this.item_mouseDownHandler, this);
+			renderer.addEventListener(TouchEvent.TOUCH_BEGIN, this.item_mouseDownHandler, this);
 			//由于ItemRenderer.mouseChildren有可能不为false，在鼠标按下时会出现切换素材的情况，
 			//导致target变化而无法抛出原生的click事件,所以此处监听MouseUp来抛出ItemClick事件。
 			renderer.addEventListener(TouchEvent.TOUCH_END, this.item_mouseUpHandler, this);
@@ -331,7 +331,7 @@ module egret {
 			if (renderer == null)
 				return;
 
-			renderer.removeEventListener(TouchEvent.TOUCH_BEGAN, this.item_mouseDownHandler, this);
+			renderer.removeEventListener(TouchEvent.TOUCH_BEGIN, this.item_mouseDownHandler, this);
 			renderer.removeEventListener(TouchEvent.TOUCH_END, this.item_mouseUpHandler, this);
 		}
 		/**

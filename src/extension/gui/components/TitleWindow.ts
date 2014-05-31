@@ -51,7 +51,7 @@ module egret {
 		public constructor(){
 			super();
             this.hostComponentKey = "egret.TitleWindow";
-			this.addEventListener(TouchEvent.TOUCH_BEGAN,this.onWindowMouseDown,this,true,100);
+			this.addEventListener(TouchEvent.TOUCH_BEGIN,this.onWindowMouseDown,this,true,100);
 		}
 		/**
 		 * 在窗体上按下时前置窗口
@@ -115,7 +115,7 @@ module egret {
 			super.partAdded(partName, instance);
 			
 			if (instance == this.moveArea){
-				this.moveArea.addEventListener(TouchEvent.TOUCH_BEGAN, this.moveArea_mouseDownHandler, this);
+				this.moveArea.addEventListener(TouchEvent.TOUCH_BEGIN, this.moveArea_mouseDownHandler, this);
 			}
 			else if (instance == this.closeButton){
 				this.closeButton.addEventListener(TouchEvent.TOUCH_TAP, this.closeButton_clickHandler, this);   
@@ -132,7 +132,7 @@ module egret {
 			super.partRemoved(partName, instance);
 			
 			if (instance == this.moveArea)
-				this.moveArea.removeEventListener(TouchEvent.TOUCH_BEGAN, this.moveArea_mouseDownHandler, this);
+				this.moveArea.removeEventListener(TouchEvent.TOUCH_BEGIN, this.moveArea_mouseDownHandler, this);
 				
 			else if (instance == this.closeButton)
 				this.closeButton.removeEventListener(TouchEvent.TOUCH_TAP, this.closeButton_clickHandler, this);

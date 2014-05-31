@@ -79,9 +79,9 @@ module egret {
 
         /**
          * 开始触摸,参考Flash的MouseEvent.MOUSE_DOWN
-		 * @constant {string} egret.TouchEvent.TOUCH_BEGAN
+		 * @constant {string} egret.TouchEvent.TOUCH_BEGIN
          */
-        public static TOUCH_BEGAN:string = "touchBegan";
+        public static TOUCH_BEGIN:string = "touchBegin";
 
         /**
          * 在同一对象上结束触摸,参考Flash的MouseEvent.MOUSE_UP

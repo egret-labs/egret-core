@@ -79,7 +79,7 @@ module egret {
                 this.touchDownTarget[identifier] = true;
                 obj.target = result;
                 obj.beginTarget = result;
-                this.dispatchEvent(TouchEvent.TOUCH_BEGAN, obj);
+                this.dispatchEvent(TouchEvent.TOUCH_BEGIN, obj);
             }
         }
 
