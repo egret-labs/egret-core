@@ -62,7 +62,7 @@ module egret {
 		 * [SkinPart]图标显示对象
 		 * @member egret.TreeItemRenderer#iconDisplay
 		 */
-		public iconDisplay:ISkinnableClient;
+		public iconDisplay:UIAsset;
 		/**
 		 * [SkinPart]子节点开启按钮
 		 * @member egret.TreeItemRenderer#disclosureButton
@@ -98,7 +98,7 @@ module egret {
 				return;
 			this._iconSkinName = value;
 			if(this.iconDisplay){
-				this.iconDisplay.skinName = this._iconSkinName;
+				this.iconDisplay.source = this._iconSkinName;
 			}
 		}
 
@@ -158,7 +158,7 @@ module egret {
 		public partAdded(partName:string, instance:any):void{
 			super.partAdded(partName,instance);
 			if(instance==this.iconDisplay){
-				this.iconDisplay.skinName = this._iconSkinName;
+				this.iconDisplay.source = this._iconSkinName;
 			}
 			else if(instance==this.disclosureButton){
 				this.disclosureButton.visible = this._hasChildren;
@@ -181,7 +181,7 @@ module egret {
 		public partRemoved(partName:string, instance:any):void{
 			super.partRemoved(partName,instance);
 			if(instance==this.iconDisplay){
-				this.iconDisplay.skinName = null;
+				this.iconDisplay.source = null;
 			}
 			else if(instance==this.disclosureButton){
 				this.disclosureButton.removeEventListener(TouchEvent.TOUCH_BEGIN,

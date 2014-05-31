@@ -25,57 +25,13 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/// <reference path="../MainContext.ts"/>
-/// <reference path="../../utils/HashObject.ts"/>
+module RES {
 
-module egret{
-	/**
-	 * @class egret.SoundContext
-	 * @classdesc
-	 * @extends egret.HashObject
-	 */
-    export class SoundContext extends HashObject{
-		/**
-		 * @method egret.SoundContext.getInstance
-		 * @returns {SoundContext}
-		 */
-        public static getInstance():SoundContext {
-            return egret.MainContext.instance.soundContext;
-        }
+    export class SoundAnalyzer extends BinAnalyzer{
 
-		/**
-		 * @member egret.SoundContext.isMusicPlaying
-		 */
-        public static isMusicPlaying:boolean = false;
-
-		/**
-		 * @method egret.SoundContext#constructor
-		 */
-        public constructor() {
+        public constructor(){
             super();
-        }
-
-		/**
-		 * @method egret.SoundContext#preloadSound
-		 * @param pat {any} 
-		 */
-        public preloadSound(path) {
-
-        }
-
-		/**
-		 * @method egret.SoundContext#playMusic
-		 * @param path {any} 
-		 * @param loop {any} 
-		 */
-        public playMusic(path, loop = true) {
-        }
-
-		/**
-		 * @method egret.SoundContext#stopMusic
-		 * @param releaseDat {any} 
-		 */
-        public stopMusic(releaseData) {
+            this._dataFormat = egret.URLLoaderDataFormat.SOUND;
         }
     }
 }

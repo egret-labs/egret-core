@@ -69,7 +69,8 @@ exports.core = [
     "egret/tween/Tween.js",
     "egret/tween/Ease.js",
     //tween end
-    "egret/context/sound/SoundContext.js",
+
+    "egret/media/Sound.js",
 
 
     //扩展
@@ -92,6 +93,7 @@ exports.core = [
     "extension/resource/analyzer/TxtAnalyzer.js",
     "extension/resource/analyzer/SheetAnalyzer.js",
     "extension/resource/analyzer/FontAnalyzer.js",
+    "extension/resource/analyzer/SoundAnalyzer.js",
     "extension/resource/Resource.js",
     //resource end
 
@@ -194,7 +196,6 @@ exports.core = [
 exports.html5 = [
     "egret/context/devices/HTML5DeviceContext.js",
     "egret/context/renderer/HTML5CanvasRenderer.js",
-    "egret/context/sound/HTML5SoundContext.js",
     "egret/context/net/HTML5NetContext.js",
     "egret/context/interactive/HTML5TouchContext.js",
     "egret/utils/SAXParser.js"

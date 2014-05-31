@@ -48,6 +48,8 @@ module RES {
          */
         public static TYPE_FONT:string = "font";
 
+        public static TYPE_SOUND:string = "sound";
+
 		/**
 		 * 构造函数
 		 * @param name 加载项名称
