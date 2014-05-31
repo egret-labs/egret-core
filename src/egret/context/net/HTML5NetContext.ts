@@ -27,6 +27,7 @@
 
 /// <reference path="NetContext.ts"/>
 /// <reference path="../../display/Texture.ts"/>
+/// <reference path="../../media/Sound.ts"/>
 /// <reference path="../../events/Event.ts"/>
 /// <reference path="../../events/IOErrorEvent.ts"/>
 /// <reference path="../../net/URLLoader.ts"/>
@@ -44,13 +45,17 @@ module egret {
      */
     export class HTML5NetContext extends NetContext {
 
-        public constructor(){
+        public constructor() {
             super();
         }
 
-        public proceed(loader:URLLoader):void{
-            if(loader.dataFormat==URLLoaderDataFormat.TEXTURE){
+        public proceed(loader:URLLoader):void {
+            if (loader.dataFormat == URLLoaderDataFormat.TEXTURE) {
                 this.loadTexture(loader);
+                return;
+            }
+            if (loader.dataFormat == URLLoaderDataFormat.SOUND) {
+                this.loadSound(loader);
                 return;
             }
 
@@ -58,18 +63,18 @@ module egret {
             var xhr = this.getXHR();
             xhr.onerror = onLoadError;
             xhr.onload = onLoadComplete;
-            xhr.open(request.method, request.url,true);
+            xhr.open(request.method, request.url, true);
             this.setResponseType(xhr, loader.dataFormat);
-            if (request.method == URLRequestMethod.GET||!request.data){
+            if (request.method == URLRequestMethod.GET || !request.data) {
                 xhr.send();
             }
             else if (request.data instanceof URLVariables) {
-                xhr.setRequestHeader("Content-Type","application/x-www-form-urlencoded");
+                xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
                 var urlVars:URLVariables = <URLVariables> request.data;
                 xhr.send(urlVars.toString());
             }
             else {
-                xhr.setRequestHeader("Content-Type","multipart/form-data");
+                xhr.setRequestHeader("Content-Type", "multipart/form-data");
                 xhr.send(request.data);
             }
 
@@ -77,7 +82,7 @@ module egret {
                 IOErrorEvent.dispatchIOErrorEvent(loader);
             };
 
-            function onLoadComplete(event){
+            function onLoadComplete(event) {
                 switch (this.dataFormat) {
                     case URLLoaderDataFormat.TEXT:
                         loader.data = xhr.responseText;
@@ -90,18 +95,40 @@ module egret {
                     case URLLoaderDataFormat.BINARY:
                         loader.data = xhr.response;
                         break;
-
                     default:
                         loader.data = xhr.responseText;
                         break;
                 }
-                callLater(Event.dispatchEvent,Event,loader,Event.COMPLETE);
+                callLater(Event.dispatchEvent, Event, loader, Event.COMPLETE);
+            };
+        }
+
+        private loadSound(loader:URLLoader):void{
+            var request:URLRequest = loader._request;
+            var audio = new Audio(request.url);
+            audio.addEventListener('canplaythrough', soundPreloadCanplayHandler, false);
+            audio.addEventListener("error", soundPreloadErrorHandler, false);
+            audio.load()
+
+            function soundPreloadCanplayHandler(event) {
+                audio.removeEventListener('canplaythrough', soundPreloadCanplayHandler, false);
+                audio.removeEventListener("error", soundPreloadErrorHandler, false);
+                var sound = new Sound();
+                sound.audio = audio;
+                loader.data = sound;
+                callLater(Event.dispatchEvent, Event, loader, Event.COMPLETE);
+            };
+
+            function soundPreloadErrorHandler(event) {
+
+                audio.removeEventListener('canplaythrough', soundPreloadCanplayHandler, false);
+                audio.removeEventListener("error", soundPreloadErrorHandler, false);
+                IOErrorEvent.dispatchIOErrorEvent(loader);
             };
         }
 
 
-
-        private getXHR():any{
+        private getXHR():any {
             if (window["XMLHttpRequest"]) {
                 return new window["XMLHttpRequest"]();
             } else {
@@ -109,7 +136,7 @@ module egret {
             }
         }
 
-        private setResponseType(xhr:XMLHttpRequest, responseType:string):void{
+        private setResponseType(xhr:XMLHttpRequest, responseType:string):void {
             switch (responseType) {
                 case URLLoaderDataFormat.TEXT:
                 case URLLoaderDataFormat.VARIABLES:
@@ -141,7 +168,7 @@ module egret {
                 var texture:Texture = new Texture();
                 texture.bitmapData = image;
                 loader.data = texture;
-                callLater(Event.dispatchEvent,Event,loader,Event.COMPLETE);
+                callLater(Event.dispatchEvent, Event, loader, Event.COMPLETE);
             };
 
             function onLoadError(event) {

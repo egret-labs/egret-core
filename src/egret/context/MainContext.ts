@@ -30,7 +30,6 @@
 /// <reference path="interactive/TouchContext.ts"/>
 /// <reference path="net/NetContext.ts"/>
 /// <reference path="renderer/RendererContext.ts"/>
-/// <reference path="sound/SoundContext.ts"/>
 /// <reference path="../display/DisplayObject.ts"/>
 /// <reference path="../display/Stage.ts"/>
 /// <reference path="../events/Event.ts"/>
@@ -62,12 +61,6 @@ module egret{
 		 * @member egret.MainContext#touchContext
          */
         public touchContext:TouchContext;
-
-        /**
-         * 声音Context
-		 * @member egret.MainContext#soundContext
-         */
-        public soundContext:SoundContext;
 
         /**
          * 网络Context

@@ -27,41 +27,37 @@
 
 module egret {
 
-	/**
-	 * @class egret.URLLoaderDataFormat
-	 * @classdesc
-	 */
-    export class URLLoaderDataFormat {
+    export class Sound {
 
-		/**
-         * 指定以原始二进制数据形式接收下载的数据。
-		 * @constant {string} egret.URLLoaderDataFormat.BINARY
-		 */
-        public static BINARY:string = "binary";
+        constructor() {
 
-		/**
-         * 指定以文本形式接收已下载的数据。
-		 * @constant {string} egret.URLLoaderDataFormat.TEXT
-		 */
-        public static TEXT:string = "text";
+        }
 
-		/**
-         * 指定以 URL 编码变量形式接收下载的数据。
-		 * @constant {string} egret.URLLoaderDataFormat.VARIABLES
-		 */
-        public static VARIABLES:string = "variables";
+        public audio:any;
 
-		/**
-         * 指定以位图纹理形式接收已下载的数据。
-		 * @constant {string} egret.URLLoaderDataFormat.TEXTURE
-		 */
-        public static TEXTURE:string = "texture";
+        public play(loop:boolean = false):void {
+            var sound = this.audio;
+            if (!sound) {
+                return;
+            }
+            if (!isNaN(sound.duration)) {
+                sound.currentTime = 0;
+            }
+            sound.loop = loop;
+            sound.play();
+        }
 
-        /**
-         * 指定以声音形式接收已下载的数据。
-         * @constant {string} egret.URLLoaderDataFormat.SOUND
-         */
-        public static SOUND:string = "sound";
+        public stop():void{
+            var sound = this.audio;
+            if (!sound){
+                return;
+            }
+            sound.stop();
+
+        }
+
 
     }
+
+
 }
