@@ -184,7 +184,7 @@ module egret {
             var maxW = 0;
             //按 行获取数据
             var lines = String(this.text).split(/(?:\r\n|\r|\n)/);
-            var drawH = 0;
+            var drawH = Math.round(this.size*0.5);
             var rap = this.size + this.lineSpacing;
 
             var linesNum = 0;
