@@ -743,8 +743,6 @@ module egret {
                 return super.dispatchEvent(event);
             }
 
-            event._reset();
-
             var list:Array<DisplayObject> = [];
             var target:DisplayObject = this;
             while (target) {
@@ -753,11 +751,17 @@ module egret {
             }
 
             var length:number = list.length;
+            var targetIndex:number = length-1;
             for (var i:number = length - 2; i >= 0; i--) {
                 list.push(list[i]);
             }
+            event._reset();
+            this._dispatchPropagationEvent(event,list,targetIndex);
+            return !event.isDefaultPrevented();
+        }
+
+        public _dispatchPropagationEvent(event:Event,list:Array<DisplayObject>,targetIndex:number):void{
             length = list.length;
-            var targetIndex:number = (length - 1) * 0.5;
             for (var i:number = 0; i < length; i++) {
                 var currentTarget:DisplayObject = list[i];
                 event._setCurrentTarget(currentTarget);
@@ -773,7 +777,6 @@ module egret {
                     break;
                 }
             }
-            return !event.isDefaultPrevented();
         }
 
         public willTrigger(type:string):boolean {

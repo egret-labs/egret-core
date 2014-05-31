@@ -44,11 +44,11 @@ module egret {
 		 * @constant egret.ScrollPolicy.OFF
 		 */		
 		public static OFF:string = "off";
-		
+
 		/**
 		 * 总是允许滚动。
 		 * @constant egret.ScrollPolicy.ON
-		 */		
+		 */
 		public static ON:string = "on";
 	}
 }

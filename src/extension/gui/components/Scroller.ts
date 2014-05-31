@@ -126,7 +126,8 @@ module egret {
         private installViewport():void{
             if (this.viewport){
                 this.viewport.clipAndEnableScrolling = true;
-                this.viewport.addEventListener(TouchEvent.TOUCH_BEGAN,this.onTouchBegan,this)
+                this.viewport.addEventListener(TouchEvent.TOUCH_BEGAN,this.onTouchBegan,this);
+                this.viewport.addEventListener(TouchEvent.TOUCH_BEGAN,this.onTouchBeganCapture,this,true);
                 this._addToDisplayListAt(<DisplayObject><any> this.viewport,0);
             }
         }
@@ -137,9 +138,56 @@ module egret {
         private uninstallViewport():void{
             if (this.viewport){
                 this.viewport.clipAndEnableScrolling = false;
-                this.viewport.removeEventListener(TouchEvent.TOUCH_BEGAN,this.onTouchBegan,this)
+                this.viewport.removeEventListener(TouchEvent.TOUCH_BEGAN,this.onTouchBegan,this);
+                this.viewport.removeEventListener(TouchEvent.TOUCH_BEGAN,this.onTouchBeganCapture,this,true);
                 this._removeFromDisplayList(<DisplayObject><any> this.viewport);
             }
+        }
+
+
+        private delayEventList:Array<Event>;
+        /**
+         * 若这个Scroller可以滚动，阻止当前事件，延迟100ms再抛出。
+         */
+        private onTouchBeganCapture(event:TouchEvent):void{
+            var canScroll:boolean = this.checkScrollPolicy();
+            if(!canScroll){
+                return;
+            }
+
+            var target:DisplayObject = event.target;
+            while (target!=this) {
+                if(target instanceof Scroller){
+                    canScroll = (<Scroller><any> target).checkScrollPolicy();
+                    if(canScroll){
+                        return;
+                    }
+                }
+                target = target.parent;
+            }
+            event.stopPropagation();
+            var evt:TouchEvent = this.cloneTouchEvent(event);
+            evt["_propagationList"] = list;
+            if(!this.delayEventList){
+                this.delayEventList = [];
+            }
+            this.delayEventList.push(evt);
+        }
+
+        private cloneTouchEvent(event:TouchEvent):TouchEvent{
+            var evt:TouchEvent = new TouchEvent(event.type,event.bubbles,event.cancelable);
+            evt.touchPointID = touchPointID
+            evt._stageX = event._stageX;
+            evt._stageY = event._stageY;
+            evt.ctrlKey = event.ctrlKey;
+            evt.altKey = event.altKey;
+            evt.shiftKey = event.shiftKey;
+            evt.touchDown = event.touchDown;
+            evt._isDefaultPrevented = event._isDefaultPrevented;
+            evt._isPropagationStopped = event._isPropagationStopped;
+            evt._isPropagationImmediateStopped = event._isPropagationImmediateStopped;
+            evt._target = event._target;
+            return evt;
         }
         /**
          * 鼠标按下时的偏移量
@@ -149,49 +197,62 @@ module egret {
 
         private _horizontalCanScroll:boolean;
         private _verticalCanScroll:boolean;
-
-        private checkScrollPolicy():void{
+        /**
+         * 检查当前滚动策略，若有一个方向可以滚动，返回true。
+         */
+        private checkScrollPolicy():boolean{
             var viewport:IViewport = this._viewport;
+            var hCanScroll:boolean;
             switch (this._horizontalScrollPolicy){
                 case "auto":
                     if(viewport.contentWidth>viewport.width){
-                        this._horizontalCanScroll = true;
+                        hCanScroll = true;
                     }
                     else{
-                        this._horizontalCanScroll = false;
+                        hCanScroll = false;
                     }
                     break;
                 case "on":
-                    this._horizontalCanScroll = true;
+                    hCanScroll = true;
                     break;
                 case "off":
-                    this._horizontalCanScroll = false;
+                    hCanScroll = false;
                     break;
             }
+            this._horizontalCanScroll = hCanScroll;
+
+            var vCanScroll:boolean;
             switch (this._verticalScrollPolicy){
                 case "auto":
                     if(viewport.contentHeight>viewport.height){
-                        this._verticalCanScroll = true;
+                        vCanScroll = true;
                     }
                     else{
-                        this._verticalCanScroll = false;
+                        vCanScroll = false;
                     }
                     break;
                 case "on":
-                    this._verticalCanScroll = true;
+                    vCanScroll = true;
                     break;
                 case "off":
-                    this._verticalCanScroll = false;
+                    vCanScroll = false;
                     break;
             }
+            this._verticalCanScroll = vCanScroll;
+            return hCanScroll||vCanScroll;
         }
 
+        private ignoreTouchBegan:boolean = true;
+
         private onTouchBegan(event:TouchEvent):void{
+            var canScroll:boolean = this.checkScrollPolicy();
+            if(!canScroll){
+                return;
+            }
             if (this.verticalAnimator&&this.verticalAnimator.isPlaying)
                 this.verticalAnimator.stop();
             if (this.horizontalAnimator&&this.horizontalAnimator.isPlaying)
                 this.horizontalAnimator.stop();
-            this.checkScrollPolicy();
             var viewport:IViewport = this._viewport;
             var hsp:number = viewport.horizontalScrollPosition;
             var vsp:number = viewport.verticalScrollPosition;

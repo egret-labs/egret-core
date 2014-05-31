@@ -190,7 +190,7 @@ module egret {
             return this._target;
         }
 
-        private _isDefaultPrevented:boolean = false;
+        public _isDefaultPrevented:boolean = false;
 
         /**
          * 检查是否已对事件调用 preventDefault() 方法。
