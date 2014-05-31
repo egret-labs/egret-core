@@ -128,6 +128,7 @@ module egret {
                 this.viewport.clipAndEnableScrolling = true;
                 this.viewport.addEventListener(TouchEvent.TOUCH_BEGIN,this.onTouchBegin,this);
                 this.viewport.addEventListener(TouchEvent.TOUCH_BEGIN,this.onTouchBeginCapture,this,true);
+                this.viewport.addEventListener(TouchEvent.TOUCH_END,this.onTouchEndCapture,this,true);
                 this._addToDisplayListAt(<DisplayObject><any> this.viewport,0);
             }
         }
@@ -140,13 +141,59 @@ module egret {
                 this.viewport.clipAndEnableScrolling = false;
                 this.viewport.removeEventListener(TouchEvent.TOUCH_BEGIN,this.onTouchBegin,this);
                 this.viewport.removeEventListener(TouchEvent.TOUCH_BEGIN,this.onTouchBeginCapture,this,true);
+                this.viewport.removeEventListener(TouchEvent.TOUCH_END,this.onTouchEndCapture,this,true);
                 this._removeFromDisplayList(<DisplayObject><any> this.viewport);
             }
         }
 
+        private touchEndTimer:Timer;
+        private delayTouchEndEvent:TouchEvent;
+
+        private onTouchEndCapture(event:TouchEvent):void{
+            if(!this.delayTouchBeginEvent){
+                return;
+            }
+            event.stopPropagation();
+            var evt:TouchEvent = this.cloneTouchEvent(event);
+            this.delayTouchEndEvent = evt;
+            this.onTouchBeginTimer();
+            if(!this.touchEndTimer){
+                this.touchEndTimer = new egret.Timer(100,1);
+                this.touchEndTimer.addEventListener(TimerEvent.TIMER_COMPLETE,this.onTouchEndTimer,this);
+            }
+            this.touchEndTimer.start();
+        }
+
+        private onTouchEndTimer(e:TimerEvent){
+            this.touchEndTimer.stop();
+            var event:TouchEvent = this.delayTouchEndEvent;
+            this.delayTouchEndEvent = null;
+            this.dispatchPropagationEvent(event);
+        }
+
+        private dispatchPropagationEvent(event:TouchEvent):void{
+            var list:Array<DisplayObject> = [];
+
+            var target:DisplayObject = event._target;
+            while (target) {
+                list.push(target);
+                target = target.parent;
+            }
+
+            var length:number = list.length;
+            for (var i:number = 1; i < length; i++) {
+                target = list[i];
+                if(target===this){
+                    break;
+                }
+                list.unshift(target);
+            }
+            var targetIndex:number = list.indexOf(event._target);
+            this._dispatchPropagationEvent(event,list,targetIndex);
+        }
 
         private touchBeginTimer:Timer;
-        private delayTouchEvent:TouchEvent;
+        private delayTouchBeginEvent:TouchEvent;
         /**
          * 若这个Scroller可以滚动，阻止当前事件，延迟100ms再抛出。
          */
@@ -166,12 +213,16 @@ module egret {
                 }
                 target = target.parent;
             }
+            if(this.delayTouchEndEvent){
+                this.delayTouchEndEvent = null;
+                this.touchEndTimer.stop();
+            }
             event.stopPropagation();
             var evt:TouchEvent = this.cloneTouchEvent(event);
-            this.delayTouchEvent = evt;
+            this.delayTouchBeginEvent = evt;
             if(!this.touchBeginTimer){
-                this.touchBeginTimer = new egret.Timer(100);
-                this.touchBeginTimer.addEventListener(TimerEvent.TIMER,this.onTouchBeginTimer,this);
+                this.touchBeginTimer = new egret.Timer(100,1);
+                this.touchBeginTimer.addEventListener(TimerEvent.TIMER_COMPLETE,this.onTouchBeginTimer,this);
             }
             this.touchBeginTimer.start();
             this.onTouchBegin(event);
@@ -191,24 +242,11 @@ module egret {
             return evt;
         }
 
-        private onTouchBeginTimer(event:TimerEvent){
+        private onTouchBeginTimer(e?:TimerEvent){
             this.touchBeginTimer.stop();
-
-            var event:TouchEvent = this.delayTouchEvent;
-            var list:Array<DisplayObject> = [];
-
-            var target:DisplayObject = event._target;
-            while (target) {
-                list.push(target);
-                target = target.parent;
-            }
-
-            var length:number = list.length;
-            for (var i:number = length - 2; i >= 0; i--) {
-                target = list[i];
-                list.push(target);
-            }
-            var targetIndex:number = list.indexOf(event._target);
+            var event:TouchEvent = this.delayTouchBeginEvent;
+            this.delayTouchBeginEvent = null;
+            this.dispatchPropagationEvent(event);
         }
 
         /**
@@ -308,7 +346,10 @@ module egret {
         private onTouchMove(event:TouchEvent):void{
             this._currentTouchX = event.stageX;
             this._currentTouchY = event.stageY;
-
+            if(this.delayTouchBeginEvent){
+                this.delayTouchBeginEvent = null;
+                this.touchBeginTimer.stop();
+            }
             var viewport:IViewport = this._viewport;
             if(this._horizontalCanScroll){
                 var hsp:number = this._offsetPointX - event.stageX;
