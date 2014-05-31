@@ -72,15 +72,6 @@ exports.core = [
 
     "egret/media/Sound.js",
 
-
-    //扩展
-    //tileMap start
-    "extension/tilemap/TMXTileMap.js",
-    "extension/tilemap/TMXLayer.js",
-    "extension/tilemap/TMXConst.js",
-    "extension/tilemap/TMXMapInfo.js",
-    //tileMap end
-
     //resource start
     "extension/resource/events/ResourceEvent.js",
     "extension/resource/core/ResourceItem.js",
