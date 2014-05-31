@@ -28,8 +28,8 @@
 /// <reference path="HashObject.ts"/>
 /// <reference path="Logger.ts"/>
 
-module egret{
-    export class SAXParser extends HashObject{
+module egret {
+    export class SAXParser extends HashObject {
         static _instance:SAXParser = null;
 
         static getInstance() {
@@ -52,38 +52,6 @@ module egret{
             } else {
                 this._isSupportDOMParser = false;
             }
-        }
-
-        /**
-         *解析xml
-         */
-        public parse(textxml:string) {
-            var path = textxml;
-            textxml = this.getList(textxml);
-            var xmlDoc = this.parserXML(textxml);
-            var plist = xmlDoc.documentElement;
-            if (plist.tagName != 'plist')
-                egret.Logger.fatal(path + "不是plist或者没有预加载plist");
-
-            //获得第一个节点
-            var node = null;
-            for (var i = 0, len = plist.childNodes.length; i < len; i++) {
-                node = plist.childNodes[i];
-                if (node.nodeType == 1)
-                    break
-            }
-            xmlDoc = null;
-            return this.parseNode(node);
-        }
-
-        /**
-         * 解析tilemap
-         */
-        public tmxParse(textxml:string, isXMLString:boolean = false) {
-            if (!isXMLString) {
-                textxml = this.getList(textxml);
-            }
-            return this.parserXML(textxml);
         }
 
         private parserXML(textxml:string) {
@@ -109,94 +77,6 @@ module egret{
                 egret.Logger.info("xml not found!");
             }
             return xmlDoc;
-        }
-
-        private parseNode(node) {
-            var data:any = null;
-            switch (node.tagName) {
-                case 'dict':
-                    data = this.parseDict(node);
-                    break;
-                case 'array':
-                    data = this.parseArray(node);
-                    break;
-                case 'string':
-                    if (node.childNodes.length == 1)
-                        data = node.firstChild.nodeValue;
-                    else {
-                        data = "";
-                        for (var i = 0; i < node.childNodes.length; i++)
-                            data += node.childNodes[i].nodeValue;
-                    }
-                    break;
-                case 'false':
-                    data = false;
-                    break;
-                case 'true':
-                    data = true;
-                    break;
-                case 'real':
-                    data = parseFloat(node.firstChild.nodeValue);
-                    break;
-                case 'integer':
-                    data = parseInt(node.firstChild.nodeValue, 10);
-                    break;
-            }
-            return data;
-        }
-
-        private parseArray(node) {
-            var data = [];
-            for (var i = 0, len = node.childNodes.length; i < len; i++) {
-                var child = node.childNodes[i];
-                if (child.nodeType != 1)
-                    continue;
-                data.push(this.parseNode(child));
-            }
-            return data;
-        }
-
-        private parseDict(node) {
-            var data = {};
-
-            var key = null;
-            for (var i = 0, len = node.childNodes.length; i < len; i++) {
-                var child = node.childNodes[i];
-                if (child.nodeType != 1)
-                    continue;
-
-                if (child.tagName == 'key') {
-                    key = child.firstChild.nodeValue;
-                }
-                else {
-                    data[key] = this.parseNode(child);
-                }
-            }
-            return data;
-        }
-
-        /**
-         * 获取文件名
-         */
-        public getName(filePath:string) {
-            var startPos = filePath.lastIndexOf("/", filePath.length) + 1;
-            var endPos = filePath.lastIndexOf(".", filePath.length);
-            return filePath.substring(startPos, endPos);
-        }
-
-        /**
-         * 获取文件扩展名
-         */
-        public getExt(filePath:string) {
-            var startPos = filePath.lastIndexOf(".", filePath.length) + 1;
-            return filePath.substring(startPos, filePath.length);
-        }
-
-        public getList(key:string) {
-            if (this._xmlDict != null) {
-                return this._xmlDict[key];
-            }
-            return null;
         }
     }
 }

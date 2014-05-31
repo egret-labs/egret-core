@@ -91,20 +91,5 @@ module egret {
                 }
             }
         }
-
-
-        public static create(url):XML {
-            var xml:XML = new XML();
-            var xmldoc:any;
-            if (egret.SAXParser) {
-                var content = egret.TextureCache.getInstance().getTextData(url);
-                xmldoc = egret.SAXParser.getInstance().tmxParse(content, true).documentElement;
-            }
-            else {
-//                xmldoc = egret_native.EGTXML.readXML(url);
-            }
-            xml._ansXML(xmldoc);
-            return xml;
-        }
     }
 }
