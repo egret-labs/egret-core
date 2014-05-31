@@ -53,13 +53,14 @@ module egret {
 			super();
             this.hostComponentKey = "egret.Tree";
 		}
-		
+
+        public static defaultTreeRendererFactory:ClassFactory = new ClassFactory(TreeItemRenderer);
 		/**
 		 * @method egret.Tree#createChildren
 		 */
 		public createChildren():void{
 			if(!this.itemRenderer)
-				this.itemRenderer = TreeItemRenderer;
+				this.itemRenderer = Tree.defaultTreeRendererFactory;
 			super.createChildren();
 		}
 		

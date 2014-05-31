@@ -49,7 +49,7 @@ module egret {
 		 */		
 		public constructor(){
 			super();
-			this.addEventListener(TouchEvent.TOUCH_BEGAN,this.onItemMouseDown,this,false,1000);
+			this.addEventListener(TouchEvent.TOUCH_BEGIN,this.onItemMouseDown,this,false,1000);
 		}
 		
 		private onItemMouseDown(event:TouchEvent):void{
@@ -164,7 +164,7 @@ module egret {
 				this.disclosureButton.visible = this._hasChildren;
 				this.disclosureButton.selected = this._isOpen;
 				this.disclosureButton._autoSelected = false;
-				this.disclosureButton.addEventListener(TouchEvent.TOUCH_BEGAN,
+				this.disclosureButton.addEventListener(TouchEvent.TOUCH_BEGIN,
 					this.disclosureButton_mouseDownHandler,
 					this);
 			}
@@ -184,7 +184,7 @@ module egret {
 				this.iconDisplay.skinName = null;
 			}
 			else if(instance==this.disclosureButton){
-				this.disclosureButton.removeEventListener(TouchEvent.TOUCH_BEGAN,
+				this.disclosureButton.removeEventListener(TouchEvent.TOUCH_BEGIN,
 					this.disclosureButton_mouseDownHandler,
 					this);
 				this.disclosureButton._autoSelected = true;

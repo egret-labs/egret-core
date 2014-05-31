@@ -53,7 +53,7 @@ module egret {
             var point = this.localToGlobal();
             var stageText = new egret.StageText();
             stageText._open(point.x, point.y,this._explicitWidth,this._explicitHeight);
-            this.addEventListener(egret.TouchEvent.TOUCH_BEGAN, this.onMouseDownHandler, this);
+            this.addEventListener(egret.TouchEvent.TOUCH_BEGIN, this.onMouseDownHandler, this);
             this.stageText = stageText;
         }
 

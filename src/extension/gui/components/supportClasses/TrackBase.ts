@@ -51,7 +51,7 @@ module egret {
 		public constructor(){
 			super();
 			this.addEventListener(Event.ADDED_TO_STAGE, this.addedToStageHandler, this);
-			this.addEventListener(TouchEvent.TOUCH_BEGAN, this.mouseDownHandler, this);
+			this.addEventListener(TouchEvent.TOUCH_BEGIN, this.mouseDownHandler, this);
 		}
 		
 		private _slideDuration:number = 300;
@@ -182,13 +182,13 @@ module egret {
 			super.partAdded(partName, instance);
 			
 			if (instance == this.thumb){
-				this.thumb.addEventListener(TouchEvent.TOUCH_BEGAN, this.thumb_mouseDownHandler, this);
+				this.thumb.addEventListener(TouchEvent.TOUCH_BEGIN, this.thumb_mouseDownHandler, this);
 				this.thumb.addEventListener(ResizeEvent.RESIZE, this.thumb_resizeHandler, this);
 				this.thumb.addEventListener(UIEvent.UPDATE_COMPLETE, this.thumb_updateCompleteHandler, this);
 				this.thumb.stickyHighlighting = true;
 			}
 			else if (instance == this.track){
-				this.track.addEventListener(TouchEvent.TOUCH_BEGAN, this.track_mouseDownHandler, this);
+				this.track.addEventListener(TouchEvent.TOUCH_BEGIN, this.track_mouseDownHandler, this);
 				this.track.addEventListener(ResizeEvent.RESIZE, this.track_resizeHandler, this);
 			}
 		}
@@ -202,12 +202,12 @@ module egret {
 			super.partRemoved(partName, instance);
 			
 			if (instance == this.thumb){
-				this.thumb.removeEventListener(TouchEvent.TOUCH_BEGAN, this.thumb_mouseDownHandler, this);
+				this.thumb.removeEventListener(TouchEvent.TOUCH_BEGIN, this.thumb_mouseDownHandler, this);
 				this.thumb.removeEventListener(ResizeEvent.RESIZE, this.thumb_resizeHandler, this);            
 				this.thumb.removeEventListener(UIEvent.UPDATE_COMPLETE, this.thumb_updateCompleteHandler, this);            
 			}
 			else if (instance == this.track){
-				this.track.removeEventListener(TouchEvent.TOUCH_BEGAN, this.track_mouseDownHandler, this);
+				this.track.removeEventListener(TouchEvent.TOUCH_BEGIN, this.track_mouseDownHandler, this);
 				this.track.removeEventListener(ResizeEvent.RESIZE, this.track_resizeHandler, this);
 			}
 		}

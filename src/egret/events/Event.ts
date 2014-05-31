@@ -143,7 +143,7 @@ module egret {
          * @member {boolean} egret.Event#bubbles
          */
         public get bubbles():boolean {
-            return this.bubbles;
+            return this._bubbles;
         }
 
         private _cancelable:boolean;

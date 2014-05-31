@@ -126,8 +126,8 @@ module egret {
         private installViewport():void{
             if (this.viewport){
                 this.viewport.clipAndEnableScrolling = true;
-                this.viewport.addEventListener(TouchEvent.TOUCH_BEGAN,this.onTouchBegan,this);
-                this.viewport.addEventListener(TouchEvent.TOUCH_BEGAN,this.onTouchBeganCapture,this,true);
+                this.viewport.addEventListener(TouchEvent.TOUCH_BEGIN,this.onTouchBegin,this);
+                this.viewport.addEventListener(TouchEvent.TOUCH_BEGIN,this.onTouchBeginCapture,this,true);
                 this._addToDisplayListAt(<DisplayObject><any> this.viewport,0);
             }
         }
@@ -138,18 +138,19 @@ module egret {
         private uninstallViewport():void{
             if (this.viewport){
                 this.viewport.clipAndEnableScrolling = false;
-                this.viewport.removeEventListener(TouchEvent.TOUCH_BEGAN,this.onTouchBegan,this);
-                this.viewport.removeEventListener(TouchEvent.TOUCH_BEGAN,this.onTouchBeganCapture,this,true);
+                this.viewport.removeEventListener(TouchEvent.TOUCH_BEGIN,this.onTouchBegin,this);
+                this.viewport.removeEventListener(TouchEvent.TOUCH_BEGIN,this.onTouchBeginCapture,this,true);
                 this._removeFromDisplayList(<DisplayObject><any> this.viewport);
             }
         }
 
 
-        private delayEventList:Array<Event>;
+        private touchBeginTimer:Timer;
+        private delayTouchEvent:TouchEvent;
         /**
          * 若这个Scroller可以滚动，阻止当前事件，延迟100ms再抛出。
          */
-        private onTouchBeganCapture(event:TouchEvent):void{
+        private onTouchBeginCapture(event:TouchEvent):void{
             var canScroll:boolean = this.checkScrollPolicy();
             if(!canScroll){
                 return;
@@ -167,28 +168,49 @@ module egret {
             }
             event.stopPropagation();
             var evt:TouchEvent = this.cloneTouchEvent(event);
-            evt["_propagationList"] = list;
-            if(!this.delayEventList){
-                this.delayEventList = [];
+            this.delayTouchEvent = evt;
+            if(!this.touchBeginTimer){
+                this.touchBeginTimer = new egret.Timer(100);
+                this.touchBeginTimer.addEventListener(TimerEvent.TIMER,this.onTouchBeginTimer,this);
             }
-            this.delayEventList.push(evt);
+            this.touchBeginTimer.start();
+            this.onTouchBegin(event);
         }
 
         private cloneTouchEvent(event:TouchEvent):TouchEvent{
-            var evt:TouchEvent = new TouchEvent(event.type,event.bubbles,event.cancelable);
-            evt.touchPointID = touchPointID
+            var evt:TouchEvent = new TouchEvent(event._type,event._bubbles,event.cancelable);
+            evt.touchPointID = event.touchPointID
             evt._stageX = event._stageX;
             evt._stageY = event._stageY;
             evt.ctrlKey = event.ctrlKey;
             evt.altKey = event.altKey;
             evt.shiftKey = event.shiftKey;
             evt.touchDown = event.touchDown;
-            evt._isDefaultPrevented = event._isDefaultPrevented;
-            evt._isPropagationStopped = event._isPropagationStopped;
-            evt._isPropagationImmediateStopped = event._isPropagationImmediateStopped;
+            evt._isDefaultPrevented = false;
             evt._target = event._target;
             return evt;
         }
+
+        private onTouchBeginTimer(event:TimerEvent){
+            this.touchBeginTimer.stop();
+
+            var event:TouchEvent = this.delayTouchEvent;
+            var list:Array<DisplayObject> = [];
+
+            var target:DisplayObject = event._target;
+            while (target) {
+                list.push(target);
+                target = target.parent;
+            }
+
+            var length:number = list.length;
+            for (var i:number = length - 2; i >= 0; i--) {
+                target = list[i];
+                list.push(target);
+            }
+            var targetIndex:number = list.indexOf(event._target);
+        }
+
         /**
          * 鼠标按下时的偏移量
          */
@@ -242,9 +264,12 @@ module egret {
             return hCanScroll||vCanScroll;
         }
 
-        private ignoreTouchBegan:boolean = true;
+        private ignoreTouchBegin:boolean = false;
 
-        private onTouchBegan(event:TouchEvent):void{
+        private onTouchBegin(event:TouchEvent):void{
+            if(event.isDefaultPrevented()){
+                return;
+            }
             var canScroll:boolean = this.checkScrollPolicy();
             if(!canScroll){
                 return;
@@ -277,6 +302,7 @@ module egret {
                 Event.LEAVE_STAGE, this.onTouchEnd, this);
             this.addEventListener(Event.ENTER_FRAME,
                 this.enterFrameHandler, this);
+            event.preventDefault();
         }
 
         private onTouchMove(event:TouchEvent):void{

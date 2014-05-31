@@ -240,7 +240,7 @@ module egret {
 		public addHandlers():void{
 			this.addEventListener(TouchEvent.TOUCH_ROLL_OVER, this.mouseEventHandler, this);
 			this.addEventListener(TouchEvent.TOUCH_ROLL_OUT, this.mouseEventHandler, this);
-			this.addEventListener(TouchEvent.TOUCH_BEGAN, this.mouseEventHandler, this);
+			this.addEventListener(TouchEvent.TOUCH_BEGIN, this.mouseEventHandler, this);
 			this.addEventListener(TouchEvent.TOUCH_END, this.mouseEventHandler, this);
 			this.addEventListener(TouchEvent.TOUCH_TAP, this.mouseEventHandler, this);
 		}
@@ -331,7 +331,7 @@ module egret {
 					break;
 				}
 
-				case TouchEvent.TOUCH_BEGAN:{
+				case TouchEvent.TOUCH_BEGIN:{
 					this.addStageMouseHandlers();
                     if(InteractionMode.mode==InteractionMode.TOUCH)
                         this.hovered = true;
