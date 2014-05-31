@@ -738,8 +738,6 @@ module egret {
             }
         }
 
-        private _dispatchEventList:Array<DisplayObject>;
-
         public dispatchEvent(event:Event):boolean {
             if (!event._bubbles) {
                 return super.dispatchEvent(event);
@@ -747,13 +745,7 @@ module egret {
 
             event._reset();
 
-            if (!this._dispatchEventList) {
-                this._dispatchEventList = [];
-            }
-            else {
-                this._dispatchEventList.length = 0;
-            }
-            var list:Array<DisplayObject> = this._dispatchEventList;
+            var list:Array<DisplayObject> = [];
             var target:DisplayObject = this;
             while (target) {
                 list.unshift(target);
