@@ -50,7 +50,6 @@ exports.core = [
     "egret/net/URLLoader.js",
     "egret/display/Texture.js",
     "egret/display/RenderTexture.js",
-    "egret/utils/TextureCache.js",
     "egret/context/renderer/RendererContext.js",
     "egret/context/interactive/InteractionMode.js",
     "egret/context/interactive/TouchContext.js",

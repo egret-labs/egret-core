@@ -41,7 +41,6 @@
  */
 
 /// <reference path="SAXParser.ts"/>
-/// <reference path="TextureCache.ts"/>
 
 module egret {
     export class XML {
