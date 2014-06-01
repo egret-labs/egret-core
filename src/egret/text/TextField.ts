@@ -174,13 +174,17 @@ module egret {
             var hGap:number = this.size+this.lineSpacing;
             var textHeight:number = length*hGap - this.lineSpacing;
             this._textHeight = textHeight;
-            if(this._hasHeightSet&&textHeight<this._explicitHeight){
+            var explicitHeight:number = this._explicitHeight;
+            if(this._hasHeightSet&&textHeight<explicitHeight){
                 var valign:number = 0;
                 if(this.verticalAlign==VerticalAlign.MIDDLE)
                     valign = 0.5;
                 else if(this.verticalAlign==VerticalAlign.BOTTOM)
                     valign = 1;
-                drawY += valign*(this._explicitHeight-textHeight);
+                drawY += valign*(explicitHeight-textHeight);
+            }
+            else{
+                explicitHeight = Number.POSITIVE_INFINITY;
             }
             drawY = Math.round(drawY);
             var minY:number = drawY;
@@ -207,7 +211,7 @@ module egret {
                 if(drawX<minX){
                     minX = drawX;
                 }
-                if(!forMeasure){
+                if(!forMeasure&&drawY<explicitHeight){
                     renderContext.drawText(this,line,drawX,drawY,maxWidth);
                 }
                 drawY += hGap;
