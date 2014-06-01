@@ -16,34 +16,16 @@
  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-/// <reference path="../../../egret/geom/Rectangle.ts"/>
 /// <reference path="../../../egret/net/URLLoaderDataFormat.ts"/>
 /// <reference path="BinAnalyzer.ts"/>
-/// <reference path="../core/ResourceItem.ts"/>
 
 module RES {
 
-    export class ImgAnalyzer extends BinAnalyzer{
+    export class TextAnalyzer extends BinAnalyzer{
 
         public constructor(){
             super();
-            this._dataFormat = egret.URLLoaderDataFormat.TEXTURE;
-        }
-
-        /**
-         * 解析并缓存加载成功的数据
-         */
-        public analyzeData(resItem:ResourceItem,data:any):void{
-            var name:string = resItem.name;
-            if(this.fileDic[name]||!data){
-                return;
-            }
-            this.fileDic[name] = data;
-            if(resItem.data["scale9grid"]){
-                var str:string = resItem.data["scale9grid"];
-                var list:Array<string> = str.split(",");
-                data["scale9Grid"] = new egret.Rectangle(parseInt(list[0]),parseInt(list[1]),parseInt(list[2]),parseInt(list[3]));
-            }
+            this._dataFormat = egret.URLLoaderDataFormat.TEXT;
         }
     }
 }

@@ -26,7 +26,7 @@ module RES {
 		/** 
 		 * 图片文件 
 		 */		
-		public static TYPE_IMG:string = "img";
+		public static TYPE_IMAGE:string = "image";
 		/** 
 		 * 二进制流文件
 		 */		
@@ -34,7 +34,7 @@ module RES {
 		/**
 		 * 文本文件(解析为字符串)
 		 */		
-		public static TYPE_TXT:string = "txt";
+		public static TYPE_TEXT:string = "text";
         /**
          * JSON文件
          */
@@ -47,7 +47,9 @@ module RES {
          * BitmapTextSpriteSheet文件
          */
         public static TYPE_FONT:string = "font";
-
+        /**
+         * 声音文件
+         */
         public static TYPE_SOUND:string = "sound";
 
 		/**

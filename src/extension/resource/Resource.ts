@@ -21,9 +21,9 @@
 /// <reference path="analyzer/AnalyzerBase.ts"/>
 /// <reference path="analyzer/BinAnalyzer.ts"/>
 /// <reference path="analyzer/SoundAnalyzer.ts"/>
-/// <reference path="analyzer/ImgAnalyzer.ts"/>
+/// <reference path="analyzer/ImageAnalyzer.ts"/>
 /// <reference path="analyzer/JsonAnalyzer.ts"/>
-/// <reference path="analyzer/TxtAnalyzer.ts"/>
+/// <reference path="analyzer/TextAnalyzer.ts"/>
 /// <reference path="core/ResourceConfig.ts"/>
 /// <reference path="core/ResourceItem.ts"/>
 /// <reference path="core/ResourceLoader.ts"/>
@@ -176,10 +176,10 @@ module RES {
         private init():void{
             if(!egret.Injector.hasMapRule(AnalyzerBase,ResourceItem.TYPE_BIN))
                 egret.Injector.mapClass(AnalyzerBase,BinAnalyzer,ResourceItem.TYPE_BIN);
-            if(!egret.Injector.hasMapRule(AnalyzerBase,ResourceItem.TYPE_IMG))
-                egret.Injector.mapClass(AnalyzerBase,ImgAnalyzer,ResourceItem.TYPE_IMG);
-            if(!egret.Injector.hasMapRule(AnalyzerBase,ResourceItem.TYPE_TXT))
-                egret.Injector.mapClass(AnalyzerBase,TxtAnalyzer,ResourceItem.TYPE_TXT);
+            if(!egret.Injector.hasMapRule(AnalyzerBase,ResourceItem.TYPE_IMAGE))
+                egret.Injector.mapClass(AnalyzerBase,ImageAnalyzer,ResourceItem.TYPE_IMAGE);
+            if(!egret.Injector.hasMapRule(AnalyzerBase,ResourceItem.TYPE_TEXT))
+                egret.Injector.mapClass(AnalyzerBase,TextAnalyzer,ResourceItem.TYPE_TEXT);
             if(!egret.Injector.hasMapRule(AnalyzerBase,ResourceItem.TYPE_JSON))
                 egret.Injector.mapClass(AnalyzerBase,JsonAnalyzer,ResourceItem.TYPE_JSON);
             if(!egret.Injector.hasMapRule(AnalyzerBase,ResourceItem.TYPE_SHEET))
@@ -390,7 +390,6 @@ module RES {
             var type:string;
             switch(suffix){
                 case ResourceItem.TYPE_XML:
-                case ResourceItem.TYPE_TXT:
                 case ResourceItem.TYPE_JSON:
                 case ResourceItem.TYPE_SHEET:
                     type = suffix;
@@ -398,10 +397,13 @@ module RES {
                 case "png":
                 case "jpg":
                 case "gif":
-                    type = ResourceItem.TYPE_IMG;
+                    type = ResourceItem.TYPE_IMAGE;
                     break;
                 case "fnt":
                     type = ResourceItem.TYPE_FONT;
+                    break;
+                case "txt":
+                    type = ResourceItem.TYPE_TEXT;
                     break;
                 default:
                     type = ResourceItem.TYPE_BIN;
