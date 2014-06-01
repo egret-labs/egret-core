@@ -53,6 +53,7 @@ module egret {
 
 		/**
 		 * 垂直两端对齐
+         * 注意：TextFiled不支持此对齐方式。
 		 * @constant egret.VerticalAlign.JUSTIFY
 		 */
 		public static JUSTIFY:string = "justify";

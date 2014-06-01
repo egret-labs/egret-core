@@ -29,6 +29,8 @@
 /// <reference path="../context/renderer/RendererContext.ts"/>
 /// <reference path="../display/DisplayObject.ts"/>
 /// <reference path="../geom/Rectangle.ts"/>
+/// <reference path="../layout/HorizontalAlign.ts"/>
+/// <reference path="../layout/VerticalAlign.ts"/>
 /// <reference path="../utils/toColorString.ts"/>
 
 module egret {
@@ -127,12 +129,6 @@ module egret {
          */
         public lineSpacing:number = 0;
 
-        /**
-         * 字符间距
-		 * @member {number} egret.TextField#letterSpacing
-         */
-        public letterSpacing:number = 0;
-
         private _numLines:number = 0;
         /**
          * 文本行数
@@ -141,8 +137,6 @@ module egret {
         public get numLines():number{
             return this._numLines;
         }
-
-        private __hackIgnoreDrawText:boolean = false;
 
         constructor() {
             super();
@@ -153,12 +147,7 @@ module egret {
          * @param renderContext
          */
         public _render(renderContext:RendererContext):void {
-            if (!this.text) {
-                return;
-            }
-
-            renderContext.setupFont(this);
-            this.drawText(renderContext);
+            this.drawText(renderContext,false);
         }
 
         /**
@@ -166,7 +155,6 @@ module egret {
          */
         public _measureBounds():egret.Rectangle {
             var renderContext = egret.MainContext.instance.rendererContext;
-            renderContext.setupFont(this);
             return this.drawText(renderContext, true);
         }
 
@@ -175,119 +163,131 @@ module egret {
          * @param renderContext
          * @returns {Rectangle}
          */
-        private drawText(renderContext:RendererContext, forMeasureContentSize:boolean = false):Rectangle {
-            if (forMeasureContentSize) {
-                this.__hackIgnoreDrawText = true;
+        private drawText(renderContext:RendererContext,forMeasure:boolean):Rectangle {
+
+            var lines:Array<string> = this.getTextLines(renderContext);
+            if(!lines){
+                return Rectangle.identity.initialize(0,0,0,0);
             }
-
-            var explicitW:number = this._explicitWidth;
-            var maxW = 0;
-            //按 行获取数据
-            var lines = String(this.text).split(/(?:\r\n|\r|\n)/);
-            var drawH = Math.round(this.size*0.5);
-            var rap = this.size + this.lineSpacing;
-
-            var linesNum = 0;
-            if (isNaN(explicitW)) {
-                //没有设置 宽度
-                linesNum = lines.length;
-                //第一遍，算出 最长寛
-                for (var i = 0, l = linesNum; i < l; i++) {
-                    //获得 一行数据
-                    var str = lines[i];
-
-                    var w:number = renderContext.measureText(str);
-                    if (w > maxW) {
-                        maxW = w;
-                    }
+            var length:number = lines.length;
+            var drawY:number = this.size*0.5;
+            var hGap:number = this.size+this.lineSpacing;
+            var textHeight:number = length*hGap - this.lineSpacing;
+            this._textHeight = textHeight;
+            if(this._hasHeightSet&&textHeight<this._explicitHeight){
+                var valign:number = 0;
+                if(this.verticalAlign==VerticalAlign.MIDDLE)
+                    valign = 0.5;
+                else if(this.verticalAlign==VerticalAlign.BOTTOM)
+                    valign = 1;
+                drawY += valign*(this._explicitHeight-textHeight);
+            }
+            drawY = Math.round(drawY);
+            var minY:number = drawY;
+            var halign:number = 0;
+            if(this.textAlign==HorizontalAlign.CENTER){
+                halign = 0.5;
+            }
+            else if(this.textAlign==HorizontalAlign.RIGHT){
+                halign = 1;
+            }
+            var measuredWidths = this.measuredWidths;
+            var maxWidth:number;
+            if(this._hasWidthSet){
+                maxWidth = this.explicitWidth;
+            }
+            else{
+                maxWidth = this._textWidth;
+            }
+            var minX:number = Number.POSITIVE_INFINITY;
+            for(var i:number=0;i<length;i++){
+                var line:string = lines[i];
+                var measureW:number = measuredWidths[i];
+                var drawX:number = Math.round((maxWidth-measureW)*halign);
+                if(drawX<minX){
+                    minX = drawX;
                 }
-
-                //第二遍，绘制
-                for (var i = 0, l = linesNum; i < l; i++) {
-                    //获得 一行数据
-                    var str = lines[i];
-                    this._drawTextLine(renderContext, str, drawH, maxW);
-                    drawH += rap;
+                if(!forMeasure){
+                    renderContext.drawText(this,line,drawX,drawY,maxWidth);
                 }
+                drawY += hGap;
             }
-            else {
-                maxW = explicitW;
-
-                //设置宽度
-                for (var i = 0, l = lines.length; i < l; i++) {
-                    //获得 一行数据
-                    var str = lines[i];
-
-                    //获取 字符串 真实显示的 寛高
-                    var w:number = renderContext.measureText(str);
-                    if (w > explicitW) {
-                        var tempStr = str;
-                        var tempLineW = 0;
-                        str = "";
-                        for (var j = 0; j < tempStr.length; j++) {
-                            var wordW = renderContext.measureText(tempStr[j]);
-                            if (tempLineW + wordW > explicitW) {
-                                if (tempLineW == 0) {
-                                    tempLineW += wordW;
-                                    str += tempStr[j];
-                                    maxW = wordW;
-                                }
-                                else {
-                                    //超出 绘制当前已经取得的字符串
-                                    this._drawTextLine(renderContext, str, drawH, maxW);
-                                    linesNum++;
-                                    j--;
-                                    str = "";
-                                    tempLineW = 0;
-                                    drawH += rap;
-                                }
-                            }
-                            else {
-                                tempLineW += wordW;
-                                str += tempStr[j];
-                            }
-                        }
-                    }
-
-                    this._drawTextLine(renderContext, str, drawH, maxW);
-                    linesNum++;
-                    drawH += rap;
-                }
-            }
-            this._numLines = linesNum;
-
-            var rect:Rectangle = Rectangle.identity;
-            if (forMeasureContentSize) {
-                rect.x = rect.y = 0;
-                rect.width = maxW;
-                rect.height = linesNum * rap;
-                this.__hackIgnoreDrawText = false;
-            }
-
-            return rect;
+            return Rectangle.identity.initialize(minX,minY,maxWidth,textHeight);
         }
 
-        /**
-         * 渲染单行文字
-         * @private
-         * @param renderContext
-         * @param text
-         * @param y
-         */
-         public _drawTextLine(renderContext:RendererContext, text, y, maxWidth):void {
-            if (this.__hackIgnoreDrawText) return;
-            var x;
-            if (this.textAlign == "left") {
-                x = 0;
-            }
-            else if (this.textAlign == "center") {
-                x = maxWidth / 2;
-            }
-            else {
-                x = maxWidth;
-            }
+        private _textWidth:number;
+        private _textHeight:number;
+        private measuredWidths:Array<number> = [];
 
-            renderContext.drawText(this,text,x,y,maxWidth);
+        private getTextLines(renderContext:RendererContext):Array<string>{
+            var text:string = this.text;
+            if(!text){
+                return null;
+            }
+            var measuredWidths = this.measuredWidths;
+            measuredWidths.length = 0;
+            renderContext.setupFont(this);
+            var lines:Array<string> = text.split(/(?:\r\n|\r|\n)/);
+            var length:number = lines.length;
+            var maxWidth:number = 0;
+            if(this._hasWidthSet){
+                var explicitWidth:number = this._explicitWidth;
+                for(var i:number=0;i<length;i++){
+                    var line:string = lines[i];
+                    var measureW:number = renderContext.measureText(line);
+                    if(measureW>explicitWidth){
+                        var newLine:string = "";
+                        var lineWidth:number = 0;
+                        var len:number = line.length;
+                        for(var j:number=0;j<len;j++){
+                            var word:string = line.charAt(j);
+                            measureW = renderContext.measureText(word);
+                            if(lineWidth+measureW>explicitWidth){
+                                i++;
+                                length++;
+                                if(lineWidth==0){
+                                    lines.splice(i,0,word);
+                                    measuredWidths[i] = measureW;
+                                    if(maxWidth<measureW){
+                                        maxWidth = measureW;
+                                    }
+                                    measureW = 0;
+                                    word = "";
+                                }
+                                else{
+                                    lines.splice(i,0,newLine);
+                                    measuredWidths[i] = lineWidth;
+                                    if(maxWidth<lineWidth){
+                                        maxWidth = lineWidth;
+                                    }
+                                    newLine = "";
+                                    lineWidth = 0;
+                                }
+                            }
+                            lineWidth += measureW;
+                            newLine += word;
+                        }
+                    }
+                    else{
+                        measuredWidths[i] = measureW;
+                        if(maxWidth<measureW){
+                            maxWidth = measureW;
+                        }
+                    }
+                }
+            }
+            else{
+                for(i=0;i<length;i++) {
+                    line = lines[i];
+                    measureW = renderContext.measureText(line);
+                    measuredWidths[i] = measureW;
+                    if(maxWidth<measureW){
+                        maxWidth = measureW;
+                    }
+                }
+            }
+            this._textWidth = maxWidth;
+            return lines;
         }
     }
 }

@@ -163,7 +163,7 @@ module egret {
             font += textField.bold?"bold ":"normal ";
             font += textField.size + "px " + textField.fontFamily;
             ctx.font = font;
-            ctx.textAlign = textField.textAlign || "left";
+            ctx.textAlign = "left";
             ctx.textBaseline = "middle";
         }
 

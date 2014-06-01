@@ -207,26 +207,6 @@ module egret {
             this.invalidateDisplayList();
         }
 
-        private letterSpacingChanged:boolean;
-        private _letterSpacing:number = 0;
-        /**
-         * 字符间距
-		 * @member egret.TextBase#letterSpacing
-         */
-        public get letterSpacing():number{
-            return this._letterSpacing;
-        }
-
-        public set letterSpacing(value:number){
-            if(this._letterSpacing==value)
-                return;
-            this._letterSpacing = value;
-            this.letterSpacingChanged = true;
-            this.invalidateProperties();
-            this.invalidateSize();
-            this.invalidateDisplayList();
-        }
-
         private textColorChanged:boolean;
 
 		private _textColor:number = 0x000000;
@@ -316,10 +296,6 @@ module egret {
 				this._textField.lineSpacing = this._lineSpacing;
 				this.lineSpacingChanged = false;
 			}
-			if (this.letterSpacingChanged){
-				this._textField.letterSpacing = this._letterSpacing;
-				this.letterSpacingChanged = false;
-			}
 			if (this.textColorChanged){
 				this._textField.textColor = this._textColor;
 				this.textColorChanged = false;
@@ -351,7 +327,6 @@ module egret {
             this._textField.textAlign = this._textAlign;
             this._textField.verticalAlign = this._verticalAlign;
             this._textField.lineSpacing = this._lineSpacing;
-            this._textField.letterSpacing = this.letterSpacing;
             this._textField.textColor = this._textColor;
             this._addToDisplayList(this._textField);
         }
