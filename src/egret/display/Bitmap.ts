@@ -66,26 +66,6 @@ module egret {
          */
         public debugColor:number = 0xff0000;
 
-        private _spriteFrame:egret.SpriteSheetFrame;
-        /**
-         * 这个API已废弃,将删除SpriteSheetFrame类。
-         * @deprecated
-         */
-        public get spriteFrame():egret.SpriteSheetFrame{
-            return this._spriteFrame;
-        }
-        public set spriteFrame(value:SpriteSheetFrame){
-            this._spriteFrame = value;
-            if(this.texture){
-                this.texture._startX = value.x;
-                this.texture._startY = value.y;
-                this.texture._textureHeight = value.h;
-                this.texture._textureWidth = value.w;
-                this.texture._offsetX = value.offX;
-                this.texture._offsetY = value.offY;
-            }
-        }
-
         /**
          * 渲染纹理
 		 * @member {egret.Texture} egret.Bitmap#texture
