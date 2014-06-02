@@ -452,6 +452,7 @@ module egret {
             var viewport:IViewport = this._viewport;
             var hsp:number = viewport.horizontalScrollPosition;
             var maxHsp:number = viewport.contentWidth-viewport.width;
+            maxHsp = Math.max(0,maxHsp);
 
             var sum:number = this._velocityX * 2.33;
             var velocityCount:number = this._previousVelocityX.length;
@@ -589,6 +590,7 @@ module egret {
             var viewport:IViewport = this._viewport;
             var vsp:number = viewport.verticalScrollPosition;
             var maxVsp:number = viewport.contentHeight-viewport.height;
+            maxVsp = Math.max(0,maxVsp);
             var vspTo:number = vsp;
             if(vsp<0){
                 vspTo = 0;
