@@ -34,6 +34,8 @@ module egret {
         private canvasContext:CanvasRenderingContext2D;
         private commandQueue:Array<Command>;
         private renderContext:RendererContext;
+        private strokeStyleColor:string;
+        private fillStyleColor:string;
 
         constructor() {
             this.renderContext = MainContext.instance.rendererContext;
@@ -47,6 +49,7 @@ module egret {
             var _colorGreen = (color & 0x00ff00) >> 8;
             var _colorRed = color >> 16;
             var _colorStr = "rgba(" + _colorRed + "," + _colorGreen + "," + _colorBlue + "," + alpha + ")";
+            this.fillStyleColor = _colorStr;
 
             this.commandQueue.push(new Command(this._setStyle, this, [_colorStr]))
 
@@ -59,20 +62,40 @@ module egret {
         public drawRect(x:number, y:number, width:number, height:number):void {
 
             var rendererContext = <HTML5CanvasRenderer>this.renderContext;
-            this.commandQueue.push(new Command(
+            if (this.strokeStyleColor) {
+                this.commandQueue.push(new Command(
 
-                function (x, y, width, height) {
-                    //this.canvasContext.fill();
-                    this.canvasContext.fillRect(rendererContext._transformTx + x,
-                        rendererContext._transformTy + y,
-                        width,
-                        height);
-                },
-                this,
-                [ x, y, width, height]
+                    function (x, y, width, height, color) {
+                        //this.canvasContext.fill();
+                        this.canvasContext.strokeRect(rendererContext._transformTx + x,
+                            rendererContext._transformTy + y,
+                            width,
+                            height,
+                            color);
+                    },
+                    this,
+                    [ x, y, width, height, this.strokeStyleColor]
 
-            )
-            );
+                )
+                );
+            }
+            if (this.fillStyleColor) {
+                this.commandQueue.push(new Command(
+
+                    function (x, y, width, height) {
+                        //this.canvasContext.fill();
+                        this.canvasContext.fillRect(rendererContext._transformTx + x,
+                            rendererContext._transformTy + y,
+                            width,
+                            height);
+                    },
+                    this,
+                    [ x, y, width, height]
+
+                )
+                );
+            }
+
         }
 
         /**
@@ -87,20 +110,20 @@ module egret {
          */
         public lineStyle(thickness:number = NaN, color:number = 0, alpha:number = 1.0, pixelHinting:boolean = false, scaleMode:string = "normal", caps:string = null, joints:string = null, miterLimit:number = 3):void {
 
+            var _colorBlue = color & 0x0000FF;
+            var _colorGreen = (color & 0x00ff00) >> 8;
+            var _colorRed = color >> 16;
+            var _colorStr = "rgba(" + _colorRed + "," + _colorGreen + "," + _colorBlue + "," + alpha + ")";
+            this.strokeStyleColor = _colorStr;
 
             this.commandQueue.push(new Command(
 
-                function (thinkness, color) {
-                    var _colorBlue = color & 0x0000FF;
-                    var _colorGreen = (color & 0x00ff00) >> 8;
-                    var _colorRed = color >> 16;
-                    var _colorStr = "rgba(" + _colorRed + "," + _colorGreen + "," + _colorBlue + "," + alpha + ")";
-                    this.canvasContext.lineWidth = thickness;
-                    this.canvasContext.strokeStyle = _colorStr;
-//                    this.canvasContext.stroke = color;
+                function (lineWidth, strokeStyle) {
+                    this.canvasContext.lineWidth = lineWidth;
+                    this.canvasContext.strokeStyle = strokeStyle;
                 },
                 this,
-                [thickness, color]
+                [thickness, _colorStr]
 
             ))
         }
@@ -130,6 +153,7 @@ module egret {
 
         public clear():void {
             this.commandQueue.length = 0;
+            this.strokeStyleColor = null;
         }
 
         public endFill():void {
