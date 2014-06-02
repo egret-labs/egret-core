@@ -83,7 +83,15 @@ module egret {
             }
         }
 
+        private lastTouchX:number = -1;
+        private lastTouchY:number = -1;
+
         public onTouchMove(x:number, y:number, identifier:number):void {
+            if(x==this.lastTouchX&&y==this.lastTouchY){
+                return;
+            }
+            this.lastTouchX = x;
+            this.lastTouchY = y;
             var stage = MainContext.instance.stage;
             var result = stage.hitTest(x, y);
             if (result) {

@@ -180,10 +180,10 @@ module egret {
                 target = target.parent;
             }
 
-            var length:number = list.length;
-            for (var i:number = 1; i < length; i++) {
+            var viewport:IViewport = this._viewport;
+            for (var i:number = 1;; i+=2) {
                 target = list[i];
-                if(target===this){
+                if(!target||target===(<any> viewport)){
                     break;
                 }
                 list.unshift(target);

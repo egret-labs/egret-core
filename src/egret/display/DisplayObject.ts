@@ -761,7 +761,7 @@ module egret {
         }
 
         public _dispatchPropagationEvent(event:Event,list:Array<DisplayObject>,targetIndex:number):void{
-            length = list.length;
+            var length:number = list.length;
             for (var i:number = 0; i < length; i++) {
                 var currentTarget:DisplayObject = list[i];
                 event._setCurrentTarget(currentTarget);
