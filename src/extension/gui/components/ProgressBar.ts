@@ -285,17 +285,21 @@ module egret {
                 switch (this._direction) {
                     case ProgressBarDirection.LEFT_TO_RIGHT:
                         this.thumb.width = thumbWidth;
+                        this.thumb.height = trackHeight;
                         this.thumb.x = thumbPosX;
                         break;
                     case ProgressBarDirection.RIGHT_TO_LEFT:
                         this.thumb.width = thumbWidth;
+                        this.thumb.height = trackHeight;
                         this.thumb.x = thumbPosX + trackWidth - thumbWidth;
                         break;
                     case ProgressBarDirection.TOP_TO_BOTTOM:
+                        this.thumb.width = trackWidth;
                         this.thumb.height = thumbHeight;
                         this.thumb.y = thumbPosY;
                         break;
                     case ProgressBarDirection.BOTTOM_TO_TOP:
+                        this.thumb.width = trackWidth;
                         this.thumb.height = thumbHeight;
                         this.thumb.y = thumbPosY + trackHeight - thumbHeight;
                         break;
