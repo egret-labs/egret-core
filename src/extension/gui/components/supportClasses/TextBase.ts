@@ -209,7 +209,7 @@ module egret {
 
         private textColorChanged:boolean;
 
-		private _textColor:number = 0x000000;
+		private _textColor:number = 0xFFFFFF;
 		/**
 		 * @member egret.TextBase#textColor
 		 */
