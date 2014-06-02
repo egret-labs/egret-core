@@ -80,7 +80,7 @@ module egret {
         }
 
         private static tick(delta, paused = false):void {
-            var tweens:Tween[] = Tween._tweens;
+            var tweens:Tween[] = Tween._tweens.concat();
             for (var i = tweens.length - 1; i >= 0; i--) {
                 var tween:Tween = tweens[i];
                 if ((paused && !tween.ignoreGlobalPause) || tween.paused) {
