@@ -86,9 +86,9 @@ module egret {
 		}
 
         private sizeChanged:boolean;
-		private _size:number = 12;
+		private _size:number = 30;
 		/**
-		 * 字号大小,默认值12 。
+		 * 字号大小,默认值30 。
 		 * @member egret.TextBase#size
 		 */
 		public get size():number{
