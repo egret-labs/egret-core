@@ -273,11 +273,9 @@ module egret {
             var list:Array<DisplayObject> = this._children;
             var child1:DisplayObject = list[index1];
             var child2:DisplayObject = list[index2];
-            list.splice(index2, 1);
-            list.splice(index1, 1);
-
-            list.splice(index1, 0, child2);
-            list.splice(index2, 0, child1);
+            
+            list[index1] = child2;
+            list[index2] = child1;
         }
 
         /**
