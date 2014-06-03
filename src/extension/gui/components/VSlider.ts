@@ -80,8 +80,8 @@ module egret {
 			this.thumb.setLayoutBoundsPosition(this.thumb.layoutBoundsX, Math.round(thumbPosParentY));
 			if(this.showTrackHighlight&&this.trackHighlight&&this.trackHighlight._parent){
 				var trackHighlightY:number = this.trackHighlight._parent.globalToLocal(thumbPosX,thumbPosY,Point.identity).y;
-				this.trackHighlight.y = Math.round(trackHighlightY+thumbHeight*0.5);
-				this.trackHighlight.height = Math.round(thumbRange-trackHighlightY+thumbHeight*0.5);
+				this.trackHighlight.y = Math.round(trackHighlightY+thumbHeight);
+				this.trackHighlight.height = Math.round(thumbRange-trackHighlightY);
 			}
 		}
 	}

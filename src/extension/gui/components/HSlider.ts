@@ -68,8 +68,7 @@ module egret {
 			if (!this.thumb || !this.track)
 				return;
 
-            var thumbWidth:number = this.thumb.layoutBoundsWidth;
-			var thumbRange:number = this.track.layoutBoundsWidth - thumbWidth;
+			var thumbRange:number = this.track.layoutBoundsWidth - this.thumb.layoutBoundsWidth;
 			var range:number = this.maximum - this.minimum;
 			var thumbPosTrackX:number = (range > 0) ? ((this.pendingValue - this.minimum) / range) * thumbRange : 0;
 			var thumbPos:Point = this.track.localToGlobal(thumbPosTrackX, 0);
@@ -81,7 +80,7 @@ module egret {
 			if(this.showTrackHighlight&&this.trackHighlight&&this.trackHighlight.parent){
 				var trackHighlightX:number = this.trackHighlight.parent.globalToLocal(thumbPosX,thumbPosY,Point.identity).x-thumbPosTrackX;
 				this.trackHighlight.x = Math.round(trackHighlightX);
-				this.trackHighlight.width = Math.round(thumbPosTrackX+thumbWidth*0.5);
+				this.trackHighlight.width = Math.round(thumbPosTrackX);
 			}
 		}
 	}
