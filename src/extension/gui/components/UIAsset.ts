@@ -70,7 +70,7 @@ module egret {
          * 设置为 BitmapFillMode.REPEAT时，位图将重复以填充区域。
          * 设置为 BitmapFillMode.SCALE时，位图将拉伸以填充区域。
          * 注意:此属性仅在source的解析结果为Texture时有效
-         * @member {egret.Texture} egret.Bitmap#fillMode
+         * @member {egret.Texture} egret.UIAsset#fillMode
          */
         public fillMode:string = "scale";
 		
