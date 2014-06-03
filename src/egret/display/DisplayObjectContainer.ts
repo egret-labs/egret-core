@@ -262,20 +262,13 @@ module egret {
         }
 
         private _swapChildrenAt(index1:number, index2:number):void{
-            if (index1 > index2){
-                var temp:number = index2;
-                index2 = index1;
-                index1 = temp;
-            }
-            else if (index1 == index2){
+            if(index1 == index2){
                 return;
             }
             var list:Array<DisplayObject> = this._children;
-            var child1:DisplayObject = list[index1];
-            var child2:DisplayObject = list[index2];
-            
-            list[index1] = child2;
-            list[index2] = child1;
+            var child:DisplayObject = list[index1];
+            list[index1] = list[index2];
+            list[index2] = child;
         }
 
         /**

@@ -285,20 +285,19 @@ module egret {
 			}
 			else if (index1 == index2)
 				return;
+
+            var elementsContent:Array<IVisualElement> = this._elementsContent;
 			
-			var element1:IVisualElement = this._elementsContent[index1];
-			var element2:IVisualElement = this._elementsContent[index2];
+			var element1:IVisualElement = elementsContent[index1];
+			var element2:IVisualElement = elementsContent[index2];
 			if (!this.elementsContentChanged){
 				this._elementRemoved(element1, index1, false);
 				this._elementRemoved(element2, index2, false);
 			}
-			
-			this._elementsContent.splice(index2, 1);
-			this._elementsContent.splice(index1, 1);
-			
-			this._elementsContent.splice(index1, 0, element2);
-			this._elementsContent.splice(index2, 0, element1);
-			
+
+            elementsContent[index1] = element2;
+            elementsContent[index2] = element1;
+
 			if (!this.elementsContentChanged){
 				this._elementAdded(element2, index1, false);
 				this._elementAdded(element1, index2, false);
