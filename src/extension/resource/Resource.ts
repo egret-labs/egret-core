@@ -33,7 +33,7 @@ module RES {
     /**
      * 加载配置文件并解析
      * @param url 配置文件路径(resource.json的路径)
-     * @param resourceRoot 资源根路径。配置中的所有url都是这个路径的相对值。
+     * @param resourceRoot 资源根路径。配置中的所有url都是这个路径的相对值。最终url是这个字符串与配置里资源项的url相加的值。
      */
     export function loadConfig(url:string,resourceRoot:string=""):void{
         instance.loadConfig(url,resourceRoot);
@@ -215,6 +215,7 @@ module RES {
          * 开始加载配置
          */
         public loadConfig(url:string,resourceRoot:string):void{
+
             this.configURL = url;
             this.resourceRoot = resourceRoot;
             var resItem:ResourceItem = new ResourceItem(url,url,ResourceItem.TYPE_JSON);
@@ -224,7 +225,7 @@ module RES {
         /**
          * 已经加载过组名列表
          */
-        private loadedGroups:Array<string> = new Array<string>();
+        private loadedGroups:Array<string> = [];
         /**
          * 检查某个资源组是否已经加载完成
          */
