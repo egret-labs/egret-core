@@ -70,7 +70,7 @@ module egret {
          * @private
          */
         public clearScreen() {
-            egret_native.Graphics.clearScreen(255, 255, 255);
+            egret_native.Graphics.clearScreen(0, 0, 0);
         }
 
 
@@ -151,11 +151,7 @@ module egret {
         public setupFont(textField:TextField):void {
             egret_native.Label.createLabel("/system/fonts/DroidSansFallback.ttf", textField.size, "");
             egret_native.Label.setTextAlignment(textField.textAlign);
-            this.__hackTextFieldSize = textField.size;
         }
-
-        private __hackTextFieldSize:number = 0;
-
 
         /**
          * 测量文本
@@ -164,7 +160,7 @@ module egret {
          * @returns {number}
          */
         public measureText(text:string):number {
-            return text.length * this.__hackTextFieldSize;
+            return egret_native.Label.getTextSize(text)[0];
         }
 
         /**
