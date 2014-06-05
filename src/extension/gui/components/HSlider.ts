@@ -67,7 +67,7 @@ module egret {
 		public updateSkinDisplayList():void{
 			if (!this.thumb || !this.track)
 				return;
-			
+
 			var thumbRange:number = this.track.layoutBoundsWidth - this.thumb.layoutBoundsWidth;
 			var range:number = this.maximum - this.minimum;
 			var thumbPosTrackX:number = (range > 0) ? ((this.pendingValue - this.minimum) / range) * thumbRange : 0;

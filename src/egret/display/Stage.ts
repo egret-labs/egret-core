@@ -32,6 +32,9 @@
 /// <reference path="../geom/Rectangle.ts"/>
 
 module egret {
+    /**
+     * @class Stage
+     */
     export class Stage extends DisplayObjectContainer {
 
         public static _invalidateRenderFlag:boolean = false;
@@ -39,6 +42,7 @@ module egret {
         /**
          * 调用 invalidate() 方法后，在显示列表下次呈现时，Egret 会向每个已注册侦听 render 事件的显示对象发送一个 render 事件。
          * 每次您希望 Egret 发送 render 事件时，都必须调用 invalidate() 方法。
+         * @method egret.Stage#invalidate
          */
         public invalidate():void {
             Stage._invalidateRenderFlag = true;
@@ -66,6 +70,7 @@ module egret {
 
         private _stageWidth:number;
         /**
+         * @member {number} egret.Stage#stageWidth
          * 舞台宽度（坐标系宽度，非设备宽度）
          */
         public get stageWidth():number {
@@ -74,6 +79,7 @@ module egret {
 
         private _stageHeight:number;
         /**
+         * @member {number} egret.Stage#stageHeight
          * 舞台高度（坐标系高度，非设备高度）
          */
         public get stageHeight():number {
@@ -82,10 +88,10 @@ module egret {
 
 
         /**
-         * @see egret.DisplayObject.hitTest
+         * @see egret.DisplayObject#hitTest
          * @param x
          * @param y
-         * @returns {DisplayObject}
+         * @returns {egret.DisplayObject}
          */
         public hitTest(x, y) {
             if (!this.touchEnabled) {
@@ -116,9 +122,9 @@ module egret {
         }
 
         /**
-         * @see egret.DisplayObject.getBounds
-         * @param resultRect {Rectangle} 可选参数，传入用于保存结果的Rectangle对象，避免重复创建对象。
-         * @returns {Rectangle}
+         * @see egret.DisplayObject#getBounds
+         * @param resultRect {egret.Rectangle} 可选参数，传入用于保存结果的Rectangle对象，避免重复创建对象。
+         * @returns {egret.Rectangle}
          */
         public getBounds(resultRect?:Rectangle):Rectangle {
             if (!resultRect) {

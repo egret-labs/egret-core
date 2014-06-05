@@ -71,6 +71,8 @@ declare module egret_native {
 
         function setTextAlignment(type:string):void;
 
+        function getTextSize(text:string):Array<number>;
+
 
     }
 

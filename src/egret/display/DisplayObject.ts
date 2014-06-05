@@ -234,7 +234,7 @@ module egret {
 
         /**
          * 显示对象是否可见。
-         * @member {boolean} egret.DisplayObject#x
+         * @member {boolean} egret.DisplayObject#visible
          */
         public visible:boolean = true;
         /**

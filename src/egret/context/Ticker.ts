@@ -86,7 +86,7 @@ module egret {
          * 取消侦听enterFrame事件
          * @method egret.Ticker#unregister
          * @param listener {Function} 事件侦听函数
-         * @param thisObject {an} 侦听函数的this对象
+         * @param thisObject {any} 侦听函数的this对象
          * @stable A-
          */
         public unregister(listener:Function, thisObject:any):void {
@@ -99,10 +99,10 @@ module egret {
          * @method egret.Ticker#setTimeout
          * @param listener {Function}
          * @param thisObject {any}
-         * @param delay {Number}
+         * @param delay {number}
          * @param ...parameter {any}
          */
-        public setTimeout(listener:Function, thisObject, delay:Number, ...parameters):void {
+        public setTimeout(listener:Function, thisObject, delay:number, ...parameters):void {
             var that = this;
             var passTime = 0;
             this.register(function (frameTime) {

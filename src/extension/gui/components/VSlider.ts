@@ -67,8 +67,9 @@ module egret {
 		public updateSkinDisplayList():void{
 			if (!this.thumb || !this.track)
 				return;
-			
-			var thumbRange:number = this.track.layoutBoundsHeight - this.thumb.layoutBoundsHeight;
+
+            var thumbHeight:number = this.thumb.layoutBoundsHeight;
+			var thumbRange:number = this.track.layoutBoundsHeight - thumbHeight;
 			var range:number = this.maximum - this.minimum;
 			var thumbPosTrackY:number = (range > 0) ? thumbRange - (((this.pendingValue - this.minimum) / range) * thumbRange) : 0;
 			var thumbPos:Point = this.track.localToGlobal(0, thumbPosTrackY);
@@ -77,10 +78,10 @@ module egret {
 			var thumbPosParentY:number = this.thumb.parent.globalToLocal(thumbPosX,thumbPosY,Point.identity).y;
 			
 			this.thumb.setLayoutBoundsPosition(this.thumb.layoutBoundsX, Math.round(thumbPosParentY));
-			if(this.showTrackHighlight&&this.trackHighlight&&this.trackHighlight.parent){
-				var trackHighlightY:number = this.trackHighlight.parent.globalToLocal(thumbPosX,thumbPosY,Point.identity).y-thumbPosTrackY;
-				this.trackHighlight.y = Math.round(trackHighlightY);
-				this.trackHighlight.height = Math.round(thumbPosTrackY);
+			if(this.showTrackHighlight&&this.trackHighlight&&this.trackHighlight._parent){
+				var trackHighlightY:number = this.trackHighlight._parent.globalToLocal(thumbPosX,thumbPosY,Point.identity).y;
+				this.trackHighlight.y = Math.round(trackHighlightY+thumbHeight);
+				this.trackHighlight.height = Math.round(thumbRange-trackHighlightY);
 			}
 		}
 	}

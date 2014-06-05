@@ -14,7 +14,7 @@ function run(current, arg, opt) {
     if (opt["-config"]) {
         var content = "{\n" +
             "  \"project\":\"\",\n" +
-            "  \"keyfile\":\"\",\n" +
+            "  \"keystore\":\"\",\n" +
             "  \"password\":\"\",\n" +
             "  \"egret-native\":\"EgretFrameworkNative\"\n" +
             "}";

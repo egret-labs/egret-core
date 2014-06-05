@@ -52,10 +52,14 @@ module egret {
 	export class UIAsset extends UIComponent{
 		/**
 		 * @method egret.UIAsset#constructor
-		 */
-		public constructor(){
+         * @param source {any} 素材标识符
+         */
+		public constructor(source?:any){
 			super();
 			this.touchChildren = false;
+            if(source){
+                this.source = source;
+            }
 		}
 
         /**
@@ -70,7 +74,7 @@ module egret {
          * 设置为 BitmapFillMode.REPEAT时，位图将重复以填充区域。
          * 设置为 BitmapFillMode.SCALE时，位图将拉伸以填充区域。
          * 注意:此属性仅在source的解析结果为Texture时有效
-         * @member {egret.Texture} egret.Bitmap#fillMode
+         * @member {egret.Texture} egret.UIAsset#fillMode
          */
         public fillMode:string = "scale";
 		
@@ -78,7 +82,7 @@ module egret {
 
 		public _source:any;
 		/**
-		 * 皮肤标识符。可以为Class,String,或DisplayObject实例等任意类型，具体规则由项目注入的素材适配器决定，
+		 * 素材标识符。可以为Class,String,或DisplayObject实例等任意类型，具体规则由项目注入的素材适配器决定，
 		 * 适配器根据此属性值解析获取对应的显示对象，并赋值给content属性。
 		 * @member egret.UIAsset#source
 		 */	

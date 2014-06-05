@@ -25,7 +25,6 @@ var mine = {
     "xml": "text/xml"
 }
 
-var projectName = "";
 function run(dir, args, opts) {
     var PORT = 3000;
     var server = http.createServer(onGet);
@@ -38,18 +37,37 @@ function run(dir, args, opts) {
     var url = path.join("http://localhost:3000", args[0], "launcher/index.html");
     open(url);
     console.log("Server runing at port: " + PORT + ".");
+    exports.projectName = args[0];
 }
 
-function onGet(request, response) {
-    var pathname = url.parse(request.url).pathname;
 
-    var realProj = pathname;
-    if (projectName != "") {
-        var proArr = pathname.split(projectName);
-        realProj = proArr[proArr.length - 1];
+function onGet(request, response) {
+    var projectName = exports.projectName;
+    var pathname = url.parse(request.url).pathname;
+    if (pathname.indexOf("__compile__") > -1) {
+        executeCommand(function () {
+            writeText("success", response);
+        }, "egret build " + projectName + " -v");
+        return;
     }
 
-    var realPath = path.join(process.cwd(), realProj);
+
+    writeFile(pathname, response);
+}
+
+function writeText(text, response) {
+    var contentType = "text/plain";
+    response.writeHead(200, {
+        'Content-Type': contentType,
+        'Access-Control-Allow-Origin': '*'
+    });
+    response.write(text);
+    response.end();
+}
+
+
+function writeFile(pathname, response) {
+    var realPath = path.join(process.cwd(), pathname);
     var ext = path.extname(realPath);
     ext = ext ? ext.slice(1) : 'unknown';
     fs.exists(realPath, function (exists) {
@@ -58,7 +76,7 @@ function onGet(request, response) {
                 'Content-Type': 'text/plain'
             });
             console.log(realPath);
-            response.write("This request URL " + realProj + " was not found on this server.");
+            response.write("This request URL " + pathname + " was not found on this server.");
             response.end();
         } else {
             fs.readFile(realPath, "binary", function (err, file) {
@@ -73,7 +91,6 @@ function onGet(request, response) {
                         'Content-Type': contentType,
                         'Access-Control-Allow-Origin': '*'
                     });
-//                    response.setHeader();
                     response.write(file, "binary");
                     response.end();
                 }
@@ -85,12 +102,37 @@ function onGet(request, response) {
 exports.run = run;
 
 
-function help_title(){
+function executeCommand(callback, script) {
+    console.log(script);
+    var cp_exec = require("child_process").exec;
+    var cmd = cp_exec(script);
+    cmd.stderr.on("data", function (data) {
+        console.log(data);
+    })
+    cmd.stdout.on("data", function (data) {
+        console.log(data);
+    })
+
+    cmd.on('exit', function (code) {
+
+        console.log(code)
+        if (code == 0) {
+            callback();
+        }
+        else {
+            libs.log("脚本执行失败");
+        }
+
+    });
+}
+
+
+function help_title() {
     return "启动HttpServer,并在默认浏览器中打开指定项目";
 }
 
 
-function help_example(){
+function help_example() {
     return "egret startserver [project_name]";
 }
 

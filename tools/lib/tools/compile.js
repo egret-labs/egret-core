@@ -147,7 +147,9 @@ function exportHeader(callback, source, output, file_list) {
         return path.join(source, item).replace(".js", ".ts");
     }).filter(function (item) {
             return fs.existsSync(item);
-        });
+        }).map(function(item){
+            return "\"" + item + "\"";
+        })
     var source = list.join(" ");
     var cmd = source + " -t ES5 -d --out " + "\"" + output + "\"";
     fs.writeFileSync("tsc_config_temp.txt", cmd, "utf-8");
