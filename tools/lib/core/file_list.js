@@ -198,4 +198,4 @@ exports.native = [
     "egret/context/interactive/NativeTouchContext.js",
     "egret/context/net/NativeNetContext.js"
 
-]
+];

@@ -157,14 +157,10 @@ module egret {
         public set value(newValue:number) {
             if (this._getValue() == newValue)
                 return;
-            if (this._slideDuration == 0 || !this.stage) {
-                this._setValue(newValue);
-            }
-            else {
+            this._setValue(newValue);
+            if (this._slideDuration > 0 && this.stage) {
                 this.validateProperties();//最大值最小值发生改变时要立即应用，防止当前起始值不正确。
                 this.slideToValue = this.nearestValidValue(newValue, this.snapInterval);
-                if (this.slideToValue == this._getValue())
-                    return;
                 if (!this.animator) {
                     this.animator = new Animation(this.animationUpdateHandler,this);
                 }
@@ -172,6 +168,8 @@ module egret {
                     this.setValue(this.nearestValidValue(this.animator.motionPaths[0].valueTo, this.snapInterval));
                     this.animator.stop();
                 }
+                if (this.slideToValue == this._getValue())
+                    return;
                 var duration:number = this._slideDuration *
                     (Math.abs(this._getValue() - this.slideToValue) / (this.maximum - this.minimum));
                 this.animator.duration = duration === Infinity ? 0 : duration;
@@ -182,11 +180,14 @@ module egret {
             }
         }
 
+        private animationValue:number;
         /**
          * 动画播放更新数值
          */
         private animationUpdateHandler(animation:Animation):void {
-            this.setValue(this.nearestValidValue(animation.currentValue["value"], this.snapInterval));
+            var value:number = this.nearestValidValue(animation.currentValue["value"], this.snapInterval);
+            this.animationValue = Math.min(this.maximum, Math.max(this.minimum, value));
+            this.invalidateDisplayList();
         }
 
         /**
@@ -263,7 +264,16 @@ module egret {
          */
         public updateSkinDisplayList():void {
             this.trackResizedOrMoved = false;
-            var currentValue:number = isNaN(this.value) ? 0 : this.value;
+            var currentValue:number = this.value;
+            if(this.animator&&this.animator.isPlaying){
+                currentValue = this.animationValue;
+            }
+            else{
+                currentValue = this.value;
+                if(isNaN(currentValue)){
+                    currentValue = 0;
+                }
+            }
             var maxValue:number = isNaN(this.maximum) ? 0 : this.maximum;
             if (this.thumb && this.track) {
                 var trackWidth:number = isNaN(this.track.width) ? 0 : this.track.width;
