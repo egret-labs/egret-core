@@ -54,7 +54,7 @@ module egret {
             }
         }
 
-        private parserXML(textxml:string) {
+        public parserXML(textxml:string) {
             var i = 0;
             while (textxml.charAt(i) == "\n" || textxml.charAt(i) == "\t" || textxml.charAt(i) == "\r" || textxml.charAt(i) == " ") {
                 i++;

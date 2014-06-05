@@ -24,6 +24,7 @@
 /// <reference path="analyzer/ImageAnalyzer.ts"/>
 /// <reference path="analyzer/JsonAnalyzer.ts"/>
 /// <reference path="analyzer/TextAnalyzer.ts"/>
+/// <reference path="analyzer/XMLAnalyzer.ts"/>
 /// <reference path="core/ResourceConfig.ts"/>
 /// <reference path="core/ResourceItem.ts"/>
 /// <reference path="core/ResourceLoader.ts"/>
@@ -188,6 +189,8 @@ module RES {
                 egret.Injector.mapClass(AnalyzerBase,FontAnalyzer,ResourceItem.TYPE_FONT);
             if(!egret.Injector.hasMapRule(AnalyzerBase,ResourceItem.TYPE_SOUND))
                 egret.Injector.mapClass(AnalyzerBase,SoundAnalyzer,ResourceItem.TYPE_SOUND);
+            if(!egret.Injector.hasMapRule(AnalyzerBase,ResourceItem.TYPE_XML))
+                egret.Injector.mapClass(AnalyzerBase,XMLAnalyzer,ResourceItem.TYPE_XML);
             this.resConfig = new ResourceConfig();
             this.resLoader = new ResourceLoader();
             this.resLoader.callBack = this.onResourceItemComp;

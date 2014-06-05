@@ -84,6 +84,7 @@ exports.core = [
     "extension/resource/analyzer/SheetAnalyzer.js",
     "extension/resource/analyzer/FontAnalyzer.js",
     "extension/resource/analyzer/SoundAnalyzer.js",
+    "extension/resource/analyzer/XMLAnalyzer.js",
     "extension/resource/Resource.js",
     //resource end
 
