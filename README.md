@@ -38,6 +38,7 @@ Egret Framework是一款使用JavaScript(TypeScript)编写的HTML5开源免费�
 工具
 -------------------------
 * [AS3-TS conversion tool ( beta )](http://download.egret-labs.org/?id=As2TsTool)
+* [Texture Packer for Egret plug-in](https://github.com/ping-chen/egret-tool) , 由社区贡献者[ping-chen](https://github.com/ping-chen/)提供
 
 
 
