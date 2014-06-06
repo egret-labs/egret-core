@@ -41,8 +41,11 @@ module egret {
 		 * 构造函数
 		 * @method egret.SetProperty#constructor
 		 */		
-		public constructor(){
+		public constructor(target:string,name:string,value:any){
 			super();
+            this.target = target;
+            this.name = name;
+            this.value = value;
 		}
 		
 		/**

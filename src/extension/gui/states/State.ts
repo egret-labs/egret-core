@@ -42,11 +42,10 @@ module egret {
 		 * @method egret.State#constructor
 		 * @param properties {any} 
 		 */
-		public constructor(properties:any=null){
+		public constructor(name:string,overrides:Array<IOverride>){
 			super();
-			for (var p in properties){
-				this[p] = properties[p];
-			}
+			this.name = name;
+            this.overrides = overrides;
 		}
 		/**
 		 * 已经初始化标志 
@@ -64,12 +63,12 @@ module egret {
 		 * 这些覆盖在进入状态时按顺序应用，在退出状态时按相反的顺序删除。 
 		 * @member egret.State#overrides
 		 */		
-		public overrides:Array<any>  = [];
+		public overrides:Array<IOverride>;
 		/**
 		 * 此视图状态作为 String 数组所属的状态组。 
 		 * @member egret.State#stateGroups
 		 */		
-		public stateGroups:Array<any>  = [];
+		public stateGroups:Array<any>;
 		/**
 		 * 初始化视图
 		 * @method egret.State#initialize
