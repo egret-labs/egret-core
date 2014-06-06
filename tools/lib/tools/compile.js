@@ -41,7 +41,7 @@ function buildAllFile(callback, source, output, file_list) {
     async.waterfall([
         checkCompilerInstalled,
 
-        //cp所有js文件
+        //cp所有非ts文件
         function (callback) {
             var all_js_file = libs.loopFileSync(source, filter);
             all_js_file.forEach(function (item) {
@@ -50,7 +50,7 @@ function buildAllFile(callback, source, output, file_list) {
             callback(null);
 
             function filter(path) {
-                return  path.indexOf(".js") > -1
+                return  path.indexOf(".ts") == -1;
             }
         },
 
