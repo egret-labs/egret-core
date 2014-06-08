@@ -36,6 +36,9 @@ function parse(xmlString) {
                 namespaces[prefix] = uri;
                 delete attribs[key];
             }
+            else{
+                node["$"+key] = attribs[key];
+            }
         }
         var name = node.name;
         var index = name.indexOf(":");
