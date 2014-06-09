@@ -279,4 +279,19 @@ function run(dir, args, opts) {
         });
 }
 
+function help_title() {
+    return "发布项目，使用GoogleClosureCompiler压缩代码";
+}
+
+
+function help_example() {
+    var result =  "\n";
+    result += "    egret publish [project_name]\n";
+    result += "描述:\n";
+    result += "    " + help_title();
+    return result;
+}
+
 exports.run = run;
+exports.help_title = help_title;
+exports.help_example = help_example;
