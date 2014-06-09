@@ -234,7 +234,7 @@ ClosureCompiler.prototype.compile = function (files, callback) {
                 if (ok) {
                     run(ClosureCompiler.getBundledJava(), args);
                 } else {
-                    libs.log(1401);
+                    libs.exit(1401);
                 }
             });
         }
