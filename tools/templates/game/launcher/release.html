@@ -1,0 +1,47 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>HelloWorld</title>
+    <meta name="viewport"
+          content="width=device-width,initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no,target-densitydpi=device-dpi"/>
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+
+    <meta name="full-screen" content="true"/>
+    <meta name="screen-orientation" content="portrait"/>
+    <meta name="x5-fullscreen" content="true"/>
+    <meta name="360-fullscreen" content="true"/>
+    <base href="../"/>
+
+    <style>
+        body {
+            text-align: center;
+            background: #000000;
+            padding: 0;
+            border: 0;
+            margin: 0;
+            height: 100%;
+        }
+
+        html {
+            -ms-touch-action: none; /* Direct all pointer events to JavaScript code. */
+        }
+    </style>
+</head>
+<body>
+<div style="display:inline-block;width:100%; height:100%;margin: 0 auto; background: black; position:relative;"
+     id="gameDiv">
+    <canvas id="gameCanvas" width="480" height="800" style="background-color: #000000"></canvas>
+</div>
+<script> document_class = "GameApp";</script>
+<script src="launcher/egret_loader.js"></script>
+<script src="launcher/game-min.js"></script>
+<script>
+    egret_h5.startGame();
+</script>
+</body>
+</html>
+
+
+
+
