@@ -234,7 +234,7 @@ ClosureCompiler.prototype.compile = function (files, callback) {
                 if (ok) {
                     run(ClosureCompiler.getBundledJava(), args);
                 } else {
-                    throw(new Error("Java is not available, neither the bundled nor a global one."));
+                    libs.log(1401);
                 }
             });
         }
@@ -273,10 +273,10 @@ function run(dir, args, opts) {
 
     var totalFileList = egretFileList.concat(gameFileList, currDir + "/launcher/egret_loader.js");
     ClosureCompiler.compile(totalFileList,
-        {js_output_file:currDir + "/launcher/game-min.js"},
-        function afterCompile (err, stdout, stderr) {
+        {js_output_file: currDir + "/launcher/game-min.js"},
+        function afterCompile(err, stdout, stderr) {
             console.log(err);
-    });
+        });
 }
 
 exports.run = run;
