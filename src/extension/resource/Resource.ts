@@ -33,16 +33,18 @@
 module RES {
     /**
      * 加载配置文件并解析
-     * @param url 配置文件路径(resource.json的路径)
-     * @param resourceRoot 资源根路径。配置中的所有url都是这个路径的相对值。最终url是这个字符串与配置里资源项的url相加的值。
+	 * @method RES.loadConfig
+     * @param url {string} 配置文件路径(resource.json的路径)
+     * @param resourceRoot {string} 资源根路径。配置中的所有url都是这个路径的相对值。最终url是这个字符串与配置里资源项的url相加的值。
      */
     export function loadConfig(url:string,resourceRoot:string=""):void{
         instance.loadConfig(url,resourceRoot);
     }
     /**
      * 根据组名加载一组资源
-     * @param name 要加载资源组的组名
-     * @param priority 加载优先级,可以为负数,默认值为0。
+	 * @method RES.loadGroup
+     * @param name {string} 要加载资源组的组名
+     * @param priority {number} 加载优先级,可以为负数,默认值为0。
      * 低优先级的组必须等待高优先级组完全加载结束才能开始，同一优先级的组会同时加载。
      */
     export function loadGroup(name:string,priority:number=0):void{
@@ -50,14 +52,18 @@ module RES {
     }
     /**
      * 检查某个资源组是否已经加载完成
-     * @param groupName 组名
+	 * @method RES.isGroupLoaded
+     * @param name {string} 组名
+	 * @returns {boolean}
      */
     export function isGroupLoaded(name:string):boolean{
         return instance.isGroupLoaded(name);
     }
     /**
      * 根据组名获取组加载项列表
-     * @param name 组名
+	 * @method RES.getGroupByName
+     * @param name {string} 组名
+	 * @returns {egret.ResourceItem}
      */
     export function getGroupByName(name:string):Array<ResourceItem>{
         return instance.getGroupByName(name);
@@ -65,50 +71,59 @@ module RES {
     /**
      * 创建自定义的加载资源组,注意：此方法仅在资源配置文件加载完成后执行才有效。
      * 可以监听ResourceEvent.CONFIG_COMPLETE事件来确认配置加载完成。
-     * @param name 要创建的加载资源组的组名
-     * @param keys 要包含的键名列表，key对应配置文件里的name属性或sbuKeys属性的一项。
-     * @param override 是否覆盖已经存在的同名资源组,默认false。
-     * @return 是否创建成功，如果传入的keys为空，或keys全部无效，则创建失败。
+	 * @method RES.createGroup
+     * @param name {string} 要创建的加载资源组的组名
+     * @param keys {egret.Array<string>} 要包含的键名列表，key对应配置文件里的name属性或sbuKeys属性的一项。
+     * @param override {boolean} 是否覆盖已经存在的同名资源组,默认false。
+	 * @returns {boolean}
      */
     export function createGroup(name:string,keys:Array<string>,override:boolean = false):boolean{
         return instance.createGroup(name,keys,override);
     }
     /**
      * 检查配置文件里是否含有指定的资源
-     * @param name 对应配置文件里的name属性。
+	 * @method RES.hasRes
+     * @param name {string} 对应配置文件里的name属性。
+	 * @returns {boolean}
      */
     export function hasRes(name:string):boolean{
         return instance.hasRes(name);
     }
     /**
      * 同步方式获取缓存的已经加载成功的资源。<br/>
-     * @param name 对应配置文件里的name属性。
+	 * @method RES.getRes
+     * @param name {string} 对应配置文件里的name属性。
+	 * @returns {any}
      */
     export function getRes(name:string):any{
         return instance.getRes(name);
     }
     /**
      * 异步方式获取配置里的资源。只要是配置文件里存在的资源，都可以通过异步方式获取。
-     * @param name 对应配置文件里的name属性。
-     * @param compFunc 回调函数。示例：compFunc(data):void,若设置了other参数则为:compFunc(data,other):void。
-     * @param thisObject 回调函数的this引用
+	 * @method RES.getResAsync
+     * @param name {string} 对应配置文件里的name属性。
+     * @param compFunc {Function} 回调函数。示例：compFunc(data):void,若设置了other参数则为:compFunc(data,other):void。
+     * @param thisObject {any} 回调函数的this引用
      */
     export function getResAsync(name:string,compFunc:Function,thisObject:any):void{
         instance.getResAsync(name,compFunc,thisObject);
     }
     /**
      * 通过完整URL方式获取外部资源。
-     * @param url 要加载文件的外部路径。
-     * @param compFunc 回调函数。示例：compFunc(data):void,若设置了other参数则为:compFunc(data,other):void。
-     * @param thisObject 回调函数的this引用
-     * @param type 文件类型(可选)。请使用ResourceItem类中定义的静态常量。若不设置将根据文件扩展名生成。
+	 * @method RES.getResByUrl
+     * @param url {string} 要加载文件的外部路径。
+     * @param compFunc {Function} 回调函数。示例：compFunc(data):void,若设置了other参数则为:compFunc(data,other):void。
+     * @param thisObject {any} 回调函数的this引用
+     * @param type {string} 文件类型(可选)。请使用ResourceItem类中定义的静态常量。若不设置将根据文件扩展名生成。
      */
     export function getResByUrl(url:string,compFunc:Function,thisObject:any,type:string=""):void{
         instance.getResByUrl(url,compFunc,thisObject,type);
     }
     /**
      * 销毁某个资源文件的缓存数据,返回是否删除成功。
-     * @param name 配置文件中加载项的name属性
+	 * @method RES.destroyRes
+     * @param name {string} 配置文件中加载项的name属性
+	 * @returns {boolean}
      */
     export function destroyRes(name:string):boolean{
         return instance.destroyRes(name);
@@ -116,6 +131,7 @@ module RES {
 
     /**
      * 添加事件侦听器,参考ResourceEvent定义的常量。
+	 * @method RES.addEventListener
      * @param type {string} 事件的类型。
      * @param listener {Function} 处理事件的侦听器函数。此函数必须接受 Event 对象作为其唯一的参数，并且不能返回任何结果，
      * 如下面的示例所示： function(evt:Event):void 函数可以有任何名称。
@@ -123,7 +139,7 @@ module RES {
      * @param useCapture {boolean} 确定侦听器是运行于捕获阶段还是运行于目标和冒泡阶段。如果将 useCapture 设置为 true，
      * 则侦听器只在捕获阶段处理事件，而不在目标或冒泡阶段处理事件。如果 useCapture 为 false，则侦听器只在目标或冒泡阶段处理事件。
      * 要在所有三个阶段都侦听事件，请调用 addEventListener 两次：一次将 useCapture 设置为 true，一次将 useCapture 设置为 false。
-     * @param  priority {number} 事件侦听器的优先级。优先级由一个带符号的 32 位整数指定。数字越大，优先级越高。优先级为 n 的所有侦听器会在
+     * @param priority {number} 事件侦听器的优先级。优先级由一个带符号的 32 位整数指定。数字越大，优先级越高。优先级为 n 的所有侦听器会在
      * 优先级为 n -1 的侦听器之前得到处理。如果两个或更多个侦听器共享相同的优先级，则按照它们的添加顺序进行处理。默认优先级为 0。
      */
     export function addEventListener(type:string, listener:Function, thisObject:any, useCapture:boolean = false, priority:number = 0):void {
@@ -131,7 +147,7 @@ module RES {
     }
     /**
      * 移除事件侦听器,参考ResourceEvent定义的常量。
-     * @method egret.EventDispatcher#removeEventListener
+	 * @method RES.removeEventListener
      * @param type {string} 事件名
      * @param listener {Function} 侦听函数
      * @param thisObject {any} 侦听函数绑定的this对象
@@ -146,6 +162,7 @@ module RES {
     class Resource extends egret.EventDispatcher{
         /**
          * 构造函数
+		 * @method RES.constructor
          */
         public constructor(){
             super();
@@ -216,6 +233,9 @@ module RES {
         private configComplete:boolean = false;
         /**
          * 开始加载配置
+		 * @method RES.loadConfig
+		 * @param url {string} 
+		 * @param resourceRoot {string} 
          */
         public loadConfig(url:string,resourceRoot:string):void{
 
@@ -231,12 +251,18 @@ module RES {
         private loadedGroups:Array<string> = [];
         /**
          * 检查某个资源组是否已经加载完成
+		 * @method RES.isGroupLoaded
+		 * @param name {string} 
+		 * @returns {boolean}
          */
         public isGroupLoaded(name:string):boolean{
             return this.loadedGroups.indexOf(name)!=-1;
         }
         /**
          * 根据组名获取组加载项列表
+		 * @method RES.getGroupByName
+		 * @param name {string} 
+		 * @returns {egret.ResourceItem}
          */
         public getGroupByName(name:string):Array<ResourceItem>{
             return this.resConfig.getGroupByName(name);
@@ -245,6 +271,9 @@ module RES {
         private groupNameList:Array<any> = [];
         /**
          * 根据组名加载一组资源
+		 * @method RES.loadGroup
+		 * @param name {string} 
+		 * @param priority {number} 
          */
         public loadGroup(name:string,priority:number=0):void{
             if(this.loadedGroups.indexOf(name)!=-1||this.resLoader.isGroupInLoading(name))
@@ -259,6 +288,11 @@ module RES {
         }
         /**
          * 创建自定义的加载资源组
+		 * @method RES.createGroup
+		 * @param name {string} 
+		 * @param keys {egret.Array<string>} 
+		 * @param override {boolean} 
+		 * @returns {boolean}
          */
         public createGroup(name:string,keys:Array<string>,override:boolean=false):boolean{
             return this.resConfig.createGroup(name,keys,override);
@@ -294,7 +328,9 @@ module RES {
         }
         /**
          * 检查配置文件里是否含有指定的资源
-         * @param name 对应配置文件里的name属性。
+		 * @method RES.hasRes
+         * @param name {string} 对应配置文件里的name属性。
+		 * @returns {boolean}
          */
         public hasRes(name:string):boolean{
             var type:string = this.resConfig.getType(name);
@@ -309,6 +345,9 @@ module RES {
         }
         /**
          * 通过name同步获取资源
+		 * @method RES.getRes
+		 * @param name {string} 
+		 * @returns {any}
          */
         public getRes(name:string):any{
             var type:string = this.resConfig.getType(name);
@@ -330,6 +369,10 @@ module RES {
         private asyncDic:any = {};
         /**
          * 通过name异步获取资源
+		 * @method RES.getResAsync
+		 * @param name {string} 
+		 * @param compFunc {Function} 
+		 * @param thisObject {any} 
          */
         public getResAsync(name:string,compFunc:Function,thisObject:any):void{
             var type:string = this.resConfig.getType(name);
@@ -359,6 +402,11 @@ module RES {
         }
         /**
          * 通过url获取资源
+		 * @method RES.getResByUrl
+		 * @param url {string} 
+		 * @param compFunc {Function} 
+		 * @param thisObject {any} 
+		 * @param type {string} 
          */
         public getResByUrl(url:string,compFunc:Function,thisObject:any,type:string=""):void{
             if(!url){
@@ -431,7 +479,9 @@ module RES {
         }
         /**
          * 销毁某个资源文件的缓存数据,返回是否删除成功。
-         * @param name 配置文件中加载项的name属性
+		 * @method RES.destroyRes
+         * @param name {string} 配置文件中加载项的name属性
+		 * @returns {boolean}
          */
         public destroyRes(name:string):boolean{
             var type:string = this.resConfig.getType(name);

@@ -21,53 +21,60 @@
 
 module RES {
 
-    export class ResourceConfig{
-        /**
-         * 构造函数
-         */
-        public constructor(){
+	/**
+	 * @class RES.ResourceConfig
+	 * @classdesc
+	 */
+    export class ResourceConfig {
+
+        public constructor() {
         }
 
         /**
          * 根据组名获取组加载项列表
-         * @param name 组名
+		 * @method RES.ResourceConfig#getGroupByName
+         * @param name {string} 组名
+		 * @returns {egret.ResourceItem}
          */
-        public getGroupByName(name:string):Array<ResourceItem>{
+        public getGroupByName(name:string):Array<ResourceItem> {
             var group:Array<ResourceItem> = new Array<ResourceItem>();
-            if(!this.groupDic[name])
+            if (!this.groupDic[name])
                 return group;
             var list:Array<any> = this.groupDic[name];
             var length:number = list.length;
-            for(var i:number=0;i<length;i++){
+            for (var i:number = 0; i < length; i++) {
                 var obj:any = list[i];
                 group.push(this.parseResourceItem(obj));
             }
             return group;
         }
+
         /**
          * 创建自定义的加载资源组,注意：此方法仅在资源配置文件加载完成后执行才有效。
          * 可以监听ResourceEvent.CONFIG_COMPLETE事件来确认配置加载完成。
-         * @param name 要创建的加载资源组的组名
-         * @param keys 要包含的键名列表，key对应配置文件里的name属性或sbuKeys属性的一项。
-         * @param override 是否覆盖已经存在的同名资源组,默认false。
-         * @return 是否创建成功，如果传入的keys为空，或keys全部无效，则创建失败。
+		 * @method RES.ResourceConfig#createGroup
+         * @param name {string} 要创建的加载资源组的组名
+         * @param keys {egret.Array<string>} 要包含的键名列表，key对应配置文件里的name属性或sbuKeys属性的一项。
+         * @param override {boolean} 是否覆盖已经存在的同名资源组,默认false。
+		 * @returns {boolean}
          */
-        public createGroup(name:string,keys:Array<string>,override:boolean=false):boolean{
-            if((!override&&this.groupDic[name])||!keys||keys.length==0)
+        public createGroup(name:string, keys:Array<string>, override:boolean = false):boolean {
+            if ((!override && this.groupDic[name]) || !keys || keys.length == 0)
                 return false;
             var group:Array<any> = [];
             var length:number = keys.length;
-            for(var i:number=0;i<length;i++){
+            for (var i:number = 0; i < length; i++) {
                 var key:string = keys[i];
                 var item:any = this.keyMap[key];
-                if(item&&group.indexOf(item)==-1)
+                if (item && group.indexOf(item) == -1)
                     group.push(item);
             }
-            if(group.length==0)
+            if (group.length == 0)
                 return false;
             this.groupDic[name] = group;
             return true;
         }
+
         /**
          * 一级键名字典
          */
@@ -76,36 +83,38 @@ module RES {
          * 加载组字典
          */
         private groupDic:any = {};
+
         /**
          * 解析一个配置文件
-         * @param data 配置文件数据
-         * @param folder 加载项的路径前缀。
+		 * @method RES.ResourceConfig#parseConfig
+         * @param data {any} 配置文件数据
+         * @param folder {string} 加载项的路径前缀。
          */
-        public parseConfig(data:any,folder:string):void{
-            if(!data)
+        public parseConfig(data:any, folder:string):void {
+            if (!data)
                 return;
             var resources:Array<any> = data["resources"];
-            if(resources){
+            if (resources) {
                 var length:number = resources.length;
-                for(var i:number=0;i<length;i++){
+                for (var i:number = 0; i < length; i++) {
                     var item:any = resources[i];
-                    item.url = folder+item.url;
-                    if(!this.keyMap[item.name])
+                    item.url = folder + item.url;
+                    if (!this.keyMap[item.name])
                         this.keyMap[item.name] = item;
                 }
             }
             var groups:Array<any> = data["groups"];
-            if(groups){
+            if (groups) {
                 length = groups.length;
-                for(i=0;i<length;i++){
+                for (i = 0; i < length; i++) {
                     var group:any = groups[i];
                     var list:Array<any> = [];
                     var keys:Array<string> = (<string> group.keys).split(",");
                     var l:number = keys.length;
-                    for(var j:number=0;j<l;j++){
+                    for (var j:number = 0; j < l; j++) {
                         var name:string = this.trim(keys[j]);
                         item = this.keyMap[name];
-                        if(item&&list.indexOf(item)==-1){
+                        if (item && list.indexOf(item) == -1) {
                             list.push(item);
                         }
                     }
@@ -113,29 +122,36 @@ module RES {
                 }
             }
         }
+
         /**
          * 获取加载项类型。
-         * @param name 对应配置文件里的name属性。
+		 * @method RES.ResourceConfig#getType
+         * @param name {string} 对应配置文件里的name属性。
+		 * @returns {string}
          */
-        public getType(name:string):string{
+        public getType(name:string):string {
             var data:any = this.keyMap[name];
-            return data?data.type:"";
+            return data ? data.type : "";
         }
+
         /**
          * 获取加载项信息对象
-         * @param name 对应配置文件里的name属性。
+		 * @method RES.ResourceConfig#getResourceItem
+         * @param name {string} 对应配置文件里的name属性。
+		 * @returns {egret.ResourceItem}
          */
-        public getResourceItem(name:string):ResourceItem{
+        public getResourceItem(name:string):ResourceItem {
             var data:any = this.keyMap[name];
-            if(data)
+            if (data)
                 return this.parseResourceItem(data);
             return null;
         }
+
         /**
          * 转换Object数据为ResourceItem对象
          */
-        private parseResourceItem(data:any):ResourceItem{
-            var resItem:ResourceItem = new ResourceItem(data.name,data.url,data.type);
+        private parseResourceItem(data:any):ResourceItem {
+            var resItem:ResourceItem = new ResourceItem(data.name, data.url, data.type);
             resItem.data = data;
             return resItem;
         }
@@ -145,20 +161,20 @@ module RES {
          * 注意：若目标字符串为null或不含有任何可见字符,将输出空字符串""。
          * @param str 要格式化的字符串
          */
-        private trim(str:string):string{
-            if(!str)
+        private trim(str:string):string {
+            if (!str)
                 return "";
-            var char:string = str.charAt(0);
-            while(str.length>0&&
-                (char==" "||char=="\t"||char=="\n"||char=="\r"||char=="\f")){
+            var strChar:string = str.charAt(0);
+            while (str.length > 0 &&
+                (strChar == " " || strChar == "\t" || strChar == "\n" || strChar == "\r" || strChar == "\f")) {
                 str = str.substr(1);
-                char = str.charAt(0);
+                strChar = str.charAt(0);
             }
-            char = str.charAt(str.length-1);
-            while(str.length>0&&
-                (char==" "||char=="\t"||char=="\n"||char=="\r"||char=="\f")){
-                str = str.substr(0,str.length-1);
-                char = str.charAt(str.length-1);
+            strChar = str.charAt(str.length - 1);
+            while (str.length > 0 &&
+                (strChar == " " || strChar == "\t" || strChar == "\n" || strChar == "\r" || strChar == "\f")) {
+                str = str.substr(0, str.length - 1);
+                strChar = str.charAt(str.length - 1);
             }
             return str;
         }

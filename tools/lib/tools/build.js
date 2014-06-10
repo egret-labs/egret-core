@@ -39,6 +39,12 @@ function run(dir, args, opts) {
             }
         );
     }
+    else {
+        var exist = fs.existsSync(path.join(currDir,"bin-debug","lib"));
+        if (!exist){
+            libs.exit(1102)
+        }
+    }
 
     task.push(
         function (callback) {
