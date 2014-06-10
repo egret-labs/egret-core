@@ -239,7 +239,7 @@ module egret {
             var o = target;
             var anchorX, anchorY;
             if (o.anchorX != 0 || o.anchorY != 0) {
-                var bounds = o.getBounds(Rectangle.identity);
+                var bounds = o._getSize(Rectangle.identity);
                 anchorX = bounds.width * o.anchorX;
                 anchorY = bounds.height * o.anchorY;
             }

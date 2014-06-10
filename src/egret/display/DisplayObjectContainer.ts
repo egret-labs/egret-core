@@ -324,7 +324,7 @@ module egret {
             for (var i = 0; i < l; i++) {
                 var child = this._children[i];
                 var bounds:Rectangle;
-                if (!child.visible || !(bounds = DisplayObject.getTransformBounds(child.getBounds(Rectangle.identity), child._getMatrix()))) {
+                if (!child.visible || !(bounds = DisplayObject.getTransformBounds(child._getSize(Rectangle.identity), child._getMatrix()))) {
                     continue;
                 }
                 var x1 = bounds.x , y1 = bounds.y,

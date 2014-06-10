@@ -517,7 +517,7 @@ module egret {
             if (o._scrollRect) {
                 o.worldTransform.append(1, 0, 0, 1, -o._scrollRect.x, -o._scrollRect.y);
             }
-            var bounds:egret.Rectangle = DisplayObject.getTransformBounds(o.getBounds(Rectangle.identity), o.worldTransform);
+            var bounds:egret.Rectangle = DisplayObject.getTransformBounds(o._getSize(Rectangle.identity), o.worldTransform);
             o.worldBounds.initialize(bounds.x, bounds.y, bounds.width, bounds.height);
             o.worldAlpha = o._parent.worldAlpha * o._alpha;
         }
@@ -583,7 +583,7 @@ module egret {
                 if (o.anchorX != 0 || o.anchorY != 0) {
                     var bounds = o.getBounds(Rectangle.identity);
                     matrix.prependTransform(o.x, o.y, o.scaleX, o.scaleY, o.rotation, o.skewX, o.skewY,
-                            bounds.width * o.anchorX, bounds.height * o.anchorY);
+                        bounds.width * o.anchorX, bounds.height * o.anchorY);
                 }
                 else {
                     matrix.prependTransform(o.x, o.y, o.scaleX, o.scaleY, o.rotation, o.skewX, o.skewY, o.anchorOffsetX, o.anchorOffsetY);
@@ -673,6 +673,20 @@ module egret {
             return Matrix.identity.identity().appendTransformFromDisplay(this);
         }
 
+        public _getSize(resultRect:Rectangle):Rectangle {
+            if (this._hasHeightSet && this._hasWidthSet){
+                return resultRect.initialize(NaN,NaN,this._explicitWidth,this._explicitHeight);
+            }
+            return this._measureSize(Rectangle.identity);
+        }
+
+        /**
+         * 测量显示对象坐标与大小
+         */
+        public _measureSize(resultRect:Rectangle):egret.Rectangle {
+            return this._measureBounds();
+        }
+
         /**
          * 测量显示对象坐标，这个方法需要子类重写
          * @returns {egret.Rectangle}
@@ -751,16 +765,16 @@ module egret {
             }
 
             var length:number = list.length;
-            var targetIndex:number = length-1;
+            var targetIndex:number = length - 1;
             for (var i:number = length - 2; i >= 0; i--) {
                 list.push(list[i]);
             }
             event._reset();
-            this._dispatchPropagationEvent(event,list,targetIndex);
+            this._dispatchPropagationEvent(event, list, targetIndex);
             return !event.isDefaultPrevented();
         }
 
-        public _dispatchPropagationEvent(event:Event,list:Array<DisplayObject>,targetIndex:number):void{
+        public _dispatchPropagationEvent(event:Event, list:Array<DisplayObject>, targetIndex:number):void {
             var length:number = list.length;
             for (var i:number = 0; i < length; i++) {
                 var currentTarget:DisplayObject = list[i];
