@@ -7,14 +7,15 @@ var __extends = this.__extends || function (d, b) {
 };
 var fs = require("fs");
 var xml = require("../core/xml.js");
+var properties = require("./properties.json");
 
 var compiler;
 
-function compile(xmlData, className) {
+function compile(xmlData, className, egretDTSPath, srcPath) {
     if (!compiler) {
         compiler = new EXMLCompiler();
     }
-    return compiler.compile(xmlData, className);
+    return compiler.compile(xmlData, className, egretDTSPath, srcPath);
 }
 ;
 
@@ -73,15 +74,16 @@ var EXMLCompiler = (function () {
     * @param xmlData 要编译的EXML文件内容
     * @param className 要编译成的完整类名，包括命名空间。
     */
-    EXMLCompiler.prototype.compile = function (xmlData, className) {
-        if (!xmlData || !className)
+    EXMLCompiler.prototype.compile = function (xmlData, className, egretDTSPath, srcPath) {
+        if (!xmlData || !className || !egretDTSPath || !srcPath)
             return "";
         if (!this.exmlConfig) {
             this.exmlConfig = new EXMLConfig();
         }
         this.currentXML = xmlData;
-        this.delayAssignmentDic = {};
         this.currentClassName = className;
+        this.exmlConfig.srcPath = srcPath;
+        this.delayAssignmentDic = {};
         this.idDic = {};
         this.stateCode = [];
         this.declarations = null;
@@ -91,9 +93,11 @@ var EXMLCompiler = (function () {
         if (index != -1) {
             this.currentClass.moduleName = className.substring(0, index);
             this.currentClass.className = className.substring(index + 1);
+            this.currentClass.classPath = className.split(".").join("/") + ".ts";
         } else {
             this.currentClass.className = className;
         }
+        this.currentClass.addReference(egretDTSPath);
         this.startCompile();
         var resutlCode = this.currentClass.toCode();
         this.currentClass = null;
@@ -301,7 +305,7 @@ var EXMLCompiler = (function () {
                 break;
             case "boolean":
                 returnValue = node.text.trim();
-                returnValue = returnValue;
+                returnValue = (returnValue == "false" || !returnValue) ? "false" : "true";
                 break;
             case "number":
                 returnValue = node.text.trim();
@@ -334,7 +338,7 @@ var EXMLCompiler = (function () {
         var length = keyList.length;
         for (var i = 0; i < length; i++) {
             key = keyList[i];
-            value = node[key].toString();
+            value = node[key];
             key = this.formatKey(key.substring(1), value);
             value = this.formatValue(key, value, node);
             if (this.currentClass.containsVar(value)) {
@@ -347,13 +351,14 @@ var EXMLCompiler = (function () {
                 }
                 var delayCb = new CpCodeBlock();
                 if (varName == KeyWords.KW_THIS) {
-                    delayCb.addAssignment(varName, value, key);
+                    delayCb.addAssignment(varName, "this." + value, key);
                 } else {
                     delayCb.startIf("this." + id);
-                    delayCb.addAssignment("this." + id, value, key);
+                    delayCb.addAssignment("this." + id, "this." + value, key);
                     delayCb.endBlock();
                 }
                 this.delayAssignmentDic[value] = delayCb;
+                value = "this." + value;
             }
             cb.addAssignment(varName, value, key);
         }
@@ -493,6 +498,12 @@ var EXMLCompiler = (function () {
         value = value.trim();
         if (value.indexOf("{") != -1) {
             value = value.substr(1, value.length - 2);
+            value = value.trim();
+            if (value.indexOf("this.") == 0) {
+                if (CodeUtil.isVariableWord(value.substring(5))) {
+                    value = value.substring(5);
+                }
+            }
         } else {
             var className = this.exmlConfig.getClassNameById(node.localName, node.namespace);
             var type = this.exmlConfig.getPropertyType(key, className, value);
@@ -505,6 +516,9 @@ var EXMLCompiler = (function () {
                     break;
                 case "string":
                     value = this.formatString(stringValue);
+                    break;
+                case "boolean":
+                    value = (value == "false" || !value) ? "false" : "true";
                     break;
                 default:
                     break;
@@ -862,9 +876,9 @@ var EXMLCompiler = (function () {
     */
     EXMLCompiler.prototype.getPackageByNode = function (node) {
         var moduleName = this.exmlConfig.getClassNameById(node.localName, node.namespace);
-        this.exmlConfig.checkComponent(moduleName);
         if (moduleName && node.namespace != EXMLCompiler.E) {
-            this.currentClass.addReference(moduleName);
+            var path = this.exmlConfig.getPathById(node.localName, node.namespace);
+            this.currentClass.addReference(path);
         }
         return moduleName;
     };
@@ -878,12 +892,6 @@ var EXMLCompiler = (function () {
     EXMLCompiler.E = "http://ns.egret-labs.org/egret";
 
     EXMLCompiler.W = "http://ns.egret-labs.org/wing";
-
-    EXMLCompiler.STATE_CLASS_PACKAGE = "egret.State";
-
-    EXMLCompiler.ADD_ITEMS_PACKAGE = "egret.AddItems";
-
-    EXMLCompiler.SETPROPERTY_PACKAGE = "egret.SetProperty";
 
     EXMLCompiler.DECLARATIONS = "Declarations";
 
@@ -900,6 +908,7 @@ var EXMLConfig = (function () {
         * 组件清单列表
         */
         this.componentDic = {};
+        this.pathToClassName = {};
         var str = fs.readFileSync("./egret-manifest.xml", "utf-8");
         var manifest = xml.parse(str);
         this.parseManifest(manifest);
@@ -981,12 +990,6 @@ var EXMLConfig = (function () {
     /**
     * @inheritDoc
     */
-    EXMLConfig.prototype.checkComponent = function (className) {
-    };
-
-    /**
-    * @inheritDoc
-    */
     EXMLConfig.prototype.getClassNameById = function (id, ns) {
         var name = "";
         if (id == "Object") {
@@ -996,9 +999,57 @@ var EXMLConfig = (function () {
         } else if (!ns || ns == EXMLCompiler.E) {
             name = "egret." + id;
         } else {
-            name = ns.substring(0, ns.length - 1) + id;
+            name = this.pathToClassName[ns + id];
+            if (!name) {
+                var path = this.getPathById(id, ns);
+                name = this.readClassNameFromPath(this.srcPath + path, id);
+                this.pathToClassName[ns + id] = name;
+            }
         }
         return name;
+    };
+
+    EXMLConfig.prototype.readClassNameFromPath = function (path, id) {
+        var tsText = fs.readFileSync(path, "utf-8");
+        tsText = CodeUtil.removeComment(tsText);
+        var className = "";
+        while (tsText.length) {
+            var index = CodeUtil.getFirstVariableIndex("class", tsText);
+            if (index == -1) {
+                break;
+            }
+            var preStr = tsText.substring(0, index);
+            tsText = tsText.substring(index + 5);
+            if (CodeUtil.getFirstVariable(tsText) == id) {
+                index = CodeUtil.getLastVariableIndex("module", preStr);
+                if (index == -1) {
+                    className = id;
+                    break;
+                }
+                preStr = preStr.substring(index + 6);
+                index = preStr.indexOf("{");
+                if (index == -1) {
+                    break;
+                }
+                var ns = preStr.substring(0, index);
+                className = ns.trim() + "." + id;
+            }
+        }
+        return className;
+    };
+
+    /**
+    * 根据id获取文件路径
+    */
+    EXMLConfig.prototype.getPathById = function (id, ns) {
+        var className = "";
+        if (!ns || ns == EXMLCompiler.W || ns == EXMLCompiler.E) {
+            return className;
+        }
+        className = ns.substring(0, ns.length - 1) + id;
+        var path = className.split(".").join("/");
+        path += ".ts";
+        return path;
     };
 
     /**
@@ -1025,15 +1076,19 @@ var EXMLConfig = (function () {
     * @inheritDoc
     */
     EXMLConfig.prototype.getPropertyType = function (prop, className, value) {
-        var type = "";
-        if (prop == "percentHeight" || prop == "percentWidth")
-            type = "number";
-        else if (value.indexOf("#") == 0 && !isNaN(parseInt("0x" + value.substring(1))))
-            type = "number";
-        else if (value == "true" || value == "false")
-            type = "boolean";
-        else
-            type = "string";
+        var type = this.findType(className, prop);
+        return type;
+    };
+
+    EXMLConfig.prototype.findType = function (className, prop) {
+        var classData = properties[className];
+        if (!classData) {
+            return "string";
+        }
+        var type = classData[prop];
+        if (!type) {
+            type = this.findType(classData["super"], prop);
+        }
         return type;
     };
     return EXMLConfig;
@@ -1061,7 +1116,7 @@ var Component = (function () {
             this.className = "egret." + this.id;
             if (item["$super"])
                 this.superClass = item.$super;
-            if (item["$defaultProperty"])
+            if (item["$default"])
                 this.defaultProp = item.$default;
             if (item["$array"])
                 this.isArray = (item.$array == "true");
@@ -1124,6 +1179,10 @@ var CpClass = (function (_super) {
         * 类名
         */
         this.className = "CpClass";
+        /**
+        * 类所在的路径，用于计算reference的相对路径
+        */
+        this.classPath = "";
         /**
         * 包名
         */
@@ -1275,6 +1334,31 @@ var CpClass = (function (_super) {
         return null;
     };
 
+    CpClass.prototype.getRelativePath = function (path) {
+        var curs = this.classPath.split("/");
+        var targets = path.split("/");
+        var length = Math.min(curs.length, targets.length - 1);
+        var index = 0;
+        for (var i = 0; i < length; i++) {
+            var cur = curs[i];
+            var tar = targets[i];
+            if (cur != tar) {
+                break;
+            }
+            index++;
+        }
+        var paths = [];
+        length = curs.length;
+        for (i = index; i < length - 1; i++) {
+            paths.push("..");
+        }
+        length = targets.length;
+        for (i = index; i < length; i++) {
+            paths.push(targets[i]);
+        }
+        return paths.join("/");
+    };
+
     CpClass.prototype.toCode = function () {
         //字符串排序
         this.referenceBlock.sort();
@@ -1291,7 +1375,8 @@ var CpClass = (function (_super) {
         index = 0;
         while (index < this.referenceBlock.length) {
             var importItem = this.referenceBlock[index];
-            returnStr += "/// <reference path=\"" + importItem + "\"/>\n";
+            var path = this.getRelativePath(importItem);
+            returnStr += "/// <reference path=\"" + path + "\"/>\n";
             index++;
         }
         if (returnStr)
@@ -1822,5 +1907,366 @@ var Modifiers = (function () {
 
     Modifiers.M_STATIC = "static";
     return Modifiers;
+})();
+
+var CodeUtil = (function () {
+    function CodeUtil() {
+    }
+    /**
+    * 判断一个字符串是否为合法变量名,第一个字符为字母,下划线或$开头，第二个字符开始为字母,下划线，数字或$
+    */
+    CodeUtil.isVariableWord = function (word) {
+        if (!word)
+            return false;
+        var char = word.charAt(0);
+        if (!CodeUtil.isVariableFirstChar(char)) {
+            return false;
+        }
+        var length = word.length;
+        for (var i = 1; i < length; i++) {
+            char = word.charAt(i);
+            if (!CodeUtil.isVariableChar(char)) {
+                return false;
+            }
+        }
+        return true;
+    };
+
+    /**
+    * 是否为合法变量字符,字符为字母,下划线，数字或$
+    */
+    CodeUtil.isVariableChar = function (char) {
+        return (char <= "Z" && char >= "A" || char <= "z" && char >= "a" || char <= "9" && char >= "0" || char == "_" || char == "$");
+    };
+
+    /**
+    * 是否为合法变量字符串的第一个字符,字符为字母,下划线或$
+    */
+    CodeUtil.isVariableFirstChar = function (char) {
+        return (char <= "Z" && char >= "A" || char <= "z" && char >= "a" || char == "_" || char == "$");
+    };
+
+    /**
+    * 判断一段代码中是否含有某个变量字符串，且该字符串的前后都不是变量字符。
+    */
+    CodeUtil.containsVariable = function (key, codeText) {
+        var contains = false;
+        while (codeText.length > 0) {
+            var index = codeText.indexOf(key);
+            if (index == -1)
+                break;
+            var lastChar = codeText.charAt(index + key.length);
+            var firstChar = codeText.charAt(index - 1);
+            if (!CodeUtil.isVariableChar(firstChar) && !CodeUtil.isVariableChar(lastChar)) {
+                contains = true;
+                break;
+            } else {
+                codeText = codeText.substring(index + key.length);
+            }
+        }
+        return contains;
+    };
+
+    /**
+    * 获取第一个含有key关键字的起始索引，且该关键字的前后都不是变量字符。
+    */
+    CodeUtil.getFirstVariableIndex = function (key, codeText) {
+        var subLength = 0;
+        while (codeText.length) {
+            var index = codeText.indexOf(key);
+            if (index == -1) {
+                break;
+            }
+            var lastChar = codeText.charAt(index + key.length);
+            var firstChar = codeText.charAt(index - 1);
+            if (!CodeUtil.isVariableChar(firstChar) && !CodeUtil.isVariableChar(lastChar)) {
+                return subLength + index;
+            } else {
+                subLength += index + key.length;
+                codeText = codeText.substring(index + key.length);
+            }
+        }
+        return -1;
+    };
+
+    /**
+    * 获取最后一个含有key关键字的起始索引，且该关键字的前后都不是变量字符。
+    */
+    CodeUtil.getLastVariableIndex = function (key, codeText) {
+        while (codeText.length) {
+            var index = codeText.lastIndexOf(key);
+            if (index == -1) {
+                break;
+            }
+            var lastChar = codeText.charAt(index + key.length);
+            var firstChar = codeText.charAt(index - 1);
+            if (!CodeUtil.isVariableChar(firstChar) && !CodeUtil.isVariableChar(lastChar)) {
+                return index;
+            } else {
+                codeText = codeText.substring(0, index);
+            }
+        }
+        return -1;
+    };
+
+    /**
+    * 获取第一个词,遇到空白字符或 \n \r \t 后停止。
+    */
+    CodeUtil.getFirstWord = function (str) {
+        str = str.trim();
+        var index = str.indexOf(" ");
+        if (index == -1)
+            index = Number.MAX_VALUE;
+        var rIndex = str.indexOf("\r");
+        if (rIndex == -1)
+            rIndex = Number.MAX_VALUE;
+        var nIndex = str.indexOf("\n");
+        if (nIndex == -1)
+            nIndex = Number.MAX_VALUE;
+        var tIndex = str.indexOf("\t");
+        if (tIndex == -1)
+            tIndex = Number.MAX_VALUE;
+        index = Math.min(index, rIndex, nIndex, tIndex);
+        str = str.substr(0, index);
+        return str.trim();
+    };
+
+    /**
+    * 移除第一个词
+    * @param str 要处理的字符串
+    * @param word 要移除的词，若不传入则自动获取。
+    */
+    CodeUtil.removeFirstWord = function (str, word) {
+        if (typeof word === "undefined") { word = ""; }
+        if (!word) {
+            word = CodeUtil.getFirstWord(str);
+        }
+        var index = str.indexOf(word);
+        if (index == -1)
+            return str;
+        return str.substring(index + word.length);
+    };
+
+    /**
+    * 获取最后一个词,遇到空白字符或 \n \r \t 后停止。
+    */
+    CodeUtil.getLastWord = function (str) {
+        str = str.trim();
+        var index = str.lastIndexOf(" ");
+        var rIndex = str.lastIndexOf("\r");
+        var nIndex = str.lastIndexOf("\n");
+        var tIndex = str.indexOf("\t");
+        index = Math.max(index, rIndex, nIndex, tIndex);
+        str = str.substring(index + 1);
+        return str.trim();
+    };
+
+    /**
+    * 移除最后一个词
+    * @param str 要处理的字符串
+    * @param word 要移除的词，若不传入则自动获取。
+    */
+    CodeUtil.removeLastWord = function (str, word) {
+        if (typeof word === "undefined") { word = ""; }
+        if (!word) {
+            word = CodeUtil.getLastWord(str);
+        }
+        var index = str.lastIndexOf(word);
+        if (index == -1)
+            return str;
+        return str.substring(0, index);
+    };
+
+    /**
+    * 获取字符串起始的第一个变量，返回的字符串两端均没有空白。若第一个非空白字符就不是合法变量字符，则返回空字符串。
+    */
+    CodeUtil.getFirstVariable = function (str) {
+        str = str.trim();
+        var word = "";
+        var length = str.length;
+        for (var i = 0; i < length; i++) {
+            var char = str.charAt(i);
+            if (CodeUtil.isVariableChar(char)) {
+                word += char;
+            } else {
+                break;
+            }
+        }
+        return word.trim();
+    };
+
+    /**
+    * 移除第一个变量
+    * @param str 要处理的字符串
+    * @param word 要移除的变量，若不传入则自动获取。
+    */
+    CodeUtil.removeFirstVariable = function (str, word) {
+        if (typeof word === "undefined") { word = ""; }
+        if (!word) {
+            word = CodeUtil.getFirstVariable(str);
+        }
+        var index = str.indexOf(word);
+        if (index == -1)
+            return str;
+        return str.substring(index + word.length);
+    };
+
+    /**
+    * 获取字符串末尾的最后一个变量,返回的字符串两端均没有空白。若最后一个非空白字符就不是合法变量字符，则返回空字符串。
+    */
+    CodeUtil.getLastVariable = function (str) {
+        str = str.trim();
+        var word = "";
+        for (var i = str.length - 1; i >= 0; i--) {
+            var char = str.charAt(i);
+            if (CodeUtil.isVariableChar(char)) {
+                word = char + word;
+            } else {
+                break;
+            }
+        }
+        return word.trim();
+    };
+
+    /**
+    * 移除最后一个变量
+    * @param str 要处理的字符串
+    * @param word 要移除的变量，若不传入则自动获取。
+    */
+    CodeUtil.removeLastVariable = function (str, word) {
+        if (typeof word === "undefined") { word = ""; }
+        if (!word) {
+            word = CodeUtil.getLastVariable(str);
+        }
+        var index = str.lastIndexOf(word);
+        if (index == -1)
+            return str;
+        return str.substring(0, index);
+    };
+
+    /**
+    * 获取一对括号的结束点,例如"class A{ function B(){} } class",返回24,若查找失败，返回-1。
+    */
+    CodeUtil.getBracketEndIndex = function (codeText, left, right) {
+        if (typeof left === "undefined") { left = "{"; }
+        if (typeof right === "undefined") { right = "}"; }
+        var indent = 0;
+        var text = "";
+        while (codeText.length > 0) {
+            var index = codeText.indexOf(left);
+            if (index == -1)
+                index = Number.MAX_VALUE;
+            var endIndex = codeText.indexOf(right);
+            if (endIndex == -1)
+                endIndex = Number.MAX_VALUE;
+            index = Math.min(index, endIndex);
+            if (index == Number.MAX_VALUE) {
+                return -1;
+            }
+            text += codeText.substring(0, index + 1);
+            codeText = codeText.substring(index + 1);
+            if (index == endIndex)
+                indent--;
+            else
+                indent++;
+            if (indent == 0) {
+                break;
+            }
+            if (codeText.length == 0)
+                return -1;
+        }
+        return text.length - 1;
+    };
+
+    /**
+    * 从后往前搜索，获取一对括号的起始点,例如"class A{ function B(){} } class",返回7，若查找失败，返回-1。
+    */
+    CodeUtil.getBracketStartIndex = function (codeText, left, right) {
+        if (typeof left === "undefined") { left = "{"; }
+        if (typeof right === "undefined") { right = "}"; }
+        var indent = 0;
+        while (codeText.length > 0) {
+            var index = codeText.lastIndexOf(left);
+            var endIndex = codeText.lastIndexOf(right);
+            index = Math.max(index, endIndex);
+            if (index == -1) {
+                return -1;
+            }
+            codeText = codeText.substring(0, index);
+            if (index == endIndex)
+                indent++;
+            else
+                indent--;
+            if (indent == 0) {
+                break;
+            }
+            if (codeText.length == 0)
+                return -1;
+        }
+        return codeText.length;
+    };
+
+    /**
+    * 移除代码注释和字符串常量
+    */
+    CodeUtil.removeComment = function (codeText) {
+        var NBSP = "\v3\v";
+        var trimText = "";
+        codeText = codeText.split("\\\"").join("\v1\v");
+        codeText = codeText.split("\\\'").join("\v2\v");
+        while (codeText.length > 0) {
+            var quoteIndex = codeText.indexOf("\"");
+            if (quoteIndex == -1)
+                quoteIndex = Number.MAX_VALUE;
+            var squoteIndex = codeText.indexOf("'");
+            if (squoteIndex == -1)
+                squoteIndex = Number.MAX_VALUE;
+            var commentIndex = codeText.indexOf("/**");
+            if (commentIndex == -1)
+                commentIndex = Number.MAX_VALUE;
+            var lineCommonentIndex = codeText.indexOf("//");
+            if (lineCommonentIndex == -1)
+                lineCommonentIndex = Number.MAX_VALUE;
+            var index = Math.min(quoteIndex, squoteIndex, commentIndex, lineCommonentIndex);
+            if (index == Number.MAX_VALUE) {
+                trimText += codeText;
+                break;
+            }
+            trimText += codeText.substring(0, index) + NBSP;
+            codeText = codeText.substring(index);
+            switch (index) {
+                case quoteIndex:
+                    codeText = codeText.substring(1);
+                    index = codeText.indexOf("\"");
+                    if (index == -1)
+                        index = codeText.length - 1;
+                    codeText = codeText.substring(index + 1);
+                    break;
+                case squoteIndex:
+                    codeText = codeText.substring(1);
+                    index = codeText.indexOf("'");
+                    if (index == -1)
+                        index = codeText.length - 1;
+                    codeText = codeText.substring(index + 1);
+                    break;
+                case commentIndex:
+                    index = codeText.indexOf("*/");
+                    if (index == -1)
+                        index = codeText.length - 1;
+                    codeText = codeText.substring(index + 2);
+                    break;
+                case lineCommonentIndex:
+                    index = codeText.indexOf("\n");
+                    if (index == -1)
+                        index = codeText.length - 1;
+                    codeText = codeText.substring(index + 1);
+                    break;
+            }
+        }
+        codeText = trimText.split("\v1\v").join("\\\"");
+        codeText = codeText.split("\v2\v").join("\\\'");
+        return codeText;
+    };
+    return CodeUtil;
 })();
 //# sourceMappingURL=exmlc.js.map

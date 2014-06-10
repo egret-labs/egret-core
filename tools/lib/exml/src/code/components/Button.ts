@@ -25,10 +25,11 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+/// <reference path="../../egret.d.ts"/>
 
 module ns_project {
 
-    class Button extends egret.Button{
+    export class Button extends egret.Button{
 
         public constructor(){
             super();
