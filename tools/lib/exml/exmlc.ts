@@ -1,5 +1,21 @@
 /// <reference path="node.d.ts"/>
 
+var fs = require("fs");
+var xml = require("../core/xml.js");
+
+var compiler:EXMLCompiler;
+
+function compile(xmlData:any,className:string):string{
+    if(!compiler){
+        compiler = new EXMLCompiler();
+    }
+    return compiler.compile(xmlData,className);
+};
+
+
+exports.compile = compile;
+
+
 class EXMLCompiler{
     /**
      * Egret命名空间
@@ -422,12 +438,12 @@ class EXMLCompiler{
                     childFunc = "["+values.join(",")+"]";
                 }
                 else{
-                    var firsChild:any = child.children[0];
+                    var firstChild:any = child.children[0];
                     if(isContainerProp){
-                        if(firsChild.localName=="Array"){
+                        if(firstChild.localName=="Array"){
                             values = [];
-                            if(firsChild.children){
-                                var len:number = firsChild.children.length;
+                            if(firstChild.children){
+                                var len:number = firstChild.children.length;
                                 for(var k:number=0;k<len;k++){
                                     item = firstChild.children[k];
                                     childFunc = this.createFuncForNode(item);
@@ -438,7 +454,7 @@ class EXMLCompiler{
                             childFunc = "["+values.join(",")+"]";
                         }
                         else{
-                            childFunc = this.createFuncForNode(firsChild);
+                            childFunc = this.createFuncForNode(firstChild);
                             if(!this.isStateNode(item))
                                 childFunc = "["+childFunc+"]";
                             else
@@ -446,7 +462,7 @@ class EXMLCompiler{
                         }
                     }
                     else{
-                        childFunc = this.createFuncForNode(firsChild);
+                        childFunc = this.createFuncForNode(firstChild);
                     }
                 }
                 if(childFunc!=""){
@@ -568,7 +584,7 @@ class EXMLCompiler{
     private unescapeHTMLEntity(str:string):string{
         if(!str)
             return "";
-        var list:Array<any> = StringUtil.htmlEntities;
+        var list:Array<any> = this.htmlEntities;
         var length:number = list.length;
         for(var i:number=0;i<length;i++){
             var arr:Array<any> = list[i];
@@ -623,7 +639,7 @@ class EXMLCompiler{
         var node:any = this.currentXML;
         for(var itemName in node){
             var value:string = node[itemName];
-            var itemName:string = itemName.substring(1);
+            itemName = itemName.substring(1);
             var index:number = itemName.indexOf(".");
             if(index!=-1){
                 var key:string = itemName.substring(0,index);
@@ -646,7 +662,7 @@ class EXMLCompiler{
             cb.addCodeLine("this.states = [");
             var first:boolean = true;
             var indentStr:string = "	";
-            var length:number = this.stateCode;
+            var length:number = this.stateCode.length;
             for(var i:number=0;i<length;i++){
                 state = this.stateCode[i];
                 if(first)
@@ -682,7 +698,7 @@ class EXMLCompiler{
     private getStateNames():void{
         var states:Array<any>;
         var children = this.currentXML.children;
-        if(chidren){
+        if(children){
             var length:number = children.length;
             for(var i:number=0;i<length;i++){
                 var item:any = children[i];
@@ -758,7 +774,7 @@ class EXMLCompiler{
                         }
                     }
 
-                    var len:number = statenames.length;
+                    var len:number = stateNames.length;
                     for(var k:number=0;k<len;k++){
                         stateName = stateNames[k];
                         states = this.getStateByName(stateName);
@@ -905,7 +921,7 @@ class EXMLCompiler{
         var moduleName:string =
             this.exmlConfig.getClassNameById(node.localName,node.namespace);
         this.exmlConfig.checkComponent(moduleName);
-        if(moduleName&&moduleName.indexOf(".")!=-1){
+        if(moduleName&&node.namespace!=EXMLCompiler.E){
             this.currentClass.addReference(moduleName);
         }
         return moduleName;
@@ -926,12 +942,15 @@ class EXMLConfig{
      * 构造函数
      */
     public constructor(){
+        var str:string = fs.readFileSync("./egret-manifest.xml","utf-8");
+        var manifest:any = xml.parse(str);
+        this.parseManifest(manifest);
     }
 
     /**
      * 组件清单列表
      */
-    public componentDic:Dictionary = {};
+    public componentDic:any = {};
     /**
      * 解析框架清单文件
      */
@@ -1028,8 +1047,7 @@ class EXMLConfig{
             name = "egret."+id;
         }
         else{
-            name = ns.uri;
-            name = name.substring(0,name.length-1)+id;
+            name = ns.substring(0,ns.length-1)+id;
         }
         return name;
     }
@@ -1064,9 +1082,9 @@ class EXMLConfig{
         else if(value.indexOf("#")==0&&!isNaN(parseInt("0x"+value.substring(1))))
             type = "number";
         else if(value=="true"||value=="false")
-            type = "Boolean";
+            type = "boolean";
         else
-            type = "String";
+            type = "string";
         return type;
     }
 
@@ -1076,7 +1094,7 @@ class Component{
     /**
      * 构造函数
      */
-    public constructor(item:any=null){
+    public constructor(item?:any){
         if(item){
             this.id = item.$id;
             this.className = "egret."+this.id;
@@ -1111,127 +1129,6 @@ class Component{
 }
 
 
-class CpState extends CodeBase{
-
-    public constructor(name:string,stateGroups:Array<any>=null){
-        super();
-        this.name = name;
-        if(stateGroups)
-            this.stateGroups = stateGroups;
-    }
-    /**
-     * 视图状态名称
-     */
-    public name:string = "";
-
-    public stateGroups:Array<any> = [];
-
-    public addItems:Array<any> = [];
-
-    public setProperty:Array<any> = [];
-
-    /**
-     * 添加一个覆盖
-     */
-    public addOverride(item:ICode):void{
-        if(item instanceof CpAddItems)
-            this.addItems.push(item);
-        else
-            this.setProperty.push(item);
-    }
-
-    public toCode():string{
-        var indentStr:string = this.getIndent(1);
-        var returnStr:string = "new egret.State (\""+this.name+"\",\n"+indentStr+"[\n";
-        var index:number = 0;
-        var isFirst:boolean = true;
-        var overrides:Array<any> = this.addItems.concat(this.setProperty);
-        while(index<overrides.length){
-            if(isFirst)
-                isFirst = false;
-            else
-                returnStr += ",\n";
-            var item:ICode = overrides[index];
-            var codes:Array<any> = item.toCode().split("\n");
-            var length:number = codes.length;
-            for(var i:number=0;i<length;i++){
-                var code:string = codes[i];
-                codes[i] = indentStr+indentStr+code;
-            }
-            returnStr += codes.join("\n");
-            index++;
-        }
-        returnStr += "\n"+indentStr+"])";
-        return returnStr;
-    }
-}
-
-class CpAddItems extends CodeBase{
-    public constructor(target:string,propertyName:string,position:string,relativeTo:string){
-        super();
-        this.target = target;
-        this.propertyName = propertyName;
-        this.position = position;
-        this.relativeTo = relativeTo;
-    }
-
-    /**
-     * 创建项目的工厂类实例
-     */
-    public target:string;
-
-    /**
-     * 要添加到的属性
-     */
-    public propertyName:string;
-
-    /**
-     * 添加的位置
-     */
-    public position:string;
-
-    /**
-     * 相对的显示元素
-     */
-    public relativeTo:string;
-
-    public toCode():string{
-        var indentStr:string = this.getIndent(1);
-        var returnStr:string = "new egret.AddItems(\""+this.target+"\",\""+this.propertyName+"\",\""+this.position+"\",\""+this.relativeTo+"\")";
-        return returnStr;
-    }
-}
-
-class CpSetProperty extends CodeBase{
-    public constructor(target:string,name:string,value:string){
-        super();
-        this.target = target;
-        this.name = name;
-        this.value = value;
-    }
-
-    /**
-     * 要修改的属性名
-     */
-    public name:string;
-
-    /**
-     * 目标实例名
-     */
-    public target:string;
-
-    /**
-     * 属性值
-     */
-    public value:string;
-
-    public toCode():string{
-        var indentStr:string = this.getIndent(1);
-        return "new egret.SetProperty(\""+this.target+"\",\""+this.name+"\","+this.value+")";
-    }
-}
-
-
 //=================代码生成工具类===================
 class CodeBase{
     public constructor(){
@@ -1248,7 +1145,7 @@ class CodeBase{
      */
     public getIndent(indent:number = -1):string{
         if(indent==-1)
-            indent = this._indent;
+            indent = this.indent;
         var str:string = "";
         for(var i:number = 0;i<indent;i++){
             str += "	";
@@ -1510,7 +1407,7 @@ class CpClass extends CodeBase{
         returnStr += "\n";
 
         //打印构造函数
-        returnStr +=this.getIndent(this.indent+1)+Modifiers.M_PUBLIC+" "+KeyWords.KW_FUNCTION+" constructor(";
+        returnStr +=this.getIndent(this.indent+1)+Modifiers.M_PUBLIC+" constructor(";
         isFirst = true;
         index = 0;
         while(this.argumentBlock.length>index){
@@ -1866,18 +1763,136 @@ class CpVariable extends CodeBase{
     }
 }
 
+class CpState extends CodeBase{
+
+    public constructor(name:string,stateGroups:Array<any>=null){
+        super();
+        this.name = name;
+        if(stateGroups)
+            this.stateGroups = stateGroups;
+    }
+    /**
+     * 视图状态名称
+     */
+    public name:string = "";
+
+    public stateGroups:Array<any> = [];
+
+    public addItems:Array<any> = [];
+
+    public setProperty:Array<any> = [];
+
+    /**
+     * 添加一个覆盖
+     */
+    public addOverride(item:CodeBase):void{
+        if(item instanceof CpAddItems)
+            this.addItems.push(item);
+        else
+            this.setProperty.push(item);
+    }
+
+    public toCode():string{
+        var indentStr:string = this.getIndent(1);
+        var returnStr:string = "new egret.State (\""+this.name+"\",\n"+indentStr+"[\n";
+        var index:number = 0;
+        var isFirst:boolean = true;
+        var overrides:Array<any> = this.addItems.concat(this.setProperty);
+        while(index<overrides.length){
+            if(isFirst)
+                isFirst = false;
+            else
+                returnStr += ",\n";
+            var item:CodeBase = overrides[index];
+            var codes:Array<any> = item.toCode().split("\n");
+            var length:number = codes.length;
+            for(var i:number=0;i<length;i++){
+                var code:string = codes[i];
+                codes[i] = indentStr+indentStr+code;
+            }
+            returnStr += codes.join("\n");
+            index++;
+        }
+        returnStr += "\n"+indentStr+"])";
+        return returnStr;
+    }
+}
+
+class CpAddItems extends CodeBase{
+    public constructor(target:string,propertyName:string,position:string,relativeTo:string){
+        super();
+        this.target = target;
+        this.propertyName = propertyName;
+        this.position = position;
+        this.relativeTo = relativeTo;
+    }
+
+    /**
+     * 创建项目的工厂类实例
+     */
+    public target:string;
+
+    /**
+     * 要添加到的属性
+     */
+    public propertyName:string;
+
+    /**
+     * 添加的位置
+     */
+    public position:string;
+
+    /**
+     * 相对的显示元素
+     */
+    public relativeTo:string;
+
+    public toCode():string{
+        var indentStr:string = this.getIndent(1);
+        var returnStr:string = "new egret.AddItems(\""+this.target+"\",\""+this.propertyName+"\",\""+this.position+"\",\""+this.relativeTo+"\")";
+        return returnStr;
+    }
+}
+
+class CpSetProperty extends CodeBase{
+    public constructor(target:string,name:string,value:string){
+        super();
+        this.target = target;
+        this.name = name;
+        this.value = value;
+    }
+
+    /**
+     * 要修改的属性名
+     */
+    public name:string;
+
+    /**
+     * 目标实例名
+     */
+    public target:string;
+
+    /**
+     * 属性值
+     */
+    public value:string;
+
+    public toCode():string{
+        var indentStr:string = this.getIndent(1);
+        return "new egret.SetProperty(\""+this.target+"\",\""+this.name+"\","+this.value+")";
+    }
+}
+
 class DataType{
     public static DT_VOID:string = "void";
 
-    public static DT_INT:string = "int";
+    public static DT_NUMBER:string = "number";
 
-    public static DT_NUMBER:string = "Number";
-
-    public static DT_BOOLEAN:string = "Boolean";
+    public static DT_BOOLEAN:string = "boolean";
 
     public static DT_ARRAY:string = "Array";
 
-    public static DT_STRING:string = "String";
+    public static DT_STRING:string = "string";
 
     public static DT_OBJECT:string = "Object";
 

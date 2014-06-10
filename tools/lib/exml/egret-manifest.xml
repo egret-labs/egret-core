@@ -17,6 +17,7 @@
   <component id="LayoutBase" super="EventDispatcher"/>
   <component id="List" super="ListBase"/>
   <component id="ListBase" super="SkinnableDataContainer"/>
+  <component id="Matrix" super="Object"/>
   <component id="ObjectCollection" super="EventDispatcher" default="source"/>
   <component id="Panel" super="SkinnableContainer"/>
   <component id="Point" super="Object"/>

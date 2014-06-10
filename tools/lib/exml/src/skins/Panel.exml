@@ -2,7 +2,7 @@
 <e:Skin width="628"  height="402"
         xmlns:e="http://ns.egret-labs.org/egret"
         xmlns:w="http://ns.egret-labs.org/wing"
-        xmlns:components="code.common.components::ns_project">
+        xmlns:components="components.*">
     <w:HostComponent name="egret.TitleWindow"/>
     <w:Declarations>
         <e:ArrayCollection id="dp">
@@ -31,7 +31,7 @@
                     <e:ProgressBar id="progressBar" x="14" y="214" width="304" value="50"/>
                     <e:Label id="label" text="标签" x="15" y="14"/>
                     <e:RadioButton id="radioButton" x="251" y="11" label="单选按钮" selected="true"/>
-                    <e:Button label="按钮" x="100" y="37"/>
+                    <components:Button label="按钮" x="100" y="37"/>
                 </e:elementsContent>
             </e:TitleWindow>
         </e:Array>

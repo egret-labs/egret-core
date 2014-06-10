@@ -5,6 +5,21 @@ var __extends = this.__extends || function (d, b) {
     __.prototype = b.prototype;
     d.prototype = new __();
 };
+var fs = require("fs");
+var xml = require("../core/xml.js");
+
+var compiler;
+
+function compile(xmlData, className) {
+    if (!compiler) {
+        compiler = new EXMLCompiler();
+    }
+    return compiler.compile(xmlData, className);
+}
+;
+
+exports.compile = compile;
+
 var EXMLCompiler = (function () {
     /**
     * 构造函数
@@ -378,12 +393,12 @@ var EXMLCompiler = (function () {
                     }
                     childFunc = "[" + values.join(",") + "]";
                 } else {
-                    var firsChild = child.children[0];
+                    var firstChild = child.children[0];
                     if (isContainerProp) {
-                        if (firsChild.localName == "Array") {
+                        if (firstChild.localName == "Array") {
                             values = [];
-                            if (firsChild.children) {
-                                var len = firsChild.children.length;
+                            if (firstChild.children) {
+                                var len = firstChild.children.length;
                                 for (var k = 0; k < len; k++) {
                                     item = firstChild.children[k];
                                     childFunc = this.createFuncForNode(item);
@@ -393,14 +408,14 @@ var EXMLCompiler = (function () {
                             }
                             childFunc = "[" + values.join(",") + "]";
                         } else {
-                            childFunc = this.createFuncForNode(firsChild);
+                            childFunc = this.createFuncForNode(firstChild);
                             if (!this.isStateNode(item))
                                 childFunc = "[" + childFunc + "]";
                             else
                                 childFunc = "[]";
                         }
                     } else {
-                        childFunc = this.createFuncForNode(firsChild);
+                        childFunc = this.createFuncForNode(firstChild);
                     }
                 }
                 if (childFunc != "") {
@@ -517,7 +532,7 @@ var EXMLCompiler = (function () {
     EXMLCompiler.prototype.unescapeHTMLEntity = function (str) {
         if (!str)
             return "";
-        var list = StringUtil.htmlEntities;
+        var list = this.htmlEntities;
         var length = list.length;
         for (var i = 0; i < length; i++) {
             var arr = list[i];
@@ -572,7 +587,7 @@ var EXMLCompiler = (function () {
         var node = this.currentXML;
         for (var itemName in node) {
             var value = node[itemName];
-            var itemName = itemName.substring(1);
+            itemName = itemName.substring(1);
             var index = itemName.indexOf(".");
             if (index != -1) {
                 var key = itemName.substring(0, index);
@@ -595,7 +610,7 @@ var EXMLCompiler = (function () {
             cb.addCodeLine("this.states = [");
             var first = true;
             var indentStr = "	";
-            var length = this.stateCode;
+            var length = this.stateCode.length;
             for (var i = 0; i < length; i++) {
                 state = this.stateCode[i];
                 if (first)
@@ -630,7 +645,7 @@ var EXMLCompiler = (function () {
     EXMLCompiler.prototype.getStateNames = function () {
         var states;
         var children = this.currentXML.children;
-        if (chidren) {
+        if (children) {
             var length = children.length;
             for (var i = 0; i < length; i++) {
                 var item = children[i];
@@ -705,7 +720,7 @@ var EXMLCompiler = (function () {
                         }
                     }
 
-                    var len = statenames.length;
+                    var len = stateNames.length;
                     for (var k = 0; k < len; k++) {
                         stateName = stateNames[k];
                         states = this.getStateByName(stateName);
@@ -848,7 +863,7 @@ var EXMLCompiler = (function () {
     EXMLCompiler.prototype.getPackageByNode = function (node) {
         var moduleName = this.exmlConfig.getClassNameById(node.localName, node.namespace);
         this.exmlConfig.checkComponent(moduleName);
-        if (moduleName && moduleName.indexOf(".") != -1) {
+        if (moduleName && node.namespace != EXMLCompiler.E) {
             this.currentClass.addReference(moduleName);
         }
         return moduleName;
@@ -885,6 +900,9 @@ var EXMLConfig = (function () {
         * 组件清单列表
         */
         this.componentDic = {};
+        var str = fs.readFileSync("./egret-manifest.xml", "utf-8");
+        var manifest = xml.parse(str);
+        this.parseManifest(manifest);
     }
     /**
     * 解析框架清单文件
@@ -978,8 +996,7 @@ var EXMLConfig = (function () {
         } else if (!ns || ns == EXMLCompiler.E) {
             name = "egret." + id;
         } else {
-            name = ns.uri;
-            name = name.substring(0, name.length - 1) + id;
+            name = ns.substring(0, ns.length - 1) + id;
         }
         return name;
     };
@@ -1014,9 +1031,9 @@ var EXMLConfig = (function () {
         else if (value.indexOf("#") == 0 && !isNaN(parseInt("0x" + value.substring(1))))
             type = "number";
         else if (value == "true" || value == "false")
-            type = "Boolean";
+            type = "boolean";
         else
-            type = "String";
+            type = "string";
         return type;
     };
     return EXMLConfig;
@@ -1027,7 +1044,6 @@ var Component = (function () {
     * 构造函数
     */
     function Component(item) {
-        if (typeof item === "undefined") { item = null; }
         /**
         * 父级类名
         */
@@ -1054,91 +1070,6 @@ var Component = (function () {
     return Component;
 })();
 
-var CpState = (function (_super) {
-    __extends(CpState, _super);
-    function CpState(name, stateGroups) {
-        if (typeof stateGroups === "undefined") { stateGroups = null; }
-        _super.call(this);
-        /**
-        * 视图状态名称
-        */
-        this.name = "";
-        this.stateGroups = [];
-        this.addItems = [];
-        this.setProperty = [];
-        this.name = name;
-        if (stateGroups)
-            this.stateGroups = stateGroups;
-    }
-    /**
-    * 添加一个覆盖
-    */
-    CpState.prototype.addOverride = function (item) {
-        if (item instanceof CpAddItems)
-            this.addItems.push(item);
-        else
-            this.setProperty.push(item);
-    };
-
-    CpState.prototype.toCode = function () {
-        var indentStr = this.getIndent(1);
-        var returnStr = "new egret.State (\"" + this.name + "\",\n" + indentStr + "[\n";
-        var index = 0;
-        var isFirst = true;
-        var overrides = this.addItems.concat(this.setProperty);
-        while (index < overrides.length) {
-            if (isFirst)
-                isFirst = false;
-            else
-                returnStr += ",\n";
-            var item = overrides[index];
-            var codes = item.toCode().split("\n");
-            var length = codes.length;
-            for (var i = 0; i < length; i++) {
-                var code = codes[i];
-                codes[i] = indentStr + indentStr + code;
-            }
-            returnStr += codes.join("\n");
-            index++;
-        }
-        returnStr += "\n" + indentStr + "])";
-        return returnStr;
-    };
-    return CpState;
-})(CodeBase);
-
-var CpAddItems = (function (_super) {
-    __extends(CpAddItems, _super);
-    function CpAddItems(target, propertyName, position, relativeTo) {
-        _super.call(this);
-        this.target = target;
-        this.propertyName = propertyName;
-        this.position = position;
-        this.relativeTo = relativeTo;
-    }
-    CpAddItems.prototype.toCode = function () {
-        var indentStr = this.getIndent(1);
-        var returnStr = "new egret.AddItems(\"" + this.target + "\",\"" + this.propertyName + "\",\"" + this.position + "\",\"" + this.relativeTo + "\")";
-        return returnStr;
-    };
-    return CpAddItems;
-})(CodeBase);
-
-var CpSetProperty = (function (_super) {
-    __extends(CpSetProperty, _super);
-    function CpSetProperty(target, name, value) {
-        _super.call(this);
-        this.target = target;
-        this.name = name;
-        this.value = value;
-    }
-    CpSetProperty.prototype.toCode = function () {
-        var indentStr = this.getIndent(1);
-        return "new egret.SetProperty(\"" + this.target + "\",\"" + this.name + "\"," + this.value + ")";
-    };
-    return CpSetProperty;
-})(CodeBase);
-
 //=================代码生成工具类===================
 var CodeBase = (function () {
     function CodeBase() {
@@ -1154,7 +1085,7 @@ var CodeBase = (function () {
     CodeBase.prototype.getIndent = function (indent) {
         if (typeof indent === "undefined") { indent = -1; }
         if (indent == -1)
-            indent = this._indent;
+            indent = this.indent;
         var str = "";
         for (var i = 0; i < indent; i++) {
             str += "	";
@@ -1410,7 +1341,7 @@ var CpClass = (function (_super) {
         returnStr += "\n";
 
         //打印构造函数
-        returnStr += this.getIndent(this.indent + 1) + Modifiers.M_PUBLIC + " " + KeyWords.KW_FUNCTION + " constructor(";
+        returnStr += this.getIndent(this.indent + 1) + Modifiers.M_PUBLIC + " constructor(";
         isFirst = true;
         index = 0;
         while (this.argumentBlock.length > index) {
@@ -1749,20 +1680,103 @@ var CpVariable = (function (_super) {
     return CpVariable;
 })(CodeBase);
 
+var CpState = (function (_super) {
+    __extends(CpState, _super);
+    function CpState(name, stateGroups) {
+        if (typeof stateGroups === "undefined") { stateGroups = null; }
+        _super.call(this);
+        /**
+        * 视图状态名称
+        */
+        this.name = "";
+        this.stateGroups = [];
+        this.addItems = [];
+        this.setProperty = [];
+        this.name = name;
+        if (stateGroups)
+            this.stateGroups = stateGroups;
+    }
+    /**
+    * 添加一个覆盖
+    */
+    CpState.prototype.addOverride = function (item) {
+        if (item instanceof CpAddItems)
+            this.addItems.push(item);
+        else
+            this.setProperty.push(item);
+    };
+
+    CpState.prototype.toCode = function () {
+        var indentStr = this.getIndent(1);
+        var returnStr = "new egret.State (\"" + this.name + "\",\n" + indentStr + "[\n";
+        var index = 0;
+        var isFirst = true;
+        var overrides = this.addItems.concat(this.setProperty);
+        while (index < overrides.length) {
+            if (isFirst)
+                isFirst = false;
+            else
+                returnStr += ",\n";
+            var item = overrides[index];
+            var codes = item.toCode().split("\n");
+            var length = codes.length;
+            for (var i = 0; i < length; i++) {
+                var code = codes[i];
+                codes[i] = indentStr + indentStr + code;
+            }
+            returnStr += codes.join("\n");
+            index++;
+        }
+        returnStr += "\n" + indentStr + "])";
+        return returnStr;
+    };
+    return CpState;
+})(CodeBase);
+
+var CpAddItems = (function (_super) {
+    __extends(CpAddItems, _super);
+    function CpAddItems(target, propertyName, position, relativeTo) {
+        _super.call(this);
+        this.target = target;
+        this.propertyName = propertyName;
+        this.position = position;
+        this.relativeTo = relativeTo;
+    }
+    CpAddItems.prototype.toCode = function () {
+        var indentStr = this.getIndent(1);
+        var returnStr = "new egret.AddItems(\"" + this.target + "\",\"" + this.propertyName + "\",\"" + this.position + "\",\"" + this.relativeTo + "\")";
+        return returnStr;
+    };
+    return CpAddItems;
+})(CodeBase);
+
+var CpSetProperty = (function (_super) {
+    __extends(CpSetProperty, _super);
+    function CpSetProperty(target, name, value) {
+        _super.call(this);
+        this.target = target;
+        this.name = name;
+        this.value = value;
+    }
+    CpSetProperty.prototype.toCode = function () {
+        var indentStr = this.getIndent(1);
+        return "new egret.SetProperty(\"" + this.target + "\",\"" + this.name + "\"," + this.value + ")";
+    };
+    return CpSetProperty;
+})(CodeBase);
+
 var DataType = (function () {
     function DataType() {
     }
     DataType.DT_VOID = "void";
 
-    DataType.DT_INT = "int";
+    DataType.DT_NUMBER = "number";
 
-    DataType.DT_NUMBER = "Number";
-
-    DataType.DT_BOOLEAN = "Boolean";
+    DataType.DT_BOOLEAN = "boolean";
 
     DataType.DT_ARRAY = "Array";
 
-    DataType.DT_STRING = "String";
+    DataType.DT_STRING = "string";
 
     DataType.DT_OBJECT = "Object";
 
