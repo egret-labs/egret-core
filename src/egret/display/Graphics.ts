@@ -59,81 +59,40 @@ module egret {
             this.canvasContext.fillStyle = colorStr;
         }
 
-	    public drawRect(x:number, y:number, width:number, height:number):void {
+        public drawRect(x:number, y:number, width:number, height:number):void {
 
-		    var rendererContext = <HTML5CanvasRenderer>this.renderContext;
-		    if (this.strokeStyleColor) {
-			    this.commandQueue.push(new Command(
+            var rendererContext = <HTML5CanvasRenderer>this.renderContext;
+            this.commandQueue.push(new Command(
 
-				    function (x, y, width, height, color) {
-					    //this.canvasContext.fill();
-					    this.canvasContext.strokeRect(rendererContext._transformTx + x,
-						    rendererContext._transformTy + y,
-						    width,
-						    height,
-						    color);
-				    },
-				    this,
-				    [ x, y, width, height, this.strokeStyleColor]
+                function (x, y, width, height) {
+                    this.canvasContext.rect(rendererContext._transformTx + x,
+                        rendererContext._transformTy + y,
+                        width,
+                        height);
+                },
+                this,
+                [ x, y, width, height]
 
-			    )
-			    );
-		    }
-		    if (this.fillStyleColor) {
-			    this.commandQueue.push(new Command(
+            )
+            );
 
-				    function (x, y, width, height) {
-					    //this.canvasContext.fill();
-					    this.canvasContext.fillRect(rendererContext._transformTx + x,
-						    rendererContext._transformTy + y,
-						    width,
-						    height);
-				    },
-				    this,
-				    [ x, y, width, height]
+        }
 
-			    )
-			    );
-		    }
+        public drawCircle(x:number, y:number, r:number):void {
+            var rendererContext = <HTML5CanvasRenderer>this.renderContext;
+            this.commandQueue.push(new Command(
+                function (x, y, r) {
+                    this.canvasContext.beginPath();
+                    this.canvasContext.arc(rendererContext._transformTx + x,
+                        rendererContext._transformTy + y, r, 0, Math.PI * 2);
+                    this.canvasContext.closePath();
 
-	    }
+                },
+                this,
+                [ x, y, r]
 
-	    public drawCircle(x:number, y:number, r:number):void {
-		    var rendererContext = <HTML5CanvasRenderer>this.renderContext;
-		    if (this.strokeStyleColor) {
-			    this.commandQueue.push(new Command(
-
-				    function (x, y, r, color) {
-					    this.canvasContext.strokeStyle = color;
-					    this.canvasContext.beginPath();
-					    this.canvasContext.arc(rendererContext._transformTx + x,
-						    rendererContext._transformTy + y, r, 0, Math.PI * 2);
-					    this.canvasContext.closePath();
-					    this.canvasContext.stroke();
-				    },
-				    this,
-				    [ x, y, r, this.strokeStyleColor]
-
-			    )
-			    );
-		    }
-		    if (this.fillStyleColor) {
-			    this.commandQueue.push(new Command(
-				    function (x, y, r) {
-					    this.canvasContext.beginPath();
-					    this.canvasContext.arc(rendererContext._transformTx + x,
-						    rendererContext._transformTy + y, r, 0, Math.PI * 2);
-					    this.canvasContext.closePath();
-					    this.canvasContext.fill();
-				    },
-				    this,
-				    [ x, y, r]
-
-			    )
-			    );
-		    }
-
-	    }
+            ));
+        }
 
         /**
          * @param thickness {number} 一个整数，以点为单位表示线条的粗细，有效值为 0 到 255。如果未指定数字，或者未定义该参数，则不绘制线条。如果传递的值小于 0，则默认值为 0。值 0 表示极细的粗细；最大粗细为 255。如果传递的值大于 255，则默认值为 255。
@@ -194,6 +153,28 @@ module egret {
         }
 
         public endFill():void {
+            if (this.strokeStyleColor) {
+                this.commandQueue.push(
+                    new Command(
+                        function () {
+                            this.canvasContext.stroke();
+                        },
+                        this,
+                        null)
+                )
+            }
+
+            if (this.fillStyleColor) {
+                this.commandQueue.push(
+                    new Command(
+                        function () {
+                            this.canvasContext.fill();
+                        },
+                        this,
+                        null)
+                )
+            }
+
         }
 
         public _draw():void {
