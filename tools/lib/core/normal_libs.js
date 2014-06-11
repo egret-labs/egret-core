@@ -157,6 +157,13 @@ function _log() {
 
 
 }
+function _warn(code) {
+    var message = locale.error_code[code];
+    if (!message) {
+        _exit(9999, code);
+    }
+    console.log("warning: "+formatStdoutString(message).replace("{0}", arguments[1]).replace("{1}", arguments[2]));
+}
 
 function _joinEgretDir(dir, projectName) {
     var currDir = dir;
@@ -188,7 +195,9 @@ exports.require = _require;
 exports.copy = copy;
 exports.deleteFileSync = remove;
 exports.exit = _exit;
+exports.warn = _warn;
 exports.mkdir = mkdirSync;
 exports.log = _log;
 exports.joinEgretDir = _joinEgretDir;
 exports.getConfig = getConfig;
+exports.remove = remove;

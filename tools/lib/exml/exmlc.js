@@ -7,15 +7,34 @@ var __extends = this.__extends || function (d, b) {
 };
 var fs = require("fs");
 var xml = require("../core/xml.js");
+var libs = require("../core/normal_libs");
+var param = require("../core/params_analyze.js");
 var properties = require("./properties.json");
 
 var compiler;
 
-function compile(xmlData, className, egretDTSPath, srcPath) {
+function compile(exmlPath, srcPath) {
+    exmlPath = exmlPath.split("\\").join("/");
+    srcPath = srcPath.split("\\").join("/");
+    if (srcPath.charAt(srcPath.length - 1) != "/") {
+        srcPath += "/";
+    }
+    if (!fs.existsSync(srcPath + exmlPath)) {
+        libs.exit(2001, srcPath + exmlPath);
+    }
+    var className = exmlPath.substring(0, exmlPath.length - 5);
+    className = className.split("/").join(".");
+    var xmlString = fs.readFileSync(srcPath + exmlPath, "utf-8");
+    var xmlData = xml.parse(xmlString);
+    if (!xmlData) {
+        libs.exit(2002, srcPath + exmlPath);
+    }
     if (!compiler) {
         compiler = new EXMLCompiler();
     }
-    return compiler.compile(xmlData, className, egretDTSPath, srcPath);
+    var tsText = compiler.compile(xmlData, className, "egret.d.ts", srcPath);
+    var tsPath = srcPath + exmlPath.substring(0, exmlPath.length - 5) + ".ts";
+    fs.writeFileSync(tsPath, tsText, "utf-8");
 }
 ;
 
@@ -911,7 +930,9 @@ var EXMLConfig = (function () {
         this.pathToClassName = {};
         this.classNameToPath = {};
         this.basicTypes = ["boolean", "number", "string"];
-        var str = fs.readFileSync("./egret-manifest.xml", "utf-8");
+        var exmlPath = param.getEgretPath() + "/tools/lib/exml/";
+        exmlPath = exmlPath.split("\\").join("/");
+        var str = fs.readFileSync(exmlPath + "egret-manifest.xml", "utf-8");
         var manifest = xml.parse(str);
         this.parseManifest(manifest);
     }

@@ -41,16 +41,21 @@ function buildAllFile(callback, source, output, file_list) {
     async.waterfall([
         checkCompilerInstalled,
 
-        //cp所有非ts文件
+        //cp所有非ts/exml文件
         function (callback) {
-            var all_js_file = libs.loopFileSync(source, filter);
-            all_js_file.forEach(function (item) {
+            var all_file = libs.loopFileSync(source, filter);
+            all_file.forEach(function (item) {
                 libs.copy(path.join(source, item), path.join(output, item));
             })
             callback(null);
 
             function filter(path) {
-                return  path.indexOf(".ts") == -1;
+                var index = path.lastIndexOf(".");
+                if(index==-1){
+                    return true;
+                }
+                var ext = path.substring(index).toLowerCase();
+                return ext!=".ts"&&ext!=".exml";
             }
         },
 
