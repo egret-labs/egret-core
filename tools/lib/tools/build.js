@@ -94,8 +94,13 @@ function run(dir, args, opts) {
         });
     }
 
-    async.series(task, function (err) {
-        libs.log("构建成功");
+    async.series(task, function (err,data) {
+        if (!err){
+            libs.log("构建成功");
+        }
+        else{
+            libs.exit(err);
+        }
     })
 }
 
