@@ -32,7 +32,7 @@ function compile(exmlPath, srcPath) {
     if (!compiler) {
         compiler = new EXMLCompiler();
     }
-    var tsText = compiler.compile(xmlData, className, "egret.d.ts", srcPath);
+    var tsText = compiler.compile(xmlData, className, "egret.d.ts", srcPath, srcPath + exmlPath);
     var tsPath = srcPath + exmlPath.substring(0, exmlPath.length - 5) + ".ts";
     fs.writeFileSync(tsPath, tsText, "utf-8");
 }
@@ -50,6 +50,7 @@ var EXMLCompiler = (function () {
         * 需要单独创建的实例id列表
         */
         this.stateIds = [];
+        this.exmlPath = "";
         this.basicTypes = ["Array", "boolean", "string", "number"];
         /**
         * 延迟赋值字典
@@ -87,18 +88,37 @@ var EXMLCompiler = (function () {
         }
     };
 
+    EXMLCompiler.prototype.toXMLString = function (node) {
+        if (!node) {
+            return "";
+        }
+        var str = "<" + node.name;
+        for (var key in node) {
+            if (key.charAt(0) == "$") {
+                var value = node[key];
+                key = key.substring(1);
+                str += " " + key + "=\"" + value + "\"";
+            }
+        }
+        if (node.isSelfClosing) {
+            str += "/>";
+        } else {
+            str += ">";
+        }
+        return str;
+    };
+
     /**
     * 编译指定的XML对象为TypeScript类。
     * 注意:编译前要先注入egret-manifest.xml清单文件给manifestData属性。
     * @param xmlData 要编译的EXML文件内容
     * @param className 要编译成的完整类名，包括命名空间。
     */
-    EXMLCompiler.prototype.compile = function (xmlData, className, egretDTSPath, srcPath) {
-        if (!xmlData || !className || !egretDTSPath || !srcPath)
-            return "";
+    EXMLCompiler.prototype.compile = function (xmlData, className, egretDTSPath, srcPath, exmlPath) {
         if (!this.exmlConfig) {
             this.exmlConfig = new EXMLConfig();
         }
+        this.exmlPath = exmlPath;
         this.currentXML = xmlData;
         this.currentClassName = className;
         this.exmlConfig.srcPath = srcPath;
@@ -143,23 +163,41 @@ var EXMLCompiler = (function () {
             }
         }
 
-        if (this.declarations) {
-            var children = this.declarations.children;
-            if (children) {
-                length = children.length;
-                for (var i = 0; i < length; i++) {
-                    node = children[i];
-                    if (node["$includeIn"])
-                        delete node.$includeIn;
-                    if (node["$excludeFrom"])
-                        delete node.$excludeFrom;
-                }
-            }
+        var list = [];
+        this.checkDeclarations(this.declarations, list);
+
+        if (list.length > 0) {
+            libs.warn(2101, this.exmlPath, list.join("\n"));
         }
 
         this.addIds(this.currentXML.children);
 
         this.createConstructFunc();
+    };
+
+    /**
+    * 清理声明节点里的状态标志
+    */
+    EXMLCompiler.prototype.checkDeclarations = function (declarations, list) {
+        if (!declarations) {
+            return;
+        }
+        var children = declarations.children;
+        if (children) {
+            var length = children.length;
+            for (var i = 0; i < length; i++) {
+                var node = children[i];
+                if (node["$includeIn"]) {
+                    list.push(this.toXMLString(node));
+                    delete node.$includeIn;
+                }
+                if (node["$excludeFrom"]) {
+                    list.push(this.toXMLString(node));
+                    delete node.$excludeFrom;
+                }
+                this.checkDeclarations(node, list);
+            }
+        }
     };
 
     /**
@@ -177,7 +215,7 @@ var EXMLCompiler = (function () {
                 this.createVarForNode(node);
                 if (this.isStateNode(node))
                     this.stateIds.push(node.$id);
-            } else if (this.getPackageByNode(node) != "") {
+            } else if (!this.isProperty(node)) {
                 this.createIdForNode(node);
                 if (this.isStateNode(node))
                     this.stateIds.push((node.$id));
@@ -246,13 +284,13 @@ var EXMLCompiler = (function () {
     * 为指定节点创建初始化函数,返回函数名引用
     */
     EXMLCompiler.prototype.createFuncForNode = function (node) {
-        var moduleName = this.getPackageByNode(node);
         var className = node.localName;
-        var isBasicType = this.isBasicTypeData(className);
-        if (!isBasicType && (this.isProperty(node) || moduleName == ""))
+        if (this.isProperty(node))
             return "";
+        var isBasicType = this.isBasicTypeData(className);
         if (isBasicType)
             return this.createBasicTypeForNode(node);
+        var moduleName = this.getPackageByNode(node);
         var func = new CpFunction;
         var tailName = "_i";
         var id = node.$id;
@@ -292,13 +330,7 @@ var EXMLCompiler = (function () {
     * 检查目标类名是否是基本数据类型
     */
     EXMLCompiler.prototype.isBasicTypeData = function (className) {
-        var length = this.basicTypes.length;
-        for (var i = 0; i < length; i++) {
-            var type = this.basicTypes[i];
-            if (type == className)
-                return true;
-        }
-        return false;
+        return this.basicTypes.indexOf(className) != -1;
     };
 
     /**
@@ -720,7 +752,7 @@ var EXMLCompiler = (function () {
         for (var i = 0; i < length; i++) {
             var node = items[i];
             this.createStates(node.children);
-            if (this.isProperty(node) || this.getPackageByNode(node) == "")
+            if (this.isProperty(node))
                 continue;
             if (EXMLCompiler.containsState(node)) {
                 var id = node.$id;
@@ -899,6 +931,9 @@ var EXMLCompiler = (function () {
             var path = this.exmlConfig.getPathById(node.localName, node.namespace);
             this.currentClass.addReference(path);
         }
+        if (!moduleName) {
+            libs.exit(2003, this.exmlPath, this.toXMLString(node));
+        }
         return moduleName;
     };
 
@@ -929,6 +964,7 @@ var EXMLConfig = (function () {
         this.componentDic = {};
         this.pathToClassName = {};
         this.classNameToPath = {};
+        this.propData = {};
         this.basicTypes = ["boolean", "number", "string"];
         var exmlPath = param.getEgretPath() + "/tools/lib/exml/";
         exmlPath = exmlPath.split("\\").join("/");
@@ -1021,6 +1057,9 @@ var EXMLConfig = (function () {
         if (ns == EXMLCompiler.W) {
         } else if (!ns || ns == EXMLCompiler.E) {
             name = "egret." + id;
+            if (!this.componentDic[name]) {
+                name = "";
+            }
         } else {
             var path = this.getPathById(id, ns);
             name = this.pathToClassName[path];
@@ -1037,6 +1076,7 @@ var EXMLConfig = (function () {
         var tsText = fs.readFileSync(path, "utf-8");
         tsText = CodeUtil.removeComment(tsText);
         var className = "";
+        var superClass;
         while (tsText.length) {
             var index = CodeUtil.getFirstVariableIndex("class", tsText);
             if (index == -1) {
@@ -1057,7 +1097,25 @@ var EXMLConfig = (function () {
                 }
                 var ns = preStr.substring(0, index);
                 className = ns.trim() + "." + id;
+                tsText = CodeUtil.removeFirstVariable(tsText);
+                var word = CodeUtil.getFirstVariable(tsText);
+                if (word == "extends") {
+                    tsText = CodeUtil.removeFirstVariable(tsText);
+                    superClass = CodeUtil.getFirstWord(tsText).trim();
+                    if (superClass.charAt(superClass.length - 1) == "{") {
+                        superClass = superClass.substring(0, superClass.length - 1);
+                    }
+                }
             }
+        }
+        if (className) {
+            var comps = new Component();
+            comps.id = id;
+            comps.className = className;
+            if (superClass) {
+                comps.superClass = superClass;
+            }
+            this.componentDic[className] = comps;
         }
         return className;
     };
@@ -1080,7 +1138,9 @@ var EXMLConfig = (function () {
     * @inheritDoc
     */
     EXMLConfig.prototype.getDefaultPropById = function (id, ns) {
-        var data = { name: "", isArray: false };
+        var data = this.propData;
+        data.name = "";
+        data.isArray = false;
         var className = this.getClassNameById(id, ns);
         var component = this.componentDic[className];
         while (component) {

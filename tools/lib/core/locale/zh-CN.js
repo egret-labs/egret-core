@@ -18,9 +18,8 @@ exports.error_code = {
     8001:"请输入命令行选项{color_green} {0} {color_normal}的参数,并确认是以下值之一: {color_green}[{1}]{color_normal}",
     8002:"{color_red}请选对正确的egret项目目录！{color_normal}\n\tEgret_Project\t\t{color_gray}//项目目录{color_normal}\n\t\t--launcher\t{color_gray}//起始目录{color_normal}\n\t\t--src\t\t{color_gray}//源代码目录{color_normal}",
     8003:"配置文件{0}不存在",
-    2001:"找不到EXML文件:{0}",
-    2002:"不是有效的XML文件:{0}"
-
-
-
+    2001:"{0}: error 找不到EXML文件",
+    2002:"{0}: error 不是有效的XML文件",
+    2003:"{0}: error 无法找到节点所对应的类定义:\n{1}",
+    2101:"{0}: warning 在w:Declarations内的子节点，不允许使用includeIn和excludeFrom等属性:\n{1}"
 }

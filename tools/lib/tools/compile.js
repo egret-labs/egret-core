@@ -85,7 +85,7 @@ function buildAllFile(callback, source, output, file_list) {
                     callback(null, source);
                 }
                 else {
-                    libs.log(1303)
+                    callback(1303);
                 }
 
             });
@@ -94,11 +94,7 @@ function buildAllFile(callback, source, output, file_list) {
 
 
     ], function (err) {
-
-        if (err) {
-            libs.exit(err);
-        }
-        callback();
+        callback(err);
     })
 
 
@@ -171,7 +167,7 @@ function exportHeader(callback, source, output, file_list) {
             }
         }
         else {
-            libs.exit(1303);
+            callback(1303)
         }
 
     });

@@ -47,9 +47,13 @@ var _require = function (moduleName) {
 
 
 function remove(path) {
-    fs.lstatSync(path).isDirectory()
-        ? rmdir(path)
-        : rmfile(path)
+    try{
+        fs.lstatSync(path).isDirectory()
+            ? rmdir(path)
+            : rmfile(path)
+    }
+    catch (e){
+    }
 }
 
 var rmfile = fs.unlinkSync
@@ -139,12 +143,24 @@ function formatStdoutString(message) {
         .split("{color_underline}").join("\033[4;36;1m");
 }
 
+var callBackList = [];
+
+function addCallBackWhenExit(callBack){
+    callBackList.push(callBack)
+}
+
 function _exit(code) {
     var message = locale.error_code[code];
     if (!message) {
         _exit(9999, code);
     }
     console.log(formatStdoutString(message).replace("{0}", arguments[1]).replace("{1}", arguments[2]));
+    var list = callBackList.concat();
+    var length = list.length;
+    for(var i=0;i<length;i++){
+        var callBack = list[i];
+        callBack();
+    }
     process.exit(code);
 }
 
@@ -162,7 +178,7 @@ function _warn(code) {
     if (!message) {
         _exit(9999, code);
     }
-    console.log("warning: "+formatStdoutString(message).replace("{0}", arguments[1]).replace("{1}", arguments[2]));
+    console.log(formatStdoutString(message).replace("{0}", arguments[1]).replace("{1}", arguments[2]));
 }
 
 function _joinEgretDir(dir, projectName) {
@@ -201,3 +217,4 @@ exports.log = _log;
 exports.joinEgretDir = _joinEgretDir;
 exports.getConfig = getConfig;
 exports.remove = remove;
+exports.addCallBackWhenExit = addCallBackWhenExit;
