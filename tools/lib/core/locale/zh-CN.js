@@ -14,6 +14,7 @@ exports.error_code = {
     1302:"请输入编译路径。例:{color_green}egret compile --source [your_typescript_source_dir] --output [your_output_dir]{color_normal}",
     1303:"编译失败",
     1401:"找不到java或java版本过低（最低需求为 java 7 ),请安装java并执行 java -version 命令确认",
+    1501:"无法启动服务器，请检查权限或端口是否被占用",
     9999:"未知错误:{0}",
     8001:"请输入命令行选项{color_green} {0} {color_normal}的参数,并确认是以下值之一: {color_green}[{1}]{color_normal}",
     8002:"{color_red}请选对正确的egret项目目录！{color_normal}\n\tEgret_Project\t\t{color_gray}//项目目录{color_normal}\n\t\t--launcher\t{color_gray}//起始目录{color_normal}\n\t\t--src\t\t{color_gray}//源代码目录{color_normal}",
