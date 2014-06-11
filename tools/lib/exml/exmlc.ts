@@ -1038,6 +1038,7 @@ class EXMLConfig{
     }
 
     private pathToClassName:any = {};
+    private classNameToPath:any = {};
     /**
      * @inheritDoc
      */
@@ -1053,11 +1054,12 @@ class EXMLConfig{
             name = "egret."+id;
         }
         else{
-            name = this.pathToClassName[ns+id];
+            var path:string = this.getPathById(id,ns);
+            name = this.pathToClassName[path];
             if(!name){
-                var path:string = this.getPathById(id,ns);
                 name = this.readClassNameFromPath(this.srcPath+path,id);
-                this.pathToClassName[ns+id] = name;
+                this.pathToClassName[path] = name;
+                this.classNameToPath[name] = path;
             }
         }
         return name;
@@ -1137,13 +1139,151 @@ class EXMLConfig{
     private findType(className:string,prop:string):string{
         var classData:any = properties[className];
         if(!classData){
-            return "string";
+            var path:string = this.srcPath+this.classNameToPath[className];
+            if(!fs.existsSync(path)){
+                return "string";
+            }
+            var text:string = fs.readFileSync(path,"utf-8");
+            classData = this.getProperties(text,className);
+            if(classData){
+                properties[className] = classData;
+            }
+            else{
+                return "string";
+            }
         }
         var type:string = classData[prop];
         if(!type){
             type = this.findType(classData["super"],prop);
         }
         return type;
+    }
+
+    /**
+     * 获取属性列表
+     */
+    private getProperties(text:string,className:string):any {
+        index = className.lastIndexOf(".");
+        var moduleName:string = "";
+        if (index != -1) {
+            moduleName = className.substring(0, index);
+            className = className.substring(index+1);
+        }
+        var data:any;
+        text = CodeUtil.removeComment(text);
+        if(moduleName){
+            while(text.length>0){
+                var index:number = CodeUtil.getFirstVariableIndex("module",text);
+                if(index==-1){
+                    break;
+                }
+                text = text.substring(index+6);
+                index = text.indexOf("{");
+                if(index==-1){
+                    continue;
+                }
+                var ns:string = text.substring(0,index).trim();
+                if(ns==moduleName){
+                    index = CodeUtil.getBracketEndIndex(text);
+                    if(index!=-1){
+                        var block:string = text.substring(0,index);
+                        index = block.indexOf("{");
+                        block = block.substring(index+1);
+                        data = this.getPropFromBlock(block,className);
+                    }
+                    break;
+                }
+            }
+        }
+        else{
+            data = this.getPropFromBlock(text,className);
+        }
+
+        return data;
+    }
+
+    private getPropFromBlock(block:string,targetClassName:string):any{
+        var data:any;
+        while(block.length>0){
+            var index:number = CodeUtil.getFirstVariableIndex("class",block);
+            if(index==-1){
+                break;
+            }
+            block = block.substring(index+5);
+            var className:string = CodeUtil.getFirstVariable(block);
+            if(className!=targetClassName){
+                continue;
+            }
+            data = {};
+            block = CodeUtil.removeFirstVariable(block,className);
+            var word:string = CodeUtil.getFirstVariable(block);
+            if(word=="extends"){
+                block = CodeUtil.removeFirstVariable(block);
+                word = CodeUtil.getFirstWord(block);
+                if(word.charAt(word.length-1)=="{")
+                    word = word.substring(0,word.length-1).trim();
+                if(word){
+                    data["super"] = word;
+                }
+            }
+            index = CodeUtil.getBracketEndIndex(block);
+            if(index==-1)
+                break;
+            var text:string = block.substring(0,index);
+            index = text.indexOf("{");
+            text = text.substring(index+1);
+            this.readProps(text,data);
+            break;
+        }
+        return data;
+    }
+
+    private basicTypes:Array<any> = ["boolean","number","string"];
+
+    private readProps(text:string,data:any):void{
+        var lines:Array<any> = text.split("\n");
+        var length:number = lines.length;
+        for(var i:number=0;i<length;i++){
+            var line:string = lines[i];
+            var index:number = line.indexOf("public ");
+            if(index==-1)
+                continue;
+            line = line.substring(index+7);
+            var word:string = CodeUtil.getFirstVariable(line);
+            if(!word||word.charAt(0)=="_")
+                continue;
+            if(word=="get"){
+                continue;
+            }
+            else if(word=="set"){
+                line = CodeUtil.removeFirstVariable(line);
+                word = CodeUtil.getFirstVariable(line);
+                if(!word||word.charAt(0)=="_"){
+                    continue;
+                }
+                line = CodeUtil.removeFirstVariable(line);
+                line = line.trim();
+                if(line.charAt(0)=="("){
+                    index = line.indexOf(":");
+                    if(index!=-1){
+                        line = line.substring(index+1);
+                        type = CodeUtil.getFirstVariable(line);
+                        if(this.basicTypes.indexOf(type)!=-1)
+                            data[word] = type;
+                    }
+                }
+            }
+            else{
+                line = CodeUtil.removeFirstVariable(line);
+                line = line.trim();
+                if(line.charAt(0)==":"){
+                    var type:string = CodeUtil.getFirstVariable(line.substring(1));
+                    if(this.basicTypes.indexOf(type)!=-1)
+                        data[word] = type;
+                }
+
+            }
+        }
     }
 
 }

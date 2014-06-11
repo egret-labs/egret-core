@@ -56,8 +56,8 @@ module code.skins{
 		private  __12_i():ns_project.Button{
 			var t:ns_project.Button = new ns_project.Button();
 			t.label = "按钮";
-			t.x = "100";
-			t.y = "37";
+			t.x = 100;
+			t.y = 37;
 			return t;
 		}
 		private  __9_i():egret.Button{
