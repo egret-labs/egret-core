@@ -75,8 +75,7 @@ class EXMLCompiler{
         if(xml.namespace!=EXMLCompiler.W&&xml["$id"]){
             var id:string = xml.$id;
             if(this.repeatedIdDic[id]){
-                if(result.indexOf(id)==-1)
-                    result.push(id);
+                result.push(this.toXMLString(xml));
             }
             else{
                 this.repeatedIdDic[id] = true;
@@ -123,7 +122,7 @@ class EXMLCompiler{
         if(!node){
             return "";
         }
-        var str:string = "<"+node.name;
+        var str:string = "  at <"+node.name;
         for(var key in node){
             if(key.charAt(0)=="$"){
                 var value:string = node[key];
@@ -181,6 +180,10 @@ class EXMLCompiler{
      * 开始编译
      */
     private startCompile():void{
+        var result:Array<any> = this.getRepeatedIds(this.currentXML);
+        if(result.length>0){
+            libs.exit(2004,this.exmlPath,result.join("\n"));
+        }
         this.currentClass.superClass = this.getPackageByNode(this.currentXML);
 
         this.getStateNames();

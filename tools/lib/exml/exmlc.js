@@ -72,8 +72,7 @@ var EXMLCompiler = (function () {
         if (xml.namespace != EXMLCompiler.W && xml["$id"]) {
             var id = xml.$id;
             if (this.repeatedIdDic[id]) {
-                if (result.indexOf(id) == -1)
-                    result.push(id);
+                result.push(this.toXMLString(xml));
             } else {
                 this.repeatedIdDic[id] = true;
             }
@@ -92,7 +91,7 @@ var EXMLCompiler = (function () {
         if (!node) {
             return "";
         }
-        var str = "<" + node.name;
+        var str = "  at <" + node.name;
         for (var key in node) {
             if (key.charAt(0) == "$") {
                 var value = node[key];
@@ -147,6 +146,10 @@ var EXMLCompiler = (function () {
     * 开始编译
     */
     EXMLCompiler.prototype.startCompile = function () {
+        var result = this.getRepeatedIds(this.currentXML);
+        if (result.length > 0) {
+            libs.exit(2004, this.exmlPath, result.join("\n"));
+        }
         this.currentClass.superClass = this.getPackageByNode(this.currentXML);
 
         this.getStateNames();

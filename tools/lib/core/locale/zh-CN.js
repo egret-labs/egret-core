@@ -22,5 +22,6 @@ exports.error_code = {
     2001:"{0}: error 找不到EXML文件",
     2002:"{0}: error 不是有效的XML文件",
     2003:"{0}: error 无法找到节点所对应的类定义:\n{1}",
+    2004:"{0}: error 节点不能含有同名的id属性:\n{1}",
     2101:"{0}: warning 在w:Declarations内的子节点，不允许使用includeIn和excludeFrom等属性:\n{1}"
 }
