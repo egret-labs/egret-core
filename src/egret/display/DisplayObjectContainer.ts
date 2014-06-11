@@ -38,8 +38,11 @@ module egret {
 	 * @classdesc
      * DisplayObjectContainer 类是显示列表中显示对象容器。
      */
-    export class DisplayObjectContainer
-    extends DisplayObject {
+    export class DisplayObjectContainer extends DisplayObject {
+
+
+        public static __EVENT__ADD_TO_STAGE_LIST:Array<DisplayObject> = [];
+        public static __EVENT__REMOVE_FROM_STAGE_LIST:Array<DisplayObject> = [];
 
         constructor() {
             super();
@@ -147,6 +150,11 @@ module egret {
                 child.dispatchEventWith(Event.ADDED,true);
             if (this._stage) {//当前容器在舞台
                 child._onAddToStage();
+                var list = DisplayObjectContainer.__EVENT__ADD_TO_STAGE_LIST;
+                while (list.length > 0){
+                    var childAddToStage = list.shift();
+                    childAddToStage.dispatchEventWith(Event.ADDED_TO_STAGE);
+                }
             }
 
             return child;
@@ -191,6 +199,11 @@ module egret {
                 child.dispatchEventWith(Event.REMOVED,true)
             if (this._stage) {//在舞台上
                 child._onRemoveFromStage();
+                var list = DisplayObjectContainer.__EVENT__REMOVE_FROM_STAGE_LIST
+                while (list.length > 0){
+                    var childAddToStage = list.shift();
+                    childAddToStage.dispatchEventWith(Event.REMOVED_FROM_STAGE);
+                }
             }
             child._parentChanged(null);
             locChildren.splice(index, 1);
