@@ -207,7 +207,8 @@ module egret {
             for(var i:number=0;i<length;i++){
                 var line:string = lines[i];
                 var measureW:number = measuredWidths[i];
-                var drawX:number = Math.round((maxWidth-measureW)*halign);
+                //var drawX:number = Math.round((maxWidth-measureW)*halign);
+                var drawX:number = Math.round(maxWidth* halign - measureW);
                 if(drawX<minX){
                     minX = drawX;
                 }
