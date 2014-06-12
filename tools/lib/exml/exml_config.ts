@@ -98,12 +98,13 @@ class EXMLConfig{
 
     private pathToClassName:any = {};
     private classNameToPath:any = {};
+
     /**
      * @inheritDoc
      */
     public getClassNameById(id:string, ns:string):string{
         var name:string = "";
-        if(id=="Object"){
+        if(this.basicTypes.indexOf(id)!=-1){
             return id;
         }
         if(ns==EXMLConfig.W){
@@ -419,6 +420,28 @@ class EXMLConfig{
 
             }
         }
+    }
+    /**
+     * 检查classNameA是否是classNameB的子类或classNameA实现了接口classNameB
+     */
+    public isInstanceOf(classNameA:string,classNameB:string):boolean{
+        if(classNameA==classNameB){
+            return true;
+        }
+        var dataA:any = properties[classNameA];
+        if(!dataA){
+            return false;
+        }
+        var list:Array<string> = dataA["implements"];
+        if(list){
+            var length:number = list.length;
+            for(var i:number=0;i<length;i++){
+                if(list[i]==classNameB){
+                    return true;
+                }
+            }
+        }
+        return this.isInstanceOf(dataA["super"],classNameB);
     }
 
 }

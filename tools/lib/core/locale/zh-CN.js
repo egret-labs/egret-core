@@ -25,6 +25,7 @@ exports.error_code = {
     2004:"{0}: error 节点不能含有同名的id属性\n{1}",
     2005:"{0}: error 节点上不存在名为'{1}'的属性:\n{2}",
     2006:"{0}: error 未定义的视图状态名称:'{1}'\n{2}",
-    2101:"{0}: warning 在w:Declarations内的子节点，不允许使用includeIn和excludeFrom等属性\n{1}",
+    2007:"{0}: error 只有egret.IVisualElement对象可以使用includeIn和excludeFrom属性\n{1}",
+    2101:"{0}: warning 在w:Declarations内的子节点，不允许使用includeIn和excludeFrom属性\n{1}",
     2102:"{0}: warning 在节点属性值的‘{}’标签内只能引用一个id，不允许使用复杂表达式\n{1}"
 }

@@ -90,7 +90,7 @@ var EXMLConfig = (function () {
     */
     EXMLConfig.prototype.getClassNameById = function (id, ns) {
         var name = "";
-        if (id == "Object") {
+        if (this.basicTypes.indexOf(id) != -1) {
             return id;
         }
         if (ns == EXMLConfig.W) {
@@ -389,6 +389,29 @@ var EXMLConfig = (function () {
                 }
             }
         }
+    };
+
+    /**
+    * 检查classNameA是否是classNameB的子类或classNameA实现了接口classNameB
+    */
+    EXMLConfig.prototype.isInstanceOf = function (classNameA, classNameB) {
+        if (classNameA == classNameB) {
+            return true;
+        }
+        var dataA = properties[classNameA];
+        if (!dataA) {
+            return false;
+        }
+        var list = dataA["implements"];
+        if (list) {
+            var length = list.length;
+            for (var i = 0; i < length; i++) {
+                if (list[i] == classNameB) {
+                    return true;
+                }
+            }
+        }
+        return this.isInstanceOf(dataA["super"], classNameB);
     };
     EXMLConfig.E = "http://ns.egret-labs.org/egret";
 

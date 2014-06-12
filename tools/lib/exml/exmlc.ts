@@ -866,6 +866,9 @@ class EXMLCompiler{
                 var states:Array<CpState>;
                 var state:CpState;
                 if(this.isStateNode(node)){
+                    if(!this.isIVisualElement(node)){
+                        libs.exit(2007,this.exmlPath,this.toXMLString(node));
+                    }
                     var propertyName:string = "";
                     var parentNode:any = (node.parent);
                     if(parentNode.localName=="Array")
@@ -934,6 +937,13 @@ class EXMLCompiler{
             }
         }
 
+    }
+    /**
+     * 检查指定的节点是否是显示对象
+     */
+    private isIVisualElement(node:any):boolean{
+        var className:string = this.exmlConfig.getClassNameById(node.localName,node.namespace);
+        return this.exmlConfig.isInstanceOf(className,"egret.IVisualElement");
     }
     /**
      * 检查指定的ID是否创建了类成员变量，若没创建则为其创建。

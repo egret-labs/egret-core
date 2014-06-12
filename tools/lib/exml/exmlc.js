@@ -814,6 +814,9 @@ var EXMLCompiler = (function () {
                 var states;
                 var state;
                 if (this.isStateNode(node)) {
+                    if (!this.isIVisualElement(node)) {
+                        libs.exit(2007, this.exmlPath, this.toXMLString(node));
+                    }
                     var propertyName = "";
                     var parentNode = (node.parent);
                     if (parentNode.localName == "Array")
@@ -879,6 +882,14 @@ var EXMLCompiler = (function () {
                 }
             }
         }
+    };
+
+    /**
+    * 检查指定的节点是否是显示对象
+    */
+    EXMLCompiler.prototype.isIVisualElement = function (node) {
+        var className = this.exmlConfig.getClassNameById(node.localName, node.namespace);
+        return this.exmlConfig.isInstanceOf(className, "egret.IVisualElement");
     };
 
     /**
