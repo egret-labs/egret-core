@@ -214,9 +214,9 @@ class EXMLConfig{
     }
 
     /**
-     * @inheritDoc
+     * 获取指定类指定属性的类型
      */
-    public getPropertyType(prop:string,className:string,value:string):string{
+    public getPropertyType(prop:string,className:string):string{
         var type:string = this.findType(className,prop);
         return type;
     }
@@ -226,7 +226,7 @@ class EXMLConfig{
         if(!classData){
             var path:string = this.srcPath+this.classNameToPath[className];
             if(!fs.existsSync(path)){
-                return "string";
+                return "";
             }
             var text:string = fs.readFileSync(path,"utf-8");
             classData = this.getProperties(text,className);
@@ -234,7 +234,7 @@ class EXMLConfig{
                 properties[className] = classData;
             }
             else{
-                return "string";
+                return "";
             }
         }
         var type:string = classData[prop];
@@ -387,12 +387,16 @@ class EXMLConfig{
                         }
                         data[word] = type;
                     }
+                    else{
+                        data[word] = "any";
+                    }
                 }
             }
             else{
                 line = CodeUtil.removeFirstVariable(line);
                 line = line.trim();
-                if(line.charAt(0)==":"){
+                var firstChar:string = line.charAt(0);
+                if(firstChar==":"){
                     var type:string = CodeUtil.getFirstWord(line.substring(1));
                     index = type.indexOf("=");
                     if(index!=-1){
@@ -408,6 +412,9 @@ class EXMLConfig{
                         type = ns+"."+type;
                     }
                     data[word] = type;
+                }
+                else if(!line||firstChar==";"||firstChar=="="){
+                    data[word] = "any";
                 }
 
             }

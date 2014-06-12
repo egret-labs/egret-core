@@ -154,10 +154,15 @@ function _exit(code) {
     if (!message) {
         _exit(9999, code);
     }
-    console.log(formatStdoutString(message).replace("{0}", arguments[1]).replace("{1}", arguments[2]));
+    message = formatStdoutString(message);
+    var length = arguments.length;
+    for(var i=1;i<length;i++){
+        message = message.replace("{"+(i-1)+"}", arguments[i]);
+    }
+    console.log(message);
     var list = callBackList.concat();
-    var length = list.length;
-    for(var i=0;i<length;i++){
+    length = list.length;
+    for(i=0;i<length;i++){
         var callBack = list[i];
         callBack();
     }

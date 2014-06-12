@@ -31,6 +31,7 @@ var __extends = this.__extends || function (d, b) {
     d.prototype = new __();
 };
 /// <reference path="node.d.ts"/>
+/// <reference path="exml_config.ts"/>
 var fs = require("fs");
 var xml = require("../core/xml.js");
 var libs = require("../core/normal_libs");
@@ -345,7 +346,7 @@ var EXMLCompiler = (function () {
         var property = obj.name;
         var isArray = obj.isArray;
 
-        this.initlizeChildNode(cb, children, property, isArray, varName);
+        this.initlizeChildNode(cb, children, property, isArray, varName, moduleName);
         if (this.delayAssignmentDic[id]) {
             cb.concat(this.delayAssignmentDic[id]);
         }
@@ -447,7 +448,7 @@ var EXMLCompiler = (function () {
     /**
     * 初始化子项
     */
-    EXMLCompiler.prototype.initlizeChildNode = function (cb, children, property, isArray, varName) {
+    EXMLCompiler.prototype.initlizeChildNode = function (cb, children, property, isArray, varName, className) {
         if (!children || children.length == 0)
             return;
         var child;
@@ -462,6 +463,13 @@ var EXMLCompiler = (function () {
                 continue;
             }
             if (this.isProperty(child)) {
+                var type = this.exmlConfig.getPropertyType(child.localName, className);
+                if (!type) {
+                    var parentStr = this.toXMLString(child.parent);
+                    var childStr = this.toXMLString(child).substring(5);
+
+                    libs.exit(2005, this.exmlPath, child.localName, parentStr + "\n      \t" + childStr);
+                }
                 if (!child.children)
                     continue;
                 var childLength = child.children.length;
@@ -589,7 +597,10 @@ var EXMLCompiler = (function () {
             }
         } else {
             var className = this.exmlConfig.getClassNameById(node.localName, node.namespace);
-            var type = this.exmlConfig.getPropertyType(key, className, value);
+            var type = this.exmlConfig.getPropertyType(key, className);
+            if (!type) {
+                libs.exit(2005, this.exmlPath, key, this.toXMLString(node));
+            }
             switch (type) {
                 case "number":
                     if (value.indexOf("#") == 0)
@@ -667,7 +678,7 @@ var EXMLCompiler = (function () {
         var obj = this.exmlConfig.getDefaultPropById(this.currentXML.localName, this.currentXML.namespace);
         var property = obj.name;
         var isArray = obj.isArray;
-        this.initlizeChildNode(cb, this.currentXML.children, property, isArray, varName);
+        this.initlizeChildNode(cb, this.currentXML.children, property, isArray, varName, this.currentClass.className);
         var id;
         if (this.stateIds.length > 0) {
             length = this.stateIds.length;

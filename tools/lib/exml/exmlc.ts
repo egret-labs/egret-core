@@ -26,6 +26,7 @@
  */
 
 /// <reference path="node.d.ts"/>
+/// <reference path="exml_config.ts"/>
 
 var fs = require("fs");
 var xml = require("../core/xml.js");
@@ -380,7 +381,7 @@ class EXMLCompiler{
         var property:string = obj.name;
         var isArray:boolean = obj.isArray;
 
-        this.initlizeChildNode(cb,children,property,isArray,varName);
+        this.initlizeChildNode(cb,children,property,isArray,varName,moduleName);
         if(this.delayAssignmentDic[id]){
             cb.concat(this.delayAssignmentDic[id]);
         }
@@ -487,7 +488,7 @@ class EXMLCompiler{
      * 初始化子项
      */
     private initlizeChildNode(cb:CpCodeBlock,children:Array<any>,
-                              property:string,isArray:boolean,varName:string):void{
+                              property:string,isArray:boolean,varName:string,className:string):void{
         if(!children||children.length==0)
             return;
         var child:any;
@@ -502,6 +503,13 @@ class EXMLCompiler{
                 continue;
             }
             if(this.isProperty(child)){
+                var type:string = this.exmlConfig.getPropertyType(child.localName,className);
+                if(!type){
+                    var parentStr:string = this.toXMLString(child.parent);
+                    var childStr:string = this.toXMLString(child).substring(5);
+
+                    libs.exit(2005,this.exmlPath,child.localName,parentStr+"\n      \t"+childStr);
+                }
                 if(!child.children)
                     continue;
                 var childLength:number = child.children.length;
@@ -637,7 +645,10 @@ class EXMLCompiler{
         }
         else{
             var className:string = this.exmlConfig.getClassNameById(node.localName,node.namespace);
-            var type:string = this.exmlConfig.getPropertyType(key,className,value);
+            var type:string = this.exmlConfig.getPropertyType(key,className);
+            if(!type){
+                libs.exit(2005,this.exmlPath,key,this.toXMLString(node));
+            }
             switch(type){
                 case "number":
                     if(value.indexOf("#")==0)
@@ -716,7 +727,7 @@ class EXMLCompiler{
         var obj:any =  this.exmlConfig.getDefaultPropById(this.currentXML.localName,this.currentXML.namespace);
         var property:string = obj.name;
         var isArray:boolean = obj.isArray;
-        this.initlizeChildNode(cb,this.currentXML.children,property,isArray,varName);
+        this.initlizeChildNode(cb,this.currentXML.children,property,isArray,varName,this.currentClass.className);
         var id:string;
         if(this.stateIds.length>0){
             length = this.stateIds.length;

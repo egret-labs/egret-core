@@ -196,9 +196,9 @@ var EXMLConfig = (function () {
     };
 
     /**
-    * @inheritDoc
+    * 获取指定类指定属性的类型
     */
-    EXMLConfig.prototype.getPropertyType = function (prop, className, value) {
+    EXMLConfig.prototype.getPropertyType = function (prop, className) {
         var type = this.findType(className, prop);
         return type;
     };
@@ -208,14 +208,14 @@ var EXMLConfig = (function () {
         if (!classData) {
             var path = this.srcPath + this.classNameToPath[className];
             if (!fs.existsSync(path)) {
-                return "string";
+                return "";
             }
             var text = fs.readFileSync(path, "utf-8");
             classData = this.getProperties(text, className);
             if (classData) {
                 properties[className] = classData;
             } else {
-                return "string";
+                return "";
             }
         }
         var type = classData[prop];
@@ -361,12 +361,15 @@ var EXMLConfig = (function () {
                             type = ns + "." + type;
                         }
                         data[word] = type;
+                    } else {
+                        data[word] = "any";
                     }
                 }
             } else {
                 line = CodeUtil.removeFirstVariable(line);
                 line = line.trim();
-                if (line.charAt(0) == ":") {
+                var firstChar = line.charAt(0);
+                if (firstChar == ":") {
                     var type = CodeUtil.getFirstWord(line.substring(1));
                     index = type.indexOf("=");
                     if (index != -1) {
@@ -381,6 +384,8 @@ var EXMLConfig = (function () {
                         type = ns + "." + type;
                     }
                     data[word] = type;
+                } else if (!line || firstChar == ";" || firstChar == "=") {
+                    data[word] = "any";
                 }
             }
         }
