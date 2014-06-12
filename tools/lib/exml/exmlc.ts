@@ -148,6 +148,8 @@ class EXMLCompiler{
 
     private exmlPath:string = "";
 
+    private idToNode:any;
+
     private toXMLString(node:any):string{
         if(!node){
             return "";
@@ -185,6 +187,7 @@ class EXMLCompiler{
         this.exmlConfig.srcPath = srcPath;
         this.delayAssignmentDic = {};
         this.idDic = {};
+        this.idToNode = {};
         this.stateCode = [];
         this.stateNames = [];
         this.declarations = null;
@@ -281,12 +284,14 @@ class EXMLCompiler{
             if(node.namespace==EXMLCompiler.W){
             }
             else if(node["$id"]){
+                this.idToNode[node.$id] = node;
                 this.createVarForNode(node);
                 if(this.isStateNode(node))//检查节点是否只存在于一个状态里，需要单独实例化
                     this.stateIds.push(node.$id);
             }
             else if(!this.isProperty(node)){
                 this.createIdForNode(node);
+                this.idToNode[node.$id] = node;
                 if(this.isStateNode(node))
                     this.stateIds.push(<string><any> (node.$id));
             }
@@ -642,8 +647,14 @@ class EXMLCompiler{
                     value = value.substring(5);
                 }
             }
-            if(!CodeUtil.isVariableWord(value)){
-                libs.warn(2102,this.exmlPath,this.toXMLString(node));
+            if(CodeUtil.isVariableWord(value)){
+                var targetNode:any = this.idToNode[value];
+                if(!targetNode){
+                    libs.exit(2010,this.exmlPath,key,value,this.toXMLString(node));
+                }
+            }
+            else{
+                libs.exit(2009,this.exmlPath,this.toXMLString(node));
             }
         }
         else{
@@ -665,8 +676,12 @@ class EXMLCompiler{
                 case "egret.IFactory":
                     value = "new egret.ClassFactory("+value+")";
                     break;
-                default:
+                case "string":
+                case "any":
                     value = this.formatString(stringValue);
+                    break;
+                default:
+                    libs.exit(2008,this.exmlPath,"string",key,this.toXMLString(node));
                     break;
             }
         }

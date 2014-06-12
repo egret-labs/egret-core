@@ -150,6 +150,7 @@ var EXMLCompiler = (function () {
         this.exmlConfig.srcPath = srcPath;
         this.delayAssignmentDic = {};
         this.idDic = {};
+        this.idToNode = {};
         this.stateCode = [];
         this.stateNames = [];
         this.declarations = null;
@@ -243,11 +244,13 @@ var EXMLCompiler = (function () {
             var node = items[i];
             if (node.namespace == EXMLCompiler.W) {
             } else if (node["$id"]) {
+                this.idToNode[node.$id] = node;
                 this.createVarForNode(node);
                 if (this.isStateNode(node))
                     this.stateIds.push(node.$id);
             } else if (!this.isProperty(node)) {
                 this.createIdForNode(node);
+                this.idToNode[node.$id] = node;
                 if (this.isStateNode(node))
                     this.stateIds.push((node.$id));
             }
@@ -593,8 +596,13 @@ var EXMLCompiler = (function () {
                     value = value.substring(5);
                 }
             }
-            if (!CodeUtil.isVariableWord(value)) {
-                libs.warn(2102, this.exmlPath, this.toXMLString(node));
+            if (CodeUtil.isVariableWord(value)) {
+                var targetNode = this.idToNode[value];
+                if (!targetNode) {
+                    libs.exit(2010, this.exmlPath, key, value, this.toXMLString(node));
+                }
+            } else {
+                libs.exit(2009, this.exmlPath, this.toXMLString(node));
             }
         } else {
             var className = this.exmlConfig.getClassNameById(node.localName, node.namespace);
@@ -615,8 +623,12 @@ var EXMLCompiler = (function () {
                 case "egret.IFactory":
                     value = "new egret.ClassFactory(" + value + ")";
                     break;
-                default:
+                case "string":
+                case "any":
                     value = this.formatString(stringValue);
+                    break;
+                default:
+                    libs.exit(2008, this.exmlPath, "string", key, this.toXMLString(node));
                     break;
             }
         }
