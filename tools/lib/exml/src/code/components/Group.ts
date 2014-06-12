@@ -29,7 +29,7 @@
 
 module ns_project {
 
-    export class Button extends egret.Button{
+    export class Group extends egret.Group{
 
         public constructor(){
             super();

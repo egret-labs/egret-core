@@ -1,15 +1,41 @@
-/// <reference path="node.d.ts"/>
+/**
+* Copyright (c) 2014,Egret-Labs.org
+* All rights reserved.
+* Redistribution and use in source and binary forms, with or without
+* modification, are permitted provided that the following conditions are met:
+*
+*     * Redistributions of source code must retain the above copyright
+*       notice, this list of conditions and the following disclaimer.
+*     * Redistributions in binary form must reproduce the above copyright
+*       notice, this list of conditions and the following disclaimer in the
+*       documentation and/or other materials provided with the distribution.
+*     * Neither the name of the Egret-Labs.org nor the
+*       names of its contributors may be used to endorse or promote products
+*       derived from this software without specific prior written permission.
+*
+* THIS SOFTWARE IS PROVIDED BY EGRET-LABS.ORG AND CONTRIBUTORS "AS IS" AND ANY
+* EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+* WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+* DISCLAIMED. IN NO EVENT SHALL EGRET-LABS.ORG AND CONTRIBUTORS BE LIABLE FOR ANY
+* DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+* (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+* LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+* ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+* (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+* SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+*/
 var __extends = this.__extends || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
     __.prototype = b.prototype;
     d.prototype = new __();
 };
+/// <reference path="node.d.ts"/>
 var fs = require("fs");
 var xml = require("../core/xml.js");
 var libs = require("../core/normal_libs");
-var param = require("../core/params_analyze.js");
-var properties = require("./properties.json");
+var CodeUtil = require("../core/code_util.js");
+var exml_config = require("./exml_config.js");
 
 var compiler;
 
@@ -115,7 +141,7 @@ var EXMLCompiler = (function () {
     */
     EXMLCompiler.prototype.compile = function (xmlData, className, egretDTSPath, srcPath, exmlPath) {
         if (!this.exmlConfig) {
-            this.exmlConfig = new EXMLConfig();
+            this.exmlConfig = new exml_config.EXMLConfig();
         }
         this.exmlPath = exmlPath;
         this.currentXML = xmlData;
@@ -558,6 +584,9 @@ var EXMLCompiler = (function () {
                     value = value.substring(5);
                 }
             }
+            if (!CodeUtil.isVariableWord(value)) {
+                libs.warn(2102, this.exmlPath, this.toXMLString(node));
+            }
         } else {
             var className = this.exmlConfig.getClassNameById(node.localName, node.namespace);
             var type = this.exmlConfig.getPropertyType(key, className, value);
@@ -568,13 +597,14 @@ var EXMLCompiler = (function () {
                     else if (value.indexOf("%") != -1)
                         value = (parseFloat(value.substr(0, value.length - 1))).toString();
                     break;
-                case "string":
-                    value = this.formatString(stringValue);
-                    break;
                 case "boolean":
                     value = (value == "false" || !value) ? "false" : "true";
                     break;
+                case "egret.IFactory":
+                    value = "new egret.ClassFactory(" + value + ")";
+                    break;
                 default:
+                    value = this.formatString(stringValue);
                     break;
             }
         }
@@ -954,393 +984,6 @@ var EXMLCompiler = (function () {
 
     EXMLCompiler.wingKeys = ["$id", "$locked", "$includeIn", "$excludeFrom"];
     return EXMLCompiler;
-})();
-
-var EXMLConfig = (function () {
-    /**
-    * 构造函数
-    */
-    function EXMLConfig() {
-        /**
-        * 组件清单列表
-        */
-        this.componentDic = {};
-        this.pathToClassName = {};
-        this.classNameToPath = {};
-        this.propData = {};
-        this.basicTypes = ["boolean", "number", "string"];
-        var exmlPath = param.getEgretPath() + "/tools/lib/exml/";
-        exmlPath = exmlPath.split("\\").join("/");
-        var str = fs.readFileSync(exmlPath + "egret-manifest.xml", "utf-8");
-        var manifest = xml.parse(str);
-        this.parseManifest(manifest);
-    }
-    /**
-    * 解析框架清单文件
-    */
-    EXMLConfig.prototype.parseManifest = function (manifest) {
-        var children = manifest.children;
-        var length = children.length;
-        for (var i = 0; i < length; i++) {
-            var item = children[i];
-            var component = new Component(item);
-            this.componentDic[component.className] = component;
-        }
-        for (var className in this.componentDic) {
-            var component = this.componentDic[className];
-            if (!component.defaultProp)
-                this.findProp(component);
-        }
-    };
-
-    /**
-    * 递归查找默认属性
-    */
-    EXMLConfig.prototype.findProp = function (component) {
-        if (component.defaultProp)
-            return component.defaultProp;
-        var superComp = this.componentDic[component.superClass];
-        if (superComp) {
-            var prop = this.findProp(superComp);
-            if (prop) {
-                component.defaultProp = prop;
-                component.isArray = superComp.isArray;
-            }
-        }
-        return component.defaultProp;
-    };
-
-    /**
-    * @inheritDoc
-    */
-    EXMLConfig.prototype.addComponent = function (className, superClass) {
-        if (!className)
-            return null;
-        if (superClass == null)
-            superClass = "";
-        className = className.split("::").join(".");
-        superClass = superClass.split("::").join(".");
-        var id = className;
-        var index = className.lastIndexOf(".");
-        if (index != -1) {
-            id = className.substring(index + 1);
-        }
-        var component = new Component();
-        component.id = id;
-        component.className = className;
-        component.superClass = superClass;
-        this.componentDic[className] = component;
-        return component;
-    };
-
-    /**
-    * @inheritDoc
-    */
-    EXMLConfig.prototype.removeComponent = function (className) {
-        var component = this.componentDic[className];
-        delete this.componentDic[className];
-        return component;
-    };
-
-    /**
-    * @inheritDoc
-    */
-    EXMLConfig.prototype.hasComponent = function (className) {
-        return this.componentDic[className];
-    };
-
-    /**
-    * @inheritDoc
-    */
-    EXMLConfig.prototype.getClassNameById = function (id, ns) {
-        var name = "";
-        if (id == "Object") {
-            return id;
-        }
-        if (ns == EXMLCompiler.W) {
-        } else if (!ns || ns == EXMLCompiler.E) {
-            name = "egret." + id;
-            if (!this.componentDic[name]) {
-                name = "";
-            }
-        } else {
-            var path = this.getPathById(id, ns);
-            name = this.pathToClassName[path];
-            if (!name) {
-                name = this.readClassNameFromPath(this.srcPath + path, id);
-                this.pathToClassName[path] = name;
-                this.classNameToPath[name] = path;
-            }
-        }
-        return name;
-    };
-
-    EXMLConfig.prototype.readClassNameFromPath = function (path, id) {
-        var tsText = fs.readFileSync(path, "utf-8");
-        tsText = CodeUtil.removeComment(tsText);
-        var className = "";
-        var superClass;
-        while (tsText.length) {
-            var index = CodeUtil.getFirstVariableIndex("class", tsText);
-            if (index == -1) {
-                break;
-            }
-            var preStr = tsText.substring(0, index);
-            tsText = tsText.substring(index + 5);
-            if (CodeUtil.getFirstVariable(tsText) == id) {
-                index = CodeUtil.getLastVariableIndex("module", preStr);
-                if (index == -1) {
-                    className = id;
-                    break;
-                }
-                preStr = preStr.substring(index + 6);
-                index = preStr.indexOf("{");
-                if (index == -1) {
-                    break;
-                }
-                var ns = preStr.substring(0, index);
-                className = ns.trim() + "." + id;
-                tsText = CodeUtil.removeFirstVariable(tsText);
-                var word = CodeUtil.getFirstVariable(tsText);
-                if (word == "extends") {
-                    tsText = CodeUtil.removeFirstVariable(tsText);
-                    superClass = CodeUtil.getFirstWord(tsText).trim();
-                    if (superClass.charAt(superClass.length - 1) == "{") {
-                        superClass = superClass.substring(0, superClass.length - 1);
-                    }
-                }
-            }
-        }
-        if (className) {
-            var comps = new Component();
-            comps.id = id;
-            comps.className = className;
-            if (superClass) {
-                comps.superClass = superClass;
-            }
-            this.componentDic[className] = comps;
-        }
-        return className;
-    };
-
-    /**
-    * 根据id获取文件路径
-    */
-    EXMLConfig.prototype.getPathById = function (id, ns) {
-        var className = "";
-        if (!ns || ns == EXMLCompiler.W || ns == EXMLCompiler.E) {
-            return className;
-        }
-        className = ns.substring(0, ns.length - 1) + id;
-        var path = className.split(".").join("/");
-        path += ".ts";
-        return path;
-    };
-
-    /**
-    * @inheritDoc
-    */
-    EXMLConfig.prototype.getDefaultPropById = function (id, ns) {
-        var data = this.propData;
-        data.name = "";
-        data.isArray = false;
-        var className = this.getClassNameById(id, ns);
-        var component = this.componentDic[className];
-        while (component) {
-            if (component.defaultProp)
-                break;
-            className = component.superClass;
-            component = this.componentDic[className];
-        }
-        if (!component)
-            return data;
-        data.name = component.defaultProp;
-        data.isArray = component.isArray;
-        return data;
-    };
-
-    /**
-    * @inheritDoc
-    */
-    EXMLConfig.prototype.getPropertyType = function (prop, className, value) {
-        var type = this.findType(className, prop);
-        return type;
-    };
-
-    EXMLConfig.prototype.findType = function (className, prop) {
-        var classData = properties[className];
-        if (!classData) {
-            var path = this.srcPath + this.classNameToPath[className];
-            if (!fs.existsSync(path)) {
-                return "string";
-            }
-            var text = fs.readFileSync(path, "utf-8");
-            classData = this.getProperties(text, className);
-            if (classData) {
-                properties[className] = classData;
-            } else {
-                return "string";
-            }
-        }
-        var type = classData[prop];
-        if (!type) {
-            type = this.findType(classData["super"], prop);
-        }
-        return type;
-    };
-
-    /**
-    * 获取属性列表
-    */
-    EXMLConfig.prototype.getProperties = function (text, className) {
-        index = className.lastIndexOf(".");
-        var moduleName = "";
-        if (index != -1) {
-            moduleName = className.substring(0, index);
-            className = className.substring(index + 1);
-        }
-        var data;
-        text = CodeUtil.removeComment(text);
-        if (moduleName) {
-            while (text.length > 0) {
-                var index = CodeUtil.getFirstVariableIndex("module", text);
-                if (index == -1) {
-                    break;
-                }
-                text = text.substring(index + 6);
-                index = text.indexOf("{");
-                if (index == -1) {
-                    continue;
-                }
-                var ns = text.substring(0, index).trim();
-                if (ns == moduleName) {
-                    index = CodeUtil.getBracketEndIndex(text);
-                    if (index != -1) {
-                        var block = text.substring(0, index);
-                        index = block.indexOf("{");
-                        block = block.substring(index + 1);
-                        data = this.getPropFromBlock(block, className);
-                    }
-                    break;
-                }
-            }
-        } else {
-            data = this.getPropFromBlock(text, className);
-        }
-
-        return data;
-    };
-
-    EXMLConfig.prototype.getPropFromBlock = function (block, targetClassName) {
-        var data;
-        while (block.length > 0) {
-            var index = CodeUtil.getFirstVariableIndex("class", block);
-            if (index == -1) {
-                break;
-            }
-            block = block.substring(index + 5);
-            var className = CodeUtil.getFirstVariable(block);
-            if (className != targetClassName) {
-                continue;
-            }
-            data = {};
-            block = CodeUtil.removeFirstVariable(block, className);
-            var word = CodeUtil.getFirstVariable(block);
-            if (word == "extends") {
-                block = CodeUtil.removeFirstVariable(block);
-                word = CodeUtil.getFirstWord(block);
-                if (word.charAt(word.length - 1) == "{")
-                    word = word.substring(0, word.length - 1).trim();
-                if (word) {
-                    data["super"] = word;
-                }
-            }
-            index = CodeUtil.getBracketEndIndex(block);
-            if (index == -1)
-                break;
-            var text = block.substring(0, index);
-            index = text.indexOf("{");
-            text = text.substring(index + 1);
-            this.readProps(text, data);
-            break;
-        }
-        return data;
-    };
-
-    EXMLConfig.prototype.readProps = function (text, data) {
-        var lines = text.split("\n");
-        var length = lines.length;
-        for (var i = 0; i < length; i++) {
-            var line = lines[i];
-            var index = line.indexOf("public ");
-            if (index == -1)
-                continue;
-            line = line.substring(index + 7);
-            var word = CodeUtil.getFirstVariable(line);
-            if (!word || word.charAt(0) == "_")
-                continue;
-            if (word == "get") {
-                continue;
-            } else if (word == "set") {
-                line = CodeUtil.removeFirstVariable(line);
-                word = CodeUtil.getFirstVariable(line);
-                if (!word || word.charAt(0) == "_") {
-                    continue;
-                }
-                line = CodeUtil.removeFirstVariable(line);
-                line = line.trim();
-                if (line.charAt(0) == "(") {
-                    index = line.indexOf(":");
-                    if (index != -1) {
-                        line = line.substring(index + 1);
-                        type = CodeUtil.getFirstVariable(line);
-                        if (this.basicTypes.indexOf(type) != -1)
-                            data[word] = type;
-                    }
-                }
-            } else {
-                line = CodeUtil.removeFirstVariable(line);
-                line = line.trim();
-                if (line.charAt(0) == ":") {
-                    var type = CodeUtil.getFirstVariable(line.substring(1));
-                    if (this.basicTypes.indexOf(type) != -1)
-                        data[word] = type;
-                }
-            }
-        }
-    };
-    return EXMLConfig;
-})();
-
-var Component = (function () {
-    /**
-    * 构造函数
-    */
-    function Component(item) {
-        /**
-        * 父级类名
-        */
-        this.superClass = "";
-        /**
-        * 默认属性
-        */
-        this.defaultProp = "";
-        /**
-        * 默认属性是否为数组类型
-        */
-        this.isArray = false;
-        if (item) {
-            this.id = item.$id;
-            this.className = "egret." + this.id;
-            if (item["$super"])
-                this.superClass = item.$super;
-            if (item["$default"])
-                this.defaultProp = item.$default;
-            if (item["$array"])
-                this.isArray = (item.$array == "true");
-        }
-    }
-    return Component;
 })();
 
 //=================代码生成工具类===================
@@ -2125,366 +1768,5 @@ var Modifiers = (function () {
 
     Modifiers.M_STATIC = "static";
     return Modifiers;
-})();
-
-var CodeUtil = (function () {
-    function CodeUtil() {
-    }
-    /**
-    * 判断一个字符串是否为合法变量名,第一个字符为字母,下划线或$开头，第二个字符开始为字母,下划线，数字或$
-    */
-    CodeUtil.isVariableWord = function (word) {
-        if (!word)
-            return false;
-        var char = word.charAt(0);
-        if (!CodeUtil.isVariableFirstChar(char)) {
-            return false;
-        }
-        var length = word.length;
-        for (var i = 1; i < length; i++) {
-            char = word.charAt(i);
-            if (!CodeUtil.isVariableChar(char)) {
-                return false;
-            }
-        }
-        return true;
-    };
-
-    /**
-    * 是否为合法变量字符,字符为字母,下划线，数字或$
-    */
-    CodeUtil.isVariableChar = function (char) {
-        return (char <= "Z" && char >= "A" || char <= "z" && char >= "a" || char <= "9" && char >= "0" || char == "_" || char == "$");
-    };
-
-    /**
-    * 是否为合法变量字符串的第一个字符,字符为字母,下划线或$
-    */
-    CodeUtil.isVariableFirstChar = function (char) {
-        return (char <= "Z" && char >= "A" || char <= "z" && char >= "a" || char == "_" || char == "$");
-    };
-
-    /**
-    * 判断一段代码中是否含有某个变量字符串，且该字符串的前后都不是变量字符。
-    */
-    CodeUtil.containsVariable = function (key, codeText) {
-        var contains = false;
-        while (codeText.length > 0) {
-            var index = codeText.indexOf(key);
-            if (index == -1)
-                break;
-            var lastChar = codeText.charAt(index + key.length);
-            var firstChar = codeText.charAt(index - 1);
-            if (!CodeUtil.isVariableChar(firstChar) && !CodeUtil.isVariableChar(lastChar)) {
-                contains = true;
-                break;
-            } else {
-                codeText = codeText.substring(index + key.length);
-            }
-        }
-        return contains;
-    };
-
-    /**
-    * 获取第一个含有key关键字的起始索引，且该关键字的前后都不是变量字符。
-    */
-    CodeUtil.getFirstVariableIndex = function (key, codeText) {
-        var subLength = 0;
-        while (codeText.length) {
-            var index = codeText.indexOf(key);
-            if (index == -1) {
-                break;
-            }
-            var lastChar = codeText.charAt(index + key.length);
-            var firstChar = codeText.charAt(index - 1);
-            if (!CodeUtil.isVariableChar(firstChar) && !CodeUtil.isVariableChar(lastChar)) {
-                return subLength + index;
-            } else {
-                subLength += index + key.length;
-                codeText = codeText.substring(index + key.length);
-            }
-        }
-        return -1;
-    };
-
-    /**
-    * 获取最后一个含有key关键字的起始索引，且该关键字的前后都不是变量字符。
-    */
-    CodeUtil.getLastVariableIndex = function (key, codeText) {
-        while (codeText.length) {
-            var index = codeText.lastIndexOf(key);
-            if (index == -1) {
-                break;
-            }
-            var lastChar = codeText.charAt(index + key.length);
-            var firstChar = codeText.charAt(index - 1);
-            if (!CodeUtil.isVariableChar(firstChar) && !CodeUtil.isVariableChar(lastChar)) {
-                return index;
-            } else {
-                codeText = codeText.substring(0, index);
-            }
-        }
-        return -1;
-    };
-
-    /**
-    * 获取第一个词,遇到空白字符或 \n \r \t 后停止。
-    */
-    CodeUtil.getFirstWord = function (str) {
-        str = str.trim();
-        var index = str.indexOf(" ");
-        if (index == -1)
-            index = Number.MAX_VALUE;
-        var rIndex = str.indexOf("\r");
-        if (rIndex == -1)
-            rIndex = Number.MAX_VALUE;
-        var nIndex = str.indexOf("\n");
-        if (nIndex == -1)
-            nIndex = Number.MAX_VALUE;
-        var tIndex = str.indexOf("\t");
-        if (tIndex == -1)
-            tIndex = Number.MAX_VALUE;
-        index = Math.min(index, rIndex, nIndex, tIndex);
-        str = str.substr(0, index);
-        return str.trim();
-    };
-
-    /**
-    * 移除第一个词
-    * @param str 要处理的字符串
-    * @param word 要移除的词，若不传入则自动获取。
-    */
-    CodeUtil.removeFirstWord = function (str, word) {
-        if (typeof word === "undefined") { word = ""; }
-        if (!word) {
-            word = CodeUtil.getFirstWord(str);
-        }
-        var index = str.indexOf(word);
-        if (index == -1)
-            return str;
-        return str.substring(index + word.length);
-    };
-
-    /**
-    * 获取最后一个词,遇到空白字符或 \n \r \t 后停止。
-    */
-    CodeUtil.getLastWord = function (str) {
-        str = str.trim();
-        var index = str.lastIndexOf(" ");
-        var rIndex = str.lastIndexOf("\r");
-        var nIndex = str.lastIndexOf("\n");
-        var tIndex = str.indexOf("\t");
-        index = Math.max(index, rIndex, nIndex, tIndex);
-        str = str.substring(index + 1);
-        return str.trim();
-    };
-
-    /**
-    * 移除最后一个词
-    * @param str 要处理的字符串
-    * @param word 要移除的词，若不传入则自动获取。
-    */
-    CodeUtil.removeLastWord = function (str, word) {
-        if (typeof word === "undefined") { word = ""; }
-        if (!word) {
-            word = CodeUtil.getLastWord(str);
-        }
-        var index = str.lastIndexOf(word);
-        if (index == -1)
-            return str;
-        return str.substring(0, index);
-    };
-
-    /**
-    * 获取字符串起始的第一个变量，返回的字符串两端均没有空白。若第一个非空白字符就不是合法变量字符，则返回空字符串。
-    */
-    CodeUtil.getFirstVariable = function (str) {
-        str = str.trim();
-        var word = "";
-        var length = str.length;
-        for (var i = 0; i < length; i++) {
-            var char = str.charAt(i);
-            if (CodeUtil.isVariableChar(char)) {
-                word += char;
-            } else {
-                break;
-            }
-        }
-        return word.trim();
-    };
-
-    /**
-    * 移除第一个变量
-    * @param str 要处理的字符串
-    * @param word 要移除的变量，若不传入则自动获取。
-    */
-    CodeUtil.removeFirstVariable = function (str, word) {
-        if (typeof word === "undefined") { word = ""; }
-        if (!word) {
-            word = CodeUtil.getFirstVariable(str);
-        }
-        var index = str.indexOf(word);
-        if (index == -1)
-            return str;
-        return str.substring(index + word.length);
-    };
-
-    /**
-    * 获取字符串末尾的最后一个变量,返回的字符串两端均没有空白。若最后一个非空白字符就不是合法变量字符，则返回空字符串。
-    */
-    CodeUtil.getLastVariable = function (str) {
-        str = str.trim();
-        var word = "";
-        for (var i = str.length - 1; i >= 0; i--) {
-            var char = str.charAt(i);
-            if (CodeUtil.isVariableChar(char)) {
-                word = char + word;
-            } else {
-                break;
-            }
-        }
-        return word.trim();
-    };
-
-    /**
-    * 移除最后一个变量
-    * @param str 要处理的字符串
-    * @param word 要移除的变量，若不传入则自动获取。
-    */
-    CodeUtil.removeLastVariable = function (str, word) {
-        if (typeof word === "undefined") { word = ""; }
-        if (!word) {
-            word = CodeUtil.getLastVariable(str);
-        }
-        var index = str.lastIndexOf(word);
-        if (index == -1)
-            return str;
-        return str.substring(0, index);
-    };
-
-    /**
-    * 获取一对括号的结束点,例如"class A{ function B(){} } class",返回24,若查找失败，返回-1。
-    */
-    CodeUtil.getBracketEndIndex = function (codeText, left, right) {
-        if (typeof left === "undefined") { left = "{"; }
-        if (typeof right === "undefined") { right = "}"; }
-        var indent = 0;
-        var text = "";
-        while (codeText.length > 0) {
-            var index = codeText.indexOf(left);
-            if (index == -1)
-                index = Number.MAX_VALUE;
-            var endIndex = codeText.indexOf(right);
-            if (endIndex == -1)
-                endIndex = Number.MAX_VALUE;
-            index = Math.min(index, endIndex);
-            if (index == Number.MAX_VALUE) {
-                return -1;
-            }
-            text += codeText.substring(0, index + 1);
-            codeText = codeText.substring(index + 1);
-            if (index == endIndex)
-                indent--;
-            else
-                indent++;
-            if (indent == 0) {
-                break;
-            }
-            if (codeText.length == 0)
-                return -1;
-        }
-        return text.length - 1;
-    };
-
-    /**
-    * 从后往前搜索，获取一对括号的起始点,例如"class A{ function B(){} } class",返回7，若查找失败，返回-1。
-    */
-    CodeUtil.getBracketStartIndex = function (codeText, left, right) {
-        if (typeof left === "undefined") { left = "{"; }
-        if (typeof right === "undefined") { right = "}"; }
-        var indent = 0;
-        while (codeText.length > 0) {
-            var index = codeText.lastIndexOf(left);
-            var endIndex = codeText.lastIndexOf(right);
-            index = Math.max(index, endIndex);
-            if (index == -1) {
-                return -1;
-            }
-            codeText = codeText.substring(0, index);
-            if (index == endIndex)
-                indent++;
-            else
-                indent--;
-            if (indent == 0) {
-                break;
-            }
-            if (codeText.length == 0)
-                return -1;
-        }
-        return codeText.length;
-    };
-
-    /**
-    * 移除代码注释和字符串常量
-    */
-    CodeUtil.removeComment = function (codeText) {
-        var NBSP = "\v3\v";
-        var trimText = "";
-        codeText = codeText.split("\\\"").join("\v1\v");
-        codeText = codeText.split("\\\'").join("\v2\v");
-        while (codeText.length > 0) {
-            var quoteIndex = codeText.indexOf("\"");
-            if (quoteIndex == -1)
-                quoteIndex = Number.MAX_VALUE;
-            var squoteIndex = codeText.indexOf("'");
-            if (squoteIndex == -1)
-                squoteIndex = Number.MAX_VALUE;
-            var commentIndex = codeText.indexOf("/**");
-            if (commentIndex == -1)
-                commentIndex = Number.MAX_VALUE;
-            var lineCommonentIndex = codeText.indexOf("//");
-            if (lineCommonentIndex == -1)
-                lineCommonentIndex = Number.MAX_VALUE;
-            var index = Math.min(quoteIndex, squoteIndex, commentIndex, lineCommonentIndex);
-            if (index == Number.MAX_VALUE) {
-                trimText += codeText;
-                break;
-            }
-            trimText += codeText.substring(0, index) + NBSP;
-            codeText = codeText.substring(index);
-            switch (index) {
-                case quoteIndex:
-                    codeText = codeText.substring(1);
-                    index = codeText.indexOf("\"");
-                    if (index == -1)
-                        index = codeText.length - 1;
-                    codeText = codeText.substring(index + 1);
-                    break;
-                case squoteIndex:
-                    codeText = codeText.substring(1);
-                    index = codeText.indexOf("'");
-                    if (index == -1)
-                        index = codeText.length - 1;
-                    codeText = codeText.substring(index + 1);
-                    break;
-                case commentIndex:
-                    index = codeText.indexOf("*/");
-                    if (index == -1)
-                        index = codeText.length - 1;
-                    codeText = codeText.substring(index + 2);
-                    break;
-                case lineCommonentIndex:
-                    index = codeText.indexOf("\n");
-                    if (index == -1)
-                        index = codeText.length - 1;
-                    codeText = codeText.substring(index + 1);
-                    break;
-            }
-        }
-        codeText = trimText.split("\v1\v").join("\\\"");
-        codeText = codeText.split("\v2\v").join("\\\'");
-        return codeText;
-    };
-    return CodeUtil;
 })();
 //# sourceMappingURL=exmlc.js.map

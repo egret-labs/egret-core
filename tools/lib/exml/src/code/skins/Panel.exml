@@ -5,8 +5,8 @@
         xmlns:components="code.components.*">
     <w:HostComponent name="egret.TitleWindow"/>
     <w:Declarations>
-        <e:ArrayCollection includeIn="normal" id="dp">
-            <e:string excludeFrom="normal">ComboBox</e:string>
+        <e:ArrayCollection id="dp">
+            <e:string>ComboBox</e:string>
             <e:string>DropDownList</e:string>
         </e:ArrayCollection>
     </w:Declarations>
@@ -20,16 +20,18 @@
                 <e:elementsContent>
                     <e:Button includeIn="normal" label="按钮" x="54" y="11">
                     </e:Button>
-                    <e:CheckBox2 label="复选框" x="105" y="11" excludeFrom="disabled"/>
-                    <e:DropDownList id="dropDownList" x="232" y="64" prompt="下拉列表" width="85" dataProvider="{this.dp}"/>
+                    <e:CheckBox label="复选框" x="105" y="11" excludeFrom="disabled"/>
+                    <e:DropDownList id="dropDownList" x="232" y="64" prompt="下拉列表" width="85" dataProvider="{dp}"/>
                     <e:ToggleButton id="checkBox" x="163" y="10" width="69" label="切换按钮"/>
                     <e:VSlider x="169" y="65" height="124" value="0.5"/>
                     <e:ProgressBar id="progressBar" x="14" y="214" width="304" value="50"/>
                     <e:Label id="label" text="标签" x="15" y="14"/>
                     <e:RadioButton id="radioButton" x="251" y="11" label="单选按钮" selected="true"/>
-                    <components:Button label="按钮" x="100" y="37"/>
                 </e:elementsContent>
             </e:TitleWindow>
+            <components:Group>
+                <e:Label text="标签" x="15" y="14"/>
+            </components:Group>
         </e:Array>
     </e:elementsContent>
 </e:Skin>
