@@ -139,6 +139,8 @@ class EXMLCompiler{
      * 状态代码列表
      */
     private stateCode:Array<CpState>;
+
+    private stateNames:Array<string>;
     /**
      * 需要单独创建的实例id列表
      */
@@ -184,6 +186,7 @@ class EXMLCompiler{
         this.delayAssignmentDic = {};
         this.idDic = {};
         this.stateCode = [];
+        this.stateNames = [];
         this.declarations = null;
         this.currentClass = new CpClass();
         this.stateIds = [];
@@ -293,7 +296,7 @@ class EXMLCompiler{
     /**
      * 检测指定节点的属性是否含有视图状态
      */
-    private static containsState(node:any):boolean{
+    private containsState(node:any):boolean{
         if(node["$includeIn"]||node["$excludeFrom"]){
             return true;
         }
@@ -752,7 +755,7 @@ class EXMLCompiler{
                 key = this.formatKey(key,value);
                 var itemValue:string = this.formatValue(key,value,node);
                 var stateName:string = itemName.substr(index+1);
-                states = this.getStateByName(stateName);
+                states = this.getStateByName(stateName,node);
                 var stateLength:number = states.length;
                 if(stateLength>0){
                     for(var i:number=0;i<stateLength;i++){
@@ -802,6 +805,7 @@ class EXMLCompiler{
      * 获取视图状态名称列表
      */
     private getStateNames():void{
+        var stateNames:Array<string> = this.stateNames;
         var states:Array<any>;
         var children = this.currentXML.children;
         if(children){
@@ -827,11 +831,18 @@ class EXMLCompiler{
                 for(var j:number=0;j<len;j++){
                     var group:string = groups[i].trim();
                     if(group){
+                        if(stateNames.indexOf(group)==-1){
+                            stateNames.push(group);
+                        }
                         stateGroups.push(group);
                     }
                 }
             }
-            this.stateCode.push(new CpState(state.$name,stateGroups));
+            var stateName:string = state.$name;
+            if(stateNames.indexOf(stateName)==-1){
+                stateNames.push(stateName);
+            }
+            this.stateCode.push(new CpState(stateName,stateGroups));
         }
     }
 
@@ -848,7 +859,7 @@ class EXMLCompiler{
             this.createStates(node.children);
             if(this.isProperty(node))
                 continue;
-            if(EXMLCompiler.containsState(node)){
+            if(this.containsState(node)){
                 var id:string = node.$id;
                 this.checkIdForState(node);
                 var stateName:string;
@@ -868,12 +879,18 @@ class EXMLCompiler{
                     var positionObj:any = this.findNearNodeId(node);
                     var stateNames:Array<any> = [];
                     if(node.hasOwnProperty("$includeIn")){
-                        stateNames = node.$includeIn.toString().split(",");
+                        stateNames = node.$includeIn.split(",");
                     }
                     else{
-                        var excludeNames:Array<any> = node.$excludeFrom.toString().split(",");
-                        var stateLength:number = this.stateCode.length;
+                        var excludeNames:Array<any> = node.$excludeFrom.split(",");
+
+                        var stateLength:number = excludeNames.length;
                         for(var j:number=0;j<stateLength;j++){
+                            var name:string = excludeNames[j];
+                            this.getStateByName(name,node);//检查exlcudeFrom是否含有未定义的视图状态名
+                        }
+                        stateLength = this.stateCode.length;
+                        for(j=0;j<stateLength;j++){
                             state = this.stateCode[j];
                             if(excludeNames.indexOf(state.name)==-1)
                                 stateNames.push(state.name);
@@ -883,7 +900,7 @@ class EXMLCompiler{
                     var len:number = stateNames.length;
                     for(var k:number=0;k<len;k++){
                         stateName = stateNames[k];
-                        states = this.getStateByName(stateName);
+                        states = this.getStateByName(stateName,node);
                         if(states.length>0){
                             var l:number = states.length;
                             for(var j:number=0;j<l;j++){
@@ -904,7 +921,7 @@ class EXMLCompiler{
                         key = this.formatKey(key,value);
                         var value:string = this.formatValue(key,value,node);
                         stateName = name.substr(index+1);
-                        states = this.getStateByName(stateName);
+                        states = this.getStateByName(stateName,node);
                         var l:number = states.length;
                         if(l>0){
                             for(var j:number=0;j<l;j++) {
@@ -942,7 +959,7 @@ class EXMLCompiler{
     /**
      * 通过视图状态名称获取对应的视图状态
      */
-    private getStateByName(name:string):Array<CpState>{
+    private getStateByName(name:string,node:any):Array<CpState>{
         var states:Array<CpState> = [];
         var length:number = this.stateCode.length;
         for(var i:number=0;i<length;i++){
@@ -966,6 +983,9 @@ class EXMLCompiler{
                         states.push(state);
                 }
             }
+        }
+        if(states.length==0){
+            libs.exit(2006,this.exmlPath,name,this.toXMLString(node));
         }
         return states;
     }
