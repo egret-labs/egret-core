@@ -1,8 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<e:Skin width="628"  height="402"
-        xmlns:e="http://ns.egret-labs.org/egret"
-        xmlns:w="http://ns.egret-labs.org/wing"
-        xmlns:components="code.components.*">
+<e:Skin width="628"  height="402" xmlns:e="http://ns.egret-labs.org/egret" xmlns:w="http://ns.egret-labs.org/wing" xmlns:components="code.components.*">
     <w:HostComponent name="egret.TitleWindow"/>
     <w:Declarations>
         <e:ArrayCollection id="dp">
@@ -14,24 +11,18 @@
         <e:State name="normal"/>
         <e:State name="disabled"/>
     </e:states>
-    <e:elementsContent>
-        <e:Array>
-            <e:TitleWindow id="titleWindow" width="336" height="287" x="161" y="60" title="TitleWindow">
-                <e:elementsContent>
-                    <e:Button includeIn="normal" label="按钮" x="54" y="11">
-                    </e:Button>
-                    <e:CheckBox label="复选框" x="105" y="11" excludeFrom="disabled"/>
-                    <e:DropDownList id="dropDownList" x="232" y="64" prompt="下拉列表" width="85" dataProvider="{dp}"/>
-                    <e:ToggleButton id="checkBox" x="163" y="10" width="69" label="切换按钮"/>
-                    <e:VSlider x="169" y="65" height="124" value="0.5"/>
-                    <e:ProgressBar id="progressBar" x="14" y="214" width="304" value="50"/>
-                    <e:Label id="label" text="标签" x="15" y="14"/>
-                    <e:RadioButton id="radioButton" x="251" y="11" label="单选按钮" selected="true"/>
-                </e:elementsContent>
-            </e:TitleWindow>
-            <components:Group>
-                <e:Label text="标签" x="15" y="14"/>
-            </components:Group>
-        </e:Array>
-    </e:elementsContent>
+    <e:TitleWindow id="titleWindow" width="336" height="287" x="161" y="60" title="TitleWindow">
+        <e:Button includeIn="normal" label="按钮" x="54" y="11">
+        </e:Button>
+        <e:CheckBox label="复选框" x="105" y="11" excludeFrom="disabled"/>
+        <e:DropDownList id="dropDownList" x="232" y="64" prompt="下拉列表" width="85" dataProvider="{dp}"/>
+        <e:ToggleButton id="checkBox" x="163" y="10" width="69" label="切换按钮"/>
+        <e:VSlider x="169" y="65" height="124" value="0.5"/>
+        <e:ProgressBar id="progressBar" x="14" y="214" width="304" value="50"/>
+        <e:Label id="label" text="标签" x="15" y="14"/>
+        <e:RadioButton id="radioButton" x="251" y="11" label="单选按钮" selected="true"/>
+    </e:TitleWindow>
+    <components:Group>
+        <e:Label text="标签" x="15" y="14"/>
+    </components:Group>
 </e:Skin>

@@ -25,6 +25,8 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+/// <reference path="node.d.ts"/>
+
 var fs = require("fs");
 var xml = require("../core/xml.js");
 var param = require("../core/params_analyze.js");
@@ -423,7 +425,7 @@ class Component{
             this.id = item.$id;
             this.className = "egret."+this.id;
             if(item["$super"])
-                this.superClass = item.$super;
+                this.superClass = "egret."+item.$super;
             if(item["$default"])
                 this.defaultProp = item.$default;
             if(item["$array"])

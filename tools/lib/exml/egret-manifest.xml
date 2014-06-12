@@ -29,7 +29,7 @@
   <component id="Rect" super="UIComponent"/>
   <component id="Rectangle" super="Object"/>
   <component id="Scroller" super="UIComponent" default="viewport"/>
-  <component id="Skin" super="EventDispatcher"/>
+  <component id="Skin" super="EventDispatcher" default="elementsContent" array="true"/>
   <component id="SkinnableComponent" super="UIAsset" state="normal,disabled"/>
   <component id="SkinnableContainer" super="SkinnableComponent" default="elementsContent" array="true"/>
   <component id="SkinnableDataContainer" super="SkinnableComponent" default="dataProvider"/>
