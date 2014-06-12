@@ -150,7 +150,6 @@ module egret {
          */
         public setupFont(textField:TextField):void {
             egret_native.Label.createLabel("/system/fonts/DroidSansFallback.ttf", textField.size, "");
-            egret_native.Label.setTextAlignment(textField.textAlign);
         }
 
         /**
@@ -189,5 +188,3 @@ module egret {
         }
     }
 }
-
-egret.Graphics.prototype._draw = function(){};

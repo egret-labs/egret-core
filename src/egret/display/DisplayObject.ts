@@ -699,12 +699,12 @@ module egret {
 
         public _onAddToStage():void {
             this._stage = MainContext.instance.stage;
-            this.dispatchEventWith(Event.ADDED_TO_STAGE);
+            DisplayObjectContainer.__EVENT__ADD_TO_STAGE_LIST.push(this);
         }
 
         public _onRemoveFromStage():void {
             this._stage = null;
-            this.dispatchEventWith(Event.REMOVED_FROM_STAGE);
+            DisplayObjectContainer.__EVENT__REMOVE_FROM_STAGE_LIST.push(this);
         }
 
         public _stage:Stage;

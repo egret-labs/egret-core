@@ -37,8 +37,13 @@ Egret Framework是一款使用JavaScript(TypeScript)编写的HTML5开源免费�
 
 工具
 -------------------------
-* [AS3-TS conversion tool ( beta )](http://download.egret-labs.org/?id=As2TsTool)
-
+* [AS3-TS Conversion Tool ( beta )](http://download.egret-labs.org/?id=As2TsTool)
+* SpriteSheet工具
+    * [Texture Packer for Egret plug-in](https://github.com/ping-chen/egret-tool) , 由社区贡献者[ping-chen](https://github.com/ping-chen/)提供
+    * [ShoeBox for Egret plug-in](https://github.com/runinspring/egretTools)，由社区贡献者[runinspring](https://github.com/runinspring)提供
+* StarlingSWF
+    * StarlingSWF 是一款将 FlashPro创作的 SWF 文件生成 Starling/Features 支持格式的工具，被广泛用于 Flash 移动项目开发中。
+    * StarlingSWF 目前已经可以导出为 Egret 支持的格式 。 [官方下载地址](http://www.zmliu.com/?p=271)
 
 
 

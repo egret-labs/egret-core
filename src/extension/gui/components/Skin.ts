@@ -380,8 +380,7 @@ module egret {
             if(typeof(value[0]) == "string"){
                 var length:number = value.length;
                 for(var i:number=0;i<length;i++){
-                    var state:State = new State();
-                    state.name = value[i];
+                    var state:State = new State(value[i],[]);
                     value[i] = state;
                 }
             }
@@ -500,7 +499,7 @@ module egret {
         private removeState(stateName:string):void{
             var state:State = this.getState(stateName);
             if (state){
-                var overrides:Array<any> = state.overrides;
+                var overrides:Array<IOverride> = state.overrides;
                 for (var i:number = overrides.length-1; i>=0; i--)
                     overrides[i].remove(this);
             }

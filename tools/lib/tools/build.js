@@ -7,13 +7,40 @@ var async = require('../core/async');
 var libs = require("../core/normal_libs");
 var param = require("../core/params_analyze.js");
 var compiler = require("./compile.js")
+var exmlc = require("../exml/exmlc.js");
 function run(dir, args, opts) {
     var needCompileEngine = opts["-e"];
+    var keepGeneratedTypescript = opts["-k"];
 
     var currDir = libs.joinEgretDir(dir, args[0]);
 
     var egret_file = path.join(currDir, "bin-debug/lib/egret_file_list.js");
     var task = [];
+
+    var exmlList = [];
+    task.push(function(callback){
+        if(!keepGeneratedTypescript){
+            libs.addCallBackWhenExit(cleanEXMLList);
+        }
+        var source = path.join(currDir, "src");
+        exmlList = libs.loopFileSync(source, filter);
+        source += "/";
+        exmlList.forEach(function (item) {
+            exmlc.compile(item,source);
+        });
+
+        callback();
+
+        function filter(path) {
+            var index = path.lastIndexOf(".");
+            if(index==-1){
+                return false;
+            }
+            return path.substring(index).toLowerCase()==".exml";
+        }
+    })
+
+
     if (needCompileEngine) {
         task.push(
             function (callback) {
@@ -39,6 +66,12 @@ function run(dir, args, opts) {
             }
         );
     }
+    else {
+        var exist = fs.existsSync(path.join(currDir,"bin-debug","lib"));
+        if (!exist){
+            libs.exit(1102)
+        }
+    }
 
     task.push(
         function (callback) {
@@ -50,9 +83,29 @@ function run(dir, args, opts) {
         }
     )
 
+
     async.series(task, function (err) {
-        libs.log("构建成功");
+        if(!keepGeneratedTypescript) {
+            cleanEXMLList();
+        }
+        if (!err){
+            libs.log("构建成功");
+        }
+        else{
+            libs.exit(err);
+        }
     })
+
+    function cleanEXMLList(){
+        if(exmlList){
+            var source = path.join(currDir, "src");
+            exmlList.forEach(function (item) {
+                var tsPath = path.join(source,item);
+                tsPath = tsPath.substring(0,tsPath.length-5)+".ts";
+                libs.remove(tsPath);
+            });
+        }
+    }
 }
 
 

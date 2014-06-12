@@ -62,40 +62,36 @@ module egret {
         public drawRect(x:number, y:number, width:number, height:number):void {
 
             var rendererContext = <HTML5CanvasRenderer>this.renderContext;
-            if (this.strokeStyleColor) {
-                this.commandQueue.push(new Command(
+            this.commandQueue.push(new Command(
 
-                    function (x, y, width, height, color) {
-                        //this.canvasContext.fill();
-                        this.canvasContext.strokeRect(rendererContext._transformTx + x,
-                            rendererContext._transformTy + y,
-                            width,
-                            height,
-                            color);
-                    },
-                    this,
-                    [ x, y, width, height, this.strokeStyleColor]
+                function (x, y, width, height) {
+                    this.canvasContext.rect(rendererContext._transformTx + x,
+                        rendererContext._transformTy + y,
+                        width,
+                        height);
+                },
+                this,
+                [ x, y, width, height]
 
-                )
-                );
-            }
-            if (this.fillStyleColor) {
-                this.commandQueue.push(new Command(
+            )
+            );
 
-                    function (x, y, width, height) {
-                        //this.canvasContext.fill();
-                        this.canvasContext.fillRect(rendererContext._transformTx + x,
-                            rendererContext._transformTy + y,
-                            width,
-                            height);
-                    },
-                    this,
-                    [ x, y, width, height]
+        }
 
-                )
-                );
-            }
+        public drawCircle(x:number, y:number, r:number):void {
+            var rendererContext = <HTML5CanvasRenderer>this.renderContext;
+            this.commandQueue.push(new Command(
+                function (x, y, r) {
+                    this.canvasContext.beginPath();
+                    this.canvasContext.arc(rendererContext._transformTx + x,
+                        rendererContext._transformTy + y, r, 0, Math.PI * 2);
+                    this.canvasContext.closePath();
 
+                },
+                this,
+                [ x, y, r]
+
+            ));
         }
 
         /**
@@ -157,6 +153,28 @@ module egret {
         }
 
         public endFill():void {
+            if (this.strokeStyleColor) {
+                this.commandQueue.push(
+                    new Command(
+                        function () {
+                            this.canvasContext.stroke();
+                        },
+                        this,
+                        null)
+                )
+            }
+
+            if (this.fillStyleColor) {
+                this.commandQueue.push(
+                    new Command(
+                        function () {
+                            this.canvasContext.fill();
+                        },
+                        this,
+                        null)
+                )
+            }
+
         }
 
         public _draw():void {
