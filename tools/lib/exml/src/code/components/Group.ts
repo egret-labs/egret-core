@@ -34,6 +34,7 @@ module ns_project {
         public constructor(){
             super();
         }
+        public g;
     }
 
 

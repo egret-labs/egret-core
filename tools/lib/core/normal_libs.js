@@ -183,7 +183,12 @@ function _warn(code) {
     if (!message) {
         _exit(9999, code);
     }
-    console.log(formatStdoutString(message).replace("{0}", arguments[1]).replace("{1}", arguments[2]));
+    message = formatStdoutString(message);
+    var length = arguments.length;
+    for(var i=1;i<length;i++){
+        message = message.replace("{"+(i-1)+"}", arguments[i]);
+    }
+    console.log(message);
 }
 
 function _joinEgretDir(dir, projectName) {

@@ -159,6 +159,9 @@ class EXMLCompiler{
             if(key.charAt(0)=="$"){
                 var value:string = node[key];
                 key = key.substring(1);
+                if(key=="id"&&value.substring(0,2)=="__"){
+                    continue;
+                }
                 str += " "+key+"=\""+value+"\"";
             }
         }
@@ -281,6 +284,7 @@ class EXMLCompiler{
         var length:number = items.length;
         for(var i:number=0;i<length;i++){
             var node:any = items[i];
+            this.addIds(node.children);
             if(node.namespace==EXMLCompiler.W){
             }
             else if(node["$id"]){
@@ -289,13 +293,23 @@ class EXMLCompiler{
                 if(this.isStateNode(node))//检查节点是否只存在于一个状态里，需要单独实例化
                     this.stateIds.push(node.$id);
             }
-            else if(!this.isProperty(node)){
+            else if(this.isProperty(node)){
+                var prop:string = node.localName;
+                var index:number = prop.indexOf(".");
+                var children:Array<any> = node.children;
+                if(index==-1||!children||children.length==0){
+                    continue;
+                }
+                var firstChild:any = children[0];
+                this.stateIds.push(firstChild.$id);
+            }
+            else{
                 this.createIdForNode(node);
                 this.idToNode[node.$id] = node;
                 if(this.isStateNode(node))
-                    this.stateIds.push(<string><any> (node.$id));
+                    this.stateIds.push(node.$id);
             }
-            this.addIds(node.children);
+
         }
     }
     /**
@@ -340,12 +354,6 @@ class EXMLCompiler{
      * 为指定节点创建变量
      */
     private createVarForNode(node:any):void{
-        var className:string = node.localName;
-        if(this.isBasicTypeData(className)){
-            if(!this.currentClass.containsVar(node.$id))
-                this.currentClass.addVariable(new CpVariable(node.$id,Modifiers.M_PUBLIC,className));
-            return;
-        }
         var moduleName:string = this.getPackageByNode(node);
         if(moduleName=="")
             return;
@@ -384,12 +392,7 @@ class EXMLCompiler{
 
         this.addAttributesToCodeBlock(cb,varName,node);
 
-        var children:Array<any> = node.children;
-        var obj:any = this.exmlConfig.getDefaultPropById(node.localName,node.namespace);
-        var property:string = obj.name;
-        var isArray:boolean = obj.isArray;
-
-        this.initlizeChildNode(cb,children,property,isArray,varName,moduleName);
+        this.initlizeChildNode(node,cb,varName);
         if(this.delayAssignmentDic[id]){
             cb.concat(this.delayAssignmentDic[id]);
         }
@@ -495,78 +498,34 @@ class EXMLCompiler{
     /**
      * 初始化子项
      */
-    private initlizeChildNode(cb:CpCodeBlock,children:Array<any>,
-                              property:string,isArray:boolean,varName:string,className:string):void{
+    private initlizeChildNode(node:any,cb:CpCodeBlock,varName:string):void{
+        var children:Array<any> = node.children;
         if(!children||children.length==0)
             return;
-        var child:any;
-        var childFunc:string = "";
+        var className:string = this.exmlConfig.getClassNameById(node.localName,node.namespace);
         var directChild:Array<any> = [];
-        var prop:string = "";
         var length:number = children.length;
+        var propList:Array<string> = [];
         for(var i:number=0;i<length;i++){
-            child = children[i];
-            prop = child.localName;
-            if(prop==EXMLCompiler.DECLARATIONS||prop=="states"||child.namespace==EXMLCompiler.W){
+            var child:any = children[i];
+            var prop:string = child.localName;
+            if(prop=="states"||child.namespace==EXMLCompiler.W){
                 continue;
             }
             if(this.isProperty(child)){
+                if(!this.isNormalKey(prop)){
+                    continue;
+                }
                 var type:string = this.exmlConfig.getPropertyType(child.localName,className);
                 if(!type){
-                    var parentStr:string = this.toXMLString(child.parent);
-                    var childStr:string = this.toXMLString(child).substring(5);
-
-                    libs.exit(2005,this.exmlPath,child.localName,parentStr+"\n      \t"+childStr);
+                    libs.exit(2005,this.exmlPath,child.localName,this.getPropertyStr(child));
                 }
-                if(!child.children)
+                if(!child.children||child.children.length==0){
+                    libs.warn(2102,this.exmlPath,this.getPropertyStr(child));
                     continue;
-                var childLength:number = child.children.length;
-                if(childLength==0)
-                    continue;
-                var isContainerProp:boolean = (prop==property&&isArray);
-                if(childLength>1){
-                    var values:Array<any> = [];
-                    for(var j:number = 0;j<childLength;j++){
-                        var item:any = child.children[j];
-                        childFunc = this.createFuncForNode(item);
-                        if(!isContainerProp||!this.isStateNode(item))
-                            values.push(childFunc);
-                    }
-                    childFunc = "["+values.join(",")+"]";
                 }
-                else{
-                    var firstChild:any = child.children[0];
-                    if(isContainerProp){
-                        if(firstChild.localName=="Array"){
-                            values = [];
-                            if(firstChild.children){
-                                var len:number = firstChild.children.length;
-                                for(var k:number=0;k<len;k++){
-                                    item = firstChild.children[k];
-                                    childFunc = this.createFuncForNode(item);
-                                    if(!isContainerProp||!this.isStateNode(item))
-                                        values.push(childFunc);
-                                }
-                            }
-                            childFunc = "["+values.join(",")+"]";
-                        }
-                        else{
-                            childFunc = this.createFuncForNode(firstChild);
-                            if(!this.isStateNode(item))
-                                childFunc = "["+childFunc+"]";
-                            else
-                                childFunc = "[]";
-                        }
-                    }
-                    else{
-                        childFunc = this.createFuncForNode(firstChild);
-                    }
-                }
-                if(childFunc!=""){
-                    if(childFunc.indexOf("()")==-1)
-                        prop = this.formatKey(prop,childFunc);
-                    cb.addAssignment(varName,childFunc,prop);
-                }
+                var errorInfo:string = this.getPropertyStr(child);
+                this.addChildrenToProp(child.children,type,prop,cb,varName,errorInfo,propList)
             }
             else{
                 directChild.push(child);
@@ -575,23 +534,83 @@ class EXMLCompiler{
         }
         if(directChild.length==0)
             return;
-        if(isArray&&(directChild.length>1||directChild[0].localName!="Array")){
-            var childs:Array<any> = [];
-            length = directChild.length;
-            for(i=0;i<length;i++){
-                child = directChild[i];
-                childFunc = this.createFuncForNode(child);
-                if(childFunc==""||this.isStateNode(child))
-                    continue;
-                childs.push(childFunc);
+        var defaultProp:string = this.exmlConfig.getDefaultPropById(node.localName,node.namespace);
+        var defaultType:string = this.exmlConfig.getPropertyType(defaultProp,className);
+        var errorInfo:string = this.getPropertyStr(directChild[0]);
+        if(!defaultProp||!defaultType){
+            libs.exit(2012,this.exmlPath,errorInfo);
+        }
+        this.addChildrenToProp(directChild,defaultType,defaultProp,cb,varName,errorInfo,propList);
+    }
+    /**
+     * 添加多个子节点到指定的属性
+     */
+    private addChildrenToProp(children:Array<any>,type:string,prop:string,
+                              cb:CpCodeBlock,varName:string,errorInfo:string,propList:Array<string>):void{
+        var childFunc:string = "";
+        var childLength:number = children.length;
+        if(childLength>1){
+            if(type!="Array"){
+                libs.exit(2011,this.exmlPath,prop,errorInfo)
             }
-            cb.addAssignment(varName,"["+childs.join(",")+"]",property);
+            var values:Array<any> = [];
+            for(var j:number = 0;j<childLength;j++){
+                var item:any = children[j];
+                childFunc = this.createFuncForNode(item);
+                if(!this.isStateNode(item))
+                    values.push(childFunc);
+            }
+            childFunc = "["+values.join(",")+"]";
         }
         else{
-            childFunc = this.createFuncForNode(directChild[0]);
-            if(childFunc!=""&&!this.isStateNode(child))
-                cb.addAssignment(varName,childFunc,property);
+            var firstChild:any = children[0];
+            if(type=="Array"){
+                if(firstChild.localName=="Array"){
+                    values = [];
+                    if(firstChild.children){
+                        var len:number = firstChild.children.length;
+                        for(var k:number=0;k<len;k++){
+                            item = firstChild.children[k];
+                            childFunc = this.createFuncForNode(item);
+                            if(!this.isStateNode(item))
+                                values.push(childFunc);
+                        }
+                    }
+                    childFunc = "["+values.join(",")+"]";
+                }
+                else{
+                    childFunc = this.createFuncForNode(firstChild);
+                    if(!this.isStateNode(firstChild))
+                        childFunc = "["+childFunc+"]";
+                    else
+                        childFunc = "[]";
+                }
+            }
+            else{
+                var targetClass:string = this.exmlConfig.getClassNameById(firstChild.localName,firstChild.namespace);
+                if(!this.exmlConfig.isInstanceOf(targetClass,type)){
+                    libs.exit(2008,this.exmlPath,targetClass,prop,errorInfo);
+                }
+                childFunc = this.createFuncForNode(firstChild);
+            }
         }
+        if(childFunc!=""){
+            if(childFunc.indexOf("()")==-1)
+                prop = this.formatKey(prop,childFunc);
+            if(propList.indexOf(prop)==-1){
+                propList.push(prop);
+            }
+            else{
+                libs.warn(2103,this.exmlPath,prop,errorInfo);
+            }
+            cb.addAssignment(varName,childFunc,prop);
+        }
+    }
+
+    private getPropertyStr(child:any):string{
+        var parentStr:string = this.toXMLString(child.parent);
+        var childStr:string = this.toXMLString(child).substring(5);
+        return parentStr+"\n      \t"+childStr;
     }
 
     /**
@@ -609,7 +628,7 @@ class EXMLCompiler{
     /**
      * 命名空间为fs的属性名列表
      */
-    public static wingKeys:Array<string> = ["$id","$locked","$includeIn","$excludeFrom"];
+    public static wingKeys:Array<string> = ["$id","$locked","$includeIn","$excludeFrom","id","locked","includeIn","excludeFrom"];
     /**
      * 是否是普通赋值的key
      */
@@ -639,7 +658,12 @@ class EXMLCompiler{
         }
         var stringValue:string = value;//除了字符串，其他类型都去除两端多余空格。
         value = value.trim();
-        if(value.indexOf("{")!=-1){
+        var className:string = this.exmlConfig.getClassNameById(node.localName,node.namespace);
+        var type:string = this.exmlConfig.getPropertyType(key,className);
+        if(!type){
+            libs.exit(2005,this.exmlPath,key,this.toXMLString(node));
+        }
+        if(type!="string"&&value.charAt(0)=="{"&&value.charAt(value.length-1)=="}"){
             value = value.substr(1,value.length-2);
             value = value.trim();
             if(value.indexOf("this.")==0){
@@ -652,17 +676,16 @@ class EXMLCompiler{
                 if(!targetNode){
                     libs.exit(2010,this.exmlPath,key,value,this.toXMLString(node));
                 }
+                var targetClass:string = this.exmlConfig.getClassNameById(targetNode.localName,targetNode.namespace);
+                if(!this.exmlConfig.isInstanceOf(targetClass,type)){
+                    libs.exit(2008,this.exmlPath,targetClass,key,this.toXMLString(node));
+                }
             }
             else{
                 libs.exit(2009,this.exmlPath,this.toXMLString(node));
             }
         }
         else{
-            var className:string = this.exmlConfig.getClassNameById(node.localName,node.namespace);
-            var type:string = this.exmlConfig.getPropertyType(key,className);
-            if(!type){
-                libs.exit(2005,this.exmlPath,key,this.toXMLString(node));
-            }
             switch(type){
                 case "number":
                     if(value.indexOf("#")==0)
@@ -742,10 +765,7 @@ class EXMLCompiler{
             }
         }
 
-        var obj:any =  this.exmlConfig.getDefaultPropById(this.currentXML.localName,this.currentXML.namespace);
-        var property:string = obj.name;
-        var isArray:boolean = obj.isArray;
-        this.initlizeChildNode(cb,this.currentXML.children,property,isArray,varName,this.currentClass.className);
+        this.initlizeChildNode(this.currentXML,cb,varName);
         var id:string;
         if(this.stateIds.length>0){
             length = this.stateIds.length;
@@ -757,8 +777,9 @@ class EXMLCompiler{
         }
         cb.addEmptyLine();
 
+        this.currentXML.$id = "";
         //生成视图状态代码
-        this.createStates(this.currentXML.children);
+        this.createStates(this.currentXML);
         var states:Array<CpState>;
         var node:any = this.currentXML;
         for(var itemName in node){
@@ -864,17 +885,51 @@ class EXMLCompiler{
     /**
      * 解析视图状态代码
      */
-    private createStates(items:Array<any>):void{
+    private createStates(parentNode:any):void{
+        var items:Array<any> = parentNode.children;
         if(!items){
             return;
         }
+        var className:string = this.exmlConfig.getClassNameById(parentNode.localName,parentNode.namespace);
         var length:number = items.length;
         for(var i:number=0;i<length;i++){
             var node:any = items[i];
-            this.createStates(node.children);
-            if(this.isProperty(node))
+            this.createStates(node);
+            if(node.namespace==EXMLCompiler.W){
                 continue;
-            if(this.containsState(node)){
+            }
+            if(this.isProperty(node))
+            {
+                var prop:string = node.localName;
+                var index:number = prop.indexOf(".");
+                var children:Array<any> = node.children;
+                if(index==-1||!children||children.length==0){
+                    continue;
+                }
+                var stateName:string = prop.substring(index+1);
+                prop = prop.substring(0,index);
+
+                var type:string = this.exmlConfig.getPropertyType(prop,className);
+                if(type=="Array"){
+                    libs.exit(2013,this.exmlPath,this.getPropertyStr(node));
+                }
+                if(children.length>1){
+                    libs.exit(2011,this.exmlPath,prop,this.getPropertyStr(node));
+                }
+                var firstChild:any = children[0];
+                this.createFuncForNode(firstChild);
+                this.checkIdForState(firstChild);
+                var value:string = "this."+firstChild.$id;
+                states = this.getStateByName(stateName,node);
+                var l:number = states.length;
+                if(l>0){
+                    for(var j:number=0;j<l;j++) {
+                        state = states[j];
+                        state.addOverride(new CpSetProperty(parentNode.$id, prop, value));
+                    }
+                }
+            }
+            else if(this.containsState(node)){
                 var id:string = node.$id;
                 this.checkIdForState(node);
                 var stateName:string;
@@ -958,7 +1013,26 @@ class EXMLCompiler{
      */
     private isIVisualElement(node:any):boolean{
         var className:string = this.exmlConfig.getClassNameById(node.localName,node.namespace);
-        return this.exmlConfig.isInstanceOf(className,"egret.IVisualElement");
+        var result:boolean = this.exmlConfig.isInstanceOf(className,"egret.IVisualElement");
+        if(!result){
+            return false;
+        }
+        var parent:any = node.parent;
+        if(!parent){
+            return false;
+        }
+        if(parent.localName=="Array"){
+            parent = parent.parent;
+        }
+        if(!parent){
+            return false;
+        }
+        if(this.isProperty(parent)){
+            return (parent.localName=="elementsContent")
+        }
+
+        var prop:string = this.exmlConfig.getDefaultPropById(parent.localName,parent.namespace);
+        return prop=="elementsContent";
     }
     /**
      * 检查指定的ID是否创建了类成员变量，若没创建则为其创建。

@@ -42,7 +42,6 @@ var EXMLConfig = (function () {
         this.componentDic = {};
         this.pathToClassName = {};
         this.classNameToPath = {};
-        this.propData = {};
         this.basicTypes = ["void", "any", "number", "string", "boolean", "Object", "Array", "Function"];
         var exmlPath = param.getEgretPath() + "/tools/lib/exml/";
         exmlPath = exmlPath.split("\\").join("/");
@@ -79,7 +78,6 @@ var EXMLConfig = (function () {
             var prop = this.findProp(superComp);
             if (prop) {
                 component.defaultProp = prop;
-                component.isArray = superComp.isArray;
             }
         }
         return component.defaultProp;
@@ -177,9 +175,6 @@ var EXMLConfig = (function () {
     * @inheritDoc
     */
     EXMLConfig.prototype.getDefaultPropById = function (id, ns) {
-        var data = this.propData;
-        data.name = "";
-        data.isArray = false;
         var className = this.getClassNameById(id, ns);
         var component = this.componentDic[className];
         while (component) {
@@ -189,16 +184,17 @@ var EXMLConfig = (function () {
             component = this.componentDic[className];
         }
         if (!component)
-            return data;
-        data.name = component.defaultProp;
-        data.isArray = component.isArray;
-        return data;
+            return "";
+        return component.defaultProp;
     };
 
     /**
     * 获取指定类指定属性的类型
     */
     EXMLConfig.prototype.getPropertyType = function (prop, className) {
+        if (className == "Object") {
+            return "any";
+        }
         var type = this.findType(className, prop);
         return type;
     };
@@ -395,6 +391,9 @@ var EXMLConfig = (function () {
     * 检查classNameA是否是classNameB的子类或classNameA实现了接口classNameB
     */
     EXMLConfig.prototype.isInstanceOf = function (classNameA, classNameB) {
+        if (classNameB == "any") {
+            return true;
+        }
         if (classNameA == classNameB) {
             return true;
         }
@@ -432,10 +431,6 @@ var Component = (function () {
         * 默认属性
         */
         this.defaultProp = "";
-        /**
-        * 默认属性是否为数组类型
-        */
-        this.isArray = false;
         if (item) {
             this.id = item.$id;
             this.className = "egret." + this.id;
@@ -443,8 +438,6 @@ var Component = (function () {
                 this.superClass = "egret." + item.$super;
             if (item["$default"])
                 this.defaultProp = item.$default;
-            if (item["$array"])
-                this.isArray = (item.$array == "true");
         }
     }
     return Component;

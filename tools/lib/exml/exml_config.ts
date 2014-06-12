@@ -89,7 +89,6 @@ class EXMLConfig{
             var prop:string = this.findProp(superComp);
             if(prop){
                 component.defaultProp = prop;
-                component.isArray = superComp.isArray;
             }
         }
         return component.defaultProp;
@@ -190,15 +189,10 @@ class EXMLConfig{
         return path;
     }
 
-    private propData:any = {};
     /**
      * @inheritDoc
      */
-    public getDefaultPropById(id:string, ns:string):any{
-
-        var data:any = this.propData;
-        data.name = "";
-        data.isArray = false;
+    public getDefaultPropById(id:string, ns:string):string{
         var className:string = this.getClassNameById(id,ns);
         var component:Component = this.componentDic[className];
         while(component){
@@ -208,16 +202,17 @@ class EXMLConfig{
             component = this.componentDic[className];
         }
         if(!component)
-            return data;
-        data.name = component.defaultProp;
-        data.isArray = component.isArray;
-        return data;
+            return "";
+        return component.defaultProp;
     }
 
     /**
      * 获取指定类指定属性的类型
      */
     public getPropertyType(prop:string,className:string):string{
+        if(className=="Object"){
+            return "any";
+        }
         var type:string = this.findType(className,prop);
         return type;
     }
@@ -425,6 +420,9 @@ class EXMLConfig{
      * 检查classNameA是否是classNameB的子类或classNameA实现了接口classNameB
      */
     public isInstanceOf(classNameA:string,classNameB:string):boolean{
+        if(classNameB=="any"){
+            return true;
+        }
         if(classNameA==classNameB){
             return true;
         }
@@ -458,8 +456,6 @@ class Component{
                 this.superClass = "egret."+item.$super;
             if(item["$default"])
                 this.defaultProp = item.$default;
-            if(item["$array"])
-                this.isArray = <boolean><any> (item.$array=="true");
         }
     }
     /**
@@ -478,10 +474,6 @@ class Component{
      * 默认属性
      */
     public defaultProp:string = "";
-    /**
-     * 默认属性是否为数组类型
-     */
-    public isArray:boolean = false;
 }
 
 exports.EXMLConfig = EXMLConfig;

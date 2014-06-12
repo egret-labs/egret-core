@@ -1,5 +1,5 @@
 <componentPackage>
-  <component id="ArrayCollection" super="EventDispatcher" default="source" array="true"/>
+  <component id="ArrayCollection" super="EventDispatcher" default="source"/>
   <component id="BasicLayout" super="LayoutBase"/>
   <component id="Button" super="ButtonBase"/>
   <component id="ButtonBase" super="SkinnableComponent" default="label" state="up,over,down,disabled"/>
@@ -7,7 +7,7 @@
   <component id="DataGroup" super="GroupBase" default="dataProvider"/>
   <component id="DropDownList" super="DropDownListBase"/>
   <component id="DropDownListBase" super="List" state="normal,open,disabled"/>
-  <component id="Group" super="GroupBase" default="elementsContent" array="true"/>
+  <component id="Group" super="GroupBase" default="elementsContent"/>
   <component id="GroupBase" super="UIComponent"/>
   <component id="HScrollBar" super="ScrollBarBase"/>
   <component id="HSlider" super="SliderBase"/>
@@ -29,13 +29,13 @@
   <component id="Rect" super="UIComponent"/>
   <component id="Rectangle" super="Object"/>
   <component id="Scroller" super="UIComponent" default="viewport"/>
-  <component id="Skin" super="EventDispatcher" default="elementsContent" array="true"/>
+  <component id="Skin" super="EventDispatcher" default="elementsContent"/>
   <component id="SkinnableComponent" super="UIAsset" state="normal,disabled"/>
-  <component id="SkinnableContainer" super="SkinnableComponent" default="elementsContent" array="true"/>
+  <component id="SkinnableContainer" super="SkinnableComponent" default="elementsContent"/>
   <component id="SkinnableDataContainer" super="SkinnableComponent" default="dataProvider"/>
   <component id="SliderBase" super="TrackBase"/>
   <component id="Spacer" super="UIComponent"/>
-  <component id="State" super="EventDispatcher" default="overrides" array="true"/>
+  <component id="State" super="EventDispatcher" default="overrides"/>
   <component id="TabBar" super="ListBase"/>
   <component id="TabBarButton" super="ToggleButtonBase"/>
   <component id="TextBase" super="UIComponent"/>

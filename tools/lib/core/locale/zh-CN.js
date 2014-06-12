@@ -25,9 +25,14 @@ exports.error_code = {
     2004:"{0}: error 节点不能含有同名的id属性\n{1}",
     2005:"{0}: error 节点上不存在名为'{1}'的属性:\n{2}",
     2006:"{0}: error 未定义的视图状态名称:'{1}'\n{2}",
-    2007:"{0}: error 只有egret.IVisualElement对象可以使用includeIn和excludeFrom属性\n{1}",
-    2008:"{0}: error 无法将'{1}'类型的值赋值给属性:'{2}'\n{3}",
+    2007:"{0}: error 只有处于容器内的egret.IVisualElement对象可以使用includeIn和excludeFrom属性\n{1}",
+    2008:"{0}: error 无法将'{1}'类型的值赋给属性:'{2}'\n{3}",
     2009:"{0}: error 在节点属性值的‘{}’标签内只能引用一个ID，不允许使用复杂表达式\n{1}",
     2010:"{0}: error 属性:'{1}'所引用的ID: '{2}'不存在\n{3}",
-    2101:"{0}: warning 在w:Declarations内的子节点，不允许使用includeIn和excludeFrom属性\n{1}"
+    2011:"{0}: error 无法将多个子节点赋值给同一个属性:'{1}'\n{2}",
+    2012:"{0}: error 节点上不存在默认属性，必须显式声明子节点要赋值到的属性名\n{1}",
+    2013:"{0}: error 类型为Array的属性节点上不允许使用视图状态语法\n{1}",
+    2101:"{0}: warning 在w:Declarations内的子节点，不允许使用includeIn和excludeFrom属性\n{1}",
+    2102:"{0}: warning 在属性节点上找不到任何子节点\n{1}",
+    2103:"{0}: warning 节点上的同一个属性'{1}'被多次赋值\n{2}"
 }
