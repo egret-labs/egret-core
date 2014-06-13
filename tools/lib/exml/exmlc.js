@@ -73,10 +73,6 @@ var EXMLCompiler = (function () {
     */
     function EXMLCompiler() {
         this.repeatedIdDic = {};
-        /**
-        * 需要单独创建的实例id列表
-        */
-        this.stateIds = [];
         this.exmlPath = "";
         this.basicTypes = ["Array", "boolean", "string", "number"];
         /**
@@ -156,6 +152,7 @@ var EXMLCompiler = (function () {
         this.idToNode = {};
         this.stateCode = [];
         this.stateNames = [];
+        this.skinParts = [];
         this.declarations = null;
         this.currentClass = new CpClass();
         this.stateIds = [];
@@ -249,6 +246,9 @@ var EXMLCompiler = (function () {
             if (node.namespace == EXMLCompiler.W) {
             } else if (node["$id"]) {
                 this.idToNode[node.$id] = node;
+                if (this.skinParts.indexOf(node.$id) == -1) {
+                    this.skinParts.push(node.$id);
+                }
                 this.createVarForNode(node);
                 if (this.isStateNode(node))
                     this.stateIds.push(node.$id);
@@ -720,7 +720,25 @@ var EXMLCompiler = (function () {
             }
             cb.addEmptyLine();
         }
-        cb.addEmptyLine();
+
+        length = this.skinParts.length;
+        if (length > 0) {
+            for (i = 0; i < length; i++) {
+                this.skinParts[i] = "\"" + this.skinParts[i] + "\"";
+            }
+            var skinPartStr = "[" + this.skinParts.join(",") + "]";
+            var skinPartVar = new CpVariable("_skinParts", Modifiers.M_PRIVATE, "Array<string>", skinPartStr, true);
+            this.currentClass.addVariable(skinPartVar);
+            var skinPartFunc = new CpFunction();
+            skinPartFunc.name = "skinParts";
+            skinPartFunc.modifierName = Modifiers.M_PUBLIC;
+            skinPartFunc.isGet = true;
+            skinPartFunc.returnType = "Array<string>";
+            var skinPartCB = new CpCodeBlock();
+            skinPartCB.addReturn(this.currentClass.className + "._skinParts");
+            skinPartFunc.codeBlock = skinPartCB;
+            this.currentClass.addFunction(skinPartFunc);
+        }
 
         this.currentXML.$id = "";
 
@@ -1264,13 +1282,19 @@ var CpClass = (function (_super) {
         return false;
     };
 
-    CpClass.prototype.sortOn = function (list, key) {
+    CpClass.prototype.sortOn = function (list, key, reverse) {
+        if (typeof reverse === "undefined") { reverse = false; }
         var length = list.length;
         for (var i = 0; i < length; i++) {
             var min = i;
             for (var j = i + 1; j < length; j++) {
-                if (list[j][key] < list[min][key])
-                    min = j;
+                if (reverse) {
+                    if (list[j][key] > list[min][key])
+                        min = j;
+                } else {
+                    if (list[j][key] < list[min][key])
+                        min = j;
+                }
             }
             if (min != i) {
                 var temp = list[min];
@@ -1348,7 +1372,9 @@ var CpClass = (function (_super) {
         //字符串排序
         this.referenceBlock.sort();
         this.sortOn(this.variableBlock, "name");
+        this.sortOn(this.variableBlock, "isStatic", true);
         this.sortOn(this.functionBlock, "name");
+        this.sortOn(this.functionBlock, "isGet", true);
 
         var isFirst = true;
         var index = 0;
@@ -1611,6 +1637,8 @@ var CpFunction = (function (_super) {
         * 是否是静态 ，默认false
         */
         this.isStatic = false;
+        this.isSet = false;
+        this.isGet = false;
         /**
         *参数列表
         */
@@ -1641,7 +1669,13 @@ var CpFunction = (function (_super) {
             noteStr = this.notation.toCode() + "\n";
         }
 
-        var returnStr = noteStr + indentStr + this.modifierName + " " + staticStr + " " + this.name + "(";
+        var getSetStr = "";
+        if (this.isGet) {
+            getSetStr = "get ";
+        } else if (this.isSet) {
+            getSetStr = "set ";
+        }
+        var returnStr = noteStr + indentStr + this.modifierName + " " + staticStr + getSetStr + this.name + "(";
 
         var isFirst = true;
         index = 0;

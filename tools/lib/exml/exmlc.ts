@@ -144,11 +144,13 @@ class EXMLCompiler{
     /**
      * 需要单独创建的实例id列表
      */
-    private stateIds:Array<any> = [];
+    private stateIds:Array<any>;
 
     private exmlPath:string = "";
 
     private idToNode:any;
+
+    private skinParts:Array<string>;
 
     private toXMLString(node:any):string{
         if(!node){
@@ -193,6 +195,7 @@ class EXMLCompiler{
         this.idToNode = {};
         this.stateCode = [];
         this.stateNames = [];
+        this.skinParts = [];
         this.declarations = null;
         this.currentClass = new CpClass();
         this.stateIds = [];
@@ -289,6 +292,9 @@ class EXMLCompiler{
             }
             else if(node["$id"]){
                 this.idToNode[node.$id] = node;
+                if(this.skinParts.indexOf(node.$id)==-1){
+                    this.skinParts.push(node.$id);
+                }
                 this.createVarForNode(node);
                 if(this.isStateNode(node))//检查节点是否只存在于一个状态里，需要单独实例化
                     this.stateIds.push(node.$id);
@@ -775,7 +781,26 @@ class EXMLCompiler{
             }
             cb.addEmptyLine();
         }
-        cb.addEmptyLine();
+
+        length = this.skinParts.length;
+        if(length>0){
+            for(i=0;i<length;i++){
+                this.skinParts[i] = "\""+this.skinParts[i]+"\"";
+            }
+            var skinPartStr:string = "["+this.skinParts.join(",")+"]";
+            var skinPartVar:CpVariable = new CpVariable("_skinParts",Modifiers.M_PRIVATE,"Array<string>",skinPartStr,true);
+            this.currentClass.addVariable(skinPartVar);
+            var skinPartFunc:CpFunction = new CpFunction();
+            skinPartFunc.name = "skinParts";
+            skinPartFunc.modifierName = Modifiers.M_PUBLIC;
+            skinPartFunc.isGet = true;
+            skinPartFunc.returnType = "Array<string>";
+            var skinPartCB:CpCodeBlock = new CpCodeBlock();
+            skinPartCB.addReturn(this.currentClass.className+"._skinParts");
+            skinPartFunc.codeBlock = skinPartCB;
+            this.currentClass.addFunction(skinPartFunc);
+        }
+
 
         this.currentXML.$id = "";
         //生成视图状态代码
@@ -1319,13 +1344,19 @@ class CpClass extends CodeBase{
         return false;
     }
 
-    private sortOn(list:Array<any>,key:string):void{
+    private sortOn(list:Array<any>,key:string,reverse:boolean=false):void{
         var length:number = list.length;
         for(var i:number=0; i<length; i++){
             var min:number = i;
             for(var j:number=i+1;j<length;j++){
-                if(list[j][key] < list[min][key])
-                    min = j;
+                if(reverse){
+                    if(list[j][key] > list[min][key])
+                        min = j;
+                }
+                else{
+                    if(list[j][key] < list[min][key])
+                        min = j;
+                }
             }
             if(min!=i){
                 var temp:any = list[min];
@@ -1415,7 +1446,9 @@ class CpClass extends CodeBase{
         //字符串排序
         this.referenceBlock.sort();
         this.sortOn(this.variableBlock,"name");
+        this.sortOn(this.variableBlock,"isStatic",true);
         this.sortOn(this.functionBlock,"name");
+        this.sortOn(this.functionBlock,"isGet",true);
 
         var isFirst:boolean = true;
         var index:number = 0;
@@ -1679,6 +1712,10 @@ class CpFunction extends CodeBase{
      */
     public isStatic:boolean = false;
 
+    public isSet:boolean = false;
+
+    public isGet:boolean = false;
+
     /**
      *参数列表
      */
@@ -1713,8 +1750,15 @@ class CpFunction extends CodeBase{
             noteStr = this.notation.toCode()+"\n";
         }
 
+        var getSetStr:string = "";
+        if(this.isGet){
+            getSetStr = "get ";
+        }
+        else if(this.isSet){
+            getSetStr = "set ";
+        }
         var returnStr:string = noteStr+indentStr+this.modifierName+" "
-            +staticStr+" "+this.name+"(";
+            +staticStr+getSetStr+this.name+"(";
 
         var isFirst:boolean = true;
         index = 0;
