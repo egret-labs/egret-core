@@ -56,7 +56,7 @@ module dragonBones {
                 if (this._display) {
                     var parent:egret.DisplayObjectContainer = this._display.parent;
                     if (parent) {
-                        var index:number = -1;//todo this._display.parent.getChildIndex(this._display);
+                        var index:number = parent.getChildIndex(this._display);
                     }
                     this.removeDisplay();
                 }
