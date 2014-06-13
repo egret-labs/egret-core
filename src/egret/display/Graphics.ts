@@ -65,10 +65,12 @@ module egret {
             this.commandQueue.push(new Command(
 
                 function (x, y, width, height) {
+                    this.canvasContext.beginPath();
                     this.canvasContext.rect(rendererContext._transformTx + x,
                         rendererContext._transformTy + y,
                         width,
                         height);
+                    this.canvasContext.closePath();
                 },
                 this,
                 [ x, y, width, height]
@@ -131,15 +133,10 @@ module egret {
          */
         public lineTo(x:number, y:number):void {
             var rendererContext = <HTML5CanvasRenderer>this.renderContext;
+            var canvasContext:CanvasRenderingContext2D = this.canvasContext;
             this.commandQueue.push(new Command(
                 function (x, y) {
-                    var canvasContext:CanvasRenderingContext2D = this.canvasContext;
-
-                    canvasContext.beginPath();
-                    canvasContext.moveTo(rendererContext._transformTx, rendererContext._transformTx)
-                    canvasContext.lineTo(rendererContext._transformTx + x, rendererContext._transformTx + y)
-                    canvasContext.stroke();
-
+                    canvasContext.lineTo(rendererContext._transformTx + x, rendererContext._transformTy + y);
                 },
                 this,
                 [x, y]
@@ -147,9 +144,24 @@ module egret {
             ))
         }
 
+        public moveTo(x:number, y:number):void {
+            var rendererContext = <HTML5CanvasRenderer>this.renderContext;
+            var canvasContext:CanvasRenderingContext2D = this.canvasContext;
+            this.commandQueue.push(new Command(
+                function (x, y) {
+                    canvasContext.moveTo(rendererContext._transformTx + x, rendererContext._transformTy + y);
+                },
+                this,
+                [x, y]
+
+            ))
+
+        }
+
         public clear():void {
             this.commandQueue.length = 0;
             this.strokeStyleColor = null;
+            this.fillStyleColor = null;
         }
 
         public endFill():void {
@@ -178,10 +190,17 @@ module egret {
         }
 
         public _draw():void {
+            var rendererContext = <HTML5CanvasRenderer>this.renderContext;
+            var canvasContext:CanvasRenderingContext2D = this.canvasContext;
+            canvasContext.moveTo(rendererContext._transformTx, rendererContext._transformTy);
+            canvasContext.save();
+            canvasContext.beginPath();
             for (var i = 0 , length = this.commandQueue.length; i < length; i++) {
                 var command:Command = this.commandQueue[i];
                 command.method.apply(command.thisObject, command.args);
             }
+            canvasContext.closePath();
+            canvasContext.restore();
         }
     }
 

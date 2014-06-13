@@ -58,7 +58,7 @@ module egret {
         public _textureMap:Object;
 
         /**
-         * 根据指定纹理名称获取一个缓存的Textrue对象
+         * 根据指定纹理名称获取一个缓存的Texture对象
          * @method egret.SpriteSheet#getTexture
          * @param name {string} 缓存这个Texture对象所使用的名称，如果名称已存在，将会覆盖之前的Texture对象
          * @returns {egret.Texture} 创建的Texture对象
