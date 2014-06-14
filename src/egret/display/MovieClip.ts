@@ -45,6 +45,7 @@ module egret {
 
             super();
             if (texture != null && texture instanceof Texture) {
+                Logger.warning("MovieClip#constructor接口参数已经变更，请尽快调整用法为 new MovieClip(new DefaultMovieClipDelegate(data,texture))")
                 this.delegate = new DefaultMovieClipDelegate(data, texture);
             }
             else {
@@ -125,7 +126,7 @@ module egret {
         }
     }
 
-    interface MovieClipDelegate {
+    export interface MovieClipDelegate {
 
         gotoAndPlay(frameName:string):void;
 
@@ -138,7 +139,7 @@ module egret {
         setMovieClip(movieclip:MovieClip):void;
     }
 
-    class DefaultMovieClipDelegate implements MovieClipDelegate {
+    export class DefaultMovieClipDelegate implements MovieClipDelegate {
         private _frameData;
         private _totalFrame:number = 0;
         private _spriteSheet:SpriteSheet;
