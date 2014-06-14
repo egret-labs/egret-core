@@ -19,6 +19,9 @@ function run(dir, args, opts) {
 
     var exmlList = [];
     task.push(function(callback){
+        if(!keepGeneratedTypescript){
+            libs.addCallBackWhenExit(cleanEXMLList);
+        }
         var source = path.join(currDir, "src");
         exmlList = libs.loopFileSync(source, filter);
         source += "/";
@@ -80,21 +83,11 @@ function run(dir, args, opts) {
         }
     )
 
-    if(!keepGeneratedTypescript){
-        task.push(function(callabck){
-            if(exmlList){
-                var source = path.join(currDir, "src");
-                exmlList.forEach(function (item) {
-                    var tsPath = path.join(source,item);
-                    tsPath = tsPath.substring(0,tsPath.length-5)+".ts";
-                    libs.remove(tsPath);
-                });
-            }
-            callabck();
-        });
-    }
 
-    async.series(task, function (err,data) {
+    async.series(task, function (err) {
+        if(!keepGeneratedTypescript) {
+            cleanEXMLList();
+        }
         if (!err){
             libs.log("构建成功");
         }
@@ -102,6 +95,17 @@ function run(dir, args, opts) {
             libs.exit(err);
         }
     })
+
+    function cleanEXMLList(){
+        if(exmlList){
+            var source = path.join(currDir, "src");
+            exmlList.forEach(function (item) {
+                var tsPath = path.join(source,item);
+                tsPath = tsPath.substring(0,tsPath.length-5)+".ts";
+                libs.remove(tsPath);
+            });
+        }
+    }
 }
 
 

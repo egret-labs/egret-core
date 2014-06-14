@@ -167,7 +167,7 @@ function exportHeader(callback, source, output, file_list) {
             }
         }
         else {
-            callback(1303);
+            callback(1303)
         }
 
     });

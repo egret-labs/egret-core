@@ -444,5 +444,22 @@ module egret {
                 child._onRemoveFromStage();
             }
         }
+
+        /**
+         * 根据对象名字获取对象
+         * @param   name    显示对象名
+         * */
+        public getChildByName(name:string):DisplayObject{
+            var locChildren = this._children;
+            var count:number = this.numChildren;
+            var displayObject:DisplayObject;
+            for(var i:number = 0 ; i < count ; i++ ){
+                displayObject = locChildren[i];
+                if(displayObject.name == name){
+                    return displayObject;
+                }
+            }
+            return null;
+        }
     }
 }

@@ -43,7 +43,7 @@ class LoadingUI extends egret.Sprite{
         this.textField.y = 300;
         this.textField.witdh = 480;
         this.textField.height = 100;
-        this.textField.align = "middle";
+        this.textField.textAlign = "center";
     }
 
     public setProgress(current, total):void {

@@ -1,10 +1,38 @@
+/**
+ * Copyright (c) 2014,Egret-Labs.org
+ * All rights reserved.
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *
+ *     * Redistributions of source code must retain the above copyright
+ *       notice, this list of conditions and the following disclaimer.
+ *     * Redistributions in binary form must reproduce the above copyright
+ *       notice, this list of conditions and the following disclaimer in the
+ *       documentation and/or other materials provided with the distribution.
+ *     * Neither the name of the Egret-Labs.org nor the
+ *       names of its contributors may be used to endorse or promote products
+ *       derived from this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY EGRET-LABS.ORG AND CONTRIBUTORS "AS IS" AND ANY
+ * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL EGRET-LABS.ORG AND CONTRIBUTORS BE LIABLE FOR ANY
+ * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+ * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
+
 /// <reference path="node.d.ts"/>
+/// <reference path="exml_config.ts"/>
 
 var fs = require("fs");
 var xml = require("../core/xml.js");
 var libs = require("../core/normal_libs")
-var param = require("../core/params_analyze.js");
-var properties = require("./properties.json")
+var CodeUtil = require("../core/code_util.js")
+var exml_config = require("./exml_config.js")
 
 var compiler:EXMLCompiler;
 
@@ -27,7 +55,7 @@ function compile(exmlPath:string,srcPath:string):void{
     if(!compiler){
         compiler = new EXMLCompiler();
     }
-    var tsText = compiler.compile(xmlData,className,"egret.d.ts",srcPath);
+    var tsText = compiler.compile(xmlData,className,"egret.d.ts",srcPath,srcPath+exmlPath);
     var tsPath:string = srcPath+exmlPath.substring(0,exmlPath.length-5)+".ts";
     fs.writeFileSync(tsPath,tsText,"utf-8");
 };
@@ -75,8 +103,7 @@ class EXMLCompiler{
         if(xml.namespace!=EXMLCompiler.W&&xml["$id"]){
             var id:string = xml.$id;
             if(this.repeatedIdDic[id]){
-                if(result.indexOf(id)==-1)
-                    result.push(id);
+                result.push(this.toXMLString(xml));
             }
             else{
                 this.repeatedIdDic[id] = true;
@@ -112,10 +139,42 @@ class EXMLCompiler{
      * 状态代码列表
      */
     private stateCode:Array<CpState>;
+
+    private stateNames:Array<string>;
     /**
      * 需要单独创建的实例id列表
      */
-    private stateIds:Array<any> = [];
+    private stateIds:Array<any>;
+
+    private exmlPath:string = "";
+
+    private idToNode:any;
+
+    private skinParts:Array<string>;
+
+    private toXMLString(node:any):string{
+        if(!node){
+            return "";
+        }
+        var str:string = "  at <"+node.name;
+        for(var key in node){
+            if(key.charAt(0)=="$"){
+                var value:string = node[key];
+                key = key.substring(1);
+                if(key=="id"&&value.substring(0,2)=="__"){
+                    continue;
+                }
+                str += " "+key+"=\""+value+"\"";
+            }
+        }
+        if(node.isSelfClosing){
+            str += "/>";
+        }
+        else{
+            str += ">";
+        }
+        return str;
+    }
 
     /**
      * 编译指定的XML对象为TypeScript类。
@@ -123,18 +182,20 @@ class EXMLCompiler{
      * @param xmlData 要编译的EXML文件内容
      * @param className 要编译成的完整类名，包括命名空间。
      */
-    public compile(xmlData:any,className:string,egretDTSPath:string,srcPath:string):string{
-        if(!xmlData||!className||!egretDTSPath||!srcPath)
-            return "";
+    public compile(xmlData:any,className:string,egretDTSPath:string,srcPath:string,exmlPath:string):string{
         if(!this.exmlConfig){
-            this.exmlConfig = new EXMLConfig();
+            this.exmlConfig = new exml_config.EXMLConfig();
         }
+        this.exmlPath = exmlPath;
         this.currentXML = xmlData;
         this.currentClassName = className;
         this.exmlConfig.srcPath = srcPath;
         this.delayAssignmentDic = {};
         this.idDic = {};
+        this.idToNode = {};
         this.stateCode = [];
+        this.stateNames = [];
+        this.skinParts = [];
         this.declarations = null;
         this.currentClass = new CpClass();
         this.stateIds = [];
@@ -159,6 +220,10 @@ class EXMLCompiler{
      * 开始编译
      */
     private startCompile():void{
+        var result:Array<any> = this.getRepeatedIds(this.currentXML);
+        if(result.length>0){
+            libs.exit(2004,this.exmlPath,result.join("\n"));
+        }
         this.currentClass.superClass = this.getPackageByNode(this.currentXML);
 
         this.getStateNames();
@@ -176,23 +241,40 @@ class EXMLCompiler{
             }
         }
 
-        if(this.declarations){//清理声明节点里的状态标志
-            var children:Array<any> = this.declarations.children;
-            if(children){
-                length = children.length;
-                for(var i:number=0;i<length;i++){
-                    node = children[i];
-                    if(node["$includeIn"])
-                        delete node.$includeIn;
-                    if(node["$excludeFrom"])
-                        delete node.$excludeFrom;
-                }
-            }
+        var list:Array<string> = [];
+        this.checkDeclarations(this.declarations,list);
+
+        if(list.length>0){
+            libs.warn(2101,this.exmlPath,list.join("\n"));
         }
 
         this.addIds(this.currentXML.children);
 
         this.createConstructFunc();
+    }
+    /**
+     * 清理声明节点里的状态标志
+     */
+    private checkDeclarations(declarations:any,list:Array<string>):void{
+        if(!declarations){
+            return;
+        }
+        var children:Array<any> = declarations.children;
+        if(children){
+            var length:number = children.length;
+            for(var i:number=0;i<length;i++){
+                var node:any = children[i];
+                if(node["$includeIn"]){
+                    list.push(this.toXMLString(node))
+                    delete node.$includeIn;
+                }
+                if(node["$excludeFrom"]){
+                    list.push(this.toXMLString(node))
+                    delete node.$excludeFrom;
+                }
+                this.checkDeclarations(node,list);
+            }
+        }
     }
 
     /**
@@ -205,25 +287,41 @@ class EXMLCompiler{
         var length:number = items.length;
         for(var i:number=0;i<length;i++){
             var node:any = items[i];
+            this.addIds(node.children);
             if(node.namespace==EXMLCompiler.W){
             }
             else if(node["$id"]){
+                this.idToNode[node.$id] = node;
+                if(this.skinParts.indexOf(node.$id)==-1){
+                    this.skinParts.push(node.$id);
+                }
                 this.createVarForNode(node);
                 if(this.isStateNode(node))//检查节点是否只存在于一个状态里，需要单独实例化
                     this.stateIds.push(node.$id);
             }
-            else if(this.getPackageByNode(node)!=""){
-                this.createIdForNode(node);
-                if(this.isStateNode(node))
-                    this.stateIds.push(<string><any> (node.$id));
+            else if(this.isProperty(node)){
+                var prop:string = node.localName;
+                var index:number = prop.indexOf(".");
+                var children:Array<any> = node.children;
+                if(index==-1||!children||children.length==0){
+                    continue;
+                }
+                var firstChild:any = children[0];
+                this.stateIds.push(firstChild.$id);
             }
-            this.addIds(node.children);
+            else{
+                this.createIdForNode(node);
+                this.idToNode[node.$id] = node;
+                if(this.isStateNode(node))
+                    this.stateIds.push(node.$id);
+            }
+
         }
     }
     /**
      * 检测指定节点的属性是否含有视图状态
      */
-    private static containsState(node:any):boolean{
+    private containsState(node:any):boolean{
         if(node["$includeIn"]||node["$excludeFrom"]){
             return true;
         }
@@ -262,12 +360,6 @@ class EXMLCompiler{
      * 为指定节点创建变量
      */
     private createVarForNode(node:any):void{
-        var className:string = node.localName;
-        if(this.isBasicTypeData(className)){
-            if(!this.currentClass.containsVar(node.$id))
-                this.currentClass.addVariable(new CpVariable(node.$id,Modifiers.M_PUBLIC,className));
-            return;
-        }
         var moduleName:string = this.getPackageByNode(node);
         if(moduleName=="")
             return;
@@ -278,13 +370,13 @@ class EXMLCompiler{
      * 为指定节点创建初始化函数,返回函数名引用
      */
     private createFuncForNode(node:any):string{
-        var moduleName:string = this.getPackageByNode(node);
         var className:string = node.localName;
-        var isBasicType:boolean = this.isBasicTypeData(className);
-        if(!isBasicType&&(this.isProperty(node)||moduleName==""))
+        if(this.isProperty(node))
             return "";
+        var isBasicType:boolean = this.isBasicTypeData(className);
         if(isBasicType)
             return this.createBasicTypeForNode(node);
+        var moduleName:string = this.getPackageByNode(node);
         var func:CpFunction = new CpFunction;
         var tailName:string = "_i";
         var id:string = node.$id;
@@ -306,12 +398,7 @@ class EXMLCompiler{
 
         this.addAttributesToCodeBlock(cb,varName,node);
 
-        var children:Array<any> = node.children;
-        var obj:any = this.exmlConfig.getDefaultPropById(node.localName,node.namespace);
-        var property:string = obj.name;
-        var isArray:boolean = obj.isArray;
-
-        this.initlizeChildNode(cb,children,property,isArray,varName);
+        this.initlizeChildNode(node,cb,varName);
         if(this.delayAssignmentDic[id]){
             cb.concat(this.delayAssignmentDic[id]);
         }
@@ -326,13 +413,7 @@ class EXMLCompiler{
      * 检查目标类名是否是基本数据类型
      */
     private isBasicTypeData(className:string):boolean{
-        var length:number = this.basicTypes.length;
-        for(var i:number=0;i<length;i++){
-            var type:string = this.basicTypes[i];
-            if(type==className)
-                return true;
-        }
-        return false;
+        return this.basicTypes.indexOf(className)!=-1;
     }
     /**
      * 为指定基本数据类型节点实例化,返回实例化后的值。
@@ -423,71 +504,34 @@ class EXMLCompiler{
     /**
      * 初始化子项
      */
-    private initlizeChildNode(cb:CpCodeBlock,children:Array<any>,
-                              property:string,isArray:boolean,varName:string):void{
+    private initlizeChildNode(node:any,cb:CpCodeBlock,varName:string):void{
+        var children:Array<any> = node.children;
         if(!children||children.length==0)
             return;
-        var child:any;
-        var childFunc:string = "";
+        var className:string = this.exmlConfig.getClassNameById(node.localName,node.namespace);
         var directChild:Array<any> = [];
-        var prop:string = "";
         var length:number = children.length;
+        var propList:Array<string> = [];
         for(var i:number=0;i<length;i++){
-            child = children[i];
-            prop = child.localName;
-            if(prop==EXMLCompiler.DECLARATIONS||prop=="states"||child.namespace==EXMLCompiler.W){
+            var child:any = children[i];
+            var prop:string = child.localName;
+            if(prop=="states"||child.namespace==EXMLCompiler.W){
                 continue;
             }
             if(this.isProperty(child)){
-                if(!child.children)
+                if(!this.isNormalKey(prop)){
                     continue;
-                var childLength:number = child.children.length;
-                if(childLength==0)
+                }
+                var type:string = this.exmlConfig.getPropertyType(child.localName,className);
+                if(!type){
+                    libs.exit(2005,this.exmlPath,child.localName,this.getPropertyStr(child));
+                }
+                if(!child.children||child.children.length==0){
+                    libs.warn(2102,this.exmlPath,this.getPropertyStr(child));
                     continue;
-                var isContainerProp:boolean = (prop==property&&isArray);
-                if(childLength>1){
-                    var values:Array<any> = [];
-                    for(var j:number = 0;j<childLength;j++){
-                        var item:any = child.children[j];
-                        childFunc = this.createFuncForNode(item);
-                        if(!isContainerProp||!this.isStateNode(item))
-                            values.push(childFunc);
-                    }
-                    childFunc = "["+values.join(",")+"]";
                 }
-                else{
-                    var firstChild:any = child.children[0];
-                    if(isContainerProp){
-                        if(firstChild.localName=="Array"){
-                            values = [];
-                            if(firstChild.children){
-                                var len:number = firstChild.children.length;
-                                for(var k:number=0;k<len;k++){
-                                    item = firstChild.children[k];
-                                    childFunc = this.createFuncForNode(item);
-                                    if(!isContainerProp||!this.isStateNode(item))
-                                        values.push(childFunc);
-                                }
-                            }
-                            childFunc = "["+values.join(",")+"]";
-                        }
-                        else{
-                            childFunc = this.createFuncForNode(firstChild);
-                            if(!this.isStateNode(item))
-                                childFunc = "["+childFunc+"]";
-                            else
-                                childFunc = "[]";
-                        }
-                    }
-                    else{
-                        childFunc = this.createFuncForNode(firstChild);
-                    }
-                }
-                if(childFunc!=""){
-                    if(childFunc.indexOf("()")==-1)
-                        prop = this.formatKey(prop,childFunc);
-                    cb.addAssignment(varName,childFunc,prop);
-                }
+                var errorInfo:string = this.getPropertyStr(child);
+                this.addChildrenToProp(child.children,type,prop,cb,varName,errorInfo,propList)
             }
             else{
                 directChild.push(child);
@@ -496,23 +540,83 @@ class EXMLCompiler{
         }
         if(directChild.length==0)
             return;
-        if(isArray&&(directChild.length>1||directChild[0].localName!="Array")){
-            var childs:Array<any> = [];
-            length = directChild.length;
-            for(i=0;i<length;i++){
-                child = directChild[i];
-                childFunc = this.createFuncForNode(child);
-                if(childFunc==""||this.isStateNode(child))
-                    continue;
-                childs.push(childFunc);
+        var defaultProp:string = this.exmlConfig.getDefaultPropById(node.localName,node.namespace);
+        var defaultType:string = this.exmlConfig.getPropertyType(defaultProp,className);
+        var errorInfo:string = this.getPropertyStr(directChild[0]);
+        if(!defaultProp||!defaultType){
+            libs.exit(2012,this.exmlPath,errorInfo);
+        }
+        this.addChildrenToProp(directChild,defaultType,defaultProp,cb,varName,errorInfo,propList);
+    }
+    /**
+     * 添加多个子节点到指定的属性
+     */
+    private addChildrenToProp(children:Array<any>,type:string,prop:string,
+                              cb:CpCodeBlock,varName:string,errorInfo:string,propList:Array<string>):void{
+        var childFunc:string = "";
+        var childLength:number = children.length;
+        if(childLength>1){
+            if(type!="Array"){
+                libs.exit(2011,this.exmlPath,prop,errorInfo)
             }
-            cb.addAssignment(varName,"["+childs.join(",")+"]",property);
+            var values:Array<any> = [];
+            for(var j:number = 0;j<childLength;j++){
+                var item:any = children[j];
+                childFunc = this.createFuncForNode(item);
+                if(!this.isStateNode(item))
+                    values.push(childFunc);
+            }
+            childFunc = "["+values.join(",")+"]";
         }
         else{
-            childFunc = this.createFuncForNode(directChild[0]);
-            if(childFunc!=""&&!this.isStateNode(child))
-                cb.addAssignment(varName,childFunc,property);
+            var firstChild:any = children[0];
+            if(type=="Array"){
+                if(firstChild.localName=="Array"){
+                    values = [];
+                    if(firstChild.children){
+                        var len:number = firstChild.children.length;
+                        for(var k:number=0;k<len;k++){
+                            item = firstChild.children[k];
+                            childFunc = this.createFuncForNode(item);
+                            if(!this.isStateNode(item))
+                                values.push(childFunc);
+                        }
+                    }
+                    childFunc = "["+values.join(",")+"]";
+                }
+                else{
+                    childFunc = this.createFuncForNode(firstChild);
+                    if(!this.isStateNode(firstChild))
+                        childFunc = "["+childFunc+"]";
+                    else
+                        childFunc = "[]";
+                }
+            }
+            else{
+                var targetClass:string = this.exmlConfig.getClassNameById(firstChild.localName,firstChild.namespace);
+                if(!this.exmlConfig.isInstanceOf(targetClass,type)){
+                    libs.exit(2008,this.exmlPath,targetClass,prop,errorInfo);
+                }
+                childFunc = this.createFuncForNode(firstChild);
+            }
         }
+        if(childFunc!=""){
+            if(childFunc.indexOf("()")==-1)
+                prop = this.formatKey(prop,childFunc);
+            if(propList.indexOf(prop)==-1){
+                propList.push(prop);
+            }
+            else{
+                libs.warn(2103,this.exmlPath,prop,errorInfo);
+            }
+            cb.addAssignment(varName,childFunc,prop);
+        }
+    }
+
+    private getPropertyStr(child:any):string{
+        var parentStr:string = this.toXMLString(child.parent);
+        var childStr:string = this.toXMLString(child).substring(5);
+        return parentStr+"\n      \t"+childStr;
     }
 
     /**
@@ -530,7 +634,7 @@ class EXMLCompiler{
     /**
      * 命名空间为fs的属性名列表
      */
-    public static wingKeys:Array<string> = ["$id","$locked","$includeIn","$excludeFrom"];
+    public static wingKeys:Array<string> = ["$id","$locked","$includeIn","$excludeFrom","id","locked","includeIn","excludeFrom"];
     /**
      * 是否是普通赋值的key
      */
@@ -560,7 +664,12 @@ class EXMLCompiler{
         }
         var stringValue:string = value;//除了字符串，其他类型都去除两端多余空格。
         value = value.trim();
-        if(value.indexOf("{")!=-1){
+        var className:string = this.exmlConfig.getClassNameById(node.localName,node.namespace);
+        var type:string = this.exmlConfig.getPropertyType(key,className);
+        if(!type){
+            libs.exit(2005,this.exmlPath,key,this.toXMLString(node));
+        }
+        if(type!="string"&&value.charAt(0)=="{"&&value.charAt(value.length-1)=="}"){
             value = value.substr(1,value.length-2);
             value = value.trim();
             if(value.indexOf("this.")==0){
@@ -568,10 +677,21 @@ class EXMLCompiler{
                     value = value.substring(5);
                 }
             }
+            if(CodeUtil.isVariableWord(value)){
+                var targetNode:any = this.idToNode[value];
+                if(!targetNode){
+                    libs.exit(2010,this.exmlPath,key,value,this.toXMLString(node));
+                }
+                var targetClass:string = this.exmlConfig.getClassNameById(targetNode.localName,targetNode.namespace);
+                if(!this.exmlConfig.isInstanceOf(targetClass,type)){
+                    libs.exit(2008,this.exmlPath,targetClass,key,this.toXMLString(node));
+                }
+            }
+            else{
+                libs.exit(2009,this.exmlPath,this.toXMLString(node));
+            }
         }
         else{
-            var className:string = this.exmlConfig.getClassNameById(node.localName,node.namespace);
-            var type:string = this.exmlConfig.getPropertyType(key,className,value);
             switch(type){
                 case "number":
                     if(value.indexOf("#")==0)
@@ -579,13 +699,18 @@ class EXMLCompiler{
                     else if(value.indexOf("%")!=-1)
                         value = (parseFloat(value.substr(0,value.length-1))).toString();
                     break;
-                case "string":
-                    value = this.formatString(stringValue);
-                    break;
                 case "boolean":
                     value = (value=="false"||!value)?"false":"true";
                     break;
+                case "egret.IFactory":
+                    value = "new egret.ClassFactory("+value+")";
+                    break;
+                case "string":
+                case "any":
+                    value = this.formatString(stringValue);
+                    break;
                 default:
+                    libs.exit(2008,this.exmlPath,"string",key,this.toXMLString(node));
                     break;
             }
         }
@@ -646,10 +771,7 @@ class EXMLCompiler{
             }
         }
 
-        var obj:any =  this.exmlConfig.getDefaultPropById(this.currentXML.localName,this.currentXML.namespace);
-        var property:string = obj.name;
-        var isArray:boolean = obj.isArray;
-        this.initlizeChildNode(cb,this.currentXML.children,property,isArray,varName);
+        this.initlizeChildNode(this.currentXML,cb,varName);
         var id:string;
         if(this.stateIds.length>0){
             length = this.stateIds.length;
@@ -659,10 +781,30 @@ class EXMLCompiler{
             }
             cb.addEmptyLine();
         }
-        cb.addEmptyLine();
 
+        length = this.skinParts.length;
+        if(length>0){
+            for(i=0;i<length;i++){
+                this.skinParts[i] = "\""+this.skinParts[i]+"\"";
+            }
+            var skinPartStr:string = "["+this.skinParts.join(",")+"]";
+            var skinPartVar:CpVariable = new CpVariable("_skinParts",Modifiers.M_PRIVATE,"Array<string>",skinPartStr,true);
+            this.currentClass.addVariable(skinPartVar);
+            var skinPartFunc:CpFunction = new CpFunction();
+            skinPartFunc.name = "skinParts";
+            skinPartFunc.modifierName = Modifiers.M_PUBLIC;
+            skinPartFunc.isGet = true;
+            skinPartFunc.returnType = "Array<string>";
+            var skinPartCB:CpCodeBlock = new CpCodeBlock();
+            skinPartCB.addReturn(this.currentClass.className+"._skinParts");
+            skinPartFunc.codeBlock = skinPartCB;
+            this.currentClass.addFunction(skinPartFunc);
+        }
+
+
+        this.currentXML.$id = "";
         //生成视图状态代码
-        this.createStates(this.currentXML.children);
+        this.createStates(this.currentXML);
         var states:Array<CpState>;
         var node:any = this.currentXML;
         for(var itemName in node){
@@ -674,7 +816,7 @@ class EXMLCompiler{
                 key = this.formatKey(key,value);
                 var itemValue:string = this.formatValue(key,value,node);
                 var stateName:string = itemName.substr(index+1);
-                states = this.getStateByName(stateName);
+                states = this.getStateByName(stateName,node);
                 var stateLength:number = states.length;
                 if(stateLength>0){
                     for(var i:number=0;i<stateLength;i++){
@@ -724,6 +866,7 @@ class EXMLCompiler{
      * 获取视图状态名称列表
      */
     private getStateNames():void{
+        var stateNames:Array<string> = this.stateNames;
         var states:Array<any>;
         var children = this.currentXML.children;
         if(children){
@@ -749,34 +892,78 @@ class EXMLCompiler{
                 for(var j:number=0;j<len;j++){
                     var group:string = groups[i].trim();
                     if(group){
+                        if(stateNames.indexOf(group)==-1){
+                            stateNames.push(group);
+                        }
                         stateGroups.push(group);
                     }
                 }
             }
-            this.stateCode.push(new CpState(state.$name,stateGroups));
+            var stateName:string = state.$name;
+            if(stateNames.indexOf(stateName)==-1){
+                stateNames.push(stateName);
+            }
+            this.stateCode.push(new CpState(stateName,stateGroups));
         }
     }
 
     /**
      * 解析视图状态代码
      */
-    private createStates(items:Array<any>):void{
+    private createStates(parentNode:any):void{
+        var items:Array<any> = parentNode.children;
         if(!items){
             return;
         }
+        var className:string = this.exmlConfig.getClassNameById(parentNode.localName,parentNode.namespace);
         var length:number = items.length;
         for(var i:number=0;i<length;i++){
             var node:any = items[i];
-            this.createStates(node.children);
-            if(this.isProperty(node)||this.getPackageByNode(node)=="")
+            this.createStates(node);
+            if(node.namespace==EXMLCompiler.W){
                 continue;
-            if(EXMLCompiler.containsState(node)){
+            }
+            if(this.isProperty(node))
+            {
+                var prop:string = node.localName;
+                var index:number = prop.indexOf(".");
+                var children:Array<any> = node.children;
+                if(index==-1||!children||children.length==0){
+                    continue;
+                }
+                var stateName:string = prop.substring(index+1);
+                prop = prop.substring(0,index);
+
+                var type:string = this.exmlConfig.getPropertyType(prop,className);
+                if(type=="Array"){
+                    libs.exit(2013,this.exmlPath,this.getPropertyStr(node));
+                }
+                if(children.length>1){
+                    libs.exit(2011,this.exmlPath,prop,this.getPropertyStr(node));
+                }
+                var firstChild:any = children[0];
+                this.createFuncForNode(firstChild);
+                this.checkIdForState(firstChild);
+                var value:string = "this."+firstChild.$id;
+                states = this.getStateByName(stateName,node);
+                var l:number = states.length;
+                if(l>0){
+                    for(var j:number=0;j<l;j++) {
+                        state = states[j];
+                        state.addOverride(new CpSetProperty(parentNode.$id, prop, value));
+                    }
+                }
+            }
+            else if(this.containsState(node)){
                 var id:string = node.$id;
                 this.checkIdForState(node);
                 var stateName:string;
                 var states:Array<CpState>;
                 var state:CpState;
                 if(this.isStateNode(node)){
+                    if(!this.isIVisualElement(node)){
+                        libs.exit(2007,this.exmlPath,this.toXMLString(node));
+                    }
                     var propertyName:string = "";
                     var parentNode:any = (node.parent);
                     if(parentNode.localName=="Array")
@@ -790,12 +977,18 @@ class EXMLCompiler{
                     var positionObj:any = this.findNearNodeId(node);
                     var stateNames:Array<any> = [];
                     if(node.hasOwnProperty("$includeIn")){
-                        stateNames = node.$includeIn.toString().split(",");
+                        stateNames = node.$includeIn.split(",");
                     }
                     else{
-                        var excludeNames:Array<any> = node.$excludeFrom.toString().split(",");
-                        var stateLength:number = this.stateCode.length;
+                        var excludeNames:Array<any> = node.$excludeFrom.split(",");
+
+                        var stateLength:number = excludeNames.length;
                         for(var j:number=0;j<stateLength;j++){
+                            var name:string = excludeNames[j];
+                            this.getStateByName(name,node);//检查exlcudeFrom是否含有未定义的视图状态名
+                        }
+                        stateLength = this.stateCode.length;
+                        for(j=0;j<stateLength;j++){
                             state = this.stateCode[j];
                             if(excludeNames.indexOf(state.name)==-1)
                                 stateNames.push(state.name);
@@ -805,7 +998,7 @@ class EXMLCompiler{
                     var len:number = stateNames.length;
                     for(var k:number=0;k<len;k++){
                         stateName = stateNames[k];
-                        states = this.getStateByName(stateName);
+                        states = this.getStateByName(stateName,node);
                         if(states.length>0){
                             var l:number = states.length;
                             for(var j:number=0;j<l;j++){
@@ -826,7 +1019,7 @@ class EXMLCompiler{
                         key = this.formatKey(key,value);
                         var value:string = this.formatValue(key,value,node);
                         stateName = name.substr(index+1);
-                        states = this.getStateByName(stateName);
+                        states = this.getStateByName(stateName,node);
                         var l:number = states.length;
                         if(l>0){
                             for(var j:number=0;j<l;j++) {
@@ -839,6 +1032,32 @@ class EXMLCompiler{
             }
         }
 
+    }
+    /**
+     * 检查指定的节点是否是显示对象
+     */
+    private isIVisualElement(node:any):boolean{
+        var className:string = this.exmlConfig.getClassNameById(node.localName,node.namespace);
+        var result:boolean = this.exmlConfig.isInstanceOf(className,"egret.IVisualElement");
+        if(!result){
+            return false;
+        }
+        var parent:any = node.parent;
+        if(!parent){
+            return false;
+        }
+        if(parent.localName=="Array"){
+            parent = parent.parent;
+        }
+        if(!parent){
+            return false;
+        }
+        if(this.isProperty(parent)){
+            return (parent.localName=="elementsContent")
+        }
+
+        var prop:string = this.exmlConfig.getDefaultPropById(parent.localName,parent.namespace);
+        return prop=="elementsContent";
     }
     /**
      * 检查指定的ID是否创建了类成员变量，若没创建则为其创建。
@@ -864,7 +1083,7 @@ class EXMLCompiler{
     /**
      * 通过视图状态名称获取对应的视图状态
      */
-    private getStateByName(name:string):Array<CpState>{
+    private getStateByName(name:string,node:any):Array<CpState>{
         var states:Array<CpState> = [];
         var length:number = this.stateCode.length;
         for(var i:number=0;i<length;i++){
@@ -888,6 +1107,9 @@ class EXMLCompiler{
                         states.push(state);
                 }
             }
+        }
+        if(states.length==0){
+            libs.exit(2006,this.exmlPath,name,this.toXMLString(node));
         }
         return states;
     }
@@ -953,6 +1175,9 @@ class EXMLCompiler{
             var path:string = this.exmlConfig.getPathById(node.localName,node.namespace);
             this.currentClass.addReference(path);
         }
+        if(!moduleName){
+            libs.exit(2003,this.exmlPath,this.toXMLString(node));
+        }
         return moduleName;
     }
 
@@ -963,387 +1188,6 @@ class EXMLCompiler{
         return name.indexOf(".")!=-1;
     }
 
-}
-
-class EXMLConfig{
-    /**
-     * 构造函数
-     */
-    public constructor(){
-        var exmlPath:string = param.getEgretPath()+"/tools/lib/exml/";
-        exmlPath = exmlPath.split("\\").join("/");
-        var str:string = fs.readFileSync(exmlPath+"egret-manifest.xml","utf-8");
-        var manifest:any = xml.parse(str);
-        this.parseManifest(manifest);
-    }
-
-    public srcPath:string;
-
-    /**
-     * 组件清单列表
-     */
-    public componentDic:any = {};
-    /**
-     * 解析框架清单文件
-     */
-    public parseManifest(manifest:any):void{
-
-        var children:Array<any> = manifest.children;
-        var length:number = children.length;
-        for(var i:number=0;i<length;i++){
-            var item:any = children[i];
-            var component:Component = new Component(item);
-            this.componentDic[component.className] = component;
-        }
-        for(var className in this.componentDic){
-            var component:Component = this.componentDic[className];
-            if(!component.defaultProp)
-                this.findProp(component);
-        }
-    }
-    /**
-     * 递归查找默认属性
-     */
-    private findProp(component:Component):string{
-        if(component.defaultProp)
-            return component.defaultProp;
-        var superComp:Component = this.componentDic[component.superClass];
-        if(superComp){
-            var prop:string = this.findProp(superComp);
-            if(prop){
-                component.defaultProp = prop;
-                component.isArray = superComp.isArray;
-            }
-        }
-        return component.defaultProp;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public addComponent(className:string,superClass:string):Component{
-        if(!className)
-            return null;
-        if(superClass==null)
-            superClass = "";
-        className = className.split("::").join(".");
-        superClass = superClass.split("::").join(".");
-        var id:string = className;
-        var index:number = className.lastIndexOf(".");
-        if(index!=-1){
-            id = className.substring(index+1);
-        }
-        var component:Component = new Component();
-        component.id = id;
-        component.className = className;
-        component.superClass = superClass;
-        this.componentDic[className] = component;
-        return component;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public removeComponent(className:string):Component{
-        var component:Component = this.componentDic[className]
-        delete this.componentDic[className];
-        return component;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public hasComponent(className:string):boolean{
-        return this.componentDic[className];
-    }
-
-    private pathToClassName:any = {};
-    private classNameToPath:any = {};
-    /**
-     * @inheritDoc
-     */
-    public getClassNameById(id:string, ns:string):string{
-        var name:string = "";
-        if(id=="Object"){
-            return id;
-        }
-        if(ns==EXMLCompiler.W){
-
-        }
-        else if(!ns||ns==EXMLCompiler.E){
-            name = "egret."+id;
-        }
-        else{
-            var path:string = this.getPathById(id,ns);
-            name = this.pathToClassName[path];
-            if(!name){
-                name = this.readClassNameFromPath(this.srcPath+path,id);
-                this.pathToClassName[path] = name;
-                this.classNameToPath[name] = path;
-            }
-        }
-        return name;
-    }
-
-    private readClassNameFromPath(path:string,id:string):string{
-        var tsText:string = fs.readFileSync(path,"utf-8");
-        tsText = CodeUtil.removeComment(tsText);
-        var className:string = "";
-        while(tsText.length){
-            var index:number = CodeUtil.getFirstVariableIndex("class",tsText);
-            if(index==-1){
-                break;
-            }
-            var preStr:string = tsText.substring(0,index);
-            tsText = tsText.substring(index+5);
-            if(CodeUtil.getFirstVariable(tsText)==id){
-                index = CodeUtil.getLastVariableIndex("module",preStr);
-                if(index==-1){
-                    className = id;
-                    break;
-                }
-                preStr = preStr.substring(index+6);
-                index = preStr.indexOf("{");
-                if(index==-1){
-                    break;
-                }
-                var ns:string = preStr.substring(0,index);
-                className = ns.trim()+"."+id;
-            }
-        }
-        return className;
-    }
-
-    /**
-     * 根据id获取文件路径
-     */
-    public getPathById(id:string,ns:string):string{
-        var className:string = "";
-        if(!ns||ns==EXMLCompiler.W||ns==EXMLCompiler.E){
-            return className;
-        }
-        className = ns.substring(0,ns.length-1)+id;
-        var path:string = className.split(".").join("/");
-        path += ".ts";
-        return path;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public getDefaultPropById(id:string, ns:string):any{
-        var data:any = {name:"",isArray:false};
-        var className:string = this.getClassNameById(id,ns);
-        var component:Component = this.componentDic[className];
-        while(component){
-            if(component.defaultProp)
-                break;
-            className = component.superClass;
-            component = this.componentDic[className];
-        }
-        if(!component)
-            return data;
-        data.name = component.defaultProp;
-        data.isArray = component.isArray;
-        return data;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public getPropertyType(prop:string,className:string,value:string):string{
-        var type:string = this.findType(className,prop);
-        return type;
-    }
-
-    private findType(className:string,prop:string):string{
-        var classData:any = properties[className];
-        if(!classData){
-            var path:string = this.srcPath+this.classNameToPath[className];
-            if(!fs.existsSync(path)){
-                return "string";
-            }
-            var text:string = fs.readFileSync(path,"utf-8");
-            classData = this.getProperties(text,className);
-            if(classData){
-                properties[className] = classData;
-            }
-            else{
-                return "string";
-            }
-        }
-        var type:string = classData[prop];
-        if(!type){
-            type = this.findType(classData["super"],prop);
-        }
-        return type;
-    }
-
-    /**
-     * 获取属性列表
-     */
-    private getProperties(text:string,className:string):any {
-        index = className.lastIndexOf(".");
-        var moduleName:string = "";
-        if (index != -1) {
-            moduleName = className.substring(0, index);
-            className = className.substring(index+1);
-        }
-        var data:any;
-        text = CodeUtil.removeComment(text);
-        if(moduleName){
-            while(text.length>0){
-                var index:number = CodeUtil.getFirstVariableIndex("module",text);
-                if(index==-1){
-                    break;
-                }
-                text = text.substring(index+6);
-                index = text.indexOf("{");
-                if(index==-1){
-                    continue;
-                }
-                var ns:string = text.substring(0,index).trim();
-                if(ns==moduleName){
-                    index = CodeUtil.getBracketEndIndex(text);
-                    if(index!=-1){
-                        var block:string = text.substring(0,index);
-                        index = block.indexOf("{");
-                        block = block.substring(index+1);
-                        data = this.getPropFromBlock(block,className);
-                    }
-                    break;
-                }
-            }
-        }
-        else{
-            data = this.getPropFromBlock(text,className);
-        }
-
-        return data;
-    }
-
-    private getPropFromBlock(block:string,targetClassName:string):any{
-        var data:any;
-        while(block.length>0){
-            var index:number = CodeUtil.getFirstVariableIndex("class",block);
-            if(index==-1){
-                break;
-            }
-            block = block.substring(index+5);
-            var className:string = CodeUtil.getFirstVariable(block);
-            if(className!=targetClassName){
-                continue;
-            }
-            data = {};
-            block = CodeUtil.removeFirstVariable(block,className);
-            var word:string = CodeUtil.getFirstVariable(block);
-            if(word=="extends"){
-                block = CodeUtil.removeFirstVariable(block);
-                word = CodeUtil.getFirstWord(block);
-                if(word.charAt(word.length-1)=="{")
-                    word = word.substring(0,word.length-1).trim();
-                if(word){
-                    data["super"] = word;
-                }
-            }
-            index = CodeUtil.getBracketEndIndex(block);
-            if(index==-1)
-                break;
-            var text:string = block.substring(0,index);
-            index = text.indexOf("{");
-            text = text.substring(index+1);
-            this.readProps(text,data);
-            break;
-        }
-        return data;
-    }
-
-    private basicTypes:Array<any> = ["boolean","number","string"];
-
-    private readProps(text:string,data:any):void{
-        var lines:Array<any> = text.split("\n");
-        var length:number = lines.length;
-        for(var i:number=0;i<length;i++){
-            var line:string = lines[i];
-            var index:number = line.indexOf("public ");
-            if(index==-1)
-                continue;
-            line = line.substring(index+7);
-            var word:string = CodeUtil.getFirstVariable(line);
-            if(!word||word.charAt(0)=="_")
-                continue;
-            if(word=="get"){
-                continue;
-            }
-            else if(word=="set"){
-                line = CodeUtil.removeFirstVariable(line);
-                word = CodeUtil.getFirstVariable(line);
-                if(!word||word.charAt(0)=="_"){
-                    continue;
-                }
-                line = CodeUtil.removeFirstVariable(line);
-                line = line.trim();
-                if(line.charAt(0)=="("){
-                    index = line.indexOf(":");
-                    if(index!=-1){
-                        line = line.substring(index+1);
-                        type = CodeUtil.getFirstVariable(line);
-                        if(this.basicTypes.indexOf(type)!=-1)
-                            data[word] = type;
-                    }
-                }
-            }
-            else{
-                line = CodeUtil.removeFirstVariable(line);
-                line = line.trim();
-                if(line.charAt(0)==":"){
-                    var type:string = CodeUtil.getFirstVariable(line.substring(1));
-                    if(this.basicTypes.indexOf(type)!=-1)
-                        data[word] = type;
-                }
-
-            }
-        }
-    }
-
-}
-
-class Component{
-    /**
-     * 构造函数
-     */
-    public constructor(item?:any){
-        if(item){
-            this.id = item.$id;
-            this.className = "egret."+this.id;
-            if(item["$super"])
-                this.superClass = item.$super;
-            if(item["$default"])
-                this.defaultProp = item.$default;
-            if(item["$array"])
-                this.isArray = <boolean><any> (item.$array=="true");
-        }
-    }
-    /**
-     * 短名ID
-     */
-    public id:string;
-    /**
-     * 完整类名
-     */
-    public className:string;
-    /**
-     * 父级类名
-     */
-    public superClass:string = "";
-    /**
-     * 默认属性
-     */
-    public defaultProp:string = "";
-    /**
-     * 默认属性是否为数组类型
-     */
-    public isArray:boolean = false;
 }
 
 
@@ -1500,13 +1344,19 @@ class CpClass extends CodeBase{
         return false;
     }
 
-    private sortOn(list:Array<any>,key:string):void{
+    private sortOn(list:Array<any>,key:string,reverse:boolean=false):void{
         var length:number = list.length;
         for(var i:number=0; i<length; i++){
             var min:number = i;
             for(var j:number=i+1;j<length;j++){
-                if(list[j][key] < list[min][key])
-                    min = j;
+                if(reverse){
+                    if(list[j][key] > list[min][key])
+                        min = j;
+                }
+                else{
+                    if(list[j][key] < list[min][key])
+                        min = j;
+                }
             }
             if(min!=i){
                 var temp:any = list[min];
@@ -1596,7 +1446,9 @@ class CpClass extends CodeBase{
         //字符串排序
         this.referenceBlock.sort();
         this.sortOn(this.variableBlock,"name");
+        this.sortOn(this.variableBlock,"isStatic",true);
         this.sortOn(this.functionBlock,"name");
+        this.sortOn(this.functionBlock,"isGet",true);
 
         var isFirst:boolean = true;
         var index:number = 0;
@@ -1860,6 +1712,10 @@ class CpFunction extends CodeBase{
      */
     public isStatic:boolean = false;
 
+    public isSet:boolean = false;
+
+    public isGet:boolean = false;
+
     /**
      *参数列表
      */
@@ -1894,8 +1750,15 @@ class CpFunction extends CodeBase{
             noteStr = this.notation.toCode()+"\n";
         }
 
+        var getSetStr:string = "";
+        if(this.isGet){
+            getSetStr = "get ";
+        }
+        else if(this.isSet){
+            getSetStr = "set ";
+        }
         var returnStr:string = noteStr+indentStr+this.modifierName+" "
-            +staticStr+" "+this.name+"(";
+            +staticStr+getSetStr+this.name+"(";
 
         var isFirst:boolean = true;
         index = 0;
@@ -2185,351 +2048,4 @@ class Modifiers{
 
     public static M_STATIC:string = "static";
 
-}
-
-
-class CodeUtil{
-
-    /**
-     * 判断一个字符串是否为合法变量名,第一个字符为字母,下划线或$开头，第二个字符开始为字母,下划线，数字或$
-     */
-    public static isVariableWord(word:string):boolean{
-        if(!word)
-            return false;
-        var char:string = word.charAt(0);
-        if(!CodeUtil.isVariableFirstChar(char)){
-            return false;
-        }
-        var length:number = word.length;
-        for(var i:number=1;i<length;i++){
-            char = word.charAt(i);
-            if(!CodeUtil.isVariableChar(char)){
-                return false;
-            }
-        }
-        return true;
-    }
-    /**
-     * 是否为合法变量字符,字符为字母,下划线，数字或$
-     */
-    public static isVariableChar(char:string):boolean{
-        return (char<="Z"&&char>="A"||char<="z"&&char>="a"||
-            char<="9"&&char>="0"||char=="_"||char=="$")
-    }
-    /**
-     * 是否为合法变量字符串的第一个字符,字符为字母,下划线或$
-     */
-    public static isVariableFirstChar(char:string):boolean{
-        return (char<="Z"&&char>="A"||char<="z"&&char>="a"||
-            char=="_"||char=="$")
-    }
-
-    /**
-     * 判断一段代码中是否含有某个变量字符串，且该字符串的前后都不是变量字符。
-     */
-    public static containsVariable(key:string,codeText:string):boolean{
-        var contains:boolean = false;
-        while(codeText.length>0){
-            var index:number = codeText.indexOf(key);
-            if(index==-1)
-                break;
-            var lastChar:string = codeText.charAt(index+key.length);
-            var firstChar:string = codeText.charAt(index-1);
-            if(!CodeUtil.isVariableChar(firstChar)&&!CodeUtil.isVariableChar(lastChar)){
-                contains = true;
-                break;
-            }
-            else{
-                codeText = codeText.substring(index+key.length);
-            }
-        }
-        return contains;
-    }
-    /**
-     * 获取第一个含有key关键字的起始索引，且该关键字的前后都不是变量字符。
-     */
-    public static getFirstVariableIndex(key:string,codeText:string):number{
-        var subLength:number = 0;
-        while(codeText.length){
-            var index:number = codeText.indexOf(key);
-            if(index==-1){
-                break;
-            }
-            var lastChar:string = codeText.charAt(index+key.length);
-            var firstChar:string = codeText.charAt(index-1);
-            if(!CodeUtil.isVariableChar(firstChar)&&!CodeUtil.isVariableChar(lastChar)){
-                return subLength+index;
-            }
-            else{
-                subLength += index+key.length;
-                codeText = codeText.substring(index+key.length);
-            }
-        }
-        return -1;
-    }
-    /**
-     * 获取最后一个含有key关键字的起始索引，且该关键字的前后都不是变量字符。
-     */
-    public static getLastVariableIndex(key:string,codeText:string):number{
-        while(codeText.length){
-            var index:number = codeText.lastIndexOf(key);
-            if(index==-1){
-                break;
-            }
-            var lastChar:string = codeText.charAt(index+key.length);
-            var firstChar:string = codeText.charAt(index-1);
-            if(!CodeUtil.isVariableChar(firstChar)&&!CodeUtil.isVariableChar(lastChar)){
-                return index;
-            }
-            else{
-                codeText = codeText.substring(0,index);
-            }
-        }
-        return -1;
-    }
-
-
-    /**
-     * 获取第一个词,遇到空白字符或 \n \r \t 后停止。
-     */
-    public static getFirstWord(str:string):string{
-        str = str.trim();
-        var index:number = str.indexOf(" ");
-        if(index==-1)
-            index = Number.MAX_VALUE;
-        var rIndex:number = str.indexOf("\r");
-        if(rIndex==-1)
-            rIndex = Number.MAX_VALUE;
-        var nIndex:number = str.indexOf("\n");
-        if(nIndex==-1)
-            nIndex = Number.MAX_VALUE;
-        var tIndex:number = str.indexOf("\t");
-        if(tIndex==-1)
-            tIndex = Number.MAX_VALUE;
-        index = Math.min(index,rIndex,nIndex,tIndex);
-        str = str.substr(0,index);
-        return str.trim();
-    }
-    /**
-     * 移除第一个词
-     * @param str 要处理的字符串
-     * @param word 要移除的词，若不传入则自动获取。
-     */
-    public static removeFirstWord(str:string,word:string=""):string{
-        if(!word){
-            word = CodeUtil.getFirstWord(str);
-        }
-        var index:number = str.indexOf(word);
-        if(index==-1)
-            return str;
-        return str.substring(index+word.length);
-    }
-    /**
-     * 获取最后一个词,遇到空白字符或 \n \r \t 后停止。
-     */
-    public static getLastWord(str:string):string{
-        str = str.trim();
-        var index:number = str.lastIndexOf(" ");
-        var rIndex:number = str.lastIndexOf("\r");
-        var nIndex:number = str.lastIndexOf("\n");
-        var tIndex:number = str.indexOf("\t");
-        index = Math.max(index,rIndex,nIndex,tIndex);
-        str = str.substring(index+1);
-        return str.trim();
-    }
-    /**
-     * 移除最后一个词
-     * @param str 要处理的字符串
-     * @param word 要移除的词，若不传入则自动获取。
-     */
-    public static removeLastWord(str:string,word:string=""):string{
-        if(!word){
-            word = CodeUtil.getLastWord(str);
-        }
-        var index:number = str.lastIndexOf(word);
-        if(index==-1)
-            return str;
-        return str.substring(0,index);
-    }
-    /**
-     * 获取字符串起始的第一个变量，返回的字符串两端均没有空白。若第一个非空白字符就不是合法变量字符，则返回空字符串。
-     */
-    public static getFirstVariable(str:string):string{
-        str = str.trim();
-        var word:string = "";
-        var length:number = str.length;
-        for(var i:number=0;i<length;i++){
-            var char:string = str.charAt(i);
-            if(CodeUtil.isVariableChar(char)){
-                word += char;
-            }
-            else{
-                break;
-            }
-        }
-        return word.trim();
-    }
-    /**
-     * 移除第一个变量
-     * @param str 要处理的字符串
-     * @param word 要移除的变量，若不传入则自动获取。
-     */
-    public static removeFirstVariable(str:string,word:string=""):string{
-        if(!word){
-            word = CodeUtil.getFirstVariable(str);
-        }
-        var index:number = str.indexOf(word);
-        if(index==-1)
-            return str;
-        return str.substring(index+word.length);
-    }
-    /**
-     * 获取字符串末尾的最后一个变量,返回的字符串两端均没有空白。若最后一个非空白字符就不是合法变量字符，则返回空字符串。
-     */
-    public static getLastVariable(str:string):string{
-        str = str.trim();
-        var word:string = "";
-        for(var i:number=str.length-1;i>=0;i--){
-            var char:string = str.charAt(i);
-            if(CodeUtil.isVariableChar(char)){
-                word = char+word;
-            }
-            else{
-                break;
-            }
-        }
-        return word.trim();
-    }
-    /**
-     * 移除最后一个变量
-     * @param str 要处理的字符串
-     * @param word 要移除的变量，若不传入则自动获取。
-     */
-    public static removeLastVariable(str:string,word:string=""):string{
-        if(!word){
-            word = CodeUtil.getLastVariable(str);
-        }
-        var index:number = str.lastIndexOf(word);
-        if(index==-1)
-            return str;
-        return str.substring(0,index);
-    }
-    /**
-     * 获取一对括号的结束点,例如"class A{ function B(){} } class",返回24,若查找失败，返回-1。
-     */
-    public static getBracketEndIndex(codeText:string,left:string="{",right:string="}"):number{
-        var indent:number = 0;
-        var text:string = "";
-        while(codeText.length>0){
-            var index:number = codeText.indexOf(left);
-            if(index==-1)
-                index = Number.MAX_VALUE;
-            var endIndex:number = codeText.indexOf(right);
-            if(endIndex==-1)
-                endIndex = Number.MAX_VALUE;
-            index = Math.min(index,endIndex);
-            if(index==Number.MAX_VALUE){
-                return -1;
-            }
-            text += codeText.substring(0,index+1);
-            codeText = codeText.substring(index+1);
-            if(index==endIndex)
-                indent--;
-            else
-                indent++;
-            if(indent==0){
-                break;
-            }
-            if(codeText.length==0)
-                return -1;
-        }
-        return text.length-1;
-    }
-    /**
-     * 从后往前搜索，获取一对括号的起始点,例如"class A{ function B(){} } class",返回7，若查找失败，返回-1。
-     */
-    public static getBracketStartIndex(codeText:string,left:string="{",right:string="}"):number{
-        var indent:number = 0;
-        while(codeText.length>0){
-            var index:number = codeText.lastIndexOf(left);
-            var endIndex:number = codeText.lastIndexOf(right);
-            index = Math.max(index,endIndex);
-            if(index==-1){
-                return -1;
-            }
-            codeText = codeText.substring(0,index);
-            if(index==endIndex)
-                indent++;
-            else
-                indent--;
-            if(indent==0){
-                break;
-            }
-            if(codeText.length==0)
-                return -1;
-        }
-        return codeText.length;
-    }
-
-    /**
-     * 移除代码注释和字符串常量
-     */
-    public static removeComment(codeText:string):string{
-        var NBSP:string = "\v3\v";
-        var trimText:string = "";
-        codeText = codeText.split("\\\"").join("\v1\v");
-        codeText = codeText.split("\\\'").join("\v2\v");
-        while(codeText.length>0){
-            var quoteIndex:number = codeText.indexOf("\"");
-            if(quoteIndex==-1)
-                quoteIndex = Number.MAX_VALUE;
-            var squoteIndex:number = codeText.indexOf("'");
-            if(squoteIndex==-1)
-                squoteIndex = Number.MAX_VALUE;
-            var commentIndex:number = codeText.indexOf("/**");
-            if(commentIndex==-1)
-                commentIndex = Number.MAX_VALUE;
-            var lineCommonentIndex:number = codeText.indexOf("//");
-            if(lineCommonentIndex==-1)
-                lineCommonentIndex = Number.MAX_VALUE;
-            var index:number = Math.min(quoteIndex,squoteIndex,commentIndex,lineCommonentIndex);
-            if(index==Number.MAX_VALUE){
-                trimText += codeText;
-                break;
-            }
-            trimText += codeText.substring(0,index)+NBSP;
-            codeText = codeText.substring(index);
-            switch(index){
-                case quoteIndex:
-                    codeText = codeText.substring(1);
-                    index = codeText.indexOf("\"");
-                    if(index==-1)
-                        index = codeText.length-1;
-                    codeText = codeText.substring(index+1);
-                    break;
-                case squoteIndex:
-                    codeText = codeText.substring(1);
-                    index = codeText.indexOf("'");
-                    if(index==-1)
-                        index=codeText.length-1;
-                    codeText = codeText.substring(index+1);
-                    break;
-                case commentIndex:
-                    index = codeText.indexOf("*/");
-                    if(index==-1)
-                        index=codeText.length-1;
-                    codeText = codeText.substring(index+2);
-                    break;
-                case lineCommonentIndex:
-                    index = codeText.indexOf("\n");
-                    if(index==-1)
-                        index=codeText.length-1;
-                    codeText = codeText.substring(index+1);
-                    break;
-            }
-        }
-        codeText = trimText.split("\v1\v").join("\\\"");
-        codeText = codeText.split("\v2\v").join("\\\'");
-        return codeText;
-    }
 }

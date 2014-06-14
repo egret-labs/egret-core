@@ -19,9 +19,20 @@ exports.error_code = {
     8001:"请输入命令行选项{color_green} {0} {color_normal}的参数,并确认是以下值之一: {color_green}[{1}]{color_normal}",
     8002:"{color_red}请选对正确的egret项目目录！{color_normal}\n\tEgret_Project\t\t{color_gray}//项目目录{color_normal}\n\t\t--launcher\t{color_gray}//起始目录{color_normal}\n\t\t--src\t\t{color_gray}//源代码目录{color_normal}",
     8003:"配置文件{0}不存在",
-    2001:"找不到EXML文件:{0}",
-    2002:"不是有效的XML文件:{0}"
-
-
-
+    2001:"{0}: error 找不到EXML文件",
+    2002:"{0}: error 不是有效的XML文件",
+    2003:"{0}: error 无法找到节点所对应的类定义\n{1}",
+    2004:"{0}: error 节点不能含有同名的id属性\n{1}",
+    2005:"{0}: error 节点上不存在名为'{1}'的属性:\n{2}",
+    2006:"{0}: error 未定义的视图状态名称:'{1}'\n{2}",
+    2007:"{0}: error 只有处于容器内的egret.IVisualElement对象可以使用includeIn和excludeFrom属性\n{1}",
+    2008:"{0}: error 无法将'{1}'类型的值赋给属性:'{2}'\n{3}",
+    2009:"{0}: error 在节点属性值的‘{}’标签内只能引用一个ID，不允许使用复杂表达式\n{1}",
+    2010:"{0}: error 属性:'{1}'所引用的ID: '{2}'不存在\n{3}",
+    2011:"{0}: error 无法将多个子节点赋值给同一个属性:'{1}'\n{2}",
+    2012:"{0}: error 节点上不存在默认属性，必须显式声明子节点要赋值到的属性名\n{1}",
+    2013:"{0}: error 类型为Array的属性节点上不允许使用视图状态语法\n{1}",
+    2101:"{0}: warning 在w:Declarations内的子节点，不允许使用includeIn和excludeFrom属性\n{1}",
+    2102:"{0}: warning 在属性节点上找不到任何子节点\n{1}",
+    2103:"{0}: warning 节点上的同一个属性'{1}'被多次赋值\n{2}"
 }

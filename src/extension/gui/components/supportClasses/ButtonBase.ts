@@ -42,52 +42,52 @@ module egret {
 	 * @classdesc
 	 * 按钮组件基类
 	 * @extends egret.SkinnableComponent
-	 */	
+	 */
 	export class ButtonBase extends SkinnableComponent{
 		/**
 		 * 构造函数
 		 * @method egret.ButtonBase#constructor
-		 */		
+		 */
 		public constructor(){
 			super();
 			this.touchChildren = false;
 			this.addHandlers();
 		}
-		
+
 		/**
 		 * 已经开始过不断抛出buttonDown事件的标志
-		 */		
+		 */
 		private _downEventFired:boolean = false;
-		
+
 		/**
-		 * 重发buttonDown事件计时器 
-		 */		
+		 * 重发buttonDown事件计时器
+		 */
 		private autoRepeatTimer:Timer;
-		
+
 		/**
 		 * [SkinPart]按钮上的文本标签
 		 * @member egret.ButtonBase#labelDisplay
 		 */
 		public labelDisplay:IDisplayText;
 
-		
+
 		private _autoRepeat:boolean = false;
 		/**
 		 * 指定在用户按住鼠标按键时是否重复分派 buttonDown 事件。
 		 * @member egret.ButtonBase#autoRepeat
-		 */		
+		 */
 		public get autoRepeat():boolean{
 			return this._autoRepeat;
 		}
-		
+
 		public set autoRepeat(value:boolean){
 			if (value == this._autoRepeat)
 				return;
-			
+
 			this._autoRepeat = value;
 			this.checkAutoRepeatTimerConditions(this.isDown());
 		}
-		
+
 		private _repeatDelay:number = 35;
 		/**
 		 * 在第一个 buttonDown 事件之后，以及相隔每个 repeatInterval 重复一次 buttonDown 事件之前，需要等待的毫秒数。
@@ -100,13 +100,13 @@ module egret {
 		public set repeatDelay(value:number){
 			this._repeatDelay = value;
 		}
-		
+
 		private _repeatInterval:number = 35;
 
 		/**
 		 * 用户在按钮上按住鼠标时，buttonDown 事件之间相隔的毫秒数。
 		 * @member egret.ButtonBase#repeatInterval
-		 */		
+		 */
 		public get repeatInterval():number{
 			return this._repeatInterval;
 		}
@@ -134,20 +134,20 @@ module egret {
 		}
 
 		private _keepDown:boolean = false;
-		
+
 		/**
 		 * 强制让按钮停在鼠标按下状态,此方法不会导致重复抛出buttonDown事件,仅影响皮肤State。
 		 * @method egret.ButtonBase#_keepDown
 		 * @param down {boolean} 是否按下
-		 */				
+		 */
 		public _setKeepDown(down:boolean):void{
 			if (this._keepDown == down)
 				return;
 			this._keepDown = down;
 			this.invalidateSkinState();
 		}
-		
-		
+
+
 		private _label:string = "";
         /**
          * 要在按钮上显示的文本
@@ -177,27 +177,27 @@ module egret {
             }
         }
 
-		
-		private _mouseCaptured:boolean = false; 
+
+		private _mouseCaptured:boolean = false;
 		/**
 		 * 指示第一次分派 MouseEvent.MOUSE_DOWN 时，是否按下鼠标以及鼠标指针是否在按钮上。
 		 * @member egret.ButtonBase#mouseCaptured
-		 */		
+		 */
 		public get mouseCaptured():boolean{
 			return this._mouseCaptured;
 		}
-		
+
 		public set mouseCaptured(value:boolean){
 			if (value == this._mouseCaptured)
 				return;
-			
-			this._mouseCaptured = value;        
+
+			this._mouseCaptured = value;
 			this.invalidateSkinState();
 			if (!value)
 				this.removeStageMouseHandlers();
 			this.checkButtonDownConditions();
 		}
-		
+
 		private _stickyHighlighting:boolean = false;
 		/**
 		 * 如果为 false，则按钮会在用户按下它时显示其鼠标按下时的外观，但在用户将鼠标拖离它时将改为显示鼠标经过的外观。
@@ -220,23 +220,23 @@ module egret {
 
 		/**
 		 * 开始抛出buttonDown事件
-		 */		
+		 */
 		private checkButtonDownConditions():void{
 			var isCurrentlyDown:boolean = this.isDown();
 			if (this._downEventFired != isCurrentlyDown){
 				if (isCurrentlyDown){
                     UIEvent.dispatchUIEvent(this,UIEvent.BUTTON_DOWN);
 				}
-				
+
 				this._downEventFired = isCurrentlyDown;
 				this.checkAutoRepeatTimerConditions(isCurrentlyDown);
 			}
 		}
-		
+
 		/**
 		 * 添加鼠标事件监听
 		 * @method egret.ButtonBase#addHandlers
-		 */		
+		 */
 		public addHandlers():void{
 			this.addEventListener(TouchEvent.TOUCH_ROLL_OVER, this.mouseEventHandler, this);
 			this.addEventListener(TouchEvent.TOUCH_ROLL_OUT, this.mouseEventHandler, this);
@@ -244,78 +244,78 @@ module egret {
 			this.addEventListener(TouchEvent.TOUCH_END, this.mouseEventHandler, this);
 			this.addEventListener(TouchEvent.TOUCH_TAP, this.mouseEventHandler, this);
 		}
-		
+
 		/**
 		 * 添加舞台鼠标弹起事件监听
-		 */		
+		 */
 		private addStageMouseHandlers():void{
 			UIGlobals.stage.addEventListener(TouchEvent.TOUCH_END,this.stage_mouseUpHandler,this);
-			
+
 			UIGlobals.stage.addEventListener(Event.LEAVE_STAGE,this.stage_mouseUpHandler,this);
 		}
-		
+
 		/**
 		 * 移除舞台鼠标弹起事件监听
-		 */	
+		 */
 		private removeStageMouseHandlers():void{
 			UIGlobals.stage.removeEventListener(TouchEvent.TOUCH_END,this.stage_mouseUpHandler,this);
-			
+
 			UIGlobals.stage.removeEventListener(Event.LEAVE_STAGE,this.stage_mouseUpHandler,this);
 		}
-		
+
 		/**
 		 * 按钮是否是按下的状态
-		 */		
+		 */
 		private isDown():boolean{
 			if (!this.enabled)
 				return false;
-			
+
 			if (this.mouseCaptured && (this.hovered || this.stickyHighlighting))
 				return true;
 			return false;
 		}
-		
-		
+
+
 		/**
 		 * 检查需要启用还是关闭重发计时器
-		 */		
+		 */
 		private checkAutoRepeatTimerConditions(buttonDown:boolean):void{
 			var needsTimer:boolean = this.autoRepeat && buttonDown;
 			var hasTimer:boolean = this.autoRepeatTimer != null;
-			
+
 			if (needsTimer == hasTimer)
 				return;
-			
+
 			if (needsTimer)
 				this.startTimer();
 			else
 				this.stopTimer();
 		}
-		
+
 		/**
 		 * 启动重发计时器
-		 */		
+		 */
 		private startTimer():void{
 			this.autoRepeatTimer = new Timer(1);
 			this.autoRepeatTimer.delay = this._repeatDelay;
 			this.autoRepeatTimer.addEventListener(TimerEvent.TIMER, this.autoRepeat_timerDelayHandler, this);
 			this.autoRepeatTimer.start();
 		}
-		
+
 		/**
 		 * 停止重发计时器
-		 */		
+		 */
 		private stopTimer():void{
 			this.autoRepeatTimer.stop();
 			this.autoRepeatTimer = null;
 		}
-		
-		
+
+
 		/**
 		 * 鼠标事件处理
 		 * @method egret.ButtonBase#mouseEventHandler
-		 * @param event {Event} 
-		 */	
+		 * @param event {Event}
+		 */
 		public mouseEventHandler(event:Event):void{
 			var touchEvent:TouchEvent = <TouchEvent> event;
 			switch (event.type){
@@ -338,7 +338,7 @@ module egret {
 					this.mouseCaptured = true;
 					break;
 				}
-					
+
 				case TouchEvent.TOUCH_END:{
 					if (event.target == this){
 						this.hovered = true;
@@ -359,51 +359,51 @@ module egret {
 				}
 			}
 		}
-		
+
 		/**
 		 * 按钮弹起事件
 		 * @method egret.ButtonBase#buttonReleased
-		 */		
+		 */
 		public buttonReleased():void{
 		}
-		
+
 		/**
 		 * 按钮点击事件
 		 * @method egret.ButtonBase#clickHandler
-		 * @param event {TouchEvent} 
-		 */		
+		 * @param event {TouchEvent}
+		 */
 		public clickHandler(event:TouchEvent):void{
 		}
-		
+
 		/**
 		 * 舞台上鼠标弹起事件
-		 */		
+		 */
 		private stage_mouseUpHandler(event:Event):void{
 			if (event.target == this)
 				return;
-			
+
 			this.mouseCaptured = false;
 		}
-		
+
 		/**
 		 * 自动重发计时器首次延迟结束事件
-		 */		
+		 */
 		private autoRepeat_timerDelayHandler(event:TimerEvent):void{
 			this.autoRepeatTimer.reset();
 			this.autoRepeatTimer.removeEventListener( TimerEvent.TIMER, this.autoRepeat_timerDelayHandler, this);
-			
+
 			this.autoRepeatTimer.delay = this._repeatInterval;
 			this.autoRepeatTimer.addEventListener( TimerEvent.TIMER, this.autoRepeat_timerHandler, this);
 			this.autoRepeatTimer.start();
 		}
-		
+
 		/**
 		 * 自动重发buttonDown事件
-		 */		
+		 */
 		private autoRepeat_timerHandler(event:TimerEvent):void{
             UIEvent.dispatchUIEvent(this,UIEvent.BUTTON_DOWN);
 		}
-		
+
 		/**
 		 * @method egret.ButtonBase#getCurrentSkinState
 		 * @returns {string}
@@ -411,7 +411,7 @@ module egret {
 		public getCurrentSkinState():string{
 			if (!this.enabled)
 				return super.getCurrentSkinState();
-			
+
 			if (this.isDown()||this._keepDown)
 				return "down";
 
@@ -420,15 +420,15 @@ module egret {
 
 			return "up";
 		}
-		
+
 		/**
 		 * @method egret.ButtonBase#partAdded
-		 * @param partName {string} 
-		 * @param instance {any} 
+		 * @param partName {string}
+		 * @param instance {any}
 		 */
 		public partAdded(partName:string, instance:any):void{
 			super.partAdded(partName, instance);
-			
+
 			if (instance == this.labelDisplay){
 				this.labelDisplay.text = this._label;
 			}
