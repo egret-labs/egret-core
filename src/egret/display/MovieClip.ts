@@ -41,9 +41,15 @@ module egret {
         private delegate:MovieClipDelegate;
         public frameRate:number = 60;
 
-        constructor(data, texture:Texture) {
+        constructor(data, texture?:Texture) {
+
             super();
-            this.delegate = new DefaultMovieClipDelegate(data, texture);
+            if (texture != null && texture instanceof Texture) {
+                this.delegate = new DefaultMovieClipDelegate(data, texture);
+            }
+            else {
+                this.delegate = data;
+            }
             this.delegate.setMovieClip(this);
         }
 
