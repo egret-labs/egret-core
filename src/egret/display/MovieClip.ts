@@ -35,12 +35,11 @@
 /// <reference path="../utils/Logger.ts"/>
 
 module egret {
-    /**
-     * MovieClip是位图动画序列类，由FlashPro + egret插件生成配置文件
-     */
+
     export class MovieClip extends DisplayObjectContainer {
 
         private delegate:MovieClipDelegate;
+        public frameRate:number = 60;
 
         constructor(data, texture:Texture) {
             super();
@@ -78,7 +77,7 @@ module egret {
         }
 
         /**
-         * 方法名改为 release
+         * 方法名改为 dispose
          * @deprecated
          */
         public release() {
@@ -107,8 +106,8 @@ module egret {
          * @deprecated
          */
         public setInterval(value:number) {
-            Logger.warning("MovieClip#setInterval方法即将废弃");
-            this.delegate["_interval"] = value;
+            Logger.warning("MovieClip#setInterval方法即将废弃,请使用MovieClip#frameRate代替");
+            this.frameRate = 60 / value;
         }
 
         /**
@@ -138,14 +137,10 @@ module egret {
         private _totalFrame:number = 0;
         private _spriteSheet:SpriteSheet;
         private _passTime:number = 0;
-        private _oneFrameTime = 1000 / 60;
-        private _interval = 0;
         private _resPool = {};
         private _currentFrameIndex:number = 0;
         private _currentFrameName:string;
 
-
-        private _currentInterval = 0;
         private _isPlaying:boolean = false;
         private movieClip:MovieClip;
 
@@ -155,7 +150,6 @@ module egret {
         constructor(public data, texture:Texture) {
             this._frameData = data;
             this._spriteSheet = new SpriteSheet(texture._bitmapData);
-            this._oneFrameTime = 1000 / egret.MainContext.instance.deviceContext.frameRate;
         }
 
         public setMovieClip(movieClip:MovieClip):void {
@@ -169,7 +163,6 @@ module egret {
             this.checkHasFrame(frameName);
             this._isPlaying = true;
             this._currentFrameIndex = 0;
-            this._currentInterval = 0;
             this._currentFrameName = frameName;
 
             this.playNextFrame();
@@ -181,8 +174,8 @@ module egret {
         public gotoAndStop(frameName:string):void {
             this.checkHasFrame(frameName);
             this.stop();
+            this._passTime = 0;
             this._currentFrameIndex = 0;
-            this._currentInterval = 0;
             this._currentFrameName = frameName;
             this._totalFrame = this._frameData.frames[frameName].totalFrame;
             this.playNextFrame();
@@ -207,13 +200,10 @@ module egret {
         }
 
         private update(advancedTime:number):void {
-            //设置间隔之后，间隔不到则不处理
-            if (this._interval != this._currentInterval) {
-                this._currentInterval++;
-                return;
-            }
-            var last = this._passTime % this._oneFrameTime;
-            var num = Math.floor((last + advancedTime) / this._oneFrameTime);
+
+            var oneFrameTime = 1000 / this.movieClip.frameRate;
+            var last = this._passTime % oneFrameTime;
+            var num = Math.floor((last + advancedTime) / oneFrameTime);
             while (num >= 1) {
                 if (num == 1) {
                     this.playNextFrame();
@@ -227,7 +217,6 @@ module egret {
         }
 
         private playNextFrame(needShow:boolean = true) {
-            this._currentInterval = 0;
             var frameData = this._frameData.frames[this._currentFrameName].childrenFrame[this._currentFrameIndex];
             if (needShow) {
                 var texture:Texture = this.getTexture(frameData.res);
@@ -246,15 +235,6 @@ module egret {
                 this._currentFrameIndex = 0;
             }
         }
-
-        /**
-         * 设置间隔
-         * @param value
-         */
-        public setInterval(value:number) {
-            this._interval = value;
-        }
-
 
         private getTexture(name:string):Texture {
             var resData = this._frameData.res[name];
