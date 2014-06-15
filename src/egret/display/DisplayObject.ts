@@ -580,15 +580,15 @@ module egret {
             var matrix = DisplayObject.identityMatrixForGetConcatenated.identity();
             var o = this;
             while (o != null) {
-                if (o.anchorX != 0 || o.anchorY != 0) {
+                if (o._anchorX != 0 || o._anchorY != 0) {
                     var bounds = o.getBounds(Rectangle.identity);
-                    matrix.prependTransform(o.x, o.y, o.scaleX, o.scaleY, o.rotation, o.skewX, o.skewY,
-                            bounds.width * o.anchorX, bounds.height * o.anchorY);
+                    matrix.prependTransform(o._x, o._y, o._scaleX, o._scaleY, o._rotation, o._skewX, o._skewY,
+                        bounds.width * o._anchorX, bounds.height * o._anchorY);
                 }
                 else {
-                    matrix.prependTransform(o.x, o.y, o.scaleX, o.scaleY, o.rotation, o.skewX, o.skewY, o.anchorOffsetX, o.anchorOffsetY);
+                    matrix.prependTransform(o._x, o._y, o._scaleX, o._scaleY, o._rotation, o._skewX, o._skewY, o._anchorOffsetX, o._anchorOffsetY);
                 }
-                o = o.parent;
+                o = o._parent;
             }
             return matrix;
         }
@@ -669,8 +669,22 @@ module egret {
         }
 
 
-        public _getMatrix():egret.Matrix {
-            return Matrix.identity.identity().appendTransformFromDisplay(this);
+        public _getMatrix():Matrix {
+
+            var matrix = Matrix.identity.identity();
+            var anchorX, anchorY;
+            if (this._anchorX != 0 || this._anchorY != 0) {
+                var bounds = this.getBounds(Rectangle.identity);
+                anchorX = bounds.width * this._anchorX;
+                anchorY = bounds.height * this._anchorY;
+            }
+            else {
+                anchorX = this._anchorOffsetX;
+                anchorY = this._anchorOffsetY;
+            }
+            matrix.appendTransform(this._x, this._y, this._scaleX, this._scaleY, this._rotation,
+                this._skewX, this._skewY, anchorX, anchorY);
+            return matrix;
         }
 
         /**
@@ -684,12 +698,12 @@ module egret {
 
         public _getOffsetPoint():egret.Point {
             var o = this;
-            var regX = o.anchorOffsetX;
-            var regY = o.anchorOffsetY;
-            if (o.anchorX != 0 || o.anchorY != 0) {
+            var regX = o._anchorOffsetX;
+            var regY = o._anchorOffsetY;
+            if (o._anchorX != 0 || o._anchorY != 0) {
                 var bounds = o.getBounds(Rectangle.identity);
-                regX = o.anchorX * bounds.width;
-                regY = o.anchorY * bounds.height;
+                regX = o._anchorX * bounds.width;
+                regY = o._anchorY * bounds.height;
             }
             var result = Point.identity;
             result.x = regX;
@@ -751,16 +765,16 @@ module egret {
             }
 
             var length:number = list.length;
-            var targetIndex:number = length-1;
+            var targetIndex:number = length - 1;
             for (var i:number = length - 2; i >= 0; i--) {
                 list.push(list[i]);
             }
             event._reset();
-            this._dispatchPropagationEvent(event,list,targetIndex);
+            this._dispatchPropagationEvent(event, list, targetIndex);
             return !event.isDefaultPrevented();
         }
 
-        public _dispatchPropagationEvent(event:Event,list:Array<DisplayObject>,targetIndex:number):void{
+        public _dispatchPropagationEvent(event:Event, list:Array<DisplayObject>, targetIndex:number):void {
             var length:number = list.length;
             for (var i:number = 0; i < length; i++) {
                 var currentTarget:DisplayObject = list[i];
