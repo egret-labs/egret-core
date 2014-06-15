@@ -500,15 +500,9 @@ module egret {
             var o = this;
             o.worldTransform.identity().appendMatrix(o._parent.worldTransform);
             var anchorX, anchorY;
-            if (o._anchorX != 0 || o._anchorY != 0) {
-                var bounds = o.getBounds(Rectangle.identity);
-                anchorX = bounds.width * o._anchorX;
-                anchorY = bounds.height * o._anchorY;
-            }
-            else {
-                anchorX = o._anchorOffsetX;
-                anchorY = o._anchorOffsetY;
-            }
+            var resultPoint = o._getOffsetPoint();
+            anchorX = resultPoint.x;
+            anchorY = resultPoint.y;
             o.worldTransform.appendTransform(o._x, o._y, o._scaleX, o._scaleY, o._rotation,
                 o._skewX, o._skewY, anchorX, anchorY);
             if (o._scrollRect) {
@@ -670,23 +664,17 @@ module egret {
 
             var matrix = Matrix.identity.identity();
             var anchorX, anchorY;
-            if (this._anchorX != 0 || this._anchorY != 0) {
-                var bounds = this.getBounds(Rectangle.identity);
-                anchorX = bounds.width * this._anchorX;
-                anchorY = bounds.height * this._anchorY;
-            }
-            else {
-                anchorX = this._anchorOffsetX;
-                anchorY = this._anchorOffsetY;
-            }
+            var resultPoint = this._getOffsetPoint();
+            anchorX = resultPoint.x;
+            anchorY = resultPoint.y;
             matrix.appendTransform(this._x, this._y, this._scaleX, this._scaleY, this._rotation,
                 this._skewX, this._skewY, anchorX, anchorY);
             return matrix;
         }
 
         public _getSize(resultRect:Rectangle):Rectangle {
-            if (this._hasHeightSet && this._hasWidthSet){
-                return resultRect.initialize(NaN,NaN,this._explicitWidth,this._explicitHeight);
+            if (this._hasHeightSet && this._hasWidthSet) {
+                return resultRect.initialize(NaN, NaN, this._explicitWidth, this._explicitHeight);
             }
             return this._measureSize(Rectangle.identity);
         }
@@ -712,7 +700,7 @@ module egret {
             var regX = o._anchorOffsetX;
             var regY = o._anchorOffsetY;
             if (o._anchorX != 0 || o._anchorY != 0) {
-                var bounds = o.getBounds(Rectangle.identity);
+                var bounds = o._getSize(Rectangle.identity);
                 regX = o._anchorX * bounds.width;
                 regY = o._anchorY * bounds.height;
             }
@@ -825,7 +813,9 @@ module egret {
         }
 
         public static getTransformBounds(bounds:egret.Rectangle, mtx:egret.Matrix):egret.Rectangle {
-            var x = bounds.x, y = bounds.y, width = bounds.width, height = bounds.height;
+//            var x = bounds.x, y = bounds.y;
+              var x,y;
+              var width = bounds.width, height = bounds.height;
 
 //            if (x || y) {
 //                mtx.appendTransform(0, 0, 1, 1, 0, 0, 0, -x, -y);
