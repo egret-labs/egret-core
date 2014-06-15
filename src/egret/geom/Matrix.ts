@@ -230,7 +230,6 @@ module egret {
             return this;
         }
 
-
         /**
          * 矩阵旋转，以角度制为单位
          * @method egret.Matrix#rotate

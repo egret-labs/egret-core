@@ -514,7 +514,7 @@ module egret {
             if (o._scrollRect) {
                 o.worldTransform.append(1, 0, 0, 1, -o._scrollRect.x, -o._scrollRect.y);
             }
-            var bounds:egret.Rectangle = DisplayObject.getTransformBounds(o.getBounds(Rectangle.identity), o.worldTransform);
+            var bounds:egret.Rectangle = DisplayObject.getTransformBounds(o._getSize(Rectangle.identity), o.worldTransform);
             o.worldBounds.initialize(bounds.x, bounds.y, bounds.width, bounds.height);
             o.worldAlpha = o._parent.worldAlpha * o._alpha;
         }
@@ -574,11 +574,11 @@ module egret {
         private static identityMatrixForGetConcatenated = new Matrix();
 
         public _getConcatenatedMatrix():egret.Matrix {
-            var matrix = DisplayObject.identityMatrixForGetConcatenated.identity();
+            var matrix:Matrix = DisplayObject.identityMatrixForGetConcatenated.identity();
             var o = this;
             while (o != null) {
                 if (o._anchorX != 0 || o._anchorY != 0) {
-                    var bounds = o.getBounds(Rectangle.identity);
+                    var bounds = o._getSize(Rectangle.identity);
                     matrix.prependTransform(o._x, o._y, o._scaleX, o._scaleY, o._rotation, o._skewX, o._skewY,
                         bounds.width * o._anchorX, bounds.height * o._anchorY);
                 }
@@ -682,6 +682,20 @@ module egret {
             matrix.appendTransform(this._x, this._y, this._scaleX, this._scaleY, this._rotation,
                 this._skewX, this._skewY, anchorX, anchorY);
             return matrix;
+        }
+
+        public _getSize(resultRect:Rectangle):Rectangle {
+            if (this._hasHeightSet && this._hasWidthSet){
+                return resultRect.initialize(NaN,NaN,this._explicitWidth,this._explicitHeight);
+            }
+            return this._measureSize(Rectangle.identity);
+        }
+
+        /**
+         * 测量显示对象坐标与大小
+         */
+        public _measureSize(resultRect:Rectangle):egret.Rectangle {
+            return this._measureBounds();
         }
 
         /**
