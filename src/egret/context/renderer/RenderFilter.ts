@@ -179,7 +179,7 @@ module egret {
 		 * @param destWidth {any} 
 		 * @param destHeight {any} 
          */
-        public drawImage(renderContext, data:RenderData, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight):void {
+        public drawImage(renderContext:RendererContext, data:RenderData, sourceX:number, sourceY:number, sourceWidth:number, sourceHeight:number, destX:number, destY:number, destWidth:number, destHeight:number):void {
             destX = destX || 0;
             destY = destY || 0;
             var locTexture = data._texture_to_render;
@@ -252,14 +252,6 @@ module egret {
                 //测试代码，把画出来的区域用红框标出来
 //                renderContext.strokeRect(destX, destY, destWidth, destHeight, "#ff0000");
 
-                sourceX = this._originalData.sourceX;
-                sourceY = this._originalData.sourceY;
-                sourceWidth = this._originalData.sourceWidth;
-                sourceHeight = this._originalData.sourceHeight;
-                destX = this._originalData.destX;
-                destY = this._originalData.destY;
-                destWidth = this._originalData.destWidth;
-                destHeight = this._originalData.destHeight;
             }
         }
 
