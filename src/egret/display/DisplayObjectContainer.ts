@@ -446,9 +446,11 @@ module egret {
         }
 
         /**
-         * 根据对象名字获取对象
-         * @param   name    显示对象名
-         * */
+         * 很据子显示对象的name属性获取子显示对象
+         * @method egret.DisplayObjectContainer#getChildByName
+         * @param name {string} name
+         * @returns {egret.DisplayObject}
+         */
         public getChildByName(name:string):DisplayObject{
             var locChildren = this._children;
             var count:number = this.numChildren;
