@@ -77,7 +77,6 @@ module egret {
         public _parent:DisplayObjectContainer = null;
 
         /**
-         * 11111
          * @event egret.Event.event:ADDED_TO_STAGE
          */
         private _cacheAsBitmap:boolean = false;
@@ -90,9 +89,6 @@ module egret {
             return this._parent;
         }
 
-        /**
-         * 仅供框架内部调用。
-         */
         public _parentChanged(parent:DisplayObjectContainer):void {
             this._parent = parent;
         }
@@ -371,6 +367,7 @@ module egret {
 
         /**
          * 宽度，优先顺序为 显式设置宽度 > 测量宽度
+         * @member {number} egret.DisplayObject#width
          * @returns {number}
          */
         public get width():number {
@@ -379,6 +376,7 @@ module egret {
 
         /**
          * 高度，优先顺序为 显式设置高度 > 测量高度
+         * @member {number} egret.DisplayObject#height
          * @returns {number}
          */
         public get height():number {
@@ -500,8 +498,7 @@ module egret {
          */
         public _updateTransform():void {
             var o = this;
-            o.worldTransform.identity();
-            o.worldTransform = o.worldTransform.appendMatrix(o._parent.worldTransform);
+            o.worldTransform.identity().appendMatrix(o._parent.worldTransform);
             var anchorX, anchorY;
             if (o._anchorX != 0 || o._anchorY != 0) {
                 var bounds = o.getBounds(Rectangle.identity);
@@ -725,6 +722,7 @@ module egret {
 
         /**
          * 获取舞台对象。当该显示对象不在舞台上时，此属性返回 undefined
+         * @member {number} egret.DisplayObject#stage
          * @returns {egret.Stage}
          */
         public get stage():Stage {
