@@ -144,6 +144,28 @@ module egret {
             ))
         }
 
+        /**
+         * 使用当前线条样式和由 (controlX, controlY) 指定的控制点绘制一条从当前绘图位置开始到 (anchorX, anchorY) 结束的二次贝塞尔曲线。当前绘图位置随后设置为 (anchorX, anchorY)。如果正在其中绘制的影片剪辑包含用 Flash 绘图工具创建的内容，则调用 curveTo() 方法将在该内容下面进行绘制。
+         * 如果在调用 moveTo() 方法之前调用了 curveTo() 方法，则当前绘图位置的默认值为 (0, 0)。如果缺少任何一个参数，则此方法将失败，并且当前绘图位置不改变。
+         * 绘制的曲线是二次贝塞尔曲线。二次贝塞尔曲线包含两个锚点和一个控制点。该曲线内插这两个锚点，并向控制点弯曲。
+         * @param controlX {number} 一个数字，指定控制点相对于父显示对象注册点的水平位置。
+         * @param controlY {number} 一个数字，指定控制点相对于父显示对象注册点的垂直位置。
+         * @param anchorX {number} 一个数字，指定下一个锚点相对于父显示对象注册点的水平位置。
+         * @param anchorY {number} 一个数字，指定下一个锚点相对于父显示对象注册点的垂直位置。
+         */
+        public curveTo(controlX:Number, controlY:Number, anchorX:Number, anchorY:Number):void{
+            var rendererContext = <HTML5CanvasRenderer>this.renderContext;
+            var canvasContext:CanvasRenderingContext2D = this.canvasContext;
+            this.commandQueue.push(new Command(
+                function (x, y,ax,ay) {
+                    canvasContext.quadraticCurveTo(rendererContext._transformTx + x, rendererContext._transformTy + y,ax,ay);
+                },
+                this,
+                [controlX, controlY,anchorX,anchorY]
+
+            ))
+        }
+
         public moveTo(x:number, y:number):void {
             var rendererContext = <HTML5CanvasRenderer>this.renderContext;
             var canvasContext:CanvasRenderingContext2D = this.canvasContext;
