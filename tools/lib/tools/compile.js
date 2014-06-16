@@ -41,6 +41,12 @@ function buildAllFile(callback, source, output, file_list) {
     async.waterfall([
         checkCompilerInstalled,
 
+
+        function (callback) {
+            libs.remove(output);
+            callback();
+        },
+
         //cp所有非ts/exml文件
         function (callback) {
             var all_file = libs.loopFileSync(source, filter);
