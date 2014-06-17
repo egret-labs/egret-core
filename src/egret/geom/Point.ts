@@ -69,5 +69,28 @@ module egret {
         public clone():Point {
             return new Point(this.x, this.y);
         }
+
+
+        /**
+         * 确定两个点是否相同。如果两个点具有相同的 x 和 y 值，则它们是相同的点。
+         * @method egret.Point#equals
+         * @param {egret.Point} toCompare 要比较的点。
+         * @returns {boolean} 如果该对象与此 Point 对象相同，则为 true 值，如果不相同，则为 false。
+         */
+        public equals(toCompare:Point):boolean{
+            return this.x == toCompare.x && this.y == toCompare.y;
+        }
+
+        /**
+         * 返回 pt1 和 pt2 之间的距离。
+         * @method egret.Point#distance
+         * @param p1 第一个点
+         * @param p2 第二个点
+         * @returns {number} 第一个点和第二个点之间的距离。
+         */
+        public static distance(p1:egret.Point, p2:egret.Point):number{
+            return Math.sqrt((p1.x - p2.x)*(p1.x - p2.x) + (p1.y - p2.y)*(p1.y - p2.y))
+        }
+
     }
 }
