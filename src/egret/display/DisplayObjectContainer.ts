@@ -337,7 +337,7 @@ module egret {
             for (var i = 0; i < l; i++) {
                 var child = this._children[i];
                 var bounds:Rectangle;
-                if (!child.visible || !(bounds = DisplayObject.getTransformBounds(child.getBounds(Rectangle.identity), child._getMatrix()))) {
+                if (!child.visible || !(bounds = DisplayObject.getTransformBounds(child._getSize(Rectangle.identity), child._getMatrix()))) {
                     continue;
                 }
                 var x1 = bounds.x , y1 = bounds.y,
@@ -420,7 +420,7 @@ module egret {
             }
             if(!result){
                 if(this._texture_to_render||this["_graphics"]){
-                    return super.hitTest(x,y);
+                    return super.hitTest(x,y,ignoreTouchEnabled);
                 }
             }
             return result;
@@ -446,9 +446,11 @@ module egret {
         }
 
         /**
-         * 根据对象名字获取对象
-         * @param   name    显示对象名
-         * */
+         * 很据子显示对象的name属性获取子显示对象
+         * @method egret.DisplayObjectContainer#getChildByName
+         * @param name {string} name
+         * @returns {egret.DisplayObject}
+         */
         public getChildByName(name:string):DisplayObject{
             var locChildren = this._children;
             var count:number = this.numChildren;

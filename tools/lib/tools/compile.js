@@ -41,6 +41,12 @@ function buildAllFile(callback, source, output, file_list) {
     async.waterfall([
         checkCompilerInstalled,
 
+
+        function (callback) {
+            libs.remove(output);
+            callback();
+        },
+
         //cp所有非ts/exml文件
         function (callback) {
             var all_file = libs.loopFileSync(source, filter);
@@ -161,6 +167,21 @@ function exportHeader(callback, source, output, file_list) {
 
     ts.on('exit', function (code) {
         if (code == 0) {
+            var egretDTS = fs.readFileSync(output,"utf-8");
+            var lines = egretDTS.split("\n");
+            var length = lines.length;
+            for(var i=0;i<length;i++){
+                var line = lines[i];
+                if(line.indexOf("/// <reference path")!=-1){
+                    lines.splice(i,1);
+                    i--;
+                }
+                else{
+                    break;
+                }
+            }
+            egretDTS = lines.join("\n");
+            fs.writeFileSync(output,egretDTS,"utf-8");
             libs.log(".d.ts文件导出成功");
             if (callback) {
                 callback();

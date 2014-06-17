@@ -66,7 +66,6 @@ module egret {
 
         public static removeTweens(target):void {
             if (!target.tween_count) {
-                egret.Logger.warning("target没有正在执行tween");
                 return;
             }
             var tweens:Tween[] = Tween._tweens;

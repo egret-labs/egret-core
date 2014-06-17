@@ -77,7 +77,6 @@ module egret {
         public _parent:DisplayObjectContainer = null;
 
         /**
-         * 11111
          * @event egret.Event.event:ADDED_TO_STAGE
          */
         private _cacheAsBitmap:boolean = false;
@@ -90,9 +89,6 @@ module egret {
             return this._parent;
         }
 
-        /**
-         * 仅供框架内部调用。
-         */
         public _parentChanged(parent:DisplayObjectContainer):void {
             this._parent = parent;
         }
@@ -371,6 +367,7 @@ module egret {
 
         /**
          * 宽度，优先顺序为 显式设置宽度 > 测量宽度
+         * @member {number} egret.DisplayObject#width
          * @returns {number}
          */
         public get width():number {
@@ -379,6 +376,7 @@ module egret {
 
         /**
          * 高度，优先顺序为 显式设置高度 > 测量高度
+         * @member {number} egret.DisplayObject#height
          * @returns {number}
          */
         public get height():number {
@@ -500,24 +498,17 @@ module egret {
          */
         public _updateTransform():void {
             var o = this;
-            o.worldTransform.identity();
-            o.worldTransform = o.worldTransform.appendMatrix(o._parent.worldTransform);
+            o.worldTransform.identity().appendMatrix(o._parent.worldTransform);
             var anchorX, anchorY;
-            if (o._anchorX != 0 || o._anchorY != 0) {
-                var bounds = o.getBounds(Rectangle.identity);
-                anchorX = bounds.width * o._anchorX;
-                anchorY = bounds.height * o._anchorY;
-            }
-            else {
-                anchorX = o._anchorOffsetX;
-                anchorY = o._anchorOffsetY;
-            }
+            var resultPoint = o._getOffsetPoint();
+            anchorX = resultPoint.x;
+            anchorY = resultPoint.y;
             o.worldTransform.appendTransform(o._x, o._y, o._scaleX, o._scaleY, o._rotation,
                 o._skewX, o._skewY, anchorX, anchorY);
             if (o._scrollRect) {
                 o.worldTransform.append(1, 0, 0, 1, -o._scrollRect.x, -o._scrollRect.y);
             }
-            var bounds:egret.Rectangle = DisplayObject.getTransformBounds(o.getBounds(Rectangle.identity), o.worldTransform);
+            var bounds:egret.Rectangle = DisplayObject.getTransformBounds(o._getSize(Rectangle.identity), o.worldTransform);
             o.worldBounds.initialize(bounds.x, bounds.y, bounds.width, bounds.height);
             o.worldAlpha = o._parent.worldAlpha * o._alpha;
         }
@@ -577,18 +568,18 @@ module egret {
         private static identityMatrixForGetConcatenated = new Matrix();
 
         public _getConcatenatedMatrix():egret.Matrix {
-            var matrix = DisplayObject.identityMatrixForGetConcatenated.identity();
+            var matrix:Matrix = DisplayObject.identityMatrixForGetConcatenated.identity();
             var o = this;
             while (o != null) {
-                if (o.anchorX != 0 || o.anchorY != 0) {
-                    var bounds = o.getBounds(Rectangle.identity);
-                    matrix.prependTransform(o.x, o.y, o.scaleX, o.scaleY, o.rotation, o.skewX, o.skewY,
-                            bounds.width * o.anchorX, bounds.height * o.anchorY);
+                if (o._anchorX != 0 || o._anchorY != 0) {
+                    var bounds = o._getSize(Rectangle.identity);
+                    matrix.prependTransform(o._x, o._y, o._scaleX, o._scaleY, o._rotation, o._skewX, o._skewY,
+                        bounds.width * o._anchorX, bounds.height * o._anchorY);
                 }
                 else {
-                    matrix.prependTransform(o.x, o.y, o.scaleX, o.scaleY, o.rotation, o.skewX, o.skewY, o.anchorOffsetX, o.anchorOffsetY);
+                    matrix.prependTransform(o._x, o._y, o._scaleX, o._scaleY, o._rotation, o._skewX, o._skewY, o._anchorOffsetX, o._anchorOffsetY);
                 }
-                o = o.parent;
+                o = o._parent;
             }
             return matrix;
         }
@@ -669,8 +660,30 @@ module egret {
         }
 
 
-        public _getMatrix():egret.Matrix {
-            return Matrix.identity.identity().appendTransformFromDisplay(this);
+        public _getMatrix():Matrix {
+
+            var matrix = Matrix.identity.identity();
+            var anchorX, anchorY;
+            var resultPoint = this._getOffsetPoint();
+            anchorX = resultPoint.x;
+            anchorY = resultPoint.y;
+            matrix.appendTransform(this._x, this._y, this._scaleX, this._scaleY, this._rotation,
+                this._skewX, this._skewY, anchorX, anchorY);
+            return matrix;
+        }
+
+        public _getSize(resultRect:Rectangle):Rectangle {
+            if (this._hasHeightSet && this._hasWidthSet) {
+                return resultRect.initialize(NaN, NaN, this._explicitWidth, this._explicitHeight);
+            }
+            return this._measureSize(Rectangle.identity);
+        }
+
+        /**
+         * 测量显示对象坐标与大小
+         */
+        public _measureSize(resultRect:Rectangle):egret.Rectangle {
+            return this._measureBounds();
         }
 
         /**
@@ -684,12 +697,12 @@ module egret {
 
         public _getOffsetPoint():egret.Point {
             var o = this;
-            var regX = o.anchorOffsetX;
-            var regY = o.anchorOffsetY;
-            if (o.anchorX != 0 || o.anchorY != 0) {
-                var bounds = o.getBounds(Rectangle.identity);
-                regX = o.anchorX * bounds.width;
-                regY = o.anchorY * bounds.height;
+            var regX = o._anchorOffsetX;
+            var regY = o._anchorOffsetY;
+            if (o._anchorX != 0 || o._anchorY != 0) {
+                var bounds = o._getSize(Rectangle.identity);
+                regX = o._anchorX * bounds.width;
+                regY = o._anchorY * bounds.height;
             }
             var result = Point.identity;
             result.x = regX;
@@ -711,6 +724,7 @@ module egret {
 
         /**
          * 获取舞台对象。当该显示对象不在舞台上时，此属性返回 undefined
+         * @member {number} egret.DisplayObject#stage
          * @returns {egret.Stage}
          */
         public get stage():Stage {
@@ -751,16 +765,16 @@ module egret {
             }
 
             var length:number = list.length;
-            var targetIndex:number = length-1;
+            var targetIndex:number = length - 1;
             for (var i:number = length - 2; i >= 0; i--) {
                 list.push(list[i]);
             }
             event._reset();
-            this._dispatchPropagationEvent(event,list,targetIndex);
+            this._dispatchPropagationEvent(event, list, targetIndex);
             return !event.isDefaultPrevented();
         }
 
-        public _dispatchPropagationEvent(event:Event,list:Array<DisplayObject>,targetIndex:number):void{
+        public _dispatchPropagationEvent(event:Event, list:Array<DisplayObject>, targetIndex:number):void {
             var length:number = list.length;
             for (var i:number = 0; i < length; i++) {
                 var currentTarget:DisplayObject = list[i];
@@ -799,7 +813,9 @@ module egret {
         }
 
         public static getTransformBounds(bounds:egret.Rectangle, mtx:egret.Matrix):egret.Rectangle {
-            var x = bounds.x, y = bounds.y, width = bounds.width, height = bounds.height;
+//            var x = bounds.x, y = bounds.y;
+              var x,y;
+              var width = bounds.width, height = bounds.height;
 
 //            if (x || y) {
 //                mtx.appendTransform(0, 0, 1, 1, 0, 0, 0, -x, -y);
