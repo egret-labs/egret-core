@@ -48,7 +48,7 @@ module egret {
 
         public _render(renderContext:RendererContext):void {
             if (this._graphics)
-                this._graphics._draw();
+                this._graphics._draw(renderContext);
             super._render(renderContext);
         }
 

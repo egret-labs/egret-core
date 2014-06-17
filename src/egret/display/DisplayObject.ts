@@ -659,6 +659,18 @@ module egret {
             }
         }
 
+        public hitTestPoint(x:number, y:number, shapeFlag?:boolean):DisplayObject {
+
+            if (!shapeFlag) {
+                return this.hitTest(x, y, true);
+            }
+            else {
+                var renderTexture:RenderTexture = new RenderTexture();
+                renderTexture.drawToTexture(this);
+                return null;
+            }
+        }
+
 
         public _getMatrix():Matrix {
 
@@ -814,8 +826,8 @@ module egret {
 
         public static getTransformBounds(bounds:egret.Rectangle, mtx:egret.Matrix):egret.Rectangle {
 //            var x = bounds.x, y = bounds.y;
-              var x,y;
-              var width = bounds.width, height = bounds.height;
+            var x, y;
+            var width = bounds.width, height = bounds.height;
 
 //            if (x || y) {
 //                mtx.appendTransform(0, 0, 1, 1, 0, 0, 0, -x, -y);
