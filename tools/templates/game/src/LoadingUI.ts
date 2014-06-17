@@ -41,7 +41,7 @@ class LoadingUI extends egret.Sprite{
         this.addChild(this.textField);
         this.textField.x = 120;
         this.textField.y = 300;
-        this.textField.witdh = 480;
+        this.textField.width = 480;
         this.textField.height = 100;
         this.textField.textAlign = "center";
     }
