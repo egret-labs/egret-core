@@ -666,15 +666,15 @@ module egret {
             }
             else {
                 var testTexture:Texture;
-                if (this._texture_to_render){
+                if (this._texture_to_render) {
                     testTexture = this._texture_to_render;
                 }
-                else{
+                else {
                     testTexture = new RenderTexture();
                     (<RenderTexture>testTexture).drawToTexture(this);
                 }
-                var pixelData:number[] = testTexture.getPixel32(x,y);
-                if (pixelData[3] != 0){
+                var pixelData:number[] = testTexture.getPixel32(x, y);
+                if (pixelData[3] != 0) {
                     return this;
                 }
                 return null;
@@ -825,7 +825,12 @@ module egret {
             return false;
         }
 
-        public cacheAsBitmap(bool:boolean):void {
+        public get cacheAsBitmap():boolean {
+            return this._cacheAsBitmap;
+        }
+
+        public set cacheAsBitmap(bool:boolean) {
+            if (this._cacheAsBitmap == bool) return;
             this._cacheAsBitmap = bool;
             if (bool) {
                 var renderTexture = new egret.RenderTexture();
