@@ -665,9 +665,15 @@ module egret {
                 return this.hitTest(x, y, true);
             }
             else {
-                var renderTexture:RenderTexture = new RenderTexture();
-                renderTexture.drawToTexture(this);
-                var pixelData:number[] = renderTexture.getPixel32(x,y);
+                var testTexture:Texture;
+                if (this._texture_to_render){
+                    testTexture = this._texture_to_render;
+                }
+                else{
+                    testTexture = new RenderTexture();
+                    (<RenderTexture>testTexture).drawToTexture(this);
+                }
+                var pixelData:number[] = testTexture.getPixel32(x,y);
                 if (pixelData[3] != 0){
                     return this;
                 }

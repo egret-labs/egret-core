@@ -35,21 +35,14 @@
 module egret {
     export class RenderTexture extends Texture {
 
-        private cacheCanvas:HTMLCanvasElement;
-
         constructor() {
             super();
-            this.cacheCanvas = document.createElement("canvas");
+            this._bitmapData = document.createElement("canvas");
 
-        }
-
-        public getPixel32(x,y):number[]{
-            var result = this.cacheCanvas.getContext("2d").getImageData(x,y,1,1);
-            return result.data;
         }
 
         public drawToTexture(displayObject:egret.DisplayObject):void {
-            var cacheCanvas:HTMLCanvasElement = this.cacheCanvas;
+            var cacheCanvas:HTMLCanvasElement = this._bitmapData;
             var bounds = displayObject.getBounds(Rectangle.identity);
             cacheCanvas.width = bounds.width;
             cacheCanvas.height = bounds.height;
@@ -73,9 +66,9 @@ module egret {
             renderFilter._drawAreaList.length = 0;
             displayObject._render(renderContext);
             renderFilter._drawAreaList = drawAreaList;
-            this._bitmapData = this.cacheCanvas;
-            this._textureWidth = this.cacheCanvas.width;
-            this._textureHeight = this.cacheCanvas.height;
+            this._bitmapData = this._bitmapData;
+            this._textureWidth = this._bitmapData.width;
+            this._textureHeight = this._bitmapData.height;
 
             //测试代码
 //            renderContext.canvasContext.setTransform(1, 0, 0, 1, 0, 0);
