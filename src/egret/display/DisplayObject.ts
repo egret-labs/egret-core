@@ -667,6 +667,10 @@ module egret {
             else {
                 var renderTexture:RenderTexture = new RenderTexture();
                 renderTexture.drawToTexture(this);
+                var pixelData:number[] = renderTexture.getPixel32(x,y);
+                if (pixelData[3] != 0){
+                    return this;
+                }
                 return null;
             }
         }

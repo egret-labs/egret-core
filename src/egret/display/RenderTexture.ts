@@ -43,6 +43,11 @@ module egret {
 
         }
 
+        public getPixel32(x,y):number[]{
+            var result = this.cacheCanvas.getContext("2d").getImageData(x,y,1,1);
+            return result.data;
+        }
+
         public drawToTexture(displayObject:egret.DisplayObject):void {
             var cacheCanvas:HTMLCanvasElement = this.cacheCanvas;
             var bounds = displayObject.getBounds(Rectangle.identity);
