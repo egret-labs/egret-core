@@ -65,8 +65,12 @@ module egret {
 		 * 构造函数
 		 * @method egret.AddItems#constructor
 		 */		
-		public constructor(){
+		public constructor(target:string,propertyName:string,position:string,relativeTo:string){
 			super();
+            this.target = target;
+            this.propertyName = propertyName;
+            this.position = position;
+            this.relativeTo = relativeTo;
 		}
 		
 		/**

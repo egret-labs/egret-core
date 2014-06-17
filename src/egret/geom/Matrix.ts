@@ -231,30 +231,6 @@ module egret {
         }
 
         /**
-         * @method egret.Matrix#appendTransformFromDisplay
-         * @param target {egret.DisplayObject}
-         * @returns {egret.Matrix}
-         */
-        public appendTransformFromDisplay(target:egret.DisplayObject):Matrix {
-            var o = target;
-            var anchorX, anchorY;
-            if (o.anchorX != 0 || o.anchorY != 0) {
-                var bounds = o.getBounds(Rectangle.identity);
-                anchorX = bounds.width * o.anchorX;
-                anchorY = bounds.height * o.anchorY;
-            }
-            else {
-                anchorX = o.anchorOffsetX;
-                anchorY = o.anchorOffsetY;
-            }
-            this.identity();
-            this.appendTransform(o.x, o.y, o.scaleX, o.scaleY, o.rotation,
-                o.skewX, o.skewY, anchorX, anchorY);
-            return this;
-        }
-
-
-        /**
          * 矩阵旋转，以角度制为单位
          * @method egret.Matrix#rotate
          * @param angle {number}

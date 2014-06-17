@@ -25,9 +25,15 @@
 
 module RES {
 
+	/**
+	 * @class RES.ResourceLoader
+	 * @classdesc
+	 * @extends egret.EventDispatcher
+	 */
 	export class ResourceLoader extends egret.EventDispatcher{
 		/**
 		 * 构造函数
+		 * @method RES.ResourceLoader#constructor
 		 */
 		public constructor(){
 			super();
@@ -35,10 +41,12 @@ module RES {
 
         /**
          * 一项加载结束回调函数。无论加载成功或者出错都将执行回调函数。示例：callBack(resItem:ResourceItem):void;
+		 * @member {Function} RES.ResourceLoader#callBack
          */
         public callBack:Function;
         /**
          * RES单例的引用
+		 * @member {any} RES.ResourceLoader#resInstance
          */
         public resInstance:any;
 		
@@ -61,15 +69,19 @@ module RES {
 		private priorityQueue:any = {};
 		/**
 		 * 检查指定的组是否正在加载中
+		 * @method RES.ResourceLoader#isGroupInLoading
+		 * @param groupName {string} 
+		 * @returns {boolean}
 		 */		
 		public isGroupInLoading(groupName:string):boolean{
 			return this.itemListDic[groupName]!==undefined;
 		}
 		/**
 		 * 开始加载一组文件
-		 * @param list 加载项列表
-		 * @param groupName 组名
-		 * @param priority 加载优先级
+		 * @method RES.ResourceLoader#loadGroup
+		 * @param list {egret.Array<ResourceItem>} 加载项列表
+		 * @param groupName {string} 组名
+		 * @param priority {number} 加载优先级
 		 */			
 		public loadGroup(list:Array<ResourceItem>,groupName:string,priority:number=0):void{
 			if(this.itemListDic[groupName]||!groupName)
@@ -100,7 +112,8 @@ module RES {
 		private lazyLoadList:Array<ResourceItem> = new Array<ResourceItem>();
 		/**
 		 * 加载一个文件
-		 * @param resItem 要加载的项
+		 * @method RES.ResourceLoader#loadItem
+		 * @param resItem {egret.ResourceItem} 要加载的项
 		 */		
 		public loadItem(resItem:ResourceItem):void{
 			this.lazyLoadList.push(resItem);

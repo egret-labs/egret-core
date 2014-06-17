@@ -41,16 +41,27 @@ function buildAllFile(callback, source, output, file_list) {
     async.waterfall([
         checkCompilerInstalled,
 
-        //cp所有非ts文件
+
         function (callback) {
-            var all_js_file = libs.loopFileSync(source, filter);
-            all_js_file.forEach(function (item) {
+            libs.remove(output);
+            callback();
+        },
+
+        //cp所有非ts/exml文件
+        function (callback) {
+            var all_file = libs.loopFileSync(source, filter);
+            all_file.forEach(function (item) {
                 libs.copy(path.join(source, item), path.join(output, item));
             })
             callback(null);
 
             function filter(path) {
-                return  path.indexOf(".ts") == -1;
+                var index = path.lastIndexOf(".");
+                if(index==-1){
+                    return true;
+                }
+                var ext = path.substring(index).toLowerCase();
+                return ext!=".ts"&&ext!=".exml";
             }
         },
 
@@ -80,7 +91,7 @@ function buildAllFile(callback, source, output, file_list) {
                     callback(null, source);
                 }
                 else {
-                    libs.log(1303)
+                    callback(1303);
                 }
 
             });
@@ -89,11 +100,7 @@ function buildAllFile(callback, source, output, file_list) {
 
 
     ], function (err) {
-
-        if (err) {
-            libs.exit(err);
-        }
-        callback();
+        callback(err);
     })
 
 
@@ -160,13 +167,28 @@ function exportHeader(callback, source, output, file_list) {
 
     ts.on('exit', function (code) {
         if (code == 0) {
+            var egretDTS = fs.readFileSync(output,"utf-8");
+            var lines = egretDTS.split("\n");
+            var length = lines.length;
+            for(var i=0;i<length;i++){
+                var line = lines[i];
+                if(line.indexOf("/// <reference path")!=-1){
+                    lines.splice(i,1);
+                    i--;
+                }
+                else{
+                    break;
+                }
+            }
+            egretDTS = lines.join("\n");
+            fs.writeFileSync(output,egretDTS,"utf-8");
             libs.log(".d.ts文件导出成功");
             if (callback) {
                 callback();
             }
         }
         else {
-            libs.exit(1303);
+            callback(1303)
         }
 
     });

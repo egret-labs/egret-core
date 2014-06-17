@@ -28,16 +28,19 @@ var mine = {
 function run(dir, args, opts) {
     var PORT = 3000;
     var server = http.createServer(onGet);
-    server.listen(PORT);
-    var open = require("../core/open");
+    server.addListener("error",function(){
+        libs.exit(1501);
+    })
+    server.listen(PORT,function(){
+        var open = require("../core/open");
+        libs.joinEgretDir(dir, args[0]);
+        var url = path.join("http://localhost:3000", args[0], "launcher/index.html");
+        open(url);
+        console.log("Server runing at port: " + PORT + ".");
+        exports.projectName = args[0];
+    });
 
-    libs.joinEgretDir(dir, args[0]);
 
-
-    var url = path.join("http://localhost:3000", args[0], "launcher/index.html");
-    open(url);
-    console.log("Server runing at port: " + PORT + ".");
-    exports.projectName = args[0];
 }
 
 

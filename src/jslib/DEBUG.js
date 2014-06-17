@@ -109,10 +109,13 @@ unstable.modal_api.setModal = function (value) {
 }
 
 var hitTest = egret.DisplayObjectContainer.prototype.hitTest;
-egret.DisplayObjectContainer.prototype.hitTest = function (x, y) {
+egret.DisplayObjectContainer.prototype.hitTest = function (x, y, ignoreTouchEnabled) {
+    if (ignoreTouchEnabled == undefined){
+        ignoreTouchEnabled = false;
+    }
     var container = this;
     if (container.visible == false) return null;
-    var result = hitTest.call(this, x, y);
+    var result = hitTest.call(this, x, y, ignoreTouchEnabled);
     if (container._modal) {
         return result ? result : this;
     }

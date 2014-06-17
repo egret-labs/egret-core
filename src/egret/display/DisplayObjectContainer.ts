@@ -38,8 +38,11 @@ module egret {
 	 * @classdesc
      * DisplayObjectContainer 类是显示列表中显示对象容器。
      */
-    export class DisplayObjectContainer
-    extends DisplayObject {
+    export class DisplayObjectContainer extends DisplayObject {
+
+
+        public static __EVENT__ADD_TO_STAGE_LIST:Array<DisplayObject> = [];
+        public static __EVENT__REMOVE_FROM_STAGE_LIST:Array<DisplayObject> = [];
 
         constructor() {
             super();
@@ -147,6 +150,11 @@ module egret {
                 child.dispatchEventWith(Event.ADDED,true);
             if (this._stage) {//当前容器在舞台
                 child._onAddToStage();
+                var list = DisplayObjectContainer.__EVENT__ADD_TO_STAGE_LIST;
+                while (list.length > 0){
+                    var childAddToStage = list.shift();
+                    childAddToStage.dispatchEventWith(Event.ADDED_TO_STAGE);
+                }
             }
 
             return child;
@@ -191,6 +199,11 @@ module egret {
                 child.dispatchEventWith(Event.REMOVED,true)
             if (this._stage) {//在舞台上
                 child._onRemoveFromStage();
+                var list = DisplayObjectContainer.__EVENT__REMOVE_FROM_STAGE_LIST
+                while (list.length > 0){
+                    var childAddToStage = list.shift();
+                    childAddToStage.dispatchEventWith(Event.REMOVED_FROM_STAGE);
+                }
             }
             child._parentChanged(null);
             locChildren.splice(index, 1);
@@ -324,7 +337,7 @@ module egret {
             for (var i = 0; i < l; i++) {
                 var child = this._children[i];
                 var bounds:Rectangle;
-                if (!child.visible || !(bounds = DisplayObject.getTransformBounds(child.getBounds(Rectangle.identity), child._getMatrix()))) {
+                if (!child.visible || !(bounds = DisplayObject.getTransformBounds(child._getSize(Rectangle.identity), child._getMatrix()))) {
                     continue;
                 }
                 var x1 = bounds.x , y1 = bounds.y,
@@ -407,7 +420,7 @@ module egret {
             }
             if(!result){
                 if(this._texture_to_render||this["_graphics"]){
-                    return super.hitTest(x,y);
+                    return super.hitTest(x,y,ignoreTouchEnabled);
                 }
             }
             return result;
@@ -430,6 +443,25 @@ module egret {
                 var child:DisplayObject = this._children[i];
                 child._onRemoveFromStage();
             }
+        }
+
+        /**
+         * 很据子显示对象的name属性获取子显示对象
+         * @method egret.DisplayObjectContainer#getChildByName
+         * @param name {string} name
+         * @returns {egret.DisplayObject}
+         */
+        public getChildByName(name:string):DisplayObject{
+            var locChildren = this._children;
+            var count:number = this.numChildren;
+            var displayObject:DisplayObject;
+            for(var i:number = 0 ; i < count ; i++ ){
+                displayObject = locChildren[i];
+                if(displayObject.name == name){
+                    return displayObject;
+                }
+            }
+            return null;
         }
     }
 }
