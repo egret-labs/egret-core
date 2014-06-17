@@ -1047,8 +1047,6 @@ module egret {
 		 * @param layoutHeight {number} 
 		 */	
 		public setLayoutBoundsSize(layoutWidth:number,layoutHeight:number):void{
-			layoutWidth /= this.scaleX;
-			layoutHeight /= this.scaleY;
 			if(isNaN(layoutWidth)){
 				this._layoutWidthExplicitlySet = false;
 				layoutWidth = this.preferredWidth;
@@ -1064,7 +1062,7 @@ module egret {
 				this._layoutHeightExplicitlySet = true;
 			}
 			
-			this.setActualSize(layoutWidth,layoutHeight);
+			this.setActualSize(layoutWidth/this._scaleX,layoutHeight/this._scaleY);
 		}
 		/**
 		 * @method egret.UIComponent#setLayoutBoundsPosition
@@ -1072,6 +1070,12 @@ module egret {
 		 * @param y {number} 
 		 */	
 		public setLayoutBoundsPosition(x:number,y:number):void{
+            if(this._scaleX<0){
+                x += this.layoutBoundsWidth;
+            }
+            if(this._scaleY<0){
+                y += this.layoutBoundsHeight;
+            }
 			var changed:boolean = false;
 			if(this._x!=x){
 				this._x = x;
@@ -1090,46 +1094,74 @@ module egret {
 		 * @member egret.UIComponent#preferredWidth
 		 */		
 		public get preferredWidth():number{
-			var w:number = isNaN(this._explicitWidth) ? this.measuredWidth:this._explicitWidth;
-			if(isNaN(w))
-				return 0;
-			return w*this.scaleX;
+			var w:number = this._hasWidthSet ? this._explicitWidth:this._measuredWidth;
+            var scaleX:number = this._scaleX;
+            if(scaleX<0){
+                scaleX = -scaleX;
+            }
+			return w*scaleX;
 		}
 		
 		/**
 		 * @member egret.UIComponent#preferredHeight
 		 */
 		public get preferredHeight():number{
-			var h:number = isNaN(this._explicitHeight) ? this.measuredHeight : this._explicitHeight;
-			if(isNaN(h))
-				return 0;
-			return h*this.scaleY;
+			var h:number = this._hasHeightSet ? this._explicitHeight:this._measuredHeight;
+            var scaleY:number = this._scaleY;
+            if(scaleY<0){
+                scaleY = -scaleY;
+            }
+			return h*scaleY;
 		}
 		
 		/**
 		 * @member egret.UIComponent#preferredX
 		 */	
 		public get preferredX():number{
-			return this._x;
+            if(this._scaleX>=0){
+                return this._x;
+            }
+            else{
+                var w:number = this.preferredWidth;
+                return this._x - w;
+            }
 		}
 		
 		/**
 		 * @member egret.UIComponent#preferredY
 		 */
 		public get preferredY():number{
-			return this._y;
+            if(this._scaleY>=0){
+                return this._y;
+            }
+            else{
+                var h:number = this.preferredHeight;
+                return this._y - h;
+            }
 		}
 		/**
 		 * @member egret.UIComponent#layoutBoundsX
 		 */
 		public get layoutBoundsX():number{
-			return this._x;
+            if(this._scaleX>=0){
+                return this._x;
+            }
+            else{
+                var w:number = this.layoutBoundsWidth;
+                return this._x - w;
+            }
 		}
 		/**
 		 * @member egret.UIComponent#layoutBoundsY
 		 */
 		public get layoutBoundsY():number{
-			return this._y;
+            if(this._scaleY>=0){
+                return this._y;
+            }
+            else{
+                var h:number = this.layoutBoundsHeight;
+                return this._y - h;
+            }
 		}
 		
 		/**
@@ -1140,13 +1172,17 @@ module egret {
 			if(this._layoutWidthExplicitlySet){
 				w = this._width;
 			}
-			else if(!isNaN(this.explicitWidth)){
+			else if(this._hasWidthSet){
 				w = this._explicitWidth;
 			}
 			else{
-				w = this.measuredWidth;
+				w = this._measuredWidth;
 			}
-			return w*this.scaleX;
+            var scaleX:number = this._scaleX;
+            if(scaleX<0){
+                scaleX = -scaleX;
+            }
+			return w*scaleX;
 		}
 		/**
 		 * 组件的布局高度,常用于父级的updateDisplayList()方法中
@@ -1158,13 +1194,17 @@ module egret {
 			if(this._layoutHeightExplicitlySet){
 				h = this._height;
 			}
-			else if(!isNaN(this.explicitHeight)){
+			else if(this._hasHeightSet){
 				h = this._explicitHeight;
 			}
 			else{
-				h = this.measuredHeight;
+				h = this._measuredHeight;
 			}
-			return h*this.scaleY;
+            var scaleY:number = this.scaleY;
+            if(scaleY<0){
+                scaleY = -scaleY;
+            }
+			return h*scaleY;
 		}
 	}
 }
