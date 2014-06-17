@@ -409,7 +409,7 @@ function removeComment(codeText) {
                 index = codeText.indexOf("\n");
                 if (index == -1)
                     index = codeText.length - 1;
-                codeText = codeText.substring(index + 1);
+                codeText = codeText.substring(index);
                 break;
         }
     }

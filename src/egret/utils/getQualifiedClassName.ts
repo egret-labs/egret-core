@@ -46,21 +46,20 @@ module egret {
      */
     export function getQualifiedClassName(value:any):string {
         var constructorFunction:any = value.prototype ? value.prototype.constructor : value.__proto__.constructor;
-        if(constructorFunction.__class__){
-            return constructorFunction.__class__;
+        var key:string = constructorFunction.toString();
+        var className:string = __functionNameCache[key];
+        if(className){
+            return className;
         }
         if(__invalidateModuleFlag){
             updateModules();
             __invalidateModuleFlag = false;
-            if(constructorFunction.__class__){
-                return constructorFunction.__class__;
+            className = __functionNameCache[key];
+            if(className){
+                return className;
             }
         }
-        var key:string = constructorFunction.toString();
-        var className:string = __functionNameCache[key];
-        if(!className){
-            __functionNameCache[key] = className = getFunctionName(constructorFunction);
-        }
+        __functionNameCache[key] = className = getFunctionName(constructorFunction);
         return className;
     }
 
@@ -73,7 +72,6 @@ module egret {
     }
 
     function updateModules():void{
-//      var t:number = getTimer();
         var list:Array<string> = egret.__moduleNameList;
         var length:number = list.length;
         for(var i:number=0;i<length;i++){
@@ -84,9 +82,6 @@ module egret {
                 setModuleName(value,key);
             }
         }
-
-//        t = getTimer()-t;
-//        console.log("updateModules: "+t+"ms");
     }
 
     function setModuleName(ns:any,name:string):void{
@@ -97,9 +92,9 @@ module egret {
                 if(!value.prototype){
                     continue;
                 }
-                var func:any = value.prototype.constructor;
-                if(!func.__class__){
-                    func.__class__ = name+"."+getFunctionName(func);
+                var classKey:string = value.toString();
+                if(!__functionNameCache[classKey]){
+                    __functionNameCache[classKey] = name+"."+getFunctionName(value);
                 }
             }
             else if(type=="object"&&!(value instanceof Array)){
