@@ -420,7 +420,7 @@ module egret {
             }
             if(!result){
                 if(this._texture_to_render||this["_graphics"]){
-                    return super.hitTest(x,y);
+                    return super.hitTest(x,y,ignoreTouchEnabled);
                 }
             }
             return result;
