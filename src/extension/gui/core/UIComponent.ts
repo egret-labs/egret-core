@@ -1121,10 +1121,8 @@ module egret {
             if(this._scaleX>=0){
                 return this._x;
             }
-            else{
-                var w:number = this.preferredWidth;
-                return this._x - w;
-            }
+            var w:number = this.preferredWidth;
+            return this._x - w;
 		}
 		
 		/**
@@ -1134,10 +1132,8 @@ module egret {
             if(this._scaleY>=0){
                 return this._y;
             }
-            else{
-                var h:number = this.preferredHeight;
-                return this._y - h;
-            }
+            var h:number = this.preferredHeight;
+            return this._y - h;
 		}
 		/**
 		 * @member egret.UIComponent#layoutBoundsX
@@ -1146,10 +1142,8 @@ module egret {
             if(this._scaleX>=0){
                 return this._x;
             }
-            else{
-                var w:number = this.layoutBoundsWidth;
-                return this._x - w;
-            }
+            var w:number = this.layoutBoundsWidth;
+            return this._x - w;
 		}
 		/**
 		 * @member egret.UIComponent#layoutBoundsY
@@ -1158,10 +1152,8 @@ module egret {
             if(this._scaleY>=0){
                 return this._y;
             }
-            else{
-                var h:number = this.layoutBoundsHeight;
-                return this._y - h;
-            }
+            var h:number = this.layoutBoundsHeight;
+            return this._y - h;
 		}
 		
 		/**
