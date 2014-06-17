@@ -71,23 +71,6 @@ exports.core = [
 
     "egret/media/Sound.js",
 
-    //resource start
-    "extension/resource/events/ResourceEvent.js",
-    "extension/resource/core/ResourceItem.js",
-    "extension/resource/core/ResourceConfig.js",
-    "extension/resource/core/ResourceLoader.js",
-    "extension/resource/analyzer/AnalyzerBase.js",
-    "extension/resource/analyzer/BinAnalyzer.js",
-    "extension/resource/analyzer/ImageAnalyzer.js",
-    "extension/resource/analyzer/JsonAnalyzer.js",
-    "extension/resource/analyzer/TextAnalyzer.js",
-    "extension/resource/analyzer/SheetAnalyzer.js",
-    "extension/resource/analyzer/FontAnalyzer.js",
-    "extension/resource/analyzer/SoundAnalyzer.js",
-    "extension/resource/analyzer/XMLAnalyzer.js",
-    "extension/resource/Resource.js",
-    //resource end
-
      //GUI start
     "extension/gui/collections/ArrayCollection.js",
     "extension/gui/collections/ObjectCollection.js",
@@ -181,7 +164,24 @@ exports.core = [
     "extension/dragonbones/DragonBonesEgretBridge.js",
     "jslib/DEBUG.js",
 //    "jslib/box2d.js",
-    "jslib/NumberUtils.js"
+    "jslib/NumberUtils.js",
+
+    //resource start
+    "extension/resource/events/ResourceEvent.js",
+    "extension/resource/core/ResourceItem.js",
+    "extension/resource/core/ResourceConfig.js",
+    "extension/resource/core/ResourceLoader.js",
+    "extension/resource/analyzer/AnalyzerBase.js",
+    "extension/resource/analyzer/BinAnalyzer.js",
+    "extension/resource/analyzer/ImageAnalyzer.js",
+    "extension/resource/analyzer/JsonAnalyzer.js",
+    "extension/resource/analyzer/TextAnalyzer.js",
+    "extension/resource/analyzer/SheetAnalyzer.js",
+    "extension/resource/analyzer/FontAnalyzer.js",
+    "extension/resource/analyzer/SoundAnalyzer.js",
+    "extension/resource/analyzer/XMLAnalyzer.js",
+    "extension/resource/Resource.js"
+    //resource end
 ]
 
 exports.html5 = [
