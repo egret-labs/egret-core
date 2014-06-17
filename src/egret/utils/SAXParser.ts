@@ -29,9 +29,15 @@
 /// <reference path="Logger.ts"/>
 
 module egret {
+    /**
+     * @deprecated
+     */
     export class SAXParser extends HashObject {
         static _instance:SAXParser = null;
 
+        /**
+         * @deprecated
+         */
         static getInstance() {
             if (!SAXParser._instance) {
                 SAXParser._instance = new SAXParser();
@@ -54,7 +60,10 @@ module egret {
             }
         }
 
-        public parserXML(textxml:string) {
+        /**
+         * @deprecated
+         */
+        public parserXML(textxml:string):any {
             var i = 0;
             while (textxml.charAt(i) == "\n" || textxml.charAt(i) == "\t" || textxml.charAt(i) == "\r" || textxml.charAt(i) == " ") {
                 i++;

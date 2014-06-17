@@ -44,20 +44,10 @@
 
 module egret {
     export class XML {
-        private _xmlStr = "";
 
-        /**
-         * 必须是 xml格式的字符串
-         * @param xmlStr  xml格式的字符串
-         */
         public constructor() {
         }
 
-        /**
-         * 解析 xml文件
-         * @param xmlDoc
-         * @private
-         */
         public _ansXML(xmlDoc) {
             var num = 0;
             if (xmlDoc.childNodes && xmlDoc.childNodes.length > 0) {
@@ -90,5 +80,13 @@ module egret {
                 }
             }
         }
+
+
+        public static parse(xmltext):XML{
+            var xml = new XML();
+            var xmldoc = SAXParser.getInstance().parserXML(xmltext);
+            xml._ansXML(xmldoc);
+            return xml;
+    }
     }
 }
