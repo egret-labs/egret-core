@@ -120,10 +120,10 @@ module RES {
         instance.getResByUrl(url,compFunc,thisObject,type);
     }
     /**
-     * 销毁某个资源文件的缓存数据,返回是否删除成功。
-	 * @method RES.destroyRes
-     * @param name {string} 配置文件中加载项的name属性
-	 * @returns {boolean}
+     * 销毁单个资源文件或一组资源的缓存数据,返回是否删除成功。
+     * @method RES.destroyRes
+     * @param name {string} 配置文件中加载项的name属性或资源组名
+     * @returns {boolean}
      */
     export function destroyRes(name:string):boolean{
         return instance.destroyRes(name);
@@ -262,7 +262,7 @@ module RES {
          * 根据组名获取组加载项列表
 		 * @method RES.getGroupByName
 		 * @param name {string} 
-		 * @returns {egret.ResourceItem}
+		 * @returns {Array<egret.ResourceItem>}
          */
         public getGroupByName(name:string):Array<ResourceItem>{
             return this.resConfig.getGroupByName(name);
@@ -479,17 +479,29 @@ module RES {
             }
         }
         /**
-         * 销毁某个资源文件的缓存数据,返回是否删除成功。
+         * 销毁单个资源文件或一组资源的缓存数据,返回是否删除成功。
 		 * @method RES.destroyRes
-         * @param name {string} 配置文件中加载项的name属性
+         * @param name {string} 配置文件中加载项的name属性或资源组名
 		 * @returns {boolean}
          */
         public destroyRes(name:string):boolean{
-            var type:string = this.resConfig.getType(name);
-            if(type=="")
-                return false;
-            var analyzer:AnalyzerBase = this.getAnalyzerByType(type);
-            return analyzer.destroyRes(name);
+            var group:Array<any> = this.resConfig.getRawGroupByName(name);
+            if(group){
+                var length:number = group.length;
+                for(var i:number=0;i<length;i++){
+                    var item:any = group[i];
+                    var analyzer:AnalyzerBase = this.getAnalyzerByType(item.type);
+                    analyzer.destroyRes(name);
+                }
+                return true;
+            }
+            else{
+                var type:string = this.resConfig.getType(name);
+                if(type=="")
+                    return false;
+                analyzer = this.getAnalyzerByType(type);
+                return analyzer.destroyRes(name);
+            }
         }
     }
     /**
