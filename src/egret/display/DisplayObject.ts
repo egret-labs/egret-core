@@ -11,7 +11,7 @@
  *       documentation and/or other materials provided with the distribution.
  *     * Neither the name of the Egret-Labs.org nor the
  *       names of its contributors may be used to endorse or promote products
- *       derived from this software without specific prior written permission.
+ *       derived from this software without specific prior written pemission.
  *
  * THIS SOFTWARE IS PROVIDED BY EGRET-LABS.ORG AND CONTRIBUTORS "AS IS" AND ANY
  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
@@ -70,15 +70,17 @@ module egret {
             this._cacheBounds = new egret.Rectangle(0, 0, 0, 0);
         }
 
+        /**
+         * 表示 DisplayObject 的实例名称。
+         * @member {string} egret.DisplayObject#name
+         */
         public name:string;
 
         public _texture_to_render:Texture;
 
         public _parent:DisplayObjectContainer = null;
 
-        /**
-         * @event egret.Event.event:ADDED_TO_STAGE
-         */
+        
         private _cacheAsBitmap:boolean = false;
 
         /**
@@ -93,12 +95,12 @@ module egret {
             this._parent = parent;
         }
 
-        public _x:number = 0;
-
         /**
          * 表示 DisplayObject 实例相对于父级 DisplayObjectContainer 本地坐标的 x 坐标。
          * @member {number} egret.DisplayObject#x
          */
+        public _x:number = 0;
+
         public get x():number {
             return this._x;
         }
@@ -109,13 +111,12 @@ module egret {
             }
         }
 
-
-        public _y:number = 0;
-
         /**
          * 表示 DisplayObject 实例相对于父级 DisplayObjectContainer 本地坐标的 y 坐标。
          * @member {number} egret.DisplayObject#y
          */
+        public _y:number = 0;
+
         public get y():number {
             return this._y;
         }
@@ -233,6 +234,7 @@ module egret {
          * @member {boolean} egret.DisplayObject#visible
          */
         public visible:boolean = true;
+        
         /**
          * 表示 DisplayObject 实例距其原始方向的旋转程度，以度为单位
          * @member {number} egret.DisplayObject#rotation
@@ -301,12 +303,13 @@ module egret {
             }
         }
 
-        public _touchEnabled:boolean;
         /**
          * 指定此对象是否接收鼠标/触摸事件
          * @member {boolean} egret.DisplayObject#touchEnabled
          * @default true
          */
+        public _touchEnabled:boolean;
+        
         public get touchEnabled():boolean {
             return this._touchEnabled;
         }
@@ -315,13 +318,19 @@ module egret {
             this._touchEnabled = value;
         }
 
+        
+        /**
+         * BlendMode 类中的一个值，用于指定要使用的混合模式。
+         * @member {BlendMode} egret.DisplayObject#blendMode
+         */
         public blendMode:BlendMode;
 
-        public _scrollRect:Rectangle;
         /**
          * 显示对象的滚动矩形范围。显示对象被裁切为矩形定义的大小，当您更改 scrollRect 对象的 x 和 y 属性时，它会在矩形内滚动。
          *  @member {egret.Rectangle} egret.DisplayObject#scrollRect
          */
+        public _scrollRect:Rectangle;
+        
         public get scrollRect():Rectangle {
             return this._scrollRect;
         }
@@ -347,20 +356,22 @@ module egret {
             return this._measureBounds().height;
         }
 
-        public _explicitWidth:number;
         /**
          * 显式设置宽度
          * @returns {number}
          */
+        public _explicitWidth:number;
+        
         public get explicitWidth():number {
             return this._explicitWidth;
         }
 
-        public _explicitHeight:number;
         /**
          * 显式设置高度
          * @returns {number}
          */
+        public _explicitHeight:number;
+        
         public get explicitHeight():number {
             return this._explicitHeight;
         }

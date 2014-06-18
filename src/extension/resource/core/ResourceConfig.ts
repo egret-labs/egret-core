@@ -34,7 +34,7 @@ module RES {
          * 根据组名获取组加载项列表
 		 * @method RES.ResourceConfig#getGroupByName
          * @param name {string} 组名
-		 * @returns {egret.ResourceItem}
+		 * @returns {Array<egret.ResourceItem>}
          */
         public getGroupByName(name:string):Array<ResourceItem> {
             var group:Array<ResourceItem> = new Array<ResourceItem>();
@@ -47,6 +47,17 @@ module RES {
                 group.push(this.parseResourceItem(obj));
             }
             return group;
+        }
+        /**
+         * 根据组名获取原始的组加载项列表
+         * @method RES.ResourceConfig#getRawGroupByName
+         * @param name {string} 组名
+         * @returns {Array<any>}
+         */
+        public getRawGroupByName(name:string):Array<any>{
+            if (this.groupDic[name])
+                return this.groupDic[name];
+            return [];
         }
 
         /**
