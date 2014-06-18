@@ -54,20 +54,33 @@ module RES {
          * 可以监听ResourceEvent.CONFIG_COMPLETE事件来确认配置加载完成。
 		 * @method RES.ResourceConfig#createGroup
          * @param name {string} 要创建的加载资源组的组名
-         * @param keys {egret.Array<string>} 要包含的键名列表，key对应配置文件里的name属性或sbuKeys属性的一项。
+         * @param keys {egret.Array<string>} 要包含的键名列表，key对应配置文件里的name属性或一个资源组名。
          * @param override {boolean} 是否覆盖已经存在的同名资源组,默认false。
 		 * @returns {boolean}
          */
         public createGroup(name:string, keys:Array<string>, override:boolean = false):boolean {
             if ((!override && this.groupDic[name]) || !keys || keys.length == 0)
                 return false;
+            var groupDic:any = this.groupDic;
             var group:Array<any> = [];
             var length:number = keys.length;
             for (var i:number = 0; i < length; i++) {
                 var key:string = keys[i];
-                var item:any = this.keyMap[key];
-                if (item && group.indexOf(item) == -1)
-                    group.push(item);
+                var g:Array<any> = groupDic[key];
+                if(g){
+                    var len:number = g.length;
+                    for(var j:number=0;j<len;j++){
+                        var item:any = g[j];
+                        if (group.indexOf(item) == -1)
+                            group.push(item);
+                    }
+                }
+                else{
+                    item = this.keyMap[key];
+                    if (item && group.indexOf(item) == -1)
+                        group.push(item);
+                }
+
             }
             if (group.length == 0)
                 return false;
