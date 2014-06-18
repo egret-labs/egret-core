@@ -38,10 +38,7 @@ module egret {
         private fillStyleColor:string;
 
         constructor() {
-            this.renderContext = MainContext.instance.rendererContext;
-            this.canvasContext = (<HTML5CanvasRenderer>this.renderContext).canvasContext;
             this.commandQueue = [];
-
         }
 
         public beginFill(color:number, alpha:number = 1):void {
@@ -61,10 +58,11 @@ module egret {
 
         public drawRect(x:number, y:number, width:number, height:number):void {
 
-            var rendererContext = <HTML5CanvasRenderer>this.renderContext;
+
             this.commandQueue.push(new Command(
 
                 function (x, y, width, height) {
+                    var rendererContext = <HTML5CanvasRenderer>this.renderContext;
                     this.canvasContext.beginPath();
                     this.canvasContext.rect(rendererContext._transformTx + x,
                         rendererContext._transformTy + y,
@@ -81,9 +79,10 @@ module egret {
         }
 
         public drawCircle(x:number, y:number, r:number):void {
-            var rendererContext = <HTML5CanvasRenderer>this.renderContext;
+
             this.commandQueue.push(new Command(
                 function (x, y, r) {
+                    var rendererContext = <HTML5CanvasRenderer>this.renderContext;
                     this.canvasContext.beginPath();
                     this.canvasContext.arc(rendererContext._transformTx + x,
                         rendererContext._transformTy + y, r, 0, Math.PI * 2);
@@ -132,10 +131,11 @@ module egret {
          * @param y
          */
         public lineTo(x:number, y:number):void {
-            var rendererContext = <HTML5CanvasRenderer>this.renderContext;
-            var canvasContext:CanvasRenderingContext2D = this.canvasContext;
+
             this.commandQueue.push(new Command(
                 function (x, y) {
+                    var rendererContext = <HTML5CanvasRenderer>this.renderContext;
+                    var canvasContext:CanvasRenderingContext2D = this.canvasContext;
                     canvasContext.lineTo(rendererContext._transformTx + x, rendererContext._transformTy + y);
                 },
                 this,
@@ -153,24 +153,26 @@ module egret {
          * @param anchorX {number} 一个数字，指定下一个锚点相对于父显示对象注册点的水平位置。
          * @param anchorY {number} 一个数字，指定下一个锚点相对于父显示对象注册点的垂直位置。
          */
-        public curveTo(controlX:Number, controlY:Number, anchorX:Number, anchorY:Number):void{
-            var rendererContext = <HTML5CanvasRenderer>this.renderContext;
-            var canvasContext:CanvasRenderingContext2D = this.canvasContext;
+        public curveTo(controlX:Number, controlY:Number, anchorX:Number, anchorY:Number):void {
+
             this.commandQueue.push(new Command(
-                function (x, y,ax,ay) {
-                    canvasContext.quadraticCurveTo(rendererContext._transformTx + x, rendererContext._transformTy + y,ax,ay);
+                function (x, y, ax, ay) {
+                    var rendererContext = <HTML5CanvasRenderer>this.renderContext;
+                    var canvasContext:CanvasRenderingContext2D = this.canvasContext;
+                    canvasContext.quadraticCurveTo(rendererContext._transformTx + x, rendererContext._transformTy + y, ax, ay);
                 },
                 this,
-                [controlX, controlY,anchorX,anchorY]
+                [controlX, controlY, anchorX, anchorY]
 
             ))
         }
 
         public moveTo(x:number, y:number):void {
-            var rendererContext = <HTML5CanvasRenderer>this.renderContext;
-            var canvasContext:CanvasRenderingContext2D = this.canvasContext;
+
             this.commandQueue.push(new Command(
                 function (x, y) {
+                    var rendererContext = <HTML5CanvasRenderer>this.renderContext;
+                    var canvasContext:CanvasRenderingContext2D = this.canvasContext;
                     canvasContext.moveTo(rendererContext._transformTx + x, rendererContext._transformTy + y);
                 },
                 this,
@@ -211,7 +213,9 @@ module egret {
 
         }
 
-        public _draw():void {
+        public _draw(renderContext:RendererContext):void {
+            this.renderContext = renderContext;
+            this.canvasContext = (<HTML5CanvasRenderer>this.renderContext).canvasContext;
             var rendererContext = <HTML5CanvasRenderer>this.renderContext;
             var canvasContext:CanvasRenderingContext2D = this.canvasContext;
             canvasContext.moveTo(rendererContext._transformTx, rendererContext._transformTy);

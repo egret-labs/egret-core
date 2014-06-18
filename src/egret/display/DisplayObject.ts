@@ -635,7 +635,7 @@ module egret {
             if (!this.visible || (!ignoreTouchEnabled && !this._touchEnabled)) {
                 return null;
             }
-            var bound:Rectangle = this.getBounds(Rectangle.identity);
+            var bound:Rectangle = this._getSize(Rectangle.identity);
             if (0 < x && x < bound.width && 0 < y && y < bound.height) {
                 if (this.mask || this._scrollRect) {
                     if (this._scrollRect
@@ -655,6 +655,28 @@ module egret {
                 return this;
             }
             else {
+                return null;
+            }
+        }
+
+        public hitTestPoint(x:number, y:number, shapeFlag?:boolean):DisplayObject {
+
+            if (!shapeFlag) {
+                return this.hitTest(x, y, true);
+            }
+            else {
+                var testTexture:Texture;
+                if (this._texture_to_render) {
+                    testTexture = this._texture_to_render;
+                }
+                else {
+                    testTexture = new RenderTexture();
+                    (<RenderTexture>testTexture).drawToTexture(this);
+                }
+                var pixelData:number[] = testTexture.getPixel32(x, y);
+                if (pixelData[3] != 0) {
+                    return this;
+                }
                 return null;
             }
         }
@@ -803,7 +825,12 @@ module egret {
             return false;
         }
 
-        public cacheAsBitmap(bool:boolean):void {
+        public get cacheAsBitmap():boolean {
+            return this._cacheAsBitmap;
+        }
+
+        public set cacheAsBitmap(bool:boolean) {
+            if (this._cacheAsBitmap == bool) return;
             this._cacheAsBitmap = bool;
             if (bool) {
                 var renderTexture = new egret.RenderTexture();
@@ -814,8 +841,8 @@ module egret {
 
         public static getTransformBounds(bounds:egret.Rectangle, mtx:egret.Matrix):egret.Rectangle {
 //            var x = bounds.x, y = bounds.y;
-              var x,y;
-              var width = bounds.width, height = bounds.height;
+            var x, y;
+            var width = bounds.width, height = bounds.height;
 
 //            if (x || y) {
 //                mtx.appendTransform(0, 0, 1, 1, 0, 0, 0, -x, -y);

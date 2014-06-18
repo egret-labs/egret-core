@@ -88,5 +88,11 @@ module egret {
             this._textureWidth = value.width * scale;
             this._textureHeight = value.height * scale;
         }
+
+
+        public getPixel32(x,y):number[]{
+            var result = this._bitmapData.getContext("2d").getImageData(x,y,1,1);
+            return result.data;
+        }
     }
 }
