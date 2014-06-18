@@ -66,7 +66,7 @@ module RES {
             var length:number = keys.length;
             for (var i:number = 0; i < length; i++) {
                 var key:string = keys[i];
-                var g:Array = groupDic[key];
+                var g:Array<any> = groupDic[key];
                 if(g){
                     var len:number = g.length;
                     for(var j:number=0;j<len;j++){
