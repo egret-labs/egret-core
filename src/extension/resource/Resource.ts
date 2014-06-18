@@ -71,11 +71,11 @@ module RES {
     /**
      * 创建自定义的加载资源组,注意：此方法仅在资源配置文件加载完成后执行才有效。
      * 可以监听ResourceEvent.CONFIG_COMPLETE事件来确认配置加载完成。
-	 * @method RES.createGroup
+     * @method RES.createGroup
      * @param name {string} 要创建的加载资源组的组名
-     * @param keys {egret.Array<string>} 要包含的键名列表，key对应配置文件里的name属性或sbuKeys属性的一项。
+     * @param keys {egret.Array<string>} 要包含的键名列表，key对应配置文件里的name属性或一个资源组名。
      * @param override {boolean} 是否覆盖已经存在的同名资源组,默认false。
-	 * @returns {boolean}
+     * @returns {boolean}
      */
     export function createGroup(name:string,keys:Array<string>,override:boolean = false):boolean{
         return instance.createGroup(name,keys,override);
@@ -287,12 +287,13 @@ module RES {
             }
         }
         /**
-         * 创建自定义的加载资源组
-		 * @method RES.createGroup
-		 * @param name {string} 
-		 * @param keys {egret.Array<string>} 
-		 * @param override {boolean} 
-		 * @returns {boolean}
+         * 创建自定义的加载资源组,注意：此方法仅在资源配置文件加载完成后执行才有效。
+         * 可以监听ResourceEvent.CONFIG_COMPLETE事件来确认配置加载完成。
+         * @method RES.ResourceConfig#createGroup
+         * @param name {string} 要创建的加载资源组的组名
+         * @param keys {egret.Array<string>} 要包含的键名列表，key对应配置文件里的name属性或一个资源组名。
+         * @param override {boolean} 是否覆盖已经存在的同名资源组,默认false。
+         * @returns {boolean}
          */
         public createGroup(name:string,keys:Array<string>,override:boolean=false):boolean{
             return this.resConfig.createGroup(name,keys,override);
