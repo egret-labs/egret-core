@@ -9,7 +9,7 @@ var async = require('../core/async');
 var cp_exec = require('child_process').exec;
 var libs = require("../core/normal_libs");
 var param = require("../core/params_analyze.js");
-
+var create_file_list = require("./create_file_list.js")
 
 function run(currentDir, args, opts) {
     var source = path.resolve(param.getEgretPath(), "");

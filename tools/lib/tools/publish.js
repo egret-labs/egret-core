@@ -3,6 +3,7 @@ var param = require("../core/params_analyze.js");
 var fs = require("fs");
 var child_process = require("child_process");
 var libs = require("../core/normal_libs");
+var create_file_list = require("./create_file_list.js")
 
 if (!fs.existsSync) fs.existsSync = path.existsSync; // node < 0.8
 
@@ -266,6 +267,14 @@ function run(dir, args, opts) {
     });
 
     var game_file = path.join(currDir, "src/game_file_list.js");
+    if(!fs.existsSync(game_file)){
+        game_file = currDir+"/bin-debug/src/game_file_list.js";
+        var gameListText = create_file_list.create(currDir+"/src/");
+        if(!fs.existsSync(currDir+"/bin-debug/src/")){
+            fs.mkdirSync(currDir+"/bin-debug/src/");
+        }
+        fs.writeFileSync(game_file,gameListText,"utf-8");
+    }
     var gameFileList = getFileList(game_file);
     gameFileList = gameFileList.map(function (item) {
         return path.join(currDir + "/bin-debug/src/", item);

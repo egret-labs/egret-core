@@ -1,7 +1,7 @@
 /**
  * 将TypeScript编译为JavaScript
  */
-var create_file_list = require("./create_file_list.js")
+var create_file_list = require("./create_file_list.js");
 var path = require("path");
 var fs = require("fs");
 var async = require('../core/async');

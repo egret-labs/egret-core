@@ -76,6 +76,9 @@ egret_h5.startGame = function () {
     egret.RendererContext.CONTENT_SCALE_FACTOR = 1;
     context.run();
 
+    //在此定义文档类的完整类名，若包含命名空间，需要填写命名空间前缀。
+    var document_class = "GameApp";
+
     var rootClass;
     if(document_class){
         rootClass = egret.getDefinitionByName(document_class);
@@ -90,7 +93,7 @@ egret_h5.startGame = function () {
         }
     }
     else{
-        throw new Error("找不到文档类！请在game_file_list.js指定文档类的完全限定名。");
+        throw new Error("找不到文档类！");
     }
 }
 
