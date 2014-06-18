@@ -1,6 +1,7 @@
 /**
  * 将TypeScript编译为JavaScript
  */
+var create_file_list = require("./create_file_list.js");
 var path = require("path");
 var fs = require("fs");
 var async = require('../core/async');
@@ -75,10 +76,18 @@ function run(dir, args, opts) {
 
     task.push(
         function (callback) {
+            var gameListPath = currDir+"/bin-debug/src/game_file_list.js";
+            if(!fs.existsSync(currDir+"/src/game_file_list.js")){
+                var gameListText = create_file_list.create(currDir+"/src/");
+                if(!fs.existsSync(currDir+"/bin-debug/src/")){
+                    fs.mkdirSync(currDir+"/bin-debug/src/");
+                }
+                fs.writeFileSync(gameListPath,gameListText,"utf-8");
+            }
             compiler.compile(callback,
                 path.join(currDir, "src"),
                 path.join(currDir, "bin-debug/src"),
-                path.join(currDir, "src/game_file_list.js")
+                gameListPath
             );
         }
     )

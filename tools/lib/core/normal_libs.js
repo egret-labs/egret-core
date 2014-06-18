@@ -57,11 +57,21 @@ function remove(path) {
 }
 
 var rmfile = fs.unlinkSync
-var rmdir = function (path) {
-    fs.readdirSync(path).forEach(function (name) {
-        remove(join(path, name))
-    })
-    fs.rmdirSync(path)
+function rmdir(path) {
+    var files = [];
+    if( fs.existsSync(path) ) {
+        files = fs.readdirSync(path);
+        files.forEach(function(file,index){
+            var curPath = path + "/" + file;
+            if(fs.statSync(curPath).isDirectory()) { // recurse
+                rmdir(curPath);
+            }
+            else {
+                fs.unlinkSync(curPath);
+            }
+        });
+        fs.rmdirSync(path);
+    }
 }
 
 
