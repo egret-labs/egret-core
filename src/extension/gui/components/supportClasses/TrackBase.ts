@@ -345,7 +345,7 @@ module egret {
 			UIGlobals.stage.removeEventListener(TouchEvent.TOUCH_END, 
 				this.stage_mouseUpHandler, 
 				this);
-			UIGlobals.stage.addEventListener(Event.LEAVE_STAGE,
+			UIGlobals.stage.removeEventListener(Event.LEAVE_STAGE,
 				this.stage_mouseUpHandler,
 				this);
 			this.removeEventListener(Event.ENTER_FRAME,this.updateWhenMouseMove,this);
