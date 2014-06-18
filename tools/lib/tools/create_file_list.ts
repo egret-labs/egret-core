@@ -28,18 +28,16 @@
 /// <reference path="../exml/node.d.ts"/>
 
 var fs = require("fs");
-var CodeUtil = require("../core/code_util.js")
+var CodeUtil = require("../core/code_util.js");
+var libs = require("../core/normal_libs");
 
 var classInfoList:any = {};
 var classNameToPath:any = {};
 var pathToClassName:any = {};
 var pathInfoList:any = {};
+var functionKeys:Array<string> = ["static","var","export","public","private","function","get","set","class","interface"];
 
-var functionKeys:Array = ["static","var","export","public","private","function","get","set","class","interface"];
-
-create("D:/Program/HTML5/egret-examples/GUIExample/src")
-
-function create(srcPath:string):void{
+function create(srcPath:string):string{
     srcPath = srcPath.split("\\").join("/");
     if(srcPath.charAt(srcPath.length-1)!="/"){
         srcPath += "/";
@@ -81,9 +79,9 @@ function create(srcPath:string):void{
 
     var pathLevelInfo:any = {};
     for(path in pathInfoList){
-        setPathLevel(path,0,pathLevelInfo);
+        setPathLevel(path,0,pathLevelInfo,[path]);
     }
-    var pathList:Array<string> = [];
+    var pathList:Array<any> = [];
     for(path in pathLevelInfo){
         var level:number = pathLevelInfo[path]
         if(pathList[level]){
@@ -107,13 +105,12 @@ function create(srcPath:string):void{
         gameList[i] = "    \""+path+"\"";
     }
     var gameListText:string = "var game_file_list = [\n"+gameList.join(",\n")+"\n];";
-    var gameListPath:string = srcPath.substring(0,srcPath.length-4)+"bin-debug/src/game_file_list.js";
-    fs.writeFileSync(gameListPath,gameListText,"utf-8");
+    return gameListText;
 }
 
 exports.create = create;
 
-function setPathLevel(path:string,level:number,pathLevelInfo:any):void{
+function setPathLevel(path:string,level:number,pathLevelInfo:any,map:Array<string>):void{
     if(pathLevelInfo[path]==null){
         pathLevelInfo[path] = level;
     }
@@ -124,7 +121,10 @@ function setPathLevel(path:string,level:number,pathLevelInfo:any):void{
     var length:number = list.length;
     for(var i:number=0;i<length;i++){
         var relyPath:string = list[i];
-        setPathLevel(relyPath,level+1,pathLevelInfo);
+        if(map.indexOf(relyPath)!=-1){
+            libs.exit(1103,path)
+        }
+        setPathLevel(relyPath,level+1,pathLevelInfo,map.concat(relyPath));
     }
 }
 
@@ -302,7 +302,7 @@ function getRelyOnFromVar(text:string,ns:string,relyOnList:Array<string>):void{
 function getClass(text:string,ns:string):string{
     var word:string = CodeUtil.getFirstWord(text);
     var index:number = word.indexOf("(");
-    if(word!=-1){
+    if(index!=-1){
         word = word.substring(0,index);
     }
     word = CodeUtil.trimVariable(word);
@@ -354,10 +354,10 @@ function getRelyOnFromStatic(text:string,ns:string,relyOnList:Array<string>):voi
     }
 }
 
-function trimKeyWords(codeText:String):String
+function trimKeyWords(codeText:string):string
 {
     codeText = codeText.trim();
-    var word:String;
+    var word:string;
     while(codeText.length>0)
     {
         word = CodeUtil.getFirstVariable(codeText);

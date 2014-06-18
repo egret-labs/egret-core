@@ -27,15 +27,13 @@
 /// <reference path="../exml/node.d.ts"/>
 var fs = require("fs");
 var CodeUtil = require("../core/code_util.js");
+var libs = require("../core/normal_libs");
 
 var classInfoList = {};
 var classNameToPath = {};
 var pathToClassName = {};
 var pathInfoList = {};
-
 var functionKeys = ["static", "var", "export", "public", "private", "function", "get", "set", "class", "interface"];
-
-create("D:/Program/HTML5/egret-examples/GUIExample/src");
 
 function create(srcPath) {
     srcPath = srcPath.split("\\").join("/");
@@ -78,7 +76,7 @@ function create(srcPath) {
 
     var pathLevelInfo = {};
     for (path in pathInfoList) {
-        setPathLevel(path, 0, pathLevelInfo);
+        setPathLevel(path, 0, pathLevelInfo, [path]);
     }
     var pathList = [];
     for (path in pathLevelInfo) {
@@ -103,13 +101,12 @@ function create(srcPath) {
         gameList[i] = "    \"" + path + "\"";
     }
     var gameListText = "var game_file_list = [\n" + gameList.join(",\n") + "\n];";
-    var gameListPath = srcPath.substring(0, srcPath.length - 4) + "bin-debug/src/game_file_list.js";
-    fs.writeFileSync(gameListPath, gameListText, "utf-8");
+    return gameListText;
 }
 
 exports.create = create;
 
-function setPathLevel(path, level, pathLevelInfo) {
+function setPathLevel(path, level, pathLevelInfo, map) {
     if (pathLevelInfo[path] == null) {
         pathLevelInfo[path] = level;
     } else {
@@ -119,7 +116,10 @@ function setPathLevel(path, level, pathLevelInfo) {
     var length = list.length;
     for (var i = 0; i < length; i++) {
         var relyPath = list[i];
-        setPathLevel(relyPath, level + 1, pathLevelInfo);
+        if (map.indexOf(relyPath) != -1) {
+            libs.exit(1103, path);
+        }
+        setPathLevel(relyPath, level + 1, pathLevelInfo, map.concat(relyPath));
     }
 }
 
@@ -291,7 +291,7 @@ function getRelyOnFromVar(text, ns, relyOnList) {
 function getClass(text, ns) {
     var word = CodeUtil.getFirstWord(text);
     var index = word.indexOf("(");
-    if (word != -1) {
+    if (index != -1) {
         word = word.substring(0, index);
     }
     word = CodeUtil.trimVariable(word);

@@ -41,7 +41,6 @@ function parse(xmlString) {
                 node["$"+key] = attribs[key];
             }
         }
-        node.attributes = attributes;
         node.toString = toString;
         var name = node.name;
         var index = name.indexOf(":");
@@ -97,14 +96,4 @@ function toString(){
     return this.text;
 };
 
-function attributes(){
-    var attribs = [];
-    for(var key in this){
-        if(key.charAt(0)=="$"){
-            key = key.substring(1);
-            attribs.push(key);
-        }
-    }
-    return attrib;
-};
 exports.parse = parse;

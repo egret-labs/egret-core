@@ -10,6 +10,7 @@ exports.error_code = {
     1001:"请输入项目名称。例: {color_green}egret create [project_name]{color_normal}",
     1101:"请输入项目名称。例:{color_green}egret build [project_name]{color_normal}",
     1102:"指定項目中不存在 bin-debug 文件夾，请执行 {color_green}egret build [project_name] -e {color_normal} 初始化引擎",
+    1103:"{0}: error 类文件之间存在循环依赖，请检查类的继承关系或静态变量的初始化引用。",
     1301:"在编译路径 {0} 下找不到 egret_file_list.js 或 game_file_list.js，请检查编译路径是否正确",
     1302:"请输入编译路径。例:{color_green}egret compile --source [your_typescript_source_dir] --output [your_output_dir]{color_normal}",
     1303:"编译失败",
