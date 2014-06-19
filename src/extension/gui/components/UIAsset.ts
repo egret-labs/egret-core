@@ -28,7 +28,6 @@
 /// <reference path="../../../egret/context/renderer/RenderFilter.ts"/>
 /// <reference path="../../../egret/context/renderer/RendererContext.ts"/>
 /// <reference path="../../../egret/display/DisplayObject.ts"/>
-/// <reference path="../../../egret/display/DisplayObjectContainer.ts"/>
 /// <reference path="../../../egret/display/Texture.ts"/>
 /// <reference path="../../../egret/geom/Rectangle.ts"/>
 /// <reference path="../../../egret/utils/Injector.ts"/>
@@ -170,10 +169,10 @@ module egret {
             this._content = content;
             if(oldContent!==content) {
                 if(oldContent instanceof DisplayObject){
-                    this._removeFromDisplayList(<DisplayObjectContainer> oldContent);
+                    this._removeFromDisplayList(<DisplayObject> oldContent);
                 }
                 if(content instanceof  DisplayObject){
-                    this._addToDisplayListAt(<DisplayObjectContainer> content,0);
+                    this._addToDisplayListAt(<DisplayObject> content,0);
                 }
             }
             if(content instanceof Texture&&content["scale9Grid"] instanceof Rectangle){

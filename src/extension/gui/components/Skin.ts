@@ -129,7 +129,7 @@ module egret {
                 this._initialized = true;
                 this.createChildren();
             }
-            
+
             if(this._hostComponent){
                 var n:number = this._elementsContent.length;
                 for (i = 0; i < n; i++){
