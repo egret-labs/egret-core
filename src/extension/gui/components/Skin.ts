@@ -117,10 +117,6 @@ module egret {
         public _setHostComponent(value:SkinnableComponent){
             if(this._hostComponent==value)
                 return;
-            if(!this._initialized){
-                this._initialized = true;
-                this.createChildren();
-            }
             var i:number;
             if(this._hostComponent){
                 for(i = this._elementsContent.length - 1; i >= 0; i--){
@@ -129,7 +125,11 @@ module egret {
             }
 
             this._hostComponent = value;
-
+            if(!this._initialized){
+                this._initialized = true;
+                this.createChildren();
+            }
+            
             if(this._hostComponent){
                 var n:number = this._elementsContent.length;
                 for (i = 0; i < n; i++){
