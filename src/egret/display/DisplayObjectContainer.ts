@@ -65,6 +65,7 @@ module egret {
         public _children:Array<DisplayObject>
 
 		/**
+         * 返回此对象的子项数目。
 		 * @member {number} egret.DisplayObjectContainer#numChildren
 		 */
         public get numChildren():number{
@@ -72,10 +73,10 @@ module egret {
         }
 
         /**
-         * 修改容器内子元件的层级
+         * 更改现有子项在显示对象容器中的位置。这会影响子对象的分层。
 		 * @method egret.DisplayObjectContainer#setChildIndex
-         * @param child {egret.DisplayObject} 容器的子元件
-         * @param index {number} 新的层级 <0或者>=元件数量，都加入到最上层
+         * @param child {egret.DisplayObject} 要为其更改索引编号的 DisplayObject 子实例。
+         * @param index {number} 生成的 child 显示对象的索引编号。当新的索引编号小于0或大于已有子元件数量时，新加入的DisplayObject对象将会放置于最上层。
          */
         public setChildIndex(child:DisplayObject, index:number):void {
             this.doSetChildIndex(child,index);
@@ -98,9 +99,10 @@ module egret {
         }
 
         /**
+         * 将一个 DisplayObject 子实例添加到该 DisplayObjectContainer 实例中。子项将被添加到该 DisplayObjectContainer 实例中其他所有子项的前（上）面。（要将某子项添加到特定索引位置，请使用 addChildAt() 方法。）
 		 * @method egret.DisplayObjectContainer#addChild
-		 * @param child {egret.DisplayObject}
-		 * @returns {egret.DisplayObject}
+		 * @param child {egret.DisplayObject} 要作为该 DisplayObjectContainer 实例的子项添加的 DisplayObject 实例。
+		 * @returns {egret.DisplayObject} 在 child 参数中传递的 DisplayObject 实例。
          */
         public addChild(child:DisplayObject):DisplayObject{
             var index:number = this.numChildren;
@@ -113,11 +115,11 @@ module egret {
 
 
         /**
-         * 将一个 DisplayObject 子实例添加到该 DisplayObjectContainer 实例中。
+         * 将一个 DisplayObject 子实例添加到该 DisplayObjectContainer 实例中。该子项将被添加到指定的索引位置。索引为 0 表示该 DisplayObjectContainer 对象的显示列表的后（底）部。如果索引值为-1，则表示该DisplayObjectContainer 对象的显示列表的前（上）部。
 		 * @method egret.DisplayObjectContainer#addChildAt
-         * @param child {egret.DisplayObject} 子显示对象
-         * @param index {number} 加载的顺序，默认为-1，加载到最前面
-		 * @returns {egret.DisplayObject}
+         * @param child {egret.DisplayObject} 要作为该 DisplayObjectContainer 实例的子项添加的 DisplayObject 实例。
+         * @param index {number} 添加该子项的索引位置。 如果指定当前占用的索引位置，则该位置以及所有更高位置上的子对象会在子级列表中上移一个位置。
+		 * @returns {egret.DisplayObject} 在 child 参数中传递的 DisplayObject 实例。
          */
         public addChildAt(child:DisplayObject, index:number):DisplayObject {
 
@@ -163,8 +165,8 @@ module egret {
         /**
          * 将一个 DisplayObject 子实例从 DisplayObjectContainer 实例中移除。
 		 * @method egret.DisplayObjectContainer#removeChild
-         * @param child {egret.DisplayObject}
-		 * @returns {egret.DisplayObject}
+         * @param child {egret.DisplayObject} 要删除的 DisplayObject 实例。
+		 * @returns {egret.DisplayObject} 在 child 参数中传递的 DisplayObject 实例。
          */
         public removeChild(child:DisplayObject):DisplayObject {
             var index = this._children.indexOf(child);
@@ -178,9 +180,10 @@ module egret {
         }
 
 		/**
+         * 从 DisplayObjectContainer 的子列表中指定的 index 位置删除子 DisplayObject。
 		 * @method egret.DisplayObjectContainer#removeChildAt
-		 * @param index {number} 
-		 * @returns {egret.DisplayObject}
+		 * @param index {number} 要删除的 DisplayObject 的子索引。
+		 * @returns {egret.DisplayObject} 已删除的 DisplayObject 实例。
 		 */
         public removeChildAt(index:number):DisplayObject {
             if (index >= 0 && index < this._children.length) {
@@ -212,10 +215,10 @@ module egret {
 
 
         /**
-         * 通过索引获取显示对象
+         * 返回位于指定索引处的子显示对象实例。
 		 * @method egret.DisplayObjectContainer#getChildAt
-         * @param index {number} 
-		 * @returns {egret.DisplayObject}
+         * @param index {number} 子对象的索引位置。
+		 * @returns {egret.DisplayObject} 位于指定索引位置处的子显示对象。
          */
         public getChildAt(index:number):DisplayObject {
             if (index >= 0 && index < this._children.length) {
@@ -228,10 +231,10 @@ module egret {
         }
 
         /**
-         *  确定指定显示对象是 DisplayObjectContainer 实例的子项还是该实例本身。搜索包括整个显示列表（其中包括此 DisplayObjectContainer 实例）。孙项、曾孙项等，每项都返回 true。
+         * 确定指定显示对象是 DisplayObjectContainer 实例的子项还是该实例本身。搜索包括整个显示列表（其中包括此 DisplayObjectContainer 实例）。孙项、曾孙项等，每项都返回 true。
 		 * @method egret.DisplayObjectContainer#contains
          * @param child {egret.DisplayObject} 要测试的子对象。
-		 * @returns {boolean}
+		 * @returns {boolean} 如果指定的显示对象为DisplayObjectContainer该实例本身，则返回true，如果指定的显示对象为当前实例子项，则返回false。
          */
         public contains(child:DisplayObject):boolean{
             while (child){
@@ -244,9 +247,10 @@ module egret {
         }
 
 		/**
+         * 在子级列表中两个指定的索引位置，交换子对象的 Z 轴顺序（前后顺序）。显示对象容器中所有其他子对象的索引位置保持不变。
 		 * @method egret.DisplayObjectContainer#swapChildrenAt
-		 * @param index1 {number} 
-		 * @param index2 {number} 
+		 * @param index1 {number} 第一个子对象的索引位置。
+		 * @param index2 {number} 第二个子对象的索引位置。
 		 */
         public swapChildrenAt(index1:number, index2:number):void{
             if (index1 >= 0 && index1 < this._children.length&&index2>=0&&index2<this._children.length) {
@@ -259,9 +263,10 @@ module egret {
         }
 
 		/**
+         * 交换两个指定子对象的 Z 轴顺序（从前到后顺序）。显示对象容器中所有其他子对象的索引位置保持不变。
 		 * @method egret.DisplayObjectContainer#swapChildren
-		 * @param child1 {egret.DisplayObject}
-		 * @param child2 {egret.DisplayObject}
+		 * @param child1 {egret.DisplayObject} 第一个子对象。
+		 * @param child2 {egret.DisplayObject} 第二个子对象。
 		 */
         public swapChildren(child1:DisplayObject, child2:DisplayObject):void{
             var index1:number = this._children.indexOf(child1);
@@ -285,17 +290,17 @@ module egret {
         }
 
         /**
-         * 获得 容器内元件的层级
+         * 返回 DisplayObject 的 child 实例的索引位置。
 		 * @method egret.DisplayObjectContainer#getChildIndex
-         * @param child {egret.DisplayObject}
-		 * @returns {number}
+         * @param child {egret.DisplayObject} 要标识的 DisplayObject 实例。
+		 * @returns {number} 要标识的子显示对象的索引位置。
          */
         public getChildIndex(child:egret.DisplayObject):number {
             return this._children.indexOf(child);
         }
 
         /**
-         * 移除所有显示对象
+         * 从 DisplayObjectContainer 实例的子级列表中删除所有 child DisplayObject 实例。
 		 * @method egret.DisplayObjectContainer#removeChildren
          */
         public removeChildren() {
@@ -446,10 +451,10 @@ module egret {
         }
 
         /**
-         * 很据子显示对象的name属性获取子显示对象
+         * 返回具有指定名称的子显示对象。
          * @method egret.DisplayObjectContainer#getChildByName
-         * @param name {string} name
-         * @returns {egret.DisplayObject}
+         * @param name {string} 要返回的子项的名称。
+         * @returns {egret.DisplayObject} 具有指定名称的子显示对象。
          */
         public getChildByName(name:string):DisplayObject{
             var locChildren = this._children;
