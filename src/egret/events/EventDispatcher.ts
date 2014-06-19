@@ -29,7 +29,7 @@
 /// <reference path="IEventDispatcher.ts"/>
 /// <reference path="../utils/HashObject.ts"/>
 /// <reference path="../utils/Recycler.ts"/>
-/// <reference path="../../jslib/DEBUG.d.ts"/>
+/// <reference path="../utils/Logger.ts"/>
 
 module egret {
     /**
@@ -74,12 +74,6 @@ module egret {
         public _captureEventsMap:Object;
 
         /**
-         * 引擎内部调用
-         * @private
-         */
-        public _isUseCapture:boolean = false;
-
-        /**
          * 添加事件侦听器
          * @method egret.EventDispatcher#addEventListener
          * @param type {string} 事件的类型。
@@ -93,8 +87,10 @@ module egret {
          * 优先级为 n -1 的侦听器之前得到处理。如果两个或更多个侦听器共享相同的优先级，则按照它们的添加顺序进行处理。默认优先级为 0。
          */
         public addEventListener(type:string, listener:Function, thisObject:any, useCapture:boolean = false, priority:number = 0):void {
-            if (DEBUG && DEBUG.ADD_EVENT_LISTENER) {
-                DEBUG.checkAddEventListener(type, listener, thisObject, useCapture, priority);
+            if (typeof useCapture === "undefined") { useCapture = false; }
+            if (typeof priority === "undefined") { priority = 0; }
+            if (!listener) {
+                Logger.fatal("addEventListener侦听函数不能为空");
             }
             var eventMap:Object;
             if(useCapture){

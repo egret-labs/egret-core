@@ -42,14 +42,6 @@ var egret;
             }
         };
 
-        DEBUG.checkAddEventListener = function (eventName, func, thisObj, useCapture, priority) {
-            if (typeof useCapture === "undefined") { useCapture = false; }
-            if (typeof priority === "undefined") { priority = 0; }
-            if (func == null || func == undefined) {
-                egret.Logger.fatal("addEventListener侦听函数不能为空");
-            }
-        };
-
         DEBUG.checkSetScaleGrid = function (texture, top, bottom, left, right) {
             if (!texture) {
                 egret.Logger.fatal("Scale9Bitmap没有纹理");
