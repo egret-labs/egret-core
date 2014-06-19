@@ -238,9 +238,6 @@ module egret {
 				this.setElementIndex(element, index);
 				return element;
 			}
-			else if (element.parent&&"removeElement" in element.parent){
-				(<IVisualElementContainer><any> (element.parent)).removeElement(element);
-			}
 			else if(host&&"removeElement" in host){
 				(<IContainer><any> host).removeElement(element);
 			}
