@@ -490,6 +490,7 @@ module RES {
                 var length:number = group.length;
                 for(var i:number=0;i<length;i++){
                     var item:any = group[i];
+                    item.loaded = false;
                     var analyzer:AnalyzerBase = this.getAnalyzerByType(item.type);
                     analyzer.destroyRes(name);
                 }
@@ -499,6 +500,8 @@ module RES {
                 var type:string = this.resConfig.getType(name);
                 if(type=="")
                     return false;
+                item = this.resConfig.getRawResourceItem(name);
+                item.loaded = false;
                 analyzer = this.getAnalyzerByType(type);
                 return analyzer.destroyRes(name);
             }
