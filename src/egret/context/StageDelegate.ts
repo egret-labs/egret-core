@@ -34,7 +34,6 @@ module egret {
 	 * @classdesc
      * StageDelegate负责处理屏幕适配策略
      * 有关屏幕适配策略，更多信息请了解 GitHub:理解egret的GameLauncher
-     * @stable B 目前StageDelegate和HTML5有一定的耦合关系，之后会对其解耦，保证NativeApp的正确运行
 	 * @extends egret.HashObject
      */
     export class StageDelegate extends HashObject{
@@ -47,7 +46,6 @@ module egret {
         public static getInstance():StageDelegate {
             if (StageDelegate.instance == null) {
                 ContainerStrategy.initialize();
-                ContentStrategy.initialize();
                 StageDelegate.instance = new StageDelegate();
             }
             return StageDelegate.instance;
@@ -91,7 +89,7 @@ module egret {
 		 * @param height {{number}}
 		 * @param resolutionPolicy {any}
 		 */
-        public setDesignSize(width:number, height:number, resolutionPolicy):void {
+        public setDesignSize(width:number, height:number, resolutionPolicy:ResolutionPolicy):void {
             // Defensive code
             if (isNaN(width) || width == 0 || isNaN(height) || height == 0) {
                 egret.Logger.info("Resolution Error");
@@ -110,27 +108,11 @@ module egret {
 
 		/**
 		 * @method egret.StageDelegate#setResolutionPolicy
-		 * @param resolutionPolic {any} 
+		 * @param resolutionPolic {any}
 		 */
-        public setResolutionPolicy(resolutionPolicy):void {
-            if (resolutionPolicy instanceof ResolutionPolicy) {
-                this._resolutionPolicy = resolutionPolicy;
-            }
-            else {
-                switch (resolutionPolicy) {
-                    case ResolutionPolicy.FIXED_HEIGHT:
-                        this._resolutionPolicy = new ResolutionPolicy(ContainerStrategy.EQUAL_TO_FRAME, ContentStrategy.FIXED_HEIGHT);
-                        break;
-                    case ResolutionPolicy.FIXED_WIDTH:
-                        this._resolutionPolicy = new ResolutionPolicy(ContainerStrategy.EQUAL_TO_FRAME, ContentStrategy.FIXED_WIDTH);
-                        break;
-                }
-            }
-            if (this._resolutionPolicy != null)
-                this._resolutionPolicy.init(this);
-            else {
-                egret.Logger.fatal("需要先设置resolutionPolicy");
-            }
+        private setResolutionPolicy(resolutionPolicy:ResolutionPolicy):void {
+            this._resolutionPolicy = resolutionPolicy;
+            resolutionPolicy.init(this);
         }
 
 		/**
@@ -153,14 +135,6 @@ module egret {
 	 * @classdesc
 	 */
     export class ResolutionPolicy {
-		/**
-		 * @constant egret.ResolutionPolicy.FIXED_HEIGHT
-		 */
-        public static FIXED_HEIGHT = 1;
-		/**
-		 * @constant egret.ResolutionPolicy.FIXED_WIDTH
-		 */
-        public static FIXED_WIDTH = 2;
 
         private _containerStrategy;
         private _contentStrategy;
@@ -172,9 +146,9 @@ module egret {
 
 		/**
 		 * @method egret.ResolutionPolicy#init
-		 * @param view {any}
+		 * @param view {egret.StageDelegate}
 		 */
-        public init(view):void {
+        public init(view:StageDelegate):void {
             this._containerStrategy.init(view);
             this._contentStrategy.init(view);
         }
@@ -282,22 +256,6 @@ module egret {
 	 * @classdesc
 	 */
     export class ContentStrategy {
-		/**
-		 * @constant egret.ContentStrategy.FIXED_HEIGHT
-		 */
-        public static FIXED_HEIGHT:ContentStrategy = null;
-		/**
-		 * @constant egret.ContentStrategy.FIXED_WIDTH
-		 */
-        public static FIXED_WIDTH:ContentStrategy = null;
-
-		/**
-		 * @method egret.ContentStrategy.initialize
-		 */
-        public static initialize():void {
-            ContentStrategy.FIXED_HEIGHT = new FixedHeight();
-            ContentStrategy.FIXED_WIDTH = new FixedWidth();
-        }
 
 		/**
 		 * @method egret.ContentStrategy#init
@@ -329,7 +287,7 @@ module egret {
 		 * @param designedResolutionWidth {any} 
 		 * @param designedResolutionHeight {any}
 		 */
-        public _apply(delegate, designedResolutionWidth, designedResolutionHeight):void {
+        public _apply(delegate:StageDelegate, designedResolutionWidth:number, designedResolutionHeight:number):void {
             var canvas:any = document.getElementById(StageDelegate.canvas_name);
             var container:any = document.getElementById(StageDelegate.canvas_div_name);
             var containerW = canvas.width, containerH = canvas.height,
@@ -363,7 +321,7 @@ module egret {
 		 * @param designedResolutionWidth {any} 
 		 * @param designedResolutionHeight {any}
 		 */
-        public _apply(delegate:egret.StageDelegate, designedResolutionWidth, designedResolutionHeight):void {
+        public _apply(delegate:StageDelegate, designedResolutionWidth:number, designedResolutionHeight:number):void {
             var canvas:HTMLCanvasElement = <HTMLCanvasElement>document.getElementById(StageDelegate.canvas_name);
             var container:HTMLElement = document.getElementById(StageDelegate.canvas_div_name);
             var viewPortWidth = document.documentElement.clientWidth;
@@ -403,7 +361,7 @@ module egret {
 		 * @param designedResolutionWidth {number} 
 		 * @param designedResolutionHeight {number}
 		 */
-        public _apply(delegate:egret.StageDelegate, designedResolutionWidth:number, designedResolutionHeight:number):void {
+        public _apply(delegate:StageDelegate, designedResolutionWidth:number, designedResolutionHeight:number):void {
             var canvas:HTMLCanvasElement = <HTMLCanvasElement>document.getElementById(StageDelegate.canvas_name);
             var container:HTMLDivElement = <HTMLDivElement>document.getElementById(StageDelegate.canvas_div_name);
             var viewPortWidth = this.width;
