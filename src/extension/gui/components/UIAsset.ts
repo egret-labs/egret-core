@@ -95,7 +95,7 @@ module egret {
 				return;
 			this._source = value;
 			if(this.createChildrenCalled){
-				this.parseSkinName();
+				this.parseSource();
 			}
 			else{
 				this.sourceChanged = true;
@@ -118,7 +118,7 @@ module egret {
 		public createChildren():void{
 			super.createChildren();
 			if(this.sourceChanged){
-				this.parseSkinName();
+				this.parseSource();
 			}
 			this.createChildrenCalled = true;
 		}
@@ -131,7 +131,7 @@ module egret {
 		/**
 		 * 解析source
 		 */		
-		private parseSkinName():void{
+		private parseSource():void{
 			this.sourceChanged = false;
 			var adapter:IAssetAdapter = UIAsset.assetAdapter;
 			if(!adapter){
