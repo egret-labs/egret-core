@@ -50,7 +50,7 @@ module egret {
 	 * 请覆盖partAdded()和partRemoved()方法
 	 * @extends egret.SkinnableComponent
 	 */
-	export class SkinnableComponent extends UIComponent{
+	export class SkinnableComponent extends UIComponent implements ISkinnableClient{
 		/**
 		 * 构造函数
 		 * @method egret.SkinnableComponent#constructor

@@ -4,7 +4,7 @@ var param = require("../core/params_analyze.js");
 var fs = require("fs");
 var async = require('../core/async');
 var compiler = require("./compile.js")
-
+var create_file_list = require("./create_file_list.js");
 
 /**
  * 创建新项目
@@ -57,10 +57,14 @@ function run(currDir, args, opts) {
         },
 
         function (callback) {
+            var gameListPath = currDir+"/"+projectName+"/bin-debug/src/game_file_list.js";
+            var gameListText = create_file_list.create(currDir+"/"+projectName+"/src/");
+            fs.mkdirSync(currDir+"/"+projectName+"/bin-debug/src/");
+            fs.writeFileSync(gameListPath,gameListText,"utf-8");
             compiler.compile(callback,
                 path.join(currDir, projectName, "src"),
                 path.join(currDir, projectName, "bin-debug/src"),
-                path.join(currDir, projectName, "src/game_file_list.js")
+                gameListPath
             );
         },
 
