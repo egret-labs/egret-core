@@ -133,12 +133,7 @@ module egret {
             if(this._hostComponent){
                 var n:number = this._elementsContent.length;
                 for (i = 0; i < n; i++){
-                    var elt:IVisualElement = this._elementsContent[i];
-                    if (elt.parent&&"removeElement" in elt.parent)
-                        (<IVisualElementContainer><any> (elt.parent)).removeElement(elt);
-                    else if(elt.owner&&"removeElement" in elt.owner)
-                        (<IContainer><any> (elt.owner)).removeElement(elt);
-                    this._elementAdded(elt, i);
+                    this._elementAdded(this._elementsContent[i], i);
                 }
 
                 this.initializeStates();
@@ -254,6 +249,8 @@ module egret {
 			
 			if(this._hostComponent)
 				this._elementAdded(element, index);
+            else
+                element.ownerChanged(this);
 			
 			return element;
 		}
@@ -277,7 +274,8 @@ module egret {
 			
 			if(this._hostComponent)
 				this._elementRemoved(element, index);
-			
+			else
+                element.ownerChanged(null);
 			this._elementsContent.splice(index, 1);
 			
 			return element;

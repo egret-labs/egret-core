@@ -471,7 +471,7 @@ module egret {
                 if ("setLayoutBoundsSize" in skin) {
                     (<ILayoutElement><any> (skin)).setLayoutBoundsSize(unscaledWidth, unscaledHeight);
                 }
-                else {
+                else if(skin instanceof DisplayObject){
                     skin.scaleX = skin.width==0?1:unscaledWidth/skin.width;
                     skin.scaleY = skin.height==0?1:unscaledHeight/skin.height;
                 }
