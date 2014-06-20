@@ -62,8 +62,6 @@ module egret {
 
         private _designWidth:number = 0;
         private _designHeight:number = 0;
-        private _originalDesignWidth:number = 0;
-        private _originalDesignHeight:number = 0;
         public _scaleX = 1;
         public _scaleY = 1;
 
@@ -78,8 +76,6 @@ module egret {
             var w = canvas.width, h = canvas.height;
             this._designWidth = w;
             this._designHeight = h;
-            this._originalDesignWidth = w;
-            this._originalDesignHeight = h;
 
         }
 
@@ -90,19 +86,9 @@ module egret {
 		 * @param resolutionPolicy {any}
 		 */
         public setDesignSize(width:number, height:number, resolutionPolicy:ResolutionPolicy):void {
-            // Defensive code
-            if (isNaN(width) || width == 0 || isNaN(height) || height == 0) {
-                egret.Logger.info("Resolution Error");
-                return;
-            }
             this.setResolutionPolicy(resolutionPolicy);
-
-
             this._designWidth = width;
             this._designHeight = height;
-            this._originalDesignWidth = width;
-            this._originalDesignHeight = height;
-
             this._resolutionPolicy._apply(this, this._designWidth, this._designHeight);
         }
 

@@ -107,7 +107,7 @@ module egret {
         public addChild(child:DisplayObject):DisplayObject{
             var index:number = this.numChildren;
 
-            if (child.parent == this)
+            if (child._parent == this)
                 index--;
 
             return this._doAddChild(child, index);
@@ -241,7 +241,7 @@ module egret {
                 if (child == this){
                     return true;
                 }
-                child = child.parent;
+                child = child._parent;
             }
             return false;
         }
