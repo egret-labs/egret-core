@@ -165,6 +165,7 @@ function readClassNames(path:string):void{
         !CodeUtil.containsVariable("function",text)){
         return;
     }
+    readRelyOnFromImport(text,fileRelyOnList);
     var block:string = "";
     var tsText:string = "";
     while(text.length>0){
@@ -213,6 +214,26 @@ function readClassNames(path:string):void{
     }
     pathToClassName[path] = list;
     pathInfoList[path] = fileRelyOnList;
+}
+
+function readRelyOnFromImport(text:string,fileRelyOnList:Array<string>):void{
+    while(text.length>0){
+        var index:number = CodeUtil.getFirstVariableIndex("import",text);
+        if(index==-1){
+            break;
+        }
+        text = text.substring(index+6);
+        text = CodeUtil.removeFirstVariable(text).trim();
+        if(text.charAt(0)!="="){
+            continue;
+        }
+        text = text.substring(1);
+        var className:string = CodeUtil.getFirstWord(text);
+        className = CodeUtil.trimVariable(className);
+        if(fileRelyOnList.indexOf(className)==-1){
+            fileRelyOnList.push(className);
+        }
+    }
 }
 
 function removeInterface(text:string):string{

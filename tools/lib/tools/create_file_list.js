@@ -157,6 +157,7 @@ function readClassNames(path) {
     if (!CodeUtil.containsVariable("class", text) && !CodeUtil.containsVariable("var", text) && !CodeUtil.containsVariable("function", text)) {
         return;
     }
+    readRelyOnFromImport(text, fileRelyOnList);
     var block = "";
     var tsText = "";
     while (text.length > 0) {
@@ -202,6 +203,26 @@ function readClassNames(path) {
     }
     pathToClassName[path] = list;
     pathInfoList[path] = fileRelyOnList;
+}
+
+function readRelyOnFromImport(text, fileRelyOnList) {
+    while (text.length > 0) {
+        var index = CodeUtil.getFirstVariableIndex("import", text);
+        if (index == -1) {
+            break;
+        }
+        text = text.substring(index + 6);
+        text = CodeUtil.removeFirstVariable(text).trim();
+        if (text.charAt(0) != "=") {
+            continue;
+        }
+        text = text.substring(1);
+        var className = CodeUtil.getFirstWord(text);
+        className = CodeUtil.trimVariable(className);
+        if (fileRelyOnList.indexOf(className) == -1) {
+            fileRelyOnList.push(className);
+        }
+    }
 }
 
 function removeInterface(text) {
