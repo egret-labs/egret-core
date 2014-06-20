@@ -179,15 +179,12 @@ module egret {
 			
 			this.checkForRangeError(index, true);
 			
-			var host:DisplayObject = element.parent; 
-			if (host == <DisplayObject><any>this){
+			var host:any = element.owner;
+			if (host == this){
 				this.setElementIndex(element, index);
 				return element;
 			}
-			else if (host&&"removeElement" in host){
-				(<IVisualElementContainer><any>host).removeElement(element);
-			}
-			else if(element.owner&&"removeElement" in element.owner){
+			else if(host&&"removeElement" in host){
 				(<IContainer> (element.owner)).removeElement(element);
 			}
 			

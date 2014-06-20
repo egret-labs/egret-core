@@ -158,6 +158,10 @@ module RES {
             return data ? data.type : "";
         }
 
+        public getRawResourceItem(name:string):any{
+            return this.keyMap[name];
+        }
+
         /**
          * 获取加载项信息对象
 		 * @method RES.ResourceConfig#getResourceItem
