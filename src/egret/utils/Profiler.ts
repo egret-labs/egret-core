@@ -72,6 +72,7 @@ module egret {
             Ticker.getInstance().register(this.update, this);
             if (this._txt == null) {
                 this._txt = new TextField();
+                this._txt.stroke = 1;
                 this._txt.size = 28;
 
                 MainContext.instance.stage.addChild(this._txt);
