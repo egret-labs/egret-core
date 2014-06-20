@@ -274,7 +274,7 @@ module egret {
          * @member {number} egret.DisplayObject#skewX
          * @default 0
          */
-        private _skewX:number = 0;
+        public _skewX:number = 0;
 
         public get skewX():number {
             return this._skewX;
@@ -291,7 +291,7 @@ module egret {
          * @member {number} egret.DisplayObject#skewY
          * @default 0
          */
-        private _skewY:number = 0;
+        public _skewY:number = 0;
 
         public get skewY():number {
             return this._skewY;

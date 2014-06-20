@@ -74,24 +74,23 @@ module dragonBones {
             public updateTransform(matrix:geom.Matrix, transform:objects.DBTransform):void {
 
 //                this._display.rotation = transform.getRotation() * 180 / Math.PI
-                this._display.x = matrix.tx;
-                this._display.y = matrix.ty;
-                this._display.skewX = transform.skewX * DragonBonesEgretBridge.RADIAN_TO_ANGLE;
-                this._display.skewY = transform.skewY * DragonBonesEgretBridge.RADIAN_TO_ANGLE;
-                this._display.scaleX = transform.scaleX;
-                this._display.scaleY = transform.scaleY;
+                this._display._x = matrix.tx;
+                this._display._y = matrix.ty;
+                this._display._skewX = transform.skewX * DragonBonesEgretBridge.RADIAN_TO_ANGLE;
+                this._display._skewY = transform.skewY * DragonBonesEgretBridge.RADIAN_TO_ANGLE;
+                this._display._scaleX = transform.scaleX;
+                this._display._scaleY = transform.scaleY;
             }
 
             public updateColor(aOffset:number, rOffset:number, gOffset:number, bOffset:number, aMultiplier:number, rMultiplier:number, gMultiplier:number, bMultiplier:number):void {
                 if (this._display) {
-                    this._display.alpha = aMultiplier;
+                    this._display._alpha = aMultiplier;
                     //todo
                 }
             }
 
             public updateBlendMode(blendMode:string) {
-//                console.log (blendMode);
-                if (this._display) {
+                if (this._display && blendMode) {
                     this._display.blendMode = egret.BlendMode.getBlendMode(blendMode);
                 }
             }
@@ -99,8 +98,8 @@ module dragonBones {
             public addDisplay(container:any, index:number):void {
                 var parent:egret.DisplayObjectContainer = <egret.DisplayObjectContainer> container;
                 if (parent && this._display) {
-                    if (this._display.parent) {
-                        this._display.parent.removeChild(this._display);
+                    if (this._display._parent) {
+                        this._display._parent.removeChild(this._display);
                     }
 
                     if (index < 0) {
@@ -113,8 +112,8 @@ module dragonBones {
             }
 
             public removeDisplay():void {
-                if (this._display && this._display.parent) {
-                    this._display.parent.removeChild(this._display);
+                if (this._display && this._display._parent) {
+                    this._display._parent.removeChild(this._display);
                 }
             }
         }
