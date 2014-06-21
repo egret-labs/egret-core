@@ -226,6 +226,36 @@ function getConfig(filepath) {
     return obj;
 }
 
+function searchExtension(filePath, extension) {
+    var list = [];
+    var stat = fs.statSync(filePath);
+    if (stat.isDirectory()&&extension) {
+        extension = extension.toLowerCase();
+        search(filePath,extension,list);
+    }
+    return list;
+}
+function search(filePath,extension,list) {
+    var files = fs.readdirSync(filePath);
+    var length = files.length;
+    var len = extension.length;
+    for (var i = 0; i < length; i++) {
+        var path = filePath + files[i];
+        var stat = fs.statSync(path);
+        if (path.charAt(0) == ".") {
+            continue;
+        }
+        if (stat.isDirectory()) {
+            search(path + "/", extension, list);
+        } else {
+            if(path.charAt(path.length-len-1)=="."&&
+                path.substr(path.length-len,len).toLowerCase()==extension){
+                list.push(path);
+            }
+        }
+    }
+}
+
 exports.loopFileSync = loopFileSync;
 exports.require = _require;
 exports.copy = copy;
@@ -238,3 +268,4 @@ exports.joinEgretDir = _joinEgretDir;
 exports.getConfig = getConfig;
 exports.remove = remove;
 exports.addCallBackWhenExit = addCallBackWhenExit;
+exports.searchExtension = searchExtension;

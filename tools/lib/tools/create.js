@@ -58,7 +58,9 @@ function run(currDir, args, opts) {
 
         function (callback) {
             var gameListPath = currDir+"/"+projectName+"/bin-debug/src/game_file_list.js";
-            var gameListText = create_file_list.create(currDir+"/"+projectName+"/src/");
+            var srcPath = currDir+"/"+projectName+"/src/";
+            var list = libs.searchExtension(srcPath,"ts");
+            var gameListText = create_file_list.create(list,srcPath);
             fs.mkdirSync(currDir+"/"+projectName+"/bin-debug/src/");
             fs.writeFileSync(gameListPath,gameListText,"utf-8");
             compiler.compile(callback,

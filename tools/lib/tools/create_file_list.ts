@@ -37,16 +37,18 @@ var pathToClassName:any = {};
 var pathInfoList:any = {};
 var functionKeys:Array<string> = ["static","var","export","public","private","function","get","set","class","interface"];
 
-function create(srcPath:string):string{
+function create(list:Array<string>,srcPath:string):string{
     srcPath = srcPath.split("\\").join("/");
     if(srcPath.charAt(srcPath.length-1)!="/"){
         srcPath += "/";
     }
-    var list:Array<string> = [];
-    search(srcPath,list);
+
     var length:number = list.length;
     for(var i:number=0;i<length;i++){
         var path:string = list[i];
+        if(path.indexOf(".d.ts")!=-1){
+            continue;
+        }
         readClassNames(path);
     }
     for(var path in pathInfoList){
@@ -125,29 +127,6 @@ function setPathLevel(path:string,level:number,pathLevelInfo:any,map:Array<strin
             libs.exit(1103,path)
         }
         setPathLevel(relyPath,level+1,pathLevelInfo,map.concat(relyPath));
-    }
-}
-
-function search(filePath:string,list:Array<string>):void{
-    var files:Array<string> = fs.readdirSync(filePath);
-    var length:number = files.length;
-    for(var i:number=0;i<length;i++){
-        var path:string = filePath+files[i];
-        var stat = fs.statSync(path);
-        if(path.charAt(0)=="."||path.indexOf(".d.ts")!=-1){
-            continue;
-        }
-        if (stat.isDirectory()) {
-            search(path+"/",list);
-        }
-        else {
-            var index = path.lastIndexOf(".");
-            if(index!=-1){
-                if(path.substring(index).toLowerCase()==".ts"){
-                    list.push(path);
-                }
-            }
-        }
     }
 }
 
