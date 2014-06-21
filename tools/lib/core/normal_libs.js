@@ -74,6 +74,11 @@ function rmdir(path) {
     }
 }
 
+function save(filePath,data,charset){
+    var path = require("path");
+    mkdirSync(path.dirname(filePath));
+    fs.writeFileSync(filePath,data,charset);
+}
 
 function copy(sourceFile, outputFile) {
     var stat = fs.lstatSync(sourceFile);
@@ -269,3 +274,4 @@ exports.getConfig = getConfig;
 exports.remove = remove;
 exports.addCallBackWhenExit = addCallBackWhenExit;
 exports.searchExtension = searchExtension;
+exports.save = save;

@@ -271,10 +271,7 @@ function run(dir, args, opts) {
         game_file = currDir+"/bin-debug/src/game_file_list.js";
         var list = libs.searchExtension(currDir+"/src/","ts");
         var gameListText = create_file_list.create(list,currDir+"/src/");
-        if(!fs.existsSync(currDir+"/bin-debug/src/")){
-            fs.mkdirSync(currDir+"/bin-debug/src/");
-        }
-        fs.writeFileSync(game_file,gameListText,"utf-8");
+        libs.save(game_file,gameListText,"utf-8");
     }
     var gameFileList = getFileList(game_file);
     gameFileList = gameFileList.map(function (item) {

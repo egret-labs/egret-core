@@ -80,10 +80,7 @@ function run(dir, args, opts) {
             if(!fs.existsSync(currDir+"/src/game_file_list.js")){
                 var list = libs.searchExtension(currDir+"/src/","ts")
                 var gameListText = create_file_list.create(list,currDir+"/src/");
-                if(!fs.existsSync(currDir+"/bin-debug/src/")){
-                    fs.mkdirSync(currDir+"/bin-debug/src/");
-                }
-                fs.writeFileSync(gameListPath,gameListText,"utf-8");
+                libs.save(gameListPath,gameListText,"utf-8");
             }
             compiler.compile(callback,
                 path.join(currDir, "src"),

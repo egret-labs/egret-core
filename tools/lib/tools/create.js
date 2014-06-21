@@ -61,8 +61,7 @@ function run(currDir, args, opts) {
             var srcPath = currDir+"/"+projectName+"/src/";
             var list = libs.searchExtension(srcPath,"ts");
             var gameListText = create_file_list.create(list,srcPath);
-            fs.mkdirSync(currDir+"/"+projectName+"/bin-debug/src/");
-            fs.writeFileSync(gameListPath,gameListText,"utf-8");
+            libs.save(gameListPath,gameListText,"utf-8");
             compiler.compile(callback,
                 path.join(currDir, projectName, "src"),
                 path.join(currDir, projectName, "bin-debug/src"),
