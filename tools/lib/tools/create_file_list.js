@@ -35,16 +35,18 @@ var pathToClassName = {};
 var pathInfoList = {};
 var functionKeys = ["static", "var", "export", "public", "private", "function", "get", "set", "class", "interface"];
 
-function create(srcPath) {
+function create(list, srcPath) {
     srcPath = srcPath.split("\\").join("/");
     if (srcPath.charAt(srcPath.length - 1) != "/") {
         srcPath += "/";
     }
-    var list = [];
-    search(srcPath, list);
+
     var length = list.length;
     for (var i = 0; i < length; i++) {
         var path = list[i];
+        if (path.indexOf(".d.ts") != -1) {
+            continue;
+        }
         readClassNames(path);
     }
     for (var path in pathInfoList) {
@@ -123,28 +125,6 @@ function setPathLevel(path, level, pathLevelInfo, map) {
     }
 }
 
-function search(filePath, list) {
-    var files = fs.readdirSync(filePath);
-    var length = files.length;
-    for (var i = 0; i < length; i++) {
-        var path = filePath + files[i];
-        var stat = fs.statSync(path);
-        if (path.charAt(0) == "." || path.indexOf(".d.ts") != -1) {
-            continue;
-        }
-        if (stat.isDirectory()) {
-            search(path + "/", list);
-        } else {
-            var index = path.lastIndexOf(".");
-            if (index != -1) {
-                if (path.substring(index).toLowerCase() == ".ts") {
-                    list.push(path);
-                }
-            }
-        }
-    }
-}
-
 /**
 * 读取文件里的类名和全局函数名。
 */
@@ -157,6 +137,7 @@ function readClassNames(path) {
     if (!CodeUtil.containsVariable("class", text) && !CodeUtil.containsVariable("var", text) && !CodeUtil.containsVariable("function", text)) {
         return;
     }
+    readRelyOnFromImport(text, fileRelyOnList);
     var block = "";
     var tsText = "";
     while (text.length > 0) {
@@ -202,6 +183,26 @@ function readClassNames(path) {
     }
     pathToClassName[path] = list;
     pathInfoList[path] = fileRelyOnList;
+}
+
+function readRelyOnFromImport(text, fileRelyOnList) {
+    while (text.length > 0) {
+        var index = CodeUtil.getFirstVariableIndex("import", text);
+        if (index == -1) {
+            break;
+        }
+        text = text.substring(index + 6);
+        text = CodeUtil.removeFirstVariable(text).trim();
+        if (text.charAt(0) != "=") {
+            continue;
+        }
+        text = text.substring(1);
+        var className = CodeUtil.getFirstWord(text);
+        className = CodeUtil.trimVariable(className);
+        if (fileRelyOnList.indexOf(className) == -1) {
+            fileRelyOnList.push(className);
+        }
+    }
 }
 
 function removeInterface(text) {
