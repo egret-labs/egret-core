@@ -1,12 +1,11 @@
 /**
  * Created by apple on 14-5-29.
  */
-var libs = require("../core/normal_libs");
+var globals = require("../core/globals");
 
 var output = "signed_egret.apk";
 var async = require("../core/async.js");
-var fs = require("fs");
-var FileUtil = require("../core/file_util.js");
+var file = require("../core/file.js");
 
 function run(current, arg, opt) {
 
@@ -18,10 +17,10 @@ function run(current, arg, opt) {
             "  \"password\":\"\",\n" +
             "  \"egret-native\":\"EgretFrameworkNative\"\n" +
             "}";
-        fs.writeFileSync("package_to_native.config", content, "utf-8");
+        file.save("package_to_native.config", content);
         return;
     }
-    var config = libs.getConfig(arg[0]);
+    var config = globals.getConfig(arg[0]);
     var keystore = config.keystore;
     var keypass = config.password;
     var project = config.project;
@@ -32,9 +31,9 @@ function run(current, arg, opt) {
         [
 
             function (callback) {
-                FileUtil.copy(join(project,"bin-debug"), join(native_folder,"assets/js/bin-debug"));
-                FileUtil.copy(join(project,"launcher"), join(native_folder,"assets/js/launcher"));
-                FileUtil.copy(join(project,"resources"), join(native_folder,"assets/js/resources"));
+                file.copy(join(project,"bin-debug"), join(native_folder,"assets/js/bin-debug"));
+                file.copy(join(project,"launcher"), join(native_folder,"assets/js/launcher"));
+                file.copy(join(project,"resources"), join(native_folder,"assets/js/resources"));
                 callback();
             },
 
@@ -49,7 +48,7 @@ function run(current, arg, opt) {
             },
 
             function (callback) {
-                fs.unlinkSync("a.apk");
+                file.remove("a.apk");
                 var cmd = "adb uninstall org.egret.egretframeworknative";
                 executeCommand(callback, cmd)
                 callback();
@@ -79,7 +78,7 @@ function executeCommand(callback, script) {
             callback();
         }
         else {
-            libs.log("脚本执行失败");
+            globals.log("脚本执行失败");
         }
 
     });

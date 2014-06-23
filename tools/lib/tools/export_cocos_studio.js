@@ -34,7 +34,7 @@
  *
  *
  */
-var fs = require("fs");
+var file = require("../core/file.js");
 var path = require("path");
 var plist = require('../core/plist');
 
@@ -49,13 +49,13 @@ function run(currDir, args, opts) {
         return;
     }
 
-    var stat = fs.existsSync(ccbFilePath);
+    var stat = file.exists(ccbFilePath);
     if (!stat) {
         console.log("can't open .ccb file");
         return;
     }
 
-    var localStr = fs.readFileSync(ccbFilePath, "utf-8");
+    var localStr = file.read(ccbFilePath);
     var localObj = JSON.parse(localStr);
 
     linkName = ccbFilePath.substring(ccbFilePath.lastIndexOf("/") + 1, ccbFilePath.lastIndexOf("."));

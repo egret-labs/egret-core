@@ -34,9 +34,9 @@
  *
  *
  */
-var fs = require("fs");
 var path = require("path");
 var plist = require('../core/plist');
+var file = require("../core/file");
 
 var totalData = {};
 var sourceArr = [];
@@ -48,7 +48,7 @@ function run(currDir, args, opts) {
         return;
     }
 
-    var stat = fs.existsSync(ccbFilePath);
+    var stat = file.exists(ccbFilePath);
     if (!stat) {
         console.log("can't open .ccb file");
         return;

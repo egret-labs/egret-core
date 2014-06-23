@@ -1,12 +1,9 @@
 var path = require("path");
 var param = require("../core/params_analyze.js");
-var fs = require("fs");
 var child_process = require("child_process");
-var libs = require("../core/normal_libs");
+var globals = require("../core/globals");
 var create_file_list = require("./create_file_list.js")
-var FileUtil = require("../core/file_util.js");
-
-if (!fs.existsSync) fs.existsSync = path.existsSync; // node < 0.8
+var file = require("../core/file.js");
 
 /**
  * Constructs a new ClosureCompiler instance.
@@ -61,7 +58,7 @@ ClosureCompiler.getGlobalJava = function () {
 
     if (process.env["JAVA_HOME"]) {
         java = path.join(process.env["JAVA_HOME"], "bin", "java" + ClosureCompiler.JAVA_EXT);
-        if (!fs.existsSync(java)) {
+        if (!file.exists(java)) {
             java = null;
         }
     }
@@ -142,8 +139,7 @@ ClosureCompiler.prototype.compile = function (files, callback) {
         if (typeof files[i] != 'string' || files[i].indexOf('"') >= 0) {
             throw(new Error("Illegal source file: " + files[i]));
         }
-        stat = fs.statSync(files[i]);
-        if (!stat.isFile()) {
+        if (!file.isFile(files[i])) {
             throw(new Error("Source file not found: " + files[i]));
         }
         args += ' --js "' + files[i] + '"';
@@ -163,18 +159,16 @@ ClosureCompiler.prototype.compile = function (files, callback) {
         if (options.externs[i].toLowerCase() == "node") {
             options.externs[i] = __dirname + "/node_modules/closurecompiler-externs";
         }
-        stat = fs.statSync(options.externs[i]);
-        if (stat.isDirectory()) {
+        if (file.isDirectory(options.externs[i])) {
             // Use all files in that directory
-            var dfiles = fs.readdirSync(options.externs[i]);
+            var dfiles = file.getDirectoryListing(options.externs[i]);
             for (j = 0; j < dfiles.length; j++) {
-                var fname = options.externs[i] + "/" + dfiles[j];
-                var fstats = fs.statSync(fname);
-                if (fstats.isFile() && path.extname(fname).toLowerCase() == '.js') {
+                var fname = dfiles[j];
+                if (file.isFile(fname) && file.getExtension(fname).toLowerCase() == 'js') {
                     externs.push(fname);
                 }
             }
-        } else if (stat.isFile()) {
+        } else if (file.isFile(options.externs[i])) {
             externs.push(options.externs[i]);
         } else {
             throw(new Error("Externs file not found: " + options.externs[i]));
@@ -236,7 +230,7 @@ ClosureCompiler.prototype.compile = function (files, callback) {
                 if (ok) {
                     run(ClosureCompiler.getBundledJava(), args);
                 } else {
-                    libs.exit(1401);
+                    globals.exit(1401);
                 }
             });
         }
@@ -246,20 +240,20 @@ ClosureCompiler.prototype.compile = function (files, callback) {
 
 
 function getFileList(file_list) {
-    if (fs.existsSync(file_list)) {
-        var js_content = fs.readFileSync(file_list, "utf-8");
+    if (file.exists(file_list)) {
+        var js_content = file.read(file_list);
         eval(js_content);
         var path = require("path");
         var varname = path.basename(file_list).split(".js")[0];
         return eval(varname);
     }
     else {
-        libs.exit(1301, file_list);
+        globals.exit(1301, file_list);
     }
 }
 
 function run(dir, args, opts) {
-    var currDir = libs.joinEgretDir(dir, args[0]);
+    var currDir = globals.joinEgretDir(dir, args[0]);
 
     var egret_file = path.join(currDir, "bin-debug/lib/egret_file_list.js");
     var egretFileList = getFileList(egret_file);
@@ -268,11 +262,11 @@ function run(dir, args, opts) {
     });
 
     var game_file = path.join(currDir, "src/game_file_list.js");
-    if(!fs.existsSync(game_file)){
+    if(!file.exists(game_file)){
         game_file = currDir+"/bin-debug/src/game_file_list.js";
-        var list = FileUtil.searchByExtension(currDir+"/src/","ts");
+        var list = file.search(currDir+"/src/","ts");
         var gameListText = create_file_list.create(list,currDir+"/src/");
-        FileUtil.save(game_file,gameListText,"utf-8");
+        file.save(game_file,gameListText);
     }
     var gameFileList = getFileList(game_file);
     gameFileList = gameFileList.map(function (item) {

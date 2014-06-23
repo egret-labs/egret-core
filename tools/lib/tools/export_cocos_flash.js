@@ -17,7 +17,7 @@
  *      以Tab结尾，容器里有多个按钮
  *
  */
-var fs = require("fs");
+var file = require("../core/file");
 var path = require("path");
 var plist = require('../core/plist');
 
@@ -33,7 +33,7 @@ function run(currDir, args, opts) {
         return;
     }
 
-    var stat = fs.existsSync(sourceFile);
+    var stat = file.exists(sourceFile);
     if (!stat) {
         console.log("can't open .ccb file");
         return;
@@ -65,7 +65,7 @@ function linkChildren(rootNode) {
     console.log("jmc生成完毕！");
 
     var saveFile = sourceFile.replace(".ccb", ".jmc");
-    fs.writeFile(saveFile, JSON.stringify(rootData, null, ""));
+    file.save(saveFile, JSON.stringify(rootData, null, ""));
 }
 
 function loop(container, parent, parentData) {

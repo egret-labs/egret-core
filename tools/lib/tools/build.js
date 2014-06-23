@@ -3,19 +3,18 @@
  */
 var create_file_list = require("./create_file_list.js");
 var path = require("path");
-var fs = require("fs");
 var async = require('../core/async');
-var libs = require("../core/normal_libs");
+var globals = require("../core/globals");
 var param = require("../core/params_analyze.js");
 var compiler = require("./compile.js");
 var exmlc = require("../exml/exmlc.js");
-var FileUtil = require("../core/file_util.js");
+var file = require("../core/file.js");
 
 function run(dir, args, opts) {
     var needCompileEngine = opts["-e"];
     var keepGeneratedTypescript = opts["-k"];
 
-    var currDir = libs.joinEgretDir(dir, args[0]);
+    var currDir = globals.joinEgretDir(dir, args[0]);
 
     var egret_file = path.join(currDir, "bin-debug/lib/egret_file_list.js");
     var task = [];
@@ -23,10 +22,10 @@ function run(dir, args, opts) {
     var exmlList = [];
     task.push(function(callback){
         if(!keepGeneratedTypescript){
-            libs.addCallBackWhenExit(cleanEXMLList);
+            globals.addCallBackWhenExit(cleanEXMLList);
         }
         var source = path.join(currDir, "src");
-        exmlList = FileUtil.searchByExtension(source,"exml");
+        exmlList = file.search(source,"exml");
         source += "/";
         exmlList.forEach(function (item) {
             exmlc.compile(item,source);
@@ -62,19 +61,19 @@ function run(dir, args, opts) {
         );
     }
     else {
-        var exist = fs.existsSync(path.join(currDir,"bin-debug","lib"));
+        var exist = file.exists(file.joinPath(currDir,"bin-debug","lib"));
         if (!exist){
-            libs.exit(1102)
+            globals.exit(1102)
         }
     }
 
     task.push(
         function (callback) {
             var gameListPath = currDir+"/bin-debug/src/game_file_list.js";
-            if(!fs.existsSync(currDir+"/src/game_file_list.js")){
-                var list = libs.searchExtension(currDir+"/src/","ts")
+            if(!file.exists(currDir+"/src/game_file_list.js")){
+                var list = file.search(currDir+"/src/","ts")
                 var gameListText = create_file_list.create(list,currDir+"/src/");
-                FileUtil.save(gameListPath,gameListText);
+                file.save(gameListPath,gameListText);
             }
             compiler.compile(callback,
                 path.join(currDir, "src"),
@@ -90,10 +89,10 @@ function run(dir, args, opts) {
             cleanEXMLList();
         }
         if (!err){
-            libs.log("构建成功");
+            globals.log("构建成功");
         }
         else{
-            libs.exit(err);
+            globals.exit(err);
         }
     })
 
@@ -103,7 +102,7 @@ function run(dir, args, opts) {
             exmlList.forEach(function (item) {
                 var tsPath = path.join(source,item);
                 tsPath = tsPath.substring(0,tsPath.length-5)+".ts";
-                FileUtil.remove(tsPath);
+                file.remove(tsPath);
             });
         }
     }

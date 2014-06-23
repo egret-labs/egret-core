@@ -25,9 +25,9 @@
 * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 /// <reference path="../exml/node.d.ts"/>
-var fs = require("fs");
+var file = require("../core/file.js");
 var CodeUtil = require("../core/code_util.js");
-var libs = require("../core/normal_libs");
+var globals = require("../core/globals.js");
 
 var classInfoList = {};
 var classNameToPath = {};
@@ -119,7 +119,7 @@ function setPathLevel(path, level, pathLevelInfo, map) {
     for (var i = 0; i < length; i++) {
         var relyPath = list[i];
         if (map.indexOf(relyPath) != -1) {
-            libs.exit(1103, path);
+            globals.exit(1103, path);
         }
         setPathLevel(relyPath, level + 1, pathLevelInfo, map.concat(relyPath));
     }
@@ -130,7 +130,7 @@ function setPathLevel(path, level, pathLevelInfo, map) {
 */
 function readClassNames(path) {
     var fileRelyOnList = [];
-    var text = fs.readFileSync(path, "utf-8");
+    var text = file.read(path);
     var list = [];
     text = CodeUtil.removeComment(text);
     text = removeInterface(text);
