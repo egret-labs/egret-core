@@ -38,7 +38,7 @@
 //解析FlexLiteStudio的功能暂时屏蔽掉
 var DOMParser = require("../core/xmldom/dom-parser").DOMParser;
 
-var file = require("file");
+var file = require("../core/file");
 var path = require("path");
 
 var xml_digester = require('../core/xml-digester');
