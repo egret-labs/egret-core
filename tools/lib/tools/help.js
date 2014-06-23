@@ -1,6 +1,6 @@
 var globals = require("../core/globals");
 var path = require("path");
-var file = require("file");
+var file = require("../core/file");
 
 
 function run(currDir, args, opts) {
