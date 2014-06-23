@@ -27,7 +27,7 @@
 
 /// <reference path="node.d.ts"/>
 
-var fs = require("fs");
+var file = require("../core/file.js");
 var xml = require("../core/xml.js");
 var param = require("../core/params_analyze.js");
 var properties = require("./properties.json")
@@ -49,7 +49,7 @@ class EXMLConfig{
     public constructor(){
         var exmlPath:string = param.getEgretPath()+"/tools/lib/exml/";
         exmlPath = exmlPath.split("\\").join("/");
-        var str:string = fs.readFileSync(exmlPath+"egret-manifest.xml","utf-8");
+        var str:string = file.read(exmlPath+"egret-manifest.xml");
         var manifest:any = xml.parse(str);
         this.parseManifest(manifest);
     }
@@ -128,7 +128,7 @@ class EXMLConfig{
     }
 
     private readClassNameFromPath(path:string,id:string):string{
-        var tsText:string = fs.readFileSync(path,"utf-8");
+        var tsText:string = file.read(path);
         tsText = CodeUtil.removeComment(tsText);
         var className:string = "";
         var superClass:string;
@@ -221,10 +221,10 @@ class EXMLConfig{
         var classData:any = properties[className];
         if(!classData){
             var path:string = this.srcPath+this.classNameToPath[className];
-            if(!fs.existsSync(path)){
+            if(!file.exists(path)){
                 return "";
             }
-            var text:string = fs.readFileSync(path,"utf-8");
+            var text:string = file.read(path);
             classData = this.getProperties(text,className);
             if(classData){
                 properties[className] = classData;

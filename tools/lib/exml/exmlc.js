@@ -32,10 +32,10 @@ var __extends = this.__extends || function (d, b) {
 };
 /// <reference path="node.d.ts"/>
 /// <reference path="exml_config.ts"/>
-var fs = require("fs");
 var xml = require("../core/xml.js");
-var libs = require("../core/normal_libs");
+var globals = require("../core/globals.js");
 var CodeUtil = require("../core/code_util.js");
+var file = require("../core/file.js");
 var exml_config = require("./exml_config.js");
 
 var compiler;
@@ -46,22 +46,22 @@ function compile(exmlPath, srcPath) {
     if (srcPath.charAt(srcPath.length - 1) != "/") {
         srcPath += "/";
     }
-    if (!fs.existsSync(srcPath + exmlPath)) {
-        libs.exit(2001, srcPath + exmlPath);
+    if (!file.exists(exmlPath)) {
+        globals.exit(2001, exmlPath);
     }
-    var className = exmlPath.substring(0, exmlPath.length - 5);
+    var className = exmlPath.substring(srcPath.length, exmlPath.length - 5);
     className = className.split("/").join(".");
-    var xmlString = fs.readFileSync(srcPath + exmlPath, "utf-8");
+    var xmlString = file.read(exmlPath);
     var xmlData = xml.parse(xmlString);
     if (!xmlData) {
-        libs.exit(2002, srcPath + exmlPath);
+        globals.exit(2002, exmlPath);
     }
     if (!compiler) {
         compiler = new EXMLCompiler();
     }
-    var tsText = compiler.compile(xmlData, className, "egret.d.ts", srcPath, srcPath + exmlPath);
-    var tsPath = srcPath + exmlPath.substring(0, exmlPath.length - 5) + ".ts";
-    fs.writeFileSync(tsPath, tsText, "utf-8");
+    var tsText = compiler.compile(xmlData, className, "egret.d.ts", srcPath, exmlPath);
+    var tsPath = exmlPath.substring(0, exmlPath.length - 5) + ".ts";
+    file.save(tsPath, tsText);
 }
 ;
 
@@ -177,7 +177,7 @@ var EXMLCompiler = (function () {
     EXMLCompiler.prototype.startCompile = function () {
         var result = this.getRepeatedIds(this.currentXML);
         if (result.length > 0) {
-            libs.exit(2004, this.exmlPath, result.join("\n"));
+            globals.exit(2004, this.exmlPath, result.join("\n"));
         }
         this.currentClass.superClass = this.getPackageByNode(this.currentXML);
 
@@ -199,7 +199,7 @@ var EXMLCompiler = (function () {
         this.checkDeclarations(this.declarations, list);
 
         if (list.length > 0) {
-            libs.warn(2101, this.exmlPath, list.join("\n"));
+            globals.warn(2101, this.exmlPath, list.join("\n"));
         }
 
         this.addIds(this.currentXML.children);
@@ -473,10 +473,10 @@ var EXMLCompiler = (function () {
                 }
                 var type = this.exmlConfig.getPropertyType(child.localName, className);
                 if (!type) {
-                    libs.exit(2005, this.exmlPath, child.localName, this.getPropertyStr(child));
+                    globals.exit(2005, this.exmlPath, child.localName, this.getPropertyStr(child));
                 }
                 if (!child.children || child.children.length == 0) {
-                    libs.warn(2102, this.exmlPath, this.getPropertyStr(child));
+                    globals.warn(2102, this.exmlPath, this.getPropertyStr(child));
                     continue;
                 }
                 var errorInfo = this.getPropertyStr(child);
@@ -491,7 +491,7 @@ var EXMLCompiler = (function () {
         var defaultType = this.exmlConfig.getPropertyType(defaultProp, className);
         var errorInfo = this.getPropertyStr(directChild[0]);
         if (!defaultProp || !defaultType) {
-            libs.exit(2012, this.exmlPath, errorInfo);
+            globals.exit(2012, this.exmlPath, errorInfo);
         }
         this.addChildrenToProp(directChild, defaultType, defaultProp, cb, varName, errorInfo, propList);
     };
@@ -504,7 +504,7 @@ var EXMLCompiler = (function () {
         var childLength = children.length;
         if (childLength > 1) {
             if (type != "Array") {
-                libs.exit(2011, this.exmlPath, prop, errorInfo);
+                globals.exit(2011, this.exmlPath, prop, errorInfo);
             }
             var values = [];
             for (var j = 0; j < childLength; j++) {
@@ -539,7 +539,7 @@ var EXMLCompiler = (function () {
             } else {
                 var targetClass = this.exmlConfig.getClassNameById(firstChild.localName, firstChild.namespace);
                 if (!this.exmlConfig.isInstanceOf(targetClass, type)) {
-                    libs.exit(2008, this.exmlPath, targetClass, prop, errorInfo);
+                    globals.exit(2008, this.exmlPath, targetClass, prop, errorInfo);
                 }
                 childFunc = this.createFuncForNode(firstChild);
             }
@@ -550,7 +550,7 @@ var EXMLCompiler = (function () {
             if (propList.indexOf(prop) == -1) {
                 propList.push(prop);
             } else {
-                libs.warn(2103, this.exmlPath, prop, errorInfo);
+                globals.warn(2103, this.exmlPath, prop, errorInfo);
             }
             cb.addAssignment(varName, childFunc, prop);
         }
@@ -609,7 +609,7 @@ var EXMLCompiler = (function () {
         var className = this.exmlConfig.getClassNameById(node.localName, node.namespace);
         var type = this.exmlConfig.getPropertyType(key, className);
         if (!type) {
-            libs.exit(2005, this.exmlPath, key, this.toXMLString(node));
+            globals.exit(2005, this.exmlPath, key, this.toXMLString(node));
         }
         if (type != "string" && value.charAt(0) == "{" && value.charAt(value.length - 1) == "}") {
             value = value.substr(1, value.length - 2);
@@ -622,14 +622,14 @@ var EXMLCompiler = (function () {
             if (CodeUtil.isVariableWord(value)) {
                 var targetNode = this.idToNode[value];
                 if (!targetNode) {
-                    libs.exit(2010, this.exmlPath, key, value, this.toXMLString(node));
+                    globals.exit(2010, this.exmlPath, key, value, this.toXMLString(node));
                 }
                 var targetClass = this.exmlConfig.getClassNameById(targetNode.localName, targetNode.namespace);
                 if (!this.exmlConfig.isInstanceOf(targetClass, type)) {
-                    libs.exit(2008, this.exmlPath, targetClass, key, this.toXMLString(node));
+                    globals.exit(2008, this.exmlPath, targetClass, key, this.toXMLString(node));
                 }
             } else {
-                libs.exit(2009, this.exmlPath, this.toXMLString(node));
+                globals.exit(2009, this.exmlPath, this.toXMLString(node));
             }
         } else {
             switch (type) {
@@ -650,7 +650,7 @@ var EXMLCompiler = (function () {
                     value = this.formatString(stringValue);
                     break;
                 default:
-                    libs.exit(2008, this.exmlPath, "string", key, this.toXMLString(node));
+                    globals.exit(2008, this.exmlPath, "string", key, this.toXMLString(node));
                     break;
             }
         }
@@ -873,10 +873,10 @@ var EXMLCompiler = (function () {
 
                 var type = this.exmlConfig.getPropertyType(prop, className);
                 if (type == "Array") {
-                    libs.exit(2013, this.exmlPath, this.getPropertyStr(node));
+                    globals.exit(2013, this.exmlPath, this.getPropertyStr(node));
                 }
                 if (children.length > 1) {
-                    libs.exit(2011, this.exmlPath, prop, this.getPropertyStr(node));
+                    globals.exit(2011, this.exmlPath, prop, this.getPropertyStr(node));
                 }
                 var firstChild = children[0];
                 this.createFuncForNode(firstChild);
@@ -898,7 +898,7 @@ var EXMLCompiler = (function () {
                 var state;
                 if (this.isStateNode(node)) {
                     if (!this.isIVisualElement(node)) {
-                        libs.exit(2007, this.exmlPath, this.toXMLString(node));
+                        globals.exit(2007, this.exmlPath, this.toXMLString(node));
                     }
                     var propertyName = "";
                     var parentNode = (node.parent);
@@ -1044,7 +1044,7 @@ var EXMLCompiler = (function () {
             }
         }
         if (states.length == 0) {
-            libs.exit(2006, this.exmlPath, name, this.toXMLString(node));
+            globals.exit(2006, this.exmlPath, name, this.toXMLString(node));
         }
         return states;
     };
@@ -1107,7 +1107,7 @@ var EXMLCompiler = (function () {
             this.currentClass.addReference(path);
         }
         if (!moduleName) {
-            libs.exit(2003, this.exmlPath, this.toXMLString(node));
+            globals.exit(2003, this.exmlPath, this.toXMLString(node));
         }
         return moduleName;
     };

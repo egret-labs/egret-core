@@ -38,7 +38,7 @@
 //解析FlexLiteStudio的功能暂时屏蔽掉
 var DOMParser = require("../core/xmldom/dom-parser").DOMParser;
 
-var fs = require("fs");
+var file = require("file");
 var path = require("path");
 
 var xml_digester = require('../core/xml-digester');
@@ -60,7 +60,7 @@ function run(currDir, args, opts) {
         return;
     }
 
-    var stat = fs.existsSync(sourceFile);
+    var stat = file.exists(sourceFile);
     if (!stat) {
         console.log("can't open .dxml file");
         return;
@@ -136,7 +136,7 @@ function ans(sourceFile, callback) {
         if (dxmlNum == 0) {
             var txt = JSON.stringify({"viewData":resultJson, "resourceData":duplicateRemoval(resouceArr)});
             var saveFile = sourceFile.replace(".dxml", ".jfll");
-            fs.writeFile(saveFile,txt);
+            file.save(saveFile,txt);
             console.log (saveFile + " 输出已完成");
 
             if (callback) {
@@ -145,7 +145,7 @@ function ans(sourceFile, callback) {
         }
     };
 
-    var xmlStr = fs.readFileSync(sourceFile,"utf-8");
+    var xmlStr = file.read(sourceFile);
     resultJson = ansXML(getXMLDoc(xmlStr));
     var dxmlArr = [];
 

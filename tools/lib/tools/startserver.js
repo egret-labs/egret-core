@@ -2,7 +2,7 @@ var http = require('http');
 var url = require('url');
 var fs = require('fs');
 var path = require('path');
-var libs = require("../core/normal_libs");
+var globals = require("../core/globals");
 
 var mine = {
     "css": "text/css",
@@ -29,11 +29,11 @@ function run(dir, args, opts) {
     var PORT = 3000;
     var server = http.createServer(onGet);
     server.addListener("error",function(){
-        libs.exit(1501);
+        globals.exit(1501);
     })
     server.listen(PORT,function(){
         var open = require("../core/open");
-        libs.joinEgretDir(dir, args[0]);
+        globals.joinEgretDir(dir, args[0]);
         var url = path.join("http://localhost:3000", args[0], "launcher/index.html");
         open(url);
         console.log("Server runing at port: " + PORT + ".");
@@ -123,7 +123,7 @@ function executeCommand(callback, script) {
             callback();
         }
         else {
-            libs.log("脚本执行失败");
+            globals.log("脚本执行失败");
         }
 
     });

@@ -1,7 +1,6 @@
-var libs = require("./normal_libs.js");
-var fs = require("fs");
+var globals = require("./globals.js");
 var path = require("path");
-
+var file = require("../core/file.js")
 
 getArgv = function () {
     var arr = process.argv.slice(2);
@@ -54,7 +53,7 @@ function getOption(option, key, enumList) {
 
     var value = option[key][0]
     if (!value || enumList.indexOf(value) == -1) {
-        libs.exit(8001, key, enumList);
+        globals.exit(8001, key, enumList);
     }
     return value;
 }
@@ -77,12 +76,12 @@ exports.getEgretPath = function () {
         for (var i = 0; i < globalpath.length; i++) {
             var prefix = globalpath[i];
             var url = path.join(prefix, "egret");
-            if (fs.existsSync(url)) {
+            if (file.exists(url)) {
                 existsFlag = true;
                 break;
             }
             var url = path.join(prefix, "../egret");
-            if (fs.existsSync(url)) {
+            if (file.exists(url)) {
                 existsFlag = true;
                 break;
             }
