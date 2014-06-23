@@ -9,6 +9,7 @@ var cp_exec = require('child_process').exec;
 var globals = require("../core/globals");
 var param = require("../core/params_analyze.js");
 var file = require("../core/file.js");
+var create_file_list = require("./create_file_list.js");
 
 function run(currentDir, args, opts) {
     var source = path.resolve(param.getEgretPath(), "");
@@ -31,20 +32,26 @@ function run(currentDir, args, opts) {
  * 编译指定的代码
  *
  * @param callback 回调函数
- * @param source 源文件所在的文件夹
+ * @param srcPath 源文件所在的文件夹
  * @param output 输出地址
- * @param file_list 文件名称，默认为source/src/game_file_list.js或 source/src/egret_file_list.js
+ * @param sourceList 要编译的ts文件列表
  */
-function buildAllFile(callback, source, output, file_list) {
+function buildAllFile(callback, srcPath, output, sourceList) {
 
+    for(var i=sourceList.length;i>=0;i--){
+        var p = sourceList[i];
+        if(file.getExtension(p)!="ts"||!file.exists(p)){
+            sourceList.splice(i,1);
+        }
+    }
     async.waterfall([
         checkCompilerInstalled,
 
         //cp所有非ts/exml文件
         function (callback) {
-            var all_file = file.searchByFunction(source, filter);
+            var all_file = file.searchByFunction(srcPath, filter);
             all_file.forEach(function (item) {
-                var itemName = item.substring(source.length);
+                var itemName = item.substring(srcPath.length);
                 file.copy(item, path.join(output, itemName));
             })
             callback(null);
@@ -60,15 +67,9 @@ function buildAllFile(callback, source, output, file_list) {
         },
 
         function (callback) {
-            var sourceList = getFileList(file_list);
-            sourceList = sourceList.map(function (item) {
-                return path.join(source, item).replace(".js", ".ts");
-            }).filter(function (item) {
-                    return file.exists(item);
-                }).map(function(item){
+            sourceList = sourceList.map(function(item){
                     return "\"" + item + "\"";
-                })
-
+                });
             var cmd = "" + sourceList.join(" ") + " -t ES5 --outDir " + "\"" + output + "\"";
             file.save("tsc_config_temp.txt", cmd);
             var ts = cp_exec("tsc @tsc_config_temp.txt");
@@ -81,8 +82,7 @@ function buildAllFile(callback, source, output, file_list) {
                 file.remove("tsc_config_temp.txt");
 
                 if (code == 0) {
-                    globals.log("编译 " + file_list + " 成功");
-                    callback(null, source);
+                    callback(null, srcPath);
                 }
                 else {
                     callback(1303);
@@ -100,19 +100,6 @@ function buildAllFile(callback, source, output, file_list) {
 
 }
 
-function getFileList(file_list) {
-    if (file.exists(file_list)) {
-        var js_content = file.read(file_list);
-        eval(js_content);
-        var path = require("path");
-        var varname = path.basename(file_list).split(".js")[0];
-        return eval(varname);
-    }
-    else {
-        globals.exit(1301, file_list);
-    }
-}
-
 function checkCompilerInstalled(callback) {
     var checkTypeScriptCompiler = "tsc";
     var tsc = cp_exec(checkTypeScriptCompiler);
@@ -127,30 +114,11 @@ function checkCompilerInstalled(callback) {
     );
 }
 
-function generateEgretFileList(callback, egret_file, runtime) {
-    var file_list = globals.require("tools/lib/core/file_list.js");
-    var required_file_list = file_list.core.concat(file_list[runtime]);
-
-    var content = required_file_list.map(function (item) {
-        return "\"" + item + "\""
-    }).join(",\n")
-    content = "var egret_file_list = [\n" + content + "\n]";
-    file.createDirectory(file.getDirectory(egret_file));
-    file.save(egret_file, content);
-    callback();
-
-}
-
-
-function exportHeader(callback, source, output, file_list) {
-    var list = getFileList(file_list);
-    list = list.map(function (item) {
-        return path.join(source, item).replace(".js", ".ts");
-    }).filter(function (item) {
-            return file.exists(item);
-        }).map(function(item){
+function exportHeader(callback, projectPath, list) {
+    list = list.map(function(item){
             return "\"" + item + "\"";
         })
+    var output = path.join(projectPath,"libs/egret.d.ts");
     var source = list.join(" ");
     var cmd = source + " -t ES5 -d --out " + "\"" + output + "\"";
     file.save("tsc_config_temp.txt", cmd);
@@ -188,7 +156,24 @@ function exportHeader(callback, source, output, file_list) {
     });
 }
 
+function generateEgretFileList(runtime,projectPath){
+    var coreList = globals.require("tools/lib/manifest/core.json");
+    var runtimeList = globals.require("tools/lib/manifest/"+runtime+".json");
+    var egretPath = param.getEgretPath();
+    var manifest = coreList.concat(runtimeList);
+    var length = manifest.length;
+    for(var i=0;i<length;i++){
+        manifest[i] = file.joinPath(egretPath,"src",manifest[i]);
+    }
+    var egretFileListText = create_file_list.create(manifest,path.join(param.getEgretPath(),"src"),false);
+    egretFileListText = "var egret_file_list = "+egretFileListText+";";
+    file.save(file.joinPath(projectPath,"bin-debug/lib/egret_file_list.js"),egretFileListText);
+    return manifest;
+}
+
+
+
 exports.compile = buildAllFile;
 exports.exportHeader = exportHeader;
-exports.generateEgretFileList = generateEgretFileList;
 exports.run = run;
+exports.generateEgretFileList = generateEgretFileList;

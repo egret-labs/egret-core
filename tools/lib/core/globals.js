@@ -10,9 +10,9 @@ var _require = function (moduleName) {
         module = require(path.join(param.getEgretPath(), moduleName));
     }
     catch (e) {
-        var errorMessage = "加载模块 " + moduleName + " 失败\n请确认在" + process.argv[1] + "所在目录下已执行 npm install " + moduleName
+        var errorMessage = "加载模块 " + moduleName + " 失败\n请确认在" + param.getEgretPath() + "所在目录下已执行 npm install " + moduleName
         console.log(errorMessage);
-        process.exit(1)
+        process.exit(1);
     }
     return module;
 

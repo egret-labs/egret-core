@@ -1,0 +1,7 @@
+[
+    "egret/context/devices/HTML5DeviceContext.ts",
+    "egret/context/renderer/HTML5CanvasRenderer.ts",
+    "egret/context/net/HTML5NetContext.ts",
+    "egret/context/interactive/HTML5TouchContext.ts",
+    "egret/utils/SAXParser.ts"
+]

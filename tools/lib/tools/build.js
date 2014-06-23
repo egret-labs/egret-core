@@ -16,7 +16,6 @@ function run(dir, args, opts) {
 
     var currDir = globals.joinEgretDir(dir, args[0]);
 
-    var egret_file = path.join(currDir, "bin-debug/lib/egret_file_list.js");
     var task = [];
 
     var exmlList = [];
@@ -36,25 +35,25 @@ function run(dir, args, opts) {
 
 
     if (needCompileEngine) {
+        var egretSourceList = [];
         task.push(
             function (callback) {
                 var runtime = param.getOption(opts, "--runtime", ["html5", "native"]);
-                compiler.generateEgretFileList(callback, egret_file, runtime);
-
+                egretSourceList = compiler.generateEgretFileList(runtime,currDir);
+                callback();
             },
             function (callback) {
                 compiler.compile(callback,
                     path.join(param.getEgretPath(), "src"),
                     path.join(currDir, "bin-debug/lib"),
-                    egret_file
+                    egretSourceList
                 );
             },
 
             function (callback) {
                 compiler.exportHeader(callback,
-                    path.join(param.getEgretPath(), "src"),
-                    path.join(currDir, "src", "egret.d.ts"),
-                    egret_file
+                    currDir,
+                    egretSourceList
                 );
 
             }
@@ -69,17 +68,7 @@ function run(dir, args, opts) {
 
     task.push(
         function (callback) {
-            var gameListPath = currDir+"/bin-debug/src/game_file_list.js";
-            if(!file.exists(currDir+"/src/game_file_list.js")){
-                var list = file.search(currDir+"/src/","ts")
-                var gameListText = create_file_list.create(list,currDir+"/src/");
-                file.save(gameListPath,gameListText);
-            }
-            compiler.compile(callback,
-                path.join(currDir, "src"),
-                path.join(currDir, "bin-debug/src"),
-                gameListPath
-            );
+            buildProject(callback,currDir);
         }
     )
 
@@ -108,6 +97,55 @@ function run(dir, args, opts) {
     }
 }
 
+function buildProject(callback,currDir){
+    var manifestPath = currDir+"/manifest.json";
+    var srcPath = currDir+"/src/";
+    var libsPath = currDir+"/libs/";
+    var sourceList;
+    var fileListText = "";
+    if(file.exists(manifestPath)){
+        sourceList = getManifest(manifestPath,srcPath);
+        fileListText = create_file_list.create(sourceList,srcPath,false);
+    }
+    else{
+        sourceList = file.searchByFunction(srcPath,filterFunc);
+        fileListText = create_file_list.create(sourceList,srcPath,true);
+    }
+    fileListText = "var game_file_list = "+fileListText+";";
+        file.save(path.join(currDir,"bin-debug/src/game_file_list.js"),fileListText);
+    var libs = file.search(libsPath,"d.ts");
+    compiler.compile(callback,
+        path.join(currDir, "src"),
+        path.join(currDir, "bin-debug/src"),
+        sourceList.concat(libs)
+    );
+}
+
+function filterFunc(item){
+    if(item.indexOf(".d.ts")==-1&&file.getExtension(item)=="ts"){
+        return true;
+    }
+    return false;
+}
+
+function getManifest(file_list,srcPath) {
+    if(!file.exists(file_list)){
+        return [];
+    }
+    var content = file.read(file_list);
+    try{
+        var manifest = JSON.parse(content);
+    }
+    catch (e){
+        globals.exit(1304,file_list);
+    }
+    var length = manifest.length;
+    for(var i=0;i<length;i++){
+        manifest[i] = file.joinPath(srcPath,manifest[i]);
+    }
+    return manifest;
+}
+
 
 function help_title() {
     return "构建指定项目,编译指定项目的 TypeScript 文件\n";
@@ -128,3 +166,4 @@ function help_example() {
 exports.run = run;
 exports.help_title = help_title;
 exports.help_example = help_example;
+exports.buildProject = buildProject;

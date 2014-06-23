@@ -24,7 +24,6 @@
 * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
-/// <reference path="../exml/node.d.ts"/>
 var file = require("../core/file.js");
 var CodeUtil = require("../core/code_util.js");
 var globals = require("../core/globals.js");
@@ -35,12 +34,39 @@ var pathToClassName = {};
 var pathInfoList = {};
 var functionKeys = ["static", "var", "export", "public", "private", "function", "get", "set", "class", "interface"];
 
-function create(list, srcPath) {
+function create(list, srcPath, sort) {
     srcPath = srcPath.split("\\").join("/");
     if (srcPath.charAt(srcPath.length - 1) != "/") {
         srcPath += "/";
     }
 
+    var gameList = [];
+    if(sort){
+        gameList = sortFileList(list);
+    }
+    else{
+        var length = list.length;
+        for (var i = 0; i < length; i++) {
+            var path = list[i];
+            if (path.indexOf(".d.ts") != -1||isInterface(path)) {
+                continue;
+            }
+            gameList.push(path);
+        }
+    }
+    length = gameList.length;
+    for (i = 0; i < length; i++) {
+        path = gameList[i];
+        path = path.substring(srcPath.length, path.length - 2) + "js";
+        gameList[i] = "    \"" + path + "\"";
+    }
+    var gameListText = "[\n" + gameList.join(",\n") + "\n]";
+    return gameListText;
+}
+
+exports.create = create;
+
+function sortFileList(list){
     var length = list.length;
     for (var i = 0; i < length; i++) {
         var path = list[i];
@@ -95,18 +121,8 @@ function create(list, srcPath) {
         list.sort();
         gameList = list.concat(gameList);
     }
-
-    length = gameList.length;
-    for (i = 0; i < length; i++) {
-        path = gameList[i];
-        path = path.substring(srcPath.length, path.length - 2) + "js";
-        gameList[i] = "    \"" + path + "\"";
-    }
-    var gameListText = "var game_file_list = [\n" + gameList.join(",\n") + "\n];";
-    return gameListText;
+    return gameList;
 }
-
-exports.create = create;
 
 function setPathLevel(path, level, pathLevelInfo, map) {
     if (pathLevelInfo[path] == null) {
@@ -125,6 +141,17 @@ function setPathLevel(path, level, pathLevelInfo, map) {
     }
 }
 
+function isInterface(path){
+    var text = file.read(path);
+    text = CodeUtil.removeComment(text);
+    text = removeInterface(text);
+    if (!CodeUtil.containsVariable("class", text) &&
+        !CodeUtil.containsVariable("var", text) &&
+        !CodeUtil.containsVariable("function", text)) {
+        return true;
+    }
+    return false;
+}
 /**
 * 读取文件里的类名和全局函数名。
 */
@@ -134,7 +161,9 @@ function readClassNames(path) {
     var list = [];
     text = CodeUtil.removeComment(text);
     text = removeInterface(text);
-    if (!CodeUtil.containsVariable("class", text) && !CodeUtil.containsVariable("var", text) && !CodeUtil.containsVariable("function", text)) {
+    if (!CodeUtil.containsVariable("class", text) &&
+        !CodeUtil.containsVariable("var", text) &&
+        !CodeUtil.containsVariable("function", text)) {
         return;
     }
     readRelyOnFromImport(text, fileRelyOnList);
@@ -355,4 +384,3 @@ function trimKeyWords(codeText) {
     }
     return codeText;
 }
-//# sourceMappingURL=create_file_list.js.map

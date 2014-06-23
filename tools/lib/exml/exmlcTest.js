@@ -1,2 +1,3 @@
-var exmlc = require("./exmlc.js");
-exmlc.compile("./src/code/skins/Panel.exml","./src/");
+var param = require("../core/params_analyze.js");
+var path = param.getEgretPath();
+console.log(path);
