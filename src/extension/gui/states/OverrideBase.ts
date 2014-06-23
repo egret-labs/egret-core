@@ -25,10 +25,6 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/// <reference path="../../../egret/utils/HashObject.ts"/>
-/// <reference path="../core/IContainer.ts"/>
-/// <reference path="../core/IStateClient.ts"/>
-/// <reference path="IOverride.ts"/>
 
 module egret {
 

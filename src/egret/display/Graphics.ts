@@ -25,8 +25,6 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/// <reference path="../context/renderer/HTML5CanvasRenderer.ts"/>
-/// <reference path="../context/renderer/RendererContext.ts"/>
 
 module egret {
     export class Graphics {

@@ -25,8 +25,6 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/// <reference path="DeviceContext.ts"/>
-/// <reference path="../../utils/getTimer.ts"/>
 
 module egret {
 

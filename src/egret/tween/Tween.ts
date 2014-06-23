@@ -25,9 +25,6 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/// <reference path="../context/Ticker.ts"/>
-/// <reference path="../events/EventDispatcher.ts"/>
-/// <reference path="../utils/Logger.ts"/>
 
 module egret {
     export class Tween extends EventDispatcher {

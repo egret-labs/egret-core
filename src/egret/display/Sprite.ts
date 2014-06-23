@@ -25,10 +25,6 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/// <reference path="../context/MainContext.ts"/>
-/// <reference path="../context/renderer/RendererContext.ts"/>
-/// <reference path="DisplayObjectContainer.ts"/>
-/// <reference path="Graphics.ts"/>
 
 module egret {
     export class Sprite extends DisplayObjectContainer {

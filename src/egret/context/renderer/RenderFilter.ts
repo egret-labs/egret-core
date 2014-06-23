@@ -25,13 +25,6 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/// <reference path="../MainContext.ts"/>
-/// <reference path="RendererContext.ts"/>
-/// <reference path="../../display/Texture.ts"/>
-/// <reference path="../../geom/Matrix.ts"/>
-/// <reference path="../../geom/Rectangle.ts"/>
-/// <reference path="../../utils/HashObject.ts"/>
-/// <reference path="../../utils/Logger.ts"/>
 
 module egret {
     /**

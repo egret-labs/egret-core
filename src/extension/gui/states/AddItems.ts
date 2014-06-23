@@ -25,11 +25,6 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/// <reference path="../components/SkinnableComponent.ts"/>
-/// <reference path="../core/IContainer.ts"/>
-/// <reference path="../core/IStateClient.ts"/>
-/// <reference path="../core/IVisualElement.ts"/>
-/// <reference path="OverrideBase.ts"/>
 
 module egret {
 

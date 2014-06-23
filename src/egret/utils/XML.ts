@@ -40,7 +40,6 @@
  *
  */
 
-/// <reference path="SAXParser.ts"/>
 
 module egret {
     export class XML {

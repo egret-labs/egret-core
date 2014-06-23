@@ -25,16 +25,6 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/// <reference path="../collections/ICollection.ts"/>
-/// <reference path="../collections/ITreeCollection.ts"/>
-/// <reference path="IItemRenderer.ts"/>
-/// <reference path="ITreeItemRenderer.ts"/>
-/// <reference path="List.ts"/>
-/// <reference path="supportClasses/TreeItemRenderer.ts"/>
-/// <reference path="../events/CollectionEvent.ts"/>
-/// <reference path="../events/CollectionEventKind.ts"/>
-/// <reference path="../events/RendererExistenceEvent.ts"/>
-/// <reference path="../events/TreeEvent.ts"/>
 
 module egret {
 

@@ -25,9 +25,6 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/// <reference path="MainContext.ts"/>
-/// <reference path="../events/EventDispatcher.ts"/>
-/// <reference path="../utils/getTimer.ts"/>
 
 module egret {
     /**

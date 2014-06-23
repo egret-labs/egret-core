@@ -25,12 +25,6 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/// <reference path="../../../egret/events/Event.ts"/>
-/// <reference path="../../../egret/events/EventDispatcher.ts"/>
-/// <reference path="../core/UIGlobals.ts"/>
-/// <reference path="../events/UIEvent.ts"/>
-/// <reference path="ILayoutManagerClient.ts"/>
-/// <reference path="layoutClass/DepthQueue.ts"/>
 
 module egret {
 

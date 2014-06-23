@@ -25,12 +25,6 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/// <reference path="../context/renderer/HTML5CanvasRenderer.ts"/>
-/// <reference path="../context/renderer/RenderFilter.ts"/>
-/// <reference path="DisplayObject.ts"/>
-/// <reference path="DisplayObjectContainer.ts"/>
-/// <reference path="Texture.ts"/>
-/// <reference path="../geom/Rectangle.ts"/>
 
 module egret {
     export class RenderTexture extends Texture {

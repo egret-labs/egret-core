@@ -1,7 +1,3 @@
-///<reference path="dragonBones.ts" />
-///<reference path="../../egret/display/DisplayObject.ts" />
-///<reference path="../../egret/display/DisplayObjectContainer.ts" />
-///<reference path="../../egret/display/Bitmap.ts" />
 /**
  * Copyright (c) 2014,Egret-Labs.org
  * All rights reserved.

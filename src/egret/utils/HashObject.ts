@@ -29,7 +29,6 @@
  * @namespace egret
  */
 
-/// <reference path="IHashObject.ts"/>
 
 module egret {
 

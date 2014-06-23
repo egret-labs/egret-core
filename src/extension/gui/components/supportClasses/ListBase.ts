@@ -25,19 +25,6 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/// <reference path="../../../../egret/display/DisplayObject.ts"/>
-/// <reference path="../../../../egret/events/TouchEvent.ts"/>
-/// <reference path="../../../../egret/utils/XML.ts"/>
-/// <reference path="../IItemRenderer.ts"/>
-/// <reference path="../SkinnableDataContainer.ts"/>
-/// <reference path="../../core/IVisualElement.ts"/>
-/// <reference path="../../events/CollectionEvent.ts"/>
-/// <reference path="../../events/CollectionEventKind.ts"/>
-/// <reference path="../../events/IndexChangeEvent.ts"/>
-/// <reference path="../../events/ListEvent.ts"/>
-/// <reference path="../../events/RendererExistenceEvent.ts"/>
-/// <reference path="../../events/UIEvent.ts"/>
-/// <reference path="../../layouts/supportClasses/LayoutBase.ts"/>
 
 module egret {
 

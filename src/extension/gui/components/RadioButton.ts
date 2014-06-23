@@ -25,9 +25,6 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/// <reference path="RadioButtonGroup.ts"/>
-/// <reference path="supportClasses/ToggleButtonBase.ts"/>
-/// <reference path="../events/UIEvent.ts"/>
 
 module egret {
 

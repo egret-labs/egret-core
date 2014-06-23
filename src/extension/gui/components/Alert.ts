@@ -25,12 +25,6 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/// <reference path="../../../egret/events/TouchEvent.ts"/>
-/// <reference path="Button.ts"/>
-/// <reference path="TitleWindow.ts"/>
-/// <reference path="../core/IDisplayText.ts"/>
-/// <reference path="../events/CloseEvent.ts"/>
-/// <reference path="../managers/PopUpManager.ts"/>
 
 module egret {
 

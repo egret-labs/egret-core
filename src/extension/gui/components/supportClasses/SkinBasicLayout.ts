@@ -25,9 +25,6 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/// <reference path="../../../../egret/utils/HashObject.ts"/>
-/// <reference path="../SkinnableComponent.ts"/>
-/// <reference path="../../core/ILayoutElement.ts"/>
 
 module egret {
 

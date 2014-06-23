@@ -25,29 +25,6 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/// <reference path="../../../egret/display/DisplayObject.ts"/>
-/// <reference path="../../../egret/events/Event.ts"/>
-/// <reference path="../../../egret/events/TimerEvent.ts"/>
-/// <reference path="../../../egret/geom/Rectangle.ts"/>
-/// <reference path="../../../egret/layout/HorizontalAlign.ts"/>
-/// <reference path="../../../egret/utils/Recycler.ts"/>
-/// <reference path="../../../egret/utils/Timer.ts"/>
-/// <reference path="../collections/ICollection.ts"/>
-/// <reference path="IItemRenderer.ts"/>
-/// <reference path="IItemRendererOwner.ts"/>
-/// <reference path="SkinnableComponent.ts"/>
-/// <reference path="supportClasses/GroupBase.ts"/>
-/// <reference path="supportClasses/ItemRenderer.ts"/>
-/// <reference path="../core/ClassFactory.ts"/>
-/// <reference path="../core/IFactory.ts"/>
-/// <reference path="../core/IInvalidating.ts"/>
-/// <reference path="../core/ISkinnableClient.ts"/>
-/// <reference path="../core/IVisualElement.ts"/>
-/// <reference path="../events/CollectionEvent.ts"/>
-/// <reference path="../events/CollectionEventKind.ts"/>
-/// <reference path="../events/RendererExistenceEvent.ts"/>
-/// <reference path="../layouts/VerticalLayout.ts"/>
-/// <reference path="../layouts/supportClasses/LayoutBase.ts"/>
 
 module egret {
 

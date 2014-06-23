@@ -25,12 +25,6 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/// <reference path="../context/renderer/RendererContext.ts"/>
-/// <reference path="DisplayObject.ts"/>
-/// <reference path="../events/Event.ts"/>
-/// <reference path="../geom/Matrix.ts"/>
-/// <reference path="../geom/Rectangle.ts"/>
-/// <reference path="../utils/Logger.ts"/>
 
 module egret {
     /**

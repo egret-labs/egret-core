@@ -25,17 +25,6 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/// <reference path="../../../egret/context/renderer/RenderFilter.ts"/>
-/// <reference path="../../../egret/context/renderer/RendererContext.ts"/>
-/// <reference path="../../../egret/display/DisplayObject.ts"/>
-/// <reference path="../../../egret/display/Texture.ts"/>
-/// <reference path="../../../egret/geom/Rectangle.ts"/>
-/// <reference path="../../../egret/utils/Injector.ts"/>
-/// <reference path="supportClasses/DefaultAssetAdapter.ts"/>
-/// <reference path="../core/IAssetAdapter.ts"/>
-/// <reference path="../core/ILayoutElement.ts"/>
-/// <reference path="../core/UIComponent.ts"/>
-/// <reference path="../events/UIEvent.ts"/>
 
 module egret {
 
