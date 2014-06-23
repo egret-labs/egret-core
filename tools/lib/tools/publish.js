@@ -4,6 +4,7 @@ var fs = require("fs");
 var child_process = require("child_process");
 var libs = require("../core/normal_libs");
 var create_file_list = require("./create_file_list.js")
+var FileUtil = require("../core/file_util.js");
 
 if (!fs.existsSync) fs.existsSync = path.existsSync; // node < 0.8
 
@@ -269,9 +270,9 @@ function run(dir, args, opts) {
     var game_file = path.join(currDir, "src/game_file_list.js");
     if(!fs.existsSync(game_file)){
         game_file = currDir+"/bin-debug/src/game_file_list.js";
-        var list = libs.searchExtension(currDir+"/src/","ts");
+        var list = FileUtil.searchByExtension(currDir+"/src/","ts");
         var gameListText = create_file_list.create(list,currDir+"/src/");
-        libs.save(game_file,gameListText,"utf-8");
+        FileUtil.save(game_file,gameListText,"utf-8");
     }
     var gameFileList = getFileList(game_file);
     gameFileList = gameFileList.map(function (item) {

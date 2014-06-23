@@ -6,7 +6,7 @@ var libs = require("../core/normal_libs");
 var output = "signed_egret.apk";
 var async = require("../core/async.js");
 var fs = require("fs");
-
+var FileUtil = require("../core/file_util.js");
 
 function run(current, arg, opt) {
 
@@ -32,9 +32,9 @@ function run(current, arg, opt) {
         [
 
             function (callback) {
-                libs.copy(join(project,"bin-debug"), join(native_folder,"assets/js/bin-debug"));
-                libs.copy(join(project,"launcher"), join(native_folder,"assets/js/launcher"));
-                libs.copy(join(project,"resources"), join(native_folder,"assets/js/resources"));
+                FileUtil.copy(join(project,"bin-debug"), join(native_folder,"assets/js/bin-debug"));
+                FileUtil.copy(join(project,"launcher"), join(native_folder,"assets/js/launcher"));
+                FileUtil.copy(join(project,"resources"), join(native_folder,"assets/js/resources"));
                 callback();
             },
 

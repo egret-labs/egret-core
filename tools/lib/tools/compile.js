@@ -9,7 +9,7 @@ var async = require('../core/async');
 var cp_exec = require('child_process').exec;
 var libs = require("../core/normal_libs");
 var param = require("../core/params_analyze.js");
-var create_file_list = require("./create_file_list.js")
+var FileUtil = require("../core/file_util.js");
 
 function run(currentDir, args, opts) {
     var source = path.resolve(param.getEgretPath(), "");
@@ -43,9 +43,10 @@ function buildAllFile(callback, source, output, file_list) {
 
         //cp所有非ts/exml文件
         function (callback) {
-            var all_file = libs.loopFileSync(source, filter);
+            var all_file = FileUtil.searchByFunction(source, filter);
             all_file.forEach(function (item) {
-                libs.copy(path.join(source, item), path.join(output, item));
+                var itemName = item.substring(source.length);
+                FileUtil.copy(item, path.join(output, itemName));
             })
             callback(null);
 
@@ -135,7 +136,7 @@ function generateEgretFileList(callback, egret_file, runtime) {
         return "\"" + item + "\""
     }).join(",\n")
     content = "var egret_file_list = [\n" + content + "\n]";
-    libs.mkdir(path.dirname(egret_file));
+    FileUtil.createDirectory(FileUtil.getDirectory(egret_file));
     fs.writeFileSync(egret_file, content, "utf-8");
     callback();
 

@@ -5,7 +5,7 @@ var fs = require("fs");
 var async = require('../core/async');
 var compiler = require("./compile.js")
 var create_file_list = require("./create_file_list.js");
-
+var FileUtil = require("../core/file_util.js");
 /**
  * 创建新项目
  * @param currentDir 当前文件夹
@@ -59,9 +59,9 @@ function run(currDir, args, opts) {
         function (callback) {
             var gameListPath = currDir+"/"+projectName+"/bin-debug/src/game_file_list.js";
             var srcPath = currDir+"/"+projectName+"/src/";
-            var list = libs.searchExtension(srcPath,"ts");
+            var list = FileUtil.searchByExtension(srcPath,"ts");
             var gameListText = create_file_list.create(list,srcPath);
-            libs.save(gameListPath,gameListText,"utf-8");
+            FileUtil.save(gameListPath,gameListText,"utf-8");
             compiler.compile(callback,
                 path.join(currDir, projectName, "src"),
                 path.join(currDir, projectName, "bin-debug/src"),
@@ -81,7 +81,7 @@ function run(currDir, args, opts) {
 function createNewProject(projectName) {
     var template = path.join(param.getEgretPath(), "tools/templates/game");
     var projPath = path.join(process.cwd(), projectName);
-    libs.copy(template, projPath);
+    FileUtil.copy(template, projPath);
 }
 
 function help_title() {

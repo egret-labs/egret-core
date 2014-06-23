@@ -32,10 +32,10 @@ var __extends = this.__extends || function (d, b) {
 };
 /// <reference path="node.d.ts"/>
 /// <reference path="exml_config.ts"/>
-var fs = require("fs");
 var xml = require("../core/xml.js");
-var libs = require("../core/normal_libs");
+var libs = require("../core/normal_libs.js");
 var CodeUtil = require("../core/code_util.js");
+var FileUtil = require("../core/file_util.js");
 var exml_config = require("./exml_config.js");
 
 var compiler;
@@ -46,22 +46,22 @@ function compile(exmlPath, srcPath) {
     if (srcPath.charAt(srcPath.length - 1) != "/") {
         srcPath += "/";
     }
-    if (!fs.existsSync(srcPath + exmlPath)) {
-        libs.exit(2001, srcPath + exmlPath);
+    if (!FileUtil.exists(exmlPath)) {
+        libs.exit(2001, exmlPath);
     }
-    var className = exmlPath.substring(0, exmlPath.length - 5);
+    var className = exmlPath.substring(srcPath.length, exmlPath.length - 5);
     className = className.split("/").join(".");
-    var xmlString = fs.readFileSync(srcPath + exmlPath, "utf-8");
+    var xmlString = FileUtil.read(exmlPath);
     var xmlData = xml.parse(xmlString);
     if (!xmlData) {
-        libs.exit(2002, srcPath + exmlPath);
+        libs.exit(2002, exmlPath);
     }
     if (!compiler) {
         compiler = new EXMLCompiler();
     }
-    var tsText = compiler.compile(xmlData, className, "egret.d.ts", srcPath, srcPath + exmlPath);
-    var tsPath = srcPath + exmlPath.substring(0, exmlPath.length - 5) + ".ts";
-    fs.writeFileSync(tsPath, tsText, "utf-8");
+    var tsText = compiler.compile(xmlData, className, "egret.d.ts", srcPath, exmlPath);
+    var tsPath = exmlPath.substring(0, exmlPath.length - 5) + ".ts";
+    FileUtil.save(tsPath, tsText);
 }
 ;
 

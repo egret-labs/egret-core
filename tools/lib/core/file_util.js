@@ -32,7 +32,7 @@ function createDirectory(path, mode, made) {
     catch (err0) {
         switch (err0.code) {
             case 'ENOENT' :
-                made = createDirectory(path.dirname(path), mode, made);
+                made = createDirectory(path_lib.dirname(path), mode, made);
                 createDirectory(path, mode, made);
                 break;
 
@@ -56,7 +56,7 @@ function createDirectory(path, mode, made) {
  * 打开文本文件的简便方法,返回打开文本的内容，若失败，返回"".
  * @param path 要打开的文件路径
  */
-function readText(path) {
+function read(path) {
     path = escapePath(path);
     try{
         var text = fs.readFileSync(path,charset);
@@ -72,7 +72,7 @@ function readText(path) {
  * @param source 文件源路径
  * @param dest 文件要复制到的目标路径
  */
-function copyTo(source, dest) {
+function copy(source, dest) {
     source = escapePath(source);
     dest = escapePath(dest);
     var stat = fs.lstatSync(source);
@@ -94,7 +94,7 @@ function _copy_dir(sourceDir, outputDir) {
     createDirectory(outputDir);
     var list = fs.readdirSync(sourceDir);
     list.forEach(function (fileName) {
-        copyTo(path_lib.join(sourceDir, fileName), path_lib.join(outputDir, fileName));
+        copy(path_lib.join(sourceDir, fileName), path_lib.join(outputDir, fileName));
     });
 }
 
@@ -176,29 +176,43 @@ function getFileName(path) {
 /**
  * 搜索指定文件夹及其子文件夹下所有的文件
  * @param dir 要搜索的文件夹
- * @param extension 要搜索的文件扩展名，例如："png"。不设置表示获取所有类型文件。注意：若设置了filterFunc，则忽略此参数。
- * @param filterFunc 过滤函数：filterFunc(file:File):Boolean,参数为遍历过程中的每一个文件夹或文件，返回true则加入结果列表
+ * @param extension 要搜索的文件扩展名,不包含点字符，例如："png"。不设置表示获取所有类型文件。
  */
-function search(dir, extension,filterFunc) {
+function searchByExtension(dir, extension) {
     var list = [];
     var stat = fs.statSync(dir);
     if (stat.isDirectory()) {
-        findFiles(dir,list,extension,filterFunc);
+        findFiles(dir,list,extension,null);
     }
     return list;
 }
+/**
+ * 搜索指定文件夹及其子文件夹下所有的文件
+ * @param dir 要搜索的文件夹
+ * @param filterFunc 过滤函数：filterFunc(file:File):Boolean,参数为遍历过程中的每一个文件，返回true则加入结果列表
+ */
+function searchByFunction(dir, filterFunc) {
+    var list = [];
+    var stat = fs.statSync(dir);
+    if (stat.isDirectory()) {
+        findFiles(dir,list,"",filterFunc);
+    }
+    return list;
+}
+
+
 
 function findFiles(filePath,list,extension,filterFunc) {
     var files = fs.readdirSync(filePath);
     var length = files.length;
     for (var i = 0; i < length; i++) {
-        var path = filePath + files[i];
+        var path = path_lib.join(filePath ,files[i]);
         var stat = fs.statSync(path);
         if (path.charAt(0) == ".") {
             continue;
         }
         if (stat.isDirectory()) {
-            findFiles(path + "/", list,extension,filterFunc);
+            findFiles(path, list,extension,filterFunc);
         }
         else if (filterFunc != null) {
             if (filterFunc(path)) {
@@ -237,10 +251,11 @@ function escapePath(path) {
 
 exports.save = save;
 exports.createDirectory = createDirectory;
-exports.readText = readText;
-exports.copyTo = copyTo;
+exports.read = read;
+exports.copy = copy;
 exports.remove = remove;
-exports.search = search;
+exports.searchByExtension = searchByExtension;
+exports.searchByFunction = searchByFunction;
 exports.exists = exists;
 exports.escapePath = escapePath;
 exports.getDirectory = getDirectory;
