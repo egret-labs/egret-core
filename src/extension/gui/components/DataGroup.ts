@@ -531,7 +531,9 @@ module egret {
 		 * 项呈示器改变
 		 */		
 		private itemRendererChanged:boolean;
-		
+        /**
+         * 这里不直接使用Class类型是因为JS里不能用对象作为键，所以需要hashCode。而只有实例对象才有hashCode，Class无法作为键。
+         */
 		private _itemRenderer:IFactory;
 		/**
 		 * 用于数据项目的项呈示器。该类必须实现 IItemRenderer 接口。<br/>
