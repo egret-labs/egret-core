@@ -483,7 +483,7 @@ module RES {
                     var item:any = group[i];
                     item.loaded = false;
                     var analyzer:AnalyzerBase = this.getAnalyzerByType(item.type);
-                    analyzer.destroyRes(name);
+                    analyzer.destroyRes(item.name);
                 }
                 return true;
             }
