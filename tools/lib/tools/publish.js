@@ -86,10 +86,23 @@ ClosureCompiler.getBundledJava = function () {
 ClosureCompiler.testJava = function (java, callback) {
     child_process.exec('"' + java + '" -version', {}, function (error, stdout, stderr) {
         stderr += "";
-        if (stderr.indexOf("version \"1.7.") >= 0 || stderr.indexOf("version \"1.8.") >= 0) {
+        var minVersionChar = "1.7";
+        var m1 = 1,m2 = 7;
+        var minVersion = 0;
+        var re = /(\d+\.\d+)\.?/gi;
+        var currentVersion = re.exec(stderr)[0];
+        var v1 = currentVersion.split(".")[0];
+        var v2 = currentVersion.split(".")[1];
+        if(v2>9 || m2>9) {
+            v2 = v2>9?v2:"0"+v2;
+            m2 = m2>9?m2:"0"+m2;
+        }
+        minVersion = m1+"."+m2;
+        currentVersion = v1+"."+v2;
+        if (currentVersion>=minVersion) {
             callback(true, null);
         } else if (stderr.indexOf("version \"") >= 0) {
-            callback(false, new Error("Not Java 7"));
+            callback(false, new Error("Need Java "+minVersionChar+" but current version is "+currentVersion));
         } else {
             callback(false, error);
         }
