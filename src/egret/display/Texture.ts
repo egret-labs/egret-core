@@ -29,9 +29,10 @@
 /// <reference path="../utils/HashObject.ts"/>
 
 module egret {
+    
     /**
-     * @class Texture
-     * 纹理类是对不同平台不同的图片资源的封装
+     * @class egret.Texture
+     * @classdesc 纹理类是对不同平台不同的图片资源的封装
      * 在HTML5中，资源是一个HTMLElement对象
      * 在OpenGL / WebGL中，资源是一个提交GPU后获取的纹理id
      * Texture类封装了这些底层实现的细节，开发者只需要关心接口即可
@@ -60,22 +61,30 @@ module egret {
         public _offsetY = 0;
 
 
-        public _textureWidth:number = 0;
         /**
          * 纹理宽度
+         * @member {number} egret.Texture#textureWidth
          */
+        public _textureWidth:number = 0;
+        
         public get textureWidth():number {
             return this._textureWidth;
         }
 
-        public _textureHeight:number = 0;
         /**
          * 纹理高度
+         * @member {number} egret.Texture#textureWidth
          */
+        public _textureHeight:number = 0;
+        
         public get textureHeight():number {
             return this._textureHeight;
         }
 
+        /**
+         * 纹理对象中得位图数据
+         * @member {any} egret.Texture#bitmapData
+         */
         public _bitmapData;
 
         public get bitmapData() {
@@ -89,7 +98,13 @@ module egret {
             this._textureHeight = value.height * scale;
         }
 
-
+        /**
+         * 获取某一点像素的颜色值
+         * @method egret.Texture#getPixel32
+         * @param x 像素点的X轴坐标
+         * @param y 像素点的Y轴坐标
+         * @returns {number} 指定像素点的颜色值
+         */
         public getPixel32(x,y):number[]{
             var result = this._bitmapData.getContext("2d").getImageData(x,y,1,1);
             return result.data;
