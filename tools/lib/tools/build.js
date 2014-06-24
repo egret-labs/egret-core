@@ -98,9 +98,9 @@ function run(dir, args, opts) {
 }
 
 function buildProject(callback,currDir){
-    var manifestPath = currDir+"/manifest.json";
-    var srcPath = currDir+"/src/";
-    var libsPath = currDir+"/libs/";
+    var manifestPath = path.join(currDir,"manifest.json");
+    var srcPath = path.join(currDir,"src/");
+    var libsPath = path.join(currDir,"libs/");
     var sourceList;
     var fileListText = "";
     if(file.exists(manifestPath)){
