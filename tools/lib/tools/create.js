@@ -1,11 +1,10 @@
 var path = require("path");
-var libs = require("../core/normal_libs");
+var globals = require("../core/globals");
 var param = require("../core/params_analyze.js");
-var fs = require("fs");
 var async = require('../core/async');
 var compiler = require("./compile.js")
-
-
+var create_file_list = require("./create_file_list.js");
+var file = require("../core/file.js");
 /**
  * 创建新项目
  * @param currentDir 当前文件夹
@@ -15,7 +14,7 @@ var compiler = require("./compile.js")
 function run(currDir, args, opts) {
     var projectName = args[0];
     if (!projectName) {
-        libs.exit(1001);
+        globals.exit(1001);
     }
 
     var runtime = param.getOption(opts, "--runtime", ["html5", "native"]);
@@ -24,20 +23,20 @@ function run(currDir, args, opts) {
     async.series([
 
         function (callback) {
-            libs.log("正在创建新项目文件夹...");
+            globals.log("正在创建新项目文件夹...");
             createNewProject(projectName);
             callback();
         },
 
         function (callback) {
 
-            libs.log ("正在生成egret_file_list...");
+            globals.log ("正在生成egret_file_list...");
             compiler.generateEgretFileList(callback, egret_file, runtime);
 
         },
 
         function (callback) {
-            libs.log("正在编译egret...");
+            globals.log("正在编译egret...");
             compiler.compile(callback,
                 path.join(param.getEgretPath(), "src"),
                 path.join(currDir, projectName, "bin-debug/lib"),
@@ -47,7 +46,7 @@ function run(currDir, args, opts) {
 
 
         function (callback) {
-            libs.log ("正在导出 egret.d.ts...");
+            globals.log ("正在导出 egret.d.ts...");
             compiler.exportHeader(callback,
                 path.join(param.getEgretPath(), "src"),
                 path.join(currDir, projectName, "src", "egret.d.ts"),
@@ -57,15 +56,20 @@ function run(currDir, args, opts) {
         },
 
         function (callback) {
+            var gameListPath = currDir+"/"+projectName+"/bin-debug/src/game_file_list.js";
+            var srcPath = currDir+"/"+projectName+"/src/";
+            var list = file.search(srcPath,"ts");
+            var gameListText = create_file_list.create(list,srcPath);
+            file.save(gameListPath,gameListText);
             compiler.compile(callback,
                 path.join(currDir, projectName, "src"),
                 path.join(currDir, projectName, "bin-debug/src"),
-                path.join(currDir, projectName, "src/game_file_list.js")
+                gameListPath
             );
         },
 
         function (callback) {
-            libs.log("创建成功");
+            globals.log("创建成功");
         }
     ])
 
@@ -76,7 +80,7 @@ function run(currDir, args, opts) {
 function createNewProject(projectName) {
     var template = path.join(param.getEgretPath(), "tools/templates/game");
     var projPath = path.join(process.cwd(), projectName);
-    libs.copy(template, projPath);
+    file.copy(template, projPath);
 }
 
 function help_title() {

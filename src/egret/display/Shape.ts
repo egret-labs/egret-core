@@ -32,12 +32,20 @@
 
 module egret {
 
+    /**
+     * @class egret.Shape
+     * @classdesc 此类用于使用 Egret 绘图应用程序编程接口 (API) 创建简单形状。Shape 类包括 graphics 属性，该属性使您可以从 Graphics 类访问方法。
+     */
     export class Shape extends egret.DisplayObject {
 
         public constructor() {
             super();
         }
 
+        /**
+         * 获取 Shape 中的 Graphics 对象。
+         * @member {egret.Graphics} egret.Shape#graphics
+         */
         private _graphics:Graphics;
 
         public get graphics():Graphics{
@@ -50,7 +58,7 @@ module egret {
 
         public _render(renderContext:RendererContext):void {
             if(this._graphics)
-                this._graphics._draw();
+                this._graphics._draw(renderContext);
         }
 
     }

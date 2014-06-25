@@ -50,7 +50,7 @@ module egret {
 	 * 请覆盖partAdded()和partRemoved()方法
 	 * @extends egret.SkinnableComponent
 	 */
-	export class SkinnableComponent extends UIComponent{
+	export class SkinnableComponent extends UIComponent implements ISkinnableClient{
 		/**
 		 * 构造函数
 		 * @method egret.SkinnableComponent#constructor
@@ -471,7 +471,7 @@ module egret {
                 if ("setLayoutBoundsSize" in skin) {
                     (<ILayoutElement><any> (skin)).setLayoutBoundsSize(unscaledWidth, unscaledHeight);
                 }
-                else {
+                else if(skin instanceof DisplayObject){
                     skin.scaleX = skin.width==0?1:unscaledWidth/skin.width;
                     skin.scaleY = skin.height==0?1:unscaledHeight/skin.height;
                 }

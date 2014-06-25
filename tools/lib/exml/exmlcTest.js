@@ -1,2 +1,2 @@
 var exmlc = require("./exmlc.js");
-exmlc.compile("code/skins/Panel.exml","./src/");
+exmlc.compile("./src/code/skins/Panel.exml","./src/");

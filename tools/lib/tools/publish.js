@@ -1,10 +1,9 @@
 var path = require("path");
 var param = require("../core/params_analyze.js");
-var fs = require("fs");
 var child_process = require("child_process");
-var libs = require("../core/normal_libs");
-
-if (!fs.existsSync) fs.existsSync = path.existsSync; // node < 0.8
+var globals = require("../core/globals");
+var create_file_list = require("./create_file_list.js")
+var file = require("../core/file.js");
 
 /**
  * Constructs a new ClosureCompiler instance.
@@ -59,7 +58,7 @@ ClosureCompiler.getGlobalJava = function () {
 
     if (process.env["JAVA_HOME"]) {
         java = path.join(process.env["JAVA_HOME"], "bin", "java" + ClosureCompiler.JAVA_EXT);
-        if (!fs.existsSync(java)) {
+        if (!file.exists(java)) {
             java = null;
         }
     }
@@ -87,10 +86,23 @@ ClosureCompiler.getBundledJava = function () {
 ClosureCompiler.testJava = function (java, callback) {
     child_process.exec('"' + java + '" -version', {}, function (error, stdout, stderr) {
         stderr += "";
-        if (stderr.indexOf("version \"1.7.") >= 0) {
+        var minVersionChar = "1.7";
+        var m1 = 1,m2 = 7;
+        var minVersion = 0;
+        var re = /(\d+\.\d+)\.?/gi;
+        var currentVersion = re.exec(stderr)[0];
+        var v1 = currentVersion.split(".")[0];
+        var v2 = currentVersion.split(".")[1];
+        if(v2>9 || m2>9) {
+            v2 = v2>9?v2:"0"+v2;
+            m2 = m2>9?m2:"0"+m2;
+        }
+        minVersion = m1+"."+m2;
+        currentVersion = v1+"."+v2;
+        if (currentVersion>=minVersion) {
             callback(true, null);
         } else if (stderr.indexOf("version \"") >= 0) {
-            callback(false, new Error("Not Java 7"));
+            callback(false, new Error("Need Java "+minVersionChar+" but current version is "+currentVersion));
         } else {
             callback(false, error);
         }
@@ -140,8 +152,7 @@ ClosureCompiler.prototype.compile = function (files, callback) {
         if (typeof files[i] != 'string' || files[i].indexOf('"') >= 0) {
             throw(new Error("Illegal source file: " + files[i]));
         }
-        stat = fs.statSync(files[i]);
-        if (!stat.isFile()) {
+        if (!file.isFile(files[i])) {
             throw(new Error("Source file not found: " + files[i]));
         }
         args += ' --js "' + files[i] + '"';
@@ -161,18 +172,16 @@ ClosureCompiler.prototype.compile = function (files, callback) {
         if (options.externs[i].toLowerCase() == "node") {
             options.externs[i] = __dirname + "/node_modules/closurecompiler-externs";
         }
-        stat = fs.statSync(options.externs[i]);
-        if (stat.isDirectory()) {
+        if (file.isDirectory(options.externs[i])) {
             // Use all files in that directory
-            var dfiles = fs.readdirSync(options.externs[i]);
+            var dfiles = file.getDirectoryListing(options.externs[i]);
             for (j = 0; j < dfiles.length; j++) {
-                var fname = options.externs[i] + "/" + dfiles[j];
-                var fstats = fs.statSync(fname);
-                if (fstats.isFile() && path.extname(fname).toLowerCase() == '.js') {
+                var fname = dfiles[j];
+                if (file.isFile(fname) && file.getExtension(fname).toLowerCase() == 'js') {
                     externs.push(fname);
                 }
             }
-        } else if (stat.isFile()) {
+        } else if (file.isFile(options.externs[i])) {
             externs.push(options.externs[i]);
         } else {
             throw(new Error("Externs file not found: " + options.externs[i]));
@@ -234,7 +243,7 @@ ClosureCompiler.prototype.compile = function (files, callback) {
                 if (ok) {
                     run(ClosureCompiler.getBundledJava(), args);
                 } else {
-                    libs.exit(1401);
+                    globals.exit(1401);
                 }
             });
         }
@@ -244,20 +253,20 @@ ClosureCompiler.prototype.compile = function (files, callback) {
 
 
 function getFileList(file_list) {
-    if (fs.existsSync(file_list)) {
-        var js_content = fs.readFileSync(file_list, "utf-8");
+    if (file.exists(file_list)) {
+        var js_content = file.read(file_list);
         eval(js_content);
         var path = require("path");
         var varname = path.basename(file_list).split(".js")[0];
         return eval(varname);
     }
     else {
-        libs.exit(1301, file_list);
+        globals.exit(1301, file_list);
     }
 }
 
 function run(dir, args, opts) {
-    var currDir = libs.joinEgretDir(dir, args[0]);
+    var currDir = globals.joinEgretDir(dir, args[0]);
 
     var egret_file = path.join(currDir, "bin-debug/lib/egret_file_list.js");
     var egretFileList = getFileList(egret_file);
@@ -266,6 +275,12 @@ function run(dir, args, opts) {
     });
 
     var game_file = path.join(currDir, "src/game_file_list.js");
+    if(!file.exists(game_file)){
+        game_file = currDir+"/bin-debug/src/game_file_list.js";
+        var list = file.search(currDir+"/src/","ts");
+        var gameListText = create_file_list.create(list,currDir+"/src/");
+        file.save(game_file,gameListText);
+    }
     var gameFileList = getFileList(game_file);
     gameFileList = gameFileList.map(function (item) {
         return path.join(currDir + "/bin-debug/src/", item);

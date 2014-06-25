@@ -691,8 +691,6 @@ module egret {
 			if(this.itemRendererSkinNameChange){
 				this.itemRendererSkinNameChange = false;
 				var length:number = this.indexToRenderer.length;
-				var client:ISkinnableClient;
-				var comp:SkinnableComponent;
 				for(var i:number=0;i<length;i++){
 					this.setItemRenderSkinName(this.indexToRenderer[i]);
 				}

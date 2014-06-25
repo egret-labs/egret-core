@@ -38,12 +38,12 @@ module egret {
          * 位图将重复以填充区域
          * @constant {string} egret.BitmapFillMode.REPEAT
          */
-        public static REPEAT = "repeat";
+        public static REPEAT:string = "repeat";
         /**
          * 位图将拉伸以填充区域
          * @constant {string} egret.BitmapFillMode.SCALE
          */
-        public static SCALE = "scale";
+        public static SCALE:string = "scale";
 
     }
 }

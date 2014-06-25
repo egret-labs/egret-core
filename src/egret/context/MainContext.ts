@@ -89,6 +89,7 @@ module egret{
             Ticker.getInstance().register(this.renderLoop, this, Number.NEGATIVE_INFINITY);
             Ticker.getInstance().register(this.broadcastEnterFrame, this, Number.POSITIVE_INFINITY);
             this.touchContext.run();
+            __invalidateModuleFlag = true;
         }
 
         /**
@@ -97,12 +98,25 @@ module egret{
         private renderLoop(frameTime:number) {
             var context = this.rendererContext;
             context.clearScreen();
+
+            if(__callLaterFunctionList.length>0){
+                var functionList:Array<any> = __callLaterFunctionList;
+                __callLaterFunctionList = [];
+                var thisList:Array<any> = __callLaterThisList;
+                __callLaterThisList = [];
+                var argsList:Array<any> = __callLaterArgsList;
+                __callLaterArgsList = [];
+            }
+
             this.dispatchEventWith(Event.RENDER);
             if(Stage._invalidateRenderFlag){
                 this.broadcastRender();
                 Stage._invalidateRenderFlag = false;
             }
-            this.doCallLaterList();
+            if(functionList){
+                this.doCallLaterList(functionList,thisList,argsList);
+            }
+
             this.stage._updateTransform();
             this.dispatchEventWith(Event.FINISH_UPDATE_TRANSFORM);
             this.stage._draw(context);
@@ -150,16 +164,7 @@ module egret{
         /**
          * 执行callLater回调函数列表
          */
-        private doCallLaterList():void{
-            if(__callLaterFunctionList.length==0){
-                return;
-            }
-            var funcList:Array<any> = __callLaterFunctionList;
-            __callLaterFunctionList = [];
-            var thisList:Array<any> = __callLaterThisList;
-            __callLaterThisList = [];
-            var argsList:Array<any> = __callLaterArgsList;
-            __callLaterArgsList = [];
+        private doCallLaterList(funcList:Array<any>,thisList:Array<any>,argsList:Array<any>):void{
             var length:number = funcList.length;
             for(var i:number=0;i<length;i++){
                 var func:Function = funcList[i];

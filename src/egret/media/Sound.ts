@@ -27,14 +27,27 @@
 
 module egret {
 
+    /**
+     * @class egret.Sound
+     * @classdesc Sound 类允许您在应用程序中使用声音。
+     */
     export class Sound {
 
         constructor() {
 
         }
 
+        /**
+         * audio音频对象
+         * @member {any} egret.Sound#audio
+         */
         public audio:any;
 
+        /**
+         * 播放声音
+         * @method egret.Sound#play
+         * @param loop {boolean} 是否循环播放，默认为false
+         */
         public play(loop:boolean = false):void {
             var sound = this.audio;
             if (!sound) {
@@ -47,6 +60,10 @@ module egret {
             sound.play();
         }
 
+        /**
+         * 停止声音
+         * @method egret.Sound#stop
+         */
         public stop():void{
             var sound = this.audio;
             if (!sound){

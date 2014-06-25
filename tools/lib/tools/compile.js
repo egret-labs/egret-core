@@ -4,24 +4,23 @@
 
 
 var path = require("path");
-var fs = require("fs");
 var async = require('../core/async');
 var cp_exec = require('child_process').exec;
-var libs = require("../core/normal_libs");
+var globals = require("../core/globals");
 var param = require("../core/params_analyze.js");
-
+var file = require("../core/file.js");
 
 function run(currentDir, args, opts) {
     var source = path.resolve(param.getEgretPath(), "");
     var source = opts["--source"];
     var output = opts["--output"];
     if (!source || !output) {
-        libs.exit(1302);
+        globals.exit(1302);
     }
     source = source[0];
     output = output[0];
     if (!source || !output) {
-        libs.exit(1302);
+        globals.exit(1302);
     }
     buildAllFile(function () {
         console.log("编译成功");
@@ -41,17 +40,12 @@ function buildAllFile(callback, source, output, file_list) {
     async.waterfall([
         checkCompilerInstalled,
 
-
-        function (callback) {
-            libs.remove(output);
-            callback();
-        },
-
         //cp所有非ts/exml文件
         function (callback) {
-            var all_file = libs.loopFileSync(source, filter);
+            var all_file = file.searchByFunction(source, filter);
             all_file.forEach(function (item) {
-                libs.copy(path.join(source, item), path.join(output, item));
+                var itemName = item.substring(source.length);
+                file.copy(item, path.join(output, itemName));
             })
             callback(null);
 
@@ -70,13 +64,13 @@ function buildAllFile(callback, source, output, file_list) {
             sourceList = sourceList.map(function (item) {
                 return path.join(source, item).replace(".js", ".ts");
             }).filter(function (item) {
-                    return fs.existsSync(item);
+                    return file.exists(item);
                 }).map(function(item){
                     return "\"" + item + "\"";
                 })
 
             var cmd = "" + sourceList.join(" ") + " -t ES5 --outDir " + "\"" + output + "\"";
-            fs.writeFileSync("tsc_config_temp.txt", cmd, "utf-8");
+            file.save("tsc_config_temp.txt", cmd);
             var ts = cp_exec("tsc @tsc_config_temp.txt");
             ts.stderr.on("data", function (data) {
                 console.log(data);
@@ -84,10 +78,10 @@ function buildAllFile(callback, source, output, file_list) {
 
 
             ts.on('exit', function (code) {
-                fs.unlinkSync("tsc_config_temp.txt");
+                file.remove("tsc_config_temp.txt");
 
                 if (code == 0) {
-                    libs.log("编译 " + file_list + " 成功");
+                    globals.log("编译 " + file_list + " 成功");
                     callback(null, source);
                 }
                 else {
@@ -107,15 +101,15 @@ function buildAllFile(callback, source, output, file_list) {
 }
 
 function getFileList(file_list) {
-    if (fs.existsSync(file_list)) {
-        var js_content = fs.readFileSync(file_list, "utf-8");
+    if (file.exists(file_list)) {
+        var js_content = file.read(file_list);
         eval(js_content);
         var path = require("path");
         var varname = path.basename(file_list).split(".js")[0];
         return eval(varname);
     }
     else {
-        libs.exit(1301, file_list);
+        globals.exit(1301, file_list);
     }
 }
 
@@ -127,22 +121,22 @@ function checkCompilerInstalled(callback) {
                 callback();
             }
             else {
-                libs.exit(2);
+                globals.exit(2);
             }
         }
     );
 }
 
 function generateEgretFileList(callback, egret_file, runtime) {
-    var file_list = libs.require("tools/lib/core/file_list.js");
+    var file_list = globals.require("tools/lib/core/file_list.js");
     var required_file_list = file_list.core.concat(file_list[runtime]);
 
     var content = required_file_list.map(function (item) {
         return "\"" + item + "\""
     }).join(",\n")
     content = "var egret_file_list = [\n" + content + "\n]";
-    libs.mkdir(path.dirname(egret_file));
-    fs.writeFileSync(egret_file, content, "utf-8");
+    file.createDirectory(file.getDirectory(egret_file));
+    file.save(egret_file, content);
     callback();
 
 }
@@ -153,13 +147,13 @@ function exportHeader(callback, source, output, file_list) {
     list = list.map(function (item) {
         return path.join(source, item).replace(".js", ".ts");
     }).filter(function (item) {
-            return fs.existsSync(item);
+            return file.exists(item);
         }).map(function(item){
             return "\"" + item + "\"";
         })
     var source = list.join(" ");
     var cmd = source + " -t ES5 -d --out " + "\"" + output + "\"";
-    fs.writeFileSync("tsc_config_temp.txt", cmd, "utf-8");
+    file.save("tsc_config_temp.txt", cmd);
     var ts = cp_exec("tsc @tsc_config_temp.txt");
     ts.stderr.on("data", function (data) {
         console.log(data);
@@ -167,7 +161,7 @@ function exportHeader(callback, source, output, file_list) {
 
     ts.on('exit', function (code) {
         if (code == 0) {
-            var egretDTS = fs.readFileSync(output,"utf-8");
+            var egretDTS = file.read(output);
             var lines = egretDTS.split("\n");
             var length = lines.length;
             for(var i=0;i<length;i++){
@@ -181,8 +175,8 @@ function exportHeader(callback, source, output, file_list) {
                 }
             }
             egretDTS = lines.join("\n");
-            fs.writeFileSync(output,egretDTS,"utf-8");
-            libs.log(".d.ts文件导出成功");
+            file.save(output,egretDTS);
+            globals.log(".d.ts文件导出成功");
             if (callback) {
                 callback();
             }
