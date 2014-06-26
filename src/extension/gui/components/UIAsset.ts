@@ -42,12 +42,13 @@ module egret {
 		 * @method egret.UIAsset#constructor
          * @param source {any} 素材标识符
          */
-		public constructor(source?:any){
+		public constructor(source?:any,autoScale:boolean=true){
 			super();
 			this.touchChildren = false;
             if(source){
                 this.source = source;
             }
+            this.autoScale = autoScale;
 		}
 
         /**
