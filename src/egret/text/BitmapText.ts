@@ -75,9 +75,9 @@ module egret {
                     var bitmap = this._bitmapPool[i];
                     if (!bitmap) {
                         bitmap = new Bitmap();
-                        bitmap.texture = texture;
                         this._bitmapPool.push(bitmap);
                     }
+                    bitmap.texture = texture;
                     this.addChild(bitmap);
                     bitmap.x = rect.width;
                 }
