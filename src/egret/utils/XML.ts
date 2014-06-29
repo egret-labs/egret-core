@@ -64,8 +64,10 @@ module egret {
             var xml:any = {};
             xml.localName = node.localName;
             xml.name = node.nodeName;
-            xml.namespace = node.namespaceURI;
-            xml.prefix = node.prefix;
+            if(node.namespaceURI)
+                xml.namespace = node.namespaceURI;
+            if(node.prefix)
+                xml.prefix = node.prefix;
             var attributes:any = node.attributes;
             var length:number = attributes.length;
             for(var i:number=0;i<length;i++){
