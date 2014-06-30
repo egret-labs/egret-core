@@ -1,7 +1,8 @@
 var fs = require('fs');
 var path_lib = require("path");
-
 var charset = "utf-8";
+if (!fs.existsSync)
+    fs.existsSync = path_lib.existsSync; // node < 0.8
 
 /**
  * 保存数据到指定文件
@@ -17,12 +18,14 @@ function save(path,data){
  * 创建文件夹
  */
 function createDirectory(path, mode, made) {
+    path = escapePath(path);
     if (mode === undefined) {
         mode = 0777 & (~process.umask());
     }
     if (!made) made = null;
 
-    if (typeof mode === 'string') mode = parseInt(mode, 8);
+    if (typeof mode === 'string')
+        mode = parseInt(mode, 8);
     path = path_lib.resolve(path);
 
     try {
@@ -32,7 +35,7 @@ function createDirectory(path, mode, made) {
     catch (err0) {
         switch (err0.code) {
             case 'ENOENT' :
-                made = createDirectory(path.dirname(path), mode, made);
+                made = createDirectory(path_lib.dirname(path), mode, made);
                 createDirectory(path, mode, made);
                 break;
 
@@ -53,10 +56,10 @@ function createDirectory(path, mode, made) {
 
 
 /**
- * 打开文本文件的简便方法,返回打开文本的内容，若失败，返回"".
+ * 读取文本文件,返回打开文本的字符串内容，若失败，返回"".
  * @param path 要打开的文件路径
  */
-function readText(path) {
+function read(path) {
     path = escapePath(path);
     try{
         var text = fs.readFileSync(path,charset);
@@ -68,11 +71,26 @@ function readText(path) {
 }
 
 /**
+ * 读取字节流文件,返回字节流，若失败，返回null.
+ * @param path 要打开的文件路径
+ */
+function readBinary(path) {
+    path = escapePath(path);
+    try{
+        var binary = fs.readFileSync(path);
+    }
+    catch (e) {
+        return null;
+    }
+    return binary;
+}
+
+/**
  * 复制文件或目录
  * @param source 文件源路径
  * @param dest 文件要复制到的目标路径
  */
-function copyTo(source, dest) {
+function copy(source, dest) {
     source = escapePath(source);
     dest = escapePath(dest);
     var stat = fs.lstatSync(source);
@@ -82,6 +100,39 @@ function copyTo(source, dest) {
     else {
         _copy_file(source, dest);
     }
+}
+
+function isDirectory(path){
+    path = escapePath(path);
+    try{
+        var stat = fs.statSync(path);
+    }
+    catch(e){
+        return false;
+    }
+    return stat.isDirectory();
+}
+
+function isSymbolicLink(path){
+    path = escapePath(path);
+    try{
+        var stat = fs.statSync(path);
+    }
+    catch(e){
+        return false;
+    }
+    return stat.isSymbolicLink();
+}
+
+function isFile(path){
+    path = escapePath(path);
+    try{
+        var stat = fs.statSync(path);
+    }
+    catch(e){
+        return false;
+    }
+    return stat.isFile();
 }
 
 function _copy_file(source_file, output_file) {
@@ -94,7 +145,7 @@ function _copy_dir(sourceDir, outputDir) {
     createDirectory(outputDir);
     var list = fs.readdirSync(sourceDir);
     list.forEach(function (fileName) {
-        copyTo(path_lib.join(sourceDir, fileName), path_lib.join(outputDir, fileName));
+        copy(path_lib.join(sourceDir, fileName), path_lib.join(outputDir, fileName));
     });
 }
 
@@ -172,33 +223,78 @@ function getFileName(path) {
         endIndex = path.length;
     return path.substring(startIndex + 1, endIndex);
 }
-
 /**
- * 搜索指定文件夹及其子文件夹下所有的文件
- * @param dir 要搜索的文件夹
- * @param extension 要搜索的文件扩展名，例如："png"。不设置表示获取所有类型文件。注意：若设置了filterFunc，则忽略此参数。
- * @param filterFunc 过滤函数：filterFunc(file:File):Boolean,参数为遍历过程中的每一个文件夹或文件，返回true则加入结果列表
+ * 获取指定文件夹下的文件或文件夹列表，不包含子文件夹内的文件。
+ * @param path 要搜索的文件夹
+ * @param relative 是否返回相对路径，若不传入或传入false，都返回绝对路径。
  */
-function search(dir, extension,filterFunc) {
-    var list = [];
-    var stat = fs.statSync(dir);
-    if (stat.isDirectory()) {
-        findFiles(dir,list,extension,filterFunc);
+function getDirectoryListing(path){
+    var relative = arguments[1];
+    path = escapePath(path);
+    try{
+        var list = fs.readdirSync(path);
+    }
+    catch (e){
+        return [];
+    }
+    if(!relative){
+        var length = list.length;
+        for(var i = 0;i<length;i++){
+            list[i] = joinPath(path,list[i]);
+        }
     }
     return list;
 }
+/**
+ * 使用指定扩展名搜索文件夹及其子文件夹下所有的文件
+ * @param dir 要搜索的文件夹
+ * @param extension 要搜索的文件扩展名,不包含点字符，例如："png"。不设置表示获取所有类型文件。
+ */
+function search(dir, extension) {
+    var list = [];
+    try{
+        var stat = fs.statSync(dir);
+    }
+    catch(e){
+        return list;
+    }
+    if (stat.isDirectory()) {
+        findFiles(dir,list,extension,null);
+    }
+    return list;
+}
+/**
+ * 使用过滤函数搜索文件夹及其子文件夹下所有的文件
+ * @param dir 要搜索的文件夹
+ * @param filterFunc 过滤函数：filterFunc(file:File):Boolean,参数为遍历过程中的每一个文件，返回true则加入结果列表
+ */
+function searchByFunction(dir, filterFunc) {
+    var list = [];
+    try{
+        var stat = fs.statSync(dir);
+    }
+    catch(e){
+        return list;
+    }
+    if (stat.isDirectory()) {
+        findFiles(dir,list,"",filterFunc);
+    }
+    return list;
+}
+
+
 
 function findFiles(filePath,list,extension,filterFunc) {
     var files = fs.readdirSync(filePath);
     var length = files.length;
     for (var i = 0; i < length; i++) {
-        var path = filePath + files[i];
+        var path = joinPath(filePath ,files[i]);
         var stat = fs.statSync(path);
         if (path.charAt(0) == ".") {
             continue;
         }
         if (stat.isDirectory()) {
-            findFiles(path + "/", list,extension,filterFunc);
+            findFiles(path, list,extension,filterFunc);
         }
         else if (filterFunc != null) {
             if (filterFunc(path)) {
@@ -234,16 +330,30 @@ function escapePath(path) {
         return "";
     return path.split("\\").join("/");
 }
+/**
+ * 连接路径,支持传入多于两个的参数。也支持"../"相对路径解析。返回的分隔符为Unix风格。
+ */
+function joinPath(dir,filename){
+    var path = path_lib.join.apply(null,arguments);
+    path = escapePath(path);
+    return path;
+}
 
 exports.save = save;
-exports.createDirectory = createDirectory;
-exports.readText = readText;
-exports.copyTo = copyTo;
+exports.read = read;
+exports.readBinary = readBinary;
+exports.copy = copy;
 exports.remove = remove;
-exports.search = search;
 exports.exists = exists;
-exports.escapePath = escapePath;
+exports.search = search;
+exports.getDirectoryListing = getDirectoryListing;
+exports.isDirectory = isDirectory;
+exports.isSymbolicLink = isSymbolicLink;
+exports.isFile = isFile;
+exports.searchByFunction = searchByFunction;
+exports.createDirectory = createDirectory;
 exports.getDirectory = getDirectory;
 exports.getExtension = getExtension;
 exports.getFileName = getFileName;
 exports.escapePath = escapePath;
+exports.joinPath = joinPath;

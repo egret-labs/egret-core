@@ -25,9 +25,6 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/// <reference path="../../../egret/geom/Rectangle.ts"/>
-/// <reference path="../core/ILayoutElement.ts"/>
-/// <reference path="supportClasses/LayoutBase.ts"/>
 
 module egret {
 

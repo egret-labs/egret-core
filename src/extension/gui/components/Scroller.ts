@@ -25,16 +25,6 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/// <reference path="../../../egret/display/DisplayObject.ts"/>
-/// <reference path="../../../egret/events/Event.ts"/>
-/// <reference path="../../../egret/events/TouchEvent.ts"/>
-/// <reference path="../../../egret/utils/getTimer.ts"/>
-/// <reference path="supportClasses/Animation.ts"/>
-/// <reference path="../core/IViewport.ts"/>
-/// <reference path="../core/IVisualElement.ts"/>
-/// <reference path="../core/IVisualElementContainer.ts"/>
-/// <reference path="../core/UIComponent.ts"/>
-/// <reference path="../core/UIGlobals.ts"/>
 
 module egret {
 

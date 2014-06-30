@@ -25,13 +25,12 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/// <reference path="Texture.ts"/>
-/// <reference path="../utils/HashObject.ts"/>
-/// <reference path="../utils/Logger.ts"/>
 
 module egret {
+    
     /**
-     * @class SpriteSheet是一张由多个子位图拼接而成的集合位图，它包含多个Texture对象。
+     * @class egret.SpriteSheet
+     * @classdesc SpriteSheet是一张由多个子位图拼接而成的集合位图，它包含多个Texture对象。
      * 每一个Texture都共享SpriteSheet的集合位图，但是指向它的不同的区域。
      * 在WebGL / OpenGL上，这种做法可以显著提升性能
      * 同时，SpriteSheet可以很方便的进行素材整合，降低HTTP请求数量

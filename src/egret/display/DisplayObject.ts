@@ -25,19 +25,6 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/// <reference path="../context/MainContext.ts"/>
-/// <reference path="../context/renderer/RenderFilter.ts"/>
-/// <reference path="../context/renderer/RendererContext.ts"/>
-/// <reference path="DisplayObjectContainer.ts"/>
-/// <reference path="RenderTexture.ts"/>
-/// <reference path="Stage.ts"/>
-/// <reference path="Texture.ts"/>
-/// <reference path="../events/Event.ts"/>
-/// <reference path="../events/EventDispatcher.ts"/>
-/// <reference path="../geom/Matrix.ts"/>
-/// <reference path="../geom/Point.ts"/>
-/// <reference path="../geom/Rectangle.ts"/>
-/// <reference path="../../jslib/NumberUtils.ts"/>
 
 module egret {
     /**
@@ -65,8 +52,8 @@ module egret {
 
         public constructor() {
             super();
-            this.worldTransform = new egret.Matrix();
-            this.worldBounds = new egret.Rectangle(0, 0, 0, 0);
+            this._worldTransform = new egret.Matrix();
+//            this._worldBounds = new egret.Rectangle(0, 0, 0, 0);
             this._cacheBounds = new egret.Rectangle(0, 0, 0, 0);
         }
 
@@ -274,7 +261,7 @@ module egret {
          * @member {number} egret.DisplayObject#skewX
          * @default 0
          */
-        private _skewX:number = 0;
+        public _skewX:number = 0;
 
         public get skewX():number {
             return this._skewX;
@@ -291,7 +278,7 @@ module egret {
          * @member {number} egret.DisplayObject#skewY
          * @default 0
          */
-        private _skewY:number = 0;
+        public _skewY:number = 0;
 
         public get skewY():number {
             return this._skewY;
@@ -435,8 +422,8 @@ module egret {
          */
         public mask:Rectangle;
 
-        public worldTransform:egret.Matrix;
-        public worldBounds:egret.Rectangle;
+        public _worldTransform:egret.Matrix;
+        public _worldBounds:egret.Rectangle;
         public worldAlpha:number = 1;
 
 
@@ -456,7 +443,7 @@ module egret {
             }
             var o = this;
             renderContext.setAlpha(o.worldAlpha, o.blendMode);
-            renderContext.setTransform(o.worldTransform);
+            renderContext.setTransform(o._worldTransform);
             if (o.mask || o._scrollRect) {
                 renderContext.save();
                 if (o._scrollRect) {
@@ -484,7 +471,7 @@ module egret {
                 var height = renderTexture._textureHeight;
                 display._updateTransform();
                 renderContext.setAlpha(display.worldAlpha, display.blendMode);
-                renderContext.setTransform(display.worldTransform);
+                renderContext.setTransform(display._worldTransform);
                 if (display.mask) {
                     renderContext.save();
                     renderContext.clip(display.mask.x, display.mask.y, display.mask.width, display.mask.height);
@@ -508,19 +495,25 @@ module egret {
          * @param renderContext
          */
         public _updateTransform():void {
+            if(this instanceof Bitmap)
+            {
+                return;
+            }
             var o = this;
-            o.worldTransform.identity().appendMatrix(o._parent.worldTransform);
+            o._worldTransform.identity().appendMatrix(o._parent._worldTransform);
             var anchorX, anchorY;
             var resultPoint = o._getOffsetPoint();
             anchorX = resultPoint.x;
             anchorY = resultPoint.y;
-            o.worldTransform.appendTransform(o._x, o._y, o._scaleX, o._scaleY, o._rotation,
+            o._worldTransform.appendTransform(o._x, o._y, o._scaleX, o._scaleY, o._rotation,
                 o._skewX, o._skewY, anchorX, anchorY);
             if (o._scrollRect) {
-                o.worldTransform.append(1, 0, 0, 1, -o._scrollRect.x, -o._scrollRect.y);
+                o._worldTransform.append(1, 0, 0, 1, -o._scrollRect.x, -o._scrollRect.y);
             }
-            var bounds:egret.Rectangle = DisplayObject.getTransformBounds(o._getSize(Rectangle.identity), o.worldTransform);
-            o.worldBounds.initialize(bounds.x, bounds.y, bounds.width, bounds.height);
+            if (false){//this._texture_to_render){ 暂时去掉worldBounds计算
+                var bounds:egret.Rectangle = DisplayObject.getTransformBounds(o._getSize(Rectangle.identity), o._worldTransform);
+                o._worldBounds.initialize(bounds.x, bounds.y, bounds.width, bounds.height);
+            }
             o.worldAlpha = o._parent.worldAlpha * o._alpha;
         }
 

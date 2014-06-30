@@ -25,13 +25,6 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/// <reference path="../../../egret/layout/HorizontalAlign.ts"/>
-/// <reference path="../../../egret/layout/VerticalAlign.ts"/>
-/// <reference path="../core/ILayoutElement.ts"/>
-/// <reference path="ColumnAlign.ts"/>
-/// <reference path="RowAlign.ts"/>
-/// <reference path="TileOrientation.ts"/>
-/// <reference path="supportClasses/LayoutBase.ts"/>
 
 module egret {
 

@@ -25,9 +25,6 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-///<reference path="egret.d.ts"/>
-///<reference path="LoadingUI.ts"/>
-
 class GameApp extends egret.DisplayObjectContainer{
 
     /**

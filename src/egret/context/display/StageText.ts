@@ -25,9 +25,6 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/// <reference path="../Browser.ts"/>
-/// <reference path="../StageDelegate.ts"/>
-/// <reference path="../../utils/HashObject.ts"/>
 
 module egret {
 

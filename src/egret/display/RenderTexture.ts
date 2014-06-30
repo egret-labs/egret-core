@@ -25,12 +25,6 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/// <reference path="../context/renderer/HTML5CanvasRenderer.ts"/>
-/// <reference path="../context/renderer/RenderFilter.ts"/>
-/// <reference path="DisplayObject.ts"/>
-/// <reference path="DisplayObjectContainer.ts"/>
-/// <reference path="Texture.ts"/>
-/// <reference path="../geom/Rectangle.ts"/>
 
 module egret {
     export class RenderTexture extends Texture {
@@ -50,12 +44,12 @@ module egret {
             cacheCanvas.width = bounds.width;
             cacheCanvas.height = bounds.height;
 
-            displayObject.worldTransform.identity();
+            displayObject._worldTransform.identity();
             displayObject.worldAlpha = 1;
             if (displayObject instanceof egret.DisplayObjectContainer) {
                 this._offsetX = bounds.x;
                 this._offsetY = bounds.y;
-                displayObject.worldTransform.append(1, 0, 0, 1, -bounds.x, -bounds.y);
+                displayObject._worldTransform.append(1, 0, 0, 1, -bounds.x, -bounds.y);
                 var list = (<egret.DisplayObjectContainer>displayObject)._children;
                 for (var i = 0 , length = list.length; i < length; i++) {
                     var child:DisplayObject = list[i];

@@ -25,8 +25,6 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/// <reference path="../IItemRenderer.ts"/>
-/// <reference path="ButtonBase.ts"/>
 
 module egret {
 

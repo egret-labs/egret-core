@@ -25,10 +25,6 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/// <reference path="../context/display/StageText.ts"/>
-/// <reference path="../display/DisplayObject.ts"/>
-/// <reference path="../events/TouchEvent.ts"/>
-/// <reference path="../geom/Rectangle.ts"/>
 
 module egret {
     export class TextInput extends DisplayObject {

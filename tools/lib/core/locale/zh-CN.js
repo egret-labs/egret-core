@@ -14,6 +14,7 @@ exports.error_code = {
     1301:"在编译路径 {0} 下找不到 egret_file_list.js 或 game_file_list.js，请检查编译路径是否正确",
     1302:"请输入编译路径。例:{color_green}egret compile --source [your_typescript_source_dir] --output [your_output_dir]{color_normal}",
     1303:"编译失败",
+    1304:"解析manifest.json文件失败，请检查文件是否为正确的JSON格式:\n{0}",
     1401:"找不到java或java版本过低（最低需求为 java 7 ),请安装java并执行 java -version 命令确认",
     1501:"无法启动服务器，请检查权限或端口是否被占用",
     9999:"未知错误:{0}",

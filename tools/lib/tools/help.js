@@ -1,6 +1,6 @@
-var libs = require("../core/normal_libs");
+var globals = require("../core/globals");
 var path = require("path");
-var fs = require("fs");
+var file = require("../core/file");
 
 
 function run(currDir, args, opts) {
@@ -26,7 +26,7 @@ function run(currDir, args, opts) {
         return;
     }
 
-    var list = fs.readdirSync(__dirname);
+    var list = file.getDirectoryListing(__dirname,true);
     console.log("用法: egret <command> [-v]\n");
     console.log("command 列表:")
     list.forEach(function (item) {

@@ -287,7 +287,7 @@ module egret {
             this.currentBatchSize++;
 
             //注意：这里的数据已经不对了，不过基类不需要这些数据
-            super.drawImage(texture._bitmapData, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight);
+            //super.drawImage(texture._bitmapData, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight);
 
 //            this._draw();
         }
@@ -305,6 +305,7 @@ module egret {
             gl.drawElements(gl.TRIANGLES, this.currentBatchSize * 6, gl.UNSIGNED_SHORT, 0);
             this.currentBatchSize = 0;
             this.renderCost += getTimer() - beforeDraw;
+            Profiler.getInstance().onDrawImage();
         }
 
         private worldTransform:Matrix;

@@ -25,7 +25,7 @@
 * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 /// <reference path="node.d.ts"/>
-var fs = require("fs");
+var file = require("../core/file.js");
 var xml = require("../core/xml.js");
 var param = require("../core/params_analyze.js");
 var properties = require("./properties.json");
@@ -45,7 +45,7 @@ var EXMLConfig = (function () {
         this.basicTypes = ["void", "any", "number", "string", "boolean", "Object", "Array", "Function"];
         var exmlPath = param.getEgretPath() + "/tools/lib/exml/";
         exmlPath = exmlPath.split("\\").join("/");
-        var str = fs.readFileSync(exmlPath + "egret-manifest.xml", "utf-8");
+        var str = file.read(exmlPath + "egret-manifest.xml");
         var manifest = xml.parse(str);
         this.parseManifest(manifest);
     }
@@ -110,7 +110,7 @@ var EXMLConfig = (function () {
     };
 
     EXMLConfig.prototype.readClassNameFromPath = function (path, id) {
-        var tsText = fs.readFileSync(path, "utf-8");
+        var tsText = file.read(path);
         tsText = CodeUtil.removeComment(tsText);
         var className = "";
         var superClass;
@@ -203,10 +203,10 @@ var EXMLConfig = (function () {
         var classData = properties[className];
         if (!classData) {
             var path = this.srcPath + this.classNameToPath[className];
-            if (!fs.existsSync(path)) {
+            if (!file.exists(path)) {
                 return "";
             }
-            var text = fs.readFileSync(path, "utf-8");
+            var text = file.read(path);
             classData = this.getProperties(text, className);
             if (classData) {
                 properties[className] = classData;

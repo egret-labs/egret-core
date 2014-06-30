@@ -25,12 +25,6 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/// <reference path="../context/renderer/RendererContext.ts"/>
-/// <reference path="DisplayObject.ts"/>
-/// <reference path="../events/Event.ts"/>
-/// <reference path="../geom/Matrix.ts"/>
-/// <reference path="../geom/Rectangle.ts"/>
-/// <reference path="../utils/Logger.ts"/>
 
 module egret {
     /**
@@ -107,7 +101,7 @@ module egret {
         public addChild(child:DisplayObject):DisplayObject{
             var index:number = this.numChildren;
 
-            if (child.parent == this)
+            if (child._parent == this)
                 index--;
 
             return this._doAddChild(child, index);
@@ -241,7 +235,7 @@ module egret {
                 if (child == this){
                     return true;
                 }
-                child = child.parent;
+                child = child._parent;
             }
             return false;
         }

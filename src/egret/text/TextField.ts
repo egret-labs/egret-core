@@ -25,13 +25,6 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/// <reference path="../context/MainContext.ts"/>
-/// <reference path="../context/renderer/RendererContext.ts"/>
-/// <reference path="../display/DisplayObject.ts"/>
-/// <reference path="../geom/Rectangle.ts"/>
-/// <reference path="../layout/HorizontalAlign.ts"/>
-/// <reference path="../layout/VerticalAlign.ts"/>
-/// <reference path="../utils/toColorString.ts"/>
 
 module egret {
     /**

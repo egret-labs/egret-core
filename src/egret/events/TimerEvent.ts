@@ -27,8 +27,6 @@
 
 /** @namespace egret */
 
-/// <reference path="Event.ts"/>
-/// <reference path="IEventDispatcher.ts"/>
 
 module egret {
 

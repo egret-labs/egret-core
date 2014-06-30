@@ -25,8 +25,6 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/// <reference path="../utils/HashObject.ts"/>
-/// <reference path="../utils/Logger.ts"/>
 
 module egret {
     /**
@@ -62,8 +60,6 @@ module egret {
 
         private _designWidth:number = 0;
         private _designHeight:number = 0;
-        private _originalDesignWidth:number = 0;
-        private _originalDesignHeight:number = 0;
         public _scaleX = 1;
         public _scaleY = 1;
 
@@ -78,8 +74,6 @@ module egret {
             var w = canvas.width, h = canvas.height;
             this._designWidth = w;
             this._designHeight = h;
-            this._originalDesignWidth = w;
-            this._originalDesignHeight = h;
 
         }
 
@@ -90,19 +84,9 @@ module egret {
 		 * @param resolutionPolicy {any}
 		 */
         public setDesignSize(width:number, height:number, resolutionPolicy:ResolutionPolicy):void {
-            // Defensive code
-            if (isNaN(width) || width == 0 || isNaN(height) || height == 0) {
-                egret.Logger.info("Resolution Error");
-                return;
-            }
             this.setResolutionPolicy(resolutionPolicy);
-
-
             this._designWidth = width;
             this._designHeight = height;
-            this._originalDesignWidth = width;
-            this._originalDesignHeight = height;
-
             this._resolutionPolicy._apply(this, this._designWidth, this._designHeight);
         }
 
@@ -379,5 +363,38 @@ module egret {
         }
 
 
+    }
+
+
+
+    /**
+     * @class egret.NoScale
+     * @classdesc
+     * @extends egret.ContentStrategy
+     */
+    export class NoScale extends ContentStrategy {
+
+        private width;
+        private height;
+
+        constructor(width, height) {
+            super();
+            this.width = width;
+            this.height = height;
+        }
+
+        /**
+         * @method egret.NoScale#_apply
+         * @param delegate {egret.StageDelegate}
+         * @param designedResolutionWidth {number}
+         * @param designedResolutionHeight {number}
+         */
+        public _apply(delegate:StageDelegate, designedResolutionWidth:number, designedResolutionHeight:number):void {
+            var canvas:HTMLCanvasElement = <HTMLCanvasElement>document.getElementById(StageDelegate.canvas_name);
+            canvas.style.width = canvas.width + "px";
+            canvas.style.height = canvas.height + "px";
+            delegate._scaleX = 1;
+            delegate._scaleY = 1;
+        }
     }
 }

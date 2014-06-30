@@ -25,17 +25,6 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/// <reference path="NetContext.ts"/>
-/// <reference path="../../display/Texture.ts"/>
-/// <reference path="../../media/Sound.ts"/>
-/// <reference path="../../events/Event.ts"/>
-/// <reference path="../../events/IOErrorEvent.ts"/>
-/// <reference path="../../net/URLLoader.ts"/>
-/// <reference path="../../net/URLLoaderDataFormat.ts"/>
-/// <reference path="../../net/URLRequest.ts"/>
-/// <reference path="../../net/URLRequestMethod.ts"/>
-/// <reference path="../../net/URLVariables.ts"/>
-/// <reference path="../../utils/callLater.ts"/>
 
 module egret {
     /**

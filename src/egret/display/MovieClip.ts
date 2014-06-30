@@ -25,17 +25,12 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/// <reference path="../context/MainContext.ts"/>
-/// <reference path="../context/Ticker.ts"/>
-/// <reference path="Bitmap.ts"/>
-/// <reference path="DisplayObjectContainer.ts"/>
-/// <reference path="SpriteSheet.ts"/>
-/// <reference path="Texture.ts"/>
-/// <reference path="../utils/Logger.ts"/>
 
 module egret {
+    
     /**
-     * MovieClip是位图动画序列类，由FlashPro + egret插件生成配置文件
+     * @class egret.MovieClip
+     * @classdesc MovieClip是位图动画序列类，由FlashPro + egret插件生成配置文件
      */
     export class MovieClip extends DisplayObjectContainer {
         private _frameData;
@@ -59,7 +54,8 @@ module egret {
 
         /**
          * 播放指定动画
-         * @param frameName
+         * @method egret.MovieClip#gotoAndPlay
+         * @param frameName {string} 镇定跳转帧的名称
          */
         public gotoAndPlay(frameName:string) {
             this.checkHasFrame(frameName);
@@ -75,7 +71,8 @@ module egret {
 
         /**
          * 播放并暂停指定动画
-         * @param frameName
+         * @method egret.MovieClip#gotoAndStop
+         * @param frameName {string} 镇定跳转帧的名称
          */
         public gotoAndStop(frameName:string) {
             this.checkHasFrame(frameName);
@@ -95,6 +92,7 @@ module egret {
 
         /**
          * 暂停动画
+         * @method egret.MovieClip#stop
          */
         public stop() {
             this._isPlaying = false;
@@ -160,23 +158,38 @@ module egret {
             return result;
         }
 
+        /**
+         * 
+         * @method egret.MovieClip#release
+         */
         public release() {
             for (var key in this._resPool) {
                 delete this._resPool[key];
             }
         }
 
+        /**
+         * 获取播放头在 MovieClip 实例的时间轴中所处的帧的编号。
+         * @method egret.MovieClip#getCurrentFrameIndex
+         * @returns {number} 返回当前帧编号
+         */
         public getCurrentFrameIndex():number {
             return this._currentFrameIndex;
         }
 
+        /**
+         * 获取 MovieClip 实例中帧的总数。
+         * @method egret.MovieClip#getTotalFrame
+         * @returns {number} 返回获取 MovieClip 实例中帧的总数。
+         */
         public getTotalFrame():number {
             return this._totalFrame;
         }
 
         /**
          * 设置间隔
-         * @param value
+         * @method egret.MovieClip#setInterval
+         * @param value {number} 间隔时间
          */
         public setInterval(value:number) {
             this._interval = value;
@@ -184,8 +197,9 @@ module egret {
 
         /**
          * 判断当前动画是否正在播放
+         * @method egret.MovieClip#getIsPlaying
          * @stable D 这个API需要改为 isPlaying()
-         * @returns {Boolean}
+         * @returns {Boolean} 如果动画正在播放则返回true，反之返回false
          */
         public getIsPlaying():boolean {
             return this._isPlaying;

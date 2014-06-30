@@ -25,8 +25,6 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/// <reference path="supportClasses/DropDownListBase.ts"/>
-/// <reference path="../core/IDisplayText.ts"/>
 
 module egret {
 

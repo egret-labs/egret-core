@@ -25,9 +25,6 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/// <reference path="../../../../egret/context/Ticker.ts"/>
-/// <reference path="../../../../egret/tween/Ease.ts"/>
-/// <reference path="../../../../egret/utils/getTimer.ts"/>
 
 module egret {
 

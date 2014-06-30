@@ -25,13 +25,6 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/// <reference path="../MainContext.ts"/>
-/// <reference path="RendererContext.ts"/>
-/// <reference path="../../display/Texture.ts"/>
-/// <reference path="../../geom/Matrix.ts"/>
-/// <reference path="../../geom/Rectangle.ts"/>
-/// <reference path="../../utils/HashObject.ts"/>
-/// <reference path="../../utils/Logger.ts"/>
 
 module egret {
     /**
@@ -187,6 +180,10 @@ module egret {
             if (locTexture == null || sourceHeight == 0 || sourceWidth == 0 || destWidth == 0 || destHeight == 0) {
                 return;
             }
+            if (!data._worldBounds){
+                renderContext.drawImage(locTexture, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight);
+                return;
+            }
             var originalData = this._originalData;
             originalData.sourceX = sourceX;
             originalData.sourceY = sourceY;
@@ -207,42 +204,42 @@ module egret {
                 //在设置过重绘区域时算出不需要绘制的区域
                 if (this._drawAreaList.length != 0) {
                     //不能允许有旋转和斜切的显示对象跨过重绘区域
-                    if (data.worldTransform.b != 0 || data.worldTransform.c != 0) {
+                    if (data._worldTransform.b != 0 || data._worldTransform.c != 0) {
                         //之前已经判断过是否出了重绘区域了
-                        if (data.worldBounds.x + originalData.destX < drawArea.x
-                            || data.worldBounds.y + originalData.destY < drawArea.y
-                            || data.worldBounds.x + data.worldBounds.width + originalData.destX > drawArea.x + drawArea.width
-                            || data.worldBounds.y + data.worldBounds.height + originalData.destY > drawArea.y + drawArea.height) {
+                        if (data._worldBounds.x + originalData.destX < drawArea.x
+                            || data._worldBounds.y + originalData.destY < drawArea.y
+                            || data._worldBounds.x + data._worldBounds.width + originalData.destX > drawArea.x + drawArea.width
+                            || data._worldBounds.y + data._worldBounds.height + originalData.destY > drawArea.y + drawArea.height) {
                             egret.Logger.fatal("请不要让带有旋转和斜切的显示对象跨过重绘区域");
                             return;
                         }
                     }
                     else {
                         //因为有旋转和斜切时候不允许跨过重绘区域，所以缩放属性可以直接这么取
-                        var scaleX = data.worldTransform.a;
-                        var scaleY = data.worldTransform.d;
+                        var scaleX = data._worldTransform.a;
+                        var scaleY = data._worldTransform.d;
                         var offset;
-                        if (data.worldBounds.x + originalData.destX < drawArea.x) {
-                            offset = (drawArea.x - data.worldBounds.x) / scaleX - originalData.destX;
+                        if (data._worldBounds.x + originalData.destX < drawArea.x) {
+                            offset = (drawArea.x - data._worldBounds.x) / scaleX - originalData.destX;
                             sourceX += offset / (destWidth / sourceWidth);
                             sourceWidth -= offset / (destWidth / sourceWidth);
                             destWidth -= offset;
                             destX += offset;
                         }
-                        if (data.worldBounds.y + originalData.destY < drawArea.y) {
-                            offset = (drawArea.y - data.worldBounds.y) / scaleY - originalData.destY;
+                        if (data._worldBounds.y + originalData.destY < drawArea.y) {
+                            offset = (drawArea.y - data._worldBounds.y) / scaleY - originalData.destY;
                             sourceY += offset / (destHeight / sourceHeight);
                             sourceHeight -= offset / (destHeight / sourceHeight);
                             destHeight -= offset;
                             destY += offset;
                         }
-                        if (data.worldBounds.x + data.worldBounds.width + originalData.destX > drawArea.x + drawArea.width) {
-                            offset = (data.worldBounds.x + data.worldBounds.width - drawArea.x - drawArea.width) / scaleX + originalData.destX;
+                        if (data._worldBounds.x + data._worldBounds.width + originalData.destX > drawArea.x + drawArea.width) {
+                            offset = (data._worldBounds.x + data._worldBounds.width - drawArea.x - drawArea.width) / scaleX + originalData.destX;
                             sourceWidth -= offset / (destWidth / sourceWidth);
                             destWidth -= offset;
                         }
-                        if (data.worldBounds.y + data.worldBounds.height + originalData.destY > drawArea.y + drawArea.height) {
-                            offset = (data.worldBounds.y + data.worldBounds.height - drawArea.y - drawArea.height) / scaleY + originalData.destY;
+                        if (data._worldBounds.y + data._worldBounds.height + originalData.destY > drawArea.y + drawArea.height) {
+                            offset = (data._worldBounds.y + data._worldBounds.height - drawArea.y - drawArea.height) / scaleY + originalData.destY;
                             sourceHeight -= offset / (destHeight / sourceHeight);
                             destHeight -= offset;
                         }
@@ -258,9 +255,9 @@ module egret {
         }
 
         private ignoreRender(data:RenderData, rect:egret.Rectangle, destX:number, destY:number):boolean {
-            var bounds = data.worldBounds;
-            var destX = destX * data.worldTransform.a;
-            var destY = destY * data.worldTransform.d;
+            var bounds = data._worldBounds;
+            var destX = destX * data._worldTransform.a;
+            var destY = destY * data._worldTransform.d;
             if (bounds.x + bounds.width + destX <= rect.x || bounds.x + destX >= rect.x + rect.width
                 || bounds.y + bounds.height + destY <= rect.y || bounds.y + destY >= rect.y + rect.height) {
                 return true;
@@ -298,11 +295,11 @@ module egret {
         /**
          * @member egret.RenderData#worldTransform
          */
-            worldTransform:egret.Matrix;
+            _worldTransform:egret.Matrix;
         /**
          * @member egret.RenderData#worldBounds
          */
-            worldBounds:egret.Rectangle;
+            _worldBounds:egret.Rectangle;
         _texture_to_render:egret.Texture;
     }
 }

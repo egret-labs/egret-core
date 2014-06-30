@@ -16,11 +16,6 @@
  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-/// <reference path="../../../egret/net/URLLoaderDataFormat.ts"/>
-/// <reference path="../../../egret/utils/SAXParser.ts"/>
-/// <reference path="../../../egret/utils/XML.ts"/>
-/// <reference path="BinAnalyzer.ts"/>
-/// <reference path="../core/ResourceItem.ts"/>
 
 module RES {
 
@@ -41,9 +36,7 @@ module RES {
             }
             try{
                 var xmlStr:string = <string> data;
-                var xmlDoc = egret.SAXParser.getInstance().parserXML(xmlStr);
-                var xml:egret.XML = new egret.XML();
-                xml._ansXML(xmlDoc.documentElement);
+                var xml:any = egret.XML.parse(xmlStr);
                 this.fileDic[name] = xml;
             }
             catch (e){

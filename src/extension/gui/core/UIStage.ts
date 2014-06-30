@@ -25,16 +25,6 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/// <reference path="../../../egret/display/DisplayObjectContainer.ts"/>
-/// <reference path="../../../egret/events/Event.ts"/>
-/// <reference path="../components/Group.ts"/>
-/// <reference path="IContainer.ts"/>
-/// <reference path="IUIStage.ts"/>
-/// <reference path="IVisualElement.ts"/>
-/// <reference path="UIGlobals.ts"/>
-/// <reference path="UILayer.ts"/>
-/// <reference path="../layouts/BasicLayout.ts"/>
-/// <reference path="../layouts/supportClasses/LayoutBase.ts"/>
 
 module egret {
 
@@ -65,15 +55,19 @@ module egret {
                 throw new Error("UIStage是GUI根容器，只能有一个此实例在显示列表中！");
             }
             UIGlobals._uiStage = this;
-			this.stage.addEventListener(Event.RESIZE,this.onResize,this);
-			this.onResize();
+            if(this._autoResize){
+                this.stage.addEventListener(Event.RESIZE,this.onResize,this);
+                this.onResize();
+            }
 		}
 		/**
 		 * 从舞台移除
 		 */		
 		private onRemoveFromStage(event:Event):void{
             UIGlobals._uiStage = null;
-			this.stage.removeEventListener(Event.RESIZE,this.onResize,this);
+            if(this._autoResize){
+                this.stage.removeEventListener(Event.RESIZE,this.onResize,this);
+            }
 		}
 		
 		/**
@@ -83,6 +77,31 @@ module egret {
 			this._setWidth(this.stage.stageWidth);
 			this._setHeight(this.stage.stageHeight);
 		}
+
+        private _autoResize:boolean = true;
+        /**
+         * 是否自动跟随舞台缩放。当此属性为true时，将强制让UIState始终与舞台保持相同大小。
+         * 反之需要外部手动同步大小。默认值为true。
+         * @member egret.UIStage#autoResize
+         */
+        public get autoResize():boolean{
+            return this._autoResize;
+        }
+
+        public set autoResize(value:boolean){
+            if(this._autoResize==value)
+                return;
+            this._autoResize = value;
+            if(!this.stage)
+                return;
+            if(this._autoResize){
+                this.stage.addEventListener(Event.RESIZE,this.onResize,this);
+                this.onResize();
+            }
+            else{
+                this.stage.removeEventListener(Event.RESIZE,this.onResize,this);
+            }
+        }
 
 		//==========================================================================
 		//                            禁止外部布局顶级容器
@@ -97,6 +116,9 @@ module egret {
 		 * @inheritDoc
 		 */
 		public set x(value:number){
+            if(this._autoResize)
+                return;
+            this._x = value;
 		}
 
 		/**
@@ -109,6 +131,9 @@ module egret {
 		 * @inheritDoc
 		 */
 		public set y(value:number){
+            if(this._autoResize)
+                return;
+            this._y = value;
 		}
 
 		/**
@@ -121,6 +146,9 @@ module egret {
 		 * @inheritDoc
 		 */
 		public set width(value:number){
+            if(this._autoResize)
+                return;
+            this._setWidth(value);
 		}
 
 		/**
@@ -133,6 +161,9 @@ module egret {
 		 * @inheritDoc
 		 */
 		public set height(value:number){
+            if(this._autoResize)
+                return;
+            this._setHeight(value);
 		}
 
 		/**
@@ -145,6 +176,9 @@ module egret {
 		 * @inheritDoc
 		 */
 		public set scaleX(value:number){
+            if(this._autoResize)
+                return;
+            this._setScaleX(value);
 		}
 
 		/**
@@ -157,6 +191,9 @@ module egret {
 		 * @inheritDoc
 		 */
 		public set scaleY(value:number){
+            if(this._autoResize)
+                return;
+            this._setScaleY(value);
 		}
 		/**
 		 * @method egret.UIStage#setActualSize
@@ -164,6 +201,9 @@ module egret {
 		 * @param h {number} 
 		 */
 		public setActualSize(w:number, h:number):void{
+            if(this._autoResize)
+                return;
+            super.setActualSize(w,h);
 		}
 		/**
 		 * @method egret.UIStage#setLayoutBoundsPosition
@@ -171,6 +211,9 @@ module egret {
 		 * @param y {number} 
 		 */
 		public setLayoutBoundsPosition(x:number, y:number):void{
+            if(this._autoResize)
+                return;
+            super.setLayoutBoundsPosition(x,y);
 		}
 		/**
 		 * @method egret.UIStage#setLayoutBoundsSize
@@ -178,6 +221,9 @@ module egret {
 		 * @param layoutHeight {number} 
 		 */
 		public setLayoutBoundsSize(layoutWidth:number, layoutHeight:number):void{
+            if(this._autoResize)
+                return;
+            super.setLayoutBoundsSize(layoutWidth,layoutHeight);
 		}
 		/**
 		 * 布局对象,UIStage只接受BasicLayout

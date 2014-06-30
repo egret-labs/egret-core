@@ -25,17 +25,15 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/// <reference path="DisplayObject.ts"/>
-/// <reference path="DisplayObjectContainer.ts"/>
-/// <reference path="../events/Event.ts"/>
-/// <reference path="../geom/Matrix.ts"/>
-/// <reference path="../geom/Rectangle.ts"/>
 
 module egret {
+    
     /**
-     * @class Stage
+     * @class egret.Stage
+     * @classdesc Stage 类代表主绘图区。
      */
     export class Stage extends DisplayObjectContainer {
+
 
         public static _invalidateRenderFlag:boolean = false;
 
@@ -57,7 +55,7 @@ module egret {
         }
 
         /**
-         * 设置舞台宽高
+         * 设置舞台宽高         
          */
         public _setStageSize(width:number, height:number):void {
             if (this._stageWidth == width && this._stageHeight == height) {
@@ -88,6 +86,7 @@ module egret {
 
 
         /**
+         * @member egret.Stage#hitTest
          * @see egret.DisplayObject#hitTest
          * @param x
          * @param y
@@ -122,6 +121,7 @@ module egret {
         }
 
         /**
+         * @member egret.Stage#getBounds
          * @see egret.DisplayObject#getBounds
          * @param resultRect {egret.Rectangle} 可选参数，传入用于保存结果的Rectangle对象，避免重复创建对象。
          * @returns {egret.Rectangle}

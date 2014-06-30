@@ -25,8 +25,6 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/// <reference path="../MainContext.ts"/>
-/// <reference path="TouchContext.ts"/>
 
 module egret {
 
