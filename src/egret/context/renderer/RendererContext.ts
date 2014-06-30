@@ -49,6 +49,12 @@ module egret {
         public renderCost:number = 0;
 
         /**
+         * 是否是webGL模式
+         * @member egret.RendererContext#isWebGLMode
+         */
+        public isWebGLMode:boolean = false;
+
+        /**
          * 绘制纹理的缩放比率，默认值为1
          * @member egret.RendererContext#texture_scale_factor
          */

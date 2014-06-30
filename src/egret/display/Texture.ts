@@ -38,6 +38,8 @@ module egret {
      */
     export class Texture extends HashObject{
 
+        public webGLTexture;
+
         public constructor(){
             super();
         }
@@ -58,6 +60,15 @@ module egret {
          * 表示这个纹理显示了之后在y方向的渲染偏移量
          */
         public _offsetY = 0;
+
+        /**
+         * 原图宽度
+         */
+        public _sourceWidth:number = 0;
+        /**
+         * 原图高度
+         */
+        public _sourceHeight:number = 0;
 
 
         public _textureWidth:number = 0;
@@ -87,6 +98,8 @@ module egret {
             this._bitmapData = value;
             this._textureWidth = value.width * scale;
             this._textureHeight = value.height * scale;
+            this._sourceWidth = this._textureWidth;
+            this._sourceHeight = this._textureHeight;
         }
 
 

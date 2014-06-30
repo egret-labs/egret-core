@@ -48,7 +48,7 @@ module egret {
          * @param tx {number}
          * @param ty {number}
          */
-            constructor(public a = 1, public b = 0, public c = 0, public d = 1, public tx = 0, public ty = 0) {
+        constructor(public a = 1, public b = 0, public c = 0, public d = 1, public tx = 0, public ty = 0) {
             super();
         }
 
@@ -353,6 +353,39 @@ module egret {
 //        resultPoint.x = matrix.a * x + matrix.c * y - matrix.tx;
 //        resultPoint.y = matrix.d * y + matrix.b * x - matrix.ty;
             return resultPoint;
+        }
+
+        private array;
+
+        public toArray(transpose) {
+            if (!this.array) {
+                this.array = new Float32Array(9);
+            }
+
+            if (transpose) {
+                this.array[0] = this.a;
+                this.array[1] = this.b;
+                this.array[2] = 0;
+                this.array[3] = this.c;
+                this.array[4] = this.d;
+                this.array[5] = 0;
+                this.array[6] = this.tx;
+                this.array[7] = this.ty;
+                this.array[8] = 1;
+            }
+            else {
+                this.array[0] = this.a;
+                this.array[1] = this.b;
+                this.array[2] = this.tx;
+                this.array[3] = this.c;
+                this.array[4] = this.d;
+                this.array[5] = this.ty;
+                this.array[6] = 0;
+                this.array[7] = 0;
+                this.array[8] = 1;
+            }
+
+            return this.array;
         }
     }
 }

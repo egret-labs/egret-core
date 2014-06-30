@@ -35,9 +35,12 @@
 module egret {
     export class RenderTexture extends Texture {
 
+        private renderContext;
+
         constructor() {
             super();
             this._bitmapData = document.createElement("canvas");
+            this.renderContext = new egret.HTML5CanvasRenderer(this._bitmapData);
 
         }
 
@@ -60,19 +63,23 @@ module egret {
                 }
             }
 
-            var renderContext = new egret.HTML5CanvasRenderer(cacheCanvas);
             var renderFilter = egret.RenderFilter.getInstance();
             var drawAreaList:Array<Rectangle> = renderFilter._drawAreaList.concat();
             renderFilter._drawAreaList.length = 0;
-            displayObject._render(renderContext);
+            this.renderContext.clearScreen();
+            this.webGLTexture = null;
+            displayObject._render(this.renderContext);
+
             renderFilter._drawAreaList = drawAreaList;
             this._bitmapData = this._bitmapData;
             this._textureWidth = this._bitmapData.width;
             this._textureHeight = this._bitmapData.height;
+            this._sourceWidth = this._textureWidth;
+            this._sourceHeight = this._textureHeight;
 
             //测试代码
-//            renderContext.canvasContext.setTransform(1, 0, 0, 1, 0, 0);
-//            renderContext.strokeRect(0, 0,cacheCanvas.width,cacheCanvas.height,"#ff0000");
+//            this.renderContext.canvasContext.setTransform(1, 0, 0, 1, 0, 0);
+//            this.renderContext.strokeRect(0, 0,cacheCanvas.width,cacheCanvas.height,"#ff0000");
 //            document.documentElement.appendChild(cacheCanvas);
         }
     }

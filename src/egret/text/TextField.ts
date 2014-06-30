@@ -35,55 +35,116 @@
 
 module egret {
     /**
-	 * @class egret.TextField
-	 * @classdesc
+     * @class egret.TextField
+     * @classdesc
      * TextField是egret的文本渲染类，采用浏览器/设备的API进行渲染，在不同的浏览器/设备中由于字体渲染方式不一，可能会有渲染差异
      * 如果开发者希望所有平台完全无差异，请使用BitmapText
-	 * @extends egret.DisplayObject
+     * @extends egret.DisplayObject
      */
     export class TextField extends DisplayObject {
+        private _textDirty:boolean = true;
         /**
          * 显示文本
-		 * @member {string} egret.TextField#text
+         * @member {string} egret.TextField#text
          */
-        public text:string;
+        public _text:string;
+
+        public get text():string {
+            return this._text;
+        }
+
+        public set text(value:string) {
+            if (this._text != value) {
+                this._textDirty = true;
+                this._text = value;
+            }
+        }
 
         /**
          * 字体
-		 * @member {any} egret.TextField#fontFamily
+         * @member {any} egret.TextField#fontFamily
          */
-        public fontFamily = "Arial";
+        public _fontFamily = "Arial";
+
+        public get fontFamily():string {
+            return this._fontFamily;
+        }
+
+        public set fontFamily(value:string) {
+            if (this._fontFamily != value) {
+                this._textDirty = true;
+                this._fontFamily = value;
+            }
+        }
+
         /**
          * 字号
-		 * @member {number} egret.TextField#size
+         * @member {number} egret.TextField#size
          */
-        public size:number = 30;
+        public _size:number = 30;
+
+        public get size():number {
+            return this._size;
+        }
+
+        public set size(value:number) {
+            if (this._size != value) {
+                this._textDirty = true;
+                this._size = value;
+            }
+        }
+
         /**
          * 是否显示为斜体，默认false。
          * @member {boolean} egret.TextField#italic
          */
-        public italic:boolean;
+        public _italic:boolean;
+
+        public get italic():boolean {
+            return this._italic;
+        }
+
+        public set italic(value:boolean) {
+            if (this._italic != value) {
+                this._textDirty = true;
+                this._italic = value;
+            }
+        }
+
         /**
          * 是否显示为粗体，默认false。
          * @member {boolean} egret.TextField#bold
          */
-        public bold:boolean;
+        public _bold:boolean;
+
+        public get bold():boolean {
+            return this._bold;
+        }
+
+        public set bold(value:boolean) {
+            if (this._bold != value) {
+                this._textDirty = true;
+                this._bold = value;
+            }
+        }
 
         public _textColorString:string = "#FFFFFF";
 
         private _textColor:number = 0xFFFFFF;
         /**
          * 文字颜色
-		 * @member {number} egret.TextField#textColor
+         * @member {number} egret.TextField#textColor
          */
-        public get textColor():number{
+        public get textColor():number {
             return this._textColor;
         }
-        public set textColor(value:number){
-            if(this._textColor==value)
-                return;
-            this._textColor = value;
-            this._textColorString = toColorString(value);
+
+        public set textColor(value:number) {
+            if (this._textColor != value) {
+                this._textDirty = true;
+                this._textColor = value;
+                this._textColorString = toColorString(value);
+            }
         }
 
         public _strokeColorString:string = "#000000";
@@ -91,50 +152,99 @@ module egret {
         private _strokeColor:number = 0x000000;
         /**
          * 描边颜色
-		 * @member {number} egret.TextField#strokeColor
+         * @member {number} egret.TextField#strokeColor
          */
-        public get strokeColor():number{
+        public get strokeColor():number {
             return this._strokeColor;
         }
-        public set strokeColor(value:number){
-            if(this._strokeColor==value)
-                return;
-            this._strokeColor = value;
-            this._strokeColorString = toColorString(value);
+
+        public set strokeColor(value:number) {
+            if (this._strokeColor != value) {
+                this._textDirty = true;
+                this._strokeColor = value;
+                this._strokeColorString = toColorString(value);
+            }
         }
 
         /**
          * 描边宽度，0为没有描边
-		 * @member {number} egret.TextField#stroke
+         * @member {number} egret.TextField#stroke
          */
-        public stroke:number = 0;
+        public _stroke:number = 0;
+
+        public get stroke():number {
+            return this._stroke;
+        }
+
+        public set stroke(value:number) {
+            if (this._stroke != value) {
+                this._textDirty = true;
+                this._stroke = value;
+            }
+        }
+
         /**
          * 文本水平对齐方式,使用HorizontalAlign定义的常量，默认值HorizontalAlign.LEFT。
-		 * @member {string} egret.TextField#textAlign
+         * @member {string} egret.TextField#textAlign
          */
-        public textAlign:string = "left";
+        public _textAlign:string = "left";
+
+        public get textAlign():string {
+            return this._textAlign;
+        }
+
+        public set textAlign(value:string) {
+            if (this._textAlign != value) {
+                this._textDirty = true;
+                this._textAlign = value;
+            }
+        }
+
         /**
          * 文本垂直对齐方式,使用VerticalAlign定义的常量，默认值VerticalAlign.TOP。
-		 * @member {string} egret.TextField#verticalAlign
+         * @member {string} egret.TextField#verticalAlign
          */
-        public verticalAlign:string = "top";
-		/**
-		 * @member {any} egret.TextField#maxWidth
-		 */
+        public _verticalAlign:string = "top";
+
+        public get verticalAlign():string {
+            return this._verticalAlign;
+        }
+
+        public set verticalAlign(value:string) {
+            if (this._verticalAlign != value) {
+                this._textDirty = true;
+                this._verticalAlign = value;
+            }
+        }
+
+        /**
+         * @member {any} egret.TextField#maxWidth
+         */
         public maxWidth;
 
         /**
          * 行间距
-		 * @member {number} egret.TextField#lineSpacing
+         * @member {number} egret.TextField#lineSpacing
          */
-        public lineSpacing:number = 0;
+        public _lineSpacing:number = 0;
+
+        public get lineSpacing():number {
+            return this._lineSpacing;
+        }
+
+        public set lineSpacing(value:number) {
+            if (this._lineSpacing != value) {
+                this._textDirty = true;
+                this._lineSpacing = value;
+            }
+        }
 
         private _numLines:number = 0;
         /**
          * 文本行数
-		 * @member {number} egret.TextField#numLines
+         * @member {number} egret.TextField#numLines
          */
-        public get numLines():number{
+        public get numLines():number {
             return this._numLines;
         }
 
@@ -146,8 +256,22 @@ module egret {
          * @see egret.DisplayObject._render
          * @param renderContext
          */
+        public _draw(renderContext:RendererContext):void {
+            if (this._textDirty) {
+                this._textDirty = false;
+                if (MainContext.instance.rendererContext.isWebGLMode) {
+                    this.cacheAsBitmap = true;
+                }
+            }
+            super._draw(renderContext);
+        }
+
+        /**
+         * @see egret.DisplayObject._render
+         * @param renderContext
+         */
         public _render(renderContext:RendererContext):void {
-            this.drawText(renderContext,false);
+            this.drawText(renderContext, false);
         }
 
         /**
@@ -163,69 +287,69 @@ module egret {
          * @param renderContext
          * @returns {Rectangle}
          */
-        private drawText(renderContext:RendererContext,forMeasure:boolean):Rectangle {
+        private drawText(renderContext:RendererContext, forMeasure:boolean):Rectangle {
 
             var lines:Array<string> = this.getTextLines(renderContext);
-            if(!lines){
-                return Rectangle.identity.initialize(0,0,0,0);
+            if (!lines) {
+                return Rectangle.identity.initialize(0, 0, 0, 0);
             }
             var length:number = lines.length;
-            var drawY:number = this.size*0.5;
-            var hGap:number = this.size+this.lineSpacing;
-            var textHeight:number = length*hGap - this.lineSpacing;
+            var drawY:number = this._size * 0.5;
+            var hGap:number = this._size + this._lineSpacing;
+            var textHeight:number = length * hGap - this._lineSpacing;
             this._textHeight = textHeight;
             var explicitHeight:number = this._explicitHeight;
-            if(this._hasHeightSet&&textHeight<explicitHeight){
+            if (this._hasHeightSet && textHeight < explicitHeight) {
                 var valign:number = 0;
-                if(this.verticalAlign==VerticalAlign.MIDDLE)
+                if (this._verticalAlign == VerticalAlign.MIDDLE)
                     valign = 0.5;
-                else if(this.verticalAlign==VerticalAlign.BOTTOM)
+                else if (this._verticalAlign == VerticalAlign.BOTTOM)
                     valign = 1;
-                drawY += valign*(explicitHeight-textHeight);
+                drawY += valign * (explicitHeight - textHeight);
             }
-            else{
+            else {
                 explicitHeight = Number.POSITIVE_INFINITY;
             }
             drawY = Math.round(drawY);
             var minY:number = drawY;
             var halign:number = 0;
-            if(this.textAlign==HorizontalAlign.CENTER){
+            if (this._textAlign == HorizontalAlign.CENTER) {
                 halign = 0.5;
             }
-            else if(this.textAlign==HorizontalAlign.RIGHT){
+            else if (this._textAlign == HorizontalAlign.RIGHT) {
                 halign = 1;
             }
             var measuredWidths = this.measuredWidths;
             var maxWidth:number;
-            if(this._hasWidthSet){
+            if (this._hasWidthSet) {
                 maxWidth = this._explicitWidth;
             }
-            else{
+            else {
                 maxWidth = this._textWidth;
             }
             var minX:number = Number.POSITIVE_INFINITY;
-            for(var i:number=0;i<length;i++){
+            for (var i:number = 0; i < length; i++) {
                 var line:string = lines[i];
                 var measureW:number = measuredWidths[i];
-                var drawX:number = Math.round((maxWidth-measureW)*halign);
-                if(drawX<minX){
+                var drawX:number = Math.round((maxWidth - measureW) * halign);
+                if (drawX < minX) {
                     minX = drawX;
                 }
-                if(!forMeasure&&drawY<explicitHeight){
-                    renderContext.drawText(this,line,drawX,drawY,maxWidth);
+                if (!forMeasure && drawY < explicitHeight) {
+                    renderContext.drawText(this, line, drawX, drawY, maxWidth);
                 }
                 drawY += hGap;
             }
-            return Rectangle.identity.initialize(minX,minY,maxWidth,textHeight);
+            return Rectangle.identity.initialize(minX, minY, maxWidth, textHeight);
         }
 
         private _textWidth:number;
         private _textHeight:number;
         private measuredWidths:Array<number> = [];
 
-        private getTextLines(renderContext:RendererContext):Array<string>{
-            var text:string = this.text;
-            if(!text){
+        private getTextLines(renderContext:RendererContext):Array<string> {
+            var text:string = this._text;
+            if (!text) {
                 return null;
             }
             var measuredWidths = this.measuredWidths;
@@ -234,34 +358,34 @@ module egret {
             var lines:Array<string> = text.split(/(?:\r\n|\r|\n)/);
             var length:number = lines.length;
             var maxWidth:number = 0;
-            if(this._hasWidthSet){
+            if (this._hasWidthSet) {
                 var explicitWidth:number = this._explicitWidth;
-                for(var i:number=0;i<length;i++){
+                for (var i:number = 0; i < length; i++) {
                     var line:string = lines[i];
                     var measureW:number = renderContext.measureText(line);
-                    if(measureW>explicitWidth){
+                    if (measureW > explicitWidth) {
                         var newLine:string = "";
                         var lineWidth:number = 0;
                         var len:number = line.length;
-                        for(var j:number=0;j<len;j++){
+                        for (var j:number = 0; j < len; j++) {
                             var word:string = line.charAt(j);
                             measureW = renderContext.measureText(word);
-                            if(lineWidth+measureW>explicitWidth){
+                            if (lineWidth + measureW > explicitWidth) {
                                 i++;
                                 length++;
-                                if(lineWidth==0){
-                                    lines.splice(i,0,word);
+                                if (lineWidth == 0) {
+                                    lines.splice(i, 0, word);
                                     measuredWidths[i] = measureW;
-                                    if(maxWidth<measureW){
+                                    if (maxWidth < measureW) {
                                         maxWidth = measureW;
                                     }
                                     measureW = 0;
                                     word = "";
                                 }
-                                else{
-                                    lines.splice(i,0,newLine);
+                                else {
+                                    lines.splice(i, 0, newLine);
                                     measuredWidths[i] = lineWidth;
-                                    if(maxWidth<lineWidth){
+                                    if (maxWidth < lineWidth) {
                                         maxWidth = lineWidth;
                                     }
                                     newLine = "";
@@ -272,20 +396,20 @@ module egret {
                             newLine += word;
                         }
                     }
-                    else{
+                    else {
                         measuredWidths[i] = measureW;
-                        if(maxWidth<measureW){
+                        if (maxWidth < measureW) {
                             maxWidth = measureW;
                         }
                     }
                 }
             }
-            else{
-                for(i=0;i<length;i++) {
+            else {
+                for (i = 0; i < length; i++) {
                     line = lines[i];
                     measureW = renderContext.measureText(line);
                     measuredWidths[i] = measureW;
-                    if(maxWidth<measureW){
+                    if (maxWidth < measureW) {
                         maxWidth = measureW;
                     }
                 }

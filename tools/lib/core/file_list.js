@@ -187,6 +187,9 @@ exports.core = [
 exports.html5 = [
     "egret/context/devices/HTML5DeviceContext.js",
     "egret/context/renderer/HTML5CanvasRenderer.js",
+    "egret/context/renderer/WebGLRenderer.js",
+    "egret/context/renderer/webgl/WebGLUtils.js",
+    "egret/context/renderer/webgl/WebGLShaderManager.js",
     "egret/context/net/HTML5NetContext.js",
     "egret/context/interactive/HTML5TouchContext.js",
     "egret/utils/SAXParser.js"

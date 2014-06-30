@@ -84,6 +84,8 @@ module egret {
             texture._startY = startY;
             texture._textureWidth = width;
             texture._textureHeight = height;
+            texture._sourceWidth = this.bitmapData.width;
+            texture._sourceHeight = this.bitmapData.height;
             this._textureMap[name] = texture;
             return texture;
         }
