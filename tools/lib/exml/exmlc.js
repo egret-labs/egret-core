@@ -59,7 +59,7 @@ function compile(exmlPath, srcPath) {
     if (!compiler) {
         compiler = new EXMLCompiler();
     }
-    var tsText = compiler.compile(xmlData, className, "egret.d.ts", srcPath, exmlPath);
+    var tsText = compiler.compile(xmlData, className, srcPath, exmlPath);
     var tsPath = exmlPath.substring(0, exmlPath.length - 5) + ".ts";
     file.save(tsPath, tsText);
 }
@@ -139,7 +139,7 @@ var EXMLCompiler = (function () {
     * @param xmlData 要编译的EXML文件内容
     * @param className 要编译成的完整类名，包括命名空间。
     */
-    EXMLCompiler.prototype.compile = function (xmlData, className, egretDTSPath, srcPath, exmlPath) {
+    EXMLCompiler.prototype.compile = function (xmlData, className, srcPath, exmlPath) {
         if (!this.exmlConfig) {
             this.exmlConfig = new exml_config.EXMLConfig();
         }
@@ -164,7 +164,6 @@ var EXMLCompiler = (function () {
         } else {
             this.currentClass.className = className;
         }
-        this.currentClass.addReference(egretDTSPath);
         this.startCompile();
         var resutlCode = this.currentClass.toCode();
         this.currentClass = null;
@@ -1102,10 +1101,6 @@ var EXMLCompiler = (function () {
     */
     EXMLCompiler.prototype.getPackageByNode = function (node) {
         var moduleName = this.exmlConfig.getClassNameById(node.localName, node.namespace);
-        if (moduleName && node.namespace != EXMLCompiler.E) {
-            var path = this.exmlConfig.getPathById(node.localName, node.namespace);
-            this.currentClass.addReference(path);
-        }
         if (!moduleName) {
             globals.exit(2003, this.exmlPath, this.toXMLString(node));
         }

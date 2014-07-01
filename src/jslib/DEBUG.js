@@ -33,29 +33,6 @@ var egret;
     var DEBUG = (function () {
         function DEBUG() {
         }
-        DEBUG.checkDrawImage = function (texture, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight) {
-            if (texture == null) {
-                egret.Logger.fatal("texture为空");
-            }
-            if (texture._textureWidth < sourceX + sourceWidth || texture._textureHeight < sourceY + sourceHeight) {
-                egret.Logger.fatal("提供的尺寸超出texture尺寸");
-            }
-        };
-
-        DEBUG.checkSetScaleGrid = function (texture, top, bottom, left, right) {
-            if (!texture) {
-                egret.Logger.fatal("Scale9Bitmap没有纹理");
-            }
-            if (parseInt(top) < 0 || parseInt(bottom) < 0 || parseInt(left) < 0 || parseInt(right) < 0) {
-                egret.Logger.fatal("传入的值不能为负数");
-            }
-            if (texture._textureWidth < left + right) {
-                egret.Logger.fatal("传入的宽度超出范围");
-            }
-            if (texture._textureHeight < top + bottom) {
-                egret.Logger.fatal("传入的高度超出范围");
-            }
-        };
 
         /**
         * 跟踪渲染主循环过程
@@ -87,32 +64,3 @@ var egret;
     })();
     egret.DEBUG = DEBUG;
 })(egret || (egret = {}));
-
-
-var unstable = unstable || {};
-unstable.modal_api = {};
-unstable.modal_api.setModal = function (value) {
-    if (value == undefined) {
-        value = true;
-    }
-    var container = this;
-    container._modal = value;
-    container.touchEnabled = value;
-}
-
-var hitTest = egret.DisplayObjectContainer.prototype.hitTest;
-egret.DisplayObjectContainer.prototype.hitTest = function (x, y, ignoreTouchEnabled) {
-    if (ignoreTouchEnabled == undefined){
-        ignoreTouchEnabled = false;
-    }
-    var container = this;
-    if (container.visible == false) return null;
-    var result = hitTest.call(this, x, y, ignoreTouchEnabled);
-    if (container._modal) {
-        return result ? result : this;
-    }
-    else {
-        return result;
-    }
-}
-egret.DisplayObjectContainer.prototype.setModal = unstable.modal_api.setModal;

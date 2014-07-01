@@ -36,9 +36,7 @@ module RES {
             }
             try{
                 var xmlStr:string = <string> data;
-                var xmlDoc = egret.SAXParser.getInstance().parserXML(xmlStr);
-                var xml:egret.XML = new egret.XML();
-                xml._ansXML(xmlDoc.documentElement);
+                var xml:any = egret.XML.parse(xmlStr);
                 this.fileDic[name] = xml;
             }
             catch (e){

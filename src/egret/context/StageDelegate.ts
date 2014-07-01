@@ -364,4 +364,37 @@ module egret {
 
 
     }
+
+
+
+    /**
+     * @class egret.NoScale
+     * @classdesc
+     * @extends egret.ContentStrategy
+     */
+    export class NoScale extends ContentStrategy {
+
+        private width;
+        private height;
+
+        constructor(width, height) {
+            super();
+            this.width = width;
+            this.height = height;
+        }
+
+        /**
+         * @method egret.NoScale#_apply
+         * @param delegate {egret.StageDelegate}
+         * @param designedResolutionWidth {number}
+         * @param designedResolutionHeight {number}
+         */
+        public _apply(delegate:StageDelegate, designedResolutionWidth:number, designedResolutionHeight:number):void {
+            var canvas:HTMLCanvasElement = <HTMLCanvasElement>document.getElementById(StageDelegate.canvas_name);
+            canvas.style.width = canvas.width + "px";
+            canvas.style.height = canvas.height + "px";
+            delegate._scaleX = 1;
+            delegate._scaleY = 1;
+        }
+    }
 }
