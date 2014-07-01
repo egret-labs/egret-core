@@ -63,7 +63,6 @@ egret_h5.startGame = function () {
     context = egret.MainContext.instance;
     if(egret.WebGLUtils.checkCanUseWebGL()) {
         context.rendererContext = new egret.WebGLRenderer(canvas);
-        context.rendererContext.isWebGLMode = true;
     }
     else {
         context.rendererContext = new egret.HTML5CanvasRenderer(canvas);

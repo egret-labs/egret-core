@@ -835,7 +835,6 @@ module egret {
 
         private renderTexture:RenderTexture;
         public set cacheAsBitmap(bool:boolean) {
-//            if (this._cacheAsBitmap == bool) return;
             this._cacheAsBitmap = bool;
             if (bool) {
                 if(!this.renderTexture)

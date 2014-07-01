@@ -35,7 +35,7 @@ module egret {
      * @extends egret.DisplayObject
      */
     export class TextField extends DisplayObject {
-        private _textDirty:boolean = true;
+        public _textDirty:boolean = true;
         /**
          * 显示文本
          * @member {string} egret.TextField#text
@@ -243,20 +243,6 @@ module egret {
 
         constructor() {
             super();
-        }
-
-        /**
-         * @see egret.DisplayObject._render
-         * @param renderContext
-         */
-        public _draw(renderContext:RendererContext):void {
-            if (this._textDirty) {
-                this._textDirty = false;
-                if (MainContext.instance.rendererContext.isWebGLMode) {
-                    this.cacheAsBitmap = true;
-                }
-            }
-            super._draw(renderContext);
         }
 
         /**

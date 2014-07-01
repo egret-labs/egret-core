@@ -76,6 +76,15 @@ module egret {
             this.initBlendMode();
 
             MainContext.instance.addEventListener(Event.FINISH_RENDER, this._draw, this);
+
+            egret.TextField.prototype._draw = function (renderContext) {
+                var textField:egret.TextField = <egret.TextField>this;
+                if (textField._textDirty) {
+                    textField._textDirty = false;
+                    textField.cacheAsBitmap = true;
+                }
+                egret.DisplayObject.prototype._draw.call(textField, renderContext);
+            };
         }
 
         private contextLost:Boolean = false;
@@ -95,14 +104,19 @@ module egret {
                 stencil: true//设置可以使用模板（用于遮罩实现）
             };
             var gl:any;
-            try {
-                gl = this.canvas.getContext("experimental-webgl", options);
-            } catch (e) {
+            var names = ["experimental-webgl", "webgl"];
+            var context = null;
+            for (var i = 0; i < names.length; i++) {
                 try {
-                    gl = this.canvas.getContext("webgl", options);
-                } catch (e2) {
-                    throw new Error("当前浏览器不支持webgl");
+                    gl = canvas.getContext(names[i], options);
+                } catch (e) {
                 }
+                if (context) {
+                    break;
+                }
+            }
+            if (!gl) {
+                throw new Error("当前浏览器不支持webgl");
             }
             this.setContext(gl);
         }
@@ -188,10 +202,11 @@ module egret {
                 return;
             }
 
-            sourceX = sourceX / MainContext.instance.rendererContext.texture_scale_factor;
-            sourceY = sourceY / MainContext.instance.rendererContext.texture_scale_factor;
-            sourceWidth = sourceWidth / MainContext.instance.rendererContext.texture_scale_factor;
-            sourceHeight = sourceHeight / MainContext.instance.rendererContext.texture_scale_factor;
+            var texture_scale_factor:number = MainContext.instance.rendererContext.texture_scale_factor;
+            sourceX = sourceX / texture_scale_factor;
+            sourceY = sourceY / texture_scale_factor;
+            sourceWidth = sourceWidth / texture_scale_factor;
+            sourceHeight = sourceHeight / texture_scale_factor;
 
             this.createWebGLTexture(texture);
 
@@ -200,7 +215,7 @@ module egret {
                 this.currentBaseTexture = texture.webGLTexture;
             }
 
-            //计算出矩阵，并把矩阵还原回之前的
+            //计算出绘制矩阵，之后把矩阵还原回之前的
             var locWorldTransform = this.worldTransform;
             var originalA:number = locWorldTransform.a;
             var originalB:number = locWorldTransform.b;
@@ -285,11 +300,6 @@ module egret {
             vertices[index++] = tint;
 
             this.currentBatchSize++;
-
-            //注意：这里的数据已经不对了，不过基类不需要这些数据
-            //super.drawImage(texture._bitmapData, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight);
-
-//            this._draw();
         }
 
         private _draw():void {
@@ -462,7 +472,6 @@ module egret {
         private updateGraphics(graphics) {
             var gl:any = this.gl;
 
-            //todo 目前只为了实现遮罩，只画了矩形
             this.buildRectangle(graphics);
 
             gl.bindBuffer(gl.ARRAY_BUFFER, this.graphicsBuffer);
@@ -478,8 +487,7 @@ module egret {
             var width:number = graphicsData.w;
             var height:number = graphicsData.h;
 
-            //todo 这些数据应该从graphicsData中读取
-            var r:number = 255;
+            var r:number = 0;
             var g:number = 0;
             var b:number = 0;
             var alpha:number = 1;
