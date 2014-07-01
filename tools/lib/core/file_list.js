@@ -177,6 +177,7 @@ exports.core = [
     "extension/resource/analyzer/JsonAnalyzer.js",
     "extension/resource/analyzer/TextAnalyzer.js",
     "extension/resource/analyzer/SheetAnalyzer.js",
+    "extension/resource/analyzer/StarlingSwfSheetAnalyzer.js",
     "extension/resource/analyzer/FontAnalyzer.js",
     "extension/resource/analyzer/SoundAnalyzer.js",
     "extension/resource/analyzer/XMLAnalyzer.js",
