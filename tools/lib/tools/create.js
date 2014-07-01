@@ -17,7 +17,8 @@ function run(currDir, args, opts) {
     if (!projectName) {
         globals.exit(1001);
     }
-    var projectPath = path.join(currDir, projectName);
+    var projectPath = path.resolve(projectName);
+    projectName = path.basename(projectPath);
     var runtime = param.getOption(opts, "--runtime", ["html5", "native"]);
     var egretSourceList = [];
     async.series([
