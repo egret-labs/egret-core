@@ -44,9 +44,7 @@ module egret {
                 if(!c){
                     return null;
                 }
-                texture = this.createTexture(name,c.x,c.y,c.width,c.height);
-                texture._offsetX = c.offsetX;
-                texture._offsetY = c.offsetY;
+                texture = this.createTexture(name,c.x,c.y,c.width,c.height,c.offsetX,c.offsetY);
                 this._textureMap[name] = texture;
             }
             return texture;
