@@ -107,12 +107,27 @@ module egret {
                     RenderFilter.getInstance().drawScale9GridImage(renderContext, thisObject, thisObject.scale9Grid, destW, destH);
                 }
                 else{
-                    var w:number = texture._textureWidth;
-                    var h:number = texture._textureHeight;
-                    var offsetX:number = Math.round(texture._offsetX*destW/w);
-                    var offsetY:number = Math.round(texture._offsetY*destH/h);
+                    var offsetX:number;
+                    var offsetY:number;
+                    if(thisObject._hasWidthSet){
+                        var scaleX:number = destW/texture._textureWidth;
+                        offsetX = Math.round(texture._offsetX*scaleX);
+                        destW = Math.round(texture._actualWidth*scaleX);
+                    }
+                    else{
+                        offsetX = texture._offsetX;
+                    }
+                    if(thisObject._hasHeightSet){
+                        var scaleY:number = destH/texture._textureHeight;
+                        offsetY = Math.round(texture._offsetY*scaleY);
+                        destH = Math.round(texture._actualHeight*scaleY);
+                    }
+                    else{
+                        offsetY = texture._offsetY;
+                    }
+
                     RenderFilter.getInstance().drawImage(renderContext, thisObject, texture._startX, texture._startY,
-                        w, h, offsetX, offsetY, destW,destH);
+                        texture._actualWidth, texture._actualHeight, offsetX, offsetY, destW,destH);
                 }
             }
             else{

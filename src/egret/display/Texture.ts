@@ -52,6 +52,14 @@ module egret {
          */
         public _startY:number = 0;
         /**
+         * 表示这个纹理在原始位图上的宽度
+         */
+        public _actualWidth:number = 0;
+        /**
+         * 表示这个纹理在原始位图上的高度
+         */
+        public _actualHeight:number = 0;
+        /**
          * 表示这个纹理显示了之后在x方向的渲染偏移量
          */
         public _offsetX = 0;
@@ -59,7 +67,6 @@ module egret {
          * 表示这个纹理显示了之后在y方向的渲染偏移量
          */
         public _offsetY = 0;
-
 
         /**
          * 纹理宽度
