@@ -103,6 +103,8 @@ module egret {
             this._bitmapData = value;
             this._textureWidth = value.width * scale;
             this._textureHeight = value.height * scale;
+            this._actualWidth = this._textureWidth;
+            this._actualHeight = this._textureHeight;
         }
 
         /**
@@ -113,7 +115,7 @@ module egret {
          * @returns {number} 指定像素点的颜色值
          */
         public getPixel32(x,y):number[]{
-            var result = this._bitmapData.getContext("2d").getImageData(x,y,1,1);
+            var result:any = this._bitmapData.getContext("2d").getImageData(x,y,1,1);
             return result.data;
         }
     }
