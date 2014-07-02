@@ -1,54 +1,53 @@
 <componentPackage>
-  <component id="ArrayCollection" super="EventDispatcher" default="source"/>
-  <component id="BasicLayout" super="LayoutBase"/>
-  <component id="Button" super="ButtonBase"/>
-  <component id="ButtonBase" super="SkinnableComponent" default="label" state="up,over,down,disabled"/>
-  <component id="CheckBox" super="ToggleButtonBase"/>
-  <component id="DataGroup" super="GroupBase" default="dataProvider"/>
-  <component id="DropDownList" super="DropDownListBase"/>
-  <component id="DropDownListBase" super="List" state="normal,open,disabled"/>
-  <component id="Group" super="GroupBase" default="elementsContent"/>
-  <component id="GroupBase" super="UIComponent"/>
-  <component id="HScrollBar" super="ScrollBarBase"/>
-  <component id="HSlider" super="SliderBase"/>
-  <component id="HorizontalLayout" super="LayoutBase"/>
-  <component id="ItemRenderer" super="ButtonBase"/>
-  <component id="Label" super="TextBase"/>
-  <component id="LayoutBase" super="EventDispatcher"/>
-  <component id="List" super="ListBase"/>
-  <component id="ListBase" super="SkinnableDataContainer"/>
-  <component id="Matrix" super="Object"/>
-  <component id="ObjectCollection" super="EventDispatcher" default="source"/>
-  <component id="Panel" super="SkinnableContainer"/>
-  <component id="Point" super="Object"/>
-  <component id="PopUpAnchor" super="UIComponent" default="popUp"/>
-  <component id="ProgressBar" super="Range"/>
-  <component id="RadioButton" super="ToggleButtonBase"/>
-  <component id="RadioButtonGroup" super="EventDispatcher"/>
-  <component id="Range" super="SkinnableComponent"/>
-  <component id="Rect" super="UIComponent"/>
-  <component id="Rectangle" super="Object"/>
-  <component id="Scroller" super="UIComponent" default="viewport"/>
-  <component id="Skin" super="EventDispatcher" default="elementsContent"/>
-  <component id="SkinnableComponent" super="UIAsset" state="normal,disabled"/>
-  <component id="SkinnableContainer" super="SkinnableComponent" default="elementsContent"/>
-  <component id="SkinnableDataContainer" super="SkinnableComponent" default="dataProvider"/>
-  <component id="SliderBase" super="TrackBase"/>
-  <component id="Spacer" super="UIComponent"/>
-  <component id="State" super="EventDispatcher" default="overrides"/>
-  <component id="TabBar" super="ListBase"/>
-  <component id="TabBarButton" super="ToggleButtonBase"/>
-  <component id="TextBase" super="UIComponent"/>
-  <component id="TileLayout" super="LayoutBase"/>
-  <component id="TitleWindow" super="Panel"/>
-  <component id="ToggleButton" super="ToggleButtonBase"/>
-  <component id="ToggleButtonBase" super="ButtonBase" state="up,over,down,disabled,upAndSelected,overAndSelected,downAndSelected,disabledAndSelected"/>
-  <component id="TrackBase" super="Range"/>
-  <component id="Tree" super="List"/>
-  <component id="TreeItemRenderer" super="ItemRenderer"/>
-  <component id="UIAsset" super="UIComponent"/>
-  <component id="UIComponent" super="DisplayObjectContainer"/>
-  <component id="VSlider" super="SliderBase"/>
-  <component id="VerticalLayout" super="LayoutBase"/>
-  <component id="ViewStack" super="Group"/>
+  <component id="ArrayCollection" super="EventDispatcher" default="source" package="egret.collections"/>
+  <component id="BasicLayout" super="LayoutBase" package="egret.layouts"/>
+  <component id="Button" super="ButtonBase" package="egret.components"/>
+  <component id="ButtonBase" super="SkinnableComponent" default="label" state="up,over,down,disabled" package="egret.components.supportClasses"/>
+  <component id="CheckBox" super="ToggleButtonBase" package="egret.components"/>
+  <component id="DataGroup" super="GroupBase" default="dataProvider" package="egret.components"/>
+  <component id="DropDownList" super="DropDownListBase" package="egret.components"/>
+  <component id="DropDownListBase" super="List" state="normal,open,disabled" package="egret.components.supportClasses"/>
+  <component id="Group" super="GroupBase" default="elementsContent" package="egret.components"/>
+  <component id="GroupBase" super="UIComponent" package="egret.components.supportClasses"/>
+  <component id="HSlider" super="SliderBase" package="egret.components"/>
+  <component id="HorizontalLayout" super="LayoutBase" package="egret.layouts"/>
+  <component id="ItemRenderer" super="ButtonBase" package="egret.components.supportClasses"/>
+  <component id="Label" super="TextBase" package="egret.components"/>
+  <component id="LayoutBase" super="EventDispatcher" package="egret.layouts.supportClasses"/>
+  <component id="List" super="ListBase" package="egret.components"/>
+  <component id="ListBase" super="SkinnableDataContainer" package="egret.components.supportClasses"/>
+  <component id="Matrix" super="Object" package="flash.geom"/>
+  <component id="ObjectCollection" super="EventDispatcher" default="source" package="egret.collections"/>
+  <component id="Panel" super="SkinnableContainer" package="egret.components"/>
+  <component id="Point" super="Object" package="flash.geom"/>
+  <component id="PopUpAnchor" super="UIComponent" default="popUp" package="egret.components"/>
+  <component id="ProgressBar" super="Range" package="egret.components"/>
+  <component id="RadioButton" super="ToggleButtonBase" package="egret.components"/>
+  <component id="RadioButtonGroup" super="EventDispatcher" package="egret.components"/>
+  <component id="Range" super="SkinnableComponent" package="egret.components"/>
+  <component id="Rect" super="UIComponent" package="egret.components"/>
+  <component id="Rectangle" super="Object" package="flash.geom"/>
+  <component id="Scroller" super="UIComponent" default="viewport" package="egret.components"/>
+  <component id="Skin" super="EventDispatcher" default="elementsContent" package="egret.components"/>
+  <component id="SkinnableComponent" super="UIAsset" state="normal,disabled" package="egret.components"/>
+  <component id="SkinnableContainer" super="SkinnableComponent" default="elementsContent" package="egret.components"/>
+  <component id="SkinnableDataContainer" super="SkinnableComponent" default="dataProvider" package="egret.components"/>
+  <component id="SliderBase" super="TrackBase" package="egret.components.supportClasses"/>
+  <component id="Spacer" super="UIComponent" package="egret.components"/>
+  <component id="State" super="EventDispatcher" default="overrides" package="egret.states"/>
+  <component id="TabBar" super="ListBase" package="egret.components"/>
+  <component id="TabBarButton" super="ToggleButtonBase" package="egret.components"/>
+  <component id="TextBase" super="UIComponent" package="egret.components.supportClasses"/>
+  <component id="TileLayout" super="LayoutBase" package="egret.layouts"/>
+  <component id="TitleWindow" super="Panel" package="egret.components"/>
+  <component id="ToggleButton" super="ToggleButtonBase" package="egret.components"/>
+  <component id="ToggleButtonBase" super="ButtonBase" state="up,over,down,disabled,upAndSelected,overAndSelected,downAndSelected,disabledAndSelected" package="egret.components.supportClasses"/>
+  <component id="TrackBase" super="Range" package="egret.components.supportClasses"/>
+  <component id="Tree" super="List" package="egret.components"/>
+  <component id="TreeItemRenderer" super="ItemRenderer" package="egret.components.supportClasses"/>
+  <component id="UIAsset" super="UIComponent" package="egret.components"/>
+  <component id="UIComponent" super="DisplayObjectContainer" package="egret.core"/>
+  <component id="VSlider" super="SliderBase" package="egret.components"/>
+  <component id="VerticalLayout" super="LayoutBase" package="egret.layouts"/>
+  <component id="ViewStack" super="Group" package="egret.components"/>
 </componentPackage>
