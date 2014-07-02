@@ -65,7 +65,7 @@ egret_h5.startGame = function () {
     context.touchContext = new egret.HTML5TouchContext(canvas);
     context.deviceContext = new egret.HTML5DeviceContext();
     context.netContext = new egret.HTML5NetContext();
-    context.stage = new egret.Stage(canvas.width, canvas.height);
+
 
     //设置屏幕适配策略
     var container = new egret.EqualToFrame();
@@ -73,6 +73,8 @@ egret_h5.startGame = function () {
     var policy = new egret.ResolutionPolicy(container, content);
     egret.StageDelegate.getInstance().setDesignSize(480, 800, policy);
 
+    context.stage = new egret.Stage(canvas.width, canvas.height);
+    
     egret.RendererContext.CONTENT_SCALE_FACTOR = 1;
     context.run();
 
