@@ -44,19 +44,19 @@ module egret {
         }
 
         /**
-         * 表示这个纹理在原始位图上的起始位置
+         * 表示这个纹理在SpriteSheet上的起始位置
          */
         public _startX:number = 0;
         /**
-         * 表示这个纹理在原始位图上的y起始位置
+         * 表示这个纹理在SpriteSheet上的y起始位置
          */
         public _startY:number = 0;
         /**
-         * 表示这个纹理在原始位图上的宽度
+         * 表示这个纹理在SpriteSheet上的宽度
          */
         public _actualWidth:number = 0;
         /**
-         * 表示这个纹理在原始位图上的高度
+         * 表示这个纹理在SpriteSheet上的高度
          */
         public _actualHeight:number = 0;
         /**
