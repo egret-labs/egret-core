@@ -118,6 +118,7 @@ module egret {
                     }
                     else{
                         offsetX = texture._offsetX;
+                        destW = actualWidth;
                     }
                     if(thisObject._hasHeightSet){
                         var scaleY:number = destH/texture._textureHeight;
@@ -126,6 +127,7 @@ module egret {
                     }
                     else{
                         offsetY = texture._offsetY;
+                        destH = actualHeight;
                     }
 
                     RenderFilter.getInstance().drawImage(renderContext, thisObject, texture._startX, texture._startY,
