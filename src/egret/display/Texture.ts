@@ -44,7 +44,7 @@ module egret {
         }
 
         /**
-         * 表示这个纹理在SpriteSheet上的起始位置
+         * 表示这个纹理在SpriteSheet上的x起始位置
          */
         public _startX:number = 0;
         /**
