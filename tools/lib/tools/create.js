@@ -18,19 +18,18 @@ function run(currDir, args, opts) {
         globals.exit(1001);
     }
     var projectPath = path.resolve(projectName);
-    projectName = path.basename(projectPath);
     var runtime = param.getOption(opts, "--runtime", ["html5", "native"]);
     var egretSourceList = [];
     async.series([
 
         function (callback) {
             globals.log("正在创建新项目文件夹...");
-            createNewProject(projectName);
+            file.copy(path.join(param.getEgretPath(), "tools/templates/game"),
+                projectPath);
             callback();
         },
 
         function (callback) {
-
             globals.log ("正在生成egret_file_list...");
             egretSourceList = compiler.generateEgretFileList(runtime,projectPath);
             callback();
@@ -67,12 +66,6 @@ function run(currDir, args, opts) {
 
 }
 
-//创建 游戏目录
-function createNewProject(projectName) {
-    var template = path.join(param.getEgretPath(), "tools/templates/game");
-    var projPath = path.join(process.cwd(), projectName);
-    file.copy(template, projPath);
-}
 
 function help_title() {
     return "创建新项目";
