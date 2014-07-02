@@ -109,10 +109,12 @@ module egret {
                 else{
                     var offsetX:number;
                     var offsetY:number;
+                    var actualWidth:number = texture._actualWidth||texture._textureWidth;
+                    var actualHeight:number = texture._actualHeight||texture._textureHeight;
                     if(thisObject._hasWidthSet){
                         var scaleX:number = destW/texture._textureWidth;
                         offsetX = Math.round(texture._offsetX*scaleX);
-                        destW = Math.round(texture._actualWidth*scaleX);
+                        destW = Math.round(actualWidth*scaleX);
                     }
                     else{
                         offsetX = texture._offsetX;
@@ -120,14 +122,14 @@ module egret {
                     if(thisObject._hasHeightSet){
                         var scaleY:number = destH/texture._textureHeight;
                         offsetY = Math.round(texture._offsetY*scaleY);
-                        destH = Math.round(texture._actualHeight*scaleY);
+                        destH = Math.round(actualHeight*scaleY);
                     }
                     else{
                         offsetY = texture._offsetY;
                     }
 
                     RenderFilter.getInstance().drawImage(renderContext, thisObject, texture._startX, texture._startY,
-                        texture._actualWidth, texture._actualHeight, offsetX, offsetY, destW,destH);
+                        actualWidth, actualHeight, offsetX, offsetY, destW,destH);
                 }
             }
             else{
