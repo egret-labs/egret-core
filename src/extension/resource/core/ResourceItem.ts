@@ -54,6 +54,11 @@ module RES {
          */
         public static TYPE_SHEET:string = "sheet";
         /**
+         * SpriteSheet文件,StarlingSwf工具专用
+         * @constant {string} RES.ResourceItem.TYPE_STARLING_SWF_SHEET
+         */
+        public static TYPE_STARLING_SWF_SHEET:string = "starlingswf_sheet";
+        /**
          * BitmapTextSpriteSheet文件
 		 * @constant {string} RES.ResourceItem.TYPE_FONT
          */

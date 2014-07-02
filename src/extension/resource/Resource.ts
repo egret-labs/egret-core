@@ -189,6 +189,8 @@ module RES {
                 egret.Injector.mapClass(AnalyzerBase,JsonAnalyzer,ResourceItem.TYPE_JSON);
             if(!egret.Injector.hasMapRule(AnalyzerBase,ResourceItem.TYPE_SHEET))
                 egret.Injector.mapClass(AnalyzerBase,SheetAnalyzer,ResourceItem.TYPE_SHEET);
+            if(!egret.Injector.hasMapRule(AnalyzerBase,ResourceItem.TYPE_STARLING_SWF_SHEET))
+                egret.Injector.mapClass(AnalyzerBase,StarlingSwfSheetAnalyzer,ResourceItem.TYPE_STARLING_SWF_SHEET);
             if(!egret.Injector.hasMapRule(AnalyzerBase,ResourceItem.TYPE_FONT))
                 egret.Injector.mapClass(AnalyzerBase,FontAnalyzer,ResourceItem.TYPE_FONT);
             if(!egret.Injector.hasMapRule(AnalyzerBase,ResourceItem.TYPE_SOUND))
