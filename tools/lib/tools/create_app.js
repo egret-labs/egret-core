@@ -61,7 +61,7 @@ function help_title() {
 
 
 function help_example() {
-    return "egret create_app [app_name] -f [h5_game_path]";
+    return "egret create_app [app_name] -f [h5_game_path] -n [native_path]";
 }
 
 
