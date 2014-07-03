@@ -27,7 +27,7 @@
 
 
 module egret {
-    
+
     /**
      * @class egret.Texture
      * @classdesc 纹理类是对不同平台不同的图片资源的封装
@@ -44,13 +44,21 @@ module egret {
         }
 
         /**
-         * 表示这个纹理在原始位图上的起始位置
+         * 表示这个纹理在SpriteSheet上的x起始位置
          */
         public _startX:number = 0;
         /**
-         * 表示这个纹理在原始位图上的y起始位置
+         * 表示这个纹理在SpriteSheet上的y起始位置
          */
         public _startY:number = 0;
+        /**
+         * 表示这个纹理在SpriteSheet上的宽度
+         */
+        public _actualWidth:number = 0;
+        /**
+         * 表示这个纹理在SpriteSheet上的高度
+         */
+        public _actualHeight:number = 0;
         /**
          * 表示这个纹理显示了之后在x方向的渲染偏移量
          */
@@ -61,21 +69,11 @@ module egret {
         public _offsetY = 0;
 
         /**
-         * 原图宽度
-         */
-        public _sourceWidth:number = 0;
-        /**
-         * 原图高度
-         */
-        public _sourceHeight:number = 0;
-
-
-        /**
          * 纹理宽度
          * @member {number} egret.Texture#textureWidth
          */
         public _textureWidth:number = 0;
-        
+
         public get textureWidth():number {
             return this._textureWidth;
         }
@@ -85,7 +83,7 @@ module egret {
          * @member {number} egret.Texture#textureWidth
          */
         public _textureHeight:number = 0;
-        
+
         public get textureHeight():number {
             return this._textureHeight;
         }
@@ -105,8 +103,8 @@ module egret {
             this._bitmapData = value;
             this._textureWidth = value.width * scale;
             this._textureHeight = value.height * scale;
-            this._sourceWidth = this._textureWidth;
-            this._sourceHeight = this._textureHeight;
+            this._actualWidth = this._textureWidth;
+            this._actualHeight = this._textureHeight;
         }
 
         /**
@@ -117,7 +115,7 @@ module egret {
          * @returns {number} 指定像素点的颜色值
          */
         public getPixel32(x,y):number[]{
-            var result = this._bitmapData.getContext("2d").getImageData(x,y,1,1);
+            var result:any = this._bitmapData.getContext("2d").getImageData(x,y,1,1);
             return result.data;
         }
     }

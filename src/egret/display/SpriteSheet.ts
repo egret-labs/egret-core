@@ -27,7 +27,7 @@
 
 
 module egret {
-    
+
     /**
      * @class egret.SpriteSheet
      * @classdesc SpriteSheet是一张由多个子位图拼接而成的集合位图，它包含多个Texture对象。
@@ -74,17 +74,30 @@ module egret {
          * @param startY {number} 指定位图区域在SpriteSheet上的起始坐标y
          * @param width {number} 指定位图区域在SpriteSheet上的宽度
          * @param height {number} 指定位图区域在SpriteSheet上的高度
+         * @param offsetX {number} 原始位图的非透明区域x起始点
+         * @param offsetY {number} 原始位图的非透明区域y起始点
+         * @param originalWidth {number} 原始位图的高度
+         * @param originalHeight {number} 原始位图的宽度
          * @returns {egret.Texture} 创建的Texture对象
          */
-        public createTexture(name:string, startX:number, startY:number, width:number, height:number):Texture {
+        public createTexture(name:string, startX:number, startY:number, width:number, height:number,
+                             offsetX:number=0,offsetY:number=0,originalWidth?:number,originalHeight?:number):Texture {
+            if(typeof(originalWidth) === "undefined"){
+                originalWidth = offsetX+width;
+            }
+            if(typeof(originalHeight) === "undefined"){
+                originalHeight = offsetY+height;
+            }
             var texture:Texture = new Texture();
             texture._bitmapData = this.bitmapData;
             texture._startX = startX;
             texture._startY = startY;
-            texture._textureWidth = width;
-            texture._textureHeight = height;
-            texture._sourceWidth = this.bitmapData.width;
-            texture._sourceHeight = this.bitmapData.height;
+            texture._actualWidth = width;
+            texture._actualHeight = height;
+            texture._offsetX = offsetX;
+            texture._offsetY = offsetY;
+            texture._textureWidth = originalWidth;
+            texture._textureHeight = originalHeight;
             this._textureMap[name] = texture;
             return texture;
         }

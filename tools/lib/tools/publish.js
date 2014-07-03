@@ -288,7 +288,7 @@ function run(dir, args, opts) {
 }
 
 function help_title() {
-    return "发布项目，使用GoogleClosureCompiler压缩代码";
+    return "发布项目，使用GoogleClosureCompiler压缩代码\n";
 }
 
 

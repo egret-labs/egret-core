@@ -326,9 +326,9 @@ module egret {
         private _textHeight:number;
         private measuredWidths:Array<number> = [];
 
-        private getTextLines(renderContext:RendererContext):Array<string> {
-            var text:string = this._text;
-            if (!text) {
+        private getTextLines(renderContext:RendererContext):Array<string>{
+            var text:string = this.text?this.text.toString():"";
+            if(!text){
                 return null;
             }
             var measuredWidths = this.measuredWidths;

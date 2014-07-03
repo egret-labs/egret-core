@@ -325,7 +325,7 @@ function getClass(text, ns) {
         word = word.substring(0, index);
     }
     word = CodeUtil.trimVariable(word);
-    if (word.indexOf("Array") != -1) {
+    if (word.indexOf("Array<") == 0) {
         return "";
     }
     if (ns && word.indexOf(".") == -1) {

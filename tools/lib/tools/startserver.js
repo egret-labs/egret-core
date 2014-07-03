@@ -131,7 +131,7 @@ function executeCommand(callback, script) {
 
 
 function help_title() {
-    return "启动HttpServer,并在默认浏览器中打开指定项目";
+    return "启动HttpServer,并在默认浏览器中打开指定项目\n";
 }
 
 

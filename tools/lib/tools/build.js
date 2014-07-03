@@ -154,11 +154,12 @@ function help_title() {
 
 function help_example() {
     var result =  "\n";
-    result += "    egret build [project_name] [-e] [--runtime html5|native]\n";
+    result += "    egret build [project_name] [-e] [-e] [--runtime html5|native]\n";
     result += "描述:\n";
     result += "    " + help_title();
     result += "参数说明:\n";
     result += "    -e           编译指定项目的同时编译引擎目录\n";
+    result += "    -k           编译EXML文件时保留生成的TS文件\n";
     result += "    --runtime    设置构建方式为 html5 或者是 native方式，默认值为html5";
     return result;
 }
