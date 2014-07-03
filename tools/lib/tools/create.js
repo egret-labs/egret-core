@@ -68,7 +68,7 @@ function run(currDir, args, opts) {
 
 
 function help_title() {
-    return "创建新项目";
+    return "创建新项目\n";
 }
 
 

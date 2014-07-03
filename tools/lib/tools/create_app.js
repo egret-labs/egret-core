@@ -53,7 +53,7 @@ function create_app_from(egret_path, app_name, h5_path) {
 
 
 function help_title() {
-    return "从h5游戏生成app";
+    return "从h5游戏生成app\n";
 }
 
 
