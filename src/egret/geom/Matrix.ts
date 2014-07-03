@@ -75,7 +75,7 @@ module egret {
          * @param d {number}
          * @param tx {number}
          * @param ty {number}
-         * @returns {ns_egret.Matrix}
+         * @returns {egret.Matrix}
          */
         public prepend(a:number, b:number, c:number, d:number, tx:number, ty:number):Matrix {
             var tx1 = this.tx;
