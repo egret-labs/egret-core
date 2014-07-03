@@ -122,18 +122,23 @@ module dragonBones {
             public spriteSheet:egret.SpriteSheet;
             private _textureData:any = {};
 
+            private _startX:number;
+            private _startY:number;
+
             constructor(public texture:any, private textureAtlasRawData:any, scale:number = 1) {
                 this.scale = scale;
                 this.name = textureAtlasRawData[utils.ConstValues.A_NAME];
                 this.parseData(textureAtlasRawData);
                 this.spriteSheet = new egret.SpriteSheet(texture.bitmapData);
+                this._startX = texture._startX;
+                this._startY = texture._startY;
             }
 
             public getTexture(fullName:string):egret.Texture {
                 var result = this.spriteSheet.getTexture(fullName);
                 if (!result) {
                     var data = this._textureData[fullName];
-                    result = this.spriteSheet.createTexture(fullName, data.x, data.y, data.width, data.height);
+                    result = this.spriteSheet.createTexture(fullName, data.x+this._startX, data.y+this._startY, data.width, data.height);
                 }
                 return result;
             }
