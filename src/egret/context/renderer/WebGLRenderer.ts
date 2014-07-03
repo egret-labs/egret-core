@@ -108,7 +108,7 @@ module egret {
             var context = null;
             for (var i = 0; i < names.length; i++) {
                 try {
-                    gl = canvas.getContext(names[i], options);
+                    gl = this.canvas.getContext(names[i], options);
                 } catch (e) {
                 }
                 if (context) {
