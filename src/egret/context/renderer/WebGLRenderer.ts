@@ -105,13 +105,12 @@ module egret {
             };
             var gl:any;
             var names = ["experimental-webgl", "webgl"];
-            var context = null;
             for (var i = 0; i < names.length; i++) {
                 try {
                     gl = this.canvas.getContext(names[i], options);
                 } catch (e) {
                 }
-                if (context) {
+                if (gl) {
                     break;
                 }
             }
