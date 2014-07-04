@@ -217,7 +217,7 @@ module egret {
         private measuredWidths:Array<number> = [];
 
         private getTextLines(renderContext:RendererContext):Array<string>{
-            var text:string = this.text||"";
+            var text:string = this.text?this.text.toString():"";
             if(!text){
                 return null;
             }
@@ -265,10 +265,8 @@ module egret {
                             lineWidth += measureW;
                             newLine += word;
                         }
-                        if(newLine){
-                            lines[i]=newLine;
-                            measuredWidths[i] = lineWidth;
-                        }
+                        lines[i]=newLine;
+                        measuredWidths[i] = lineWidth;
                     }
                     else{
                         measuredWidths[i] = measureW;
