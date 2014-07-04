@@ -3,6 +3,12 @@ console.log = function (message) {
     egtlog(message);
 }
 
+egret_native.setSearchPaths(["",
+    "src/",
+    "resource/",
+    "resource/assets/",
+    "resource/config"
+]);
 
 egret_native.egtMain = function () {
     require("bin-debug/lib/egret_file_list.js");
@@ -30,6 +36,7 @@ egret_native.egtMain = function () {
 
     context.run();
 
+    var document_class = "GameApp";
     var rootClass;
     if(document_class){
         rootClass = egret.getDefinitionByName(document_class);
