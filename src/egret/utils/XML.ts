@@ -91,21 +91,21 @@ module egret {
             }
             var children:any = node.childNodes;
             length = children.length;
-            if(length==0){
+            for(i=0;i<length;i++){
+                var childNode:any = children[i];
+                var childXML:any = XML.parseNode(childNode);
+                if(childXML){
+                    if(!xml.children){
+                        xml.children = [];
+                    }
+                    childXML.parent = xml;
+                    xml.children.push(childXML);
+                }
+            }
+            if(!xml.children){
                 var text:string = node.textContent.trim();
                 if(text){
                     xml.text = text;
-                }
-            }
-            else{
-                xml.children = [];
-                for(i=0;i<length;i++){
-                    var childNode:any = children[i];
-                    var childXML:any = XML.parseNode(childNode);
-                    if(childXML){
-                        childXML.parent = xml;
-                        xml.children.push(childXML);
-                    }
                 }
             }
             return xml;
