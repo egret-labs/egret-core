@@ -164,20 +164,6 @@ function setPathLevel(path, level, pathLevelInfo, map) {
     }
 }
 /**
- * 这个文件是否只含有接口
- */
-function isInterface(path){
-    var text = file.read(path);
-    text = CodeUtil.removeComment(text);
-    text = removeInterface(text);
-    if (!CodeUtil.containsVariable("class", text) &&
-        !CodeUtil.containsVariable("var", text) &&
-        !CodeUtil.containsVariable("function", text)) {
-        return true;
-    }
-    return false;
-}
-/**
  * 读取一个exml文件引用的类列表
  */
 function readClassNamesFromExml(path,srcPath){
@@ -471,5 +457,6 @@ function help_example() {
 
 exports.run = run;
 exports.create = create;
+exports.removeInterface = removeInterface;
 exports.help_title = help_title;
 exports.help_example = help_example;

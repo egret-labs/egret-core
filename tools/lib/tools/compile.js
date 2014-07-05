@@ -10,6 +10,7 @@ var globals = require("../core/globals");
 var param = require("../core/params_analyze.js");
 var file = require("../core/file.js");
 var exmlc = require("../exml/exmlc.js");
+var CodeUtil = require("../core/code_util.js");
 var create_manifest = require("./create_manifest.js")
 
 
@@ -25,7 +26,7 @@ function run(currentDir, args, opts) {
     if (!source || !output) {
         globals.exit(1302);
     }
-    buildAllFile(function () {
+    compile(function () {
         console.log("编译成功");
     }, source, output)
 }
@@ -39,7 +40,7 @@ function run(currentDir, args, opts) {
  * @param sourceList 要编译的文件列表包含ts和exml
  * @param keepGeneratedTypescript 是否保留exml生成的ts文件
  */
-function buildAllFile(callback, srcPath, output, sourceList,keepGeneratedTypescript) {
+function compile(callback, srcPath, output, sourceList,keepGeneratedTypescript) {
 
     var exmlList = [];
     var tsList = [];
@@ -260,9 +261,17 @@ function createFileList(manifest, srcPath) {
     var length = manifest.length;
     for (var i = 0; i < length; i++) {
         var filePath = manifest[i];
-        if (filePath.indexOf(".d.ts") == -1) {
-            gameList.push(filePath);
+        if (filePath.indexOf(".d.ts") != -1) {
+            continue;
         }
+        var fileName = file.getFileName(filePath);
+        if(fileName.charAt(0)=="I"){
+            var str = fileName.charAt(1);
+            if(str>="A"&&str<="Z"&&isInterface(filePath)){
+                continue;
+            }
+        }
+        gameList.push(filePath);
     }
 
     length = gameList.length;
@@ -282,9 +291,24 @@ function createFileList(manifest, srcPath) {
     return gameListText;
 }
 
+/**
+ * 这个文件是否只含有接口
+ */
+function isInterface(path){
+    var text = file.read(path);
+    text = CodeUtil.removeComment(text);
+    text = create_manifest.removeInterface(text);
+    if (!CodeUtil.containsVariable("class", text) &&
+        !CodeUtil.containsVariable("var", text) &&
+        !CodeUtil.containsVariable("function", text)) {
+        return true;
+    }
+    return false;
+}
 
 
-exports.compile = buildAllFile;
+
+exports.compile = compile;
 exports.exportHeader = exportHeader;
 exports.run = run;
 exports.generateEgretFileList = generateEgretFileList;
