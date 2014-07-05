@@ -77,6 +77,22 @@ function create(srcPath){
     pathInfoList = {};
     pathToClassNames = {};
     var manifest = file.searchByFunction(srcPath,filterFunc);
+    var exmlList = [];
+    for(var i=manifest.length-1;i>=0;i--){
+        var path = manifest[i];
+        var ext = file.getExtension(path).toLowerCase();
+        if(ext=="exml"){
+            exmlList.push(path);
+        }
+    }
+    for(i=exmlList.length-1;i>=0;i--){
+        path = exmlList[i];
+        path = path.substring(0,path.length-4)+"ts";
+        var index= manifest.indexOf(path);
+        if(index!=-1){
+            manifest.splice(index,1);
+        }
+    }
     var manifest = sortFileList(manifest,srcPath);
     return manifest;
 }
