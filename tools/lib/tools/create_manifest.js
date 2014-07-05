@@ -6,19 +6,19 @@ var xml = require("../core/xml.js");
 /**
  * 键是类名，值为这个类依赖的类名列表
  */
-var classInfoList = {};
+var classInfoList;
 /**
  * 键为类名，值为这个类所在的文件路径
  */
-var classNameToPath = {};
+var classNameToPath;
 /**
  * 键为文件路径，值为这个文件包含的类名列表
  */
-var pathToClassNames = {};
+var pathToClassNames;
 /**
  * 键为文件路径，值为这个文件依赖的类名列表(从import或全局变量中读取的)
  */
-var pathInfoList = {};
+var pathInfoList;
 /**
  * ts关键字
  */
@@ -58,9 +58,24 @@ function run(currDir, args, opts) {
     globals.log("manifest.json生成成功");
 }
 /**
+ * 获取项目中所有类名和文件路径的映射数据
+ */
+function getClassToPathInfo(srcPath){
+
+    if(!classNameToPath){
+        create(srcPath);
+    }
+    return classNameToPath;
+}
+
+/**
  * 创建manifest列表
  */
 function create(srcPath){
+    classInfoList = {};
+    classNameToPath = {};
+    pathInfoList = {};
+    pathToClassNames = {};
     var manifest = file.searchByFunction(srcPath,filterFunc);
     var manifest = sortFileList(manifest,srcPath);
     return manifest;
@@ -75,6 +90,7 @@ function filterFunc(item){
     }
     return false;
 }
+
 
 /**
  * 按照引用关系排序指定的文件列表
@@ -458,5 +474,6 @@ function help_example() {
 exports.run = run;
 exports.create = create;
 exports.removeInterface = removeInterface;
+exports.getClassToPathInfo = getClassToPathInfo;
 exports.help_title = help_title;
 exports.help_example = help_example;
