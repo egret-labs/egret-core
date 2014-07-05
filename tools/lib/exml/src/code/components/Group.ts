@@ -25,8 +25,6 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/// <reference path="../../egret.d.ts"/>
-
 module ns_project {
 
     export class Group extends egret.Group{

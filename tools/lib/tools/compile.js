@@ -9,7 +9,9 @@ var cp_exec = require('child_process').exec;
 var globals = require("../core/globals");
 var param = require("../core/params_analyze.js");
 var file = require("../core/file.js");
-var create_file_list = require("./create_file_list.js");
+var exmlc = require("../exml/exmlc.js");
+var create_manifest = require("./create_manifest.js")
+
 
 function run(currentDir, args, opts) {
     var source = path.resolve(param.getEgretPath(), "");
@@ -34,16 +36,31 @@ function run(currentDir, args, opts) {
  * @param callback 回调函数
  * @param srcPath 源文件所在的文件夹
  * @param output 输出地址
- * @param sourceList 要编译的ts文件列表
+ * @param sourceList 要编译的文件列表包含ts和exml
+ * @param keepGeneratedTypescript 是否保留exml生成的ts文件
  */
-function buildAllFile(callback, srcPath, output, sourceList) {
+function buildAllFile(callback, srcPath, output, sourceList,keepGeneratedTypescript) {
 
-    for(var i=sourceList.length;i>=0;i--){
+    var exmlList = [];
+    var tsList = [];
+    var length = sourceList.length;
+    for(var i=0;i<length;i++){
         var p = sourceList[i];
-        if(file.getExtension(p)!="ts"||!file.exists(p)){
-            sourceList.splice(i,1);
+        if(!file.exists(p)){
+            continue;
+        }
+        var ext = file.getExtension(p).toLowerCase();
+        if(ext=="ts"){
+            tsList.push(p);
+        }
+        else if(ext=="exml"){
+            exmlList.push(p);
+            tsList.push(p.substring(0, p.length-4)+"ts");
         }
     }
+
+    globals.addCallBackWhenExit(cleanTempFile);
+
     async.waterfall([
         checkCompilerInstalled,
 
@@ -65,12 +82,20 @@ function buildAllFile(callback, srcPath, output, sourceList) {
                 return ext!=".ts"&&ext!=".exml";
             }
         },
+        //编译exml文件
+        function(callback){
+            exmlList.forEach(function (item) {
+                exmlc.compile(item,srcPath);
+            });
 
+            callback();
+        },
+        //编译ts文件
         function (callback) {
-            sourceList = sourceList.map(function(item){
-                    return "\"" + item + "\"";
-                });
-            var cmd = "" + sourceList.join(" ") + " -t ES5 --outDir " + "\"" + output + "\"";
+            tsList = tsList.map(function(item){
+                return "\"" + item + "\"";
+            });
+            var cmd = "" + tsList.join(" ") + " -t ES5 --outDir " + "\"" + output + "\"";
             file.save("tsc_config_temp.txt", cmd);
             var ts = cp_exec("tsc @tsc_config_temp.txt");
             ts.stderr.on("data", function (data) {
@@ -79,8 +104,7 @@ function buildAllFile(callback, srcPath, output, sourceList) {
 
 
             ts.on('exit', function (code) {
-                file.remove("tsc_config_temp.txt");
-
+                cleanTempFile();
                 if (code == 0) {
                     callback(null, srcPath);
                 }
@@ -97,7 +121,15 @@ function buildAllFile(callback, srcPath, output, sourceList) {
         callback(err);
     })
 
-
+    function cleanTempFile(){
+        file.remove("tsc_config_temp.txt");
+        if(!keepGeneratedTypescript&&exmlList){
+            exmlList.forEach(function (p) {
+                var tsPath = p.substring(0, p.length-4)+"ts";
+                file.remove(tsPath);
+            });
+        }
+    }
 }
 
 function checkCompilerInstalled(callback) {
@@ -114,10 +146,25 @@ function checkCompilerInstalled(callback) {
     );
 }
 
-function exportHeader(callback, projectPath, list) {
+function exportHeader(callback, projectPath, sourceList) {
+    var list = [];
+    var length = sourceList.length;
+    for(var i=0;i<length;i++){
+        var p = sourceList[i];
+        if(!file.exists(p)){
+            continue;
+        }
+        var ext = file.getExtension(p).toLowerCase();
+        if(ext=="ts"){
+            list.push(p);
+        }
+        else if(ext=="exml"){
+            list.push(p.substring(0, p.length-4)+"ts");
+        }
+    }
     list = list.map(function(item){
-            return "\"" + item + "\"";
-        })
+        return "\"" + item + "\"";
+    })
     var output = path.join(projectPath,"libs/egret.d.ts");
     var source = list.join(" ");
     var cmd = source + " -t ES5 -d --out " + "\"" + output + "\"";
@@ -165,10 +212,74 @@ function generateEgretFileList(runtime,projectPath){
     for(var i=0;i<length;i++){
         manifest[i] = file.joinPath(egretPath,"src",manifest[i]);
     }
-    var egretFileListText = create_file_list.create(manifest,path.join(param.getEgretPath(),"src"),false);
+    var srcPath = path.join(param.getEgretPath(),"src/");
+    srcPath = srcPath.split("\\").join("/");
+    var egretFileListText = createFileList(manifest,srcPath);
     egretFileListText = "var egret_file_list = "+egretFileListText+";";
     file.save(file.joinPath(projectPath,"bin-debug/lib/egret_file_list.js"),egretFileListText);
     return manifest;
+}
+
+function generateGameFileList(projectPath) {
+    var manifestPath = path.join(projectPath,"manifest.json");
+    var srcPath = path.join(projectPath,"src/");
+    var manifest;
+    if(file.exists(manifestPath)){
+        manifest = getManifestJson(manifestPath,srcPath);
+    }
+    else{
+        manifest = create_manifest.create(srcPath);
+    }
+    var fileListText = createFileList(manifest,srcPath);
+    fileListText = "var game_file_list = "+fileListText+";";
+    file.save(path.join(projectPath,"bin-debug/src/game_file_list.js"),fileListText);
+    return manifest;
+}
+
+function getManifestJson(file_list,srcPath) {
+    if(!file.exists(file_list)){
+        return [];
+    }
+    var content = file.read(file_list);
+    try{
+        var manifest = JSON.parse(content);
+    }
+    catch (e){
+        globals.exit(1304,file_list);
+    }
+    var length = manifest.length;
+    for(var i=0;i<length;i++){
+        manifest[i] = file.joinPath(srcPath,manifest[i]);
+    }
+    return manifest;
+}
+
+function createFileList(manifest, srcPath) {
+
+    var gameList = [];
+    var length = manifest.length;
+    for (var i = 0; i < length; i++) {
+        var filePath = manifest[i];
+        if (filePath.indexOf(".d.ts") == -1) {
+            gameList.push(filePath);
+        }
+    }
+
+    length = gameList.length;
+    for (i = 0; i < length; i++) {
+        filePath = gameList[i];
+        filePath = filePath.substring(srcPath.length);
+        var ext = file.getExtension(filePath).toLowerCase();
+        if(ext=="exml"){
+            filePath = filePath.substring(0, filePath.length - 4) + "js";
+        }
+        else if(ext=="ts"){
+            filePath = filePath.substring(0, filePath.length - 2) + "js";
+        }
+        gameList[i] = "    \"" + filePath + "\"";
+    }
+    var gameListText = "[\n" + gameList.join(",\n") + "\n]";
+    return gameListText;
 }
 
 
@@ -177,3 +288,4 @@ exports.compile = buildAllFile;
 exports.exportHeader = exportHeader;
 exports.run = run;
 exports.generateEgretFileList = generateEgretFileList;
+exports.generateGameFileList = generateGameFileList;

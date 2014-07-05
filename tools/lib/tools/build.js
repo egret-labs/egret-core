@@ -1,13 +1,11 @@
 /**
- * 将TypeScript编译为JavaScript
+ * 将TypeScript和EXML编译为JavaScript
  */
-var create_file_list = require("./create_file_list.js");
 var path = require("path");
 var async = require('../core/async');
 var globals = require("../core/globals");
 var param = require("../core/params_analyze.js");
 var compiler = require("./compile.js");
-var exmlc = require("../exml/exmlc.js");
 var file = require("../core/file.js");
 
 function run(dir, args, opts) {
@@ -18,35 +16,17 @@ function run(dir, args, opts) {
 
     var task = [];
 
-    var exmlList = [];
-    task.push(function(callback){
-        if(!keepGeneratedTypescript){
-            globals.addCallBackWhenExit(cleanEXMLList);
-        }
-        var source = path.join(currDir, "src");
-        exmlList = file.search(source,"exml");
-        source += "/";
-        exmlList.forEach(function (item) {
-            exmlc.compile(item,source);
-        });
-
-        callback();
-    })
-
-
     if (needCompileEngine) {
         var egretSourceList = [];
         task.push(
             function (callback) {
                 var runtime = param.getOption(opts, "--runtime", ["html5", "native"]);
                 egretSourceList = compiler.generateEgretFileList(runtime,currDir);
-                callback();
-            },
-            function (callback) {
                 compiler.compile(callback,
                     path.join(param.getEgretPath(), "src"),
                     path.join(currDir, "bin-debug/lib"),
-                    egretSourceList
+                    egretSourceList,
+                    false
                 );
             },
 
@@ -68,15 +48,12 @@ function run(dir, args, opts) {
 
     task.push(
         function (callback) {
-            buildProject(callback,currDir);
+            buildProject(callback,currDir,keepGeneratedTypescript);
         }
     )
 
 
     async.series(task, function (err) {
-        if(!keepGeneratedTypescript) {
-            cleanEXMLList();
-        }
         if (!err){
             globals.log("构建成功");
         }
@@ -85,66 +62,21 @@ function run(dir, args, opts) {
         }
     })
 
-    function cleanEXMLList(){
-        if(exmlList){
-            var source = path.join(currDir, "src");
-            exmlList.forEach(function (item) {
-                var tsPath = path.join(source,item);
-                tsPath = tsPath.substring(0,tsPath.length-5)+".ts";
-                file.remove(tsPath);
-            });
-        }
-    }
+
 }
 
-function buildProject(callback,currDir){
-    var manifestPath = path.join(currDir,"manifest.json");
-    var srcPath = path.join(currDir,"src/");
+function buildProject(callback,currDir,keepGeneratedTypescript){
     var libsPath = path.join(currDir,"libs/");
-    var sourceList;
-    var fileListText = "";
-    if(file.exists(manifestPath)){
-        sourceList = getManifest(manifestPath,srcPath);
-        fileListText = create_file_list.create(sourceList,srcPath,false);
-    }
-    else{
-        sourceList = file.searchByFunction(srcPath,filterFunc);
-        fileListText = create_file_list.create(sourceList,srcPath,true);
-    }
-    fileListText = "var game_file_list = "+fileListText+";";
-        file.save(path.join(currDir,"bin-debug/src/game_file_list.js"),fileListText);
+    var sourceList = compiler.generateGameFileList(currDir);
     var libs = file.search(libsPath,"d.ts");
     compiler.compile(callback,
         path.join(currDir, "src"),
         path.join(currDir, "bin-debug/src"),
-        sourceList.concat(libs)
+        sourceList.concat(libs),
+        keepGeneratedTypescript
     );
 }
 
-function filterFunc(item){
-    if(item.indexOf(".d.ts")==-1&&file.getExtension(item)=="ts"){
-        return true;
-    }
-    return false;
-}
-
-function getManifest(file_list,srcPath) {
-    if(!file.exists(file_list)){
-        return [];
-    }
-    var content = file.read(file_list);
-    try{
-        var manifest = JSON.parse(content);
-    }
-    catch (e){
-        globals.exit(1304,file_list);
-    }
-    var length = manifest.length;
-    for(var i=0;i<length;i++){
-        manifest[i] = file.joinPath(srcPath,manifest[i]);
-    }
-    return manifest;
-}
 
 
 function help_title() {
