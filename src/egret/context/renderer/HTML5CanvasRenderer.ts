@@ -194,6 +194,9 @@ module egret {
             this.canvasContext.strokeRect(x, y, w, h);
         }
 
+
+
+
         //WebGL API
     }
 }
@@ -376,6 +379,9 @@ module egret_h5_graphics {
     export function init():void {
         for (var key in egret_h5_graphics) {
             egret.Graphics.prototype[key] = egret_h5_graphics[key];
+        }
+        egret.RendererContext.createRendererContext = function(canvas:any){
+            return new egret.HTML5CanvasRenderer(canvas);
         }
     }
 

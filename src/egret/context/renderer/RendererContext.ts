@@ -176,6 +176,10 @@ module egret {
 
         public strokeRect(x, y, w, h, color) {
         }
+
+        public static createRendererContext(canvas:any):RendererContext{
+            return null;
+        }
     }
 
 

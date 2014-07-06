@@ -54,7 +54,7 @@ module egret {
                 }
             }
 
-            var renderContext = new egret.HTML5CanvasRenderer(cacheCanvas);
+            var renderContext = egret.RendererContext.createRendererContext(cacheCanvas);
             var renderFilter = egret.RenderFilter.getInstance();
             var drawAreaList:Array<Rectangle> = renderFilter._drawAreaList.concat();
             renderFilter._drawAreaList.length = 0;
