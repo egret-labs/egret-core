@@ -43,7 +43,7 @@ egret_native.egtMain = function () {
     }
     if(rootClass) {
         var rootContainer = new rootClass();
-        if(rootContainer instanceof egret.DisplayObject){
+        if(rootContainer instanceof egret.DisplayObjectContainer){
             context.stage.addChild(rootContainer);
         }
         else{
@@ -51,6 +51,6 @@ egret_native.egtMain = function () {
         }
     }
     else{
-        throw new Error("找不到文档类！请在game_file_list.js指定文档类的完全限定名。");
+        throw new Error("找不到文档类！");
     }
 }

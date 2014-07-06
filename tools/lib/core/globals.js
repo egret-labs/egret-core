@@ -99,6 +99,16 @@ function getConfig(filepath) {
     return obj;
 }
 
+var egretConfig;
+
+function getDocumentClass(currDir){
+    if(!egretConfig){
+        var configPath = path.join(currDir,"egretProperties.json");
+        egretConfig = getConfig(configPath);
+    }
+    return egretConfig["document_class"];
+}
+
 exports.require = _require;
 exports.exit = _exit;
 exports.warn = _warn;
@@ -106,3 +116,4 @@ exports.log = _log;
 exports.joinEgretDir = _joinEgretDir;
 exports.getConfig = getConfig;
 exports.addCallBackWhenExit = addCallBackWhenExit;
+exports.getDocumentClass = getDocumentClass;

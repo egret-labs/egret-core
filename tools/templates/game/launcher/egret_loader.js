@@ -78,16 +78,13 @@ egret_h5.startGame = function () {
     egret.RendererContext.CONTENT_SCALE_FACTOR = 1;
     context.run();
 
-    //在此定义文档类的完整类名，若包含命名空间，需要填写命名空间前缀。
-    var document_class = "GameApp";
-
     var rootClass;
     if(document_class){
         rootClass = egret.getDefinitionByName(document_class);
     }
     if(rootClass) {
         var rootContainer = new rootClass();
-        if(rootContainer instanceof egret.DisplayObject){
+        if(rootContainer instanceof egret.DisplayObjectContainer){
             context.stage.addChild(rootContainer);
         }
         else{

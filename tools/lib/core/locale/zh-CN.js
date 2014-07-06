@@ -15,6 +15,8 @@ exports.error_code = {
     1302:"请输入编译路径。例:{color_green}egret compile --source [your_typescript_source_dir] --output [your_output_dir]{color_normal}",
     1303:"编译失败",
     1304:"解析manifest.json文件失败，请检查文件是否为正确的JSON格式:\n{0}",
+    1305:"读取launcher/{0}.html失败，请检查编译路径是否正确",
+    1306:"在launcher/{0}内找不到文档类'document_class'的变量定义，请检查文件内容是否正确",
     1401:"找不到java或java版本过低（最低需求为 java 7 ),请安装java并执行 java -version 命令确认",
     1501:"无法启动服务器，请检查权限或端口是否被占用",
     1601:"请输入项目名称和h5游戏目录。例: {color_green}egret create_app [app_name] -f [h5_game_path] -n [native_path]{color_normal}",

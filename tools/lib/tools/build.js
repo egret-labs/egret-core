@@ -7,6 +7,7 @@ var globals = require("../core/globals");
 var param = require("../core/params_analyze.js");
 var compiler = require("./compile.js");
 var file = require("../core/file.js");
+var code_util = require("../core/code_util.js");
 
 function run(dir, args, opts) {
     var needCompileEngine = opts["-e"];
@@ -66,6 +67,11 @@ function run(dir, args, opts) {
 }
 
 function buildProject(callback,currDir,keepGeneratedTypescript){
+    var document_class = globals.getDocumentClass(currDir);
+    replaceDocumentClass("index.html",document_class,currDir);
+    replaceDocumentClass("release.html",document_class,currDir);
+    replaceDocumentClass("native_loader.js",document_class,currDir);
+
     var libsPath = path.join(currDir,"libs/");
     var sourceList = compiler.generateGameFileList(currDir);
     var libs = file.search(libsPath,"d.ts");
@@ -75,6 +81,44 @@ function buildProject(callback,currDir,keepGeneratedTypescript){
         sourceList.concat(libs),
         keepGeneratedTypescript
     );
+}
+
+function replaceDocumentClass(key,document_class,currDir){
+    var filePath = path.join(currDir,"launcher",key);
+    var indexHtml = file.read(filePath);
+    if(!indexHtml){
+        globals.exit(1305,key);
+    }
+    var html = "";
+    var found = false;
+    while(indexHtml.length>0){
+        var index = code_util.getFirstVariableIndex("document_class",indexHtml);
+        if(index==-1){
+            html += indexHtml;
+            break;
+        }
+        html += indexHtml.substring(0,index+14);
+        indexHtml = indexHtml.substring(index+14).trim();
+        if(indexHtml.charAt(0)=="="){
+            html += " = ";
+            indexHtml = indexHtml.substring(1).trim();
+            var quote = indexHtml.charAt(0);
+            if(quote=="\""||quote=="'"){
+                html += quote;
+                indexHtml = indexHtml.substring(1);
+                index = indexHtml.indexOf(quote);
+                if(index!=-1){
+                    html += document_class;
+                    indexHtml = indexHtml.substring(index);
+                    found = true;
+                }
+            }
+        }
+    }
+    if(!found){
+        globals.exit(1306,key);
+    }
+    file.save(filePath,html);
 }
 
 
