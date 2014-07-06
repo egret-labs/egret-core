@@ -264,13 +264,6 @@ function createFileList(manifest, srcPath) {
         if (filePath.indexOf(".d.ts") != -1) {
             continue;
         }
-        var fileName = file.getFileName(filePath);
-        if(fileName.charAt(0)=="I"){
-            var str = fileName.charAt(1);
-            if(str>="A"&&str<="Z"&&isInterface(filePath)){
-                continue;
-            }
-        }
         gameList.push(filePath);
     }
 
@@ -290,22 +283,6 @@ function createFileList(manifest, srcPath) {
     var gameListText = "[\n" + gameList.join(",\n") + "\n]";
     return gameListText;
 }
-
-/**
- * 这个文件是否只含有接口
- */
-function isInterface(path){
-    var text = file.read(path);
-    text = CodeUtil.removeComment(text);
-    text = create_manifest.removeInterface(text);
-    if (!CodeUtil.containsVariable("class", text) &&
-        !CodeUtil.containsVariable("var", text) &&
-        !CodeUtil.containsVariable("function", text)) {
-        return true;
-    }
-    return false;
-}
-
 
 
 exports.compile = compile;

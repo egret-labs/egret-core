@@ -104,9 +104,19 @@ var egretConfig;
 function getDocumentClass(currDir){
     if(!egretConfig){
         var configPath = path.join(currDir,"egretProperties.json");
-        egretConfig = getConfig(configPath);
+        if(file.exists(configPath)){
+            var content = file.read(configPath);
+            try{
+                egretConfig = JSON.parse(content);
+            }
+            catch (e)
+            {}
+        }
     }
-    return egretConfig["document_class"];
+    if(egretConfig){
+        return egretConfig["document_class"];
+    }
+    return "";
 }
 
 exports.require = _require;

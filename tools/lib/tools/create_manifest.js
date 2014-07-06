@@ -142,9 +142,16 @@ function sortFileList(list,srcPath){
     }
     for (i = 0; i < length; i++) {
         path = list[i];
-        readReference(path);
+        var ext = file.getExtension(path).toLowerCase();
+        if(ext=="exml"){
+            readReferenceFromExml(path);
+        }
+        else{
+            readReferenceFromTs(path);
+        }
     }
     textTemp = null;
+
 
     var paths = [];
     //把所有引用关系都合并到pathInfoList里，并把类名替换为对应文件路径。
@@ -184,8 +191,39 @@ function sortFileList(list,srcPath){
         list = sortOnReference(list);
         gameList = list.concat(gameList);
     }
+
+    //删除文档类没有引用过的类名
+    var documentClass = globals.getDocumentClass(srcPath.substring(0,srcPath.length-4));
+    var docPath = classNameToPath[documentClass];
+    if(docPath){
+        var referenceList = [docPath];
+        getReferenceList(docPath,referenceList);
+        for(var i=gameList.length-1;i>=0;i--){
+            var path = gameList[i];
+            if(referenceList.indexOf(path)==-1){
+                gameList.splice(i,1);
+            }
+        }
+    }
     return gameList;
 }
+
+function getReferenceList(path,result){
+    var list = referenceInfoList[path];
+    if(list){
+        var length = list.length;
+        for(var i=0;i<length;i++){
+            var path = list[i];
+            if(path&&result.indexOf(path)==-1){
+                result.push(path);
+                getReferenceList(path,result);
+            }
+        }
+    }
+
+}
+
+
 /**
  * 按照引用关系进行排序
  */
@@ -273,12 +311,56 @@ function setPathLevel(path, level, pathLevelInfo, map,pathRelyInfo,throwError) {
         setPathLevel(relyPath, level + 1, pathLevelInfo, map.concat(relyPath),pathRelyInfo,throwError);
     }
 }
+/**
+ * 读取一个EXML文件引用的类名列表
+ */
+function readReferenceFromExml(path){
+    var text = textTemp[path];
+    var exml = xml.parse(text);
+    if(!exml){
+        return;
+    }
+    var list = [];
+    readReferenceFromNode(exml,list);
+    referenceInfoList[path] = list;
+}
+/**
+ * 从一个xml节点读取类名引用
+ */
+function readReferenceFromNode(node,list){
+    if(!node){
+        return;
+    }
+    var className = getClassNameById(node.localName,node.namespace);
+    var path = classNameToPath[className];
+    if(path&&list.indexOf(path)==-1){
+        list.push(path);
+    }
 
+    for(var key in node){
+        if(key.charAt(0)=="$"){
+            var value = node[key];
+            path = classNameToPath[value];
+            if(path&&list.indexOf(path)==-1){
+                list.push(path);
+            }
+        }
+    }
+
+    var children = node.children;
+    if(children){
+        var length = children.length;
+        for(var i=0;i<length;i++){
+            var child = children[i];
+            readReferenceFromNode(child,list);
+        }
+    }
+}
 
 /**
- * 读取一个文件引用的类名列表
+ * 读取一个TS文件引用的类名列表
  */
-function readReference(path){
+function readReferenceFromTs(path){
     var text = textTemp[path];
     text = CodeUtil.removeComment(text);
     text = removeInterface(text);
@@ -660,7 +742,6 @@ function help_example() {
 
 exports.run = run;
 exports.create = create;
-exports.removeInterface = removeInterface;
 exports.getClassToPathInfo = getClassToPathInfo;
 exports.help_title = help_title;
 exports.help_example = help_example;

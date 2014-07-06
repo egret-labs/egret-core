@@ -68,9 +68,11 @@ function run(dir, args, opts) {
 
 function buildProject(callback,currDir,keepGeneratedTypescript){
     var document_class = globals.getDocumentClass(currDir);
-    replaceDocumentClass("index.html",document_class,currDir);
-    replaceDocumentClass("release.html",document_class,currDir);
-    replaceDocumentClass("native_loader.js",document_class,currDir);
+    if(document_class){
+        replaceDocumentClass("index.html",document_class,currDir);
+        replaceDocumentClass("release.html",document_class,currDir);
+        replaceDocumentClass("native_loader.js",document_class,currDir);
+    }
 
     var libsPath = path.join(currDir,"libs/");
     var sourceList = compiler.generateGameFileList(currDir);
