@@ -362,6 +362,8 @@ function trimVariableRight(str) {
 function removeComment(codeText) {
     var NBSP = "\v3\v";
     var trimText = "";
+
+    codeText = codeText.split("\\\\").join("\v0\v");
     codeText = codeText.split("\\\"").join("\v1\v");
     codeText = codeText.split("\\\'").join("\v2\v");
     while (codeText.length > 0) {
@@ -413,7 +415,8 @@ function removeComment(codeText) {
                 break;
         }
     }
-    codeText = trimText.split("\v1\v").join("\\\"");
+    codeText = trimText.split("\v0\v").join("\\\\");
+    codeText = codeText.split("\v1\v").join("\\\"");
     codeText = codeText.split("\v2\v").join("\\\'");
     return codeText;
 }

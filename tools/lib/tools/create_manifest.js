@@ -20,6 +20,14 @@ var pathToClassNames;
  */
 var pathInfoList;
 /**
+ * 键为文件路径，值为这个文件引用的文件列表
+ */
+var referenceInfoList;
+/**
+ * 在静态变量或全局变量上被new出来的对象类名列表
+ */
+var newClassNameList;
+/**
  * ts关键字
  */
 var functionKeys = ["static", "var", "export", "public", "private", "function", "get", "set", "class", "interface"];
@@ -36,6 +44,7 @@ var W = "http://ns.egret-labs.org/wing";
  */
 var basicTypes = ["void","any","number","string","boolean","Object","Array","Function"];
 
+var textTemp;
 
 /**
  * 生成manifest.json文件
@@ -76,6 +85,8 @@ function create(srcPath){
     classNameToPath = {};
     pathInfoList = {};
     pathToClassNames = {};
+    referenceInfoList = {};
+    newClassNameList = [];
     var manifest = file.searchByFunction(srcPath,filterFunc);
     var exmlList = [];
     for(var i=manifest.length-1;i>=0;i--){
@@ -116,10 +127,11 @@ function sortFileList(list,srcPath){
     if (srcPath.charAt(srcPath.length - 1) != "/") {
         srcPath += "/";
     }
-
+    textTemp = {};
     var length = list.length;
     for (var i = 0; i < length; i++) {
         var path = list[i];
+        textTemp[path] = file.read(path);
         var ext = file.getExtension(path).toLowerCase();
         if(ext=="exml"){
             readClassNamesFromExml(path,srcPath);
@@ -128,7 +140,16 @@ function sortFileList(list,srcPath){
             readClassNamesFromTs(path);
         }
     }
+    for (i = 0; i < length; i++) {
+        path = list[i];
+        readReference(path);
+    }
+    textTemp = null;
+
+    var paths = [];
+    //把所有引用关系都合并到pathInfoList里，并把类名替换为对应文件路径。
     for (var path in pathInfoList) {
+        paths.push(path);
         var list = pathInfoList[path];
         var classList = pathToClassNames[path];
         length = classList.length;
@@ -155,19 +176,49 @@ function sortFileList(list,srcPath){
         }
     }
 
-    var pathLevelInfo = {};
-    for (path in pathInfoList) {
-        setPathLevel(path, 0, pathLevelInfo, [path]);
+    var pathList = sortOnPathLevel(paths,pathInfoList,true);
+
+    var gameList = [];
+    for (var key in pathList) {
+        list = pathList[key];
+        list = sortOnReference(list);
+        gameList = list.concat(gameList);
     }
-    var pathList = [];
-    for (path in pathLevelInfo) {
-        var level = pathLevelInfo[path];
-        if (pathList[level]) {
-            pathList[level].push(path);
-        } else {
-            pathList[level] = [path];
+    return gameList;
+}
+/**
+ * 按照引用关系进行排序
+ */
+function sortOnReference(list){
+    var pathRelyInfo = {};
+    var length = list.length;
+    for(var i=0;i<length;i++){
+        var path = list[i];
+        var refList = [];
+        var reference = referenceInfoList[path];
+        for(var j=list.length-1;j>=0;j--){
+            var p = reference[j];
+            if(list.indexOf(p)!=-1){
+                refList.push(p);
+            }
+        }
+        pathRelyInfo[path] = refList;
+    }
+
+    var firstList = [];
+    var secondList = [];
+    for(i=0;i<length;i++){
+        path = list[i];
+        if(newClassNameList.indexOf(path)!=-1){
+            firstList.push(path);
+        }
+        else{
+            secondList.push(path);
         }
     }
+    list = firstList.concat(secondList);
+
+    var pathList = sortOnPathLevel(list,pathRelyInfo,false);
     var gameList = [];
     for (var key in pathList) {
         list = pathList[key];
@@ -177,29 +228,139 @@ function sortFileList(list,srcPath){
     return gameList;
 }
 /**
+ * 根据引用深度排序
+ */
+function sortOnPathLevel(list,pathRelyInfo,throwError){
+    var length = list.length;
+    var pathLevelInfo = {};
+    for(var i=0;i<length;i++){
+        var path = list[i];
+        setPathLevel(path, 0, pathLevelInfo, [path],pathRelyInfo,throwError);
+    }
+
+    //pathList里存储每个level对应的文件路径列表
+    var pathList = [];
+    for (path in pathLevelInfo) {
+        var level = pathLevelInfo[path];
+        if (pathList[level]) {
+            pathList[level].push(path);
+        }
+        else {
+            pathList[level] = [path];
+        }
+    }
+    return pathList;
+}
+/**
  * 设置文件引用深度
  */
-function setPathLevel(path, level, pathLevelInfo, map) {
+function setPathLevel(path, level, pathLevelInfo, map,pathRelyInfo,throwError) {
     if (pathLevelInfo[path] == null) {
         pathLevelInfo[path] = level;
     } else {
         pathLevelInfo[path] = Math.max(pathLevelInfo[path], level);
     }
-    var list = pathInfoList[path];
+    var list = pathRelyInfo[path];
     var length = list.length;
     for (var i = 0; i < length; i++) {
         var relyPath = list[i];
         if (map.indexOf(relyPath) != -1) {
-            globals.exit(1103, path);
+            if(throwError){
+                globals.exit(1103, path);
+            }
+            break;
         }
-        setPathLevel(relyPath, level + 1, pathLevelInfo, map.concat(relyPath));
+        setPathLevel(relyPath, level + 1, pathLevelInfo, map.concat(relyPath),pathRelyInfo,throwError);
     }
 }
+
+
+/**
+ * 读取一个文件引用的类名列表
+ */
+function readReference(path){
+    var text = textTemp[path];
+    text = CodeUtil.removeComment(text);
+    text = removeInterface(text);
+    var orgText = text;
+    var block = "";
+    var tsText = "";
+    var moduleList = {};
+    while (text.length > 0) {
+        var index = text.indexOf("{");
+        if (index == -1) {
+            if (tsText) {
+                tsText = "";
+            }
+            break;
+        } else {
+            var preStr = text.substring(0, index);
+            tsText += preStr;
+            text = text.substring(index);
+            index = CodeUtil.getBracketEndIndex(text);
+            if (index == -1) {
+                break;
+            }
+            block = text.substring(1, index);
+            text = text.substring(index + 1);
+            var ns = CodeUtil.getLastWord(preStr);
+            preStr = CodeUtil.removeLastWord(preStr);
+            var word = CodeUtil.getLastWord(preStr);
+            if (word == "module") {
+                if (tsText) {
+                    tsText = "";
+                }
+                if(!moduleList[ns]){
+                    moduleList[ns] = block;
+                }
+                else{
+                    moduleList[ns] += block;
+                }
+
+            } else {
+                tsText += "{" + block + "}";
+            }
+        }
+    }
+
+    var list = [];
+    for(var className in classInfoList){
+        if(CodeUtil.containsVariable(className,orgText)){
+            var p = classNameToPath[className];
+            if(p&&p!=path&&list.indexOf(p)==-1){
+                list.push(p);
+            }
+            continue;
+        }
+        var key = className;
+        var index = className.lastIndexOf(".");
+        if(index==-1){
+            continue;
+        }
+        key = className.substring(index+1);
+        var targetNS = className.substring(0,index);
+
+        for(var ns in moduleList){
+            if(ns==targetNS){
+                text = moduleList[ns];
+                if(CodeUtil.containsVariable(key,text)){
+                    p = classNameToPath[className];
+                    if(p&&p!=path&&list.indexOf(p)==-1){
+                        list.push(p);
+                    }
+                    break;
+                }
+            }
+        }
+    }
+    referenceInfoList[path] = list;
+}
+
 /**
  * 读取一个exml文件引用的类列表
  */
 function readClassNamesFromExml(path,srcPath){
-    var text = file.read(path);
+    var text = textTemp[path];
     var exml = xml.parse(text);
     if(!exml){
         return;
@@ -237,8 +398,11 @@ function getClassNameById(id,ns){
  * 读取一个ts文件引用的类列表
  */
 function readClassNamesFromTs(path) {
+    if(path.indexOf("SheetAnalyzer")!=-1){
+        path.substr(1);
+    }
     var fileRelyOnList = [];
-    var text = file.read(path);
+    var text = textTemp[path];
     var list = [];
     text = CodeUtil.removeComment(text);
     text = removeInterface(text);
@@ -398,7 +562,11 @@ function getRelyOnFromVar(text, ns, relyOnList) {
         var word = getClass(text, ns);
         if (word && relyOnList.indexOf(word) == -1) {
             relyOnList.push(word);
+            if(newClassNameList.indexOf(word)==-1){
+                newClassNameList.push(word);
+            }
         }
+
     }
 }
 /**
@@ -456,6 +624,9 @@ function getRelyOnFromStatic(text, ns, relyOnList) {
         word = getClass(text, ns);
         if (word && relyOnList.indexOf(word) == -1) {
             relyOnList.push(word);
+            if(newClassNameList.indexOf(word)==-1){
+                newClassNameList.push(word);
+            }
         }
     }
 }
