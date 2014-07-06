@@ -58,6 +58,9 @@ declare module egret_native {
 
         function setGlobalAlpha(alpha:number):void;
 
+        function pushRectStencil(x:number,y:number,w:number,h:number,r:number,g:number,b:number,a:number,hackFlag:number,forceCreateMask:boolean):void;
+
+        function popStencil():void;
 
     }
 
