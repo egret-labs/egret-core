@@ -183,15 +183,25 @@ module egret {
         }
 
         clip(x, y, w, h) {
-            this.canvasContext.beginPath();
-            this.canvasContext.rect(x + this._transformTx, y + this._transformTy, w, h);
-            this.canvasContext.clip();
-            this.canvasContext.closePath();
+
         }
 
         strokeRect(x, y, w, h, color) {
             this.canvasContext.strokeStyle = color;
             this.canvasContext.strokeRect(x, y, w, h);
+        }
+
+
+        public pushMask(mask:Rectangle):void{
+            this.canvasContext.save();
+            this.canvasContext.beginPath();
+            this.canvasContext.rect(mask.x + this._transformTx, mask.y + this._transformTy, mask.width, mask.height);
+            this.canvasContext.clip();
+            this.canvasContext.closePath();
+        }
+
+        public popMask():void{
+            this.canvasContext.restore();
         }
 
 
