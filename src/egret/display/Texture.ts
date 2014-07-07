@@ -89,6 +89,15 @@ module egret {
         }
 
         /**
+         * 纹理原图宽度
+         */
+        public sourceWidth:number = 0;
+        /**
+         * 纹理原图高度
+         */
+        public sourceHeight:number = 0;
+
+        /**
          * 纹理对象中得位图数据
          * @member {any} egret.Texture#bitmapData
          */
@@ -105,6 +114,8 @@ module egret {
             this._textureHeight = value.height * scale;
             this._actualWidth = this._textureWidth;
             this._actualHeight = this._textureHeight;
+            this.sourceWidth = this._textureWidth;
+            this.sourceHeight = this._textureHeight;
         }
 
         /**

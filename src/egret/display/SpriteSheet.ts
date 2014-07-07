@@ -89,7 +89,7 @@ module egret {
                 originalHeight = offsetY+height;
             }
             var texture:Texture = new Texture();
-            texture._bitmapData = this.bitmapData;
+            texture.bitmapData = this.bitmapData;
             texture._startX = startX;
             texture._startY = startY;
             texture._actualWidth = width;
