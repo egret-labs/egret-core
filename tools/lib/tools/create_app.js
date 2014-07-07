@@ -11,6 +11,15 @@ function run(dir, args, opts) {
 	if (!app_name || !h5_path || !template_path) {
 		globals.exit(1601);
 	}
+    globals.log("> compile html project to android/ios ...");
+    // egert build h5_project -e --runtime native
+    var build_args = [path.resolve(h5_path[0])];
+    var build_opts = {
+        "-e": " ",
+        "--runtime": ["native"]
+    };
+    var build = require('./build.js');
+    build.run(dir, build_args, build_opts);
     create_app_from(path.resolve(app_name), path.resolve(h5_path[0]), path.resolve(template_path[0]));
 }
 
