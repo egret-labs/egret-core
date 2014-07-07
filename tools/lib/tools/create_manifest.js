@@ -396,7 +396,6 @@ function readReferenceFromNode(node,list){
 function readReferenceFromTs(path){
     var text = textTemp[path];
     text = CodeUtil.removeComment(text);
-    text = removeInterface(text);
     var orgText = text;
     var block = "";
     var tsText = "";
@@ -454,9 +453,10 @@ function readReferenceFromTs(path){
         }
         key = className.substring(index+1);
         var targetNS = className.substring(0,index);
+        targetNS = targetNS.split(".")[0];
 
         for(var ns in moduleList){
-            if(ns==targetNS){
+            if(ns.split(".")[0]==targetNS){
                 text = moduleList[ns];
                 if(CodeUtil.containsVariable(key,text)){
                     p = classNameToPath[className];
@@ -542,7 +542,6 @@ function analyzeTsFile(path,readRelyOn){
     var text = textTemp[path];
     var list = [];
     text = CodeUtil.removeComment(text);
-    text = removeInterface(text);
     if(readRelyOn){
         readRelyOnFromImport(text, fileRelyOnList);
     }
@@ -646,20 +645,29 @@ function readClassFromBlock(text, fileRelyOnList,path, ns,readRelyOn) {
     var list = [];
 
     while (text.length > 0) {
+
         var index = CodeUtil.getFirstVariableIndex("class", text);
-        if (index == -1) {
+        if(index==-1){
+            index = Number.POSITIVE_INFINITY;
+        }
+        var interfaceIndex = CodeUtil.getFirstVariableIndex("interface", text);
+        if(interfaceIndex==-1){
+            interfaceIndex = Number.POSITIVE_INFINITY;
+        }
+        index = Math.min(interfaceIndex,index);
+        if (index == Number.POSITIVE_INFINITY) {
             if(readRelyOn){
                 findClassInLine(text,pathToClassNames[path],ns,fileRelyOnList);
             }
             break;
         }
-
-        var preStr = text.substring(0, index + 5);
+        var keyLength = index==interfaceIndex?9:5;
+        var preStr = text.substring(0, index + keyLength);
         if(readRelyOn){
             findClassInLine(preStr,pathToClassNames[path],ns,fileRelyOnList)
         }
 
-        text = text.substring(index + 5);
+        text = text.substring(index + keyLength);
         var word = CodeUtil.getFirstVariable(text);
         if (word) {
             var className;
@@ -719,24 +727,6 @@ function readClassFromBlock(text, fileRelyOnList,path, ns,readRelyOn) {
     return list;
 }
 
-/**
- * 获取变量的类型
- */
-function getClass(text, ns) {
-    var word = CodeUtil.getFirstWord(text);
-    var index = word.indexOf("(");
-    if (index != -1) {
-        word = word.substring(0, index);
-    }
-    word = CodeUtil.trimVariable(word);
-    if (word.indexOf("Array<") == 0) {
-        return "";
-    }
-    if (ns && word.indexOf(".") == -1) {
-        word = ns + "." + word;
-    }
-    return word;
-}
 /**
  * 从代码的静态变量中读取依赖关系
  */
