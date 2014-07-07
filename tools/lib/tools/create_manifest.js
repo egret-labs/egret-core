@@ -11,6 +11,11 @@ var classInfoList;
  * 键为类名，值为这个类所在的文件路径
  */
 var classNameToPath;
+
+/**
+ * 键是不含命名空间的类名，值是命名空间
+ */
+var classNameToModule;
 /**
  * 键为文件路径，值为这个文件包含的类名列表
  */
@@ -27,6 +32,7 @@ var referenceInfoList;
  * 在静态变量或全局变量上被new出来的对象类名列表
  */
 var newClassNameList;
+
 /**
  * ts关键字
  */
@@ -45,8 +51,6 @@ var W = "http://ns.egret-labs.org/wing";
 var basicTypes = ["void","any","number","string","boolean","Object","Array","Function"];
 
 var textTemp;
-
-create("D:/Program/HTML5/Hello/src/");
 
 /**
  * 生成manifest.json文件
@@ -101,6 +105,7 @@ function create(srcPath){
 function getManifest(srcPath){
     classInfoList = {};
     classNameToPath = {};
+    classNameToModule = {};
     pathInfoList = {};
     pathToClassNames = {};
     referenceInfoList = {};
@@ -665,6 +670,13 @@ function readClassFromBlock(text, fileRelyOnList,path, ns,readRelyOn) {
             }
             if (list.indexOf(className) == -1) {
                 list.push(className);
+                var nsList = classNameToModule[word];
+                if(!nsList){
+                    nsList = classNameToModule[word] = [];
+                }
+                if(nsList.indexOf(ns)==-1){
+                    nsList.push(ns);
+                }
             }
             if(readRelyOn){
                 var relyOnList = classInfoList[className];
@@ -674,15 +686,24 @@ function readClassFromBlock(text, fileRelyOnList,path, ns,readRelyOn) {
             }
             text = CodeUtil.removeFirstVariable(text);
             word = CodeUtil.getFirstVariable(text);
-            if (word == "extends") {
+            if (readRelyOn&&word == "extends") {
                 text = CodeUtil.removeFirstVariable(text);
                 word = CodeUtil.getFirstWord(text);
                 word = CodeUtil.trimVariable(word);
                 if (ns && word.indexOf(".") == -1) {
-                    word = ns + "." + word;
+                    var nsList = classNameToModule[word];
+                    var length = nsList.length;
+                    var prefix = ns.split(".")[0];
+                    for(var k=0;k<length;k++){
+                        var superNs = nsList[k];
+                        if(superNs.split(".")[0]==prefix){
+                            word = superNs+"."+word;
+                        }
+                    }
                 }
-                if (readRelyOn&&relyOnList.indexOf(word) == -1) {
+                if (relyOnList.indexOf(word) == -1) {
                     relyOnList.push(word);
+
                 }
             }
         }
