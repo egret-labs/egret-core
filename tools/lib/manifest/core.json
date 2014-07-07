@@ -193,7 +193,6 @@
     "extension/resource/analyzer/JsonAnalyzer.ts",
     "extension/resource/analyzer/TextAnalyzer.ts",
     "extension/resource/analyzer/SheetAnalyzer.ts",
-    "extension/resource/analyzer/StarlingSwfSheetAnalyzer.ts",
     "extension/resource/analyzer/FontAnalyzer.ts",
     "extension/resource/analyzer/SoundAnalyzer.ts",
     "extension/resource/analyzer/XMLAnalyzer.ts",

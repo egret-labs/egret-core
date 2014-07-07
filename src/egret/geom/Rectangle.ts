@@ -160,8 +160,10 @@ module egret {
          * @returns {boolean}
          */
         public containsPoint(point:Point):boolean {
-            if (this.x < point.x && this.width > point.x
-                && this.y < point.y && this.height > point.y) {
+            if (this.x < point.x
+                && this.x + this.width > point.x
+                && this.y < point.y
+                && this.y + this.height > point.y) {
                 return true;
             }
             return false;

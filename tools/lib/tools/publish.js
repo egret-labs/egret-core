@@ -280,7 +280,7 @@ function run(dir, args, opts) {
         return path.join(currDir + "/bin-debug/src/", item);
     });
 
-    var totalFileList = egretFileList.concat(gameFileList, currDir + "/launcher/egret_loader.js");
+    var totalFileList = egretFileList.concat(gameFileList);
     ClosureCompiler.compile(totalFileList,
         {js_output_file: currDir + "/launcher/game-min.js"},
         function afterCompile(err, stdout, stderr) {

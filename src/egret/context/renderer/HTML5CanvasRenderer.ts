@@ -202,6 +202,7 @@ module egret {
 
         public popMask():void{
             this.canvasContext.restore();
+            this.canvasContext.setTransform(1,0,0,1,0,0);
         }
 
 
