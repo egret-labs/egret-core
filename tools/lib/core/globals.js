@@ -77,7 +77,7 @@ function _warn(code) {
 function _joinEgretDir(dir, projectName) {
     var currDir = dir;
     if (projectName) {
-        currDir = path.join(currDir, projectName);
+        currDir = path.resolve(projectName);
     }
 
     var stat2 = file.exists(path.join(currDir, "src"));

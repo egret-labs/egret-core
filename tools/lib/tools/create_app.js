@@ -6,17 +6,26 @@ var file = require('../core/file.js');
 
 function run(dir, args, opts) {
 	var app_name = args[0];
-    var native_path = opts["-n"];
+    var template_path = opts["-t"];
 	var h5_path = opts["-f"];
-	if (!app_name || !h5_path || !native_path) {
+	if (!app_name || !h5_path || !template_path) {
 		globals.exit(1601);
 	}
-    create_app_from(path.resolve(app_name), path.resolve(h5_path[0]), path.resolve(native_path[0]));
+    globals.log("> compile html project to android/ios ...");
+    // egert build h5_project -e --runtime native
+    var build_args = [path.resolve(h5_path[0])];
+    var build_opts = {
+        "-e": " ",
+        "--runtime": ["native"]
+    };
+    var build = require('./build.js');
+    build.run(dir, build_args, build_opts);
+    create_app_from(path.resolve(app_name), path.resolve(h5_path[0]), path.resolve(template_path[0]));
 }
 
 
-function create_app_from(app_name, h5_path, native_path) {
-    var app_data = JSON.parse(file.read(path.join(native_path, "create_app.json")));
+function create_app_from(app_name, h5_path, template_path) {
+    var app_data = JSON.parse(file.read(path.join(template_path, "create_app.json")));
     if (!app_data) {
         globals.exit(1602);
     }
@@ -24,7 +33,7 @@ function create_app_from(app_name, h5_path, native_path) {
     // copy from project template
     globals.log("> copy from project template ...");
     for (var i = 0; i < app_data.template.source.length; ++i) {
-        file.copy(path.join(native_path, app_data.template.source[i]),
+        file.copy(path.join(template_path, app_data.template.source[i]),
             path.join(app_name, app_data.template.source[i]));
     }
 
@@ -53,6 +62,9 @@ function create_app_from(app_name, h5_path, native_path) {
             file.remove(path.join(target, ".gitignore"));
         }
     }
+
+    globals.log("> save the resources target to game config ...");
+    //TODO write $(app_name) to the egret_prefs.json
 }
 
 
@@ -62,7 +74,7 @@ function help_title() {
 
 
 function help_example() {
-    return "egret create_app [app_name] -f [h5_game_path] -n [native_path]";
+    return "egret create_app [app_name] -f [h5_game_path] -t [template_path]";
 }
 
 
