@@ -134,7 +134,7 @@ module RES {
                     var keys:Array<string> = (<string> group.keys).split(",");
                     var l:number = keys.length;
                     for (var j:number = 0; j < l; j++) {
-                        var name:string = this.trim(keys[j]);
+                        var name:string = keys[j].trim();
                         item = this.keyMap[name];
                         if (item && list.indexOf(item) == -1) {
                             list.push(item);
