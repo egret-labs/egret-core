@@ -490,10 +490,6 @@ module egret {
          * @param renderContext
          */
         public _updateTransform():void {
-            if(this instanceof Bitmap)
-            {
-                return;
-            }
             var o = this;
             o._worldTransform.identity().appendMatrix(o._parent._worldTransform);
             var anchorX, anchorY;

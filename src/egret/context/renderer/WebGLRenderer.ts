@@ -359,7 +359,7 @@ module egret {
         private maskList:Array<any> = [];
         private maskDataFreeList:Array<any> = [];
 
-        public clip(x, y, w, h) {
+        public pushMask(mask:Rectangle):void{
             this._draw();
             var gl:any = this.gl;
             if (this.maskList.length == 0) {
@@ -369,13 +369,13 @@ module egret {
 
             var maskData:any = this.maskDataFreeList.pop();
             if (!maskData) {
-                maskData = {x: x, y: y, w: w, h: h};
+                maskData = {x: mask.x, y: mask.y, w: mask.width, h: mask.height};
             }
             else {
-                maskData.x = x;
-                maskData.y = y;
-                maskData.w = w;
-                maskData.h = h;
+                maskData.x = mask.x;
+                maskData.y = mask.y;
+                maskData.w = mask.width;
+                maskData.h = mask.height;
             }
             this.maskList.push(maskData);
 
@@ -389,7 +389,7 @@ module egret {
             gl.stencilOp(gl.KEEP, gl.KEEP, gl.KEEP);
         }
 
-        public restore() {
+        public popMask():void{
             this._draw();
             var gl:any = this.gl;
             var maskData = this.maskList.pop();
