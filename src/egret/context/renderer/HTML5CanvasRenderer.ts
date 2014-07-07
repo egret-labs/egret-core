@@ -27,17 +27,17 @@
 
 
 module egret {
-	/**
-	 * @class egret.HTML5CanvasRenderer
-	 * @classdesc
-	 * @extends egret.RendererContext
-	 */
+    /**
+     * @class egret.HTML5CanvasRenderer
+     * @classdesc
+     * @extends egret.RendererContext
+     */
     export class HTML5CanvasRenderer extends RendererContext {
 
         private canvas;
-		/**
-		 * @member egret.HTML5CanvasRenderer#canvasContext
-		 */
+        /**
+         * @member egret.HTML5CanvasRenderer#canvasContext
+         */
         public canvasContext;
 
         private _matrixA:number;
@@ -57,14 +57,14 @@ module egret {
             this.canvasContext = canvas.getContext("2d");
             var f = this.canvasContext.setTransform;
             var that = this;
-            this.canvasContext.setTransform = function (a,b,c,d,tx,ty){
+            this.canvasContext.setTransform = function (a, b, c, d, tx, ty) {
                 that._matrixA = a;
                 that._matrixB = b;
                 that._matrixC = c;
                 that._matrixD = d;
                 that._matrixTx = tx;
                 that._matrixTy = ty;
-                f.call(that.canvasContext,a, b, c, d, tx, ty);
+                f.call(that.canvasContext, a, b, c, d, tx, ty);
             };
             this._matrixA = 1;
             this._matrixB = 0;
@@ -132,7 +132,7 @@ module egret {
         restore() {
 //            return;
             this.canvasContext.restore();
-            this.canvasContext.setTransform(1,0,0,1,0,0);
+            this.canvasContext.setTransform(1, 0, 0, 1, 0, 0);
         }
 
 
@@ -144,7 +144,7 @@ module egret {
                 this.blendValue = blendMode.value;
                 this.canvasContext.globalCompositeOperation = blendMode.value;
             }
-            else if(this.blendValue != egret.BlendMode.NORMAL.value){
+            else if (this.blendValue != egret.BlendMode.NORMAL.value) {
                 this.blendValue = egret.BlendMode.NORMAL.value;
                 this.canvasContext.globalCompositeOperation = egret.BlendMode.NORMAL.value;
             }
@@ -152,8 +152,8 @@ module egret {
 
         setupFont(textField:TextField):void {
             var ctx = this.canvasContext;
-            var font:string = textField.italic?"italic ":"normal ";
-            font += textField.bold?"bold ":"normal ";
+            var font:string = textField.italic ? "italic " : "normal ";
+            font += textField.bold ? "bold " : "normal ";
             font += textField.size + "px " + textField.fontFamily;
             ctx.font = font;
             ctx.textAlign = "left";
@@ -179,14 +179,11 @@ module egret {
                 renderContext.strokeText(text, x + this._transformTx, y + this._transformTy, maxWidth || 0xFFFF);
             }
             renderContext.fillText(text, x + this._transformTx, y + this._transformTy, maxWidth || 0xFFFF);
-            super.drawText(textField,text, x, y, maxWidth);
+            super.drawText(textField, text, x, y, maxWidth);
         }
 
         clip(x, y, w, h) {
-            this.canvasContext.beginPath();
-            this.canvasContext.rect(x + this._transformTx, y + this._transformTy, w, h);
-            this.canvasContext.clip();
-            this.canvasContext.closePath();
+
         }
 
         strokeRect(x, y, w, h, color) {
@@ -194,6 +191,212 @@ module egret {
             this.canvasContext.strokeRect(x, y, w, h);
         }
 
+
+        public pushMask(mask:Rectangle):void{
+            this.canvasContext.save();
+            this.canvasContext.beginPath();
+            this.canvasContext.rect(mask.x + this._transformTx, mask.y + this._transformTy, mask.width, mask.height);
+            this.canvasContext.clip();
+            this.canvasContext.closePath();
+        }
+
+        public popMask():void{
+            this.canvasContext.restore();
+            this.canvasContext.setTransform(1,0,0,1,0,0);
+        }
+
+
+
+
         //WebGL API
     }
 }
+
+
+module egret_h5_graphics {
+
+    export function beginFill(color:number, alpha:number = 1):void {
+        var _colorBlue = color & 0x0000FF;
+        var _colorGreen = (color & 0x00ff00) >> 8;
+        var _colorRed = color >> 16;
+        var _colorStr = "rgba(" + _colorRed + "," + _colorGreen + "," + _colorBlue + "," + alpha + ")";
+        this.fillStyleColor = _colorStr;
+
+        this.commandQueue.push(new Command(this._setStyle, this, [_colorStr]))
+
+    }
+
+    export function drawRect(x:number, y:number, width:number, height:number):void {
+        this.commandQueue.push(new Command(
+
+            function (x, y, width, height) {
+                var rendererContext = <egret.HTML5CanvasRenderer>this.renderContext;
+                this.canvasContext.beginPath();
+                this.canvasContext.rect(rendererContext._transformTx + x,
+                    rendererContext._transformTy + y,
+                    width,
+                    height);
+                this.canvasContext.closePath();
+            },
+            this,
+            [ x, y, width, height]
+
+        )
+        );
+
+    }
+
+    export function drawCircle(x:number, y:number, r:number):void {
+
+        this.commandQueue.push(new Command(
+            function (x, y, r) {
+                var rendererContext = <egret.HTML5CanvasRenderer>this.renderContext;
+                this.canvasContext.beginPath();
+                this.canvasContext.arc(rendererContext._transformTx + x,
+                    rendererContext._transformTy + y, r, 0, Math.PI * 2);
+                this.canvasContext.closePath();
+
+            },
+            this,
+            [ x, y, r]
+
+        ));
+    }
+
+    export function lineStyle(thickness:number = NaN, color:number = 0, alpha:number = 1.0, pixelHinting:boolean = false, scaleMode:string = "normal", caps:string = null, joints:string = null, miterLimit:number = 3):void {
+
+        var _colorBlue = color & 0x0000FF;
+        var _colorGreen = (color & 0x00ff00) >> 8;
+        var _colorRed = color >> 16;
+        var _colorStr = "rgba(" + _colorRed + "," + _colorGreen + "," + _colorBlue + "," + alpha + ")";
+        this.strokeStyleColor = _colorStr;
+
+        this.commandQueue.push(new Command(
+
+            function (lineWidth, strokeStyle) {
+                this.canvasContext.lineWidth = lineWidth;
+                this.canvasContext.strokeStyle = strokeStyle;
+            },
+            this,
+            [thickness, _colorStr]
+
+        ))
+    }
+
+    export function lineTo(x:number, y:number):void {
+
+        this.commandQueue.push(new Command(
+            function (x, y) {
+                var rendererContext = <egret.HTML5CanvasRenderer>this.renderContext;
+                var canvasContext:CanvasRenderingContext2D = this.canvasContext;
+                canvasContext.lineTo(rendererContext._transformTx + x, rendererContext._transformTy + y);
+            },
+            this,
+            [x, y]
+
+        ))
+    }
+
+    export function curveTo(controlX:Number, controlY:Number, anchorX:Number, anchorY:Number):void {
+
+        this.commandQueue.push(new Command(
+            function (x, y, ax, ay) {
+                var rendererContext = <egret.HTML5CanvasRenderer>this.renderContext;
+                var canvasContext:CanvasRenderingContext2D = this.canvasContext;
+                canvasContext.quadraticCurveTo(rendererContext._transformTx + x, rendererContext._transformTy + y, ax, ay);
+            },
+            this,
+            [controlX, controlY, anchorX, anchorY]
+
+        ))
+    }
+
+    export function moveTo(x:number, y:number):void {
+        this.commandQueue.push(new Command(
+            function (x, y) {
+                var rendererContext = <egret.HTML5CanvasRenderer>this.renderContext;
+                var canvasContext:CanvasRenderingContext2D = this.canvasContext;
+                canvasContext.moveTo(rendererContext._transformTx + x, rendererContext._transformTy + y);
+            },
+            this,
+            [x, y]
+
+        ))
+
+    }
+
+    export function clear():void {
+        this.commandQueue.length = 0;
+        this.strokeStyleColor = null;
+        this.fillStyleColor = null;
+    }
+
+
+    export function endFill():void {
+        if (this.strokeStyleColor) {
+            this.commandQueue.push(
+                new Command(
+                    function () {
+                        this.canvasContext.stroke();
+                    },
+                    this,
+                    null)
+            )
+        }
+
+        if (this.fillStyleColor) {
+            this.commandQueue.push(
+                new Command(
+                    function () {
+                        this.canvasContext.fill();
+                    },
+                    this,
+                    null)
+            )
+        }
+
+    }
+
+    export function _draw(renderContext:egret.RendererContext):void {
+        this.renderContext = renderContext;
+        this.canvasContext = (<egret.HTML5CanvasRenderer>this.renderContext).canvasContext;
+        var rendererContext = <egret.HTML5CanvasRenderer>this.renderContext;
+        var canvasContext:CanvasRenderingContext2D = this.canvasContext;
+        canvasContext.moveTo(rendererContext._transformTx, rendererContext._transformTy);
+        canvasContext.save();
+        canvasContext.beginPath();
+        for (var i = 0 , length = this.commandQueue.length; i < length; i++) {
+            var command:Command = this.commandQueue[i];
+            command.method.apply(command.thisObject, command.args);
+        }
+        canvasContext.closePath();
+        canvasContext.restore();
+    }
+
+    class Command {
+
+        constructor(public method:Function, public thisObject:any, public args:Array<any>) {
+
+        }
+
+
+    }
+
+    export function _setStyle(colorStr:string):void {
+        this.canvasContext.fillStyle = colorStr;
+    }
+
+
+    export function init():void {
+        for (var key in egret_h5_graphics) {
+            egret.Graphics.prototype[key] = egret_h5_graphics[key];
+        }
+        egret.RendererContext.createRendererContext = function(canvas:any){
+            return new egret.HTML5CanvasRenderer(canvas);
+        }
+    }
+
+}
+
+
+egret_h5_graphics.init();

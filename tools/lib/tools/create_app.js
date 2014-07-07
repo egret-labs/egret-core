@@ -48,8 +48,9 @@ function create_app_from(app_name, h5_path, native_path) {
     globals.log("> copy h5 resources into " + app_name + " ...");
     for (var i = 0; i < app_data.game.target.length; ++i) {
         for (var j = 0; j < app_data.game.h5_tree.length; ++j) {
-            file.copy(path.join(h5_path, app_data.game.h5_tree[j]),
-                path.join(app_name, app_data.game.target[i], app_data.game.h5_tree[j]));
+            var target = path.join(app_name, app_data.game.target[i], app_data.game.h5_tree[j]);
+            file.copy(path.join(h5_path, app_data.game.h5_tree[j]), target);
+            file.remove(path.join(target, ".gitignore"));
         }
     }
 }

@@ -67,7 +67,7 @@ module egret {
 
         public _parent:DisplayObjectContainer = null;
 
-        
+
         private _cacheAsBitmap:boolean = false;
 
         /**
@@ -221,7 +221,7 @@ module egret {
          * @member {boolean} egret.DisplayObject#visible
          */
         public visible:boolean = true;
-        
+
         /**
          * 表示 DisplayObject 实例距其原始方向的旋转程度，以度为单位
          * @member {number} egret.DisplayObject#rotation
@@ -296,7 +296,7 @@ module egret {
          * @default true
          */
         public _touchEnabled:boolean;
-        
+
         public get touchEnabled():boolean {
             return this._touchEnabled;
         }
@@ -305,7 +305,7 @@ module egret {
             this._touchEnabled = value;
         }
 
-        
+
         /**
          * BlendMode 类中的一个值，用于指定要使用的混合模式。
          * @member {BlendMode} egret.DisplayObject#blendMode
@@ -317,7 +317,7 @@ module egret {
          *  @member {egret.Rectangle} egret.DisplayObject#scrollRect
          */
         public _scrollRect:Rectangle;
-        
+
         public get scrollRect():Rectangle {
             return this._scrollRect;
         }
@@ -348,7 +348,7 @@ module egret {
          * @returns {number}
          */
         public _explicitWidth:number;
-        
+
         public get explicitWidth():number {
             return this._explicitWidth;
         }
@@ -358,7 +358,7 @@ module egret {
          * @returns {number}
          */
         public _explicitHeight:number;
-        
+
         public get explicitHeight():number {
             return this._explicitHeight;
         }
@@ -444,18 +444,13 @@ module egret {
             var o = this;
             renderContext.setAlpha(o.worldAlpha, o.blendMode);
             renderContext.setTransform(o._worldTransform);
-            if (o.mask || o._scrollRect) {
-                renderContext.save();
-                if (o._scrollRect) {
-                    renderContext.clip(o._scrollRect.x, o._scrollRect.y, o._scrollRect.width, o._scrollRect.height);
-                }
-                else {
-                    renderContext.clip(o.mask.x, o.mask.y, o.mask.width, o.mask.height);
-                }
+            var mask = o.mask || o._scrollRect;
+            if (mask) {
+                renderContext.pushMask(mask);
             }
             this._render(renderContext);
-            if (o.mask || o._scrollRect) {
-                renderContext.restore();
+            if (mask) {
+                renderContext.popMask();
             }
             this.destroyCacheBounds();
         }
@@ -472,15 +467,15 @@ module egret {
                 display._updateTransform();
                 renderContext.setAlpha(display.worldAlpha, display.blendMode);
                 renderContext.setTransform(display._worldTransform);
-                if (display.mask) {
-                    renderContext.save();
-                    renderContext.clip(display.mask.x, display.mask.y, display.mask.width, display.mask.height);
+                var mask = this.mask || this._scrollRect;
+                if (mask) {
+                    renderContext.pushMask(mask);
                 }
                 var scale_factor = egret.MainContext.instance.rendererContext.texture_scale_factor;
                 var renderFilter = egret.RenderFilter.getInstance();
                 renderFilter.drawImage(renderContext, display, 0, 0, width * scale_factor, height * scale_factor, offsetX, offsetY, width, height);
-                if (display.mask) {
-                    renderContext.restore();
+                if (mask) {
+                    renderContext.popMask();
                 }
                 return true;
             }
@@ -510,7 +505,7 @@ module egret {
             if (o._scrollRect) {
                 o._worldTransform.append(1, 0, 0, 1, -o._scrollRect.x, -o._scrollRect.y);
             }
-            if (false){//this._texture_to_render){ 暂时去掉worldBounds计算
+            if (false) {//this._texture_to_render){ 暂时去掉worldBounds计算
                 var bounds:egret.Rectangle = DisplayObject.getTransformBounds(o._getSize(Rectangle.identity), o._worldTransform);
                 o._worldBounds.initialize(bounds.x, bounds.y, bounds.width, bounds.height);
             }

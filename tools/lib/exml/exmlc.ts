@@ -692,6 +692,13 @@ class EXMLCompiler{
         }
         else{
             switch(type){
+                case "Class":
+                    if(!this.exmlConfig.checkClassName(value)){
+                        globals.exit(2015, this.exmlPath, value,this.toXMLString(node));
+                    }
+                    if(value==this.currentClassName) {//防止无限循环。
+                        globals.exit(2014, this.exmlPath, this.toXMLString(node));
+                    }
                 case "number":
                     if(value.indexOf("#")==0)
                         value = "0x"+value.substring(1);

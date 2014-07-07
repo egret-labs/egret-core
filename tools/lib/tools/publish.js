@@ -89,7 +89,8 @@ ClosureCompiler.testJava = function (java, callback) {
         var m1 = 1,m2 = 7;
         var minVersion = 0;
         var re = /(\d+\.\d+)\.?/gi;
-        var currentVersion = re.exec(stderr)[0];
+        var versionArr = re.exec(stderr);
+        var currentVersion = versionArr?versionArr[0]:"0.0.0";
         var v1 = currentVersion.split(".")[0];
         var v2 = currentVersion.split(".")[1];
         if(v2>9 || m2>9) {
@@ -279,7 +280,7 @@ function run(dir, args, opts) {
         return path.join(currDir + "/bin-debug/src/", item);
     });
 
-    var totalFileList = egretFileList.concat(gameFileList, currDir + "/launcher/egret_loader.js");
+    var totalFileList = egretFileList.concat(gameFileList);
     ClosureCompiler.compile(totalFileList,
         {js_output_file: currDir + "/launcher/game-min.js"},
         function afterCompile(err, stdout, stderr) {

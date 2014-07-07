@@ -49,16 +49,27 @@ module egret {
          */
         public static parse(value:string):any{
             var xmlDoc = SAXParser.getInstance().parserXML(value);
-            if(!xmlDoc||!xmlDoc.children){
+            if(!xmlDoc||!xmlDoc.childNodes){
                 return null;
             }
-            var root:any = xmlDoc.children[0];
-            var xml:any = XML.parseNode(root);
+            var length:number = xmlDoc.childNodes.length;
+            var found:boolean = false;
+            for(var i:number=0;i<length;i++){
+                var node:any = xmlDoc.childNodes[i];
+                if(node.nodeType == 1){
+                    found = true;
+                    break;
+                }
+            }
+            if(!found){
+                return null;
+            }
+            var xml:any = XML.parseNode(node);
             return xml;
         }
 
         private static parseNode(node:any):any{
-            if(!node){
+            if(!node||node.nodeType != 1){
                 return null;
             }
             var xml:any = {};
@@ -78,23 +89,23 @@ module egret {
                 }
                 xml["$"+key] = attrib.value;
             }
-            var children:any = node.children;
+            var children:any = node.childNodes;
             length = children.length;
-            if(length==0){
+            for(i=0;i<length;i++){
+                var childNode:any = children[i];
+                var childXML:any = XML.parseNode(childNode);
+                if(childXML){
+                    if(!xml.children){
+                        xml.children = [];
+                    }
+                    childXML.parent = xml;
+                    xml.children.push(childXML);
+                }
+            }
+            if(!xml.children){
                 var text:string = node.textContent.trim();
                 if(text){
                     xml.text = text;
-                }
-            }
-            else{
-                xml.children = [];
-                for(i=0;i<length;i++){
-                    var childNode:any = children[i];
-                    var childXML:any = XML.parseNode(childNode);
-                    if(childXML){
-                        childXML.parent = xml;
-                        xml.children.push(childXML);
-                    }
                 }
             }
             return xml;

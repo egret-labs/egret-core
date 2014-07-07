@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<e:Skin width="628"  height="402" xmlns:e="http://ns.egret-labs.org/egret" xmlns:w="http://ns.egret-labs.org/wing" xmlns:components="code.components.*">
+<e:Skin width="628"  height="402" xmlns:e="http://ns.egret-labs.org/egret" xmlns:w="http://ns.egret-labs.org/wing" xmlns:components="ns_project.*">
     <w:HostComponent name="egret.TitleWindow"/>
     <w:Declarations>
         <e:ArrayCollection id="dp">

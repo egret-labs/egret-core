@@ -168,14 +168,17 @@ module egret {
             egret_native.Label.drawText(text, x, y);
         }
 
-        /**
-         * 矩形遮罩
-         * @method egret.NativeRendererContext#clip
-         * @param x {any}
-         * @param y {any}
-         * @param w {any}
-         */
-        public clip(x, y, w, h) {
+        public pushMask(x:number, y:number, w:number, h:number):void {
+            egret_native.Graphics.pushRectStencil(10, 10, 400, 500, 255, 0, 0, 255 * 0.5, 0, false);
+        }
+
+        public popMask():void {
+            egret_native.Graphics.popStencil();
         }
     }
+}
+
+
+egret.Graphics.prototype._draw = function () {
+    return;
 }

@@ -349,11 +349,10 @@ module egret {
                         for (var j:number = 0; j < len; j++) {
                             var word:string = line.charAt(j);
                             measureW = renderContext.measureText(word);
-                            if (lineWidth + measureW > explicitWidth) {
-                                i++;
-                                length++;
-                                if (lineWidth == 0) {
-                                    lines.splice(i, 0, word);
+                            if(lineWidth+measureW>explicitWidth){
+
+                                if(lineWidth==0){
+                                    lines.splice(i,0,word);
                                     measuredWidths[i] = measureW;
                                     if (maxWidth < measureW) {
                                         maxWidth = measureW;
@@ -370,10 +369,14 @@ module egret {
                                     newLine = "";
                                     lineWidth = 0;
                                 }
+                                i++;
+                                length++;
                             }
                             lineWidth += measureW;
                             newLine += word;
                         }
+                        lines[i]=newLine;
+                        measuredWidths[i] = lineWidth;
                     }
                     else {
                         measuredWidths[i] = measureW;

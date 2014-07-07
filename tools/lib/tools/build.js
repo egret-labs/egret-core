@@ -1,14 +1,13 @@
 /**
- * 将TypeScript编译为JavaScript
+ * 将TypeScript和EXML编译为JavaScript
  */
-var create_file_list = require("./create_file_list.js");
 var path = require("path");
 var async = require('../core/async');
 var globals = require("../core/globals");
 var param = require("../core/params_analyze.js");
 var compiler = require("./compile.js");
-var exmlc = require("../exml/exmlc.js");
 var file = require("../core/file.js");
+var code_util = require("../core/code_util.js");
 
 function run(dir, args, opts) {
     var needCompileEngine = opts["-e"];
@@ -18,35 +17,17 @@ function run(dir, args, opts) {
 
     var task = [];
 
-    var exmlList = [];
-    task.push(function(callback){
-        if(!keepGeneratedTypescript){
-            globals.addCallBackWhenExit(cleanEXMLList);
-        }
-        var source = path.join(currDir, "src");
-        exmlList = file.search(source,"exml");
-        source += "/";
-        exmlList.forEach(function (item) {
-            exmlc.compile(item,source);
-        });
-
-        callback();
-    })
-
-
     if (needCompileEngine) {
         var egretSourceList = [];
         task.push(
             function (callback) {
                 var runtime = param.getOption(opts, "--runtime", ["html5", "native"]);
                 egretSourceList = compiler.generateEgretFileList(runtime,currDir);
-                callback();
-            },
-            function (callback) {
                 compiler.compile(callback,
                     path.join(param.getEgretPath(), "src"),
                     path.join(currDir, "bin-debug/lib"),
-                    egretSourceList
+                    egretSourceList,
+                    false
                 );
             },
 
@@ -68,15 +49,12 @@ function run(dir, args, opts) {
 
     task.push(
         function (callback) {
-            buildProject(callback,currDir);
+            buildProject(callback,currDir,keepGeneratedTypescript);
         }
     )
 
 
     async.series(task, function (err) {
-        if(!keepGeneratedTypescript) {
-            cleanEXMLList();
-        }
         if (!err){
             globals.log("构建成功");
         }
@@ -85,66 +63,66 @@ function run(dir, args, opts) {
         }
     })
 
-    function cleanEXMLList(){
-        if(exmlList){
-            var source = path.join(currDir, "src");
-            exmlList.forEach(function (item) {
-                var tsPath = path.join(source,item);
-                tsPath = tsPath.substring(0,tsPath.length-5)+".ts";
-                file.remove(tsPath);
-            });
-        }
-    }
+
 }
 
-function buildProject(callback,currDir){
-    var manifestPath = path.join(currDir,"manifest.json");
-    var srcPath = path.join(currDir,"src/");
+function buildProject(callback,currDir,keepGeneratedTypescript){
+    var document_class = globals.getDocumentClass(currDir);
+    if(document_class){
+        replaceDocumentClass("index.html",document_class,currDir);
+        replaceDocumentClass("release.html",document_class,currDir);
+        replaceDocumentClass("native_loader.js",document_class,currDir);
+    }
+
     var libsPath = path.join(currDir,"libs/");
-    var sourceList;
-    var fileListText = "";
-    if(file.exists(manifestPath)){
-        sourceList = getManifest(manifestPath,srcPath);
-        fileListText = create_file_list.create(sourceList,srcPath,false);
-    }
-    else{
-        sourceList = file.searchByFunction(srcPath,filterFunc);
-        fileListText = create_file_list.create(sourceList,srcPath,true);
-    }
-    fileListText = "var game_file_list = "+fileListText+";";
-        file.save(path.join(currDir,"bin-debug/src/game_file_list.js"),fileListText);
+    var sourceList = compiler.generateGameFileList(currDir);
     var libs = file.search(libsPath,"d.ts");
     compiler.compile(callback,
         path.join(currDir, "src"),
         path.join(currDir, "bin-debug/src"),
-        sourceList.concat(libs)
+        sourceList.concat(libs),
+        keepGeneratedTypescript
     );
 }
 
-function filterFunc(item){
-    if(item.indexOf(".d.ts")==-1&&file.getExtension(item)=="ts"){
-        return true;
+function replaceDocumentClass(key,document_class,currDir){
+    var filePath = path.join(currDir,"launcher",key);
+    var indexHtml = file.read(filePath);
+    if(!indexHtml){
+        globals.exit(1305,key);
     }
-    return false;
+    var html = "";
+    var found = false;
+    while(indexHtml.length>0){
+        var index = code_util.getFirstVariableIndex("document_class",indexHtml);
+        if(index==-1){
+            html += indexHtml;
+            break;
+        }
+        html += indexHtml.substring(0,index+14);
+        indexHtml = indexHtml.substring(index+14).trim();
+        if(indexHtml.charAt(0)=="="){
+            html += " = ";
+            indexHtml = indexHtml.substring(1).trim();
+            var quote = indexHtml.charAt(0);
+            if(quote=="\""||quote=="'"){
+                html += quote;
+                indexHtml = indexHtml.substring(1);
+                index = indexHtml.indexOf(quote);
+                if(index!=-1){
+                    html += document_class;
+                    indexHtml = indexHtml.substring(index);
+                    found = true;
+                }
+            }
+        }
+    }
+    if(!found){
+        globals.exit(1306,key);
+    }
+    file.save(filePath,html);
 }
 
-function getManifest(file_list,srcPath) {
-    if(!file.exists(file_list)){
-        return [];
-    }
-    var content = file.read(file_list);
-    try{
-        var manifest = JSON.parse(content);
-    }
-    catch (e){
-        globals.exit(1304,file_list);
-    }
-    var length = manifest.length;
-    for(var i=0;i<length;i++){
-        manifest[i] = file.joinPath(srcPath,manifest[i]);
-    }
-    return manifest;
-}
 
 
 function help_title() {
