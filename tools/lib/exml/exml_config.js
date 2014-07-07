@@ -48,6 +48,39 @@ var EXMLConfig = (function () {
         var manifest = xml.parse(str);
         this.parseManifest(manifest);
     }
+    Object.defineProperty(EXMLConfig.prototype, "srcPath", {
+        get: function () {
+            return this._srcPath;
+        },
+        set: function (value) {
+            this._srcPath = value;
+            this.classNameToPath = create_manifest.getClassToPathInfo(this.srcPath);
+            this.parseModules();
+        },
+        enumerable: true,
+        configurable: true
+    });
+
+
+    EXMLConfig.prototype.parseModules = function () {
+        this.classNameToModule = {};
+        for (var className in this.classNameToPath) {
+            var index = className.lastIndexOf(".");
+            var ns = "";
+            if (index != -1) {
+                ns = className.substring(0, index);
+                className = className.substring(index + 1);
+            }
+            var list = this.classNameToModule[className];
+            if (!list) {
+                list = this.classNameToModule[className] = [];
+            }
+            if (list.indexOf(ns) == -1) {
+                list.push(ns);
+            }
+        }
+    };
+
     /**
     * 解析框架清单文件
     */
@@ -98,9 +131,6 @@ var EXMLConfig = (function () {
             }
         } else {
             name = ns.substring(0, ns.length - 1) + id;
-            if (!this.classNameToPath) {
-                this.classNameToPath = create_manifest.getClassToPathInfo(this.srcPath);
-            }
             if (!this.classNameToPath[name]) {
                 name = "";
             }
@@ -114,9 +144,6 @@ var EXMLConfig = (function () {
     EXMLConfig.prototype.checkClassName = function (className) {
         if (this.componentDic[className]) {
             return true;
-        }
-        if (!this.classNameToPath) {
-            this.classNameToPath = create_manifest.getClassToPathInfo(this.srcPath);
         }
         if (this.classNameToPath[name]) {
             return true;
@@ -280,7 +307,7 @@ var EXMLConfig = (function () {
                 word = CodeUtil.getFirstWord(preStr);
                 if (word) {
                     if (ns && word.indexOf(".") == -1) {
-                        word = ns + "." + word;
+                        word = this.getFullClassName(word, ns);
                     }
                     data["super"] = word;
                 }
@@ -295,7 +322,7 @@ var EXMLConfig = (function () {
                     inter = inter.trim();
                     if (inter) {
                         if (ns && inter.indexOf(".") == -1) {
-                            inter = ns + "." + inter;
+                            inter = this.getFullClassName(inter, ns);
                         }
                         arr[i] = inter;
                     } else {
@@ -312,6 +339,22 @@ var EXMLConfig = (function () {
             break;
         }
         return data;
+    };
+
+    EXMLConfig.prototype.getFullClassName = function (word, ns) {
+        if (!ns) {
+            ns = "";
+        }
+        var nsList = this.classNameToModule[word];
+        var length = nsList.length;
+        var prefix = ns.split(".")[0];
+        for (var k = 0; k < length; k++) {
+            var superNs = nsList[k];
+            if (superNs.split(".")[0] == prefix) {
+                word = superNs + "." + word;
+            }
+        }
+        return word;
     };
 
     EXMLConfig.prototype.readProps = function (text, data, ns) {
@@ -348,7 +391,7 @@ var EXMLConfig = (function () {
                         }
                         type = CodeUtil.trimVariable(type);
                         if (type.indexOf(".") == -1 && this.basicTypes.indexOf(type) == -1) {
-                            type = ns + "." + type;
+                            type = this.getFullClassName(type, ns);
                         }
                         data[word] = type;
                     } else {
@@ -371,7 +414,7 @@ var EXMLConfig = (function () {
                     }
                     type = CodeUtil.trimVariable(type);
                     if (type.indexOf(".") == -1 && this.basicTypes.indexOf(type) == -1) {
-                        type = ns + "." + type;
+                        type = this.getFullClassName(type, ns);
                     }
                     data[word] = type;
                 } else if (!line || firstChar == ";" || firstChar == "=") {

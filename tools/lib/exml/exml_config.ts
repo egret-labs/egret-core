@@ -53,14 +53,49 @@ class EXMLConfig{
         var str:string = file.read(exmlPath+"egret-manifest.xml");
         var manifest:any = xml.parse(str);
         this.parseManifest(manifest);
+
     }
 
-    public srcPath:string;
+    private _srcPath:string;
+
+    public get srcPath():string{
+        return this._srcPath;
+    }
+
+    public set srcPath(value:string){
+        this._srcPath = value;
+        this.classNameToPath = create_manifest.getClassToPathInfo(this.srcPath);
+        this.parseModules();
+    }
+
+
+    private classNameToPath:any;
+
+    private classNameToModule:any;
 
     /**
      * 组件清单列表
      */
     public componentDic:any = {};
+
+    private parseModules():void{
+        this.classNameToModule = {};
+        for(var className in this.classNameToPath){
+            var index:number = className.lastIndexOf(".");
+            var ns:string = "";
+            if(index!=-1){
+                ns = className.substring(0,index);
+                className = className.substring(index+1);
+            }
+            var list:Array<string> = this.classNameToModule[className];
+            if(!list){
+                list = this.classNameToModule[className] = [];
+            }
+            if(list.indexOf(ns)==-1){
+                list.push(ns);
+            }
+        }
+    }
     /**
      * 解析框架清单文件
      */
@@ -95,7 +130,6 @@ class EXMLConfig{
         return component.defaultProp;
     }
 
-    private classNameToPath:any;
     /**
      * @inheritDoc
      */
@@ -115,9 +149,6 @@ class EXMLConfig{
         }
         else{
             name = ns.substring(0,ns.length-1)+id
-            if(!this.classNameToPath){
-                this.classNameToPath = create_manifest.getClassToPathInfo(this.srcPath);
-            }
             if(!this.classNameToPath[name]){
                 name = "";
             }
@@ -130,9 +161,6 @@ class EXMLConfig{
     public checkClassName(className:string):boolean{
         if(this.componentDic[className]){
             return true;
-        }
-        if(!this.classNameToPath){
-            this.classNameToPath = create_manifest.getClassToPathInfo(this.srcPath);
         }
         if(this.classNameToPath[name]){
             return true;
@@ -300,7 +328,7 @@ class EXMLConfig{
                 word = CodeUtil.getFirstWord(preStr);
                 if(word){
                     if(ns&&word.indexOf(".")==-1){
-                        word = ns+"."+word;
+                        word = this.getFullClassName(word,ns);
                     }
                     data["super"] = word;
                 }
@@ -315,7 +343,7 @@ class EXMLConfig{
                     inter = inter.trim();
                     if(inter){
                         if(ns&&inter.indexOf(".")==-1){
-                            inter = ns+"."+inter;
+                            inter = this.getFullClassName(inter,ns);
                         }
                         arr[i] = inter;
                     }
@@ -333,6 +361,22 @@ class EXMLConfig{
             break;
         }
         return data;
+    }
+
+    private getFullClassName(word:string,ns:string):string{
+        if(!ns){
+            ns = "";
+        }
+        var nsList = this.classNameToModule[word];
+        var length = nsList.length;
+        var prefix = ns.split(".")[0];
+        for(var k=0;k<length;k++){
+            var superNs = nsList[k];
+            if(superNs.split(".")[0]==prefix){
+                word = superNs+"."+word;
+            }
+        }
+        return word;
     }
 
     private basicTypes:Array<any> = ["void","any","number","string","boolean","Object","Array","Function"];
@@ -373,7 +417,7 @@ class EXMLConfig{
                         }
                         type = CodeUtil.trimVariable(type);
                         if(type.indexOf(".")==-1&&this.basicTypes.indexOf(type)==-1){
-                            type = ns+"."+type;
+                            type = this.getFullClassName(type,ns);
                         }
                         data[word] = type;
                     }
@@ -399,7 +443,7 @@ class EXMLConfig{
                     }
                     type = CodeUtil.trimVariable(type);
                     if(type.indexOf(".")==-1&&this.basicTypes.indexOf(type)==-1){
-                        type = ns+"."+type;
+                        type = this.getFullClassName(type,ns);
                     }
                     data[word] = type;
                 }
