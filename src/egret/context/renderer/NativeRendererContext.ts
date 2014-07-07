@@ -169,7 +169,7 @@ module egret {
         }
 
         public pushMask(x:number, y:number, w:number, h:number):void {
-            egret_native.Graphics.pushRectStencil(10, 10, 400, 500, 255, 0, 0, 255 * 0.5, 0, false);
+            egret_native.Graphics.pushRectStencil(x, y, w, h, 255, 0, 0, 255 * 0.5, 0, false);
         }
 
         public popMask():void {
