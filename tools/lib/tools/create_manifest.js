@@ -46,6 +46,8 @@ var basicTypes = ["void","any","number","string","boolean","Object","Array","Fun
 
 var textTemp;
 
+create("D:/Program/HTML5/Hello/src/");
+
 /**
  * 生成manifest.json文件
  * @param currentDir 当前文件夹
@@ -70,9 +72,13 @@ function run(currDir, args, opts) {
  * 获取项目中所有类名和文件路径的映射数据
  */
 function getClassToPathInfo(srcPath){
-
+    srcPath = srcPath.split("\\").join("/");
+    if (srcPath.charAt(srcPath.length - 1) != "/") {
+        srcPath += "/";
+    }
     if(!classNameToPath){
-        create(srcPath);
+        getManifest(srcPath);
+        textTemp = null;
     }
     return classNameToPath;
 }
@@ -81,12 +87,25 @@ function getClassToPathInfo(srcPath){
  * 创建manifest列表
  */
 function create(srcPath){
+    srcPath = srcPath.split("\\").join("/");
+    if (srcPath.charAt(srcPath.length - 1) != "/") {
+        srcPath += "/";
+    }
+    var manifest = getManifest(srcPath);
+    manifest = sortFileList(manifest,srcPath);
+    return manifest;
+}
+/**
+ * 获取manifest列表，并读取所有的类名
+ */
+function getManifest(srcPath){
     classInfoList = {};
     classNameToPath = {};
     pathInfoList = {};
     pathToClassNames = {};
     referenceInfoList = {};
     newClassNameList = [];
+    textTemp = {};
     var manifest = file.searchByFunction(srcPath,filterFunc);
     var exmlList = [];
     for(var i=manifest.length-1;i>=0;i--){
@@ -104,7 +123,20 @@ function create(srcPath){
             manifest.splice(index,1);
         }
     }
-    var manifest = sortFileList(manifest,srcPath);
+
+    var length = manifest.length;
+    for (var i = 0; i < length; i++) {
+        var path = manifest[i];
+        textTemp[path] = file.read(path);
+        var ext = file.getExtension(path).toLowerCase();
+        if(ext=="exml"){
+            readClassNamesFromExml(path,srcPath);
+        }
+        else{
+            readClassNamesFromTs(path);
+        }
+    }
+
     return manifest;
 }
 /**
@@ -123,21 +155,17 @@ function filterFunc(item){
  * 按照引用关系排序指定的文件列表
  */
 function sortFileList(list,srcPath){
-    srcPath = srcPath.split("\\").join("/");
-    if (srcPath.charAt(srcPath.length - 1) != "/") {
-        srcPath += "/";
-    }
-    textTemp = {};
+
     var length = list.length;
     for (var i = 0; i < length; i++) {
         var path = list[i];
         textTemp[path] = file.read(path);
         var ext = file.getExtension(path).toLowerCase();
         if(ext=="exml"){
-            readClassNamesFromExml(path,srcPath);
+            readRelyOnFromExml(path,srcPath);
         }
         else{
-            readClassNamesFromTs(path);
+            readRelyOnFromTs(path);
         }
     }
     for (i = 0; i < length; i++) {
@@ -439,7 +467,7 @@ function readReferenceFromTs(path){
 }
 
 /**
- * 读取一个exml文件引用的类列表
+ * 读取一个exml文件包含的类名
  */
 function readClassNamesFromExml(path,srcPath){
     var text = textTemp[path];
@@ -451,6 +479,18 @@ function readClassNamesFromExml(path,srcPath){
     className = className.split("/").join(".");
     classNameToPath[className] = path;
     pathToClassNames[path] = [className];
+}
+
+/**
+ * 读取一个exml文件依赖的类列表
+ */
+function readRelyOnFromExml(path,srcPath){
+    var text = textTemp[path];
+    var exml = xml.parse(text);
+    if(!exml){
+        return;
+    }
+    var className = pathToClassNames[path][0];
     pathInfoList[path] = [];
     var relyOnList = classInfoList[className] = [];
     var superClass = getClassNameById(exml.localName,exml.namespace);
@@ -480,25 +520,37 @@ function getClassNameById(id,ns){
  * 读取一个ts文件引用的类列表
  */
 function readClassNamesFromTs(path) {
-    if(path.indexOf("SheetAnalyzer")!=-1){
-        path.substr(1);
-    }
+    analyzeTsFile(path,false);
+}
+
+/**
+ * 读取一个ts文件引用的类列表
+ */
+function readRelyOnFromTs(path) {
+    analyzeTsFile(path,true);
+}
+/**
+ * 分析一个ts文件
+ */
+function analyzeTsFile(path,readRelyOn){
     var fileRelyOnList = [];
     var text = textTemp[path];
     var list = [];
     text = CodeUtil.removeComment(text);
     text = removeInterface(text);
-    readRelyOnFromImport(text, fileRelyOnList);
+    if(readRelyOn){
+        readRelyOnFromImport(text, fileRelyOnList);
+    }
     var block = "";
     var tsText = "";
     while (text.length > 0) {
         var index = text.indexOf("{");
         if (index == -1) {
             if (tsText) {
-                list = list.concat(readClassFromBlock(tsText, fileRelyOnList));
+                list = list.concat(readClassFromBlock(tsText, fileRelyOnList,path,"",readRelyOn));
                 tsText = "";
             }
-            list = list.concat(readClassFromBlock(text, fileRelyOnList));
+            list = list.concat(readClassFromBlock(text, fileRelyOnList,path,"",readRelyOn));
             break;
         } else {
             var preStr = text.substring(0, index);
@@ -515,25 +567,31 @@ function readClassNamesFromTs(path) {
             var word = CodeUtil.getLastWord(preStr);
             if (word == "module") {
                 if (tsText) {
-                    list = list.concat(readClassFromBlock(tsText, fileRelyOnList));
+                    list = list.concat(readClassFromBlock(tsText, fileRelyOnList,path,"",readRelyOn));
                     tsText = "";
                 }
-                list = list.concat(readClassFromBlock(block, fileRelyOnList, ns));
+                list = list.concat(readClassFromBlock(block, fileRelyOnList,path, ns,readRelyOn));
             } else {
                 tsText += "{" + block + "}";
             }
         }
     }
     if (tsText) {
-        list = list.concat(readClassFromBlock(tsText, fileRelyOnList));
+        list = list.concat(readClassFromBlock(tsText, fileRelyOnList,path,"",readRelyOn));
     }
-    var length = list.length;
-    for (var i = 0; i < length; i++) {
-        var className = list[i];
-        classNameToPath[className] = path;
+
+
+    if(readRelyOn){
+        pathInfoList[path] = fileRelyOnList;
     }
-    pathToClassNames[path] = list;
-    pathInfoList[path] = fileRelyOnList;
+    else{
+        var length = list.length;
+        for (var i = 0; i < length; i++) {
+            var className = list[i];
+            classNameToPath[className] = path;
+        }
+        pathToClassNames[path] = list;
+    }
 }
 /**
  * 从import关键字中分析引用关系
@@ -578,19 +636,23 @@ function removeInterface(text) {
 /**
  * 从代码块中分析引用关系，代码块为一个Module，或类外的一段全局函数定义
  */
-function readClassFromBlock(text, fileRelyOnList, ns) {
+function readClassFromBlock(text, fileRelyOnList,path, ns,readRelyOn) {
     if (typeof ns === "undefined") { ns = ""; }
     var list = [];
 
     while (text.length > 0) {
         var index = CodeUtil.getFirstVariableIndex("class", text);
         if (index == -1) {
-            getRelyOnFromVar(text, ns, fileRelyOnList);
+            if(readRelyOn){
+                findClassInLine(text,pathToClassNames[path],ns,fileRelyOnList);
+            }
             break;
         }
 
         var preStr = text.substring(0, index + 5);
-        getRelyOnFromVar(preStr, ns, fileRelyOnList);
+        if(readRelyOn){
+            findClassInLine(preStr,pathToClassNames[path],ns,fileRelyOnList)
+        }
 
         text = text.substring(index + 5);
         var word = CodeUtil.getFirstVariable(text);
@@ -604,9 +666,11 @@ function readClassFromBlock(text, fileRelyOnList, ns) {
             if (list.indexOf(className) == -1) {
                 list.push(className);
             }
-            var relyOnList = classInfoList[className];
-            if (!relyOnList) {
-                relyOnList = classInfoList[className] = [];
+            if(readRelyOn){
+                var relyOnList = classInfoList[className];
+                if (!relyOnList) {
+                    relyOnList = classInfoList[className] = [];
+                }
             }
             text = CodeUtil.removeFirstVariable(text);
             word = CodeUtil.getFirstVariable(text);
@@ -617,7 +681,7 @@ function readClassFromBlock(text, fileRelyOnList, ns) {
                 if (ns && word.indexOf(".") == -1) {
                     word = ns + "." + word;
                 }
-                if (relyOnList.indexOf(word) == -1) {
+                if (readRelyOn&&relyOnList.indexOf(word) == -1) {
                     relyOnList.push(word);
                 }
             }
@@ -627,30 +691,13 @@ function readClassFromBlock(text, fileRelyOnList, ns) {
         text = text.substring(index + 1);
         index = classBlock.indexOf("{");
         classBlock = classBlock.substring(index);
-        getRelyOnFromStatic(classBlock, ns, relyOnList);
+        if(readRelyOn){
+            getRelyOnFromStatic(classBlock, ns,className, relyOnList);
+        }
     }
     return list;
 }
-/**
- * 从类外部的var变量列表中分析引用关系
- */
-function getRelyOnFromVar(text, ns, relyOnList) {
-    while (text.length > 0) {
-        var index = CodeUtil.getFirstVariableIndex("new", text);
-        if (index == -1) {
-            break;
-        }
-        text = text.substring(index + 3).trim();
-        var word = getClass(text, ns);
-        if (word && relyOnList.indexOf(word) == -1) {
-            relyOnList.push(word);
-            if(newClassNameList.indexOf(word)==-1){
-                newClassNameList.push(word);
-            }
-        }
 
-    }
-}
 /**
  * 获取变量的类型
  */
@@ -672,7 +719,7 @@ function getClass(text, ns) {
 /**
  * 从代码的静态变量中读取依赖关系
  */
-function getRelyOnFromStatic(text, ns, relyOnList) {
+function getRelyOnFromStatic(text,ns, className, relyOnList) {
     while (text.length > 0) {
         var index = CodeUtil.getFirstVariableIndex("static", text);
         if (index == -1) {
@@ -698,18 +745,44 @@ function getRelyOnFromStatic(text, ns, relyOnList) {
             continue;
         }
         text = text.substring(1).trim();
-        var word = CodeUtil.getFirstVariable(text);
-        if (word != "new") {
+        index = text.indexOf("\n");
+        var line = text;
+        if(index!=-1){
+            line = text.substring(0,index);
+            text = text.substring(index);
+        }
+        findClassInLine(line,[className],ns,relyOnList);
+    }
+}
+
+function findClassInLine(line,classNames,ns,relyOnList){
+    for(var name in classNameToPath){
+        if(classNames.indexOf(name)!=-1){
             continue;
         }
-        text = CodeUtil.removeFirstVariable(text);
-        word = getClass(text, ns);
-        if (word && relyOnList.indexOf(word) == -1) {
-            relyOnList.push(word);
-            if(newClassNameList.indexOf(word)==-1){
-                newClassNameList.push(word);
+        var found = false;
+        if(CodeUtil.containsVariable(name,line)){
+
+            found = true;
+        }
+        if(!found){
+            var index = name.lastIndexOf(".");
+            if(index!=-1&&name.substring(0,index)==ns){
+                if(CodeUtil.containsVariable(name.substring(index+1),line)){
+                    found = true;
+                }
             }
         }
+
+        if(found){
+            if (relyOnList.indexOf(name) == -1) {
+                relyOnList.push(name);
+                if(newClassNameList.indexOf(name)==-1){
+                    newClassNameList.push(name);
+                }
+            }
+        }
+
     }
 }
 
