@@ -13,14 +13,19 @@ function run(dir, args, opts) {
 	}
     globals.log("> compile html project to android/ios ...");
     // egert build h5_project -e --runtime native
-    var build_args = [path.resolve(h5_path[0])];
-    var build_opts = {
-        "-e": " ",
-        "--runtime": ["native"]
-    };
-    var build = require('./build.js');
-    build.run(dir, build_args, build_opts);
-    create_app_from(path.resolve(app_name), path.resolve(h5_path[0]), path.resolve(template_path[0]));
+    var cmd = "egret build " + path.resolve(h5_path[0]) + " --runtime native -e";
+    var cp_exec = require('child_process').exec;
+    var build = cp_exec(cmd);
+    build.stderr.on("data", function(data) {
+        console.log(data);
+    });
+    build.on("exit", function(result) {
+        if (result == 0) {
+            create_app_from(path.resolve(app_name), path.resolve(h5_path[0]), path.resolve(template_path[0]));
+        } else {
+            globals.exit(1603);
+        }
+    });
 }
 
 
