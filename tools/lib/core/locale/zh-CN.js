@@ -19,8 +19,8 @@ exports.error_code = {
     1306:"在launcher/{0}内找不到文档类'document_class'的变量定义，请检查文件内容是否正确",
     1401:"找不到java或java版本过低（最低需求为 java 7 ),请安装java并执行 java -version 命令确认",
     1501:"无法启动服务器，请检查权限或端口是否被占用",
-    1601:"请输入项目名称和h5游戏目录。例: {color_green}egret create_app [app_name] -f [h5_game_path] -n [native_path]{color_normal}",
-    1602:"请从http://TODO下载app模块库，再次运行命令",
+    1601:"请输入项目名称和h5游戏目录。例: {color_green}egret create_app [app_name] -f [h5_game_path] -t [template_path]{color_normal}",
+    1602:"请从http://...下载各平台app模块库，再次运行命令", //TODO 等待确定下载地址
     9999:"未知错误:{0}",
     8001:"请输入命令行选项{color_green} {0} {color_normal}的参数,并确认是以下值之一: {color_green}[{1}]{color_normal}",
     8002:"{color_red}请选对正确的egret项目目录！{color_normal}\n\tEgret_Project\t\t{color_gray}//项目目录{color_normal}\n\t\t--launcher\t{color_gray}//启动目录{color_normal}\n\t\t--src\t\t{color_gray}//源代码目录{color_normal}",
