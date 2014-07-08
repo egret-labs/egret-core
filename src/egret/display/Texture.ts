@@ -82,14 +82,24 @@ module egret {
             this._bitmapHeight = value;
         }
 
-        /**
-         * 表示这个纹理在bitmapData上的x起始位置
-         */
+
         public _bitmapX:number = 0;
         /**
-         * 表示这个纹理在bitmapData上的y起始位置
+         * 表示这个纹理在bitmapData上的x起始位置
+         * @member {number} egret.Texture#bitmapX
          */
+        public get bitmapX():number{
+            return this._bitmapX;
+        }
+
         public _bitmapY:number = 0;
+        /**
+         * 表示这个纹理在bitmapData上的y起始位置
+         * @member {number} egret.Texture#bitmapY
+         */
+        public get bitmapY():number{
+            return this._bitmapY;
+        }
         /**
          * 表示这个纹理在bitmapData上的宽度
          */
