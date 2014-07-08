@@ -125,7 +125,7 @@ module egret {
                         destH = bitmapHeight;
                     }
 
-                    RenderFilter.getInstance().drawImage(renderContext, thisObject, texture._startX, texture._startY,
+                    RenderFilter.getInstance().drawImage(renderContext, thisObject, texture._bitmapX, texture._bitmapY,
                         bitmapWidth, bitmapHeight, offsetX, offsetY, destW,destH);
                 }
             }
