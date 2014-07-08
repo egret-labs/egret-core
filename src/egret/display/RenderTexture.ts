@@ -60,9 +60,11 @@ module egret {
             renderFilter._drawAreaList.length = 0;
             displayObject._render(renderContext);
             renderFilter._drawAreaList = drawAreaList;
-            this._bitmapData = this._bitmapData;
+
             this._textureWidth = this._bitmapData.width;
             this._textureHeight = this._bitmapData.height;
+            this._sourceWidth = this._textureWidth;
+            this._sourceHeight = this._textureHeight;
 
             //测试代码
 //            renderContext.canvasContext.setTransform(1, 0, 0, 1, 0, 0);
