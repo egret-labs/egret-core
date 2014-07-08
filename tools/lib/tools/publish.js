@@ -90,7 +90,8 @@ ClosureCompiler.testJava = function (java, callback) {
         var m1 = 1,m2 = 7;
         var minVersion = 0;
         var re = /(\d+\.\d+)\.?/gi;
-        var currentVersion = re.exec(stderr)[0];
+        var versionArr = re.exec(stderr);
+        var currentVersion = versionArr?versionArr[0]:"0.0.0";
         var v1 = currentVersion.split(".")[0];
         var v2 = currentVersion.split(".")[1];
         if(v2>9 || m2>9) {
