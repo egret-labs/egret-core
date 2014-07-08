@@ -395,8 +395,8 @@ function readReferenceFromNode(node,list){
  */
 function readReferenceFromTs(path){
     var text = textTemp[path];
-    text = CodeUtil.removeComment(text);
     var orgText = text;
+    text = CodeUtil.removeComment(text);
     var block = "";
     var tsText = "";
     var moduleList = {};
