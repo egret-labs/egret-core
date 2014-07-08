@@ -26,62 +26,174 @@
  */
 
 
-module egret {
-    
-    /**
-     * @class egret.MovieClip
-     * @classdesc MovieClip是位图动画序列类，由FlashPro + egret插件生成配置文件
-     */
-    export class MovieClip extends DisplayObjectContainer {
-        private _frameData;
-        private _spriteSheet:SpriteSheet;
-        private _resPool = {};
-        private _currentFrameIndex:number = 0;
-        private _currentFrameName:string;
-        private _totalFrame:number = 0;
-        private _interval = 0;
-        private _currentInterval = 0;
-        private _isPlaying:boolean = false;
-        private _passTime:number = 0;
-        private _oneFrameTime = 1000 / 60;
+/// <reference path="../context/MainContext.ts"/>
+/// <reference path="../context/Ticker.ts"/>
+/// <reference path="Bitmap.ts"/>
+/// <reference path="DisplayObjectContainer.ts"/>
+/// <reference path="SpriteSheet.ts"/>
+/// <reference path="Texture.ts"/>
+/// <reference path="../utils/Logger.ts"/>
 
-        constructor(public data, texture:Texture) {
+module egret {
+
+    export class MovieClip extends DisplayObjectContainer {
+
+        private delegate:MovieClipDelegate;
+        public frameRate:number = 60;
+
+        constructor(data, texture?:Texture) {
+
             super();
-            this._frameData = data;
-            this._spriteSheet = new SpriteSheet(texture._bitmapData);
-            this._oneFrameTime = 1000 / egret.MainContext.instance.deviceContext.frameRate;
+            if (texture != null && texture instanceof Texture) {
+                Logger.warning("MovieClip#constructor接口参数已经变更，请尽快调整用法为 new MovieClip(new DefaultMovieClipDelegate(data,texture))")
+                this.delegate = new DefaultMovieClipDelegate(data, texture);
+            }
+            else {
+                this.delegate = data;
+            }
+            this.delegate.setMovieClip(this);
         }
 
         /**
          * 播放指定动画
-         * @method egret.MovieClip#gotoAndPlay
-         * @param frameName {string} 镇定跳转帧的名称
+         * @param frameName
          */
         public gotoAndPlay(frameName:string) {
-            this.checkHasFrame(frameName);
-            this._isPlaying = true;
-            this._currentFrameIndex = 0;
-            this._currentInterval = 0;
-            this._currentFrameName = frameName;
-            this._totalFrame = this._frameData.frames[frameName].totalFrame;
-            this.playNextFrame();
-            this._passTime = 0;
-            Ticker.getInstance().register(this.update, this);
+            this.delegate.gotoAndPlay(frameName);
         }
 
         /**
          * 播放并暂停指定动画
-         * @method egret.MovieClip#gotoAndStop
-         * @param frameName {string} 镇定跳转帧的名称
+         * @param frameName
          */
         public gotoAndStop(frameName:string) {
+            this.delegate.gotoAndStop(frameName);
+        }
+
+
+        /**
+         * 暂停动画
+         */
+        public stop() {
+            this.delegate.stop();
+        }
+
+        public dispose():void {
+            this.delegate.dispose();
+
+        }
+
+        /**
+         * 方法名改为 dispose
+         * @deprecated
+         */
+        public release() {
+            Logger.warning("MovieClip#release方法即将废弃");
+            this.dispose();
+        }
+
+
+        /**
+         * @deprecated
+         */
+        public getCurrentFrameIndex():number {
+            Logger.warning("MovieClip#getCurrentFrameIndex方法即将废弃");
+            return this.delegate["_currentFrameIndex"];
+        }
+
+        /**
+         * @deprecated
+         */
+        public getTotalFrame():number {
+            Logger.warning("MovieClip#getTotalFrame方法即将废弃");
+            return this.delegate["_totalFrame"];
+        }
+
+        /**
+         * @deprecated
+         */
+        public setInterval(value:number) {
+            Logger.warning("MovieClip#setInterval方法即将废弃,请使用MovieClip#frameRate代替");
+            this.frameRate = 60 / value;
+        }
+
+        /**
+         * @deprecated
+         */
+        public getIsPlaying():boolean {
+            Logger.warning("MovieClip#getIsPlaying方法即将废弃");
+            return this.delegate["isPlaying"];
+        }
+    }
+
+    export interface MovieClipDelegate {
+
+        gotoAndPlay(frameName:string):void;
+
+        gotoAndStop(frameName:string):void;
+
+        stop():void;
+
+        dispose():void;
+
+        setMovieClip(movieclip:MovieClip):void;
+    }
+
+    export class DefaultMovieClipDelegate implements MovieClipDelegate {
+        private _frameData;
+        private _totalFrame:number = 0;
+        private _spriteSheet:SpriteSheet;
+        private _passTime:number = 0;
+        private _currentFrameIndex:number = 0;
+        private _currentFrameName:string;
+
+        private _isPlaying:boolean = false;
+        private movieClip:MovieClip;
+
+        private bitmap:Bitmap;
+
+
+        constructor(public data, texture:Texture) {
+            this._frameData = data;
+            this._spriteSheet = new SpriteSheet(texture._bitmapData);
+        }
+
+        public setMovieClip(movieClip:MovieClip):void {
+            this.movieClip = movieClip;
+            this.bitmap = new egret.Bitmap();
+            this.movieClip.addChild(this.bitmap);
+
+        }
+
+        public gotoAndPlay(frameName:string):void {
+            this.checkHasFrame(frameName);
+            this._isPlaying = true;
+            this._currentFrameIndex = 0;
+            this._currentFrameName = frameName;
+
+            this.playNextFrame();
+            this._passTime = 0;
+            Ticker.getInstance().register(this.update, this);
+            this._totalFrame = this._frameData.frames[frameName].totalFrame;
+        }
+
+        public gotoAndStop(frameName:string):void {
             this.checkHasFrame(frameName);
             this.stop();
+            this._passTime = 0;
             this._currentFrameIndex = 0;
-            this._currentInterval = 0;
             this._currentFrameName = frameName;
             this._totalFrame = this._frameData.frames[frameName].totalFrame;
             this.playNextFrame();
+        }
+
+        public stop():void {
+            this._isPlaying = false;
+            Ticker.getInstance().unregister(this.update, this);
+        }
+
+        public dispose():void {
+
         }
 
         private checkHasFrame(name:string) {
@@ -90,23 +202,11 @@ module egret {
             }
         }
 
-        /**
-         * 暂停动画
-         * @method egret.MovieClip#stop
-         */
-        public stop() {
-            this._isPlaying = false;
-            Ticker.getInstance().unregister(this.update, this);
-        }
+        private update(advancedTime:number):void {
 
-        private update(frameTime:number) {
-            //设置间隔之后，间隔不到则不处理
-            if (this._interval != this._currentInterval) {
-                this._currentInterval++;
-                return;
-            }
-            var last = this._passTime % this._oneFrameTime;
-            var num = Math.floor((last + frameTime) / this._oneFrameTime);
+            var oneFrameTime = 1000 / this.movieClip.frameRate;
+            var last = this._passTime % oneFrameTime;
+            var num = Math.floor((last + advancedTime) / oneFrameTime);
             while (num >= 1) {
                 if (num == 1) {
                     this.playNextFrame();
@@ -116,22 +216,21 @@ module egret {
                 }
                 num--;
             }
-            this._passTime += frameTime;
+            this._passTime += advancedTime;
         }
 
         private playNextFrame(needShow:boolean = true) {
-            this._currentInterval = 0;
             var frameData = this._frameData.frames[this._currentFrameName].childrenFrame[this._currentFrameIndex];
             if (needShow) {
-                var bitmap = this.getBitmap(frameData.res);
+                var texture:Texture = this.getTexture(frameData.res);
+                var bitmap = this.bitmap;
                 bitmap.x = frameData.x;
                 bitmap.y = frameData.y;
-                this.removeChildren();
-                this.addChild(bitmap);
+                bitmap.texture = texture;
             }
 
             if (frameData.action != null) {
-                this.dispatchEventWith(frameData.action);
+                this.movieClip.dispatchEventWith(frameData.action);
             }
 
             this._currentFrameIndex++;
@@ -140,69 +239,18 @@ module egret {
             }
         }
 
-        private getBitmap(name:string):Bitmap {
-            var result:Bitmap;
-            if (this._resPool[name] != null) {
-                result = this._resPool[name];
+        private getTexture(name:string):Texture {
+            var resData = this._frameData.res[name];
+            var texture = this._spriteSheet.getTexture(name);
+            if (!texture) {
+                texture = this._spriteSheet.createTexture(name, resData.x, resData.y, resData.w, resData.h);
             }
-            else {
-                var resData = this._frameData.res[name];
-                result = new Bitmap();
-                var texture = this._spriteSheet.getTexture(name);
-                if (!texture) {
-                    texture = this._spriteSheet.createTexture(name, resData.x, resData.y, resData.w, resData.h);
-                }
-                result.texture = texture;
-                this._resPool[name] = result;
-            }
-            return result;
+            return texture;
         }
 
-        /**
-         * 
-         * @method egret.MovieClip#release
-         */
-        public release() {
-            for (var key in this._resPool) {
-                delete this._resPool[key];
-            }
-        }
 
-        /**
-         * 获取播放头在 MovieClip 实例的时间轴中所处的帧的编号。
-         * @method egret.MovieClip#getCurrentFrameIndex
-         * @returns {number} 返回当前帧编号
-         */
-        public getCurrentFrameIndex():number {
-            return this._currentFrameIndex;
-        }
-
-        /**
-         * 获取 MovieClip 实例中帧的总数。
-         * @method egret.MovieClip#getTotalFrame
-         * @returns {number} 返回获取 MovieClip 实例中帧的总数。
-         */
-        public getTotalFrame():number {
-            return this._totalFrame;
-        }
-
-        /**
-         * 设置间隔
-         * @method egret.MovieClip#setInterval
-         * @param value {number} 间隔时间
-         */
-        public setInterval(value:number) {
-            this._interval = value;
-        }
-
-        /**
-         * 判断当前动画是否正在播放
-         * @method egret.MovieClip#getIsPlaying
-         * @stable D 这个API需要改为 isPlaying()
-         * @returns {Boolean} 如果动画正在播放则返回true，反之返回false
-         */
-        public getIsPlaying():boolean {
-            return this._isPlaying;
-        }
     }
+
 }
+
+

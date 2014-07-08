@@ -569,7 +569,7 @@ module egret {
                 if (o._anchorX != 0 || o._anchorY != 0) {
                     var bounds = o._getSize(Rectangle.identity);
                     matrix.prependTransform(o._x, o._y, o._scaleX, o._scaleY, o._rotation, o._skewX, o._skewY,
-                        bounds.width * o._anchorX, bounds.height * o._anchorY);
+                            bounds.width * o._anchorX, bounds.height * o._anchorY);
                 }
                 else {
                     matrix.prependTransform(o._x, o._y, o._scaleX, o._scaleY, o._rotation, o._skewX, o._skewY, o._anchorOffsetX, o._anchorOffsetY);
@@ -654,6 +654,8 @@ module egret {
             }
         }
 
+        private _hitTestPointTexture:RenderTexture;
+
         public hitTestPoint(x:number, y:number, shapeFlag?:boolean):DisplayObject {
 
             if (!shapeFlag) {
@@ -665,7 +667,10 @@ module egret {
                     testTexture = this._texture_to_render;
                 }
                 else {
-                    testTexture = new RenderTexture();
+                    if (!this._hitTestPointTexture) {
+                        this._hitTestPointTexture = new RenderTexture();
+                    }
+                    testTexture = this._hitTestPointTexture;
                     (<RenderTexture>testTexture).drawToTexture(this);
                 }
                 var pixelData:number[] = testTexture.getPixel32(x, y);
