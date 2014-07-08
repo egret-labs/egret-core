@@ -144,8 +144,8 @@ module egret {
             }
             var textureWidth:number = texture._textureWidth;
             var textureHeight:number = texture._textureHeight;
-            var sourceX:number = texture._startX;
-            var sourceY:number = texture._startY;
+            var sourceX:number = texture._bitmapX;
+            var sourceY:number = texture._bitmapY;
             var sourceWidth:number = texture._bitmapWidth||textureWidth;
             var sourceHeight:number = texture._bitmapHeight||textureHeight;
             var destX:number = texture._offsetX;
@@ -174,8 +174,8 @@ module egret {
             var renderFilter:RenderFilter = RenderFilter.getInstance();
             var textureWidth:number = texture._textureWidth;
             var textureHeight:number = texture._textureHeight;
-            var sourceX:number = texture._startX;
-            var sourceY:number = texture._startY;
+            var sourceX:number = texture._bitmapX;
+            var sourceY:number = texture._bitmapY;
             var sourceWidth:number = texture._bitmapWidth||textureWidth;
             var sourceHeight:number = texture._bitmapHeight||textureHeight;
             var destX:number = texture._offsetX;
