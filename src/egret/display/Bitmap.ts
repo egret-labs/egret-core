@@ -106,27 +106,27 @@ module egret {
                 else{
                     var offsetX:number = texture._offsetX;
                     var offsetY:number = texture._offsetY;
-                    var actualWidth:number = texture._actualWidth||textureWidth;
-                    var actualHeight:number = texture._actualHeight||textureHeight;
+                    var bitmapWidth:number = texture._bitmapWidth||textureWidth;
+                    var bitmapHeight:number = texture._bitmapHeight||textureHeight;
                     if(thisObject._hasWidthSet){
                         var scaleX:number = destW/textureWidth;
                         offsetX = Math.round(offsetX*scaleX);
-                        destW = Math.round(actualWidth*scaleX);
+                        destW = Math.round(bitmapWidth*scaleX);
                     }
                     else{
-                        destW = actualWidth;
+                        destW = bitmapWidth;
                     }
                     if(thisObject._hasHeightSet){
                         var scaleY:number = destH/textureHeight;
                         offsetY = Math.round(offsetY*scaleY);
-                        destH = Math.round(actualHeight*scaleY);
+                        destH = Math.round(bitmapHeight*scaleY);
                     }
                     else{
-                        destH = actualHeight;
+                        destH = bitmapHeight;
                     }
 
                     RenderFilter.getInstance().drawImage(renderContext, thisObject, texture._startX, texture._startY,
-                        actualWidth, actualHeight, offsetX, offsetY, destW,destH);
+                        bitmapWidth, bitmapHeight, offsetX, offsetY, destW,destH);
                 }
             }
             else{
@@ -146,8 +146,8 @@ module egret {
             var textureHeight:number = texture._textureHeight;
             var sourceX:number = texture._startX;
             var sourceY:number = texture._startY;
-            var sourceWidth:number = texture._actualWidth||textureWidth;
-            var sourceHeight:number = texture._actualHeight||textureHeight;
+            var sourceWidth:number = texture._bitmapWidth||textureWidth;
+            var sourceHeight:number = texture._bitmapHeight||textureHeight;
             var destX:number = texture._offsetX;
             var destY:number = texture._offsetY;
 
@@ -176,8 +176,8 @@ module egret {
             var textureHeight:number = texture._textureHeight;
             var sourceX:number = texture._startX;
             var sourceY:number = texture._startY;
-            var sourceWidth:number = texture._actualWidth||textureWidth;
-            var sourceHeight:number = texture._actualHeight||textureHeight;
+            var sourceWidth:number = texture._bitmapWidth||textureWidth;
+            var sourceHeight:number = texture._bitmapHeight||textureHeight;
             var destX:number = texture._offsetX;
             var destY:number = texture._offsetY;
 
