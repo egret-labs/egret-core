@@ -29,10 +29,11 @@
 module egret {
     export class RenderTexture extends Texture {
 
+        private renderContext;
         constructor() {
             super();
             this._bitmapData = document.createElement("canvas");
-
+            this.renderContext = egret.RendererContext.createRendererContext(this._bitmapData);
         }
 
         public drawToTexture(displayObject:egret.DisplayObject):void {
@@ -54,11 +55,11 @@ module egret {
                 }
             }
 
-            var renderContext = egret.RendererContext.createRendererContext(cacheCanvas);
             var renderFilter = egret.RenderFilter.getInstance();
             var drawAreaList:Array<Rectangle> = renderFilter._drawAreaList.concat();
             renderFilter._drawAreaList.length = 0;
-            displayObject._render(renderContext);
+            this.renderContext.clearScreen();
+            displayObject._render(this.renderContext);
             renderFilter._drawAreaList = drawAreaList;
 
             this._textureWidth = this._bitmapData.width;
