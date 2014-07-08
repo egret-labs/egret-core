@@ -656,10 +656,10 @@ module egret {
 
         private _hitTestPointTexture:RenderTexture;
 
-        public hitTestPoint(x:number, y:number, shapeFlag?:boolean):DisplayObject {
+        public hitTestPoint(x:number, y:number, shapeFlag?:boolean):boolean {
 
             if (!shapeFlag) {
-                return this.hitTest(x, y, true);
+                return !!this.hitTest(x, y, true);
             }
             else {
                 var testTexture:Texture;
@@ -675,9 +675,9 @@ module egret {
                 }
                 var pixelData:number[] = testTexture.getPixel32(x, y);
                 if (pixelData[3] != 0) {
-                    return this;
+                    return true;
                 }
-                return null;
+                return false;
             }
         }
 
