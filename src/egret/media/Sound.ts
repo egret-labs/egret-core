@@ -61,19 +61,74 @@ module egret {
         }
 
         /**
-         * 停止声音
-         * @method egret.Sound#stop
+         * 暂停声音
+         * @method egret.Sound#pause
          */
-        public stop():void{
+        public pause():void{
             var sound = this.audio;
             if (!sound){
                 return;
             }
-            sound.stop();
-
+            sound.pause();
         }
 
+        /**
+         * 重新加载声音
+         * @method egret.Sound#load
+         */
+        public load():void{
+            var sound = this.audio;
+            if (!sound){
+                return;
+            }
+            sound.load();
+        }
 
+        /**
+         * 添加事件监听
+         * @param type 事件类型
+         * @param listener 监听函数
+         */
+        public addEventListener(type:string, listener:Function):void{
+            var sound = this.audio;
+            if (!sound){
+                return;
+            }
+            this.audio.addEventListener(type, listener, false);
+        }
+
+        /**
+         * 移除事件监听
+         * @param type 事件类型
+         * @param listener 监听函数
+         */
+        public removeEventListener(type:string, listener:Function):void{
+            var sound = this.audio;
+            if (!sound){
+                return;
+            }
+            this.audio.removeEventListener(type, listener, false);
+        }
+
+        /**
+         * 设置音量
+         * @param value 值需大于0 小于等于 1
+         */
+        public setVolume(value:number):void{
+            var sound = this.audio;
+            if (!sound){
+                return;
+            }
+            sound.volume = value;
+        }
+
+        /**
+         * 获取当前音量值
+         * @returns number
+         */
+        public getVolume():number{
+            return this.audio ? this.audio.volume : 0;
+        }
     }
 
 
