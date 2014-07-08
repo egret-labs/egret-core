@@ -41,48 +41,6 @@ module egret {
             super();
         }
 
-        /**
-         * 已废弃，请使用_bitmapX替代
-         * @deprecated
-         */
-        public get _startX():number{
-            return this._bitmapX;
-        }
-        public set _startX(value:number){
-            this._bitmapX = value;
-        }
-        /**
-         * 已废弃，请使用_bitmapY替代
-         * @deprecated
-         */
-        public get _startY():number{
-            return this._bitmapY;
-        }
-        public set _startY(value:number){
-            this._bitmapY = value;
-        }
-        /**
-         * 已废弃，请使用_bitmapWidth替代
-         * @deprecated
-         */
-        public get _actualWidth():number{
-            return this._bitmapWidth;
-        }
-        public set _actualWidth(value:number){
-            this._bitmapWidth = value;
-        }
-        /**
-         * 已废弃，请使用_bitmapHeight替代
-         * @deprecated
-         */
-        public get _actualHeight():number{
-            return this._bitmapHeight;
-        }
-        public set _actualHeight(value:number){
-            this._bitmapHeight = value;
-        }
-
-
         public _bitmapX:number = 0;
         /**
          * 表示这个纹理在bitmapData上的x起始位置
