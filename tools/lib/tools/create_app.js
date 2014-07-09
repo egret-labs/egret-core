@@ -4,6 +4,11 @@ var globals = require("../core/globals");
 var param = require("../core/params_analyze.js");
 var file = require('../core/file.js');
 
+
+var CREATE_APP = "create_app.json";
+var PREFERENCES = "egretProperties.json";
+
+
 function run(dir, args, opts) {
 	var app_name = args[0];
     var template_path = opts["-t"];
@@ -23,16 +28,20 @@ function run(dir, args, opts) {
         if (result == 0) {
             create_app_from(path.resolve(app_name), path.resolve(h5_path[0]), path.resolve(template_path[0]));
         } else {
-            globals.exit(1603);
+            globals.exit(1604);
         }
     });
 }
 
 
 function create_app_from(app_name, h5_path, template_path) {
-    var app_data = JSON.parse(file.read(path.join(template_path, "create_app.json")));
-    if (!app_data) {
+    var preferences = read_json_from(path.join(h5_path, PREFERENCES));
+    if (!preferences) {
         globals.exit(1602);
+    }
+    var app_data = read_json_from(path.join(template_path, CREATE_APP));
+    if (!app_data) {
+        globals.exit(1603);
     }
 
     // copy from project template
@@ -59,8 +68,7 @@ function create_app_from(app_name, h5_path, template_path) {
 
     // copy h5 res into here
     globals.log("> copy h5 resources into " + app_name + " ...");
-    var preferences = get_preferences(h5_path);
-        if (preferences["support_path"] === undefined) {
+    if (preferences["support_path"] === undefined) {
         preferences["support_path"] = [];
     }
     app_data.game.target.forEach(function(target) {
@@ -71,24 +79,19 @@ function create_app_from(app_name, h5_path, template_path) {
             file.remove(path.join(target_dir, ".gitignore"));
         });
     });
-    file.save(path.join(h5_path, "egretProperties.json"), JSON.stringify(preferences, null, '\t') + '\n');
+    file.save(path.join(h5_path, PREFERENCES), JSON.stringify(preferences, null, '\t') + '\n');
 }
 
-function get_preferences(h5_path) {
-    var preferences_file = path.join(h5_path, "egretProperties.json");
-    var content = file.read(preferences_file);
-    if (content == "") {
+function read_json_from(json_file) {
+    if (!fs.existsSync(json_file)) {
         return null;
+    } else {
+        return JSON.parse(file.read(json_file));
     }
-    var preferences = JSON.parse(file.read(content));
-    if (!preferences) {
-        globals.exit(1604);
-    }
-    return preferences;
 }
 
 function build_copy_from(h5_path) {
-    var preferences = get_preferences(h5_path);
+    var preferences = read_json_from(path.join(h5_path, PREFERENCES));
     if (preferences == null || preferences["support_path"] === undefined) {
         return;
     }
