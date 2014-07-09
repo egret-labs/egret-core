@@ -37,13 +37,16 @@ module egret {
      */
     export class SpriteSheet extends HashObject {
 
-        public constructor(bitmapData:any) {
+        public constructor(texture:Texture) {
             super();
+            var bitmapData:any = texture.bitmapData;
             this.bitmapData = bitmapData;
             this._textureMap = {};
             var scale = egret.MainContext.instance.rendererContext.texture_scale_factor;
             this._sourceWidth = bitmapData.width*scale;
             this._sourceHeight = bitmapData.height*scale;
+            this._bitmapX = texture._bitmapX;
+            this._bitmapY = texture._bitmapY;
         }
         /**
          * 表示bitmapData.width
@@ -53,6 +56,14 @@ module egret {
          * 表示bitmapData.height
          */
         public _sourceHeight:number;
+        /**
+         * 表示这个SpriteSheet的位图区域在bitmapData上的起始位置x。
+         */
+        public _bitmapX:number;
+        /**
+         * 表示这个SpriteSheet的位图区域在bitmapData上的起始位置y。
+         */
+        public _bitmapY:number;
         /**
          * 共享的位图数据
          */
@@ -97,8 +108,8 @@ module egret {
             var texture:Texture = new Texture();
 
             texture._bitmapData = this.bitmapData;
-            texture._bitmapX = bitmapX;
-            texture._bitmapY = bitmapY;
+            texture._bitmapX = this._bitmapX+bitmapX;
+            texture._bitmapY = this._bitmapY+bitmapY;
             texture._bitmapWidth = bitmapWidth;
             texture._bitmapHeight = bitmapHeight;
             texture._offsetX = offsetX;

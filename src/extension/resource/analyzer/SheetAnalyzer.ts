@@ -119,7 +119,7 @@ module RES {
             if(!frames){
                 return null;
             }
-            var spriteSheet:egret.SpriteSheet = new egret.SpriteSheet(texture._bitmapData);
+            var spriteSheet:egret.SpriteSheet = new egret.SpriteSheet(texture);
             for(var name in frames){
                 var config:any = frames[name];
                 spriteSheet.createTexture(name,config.x,config.y,config.w,config.h);
