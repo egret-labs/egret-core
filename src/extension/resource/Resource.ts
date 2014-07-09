@@ -68,6 +68,11 @@ module RES {
     export function getGroupByName(name:string):Array<ResourceItem>{
         return instance.getGroupByName(name);
     }
+
+		export function isGroupInLoading(name:string):boolean{
+			return instance.isGroupInLoading(name);
+		}
+
     /**
      * 创建自定义的加载资源组,注意：此方法仅在资源配置文件加载完成后执行才有效。
      * 可以监听ResourceEvent.CONFIG_COMPLETE事件来确认配置加载完成。
@@ -267,6 +272,10 @@ module RES {
         public getGroupByName(name:string):Array<ResourceItem>{
             return this.resConfig.getGroupByName(name);
         }
+
+	    public isGroupInLoading(name:string):boolean{
+		    return this.resLoader.isGroupInLoading(name);
+	    }
 
         private groupNameList:Array<any> = [];
         /**
