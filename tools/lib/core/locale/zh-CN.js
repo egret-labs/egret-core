@@ -22,6 +22,7 @@ exports.error_code = {
     1601:"请输入项目名称和h5游戏目录。例: {color_green}egret create_app [app_name] -f [h5_game_path] -t [template_path]{color_normal}",
     1602:"请从{color_blue}http://download.egret-labs.org/id=egret-android{color_normal}下载各平台app模块库，再次运行命令",
     1603:"执行egret build命令失败",
+    1604:"$(h5_path)/egretProperties.json丢失",
     9999:"未知错误:{0}",
     8001:"请输入命令行选项{color_green} {0} {color_normal}的参数,并确认是以下值之一: {color_green}[{1}]{color_normal}",
     8002:"{color_red}请选对正确的egret项目目录！{color_normal}\n\tEgret_Project\t\t{color_gray}//项目目录{color_normal}\n\t\t--launcher\t{color_gray}//启动目录{color_normal}\n\t\t--src\t\t{color_gray}//源代码目录{color_normal}",

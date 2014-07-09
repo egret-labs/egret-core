@@ -56,6 +56,8 @@ function run(dir, args, opts) {
 
     async.series(task, function (err) {
         if (!err){
+            var create_app = require("./create_app.js");
+            create_app.build_copy_from(currDir);
             globals.log("构建成功");
         }
         else{

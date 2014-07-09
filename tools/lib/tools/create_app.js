@@ -37,41 +37,63 @@ function create_app_from(app_name, h5_path, template_path) {
 
     // copy from project template
     globals.log("> copy from project template ...");
-    for (var i = 0; i < app_data.template.source.length; ++i) {
-        file.copy(path.join(template_path, app_data.template.source[i]),
-            path.join(app_name, app_data.template.source[i]));
-    }
+    app_data.template.source.forEach(function(source) {
+        file.copy(path.join(template_path, source), path.join(app_name, source));
+    });
 
     // replace keyword in content
     globals.log("> replace all configure elements ...");
-    for (var i = 0; i < app_data.rename_tree.content.length; ++i) {
-        var target_path = path.join(app_name, app_data.rename_tree.content[i]);
-        var content = file.read(target_path);
-        content = content.replace(new RegExp(app_data.template_name, "g"), path.basename(app_name));
-        file.save(target_path, content);
-    }
+    app_data.rename_tree.content.forEach(function(content) {
+        var target_path = path.join(app_name, content);
+        var c = file.read(target_path);
+        c = c.replace(new RegExp(app_data.template_name, "g"), path.basename(app_name));
+        file.save(target_path, c);
+    });
 
     // rename keyword in project name
     globals.log("> rename project name ...");
-    for (var i = 0; i < app_data.rename_tree.file_name.length; ++i) {
-        var str = path.join(app_name, app_data.rename_tree.file_name[i]);
-        fs.renameSync(str, str.replace(app_data.template_name, path.basename(app_name)))
-    }
+    app_data.rename_tree.file_name.forEach(function(f) {
+        var str = path.join(app_name, f);
+        fs.renameSync(str, str.replace(app_data.template_name, path.basename(app_name)));
+    });
 
     // copy h5 res into here
     globals.log("> copy h5 resources into " + app_name + " ...");
-    for (var i = 0; i < app_data.game.target.length; ++i) {
-        for (var j = 0; j < app_data.game.h5_tree.length; ++j) {
-            var target = path.join(app_name, app_data.game.target[i], app_data.game.h5_tree[j]);
-            file.copy(path.join(h5_path, app_data.game.h5_tree[j]), target);
-            file.remove(path.join(target, ".gitignore"));
-        }
+    var preferences = get_preferences(h5_path);
+        if (preferences["support_path"] === undefined) {
+        preferences["support_path"] = [];
     }
-
-    globals.log("> save the resources target to game config ...");
-    //TODO write $(app_name) to the egret_prefs.json
+    app_data.game.target.forEach(function(target) {
+        preferences["support_path"].push(path.join(app_name, target));
+        preferences["game_dir_tree"].forEach(function(branch) {
+            var target_dir = path.join(app_name, target, branch);
+            file.copy(path.join(h5_path, branch), path.join(target_dir));
+            file.remove(path.join(target_dir, ".gitignore"));
+        });
+    });
+    file.save(path.join(h5_path, "egretProperties.json"), JSON.stringify(preferences, null, '\t') + '\n');
 }
 
+function get_preferences(h5_path) {
+    var preferences_file = path.join(h5_path, "egretProperties.json");
+    var preferences = JSON.parse(file.read(preferences_file));
+    if (!preferences) {
+        globals.exit(1604);
+    }
+    return preferences;
+}
+
+function build_copy_from(h5_path) {
+    var preferences = get_preferences(h5_path);
+    if (preferences["support_path"] === undefined) {
+        return;
+    }
+    preferences["support_path"].forEach(function(target) {
+        preferences["game_dir_tree"].forEach(function(branch) {
+           file.copy(path.join(h5_path, branch), path.join(target, branch));
+        });
+    });
+}
 
 function help_title() {
     return "从h5游戏生成app\n";
@@ -86,3 +108,4 @@ function help_example() {
 exports.run = run;
 exports.help_title = help_title;
 exports.help_example = help_example;
+exports.build_copy_from = build_copy_from;
