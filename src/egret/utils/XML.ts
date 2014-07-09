@@ -41,6 +41,7 @@ module egret {
      * 其中XML上的属性节点都使用$+"属性名"的方式表示,子节点都存放在children属性的列表里，name表示节点名称。
      */
     export class XML {
+
         /**
          * 解析一个XML字符串为JSON对象。
          * @method egret.XML.parse
@@ -109,6 +110,76 @@ module egret {
                 }
             }
             return xml;
+        }
+        /**
+         * 查找xml上符合节点路径的所有子节点。
+         * @method egret.XML.findChildren
+         * @param xml {any} 要查找的XML节点。
+         * @param path {string} 子节点路径，例如"item.node"
+         * @param result {Array<any>} 可选参数，传入一个数组用于存储查找的结果。这样做能避免重复创建对象。
+         * @returns {any} 返回所有符合path路径的xml上的子孙节点列表
+         */
+        public static findChildren(xml:any,path:string,result?:Array<any>):Array<any>{
+            if(!result){
+                result = [];
+            }
+            else{
+                result.length = 0;
+            }
+            XML.findByPath(xml,path,result);
+            return result;
+        }
+
+        public static findByPath(xml:any,path:string,result:Array<any>):void{
+            var index:number = path.indexOf(".");
+            var key:string;
+            var end:boolean;
+            if(index==-1){
+                key = path;
+                end = true;
+            }
+            else{
+                key = path.substring(0,index);
+                path = path.substring(index+1);
+                end = false;
+            }
+            var children:Array<any> = xml.children;
+            if(!children){
+                return;
+            }
+            var length:number = children.length;
+            for(var i:number=0;i<length;i++){
+                var child:any = children[i];
+                if(child.localName==key){
+                    if(end){
+                        result.push(child);
+                    }
+                    else{
+                        XML.findByPath(child,path,result);
+                    }
+                }
+            }
+        }
+        /**
+         * 获取一个XML节点上的所有属性名列表
+         * @method egret.XML.getAttributes
+         * @param xml {any} 要查找的XML节点。
+         * @param result {Array<any>} 可选参数，传入一个数组用于存储查找的结果。这样做能避免重复创建对象。
+         * @returns {any} 返回xml上的属性名列表,不包含"$"前缀。
+         */
+        public static getAttributes(xml:any,result?:Array<any>):Array<string>{
+            if(!result){
+                result = [];
+            }
+            else{
+                result.length = 0;
+            }
+            for(var key in xml){
+                if(key.charAt(0)=="$"){
+                    result.push(key.substring(1));
+                }
+            }
+            return result;
         }
     }
 }
