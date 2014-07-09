@@ -125,13 +125,13 @@ module dragonBones {
             private _startX:number;
             private _startY:number;
 
-            constructor(public texture:any, private textureAtlasRawData:any, scale:number = 1) {
+            constructor(public texture:egret.Texture, private textureAtlasRawData:any, scale:number = 1) {
                 this.scale = scale;
                 this.name = textureAtlasRawData[utils.ConstValues.A_NAME];
                 this.parseData(textureAtlasRawData);
                 this.spriteSheet = new egret.SpriteSheet(texture.bitmapData);
-                this._startX = texture._startX;
-                this._startY = texture._startY;
+                this._startX = texture._bitmapX;
+                this._startY = texture._bitmapY;
             }
 
             public getTexture(fullName:string):egret.Texture {
