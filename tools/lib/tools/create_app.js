@@ -76,7 +76,11 @@ function create_app_from(app_name, h5_path, template_path) {
 
 function get_preferences(h5_path) {
     var preferences_file = path.join(h5_path, "egretProperties.json");
-    var preferences = JSON.parse(file.read(preferences_file));
+    var content = file.read(preferences_file);
+    if (content == "") {
+        return null;
+    }
+    var preferences = JSON.parse(file.read(content));
     if (!preferences) {
         globals.exit(1604);
     }
@@ -85,7 +89,7 @@ function get_preferences(h5_path) {
 
 function build_copy_from(h5_path) {
     var preferences = get_preferences(h5_path);
-    if (preferences["support_path"] === undefined) {
+    if (preferences == null || preferences["support_path"] === undefined) {
         return;
     }
     preferences["support_path"].forEach(function(target) {
