@@ -91,7 +91,7 @@ Egret 1.0 Release Candidate 是 Egret 1.0的第一个发布候选版，在此版
 
 
 ## 详细改动日志
-<a id="tag1">
+<a id="tag1"></a>
 ### egret startserver 命令优化
 
 
