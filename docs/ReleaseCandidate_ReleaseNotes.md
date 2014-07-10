@@ -52,8 +52,7 @@ Egret 1.0 Release Candidate 是 Egret 1.0的第一个发布候选版，在此版
 
 * 优化 DisplayObjectContainer.swapChildren() 的性能
 * egret.UIAsset 类的构造函数添加一个可选参数 source 
-* 在 startserver 命令启动服务器失败时会返回更友好的错误提示
-* startserver 命令现在可以通过 --
+* 改进 egret startserver 命令，使其对开发者更为友好，具体参见 todo
 * 大幅优化引擎主渲染循环 updateTransform 的性能
 * 大幅优化引擎 hitTest 的性能
 * 修改 将 DisplayObject.cacheAsBitmap() 修改为 DisplayObject.cacheAsBitmap ，以和 Flash Style API 保持一致
