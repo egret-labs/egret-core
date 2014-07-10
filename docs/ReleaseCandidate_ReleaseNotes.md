@@ -72,7 +72,7 @@ Egret 1.0 Release Candidate 是 Egret 1.0的第一个发布候选版，在此版
 
 ## 旧项目升级迁移事项
 
-为了让命令行工具支持自动生成game_file_list和不用手写reference的功能，对项目结构做了部分调整。旧项目请按如下步骤升级以使用新的命令行工具进行编译：
+为了让命令行工具支持自动生成game_file_list和不用手写reference的功能，我们对项目结构做了部分调整。旧项目请按如下步骤升级以使用新的命令行工具进行编译：
 
 * 重装egret命令行工具
 * 使用```egret create {临时项目名}```命令创建一新的模板项目,拷贝其中的launcher文件夹和egretProperties.json文件到旧项目并覆盖。
