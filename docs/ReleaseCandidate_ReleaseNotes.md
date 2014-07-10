@@ -60,12 +60,12 @@ Egret 1.0 Release Candidate 是 Egret 1.0的第一个发布候选版，在此版
 * 优化 DragonBones 模块的性能，在移动设备浏览器中有 200% 左右的性能提升
 * UIStage增加autoResize属性
 * 命令行工具改为无需声明reference的编译方式
-* 增加Profiler具体显示
+* 增加Profiler具体显示，现在 Profiler 将会在三行 Profiler 信息前分别将其标记为 Draw / Cost / FPS
 * 添加 Rectangle.containsPoint 方法
 
 ### 重构
 
-* MovieClip类的结构进行了重构，允许开发者对数据格式进行扩展，同时废弃了部分API，目前被废弃的API会向下兼容，但是在 1.0 Final Release 中这些API会被删除
+* MovieClip类的结构进行了重构，允许开发者对数据格式进行扩展，同时废弃了部分API，目前被废弃的API会向下兼容，但是在 1.0 Final Release 中这些API会被删除,更多细节参见[这里](#tag2)
 
 
 ## 已知问题
@@ -97,4 +97,5 @@ Egret 1.0 Release Candidate 是 Egret 1.0的第一个发布候选版，在此版
 * egret startserver 命令现在可以通过添加 ``` --port ``` 参数的方式修改 Node.js 服务器的启动端口，例 ``` egret startserver --port 10086 ```
 * egret startserver 命令现在可以通过添加 ``` -ip ``` 参数，在打开的浏览器的链接中显示 ip地址而非 http://localhost ，方便开发者更简单的进行移动设备调试或者url链接在局域网环境下的分享 
 
-
+<a name="tag2"></a>
+### MovieClip 重构
