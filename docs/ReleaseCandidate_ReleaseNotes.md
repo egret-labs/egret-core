@@ -30,6 +30,10 @@ Egret 1.0 Release Candidate 是 Egret 1.0的第一个发布候选版，在此版
 
 ### 修复
 
+* 解决在部分三星设备中，当游戏从锁屏状态恢复后，游戏画面卡死的bug
+
+> 特别鸣谢： 墨麟集团：武汉鱼之乐信息技术有限公司
+
 * 解决 egret 安装在包含空格的文件夹内时创建新项目会报错的bug
 * 解决 egret create 命令传入绝对路径导致报错的bug
 * 解决 GraphicsAPI 在 RenderTexture上渲染失败的BUG
@@ -50,6 +54,7 @@ Egret 1.0 Release Candidate 是 Egret 1.0的第一个发布候选版，在此版
 * 优化 DisplayObjectContainer.swapChildren() 的性能
 * egret.UIAsset 类的构造函数添加一个可选参数 source 
 * 在 startserver 命令启动服务器失败时会返回更友好的错误提示
+* startserver 命令现在可以通过 --
 * 大幅优化引擎主渲染循环 updateTransform 的性能
 * 大幅优化引擎 hitTest 的性能
 * 修改 将 DisplayObject.cacheAsBitmap() 修改为 DisplayObject.cacheAsBitmap ，以和 Flash Style API 保持一致
