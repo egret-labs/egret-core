@@ -78,7 +78,7 @@ Egret 1.0 Release Candidate 是 Egret 1.0的第一个发布候选版，在此版
 * 使用```egret create {临时项目名}```命令创建一新的模板项目,拷贝其中的launcher文件夹和egretProperties.json文件到旧项目并覆盖。
 * 若旧项目的文档类不是GameApp，请编辑egretProperties.json文件，找到```document_class```这一行，将文档类的值```GameApp```改为旧项目的文档类。
 * 删除旧项目src目录下的egret.d.ts文件
-* 删除所有TS文件内的reference标签，可以使用[这个工具](https://download.egret-labs.org/?id=TsReferenceTool)，拖入文件夹一次性清除。
+* 删除所有ts文件内的reference标签，可以使用[这个工具](https://download.egret-labs.org/?id=TsReferenceTool)，拖入文件夹一次性清除。
 * 使用```egret build {旧项目名} -e```重新编译项目。注意要加上-e参数才能编译引擎代码。
 
 关于文档类，从这版本起，文档类只在egretProperties.json里配置。命令行工具会自动去修改index.html等页面里的文档类配置。请不要直接修改launcher文件夹下的文件。
