@@ -11,6 +11,8 @@ Egret 1.0 Release Candidate Release Note
 
 Egret 1.0 Release Candidate 是 Egret 1.0的第一个发布候选版，在此版本后，Egret 1.0原则上不会再改动 API结构，而是专注于解决现有的问题和优化。感谢所有在 Prerelease 和 Public Beta 阶段所有对 Egret 提出宝贵意见的开发者。
 
+特别鸣谢： 墨麟集团-武汉鱼之乐信息技术有限公司
+
 ### 新特性
 * 核心显示列表
   * 为 Graphics API 添加 moveTo / curveTo / drawCircle 等方法
@@ -31,9 +33,6 @@ Egret 1.0 Release Candidate 是 Egret 1.0的第一个发布候选版，在此版
 ### 修复
 
 * 解决在部分三星设备中，当游戏从锁屏状态恢复后，游戏画面卡死的bug
-
-> 特别鸣谢： 墨麟集团：武汉鱼之乐信息技术有限公司
-
 * 解决 egret 安装在包含空格的文件夹内时创建新项目会报错的bug
 * 解决 egret create 命令传入绝对路径导致报错的bug
 * 解决 GraphicsAPI 在 RenderTexture上渲染失败的BUG
