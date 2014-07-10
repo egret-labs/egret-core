@@ -484,11 +484,9 @@ module egret {
 
 			if(oldRenderer&&oldRenderer instanceof DisplayObject){
 				this.recycle(oldRenderer);
-                RendererExistenceEvent.dispatchRendererExistenceEvent(this,
-                    RendererExistenceEvent.RENDERER_REMOVE,oldRenderer, oldRenderer.itemIndex, oldRenderer.data);
 			}
 		}
-		
+
 		/**
 		 * 对象池字典
 		 */		
