@@ -657,7 +657,7 @@ module egret {
         private _hitTestPointTexture:RenderTexture;
 
         public hitTestPoint(x:number, y:number, shapeFlag?:boolean):boolean {
-            var p:egret.Point = this.globalToLocal(x,y);
+            var p:egret.Point = this.globalToLocal(x, y);
             if (!shapeFlag) {
                 return !!this.hitTest(p.x, p.y, true);
             }
@@ -829,13 +829,19 @@ module egret {
             return this._cacheAsBitmap;
         }
 
+        private renderTexture:RenderTexture;
+
         public set cacheAsBitmap(bool:boolean) {
-            if (this._cacheAsBitmap == bool) return;
             this._cacheAsBitmap = bool;
             if (bool) {
-                var renderTexture = new egret.RenderTexture();
-                renderTexture.drawToTexture(this);
-                this._texture_to_render = renderTexture;
+                if (!this.renderTexture) {
+                    this.renderTexture = new egret.RenderTexture();
+                }
+                this.renderTexture.drawToTexture(this);
+                this._texture_to_render = this.renderTexture;
+            }
+            else {
+                this._texture_to_render = null;
             }
         }
 
