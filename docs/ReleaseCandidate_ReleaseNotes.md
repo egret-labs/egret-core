@@ -103,7 +103,24 @@ Egret 1.0 Release Candidate 是 Egret 1.0的第一个发布候选版，在此版
 
 在这个版本中，我们着手解决这个问题，现在 MovieClip 只是一个空的基类，具体的实现细节逻辑委托给了 DefaultMovieClipDelegate 这个类去实现，并保持了 MovieClip 对外接口不变。
 
-在egret的未来规划中，DragonBones、StarlingSWF for Egret 以及其他开发者自己实现的其他动画播放方式，都可以通过实现一个 MovieClipDelegate 来统一起来，最终暴露给开发者的接口都是 MovieClip.gotoAndPlay() 等
+在egret的未来规划中，DragonBones、StarlingSWF for Egret 以及其他开发者自己实现的其他动画播放方式，都可以通过实现一个 MovieClipDelegate 来统一起来，最终暴露给开发者的接口都是 MovieClip.gotoAndPlay() 等，例如：
+
+```
+
+var movieclip1 = new MovieClip(new DefaultMovieClipDelegate(texture,data));
+var movieclip2 = new MovieClip(new DragonBonesMovieClipDelegate(texture,skeletonData,textureData));
+var movieclip3 = new MovieClip(new StarlingSwfMovieClipDelegate(texture,data));
+
+this.addChild(movieclip1);
+this.addChild(movieclip2);
+this.addChild(movieclip3);
+
+movieclip1.gotoAndStop("run");
+movieclip2.gotoAndPlay("jump");
+movieclip3.stop();
+
+
+```
 
 
 
