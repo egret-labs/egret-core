@@ -90,8 +90,11 @@ Egret 1.0 Release Candidate 是 Egret 1.0的第一个发布候选版，在此版
 关于自动生成```game_file_list.js```的功能。默认情况下，命令行会根据配置的文档类，只把被引用到的类生成到列表里。这里跟Flash的编译一致，若是通过反射的字符串方式获取类名可能会无法生成到列表，请在ts文件内定义一个引用该类的var变量来解决这个问题。若需要屏蔽自动生成功能，采用自定义加载列表。请在旧项目的目录下运行```egret create_manifest```，会生成一个manifest.json文件模板。修改该模板，之后命令行都以这个文件作为列表来源。
 
 
-## 详细改动日志
-<a id="tag1" name="tag1"></a>
+## 部分详细改动日志
+<a name="tag1"></a>
 ### egret startserver 命令优化
+* 当端口被占用导致 egret startserver 执行失败时，现在会给开发者提供友好的错误提示，而非 Node.js 内部报错
+* egret startserver 命令现在可以通过添加 ``` --port ``` 参数的方式修改 Node.js 服务器的启动端口，例 ``` egret startserver --port 10086 ```
+* egret startserver 命令现在可以通过添加 ``` -ip ``` 参数，在打开的浏览器的链接中显示 ip地址而非 http://localhost ，方便开发者更简单的进行移动设备调试或者url链接在局域网环境下的分享 
 
 
