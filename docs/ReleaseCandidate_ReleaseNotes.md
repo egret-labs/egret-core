@@ -14,6 +14,7 @@ Egret 1.0 Release Candidate 是 Egret 1.0的第一个发布候选版，在此版
 ### 新特性
 * 核心显示列表
   * 为 Graphics API 添加 moveTo / curveTo / drawCircle 等方法
+  * Graphics解决和Flash表象不一致的一系列问题，如不调用endFill方法就不会绘制等
   * 添加 DisplayObject.getChildByName(name) 方法
   * 添加精确像素碰撞检测
 
