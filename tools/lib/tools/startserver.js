@@ -3,6 +3,7 @@ var url = require('url');
 var fs = require('fs');
 var path = require('path');
 var globals = require("../core/globals");
+var os = require("os");
 
 var mine = {
     "css": "text/css",
@@ -37,7 +38,8 @@ function run(dir, args, opts) {
     server.listen(PORT, function () {
         var open = require("../core/open");
         globals.joinEgretDir(dir, args[0]);
-        var url = path.join("http://localhost:" + PORT, args[0], "launcher/index.html");
+        var ip = findIP(opts);
+        var url = path.join("http://" + ip + ":" + PORT, args[0], "launcher/index.html");
         open(url);
         console.log("Server runing at port: " + PORT + ".");
         exports.projectName = args[0];
@@ -46,6 +48,25 @@ function run(dir, args, opts) {
 
 }
 
+function findIP(opts) {
+    var ipConfig = os.networkInterfaces();
+    var ip = "localhost";
+    if (!opts["-ip"]) {
+        return ip;
+    }
+    for (var key in ipConfig) {
+        var arr = ipConfig[key];
+        var length = arr.length;
+        for (var i = 0; i < length; i++) {
+            var ipData = arr[i];
+            if (!ipData.internal && ipData.family == "IPv4") {
+                ip = ipData.address;
+                return ip;
+            }
+        }
+    }
+    return ip;
+}
 
 function onGet(request, response) {
     var projectName = exports.projectName;
@@ -142,6 +163,7 @@ function help_example() {
     var result = "egret startserver [project_name]";
     result += "参数说明:\n";
     result += "    --port           指定端口号\n";
+    result += "    -ip              是否使用本机IP\n";
     return result;
 }
 
