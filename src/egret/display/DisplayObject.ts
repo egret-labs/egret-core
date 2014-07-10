@@ -569,7 +569,7 @@ module egret {
                 if (o._anchorX != 0 || o._anchorY != 0) {
                     var bounds = o._getSize(Rectangle.identity);
                     matrix.prependTransform(o._x, o._y, o._scaleX, o._scaleY, o._rotation, o._skewX, o._skewY,
-                        bounds.width * o._anchorX, bounds.height * o._anchorY);
+                            bounds.width * o._anchorX, bounds.height * o._anchorY);
                 }
                 else {
                     matrix.prependTransform(o._x, o._y, o._scaleX, o._scaleY, o._rotation, o._skewX, o._skewY, o._anchorOffsetX, o._anchorOffsetY);
@@ -654,10 +654,12 @@ module egret {
             }
         }
 
-        public hitTestPoint(x:number, y:number, shapeFlag?:boolean):DisplayObject {
+        private _hitTestPointTexture:RenderTexture;
 
+        public hitTestPoint(x:number, y:number, shapeFlag?:boolean):boolean {
+            var p:egret.Point = this.globalToLocal(x, y);
             if (!shapeFlag) {
-                return this.hitTest(x, y, true);
+                return !!this.hitTest(p.x, p.y, true);
             }
             else {
                 var testTexture:Texture;
@@ -665,14 +667,17 @@ module egret {
                     testTexture = this._texture_to_render;
                 }
                 else {
-                    testTexture = new RenderTexture();
+                    if (!this._hitTestPointTexture) {
+                        this._hitTestPointTexture = new RenderTexture();
+                    }
+                    testTexture = this._hitTestPointTexture;
                     (<RenderTexture>testTexture).drawToTexture(this);
                 }
-                var pixelData:number[] = testTexture.getPixel32(x, y);
+                var pixelData:number[] = testTexture.getPixel32(p.x, p.y);
                 if (pixelData[3] != 0) {
-                    return this;
+                    return true;
                 }
-                return null;
+                return false;
             }
         }
 
@@ -825,18 +830,17 @@ module egret {
         }
 
         private renderTexture:RenderTexture;
+
         public set cacheAsBitmap(bool:boolean) {
             this._cacheAsBitmap = bool;
             if (bool) {
-                if(!this.renderTexture)
-                {
+                if (!this.renderTexture) {
                     this.renderTexture = new egret.RenderTexture();
                 }
                 this.renderTexture.drawToTexture(this);
                 this._texture_to_render = this.renderTexture;
             }
-            else
-            {
+            else {
                 this._texture_to_render = null;
             }
         }

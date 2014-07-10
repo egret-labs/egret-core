@@ -168,8 +168,8 @@ module egret {
             egret_native.Label.drawText(text, x, y);
         }
 
-        public pushMask(x:number, y:number, w:number, h:number):void {
-            egret_native.Graphics.pushRectStencil(10, 10, 400, 500, 255, 0, 0, 255 * 0.5, 0, false);
+        public pushMask(mask:Rectangle):void {
+            egret_native.Graphics.pushRectStencil(mask.x, mask.y, mask.width, mask.height, 255, 0, 0, 255 * 0.5, 0, false);
         }
 
         public popMask():void {

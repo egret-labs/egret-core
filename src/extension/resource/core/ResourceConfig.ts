@@ -134,7 +134,7 @@ module RES {
                     var keys:Array<string> = (<string> group.keys).split(",");
                     var l:number = keys.length;
                     for (var j:number = 0; j < l; j++) {
-                        var name:string = this.trim(keys[j]);
+                        var name:string = keys[j].trim();
                         item = this.keyMap[name];
                         if (item && list.indexOf(item) == -1) {
                             list.push(item);
@@ -180,29 +180,6 @@ module RES {
             var resItem:ResourceItem = new ResourceItem(data.name, data.url, data.type);
             resItem.data = data;
             return resItem;
-        }
-
-        /**
-         * 去掉字符串两端所有连续的不可见字符。
-         * 注意：若目标字符串为null或不含有任何可见字符,将输出空字符串""。
-         * @param str 要格式化的字符串
-         */
-        private trim(str:string):string {
-            if (!str)
-                return "";
-            var strChar:string = str.charAt(0);
-            while (str.length > 0 &&
-                (strChar == " " || strChar == "\t" || strChar == "\n" || strChar == "\r" || strChar == "\f")) {
-                str = str.substr(1);
-                strChar = str.charAt(0);
-            }
-            strChar = str.charAt(str.length - 1);
-            while (str.length > 0 &&
-                (strChar == " " || strChar == "\t" || strChar == "\n" || strChar == "\r" || strChar == "\f")) {
-                str = str.substr(0, str.length - 1);
-                strChar = str.charAt(str.length - 1);
-            }
-            return str;
         }
     }
 }

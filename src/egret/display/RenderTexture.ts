@@ -30,12 +30,10 @@ module egret {
     export class RenderTexture extends Texture {
 
         private renderContext;
-
         constructor() {
             super();
             this._bitmapData = document.createElement("canvas");
-            this.renderContext = new egret.HTML5CanvasRenderer(this._bitmapData);
-
+            this.renderContext = egret.RendererContext.createRendererContext(this._bitmapData);
         }
 
         public drawToTexture(displayObject:egret.DisplayObject):void {
@@ -65,11 +63,12 @@ module egret {
             displayObject._render(this.renderContext);
 
             renderFilter._drawAreaList = drawAreaList;
-            this._bitmapData = this._bitmapData;
+
             this._textureWidth = this._bitmapData.width;
             this._textureHeight = this._bitmapData.height;
-            this.sourceWidth = this._textureWidth;
-            this.sourceHeight = this._textureHeight;
+            this._sourceWidth = this._textureWidth;
+            this._sourceHeight = this._textureHeight;
+
             //测试代码
 //            this.renderContext.canvasContext.setTransform(1, 0, 0, 1, 0, 0);
 //            this.renderContext.strokeRect(0, 0,cacheCanvas.width,cacheCanvas.height,"#ff0000");

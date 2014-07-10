@@ -61,18 +61,6 @@ module egret {
         }
 
         /**
-         * 停止声音
-         * @method egret.Sound#stop
-         */
-        public stop():void{
-            var sound = this.audio;
-            if (!sound){
-                return;
-            }
-            sound.stop();
-        }
-
-        /**
          * 暂停声音
          * @method egret.Sound#pause
          */

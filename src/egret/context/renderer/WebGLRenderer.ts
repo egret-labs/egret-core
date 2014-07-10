@@ -242,8 +242,8 @@ module egret {
             locWorldTransform.tx = originalTx;
             locWorldTransform.ty = originalTy;
 
-            var width:number = texture.sourceWidth;
-            var height:number = texture.sourceHeight;
+            var width:number = texture._sourceWidth;
+            var height:number = texture._sourceHeight;
 
             var w:number = sourceWidth;
             var h:number = sourceHeight;

@@ -117,7 +117,7 @@ module RES {
         public parseSpriteSheet(texture:egret.Texture,data:any):egret.SpriteSheet{
             var frames:any = data.frames;
             if(!frames){
-                return;
+                return null;
             }
             var spriteSheet:egret.SpriteSheet = new egret.SpriteSheet(texture._bitmapData);
             for(var name in frames){

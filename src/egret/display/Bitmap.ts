@@ -106,27 +106,27 @@ module egret {
                 else{
                     var offsetX:number = texture._offsetX;
                     var offsetY:number = texture._offsetY;
-                    var actualWidth:number = texture._actualWidth||textureWidth;
-                    var actualHeight:number = texture._actualHeight||textureHeight;
+                    var bitmapWidth:number = texture._bitmapWidth||textureWidth;
+                    var bitmapHeight:number = texture._bitmapHeight||textureHeight;
                     if(thisObject._hasWidthSet){
                         var scaleX:number = destW/textureWidth;
                         offsetX = Math.round(offsetX*scaleX);
-                        destW = Math.round(actualWidth*scaleX);
+                        destW = Math.round(bitmapWidth*scaleX);
                     }
                     else{
-                        destW = actualWidth;
+                        destW = bitmapWidth;
                     }
                     if(thisObject._hasHeightSet){
                         var scaleY:number = destH/textureHeight;
                         offsetY = Math.round(offsetY*scaleY);
-                        destH = Math.round(actualHeight*scaleY);
+                        destH = Math.round(bitmapHeight*scaleY);
                     }
                     else{
-                        destH = actualHeight;
+                        destH = bitmapHeight;
                     }
 
-                    RenderFilter.getInstance().drawImage(renderContext, thisObject, texture._startX, texture._startY,
-                        actualWidth, actualHeight, offsetX, offsetY, destW,destH);
+                    RenderFilter.getInstance().drawImage(renderContext, thisObject, texture._bitmapX, texture._bitmapY,
+                        bitmapWidth, bitmapHeight, offsetX, offsetY, destW,destH);
                 }
             }
             else{
@@ -144,10 +144,10 @@ module egret {
             }
             var textureWidth:number = texture._textureWidth;
             var textureHeight:number = texture._textureHeight;
-            var sourceX:number = texture._startX;
-            var sourceY:number = texture._startY;
-            var sourceWidth:number = texture._actualWidth||textureWidth;
-            var sourceHeight:number = texture._actualHeight||textureHeight;
+            var sourceX:number = texture._bitmapX;
+            var sourceY:number = texture._bitmapY;
+            var sourceWidth:number = texture._bitmapWidth||textureWidth;
+            var sourceHeight:number = texture._bitmapHeight||textureHeight;
             var destX:number = texture._offsetX;
             var destY:number = texture._offsetY;
 
@@ -174,10 +174,10 @@ module egret {
             var renderFilter:RenderFilter = RenderFilter.getInstance();
             var textureWidth:number = texture._textureWidth;
             var textureHeight:number = texture._textureHeight;
-            var sourceX:number = texture._startX;
-            var sourceY:number = texture._startY;
-            var sourceWidth:number = texture._actualWidth||textureWidth;
-            var sourceHeight:number = texture._actualHeight||textureHeight;
+            var sourceX:number = texture._bitmapX;
+            var sourceY:number = texture._bitmapY;
+            var sourceWidth:number = texture._bitmapWidth||textureWidth;
+            var sourceHeight:number = texture._bitmapHeight||textureHeight;
             var destX:number = texture._offsetX;
             var destY:number = texture._offsetY;
 
@@ -211,19 +211,20 @@ module egret {
             var sourceBottomH:number = sourceHeight - s9g.bottom
 
             var destX1:number = roundedDrawX + s9g.x;
+            var destY1:number = roundedDrawY + s9g.y;
             var destScaleGridBottom:number = destHeight - (sourceHeight - s9g.bottom);
             var destScaleGridRight:number = destWidth - (sourceWidth - s9g.right);
 
 
-            renderFilter.drawImage(renderContext, data, sourceX, sourceY, s9g.x, s9g.y, roundedDrawX, 0, s9g.x, s9g.y);
-            renderFilter.drawImage(renderContext, data, sourceX2, sourceY, s9g.width, s9g.y, destX1, 0, destScaleGridRight - s9g.x, s9g.y);
-            renderFilter.drawImage(renderContext, data, sourceX3, sourceY, sourceRightW, s9g.y, roundedDrawX + destScaleGridRight, 0, destWidth - destScaleGridRight, s9g.y);
-            renderFilter.drawImage(renderContext, data, sourceX, sourceY2, s9g.x, s9g.height, roundedDrawX, s9g.y, s9g.x, destScaleGridBottom - s9g.y);
-            renderFilter.drawImage(renderContext, data, sourceX2, sourceY2, s9g.width, s9g.height, destX1, s9g.y, destScaleGridRight - s9g.x, destScaleGridBottom - s9g.y);
-            renderFilter.drawImage(renderContext, data, sourceX3, sourceY2, sourceRightW, s9g.height, roundedDrawX + destScaleGridRight, s9g.y, destWidth - destScaleGridRight, destScaleGridBottom - s9g.y);
-            renderFilter.drawImage(renderContext, data, sourceX, sourceY3, s9g.x, sourceBottomH, roundedDrawX, destScaleGridBottom, s9g.x, destHeight - destScaleGridBottom);
-            renderFilter.drawImage(renderContext, data, sourceX2, sourceY3, s9g.width, sourceBottomH, destX1, destScaleGridBottom, destScaleGridRight - s9g.x, destHeight - destScaleGridBottom);
-            renderFilter.drawImage(renderContext, data, sourceX3, sourceY3, sourceRightW, sourceBottomH, roundedDrawX + destScaleGridRight, destScaleGridBottom, destWidth - destScaleGridRight, destHeight - destScaleGridBottom);
+            renderFilter.drawImage(renderContext, data, sourceX, sourceY, s9g.x, s9g.y, roundedDrawX, roundedDrawY, s9g.x, s9g.y);
+            renderFilter.drawImage(renderContext, data, sourceX2, sourceY, s9g.width, s9g.y, destX1, roundedDrawY, destScaleGridRight - s9g.x, s9g.y);
+            renderFilter.drawImage(renderContext, data, sourceX3, sourceY, sourceRightW, s9g.y, roundedDrawX + destScaleGridRight, roundedDrawY, destWidth - destScaleGridRight, s9g.y);
+            renderFilter.drawImage(renderContext, data, sourceX, sourceY2, s9g.x, s9g.height, roundedDrawX, destY1, s9g.x, destScaleGridBottom - s9g.y);
+            renderFilter.drawImage(renderContext, data, sourceX2, sourceY2, s9g.width, s9g.height, destX1, destY1, destScaleGridRight - s9g.x, destScaleGridBottom - s9g.y);
+            renderFilter.drawImage(renderContext, data, sourceX3, sourceY2, sourceRightW, s9g.height, roundedDrawX + destScaleGridRight, destY1, destWidth - destScaleGridRight, destScaleGridBottom - s9g.y);
+            renderFilter.drawImage(renderContext, data, sourceX, sourceY3, s9g.x, sourceBottomH, roundedDrawX, roundedDrawY+destScaleGridBottom, s9g.x, destHeight - destScaleGridBottom);
+            renderFilter.drawImage(renderContext, data, sourceX2, sourceY3, s9g.width, sourceBottomH, destX1, roundedDrawY+destScaleGridBottom, destScaleGridRight - s9g.x, destHeight - destScaleGridBottom);
+            renderFilter.drawImage(renderContext, data, sourceX3, sourceY3, sourceRightW, sourceBottomH, roundedDrawX + destScaleGridRight, roundedDrawY+destScaleGridBottom, destWidth - destScaleGridRight, destHeight - destScaleGridBottom);
         }
 
         /**

@@ -43,22 +43,32 @@ module egret {
             super();
         }
 
+        public _bitmapX:number = 0;
         /**
-         * 表示这个纹理在SpriteSheet上的x起始位置
+         * 表示这个纹理在bitmapData上的x起始位置
+         * @member {number} egret.Texture#bitmapX
          */
-        public _startX:number = 0;
+        public get bitmapX():number{
+            return this._bitmapX;
+        }
+
+        public _bitmapY:number = 0;
         /**
-         * 表示这个纹理在SpriteSheet上的y起始位置
+         * 表示这个纹理在bitmapData上的y起始位置
+         * @member {number} egret.Texture#bitmapY
          */
-        public _startY:number = 0;
+        public get bitmapY():number{
+            return this._bitmapY;
+        }
         /**
-         * 表示这个纹理在SpriteSheet上的宽度
+         * 表示这个纹理在bitmapData上的宽度
          */
-        public _actualWidth:number = 0;
+        public _bitmapWidth:number = 0;
         /**
-         * 表示这个纹理在SpriteSheet上的高度
+         * 表示这个纹理在bitmapData上的高度
          */
-        public _actualHeight:number = 0;
+        public _bitmapHeight:number = 0;
+
         /**
          * 表示这个纹理显示了之后在x方向的渲染偏移量
          */
@@ -68,34 +78,33 @@ module egret {
          */
         public _offsetY = 0;
 
+
+        public _textureWidth:number = 0;
         /**
          * 纹理宽度
          * @member {number} egret.Texture#textureWidth
          */
-        public _textureWidth:number = 0;
-
         public get textureWidth():number {
             return this._textureWidth;
         }
 
+
+        public _textureHeight:number = 0;
         /**
          * 纹理高度
          * @member {number} egret.Texture#textureWidth
          */
-        public _textureHeight:number = 0;
-
         public get textureHeight():number {
             return this._textureHeight;
         }
-
         /**
-         * 纹理原图宽度
+         * 表示bitmapData.width
          */
-        public sourceWidth:number = 0;
+        public _sourceWidth:number;
         /**
-         * 纹理原图高度
+         * 表示bitmapData.height
          */
-        public sourceHeight:number = 0;
+        public _sourceHeight:number;
 
         /**
          * 纹理对象中得位图数据
@@ -112,10 +121,11 @@ module egret {
             this._bitmapData = value;
             this._textureWidth = value.width * scale;
             this._textureHeight = value.height * scale;
-            this._actualWidth = this._textureWidth;
-            this._actualHeight = this._textureHeight;
-            this.sourceWidth = this._textureWidth;
-            this.sourceHeight = this._textureHeight;
+            this._bitmapWidth = this._textureWidth;
+            this._bitmapHeight = this._textureHeight;
+            this._sourceWidth = this._textureWidth;
+            this._sourceHeight = this._textureHeight;
+            this._offsetX = this._offsetY = this._bitmapX = this._bitmapY = 0;
         }
 
         /**
