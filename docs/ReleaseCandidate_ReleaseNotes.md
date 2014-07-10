@@ -99,3 +99,12 @@ Egret 1.0 Release Candidate 是 Egret 1.0的第一个发布候选版，在此版
 
 <a name="tag2"></a>
 ### MovieClip 重构
+在 egret 1.0.0 public beta 版本中，MovieClip是一个具体的实现类，封装了动画渲染、动画帧切换、数据格式解析等所有内容，这虽然使开发者直接使用比较方便，但也导致了无法扩展、很难支持第三方数据格式等问题
+
+在这个版本中，我们着手解决这个问题，现在 MovieClip 只是一个空的基类，具体的实现细节逻辑委托给了 DefaultMovieClipDelegate 这个类去实现，并保持了 MovieClip 对外接口不变。
+
+在egret的未来规划中，DragonBones、StarlingSWF for Egret 以及其他开发者自己实现的其他动画播放方式，都可以通过实现一个 MovieClipDelegate 来统一起来，最终暴露给开发者的接口都是 MovieClip.gotoAndPlay() 等
+
+
+
+
