@@ -41,9 +41,8 @@ module egret {
             super();
             this.bitmapData = bitmapData;
             this._textureMap = {};
-            var scale = egret.MainContext.instance.rendererContext.texture_scale_factor;
-            this._sourceWidth = bitmapData.width*scale;
-            this._sourceHeight = bitmapData.height*scale;
+            this._sourceWidth = bitmapData.width;
+            this._sourceHeight = bitmapData.height;
         }
         /**
          * 表示bitmapData.width

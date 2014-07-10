@@ -74,8 +74,8 @@ egret_h5.startGame = function () {
     egret.StageDelegate.getInstance().setDesignSize(480, 800, policy);
 
     context.stage = new egret.Stage(canvas.width, canvas.height);
-    
-    egret.RendererContext.CONTENT_SCALE_FACTOR = 1;
+
+    egret.MainContext.instance.rendererContext.texture_scale_factor = 1;
     context.run();
 
     var rootClass;

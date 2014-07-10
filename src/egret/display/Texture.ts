@@ -116,12 +116,12 @@ module egret {
         public set bitmapData(value:any) {
             var scale = egret.MainContext.instance.rendererContext.texture_scale_factor;
             this._bitmapData = value;
-            this._textureWidth = value.width * scale;
-            this._textureHeight = value.height * scale;
+            this._sourceWidth = value.width;
+            this._sourceHeight = value.height;
+            this._textureWidth = this._sourceWidth * scale;
+            this._textureHeight = this._sourceHeight * scale;
             this._bitmapWidth = this._textureWidth;
             this._bitmapHeight = this._textureHeight;
-            this._sourceWidth = this._textureWidth;
-            this._sourceHeight = this._textureHeight;
             this._offsetX = this._offsetY = this._bitmapX = this._bitmapY = 0;
         }
 
