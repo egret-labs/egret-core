@@ -65,6 +65,11 @@ Egret 1.0 Release Candidate 是 Egret 1.0的第一个发布候选版，在此版
 
 
 ## 已知问题
-
+* egret publish 命令在特定 windows 系统上会执行失败（命令行缓冲区不足），这个问题会在下个版本中修复
 
 ## 路线图
+
+
+## 旧项目升级迁移事项
+
+//todo   @dom 项目升级,  .d.ts 变位置   game_file_list 生成 ， 老项目不想自动生成怎么办?
