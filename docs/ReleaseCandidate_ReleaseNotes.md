@@ -28,7 +28,7 @@ Egret 1.0 Release Candidate 是 Egret 1.0的第一个发布候选版，在此版
   * egret build命令支持对exml文件的编译，直接生成目标js文件。exml是Egret GUI支持的皮肤描述文件。
 
 * Egret Android Support Update 1 ，在这个版本中，开发者可以通过 egret create_cpp 命令创建一个支持 egret 的标准Android工程项，并修复若干问题，[具体列表如下] (https://github.com/egret-labs/egret-android-support/blob/master/ReleaseNote.md)
-* Egret iOS Support Alpha，同样可以使用 egret create_app 命令创建，添加了若干新特性，如题列表如下[具体列表如下](https://github.com/egret-labs/egret-ios-support/blob/master/README.md)
+* Egret iOS Support Alpha，同样可以使用 egret create_app 命令创建，添加了若干新特性，[具体列表如下](https://github.com/egret-labs/egret-ios-support/blob/master/ReleaseNote.md)
 
 ### 修复
 
