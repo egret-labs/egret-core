@@ -155,7 +155,7 @@ module egret {
 
         constructor(public data, texture:Texture) {
             this._frameData = data;
-            this._spriteSheet = new SpriteSheet(texture._bitmapData);
+            this._spriteSheet = new SpriteSheet(texture);
         }
 
         public setMovieClip(movieClip:MovieClip):void {

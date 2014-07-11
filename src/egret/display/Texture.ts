@@ -40,24 +40,14 @@ module egret {
         public constructor(){
             super();
         }
-
-        public _bitmapX:number = 0;
         /**
          * 表示这个纹理在bitmapData上的x起始位置
-         * @member {number} egret.Texture#bitmapX
          */
-        public get bitmapX():number{
-            return this._bitmapX;
-        }
-
-        public _bitmapY:number = 0;
+        public _bitmapX:number = 0;
         /**
          * 表示这个纹理在bitmapData上的y起始位置
-         * @member {number} egret.Texture#bitmapY
          */
-        public get bitmapY():number{
-            return this._bitmapY;
-        }
+        public _bitmapY:number = 0;
         /**
          * 表示这个纹理在bitmapData上的宽度
          */
@@ -103,17 +93,17 @@ module egret {
          * 表示bitmapData.height
          */
         public _sourceHeight:number;
+
+        public _bitmapData;
         /**
          * 纹理对象中得位图数据
          * @member {any} egret.Texture#bitmapData
          */
-        public _bitmapData;
-
         public get bitmapData() {
             return this._bitmapData;
         }
 
-        public set bitmapData(value:any) {
+        public _setBitmapData(value:any) {
             var scale = egret.MainContext.instance.rendererContext.texture_scale_factor;
             this._bitmapData = value;
             this._sourceWidth = value.width;

@@ -55,7 +55,7 @@ module RES {
                 delete this.sheetMap[name];
                 if(texture){
                     var spriteSheet:egret.BitmapTextSpriteSheet =
-                        new egret.BitmapTextSpriteSheet(texture._bitmapData,config);
+                        new egret.BitmapTextSpriteSheet(texture,config);
                     this.fileDic[name] = spriteSheet;
                 }
             }
