@@ -264,6 +264,13 @@ function createFileList(manifest, srcPath) {
         if (filePath.indexOf(".d.ts") != -1) {
             continue;
         }
+        var fileName = file.getFileName(filePath);
+        if(fileName.charAt(0)=="I"){
+            var str = fileName.charAt(1);
+            if(str>="A"&&str<="Z"&&isInterface(filePath)){
+                continue;
+            }
+        }
         gameList.push(filePath);
     }
 
@@ -282,6 +289,40 @@ function createFileList(manifest, srcPath) {
     }
     var gameListText = "[\n" + gameList.join(",\n") + "\n]";
     return gameListText;
+}
+
+/**
+ * 这个文件是否只含有接口
+ */
+function isInterface(path){
+    var text = file.read(path);
+    text = CodeUtil.removeComment(text);
+    text = removeInterface(text);
+    if (!CodeUtil.containsVariable("class", text) &&
+        !CodeUtil.containsVariable("var", text) &&
+        !CodeUtil.containsVariable("function", text)) {
+        return true;
+    }
+    return false;
+}
+
+/**
+ * 移除代码中的接口定义
+ */
+function removeInterface(text) {
+    var tsText = "";
+    while (text.length > 0) {
+        var index = CodeUtil.getFirstVariableIndex("interface", text);
+        if (index == -1) {
+            tsText += text;
+            break;
+        }
+        tsText += text.substring(0, index);
+        text = text.substring(index);
+        index = CodeUtil.getBracketEndIndex(text);
+        text = text.substring(index + 1);
+    }
+    return tsText;
 }
 
 

@@ -619,24 +619,7 @@ function readRelyOnFromImport(text, fileRelyOnList) {
         }
     }
 }
-/**
- * 移除代码中的接口定义
- */
-function removeInterface(text) {
-    var tsText = "";
-    while (text.length > 0) {
-        var index = CodeUtil.getFirstVariableIndex("interface", text);
-        if (index == -1) {
-            tsText += text;
-            break;
-        }
-        tsText += text.substring(0, index);
-        text = text.substring(index);
-        index = CodeUtil.getBracketEndIndex(text);
-        text = text.substring(index + 1);
-    }
-    return tsText;
-}
+
 /**
  * 从代码块中分析引用关系，代码块为一个Module，或类外的一段全局函数定义
  */
