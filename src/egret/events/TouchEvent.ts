@@ -25,10 +25,6 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/// <reference path="../display/DisplayObject.ts"/>
-/// <reference path="Event.ts"/>
-/// <reference path="IEventDispatcher.ts"/>
-/// <reference path="../geom/Point.ts"/>
 
 module egret {
 

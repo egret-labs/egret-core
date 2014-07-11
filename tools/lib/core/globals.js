@@ -10,9 +10,9 @@ var _require = function (moduleName) {
         module = require(path.join(param.getEgretPath(), moduleName));
     }
     catch (e) {
-        var errorMessage = "加载模块 " + moduleName + " 失败\n请确认在" + process.argv[1] + "所在目录下已执行 npm install " + moduleName
+        var errorMessage = "加载模块 " + moduleName + " 失败\n请确认在" + param.getEgretPath() + "所在目录下已执行 npm install " + moduleName
         console.log(errorMessage);
-        process.exit(1)
+        process.exit(1);
     }
     return module;
 
@@ -77,7 +77,7 @@ function _warn(code) {
 function _joinEgretDir(dir, projectName) {
     var currDir = dir;
     if (projectName) {
-        currDir = path.join(currDir, projectName);
+        currDir = path.resolve(projectName);
     }
 
     var stat2 = file.exists(path.join(currDir, "src"));
@@ -99,6 +99,26 @@ function getConfig(filepath) {
     return obj;
 }
 
+var egretConfig;
+
+function getDocumentClass(currDir){
+    if(!egretConfig){
+        var configPath = path.join(currDir,"egretProperties.json");
+        if(file.exists(configPath)){
+            var content = file.read(configPath);
+            try{
+                egretConfig = JSON.parse(content);
+            }
+            catch (e)
+            {}
+        }
+    }
+    if(egretConfig){
+        return egretConfig["document_class"];
+    }
+    return "";
+}
+
 exports.require = _require;
 exports.exit = _exit;
 exports.warn = _warn;
@@ -106,3 +126,4 @@ exports.log = _log;
 exports.joinEgretDir = _joinEgretDir;
 exports.getConfig = getConfig;
 exports.addCallBackWhenExit = addCallBackWhenExit;
+exports.getDocumentClass = getDocumentClass;

@@ -25,11 +25,6 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/// <reference path="../../display/Texture.ts"/>
-/// <reference path="../../geom/Matrix.ts"/>
-/// <reference path="../../text/TextField.ts"/>
-/// <reference path="../../utils/HashObject.ts"/>
-/// <reference path="../../utils/Profiler.ts"/>
 
 module egret {
     /**
@@ -108,22 +103,6 @@ module egret {
         }
 
         /**
-         * @method egret.RendererContext#save
-         * @stable C 这个方法以后会和restore一起删除，移动到HTML5CanvasContext的具体实现中，而不是作为一个接口
-         */
-        public save() {
-
-        }
-
-        /**
-         * @method egret.RendererContext#restore
-         * @stable C 这个方法以后会和save一起删除，移动到HTML5CanvasContext的具体实现中，而不是作为一个接口
-         */
-        public restore() {
-
-        }
-
-        /**
          * 设置渲染alpha
          * @method egret.RendererContext#setAlpha
          * @param value {number}
@@ -168,18 +147,20 @@ module egret {
             Profiler.getInstance().onDrawImage();
         }
 
-        /**
-         * 矩形遮罩
-         * @method egret.RendererContext#clip
-         * @param x {any}
-         * @param y {any}
-         * @param w {any}
-         */
-        public clip(x, y, w, h) {
+        public strokeRect(x, y, w, h, color) {
         }
 
 
-        public strokeRect(x, y, w, h, color) {
+        public pushMask(mask:Rectangle):void{
+
+        }
+
+        public popMask():void{
+
+        }
+
+        public static createRendererContext(canvas:any):RendererContext{
+            return null;
         }
     }
 

@@ -30,8 +30,9 @@
 var file = require("../core/file.js");
 var xml = require("../core/xml.js");
 var param = require("../core/params_analyze.js");
-var properties = require("./properties.json")
-var CodeUtil = require("../core/code_util.js")
+var properties = require("./properties.json");
+var CodeUtil = require("../core/code_util.js");
+var create_manifest = require("../tools/create_manifest.js");
 
 class EXMLConfig{
 
@@ -52,14 +53,49 @@ class EXMLConfig{
         var str:string = file.read(exmlPath+"egret-manifest.xml");
         var manifest:any = xml.parse(str);
         this.parseManifest(manifest);
+
     }
 
-    public srcPath:string;
+    private _srcPath:string;
+
+    public get srcPath():string{
+        return this._srcPath;
+    }
+
+    public set srcPath(value:string){
+        this._srcPath = value;
+        this.classNameToPath = create_manifest.getClassToPathInfo(this.srcPath);
+        this.parseModules();
+    }
+
+
+    private classNameToPath:any;
+
+    private classNameToModule:any;
 
     /**
      * 组件清单列表
      */
     public componentDic:any = {};
+
+    private parseModules():void{
+        this.classNameToModule = {};
+        for(var className in this.classNameToPath){
+            var index:number = className.lastIndexOf(".");
+            var ns:string = "";
+            if(index!=-1){
+                ns = className.substring(0,index);
+                className = className.substring(index+1);
+            }
+            var list:Array<string> = this.classNameToModule[className];
+            if(!list){
+                list = this.classNameToModule[className] = [];
+            }
+            if(list.indexOf(ns)==-1){
+                list.push(ns);
+            }
+        }
+    }
     /**
      * 解析框架清单文件
      */
@@ -94,10 +130,6 @@ class EXMLConfig{
         return component.defaultProp;
     }
 
-
-    private pathToClassName:any = {};
-    private classNameToPath:any = {};
-
     /**
      * @inheritDoc
      */
@@ -116,94 +148,64 @@ class EXMLConfig{
             }
         }
         else{
-            var path:string = this.getPathById(id,ns);
-            name = this.pathToClassName[path];
-            if(!name){
-                name = this.readClassNameFromPath(this.srcPath+path,id);
-                this.pathToClassName[path] = name;
-                this.classNameToPath[name] = path;
+            name = ns.substring(0,ns.length-1)+id
+            if(!this.classNameToPath[name]){
+                name = "";
             }
         }
         return name;
     }
-
-    private readClassNameFromPath(path:string,id:string):string{
-        var tsText:string = file.read(path);
-        tsText = CodeUtil.removeComment(tsText);
-        var className:string = "";
-        var superClass:string;
-        while(tsText.length){
-            var index:number = CodeUtil.getFirstVariableIndex("class",tsText);
-            if(index==-1){
-                break;
-            }
-            var preStr:string = tsText.substring(0,index);
-            tsText = tsText.substring(index+5);
-            if(CodeUtil.getFirstVariable(tsText)==id){
-                index = CodeUtil.getLastVariableIndex("module",preStr);
-                if(index==-1){
-                    className = id;
-                    break;
-                }
-                preStr = preStr.substring(index+6);
-                index = preStr.indexOf("{");
-                if(index==-1){
-                    break;
-                }
-                var ns:string = preStr.substring(0,index);
-                className = ns.trim()+"."+id;
-                tsText = CodeUtil.removeFirstVariable(tsText);
-                var word:string = CodeUtil.getFirstVariable(tsText);
-                if(word=="extends"){
-                    tsText = CodeUtil.removeFirstVariable(tsText);
-                    superClass = CodeUtil.getFirstWord(tsText).trim();
-                    if(superClass.charAt(superClass.length-1)=="{"){
-                        superClass = superClass.substring(0,superClass.length-1);
-                    }
-                }
-            }
-        }
-        if(className){
-            var comps:Component = new Component();
-            comps.id = id;
-            comps.className = className;
-            if(superClass){
-                comps.superClass = superClass;
-            }
-            this.componentDic[className] = comps;
-        }
-        return className;
-    }
-
     /**
-     * 根据id获取文件路径
+     * 检查一个类名是否存在
      */
-    public getPathById(id:string,ns:string):string{
-        var className:string = "";
-        if(!ns||ns==EXMLConfig.W||ns==EXMLConfig.E){
-            return className;
+    public checkClassName(className:string):boolean{
+        if(this.componentDic[className]){
+            return true;
         }
-        className = ns.substring(0,ns.length-1)+id;
-        var path:string = className.split(".").join("/");
-        path += ".ts";
-        return path;
+        if(this.classNameToPath[name]){
+            return true;
+        }
+        return false;
     }
-
     /**
      * @inheritDoc
      */
     public getDefaultPropById(id:string, ns:string):string{
         var className:string = this.getClassNameById(id,ns);
         var component:Component = this.componentDic[className];
-        while(component){
-            if(component.defaultProp)
-                break;
-            className = component.superClass;
-            component = this.componentDic[className];
+        if(!component&&className){
+            component = this.findDefaultProp(className);
         }
         if(!component)
             return "";
         return component.defaultProp;
+    }
+
+    private findDefaultProp(className:string):Component{
+        var classData:any = properties[className];
+        if(!classData){
+            var path:string = this.classNameToPath[className];
+            var ext:string = file.getExtension(path).toLowerCase();
+            var text:string = file.read(path);
+            if(ext=="ts"){
+                classData = this.getPropertiesFromTs(text,className);
+            }
+            else if(ext=="exml"){
+                classData = this.getPropertiesFromExml(text);
+            }
+            if(classData){
+                properties[className] = classData;
+            }
+            else{
+                return null;
+            }
+        }
+        var superClass:string = classData["super"];
+        var component:Component = this.componentDic[superClass];
+        if(!component){
+            component = this.findDefaultProp(superClass);
+        }
+        return component;
     }
 
     /**
@@ -220,12 +222,15 @@ class EXMLConfig{
     private findType(className:string,prop:string):string{
         var classData:any = properties[className];
         if(!classData){
-            var path:string = this.srcPath+this.classNameToPath[className];
-            if(!file.exists(path)){
-                return "";
-            }
+            var path:string = this.classNameToPath[className];
+            var ext:string = file.getExtension(path).toLowerCase();
             var text:string = file.read(path);
-            classData = this.getProperties(text,className);
+            if(ext=="ts"){
+                classData = this.getPropertiesFromTs(text,className);
+            }
+            else if(ext=="exml"){
+                classData = this.getPropertiesFromExml(text);
+            }
             if(classData){
                 properties[className] = classData;
             }
@@ -241,9 +246,26 @@ class EXMLConfig{
     }
 
     /**
+     * 读取一个exml文件引用的类列表
+     */
+    private getPropertiesFromExml(text:string):any{
+        var exml:any = xml.parse(text);
+        if(!exml){
+            return null;
+        }
+        var superClass:string = this.getClassNameById(exml.localName,exml.namespace);
+        if(superClass){
+            var data:any = {};
+            data["super"] = superClass;
+            return data;
+        }
+        return null;
+    }
+
+    /**
      * 获取属性列表
      */
-    private getProperties(text:string,className:string):any {
+    private getPropertiesFromTs(text:string,className:string):any {
         index = className.lastIndexOf(".");
         var moduleName:string = "";
         if (index != -1) {
@@ -306,7 +328,7 @@ class EXMLConfig{
                 word = CodeUtil.getFirstWord(preStr);
                 if(word){
                     if(ns&&word.indexOf(".")==-1){
-                        word = ns+"."+word;
+                        word = this.getFullClassName(word,ns);
                     }
                     data["super"] = word;
                 }
@@ -321,7 +343,7 @@ class EXMLConfig{
                     inter = inter.trim();
                     if(inter){
                         if(ns&&inter.indexOf(".")==-1){
-                            inter = ns+"."+inter;
+                            inter = this.getFullClassName(inter,ns);
                         }
                         arr[i] = inter;
                     }
@@ -339,6 +361,22 @@ class EXMLConfig{
             break;
         }
         return data;
+    }
+
+    private getFullClassName(word:string,ns:string):string{
+        if(!ns){
+            ns = "";
+        }
+        var nsList = this.classNameToModule[word];
+        var length = nsList.length;
+        var prefix = ns.split(".")[0];
+        for(var k=0;k<length;k++){
+            var superNs = nsList[k];
+            if(superNs.split(".")[0]==prefix){
+                word = superNs+"."+word;
+            }
+        }
+        return word;
     }
 
     private basicTypes:Array<any> = ["void","any","number","string","boolean","Object","Array","Function"];
@@ -379,7 +417,7 @@ class EXMLConfig{
                         }
                         type = CodeUtil.trimVariable(type);
                         if(type.indexOf(".")==-1&&this.basicTypes.indexOf(type)==-1){
-                            type = ns+"."+type;
+                            type = this.getFullClassName(type,ns);
                         }
                         data[word] = type;
                     }
@@ -405,7 +443,7 @@ class EXMLConfig{
                     }
                     type = CodeUtil.trimVariable(type);
                     if(type.indexOf(".")==-1&&this.basicTypes.indexOf(type)==-1){
-                        type = ns+"."+type;
+                        type = this.getFullClassName(type,ns);
                     }
                     data[word] = type;
                 }

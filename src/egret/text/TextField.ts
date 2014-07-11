@@ -25,13 +25,6 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/// <reference path="../context/MainContext.ts"/>
-/// <reference path="../context/renderer/RendererContext.ts"/>
-/// <reference path="../display/DisplayObject.ts"/>
-/// <reference path="../geom/Rectangle.ts"/>
-/// <reference path="../layout/HorizontalAlign.ts"/>
-/// <reference path="../layout/VerticalAlign.ts"/>
-/// <reference path="../utils/toColorString.ts"/>
 
 module egret {
     /**
@@ -247,8 +240,7 @@ module egret {
                             var word:string = line.charAt(j);
                             measureW = renderContext.measureText(word);
                             if(lineWidth+measureW>explicitWidth){
-                                i++;
-                                length++;
+
                                 if(lineWidth==0){
                                     lines.splice(i,0,word);
                                     measuredWidths[i] = measureW;
@@ -267,10 +259,14 @@ module egret {
                                     newLine = "";
                                     lineWidth = 0;
                                 }
+                                i++;
+                                length++;
                             }
                             lineWidth += measureW;
                             newLine += word;
                         }
+                        lines[i]=newLine;
+                        measuredWidths[i] = lineWidth;
                     }
                     else{
                         measuredWidths[i] = measureW;

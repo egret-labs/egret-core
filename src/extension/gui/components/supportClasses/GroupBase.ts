@@ -25,15 +25,6 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/// <reference path="../../../../egret/geom/Rectangle.ts"/>
-/// <reference path="../../core/ILayoutElement.ts"/>
-/// <reference path="../../core/IViewport.ts"/>
-/// <reference path="../../core/IVisualElement.ts"/>
-/// <reference path="../../core/UIComponent.ts"/>
-/// <reference path="../../events/PropertyChangeEvent.ts"/>
-/// <reference path="../../events/PropertyChangeEventKind.ts"/>
-/// <reference path="../../layouts/BasicLayout.ts"/>
-/// <reference path="../../layouts/supportClasses/LayoutBase.ts"/>
 
 module egret {
 

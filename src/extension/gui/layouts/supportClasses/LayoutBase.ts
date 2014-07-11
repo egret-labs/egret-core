@@ -25,9 +25,6 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/// <reference path="../../../../egret/events/EventDispatcher.ts"/>
-/// <reference path="../../../../egret/geom/Rectangle.ts"/>
-/// <reference path="../../components/supportClasses/GroupBase.ts"/>
 
 module egret {
 

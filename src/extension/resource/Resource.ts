@@ -16,19 +16,6 @@
  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-/// <reference path="../../egret/events/EventDispatcher.ts"/>
-/// <reference path="../../egret/utils/Injector.ts"/>
-/// <reference path="analyzer/AnalyzerBase.ts"/>
-/// <reference path="analyzer/BinAnalyzer.ts"/>
-/// <reference path="analyzer/SoundAnalyzer.ts"/>
-/// <reference path="analyzer/ImageAnalyzer.ts"/>
-/// <reference path="analyzer/JsonAnalyzer.ts"/>
-/// <reference path="analyzer/TextAnalyzer.ts"/>
-/// <reference path="analyzer/XMLAnalyzer.ts"/>
-/// <reference path="core/ResourceConfig.ts"/>
-/// <reference path="core/ResourceItem.ts"/>
-/// <reference path="core/ResourceLoader.ts"/>
-/// <reference path="events/ResourceEvent.ts"/>
 
 module RES {
     /**

@@ -16,15 +16,6 @@
  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-/// <reference path="../../../egret/display/SpriteSheet.ts"/>
-/// <reference path="../../../egret/display/Texture.ts"/>
-/// <reference path="../../../egret/events/Event.ts"/>
-/// <reference path="../../../egret/net/URLLoader.ts"/>
-/// <reference path="../../../egret/net/URLLoaderDataFormat.ts"/>
-/// <reference path="../Resource.ts"/>
-/// <reference path="AnalyzerBase.ts"/>
-/// <reference path="BinAnalyzer.ts"/>
-/// <reference path="../core/ResourceItem.ts"/>
 
 module RES {
     /**
@@ -123,12 +114,12 @@ module RES {
             return url;
         }
 
-        private parseSpriteSheet(texture:egret.Texture,data:any):egret.SpriteSheet{
+        public parseSpriteSheet(texture:egret.Texture,data:any):egret.SpriteSheet{
             var frames:any = data.frames;
             if(!frames){
-                return;
+                return null;
             }
-            var spriteSheet:egret.SpriteSheet = new egret.SpriteSheet(texture._bitmapData);
+            var spriteSheet:egret.SpriteSheet = new egret.SpriteSheet(texture);
             for(var name in frames){
                 var config:any = frames[name];
                 spriteSheet.createTexture(name,config.x,config.y,config.w,config.h);

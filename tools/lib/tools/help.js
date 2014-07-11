@@ -28,7 +28,7 @@ function run(currDir, args, opts) {
 
     var list = file.getDirectoryListing(__dirname,true);
     console.log("用法: egret <command> [-v]\n");
-    console.log("command 列表:")
+    console.log("command 列表:\n")
     list.forEach(function (item) {
         if (item.indexOf(".js") == -1) {
             return;
@@ -40,7 +40,7 @@ function run(currDir, args, opts) {
             console.log(getSpace(4) + tool_name + getSpace(30 - tool_name.length) + title);
         }
     })
-    console.log("参数列表:");
+    console.log("参数列表:\n");
     console.log(getSpace(4) + "-v" + getSpace(30 - 2) + "打印详细日志");
     console.log("");
     console.log("使用 egret help <command> 了解各个 command 的细节")

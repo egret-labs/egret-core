@@ -30,7 +30,6 @@ var __extends = this.__extends || function (d, b) {
     __.prototype = b.prototype;
     d.prototype = new __();
 };
-/// <reference path="../../egret.d.ts"/>
 var ns_project;
 (function (ns_project) {
     var Group = (function (_super) {

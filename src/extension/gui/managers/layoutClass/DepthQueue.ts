@@ -25,9 +25,6 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/// <reference path="../../../../egret/display/DisplayObject.ts"/>
-/// <reference path="../../../../egret/display/DisplayObjectContainer.ts"/>
-/// <reference path="../ILayoutManagerClient.ts"/>
 
 module egret {
 

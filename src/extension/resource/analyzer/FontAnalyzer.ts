@@ -25,9 +25,6 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/// <reference path="../../../egret/display/Texture.ts"/>
-/// <reference path="../../../egret/text/BitmapTextSpriteSheet.ts"/>
-/// <reference path="../core/ResourceItem.ts"/>
 
 module RES {
 
@@ -58,7 +55,7 @@ module RES {
                 delete this.sheetMap[name];
                 if(texture){
                     var spriteSheet:egret.BitmapTextSpriteSheet =
-                        new egret.BitmapTextSpriteSheet(texture._bitmapData,config);
+                        new egret.BitmapTextSpriteSheet(texture,config);
                     this.fileDic[name] = spriteSheet;
                 }
             }

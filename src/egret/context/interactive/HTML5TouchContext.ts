@@ -25,9 +25,6 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/// <reference path="../StageDelegate.ts"/>
-/// <reference path="TouchContext.ts"/>
-/// <reference path="../../geom/Point.ts"/>
 
 module egret {
 

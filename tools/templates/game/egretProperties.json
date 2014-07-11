@@ -1,0 +1,9 @@
+{
+    "document_class" : "GameApp",
+    "game_dir_tree": [
+        "bin-debug/",
+        "launcher/",
+        "resource/",
+        "src/"
+    ]
+}

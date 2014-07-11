@@ -25,15 +25,6 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/// <reference path="../NativeContext.d.ts"/>
-/// <reference path="RendererContext.ts"/>
-/// <reference path="../../display/Graphics.ts"/>
-/// <reference path="../../display/Texture.ts"/>
-/// <reference path="../../geom/Matrix.ts"/>
-/// <reference path="../../text/TextField.ts"/>
-/// <reference path="../../utils/HashObject.ts"/>
-/// <reference path="../../utils/Profiler.ts"/>
-/// <reference path="../../context/NativeContext.d.ts"/>
 
 module egret {
     /**
@@ -177,14 +168,17 @@ module egret {
             egret_native.Label.drawText(text, x, y);
         }
 
-        /**
-         * 矩形遮罩
-         * @method egret.NativeRendererContext#clip
-         * @param x {any}
-         * @param y {any}
-         * @param w {any}
-         */
-        public clip(x, y, w, h) {
+        public pushMask(mask:Rectangle):void {
+            egret_native.Graphics.pushRectStencil(mask.x, mask.y, mask.width, mask.height, 255, 0, 0, 255 * 0.5, 0, false);
+        }
+
+        public popMask():void {
+            egret_native.Graphics.popStencil();
         }
     }
+}
+
+
+egret.Graphics.prototype._draw = function () {
+    return;
 }

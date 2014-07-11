@@ -1,14 +1,13 @@
 /**
- * 将TypeScript编译为JavaScript
+ * 将TypeScript和EXML编译为JavaScript
  */
-var create_file_list = require("./create_file_list.js");
 var path = require("path");
 var async = require('../core/async');
 var globals = require("../core/globals");
 var param = require("../core/params_analyze.js");
 var compiler = require("./compile.js");
-var exmlc = require("../exml/exmlc.js");
 var file = require("../core/file.js");
+var code_util = require("../core/code_util.js");
 
 function run(dir, args, opts) {
     var needCompileEngine = opts["-e"];
@@ -16,45 +15,26 @@ function run(dir, args, opts) {
 
     var currDir = globals.joinEgretDir(dir, args[0]);
 
-    var egret_file = path.join(currDir, "bin-debug/lib/egret_file_list.js");
     var task = [];
 
-    var exmlList = [];
-    task.push(function(callback){
-        if(!keepGeneratedTypescript){
-            globals.addCallBackWhenExit(cleanEXMLList);
-        }
-        var source = path.join(currDir, "src");
-        exmlList = file.search(source,"exml");
-        source += "/";
-        exmlList.forEach(function (item) {
-            exmlc.compile(item,source);
-        });
-
-        callback();
-    })
-
-
     if (needCompileEngine) {
+        var egretSourceList = [];
         task.push(
             function (callback) {
                 var runtime = param.getOption(opts, "--runtime", ["html5", "native"]);
-                compiler.generateEgretFileList(callback, egret_file, runtime);
-
-            },
-            function (callback) {
+                egretSourceList = compiler.generateEgretFileList(runtime,currDir);
                 compiler.compile(callback,
                     path.join(param.getEgretPath(), "src"),
                     path.join(currDir, "bin-debug/lib"),
-                    egret_file
+                    egretSourceList,
+                    false
                 );
             },
 
             function (callback) {
                 compiler.exportHeader(callback,
-                    path.join(param.getEgretPath(), "src"),
-                    path.join(currDir, "src", "egret.d.ts"),
-                    egret_file
+                    currDir,
+                    egretSourceList
                 );
 
             }
@@ -69,26 +49,15 @@ function run(dir, args, opts) {
 
     task.push(
         function (callback) {
-            var gameListPath = currDir+"/bin-debug/src/game_file_list.js";
-            if(!file.exists(currDir+"/src/game_file_list.js")){
-                var list = file.search(currDir+"/src/","ts")
-                var gameListText = create_file_list.create(list,currDir+"/src/");
-                file.save(gameListPath,gameListText);
-            }
-            compiler.compile(callback,
-                path.join(currDir, "src"),
-                path.join(currDir, "bin-debug/src"),
-                gameListPath
-            );
+            buildProject(callback,currDir,keepGeneratedTypescript);
         }
     )
 
 
     async.series(task, function (err) {
-        if(!keepGeneratedTypescript) {
-            cleanEXMLList();
-        }
         if (!err){
+            var create_app = require("./create_app.js");
+            create_app.build_copy_from(currDir);
             globals.log("构建成功");
         }
         else{
@@ -96,17 +65,66 @@ function run(dir, args, opts) {
         }
     })
 
-    function cleanEXMLList(){
-        if(exmlList){
-            var source = path.join(currDir, "src");
-            exmlList.forEach(function (item) {
-                var tsPath = path.join(source,item);
-                tsPath = tsPath.substring(0,tsPath.length-5)+".ts";
-                file.remove(tsPath);
-            });
+
+}
+
+function buildProject(callback,currDir,keepGeneratedTypescript){
+    var document_class = globals.getDocumentClass(currDir);
+    if(document_class){
+        replaceDocumentClass("index.html",document_class,currDir);
+        replaceDocumentClass("release.html",document_class,currDir);
+        replaceDocumentClass("native_loader.js",document_class,currDir);
+    }
+
+    var libsPath = path.join(currDir,"libs/");
+    var sourceList = compiler.generateGameFileList(currDir);
+    var libs = file.search(libsPath,"d.ts");
+    compiler.compile(callback,
+        path.join(currDir, "src"),
+        path.join(currDir, "bin-debug/src"),
+        sourceList.concat(libs),
+        keepGeneratedTypescript
+    );
+}
+
+function replaceDocumentClass(key,document_class,currDir){
+    var filePath = path.join(currDir,"launcher",key);
+    var indexHtml = file.read(filePath);
+    if(!indexHtml){
+        globals.exit(1305,key);
+    }
+    var html = "";
+    var found = false;
+    while(indexHtml.length>0){
+        var index = code_util.getFirstVariableIndex("document_class",indexHtml);
+        if(index==-1){
+            html += indexHtml;
+            break;
+        }
+        html += indexHtml.substring(0,index+14);
+        indexHtml = indexHtml.substring(index+14).trim();
+        if(indexHtml.charAt(0)=="="){
+            html += " = ";
+            indexHtml = indexHtml.substring(1).trim();
+            var quote = indexHtml.charAt(0);
+            if(quote=="\""||quote=="'"){
+                html += quote;
+                indexHtml = indexHtml.substring(1);
+                index = indexHtml.indexOf(quote);
+                if(index!=-1){
+                    html += document_class;
+                    indexHtml = indexHtml.substring(index);
+                    found = true;
+                }
+            }
         }
     }
+    if(!found){
+        globals.exit(1306,key);
+    }
+    file.save(filePath,html);
 }
+
 
 
 function help_title() {
@@ -116,11 +134,12 @@ function help_title() {
 
 function help_example() {
     var result =  "\n";
-    result += "    egret build [project_name] [-e] [--runtime html5|native]\n";
+    result += "    egret build [project_name] [-e] [-e] [--runtime html5|native]\n";
     result += "描述:\n";
     result += "    " + help_title();
     result += "参数说明:\n";
     result += "    -e           编译指定项目的同时编译引擎目录\n";
+    result += "    -k           编译EXML文件时保留生成的TS文件\n";
     result += "    --runtime    设置构建方式为 html5 或者是 native方式，默认值为html5";
     return result;
 }
@@ -128,3 +147,4 @@ function help_example() {
 exports.run = run;
 exports.help_title = help_title;
 exports.help_example = help_example;
+exports.buildProject = buildProject;

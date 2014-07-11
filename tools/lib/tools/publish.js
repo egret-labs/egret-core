@@ -2,7 +2,6 @@ var path = require("path");
 var param = require("../core/params_analyze.js");
 var child_process = require("child_process");
 var globals = require("../core/globals");
-var create_file_list = require("./create_file_list.js")
 var file = require("../core/file.js");
 
 /**
@@ -275,19 +274,13 @@ function run(dir, args, opts) {
         return path.join(currDir + "/bin-debug/lib/", item);
     });
 
-    var game_file = path.join(currDir, "src/game_file_list.js");
-    if(!file.exists(game_file)){
-        game_file = currDir+"/bin-debug/src/game_file_list.js";
-        var list = file.search(currDir+"/src/","ts");
-        var gameListText = create_file_list.create(list,currDir+"/src/");
-        file.save(game_file,gameListText);
-    }
+    var game_file = path.join(currDir, "bin-debug/src/game_file_list.js");
     var gameFileList = getFileList(game_file);
     gameFileList = gameFileList.map(function (item) {
         return path.join(currDir + "/bin-debug/src/", item);
     });
 
-    var totalFileList = egretFileList.concat(gameFileList, currDir + "/launcher/egret_loader.js");
+    var totalFileList = egretFileList.concat(gameFileList);
     ClosureCompiler.compile(totalFileList,
         {js_output_file: currDir + "/launcher/game-min.js"},
         function afterCompile(err, stdout, stderr) {
@@ -296,7 +289,7 @@ function run(dir, args, opts) {
 }
 
 function help_title() {
-    return "发布项目，使用GoogleClosureCompiler压缩代码";
+    return "发布项目，使用GoogleClosureCompiler压缩代码\n";
 }
 
 

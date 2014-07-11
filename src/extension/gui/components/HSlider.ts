@@ -25,8 +25,6 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/// <reference path="../../../egret/geom/Point.ts"/>
-/// <reference path="supportClasses/SliderBase.ts"/>
 
 module egret {
 

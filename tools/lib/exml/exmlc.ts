@@ -55,7 +55,7 @@ function compile(exmlPath:string,srcPath:string):void{
     if(!compiler){
         compiler = new EXMLCompiler();
     }
-    var tsText = compiler.compile(xmlData,className,"egret.d.ts",srcPath,exmlPath);
+    var tsText = compiler.compile(xmlData,className,srcPath,exmlPath);
     var tsPath:string = exmlPath.substring(0,exmlPath.length-5)+".ts";
     file.save(tsPath,tsText);
 };
@@ -182,7 +182,7 @@ class EXMLCompiler{
      * @param xmlData 要编译的EXML文件内容
      * @param className 要编译成的完整类名，包括命名空间。
      */
-    public compile(xmlData:any,className:string,egretDTSPath:string,srcPath:string,exmlPath:string):string{
+    public compile(xmlData:any,className:string,srcPath:string,exmlPath:string):string{
         if(!this.exmlConfig){
             this.exmlConfig = new exml_config.EXMLConfig();
         }
@@ -208,7 +208,6 @@ class EXMLCompiler{
         else{
             this.currentClass.className = className;
         }
-        this.currentClass.addReference(egretDTSPath);
         this.startCompile();
         var resutlCode:string = this.currentClass.toCode();
         this.currentClass = null;
@@ -693,6 +692,13 @@ class EXMLCompiler{
         }
         else{
             switch(type){
+                case "Class":
+                    if(!this.exmlConfig.checkClassName(value)){
+                        globals.exit(2015, this.exmlPath, value,this.toXMLString(node));
+                    }
+                    if(value==this.currentClassName) {//防止无限循环。
+                        globals.exit(2014, this.exmlPath, this.toXMLString(node));
+                    }
                 case "number":
                     if(value.indexOf("#")==0)
                         value = "0x"+value.substring(1);
@@ -1170,11 +1176,6 @@ class EXMLCompiler{
     private getPackageByNode(node:any):string{
         var moduleName:string =
             this.exmlConfig.getClassNameById(node.localName,node.namespace);
-        if(moduleName&&node.namespace!=EXMLCompiler.E){
-
-            var path:string = this.exmlConfig.getPathById(node.localName,node.namespace);
-            this.currentClass.addReference(path);
-        }
         if(!moduleName){
             globals.exit(2003,this.exmlPath,this.toXMLString(node));
         }

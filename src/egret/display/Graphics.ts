@@ -25,8 +25,6 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/// <reference path="../context/renderer/HTML5CanvasRenderer.ts"/>
-/// <reference path="../context/renderer/RendererContext.ts"/>
 
 module egret {
 
@@ -53,18 +51,11 @@ module egret {
          * @param alpha {number} 填充的 Alpha 值
          */
         public beginFill(color:number, alpha:number = 1):void {
-            var _colorBlue = color & 0x0000FF;
-            var _colorGreen = (color & 0x00ff00) >> 8;
-            var _colorRed = color >> 16;
-            var _colorStr = "rgba(" + _colorRed + "," + _colorGreen + "," + _colorBlue + "," + alpha + ")";
-            this.fillStyleColor = _colorStr;
-
-            this.commandQueue.push(new Command(this._setStyle, this, [_colorStr]))
 
         }
 
         private _setStyle(colorStr:string):void {
-            this.canvasContext.fillStyle = colorStr;
+
         }
 
         /**
@@ -77,24 +68,6 @@ module egret {
          */
         public drawRect(x:number, y:number, width:number, height:number):void {
 
-
-            this.commandQueue.push(new Command(
-
-                function (x, y, width, height) {
-                    var rendererContext = <HTML5CanvasRenderer>this.renderContext;
-                    this.canvasContext.beginPath();
-                    this.canvasContext.rect(rendererContext._transformTx + x,
-                        rendererContext._transformTy + y,
-                        width,
-                        height);
-                    this.canvasContext.closePath();
-                },
-                this,
-                [ x, y, width, height]
-
-            )
-            );
-
         }
 
         /**
@@ -106,19 +79,6 @@ module egret {
          */
         public drawCircle(x:number, y:number, r:number):void {
 
-            this.commandQueue.push(new Command(
-                function (x, y, r) {
-                    var rendererContext = <HTML5CanvasRenderer>this.renderContext;
-                    this.canvasContext.beginPath();
-                    this.canvasContext.arc(rendererContext._transformTx + x,
-                        rendererContext._transformTy + y, r, 0, Math.PI * 2);
-                    this.canvasContext.closePath();
-
-                },
-                this,
-                [ x, y, r]
-
-            ));
         }
 
         /**
@@ -135,22 +95,6 @@ module egret {
          */
         public lineStyle(thickness:number = NaN, color:number = 0, alpha:number = 1.0, pixelHinting:boolean = false, scaleMode:string = "normal", caps:string = null, joints:string = null, miterLimit:number = 3):void {
 
-            var _colorBlue = color & 0x0000FF;
-            var _colorGreen = (color & 0x00ff00) >> 8;
-            var _colorRed = color >> 16;
-            var _colorStr = "rgba(" + _colorRed + "," + _colorGreen + "," + _colorBlue + "," + alpha + ")";
-            this.strokeStyleColor = _colorStr;
-
-            this.commandQueue.push(new Command(
-
-                function (lineWidth, strokeStyle) {
-                    this.canvasContext.lineWidth = lineWidth;
-                    this.canvasContext.strokeStyle = strokeStyle;
-                },
-                this,
-                [thickness, _colorStr]
-
-            ))
         }
 
         /**
@@ -161,16 +105,6 @@ module egret {
          */
         public lineTo(x:number, y:number):void {
 
-            this.commandQueue.push(new Command(
-                function (x, y) {
-                    var rendererContext = <HTML5CanvasRenderer>this.renderContext;
-                    var canvasContext:CanvasRenderingContext2D = this.canvasContext;
-                    canvasContext.lineTo(rendererContext._transformTx + x, rendererContext._transformTy + y);
-                },
-                this,
-                [x, y]
-
-            ))
         }
 
         /**
@@ -185,16 +119,6 @@ module egret {
          */
         public curveTo(controlX:Number, controlY:Number, anchorX:Number, anchorY:Number):void {
 
-            this.commandQueue.push(new Command(
-                function (x, y, ax, ay) {
-                    var rendererContext = <HTML5CanvasRenderer>this.renderContext;
-                    var canvasContext:CanvasRenderingContext2D = this.canvasContext;
-                    canvasContext.quadraticCurveTo(rendererContext._transformTx + x, rendererContext._transformTy + y, ax, ay);
-                },
-                this,
-                [controlX, controlY, anchorX, anchorY]
-
-            ))
         }
 
         /**
@@ -205,17 +129,6 @@ module egret {
          */
         public moveTo(x:number, y:number):void {
 
-            this.commandQueue.push(new Command(
-                function (x, y) {
-                    var rendererContext = <HTML5CanvasRenderer>this.renderContext;
-                    var canvasContext:CanvasRenderingContext2D = this.canvasContext;
-                    canvasContext.moveTo(rendererContext._transformTx + x, rendererContext._transformTy + y);
-                },
-                this,
-                [x, y]
-
-            ))
-
         }
 
         /**
@@ -223,9 +136,7 @@ module egret {
          * @method egret.Graphics#clear
          */
         public clear():void {
-            this.commandQueue.length = 0;
-            this.strokeStyleColor = null;
-            this.fillStyleColor = null;
+
         }
 
         /**
@@ -233,45 +144,12 @@ module egret {
          * @method egret.Graphics#endFill
          */
         public endFill():void {
-            if (this.strokeStyleColor) {
-                this.commandQueue.push(
-                    new Command(
-                        function () {
-                            this.canvasContext.stroke();
-                        },
-                        this,
-                        null)
-                )
-            }
-
-            if (this.fillStyleColor) {
-                this.commandQueue.push(
-                    new Command(
-                        function () {
-                            this.canvasContext.fill();
-                        },
-                        this,
-                        null)
-                )
-            }
 
         }
 
 
         public _draw(renderContext:RendererContext):void {
-            this.renderContext = renderContext;
-            this.canvasContext = (<HTML5CanvasRenderer>this.renderContext).canvasContext;
-            var rendererContext = <HTML5CanvasRenderer>this.renderContext;
-            var canvasContext:CanvasRenderingContext2D = this.canvasContext;
-            canvasContext.moveTo(rendererContext._transformTx, rendererContext._transformTy);
-            canvasContext.save();
-            canvasContext.beginPath();
-            for (var i = 0 , length = this.commandQueue.length; i < length; i++) {
-                var command:Command = this.commandQueue[i];
-                command.method.apply(command.thisObject, command.args);
-            }
-            canvasContext.closePath();
-            canvasContext.restore();
+
         }
     }
 

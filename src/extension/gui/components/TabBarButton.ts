@@ -25,8 +25,6 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/// <reference path="IItemRenderer.ts"/>
-/// <reference path="supportClasses/ToggleButtonBase.ts"/>
 
 module egret {
 

@@ -25,11 +25,6 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/// <reference path="../context/MainContext.ts"/>
-/// <reference path="../context/Ticker.ts"/>
-/// <reference path="../events/Event.ts"/>
-/// <reference path="../text/TextField.ts"/>
-/// <reference path="getTimer.ts"/>
 
 module egret {
     /**
@@ -129,7 +124,7 @@ module egret {
                     + Math.ceil(egret.MainContext.instance.rendererContext.renderCost).toString();
                 var frameStr = Math.floor(this._tick * 1000 / this._totalDeltaTime).toString();
 
-                this._txt.text = drawStr + "\n" + timeStr + "\n" + frameStr;
+                this._txt.text = "draw:" + drawStr + "\n" + "cost:" + timeStr + "\n" + "FPS:" + frameStr;
 
                 this._totalDeltaTime = 0;
                 this._tick = 0;

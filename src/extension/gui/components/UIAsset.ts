@@ -25,17 +25,6 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/// <reference path="../../../egret/context/renderer/RenderFilter.ts"/>
-/// <reference path="../../../egret/context/renderer/RendererContext.ts"/>
-/// <reference path="../../../egret/display/DisplayObject.ts"/>
-/// <reference path="../../../egret/display/Texture.ts"/>
-/// <reference path="../../../egret/geom/Rectangle.ts"/>
-/// <reference path="../../../egret/utils/Injector.ts"/>
-/// <reference path="supportClasses/DefaultAssetAdapter.ts"/>
-/// <reference path="../core/IAssetAdapter.ts"/>
-/// <reference path="../core/ILayoutElement.ts"/>
-/// <reference path="../core/UIComponent.ts"/>
-/// <reference path="../events/UIEvent.ts"/>
 
 module egret {
 
@@ -53,12 +42,13 @@ module egret {
 		 * @method egret.UIAsset#constructor
          * @param source {any} 素材标识符
          */
-		public constructor(source?:any){
+		public constructor(source?:any,autoScale:boolean=true){
 			super();
 			this.touchChildren = false;
             if(source){
                 this.source = source;
             }
+            this.autoScale = autoScale;
 		}
 
         /**
@@ -204,7 +194,10 @@ module egret {
                 this.measuredHeight = (<Texture> content)._textureHeight;
             }
 		}
-		
+        /**
+         * 是自动否缩放content对象，以符合UIAsset的尺寸。默认值true。
+         */
+        public autoScale:Boolean = true;
 		/**
 		 * @method egret.UIAsset#updateDisplayList
 		 * @param unscaledWidth {number} 
@@ -213,7 +206,7 @@ module egret {
 		public updateDisplayList(unscaledWidth:number, unscaledHeight:number):void{
 			super.updateDisplayList(unscaledWidth,unscaledHeight);
             var content:any = this._content;
-			if(content instanceof DisplayObject){
+			if(this.autoScale&&content instanceof DisplayObject){
 				if("setLayoutBoundsSize" in content){
                     (<ILayoutElement><any> (content)).setLayoutBoundsSize(unscaledWidth,unscaledHeight);
 				}
@@ -228,7 +221,17 @@ module egret {
             if(this._content instanceof Texture){
                 var texture:Texture = <Texture> this._content;
                 this._texture_to_render = texture;
-                Bitmap._drawBitmap(renderContext,this._width,this._height,this);
+                var w:number;
+                var h:number;
+                if(this.autoScale){
+                    w = this._width;
+                    h = this._height;
+                }
+                else{
+                    w = texture.textureWidth;
+                    h = texture.textureHeight;
+                }
+                Bitmap._drawBitmap(renderContext,w,h,this);
             }
             else{
                 this._texture_to_render = null;

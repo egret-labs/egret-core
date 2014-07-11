@@ -25,8 +25,6 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/// <reference path="DeviceContext.ts"/>
-/// <reference path="../../utils/getTimer.ts"/>
 
 module egret {
 
@@ -41,6 +39,8 @@ module egret {
 
         private _time:number = 0;
 
+        private static instance:HTML5DeviceContext;
+
 		/**
 		 * @member egret.HTML5DeviceContext#frameRate
 		 */
@@ -51,6 +51,8 @@ module egret {
 		 */
         public constructor() {
             super();
+            HTML5DeviceContext.instance = this;
+            this.registerListener();
         }
 
         static requestAnimationFrame:Function = window["requestAnimationFrame"] ||
@@ -63,6 +65,40 @@ module egret {
                 return window.setTimeout(callback, 1000 / 60);
             };
 
+        static cancelAnimationFrame = window["cancelAnimationFrame"] ||
+            window["msCancelAnimationFrame"] ||
+            window["mozCancelAnimationFrame"] ||
+            window["webkitCancelAnimationFrame"] ||
+            window["oCancelAnimationFrame"] ||
+            window["cancelRequestAnimationFrame"] ||
+            window["msCancelRequestAnimationFrame"] ||
+            window["mozCancelRequestAnimationFrame"] ||
+            window["oCancelRequestAnimationFrame"] ||
+            window["webkitCancelRequestAnimationFrame"] ||
+            function (id) {
+                return window.clearTimeout(id);
+            };
+
+        static _thisObject:any;
+
+        static _callback:Function;
+
+        private _requestAnimationId:number;
+
+
+
+        private enterFrame():void{
+            var context = HTML5DeviceContext.instance;
+            var thisObject = HTML5DeviceContext._thisObject;
+            var callback = HTML5DeviceContext._callback
+            var thisTime = egret.getTimer();
+            var advancedTime = thisTime - context._time;
+            callback.call(thisObject, advancedTime);
+            context._time = thisTime;
+            context._requestAnimationId = HTML5DeviceContext.requestAnimationFrame.call(window, HTML5DeviceContext.prototype.enterFrame);
+
+        }
+
 
 		/**
 		 * @method egret.HTML5DeviceContext#executeMainLoop
@@ -70,19 +106,29 @@ module egret {
 		 * @param thisObject {any} 
 		 */
         public executeMainLoop(callback:Function, thisObject:any):void {
+            HTML5DeviceContext._callback = callback;
+            HTML5DeviceContext._thisObject = thisObject;
+            this.enterFrame();
+        }
 
-
-            var self = this;
-
-            var enterFrame = function () {
-                var thisTime:number = getTimer();
-                var advancedTime = thisTime - self._time;
-                callback.call(thisObject, advancedTime);
-                self._time = thisTime;
-                HTML5DeviceContext.requestAnimationFrame.call(window, enterFrame);
+        private reset():void{
+            var context = HTML5DeviceContext.instance;
+            if (context._requestAnimationId){
+                context._time = egret.getTimer();
+                HTML5DeviceContext.cancelAnimationFrame.call(window,context._requestAnimationId);
             }
+            context.enterFrame();
+        }
 
-            HTML5DeviceContext.requestAnimationFrame.call(window, enterFrame);
+        private registerListener():void{
+
+            //todo: visiblechanged pageshow 
+            window.onfocus = function () {
+                var context = HTML5DeviceContext.instance;
+                context.reset();
+            };
+            window.onblur = function () {
+            };
         }
     }
 

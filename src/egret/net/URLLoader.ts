@@ -25,10 +25,6 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/// <reference path="../context/MainContext.ts"/>
-/// <reference path="../events/EventDispatcher.ts"/>
-/// <reference path="URLLoaderDataFormat.ts"/>
-/// <reference path="URLRequest.ts"/>
 
 module egret {
 

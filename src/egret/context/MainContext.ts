@@ -25,17 +25,6 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/// <reference path="Ticker.ts"/>
-/// <reference path="devices/DeviceContext.ts"/>
-/// <reference path="interactive/TouchContext.ts"/>
-/// <reference path="net/NetContext.ts"/>
-/// <reference path="renderer/RendererContext.ts"/>
-/// <reference path="../display/DisplayObject.ts"/>
-/// <reference path="../display/Stage.ts"/>
-/// <reference path="../events/Event.ts"/>
-/// <reference path="../events/EventDispatcher.ts"/>
-/// <reference path="../utils/Recycler.ts"/>
-/// <reference path="../utils/callLater.ts"/>
 
 module egret{
     /**

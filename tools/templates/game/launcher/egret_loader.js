@@ -65,19 +65,18 @@ egret_h5.startGame = function () {
     context.touchContext = new egret.HTML5TouchContext(canvas);
     context.deviceContext = new egret.HTML5DeviceContext();
     context.netContext = new egret.HTML5NetContext();
-    context.stage = new egret.Stage(canvas.width, canvas.height);
+
 
     //设置屏幕适配策略
     var container = new egret.EqualToFrame();
-    var content = egret.Browser.getInstance().isMobile ? new egret.FixedWidth() : new egret.FixedSize(480, 800);
+    var content = egret.Browser.getInstance().isMobile ? new egret.FixedWidth() : new egret.NoScale();
     var policy = new egret.ResolutionPolicy(container, content);
     egret.StageDelegate.getInstance().setDesignSize(480, 800, policy);
 
-    egret.RendererContext.CONTENT_SCALE_FACTOR = 1;
-    context.run();
+    context.stage = new egret.Stage(canvas.width, canvas.height);
 
-    //在此定义文档类的完整类名，若包含命名空间，需要填写命名空间前缀。
-    var document_class = "GameApp";
+    egret.MainContext.instance.rendererContext.texture_scale_factor = 1;
+    context.run();
 
     var rootClass;
     if(document_class){
@@ -85,7 +84,7 @@ egret_h5.startGame = function () {
     }
     if(rootClass) {
         var rootContainer = new rootClass();
-        if(rootContainer instanceof egret.DisplayObject){
+        if(rootContainer instanceof egret.DisplayObjectContainer){
             context.stage.addChild(rootContainer);
         }
         else{

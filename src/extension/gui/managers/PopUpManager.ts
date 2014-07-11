@@ -25,11 +25,6 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/// <reference path="../../../egret/utils/Injector.ts"/>
-/// <reference path="../core/IVisualElement.ts"/>
-/// <reference path="../events/PopUpEvent.ts"/>
-/// <reference path="IPopUpManager.ts"/>
-/// <reference path="impl/PopUpManagerImpl.ts"/>
 
 module egret {
 

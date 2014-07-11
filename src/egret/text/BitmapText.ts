@@ -25,10 +25,6 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/// <reference path="../display/Bitmap.ts"/>
-/// <reference path="../display/DisplayObjectContainer.ts"/>
-/// <reference path="../geom/Rectangle.ts"/>
-/// <reference path="BitmapTextSpriteSheet.ts"/>
 
 module egret {
     /**

@@ -25,8 +25,6 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/// <reference path="supportClasses/TextBase.ts"/>
-/// <reference path="../events/UIEvent.ts"/>
 
 module egret {
 

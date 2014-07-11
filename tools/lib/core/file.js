@@ -252,7 +252,12 @@ function getDirectoryListing(path){
  */
 function search(dir, extension) {
     var list = [];
-    var stat = fs.statSync(dir);
+    try{
+        var stat = fs.statSync(dir);
+    }
+    catch(e){
+        return list;
+    }
     if (stat.isDirectory()) {
         findFiles(dir,list,extension,null);
     }
@@ -265,7 +270,12 @@ function search(dir, extension) {
  */
 function searchByFunction(dir, filterFunc) {
     var list = [];
-    var stat = fs.statSync(dir);
+    try{
+        var stat = fs.statSync(dir);
+    }
+    catch(e){
+        return list;
+    }
     if (stat.isDirectory()) {
         findFiles(dir,list,"",filterFunc);
     }
@@ -321,7 +331,7 @@ function escapePath(path) {
     return path.split("\\").join("/");
 }
 /**
- * 连接路径,支持传入多于两个的参数。返回的分隔符为Unix风格。
+ * 连接路径,支持传入多于两个的参数。也支持"../"相对路径解析。返回的分隔符为Unix风格。
  */
 function joinPath(dir,filename){
     var path = path_lib.join.apply(null,arguments);
