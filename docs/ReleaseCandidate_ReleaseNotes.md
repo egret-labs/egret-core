@@ -1,4 +1,4 @@
-Egret 1.0 Release Candidate Release Note
+Egret 1.0 Release Candidate 1 Release Note
 ===============================
 
 最近更新时间：2014年7月10日
