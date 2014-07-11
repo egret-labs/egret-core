@@ -288,10 +288,17 @@ function run(dir, args, opts) {
     combineToSingleJavaScriptFile(totalFileList,tempFile);
 
     ClosureCompiler.compile([tempFile],
-        {js_output_file: currDir + "/launcher/game-min.js"},
+        {js_output_file: currDir + "/launcher/game-min.js","warning_level":"QUIET"},
         function afterCompile(err, stdout, stderr) {
-            console.log(err);
-            file.remove(tempFile);
+//            console.log(err);
+
+            if (!err){
+                file.remove(tempFile);
+            }
+            else{
+                console.log (err)
+            }
+
         });
 }
 
@@ -313,7 +320,7 @@ function combineToSingleJavaScriptFile(filelist,name){
     var content = "";
     for (var i = 0 ; i < filelist.length ; i++){
         var filePath = filelist[i];
-        content += file.read(filePath);
+        content += file.read(filePath) + "\n";
     }
     file.save(name,content);
 }
