@@ -160,10 +160,10 @@ function help_title() {
 
 
 function help_example() {
-    var result = "egret startserver [project_name]";
+    var result = "egret startserver [project_name] [--port 3000] [-ip]\n";
     result += "参数说明:\n";
     result += "    --port           指定端口号\n";
-    result += "    -ip              是否使用本机IP\n";
+    result += "    -ip              是否使用本机IP";
     return result;
 }
 
