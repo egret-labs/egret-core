@@ -357,28 +357,29 @@ module RES {
         private asyncDic:any = {};
         /**
          * 通过name异步获取资源
-		 * @method RES.getResAsync
-		 * @param name {string} 
-		 * @param compFunc {Function} 
-		 * @param thisObject {any} 
+         * @method RES.getResAsync
+         * @param name {string}
+         * @param compFunc {Function}
+         * @param thisObject {any}
          */
-        public getResAsync(name:string,compFunc:Function,thisObject:any):void{
-            var type:string = this.resConfig.getType(name);
+        public getResAsync(key:string,compFunc:Function,thisObject:any):void{
+            var type:string = this.resConfig.getType(key);
+            var name:string = key;
             if(type==""){
-                var prefix:string = RES.AnalyzerBase.getStringPrefix(name);
-                type = this.resConfig.getType(prefix);
+                name = RES.AnalyzerBase.getStringPrefix(key);
+                type = this.resConfig.getType(name);
                 if(type==""){
                     compFunc.call(thisObject,null);
                     return;
                 }
             }
             var analyzer:AnalyzerBase = this.getAnalyzerByType(type);
-            var res:any = analyzer.getRes(name);
+            var res:any = analyzer.getRes(key);
             if(res){
                 compFunc.call(thisObject,res);
                 return;
             }
-            var args:any = {name:name,compFunc:compFunc,thisObject:thisObject};
+            var args:any = {name:key,compFunc:compFunc,thisObject:thisObject};
             if(this.asyncDic[name]){
                 this.asyncDic[name].push(args);
             }

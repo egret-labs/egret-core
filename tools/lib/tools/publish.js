@@ -281,10 +281,24 @@ function run(dir, args, opts) {
     });
 
     var totalFileList = egretFileList.concat(gameFileList);
-    ClosureCompiler.compile(totalFileList,
-        {js_output_file: currDir + "/launcher/game-min.js"},
+
+
+    var tempFile = path.join(currDir,"bin-debug/__temp.js");
+
+    combineToSingleJavaScriptFile(totalFileList,tempFile);
+
+    ClosureCompiler.compile([tempFile],
+        {js_output_file: currDir + "/launcher/game-min.js","warning_level":"QUIET"},
         function afterCompile(err, stdout, stderr) {
-            console.log(err);
+//            console.log(err);
+
+            if (!err){
+                file.remove(tempFile);
+            }
+            else{
+                console.log (err)
+            }
+
         });
 }
 
@@ -299,6 +313,16 @@ function help_example() {
     result += "描述:\n";
     result += "    " + help_title();
     return result;
+}
+
+
+function combineToSingleJavaScriptFile(filelist,name){
+    var content = "";
+    for (var i = 0 ; i < filelist.length ; i++){
+        var filePath = filelist[i];
+        content += file.read(filePath) + "\n";
+    }
+    file.save(name,content);
 }
 
 exports.run = run;

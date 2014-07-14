@@ -155,7 +155,7 @@ module egret {
                 image.onerror = null;
                 image.onload = null;
                 var texture:Texture = new Texture();
-                texture.bitmapData = image;
+                texture._setBitmapData(image);
                 loader.data = texture;
                 callLater(Event.dispatchEvent, Event, loader, Event.COMPLETE);
             };

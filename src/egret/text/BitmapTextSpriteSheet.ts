@@ -30,14 +30,9 @@ module egret {
 
     export class BitmapTextSpriteSheet extends SpriteSheet {
 
-        private _startX:number;
-        private _startY:number;
-
-        public constructor(bitmapData:any, fntText:string, startX:number = 0, startY:number = 0) {
-            super(bitmapData);
+        public constructor(texture:Texture, fntText:string) {
+            super(texture);
             this.charList = this.parseConfig(fntText);
-            this._startX = startX;
-            this._startY = startY;
         }
 
         private charList:any;
@@ -49,7 +44,7 @@ module egret {
                 if (!c) {
                     return null;
                 }
-                texture = this.createTexture(name, c.x + this._startX, c.y + this._startY, c.width, c.height, c.offsetX, c.offsetY);
+                texture = this.createTexture(name, c.x, c.y, c.width, c.height, c.offsetX, c.offsetY);
                 this._textureMap[name] = texture;
             }
             return texture;

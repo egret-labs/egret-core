@@ -463,7 +463,7 @@ module egret {
 				this.recycle(oldRenderer);
 			}
 		}
-		
+
 		/**
 		 * 对象池字典
 		 */		

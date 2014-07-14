@@ -39,7 +39,7 @@ function run(dir, args, opts) {
         var open = require("../core/open");
         globals.joinEgretDir(dir, args[0]);
         var ip = findIP(opts);
-        var url = path.join("http://" + ip + ":" + PORT, args[0], "launcher/index.html");
+        var url = path.join("http://" + ip + ":" + PORT, args[0] ? args[0] : "", "launcher/index.html");
         open(url);
         console.log("Server runing at port: " + PORT + ".");
         exports.projectName = args[0];
@@ -160,10 +160,10 @@ function help_title() {
 
 
 function help_example() {
-    var result = "egret startserver [project_name]";
+    var result = "egret startserver [project_name] [--port 3000] [-ip]\n";
     result += "参数说明:\n";
     result += "    --port           指定端口号\n";
-    result += "    -ip              是否使用本机IP\n";
+    result += "    -ip              是否使用本机IP";
     return result;
 }
 
