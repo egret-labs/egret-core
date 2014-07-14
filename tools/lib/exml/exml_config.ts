@@ -91,7 +91,7 @@ class EXMLConfig{
             if(!list){
                 list = this.classNameToModule[className] = [];
             }
-            if(list.indexOf(ns)==-1){
+            if(list.indexOf(ns)==-1){ 
                 list.push(ns);
             }
         }
@@ -159,10 +159,13 @@ class EXMLConfig{
      * 检查一个类名是否存在
      */
     public checkClassName(className:string):boolean{
+        if(!className){
+            return false;
+        }
         if(this.componentDic[className]){
             return true;
         }
-        if(this.classNameToPath[name]){
+        if(this.classNameToPath[className]){
             return true;
         }
         return false;
