@@ -39,7 +39,7 @@ function run(dir, args, opts) {
         var open = require("../core/open");
         globals.joinEgretDir(dir, args[0]);
         var ip = findIP(opts);
-        var url = path.join("http://" + ip + ":" + PORT, args[0], "launcher/index.html");
+        var url = path.join("http://" + ip + ":" + PORT, args[0] ? args[0] : "", "launcher/index.html");
         open(url);
         console.log("Server runing at port: " + PORT + ".");
         exports.projectName = args[0];

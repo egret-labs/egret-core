@@ -28,7 +28,7 @@ function formatStdoutString(message) {
 
 var callBackList = [];
 
-function addCallBackWhenExit(callBack){
+function addCallBackWhenExit(callBack) {
     callBackList.push(callBack)
 }
 
@@ -39,13 +39,19 @@ function _exit(code) {
     }
     message = formatStdoutString(message);
     var length = arguments.length;
-    for(var i=1;i<length;i++){
-        message = message.replace("{"+(i-1)+"}", arguments[i]);
+    for (var i = 1; i < length; i++) {
+        message = message.replace("{" + (i - 1) + "}", arguments[i]);
     }
     console.log(message);
+    var opt = param.getArgv().opts;
+    var vebose = opt.hasOwnProperty("-printError");
+    if (vebose) {
+        var url = path.join(process.cwd(), "error.txt")
+        file.save(url, message);
+    }
     var list = callBackList.concat();
     length = list.length;
-    for(i=0;i<length;i++){
+    for (i = 0; i < length; i++) {
         var callBack = list[i];
         callBack();
     }
@@ -68,8 +74,8 @@ function _warn(code) {
     }
     message = formatStdoutString(message);
     var length = arguments.length;
-    for(var i=1;i<length;i++){
-        message = message.replace("{"+(i-1)+"}", arguments[i]);
+    for (var i = 1; i < length; i++) {
+        message = message.replace("{" + (i - 1) + "}", arguments[i]);
     }
     console.log(message);
 }
@@ -91,8 +97,8 @@ function _joinEgretDir(dir, projectName) {
 
 function getConfig(filepath) {
     var exists = file.exists(filepath);
-    if (!exists){
-        _exit(8003,filepath)
+    if (!exists) {
+        _exit(8003, filepath)
     }
     var content = file.read(filepath);
     var obj = JSON.parse(content);
@@ -101,19 +107,19 @@ function getConfig(filepath) {
 
 var egretConfig;
 
-function getDocumentClass(currDir){
-    if(!egretConfig){
-        var configPath = path.join(currDir,"egretProperties.json");
-        if(file.exists(configPath)){
+function getDocumentClass(currDir) {
+    if (!egretConfig) {
+        var configPath = path.join(currDir, "egretProperties.json");
+        if (file.exists(configPath)) {
             var content = file.read(configPath);
-            try{
+            try {
                 egretConfig = JSON.parse(content);
             }
-            catch (e)
-            {}
+            catch (e) {
+            }
         }
     }
-    if(egretConfig){
+    if (egretConfig) {
         return egretConfig["document_class"];
     }
     return "";
