@@ -251,6 +251,7 @@ module egret {
          */
         public _render(renderContext:RendererContext):void {
             this.drawText(renderContext, false);
+            this._textDirty = false;
         }
 
         /**
