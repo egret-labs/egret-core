@@ -98,13 +98,7 @@ function compile(callback, srcPath, output, sourceList,keepGeneratedTypescript) 
             });
             var cmd = "" + tsList.join(" ") + " -t ES5 --outDir " + "\"" + output + "\"";
             file.save("tsc_config_temp.txt", cmd);
-            var ts = cp_exec("tsc @tsc_config_temp.txt");
-            ts.stderr.on("data", function (data) {
-                console.log(data);
-            })
-
-
-            ts.on('exit', function (code) {
+            typeScriptCompiler(function (code){
                 cleanTempFile();
                 if (code == 0) {
                     callback(null, srcPath);
@@ -112,7 +106,6 @@ function compile(callback, srcPath, output, sourceList,keepGeneratedTypescript) 
                 else {
                     callback(1303);
                 }
-
             });
         }
 
@@ -131,6 +124,14 @@ function compile(callback, srcPath, output, sourceList,keepGeneratedTypescript) 
             });
         }
     }
+}
+
+function typeScriptCompiler(quitFunc){
+    var TypeScript = require('../core/typescript/typescript-wrapper.js');
+    TypeScript.IO.arguments = ["@tsc_config_temp.txt"];
+    TypeScript.IO.quit = quitFunc;
+    var batch = new TypeScript.BatchCompiler(TypeScript.IO);
+    batch.batchCompile();
 }
 
 function checkCompilerInstalled(callback) {
@@ -170,12 +171,7 @@ function exportHeader(callback, projectPath, sourceList) {
     var source = list.join(" ");
     var cmd = source + " -t ES5 -d --out " + "\"" + output + "\"";
     file.save("tsc_config_temp.txt", cmd);
-    var ts = cp_exec("tsc @tsc_config_temp.txt");
-    ts.stderr.on("data", function (data) {
-        console.log(data);
-    })
-
-    ts.on('exit', function (code) {
+    typeScriptCompiler(function (code) {
         if (code == 0) {
             var egretDTS = file.read(output);
             var lines = egretDTS.split("\n");
@@ -200,7 +196,6 @@ function exportHeader(callback, projectPath, sourceList) {
         else {
             callback(1303)
         }
-
     });
 }
 
