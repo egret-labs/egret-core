@@ -26,6 +26,13 @@ function run(currDir, args, opts) {
             globals.log("正在创建新项目文件夹...");
             file.copy(path.join(param.getEgretPath(), "tools/templates/game"),
                 projectPath);
+            if(process.platform!="win32"){
+                var list = file.search(projectPath,"bat");
+                list = list.concat(file.search(projectPath,"cmd"));
+                for(var i=list.length-1;i>=0;i--){
+                    file.remove(list[i]);
+                }
+            }
             callback();
         },
 
