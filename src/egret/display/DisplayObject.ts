@@ -662,17 +662,11 @@ module egret {
                 return !!this.hitTest(p.x, p.y, true);
             }
             else {
-                var testTexture:Texture;
-                if (this._texture_to_render) {
-                    testTexture = this._texture_to_render;
+                if (!this._hitTestPointTexture) {
+                    this._hitTestPointTexture = new RenderTexture();
                 }
-                else {
-                    if (!this._hitTestPointTexture) {
-                        this._hitTestPointTexture = new RenderTexture();
-                    }
-                    testTexture = this._hitTestPointTexture;
-                    (<RenderTexture>testTexture).drawToTexture(this);
-                }
+                var testTexture:Texture = this._hitTestPointTexture;
+                (<RenderTexture>testTexture).drawToTexture(this);
                 var pixelData:number[] = testTexture.getPixel32(p.x - this._hitTestPointTexture._offsetX, p.y - this._hitTestPointTexture._offsetY);
                 if (pixelData[3] != 0) {
                     return true;
