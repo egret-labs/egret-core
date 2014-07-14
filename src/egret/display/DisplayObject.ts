@@ -673,7 +673,7 @@ module egret {
                     testTexture = this._hitTestPointTexture;
                     (<RenderTexture>testTexture).drawToTexture(this);
                 }
-                var pixelData:number[] = testTexture.getPixel32(p.x, p.y);
+                var pixelData:number[] = testTexture.getPixel32(p.x - this._hitTestPointTexture._offsetX, p.y - this._hitTestPointTexture._offsetY);
                 if (pixelData[3] != 0) {
                     return true;
                 }
