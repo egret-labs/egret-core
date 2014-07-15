@@ -80,12 +80,14 @@ Egret 1.0 Release Candidate 是 Egret 1.0的第一个发布候选版，在此版
 * 使用```egret create {临时项目名}```命令创建一新的模板项目,拷贝其中的launcher文件夹和egretProperties.json文件到旧项目并覆盖。
 * 若旧项目的文档类不是GameApp，请编辑egretProperties.json文件，找到```document_class```这一行，将文档类的值```GameApp```改为旧项目的文档类。
 * 删除旧项目src目录下的egret.d.ts文件
-* 删除所有ts文件内的reference标签，可以使用[这个工具](https://download.egret-labs.org/?id=TsReferenceTool)，拖入文件夹一次性清除。
+* 删除所有ts文件内的reference标签，可以使用[这个工具](http://download.egret-labs.org/?id=TsReferenceTool)，拖入文件夹一次性清除。
 * 使用```egret build {旧项目名} -e```重新编译项目。注意要加上-e参数才能编译引擎代码。
 
 关于文档类，从这版本起，文档类只在egretProperties.json里配置。命令行工具会自动去修改index.html等页面里的文档类配置。请不要直接修改launcher文件夹下的文件。
 
 关于自动生成```game_file_list.js```的功能。默认情况下，命令行会根据配置的文档类，只把被引用到的类生成到列表里。这里跟Flash的编译一致，若是通过反射的字符串方式获取类名可能会无法生成到列表，请在ts文件内定义一个引用该类的var变量来解决这个问题。若需要屏蔽自动生成功能，采用自定义加载列表。请在旧项目的目录下运行```egret create_manifest```，会生成一个manifest.json文件模板。修改该模板，之后命令行都以这个文件作为列表来源。
+
+关于发布IOS平台原生App，由于```resources```文件夹在IOS平台下是关键字。会导致发布失败。新的模板项目已经把这个文件夹重命名为```resource```。旧项目若需要发布IOS平台，也要重命名这个文件夹。并修改```GameApp```中```RES.loadConfig()```这一行的两个```resources```参数为```resource```
 
 
 ## 部分详细改动日志

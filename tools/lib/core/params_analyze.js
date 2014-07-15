@@ -2,7 +2,11 @@ var globals = require("./globals.js");
 var path = require("path");
 var file = require("../core/file.js")
 
+var argv;
 getArgv = function () {
+    if(argv) {
+        return argv;
+    }
     var arr = process.argv.slice(2);
 
     var args = [];
@@ -32,14 +36,14 @@ getArgv = function () {
 
     if (name) opts[name] = values4Opt;
 
-    var result = {
+    argv = {
         name: arr[0],
         currDir: process.cwd(),
         args: args,
         opts: opts
     }
 
-    return result;
+    return argv;
 };
 
 function _getEnv() {

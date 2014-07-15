@@ -339,6 +339,89 @@ function joinPath(dir,filename){
     return path;
 }
 
+/**
+ * 检查文件是否为UTF8格式
+ */
+function isUTF8(text) {
+    var i = 0;
+    while(i < text.length){
+        if(     (// ASCII
+                    text[i] == 0x09 ||
+                    text[i] == 0x0A ||
+                    text[i] == 0x0D ||
+                    (0x20 <= text[i] && text[i] <= 0x7E)
+                )
+          ) {
+              i += 1;
+              continue;
+          }
+
+        if(     (// non-overlong 2-byte
+                    (0xC2 <= text[i] && text[i] <= 0xDF) &&
+                    (0x80 <= text[i+1] && text[i+1] <= 0xBF)
+                )
+          ) {
+              i += 2;
+              continue;
+          }
+
+        if(     (// excluding overlongs
+                    text[i] == 0xE0 &&
+                    (0xA0 <= text[i + 1] && text[i + 1] <= 0xBF) &&
+                    (0x80 <= text[i + 2] && text[i + 2] <= 0xBF)
+                ) ||
+                (// straight 3-byte
+                 ((0xE1 <= text[i] && text[i] <= 0xEC) ||
+                  text[i] == 0xEE ||
+                  text[i] == 0xEF) &&
+                 (0x80 <= text[i + 1] && text[i+1] <= 0xBF) &&
+                 (0x80 <= text[i+2] && text[i+2] <= 0xBF)
+                ) ||
+                (// excluding surrogates
+                 text[i] == 0xED &&
+                 (0x80 <= text[i+1] && text[i+1] <= 0x9F) &&
+                 (0x80 <= text[i+2] && text[i+2] <= 0xBF)
+                )
+          ) {
+              i += 3;
+              continue;
+          }
+
+        if(     (// planes 1-3
+                    text[i] == 0xF0 &&
+                    (0x90 <= text[i + 1] && text[i + 1] <= 0xBF) &&
+                    (0x80 <= text[i + 2] && text[i + 2] <= 0xBF) &&
+                    (0x80 <= text[i + 3] && text[i + 3] <= 0xBF)
+                ) ||
+                (// planes 4-15
+                 (0xF1 <= text[i] && text[i] <= 0xF3) &&
+                 (0x80 <= text[i + 1] && text[i + 1] <= 0xBF) &&
+                 (0x80 <= text[i + 2] && text[i + 2] <= 0xBF) &&
+                 (0x80 <= text[i + 3] && text[i + 3] <= 0xBF)
+                ) ||
+                (// plane 16
+                 text[i] == 0xF4 &&
+                 (0x80 <= text[i + 1] && text[i + 1] <= 0x8F) &&
+                 (0x80 <= text[i + 2] && text[i + 2] <= 0xBF) &&
+                 (0x80 <= text[i + 3] && text[i + 3] <= 0xBF)
+                )
+          ) {
+              i += 4;
+              continue;
+          }
+
+        return false;
+    }
+
+    return true;
+}
+
+function toUTF8(text) {
+    var StringDecoder = require('string_decoder').StringDecoder;
+    var decoder = new StringDecoder();
+    return decoder.write(text);
+}
+
 exports.save = save;
 exports.read = read;
 exports.readBinary = readBinary;
@@ -357,3 +440,5 @@ exports.getExtension = getExtension;
 exports.getFileName = getFileName;
 exports.escapePath = escapePath;
 exports.joinPath = joinPath;
+exports.isUTF8 = isUTF8;
+exports.toUTF8 = toUTF8;
