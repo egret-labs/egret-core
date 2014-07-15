@@ -7,7 +7,7 @@ Current Version: v1.0.1 ( Release Candidate )
 简介
 -------------------
 
-Egret Framework是一款使用JavaScript(TypeScript)编写的HTML5开源免费游戏框架。Egret Framework的核心定位是开放，高效，优雅。基于它，你可以快速轻松地构建属于自己的HTML5移动游戏。
+Egret Framework是一款使用JavaScript(TypeScript)编写的HTML5开源免费游戏框架。Egret Framework的核心定位是开放，高效，优雅。基于它，你可以快速轻松地构建HTML5移动游戏或原生游戏。
 
 
 支持平台
