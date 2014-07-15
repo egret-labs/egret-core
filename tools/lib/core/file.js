@@ -10,6 +10,9 @@ if (!fs.existsSync)
  * @param data 要保存的数据
  */
 function save(path,data){
+    if(exists(path)) {
+        remove(path);
+    }
     path = escapePath(path);
     createDirectory(path_lib.dirname(path));
     fs.writeFileSync(path,data,charset);
