@@ -141,6 +141,7 @@ function help_example() {
     result += "    -e           编译指定项目的同时编译引擎目录\n";
     result += "    -k           编译EXML文件时保留生成的TS文件\n";
     result += "    --runtime    设置构建方式为 html5 或者是 native方式，默认值为html5";
+    result += "    -quick       快速编译，跳过ts严格类型检查阶段";
     return result;
 }
 

@@ -130,6 +130,11 @@ function typeScriptCompiler(quitFunc){
     var TypeScript = require('../core/typescript/tsc.js');
     TypeScript.IO.arguments = ["@tsc_config_temp.txt"];
     TypeScript.IO.quit = quitFunc;
+
+    if(param.getArgv().opts["-quick"]) {//快速构建，去掉类型检查阶段
+        TypeScript.PullTypeResolver.typeCheck = function (){};
+    }
+
     var batch = new TypeScript.BatchCompiler(TypeScript.IO);
     batch.batchCompile();
 }
