@@ -24,9 +24,9 @@ Egret Framework是一款使用JavaScript(TypeScript)编写的HTML5开源免费�
 * Windows Phone 8
 
 #### Mobile App
-* Android 2.3+ ( beta )
-* iOS 5.0+ ( 即将推出 )
-* Windows Phone 8 ( 规划中 ）
+* Android 2.3+ ( RC1)
+* iOS 5.0+ ( RC1 )
+* Windows Phone 8 ( 已支持，参见[这里](http://docs.egret-labs.org/post/tools/native/winphone.html) ）
 
 
 文档与教程
