@@ -136,12 +136,16 @@ function createProjectDTS(excludeList,srcPath){
             dts += "declare module "+moduleName+" {\n";
             indent = "  ";
         }
+        else
+        {
+            indent = "declare ";
+        }
         var length = list.length;
         for(var i=0;i<length;i++){
             var className = list[i];
             dts += indent+"class "+className+"{}\n";
         }
-        if(indent){
+        if(moduleName!="default"){
             dts += "}\n";
         }
     }
