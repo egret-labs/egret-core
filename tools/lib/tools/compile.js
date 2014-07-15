@@ -52,6 +52,9 @@ function compile(callback, srcPath, output, sourceList,keepGeneratedTypescript) 
         }
         var ext = file.getExtension(p).toLowerCase();
         if(ext=="ts"){
+            if(isQuickMode() && p.indexOf(".d.ts") != -1) {
+                continue;
+            }
             tsList.push(p);
         }
         else if(ext=="exml"){
@@ -131,13 +134,21 @@ function typeScriptCompiler(quitFunc){
     TypeScript.IO.arguments = ["@tsc_config_temp.txt"];
     TypeScript.IO.quit = quitFunc;
 
-    var opts = param.getArgv().opts;
-    if(opts["-quick"] || opts["-q"]) {//快速构建，去掉类型检查阶段
+    if(isQuickMode()) {//快速构建，去掉类型检查阶段
         TypeScript.PullTypeResolver.typeCheck = function (){};
     }
 
     var batch = new TypeScript.BatchCompiler(TypeScript.IO);
     batch.batchCompile();
+
+}
+
+function isQuickMode () {
+    var opts = param.getArgv().opts;
+    if(opts["-quick"] || opts["-q"]) {
+        return true;
+    }
+    return false;
 }
 
 function checkCompilerInstalled(callback) {
