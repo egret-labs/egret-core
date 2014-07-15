@@ -127,7 +127,7 @@ function compile(callback, srcPath, output, sourceList,keepGeneratedTypescript) 
 }
 
 function typeScriptCompiler(quitFunc){
-    var TypeScript = require('../core/typescript/typescript-wrapper.js');
+    var TypeScript = require('../core/typescript/tsc.js');
     TypeScript.IO.arguments = ["@tsc_config_temp.txt"];
     TypeScript.IO.quit = quitFunc;
     var batch = new TypeScript.BatchCompiler(TypeScript.IO);

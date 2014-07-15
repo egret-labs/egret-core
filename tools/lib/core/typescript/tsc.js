@@ -62923,3 +62923,6 @@ var TypeScript;
     })();
     TypeScript.BatchCompiler = BatchCompiler;
 })(TypeScript || (TypeScript = {}));
+
+
+module.exports = TypeScript;
