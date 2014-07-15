@@ -87,7 +87,7 @@ Egret 1.0 Release Candidate 是 Egret 1.0的第一个发布候选版，在此版
 
 关于自动生成```game_file_list.js```的功能。默认情况下，命令行会根据配置的文档类，只把被引用到的类生成到列表里。这里跟Flash的编译一致，若是通过反射的字符串方式获取类名可能会无法生成到列表，请在ts文件内定义一个引用该类的var变量来解决这个问题。若需要屏蔽自动生成功能，采用自定义加载列表。请在旧项目的目录下运行```egret create_manifest```，会生成一个manifest.json文件模板。修改该模板，之后命令行都以这个文件作为列表来源。
 
-关于发布IOS平台原生App，由于```resources```文件夹在IOS平台下是关键字。会导致发布失败。新的模板项目已经把这个文件夹重命名为```resource```。旧项目若需要发布IOS平台，也要重命名这个文件夹。并修改```GameApp```中```RES.loadConfig()```这一行的两个`````````resources``````参数为```resource```
+关于发布IOS平台原生App，由于```resources```文件夹在IOS平台下是关键字。会导致发布失败。新的模板项目已经把这个文件夹重命名为```resource```。旧项目若需要发布IOS平台，也要重命名这个文件夹。并修改```GameApp```中```RES.loadConfig()```这一行的两个```resources```参数为```resource```
 
 
 ## 部分详细改动日志
