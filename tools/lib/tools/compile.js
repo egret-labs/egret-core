@@ -135,12 +135,20 @@ function typeScriptCompiler(quitFunc){
     TypeScript.IO.quit = quitFunc;
 
     if(isQuickMode()) {//快速构建，去掉类型检查阶段
-        TypeScript.PullTypeResolver.typeCheck = function (){};
+        TypeScript.PullTypeResolver.typeCheck = function (compilationSettings, semanticInfoChain, document) {
+            var sourceUnit = document.sourceUnit();
+
+            var resolver = semanticInfoChain.getResolver();
+            var context = new TypeScript.PullTypeResolutionContext(resolver, true, sourceUnit.fileName());
+
+            if (resolver.canTypeCheckAST(sourceUnit, context)) {
+                resolver.resolveAST(sourceUnit, false, context);
+            }
+        };
     }
 
     var batch = new TypeScript.BatchCompiler(TypeScript.IO);
     batch.batchCompile();
-
 }
 
 function isQuickMode () {
