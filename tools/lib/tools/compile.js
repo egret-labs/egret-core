@@ -131,7 +131,8 @@ function typeScriptCompiler(quitFunc){
     TypeScript.IO.arguments = ["@tsc_config_temp.txt"];
     TypeScript.IO.quit = quitFunc;
 
-    if(param.getArgv().opts["-quick"]) {//快速构建，去掉类型检查阶段
+    var opts = param.getArgv().opts;
+    if(opts["-quick"] || opts["-q"]) {//快速构建，去掉类型检查阶段
         TypeScript.PullTypeResolver.typeCheck = function (){};
     }
 
