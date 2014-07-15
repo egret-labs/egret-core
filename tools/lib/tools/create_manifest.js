@@ -73,13 +73,23 @@ function run(currDir, args, opts) {
     globals.log("manifest.json生成成功");
 }
 /**
- * 获取项目中所有类名和文件路径的映射数据
+ * 格式化srcPath
  */
-function getClassToPathInfo(srcPath){
+function escapeSrcPath(srcPath){
+    if(!srcPath){
+        return "";
+    }
     srcPath = srcPath.split("\\").join("/");
     if (srcPath.charAt(srcPath.length - 1) != "/") {
         srcPath += "/";
     }
+    return srcPath;
+}
+/**
+ * 获取项目中所有类名和文件路径的映射数据
+ */
+function getClassToPathInfo(srcPath){
+    srcPath = escapeSrcPath(srcPath);
     if(!classNameToPath){
         getManifest(srcPath);
         textTemp = null;
@@ -87,14 +97,62 @@ function getClassToPathInfo(srcPath){
     return classNameToPath;
 }
 
+function createProjectDTS(excludeList,srcPath){
+    srcPath = escapeSrcPath(srcPath);
+    if(!classNameToPath){
+        getManifest(srcPath);
+        textTemp = null;
+    }
+    var classList = [];
+    for(var path in pathToClassNames){
+        if(excludeList.indexOf(path)!=-1){
+            continue;
+        }
+        var list = pathToClassNames[path];
+        classList = classList.concat(list);
+    }
+
+    var length = classList.length;
+    var moduleNames = {};
+    for(var i=0;i<length;i++){
+        var className =  classList[i];
+        var index = className.lastIndexOf(".");
+        var moduleName = "default";
+        if(index!=-1){
+            moduleName = className.substring(0,index);
+            className = className.substring(index+1);
+        }
+        var list = moduleNames[moduleName];
+        if(!moduleNames[moduleName]){
+            list = moduleNames[moduleName] = [];
+        }
+        list.push(className);
+    }
+    var dts = "";
+    for(var moduleName in moduleNames){
+        list = moduleNames[moduleName];
+        var indent = "";
+        if(moduleName!="default"){
+            dts += "declare module "+moduleName+" {\n";
+            indent = "  ";
+        }
+        var length = list.length;
+        for(var i=0;i<length;i++){
+            var className = list[i];
+            dts += indent+"class "+className+"{}\n";
+        }
+        if(indent){
+            dts += "}\n";
+        }
+    }
+    return dts;
+}
+
 /**
  * 创建manifest列表
  */
 function create(srcPath){
-    srcPath = srcPath.split("\\").join("/");
-    if (srcPath.charAt(srcPath.length - 1) != "/") {
-        srcPath += "/";
-    }
+    srcPath = escapeSrcPath(srcPath);
     var manifest = getManifest(srcPath);
     manifest = sortFileList(manifest,srcPath);
     return manifest;
@@ -810,5 +868,6 @@ function help_example() {
 exports.run = run;
 exports.create = create;
 exports.getClassToPathInfo = getClassToPathInfo;
+exports.createProjectDTS = createProjectDTS;
 exports.help_title = help_title;
 exports.help_example = help_example;
