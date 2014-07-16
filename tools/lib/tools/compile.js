@@ -68,7 +68,6 @@ function compile(callback, srcPath, output, sourceList, keepGeneratedTypescript)
     globals.addCallBackWhenExit(cleanTempFile);
 
     async.waterfall([
-        checkCompilerInstalled,
 
         //cp所有非ts/exml文件
         function (callback) {
@@ -101,7 +100,11 @@ function compile(callback, srcPath, output, sourceList, keepGeneratedTypescript)
             tsList = tsList.map(function (item) {
                 return "\"" + item + "\"";
             });
-            var cmd = "" + tsList.join(" ") + " -t ES5 --outDir " + "\"" + output + "\"";
+
+            var sourcemap = param.getArgv()["opts"]["-sourcemap"];
+            sourcemap = sourcemap ? "--sourcemap " : "";
+
+            var cmd = sourcemap + tsList.join(" ") + " -t ES5 --outDir " + "\"" + output + "\"";
             file.save("tsc_config_temp.txt", cmd);
             typeScriptCompiler(function (code) {
                 cleanTempFile();
@@ -212,20 +215,6 @@ function isQuickMode() {
         return true;
     }
     return false;
-}
-
-function checkCompilerInstalled(callback) {
-    var checkTypeScriptCompiler = "tsc";
-    var tsc = cp_exec(checkTypeScriptCompiler);
-    tsc.on('exit', function (code) {
-            if (code == 0) {
-                callback();
-            }
-            else {
-                globals.exit(2);
-            }
-        }
-    );
 }
 
 function exportHeader(callback, projectPath, sourceList) {
