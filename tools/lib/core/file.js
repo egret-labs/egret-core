@@ -419,12 +419,6 @@ function isUTF8(text) {
     return true;
 }
 
-function toUTF8(text) {
-    var StringDecoder = require('string_decoder').StringDecoder;
-    var decoder = new StringDecoder();
-    return decoder.write(text);
-}
-
 exports.save = save;
 exports.read = read;
 exports.readBinary = readBinary;
@@ -444,4 +438,3 @@ exports.getFileName = getFileName;
 exports.escapePath = escapePath;
 exports.joinPath = joinPath;
 exports.isUTF8 = isUTF8;
-exports.toUTF8 = toUTF8;
