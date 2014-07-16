@@ -8,6 +8,8 @@ var param = require("../core/params_analyze.js");
 var compiler = require("./compile.js");
 var file = require("../core/file.js");
 var code_util = require("../core/code_util.js");
+var create_app = require("./create_app.js");
+
 
 function run(dir, args, opts) {
     var needCompileEngine = opts["-e"];
@@ -56,7 +58,6 @@ function run(dir, args, opts) {
 
     async.series(task, function (err) {
         if (!err){
-            var create_app = require("./create_app.js");
             create_app.build_copy_from(currDir);
             globals.log("构建成功");
         }

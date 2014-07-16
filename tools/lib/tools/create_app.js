@@ -107,9 +107,9 @@ function build_copy(h5_path, ignore_list, target_path_list) {
 function build_copy_from(h5_path) {
     var preferences = read_json_from(path.join(h5_path, PREFERENCES));
     if (!preferences ||
-        !preferences["native"] === undefined ||
-        !preferences["native"]["path_ignore"] === undefined ||
-        !preferences["native"]["support_path"] === undefined) {
+        preferences["native"] === undefined ||
+        preferences["native"]["path_ignore"] === undefined ||
+        preferences["native"]["support_path"] === undefined) {
         return;
     }
     build_copy(h5_path, preferences["native"]["path_ignore"], preferences["native"]["support_path"]);
