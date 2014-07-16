@@ -73,13 +73,23 @@ function run(currDir, args, opts) {
     globals.log("manifest.json生成成功");
 }
 /**
- * 获取项目中所有类名和文件路径的映射数据
+ * 格式化srcPath
  */
-function getClassToPathInfo(srcPath){
+function escapeSrcPath(srcPath){
+    if(!srcPath){
+        return "";
+    }
     srcPath = srcPath.split("\\").join("/");
     if (srcPath.charAt(srcPath.length - 1) != "/") {
         srcPath += "/";
     }
+    return srcPath;
+}
+/**
+ * 获取项目中所有类名和文件路径的映射数据
+ */
+function getClassToPathInfo(srcPath){
+    srcPath = escapeSrcPath(srcPath);
     if(!classNameToPath){
         getManifest(srcPath);
         textTemp = null;
@@ -87,14 +97,66 @@ function getClassToPathInfo(srcPath){
     return classNameToPath;
 }
 
+function createProjectDTS(excludeList,srcPath){
+    srcPath = escapeSrcPath(srcPath);
+    if(!classNameToPath){
+        getManifest(srcPath);
+        textTemp = null;
+    }
+    var classList = [];
+    for(var path in pathToClassNames){
+        if(excludeList.indexOf(path)!=-1){
+            continue;
+        }
+        var list = pathToClassNames[path];
+        classList = classList.concat(list);
+    }
+
+    var length = classList.length;
+    var moduleNames = {};
+    for(var i=0;i<length;i++){
+        var className =  classList[i];
+        var index = className.lastIndexOf(".");
+        var moduleName = "default";
+        if(index!=-1){
+            moduleName = className.substring(0,index);
+            className = className.substring(index+1);
+        }
+        var list = moduleNames[moduleName];
+        if(!moduleNames[moduleName]){
+            list = moduleNames[moduleName] = [];
+        }
+        list.push(className);
+    }
+    var dts = "";
+    for(var moduleName in moduleNames){
+        list = moduleNames[moduleName];
+        var indent = "";
+        if(moduleName!="default"){
+            dts += "declare module "+moduleName+" {\n";
+            indent = "  ";
+        }
+        else
+        {
+            indent = "declare ";
+        }
+        var length = list.length;
+        for(var i=0;i<length;i++){
+            var className = list[i];
+            dts += indent+"class "+className+"{}\n";
+        }
+        if(moduleName!="default"){
+            dts += "}\n";
+        }
+    }
+    return dts;
+}
+
 /**
  * 创建manifest列表
  */
 function create(srcPath){
-    srcPath = srcPath.split("\\").join("/");
-    if (srcPath.charAt(srcPath.length - 1) != "/") {
-        srcPath += "/";
-    }
+    srcPath = escapeSrcPath(srcPath);
     var manifest = getManifest(srcPath);
     manifest = sortFileList(manifest,srcPath);
     return manifest;
@@ -549,7 +611,7 @@ function analyzeTsFile(path,readRelyOn){
     var tsText = "";
     while (text.length > 0) {
         var index = text.indexOf("{");
-        if (index == -1) {
+         if (index == -1) {
             if (tsText) {
                 list = list.concat(readClassFromBlock(tsText, fileRelyOnList,path,"",readRelyOn));
                 tsText = "";
@@ -637,14 +699,45 @@ function readClassFromBlock(text, fileRelyOnList,path, ns,readRelyOn) {
         if(interfaceIndex==-1){
             interfaceIndex = Number.POSITIVE_INFINITY;
         }
-        index = Math.min(interfaceIndex,index);
+        var functionIndex = CodeUtil.getFirstVariableIndex("function", text);
+        if(functionIndex==-1){
+            functionIndex = Number.POSITIVE_INFINITY;
+        }
+        else if(ns){
+            if(CodeUtil.getLastWord(text.substring(0,functionIndex))!="export"){
+                functionIndex = Number.POSITIVE_INFINITY;
+            }
+        }
+        var varIndex = CodeUtil.getFirstVariableIndex("var", text);
+        if(varIndex==-1){
+            varIndex = Number.POSITIVE_INFINITY;
+        }
+        else if(ns){
+            if(CodeUtil.getLastWord(text.substring(0,varIndex))!="export"){
+                varIndex = Number.POSITIVE_INFINITY;
+            }
+        }
+        index = Math.min(interfaceIndex,index,functionIndex,varIndex);
         if (index == Number.POSITIVE_INFINITY) {
             if(readRelyOn){
                 findClassInLine(text,pathToClassNames[path],ns,fileRelyOnList);
             }
             break;
         }
-        var keyLength = index==interfaceIndex?9:5;
+
+        var isVar = (index==varIndex);
+        var keyLength = 5;
+        switch (index){
+            case varIndex:
+                keyLength = 3;
+                break;
+            case interfaceIndex:
+                keyLength = 9;
+                break;
+            case functionIndex:
+                keyLength = 8;
+                break;
+        }
         var preStr = text.substring(0, index + keyLength);
         if(readRelyOn){
             findClassInLine(preStr,pathToClassNames[path],ns,fileRelyOnList)
@@ -698,14 +791,24 @@ function readClassFromBlock(text, fileRelyOnList,path, ns,readRelyOn) {
                 }
             }
         }
-        index = CodeUtil.getBracketEndIndex(text);
-        var classBlock = text.substring(0, index + 1);
-        text = text.substring(index + 1);
-        index = classBlock.indexOf("{");
-        classBlock = classBlock.substring(index);
-        if(readRelyOn){
-            getRelyOnFromStatic(classBlock, ns,className, relyOnList);
+        if(isVar){
+            index = text.indexOf("\n");
+            if(index==-1){
+                index = text.length;
+            }
+            text = text.substring(index);
         }
+        else{
+            index = CodeUtil.getBracketEndIndex(text);
+            var classBlock = text.substring(0, index + 1);
+            text = text.substring(index + 1);
+            index = classBlock.indexOf("{");
+            classBlock = classBlock.substring(index);
+            if(readRelyOn){
+                getRelyOnFromStatic(classBlock, ns,className, relyOnList);
+            }
+        }
+
     }
     return list;
 }
@@ -810,5 +913,6 @@ function help_example() {
 exports.run = run;
 exports.create = create;
 exports.getClassToPathInfo = getClassToPathInfo;
+exports.createProjectDTS = createProjectDTS;
 exports.help_title = help_title;
 exports.help_example = help_example;
