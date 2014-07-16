@@ -611,7 +611,7 @@ function analyzeTsFile(path,readRelyOn){
     var tsText = "";
     while (text.length > 0) {
         var index = text.indexOf("{");
-        if (index == -1) {
+         if (index == -1) {
             if (tsText) {
                 list = list.concat(readClassFromBlock(tsText, fileRelyOnList,path,"",readRelyOn));
                 tsText = "";
@@ -699,14 +699,45 @@ function readClassFromBlock(text, fileRelyOnList,path, ns,readRelyOn) {
         if(interfaceIndex==-1){
             interfaceIndex = Number.POSITIVE_INFINITY;
         }
-        index = Math.min(interfaceIndex,index);
+        var functionIndex = CodeUtil.getFirstVariableIndex("function", text);
+        if(functionIndex==-1){
+            functionIndex = Number.POSITIVE_INFINITY;
+        }
+        else if(ns){
+            if(CodeUtil.getLastWord(text.substring(0,functionIndex))!="export"){
+                functionIndex = Number.POSITIVE_INFINITY;
+            }
+        }
+        var varIndex = CodeUtil.getFirstVariableIndex("var", text);
+        if(varIndex==-1){
+            varIndex = Number.POSITIVE_INFINITY;
+        }
+        else if(ns){
+            if(CodeUtil.getLastWord(text.substring(0,varIndex))!="export"){
+                varIndex = Number.POSITIVE_INFINITY;
+            }
+        }
+        index = Math.min(interfaceIndex,index,functionIndex,varIndex);
         if (index == Number.POSITIVE_INFINITY) {
             if(readRelyOn){
                 findClassInLine(text,pathToClassNames[path],ns,fileRelyOnList);
             }
             break;
         }
-        var keyLength = index==interfaceIndex?9:5;
+
+        var isVar = (index==varIndex);
+        var keyLength = 5;
+        switch (index){
+            case varIndex:
+                keyLength = 3;
+                break;
+            case interfaceIndex:
+                keyLength = 9;
+                break;
+            case functionIndex:
+                keyLength = 8;
+                break;
+        }
         var preStr = text.substring(0, index + keyLength);
         if(readRelyOn){
             findClassInLine(preStr,pathToClassNames[path],ns,fileRelyOnList)
@@ -760,14 +791,24 @@ function readClassFromBlock(text, fileRelyOnList,path, ns,readRelyOn) {
                 }
             }
         }
-        index = CodeUtil.getBracketEndIndex(text);
-        var classBlock = text.substring(0, index + 1);
-        text = text.substring(index + 1);
-        index = classBlock.indexOf("{");
-        classBlock = classBlock.substring(index);
-        if(readRelyOn){
-            getRelyOnFromStatic(classBlock, ns,className, relyOnList);
+        if(isVar){
+            index = text.indexOf("\n");
+            if(index==-1){
+                index = text.length;
+            }
+            text = text.substring(index);
         }
+        else{
+            index = CodeUtil.getBracketEndIndex(text);
+            var classBlock = text.substring(0, index + 1);
+            text = text.substring(index + 1);
+            index = classBlock.indexOf("{");
+            classBlock = classBlock.substring(index);
+            if(readRelyOn){
+                getRelyOnFromStatic(classBlock, ns,className, relyOnList);
+            }
+        }
+
     }
     return list;
 }

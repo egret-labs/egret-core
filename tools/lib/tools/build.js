@@ -8,6 +8,8 @@ var param = require("../core/params_analyze.js");
 var compiler = require("./compile.js");
 var file = require("../core/file.js");
 var code_util = require("../core/code_util.js");
+var create_app = require("./create_app.js");
+
 
 function run(dir, args, opts) {
     var needCompileEngine = opts["-e"];
