@@ -22,7 +22,7 @@ function run(dir, args, opts) {
         task.push(
             function (callback) {
                 var runtime = param.getOption(opts, "--runtime", ["html5", "native"]);
-                egretSourceList = compiler.generateEgretFileList(runtime,currDir);
+                egretSourceList = compiler.generateEgretFileList(runtime, currDir);
                 compiler.compile(callback,
                     path.join(param.getEgretPath(), "src"),
                     path.join(currDir, "bin-debug/lib"),
@@ -41,26 +41,30 @@ function run(dir, args, opts) {
         );
     }
     else {
-        var exist = file.exists(file.joinPath(currDir,"bin-debug","lib"));
-        if (!exist){
+        var exist = file.exists(file.joinPath(currDir, "bin-debug", "lib"));
+        if (!exist) {
             globals.exit(1102)
         }
     }
 
     task.push(
+
         function (callback) {
-            buildProject(callback,currDir,keepGeneratedTypescript);
+            buildProject(callback, currDir, keepGeneratedTypescript);
+        },
+
+        function (callback) {
+            var create_app = require("./create_app.js");
+            create_app.build_copy_from(currDir);
+            callback();
         }
     )
 
-
     async.series(task, function (err) {
-        if (!err){
-            var create_app = require("./create_app.js");
-            create_app.build_copy_from(currDir);
+        if (!err) {
             globals.log("构建成功");
         }
-        else{
+        else {
             globals.exit(err);
         }
     })
@@ -68,17 +72,17 @@ function run(dir, args, opts) {
 
 }
 
-function buildProject(callback,currDir,keepGeneratedTypescript){
+function buildProject(callback, currDir, keepGeneratedTypescript) {
     var document_class = globals.getDocumentClass(currDir);
-    if(document_class){
-        replaceDocumentClass("index.html",document_class,currDir);
-        replaceDocumentClass("release.html",document_class,currDir);
-        replaceDocumentClass("native_loader.js",document_class,currDir);
+    if (document_class) {
+        replaceDocumentClass("index.html", document_class, currDir);
+        replaceDocumentClass("release.html", document_class, currDir);
+        replaceDocumentClass("native_loader.js", document_class, currDir);
     }
 
-    var libsPath = path.join(currDir,"libs/");
+    var libsPath = path.join(currDir, "libs/");
     var sourceList = compiler.generateGameFileList(currDir);
-    var libs = file.search(libsPath,"d.ts");
+    var libs = file.search(libsPath, "d.ts");
     compiler.compile(callback,
         path.join(currDir, "src"),
         path.join(currDir, "bin-debug/src"),
@@ -87,31 +91,31 @@ function buildProject(callback,currDir,keepGeneratedTypescript){
     );
 }
 
-function replaceDocumentClass(key,document_class,currDir){
-    var filePath = path.join(currDir,"launcher",key);
+function replaceDocumentClass(key, document_class, currDir) {
+    var filePath = path.join(currDir, "launcher", key);
     var indexHtml = file.read(filePath);
-    if(!indexHtml){
-        globals.exit(1305,key);
+    if (!indexHtml) {
+        globals.exit(1305, key);
     }
     var html = "";
     var found = false;
-    while(indexHtml.length>0){
-        var index = code_util.getFirstVariableIndex("document_class",indexHtml);
-        if(index==-1){
+    while (indexHtml.length > 0) {
+        var index = code_util.getFirstVariableIndex("document_class", indexHtml);
+        if (index == -1) {
             html += indexHtml;
             break;
         }
-        html += indexHtml.substring(0,index+14);
-        indexHtml = indexHtml.substring(index+14).trim();
-        if(indexHtml.charAt(0)=="="){
+        html += indexHtml.substring(0, index + 14);
+        indexHtml = indexHtml.substring(index + 14).trim();
+        if (indexHtml.charAt(0) == "=") {
             html += " = ";
             indexHtml = indexHtml.substring(1).trim();
             var quote = indexHtml.charAt(0);
-            if(quote=="\""||quote=="'"){
+            if (quote == "\"" || quote == "'") {
                 html += quote;
                 indexHtml = indexHtml.substring(1);
                 index = indexHtml.indexOf(quote);
-                if(index!=-1){
+                if (index != -1) {
                     html += document_class;
                     indexHtml = indexHtml.substring(index);
                     found = true;
@@ -119,12 +123,11 @@ function replaceDocumentClass(key,document_class,currDir){
             }
         }
     }
-    if(!found){
-        globals.exit(1306,key);
+    if (!found) {
+        globals.exit(1306, key);
     }
-    file.save(filePath,html);
+    file.save(filePath, html);
 }
-
 
 
 function help_title() {
@@ -133,7 +136,7 @@ function help_title() {
 
 
 function help_example() {
-    var result =  "\n";
+    var result = "\n";
     result += "    egret build [project_name] [-e] [--runtime html5|native] [-quick/-q]\n";
     result += "描述:\n";
     result += "    " + help_title();
