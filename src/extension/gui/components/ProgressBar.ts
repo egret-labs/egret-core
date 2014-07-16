@@ -150,27 +150,31 @@ module egret {
             this._setValue(newValue);
             if (this._slideDuration > 0 && this.stage) {
                 this.validateProperties();//最大值最小值发生改变时要立即应用，防止当前起始值不正确。
-                this.slideToValue = this.nearestValidValue(newValue, this.snapInterval);
                 if (!this.animator) {
                     this.animator = new Animation(this.animationUpdateHandler,this);
                 }
                 if (this.animator.isPlaying) {
-                    this.setValue(this.nearestValidValue(this.animator.motionPaths[0].valueTo, this.snapInterval));
+                    this.animationValue = this.slideToValue;
+                    this.invalidateDisplayList();
                     this.animator.stop();
                 }
-                if (this.slideToValue == this._getValue())
+                this.slideToValue = this.nearestValidValue(newValue, this.snapInterval);
+                if (this.slideToValue == this.animationValue)
                     return;
                 var duration:number = this._slideDuration *
-                    (Math.abs(this._getValue() - this.slideToValue) / (this.maximum - this.minimum));
+                    (Math.abs(this.animationValue - this.slideToValue) / (this.maximum - this.minimum));
                 this.animator.duration = duration === Infinity ? 0 : duration;
                 this.animator.motionPaths = [
-                    {prop: "value", from: this._getValue(), to: this.slideToValue}
+                    {prop: "value", from: this.animationValue, to: this.slideToValue}
                 ];
                 this.animator.play();
             }
+            else{
+                this.animationValue = this._getValue();
+            }
         }
 
-        private animationValue:number;
+        private animationValue:number = 0;
         /**
          * 动画播放更新数值
          */
