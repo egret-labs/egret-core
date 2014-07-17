@@ -328,12 +328,8 @@ function createFileList(manifest, srcPath) {
         if (filePath.indexOf(".d.ts") != -1) {
             continue;
         }
-        var fileName = file.getFileName(filePath);
-        if (fileName.charAt(0) == "I") {
-            var str = fileName.charAt(1);
-            if (str >= "A" && str <= "Z" && isInterface(filePath)) {
-                continue;
-            }
+        if (isInterface(filePath)) {
+            continue;
         }
         gameList.push(filePath);
     }
