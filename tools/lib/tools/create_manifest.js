@@ -50,8 +50,6 @@ var W = "http://ns.egret-labs.org/wing";
  */
 var basicTypes = ["void","any","number","string","boolean","Object","Array","Function"];
 
-var textTemp = {};
-
 var classKeys = ["static",  "public", "private", "get", "set", "class", "interface","module"];
 
 
@@ -98,17 +96,6 @@ function getClassToPathInfo(srcPath){
     }
     return classNameToPath;
 }
-/**
- * 获取文本文件内容
- */
-function readText(path){
-    path = file.escapePath(path);
-    var text = textTemp[path];
-    if(text){
-        return text
-    }
-    return file.read(path);
-}
 
 function createProjectDTS(excludeList,srcPath){
     srcPath = escapeSrcPath(srcPath);
@@ -120,7 +107,7 @@ function createProjectDTS(excludeList,srcPath){
         if(excludeList.indexOf(path)!=-1){
             continue;
         }
-        var text = textTemp[path];
+        var text = file.read(path);
         dts += createOneDTS(text)+"\n";
     }
     return dts;
@@ -287,19 +274,30 @@ function removeFunctionBody(text){
             }
             dts = dts.trim();
             dts += ";";
+            if(constructorArgs){
+                dts += constructorArgs;
+            }
             text = text.substring(endIndex+1);
+
         }
     }
     return dts;
 }
+
+var constructorArgs = "";
 /**
  * 移除var的默认值
  */
 function formatArguments(argStr){
     var list = argStr.split(",");
     var length = list.length;
+    var argList = [];
     for(var i=0;i<length;i++){
         var arg = list[i];
+        arg = arg.trim();
+        if(arg.indexOf("public")==0||arg.indexOf("private")==0){
+            argList.push(arg+";");
+        }
         var args = arg.split(":");
         if(args.length>1){
             var arg1 = args[1];
@@ -313,7 +311,6 @@ function formatArguments(argStr){
                 arg = arg0.split("=")[0]+"?";
             }
         }
-        arg = arg.trim();
         if(arg.indexOf("public")==0){
             arg = arg.substring(6);
         }
@@ -322,7 +319,14 @@ function formatArguments(argStr){
         }
         list[i] = arg;
     }
-    argStr = list.join(",");
+    argStr = list.join(",")
+    if(argList.length>0){
+        constructorArgs = "\t\t"+argList.join("\n\t\t");
+    }
+    else{
+        constructorArgs = "";
+    }
+
     return argStr;
 }
 /**
@@ -394,7 +398,6 @@ function getManifest(srcPath){
     pathToClassNames = {};
     referenceInfoList = {};
     newClassNameList = [];
-    textTemp = {};
     var manifest = file.searchByFunction(srcPath,filterFunc);
     var exmlList = [];
     for(var i=manifest.length-1;i>=0;i--){
@@ -416,7 +419,6 @@ function getManifest(srcPath){
     var length = manifest.length;
     for (var i = 0; i < length; i++) {
         var path = manifest[i];
-        textTemp[path] = file.read(path);
         var ext = file.getExtension(path).toLowerCase();
         if(ext=="exml"){
             readClassNamesFromExml(path,srcPath);
@@ -448,7 +450,6 @@ function sortFileList(list,srcPath){
     var length = list.length;
     for (var i = 0; i < length; i++) {
         var path = list[i];
-        textTemp[path] = file.read(path);
         var ext = file.getExtension(path).toLowerCase();
         if(ext=="exml"){
             readRelyOnFromExml(path,srcPath);
@@ -631,7 +632,7 @@ function setPathLevel(path, level, pathLevelInfo, map,pathRelyInfo,throwError) {
  * 读取一个EXML文件引用的类名列表
  */
 function readReferenceFromExml(path){
-    var text = textTemp[path];
+    var text = file.read(path);
     var exml = xml.parse(text);
     if(!exml){
         return;
@@ -677,7 +678,7 @@ function readReferenceFromNode(node,list){
  * 读取一个TS文件引用的类名列表
  */
 function readReferenceFromTs(path){
-    var text = textTemp[path];
+    var text = file.read(path);
     var orgText = text;
     text = CodeUtil.removeComment(text);
     var block = "";
@@ -758,7 +759,7 @@ function readReferenceFromTs(path){
  * 读取一个exml文件包含的类名
  */
 function readClassNamesFromExml(path,srcPath){
-    var text = textTemp[path];
+    var text = file.read(path);
     var exml = xml.parse(text);
     if(!exml){
         return;
@@ -773,7 +774,7 @@ function readClassNamesFromExml(path,srcPath){
  * 读取一个exml文件依赖的类列表
  */
 function readRelyOnFromExml(path,srcPath){
-    var text = textTemp[path];
+    var text = file.read(path);
     var exml = xml.parse(text);
     if(!exml){
         return;
@@ -822,7 +823,7 @@ function readRelyOnFromTs(path) {
  */
 function analyzeTsFile(path,readRelyOn){
     var fileRelyOnList = [];
-    var text = textTemp[path];
+    var text = file.read(path);
     var list = [];
     text = CodeUtil.removeComment(text);
     if(readRelyOn){
@@ -1133,7 +1134,6 @@ function help_example() {
 
 exports.run = run;
 exports.create = create;
-exports.readText = readText;
 exports.getClassToPathInfo = getClassToPathInfo;
 exports.createProjectDTS = createProjectDTS;
 exports.help_title = help_title;
