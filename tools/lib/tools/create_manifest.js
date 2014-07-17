@@ -50,7 +50,7 @@ var W = "http://ns.egret-labs.org/wing";
  */
 var basicTypes = ["void","any","number","string","boolean","Object","Array","Function"];
 
-var textTemp;
+var textTemp = {};
 
 var classKeys = ["static",  "public", "private", "get", "set", "class", "interface","module"];
 
@@ -97,6 +97,17 @@ function getClassToPathInfo(srcPath){
         getManifest(srcPath);
     }
     return classNameToPath;
+}
+/**
+ * 获取文本文件内容
+ */
+function readText(path){
+    path = file.escapePath(path);
+    var text = textTemp[path];
+    if(text){
+        return text
+    }
+    return file.read(path);
 }
 
 function createProjectDTS(excludeList,srcPath){
@@ -1108,6 +1119,7 @@ function help_example() {
 
 exports.run = run;
 exports.create = create;
+exports.readText = readText;
 exports.getClassToPathInfo = getClassToPathInfo;
 exports.createProjectDTS = createProjectDTS;
 exports.help_title = help_title;
