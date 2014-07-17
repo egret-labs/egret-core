@@ -277,26 +277,7 @@ function removeFunctionBody(text){
                 }
                 else{
 
-                    var list = argStr.split(",");
-                    var length = list.length;
-                    for(var i=0;i<length;i++){
-                        var arg = list[i];
-                        var args = arg.split(":");
-                        if(args.length>1){
-                            var arg1 = args[1];
-                            if(arg1.indexOf("=")!=-1){
-                                list[i] = args[0]+"?:"+arg1.split("=")[0];
-                            }
-                        }
-                        else{
-                            var arg0 = args[0];
-                            if(arg0.indexOf("=")!=-1){
-                                list[i] = arg0.split("=")[0]+"?";
-                            }
-                        }
-                    }
-                    argStr = list.join(",");
-
+                    argStr = formatArguments(argStr);
                     argsTemp[argsTemp.length] = argStr;
                     argStr = "\v"+(argsTemp.length-1)+"\v";
                     preStr = preStr.substring(index);
@@ -310,6 +291,39 @@ function removeFunctionBody(text){
         }
     }
     return dts;
+}
+/**
+ * 移除var的默认值
+ */
+function formatArguments(argStr){
+    var list = argStr.split(",");
+    var length = list.length;
+    for(var i=0;i<length;i++){
+        var arg = list[i];
+        var args = arg.split(":");
+        if(args.length>1){
+            var arg1 = args[1];
+            if(arg1.indexOf("=")!=-1){
+                arg = args[0]+"?:"+arg1.split("=")[0];
+            }
+        }
+        else{
+            var arg0 = args[0];
+            if(arg0.indexOf("=")!=-1){
+                arg = arg0.split("=")[0]+"?";
+            }
+        }
+        arg = arg.trim();
+        if(arg.indexOf("public")==0){
+            arg = arg.substring(6);
+        }
+        else if(arg.indexOf("private")==0){
+            arg = arg.substring(7)
+        }
+        list[i] = arg;
+    }
+    argStr = list.join(",");
+    return argStr;
 }
 /**
  * 移除var的默认值
