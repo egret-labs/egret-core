@@ -70,7 +70,8 @@ module egret {
                 var character = this.text.charAt(i);
                 var texture = this.spriteSheet.getTexture(character);
                 if (texture == null) {
-                    console.log("当前没有位图文字" + character);
+                    console.log("当前没有位图文字：" + character);
+                    continue;
                 }
                 var offsetX = texture._offsetX;
                 var offsetY = texture._offsetY;
