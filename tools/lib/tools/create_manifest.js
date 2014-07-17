@@ -321,7 +321,7 @@ function formatArguments(argStr){
     }
     argStr = list.join(",")
     if(argList.length>0){
-        constructorArgs = "\t\t"+argList.join("\n\t\t");
+        constructorArgs = "\n\t\t"+argList.join("\n\t\t");
     }
     else{
         constructorArgs = "";
