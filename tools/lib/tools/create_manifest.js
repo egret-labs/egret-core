@@ -36,7 +36,7 @@ var newClassNameList;
 /**
  * ts关键字
  */
-var functionKeys = ["static", "var", "export", "public", "private", "function", "get", "set", "class", "interface"];
+var functionKeys = ["static", "var", "export", "public", "private", "function", "get", "set", "class", "interface","module"];
 /**
  * Egret命名空间
  */
@@ -51,6 +51,12 @@ var W = "http://ns.egret-labs.org/wing";
 var basicTypes = ["void","any","number","string","boolean","Object","Array","Function"];
 
 var textTemp;
+
+var classKeys = ["static",  "public", "private", "get", "set", "class", "interface","module"];
+
+
+var dts = createProjectDTS([],"D:/Program/HTML5/egret/src/");
+file.save("egret.d.ts",dts);
 
 /**
  * 生成manifest.json文件
@@ -92,62 +98,256 @@ function getClassToPathInfo(srcPath){
     srcPath = escapeSrcPath(srcPath);
     if(!classNameToPath){
         getManifest(srcPath);
-        textTemp = null;
     }
     return classNameToPath;
 }
 
 function createProjectDTS(excludeList,srcPath){
     srcPath = escapeSrcPath(srcPath);
-    if(!classNameToPath){
+    if(!pathToClassNames){
         getManifest(srcPath);
-        textTemp = null;
     }
-    var classList = [];
+    var dts = "";
     for(var path in pathToClassNames){
         if(excludeList.indexOf(path)!=-1){
             continue;
         }
-        var list = pathToClassNames[path];
-        classList = classList.concat(list);
+        var text = textTemp[path];
+        dts += createOneDTS(text)+"\n";
     }
+    return dts;
+}
 
-    var length = classList.length;
-    var moduleNames = {};
-    for(var i=0;i<length;i++){
-        var className =  classList[i];
-        var index = className.lastIndexOf(".");
-        var moduleName = "default";
-        if(index!=-1){
-            moduleName = className.substring(0,index);
-            className = className.substring(index+1);
-        }
-        var list = moduleNames[moduleName];
-        if(!moduleNames[moduleName]){
-            list = moduleNames[moduleName] = [];
-        }
-        list.push(className);
+function createOneDTS(text){
+    if(!text){
+        return "";
     }
+    text = CodeUtil.removeComment(text)
+    //移除export
     var dts = "";
-    for(var moduleName in moduleNames){
-        list = moduleNames[moduleName];
-        var indent = "";
-        if(moduleName!="default"){
-            dts += "declare module "+moduleName+" {\n";
-            indent = "  ";
+    while(text.length>0){
+        var index = CodeUtil.getFirstVariableIndex("export",text);
+        if(index==-1){
+            dts += text;
+            break;
         }
-        else
-        {
-            indent = "declare ";
+        dts += text.substring(0,index);
+        text = text.substring(index+6);
+    }
+    text = dts;
+    text = attachDeclare(text);
+    text = removeFunctionBody(text);
+    text = removeDefaultValue(text);
+
+    var length = argsTemp.length;
+    for(var i=0;i<length;i++){
+        var argStr = argsTemp[i];
+        text = text.split("\v"+i+"\v").join(argStr);
+    }
+    text = text.split(";;").join(";");
+    return text;
+}
+/**
+ * 增加declare声明
+ */
+function attachDeclare(text){
+    var dts = "";
+    while (text.length > 0) {
+
+        var index = CodeUtil.getFirstVariableIndex("class", text);
+        if(index==-1){
+            index = Number.POSITIVE_INFINITY;
         }
-        var length = list.length;
-        for(var i=0;i<length;i++){
-            var className = list[i];
-            dts += indent+"class "+className+"{}\n";
+        var moduleIndex = CodeUtil.getFirstVariableIndex("module",text);
+        if(moduleIndex==-1){
+            moduleIndex = Number.POSITIVE_INFINITY;
         }
-        if(moduleName!="default"){
-            dts += "}\n";
+        var interfaceIndex = CodeUtil.getFirstVariableIndex("interface", text);
+        if(interfaceIndex==-1){
+            interfaceIndex = Number.POSITIVE_INFINITY;
         }
+        var functionIndex = CodeUtil.getFirstVariableIndex("function", text);
+        if(functionIndex==-1){
+            functionIndex = Number.POSITIVE_INFINITY;
+        }
+
+        var varIndex = CodeUtil.getFirstVariableIndex("var", text);
+        if(varIndex==-1){
+            varIndex = Number.POSITIVE_INFINITY;
+        }
+
+        index = Math.min(interfaceIndex,index,functionIndex,varIndex,moduleIndex);
+        if (index == Number.POSITIVE_INFINITY) {
+            break;
+        }
+
+        var preStr = text.substring(0,index);
+        if(trimKeyWords(preStr)!=""){
+            var keyLength = 5;
+            switch (index){
+                case moduleIndex:
+                    keyLength = 6;
+                    break;
+                case interfaceIndex:
+                    keyLength = 9;
+                    break;
+                case functionIndex:
+                    keyLength = 8;
+                    break;
+                case varIndex:
+                    keyLength = 3;
+                    break;
+            }
+            text = text.substring(index+keyLength);
+            continue;
+        }
+        dts += "declare ";
+        text = text.substring(index);
+        if(index==varIndex){
+            index = text.indexOf("\n");
+            if(index==-1){
+                index = text.length;
+            }
+            dts += text.substring(0,index);
+            text = text.substring(index);
+        }
+        else{
+            index = CodeUtil.getBracketEndIndex(text);
+            dts += text.substring(0, index + 1)+"\n";
+            text = text.substring(index + 1);
+        }
+    }
+    return dts;
+}
+
+var argsTemp = [];
+/**
+ * 移除函数体
+ */
+function removeFunctionBody(text){
+    argsTemp = [];
+    var dts = "";
+    while(text.length>0){
+        var index = text.indexOf("{");
+        if(index==-1){
+            dts += text;
+            break;
+        }
+        var preStr = text.substring(0,index);
+        text = text.substring(index);
+        index = preStr.lastIndexOf("}");
+        index = Math.max(index,preStr.lastIndexOf(";"));
+        if(index==-1){
+            index = 0;
+        }
+        dts += preStr.substring(0,index);
+        preStr = preStr.substring(index);
+        var endIndex = CodeUtil.getBracketEndIndex(text);
+        if(endIndex==-1){
+            dts +=text;
+            break;
+        }
+
+        if(CodeUtil.containsVariable("module",preStr)
+            ||CodeUtil.containsVariable("class",preStr)
+            ||CodeUtil.containsVariable("interface",preStr)){
+            dts += preStr+"{";
+            text = text.substring(1);
+        }
+        else{
+            index = CodeUtil.getBracketStartIndex(preStr,"(",")");
+            if(index==-1){
+                dts += preStr;
+            }
+            else{
+                dts += preStr.substring(0,index+1)
+                preStr = preStr.substring(index+1);
+                index = preStr.lastIndexOf(")");
+                var argStr = preStr.substring(0,index);
+                if(argStr.trim()==""){
+                    dts += preStr;
+                }
+                else{
+
+                    var list = argStr.split(",");
+                    var length = list.length;
+                    for(var i=0;i<length;i++){
+                        var arg = list[i];
+                        var args = arg.split(":");
+                        if(args.length>1){
+                            var arg1 = args[1];
+                            if(arg1.indexOf("=")!=-1){
+                                list[i] = args[0]+"?:"+arg1.split("=")[0];
+                            }
+                        }
+                        else{
+                            var arg0 = args[0];
+                            if(arg0.indexOf("=")!=-1){
+                                list[i] = arg0.split("=")[0]+"?";
+                            }
+                        }
+                    }
+                    argStr = list.join(",");
+
+                    argsTemp[argsTemp.length] = argStr;
+                    argStr = "\v"+(argsTemp.length-1)+"\v";
+                    preStr = preStr.substring(index);
+
+                    dts += argStr + preStr;
+                }
+            }
+            dts = dts.trim();
+            dts += ";";
+            text = text.substring(endIndex+1);
+        }
+    }
+    return dts;
+}
+/**
+ * 移除var的默认值
+ */
+function removeDefaultValue(text){
+    var dts = "";
+    var functionLength = classKeys.length;
+    while(text.length>0){
+        var index = text.indexOf("=");
+        if(index==-1){
+            dts += text;
+            break;
+        }
+        dts += text.substring(0,index);
+        text = text.substring(index);
+        if(text.charAt(0)==">"){
+            continue;
+        }
+        dts = dts.trim()+";";
+        index = text.indexOf(";");
+        if(index==-1){
+            index = Number.POSITIVE_INFINITY;
+        }
+        var endIndex = text.indexOf("}");
+        if(endIndex==-1){
+            endIndex = Number.POSITIVE_INFINITY;
+        }
+        index = Math.min(index,endIndex);
+        if(index!=Number.POSITIVE_INFINITY){
+            index += 1;
+        }
+        for(var i=0;i<functionLength;i++){
+            var functionKey = classKeys[i];
+            var functionIndex = CodeUtil.getFirstVariableIndex(functionKey,text);
+            if(functionIndex!=-1){
+                index = Math.min(index,functionIndex);
+            }
+        }
+        if(index==Number.POSITIVE_INFINITY){
+            break;
+        }
+        var lineIndex = text.indexOf("\n");
+        if(lineIndex!=-1){
+            index = Math.max(index,lineIndex)
+        }
+        text  = text.substring(index);
     }
     return dts;
 }
@@ -245,7 +445,6 @@ function sortFileList(list,srcPath){
             readReferenceFromTs(path);
         }
     }
-    textTemp = null;
 
 
     var paths = [];
