@@ -467,16 +467,9 @@ module egret {
                 display._updateTransform();
                 renderContext.setAlpha(display.worldAlpha, display.blendMode);
                 renderContext.setTransform(display._worldTransform);
-                var mask = this.mask || this._scrollRect;
-                if (mask) {
-                    renderContext.pushMask(mask);
-                }
                 var scale_factor = egret.MainContext.instance.rendererContext.texture_scale_factor;
                 var renderFilter = egret.RenderFilter.getInstance();
                 renderFilter.drawImage(renderContext, display, 0, 0, width * scale_factor, height * scale_factor, offsetX, offsetY, width, height);
-                if (mask) {
-                    renderContext.popMask();
-                }
                 return true;
             }
             else {
