@@ -55,9 +55,6 @@ var textTemp;
 var classKeys = ["static",  "public", "private", "get", "set", "class", "interface","module"];
 
 
-var dts = createProjectDTS([],"D:/Program/HTML5/egret/src/");
-file.save("egret.d.ts",dts);
-
 /**
  * 生成manifest.json文件
  * @param currentDir 当前文件夹
