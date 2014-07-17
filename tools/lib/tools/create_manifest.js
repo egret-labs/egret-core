@@ -276,6 +276,7 @@ function removeFunctionBody(text){
             dts += ";";
             if(constructorArgs){
                 dts += constructorArgs;
+                constructorArgs = "";
             }
             text = text.substring(endIndex+1);
 
