@@ -47,6 +47,9 @@ declare module egret_native {
     function readFileSync(filepath:string):any;
 
 
+    function requireHttpSync(url:string,callback:Function):void;
+
+
     module Graphics {
 
 
