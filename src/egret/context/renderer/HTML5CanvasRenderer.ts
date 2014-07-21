@@ -327,6 +327,7 @@ module egret_h5_graphics {
             this.endFillCommand = new Command(
                 function () {
                     this.canvasContext.fill();
+                    this.canvasContext.closePath();
                 },
                 this,
                 null);
@@ -388,6 +389,7 @@ module egret_h5_graphics {
 
     export function _setStyle(colorStr:string):void {
         this.canvasContext.fillStyle = colorStr;
+        this.canvasContext.beginPath();
     }
 
 
