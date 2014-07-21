@@ -107,22 +107,6 @@ module egret {
         }
 
         /**
-         * @method egret.NativeRendererContext#save
-         * @stable C 这个方法以后会和restore一起删除，移动到HTML5CanvasContext的具体实现中，而不是作为一个接口
-         */
-        public save() {
-
-        }
-
-        /**
-         * @method egret.NativeRendererContext#restore
-         * @stable C 这个方法以后会和save一起删除，移动到HTML5CanvasContext的具体实现中，而不是作为一个接口
-         */
-        public restore() {
-
-        }
-
-        /**
          * 设置渲染alpha
          * @method egret.NativeRendererContext#setAlpha
          * @param value {number}
