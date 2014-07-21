@@ -334,6 +334,9 @@ module egret_h5_graphics {
     }
 
     export function endFill():void {
+        if(this.fillStyleColor != null) {
+            this._fill();
+        }
         this.fillStyleColor = null;
     }
 
@@ -367,7 +370,6 @@ module egret_h5_graphics {
             this.createEndLineCommand();
             this.commandQueue.push(this.endLineCommand);
         }
-
         for (var i = 0; i < length; i++) {
             var command:Command = this.commandQueue[i];
             command.method.apply(command.thisObject, command.args);
