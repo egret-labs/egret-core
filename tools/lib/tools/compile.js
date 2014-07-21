@@ -48,7 +48,7 @@ function compile(callback, srcPath, output, sourceList, keepGeneratedTypescript)
     var length = sourceList.length;
     for (var i = 0; i < length; i++) {
         var p = sourceList[i];
-        if (!file.exists(p)) {
+        if (!file.exists(p)|| p.indexOf("exml.d.ts")!=-1) {
             continue;
         }
         var ext = file.getExtension(p).toLowerCase();
@@ -317,7 +317,8 @@ function createFileList(manifest, srcPath) {
         if (filePath.indexOf(".d.ts") != -1) {
             continue;
         }
-        if (isInterface(filePath)) {
+        var ext = file.getExtension(filePath).toLowerCase();
+        if (ext=="ts"&&isInterface(filePath)) {
             continue;
         }
         gameList.push(filePath);

@@ -52,7 +52,6 @@ var basicTypes = ["void","any","number","string","boolean","Object","Array","Fun
 
 var classKeys = ["static",  "public", "private", "get", "set", "class", "interface","module"];
 
-
 /**
  * 生成manifest.json文件
  * @param currentDir 当前文件夹

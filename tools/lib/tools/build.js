@@ -84,6 +84,14 @@ function buildProject(callback, currDir, keepGeneratedTypescript) {
 
     var libsPath = path.join(currDir, "libs/");
     var sourceList = compiler.generateGameFileList(currDir);
+    var dts = generateExmlDTS(sourceList,path.join(currDir, "src"));
+    var exmlDtsPath = path.join(currDir, "libs","exml.d.ts");
+    if(dts){
+        file.save(exmlDtsPath,dts);
+    }
+    else{
+        file.remove(exmlDtsPath);
+    }
     var libs = file.search(libsPath, "d.ts");
     compiler.compile(callback,
         path.join(currDir, "src"),
@@ -91,6 +99,37 @@ function buildProject(callback, currDir, keepGeneratedTypescript) {
         sourceList.concat(libs),
         keepGeneratedTypescript
     );
+
+}
+
+function generateExmlDTS(sourceList,srcPath){
+    srcPath = srcPath.split("\\").join("/");
+    if (srcPath.charAt(srcPath.length - 1) != "/") {
+        srcPath += "/";
+    }
+    var length = sourceList.length;
+    var dts = "";
+    for (var i = 0; i < length; i++) {
+        var p = sourceList[i];
+        if (!file.exists(p)) {
+            continue;
+        }
+        var ext = file.getExtension(p).toLowerCase();
+        if (ext == "exml") {
+            var className = p.substring(srcPath.length,p.length-5);
+            className = className.split("/").join(".");
+            var index = className.lastIndexOf(".");
+            if(index==-1){
+                dts += "declare class "+className+" extends egret.Skin{\n}\n";
+            }
+            else{
+                var moduleName = className.substring(0,index);
+                className = className.substring(index+1);
+                dts += "declare module "+moduleName+"{\n\tclass "+className+" extends egret.Skin{\n\t}\n}\n";
+            }
+        }
+    }
+    return dts;
 }
 
 function replaceDocumentClass(key, document_class, currDir) {
