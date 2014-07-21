@@ -124,18 +124,6 @@ module egret {
             }
         }
 
-        save() {
-//            return;
-            this.canvasContext.save();
-        }
-
-        restore() {
-//            return;
-            this.canvasContext.restore();
-            this.canvasContext.setTransform(1, 0, 0, 1, 0, 0);
-        }
-
-
         setAlpha(alpha:number, blendMode:egret.BlendMode) {
             if (alpha != this.canvasContext.globalAlpha) {
                 this.canvasContext.globalAlpha = alpha;
@@ -180,10 +168,6 @@ module egret {
             }
             renderContext.fillText(text, x + this._transformTx, y + this._transformTy, maxWidth || 0xFFFF);
             super.drawText(textField, text, x, y, maxWidth);
-        }
-
-        clip(x, y, w, h) {
-
         }
 
         strokeRect(x, y, w, h, color) {
