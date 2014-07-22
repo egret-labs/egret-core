@@ -36,7 +36,7 @@
   <component id="Spacer" super="UIComponent" show="true"/>
   <component id="State" super="EventDispatcher" default="overrides" show="false"/>
   <component id="TabBar" super="ListBase" show="true"/>
-  <component id="TabBarButton" super="ToggleButtonBase" show="true"/>
+  <component id="TabBarButton" super="ToggleButtonBase" show="false"/>
   <component id="TextBase" super="UIComponent" show="false"/>
   <component id="TileLayout" super="LayoutBase" show="false"/>
   <component id="TitleWindow" super="Panel" show="true"/>
