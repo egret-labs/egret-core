@@ -72,7 +72,7 @@ module egret {
             };
 
             function onLoadComplete(event) {
-                switch (this.dataFormat) {
+                switch (loader.dataFormat) {
                     case URLLoaderDataFormat.TEXT:
                         loader.data = xhr.responseText;
                         break;
