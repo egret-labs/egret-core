@@ -1,53 +1,53 @@
 <componentPackage>
-  <component id="ArrayCollection" super="EventDispatcher" default="source"/>
-  <component id="BasicLayout" super="LayoutBase"/>
-  <component id="Button" super="ButtonBase"/>
-  <component id="ButtonBase" super="SkinnableComponent" default="label" state="up,over,down,disabled"/>
-  <component id="CheckBox" super="ToggleButtonBase"/>
-  <component id="DataGroup" super="GroupBase" default="dataProvider"/>
-  <component id="DropDownList" super="DropDownListBase"/>
-  <component id="DropDownListBase" super="List" state="normal,open,disabled"/>
-  <component id="Group" super="GroupBase" default="elementsContent"/>
-  <component id="GroupBase" super="UIComponent"/>
-  <component id="HSlider" super="SliderBase"/>
-  <component id="HorizontalLayout" super="LayoutBase"/>
-  <component id="ItemRenderer" super="ButtonBase"/>
-  <component id="Label" super="TextBase"/>
-  <component id="LayoutBase" super="EventDispatcher"/>
-  <component id="List" super="ListBase"/>
-  <component id="ListBase" super="SkinnableDataContainer"/>
-  <component id="Matrix" super="Object"/>
-  <component id="ObjectCollection" super="EventDispatcher" default="source"/>
-  <component id="Panel" super="SkinnableContainer"/>
-  <component id="Point" super="Object"/>
-  <component id="PopUpAnchor" super="UIComponent" default="popUp"/>
-  <component id="ProgressBar" super="Range"/>
-  <component id="RadioButton" super="ToggleButtonBase"/>
-  <component id="RadioButtonGroup" super="EventDispatcher"/>
-  <component id="Range" super="SkinnableComponent"/>
-  <component id="Rect" super="UIComponent"/>
-  <component id="Rectangle" super="Object"/>
-  <component id="Scroller" super="UIComponent" default="viewport"/>
-  <component id="Skin" super="EventDispatcher" default="elementsContent"/>
-  <component id="SkinnableComponent" super="UIAsset" state="normal,disabled"/>
-  <component id="SkinnableContainer" super="SkinnableComponent" default="elementsContent"/>
-  <component id="SkinnableDataContainer" super="SkinnableComponent" default="dataProvider"/>
-  <component id="SliderBase" super="TrackBase"/>
-  <component id="Spacer" super="UIComponent"/>
-  <component id="State" super="EventDispatcher" default="overrides"/>
-  <component id="TabBar" super="ListBase"/>
-  <component id="TabBarButton" super="ToggleButtonBase"/>
-  <component id="TextBase" super="UIComponent"/>
-  <component id="TileLayout" super="LayoutBase"/>
-  <component id="TitleWindow" super="Panel"/>
-  <component id="ToggleButton" super="ToggleButtonBase"/>
-  <component id="ToggleButtonBase" super="ButtonBase" state="up,over,down,disabled,upAndSelected,overAndSelected,downAndSelected,disabledAndSelected"/>
-  <component id="TrackBase" super="Range"/>
-  <component id="Tree" super="List"/>
-  <component id="TreeItemRenderer" super="ItemRenderer"/>
-  <component id="UIAsset" super="UIComponent"/>
-  <component id="UIComponent" super="DisplayObjectContainer"/>
-  <component id="VSlider" super="SliderBase"/>
-  <component id="VerticalLayout" super="LayoutBase"/>
-  <component id="ViewStack" super="Group"/>
+  <component id="ArrayCollection" super="EventDispatcher" default="source" show="false"/>
+  <component id="BasicLayout" super="LayoutBase" show="false"/>
+  <component id="Button" super="ButtonBase" show="true"/>
+  <component id="ButtonBase" super="SkinnableComponent" default="label" state="up,over,down,disabled" show="false"/>
+  <component id="CheckBox" super="ToggleButtonBase" show="true"/>
+  <component id="DataGroup" super="GroupBase" default="dataProvider" show="true"/>
+  <component id="DropDownList" super="DropDownListBase" show="true"/>
+  <component id="DropDownListBase" super="List" state="normal,open,disabled" show="false"/>
+  <component id="Group" super="GroupBase" default="elementsContent" show="true"/>
+  <component id="GroupBase" super="UIComponent" show="false"/>
+  <component id="HSlider" super="SliderBase" show="true"/>
+  <component id="HorizontalLayout" super="LayoutBase" show="false"/>
+  <component id="ItemRenderer" super="ButtonBase" show="false"/>
+  <component id="Label" super="TextBase" show="true"/>
+  <component id="LayoutBase" super="EventDispatcher" show="false"/>
+  <component id="List" super="ListBase" show="true"/>
+  <component id="ListBase" super="SkinnableDataContainer" show="false"/>
+  <component id="Matrix" super="Object" show="false"/>
+  <component id="ObjectCollection" super="EventDispatcher" default="source" show="false"/>
+  <component id="Panel" super="SkinnableContainer" show="true"/>
+  <component id="Point" super="Object" show="false"/>
+  <component id="PopUpAnchor" super="UIComponent" default="popUp" show="true"/>
+  <component id="ProgressBar" super="Range" show="true"/>
+  <component id="RadioButton" super="ToggleButtonBase" show="true"/>
+  <component id="RadioButtonGroup" super="EventDispatcher" show="false"/>
+  <component id="Range" super="SkinnableComponent" show="false"/>
+  <component id="Rect" super="UIComponent" show="true"/>
+  <component id="Rectangle" super="Object" show="false"/>
+  <component id="Scroller" super="UIComponent" default="viewport" show="true"/>
+  <component id="Skin" super="EventDispatcher" default="elementsContent" show="false"/>
+  <component id="SkinnableComponent" super="UIAsset" state="normal,disabled" show="false"/>
+  <component id="SkinnableContainer" super="SkinnableComponent" default="elementsContent" show="true"/>
+  <component id="SkinnableDataContainer" super="SkinnableComponent" default="dataProvider" show="true"/>
+  <component id="SliderBase" super="TrackBase" show="false"/>
+  <component id="Spacer" super="UIComponent" show="true"/>
+  <component id="State" super="EventDispatcher" default="overrides" show="false"/>
+  <component id="TabBar" super="ListBase" show="true"/>
+  <component id="TabBarButton" super="ToggleButtonBase" show="false"/>
+  <component id="TextBase" super="UIComponent" show="false"/>
+  <component id="TileLayout" super="LayoutBase" show="false"/>
+  <component id="TitleWindow" super="Panel" show="true"/>
+  <component id="ToggleButton" super="ToggleButtonBase" show="true"/>
+  <component id="ToggleButtonBase" super="ButtonBase" state="up,over,down,disabled,upAndSelected,overAndSelected,downAndSelected,disabledAndSelected" show="false"/>
+  <component id="TrackBase" super="Range" show="false"/>
+  <component id="Tree" super="List" show="true"/>
+  <component id="TreeItemRenderer" super="ItemRenderer" show="false"/>
+  <component id="UIAsset" super="UIComponent" show="true"/>
+  <component id="UIComponent" super="DisplayObjectContainer" show="false"/>
+  <component id="VSlider" super="SliderBase" show="true"/>
+  <component id="VerticalLayout" super="LayoutBase" show="false"/>
+  <component id="ViewStack" super="Group" show="true"/>
 </componentPackage>

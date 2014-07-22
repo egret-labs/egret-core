@@ -19,6 +19,7 @@
     "egret/utils/Timer.ts",
     "egret/utils/getQualifiedClassName.ts",
     "egret/utils/getDefinitionByName.ts",
+    "egret/utils/setTimeout.ts",
     "egret/utils/hasDefinition.ts",
     "egret/utils/toColorString.ts",
     "egret/geom/Matrix.ts",
