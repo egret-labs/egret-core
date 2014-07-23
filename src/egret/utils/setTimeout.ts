@@ -30,27 +30,28 @@ module egret {
     var __setTimeout__cache:any = {};
     var __setTimeout__index:number = 0;
 
-    export function setTimeout(callback:Function, time:number, ...args):number {
-        var update = function (dt:number):void {
-            passTime += dt;
-            if (passTime >= time) {
-                Ticker.getInstance().unregister(update, null);
-                callback.apply(null, args || null);
-            }
-        };
-
-        //考虑要不要所有setTimeout只添加一个侦听
-        var passTime:number = 0;
-        Ticker.getInstance().register(update, null);
+    export function setTimeout(callback:Function, thisObj:any, time:number, ...args):number {
+        var data = {callback: callback, thisObj: thisObj, time: time, params: args};
+        if (__setTimeout__index == 0) {
+            Ticker.getInstance().register(timeoutUpdate, null);
+        }
         __setTimeout__index++;
-        __setTimeout__cache[__setTimeout__index] = update;
+        __setTimeout__cache[__setTimeout__index] = data;
         return __setTimeout__index;
     }
 
     export function clearTimeout(num:number):void {
-        var func = __setTimeout__cache[num];
-        if (func) {
-            Ticker.getInstance().unregister(func, null);
+        delete __setTimeout__cache[num];
+    }
+
+    function timeoutUpdate(dt:number):void {
+        for (var key in __setTimeout__cache) {
+            var data = __setTimeout__cache[key];
+            data.time -= dt;
+            if (data.time <= 0) {
+                data.callback.apply(data.thisObj, data.params);
+                delete __setTimeout__cache[key];
+            }
         }
     }
 }
