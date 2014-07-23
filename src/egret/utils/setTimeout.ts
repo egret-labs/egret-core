@@ -30,8 +30,17 @@ module egret {
     var __setTimeout__cache:any = {};
     var __setTimeout__index:number = 0;
 
-    export function setTimeout(callback:Function, thisObj:any, time:number, ...args):number {
-        var data = {callback: callback, thisObj: thisObj, time: time, params: args};
+    /**
+     * 在指定的延迟（以毫秒为单位）后运行指定的函数。
+     * @method egret.setTimeout
+     * @param listener {Function}
+     * @param thisObject {any}
+     * @param delay {number}
+     * @param args {any}
+     * @returns {number} 唯一引用
+     */
+    export function setTimeout(listener:Function, thisObject:any, delay:number, ...args):number {
+        var data = {listener: listener, thisObject: thisObject, delay: delay, params: args};
         if (__setTimeout__index == 0) {
             Ticker.getInstance().register(timeoutUpdate, null);
         }
@@ -40,16 +49,21 @@ module egret {
         return __setTimeout__index;
     }
 
-    export function clearTimeout(num:number):void {
-        delete __setTimeout__cache[num];
+    /**
+     * 清除指定延迟后运行的函数。
+     * @method egret.clearTimeout
+     * @param key {number}
+     */
+    export function clearTimeout(key:number):void {
+        delete __setTimeout__cache[key];
     }
 
     function timeoutUpdate(dt:number):void {
         for (var key in __setTimeout__cache) {
             var data = __setTimeout__cache[key];
-            data.time -= dt;
-            if (data.time <= 0) {
-                data.callback.apply(data.thisObj, data.params);
+            data.delay -= dt;
+            if (data.delay <= 0) {
+                data.listener.apply(data.thisObject, data.params);
                 delete __setTimeout__cache[key];
             }
         }

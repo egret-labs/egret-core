@@ -98,24 +98,11 @@ module egret {
          * @param thisObject {any}
          * @param delay {number}
          * @param ...parameter {any}
+         * @deprecated
          */
         public setTimeout(listener:Function, thisObject, delay:number, ...parameters):void {
-            var that = this;
-            var passTime = 0;
-            this.register(function (frameTime) {
-                if (delay == 0) {
-                    that.unregister(arguments.callee, thisObject);
-                    listener.apply(thisObject, parameters);
-
-                }
-                else {
-                    passTime += frameTime;
-                    if (passTime >= delay) {
-                        that.unregister(arguments.callee, thisObject);
-                        listener.apply(thisObject, parameters);
-                    }
-                }
-            }, thisObject)
+            Logger.warning("Ticker#setTimeout方法即将废弃,请使用egret.setTimeout");
+            egret.setTimeout.apply(null, [listener,thisObject,delay].concat(parameters));
         }
 
         /**
