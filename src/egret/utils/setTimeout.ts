@@ -26,18 +26,31 @@
  */
 
 module egret {
-    export function setTimeout(callback:Function, time:number, ...args):any {
-        //考虑要不要所有setTimeout只添加一个侦听
-        var passTime:number = 0;
-        Ticker.getInstance().register(update, callback);
 
-        function update(dt:number):void {
+    var __setTimeout__cache:any = {};
+    var __setTimeout__index:number = 0;
+
+    export function setTimeout(callback:Function, time:number, ...args):number {
+        var update = function (dt:number):void {
             passTime += dt;
             if (passTime >= time) {
-                Ticker.getInstance().unregister(update, callback);
-
+                Ticker.getInstance().unregister(update, null);
                 callback.apply(null, args || null);
             }
+        };
+
+        //考虑要不要所有setTimeout只添加一个侦听
+        var passTime:number = 0;
+        Ticker.getInstance().register(update, null);
+        __setTimeout__index++;
+        __setTimeout__cache[__setTimeout__index] = update;
+        return __setTimeout__index;
+    }
+
+    export function clearTimeout(num:number):void {
+        var func = __setTimeout__cache[num];
+        if (func) {
+            Ticker.getInstance().unregister(func, null);
         }
     }
 }
