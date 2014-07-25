@@ -59,6 +59,8 @@ module egret {
             var drawAreaList:Array<Rectangle> = renderFilter._drawAreaList.concat();
             renderFilter._drawAreaList.length = 0;
             this.renderContext.clearScreen();
+
+            this.webGLTexture = null;//gl.deleteTexture(this.webGLTexture);
             var mask = displayObject.mask || displayObject._scrollRect;
             if (mask) {
                 this.renderContext.pushMask(mask);

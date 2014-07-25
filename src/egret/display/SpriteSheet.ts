@@ -27,7 +27,7 @@
 
 
 module egret {
-    
+
     /**
      * @class egret.SpriteSheet
      * @classdesc SpriteSheet是一张由多个子位图拼接而成的集合位图，它包含多个Texture对象。
