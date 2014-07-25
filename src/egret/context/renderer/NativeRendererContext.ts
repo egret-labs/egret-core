@@ -153,7 +153,7 @@ module egret {
         }
 
         public pushMask(mask:Rectangle):void {
-            egret_native.Graphics.pushRectStencil(mask.x, mask.y, mask.width, mask.height, 255, 0, 0, 255 * 0.5, 0, false);
+            egret_native.Graphics.pushRectStencil(mask.x, mask.y, mask.width, mask.height, 255, 0, 0, 0, 0, false);
         }
 
         public popMask():void {
