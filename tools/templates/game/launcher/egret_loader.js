@@ -61,12 +61,6 @@ egret_h5.loadSingleScript = function (src, callback) {
 egret_h5.startGame = function () {
     var canvas = document.getElementById(egret.StageDelegate.canvas_name);
     context = egret.MainContext.instance;
-    if(egret.WebGLUtils.checkCanUseWebGL()) {
-        context.rendererContext = new egret.WebGLRenderer(canvas);
-    }
-    else {
-        context.rendererContext = new egret.HTML5CanvasRenderer(canvas);
-    }
     context.touchContext = new egret.HTML5TouchContext(canvas);
     context.deviceContext = new egret.HTML5DeviceContext();
     context.netContext = new egret.HTML5NetContext();
@@ -79,6 +73,13 @@ egret_h5.startGame = function () {
     egret.StageDelegate.getInstance().setDesignSize(480, 800, policy);
 
     context.stage = new egret.Stage(canvas.width, canvas.height);
+
+    if(egret.WebGLUtils.checkCanUseWebGL()) {
+        context.rendererContext = new egret.WebGLRenderer(canvas);
+    }
+    else {
+        context.rendererContext = new egret.HTML5CanvasRenderer(canvas);
+    }
 
     egret.MainContext.instance.rendererContext.texture_scale_factor = 1;
     context.run();
