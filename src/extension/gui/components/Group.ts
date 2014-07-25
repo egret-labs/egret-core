@@ -173,7 +173,7 @@ module egret {
 			this.checkForRangeError(index, true);
 			
 			var host:any = element.owner;
-			if (host == this){
+			if (host == this||element.parent==this){
 				this.setElementIndex(element, index);
 				return element;
 			}

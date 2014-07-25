@@ -36,7 +36,7 @@ function run(dir, args, opts) {
 
 function create_app_from(app_name, h5_path, template_path) {
     var preferences = read_json_from(path.join(h5_path, PREFERENCES));
-    if (!preferences) {
+    if (!preferences || !preferences["native"] || !preferences["native"]["path_ignore"]) {
         globals.exit(1602);
     }
     var app_data = read_json_from(path.join(template_path, CREATE_APP));
@@ -68,18 +68,20 @@ function create_app_from(app_name, h5_path, template_path) {
 
     // copy h5 res into here
     globals.log("> copy h5 resources into " + app_name + " ...");
-    if (preferences["support_path"] === undefined) {
-        preferences["support_path"] = [];
+    if (preferences["native"]["support_path"] === undefined) {
+        preferences["native"]["support_path"] = [];
     }
+    var target_list = [];
     app_data.game.target.forEach(function(target) {
-        preferences["support_path"].push(path.join(app_name, target));
-        preferences["game_dir_tree"].forEach(function(branch) {
-            var target_dir = path.join(app_name, target, branch);
-            file.copy(path.join(h5_path, branch), path.join(target_dir));
-            file.remove(path.join(target_dir, ".gitignore"));
-        });
+        target_list.push(path.join(app_name, target));
     });
-    file.save(path.join(h5_path, PREFERENCES), JSON.stringify(preferences, null, '\t') + '\n');
+    preferences["native"]["support_path"] = preferences["native"]["support_path"].concat(target_list);
+    file.save(path.join(h5_path, PREFERENCES), JSON.stringify(preferences, null, '\t'));
+
+    build_copy(h5_path, preferences["native"]["path_ignore"], target_list);
+    target_list.forEach(function(target) {
+        file.remove(path.join(target, ".gitignore"));
+    });
 }
 
 function read_json_from(json_file) {
@@ -90,16 +92,27 @@ function read_json_from(json_file) {
     }
 }
 
-function build_copy_from(h5_path) {
-    var preferences = read_json_from(path.join(h5_path, PREFERENCES));
-    if (preferences == null || preferences["support_path"] === undefined) {
-        return;
-    }
-    preferences["support_path"].forEach(function(target) {
-        preferences["game_dir_tree"].forEach(function(branch) {
-           file.copy(path.join(h5_path, branch), path.join(target, branch));
+function build_copy(h5_path, ignore_list, target_path_list) {
+    target_path_list.forEach(function(target) {
+        var copy_tree = file.getDirectoryListing(h5_path);
+        copy_tree.forEach(function(branch) {
+            branch = path.basename(branch);
+            if (ignore_list.indexOf(branch) == -1) {
+                file.copy(path.join(h5_path, branch), path.join(target, branch));
+            }
         });
     });
+}
+
+function build_copy_from(h5_path) {
+    var preferences = read_json_from(path.join(h5_path, PREFERENCES));
+    if (!preferences ||
+        preferences["native"] === undefined ||
+        preferences["native"]["path_ignore"] === undefined ||
+        preferences["native"]["support_path"] === undefined) {
+        return;
+    }
+    build_copy(h5_path, preferences["native"]["path_ignore"], preferences["native"]["support_path"]);
 }
 
 function help_title() {

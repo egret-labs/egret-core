@@ -36,7 +36,7 @@ var newClassNameList;
 /**
  * ts关键字
  */
-var functionKeys = ["static", "var", "export", "public", "private", "function", "get", "set", "class", "interface"];
+var functionKeys = ["static", "var", "export", "public", "private", "function", "get", "set", "class", "interface","module"];
 /**
  * Egret命名空间
  */
@@ -50,7 +50,7 @@ var W = "http://ns.egret-labs.org/wing";
  */
 var basicTypes = ["void","any","number","string","boolean","Object","Array","Function"];
 
-var textTemp;
+var classKeys = ["static",  "public", "private", "get", "set", "class", "interface","module"];
 
 /**
  * 生成manifest.json文件
@@ -73,28 +73,316 @@ function run(currDir, args, opts) {
     globals.log("manifest.json生成成功");
 }
 /**
- * 获取项目中所有类名和文件路径的映射数据
+ * 格式化srcPath
  */
-function getClassToPathInfo(srcPath){
+function escapeSrcPath(srcPath){
+    if(!srcPath){
+        return "";
+    }
     srcPath = srcPath.split("\\").join("/");
     if (srcPath.charAt(srcPath.length - 1) != "/") {
         srcPath += "/";
     }
+    return srcPath;
+}
+/**
+ * 获取项目中所有类名和文件路径的映射数据
+ */
+function getClassToPathInfo(srcPath){
+    srcPath = escapeSrcPath(srcPath);
     if(!classNameToPath){
         getManifest(srcPath);
-        textTemp = null;
     }
     return classNameToPath;
+}
+
+function createProjectDTS(excludeList,srcPath){
+    srcPath = escapeSrcPath(srcPath);
+    if(!pathToClassNames){
+        getManifest(srcPath);
+    }
+    var dts = "";
+    for(var path in pathToClassNames){
+        if(excludeList.indexOf(path)!=-1){
+            continue;
+        }
+        var text = file.read(path);
+        dts += createOneDTS(text)+"\n";
+    }
+    return dts;
+}
+
+function createOneDTS(text){
+    if(!text){
+        return "";
+    }
+    text = CodeUtil.removeComment(text)
+    //移除export
+    var dts = "";
+    while(text.length>0){
+        var index = CodeUtil.getFirstVariableIndex("export",text);
+        if(index==-1){
+            dts += text;
+            break;
+        }
+        dts += text.substring(0,index);
+        text = text.substring(index+6);
+    }
+    text = dts;
+    text = attachDeclare(text);
+    text = removeFunctionBody(text);
+    text = removeDefaultValue(text);
+
+    var length = argsTemp.length;
+    for(var i=0;i<length;i++){
+        var argStr = argsTemp[i];
+        text = text.split("\v"+i+"\v").join(argStr);
+    }
+    text = text.split(";;").join(";");
+    return text;
+}
+/**
+ * 增加declare声明
+ */
+function attachDeclare(text){
+    var dts = "";
+    while (text.length > 0) {
+
+        var index = CodeUtil.getFirstVariableIndex("class", text);
+        if(index==-1){
+            index = Number.POSITIVE_INFINITY;
+        }
+        var moduleIndex = CodeUtil.getFirstVariableIndex("module",text);
+        if(moduleIndex==-1){
+            moduleIndex = Number.POSITIVE_INFINITY;
+        }
+        var interfaceIndex = CodeUtil.getFirstVariableIndex("interface", text);
+        if(interfaceIndex==-1){
+            interfaceIndex = Number.POSITIVE_INFINITY;
+        }
+        var functionIndex = CodeUtil.getFirstVariableIndex("function", text);
+        if(functionIndex==-1){
+            functionIndex = Number.POSITIVE_INFINITY;
+        }
+
+        var varIndex = CodeUtil.getFirstVariableIndex("var", text);
+        if(varIndex==-1){
+            varIndex = Number.POSITIVE_INFINITY;
+        }
+
+        index = Math.min(interfaceIndex,index,functionIndex,varIndex,moduleIndex);
+        if (index == Number.POSITIVE_INFINITY) {
+            break;
+        }
+
+        var preStr = text.substring(0,index);
+        if(trimKeyWords(preStr)!=""){
+            var keyLength = 5;
+            switch (index){
+                case moduleIndex:
+                    keyLength = 6;
+                    break;
+                case interfaceIndex:
+                    keyLength = 9;
+                    break;
+                case functionIndex:
+                    keyLength = 8;
+                    break;
+                case varIndex:
+                    keyLength = 3;
+                    break;
+            }
+            text = text.substring(index+keyLength);
+            continue;
+        }
+        dts += "declare ";
+        text = text.substring(index);
+        if(index==varIndex){
+            index = text.indexOf("\n");
+            if(index==-1){
+                index = text.length;
+            }
+            dts += text.substring(0,index);
+            text = text.substring(index);
+        }
+        else{
+            index = CodeUtil.getBracketEndIndex(text);
+            dts += text.substring(0, index + 1)+"\n";
+            text = text.substring(index + 1);
+        }
+    }
+    return dts;
+}
+
+var argsTemp = [];
+/**
+ * 移除函数体
+ */
+function removeFunctionBody(text){
+    argsTemp = [];
+    var dts = "";
+    while(text.length>0){
+        var index = text.indexOf("{");
+        if(index==-1){
+            dts += text;
+            break;
+        }
+        var preStr = text.substring(0,index);
+        text = text.substring(index);
+        index = preStr.lastIndexOf("}");
+        index = Math.max(index,preStr.lastIndexOf(";"));
+        if(index==-1){
+            index = 0;
+        }
+        dts += preStr.substring(0,index);
+        preStr = preStr.substring(index);
+        var endIndex = CodeUtil.getBracketEndIndex(text);
+        if(endIndex==-1){
+            dts +=text;
+            break;
+        }
+
+        if(CodeUtil.containsVariable("module",preStr)
+            ||CodeUtil.containsVariable("class",preStr)
+            ||CodeUtil.containsVariable("interface",preStr)){
+            dts += preStr+"{";
+            text = text.substring(1);
+        }
+        else{
+            index = CodeUtil.getBracketStartIndex(preStr,"(",")");
+            if(index==-1){
+                dts += preStr;
+            }
+            else{
+                dts += preStr.substring(0,index+1)
+                preStr = preStr.substring(index+1);
+                index = preStr.lastIndexOf(")");
+                var argStr = preStr.substring(0,index);
+                if(argStr.trim()==""){
+                    dts += preStr;
+                }
+                else{
+
+                    argStr = formatArguments(argStr);
+                    argsTemp[argsTemp.length] = argStr;
+                    argStr = "\v"+(argsTemp.length-1)+"\v";
+                    preStr = preStr.substring(index);
+
+                    dts += argStr + preStr;
+                }
+            }
+            dts = dts.trim();
+            dts += ";";
+            if(constructorArgs){
+                dts += constructorArgs;
+                constructorArgs = "";
+            }
+            text = text.substring(endIndex+1);
+
+        }
+    }
+    return dts;
+}
+
+var constructorArgs = "";
+/**
+ * 移除var的默认值
+ */
+function formatArguments(argStr){
+    var list = argStr.split(",");
+    var length = list.length;
+    var argList = [];
+    for(var i=0;i<length;i++){
+        var arg = list[i];
+        arg = arg.trim();
+        if(arg.indexOf("public")==0||arg.indexOf("private")==0){
+            argList.push(arg+";");
+        }
+        var args = arg.split(":");
+        if(args.length>1){
+            var arg1 = args[1];
+            if(arg1.indexOf("=")!=-1){
+                arg = args[0]+"?:"+arg1.split("=")[0];
+            }
+        }
+        else{
+            var arg0 = args[0];
+            if(arg0.indexOf("=")!=-1){
+                arg = arg0.split("=")[0]+"?";
+            }
+        }
+        if(arg.indexOf("public")==0){
+            arg = arg.substring(6);
+        }
+        else if(arg.indexOf("private")==0){
+            arg = arg.substring(7)
+        }
+        list[i] = arg;
+    }
+    argStr = list.join(",")
+    if(argList.length>0){
+        constructorArgs = "\n\t\t"+argList.join("\n\t\t");
+    }
+    else{
+        constructorArgs = "";
+    }
+
+    return argStr;
+}
+/**
+ * 移除var的默认值
+ */
+function removeDefaultValue(text){
+    var dts = "";
+    var functionLength = classKeys.length;
+    while(text.length>0){
+        var index = text.indexOf("=");
+        if(index==-1){
+            dts += text;
+            break;
+        }
+        dts += text.substring(0,index);
+        text = text.substring(index);
+        if(text.charAt(0)==">"){
+            continue;
+        }
+        dts = dts.trim()+";";
+        index = text.indexOf(";");
+        if(index==-1){
+            index = Number.POSITIVE_INFINITY;
+        }
+        var endIndex = text.indexOf("}");
+        if(endIndex==-1){
+            endIndex = Number.POSITIVE_INFINITY;
+        }
+        index = Math.min(index,endIndex);
+        if(index!=Number.POSITIVE_INFINITY){
+            index += 1;
+        }
+        for(var i=0;i<functionLength;i++){
+            var functionKey = classKeys[i];
+            var functionIndex = CodeUtil.getFirstVariableIndex(functionKey,text);
+            if(functionIndex!=-1){
+                index = Math.min(index,functionIndex);
+            }
+        }
+        if(index==Number.POSITIVE_INFINITY){
+            break;
+        }
+        var lineIndex = text.indexOf("\n");
+        if(lineIndex!=-1){
+            index = Math.max(index,lineIndex)
+        }
+        text  = text.substring(index);
+    }
+    return dts;
 }
 
 /**
  * 创建manifest列表
  */
 function create(srcPath){
-    srcPath = srcPath.split("\\").join("/");
-    if (srcPath.charAt(srcPath.length - 1) != "/") {
-        srcPath += "/";
-    }
+    srcPath = escapeSrcPath(srcPath);
     var manifest = getManifest(srcPath);
     manifest = sortFileList(manifest,srcPath);
     return manifest;
@@ -110,7 +398,6 @@ function getManifest(srcPath){
     pathToClassNames = {};
     referenceInfoList = {};
     newClassNameList = [];
-    textTemp = {};
     var manifest = file.searchByFunction(srcPath,filterFunc);
     var exmlList = [];
     for(var i=manifest.length-1;i>=0;i--){
@@ -132,7 +419,6 @@ function getManifest(srcPath){
     var length = manifest.length;
     for (var i = 0; i < length; i++) {
         var path = manifest[i];
-        textTemp[path] = file.read(path);
         var ext = file.getExtension(path).toLowerCase();
         if(ext=="exml"){
             readClassNamesFromExml(path,srcPath);
@@ -164,7 +450,6 @@ function sortFileList(list,srcPath){
     var length = list.length;
     for (var i = 0; i < length; i++) {
         var path = list[i];
-        textTemp[path] = file.read(path);
         var ext = file.getExtension(path).toLowerCase();
         if(ext=="exml"){
             readRelyOnFromExml(path,srcPath);
@@ -183,7 +468,6 @@ function sortFileList(list,srcPath){
             readReferenceFromTs(path);
         }
     }
-    textTemp = null;
 
 
     var paths = [];
@@ -348,7 +632,7 @@ function setPathLevel(path, level, pathLevelInfo, map,pathRelyInfo,throwError) {
  * 读取一个EXML文件引用的类名列表
  */
 function readReferenceFromExml(path){
-    var text = textTemp[path];
+    var text = file.read(path);
     var exml = xml.parse(text);
     if(!exml){
         return;
@@ -394,7 +678,7 @@ function readReferenceFromNode(node,list){
  * 读取一个TS文件引用的类名列表
  */
 function readReferenceFromTs(path){
-    var text = textTemp[path];
+    var text = file.read(path);
     var orgText = text;
     text = CodeUtil.removeComment(text);
     var block = "";
@@ -475,7 +759,7 @@ function readReferenceFromTs(path){
  * 读取一个exml文件包含的类名
  */
 function readClassNamesFromExml(path,srcPath){
-    var text = textTemp[path];
+    var text = file.read(path);
     var exml = xml.parse(text);
     if(!exml){
         return;
@@ -490,7 +774,7 @@ function readClassNamesFromExml(path,srcPath){
  * 读取一个exml文件依赖的类列表
  */
 function readRelyOnFromExml(path,srcPath){
-    var text = textTemp[path];
+    var text = file.read(path);
     var exml = xml.parse(text);
     if(!exml){
         return;
@@ -539,7 +823,7 @@ function readRelyOnFromTs(path) {
  */
 function analyzeTsFile(path,readRelyOn){
     var fileRelyOnList = [];
-    var text = textTemp[path];
+    var text = file.read(path);
     var list = [];
     text = CodeUtil.removeComment(text);
     if(readRelyOn){
@@ -549,7 +833,7 @@ function analyzeTsFile(path,readRelyOn){
     var tsText = "";
     while (text.length > 0) {
         var index = text.indexOf("{");
-        if (index == -1) {
+         if (index == -1) {
             if (tsText) {
                 list = list.concat(readClassFromBlock(tsText, fileRelyOnList,path,"",readRelyOn));
                 tsText = "";
@@ -637,14 +921,45 @@ function readClassFromBlock(text, fileRelyOnList,path, ns,readRelyOn) {
         if(interfaceIndex==-1){
             interfaceIndex = Number.POSITIVE_INFINITY;
         }
-        index = Math.min(interfaceIndex,index);
+        var functionIndex = CodeUtil.getFirstVariableIndex("function", text);
+        if(functionIndex==-1){
+            functionIndex = Number.POSITIVE_INFINITY;
+        }
+        else if(ns){
+            if(CodeUtil.getLastWord(text.substring(0,functionIndex))!="export"){
+                functionIndex = Number.POSITIVE_INFINITY;
+            }
+        }
+        var varIndex = CodeUtil.getFirstVariableIndex("var", text);
+        if(varIndex==-1){
+            varIndex = Number.POSITIVE_INFINITY;
+        }
+        else if(ns){
+            if(CodeUtil.getLastWord(text.substring(0,varIndex))!="export"){
+                varIndex = Number.POSITIVE_INFINITY;
+            }
+        }
+        index = Math.min(interfaceIndex,index,functionIndex,varIndex);
         if (index == Number.POSITIVE_INFINITY) {
             if(readRelyOn){
                 findClassInLine(text,pathToClassNames[path],ns,fileRelyOnList);
             }
             break;
         }
-        var keyLength = index==interfaceIndex?9:5;
+
+        var isVar = (index==varIndex);
+        var keyLength = 5;
+        switch (index){
+            case varIndex:
+                keyLength = 3;
+                break;
+            case interfaceIndex:
+                keyLength = 9;
+                break;
+            case functionIndex:
+                keyLength = 8;
+                break;
+        }
         var preStr = text.substring(0, index + keyLength);
         if(readRelyOn){
             findClassInLine(preStr,pathToClassNames[path],ns,fileRelyOnList)
@@ -698,14 +1013,24 @@ function readClassFromBlock(text, fileRelyOnList,path, ns,readRelyOn) {
                 }
             }
         }
-        index = CodeUtil.getBracketEndIndex(text);
-        var classBlock = text.substring(0, index + 1);
-        text = text.substring(index + 1);
-        index = classBlock.indexOf("{");
-        classBlock = classBlock.substring(index);
-        if(readRelyOn){
-            getRelyOnFromStatic(classBlock, ns,className, relyOnList);
+        if(isVar){
+            index = text.indexOf("\n");
+            if(index==-1){
+                index = text.length;
+            }
+            text = text.substring(index);
         }
+        else{
+            index = CodeUtil.getBracketEndIndex(text);
+            var classBlock = text.substring(0, index + 1);
+            text = text.substring(index + 1);
+            index = classBlock.indexOf("{");
+            classBlock = classBlock.substring(index);
+            if(readRelyOn){
+                getRelyOnFromStatic(classBlock, ns,className, relyOnList);
+            }
+        }
+
     }
     return list;
 }
@@ -810,5 +1135,6 @@ function help_example() {
 exports.run = run;
 exports.create = create;
 exports.getClassToPathInfo = getClassToPathInfo;
+exports.createProjectDTS = createProjectDTS;
 exports.help_title = help_title;
 exports.help_example = help_example;

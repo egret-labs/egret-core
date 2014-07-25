@@ -122,7 +122,7 @@ module RES {
             var spriteSheet:egret.SpriteSheet = new egret.SpriteSheet(texture);
             for(var name in frames){
                 var config:any = frames[name];
-                spriteSheet.createTexture(name,config.x,config.y,config.w,config.h);
+                spriteSheet.createTexture(name,config.x,config.y,config.w,config.h,config.offX, config.offY,config.sourceW,config.sourceH);
             }
             return spriteSheet;
         }

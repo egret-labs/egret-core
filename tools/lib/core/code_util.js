@@ -360,7 +360,7 @@ function trimVariableRight(str) {
 * 移除代码注释和字符串常量
 */
 function removeComment(codeText) {
-    var NBSP = "\v3\v";
+    var NBSP = "";
     var trimText = "";
 
     codeText = codeText.split("\\\\").join("\v0\v");

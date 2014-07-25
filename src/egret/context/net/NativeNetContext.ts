@@ -46,6 +46,22 @@ module egret {
                 return;
             }
 
+
+            var url = loader._request.url;
+            if (url.indexOf("http://") == 0){
+                egret_native.requireHttpSync( url , function( str_resultcode ,str_recived_data  ) {
+                    if (str_resultcode == 0){
+                        loader.data = str_recived_data;
+                        callLater(Event.dispatchEvent, Event, loader, Event.COMPLETE);
+                    }
+                    else{
+                        //todo
+                        console.log ("net error:" + str_resultcode);
+                    }
+                })
+                return;
+            }
+
             callLater(onLoadComplete, this);
 
             function onLoadComplete() {

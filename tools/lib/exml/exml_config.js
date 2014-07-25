@@ -142,10 +142,13 @@ var EXMLConfig = (function () {
     * 检查一个类名是否存在
     */
     EXMLConfig.prototype.checkClassName = function (className) {
+        if (!className) {
+            return false;
+        }
         if (this.componentDic[className]) {
             return true;
         }
-        if (this.classNameToPath[name]) {
+        if (this.classNameToPath[className]) {
             return true;
         }
         return false;

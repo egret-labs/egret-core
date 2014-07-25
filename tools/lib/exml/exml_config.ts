@@ -30,9 +30,9 @@
 var file = require("../core/file.js");
 var xml = require("../core/xml.js");
 var param = require("../core/params_analyze.js");
-var properties = require("./properties.json");
 var CodeUtil = require("../core/code_util.js");
 var create_manifest = require("../tools/create_manifest.js");
+var properties = {};
 
 class EXMLConfig{
 
@@ -54,6 +54,8 @@ class EXMLConfig{
         var manifest:any = xml.parse(str);
         this.parseManifest(manifest);
 
+        str = file.read(exmlPath+"properties.json");
+        properties = JSON.parse(str);
     }
 
     private _srcPath:string;
@@ -91,7 +93,7 @@ class EXMLConfig{
             if(!list){
                 list = this.classNameToModule[className] = [];
             }
-            if(list.indexOf(ns)==-1){
+            if(list.indexOf(ns)==-1){ 
                 list.push(ns);
             }
         }
@@ -159,10 +161,13 @@ class EXMLConfig{
      * 检查一个类名是否存在
      */
     public checkClassName(className:string):boolean{
+        if(!className){
+            return false;
+        }
         if(this.componentDic[className]){
             return true;
         }
-        if(this.classNameToPath[name]){
+        if(this.classNameToPath[className]){
             return true;
         }
         return false;
