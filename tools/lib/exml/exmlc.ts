@@ -971,14 +971,14 @@ class EXMLCompiler{
                         globals.exit(2007,this.exmlPath,this.toXMLString(node));
                     }
                     var propertyName:string = "";
-                    var parentNode:any = (node.parent);
-                    if(parentNode.localName=="Array")
-                        parentNode = parentNode.parent;
-                    if(this.isProperty(parentNode))
-                        parentNode = parentNode.parent;
-                    if(parentNode&&parentNode != this.currentXML){
-                        propertyName = parentNode.$id;
-                        this.checkIdForState(parentNode);
+                    var parent:any = (node.parent);
+                    if(parent.localName=="Array")
+                        parent = parent.parent;
+                    if(this.isProperty(parent))
+                        parent = parent.parent;
+                    if(parent&&parent != this.currentXML){
+                        propertyName = parent.$id;
+                        this.checkIdForState(parent);
                     }
                     var positionObj:any = this.findNearNodeId(node);
                     var stateNames:Array<any> = [];
