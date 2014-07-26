@@ -1018,6 +1018,9 @@ class EXMLCompiler{
 
                 for(var name in node){
                     var value:string = node[name];
+					if(value.charAt(0)!="$"){
+                    	continue;
+                    }
                     name = name.substring(1);
                     var index:number = name.indexOf(".");
                     if(index!=-1){
