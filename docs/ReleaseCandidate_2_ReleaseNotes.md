@@ -16,11 +16,13 @@ Egret 1.0 Release Candidate 2 是 Egret 1.0的第二个发布候选版，专注�
 
 * 核心显示列表
   * WebGL 支持（Beta）
-  * 修复第三方资源打包工具对素材进行裁边时，解析错误的BUG，并更新了 ShoeBox / TexturePacker 的Egret插件的导出格式
-  * 优化了BitmapText 性能
-  * 当BitmapText.text 中存在 fnt 配置文件中不存在的字形时，目前会提示一个 Warning，而非给出一个难以理解的错误信息
-  * 修复 Graphics API 在特定情况下，连续调用 lineTo() 和 flash的绘制结果不一样的BUG
   * 添加 egret.setTimeout函数和 egret.clearTimeout函数
+  * 修复第三方资源打包工具对素材进行裁边时，解析错误的BUG，并更新了 ShoeBox / TexturePacker 的Egret插件的导出格式
+  * 修复 Graphics API 在特定情况下，连续调用 lineTo() 和 flash的绘制结果不一样的BUG
+  * 修复在另一部分三星手机中，
+  * 当BitmapText.text 中存在 fnt 配置文件中不存在的字形时，目前会提示一个 Warning，而非给出一个难以理解的错误信息
+  * 优化了BitmapText 性能
+  * 
 
 * GUI体系
  * 修复RadioButtonGroup排序函数的作用域不正确导致递归出错
@@ -34,5 +36,4 @@ Egret 1.0 Release Candidate 2 是 Egret 1.0的第二个发布候选版，专注�
   * 修复 egret publish 在 windows 环境下报错的bug
   * 修复 egret startserver 在当前项目路径下直接运行（不输入项目名）会报错的bug
 
-* Egret Native Suppoort
 
