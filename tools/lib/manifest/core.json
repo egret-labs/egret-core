@@ -87,7 +87,7 @@
     "extension/gui/core/IUIComponent.ts",
     "extension/gui/core/IUIStage.ts",
     "extension/gui/core/IViewport.ts",
-    "extension/gui/core/IViewstack.ts",
+    "extension/gui/core/IViewStack.ts",
     "extension/gui/core/IVisualElement.ts",
     "extension/gui/core/IVisualElementContainer.ts",
     "extension/gui/managers/ILayoutManagerClient.ts",
