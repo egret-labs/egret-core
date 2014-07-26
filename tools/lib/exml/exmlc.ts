@@ -298,21 +298,23 @@ class EXMLCompiler{
                 if(this.isStateNode(node))//检查节点是否只存在于一个状态里，需要单独实例化
                     this.stateIds.push(node.$id);
             }
-            else if(this.isProperty(node)){
-                var prop:string = node.localName;
-                var index:number = prop.indexOf(".");
-                var children:Array<any> = node.children;
-                if(index==-1||!children||children.length==0){
-                    continue;
+            else if(node.localName){
+                if(this.isProperty(node)){
+                    var prop:string = node.localName;
+                    var index:number = prop.indexOf(".");
+                    var children:Array<any> = node.children;
+                    if(index==-1||!children||children.length==0){
+                        continue;
+                    }
+                    var firstChild:any = children[0];
+                    this.stateIds.push(firstChild.$id);
                 }
-                var firstChild:any = children[0];
-                this.stateIds.push(firstChild.$id);
-            }
-            else{
-                this.createIdForNode(node);
-                this.idToNode[node.$id] = node;
-                if(this.isStateNode(node))
-                    this.stateIds.push(node.$id);
+                else{
+                    this.createIdForNode(node);
+                    this.idToNode[node.$id] = node;
+                    if(this.isStateNode(node))
+                        this.stateIds.push(node.$id);
+                }
             }
 
         }
@@ -929,7 +931,7 @@ class EXMLCompiler{
         for(var i:number=0;i<length;i++){
             var node:any = items[i];
             this.createStates(node);
-            if(node.namespace==EXMLCompiler.W){
+            if(node.namespace==EXMLCompiler.W||!node.localName){
                 continue;
             }
             if(this.isProperty(node))

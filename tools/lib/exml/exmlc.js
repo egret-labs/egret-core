@@ -251,20 +251,22 @@ var EXMLCompiler = (function () {
                 this.createVarForNode(node);
                 if (this.isStateNode(node))
                     this.stateIds.push(node.$id);
-            } else if (this.isProperty(node)) {
-                var prop = node.localName;
-                var index = prop.indexOf(".");
-                var children = node.children;
-                if (index == -1 || !children || children.length == 0) {
-                    continue;
+            } else if (node.localName) {
+                if (this.isProperty(node)) {
+                    var prop = node.localName;
+                    var index = prop.indexOf(".");
+                    var children = node.children;
+                    if (index == -1 || !children || children.length == 0) {
+                        continue;
+                    }
+                    var firstChild = children[0];
+                    this.stateIds.push(firstChild.$id);
+                } else {
+                    this.createIdForNode(node);
+                    this.idToNode[node.$id] = node;
+                    if (this.isStateNode(node))
+                        this.stateIds.push(node.$id);
                 }
-                var firstChild = children[0];
-                this.stateIds.push(firstChild.$id);
-            } else {
-                this.createIdForNode(node);
-                this.idToNode[node.$id] = node;
-                if (this.isStateNode(node))
-                    this.stateIds.push(node.$id);
             }
         }
     };
@@ -754,6 +756,9 @@ var EXMLCompiler = (function () {
         var node = this.currentXML;
         for (var itemName in node) {
             var value = node[itemName];
+            if (value.charAt(0) != "$") {
+                continue;
+            }
             itemName = itemName.substring(1);
             var index = itemName.indexOf(".");
             if (index != -1) {
@@ -864,7 +869,7 @@ var EXMLCompiler = (function () {
         for (var i = 0; i < length; i++) {
             var node = items[i];
             this.createStates(node);
-            if (node.namespace == EXMLCompiler.W) {
+            if (node.namespace == EXMLCompiler.W || !node.localName) {
                 continue;
             }
             if (this.isProperty(node)) {
@@ -907,14 +912,14 @@ var EXMLCompiler = (function () {
                         globals.exit(2007, this.exmlPath, this.toXMLString(node));
                     }
                     var propertyName = "";
-                    var parentNode = (node.parent);
-                    if (parentNode.localName == "Array")
-                        parentNode = parentNode.parent;
-                    if (this.isProperty(parentNode))
-                        parentNode = parentNode.parent;
-                    if (parentNode && parentNode != this.currentXML) {
-                        propertyName = parentNode.$id;
-                        this.checkIdForState(parentNode);
+                    var parent = (node.parent);
+                    if (parent.localName == "Array")
+                        parent = parent.parent;
+                    if (this.isProperty(parent))
+                        parent = parent.parent;
+                    if (parent && parent != this.currentXML) {
+                        propertyName = parent.$id;
+                        this.checkIdForState(parent);
                     }
                     var positionObj = this.findNearNodeId(node);
                     var stateNames = [];
@@ -952,6 +957,9 @@ var EXMLCompiler = (function () {
 
                 for (var name in node) {
                     var value = node[name];
+                    if (value.charAt(0) != "$") {
+                        continue;
+                    }
                     name = name.substring(1);
                     var index = name.indexOf(".");
                     if (index != -1) {
