@@ -815,6 +815,9 @@ class EXMLCompiler{
         var node:any = this.currentXML;
         for(var itemName in node){
             var value:string = node[itemName];
+			if(value.charAt(0)!="$"){
+                continue;
+			}
             itemName = itemName.substring(1);
             var index:number = itemName.indexOf(".");
             if(index!=-1){
