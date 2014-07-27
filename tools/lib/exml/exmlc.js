@@ -756,7 +756,7 @@ var EXMLCompiler = (function () {
         var node = this.currentXML;
         for (var itemName in node) {
             var value = node[itemName];
-            if (value.charAt(0) != "$") {
+            if (itemName.charAt(0) != "$") {
                 continue;
             }
             itemName = itemName.substring(1);
@@ -957,7 +957,7 @@ var EXMLCompiler = (function () {
 
                 for (var name in node) {
                     var value = node[name];
-                    if (value.charAt(0) != "$") {
+                    if (name.charAt(0) != "$") {
                         continue;
                     }
                     name = name.substring(1);

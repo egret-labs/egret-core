@@ -817,7 +817,7 @@ class EXMLCompiler{
         var node:any = this.currentXML;
         for(var itemName in node){
             var value:string = node[itemName];
-			if(value.charAt(0)!="$"){
+			if(itemName.charAt(0)!="$"){
                 continue;
 			}
             itemName = itemName.substring(1);
@@ -1023,7 +1023,7 @@ class EXMLCompiler{
 
                 for(var name in node){
                     var value:string = node[name];
-					if(value.charAt(0)!="$"){
+					if(name.charAt(0)!="$"){
                     	continue;
                     }
                     name = name.substring(1);
