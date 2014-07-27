@@ -25,6 +25,7 @@ function run(current, arg, opt) {
     var keypass = config.password;
     var project = config.project;
     var native_folder = config["egret-native"];
+    var jscmaker = config["jsc-maker"];
     var join = require("path").join;
 
     async.series(
@@ -34,6 +35,22 @@ function run(current, arg, opt) {
                 file.copy(join(project,"bin-debug"), join(native_folder,"assets/bin-debug"));
                 file.copy(join(project,"launcher"), join(native_folder,"assets/launcher"));
                 file.copy(join(project,"resources"), join(native_folder,"assets/resources"));
+                callback();
+            },
+
+
+            function (callback) {
+                var cmd = jscmaker +" " + join(native_folder,"assets")
+                executeCommand(callback, cmd);
+            },
+
+            function (callback) {
+
+                var list = file.search(join(native_folder,"assets"),"js");
+                list = list.concat( file.search(join(native_folder,"assets"),"js.map"));
+                list.forEach(function(item){
+                    file.remove(item);
+                })
                 callback();
             },
 
@@ -47,6 +64,8 @@ function run(current, arg, opt) {
                 executeCommand(callback, cmd);
             },
 
+          
+
             function (callback) {
                 file.remove("a.apk");
                 var cmd = "adb uninstall org.egret.egretframeworknative";
@@ -58,6 +77,8 @@ function run(current, arg, opt) {
                 var cmd = "adb install " + output;
                 executeCommand(callback, cmd);
             }
+
+
 
         ]
 
