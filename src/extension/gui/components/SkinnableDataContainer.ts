@@ -117,13 +117,13 @@ module egret {
 		 * rendererClass获取顺序：itemRendererFunction > itemRenderer > 默认ItemRenerer。
 		 * @member egret.SkinnableDataContainer#itemRenderer
 		 */		
-		public get itemRenderer():any{
+		public get itemRenderer():IFactory{
 			return (this.dataGroup) 
 			? this.dataGroup.itemRenderer 
 				: this._dataGroupProperties.itemRenderer;
 		}
 		
-		public set itemRenderer(value:any){
+		public set itemRenderer(value:IFactory){
 			if (this.dataGroup==null){
 				this._dataGroupProperties.itemRenderer = value;
 			}

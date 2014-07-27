@@ -61,13 +61,18 @@ module egret {
 
         //todo:这里对bounds的处理和TextField非常类似，以后考虑重构
         public _renderText(forMeasureContentSize:boolean = false):Rectangle {
-            var rect:Rectangle = Rectangle.identity.initialize(0, 0, 0, 0);
+            var tempW:number = 0;
+            var tempH:number = 0;
             if (!forMeasureContentSize) {
                 this.removeChildren();
             }
             for (var i = 0, l = this.text.length; i < l; i++) {
                 var character = this.text.charAt(i);
                 var texture = this.spriteSheet.getTexture(character);
+                if (texture == null) {
+                    console.log("当前没有位图文字：" + character);
+                    continue;
+                }
                 var offsetX = texture._offsetX;
                 var offsetY = texture._offsetY;
                 var characterWidth = texture._textureWidth;
@@ -79,13 +84,14 @@ module egret {
                     }
                     bitmap.texture = texture;
                     this.addChild(bitmap);
-                    bitmap.x = rect.width;
+                    bitmap.x = tempW;
                 }
-                rect.width += characterWidth + offsetX;
-                if (offsetY + texture._textureHeight > rect.height) {
-                    rect.height = offsetY + texture._textureHeight;
+                tempW += characterWidth + offsetX;
+                if (offsetY + texture._textureHeight > tempH) {
+                    tempH = offsetY + texture._textureHeight;
                 }
             }
+            var rect:Rectangle = Rectangle.identity.initialize(0, 0, tempW, tempH);
             return rect;
         }
 

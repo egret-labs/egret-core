@@ -31,9 +31,9 @@ function run(current, arg, opt) {
         [
 
             function (callback) {
-                file.copy(join(project,"bin-debug"), join(native_folder,"assets/js/bin-debug"));
-                file.copy(join(project,"launcher"), join(native_folder,"assets/js/launcher"));
-                file.copy(join(project,"resources"), join(native_folder,"assets/js/resources"));
+                file.copy(join(project,"bin-debug"), join(native_folder,"assets/bin-debug"));
+                file.copy(join(project,"launcher"), join(native_folder,"assets/launcher"));
+                file.copy(join(project,"resources"), join(native_folder,"assets/resources"));
                 callback();
             },
 

@@ -124,18 +124,6 @@ module egret {
             }
         }
 
-        save() {
-//            return;
-            this.canvasContext.save();
-        }
-
-        restore() {
-//            return;
-            this.canvasContext.restore();
-            this.canvasContext.setTransform(1, 0, 0, 1, 0, 0);
-        }
-
-
         setAlpha(alpha:number, blendMode:egret.BlendMode) {
             if (alpha != this.canvasContext.globalAlpha) {
                 this.canvasContext.globalAlpha = alpha;
@@ -180,10 +168,6 @@ module egret {
             }
             renderContext.fillText(text, x + this._transformTx, y + this._transformTy, maxWidth || 0xFFFF);
             super.drawText(textField, text, x, y, maxWidth);
-        }
-
-        clip(x, y, w, h) {
-
         }
 
         strokeRect(x, y, w, h, color) {
@@ -343,6 +327,7 @@ module egret_h5_graphics {
             this.endFillCommand = new Command(
                 function () {
                     this.canvasContext.fill();
+                    this.canvasContext.closePath();
                 },
                 this,
                 null);
@@ -350,6 +335,9 @@ module egret_h5_graphics {
     }
 
     export function endFill():void {
+        if(this.fillStyleColor != null) {
+            this._fill();
+        }
         this.fillStyleColor = null;
     }
 
@@ -383,7 +371,6 @@ module egret_h5_graphics {
             this.createEndLineCommand();
             this.commandQueue.push(this.endLineCommand);
         }
-
         for (var i = 0; i < length; i++) {
             var command:Command = this.commandQueue[i];
             command.method.apply(command.thisObject, command.args);
@@ -402,6 +389,7 @@ module egret_h5_graphics {
 
     export function _setStyle(colorStr:string):void {
         this.canvasContext.fillStyle = colorStr;
+        this.canvasContext.beginPath();
     }
 
 

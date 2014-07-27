@@ -298,21 +298,23 @@ class EXMLCompiler{
                 if(this.isStateNode(node))//检查节点是否只存在于一个状态里，需要单独实例化
                     this.stateIds.push(node.$id);
             }
-            else if(this.isProperty(node)){
-                var prop:string = node.localName;
-                var index:number = prop.indexOf(".");
-                var children:Array<any> = node.children;
-                if(index==-1||!children||children.length==0){
-                    continue;
+            else if(node.localName){
+                if(this.isProperty(node)){
+                    var prop:string = node.localName;
+                    var index:number = prop.indexOf(".");
+                    var children:Array<any> = node.children;
+                    if(index==-1||!children||children.length==0){
+                        continue;
+                    }
+                    var firstChild:any = children[0];
+                    this.stateIds.push(firstChild.$id);
                 }
-                var firstChild:any = children[0];
-                this.stateIds.push(firstChild.$id);
-            }
-            else{
-                this.createIdForNode(node);
-                this.idToNode[node.$id] = node;
-                if(this.isStateNode(node))
-                    this.stateIds.push(node.$id);
+                else{
+                    this.createIdForNode(node);
+                    this.idToNode[node.$id] = node;
+                    if(this.isStateNode(node))
+                        this.stateIds.push(node.$id);
+                }
             }
 
         }
@@ -815,6 +817,9 @@ class EXMLCompiler{
         var node:any = this.currentXML;
         for(var itemName in node){
             var value:string = node[itemName];
+			if(value.charAt(0)!="$"){
+                continue;
+			}
             itemName = itemName.substring(1);
             var index:number = itemName.indexOf(".");
             if(index!=-1){
@@ -926,7 +931,7 @@ class EXMLCompiler{
         for(var i:number=0;i<length;i++){
             var node:any = items[i];
             this.createStates(node);
-            if(node.namespace==EXMLCompiler.W){
+            if(node.namespace==EXMLCompiler.W||!node.localName){
                 continue;
             }
             if(this.isProperty(node))
@@ -971,14 +976,14 @@ class EXMLCompiler{
                         globals.exit(2007,this.exmlPath,this.toXMLString(node));
                     }
                     var propertyName:string = "";
-                    var parentNode:any = (node.parent);
-                    if(parentNode.localName=="Array")
-                        parentNode = parentNode.parent;
-                    if(this.isProperty(parentNode))
-                        parentNode = parentNode.parent;
-                    if(parentNode&&parentNode != this.currentXML){
-                        propertyName = parentNode.$id;
-                        this.checkIdForState(parentNode);
+                    var parent:any = (node.parent);
+                    if(parent.localName=="Array")
+                        parent = parent.parent;
+                    if(this.isProperty(parent))
+                        parent = parent.parent;
+                    if(parent&&parent != this.currentXML){
+                        propertyName = parent.$id;
+                        this.checkIdForState(parent);
                     }
                     var positionObj:any = this.findNearNodeId(node);
                     var stateNames:Array<any> = [];
@@ -1018,6 +1023,9 @@ class EXMLCompiler{
 
                 for(var name in node){
                     var value:string = node[name];
+					if(value.charAt(0)!="$"){
+                    	continue;
+                    }
                     name = name.substring(1);
                     var index:number = name.indexOf(".");
                     if(index!=-1){

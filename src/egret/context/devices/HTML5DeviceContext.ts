@@ -29,11 +29,11 @@
 module egret {
 
 
-	/**
-	 * @class egret.HTML5DeviceContext
-	 * @classdesc
-	 * @extends egret.DeviceContext
-	 */
+    /**
+     * @class egret.HTML5DeviceContext
+     * @classdesc
+     * @extends egret.DeviceContext
+     */
     export class HTML5DeviceContext extends DeviceContext {
 
 
@@ -41,14 +41,15 @@ module egret {
 
         private static instance:HTML5DeviceContext;
 
-		/**
-		 * @member egret.HTML5DeviceContext#frameRate
-		 */
-        public frameRate:number = 60;s
+        /**
+         * @member egret.HTML5DeviceContext#frameRate
+         */
+        public frameRate:number = 60;
+        s
 
-		/**
-		 * @method egret.HTML5DeviceContext#constructor
-		 */
+        /**
+         * @method egret.HTML5DeviceContext#constructor
+         */
         public constructor() {
             super();
             HTML5DeviceContext.instance = this;
@@ -86,8 +87,7 @@ module egret {
         private _requestAnimationId:number;
 
 
-
-        private enterFrame():void{
+        private enterFrame():void {
             var context = HTML5DeviceContext.instance;
             var thisObject = HTML5DeviceContext._thisObject;
             var callback = HTML5DeviceContext._callback
@@ -100,35 +100,65 @@ module egret {
         }
 
 
-		/**
-		 * @method egret.HTML5DeviceContext#executeMainLoop
-		 * @param callback {Function} 
-		 * @param thisObject {any} 
-		 */
+        /**
+         * @method egret.HTML5DeviceContext#executeMainLoop
+         * @param callback {Function}
+         * @param thisObject {any}
+         */
         public executeMainLoop(callback:Function, thisObject:any):void {
             HTML5DeviceContext._callback = callback;
             HTML5DeviceContext._thisObject = thisObject;
             this.enterFrame();
         }
 
-        private reset():void{
+        private reset():void {
             var context = HTML5DeviceContext.instance;
-            if (context._requestAnimationId){
+            if (context._requestAnimationId) {
                 context._time = egret.getTimer();
-                HTML5DeviceContext.cancelAnimationFrame.call(window,context._requestAnimationId);
+                HTML5DeviceContext.cancelAnimationFrame.call(window, context._requestAnimationId);
+                context.enterFrame();
             }
-            context.enterFrame();
         }
 
-        private registerListener():void{
+        private registerListener():void {
 
-            //todo: visiblechanged pageshow 
-            window.onfocus = function () {
+            var onFocusHandler = function () {
                 var context = HTML5DeviceContext.instance;
                 context.reset();
-            };
+            }
+
+            var handleVisibilityChange = function () {
+                if (!document[hidden]) {
+                    onFocusHandler();
+                }
+            }
+
+            window.onfocus = onFocusHandler
             window.onblur = function () {
             };
+
+
+            var hidden, visibilityChange;
+            if (typeof document.hidden !== "undefined") {
+                hidden = "hidden";
+                visibilityChange = "visibilitychange";
+            } else if (typeof document["mozHidden"] !== "undefined") {
+                hidden = "mozHidden";
+                visibilityChange = "mozvisibilitychange";
+            } else if (typeof document["msHidden"] !== "undefined") {
+                hidden = "msHidden";
+                visibilityChange = "msvisibilitychange";
+            } else if (typeof document["webkitHidden"] !== "undefined") {
+                hidden = "webkitHidden";
+                visibilityChange = "webkitvisibilitychange";
+            }
+            if ("onpageshow" in window && "onpagehide" in window) {
+                window.addEventListener("pageshow", onFocusHandler, false);
+//                window.addEventListener("pagehide", handleBlur, false);
+            }
+            if (hidden && visibilityChange) {
+                document.addEventListener(visibilityChange, handleVisibilityChange, false);
+            }
         }
     }
 

@@ -28,9 +28,9 @@
 var file = require("../core/file.js");
 var xml = require("../core/xml.js");
 var param = require("../core/params_analyze.js");
-var properties = require("./properties.json");
 var CodeUtil = require("../core/code_util.js");
 var create_manifest = require("../tools/create_manifest.js");
+var properties = {};
 
 var EXMLConfig = (function () {
     /**
@@ -47,6 +47,9 @@ var EXMLConfig = (function () {
         var str = file.read(exmlPath + "egret-manifest.xml");
         var manifest = xml.parse(str);
         this.parseManifest(manifest);
+
+        str = file.read(exmlPath + "properties.json");
+        properties = JSON.parse(str);
     }
     Object.defineProperty(EXMLConfig.prototype, "srcPath", {
         get: function () {

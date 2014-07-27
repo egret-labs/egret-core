@@ -27,7 +27,7 @@
 
 
 module egret {
-    
+
     /**
      * @class egret.Texture
      * @classdesc 纹理类是对不同平台不同的图片资源的封装
@@ -36,6 +36,8 @@ module egret {
      * Texture类封装了这些底层实现的细节，开发者只需要关心接口即可
      */
     export class Texture extends HashObject{
+
+        public webGLTexture;
 
         public constructor(){
             super();

@@ -80,7 +80,7 @@ function create_app_from(app_name, h5_path, template_path) {
 
     build_copy(h5_path, preferences["native"]["path_ignore"], target_list);
     target_list.forEach(function(target) {
-        file.remove(path.join(target, "egret-game/.gitignore"));
+        file.remove(path.join(target, ".gitignore"));
     });
 }
 

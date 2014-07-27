@@ -27,13 +27,15 @@
 
 
 module egret {
-    
+
     /**
      * @class egret.SpriteSheet
      * @classdesc SpriteSheet是一张由多个子位图拼接而成的集合位图，它包含多个Texture对象。
      * 每一个Texture都共享SpriteSheet的集合位图，但是指向它的不同的区域。
      * 在WebGL / OpenGL上，这种做法可以显著提升性能
      * 同时，SpriteSheet可以很方便的进行素材整合，降低HTTP请求数量
+     * SpriteSheet 格式的具体规范可以参见此文档  https://github.com/egret-labs/egret-core/wiki/Egret-SpriteSheet-Specification
+     *
      */
     export class SpriteSheet extends HashObject {
 

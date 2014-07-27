@@ -48,7 +48,7 @@ function compile(callback, srcPath, output, sourceList, keepGeneratedTypescript)
     var length = sourceList.length;
     for (var i = 0; i < length; i++) {
         var p = sourceList[i];
-        if (!file.exists(p)) {
+        if (!file.exists(p)|| p.indexOf("exml.d.ts")!=-1) {
             continue;
         }
         var ext = file.getExtension(p).toLowerCase();
@@ -61,9 +61,7 @@ function compile(callback, srcPath, output, sourceList, keepGeneratedTypescript)
         }
     }
 
-    if (isQuickMode()) {
-        tsList = parseFromCrc32(tsList);
-    }
+    tsList = parseFromCrc32(tsList);
 
     globals.addCallBackWhenExit(cleanTempFile);
 
@@ -109,6 +107,7 @@ function compile(callback, srcPath, output, sourceList, keepGeneratedTypescript)
             typeScriptCompiler(function (code) {
                 cleanTempFile();
                 if (code == 0) {
+                    file.save(crc32FilePath, JSON.stringify(crc32Map));
                     callback(null, srcPath);
                 }
                 else {
@@ -135,13 +134,14 @@ function compile(callback, srcPath, output, sourceList, keepGeneratedTypescript)
     }
 }
 
+var crc32FilePath;
+var crc32Map;
 function parseFromCrc32(tsList) {
     var result = [];
     var argv = param.getArgv();
     var currDir = globals.joinEgretDir(argv.currDir, argv.args[0]);
-    var crc32FilePath = path.join(currDir, "crc32.temp");
+    crc32FilePath = path.join(currDir, "crc32.temp");
     var crc32Txt = "";
-    var crc32Map;
     if (file.exists(crc32FilePath)) {
         crc32Txt = file.read(crc32FilePath);
         crc32Map = JSON.parse(crc32Txt);
@@ -152,23 +152,28 @@ function parseFromCrc32(tsList) {
     var l = tsList.length;
     for (var j = 0; j < l; j++) {
         var tsFilePath = tsList[j];
-        if(tsFilePath.indexOf(".d.ts") != -1) {//.d.ts一定要传给编译器
+        if (tsFilePath.indexOf(".d.ts") != -1) {//.d.ts一定要传给编译器
             result.push(tsFilePath);
             continue;
         }
         var tsFileTxt = file.read(tsFilePath);
-        var crc32Txt = crc32.direct(tsFileTxt);
-        if (crc32Map[tsFilePath] && crc32Map[tsFilePath] == crc32Txt) {//有过改变的文件需要编译
+        var tsFileCrc32Txt = crc32.direct(tsFileTxt);
+        if (crc32Map[tsFilePath] && crc32Map[tsFilePath] == tsFileCrc32Txt) {//有过改变的文件需要编译
             continue;
         }
-        crc32Map[tsFilePath] = crc32Txt;
+        crc32Map[tsFilePath] = tsFileCrc32Txt;
         result.push(tsFilePath);
     }
-    file.save(crc32FilePath, JSON.stringify(crc32Map));
-    var projectDTS = create_manifest.createProjectDTS(result, path.join(currDir, "src"));
-    file.save("game.d.ts", projectDTS);
-    result.push(path.join(argv.currDir, "game.d.ts"));
-    return result;
+
+    if (isQuickMode()) {
+        var projectDTS = create_manifest.createProjectDTS(result, path.join(currDir, "src"));
+        file.save("game.d.ts", projectDTS);
+        result.push(path.join(argv.currDir, "game.d.ts"));
+        return result;
+    }
+    else {
+        return tsList;
+    }
 }
 
 function typeScriptCompiler(quitFunc) {
@@ -187,26 +192,10 @@ function typeScriptCompiler(quitFunc) {
                 resolver.resolveAST(sourceUnit, false, context);
             }
         };
-        TypeScript.IO.stderr = {
-            Write: function (str) {
-                writeError(str);
-            },
-            WriteLine: function (str) {
-                writeError(str + '\n');
-            },
-            Close: function () {
-            }
-        }
     }
 
     var batch = new TypeScript.BatchCompiler(TypeScript.IO);
     batch.batchCompile();
-
-    function writeError(error) {//只输出严重级bug
-        if(error.indexOf("error TS1") != -1 || error.indexOf("error TS5") != -1) {
-            process.stderr.write(error);
-        }
-    }
 }
 
 function isQuickMode() {
@@ -328,12 +317,9 @@ function createFileList(manifest, srcPath) {
         if (filePath.indexOf(".d.ts") != -1) {
             continue;
         }
-        var fileName = file.getFileName(filePath);
-        if (fileName.charAt(0) == "I") {
-            var str = fileName.charAt(1);
-            if (str >= "A" && str <= "Z" && isInterface(filePath)) {
-                continue;
-            }
+        var ext = file.getExtension(filePath).toLowerCase();
+        if (ext=="ts"&&isInterface(filePath)) {
+            continue;
         }
         gameList.push(filePath);
     }

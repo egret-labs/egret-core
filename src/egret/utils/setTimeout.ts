@@ -25,74 +25,47 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+module egret {
 
-declare module egret_native {
-
-    /**
-     * 游戏启动
-     * @private
-     */
-    function startGame():void;
+    var __setTimeout__cache:any = {};
+    var __setTimeout__index:number = 0;
 
     /**
-     * 启动主循环
-     * @param callback 主循环回调函数
-     * @param thisObject
+     * 在指定的延迟（以毫秒为单位）后运行指定的函数。
+     * @method egret.setTimeout
+     * @param listener {Function}
+     * @param thisObject {any}
+     * @param delay {number}
+     * @param args {any}
+     * @returns {number} 唯一引用
      */
-    function executeMainLoop(callback:Function, thisObject:any):void;
-
-
-    function readXML(filepath:string):any;
-
-    function readFileSync(filepath:string):any;
-
-
-    function requireHttpSync(url:string,callback:Function):void;
-
-
-    module Graphics {
-
-
-        function clearScreen(r:number, g:number, b:number):void;
-
-        function drawImage(texture:any, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight):void;
-
-        function setTransform(a:number, b:number, c:number, d:number, tx:number, ty:number):void;
-
-        function setGlobalAlpha(alpha:number):void;
-
-        function pushRectStencil(x:number,y:number,w:number,h:number,r:number,g:number,b:number,a:number,hackFlag:number,forceCreateMask:boolean):void;
-
-        function popStencil():void;
-
+    export function setTimeout(listener:Function, thisObject:any, delay:number, ...args):number {
+        var data = {listener: listener, thisObject: thisObject, delay: delay, params: args};
+        if (__setTimeout__index == 0) {
+            Ticker.getInstance().register(timeoutUpdate, null);
+        }
+        __setTimeout__index++;
+        __setTimeout__cache[__setTimeout__index] = data;
+        return __setTimeout__index;
     }
 
-    module Label {
-
-        function createLabel(font:string, size:number, defaultString:string):void;
-
-        function setTextColor(color:number):void;
-
-        function drawText(text:string, x:number, y:number):void;
-
-        function setTextAlignment(type:string):void;
-
-        function getTextSize(text:string):Array<number>;
-
-
+    /**
+     * 清除指定延迟后运行的函数。
+     * @method egret.clearTimeout
+     * @param key {number}
+     */
+    export function clearTimeout(key:number):void {
+        delete __setTimeout__cache[key];
     }
 
-
-    module EGTXML {
-
-
-        function readXML(filepath:string):void;
-    }
-
-    module Texture {
-
-        function addTexture(filePath:string):any;
-
-        function removeTexture(filePath:string):void;
+    function timeoutUpdate(dt:number):void {
+        for (var key in __setTimeout__cache) {
+            var data = __setTimeout__cache[key];
+            data.delay -= dt;
+            if (data.delay <= 0) {
+                data.listener.apply(data.thisObject, data.params);
+                delete __setTimeout__cache[key];
+            }
+        }
     }
 }

@@ -59,7 +59,16 @@ module egret {
             var drawAreaList:Array<Rectangle> = renderFilter._drawAreaList.concat();
             renderFilter._drawAreaList.length = 0;
             this.renderContext.clearScreen();
+
+            this.webGLTexture = null;//gl.deleteTexture(this.webGLTexture);
+            var mask = displayObject.mask || displayObject._scrollRect;
+            if (mask) {
+                this.renderContext.pushMask(mask);
+            }
             displayObject._render(this.renderContext);
+            if (mask) {
+                this.renderContext.popMask();
+            }
             renderFilter._drawAreaList = drawAreaList;
 
             this._textureWidth = this._bitmapData.width;
@@ -68,8 +77,8 @@ module egret {
             this._sourceHeight = this._textureHeight;
 
             //测试代码
-//            renderContext.canvasContext.setTransform(1, 0, 0, 1, 0, 0);
-//            renderContext.strokeRect(0, 0,cacheCanvas.width,cacheCanvas.height,"#ff0000");
+//            this.renderContext.canvasContext.setTransform(1, 0, 0, 1, 0, 0);
+//            this.renderContext.strokeRect(0, 0,cacheCanvas.width,cacheCanvas.height,"#ff0000");
 //            document.documentElement.appendChild(cacheCanvas);
         }
     }

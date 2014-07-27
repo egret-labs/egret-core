@@ -57,18 +57,28 @@ function createDirectory(path, mode, made) {
     return made;
 }
 
-
+var textTemp = {};
 /**
  * 读取文本文件,返回打开文本的字符串内容，若失败，返回"".
  * @param path 要打开的文件路径
  */
 function read(path) {
     path = escapePath(path);
+    var text = textTemp[path];
+    if(text){
+        return text;
+    }
     try{
-        var text = fs.readFileSync(path,charset);
+        text = fs.readFileSync(path,charset);
     }
     catch (err0) {
         return "";
+    }
+    if(text){
+        var ext = getExtension(path).toLowerCase();
+        if(ext=="ts"||ext=="exml"){
+            textTemp[path] = text;
+        }
     }
     return text;
 }
