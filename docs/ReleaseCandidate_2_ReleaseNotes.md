@@ -39,5 +39,6 @@ Egret 1.0 Release Candidate 2 是 Egret 1.0的第二个发布候选版，专注�
   * 优化 egret build 命令，现在编译速度会和之前比提升最高 20%，大型项目更加明显
   * 修复 egret publish 在 windows 环境下报错的bug
   * 修复 egret startserver 在当前项目路径下直接运行（不输入项目名）会报错的bug
+  * 修复了 exml 编译器的若干问题,并进一步提高稳定性
 
 
