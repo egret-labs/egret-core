@@ -61,8 +61,6 @@ function compile(callback, srcPath, output, sourceList, keepGeneratedTypescript)
         }
     }
 
-    tsList = parseFromCrc32(tsList);
-
     globals.addCallBackWhenExit(cleanTempFile);
 
     async.waterfall([
@@ -132,7 +130,7 @@ function compile(callback, srcPath, output, sourceList, keepGeneratedTypescript)
         }
     }
 }
-
+/*
 var crc32FilePath;
 var crc32Map;
 function parseFromCrc32(tsList) {
@@ -174,6 +172,7 @@ function parseFromCrc32(tsList) {
         return tsList;
     }
 }
+*/
 
 function typeScriptCompiler(quitFunc) {
     var TypeScript = require('../core/typescript/tsc.js');

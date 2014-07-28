@@ -69,6 +69,11 @@ module egret{
          */
         public stage:Stage;
 
+        public static type:string;
+
+        public static TYPE_WEB:string = "web";
+        public static TYPE_NATIVE:string = "native";
+
         /**
          * 游戏启动，开启主循环，参考Flash的滑动跑道模型
 		 * @method egret.MainContext#run
@@ -172,3 +177,4 @@ module egret{
 }
 
 egret.MainContext.instance = new egret.MainContext();
+egret.MainContext.type = egret.MainContext.TYPE_WEB;

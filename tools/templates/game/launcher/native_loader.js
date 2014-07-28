@@ -24,6 +24,8 @@ egret_native.egtMain = function () {
     }
 
 
+
+    egret.MainContext.type = egret.MainContext.TYPE_NATIVE;
     var context = egret.MainContext.instance;
     context.rendererContext = new egret.NativeRendererContext();
     context.netContext = new egret.NativeNetContext();
