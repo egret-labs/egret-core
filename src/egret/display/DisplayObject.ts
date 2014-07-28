@@ -624,7 +624,7 @@ module egret {
                 return null;
             }
             var bound:Rectangle = this._getSize(Rectangle.identity);
-            if (0 < x && x < bound.width && 0 < y && y < bound.height) {
+            if (0 <= x && x < bound.width && 0 <= y && y < bound.height) {
                 if (this.mask || this._scrollRect) {
                     if (this._scrollRect
                         && x < this._scrollRect.width
@@ -632,9 +632,9 @@ module egret {
                         return this;
                     }
                     else if (this.mask
-                        && this.mask.x < x
+                        && this.mask.x <= x
                         && x < this.mask.x + this.mask.width
-                        && this.mask.y < y
+                        && this.mask.y <= y
                         && y < this.mask.y + this.mask.height) {
                         return this;
                     }
