@@ -69,10 +69,10 @@ module egret{
          */
         public stage:Stage;
 
-        public static type:string;
+        public static deviceType:string;
 
-        public static TYPE_WEB:string = "web";
-        public static TYPE_NATIVE:string = "native";
+        public static DEVICE_PC:string = "web";
+        public static DEVICE_MOBILE:string = "native";
 
         /**
          * 游戏启动，开启主循环，参考Flash的滑动跑道模型
@@ -177,4 +177,8 @@ module egret{
 }
 
 egret.MainContext.instance = new egret.MainContext();
-egret.MainContext.type = egret.MainContext.TYPE_WEB;
+
+
+
+
+egret.MainContext.deviceType =  this.hasOwnProperty("window") && window["navigator"] ? egret.MainContext.DEVICE_PC : egret.MainContext.DEVICE_MOBILE;
