@@ -107,7 +107,6 @@ function compile(callback, srcPath, output, sourceList, keepGeneratedTypescript)
             typeScriptCompiler(function (code) {
                 cleanTempFile();
                 if (code == 0) {
-                    file.save(crc32FilePath, JSON.stringify(crc32Map));
                     callback(null, srcPath);
                 }
                 else {
