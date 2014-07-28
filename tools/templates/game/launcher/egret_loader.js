@@ -74,7 +74,8 @@ egret_h5.startGame = function () {
 
     context.stage = new egret.Stage(canvas.width, canvas.height);
 
-    if(egret.WebGLUtils.checkCanUseWebGL()) {
+    //WebGL是egret的Beta特性，默认关闭
+    if(false){// egret.WebGLUtils.checkCanUseWebGL()) {
         context.rendererContext = new egret.WebGLRenderer(canvas);
     }
     else {
