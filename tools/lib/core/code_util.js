@@ -360,6 +360,12 @@ function trimVariableRight(str) {
 * 移除代码注释和字符串常量
 */
 function removeComment(codeText) {
+
+
+    //performance optimize
+    var result = codeText.replace(/(?:^|\n|\r)\s*\/\*[\s\S]*?\*\/\s*(?:\r|\n|$)/g, '\n').replace(/(?:^|\n|\r)\s*\/\/.*(?:\r|\n|$)/g, '\n');
+    return result;
+
     var NBSP = "";
     var trimText = "";
 
