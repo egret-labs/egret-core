@@ -185,7 +185,7 @@ var testDeviceType = function () {
         return true
     }
     var ua = navigator.userAgent.toLowerCase();
-    return (this.ua.indexOf('mobile') != -1 || ua.indexOf('android') != -1);
+    return (ua.indexOf('mobile') != -1 || ua.indexOf('android') != -1);
 }
 
 egret.MainContext.instance = new egret.MainContext();
