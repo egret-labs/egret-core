@@ -153,6 +153,7 @@ module egret {
                 }
             }
 
+            child._setSizeDirty();
             return child;
         }
 
@@ -204,6 +205,9 @@ module egret {
             }
             child._parentChanged(null);
             locChildren.splice(index, 1);
+
+            this._setSizeDirty();
+
             return child;
         }
 
