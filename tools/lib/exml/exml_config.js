@@ -214,6 +214,7 @@ var EXMLConfig = (function () {
             var ext = file.getExtension(path).toLowerCase();
             var text = file.read(path);
             if (ext == "ts") {
+                text = CodeUtil.removeComment(text, path);
                 classData = this.getPropertiesFromTs(text, className);
             } else if (ext == "exml") {
                 classData = this.getPropertiesFromExml(text);
@@ -259,7 +260,6 @@ var EXMLConfig = (function () {
             className = className.substring(index + 1);
         }
         var data;
-        text = CodeUtil.removeComment(text);
         if (moduleName) {
             while (text.length > 0) {
                 var index = CodeUtil.getFirstVariableIndex("module", text);

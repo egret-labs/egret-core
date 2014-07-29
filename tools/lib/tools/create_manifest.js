@@ -50,8 +50,7 @@ var W = "http://ns.egret-labs.org/wing";
  */
 var basicTypes = ["void","any","number","string","boolean","Object","Array","Function"];
 
-var classKeys = ["static",  "public", "private", "get", "set", "class", "interface","module"];
-
+//create("D:/Program/HTML5/egret/src/")
 /**
  * 生成manifest.json文件
  * @param currentDir 当前文件夹
@@ -397,7 +396,7 @@ function readReferenceFromNode(node,list){
 function readReferenceFromTs(path){
     var text = file.read(path);
     var orgText = text;
-    text = CodeUtil.removeComment(text);
+    text = CodeUtil.removeComment(text,path);
     var block = "";
     var tsText = "";
     var moduleList = {};
@@ -526,78 +525,152 @@ function getClassNameById(id,ns){
  * 读取一个ts文件引用的类列表
  */
 function readClassNamesFromTs(path) {
-    analyzeTsFile(path,false);
+    var text = file.read(path);
+    text = CodeUtil.removeComment(text,path);
+    var list = [];
+    analyzeModule(text,list,"");
+    var length = list.length;
+    for (var i = 0; i < length; i++) {
+        var className = list[i];
+        classNameToPath[className] = path;
+    }
+    pathToClassNames[path] = list;
+}
+
+/**
+ * 分析一个ts文件
+ */
+function analyzeModule(text,list,moduleName)
+{
+    var block = "";
+    while (text.length > 0){
+        var index = CodeUtil.getFirstVariableIndex("module",text);
+        if (index == -1){
+            readClassFromBlock(text,list,moduleName);
+            break;
+        }
+        else{
+            var preStr = text.substring(0, index).trim();
+            if(preStr){
+                readClassFromBlock(preStr,list,moduleName);
+            }
+            text = text.substring(index+6);
+            var ns = CodeUtil.getFirstWord(text);
+            ns = CodeUtil.trimVariable(ns);
+            index = CodeUtil.getBracketEndIndex(text);
+            if (index == -1){
+                break;
+            }
+            block = text.substring(0, index+1);
+            text = text.substring(index + 1);
+            if(moduleName){
+                ns = moduleName+"."+ns;
+            }
+            analyzeModule(block,list,ns);
+        }
+    }
+}
+
+/**
+ * 从代码块中读取类名，接口名，全局函数和全局变量，代码块为一个Module，或类外的一段全局函数定义
+ */
+function readClassFromBlock(text,list,ns){
+    while (text.length > 0){
+        var index = CodeUtil.getFirstVariableIndex("class", text);
+        if(index==-1){
+            index = Number.POSITIVE_INFINITY;
+        }
+        var interfaceIndex = CodeUtil.getFirstVariableIndex("interface", text);
+        if(interfaceIndex==-1){
+            interfaceIndex = Number.POSITIVE_INFINITY;
+        }
+        var functionIndex = CodeUtil.getFirstVariableIndex("function", text);
+        if(functionIndex==-1){
+            functionIndex = Number.POSITIVE_INFINITY;
+        }
+        else if(ns){
+            if(CodeUtil.getLastWord(text.substring(0,functionIndex))!="export")
+            {
+                functionIndex = Number.POSITIVE_INFINITY;
+            }
+        }
+        var varIndex = CodeUtil.getFirstVariableIndex("var", text);
+        if(varIndex==-1){
+            varIndex = Number.POSITIVE_INFINITY;
+        }
+        else if(ns){
+            if(CodeUtil.getLastWord(text.substring(0,varIndex))!="export")
+            {
+                varIndex = Number.POSITIVE_INFINITY;
+            }
+        }
+        index = Math.min(interfaceIndex,index,functionIndex,varIndex);
+        if (index == Number.POSITIVE_INFINITY){
+            break;
+        }
+
+        var isVar = (index==varIndex);
+        var keyLength = 5;
+        switch (index){
+            case varIndex:
+                keyLength = 3;
+                break;
+            case interfaceIndex:
+                keyLength = 9;
+                break;
+            case functionIndex:
+                keyLength = 8;
+                break;
+        }
+
+        text = text.substring(index + keyLength);
+        var word = CodeUtil.getFirstVariable(text);
+        if (word) {
+            var className;
+            if (ns){
+                className = ns + "." + word;
+            }
+            else{
+                className = word;
+            }
+            if (list.indexOf(className) == -1){
+                list.push(className);
+                var nsList = classNameToModule[word];
+                if(!nsList){
+                    nsList = classNameToModule[word] = [];
+                }
+                if(nsList.indexOf(ns)==-1){
+                    nsList.push(ns);
+                }
+            }
+            text = CodeUtil.removeFirstVariable(text);
+        }
+        if(isVar){
+            index = text.indexOf("\n");
+            if(index==-1){
+                index = text.length;
+            }
+            text = text.substring(index);
+        }
+        else{
+            index = CodeUtil.getBracketEndIndex(text);
+            text = text.substring(index + 1);
+        }
+    }
 }
 
 /**
  * 读取一个ts文件引用的类列表
  */
 function readRelyOnFromTs(path) {
-    analyzeTsFile(path,true);
-}
-/**
- * 分析一个ts文件
- */
-function analyzeTsFile(path,readRelyOn){
     var fileRelyOnList = [];
     var text = file.read(path);
-    var list = [];
-    text = CodeUtil.removeComment(text);
-    if(readRelyOn){
-        readRelyOnFromImport(text, fileRelyOnList);
-    }
-    var block = "";
-    var tsText = "";
-    while (text.length > 0) {
-        var index = text.indexOf("{");
-         if (index == -1) {
-            if (tsText) {
-                list = list.concat(readClassFromBlock(tsText, fileRelyOnList,path,"",readRelyOn));
-                tsText = "";
-            }
-            list = list.concat(readClassFromBlock(text, fileRelyOnList,path,"",readRelyOn));
-            break;
-        } else {
-            var preStr = text.substring(0, index);
-            tsText += preStr;
-            text = text.substring(index);
-            index = CodeUtil.getBracketEndIndex(text);
-            if (index == -1) {
-                break;
-            }
-            block = text.substring(1, index);
-            text = text.substring(index + 1);
-            var ns = CodeUtil.getLastWord(preStr);
-            preStr = CodeUtil.removeLastWord(preStr);
-            var word = CodeUtil.getLastWord(preStr);
-            if (word == "module") {
-                if (tsText) {
-                    list = list.concat(readClassFromBlock(tsText, fileRelyOnList,path,"",readRelyOn));
-                    tsText = "";
-                }
-                list = list.concat(readClassFromBlock(block, fileRelyOnList,path, ns,readRelyOn));
-            } else {
-                tsText += "{" + block + "}";
-            }
-        }
-    }
-    if (tsText) {
-        list = list.concat(readClassFromBlock(tsText, fileRelyOnList,path,"",readRelyOn));
-    }
-
-
-    if(readRelyOn){
-        pathInfoList[path] = fileRelyOnList;
-    }
-    else{
-        var length = list.length;
-        for (var i = 0; i < length; i++) {
-            var className = list[i];
-            classNameToPath[className] = path;
-        }
-        pathToClassNames[path] = list;
-    }
+    text = CodeUtil.removeComment(text,path);
+    readRelyOnFromImport(text, fileRelyOnList);
+    analyzeModuleForRelyOn(text,path,fileRelyOnList,"");
+    pathInfoList[path] = fileRelyOnList;
 }
+
 /**
  * 从import关键字中分析引用关系
  */
@@ -622,65 +695,52 @@ function readRelyOnFromImport(text, fileRelyOnList) {
 }
 
 /**
+ * 分析一个ts文件
+ */
+function analyzeModuleForRelyOn(text,path,fileRelyOnList,moduleName){
+    while (text.length > 0){
+        var index = CodeUtil.getFirstVariableIndex("module",text);
+        if (index == -1){
+            readRelyOnFromBlock(text,path,fileRelyOnList,moduleName);
+            break;
+        }
+        else{
+            var preStr = text.substring(0, index).trim();
+            if(preStr){
+                readRelyOnFromBlock(preStr,path,fileRelyOnList,moduleName);
+            }
+
+            text = text.substring(index+6);
+            var ns = CodeUtil.getFirstWord(text);
+            ns = CodeUtil.trimVariable(ns);
+            index = CodeUtil.getBracketEndIndex(text);
+            if (index == -1){
+                break;
+            }
+            var block = text.substring(0, index+1);
+            text = text.substring(index + 1);
+            if(moduleName){
+                ns = moduleName+"."+ns;
+            }
+            analyzeModuleForRelyOn(block,path,fileRelyOnList,ns);
+        }
+    }
+}
+
+/**
  * 从代码块中分析引用关系，代码块为一个Module，或类外的一段全局函数定义
  */
-function readClassFromBlock(text, fileRelyOnList,path, ns,readRelyOn) {
-    if (typeof ns === "undefined") { ns = ""; }
-    var list = [];
-
+function readRelyOnFromBlock(text, path,fileRelyOnList,ns) {
     while (text.length > 0) {
-
         var index = CodeUtil.getFirstVariableIndex("class", text);
         if(index==-1){
-            index = Number.POSITIVE_INFINITY;
-        }
-        var interfaceIndex = CodeUtil.getFirstVariableIndex("interface", text);
-        if(interfaceIndex==-1){
-            interfaceIndex = Number.POSITIVE_INFINITY;
-        }
-        var functionIndex = CodeUtil.getFirstVariableIndex("function", text);
-        if(functionIndex==-1){
-            functionIndex = Number.POSITIVE_INFINITY;
-        }
-        else if(ns){
-            if(CodeUtil.getLastWord(text.substring(0,functionIndex))!="export"){
-                functionIndex = Number.POSITIVE_INFINITY;
-            }
-        }
-        var varIndex = CodeUtil.getFirstVariableIndex("var", text);
-        if(varIndex==-1){
-            varIndex = Number.POSITIVE_INFINITY;
-        }
-        else if(ns){
-            if(CodeUtil.getLastWord(text.substring(0,varIndex))!="export"){
-                varIndex = Number.POSITIVE_INFINITY;
-            }
-        }
-        index = Math.min(interfaceIndex,index,functionIndex,varIndex);
-        if (index == Number.POSITIVE_INFINITY) {
-            if(readRelyOn){
-                findClassInLine(text,pathToClassNames[path],ns,fileRelyOnList);
-            }
+            findClassInLine(text,pathToClassNames[path],ns,fileRelyOnList);
             break;
         }
 
-        var isVar = (index==varIndex);
         var keyLength = 5;
-        switch (index){
-            case varIndex:
-                keyLength = 3;
-                break;
-            case interfaceIndex:
-                keyLength = 9;
-                break;
-            case functionIndex:
-                keyLength = 8;
-                break;
-        }
         var preStr = text.substring(0, index + keyLength);
-        if(readRelyOn){
-            findClassInLine(preStr,pathToClassNames[path],ns,fileRelyOnList)
-        }
+        findClassInLine(preStr,pathToClassNames[path],ns,fileRelyOnList)
 
         text = text.substring(index + keyLength);
         var word = CodeUtil.getFirstVariable(text);
@@ -691,25 +751,13 @@ function readClassFromBlock(text, fileRelyOnList,path, ns,readRelyOn) {
             } else {
                 className = word;
             }
-            if (list.indexOf(className) == -1) {
-                list.push(className);
-                var nsList = classNameToModule[word];
-                if(!nsList){
-                    nsList = classNameToModule[word] = [];
-                }
-                if(nsList.indexOf(ns)==-1){
-                    nsList.push(ns);
-                }
-            }
-            if(readRelyOn){
-                var relyOnList = classInfoList[className];
-                if (!relyOnList) {
-                    relyOnList = classInfoList[className] = [];
-                }
+            var relyOnList = classInfoList[className];
+            if (!relyOnList) {
+                relyOnList = classInfoList[className] = [];
             }
             text = CodeUtil.removeFirstVariable(text);
             word = CodeUtil.getFirstVariable(text);
-            if (readRelyOn&&word == "extends") {
+            if (word == "extends") {
                 text = CodeUtil.removeFirstVariable(text);
                 word = CodeUtil.getFirstWord(text);
                 word = CodeUtil.trimVariable(word);
@@ -726,30 +774,16 @@ function readClassFromBlock(text, fileRelyOnList,path, ns,readRelyOn) {
                 }
                 if (relyOnList.indexOf(word) == -1) {
                     relyOnList.push(word);
-
                 }
             }
         }
-        if(isVar){
-            index = text.indexOf("\n");
-            if(index==-1){
-                index = text.length;
-            }
-            text = text.substring(index);
-        }
-        else{
-            index = CodeUtil.getBracketEndIndex(text);
-            var classBlock = text.substring(0, index + 1);
-            text = text.substring(index + 1);
-            index = classBlock.indexOf("{");
-            classBlock = classBlock.substring(index);
-            if(readRelyOn){
-                getRelyOnFromStatic(classBlock, ns,className, relyOnList);
-            }
-        }
-
+        index = CodeUtil.getBracketEndIndex(text);
+        var classBlock = text.substring(0, index + 1);
+        text = text.substring(index + 1);
+        index = classBlock.indexOf("{");
+        classBlock = classBlock.substring(index);
+        getRelyOnFromStatic(classBlock, ns,className, relyOnList);
     }
-    return list;
 }
 
 /**

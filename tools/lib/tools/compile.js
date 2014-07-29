@@ -345,7 +345,7 @@ function createFileList(manifest, srcPath) {
  */
 function isInterface(path) {
     var text = file.read(path);
-    text = CodeUtil.removeComment(text);
+    text = CodeUtil.removeComment(text,path);
     text = removeInterface(text);
     if (!CodeUtil.containsVariable("class", text) && !CodeUtil.containsVariable("var", text) && !CodeUtil.containsVariable("function", text)) {
         return true;

@@ -231,6 +231,7 @@ class EXMLConfig{
             var ext:string = file.getExtension(path).toLowerCase();
             var text:string = file.read(path);
             if(ext=="ts"){
+                text = CodeUtil.removeComment(text,path);
                 classData = this.getPropertiesFromTs(text,className);
             }
             else if(ext=="exml"){
@@ -278,7 +279,6 @@ class EXMLConfig{
             className = className.substring(index+1);
         }
         var data:any;
-        text = CodeUtil.removeComment(text);
         if(moduleName){
             while(text.length>0){
                 var index:number = CodeUtil.getFirstVariableIndex("module",text);
