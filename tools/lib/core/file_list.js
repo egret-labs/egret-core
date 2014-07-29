@@ -40,7 +40,8 @@ exports.core = [
     "egret/display/SpriteSheet.js",
     "egret/text/TextInput.js",
     "egret/text/BitmapTextSpriteSheet.js",
-    "egret/display/MovieClip.js",
+		"egret/display/MovieClip.js",
+		"egret/display/Clip.js",
     "egret/context/display/StageText.js",
 
     "egret/net/URLRequestMethod.js",
