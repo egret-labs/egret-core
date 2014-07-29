@@ -79,7 +79,7 @@ module egret {
 
             egret.TextField.prototype._draw = function (renderContext) {
                 var textField:egret.TextField = <egret.TextField>this;
-                if (textField._textDirty) {
+                if (textField.getDirty()) {
                     textField.cacheAsBitmap = true;
                 }
                 egret.DisplayObject.prototype._draw.call(textField, renderContext);
