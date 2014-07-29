@@ -35,7 +35,6 @@ module egret {
      * @extends egret.DisplayObject
      */
     export class TextField extends DisplayObject {
-        public _textDirty:boolean = true;
         /**
          * 显示文本
          * @member {string} egret.TextField#text
@@ -46,9 +45,14 @@ module egret {
             return this._text;
         }
 
+        public _setTextDirty():void {
+            this._setSizeDirty();
+
+        }
+
         public set text(value:string) {
             if (this._text != value) {
-                this._textDirty = true;
+                this._setTextDirty();
                 this._text = value;
             }
         }
@@ -65,7 +69,7 @@ module egret {
 
         public set fontFamily(value:string) {
             if (this._fontFamily != value) {
-                this._textDirty = true;
+                this._setTextDirty();
                 this._fontFamily = value;
             }
         }
@@ -82,7 +86,7 @@ module egret {
 
         public set size(value:number) {
             if (this._size != value) {
-                this._textDirty = true;
+                this._setTextDirty();
                 this._size = value;
             }
         }
@@ -99,7 +103,7 @@ module egret {
 
         public set italic(value:boolean) {
             if (this._italic != value) {
-                this._textDirty = true;
+                this._setTextDirty();
                 this._italic = value;
             }
         }
@@ -116,7 +120,7 @@ module egret {
 
         public set bold(value:boolean) {
             if (this._bold != value) {
-                this._textDirty = true;
+                this._setTextDirty();
                 this._bold = value;
             }
         }
@@ -134,7 +138,7 @@ module egret {
 
         public set textColor(value:number) {
             if (this._textColor != value) {
-                this._textDirty = true;
+                this._setTextDirty();
                 this._textColor = value;
                 this._textColorString = toColorString(value);
             }
@@ -153,7 +157,7 @@ module egret {
 
         public set strokeColor(value:number) {
             if (this._strokeColor != value) {
-                this._textDirty = true;
+                this._setTextDirty();
                 this._strokeColor = value;
                 this._strokeColorString = toColorString(value);
             }
@@ -171,7 +175,7 @@ module egret {
 
         public set stroke(value:number) {
             if (this._stroke != value) {
-                this._textDirty = true;
+                this._setTextDirty();
                 this._stroke = value;
             }
         }
@@ -188,7 +192,7 @@ module egret {
 
         public set textAlign(value:string) {
             if (this._textAlign != value) {
-                this._textDirty = true;
+                this._setTextDirty();
                 this._textAlign = value;
             }
         }
@@ -205,7 +209,7 @@ module egret {
 
         public set verticalAlign(value:string) {
             if (this._verticalAlign != value) {
-                this._textDirty = true;
+                this._setTextDirty();
                 this._verticalAlign = value;
             }
         }
@@ -227,7 +231,7 @@ module egret {
 
         public set lineSpacing(value:number) {
             if (this._lineSpacing != value) {
-                this._textDirty = true;
+                this._setTextDirty();
                 this._lineSpacing = value;
             }
         }
@@ -251,7 +255,8 @@ module egret {
          */
         public _render(renderContext:RendererContext):void {
             this.drawText(renderContext, false);
-            this._textDirty = false;
+
+            this._clearDirty();
         }
 
         /**
