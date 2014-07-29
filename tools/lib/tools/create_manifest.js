@@ -196,11 +196,13 @@ function sortFileList(list,srcPath){
         for (i = 0; i < length; i++) {
             var className = classList[i];
             var relyOnList = classInfoList[className];
-            var len = relyOnList.length;
-            for (var j = 0; j < len; j++) {
-                className = relyOnList[j];
-                if (list.indexOf(className) == -1) {
-                    list.push(className);
+            if(relyOnList){
+                var len = relyOnList.length;
+                for (var j = 0; j < len; j++) {
+                    className = relyOnList[j];
+                    if (list.indexOf(className) == -1) {
+                        list.push(className);
+                    }
                 }
             }
         }
@@ -761,17 +763,7 @@ function readRelyOnFromBlock(text, path,fileRelyOnList,ns) {
                 text = CodeUtil.removeFirstVariable(text);
                 word = CodeUtil.getFirstWord(text);
                 word = CodeUtil.trimVariable(word);
-                if (ns && word.indexOf(".") == -1) {
-                    var nsList = classNameToModule[word];
-                    var length = nsList.length;
-                    var prefix = ns.split(".")[0];
-                    for(var k=0;k<length;k++){
-                        var superNs = nsList[k];
-                        if(superNs.split(".")[0]==prefix){
-                            word = superNs+"."+word;
-                        }
-                    }
-                }
+                word = getFullClassName(word,ns);
                 if (relyOnList.indexOf(word) == -1) {
                     relyOnList.push(word);
                 }
@@ -784,6 +776,51 @@ function readRelyOnFromBlock(text, path,fileRelyOnList,ns) {
         classBlock = classBlock.substring(index);
         getRelyOnFromStatic(classBlock, ns,className, relyOnList);
     }
+}
+
+/**
+ * 根据类类短名，和这个类被引用的时所在的module名来获取完整类名。
+ */
+function getFullClassName(word,ns) {
+    if (!ns||!word) {
+        return word;
+    }
+    var prefix = "";
+    var index = word.lastIndexOf(".");
+    var nsList;
+    if(index==-1){
+        nsList = classNameToModule[word];
+    }
+    else{
+        prefix = word.substring(0,index);
+        nsList = classNameToModule[word.substring(index+1)];
+    }
+    if(!nsList){
+        return word;
+    }
+    var length = nsList.length;
+    var targetNs = "";
+    for(var k=0;k<length;k++){
+        var superNs = nsList[k];
+        if(prefix){
+            var tail = superNs.substring(superNs.length-prefix.length);
+            if(tail==prefix){
+                superNs = superNs.substring(0,superNs.length-prefix.length-1);
+            }
+            else{
+                continue;
+            }
+        }
+        if(ns.indexOf(superNs)==0){
+            if(superNs.length>targetNs.length){
+                targetNs = superNs;
+            }
+        }
+    }
+    if(targetNs){
+        word = targetNs+"."+word;
+    }
+    return word;
 }
 
 /**

@@ -178,7 +178,7 @@ var EXMLConfig = (function () {
             var ext = file.getExtension(path).toLowerCase();
             var text = file.read(path);
             if (ext == "ts") {
-                classData = this.getPropertiesFromTs(text, className);
+                classData = this.getPropertiesFromTs(text, className, "");
             } else if (ext == "exml") {
                 classData = this.getPropertiesFromExml(text);
             }
@@ -215,7 +215,7 @@ var EXMLConfig = (function () {
             var text = file.read(path);
             if (ext == "ts") {
                 text = CodeUtil.removeComment(text, path);
-                classData = this.getPropertiesFromTs(text, className);
+                classData = this.getPropertiesFromTs(text, className, "");
             } else if (ext == "exml") {
                 classData = this.getPropertiesFromExml(text);
             }
@@ -252,7 +252,7 @@ var EXMLConfig = (function () {
     /**
     * 获取属性列表
     */
-    EXMLConfig.prototype.getPropertiesFromTs = function (text, className) {
+    EXMLConfig.prototype.getPropertiesFromTs = function (text, className, nsPrefiex) {
         index = className.lastIndexOf(".");
         var moduleName = "";
         if (index != -1) {
@@ -272,19 +272,33 @@ var EXMLConfig = (function () {
                     continue;
                 }
                 var ns = text.substring(0, index).trim();
-                if (ns == moduleName) {
-                    index = CodeUtil.getBracketEndIndex(text);
-                    if (index != -1) {
-                        var block = text.substring(0, index);
-                        index = block.indexOf("{");
-                        block = block.substring(index + 1);
-                        data = this.getPropFromBlock(block, className, moduleName);
-                    }
+                text = text.substring(index);
+                index = CodeUtil.getBracketEndIndex(text);
+                if (index == -1) {
                     break;
+                }
+                var block = text.substring(0, index);
+                text = text.substring(index);
+                if (ns == moduleName) {
+                    if (nsPrefiex) {
+                        ns = nsPrefiex + "." + moduleName;
+                    }
+                    data = this.getPropFromBlock(block, className, ns);
+                    break;
+                } else if (moduleName.indexOf(ns) == 0 && moduleName.charAt(ns.length) == ".") {
+                    var tail = moduleName.substring(ns.length + 1);
+                    var prefix = moduleName.substring(0, ns.length);
+                    if (nsPrefiex) {
+                        prefix = nsPrefiex + "." + prefix;
+                    }
+                    data = this.getPropertiesFromTs(block, tail + "." + className, prefix);
+                    if (data) {
+                        break;
+                    }
                 }
             }
         } else {
-            data = this.getPropFromBlock(text, className, "");
+            data = this.getPropFromBlock(text, className, nsPrefiex);
         }
 
         return data;
@@ -312,9 +326,7 @@ var EXMLConfig = (function () {
                 preStr = CodeUtil.removeFirstVariable(preStr);
                 word = CodeUtil.getFirstWord(preStr);
                 if (word) {
-                    if (ns && word.indexOf(".") == -1) {
-                        word = this.getFullClassName(word, ns);
-                    }
+                    word = this.getFullClassName(word, ns);
                     data["super"] = word;
                 }
                 preStr = CodeUtil.removeFirstWord(preStr);
@@ -327,9 +339,7 @@ var EXMLConfig = (function () {
                     var inter = arr[i];
                     inter = inter.trim();
                     if (inter) {
-                        if (ns && inter.indexOf(".") == -1) {
-                            inter = this.getFullClassName(inter, ns);
-                        }
+                        inter = this.getFullClassName(inter, ns);
                         arr[i] = inter;
                     } else {
                         arr.splice(i, 1);
@@ -347,18 +357,45 @@ var EXMLConfig = (function () {
         return data;
     };
 
+    /**
+    * 根据类类短名，和这个类被引用的时所在的module名来获取完整类名。
+    */
     EXMLConfig.prototype.getFullClassName = function (word, ns) {
-        if (!ns) {
-            ns = "";
+        if (!ns || !word) {
+            return word;
         }
-        var nsList = this.classNameToModule[word];
+        var prefix = "";
+        var index = word.lastIndexOf(".");
+        var nsList;
+        if (index == -1) {
+            nsList = this.classNameToModule[word];
+        } else {
+            prefix = word.substring(0, index);
+            nsList = this.classNameToModule[word.substring(index + 1)];
+        }
+        if (!nsList) {
+            return word;
+        }
         var length = nsList.length;
-        var prefix = ns.split(".")[0];
+        var targetNs = "";
         for (var k = 0; k < length; k++) {
             var superNs = nsList[k];
-            if (superNs.split(".")[0] == prefix) {
-                word = superNs + "." + word;
+            if (prefix) {
+                var tail = superNs.substring(superNs.length - prefix.length);
+                if (tail == prefix) {
+                    superNs = superNs.substring(0, superNs.length - prefix.length - 1);
+                } else {
+                    continue;
+                }
             }
+            if (ns.indexOf(superNs) == 0) {
+                if (superNs.length > targetNs.length) {
+                    targetNs = superNs;
+                }
+            }
+        }
+        if (targetNs) {
+            word = targetNs + "." + word;
         }
         return word;
     };
@@ -396,7 +433,7 @@ var EXMLConfig = (function () {
                             type = type.substring(0, index);
                         }
                         type = CodeUtil.trimVariable(type);
-                        if (type.indexOf(".") == -1 && this.basicTypes.indexOf(type) == -1) {
+                        if (this.basicTypes.indexOf(type) == -1) {
                             type = this.getFullClassName(type, ns);
                         }
                         data[word] = type;
@@ -419,7 +456,7 @@ var EXMLConfig = (function () {
                         type = type.substring(0, index);
                     }
                     type = CodeUtil.trimVariable(type);
-                    if (type.indexOf(".") == -1 && this.basicTypes.indexOf(type) == -1) {
+                    if (this.basicTypes.indexOf(type) == -1) {
                         type = this.getFullClassName(type, ns);
                     }
                     data[word] = type;
