@@ -637,12 +637,14 @@ function readClassFromBlock(text,list,ns){
             }
             if (list.indexOf(className) == -1){
                 list.push(className);
-                var nsList = classNameToModule[word];
-                if(!nsList){
-                    nsList = classNameToModule[word] = [];
-                }
-                if(nsList.indexOf(ns)==-1){
-                    nsList.push(ns);
+                if(ns){
+                    var nsList = classNameToModule[word];
+                    if(!nsList){
+                        nsList = classNameToModule[word] = [];
+                    }
+                    if(nsList.indexOf(ns)==-1){
+                        nsList.push(ns);
+                    }
                 }
             }
             text = CodeUtil.removeFirstVariable(text);

@@ -93,7 +93,7 @@ class EXMLConfig{
             if(!list){
                 list = this.classNameToModule[className] = [];
             }
-            if(list.indexOf(ns)==-1){ 
+            if(ns&&list.indexOf(ns)==-1){
                 list.push(ns);
             }
         }
