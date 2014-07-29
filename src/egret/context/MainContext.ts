@@ -26,12 +26,12 @@
  */
 
 
-module egret{
+module egret {
     /**
-	 * @class egret.MainContext
-	 * @classdesc
+     * @class egret.MainContext
+     * @classdesc
      * MainContext是游戏的核心跨平台接口，组合了多个功能Context，并是游戏启动的主入口
-	 * @extends egret.EventDispatcher
+     * @extends egret.EventDispatcher
      */
     export class MainContext extends EventDispatcher {
 
@@ -41,37 +41,42 @@ module egret{
 
         /**
          * 渲染Context
-		 * @member egret.MainContext#rendererContext
+         * @member egret.MainContext#rendererContext
          */
         public rendererContext:RendererContext;
 
         /**
          * 触摸Context
-		 * @member egret.MainContext#touchContext
+         * @member egret.MainContext#touchContext
          */
         public touchContext:TouchContext;
 
         /**
          * 网络Context
-		 * @member egret.MainContext#netContext
+         * @member egret.MainContext#netContext
          */
         public netContext:NetContext;
 
         /**
          * 设备divice
-		 * @member egret.MainContext#deviceContext
+         * @member egret.MainContext#deviceContext
          */
         public deviceContext:DeviceContext;
 
         /**
          * 舞台
-		 * @member egret.MainContext#stage
+         * @member egret.MainContext#stage
          */
         public stage:Stage;
 
+        public static deviceType:string;
+
+        public static DEVICE_PC:string = "web";
+        public static DEVICE_MOBILE:string = "native";
+
         /**
          * 游戏启动，开启主循环，参考Flash的滑动跑道模型
-		 * @method egret.MainContext#run
+         * @method egret.MainContext#run
          */
         public run() {
             Ticker.getInstance().run();
@@ -88,7 +93,7 @@ module egret{
             var context = this.rendererContext;
             context.clearScreen();
 
-            if(__callLaterFunctionList.length>0){
+            if (__callLaterFunctionList.length > 0) {
                 var functionList:Array<any> = __callLaterFunctionList;
                 __callLaterFunctionList = [];
                 var thisList:Array<any> = __callLaterThisList;
@@ -98,12 +103,12 @@ module egret{
             }
 
             this.dispatchEventWith(Event.RENDER);
-            if(Stage._invalidateRenderFlag){
+            if (Stage._invalidateRenderFlag) {
                 this.broadcastRender();
                 Stage._invalidateRenderFlag = false;
             }
-            if(functionList){
-                this.doCallLaterList(functionList,thisList,argsList);
+            if (functionList) {
+                this.doCallLaterList(functionList, thisList, argsList);
             }
 
             this.stage._updateTransform();
@@ -113,6 +118,7 @@ module egret{
         }
 
         private reuseEvent:Event = new Event("")
+
         /**
          * 广播EnterFrame事件。
          */
@@ -123,52 +129,64 @@ module egret{
             this.dispatchEvent(event);
             var list:Array<any> = DisplayObject._enterFrameCallBackList.concat();
             var length:number = list.length;
-            for(var i:number = 0;i<length;i++){
+            for (var i:number = 0; i < length; i++) {
                 var eventBin:any = list[i];
                 event._target = eventBin.display;
                 event._setCurrentTarget(eventBin.display);
-                eventBin.listener.call(eventBin.thisObject,event);
+                eventBin.listener.call(eventBin.thisObject, event);
             }
 
             list = Recycler._callBackList;
-            for(i=list.length-1;i>=0;i--){
+            for (i = list.length - 1; i >= 0; i--) {
                 list[i]._checkFrame();
             }
         }
+
         /**
          * 广播Render事件。
          */
-        private broadcastRender():void{
+        private broadcastRender():void {
             var event:Event = this.reuseEvent;
             event._type = Event.RENDER;
             var list:Array<any> = DisplayObject._renderCallBackList.concat();
             var length:number = list.length;
-            for(var i:number = 0;i<length;i++){
+            for (var i:number = 0; i < length; i++) {
                 var eventBin:any = list[i];
                 event._target = eventBin.display;
                 event._setCurrentTarget(eventBin.display);
-                eventBin.listener.call(eventBin.thisObject,event);
+                eventBin.listener.call(eventBin.thisObject, event);
             }
         }
+
         /**
          * 执行callLater回调函数列表
          */
-        private doCallLaterList(funcList:Array<any>,thisList:Array<any>,argsList:Array<any>):void{
+        private doCallLaterList(funcList:Array<any>, thisList:Array<any>, argsList:Array<any>):void {
             var length:number = funcList.length;
-            for(var i:number=0;i<length;i++){
+            for (var i:number = 0; i < length; i++) {
                 var func:Function = funcList[i];
-                if(func!=null){
-                    func.apply(thisList[i],argsList[i]);
+                if (func != null) {
+                    func.apply(thisList[i], argsList[i]);
                 }
             }
         }
 
-		/**
-		 * @member egret.MainContext.instance
-		 */
+        /**
+         * @member egret.MainContext.instance
+         */
         public static instance:egret.MainContext;
 
     }
 }
 
+
+var testDeviceType = function () {
+    if (!this.hasOwnProperty("navigator")) {
+        return true
+    }
+    var ua = navigator.userAgent.toLowerCase();
+    return (ua.indexOf('mobile') != -1 || ua.indexOf('android') != -1);
+}
+
 egret.MainContext.instance = new egret.MainContext();
+egret.MainContext.deviceType = testDeviceType() ? egret.MainContext.DEVICE_MOBILE : egret.MainContext.DEVICE_PC;
