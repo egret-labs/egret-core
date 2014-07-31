@@ -50,7 +50,7 @@ var W = "http://ns.egret-labs.org/wing";
  */
 var basicTypes = ["void","any","number","string","boolean","Object","Array","Function"];
 
-//create("D:/Program/HTML5/egret/src/")
+//create("C:/Users/DOM/Desktop/AA/src")
 /**
  * 生成manifest.json文件
  * @param currentDir 当前文件夹
@@ -440,7 +440,7 @@ function readReferenceFromTs(path){
     }
 
     var list = [];
-    for(var className in classInfoList){
+    for(var className in classNameToPath){
         if(CodeUtil.containsVariable(className,orgText)){
             var p = classNameToPath[className];
             if(p&&p!=path&&list.indexOf(p)==-1){
