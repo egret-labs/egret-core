@@ -99,9 +99,9 @@ module egret {
             var textureWidth:number = texture._textureWidth;
             var textureHeight:number = texture._textureHeight;
             if(thisObject.fillMode=="scale"){
-                var s9g:Rectangle = thisObject.scale9Grid;
+                var s9g:Rectangle = thisObject.scale9Grid||texture["scale9Grid"];
                 if (s9g&&textureWidth - s9g.width < destW && textureHeight - s9g.height < destH) {
-                    Bitmap.drawScale9GridImage(renderContext, thisObject, thisObject.scale9Grid, destW, destH);
+                    Bitmap.drawScale9GridImage(renderContext, thisObject, s9g, destW, destH);
                 }
                 else{
                     var offsetX:number = texture._offsetX;
