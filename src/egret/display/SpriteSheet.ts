@@ -48,10 +48,10 @@ module egret {
             this._sourceWidth = bitmapData.width;
             this._sourceHeight = bitmapData.height;
 
-            this._bitmapX = texture._bitmapX;
-            this._bitmapY = texture._bitmapY;
-
+            this._bitmapX = texture._bitmapX - texture._offsetX;
+            this._bitmapY = texture._bitmapY - texture._offsetY;
         }
+
         /**
          * 表示bitmapData.width
          */
@@ -63,11 +63,11 @@ module egret {
         /**
          * 表示这个SpriteSheet的位图区域在bitmapData上的起始位置x。
          */
-        public _bitmapX:number;
+        private _bitmapX:number;
         /**
          * 表示这个SpriteSheet的位图区域在bitmapData上的起始位置y。
          */
-        public _bitmapY:number;
+        private _bitmapY:number;
         /**
          * 共享的位图数据
          */
@@ -101,19 +101,18 @@ module egret {
          * @param textureHeight {number} 原始位图的宽度，若不传入，这使用bitmapHeight值。
          * @returns {egret.Texture} 创建的Texture对象
          */
-        public createTexture(name:string, bitmapX:number, bitmapY:number, bitmapWidth:number, bitmapHeight:number,
-                             offsetX:number=0,offsetY:number=0,textureWidth?:number,textureHeight?:number):Texture {
-            if(typeof textureWidth === "undefined"){
-                textureWidth = offsetX+bitmapWidth;
+        public createTexture(name:string, bitmapX:number, bitmapY:number, bitmapWidth:number, bitmapHeight:number, offsetX:number = 0, offsetY:number = 0, textureWidth?:number, textureHeight?:number):Texture {
+            if (typeof textureWidth === "undefined") {
+                textureWidth = offsetX + bitmapWidth;
             }
-            if(typeof textureHeight === "undefined"){
-                textureHeight = offsetY+bitmapHeight;
+            if (typeof textureHeight === "undefined") {
+                textureHeight = offsetY + bitmapHeight;
             }
             var texture:Texture = new Texture();
 
             texture._bitmapData = this.bitmapData;
-            texture._bitmapX = this._bitmapX+bitmapX;
-            texture._bitmapY = this._bitmapY+bitmapY;
+            texture._bitmapX = this._bitmapX + bitmapX;
+            texture._bitmapY = this._bitmapY + bitmapY;
             texture._bitmapWidth = bitmapWidth;
             texture._bitmapHeight = bitmapHeight;
             texture._offsetX = offsetX;
