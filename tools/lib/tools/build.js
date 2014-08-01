@@ -19,12 +19,42 @@ function run(dir, args, opts) {
 
     var task = [];
 
+    var runtime = param.getOption(opts, "--runtime", ["html5", "native"]);
+    egretSourceList = compiler.generateModuleFileList();
+
+    if (true){
+
+        task.push(
+
+            function(callback){
+                compiler.compileModule(
+                    callback,egretSourceList,path.join(param.getEgretPath(), "src"),path.join(currDir, "bin-debug/lib"));
+            }
+        )
+    }
+
+
+    async.series(task, function (err) {
+        if (!err) {
+            globals.log("构建成功");
+        }
+        else {
+            globals.exit(err);
+        }
+    })
+
+
+
+
+    return;
+
     if (needCompileEngine) {
         var egretSourceList = [];
         task.push(
             function (callback) {
                 var runtime = param.getOption(opts, "--runtime", ["html5", "native"]);
                 egretSourceList = compiler.generateEgretFileList(runtime, currDir);
+                console.log (egretSourceList)
                 compiler.compile(callback,
                     path.join(param.getEgretPath(), "src"),
                     path.join(currDir, "bin-debug/lib"),

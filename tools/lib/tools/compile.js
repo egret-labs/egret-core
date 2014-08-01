@@ -103,9 +103,10 @@ function compile(callback, srcPath, output, sourceList, keepGeneratedTypescript)
             var cmd = sourcemap + tsList.join(" ") + " -t ES5 --outDir " + "\"" + output + "\"";
             file.save("tsc_config_temp.txt", cmd);
             typeScriptCompiler(function (code) {
-                cleanTempFile();
                 if (code == 0) {
-                    callback(null, srcPath);
+                    output = path.join(output,"egret.d.ts");
+                    var cmd = sourcemap + tsList.join(" ") + " -d -t ES5 --out " + "\"" + output + "\"";
+                    file.save("tsc_config_temp.txt", cmd);
                 }
                 else {
                     callback(1303);
@@ -272,6 +273,11 @@ function generateEgretFileList(runtime, projectPath) {
     return manifest;
 }
 
+function generateModuleFileList(moduleName){
+    var coreList = globals.require("tools/lib/manifest/core.json");
+    return coreList;
+}
+
 function generateGameFileList(projectPath) {
     var manifestPath = path.join(projectPath, "manifest.json");
     var srcPath = path.join(projectPath, "src/");
@@ -372,6 +378,41 @@ function removeInterface(text) {
 }
 
 
+function compileModule(callback,sourceList,prefix,output){
+    var tsList = sourceList;
+    tsList = tsList.map(function (item) {
+        return "\"" + path.join(prefix,item) + "\"";
+    }).filter(function(item){
+            return item.indexOf(".js") == -1
+        })
+
+
+    var sourcemap = param.getArgv()["opts"]["-sourcemap"];
+    sourcemap = sourcemap ? "--sourcemap " : "";
+
+    var cmd = sourcemap + tsList.join(" ") + " -t ES5 --outDir " + "\"" + output + "\"";
+    file.save("tsc_config_temp.txt", cmd);
+    typeScriptCompiler(function (code) {
+        if (code == 0) {
+
+
+            var cmd = sourcemap + tsList.join(" ") + " -d -t ES5 --out " + "\"" + path.join(output,"egret.d.ts") + "\"";
+            file.save("tsc_config_temp.txt", cmd);
+            typeScriptCompiler(function (code) {
+                if (code == 0) {
+                    callback(null, prefix);
+                }
+            });
+        }
+        else {
+            callback(1303);
+        }
+    });
+
+}
+
+exports.generateModuleFileList = generateModuleFileList;
+exports.compileModule = compileModule;
 exports.compile = compile;
 exports.exportHeader = exportHeader;
 exports.run = run;
