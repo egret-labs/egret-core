@@ -170,11 +170,10 @@ module egret {
             this._isPlaying = true;
             this._currentFrameIndex = 0;
             this._currentFrameName = frameName;
-
+            this._totalFrame = this._frameData.frames[frameName].totalFrame;
             this.playNextFrame();
             this._passTime = 0;
             Ticker.getInstance().register(this.update, this);
-            this._totalFrame = this._frameData.frames[frameName].totalFrame;
         }
 
         public gotoAndStop(frameName:string):void {
