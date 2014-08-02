@@ -13,6 +13,7 @@ var exmlc = require("../exml/exmlc.js");
 var CodeUtil = require("../core/code_util.js");
 var create_manifest = require("./create_manifest.js");
 var crc32 = require("../core/crc32.js");
+var add_class_name = require("./add_class_name.js");
 
 
 function run(currentDir, args, opts) {
@@ -93,7 +94,12 @@ function compile(callback, srcPath, output, sourceList, keepGeneratedTypescript)
         },
         //编译ts文件
         function (callback) {
+            var jsList = [];
+            var length = srcPath.length;
             tsList = tsList.map(function (item) {
+                var itemName = item.substring(length);
+                itemName = itemName.substring(0,itemName.length-2)+"js";
+                jsList.push(path.join(output, itemName));
                 return "\"" + item + "\"";
             });
 
@@ -103,6 +109,13 @@ function compile(callback, srcPath, output, sourceList, keepGeneratedTypescript)
             var cmd = sourcemap + tsList.join(" ") + " -t ES5 --outDir " + "\"" + output + "\"";
             file.save("tsc_config_temp.txt", cmd);
             typeScriptCompiler(function (code) {
+                var length = jsList.length;
+                for(var i=0;i<length;i++){
+                    var jsPath = jsList[i];
+                    var jsText = file.read(jsPath);
+                    jsText = add_class_name.analyze(jsText);
+                    file.save(jsPath,jsText);
+                }
                 cleanTempFile();
                 if (code == 0) {
                     callback(null, srcPath);
