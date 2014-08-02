@@ -103,6 +103,7 @@
     "extension/gui/states/SetProperty.ts",
     "extension/gui/states/State.ts",
     "extension/gui/utils/LayoutUtil.ts",
+    "extension/gui/utils/getScale9Grid.ts",
     "extension/gui/components/IItemRenderer.ts",
     "extension/gui/components/IItemRendererOwner.ts",
     "extension/gui/components/ITreeItemRenderer.ts",

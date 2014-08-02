@@ -692,6 +692,9 @@ class EXMLCompiler{
                 globals.exit(2009,this.exmlPath,this.toXMLString(node));
             }
         }
+        else if(key=="scale9Grid"&&type=="egret.Rectangle"){
+            value = "egret.getScale9Grid(\""+value+"\")";
+        }
         else{
             switch(type){
                 case "Class":
