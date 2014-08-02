@@ -693,7 +693,7 @@ class EXMLCompiler{
             }
         }
         else if(key=="scale9Grid"&&type=="egret.Rectangle"){
-            var rect:Array = value.split(",");
+            var rect:Array<any> = value.split(",");
             if(rect.length!=4||isNaN(parseInt(rect[0]))||isNaN(parseInt(rect[1]))||
                 isNaN(parseInt(rect[2]))||isNaN(parseInt(rect[3]))){
                 globals.exit(2016,this.exmlPath,this.toXMLString(node))
