@@ -13,8 +13,6 @@ var exmlc = require("../exml/exmlc.js");
 var CodeUtil = require("../core/code_util.js");
 var create_manifest = require("./create_manifest.js");
 var crc32 = require("../core/crc32.js");
-var add_class_name = require("./add_class_name.js");
-
 
 function run(currentDir, args, opts) {
     var source = path.resolve(param.getEgretPath(), "");
@@ -94,12 +92,7 @@ function compile(callback, srcPath, output, sourceList, keepGeneratedTypescript)
         },
         //编译ts文件
         function (callback) {
-            var jsList = [];
-            var length = srcPath.length;
             tsList = tsList.map(function (item) {
-                var itemName = item.substring(length);
-                itemName = itemName.substring(0,itemName.length-2)+"js";
-                jsList.push(path.join(output, itemName));
                 return "\"" + item + "\"";
             });
 
@@ -109,13 +102,6 @@ function compile(callback, srcPath, output, sourceList, keepGeneratedTypescript)
             var cmd = sourcemap + tsList.join(" ") + " -t ES5 --outDir " + "\"" + output + "\"";
             file.save("tsc_config_temp.txt", cmd);
             typeScriptCompiler(function (code) {
-                var length = jsList.length;
-                for(var i=0;i<length;i++){
-                    var jsPath = jsList[i];
-                    var jsText = file.read(jsPath);
-                    jsText = add_class_name.analyze(jsText);
-                    file.save(jsPath,jsText);
-                }
                 cleanTempFile();
                 if (code == 0) {
                     callback(null, srcPath);
@@ -191,6 +177,119 @@ function typeScriptCompiler(quitFunc) {
     var TypeScript = require('../core/typescript/tsc.js');
     TypeScript.IO.arguments = ["@tsc_config_temp.txt"];
     TypeScript.IO.quit = quitFunc;
+    TypeScript.Emitter.prototype.emitClass = function (classDecl) {
+        var pullDecl = this.semanticInfoChain.getDeclForAST(classDecl);
+        this.pushDecl(pullDecl);
+
+        var svClassNode = this.thisClassNode;
+        this.thisClassNode = classDecl;
+        var className = classDecl.identifier.text();
+        this.emitComments(classDecl, true);
+        var temp = this.setContainer(3 /* Class */);
+
+        this.recordSourceMappingStart(classDecl);
+        this.writeToOutput("var " + className);
+
+        var hasBaseClass = TypeScript.ASTHelpers.getExtendsHeritageClause(classDecl.heritageClauses) !== null;
+        var baseTypeReference = null;
+        var varDecl = null;
+
+        if (hasBaseClass) {
+            this.writeLineToOutput(" = (function (_super) {");
+        } else {
+            this.writeLineToOutput(" = (function () {");
+        }
+
+        this.recordSourceMappingNameStart(className);
+        this.indenter.increaseIndent();
+
+        if (hasBaseClass) {
+            baseTypeReference = TypeScript.ASTHelpers.getExtendsHeritageClause(classDecl.heritageClauses).typeNames.nonSeparatorAt(0);
+            this.emitIndent();
+            this.writeToOutputWithSourceMapRecord("__extends(" + className + ", _super)", baseTypeReference);
+            this.writeLineToOutput(";");
+        }
+
+        this.emitIndent();
+
+        var constrDecl = getLastConstructor(classDecl);
+
+        if (constrDecl) {
+            this.emit(constrDecl);
+            this.writeLineToOutput("");
+        } else {
+            this.recordSourceMappingStart(classDecl);
+
+            this.indenter.increaseIndent();
+            this.writeLineToOutput("function " + classDecl.identifier.text() + "() {");
+            this.recordSourceMappingNameStart("constructor");
+            if (hasBaseClass) {
+                this.emitIndent();
+                this.writeToOutputWithSourceMapRecord("_super.apply(this, arguments)", baseTypeReference);
+                this.writeLineToOutput(";");
+            }
+
+            if (this.shouldCaptureThis(classDecl)) {
+                this.writeCaptureThisStatement(classDecl);
+            }
+
+            this.emitParameterPropertyAndMemberVariableAssignments();
+
+            this.indenter.decreaseIndent();
+            this.emitIndent();
+            this.writeToOutputWithSourceMapRecord("}", classDecl.closeBraceToken);
+            this.writeLineToOutput("");
+
+            this.recordSourceMappingNameEnd();
+            this.recordSourceMappingEnd(classDecl);
+        }
+
+        this.emitClassMembers(classDecl);
+
+        this.emitIndent();
+        this.writeToOutputWithSourceMapRecord("return " + className + ";", classDecl.closeBraceToken);
+        this.writeLineToOutput("");
+        this.indenter.decreaseIndent();
+        this.emitIndent();
+        this.writeToOutputWithSourceMapRecord("}", classDecl.closeBraceToken);
+        this.recordSourceMappingNameEnd();
+        this.recordSourceMappingStart(classDecl);
+        this.writeToOutput(")(");
+        if (hasBaseClass) {
+            this.emitJavascript(baseTypeReference, false);
+        }
+        this.writeToOutput(");");
+        this.recordSourceMappingEnd(classDecl);
+
+        if ((temp === 1 /* Module */ || temp === 2 /* DynamicModule */) && TypeScript.hasFlag(pullDecl.flags, 1 /* Exported */)) {
+            this.writeLineToOutput("");
+            this.emitIndent();
+            var modName = temp === 1 /* Module */ ? this.moduleName : "exports";
+            this.writeToOutputWithSourceMapRecord(modName + "." + className + " = " + className + ";", classDecl);
+
+            var fullClassName = pullDecl.name;
+            var parentDecl = pullDecl.getParentDecl();
+            while(parentDecl&&!(parentDecl instanceof TypeScript.RootPullDecl)){
+                fullClassName = parentDecl.name+"."+fullClassName;
+                parentDecl = parentDecl.getParentDecl();
+            }
+            this.writeLineToOutput("");
+            this.emitIndent();
+            this.writeToOutputWithSourceMapRecord(className + ".prototype.__class__ = \"" + fullClassName + "\";", classDecl);
+        }
+        else{
+            this.writeLineToOutput("");
+            this.emitIndent();
+            this.writeToOutputWithSourceMapRecord(className + ".prototype.__class__ = \"" + className + "\";", classDecl);
+        }
+
+        this.recordSourceMappingEnd(classDecl);
+        this.emitComments(classDecl, false);
+        this.setContainer(temp);
+        this.thisClassNode = svClassNode;
+
+        this.popDecl(pullDecl);
+    };
 
     if (isQuickMode()) {//快速构建，去掉类型检查阶段
         TypeScript.PullTypeResolver.typeCheck = function (compilationSettings, semanticInfoChain, document) {
@@ -382,6 +481,12 @@ function removeInterface(text) {
         text = text.substring(index + 1);
     }
     return tsText;
+}
+
+function getLastConstructor(classDecl) {
+    return classDecl.classElements.lastOrDefault(function (e) {
+        return e.kind() === 137 /* ConstructorDeclaration */;
+    });
 }
 
 
