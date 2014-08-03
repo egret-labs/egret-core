@@ -384,7 +384,7 @@ module egret {
          * BlendMode 类中的一个值，用于指定要使用的混合模式。
          * @member {BlendMode} egret.DisplayObject#blendMode
          */
-        public blendMode:BlendMode;
+        public blendMode:string;
 
         /**
          * 显示对象的滚动矩形范围。显示对象被裁切为矩形定义的大小，当您更改 scrollRect 对象的 x 和 y 属性时，它会在矩形内滚动。

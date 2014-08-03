@@ -87,7 +87,7 @@ module dragonBones {
 
             public updateBlendMode(blendMode:string) {
                 if (this._display && blendMode) {
-                    this._display.blendMode = egret.BlendMode.getBlendMode(blendMode);
+                    this._display.blendMode = blendMode;
                 }
             }
 
