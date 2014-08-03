@@ -108,7 +108,7 @@ module egret {
          * @param value {number}
          * @param blendMode {egret.BlendMod}
          */
-        public setAlpha(value:number, blendMode:egret.BlendMode) {
+        public setAlpha(value:number, blendMode:string) {
 
         }
 
@@ -163,52 +163,4 @@ module egret {
             return null;
         }
     }
-
-
-    /**
-     * @class egret.BlendMode
-     * @classdesc
-     */
-    export class BlendMode {
-
-        /**
-         * @member egret.BlendMode#value
-         */
-        public value:string;
-
-        constructor(private type) {
-            switch (type) {
-                case "add":
-                case "layer":
-                    this.value = "lighter";
-                    break;
-                default:
-                    this.value = "source-over";
-            }
-        }
-
-//            updateContext(ctx){
-//                if (this.type == "add"){
-//                    ctx.globalCompositeOperation = "lighter";
-//                }
-//            }
-
-
-        static NORMAL = new BlendMode("normal");
-        static ADD = new BlendMode("add");
-        static LAYER = new BlendMode("layer");
-
-        /**
-         * @method egret.BlendMode.getBlendMode
-         * @param typ {any}
-         */
-        public static getBlendMode(type) {
-            if (!type) {
-                return egret.BlendMode.NORMAL;
-            }
-            return egret.BlendMode[type.toUpperCase()];
-        }
-    }
-
-
 }
