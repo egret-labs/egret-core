@@ -691,8 +691,8 @@ module egret {
         /**
          * 检测指定坐标是否在显示对象内
          * @method egret.DisplayObject#hitTest
-         * @param x {number}
-         * @param y {number}
+         * @param x {number} 检测坐标的x轴
+         * @param y {number} 检测坐标的y轴
          * @param ignoreTouchEnabled 是否忽略TouchEnabled
          * @returns {*}
          */

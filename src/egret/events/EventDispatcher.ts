@@ -169,7 +169,7 @@ module egret {
         /**
          * 检测是否存在监听器
          * @method egret.EventDispatcher#hasEventListener
-         * @param type 事件名
+         * @param type {string} 事件类型
          * @returns {boolean}
          * @stable A
          */
