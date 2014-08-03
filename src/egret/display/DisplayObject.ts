@@ -367,7 +367,7 @@ module egret {
         /**
          * 指定此对象是否接收鼠标/触摸事件
          * @member {boolean} egret.DisplayObject#touchEnabled
-         * @default true
+         * @default false
          */
         public _touchEnabled:boolean;
 
@@ -693,7 +693,7 @@ module egret {
          * @method egret.DisplayObject#hitTest
          * @param x {number} 检测坐标的x轴
          * @param y {number} 检测坐标的y轴
-         * @param ignoreTouchEnabled 是否忽略TouchEnabled
+         * @param ignoreTouchEnabled {boolean} 是否忽略TouchEnabled
          * @returns {*}
          */
         public hitTest(x:number, y:number, ignoreTouchEnabled:boolean = false):DisplayObject {
