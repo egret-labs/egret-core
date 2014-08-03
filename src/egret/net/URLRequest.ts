@@ -30,14 +30,15 @@ module egret {
 
 	/**
 	 * @class egret.URLRequest
-	 * @classdesc
+	 * @classdesc URLRequest 类可捕获单个 HTTP 请求中的所有信息。
 	 * @extends egret.HashObject
 	 */
     export class URLRequest extends HashObject{
 
 		/**
+         * 实例化一个URLRequest对象
 		 * @method egret.URLRequest#constructor
-		 * @param url {string} 
+		 * @param url {string} 进行网络请求的地址
 		 */
         public constructor(url:string=null){
             super();

@@ -29,6 +29,7 @@
 module egret {
 
     /**
+     * @classdesc 注入器
      * @class egret.Injector
      */
 	export class Injector{

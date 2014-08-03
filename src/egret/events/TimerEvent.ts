@@ -33,8 +33,6 @@ module egret {
 	/**
 	 * @class egret.TimerEvent
 	 * @classdesc
-     * 创建一个 Event 对象，其中包含有关 timer 事件的特定信息。
-     *
      * 每当 Timer 对象达到由 Timer.delay 属性指定的间隔时，Timer 对象即会调度 TimerEvent 对象。
 	 * @extends egret.Event
 	 */

@@ -121,6 +121,7 @@ module egret {
         }
 
         /**
+         * 返回舞台尺寸范围
          * @member egret.Stage#getBounds
          * @see egret.DisplayObject#getBounds
          * @param resultRect {egret.Rectangle} 可选参数，传入用于保存结果的Rectangle对象，避免重复创建对象。
