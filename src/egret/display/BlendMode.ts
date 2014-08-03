@@ -19,7 +19,7 @@
 module egret {
     /**
      * @class egret.BlendMode
-     * @classdesc
+     * @classdesc 提供混合模式可视效果的常量值的类。
      */
     export class BlendMode {
 
