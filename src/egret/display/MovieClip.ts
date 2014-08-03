@@ -36,6 +36,11 @@
 
 module egret {
 
+    /**
+     * @class egret.MovieClip
+     * @classdesc 影片剪辑，可以通过影片剪辑播放序列帧动画。
+     * @extends egret.DisplayObjectContainer
+     */
     export class MovieClip extends DisplayObjectContainer {
 
         private delegate:MovieClipDelegate;
@@ -56,7 +61,7 @@ module egret {
 
         /**
          * 播放指定动画
-         * @param frameName
+         * @param frameName {string} 指定帧的帧名称
          */
         public gotoAndPlay(frameName:string) {
             this.delegate.gotoAndPlay(frameName);
@@ -64,7 +69,7 @@ module egret {
 
         /**
          * 播放并暂停指定动画
-         * @param frameName
+         * @param frameName {string} 指定帧的帧名称
          */
         public gotoAndStop(frameName:string) {
             this.delegate.gotoAndStop(frameName);
@@ -102,7 +107,8 @@ module egret {
         }
 
         /**
-         * @deprecated
+         * 获取当前影片剪辑的帧频数
+         * @return {number}
          */
         public getTotalFrame():number {
             Logger.warning("MovieClip#getTotalFrame方法即将废弃");
