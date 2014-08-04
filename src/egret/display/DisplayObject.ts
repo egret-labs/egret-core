@@ -57,6 +57,39 @@ module egret {
             this._cacheBounds = new egret.Rectangle(0, 0, 0, 0);
         }
 
+        private _normalDirty:boolean = true;
+        public _setDirty() {
+            this._normalDirty = true;
+        }
+
+        public getDirty():boolean {
+            return this._normalDirty || this._sizeDirty;
+        }
+
+        //对宽高有影响
+        private _sizeDirty:boolean = true;
+
+        public _setParentSizeDirty():void {
+            if (this.parent && (!this.parent._hasWidthSet && !this.parent._hasHeightSet)) {
+                this.parent._setSizeDirty();
+            }
+        }
+
+        public _setSizeDirty() {
+            this._sizeDirty = true;
+
+            this._setDirty();
+            this._setParentSizeDirty();
+        }
+
+        public _clearDirty():void {
+            this._normalDirty = false;
+        }
+
+        public _clearSizeDirty():void {
+            this._sizeDirty = false;
+        }
+
         /**
          * 表示 DisplayObject 的实例名称。
          * @member {string} egret.DisplayObject#name
@@ -95,6 +128,9 @@ module egret {
         public set x(value:number) {
             if (NumberUtils.isNumber(value)) {
                 this._x = value;
+
+                this._setDirty();
+                this._setParentSizeDirty();
             }
         }
 
@@ -111,6 +147,9 @@ module egret {
         public set y(value:number) {
             if (NumberUtils.isNumber(value)) {
                 this._y = value;
+
+                this._setDirty();
+                this._setParentSizeDirty();
             }
         }
 
@@ -128,6 +167,9 @@ module egret {
         public set scaleX(value:number) {
             if (NumberUtils.isNumber(value)) {
                 this._scaleX = value;
+
+                this._setDirty();
+                this._setParentSizeDirty();
             }
         }
 
@@ -145,6 +187,9 @@ module egret {
         public set scaleY(value:number) {
             if (NumberUtils.isNumber(value)) {
                 this._scaleY = value;
+
+                this._setDirty();
+                this._setParentSizeDirty();
             }
         }
 
@@ -162,6 +207,9 @@ module egret {
         public set anchorOffsetX(value:number) {
             if (NumberUtils.isNumber(value)) {
                 this._anchorOffsetX = value;
+
+                this._setDirty();
+                this._setParentSizeDirty();
             }
         }
 
@@ -179,6 +227,9 @@ module egret {
         public set anchorOffsetY(value:number) {
             if (NumberUtils.isNumber(value)) {
                 this._anchorOffsetY = value;
+
+                this._setDirty();
+                this._setParentSizeDirty();
             }
         }
 
@@ -196,6 +247,9 @@ module egret {
         public set anchorX(value:number) {
             if (NumberUtils.isNumber(value)) {
                 this._anchorX = value;
+
+                this._setDirty();
+                this._setParentSizeDirty();
             }
         }
 
@@ -213,6 +267,9 @@ module egret {
         public set anchorY(value:number) {
             if (NumberUtils.isNumber(value)) {
                 this._anchorY = value;
+
+                this._setDirty();
+                this._setParentSizeDirty();
             }
         }
 
@@ -220,7 +277,16 @@ module egret {
          * 显示对象是否可见。
          * @member {boolean} egret.DisplayObject#visible
          */
-        public visible:boolean = true;
+        public _visible:boolean = true;
+
+        public get visible():boolean {
+            return this._visible;
+        }
+
+        public set visible(value:boolean) {
+            this._visible = value;
+            this._setDirty();
+        }
 
         /**
          * 表示 DisplayObject 实例距其原始方向的旋转程度，以度为单位
@@ -236,6 +302,8 @@ module egret {
         public set rotation(value:number) {
             if (NumberUtils.isNumber(value)) {
                 this._rotation = value;
+
+                this._setSizeDirty();
             }
         }
 
@@ -253,6 +321,8 @@ module egret {
         public set alpha(value:number) {
             if (NumberUtils.isNumber(value)) {
                 this._alpha = value;
+
+                this._setDirty();
             }
         }
 
@@ -270,6 +340,8 @@ module egret {
         public set skewX(value:number) {
             if (NumberUtils.isNumber(value)) {
                 this._skewX = value;
+
+                this._setSizeDirty();
             }
         }
 
@@ -287,13 +359,15 @@ module egret {
         public set skewY(value:number) {
             if (NumberUtils.isNumber(value)) {
                 this._skewY = value;
+
+                this._setSizeDirty();
             }
         }
 
         /**
          * 指定此对象是否接收鼠标/触摸事件
          * @member {boolean} egret.DisplayObject#touchEnabled
-         * @default true
+         * @default false
          */
         public _touchEnabled:boolean;
 
@@ -310,7 +384,7 @@ module egret {
          * BlendMode 类中的一个值，用于指定要使用的混合模式。
          * @member {BlendMode} egret.DisplayObject#blendMode
          */
-        public blendMode:BlendMode;
+        public blendMode:string;
 
         /**
          * 显示对象的滚动矩形范围。显示对象被裁切为矩形定义的大小，当您更改 scrollRect 对象的 x 和 y 属性时，它会在矩形内滚动。
@@ -324,6 +398,8 @@ module egret {
 
         public set scrollRect(value:Rectangle) {
             this._scrollRect = value;
+
+            this._setSizeDirty();
         }
 
 
@@ -369,7 +445,7 @@ module egret {
          * @returns {number}
          */
         public get width():number {
-            return this.getBounds(Rectangle.identity).width;
+            return this._getSize(Rectangle.identity).width;
         }
 
         /**
@@ -378,7 +454,7 @@ module egret {
          * @returns {number}
          */
         public get height():number {
-            return this.getBounds(Rectangle.identity).height;
+            return this._getSize(Rectangle.identity).height;
         }
 
         public _hasWidthSet:Boolean = false;
@@ -388,6 +464,7 @@ module egret {
          * @param value
          */
         public set width(value:number) {
+            this._setSizeDirty();
             this._setWidth(value);
         }
 
@@ -400,12 +477,12 @@ module egret {
         }
 
         public _hasHeightSet:Boolean = false;
-
         /**
          * 显式设置高度
          * @param value
          */
         public set height(value:number) {
+            this._setSizeDirty();
             this._setHeight(value);
         }
 
@@ -518,7 +595,7 @@ module egret {
          * @returns {Rectangle}
          */
         public getBounds(resultRect?:Rectangle):egret.Rectangle {
-            if (this._cacheBounds.x == 0 && this._cacheBounds.y == 0 && this._cacheBounds.width == 0 && this._cacheBounds.height == 0) {
+//            if (this._cacheBounds.x == 0 && this._cacheBounds.y == 0 && this._cacheBounds.width == 0 && this._cacheBounds.height == 0) {
                 var rect:Rectangle = this._measureBounds();
                 var w:number = this._hasWidthSet ? this._explicitWidth : rect.width;
                 var h:number = this._hasHeightSet ? this._explicitHeight : rect.height;
@@ -534,7 +611,7 @@ module egret {
                     anchorY = this._anchorOffsetY;
                 }
                 this._cacheBounds.initialize(x - anchorX, y - anchorY, w, h);
-            }
+//            }
             var result:egret.Rectangle = this._cacheBounds;
             if (!resultRect) {
                 resultRect = new Rectangle();
@@ -614,9 +691,9 @@ module egret {
         /**
          * 检测指定坐标是否在显示对象内
          * @method egret.DisplayObject#hitTest
-         * @param x {number}
-         * @param y {number}
-         * @param ignoreTouchEnabled 是否忽略TouchEnabled
+         * @param x {number} 检测坐标的x轴
+         * @param y {number} 检测坐标的y轴
+         * @param ignoreTouchEnabled {boolean} 是否忽略TouchEnabled
          * @returns {*}
          */
         public hitTest(x:number, y:number, ignoreTouchEnabled:boolean = false):DisplayObject {
@@ -624,7 +701,7 @@ module egret {
                 return null;
             }
             var bound:Rectangle = this._getSize(Rectangle.identity);
-            if (0 < x && x < bound.width && 0 < y && y < bound.height) {
+            if (0 <= x && x < bound.width && 0 <= y && y < bound.height) {
                 if (this.mask || this._scrollRect) {
                     if (this._scrollRect
                         && x < this._scrollRect.width
@@ -632,9 +709,9 @@ module egret {
                         return this;
                     }
                     else if (this.mask
-                        && this.mask.x < x
+                        && this.mask.x <= x
                         && x < this.mask.x + this.mask.width
-                        && this.mask.y < y
+                        && this.mask.y <= y
                         && y < this.mask.y + this.mask.height) {
                         return this;
                     }
@@ -688,11 +765,23 @@ module egret {
             return this._measureSize(Rectangle.identity);
         }
 
+        private _rectW:number = 0;
+        private _rectH:number = 0;
         /**
          * 测量显示对象坐标与大小
          */
         public _measureSize(resultRect:Rectangle):egret.Rectangle {
-            return this._measureBounds();
+            if (this._sizeDirty) {
+                resultRect = this._measureBounds();
+                this._rectW = resultRect.width;
+                this._rectH = resultRect.height;
+                this._clearSizeDirty();
+            }
+            else {
+                resultRect.width = this._rectW;
+                resultRect.height = this._rectH;
+            }
+            return resultRect;
         }
 
         /**

@@ -92,10 +92,10 @@ module egret {
         /**
          * 举行类初始化赋值，开发者尽量调用此方法复用Rectangle对象，而不是每次需要的时候都重新创建
          * @method egret.Rectangle#initialize
-         * @param x {number}
-         * @param y {number}
-         * @param width {number}
-         * @param height {number}
+         * @param x {number} 矩形的x轴
+         * @param y {number} 矩形的y轴
+         * @param width {number} 矩形的宽度
+         * @param height {number} 矩形的高度
          * @returns {egret.Rectangle}
          */
         public initialize(x:number, y:number, width:number, height:number):Rectangle {
@@ -109,9 +109,9 @@ module egret {
         /**
          * 判断某坐标点是否存在于矩形内
          * @method egret.Rectangle#contains
-         * @param x {number}
-         * @param y {number}
-         * @returns {boolean}
+         * @param x {number} 检测点的x轴
+         * @param y {number} 检测点的y轴
+         * @returns {boolean} 如果检测点位于矩形内，返回true，否则，返回false
          */
         public contains(x:number, y:number):boolean {
             return this.x <= x &&
@@ -124,7 +124,7 @@ module egret {
          * 确定在 toIntersect 参数中指定的对象是否与此 Rectangle 对象相交。此方法检查指定的 Rectangle 对象的 x、y、width 和 height 属性，以查看它是否与此 Rectangle 对象相交。
          * @method egret.Rectangle#intersects
          * @param toIntersect {egret.Rectangle} 要与此 Rectangle 对象比较的 Rectangle 对象。
-         * @returns {boolean}
+         * @returns {boolean} 如果两个矩形相交，返回true，否则返回false
          */
         public intersects(toIntersect:Rectangle):boolean {
             if (this.contains(toIntersect.x, toIntersect.y))
@@ -141,7 +141,7 @@ module egret {
         /**
          * 克隆矩形对象
          * @method egret.Rectangle#clone
-         *
+         * @returns {egret.Rectangle} 返回克隆后的矩形
          */
         public clone():Rectangle {
             return new Rectangle(this.x, this.y, this.width, this.height);
@@ -156,8 +156,8 @@ module egret {
         /**
          * 是否包含某个点
          * @method egret.Rectangle#containsPoint
-         * @param point {egret.Point}
-         * @returns {boolean}
+         * @param point {egret.Point} 包含点对象
+         * @returns {boolean} 如果包含，返回true，否则返回false
          */
         public containsPoint(point:Point):boolean {
             if (this.x < point.x

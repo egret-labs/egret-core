@@ -29,7 +29,6 @@
 module egret{
     /**
      * 这个类是HTML5的WebWrapper的第一个版本
-     * @stable C 目前只是实现需求，大部分API需要考虑重新设计
      */
     export class Browser extends HashObject{
 
@@ -39,13 +38,21 @@ module egret{
         private trans:string;
         private ua;
         private isHD:boolean;
-        public isMobile:boolean;
 
         public static getInstance():Browser {
             if (Browser.instance == null) {
                 Browser.instance = new Browser();
             }
             return Browser.instance;
+        }
+
+        /**
+         * @deprecated
+         * @returns {boolean}
+         */
+        public get isMobile():boolean{
+            Logger.warning("Browser.isMobile接口参数已经变更，请尽快调整用法为 egret.MainContext.deviceType == egret.MainContext.DEVICE_MOBILE ")
+            return egret.MainContext.deviceType == egret.MainContext.DEVICE_MOBILE;
         }
 
         constructor() {
@@ -83,7 +90,6 @@ module egret{
                     this.isHD = true;
             }
             this.trans = this.pfx + "Transform";
-            this.isMobile = (this.ua.indexOf('mobile') != -1 || this.ua.indexOf('android') != -1);
         }
 
         public $new(x) {
@@ -170,7 +176,6 @@ module egret{
         public translate = (this.isHD) ? function (a) {
             return "translate3d(" + a.x + "px, " + (a.y - MainContext.instance.stage.stageHeight) + "px, 0) "
         } : function (a) {
-            console.log("translate(" + a.x + "px, " + a.y + "px) ");
             return "translate(" + a.x + "px, " + a.y + "px) "
         };
 

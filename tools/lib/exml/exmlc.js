@@ -632,6 +632,12 @@ var EXMLCompiler = (function () {
             } else {
                 globals.exit(2009, this.exmlPath, this.toXMLString(node));
             }
+        } else if (key == "scale9Grid" && type == "egret.Rectangle") {
+            var rect = value.split(",");
+            if (rect.length != 4 || isNaN(parseInt(rect[0])) || isNaN(parseInt(rect[1])) || isNaN(parseInt(rect[2])) || isNaN(parseInt(rect[3]))) {
+                globals.exit(2016, this.exmlPath, this.toXMLString(node));
+            }
+            value = "egret.getScale9Grid(\"" + value + "\")";
         } else {
             switch (type) {
                 case "Class":
@@ -756,7 +762,7 @@ var EXMLCompiler = (function () {
         var node = this.currentXML;
         for (var itemName in node) {
             var value = node[itemName];
-            if (value.charAt(0) != "$") {
+            if (itemName.charAt(0) != "$") {
                 continue;
             }
             itemName = itemName.substring(1);
@@ -957,7 +963,7 @@ var EXMLCompiler = (function () {
 
                 for (var name in node) {
                     var value = node[name];
-                    if (value.charAt(0) != "$") {
+                    if (name.charAt(0) != "$") {
                         continue;
                     }
                     name = name.substring(1);

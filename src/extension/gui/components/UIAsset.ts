@@ -165,9 +165,6 @@ module egret {
                     this._addToDisplayListAt(<DisplayObject> content,0);
                 }
             }
-            if(content instanceof Texture&&content["scale9Grid"] instanceof Rectangle){
-                this.scale9Grid = content["scale9Grid"];
-            }
             this.invalidateSize();
             this.invalidateDisplayList();
 			this.contentReused = false;

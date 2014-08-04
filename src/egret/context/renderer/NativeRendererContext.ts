@@ -113,7 +113,7 @@ module egret {
          * @stable A
          * @param blendMode {egret.BlendMode}
          */
-        public setAlpha(value:number, blendMode:egret.BlendMode) {
+        public setAlpha(value:number, blendMode:string) {
             egret_native.Graphics.setGlobalAlpha(value);
         }
 

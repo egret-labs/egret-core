@@ -39,9 +39,10 @@ module egret {
         static identity = new Point(0, 0);
 
         /**
+         * 创建一个 egret.Point 对象
 		 * @method egret.Point#constructor
-         * @param x {number} 
-         * @param y {number} 
+         * @param x {number} 该对象的x属性值，默认为0
+         * @param y {number} 该对象的y属性值，默认为0
          */
         public constructor(x:number = 0, y:number = 0) {
             super();
@@ -83,8 +84,8 @@ module egret {
         /**
          * 返回 pt1 和 pt2 之间的距离。
          * @method egret.Point#distance
-         * @param p1 第一个点
-         * @param p2 第二个点
+         * @param p1 {egret.Point} 第一个点
+         * @param p2 {egret.Point} 第二个点
          * @returns {number} 第一个点和第二个点之间的距离。
          */
         public static distance(p1:egret.Point, p2:egret.Point):number{

@@ -40,44 +40,7 @@ module egret {
 
         public run():void {
             var that = this;
-            if ("ontouchstart" in window) {
-                this.canvas.addEventListener("touchstart", function (event:any) {
-                    var l = event.changedTouches.length;
-                    for (var i:number = 0; i < l && i < that.maxTouches; i++) {
-                        that._onTouchBegin(event.changedTouches[i]);
-                    }
-                    event.stopPropagation();
-                    event.preventDefault();
-                }, false);
-
-                this.canvas.addEventListener("touchmove", function (event:any) {
-                    var l = event.changedTouches.length;
-                    for (var i:number = 0; i < l && i < that.maxTouches; i++) {
-                        that._onTouchMove(event.changedTouches[i]);
-                    }
-                    event.stopPropagation();
-                    event.preventDefault();
-                }, false);
-
-                this.canvas.addEventListener("touchend", function (event:any) {
-                    var l = event.changedTouches.length;
-                    for (var i:number = 0; i < l && i < that.maxTouches; i++) {
-                        that._onTouchEnd(event.changedTouches[i]);
-                    }
-                    event.stopPropagation();
-                    event.preventDefault();
-                }, false);
-
-                this.canvas.addEventListener("touchcancel", function (event:any) {
-                    var l = event.changedTouches.length;
-                    for (var i:number = 0; i < l && i < that.maxTouches; i++) {
-                        that._onTouchEnd(event.changedTouches[i]);
-                    }
-                    event.stopPropagation();
-                    event.preventDefault();
-                }, false);
-            }
-            else if (window.navigator.msPointerEnabled) {
+            if (window.navigator.msPointerEnabled) {
                 this.canvas.addEventListener("MSPointerDown", function (event:any) {
                     that._onTouchBegin(event);
                     event.stopPropagation();
@@ -95,14 +58,46 @@ module egret {
                 }, false);
             }
             else {
+                //touch事件
+                this.canvas.addEventListener("touchstart", function (event:any) {
+                    var l = event.changedTouches.length;
+                    for (var i:number = 0; i < l && i < that.maxTouches; i++) {
+                        that._onTouchBegin(event.changedTouches[i]);
+                    }
+                    event.stopPropagation();
+                    event.preventDefault();
+                }, false);
+                this.canvas.addEventListener("touchmove", function (event:any) {
+                    var l = event.changedTouches.length;
+                    for (var i:number = 0; i < l && i < that.maxTouches; i++) {
+                        that._onTouchMove(event.changedTouches[i]);
+                    }
+                    event.stopPropagation();
+                    event.preventDefault();
+                }, false);
+                this.canvas.addEventListener("touchend", function (event:any) {
+                    var l = event.changedTouches.length;
+                    for (var i:number = 0; i < l && i < that.maxTouches; i++) {
+                        that._onTouchEnd(event.changedTouches[i]);
+                    }
+                    event.stopPropagation();
+                    event.preventDefault();
+                }, false);
+                this.canvas.addEventListener("touchcancel", function (event:any) {
+                    var l = event.changedTouches.length;
+                    for (var i:number = 0; i < l && i < that.maxTouches; i++) {
+                        that._onTouchEnd(event.changedTouches[i]);
+                    }
+                    event.stopPropagation();
+                    event.preventDefault();
+                }, false);
+                //mouse事件
                 this.canvas.addEventListener("mousedown", function (event) {
                     that._onTouchBegin(event);
                 });
-
                 this.canvas.addEventListener("mousemove", function (event) {
                     that._onTouchMove(event);
                 });
-
                 this.canvas.addEventListener("mouseup", function (event) {
                     that._onTouchEnd(event);
                 });

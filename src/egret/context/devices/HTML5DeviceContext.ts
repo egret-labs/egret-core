@@ -42,43 +42,49 @@ module egret {
         private static instance:HTML5DeviceContext;
 
         /**
-         * @member egret.HTML5DeviceContext#frameRate
-         */
-        public frameRate:number = 60;
-        s
-
-        /**
          * @method egret.HTML5DeviceContext#constructor
          */
-        public constructor() {
+        public constructor(public frameRate:number = 60) {
             super();
+            if (frameRate == 60) {
+                HTML5DeviceContext.requestAnimationFrame = window["requestAnimationFrame"] ||
+                    window["webkitRequestAnimationFrame"] ||
+                    window["mozRequestAnimationFrame"] ||
+                    window["oRequestAnimationFrame"] ||
+                    window["msRequestAnimationFrame"];
+
+                HTML5DeviceContext.cancelAnimationFrame = window["cancelAnimationFrame"] ||
+                    window["msCancelAnimationFrame"] ||
+                    window["mozCancelAnimationFrame"] ||
+                    window["webkitCancelAnimationFrame"] ||
+                    window["oCancelAnimationFrame"] ||
+                    window["cancelRequestAnimationFrame"] ||
+                    window["msCancelRequestAnimationFrame"] ||
+                    window["mozCancelRequestAnimationFrame"] ||
+                    window["oCancelRequestAnimationFrame"] ||
+                    window["webkitCancelRequestAnimationFrame"];
+
+            }
+            if (!HTML5DeviceContext.requestAnimationFrame) {
+                HTML5DeviceContext.requestAnimationFrame = function (callback) {
+                    return window.setTimeout(callback, 1000 / frameRate);
+                };
+            }
+
+            if (!HTML5DeviceContext.cancelAnimationFrame) {
+                HTML5DeviceContext.cancelAnimationFrame = function (id) {
+                    return window.clearTimeout(id);
+                };
+            }
+
+
             HTML5DeviceContext.instance = this;
             this.registerListener();
         }
 
-        static requestAnimationFrame:Function = window["requestAnimationFrame"] ||
-            window["webkitRequestAnimationFrame"] ||
-            window["mozRequestAnimationFrame"] ||
-            window["oRequestAnimationFrame"] ||
-            window["msRequestAnimationFrame"] ||
-            //如果全都没有，使用setTimeout实现
-            function (callback) {
-                return window.setTimeout(callback, 1000 / 60);
-            };
+        static requestAnimationFrame:Function;
 
-        static cancelAnimationFrame = window["cancelAnimationFrame"] ||
-            window["msCancelAnimationFrame"] ||
-            window["mozCancelAnimationFrame"] ||
-            window["webkitCancelAnimationFrame"] ||
-            window["oCancelAnimationFrame"] ||
-            window["cancelRequestAnimationFrame"] ||
-            window["msCancelRequestAnimationFrame"] ||
-            window["mozCancelRequestAnimationFrame"] ||
-            window["oCancelRequestAnimationFrame"] ||
-            window["webkitCancelRequestAnimationFrame"] ||
-            function (id) {
-                return window.clearTimeout(id);
-            };
+        static cancelAnimationFrame:Function;
 
         static _thisObject:any;
 

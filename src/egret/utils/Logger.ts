@@ -37,8 +37,8 @@ module egret {
         /**
          * 表示出现了致命错误，开发者必须修复错误
 		 * @method egret.Logger.fatal
-         * @param actionCode {string} 
-         * @param value {Object} 
+         * @param actionCode {string} 错误信息
+         * @param value {Object} 错误描述信息
          */
         public static fatal(actionCode:string, value:Object = null){
             egret.Logger.traceToConsole("Fatal",actionCode,value);
@@ -48,8 +48,8 @@ module egret {
         /**
          * 记录正常的Log信息
 		 * @method egret.Logger.info
-         * @param actionCode {string} 
-         * @param value {Object} 
+         * @param actionCode {string} 错误信息
+         * @param value {Object} 错误描述信息
          */
         public static info(actionCode:string, value:Object = null){
             egret.Logger.traceToConsole("Info",actionCode,value);
@@ -58,8 +58,8 @@ module egret {
         /**
          * 记录可能会出现问题的Log信息
 		 * @method egret.Logger.warning
-         * @param actionCode {string} 
-         * @param value {Object} 
+         * @param actionCode {string} 错误信息
+         * @param value {Object} 错误描述信息
          */
         public static warning(actionCode:string, value:Object = null){
             egret.Logger.traceToConsole("Warning",actionCode,value);

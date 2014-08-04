@@ -79,7 +79,7 @@ module egret {
 
             egret.TextField.prototype._draw = function (renderContext) {
                 var textField:egret.TextField = <egret.TextField>this;
-                if (textField._textDirty) {
+                if (textField.getDirty()) {
                     textField.cacheAsBitmap = true;
                 }
                 egret.DisplayObject.prototype._draw.call(textField, renderContext);
@@ -142,8 +142,8 @@ module egret {
         }
 
         private initBlendMode():void {
-            WebGLRenderer.blendModesWebGL[BlendMode.NORMAL.value] = [this.gl.ONE, this.gl.ONE_MINUS_SRC_ALPHA];
-            WebGLRenderer.blendModesWebGL[BlendMode.ADD.value] = [this.gl.SRC_ALPHA, this.gl.DST_ALPHA];
+            WebGLRenderer.blendModesWebGL[BlendMode.NORMAL] = [this.gl.ONE, this.gl.ONE_MINUS_SRC_ALPHA];
+            WebGLRenderer.blendModesWebGL[BlendMode.ADD] = [this.gl.SRC_ALPHA, this.gl.DST_ALPHA];
         }
 
         private start():void {
@@ -165,7 +165,7 @@ module egret {
             gl.vertexAttribPointer(shader.aTextureCoord, 2, gl.FLOAT, false, stride, 2 * 4);
             gl.vertexAttribPointer(shader.colorAttribute, 2, gl.FLOAT, false, stride, 4 * 4);
 
-            this.setBlendMode(BlendMode.NORMAL.value);
+            this.setBlendMode(BlendMode.NORMAL);
         }
 
         public clearScreen():void {
@@ -330,10 +330,10 @@ module egret {
 
         private worldAlpha:number;
 
-        public setAlpha(value:number, blendMode:BlendMode):void {
+        public setAlpha(value:number, blendMode:string):void {
             this.worldAlpha = value;
             if (blendMode) {
-                this.setBlendMode(blendMode.value);
+                this.setBlendMode(blendMode);
             }
         }
 
