@@ -76,6 +76,9 @@ module egret {
         }
 
         public _setSizeDirty() {
+            if (this._sizeDirty) {
+                return;
+            }
             this._sizeDirty = true;
 
             this._setDirty();
