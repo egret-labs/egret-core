@@ -36,9 +36,19 @@
 
 module egret {
 
+	/**
+	 * @class egret.MovieClip
+	 * @classdesc
+     * MovieClip是所有影片剪辑类的抽象基类
+	 * @extends egret.DisplayObjectContainer
+	 */
     export class MovieClip extends DisplayObjectContainer {
 
         private delegate:MovieClipDelegate;
+		/**
+		 * @member {number} egret.MovieClip#frameRate
+         * 动画的播放帧频
+		 */
         public frameRate:number = 60;
 
         constructor(data, texture?:Texture) {
@@ -56,7 +66,8 @@ module egret {
 
         /**
          * 播放指定动画
-         * @param frameName
+		 * @method egret.MovieClip#gotoAndPlay
+         * @param frameName {string} 
          */
         public gotoAndPlay(frameName:string) {
             this.delegate.gotoAndPlay(frameName);
@@ -64,7 +75,8 @@ module egret {
 
         /**
          * 播放并暂停指定动画
-         * @param frameName
+		 * @method egret.MovieClip#gotoAndStop
+         * @param frameName {string} 
          */
         public gotoAndStop(frameName:string) {
             this.delegate.gotoAndStop(frameName);
@@ -73,11 +85,15 @@ module egret {
 
         /**
          * 暂停动画
+		 * @method egret.MovieClip#stop
          */
         public stop() {
             this.delegate.stop();
         }
 
+		/**
+		 * @method egret.MovieClip#dispose
+		 */
         public dispose():void {
             this.delegate.dispose();
 
@@ -85,6 +101,7 @@ module egret {
 
         /**
          * 方法名改为 dispose
+		 * @method egret.MovieClip#release
          * @deprecated
          */
         public release() {
@@ -94,7 +111,9 @@ module egret {
 
 
         /**
+		 * @method egret.MovieClip#getCurrentFrameIndex
          * @deprecated
+		 * @returns {number}
          */
         public getCurrentFrameIndex():number {
             Logger.warning("MovieClip#getCurrentFrameIndex方法即将废弃");
@@ -102,7 +121,9 @@ module egret {
         }
 
         /**
+		 * @method egret.MovieClip#getTotalFrame
          * @deprecated
+		 * @returns {number}
          */
         public getTotalFrame():number {
             Logger.warning("MovieClip#getTotalFrame方法即将废弃");
@@ -110,7 +131,9 @@ module egret {
         }
 
         /**
+		 * @method egret.MovieClip#setInterval
          * @deprecated
+		 * @param value {number} 
          */
         public setInterval(value:number) {
             Logger.warning("MovieClip#setInterval方法即将废弃,请使用MovieClip#frameRate代替");
@@ -118,7 +141,9 @@ module egret {
         }
 
         /**
+		 * @method egret.MovieClip#getIsPlaying
          * @deprecated
+		 * @returns {boolean}
          */
         public getIsPlaying():boolean {
             Logger.warning("MovieClip#getIsPlaying方法即将废弃");
@@ -128,16 +153,22 @@ module egret {
 
     export interface MovieClipDelegate {
 
+
         gotoAndPlay(frameName:string):void;
+
 
         gotoAndStop(frameName:string):void;
 
+
         stop():void;
+
 
         dispose():void;
 
+
         setMovieClip(movieclip:MovieClip):void;
     }
+
 
     export class DefaultMovieClipDelegate implements MovieClipDelegate {
         private _frameData;
@@ -153,10 +184,12 @@ module egret {
         private bitmap:Bitmap;
 
 
+
         constructor(public data, texture:Texture) {
             this._frameData = data;
             this._spriteSheet = new SpriteSheet(texture);
         }
+
 
         public setMovieClip(movieClip:MovieClip):void {
             this.movieClip = movieClip;
@@ -177,6 +210,7 @@ module egret {
             this._totalFrame = this._frameData.frames[frameName].totalFrame;
         }
 
+
         public gotoAndStop(frameName:string):void {
             this.checkHasFrame(frameName);
             this.stop();
@@ -187,10 +221,12 @@ module egret {
             this.playNextFrame();
         }
 
+
         public stop():void {
             this._isPlaying = false;
             Ticker.getInstance().unregister(this.update, this);
         }
+
 
         public dispose():void {
 
