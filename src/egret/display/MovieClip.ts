@@ -36,12 +36,11 @@
 
 module egret {
 
-	/**
-	 * @class egret.MovieClip
-	 * @classdesc
-     * MovieClip是所有影片剪辑类的抽象基类
-	 * @extends egret.DisplayObjectContainer
-	 */
+    /**
+     * @class egret.MovieClip
+     * @classdesc 影片剪辑，可以通过影片剪辑播放序列帧动画。
+     * @extends egret.DisplayObjectContainer
+     */
     export class MovieClip extends DisplayObjectContainer {
 
         private delegate:MovieClipDelegate;
@@ -67,7 +66,8 @@ module egret {
         /**
          * 播放指定动画
 		 * @method egret.MovieClip#gotoAndPlay
-         * @param frameName {string} 
+         * @param frameName {string} 指定帧的帧名称
+
          */
         public gotoAndPlay(frameName:string) {
             this.delegate.gotoAndPlay(frameName);
@@ -76,7 +76,8 @@ module egret {
         /**
          * 播放并暂停指定动画
 		 * @method egret.MovieClip#gotoAndStop
-         * @param frameName {string} 
+         * @param frameName {string} 指定帧的帧名称
+
          */
         public gotoAndStop(frameName:string) {
             this.delegate.gotoAndStop(frameName);
@@ -121,6 +122,7 @@ module egret {
         }
 
         /**
+         * 获取当前影片剪辑的帧频数
 		 * @method egret.MovieClip#getTotalFrame
          * @deprecated
 		 * @returns {number}
@@ -203,11 +205,10 @@ module egret {
             this._isPlaying = true;
             this._currentFrameIndex = 0;
             this._currentFrameName = frameName;
-
+            this._totalFrame = this._frameData.frames[frameName].totalFrame;
             this.playNextFrame();
             this._passTime = 0;
             Ticker.getInstance().register(this.update, this);
-            this._totalFrame = this._frameData.frames[frameName].totalFrame;
         }
 
 

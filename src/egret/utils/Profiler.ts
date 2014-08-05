@@ -37,6 +37,10 @@ module egret {
 
         private static instance:Profiler;
 
+        /**
+         * 返回系统中唯一的Profiler实例。
+         * @returns {Profiler}
+         */
         static getInstance():Profiler {
             if (Profiler.instance == null) {
                 Profiler.instance = new Profiler();

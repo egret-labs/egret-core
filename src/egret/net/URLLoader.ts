@@ -77,8 +77,8 @@ module egret {
          * 从指定的 URL 发送和加载数据。可以以文本、原始二进制数据或 URL 编码变量格式接收数据，这取决于为 dataFormat 属性所设置的值。
          * 请注意 dataFormat 属性的默认值为文本。如果想将数据发送至指定的 URL，则可以在 URLRequest 对象中设置 data 属性。
 		 * @method egret.URLLoader#load
-		 * @param request {URLRequest} 
-		 */
+		 * @param request {URLRequest}  一个 URLRequest 对象，指定要下载的 URL。
+         */
         public load(request:URLRequest):void {
             this._request = request;
             this.data = null;

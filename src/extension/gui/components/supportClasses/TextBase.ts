@@ -143,8 +143,8 @@ module egret {
         private textAlignChanged:boolean;
 		private _textAlign:string = HorizontalAlign.LEFT;
 		/**
-		 * 文字的水平对齐方式 ,请使用TextAlign中定义的常量。
-		 * 默认值：TextFormatAlign.LEFT。
+		 * 文字的水平对齐方式 ,请使用HorizontalAlign中定义的常量。
+		 * 默认值：HorizontalAlign.LEFT。
 		 * @member egret.TextBase#textAlign
 		 */
 		public get textAlign():string{

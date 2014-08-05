@@ -29,7 +29,7 @@ module egret {
 
 	/**
 	 * @class egret.URLLoaderDataFormat
-	 * @classdesc
+	 * @classdesc URLLoaderDataFormat 类提供了一些用于指定如何接收已下载数据的值。
 	 */
     export class URLLoaderDataFormat {
 

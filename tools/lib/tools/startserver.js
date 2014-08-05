@@ -22,6 +22,7 @@ var mine = {
     "txt": "text/plain",
     "wav": "audio/x-wav",
     "wma": "audio/x-ms-wma",
+    "mp3": "audio/mpeg",
     "wmv": "video/x-ms-wmv",
     "xml": "text/xml"
 }
@@ -115,7 +116,9 @@ function writeFile(pathname, response) {
                 } else {
                     var contentType = mine[ext] || "text/plain";
                     response.writeHead(200, {
+                        'Accept-Ranges': 'bytes',
                         'Content-Type': contentType,
+                        'Content-Length': file.length,
                         'Access-Control-Allow-Origin': '*'
                     });
                     response.write(file, "binary");

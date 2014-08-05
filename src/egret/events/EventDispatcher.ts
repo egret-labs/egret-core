@@ -169,7 +169,7 @@ module egret {
         /**
          * 检测是否存在监听器
          * @method egret.EventDispatcher#hasEventListener
-         * @param type 事件名
+         * @param type {string} 事件类型
          * @returns {boolean}
          * @stable A
          */
@@ -183,8 +183,8 @@ module egret {
          * hasEventListener() 与 willTrigger() 方法的区别是：hasEventListener() 只检查它所属的对象，
          * 而 willTrigger() 方法检查整个事件流以查找由 type 参数指定的事件。
          * @method egret.EventDispatcher#willTrigger
-         * @param type 事件名
-         * @returns {boolean}
+         * @param type {string} 事件类型
+         * @returns {boolean} 是否发生碰撞，如果发生返回true，如果没有碰撞，返回false
          */
         public willTrigger(type:string):boolean{
             return this.hasEventListener(type);

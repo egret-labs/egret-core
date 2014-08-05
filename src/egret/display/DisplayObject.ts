@@ -76,6 +76,9 @@ module egret {
         }
 
         public _setSizeDirty() {
+            if (this._sizeDirty) {
+                return;
+            }
             this._sizeDirty = true;
 
             this._setDirty();
@@ -367,7 +370,7 @@ module egret {
         /**
          * 指定此对象是否接收鼠标/触摸事件
          * @member {boolean} egret.DisplayObject#touchEnabled
-         * @default true
+         * @default false
          */
         public _touchEnabled:boolean;
 
@@ -384,7 +387,7 @@ module egret {
          * BlendMode 类中的一个值，用于指定要使用的混合模式。
          * @member {BlendMode} egret.DisplayObject#blendMode
          */
-        public blendMode:BlendMode;
+        public blendMode:string;
 
         /**
          * 显示对象的滚动矩形范围。显示对象被裁切为矩形定义的大小，当您更改 scrollRect 对象的 x 和 y 属性时，它会在矩形内滚动。
@@ -691,9 +694,9 @@ module egret {
         /**
          * 检测指定坐标是否在显示对象内
          * @method egret.DisplayObject#hitTest
-         * @param x {number}
-         * @param y {number}
-         * @param ignoreTouchEnabled 是否忽略TouchEnabled
+         * @param x {number} 检测坐标的x轴
+         * @param y {number} 检测坐标的y轴
+         * @param ignoreTouchEnabled {boolean} 是否忽略TouchEnabled
          * @returns {*}
          */
         public hitTest(x:number, y:number, ignoreTouchEnabled:boolean = false):DisplayObject {

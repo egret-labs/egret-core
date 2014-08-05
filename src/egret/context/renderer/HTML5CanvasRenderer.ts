@@ -52,7 +52,7 @@ module egret {
 
         private blendValue:string;
 
-        constructor(canvas) {
+        public constructor(canvas) {
             this.canvas = canvas;
             this.canvasContext = canvas.getContext("2d");
             var f = this.canvasContext.setTransform;
@@ -78,7 +78,7 @@ module egret {
             super();
         }
 
-        clearScreen() {
+        public clearScreen() {
             this.setTransform(egret.Matrix.identity.identity());
             var list = RenderFilter.getInstance().getDrawAreaList();
             for (var i:number = 0 , l:number = list.length; i < l; i++) {
@@ -88,11 +88,11 @@ module egret {
             this.renderCost = 0;
         }
 
-        clearRect(x:number, y:number, w:number, h:number) {
+        public clearRect(x:number, y:number, w:number, h:number) {
             this.canvasContext.clearRect(x, y, w, h);
         }
 
-        drawImage(texture:Texture, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight) {
+        public drawImage(texture:Texture, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight) {
             sourceX = sourceX / egret.MainContext.instance.rendererContext.texture_scale_factor;
             sourceY = sourceY / egret.MainContext.instance.rendererContext.texture_scale_factor;
             sourceWidth = sourceWidth / egret.MainContext.instance.rendererContext.texture_scale_factor;
@@ -109,7 +109,7 @@ module egret {
             this.renderCost += egret.getTimer() - beforeDraw;
         }
 
-        setTransform(matrix:egret.Matrix) {
+        public setTransform(matrix:egret.Matrix) {
             //在没有旋转缩放斜切的情况下，先不进行矩阵偏移，等下次绘制的时候偏移
             if (matrix.a == 1 && matrix.b == 0 && matrix.c == 0 && matrix.d == 1
                 && this._matrixA == 1 && this._matrixB == 0 && this._matrixC == 0 && this._matrixD == 1) {
@@ -124,21 +124,21 @@ module egret {
             }
         }
 
-        setAlpha(alpha:number, blendMode:egret.BlendMode) {
+        public setAlpha(alpha:number, blendMode:string) {
             if (alpha != this.canvasContext.globalAlpha) {
                 this.canvasContext.globalAlpha = alpha;
             }
             if (blendMode) {
-                this.blendValue = blendMode.value;
-                this.canvasContext.globalCompositeOperation = blendMode.value;
+                this.blendValue = blendMode;
+                this.canvasContext.globalCompositeOperation = blendMode;
             }
-            else if (this.blendValue != egret.BlendMode.NORMAL.value) {
-                this.blendValue = egret.BlendMode.NORMAL.value;
-                this.canvasContext.globalCompositeOperation = egret.BlendMode.NORMAL.value;
+            else if (this.blendValue != egret.BlendMode.NORMAL) {
+                this.blendValue = egret.BlendMode.NORMAL;
+                this.canvasContext.globalCompositeOperation = egret.BlendMode.NORMAL;
             }
         }
 
-        setupFont(textField:TextField):void {
+        public setupFont(textField:TextField):void {
             var ctx = this.canvasContext;
             var font:string = textField.italic ? "italic " : "normal ";
             font += textField.bold ? "bold " : "normal ";
@@ -149,13 +149,13 @@ module egret {
         }
 
 
-        measureText(text:string):number {
+        public measureText(text:string):number {
             var result = this.canvasContext.measureText(text);
             return result.width;
         }
 
 
-        drawText(textField:egret.TextField, text:string, x:number, y:number, maxWidth:number) {
+        public drawText(textField:egret.TextField, text:string, x:number, y:number, maxWidth:number) {
             var textColor:string = textField._textColorString;
             var strokeColor:string = textField._strokeColorString;
             var outline = textField.stroke;
@@ -170,7 +170,7 @@ module egret {
             super.drawText(textField, text, x, y, maxWidth);
         }
 
-        strokeRect(x, y, w, h, color) {
+        public strokeRect(x, y, w, h, color) {
             this.canvasContext.strokeStyle = color;
             this.canvasContext.strokeRect(x, y, w, h);
         }

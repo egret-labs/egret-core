@@ -83,7 +83,6 @@ module egret {
             Ticker.getInstance().register(this.renderLoop, this, Number.NEGATIVE_INFINITY);
             Ticker.getInstance().register(this.broadcastEnterFrame, this, Number.POSITIVE_INFINITY);
             this.touchContext.run();
-            __invalidateModuleFlag = true;
         }
 
         /**
