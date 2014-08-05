@@ -27,9 +27,24 @@
 
 
 module egret {
+	/**
+	 * @class egret.Tween
+	 * @classdesc
+     * Tween是Egret的动画缓动类
+	 * @extends egret.EventDispatcher
+	 */
     export class Tween extends EventDispatcher {
+		/**
+		 * @constant {any} egret.Tween.NONE
+		 */
         public static NONE = 0;
+		/**
+		 * @constant {any} egret.Tween.LOOP
+		 */
         public static LOOP = 1;
+		/**
+		 * @constant {any} egret.Tween.REVERSE
+		 */
         public static REVERSE = 2;
 
         private static _tweens:Tween[] = [];
@@ -54,6 +69,11 @@ module egret {
         private _stepPosition:number = 0;
         private passive:boolean = false;
 
+		/**
+         * 激活一个显示对象，对其添加 Tween 动画
+		 * @method egret.Tween.get
+         * @param target {egret.DisplayObject} 要激活的显示对象
+		 */
         public static get(target, props = null, pluginData = null, override = false):Tween {
             if (override) {
                 Tween.removeTweens(target);
@@ -61,7 +81,12 @@ module egret {
             return new Tween(target, props, pluginData);
         }
 
-        public static removeTweens(target):void {
+		/**
+         * 删除一个显示对象上的全部 Tween 动画
+		 * @method egret.Tween.removeTweens
+		 * @param target {egret.DisplayObject}
+		 */
+        public static removeTweens(target:any):void {
             if (!target.tween_count) {
                 return;
             }
@@ -112,6 +137,9 @@ module egret {
             }
         }
 
+		/**
+		 * @method egret.Tween.removeAllTweens
+		 */
         public static removeAllTweens():void {
             var tweens:Tween[] = Tween._tweens;
             for (var i = 0, l = tweens.length; i < l; i++) {
@@ -292,6 +320,11 @@ module egret {
 
         }
 
+		/**
+		 * @method egret.Tween#setPaused
+		 * @param value {boolean} 
+		 * @returns {egret.Tween}
+		 */
         public setPaused(value:boolean):Tween {
             this.paused = value;
             Tween._register(this, !value);
@@ -362,7 +395,14 @@ module egret {
             }
         }
 
-        public wait(duration:number, passive = false):Tween {
+		/**
+         * 等待指定秒后执行下一个动画
+		 * @method egret.Tween#wait
+		 * @param duration {number} 要等待的时间，以秒为单位
+		 * @param passive {boolean}
+		 * @returns {egret.Tween}
+		 */
+        public wait(duration:number, passive?:boolean):Tween {
             if (duration == null || duration <= 0) {
                 return this;
             }
@@ -370,6 +410,14 @@ module egret {
             return this._addStep({d: duration, p0: o, p1: o, v: passive});
         }
 
+		/**
+         * 将指定显示对象的属性修改为指定值
+		 * @method egret.Tween#to
+		 * @param props {Object} 对象的属性集合
+		 * @param duration {number} 持续时间
+		 * @param ease {egret.Ease} 缓动算法
+		 * @returns {egret.Tween}
+		 */
         public to(props, duration:number, ease = undefined):Tween {
             if (isNaN(duration) || duration < 0) {
                 duration = 0;
@@ -377,6 +425,14 @@ module egret {
             return this._addStep({d: duration || 0, p0: this._cloneProps(this._curQueueProps), e: ease, p1: this._cloneProps(this._appendQueueProps(props))});
         }
 
+		/**
+         * 执行回调函数
+		 * @method egret.Tween#call
+		 * @param callback {Function} 
+		 * @param thisObj {Object}
+		 * @param params {Object}
+		 * @returns {egret.Tween}
+		 */
         public call(callback:Function, thisObj = undefined, params = undefined):Tween {
             return this._addAction({f: callback, p: params ? params : [this], o: thisObj ? thisObj : this._target});
         }
@@ -385,6 +441,11 @@ module egret {
             return this._addAction({f: this._set, o: this, p: [props, target ? target : this._target]});
         }
 
+		/**
+		 * @method egret.Tween#play
+		 * @param tween {egret.Tween} 
+		 * @returns {egret.Tween}
+		 */
         public play(tween:Tween):Tween {
             if (!tween) {
                 tween = this;
@@ -392,6 +453,11 @@ module egret {
             return this.call(tween.setPaused, [false], tween);
         }
 
+		/**
+		 * @method egret.Tween#pause
+		 * @param tween {egret.Tween} 
+		 * @returns {egret.Tween}
+		 */
         public pause(tween:Tween):Tween {
             if (!tween) {
                 tween = this;
@@ -399,6 +465,10 @@ module egret {
             return this.call(tween.setPaused, [true], tween);
         }
 
+		/**
+		 * @method egret.Tween#tick
+		 * @param delta {number} 
+		 */
         public tick(delta:number):void {
             if (this.paused) {
                 return;
