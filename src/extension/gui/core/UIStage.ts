@@ -26,7 +26,7 @@
  */
 
 
-module egret {
+module egret.gui {
 
 	/**
 	 * @class egret.UIStage

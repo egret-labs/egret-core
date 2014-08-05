@@ -26,7 +26,7 @@
  */
 
 
-module egret {
+module egret.gui {
     /**
 	 * @classdesc
      * IFactory 接口定义工厂类（如 ClassFactory）必须实现的接口。

@@ -25,7 +25,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-module egret {
+module egret.gui {
 
 	/**
 	 * @class egret.RowAlign
