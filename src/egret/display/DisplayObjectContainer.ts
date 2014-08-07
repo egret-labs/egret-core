@@ -153,7 +153,8 @@ module egret {
                 }
             }
 
-            child._setSizeDirty();
+            child._setDirty();
+            this._setSizeDirty();
             return child;
         }
 

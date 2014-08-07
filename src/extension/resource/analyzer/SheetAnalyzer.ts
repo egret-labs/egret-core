@@ -83,6 +83,7 @@ module RES {
                     config = JSON.parse(str);
                 }
                 catch (e){
+                    egret.Logger.warning("JSON文件格式不正确: "+resItem.url);
                 }
                 if(!config){
                     return;

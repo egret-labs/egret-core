@@ -27,6 +27,12 @@
 
 
 module egret {
+	/**
+	 * @class egret.RenderTexture
+	 * @classdesc
+     * RenderTexture 是动态纹理类，他实现了将显示对象及其子对象绘制成为一个纹理的功能
+	 * @extends egret.Texture
+	 */
     export class RenderTexture extends Texture {
 
         private renderContext;
@@ -36,6 +42,11 @@ module egret {
             this.renderContext = egret.RendererContext.createRendererContext(this._bitmapData);
         }
 
+		/**
+         * 将制定显示对象绘制为一个纹理
+		 * @method egret.RenderTexture#drawToTexture
+		 * @param displayObject {egret.DisplayObject} 
+		 */
         public drawToTexture(displayObject:egret.DisplayObject):void {
             var cacheCanvas:HTMLCanvasElement = this._bitmapData;
             var bounds = displayObject.getBounds(Rectangle.identity);
