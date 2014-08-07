@@ -26,21 +26,21 @@
  */
 
 
-module egret {
+module egret.gui {
 
 	/**
-	 * @class egret.Button
+	 * @class egret.gui.Button
 	 * @classdesc
 	 * 按钮控件
-	 * @extends egret.ButtonBase
+	 * @extends egret.gui.ButtonBase
 	 */	
 	export class Button extends ButtonBase{
 		/**
-		 * @method egret.Button#constructor
+		 * @method egret.gui.Button#constructor
 		 */
 		public constructor(){
 			super();
-            this.hostComponentKey = "egret.Button";
+            this.hostComponentKey = "egret.gui.Button";
 		}
 	}
 }

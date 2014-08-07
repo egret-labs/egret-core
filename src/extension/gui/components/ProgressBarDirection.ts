@@ -25,32 +25,32 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-module egret {
+module egret.gui {
 
 	/**
-	 * @class egret.ProgressBarDirection
+	 * @class egret.gui.ProgressBarDirection
 	 * @classdesc
 	 * 定义进度条控件增长方向的常量
 	 */
 	export class ProgressBarDirection{
 		/**
 		 * 水平从左到右增长
-		 * @constant egret.ProgressBarDirection.LEFT_TO_RIGHT
+		 * @constant egret.gui.ProgressBarDirection.LEFT_TO_RIGHT
 		 */		
 		public static LEFT_TO_RIGHT:string = "leftToRight";
 		/**
 		 * 水平从右到左增长
-		 * @constant egret.ProgressBarDirection.RIGHT_TO_LEFT
+		 * @constant egret.gui.ProgressBarDirection.RIGHT_TO_LEFT
 		 */		
 		public static RIGHT_TO_LEFT:string = "rightToLeft";
 		/**
 		 * 竖直从上到下增长
-		 * @constant egret.ProgressBarDirection.TOP_TO_BOTTOM
+		 * @constant egret.gui.ProgressBarDirection.TOP_TO_BOTTOM
 		 */		
 		public static TOP_TO_BOTTOM:string = "topToBottom";
 		/**
 		 * 竖直从下到上增长
-		 * @constant egret.ProgressBarDirection.BOTTOM_TO_TOP
+		 * @constant egret.gui.ProgressBarDirection.BOTTOM_TO_TOP
 		 */		
 		public static BOTTOM_TO_TOP:string = "bottomToTop";
 	}

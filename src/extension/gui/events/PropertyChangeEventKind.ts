@@ -25,23 +25,23 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-module egret {
+module egret.gui {
 
 	/**
-	 * @class egret.PropertyChangeEventKind
+	 * @class egret.gui.PropertyChangeEventKind
 	 * @classdesc
 	 * PropertyChangeEventKind 类定义 PropertyChangeEvent 类的 kind 属性的常量值。
 	 */
 	export class PropertyChangeEventKind{
 		/**
 		 * 指示该属性的值已更改。 
-		 * @constant egret.PropertyChangeEventKind.UPDATE
+		 * @constant egret.gui.PropertyChangeEventKind.UPDATE
 		 */		
 		public static UPDATE:string = "update";
 		
 		/**
 		 * 指示该属性已从此对象中删除。
-		 * @constant egret.PropertyChangeEventKind.DELETE
+		 * @constant egret.gui.PropertyChangeEventKind.DELETE
 		 */
 		public static DELETE:string = "delete";
 	}

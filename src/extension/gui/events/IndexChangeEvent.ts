@@ -26,10 +26,10 @@
  */
 
 
-module egret {
+module egret.gui {
 
 	/**
-	 * @class egret.IndexChangeEvent
+	 * @class egret.gui.IndexChangeEvent
 	 * @classdesc
 	 * 索引改变事件
 	 * @extends egret.Event
@@ -37,18 +37,18 @@ module egret {
 	export class IndexChangeEvent extends Event{
 		/**
 		 * 指示索引已更改 
-		 * @constant egret.IndexChangeEvent.CHANGE
+		 * @constant egret.gui.IndexChangeEvent.CHANGE
 		 */		
 		public static CHANGE:string = "change";
 		
 		/**
 		 * 指示索引即将更改,可以通过调用preventDefault()方法阻止索引发生更改
-		 * @constant egret.IndexChangeEvent.CHANGING
+		 * @constant egret.gui.IndexChangeEvent.CHANGING
 		 */
 		public static CHANGING:string = "changing";
 		
 		/**
-		 * @method egret.IndexChangeEvent#constructor
+		 * @method egret.gui.IndexChangeEvent#constructor
 		 * @param type {string} 
 		 * @param bubbles {boolean} 
 		 * @param cancelable {boolean} 
@@ -67,19 +67,19 @@ module egret {
 		
 		/**
 		 * 进行更改之后的从零开始的索引。
-		 * @member egret.IndexChangeEvent#newIndex
+		 * @member egret.gui.IndexChangeEvent#newIndex
 		 */
 		public newIndex:number;
 		
 		/**
 		 * 进行更改之前的从零开始的索引。
-		 * @member egret.IndexChangeEvent#oldIndex
+		 * @member egret.gui.IndexChangeEvent#oldIndex
 		 */		
 		public oldIndex:number;
 
         /**
          * 使用指定的EventDispatcher对象来抛出事件对象。抛出的对象将会缓存在对象池上，供下次循环复用。
-         * @method egret.IndexChangeEvent.dispatchIndexChangeEvent
+         * @method egret.gui.IndexChangeEvent.dispatchIndexChangeEvent
          */
         public static dispatchIndexChangeEvent(target:IEventDispatcher,type:string,
                                                oldIndex:number = -1,newIndex:number = -1,cancelable:boolean = false):boolean{

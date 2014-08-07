@@ -25,19 +25,19 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-module egret {
+module egret.gui {
     /**
-     * @class egret.IAssetAdapter
+     * @class egret.gui.IAssetAdapter
      * @interface
      * @classdesc
      * 素材适配器接口。
      * 若项目需要自定义UIAsset.source的解析规则，需要实现这个接口，
-     * 然后调用Injector.mapClass("egret.IAssetAdapter",YourAssetAdapter)注入到框架即可。
+     * 然后调用Injector.mapClass("egret.gui.IAssetAdapter",YourAssetAdapter)注入到框架即可。
      */
     export interface IAssetAdapter{
         /**
          * 解析素材
-         * @method egret.IAssetAdapter#getAsset
+         * @method egret.gui.IAssetAdapter#getAsset
          * @param source {any} 待解析的新素材标识符
          * @param compFunc {Function} 解析完成回调函数，示例：compFunc(content:any,source:any):void;
          * 回调参数content接受两种类型：DisplayObject或Texture。

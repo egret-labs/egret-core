@@ -27,7 +27,7 @@
 
 module ns_project {
 
-    export class Group extends egret.Group{
+    export class Group extends egret.gui.Group{
 
         public constructor(){
             super();

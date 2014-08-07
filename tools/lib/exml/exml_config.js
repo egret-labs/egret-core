@@ -41,6 +41,7 @@ var EXMLConfig = (function () {
         * 组件清单列表
         */
         this.componentDic = {};
+        this.idMap = {};
         this.basicTypes = ["void", "any", "number", "string", "boolean", "Object", "Array", "Function"];
         var exmlPath = param.getEgretPath() + "/tools/lib/exml/";
         exmlPath = exmlPath.split("\\").join("/");
@@ -94,9 +95,11 @@ var EXMLConfig = (function () {
             var item = children[i];
             var component = new Component(item);
             this.componentDic[component.className] = component;
+            this.idMap[component.id] = component.className;
         }
         for (var className in this.componentDic) {
             var component = this.componentDic[className];
+
             if (!component.defaultProp)
                 this.findProp(component);
         }
@@ -128,10 +131,7 @@ var EXMLConfig = (function () {
         }
         if (ns == EXMLConfig.W) {
         } else if (!ns || ns == EXMLConfig.E) {
-            name = "egret." + id;
-            if (!this.componentDic[name]) {
-                name = "";
-            }
+            name = this.idMap[id];
         } else {
             name = ns.substring(0, ns.length - 1) + id;
             if (!this.classNameToPath[name]) {
@@ -513,9 +513,9 @@ var Component = (function () {
         this.defaultProp = "";
         if (item) {
             this.id = item.$id;
-            this.className = "egret." + this.id;
+            this.className = item["$module"] + "." + this.id;
             if (item["$super"])
-                this.superClass = "egret." + item.$super;
+                this.superClass = item.$super;
             if (item["$default"])
                 this.defaultProp = item.$default;
         }
@@ -523,5 +523,14 @@ var Component = (function () {
     return Component;
 })();
 
+var exmlConfig;
+function getInstance() {
+    if (!exmlConfig) {
+        exmlConfig = new EXMLConfig();
+    }
+    return exmlConfig;
+}
+
 exports.EXMLConfig = EXMLConfig;
+exports.getInstance = getInstance;
 //# sourceMappingURL=exml_config.js.map

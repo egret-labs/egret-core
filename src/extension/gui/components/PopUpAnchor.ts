@@ -26,18 +26,18 @@
  */
 
 
-module egret {
+module egret.gui {
 
 	/**
-	 * @class egret.PopUpAnchor
+	 * @class egret.gui.PopUpAnchor
 	 * @classdesc
 	 * PopUpAnchor组件用于定位布局中的弹出控件或下拉控件
-	 * @extends egret.UIComponent
+	 * @extends egret.gui.UIComponent
 	 */	
 	export class PopUpAnchor extends UIComponent{
 		/**
 		 * 构造函数
-		 * @method egret.PopUpAnchor#constructor
+		 * @method egret.gui.PopUpAnchor#constructor
 		 */		
 		public constructor(){
 			super();
@@ -56,7 +56,7 @@ module egret {
 		private _popUpHeightMatchesAnchorHeight:boolean = false;
 		/**
 		 * 如果为 true，则将popUp控件的高度设置为 PopUpAnchor的高度值。
-		 * @member egret.PopUpAnchor#popUpHeightMatchesAnchorHeight
+		 * @member egret.gui.PopUpAnchor#popUpHeightMatchesAnchorHeight
 		 */
 		public get popUpHeightMatchesAnchorHeight():boolean{
 			return this._popUpHeightMatchesAnchorHeight;
@@ -73,7 +73,7 @@ module egret {
 		private _popUpWidthMatchesAnchorWidth:boolean = false;
 		/**
 		 * 如果为true，则将popUp控件的宽度设置为PopUpAnchor的宽度值。
-		 * @member egret.PopUpAnchor#popUpWidthMatchesAnchorWidth
+		 * @member egret.gui.PopUpAnchor#popUpWidthMatchesAnchorWidth
 		 */		
 		public get popUpWidthMatchesAnchorWidth():boolean{
 			return this._popUpWidthMatchesAnchorWidth;
@@ -90,7 +90,7 @@ module egret {
 		private _displayPopUp:boolean = false;
 		/**
 		 * 如果为 true，则将popUp对象弹出。若为false，关闭弹出的popUp。
-		 * @member egret.PopUpAnchor#displayPopUp
+		 * @member egret.gui.PopUpAnchor#displayPopUp
 		 */		
 		public get displayPopUp():boolean{
 			return this._displayPopUp;
@@ -107,7 +107,7 @@ module egret {
 		private _popUp:IVisualElement;
 		/**
 		 * 要弹出或移除的目标显示对象。
-		 * @member egret.PopUpAnchor#popUp
+		 * @member egret.gui.PopUpAnchor#popUp
 		 */		
 		public get popUp():IVisualElement{ 
 			return this._popUp 
@@ -125,7 +125,7 @@ module egret {
 		/**
 		 * popUp相对于PopUpAnchor的弹出位置。请使用PopUpPosition里定义的常量。默认值TOP_LEFT。
 		 * @see org.flexlite.domUI.core.PopUpPosition
-		 * @member egret.PopUpAnchor#popUpPosition
+		 * @member egret.gui.PopUpAnchor#popUpPosition
 		 */		
 		public get popUpPosition():string{
 			return this._popUpPosition;
@@ -139,7 +139,7 @@ module egret {
 		}
 		
 		/**
-		 * @method egret.PopUpAnchor#updateDisplayList
+		 * @method egret.gui.PopUpAnchor#updateDisplayList
 		 * @param unscaledWidth {number} 
 		 * @param unscaledHeight {number} 
 		 */
@@ -149,7 +149,7 @@ module egret {
 		}
 		/**
 		 * 手动刷新popUp的弹出位置和尺寸。
-		 * @method egret.PopUpAnchor#updatePopUpTransform
+		 * @method egret.gui.PopUpAnchor#updatePopUpTransform
 		 */		
 		public updatePopUpTransform():void{
 			this.applyPopUpTransform(this.width, this.height);
@@ -200,7 +200,7 @@ module egret {
 		private _openDuration:number = 250;
 		/**
 		 * 窗口弹出的动画时间(以毫秒为单位)，设置为0则直接弹出窗口而不播放动画效果。默认值250。
-		 * @member egret.PopUpAnchor#openDuration
+		 * @member egret.gui.PopUpAnchor#openDuration
 		 */
 		public get openDuration():number{
 			return this._openDuration;
@@ -213,7 +213,7 @@ module egret {
 		private _closeDuration:number = 150;
 		/**
 		 * 窗口关闭的动画时间(以毫秒为单位)，设置为0则直接关闭窗口而不播放动画效果。默认值150。
-		 * @member egret.PopUpAnchor#closeDuration
+		 * @member egret.gui.PopUpAnchor#closeDuration
 		 */
 		public get closeDuration():number{
 			return this._closeDuration;

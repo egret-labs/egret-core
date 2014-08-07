@@ -26,22 +26,22 @@
  */
 
 
-module egret {
+module egret.gui {
 
 	/**
-	 * @class egret.MoveEvent
+	 * @class egret.gui.MoveEvent
 	 * @classdesc
 	 * 移动事件
 	 * @extends egret.Event
 	 */
 	export class MoveEvent extends Event{
 		/**
-		 * @constant egret.MoveEvent.MOVE
+		 * @constant egret.gui.MoveEvent.MOVE
 		 */
 		public static MOVE:string = "move";
 		
 		/**
-		 * @method egret.MoveEvent#constructor
+		 * @method egret.gui.MoveEvent#constructor
 		 * @param type {string} 
 		 * @param oldX {number} 
 		 * @param oldY {number} 
@@ -59,19 +59,19 @@ module egret {
 		
 		/**
 		 * 旧的组件X
-		 * @member egret.MoveEvent#oldX
+		 * @member egret.gui.MoveEvent#oldX
 		 */
 		public oldX:number;
 		
 		/**
 		 * 旧的组件Y
-		 * @member egret.MoveEvent#oldY
+		 * @member egret.gui.MoveEvent#oldY
 		 */
 		public oldY:number;
 
         /**
          * 使用指定的EventDispatcher对象来抛出事件对象。抛出的对象将会缓存在对象池上，供下次循环复用。
-         * @method egret.MoveEvent.dispatchMoveEvent
+         * @method egret.gui.MoveEvent.dispatchMoveEvent
          */
         public static dispatchMoveEvent(target:IEventDispatcher,oldX:number = NaN, oldY:number = NaN):void{
             var eventClass:any = MoveEvent;

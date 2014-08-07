@@ -26,43 +26,43 @@
  */
 
 
-module egret {
+module egret.gui {
 
 	/**
-	 * @class egret.ProgressBar
+	 * @class egret.gui.ProgressBar
 	 * @classdesc
 	 * 进度条控件。
-	 * @extends egret.Range
+	 * @extends egret.gui.Range
 	 */
     export class ProgressBar extends Range {
 		/**
-		 * @method egret.ProgressBar#constructor
+		 * @method egret.gui.ProgressBar#constructor
 		 */
         public constructor() {
             super();
-            this.hostComponentKey = "egret.ProgressBar";
+            this.hostComponentKey = "egret.gui.ProgressBar";
         }
 
         /**
          * [SkinPart]进度高亮显示对象。
-		 * @member egret.ProgressBar#thumb
+		 * @member egret.gui.ProgressBar#thumb
          */
         public thumb:DisplayObject;
         /**
          * [SkinPart]轨道显示对象，用于确定thumb要覆盖的区域。
-		 * @member egret.ProgressBar#track
+		 * @member egret.gui.ProgressBar#track
          */
         public track:DisplayObject;
         /**
          * [SkinPart]进度条文本
-		 * @member egret.ProgressBar#labelDisplay
+		 * @member egret.gui.ProgressBar#labelDisplay
          */
         public labelDisplay:Label;
 
         private _labelFunction:Function;
         /**
          * 进度条文本格式化回调函数。示例：labelFunction(value:Number,maximum:Number):String;
-		 * @member egret.ProgressBar#labelFunction
+		 * @member egret.gui.ProgressBar#labelFunction
          */
         public get labelFunction():Function {
             return this._labelFunction;
@@ -77,7 +77,7 @@ module egret {
 
         /**
          * 将当前value转换成文本
-		 * @method egret.ProgressBar#valueToLabel
+		 * @method egret.gui.ProgressBar#valueToLabel
 		 * @param value {number} 
 		 * @param maximum {number} 
 		 * @returns {string}
@@ -93,7 +93,7 @@ module egret {
 
         /**
          * value改变时调整thumb长度的缓动动画时间，单位毫秒。设置为0则不执行缓动。默认值500。
-		 * @member egret.ProgressBar#slideDuration
+		 * @member egret.gui.ProgressBar#slideDuration
          */
         public get slideDuration():number {
             return this._slideDuration;
@@ -112,7 +112,7 @@ module egret {
         private _direction:string = ProgressBarDirection.LEFT_TO_RIGHT;
         /**
          * 进度条增长方向。请使用ProgressBarDirection定义的常量。默认值：ProgressBarDirection.LEFT_TO_RIGHT。
-		 * @member egret.ProgressBar#direction
+		 * @member egret.gui.ProgressBar#direction
          */
         public get direction():string {
             return this._direction;
@@ -138,7 +138,7 @@ module egret {
          * 进度条的当前值。
          * 注意：当组件添加到显示列表后，若slideDuration不为0。设置此属性，并不会立即应用。而是作为目标值，开启缓动动画缓慢接近。
          * 若需要立即重置属性，请先设置slideDuration为0，或者把组件从显示列表移除。
-		 * @member egret.ProgressBar#value
+		 * @member egret.gui.ProgressBar#value
          */
         public get value():number {
             return this._getValue();
@@ -185,7 +185,7 @@ module egret {
         }
 
         /**
-		 * @method egret.ProgressBar#setValue
+		 * @method egret.gui.ProgressBar#setValue
 		 * @param value {number} 
          */
         public setValue(value:number):void {
@@ -194,7 +194,7 @@ module egret {
         }
 
         /**
-		 * @method egret.ProgressBar#updateDisplayList
+		 * @method egret.gui.ProgressBar#updateDisplayList
 		 * @param unscaledWidth {number} 
 		 * @param unscaledHeight {number} 
          */
@@ -204,7 +204,7 @@ module egret {
         }
 
         /**
-		 * @method egret.ProgressBar#partAdded
+		 * @method egret.gui.ProgressBar#partAdded
 		 * @param partName {string} 
 		 * @param instance {any} 
          */
@@ -218,7 +218,7 @@ module egret {
         }
 
         /**
-		 * @method egret.ProgressBar#partRemoved
+		 * @method egret.gui.ProgressBar#partRemoved
 		 * @param partName {string} 
 		 * @param instance {any} 
          */
@@ -242,7 +242,7 @@ module egret {
         }
 
 		/**
-		 * @method egret.ProgressBar#commitProperties
+		 * @method egret.gui.ProgressBar#commitProperties
 		 */
         public commitProperties():void {
             super.commitProperties();
@@ -254,7 +254,7 @@ module egret {
 
         /**
          * 更新皮肤部件大小和可见性。
-		 * @method egret.ProgressBar#updateSkinDisplayList
+		 * @method egret.gui.ProgressBar#updateSkinDisplayList
          */
         public updateSkinDisplayList():void {
             this.trackResizedOrMoved = false;

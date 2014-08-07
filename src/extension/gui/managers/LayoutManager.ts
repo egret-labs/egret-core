@@ -26,17 +26,17 @@
  */
 
 
-module egret {
+module egret.gui {
 
 	/**
-	 * @class egret.LayoutManager
+	 * @class egret.gui.LayoutManager
 	 * @classdesc
 	 * 布局管理器
 	 * @extends egret.EventDispatcher
 	 */
 	export class LayoutManager extends EventDispatcher{
 		/**
-		 * @method egret.LayoutManager#constructor
+		 * @method egret.gui.LayoutManager#constructor
 		 */
 		public constructor(){
 			super();
@@ -55,7 +55,7 @@ module egret {
 		private invalidatePropertiesQueue:DepthQueue = new DepthQueue();
 		/**
 		 * 标记组件提交过属性
-		 * @method egret.LayoutManager#invalidateProperties
+		 * @method egret.gui.LayoutManager#invalidateProperties
 		 * @param client {ILayoutManagerClient} 
 		 */		
 		public invalidateProperties(client:ILayoutManagerClient):void{
@@ -95,7 +95,7 @@ module egret {
 		private invalidateSizeQueue:DepthQueue = new DepthQueue();
 		/**
 		 * 标记需要重新测量尺寸
-		 * @method egret.LayoutManager#invalidateSize
+		 * @method egret.gui.LayoutManager#invalidateSize
 		 * @param client {ILayoutManagerClient} 
 		 */		
 		public invalidateSize(client:ILayoutManagerClient ):void{
@@ -133,7 +133,7 @@ module egret {
 		private invalidateDisplayListQueue:DepthQueue = new DepthQueue();
 		/**
 		 * 标记需要重新测量尺寸
-		 * @method egret.LayoutManager#invalidateDisplayList
+		 * @method egret.gui.LayoutManager#invalidateDisplayList
 		 * @param client {ILayoutManagerClient} 
 		 */		
 		public invalidateDisplayList(client:ILayoutManagerClient ):void{
@@ -218,7 +218,7 @@ module egret {
 		}
 		/**
 		 * 立即应用所有延迟的属性
-		 * @method egret.LayoutManager#validateNow
+		 * @method egret.gui.LayoutManager#validateNow
 		 */		
 		public validateNow():void{
 			var infiniteLoopGuard:number = 0;
@@ -227,7 +227,7 @@ module egret {
 		}
 		/**
 		 * 使大于等于指定组件层级的元素立即应用属性 
-		 * @method egret.LayoutManager#validateClient
+		 * @method egret.gui.LayoutManager#validateClient
 		 * @param target {ILayoutManagerClient} 要立即应用属性的组件
 		 * @param skipDisplayList {boolean} 是否跳过更新显示列表阶段
 		 */			

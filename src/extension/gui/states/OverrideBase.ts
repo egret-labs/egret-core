@@ -26,31 +26,31 @@
  */
 
 
-module egret {
+module egret.gui {
 
 	/**
-	 * @class egret.OverrideBase
+	 * @class egret.gui.OverrideBase
 	 * @classdesc
 	 * OverrideBase 类是视图状态所用的 override 类的基类。
 	 * @extends egret.HashObject
-	 * @implements egret.IOverride
+	 * @implements egret.gui.IOverride
 	 */	
 	export class OverrideBase extends HashObject implements IOverride{
 		/**
-		 * @method egret.OverrideBase#constructor
+		 * @method egret.gui.OverrideBase#constructor
 		 */
 		public constructor() {
             super();
         }
 		/**
-		 * @method egret.OverrideBase#initialize
+		 * @method egret.gui.OverrideBase#initialize
 		 * @param parent {IStateClient} 
 		 */
 		public initialize(parent:IStateClient):void {
 		}
 		
 		/**
-		 * @method egret.OverrideBase#apply
+		 * @method egret.gui.OverrideBase#apply
 		 * @param parent {IContainer} 
 		 */
 		public apply(parent:IContainer):void {
@@ -58,7 +58,7 @@ module egret {
 		}
 		
 		/**
-		 * @method egret.OverrideBase#remove
+		 * @method egret.gui.OverrideBase#remove
 		 * @param parent {IContainer} 
 		 */
 		public remove(parent:IContainer):void {
@@ -69,7 +69,7 @@ module egret {
 		}
 		/**
 		 * 从对象初始化，这是一个便利方法
-		 * @method egret.OverrideBase#initializeFromObject
+		 * @method egret.gui.OverrideBase#initializeFromObject
 		 * @param properties {any} 
 		 * @returns {any}
 		 */		

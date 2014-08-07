@@ -26,10 +26,10 @@
  */
 
 
-module egret {
+module egret.gui {
 
 	/**
-	 * @class egret.IItemRendererOwner
+	 * @class egret.gui.IItemRendererOwner
 	 * @interface
 	 * @classdesc
 	 * 项呈示器的主机组件接口
@@ -37,7 +37,7 @@ module egret {
 	export interface IItemRendererOwner{
 		/**
 		 * 更新项呈示器数据
-		 * @method egret.IItemRendererOwner#updateRenderer
+		 * @method egret.gui.IItemRendererOwner#updateRenderer
 		 * @param renderer {IItemRenderer} 
 		 * @param itemIndex {number} 
 		 * @param data {any}

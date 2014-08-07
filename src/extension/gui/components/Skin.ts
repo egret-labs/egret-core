@@ -26,23 +26,23 @@
  */
 
 
-module egret {
+module egret.gui {
 
 	/**
-	 * @class egret.Skin
+	 * @class egret.gui.Skin
 	 * @classdesc
 	 * 含有视图状态功能的皮肤基类。注意：为了减少嵌套层级，此皮肤没有继承显示对象，若需要显示对象版本皮肤，请使用Skin。
 	 * @see org.flexlite.domUI.components.supportClasses.Skin
 	 * @extends egret.EventDispatcher
-	 * @implements egret.IStateClient
-	 * @implements egret.ISkin
-	 * @implements egret.IContainer
+	 * @implements egret.gui.IStateClient
+	 * @implements egret.gui.ISkin
+	 * @implements egret.gui.IContainer
 	 */
 	export class Skin extends EventDispatcher
 		implements IStateClient, ISkin, IContainer{
 		/**
 		 * 构造函数
-		 * @method egret.Skin#constructor
+		 * @method egret.gui.Skin#constructor
 		 */		
 		public constructor(){
 			super();
@@ -50,32 +50,32 @@ module egret {
 		
 		/**
 		 * 组件的最大测量宽度,仅影响measuredWidth属性的取值范围。
-		 * @member egret.Skin#maxWidth
+		 * @member egret.gui.Skin#maxWidth
 		 */	
 		public maxWidth:number = 10000;
 		/**
 		 * 组件的最小测量宽度,此属性设置为大于maxWidth的值时无效。仅影响measuredWidth属性的取值范围。
-		 * @member egret.Skin#minWidth
+		 * @member egret.gui.Skin#minWidth
 		 */
 		public minWidth:number = 0;
 		/**
 		 * 组件的最大测量高度,仅影响measuredHeight属性的取值范围。
-		 * @member egret.Skin#maxHeight
+		 * @member egret.gui.Skin#maxHeight
 		 */
 		public maxHeight:number = 10000;
 		/**
 		 * 组件的最小测量高度,此属性设置为大于maxHeight的值时无效。仅影响measuredHeight属性的取值范围。
-		 * @member egret.Skin#minHeight
+		 * @member egret.gui.Skin#minHeight
 		 */
 		public minHeight:number = 0;
 		/**
 		 * 组件宽度
-		 * @member egret.Skin#width
+		 * @member egret.gui.Skin#width
 		 */
 		public width:number = NaN;
 		/**
 		 * 组件高度
-		 * @member egret.Skin#height
+		 * @member egret.gui.Skin#height
 		 */
 		public height:number = NaN;
 
@@ -83,7 +83,7 @@ module egret {
         /**
          * 创建子项,子类覆盖此方法以完成组件子项的初始化操作，
          * 请务必调用super.createChildren()以完成父类组件的初始化
-         * @method egret.Skin#createChildren
+         * @method egret.gui.Skin#createChildren
          */
         public createChildren():void{
 
@@ -91,7 +91,7 @@ module egret {
 
 		private _hostComponent:SkinnableComponent;
 		/**
-		 * @member egret.Skin#hostComponent
+		 * @member egret.gui.Skin#hostComponent
 		 */
 		public get hostComponent():SkinnableComponent{
 			return this._hostComponent;
@@ -175,14 +175,14 @@ module egret {
 		}
 		
 		/**
-		 * @member egret.Skin#numElements
+		 * @member egret.gui.Skin#numElements
 		 */
 		public get numElements():number{
 			return this._elementsContent.length;
 		}
 		
 		/**
-		 * @method egret.Skin#getElementAt
+		 * @method egret.gui.Skin#getElementAt
 		 * @param index {number} 
 		 * @returns {IVisualElement}
 		 */
@@ -201,7 +201,7 @@ module egret {
 				throw new RangeError("索引:\""+index+"\"超出可视元素索引范围");
 		}
 		/**
-		 * @method egret.Skin#addElement
+		 * @method egret.gui.Skin#addElement
 		 * @param element {IVisualElement} 
 		 * @returns {IVisualElement}
 		 */
@@ -214,7 +214,7 @@ module egret {
 			return this.addElementAt(element, index);
 		}
 		/**
-		 * @method egret.Skin#addElementAt
+		 * @method egret.gui.Skin#addElementAt
 		 * @param element {IVisualElement} 
 		 * @param index {number} 
 		 * @returns {IVisualElement}
@@ -241,7 +241,7 @@ module egret {
 			return element;
 		}
 		/**
-		 * @method egret.Skin#removeElement
+		 * @method egret.gui.Skin#removeElement
 		 * @param element {IVisualElement} 
 		 * @returns {IVisualElement}
 		 */
@@ -249,7 +249,7 @@ module egret {
 			return this.removeElementAt(this.getElementIndex(element));
 		}
 		/**
-		 * @method egret.Skin#removeElementAt
+		 * @method egret.gui.Skin#removeElementAt
 		 * @param index {number} 
 		 * @returns {IVisualElement}
 		 */
@@ -268,7 +268,7 @@ module egret {
 		}
 			
 		/**
-		 * @method egret.Skin#getElementIndex
+		 * @method egret.gui.Skin#getElementIndex
 		 * @param element {IVisualElement} 
 		 * @returns {number}
 		 */
@@ -276,7 +276,7 @@ module egret {
 			return this._elementsContent.indexOf(element);
 		}
 		/**
-		 * @method egret.Skin#setElementIndex
+		 * @method egret.gui.Skin#setElementIndex
 		 * @param element {IVisualElement} 
 		 * @param index {number} 
 		 */
@@ -299,7 +299,7 @@ module egret {
 		
 		/**
 		 * 添加一个显示元素到容器
-		 * @method egret.Skin#_elementAdded
+		 * @method egret.gui.Skin#_elementAdded
 		 * @param element {IVisualElement} 
 		 * @param index {number} 
 		 * @param notifyListeners {boolean} 
@@ -322,7 +322,7 @@ module egret {
 		}
 		/**
 		 * 从容器移除一个显示元素
-		 * @method egret.Skin#_elementRemoved
+		 * @method egret.gui.Skin#_elementRemoved
 		 * @param element {IVisualElement} 
 		 * @param index {number} 
 		 * @param notifyListeners {boolean} 
@@ -411,7 +411,7 @@ module egret {
 
         /**
          * 返回是否含有指定名称的视图状态
-         * @method egret.Skin#hasState
+         * @method egret.gui.Skin#hasState
          * @param stateName {string}
          * @returns {boolean}
          */
@@ -430,7 +430,7 @@ module egret {
         }
         /**
          * 应用当前的视图状态。子类覆盖此方法在视图状态发生改变时执行相应更新操作。
-         * @method egret.Skin#commitCurrentState
+         * @method egret.gui.Skin#commitCurrentState
          */
         public commitCurrentState():void{
             if(!this.currentStateChanged)

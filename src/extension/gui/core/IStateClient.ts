@@ -26,10 +26,10 @@
  */
 
 
-module egret {
+module egret.gui {
 
 	/**
-	 * @class egret.IStateClient
+	 * @class egret.gui.IStateClient
 	 * @interface
 	 * @classdesc
 	 * 具有视图状态的组件接口
@@ -38,19 +38,19 @@ module egret {
 	export interface IStateClient extends IEventDispatcher{
 		/**
 		 * 组件的当前视图状态。将其设置为 "" 或 null 可将组件重置回其基本状态。 
-		 * @member egret.IStateClient#currentState
+		 * @member egret.gui.IStateClient#currentState
 		 */		
 		currentState:string;
 		
 		/**
 		 * 为此组件定义的视图状态。
-		 * @member egret.IStateClient#states
+		 * @member egret.gui.IStateClient#states
 		 */		
 		states:Array<any>;
 		
 		/**
 		 * 返回是否含有指定名称的视图状态
-		 * @method egret.IStateClient#hasState
+		 * @method egret.gui.IStateClient#hasState
 		 * @param stateName {string} 要检测的视图状态名称
 		 * @returns {boolean}
 		 */			

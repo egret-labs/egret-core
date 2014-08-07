@@ -26,18 +26,18 @@
  */
 
 
-module egret {
+module egret.gui {
 
     /**
-     * @class egret.Rect
+     * @class egret.gui.Rect
      * @classdesc
      * 矩形绘图元素。此组件可响应鼠标事件。
-     * @extends egret.UIComponent
+     * @extends egret.gui.UIComponent
      */
     export class Rect extends UIComponent {
         /**
          * 构造函数
-         * @method egret.Rect#constructor
+         * @method egret.gui.Rect#constructor
          */
         public constructor() {
             super();
@@ -62,7 +62,7 @@ module egret {
         private _fillColor:number = 0xFFFFFF;
         /**
          * 填充颜色
-         * @member egret.Rect#fillColor
+         * @member egret.gui.Rect#fillColor
          */
         public get fillColor():number {
             return this._fillColor;
@@ -78,7 +78,7 @@ module egret {
         private _fillAlpha:number = 1;
         /**
          * 填充透明度,默认值为0。
-         * @member egret.Rect#fillAlpha
+         * @member egret.gui.Rect#fillAlpha
          */
         public get fillAlpha():number {
             return this._fillAlpha;
@@ -94,7 +94,7 @@ module egret {
         private _strokeColor:number = 0x444444;
         /**
          * 边框颜色,注意：当strokeAlpha为0时，不显示边框。
-         * @member egret.Rect#strokeColor
+         * @member egret.gui.Rect#strokeColor
          */
         public get strokeColor():number {
             return this._strokeColor;
@@ -110,7 +110,7 @@ module egret {
         private _strokeAlpha:number = 0;
         /**
          * 边框透明度，默认值为0。
-         * @member egret.Rect#strokeAlpha
+         * @member egret.gui.Rect#strokeAlpha
          */
         public get strokeAlpha():number {
             return this._strokeAlpha;
@@ -126,7 +126,7 @@ module egret {
         private _strokeWeight:number = 1;
         /**
          * 边框粗细(像素),注意：当strokeAlpha为0时，不显示边框。
-         * @member egret.Rect#strokeWeight
+         * @member egret.gui.Rect#strokeWeight
          */
         public get strokeWeight():number {
             return this._strokeWeight;
@@ -166,7 +166,7 @@ module egret {
         }
 
         /**
-         * @method egret.Rect#updateDisplayList
+         * @method egret.gui.Rect#updateDisplayList
          * @param unscaledWidth {number}
          * @param unscaledHeight {number}
          */

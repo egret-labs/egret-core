@@ -26,34 +26,34 @@
  */
 
 
-module egret {
+module egret.gui {
 
     /**
-     * @class egret.Alert
+     * @class egret.gui.Alert
      * @classdesc
      * 弹出对话框，可能包含消息、标题、按钮（“确定”、“取消”、“是”和“否”的任意组合)。
-     * @extends egret.TitleWindow
+     * @extends egret.gui.TitleWindow
      */
     export class Alert extends TitleWindow{
         /**
          * 当对话框关闭时，closeEvent.detail的值若等于此属性,表示被点击的按钮为firstButton。
-         * @constant egret.Alert.FIRST_BUTTON
+         * @constant egret.gui.Alert.FIRST_BUTTON
          */
         public static FIRST_BUTTON:string = "firstButton";
         /**
          * 当对话框关闭时，closeEvent.detail的值若等于此属性,表示被点击的按钮为secondButton。
-         * @constant egret.Alert.SECOND_BUTTON
+         * @constant egret.gui.Alert.SECOND_BUTTON
          */
         public static SECOND_BUTTON:string = "secondButton";
         /**
          * 当对话框关闭时，closeEvent.detail的值若等于此属性,表示被点击的按钮为closeButton。
-         * @constant egret.Alert.CLOSE_BUTTON
+         * @constant egret.gui.Alert.CLOSE_BUTTON
          */
         public static CLOSE_BUTTON:string = "closeButton";
 
         /**
          * 弹出Alert控件的静态方法。在Alert控件中选择一个按钮，将关闭该控件。
-         * @method egret.Alert.show
+         * @method egret.gui.Alert.show
          * @param text {string} 要显示的文本内容字符串。
          * @param title {string} 对话框标题
          * @param closeHandler {Function} 按下Alert控件上的任意按钮时的回调函数。示例:closeHandler(event:CloseEvent);
@@ -78,17 +78,17 @@ module egret {
         }
         /**
          * 构造函数，请通过静态方法Alert.show()来创建对象实例。
-         * @method egret.Alert#constructor
+         * @method egret.gui.Alert#constructor
          */
         public constructor(){
             super();
-            this.hostComponentKey = "egret.Alert";
+            this.hostComponentKey = "egret.gui.Alert";
         }
 
         private _firstButtonLabel:string = "";
         /**
          * 第一个按钮上显示的文本
-         * @member egret.Alert#firstButtonLabel
+         * @member egret.gui.Alert#firstButtonLabel
          */
         public get firstButtonLabel():string{
             return this._firstButtonLabel;
@@ -104,7 +104,7 @@ module egret {
         private _secondButtonLabel:string = "";
         /**
          * 第二个按钮上显示的文本
-         * @member egret.Alert#secondButtonLabel
+         * @member egret.gui.Alert#secondButtonLabel
          */
         public get secondButtonLabel():string{
             return this._secondButtonLabel;
@@ -124,7 +124,7 @@ module egret {
         private _contentText:string = "";
         /**
          * 文本内容
-         * @member egret.Alert#contentText
+         * @member egret.gui.Alert#contentText
          */
         public get contentText():string{
             return this._contentText;
@@ -159,7 +159,7 @@ module egret {
             }
         }
         /**
-         * @method egret.Alert#closeButton_clickHandler
+         * @method egret.gui.Alert#closeButton_clickHandler
          * @param event {TouchEvent}
          */
         public closeButton_clickHandler(event:TouchEvent):void{
@@ -172,21 +172,21 @@ module egret {
 
         /**
          * [SkinPart]文本内容显示对象
-         * @member egret.Alert#contentDisplay
+         * @member egret.gui.Alert#contentDisplay
          */
         public contentDisplay:IDisplayText;
         /**
          * [SkinPart]第一个按钮，通常是"确定"。
-         * @member egret.Alert#firstButton
+         * @member egret.gui.Alert#firstButton
          */
         public firstButton:Button;
         /**
          * [SkinPart]第二个按钮，通常是"取消"。
-         * @member egret.Alert#secondButton
+         * @member egret.gui.Alert#secondButton
          */
         public secondButton:Button;
         /**
-         * @method egret.Alert#partAdded
+         * @method egret.gui.Alert#partAdded
          * @param partName {string}
          * @param instance {any}
          */
@@ -207,7 +207,7 @@ module egret {
             }
         }
         /**
-         * @method egret.Alert#partRemoved
+         * @method egret.gui.Alert#partRemoved
          * @param partName {string}
          * @param instance {any}
          */
