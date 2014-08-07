@@ -55,32 +55,27 @@ module egret
 
 
 	/**
+     * ByteArray 类提供用于优化读取、写入以及处理二进制数据的方法和属性。
 	 * @class egret.ByteArray
 	 * @classdesc
 	 */
     export class ByteArray
     {
 		/**
+         * 将文件指针的当前位置（以字节为单位）移动或返回到 ByteArray 对象中。下一次调用读取方法时将在此位置开始读取，或者下一次调用写入方法时将在此位置开始写入
 		 * @member {number} egret.ByteArray#position
 		 */
         public position:number = 0;
 		/**
+         * ByteArray 对象的长度（以字节为单位）。
 		 * @member {number} egret.ByteArray#length
 		 */
         public length:number = 0;
-        public _mode:string = "";
-		/**
-		 * @member {number} egret.ByteArray#maxlength
-		 */
-        public maxlength:number = 0;
-		/**
-		 * @member {any} egret.ByteArray#arraybytes
-		 */
-        public arraybytes; //ArrayBuffer
-		/**
-		 * @member {any} egret.ByteArray#unalignedarraybytestemp
-		 */
-        public unalignedarraybytestemp; //ArrayBuffer
+
+        private _mode:string = "";
+        private maxlength:number = 0;
+        private arraybytes; //ArrayBuffer
+        private unalignedarraybytestemp; //ArrayBuffer
         private _endian:string =  Endian.LITTLE_ENDIAN;
         private isLittleEndian:boolean = false;
 		/**
@@ -98,6 +93,7 @@ module egret
         }
 
 		/**
+         * 更改或读取数据的字节顺序；egret.Endian.BIG_ENDIAN 或 egret.Endian.LITTLE_ENDIAN。
 		 * @member {string} egret.ByteArray#endian
 		 */
         public get endian():string{
@@ -139,10 +135,12 @@ module egret
         }
 
 		/**
+         * 可从字节数组的当前位置到数组末尾读取的数据的字节数。
+         * 每次访问 ByteArray 对象时，将 bytesAvailable 属性与读取方法结合使用，以确保读取有效的数据。
 		 * @method egret.ByteArray#getBytesAvailable
 		 * @returns {number}
 		 */
-        public getBytesAvailable():number
+        public get bytesAvailable():number
         {
             return ( this.length ) - ( this.position );
         }
@@ -151,7 +149,7 @@ module egret
 		 * @method egret.ByteArray#ensureSpace
 		 * @param n {number} 
 		 */
-        public ensureSpace(n:number)
+        public ensureSpace(n:number):void
         {
             if (n > this.maxlength) {
                 var newmaxlength:number = (n + 255) & (~255);
@@ -168,7 +166,7 @@ module egret
 		 * @method egret.ByteArray#writeByte
 		 * @param b {number} 
 		 */
-        public writeByte(b:number)
+        public writeByte(b:number):void
         {
             this.ensureWriteableSpace(1);
             var view = new Int8Array(this.arraybytes);
@@ -179,9 +177,12 @@ module egret
         }
 
 		/**
+         * 从字节流中读取带符号的字节。
+         * 返回值的范围是从 -128 到 127。
 		 * @method egret.ByteArray#readByte
-		 */
-        public readByte()
+         * returns {number} 介于 -128 和 127 之间的整数。
+         */
+        public readByte():number
         {
             if (this.position >= this.length) {
                 throw "ByteArray out of bounds read. Positon=" + this.position + ", Length=" + this.length;
@@ -192,18 +193,18 @@ module egret
         }
 
 		/**
-		 * @method egret.ByteArray#readBytes
-		 * @param bytes {egret.ByteArray} 
-		 * @param offset {number} 
-		 * @param length {number} 
-		 */
-        public readBytes(bytes:ByteArray, offset:number = 0, length:number = 0)
-        {
+         * 从字节流中读取 length 参数指定的数据字节数。从 offset 指定的位置开始，将字节读入 bytes 参数指定的 ByteArray 对象中，并将字节写入目标 ByteArray 中。
+         * @method egret.ByteArray#readBytes
+		 * @param bytes {egret.ByteArray} 要将数据读入的 ByteArray 对象。
+		 * @param offset {number} bytes 中的偏移（位置），应从该位置写入读取的数据。
+		 * @param length {number} 要读取的字节数。默认值 0 导致读取所有可用的数据。
 
+         */
+        public readBytes(bytes:ByteArray, offset:number = 0, length:number = 0):void
+        {
             if (length == null) {
                 length = bytes.length;
             }
-
             bytes.ensureWriteableSpace(offset + length);
 
             var byteView:Int8Array = new Int8Array(bytes.arraybytes);
@@ -346,8 +347,9 @@ module egret
         }
 
 		/**
+         * 从字节流中读取一个 IEEE 754 双精度（64 位）浮点数。
 		 * @method egret.ByteArray#readDouble
-		 * @returns {number}
+		 * @returns {number} 返回双精度（64 位）浮点数。
 		 */
         public readDouble():number
         {
@@ -406,9 +408,12 @@ module egret
         }
 
 		/**
+         * 从字节流中读取一个无符号的 32 位整数。
+         * 返回值的范围是从 0 到 4294967295。
 		 * @method egret.ByteArray#readUnsignedInt
-		 */
-        public readUnsignedInt()
+         *  @returns {number} 介于 0 和 4294967295 之间的 32 位无符号整数。
+         */
+        public readUnsignedInt():number
         {
 
             if (this.position > this.length + 4) {
@@ -453,9 +458,11 @@ module egret
         }
 
 		/**
+         * 从字节流中读取一个 IEEE 754 单精度（32 位）浮点数。
 		 * @method egret.ByteArray#readFloat
+         * @returns {number} 单精度（32 位）浮点数。
 		 */
-        public readFloat()
+        public readFloat():number
         {
             if (this.position > this.length + 4) {
                 throw "ByteArray out of bounds read. Positon=" + this.position + ", Length=" + this.length;
