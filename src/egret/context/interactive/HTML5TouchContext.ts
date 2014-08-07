@@ -57,50 +57,13 @@ module egret {
                     event.preventDefault();
                 }, false);
             }
-            else {
-                //touch事件
-                this.canvas.addEventListener("touchstart", function (event:any) {
-                    var l = event.changedTouches.length;
-                    for (var i:number = 0; i < l && i < that.maxTouches; i++) {
-                        that._onTouchBegin(event.changedTouches[i]);
-                    }
-                    event.stopPropagation();
-                    event.preventDefault();
-                }, false);
-                this.canvas.addEventListener("touchmove", function (event:any) {
-                    var l = event.changedTouches.length;
-                    for (var i:number = 0; i < l && i < that.maxTouches; i++) {
-                        that._onTouchMove(event.changedTouches[i]);
-                    }
-                    event.stopPropagation();
-                    event.preventDefault();
-                }, false);
-                this.canvas.addEventListener("touchend", function (event:any) {
-                    var l = event.changedTouches.length;
-                    for (var i:number = 0; i < l && i < that.maxTouches; i++) {
-                        that._onTouchEnd(event.changedTouches[i]);
-                    }
-                    event.stopPropagation();
-                    event.preventDefault();
-                }, false);
-                this.canvas.addEventListener("touchcancel", function (event:any) {
-                    var l = event.changedTouches.length;
-                    for (var i:number = 0; i < l && i < that.maxTouches; i++) {
-                        that._onTouchEnd(event.changedTouches[i]);
-                    }
-                    event.stopPropagation();
-                    event.preventDefault();
-                }, false);
-                //mouse事件
-                this.canvas.addEventListener("mousedown", function (event) {
-                    that._onTouchBegin(event);
-                });
-                this.canvas.addEventListener("mousemove", function (event) {
-                    that._onTouchMove(event);
-                });
-                this.canvas.addEventListener("mouseup", function (event) {
-                    that._onTouchEnd(event);
-                });
+            else if(MainContext.deviceType == MainContext.DEVICE_MOBILE){
+                this.addTouchListener();
+
+            }
+            else if(MainContext.deviceType == MainContext.DEVICE_PC){
+                this.addTouchListener();
+                this.addMouseListener();
             }
 
             window.addEventListener("mousedown", function (event) {
@@ -118,6 +81,55 @@ module egret {
                 }
                 that._isTouchDown = false;
             });
+        }
+
+        private addMouseListener():void {
+            var that = this;
+            this.canvas.addEventListener("mousedown", function (event) {
+                that._onTouchBegin(event);
+            });
+            this.canvas.addEventListener("mousemove", function (event) {
+                that._onTouchMove(event);
+            });
+            this.canvas.addEventListener("mouseup", function (event) {
+                that._onTouchEnd(event);
+            });
+        }
+
+        private addTouchListener():void {
+            var that = this;
+            this.canvas.addEventListener("touchstart", function (event:any) {
+                var l = event.changedTouches.length;
+                for (var i:number = 0; i < l && i < that.maxTouches; i++) {
+                    that._onTouchBegin(event.changedTouches[i]);
+                }
+                event.stopPropagation();
+                event.preventDefault();
+            }, false);
+            this.canvas.addEventListener("touchmove", function (event:any) {
+                var l = event.changedTouches.length;
+                for (var i:number = 0; i < l && i < that.maxTouches; i++) {
+                    that._onTouchMove(event.changedTouches[i]);
+                }
+                event.stopPropagation();
+                event.preventDefault();
+            }, false);
+            this.canvas.addEventListener("touchend", function (event:any) {
+                var l = event.changedTouches.length;
+                for (var i:number = 0; i < l && i < that.maxTouches; i++) {
+                    that._onTouchEnd(event.changedTouches[i]);
+                }
+                event.stopPropagation();
+                event.preventDefault();
+            }, false);
+            this.canvas.addEventListener("touchcancel", function (event:any) {
+                var l = event.changedTouches.length;
+                for (var i:number = 0; i < l && i < that.maxTouches; i++) {
+                    that._onTouchEnd(event.changedTouches[i]);
+                }
+                event.stopPropagation();
+                event.preventDefault();
+            }, false);
         }
 
         private inOutOfCanvas(event):boolean {
