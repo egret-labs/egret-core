@@ -30,26 +30,62 @@
 module egret
 {
 
+	/**
+     * Endian 类中包含一些值，它们表示用于表示多字节数字的字节顺序。
+     * 字节顺序为 bigEndian（最高有效字节位于最前）或 littleEndian（最低有效字节位于最前）。
+	 * @class egret.Endian
+	 * @classdesc
+	 */
     export class Endian {
 
 
-        static LITTLE_ENDIAN:string = "LITTLE_ENDIAN";
+		/**
+         * 表示多字节数字的最高有效字节位于字节序列的最前面
+		 * @constant {string} egret.Endian.LITTLE_ENDIAN
+		 */
+        public static LITTLE_ENDIAN:string = "LITTLE_ENDIAN";
 
-        static BIG_ENDIAN:string = "BIG_ENDIAN";
+		/**
+         * 表示多字节数字的最低有效字节位于字节序列的最前面
+		 * @constant {string} egret.Endian.BIG_ENDIAN
+		 */
+        public static BIG_ENDIAN:string = "BIG_ENDIAN";
 
     }
 
 
+	/**
+	 * @class egret.ByteArray
+	 * @classdesc
+	 */
     export class ByteArray
     {
+		/**
+		 * @member {number} egret.ByteArray#position
+		 */
         public position:number = 0;
+		/**
+		 * @member {number} egret.ByteArray#length
+		 */
         public length:number = 0;
         public _mode:string = "";
+		/**
+		 * @member {number} egret.ByteArray#maxlength
+		 */
         public maxlength:number = 0;
+		/**
+		 * @member {any} egret.ByteArray#arraybytes
+		 */
         public arraybytes; //ArrayBuffer
+		/**
+		 * @member {any} egret.ByteArray#unalignedarraybytestemp
+		 */
         public unalignedarraybytestemp; //ArrayBuffer
         private _endian:string =  Endian.LITTLE_ENDIAN;
         private isLittleEndian:boolean = false;
+		/**
+		 * @constant {string} egret.ByteArray.DEFAULT_ENDIAN
+		 */
         public static DEFAULT_ENDIAN:string = Endian.BIG_ENDIAN;
 
         constructor()
@@ -61,6 +97,9 @@ module egret
             this.endian = ByteArray.DEFAULT_ENDIAN;
         }
 
+		/**
+		 * @member {string} egret.ByteArray#endian
+		 */
         public get endian():string{
             return this._endian;
         }
@@ -70,11 +109,19 @@ module egret
             this.isLittleEndian = value == Endian.LITTLE_ENDIAN;
         }
 
+		/**
+		 * @method egret.ByteArray#ensureWriteableSpace
+		 * @param n {number} 
+		 */
         public ensureWriteableSpace(n:number)
         {
             this.ensureSpace(n + this.position);
         }
 
+		/**
+		 * @method egret.ByteArray#setArrayBuffer
+		 * @param aBuffer {egret.ArrayBuffer} 
+		 */
         public setArrayBuffer(aBuffer:ArrayBuffer):void
         {
 
@@ -91,11 +138,19 @@ module egret
 
         }
 
+		/**
+		 * @method egret.ByteArray#getBytesAvailable
+		 * @returns {number}
+		 */
         public getBytesAvailable():number
         {
             return ( this.length ) - ( this.position );
         }
 
+		/**
+		 * @method egret.ByteArray#ensureSpace
+		 * @param n {number} 
+		 */
         public ensureSpace(n:number)
         {
             if (n > this.maxlength) {
@@ -109,6 +164,10 @@ module egret
             }
         }
 
+		/**
+		 * @method egret.ByteArray#writeByte
+		 * @param b {number} 
+		 */
         public writeByte(b:number)
         {
             this.ensureWriteableSpace(1);
@@ -119,6 +178,9 @@ module egret
             }
         }
 
+		/**
+		 * @method egret.ByteArray#readByte
+		 */
         public readByte()
         {
             if (this.position >= this.length) {
@@ -129,6 +191,12 @@ module egret
             return view[ this.position++ ];
         }
 
+		/**
+		 * @method egret.ByteArray#readBytes
+		 * @param bytes {egret.ByteArray} 
+		 * @param offset {number} 
+		 * @param length {number} 
+		 */
         public readBytes(bytes:ByteArray, offset:number = 0, length:number = 0)
         {
 
@@ -151,6 +219,10 @@ module egret
 
         }
 
+		/**
+		 * @method egret.ByteArray#writeUnsignedByte
+		 * @param b {number} 
+		 */
         public writeUnsignedByte(b:number)
         {
             this.ensureWriteableSpace(1);
@@ -161,6 +233,9 @@ module egret
             }
         }
 
+		/**
+		 * @method egret.ByteArray#readUnsignedByte
+		 */
         public readUnsignedByte()
         {
             if (this.position >= this.length) {
@@ -170,6 +245,10 @@ module egret
             return view[this.position++];
         }
 
+		/**
+		 * @method egret.ByteArray#writeUnsignedShort
+		 * @param b {number} 
+		 */
         public writeUnsignedShort(b:number)
         {
             this.ensureWriteableSpace(2);
@@ -189,6 +268,11 @@ module egret
             }
         }
 
+		/**
+		 * @method egret.ByteArray#readUTFBytes
+		 * @param len {number} 
+		 * @returns {string}
+		 */
         public readUTFBytes(len:number):string
         {
 
@@ -230,39 +314,54 @@ module egret
 
         }
 
+		/**
+		 * @method egret.ByteArray#readInt
+		 * @returns {number}
+		 */
         public readInt():number
         {
 
             var data:DataView = new DataView(this.arraybytes);
-            var int:number = data.getInt32(this.position, this.isLittleEndian);
+            var intNumber:number = data.getInt32(this.position, this.isLittleEndian);
 
             this.position += 4;
 
-            return int;
+            return intNumber;
 
         }
 
+		/**
+		 * @method egret.ByteArray#readShort
+		 * @returns {number}
+		 */
         public readShort():number
         {
 
             var data:DataView = new DataView(this.arraybytes);
-            var short:number = data.getInt16(this.position, this.isLittleEndian);
+            var shortNumber:number = data.getInt16(this.position, this.isLittleEndian);
 
             this.position += 2;
-            return short;
+            return shortNumber;
 
         }
 
+		/**
+		 * @method egret.ByteArray#readDouble
+		 * @returns {number}
+		 */
         public readDouble():number
         {
             var data:DataView = new DataView(this.arraybytes);
-            var double:number = data.getFloat64(this.position, this.isLittleEndian);
+            var doubleNumber:number = data.getFloat64(this.position, this.isLittleEndian);
 
             this.position += 8;
-            return double;
+            return doubleNumber;
 
         }
 
+		/**
+		 * @method egret.ByteArray#readUnsignedShort
+		 */
         public readUnsignedShort()
         {
             if (this.position > this.length + 2) {
@@ -283,6 +382,10 @@ module egret
             }
         }
 
+		/**
+		 * @method egret.ByteArray#writeUnsignedInt
+		 * @param b {number} 
+		 */
         public writeUnsignedInt(b:number)
         {
             this.ensureWriteableSpace(4);
@@ -302,6 +405,9 @@ module egret
             }
         }
 
+		/**
+		 * @method egret.ByteArray#readUnsignedInt
+		 */
         public readUnsignedInt()
         {
 
@@ -323,6 +429,10 @@ module egret
             }
         }
 
+		/**
+		 * @method egret.ByteArray#writeFloat
+		 * @param b {number} 
+		 */
         public writeFloat(b:number)
         {
             this.ensureWriteableSpace(4);
@@ -342,6 +452,9 @@ module egret
             }
         }
 
+		/**
+		 * @method egret.ByteArray#readFloat
+		 */
         public readFloat()
         {
             if (this.position > this.length + 4) {
