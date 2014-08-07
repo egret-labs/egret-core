@@ -1,33 +1,4 @@
 {
-	"egret.AddItems":
-	{
-		"position":"string",
-		"propertyName":"string",
-		"relativeTo":"string",
-		"super":"egret.OverrideBase",
-		"target":"string"
-	},
-	"egret.Alert":
-	{
-		"contentDisplay":"egret.IDisplayText",
-		"contentText":"string",
-		"firstButton":"egret.Button",
-		"firstButtonLabel":"string",
-		"secondButton":"egret.Button",
-		"secondButtonLabel":"string",
-		"super":"egret.TitleWindow"
-	},
-	"egret.ArrayCollection":
-	{
-		"implements":["egret.ICollection"],
-		"source":"Array",
-		"super":"egret.EventDispatcher"
-	},
-	"egret.BasicLayout":
-	{
-		"mouseWheelSpeed":"number",
-		"super":"egret.LayoutBase"
-	},
 	"egret.Bitmap":
 	{
 		"debug":"boolean",
@@ -47,39 +18,6 @@
 	{
 		"super":"egret.SpriteSheet"
 	},
-	"egret.Button":
-	{
-		"super":"egret.ButtonBase"
-	},
-	"egret.ButtonBase":
-	{
-		"autoRepeat":"boolean",
-		"hovered":"boolean",
-		"label":"string",
-		"labelDisplay":"egret.IDisplayText",
-		"mouseCaptured":"boolean",
-		"repeatDelay":"number",
-		"repeatInterval":"number",
-		"stickyHighlighting":"boolean",
-		"super":"egret.SkinnableComponent"
-	},
-	"egret.CheckBox":
-	{
-		"super":"egret.ToggleButtonBase"
-	},
-	"egret.ClassFactory":
-	{
-		"generator":"any",
-		"super":"egret.HashObject"
-	},
-	"egret.DataGroup":
-	{
-		"dataProvider":"egret.ICollection",
-		"itemRenderer":"egret.IFactory",
-		"itemRendererFunction":"Function",
-		"itemRendererSkinName":"Class",
-		"super":"egret.GroupBase"
-	},
 	"egret.DefaultMovieClipDelegate":
 	{
 		"implements":["egret.MovieClipDelegate"]
@@ -91,7 +29,7 @@
 		"anchorOffsetY":"number",
 		"anchorX":"number",
 		"anchorY":"number",
-		"blendMode":"egret.BlendMode",
+		"blendMode":"string",
 		"cacheAsBitmap":"boolean",
 		"height":"number",
 		"implements":["egret.RenderData"],
@@ -116,19 +54,6 @@
 		"super":"egret.DisplayObject",
 		"touchChildren":"boolean"
 	},
-	"egret.DropDownList":
-	{
-		"labelDisplay":"egret.IDisplayText",
-		"prompt":"string",
-		"super":"egret.DropDownListBase"
-	},
-	"egret.DropDownListBase":
-	{
-		"dropDown":"egret.DisplayObject",
-		"dropDownController":"egret.DropDownController",
-		"openButton":"egret.ButtonBase",
-		"super":"egret.List"
-	},
 	"egret.EgretShader":
 	{
 		"aTextureCoord":"any",
@@ -143,74 +68,9 @@
 		"implements":["egret.IEventDispatcher"],
 		"super":"egret.HashObject"
 	},
-	"egret.Group":
-	{
-		"elementsContent":"Array",
-		"implements":["egret.IVisualElementContainer"],
-		"super":"egret.GroupBase"
-	},
-	"egret.GroupBase":
-	{
-		"clipAndEnableScrolling":"boolean",
-		"horizontalScrollPosition":"number",
-		"implements":["egret.IViewport"],
-		"layout":"egret.LayoutBase",
-		"super":"egret.UIComponent",
-		"verticalScrollPosition":"number"
-	},
-	"egret.HSlider":
-	{
-		"super":"egret.SliderBase"
-	},
 	"egret.HashObject":
 	{
 		"implements":["egret.IHashObject"]
-	},
-	"egret.HorizontalLayout":
-	{
-		"gap":"number",
-		"horizontalAlign":"string",
-		"padding":"number",
-		"paddingBottom":"number",
-		"paddingLeft":"number",
-		"paddingRight":"number",
-		"paddingTop":"number",
-		"super":"egret.LayoutBase",
-		"verticalAlign":"string"
-	},
-	"egret.Label":
-	{
-		"maxDisplayedLines":"number",
-		"padding":"number",
-		"paddingBottom":"number",
-		"paddingLeft":"number",
-		"paddingRight":"number",
-		"paddingTop":"number",
-		"super":"egret.TextBase"
-	},
-	"egret.LayoutBase":
-	{
-		"super":"egret.EventDispatcher",
-		"target":"egret.GroupBase",
-		"typicalLayoutRect":"egret.Rectangle",
-		"useVirtualLayout":"boolean"
-	},
-	"egret.List":
-	{
-		"allowMultipleSelection":"boolean",
-		"selectedIndices":"Array",
-		"selectedItems":"Array",
-		"super":"egret.ListBase"
-	},
-	"egret.ListBase":
-	{
-		"labelField":"string",
-		"labelFunction":"Function",
-		"requireSelection":"boolean",
-		"selectedIndex":"number",
-		"selectedItem":"any",
-		"super":"egret.SkinnableDataContainer",
-		"useVirtualLayout":"boolean"
 	},
 	"egret.Matrix":
 	{
@@ -222,41 +82,11 @@
 		"frameRate":"number",
 		"super":"egret.DisplayObjectContainer"
 	},
-	"egret.ObjectCollection":
-	{
-		"implements":["egret.ICollection","egret.ITreeCollection"],
-		"openNodes":"Array",
-		"showRoot":"boolean",
-		"source":"any",
-		"super":"egret.EventDispatcher"
-	},
-	"egret.OverrideBase":
-	{
-		"implements":["egret.IOverride"],
-		"super":"egret.HashObject"
-	},
-	"egret.Panel":
-	{
-		"super":"egret.SkinnableContainer",
-		"title":"string",
-		"titleDisplay":"egret.IDisplayText"
-	},
 	"egret.Point":
 	{
 		"super":"egret.HashObject",
 		"x":"number",
 		"y":"number"
-	},
-	"egret.PopUpAnchor":
-	{
-		"closeDuration":"number",
-		"displayPopUp":"boolean",
-		"openDuration":"number",
-		"popUp":"egret.IVisualElement",
-		"popUpHeightMatchesAnchorHeight":"boolean",
-		"popUpPosition":"string",
-		"popUpWidthMatchesAnchorWidth":"boolean",
-		"super":"egret.UIComponent"
 	},
 	"egret.PrimitiveShader":
 	{
@@ -271,48 +101,6 @@
 		"tintColor":"any",
 		"translationMatrix":"any",
 		"vertexSrc":"any"
-	},
-	"egret.ProgressBar":
-	{
-		"direction":"string",
-		"labelDisplay":"egret.Label",
-		"labelFunction":"Function",
-		"slideDuration":"number",
-		"super":"egret.Range",
-		"thumb":"egret.DisplayObject",
-		"track":"egret.DisplayObject"
-	},
-	"egret.RadioButton":
-	{
-		"group":"egret.RadioButtonGroup",
-		"groupName":"string",
-		"super":"egret.ToggleButtonBase",
-		"value":"any"
-	},
-	"egret.RadioButtonGroup":
-	{
-		"enabled":"boolean",
-		"selectedValue":"any",
-		"selection":"egret.RadioButton",
-		"super":"egret.EventDispatcher"
-	},
-	"egret.Range":
-	{
-		"maximum":"number",
-		"minimum":"number",
-		"snapInterval":"number",
-		"stepSize":"number",
-		"super":"egret.SkinnableComponent",
-		"value":"number"
-	},
-	"egret.Rect":
-	{
-		"fillAlpha":"number",
-		"fillColor":"number",
-		"strokeAlpha":"number",
-		"strokeColor":"number",
-		"strokeWeight":"number",
-		"super":"egret.UIComponent"
 	},
 	"egret.Rectangle":
 	{
@@ -332,87 +120,13 @@
 	{
 		"super":"egret.Texture"
 	},
-	"egret.Scroller":
-	{
-		"horizontalScrollPolicy":"string",
-		"implements":["egret.IVisualElementContainer"],
-		"super":"egret.UIComponent",
-		"verticalScrollPolicy":"string",
-		"viewport":"egret.IViewport"
-	},
-	"egret.SetProperty":
-	{
-		"name":"string",
-		"super":"egret.OverrideBase",
-		"target":"string",
-		"value":"any"
-	},
 	"egret.Shape":
 	{
 		"super":"egret.DisplayObject"
 	},
-	"egret.Skin":
-	{
-		"currentState":"string",
-		"elementsContent":"Array",
-		"height":"number",
-		"hostComponent":"egret.SkinnableComponent",
-		"implements":["egret.IStateClient","egret.ISkin","egret.IContainer"],
-		"maxHeight":"number",
-		"maxWidth":"number",
-		"minHeight":"number",
-		"minWidth":"number",
-		"states":"Array",
-		"super":"egret.EventDispatcher",
-		"width":"number"
-	},
-	"egret.SkinBasicLayout":
-	{
-		"super":"egret.HashObject",
-		"target":"egret.SkinnableComponent"
-	},
-	"egret.SkinnableComponent":
-	{
-		"autoTouchEnabled":"boolean",
-		"hostComponentKey":"string",
-		"implements":["egret.ISkinnableClient"],
-		"skinName":"Class",
-		"super":"egret.UIComponent"
-	},
-	"egret.SkinnableContainer":
-	{
-		"contentGroup":"egret.Group",
-		"elementsContent":"Array",
-		"implements":["egret.IVisualElementContainer"],
-		"layout":"egret.LayoutBase",
-		"super":"egret.SkinnableComponent"
-	},
-	"egret.SkinnableDataContainer":
-	{
-		"dataGroup":"egret.DataGroup",
-		"dataProvider":"egret.ICollection",
-		"implements":["egret.IItemRendererOwner"],
-		"itemRenderer":"egret.IFactory",
-		"itemRendererFunction":"Function",
-		"itemRendererSkinName":"Class",
-		"layout":"egret.LayoutBase",
-		"super":"egret.SkinnableComponent"
-	},
-	"egret.SliderBase":
-	{
-		"liveDragging":"boolean",
-		"pendingValue":"number",
-		"showTrackHighlight":"boolean",
-		"super":"egret.TrackBase",
-		"trackHighlight":"egret.DisplayObject"
-	},
 	"egret.Sound":
 	{
 		"audio":"any"
-	},
-	"egret.Spacer":
-	{
-		"super":"egret.UIComponent"
 	},
 	"egret.Sprite":
 	{
@@ -425,39 +139,6 @@
 	"egret.StageText":
 	{
 		"super":"egret.HashObject"
-	},
-	"egret.State":
-	{
-		"name":"string",
-		"overrides":"Array",
-		"stateGroups":"Array",
-		"super":"egret.HashObject"
-	},
-	"egret.TabBar":
-	{
-		"super":"egret.ListBase"
-	},
-	"egret.TabBarButton":
-	{
-		"allowDeselection":"boolean",
-		"data":"any",
-		"implements":["egret.IItemRenderer"],
-		"itemIndex":"number",
-		"super":"egret.ToggleButtonBase"
-	},
-	"egret.TextBase":
-	{
-		"bold":"boolean",
-		"fontFamily":"string",
-		"implements":["egret.IDisplayText"],
-		"italic":"boolean",
-		"lineSpacing":"number",
-		"size":"number",
-		"super":"egret.UIComponent",
-		"text":"string",
-		"textAlign":"string",
-		"textColor":"number",
-		"verticalAlign":"string"
 	},
 	"egret.TextField":
 	{
@@ -484,7 +165,330 @@
 		"super":"egret.HashObject",
 		"webGLTexture":"any"
 	},
-	"egret.TileLayout":
+	"egret.Tween":
+	{
+		"super":"egret.EventDispatcher"
+	},
+	"egret.gui.AddItems":
+	{
+		"position":"string",
+		"propertyName":"string",
+		"relativeTo":"string",
+		"super":"egret.gui.OverrideBase",
+		"target":"string"
+	},
+	"egret.gui.Alert":
+	{
+		"contentDisplay":"egret.gui.IDisplayText",
+		"contentText":"string",
+		"firstButton":"egret.gui.Button",
+		"firstButtonLabel":"string",
+		"secondButton":"egret.gui.Button",
+		"secondButtonLabel":"string",
+		"super":"egret.gui.TitleWindow"
+	},
+	"egret.gui.ArrayCollection":
+	{
+		"implements":["egret.gui.ICollection"],
+		"source":"Array",
+		"super":"egret.EventDispatcher"
+	},
+	"egret.gui.BasicLayout":
+	{
+		"mouseWheelSpeed":"number",
+		"super":"egret.gui.LayoutBase"
+	},
+	"egret.gui.Button":
+	{
+		"super":"egret.gui.ButtonBase"
+	},
+	"egret.gui.ButtonBase":
+	{
+		"autoRepeat":"boolean",
+		"hovered":"boolean",
+		"label":"string",
+		"labelDisplay":"egret.gui.IDisplayText",
+		"mouseCaptured":"boolean",
+		"repeatDelay":"number",
+		"repeatInterval":"number",
+		"stickyHighlighting":"boolean",
+		"super":"egret.gui.SkinnableComponent"
+	},
+	"egret.gui.CheckBox":
+	{
+		"super":"egret.gui.ToggleButtonBase"
+	},
+	"egret.gui.ClassFactory":
+	{
+		"generator":"any",
+		"super":"egret.HashObject"
+	},
+	"egret.gui.DataGroup":
+	{
+		"dataProvider":"egret.gui.ICollection",
+		"itemRenderer":"egret.gui.IFactory",
+		"itemRendererFunction":"Function",
+		"itemRendererSkinName":"Class",
+		"super":"egret.gui.GroupBase"
+	},
+	"egret.gui.DropDownList":
+	{
+		"labelDisplay":"egret.gui.IDisplayText",
+		"prompt":"string",
+		"super":"egret.gui.DropDownListBase"
+	},
+	"egret.gui.DropDownListBase":
+	{
+		"dropDown":"egret.DisplayObject",
+		"dropDownController":"egret.gui.DropDownController",
+		"openButton":"egret.gui.ButtonBase",
+		"super":"egret.gui.List"
+	},
+	"egret.gui.Group":
+	{
+		"elementsContent":"Array",
+		"implements":["egret.gui.IVisualElementContainer"],
+		"super":"egret.gui.GroupBase"
+	},
+	"egret.gui.GroupBase":
+	{
+		"clipAndEnableScrolling":"boolean",
+		"horizontalScrollPosition":"number",
+		"implements":["egret.gui.IViewport"],
+		"layout":"egret.gui.LayoutBase",
+		"super":"egret.gui.UIComponent",
+		"verticalScrollPosition":"number"
+	},
+	"egret.gui.HSlider":
+	{
+		"super":"egret.gui.SliderBase"
+	},
+	"egret.gui.HorizontalLayout":
+	{
+		"gap":"number",
+		"horizontalAlign":"string",
+		"padding":"number",
+		"paddingBottom":"number",
+		"paddingLeft":"number",
+		"paddingRight":"number",
+		"paddingTop":"number",
+		"super":"egret.gui.LayoutBase",
+		"verticalAlign":"string"
+	},
+	"egret.gui.Label":
+	{
+		"maxDisplayedLines":"number",
+		"padding":"number",
+		"paddingBottom":"number",
+		"paddingLeft":"number",
+		"paddingRight":"number",
+		"paddingTop":"number",
+		"super":"egret.gui.TextBase"
+	},
+	"egret.gui.LayoutBase":
+	{
+		"super":"egret.EventDispatcher",
+		"target":"egret.gui.GroupBase",
+		"typicalLayoutRect":"egret.Rectangle",
+		"useVirtualLayout":"boolean"
+	},
+	"egret.gui.List":
+	{
+		"allowMultipleSelection":"boolean",
+		"selectedIndices":"Array",
+		"selectedItems":"Array",
+		"super":"egret.gui.ListBase"
+	},
+	"egret.gui.ListBase":
+	{
+		"labelField":"string",
+		"labelFunction":"Function",
+		"requireSelection":"boolean",
+		"selectedIndex":"number",
+		"selectedItem":"any",
+		"super":"egret.gui.SkinnableDataContainer",
+		"useVirtualLayout":"boolean"
+	},
+	"egret.gui.ObjectCollection":
+	{
+		"implements":["egret.gui.ICollection","egret.gui.ITreeCollection"],
+		"openNodes":"Array",
+		"showRoot":"boolean",
+		"source":"any",
+		"super":"egret.EventDispatcher"
+	},
+	"egret.gui.OverrideBase":
+	{
+		"implements":["egret.gui.IOverride"],
+		"super":"egret.HashObject"
+	},
+	"egret.gui.Panel":
+	{
+		"super":"egret.gui.SkinnableContainer",
+		"title":"string",
+		"titleDisplay":"egret.gui.IDisplayText"
+	},
+	"egret.gui.PopUpAnchor":
+	{
+		"closeDuration":"number",
+		"displayPopUp":"boolean",
+		"openDuration":"number",
+		"popUp":"egret.gui.IVisualElement",
+		"popUpHeightMatchesAnchorHeight":"boolean",
+		"popUpPosition":"string",
+		"popUpWidthMatchesAnchorWidth":"boolean",
+		"super":"egret.gui.UIComponent"
+	},
+	"egret.gui.ProgressBar":
+	{
+		"direction":"string",
+		"labelDisplay":"egret.gui.Label",
+		"labelFunction":"Function",
+		"slideDuration":"number",
+		"super":"egret.gui.Range",
+		"thumb":"egret.DisplayObject",
+		"track":"egret.DisplayObject"
+	},
+	"egret.gui.RadioButton":
+	{
+		"group":"egret.gui.RadioButtonGroup",
+		"groupName":"string",
+		"super":"egret.gui.ToggleButtonBase",
+		"value":"any"
+	},
+	"egret.gui.RadioButtonGroup":
+	{
+		"enabled":"boolean",
+		"selectedValue":"any",
+		"selection":"egret.gui.RadioButton",
+		"super":"egret.EventDispatcher"
+	},
+	"egret.gui.Range":
+	{
+		"maximum":"number",
+		"minimum":"number",
+		"snapInterval":"number",
+		"stepSize":"number",
+		"super":"egret.gui.SkinnableComponent",
+		"value":"number"
+	},
+	"egret.gui.Rect":
+	{
+		"fillAlpha":"number",
+		"fillColor":"number",
+		"strokeAlpha":"number",
+		"strokeColor":"number",
+		"strokeWeight":"number",
+		"super":"egret.gui.UIComponent"
+	},
+	"egret.gui.Scroller":
+	{
+		"horizontalScrollPolicy":"string",
+		"implements":["egret.gui.IVisualElementContainer"],
+		"super":"egret.gui.UIComponent",
+		"verticalScrollPolicy":"string",
+		"viewport":"egret.gui.IViewport"
+	},
+	"egret.gui.SetProperty":
+	{
+		"name":"string",
+		"super":"egret.gui.OverrideBase",
+		"target":"string",
+		"value":"any"
+	},
+	"egret.gui.Skin":
+	{
+		"currentState":"string",
+		"elementsContent":"Array",
+		"height":"number",
+		"hostComponent":"egret.gui.SkinnableComponent",
+		"implements":["egret.gui.IStateClient","egret.gui.ISkin","egret.gui.IContainer"],
+		"maxHeight":"number",
+		"maxWidth":"number",
+		"minHeight":"number",
+		"minWidth":"number",
+		"states":"Array",
+		"super":"egret.EventDispatcher",
+		"width":"number"
+	},
+	"egret.gui.SkinBasicLayout":
+	{
+		"super":"egret.HashObject",
+		"target":"egret.gui.SkinnableComponent"
+	},
+	"egret.gui.SkinnableComponent":
+	{
+		"autoTouchEnabled":"boolean",
+		"hostComponentKey":"string",
+		"implements":["egret.gui.ISkinnableClient"],
+		"skinName":"Class",
+		"super":"egret.gui.UIComponent"
+	},
+	"egret.gui.SkinnableContainer":
+	{
+		"contentGroup":"egret.gui.Group",
+		"elementsContent":"Array",
+		"implements":["egret.gui.IVisualElementContainer"],
+		"layout":"egret.gui.LayoutBase",
+		"super":"egret.gui.SkinnableComponent"
+	},
+	"egret.gui.SkinnableDataContainer":
+	{
+		"dataGroup":"egret.gui.DataGroup",
+		"dataProvider":"egret.gui.ICollection",
+		"implements":["egret.gui.IItemRendererOwner"],
+		"itemRenderer":"egret.gui.IFactory",
+		"itemRendererFunction":"Function",
+		"itemRendererSkinName":"Class",
+		"layout":"egret.gui.LayoutBase",
+		"super":"egret.gui.SkinnableComponent"
+	},
+	"egret.gui.SliderBase":
+	{
+		"liveDragging":"boolean",
+		"pendingValue":"number",
+		"showTrackHighlight":"boolean",
+		"super":"egret.gui.TrackBase",
+		"trackHighlight":"egret.DisplayObject"
+	},
+	"egret.gui.Spacer":
+	{
+		"super":"egret.gui.UIComponent"
+	},
+	"egret.gui.State":
+	{
+		"name":"string",
+		"overrides":"Array",
+		"stateGroups":"Array",
+		"super":"egret.HashObject"
+	},
+	"egret.gui.TabBar":
+	{
+		"super":"egret.gui.ListBase"
+	},
+	"egret.gui.TabBarButton":
+	{
+		"allowDeselection":"boolean",
+		"data":"any",
+		"implements":["egret.gui.IItemRenderer"],
+		"itemIndex":"number",
+		"super":"egret.gui.ToggleButtonBase"
+	},
+	"egret.gui.TextBase":
+	{
+		"bold":"boolean",
+		"fontFamily":"string",
+		"implements":["egret.gui.IDisplayText"],
+		"italic":"boolean",
+		"lineSpacing":"number",
+		"size":"number",
+		"super":"egret.gui.UIComponent",
+		"text":"string",
+		"textAlign":"string",
+		"textColor":"number",
+		"verticalAlign":"string"
+	},
+	"egret.gui.TileLayout":
 	{
 		"columnAlign":"string",
 		"columnWidth":"number",
@@ -500,59 +504,55 @@
 		"requestedRowCount":"number",
 		"rowAlign":"string",
 		"rowHeight":"number",
-		"super":"egret.LayoutBase",
+		"super":"egret.gui.LayoutBase",
 		"verticalAlign":"string",
 		"verticalGap":"number"
 	},
-	"egret.TitleWindow":
+	"egret.gui.TitleWindow":
 	{
 		"autoBackToStage":"boolean",
-		"closeButton":"egret.Button",
+		"closeButton":"egret.gui.Button",
 		"moveArea":"egret.DisplayObject",
 		"showCloseButton":"boolean",
-		"super":"egret.Panel"
+		"super":"egret.gui.Panel"
 	},
-	"egret.ToggleButton":
+	"egret.gui.ToggleButton":
 	{
-		"super":"egret.ToggleButtonBase"
+		"super":"egret.gui.ToggleButtonBase"
 	},
-	"egret.ToggleButtonBase":
+	"egret.gui.ToggleButtonBase":
 	{
 		"selected":"boolean",
-		"super":"egret.ButtonBase"
+		"super":"egret.gui.ButtonBase"
 	},
-	"egret.TrackBase":
+	"egret.gui.TrackBase":
 	{
 		"slideDuration":"number",
-		"super":"egret.Range",
-		"thumb":"egret.Button",
-		"track":"egret.Button"
+		"super":"egret.gui.Range",
+		"thumb":"egret.gui.Button",
+		"track":"egret.gui.Button"
 	},
-	"egret.Tree":
+	"egret.gui.Tree":
 	{
 		"iconField":"string",
 		"iconFunction":"Function",
-		"super":"egret.List"
+		"super":"egret.gui.List"
 	},
-	"egret.Tween":
+	"egret.gui.UIAsset":
 	{
-		"super":"egret.EventDispatcher"
-	},
-	"egret.UIAsset":
-	{
-		"autoScale":"egret.Boolean",
+		"autoScale":"Boolean",
 		"fillMode":"string",
 		"scale9Grid":"egret.Rectangle",
 		"source":"any",
-		"super":"egret.UIComponent"
+		"super":"egret.gui.UIComponent"
 	},
-	"egret.UIComponent":
+	"egret.gui.UIComponent":
 	{
 		"bottom":"number",
 		"enabled":"boolean",
 		"horizontalCenter":"number",
 		"id":"string",
-		"implements":["egret.IUIComponent","egret.ILayoutManagerClient","egret.ILayoutElement","egret.IInvalidating","egret.IVisualElement"],
+		"implements":["egret.gui.IUIComponent","egret.gui.ILayoutManagerClient","egret.gui.ILayoutElement","egret.gui.IInvalidating","egret.gui.IVisualElement"],
 		"includeInLayout":"boolean",
 		"initialized":"boolean",
 		"isPopUp":"boolean",
@@ -572,11 +572,11 @@
 		"updateCompletePendingFlag":"boolean",
 		"verticalCenter":"number"
 	},
-	"egret.VSlider":
+	"egret.gui.VSlider":
 	{
-		"super":"egret.SliderBase"
+		"super":"egret.gui.SliderBase"
 	},
-	"egret.VerticalLayout":
+	"egret.gui.VerticalLayout":
 	{
 		"gap":"number",
 		"horizontalAlign":"string",
@@ -585,16 +585,16 @@
 		"paddingLeft":"number",
 		"paddingRight":"number",
 		"paddingTop":"number",
-		"super":"egret.LayoutBase",
+		"super":"egret.gui.LayoutBase",
 		"verticalAlign":"string"
 	},
-	"egret.ViewStack":
+	"egret.gui.ViewStack":
 	{
 		"createAllChildren":"boolean",
-		"implements":["egret.IViewStack","egret.ICollection"],
-		"selectedChild":"egret.IVisualElement",
+		"implements":["egret.gui.IViewStack","egret.gui.ICollection"],
+		"selectedChild":"egret.gui.IVisualElement",
 		"selectedIndex":"number",
-		"super":"egret.Group"
+		"super":"egret.gui.Group"
 	},
 	"eumn":
 	{
@@ -603,56 +603,56 @@
 			"fillMode":"egret.BitmapFillMode"
 		},
 		"egret.BitmapFillMode":["repeat","scale"],
-		"egret.ColumnAlign":["left","justifyUsingGap","justifyUsingWidth"],
 		"egret.HorizontalAlign":["left","right","center","justify","contentJustify"],
-		"egret.HorizontalLayout":
-		{
-			"horizontalAlign":"egret.HorizontalAlign",
-			"verticalAlign":"egret.VerticalAlign"
-		},
-		"egret.PopUpAnchor":
-		{
-			"popUpPosition":"egret.PopUpPosition"
-		},
-		"egret.PopUpPosition":["above","below","center","topLeft","left","right"],
-		"egret.ProgressBar":
-		{
-			"direction":"egret.ProgressBarDirection"
-		},
-		"egret.ProgressBarDirection":["leftToRight","rightToLeft","topToBottom","bottomToTop"],
-		"egret.RowAlign":["top","justifyUsingGap","justifyUsingHeight"],
-		"egret.ScrollPolicy":["auto","off","on"],
-		"egret.Scroller":
-		{
-			"horizontalScrollPolicy":"egret.ScrollPolicy",
-			"verticalScrollPolicy":"egret.ScrollPolicy"
-		},
-		"egret.TextBase":
-		{
-			"textAlign":"egret.HorizontalAlign",
-			"verticalAlign":"egret.VerticalAlign"
-		},
 		"egret.TextField":
 		{
 			"textAlign":"egret.HorizontalAlign",
 			"verticalAlign":"egret.VerticalAlign"
 		},
 		"egret.TextFieldType":["dynamic","input"],
-		"egret.TileLayout":
+		"egret.VerticalAlign":["top","bottom","middle","justify","contentJustify"],
+		"egret.gui.ColumnAlign":["left","justifyUsingGap","justifyUsingWidth"],
+		"egret.gui.HorizontalLayout":
 		{
-			"columnAlign":"egret.ColumnAlign",
 			"horizontalAlign":"egret.HorizontalAlign",
-			"orientation":"egret.TileOrientation",
-			"rowAlign":"egret.RowAlign",
 			"verticalAlign":"egret.VerticalAlign"
 		},
-		"egret.TileOrientation":["rows","columns"],
-		"egret.UIAsset":
+		"egret.gui.PopUpAnchor":
+		{
+			"popUpPosition":"egret.gui.PopUpPosition"
+		},
+		"egret.gui.PopUpPosition":["above","below","center","topLeft","left","right"],
+		"egret.gui.ProgressBar":
+		{
+			"direction":"egret.gui.ProgressBarDirection"
+		},
+		"egret.gui.ProgressBarDirection":["leftToRight","rightToLeft","topToBottom","bottomToTop"],
+		"egret.gui.RowAlign":["top","justifyUsingGap","justifyUsingHeight"],
+		"egret.gui.ScrollPolicy":["auto","off","on"],
+		"egret.gui.Scroller":
+		{
+			"horizontalScrollPolicy":"egret.gui.ScrollPolicy",
+			"verticalScrollPolicy":"egret.gui.ScrollPolicy"
+		},
+		"egret.gui.TextBase":
+		{
+			"textAlign":"egret.HorizontalAlign",
+			"verticalAlign":"egret.VerticalAlign"
+		},
+		"egret.gui.TileLayout":
+		{
+			"columnAlign":"egret.gui.ColumnAlign",
+			"horizontalAlign":"egret.HorizontalAlign",
+			"orientation":"egret.gui.TileOrientation",
+			"rowAlign":"egret.gui.RowAlign",
+			"verticalAlign":"egret.VerticalAlign"
+		},
+		"egret.gui.TileOrientation":["rows","columns"],
+		"egret.gui.UIAsset":
 		{
 			"fillMode":"egret.BitmapFillMode"
 		},
-		"egret.VerticalAlign":["top","bottom","middle","justify","contentJustify"],
-		"egret.VerticalLayout":
+		"egret.gui.VerticalLayout":
 		{
 			"horizontalAlign":"egret.HorizontalAlign",
 			"verticalAlign":"egret.VerticalAlign"

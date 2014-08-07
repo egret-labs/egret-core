@@ -141,7 +141,7 @@ var EXMLCompiler = (function () {
     */
     EXMLCompiler.prototype.compile = function (xmlData, className, srcPath, exmlPath) {
         if (!this.exmlConfig) {
-            this.exmlConfig = new exml_config.EXMLConfig();
+            this.exmlConfig = new exml_config.getInstance();
         }
         this.exmlPath = exmlPath;
         this.currentXML = xmlData;
@@ -637,7 +637,7 @@ var EXMLCompiler = (function () {
             if (rect.length != 4 || isNaN(parseInt(rect[0])) || isNaN(parseInt(rect[1])) || isNaN(parseInt(rect[2])) || isNaN(parseInt(rect[3]))) {
                 globals.exit(2016, this.exmlPath, this.toXMLString(node));
             }
-            value = "egret.getScale9Grid(\"" + value + "\")";
+            value = "egret.gui.getScale9Grid(\"" + value + "\")";
         } else {
             switch (type) {
                 case "Class":
@@ -656,8 +656,8 @@ var EXMLCompiler = (function () {
                 case "boolean":
                     value = (value == "false" || !value) ? "false" : "true";
                     break;
-                case "egret.IFactory":
-                    value = "new egret.ClassFactory(" + value + ")";
+                case "egret.gui.IFactory":
+                    value = "new egret.gui.ClassFactory(" + value + ")";
                     break;
                 case "string":
                 case "any":
@@ -992,7 +992,7 @@ var EXMLCompiler = (function () {
     */
     EXMLCompiler.prototype.isIVisualElement = function (node) {
         var className = this.exmlConfig.getClassNameById(node.localName, node.namespace);
-        var result = this.exmlConfig.isInstanceOf(className, "egret.IVisualElement");
+        var result = this.exmlConfig.isInstanceOf(className, "egret.gui.IVisualElement");
         if (!result) {
             return false;
         }
@@ -1828,7 +1828,7 @@ var CpState = (function (_super) {
 
     CpState.prototype.toCode = function () {
         var indentStr = this.getIndent(1);
-        var returnStr = "new egret.State (\"" + this.name + "\",\n" + indentStr + "[\n";
+        var returnStr = "new egret.gui.State (\"" + this.name + "\",\n" + indentStr + "[\n";
         var index = 0;
         var isFirst = true;
         var overrides = this.addItems.concat(this.setProperty);
@@ -1864,7 +1864,7 @@ var CpAddItems = (function (_super) {
     }
     CpAddItems.prototype.toCode = function () {
         var indentStr = this.getIndent(1);
-        var returnStr = "new egret.AddItems(\"" + this.target + "\",\"" + this.propertyName + "\",\"" + this.position + "\",\"" + this.relativeTo + "\")";
+        var returnStr = "new egret.gui.AddItems(\"" + this.target + "\",\"" + this.propertyName + "\",\"" + this.position + "\",\"" + this.relativeTo + "\")";
         return returnStr;
     };
     return CpAddItems;
@@ -1880,7 +1880,7 @@ var CpSetProperty = (function (_super) {
     }
     CpSetProperty.prototype.toCode = function () {
         var indentStr = this.getIndent(1);
-        return "new egret.SetProperty(\"" + this.target + "\",\"" + this.name + "\"," + this.value + ")";
+        return "new egret.gui.SetProperty(\"" + this.target + "\",\"" + this.name + "\"," + this.value + ")";
     };
     return CpSetProperty;
 })(CodeBase);

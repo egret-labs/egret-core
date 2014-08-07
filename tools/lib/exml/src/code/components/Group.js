@@ -38,7 +38,7 @@ var ns_project;
             _super.call(this);
         }
         return Group;
-    })(egret.Group);
+    })(egret.gui.Group);
     ns_project.Group = Group;
 })(ns_project || (ns_project = {}));
 //# sourceMappingURL=Group.js.map

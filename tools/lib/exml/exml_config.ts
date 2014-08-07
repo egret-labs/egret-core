@@ -80,6 +80,8 @@ class EXMLConfig{
      */
     public componentDic:any = {};
 
+    public idMap:any = {};
+
     private parseModules():void{
         this.classNameToModule = {};
         for(var className in this.classNameToPath){
@@ -109,9 +111,11 @@ class EXMLConfig{
             var item:any = children[i];
             var component:Component = new Component(item);
             this.componentDic[component.className] = component;
+            this.idMap[component.id] = component.className;
         }
         for(var className in this.componentDic){
             var component:Component = this.componentDic[className];
+
             if(!component.defaultProp)
                 this.findProp(component);
         }
@@ -144,10 +148,7 @@ class EXMLConfig{
 
         }
         else if(!ns||ns==EXMLConfig.E){
-            name = "egret."+id;
-            if(!this.componentDic[name]){
-                name = "";
-            }
+            name = this.idMap[id];
         }
         else{
             name = ns.substring(0,ns.length-1)+id
@@ -533,9 +534,9 @@ class Component{
     public constructor(item?:any){
         if(item){
             this.id = item.$id;
-            this.className = "egret."+this.id;
+            this.className = item["$module"] +"."+ this.id;
             if(item["$super"])
-                this.superClass = "egret."+item.$super;
+                this.superClass = item.$super;
             if(item["$default"])
                 this.defaultProp = item.$default;
         }
@@ -558,4 +559,13 @@ class Component{
     public defaultProp:string = "";
 }
 
+var exmlConfig:EXMLConfig;
+function getInstance():EXMLConfig{
+    if(!exmlConfig){
+        exmlConfig = new EXMLConfig();
+    }
+    return exmlConfig;
+}
+
 exports.EXMLConfig = EXMLConfig;
+exports.getInstance = getInstance;

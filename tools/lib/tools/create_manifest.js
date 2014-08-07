@@ -2,7 +2,7 @@ var file = require("../core/file.js");
 var globals = require("../core/globals.js");
 var CodeUtil = require("../core/code_util.js");
 var xml = require("../core/xml.js");
-
+var exml_config = require("../exml/exml_config.js");
 /**
  * 键是类名，值为这个类依赖的类名列表
  */
@@ -33,6 +33,7 @@ var referenceInfoList;
  */
 var newClassNameList;
 
+var exmlConfig;
 /**
  * ts关键字
  */
@@ -49,6 +50,7 @@ var W = "http://ns.egret-labs.org/wing";
  * 基本数据类型
  */
 var basicTypes = ["void","any","number","string","boolean","Object","Array","Function"];
+
 
 //create("C:/Users/DOM/Desktop/AA/src")
 /**
@@ -511,16 +513,13 @@ function readRelyOnFromExml(path,srcPath){
  * 根据id和命名空间获取类名
  */
 function getClassNameById(id,ns){
-    var name = "";
-    if (ns == W||basicTypes.indexOf(id) != -1) {
+    if(ns==E||ns==W){
+        if(!exmlConfig){
+            exmlConfig = exml_config.getInstance();
+        }
+        return exmlConfig.getClassNameById(id,ns);
     }
-    else if (!ns || ns == E) {
-        name = "egret." + id;
-    }
-    else {
-        name = ns.substring(0,ns.length-1)+id
-    }
-    return name;
+    return ns.substring(0,ns.length-1)+id;
 }
 
 /**
