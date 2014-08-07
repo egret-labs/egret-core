@@ -64,6 +64,7 @@
     "jslib/gzip.js",
     "jslib/zlib.min.js",
     "egret/utils/XML.ts",
+    "egret/utils/ByteArray.ts",
     "egret/tween/Tween.ts",
     "egret/tween/Ease.ts",
     "egret/media/Sound.ts",
