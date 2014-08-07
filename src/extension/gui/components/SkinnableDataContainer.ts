@@ -29,24 +29,24 @@
 module egret.gui {
 
 	/**
-	 * @class egret.SkinnableDataContainer
+	 * @class egret.gui.SkinnableDataContainer
 	 * @classdesc
 	 * 可设置外观的数据项目容器基类
-	 * @extends egret.SkinnableComponent
-	 * @implements egret.IItemRendererOwner
+	 * @extends egret.gui.SkinnableComponent
+	 * @implements egret.gui.IItemRendererOwner
 	 */
 	export class SkinnableDataContainer extends SkinnableComponent implements IItemRendererOwner{
 		/**
 		 * 构造函数
-		 * @method egret.SkinnableDataContainer#constructor
+		 * @method egret.gui.SkinnableDataContainer#constructor
 		 */		
 		public constructor(){
 			super();
-            this.hostComponentKey = "egret.SkinnableDataContainer";
+            this.hostComponentKey = "egret.gui.SkinnableDataContainer";
 		}
 		
 		/**
-		 * @method egret.SkinnableDataContainer#updateRenderer
+		 * @method egret.gui.SkinnableDataContainer#updateRenderer
 		 * @param renderer {IItemRenderer} 
 		 * @param itemIndex {number} 
 		 * @param data {any} 
@@ -64,7 +64,7 @@ module egret.gui {
 		
 		/**
 		 * 返回可在项呈示器中显示的 String 
-		 * @method egret.SkinnableDataContainer#itemToLabel
+		 * @method egret.gui.SkinnableDataContainer#itemToLabel
 		 * @param item {any} 
 		 * @returns {string}
 		 */		
@@ -76,7 +76,7 @@ module egret.gui {
 		
 		/**
 		 * [SkinPart]数据项目容器实体
-		 * @member egret.SkinnableDataContainer#dataGroup
+		 * @member egret.gui.SkinnableDataContainer#dataGroup
 		 */		
 		public dataGroup:DataGroup;
 		/**
@@ -86,7 +86,7 @@ module egret.gui {
 		
 		/**
 		 * 列表数据源，请使用实现了ICollection接口的数据类型，例如ArrayCollection
-		 * @member egret.SkinnableDataContainer#dataProvider
+		 * @member egret.gui.SkinnableDataContainer#dataProvider
 		 */		
 		public get dataProvider():ICollection{
            return this._getDataProvider();
@@ -115,7 +115,7 @@ module egret.gui {
 		/**
 		 * 用于数据项目的项呈示器。该类必须实现 IItemRenderer 接口。 <br/>
 		 * rendererClass获取顺序：itemRendererFunction > itemRenderer > 默认ItemRenerer。
-		 * @member egret.SkinnableDataContainer#itemRenderer
+		 * @member egret.gui.SkinnableDataContainer#itemRenderer
 		 */		
 		public get itemRenderer():IFactory{
 			return (this.dataGroup) 
@@ -136,7 +136,7 @@ module egret.gui {
 		/**
 		 * 条目渲染器的可选皮肤标识符。在实例化itemRenderer时，若其内部没有设置过skinName,则将此属性的值赋值给它的skinName。
 		 * 注意:若itemRenderer不是ISkinnableClient，则此属性无效。
-		 * @member egret.SkinnableDataContainer#itemRendererSkinName
+		 * @member egret.gui.SkinnableDataContainer#itemRendererSkinName
 		 */	
 		public get itemRendererSkinName():any{
 			return (this.dataGroup) 
@@ -159,7 +159,7 @@ module egret.gui {
 		 * rendererClass获取顺序：itemRendererFunction > itemRenderer > 默认ItemRenerer。 <br/>
 		 * 应该定义一个与此示例函数类似的呈示器函数： <br/>
 		 * function myItemRendererFunction(item:Object):IFactory
-		 * @member egret.SkinnableDataContainer#itemRendererFunction
+		 * @member egret.gui.SkinnableDataContainer#itemRendererFunction
 		 */		
 		public get itemRendererFunction():Function{
 			return (this.dataGroup) 
@@ -179,7 +179,7 @@ module egret.gui {
 		
 		/**
 		 * 布局对象
-		 * @member egret.SkinnableDataContainer#layout
+		 * @member egret.gui.SkinnableDataContainer#layout
 		 */	
 		public get layout():LayoutBase{
 			return (this.dataGroup) 
@@ -202,7 +202,7 @@ module egret.gui {
         }
 		
 		/**
-		 * @method egret.SkinnableDataContainer#partAdded
+		 * @method egret.gui.SkinnableDataContainer#partAdded
 		 * @param partName {string} 
 		 * @param instance {any} 
 		 */
@@ -252,7 +252,7 @@ module egret.gui {
 		}
 		
 		/**
-		 * @method egret.SkinnableDataContainer#partRemoved
+		 * @method egret.gui.SkinnableDataContainer#partRemoved
 		 * @param partName {string} 
 		 * @param instance {any} 
 		 */
@@ -283,7 +283,7 @@ module egret.gui {
 		}
 		
 		/**
-		 * @method egret.SkinnableDataContainer#addEventListener
+		 * @method egret.gui.SkinnableDataContainer#addEventListener
 		 * @param type {string} 
 		 * @param listener {Function} 
 		 * @param thisObject {any} 
@@ -305,7 +305,7 @@ module egret.gui {
 		}
 		
 		/**
-		 * @method egret.SkinnableDataContainer#removeEventListener
+		 * @method egret.gui.SkinnableDataContainer#removeEventListener
 		 * @param type {string} 
 		 * @param listener {Function} 
 		 * @param thisObject {any} 

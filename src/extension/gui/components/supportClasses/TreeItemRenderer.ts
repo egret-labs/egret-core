@@ -29,16 +29,16 @@
 module egret.gui {
 
 	/**
-	 * @class egret.TreeItemRenderer
+	 * @class egret.gui.TreeItemRenderer
 	 * @classdesc
 	 * Tree组件的项呈示器基类
-	 * @extends egret.ItemRenderer
-	 * @implements egret.ITreeItemRenderer
+	 * @extends egret.gui.ItemRenderer
+	 * @implements egret.gui.ITreeItemRenderer
 	 */
 	export class TreeItemRenderer extends ItemRenderer implements ITreeItemRenderer{
 		/**
 		 * 构造函数
-		 * @method egret.TreeItemRenderer#constructor
+		 * @method egret.gui.TreeItemRenderer#constructor
 		 */		
 		public constructor(){
 			super();
@@ -53,24 +53,24 @@ module egret.gui {
 
 		/**
 		 * [SkinPart]图标显示对象
-		 * @member egret.TreeItemRenderer#iconDisplay
+		 * @member egret.gui.TreeItemRenderer#iconDisplay
 		 */
 		public iconDisplay:UIAsset;
 		/**
 		 * [SkinPart]子节点开启按钮
-		 * @member egret.TreeItemRenderer#disclosureButton
+		 * @member egret.gui.TreeItemRenderer#disclosureButton
 		 */
 		public disclosureButton:ToggleButtonBase;
 		/**
 		 * [SkinPart]用于调整缩进值的容器对象。
-		 * @member egret.TreeItemRenderer#contentGroup
+		 * @member egret.gui.TreeItemRenderer#contentGroup
 		 */
 		public contentGroup:DisplayObject;
 		
 		private _indentation:number = 17;
 		/**
 		 * 子节点相对父节点的缩进值，以像素为单位。默认17。
-		 * @member egret.TreeItemRenderer#indentation
+		 * @member egret.gui.TreeItemRenderer#indentation
 		 */
 		public get indentation():number{
 			return this._indentation;
@@ -81,7 +81,7 @@ module egret.gui {
 		
 		private _iconSkinName:any;
 		/**
-		 * @member egret.TreeItemRenderer#iconSkinName
+		 * @member egret.gui.TreeItemRenderer#iconSkinName
 		 */
 		public get iconSkinName():any{
 			return this._iconSkinName;
@@ -97,7 +97,7 @@ module egret.gui {
 
 		private _depth:number = 0;
 		/**
-		 * @member egret.TreeItemRenderer#depth
+		 * @member egret.gui.TreeItemRenderer#depth
 		 */
 		public get depth():number{
 			return this._depth;
@@ -113,7 +113,7 @@ module egret.gui {
 		
 		private _hasChildren:boolean = false;
 		/**
-		 * @member egret.TreeItemRenderer#hasChildren
+		 * @member egret.gui.TreeItemRenderer#hasChildren
 		 */
 		public get hasChildren():boolean{
 			return this._hasChildren;
@@ -129,7 +129,7 @@ module egret.gui {
 		
 		private _isOpen:boolean = false;
 		/**
-		 * @member egret.TreeItemRenderer#opened
+		 * @member egret.gui.TreeItemRenderer#opened
 		 */
 		public get opened():boolean{
 			return this._isOpen;
@@ -144,7 +144,7 @@ module egret.gui {
 		}
 
 		/**
-		 * @method egret.TreeItemRenderer#partAdded
+		 * @method egret.gui.TreeItemRenderer#partAdded
 		 * @param partName {string} 
 		 * @param instance {any} 
 		 */
@@ -167,7 +167,7 @@ module egret.gui {
 		}
 		
 		/**
-		 * @method egret.TreeItemRenderer#partRemoved
+		 * @method egret.gui.TreeItemRenderer#partRemoved
 		 * @param partName {string} 
 		 * @param instance {any} 
 		 */
@@ -186,7 +186,7 @@ module egret.gui {
 		}
 		/**
 		 * 鼠标在disclosureButton上按下
-		 * @method egret.TreeItemRenderer#disclosureButton_mouseDownHandler
+		 * @method egret.gui.TreeItemRenderer#disclosureButton_mouseDownHandler
 		 * @param event {TouchEvent} 
 		 */		
 		public disclosureButton_mouseDownHandler(event:TouchEvent):void{

@@ -29,25 +29,25 @@
 module egret.gui {
 
 	/**
-	 * @class egret.Panel
+	 * @class egret.gui.Panel
 	 * @classdesc
 	 * 带有标题，内容区域的面板组件
-	 * @extends egret.SkinnableContainer
+	 * @extends egret.gui.SkinnableContainer
 	 */	
     export class Panel extends SkinnableContainer {
         /**
          * 构造函数
-		 * @method egret.Panel#constructor
+		 * @method egret.gui.Panel#constructor
          */
         public constructor() {
             super();
-            this.hostComponentKey = "egret.Panel";
+            this.hostComponentKey = "egret.gui.Panel";
             this.touchEnabled = false;
         }
 
         /**
          * [SkinPart]标题显示对象
-		 * @member egret.Panel#titleDisplay
+		 * @member egret.gui.Panel#titleDisplay
          */
         public titleDisplay:IDisplayText;
 
@@ -59,7 +59,7 @@ module egret.gui {
 
         /**
          * 标题文本内容
-		 * @member egret.Panel#title
+		 * @member egret.gui.Panel#title
          */
         public get title():string {
             return this._title;
@@ -73,7 +73,7 @@ module egret.gui {
         }
 
         /**
-		 * @method egret.Panel#partAdded
+		 * @method egret.gui.Panel#partAdded
 		 * @param partName {string} 
 		 * @param instance {any} 
          */

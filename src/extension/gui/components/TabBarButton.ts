@@ -29,27 +29,27 @@
 module egret.gui {
 
 	/**
-	 * @class egret.TabBarButton
+	 * @class egret.gui.TabBarButton
 	 * @classdesc
 	 * 选项卡组件的按钮条目
-	 * @extends egret.ToggleButtonBase
-	 * @implements egret.IItemRenderer
+	 * @extends egret.gui.ToggleButtonBase
+	 * @implements egret.gui.IItemRenderer
 	 */	
 	export class TabBarButton extends ToggleButtonBase implements IItemRenderer{
 		
 		/**
-		 * @method egret.TabBarButton#constructor
+		 * @method egret.gui.TabBarButton#constructor
 		 */
 		public constructor(){
 			super();
-            this.hostComponentKey = "egret.TabBarButton";
+            this.hostComponentKey = "egret.gui.TabBarButton";
 		}
 		
 		private _allowDeselection:boolean = true;
 		/**
 		 * 如果为 true，用户单击当前选定的按钮时即会将其取消选择。
 		 * 如果为 false，用户必须选择不同的按钮才可取消选择当前选定的按钮。
-		 * @member egret.TabBarButton#allowDeselection
+		 * @member egret.gui.TabBarButton#allowDeselection
 		 */		
 		public get allowDeselection():boolean{
 			return this._allowDeselection;
@@ -61,7 +61,7 @@ module egret.gui {
 		
 		private _data:any;
 		/**
-		 * @member egret.TabBarButton#data
+		 * @member egret.gui.TabBarButton#data
 		 */
 		public get data():any{
 			return this._data;
@@ -74,7 +74,7 @@ module egret.gui {
 		
 		private _itemIndex:number;
 		/**
-		 * @member egret.TabBarButton#itemIndex
+		 * @member egret.gui.TabBarButton#itemIndex
 		 */
 		public get itemIndex():number{
 			return this._itemIndex;
@@ -97,7 +97,7 @@ module egret.gui {
 		}
 		
 		/**
-		 * @method egret.TabBarButton#buttonReleased
+		 * @method egret.gui.TabBarButton#buttonReleased
 		 */
 		public buttonReleased():void{
 			if (this.selected && !this.allowDeselection)

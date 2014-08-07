@@ -29,22 +29,22 @@
 module egret.gui {
 
 	/**
-	 * @class egret.UIComponent
+	 * @class egret.gui.UIComponent
 	 * @classdesc
 	 * 显示对象基类
 	 * @extends egret.DisplayObjectContainer
-	 * @implements egret.IUIComponent
-	 * @implements egret.ILayoutManagerClient
-	 * @implements egret.ILayoutElement
-	 * @implements egret.IInvalidating
-	 * @implements egret.IVisualElement
+	 * @implements egret.gui.IUIComponent
+	 * @implements egret.gui.ILayoutManagerClient
+	 * @implements egret.gui.ILayoutElement
+	 * @implements egret.gui.IInvalidating
+	 * @implements egret.gui.IVisualElement
 	 */
 	export class UIComponent extends DisplayObjectContainer
 		implements IUIComponent,ILayoutManagerClient,ILayoutElement,
 		IInvalidating,IVisualElement{
 		/**
 		 * 构造函数
-		 * @method egret.UIComponent#constructor
+		 * @method egret.gui.UIComponent#constructor
 		 */		
 		public constructor(){
 			super();
@@ -67,7 +67,7 @@ module egret.gui {
 		private _id:string;
 		/**
 		 * 组件 ID。此值将作为对象的实例名称，因此不应包含任何空格或特殊字符。应用程序中的每个组件都应具有唯一的 ID。 
-		 * @constant egret.UIComponent#id
+		 * @constant egret.gui.UIComponent#id
 		 */		
 		public get id():string{
 			return this._id;
@@ -79,7 +79,7 @@ module egret.gui {
 
 		private _isPopUp:boolean;
 		/**
-		 * @member egret.UIComponent#isPopUp
+		 * @member egret.gui.UIComponent#isPopUp
 		 */
 		public get isPopUp():boolean{
 			return this._isPopUp;
@@ -90,13 +90,13 @@ module egret.gui {
 		
 		private _owner:any;
 		/**
-		 * @member egret.UIComponent#owner
+		 * @member egret.gui.UIComponent#owner
 		 */
 		public get owner():any{
 			return this._owner? this._owner : this.parent;
 		}
 		/**
-		 * @method egret.UIComponent#ownerChanged
+		 * @method egret.gui.UIComponent#ownerChanged
 		 * @param value {any} 
 		 */
 		public ownerChanged(value:any):void{
@@ -106,7 +106,7 @@ module egret.gui {
 		
 		private _updateCompletePendingFlag:boolean = false;
 		/**
-		 * @member egret.UIComponent#updateCompletePendingFlag
+		 * @member egret.gui.UIComponent#updateCompletePendingFlag
 		 */		
 		public get updateCompletePendingFlag():boolean{
 			return this._updateCompletePendingFlag;
@@ -118,7 +118,7 @@ module egret.gui {
 		private _initialized:boolean = false;
 		
 		/**
-		 * @member egret.UIComponent#initialized
+		 * @member egret.gui.UIComponent#initialized
 		 */
 		public get initialized():boolean{
 			return this._initialized;
@@ -137,7 +137,7 @@ module egret.gui {
 		private initializeCalled:boolean = false;
 		/**
 		 * 初始化组件
-		 * @method egret.UIComponent#_initialize
+		 * @method egret.gui.UIComponent#_initialize
 		 */
 		public _initialize():void{
 			if(this.initializeCalled)
@@ -153,14 +153,14 @@ module egret.gui {
 		/**
 		 * 创建子项,子类覆盖此方法以完成组件子项的初始化操作，
 		 * 请务必调用super.createChildren()以完成父类组件的初始化
-		 * @method egret.UIComponent#createChildren
+		 * @method egret.gui.UIComponent#createChildren
 		 */		
 		public createChildren():void{
 			
 		}		
 		/**
 		 * 子项创建完成
-		 * @method egret.UIComponent#childrenCreated
+		 * @method egret.gui.UIComponent#childrenCreated
 		 */		
 		private childrenCreated():void{
 			this.invalidateProperties();
@@ -171,7 +171,7 @@ module egret.gui {
 		
 		private _nestLevel:number = 0;
 		/**
-		 * @member egret.UIComponent#nestLevel
+		 * @member egret.gui.UIComponent#nestLevel
 		 */	
 		public get nestLevel():number{
 			return this._nestLevel;
@@ -254,7 +254,7 @@ module egret.gui {
 		/**
          * GUI范围内，请不要调用任何addChild方法，若是容器，请用addElement,若需要包装普通显示对象，请把显示对象赋值给UIAsset.source。
          * @deprecated
-		 * @method egret.UIComponent#addChild
+		 * @method egret.gui.UIComponent#addChild
 		 * @param child {DisplayObject} 
 		 * @returns {DisplayObject}
 		 */
@@ -268,7 +268,7 @@ module egret.gui {
 		/**
          * GUI范围内，请不要调用任何addChildAt方法，若是容器，请用addElementAt,若需要包装普通显示对象，请把显示对象赋值给UIAsset.source。
          * @deprecated
-		 * @method egret.UIComponent#addChildAt
+		 * @method egret.gui.UIComponent#addChildAt
 		 * @param child {DisplayObject} 
 		 * @param index {number} 
 		 * @returns {DisplayObject}
@@ -282,7 +282,7 @@ module egret.gui {
 		
 		/**
 		 * 即将添加一个子项
-		 * @method egret.UIComponent#_addingChild
+		 * @method egret.gui.UIComponent#_addingChild
 		 * @param child {DisplayObject} 
 		 */		
 		public _addingChild(child:DisplayObject):void{
@@ -304,7 +304,7 @@ module egret.gui {
 		/**
          * GUI范围内，请不要调用任何removeChild方法，若是容器，请用removeElement
          * @deprecated
-		 * @method egret.UIComponent#removeChild
+		 * @method egret.gui.UIComponent#removeChild
 		 * @param child {DisplayObject} 
 		 * @returns {DisplayObject}
 		 */
@@ -317,7 +317,7 @@ module egret.gui {
 		/**
          * GUI范围内，请不要调用任何removeChildAt方法，若是容器，请用removeElementAt
          * @deprecated
-		 * @method egret.UIComponent#removeChildAt
+		 * @method egret.gui.UIComponent#removeChildAt
 		 * @param index {number} 
 		 * @returns {DisplayObject}
 		 */
@@ -360,7 +360,7 @@ module egret.gui {
 		
 		public _enabled:boolean = true;
 		/**
-		 * @member egret.UIComponent#enabled
+		 * @member egret.gui.UIComponent#enabled
 		 */
 		public get enabled():boolean{
 			return this._enabled;
@@ -397,7 +397,7 @@ module egret.gui {
         }
 		
 		/**
-		 * @member egret.UIComponent#width
+		 * @member egret.gui.UIComponent#width
 		 */
 		public get width():number{
 			return this._width;
@@ -430,13 +430,13 @@ module egret.gui {
         }
 		
 		/**
-		 * @member egret.UIComponent#height
+		 * @member egret.gui.UIComponent#height
 		 */
 		public get height():number{
 			return this._height;
 		}
 		/**
-		 * @member egret.UIComponent#scaleX
+		 * @member egret.gui.UIComponent#scaleX
 		 */
         public get scaleX():number{
             return this._scaleX;
@@ -456,7 +456,7 @@ module egret.gui {
         }
 
 		/**
-		 * @member egret.UIComponent#scaleY
+		 * @member egret.gui.UIComponent#scaleY
 		 */
         public get scaleY():number{
             return this._scaleY;
@@ -477,7 +477,7 @@ module egret.gui {
 		
 		private _minWidth:number = 0;
 		/**
-		 * @member egret.UIComponent#minWidth
+		 * @member egret.gui.UIComponent#minWidth
 		 */
 		public get minWidth():number{
 			return this._minWidth;
@@ -491,7 +491,7 @@ module egret.gui {
 		
 		private _maxWidth:number = 10000;
 		/**
-		 * @member egret.UIComponent#maxWidth
+		 * @member egret.gui.UIComponent#maxWidth
 		 */
 		public get maxWidth():number{
 			return this._maxWidth;
@@ -505,7 +505,7 @@ module egret.gui {
 		
 		private _minHeight:number = 0;
 		/**
-		 * @member egret.UIComponent#minHeight
+		 * @member egret.gui.UIComponent#minHeight
 		 */
 		public get minHeight():number{
 			return this._minHeight;
@@ -519,7 +519,7 @@ module egret.gui {
 		
 		private _maxHeight:number = 10000;
 		/**
-		 * @member egret.UIComponent#maxHeight
+		 * @member egret.gui.UIComponent#maxHeight
 		 */
 		public get maxHeight():number{
 			return this._maxHeight;
@@ -536,7 +536,7 @@ module egret.gui {
 		private _measuredWidth:number = 0;
 		/**
 		 * 组件的默认宽度（以像素为单位）。此值由 measure() 方法设置。
-		 * @member egret.UIComponent#measuredWidth
+		 * @member egret.gui.UIComponent#measuredWidth
 		 */		
 		public get measuredWidth():number{
 			return this._measuredWidth;
@@ -548,7 +548,7 @@ module egret.gui {
 		private _measuredHeight:number = 0;
 		/**
 		 * 组件的默认高度（以像素为单位）。此值由 measure() 方法设置。
-		 * @member egret.UIComponent#measuredHeight
+		 * @member egret.gui.UIComponent#measuredHeight
 		 */
 		public get measuredHeight():number{
 			return this._measuredHeight;
@@ -557,7 +557,7 @@ module egret.gui {
 			this._measuredHeight = value;
 		}
 		/**
-		 * @method egret.UIComponent#setActualSize
+		 * @method egret.gui.UIComponent#setActualSize
 		 * @param w {number} 
 		 * @param h {number} 
 		 */
@@ -579,11 +579,11 @@ module egret.gui {
 		
 		/**
 		 * 属性提交前组件旧的X
-		 * @member egret.UIComponent#oldX
+		 * @member egret.gui.UIComponent#oldX
 		 */
 		private oldX:number;
 		/**
-		 * @constant egret.UIComponent#x
+		 * @constant egret.gui.UIComponent#x
 		 */
         public get x():number {
             return this._x;
@@ -602,11 +602,11 @@ module egret.gui {
 		
 		/**
 		 * 属性提交前组件旧的Y
-		 * @member egret.UIComponent#oldY
+		 * @member egret.gui.UIComponent#oldY
 		 */
 		private oldY:number;
 		/**
-		 * @constant egret.UIComponent#y
+		 * @constant egret.gui.UIComponent#y
 		 */
         public get y():number {
             return this._y;
@@ -624,11 +624,11 @@ module egret.gui {
 		}
 		
 		/**
-		 * @member egret.UIComponent#_invalidatePropertiesFlag
+		 * @member egret.gui.UIComponent#_invalidatePropertiesFlag
 		 */
 		public _invalidatePropertiesFlag:boolean = false;
 		/**
-		 * @method egret.UIComponent#invalidateProperties
+		 * @method egret.gui.UIComponent#invalidateProperties
 		 */		
 		public invalidateProperties():void{
 			if (!this._invalidatePropertiesFlag){
@@ -639,7 +639,7 @@ module egret.gui {
 			}
 		}
 		/**
-		 * @method egret.UIComponent#validateProperties
+		 * @method egret.gui.UIComponent#validateProperties
 		 */		
 		public validateProperties():void{
 			if (this._invalidatePropertiesFlag){
@@ -650,12 +650,12 @@ module egret.gui {
 		}
 		
 		/**
-		 * @member egret.UIComponent#_invalidateSizeFlag
+		 * @member egret.gui.UIComponent#_invalidateSizeFlag
 		 */
 		public _invalidateSizeFlag:boolean = false;
 		
 		/**
-		 * @method egret.UIComponent#invalidateSize
+		 * @method egret.gui.UIComponent#invalidateSize
 		 */	
 		public invalidateSize():void{
 			if (!this._invalidateSizeFlag){
@@ -667,7 +667,7 @@ module egret.gui {
 		}
 		
 		/**
-		 * @method egret.UIComponent#validateSize
+		 * @method egret.gui.UIComponent#validateSize
 		 * @param recursive {boolean} 
 		 */	
 		public validateSize(recursive:boolean = false):void{
@@ -689,12 +689,12 @@ module egret.gui {
 		}
 		/**
 		 * 上一次测量的首选宽度
-		 * @member egret.UIComponent#_oldPreferWidth
+		 * @member egret.gui.UIComponent#_oldPreferWidth
 		 */		
 		public _oldPreferWidth:number;
 		/**
 		 * 上一次测量的首选高度
-		 * @member egret.UIComponent#_oldPreferHeight
+		 * @member egret.gui.UIComponent#_oldPreferHeight
 		 */		
 		public _oldPreferHeight:number;
 		/**
@@ -736,12 +736,12 @@ module egret.gui {
 		}
 		
 		/**
-		 * @member egret.UIComponent#_invalidateDisplayListFlag
+		 * @member egret.gui.UIComponent#_invalidateDisplayListFlag
 		 */
 		public _invalidateDisplayListFlag:boolean = false;
 		
 		/**
-		 * @method egret.UIComponent#invalidateDisplayList
+		 * @method egret.gui.UIComponent#invalidateDisplayList
 		 */		
 		public invalidateDisplayList():void{
 			if (!this._invalidateDisplayListFlag){
@@ -753,7 +753,7 @@ module egret.gui {
 		}
 		
 		/**
-		 * @method egret.UIComponent#validateDisplayList
+		 * @method egret.gui.UIComponent#validateDisplayList
 		 */		
 		public validateDisplayList():void{
 			if (this._invalidateDisplayListFlag){
@@ -788,12 +788,12 @@ module egret.gui {
 		}
 		
 		/**
-		 * @member egret.UIComponent#_validateNowFlag
+		 * @member egret.gui.UIComponent#_validateNowFlag
 		 */
 		public _validateNowFlag:boolean = false;
 		
 		/**
-		 * @method egret.UIComponent#validateNow
+		 * @method egret.gui.UIComponent#validateNow
 		 * @param skipDisplayList {boolean} 
 		 */	
 		public validateNow(skipDisplayList:boolean = false):void{
@@ -804,7 +804,7 @@ module egret.gui {
 		}
 		/**
 		 * 标记父级容器的尺寸和显示列表为失效
-		 * @method egret.UIComponent#invalidateParentSizeAndDisplayList
+		 * @method egret.gui.UIComponent#invalidateParentSizeAndDisplayList
 		 */		
 		public invalidateParentSizeAndDisplayList():void{
 			if (!this.parent||!this._includeInLayout||!("invalidateSize" in this.parent))
@@ -816,7 +816,7 @@ module egret.gui {
 		
 		/**
 		 * 更新显示列表
-		 * @method egret.UIComponent#updateDisplayList
+		 * @method egret.gui.UIComponent#updateDisplayList
 		 * @param unscaledWidth {number} 
 		 * @param unscaledHeight {number} 
 		 */		
@@ -825,7 +825,7 @@ module egret.gui {
 		
 		/**
 		 * 是否可以跳过测量尺寸阶段,返回true则不执行measure()方法
-		 * @method egret.UIComponent#canSkipMeasurement
+		 * @method egret.gui.UIComponent#canSkipMeasurement
 		 * @returns {boolean}
 		 */		
 		public canSkipMeasurement():boolean{
@@ -834,7 +834,7 @@ module egret.gui {
 		
 		/**
 		 * 提交属性，子类在调用完invalidateProperties()方法后，应覆盖此方法以应用属性
-		 * @method egret.UIComponent#commitProperties
+		 * @method egret.gui.UIComponent#commitProperties
 		 */		
 		public commitProperties():void{
 			if(this.oldWidth != this._width||this.oldHeight != this._height){
@@ -846,7 +846,7 @@ module egret.gui {
 		}
 		/**
 		 * 测量组件尺寸
-		 * @method egret.UIComponent#measure
+		 * @method egret.gui.UIComponent#measure
 		 */		
 		public measure():void{
 			this._measuredHeight = 0;
@@ -883,7 +883,7 @@ module egret.gui {
 		
 		public _includeInLayout:boolean = true;
 		/**
-		 * @member egret.UIComponent#includeInLayout
+		 * @member egret.gui.UIComponent#includeInLayout
 		 */
 		public get includeInLayout():boolean{
 			return this._includeInLayout;
@@ -900,7 +900,7 @@ module egret.gui {
 		private _left:number;
 		
 		/**
-		 * @member egret.UIComponent#left
+		 * @member egret.gui.UIComponent#left
 		 */
 		public get left():number{
 			return this._left;
@@ -914,7 +914,7 @@ module egret.gui {
 		
 		private _right:number;
 		/**
-		 * @member egret.UIComponent#right
+		 * @member egret.gui.UIComponent#right
 		 */
 		public get right():number{
 			return this._right;
@@ -928,7 +928,7 @@ module egret.gui {
 		
 		private _top:number;
 		/**
-		 * @member egret.UIComponent#top
+		 * @member egret.gui.UIComponent#top
 		 */
 		public get top():number{
 			return this._top;
@@ -942,7 +942,7 @@ module egret.gui {
 		
 		private _bottom:number;
 		/**
-		 * @member egret.UIComponent#bottom
+		 * @member egret.gui.UIComponent#bottom
 		 */	
 		public get bottom():number{
 			return this._bottom;
@@ -957,7 +957,7 @@ module egret.gui {
 		
 		private _horizontalCenter:number;
 		/**
-		 * @member egret.UIComponent#horizontalCenter
+		 * @member egret.gui.UIComponent#horizontalCenter
 		 */
 		public get horizontalCenter():number{
 			return this._horizontalCenter;
@@ -971,7 +971,7 @@ module egret.gui {
 		
 		private _verticalCenter:number;
 		/**
-		 * @member egret.UIComponent#verticalCenter
+		 * @member egret.gui.UIComponent#verticalCenter
 		 */
 		public get verticalCenter():number{
 			return this._verticalCenter;
@@ -986,7 +986,7 @@ module egret.gui {
 		
 		private _percentWidth:number;
 		/**
-		 * @member egret.UIComponent#percentWidth
+		 * @member egret.gui.UIComponent#percentWidth
 		 */
 		public get percentWidth():number{
 			return this._percentWidth;
@@ -1002,7 +1002,7 @@ module egret.gui {
 		private _percentHeight:number;
 		
 		/**
-		 * @member egret.UIComponent#percentHeight
+		 * @member egret.gui.UIComponent#percentHeight
 		 */
 		public get percentHeight():number{
 			return this._percentHeight;
@@ -1016,18 +1016,18 @@ module egret.gui {
 		
 		/**
 		 * 父级布局管理器设置了组件的宽度标志，尺寸设置优先级：自动布局>显式设置>自动测量
-		 * @member egret.UIComponent#_layoutWidthExplicitlySet
+		 * @member egret.gui.UIComponent#_layoutWidthExplicitlySet
 		 */
 		public _layoutWidthExplicitlySet:boolean = false;
 		
 		/**
 		 * 父级布局管理器设置了组件的高度标志，尺寸设置优先级：自动布局>显式设置>自动测量
-		 * @member egret.UIComponent#_layoutHeightExplicitlySet
+		 * @member egret.gui.UIComponent#_layoutHeightExplicitlySet
 		 */
 		public _layoutHeightExplicitlySet:boolean = false;
 		
 		/**
-		 * @method egret.UIComponent#setLayoutBoundsSize
+		 * @method egret.gui.UIComponent#setLayoutBoundsSize
 		 * @param layoutWidth {number} 
 		 * @param layoutHeight {number} 
 		 */	
@@ -1050,7 +1050,7 @@ module egret.gui {
 			this.setActualSize(layoutWidth/this._scaleX,layoutHeight/this._scaleY);
 		}
 		/**
-		 * @method egret.UIComponent#setLayoutBoundsPosition
+		 * @method egret.gui.UIComponent#setLayoutBoundsPosition
 		 * @param x {number} 
 		 * @param y {number} 
 		 */	
@@ -1076,7 +1076,7 @@ module egret.gui {
 		}
 		
 		/**
-		 * @member egret.UIComponent#preferredWidth
+		 * @member egret.gui.UIComponent#preferredWidth
 		 */		
 		public get preferredWidth():number{
 			var w:number = this._hasWidthSet ? this._explicitWidth:this._measuredWidth;
@@ -1088,7 +1088,7 @@ module egret.gui {
 		}
 		
 		/**
-		 * @member egret.UIComponent#preferredHeight
+		 * @member egret.gui.UIComponent#preferredHeight
 		 */
 		public get preferredHeight():number{
 			var h:number = this._hasHeightSet ? this._explicitHeight:this._measuredHeight;
@@ -1100,7 +1100,7 @@ module egret.gui {
 		}
 		
 		/**
-		 * @member egret.UIComponent#preferredX
+		 * @member egret.gui.UIComponent#preferredX
 		 */	
 		public get preferredX():number{
             if(this._scaleX>=0){
@@ -1111,7 +1111,7 @@ module egret.gui {
 		}
 		
 		/**
-		 * @member egret.UIComponent#preferredY
+		 * @member egret.gui.UIComponent#preferredY
 		 */
 		public get preferredY():number{
             if(this._scaleY>=0){
@@ -1121,7 +1121,7 @@ module egret.gui {
             return this._y - h;
 		}
 		/**
-		 * @member egret.UIComponent#layoutBoundsX
+		 * @member egret.gui.UIComponent#layoutBoundsX
 		 */
 		public get layoutBoundsX():number{
             if(this._scaleX>=0){
@@ -1131,7 +1131,7 @@ module egret.gui {
             return this._x - w;
 		}
 		/**
-		 * @member egret.UIComponent#layoutBoundsY
+		 * @member egret.gui.UIComponent#layoutBoundsY
 		 */
 		public get layoutBoundsY():number{
             if(this._scaleY>=0){
@@ -1142,7 +1142,7 @@ module egret.gui {
 		}
 		
 		/**
-		 * @member egret.UIComponent#layoutBoundsWidth
+		 * @member egret.gui.UIComponent#layoutBoundsWidth
 		 */	
 		public get layoutBoundsWidth():number{
 			var w:number =  0;
@@ -1164,7 +1164,7 @@ module egret.gui {
 		/**
 		 * 组件的布局高度,常用于父级的updateDisplayList()方法中
 		 * 按照：布局高度>外部显式设置高度>测量高度 的优先级顺序返回高度
-		 * @member egret.UIComponent#layoutBoundsHeight
+		 * @member egret.gui.UIComponent#layoutBoundsHeight
 		 */		
 		public get layoutBoundsHeight():number{
 			var h:number =  0

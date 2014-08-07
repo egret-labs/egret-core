@@ -29,15 +29,15 @@
 module egret.gui {
 
 	/**
-	 * @class egret.GroupBase
+	 * @class egret.gui.GroupBase
 	 * @classdesc
 	 * 自动布局容器基类
-	 * @extends egret.UIComponent
-	 * @implements egret.IViewport
+	 * @extends egret.gui.UIComponent
+	 * @implements egret.gui.IViewport
 	 */
     export class GroupBase extends UIComponent implements IViewport{
 		/**
-		 * @method egret.GroupBase#constructor
+		 * @method egret.gui.GroupBase#constructor
 		 */
         public constructor(){
             super();
@@ -45,7 +45,7 @@ module egret.gui {
         }
 
         /**
-         * @method egret.GroupBase#createChildren
+         * @method egret.gui.GroupBase#createChildren
          */
         public createChildren():void{
             super.createChildren();
@@ -57,7 +57,7 @@ module egret.gui {
         private _contentWidth:number = 0;
 
         /**
-		 * @member egret.GroupBase#contentWidth
+		 * @member egret.gui.GroupBase#contentWidth
          */
         public get contentWidth():number {
             return this._contentWidth;
@@ -76,7 +76,7 @@ module egret.gui {
         private _contentHeight:number = 0;
 
         /**
-		 * @member egret.GroupBase#contentHeight
+		 * @member egret.gui.GroupBase#contentHeight
          */
         public get contentHeight():number {
             return this._contentHeight;
@@ -93,7 +93,7 @@ module egret.gui {
         }
         /**
          * 设置 contentWidth 和 contentHeight 属性，此方法由Layout类调用
-		 * @method egret.GroupBase#setContentSize
+		 * @method egret.gui.GroupBase#setContentSize
          * @private
          *
 		 * @param width {number} 
@@ -109,7 +109,7 @@ module egret.gui {
         public _layout:LayoutBase;
         /**
          * 此容器的布局对象
-		 * @member egret.GroupBase#layout
+		 * @member egret.gui.GroupBase#layout
          */
         public get layout():LayoutBase{
             return this._layout;
@@ -139,7 +139,7 @@ module egret.gui {
         private _clipAndEnableScrolling:boolean = false;
         /**
          * 如果为 true，指定将子代剪切到视区的边界。如果为 false，则容器子代会从容器边界扩展过去，而不管组件的大小规范。默认false
-         * @member egret.GroupBase#clipAndEnableScrolling
+         * @member egret.gui.GroupBase#clipAndEnableScrolling
          */
         public get clipAndEnableScrolling():boolean {
             return this._clipAndEnableScrolling;
@@ -162,7 +162,7 @@ module egret.gui {
         private _horizontalScrollPosition:number = 0;
         /**
          * 可视区域水平方向起始点
-         * @member egret.GroupBase#horizontalScrollPosition
+         * @member egret.gui.GroupBase#horizontalScrollPosition
          */
         public get horizontalScrollPosition():number {
             return this._horizontalScrollPosition;
@@ -181,7 +181,7 @@ module egret.gui {
         private _verticalScrollPosition:number = 0;
         /**
          * 可视区域竖直方向起始点
-         * @member egret.GroupBase#verticalScrollPosition
+         * @member egret.gui.GroupBase#verticalScrollPosition
          */
         public get verticalScrollPosition():number {
             return this._verticalScrollPosition;
@@ -238,7 +238,7 @@ module egret.gui {
         }
 
         /**
-		 * @method egret.GroupBase#measure
+		 * @method egret.gui.GroupBase#measure
          */
         public measure():void{
             if(!this._layout||!this._layoutInvalidateSizeFlag)
@@ -249,20 +249,20 @@ module egret.gui {
 
         /**
          * 在更新显示列表时是否需要更新布局标志
-		 * @member egret.GroupBase#_layoutInvalidateDisplayListFlag
+		 * @member egret.gui.GroupBase#_layoutInvalidateDisplayListFlag
          */
         public _layoutInvalidateDisplayListFlag:boolean = false;
 
         /**
          * 标记需要更新显示列表但不需要更新布局
-		 * @method egret.GroupBase#_invalidateDisplayListExceptLayout
+		 * @method egret.gui.GroupBase#_invalidateDisplayListExceptLayout
          */
         public _invalidateDisplayListExceptLayout():void{
             super.invalidateDisplayList();
         }
 
         /**
-		 * @method egret.GroupBase#invalidateDisplayList
+		 * @method egret.gui.GroupBase#invalidateDisplayList
          */
         public invalidateDisplayList():void{
             super.invalidateDisplayList();
@@ -270,7 +270,7 @@ module egret.gui {
         }
 
         /**
-		 * @method egret.GroupBase#_childXYChanged
+		 * @method egret.gui.GroupBase#_childXYChanged
          */
         public _childXYChanged():void{
             this.invalidateSize();
@@ -279,20 +279,20 @@ module egret.gui {
 
         /**
          * 在测量尺寸时是否需要测量布局的标志
-		 * @member egret.GroupBase#_layoutInvalidateSizeFlag
+		 * @member egret.gui.GroupBase#_layoutInvalidateSizeFlag
          */
         public _layoutInvalidateSizeFlag:boolean = false;
 
         /**
          * 标记需要更新显示列表但不需要更新布局
-		 * @method egret.GroupBase#_invalidateSizeExceptLayout
+		 * @method egret.gui.GroupBase#_invalidateSizeExceptLayout
          */
         public _invalidateSizeExceptLayout():void{
             super.invalidateSize();
         }
 
         /**
-		 * @method egret.GroupBase#invalidateSize
+		 * @method egret.gui.GroupBase#invalidateSize
          */
         public invalidateSize():void{
             super.invalidateSize();
@@ -300,7 +300,7 @@ module egret.gui {
         }
 
         /**
-		 * @method egret.GroupBase#updateDisplayList
+		 * @method egret.gui.GroupBase#updateDisplayList
 		 * @param unscaledWidth {number} 
 		 * @param unscaledHeight {number} 
          */
@@ -314,7 +314,7 @@ module egret.gui {
         }
         /**
          * 此容器中的可视元素的数量。
-		 * @member egret.GroupBase#numElements
+		 * @member egret.gui.GroupBase#numElements
          */
         public get numElements():number{
             return -1;
@@ -322,7 +322,7 @@ module egret.gui {
 
         /**
          * 返回指定索引处的可视元素。
-		 * @method egret.GroupBase#getElementAt
+		 * @method egret.gui.GroupBase#getElementAt
          * @param index {number} 要检索的元素的索引。
          * @throws RangeError 如果在子列表中不存在该索引位置。
 		 * @returns {IVisualElement}
@@ -333,7 +333,7 @@ module egret.gui {
 
         /**
          * 返回可视元素的索引位置。若不存在，则返回-1。
-		 * @method egret.GroupBase#getElementIndex
+		 * @method egret.gui.GroupBase#getElementIndex
          * @param element {IVisualElement} 可视元素。
 		 * @returns {number}
          */
@@ -343,7 +343,7 @@ module egret.gui {
 
         /**
          * 返回在容器可视区域内的布局元素索引列表,此方法忽略不是布局元素的普通的显示对象
-		 * @method egret.GroupBase#getElementIndicesInView
+		 * @method egret.gui.GroupBase#getElementIndicesInView
 		 * @returns {number}
          */
         public getElementIndicesInView():Array<number>{
@@ -373,7 +373,7 @@ module egret.gui {
         /**
          * 在支持虚拟布局的容器中，设置容器内可见的子元素索引范围。此方法在不支持虚拟布局的容器中无效。
          * 通常在即将连续调用getVirtualElementAt()之前需要显式设置一次，以便容器提前释放已经不可见的子元素。
-		 * @method egret.GroupBase#setVirtualElementIndicesInView
+		 * @method egret.gui.GroupBase#setVirtualElementIndicesInView
          * @param startIndex {number} 可视元素起始索引
          * @param endIndex {number} 可视元素结束索引
          */
@@ -383,7 +383,7 @@ module egret.gui {
 
         /**
          * 支持useVirtualLayout属性的布局类在updateDisplayList()中使用此方法来获取“处于视图中”的布局元素
-		 * @method egret.GroupBase#getVirtualElementAt
+		 * @method egret.gui.GroupBase#getVirtualElementAt
          * @param index {number} 要检索的元素的索引。
 		 * @returns {IVisualElement}
          */

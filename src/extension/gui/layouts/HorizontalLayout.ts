@@ -29,14 +29,14 @@
 module egret.gui {
 
 	/**
-	 * @class egret.HorizontalLayout
+	 * @class egret.gui.HorizontalLayout
 	 * @classdesc
 	 * 水平布局
-	 * @extends egret.LayoutBase
+	 * @extends egret.gui.LayoutBase
 	 */
 	export class HorizontalLayout extends LayoutBase{
 		/**
-		 * @method egret.HorizontalLayout#constructor
+		 * @method egret.gui.HorizontalLayout#constructor
 		 */
 		public constructor(){
 			super();
@@ -46,7 +46,7 @@ module egret.gui {
 		/**
 		 * 布局元素的水平对齐策略。参考HorizontalAlign定义的常量。
 		 * 注意：此属性设置为CONTENT_JUSTIFY始终无效。当useVirtualLayout为true时，设置JUSTIFY也无效。
-		 * @member egret.HorizontalLayout#horizontalAlign
+		 * @member egret.gui.HorizontalLayout#horizontalAlign
 		 */
 		public get horizontalAlign():string{
 			return this._horizontalAlign;
@@ -63,7 +63,7 @@ module egret.gui {
 		private _verticalAlign:string = VerticalAlign.TOP;
 		/**
 		 * 布局元素的竖直对齐策略。参考VerticalAlign定义的常量。
-		 * @member egret.HorizontalLayout#verticalAlign
+		 * @member egret.gui.HorizontalLayout#verticalAlign
 		 */
 		public get verticalAlign():string{
 			return this._verticalAlign;
@@ -80,7 +80,7 @@ module egret.gui {
 		private _gap:number = 6;
 		/**
 		 * 布局元素之间的水平空间（以像素为单位）
-		 * @member egret.HorizontalLayout#gap
+		 * @member egret.gui.HorizontalLayout#gap
 		 */
 		public get gap():number{
 			return this._gap;
@@ -99,7 +99,7 @@ module egret.gui {
 		/**
 		 * 四个边缘的共同内边距。若单独设置了任一边缘的内边距，则该边缘的内边距以单独设置的值为准。
 		 * 此属性主要用于快速设置多个边缘的相同内边距。默认值：0。
-		 * @member egret.HorizontalLayout#padding
+		 * @member egret.gui.HorizontalLayout#padding
 		 */
 		public get padding():number{
 			return this._padding;
@@ -115,7 +115,7 @@ module egret.gui {
 		private _paddingLeft:number = NaN;
 		/**
 		 * 容器的左边缘与布局元素的左边缘之间的最少像素数,若为NaN将使用padding的值，默认值：NaN。
-		 * @member egret.HorizontalLayout#paddingLeft
+		 * @member egret.gui.HorizontalLayout#paddingLeft
 		 */
 		public get paddingLeft():number{
 			return this._paddingLeft;
@@ -132,7 +132,7 @@ module egret.gui {
 		private _paddingRight:number = NaN;
 		/**
 		 * 容器的右边缘与布局元素的右边缘之间的最少像素数,若为NaN将使用padding的值，默认值：NaN。
-		 * @member egret.HorizontalLayout#paddingRight
+		 * @member egret.gui.HorizontalLayout#paddingRight
 		 */
 		public get paddingRight():number{
 			return this._paddingRight;
@@ -149,7 +149,7 @@ module egret.gui {
 		private _paddingTop:number = NaN;
 		/**
 		 * 容器的顶边缘与第一个布局元素的顶边缘之间的像素数,若为NaN将使用padding的值，默认值：NaN。
-		 * @member egret.HorizontalLayout#paddingTop
+		 * @member egret.gui.HorizontalLayout#paddingTop
 		 */
 		public get paddingTop():number{
 			return this._paddingTop;
@@ -166,7 +166,7 @@ module egret.gui {
 		private _paddingBottom:number = NaN;
 		/**
 		 * 容器的底边缘与最后一个布局元素的底边缘之间的像素数,若为NaN将使用padding的值，默认值：NaN。
-		 * @member egret.HorizontalLayout#paddingBottom
+		 * @member egret.gui.HorizontalLayout#paddingBottom
 		 */
 		public get paddingBottom():number{
 			return this._paddingBottom;
@@ -191,7 +191,7 @@ module egret.gui {
 		}
 
 		/**
-		 * @method egret.HorizontalLayout#measure
+		 * @method egret.gui.HorizontalLayout#measure
 		 */
 		public measure():void{
 			super.measure();
@@ -274,7 +274,7 @@ module egret.gui {
 		}
 		
 		/**
-		 * @method egret.HorizontalLayout#updateDisplayList
+		 * @method egret.gui.HorizontalLayout#updateDisplayList
 		 * @param width {number} 
 		 * @param height {number} 
 		 */
@@ -359,7 +359,7 @@ module egret.gui {
 		}
 		
 		/**
-		 * @method egret.HorizontalLayout#elementAdded
+		 * @method egret.gui.HorizontalLayout#elementAdded
 		 * @param index {number} 
 		 */
 		public elementAdded(index:number):void{
@@ -371,7 +371,7 @@ module egret.gui {
 		}
 		
 		/**
-		 * @method egret.HorizontalLayout#elementRemoved
+		 * @method egret.gui.HorizontalLayout#elementRemoved
 		 * @param index {number} 
 		 */
 		public elementRemoved(index:number):void{
@@ -382,7 +382,7 @@ module egret.gui {
 		}
 		
 		/**
-		 * @method egret.HorizontalLayout#clearVirtualLayoutCache
+		 * @method egret.gui.HorizontalLayout#clearVirtualLayoutCache
 		 */
 		public clearVirtualLayoutCache():void{
 			if(!this.useVirtualLayout)
@@ -426,7 +426,7 @@ module egret.gui {
 		private indexInViewCalculated:boolean = false;
 		
 		/**
-		 * @method egret.HorizontalLayout#scrollPositionChanged
+		 * @method egret.gui.HorizontalLayout#scrollPositionChanged
 		 */
 		public scrollPositionChanged():void{
 			super.scrollPositionChanged();
@@ -765,7 +765,7 @@ module egret.gui {
 		
 		/**
 		 * 为每个可变尺寸的子项分配空白区域
-		 * @method egret.HorizontalLayout.flexChildrenProportionally
+		 * @method egret.gui.HorizontalLayout.flexChildrenProportionally
 		 * @param spaceForChildren {number} 
 		 * @param spaceToDistribute {number} 
 		 * @param totalPercent {number} 

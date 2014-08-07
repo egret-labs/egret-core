@@ -29,15 +29,15 @@
 module egret.gui {
 
 	/**
-	 * @class egret.TextBase
+	 * @class egret.gui.TextBase
 	 * @classdesc
 	 * 文本基类,实现对文本的自动布局，样式属性设置。
-	 * @extends egret.UIComponent
-	 * @implements egret.IDisplayText
+	 * @extends egret.gui.UIComponent
+	 * @implements egret.gui.IDisplayText
 	 */	
 	export class TextBase extends UIComponent implements IDisplayText{
 		/**
-		 * @method egret.TextBase#constructor
+		 * @method egret.gui.TextBase#constructor
 		 */
 		public constructor(){
 			super();
@@ -45,12 +45,12 @@ module egret.gui {
 		
 		/**
 		 * 默认的文本测量宽度 
-		 * @constant egret.TextBase.DEFAULT_MEASURED_WIDTH
+		 * @constant egret.gui.TextBase.DEFAULT_MEASURED_WIDTH
 		 */		
 		public static DEFAULT_MEASURED_WIDTH:number = 160;
 		/**
 		 * 默认的文本测量高度
-		 * @constant egret.TextBase.DEFAULT_MEASURED_HEIGHT
+		 * @constant egret.gui.TextBase.DEFAULT_MEASURED_HEIGHT
 		 */		
 		public static DEFAULT_MEASURED_HEIGHT:number = 22;
 		
@@ -63,7 +63,7 @@ module egret.gui {
 		private _fontFamily:string = "SimSun";
 		/**
 		 * 字体名称 。默认值：SimSun
-		 * @member egret.TextBase#fontFamily
+		 * @member egret.gui.TextBase#fontFamily
 		 */
 		public get fontFamily():string{
 
@@ -84,7 +84,7 @@ module egret.gui {
 		private _size:number = 30;
 		/**
 		 * 字号大小,默认值30 。
-		 * @member egret.TextBase#size
+		 * @member egret.gui.TextBase#size
 		 */
 		public get size():number{
 			return this._size;
@@ -104,7 +104,7 @@ module egret.gui {
 		private _bold:boolean;
 		/**
 		 * 是否显示为粗体，默认false。
-		 * @member egret.TextBase#bold
+		 * @member egret.gui.TextBase#bold
 		 */
 		public get bold():boolean{
 			return this._bold;
@@ -124,7 +124,7 @@ module egret.gui {
 		private _italic:boolean;
 		/**
 		 * 是否显示为粗体，默认false。
-		 * @member egret.TextBase#italic
+		 * @member egret.gui.TextBase#italic
 		 */
 		public get italic():boolean{
 			return this._italic;
@@ -145,7 +145,7 @@ module egret.gui {
 		/**
 		 * 文字的水平对齐方式 ,请使用HorizontalAlign中定义的常量。
 		 * 默认值：HorizontalAlign.LEFT。
-		 * @member egret.TextBase#textAlign
+		 * @member egret.gui.TextBase#textAlign
 		 */
 		public get textAlign():string{
 			return this._textAlign;
@@ -166,7 +166,7 @@ module egret.gui {
 		/**
 		 * 文字的垂直对齐方式 ,请使用VerticalAlign中定义的常量。
 		 * 默认值：VerticalAlign.TOP。
-		 * @member egret.TextBase#verticalAlign
+		 * @member egret.gui.TextBase#verticalAlign
 		 */
 		public get verticalAlign():string{
 			return this._verticalAlign;
@@ -186,7 +186,7 @@ module egret.gui {
         private _lineSpacing:number = 0;
         /**
          * 行间距
-		 * @member egret.TextBase#lineSpacing
+		 * @member egret.gui.TextBase#lineSpacing
          */
         public get lineSpacing():number{
             return this._lineSpacing;
@@ -206,7 +206,7 @@ module egret.gui {
 
 		private _textColor:number = 0xFFFFFF;
 		/**
-		 * @member egret.TextBase#textColor
+		 * @member egret.gui.TextBase#textColor
 		 */
 		public get textColor():number{
 			return this._textColor;
@@ -221,12 +221,12 @@ module egret.gui {
 		}
 
 		/**
-		 * @member egret.TextBase#_textChanged
+		 * @member egret.gui.TextBase#_textChanged
 		 */
         public _textChanged:boolean;
 		public _text:string = "";
 		/**
-		 * @member egret.TextBase#text
+		 * @member egret.gui.TextBase#text
 		 */
         public get text():string{
 			return this._text;
@@ -243,7 +243,7 @@ module egret.gui {
 		}
 		
 		/**
-		 * @method egret.TextBase#createChildren
+		 * @method egret.gui.TextBase#createChildren
 		 */
 		public createChildren():void{
 			super.createChildren();
@@ -254,7 +254,7 @@ module egret.gui {
 		}
 		
 		/**
-		 * @method egret.TextBase#commitProperties
+		 * @method egret.gui.TextBase#commitProperties
 		 */
 		public commitProperties():void{
 			super.commitProperties();
@@ -327,7 +327,7 @@ module egret.gui {
         }
 		
 		/**
-		 * @method egret.TextBase#measure
+		 * @method egret.gui.TextBase#measure
 		 */
 		public measure():void{
 			super.measure();
@@ -338,7 +338,7 @@ module egret.gui {
 		
 		/**
 		 * 更新显示列表
-		 * @method egret.TextBase#$updateDisplayList
+		 * @method egret.gui.TextBase#$updateDisplayList
 		 * @param unscaledWidth {number} 
 		 * @param unscaledHeight {number} 
 		 */		
@@ -347,7 +347,7 @@ module egret.gui {
 		}
 		
 		/**
-		 * @method egret.TextBase#updateDisplayList
+		 * @method egret.gui.TextBase#updateDisplayList
 		 * @param unscaledWidth {number} 
 		 * @param unscaledHeight {number} 
 		 */

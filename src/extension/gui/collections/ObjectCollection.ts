@@ -29,18 +29,18 @@
 module egret.gui {
 
 	/**
-	 * @class egret.ObjectCollection
+	 * @class egret.gui.ObjectCollection
 	 * @classdesc
 	 * Object的集合类数据结构包装器,通常作为Tree组件的数据源。
 	 * @extends egret.EventDispatcher
-	 * @implements egret.ICollection
-	 * @implements egret.ITreeCollection
+	 * @implements egret.gui.ICollection
+	 * @implements egret.gui.ITreeCollection
 	 */
 	export class ObjectCollection extends EventDispatcher 
 		implements ICollection,ITreeCollection{
 		/**
 		 * 构造函数
-		 * @method egret.ObjectCollection#constructor
+		 * @method egret.gui.ObjectCollection#constructor
 		 * @param childrenKey {string} 要从item中获取子项列表的属性名,属性值为一个数组或Vector。
 		 * @param parentKey {string} 要从item中获取父级项的属性名
 		 */		
@@ -61,7 +61,7 @@ module egret.gui {
 		private _source:any;
 		/**
 		 * 数据源。注意：设置source会同时清空openNodes。
-		 * @member egret.ObjectCollection#source
+		 * @member egret.gui.ObjectCollection#source
 		 */
 		public get source():any{
 			return this._source;
@@ -91,7 +91,7 @@ module egret.gui {
 		private _openNodes:Array<any> = [];
 		/**
 		 * 处于展开状态的节点列表
-		 * @member egret.ObjectCollection#openNodes
+		 * @member egret.gui.ObjectCollection#openNodes
 		 */
 		public get openNodes():Array<any>{
 			return this._openNodes.concat();
@@ -102,13 +102,13 @@ module egret.gui {
 		}
 		
 		/**
-		 * @member egret.ObjectCollection#length
+		 * @member egret.gui.ObjectCollection#length
 		 */
 		public get length():number{
 			return this.nodeList.length;
 		}
 		/**
-		 * @method egret.ObjectCollection#getItemAt
+		 * @method egret.gui.ObjectCollection#getItemAt
 		 * @param index {number} 
 		 * @returns {any}
 		 */
@@ -116,7 +116,7 @@ module egret.gui {
 			return this.nodeList[index];
 		}
 		/**
-		 * @method egret.ObjectCollection#getItemIndex
+		 * @method egret.gui.ObjectCollection#getItemIndex
 		 * @param item {any} 
 		 * @returns {number}
 		 */
@@ -132,7 +132,7 @@ module egret.gui {
 		
 		/**
 		 * 通知视图，某个项目的属性已更新。
-		 * @method egret.ObjectCollection#itemUpdated
+		 * @method egret.gui.ObjectCollection#itemUpdated
 		 * @param item {any} 
 		 */
 		public itemUpdated(item:any):void{
@@ -144,7 +144,7 @@ module egret.gui {
 		
 		/**
 		 * 删除指定节点
-		 * @method egret.ObjectCollection#removeItem
+		 * @method egret.gui.ObjectCollection#removeItem
 		 * @param item {any} 
 		 */
 		public removeItem(item:any):void{
@@ -173,7 +173,7 @@ module egret.gui {
 		private _showRoot:boolean = false;
 		/**
 		 * 是否显示根节点,默认false。
-		 * @member egret.ObjectCollection#showRoot
+		 * @member egret.gui.ObjectCollection#showRoot
 		 */
 		public get showRoot():boolean{
 			return this._showRoot;
@@ -210,7 +210,7 @@ module egret.gui {
 			}
 		}
 		/**
-		 * @method egret.ObjectCollection#hasChildren
+		 * @method egret.gui.ObjectCollection#hasChildren
 		 * @param item {any} 
 		 * @returns {boolean}
 		 */		
@@ -220,7 +220,7 @@ module egret.gui {
 			return false;
 		}
 		/**
-		 * @method egret.ObjectCollection#isItemOpen
+		 * @method egret.gui.ObjectCollection#isItemOpen
 		 * @param item {any} 
 		 * @returns {boolean}
 		 */	
@@ -228,7 +228,7 @@ module egret.gui {
 			return this._openNodes.indexOf(item)!=-1;
 		}	
 		/**
-		 * @method egret.ObjectCollection#expandItem
+		 * @method egret.gui.ObjectCollection#expandItem
 		 * @param item {any} 
 		 * @param open {boolean} 
 		 */	
@@ -282,7 +282,7 @@ module egret.gui {
 			}
 		}
 		/**
-		 * @method egret.ObjectCollection#getDepth
+		 * @method egret.gui.ObjectCollection#getDepth
 		 * @param item {any} 
 		 * @returns {number}
 		 */	
@@ -299,7 +299,7 @@ module egret.gui {
 		}
 		/**
 		 * 刷新数据源。
-		 * @method egret.ObjectCollection#refresh
+		 * @method egret.gui.ObjectCollection#refresh
 		 */		
 		public refresh():void{
 			this.nodeList = [];
@@ -322,7 +322,7 @@ module egret.gui {
 		}
 		/**
 		 * 一个工具方法，给parent的子项以及子孙项赋值父级引用。
-		 * @method egret.ObjectCollection.assignParent
+		 * @method egret.gui.ObjectCollection.assignParent
 		 * @param parent {any} 要遍历子项的parent对象。
 		 * @param childrenKey {string} 要从parent中获取子项列表的属性名,属性值为一个数组或Vector。
 		 * @param parentKey {string} 要给子项赋值父级引用的属性名。

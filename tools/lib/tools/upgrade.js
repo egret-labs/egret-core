@@ -5,6 +5,7 @@
 
 var file = require("../core/file.js");
 var param = require("../core/params_analyze.js");
+var code_util = require("../core/code_util.js");
 var path = require("path");
 function run(currDir, args, opts) {
 
@@ -29,8 +30,14 @@ function fixSingleTypeScriptFile(item) {
     for (var key in gui_refactor_1_0_3){
 
         var value = gui_refactor_1_0_3[key];
-        content = content.replace(new RegExp(key,"gi"),value);
-        console.log (key,value)
+
+        while(content){
+            var index = code_util.getFirstVariableIndex(key,content);
+            if(index==-1){
+                break;
+            }
+            content = content.substring(0,index)+ value +content.substring(index+key.length);
+        }
     }
     file.save(item, content);
 }

@@ -29,19 +29,19 @@
 module egret.gui {
 
 	/**
-	 * @class egret.ToggleButton
+	 * @class egret.gui.ToggleButton
 	 * @classdesc
 	 * 切换按钮
-	 * @extends egret.ToggleButtonBase
+	 * @extends egret.gui.ToggleButtonBase
 	 */	
 	export class ToggleButton extends ToggleButtonBase{
 		/**
 		 * 构造函数
-		 * @method egret.ToggleButton#constructor
+		 * @method egret.gui.ToggleButton#constructor
 		 */		
 		public constructor(){
 			super();
-            this.hostComponentKey = "egret.ToggleButton";
+            this.hostComponentKey = "egret.gui.ToggleButton";
 		}
 		
 	}

@@ -29,7 +29,7 @@
 module egret.gui {
 
 	/**
-	 * @class egret.StateChangeEvent
+	 * @class egret.gui.StateChangeEvent
 	 * @classdesc
 	 * 视图状态改变事件
 	 * @extends egret.Event
@@ -37,17 +37,17 @@ module egret.gui {
 	export class StateChangeEvent extends Event{
 		/**
 		 * 当前视图状态已经改变 
-		 * @constant egret.StateChangeEvent.CURRENT_STATE_CHANGE
+		 * @constant egret.gui.StateChangeEvent.CURRENT_STATE_CHANGE
 		 */		
 		public static CURRENT_STATE_CHANGE:string = "currentStateChange";
 		/**
 		 * 当前视图状态即将改变
-		 * @constant egret.StateChangeEvent.CURRENT_STATE_CHANGING
+		 * @constant egret.gui.StateChangeEvent.CURRENT_STATE_CHANGING
 		 */		
 		public static CURRENT_STATE_CHANGING:string = "currentStateChanging";
 		
 		/**
-		 * @method egret.StateChangeEvent#constructor
+		 * @method egret.gui.StateChangeEvent#constructor
 		 * @param type {string} 
 		 * @param bubbles {boolean} 
 		 * @param cancelable {boolean} 
@@ -65,19 +65,19 @@ module egret.gui {
 		}
 		/**
 		 * 组件正在进入的视图状态的名称。
-		 * @member egret.StateChangeEvent#newState
+		 * @member egret.gui.StateChangeEvent#newState
 		 */		
 		public newState:string;
 		
 		/**
 		 * 组件正在退出的视图状态的名称。
-		 * @member egret.StateChangeEvent#oldState
+		 * @member egret.gui.StateChangeEvent#oldState
 		 */		
 		public oldState:string;
 
         /**
          * 使用指定的EventDispatcher对象来抛出事件对象。抛出的对象将会缓存在对象池上，供下次循环复用。
-         * @method egret.StateChangeEvent.dispatchStateChangeEvent
+         * @method egret.gui.StateChangeEvent.dispatchStateChangeEvent
          */
         public static dispatchStateChangeEvent(target:IEventDispatcher,type:string,
                                                oldState:string = null,newState:string = null):void{

@@ -29,37 +29,37 @@
 module egret.gui {
 
 	/**
-	 * @class egret.IUIComponent
+	 * @class egret.gui.IUIComponent
 	 * @interface
 	 * @classdesc
 	 * UI组件接口
-	 * @extends egret.IVisualElement
+	 * @extends egret.gui.IVisualElement
 	 */	
 	export interface IUIComponent extends IVisualElement{
 		/**
 		 * 组件是否可以接受用户交互。
-		 * @member egret.IUIComponent#enabled
+		 * @member egret.gui.IUIComponent#enabled
 		 */
 		enabled:boolean;
 		/**
 		 * PopUpManager将其设置为true,以指示已弹出该组件。
-		 * @member egret.IUIComponent#isPopUp
+		 * @member egret.gui.IUIComponent#isPopUp
 		 */
 		isPopUp:boolean;
 		/**
 		 * 外部显式指定的高度
-		 * @member egret.IUIComponent#explicitHeight
+		 * @member egret.gui.IUIComponent#explicitHeight
 		 */
 		explicitHeight:number;
 		/**
 		 * 外部显式指定的宽度
-		 * @member egret.IUIComponent#explicitWidth
+		 * @member egret.gui.IUIComponent#explicitWidth
 		 */
 		explicitWidth:number;
 		/**
 		 * 设置组件的宽高，w,h均不包含scale值。此方法不同于直接设置width,height属性，
 		 * 不会影响显式标记尺寸属性widthExplicitlySet,_heightExplicitlySet
-		 * @method egret.IUIComponent#setActualSize
+		 * @method egret.gui.IUIComponent#setActualSize
 		 * @param newWidth {number} 
 		 * @param newHeight {number} 
 		 */		

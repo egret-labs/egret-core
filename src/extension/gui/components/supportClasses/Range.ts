@@ -29,15 +29,15 @@
 module egret.gui {
 
 	/**
-	 * @class egret.Range
+	 * @class egret.gui.Range
 	 * @classdesc
 	 * 范围选取组件,该组件包含一个值和这个值所允许的最大最小约束范围。
-	 * @extends egret.SkinnableComponent
+	 * @extends egret.gui.SkinnableComponent
 	 */	
     export class Range extends SkinnableComponent {
         /**
          * 构造函数
-		 * @method egret.Range#constructor
+		 * @method egret.gui.Range#constructor
          */
         public constructor() {
             super();
@@ -51,7 +51,7 @@ module egret.gui {
 
         /**
          * 最大有效值
-		 * @member egret.Range#maximum
+		 * @member egret.gui.Range#maximum
          */
         public get maximum():number {
             return this._maximum;
@@ -80,7 +80,7 @@ module egret.gui {
 
         /**
          * 最小有效值
-		 * @member egret.Range#minimum
+		 * @member egret.gui.Range#minimum
          */
         public get minimum():number {
             return this._minimum;
@@ -111,7 +111,7 @@ module egret.gui {
          * 调用 changeValueByStep() 方法时 value 属性更改的单步大小。默认值为 1。<br/>
          * 除非 snapInterval 为 0，否则它必须是 snapInterval 的倍数。<br/>
          * 如果 stepSize 不是倍数，则会将它近似到大于或等于 snapInterval 的最近的倍数。<br/>
-		 * @member egret.Range#stepSize
+		 * @member egret.gui.Range#stepSize
          */
         public get stepSize():number {
             return this._stepSize;
@@ -137,7 +137,7 @@ module egret.gui {
 
         /**
          * 此范围的当前值。
-		 * @member egret.Range#value
+		 * @member egret.gui.Range#value
          */
         public get value():number {
             return this._getValue();
@@ -170,7 +170,7 @@ module egret.gui {
          * 例如，如果 minimum 为 10，maximum 为 20，而此属性为 3，则可能的有效值为 10、13、16、19 和 20。<br/>
          * 如果此属性的值为零，则仅会将有效值约束到介于 minimum 和 maximum 之间（包括两者）。<br/>
          * 此属性还约束 stepSize 属性（如果设置）的有效值。如果未显式设置此属性，但设置了 stepSize，则 snapInterval 将默认为 stepSize。<br/>
-		 * @member egret.Range#snapInterval
+		 * @member egret.gui.Range#snapInterval
          */
         public get snapInterval():number {
             return this._snapInterval;
@@ -196,7 +196,7 @@ module egret.gui {
         }
 
         /**
-		 * @method egret.Range#commitProperties
+		 * @method egret.gui.Range#commitProperties
          */
         public commitProperties():void {
             super.commitProperties();
@@ -245,7 +245,7 @@ module egret.gui {
 
         /**
          * 修正输入的值为有效值
-		 * @method egret.Range#nearestValidValue
+		 * @method egret.gui.Range#nearestValidValue
          * @param value {number} 输入值。
          * @param interval {number} snapInterval 的值，或 snapInterval 的整数倍数。
 		 * @returns {number}
@@ -275,7 +275,7 @@ module egret.gui {
 
         /**
          * 设置当前值。此方法假定调用者已经使用了 nearestValidValue() 方法来约束 value 参数
-		 * @method egret.Range#setValue
+		 * @method egret.gui.Range#setValue
          * @param value {number} value属性的新值
          */
         public setValue(value:number):void {
@@ -292,7 +292,7 @@ module egret.gui {
 
         /**
          * 按 stepSize增大或减小当前值
-		 * @method egret.Range#changeValueByStep
+		 * @method egret.gui.Range#changeValueByStep
          * @param increase {boolean} 若为 true，则向value增加stepSize，否则减去它。
          */
         public changeValueByStep(increase:boolean = true):void {

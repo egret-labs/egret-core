@@ -29,15 +29,15 @@
 module egret.gui {
 
 	/**
-	 * @class egret.ItemRenderer
+	 * @class egret.gui.ItemRenderer
 	 * @classdesc
 	 * 项呈示器基类
-	 * @extends egret.ButtonBase
-	 * @implements egret.IItemRenderer
+	 * @extends egret.gui.ButtonBase
+	 * @implements egret.gui.IItemRenderer
 	 */
 	export class ItemRenderer extends ButtonBase implements IItemRenderer{
 		/**
-		 * @method egret.ItemRenderer#constructor
+		 * @method egret.gui.ItemRenderer#constructor
 		 */
 		public constructor(){
 			super();
@@ -47,7 +47,7 @@ module egret.gui {
 		private dataChangedFlag:boolean = false;
 		private _data:any;
 		/**
-		 * @member egret.ItemRenderer#data
+		 * @member egret.gui.ItemRenderer#data
 		 */
 		public get data():any{
 			return this._data;
@@ -68,7 +68,7 @@ module egret.gui {
 		/**
 		 * 子类复写此方法以在data数据源发生改变时跟新显示列表。
 		 * 与直接复写_data的setter方法不同，它会确保在皮肤已经附加完成后再被调用。
-		 * @method egret.ItemRenderer#dataChanged
+		 * @method egret.gui.ItemRenderer#dataChanged
 		 */		
 		public dataChanged():void{
 			
@@ -76,7 +76,7 @@ module egret.gui {
 		
 		private _selected:boolean = false;
 		/**
-		 * @member egret.ItemRenderer#selected
+		 * @member egret.gui.ItemRenderer#selected
 		 */
 		public get selected():boolean{
 			return this._selected;
@@ -91,7 +91,7 @@ module egret.gui {
 		
 		private _itemIndex:number = -1;
 		/**
-		 * @member egret.ItemRenderer#itemIndex
+		 * @member egret.gui.ItemRenderer#itemIndex
 		 */
 		public get itemIndex():number{
 			return this._itemIndex;
@@ -102,7 +102,7 @@ module egret.gui {
 		}
 		
 		/**
-		 * @method egret.ItemRenderer#commitProperties
+		 * @method egret.gui.ItemRenderer#commitProperties
 		 */
 		public commitProperties():void{
 			super.commitProperties();
@@ -113,7 +113,7 @@ module egret.gui {
 		}
 		
 		/**
-		 * @method egret.ItemRenderer#getCurrentSkinState
+		 * @method egret.gui.ItemRenderer#getCurrentSkinState
 		 * @returns {string}
 		 */
 		public getCurrentSkinState():string{

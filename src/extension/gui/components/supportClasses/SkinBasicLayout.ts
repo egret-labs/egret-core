@@ -29,14 +29,14 @@
 module egret.gui {
 
 	/**
-	 * @class egret.SkinBasicLayout
+	 * @class egret.gui.SkinBasicLayout
 	 * @classdesc
 	 * 皮肤简单布局类。
 	 * @extends egret.HashObject
 	 */
     export class SkinBasicLayout extends HashObject{
 		/**
-		 * @method egret.SkinBasicLayout#constructor
+		 * @method egret.gui.SkinBasicLayout#constructor
 		 */
         public constructor() {
             super();
@@ -46,7 +46,7 @@ module egret.gui {
 
         /**
          * 目标布局对象
-		 * @member egret.SkinBasicLayout#target
+		 * @member egret.gui.SkinBasicLayout#target
          */
         public get target():SkinnableComponent {
             return this._target;
@@ -59,7 +59,7 @@ module egret.gui {
 
         /**
          * 测量组件尺寸大小
-		 * @method egret.SkinBasicLayout#measure
+		 * @method egret.gui.SkinBasicLayout#measure
          */
         public measure():void {
             if (this.target == null)
@@ -126,7 +126,7 @@ module egret.gui {
 
         /**
          * 更新显示列表
-		 * @method egret.SkinBasicLayout#updateDisplayList
+		 * @method egret.gui.SkinBasicLayout#updateDisplayList
 		 * @param unscaledWidth {number} 
 		 * @param unscaledHeight {number} 
          */

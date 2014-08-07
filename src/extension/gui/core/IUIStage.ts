@@ -29,7 +29,7 @@
 module egret.gui {
 
 	/**
-	 * @class egret.IUIStage
+	 * @class egret.gui.IUIStage
 	 * @interface
 	 * @classdesc
 	 * @extends egret.IEventDispatcher
@@ -37,22 +37,22 @@ module egret.gui {
 	export interface IUIStage extends IEventDispatcher{
 		/**
 		 * 弹出窗口层容器。
-		 * @member egret.IUIStage#popUpContainer
+		 * @member egret.gui.IUIStage#popUpContainer
 		 */	
 		popUpContainer:IContainer;
 		/**
 		 * 工具提示层容器。
-		 * @member egret.IUIStage#toolTipContainer
+		 * @member egret.gui.IUIStage#toolTipContainer
 		 */		
 		toolTipContainer:IContainer;
 		/**
 		 * 鼠标样式层容器。
-		 * @member egret.IUIStage#cursorContainer
+		 * @member egret.gui.IUIStage#cursorContainer
 		 */		
 		cursorContainer:IContainer;
 		/**
 		 * 舞台引用
-		 * @member egret.IUIStage#stage
+		 * @member egret.gui.IUIStage#stage
 		 */		
 		stage:Stage;
 	}

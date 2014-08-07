@@ -29,7 +29,7 @@
 module egret.gui {
 
 	/**
-	 * @class egret.RendererExistenceEvent
+	 * @class egret.gui.RendererExistenceEvent
 	 * @classdesc
 	 * 在DataGroup添加或删除项呈示器时分派的事件。
 	 * @extends egret.Event
@@ -37,17 +37,17 @@ module egret.gui {
 	export class RendererExistenceEvent extends Event{
 		/**
 		 * 添加了项呈示器 
-		 * @constant egret.RendererExistenceEvent.RENDERER_ADD
+		 * @constant egret.gui.RendererExistenceEvent.RENDERER_ADD
 		 */		
 		public static RENDERER_ADD:string = "rendererAdd";
 		/**
 		 * 移除了项呈示器 
-		 * @constant egret.RendererExistenceEvent.RENDERER_REMOVE
+		 * @constant egret.gui.RendererExistenceEvent.RENDERER_REMOVE
 		 */		
 		public static RENDERER_REMOVE:string = "rendererRemove";
 
 		/**
-		 * @method egret.RendererExistenceEvent#constructor
+		 * @method egret.gui.RendererExistenceEvent#constructor
 		 * @param type {string} 
 		 * @param bubbles {boolean} 
 		 * @param cancelable {boolean} 
@@ -67,25 +67,25 @@ module egret.gui {
 		
 		/**
 		 * 呈示器的数据项目。 
-		 * @member egret.RendererExistenceEvent#data
+		 * @member egret.gui.RendererExistenceEvent#data
 		 */		
 		public data:any;
 		
 		/**
 		 * 指向已添加或删除项呈示器的位置的索引。 
-		 * @member egret.RendererExistenceEvent#index
+		 * @member egret.gui.RendererExistenceEvent#index
 		 */		
 		public index:number;
 		
 		/**
 		 * 对已添加或删除的项呈示器的引用。 
-		 * @member egret.RendererExistenceEvent#renderer
+		 * @member egret.gui.RendererExistenceEvent#renderer
 		 */		
 		public renderer:IItemRenderer;
 
         /**
          * 使用指定的EventDispatcher对象来抛出事件对象。抛出的对象将会缓存在对象池上，供下次循环复用。
-         * @method egret.RendererExistenceEvent.dispatchRendererExistenceEvent
+         * @method egret.gui.RendererExistenceEvent.dispatchRendererExistenceEvent
          */
         public static dispatchRendererExistenceEvent(target:IEventDispatcher,type:string,renderer:IItemRenderer = null,
                                              index:number = -1, data:any = null):void{

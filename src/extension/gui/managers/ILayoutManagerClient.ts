@@ -29,7 +29,7 @@
 module egret.gui {
 
 	/**
-	 * @class egret.ILayoutManagerClient
+	 * @class egret.gui.ILayoutManagerClient
 	 * @interface
 	 * @classdesc
 	 * 使用布局管理器的组件接口
@@ -38,38 +38,38 @@ module egret.gui {
 	export interface ILayoutManagerClient extends IEventDispatcher{
 		/**
 		 * 验证组件的属性
-		 * @method egret.ILayoutManagerClient#validateProperties
+		 * @method egret.gui.ILayoutManagerClient#validateProperties
 		 */		
 		validateProperties():void;
 		/**
 		 * 验证组件的尺寸
-		 * @method egret.ILayoutManagerClient#validateSize
+		 * @method egret.gui.ILayoutManagerClient#validateSize
 		 * @param recursive? {boolean} 
 		 */		
 		validateSize(recursive?:boolean):void;
 		/**
 		 * 验证子项的位置和大小，并绘制其他可视内容
-		 * @method egret.ILayoutManagerClient#validateDisplayList
+		 * @method egret.gui.ILayoutManagerClient#validateDisplayList
 		 */		
 		validateDisplayList():void;
 		/**
 		 * 在显示列表的嵌套深度
-		 * @member egret.ILayoutManagerClient#nestLevel
+		 * @member egret.gui.ILayoutManagerClient#nestLevel
 		 */		
 		nestLevel:number;
 		/**
 		 * 是否完成初始化。此标志只能由 LayoutManager 修改。
-		 * @member egret.ILayoutManagerClient#initialized
+		 * @member egret.gui.ILayoutManagerClient#initialized
 		 */		
 		initialized:boolean;
 		/**
 		 * 一个标志，用于确定某个对象是否正在等待分派其updateComplete事件。此标志只能由 LayoutManager 修改。
-		 * @member egret.ILayoutManagerClient#updateCompletePendingFlag
+		 * @member egret.gui.ILayoutManagerClient#updateCompletePendingFlag
 		 */		
 		updateCompletePendingFlag:boolean;
 		/**
 		 * 父级显示对象
-		 * @member egret.ILayoutManagerClient#parent
+		 * @member egret.gui.ILayoutManagerClient#parent
 		 */		
 		parent:DisplayObjectContainer;
 	}

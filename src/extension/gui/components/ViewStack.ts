@@ -29,17 +29,17 @@
 module egret.gui {
 
 	/**
-	 * @class egret.ViewStack
+	 * @class egret.gui.ViewStack
 	 * @classdesc
 	 * 层级堆叠容器,一次只显示一个子对象。
-	 * @extends egret.Group
-	 * @implements egret.IViewStack
-	 * @implements egret.ICollection
+	 * @extends egret.gui.Group
+	 * @implements egret.gui.IViewStack
+	 * @implements egret.gui.ICollection
 	 */
 	export class ViewStack extends Group implements IViewStack,ICollection{
 		/**
 		 * 构造函数
-		 * @method egret.ViewStack#constructor
+		 * @method egret.gui.ViewStack#constructor
 		 */		
 		public constructor(){
 			super();
@@ -48,7 +48,7 @@ module egret.gui {
 
 		/**
 		 * 此容器的布局对象为只读,默认限制为BasicLayout。
-		 * @member egret.ViewStack#layout
+		 * @member egret.gui.ViewStack#layout
 		 */		
 		public get layout():LayoutBase{
 			return this._layout;
@@ -59,7 +59,7 @@ module egret.gui {
 		private _createAllChildren:boolean = false;
 		/**
 		 * 是否立即初始化化所有子项。false表示当子项第一次被显示时再初始化它。默认值false。
-		 * @member egret.ViewStack#createAllChildren
+		 * @member egret.gui.ViewStack#createAllChildren
 		 */
 		public get createAllChildren():boolean{
 			return this._createAllChildren;
@@ -87,7 +87,7 @@ module egret.gui {
 
 		private _selectedChild:IVisualElement;
 		/**
-		 * @member egret.ViewStack#selectedChild
+		 * @member egret.gui.ViewStack#selectedChild
 		 */	
 		public get selectedChild():IVisualElement{
 			var index:number = this.selectedIndex;
@@ -112,7 +112,7 @@ module egret.gui {
 		
 		public _selectedIndex:number = -1;
 		/**
-		 * @member egret.ViewStack#selectedIndex
+		 * @member egret.gui.ViewStack#selectedIndex
 		 */	
 		public get selectedIndex():number{
 			return this.proposedSelectedIndex!=ViewStack.NO_PROPOSED_SELECTION?this.proposedSelectedIndex:this._selectedIndex;
@@ -124,7 +124,7 @@ module egret.gui {
 		private notifyTabBar:boolean = false;
 		/**
 		 * 设置选中项索引
-		 * @method egret.ViewStack#_setSelectedIndex
+		 * @method egret.gui.ViewStack#_setSelectedIndex
 		 * @param value {number} 
 		 * @param notifyListeners {boolean} 
 		 */		
@@ -141,7 +141,7 @@ module egret.gui {
 		
 		/**
 		 * 添加一个显示元素到容器
-		 * @method egret.ViewStack#_elementAdded
+		 * @method egret.gui.ViewStack#_elementAdded
 		 * @param element {IVisualElement} 
 		 * @param index {number} 
 		 * @param notifyListeners {boolean} 
@@ -173,7 +173,7 @@ module egret.gui {
 		
 		/**
 		 * 从容器移除一个显示元素
-		 * @method egret.ViewStack#_elementRemoved
+		 * @method egret.gui.ViewStack#_elementRemoved
 		 * @param element {IVisualElement} 
 		 * @param index {number} 
 		 * @param notifyListeners {boolean} 
@@ -206,7 +206,7 @@ module egret.gui {
 		private childOrderingChanged:boolean = false;
 		
 		/**
-		 * @method egret.ViewStack#commitProperties
+		 * @method egret.gui.ViewStack#commitProperties
 		 */
 		public commitProperties():void{
 			super.commitProperties();
@@ -259,13 +259,13 @@ module egret.gui {
 			this.invalidateDisplayList();
 		}
 		/**
-		 * @member egret.ViewStack#length
+		 * @member egret.gui.ViewStack#length
 		 */	
 		public get length():number{
 			return this.numElements;
 		}
 		/**
-		 * @method egret.ViewStack#getItemAt
+		 * @method egret.gui.ViewStack#getItemAt
 		 * @param index {number} 
 		 * @returns {any}
 		 */			
@@ -276,7 +276,7 @@ module egret.gui {
 			return "";
 		}
 		/**
-		 * @method egret.ViewStack#getItemIndex
+		 * @method egret.gui.ViewStack#getItemIndex
 		 * @param item {any} 
 		 * @returns {number}
 		 */		

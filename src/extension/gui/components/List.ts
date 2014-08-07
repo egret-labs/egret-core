@@ -29,23 +29,23 @@
 module egret.gui {
 
 	/**
-	 * @class egret.List
+	 * @class egret.gui.List
 	 * @classdesc
 	 * 列表组件
-	 * @extends egret.ListBase
+	 * @extends egret.gui.ListBase
 	 */
 	export class List extends ListBase{
 		/**
-		 * @method egret.List#constructor
+		 * @method egret.gui.List#constructor
 		 */
 		public constructor(){
 			super();
-            this.hostComponentKey = "egret.List";
+            this.hostComponentKey = "egret.gui.List";
 			this.useVirtualLayout = true;
 		}
 		
 		/**
-		 * @method egret.List#createChildren
+		 * @method egret.gui.List#createChildren
 		 */
 		public createChildren():void{
 			if(!this.itemRenderer)
@@ -55,7 +55,7 @@ module egret.gui {
 		
 		/**
 		 * 是否使用虚拟布局,默认true
-		 * @member egret.List#useVirtualLayout
+		 * @member egret.gui.List#useVirtualLayout
 		 */		
 		public get useVirtualLayout():boolean{
 			return this._getUseVirtualLayout();
@@ -72,7 +72,7 @@ module egret.gui {
 		private _allowMultipleSelection:boolean = false;
 		/**
 		 * 是否允许同时选中多项
-		 * @member egret.List#allowMultipleSelection
+		 * @member egret.gui.List#allowMultipleSelection
 		 */
 		public get allowMultipleSelection():boolean{
 			return this._allowMultipleSelection;
@@ -87,7 +87,7 @@ module egret.gui {
 		private _proposedSelectedIndices:Array<number>;
 		/**
 		 * 当前选中的一个或多个项目的索引列表
-		 * @member egret.List#selectedIndices
+		 * @member egret.gui.List#selectedIndices
 		 */		
 		public get selectedIndices():Array<number>{
 			if(this._proposedSelectedIndices)
@@ -99,7 +99,7 @@ module egret.gui {
 			this._setSelectedIndices(value, false);
 		}
 		/**
-		 * @member egret.List#selectedIndex
+		 * @member egret.gui.List#selectedIndex
 		 */
 		public get selectedIndex():number{
 			if(this._proposedSelectedIndices){
@@ -116,7 +116,7 @@ module egret.gui {
 		
 		/**
 		 * 当前选中的一个或多个项目的数据源列表
-		 * @member egret.List#selectedItems
+		 * @member egret.gui.List#selectedItems
 		 */		
 		public get selectedItems():Array<Object>{
 			var result:Array<Object> = [];
@@ -165,7 +165,7 @@ module egret.gui {
 		}
 
 		/**
-		 * @method egret.List#commitProperties
+		 * @method egret.gui.List#commitProperties
 		 */
 		public commitProperties():void{
 			super.commitProperties();
@@ -174,7 +174,7 @@ module egret.gui {
 			}
 		}
 		/**
-		 * @method egret.List#commitSelection
+		 * @method egret.gui.List#commitSelection
 		 * @param dispatchChangedEvents {boolean} 
 		 * @returns {boolean}
 		 */
@@ -238,7 +238,7 @@ module egret.gui {
 		}
 		/**
 		 * 提交多项选中项属性
-		 * @method egret.List#commitMultipleSelection
+		 * @method egret.gui.List#commitMultipleSelection
 		 */
 		public commitMultipleSelection():void{
 			var removedItems:Array<number> = [];
@@ -292,7 +292,7 @@ module egret.gui {
 		}
 
 		/**
-		 * @method egret.List#dataGroup_rendererAddHandler
+		 * @method egret.gui.List#dataGroup_rendererAddHandler
 		 * @param event {RendererExistenceEvent} 
 		 */
 		public dataGroup_rendererAddHandler(event:RendererExistenceEvent):void{
@@ -309,7 +309,7 @@ module egret.gui {
 		}
 
 		/**
-		 * @method egret.List#dataGroup_rendererRemoveHandler
+		 * @method egret.gui.List#dataGroup_rendererRemoveHandler
 		 * @param event {RendererExistenceEvent} 
 		 */
 		public dataGroup_rendererRemoveHandler(event:RendererExistenceEvent):void{
@@ -330,7 +330,7 @@ module egret.gui {
 		private mouseDownItemRenderer:IItemRenderer;
 		/**
 		 * 鼠标在项呈示器上按下
-		 * @method egret.List#item_mouseDownHandler
+		 * @method egret.gui.List#item_mouseDownHandler
 		 * @param event {TouchEvent} 
 		 */
 		public item_mouseDownHandler(event:TouchEvent):void{

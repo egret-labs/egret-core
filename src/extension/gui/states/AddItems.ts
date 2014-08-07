@@ -29,36 +29,36 @@
 module egret.gui {
 
 	/**
-	 * @class egret.AddItems
+	 * @class egret.gui.AddItems
 	 * @classdesc
 	 * 添加显示元素
-	 * @extends egret.OverrideBase
+	 * @extends egret.gui.OverrideBase
 	 */	
 	export class AddItems extends OverrideBase {
 		/**
 		 * 添加父级容器的底层
-		 * @constant egret.AddItems.FIRST
+		 * @constant egret.gui.AddItems.FIRST
 		 */		
 		public static FIRST:string = "first";
 		/**
 		 * 添加在父级容器的顶层 
-		 * @constant egret.AddItems.LAST
+		 * @constant egret.gui.AddItems.LAST
 		 */		
 		public static LAST:string = "last";
 		/**
 		 * 添加在相对对象之前 
-		 * @constant egret.AddItems.BEFORE
+		 * @constant egret.gui.AddItems.BEFORE
 		 */		
 		public static BEFORE:string = "before";
 		/**
 		 * 添加在相对对象之后 
-		 * @constant egret.AddItems.AFTER
+		 * @constant egret.gui.AddItems.AFTER
 		 */		
 		public static AFTER:string = "after";
 		
 		/**
 		 * 构造函数
-		 * @method egret.AddItems#constructor
+		 * @method egret.gui.AddItems#constructor
 		 */		
 		public constructor(target:string,propertyName:string,position:string,relativeTo:string){
 			super();
@@ -70,30 +70,30 @@ module egret.gui {
 		
 		/**
 		 * 要添加到的属性 
-		 * @member egret.AddItems#propertyName
+		 * @member egret.gui.AddItems#propertyName
 		 */		
 		public propertyName:string = "";
 		
 		/**
 		 * 添加的位置 
-		 * @member egret.AddItems#position
+		 * @member egret.gui.AddItems#position
 		 */		
 		public position:string = AddItems.LAST;
 		
 		/**
 		 * 相对的显示元素的实例名
-		 * @member egret.AddItems#relativeTo
+		 * @member egret.gui.AddItems#relativeTo
 		 */		
 		public relativeTo:string;
 		
 		/**
 		 * 目标实例名
-		 * @member egret.AddItems#target
+		 * @member egret.gui.AddItems#target
 		 */		
 		public target:string;
 		
 		/**
-		 * @method egret.AddItems#initialize
+		 * @method egret.gui.AddItems#initialize
 		 * @param parent {IStateClient} 
 		 */
 		public initialize(parent:IStateClient):void{
@@ -111,7 +111,7 @@ module egret.gui {
 		}
 		
 		/**
-		 * @method egret.AddItems#apply
+		 * @method egret.gui.AddItems#apply
 		 * @param parent {IContainer} 
 		 */
 		public apply(parent:IContainer):void{
@@ -146,7 +146,7 @@ module egret.gui {
 		}
 		
 		/**
-		 * @method egret.AddItems#remove
+		 * @method egret.gui.AddItems#remove
 		 * @param parent {IContainer} 
 		 */
 		public remove(parent:IContainer):void{

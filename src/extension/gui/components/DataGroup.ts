@@ -29,23 +29,23 @@
 module egret.gui {
 
 	/**
-	 * @class egret.DataGroup
+	 * @class egret.gui.DataGroup
 	 * @classdesc
 	 * 数据项目的容器基类
 	 * 将数据项目转换为可视元素以进行显示。
-	 * @extends egret.GroupBase
+	 * @extends egret.gui.GroupBase
 	 */
 	export class DataGroup extends GroupBase{
 		/**
 		 * 构造函数
-		 * @method egret.DataGroup#constructor
+		 * @method egret.gui.DataGroup#constructor
 		 */		
 		public constructor(){
 			super();
 		}
 
 		/**
-		 * @method egret.DataGroup.defaultRendererFactory
+		 * @method egret.gui.DataGroup.defaultRendererFactory
 		 * @param ClassFactory {any} 
 		 */
         public static defaultRendererFactory:ClassFactory = new ClassFactory(ItemRenderer);
@@ -57,7 +57,7 @@ module egret.gui {
 		private useVirtualLayoutChanged:boolean = false;
 
 		/**
-		 * @member egret.DataGroup#layout
+		 * @member egret.gui.DataGroup#layout
 		 */
         public get layout():LayoutBase{
             return this._layout;
@@ -96,7 +96,7 @@ module egret.gui {
 		private virtualRendererIndices:Array<number>;
 		
 		/**
-		 * @method egret.DataGroup#setVirtualElementIndicesInView
+		 * @method egret.gui.DataGroup#setVirtualElementIndicesInView
 		 * @param startIndex {number} 
 		 * @param endIndex {number} 
 		 */
@@ -116,7 +116,7 @@ module egret.gui {
 		}
 		
 		/**
-		 * @method egret.DataGroup#getVirtualElementAt
+		 * @method egret.gui.DataGroup#getVirtualElementAt
 		 * @param index {number} 
 		 * @returns {IVisualElement}
 		 */
@@ -175,7 +175,7 @@ module egret.gui {
 		private createNewRendererFlag:boolean = false;
 		
 		/**
-		 * @method egret.DataGroup#invalidateSize
+		 * @method egret.gui.DataGroup#invalidateSize
 		 */
 		public invalidateSize():void{
 			if(!this.createNewRendererFlag)//虚拟布局时创建子项不需要重新验证
@@ -287,7 +287,7 @@ module egret.gui {
 		}
 		
 		/**
-		 * @method egret.DataGroup#getElementIndicesInView
+		 * @method egret.gui.DataGroup#getElementIndicesInView
 		 * @returns {number}
 		 */
 		public getElementIndicesInView():Array<number>{
@@ -311,7 +311,7 @@ module egret.gui {
 		private _dataProvider:ICollection;
 		/**
 		 * 列表数据源，请使用实现了ICollection接口的数据类型，例如ArrayCollection
-		 * @member egret.DataGroup#dataProvider
+		 * @member egret.gui.DataGroup#dataProvider
 		 */
 		public get dataProvider():ICollection{
 			return this._dataProvider;
@@ -536,7 +536,7 @@ module egret.gui {
 		/**
 		 * 用于数据项目的项呈示器。该类必须实现 IItemRenderer 接口。<br/>
 		 * rendererClass获取顺序：itemRendererFunction > itemRenderer > 默认ItemRenerer。
-		 * @member egret.DataGroup#itemRenderer
+		 * @member egret.gui.DataGroup#itemRenderer
 		 */
 		public get itemRenderer():IFactory{
 			return this._itemRenderer;
@@ -559,7 +559,7 @@ module egret.gui {
 		/**
 		 * 条目渲染器的可选皮肤标识符。在实例化itemRenderer时，若其内部没有设置过skinName,则将此属性的值赋值给它的skinName。
 		 * 注意:若itemRenderer不是ISkinnableClient，则此属性无效。
-		 * @member egret.DataGroup#itemRendererSkinName
+		 * @member egret.gui.DataGroup#itemRendererSkinName
 		 */
 		public get itemRendererSkinName():any{
 			return this._itemRendererSkinName;
@@ -581,7 +581,7 @@ module egret.gui {
 		 * rendererClass获取顺序：itemRendererFunction > itemRenderer > 默认ItemRenerer。<br/>
 		 * 应该定义一个与此示例函数类似的呈示器函数： <br/>
 		 * function myItemRendererFunction(item:Object):IFactory
-		 * @member egret.DataGroup#itemRendererFunction
+		 * @member egret.gui.DataGroup#itemRendererFunction
 		 */		
 		public get itemRendererFunction():Function{
 			return this._itemRendererFunction;
@@ -614,7 +614,7 @@ module egret.gui {
 		}
 		
 		/**
-		 * @method egret.DataGroup#createChildren
+		 * @method egret.gui.DataGroup#createChildren
          * 设置默认的ItemRenderer
 		 * @private
 		 *
@@ -631,7 +631,7 @@ module egret.gui {
 		
 		
 		/**
-		 * @method egret.DataGroup#commitProperties
+		 * @method egret.gui.DataGroup#commitProperties
 		 */
 		public commitProperties():void{
 			if(this.itemRendererChanged||this.dataProviderChanged||this.useVirtualLayoutChanged){
@@ -685,7 +685,7 @@ module egret.gui {
 		}
 		
 		/**
-		 * @method egret.DataGroup#measure
+		 * @method egret.gui.DataGroup#measure
 		 */
 		public measure():void{
 			if(this.layout&&this.layout.useVirtualLayout){
@@ -700,7 +700,7 @@ module egret.gui {
 		private virtualLayoutUnderway:boolean = false;
 		
 		/**
-		 * @method egret.DataGroup#updateDisplayList
+		 * @method egret.gui.DataGroup#updateDisplayList
 		 * @param unscaledWidth {number} 
 		 * @param unscaledHeight {number} 
 		 */
@@ -829,7 +829,7 @@ module egret.gui {
 		
 		/**
 		 * 更新项呈示器
-		 * @method egret.DataGroup#updateRenderer
+		 * @method egret.gui.DataGroup#updateRenderer
 		 * @param renderer {IItemRenderer} 
 		 * @param itemIndex {number} 
 		 * @param data {any} 
@@ -857,7 +857,7 @@ module egret.gui {
 		/**
 		 * 返回可在项呈示器中显示的 String。
 		 * 若DataGroup被作为SkinnableDataContainer的皮肤组件,此方法将不会执行，被SkinnableDataContainer.itemToLabel()所替代。 
-		 * @method egret.DataGroup#itemToLabel
+		 * @method egret.gui.DataGroup#itemToLabel
 		 * @param item {any} 
 		 * @returns {string}
 		 */		
@@ -868,7 +868,7 @@ module egret.gui {
 		}
 		
 		/**
-		 * @method egret.DataGroup#getElementAt
+		 * @method egret.gui.DataGroup#getElementAt
 		 * @param index {number} 
 		 * @returns {IVisualElement}
 		 */
@@ -877,7 +877,7 @@ module egret.gui {
 		}
 		
 		/**
-		 * @method egret.DataGroup#getElementIndex
+		 * @method egret.gui.DataGroup#getElementIndex
 		 * @param element {IVisualElement} 
 		 * @returns {number}
 		 */
@@ -888,7 +888,7 @@ module egret.gui {
 		}
 		
 		/**
-		 * @member egret.DataGroup#numElements
+		 * @member egret.gui.DataGroup#numElements
 		 */
 		public get numElements():number{
 			if(!this._dataProvider)
@@ -898,7 +898,7 @@ module egret.gui {
 		
 		private static errorStr:string = "在此组件中不可用，若此组件为容器类，请使用";
 		/**
-		 * @method egret.DataGroup#addChild
+		 * @method egret.gui.DataGroup#addChild
 		 * @deprecated
 		 * @param child {DisplayObject} 
 		 * @returns {DisplayObject}
@@ -907,7 +907,7 @@ module egret.gui {
 			throw(new Error("addChild()"+DataGroup.errorStr+"addElement()代替"));
 		}
 		/**
-		 * @method egret.DataGroup#addChildAt
+		 * @method egret.gui.DataGroup#addChildAt
 		 * @deprecated
 		 * @param child {DisplayObject} 
 		 * @param index {number} 
@@ -917,7 +917,7 @@ module egret.gui {
 			throw(new Error("addChildAt()"+DataGroup.errorStr+"addElementAt()代替"));
 		}
 		/**
-		 * @method egret.DataGroup#removeChild
+		 * @method egret.gui.DataGroup#removeChild
 		 * @deprecated
 		 * @param child {DisplayObject} 
 		 * @returns {DisplayObject}
@@ -926,7 +926,7 @@ module egret.gui {
 			throw(new Error("removeChild()"+DataGroup.errorStr+"removeElement()代替"));
 		}
 		/**
-		 * @method egret.DataGroup#removeChildAt
+		 * @method egret.gui.DataGroup#removeChildAt
 		 * @deprecated
 		 * @param index {number} 
 		 * @returns {DisplayObject}
@@ -935,7 +935,7 @@ module egret.gui {
 			throw(new Error("removeChildAt()"+DataGroup.errorStr+"removeElementAt()代替"));
 		}
 		/**
-		 * @method egret.DataGroup#setChildIndex
+		 * @method egret.gui.DataGroup#setChildIndex
 		 * @deprecated
 		 * @param child {DisplayObject} 
 		 * @param index {number} 
@@ -944,7 +944,7 @@ module egret.gui {
 			throw(new Error("setChildIndex()"+DataGroup.errorStr+"setElementIndex()代替"));
 		}
 		/**
-		 * @method egret.DataGroup#swapChildren
+		 * @method egret.gui.DataGroup#swapChildren
 		 * @deprecated
 		 * @param child1 {DisplayObject} 
 		 * @param child2 {DisplayObject} 
@@ -953,7 +953,7 @@ module egret.gui {
 			throw(new Error("swapChildren()"+DataGroup.errorStr+"swapElements()代替"));
 		}
 		/**
-		 * @method egret.DataGroup#swapChildrenAt
+		 * @method egret.gui.DataGroup#swapChildrenAt
 		 * @deprecated
 		 * @param index1 {number} 
 		 * @param index2 {number} 

@@ -28,20 +28,20 @@
 module egret.gui {
 
 	/**
-	 * @class egret.TileOrientation
+	 * @class egret.gui.TileOrientation
 	 * @classdesc
 	 * TileOrientation 类为 TileLayout 类的 orientation 属性定义可能的值。
 	 */
 	export class TileOrientation{
 		/**
 		 * 逐行排列元素。 
-		 * @constant egret.TileOrientation.ROWS
+		 * @constant egret.gui.TileOrientation.ROWS
 		 */		
 		public static ROWS:string = "rows";
 		
 		/**
 		 * 逐列排列元素。
-		 * @constant egret.TileOrientation.COLUMNS
+		 * @constant egret.gui.TileOrientation.COLUMNS
 		 */
 		public static COLUMNS:string = "columns";
 	}

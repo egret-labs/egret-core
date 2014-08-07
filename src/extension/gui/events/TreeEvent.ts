@@ -29,7 +29,7 @@
 module egret.gui {
 
 	/**
-	 * @class egret.TreeEvent
+	 * @class egret.gui.TreeEvent
 	 * @classdesc
 	 * Tree事件
 	 * @extends egret.Event
@@ -37,22 +37,22 @@ module egret.gui {
 	export class TreeEvent extends Event{
 		/**
 		 * 节点关闭,注意：只有通过交互操作引起的节点关闭才会抛出此事件。
-		 * @constant egret.TreeEvent.ITEM_CLOSE
+		 * @constant egret.gui.TreeEvent.ITEM_CLOSE
 		 */		
 		public static ITEM_CLOSE:string = "itemClose";
 		/**
 		 * 节点打开,注意：只有通过交互操作引起的节点打开才会抛出此事件。
-		 * @constant egret.TreeEvent.ITEM_OPEN
+		 * @constant egret.gui.TreeEvent.ITEM_OPEN
 		 */		
 		public static ITEM_OPEN:string = "itemOpen";
 		/**
 		 * 子节点打开或关闭前一刻分派。可以调用preventDefault()方法阻止节点的状态改变。
-		 * @constant egret.TreeEvent.ITEM_OPENING
+		 * @constant egret.gui.TreeEvent.ITEM_OPENING
 		 */		
 		public static ITEM_OPENING:string = "itemOpening";
 		
 		/**
-		 * @method egret.TreeEvent#constructor
+		 * @method egret.gui.TreeEvent#constructor
 		 * @param type {string} 
 		 * @param bubbles {boolean} 
 		 * @param cancelable {boolean} 
@@ -70,29 +70,29 @@ module egret.gui {
 		
 		/**
 		 * 触发鼠标事件的项呈示器数据源项。
-		 * @member egret.TreeEvent#item
+		 * @member egret.gui.TreeEvent#item
 		 */
 		public item:any;
 		
 		/**
 		 * 触发鼠标事件的项呈示器。 
-		 * @member egret.TreeEvent#itemRenderer
+		 * @member egret.gui.TreeEvent#itemRenderer
 		 */		
 		public itemRenderer:ITreeItemRenderer;
 		/**
 		 * 触发鼠标事件的项索引
-		 * @member egret.TreeEvent#itemIndex
+		 * @member egret.gui.TreeEvent#itemIndex
 		 */		
 		public itemIndex:number;
 		/**
 		 * 当事件类型为ITEM_OPENING时，true表示即将打开节点，反之关闭。
-		 * @member egret.TreeEvent#opening
+		 * @member egret.gui.TreeEvent#opening
 		 */		
 		public opening:boolean;
 
         /**
          * 使用指定的EventDispatcher对象来抛出事件对象。抛出的对象将会缓存在对象池上，供下次循环复用。
-         * @method egret.TreeEvent.dispatchTreeEvent
+         * @method egret.gui.TreeEvent.dispatchTreeEvent
          */
         public static dispatchTreeEvent(target:IEventDispatcher,type:string,itemIndex:number = -1,
                                          item:any = null,itemRenderer:ITreeItemRenderer = null,opening:boolean=false):void{

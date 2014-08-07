@@ -29,7 +29,7 @@
 module egret.gui {
 
 	/**
-	 * @class egret.RadioButtonGroup
+	 * @class egret.gui.RadioButtonGroup
 	 * @classdesc
 	 * 单选按钮组
 	 * @extends egret.EventDispatcher
@@ -37,7 +37,7 @@ module egret.gui {
 	export class RadioButtonGroup extends EventDispatcher{
 		/**
 		 * 构造函数
-		 * @method egret.RadioButtonGroup#constructor
+		 * @method egret.gui.RadioButtonGroup#constructor
 		 */		
 		public constructor(){
 			super();
@@ -48,7 +48,7 @@ module egret.gui {
 		private static groupCount:number = 0;
 		/**
 		 * 组名
-		 * @member egret.RadioButtonGroup#_name
+		 * @member egret.gui.RadioButtonGroup#_name
 		 */		
 		public _name:string;
 		/**
@@ -59,7 +59,7 @@ module egret.gui {
 		private _enabled:boolean = true;
 		/**
 		 * 组件是否可以接受用户交互。默认值为true。设置此属性将影响组内所有单选按钮。
-		 * @member egret.RadioButtonGroup#enabled
+		 * @member egret.gui.RadioButtonGroup#enabled
 		 */	
 		public get enabled():boolean{
 			return this._enabled;
@@ -74,7 +74,7 @@ module egret.gui {
 		}
 		/**
 		 * 组内单选按钮数量
-		 * @member egret.RadioButtonGroup#numRadioButtons
+		 * @member egret.gui.RadioButtonGroup#numRadioButtons
 		 */		
 		public get numRadioButtons():number{
 			return this.radioButtons.length;
@@ -83,7 +83,7 @@ module egret.gui {
 		private _selectedValue:any;
 		/**
 		 * 当前被选中的单选按钮的value属性值。注意，此属性仅当目标RadioButton在显示列表时有效。
-		 * @member egret.RadioButtonGroup#selectedValue
+		 * @member egret.gui.RadioButtonGroup#selectedValue
 		 */		
 		public get selectedValue():any{
 			if (this.selection){
@@ -116,7 +116,7 @@ module egret.gui {
 		private _selection:RadioButton;
 		/**
 		 * 当前被选中的单选按钮引用,注意，此属性仅当目标RadioButton在显示列表时有效。
-		 * @member egret.RadioButtonGroup#selection
+		 * @member egret.gui.RadioButtonGroup#selection
 		 */		
 		public get selection():RadioButton{
 			return this._selection;
@@ -128,7 +128,7 @@ module egret.gui {
 		}
 		/**
 		 * 获取指定索引的单选按钮
-		 * @method egret.RadioButtonGroup#getRadioButtonAt
+		 * @method egret.gui.RadioButtonGroup#getRadioButtonAt
 		 * @param index {number} 单选按钮的索引
 		 * @returns {RadioButton}
 		 */		
@@ -140,7 +140,7 @@ module egret.gui {
 		}
 		/**
 		 * 添加单选按钮到组内
-		 * @method egret.RadioButtonGroup#_addInstance
+		 * @method egret.gui.RadioButtonGroup#_addInstance
 		 * @param instance {RadioButton} 
 		 */
 		public _addInstance(instance:RadioButton):void{
@@ -197,7 +197,7 @@ module egret.gui {
 		}
 		/**
 		 * 从组里移除单选按钮
-		 * @method egret.RadioButtonGroup#_removeInstance
+		 * @method egret.gui.RadioButtonGroup#_removeInstance
 		 * @param instance {RadioButton} 
 		 */		
 		public _removeInstance(instance:RadioButton):void{
@@ -236,7 +236,7 @@ module egret.gui {
 		}
 		/**
 		 * 设置选中的单选按钮
-		 * @method egret.RadioButtonGroup#_setSelection
+		 * @method egret.gui.RadioButtonGroup#_setSelection
 		 * @param value {RadioButton} 
 		 * @param fireChange {boolean} 
 		 */		

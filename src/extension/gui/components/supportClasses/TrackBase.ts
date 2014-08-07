@@ -29,14 +29,14 @@
 module egret.gui {
 
 	/**
-	 * @class egret.TrackBase
+	 * @class egret.gui.TrackBase
 	 * @classdesc
 	 * TrackBase类是具有一个轨道和一个或多个滑块按钮的组件的一个基类，如 Slider 和 ScrollBar。
-	 * @extends egret.Range
+	 * @extends egret.gui.Range
 	 */	
 	export class TrackBase extends Range{
 		/**
-		 * @method egret.TrackBase#constructor
+		 * @method egret.gui.TrackBase#constructor
 		 */
 		public constructor(){
 			super();
@@ -53,7 +53,7 @@ module egret.gui {
 		 * 未按下 Shift 键时单击 ScrollBar 轨道将导致出现分页行为。<br/>
 		 * 按住 Shift 键并单击时，必须也对 ScrollBar 设置 smoothScrolling 属性才可以实现动画行为。<br/>
 		 * 此持续时间是整个滑过轨道的总时间，实际滚动会根据距离相应缩短。
-		 * @member egret.TrackBase#slideDuration
+		 * @member egret.gui.TrackBase#slideDuration
 		 */		
 		public get slideDuration():number{
 			return this._slideDuration;
@@ -66,19 +66,19 @@ module egret.gui {
 		
 		/**
 		 * [SkinPart]实体滑块组件
-		 * @member egret.TrackBase#thumb
+		 * @member egret.gui.TrackBase#thumb
 		 */		
 		public thumb:Button;
 		
 		/**
 		 * [SkinPart]实体轨道组件
-		 * @member egret.TrackBase#track
+		 * @member egret.gui.TrackBase#track
 		 */
 		public track:Button;
 
         /**
          * 最大有效值
-		 * @member egret.TrackBase#maximum
+		 * @member egret.gui.TrackBase#maximum
          */
         public get maximum():number {
             return this._maximum;
@@ -95,7 +95,7 @@ module egret.gui {
 		}
         /**
          * 最小有效值
-		 * @member egret.TrackBase#minimum
+		 * @member egret.gui.TrackBase#minimum
          */
         public get minimum():number {
             return this._minimum;
@@ -113,7 +113,7 @@ module egret.gui {
 		}
         /**
          * 此范围的当前值。
-		 * @member egret.TrackBase#value
+		 * @member egret.gui.TrackBase#value
          */
         public get value():number {
             return this._getValue();
@@ -130,7 +130,7 @@ module egret.gui {
 		}
 		
 		/**
-		 * @method egret.TrackBase#setValue
+		 * @method egret.gui.TrackBase#setValue
 		 * @param value {number} 
 		 */
 		public setValue(value:number):void{
@@ -140,7 +140,7 @@ module egret.gui {
 		
 		/**
 		 * 将相对于轨道的 x,y 像素位置转换为介于最小值和最大值（包括两者）之间的一个值。 
-		 * @method egret.TrackBase#pointToValue
+		 * @method egret.gui.TrackBase#pointToValue
 		 * @param x {number} 相对于轨道原点的位置的x坐标。
 		 * @param y {number} 相对于轨道原点的位置的y坐标。
 		 * @returns {number}
@@ -151,7 +151,7 @@ module egret.gui {
 		
 		
 		/**
-		 * @method egret.TrackBase#changeValueByStep
+		 * @method egret.gui.TrackBase#changeValueByStep
 		 * @param increase {boolean} 
 		 */
 		public changeValueByStep(increase:boolean = true):void{
@@ -164,7 +164,7 @@ module egret.gui {
 		}
 		
 		/**
-		 * @method egret.TrackBase#partAdded
+		 * @method egret.gui.TrackBase#partAdded
 		 * @param partName {string} 
 		 * @param instance {any} 
 		 */
@@ -184,7 +184,7 @@ module egret.gui {
 		}
 		
 		/**
-		 * @method egret.TrackBase#partRemoved
+		 * @method egret.gui.TrackBase#partRemoved
 		 * @param partName {string} 
 		 * @param instance {any} 
 		 */
@@ -203,7 +203,7 @@ module egret.gui {
 		}
 		
 		/**
-		 * @method egret.TrackBase#updateDisplayList
+		 * @method egret.gui.TrackBase#updateDisplayList
 		 * @param w {number} 
 		 * @param h {number} 
 		 */
@@ -221,7 +221,7 @@ module egret.gui {
 		/**
 		 * 更新皮肤部件（通常为滑块）的大小和可见性。<br/>
 		 * 子类覆盖此方法以基于 minimum、maximum 和 value 属性更新滑块的大小、位置和可见性。 
-		 * @method egret.TrackBase#updateSkinDisplayList
+		 * @method egret.gui.TrackBase#updateSkinDisplayList
 		 */		
 		public updateSkinDisplayList():void {
 		}
@@ -257,7 +257,7 @@ module egret.gui {
 		
 		/**
 		 * 滑块按下事件
-		 * @method egret.TrackBase#thumb_mouseDownHandler
+		 * @method egret.gui.TrackBase#thumb_mouseDownHandler
 		 * @param event {TouchEvent} 
 		 */		
 		public thumb_mouseDownHandler(event:TouchEvent):void{        
@@ -290,7 +290,7 @@ module egret.gui {
 		
 		/**
 		 * 当thumb被拖动时更新值，此方法每帧只被调用一次，比直接在鼠标移动事件里更新性能更高。
-		 * @method egret.TrackBase#updateWhenMouseMove
+		 * @method egret.gui.TrackBase#updateWhenMouseMove
 		 */		
 		public updateWhenMouseMove():void{
 			if(!this.track)
@@ -312,7 +312,7 @@ module egret.gui {
 
 		/**
 		 * 鼠标移动事件
-		 * @method egret.TrackBase#stage_mouseMoveHandler
+		 * @method egret.gui.TrackBase#stage_mouseMoveHandler
 		 * @param event {TouchEvent} 
 		 */		
 		public stage_mouseMoveHandler(event:TouchEvent):void{
@@ -325,7 +325,7 @@ module egret.gui {
 		
 		/**
 		 * 鼠标弹起事件
-		 * @method egret.TrackBase#stage_mouseUpHandler
+		 * @method egret.gui.TrackBase#stage_mouseUpHandler
 		 * @param event {Event} 
 		 */		
 		public stage_mouseUpHandler(event:Event):void{
@@ -349,7 +349,7 @@ module egret.gui {
 		
 		/**
 		 * 轨道被按下事件
-		 * @method egret.TrackBase#track_mouseDownHandler
+		 * @method egret.gui.TrackBase#track_mouseDownHandler
 		 * @param event {TouchEvent} 
 		 */		
 		public track_mouseDownHandler(event:TouchEvent):void { 

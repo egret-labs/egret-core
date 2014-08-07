@@ -28,26 +28,26 @@
 module egret.gui {
 
 	/**
-	 * @class egret.ColumnAlign
+	 * @class egret.gui.ColumnAlign
 	 * @classdesc
 	 * ColumnAlign 类为 TileLayout 类的 columnAlign 属性定义可能的值。
 	 */
 	export class ColumnAlign{
 		/**
 		 * 不将行两端对齐。 
-		 * @constant egret.ColumnAlign.LEFT
+		 * @constant egret.gui.ColumnAlign.LEFT
 		 */		
 		public static LEFT:string = "left";
 		
 		/**
 		 * 通过增大水平间隙将行两端对齐。
-		 * @constant egret.ColumnAlign.JUSTIFY_USING_GAP
+		 * @constant egret.gui.ColumnAlign.JUSTIFY_USING_GAP
 		 */
 		public static JUSTIFY_USING_GAP:string = "justifyUsingGap";
 		
 		/**
 		 * 通过增大行高度将行两端对齐。 
-		 * @constant egret.ColumnAlign.JUSTIFY_USING_WIDTH
+		 * @constant egret.gui.ColumnAlign.JUSTIFY_USING_WIDTH
 		 */		
 		public static JUSTIFY_USING_WIDTH:string = "justifyUsingWidth";
 	}

@@ -29,15 +29,15 @@
 module egret.gui {
 
 	/**
-	 * @class egret.UILayer
+	 * @class egret.gui.UILayer
 	 * @classdesc
 	 * UIStage的虚拟子容器
-	 * @implements egret.IContainer
+	 * @implements egret.gui.IContainer
 	 */
 	export class UILayer implements IContainer{
 		/**
 		 * 构造函数
-		 * @method egret.UILayer#constructor
+		 * @method egret.gui.UILayer#constructor
 		 * @param owner {IUIStage} 
 		 * @param lowerBoundReference {string} 
 		 * @param upperBoundReference {strin} 
@@ -64,7 +64,7 @@ module egret.gui {
 		 */		
 		private upperBoundReference:string;
 		/**
-		 * @member egret.UILayer#numElements
+		 * @member egret.gui.UILayer#numElements
 		 */
 		public get numElements():number{
 			return this.owner[this.upperBoundReference] - this.owner[this.lowerBoundReference];
@@ -77,7 +77,7 @@ module egret.gui {
 		private raw_removeElementAt:string = "raw_removeElementAt";
 		private raw_setElementIndex:string = "raw_setElementIndex";
 		/**
-		 * @method egret.UILayer#getElementAt
+		 * @method egret.gui.UILayer#getElementAt
 		 * @param index {number} 
 		 * @returns {IVisualElement}
 		 */
@@ -88,7 +88,7 @@ module egret.gui {
 			return retval;
 		}
 		/**
-		 * @method egret.UILayer#addElement
+		 * @method egret.gui.UILayer#addElement
 		 * @param element {IVisualElement} 
 		 * @returns {IVisualElement}
 		 */
@@ -102,7 +102,7 @@ module egret.gui {
 			return element;
 		}
 		/**
-		 * @method egret.UILayer#addElementAt
+		 * @method egret.gui.UILayer#addElementAt
 		 * @param element {IVisualElement} 
 		 * @param index {number} 
 		 * @returns {IVisualElement}
@@ -115,7 +115,7 @@ module egret.gui {
 			return element;
 		}
 		/**
-		 * @method egret.UILayer#removeElement
+		 * @method egret.gui.UILayer#removeElement
 		 * @param element {IVisualElement} 
 		 * @returns {IVisualElement}
 		 */
@@ -130,7 +130,7 @@ module egret.gui {
 			return element;
 		}
 		/**
-		 * @method egret.UILayer#removeElementAt
+		 * @method egret.gui.UILayer#removeElementAt
 		 * @param index {number} 
 		 * @returns {IVisualElement}
 		 */
@@ -146,7 +146,7 @@ module egret.gui {
 			return element;
 		}
 		/**
-		 * @method egret.UILayer#getElementIndex
+		 * @method egret.gui.UILayer#getElementIndex
 		 * @param element {IVisualElement} 
 		 * @returns {number}
 		 */
@@ -156,7 +156,7 @@ module egret.gui {
 			return retval;
 		}
 		/**
-		 * @method egret.UILayer#setElementIndex
+		 * @method egret.gui.UILayer#setElementIndex
 		 * @param element {IVisualElement} 
 		 * @param index {number} 
 		 */

@@ -29,7 +29,7 @@
 module egret.gui {
 
 	/**
-	 * @class egret.ListEvent
+	 * @class egret.gui.ListEvent
 	 * @classdesc
 	 * 列表事件
 	 * @extends egret.TouchEvent
@@ -37,25 +37,25 @@ module egret.gui {
 	export class ListEvent extends TouchEvent{
 		/**
 		 * 指示用户执行了将鼠标指针从控件中某个项呈示器上移开的操作 
-		 * @constant egret.ListEvent.ITEM_ROLL_OUT
+		 * @constant egret.gui.ListEvent.ITEM_ROLL_OUT
 		 */		
 		public static ITEM_ROLL_OUT:string = "itemRollOut";
 		
 		/**
 		 * 指示用户执行了将鼠标指针滑过控件中某个项呈示器的操作。 
-		 * @constant egret.ListEvent.ITEM_ROLL_OVER
+		 * @constant egret.gui.ListEvent.ITEM_ROLL_OVER
 		 */
 		public static ITEM_ROLL_OVER:string = "itemRollOver";
 		
 		/**
 		 * 指示用户执行了将鼠标在某个项呈示器上单击的操作。 
-		 * @constant egret.ListEvent.ITEM_CLICK
+		 * @constant egret.gui.ListEvent.ITEM_CLICK
 		 */		
 		public static ITEM_CLICK:string = "itemClick";
 		
 		
 		/**
-		 * @method egret.ListEvent#constructor
+		 * @method egret.gui.ListEvent#constructor
 		 * @param type {string} 
 		 * @param bubbles {boolean} 
 		 * @param cancelable {boolean} 
@@ -84,25 +84,25 @@ module egret.gui {
 		
 		/**
 		 * 触发鼠标事件的项呈示器数据源项。
-		 * @member egret.ListEvent#item
+		 * @member egret.gui.ListEvent#item
 		 */
 		public item:any;
 		
 		/**
 		 * 触发鼠标事件的项呈示器。 
-		 * @member egret.ListEvent#itemRenderer
+		 * @member egret.gui.ListEvent#itemRenderer
 		 */		
 		public itemRenderer:IItemRenderer;
 		
 		/**
 		 * 触发鼠标事件的项索引
-		 * @member egret.ListEvent#itemIndex
+		 * @member egret.gui.ListEvent#itemIndex
 		 */		
 		public itemIndex:number;
 
         /**
          * 使用指定的EventDispatcher对象来抛出事件对象。抛出的对象将会缓存在对象池上，供下次循环复用。
-         * @method egret.ListEvent.dispatchListEvent
+         * @method egret.gui.ListEvent.dispatchListEvent
          */
         public static dispatchListEvent(target:IEventDispatcher,type:string,touchEvent:TouchEvent=null,
                                         itemIndex:number = -1,item:any = null,itemRenderer:IItemRenderer = null):void{

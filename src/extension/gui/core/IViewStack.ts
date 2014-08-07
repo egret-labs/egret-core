@@ -29,7 +29,7 @@
 module egret.gui {
 
 	/**
-	 * @class egret.IViewStack
+	 * @class egret.gui.IViewStack
 	 * @interface
 	 * @classdesc
 	 * 层级堆叠容器接口
@@ -37,13 +37,13 @@ module egret.gui {
 	export interface IViewStack{
 		/**
 		 * 当前可见子元素的索引。索引从0开始。
-		 * @member egret.IViewStack#selectedIndex
+		 * @member egret.gui.IViewStack#selectedIndex
 		 */			
 		selectedIndex:number;
 		
 		/**
 		 * 当前可见的子元素。
-		 * @member egret.IViewStack#selectedChild
+		 * @member egret.gui.IViewStack#selectedChild
 		 */
 		selectedChild:IVisualElement;
 	}

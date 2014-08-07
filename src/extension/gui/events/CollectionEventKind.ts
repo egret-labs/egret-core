@@ -28,7 +28,7 @@
 module egret.gui {
 
 	/**
-	 * @class egret.CollectionEventKind
+	 * @class egret.gui.CollectionEventKind
 	 * @classdesc
 	 * 定义  CollectionEvent 类 kind 属性的有效值的常量。
 	 * 这些常量指示对集合进行的更改类型。
@@ -36,47 +36,47 @@ module egret.gui {
 	export class CollectionEventKind{
 		/**
 		 * 指示集合添加了一个或多个项目。 
-		 * @constant egret.CollectionEventKind.ADD
+		 * @constant egret.gui.CollectionEventKind.ADD
 		 */		
 		public static ADD:string = "add";
 		/**
 		 * 指示项目已从 CollectionEvent.oldLocation确定的位置移动到 location确定的位置。 
-		 * @constant egret.CollectionEventKind.MOVE
+		 * @constant egret.gui.CollectionEventKind.MOVE
 		 */		
 		public static MOVE:string = "move";
 		/**
 		 * 指示集合应用了排序或/和筛选。
-		 * @constant egret.CollectionEventKind.REFRESH
+		 * @constant egret.gui.CollectionEventKind.REFRESH
 		 */		
 		public static REFRESH:string = "refresh";
 		/**
 		 * 指示集合删除了一个或多个项目。 
-		 * @constant egret.CollectionEventKind.REMOVE
+		 * @constant egret.gui.CollectionEventKind.REMOVE
 		 */		
 		public static REMOVE:string = "remove";
 		/**
 		 * 指示已替换由 CollectionEvent.location 属性确定的位置处的项目。 
-		 * @constant egret.CollectionEventKind.REPLACE
+		 * @constant egret.gui.CollectionEventKind.REPLACE
 		 */		
 		public static REPLACE:string = "replace";
 		/**
 		 * 指示集合已彻底更改，需要进行重置。 
-		 * @constant egret.CollectionEventKind.RESET
+		 * @constant egret.gui.CollectionEventKind.RESET
 		 */		
 		public static RESET:string = "reset";
 		/**
 		 * 指示集合中一个或多个项目进行了更新。受影响的项目将存储在  CollectionEvent.items 属性中。 
-		 * @constant egret.CollectionEventKind.UPDATE
+		 * @constant egret.gui.CollectionEventKind.UPDATE
 		 */		
 		public static UPDATE:string = "update";
 		/**
 		 * 指示集合中某个节点的子项列表已打开，通常应用于Tree的数据源XMLCollection。
-		 * @constant egret.CollectionEventKind.OPEN
+		 * @constant egret.gui.CollectionEventKind.OPEN
 		 */		
 		public static OPEN:string = "open";
 		/**
 		 * 指示集合中某个节点的子项列表已关闭，通常应用于Tree的数据源XMLCollection。
-		 * @constant egret.CollectionEventKind.CLOSE
+		 * @constant egret.gui.CollectionEventKind.CLOSE
 		 */		
 		public static CLOSE:string = "close";
 	}

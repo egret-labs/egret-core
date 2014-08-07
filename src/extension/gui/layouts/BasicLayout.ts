@@ -29,14 +29,14 @@
 module egret.gui {
 
 	/**
-	 * @class egret.BasicLayout
+	 * @class egret.gui.BasicLayout
 	 * @classdesc
 	 * 基本布局
-	 * @extends egret.LayoutBase
+	 * @extends egret.gui.LayoutBase
 	 */
 	export class BasicLayout extends LayoutBase{
 		/**
-		 * @method egret.BasicLayout#constructor
+		 * @method egret.gui.BasicLayout#constructor
 		 */
 		public constructor(){
 			super();
@@ -52,7 +52,7 @@ module egret.gui {
 		/**
 		 * 鼠标滚轮每次滚动时目标容器的verticalScrollPosition
 		 * 或horizontalScrollPosition改变的像素距离。必须大于0， 默认值20。
-		 * @member egret.BasicLayout#mouseWheelSpeed
+		 * @member egret.gui.BasicLayout#mouseWheelSpeed
 		 */
 		public get mouseWheelSpeed():number{
 			return this._mouseWheelSpeed;
@@ -64,7 +64,7 @@ module egret.gui {
 		}
 
 		/**
-		 * @method egret.BasicLayout#getElementBoundsLeftOfScrollRect
+		 * @method egret.gui.BasicLayout#getElementBoundsLeftOfScrollRect
 		 * @param scrollRect {Rectangle} 
 		 * @returns {Rectangle}
 		 */
@@ -75,7 +75,7 @@ module egret.gui {
 			return bounds;
 		}
 		/**
-		 * @method egret.BasicLayout#getElementBoundsRightOfScrollRect
+		 * @method egret.gui.BasicLayout#getElementBoundsRightOfScrollRect
 		 * @param scrollRect {Rectangle} 
 		 * @returns {Rectangle}
 		 */
@@ -86,7 +86,7 @@ module egret.gui {
 			return bounds;
 		}
 		/**
-		 * @method egret.BasicLayout#getElementBoundsAboveScrollRect
+		 * @method egret.gui.BasicLayout#getElementBoundsAboveScrollRect
 		 * @param scrollRect {Rectangle} 
 		 * @returns {Rectangle}
 		 */
@@ -97,7 +97,7 @@ module egret.gui {
 			return bounds;
 		}
 		/**
-		 * @method egret.BasicLayout#getElementBoundsBelowScrollRect
+		 * @method egret.gui.BasicLayout#getElementBoundsBelowScrollRect
 		 * @param scrollRect {Rectangle} 
 		 * @returns {Rectangle}
 		 */
@@ -109,7 +109,7 @@ module egret.gui {
 		}
 
 		/**
-		 * @method egret.BasicLayout#measure
+		 * @method egret.gui.BasicLayout#measure
 		 */
 		public measure():void{
 			super.measure();
@@ -177,7 +177,7 @@ module egret.gui {
 
 
 		/**
-		 * @method egret.BasicLayout#updateDisplayList
+		 * @method egret.gui.BasicLayout#updateDisplayList
 		 * @param unscaledWidth {number} 
 		 * @param unscaledHeight {number} 
 		 */

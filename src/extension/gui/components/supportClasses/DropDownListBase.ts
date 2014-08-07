@@ -29,15 +29,15 @@
 module egret.gui {
 
 	/**
-	 * @class egret.DropDownListBase
+	 * @class egret.gui.DropDownListBase
 	 * @classdesc
 	 * 下拉列表控件基类
-	 * @extends egret.List
+	 * @extends egret.gui.List
 	 */	
 	export class DropDownListBase extends List{
 		/**
 		 * 构造函数
-		 * @method egret.DropDownListBase#constructor
+		 * @method egret.gui.DropDownListBase#constructor
 		 */		
 		public constructor(){
 			super();
@@ -47,18 +47,18 @@ module egret.gui {
 		
 		/**
 		 * [SkinPart]下拉区域显示对象
-		 * @member egret.DropDownListBase#dropDown
+		 * @member egret.gui.DropDownListBase#dropDown
 		 */		
 		public dropDown:DisplayObject;
 		/**
 		 * [SkinPart]下拉触发按钮
-		 * @member egret.DropDownListBase#openButton
+		 * @member egret.gui.DropDownListBase#openButton
 		 */		
 		public openButton:ButtonBase;
 		
 		
 		/**
-		 * @constant egret.DropDownListBase.PAGE_SIZE
+		 * @constant egret.gui.DropDownListBase.PAGE_SIZE
 		 */
 		public static PAGE_SIZE:number = 5;
 		
@@ -104,7 +104,7 @@ module egret.gui {
 		private _dropDownController:DropDownController; 
 		/**
 		 * 下拉控制器
-		 * @member egret.DropDownListBase#dropDownController
+		 * @member egret.gui.DropDownListBase#dropDownController
 		 */		
 		public get dropDownController():DropDownController{
 			return this._dropDownController;
@@ -126,7 +126,7 @@ module egret.gui {
 		}
 		/**
 		 * 下拉列表是否已经已打开
-		 * @member egret.DropDownListBase#isDropDownOpen
+		 * @member egret.gui.DropDownListBase#isDropDownOpen
 		 */		
 		public get isDropDownOpen():boolean{
 			if (this.dropDownController)
@@ -138,7 +138,7 @@ module egret.gui {
 		private _userProposedSelectedIndex:number = ListBase.NO_SELECTION;
 				
 		/**
-		 * @method egret.DropDownListBase#commitProperties
+		 * @method egret.gui.DropDownListBase#commitProperties
 		 */
 		public commitProperties():void{
 			super.commitProperties();
@@ -150,7 +150,7 @@ module egret.gui {
 		}
 		
 		/**
-		 * @method egret.DropDownListBase#partAdded
+		 * @method egret.gui.DropDownListBase#partAdded
 		 * @param partName {string} 
 		 * @param instance {any} 
 		 */
@@ -167,7 +167,7 @@ module egret.gui {
 		}
 		
 		/**
-		 * @method egret.DropDownListBase#partRemoved
+		 * @method egret.gui.DropDownListBase#partRemoved
 		 * @param partName {string} 
 		 * @param instance {any} 
 		 */
@@ -184,7 +184,7 @@ module egret.gui {
 		}
 		
 		/**
-		 * @method egret.DropDownListBase#getCurrentSkinState
+		 * @method egret.gui.DropDownListBase#getCurrentSkinState
 		 * @returns {string}
 		 */
 		public getCurrentSkinState():string{
@@ -192,7 +192,7 @@ module egret.gui {
 		}   
 		
 		/**
-		 * @method egret.DropDownListBase#commitSelection
+		 * @method egret.gui.DropDownListBase#commitSelection
 		 * @param dispatchChangedEvents {boolean} 
 		 * @returns {boolean}
 		 */
@@ -203,7 +203,7 @@ module egret.gui {
 		}
 		
 		/**
-		 * @method egret.DropDownListBase#_isItemIndexSelected
+		 * @method egret.gui.DropDownListBase#_isItemIndexSelected
 		 * @param index {number} 
 		 * @returns {boolean}
 		 */
@@ -212,14 +212,14 @@ module egret.gui {
 		}
 		/**
 		 * 打开下拉列表并抛出UIEvent.OPEN事件。
-		 * @method egret.DropDownListBase#openDropDown
+		 * @method egret.gui.DropDownListBase#openDropDown
 		 */		
 		public openDropDown():void{
 			this.dropDownController.openDropDown();
 		}
 		/**
 		 * 关闭下拉列表并抛出UIEvent.CLOSE事件。
-		 * @method egret.DropDownListBase#closeDropDown
+		 * @method egret.gui.DropDownListBase#closeDropDown
 		 * @param commit {boolean} 
 		 */		
 		public closeDropDown(commit:boolean):void{
@@ -227,7 +227,7 @@ module egret.gui {
 		}
 		/**
 		 * 更新选中项的提示文本
-		 * @method egret.DropDownListBase#updateLabelDisplay
+		 * @method egret.gui.DropDownListBase#updateLabelDisplay
 		 * @param displayItem {any} 
 		 */		
 		public updateLabelDisplay(displayItem:any = undefined):void{
@@ -235,7 +235,7 @@ module egret.gui {
 		}
 		/**
 		 * 改变高亮的选中项
-		 * @method egret.DropDownListBase#_changeHighlightedSelection
+		 * @method egret.gui.DropDownListBase#_changeHighlightedSelection
 		 * @param newIndex {number} 
 		 * @param scrollToTop {boolean} 
 		 */		
@@ -246,7 +246,7 @@ module egret.gui {
 		}
 		
 		/**
-		 * @method egret.DropDownListBase#dataProvider_collectionChangeHandler
+		 * @method egret.gui.DropDownListBase#dataProvider_collectionChangeHandler
 		 * @param event {CollectionEvent} 
 		 */
 		public dataProvider_collectionChangeHandler(event:CollectionEvent):void{       
@@ -257,7 +257,7 @@ module egret.gui {
 		}
 		
 		/**
-		 * @method egret.DropDownListBase#item_mouseDownHandler
+		 * @method egret.gui.DropDownListBase#item_mouseDownHandler
 		 * @param event {TouchEvent} 
 		 */
 		public item_mouseDownHandler(event:TouchEvent):void{
@@ -271,7 +271,7 @@ module egret.gui {
 		}
 		/**
 		 * 控制器抛出打开列表事件
-		 * @method egret.DropDownListBase#_dropDownController_openHandler
+		 * @method egret.gui.DropDownListBase#_dropDownController_openHandler
 		 * @param event {UIEvent} 
 		 */		
 		public _dropDownController_openHandler(event:UIEvent):void{
@@ -281,7 +281,7 @@ module egret.gui {
 		}
 		/**
 		 * 打开列表后组件一次失效验证全部完成
-		 * @method egret.DropDownListBase#_open_updateCompleteHandler
+		 * @method egret.gui.DropDownListBase#_open_updateCompleteHandler
 		 * @param event {UIEvent} 
 		 */		
 		public _open_updateCompleteHandler(event:UIEvent):void{   
@@ -290,7 +290,7 @@ module egret.gui {
 		}
 		/**
 		 * 控制器抛出关闭列表事件
-		 * @method egret.DropDownListBase#dropDownController_closeHandler
+		 * @method egret.gui.DropDownListBase#dropDownController_closeHandler
 		 * @param event {UIEvent} 
 		 */		
 		public dropDownController_closeHandler(event:UIEvent):void{
