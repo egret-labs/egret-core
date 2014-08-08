@@ -7,10 +7,11 @@ var file = require("../core/file.js");
 var param = require("../core/params_analyze.js");
 var code_util = require("../core/code_util.js");
 var path = require("path");
+var globals = require("../core/globals.js");
 function run(currDir, args, opts) {
 
-//    var extensionDir = path.join(param.getEgretPath(),"src");
-    var extensionDir = path.join(currDir,args[0],"src");
+    currDir = globals.joinEgretDir(currDir, args[0]);
+    var extensionDir = path.join(currDir,"src");
     var list = file.search(extensionDir, "ts");
     list.forEach(fixSingleTypeScriptFile);
 
