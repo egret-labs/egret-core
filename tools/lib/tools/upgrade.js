@@ -9,8 +9,8 @@ var code_util = require("../core/code_util.js");
 var path = require("path");
 function run(currDir, args, opts) {
 
-    var extensionDir = path.join(param.getEgretPath(),"src");
-//    var extensionDir = path.join(currDir,"src");
+//    var extensionDir = path.join(param.getEgretPath(),"src");
+    var extensionDir = path.join(currDir,args[0],"src");
     var list = file.search(extensionDir, "ts");
     list.forEach(fixSingleTypeScriptFile);
 

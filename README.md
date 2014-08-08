@@ -1,6 +1,6 @@
-Egret Framework
+Egret Engine
 ================================================
-Current Version: v1.0.2 ( Release Candidate )
+Current Version: v1.0.3 ( 1.0 Final )
 
 
 
