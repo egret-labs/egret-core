@@ -212,6 +212,7 @@ module egret.gui {
 					content.height = unscaledHeight/content.scaleY;
 				}
 			}
+            this._setSizeDirty();
 		}
 
         public _render(renderContext:RendererContext):void {

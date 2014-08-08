@@ -467,7 +467,6 @@ module egret {
          * @param value
          */
         public set width(value:number) {
-            this._setSizeDirty();
             this._setWidth(value);
         }
 
@@ -475,6 +474,7 @@ module egret {
          * @inheritDoc
          */
         public _setWidth(value:number):void {
+            this._setSizeDirty();
             this._explicitWidth = value;
             this._hasWidthSet = NumberUtils.isNumber(value);
         }
@@ -485,7 +485,6 @@ module egret {
          * @param value
          */
         public set height(value:number) {
-            this._setSizeDirty();
             this._setHeight(value);
         }
 
@@ -493,6 +492,7 @@ module egret {
          * @inheritDoc
          */
         public _setHeight(value:number):void {
+            this._setSizeDirty();
             this._explicitHeight = value;
             this._hasHeightSet = NumberUtils.isNumber(value);
         }
@@ -763,7 +763,7 @@ module egret {
 
         public _getSize(resultRect:Rectangle):Rectangle {
             if (this._hasHeightSet && this._hasWidthSet) {
-                return resultRect.initialize(NaN, NaN, this._explicitWidth, this._explicitHeight);
+                return resultRect.initialize(0, 0, this._explicitWidth, this._explicitHeight);
             }
             return this._measureSize(Rectangle.identity);
         }

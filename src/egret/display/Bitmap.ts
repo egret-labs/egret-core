@@ -44,7 +44,8 @@ module egret {
         public constructor(texture?:Texture) {
             super();
             if(texture){
-                this.texture = texture;
+                this._texture = texture;
+                this._setSizeDirty();
             }
         }
 
@@ -60,11 +61,22 @@ module egret {
          */
         public debugColor:number = 0xff0000;
 
+        private _texture:Texture;
         /**
          * 渲染纹理
 		 * @member {egret.Texture} egret.Bitmap#texture
          */
-        public texture:Texture;
+        public get texture():Texture{
+            return this._texture;
+        }
+
+        public set texture(value:Texture){
+            if(value==this._texture){
+                return;
+            }
+            this._setSizeDirty();
+            this._texture = value;
+        }
         /**
          * 矩形区域，它定义位图对象的九个缩放区域。此属性仅当fillMode为BitmapFillMode.SCALE时有效。
          * @member {egret.Texture} egret.Bitmap#scale9Grid
@@ -80,7 +92,7 @@ module egret {
         public fillMode:string = "scale";
 
         public _render(renderContext:RendererContext):void {
-            var texture = this.texture;
+            var texture = this._texture;
             if (!texture) {
                 this._texture_to_render = null;
                 return;
@@ -222,7 +234,7 @@ module egret {
          * @private
          */
         public _measureBounds():egret.Rectangle {
-            var texture:Texture = this.texture;
+            var texture:Texture = this._texture;
             if(!texture){
                 return super._measureBounds();
             }
