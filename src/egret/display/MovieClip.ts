@@ -25,15 +25,6 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-
-/// <reference path="../context/MainContext.ts"/>
-/// <reference path="../context/Ticker.ts"/>
-/// <reference path="Bitmap.ts"/>
-/// <reference path="DisplayObjectContainer.ts"/>
-/// <reference path="SpriteSheet.ts"/>
-/// <reference path="Texture.ts"/>
-/// <reference path="../utils/Logger.ts"/>
-
 module egret {
 
     /**
@@ -44,28 +35,27 @@ module egret {
     export class MovieClip extends DisplayObjectContainer {
 
         private delegate:MovieClipDelegate;
-		/**
-		 * @member {number} egret.MovieClip#frameRate
+        /**
+         * @member {number} egret.MovieClip#frameRate
          * 动画的播放帧频
-		 */
+         */
         public frameRate:number = 60;
 
         constructor(data, texture?:Texture) {
-
             super();
-            if (texture != null && texture instanceof Texture) {
-                Logger.warning("MovieClip#constructor接口参数已经变更，请尽快调整用法为 new MovieClip(new DefaultMovieClipDelegate(data,texture))")
-                this.delegate = new DefaultMovieClipDelegate(data, texture);
-            }
-            else {
+            if (data instanceof DefaultMovieClipDelegate){
+                Logger.warning("MovieClip#constructor接口参数已经变更，请尽快调整用法为 new MovieClip(data,texture)")
                 this.delegate = data;
+            }
+            else{
+                this.delegate = new DefaultMovieClipDelegate(data, texture);
             }
             this.delegate.setMovieClip(this);
         }
 
         /**
          * 播放指定动画
-		 * @method egret.MovieClip#gotoAndPlay
+         * @method egret.MovieClip#gotoAndPlay
          * @param frameName {string} 指定帧的帧名称
 
          */
@@ -75,7 +65,7 @@ module egret {
 
         /**
          * 播放并暂停指定动画
-		 * @method egret.MovieClip#gotoAndStop
+         * @method egret.MovieClip#gotoAndStop
          * @param frameName {string} 指定帧的帧名称
 
          */
@@ -86,15 +76,15 @@ module egret {
 
         /**
          * 暂停动画
-		 * @method egret.MovieClip#stop
+         * @method egret.MovieClip#stop
          */
         public stop() {
             this.delegate.stop();
         }
 
-		/**
-		 * @method egret.MovieClip#dispose
-		 */
+        /**
+         * @method egret.MovieClip#dispose
+         */
         public dispose():void {
             this.delegate.dispose();
 
@@ -102,7 +92,7 @@ module egret {
 
         /**
          * 方法名改为 dispose
-		 * @method egret.MovieClip#release
+         * @method egret.MovieClip#release
          * @deprecated
          */
         public release() {
@@ -112,9 +102,9 @@ module egret {
 
 
         /**
-		 * @method egret.MovieClip#getCurrentFrameIndex
+         * @method egret.MovieClip#getCurrentFrameIndex
          * @deprecated
-		 * @returns {number}
+         * @returns {number}
          */
         public getCurrentFrameIndex():number {
             Logger.warning("MovieClip#getCurrentFrameIndex方法即将废弃");
@@ -123,9 +113,9 @@ module egret {
 
         /**
          * 获取当前影片剪辑的帧频数
-		 * @method egret.MovieClip#getTotalFrame
+         * @method egret.MovieClip#getTotalFrame
          * @deprecated
-		 * @returns {number}
+         * @returns {number}
          */
         public getTotalFrame():number {
             Logger.warning("MovieClip#getTotalFrame方法即将废弃");
@@ -133,9 +123,9 @@ module egret {
         }
 
         /**
-		 * @method egret.MovieClip#setInterval
+         * @method egret.MovieClip#setInterval
          * @deprecated
-		 * @param value {number} 
+         * @param value {number}
          */
         public setInterval(value:number) {
             Logger.warning("MovieClip#setInterval方法即将废弃,请使用MovieClip#frameRate代替");
@@ -143,9 +133,9 @@ module egret {
         }
 
         /**
-		 * @method egret.MovieClip#getIsPlaying
+         * @method egret.MovieClip#getIsPlaying
          * @deprecated
-		 * @returns {boolean}
+         * @returns {boolean}
          */
         public getIsPlaying():boolean {
             Logger.warning("MovieClip#getIsPlaying方法即将废弃");

@@ -26,26 +26,26 @@
  */
 
 
-module egret {
+module egret.gui {
 
 	/**
-	 * @class egret.Scroller
+	 * @class egret.gui.Scroller
 	 * @classdesc
 	 * 滚动条组件
-	 * @extends egret.UIComponent
-	 * @implements egret.IVisualElementContainer
+	 * @extends egret.gui.UIComponent
+	 * @implements egret.gui.IVisualElementContainer
 	 */	
     export class Scroller extends UIComponent implements IVisualElementContainer{
         /**
          * 构造函数
-		 * @method egret.Scroller#constructor
+		 * @method egret.gui.Scroller#constructor
          */
         public constructor(){
             super();
         }
 
         /**
-		 * @method egret.Scroller#measure
+		 * @method egret.gui.Scroller#measure
          */
         public measure():void{
             if(!this._viewport)
@@ -54,7 +54,7 @@ module egret {
             this.measuredHeight = this._viewport.preferredHeight;
         }
         /**
-		 * @method egret.Scroller#updateDisplayList
+		 * @method egret.gui.Scroller#updateDisplayList
 		 * @param unscaledWidth {number} 
 		 * @param unscaledHeight {number} 
          */
@@ -66,7 +66,7 @@ module egret {
 
         /**
          * 垂直滚动条显示策略，参见ScrollPolicy类定义的常量。
-		 * @member egret.Scroller#verticalScrollPolicy
+		 * @member egret.gui.Scroller#verticalScrollPolicy
          */
         public get verticalScrollPolicy():string
         {
@@ -81,7 +81,7 @@ module egret {
 
         /**
          * 水平滚动条显示策略，参见ScrollPolicy类定义的常量。
-		 * @member egret.Scroller#horizontalScrollPolicy
+		 * @member egret.gui.Scroller#horizontalScrollPolicy
          */
         public get horizontalScrollPolicy():string
         {
@@ -95,7 +95,7 @@ module egret {
 
         /**
          * 要滚动的视域组件。
-		 * @member egret.Scroller#viewport
+		 * @member egret.gui.Scroller#viewport
          */
         public get viewport():IViewport{
             return this._viewport;
@@ -544,7 +544,7 @@ module egret {
 
         /**
          * 缓动到水平滚动位置
-		 * @method egret.Scroller#throwHorizontally
+		 * @method egret.gui.Scroller#throwHorizontally
 		 * @param hspTo {number} 
 		 * @param duration {number} 
          */
@@ -592,7 +592,7 @@ module egret {
         }
         /**
          * 缓动到垂直滚动位置
-		 * @method egret.Scroller#throwVertically
+		 * @method egret.gui.Scroller#throwVertically
 		 * @param vspTo {number} 
 		 * @param duration {number} 
          */
@@ -622,7 +622,7 @@ module egret {
 
 
 		/**
-		 * @member egret.Scroller#numElements
+		 * @member egret.gui.Scroller#numElements
 		 */
         public get numElements():number{
             return this.viewport ? 1 : 0;
@@ -635,7 +635,7 @@ module egret {
             throw new RangeError("索引:\""+index+"\"超出可视元素索引范围");
         }
         /**
-		 * @method egret.Scroller#getElementAt
+		 * @method egret.gui.Scroller#getElementAt
 		 * @param index {number} 
 		 * @returns {IVisualElement}
          */
@@ -648,7 +648,7 @@ module egret {
         }
 
         /**
-		 * @method egret.Scroller#getElementIndex
+		 * @method egret.gui.Scroller#getElementIndex
 		 * @param element {IVisualElement} 
 		 * @returns {number}
          */
@@ -659,7 +659,7 @@ module egret {
                 return -1;
         }
         /**
-		 * @method egret.Scroller#containsElement
+		 * @method egret.gui.Scroller#containsElement
 		 * @param element {IVisualElement} 
 		 * @returns {boolean}
          */
@@ -673,7 +673,7 @@ module egret {
             throw new Error("此方法在Scroller组件内不可用!");
         }
         /**
-		 * @method egret.Scroller#addElement
+		 * @method egret.gui.Scroller#addElement
          * @deprecated
 		 * @param element {IVisualElement} 
 		 * @returns {IVisualElement}
@@ -683,7 +683,7 @@ module egret {
             return null;
         }
         /**
-		 * @method egret.Scroller#addElementAt
+		 * @method egret.gui.Scroller#addElementAt
          * @deprecated
 		 * @param element {IVisualElement} 
 		 * @param index {number} 
@@ -694,7 +694,7 @@ module egret {
             return null;
         }
         /**
-		 * @method egret.Scroller#removeElement
+		 * @method egret.gui.Scroller#removeElement
          * @deprecated
 		 * @param element {IVisualElement} 
 		 * @returns {IVisualElement}
@@ -704,7 +704,7 @@ module egret {
             return null;
         }
         /**
-		 * @method egret.Scroller#removeElementAt
+		 * @method egret.gui.Scroller#removeElementAt
          * @deprecated
 		 * @param index {number} 
 		 * @returns {IVisualElement}
@@ -714,14 +714,14 @@ module egret {
             return null;
         }
         /**
-		 * @method egret.Scroller#removeAllElements
+		 * @method egret.gui.Scroller#removeAllElements
          * @deprecated
          */
         public removeAllElements():void{
             this.throwNotSupportedError();
         }
         /**
-		 * @method egret.Scroller#setElementIndex
+		 * @method egret.gui.Scroller#setElementIndex
          * @deprecated
 		 * @param element {IVisualElement} 
 		 * @param index {number} 
@@ -730,7 +730,7 @@ module egret {
             this.throwNotSupportedError();
         }
         /**
-		 * @method egret.Scroller#swapElements
+		 * @method egret.gui.Scroller#swapElements
          * @deprecated
 		 * @param element1 {IVisualElement} 
 		 * @param element2 {IVisualElement} 
@@ -739,7 +739,7 @@ module egret {
             this.throwNotSupportedError();
         }
         /**
-		 * @method egret.Scroller#swapElementsAt
+		 * @method egret.gui.Scroller#swapElementsAt
          * @deprecated
 		 * @param index1 {number} 
 		 * @param index2 {number} 
@@ -749,7 +749,7 @@ module egret {
         }
 
         /**
-		 * @method egret.Scroller#addChild
+		 * @method egret.gui.Scroller#addChild
          * @deprecated
 		 * @param child {DisplayObject} 
 		 * @returns {DisplayObject}
@@ -759,7 +759,7 @@ module egret {
             return null;
         }
         /**
-		 * @method egret.Scroller#addChildAt
+		 * @method egret.gui.Scroller#addChildAt
          * @deprecated
 		 * @param child {DisplayObject} 
 		 * @param index {number} 
@@ -770,7 +770,7 @@ module egret {
             return null;
         }
         /**
-		 * @method egret.Scroller#removeChild
+		 * @method egret.gui.Scroller#removeChild
          * @deprecated
 		 * @param child {DisplayObject} 
 		 * @returns {DisplayObject}
@@ -780,7 +780,7 @@ module egret {
             return null;
         }
         /**
-		 * @method egret.Scroller#removeChildAt
+		 * @method egret.gui.Scroller#removeChildAt
          * @deprecated
 		 * @param index {number} 
 		 * @returns {DisplayObject}
@@ -790,7 +790,7 @@ module egret {
             return null;
         }
         /**
-		 * @method egret.Scroller#setChildIndex
+		 * @method egret.gui.Scroller#setChildIndex
          * @deprecated
 		 * @param child {DisplayObject} 
 		 * @param index {number} 
@@ -799,7 +799,7 @@ module egret {
             this.throwNotSupportedError();
         }
         /**
-		 * @method egret.Scroller#swapChildren
+		 * @method egret.gui.Scroller#swapChildren
          * @deprecated
 		 * @param child1 {DisplayObject} 
 		 * @param child2 {DisplayObject} 
@@ -808,7 +808,7 @@ module egret {
             this.throwNotSupportedError();
         }
         /**
-		 * @method egret.Scroller#swapChildrenAt
+		 * @method egret.gui.Scroller#swapChildrenAt
          * @deprecated
 		 * @param index1 {number} 
 		 * @param index2 {number} 

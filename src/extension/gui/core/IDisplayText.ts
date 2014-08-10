@@ -26,20 +26,20 @@
  */
 
 
-module egret {
+module egret.gui {
 
     /**
-	 * @class egret.IDisplayText
+	 * @class egret.gui.IDisplayText
 	 * @interface
 	 * @classdesc
      * 简单文本显示控件接口。
-	 * @extends egret.IUIComponent
+	 * @extends egret.gui.IUIComponent
      */
     export interface IDisplayText extends IUIComponent
     {
         /**
          * 此文本组件所显示的文本。
-		 * @member egret.IDisplayText#text
+		 * @member egret.gui.IDisplayText#text
          */
         text:string;
     }

@@ -120,12 +120,12 @@ function generateExmlDTS(sourceList,srcPath){
             className = className.split("/").join(".");
             var index = className.lastIndexOf(".");
             if(index==-1){
-                dts += "declare class "+className+" extends egret.Skin{\n}\n";
+                dts += "declare class "+className+" extends egret.gui.Skin{\n}\n";
             }
             else{
                 var moduleName = className.substring(0,index);
                 className = className.substring(index+1);
-                dts += "declare module "+moduleName+"{\n\tclass "+className+" extends egret.Skin{\n\t}\n}\n";
+                dts += "declare module "+moduleName+"{\n\tclass "+className+" extends egret.gui.Skin{\n\t}\n}\n";
             }
         }
     }

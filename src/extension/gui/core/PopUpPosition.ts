@@ -25,10 +25,10 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-module egret {
+module egret.gui {
 
 	/**
-	 * @class egret.PopUpPosition
+	 * @class egret.gui.PopUpPosition
 	 * @classdesc
 	 * 定义弹出位置的常量值。
 	 * 该常量决定目标对象相对于父级组件的弹出位置。
@@ -36,32 +36,32 @@ module egret {
 	export class PopUpPosition{	
 		/**
 		 * 在组件上方弹出
-		 * @constant egret.PopUpPosition.ABOVE
+		 * @constant egret.gui.PopUpPosition.ABOVE
 		 */		
 		public static ABOVE:string = "above";
 		/**
 		 * 在组件下方弹出
-		 * @constant egret.PopUpPosition.BELOW
+		 * @constant egret.gui.PopUpPosition.BELOW
 		 */		
 		public static BELOW:string = "below";
 		/**
 		 * 在组件中心弹出
-		 * @constant egret.PopUpPosition.CENTER
+		 * @constant egret.gui.PopUpPosition.CENTER
 		 */		
 		public static CENTER:string = "center";
 		/**
 		 * 在组件左上角弹出 
-		 * @constant egret.PopUpPosition.TOP_LEFT
+		 * @constant egret.gui.PopUpPosition.TOP_LEFT
 		 */		
 		public static TOP_LEFT:string = "topLeft";
 		/**
 		 * 在组件左边弹出
-		 * @constant egret.PopUpPosition.LEFT
+		 * @constant egret.gui.PopUpPosition.LEFT
 		 */		
 		public static LEFT:string = "left";
 		/**
 		 * 在组件右边弹出
-		 * @constant egret.PopUpPosition.RIGHT
+		 * @constant egret.gui.PopUpPosition.RIGHT
 		 */		
 		public static RIGHT:string = "right";
 		

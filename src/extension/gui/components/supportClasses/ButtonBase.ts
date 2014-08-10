@@ -26,18 +26,18 @@
  */
 
 
-module egret {
+module egret.gui {
 
 	/**
-	 * @class egret.ButtonBase
+	 * @class egret.gui.ButtonBase
 	 * @classdesc
 	 * 按钮组件基类
-	 * @extends egret.SkinnableComponent
+	 * @extends egret.gui.SkinnableComponent
 	 */
 	export class ButtonBase extends SkinnableComponent{
 		/**
 		 * 构造函数
-		 * @method egret.ButtonBase#constructor
+		 * @method egret.gui.ButtonBase#constructor
 		 */
 		public constructor(){
 			super();
@@ -57,7 +57,7 @@ module egret {
 
 		/**
 		 * [SkinPart]按钮上的文本标签
-		 * @member egret.ButtonBase#labelDisplay
+		 * @member egret.gui.ButtonBase#labelDisplay
 		 */
 		public labelDisplay:IDisplayText;
 
@@ -65,7 +65,7 @@ module egret {
 		private _autoRepeat:boolean = false;
 		/**
 		 * 指定在用户按住鼠标按键时是否重复分派 buttonDown 事件。
-		 * @member egret.ButtonBase#autoRepeat
+		 * @member egret.gui.ButtonBase#autoRepeat
 		 */
 		public get autoRepeat():boolean{
 			return this._autoRepeat;
@@ -82,7 +82,7 @@ module egret {
 		private _repeatDelay:number = 35;
 		/**
 		 * 在第一个 buttonDown 事件之后，以及相隔每个 repeatInterval 重复一次 buttonDown 事件之前，需要等待的毫秒数。
-		 * @member egret.ButtonBase#repeatDelay
+		 * @member egret.gui.ButtonBase#repeatDelay
 		 */
 		public get repeatDelay():number{
 			return this._repeatDelay;
@@ -96,7 +96,7 @@ module egret {
 
 		/**
 		 * 用户在按钮上按住鼠标时，buttonDown 事件之间相隔的毫秒数。
-		 * @member egret.ButtonBase#repeatInterval
+		 * @member egret.gui.ButtonBase#repeatInterval
 		 */
 		public get repeatInterval():number{
 			return this._repeatInterval;
@@ -110,7 +110,7 @@ module egret {
 		private _hovered:boolean = false;
 		/**
 		 * 指示鼠标指针是否位于按钮上。
-		 * @member egret.ButtonBase#hovered
+		 * @member egret.gui.ButtonBase#hovered
 		 */
 		public get hovered():boolean{
 			return this._hovered;
@@ -128,7 +128,7 @@ module egret {
 
 		/**
 		 * 强制让按钮停在鼠标按下状态,此方法不会导致重复抛出buttonDown事件,仅影响皮肤State。
-		 * @method egret.ButtonBase#_keepDown
+		 * @method egret.gui.ButtonBase#_keepDown
 		 * @param down {boolean} 是否按下
 		 */
 		public _setKeepDown(down:boolean):void{
@@ -142,7 +142,7 @@ module egret {
 		private _label:string = "";
         /**
          * 要在按钮上显示的文本
-		 * @member egret.ButtonBase#label
+		 * @member egret.gui.ButtonBase#label
          */
 		public get label():string{
             return this._getLabel();
@@ -172,7 +172,7 @@ module egret {
 		private _mouseCaptured:boolean = false;
 		/**
 		 * 指示第一次分派 MouseEvent.MOUSE_DOWN 时，是否按下鼠标以及鼠标指针是否在按钮上。
-		 * @member egret.ButtonBase#mouseCaptured
+		 * @member egret.gui.ButtonBase#mouseCaptured
 		 */
 		public get mouseCaptured():boolean{
 			return this._mouseCaptured;
@@ -193,7 +193,7 @@ module egret {
 		/**
 		 * 如果为 false，则按钮会在用户按下它时显示其鼠标按下时的外观，但在用户将鼠标拖离它时将改为显示鼠标经过的外观。
 		 * 如果为 true，则按钮会在用户按下它时显示其鼠标按下时的外观，并在用户将鼠标拖离时继续显示此外观。
-		 * @member egret.ButtonBase#stickyHighlighting
+		 * @member egret.gui.ButtonBase#stickyHighlighting
 		 */
 		public get stickyHighlighting():boolean{
 			return this._stickyHighlighting
@@ -226,7 +226,7 @@ module egret {
 
 		/**
 		 * 添加鼠标事件监听
-		 * @method egret.ButtonBase#addHandlers
+		 * @method egret.gui.ButtonBase#addHandlers
 		 */
 		public addHandlers():void{
 			this.addEventListener(TouchEvent.TOUCH_ROLL_OVER, this.mouseEventHandler, this);
@@ -304,7 +304,7 @@ module egret {
 
 		/**
 		 * 鼠标事件处理
-		 * @method egret.ButtonBase#mouseEventHandler
+		 * @method egret.gui.ButtonBase#mouseEventHandler
 		 * @param event {Event}
 		 */
 		public mouseEventHandler(event:Event):void{
@@ -353,14 +353,14 @@ module egret {
 
 		/**
 		 * 按钮弹起事件
-		 * @method egret.ButtonBase#buttonReleased
+		 * @method egret.gui.ButtonBase#buttonReleased
 		 */
 		public buttonReleased():void{
 		}
 
 		/**
 		 * 按钮点击事件
-		 * @method egret.ButtonBase#clickHandler
+		 * @method egret.gui.ButtonBase#clickHandler
 		 * @param event {TouchEvent}
 		 */
 		public clickHandler(event:TouchEvent):void{
@@ -396,7 +396,7 @@ module egret {
 		}
 
 		/**
-		 * @method egret.ButtonBase#getCurrentSkinState
+		 * @method egret.gui.ButtonBase#getCurrentSkinState
 		 * @returns {string}
 		 */
 		public getCurrentSkinState():string{
@@ -413,7 +413,7 @@ module egret {
 		}
 
 		/**
-		 * @method egret.ButtonBase#partAdded
+		 * @method egret.gui.ButtonBase#partAdded
 		 * @param partName {string}
 		 * @param instance {any}
 		 */

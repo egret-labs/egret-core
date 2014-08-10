@@ -26,10 +26,10 @@
  */
 
 
-module egret {
+module egret.gui {
 
     /**
-     * @class egret.CollectionEvent
+     * @class egret.gui.CollectionEvent
      * @classdesc
      * 集合类型数据改变事件
      * @extends egret.Event
@@ -37,12 +37,12 @@ module egret {
     export class CollectionEvent extends Event{
         /**
          * 集合类数据发生改变
-         * @constant egret.CollectionEvent.COLLECTION_CHANGE
+         * @constant egret.gui.CollectionEvent.COLLECTION_CHANGE
          */
         public static COLLECTION_CHANGE:string = "collectionChange";
 
         /**
-         * @method egret.CollectionEvent#constructor
+         * @method egret.gui.CollectionEvent#constructor
          * @param type {string}
          * @param bubbles {boolean}
          * @param cancelable {boolean}
@@ -66,17 +66,17 @@ module egret {
         }
         /**
          * 指示发生的事件类型。此属性值可以是 CollectionEventKind 类中的一个值，也可以是 null，用于指示类型未知。
-         * @member egret.CollectionEvent#kind
+         * @member egret.gui.CollectionEvent#kind
          */
         public kind:string;
         /**
          * 受事件影响的项目的列表
-         * @member egret.CollectionEvent#items
+         * @member egret.gui.CollectionEvent#items
          */
         public items:Array<any>;
         /**
          * 仅当kind的值为CollectionEventKind.REPLACE时，表示替换前的项目列表
-         * @member egret.CollectionEvent#oldItems
+         * @member egret.gui.CollectionEvent#oldItems
          */
         public oldItems:Array<any>;
         /**
@@ -84,19 +84,19 @@ module egret {
          * CollectionEventKind.REMOVE 或 CollectionEventKind.REPLACE，
          * CollectionEventKind.UPDATE
          * 则此属性为 items 属性中指定的项目集合中零号元素的的索引。
-         * @member egret.CollectionEvent#location
+         * @member egret.gui.CollectionEvent#location
          */
         public location:number;
         /**
          * 如果 kind 的值为 CollectionEventKind.MOVE，
          * 则此属性为 items 属性中指定的项目在目标集合中原来位置的从零开始的索引。
-         * @member egret.CollectionEvent#oldLocation
+         * @member egret.gui.CollectionEvent#oldLocation
          */
         public oldLocation:number;
 
         /**
          * 使用指定的EventDispatcher对象来抛出事件对象。抛出的对象将会缓存在对象池上，供下次循环复用。
-         * @method egret.CollectionEvent.dispatchCollectionEvent
+         * @method egret.gui.CollectionEvent.dispatchCollectionEvent
          */
         public static dispatchCollectionEvent(target:IEventDispatcher,type:string,kind:string = null, location:number = -1,
                                              oldLocation:number = -1, items:Array<any> = null,oldItems:Array<any>=null):void{

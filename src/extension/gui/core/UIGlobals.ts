@@ -26,10 +26,10 @@
  */
 
 
-module egret {
+module egret.gui {
 
 	/**
-	 * @class egret.UIGlobals
+	 * @class egret.gui.UIGlobals
 	 * @classdesc
 	 */
 	export class UIGlobals{
@@ -37,7 +37,7 @@ module egret {
 		private static _stage:Stage;
 		/**
 		 * 舞台引用，当第一个UIComponent添加到舞台时此属性被自动赋值
-		 * @member egret.UIGlobals.stage
+		 * @member egret.gui.UIGlobals.stage
 		 */		
 		public static get stage():Stage{
 			return UIGlobals._stage;
@@ -48,7 +48,7 @@ module egret {
 		private static initlized:boolean = false;
 		/**
 		 * 初始化管理器
-		 * @method egret.UIGlobals._initlize
+		 * @method egret.gui.UIGlobals._initlize
 		 * @param stage {Stage} 
 		 */		
 		public static _initlize(stage:Stage):void{
@@ -60,7 +60,7 @@ module egret {
 		}
 		/**
 		 * 延迟渲染布局管理器 
-		 * @member egret.UIGlobals._layoutManager
+		 * @member egret.gui.UIGlobals._layoutManager
 		 */		
 		public static _layoutManager:LayoutManager;
 		/**
@@ -69,7 +69,7 @@ module egret {
 		public static _uiStage:IUIStage;
 		/**
 		 * 顶级应用容器
-		 * @member egret.UIGlobals.uiStage
+		 * @member egret.gui.UIGlobals.uiStage
 		 */
 		public static get uiStage():IUIStage{
 			return UIGlobals._uiStage;

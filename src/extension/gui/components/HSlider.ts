@@ -26,26 +26,26 @@
  */
 
 
-module egret {
+module egret.gui {
 
 	/**
-	 * @class egret.HSlider
+	 * @class egret.gui.HSlider
 	 * @classdesc
 	 * 水平滑块控件
-	 * @extends egret.SliderBase
+	 * @extends egret.gui.SliderBase
 	 */	
 	export class HSlider extends SliderBase{
 		/**
 		 * 构造函数
-		 * @method egret.HSlider#constructor
+		 * @method egret.gui.HSlider#constructor
 		 */	
 		public constructor(){
 			super();
-            this.hostComponentKey = "egret.HSlider";
+            this.hostComponentKey = "egret.gui.HSlider";
 		}
 		
 		/**
-		 * @method egret.HSlider#pointToValue
+		 * @method egret.gui.HSlider#pointToValue
 		 * @param x {number} 
 		 * @param y {number} 
 		 * @returns {number}
@@ -60,7 +60,7 @@ module egret {
 		}
 		
 		/**
-		 * @method egret.HSlider#updateSkinDisplayList
+		 * @method egret.gui.HSlider#updateSkinDisplayList
 		 */
 		public updateSkinDisplayList():void{
 			if (!this.thumb || !this.track)

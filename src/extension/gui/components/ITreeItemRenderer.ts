@@ -26,37 +26,37 @@
  */
 
 
-module egret {
+module egret.gui {
 
 	/**
-	 * @class egret.ITreeItemRenderer
+	 * @class egret.gui.ITreeItemRenderer
 	 * @interface
 	 * @classdesc
 	 * 树状列表组件的项呈示器接口
-	 * @extends egret.IItemRenderer
+	 * @extends egret.gui.IItemRenderer
 	 */
 	export interface ITreeItemRenderer extends IItemRenderer{
 		/**
 		 * 图标的皮肤名
-		 * @member egret.ITreeItemRenderer#iconSkinName
+		 * @member egret.gui.ITreeItemRenderer#iconSkinName
 		 */
 		iconSkinName:any;
 		
 		/**
 		 * 缩进深度。0表示顶级节点，1表示第一层子节点，以此类推。
-		 * @member egret.ITreeItemRenderer#depth
+		 * @member egret.gui.ITreeItemRenderer#depth
 		 */
 		depth:number;
 		
 		/**
 		 * 是否含有子节点。
-		 * @member egret.ITreeItemRenderer#hasChildren
+		 * @member egret.gui.ITreeItemRenderer#hasChildren
 		 */
 		hasChildren:boolean;
 
 		/**
 		 * 节点是否处于开启状态。
-		 * @member egret.ITreeItemRenderer#opened
+		 * @member egret.gui.ITreeItemRenderer#opened
 		 */
 		opened:boolean;
 	}

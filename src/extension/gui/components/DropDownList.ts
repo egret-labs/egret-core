@@ -26,28 +26,28 @@
  */
 
 
-module egret {
+module egret.gui {
 
 	/**
-	 * @class egret.DropDownList
+	 * @class egret.gui.DropDownList
 	 * @classdesc
 	 * 不可输入的下拉列表控件。带输入功能的下拉列表控件，请使用ComboBox。
 	 * @see org.flexlite.domUI.components.ComboBox
-	 * @extends egret.DropDownListBase
+	 * @extends egret.gui.DropDownListBase
 	 */	
 	export class DropDownList extends DropDownListBase{
 		/**
 		 * 构造函数
-		 * @method egret.DropDownList#constructor
+		 * @method egret.gui.DropDownList#constructor
 		 */		
 		public constructor(){
 			super();
-            this.hostComponentKey = "egret.DropDownList";
+            this.hostComponentKey = "egret.gui.DropDownList";
 		}
 		
 		/**
 		 * [SkinPart]选中项文本
-		 * @member egret.DropDownList#labelDisplay
+		 * @member egret.gui.DropDownList#labelDisplay
 		 */		
 		public labelDisplay:IDisplayText;
 		
@@ -55,7 +55,7 @@ module egret {
 		/**
 		 * 当没有选中项时在DropDownList上要显示的字符串。<p/>
 		 * 它通常是一个类似于“请选择一项...”的文本。当下拉列表中的某个项目被选中后，会被替换为该选定项目中的文本。
-		 * @member egret.DropDownList#prompt
+		 * @member egret.gui.DropDownList#prompt
 		 */		
 		public get prompt():string{
 			return this._prompt;
@@ -70,7 +70,7 @@ module egret {
 		}
 		
 		/**
-		 * @method egret.DropDownList#partAdded
+		 * @method egret.gui.DropDownList#partAdded
 		 * @param partName {string} 
 		 * @param instance {any} 
 		 */
@@ -84,7 +84,7 @@ module egret {
 		}
 		
 		/**
-		 * @method egret.DropDownList#updateLabelDisplay
+		 * @method egret.gui.DropDownList#updateLabelDisplay
 		 * @param displayItem {any} 
 		 */
 		public updateLabelDisplay(displayItem:any = undefined):void{

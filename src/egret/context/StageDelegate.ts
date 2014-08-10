@@ -31,7 +31,6 @@ module egret {
 	 * @class egret.StageDelegate
 	 * @classdesc
      * StageDelegate负责处理屏幕适配策略
-     * 有关屏幕适配策略，更多信息请了解 GitHub:理解egret的GameLauncher
 	 * @extends egret.HashObject
      */
     export class StageDelegate extends HashObject{
@@ -81,22 +80,25 @@ module egret {
 		 * @method egret.StageDelegate#setDesignSize
 		 * @param width {number}
 		 * @param height {{number}}
-		 * @param resolutionPolicy {any}
 		 */
-        public setDesignSize(width:number, height:number, resolutionPolicy:ResolutionPolicy):void {
-            this.setResolutionPolicy(resolutionPolicy);
+        public setDesignSize(width:number, height:number):void {
             this._designWidth = width;
             this._designHeight = height;
-            this._resolutionPolicy._apply(this, this._designWidth, this._designHeight);
+            if (arguments[2]){
+                Logger.warning("该方法目前不应传入 resolutionPolicy 参数，请在 docs/1.0_Final_ReleaseNote中查看如何升级")
+                var resolutionPolicy:ResolutionPolicy = arguments[2];
+                this._setResolutionPolicy(resolutionPolicy);
+            }
         }
 
 		/**
-		 * @method egret.StageDelegate#setResolutionPolicy
+		 * @method egret.StageDelegate#_setResolutionPolicy
 		 * @param resolutionPolic {any}
 		 */
-        private setResolutionPolicy(resolutionPolicy:ResolutionPolicy):void {
+        public _setResolutionPolicy(resolutionPolicy:ResolutionPolicy):void {
             this._resolutionPolicy = resolutionPolicy;
             resolutionPolicy.init(this);
+            resolutionPolicy._apply(this, this._designWidth, this._designHeight);
         }
 
 		/**

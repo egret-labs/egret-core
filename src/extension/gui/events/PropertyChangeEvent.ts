@@ -26,10 +26,10 @@
  */
 
 
-module egret {
+module egret.gui {
 
 	/**
-	 * @class egret.PropertyChangeEvent
+	 * @class egret.gui.PropertyChangeEvent
 	 * @classdesc
 	 * 对象的一个属性发生更改时传递到事件侦听器的事件
 	 * @extends egret.Event
@@ -37,13 +37,13 @@ module egret {
 	export class PropertyChangeEvent extends Event{
 		/**
 		 * 属性改变 
-		 * @constant egret.PropertyChangeEvent.PROPERTY_CHANGE
+		 * @constant egret.gui.PropertyChangeEvent.PROPERTY_CHANGE
 		 */		
 		public static PROPERTY_CHANGE:string = "propertyChange";
 
 		/**
 		 * 构造函数
-		 * @method egret.PropertyChangeEvent#constructor
+		 * @method egret.gui.PropertyChangeEvent#constructor
 		 * @param type {string} 
 		 * @param bubbles {boolean} 
 		 * @param cancelable {boolean} 
@@ -71,37 +71,37 @@ module egret {
 		
 		/**
 		 * 指定更改的类型。可能的值为 PropertyChangeEventKind.UPDATE、PropertyChangeEventKind.DELETE 和 null。 
-		 * @member egret.PropertyChangeEvent#kind
+		 * @member egret.gui.PropertyChangeEvent#kind
 		 */		
 		public kind:string;
 		
 		/**
 		 * 更改后的属性的值。 
-		 * @member egret.PropertyChangeEvent#newValue
+		 * @member egret.gui.PropertyChangeEvent#newValue
 		 */		
 		public newValue:any;
 		
 		/**
 		 * 更改后的属性的值。 
-		 * @member egret.PropertyChangeEvent#oldValue
+		 * @member egret.gui.PropertyChangeEvent#oldValue
 		 */
 		public oldValue:any;
 		
 		/**
 		 * 指定已更改属性的 String、QName 或 int。 
-		 * @member egret.PropertyChangeEvent#property
+		 * @member egret.gui.PropertyChangeEvent#property
 		 */
 		public property:any;
 		
 		/**
 		 * 发生更改的对象。 
-		 * @member egret.PropertyChangeEvent#source
+		 * @member egret.gui.PropertyChangeEvent#source
 		 */		
 		public source:any;
 
         /**
          * 使用指定的EventDispatcher对象来抛出事件对象。抛出的对象将会缓存在对象池上，供下次循环复用。
-         * @method egret.PropertyChangeEvent.dispatchPropertyChangeEvent
+         * @method egret.gui.PropertyChangeEvent.dispatchPropertyChangeEvent
          */
         public static dispatchPropertyChangeEvent(target:IEventDispatcher,kind:string = null,
                                                   property:any = null,oldValue:any = null,

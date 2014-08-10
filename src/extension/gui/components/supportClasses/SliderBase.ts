@@ -26,18 +26,18 @@
  */
 
 
-module egret {
+module egret.gui {
 
 	/**
-	 * @class egret.SliderBase
+	 * @class egret.gui.SliderBase
 	 * @classdesc
 	 * 滑块控件基类
-	 * @extends egret.TrackBase
+	 * @extends egret.gui.TrackBase
 	 */
 	export class SliderBase extends TrackBase{
 		/**
 		 * 构造函数
-		 * @method egret.SliderBase#constructor
+		 * @method egret.gui.SliderBase#constructor
 		 */	
 		public constructor(){
 			super();
@@ -46,7 +46,7 @@ module egret {
 		
 		/**
 		 * [SkinPart]轨道高亮显示对象
-		 * @member egret.SliderBase#trackHighlight
+		 * @member egret.gui.SliderBase#trackHighlight
 		 */		
 		public trackHighlight:DisplayObject;
 		
@@ -55,7 +55,7 @@ module egret {
 		/**
 		 * 是否启用轨道高亮效果。默认值为true。
 		 * 注意，皮肤里的子部件trackHighlight要同时为非空才能显示高亮效果。
-		 * @member egret.SliderBase#showTrackHighlight
+		 * @member egret.gui.SliderBase#showTrackHighlight
 		 */
 		public get showTrackHighlight():boolean{
 			return this._showTrackHighlight;
@@ -80,7 +80,7 @@ module egret {
 		/**
 		 * 释放鼠标按键时滑块将具有的值。无论liveDragging是否为true，在滑块拖动期间始终更新此属性。
 		 * 而value属性在当liveDragging为false时，只在鼠标释放时更新一次。
-		 * @member egret.SliderBase#pendingValue
+		 * @member egret.gui.SliderBase#pendingValue
 		 */
 		public get pendingValue():number{
 			return this._pendingValue;
@@ -93,7 +93,7 @@ module egret {
 		}
 		
 		/**
-		 * @method egret.SliderBase#setValue
+		 * @method egret.gui.SliderBase#setValue
 		 * @param value {number} 
 		 */
 		public setValue(value:number):void{
@@ -133,7 +133,7 @@ module egret {
 		}
 		
 		/**
-		 * @method egret.SliderBase#thumb_mouseDownHandler
+		 * @method egret.gui.SliderBase#thumb_mouseDownHandler
 		 * @param event {TouchEvent} 
 		 */
 		public thumb_mouseDownHandler(event:TouchEvent):void{
@@ -146,7 +146,7 @@ module egret {
 		private _liveDragging:boolean = true;
 		/**
 		 * 如果为 true，则将在沿着轨道拖动滑块时，而不是在释放滑块按钮时，提交此滑块的值。
-		 * @member egret.SliderBase#liveDragging
+		 * @member egret.gui.SliderBase#liveDragging
 		 */
 		public get liveDragging():boolean{
 			return this._liveDragging;
@@ -157,7 +157,7 @@ module egret {
 		}
 		
 		/**
-		 * @method egret.SliderBase#updateWhenMouseMove
+		 * @method egret.gui.SliderBase#updateWhenMouseMove
 		 */
 		public updateWhenMouseMove():void{      
 			if(!this.track)
@@ -180,7 +180,7 @@ module egret {
 		}
 		
 		/**
-		 * @method egret.SliderBase#stage_mouseUpHandler
+		 * @method egret.gui.SliderBase#stage_mouseUpHandler
 		 * @param event {Event} 
 		 */
 		public stage_mouseUpHandler(event:Event):void{
@@ -192,7 +192,7 @@ module egret {
 		}
 		
 		/**
-		 * @method egret.SliderBase#track_mouseDownHandler
+		 * @method egret.gui.SliderBase#track_mouseDownHandler
 		 * @param event {TouchEvent} 
 		 */
 		public track_mouseDownHandler(event:TouchEvent):void{
@@ -231,7 +231,7 @@ module egret {
 		}
 		
 		/**
-		 * @method egret.SliderBase#partAdded
+		 * @method egret.gui.SliderBase#partAdded
 		 * @param partName {string} 
 		 * @param instance {any} 
 		 */

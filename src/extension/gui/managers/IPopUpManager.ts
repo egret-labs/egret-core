@@ -26,33 +26,33 @@
  */
 
 
-module egret {
+module egret.gui {
 
 	/**
-	 * @class egret.IPopUpManager
+	 * @class egret.gui.IPopUpManager
 	 * @interface
 	 * @classdesc
 	 * 窗口弹出管理器接口。若项目需要自定义弹出框管理器，请实现此接口，
-	 * 并在项目初始化前调用Injector.mapClass("egret.IPopUpManager",YourPopUpManager)，
+	 * 并在项目初始化前调用Injector.mapClass("egret.gui.IPopUpManager",YourPopUpManager)，
 	 * 注入自定义的弹出框管理器类。
 	 * @extends egret.IEventDispatcher
 	 */
 	export interface IPopUpManager extends IEventDispatcher{
 		/**
 		 * 模态遮罩的填充颜色
-		 * @member egret.IPopUpManager#modalColor
+		 * @member egret.gui.IPopUpManager#modalColor
 		 */
 		modalColor:number;
 		
 		/**
 		 * 模态遮罩的透明度
-		 * @member egret.IPopUpManager#modalAlpha
+		 * @member egret.gui.IPopUpManager#modalAlpha
 		 */
 		modalAlpha:number;
 		
 		/**
 		 * 弹出一个窗口。<br/>
-		 * @method egret.IPopUpManager#addPopUp
+		 * @method egret.gui.IPopUpManager#addPopUp
 		 * @param popUp {IVisualElement} 要弹出的窗口
 		 * @param modal? {boolean} 是否启用模态。即禁用弹出窗口所在层以下的鼠标事件。默认false。
 		 * @param center? {boolean} 是否居中窗口。等效于在外部调用centerPopUp()来居中。默认true。
@@ -61,28 +61,28 @@ module egret {
 		
 		/**
 		 * 移除由addPopUp()方法弹出的窗口。
-		 * @method egret.IPopUpManager#removePopUp
+		 * @method egret.gui.IPopUpManager#removePopUp
 		 * @param popUp {IVisualElement} 要移除的窗口
 		 */		
 		removePopUp(popUp:IVisualElement):void;
 		
 		/**
 		 * 将指定窗口居中显示
-		 * @method egret.IPopUpManager#centerPopUp
+		 * @method egret.gui.IPopUpManager#centerPopUp
 		 * @param popUp {IVisualElement} 要居中显示的窗口
 		 */
 		centerPopUp(popUp:IVisualElement):void;
 		
 		/**
 		 * 将指定窗口的层级调至最前
-		 * @method egret.IPopUpManager#bringToFront
+		 * @method egret.gui.IPopUpManager#bringToFront
 		 * @param popUp {IVisualElement} 要最前显示的窗口
 		 */		
 		bringToFront(popUp:IVisualElement):void;
 		
 		/**
 		 * 已经弹出的窗口列表
-		 * @member egret.IPopUpManager#popUpList
+		 * @member egret.gui.IPopUpManager#popUpList
 		 */		
 		popUpList:Array<any>;
 	}

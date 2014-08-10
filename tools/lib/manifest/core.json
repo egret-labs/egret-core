@@ -33,6 +33,7 @@
     "egret/display/DisplayObject.ts",
     "egret/display/DisplayObjectContainer.ts",
     "egret/display/Stage.ts",
+    "egret/display/StageScaleMode.ts",
     "egret/display/BitmapFillMode.ts",
     "egret/display/Bitmap.ts",
     "egret/text/BitmapText.ts",

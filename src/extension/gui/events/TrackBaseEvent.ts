@@ -26,10 +26,10 @@
  */
 
 
-module egret {
+module egret.gui {
 
 	/**
-	 * @class egret.TrackBaseEvent
+	 * @class egret.gui.TrackBaseEvent
 	 * @classdesc
 	 * 从TrackBase组件分派的事件。
 	 * @extends egret.Event
@@ -37,25 +37,25 @@ module egret {
 	export class TrackBaseEvent extends Event{
 		/**
 		 * 正在拖拽滑块
-		 * @constant egret.TrackBaseEvent.THUMB_DRAG
+		 * @constant egret.gui.TrackBaseEvent.THUMB_DRAG
 		 */		
 		public static THUMB_DRAG:string = "thumbDrag";
 		
 		/**
 		 * 滑块被按下 
-		 * @constant egret.TrackBaseEvent.THUMB_PRESS
+		 * @constant egret.gui.TrackBaseEvent.THUMB_PRESS
 		 */		
 		public static THUMB_PRESS:string = "thumbPress";
 		
 		/**
 		 * 滑块被放开
-		 * @constant egret.TrackBaseEvent.THUMB_RELEASE
+		 * @constant egret.gui.TrackBaseEvent.THUMB_RELEASE
 		 */		
 		public static THUMB_RELEASE:string = "thumbRelease";
 		
 		/**
 		 * 构造函数
-		 * @method egret.TrackBaseEvent#constructor
+		 * @method egret.gui.TrackBaseEvent#constructor
 		 * @param type {string} 
 		 * @param bubbles {boolean} 
 		 * @param cancelable {boolean} 
@@ -66,7 +66,7 @@ module egret {
 
         /**
          * 使用指定的EventDispatcher对象来抛出事件对象。抛出的对象将会缓存在对象池上，供下次循环复用。
-         * @method egret.TrackBaseEvent.dispatchTrackBaseEvent
+         * @method egret.gui.TrackBaseEvent.dispatchTrackBaseEvent
          */
         public static dispatchTrackBaseEvent(target:IEventDispatcher,type:string):void{
             var eventClass:any = TrackBaseEvent;

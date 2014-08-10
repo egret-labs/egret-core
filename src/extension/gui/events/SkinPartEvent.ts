@@ -26,10 +26,10 @@
  */
 
 
-module egret {
+module egret.gui {
 
 	/**
-	 * @class egret.SkinPartEvent
+	 * @class egret.gui.SkinPartEvent
 	 * @classdesc
 	 * 皮肤组件附加移除事件
 	 * @extends egret.Event
@@ -37,17 +37,17 @@ module egret {
 	export class SkinPartEvent extends Event{
 		/**
 		 * 附加皮肤公共子部件 
-		 * @constant egret.SkinPartEvent.PART_ADDED
+		 * @constant egret.gui.SkinPartEvent.PART_ADDED
 		 */		
 		public static PART_ADDED:string = "partAdded";
 		/**
 		 * 移除皮肤公共子部件 
-		 * @constant egret.SkinPartEvent.PART_REMOVED
+		 * @constant egret.gui.SkinPartEvent.PART_REMOVED
 		 */		
 		public static PART_REMOVED:string = "partRemoved";
 		
 		/**
-		 * @method egret.SkinPartEvent#constructor
+		 * @method egret.gui.SkinPartEvent#constructor
 		 * @param type {string} 
 		 * @param bubbles {boolean} 
 		 * @param cancelable {boolean} 
@@ -66,19 +66,19 @@ module egret {
 		
 		/**
 		 * 被添加或移除的皮肤组件实例
-		 * @member egret.SkinPartEvent#instance
+		 * @member egret.gui.SkinPartEvent#instance
 		 */    
 		public instance:any;
 		
 		/**
 		 * 被添加或移除的皮肤组件的实例名
-		 * @member egret.SkinPartEvent#partName
+		 * @member egret.gui.SkinPartEvent#partName
 		 */   
 		public partName:string;
 
         /**
          * 使用指定的EventDispatcher对象来抛出事件对象。抛出的对象将会缓存在对象池上，供下次循环复用。
-         * @method egret.SkinPartEvent.dispatchSkinPartEvent
+         * @method egret.gui.SkinPartEvent.dispatchSkinPartEvent
          */
         public static dispatchSkinPartEvent(target:IEventDispatcher,type:string,
                                             partName:string = null,instance:any = null):void{

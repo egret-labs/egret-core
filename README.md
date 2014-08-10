@@ -1,6 +1,6 @@
-Egret Framework
+Egret Engine
 ================================================
-Current Version: v1.0.2 ( Release Candidate )
+Current Version: v1.0.3 ( 1.0 Final )
 
 
 
@@ -51,6 +51,8 @@ Egret Framework是一款使用JavaScript(TypeScript)编写的HTML5开源免费�
 发布说明
 --------------------
 
+[Egret 1.0.3 Final Release Notes 2014-8-8](/docs/1.0_Final_ReleaseNotes.md)
+
 [Egret 1.0.2 Release Candidate 2 Release Notes 2014-7-25](/docs/ReleaseCandidate_2_ReleaseNotes.md)
 
 [Egret 1.0.1 Release Candidate 1 Release Notes 2014-7-10](/docs/ReleaseCandidate_ReleaseNotes.md)
@@ -68,4 +70,6 @@ Egret Framework是一款使用JavaScript(TypeScript)编写的HTML5开源免费�
 联系我们
 -------------------
 * 开发者论坛: http://bbs.egret-labs.org
-* 开发者群: 141578440（满）397297607
+* 开发者群:
+  * 1群：141578440（满）
+  * 2群：397297607

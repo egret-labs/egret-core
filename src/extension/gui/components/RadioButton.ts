@@ -26,38 +26,38 @@
  */
 
 
-module egret {
+module egret.gui {
 
 	/**
-	 * @class egret.RadioButton
+	 * @class egret.gui.RadioButton
 	 * @classdesc
 	 * 单选按钮
-	 * @extends egret.ToggleButtonBase
+	 * @extends egret.gui.ToggleButtonBase
 	 */
 	export class RadioButton extends ToggleButtonBase{
 		/**
 		 * 构造函数
-		 * @method egret.RadioButton#constructor
+		 * @method egret.gui.RadioButton#constructor
 		 */
 		public constructor(){
 			super();
-            this.hostComponentKey = "egret.RadioButton";
+            this.hostComponentKey = "egret.gui.RadioButton";
 			this.groupName = "radioGroup";
 		}
 		
 		/**
 		 * 在RadioButtonGroup中的索引
-		 * @member egret.RadioButton#_indexNumber
+		 * @member egret.gui.RadioButton#_indexNumber
 		 */		
 		public _indexNumber:number = 0;
 		/**
 		 * 所属的RadioButtonGroup
-		 * @member egret.RadioButton#_radioButtonGroup
+		 * @member egret.gui.RadioButton#_radioButtonGroup
 		 */		
 		public _radioButtonGroup:RadioButtonGroup = null;
 		
 		/**
-		 * @member egret.RadioButton#enabled
+		 * @member egret.gui.RadioButton#enabled
 		 */
 		public get enabled():boolean{
 			if (!this._enabled)
@@ -81,7 +81,7 @@ module egret {
 		/**
 		 * 此单选按钮所属的组。同一个组的多个单选按钮之间互斥。
 		 * 若不设置此属性，则根据groupName属性自动创建一个唯一的RadioButtonGroup。
-		 * @member egret.RadioButton#group
+		 * @member egret.gui.RadioButton#group
 		 */		
 		public get group():RadioButtonGroup{
 			if (!this._group&&this._groupName){
@@ -116,7 +116,7 @@ module egret {
 		/**
 		 * 所属组的名称,具有相同组名的多个单选按钮之间互斥。默认值:"radioGroup"。
 		 * 可以把此属性当做设置组的一个简便方式，作用与设置group属性相同,。
-		 * @member egret.RadioButton#groupName
+		 * @member egret.gui.RadioButton#groupName
 		 */		
 		public get groupName():string{
 			return this._groupName;
@@ -145,7 +145,7 @@ module egret {
 		/**
 		 * 与此单选按钮关联的自定义数据。
 		 * 当被点击时，所属的RadioButtonGroup对象会把此属性赋值给ItemClickEvent.item属性并抛出事件。
-		 * @member egret.RadioButton#value
+		 * @member egret.gui.RadioButton#value
 		 */		
 		public get value():any{
 			return this._value;
@@ -160,7 +160,7 @@ module egret {
                 UIEvent.dispatchUIEvent(this.group,UIEvent.VALUE_COMMIT);
 		}
 		/**
-		 * @method egret.RadioButton#commitProperties
+		 * @method egret.gui.RadioButton#commitProperties
 		 */
 		public commitProperties():void{
 			if (this.groupChanged){
@@ -170,7 +170,7 @@ module egret {
 			super.commitProperties();
 		}
 		/**
-		 * @method egret.RadioButton#updateDisplayList
+		 * @method egret.gui.RadioButton#updateDisplayList
 		 * @param unscaledWidth {number} 
 		 * @param unscaledHeight {number} 
 		 */
@@ -185,7 +185,7 @@ module egret {
 			}
 		}
 		/**
-		 * @method egret.RadioButton#buttonReleased
+		 * @method egret.gui.RadioButton#buttonReleased
 		 */
 		public buttonReleased():void{
 			if(!this.enabled || this.selected)

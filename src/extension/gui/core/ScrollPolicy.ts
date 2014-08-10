@@ -25,29 +25,29 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-module egret {
+module egret.gui {
 
 	/**
-	 * @class egret.ScrollPolicy
+	 * @class egret.gui.ScrollPolicy
 	 * @classdesc
 	 * 滚动条显示策略常量
 	 */
 	export class ScrollPolicy{
 		/**
 		 * 如果子项超出父级的尺寸，则允许滚动，反之不允许滚动。
-		 * @constant egret.ScrollPolicy.AUTO
+		 * @constant egret.gui.ScrollPolicy.AUTO
 		 */		
 		public static AUTO:string = "auto";
 		
 		/**
 		 * 从不允许滚动。
-		 * @constant egret.ScrollPolicy.OFF
+		 * @constant egret.gui.ScrollPolicy.OFF
 		 */		
 		public static OFF:string = "off";
 
 		/**
 		 * 总是允许滚动。
-		 * @constant egret.ScrollPolicy.ON
+		 * @constant egret.gui.ScrollPolicy.ON
 		 */
 		public static ON:string = "on";
 	}

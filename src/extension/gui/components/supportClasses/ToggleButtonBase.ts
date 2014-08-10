@@ -26,17 +26,17 @@
  */
 
 
-module egret {
+module egret.gui {
 
 	/**
-	 * @class egret.ToggleButtonBase
+	 * @class egret.gui.ToggleButtonBase
 	 * @classdesc
 	 * 切换按钮组件基类
-	 * @extends egret.ButtonBase
+	 * @extends egret.gui.ButtonBase
 	 */	
 	export class ToggleButtonBase extends ButtonBase{
 		/**
-		 * @method egret.ToggleButtonBase#constructor
+		 * @method egret.gui.ToggleButtonBase#constructor
 		 */
 		public constructor(){
 			super();
@@ -45,7 +45,7 @@ module egret {
 		public _selected:boolean;
 		/**
 		 * 按钮处于按下状态时为 true，而按钮处于弹起状态时为 false。
-		 * @member egret.ToggleButtonBase#selected
+		 * @member egret.gui.ToggleButtonBase#selected
 		 */		
 		public get selected():boolean{
 			return this._selected;
@@ -65,7 +65,7 @@ module egret {
         }
 		
 		/**
-		 * @method egret.ToggleButtonBase#getCurrentSkinState
+		 * @method egret.gui.ToggleButtonBase#getCurrentSkinState
 		 * @returns {string}
 		 */
 		public getCurrentSkinState():string{
@@ -79,7 +79,7 @@ module egret {
 		 */		
 		public _autoSelected:boolean = true;
 		/**
-		 * @method egret.ToggleButtonBase#buttonReleased
+		 * @method egret.gui.ToggleButtonBase#buttonReleased
 		 */
 		public buttonReleased():void{
 			super.buttonReleased();

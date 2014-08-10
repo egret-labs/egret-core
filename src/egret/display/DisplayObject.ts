@@ -467,7 +467,6 @@ module egret {
          * @param value
          */
         public set width(value:number) {
-            this._setSizeDirty();
             this._setWidth(value);
         }
 
@@ -475,6 +474,7 @@ module egret {
          * @inheritDoc
          */
         public _setWidth(value:number):void {
+            this._setSizeDirty();
             this._explicitWidth = value;
             this._hasWidthSet = NumberUtils.isNumber(value);
         }
@@ -485,7 +485,6 @@ module egret {
          * @param value
          */
         public set height(value:number) {
-            this._setSizeDirty();
             this._setHeight(value);
         }
 
@@ -493,6 +492,7 @@ module egret {
          * @inheritDoc
          */
         public _setHeight(value:number):void {
+            this._setSizeDirty();
             this._explicitHeight = value;
             this._hasHeightSet = NumberUtils.isNumber(value);
         }
@@ -729,6 +729,15 @@ module egret {
 
         private _hitTestPointTexture:RenderTexture;
 
+        /**
+         * 计算显示对象，以确定它是否与 x 和 y 参数指定的点重叠或相交。x 和 y 参数指定舞台的坐标空间中的点，而不是包含显示对象的显示对象容器中的点（除非显示对象容器是舞台）。
+         * 注意，不要在大量物体中使用精确碰撞像素检测，这回带来巨大的性能开销
+         * @method egret.DisplayObject#hitTestPoint
+         * @param x {number}  要测试的此对象的 x 坐标。
+         * @param y {number}  要测试的此对象的 y 坐标。
+         * @param shapeFlag {boolean} 是检查对象 (true) 的实际像素，还是检查边框 (false) 的实际像素。
+         * @returns {boolean} 如果显示对象与指定的点重叠或相交，则为 true；否则为 false。
+         */
         public hitTestPoint(x:number, y:number, shapeFlag?:boolean):boolean {
             var p:egret.Point = this.globalToLocal(x, y);
             if (!shapeFlag) {
@@ -763,7 +772,7 @@ module egret {
 
         public _getSize(resultRect:Rectangle):Rectangle {
             if (this._hasHeightSet && this._hasWidthSet) {
-                return resultRect.initialize(NaN, NaN, this._explicitWidth, this._explicitHeight);
+                return resultRect.initialize(0, 0, this._explicitWidth, this._explicitHeight);
             }
             return this._measureSize(Rectangle.identity);
         }
