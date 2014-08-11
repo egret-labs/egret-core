@@ -428,6 +428,9 @@ module RES {
          */
         private getTypeByUrl(url:string):string{
             var suffix:string = url.substr(url.lastIndexOf(".")+1);
+            if(suffix){
+                suffix = suffix.toLowerCase();
+            }
             var type:string;
             switch(suffix){
                 case ResourceItem.TYPE_XML:
@@ -445,6 +448,17 @@ module RES {
                     break;
                 case "txt":
                     type = ResourceItem.TYPE_TEXT;
+                    break;
+                case "mp3":
+                case "ogg":
+                case "mpeg":
+                case "wav":
+                case "m4a":
+                case "mp4":
+                case "aiff":
+                case "wma":
+                case "mid":
+                    type = ResourceItem.TYPE_SOUND;
                     break;
                 default:
                     type = ResourceItem.TYPE_BIN;
