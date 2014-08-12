@@ -25,45 +25,49 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-egret_h5.startGame = function () {
-    var canvas = document.getElementById(egret.StageDelegate.canvas_name);
-    context = egret.MainContext.instance;
-    context.touchContext = new egret.HTML5TouchContext(canvas);
-    context.deviceContext = new egret.HTML5DeviceContext();
-    context.netContext = new egret.HTML5NetContext();
+egret_h5 = {};
 
+egret_h5.prefix = "";
 
+egret_h5.loadScript = function (list, callback) {
+    var loaded = 0;
+    var loadNext = function () {
+        egret_h5.loadSingleScript(egret_h5.prefix + list[loaded], function () {
+            loaded++;
+            if (loaded >= list.length) {
+                callback();
+            }
+            else {
+                loadNext();
+            }
+        })
+    };
+    loadNext();
+};
 
-    egret.StageDelegate.getInstance().setDesignSize(480, 800);
-    context.stage = new egret.Stage();
-    var scaleMode =  egret.MainContext.deviceType == egret.MainContext.DEVICE_MOBILE ? egret.StageScaleMode.SHOW_ALL : egret.StageScaleMode.NO_SCALE;
-    context.stage.scaleMode = scaleMode;
-
-    //WebGL是egret的Beta特性，默认关闭
-    if(false){// egret.WebGLUtils.checkCanUseWebGL()) {
-        context.rendererContext = new egret.WebGLRenderer(canvas);
+egret_h5.loadSingleScript = function (src, callback) {
+    var s = document.createElement('script');
+    if (s.hasOwnProperty("async")) {
+        s.async = false;
     }
-    else {
-        context.rendererContext = new egret.HTML5CanvasRenderer(canvas);
-    }
+    s.src = src;
+    s.addEventListener('load', function () {
+        this.removeEventListener('load', arguments.callee, false);
+        callback();
+    }, false);
+    document.body.appendChild(s);
+};
 
-    egret.MainContext.instance.rendererContext.texture_scale_factor = 1;
-    context.run();
+egret_h5.preloadScript = function (list, prefix) {
+    if (!egret_h5.preloadList) {
+        egret_h5.preloadList = [];
+    }
+    egret_h5.preloadList = egret_h5.preloadList.concat(list.map(function (item) {
+        return prefix + item;
+    }))
+};
 
-    var rootClass;
-    if(document_class){
-        rootClass = egret.getDefinitionByName(document_class);
-    }
-    if(rootClass) {
-        var rootContainer = new rootClass();
-        if(rootContainer instanceof egret.DisplayObjectContainer){
-            context.stage.addChild(rootContainer);
-        }
-        else{
-            throw new Error("文档类必须是egret.DisplayObjectContainer的子类!");
-        }
-    }
-    else{
-        throw new Error("找不到文档类！");
-    }
+egret_h5.startLoading = function () {
+    var list = egret_h5.preloadList;
+    egret_h5.loadScript(list, egret_h5.startGame);
 };
