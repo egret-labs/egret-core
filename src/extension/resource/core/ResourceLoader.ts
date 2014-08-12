@@ -32,7 +32,14 @@ module RES {
 		public constructor(){
 			super();
 		}
-
+        /**
+         * 最大并发加载数
+         */
+        public thread:number = 2;
+        /**
+         * 正在加载的线程计数
+         */
+        private loadingCount:number = 0;
         /**
          * 一项加载结束回调函数。无论加载成功或者出错都将执行回调函数。示例：callBack(resItem:ResourceItem):void;
 		 * @member {Function} RES.ResourceLoader#callBack
@@ -122,19 +129,23 @@ module RES {
 		 * 加载下一项
 		 */		
 		private next():void{
-            var resItem:ResourceItem = this.getOneResourceItem();
-            if(!resItem)
-                return;
-            if(resItem.loaded){
-                this.onItemComplete(resItem);
-            }
-            else{
-                var analyzer:AnalyzerBase = this.analyzerDic[resItem.type];
-                if(!analyzer){
-                    analyzer = this.analyzerDic[resItem.type] = egret.Injector.getInstance(AnalyzerBase,resItem.type);
+            while(this.loadingCount<this.thread) {
+                var resItem:ResourceItem = this.getOneResourceItem();
+                if(!resItem)
+                    break;
+                this.loadingCount++;
+                if(resItem.loaded){
+                    this.onItemComplete(resItem);
                 }
-                analyzer.loadFile(resItem,this.onItemComplete,this);
+                else{
+                    var analyzer:AnalyzerBase = this.analyzerDic[resItem.type];
+                    if(!analyzer){
+                        analyzer = this.analyzerDic[resItem.type] = egret.Injector.getInstance(AnalyzerBase,resItem.type);
+                    }
+                    analyzer.loadFile(resItem,this.onItemComplete,this);
+                }
             }
+
 		}
 		
 		/**
@@ -174,6 +185,7 @@ module RES {
 		 * 加载结束
 		 */		
 		private onItemComplete(resItem:ResourceItem):void{
+            this.loadingCount--;
 			var groupName:string = resItem.groupName;
 			if(!resItem.loaded){//加载失败
                 ResourceEvent.dispatchResourceEvent(this.resInstance,ResourceEvent.ITEM_LOAD_ERROR,groupName,resItem);

@@ -116,6 +116,14 @@ module RES {
     export function destroyRes(name:string):boolean{
         return instance.destroyRes(name);
     }
+    /**
+     * 设置最大并发加载线程数量，默认值是2.
+     * @method RES.setMaxLoadingThread
+     * @param thread {number} 要设置的并发加载数。
+     */
+    export function setMaxLoadingThread(thread:number):void{
+        instance.setMaxLoadingThread(thread);
+    }
 
     /**
      * 添加事件侦听器,参考ResourceEvent定义的常量。
@@ -532,6 +540,17 @@ module RES {
                 analyzer = this.getAnalyzerByType(type);
                 return analyzer.destroyRes(name);
             }
+        }
+        /**
+         * 设置最大并发加载线程数量，默认值是2.
+         * @method RES.setMaxLoadingThread
+         * @param thread {number} 要设置的并发加载数。
+         */
+        public setMaxLoadingThread(thread:number):void{
+            if(thread<1){
+                thread = 1;
+            }
+            this.resLoader.thread = thread;
         }
     }
     /**
