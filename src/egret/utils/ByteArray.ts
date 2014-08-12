@@ -180,7 +180,7 @@ module egret
          * 从字节流中读取带符号的字节。
          * 返回值的范围是从 -128 到 127。
 		 * @method egret.ByteArray#readByte
-         * returns {number} 介于 -128 和 127 之间的整数。
+         * @returns {number} 介于 -128 和 127 之间的整数。
          */
         public readByte():number
         {

@@ -60,7 +60,7 @@ module RES {
      * 可以监听ResourceEvent.CONFIG_COMPLETE事件来确认配置加载完成。
      * @method RES.createGroup
      * @param name {string} 要创建的加载资源组的组名
-     * @param keys {egret.Array<string>} 要包含的键名列表，key对应配置文件里的name属性或一个资源组名。
+     * @param keys {egret.Array<string>} 要包含的键名列表，key对应配置文件里的name属性或sbuKeys属性的一项或一个资源组名。
      * @param override {boolean} 是否覆盖已经存在的同名资源组,默认false。
      * @returns {boolean}
      */
@@ -70,30 +70,30 @@ module RES {
     /**
      * 检查配置文件里是否含有指定的资源
 	 * @method RES.hasRes
-     * @param name {string} 对应配置文件里的name属性。
+     * @param key {string} 对应配置文件里的name属性或sbuKeys属性的一项。
 	 * @returns {boolean}
      */
-    export function hasRes(name:string):boolean{
-        return instance.hasRes(name);
+    export function hasRes(key:string):boolean{
+        return instance.hasRes(key);
     }
     /**
      * 同步方式获取缓存的已经加载成功的资源。<br/>
 	 * @method RES.getRes
-     * @param name {string} 对应配置文件里的name属性。
+     * @param key {string} 对应配置文件里的name属性或sbuKeys属性的一项。
 	 * @returns {any}
      */
-    export function getRes(name:string):any{
-        return instance.getRes(name);
+    export function getRes(key:string):any{
+        return instance.getRes(key);
     }
     /**
      * 异步方式获取配置里的资源。只要是配置文件里存在的资源，都可以通过异步方式获取。
 	 * @method RES.getResAsync
-     * @param name {string} 对应配置文件里的name属性。
+     * @param key {string} 对应配置文件里的name属性或sbuKeys属性的一项。
      * @param compFunc {Function} 回调函数。示例：compFunc(data):void,若设置了other参数则为:compFunc(data,other):void。
      * @param thisObject {any} 回调函数的this引用
      */
-    export function getResAsync(name:string,compFunc:Function,thisObject:any):void{
-        instance.getResAsync(name,compFunc,thisObject);
+    export function getResAsync(key:string,compFunc:Function,thisObject:any):void{
+        instance.getResAsync(key,compFunc,thisObject);
     }
     /**
      * 通过完整URL方式获取外部资源。
@@ -221,8 +221,8 @@ module RES {
         /**
          * 开始加载配置
 		 * @method RES.loadConfig
-		 * @param url {string} 
-		 * @param resourceRoot {string} 
+		 * @param url {string}
+		 * @param resourceRoot {string}
          */
         public loadConfig(url:string,resourceRoot:string):void{
 
@@ -239,7 +239,7 @@ module RES {
         /**
          * 检查某个资源组是否已经加载完成
 		 * @method RES.isGroupLoaded
-		 * @param name {string} 
+		 * @param name {string}
 		 * @returns {boolean}
          */
         public isGroupLoaded(name:string):boolean{
@@ -248,7 +248,7 @@ module RES {
         /**
          * 根据组名获取组加载项列表
 		 * @method RES.getGroupByName
-		 * @param name {string} 
+		 * @param name {string}
 		 * @returns {Array<egret.ResourceItem>}
          */
         public getGroupByName(name:string):Array<ResourceItem>{
@@ -259,8 +259,8 @@ module RES {
         /**
          * 根据组名加载一组资源
 		 * @method RES.loadGroup
-		 * @param name {string} 
-		 * @param priority {number} 
+		 * @param name {string}
+		 * @param priority {number}
          */
         public loadGroup(name:string,priority:number=0):void{
             if(this.loadedGroups.indexOf(name)!=-1||this.resLoader.isGroupInLoading(name))
@@ -317,13 +317,13 @@ module RES {
         /**
          * 检查配置文件里是否含有指定的资源
 		 * @method RES.hasRes
-         * @param name {string} 对应配置文件里的name属性。
+         * @param key {string} 对应配置文件里的name属性或sbuKeys属性的一项。
 		 * @returns {boolean}
          */
-        public hasRes(name:string):boolean{
-            var type:string = this.resConfig.getType(name);
+        public hasRes(key:string):boolean{
+            var type:string = this.resConfig.getType(key);
             if(type==""){
-                var prefix:string = RES.AnalyzerBase.getStringPrefix(name);
+                var prefix:string = RES.AnalyzerBase.getStringPrefix(key);
                 type = this.resConfig.getType(prefix);
                 if(type==""){
                     return false;
@@ -332,15 +332,15 @@ module RES {
             return true;
         }
         /**
-         * 通过name同步获取资源
+         * 通过key同步获取资源
 		 * @method RES.getRes
-		 * @param name {string} 
+		 * @param key {string}
 		 * @returns {any}
          */
-        public getRes(name:string):any{
-            var type:string = this.resConfig.getType(name);
+        public getRes(key:string):any{
+            var type:string = this.resConfig.getType(key);
             if(type==""){
-                var prefix:string = RES.AnalyzerBase.getStringPrefix(name);
+                var prefix:string = RES.AnalyzerBase.getStringPrefix(key);
                 type = this.resConfig.getType(prefix);
                 if(type==""){
                     return null;
@@ -348,7 +348,7 @@ module RES {
             }
 
             var analyzer:AnalyzerBase = this.getAnalyzerByType(type);
-            return analyzer.getRes(name);
+            return analyzer.getRes(key);
         }
 
         /**
@@ -356,15 +356,15 @@ module RES {
          */
         private asyncDic:any = {};
         /**
-         * 通过name异步获取资源
+         * 通过key异步获取资源
          * @method RES.getResAsync
-         * @param name {string}
+         * @param key {string}
          * @param compFunc {Function}
          * @param thisObject {any}
          */
         public getResAsync(key:string,compFunc:Function,thisObject:any):void{
             var type:string = this.resConfig.getType(key);
-            var name:string = key;
+            var name:string = this.resConfig.getName(key);
             if(type==""){
                 name = RES.AnalyzerBase.getStringPrefix(key);
                 type = this.resConfig.getType(name);
@@ -379,7 +379,7 @@ module RES {
                 compFunc.call(thisObject,res);
                 return;
             }
-            var args:any = {name:key,compFunc:compFunc,thisObject:thisObject};
+            var args:any = {key:key,compFunc:compFunc,thisObject:thisObject};
             if(this.asyncDic[name]){
                 this.asyncDic[name].push(args);
             }
@@ -412,7 +412,7 @@ module RES {
                 compFunc.call(thisObject,res);
                 return;
             }
-            var args:any = {name:name,compFunc:compFunc,thisObject:thisObject};
+            var args:any = {key:name,compFunc:compFunc,thisObject:thisObject};
             if(this.asyncDic[name]){
                 this.asyncDic[name].push(args);
             }
@@ -428,6 +428,9 @@ module RES {
          */
         private getTypeByUrl(url:string):string{
             var suffix:string = url.substr(url.lastIndexOf(".")+1);
+            if(suffix){
+                suffix = suffix.toLowerCase();
+            }
             var type:string;
             switch(suffix){
                 case ResourceItem.TYPE_XML:
@@ -446,6 +449,17 @@ module RES {
                 case "txt":
                     type = ResourceItem.TYPE_TEXT;
                     break;
+                case "mp3":
+                case "ogg":
+                case "mpeg":
+                case "wav":
+                case "m4a":
+                case "mp4":
+                case "aiff":
+                case "wma":
+                case "mid":
+                    type = ResourceItem.TYPE_SOUND;
+                    break;
                 default:
                     type = ResourceItem.TYPE_BIN;
                     break;
@@ -462,7 +476,7 @@ module RES {
             var length:number = argsList.length;
             for(var i:number=0;i<length;i++){
                 var args:any = argsList[i];
-                var res:any = analyzer.getRes(args.name);
+                var res:any = analyzer.getRes(args.key);
                 args.compFunc.call(args.thisObject,res);
             }
         }

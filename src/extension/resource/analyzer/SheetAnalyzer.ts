@@ -34,6 +34,9 @@ module RES {
         public getRes(name:string):any{
             var res:any = this.fileDic[name];
             if(!res){
+                res = this.textureMap[name];
+            }
+            if(!res){
                 var prefix:string = RES.AnalyzerBase.getStringPrefix(name);
                 res = this.fileDic[prefix];
                 if(res){
@@ -68,6 +71,8 @@ module RES {
         }
 
         public sheetMap:any = {};
+
+        private textureMap:any = {};
         /**
          * 解析并缓存加载成功的数据
          */
@@ -121,9 +126,13 @@ module RES {
                 return null;
             }
             var spriteSheet:egret.SpriteSheet = new egret.SpriteSheet(texture);
+            var textureMap:any = this.textureMap;
             for(var name in frames){
                 var config:any = frames[name];
-                spriteSheet.createTexture(name,config.x,config.y,config.w,config.h,config.offX, config.offY,config.sourceW,config.sourceH);
+                var texture:egret.Texture = spriteSheet.createTexture(name,config.x,config.y,config.w,config.h,config.offX, config.offY,config.sourceW,config.sourceH);
+                if(textureMap[name]==null){
+                    textureMap[name] = texture;
+                }
             }
             return spriteSheet;
         }

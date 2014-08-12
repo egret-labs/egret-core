@@ -266,6 +266,17 @@ function getFileList(file_list) {
 }
 
 function run(dir, args, opts) {
+    var version;
+    if (opts["--version"] && opts["--version"][0]) {
+        version = opts["--version"][0];
+    }
+    else if (opts["--v"] && opts["--v"][0]) {
+        version = opts["--v"][0];
+    }
+    else {
+        globals.exit(1701);
+    }
+
     var currDir = globals.joinEgretDir(dir, args[0]);
 
     var egret_file = path.join(currDir, "bin-debug/lib/egret_file_list.js");
@@ -282,13 +293,19 @@ function run(dir, args, opts) {
 
     var totalFileList = egretFileList.concat(gameFileList);
 
-
     var tempFile = path.join(currDir,"bin-debug/__temp.js");
 
     combineToSingleJavaScriptFile(totalFileList,tempFile);
 
+    var launcherDir = currDir + "/release/" + version + "/launcher";
+    var resourceDir = currDir + "/release/" + version + "/resource";
+    file.remove(launcherDir);
+    file.copy(currDir + "/launcher", launcherDir);
+    file.remove(resourceDir);
+    file.copy(currDir + "/resource", resourceDir);
+
     ClosureCompiler.compile([tempFile],
-        {js_output_file: currDir + "/launcher/game-min.js","warning_level":"QUIET"},
+        {js_output_file: launcherDir + "/game-min.js","warning_level":"QUIET"},
         function afterCompile(err, stdout, stderr) {
 //            console.log(err);
 
@@ -309,7 +326,7 @@ function help_title() {
 
 function help_example() {
     var result =  "\n";
-    result += "    egret publish [project_name]\n";
+    result += "    egret publish [project_name] --version [version]\n";
     result += "描述:\n";
     result += "    " + help_title();
     return result;

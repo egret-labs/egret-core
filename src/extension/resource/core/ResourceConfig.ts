@@ -63,7 +63,7 @@ module RES {
          * 可以监听ResourceEvent.CONFIG_COMPLETE事件来确认配置加载完成。
 		 * @method RES.ResourceConfig#createGroup
          * @param name {string} 要创建的加载资源组的组名
-         * @param keys {egret.Array<string>} 要包含的键名列表，key对应配置文件里的name属性或一个资源组名。
+         * @param keys {egret.Array<string>} 要包含的键名列表，key对应配置文件里的name属性或sbuKeys属性的一项或一个资源组名。
          * @param override {boolean} 是否覆盖已经存在的同名资源组,默认false。
 		 * @returns {boolean}
          */
@@ -120,9 +120,10 @@ module RES {
                 var length:number = resources.length;
                 for (var i:number = 0; i < length; i++) {
                     var item:any = resources[i];
-                    item.url = folder + item.url;
-                    if (!this.keyMap[item.name])
-                        this.keyMap[item.name] = item;
+                    var url:string = item.url;
+                    if(url&&url.indexOf("://")==-1)
+                        item.url = folder + url;
+                    this.addItemToKeyMap(item);
                 }
             }
             var groups:Array<any> = data["groups"];
@@ -146,28 +147,58 @@ module RES {
         }
 
         /**
+         * 添加一个加载项数据到列表
+         */
+        private addItemToKeyMap(item:any):void{
+            if(!this.keyMap[item.name])
+                this.keyMap[item.name] = item;
+            if(item.hasOwnProperty("subkeys")){
+                var subkeys:Array<any> = (<string><any> (item.subkeys)).split(",");
+                item.subkeys = subkeys;
+                var length:number = subkeys.length;
+                for(var i:number = 0;i < length;i++){
+                    var key:string = subkeys[i];
+                    if(this.keyMap[key]!=null)
+                        continue;
+                    this.keyMap[key] = item;
+                }
+            }
+        }
+
+        /**
+         * 获取加载项的name属性
+         * @method RES.ResourceConfig#getType
+         * @param key {string} 对应配置文件里的name属性或sbuKeys属性的一项。
+         * @returns {string}
+         */
+        public getName(key:string):string{
+            var data:any = this.keyMap[key];
+            return data?data.name:"";
+        }
+
+        /**
          * 获取加载项类型。
 		 * @method RES.ResourceConfig#getType
-         * @param name {string} 对应配置文件里的name属性。
+         * @param key {string} 对应配置文件里的name属性或sbuKeys属性的一项。
 		 * @returns {string}
          */
-        public getType(name:string):string {
-            var data:any = this.keyMap[name];
+        public getType(key:string):string {
+            var data:any = this.keyMap[key];
             return data ? data.type : "";
         }
 
-        public getRawResourceItem(name:string):any{
-            return this.keyMap[name];
+        public getRawResourceItem(key:string):any{
+            return this.keyMap[key];
         }
 
         /**
          * 获取加载项信息对象
 		 * @method RES.ResourceConfig#getResourceItem
-         * @param name {string} 对应配置文件里的name属性。
+         * @param key {string} 对应配置文件里的key属性或sbuKeys属性的一项。
 		 * @returns {egret.ResourceItem}
          */
-        public getResourceItem(name:string):ResourceItem {
-            var data:any = this.keyMap[name];
+        public getResourceItem(key:string):ResourceItem {
+            var data:any = this.keyMap[key];
             if (data)
                 return this.parseResourceItem(data);
             return null;
