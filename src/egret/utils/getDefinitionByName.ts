@@ -30,8 +30,9 @@ module egret {
     var __getDefinitionByName__cache:Object = {};
     /**
      * 返回 name 参数指定的类的类对象引用。
-     * @param name 类的名称。
-     * @returns {any} 返回 name 参数指定的类的类对象引用。
+	 * @method egret.getDefinitionByName
+     * @param name {string} 类的名称。
+	 * @returns {any}
      * @example
      * egret.getDefinitionByName("egret.DisplayObject") //返回 DisplayObject类定义
      */

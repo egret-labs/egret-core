@@ -29,6 +29,9 @@ module egret {
 
     /**
      * 转换数字为颜色字符串
+	 * @method egret.toColorString
+	 * @param value {number} 
+	 * @returns {string}
      */
     export function toColorString(value:number):string{
         if(isNaN(value)||value < 0)
