@@ -29,7 +29,7 @@ module egret {
 
 	/**
 	 * @class egret.HorizontalAlign
-	 * @classdesc
+	 * @classdesc 水平对齐方式
 	 */
 	export class HorizontalAlign{
         /**

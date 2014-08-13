@@ -26,19 +26,19 @@
  */
 
 
-module egret {
+module egret.gui {
     /**
 	 * @classdesc
      * IFactory 接口定义工厂类（如 ClassFactory）必须实现的接口。
      * IFactory 类型的对象是“工厂对象”，Egret使用它来生成另一类的多个实例（每个实例具有相同的属性）。
      * @interface
-	 * @class egret.IFactory
+	 * @class egret.gui.IFactory
 	 * @extends egret.IHashObject
      */
     export interface IFactory extends IHashObject{
         /**
          * 创建某一类（由实现 IFactory 的类确定）的实例。
-		 * @method egret.IFactory#newInstance
+		 * @method egret.gui.IFactory#newInstance
 		 * @returns {any}
          */
         newInstance():any;

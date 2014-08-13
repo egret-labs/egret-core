@@ -26,22 +26,22 @@
  */
 
 
-module egret {
+module egret.gui {
 
 	/**
-	 * @class egret.CheckBox
+	 * @class egret.gui.CheckBox
 	 * @classdesc
 	 * 复选框
-	 * @extends egret.ToggleButtonBase
+	 * @extends egret.gui.ToggleButtonBase
 	 */	
 	export class CheckBox extends ToggleButtonBase{
 		/**
 		 * 构造函数
-		 * @method egret.CheckBox#constructor
+		 * @method egret.gui.CheckBox#constructor
 		 */		
 		public constructor(){
 			super();
-            this.hostComponentKey = "egret.CheckBox";
+            this.hostComponentKey = "egret.gui.CheckBox";
 		}
 	}
 	

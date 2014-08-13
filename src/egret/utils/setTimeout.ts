@@ -32,12 +32,12 @@ module egret {
 
     /**
      * 在指定的延迟（以毫秒为单位）后运行指定的函数。
-     * @method egret.setTimeout
-     * @param listener {Function}
-     * @param thisObject {any}
-     * @param delay {number}
-     * @param args {any}
-     * @returns {number} 唯一引用
+	 * @method egret.setTimeout
+     * @param listener {Function} 侦听函数
+     * @param thisObject {any} this对象
+     * @param delay {number} 延迟时间，以毫秒为单位
+     * @param ...args {any} 参数列表
+	 * @returns {number} 返回索引，可以用于 clearTimeout
      */
     export function setTimeout(listener:Function, thisObject:any, delay:number, ...args):number {
         var data = {listener: listener, thisObject: thisObject, delay: delay, params: args};
@@ -51,8 +51,8 @@ module egret {
 
     /**
      * 清除指定延迟后运行的函数。
-     * @method egret.clearTimeout
-     * @param key {number}
+	 * @method egret.clearTimeout
+     * @param key {number} 
      */
     export function clearTimeout(key:number):void {
         delete __setTimeout__cache[key];

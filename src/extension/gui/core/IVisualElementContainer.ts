@@ -26,32 +26,32 @@
  */
 
 
-module egret {
+module egret.gui {
 
 	/**
-	 * @class egret.IVisualElementContainer
+	 * @class egret.gui.IVisualElementContainer
 	 * @interface
 	 * @classdesc
 	 * 具有管理IVisualElement子显示对象的容器接口
-	 * @extends egret.IVisualElement
-	 * @extends egret.IContainer
+	 * @extends egret.gui.IVisualElement
+	 * @extends egret.gui.IContainer
 	 */	
 	export interface IVisualElementContainer extends IVisualElement,IContainer{
 		/**
 		 * 从容器中删除所有可视元素。
-		 * @method egret.IVisualElementContainer#removeAllElements
+		 * @method egret.gui.IVisualElementContainer#removeAllElements
 		 */		
 		removeAllElements():void;
 		/**
 		 * 交换两个指定可视元素的索引。所有其他元素仍位于相同的索引位置。
-		 * @method egret.IVisualElementContainer#swapElements
+		 * @method egret.gui.IVisualElementContainer#swapElements
 		 * @param element1 {IVisualElement} 第一个可视元素。
 		 * @param element2 {IVisualElement} 第二个可视元素。
 		 */		
 		swapElements(element1:IVisualElement, element2:IVisualElement):void;
 		/**
 		 * 交换容器中位于两个指定索引位置的可视元素。所有其他可视元素仍位于相同的索引位置。
-		 * @method egret.IVisualElementContainer#swapElementsAt
+		 * @method egret.gui.IVisualElementContainer#swapElementsAt
 		 * @param index1 {number} 第一个元素的索引。
 		 * @param index2 {number} 第二个元素的索引。
 		 * @throws RangeError 如果在子列表中不存在该索引位置。

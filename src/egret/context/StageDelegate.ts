@@ -31,7 +31,6 @@ module egret {
 	 * @class egret.StageDelegate
 	 * @classdesc
      * StageDelegate负责处理屏幕适配策略
-     * 有关屏幕适配策略，更多信息请了解 GitHub:理解egret的GameLauncher
 	 * @extends egret.HashObject
      */
     export class StageDelegate extends HashObject{
@@ -81,22 +80,25 @@ module egret {
 		 * @method egret.StageDelegate#setDesignSize
 		 * @param width {number}
 		 * @param height {{number}}
-		 * @param resolutionPolicy {any}
 		 */
-        public setDesignSize(width:number, height:number, resolutionPolicy:ResolutionPolicy):void {
-            this.setResolutionPolicy(resolutionPolicy);
+        public setDesignSize(width:number, height:number):void {
             this._designWidth = width;
             this._designHeight = height;
-            this._resolutionPolicy._apply(this, this._designWidth, this._designHeight);
+            if (arguments[2]){
+                Logger.warning("该方法目前不应传入 resolutionPolicy 参数，请在 docs/1.0_Final_ReleaseNote中查看如何升级")
+                var resolutionPolicy:ResolutionPolicy = arguments[2];
+                this._setResolutionPolicy(resolutionPolicy);
+            }
         }
 
 		/**
-		 * @method egret.StageDelegate#setResolutionPolicy
+		 * @method egret.StageDelegate#_setResolutionPolicy
 		 * @param resolutionPolic {any}
 		 */
-        private setResolutionPolicy(resolutionPolicy:ResolutionPolicy):void {
+        public _setResolutionPolicy(resolutionPolicy:ResolutionPolicy):void {
             this._resolutionPolicy = resolutionPolicy;
             resolutionPolicy.init(this);
+            resolutionPolicy._apply(this, this._designWidth, this._designHeight);
         }
 
 		/**
@@ -265,31 +267,45 @@ module egret {
 	 * @extends egret.ContentStrategy
 	 */
     export class FixedHeight extends ContentStrategy {
-		/**
+        private minWidth:number;
+
+        /**
+         * 构造函数
+         * @param minWidth 最终游戏内适配的最小stageWidth，默认没有最小宽度
+         */
+        constructor(minWidth:number = 0) {
+            super();
+            this.minWidth = minWidth;
+        }
+
+        /**
 		 * @method egret.FixedHeight#_apply
 		 * @param delegate {any} 
 		 * @param designedResolutionWidth {any} 
 		 * @param designedResolutionHeight {any}
 		 */
         public _apply(delegate:StageDelegate, designedResolutionWidth:number, designedResolutionHeight:number):void {
-            var canvas:any = document.getElementById(StageDelegate.canvas_name);
-            var container:any = document.getElementById(StageDelegate.canvas_div_name);
-            var containerW = canvas.width, containerH = canvas.height,
-                designW = designedResolutionWidth, designH = designedResolutionHeight,
-                scale = containerH / designH,
-                contentW = designW * scale, contentH = containerH;
+            var canvas:HTMLCanvasElement = <HTMLCanvasElement>document.getElementById(StageDelegate.canvas_name);
+            var container:HTMLElement = document.getElementById(StageDelegate.canvas_div_name);
+            var viewPortWidth:number = document.documentElement.clientWidth;//分辨率宽
+            var viewPortHeight:number = document.documentElement.clientHeight;//分辨率高
 
-            var viewPortHeight = window.innerHeight;
-            scale = viewPortHeight / designH;
-            var viewPortWidth = designW * scale;
-            canvas.width = designW;
+            var scale:number = viewPortHeight / designedResolutionHeight;
+            var designW:number = viewPortWidth / scale;
+            var designH:number = designedResolutionHeight;
+
+            var scale2:number = 1;
+            if (this.minWidth != 0) {
+                scale2 = Math.min(1, designW / this.minWidth);
+            }
+            canvas.width = designW / scale2;
             canvas.height = designH;
             canvas.style.width = viewPortWidth + "px";
-            canvas.style.height = viewPortHeight + "px";
+            canvas.style.height = (viewPortHeight * scale2) + "px";
             container.style.width = viewPortWidth + "px";
-            container.style.height = viewPortHeight + "px";
-            delegate._scaleX = scale;
-            delegate._scaleY = scale;
+            container.style.height = (viewPortHeight * scale2) + "px";
+            delegate._scaleX = scale * scale2;
+            delegate._scaleY = scale * scale2;
         }
     }
 
@@ -299,6 +315,18 @@ module egret {
 	 * @extends egret.ContentStrategy
 	 */
     export class FixedWidth extends ContentStrategy {
+
+        private minHeight:number;
+
+        /**
+         * 构造函数
+         * @param minHeight 最终游戏内适配的最小stageHeight，默认没有最小高度
+         */
+        constructor(minHeight:number = 0) {
+            super();
+            this.minHeight = minHeight;
+        }
+
 		/**
 		 * @method egret.FixedWidth#_apply
 		 * @param delegate {egret.StageDelegate}
@@ -308,20 +336,28 @@ module egret {
         public _apply(delegate:StageDelegate, designedResolutionWidth:number, designedResolutionHeight:number):void {
             var canvas:HTMLCanvasElement = <HTMLCanvasElement>document.getElementById(StageDelegate.canvas_name);
             var container:HTMLElement = document.getElementById(StageDelegate.canvas_div_name);
-            var viewPortWidth = document.documentElement.clientWidth;
-            var viewPortHeight = document.documentElement.clientHeight;
-            var scale = viewPortWidth / designedResolutionWidth;
-            canvas.width = designedResolutionWidth;
-            canvas.height = viewPortHeight / scale;
+            var viewPortWidth:number = document.documentElement.clientWidth;//分辨率宽
+            var viewPortHeight:number = document.documentElement.clientHeight;//分辨率高
 
-            canvas.style.width = viewPortWidth + "px";
+            var scale:number = viewPortWidth / designedResolutionWidth;
+            var designW:number = designedResolutionWidth;
+            var designH:number = viewPortHeight / scale;
+
+            var scale2:number = 1;
+            if (this.minHeight != 0) {
+                scale2 = Math.min(1, designH / this.minHeight);
+            }
+            canvas.width = designW;
+            canvas.height = designH / scale2;
+            canvas.style.width = (viewPortWidth * scale2) + "px";
             canvas.style.height = viewPortHeight + "px";
-            container.style.width = viewPortWidth + "px";
+            container.style.width = (viewPortWidth * scale2) + "px";
             container.style.height = viewPortHeight + "px";
-            delegate._scaleX = scale;
-            delegate._scaleY = scale;
+            delegate._scaleX = scale * scale2;
+            delegate._scaleY = scale * scale2;
         }
     }
+
 
 	/**
 	 * @class egret.FixedSize
@@ -361,10 +397,7 @@ module egret {
             delegate._scaleX = scale;
             delegate._scaleY = scale;
         }
-
-
     }
-
 
 
     /**
@@ -374,13 +407,8 @@ module egret {
      */
     export class NoScale extends ContentStrategy {
 
-        private width;
-        private height;
-
-        constructor(width, height) {
+        constructor() {
             super();
-            this.width = width;
-            this.height = height;
         }
 
         /**

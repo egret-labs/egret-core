@@ -26,22 +26,22 @@
  */
 
 
-module egret {
+module egret.gui {
 
 	/**
-	 * @class egret.TabBar
+	 * @class egret.gui.TabBar
 	 * @classdesc
 	 * 选项卡组件
-	 * @extends egret.ListBase
+	 * @extends egret.gui.ListBase
 	 */	
 	export class TabBar extends ListBase{
 		/**
 		 * 构造函数
-		 * @method egret.TabBar#constructor
+		 * @method egret.gui.TabBar#constructor
 		 */		
 		public constructor(){
 			super();
-            this.hostComponentKey = "egret.TabBar";
+            this.hostComponentKey = "egret.gui.TabBar";
 			this.requireSelection = true;
 		}
 		
@@ -50,7 +50,7 @@ module egret {
 		 */
 		private requireSelectionChanged_tabBar:boolean;
 		/**
-		 * @method egret.TabBar#c
+		 * @method egret.gui.TabBar#c
 		 * @param value {boolea} 
 		 */
 		public c(value:boolean){
@@ -93,7 +93,7 @@ module egret {
 		
 		
 		/**
-		 * @method egret.TabBar#commitProperties
+		 * @method egret.gui.TabBar#commitProperties
 		 */
 		public commitProperties():void{
 			super.commitProperties();
@@ -110,7 +110,7 @@ module egret {
 		}  
 		
 		/**
-		 * @method egret.TabBar#dataGroup_rendererAddHandler
+		 * @method egret.gui.TabBar#dataGroup_rendererAddHandler
 		 * @param event {RendererExistenceEvent} 
 		 */
 		public dataGroup_rendererAddHandler(event:RendererExistenceEvent):void{
@@ -125,7 +125,7 @@ module egret {
 		}
 		
 		/**
-		 * @method egret.TabBar#dataGroup_rendererRemoveHandler
+		 * @method egret.gui.TabBar#dataGroup_rendererRemoveHandler
 		 * @param event {RendererExistenceEvent} 
 		 */
 		public dataGroup_rendererRemoveHandler(event:RendererExistenceEvent):void{   

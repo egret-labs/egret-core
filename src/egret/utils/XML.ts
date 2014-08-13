@@ -27,7 +27,7 @@
 
 module egret {
     /**
-     * @class egret.XML
+	 * @class egret.XML
      * @classdesc
      * XML文件解析工具，它将XML文件解析为标准的JSON对象返回。
      * 用法类似JSON.parse(),传入一个XML字符串给XML.parse()，将能得到一个标准JSON对象。
@@ -37,16 +37,15 @@ module egret {
      *       </root>
      * 将解析为:
      * {"name":"root","$value":"abc","children":[{"name":"item","$value":"item0"},{"name":"item","$value":"item0"}]};
-     *
      * 其中XML上的属性节点都使用$+"属性名"的方式表示,子节点都存放在children属性的列表里，name表示节点名称。
      */
     export class XML {
 
         /**
          * 解析一个XML字符串为JSON对象。
-         * @method egret.XML.parse
+		 * @method egret.XML.parse
          * @param value {string} 要解析的XML字符串。
-         * @returns {any} XML对应的JSON对象。
+		 * @returns {any}
          */
         public static parse(value:string):any{
             var xmlDoc = SAXParser.getInstance().parserXML(value);
@@ -113,11 +112,11 @@ module egret {
         }
         /**
          * 查找xml上符合节点路径的所有子节点。
-         * @method egret.XML.findChildren
+		 * @method egret.XML.findChildren
          * @param xml {any} 要查找的XML节点。
          * @param path {string} 子节点路径，例如"item.node"
-         * @param result {Array<any>} 可选参数，传入一个数组用于存储查找的结果。这样做能避免重复创建对象。
-         * @returns {any} 返回所有符合path路径的xml上的子孙节点列表
+         * @param result {egret.Array<any>} 可选参数，传入一个数组用于存储查找的结果。这样做能避免重复创建对象。
+		 * @returns {any}
          */
         public static findChildren(xml:any,path:string,result?:Array<any>):Array<any>{
             if(!result){
@@ -130,6 +129,12 @@ module egret {
             return result;
         }
 
+		/**
+		 * @method egret.XML.findByPath
+		 * @param xml {any} 
+		 * @param path {string} 
+		 * @param result {egret.Array<any>} 
+		 */
         public static findByPath(xml:any,path:string,result:Array<any>):void{
             var index:number = path.indexOf(".");
             var key:string;
@@ -162,10 +167,10 @@ module egret {
         }
         /**
          * 获取一个XML节点上的所有属性名列表
-         * @method egret.XML.getAttributes
+		 * @method egret.XML.getAttributes
          * @param xml {any} 要查找的XML节点。
-         * @param result {Array<any>} 可选参数，传入一个数组用于存储查找的结果。这样做能避免重复创建对象。
-         * @returns {any} 返回xml上的属性名列表,不包含"$"前缀。
+         * @param result {egret.Array<any>} 可选参数，传入一个数组用于存储查找的结果。这样做能避免重复创建对象。
+		 * @returns {string}
          */
         public static getAttributes(xml:any,result?:Array<any>):Array<string>{
             if(!result){

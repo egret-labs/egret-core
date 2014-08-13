@@ -76,6 +76,7 @@ module dragonBones {
                 this._display._skewY = transform.skewY * DragonBonesEgretBridge.RADIAN_TO_ANGLE;
                 this._display._scaleX = transform.scaleX;
                 this._display._scaleY = transform.scaleY;
+                this._display._setSizeDirty();
             }
 
             public updateColor(aOffset:number, rOffset:number, gOffset:number, bOffset:number, aMultiplier:number, rMultiplier:number, gMultiplier:number, bMultiplier:number):void {
@@ -87,7 +88,7 @@ module dragonBones {
 
             public updateBlendMode(blendMode:string) {
                 if (this._display && blendMode) {
-                    this._display.blendMode = egret.BlendMode.getBlendMode(blendMode);
+                    this._display.blendMode = blendMode;
                 }
             }
 

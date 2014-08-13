@@ -27,83 +27,22 @@
 
 module egret {
     /**
-     * 在window上需要读取的命名空间属性列表
-     */
-    export var __moduleNameList:Array<string> = ["egret","RES","dragonBones"];
-
-    /**
-     * 需要重新刷新类名的标志
-     */
-    export var __invalidateModuleFlag:boolean = true;
-
-    var __functionNameCache:any = {};
-    /**
      * 返回一个对象的完全限定名<br/>
-     * @param value 需要完全限定类名称的对象，可以将任何 TypeScript / JavaScript值传递给此方法，包括所有可用的TypeScript / JavaScript类型、对象实例、原始类型（如number）和类对象
-     * @returns {string} 包含完全限定类名称的字符串<br />
+	 * @method egret.getQualifiedClassName
+     * @param value {any} 需要完全限定类名称的对象，可以将任何 TypeScript / JavaScript值传递给此方法，包括所有可用的TypeScript / JavaScript类型、对象实例、原始类型（如number）和类对象
+	 * @returns {string}
      * @example
      *  egret.getQualifiedClassName(egret.DisplayObject) //返回 "egret.DisplayObject"
      */
     export function getQualifiedClassName(value:any):string {
-        var constructorFunction:any = value.prototype ? value.prototype.constructor : value.__proto__.constructor;
-        var key:string = constructorFunction.toString();
-        var className:string = __functionNameCache[key];
-        if(className){
-            return className;
+        var prototype:any = value.prototype ? value.prototype : value.__proto__;
+        if(prototype.hasOwnProperty("__class__")){
+            return prototype["__class__"];
         }
-        if(__invalidateModuleFlag){
-            updateModules();
-            __invalidateModuleFlag = false;
-            className = __functionNameCache[key];
-            if(className){
-                return className;
-            }
-        }
-        __functionNameCache[key] = className = getFunctionName(constructorFunction);
+        var constructorString:string = prototype.constructor.toString();
+        var index:number = constructorString.indexOf("(");
+        var className:string = constructorString.substring(9, index);
+        prototype["__class__"] = className;
         return className;
     }
-
-
-
-    function getFunctionName(constructorFunction:Function):string{
-        var constructorString:string = constructorFunction.toString();
-        var index:number = constructorString.indexOf("(");
-        return constructorString.substring(9, index);
-    }
-
-    function updateModules():void{
-        var list:Array<string> = egret.__moduleNameList;
-        var length:number = list.length;
-        for(var i:number=0;i<length;i++){
-            var key:string = list[i];
-            var value:any = __global[key];
-            if(value&&typeof(value)=="object"&&value.__proto__&&
-                getFunctionName(value.__proto__.constructor)=="Object"){
-                setModuleName(value,key);
-            }
-        }
-    }
-
-    function setModuleName(ns:any,name:string):void{
-        for(var key in ns){
-            var value:any = ns[key];
-            var type:string = typeof(value);
-            if(type=="function"){
-                if(!value.prototype){
-                    continue;
-                }
-                var classKey:string = value.toString();
-                if(!__functionNameCache[classKey]){
-                    __functionNameCache[classKey] = name+"."+getFunctionName(value);
-                }
-            }
-            else if(type=="object"&&!(value instanceof Array)){
-                setModuleName(value,name+"."+key);
-            }
-        }
-    }
-
-
 }
-
-var __global = __global || this;

@@ -25,10 +25,10 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-module egret {
+module egret.gui {
 
 	/**
-	 * @class egret.IInvalidateDisplay
+	 * @class egret.gui.IInvalidateDisplay
 	 * @interface
 	 * @classdesc
 	 * 具有延迟应用属性功能的显示对象接口
@@ -36,7 +36,7 @@ module egret {
 	export interface IInvalidateDisplay{
 		/**
 		 * 立即应用所有标记为延迟验证的属性
-		 * @method egret.IInvalidateDisplay#validateNow
+		 * @method egret.gui.IInvalidateDisplay#validateNow
 		 */		
 		validateNow():void;
 	}

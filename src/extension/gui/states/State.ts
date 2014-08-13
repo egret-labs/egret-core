@@ -26,17 +26,17 @@
  */
 
 
-module egret {
+module egret.gui {
 
 	/**
-	 * @class egret.State
+	 * @class egret.gui.State
 	 * @classdesc
 	 * State 类定义视图状态，即组件的特定视图。
 	 * @extends egret.HashObject
 	 */
 	export class State extends HashObject{
 		/**
-		 * @method egret.State#constructor
+		 * @method egret.gui.State#constructor
 		 * @param properties {any} 
 		 */
 		public constructor(name:string,overrides:Array<IOverride>){
@@ -51,24 +51,24 @@ module egret {
 
 		/**
 		 * 视图状态的名称。给定组件的状态名称必须唯一。必须设置此属性。
-		 * @member egret.State#name
+		 * @member egret.gui.State#name
 		 */		
 		public name:string;
 		
 		/**
 		 * 该视图状态的覆盖，表现为实现 IOverride 接口的对象的数组。
 		 * 这些覆盖在进入状态时按顺序应用，在退出状态时按相反的顺序删除。 
-		 * @member egret.State#overrides
+		 * @member egret.gui.State#overrides
 		 */		
 		public overrides:Array<IOverride>;
 		/**
 		 * 此视图状态作为 String 数组所属的状态组。 
-		 * @member egret.State#stateGroups
+		 * @member egret.gui.State#stateGroups
 		 */		
 		public stateGroups:Array<any>;
 		/**
 		 * 初始化视图
-		 * @method egret.State#initialize
+		 * @method egret.gui.State#initialize
 		 * @param parent {IStateClient} 
 		 */		
 		public initialize(parent:IStateClient):void{

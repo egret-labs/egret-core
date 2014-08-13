@@ -35,6 +35,9 @@ module egret {
     export class Stage extends DisplayObjectContainer {
 
 
+        private _scaleMode:string;
+
+
         public static _invalidateRenderFlag:boolean = false;
 
         /**
@@ -46,24 +49,39 @@ module egret {
             Stage._invalidateRenderFlag = true;
         }
 
-        public constructor(width:number, height:number) {
+        public constructor(width:number = 480, height:number = 800) {
             super();
             this.touchEnabled = true;
             this._stage = this;
             this._stageWidth = width;
             this._stageHeight = height;
+
         }
 
-        /**
-         * 设置舞台宽高         
-         */
-        public _setStageSize(width:number, height:number):void {
-            if (this._stageWidth == width && this._stageHeight == height) {
-                return;
+
+        public get scaleMode():string{
+            return this._scaleMode;
+        }
+
+        public set scaleMode(value:string){
+            if (this._scaleMode != value){
+                this._scaleMode = value;
+
+               var  scaleModeEnum = {};
+                scaleModeEnum[StageScaleMode.NO_SCALE] = new NoScale();
+                scaleModeEnum[StageScaleMode.SHOW_ALL] = new FixedWidth();
+                var content = scaleModeEnum[value];
+                if (!content){
+                    throw new Error("使用了尚未实现的ScaleMode");
+                }
+                var container = new egret.EqualToFrame();
+                var policy = new egret.ResolutionPolicy(container, content);
+                egret.StageDelegate.getInstance()._setResolutionPolicy(policy);
+                var canvas:any = document.getElementById(StageDelegate.canvas_name);
+                this._stageWidth = canvas.width;
+                this._stageHeight = canvas.height;
+                this.dispatchEventWith(Event.RESIZE);
             }
-            this._stageWidth = width;
-            this._stageHeight = height;
-            this.dispatchEventWith(Event.RESIZE);
         }
 
         private _stageWidth:number;
@@ -121,6 +139,7 @@ module egret {
         }
 
         /**
+         * 返回舞台尺寸范围
          * @member egret.Stage#getBounds
          * @see egret.DisplayObject#getBounds
          * @param resultRect {egret.Rectangle} 可选参数，传入用于保存结果的Rectangle对象，避免重复创建对象。

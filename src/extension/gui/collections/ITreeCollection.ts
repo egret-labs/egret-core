@@ -26,19 +26,19 @@
  */
 
 
-module egret {
+module egret.gui {
 
 	/**
-	 * @class egret.ITreeCollection
+	 * @class egret.gui.ITreeCollection
 	 * @interface
 	 * @classdesc
 	 * Tree组件的集合类数据源对象接口 
-	 * @extends egret.ICollection
+	 * @extends egret.gui.ICollection
 	 */
 	export interface ITreeCollection extends ICollection{
 		/**
 		 * 检查指定的节点是否含有子节点
-		 * @method egret.ITreeCollection#hasChildren
+		 * @method egret.gui.ITreeCollection#hasChildren
 		 * @param item {any} 要检查的节点
 		 * @returns {boolean}
 		 */		
@@ -46,7 +46,7 @@ module egret {
 
 		/**
 		 * 指定的节点是否打开
-		 * @method egret.ITreeCollection#isItemOpen
+		 * @method egret.gui.ITreeCollection#isItemOpen
 		 * @param item {any} 
 		 * @returns {boolean}
 		 */		
@@ -54,7 +54,7 @@ module egret {
 
 		/**
 		 * 打开或关闭一个节点
-		 * @method egret.ITreeCollection#expandItem
+		 * @method egret.gui.ITreeCollection#expandItem
 		 * @param item {any} 要打开或关闭的节点
 		 * @param open? {boolean} true表示打开节点，反之关闭。
 		 */		
@@ -62,7 +62,7 @@ module egret {
 
 		/**
 		 * 获取节点的深度
-		 * @method egret.ITreeCollection#getDepth
+		 * @method egret.gui.ITreeCollection#getDepth
 		 * @param item {any} 
 		 * @returns {number}
 		 */		

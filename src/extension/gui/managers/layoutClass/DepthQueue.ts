@@ -26,16 +26,16 @@
  */
 
 
-module egret {
+module egret.gui {
 
 	/**
-	 * @class egret.DepthQueue
+	 * @class egret.gui.DepthQueue
 	 * @classdesc
 	 * 显示列表嵌套深度排序队列
 	 */
 	export class DepthQueue{
 		/**
-		 * @method egret.DepthQueue#constructor
+		 * @method egret.gui.DepthQueue#constructor
 		 */
 		public constructor(){
 		}
@@ -56,7 +56,7 @@ module egret {
 		private maxDepth:number = -1;
 		/**
 		 * 插入一个元素
-		 * @method egret.DepthQueue#insert
+		 * @method egret.gui.DepthQueue#insert
 		 * @param client {ILayoutManagerClient} 
 		 */		
 		public insert(client:ILayoutManagerClient):void{
@@ -89,7 +89,7 @@ module egret {
 		}
 		/**
 		 * 从队列尾弹出深度最大的一个对象
-		 * @method egret.DepthQueue#pop
+		 * @method egret.gui.DepthQueue#pop
 		 * @returns {ILayoutManagerClient}
 		 */		
 		public pop():ILayoutManagerClient{
@@ -123,7 +123,7 @@ module egret {
 		}
 		/**
 		 * 从队列首弹出深度最小的一个对象
-		 * @method egret.DepthQueue#shift
+		 * @method egret.gui.DepthQueue#shift
 		 * @returns {ILayoutManagerClient}
 		 */		
 		public shift():ILayoutManagerClient{
@@ -158,7 +158,7 @@ module egret {
 		
 		/**
 		 * 移除大于等于指定组件层级的元素中最大的元素
-		 * @method egret.DepthQueue#removeLargestChild
+		 * @method egret.gui.DepthQueue#removeLargestChild
 		 * @param client {ILayoutManagerClient} 
 		 * @returns {any}
 		 */
@@ -203,7 +203,7 @@ module egret {
 		
 		/**
 		 * 移除大于等于指定组件层级的元素中最小的元素
-		 * @method egret.DepthQueue#removeSmallestChild
+		 * @method egret.gui.DepthQueue#removeSmallestChild
 		 * @param client {ILayoutManagerClient} 
 		 * @returns {any}
 		 */
@@ -247,7 +247,7 @@ module egret {
 		
 		/**
 		 * 移除一个元素
-		 * @method egret.DepthQueue#remove
+		 * @method egret.gui.DepthQueue#remove
 		 * @param client {ILayoutManagerClient} 
 		 * @param level {number} 
 		 * @returns {ILayoutManagerClient}
@@ -266,7 +266,7 @@ module egret {
 		
 		/**
 		 * 清空队列
-		 * @method egret.DepthQueue#removeAll
+		 * @method egret.gui.DepthQueue#removeAll
 		 */		
 		public removeAll():void{
 			this.depthBins.length = 0;
@@ -275,7 +275,7 @@ module egret {
 		}
 		/**
 		 * 队列是否为空
-		 * @method egret.DepthQueue#isEmpty
+		 * @method egret.gui.DepthQueue#isEmpty
 		 * @returns {boolean}
 		 */		
 		public isEmpty():boolean{

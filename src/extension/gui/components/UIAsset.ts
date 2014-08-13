@@ -26,20 +26,20 @@
  */
 
 
-module egret {
+module egret.gui {
 
 	/**
-	 * @class egret.UIAsset
+	 * @class egret.gui.UIAsset
 	 * @classdesc
 	 * 素材包装器。<p/>
 	 * 注意：UIAsset仅在添content时测量一次初始尺寸， 请不要在外部直接修改content尺寸，
 	 * 若做了引起content尺寸发生变化的操作, 需手动调用UIAsset的invalidateSize()进行重新测量。
-	 * @extends egret.UIComponent
-	 * @implements egret.ISkinnableClient
+	 * @extends egret.gui.UIComponent
+	 * @implements egret.gui.ISkinnableClient
 	 */
 	export class UIAsset extends UIComponent{
 		/**
-		 * @method egret.UIAsset#constructor
+		 * @method egret.gui.UIAsset#constructor
          * @param source {any} 素材标识符
          */
 		public constructor(source?:any,autoScale:boolean=true){
@@ -54,7 +54,7 @@ module egret {
         /**
          * 矩形区域，它定义素材对象的九个缩放区域。
          * 注意:此属性仅在source的解析结果为Texture并且fileMode为BitmapFillMode.SCALE时有效。
-         * @member {egret.Texture} egret.UIAsset#scale9Grid
+         * @member {egret.Texture} egret.gui.UIAsset#scale9Grid
          */
         public scale9Grid:Rectangle;
 
@@ -63,7 +63,7 @@ module egret {
          * 设置为 BitmapFillMode.REPEAT时，位图将重复以填充区域。
          * 设置为 BitmapFillMode.SCALE时，位图将拉伸以填充区域。
          * 注意:此属性仅在source的解析结果为Texture时有效
-         * @member {egret.Texture} egret.UIAsset#fillMode
+         * @member {egret.Texture} egret.gui.UIAsset#fillMode
          */
         public fillMode:string = "scale";
 		
@@ -73,7 +73,7 @@ module egret {
 		/**
 		 * 素材标识符。可以为Class,String,或DisplayObject实例等任意类型，具体规则由项目注入的素材适配器决定，
 		 * 适配器根据此属性值解析获取对应的显示对象，并赋值给content属性。
-		 * @member egret.UIAsset#source
+		 * @member egret.gui.UIAsset#source
 		 */	
 		public get source():any{
 			return this._source;
@@ -94,7 +94,7 @@ module egret {
 		public _content:any;
 		/**
 		 * 解析source得到的对象，通常为显示对象或Texture。
-		 * @member egret.UIAsset#content
+		 * @member egret.gui.UIAsset#content
 		 */
 		public get content():any{
 			return this._content;
@@ -102,7 +102,7 @@ module egret {
 		
 		private createChildrenCalled:boolean = false;
 		/**
-		 * @method egret.UIAsset#createChildren
+		 * @method egret.gui.UIAsset#createChildren
 		 */
 		public createChildren():void{
 			super.createChildren();
@@ -141,7 +141,7 @@ module egret {
         private getAdapter():IAssetAdapter{
             var adapter:IAssetAdapter;
             try{
-                adapter = Injector.getInstance("egret.IAssetAdapter");
+                adapter = Injector.getInstance("egret.gui.IAssetAdapter");
             }
             catch(e){
                 adapter = new DefaultAssetAdapter();
@@ -164,9 +164,6 @@ module egret {
                 if(content instanceof  DisplayObject){
                     this._addToDisplayListAt(<DisplayObject> content,0);
                 }
-            }
-            if(content instanceof Texture&&content["scale9Grid"] instanceof Rectangle){
-                this.scale9Grid = content["scale9Grid"];
             }
             this.invalidateSize();
             this.invalidateDisplayList();
@@ -199,7 +196,7 @@ module egret {
          */
         public autoScale:Boolean = true;
 		/**
-		 * @method egret.UIAsset#updateDisplayList
+		 * @method egret.gui.UIAsset#updateDisplayList
 		 * @param unscaledWidth {number} 
 		 * @param unscaledHeight {number} 
 		 */
@@ -215,6 +212,7 @@ module egret {
 					content.height = unscaledHeight/content.scaleY;
 				}
 			}
+            this._setSizeDirty();
 		}
 
         public _render(renderContext:RendererContext):void {
@@ -272,7 +270,7 @@ module egret {
 
 		private static errorStr:string = "在此组件中不可用，若此组件为容器类，请使用";
 		/**
-		 * @method egret.UIAsset#addChild
+		 * @method egret.gui.UIAsset#addChild
          * @deprecated
 		 * @param child {DisplayObject} 
 		 * @returns {DisplayObject}
@@ -281,7 +279,7 @@ module egret {
 			throw(new Error("addChild()"+UIAsset.errorStr+"addElement()代替"));
 		}
 		/**
-		 * @method egret.UIAsset#addChildAt
+		 * @method egret.gui.UIAsset#addChildAt
 		 * @deprecated
 		 * @param child {DisplayObject} 
 		 * @param index {number} 
@@ -291,7 +289,7 @@ module egret {
 			throw(new Error("addChildAt()"+UIAsset.errorStr+"addElementAt()代替"));
 		}
 		/**
-		 * @method egret.UIAsset#removeChild
+		 * @method egret.gui.UIAsset#removeChild
 		 * @deprecated
 		 * @param child {DisplayObject} 
 		 * @returns {DisplayObject}
@@ -300,7 +298,7 @@ module egret {
 			throw(new Error("removeChild()"+UIAsset.errorStr+"removeElement()代替"));
 		}
 		/**
-		 * @method egret.UIAsset#removeChildAt
+		 * @method egret.gui.UIAsset#removeChildAt
 		 * @deprecated
 		 * @param index {number} 
 		 * @returns {DisplayObject}
@@ -309,7 +307,7 @@ module egret {
 			throw(new Error("removeChildAt()"+UIAsset.errorStr+"removeElementAt()代替"));
 		}
 		/**
-		 * @method egret.UIAsset#setChildIndex
+		 * @method egret.gui.UIAsset#setChildIndex
 		 * @deprecated
 		 * @param child {DisplayObject} 
 		 * @param index {number} 
@@ -318,7 +316,7 @@ module egret {
 			throw(new Error("setChildIndex()"+UIAsset.errorStr+"setElementIndex()代替"));
 		}
 		/**
-		 * @method egret.UIAsset#swapChildren
+		 * @method egret.gui.UIAsset#swapChildren
 		 * @deprecated
 		 * @param child1 {DisplayObject} 
 		 * @param child2 {DisplayObject} 
@@ -327,7 +325,7 @@ module egret {
 			throw(new Error("swapChildren()"+UIAsset.errorStr+"swapElements()代替"));
 		}
 		/**
-		 * @method egret.UIAsset#swapChildrenAt
+		 * @method egret.gui.UIAsset#swapChildrenAt
 		 * @deprecated
 		 * @param index1 {number} 
 		 * @param index2 {number} 

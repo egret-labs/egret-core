@@ -26,27 +26,27 @@
  */
 
 
-module egret {
+module egret.gui {
 
 	/**
-	 * @class egret.Tree
+	 * @class egret.gui.Tree
 	 * @classdesc
 	 * 树状列表组件
-	 * @extends egret.List
+	 * @extends egret.gui.List
 	 */
 	export class Tree extends List{
 		/**
 		 * 构造函数
-		 * @method egret.Tree#constructor
+		 * @method egret.gui.Tree#constructor
 		 */		
 		public constructor(){
 			super();
-            this.hostComponentKey = "egret.Tree";
+            this.hostComponentKey = "egret.gui.Tree";
 		}
 
         public static defaultTreeRendererFactory:ClassFactory = new ClassFactory(TreeItemRenderer);
 		/**
-		 * @method egret.Tree#createChildren
+		 * @method egret.gui.Tree#createChildren
 		 */
 		public createChildren():void{
 			if(!this.itemRenderer)
@@ -55,7 +55,7 @@ module egret {
 		}
 		
 		/**
-		 * @method egret.Tree#updateRenderer
+		 * @method egret.gui.Tree#updateRenderer
 		 * @param renderer {IItemRenderer} 
 		 * @param itemIndex {number} 
 		 * @param data {any} 
@@ -74,7 +74,7 @@ module egret {
 		}
 		/**
 		 * 根据数据项返回项呈示器中图标的skinName属性值
-		 * @method egret.Tree#itemToIcon
+		 * @method egret.gui.Tree#itemToIcon
 		 * @param data {any} 
 		 * @returns {any}
 		 */		
@@ -99,7 +99,7 @@ module egret {
 		}
 		
 		/**
-		 * @method egret.Tree#dataGroup_rendererAddHandler
+		 * @method egret.gui.Tree#dataGroup_rendererAddHandler
 		 * @param event {RendererExistenceEvent} 
 		 */
 		public dataGroup_rendererAddHandler(event:RendererExistenceEvent):void{
@@ -125,7 +125,7 @@ module egret {
 		}
 		
 		/**
-		 * @method egret.Tree#dataGroup_rendererRemoveHandler
+		 * @method egret.gui.Tree#dataGroup_rendererRemoveHandler
 		 * @param event {RendererExistenceEvent} 
 		 */
 		public dataGroup_rendererRemoveHandler(event:RendererExistenceEvent):void{
@@ -142,7 +142,7 @@ module egret {
 		/**
 		 * 数据项中用来确定图标skinName属性值的字段名称。另请参考UIAsset.skinName。
 		 * 若设置了iconFunction，则设置此属性无效。
-		 * @member egret.Tree#iconField
+		 * @member egret.gui.Tree#iconField
 		 */		
 		public get iconField():string{
 			return this._iconField;
@@ -159,7 +159,7 @@ module egret {
 		/**
 		 * 用户提供的函数，在每个数据项目上运行以确定其图标的skinName值。另请参考UIAsset.skinName。
 		 * 示例：iconFunction(item:Object):Object
-		 * @member egret.Tree#iconFunction
+		 * @member egret.gui.Tree#iconFunction
 		 */		
 		public get iconFunction():Function{
 			return this._iconFunction;
@@ -173,7 +173,7 @@ module egret {
 		}
 		/**
 		 * 打开或关闭一个节点,注意，此操作不会抛出open或close事件。
-		 * @method egret.Tree#expandItem
+		 * @method egret.gui.Tree#expandItem
 		 * @param item {any} 要打开或关闭的节点
 		 * @param open {boolean} true表示打开节点，反之关闭。
 		 */		
@@ -185,7 +185,7 @@ module egret {
 		}
 		/**
 		 * 指定的节点是否打开
-		 * @method egret.Tree#isItemOpen
+		 * @method egret.gui.Tree#isItemOpen
 		 * @param item {any} 
 		 * @returns {boolean}
 		 */		
@@ -197,7 +197,7 @@ module egret {
 		}
 		
 		/**
-		 * @method egret.Tree#dataProvider_collectionChangeHandler
+		 * @method egret.gui.Tree#dataProvider_collectionChangeHandler
 		 * @param event {CollectionEvent} 
 		 */
 		public dataProvider_collectionChangeHandler(event:CollectionEvent):void{       
@@ -216,7 +216,7 @@ module egret {
 		}
 		
 		/**
-		 * @method egret.Tree#commitProperties
+		 * @method egret.gui.Tree#commitProperties
 		 */
 		public commitProperties():void{
 			super.commitProperties();

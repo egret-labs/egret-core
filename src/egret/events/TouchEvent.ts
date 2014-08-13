@@ -35,7 +35,7 @@ module egret {
 		 *
          * @class egret.TouchEvent
          * @classdesc
-         * TouchEvent数据类
+         * TouchEvent事件类
          * @extends egret.Event
          * @constructor egret.TouchEvent
          * @param type {string} 事件的类型，可以作为 Event.type 访问。

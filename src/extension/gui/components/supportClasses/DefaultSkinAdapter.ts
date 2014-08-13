@@ -26,24 +26,24 @@
  */
 
 
-module egret {
+module egret.gui {
 
 	/**
-	 * @class egret.DefaultSkinAdapter
+	 * @class egret.gui.DefaultSkinAdapter
 	 * @classdesc
 	 * 默认的ISkinAdapter接口实现
-	 * @implements egret.ISkinAdapter
+	 * @implements egret.gui.ISkinAdapter
 	 */
     export class DefaultSkinAdapter implements ISkinAdapter{
         /**
          * 构造函数
-		 * @method egret.DefaultSkinAdapter#constructor
+		 * @method egret.gui.DefaultSkinAdapter#constructor
          */
         public constructor(){
         }
         /**
          * 获取皮肤显示对象
-         * @method egret.ISkinAdapter#getSkin
+         * @method egret.gui.ISkinAdapter#getSkin
          * @param skinName {any} 待解析的皮肤标识符
          * @param hostComponentKey {string} 主机组件标识符
          * @returns {any} 皮肤对象实例

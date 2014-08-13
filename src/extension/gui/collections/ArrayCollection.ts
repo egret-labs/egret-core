@@ -26,21 +26,21 @@
  */
 
 
-module egret {
+module egret.gui {
 
     /**
-     * @class egret.ArrayCollection
+     * @class egret.gui.ArrayCollection
      * @classdesc
      * 数组的集合类数据结构包装器
      * 通常作为列表组件的数据源，使用这种数据结构包装普通数组，
      * 能在数据源发生改变的时候主动通知视图刷新变更的数据项
      * @extends egret.EventDispatcher
-     * @implements egret.ICollection
+     * @implements egret.gui.ICollection
      */
     export class ArrayCollection extends EventDispatcher implements ICollection{
         /**
          * 构造函数
-         * @method egret.ArrayCollection#constructor
+         * @method egret.gui.ArrayCollection#constructor
          * @param source {Array<any>} 数据源
          */
         public constructor(source:Array<any> = null){
@@ -58,7 +58,7 @@ module egret {
          * 数据源
          * 通常情况下请不要直接调用Array的方法操作数据源，否则对应的视图无法收到数据改变的通知。
          * 若对数据源进行了排序或过滤等操作，请手动调用refresh()方法刷新数据。<br/>
-         * @member egret.ArrayCollection#source
+         * @member egret.gui.ArrayCollection#source
          */
         public get source():Array<any>{
             return this._source;
@@ -72,14 +72,14 @@ module egret {
         }
         /**
          * 在对数据源进行排序或过滤操作后可以手动调用此方法刷新所有数据,以更新视图。
-         * @method egret.ArrayCollection#refresh
+         * @method egret.gui.ArrayCollection#refresh
          */
         public refresh():void{
             this.dispatchCoEvent(CollectionEventKind.REFRESH);
         }
         /**
          * 是否包含某项数据
-         * @method egret.ArrayCollection#contains
+         * @method egret.gui.ArrayCollection#contains
          * @param item {any}
          * @returns {boolean}
          */
@@ -102,14 +102,14 @@ module egret {
         //
         //--------------------------------------------------------------------------
         /**
-         * @member egret.ArrayCollection#length
+         * @member egret.gui.ArrayCollection#length
          */
         public get length():number{
             return this._source.length;
         }
         /**
          * 向列表末尾添加指定项目。等效于 addItemAt(item, length)。
-         * @method egret.ArrayCollection#addItem
+         * @method egret.gui.ArrayCollection#addItem
          * @param item {any}
          */
         public addItem(item:any):void{
@@ -119,7 +119,7 @@ module egret {
         /**
          * 在指定的索引处添加项目。
          * 任何大于已添加项目的索引的项目索引都会增加 1。
-         * @method egret.ArrayCollection#addItemAt
+         * @method egret.gui.ArrayCollection#addItemAt
          * @throws RangeError 如果索引小于 0 或大于长度。
          * @param item {any}
          * @param index {number}
@@ -132,7 +132,7 @@ module egret {
             this.dispatchCoEvent(CollectionEventKind.ADD,index,-1,[item]);
         }
         /**
-         * @method egret.ArrayCollection#getItemAt
+         * @method egret.gui.ArrayCollection#getItemAt
          * @param index {number}
          * @returns {any}
          */
@@ -140,7 +140,7 @@ module egret {
             return this._source[index];
         }
         /**
-         * @method egret.ArrayCollection#getItemIndex
+         * @method egret.gui.ArrayCollection#getItemIndex
          * @param item {any}
          * @returns {number}
          */
@@ -155,7 +155,7 @@ module egret {
         }
         /**
          * 通知视图，某个项目的属性已更新。
-         * @method egret.ArrayCollection#itemUpdated
+         * @method egret.gui.ArrayCollection#itemUpdated
          * @param item {any}
          */
         public itemUpdated(item:any):void{
@@ -166,7 +166,7 @@ module egret {
         }
         /**
          * 删除列表中的所有项目。
-         * @method egret.ArrayCollection#removeAll
+         * @method egret.gui.ArrayCollection#removeAll
          */
         public removeAll():void{
             var items:Array<any> = this._source.concat();
@@ -175,7 +175,7 @@ module egret {
         }
         /**
          * 删除指定索引处的项目并返回该项目。原先位于此索引之后的所有项目的索引现在都向前移动一个位置。
-         * @method egret.ArrayCollection#removeItemAt
+         * @method egret.gui.ArrayCollection#removeItemAt
          * @throws RangeError 如果索引小于 0 或大于长度。
          * @param index {number}
          * @returns {any}
@@ -188,7 +188,7 @@ module egret {
         }
         /**
          * 替换在指定索引处的项目，并返回该项目。
-         * @method egret.ArrayCollection#replaceItemAt
+         * @method egret.gui.ArrayCollection#replaceItemAt
          * @throws RangeError 如果索引小于 0 或大于长度。
          * @param item {any}
          * @param index {number}
@@ -202,7 +202,7 @@ module egret {
         }
         /**
          * 用新数据源替换原始数据源，此方法与直接设置source不同，它不会导致目标视图重置滚动位置。
-         * @method egret.ArrayCollection#replaceAll
+         * @method egret.gui.ArrayCollection#replaceAll
          * @param newSource {Array<any>} 新的数据源
          */
         public replaceAll(newSource:Array<any>):void{
@@ -226,7 +226,7 @@ module egret {
          * 在oldIndex和newIndex之间的项目，
          * 若oldIndex小于newIndex,索引会减1
          * 若oldIndex大于newIndex,索引会加1
-         * @method egret.ArrayCollection#moveItemAt
+         * @method egret.gui.ArrayCollection#moveItemAt
          * @param oldIndex {number}
          * @param newIndex {number}
          * @returns {any}

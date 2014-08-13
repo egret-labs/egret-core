@@ -28,8 +28,10 @@
 
 module egret {
     /**
-     * @class BitmapText
-     * 位图字体采用了Bitmap+SpriteSheet的方式来渲染文字
+	 * @classdesc
+	 * @class egret.BitmapText
+     * 位图字体采用了Bitmap+SpriteSheet的方式来渲染文字。
+	 * @extends egret.DisplayObjectContainer
      */
     export class BitmapText extends DisplayObjectContainer {
 
@@ -46,12 +48,18 @@ module egret {
             this._text = value;
         }
 
+		/**
+         * 显示的文本内容
+		 * @member {string} egret.BitmapText#text
+         *
+		 */
         public get text():string {
             return this._text;
         }
 
         /**
          * BitmapTextSpriteSheet对象，缓存了所有文本的位图纹理
+		 * @member {egret.BitmapTextSpriteSheet} egret.BitmapText#spriteSheet
          */
         public spriteSheet:BitmapTextSpriteSheet;
 

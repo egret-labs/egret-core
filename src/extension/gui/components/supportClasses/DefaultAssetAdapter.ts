@@ -26,23 +26,23 @@
  */
 
 
-module egret {
+module egret.gui {
     /**
-     * @class egret.DefaultAssetAdapter
+     * @class egret.gui.DefaultAssetAdapter
      * @classdesc
      * 默认的IAssetAdapter接口实现
-     * @implements egret.IAssetAdapter
+     * @implements egret.gui.IAssetAdapter
      */
     export class DefaultAssetAdapter implements IAssetAdapter{
         /**
          * 构造函数
-         * @method egret.DefaultSkinAdapter#constructor
+         * @method egret.gui.DefaultSkinAdapter#constructor
          */
         public constructor(){
         }
         /**
          * 解析素材
-         * @method egret.DefaultAssetAdapter#getAsset
+         * @method egret.gui.DefaultAssetAdapter#getAsset
          * @param source {any} 待解析的新素材标识符
          * @param compFunc {Function} 解析完成回调函数，示例：compFunc(content:any,source:any):void;
          * 回调参数content接受两种类型：DisplayObject或Texture。

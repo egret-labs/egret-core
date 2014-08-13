@@ -184,7 +184,7 @@ class EXMLCompiler{
      */
     public compile(xmlData:any,className:string,srcPath:string,exmlPath:string):string{
         if(!this.exmlConfig){
-            this.exmlConfig = new exml_config.EXMLConfig();
+            this.exmlConfig = new exml_config.getInstance();
         }
         this.exmlPath = exmlPath;
         this.currentXML = xmlData;
@@ -692,6 +692,14 @@ class EXMLCompiler{
                 globals.exit(2009,this.exmlPath,this.toXMLString(node));
             }
         }
+        else if(key=="scale9Grid"&&type=="egret.Rectangle"){
+            var rect:Array<any> = value.split(",");
+            if(rect.length!=4||isNaN(parseInt(rect[0]))||isNaN(parseInt(rect[1]))||
+                isNaN(parseInt(rect[2]))||isNaN(parseInt(rect[3]))){
+                globals.exit(2016,this.exmlPath,this.toXMLString(node))
+            }
+            value = "egret.gui.getScale9Grid(\""+value+"\")";
+        }
         else{
             switch(type){
                 case "Class":
@@ -710,8 +718,8 @@ class EXMLCompiler{
                 case "boolean":
                     value = (value=="false"||!value)?"false":"true";
                     break;
-                case "egret.IFactory":
-                    value = "new egret.ClassFactory("+value+")";
+                case "egret.gui.IFactory":
+                    value = "new egret.gui.ClassFactory("+value+")";
                     break;
                 case "string":
                 case "any":
@@ -1052,7 +1060,7 @@ class EXMLCompiler{
      */
     private isIVisualElement(node:any):boolean{
         var className:string = this.exmlConfig.getClassNameById(node.localName,node.namespace);
-        var result:boolean = this.exmlConfig.isInstanceOf(className,"egret.IVisualElement");
+        var result:boolean = this.exmlConfig.isInstanceOf(className,"egret.gui.IVisualElement");
         if(!result){
             return false;
         }
@@ -1918,7 +1926,7 @@ class CpState extends CodeBase{
 
     public toCode():string{
         var indentStr:string = this.getIndent(1);
-        var returnStr:string = "new egret.State (\""+this.name+"\",\n"+indentStr+"[\n";
+        var returnStr:string = "new egret.gui.State (\""+this.name+"\",\n"+indentStr+"[\n";
         var index:number = 0;
         var isFirst:boolean = true;
         var overrides:Array<any> = this.addItems.concat(this.setProperty);
@@ -1973,7 +1981,7 @@ class CpAddItems extends CodeBase{
 
     public toCode():string{
         var indentStr:string = this.getIndent(1);
-        var returnStr:string = "new egret.AddItems(\""+this.target+"\",\""+this.propertyName+"\",\""+this.position+"\",\""+this.relativeTo+"\")";
+        var returnStr:string = "new egret.gui.AddItems(\""+this.target+"\",\""+this.propertyName+"\",\""+this.position+"\",\""+this.relativeTo+"\")";
         return returnStr;
     }
 }
@@ -2003,7 +2011,7 @@ class CpSetProperty extends CodeBase{
 
     public toCode():string{
         var indentStr:string = this.getIndent(1);
-        return "new egret.SetProperty(\""+this.target+"\",\""+this.name+"\","+this.value+")";
+        return "new egret.gui.SetProperty(\""+this.target+"\",\""+this.name+"\","+this.value+")";
     }
 }
 

@@ -26,19 +26,19 @@
  */
 
 
-module egret {
+module egret.gui {
 
 	/**
-	 * @class egret.Spacer
+	 * @class egret.gui.Spacer
 	 * @classdesc
 	 * 占位组件,一个布局辅助类。
 	 * 自身完全不可见，但可以在父级容器的布局中分配空间，通常用于垂直和水平布局中，推挤其他组件。
-	 * @extends egret.UIComponent
+	 * @extends egret.gui.UIComponent
 	 */	
 	export class Spacer extends UIComponent{
 		/**
 		 * 构造函数
-		 * @method egret.Spacer#constructor
+		 * @method egret.gui.Spacer#constructor
 		 */		
 		public constructor(){
 			super();

@@ -26,18 +26,18 @@
  */
 
 
-module egret {
+module egret.gui {
 
 	/**
-	 * @class egret.Group
+	 * @class egret.gui.Group
 	 * @classdesc
 	 * 自动布局容器
-	 * @extends egret.GroupBase
-	 * @implements egret.IVisualElementContainer
+	 * @extends egret.gui.GroupBase
+	 * @implements egret.gui.IVisualElementContainer
 	 */
 	export class Group extends GroupBase implements IVisualElementContainer{
 		/**
-		 * @method egret.Group#constructor
+		 * @method egret.gui.Group#constructor
 		 */
 		public constructor(){
 			super();
@@ -49,7 +49,7 @@ module egret {
 		private createChildrenCalled:boolean = false;
 		
 		/**
-		 * @method egret.Group#createChildren
+		 * @method egret.gui.Group#createChildren
 		 */
 		public createChildren():void{
 			super.createChildren();
@@ -122,14 +122,14 @@ module egret {
 		
 		
 		/**
-		 * @member egret.Group#numElements
+		 * @member egret.gui.Group#numElements
 		 */
 		public get numElements():number{
 			return this._elementsContent.length;
 		}
 		
 		/**
-		 * @method egret.Group#getElementAt
+		 * @method egret.gui.Group#getElementAt
 		 * @param index {number} 
 		 * @returns {IVisualElement}
 		 */
@@ -148,7 +148,7 @@ module egret {
 				throw new RangeError("索引:\""+index+"\"超出可视元素索引范围");
 		}
 		/**
-		 * @method egret.Group#addElement
+		 * @method egret.gui.Group#addElement
 		 * @param element {IVisualElement} 
 		 * @returns {IVisualElement}
 		 */
@@ -161,7 +161,7 @@ module egret {
 			return this.addElementAt(element, index);
 		}
 		/**
-		 * @method egret.Group#addElementAt
+		 * @method egret.gui.Group#addElementAt
 		 * @param element {IVisualElement} 
 		 * @param index {number} 
 		 * @returns {IVisualElement}
@@ -189,7 +189,7 @@ module egret {
 			return element;
 		}
 		/**
-		 * @method egret.Group#removeElement
+		 * @method egret.gui.Group#removeElement
 		 * @param element {IVisualElement} 
 		 * @returns {IVisualElement}
 		 */
@@ -197,7 +197,7 @@ module egret {
 			return this.removeElementAt(this.getElementIndex(element));
 		}
 		/**
-		 * @method egret.Group#removeElementAt
+		 * @method egret.gui.Group#removeElementAt
 		 * @param index {number} 
 		 * @returns {IVisualElement}
 		 */
@@ -214,7 +214,7 @@ module egret {
 			return element;
 		}
 		/**
-		 * @method egret.Group#removeAllElements
+		 * @method egret.gui.Group#removeAllElements
 		 */
 		public removeAllElements():void{
 			for (var i:number = this.numElements - 1; i >= 0; i--){
@@ -223,7 +223,7 @@ module egret {
 		}
 		
 		/**
-		 * @method egret.Group#getElementIndex
+		 * @method egret.gui.Group#getElementIndex
 		 * @param element {IVisualElement} 
 		 * @returns {number}
 		 */
@@ -231,7 +231,7 @@ module egret {
 			return this._elementsContent.indexOf(element);
 		}
 		/**
-		 * @method egret.Group#setElementIndex
+		 * @method egret.gui.Group#setElementIndex
 		 * @param element {IVisualElement} 
 		 * @param index {number} 
 		 */
@@ -252,7 +252,7 @@ module egret {
 				this._elementAdded(element, index, false);
 		}
 		/**
-		 * @method egret.Group#swapElements
+		 * @method egret.gui.Group#swapElements
 		 * @param element1 {IVisualElement} 
 		 * @param element2 {IVisualElement} 
 		 */
@@ -260,7 +260,7 @@ module egret {
 			this.swapElementsAt(this.getElementIndex(element1), this.getElementIndex(element2));
 		}
 		/**
-		 * @method egret.Group#swapElementsAt
+		 * @method egret.gui.Group#swapElementsAt
 		 * @param index1 {number} 
 		 * @param index2 {number} 
 		 */
@@ -295,7 +295,7 @@ module egret {
 		}
 		/**
 		 * 添加一个显示元素到容器
-		 * @method egret.Group#_elementAdded
+		 * @method egret.gui.Group#_elementAdded
 		 * @param element {IVisualElement} 
 		 * @param index {number} 
 		 * @param notifyListeners {boolean} 
@@ -317,7 +317,7 @@ module egret {
 		}
 		/**
 		 * 从容器移除一个显示元素
-		 * @method egret.Group#_elementRemoved
+		 * @method egret.gui.Group#_elementRemoved
 		 * @param element {IVisualElement} 
 		 * @param index {number} 
 		 * @param notifyListeners {boolean} 
@@ -340,7 +340,7 @@ module egret {
 		
 		private static errorStr:string = "在此组件中不可用，若此组件为容器类，请使用";
 		/**
-		 * @method egret.Group#addChild
+		 * @method egret.gui.Group#addChild
 		 * @deprecated
 		 * @param child {DisplayObject} 
 		 * @returns {DisplayObject}
@@ -349,7 +349,7 @@ module egret {
 			throw(new Error("addChild()"+Group.errorStr+"addElement()代替"));
 		}
 		/**
-		 * @method egret.Group#addChildAt
+		 * @method egret.gui.Group#addChildAt
 		 * @deprecated
 		 * @param child {DisplayObject} 
 		 * @param index {number} 
@@ -359,7 +359,7 @@ module egret {
 			throw(new Error("addChildAt()"+Group.errorStr+"addElementAt()代替"));
 		}
 		/**
-		 * @method egret.Group#removeChild
+		 * @method egret.gui.Group#removeChild
 		 * @deprecated
 		 * @param child {DisplayObject} 
 		 * @returns {DisplayObject}
@@ -368,7 +368,7 @@ module egret {
 			throw(new Error("removeChild()"+Group.errorStr+"removeElement()代替"));
 		}
 		/**
-		 * @method egret.Group#removeChildAt
+		 * @method egret.gui.Group#removeChildAt
 		 * @deprecated
 		 * @param index {number} 
 		 * @returns {DisplayObject}
@@ -377,7 +377,7 @@ module egret {
 			throw(new Error("removeChildAt()"+Group.errorStr+"removeElementAt()代替"));
 		}
 		/**
-		 * @method egret.Group#setChildIndex
+		 * @method egret.gui.Group#setChildIndex
 		 * @deprecated
 		 * @param child {DisplayObject} 
 		 * @param index {number} 
@@ -386,7 +386,7 @@ module egret {
 			throw(new Error("setChildIndex()"+Group.errorStr+"setElementIndex()代替"));
 		}
 		/**
-		 * @method egret.Group#swapChildren
+		 * @method egret.gui.Group#swapChildren
 		 * @deprecated
 		 * @param child1 {DisplayObject} 
 		 * @param child2 {DisplayObject} 
@@ -395,7 +395,7 @@ module egret {
 			throw(new Error("swapChildren()"+Group.errorStr+"swapElements()代替"));
 		}
 		/**
-		 * @method egret.Group#swapChildrenAt
+		 * @method egret.gui.Group#swapChildrenAt
 		 * @deprecated
 		 * @param index1 {number} 
 		 * @param index2 {number} 
