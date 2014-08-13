@@ -27,6 +27,11 @@
 
 
 module egret {
+	/**
+	 * @class egret.Timer
+	 * @classdesc
+	 * @extends egret.EventDispatcher
+	 */
     export class Timer extends EventDispatcher {
 
         constructor(delay:number, repeatCount:number = 0) {
@@ -35,27 +40,46 @@ module egret {
             this.repeatCount = repeatCount;
         }
 
+		/**
+		 * @member {number} egret.Timer#delay
+		 */
         public delay:number;
 
+		/**
+		 * @member {number} egret.Timer#repeatCount
+		 */
         public repeatCount:number;
 
         private _currentCount:number = 0;
 
+		/**
+		 * @method egret.Timer#currentCount
+		 * @returns {number}
+		 */
         public currentCount():number{
             return this._currentCount;
         }
 
         private _running:boolean;
 
+		/**
+		 * @member {boolean} egret.Timer#running
+		 */
         public get running():boolean{
             return this._running;
         }
 
+		/**
+		 * @method egret.Timer#reset
+		 */
         public reset():void{
             this.stop();
             this._currentCount = 0;
         }
 
+		/**
+		 * @method egret.Timer#start
+		 */
         public start() {
             if(this._running)
                 return;
@@ -67,6 +91,9 @@ module egret {
             this._running = true;
         }
 
+		/**
+		 * @method egret.Timer#stop
+		 */
         public stop() {
             if(!this._running)
                 return;

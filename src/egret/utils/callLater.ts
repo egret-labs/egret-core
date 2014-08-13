@@ -32,9 +32,10 @@ module egret {
     export var __callLaterArgsList:Array<any> = [];
     /**
      * 延迟函数到屏幕重绘前执行。
-     * @param method 要延迟执行的函数
-     * @param thisObject 回调函数的this引用
-     * @param args 函数参数列表
+	 * @method egret.callLater
+     * @param method {Function} 要延迟执行的函数
+     * @param thisObject {any} 回调函数的this引用
+     * @param ...args {any} 函数参数列表
      */
     export function callLater(method:Function,thisObject:any,...args):void
     {
