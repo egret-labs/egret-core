@@ -307,6 +307,12 @@ module RES {
          * @returns {boolean}
          */
         public createGroup(name:string,keys:Array<string>,override:boolean=false):boolean{
+            if(override){
+                var index:number = this.loadedGroups.indexOf(name);
+                if(index!=-1){
+                    this.loadedGroups.splice(index,1);
+                }
+            }
             return this.resConfig.createGroup(name,keys,override);
         }
         /**
