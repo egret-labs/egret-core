@@ -13,6 +13,8 @@ var CodeUtil = require("../core/code_util.js");
 var create_manifest = require("./create_manifest.js");
 
 
+var all_module_file_list = [];
+
 
 function run(currentDir, args, opts) {
     var source = path.resolve(param.getEgretPath(), "");
@@ -368,23 +370,6 @@ function exportHeader(callback, projectPath, sourceList) {
     });
 }
 
-function generateEgretFileList(runtime, projectPath) {
-    var coreList = globals.require("tools/lib/manifest/core.json");
-    var runtimeList = globals.require("tools/lib/manifest/" + runtime + ".json");
-    var egretPath = param.getEgretPath();
-    var manifest = coreList.concat(runtimeList);
-    var length = manifest.length;
-    for (var i = 0; i < length; i++) {
-        manifest[i] = file.joinPath(egretPath, "src", manifest[i]);
-    }
-    var srcPath = path.join(param.getEgretPath(), "src/");
-    srcPath = srcPath.split("\\").join("/");
-    var egretFileListText = createFileList(manifest, srcPath);
-    egretFileListText = "var egret_file_list = " + egretFileListText + ";";
-    file.save(file.joinPath(projectPath, "bin-debug/lib/egret_file_list.js"), egretFileListText);
-    return manifest;
-}
-
 function getModuleConfig(moduleName) {
     var coreList = globals.require("tools/lib/manifest/" + moduleName + ".json");
     return coreList
@@ -507,6 +492,7 @@ function compileModule(callback, moduleName, prefix, projectDir) {
     }).filter(function (item) {
             return item.indexOf(".js") == -1
         })
+    all_module_file_list = all_module_file_list.concat(moduleConfig.file_list);
     var dependencyList = moduleConfig.dependence;
     if (dependencyList) {
         for (var i = 0; i < dependencyList.length; i++) {
@@ -540,9 +526,41 @@ function compileModule(callback, moduleName, prefix, projectDir) {
 
 }
 
+function generateAllModuleFileList(projectDir) {
+
+
+    var manifest = all_module_file_list
+//        .map(function (item) {
+//        return path.resolve(projectDir, item)
+//
+//    })
+
+
+//    var coreList = globals.require("tools/lib/manifest/core.json");
+//    var runtimeList = globals.require("tools/lib/manifest/" + runtime + ".json");
+    var egretPath = param.getEgretPath();
+//    var manifest = coreList.concat(runtimeList);
+    var length = manifest.length;
+    for (var i = 0; i < length; i++) {
+        manifest[i] = file.joinPath(egretPath, "src", manifest[i]);
+        console.log (egretPath,manifest[i])
+    }
+    console.log (manifest)
+
+    var srcPath = path.join(param.getEgretPath(), "src/");
+    srcPath = srcPath.split("\\").join("/");
+    var egretFileListText = createFileList(manifest, srcPath);
+    egretFileListText = "var egret_file_list = " + egretFileListText + ";";
+    file.save(file.joinPath(projectDir, "bin-debug/lib/egret_file_list.js"), egretFileListText);
+    return manifest;
+
+
+
+}
+
+exports.generateAllModuleFileList = generateAllModuleFileList;
 exports.compileModule = compileModule;
 exports.compile = compile;
 exports.exportHeader = exportHeader;
 exports.run = run;
-exports.generateEgretFileList = generateEgretFileList;
 exports.generateGameFileList = generateGameFileList;

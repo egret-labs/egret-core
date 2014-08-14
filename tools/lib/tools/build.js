@@ -21,68 +21,28 @@ function run(dir, args, opts) {
 
     var runtime = param.getOption(opts, "--runtime", ["html5", "native"]);
 
-    if (true) {
+    if (needCompileEngine) {
+
+        var egret_src = path.join(param.getEgretPath(), "src")
+        task.push(
+            function (callback) {
+                compiler.compileModule(
+                    callback, "core", egret_src, currDir);
+            });
 
         task.push(
-
             function (callback) {
                 compiler.compileModule(
-                    callback, "core", path.join(param.getEgretPath(), "src"), currDir);
-            },
+                    callback, "html5", egret_src, currDir);
+            });
 
+        task.push(
             function (callback) {
-                compiler.compileModule(
-                    callback, "html5", path.join(param.getEgretPath(), "src"), currDir);
+                compiler.generateAllModuleFileList(currDir);
             }
         )
     }
-
-
-    async.series(task, function (err) {
-        if (!err) {
-            globals.log("构建成功");
-        }
-        else {
-            globals.exit(err);
-        }
-    })
-
-
-    return;
-
-    if (needCompileEngine) {
-        var egretSourceList = [];
-        task.push(
-            function (callback) {
-                var runtime = param.getOption(opts, "--runtime", ["html5", "native"]);
-                egretSourceList = compiler.generateEgretFileList(runtime, currDir);
-                console.log(egretSourceList)
-                compiler.compile(callback,
-                    path.join(param.getEgretPath(), "src"),
-                    path.join(currDir, "bin-debug/lib"),
-                    egretSourceList,
-                    false
-                );
-            },
-
-            function (callback) {
-                compiler.exportHeader(callback,
-                    currDir,
-                    egretSourceList
-                );
-
-            }
-        );
-    }
-    else {
-        var exist = file.exists(file.joinPath(currDir, "bin-debug", "lib"));
-        if (!exist) {
-            globals.exit(1102)
-        }
-    }
-
     task.push(
-
         function (callback) {
             buildProject(callback, currDir, keepGeneratedTypescript);
         },
@@ -94,6 +54,7 @@ function run(dir, args, opts) {
         }
     )
 
+
     async.series(task, function (err) {
         if (!err) {
             globals.log("构建成功");
@@ -102,8 +63,6 @@ function run(dir, args, opts) {
             globals.exit(err);
         }
     })
-
-
 }
 
 function buildProject(callback, currDir, keepGeneratedTypescript) {
