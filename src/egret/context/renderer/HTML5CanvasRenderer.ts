@@ -370,6 +370,7 @@ module egret_h5_graphics {
         if (this.strokeStyleColor && length > 0 && this.commandQueue[length - 1] != this.endLineCommand) {
             this.createEndLineCommand();
             this.commandQueue.push(this.endLineCommand);
+            length = this.commandQueue.length;
         }
         for (var i = 0; i < length; i++) {
             var command:Command = this.commandQueue[i];
