@@ -183,13 +183,15 @@ module egret {
         private currentBlendMode:string = "";
 
         private setBlendMode(blendMode:string) {
-            if(!blendMode) {
+            if (!blendMode) {
                 blendMode = egret.BlendMode.NORMAL;
             }
             if (this.currentBlendMode != blendMode) {
-                this.currentBlendMode = blendMode;
-                var blendModeWebGL = WebGLRenderer.blendModesWebGL[this.currentBlendMode];
-                this.gl.blendFunc(blendModeWebGL[0], blendModeWebGL[1]);
+                var blendModeWebGL = WebGLRenderer.blendModesWebGL[blendMode];
+                if (blendModeWebGL) {
+                    this.gl.blendFunc(blendModeWebGL[0], blendModeWebGL[1]);
+                    this.currentBlendMode = blendMode;
+                }
             }
         }
 
@@ -359,7 +361,7 @@ module egret {
         private maskList:Array<any> = [];
         private maskDataFreeList:Array<any> = [];
 
-        public pushMask(mask:Rectangle):void{
+        public pushMask(mask:Rectangle):void {
             this._draw();
             var gl:any = this.gl;
             if (this.maskList.length == 0) {
@@ -389,7 +391,7 @@ module egret {
             gl.stencilOp(gl.KEEP, gl.KEEP, gl.KEEP);
         }
 
-        public popMask():void{
+        public popMask():void {
             this._draw();
             var gl:any = this.gl;
             var maskData = this.maskList.pop();
