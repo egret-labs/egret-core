@@ -66,9 +66,9 @@ module egret {
          * @param width {number} 矩形的宽度（以像素为单位）。
          * @param height {number} 矩形的高度（以像素为单位）。
          */
-        public drawRect(x:number, y:number, width:number, height:number):void {
+        /*public drawRect(x:number, y:number, width:number, height:number):void {
 
-        }
+        }*/
 
         /**
          * 绘制一个圆角矩形
@@ -79,7 +79,7 @@ module egret {
          * @param height {number} 矩形的高度（以像素为单位）。
          * @param r? {number} 圆的半径（以像素为单位）,不设置就为直角矩形。
          */
-        public drawRoundRect(x:number, y:number, width:number, height:number, r?:number):void{
+        public drawRect(x:number, y:number, width:number, height:number, r?:number):void{
 
         }
 

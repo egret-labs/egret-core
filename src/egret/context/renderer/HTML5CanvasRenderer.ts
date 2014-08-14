@@ -208,27 +208,9 @@ module egret_h5_graphics {
 
     }
 
-    /*export function drawRect(x:number, y:number, width:number, height:number):void {
-        this.commandQueue.push(new Command(
-                function (x, y, width, height) {
-                    var rendererContext = <egret.HTML5CanvasRenderer>this.renderContext;
-                    this.canvasContext.beginPath();
-                    this.canvasContext.rect(rendererContext._transformTx + x,
-                            rendererContext._transformTy + y,
-                        width,
-                        height);
-                    this.canvasContext.closePath();
-                },
-                this,
-                [ x, y, width, height]
-            )
-        );
-        this._fill();
-    }*/
-
     export function drawRect(x:number, y:number, width:number, height:number, r?:number):void {
         this.commandQueue.push(new Command(
-            function (x, y, width, height, r) {
+            function (x, y, width, height, r?) {
                 var rendererContext = <egret.HTML5CanvasRenderer>this.renderContext;
                 var _x:number = rendererContext._transformTx + x;//控制X偏移
                 var _y:number = rendererContext._transformTy + y;//控制Y偏移
@@ -266,7 +248,6 @@ module egret_h5_graphics {
                 this.canvasContext.arc(rendererContext._transformTx + x,
                         rendererContext._transformTy + y, r, 0, Math.PI * 2);
                 this.canvasContext.closePath();
-
             },
             this,
             [ x, y, r]
