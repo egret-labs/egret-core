@@ -164,8 +164,6 @@ module egret {
             gl.vertexAttribPointer(shader.aVertexPosition, 2, gl.FLOAT, false, stride, 0);
             gl.vertexAttribPointer(shader.aTextureCoord, 2, gl.FLOAT, false, stride, 2 * 4);
             gl.vertexAttribPointer(shader.colorAttribute, 2, gl.FLOAT, false, stride, 4 * 4);
-
-            this.setBlendMode(BlendMode.NORMAL);
         }
 
         public clearScreen():void {
@@ -185,6 +183,9 @@ module egret {
         private currentBlendMode:string = "";
 
         private setBlendMode(blendMode:string) {
+            if(!blendMode) {
+                blendMode = egret.BlendMode.NORMAL;
+            }
             if (this.currentBlendMode != blendMode) {
                 this.currentBlendMode = blendMode;
                 var blendModeWebGL = WebGLRenderer.blendModesWebGL[this.currentBlendMode];
