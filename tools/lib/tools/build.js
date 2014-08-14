@@ -20,15 +20,19 @@ function run(dir, args, opts) {
     var task = [];
 
     var runtime = param.getOption(opts, "--runtime", ["html5", "native"]);
-    egretSourceList = compiler.generateModuleFileList();
 
-    if (true){
+    if (true) {
 
         task.push(
 
-            function(callback){
+            function (callback) {
                 compiler.compileModule(
-                    callback,egretSourceList,path.join(param.getEgretPath(), "src"),path.join(currDir, "bin-debug/lib"));
+                    callback, "core", path.join(param.getEgretPath(), "src"), currDir);
+            },
+
+            function (callback) {
+                compiler.compileModule(
+                    callback, "html5", path.join(param.getEgretPath(), "src"), currDir);
             }
         )
     }
@@ -44,8 +48,6 @@ function run(dir, args, opts) {
     })
 
 
-
-
     return;
 
     if (needCompileEngine) {
@@ -54,7 +56,7 @@ function run(dir, args, opts) {
             function (callback) {
                 var runtime = param.getOption(opts, "--runtime", ["html5", "native"]);
                 egretSourceList = compiler.generateEgretFileList(runtime, currDir);
-                console.log (egretSourceList)
+                console.log(egretSourceList)
                 compiler.compile(callback,
                     path.join(param.getEgretPath(), "src"),
                     path.join(currDir, "bin-debug/lib"),
@@ -114,12 +116,12 @@ function buildProject(callback, currDir, keepGeneratedTypescript) {
 
     var libsPath = path.join(currDir, "libs/");
     var sourceList = compiler.generateGameFileList(currDir);
-    var dts = generateExmlDTS(sourceList,path.join(currDir, "src"));
-    var exmlDtsPath = path.join(currDir, "libs","exml.d.ts");
-    if(dts){
-        file.save(exmlDtsPath,dts);
+    var dts = generateExmlDTS(sourceList, path.join(currDir, "src"));
+    var exmlDtsPath = path.join(currDir, "libs", "exml.d.ts");
+    if (dts) {
+        file.save(exmlDtsPath, dts);
     }
-    else{
+    else {
         file.remove(exmlDtsPath);
     }
     var libs = file.search(libsPath, "d.ts");
@@ -132,7 +134,7 @@ function buildProject(callback, currDir, keepGeneratedTypescript) {
 
 }
 
-function generateExmlDTS(sourceList,srcPath){
+function generateExmlDTS(sourceList, srcPath) {
     srcPath = srcPath.split("\\").join("/");
     if (srcPath.charAt(srcPath.length - 1) != "/") {
         srcPath += "/";
@@ -146,16 +148,16 @@ function generateExmlDTS(sourceList,srcPath){
         }
         var ext = file.getExtension(p).toLowerCase();
         if (ext == "exml") {
-            var className = p.substring(srcPath.length,p.length-5);
+            var className = p.substring(srcPath.length, p.length - 5);
             className = className.split("/").join(".");
             var index = className.lastIndexOf(".");
-            if(index==-1){
-                dts += "declare class "+className+" extends egret.gui.Skin{\n}\n";
+            if (index == -1) {
+                dts += "declare class " + className + " extends egret.gui.Skin{\n}\n";
             }
-            else{
-                var moduleName = className.substring(0,index);
-                className = className.substring(index+1);
-                dts += "declare module "+moduleName+"{\n\tclass "+className+" extends egret.gui.Skin{\n\t}\n}\n";
+            else {
+                var moduleName = className.substring(0, index);
+                className = className.substring(index + 1);
+                dts += "declare module " + moduleName + "{\n\tclass " + className + " extends egret.gui.Skin{\n\t}\n}\n";
             }
         }
     }
