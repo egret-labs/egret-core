@@ -282,7 +282,7 @@ function run(dir, args, opts) {
     var egret_file = path.join(currDir, "bin-debug/lib/egret_file_list.js");
     var egretFileList = getFileList(egret_file);
     egretFileList = egretFileList.map(function (item) {
-        return path.join(currDir + "/bin-debug/lib/", item);
+        return path.join(currDir + "/libs/core", item);
     });
 
     var game_file = path.join(currDir, "bin-debug/src/game_file_list.js");

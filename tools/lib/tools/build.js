@@ -30,6 +30,13 @@ function run(dir, args, opts) {
                     callback, "core", egret_src, currDir);
             });
 
+
+//        task.push(
+//            function (callback) {
+//                compiler.compileModule(
+//                    callback, "gui", egret_src, currDir);
+//            });
+
         task.push(
             function (callback) {
                 compiler.compileModule(

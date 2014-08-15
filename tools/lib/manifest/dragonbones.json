@@ -1,0 +1,8 @@
+{
+    "name": "dragonbones",
+    "dependence": ["core"],
+    "file_list": [
+        "extension/dragonbones/dragonBones.ts",
+        "extension/dragonbones/DragonBonesEgretBridge.ts"
+    ]
+}

@@ -543,9 +543,7 @@ function generateAllModuleFileList(projectDir) {
     var length = manifest.length;
     for (var i = 0; i < length; i++) {
         manifest[i] = file.joinPath(egretPath, "src", manifest[i]);
-        console.log (egretPath,manifest[i])
     }
-    console.log (manifest)
 
     var srcPath = path.join(param.getEgretPath(), "src/");
     srcPath = srcPath.split("\\").join("/");
