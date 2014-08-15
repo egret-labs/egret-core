@@ -23,9 +23,10 @@ module RES {
 	 * @method RES.loadConfig
      * @param url {string} 配置文件路径(resource.json的路径)
      * @param resourceRoot {string} 资源根路径。配置中的所有url都是这个路径的相对值。最终url是这个字符串与配置里资源项的url相加的值。
+     * @param type {string} 配置文件的格式。确定要用什么解析器来解析配置文件。默认"json"
      */
-    export function loadConfig(url:string,resourceRoot:string=""):void{
-        instance.loadConfig(url,resourceRoot);
+    export function loadConfig(url:string,resourceRoot:string="",type="json"):void{
+        instance.loadConfig(url,resourceRoot,type);
     }
     /**
      * 根据组名加载一组资源
@@ -114,6 +115,14 @@ module RES {
      */
     export function destroyRes(name:string):boolean{
         return instance.destroyRes(name);
+    }
+    /**
+     * 设置最大并发加载线程数量，默认值是2.
+     * @method RES.setMaxLoadingThread
+     * @param thread {number} 要设置的并发加载数。
+     */
+    export function setMaxLoadingThread(thread:number):void{
+        instance.setMaxLoadingThread(thread);
     }
 
     /**
@@ -206,14 +215,12 @@ module RES {
          * 配置文件组组名
          */
         private static GROUP_CONFIG:string = "RES__CONFIG";
-        /**
-         * 配置文件路径
-         */
-        private configURL:string;
-        /**
-         * 资源根路径
-         */
-        private resourceRoot:string;
+
+        private configItemList:Array<any> = [];
+
+        private loadingConfigList:Array<any>;
+
+        private callLaterFlag:boolean = false;
         /**
          * 配置文件加载解析完成标志
          */
@@ -223,13 +230,30 @@ module RES {
 		 * @method RES.loadConfig
 		 * @param url {string}
 		 * @param resourceRoot {string}
+		 * @param type {string}
          */
-        public loadConfig(url:string,resourceRoot:string):void{
+        public loadConfig(url:string,resourceRoot:string,type:string="json"):void{
 
-            this.configURL = url;
-            this.resourceRoot = resourceRoot;
-            var resItem:ResourceItem = new ResourceItem(url,url,ResourceItem.TYPE_JSON);
-            var itemList:Array<ResourceItem> = [resItem];
+            var configItem:any = {url:url,resourceRoot:resourceRoot,type:type};
+            this.configItemList.push(configItem);
+            if(!this.callLaterFlag){
+                egret.callLater(this.startLoadConfig,this);
+                this.callLaterFlag = true;
+            }
+        }
+
+        private startLoadConfig():void{
+            this.callLaterFlag = false;
+            var configList:Array<any> = this.configItemList;
+            this.configItemList = [];
+            this.loadingConfigList = configList;
+            var length:number = configList.length;
+            var itemList:Array<ResourceItem> = [];
+            for(var i:number=0;i<length;i++){
+                var item:any = configList[i];
+                var resItem:ResourceItem = new ResourceItem(item.url,item.url,item.type);
+                itemList.push(resItem);
+            }
             this.resLoader.loadGroup(itemList,Resource.GROUP_CONFIG,Number.MAX_VALUE);
         }
         /**
@@ -283,6 +307,12 @@ module RES {
          * @returns {boolean}
          */
         public createGroup(name:string,keys:Array<string>,override:boolean=false):boolean{
+            if(override){
+                var index:number = this.loadedGroups.indexOf(name);
+                if(index!=-1){
+                    this.loadedGroups.splice(index,1);
+                }
+            }
             return this.resConfig.createGroup(name,keys,override);
         }
         /**
@@ -294,11 +324,16 @@ module RES {
          */
         private onGroupComp(event:ResourceEvent):void{
             if(event.groupName==Resource.GROUP_CONFIG){
-                var analyzer:AnalyzerBase = this.getAnalyzerByType(ResourceItem.TYPE_JSON);
-                var data:any = analyzer.getRes(this.configURL);
-                analyzer.destroyRes(this.configURL);
-                this.resConfig.parseConfig(data,this.resourceRoot);
+                var length:number = this.loadingConfigList.length;
+                for(var i:number = 0;i < length;i++){
+                    var config:any = this.loadingConfigList[i];
+                    var resolver:AnalyzerBase = this.getAnalyzerByType(config.type);
+                    var data:any = resolver.getRes(config.url);
+                    resolver.destroyRes(config.url);
+                    this.resConfig.parseConfig(data,config.resourceRoot);
+                }
                 this.configComplete = true;
+                this.loadingConfigList = null;
                 ResourceEvent.dispatchResourceEvent(this,ResourceEvent.CONFIG_COMPLETE);
                 var groupNameList:Array<any> = this.groupNameList;
                 var length:number = groupNameList.length;
@@ -511,6 +546,17 @@ module RES {
                 analyzer = this.getAnalyzerByType(type);
                 return analyzer.destroyRes(name);
             }
+        }
+        /**
+         * 设置最大并发加载线程数量，默认值是2.
+         * @method RES.setMaxLoadingThread
+         * @param thread {number} 要设置的并发加载数。
+         */
+        public setMaxLoadingThread(thread:number):void{
+            if(thread<1){
+                thread = 1;
+            }
+            this.resLoader.thread = thread;
         }
     }
     /**

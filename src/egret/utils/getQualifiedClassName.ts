@@ -28,8 +28,9 @@
 module egret {
     /**
      * 返回一个对象的完全限定名<br/>
-     * @param value 需要完全限定类名称的对象，可以将任何 TypeScript / JavaScript值传递给此方法，包括所有可用的TypeScript / JavaScript类型、对象实例、原始类型（如number）和类对象
-     * @returns {string} 包含完全限定类名称的字符串<br />
+	 * @method egret.getQualifiedClassName
+     * @param value {any} 需要完全限定类名称的对象，可以将任何 TypeScript / JavaScript值传递给此方法，包括所有可用的TypeScript / JavaScript类型、对象实例、原始类型（如number）和类对象
+	 * @returns {string}
      * @example
      *  egret.getQualifiedClassName(egret.DisplayObject) //返回 "egret.DisplayObject"
      */
