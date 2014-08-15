@@ -266,15 +266,12 @@ function getFileList(file_list) {
 }
 
 function run(dir, args, opts) {
-    var version;
+    var version = "";
     if (opts["--version"] && opts["--version"][0]) {
-        version = opts["--version"][0];
+        version = "/" + opts["--version"][0];
     }
     else if (opts["--v"] && opts["--v"][0]) {
-        version = opts["--v"][0];
-    }
-    else {
-        globals.exit(1701);
+        version = "/" + opts["--v"][0];
     }
 
     var currDir = globals.joinEgretDir(dir, args[0]);
@@ -297,10 +294,16 @@ function run(dir, args, opts) {
 
     combineToSingleJavaScriptFile(totalFileList,tempFile);
 
-    var launcherDir = currDir + "/release/" + version + "/launcher";
-    var resourceDir = currDir + "/release/" + version + "/resource";
+    var releaseDir = currDir + "/release" + version;
+    var launcherDir = releaseDir + "/launcher";
+    var resourceDir = releaseDir + "/resource";
     file.remove(launcherDir);
     file.copy(currDir + "/launcher", launcherDir);
+    file.remove(launcherDir + "/index.html");
+    file.copy(launcherDir + "/release.html",releaseDir + "/index.html");
+    file.remove(launcherDir + "/release.html");
+    file.remove(launcherDir + "/native_loader.js");
+
     file.remove(resourceDir);
     file.copy(currDir + "/resource", resourceDir);
 

@@ -10,15 +10,15 @@ var PREFERENCES = "egretProperties.json";
 
 
 function run(dir, args, opts) {
-	var app_name = args[0];
-    var template_path = opts["-t"];
-	var h5_path = opts["-f"];
-	if (!app_name || !h5_path || !template_path) {
-		globals.exit(1601);
-	}
+	var arg_app_name = args[0];
+    var arg_template_path = opts["-t"];
+	var arg_h5_path = opts["-f"];
+    var params = clean_params(arg_app_name, arg_h5_path, arg_template_path);
+
     globals.log("> compile html project to android/ios ...");
     // egert build h5_project -e --runtime native
-    var cmd = "egret build " + path.resolve(h5_path[0]) + " --runtime native -e";
+    var cmd = "egret build " + params["h5_path"] + " --runtime native -e";
+    globals.log(cmd);
     var cp_exec = require('child_process').exec;
     var build = cp_exec(cmd);
     build.stderr.on("data", function(data) {
@@ -26,15 +26,24 @@ function run(dir, args, opts) {
     });
     build.on("exit", function(result) {
         if (result == 0) {
-            create_app_from(path.resolve(app_name), path.resolve(h5_path[0]), path.resolve(template_path[0]));
+            create_app_from(params["app_path"], params["h5_path"], params["template_path"], params["preferences"], params["app_data"]);
         } else {
             globals.exit(1604);
         }
     });
 }
 
+function clean_params(arg_app_name, arg_h5_path, arg_template_path) {
+    if (!arg_app_name || !arg_h5_path || !arg_template_path) {
+		globals.exit(1601);
+	}
+    var app_path = path.resolve(arg_app_name);
+    var h5_path = path.resolve(arg_h5_path[0]);
+    var template_path = path.resolve(arg_template_path[0]);
 
-function create_app_from(app_name, h5_path, template_path) {
+    if (app_path == h5_path) {
+        globals.exit(1605);
+    }
     var preferences = read_json_from(path.join(h5_path, PREFERENCES));
     if (!preferences || !preferences["native"] || !preferences["native"]["path_ignore"]) {
         globals.exit(1602);
@@ -43,37 +52,44 @@ function create_app_from(app_name, h5_path, template_path) {
     if (!app_data) {
         globals.exit(1603);
     }
+    return {"app_path": app_path,
+        "h5_path": h5_path,
+        "template_path": template_path,
+        "preferences": preferences,
+        "app_data": app_data};
+}
 
+function create_app_from(app_path, h5_path, template_path, preferences, app_data) {
     // copy from project template
     globals.log("> copy from project template ...");
-    app_data.template.source.forEach(function(source) {
-        file.copy(path.join(template_path, source), path.join(app_name, source));
+    app_data["template"]["source"].forEach(function(source) {
+        file.copy(path.join(template_path, source), path.join(app_path, source));
     });
 
     // replace keyword in content
     globals.log("> replace all configure elements ...");
-    app_data.rename_tree.content.forEach(function(content) {
-        var target_path = path.join(app_name, content);
+    app_data["rename_tree"]["content"].forEach(function(content) {
+        var target_path = path.join(app_path, content);
         var c = file.read(target_path);
-        c = c.replace(new RegExp(app_data.template_name, "g"), path.basename(app_name));
+        c = c.replace(new RegExp(app_data["template_name"], "g"), path.basename(app_path));
         file.save(target_path, c);
     });
 
     // rename keyword in project name
     globals.log("> rename project name ...");
-    app_data.rename_tree.file_name.forEach(function(f) {
-        var str = path.join(app_name, f);
-        fs.renameSync(str, str.replace(app_data.template_name, path.basename(app_name)));
+    app_data["rename_tree"]["file_name"].forEach(function(f) {
+        var str = path.join(app_path, f);
+        fs.renameSync(str, str.replace(app_data["template_name"], path.basename(app_path)));
     });
 
     // copy h5 res into here
-    globals.log("> copy h5 resources into " + app_name + " ...");
+    globals.log("> copy h5 resources into " + app_path + " ...");
     if (preferences["native"]["support_path"] === undefined) {
         preferences["native"]["support_path"] = [];
     }
     var target_list = [];
     app_data.game.target.forEach(function(target) {
-        target_list.push(path.join(app_name, target));
+        target_list.push(path.join(app_path, target));
     });
     preferences["native"]["support_path"] = preferences["native"]["support_path"].concat(target_list);
     file.save(path.join(h5_path, PREFERENCES), JSON.stringify(preferences, null, '\t'));

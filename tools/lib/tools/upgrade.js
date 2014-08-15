@@ -15,9 +15,11 @@ function run(currDir, args, opts) {
     var list = file.search(extensionDir, "ts");
     list.forEach(fixSingleTypeScriptFile);
 
-
-
-
+    //新的publish改之后，需要把base给删掉
+    var releasePath = currDir + "/launcher/release.html";
+    var txt = file.read(releasePath);
+    txt = txt.replace("<base href=\"../\"/>","");
+    file.save(releasePath, txt);
 }
 
 function getClassList(item) {

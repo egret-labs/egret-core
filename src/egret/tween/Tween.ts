@@ -396,9 +396,9 @@ module egret {
         }
 
 		/**
-         * 等待指定秒后执行下一个动画
+         * 等待指定毫秒后执行下一个动画
 		 * @method egret.Tween#wait
-		 * @param duration {number} 要等待的时间，以秒为单位
+		 * @param duration {number} 要等待的时间，以毫秒为单位
 		 * @param passive {boolean}
 		 * @returns {egret.Tween}
 		 */

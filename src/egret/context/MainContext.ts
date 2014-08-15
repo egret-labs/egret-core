@@ -180,7 +180,7 @@ module egret {
 
 
 var testDeviceType = function () {
-    if (!this.hasOwnProperty("navigator")) {
+    if (!this["navigator"]) {
         return true
     }
     var ua = navigator.userAgent.toLowerCase();
