@@ -24,24 +24,19 @@ function run(dir, args, opts) {
     if (needCompileEngine) {
 
         var egret_src = path.join(param.getEgretPath(), "src")
-        task.push(
-            function (callback) {
-                compiler.compileModule(
-                    callback, "core", egret_src, currDir);
-            });
 
 
-//        task.push(
-//            function (callback) {
-//                compiler.compileModule(
-//                    callback, "gui", egret_src, currDir);
-//            });
-
-        task.push(
-            function (callback) {
-                compiler.compileModule(
-                    callback, "html5", egret_src, currDir);
-            });
+        var projectConfig = require("../core/projectConfig.js");
+        projectConfig.init(currDir);
+        var moduleList = projectConfig.getModule();
+        moduleList.map(function (moduleName) {
+            task.push(
+                function (callback) {
+                    compiler.compileModule(
+                        callback, moduleName, egret_src, currDir);
+                });
+        })
+//        projectConfig.save();
 
         task.push(
             function (callback) {
