@@ -1,5 +1,13 @@
 {
-    "document_class" : "GameApp",
+    "document_class": "GameApp",
+    "modules": [
+        {
+            "name": "core"
+        },
+        {
+            "name": "html5"
+        }
+    ],
     "native": {
         "path_ignore": [
             "libs"
