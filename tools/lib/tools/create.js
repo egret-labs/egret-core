@@ -49,6 +49,24 @@ function run(currDir, args, opts) {
         function (callback) {
             compiler.compileModule(
                 callback,
+                "gui",
+                path.join(param.getEgretPath(), "src"),
+                projectPath
+            );
+        },
+
+        function (callback) {
+            compiler.compileModule(
+                callback,
+                "dragonbones",
+                path.join(param.getEgretPath(), "src"),
+                projectPath
+            );
+        },
+
+        function (callback) {
+            compiler.compileModule(
+                callback,
                 "html5",
                 path.join(param.getEgretPath(), "src"),
                 projectPath
