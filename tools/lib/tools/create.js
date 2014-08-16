@@ -26,10 +26,10 @@ function run(currDir, args, opts) {
             globals.log("正在创建新项目文件夹...");
             file.copy(path.join(param.getEgretPath(), "tools/templates/game"),
                 projectPath);
-            if(process.platform!="win32"){
-                var list = file.search(projectPath,"bat");
-                list = list.concat(file.search(projectPath,"cmd"));
-                for(var i=list.length-1;i>=0;i--){
+            if (process.platform != "win32") {
+                var list = file.search(projectPath, "bat");
+                list = list.concat(file.search(projectPath, "cmd"));
+                for (var i = list.length - 1; i >= 0; i--) {
                     file.remove(list[i]);
                 }
             }
@@ -42,8 +42,22 @@ function run(currDir, args, opts) {
                 callback,
                 "core",
                 path.join(param.getEgretPath(), "src"),
-                path.join(projectPath, "bin-debug/lib")
+                projectPath
             );
+        },
+
+        function (callback) {
+            compiler.compileModule(
+                callback,
+                "html5",
+                path.join(param.getEgretPath(), "src"),
+                projectPath
+            );
+        },
+
+        function (callback) {
+            compiler.generateAllModuleFileList(projectPath);
+            callback();
         },
 
 //        function (callback) {
@@ -73,8 +87,8 @@ function run(currDir, args, opts) {
 //        },
 
         function (callback) {
-           globals.log ("正在编译项目...");
-           build.buildProject(callback,projectPath);
+            globals.log("正在编译项目...");
+            build.buildProject(callback, projectPath);
         },
 
         function (callback) {

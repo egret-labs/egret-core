@@ -529,15 +529,9 @@ function compileModule(callback, moduleName, prefix, projectDir) {
 function generateAllModuleFileList(projectDir) {
 
 
-    var manifest = all_module_file_list
-//        .map(function (item) {
-//        return path.resolve(projectDir, item)
-//
-//    })
+    var manifest = all_module_file_list;
 
 
-//    var coreList = globals.require("tools/lib/manifest/core.json");
-//    var runtimeList = globals.require("tools/lib/manifest/" + runtime + ".json");
     var egretPath = param.getEgretPath();
 //    var manifest = coreList.concat(runtimeList);
     var length = manifest.length;

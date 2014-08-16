@@ -41,6 +41,7 @@ function run(dir, args, opts) {
         task.push(
             function (callback) {
                 compiler.generateAllModuleFileList(currDir);
+                callback();
             }
         )
     }

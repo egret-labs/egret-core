@@ -8,17 +8,33 @@ var param = require("../core/params_analyze.js");
 var code_util = require("../core/code_util.js");
 var path = require("path");
 var globals = require("../core/globals.js");
-function run(currDir, args, opts) {
+var currDir;
+var args
+function run(dir, a, opts) {
+    currDir = dir;
+    args = a;
+    upgradeTo_1_0_3();
+    upgradeTo_1_0_4();
 
+}
+
+function upgradeTo_1_0_3(){
     currDir = globals.joinEgretDir(currDir, args[0]);
     var extensionDir = path.join(currDir,"src");
     var list = file.search(extensionDir, "ts");
     list.forEach(fixSingleTypeScriptFile);
+}
 
+function upgradeTo_1_0_4(){
     //新的publish改之后，需要把base给删掉
     var releasePath = currDir + "/launcher/release.html";
     var txt = file.read(releasePath);
     txt = txt.replace("<base href=\"../\"/>","");
+    file.save(releasePath, txt);
+
+    var releasePath = currDir + "/launcher/index.html";
+    var txt = file.read(releasePath);
+    txt = txt.replace("\"bin-debug/lib/\"","\"libs/core/\"")
     file.save(releasePath, txt);
 }
 
