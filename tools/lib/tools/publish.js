@@ -266,6 +266,11 @@ function getFileList(file_list) {
 }
 
 function run(dir, args, opts) {
+    if (opts["-testJava"]){
+        checkUserJava();
+        return;
+    }
+
     var version = "";
     if (opts["--version"] && opts["--version"][0]) {
         version = "/" + opts["--version"][0];
@@ -343,6 +348,20 @@ function combineToSingleJavaScriptFile(filelist,name){
         content += file.read(filePath) + "\n";
     }
     file.save(name,content);
+}
+
+function checkUserJava(){
+    var globalJava = ClosureCompiler.getGlobalJava();
+    console.log ("正在执行检测命令:" + globalJava + " -version");
+    console.log ("您可以修改 JAVA_HOME 环境变量来修改 JAVA 路径");
+    ClosureCompiler.testJava(globalJava,function(isSuccess){
+        if (!isSuccess){
+            globals.exit(1401);
+        }
+        else{
+            console.log ("检测成功");
+        }
+    })
 }
 
 exports.run = run;
