@@ -1,5 +1,10 @@
 {
-    "document_class" : "GameApp",
+    "document_class": "GameApp",
+    "modules": [
+        {
+            "name": "core"
+        }
+    ],
     "native": {
         "path_ignore": [
             "libs"
