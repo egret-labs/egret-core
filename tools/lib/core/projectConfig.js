@@ -12,8 +12,25 @@ function init(name){
     projectName = name;
     var projectPath = path.join(projectName,"egretProperties.json")
     var content = file.read(projectPath);
-    projectConfig = JSON.parse(content);
-    exports.data = projectConfig
+    if (!content){
+        projectConfig = {
+            "modules": [
+                {
+                    "name": "core"
+                }
+            ],
+            "native": {
+                "path_ignore": [
+                    "libs"
+                ]
+            }
+        }
+
+    }
+    else{
+        projectConfig = JSON.parse(content);
+    }
+    exports.data = projectConfig;
 }
 
 function save(){
@@ -22,10 +39,12 @@ function save(){
     file.save(projectPath,content);
 }
 
-function getModule(){
-    return projectConfig.modules.map(function(item){
+function getModule(runtime){
+    var moduleList = projectConfig.modules.map(function(item){
         return item.name;
     })
+    moduleList.push(runtime);
+    return moduleList;
 }
 
 

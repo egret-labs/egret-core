@@ -8,6 +8,9 @@ var param = require("../core/params_analyze.js");
 var code_util = require("../core/code_util.js");
 var path = require("path");
 var globals = require("../core/globals.js");
+var projectConfig = require("../core/projectConfig.js")
+
+
 var currDir;
 var args
 function run(dir, a, opts) {
@@ -18,24 +21,37 @@ function run(dir, a, opts) {
 
 }
 
-function upgradeTo_1_0_3(){
+function upgradeTo_1_0_3() {
     currDir = globals.joinEgretDir(currDir, args[0]);
-    var extensionDir = path.join(currDir,"src");
+    var extensionDir = path.join(currDir, "src");
     var list = file.search(extensionDir, "ts");
     list.forEach(fixSingleTypeScriptFile);
 }
 
-function upgradeTo_1_0_4(){
+function upgradeTo_1_0_4() {
     //新的publish改之后，需要把base给删掉
     var releasePath = currDir + "/launcher/release.html";
     var txt = file.read(releasePath);
-    txt = txt.replace("<base href=\"../\"/>","");
+    txt = txt.replace("<base href=\"../\"/>", "");
     file.save(releasePath, txt);
 
     var releasePath = currDir + "/launcher/index.html";
     var txt = file.read(releasePath);
-    txt = txt.replace("\"bin-debug/lib/\"","\"libs/core/\"")
+    txt = txt.replace("\"bin-debug/lib/\"", "\"libs/core/\"")
     file.save(releasePath, txt);
+    projectConfig.init(currDir);
+    projectConfig.data.modules = [
+        {
+            "name": "core"
+        },
+        {
+            "name": "gui"
+        },
+        {
+            "name": "dragonbones"
+        }
+    ]
+    projectConfig.save();
 }
 
 function getClassList(item) {
@@ -46,16 +62,16 @@ function getClassList(item) {
 
 function fixSingleTypeScriptFile(item) {
     var content = file.read(item);
-    for (var key in gui_refactor_1_0_3){
+    for (var key in gui_refactor_1_0_3) {
 
         var value = gui_refactor_1_0_3[key];
 
-        while(content){
-            var index = code_util.getFirstVariableIndex(key,content);
-            if(index==-1){
+        while (content) {
+            var index = code_util.getFirstVariableIndex(key, content);
+            if (index == -1) {
                 break;
             }
-            content = content.substring(0,index)+ value +content.substring(index+key.length);
+            content = content.substring(0, index) + value + content.substring(index + key.length);
         }
     }
     file.save(item, content);

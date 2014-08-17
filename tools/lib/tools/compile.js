@@ -319,57 +319,6 @@ function isQuickMode() {
     return false;
 }
 
-function exportHeader(callback, projectPath, sourceList) {
-    var list = [];
-    var length = sourceList.length;
-    for (var i = 0; i < length; i++) {
-        var p = sourceList[i];
-        if (!file.exists(p)) {
-            continue;
-        }
-        var ext = file.getExtension(p).toLowerCase();
-        if (ext == "ts") {
-            list.push(p);
-        }
-        else if (ext == "exml") {
-            list.push(p.substring(0, p.length - 4) + "ts");
-        }
-    }
-    list = list.map(function (item) {
-        return "\"" + item + "\"";
-    })
-    var output = path.join(projectPath, "libs/egret.d.ts");
-    var source = list.join(" ");
-    var cmd = source + " -t ES5 -d --out " + "\"" + output + "\"";
-    file.save("tsc_config_temp.txt", cmd);
-    typeScriptCompiler(function (code) {
-        if (code == 0) {
-            var egretDTS = file.read(output);
-            var lines = egretDTS.split("\n");
-            var length = lines.length;
-            for (var i = 0; i < length; i++) {
-                var line = lines[i];
-                if (line.indexOf("/// <reference path") != -1) {
-                    lines.splice(i, 1);
-                    i--;
-                }
-                else {
-                    break;
-                }
-            }
-            egretDTS = lines.join("\n");
-            file.save(output, egretDTS);
-            globals.log(".d.ts文件导出成功");
-            if (callback) {
-                callback();
-            }
-        }
-        else {
-            callback(1303)
-        }
-    });
-}
-
 function getModuleConfig(moduleName) {
     var coreList = globals.require("tools/lib/manifest/" + moduleName + ".json");
     return coreList
@@ -553,6 +502,5 @@ function generateAllModuleFileList(projectDir) {
 exports.generateAllModuleFileList = generateAllModuleFileList;
 exports.compileModule = compileModule;
 exports.compile = compile;
-exports.exportHeader = exportHeader;
 exports.run = run;
 exports.generateGameFileList = generateGameFileList;

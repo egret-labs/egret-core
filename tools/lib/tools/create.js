@@ -78,32 +78,6 @@ function run(currDir, args, opts) {
             callback();
         },
 
-//        function (callback) {
-//            globals.log ("正在生成egret_file_list...");
-//            egretSourceList = compiler.generateEgretFileList(runtime,projectPath);
-//            callback();
-//        },
-//
-//        function (callback) {
-//            globals.log("正在编译egret...");
-//            compiler.compile(callback,
-//                path.join(param.getEgretPath(), "src"),
-//                path.join(projectPath, "bin-debug/lib"),
-//                egretSourceList
-//            );
-//        },
-
-
-//        function (callback) {
-//            return;
-//            globals.log ("正在导出 egret.d.ts...");
-//            compiler.exportHeader(callback,
-//                projectPath,
-//                egretSourceList
-//            );
-//
-//        },
-
         function (callback) {
             globals.log("正在编译项目...");
             build.buildProject(callback, projectPath);

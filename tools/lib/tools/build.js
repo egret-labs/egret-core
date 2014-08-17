@@ -28,7 +28,7 @@ function run(dir, args, opts) {
 
         var projectConfig = require("../core/projectConfig.js");
         projectConfig.init(currDir);
-        var moduleList = projectConfig.getModule();
+        var moduleList = projectConfig.getModule(runtime);
         moduleList.map(function (moduleName) {
             task.push(
                 function (callback) {
@@ -127,6 +127,7 @@ function generateExmlDTS(sourceList, srcPath) {
 }
 
 function replaceDocumentClass(key, document_class, currDir) {
+    console.log (key)
     var filePath = path.join(currDir, "launcher", key);
     var indexHtml = file.read(filePath);
     if (!indexHtml) {

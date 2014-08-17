@@ -3,9 +3,6 @@
     "modules": [
         {
             "name": "core"
-        },
-        {
-            "name": "html5"
         }
     ],
     "native": {
