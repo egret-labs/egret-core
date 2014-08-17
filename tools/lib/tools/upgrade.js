@@ -34,7 +34,7 @@ function upgradeTo_1_0_4() {
     var txt = file.read(releasePath);
     txt = txt.replace("<base href=\"../\"/>", "");
     file.save(releasePath, txt);
-
+    file.remove(path.join(currDir,"libs/egret.d.ts"));
     var releasePath = currDir + "/launcher/index.html";
     var txt = file.read(releasePath);
     txt = txt.replace("\"bin-debug/lib/\"", "\"libs/core/\"")

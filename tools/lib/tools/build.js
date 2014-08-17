@@ -127,7 +127,6 @@ function generateExmlDTS(sourceList, srcPath) {
 }
 
 function replaceDocumentClass(key, document_class, currDir) {
-    console.log (key)
     var filePath = path.join(currDir, "launcher", key);
     var indexHtml = file.read(filePath);
     if (!indexHtml) {
