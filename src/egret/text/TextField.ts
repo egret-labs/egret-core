@@ -284,7 +284,7 @@ module egret {
             var textHeight:number = length * hGap - this._lineSpacing;
             this._textHeight = textHeight;
             var explicitHeight:number = this._hasHeightSet?this._explicitHeight:Number.POSITIVE_INFINITY;
-            if ( textHeight < explicitHeight) {
+            if (this._hasHeightSet&&textHeight < explicitHeight) {
                 var valign:number = 0;
                 if (this._verticalAlign == VerticalAlign.MIDDLE)
                     valign = 0.5;
