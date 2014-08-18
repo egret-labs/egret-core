@@ -8,6 +8,7 @@ exports.error_code = {
     1:"请先设置环境变量 {color_green}EGRET_PATH{color_normal}。您可以访问 {color_underline}https://github.com/egret-team/egret/wiki/Setting-environment-variables{color_normal} 获取更多细节",
     2:"TypeScript编译器尚未安装，请执行 {color_green}npm install -g typescript{color_normal} 进行安装",
     1001:"请输入项目名称。例: {color_green}egret create [project_name]{color_normal}",
+    1002:"该项目已存在",
     1101:"请输入项目名称。例:{color_green}egret build [project_name]{color_normal}",
     1102:"指定項目中不存在 bin-debug 文件夾，请执行 {color_green}egret build [project_name] -e {color_normal} 初始化引擎",
     1103:"{0}: error 类文件之间存在循环依赖，请检查类的继承关系或静态变量的初始化引用。",
