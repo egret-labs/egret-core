@@ -33,6 +33,9 @@ module egret {
      */
     export class Sound {
 
+        public static MUSIC:string = "music";
+        public static EFFECT:string = "effect";
+
         constructor() {
 
         }
@@ -41,7 +44,9 @@ module egret {
          * audio音频对象
          * @member {any} egret.Sound#audio
          */
-        public audio:any;
+        private audio:any;
+
+        public type:string = Sound.EFFECT;
 
         /**
          * 播放声音
@@ -64,9 +69,9 @@ module egret {
          * 暂停声音
          * @method egret.Sound#pause
          */
-        public pause():void{
+        public pause():void {
             var sound = this.audio;
-            if (!sound){
+            if (!sound) {
                 return;
             }
             sound.pause();
@@ -76,9 +81,9 @@ module egret {
          * 重新加载声音
          * @method egret.Sound#load
          */
-        public load():void{
+        public load():void {
             var sound = this.audio;
-            if (!sound){
+            if (!sound) {
                 return;
             }
             sound.load();
@@ -89,9 +94,9 @@ module egret {
          * @param type 事件类型
          * @param listener 监听函数
          */
-        public addEventListener(type:string, listener:Function):void{
+        public addEventListener(type:string, listener:Function):void {
             var sound = this.audio;
-            if (!sound){
+            if (!sound) {
                 return;
             }
             this.audio.addEventListener(type, listener, false);
@@ -102,9 +107,9 @@ module egret {
          * @param type 事件类型
          * @param listener 监听函数
          */
-        public removeEventListener(type:string, listener:Function):void{
+        public removeEventListener(type:string, listener:Function):void {
             var sound = this.audio;
-            if (!sound){
+            if (!sound) {
                 return;
             }
             this.audio.removeEventListener(type, listener, false);
@@ -114,9 +119,9 @@ module egret {
          * 设置音量
          * @param value 值需大于0 小于等于 1
          */
-        public setVolume(value:number):void{
+        public setVolume(value:number):void {
             var sound = this.audio;
-            if (!sound){
+            if (!sound) {
                 return;
             }
             sound.volume = value;
@@ -126,10 +131,16 @@ module egret {
          * 获取当前音量值
          * @returns number
          */
-        public getVolume():number{
+        public getVolume():number {
             return this.audio ? this.audio.volume : 0;
         }
+
+        public preload(type:string):void {
+            this.type = type;
+        }
+
+        public _setAudio(value:any):void {
+            this.audio = value;
+        }
     }
-
-
 }
