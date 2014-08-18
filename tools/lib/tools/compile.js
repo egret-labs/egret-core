@@ -105,9 +105,7 @@ function compile(callback, srcPath, output, sourceList, keepGeneratedTypescript)
             file.save("tsc_config_temp.txt", cmd);
             typeScriptCompiler(function (code) {
                 if (code == 0) {
-                    output = path.join(output, "egret.d.ts");
-                    var cmd = sourcemap + tsList.join(" ") + " -d -t ES5 --out " + "\"" + output + "\"";
-                    file.save("tsc_config_temp.txt", cmd);
+                    cleanTempFile();
                 }
                 else {
                     callback(1303);
