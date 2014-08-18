@@ -1,5 +1,5 @@
 {
-    "document_class": "GameApp",
+    "document_class": "Main",
     "modules": [
         {
             "name": "core"

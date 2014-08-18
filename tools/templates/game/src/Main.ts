@@ -25,7 +25,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-class GameApp extends egret.DisplayObjectContainer{
+class Main extends egret.DisplayObjectContainer{
 
     /**
      * 加载进度界面
