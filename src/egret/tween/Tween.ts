@@ -434,6 +434,9 @@ module egret {
 		 * @returns {egret.Tween}
 		 */
         public call(callback:Function, thisObj = undefined, params = undefined):Tween {
+	          if(!callback){
+		          return this;
+	          }
             return this._addAction({f: callback, p: params ? params : [this], o: thisObj ? thisObj : this._target});
         }
 
