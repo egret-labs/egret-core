@@ -51,6 +51,7 @@ function upgradeTo_1_0_4() {
             "name": "dragonbones"
         }
     ]
+    projectConfig.data.egret_version = "1.0.4";
     projectConfig.save();
 }
 

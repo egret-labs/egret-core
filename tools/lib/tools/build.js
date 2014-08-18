@@ -12,11 +12,13 @@ var create_app = require("./create_app.js");
 
 
 function run(dir, args, opts) {
+
+
     var needCompileEngine = opts["-e"];
     var keepGeneratedTypescript = opts["-k"];
 
     var currDir = globals.joinEgretDir(dir, args[0]);
-
+    globals.checkVersion(currDir);
     var task = [];
 
     var runtime = param.getOption(opts, "--runtime", ["html5", "native"]);
