@@ -105,7 +105,7 @@ module egret {
                 audio.removeEventListener('canplaythrough', soundPreloadCanplayHandler, false);
                 audio.removeEventListener("error", soundPreloadErrorHandler, false);
                 var sound = new Sound();
-                sound.audio = audio;
+                sound._setAudio(audio);
                 loader.data = sound;
                 callLater(Event.dispatchEvent, Event, loader, Event.COMPLETE);
             };
