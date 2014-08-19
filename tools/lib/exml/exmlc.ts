@@ -1468,12 +1468,17 @@ class CpClass extends CodeBase{
         this.sortOn(this.functionBlock,"isGet",true);
 
         var isFirst:boolean = true;
-        var index:number = 0;
+        if(this.moduleName){
+            this.indent = 1;
+        }
+        else{
+            this.indent = 0;
+        }
         var indentStr:string = this.getIndent();
 
         var returnStr:string = "";
         //打印文件引用区域
-        index = 0;
+        var index:number = 0;
         while(index<this.referenceBlock.length){
             var importItem:string = this.referenceBlock[index];
             var path:string = this.getRelativePath(importItem);
@@ -1483,15 +1488,19 @@ class CpClass extends CodeBase{
         if(returnStr)
             returnStr += "\n";
 
+        var exportStr:string = "";
         //打印包名
-        returnStr += KeyWords.KW_MODULE+" "+this.moduleName+"{\n";
+        if(this.moduleName){
+            returnStr += KeyWords.KW_MODULE+" "+this.moduleName+"{\n";
+            exportStr = KeyWords.KW_EXPORT+" ";
+        }
 
         //打印注释
         if(this.notation!=null){
             this.notation.indent = this.indent;
             returnStr += this.notation.toCode()+"\n";
         }
-        returnStr += indentStr+KeyWords.KW_EXPORT+" "+KeyWords.KW_CLASS+" "+this.className;
+        returnStr += indentStr+exportStr+KeyWords.KW_CLASS+" "+this.className;
 
         //打印父类
         if(this.superClass!=null&&this.superClass!=""){
@@ -1522,6 +1531,7 @@ class CpClass extends CodeBase{
         index = 0;
         while(this.variableBlock.length>index){
             var variableItem:CodeBase = this.variableBlock[index];
+            variableItem.indent = this.indent + 1;
             returnStr += variableItem.toCode()+"\n";
             index++;
         }
@@ -1558,17 +1568,19 @@ class CpClass extends CodeBase{
         }
         returnStr += this.getIndent(this.indent+1)+"}\n\n";
 
-
         //打印函数列表
         index = 0;
         while(this.functionBlock.length>index){
             var functionItem:CodeBase = this.functionBlock[index];
+            functionItem.indent = this.indent+1;
             returnStr += functionItem.toCode()+"\n";
             index++;
         }
 
-        returnStr += indentStr+"}\n}";
-
+        returnStr += indentStr+"}";
+        if(this.moduleName){
+            returnStr += "\n}";
+        }
         return returnStr;
     }
 

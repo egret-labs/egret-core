@@ -1393,13 +1393,17 @@ var CpClass = (function (_super) {
         this.sortOn(this.functionBlock, "isGet", true);
 
         var isFirst = true;
-        var index = 0;
+        if (this.moduleName) {
+            this.indent = 1;
+        } else {
+            this.indent = 0;
+        }
         var indentStr = this.getIndent();
 
         var returnStr = "";
 
         //打印文件引用区域
-        index = 0;
+        var index = 0;
         while (index < this.referenceBlock.length) {
             var importItem = this.referenceBlock[index];
             var path = this.getRelativePath(importItem);
@@ -1409,15 +1413,20 @@ var CpClass = (function (_super) {
         if (returnStr)
             returnStr += "\n";
 
+        var exportStr = "";
+
         //打印包名
-        returnStr += KeyWords.KW_MODULE + " " + this.moduleName + "{\n";
+        if (this.moduleName) {
+            returnStr += KeyWords.KW_MODULE + " " + this.moduleName + "{\n";
+            exportStr = KeyWords.KW_EXPORT + " ";
+        }
 
         //打印注释
         if (this.notation != null) {
             this.notation.indent = this.indent;
             returnStr += this.notation.toCode() + "\n";
         }
-        returnStr += indentStr + KeyWords.KW_EXPORT + " " + KeyWords.KW_CLASS + " " + this.className;
+        returnStr += indentStr + exportStr + KeyWords.KW_CLASS + " " + this.className;
 
         //打印父类
         if (this.superClass != null && this.superClass != "") {
@@ -1447,6 +1456,7 @@ var CpClass = (function (_super) {
         index = 0;
         while (this.variableBlock.length > index) {
             var variableItem = this.variableBlock[index];
+            variableItem.indent = this.indent + 1;
             returnStr += variableItem.toCode() + "\n";
             index++;
         }
@@ -1486,12 +1496,15 @@ var CpClass = (function (_super) {
         index = 0;
         while (this.functionBlock.length > index) {
             var functionItem = this.functionBlock[index];
+            functionItem.indent = this.indent + 1;
             returnStr += functionItem.toCode() + "\n";
             index++;
         }
 
-        returnStr += indentStr + "}\n}";
-
+        returnStr += indentStr + "}";
+        if (this.moduleName) {
+            returnStr += "\n}";
+        }
         return returnStr;
     };
     return CpClass;
