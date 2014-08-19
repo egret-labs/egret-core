@@ -1,8 +1,12 @@
-[
-    "egret/context/devices/NativeDeviceContext.ts",
-    "egret/context/renderer/NativeRendererContext.ts",
-    "egret/context/interactive/NativeTouchContext.ts",
-    "egret/context/net/NativeNetContext.ts",
-    "egret/context/NativeContext.d.ts",
-    "egret/utils/SAXParser.ts"
+{
+"name": "native",
+"dependence": ["core"],
+"output":"core/egret/context",
+"file_list": [
+"egret/context/devices/NativeDeviceContext.ts",
+"egret/context/renderer/NativeRendererContext.ts",
+"egret/context/interactive/NativeTouchContext.ts",
+"egret/context/net/NativeNetContext.ts",
+"egret/context/NativeContext.d.ts"
 ]
+}

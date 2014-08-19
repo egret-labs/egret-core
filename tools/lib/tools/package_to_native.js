@@ -32,27 +32,29 @@ function run(current, arg, opt) {
         [
 
             function (callback) {
-                file.copy(join(project,"bin-debug"), join(native_folder,"assets/bin-debug"));
-                file.copy(join(project,"launcher"), join(native_folder,"assets/launcher"));
-                file.copy(join(project,"resource"), join(native_folder,"assets/resource"));
+                file.copy(join(project,"bin-debug"), join(native_folder,"assets/egret-game/bin-debug"));
+                file.copy(join(project,"launcher"), join(native_folder,"assets/egret-game/launcher"));
+                file.copy(join(project,"resource"), join(native_folder,"assets/egret-game/resource"));
+                file.copy(join(project,"libs"), join(native_folder,"assets/egret-game/libs"));
+//                return;
                 callback();
             },
 
 
-            function (callback) {
-                var cmd = jscmaker +" " + join(native_folder,"assets")
-                executeCommand(callback, cmd);
-            },
+//            function (callback) {
+//                var cmd = jscmaker +" " + join(native_folder,"assets")
+//                executeCommand(callback, cmd);
+//            },
 
-            function (callback) {
-
-                var list = file.search(join(native_folder,"assets"),"js");
-                list = list.concat( file.search(join(native_folder,"assets"),"js.map"));
-                list.forEach(function(item){
-                    file.remove(item);
-                })
-                callback();
-            },
+//            function (callback) {
+//
+//                var list = file.search(join(native_folder,"assets"),"js");
+//                list = list.concat( file.search(join(native_folder,"assets"),"js.map"));
+//                list.forEach(function(item){
+//                    file.remove(item);
+//                })
+//                callback();
+//            },
 
             function (callback) {
                 var cmd = "apktool b " + native_folder + " a.apk";
@@ -68,7 +70,7 @@ function run(current, arg, opt) {
 
             function (callback) {
                 file.remove("a.apk");
-                var cmd = "adb uninstall org.egret.egretframeworknative";
+                var cmd = "adb uninstall org.egret.java.HelloEgret";
                 executeCommand(callback, cmd)
                 callback();
             },
