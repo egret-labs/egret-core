@@ -243,6 +243,66 @@ module egret_h5_graphics {
         this._fill();
     }
 
+    export function drawRoundRect(x:number, y:number, width:number, height:number, ellipseWidth:number, ellipseHeight?:number):void {
+        //非等值椭圆角实现
+        this.commandQueue.push(new Command(
+                function (x, y, width, height, ellipseWidth, ellipseHeight?) {
+                    var rendererContext = <egret.HTML5CanvasRenderer>this.renderContext;
+                    var _x:number = rendererContext._transformTx + x;//控制X偏移
+                    var _y:number = rendererContext._transformTy + y;//控制Y偏移
+                    var _w:number = width;
+                    var _h:number = height;
+                    var _ew:number = ellipseWidth / 2;
+                    var _eh:number = ellipseHeight ? ellipseHeight / 2 : _ew;
+                    var right:number = _x + _w;
+                    var bottom:number = _y + _h;
+                    var ax:number = right;
+                    var ay:number = bottom - _eh;
+
+                    this.canvasContext.beginPath();
+                    this.canvasContext.moveTo(ax, ay);
+                    this.canvasContext.quadraticCurveTo(right, bottom, right - _ew, bottom);
+                    this.canvasContext.lineTo(_x + _ew, bottom);
+                    this.canvasContext.quadraticCurveTo(_x, bottom, _x, bottom - _eh);
+                    this.canvasContext.lineTo(_x, _y + _eh);
+                    this.canvasContext.quadraticCurveTo(_x, _y, _x + _ew, _y);
+                    this.canvasContext.lineTo(right - _ew, _y);
+                    this.canvasContext.quadraticCurveTo(right, _y, right, _y + _eh);
+                    this.canvasContext.lineTo(ax, ay);
+                    this.canvasContext.closePath();
+                },
+                this,
+                [ x, y, width, height, ellipseWidth, ellipseHeight]
+            )
+        );
+        this._fill();
+    }
+
+    export function drawEllipse(x:number, y:number, width:number, height:number):void {
+        //基于均匀压缩算法
+        this.commandQueue.push(new Command(
+            function (x, y, width, height) {
+                var rendererContext = <egret.HTML5CanvasRenderer>this.renderContext;
+                this.canvasContext.save();
+                var _x:number = rendererContext._transformTx + x;//控制X偏移
+                var _y:number = rendererContext._transformTy + y;//控制Y偏移
+                var r:number = (width > height) ? width : height;//选宽高较大者做为arc半径参数
+                var ratioX:number = width / r;//横轴缩放比率
+                var ratioY:number = height / r;//纵轴缩放比率
+                this.canvasContext.scale(ratioX,ratioY);//进行缩放(均匀压缩)
+                this.canvasContext.beginPath();
+                this.canvasContext.moveTo((_x + width) / ratioX,_y / ratioY);
+                this.canvasContext.arc(_x / ratioX, _y / ratioY, r, 0, 2 * Math.PI);
+                this.canvasContext.closePath();
+                this.canvasContext.restore();
+                this.canvasContext.stroke();
+            },
+            this,
+            [ x, y, width, height]
+        ));
+        this._fill();
+    }
+
     export function lineStyle(thickness:number = NaN, color:number = 0, alpha:number = 1.0, pixelHinting:boolean = false, scaleMode:string = "normal", caps:string = null, joints:string = null, miterLimit:number = 3):void {
         if (this.strokeStyleColor) {
             this.createEndLineCommand();
