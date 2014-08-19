@@ -208,32 +208,19 @@ module egret_h5_graphics {
 
     }
 
-    export function drawRect(x:number, y:number, width:number, height:number, r?:number):void {
+    export function drawRect(x:number, y:number, width:number, height:number):void {
         this.commandQueue.push(new Command(
-                function (x, y, width, height, r?) {
+                function (x, y, width, height) {
                     var rendererContext = <egret.HTML5CanvasRenderer>this.renderContext;
-                    var _x:number = rendererContext._transformTx + x;//控制X偏移
-                    var _y:number = rendererContext._transformTy + y;//控制Y偏移
-                    var _w:number = width;
-                    var _h:number = height;
                     this.canvasContext.beginPath();
-                    if(r){
-                        var _r:number = r;
-                        if(_w < 2 * r) _r = _w / 2;
-                        if(_h < 2* r) _r = _h / 2;
-                        this.canvasContext.moveTo(_x + _r, _y);//起始绘制点
-                        this.canvasContext.arcTo(_x + _w, _y, _x + _w, _y + _h, _r);
-                        this.canvasContext.arcTo(_x + _w, _y + _h, _x, _y + _h, _r);
-                        this.canvasContext.arcTo(_x, _y + _h, _x, _y, _r);
-                        this.canvasContext.arcTo(_x, _y, _x + _w, _y, _r);
-                    }
-                    else{
-                        this.canvasContext.rect(_x, _y, _w, _h);
-                    }
+                    this.canvasContext.rect(rendererContext._transformTx + x,
+                            rendererContext._transformTy + y,
+                        width,
+                        height);
                     this.canvasContext.closePath();
                 },
                 this,
-                [ x, y, width, height, r]
+                [ x, y, width, height]
             )
         );
         this._fill();
@@ -253,6 +240,41 @@ module egret_h5_graphics {
             this,
             [ x, y, r]
         ));
+        this._fill();
+    }
+
+    export function drawRoundRect(x:number, y:number, width:number, height:number, ellipseWidth:number, ellipseHeight?:number):void {
+        //非等值椭圆角实现
+        this.commandQueue.push(new Command(
+                function (x, y, width, height, ellipseWidth, ellipseHeight?) {
+                    var rendererContext = <egret.HTML5CanvasRenderer>this.renderContext;
+                    var _x:number = rendererContext._transformTx + x;//控制X偏移
+                    var _y:number = rendererContext._transformTy + y;//控制Y偏移
+                    var _w:number = width;
+                    var _h:number = height;
+                    var _ew:number = ellipseWidth / 2;
+                    var _eh:number = ellipseHeight ? ellipseHeight / 2 : _ew;
+                    var right:number = _x + _w;
+                    var bottom:number = _y + _h;
+                    var ax:number = right;
+                    var ay:number = bottom - _eh;
+
+                    this.canvasContext.beginPath();
+                    this.canvasContext.moveTo(ax, ay);
+                    this.canvasContext.quadraticCurveTo(right, bottom, right - _ew, bottom);
+                    this.canvasContext.lineTo(_x + _ew, bottom);
+                    this.canvasContext.quadraticCurveTo(_x, bottom, _x, bottom - _eh);
+                    this.canvasContext.lineTo(_x, _y + _eh);
+                    this.canvasContext.quadraticCurveTo(_x, _y, _x + _ew, _y);
+                    this.canvasContext.lineTo(right - _ew, _y);
+                    this.canvasContext.quadraticCurveTo(right, _y, right, _y + _eh);
+                    this.canvasContext.lineTo(ax, ay);
+                    this.canvasContext.closePath();
+                },
+                this,
+                [ x, y, width, height, ellipseWidth, ellipseHeight]
+            )
+        );
         this._fill();
     }
 

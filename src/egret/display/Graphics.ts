@@ -67,7 +67,7 @@ module egret {
          * @param height {number} 矩形的高度（以像素为单位）。
          * @param r? {number} 圆的半径（以像素为单位）,不设置就为直角矩形。
          */
-        public drawRect(x:number, y:number, width:number, height:number, r?:number):void{
+        public drawRect(x:number, y:number, width:number, height:number):void{
 
         }
 
@@ -79,6 +79,20 @@ module egret {
          * @param r {number} 圆的半径（以像素为单位）。
          */
         public drawCircle(x:number, y:number, r:number):void {
+
+        }
+
+        /**
+         * 绘制一个圆角矩形
+         * @method egret.Graphics#drawRect
+         * @param x {number} 圆心相对于父显示对象注册点的 x 位置（以像素为单位）。
+         * @param y {number} 相对于父显示对象注册点的圆心的 y 位置（以像素为单位）。
+         * @param width {number} 矩形的宽度（以像素为单位）。
+         * @param height {number} 矩形的高度（以像素为单位）。
+         * @param ellipseWidth {number} 用于绘制圆角的椭圆的宽度（以像素为单位）。
+         * @param ellipseHeight {number} 用于绘制圆角的椭圆的高度（以像素为单位）。 （可选）如果未指定值，则默认值与为 ellipseWidth 参数提供的值相匹配。
+         */
+        public drawRoundRect(x:number, y:number, width:number, height:number, ellipseWidth:number, ellipseHeight?:number):void{
 
         }
 
