@@ -379,7 +379,8 @@ module egret {
                 return null;
             }
             if (this._scrollRect) {
-                if (x > this._scrollRect.width
+                if (x < 0 || y < 0
+                    || x > this._scrollRect.width
                     || y > this._scrollRect.height) {
                     return null;
                 }

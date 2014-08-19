@@ -396,9 +396,9 @@ module egret {
         }
 
 		/**
-         * 等待指定秒后执行下一个动画
+         * 等待指定毫秒后执行下一个动画
 		 * @method egret.Tween#wait
-		 * @param duration {number} 要等待的时间，以秒为单位
+		 * @param duration {number} 要等待的时间，以毫秒为单位
 		 * @param passive {boolean}
 		 * @returns {egret.Tween}
 		 */
@@ -434,7 +434,7 @@ module egret {
 		 * @returns {egret.Tween}
 		 */
         public call(callback:Function, thisObj = undefined, params = undefined):Tween {
-            return this._addAction({f: callback, p: params ? params : [this], o: thisObj ? thisObj : this._target});
+            return this._addAction({f: callback, p: params ? params : [], o: thisObj ? thisObj : this._target});
         }
 
         public set(props, target = null):Tween {
@@ -446,11 +446,11 @@ module egret {
 		 * @param tween {egret.Tween} 
 		 * @returns {egret.Tween}
 		 */
-        public play(tween:Tween):Tween {
+        public play(tween?:Tween):Tween {
             if (!tween) {
                 tween = this;
             }
-            return this.call(tween.setPaused, [false], tween);
+            return this.call(tween.setPaused, tween, [false]);
         }
 
 		/**
@@ -458,11 +458,11 @@ module egret {
 		 * @param tween {egret.Tween} 
 		 * @returns {egret.Tween}
 		 */
-        public pause(tween:Tween):Tween {
+        public pause(tween?:Tween):Tween {
             if (!tween) {
                 tween = this;
             }
-            return this.call(tween.setPaused, [true], tween);
+            return this.call(tween.setPaused, tween, [true]);
         }
 
 		/**

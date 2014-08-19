@@ -288,7 +288,7 @@ module egret {
 
         public set visible(value:boolean) {
             this._visible = value;
-            this._setDirty();
+            this._setSizeDirty();
         }
 
         /**

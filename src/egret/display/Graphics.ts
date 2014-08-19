@@ -59,19 +59,7 @@ module egret {
         }
 
         /**
-         * 绘制一个矩形。
-         * @method egret.Graphics#drawRect
-         * @param x {number} 一个表示相对于父显示对象注册点的水平位置的数字（以像素为单位）。
-         * @param y {number} 一个表示相对于父显示对象注册点的垂直位置的数字（以像素为单位）。
-         * @param width {number} 矩形的宽度（以像素为单位）。
-         * @param height {number} 矩形的高度（以像素为单位）。
-         */
-        /*public drawRect(x:number, y:number, width:number, height:number):void {
-
-        }*/
-
-        /**
-         * 绘制一个圆角矩形
+         * 绘制一个矩形
          * @method egret.Graphics#drawRect
          * @param x {number} 圆心相对于父显示对象注册点的 x 位置（以像素为单位）。
          * @param y {number} 相对于父显示对象注册点的圆心的 y 位置（以像素为单位）。

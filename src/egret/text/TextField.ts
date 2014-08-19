@@ -283,17 +283,14 @@ module egret {
             var hGap:number = this._size + this._lineSpacing;
             var textHeight:number = length * hGap - this._lineSpacing;
             this._textHeight = textHeight;
-            var explicitHeight:number = this._explicitHeight;
-            if (this._hasHeightSet && textHeight < explicitHeight) {
+            var explicitHeight:number = this._hasHeightSet?this._explicitHeight:Number.POSITIVE_INFINITY;
+            if (this._hasHeightSet&&textHeight < explicitHeight) {
                 var valign:number = 0;
                 if (this._verticalAlign == VerticalAlign.MIDDLE)
                     valign = 0.5;
                 else if (this._verticalAlign == VerticalAlign.BOTTOM)
                     valign = 1;
                 drawY += valign * (explicitHeight - textHeight);
-            }
-            else {
-                explicitHeight = Number.POSITIVE_INFINITY;
             }
             drawY = Math.round(drawY);
             var minY:number = drawY;

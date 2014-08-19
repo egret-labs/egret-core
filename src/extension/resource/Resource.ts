@@ -512,7 +512,7 @@ module RES {
             for(var i:number=0;i<length;i++){
                 var args:any = argsList[i];
                 var res:any = analyzer.getRes(args.key);
-                args.compFunc.call(args.thisObject,res);
+                args.compFunc.call(args.thisObject,res,args.key);
             }
         }
         /**

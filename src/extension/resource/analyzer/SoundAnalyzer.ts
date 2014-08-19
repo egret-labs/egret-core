@@ -27,11 +27,23 @@
 
 module RES {
 
-    export class SoundAnalyzer extends BinAnalyzer{
+    export class SoundAnalyzer extends BinAnalyzer {
 
-        public constructor(){
+        public constructor() {
             super();
             this._dataFormat = egret.URLLoaderDataFormat.SOUND;
+        }
+
+        public analyzeData(resItem:ResourceItem, data:any):void {
+            var name:string = resItem.name;
+            if (this.fileDic[name] || !data) {
+                return;
+            }
+            this.fileDic[name] = data;
+            var config:any = resItem.data;
+            if (config && config["soundType"]) {
+                data.preload(config.soundType);
+            }
         }
     }
 }

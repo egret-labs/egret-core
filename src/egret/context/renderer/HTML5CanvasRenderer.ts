@@ -210,30 +210,30 @@ module egret_h5_graphics {
 
     export function drawRect(x:number, y:number, width:number, height:number, r?:number):void {
         this.commandQueue.push(new Command(
-            function (x, y, width, height, r?) {
-                var rendererContext = <egret.HTML5CanvasRenderer>this.renderContext;
-                var _x:number = rendererContext._transformTx + x;//控制X偏移
-                var _y:number = rendererContext._transformTy + y;//控制Y偏移
-                var _w:number = width;
-                var _h:number = height;
-                this.canvasContext.beginPath();
-                if(r){
-                    var _r:number = r;
-                    if(_w < 2 * r) _r = _w / 2;
-                    if(_h < 2* r) _r = _h / 2;
-                    this.canvasContext.moveTo(_x + _r, _y);//起始绘制点
-                    this.canvasContext.arcTo(_x + _w, _y, _x + _w, _y + _h, _r);
-                    this.canvasContext.arcTo(_x + _w, _y + _h, _x, _y + _h, _r);
-                    this.canvasContext.arcTo(_x, _y + _h, _x, _y, _r);
-                    this.canvasContext.arcTo(_x, _y, _x + _w, _y, _r);
-                }
-                else{
-                    this.canvasContext.rect(_x, _y, _w, _h);
-                }
-                this.canvasContext.closePath();
-            },
-            this,
-            [ x, y, width, height, r]
+                function (x, y, width, height, r?) {
+                    var rendererContext = <egret.HTML5CanvasRenderer>this.renderContext;
+                    var _x:number = rendererContext._transformTx + x;//控制X偏移
+                    var _y:number = rendererContext._transformTy + y;//控制Y偏移
+                    var _w:number = width;
+                    var _h:number = height;
+                    this.canvasContext.beginPath();
+                    if(r){
+                        var _r:number = r;
+                        if(_w < 2 * r) _r = _w / 2;
+                        if(_h < 2* r) _r = _h / 2;
+                        this.canvasContext.moveTo(_x + _r, _y);//起始绘制点
+                        this.canvasContext.arcTo(_x + _w, _y, _x + _w, _y + _h, _r);
+                        this.canvasContext.arcTo(_x + _w, _y + _h, _x, _y + _h, _r);
+                        this.canvasContext.arcTo(_x, _y + _h, _x, _y, _r);
+                        this.canvasContext.arcTo(_x, _y, _x + _w, _y, _r);
+                    }
+                    else{
+                        this.canvasContext.rect(_x, _y, _w, _h);
+                    }
+                    this.canvasContext.closePath();
+                },
+                this,
+                [ x, y, width, height, r]
             )
         );
         this._fill();
@@ -248,6 +248,7 @@ module egret_h5_graphics {
                 this.canvasContext.arc(rendererContext._transformTx + x,
                         rendererContext._transformTy + y, r, 0, Math.PI * 2);
                 this.canvasContext.closePath();
+
             },
             this,
             [ x, y, r]
@@ -407,6 +408,7 @@ module egret_h5_graphics {
         if (this.strokeStyleColor && length > 0 && this.commandQueue[length - 1] != this.endLineCommand) {
             this.createEndLineCommand();
             this.commandQueue.push(this.endLineCommand);
+            length = this.commandQueue.length;
         }
         for (var i = 0; i < length; i++) {
             var command:Command = this.commandQueue[i];

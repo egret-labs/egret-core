@@ -1,8 +1,14 @@
 {
-    "document_class" : "GameApp",
+    "document_class": "Main",
+    "modules": [
+        {
+            "name": "core"
+        }
+    ],
     "native": {
         "path_ignore": [
             "libs"
         ]
-    }
+    },
+    "egret_version":"1.0.4"
 }
