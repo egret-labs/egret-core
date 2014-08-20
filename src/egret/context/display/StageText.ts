@@ -28,99 +28,95 @@
 
 module egret {
 
-	/**
-	 * @class egret.StageText
-	 * @classdesc
-	 * @extends egret.HashObject
-	 */
-    export class StageText extends HashObject{
+    /**
+     * @class egret.StageText
+     * @classdesc
+     * @extends egret.HashObject
+     */
+    export class StageText extends HashObject {
 
-        private div:HTMLDivElement;
+        private div:any;
         private inputElement:HTMLInputElement;
+        private _size:number = 20;
 
         constructor() {
             super();
         }
 
-		/**
-		 * @method egret.StageText#getText
-		 * @returns {string}
-		 */
+        /**
+         * @method egret.StageText#getText
+         * @returns {string}
+         */
         public _getText():string {
             return this.inputElement.value;
         }
 
-		/**
-		 * @method egret.StageText#setText
-		 * @param value {string} 
-		 */
+        /**
+         * @method egret.StageText#setText
+         * @param value {string}
+         */
         public _setText(value:string):void {
             this.inputElement.value = value;
         }
 
-		/**
-		 * @method egret.StageText#setTextType
-		 * @param type {string} 
-		 */
+        /**
+         * @method egret.StageText#setTextType
+         * @param type {string}
+         */
         public _setTextType(type:string):void {
             this.inputElement.type = type;
         }
 
-		/**
-		 * @method egret.StageText#getTextType
-		 * @returns {string}
-		 */
+        /**
+         * @method egret.StageText#getTextType
+         * @returns {string}
+         */
         public _getTextType():string {
             return this.inputElement.type;
         }
 
-		/**
-		 * @method egret.StageText#open
-		 * @param x {number} 
-		 * @param y {number} 
-		 * @param width {number} 
-		 * @param height {number} 
-		 */
+        /**
+         * @method egret.StageText#open
+         * @param x {number}
+         * @param y {number}
+         * @param width {number}
+         * @param height {number}
+         */
         public _open(x:number, y:number, width:number = 160, height:number = 21):void {
-
-
             var scaleX = egret.StageDelegate.getInstance().getScaleX();
             var scaleY = egret.StageDelegate.getInstance().getScaleY();
 
             var inputElement = document.createElement("input");
             inputElement.type = "text";
-            inputElement.style.fontSize = "20px";
+            inputElement.style.fontSize = this._size + "px";
             inputElement.style.color = "#FFFFFF";
-            inputElement.style.borderStyle = "none";
+            inputElement.style.border = "none";
             inputElement.style.background = "none";
-            inputElement.style.width = width * scaleX + "px";
-            inputElement.style.height = height * scaleY + "px";
+            inputElement.style.width = width + "px";
+            inputElement.style.padding = "0";
             inputElement.style.outline = "medium";
 
             var div = egret.Browser.getInstance().$new("div");
-            div.style.position = 'absolute';
             div.position.x = x * scaleX;
-            div.style.width = width * scaleX + "px";
-            div.style.height = height * scaleY + "px";
             div.position.y = y * scaleY;
+            div.style.width = width + "px";
+            div.scale.x = scaleX;
+            div.scale.y = scaleY;
             div.transforms();
+            div.style[egret_dom.getTrans("transformOrigin")] = "0% 0% 0px";
+
             div.appendChild(inputElement);
 
             var stageDelegateDiv = egret.Browser.getInstance().$("#StageDelegateDiv");
             if (!stageDelegateDiv) {
-                var container = document.getElementById(egret.StageDelegate.canvas_div_name);
-                var height = container.clientHeight;
-                var width = container.clientWidth;
+                var canvas = document.getElementById(egret.StageDelegate.canvas_name);
                 stageDelegateDiv = egret.Browser.getInstance().$new("div");
                 stageDelegateDiv.id = "StageDelegateDiv";
-                stageDelegateDiv.style.position = 'absolute';
-                stageDelegateDiv.style.width = width + "px";
-                stageDelegateDiv.style.maxHeight = height + "px";
-                stageDelegateDiv.style.margin = 0 + "px";
+                stageDelegateDiv.style.width = canvas.style.width;
+                stageDelegateDiv.style.height = canvas.style.height;
 
-                var canvas = document.getElementById(egret.StageDelegate.canvas_div_name);
-                canvas.appendChild(stageDelegateDiv);
-                stageDelegateDiv.position.y = -height;
+                var container = document.getElementById(egret.StageDelegate.canvas_div_name);
+                container.appendChild(stageDelegateDiv);
                 stageDelegateDiv.transforms();
             }
             stageDelegateDiv.appendChild(div);
@@ -128,16 +124,33 @@ module egret {
             this.inputElement = inputElement;
         }
 
-		/**
-		 * @method egret.StageText#remove
-		 */
+        /**
+         * @method egret.StageText#remove
+         */
         public _remove():void {
             var div = this.div;
             if (div && div.parentNode) {
                 div.parentNode.removeChild(div);
             }
-
         }
 
+        public changePosition(x:number, y:number):void {
+            var scaleX = egret.StageDelegate.getInstance().getScaleX();
+            var scaleY = egret.StageDelegate.getInstance().getScaleY();
+
+            this.div.position.x = x * scaleX;
+            this.div.position.y = y * scaleY;
+            this.div.transforms();
+        }
+
+        public changeSize(width:number, height:number):void {
+            //todo
+            this.inputElement.style.width = width + "px";
+//            this.inputElement.style.height = height + "px";
+
+            this.div.style.width = width + "px";
+//            this.div.style.height = height + "px";
+            this.div.transforms();
+        }
     }
 }

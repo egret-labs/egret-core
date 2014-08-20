@@ -58,7 +58,7 @@ module egret {
         }
 
         private _normalDirty:boolean = true;
-        public _setDirty() {
+        public _setDirty():void {
             this._normalDirty = true;
         }
 
@@ -86,10 +86,12 @@ module egret {
         }
 
         public _clearDirty():void {
+            //todo 这个除了文本的，其他都没有clear过
             this._normalDirty = false;
         }
 
         public _clearSizeDirty():void {
+            //todo 最好在enterFrame都重新算一遍
             this._sizeDirty = false;
         }
 
@@ -830,10 +832,10 @@ module egret {
             DisplayObjectContainer.__EVENT__REMOVE_FROM_STAGE_LIST.push(this);
         }
 
-        public _stage:Stage;
+        public _stage:Stage = null;
 
         /**
-         * 获取舞台对象。当该显示对象不在舞台上时，此属性返回 undefined
+         * 获取舞台对象。当该显示对象不在舞台上时，此属性返回 null
          * @member {number} egret.DisplayObject#stage
          * @returns {egret.Stage}
          */

@@ -31,7 +31,6 @@ module egret {
 
         private _domInputSprite;
         private _edTxt;
-        private _delegate:TextInputDegelete;
         private _placeholderText:string = "";
         private _edFontSize:number = 14;
         private _textColor:number = 0xff0000;
@@ -41,16 +40,18 @@ module egret {
         private _preX:number = 0;
         private _preY:number = 0;
 
-
         private stageText:egret.StageText;
+
+        constructor() {
+            super();
+            this.stageText = new egret.StageText();
+            var point = this.localToGlobal();
+            this.stageText._open(point.x, point.y, this._explicitWidth, this._explicitHeight);
+        }
 
         public _onAddToStage():void {
             super._onAddToStage();
-            var point = this.localToGlobal();
-            var stageText = new egret.StageText();
-            stageText._open(point.x, point.y,this._explicitWidth,this._explicitHeight);
             this.addEventListener(egret.TouchEvent.TOUCH_BEGIN, this.onMouseDownHandler, this);
-            this.stageText = stageText;
         }
 
         public setText(value:string):void {
@@ -70,7 +71,6 @@ module egret {
         }
 
 
-
         private onMouseDownHandler(event:TouchEvent) {
 
         }
@@ -87,20 +87,24 @@ module egret {
             //它不能被点击
             return null;
         }
-    }
 
-    export class TextInputDegelete {
-
-        public editBoxEditingDidBegin(sender) {
+        public _setDirty():void {
+            super._setDirty();
+            //todo 等dirty完善
+            var point = this.localToGlobal();
+            this.stageText.changePosition(point.x, point.y);
+            this.stageText.changeSize(this._explicitWidth, this._explicitHeight);
         }
 
-        public editBoxEditingDidEnd(sender) {
-        }
-
-        public editBoxTextChanged(sender, text) {
-        }
-
-        public editBoxReturn(sender) {
-        }
+//        public _clearDirty():void {
+//            super._clearDirty();
+//            var point = this.localToGlobal();
+//            this.stageText.changePosition(point.x, point.y);
+//        }
+//
+//        public _clearSizeDirty():void {
+//            super._clearSizeDirty();
+//            this.stageText.changeSize(this._explicitWidth, this._explicitHeight);
+//        }
     }
 }

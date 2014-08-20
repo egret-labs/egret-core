@@ -7,6 +7,7 @@
         "egret/utils/Recycler.ts",
         "egret/utils/getTimer.ts",
         "egret/utils/callLater.ts",
+        "egret/context/renderer/dom/DOMTrans.ts",
         "egret/events/Event.ts",
         "egret/events/IOErrorEvent.ts",
         "egret/events/TouchEvent.ts",
