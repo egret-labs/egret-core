@@ -36,6 +36,7 @@ module egret {
         private _currentTouchTarget:any = {};
         public maxTouches:number = 2;
         private touchDownTarget:any = {};
+        private touchingIdentifiers:Array<any> = [];
 
         public constructor() {
             super();
@@ -64,11 +65,14 @@ module egret {
 
         public dispatchEvent(type:string, data:any):void {
             var touchDown:boolean = (this.touchDownTarget[data.identifier] == true)
-            TouchEvent.dispatchTouchEvent(data.target,type,data.identifier,
-                data.stageX,data.stageY,false,false,false,touchDown);
+            TouchEvent.dispatchTouchEvent(data.target, type, data.identifier,
+                data.stageX, data.stageY, false, false, false, touchDown);
         }
 
         public onTouchBegan(x:number, y:number, identifier:number):void {
+            if (this.touchingIdentifiers.length == this.maxTouches) {
+                return;
+            }
             var stage = MainContext.instance.stage;
             var result:any = stage.hitTest(x, y);
             if (result) {
@@ -78,13 +82,18 @@ module egret {
                 obj.beginTarget = result;
                 this.dispatchEvent(TouchEvent.TOUCH_BEGIN, obj);
             }
+            this.touchingIdentifiers.push(identifier);
         }
 
         private lastTouchX:number = -1;
         private lastTouchY:number = -1;
 
         public onTouchMove(x:number, y:number, identifier:number):void {
-            if(x==this.lastTouchX&&y==this.lastTouchY){
+            var index = this.touchingIdentifiers.indexOf(identifier);
+            if (index == -1) {
+                return;
+            }
+            if (x == this.lastTouchX && y == this.lastTouchY) {
                 return;
             }
             this.lastTouchX = x;
@@ -99,6 +108,11 @@ module egret {
         }
 
         public onTouchEnd(x:number, y:number, identifier:number):void {
+            var index = this.touchingIdentifiers.indexOf(identifier);
+            if (index == -1) {
+                return;
+            }
+            this.touchingIdentifiers.splice(index, 1);
             var stage = MainContext.instance.stage;
             var result = stage.hitTest(x, y);
             if (result) {

@@ -100,7 +100,7 @@ module egret {
             var that = this;
             this.canvas.addEventListener("touchstart", function (event:any) {
                 var l = event.changedTouches.length;
-                for (var i:number = 0; i < l && i < that.maxTouches; i++) {
+                for (var i:number = 0; i < l; i++) {
                     that._onTouchBegin(event.changedTouches[i]);
                 }
                 event.stopPropagation();
@@ -108,7 +108,7 @@ module egret {
             }, false);
             this.canvas.addEventListener("touchmove", function (event:any) {
                 var l = event.changedTouches.length;
-                for (var i:number = 0; i < l && i < that.maxTouches; i++) {
+                for (var i:number = 0; i < l; i++) {
                     that._onTouchMove(event.changedTouches[i]);
                 }
                 event.stopPropagation();
@@ -116,7 +116,7 @@ module egret {
             }, false);
             this.canvas.addEventListener("touchend", function (event:any) {
                 var l = event.changedTouches.length;
-                for (var i:number = 0; i < l && i < that.maxTouches; i++) {
+                for (var i:number = 0; i < l; i++) {
                     that._onTouchEnd(event.changedTouches[i]);
                 }
                 event.stopPropagation();
@@ -124,7 +124,7 @@ module egret {
             }, false);
             this.canvas.addEventListener("touchcancel", function (event:any) {
                 var l = event.changedTouches.length;
-                for (var i:number = 0; i < l && i < that.maxTouches; i++) {
+                for (var i:number = 0; i < l; i++) {
                     that._onTouchEnd(event.changedTouches[i]);
                 }
                 event.stopPropagation();
