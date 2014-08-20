@@ -29,7 +29,7 @@
   <component id="Rectangle" super="Object" show="false" module="egret"/>
   <component id="Scroller" super="egret.gui.UIComponent" default="viewport" show="true" module="egret.gui"/>
   <component id="Skin" super="egret.EventDispatcher" default="elementsContent" show="false" module="egret.gui"/>
-  <component id="SkinnableComponent" super="egret.gui.UIAsset" state="normal,disabled" show="false" module="egret.gui"/>
+  <component id="SkinnableComponent" super="egret.gui.UIAsset" state="normal,disabled" show="true" module="egret.gui"/>
   <component id="SkinnableContainer" super="egret.gui.SkinnableComponent" default="elementsContent" show="true" module="egret.gui"/>
   <component id="SkinnableDataContainer" super="egret.gui.SkinnableComponent" default="dataProvider" show="true" module="egret.gui"/>
   <component id="SliderBase" super="egret.gui.TrackBase" show="false" module="egret.gui"/>
