@@ -25,27 +25,9 @@ function run(dir, args, opts) {
 
     if (needCompileEngine) {
 
-        var egret_src = path.join(param.getEgretPath(), "src")
-
-
-        var projectConfig = require("../core/projectConfig.js");
-        projectConfig.init(currDir);
-        var moduleList = projectConfig.getModule(runtime);
-        moduleList.map(function (moduleName) {
-            task.push(
-                function (callback) {
-                    compiler.compileModule(
-                        callback, moduleName, egret_src, currDir);
-                });
-        })
-//        projectConfig.save();
-
-        task.push(
-            function (callback) {
-                compiler.generateAllModuleFileList(currDir);
-                callback();
-            }
-        )
+        task.push(function (callback) {
+            compiler.compileModules(callback, currDir,runtime);
+        });
     }
     task.push(
         function (callback) {

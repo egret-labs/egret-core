@@ -41,44 +41,7 @@ function run(currDir, args, opts) {
 
 
         function (callback) {
-            compiler.compileModule(
-                callback,
-                "core",
-                path.join(param.getEgretPath(), "src"),
-                projectPath
-            );
-        },
-
-        function (callback) {
-            compiler.compileModule(
-                callback,
-                "gui",
-                path.join(param.getEgretPath(), "src"),
-                projectPath
-            );
-        },
-
-        function (callback) {
-            compiler.compileModule(
-                callback,
-                "dragonbones",
-                path.join(param.getEgretPath(), "src"),
-                projectPath
-            );
-        },
-
-        function (callback) {
-            compiler.compileModule(
-                callback,
-                "html5",
-                path.join(param.getEgretPath(), "src"),
-                projectPath
-            );
-        },
-
-        function (callback) {
-            compiler.generateAllModuleFileList(projectPath);
-            callback();
+                compiler.compileModules(callback, projectPath,runtime);
         },
 
         function (callback) {

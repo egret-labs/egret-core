@@ -473,6 +473,35 @@ function compileModule(callback, moduleName, prefix, projectDir) {
 
 }
 
+
+function compileModules(callback,projectDir,runtime){
+
+    var prefix = path.join(param.getEgretPath(), "src")
+
+    var projectConfig = require("../core/projectConfig.js");
+    projectConfig.init(projectDir);
+    var moduleList = projectConfig.getModule(runtime);
+
+    var tasks = [];
+    moduleList.map(function (moduleName) {
+        tasks.push(
+            function (callback) {
+                compileModule(
+                    callback, moduleName, prefix, projectDir);
+            });
+    })
+
+    tasks.push(
+        function (callback) {
+            generateAllModuleFileList(projectDir);
+            callback();
+        }
+    );
+    async.series(tasks,callback);
+
+
+}
+
 function generateAllModuleFileList(projectDir) {
 
 
@@ -498,7 +527,7 @@ function generateAllModuleFileList(projectDir) {
 }
 
 exports.generateAllModuleFileList = generateAllModuleFileList;
-exports.compileModule = compileModule;
+exports.compileModules = compileModules;
 exports.compile = compile;
 exports.run = run;
 exports.generateGameFileList = generateGameFileList;
