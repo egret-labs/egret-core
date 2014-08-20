@@ -88,10 +88,10 @@ function create_app_from(app_path, h5_path, template_path, preferences, app_data
         preferences["native"]["support_path"] = [];
     }
     var target_list = [];
-    app_data.game.target.forEach(function(target) {
+    app_data["game"]["target"].forEach(function(target) {
         target_list.push(path.join(app_path, target));
     });
-    preferences["native"]["support_path"] = preferences["native"]["support_path"].concat(target_list);
+    preferences["native"]["support_path"] = target_list;
     file.save(path.join(h5_path, PREFERENCES), JSON.stringify(preferences, null, '\t'));
 
     build_copy(h5_path, preferences["native"]["path_ignore"], target_list);
