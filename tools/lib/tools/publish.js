@@ -307,7 +307,7 @@ function run(dir, args, opts) {
     file.remove(launcherDir + "/index.html");
     file.copy(launcherDir + "/release.html",releaseDir + "/index.html");
     file.remove(launcherDir + "/release.html");
-    file.remove(launcherDir + "/native_loader.js");
+//    file.remove(launcherDir + "/native_loader.js");
 
     file.remove(resourceDir);
     file.copy(currDir + "/resource", resourceDir);
