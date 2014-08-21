@@ -99,9 +99,9 @@ module egret {
             var callback = HTML5DeviceContext._callback
             var thisTime = egret.getTimer();
             var advancedTime = thisTime - context._time;
+            context._requestAnimationId = HTML5DeviceContext.requestAnimationFrame.call(window, HTML5DeviceContext.prototype.enterFrame);
             callback.call(thisObject, advancedTime);
             context._time = thisTime;
-            context._requestAnimationId = HTML5DeviceContext.requestAnimationFrame.call(window, HTML5DeviceContext.prototype.enterFrame);
 
         }
 

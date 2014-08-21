@@ -89,8 +89,6 @@ module egret {
          * 滑动跑道模型，渲染部分
          */
         private renderLoop(frameTime:number) {
-            var context = this.rendererContext;
-            context.clearScreen();
 
             if (__callLaterFunctionList.length > 0) {
                 var functionList:Array<any> = __callLaterFunctionList;
@@ -109,7 +107,8 @@ module egret {
             if (functionList) {
                 this.doCallLaterList(functionList, thisList, argsList);
             }
-
+            var context = this.rendererContext;
+            context.clearScreen();
             this.stage._updateTransform();
             this.dispatchEventWith(Event.FINISH_UPDATE_TRANSFORM);
             this.stage._draw(context);
