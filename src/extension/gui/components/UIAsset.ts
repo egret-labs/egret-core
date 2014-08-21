@@ -194,7 +194,7 @@ module egret.gui {
         /**
          * 是自动否缩放content对象，以符合UIAsset的尺寸。默认值true。
          */
-        public autoScale:Boolean = true;
+        public autoScale:boolean = true;
 		/**
 		 * @method egret.gui.UIAsset#updateDisplayList
 		 * @param unscaledWidth {number} 
