@@ -18,6 +18,12 @@
 	{
 		"super":"egret.SpriteSheet"
 	},
+	"egret.ByteArray":
+	{
+		"endian":"string",
+		"length":"number",
+		"position":"number"
+	},
 	"egret.DefaultMovieClipDelegate":
 	{
 		"implements":["egret.MovieClipDelegate"]
@@ -126,7 +132,7 @@
 	},
 	"egret.Sound":
 	{
-		"audio":"any"
+		"type":"string"
 	},
 	"egret.Sprite":
 	{
@@ -540,7 +546,7 @@
 	},
 	"egret.gui.UIAsset":
 	{
-		"autoScale":"Boolean",
+		"autoScale":"boolean",
 		"fillMode":"string",
 		"scale9Grid":"egret.Rectangle",
 		"source":"any",

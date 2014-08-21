@@ -45,6 +45,19 @@
       <xs:attributeGroup ref="egret.BitmapTextSpriteSheet"/>
     </xs:complexType>
   </xs:element>
+  <xs:attributeGroup name="egret.ByteArray">
+    <xs:attribute name="endian" type="xs:string"/>
+    <xs:attribute name="length" type="xs:decimal"/>
+    <xs:attribute name="position" type="xs:decimal"/>
+  </xs:attributeGroup>
+  <xs:element name="ByteArray">
+    <xs:complexType>
+      <xs:choice minOccurs="0">
+        <xs:any/>
+      </xs:choice>
+      <xs:attributeGroup ref="egret.ByteArray"/>
+    </xs:complexType>
+  </xs:element>
   <xs:attributeGroup name="egret.DefaultMovieClipDelegate"/>
   <xs:element name="DefaultMovieClipDelegate">
     <xs:complexType>
@@ -246,7 +259,7 @@
     </xs:complexType>
   </xs:element>
   <xs:attributeGroup name="egret.Sound">
-    <xs:attribute name="audio" type="xs:string"/>
+    <xs:attribute name="type" type="xs:string"/>
   </xs:attributeGroup>
   <xs:element name="Sound">
     <xs:complexType>
@@ -1160,7 +1173,7 @@
   </xs:element>
   <xs:attributeGroup name="egret.gui.UIAsset">
     <xs:attributeGroup ref="egret.gui.UIComponent"/>
-    <xs:attribute name="autoScale" type="xs:string"/>
+    <xs:attribute name="autoScale" type="xs:boolean"/>
     <xs:attribute name="fillMode" type="egret.BitmapFillMode"/>
     <xs:attribute name="scale9Grid" type="xs:string"/>
     <xs:attribute name="source" type="xs:string"/>
