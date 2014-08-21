@@ -144,7 +144,6 @@ module egret {
         }
 
         public changeSize(width:number, height:number):void {
-            //todo
             this.inputElement.style.width = width + "px";
 //            this.inputElement.style.height = height + "px";
 
