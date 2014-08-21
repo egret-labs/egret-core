@@ -151,5 +151,14 @@ module egret {
 //            this.div.style.height = height + "px";
             this.div.transforms();
         }
+
+        public setSize(value:number):void {
+            this._size = value;
+            this.inputElement.style.fontSize = this._size + "px";
+        }
+
+        public setTextColor(value:string):void {
+            this.inputElement.style.color = value;
+        }
     }
 }
