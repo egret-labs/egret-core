@@ -64,6 +64,7 @@
         "egret/context/interactive/TouchContext.ts",
         "egret/context/net/NetContext.ts",
         "egret/context/devices/DeviceContext.ts",
+        "egret/context/external/ExternalInterface.ts",
         "egret/context/Browser.ts",
         "egret/utils/XML.ts",
         "egret/utils/ByteArray.ts",

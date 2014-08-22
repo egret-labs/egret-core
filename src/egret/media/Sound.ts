@@ -35,6 +35,7 @@ module egret {
 
         public static MUSIC:string = "music";
         public static EFFECT:string = "effect";
+        public path:string;
 
         constructor() {
 

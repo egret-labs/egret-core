@@ -531,3 +531,4 @@ exports.compileModules = compileModules;
 exports.compile = compile;
 exports.run = run;
 exports.generateGameFileList = generateGameFileList;
+exports.getModuleConfig = getModuleConfig;

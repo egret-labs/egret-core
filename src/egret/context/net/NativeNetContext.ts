@@ -45,6 +45,10 @@ module egret {
                 this.loadTexture(loader);
                 return;
             }
+            if (loader.dataFormat == URLLoaderDataFormat.SOUND) {
+                this.loadSound(loader);
+                return;
+            }
 
 
             var url = loader._request.url;
@@ -70,6 +74,24 @@ module egret {
                 loader.data = content;
                 Event.dispatchEvent(loader,Event.COMPLETE);
             };
+        }
+
+        private loadSound (loader) {
+            var request = loader._request;
+            var url = request.url;
+            var savePath = request.url;
+            var promise = egret.PromiseObject.create();
+            promise.onSuccessFunc = function () {
+                egret_native.Audio.preloadEffect(savePath);
+                var sound = new egret.Sound();
+                sound.path = savePath;
+                loader.data = sound;
+                egret.callLater(egret.Event.dispatchEvent, egret.Event, loader, egret.Event.COMPLETE);
+            };
+            promise.onErrorFunc = function () {
+                egret.IOErrorEvent.dispatchIOErrorEvent(loader);
+            };
+            egret_native.download(url, savePath, promise);
         }
 
         private loadTexture(loader:URLLoader):void {

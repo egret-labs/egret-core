@@ -25,41 +25,48 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-
 module egret {
+    export class PromiseObject {
+        private static promiseObjectList = [];
 
+        public onSuccessFunc:Function;
+        public onSuccessThisObject:any;
+        public onErrorFunc:Function;
+        public onErrorThisObject:any;
 
-	/**
-	 * @class egret.NativeDeviceContext
-	 * @classdesc
-	 * @extends egret.HashObject
-	 */
-    export class NativeDeviceContext extends HashObject {
+        constructor() {
 
-        private callback:Function;
-        private thisObject:any;
-
-		/**
-		 * @method egret.NativeDeviceContext#constructor
-		 */
-        public constructor() {
-            super();
         }
 
-		/**
-		 * @method egret.NativeDeviceContext#executeMainLoop
-		 * @param callback {Function} 
-		 * @param thisObject {any} 
-		 */
-        public executeMainLoop(callback:Function, thisObject:any):void {
-
-            this.callback = callback;
-            this.thisObject = thisObject;
-            egret_native.executeMainLoop(this.onEnterFrame, this);
+        public static create() {
+            if (PromiseObject.promiseObjectList.length) {
+                return PromiseObject.promiseObjectList.pop();
+            }
+            else {
+                return new egret.PromiseObject();
+            }
         }
 
-        private onEnterFrame(advancedTime:number):void {
-            this.callback.call(this.thisObject, advancedTime);
+        private onSuccess() {
+            if (this.onSuccessFunc) {
+                this.onSuccessFunc.call(this.onSuccessThisObject);
+            }
+            this.destroy();
+        }
+
+        private onError(errorcode) {
+            if (this.onErrorFunc) {
+                this.onErrorFunc.call(this.onErrorThisObject);
+            }
+            this.destroy();
+        }
+
+        private destroy() {
+            this.onSuccessFunc = undefined;
+            this.onSuccessThisObject = undefined;
+            this.onErrorFunc = undefined;
+            this.onErrorThisObject = undefined;
+            PromiseObject.promiseObjectList.push(this);
         }
     }
 }

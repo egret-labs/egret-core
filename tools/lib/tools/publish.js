@@ -3,6 +3,7 @@ var param = require("../core/params_analyze.js");
 var child_process = require("child_process");
 var globals = require("../core/globals");
 var file = require("../core/file.js");
+var compile = require("./compile.js");
 
 /**
  * Constructs a new ClosureCompiler instance.
@@ -271,6 +272,7 @@ function run(dir, args, opts) {
         return;
     }
 
+    //发布版本
     var version = "";
     if (opts["--version"] && opts["--version"][0]) {
         version = "/" + opts["--version"][0];
@@ -281,9 +283,57 @@ function run(dir, args, opts) {
 
     var currDir = globals.joinEgretDir(dir, args[0]);
 
+    //复制资源
+    var releaseDir = currDir + "/release" + version;
+    var launcherDir = releaseDir + "/launcher";
+    var resourceDir = releaseDir + "/resource";
+    file.remove(launcherDir);
+    file.copy(currDir + "/launcher", launcherDir);
+    file.remove(launcherDir + "/index.html");
+    file.copy(launcherDir + "/release.html",releaseDir + "/index.html");
+    file.remove(launcherDir + "/release.html");
+
+    file.remove(resourceDir);
+    file.copy(currDir + "/resource", resourceDir);
+
     var egret_file = path.join(currDir, "bin-debug/lib/egret_file_list.js");
     var egretFileList = getFileList(egret_file);
-    egretFileList = egretFileList.map(function (item) {
+
+    var html5FileList = compile.getModuleConfig("html5").file_list;
+    var length = html5FileList.length;
+    for(var i = 0 ; i < length ; i++) {
+        var filePath = html5FileList[i];
+        filePath = filePath.replace(".ts",".js");
+        html5FileList[i] = filePath;
+        var index = egretFileList.indexOf(filePath);
+        if(index != -1) {
+            egretFileList.splice(index, 1);
+        }
+    }
+    var nativeFileList = compile.getModuleConfig("native").file_list;
+    length = nativeFileList.length;
+    for(i = 0 ; i < length ; i++) {
+        filePath = nativeFileList[i];
+        if(filePath.indexOf(".d.ts") != -1) {
+            nativeFileList.splice(i, 1);
+            i--;
+            length--;
+            continue;
+        }
+        filePath = filePath.replace(".ts",".js");
+        nativeFileList[i] = filePath;
+        index = egretFileList.indexOf(filePath);
+        if(index != -1) {
+            egretFileList.splice(index, 1);
+        }
+    }
+
+    var egretHTML5FileList = egretFileList.concat(html5FileList);
+    egretHTML5FileList = egretHTML5FileList.map(function (item) {
+        return path.join(currDir + "/libs/core", item);
+    });
+    var egretNativeFileList = egretFileList.concat(nativeFileList);
+    egretNativeFileList = egretNativeFileList.map(function (item) {
         return path.join(currDir + "/libs/core", item);
     });
 
@@ -293,32 +343,29 @@ function run(dir, args, opts) {
         return path.join(currDir + "/bin-debug/src/", item);
     });
 
-    var totalFileList = egretFileList.concat(gameFileList);
+    var totalHTML5FileList = egretHTML5FileList.concat(gameFileList);
+    var totalNativeFileList = egretNativeFileList.concat(gameFileList);
 
+    var runtime = param.getOption(opts, "--runtime", ["html5", "native"]);
+    if(runtime == "html5") {
+        compilerSingleFile(currDir, totalHTML5FileList, launcherDir + "/game-min.js");
+    }
+    else if(runtime == "native") {
+        compilerSingleFile(currDir, totalNativeFileList, launcherDir + "/game-min-native.js");
+    }
+}
+
+function compilerSingleFile(currDir, fileList, outputFile, callback) {
     var tempFile = path.join(currDir,"bin-debug/__temp.js");
-
-    combineToSingleJavaScriptFile(totalFileList,tempFile);
-
-    var releaseDir = currDir + "/release" + version;
-    var launcherDir = releaseDir + "/launcher";
-    var resourceDir = releaseDir + "/resource";
-    file.remove(launcherDir);
-    file.copy(currDir + "/launcher", launcherDir);
-    file.remove(launcherDir + "/index.html");
-    file.copy(launcherDir + "/release.html",releaseDir + "/index.html");
-    file.remove(launcherDir + "/release.html");
-//    file.remove(launcherDir + "/native_loader.js");
-
-    file.remove(resourceDir);
-    file.copy(currDir + "/resource", resourceDir);
-
+    combineToSingleJavaScriptFile(fileList,tempFile);
     ClosureCompiler.compile([tempFile],
-        {js_output_file: launcherDir + "/game-min.js","warning_level":"QUIET"},
+        {js_output_file: outputFile,"warning_level":"QUIET"},
         function afterCompile(err, stdout, stderr) {
-//            console.log(err);
-
             if (!err){
                 file.remove(tempFile);
+                if(callback) {
+                    callback();
+                }
             }
             else{
                 console.log (err)
@@ -334,9 +381,12 @@ function help_title() {
 
 function help_example() {
     var result =  "\n";
-    result += "    egret publish [project_name] --version [version]\n";
+    result += "    egret publish [project_name] --version [version] [--runtime html5|native]\n";
     result += "描述:\n";
     result += "    " + help_title();
+    result += "参数说明:\n";
+    result += "    --version    设置发布之后的版本号，可以不设置\n";
+    result += "    --runtime    设置发布方式为 html5 或者是 native方式，默认值为html5";
     return result;
 }
 
