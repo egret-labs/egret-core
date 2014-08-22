@@ -726,7 +726,7 @@ class EXMLCompiler{
                     value = this.formatString(stringValue);
                     break;
                 default:
-                    globals.exit(2008,this.exmlPath,"string",key,this.toXMLString(node));
+                    globals.exit(2008,this.exmlPath,"string",key+":"+type,this.toXMLString(node));
                     break;
             }
         }
