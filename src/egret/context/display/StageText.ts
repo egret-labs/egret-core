@@ -109,11 +109,11 @@ module egret {
 
             var stageDelegateDiv = egret.Browser.getInstance().$("#StageDelegateDiv");
             if (!stageDelegateDiv) {
-                var canvas = document.getElementById(egret.StageDelegate.canvas_name);
+//                var canvas = document.getElementById(egret.StageDelegate.canvas_name);
                 stageDelegateDiv = egret.Browser.getInstance().$new("div");
                 stageDelegateDiv.id = "StageDelegateDiv";
-                stageDelegateDiv.style.width = canvas.style.width;
-                stageDelegateDiv.style.height = canvas.style.height;
+//                stageDelegateDiv.style.width = canvas.style.width;
+//                stageDelegateDiv.style.height = canvas.style.height;
 
                 var container = document.getElementById(egret.StageDelegate.canvas_div_name);
                 container.appendChild(stageDelegateDiv);
@@ -144,13 +144,21 @@ module egret {
         }
 
         public changeSize(width:number, height:number):void {
-            //todo
             this.inputElement.style.width = width + "px";
 //            this.inputElement.style.height = height + "px";
 
             this.div.style.width = width + "px";
 //            this.div.style.height = height + "px";
             this.div.transforms();
+        }
+
+        public setSize(value:number):void {
+            this._size = value;
+            this.inputElement.style.fontSize = this._size + "px";
+        }
+
+        public setTextColor(value:string):void {
+            this.inputElement.style.color = value;
         }
     }
 }

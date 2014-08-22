@@ -29,17 +29,6 @@
 module egret {
     export class TextInput extends DisplayObject {
 
-        private _domInputSprite;
-        private _edTxt;
-        private _placeholderText:string = "";
-        private _edFontSize:number = 14;
-        private _textColor:number = 0xff0000;
-        private _placeholderFontSize = 14;
-        private _placeholderColor:number = 0xffff00;
-
-        private _preX:number = 0;
-        private _preY:number = 0;
-
         private stageText:egret.StageText;
 
         constructor() {
@@ -88,23 +77,62 @@ module egret {
             return null;
         }
 
-        public _setDirty():void {
-            super._setDirty();
-            //todo 等dirty完善
-            var point = this.localToGlobal();
-            this.stageText.changePosition(point.x, point.y);
-            this.stageText.changeSize(this._explicitWidth, this._explicitHeight);
+        public _updateTransform():void {
+            //todo 等待worldTransform的性能优化完成，合并这块代码
+            var oldTransFormA = this._worldTransform.a;
+            var oldTransFormB = this._worldTransform.b;
+            var oldTransFormC = this._worldTransform.c;
+            var oldTransFormD = this._worldTransform.d;
+            var oldTransFormTx = this._worldTransform.tx;
+            var oldTransFormTy = this._worldTransform.ty;
+            super._updateTransform();
+            var newTransForm = this._worldTransform;
+            if (oldTransFormA != newTransForm.a ||
+                oldTransFormB != newTransForm.b ||
+                oldTransFormC != newTransForm.c ||
+                oldTransFormD != newTransForm.d ||
+                oldTransFormTx != newTransForm.tx ||
+                oldTransFormTy != newTransForm.ty) {
+                var point = this.localToGlobal();
+                this.stageText.changePosition(point.x, point.y);
+                this.stageText.changeSize(this._explicitWidth, this._explicitHeight);
+            }
         }
 
-//        public _clearDirty():void {
-//            super._clearDirty();
-//            var point = this.localToGlobal();
-//            this.stageText.changePosition(point.x, point.y);
-//        }
-//
-//        public _clearSizeDirty():void {
-//            super._clearSizeDirty();
-//            this.stageText.changeSize(this._explicitWidth, this._explicitHeight);
-//        }
+        /**
+         * 字号
+         * @member {number} egret.TextField#size
+         */
+        public _size:number = 30;
+
+        public get size():number {
+            return this._size;
+        }
+
+        public set size(value:number) {
+            if (this._size != value) {
+                this._size = value;
+                this.stageText.setSize(this._size);
+            }
+        }
+
+        public _textColorString:string = "#FFFFFF";
+
+        private _textColor:number = 0xFFFFFF;
+        /**
+         * 文字颜色
+         * @member {number} egret.TextField#textColor
+         */
+        public get textColor():number {
+            return this._textColor;
+        }
+
+        public set textColor(value:number) {
+            if (this._textColor != value) {
+                this._textColor = value;
+                this._textColorString = toColorString(value);
+                this.stageText.setTextColor(this._textColorString);
+            }
+        }
     }
 }

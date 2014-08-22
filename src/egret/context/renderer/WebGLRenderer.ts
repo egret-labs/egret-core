@@ -335,9 +335,7 @@ module egret {
 
         public setAlpha(value:number, blendMode:string):void {
             this.worldAlpha = value;
-            if (blendMode) {
-                this.setBlendMode(blendMode);
-            }
+            this.setBlendMode(blendMode);
         }
 
         public createWebGLTexture(texture:Texture):void {
