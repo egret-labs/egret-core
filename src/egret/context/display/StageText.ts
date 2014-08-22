@@ -109,11 +109,11 @@ module egret {
 
             var stageDelegateDiv = egret.Browser.getInstance().$("#StageDelegateDiv");
             if (!stageDelegateDiv) {
-                var canvas = document.getElementById(egret.StageDelegate.canvas_name);
+//                var canvas = document.getElementById(egret.StageDelegate.canvas_name);
                 stageDelegateDiv = egret.Browser.getInstance().$new("div");
                 stageDelegateDiv.id = "StageDelegateDiv";
-                stageDelegateDiv.style.width = canvas.style.width;
-                stageDelegateDiv.style.height = canvas.style.height;
+//                stageDelegateDiv.style.width = canvas.style.width;
+//                stageDelegateDiv.style.height = canvas.style.height;
 
                 var container = document.getElementById(egret.StageDelegate.canvas_div_name);
                 container.appendChild(stageDelegateDiv);
