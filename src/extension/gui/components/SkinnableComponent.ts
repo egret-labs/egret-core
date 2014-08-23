@@ -48,7 +48,6 @@ module egret.gui {
 		}
         /**
          * 主机组件标识符。用于唯一确定一个组件的名称。
-         * 在解析skinName时，会把此属性的值传递给ISkinAdapter.getSkin()方法，以参与皮肤解析的规则判断。
          * 用户自定义的组件若不对此属性赋值，将会继承父级的标识符定义。
          * @member {string} egret.gui.SkinnableComponent#hostComponentKey
          */
@@ -63,7 +62,7 @@ module egret.gui {
         /**
          * 皮肤标识符。可以为Class,String,或DisplayObject实例等任意类型，具体规则由项目注入的素材适配器决定，
          * 适配器根据此属性值解析获取对应的显示对象，并赋值给skin属性。
-         * @member egret.gui.SkinnableComponent#skinName
+         * @member {string} egret.gui.SkinnableComponent#skinName
          */
         public get skinName():any{
             return this._skinName;
@@ -77,15 +76,6 @@ module egret.gui {
             if(this.createChildrenCalled){
                 this.parseSkinName();
             }
-        }
-
-        public _skin:any;
-        /**
-         * 皮肤对象实例。
-         * @member egret.gui.SkinnableComponent#skin
-         */
-        public get skin():any{
-            return this._skin;
         }
 
         private createChildrenCalled:boolean = false;
@@ -102,7 +92,10 @@ module egret.gui {
          * 皮肤解析适配器
          */
         private static skinAdapter:ISkinAdapter;
-
+        /**
+         * 默认皮肤主题解析器
+         */
+        public static _defaultTheme:Theme;
         /**
          * 解析skinName
          */
@@ -113,6 +106,42 @@ module egret.gui {
             }
 
             var skin:any = adapter.getSkin(this._skinName,this.hostComponentKey);
+            if(!skin){
+                var theme:Theme = SkinnableComponent._defaultTheme;
+                if(theme){
+                    skin = theme.getDefaultSkin(this);
+                }
+            }
+            this._setSkin(skin);
+        }
+        /**
+         * 获取皮肤适配器
+         */
+        private getSkinAdapter():ISkinAdapter{
+            var adapter:ISkinAdapter;
+            try{
+                adapter = Injector.getInstance("egret.gui.ISkinAdapter");
+            }
+            catch(e){
+                adapter = new DefaultSkinAdapter();
+            }
+            SkinnableComponent.skinAdapter = adapter;
+            return adapter;
+        }
+
+        public _skin:any;
+        /**
+         * 皮肤对象实例。
+         * @member egret.gui.SkinnableComponent#skin
+         */
+        public get skin():any{
+            return this._skin;
+        }
+
+        /**
+         * 设置皮肤
+         */
+        public _setSkin(skin:any):void{
             var oldSkin:any = this._skin;
             this.detachSkin(oldSkin);
             if(oldSkin instanceof DisplayObject){
@@ -131,20 +160,6 @@ module egret.gui {
             if(this.hasEventListener(UIEvent.SKIN_CHANGED)){
                 UIEvent.dispatchUIEvent(this,UIEvent.SKIN_CHANGED);
             }
-        }
-        /**
-         * 获取皮肤适配器
-         */
-        private getSkinAdapter():ISkinAdapter{
-            var adapter:ISkinAdapter;
-            try{
-                adapter = Injector.getInstance("egret.gui.ISkinAdapter");
-            }
-            catch(e){
-                adapter = new DefaultSkinAdapter();
-            }
-            SkinnableComponent.skinAdapter = adapter;
-            return adapter;
         }
 
 		/**

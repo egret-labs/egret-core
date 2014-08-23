@@ -61,8 +61,9 @@ function buildProject(callback, currDir, keepGeneratedTypescript) {
     }
 
     var libsPath = path.join(currDir, "libs/");
-    var sourceList = compiler.generateGameFileList(currDir);
-    var dts = generateExmlDTS(sourceList, path.join(currDir, "src"));
+    var srcPath = path.join(currDir, "src/");
+    var exmlList = file.search(srcPath,"exml");
+    var dts = generateExmlDTS(exmlList, srcPath);
     var exmlDtsPath = path.join(currDir, "libs", "exml.d.ts");
     if (dts) {
         file.save(exmlDtsPath, dts);
@@ -71,6 +72,7 @@ function buildProject(callback, currDir, keepGeneratedTypescript) {
         file.remove(exmlDtsPath);
     }
     var libs = file.search(libsPath, "d.ts");
+    var sourceList = compiler.generateGameFileList(currDir);
     compiler.compile(callback,
         path.join(currDir, "src"),
         path.join(currDir, "bin-debug/src"),

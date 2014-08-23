@@ -283,6 +283,7 @@ function search(dir, extension) {
  */
 function searchByFunction(dir, filterFunc) {
     var list = [];
+    var checkDir = arguments[2];
     try{
         var stat = fs.statSync(dir);
     }
@@ -290,23 +291,28 @@ function searchByFunction(dir, filterFunc) {
         return list;
     }
     if (stat.isDirectory()) {
-        findFiles(dir,list,"",filterFunc);
+        findFiles(dir,list,"",filterFunc,checkDir);
     }
     return list;
 }
 
 
 
-function findFiles(filePath,list,extension,filterFunc) {
+function findFiles(filePath,list,extension,filterFunc,checkDir) {
     var files = fs.readdirSync(filePath);
     var length = files.length;
     for (var i = 0; i < length; i++) {
-        var path = joinPath(filePath ,files[i]);
-        var stat = fs.statSync(path);
-        if (path.charAt(0) == ".") {
+        if (files[i].charAt(0) == ".") {
             continue;
         }
+        var path = joinPath(filePath ,files[i]);
+        var stat = fs.statSync(path);
         if (stat.isDirectory()) {
+            if(checkDir){
+                if (!filterFunc(path)) {
+                    continue;
+                }
+            }
             findFiles(path, list,extension,filterFunc);
         }
         else if (filterFunc != null) {

@@ -1,8 +1,8 @@
 {
     "name":"gui",
-   "dependence":["core"],
+    "dependence":["core"],
     "output":"core/extension/gui",
-   "file_list":
+    "file_list":
     [
         "extension/gui/collections/ICollection.ts",
         "extension/gui/collections/ArrayCollection.ts",
@@ -49,6 +49,7 @@
         "extension/gui/components/SkinnableComponent.ts",
         "extension/gui/components/supportClasses/DefaultSkinAdapter.ts",
         "extension/gui/components/supportClasses/DefaultAssetAdapter.ts",
+        "extension/gui/components/supportClasses/Theme.ts",
         "extension/gui/components/supportClasses/SkinBasicLayout.ts",
         "extension/gui/components/supportClasses/ButtonBase.ts",
         "extension/gui/components/supportClasses/ToggleButtonBase.ts",

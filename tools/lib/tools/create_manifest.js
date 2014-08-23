@@ -33,6 +33,8 @@ var referenceInfoList;
  */
 var newClassNameList;
 
+var thmList;
+
 var exmlConfig;
 /**
  * ts关键字
@@ -46,13 +48,9 @@ var E = "http://ns.egret-labs.org/egret";
  * Wing命名空间
  */
 var W = "http://ns.egret-labs.org/wing";
-/**
- * 基本数据类型
- */
-var basicTypes = ["void","any","number","string","boolean","Object","Array","Function"];
 
 
-//create("C:/Users/DOM/Desktop/AA/src")
+//create("D:/Program/HTML5/egret-examples/GUIExample/src");
 /**
  * 生成manifest.json文件
  * @param currentDir 当前文件夹
@@ -116,6 +114,7 @@ function getManifest(srcPath){
     pathToClassNames = {};
     referenceInfoList = {};
     newClassNameList = [];
+    thmList = [];
     var manifest = file.searchByFunction(srcPath,filterFunc);
     var exmlList = [];
     for(var i=manifest.length-1;i>=0;i--){
@@ -153,6 +152,10 @@ function getManifest(srcPath){
  */
 function filterFunc(item){
     var ext = file.getExtension(item).toLowerCase();
+    if(ext=="thm"){
+        thmList.push(item);
+        return false;
+    }
     if((ext=="ts"&&item.indexOf(".d.ts")==-1)||ext=="exml"){
         return true;
     }
@@ -235,6 +238,15 @@ function sortFileList(list,srcPath){
     if(docPath){
         var referenceList = [docPath];
         getReferenceList(docPath,referenceList);
+        var thmClassList = readTHMClassList(file.joinPath(srcPath,".."));
+        var length = thmClassList.length;
+        for(var i=0;i<length;i++){
+            var thmPath = thmClassList[i];
+            if(referenceList.indexOf(thmPath)==-1){
+                referenceList.push(thmPath);
+                getReferenceList(thmPath,referenceList);
+            }
+        }
         for(var i=gameList.length-1;i>=0;i--){
             var path = gameList[i];
             if(referenceList.indexOf(path)==-1){
@@ -243,6 +255,61 @@ function sortFileList(list,srcPath){
         }
     }
     return gameList;
+}
+
+var searchPath;
+/**
+ * 读取主题文件列表
+ */
+function readTHMClassList(projectPath){
+    searchPath = projectPath;
+    var list = file.searchByFunction(projectPath,thmFilterFunc,true);
+    thmList = thmList.concat(list);
+    var length = thmList.length;
+    var pathList = [];
+    for(var i=0;i<length;i++){
+        var path = thmList[i];
+        var text = file.read(path);
+        var skins;
+        try{
+            var data = JSON.parse(text);
+            skins = data.skins;
+        }
+        catch(e){
+            continue;
+        }
+        if(!skins){
+            continue;
+        }
+        for(var key in skins){
+            var className = skins[key];
+            var classPath = classNameToPath[className];
+            if(classPath&&pathList.indexOf(classPath)==-1){
+                pathList.push(classPath);
+            }
+        }
+    }
+    return pathList;
+}
+
+/**
+ * 过滤函数
+ */
+function thmFilterFunc(item){
+    var ext = file.getExtension(item).toLowerCase();
+    if(!ext){
+        if(item==searchPath+"/bin-debug"||
+            item==searchPath+"/libs"||
+            item==searchPath+"/src"||
+            item==searchPath+"/launcher"){
+            return false;
+        }
+        return true;
+    }
+    if(ext=="thm"){
+        return true;
+    }
+    return false;
 }
 
 function getReferenceList(path,result){
