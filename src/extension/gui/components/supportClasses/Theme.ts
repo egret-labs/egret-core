@@ -85,6 +85,7 @@ module egret.gui {
                 return;
             }
             var list:Array<SkinnableComponent> = this.delyList;
+            this.delyList = [];
             var length:number = list.length;
             for(var i:number=0;i<length;i++){
                 var client:SkinnableComponent = list[i];
