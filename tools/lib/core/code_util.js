@@ -382,7 +382,7 @@ function removeComment(codeText,path) {
         var squoteIndex = codeText.indexOf("'");
         if (squoteIndex == -1)
             squoteIndex = Number.MAX_VALUE;
-        var commentIndex = codeText.indexOf("/**");
+        var commentIndex = codeText.indexOf("/*");
         if (commentIndex == -1)
             commentIndex = Number.MAX_VALUE;
         var lineCommonentIndex = codeText.indexOf("//");
