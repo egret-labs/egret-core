@@ -191,3 +191,4 @@ exports.getConfig = getConfig;
 exports.addCallBackWhenExit = addCallBackWhenExit;
 exports.getDocumentClass = getDocumentClass;
 exports.checkVersion = checkVersion;
+exports.compressVersion = compressVersion;

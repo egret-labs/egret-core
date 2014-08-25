@@ -10,25 +10,41 @@ var path = require("path");
 var globals = require("../core/globals.js");
 var projectConfig = require("../core/projectConfig.js")
 
+var upgradeConfig = {
+    "1.0.3":upgradeTo_1_0_3,
+    "1.0.4":upgradeTo_1_0_4
+};
 
 var currDir;
-var args
+var args;
 function run(dir, a, opts) {
-    currDir = dir;
+    currDir = globals.joinEgretDir(dir, a[0]);
     args = a;
-    upgradeTo_1_0_3();
-    upgradeTo_1_0_4();
 
+    var config = require("../core/projectConfig.js");
+    config.init(currDir);
+    var version = config.data.egret_version;
+    if (!version) {
+        version = "1.0.0";
+    }
+
+    for(var key in upgradeConfig) {
+        var result = globals.compressVersion(version, key);
+        if(result < 0) {
+            upgradeConfig[key]();
+        }
+    }
 }
 
 function upgradeTo_1_0_3() {
-    currDir = globals.joinEgretDir(currDir, args[0]);
+    globals.log("正在更新到1.0.3");
     var extensionDir = path.join(currDir, "src");
     var list = file.search(extensionDir, "ts");
     list.forEach(fixSingleTypeScriptFile);
 }
 
 function upgradeTo_1_0_4() {
+    globals.log("正在更新到1.0.4");
     //新的publish改之后，需要把base给删掉
     var releasePath = currDir + "/launcher/release.html";
     var txt = file.read(releasePath);
@@ -37,7 +53,7 @@ function upgradeTo_1_0_4() {
     file.remove(path.join(currDir,"libs/egret.d.ts"));
     var releasePath = currDir + "/launcher/index.html";
     var txt = file.read(releasePath);
-    txt = txt.replace("\"bin-debug/lib/\"", "\"libs/core/\"")
+    txt = txt.replace("\"bin-debug/lib/\"", "\"libs/core/\"");
     file.save(releasePath, txt);
     projectConfig.init(currDir);
     projectConfig.data.modules = [
@@ -50,7 +66,7 @@ function upgradeTo_1_0_4() {
         {
             "name": "dragonbones"
         }
-    ]
+    ];
     projectConfig.data.egret_version = "1.0.4";
     projectConfig.save();
 }
