@@ -40,10 +40,9 @@ function save(){
 }
 
 function getModule(runtime){
-    var moduleList = projectConfig.modules.map(function(item){
-        return item.name;
-    })
-    moduleList.push(runtime);
+    var moduleList = projectConfig.modules.concat();
+
+    moduleList.push({"name":runtime});
     return moduleList;
 }
 

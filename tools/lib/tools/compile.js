@@ -483,11 +483,11 @@ function compileModules(callback,projectDir,runtime){
     var moduleList = projectConfig.getModule(runtime);
 
     var tasks = [];
-    moduleList.map(function (moduleName) {
+    moduleList.map(function (module) {
         tasks.push(
             function (callback) {
                 compileModule(
-                    callback, moduleName, prefix, projectDir);
+                    callback, module.name, prefix, projectDir);
             });
     })
 
