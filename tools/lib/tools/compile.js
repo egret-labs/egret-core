@@ -331,6 +331,9 @@ function getModuleConfig(module, projectDir) {
         }
     }
     var content = file.read(moduleName);
+    if (!content) {
+        globals.exit(8003, moduleName);
+    }
     var coreList = JSON.parse(content);
     return coreList
 }
@@ -444,11 +447,11 @@ function getLastConstructor(classDecl) {
 function compileModule(callback, module, projectDir) {
 
     var prefix
-    if (!module.path){
+    if (!module.path) {
         prefix = path.join(param.getEgretPath(), "src");
     }
-    else{
-        prefix = path.join(projectDir,module.path);
+    else {
+        prefix = path.join(projectDir, module.path);
     }
     var moduleConfig = getModuleConfig(module, projectDir)
     var output = moduleConfig.output ? moduleConfig.output : moduleConfig.name;
@@ -459,7 +462,6 @@ function compileModule(callback, module, projectDir) {
     }).filter(function (item) {
             return item.indexOf(".js") == -1 //&& item.indexOf(".d.ts") == -1;
         })
-    all_module_file_list = all_module_file_list.concat(moduleConfig.file_list);
     var dependencyList = moduleConfig.dependence;
     if (dependencyList) {
         for (var i = 0; i < dependencyList.length; i++) {
@@ -471,31 +473,37 @@ function compileModule(callback, module, projectDir) {
     }
 
 
-    var sourcemap = param.getArgv()["opts"]["-sourcemap"];
-    sourcemap = sourcemap ? "--sourcemap " : "";
+    all_module_file_list = all_module_file_list.concat(moduleConfig.file_list);
 
-    var cmd = sourcemap + tsList.join(" ") + " -t ES5 --outDir " + "\"" + output + "\"";
-    file.save("tsc_config_temp.txt", cmd);//todo performance-optimize
-    typeScriptCompiler(function (code) {
-        if (code == 0) {
+    async.series([
+
+        function () {
+            var sourcemap = param.getArgv()["opts"]["-sourcemap"];
+            sourcemap = sourcemap ? "--sourcemap " : "";
+
+            var cmd = sourcemap + tsList.join(" ") + " -t ES5 --outDir " + "\"" + output + "\"";
+            file.save("tsc_config_temp.txt", cmd);//todo performance-optimize
+            typeScriptCompiler(callback);
+        },
+
+
+        function (callback) {
             var cmd = sourcemap + tsList.join(" ") + " -d -t ES5 --out " + "\"" + path.join(output, moduleConfig.name + ".d.ts") + "\"";
             file.save("tsc_config_temp.txt", cmd);
-            typeScriptCompiler(function (code) {
-                if (code == 0) {
-                    callback(null, prefix);
-                }
-            });
+            typeScriptCompiler(callback);
         }
-        else {
-            callback(1303);
+
+
+    ], function (err) {
+        if (err) {
+            globals.exit(1303);
         }
-    });
+    })
 
 }
 
 
 function compileModules(callback, projectDir, runtime) {
-
 
 
     var projectConfig = require("../core/projectConfig.js");
