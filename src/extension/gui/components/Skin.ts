@@ -28,56 +28,108 @@
 
 module egret.gui {
 
-	/**
-	 * @class egret.gui.Skin
-	 * @classdesc
-	 * 含有视图状态功能的皮肤基类。注意：为了减少嵌套层级，此皮肤没有继承显示对象，若需要显示对象版本皮肤，请使用Skin。
-	 * @see org.flexlite.domUI.components.supportClasses.Skin
-	 * @extends egret.EventDispatcher
-	 * @implements egret.gui.IStateClient
-	 * @implements egret.gui.ISkin
-	 * @implements egret.gui.IContainer
-	 */
-	export class Skin extends EventDispatcher
-		implements IStateClient, ISkin, IContainer{
-		/**
-		 * 构造函数
-		 * @method egret.gui.Skin#constructor
-		 */		
-		public constructor(){
-			super();
-		}
-		
-		/**
-		 * 组件的最大测量宽度,仅影响measuredWidth属性的取值范围。
-		 * @member egret.gui.Skin#maxWidth
-		 */	
-		public maxWidth:number = 10000;
-		/**
-		 * 组件的最小测量宽度,此属性设置为大于maxWidth的值时无效。仅影响measuredWidth属性的取值范围。
-		 * @member egret.gui.Skin#minWidth
-		 */
-		public minWidth:number = 0;
-		/**
-		 * 组件的最大测量高度,仅影响measuredHeight属性的取值范围。
-		 * @member egret.gui.Skin#maxHeight
-		 */
-		public maxHeight:number = 10000;
-		/**
-		 * 组件的最小测量高度,此属性设置为大于maxHeight的值时无效。仅影响measuredHeight属性的取值范围。
-		 * @member egret.gui.Skin#minHeight
-		 */
-		public minHeight:number = 0;
-		/**
-		 * 组件宽度
-		 * @member egret.gui.Skin#width
-		 */
-		public width:number = NaN;
-		/**
-		 * 组件高度
-		 * @member egret.gui.Skin#height
-		 */
-		public height:number = NaN;
+    /**
+     * @class egret.gui.Skin
+     * @classdesc
+     * 含有视图状态功能的皮肤基类。注意：为了减少嵌套层级，此皮肤没有继承显示对象，若需要显示对象版本皮肤，请使用Skin。
+     * @see org.flexlite.domUI.components.supportClasses.Skin
+     * @extends egret.EventDispatcher
+     * @implements egret.gui.IStateClient
+     * @implements egret.gui.ISkin
+     * @implements egret.gui.IContainer
+     */
+    export class Skin extends EventDispatcher
+    implements IStateClient, ISkin, IContainer{
+        /**
+         * 构造函数
+         * @method egret.gui.Skin#constructor
+         */
+        public constructor(){
+            super();
+            this.skinLayout = new SkinBasicLayout();
+            this.skinLayout.target = this;
+        }
+
+        /**
+         * 组件的最大测量宽度,仅影响measuredWidth属性的取值范围。
+         * @member egret.gui.Skin#maxWidth
+         */
+        public maxWidth:number = 10000;
+        /**
+         * 组件的最小测量宽度,此属性设置为大于maxWidth的值时无效。仅影响measuredWidth属性的取值范围。
+         * @member egret.gui.Skin#minWidth
+         */
+        public minWidth:number = 0;
+        /**
+         * 组件的最大测量高度,仅影响measuredHeight属性的取值范围。
+         * @member egret.gui.Skin#maxHeight
+         */
+        public maxHeight:number = 10000;
+        /**
+         * 组件的最小测量高度,此属性设置为大于maxHeight的值时无效。仅影响measuredHeight属性的取值范围。
+         * @member egret.gui.Skin#minHeight
+         */
+        public minHeight:number = 0;
+
+        public _hasWidthSet:Boolean = false;
+        public _width:number = NaN;
+        /**
+         * 组件宽度,默认值为NaN,设置为NaN将使用组件的measure()方法自动计算尺寸
+         * @member egret.gui.Skin#width
+         */
+        public get width():number{
+            return this._width;
+        }
+        public set width(value:number){
+            if(this._width==value)
+                return;
+            this._width = value;
+            this._hasWidthSet = NumberUtils.isNumber(value);
+        }
+
+        public _hasHeightSet:Boolean = false;
+
+        public _height:number = NaN;
+        /**
+         * 组件高度,默认值为NaN,设置为NaN将使用组件的measure()方法自动计算尺寸
+         * @member egret.gui.Skin#height
+         */
+        public get height():number{
+            return this._height;
+        }
+
+        public set height(value:number) {
+            if (this._height == value)
+                return;
+            this._height = value;
+            this._hasHeightSet = NumberUtils.isNumber(value);
+        }
+
+        /**
+         * 组件的默认宽度（以像素为单位）。此值由 measure() 方法设置。
+         * @member egret.gui.Skin#measuredWidth
+         */
+        public measuredWidth:number = 0;
+
+        /**
+         * 组件的默认高度（以像素为单位）。此值由 measure() 方法设置。
+         * @member egret.gui.Skin#measuredHeight
+         */
+        public measuredHeight:number = 0;
+
+        /**
+         * @member egret.gui.Skin#preferredWidth
+         */
+        public get preferredWidth():number{
+            return this._hasWidthSet ? this._width:this.measuredWidth;
+        }
+
+        /**
+         * @member egret.gui.Skin#preferredHeight
+         */
+        public get preferredHeight():number{
+            return this._hasHeightSet ? this._height:this.measuredHeight;
+        }
 
         private _initialized:boolean = false;
         /**
@@ -89,19 +141,19 @@ module egret.gui {
 
         }
 
-		private _hostComponent:SkinnableComponent;
-		/**
-		 * @member egret.gui.Skin#hostComponent
-		 */
-		public get hostComponent():SkinnableComponent{
-			return this._hostComponent;
-		}
-		/**
-		 * @inheritDoc
-		 */
-		public set hostComponent(value:SkinnableComponent){
-			this._setHostComponent(value);
-		}
+        private _hostComponent:SkinnableComponent;
+        /**
+         * @member egret.gui.Skin#hostComponent
+         */
+        public get hostComponent():SkinnableComponent{
+            return this._hostComponent;
+        }
+        /**
+         * @inheritDoc
+         */
+        public set hostComponent(value:SkinnableComponent){
+            this._setHostComponent(value);
+        }
 
         public _setHostComponent(value:SkinnableComponent){
             if(this._hostComponent==value)
@@ -133,216 +185,248 @@ module egret.gui {
             }
         }
 
-		private _elementsContent:Array<any> = [];
-		/**
-		 * 返回子元素列表
-		 */
-		public _getElementsContent():Array<any>{
-			return this._elementsContent;
-		}
-		
-		/**
-		 * 设置容器子对象数组 。数组包含要添加到容器的子项列表，之前的已存在于容器中的子项列表被全部移除后添加列表里的每一项到容器。
-		 * 设置该属性时会对您输入的数组进行一次浅复制操作，所以您之后对该数组的操作不会影响到添加到容器的子项列表数量。
-		 */		
-		public set elementsContent(value:Array<any>){
-			if(value==null)
-				value = [];
-			if(value==this._elementsContent)
-				return;
-			if(this._hostComponent){
-				var i:number;
-				for (i = this._elementsContent.length - 1; i >= 0; i--){
-					this._elementRemoved(this._elementsContent[i], i);
-				}
-				
-				this._elementsContent = value.concat();
-				
-				var n:number = this._elementsContent.length;
-				for (i = 0; i < n; i++){   
-					var elt:IVisualElement = this._elementsContent[i];
-					
-					if(elt.parent&&"removeElement" in elt.parent)
-						(<IVisualElementContainer><any> (elt.parent)).removeElement(elt);
-					else if(elt.owner&&"removeElement" in elt.owner)
-						(<IContainer><any> (elt.owner)).removeElement(elt);
-					this._elementAdded(elt, i);
-				}
-			}
-			else{
-				this._elementsContent = value.concat();
-			}
-		}
-		
-		/**
-		 * @member egret.gui.Skin#numElements
-		 */
-		public get numElements():number{
-			return this._elementsContent.length;
-		}
-		
-		/**
-		 * @method egret.gui.Skin#getElementAt
-		 * @param index {number} 
-		 * @returns {IVisualElement}
-		 */
-		public getElementAt(index:number):IVisualElement{
-			this.checkForRangeError(index);
-			return this._elementsContent[index];
-		}
-		
-		private checkForRangeError(index:number, addingElement:boolean = false):void{
-			var maxIndex:number = this._elementsContent.length - 1;
-			
-			if (addingElement)
-				maxIndex++;
-			
-			if (index < 0 || index > maxIndex)
-				throw new RangeError("索引:\""+index+"\"超出可视元素索引范围");
-		}
-		/**
-		 * @method egret.gui.Skin#addElement
-		 * @param element {IVisualElement} 
-		 * @returns {IVisualElement}
-		 */
-		public addElement(element:IVisualElement):IVisualElement{
-			var index:number = this.numElements;
-			
-			if (element.owner == this)
-				index = this.numElements-1;
-			
-			return this.addElementAt(element, index);
-		}
-		/**
-		 * @method egret.gui.Skin#addElementAt
-		 * @param element {IVisualElement} 
-		 * @param index {number} 
-		 * @returns {IVisualElement}
-		 */
-		public addElementAt(element:IVisualElement, index:number):IVisualElement{
-			this.checkForRangeError(index, true);
-			
-			var host:any = element.owner; 
-			if (host == this){
-				this.setElementIndex(element, index);
-				return element;
-			}
-			else if(host&&"removeElement" in host){
-				(<IContainer><any> host).removeElement(element);
-			}
-			
-			this._elementsContent.splice(index, 0, element);
-			
-			if(this._hostComponent)
-				this._elementAdded(element, index);
+        private _elementsContent:Array<any> = [];
+        /**
+         * 返回子元素列表
+         */
+        public _getElementsContent():Array<any>{
+            return this._elementsContent;
+        }
+
+        /**
+         * 设置容器子对象数组 。数组包含要添加到容器的子项列表，之前的已存在于容器中的子项列表被全部移除后添加列表里的每一项到容器。
+         * 设置该属性时会对您输入的数组进行一次浅复制操作，所以您之后对该数组的操作不会影响到添加到容器的子项列表数量。
+         */
+        public set elementsContent(value:Array<any>){
+            if(value==null)
+                value = [];
+            if(value==this._elementsContent)
+                return;
+            if(this._hostComponent){
+                var i:number;
+                for (i = this._elementsContent.length - 1; i >= 0; i--){
+                    this._elementRemoved(this._elementsContent[i], i);
+                }
+
+                this._elementsContent = value.concat();
+
+                var n:number = this._elementsContent.length;
+                for (i = 0; i < n; i++){
+                    var elt:IVisualElement = this._elementsContent[i];
+
+                    if(elt.parent&&"removeElement" in elt.parent)
+                        (<IVisualElementContainer><any> (elt.parent)).removeElement(elt);
+                    else if(elt.owner&&"removeElement" in elt.owner)
+                        (<IContainer><any> (elt.owner)).removeElement(elt);
+                    this._elementAdded(elt, i);
+                }
+            }
+            else{
+                this._elementsContent = value.concat();
+            }
+        }
+
+        /**
+         * @member egret.gui.Skin#numElements
+         */
+        public get numElements():number{
+            return this._elementsContent.length;
+        }
+
+        /**
+         * @method egret.gui.Skin#getElementAt
+         * @param index {number}
+         * @returns {IVisualElement}
+         */
+        public getElementAt(index:number):IVisualElement{
+            this.checkForRangeError(index);
+            return this._elementsContent[index];
+        }
+
+        private checkForRangeError(index:number, addingElement:boolean = false):void{
+            var maxIndex:number = this._elementsContent.length - 1;
+
+            if (addingElement)
+                maxIndex++;
+
+            if (index < 0 || index > maxIndex)
+                throw new RangeError("索引:\""+index+"\"超出可视元素索引范围");
+        }
+        /**
+         * @method egret.gui.Skin#addElement
+         * @param element {IVisualElement}
+         * @returns {IVisualElement}
+         */
+        public addElement(element:IVisualElement):IVisualElement{
+            var index:number = this.numElements;
+
+            if (element.owner == this)
+                index = this.numElements-1;
+
+            return this.addElementAt(element, index);
+        }
+        /**
+         * @method egret.gui.Skin#addElementAt
+         * @param element {IVisualElement}
+         * @param index {number}
+         * @returns {IVisualElement}
+         */
+        public addElementAt(element:IVisualElement, index:number):IVisualElement{
+            this.checkForRangeError(index, true);
+
+            var host:any = element.owner;
+            if (host == this){
+                this.setElementIndex(element, index);
+                return element;
+            }
+            else if(host&&"removeElement" in host){
+                (<IContainer><any> host).removeElement(element);
+            }
+
+            this._elementsContent.splice(index, 0, element);
+
+            if(this._hostComponent)
+                this._elementAdded(element, index);
             else
                 element.ownerChanged(this);
-			
-			return element;
-		}
-		/**
-		 * @method egret.gui.Skin#removeElement
-		 * @param element {IVisualElement} 
-		 * @returns {IVisualElement}
-		 */
-		public removeElement(element:IVisualElement):IVisualElement{
-			return this.removeElementAt(this.getElementIndex(element));
-		}
-		/**
-		 * @method egret.gui.Skin#removeElementAt
-		 * @param index {number} 
-		 * @returns {IVisualElement}
-		 */
-		public removeElementAt(index:number):IVisualElement{
-			this.checkForRangeError(index);
-			
-			var element:IVisualElement = this._elementsContent[index];
-			
-			if(this._hostComponent)
-				this._elementRemoved(element, index);
-			else
+
+            return element;
+        }
+        /**
+         * @method egret.gui.Skin#removeElement
+         * @param element {IVisualElement}
+         * @returns {IVisualElement}
+         */
+        public removeElement(element:IVisualElement):IVisualElement{
+            return this.removeElementAt(this.getElementIndex(element));
+        }
+        /**
+         * @method egret.gui.Skin#removeElementAt
+         * @param index {number}
+         * @returns {IVisualElement}
+         */
+        public removeElementAt(index:number):IVisualElement{
+            this.checkForRangeError(index);
+
+            var element:IVisualElement = this._elementsContent[index];
+
+            if(this._hostComponent)
+                this._elementRemoved(element, index);
+            else
                 element.ownerChanged(null);
-			this._elementsContent.splice(index, 1);
-			
-			return element;
-		}
-			
-		/**
-		 * @method egret.gui.Skin#getElementIndex
-		 * @param element {IVisualElement} 
-		 * @returns {number}
-		 */
-		public getElementIndex(element:IVisualElement):number{
-			return this._elementsContent.indexOf(element);
-		}
-		/**
-		 * @method egret.gui.Skin#setElementIndex
-		 * @param element {IVisualElement} 
-		 * @param index {number} 
-		 */
-		public setElementIndex(element:IVisualElement, index:number):void{
-			this.checkForRangeError(index);
-			
-			var oldIndex:number = this.getElementIndex(element);
-			if (oldIndex==-1||oldIndex == index)
-				return;
-			
-			if(this._hostComponent)
-				this._elementRemoved(element, oldIndex, false);
-			
-			this._elementsContent.splice(oldIndex, 1);
-			this._elementsContent.splice(index, 0, element);
-			
-			if(this._hostComponent)
-				this._elementAdded(element, index, false);
-		}
-		
-		/**
-		 * 添加一个显示元素到容器
-		 * @method egret.gui.Skin#_elementAdded
-		 * @param element {IVisualElement} 
-		 * @param index {number} 
-		 * @param notifyListeners {boolean} 
-		 */		
-		public _elementAdded(element:IVisualElement, index:number, notifyListeners:boolean = true):void{
-			element.ownerChanged(this);
+            this._elementsContent.splice(index, 1);
+
+            return element;
+        }
+
+        /**
+         * @method egret.gui.Skin#getElementIndex
+         * @param element {IVisualElement}
+         * @returns {number}
+         */
+        public getElementIndex(element:IVisualElement):number{
+            return this._elementsContent.indexOf(element);
+        }
+        /**
+         * @method egret.gui.Skin#setElementIndex
+         * @param element {IVisualElement}
+         * @param index {number}
+         */
+        public setElementIndex(element:IVisualElement, index:number):void{
+            this.checkForRangeError(index);
+
+            var oldIndex:number = this.getElementIndex(element);
+            if (oldIndex==-1||oldIndex == index)
+                return;
+
+            if(this._hostComponent)
+                this._elementRemoved(element, oldIndex, false);
+
+            this._elementsContent.splice(oldIndex, 1);
+            this._elementsContent.splice(index, 0, element);
+
+            if(this._hostComponent)
+                this._elementAdded(element, index, false);
+        }
+
+        /**
+         * 添加一个显示元素到容器
+         * @method egret.gui.Skin#_elementAdded
+         * @param element {IVisualElement}
+         * @param index {number}
+         * @param notifyListeners {boolean}
+         */
+        public _elementAdded(element:IVisualElement, index:number, notifyListeners:boolean = true):void{
+            element.ownerChanged(this);
             if(element instanceof DisplayObject){
                 var childDO:DisplayObject = <DisplayObject><any> element;
                 this._hostComponent._addToDisplayListAt(childDO,index,notifyListeners);
             }
 
-			if (notifyListeners){
-				if (this.hasEventListener(ElementExistenceEvent.ELEMENT_ADD))
+            if (notifyListeners){
+                if (this.hasEventListener(ElementExistenceEvent.ELEMENT_ADD))
                     ElementExistenceEvent.dispatchElementExistenceEvent(this,
                         ElementExistenceEvent.ELEMENT_ADD,element,index);
-			}
-			
-			this._hostComponent.invalidateSize();
-			this._hostComponent.invalidateDisplayList();
-		}
-		/**
-		 * 从容器移除一个显示元素
-		 * @method egret.gui.Skin#_elementRemoved
-		 * @param element {IVisualElement} 
-		 * @param index {number} 
-		 * @param notifyListeners {boolean} 
-		 */		
-		public _elementRemoved(element:IVisualElement, index:number, notifyListeners:boolean = true):void{
-			if (notifyListeners){        
-				if (this.hasEventListener(ElementExistenceEvent.ELEMENT_REMOVE))
+            }
+
+            this._hostComponent.invalidateSize();
+            this._hostComponent.invalidateDisplayList();
+        }
+        /**
+         * 从容器移除一个显示元素
+         * @method egret.gui.Skin#_elementRemoved
+         * @param element {IVisualElement}
+         * @param index {number}
+         * @param notifyListeners {boolean}
+         */
+        public _elementRemoved(element:IVisualElement, index:number, notifyListeners:boolean = true):void{
+            if (notifyListeners){
+                if (this.hasEventListener(ElementExistenceEvent.ELEMENT_REMOVE))
                     ElementExistenceEvent.dispatchElementExistenceEvent(this,
                         ElementExistenceEvent.ELEMENT_REMOVE,element,index);
-			}
+            }
 
             if(element instanceof DisplayObject&&element.parent==this._hostComponent){
                 var childDO:DisplayObject = <DisplayObject><any> element;
                 this._hostComponent._removeFromDisplayList(childDO,notifyListeners);
             }
 
-			element.ownerChanged(null);
-			this._hostComponent.invalidateSize();
-			this._hostComponent.invalidateDisplayList();
-		}
+            element.ownerChanged(null);
+            this._hostComponent.invalidateSize();
+            this._hostComponent.invalidateDisplayList();
+        }
+
+
+        private skinLayout:SkinBasicLayout;
+        /**
+         * 测量组件尺寸
+         * @method egret.gui.Skin#measure
+         */
+        public measure():void{
+            this.skinLayout.measure();
+            if(this.measuredWidth<this.minWidth){
+                this.measuredWidth = this.minWidth;
+            }
+            if(this.measuredWidth>this.maxWidth){
+                this.measuredWidth = this.maxWidth;
+            }
+            if(this.measuredHeight<this.minHeight){
+                this.measuredHeight = this.minHeight;
+            }
+            if(this.measuredHeight>this.maxHeight){
+                this.measuredHeight = this.maxHeight
+            }
+        }
+
+        /**
+         * 更新显示列表
+         * @method egret.gui.Skin#updateDisplayList
+         * @param unscaledWidth {number}
+         * @param unscaledHeight {number}
+         */
+        public updateDisplayList(unscaledWidth:number, unscaledHeight:number):void{
+            this.skinLayout.updateDisplayList(unscaledWidth,unscaledHeight);
+        }
 
         //========================state相关函数===============start=========================
 
@@ -519,5 +603,5 @@ module egret.gui {
             }
         }
         //========================state相关函数===============end=========================
-	}
+    }
 }
