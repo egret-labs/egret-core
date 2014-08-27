@@ -21,7 +21,6 @@ function init(name){
             ],
             "native": {
                 "path_ignore": [
-                    "libs"
                 ]
             }
         }

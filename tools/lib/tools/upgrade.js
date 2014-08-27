@@ -8,7 +8,7 @@ var param = require("../core/params_analyze.js");
 var code_util = require("../core/code_util.js");
 var path = require("path");
 var globals = require("../core/globals.js");
-var projectConfig = require("../core/projectConfig.js")
+var projectConfig = require("../core/projectConfig.js");
 
 var upgradeConfig = {
     "1.0.3":upgradeTo_1_0_3,
@@ -68,6 +68,7 @@ function upgradeTo_1_0_4() {
         }
     ];
     projectConfig.data.egret_version = "1.0.4";
+    projectConfig.native.path_ignore = [];
     projectConfig.save();
 }
 
