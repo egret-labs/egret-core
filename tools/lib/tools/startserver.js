@@ -29,20 +29,32 @@ var mine = {
 
 function run(dir, args, opts) {
     var PORT = 3000;
+	var OPEN = true
     if (opts["--port"] && opts["--port"][0]) {
         PORT = opts["--port"][0];
     }
+	if (opts["-serveronly"]) {
+		OPEN =  false;
+	}
     var server = http.createServer(onGet);
     server.addListener("error", function () {
         globals.exit(1501);
     })
     server.listen(PORT, function () {
-        var open = require("../core/open");
+		if(OPEN){
+			var open = require("../core/open");
+		}
         globals.joinEgretDir(dir, args[0]);
         var ip = findIP(opts);
         var url = path.join("http://" + ip + ":" + PORT, args[0] ? args[0] : "", "launcher/index.html");
-        open(url);
-        console.log("Server runing at port: " + PORT + ".");
+		if(OPEN)
+		{
+			open(url);
+			console.log("Server runing at port: " + PORT + ".");
+		}else
+		{
+			console.log("Url:"+url);
+		}
         exports.projectName = args[0];
     });
 
@@ -152,7 +164,6 @@ function executeCommand(callback, script) {
         else {
             globals.log("脚本执行失败");
         }
-
     });
 }
 
@@ -163,10 +174,11 @@ function help_title() {
 
 
 function help_example() {
-    var result = "egret startserver [project_name] [--port 3000] [-ip]\n";
+    var result = "egret startserver [project_name] [--port 3000] [-ip] [-serveronly]\n";
     result += "参数说明:\n";
     result += "    --port           指定端口号\n";
-    result += "    -ip              是否使用本机IP";
+    result += "    -ip              是否使用本机IP\n";
+	result += "    -serveronly      是否只运行服务器";
     return result;
 }
 
