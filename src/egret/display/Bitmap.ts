@@ -157,7 +157,7 @@ module egret {
                 for (var y:number = destY; y < destHeight; y += textureHeight) {
                     var destW:number = Math.min(sourceWidth, destWidth - x);
                     var destH:number = Math.min(sourceHeight, destHeight - y);
-                    renderFilter.drawImage(renderContext, data, sourceX, sourceY, sourceWidth, sourceHeight, x, y, destW, destH);
+                    renderFilter.drawImage(renderContext, data, sourceX, sourceY, destW, destH, x, y, destW, destH);
                 }
             }
         }

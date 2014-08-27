@@ -317,8 +317,24 @@ function isQuickMode() {
     return false;
 }
 
-function getModuleConfig(moduleName) {
-    var coreList = globals.require("tools/lib/manifest/" + moduleName + ".json");
+function getModuleConfig(module, projectDir) {
+    var moduleName;
+    if (typeof (module) == "string") {
+        moduleName = path.join(param.getEgretPath(), "tools/lib/manifest", module + ".json");
+    }
+    else {
+        if (module.path) {
+            moduleName = path.join(projectDir, module.path, module.name + ".json");
+        }
+        else {
+            moduleName = path.join(param.getEgretPath(), "tools/lib/manifest", module.name + ".json");
+        }
+    }
+    var content = file.read(moduleName);
+    if (!content) {
+        globals.exit(8003, moduleName);
+    }
+    var coreList = JSON.parse(content);
     return coreList
 }
 
@@ -428,55 +444,70 @@ function getLastConstructor(classDecl) {
 }
 
 
-function compileModule(callback, moduleName, prefix, projectDir) {
+function compileModule(callback, module, projectDir) {
 
-    var moduleConfig = getModuleConfig(moduleName)
+    var prefix
+    if (!module.path) {
+        prefix = path.join(param.getEgretPath(), "src");
+    }
+    else {
+        prefix = path.join(projectDir, module.path);
+    }
+    var moduleConfig = getModuleConfig(module, projectDir)
     var output = moduleConfig.output ? moduleConfig.output : moduleConfig.name;
     output = path.join(projectDir, "libs", output);
     var tsList = moduleConfig.file_list;
     tsList = tsList.map(function (item) {
         return "\"" + path.join(prefix, item) + "\"";
     }).filter(function (item) {
-            return item.indexOf(".js") == -1
+            return item.indexOf(".js") == -1 //&& item.indexOf(".d.ts") == -1;
         })
-    all_module_file_list = all_module_file_list.concat(moduleConfig.file_list);
     var dependencyList = moduleConfig.dependence;
     if (dependencyList) {
         for (var i = 0; i < dependencyList.length; i++) {
-            var dependencyModule = getModuleConfig(dependencyList[i]);
+            var dependencyModule = getModuleConfig(dependencyList[i], projectDir);
             var dependencyModuleOutput = dependencyModule.output ? dependencyModule.output : dependencyModule.name;
             dependencyModuleOutput = path.join(projectDir, "libs", dependencyModuleOutput);
             tsList.push(path.join(dependencyModuleOutput, dependencyModule.name + ".d.ts"));
         }
     }
 
-
     var sourcemap = param.getArgv()["opts"]["-sourcemap"];
-    sourcemap = sourcemap ? "--sourcemap " : "";
+    all_module_file_list = all_module_file_list.concat(moduleConfig.file_list);
 
-    var cmd = sourcemap + tsList.join(" ") + " -t ES5 --outDir " + "\"" + output + "\"";
-    file.save("tsc_config_temp.txt", cmd);//todo performance-optimize
-    typeScriptCompiler(function (code) {
-        if (code == 0) {
-            var cmd = sourcemap + tsList.join(" ") + " -d -t ES5 --out " + "\"" + path.join(output, moduleName + ".d.ts") + "\"";
+    async.series([
+
+        function (callback) {
+
+            sourcemap = sourcemap ? "--sourcemap " : "";
+
+            var cmd = sourcemap + tsList.join(" ") + " -t ES5 --outDir " + "\"" + output + "\"";
+            file.save("tsc_config_temp.txt", cmd);//todo performance-optimize
+            typeScriptCompiler(callback);
+        },
+
+
+        function (callback) {
+            var cmd = sourcemap + tsList.join(" ") + " -d -t ES5 --out " + "\"" + path.join(output, moduleConfig.name + ".d.ts") + "\"";
             file.save("tsc_config_temp.txt", cmd);
-            typeScriptCompiler(function (code) {
-                if (code == 0) {
-                    callback(null, prefix);
-                }
-            });
+            typeScriptCompiler(callback);
         }
-        else {
-            callback(1303);
+
+
+    ], function (err) {
+        if (err) {
+            globals.exit(1303);
         }
-    });
+        else{
+            callback();
+        }
+    })
 
 }
 
 
-function compileModules(callback,projectDir,runtime){
+function compileModules(callback, projectDir, runtime) {
 
-    var prefix = path.join(param.getEgretPath(), "src")
 
     var projectConfig = require("../core/projectConfig.js");
     projectConfig.init(projectDir);
@@ -487,7 +518,7 @@ function compileModules(callback,projectDir,runtime){
         tasks.push(
             function (callback) {
                 compileModule(
-                    callback, module.name, prefix, projectDir);
+                    callback, module, projectDir);
             });
     })
 
@@ -497,7 +528,7 @@ function compileModules(callback,projectDir,runtime){
             callback();
         }
     );
-    async.series(tasks,callback);
+    async.series(tasks, callback);
 
 
 }
@@ -521,7 +552,6 @@ function generateAllModuleFileList(projectDir) {
     egretFileListText = "var egret_file_list = " + egretFileListText + ";";
     file.save(file.joinPath(projectDir, "bin-debug/lib/egret_file_list.js"), egretFileListText);
     return manifest;
-
 
 
 }
