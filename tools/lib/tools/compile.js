@@ -472,13 +472,13 @@ function compileModule(callback, module, projectDir) {
         }
     }
 
-
+    var sourcemap = param.getArgv()["opts"]["-sourcemap"];
     all_module_file_list = all_module_file_list.concat(moduleConfig.file_list);
 
     async.series([
 
-        function () {
-            var sourcemap = param.getArgv()["opts"]["-sourcemap"];
+        function (callback) {
+
             sourcemap = sourcemap ? "--sourcemap " : "";
 
             var cmd = sourcemap + tsList.join(" ") + " -t ES5 --outDir " + "\"" + output + "\"";
@@ -497,6 +497,9 @@ function compileModule(callback, module, projectDir) {
     ], function (err) {
         if (err) {
             globals.exit(1303);
+        }
+        else{
+            callback();
         }
     })
 
