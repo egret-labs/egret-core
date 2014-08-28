@@ -1,13 +1,14 @@
 {
-"name": "native",
-"dependence": ["core"],
-"output":"core/egret/context",
-"file_list": [
-"egret/context/devices/NativeDeviceContext.ts",
-"egret/context/renderer/NativeRendererContext.ts",
-"egret/context/interactive/NativeTouchContext.ts",
-"egret/context/PromiseObject.ts",
-"egret/context/net/NativeNetContext.ts",
-"egret/context/NativeContext.d.ts"
-]
+    "name": "native",
+    "dependence": ["core"],
+    "output": "core/egret/context",
+    "source": "src",
+    "file_list": [
+        "egret/context/devices/NativeDeviceContext.ts",
+        "egret/context/renderer/NativeRendererContext.ts",
+        "egret/context/interactive/NativeTouchContext.ts",
+        "egret/context/PromiseObject.ts",
+        "egret/context/net/NativeNetContext.ts",
+        "egret/context/NativeContext.d.ts"
+    ]
 }

@@ -2,6 +2,7 @@
     "name":"gui",
     "dependence":["core"],
     "output":"core/extension/gui",
+    "source":"src",
     "file_list":
     [
         "extension/gui/collections/ICollection.ts",

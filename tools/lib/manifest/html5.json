@@ -2,6 +2,7 @@
     "name": "html5",
     "dependence": ["core"],
     "output":"core/egret/context",
+    "source":"src",
     "file_list": [
         "egret/context/devices/HTML5DeviceContext.ts",
         "egret/context/renderer/HTML5CanvasRenderer.ts",

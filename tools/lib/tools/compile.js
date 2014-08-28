@@ -448,7 +448,7 @@ function compileModule(callback, module, projectDir) {
 
     var prefix
     if (!module.path) {
-        prefix = path.join(param.getEgretPath(), "src");
+        prefix = path.join(param.getEgretPath());
     }
     else {
         prefix = path.join(projectDir, module.path);
@@ -458,7 +458,7 @@ function compileModule(callback, module, projectDir) {
     output = path.join(projectDir, "libs", output);
     var tsList = moduleConfig.file_list;
     tsList = tsList.map(function (item) {
-        return "\"" + path.join(prefix, item) + "\"";
+        return "\"" + path.join(prefix, moduleConfig.source, item) + "\"";
     }).filter(function (item) {
             return item.indexOf(".js") == -1 //&& item.indexOf(".d.ts") == -1;
         })
@@ -498,7 +498,7 @@ function compileModule(callback, module, projectDir) {
         if (err) {
             globals.exit(1303);
         }
-        else{
+        else {
             callback();
         }
     })

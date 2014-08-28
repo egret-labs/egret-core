@@ -2,6 +2,7 @@
     "name": "dragonbones",
     "dependence": ["core"],
     "output":"core/extension/dragonbones",
+    "source":"src",
     "file_list": [
         "extension/dragonbones/dragonBones.ts",
         "extension/dragonbones/DragonBonesEgretBridge.ts"
