@@ -40,6 +40,7 @@ module egret {
 
         public _onAddToStage():void {
             super._onAddToStage();
+            this.stageText._add();
             this.addEventListener(egret.TouchEvent.TOUCH_BEGIN, this.onMouseDownHandler, this);
         }
 
