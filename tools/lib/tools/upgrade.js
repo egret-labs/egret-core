@@ -11,8 +11,9 @@ var globals = require("../core/globals.js");
 var projectConfig = require("../core/projectConfig.js");
 
 var upgradeConfig = {
-    "1.0.3":upgradeTo_1_0_3,
-    "1.0.4":upgradeTo_1_0_4
+    "1.0.3": upgradeTo_1_0_3,
+    "1.0.4": upgradeTo_1_0_4,
+    "1.0.5": upgradeTo_1_0_5
 };
 
 var currDir;
@@ -28,9 +29,9 @@ function run(dir, a, opts) {
         version = "1.0.0";
     }
 
-    for(var key in upgradeConfig) {
+    for (var key in upgradeConfig) {
         var result = globals.compressVersion(version, key);
-        if(result < 0) {
+        if (result < 0) {
             upgradeConfig[key]();
         }
     }
@@ -50,7 +51,7 @@ function upgradeTo_1_0_4() {
     var txt = file.read(releasePath);
     txt = txt.replace("<base href=\"../\"/>", "");
     file.save(releasePath, txt);
-    file.remove(path.join(currDir,"libs/egret.d.ts"));
+    file.remove(path.join(currDir, "libs/egret.d.ts"));
     var releasePath = currDir + "/launcher/index.html";
     var txt = file.read(releasePath);
     txt = txt.replace("\"bin-debug/lib/\"", "\"libs/core/\"");
@@ -67,10 +68,25 @@ function upgradeTo_1_0_4() {
             "name": "dragonbones"
         }
     ];
+    projectConfig.init(currDir);
     projectConfig.data.egret_version = "1.0.4";
-    projectConfig.native.path_ignore = [];
+    projectConfig.data.native.path_ignore = [];
     projectConfig.save();
 }
+
+
+function upgradeTo_1_0_5() {
+    globals.log("正在更新到1.0.5");
+    var releasePath = currDir + "/launcher/index.html";
+    var txt = file.read(releasePath);
+    txt = txt.replace("\"libs/core/\"", "\"libs/\"");
+    file.save(releasePath, txt);
+    projectConfig.init(currDir);
+    projectConfig.data.egret_version = "1.0.5";
+    projectConfig.data.native.path_ignore = [];
+    projectConfig.save();
+}
+
 
 function getClassList(item) {
     var basename = path.basename(item)
