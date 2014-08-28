@@ -574,7 +574,7 @@ function generateAllModuleFileList(projectDir) {
     })
 
     var egretFileListText = all_module_file_list.map(function (item) {
-        return "\"" + item.replace(".ts", ".js") + "\"";
+        return "\"" + item.replace(".ts", ".js").replace(new RegExp("\\","gi"),"/") + "\"";
     }).join(",\n");
     egretFileListText = "[\n" + egretFileListText + "];\n";
     egretFileListText = "var egret_file_list = " + egretFileListText + ";";
