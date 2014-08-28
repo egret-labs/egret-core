@@ -516,7 +516,7 @@ class EXMLCompiler{
         for(var i:number=0;i<length;i++){
             var child:any = children[i];
             var prop:string = child.localName;
-            if(prop=="states"||child.namespace==EXMLCompiler.W){
+            if(child.namespace==EXMLCompiler.W){
                 continue;
             }
             if(this.isProperty(child)){
@@ -893,14 +893,19 @@ class EXMLCompiler{
             for(var i:number=0;i<length;i++){
                 var item:any = children[i];
                 if(item.localName=="states"){
+                    item.namespace = EXMLCompiler.W;
                     states = item.children;
                     break;
                 }
             }
         }
 
-        if(states==null||states.length==0)
+        if(states==null)
             return;
+        if(states.length==0){
+            globals.warn(2102,this.exmlPath,this.getPropertyStr(item));
+            return;
+        }
         length = states.length;
         for(i=0;i<length;i++){
             var state:any = states[i];

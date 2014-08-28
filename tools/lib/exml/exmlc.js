@@ -465,7 +465,7 @@ var EXMLCompiler = (function () {
         for (var i = 0; i < length; i++) {
             var child = children[i];
             var prop = child.localName;
-            if (prop == "states" || child.namespace == EXMLCompiler.W) {
+            if (child.namespace == EXMLCompiler.W) {
                 continue;
             }
             if (this.isProperty(child)) {
@@ -664,7 +664,7 @@ var EXMLCompiler = (function () {
                     value = this.formatString(stringValue);
                     break;
                 default:
-                    globals.exit(2008, this.exmlPath, "string", key, this.toXMLString(node));
+                    globals.exit(2008, this.exmlPath, "string", key + ":" + type, this.toXMLString(node));
                     break;
             }
         }
@@ -829,14 +829,19 @@ var EXMLCompiler = (function () {
             for (var i = 0; i < length; i++) {
                 var item = children[i];
                 if (item.localName == "states") {
+                    item.namespace = EXMLCompiler.W;
                     states = item.children;
                     break;
                 }
             }
         }
 
-        if (states == null || states.length == 0)
+        if (states == null)
             return;
+        if (states.length == 0) {
+            globals.warn(2102, this.exmlPath, this.getPropertyStr(item));
+            return;
+        }
         length = states.length;
         for (i = 0; i < length; i++) {
             var state = states[i];

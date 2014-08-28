@@ -13,7 +13,7 @@ var CodeUtil = require("../core/code_util.js");
 var create_manifest = require("./create_manifest.js");
 
 
-var all_module_file_list = [];
+var all_module = [];
 
 
 function run(currentDir, args, opts) {
@@ -106,6 +106,7 @@ function compile(callback, srcPath, output, sourceList, keepGeneratedTypescript)
             typeScriptCompiler(function (code) {
                 if (code == 0) {
                     cleanTempFile();
+                    callback();
                 }
                 else {
                     callback(1303);
@@ -317,9 +318,34 @@ function isQuickMode() {
     return false;
 }
 
-function getModuleConfig(moduleName) {
-    var coreList = globals.require("tools/lib/manifest/" + moduleName + ".json");
-    return coreList
+function getModuleConfig(module, projectDir) {
+    var moduleName;
+    if (typeof (module) == "string") {
+        moduleName = path.join(param.getEgretPath(), "tools/lib/manifest", module + ".json");
+    }
+    else {
+        if (module.path) {
+            moduleName = path.join(projectDir, module.path, module.name + ".json");
+        }
+        else {
+            moduleName = path.join(param.getEgretPath(), "tools/lib/manifest", module.name + ".json");
+        }
+    }
+    var content = file.read(moduleName);
+    if (!content) {
+        globals.exit(8003, moduleName);
+    }
+    var moduleConfig = JSON.parse(content);
+
+    if (!module.path) {
+        moduleConfig.prefix = path.join(param.getEgretPath());
+    }
+    else {
+        moduleConfig.prefix = path.join(projectDir, module.path);
+    }
+
+
+    return moduleConfig
 }
 
 function generateGameFileList(projectPath) {
@@ -428,55 +454,77 @@ function getLastConstructor(classDecl) {
 }
 
 
-function compileModule(callback, moduleName, prefix, projectDir) {
+function compileModule(callback, module, projectDir) {
 
-    var moduleConfig = getModuleConfig(moduleName)
+    var moduleConfig = getModuleConfig(module, projectDir)
     var output = moduleConfig.output ? moduleConfig.output : moduleConfig.name;
     output = path.join(projectDir, "libs", output);
     var tsList = moduleConfig.file_list;
     tsList = tsList.map(function (item) {
-        return "\"" + path.join(prefix, item) + "\"";
+        return "\"" + path.join(moduleConfig.prefix, moduleConfig.source, item) + "\"";
     }).filter(function (item) {
-            return item.indexOf(".js") == -1
+            return item.indexOf(".js") == -1 //&& item.indexOf(".d.ts") == -1;
         })
-    all_module_file_list = all_module_file_list.concat(moduleConfig.file_list);
     var dependencyList = moduleConfig.dependence;
     if (dependencyList) {
         for (var i = 0; i < dependencyList.length; i++) {
-            var dependencyModule = getModuleConfig(dependencyList[i]);
+            var dependencyModule = getModuleConfig(dependencyList[i], projectDir);
             var dependencyModuleOutput = dependencyModule.output ? dependencyModule.output : dependencyModule.name;
             dependencyModuleOutput = path.join(projectDir, "libs", dependencyModuleOutput);
             tsList.push(path.join(dependencyModuleOutput, dependencyModule.name + ".d.ts"));
         }
     }
 
-
     var sourcemap = param.getArgv()["opts"]["-sourcemap"];
     sourcemap = sourcemap ? "--sourcemap " : "";
+    all_module.push(moduleConfig);
 
-    var cmd = sourcemap + tsList.join(" ") + " -t ES5 --outDir " + "\"" + output + "\"";
-    file.save("tsc_config_temp.txt", cmd);//todo performance-optimize
-    typeScriptCompiler(function (code) {
-        if (code == 0) {
-            var cmd = sourcemap + tsList.join(" ") + " -d -t ES5 --out " + "\"" + path.join(output, moduleName + ".d.ts") + "\"";
+
+    async.series([
+
+        function (callback) {
+            var cmd = sourcemap + tsList.join(" ") + " -t ES5 --outDir " + "\"" + output + "\"";
+            file.save("tsc_config_temp.txt", cmd);//todo performance-optimize
+            typeScriptCompiler(callback);
+        },
+
+
+        function (callback) {
+            var cmd = sourcemap + tsList.join(" ") + " -d -t ES5 --out " + "\"" + path.join(output, moduleConfig.name + ".d.ts") + "\"";
             file.save("tsc_config_temp.txt", cmd);
-            typeScriptCompiler(function (code) {
-                if (code == 0) {
-                    callback(null, prefix);
-                }
-            });
+            typeScriptCompiler(callback);
+        },
+
+        function (callback) {
+            var jsList = moduleConfig.file_list;
+            jsList = jsList.filter(function (item) {
+                return item.indexOf(".js") > -1 ||  item.indexOf(".d.ts") > -1;
+            })
+            jsList.map(function (item) {
+                var source = path.join(moduleConfig.prefix, moduleConfig.source, item);
+                var target = path.join(output, item);
+                file.copy(source, target);
+            })
+            callback()
+
+
+        }
+
+
+    ], function (err) {
+        if (err) {
+            globals.exit(1303);
         }
         else {
-            callback(1303);
+            callback();
         }
-    });
+    })
 
 }
 
 
-function compileModules(callback,projectDir,runtime){
+function compileModules(callback, projectDir, runtime) {
 
-    var prefix = path.join(param.getEgretPath(), "src")
 
     var projectConfig = require("../core/projectConfig.js");
     projectConfig.init(projectDir);
@@ -487,7 +535,7 @@ function compileModules(callback,projectDir,runtime){
         tasks.push(
             function (callback) {
                 compileModule(
-                    callback, module.name, prefix, projectDir);
+                    callback, module, projectDir);
             });
     })
 
@@ -497,7 +545,7 @@ function compileModules(callback,projectDir,runtime){
             callback();
         }
     );
-    async.series(tasks,callback);
+    async.series(tasks, callback);
 
 
 }
@@ -505,28 +553,35 @@ function compileModules(callback,projectDir,runtime){
 function generateAllModuleFileList(projectDir) {
 
 
-    var manifest = all_module_file_list;
+    var all_module_file_list = [];
 
 
-    var egretPath = param.getEgretPath();
-//    var manifest = coreList.concat(runtimeList);
-    var length = manifest.length;
-    for (var i = 0; i < length; i++) {
-        manifest[i] = file.joinPath(egretPath, "src", manifest[i]);
-    }
+    all_module.map(function(moduleConfig){
 
-    var srcPath = path.join(param.getEgretPath(), "src/");
-    srcPath = srcPath.split("\\").join("/");
-    var egretFileListText = createFileList(manifest, srcPath);
+
+        moduleConfig.file_list.map(function(item){
+            var tsFile = path.join(moduleConfig.prefix,moduleConfig.source,item)
+            if (item.indexOf(".d.ts") != -1) {
+                return;
+            }
+            var ext = file.getExtension(tsFile).toLowerCase();
+            if (ext == "ts" && isInterface(tsFile)) {
+                return;
+            }
+            var output = moduleConfig.output ? moduleConfig.output : moduleConfig.name;
+            all_module_file_list.push(path.join(output,item));
+        })
+    })
+
+    var egretFileListText = all_module_file_list.map(function (item) {
+        return "\"" + item.replace(".ts", ".js") + "\"";
+    }).join(",\n");
+    egretFileListText = "[\n" + egretFileListText + "];\n";
     egretFileListText = "var egret_file_list = " + egretFileListText + ";";
     file.save(file.joinPath(projectDir, "bin-debug/lib/egret_file_list.js"), egretFileListText);
-    return manifest;
-
-
 
 }
 
-exports.generateAllModuleFileList = generateAllModuleFileList;
 exports.compileModules = compileModules;
 exports.compile = compile;
 exports.run = run;

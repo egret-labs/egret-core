@@ -1,6 +1,7 @@
 {
     "name": "core",
     "dependence": [],
+    "source":"src",
     "file_list": [
         "egret/utils/IHashObject.ts",
         "egret/utils/HashObject.ts",

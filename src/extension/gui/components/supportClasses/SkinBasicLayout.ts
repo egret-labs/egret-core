@@ -42,17 +42,17 @@ module egret.gui {
             super();
         }
 
-        private _target:SkinnableComponent;
+        private _target:Skin;
 
         /**
          * 目标布局对象
 		 * @member egret.gui.SkinBasicLayout#target
          */
-        public get target():SkinnableComponent {
+        public get target():Skin {
             return this._target;
         }
 
-        public set target(value:SkinnableComponent) {
+        public set target(value:Skin) {
             this._target = value;
         }
 
@@ -68,11 +68,11 @@ module egret.gui {
             var measureW:number = 0;
             var measureH:number = 0;
 
-            var skin:any = this._target.skin;
-            var count:number = this.target.numChildren;
+            var target:any = this._target;
+            var count:number = target.numElements;
             for (var i:number = 0; i < count; i++) {
-                var layoutElement:ILayoutElement = <ILayoutElement><any>this.target.getChildAt(i);
-                if (!layoutElement || layoutElement == skin || !layoutElement.includeInLayout)
+                var layoutElement:ILayoutElement = <ILayoutElement><any>target.getElementAt(i);
+                if (!layoutElement || !layoutElement.includeInLayout)
                     continue;
 
                 var hCenter:number = layoutElement.horizontalCenter;
@@ -120,8 +120,8 @@ module egret.gui {
                 measureH = Math.ceil(Math.max(measureH, extY + preferredHeight));
             }
 
-            this.target.measuredWidth = Math.max(measureW, this.target.measuredWidth);
-            this.target.measuredHeight = Math.max(measureH, this.target.measuredHeight);
+            this.target.measuredWidth = measureW;
+            this.target.measuredHeight = measureH;
         }
 
         /**
@@ -134,11 +134,10 @@ module egret.gui {
             if (this.target == null)
                 return;
 
-            var count:number = this.target.numChildren;
-            var skin:any = this._target.skin;
+            var count:number = this.target.numElements;
             for (var i:number = 0; i < count; i++) {
-                var layoutElement:ILayoutElement = <ILayoutElement><any> this.target.getChildAt(i);
-                if (layoutElement == null || layoutElement == skin || !layoutElement.includeInLayout)
+                var layoutElement:ILayoutElement = <ILayoutElement><any> this.target.getElementAt(i);
+                if (layoutElement == null || !layoutElement.includeInLayout)
                     continue;
 
                 var hCenter:number = layoutElement.horizontalCenter;

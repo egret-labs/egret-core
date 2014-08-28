@@ -162,6 +162,7 @@ module egret.gui {
             }
         }
 
+        private skinLayoutEnabled = false;
 		/**
 		 * 附加皮肤
 		 * @method egret.gui.SkinnableComponent#attachSkin
@@ -173,10 +174,10 @@ module egret.gui {
 				newSkin.hostComponent = this;
 				this.findSkinParts();
 			}
-			if(skin&&"hostComponent" in skin&&skin instanceof DisplayObject)
-				this._setSkinLayoutEnabled(false);
+			if(skin&&!(skin instanceof DisplayObject))
+				this.skinLayoutEnabled = true;
 			else
-				this._setSkinLayoutEnabled(true);
+				this.skinLayoutEnabled = false;
 		}
 		/**
 		 * 匹配皮肤和主机组件的公共变量，并完成实例的注入。此方法在附加皮肤时会自动执行一次。
@@ -384,29 +385,9 @@ module egret.gui {
 				this.validateSkinState();
 			}
 		}
-		
-		private skinLayout:SkinBasicLayout;
-		/**
-		 * 启用或禁用组件自身的布局。通常用在当组件的皮肤不是ISkinPartHost，又需要自己创建子项并布局时。
-		 */		
-		public _setSkinLayoutEnabled(value:boolean){
-			var hasLayout:boolean = (this.skinLayout != null);
-			if(hasLayout==value)
-				return;
-			if(value){
-				this.skinLayout = new SkinBasicLayout();
-				this.skinLayout.target = this;
-			}
-			else{
-				this.skinLayout.target = null;
- 				this.skinLayout = null;
-			}
-			this.invalidateSize();
-			this.invalidateDisplayList();
-		}
-		
+
 		public _childXYChanged():void{
-			if(this.skinLayout){
+			if(this.skinLayoutEnabled){
 				this.invalidateSize();
 				this.invalidateDisplayList();
 			}
@@ -417,49 +398,21 @@ module egret.gui {
             var skin:any = this._skin;
             if(!skin)
                 return;
-            var isDisplayObject:boolean = (skin instanceof DisplayObject);
-            if(isDisplayObject){
-                if(skin&&"preferredWidth" in skin){
-                    this.measuredWidth = (<ILayoutElement> (skin)).preferredWidth;
-                    this.measuredHeight = (<ILayoutElement> (skin)).preferredHeight;
+            if(this.skinLayoutEnabled){
+                skin.measure();
+                this.measuredWidth = skin.preferredWidth;
+                this.measuredHeight = skin.preferredHeight;
+            }
+            else{
+                if("preferredWidth" in skin){
+                    this.measuredWidth = skin.preferredWidth;
+                    this.measuredHeight = skin.preferredHeight;
                 }
                 else{
                     this.measuredWidth = skin.width;
                     this.measuredHeight = skin.height;
                 }
             }
-			if(this.skinLayout){
-				this.skinLayout.measure();
-			}
-            if(!isDisplayObject){//对非显示对象的皮肤测量
-				var measuredW:number = this.measuredWidth;
-				var measuredH:number = this.measuredHeight;
-				try{
-					if(!isNaN(skin.width))
-						measuredW = Math.ceil(skin.width);
-					if(!isNaN(skin.height))
-						measuredH = Math.ceil(skin.height);
-					if(skin.hasOwnProperty("minWidth")&&
-						measuredW<skin.minWidth){
-						measuredW = skin.minWidth;
-					}
-					if(skin.hasOwnProperty("maxWidth")&&
-						measuredW>skin.maxWidth){
-						measuredW = skin.maxWidth;
-					}
-					if(skin.hasOwnProperty("minHeight")&&
-						measuredH<skin.minHeight){
-						measuredH = skin.minHeight;
-					}
-					if(skin.hasOwnProperty("maxHeight")&&
-						measuredH>skin.maxHeight){
-						measuredH = skin.maxHeight
-					}
-					this.measuredWidth = measuredW;
-					this.measuredHeight = measuredH;
-				}
-				catch(e){}
-			}
 		}
 		
 		/**
@@ -471,7 +424,10 @@ module egret.gui {
 			super.updateDisplayList(unscaledWidth,unscaledHeight);
             var skin:any = this._skin;
             if(skin) {
-                if ("setLayoutBoundsSize" in skin) {
+                if(this.skinLayoutEnabled){
+                    skin.updateDisplayList(unscaledWidth,unscaledHeight);
+                }
+                else if ("setLayoutBoundsSize" in skin) {
                     (<ILayoutElement><any> (skin)).setLayoutBoundsSize(unscaledWidth, unscaledHeight);
                 }
                 else if(skin instanceof DisplayObject){
@@ -479,9 +435,6 @@ module egret.gui {
                     skin.scaleY = skin.height==0?1:unscaledHeight/skin.height;
                 }
             }
-			if(this.skinLayout){
-				this.skinLayout.updateDisplayList(unscaledWidth,unscaledHeight);
-			}
 		}
 
         private static errorStr:string = "在此组件中不可用，若此组件为容器类，请使用";

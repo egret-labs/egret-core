@@ -2,13 +2,14 @@
     "name": "html5",
     "dependence": ["core"],
     "output":"core/egret/context",
+    "source":"src/egret/context",
     "file_list": [
-        "egret/context/devices/HTML5DeviceContext.ts",
-        "egret/context/renderer/HTML5CanvasRenderer.ts",
-        "egret/context/renderer/WebGLRenderer.ts",
-        "egret/context/renderer/webgl/WebGLUtils.ts",
-        "egret/context/renderer/webgl/WebGLShaderManager.ts",
-        "egret/context/net/HTML5NetContext.ts",
-        "egret/context/interactive/HTML5TouchContext.ts"
+        "devices/HTML5DeviceContext.ts",
+        "renderer/HTML5CanvasRenderer.ts",
+        "renderer/WebGLRenderer.ts",
+        "renderer/webgl/WebGLUtils.ts",
+        "renderer/webgl/WebGLShaderManager.ts",
+        "net/HTML5NetContext.ts",
+        "interactive/HTML5TouchContext.ts"
     ]
 }
