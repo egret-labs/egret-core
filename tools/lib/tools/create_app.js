@@ -79,7 +79,12 @@ function create_app_from(app_path, h5_path, template_path, preferences, app_data
     globals.log("> rename project name ...");
     app_data["rename_tree"]["file_name"].forEach(function(f) {
         var str = path.join(app_path, f);
-        fs.renameSync(str, str.replace(app_data["template_name"], path.basename(app_path)));
+        var offset = app_data["template_name"].length;
+        var index = str.lastIndexOf(app_data["template_name"]);
+        if (index > 0) {
+            var target_str = str.substring(0, index) + path.basename(app_path) + str.substring(index + offset);
+            fs.renameSync(str, target_str);
+        }
     });
 
     // copy h5 res into here
