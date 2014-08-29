@@ -130,6 +130,11 @@ module RES {
             for(var name in frames){
                 var config:any = frames[name];
                 var texture:egret.Texture = spriteSheet.createTexture(name,config.x,config.y,config.w,config.h,config.offX, config.offY,config.sourceW,config.sourceH);
+                if(config["scale9grid"]){
+                    var str:string = config["scale9grid"];
+                    var list:Array<string> = str.split(",");
+                    texture["scale9Grid"] = new egret.Rectangle(parseInt(list[0]),parseInt(list[1]),parseInt(list[2]),parseInt(list[3]));
+                }
                 if(textureMap[name]==null){
                     textureMap[name] = texture;
                 }
