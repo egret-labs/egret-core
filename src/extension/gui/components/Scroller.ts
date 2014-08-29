@@ -136,29 +136,11 @@ module egret.gui {
             }
         }
 
-        private touchEndTimer:Timer;
-        private delayTouchEndEvent:TouchEvent;
-
         private onTouchEndCapture(event:TouchEvent):void{
             if(!this.delayTouchBeginEvent){
                 return;
             }
-            event.stopPropagation();
-            var evt:TouchEvent = this.cloneTouchEvent(event);
-            this.delayTouchEndEvent = evt;
             this.onTouchBeginTimer();
-            if(!this.touchEndTimer){
-                this.touchEndTimer = new egret.Timer(100,1);
-                this.touchEndTimer.addEventListener(TimerEvent.TIMER_COMPLETE,this.onTouchEndTimer,this);
-            }
-            this.touchEndTimer.start();
-        }
-
-        private onTouchEndTimer(e:TimerEvent){
-            this.touchEndTimer.stop();
-            var event:TouchEvent = this.delayTouchEndEvent;
-            this.delayTouchEndEvent = null;
-            this.dispatchPropagationEvent(event);
         }
 
         private dispatchPropagationEvent(event:TouchEvent):void{
@@ -202,10 +184,6 @@ module egret.gui {
                     }
                 }
                 target = target.parent;
-            }
-            if(this.delayTouchEndEvent){
-                this.delayTouchEndEvent = null;
-                this.touchEndTimer.stop();
             }
             event.stopPropagation();
             var evt:TouchEvent = this.cloneTouchEvent(event);
