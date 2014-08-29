@@ -334,6 +334,9 @@ module egret.gui {
         }
 
         private onTouchMove(event:TouchEvent):void{
+            if(this._currentTouchX==event.stageX&&this._currentTouchY==event.stageY){
+                return;
+            }
             this._currentTouchX = event.stageX;
             this._currentTouchY = event.stageY;
             if(this.delayTouchBeginEvent){
