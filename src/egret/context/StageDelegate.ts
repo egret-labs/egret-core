@@ -421,9 +421,13 @@ module egret {
             var viewPortWidth:number = document.documentElement.clientWidth;//分辨率宽
             var viewPortHeight:number = document.documentElement.clientHeight;//分辨率高
 
-            var scale:number = viewPortWidth / designedResolutionWidth;
+            var scale:number = ( viewPortWidth / designedResolutionWidth < viewPortHeight / designedResolutionHeight) ? viewPortWidth / designedResolutionWidth : viewPortHeight / designedResolutionHeight;
             var designW:number = designedResolutionWidth;
-            var designH:number = viewPortHeight / scale;
+            var designH:number = designedResolutionHeight;
+
+            var viewPortWidth = designW * scale;
+            var viewPortHeight = designH * scale;
+
 
             var scale2:number = 1;
 
@@ -431,6 +435,7 @@ module egret {
             canvas.height = designH / scale2;
             canvas.style.width = (viewPortWidth * scale2) + "px";
             canvas.style.height = viewPortHeight + "px";
+            canvas.style.top = Math.floor((document.documentElement.clientHeight - viewPortHeight) / 2)+ "px"
             container.style.width = (viewPortWidth * scale2) + "px";
             container.style.height = viewPortHeight + "px";
             delegate._scaleX = scale * scale2;

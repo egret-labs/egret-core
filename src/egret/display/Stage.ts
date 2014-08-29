@@ -69,6 +69,7 @@ module egret {
 
                var  scaleModeEnum = {};
                 scaleModeEnum[StageScaleMode.NO_SCALE] = new NoScale();
+//                scaleModeEnum[StageScaleMode.SHOW_ALL] = new ShowAll();
                 scaleModeEnum[StageScaleMode.SHOW_ALL] = new FixedWidth();
                 var content = scaleModeEnum[value];
                 if (!content){
