@@ -38,9 +38,9 @@ module egret {
          * 如果该容器是某个 App 容器，该容器将处理该事件。
          * @method egret.ExternalInterface#call
          * @param functionName {string}
-         * @param arguments
+         * @param value {string}
          */
-        public static call(functionName:String, ...args):void {
+        public static call(functionName:string, value:string):void {
 
         }
 
@@ -51,7 +51,7 @@ module egret {
          * @param functionName {string}
          * @param listener {Function}
          */
-        public static addCallback(functionName:String, listener:Function):void {
+        public static addCallback(functionName:string, listener:Function):void {
 
         }
     }

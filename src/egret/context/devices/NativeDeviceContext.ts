@@ -70,10 +70,10 @@ module egret {
 module egret_native_external_interface {
     export var callBackDic = {};
 
-    export function call(functionName:String, ...args):void {
+    export function call(functionName:string, value:string):void {
         var data:any = {};
         data.functionName = functionName;
-        data.args = args;
+        data.value = value;
         egret_native.sendInfoToPlugin(JSON.stringify(data));
     }
 
@@ -86,8 +86,8 @@ module egret_native_external_interface {
         var functionName = data.functionName;
         var listener = egret_native_external_interface.callBackDic[functionName];
         if (listener) {
-            var args = data.args;
-            listener.apply(null, args);
+            var value = data.value;
+            listener.apply(null, value);
         }
     }
 
