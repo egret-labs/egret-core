@@ -87,23 +87,23 @@ ClosureCompiler.testJava = function (java, callback) {
     child_process.exec('"' + java + '" -version', {}, function (error, stdout, stderr) {
         stderr += "";
         var minVersionChar = "1.7";
-        var m1 = 1,m2 = 7;
+        var m1 = 1, m2 = 7;
         var minVersion = 0;
         var re = /(\d+\.\d+)\.?/gi;
         var versionArr = re.exec(stderr);
-        var currentVersion = versionArr?versionArr[0]:"0.0.0";
+        var currentVersion = versionArr ? versionArr[0] : "0.0.0";
         var v1 = currentVersion.split(".")[0];
         var v2 = currentVersion.split(".")[1];
-        if(v2>9 || m2>9) {
-            v2 = v2>9?v2:"0"+v2;
-            m2 = m2>9?m2:"0"+m2;
+        if (v2 > 9 || m2 > 9) {
+            v2 = v2 > 9 ? v2 : "0" + v2;
+            m2 = m2 > 9 ? m2 : "0" + m2;
         }
-        minVersion = m1+"."+m2;
-        currentVersion = v1+"."+v2;
-        if (currentVersion>=minVersion) {
+        minVersion = m1 + "." + m2;
+        currentVersion = v1 + "." + v2;
+        if (currentVersion >= minVersion) {
             callback(true, null);
         } else if (stderr.indexOf("version \"") >= 0) {
-            callback(false, new Error("Need Java "+minVersionChar+" but current version is "+currentVersion));
+            callback(false, new Error("Need Java " + minVersionChar + " but current version is " + currentVersion));
         } else {
             callback(false, error);
         }
@@ -267,7 +267,7 @@ function getFileList(file_list) {
 }
 
 function run(dir, args, opts) {
-    if (opts["-testJava"]){
+    if (opts["-testJava"]) {
         checkUserJava();
         return;
     }
@@ -290,7 +290,7 @@ function run(dir, args, opts) {
     file.remove(launcherDir);
     file.copy(currDir + "/launcher", launcherDir);
     file.remove(launcherDir + "/index.html");
-    file.copy(launcherDir + "/release.html",releaseDir + "/index.html");
+    file.copy(launcherDir + "/release.html", releaseDir + "/index.html");
     file.remove(launcherDir + "/release.html");
 
     file.remove(resourceDir);
@@ -301,40 +301,41 @@ function run(dir, args, opts) {
 
     var html5FileList = compile.getModuleConfig("html5").file_list;
     var length = html5FileList.length;
-    for(var i = 0 ; i < length ; i++) {
+    for (var i = 0; i < length; i++) {
         var filePath = html5FileList[i];
-        filePath = filePath.replace(".ts",".js");
+        filePath = filePath.replace(".ts", ".js");
         html5FileList[i] = filePath;
         var index = egretFileList.indexOf(filePath);
-        if(index != -1) {
+        if (index != -1) {
             egretFileList.splice(index, 1);
         }
     }
+
     var nativeFileList = compile.getModuleConfig("native").file_list;
     length = nativeFileList.length;
-    for(i = 0 ; i < length ; i++) {
+    for (i = 0; i < length; i++) {
         filePath = nativeFileList[i];
-        if(filePath.indexOf(".d.ts") != -1) {
+        if (filePath.indexOf(".d.ts") != -1) {
             nativeFileList.splice(i, 1);
             i--;
             length--;
             continue;
         }
-        filePath = filePath.replace(".ts",".js");
+        filePath = filePath.replace(".ts", ".js");
         nativeFileList[i] = filePath;
         index = egretFileList.indexOf(filePath);
-        if(index != -1) {
+        if (index != -1) {
             egretFileList.splice(index, 1);
         }
     }
 
     var egretHTML5FileList = egretFileList.concat(html5FileList);
     egretHTML5FileList = egretHTML5FileList.map(function (item) {
-        return path.join(currDir + "/libs/core", item);
+        return path.join(currDir, "libs/", item);
     });
     var egretNativeFileList = egretFileList.concat(nativeFileList);
     egretNativeFileList = egretNativeFileList.map(function (item) {
-        return path.join(currDir + "/libs/core", item);
+        return path.join(currDir, "libs/", item);
     });
 
     var game_file = path.join(currDir, "bin-debug/src/game_file_list.js");
@@ -347,28 +348,28 @@ function run(dir, args, opts) {
     var totalNativeFileList = egretNativeFileList.concat(gameFileList);
 
     var runtime = param.getOption(opts, "--runtime", ["html5", "native"]);
-    if(runtime == "html5") {
+    if (runtime == "html5") {
         compilerSingleFile(currDir, totalHTML5FileList, launcherDir + "/game-min.js");
     }
-    else if(runtime == "native") {
+    else if (runtime == "native") {
         compilerSingleFile(currDir, totalNativeFileList, launcherDir + "/game-min-native.js");
     }
 }
 
 function compilerSingleFile(currDir, fileList, outputFile, callback) {
-    var tempFile = path.join(currDir,"bin-debug/__temp.js");
-    combineToSingleJavaScriptFile(fileList,tempFile);
+    var tempFile = path.join(currDir, "bin-debug/__temp.js");
+    combineToSingleJavaScriptFile(fileList, tempFile);
     ClosureCompiler.compile([tempFile],
-        {js_output_file: outputFile,"warning_level":"QUIET"},
+        {js_output_file: outputFile, "warning_level": "QUIET"},
         function afterCompile(err, stdout, stderr) {
-            if (!err){
+            if (!err) {
                 file.remove(tempFile);
-                if(callback) {
+                if (callback) {
                     callback();
                 }
             }
-            else{
-                console.log (err)
+            else {
+                console.log(err)
             }
 
         });
@@ -380,7 +381,7 @@ function help_title() {
 
 
 function help_example() {
-    var result =  "\n";
+    var result = "\n";
     result += "    egret publish [project_name] --version [version] [--runtime html5|native]\n";
     result += "描述:\n";
     result += "    " + help_title();
@@ -391,25 +392,25 @@ function help_example() {
 }
 
 
-function combineToSingleJavaScriptFile(filelist,name){
+function combineToSingleJavaScriptFile(filelist, name) {
     var content = "";
-    for (var i = 0 ; i < filelist.length ; i++){
+    for (var i = 0; i < filelist.length; i++) {
         var filePath = filelist[i];
         content += file.read(filePath) + "\n";
     }
-    file.save(name,content);
+    file.save(name, content);
 }
 
-function checkUserJava(){
+function checkUserJava() {
     var globalJava = ClosureCompiler.getGlobalJava();
-    console.log ("正在执行检测命令:" + globalJava + " -version");
-    console.log ("您可以修改 JAVA_HOME 环境变量来修改 JAVA 路径");
-    ClosureCompiler.testJava(globalJava,function(isSuccess){
-        if (!isSuccess){
+    console.log("正在执行检测命令:" + globalJava + " -version");
+    console.log("您可以修改 JAVA_HOME 环境变量来修改 JAVA 路径");
+    ClosureCompiler.testJava(globalJava, function (isSuccess) {
+        if (!isSuccess) {
             globals.exit(1401);
         }
-        else{
-            console.log ("检测成功");
+        else {
+            console.log("检测成功");
         }
     })
 }
