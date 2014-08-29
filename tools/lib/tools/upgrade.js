@@ -90,6 +90,15 @@ function upgradeTo_1_0_5() {
     txt = txt.replace("\"libs/core", "\"libs");
     file.save(releasePath, txt);
 
+
+    var releasePath = currDir + "/launcher/egret_loader.js";
+    var txt = file.read(releasePath);
+    txt = txt.replace("egret.StageScaleMode.SHOW_ALL", "egret.StageScaleMode.NO_BORDER");
+    file.save(releasePath, txt);
+
+
+
+
     projectConfig.init(currDir);
     projectConfig.data.egret_version = "1.0.5";
     projectConfig.data.native.path_ignore = [];

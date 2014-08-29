@@ -69,8 +69,8 @@ module egret {
 
                var  scaleModeEnum = {};
                 scaleModeEnum[StageScaleMode.NO_SCALE] = new NoScale();
-//                scaleModeEnum[StageScaleMode.SHOW_ALL] = new ShowAll();
-                scaleModeEnum[StageScaleMode.SHOW_ALL] = new FixedWidth();
+                scaleModeEnum[StageScaleMode.SHOW_ALL] = new ShowAll();
+                scaleModeEnum[StageScaleMode.NO_BORDER] = new FixedWidth();
                 var content = scaleModeEnum[value];
                 if (!content){
                     throw new Error("使用了尚未实现的ScaleMode");
