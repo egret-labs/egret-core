@@ -35,6 +35,8 @@ function run(dir, a, opts) {
             upgradeConfig[key]();
         }
     }
+
+    globals.exit(1702);
 }
 
 function upgradeTo_1_0_3() {
