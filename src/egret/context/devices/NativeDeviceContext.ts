@@ -84,7 +84,7 @@ module egret_native_external_interface {
         var listener = egret_native_external_interface.callBackDic[functionName];
         if (listener) {
             var value = data.value;
-            listener.apply(null, value);
+            listener.call(null, value);
         }
     }
 
