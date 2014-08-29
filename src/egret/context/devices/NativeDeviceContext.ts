@@ -44,9 +44,6 @@ module egret {
          */
         public constructor() {
             super();
-            egret_native.recivedPluginInfo = function (info:string) {
-
-            };
         }
 
         /**
