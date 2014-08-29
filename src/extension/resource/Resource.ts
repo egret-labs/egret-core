@@ -90,7 +90,7 @@ module RES {
      * 异步方式获取配置里的资源。只要是配置文件里存在的资源，都可以通过异步方式获取。
 	 * @method RES.getResAsync
      * @param key {string} 对应配置文件里的name属性或sbuKeys属性的一项。
-     * @param compFunc {Function} 回调函数。示例：compFunc(data):void,若设置了other参数则为:compFunc(data,other):void。
+     * @param compFunc {Function} 回调函数。示例：compFunc(data,key):void。
      * @param thisObject {any} 回调函数的this引用
      */
     export function getResAsync(key:string,compFunc:Function,thisObject:any):void{
@@ -100,7 +100,7 @@ module RES {
      * 通过完整URL方式获取外部资源。
 	 * @method RES.getResByUrl
      * @param url {string} 要加载文件的外部路径。
-     * @param compFunc {Function} 回调函数。示例：compFunc(data):void,若设置了other参数则为:compFunc(data,other):void。
+     * @param compFunc {Function} 回调函数。示例：compFunc(data,url):void。
      * @param thisObject {any} 回调函数的this引用
      * @param type {string} 文件类型(可选)。请使用ResourceItem类中定义的静态常量。若不设置将根据文件扩展名生成。
      */
@@ -394,7 +394,7 @@ module RES {
          * 通过key异步获取资源
          * @method RES.getResAsync
          * @param key {string}
-         * @param compFunc {Function}
+         * @param compFunc {Function} 回调函数。示例：compFunc(data,url):void。
          * @param thisObject {any}
          */
         public getResAsync(key:string,compFunc:Function,thisObject:any):void{
