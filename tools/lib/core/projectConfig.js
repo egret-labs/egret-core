@@ -29,6 +29,9 @@ function init(name){
     else{
         projectConfig = JSON.parse(content);
     }
+    if (!projectConfig.native){
+        projectConfig.native = {};
+    }
     exports.data = projectConfig;
 }
 
