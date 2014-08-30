@@ -151,15 +151,23 @@ module egret {
         }
 
 
-        public pushMask(mask:Rectangle):void{
+        public pushMask(mask:Rectangle):void {
 
         }
 
-        public popMask():void{
+        public popMask():void {
 
         }
 
-        public static createRendererContext(canvas:any):RendererContext{
+        public onRenderStart():void {
+
+        }
+
+        public onRenderFinish():void {
+
+        }
+
+        public static createRendererContext(canvas:any):RendererContext {
             return null;
         }
     }

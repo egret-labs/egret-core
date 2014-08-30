@@ -79,7 +79,7 @@ module egret {
         }
 
         public clearScreen() {
-            this.setTransform(egret.Matrix.identity.identity());
+//            this.setTransform(egret.Matrix.identity.identity());
             var list = RenderFilter.getInstance().getDrawAreaList();
             for (var i:number = 0 , l:number = list.length; i < l; i++) {
                 var area = list[i];
@@ -190,7 +190,14 @@ module egret {
         }
 
 
-        //WebGL API
+        public onRenderStart():void {
+            this.canvasContext.save();
+        }
+
+        public onRenderFinish():void {
+            this.canvasContext.restore();
+            this.canvasContext.setTransform(1, 0, 0, 1, 0, 0);
+        }
     }
 }
 

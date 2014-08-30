@@ -108,11 +108,13 @@ module egret {
                 this.doCallLaterList(functionList, thisList, argsList);
             }
             var context = this.rendererContext;
+            context.onRenderStart();
             context.clearScreen();
             this.stage._updateTransform();
             this.dispatchEventWith(Event.FINISH_UPDATE_TRANSFORM);
             this.stage._draw(context);
             this.dispatchEventWith(Event.FINISH_RENDER);
+            context.onRenderFinish();
         }
 
         private reuseEvent:Event = new Event("")
