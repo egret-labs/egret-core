@@ -890,7 +890,7 @@ module egret {
             var length:number = list.length;
             for (var i:number = 0; i < length; i++) {
                 var currentTarget:DisplayObject = list[i];
-                event._setCurrentTarget(currentTarget);
+                event._currentTarget = currentTarget;
                 event._target = this;
                 if (i < targetIndex)
                     event._eventPhase = 1;

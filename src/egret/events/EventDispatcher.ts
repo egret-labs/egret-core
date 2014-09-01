@@ -200,7 +200,7 @@ module egret {
         public dispatchEvent(event:Event):boolean {
             event._reset();
             event._target = this._eventTarget;
-            event._setCurrentTarget(this._eventTarget);
+            event._currentTarget = this._eventTarget;
             return this._notifyListener(event);
         }
 

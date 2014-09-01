@@ -137,22 +137,24 @@ module egret {
             return this._stageY;
         }
 
-        private _localX:number = 0;
         /**
          * 事件发生点相对于currentTarget的水平坐标。
 		 * @member {number} egret.TouchEvent#localX
          */
         public get localX():number {
-            return this._localX;
+            var dp:DisplayObject = <DisplayObject> this._currentTarget;
+            var point:Point = dp.globalToLocal(this._stageX, this._stageY,Point.identity);
+            return point.x;
         }
 
-        private _localY:number = 0;
         /**
          * 事件发生点相对于currentTarget的垂直坐标。
 		 * @member {number} egret.TouchEvent#localY
          */
         public get localY():number {
-            return this._localY;
+            var dp:DisplayObject = <DisplayObject> this._currentTarget;
+            var point:Point = dp.globalToLocal(this._stageX, this._stageY,Point.identity);
+            return point.y;
         }
 
         /**
@@ -180,16 +182,6 @@ module egret {
 		 * @member {boolean} egret.TouchEvent#touchDown
          */
         public touchDown:boolean;
-
-        public _setCurrentTarget(target:any):void {
-            super._setCurrentTarget(target);
-            if (target instanceof DisplayObject) {
-                var dp:DisplayObject = <DisplayObject> target;
-                var point:Point = dp.globalToLocal(this._stageX, this._stageY,Point.identity);
-                this._localX = point.x;
-                this._localY = point.y;
-            }
-        }
 
         /**
          * 使用指定的EventDispatcher对象来抛出Event事件对象。抛出的对象将会缓存在对象池上，供下次循环复用。

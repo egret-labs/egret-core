@@ -164,7 +164,7 @@ module egret {
             return this._eventPhase;
         }
 
-        private _currentTarget:any;
+        public _currentTarget:any;
         /**
          * 当前正在使用某个事件侦听器处理 Event 对象的对象。例如，如果用户单击“确定”按钮，
          * 则当前目标可以是包含该按钮的节点，也可以是它的已为该事件注册了事件侦听器的始祖之一。
@@ -172,10 +172,6 @@ module egret {
          */
         public get currentTarget():any {
             return this._currentTarget;
-        }
-
-        public _setCurrentTarget(target:any):void {
-            this._currentTarget = target;
         }
 
         public _target:any;
