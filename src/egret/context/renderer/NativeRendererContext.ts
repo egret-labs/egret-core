@@ -33,7 +33,7 @@ module egret {
      * NativeRendererContext 是引擎在Native上的渲染上下文。
      * @extends egret.HashObject
      */
-    export class NativeRendererContext extends HashObject {
+    export class NativeRendererContext extends RendererContext {
 
 
         /**

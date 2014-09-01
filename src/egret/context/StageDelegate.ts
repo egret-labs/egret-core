@@ -395,8 +395,10 @@ module egret {
          */
         public _apply(delegate:StageDelegate, designedResolutionWidth:number, designedResolutionHeight:number):void {
             var canvas:HTMLCanvasElement = <HTMLCanvasElement>document.getElementById(StageDelegate.canvas_name);
-            canvas.style.width = canvas.width + "px";
-            canvas.style.height = canvas.height + "px";
+            canvas.width = designedResolutionWidth;
+            canvas.height = designedResolutionHeight;
+            canvas.style.width = designedResolutionWidth + "px";
+            canvas.style.height = designedResolutionHeight + "px";
             delegate._scaleX = 1;
             delegate._scaleY = 1;
         }
