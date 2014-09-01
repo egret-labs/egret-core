@@ -873,7 +873,7 @@ module egret {
             var target:DisplayObject = this;
             while (target) {
                 list.unshift(target);
-                target = target.parent;
+                target = target._parent;
             }
 
             var length:number = list.length;
@@ -883,7 +883,7 @@ module egret {
             }
             event._reset();
             this._dispatchPropagationEvent(event, list, targetIndex);
-            return !event.isDefaultPrevented();
+            return !event._isDefaultPrevented;
         }
 
         public _dispatchPropagationEvent(event:Event, list:Array<DisplayObject>, targetIndex:number):void {
