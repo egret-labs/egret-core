@@ -400,7 +400,12 @@ function setPathLevel(path, level, pathLevelInfo, map,pathRelyInfo,throwError) {
     if (pathLevelInfo[path] == null) {
         pathLevelInfo[path] = level;
     } else {
-        pathLevelInfo[path] = Math.max(pathLevelInfo[path], level);
+        if(pathLevelInfo[path]<level){
+            pathLevelInfo[path] = level;
+        }
+        else{
+            return;
+        }
     }
     var list = pathRelyInfo[path];
     var length = list.length;
