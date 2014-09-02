@@ -214,12 +214,16 @@ module egret {
 
         public _notifyListener(event:Event):boolean {
             var eventMap:Object = event._eventPhase == 1 ? this._captureEventsMap : this._eventsMap;
-            if (!eventMap){
+            if (!eventMap) {
                 return true;
             }
             var list:Array<any> = eventMap[event._type];
+
+            if (!list) {
+                return true;
+            }
             var length:number = list.length;
-            if (!list || length == 0) {
+            if (length == 0) {
                 return true;
             }
             list = list.concat();
