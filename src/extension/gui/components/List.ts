@@ -334,7 +334,7 @@ module egret.gui {
 		 * @param event {TouchEvent} 
 		 */
 		public item_mouseDownHandler(event:TouchEvent):void{
-			if (event.isDefaultPrevented())
+			if (event._isDefaultPrevented)
 				return;
 
 			var itemRenderer:IItemRenderer = <IItemRenderer> (event.currentTarget);

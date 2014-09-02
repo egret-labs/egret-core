@@ -132,7 +132,7 @@ module egret {
             for (var i:number = 0; i < length; i++) {
                 var eventBin:any = list[i];
                 event._target = eventBin.display;
-                event._setCurrentTarget(eventBin.display);
+                event._currentTarget = eventBin.display;
                 eventBin.listener.call(eventBin.thisObject, event);
             }
 
@@ -152,8 +152,9 @@ module egret {
             var length:number = list.length;
             for (var i:number = 0; i < length; i++) {
                 var eventBin:any = list[i];
-                event._target = eventBin.display;
-                event._setCurrentTarget(eventBin.display);
+                var target = eventBin.display;
+                event._target = target;
+                event._currentTarget = target;
                 eventBin.listener.call(eventBin.thisObject, event);
             }
         }

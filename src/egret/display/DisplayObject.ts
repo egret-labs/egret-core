@@ -559,12 +559,19 @@ module egret {
             }
         }
 
-
         /**
          * @private
          * @param renderContext
          */
         public _updateTransform():void {
+            this._calculateWorldform();
+        }
+
+        /**
+         * 计算全局数据
+         * @private
+         */
+        public _calculateWorldform():void {
             var o = this;
             o._worldTransform.identity().appendMatrix(o._parent._worldTransform);
             var anchorX, anchorY;
@@ -873,7 +880,7 @@ module egret {
             var target:DisplayObject = this;
             while (target) {
                 list.unshift(target);
-                target = target.parent;
+                target = target._parent;
             }
 
             var length:number = list.length;
@@ -883,14 +890,14 @@ module egret {
             }
             event._reset();
             this._dispatchPropagationEvent(event, list, targetIndex);
-            return !event.isDefaultPrevented();
+            return !event._isDefaultPrevented;
         }
 
         public _dispatchPropagationEvent(event:Event, list:Array<DisplayObject>, targetIndex:number):void {
             var length:number = list.length;
             for (var i:number = 0; i < length; i++) {
                 var currentTarget:DisplayObject = list[i];
-                event._setCurrentTarget(currentTarget);
+                event._currentTarget = currentTarget;
                 event._target = this;
                 if (i < targetIndex)
                     event._eventPhase = 1;

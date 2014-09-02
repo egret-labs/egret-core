@@ -273,7 +273,7 @@ module egret.gui {
         private ignoreTouchBegin:boolean = false;
 
         private onTouchBegin(event:TouchEvent):void{
-            if(event.isDefaultPrevented()){
+            if(event._isDefaultPrevented){
                 return;
             }
             var canScroll:boolean = this.checkScrollPolicy();

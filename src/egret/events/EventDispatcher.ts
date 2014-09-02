@@ -45,14 +45,15 @@ module egret {
          */
         public constructor(target:IEventDispatcher = null) {
             super();
-            if (target){
+            if (target) {
                 this._eventTarget = target;
             }
-            else{
+            else {
                 this._eventTarget = this;
             }
 
         }
+
         /**
          * 事件抛出对象
          */
@@ -82,37 +83,42 @@ module egret {
          * 优先级为 n -1 的侦听器之前得到处理。如果两个或更多个侦听器共享相同的优先级，则按照它们的添加顺序进行处理。默认优先级为 0。
          */
         public addEventListener(type:string, listener:Function, thisObject:any, useCapture:boolean = false, priority:number = 0):void {
-            if (typeof useCapture === "undefined") { useCapture = false; }
-            if (typeof priority === "undefined") { priority = 0; }
+            if (typeof useCapture === "undefined") {
+                useCapture = false;
+            }
+            if (typeof priority === "undefined") {
+                priority = 0;
+            }
             if (!listener) {
                 Logger.fatal("addEventListener侦听函数不能为空");
             }
             var eventMap:Object;
-            if(useCapture){
-                if(!this._captureEventsMap)
+            if (useCapture) {
+                if (!this._captureEventsMap)
                     this._captureEventsMap = {};
                 eventMap = this._captureEventsMap;
             }
-            else{
-                if(!this._eventsMap)
+            else {
+                if (!this._eventsMap)
                     this._eventsMap = {};
                 eventMap = this._eventsMap;
             }
             var list:Array<any> = eventMap[type];
-            if(!list){
+            if (!list) {
                 list = eventMap[type] = [];
             }
-            this._insertEventBin(list,listener, thisObject,priority)
+            this._insertEventBin(list, listener, thisObject, priority)
         }
+
         /**
          * 在一个事件列表中按优先级插入事件对象
          */
-        public _insertEventBin(list:Array<any>,listener:Function, thisObject:any,priority:number):boolean{
+        public _insertEventBin(list:Array<any>, listener:Function, thisObject:any, priority:number):boolean {
             var insertIndex:number = -1;
             var length:number = list.length;
             for (var i:number = 0; i < length; i++) {
                 var bin:any = list[i];
-                if (bin.listener === listener&&bin.thisObject===thisObject) {
+                if (bin.listener === listener && bin.thisObject === thisObject) {
                     return false;
                 }
                 if (insertIndex == -1 && bin.priority < priority) {
@@ -137,28 +143,29 @@ module egret {
          * @param thisObject {any} 侦听函数绑定的this对象
          * @param useCapture {boolean} 是否使用捕获，这个属性只在显示列表中生效。
          */
-        public removeEventListener(type:string, listener:Function,thisObject:any,useCapture:boolean = false):void {
+        public removeEventListener(type:string, listener:Function, thisObject:any, useCapture:boolean = false):void {
 
             var eventMap:Object = useCapture ? this._captureEventsMap : this._eventsMap;
-            if(!eventMap)
+            if (!eventMap)
                 return;
             var list:Array<any> = eventMap[type];
             if (!list) {
                 return;
             }
-            this._removeEventBin(list,listener,thisObject);
-            if(list.length==0){
+            this._removeEventBin(list, listener, thisObject);
+            if (list.length == 0) {
                 delete eventMap[type];
             }
         }
+
         /**
          * 在一个事件列表中按优先级插入事件对象
          */
-        public _removeEventBin(list:Array<any>,listener:Function,thisObject:any):boolean{
+        public _removeEventBin(list:Array<any>, listener:Function, thisObject:any):boolean {
             var length:number = list.length;
             for (var i:number = 0; i < length; i++) {
                 var bin:any = list[i];
-                if (bin.listener === listener&&bin.thisObject===thisObject) {
+                if (bin.listener === listener && bin.thisObject === thisObject) {
                     list.splice(i, 1);
                     return true
                 }
@@ -174,9 +181,10 @@ module egret {
          * @stable A
          */
         public hasEventListener(type:string):boolean {
-            return (this._eventsMap&&this._eventsMap[type] ||
-                this._captureEventsMap&&this._captureEventsMap[type]);
+            return (this._eventsMap && this._eventsMap[type] ||
+                this._captureEventsMap && this._captureEventsMap[type]);
         }
+
         /**
          * 检查是否用此 EventDispatcher 对象或其任何始祖为指定事件类型注册了事件侦听器。将指定类型的事件调度给此
          * EventDispatcher 对象或其任一后代时，如果在事件流的任何阶段触发了事件侦听器，则此方法返回 true。
@@ -186,7 +194,7 @@ module egret {
          * @param type {string} 事件类型
          * @returns {boolean} 是否发生碰撞，如果发生返回true，如果没有碰撞，返回false
          */
-        public willTrigger(type:string):boolean{
+        public willTrigger(type:string):boolean {
             return this.hasEventListener(type);
         }
 
@@ -200,28 +208,33 @@ module egret {
         public dispatchEvent(event:Event):boolean {
             event._reset();
             event._target = this._eventTarget;
-            event._setCurrentTarget(this._eventTarget);
+            event._currentTarget = this._eventTarget;
             return this._notifyListener(event);
         }
 
-        public _notifyListener(event:Event):boolean{
-            var eventMap:Object = event._eventPhase==1 ? this._captureEventsMap : this._eventsMap;
-            if(!eventMap)
+        public _notifyListener(event:Event):boolean {
+            var eventMap:Object = event._eventPhase == 1 ? this._captureEventsMap : this._eventsMap;
+            if (!eventMap) {
                 return true;
-            var list:Array<any> = eventMap[event.type];
+            }
+            var list:Array<any> = eventMap[event._type];
+
             if (!list) {
                 return true;
             }
-            list = list.concat();
             var length:number = list.length;
-            for(var i:number = 0;i<length;i++){
+            if (length == 0) {
+                return true;
+            }
+            list = list.concat();
+            for (var i:number = 0; i < length; i++) {
                 var eventBin:any = list[i];
-                eventBin.listener.call(eventBin.thisObject,event);
-                if(event._isPropagationImmediateStopped){
+                eventBin.listener.call(eventBin.thisObject, event);
+                if (event._isPropagationImmediateStopped) {
                     break;
                 }
             }
-            return !event.isDefaultPrevented();
+            return !event._isDefaultPrevented;
         }
 
         /**
@@ -231,8 +244,8 @@ module egret {
          * @param bubbles {boolean} 是否冒泡，默认false
          * @param data {any}附加数据(可选)
          */
-        public dispatchEventWith(type:string, bubbles:boolean = false, data?:Object):void{
-           Event.dispatchEvent(this,type,bubbles,data);
+        public dispatchEventWith(type:string, bubbles:boolean = false, data?:Object):void {
+            Event.dispatchEvent(this, type, bubbles, data);
         }
     }
 }
