@@ -559,12 +559,19 @@ module egret {
             }
         }
 
-
         /**
          * @private
          * @param renderContext
          */
         public _updateTransform():void {
+            this._calculateWorldform();
+        }
+
+        /**
+         * 计算全局数据
+         * @private
+         */
+        public _calculateWorldform():void {
             var o = this;
             o._worldTransform.identity().appendMatrix(o._parent._worldTransform);
             var anchorX, anchorY;
