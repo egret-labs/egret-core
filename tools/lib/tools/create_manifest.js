@@ -809,13 +809,13 @@ function readRelyOnFromBlock(text, path,fileRelyOnList,ns) {
     while (text.length > 0) {
         var index = CodeUtil.getFirstVariableIndex("class", text);
         if(index==-1){
-            findClassInLine(text,pathToClassNames[path],ns,fileRelyOnList);
+            escapFunctionLines(text,pathToClassNames[path],ns,fileRelyOnList);
             break;
         }
 
         var keyLength = 5;
         var preStr = text.substring(0, index + keyLength);
-        findClassInLine(preStr,pathToClassNames[path],ns,fileRelyOnList)
+        escapFunctionLines(preStr,pathToClassNames[path],ns,fileRelyOnList)
 
         text = text.substring(index + keyLength);
         var word = CodeUtil.getFirstVariable(text);
@@ -931,7 +931,26 @@ function getRelyOnFromStatic(text,ns, className, relyOnList) {
             line = text.substring(0,index);
             text = text.substring(index);
         }
-        findClassInLine(line,[className],ns,relyOnList);
+        escapFunctionLines(line,[className],ns,relyOnList);
+    }
+}
+/**
+ * 排除代码段里的全局函数块。
+ */
+function escapFunctionLines(text,classNames,ns,relyOnList){
+    while(text.length>0){
+        var index = CodeUtil.getFirstVariableIndex("function");
+        if(index==-1){
+            findClassInLine(text,classNames,ns,relyOnList);
+            break;
+        }
+        findClassInLine(text.substring(0,index),classNames,ns,relyOnList);
+        text = text.substring(index);
+        index = CodeUtil.getBracketEndIndex(text);
+        if(index==-1){
+            break;
+        }
+        text = text.substring(index);
     }
 }
 
