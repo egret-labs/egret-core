@@ -939,7 +939,7 @@ function getRelyOnFromStatic(text,ns, className, relyOnList) {
  */
 function escapFunctionLines(text,classNames,ns,relyOnList){
     while(text.length>0){
-        var index = CodeUtil.getFirstVariableIndex("function");
+        var index = CodeUtil.getFirstVariableIndex("function",text);
         if(index==-1){
             findClassInLine(text,classNames,ns,relyOnList);
             break;
