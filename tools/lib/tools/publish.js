@@ -54,12 +54,14 @@ ClosureCompiler.JAVA_EXT = process.platform == 'win32' ? '.exe' : '';
  * @expose
  */
 ClosureCompiler.getGlobalJava = function () {
-    var java = null;
-
-    if (process.env["JAVA_HOME"]) {
-        java = path.join(process.env["JAVA_HOME"], "bin", "java" + ClosureCompiler.JAVA_EXT);
-        if (!file.exists(java)) {
-            java = null;
+    var java = path.join(process.execPath,"../jre/bin","java" + ClosureCompiler.JAVA_EXT);
+    if(!file.exists(java)){
+        java = null;
+        if (process.env["JAVA_HOME"]) {
+            java = path.join(process.env["JAVA_HOME"], "bin", "java" + ClosureCompiler.JAVA_EXT);
+            if (!file.exists(java)) {
+                java = null;
+            }
         }
     }
     if (!java) {
