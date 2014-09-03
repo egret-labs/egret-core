@@ -52,7 +52,14 @@ module egret {
             var xhr = this.getXHR();
             xhr.onerror = onLoadError;
             xhr.onload = onLoadComplete;
-            xhr.open(request.method, request.url, true);
+
+            var url:string = request.url;
+            //get请求没有设置参数，而是设置URLVariables的情况
+            if (url.indexOf("?") == -1 && request.method == URLRequestMethod.GET && request.data && request.data instanceof URLVariables) {
+                url = url + "?" + request.data.toString();
+            }
+
+            xhr.open(request.method, url, true);
             this.setResponseType(xhr, loader.dataFormat);
             if (request.method == URLRequestMethod.GET || !request.data) {
                 xhr.send();
