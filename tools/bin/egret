@@ -1,4 +1,10 @@
 #! /usr/bin/env node
-var analysis = require("../lib/core/params_analyze.js");
-var check = require("../lib/core/tool_check.js");
+var EGRET_PATH = process.env.EGRET_PATH;
+var fs = require('fs');
+var path = require("path");
+if(!fs.existsSync(EGRET_PATH)){
+    EGRET_PATH = "../../";
+}
+var analysis = require(path.join(EGRET_PATH,"tools/lib/core/params_analyze.js"));
+var check = require(path.join(EGRET_PATH,"tools/lib/core/tool_check.js"));
 check.run(analysis.getArgv());

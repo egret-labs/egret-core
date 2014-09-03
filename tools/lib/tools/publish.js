@@ -351,10 +351,10 @@ function run(dir, args, opts) {
 
     var runtime = param.getOption(opts, "--runtime", ["html5", "native"]);
     if (runtime == "html5") {
-        compilerSingleFile(currDir, totalHTML5FileList, launcherDir + "/game-min.js");
+        compilerSingleFile(currDir, totalHTML5FileList, "\""+launcherDir + "/game-min.js\"");
     }
     else if (runtime == "native") {
-        compilerSingleFile(currDir, totalNativeFileList, launcherDir + "/game-min-native.js");
+        compilerSingleFile(currDir, totalNativeFileList, "\""+launcherDir + "/game-min-native.js\"");
     }
 }
 
