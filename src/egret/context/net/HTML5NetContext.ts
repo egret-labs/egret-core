@@ -53,11 +53,7 @@ module egret {
             xhr.onerror = onLoadError;
             xhr.onload = onLoadComplete;
 
-            var url:string = request.url;
-            //get请求没有设置参数，而是设置URLVariables的情况
-            if (url.indexOf("?") == -1 && request.method == URLRequestMethod.GET && request.data && request.data instanceof URLVariables) {
-                url = url + "?" + request.data.toString();
-            }
+            var url:string = NetContext._getUrl(request);
 
             xhr.open(request.method, url, true);
             this.setResponseType(xhr, loader.dataFormat);

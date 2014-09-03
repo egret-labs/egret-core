@@ -38,12 +38,12 @@ module egret {
          * 表示 URLRequest 对象是一个 GET。
 		 * @constant {string} egret.URLRequestMethod.GET
 		 */
-        public static GET:string = "GET";
+        public static GET:string = "get";
 
 		/**
          * 表示 URLRequest 对象是一个 POST。
 		 * @constant {string} egret.URLRequestMethod.POST
 		 */
-        public static POST:string = "POST";
+        public static POST:string = "post";
     }
 }
