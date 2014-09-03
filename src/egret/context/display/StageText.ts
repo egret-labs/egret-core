@@ -37,7 +37,7 @@ module egret {
 
         private div:any;
         private inputElement:HTMLInputElement;
-        private _size:number = 20;
+        private _size:number = 30;
 
         constructor() {
             super();
