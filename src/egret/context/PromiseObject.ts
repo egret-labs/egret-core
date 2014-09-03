@@ -47,16 +47,16 @@ module egret {
             }
         }
 
-        private onSuccess() {
+        private onSuccess(...args) {
             if (this.onSuccessFunc) {
-                this.onSuccessFunc.call(this.onSuccessThisObject);
+                this.onSuccessFunc.apply(this.onSuccessThisObject, args);
             }
             this.destroy();
         }
 
-        private onError(errorcode) {
+        private onError(...args) {
             if (this.onErrorFunc) {
-                this.onErrorFunc.call(this.onErrorThisObject);
+                this.onErrorFunc.apply(this.onErrorThisObject, args);
             }
             this.destroy();
         }

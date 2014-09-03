@@ -49,6 +49,8 @@ declare module egret_native {
 
     function requireHttpSync(url:string, callback:Function):void;
 
+    function requireHttp(url:string, param:any, callback:Function):void;
+
     function sendInfoToPlugin(info:string):void;
 
     function recivedPluginInfo(info:string):void;
@@ -58,7 +60,7 @@ declare module egret_native {
 
         function playBackgroundMusic(path:string, loop:boolean):void;
 
-        function stopBackgroundMusic():void;
+        function stopBackgroundMusic(isRelease:boolean):void;
 
         function preloadEffect(path:string):void;
 

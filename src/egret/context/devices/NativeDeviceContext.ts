@@ -113,7 +113,7 @@ module egret_native_sound {
 
     export function pause() {
         if (this.type == egret.Sound.MUSIC) {
-            egret_native.Audio.stopBackgroundMusic();
+            egret_native.Audio.stopBackgroundMusic(false);
         }
         else if (this.type == egret.Sound.EFFECT) {
             if (this.effect_id) {

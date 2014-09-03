@@ -44,11 +44,29 @@ module egret {
             this.addEventListener(egret.TouchEvent.TOUCH_BEGIN, this.onMouseDownHandler, this);
         }
 
+        /**
+         * @deprecated
+         * @param value
+         */
         public setText(value:string):void {
+            Logger.warning("TextInput.setText()已废弃，请使用TextInput.text设置");
             this.stageText._setText(value);
         }
 
+        /**
+         * @deprecated
+         * @returns {string}
+         */
         public getText():string {
+            Logger.warning("TextInput.getText()已废弃，请使用TextInput.text获取");
+            return this.stageText._getText();
+        }
+
+        public set text(value:string) {
+            this.stageText._setText(value);
+        }
+
+        public get text():string {
             return this.stageText._getText();
         }
 

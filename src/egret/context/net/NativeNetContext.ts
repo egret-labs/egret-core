@@ -34,7 +34,7 @@ module egret {
             super();
         }
 
-
+        private urlData:any = {};
         /**
          * @method egret.HTML5NetContext#proceed
          * @param loader {URLLoader}
@@ -50,26 +50,33 @@ module egret {
                 return;
             }
 
-
-            var url = loader._request.url;
+            var request:URLRequest = loader._request;
+            var url:string = NetContext._getUrl(request);
             if (url.indexOf("http://") == 0) {
-                egret_native.requireHttpSync(url, function (str_resultcode, str_recived_data) {
-                    if (str_resultcode == 0) {
-                        loader.data = str_recived_data;
-                        callLater(Event.dispatchEvent, Event, loader, Event.COMPLETE);
-                    }
-                    else {
-                        //todo
-                        console.log("net error:" + str_resultcode);
-                    }
-                })
+                this.urlData.type = request.method;
+                if (request.method == URLRequestMethod.POST && request.data && request.data instanceof URLVariables) {
+                    var urlVars:URLVariables = <URLVariables> request.data;
+                    this.urlData.data = urlVars.toString();
+                }
+                else {
+                    delete this.urlData["data"];
+                }
+                var promise = PromiseObject.create();
+                promise.onSuccessFunc = function (getted_str){
+                    loader.data = getted_str;
+                    callLater(Event.dispatchEvent, Event, loader, Event.COMPLETE);
+                };
+                promise.onErrorFunc = function (error_code){
+                    console.log("net error:" + error_code);
+                    IOErrorEvent.dispatchIOErrorEvent(loader);
+                };
+                egret_native.requireHttp(url, this.urlData, promise);
                 return;
             }
 
             callLater(onLoadComplete, this);
 
             function onLoadComplete() {
-                var request:URLRequest = loader._request;
                 var content = egret_native.readFileSync(request.url);
                 loader.data = content;
                 Event.dispatchEvent(loader, Event.COMPLETE);

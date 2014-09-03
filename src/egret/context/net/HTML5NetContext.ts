@@ -52,7 +52,10 @@ module egret {
             var xhr = this.getXHR();
             xhr.onerror = onLoadError;
             xhr.onload = onLoadComplete;
-            xhr.open(request.method, request.url, true);
+
+            var url:string = NetContext._getUrl(request);
+
+            xhr.open(request.method, url, true);
             this.setResponseType(xhr, loader.dataFormat);
             if (request.method == URLRequestMethod.GET || !request.data) {
                 xhr.send();
