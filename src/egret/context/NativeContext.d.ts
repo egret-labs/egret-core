@@ -60,7 +60,7 @@ declare module egret_native {
 
         function playBackgroundMusic(path:string, loop:boolean):void;
 
-        function stopBackgroundMusic():void;
+        function stopBackgroundMusic(isRelease:boolean):void;
 
         function preloadEffect(path:string):void;
 
