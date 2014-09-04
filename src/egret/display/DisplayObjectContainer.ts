@@ -99,7 +99,7 @@ module egret {
 		 * @returns {egret.DisplayObject} 在 child 参数中传递的 DisplayObject 实例。
          */
         public addChild(child:DisplayObject):DisplayObject{
-            var index:number = this.numChildren;
+            var index:number = this._children.length;
 
             if (child._parent == this)
                 index--;
@@ -129,7 +129,7 @@ module egret {
                 return child;
             }
 
-            var host:DisplayObjectContainer = child.parent;
+            var host:DisplayObjectContainer = child._parent;
             if (host == this)
             {
                 this.doSetChildIndex(child,index);
