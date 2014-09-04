@@ -74,8 +74,7 @@ function buildProject(callback, currDir, keepGeneratedTypescript) {
     var libs = file.search(libsPath, "d.ts");
     var sourceList = compiler.generateGameFileList(currDir);
     compiler.compile(callback,
-        path.join(currDir, "src"),
-        path.join(currDir, "bin-debug/src"),
+        path.join(currDir),
         sourceList.concat(libs),
         keepGeneratedTypescript
     );

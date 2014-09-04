@@ -42,7 +42,38 @@ function run(currentDir, args, opts) {
  * @param sourceList 要编译的文件列表包含ts和exml
  * @param keepGeneratedTypescript 是否保留exml生成的ts文件
  */
-function compile(callback, srcPath, output, sourceList, keepGeneratedTypescript) {
+function compile(callback, projectDir, sourceList, keepGeneratedTypescript) {
+
+    var srcPath = path.join(projectDir,"src");
+    var output = path.join(projectDir,"bin-debug/src");
+
+
+    //=========================
+    // 这段逻辑的作用是把第三方 module 的 ts文件不要随着 game_file_list 编译进去，这里的代码以后需要重构
+
+    var projectConfig = require("../core/projectConfig.js");
+    projectConfig.init(projectDir);
+    var moduleList = projectConfig.getModule("html5");
+    var moduleFileList = [];
+    for (var key in moduleList){
+        var module = moduleList[key];
+        if (module.path){
+
+            var moduleConfig = getModuleConfig(module,projectDir);
+            var file_list = moduleConfig.file_list;
+            file_list = file_list.map(function (item) {
+                return  path.join(moduleConfig.prefix, moduleConfig.source, item);
+            }).filter(function (item) {
+                return item.indexOf(".js") == -1 && item.indexOf(".d.ts") == -1;
+            })
+
+
+            moduleFileList = moduleFileList.concat(file_list)
+        }
+    }
+
+    //=========================
+
 
     var exmlList = [];
     var tsList = [];
@@ -53,7 +84,7 @@ function compile(callback, srcPath, output, sourceList, keepGeneratedTypescript)
             continue;
         }
         var ext = file.getExtension(p).toLowerCase();
-        if (ext == "ts") {
+        if (ext == "ts" && moduleFileList.indexOf(p) == -1) {
             tsList.push(p);
         }
         else if (ext == "exml") {
