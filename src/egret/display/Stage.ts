@@ -112,11 +112,11 @@ module egret {
          * @returns {egret.DisplayObject}
          */
         public hitTest(x, y) {
-            if (!this.touchEnabled) {
+            if (!this._touchEnabled) {
                 return null;
             }
             var result:DisplayObject;
-            if (!this.visible) {
+            if (!this._touchEnabled) {
                 return this;
             }
             var children = this._children;
@@ -125,13 +125,13 @@ module egret {
                 var child = children[i];
                 var o = child;
                 var offsetPoint = o._getOffsetPoint();
-                var mtx = Matrix.identity.identity().prependTransform(o.x, o.y, o.scaleX, o.scaleY, o.rotation,
+                var mtx = Matrix.identity.identity().prependTransform(o._x, o._y, o._scaleX, o._scaleY, o._rotation,
                     0, 0, offsetPoint.x, offsetPoint.y);
                 mtx.invert();
                 var point = Matrix.transformCoords(mtx, x, y);
                 result = child.hitTest(point.x, point.y, true);
                 if (result) {
-                    if (result.touchEnabled) {
+                    if (result._touchEnabled) {
                         return result;
                     }
                 }
