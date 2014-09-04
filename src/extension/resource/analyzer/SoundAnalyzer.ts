@@ -44,6 +44,9 @@ module RES {
             if (config && config["soundType"]) {
                 data.preload(config.soundType);
             }
+            else {
+                data.preload(egret.Sound.EFFECT);
+            }
         }
     }
 }
