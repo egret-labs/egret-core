@@ -67,6 +67,7 @@
         "egret/context/devices/DeviceContext.ts",
         "egret/context/external/ExternalInterface.ts",
         "egret/context/Browser.ts",
+        "egret/context/localStorage/localStorage.ts",
         "egret/utils/XML.ts",
         "egret/utils/ByteArray.ts",
         "egret/tween/Tween.ts",

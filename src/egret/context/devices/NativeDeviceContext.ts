@@ -153,3 +153,53 @@ module egret_native_sound {
 }
 
 egret_native_sound.init();
+
+module egret_native_localStorage {
+    export var filePath:string = "LocalStorage.local";
+
+    export function getItem(key:string):string {
+        return this.data[key];
+    }
+
+    export function setItem(key:string, value:string):void {
+        this.data[key] = value;
+        this.save();
+    }
+
+    export function removeItem(key:string):void {
+        delete this.data[key];
+        this.save();
+    }
+
+    export function clear():void {
+        for (var key in this.data) {
+            delete this.data[key];
+        }
+        this.save();
+    }
+
+    export function save() {
+//        console.log("egret_native_localStorage::" + "WriteFile");
+        egret_native.writeFileSync(egret_native_localStorage.filePath, JSON.stringify(this.data));
+    }
+
+    export function init():void {
+        if (egret_native.isFileExists(egret_native_localStorage.filePath)) {
+//            console.log("egret_native_localStorage::" + "文件存在");
+            var str:string = egret_native.readFileSync(egret_native_localStorage.filePath);
+//            console.log("egret_native_localStorage::" + str);
+            this.data = JSON.parse(str);
+//            console.log("egret_native_localStorage::" + "ReadFileSuccess");
+        }
+        else {
+//            console.log("egret_native_localStorage::" + "文件不存在");
+            this.data = {};
+        }
+
+        for (var key in egret_native_localStorage) {
+            egret.localStorage[key] = egret_native_localStorage[key];
+        }
+    }
+}
+
+egret_native_localStorage.init();

@@ -44,8 +44,11 @@ declare module egret_native {
 
     function readXML(filepath:string):any;
 
+    function isFileExists(filepath:string):boolean;
+
     function readFileSync(filepath:string):any;
 
+    function writeFileSync(filepath:string, fileContent:string):any;
 
     function requireHttpSync(url:string, callback:Function):void;
 

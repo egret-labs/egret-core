@@ -169,3 +169,30 @@ module egret {
     }
 
 }
+
+module egret_html5_localStorage {
+    //todo 有可能没有window.localStorage对象
+    export function getItem(key:string):string {
+        return window.localStorage.getItem(key);
+    }
+
+    export function setItem(key:string, value:string):void {
+        window.localStorage.setItem(key, value);
+    }
+
+    export function removeItem(key:string):void {
+        window.localStorage.removeItem(key);
+    }
+
+    export function clear():void {
+        window.localStorage.clear();
+    }
+
+    export function init():void {
+        for (var key in egret_html5_localStorage) {
+            egret.localStorage[key] = egret_html5_localStorage[key];
+        }
+    }
+}
+
+egret_html5_localStorage.init();
