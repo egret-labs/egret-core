@@ -311,7 +311,7 @@ module egret {
         }
 
         public _updateTransform():void {
-            if (!this.visible) {
+            if (!this._visible) {
                 return;
             }
             super._updateTransform();
@@ -341,7 +341,7 @@ module egret {
             for (var i = 0; i < l; i++) {
                 var child = this._children[i];
                 var bounds:Rectangle;
-                if (!child.visible || !(bounds = DisplayObject.getTransformBounds(child._getSize(Rectangle.identity), child._getMatrix()))) {
+                if (!child._visible || !(bounds = DisplayObject.getTransformBounds(child._getSize(Rectangle.identity), child._getMatrix()))) {
                     continue;
                 }
                 var x1 = bounds.x , y1 = bounds.y,
@@ -375,7 +375,7 @@ module egret {
          */
         public hitTest(x:number, y:number, ignoreTouchEnabled:boolean = false):DisplayObject{
             var result:DisplayObject;
-            if (!this.visible) {
+            if (!this._visible) {
                 return null;
             }
             if (this._scrollRect) {

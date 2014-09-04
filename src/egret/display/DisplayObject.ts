@@ -70,8 +70,9 @@ module egret {
         private _sizeDirty:boolean = true;
 
         public _setParentSizeDirty():void {
-            if (this.parent && (!this.parent._hasWidthSet && !this.parent._hasHeightSet)) {
-                this.parent._setSizeDirty();
+            var parent = this._parent;
+            if (parent && (!(parent._hasWidthSet || parent._hasHeightSet))) {
+                parent._setSizeDirty();
             }
         }
 
@@ -514,7 +515,7 @@ module egret {
          * @param renderContext
          */
         public _draw(renderContext:RendererContext):void {
-            if (!this.visible) {
+            if (!this._visible) {
                 this.destroyCacheBounds();
                 return;
             }
@@ -709,7 +710,7 @@ module egret {
          * @returns {*}
          */
         public hitTest(x:number, y:number, ignoreTouchEnabled:boolean = false):DisplayObject {
-            if (!this.visible || (!ignoreTouchEnabled && !this._touchEnabled)) {
+            if (!this._visible || (!ignoreTouchEnabled && !this._touchEnabled)) {
                 return null;
             }
             var bound:Rectangle = this._getSize(Rectangle.identity);
