@@ -433,7 +433,7 @@ module egret {
 
         public _onAddToStage() {
             super._onAddToStage();
-            var length:number = this.numChildren;
+            var length = this._children.length;
             for (var i = 0; i < length; i++) {
                 var child:DisplayObject = this._children[i];
                 child._onAddToStage();
@@ -442,7 +442,7 @@ module egret {
 
         public _onRemoveFromStage() {
             super._onRemoveFromStage();
-            var length:number = this.numChildren;
+            var length = this._children.length;
             for (var i = 0; i < length; i++) {
                 var child:DisplayObject = this._children[i];
                 child._onRemoveFromStage();
@@ -457,9 +457,9 @@ module egret {
          */
         public getChildByName(name:string):DisplayObject{
             var locChildren = this._children;
-            var count:number = this.numChildren;
+            var length = locChildren.length;
             var displayObject:DisplayObject;
-            for(var i:number = 0 ; i < count ; i++ ){
+            for(var i:number = 0 ; i < length ; i++ ){
                 displayObject = locChildren[i];
                 if(displayObject.name == name){
                     return displayObject;
