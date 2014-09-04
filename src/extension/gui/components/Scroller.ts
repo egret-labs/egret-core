@@ -160,8 +160,27 @@ module egret.gui {
                 }
                 list.unshift(target);
             }
-            var targetIndex:number = list.indexOf(event._target);
-            this._dispatchPropagationEvent(event,list,targetIndex);
+            this._dispatchPropagationEvent(event,list);
+        }
+
+        //todo 此处代码是为了兼容之前的实现，应该尽快更优化的实现后删除
+        public _dispatchPropagationEvent(event:Event, list:Array<DisplayObject>, targetIndex?:number):void {
+            var length:number = list.length;
+            for (var i:number = 0; i < length; i++) {
+                var currentTarget:DisplayObject = list[i];
+                event._currentTarget = currentTarget;
+                event._target = this;
+                if (i < targetIndex)
+                    event._eventPhase = 1;
+                else if (i == targetIndex)
+                    event._eventPhase = 2;
+                else
+                    event._eventPhase = 3;
+                currentTarget._notifyListener(event);
+                if (event._isPropagationStopped || event._isPropagationImmediateStopped) {
+                    break;
+                }
+            }
         }
 
         private touchBeginTimer:Timer;

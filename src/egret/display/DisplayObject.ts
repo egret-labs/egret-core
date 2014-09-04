@@ -880,35 +880,47 @@ module egret {
             var list:Array<DisplayObject> = [];
             var target:DisplayObject = this;
             while (target) {
-                list.unshift(target);
+                list.push(target);
                 target = target._parent;
             }
-
-            var length:number = list.length;
-            var targetIndex:number = length - 1;
-            for (var i:number = length - 2; i >= 0; i--) {
-                list.push(list[i]);
-            }
             event._reset();
-            this._dispatchPropagationEvent(event, list, targetIndex);
+            this._dispatchPropagationEvent(event, list);
             return !event._isDefaultPrevented;
         }
 
-        public _dispatchPropagationEvent(event:Event, list:Array<DisplayObject>, targetIndex:number):void {
+        public _dispatchPropagationEvent(event:Event, list:Array<DisplayObject>,targetIndex?:number):void {
             var length:number = list.length;
-            for (var i:number = 0; i < length; i++) {
+            var eventPhase:number = 1;
+            for (var i:number = length - 1 ; i >= 0 ; i--){
                 var currentTarget:DisplayObject = list[i];
                 event._currentTarget = currentTarget;
                 event._target = this;
-                if (i < targetIndex)
-                    event._eventPhase = 1;
-                else if (i == targetIndex)
-                    event._eventPhase = 2;
-                else
-                    event._eventPhase = 3;
+                event._eventPhase = eventPhase;
                 currentTarget._notifyListener(event);
                 if (event._isPropagationStopped || event._isPropagationImmediateStopped) {
-                    break;
+                    return;
+                }
+            }
+
+            var eventPhase:number = 2;
+            var currentTarget:DisplayObject = list[0];
+            event._currentTarget = currentTarget;
+            event._target = this;
+            event._eventPhase = eventPhase;
+            currentTarget._notifyListener(event);
+            if (event._isPropagationStopped || event._isPropagationImmediateStopped) {
+                return;
+            }
+
+            var eventPhase:number = 3;
+            for (i = 1 ; i < length ; i++){
+                var currentTarget:DisplayObject = list[i];
+                event._currentTarget = currentTarget;
+                event._target = this;
+                event._eventPhase = eventPhase;
+                currentTarget._notifyListener(event);
+                if (event._isPropagationStopped || event._isPropagationImmediateStopped) {
+                    return;
                 }
             }
         }
