@@ -71,22 +71,27 @@ module egret {
                     IOErrorEvent.dispatchIOErrorEvent(loader);
                 };
                 egret_native.requireHttp(url, this.urlData, promise);
-                return;
+            }
+            else if(!egret_native.isFileExists(url)) {
+                var promise = PromiseObject.create();
+                promise.onSuccessFunc = onLoadComplete;
+                egret_native.download(url, url, promise);
+            }
+            else {
+                callLater(onLoadComplete, this);
             }
 
-            callLater(onLoadComplete, this);
-
             function onLoadComplete() {
-                var content = egret_native.readFileSync(request.url);
+                var content = egret_native.readFileSync(url);
                 loader.data = content;
                 Event.dispatchEvent(loader, Event.COMPLETE);
-            };
+            }
         }
 
         private loadSound(loader:URLLoader) {
             var request = loader._request;
             var url = request.url;
-            var savePath = request.url;
+            var savePath = url;
 
             if(url.indexOf("http://") != -1) {
                 var promise = egret.PromiseObject.create();
@@ -95,6 +100,14 @@ module egret {
                     egret.IOErrorEvent.dispatchIOErrorEvent(loader);
                 };
                 egret_native.download(url, savePath, promise);
+            }
+            else if(!egret_native.isFileExists(url)) {
+                var promise = PromiseObject.create();
+                promise.onSuccessFunc = onLoadComplete;
+                promise.onErrorFunc = function () {
+                    egret.IOErrorEvent.dispatchIOErrorEvent(loader);
+                };
+                egret_native.download(url, url, promise);
             }
             else {
                 callLater(onLoadComplete, this);
@@ -121,6 +134,14 @@ module egret {
                     egret.IOErrorEvent.dispatchIOErrorEvent(loader);
                 };
                 egret_native.download(url, savePath, promise);
+            }
+            else if(!egret_native.isFileExists(url)) {
+                var promise = PromiseObject.create();
+                promise.onSuccessFunc = onLoadComplete;
+                promise.onErrorFunc = function () {
+                    egret.IOErrorEvent.dispatchIOErrorEvent(loader);
+                };
+                egret_native.download(url, url, promise);
             }
             else {
                 callLater(onLoadComplete, this);
