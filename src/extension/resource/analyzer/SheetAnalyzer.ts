@@ -102,7 +102,8 @@ module RES {
                 config = this.sheetMap[name];
                 delete this.sheetMap[name];
                 if(texture){
-                    var spriteSheet:egret.SpriteSheet = this.parseSpriteSheet(texture,config);
+                    var targetName:string = resItem.data&&resItem.data.subkeys?"":name;
+                    var spriteSheet:egret.SpriteSheet = this.parseSpriteSheet(texture,config,targetName);
                     this.fileDic[name] = spriteSheet;
                 }
             }
@@ -120,23 +121,26 @@ module RES {
             return url;
         }
 
-        public parseSpriteSheet(texture:egret.Texture,data:any):egret.SpriteSheet{
+        public parseSpriteSheet(texture:egret.Texture,data:any,name:string):egret.SpriteSheet{
             var frames:any = data.frames;
             if(!frames){
                 return null;
             }
             var spriteSheet:egret.SpriteSheet = new egret.SpriteSheet(texture);
             var textureMap:any = this.textureMap;
-            for(var name in frames){
-                var config:any = frames[name];
-                var texture:egret.Texture = spriteSheet.createTexture(name,config.x,config.y,config.w,config.h,config.offX, config.offY,config.sourceW,config.sourceH);
+            for(var subkey in frames){
+                var config:any = frames[subkey];
+                var texture:egret.Texture = spriteSheet.createTexture(subkey,config.x,config.y,config.w,config.h,config.offX, config.offY,config.sourceW,config.sourceH);
                 if(config["scale9grid"]){
                     var str:string = config["scale9grid"];
                     var list:Array<string> = str.split(",");
                     texture["scale9Grid"] = new egret.Rectangle(parseInt(list[0]),parseInt(list[1]),parseInt(list[2]),parseInt(list[3]));
                 }
-                if(textureMap[name]==null){
-                    textureMap[name] = texture;
+                if(textureMap[subkey]==null){
+                    textureMap[subkey] = texture;
+                    if(name){
+                        this.addSubkey(subkey,name);
+                    }
                 }
             }
             return spriteSheet;
