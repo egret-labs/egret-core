@@ -83,7 +83,7 @@ module egret {
             var list = RenderFilter.getInstance().getDrawAreaList();
             for (var i:number = 0 , l:number = list.length; i < l; i++) {
                 var area = list[i];
-                this.clearRect(area.x - this._transformTx, area.y - this._transformTy, area.width, area.height);
+                this.clearRect(area.x, area.y, area.width, area.height);
             }
             this.renderCost = 0;
         }
