@@ -92,29 +92,22 @@ module egret {
         public static TOUCH_RELEASE_OUTSIDE:string = "touchReleaseOutside";
 
         /**
-         * 移动，参考FLash的MouseEvent.MOVE
-         * @member egret.TouchEvent.TOUCH_MOVE
-		 * @constant {string} egret.TouchEvent.TOUCH_ROLL_OUT
+         * @deprecated
          */
         public static TOUCH_ROLL_OUT:string = "touchRollOut";
 
         /**
-         * 移动，参考FLash的MouseEvent.MOVE
-         * @member egret.TouchEvent.TOUCH_MOVE
-		 * @constant {string} egret.TouchEvent.TOUCH_ROLL_OVER
+         * @deprecated
          */
         public static TOUCH_ROLL_OVER:string = "touchRollOver";
 
         /**
-         * 移动，参考FLash的MouseEvent.MOVE
-		 * @constant {string} egret.TouchEvent.TOUCH_OUT
+         * @deprecated
          */
         public static TOUCH_OUT:string = "touchOut";
 
         /**
-         * 移动，参考FLash的MouseEvent.MOVE
-         * @member egret.TouchEvent.TOUCH_MOVE
-		 * @constant {string} egret.TouchEvent.TOUCH_OVER
+         * @deprecated
          */
         public static TOUCH_OVER:string = "touchOver";
 
