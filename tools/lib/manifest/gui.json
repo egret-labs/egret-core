@@ -62,6 +62,7 @@
         "components/supportClasses/Range.ts",
         "components/supportClasses/TrackBase.ts",
         "components/supportClasses/SliderBase.ts",
+        "components/Spacer.ts",
         "components/Label.ts",
         "components/Rect.ts",
         "components/Button.ts",
