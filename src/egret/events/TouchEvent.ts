@@ -164,16 +164,19 @@ module egret {
         public touchPointID:number;
         /**
          * 事件发生时ctrl键是否被按下。 (Mac OS下为 Cmd 或 Ctrl)
+         * @deprecated
 		 * @member {boolean} egret.TouchEvent#ctrlKey
          */
         public ctrlKey:boolean;
         /**
          * 事件发生时shift键是否被按下。
+         * @deprecated
 		 * @member {boolean} egret.TouchEvent#shiftKey
          */
         public shiftKey:boolean;
         /**
          * 事件发生时alt键是否被按下。
+         * @deprecated
 		 * @member {boolean} egret.TouchEvent#altKey
          */
         public altKey:boolean;
