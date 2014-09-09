@@ -54,6 +54,7 @@ module egret {
         private globalAlpha:number = 1;
 
         public constructor(canvas) {
+            super();
             this.canvas = canvas;
             this.canvasContext = canvas.getContext("2d");
             var f = this.canvasContext.setTransform;
