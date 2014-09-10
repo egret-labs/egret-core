@@ -309,6 +309,20 @@ module egret {
             return this;
         }
 
+        /**
+         * 矩阵重置为目标矩阵
+         * @method egret.Matrix#identityMatrix
+         * @returns {egret.Matrix}
+         */
+        public identityMatrix(matrix:Matrix):Matrix {
+            this.a = matrix.a;
+            this.b = matrix.b;
+            this.c = matrix.c;
+            this.d = matrix.d;
+            this.tx = matrix.tx;
+            this.ty = matrix.ty;
+            return this;
+        }
 
         /**
          * 矩阵翻转
