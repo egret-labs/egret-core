@@ -116,7 +116,7 @@ module egret {
                 return null;
             }
             var result:DisplayObject;
-            if (!this._touchEnabled) {
+            if (!this._touchChildren) {
                 return this;
             }
             var children = this._children;
