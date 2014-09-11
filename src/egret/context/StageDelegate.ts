@@ -445,6 +445,44 @@ module egret {
         }
     }
 
+    export class FullScreen extends ContentStrategy {
+
+        constructor(){
+            super();
+        }
+
+
+        /**
+         * @method egret.NoScale#_apply
+         * @param delegate {egret.StageDelegate}
+         * @param designedResolutionWidth {number}
+         * @param designedResolutionHeight {number}
+         */
+        public _apply(delegate:StageDelegate, designedResolutionWidth:number, designedResolutionHeight:number):void {
+            var canvas:HTMLCanvasElement = <HTMLCanvasElement>document.getElementById(StageDelegate.canvas_name);
+            var container:HTMLElement = document.getElementById(StageDelegate.canvas_div_name);
+            var viewPortWidth:number = document.documentElement.clientWidth;//分辨率宽
+            var viewPortHeight:number = document.documentElement.clientHeight;//分辨率高
+
+            var designW:number = designedResolutionWidth;
+            var designH:number = designedResolutionHeight;
+            var scalex:number = viewPortWidth/designedResolutionWidth;
+            var scaley:number = viewPortHeight/designedResolutionHeight;
+
+            viewPortWidth = designW * scalex;
+            viewPortHeight = designH * scaley;
+
+            canvas.width = designW;
+            canvas.height = designH;
+            canvas.style.width = viewPortWidth + "px";
+            canvas.style.height = viewPortHeight + "px";
+            container.style.width = viewPortWidth + "px";
+            container.style.height = viewPortHeight + "px";
+            delegate._scaleX = scalex;
+            delegate._scaleY = scaley;
+        }
+    }
+
 
 
 }
