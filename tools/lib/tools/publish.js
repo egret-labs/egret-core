@@ -279,7 +279,7 @@ function run(dir, args, opts) {
         return;
     }
 
-    isDebug = opts["--debug"] != null;
+    isDebug = opts["-debug"] != null;
 
     //发布版本
     var version = "";
