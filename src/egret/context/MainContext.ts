@@ -104,7 +104,9 @@ module egret {
                 __callLaterArgsList = [];
             }
 
-            this.dispatchEventWith(Event.RENDER);
+            var event = MainContext.cachedEvent;
+            event._type = Event.RENDER;
+            this.dispatchEvent(event);
             if (Stage._invalidateRenderFlag) {
                 this.broadcastRender();
                 Stage._invalidateRenderFlag = false;
@@ -116,9 +118,12 @@ module egret {
             context.onRenderStart();
             context.clearScreen();
             this.stage._updateTransform();
-            this.dispatchEventWith(Event.FINISH_UPDATE_TRANSFORM);
+
+            this.dispatchEvent(event);
+            event._type = Event.FINISH_UPDATE_TRANSFORM;
             this.stage._draw(context);
-            this.dispatchEventWith(Event.FINISH_RENDER);
+            event._type = Event.FINISH_RENDER;
+            this.dispatchEvent(event);
             context.onRenderFinish();
         }
 
@@ -181,6 +186,8 @@ module egret {
          * @member egret.MainContext.instance
          */
         public static instance:egret.MainContext;
+
+        private static cachedEvent:Event = new Event("");
 
     }
 }

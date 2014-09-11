@@ -23,6 +23,18 @@ module RES {
 
         public constructor(){
             super();
+            this.resourceConfig = <ResourceConfig>(RES["configInstance"]);
+        }
+
+        private resourceConfig:ResourceConfig;
+        /**
+         * 添加一个二级键名到配置列表。
+         * @method RES.ResourceConfig#addSubkey
+         * @param subkey {string} 要添加的二级键名
+         * @param name {string} 二级键名所属的资源name属性
+         */
+        public addSubkey(subkey:string,name:string):void{
+            this.resourceConfig.addSubkey(subkey,name);
         }
         /**
          * 加载一个资源文件

@@ -51,8 +51,10 @@ module egret {
         public _transformTy:number;
 
         private blendValue:string;
+        private globalAlpha:number = 1;
 
         public constructor(canvas) {
+            super();
             this.canvas = canvas;
             this.canvasContext = canvas.getContext("2d");
             var f = this.canvasContext.setTransform;
@@ -83,7 +85,7 @@ module egret {
             var list = RenderFilter.getInstance().getDrawAreaList();
             for (var i:number = 0 , l:number = list.length; i < l; i++) {
                 var area = list[i];
-                this.clearRect(area.x - this._transformTx, area.y - this._transformTy, area.width, area.height);
+                this.clearRect(area.x, area.y, area.width, area.height);
             }
             this.renderCost = 0;
         }
@@ -93,10 +95,11 @@ module egret {
         }
 
         public drawImage(texture:Texture, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight) {
-            sourceX = sourceX / egret.MainContext.instance.rendererContext.texture_scale_factor;
-            sourceY = sourceY / egret.MainContext.instance.rendererContext.texture_scale_factor;
-            sourceWidth = sourceWidth / egret.MainContext.instance.rendererContext.texture_scale_factor;
-            sourceHeight = sourceHeight / egret.MainContext.instance.rendererContext.texture_scale_factor;
+            var scale = egret.MainContext.instance.rendererContext.texture_scale_factor;
+            sourceX = sourceX / scale;
+            sourceY = sourceY / scale;
+            sourceWidth = sourceWidth / scale;
+            sourceHeight = sourceHeight / scale;
 //            if (DEBUG && DEBUG.DRAW_IMAGE) {
 //                DEBUG.checkDrawImage(texture, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight);
 //            }
@@ -125,8 +128,8 @@ module egret {
         }
 
         public setAlpha(alpha:number, blendMode:string) {
-            if (alpha != this.canvasContext.globalAlpha) {
-                this.canvasContext.globalAlpha = alpha;
+            if (alpha != this.globalAlpha) {
+                this.canvasContext.globalAlpha = this.globalAlpha = alpha;
             }
             if (blendMode) {
                 this.blendValue = blendMode;

@@ -46,7 +46,9 @@ function run(dir, args, opts) {
 		}
         globals.joinEgretDir(dir, args[0]);
         var ip = findIP(opts);
-        var url = path.join("http://" + ip + ":" + PORT, args[0] ? args[0] : "", "launcher/index.html");
+        var projectName = args[0] ? args[0] : "";
+        var projectNamePath =  projectName ? projectName + "/" : "";
+        var url = "http://" + ip + ":" + PORT + "/" + projectNamePath + "launcher/index.html";
 		if(OPEN)
 		{
 			open(url);
@@ -55,7 +57,7 @@ function run(dir, args, opts) {
 		{
 			console.log("Url:"+url);
 		}
-        exports.projectName = args[0];
+        exports.projectName = projectName;
     });
 
 
