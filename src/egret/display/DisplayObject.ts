@@ -132,6 +132,10 @@ module egret {
         }
 
         public set x(value:number) {
+            this._setX(value);
+        }
+
+        public _setX(value:number):void {
             if (NumberUtils.isNumber(value)) {
                 this._x = value;
 
@@ -151,6 +155,10 @@ module egret {
         }
 
         public set y(value:number) {
+            this._setY(value);
+        }
+
+        public _setY(value:number):void {
             if (NumberUtils.isNumber(value)) {
                 this._y = value;
 
