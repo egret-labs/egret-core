@@ -104,6 +104,7 @@ module egret {
                 __callLaterArgsList = [];
             }
 
+            var stage = this.stage;
             var event = MainContext.cachedEvent;
             event._type = Event.RENDER;
             this.dispatchEvent(event);
@@ -117,11 +118,12 @@ module egret {
             var context = this.rendererContext;
             context.onRenderStart();
             context.clearScreen();
-            this.stage._updateTransform();
 
-            this.dispatchEvent(event);
+            stage._updateTransform();
             event._type = Event.FINISH_UPDATE_TRANSFORM;
-            this.stage._draw(context);
+            this.dispatchEvent(event);
+
+            stage._draw(context);
             event._type = Event.FINISH_RENDER;
             this.dispatchEvent(event);
             context.onRenderFinish();
