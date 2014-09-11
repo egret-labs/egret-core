@@ -5,6 +5,8 @@ var globals = require("../core/globals");
 var file = require("../core/file.js");
 var compile = require("./compile.js");
 
+var isDebug = false;
+
 /**
  * Constructs a new ClosureCompiler instance.
  * @exports ClosureCompiler
@@ -195,6 +197,9 @@ ClosureCompiler.prototype.compile = function (files, callback) {
     for (i = 0; i < externs.length; i++) {
         args += ' --externs "' + externs[i] + '"';
     }
+    if (isDebug) {
+        args += ' --debug ';
+    }
 
     // Convert any other options to command line arguments
     keys = Object.keys(options);
@@ -273,6 +278,8 @@ function run(dir, args, opts) {
         checkUserJava();
         return;
     }
+
+    isDebug = opts["-debug"] != null;
 
     //发布版本
     var version = "";
