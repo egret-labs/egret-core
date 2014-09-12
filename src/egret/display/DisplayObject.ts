@@ -136,7 +136,7 @@ module egret {
         }
 
         public _setX(value:number):void {
-            if (NumberUtils.isNumber(value)) {
+            if (NumberUtils.isNumber(value) && this._x != value) {
                 this._x = value;
 
                 this._setDirty();
@@ -159,7 +159,7 @@ module egret {
         }
 
         public _setY(value:number):void {
-            if (NumberUtils.isNumber(value)) {
+            if (NumberUtils.isNumber(value) && this._y != value) {
                 this._y = value;
 
                 this._setDirty();
@@ -179,7 +179,7 @@ module egret {
         }
 
         public set scaleX(value:number) {
-            if (NumberUtils.isNumber(value)) {
+            if (NumberUtils.isNumber(value) && this._scaleX != value) {
                 this._scaleX = value;
 
                 this._setDirty();
@@ -199,7 +199,7 @@ module egret {
         }
 
         public set scaleY(value:number) {
-            if (NumberUtils.isNumber(value)) {
+            if (NumberUtils.isNumber(value) && this._scaleY != value) {
                 this._scaleY = value;
 
                 this._setDirty();
@@ -219,7 +219,7 @@ module egret {
         }
 
         public set anchorOffsetX(value:number) {
-            if (NumberUtils.isNumber(value)) {
+            if (NumberUtils.isNumber(value) && this._anchorOffsetX != value) {
                 this._anchorOffsetX = value;
 
                 this._setDirty();
@@ -239,7 +239,7 @@ module egret {
         }
 
         public set anchorOffsetY(value:number) {
-            if (NumberUtils.isNumber(value)) {
+            if (NumberUtils.isNumber(value) && this._anchorOffsetY != value) {
                 this._anchorOffsetY = value;
 
                 this._setDirty();
@@ -259,7 +259,7 @@ module egret {
         }
 
         public set anchorX(value:number) {
-            if (NumberUtils.isNumber(value)) {
+            if (NumberUtils.isNumber(value) && this._anchorX != value) {
                 this._anchorX = value;
 
                 this._setDirty();
@@ -279,7 +279,7 @@ module egret {
         }
 
         public set anchorY(value:number) {
-            if (NumberUtils.isNumber(value)) {
+            if (NumberUtils.isNumber(value) && this._anchorY != value) {
                 this._anchorY = value;
 
                 this._setDirty();
@@ -298,8 +298,14 @@ module egret {
         }
 
         public set visible(value:boolean) {
-            this._visible = value;
-            this._setSizeDirty();
+            this._setVisible(value);
+        }
+
+        public _setVisible(value:boolean):void {
+            if (this._visible != value) {
+                this._visible = value;
+                this._setSizeDirty();
+            }
         }
 
         /**
@@ -314,7 +320,7 @@ module egret {
         }
 
         public set rotation(value:number) {
-            if (NumberUtils.isNumber(value)) {
+            if (NumberUtils.isNumber(value) && this._rotation != value) {
                 this._rotation = value;
 
                 this._setSizeDirty();
@@ -333,7 +339,7 @@ module egret {
         }
 
         public set alpha(value:number) {
-            if (NumberUtils.isNumber(value)) {
+            if (NumberUtils.isNumber(value) && this._alpha != value) {
                 this._alpha = value;
 
                 this._setDirty();
@@ -352,7 +358,7 @@ module egret {
         }
 
         public set skewX(value:number) {
-            if (NumberUtils.isNumber(value)) {
+            if (NumberUtils.isNumber(value) && this._skewX != value) {
                 this._skewX = value;
 
                 this._setSizeDirty();
@@ -371,7 +377,7 @@ module egret {
         }
 
         public set skewY(value:number) {
-            if (NumberUtils.isNumber(value)) {
+            if (NumberUtils.isNumber(value) && this._skewY != value) {
                 this._skewY = value;
 
                 this._setSizeDirty();
