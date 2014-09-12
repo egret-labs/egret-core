@@ -109,6 +109,31 @@ module egret {
 
             this.div = div;
             this.inputElement = inputElement;
+
+        }
+
+        private _addListeners():void {
+            this.inputElement.addEventListener("MSPointerDown", this.onHandler);
+            this.inputElement.addEventListener("MSPointerMove", this.onHandler);
+            this.inputElement.addEventListener("MSPointerUp", this.onHandler);
+            this.inputElement.addEventListener("touchstart", this.onHandler);
+            this.inputElement.addEventListener("touchmove", this.onHandler);
+            this.inputElement.addEventListener("touchend", this.onHandler);
+            this.inputElement.addEventListener("touchcancel", this.onHandler);
+        }
+
+        private _removeListeners():void {
+            this.inputElement.removeEventListener("MSPointerDown", this.onHandler);
+            this.inputElement.removeEventListener("MSPointerMove", this.onHandler);
+            this.inputElement.removeEventListener("MSPointerUp", this.onHandler);
+            this.inputElement.removeEventListener("touchstart", this.onHandler);
+            this.inputElement.removeEventListener("touchmove", this.onHandler);
+            this.inputElement.removeEventListener("touchend", this.onHandler);
+            this.inputElement.removeEventListener("touchcancel", this.onHandler);
+        }
+
+        private onHandler(e):void {
+            e["isScroll"] = true;
         }
 
         private getStageDelegateDiv():any {
@@ -116,6 +141,7 @@ module egret {
             if (!stageDelegateDiv) {
                 stageDelegateDiv = egret.Browser.getInstance().$new("div");
                 stageDelegateDiv.id = "StageDelegateDiv";
+                stageDelegateDiv.style["top"] = egret.StageDelegate.getInstance().getOffSetY() + "px";
                 var container = document.getElementById(egret.StageDelegate.canvas_div_name);
                 container.appendChild(stageDelegateDiv);
                 stageDelegateDiv.transforms();
@@ -132,6 +158,8 @@ module egret {
                 var stageDelegateDiv = this.getStageDelegateDiv();
                 stageDelegateDiv.appendChild(div);
             }
+
+            this._addListeners();
         }
 
         /**
@@ -142,6 +170,8 @@ module egret {
             if (div && div.parentNode) {
                 div.parentNode.removeChild(div);
             }
+
+            this._removeListeners();
         }
 
         public changePosition(x:number, y:number):void {

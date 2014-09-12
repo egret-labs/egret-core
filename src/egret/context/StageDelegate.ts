@@ -62,6 +62,8 @@ module egret {
         public _scaleX = 1;
         public _scaleY = 1;
 
+        public _offSetY:number = 0;
+
         private _resolutionPolicy;
 
         /**
@@ -113,6 +115,13 @@ module egret {
          */
         public getScaleY():number {
             return this._scaleY;
+        }
+
+        /**
+         * @method egret.StageDelegate#getOffSetY
+         */
+        public getOffSetY():number {
+            return this._offSetY;
         }
     }
 
@@ -437,11 +446,14 @@ module egret {
             canvas.height = designH / scale2;
             canvas.style.width = (viewPortWidth * scale2) + "px";
             canvas.style.height = viewPortHeight + "px";
-            canvas.style.top = Math.floor((document.documentElement.clientHeight - viewPortHeight) / 2)+ "px"
+
+            delegate._offSetY = Math.floor((document.documentElement.clientHeight - viewPortHeight) / 2);
+            canvas.style.top = delegate._offSetY + "px";
             container.style.width = (viewPortWidth * scale2) + "px";
             container.style.height = viewPortHeight + "px";
             delegate._scaleX = scale * scale2;
             delegate._scaleY = scale * scale2;
+
         }
     }
 
