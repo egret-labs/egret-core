@@ -1,6 +1,6 @@
 Egret Engine
 ================================================
-Current Version: v1.0.5
+Current Version: v1.0.6
 
 
 
@@ -50,6 +50,8 @@ Egret Engine是一款使用JavaScript(TypeScript)编写的HTML5开源免费游�
 
 发布说明
 --------------------
+
+[Egret 1.0.6 Release Notes 2014-9-12](/docs/1.0.6_ReleaseNotes.md)
 
 [Egret 1.0.5 Release Notes 2014-8-29](/docs/1.0.5_ReleaseNotes.md)
 
