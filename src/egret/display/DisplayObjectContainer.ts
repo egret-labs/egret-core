@@ -402,32 +402,33 @@ module egret {
                 var offsetPoint = o._getOffsetPoint();
                 var childX = o._x;
                 var childY = o._y;
-                if(this._scrollRect)
-                {
+                if (this._scrollRect) {
                     childX -= this._scrollRect.x;
                     childY -= this._scrollRect.y;
                 }
-                var mtx = Matrix.identity.identity().prependTransform(childX, childY, o._scaleX, o._scaleY, o._rotation,
-                    0, 0, offsetPoint.x, offsetPoint.y);
+                var mtx = egret.Matrix.identity.identity().prependTransform(childX, childY, o._scaleX, o._scaleY, o._rotation, 0, 0, offsetPoint.x, offsetPoint.y);
                 mtx.invert();
-                var point = Matrix.transformCoords(mtx, x, y);
+                var point = egret.Matrix.transformCoords(mtx, x, y);
                 var childHitTestResult = child.hitTest(point.x, point.y, true);
                 if (childHitTestResult) {
+                    if(!touchChildren) {
+                        return this;
+                    }
+
                     if (childHitTestResult._touchEnabled && touchChildren) {
                         return childHitTestResult;
                     }
-                    else if (this._touchEnabled) {
-                        return this;
-                    }
-                    if (result == null) {
-                        result = childHitTestResult;
-                    }
+
+                    result = this;
                 }
             }
-            if(!result){
-                    return super.hitTest(x,y,ignoreTouchEnabled);
+            if(result) {
+                return result;
             }
-            return result;
+            else if (this._texture_to_render || this["graphics"]) {
+                return super.hitTest(x, y, ignoreTouchEnabled);
+            }
+            return null;
         }
 
 
