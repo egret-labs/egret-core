@@ -13,7 +13,8 @@ var projectConfig = require("../core/projectConfig.js");
 var upgradeConfig = {
     "1.0.3": upgradeTo_1_0_3,
     "1.0.4": upgradeTo_1_0_4,
-    "1.0.5": upgradeTo_1_0_5
+    "1.0.5": upgradeTo_1_0_5,
+    "1.0.6": upgradeTo_1_0_6
 };
 
 var currDir;
@@ -70,7 +71,6 @@ function upgradeTo_1_0_4() {
             "name": "dragonbones"
         }
     ];
-    projectConfig.init(currDir);
     projectConfig.data.egret_version = "1.0.4";
     projectConfig.data.native.path_ignore = [];
     projectConfig.save();
@@ -102,6 +102,12 @@ function upgradeTo_1_0_5() {
     projectConfig.init(currDir);
     projectConfig.data.egret_version = "1.0.5";
     projectConfig.data.native.path_ignore = [];
+    projectConfig.save();
+}
+
+function upgradeTo_1_0_6(){
+    projectConfig.init(currDir);
+    projectConfig.data.egret_version = "1.0.6";
     projectConfig.save();
 }
 
