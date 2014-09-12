@@ -918,7 +918,7 @@ class EXMLCompiler{
                 var groups:Array<any> = state.$stateGroups.split(",");
                 var len:number = groups.length;
                 for(var j:number=0;j<len;j++){
-                    var group:string = groups[i].trim();
+                    var group:string = groups[j].trim();
                     if(group){
                         if(stateNames.indexOf(group)==-1){
                             stateNames.push(group);

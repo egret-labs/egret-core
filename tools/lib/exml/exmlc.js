@@ -854,7 +854,7 @@ var EXMLCompiler = (function () {
                 var groups = state.$stateGroups.split(",");
                 var len = groups.length;
                 for (var j = 0; j < len; j++) {
-                    var group = groups[i].trim();
+                    var group = groups[j].trim();
                     if (group) {
                         if (stateNames.indexOf(group) == -1) {
                             stateNames.push(group);
