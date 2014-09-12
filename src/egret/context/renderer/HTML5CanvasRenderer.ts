@@ -143,9 +143,9 @@ module egret {
 
         public setupFont(textField:TextField):void {
             var ctx = this.canvasContext;
-            var font:string = textField.italic ? "italic " : "normal ";
-            font += textField.bold ? "bold " : "normal ";
-            font += textField.size + "px " + textField.fontFamily;
+            var font:string = textField._italic ? "italic " : "normal ";
+            font += textField._bold ? "bold " : "normal ";
+            font += textField._size + "px " + textField._fontFamily;
             ctx.font = font;
             ctx.textAlign = "left";
             ctx.textBaseline = "middle";
@@ -161,7 +161,7 @@ module egret {
         public drawText(textField:egret.TextField, text:string, x:number, y:number, maxWidth:number) {
             var textColor:string = textField._textColorString;
             var strokeColor:string = textField._strokeColorString;
-            var outline = textField.stroke;
+            var outline = textField._stroke;
             var renderContext = this.canvasContext;
             renderContext.fillStyle = textColor;
             renderContext.strokeStyle = strokeColor;
