@@ -139,6 +139,17 @@
       <xs:attributeGroup ref="egret.EventDispatcher"/>
     </xs:complexType>
   </xs:element>
+  <xs:attributeGroup name="egret.FullScreen">
+    <xs:attributeGroup ref="egret.ContentStrategy"/>
+  </xs:attributeGroup>
+  <xs:element name="FullScreen">
+    <xs:complexType>
+      <xs:choice minOccurs="0">
+        <xs:any/>
+      </xs:choice>
+      <xs:attributeGroup ref="egret.FullScreen"/>
+    </xs:complexType>
+  </xs:element>
   <xs:attributeGroup name="egret.HashObject">
     <xs:attribute name="id" type="xs:string"/>
   </xs:attributeGroup>
@@ -208,6 +219,20 @@
       <xs:attributeGroup ref="egret.PrimitiveShader"/>
     </xs:complexType>
   </xs:element>
+  <xs:attributeGroup name="egret.PromiseObject">
+    <xs:attribute name="onErrorFunc" type="xs:string"/>
+    <xs:attribute name="onErrorThisObject" type="xs:string"/>
+    <xs:attribute name="onSuccessFunc" type="xs:string"/>
+    <xs:attribute name="onSuccessThisObject" type="xs:string"/>
+  </xs:attributeGroup>
+  <xs:element name="PromiseObject">
+    <xs:complexType>
+      <xs:choice minOccurs="0">
+        <xs:any/>
+      </xs:choice>
+      <xs:attributeGroup ref="egret.PromiseObject"/>
+    </xs:complexType>
+  </xs:element>
   <xs:attributeGroup name="egret.Rectangle">
     <xs:attributeGroup ref="egret.HashObject"/>
     <xs:attribute name="bottom" type="xs:decimal"/>
@@ -258,7 +283,19 @@
       <xs:attributeGroup ref="egret.Shape"/>
     </xs:complexType>
   </xs:element>
+  <xs:attributeGroup name="egret.ShowAll">
+    <xs:attributeGroup ref="egret.ContentStrategy"/>
+  </xs:attributeGroup>
+  <xs:element name="ShowAll">
+    <xs:complexType>
+      <xs:choice minOccurs="0">
+        <xs:any/>
+      </xs:choice>
+      <xs:attributeGroup ref="egret.ShowAll"/>
+    </xs:complexType>
+  </xs:element>
   <xs:attributeGroup name="egret.Sound">
+    <xs:attribute name="path" type="xs:string"/>
     <xs:attribute name="type" type="xs:string"/>
   </xs:attributeGroup>
   <xs:element name="Sound">
@@ -345,6 +382,9 @@
   </xs:element>
   <xs:attributeGroup name="egret.TextInput">
     <xs:attributeGroup ref="egret.DisplayObject"/>
+    <xs:attribute name="size" type="xs:decimal"/>
+    <xs:attribute name="text" type="xs:string"/>
+    <xs:attribute name="textColor" type="xs:decimal"/>
   </xs:attributeGroup>
   <xs:element name="TextInput">
     <xs:complexType>
@@ -434,6 +474,7 @@
       <xs:element ref="TitleWindow"/>
       <xs:element ref="ToggleButton"/>
       <xs:element ref="ToggleButtonBase"/>
+      <xs:element ref="ToggleSwitch"/>
       <xs:element ref="TrackBase"/>
       <xs:element ref="Tree"/>
       <xs:element ref="UIAsset"/>
@@ -900,6 +941,8 @@
     <xs:attribute name="hostComponent" type="xs:string"/>
     <xs:attribute name="maxHeight" type="xs:decimal"/>
     <xs:attribute name="maxWidth" type="xs:decimal"/>
+    <xs:attribute name="measuredHeight" type="xs:decimal"/>
+    <xs:attribute name="measuredWidth" type="xs:decimal"/>
     <xs:attribute name="minHeight" type="xs:decimal"/>
     <xs:attribute name="minWidth" type="xs:decimal"/>
     <xs:attribute name="states" type="xs:string"/>
@@ -1142,6 +1185,17 @@
         <xs:any/>
       </xs:choice>
       <xs:attributeGroup ref="egret.gui.ToggleButtonBase"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:attributeGroup name="egret.gui.ToggleSwitch">
+    <xs:attributeGroup ref="egret.gui.ToggleButtonBase"/>
+  </xs:attributeGroup>
+  <xs:element name="ToggleSwitch">
+    <xs:complexType>
+      <xs:choice minOccurs="0">
+        <xs:any/>
+      </xs:choice>
+      <xs:attributeGroup ref="egret.gui.ToggleSwitch"/>
     </xs:complexType>
   </xs:element>
   <xs:attributeGroup name="egret.gui.TrackBase">
