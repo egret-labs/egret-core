@@ -52,7 +52,11 @@ function compile(exmlPath, srcPath) {
     var className = exmlPath.substring(srcPath.length, exmlPath.length - 5);
     className = className.split("/").join(".");
     var xmlString = file.read(exmlPath);
-    var xmlData = xml.parse(xmlString);
+    try  {
+        var xmlData = xml.parse(xmlString);
+    } catch (e) {
+        globals.exit(2002, exmlPath);
+    }
     if (!xmlData) {
         globals.exit(2002, exmlPath);
     }

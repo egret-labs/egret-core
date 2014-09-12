@@ -48,7 +48,12 @@ function compile(exmlPath:string,srcPath:string):void{
     var className:string = exmlPath.substring(srcPath.length,exmlPath.length-5);
     className = className.split("/").join(".");
     var xmlString = file.read(exmlPath);
-    var xmlData = xml.parse(xmlString);
+    try{
+        var xmlData = xml.parse(xmlString);
+    }
+    catch(e){
+        globals.exit(2002,exmlPath);
+    }
     if(!xmlData){
         globals.exit(2002,exmlPath);
     }
@@ -62,7 +67,6 @@ function compile(exmlPath:string,srcPath:string):void{
 
 
 exports.compile = compile;
-
 
 class EXMLCompiler{
     /**
