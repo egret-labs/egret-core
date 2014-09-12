@@ -100,6 +100,38 @@ module egret {
             target.tween_count = 0;
         }
 
+        /**
+         * 暂停某个元件的所有缓动
+         * @param target
+         */
+        public static pauseTweens(target:any):void {
+            if (!target.tween_count) {
+                return;
+            }
+            var tweens:egret.Tween[] = egret.Tween._tweens;
+            for (var i = tweens.length - 1; i >= 0; i--) {
+                if (tweens[i]._target == target) {
+                    tweens[i].paused = true;
+                }
+            }
+        }
+
+        /**
+         * 继续播放某个元件的所有缓动
+         * @param target
+         */
+        public static resumeTweens(target:any):void {
+            if (!target.tween_count) {
+                return;
+            }
+            var tweens:egret.Tween[] = egret.Tween._tweens;
+            for (var i = tweens.length - 1; i >= 0; i--) {
+                if (tweens[i]._target == target) {
+                    tweens[i].paused = false;
+                }
+            }
+        }
+
         private static tick(delta, paused = false):void {
             var tweens:Tween[] = Tween._tweens.concat();
             for (var i = tweens.length - 1; i >= 0; i--) {
