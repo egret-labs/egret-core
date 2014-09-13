@@ -48,7 +48,7 @@ function run(currDir, args, opts) {
 
         function (callback) {
             globals.log("正在编译项目...");
-            build.buildProject(callback, projectPath);
+            build.buildProject(callback, projectPath,runtime);
         },
 
         function (callback) {

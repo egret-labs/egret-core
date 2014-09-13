@@ -35,6 +35,14 @@ var newClassNameList;
 
 var thmList;
 
+var moduleReferenceInfo;
+
+var modeulClassToPath;
+/**
+ * 包括模块类的所有被文档类引用到的类路径列表
+ */
+var moduleReferenceList;
+
 var exmlConfig;
 /**
  * ts关键字
@@ -95,19 +103,31 @@ function getClassToPathInfo(srcPath){
     }
     return classNameToPath;
 }
-/**
- * 创建manifest列表
- */
-function create(srcPath,createAll){
-    srcPath = escapeSrcPath(srcPath);
-    var manifest = getManifest(srcPath);
-    manifest = sortFileList(manifest,srcPath,createAll);
-    return manifest;
+
+function getModuleReferenceInfo(fileList){
+    resetCache();
+    var length = fileList.length;
+    for (var i = 0; i < length; i++) {
+        var path = fileList[i];
+        readClassNamesFromTs(path);
+    }
+    for (i = 0; i < length; i++) {
+        path = fileList[i];
+        readReferenceFromTs(path);
+    }
+    var result = {referenceInfoList:referenceInfoList,classNameToPath:classNameToPath};
+    classInfoList = null;
+    classNameToPath = null;
+    classNameToModule = null;
+    pathInfoList = null;
+    pathToClassNames = null;
+    referenceInfoList = null;
+    newClassNameList = null;
+    thmList = null;
+    return result;
 }
-/**
- * 获取manifest列表，并读取所有的类名
- */
-function getManifest(srcPath){
+
+function resetCache(){
     classInfoList = {};
     classNameToPath = {};
     classNameToModule = {};
@@ -116,6 +136,38 @@ function getManifest(srcPath){
     referenceInfoList = {};
     newClassNameList = [];
     thmList = [];
+    moduleReferenceInfo = null;
+    modeulClassToPath = null;
+    moduleReferenceList = null;
+}
+
+function getModuleReferenceList(referenceInfo){
+    return moduleReferenceList;
+}
+
+
+/**
+ * 创建manifest列表
+ */
+function create(srcPath,createAll,referenceInfo){
+    srcPath = escapeSrcPath(srcPath);
+    var manifest = getManifest(srcPath);
+    if(referenceInfo){
+        moduleReferenceInfo = referenceInfo.referenceInfoList;
+        modeulClassToPath = referenceInfo.classNameToPath;
+    }
+    manifest = sortFileList(manifest,srcPath);
+    if(!createAll){
+        filterFileList(manifest,srcPath);
+    }
+    return manifest;
+}
+
+/**
+ * 获取manifest列表，并读取所有的类名
+ */
+function getManifest(srcPath){
+    resetCache();
     var manifest = file.searchByFunction(srcPath,filterFunc);
     var exmlList = [];
     for(var i=manifest.length-1;i>=0;i--){
@@ -167,7 +219,7 @@ function filterFunc(item){
 /**
  * 按照引用关系排序指定的文件列表
  */
-function sortFileList(list,srcPath,createAll){
+function sortFileList(list,srcPath){
 
     var length = list.length;
     for (var i = 0; i < length; i++) {
@@ -233,31 +285,32 @@ function sortFileList(list,srcPath,createAll){
         gameList = list.concat(gameList);
     }
 
-    if(!createAll){
-        //删除文档类没有引用过的类名
-        var documentClass = globals.getDocumentClass(srcPath.substring(0,srcPath.length-4));
-        var docPath = classNameToPath[documentClass];
-        if(docPath){
-            var referenceList = [docPath];
-            getReferenceList(docPath,referenceList);
-            var thmClassList = readTHMClassList(file.joinPath(srcPath,".."));
-            var length = thmClassList.length;
-            for(var i=0;i<length;i++){
-                var thmPath = thmClassList[i];
-                if(referenceList.indexOf(thmPath)==-1){
-                    referenceList.push(thmPath);
-                    getReferenceList(thmPath,referenceList);
-                }
+    return gameList;
+}
+
+function filterFileList(gameList,srcPath){
+    var documentClass = globals.getDocumentClass(srcPath.substring(0,srcPath.length-4));
+    var docPath = classNameToPath[documentClass];
+    if(docPath) {
+        var documentList = readTHMClassList(file.joinPath(srcPath, ".."));
+        documentList.push(docPath);
+        var referenceList = [];
+        var length = documentList.length;
+        for(var i=0;i<length;i++){
+            var docPath = documentList[i];
+            if(referenceList.indexOf(docPath)==-1){
+                referenceList.push(docPath);
+                getReferenceList(docPath,referenceList);
             }
-            for(var i=gameList.length-1;i>=0;i--){
-                var path = gameList[i];
-                if(referenceList.indexOf(path)==-1){
-                    gameList.splice(i,1);
-                }
+        }
+        moduleReferenceList = referenceList;
+        for(var i=gameList.length-1;i>=0;i--){
+            var path = gameList[i];
+            if(referenceList.indexOf(path)==-1){
+                gameList.splice(i,1);
             }
         }
     }
-
     return gameList;
 }
 
@@ -318,6 +371,9 @@ function thmFilterFunc(item){
 
 function getReferenceList(path,result){
     var list = referenceInfoList[path];
+    if(!list&&moduleReferenceInfo){
+        list = moduleReferenceInfo[path];
+    }
     if(list){
         var length = list.length;
         for(var i=0;i<length;i++){
@@ -434,6 +490,11 @@ function readReferenceFromExml(path){
         return;
     }
     var list = [];
+    if(modeulClassToPath){
+        list.push(modeulClassToPath["egret.gui.AddItems"]);
+        list.push(modeulClassToPath["egret.gui.SetProperty"]);
+        list.push(modeulClassToPath["egret.gui.State"]);
+    }
     readReferenceFromNode(exml,list);
     referenceInfoList[path] = list;
 }
@@ -446,6 +507,9 @@ function readReferenceFromNode(node,list){
     }
     var className = getClassNameById(node.localName,node.namespace);
     var path = classNameToPath[className];
+    if(!path&&modeulClassToPath){
+        path = modeulClassToPath[className];
+    }
     if(path&&list.indexOf(path)==-1){
         list.push(path);
     }
@@ -454,6 +518,9 @@ function readReferenceFromNode(node,list){
         if(key.charAt(0)=="$"){
             var value = node[key];
             path = classNameToPath[value];
+            if(!path&&modeulClassToPath){
+                path = modeulClassToPath[className];
+            }
             if(path&&list.indexOf(path)==-1){
                 list.push(path);
             }
@@ -518,6 +585,14 @@ function readReferenceFromTs(path){
     }
 
     var list = [];
+    checkAllClassName(classNameToPath,path,list,moduleList,text,orgText);
+    if(modeulClassToPath){
+        checkAllClassName(modeulClassToPath,path,list,moduleList,text,orgText);
+    }
+    referenceInfoList[path] = list;
+}
+
+function checkAllClassName(classNameToPath,path,list,moduleList,text,orgText){
     for(var className in classNameToPath){
         if(CodeUtil.containsVariable(className,orgText)){
             var p = classNameToPath[className];
@@ -548,7 +623,6 @@ function readReferenceFromTs(path){
             }
         }
     }
-    referenceInfoList[path] = list;
 }
 
 /**
@@ -1025,5 +1099,7 @@ function help_example() {
 exports.run = run;
 exports.create = create;
 exports.getClassToPathInfo = getClassToPathInfo;
+exports.getModuleReferenceInfo = getModuleReferenceInfo;
+exports.getModuleReferenceList = getModuleReferenceList;
 exports.help_title = help_title;
 exports.help_example = help_example;
