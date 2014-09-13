@@ -51,6 +51,10 @@ module egret {
         }
 
         public set text(value:string) {
+            this._setText(value);
+        }
+
+        public _setText(value:string):void {
             if (this._text != value) {
                 this._setTextDirty();
                 this._text = value;
@@ -68,6 +72,10 @@ module egret {
         }
 
         public set fontFamily(value:string) {
+            this._setFontFamily(value);
+        }
+
+        public _setFontFamily(value:string):void {
             if (this._fontFamily != value) {
                 this._setTextDirty();
                 this._fontFamily = value;
@@ -85,6 +93,10 @@ module egret {
         }
 
         public set size(value:number) {
+            this._setSize(value);
+        }
+
+        public _setSize(value:number):void {
             if (this._size != value) {
                 this._setTextDirty();
                 this._size = value;
@@ -102,6 +114,10 @@ module egret {
         }
 
         public set italic(value:boolean) {
+            this._setItalic(value);
+        }
+
+        public _setItalic(value:boolean):void {
             if (this._italic != value) {
                 this._setTextDirty();
                 this._italic = value;
@@ -119,6 +135,10 @@ module egret {
         }
 
         public set bold(value:boolean) {
+            this._setBold(value);
+        }
+
+        public _setBold(value:boolean):void {
             if (this._bold != value) {
                 this._setTextDirty();
                 this._bold = value;
@@ -137,6 +157,10 @@ module egret {
         }
 
         public set textColor(value:number) {
+            this._setTextColor(value);
+        }
+
+        public _setTextColor(value:number):void {
             if (this._textColor != value) {
                 this._setTextDirty();
                 this._textColor = value;
@@ -156,6 +180,10 @@ module egret {
         }
 
         public set strokeColor(value:number) {
+            this._setStrokeColor(value);
+        }
+
+        public _setStrokeColor(value:number):void {
             if (this._strokeColor != value) {
                 this._setTextDirty();
                 this._strokeColor = value;
@@ -174,6 +202,10 @@ module egret {
         }
 
         public set stroke(value:number) {
+            this._setStroke(value);
+        }
+
+        public _setStroke(value:number):void {
             if (this._stroke != value) {
                 this._setTextDirty();
                 this._stroke = value;
@@ -191,6 +223,10 @@ module egret {
         }
 
         public set textAlign(value:string) {
+            this._setTextAlign(value);
+        }
+
+        public _setTextAlign(value:string):void {
             if (this._textAlign != value) {
                 this._setTextDirty();
                 this._textAlign = value;
@@ -208,6 +244,10 @@ module egret {
         }
 
         public set verticalAlign(value:string) {
+            this._setVerticalAlign(value);
+        }
+
+        public _setVerticalAlign(value:string):void {
             if (this._verticalAlign != value) {
                 this._setTextDirty();
                 this._verticalAlign = value;
@@ -230,6 +270,10 @@ module egret {
         }
 
         public set lineSpacing(value:number) {
+            this._setLineSpacing(value);
+        }
+
+        public _setLineSpacing(value:number):void {
             if (this._lineSpacing != value) {
                 this._setTextDirty();
                 this._lineSpacing = value;
