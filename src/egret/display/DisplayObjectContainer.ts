@@ -302,7 +302,7 @@ module egret {
          * 从 DisplayObjectContainer 实例的子级列表中删除所有 child DisplayObject 实例。
 		 * @method egret.DisplayObjectContainer#removeChildren
          */
-        public removeChildren() {
+        public removeChildren():void {
             var locChildren = this._children;
             for(var i:number=locChildren.length-1;i>=0;i--)
             {
@@ -432,7 +432,7 @@ module egret {
         }
 
 
-        public _onAddToStage() {
+        public _onAddToStage():void {
             super._onAddToStage();
             var length = this._children.length;
             for (var i = 0; i < length; i++) {
@@ -441,7 +441,7 @@ module egret {
             }
         }
 
-        public _onRemoveFromStage() {
+        public _onRemoveFromStage():void {
             super._onRemoveFromStage();
             var length = this._children.length;
             for (var i = 0; i < length; i++) {
