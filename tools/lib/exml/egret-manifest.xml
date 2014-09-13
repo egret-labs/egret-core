@@ -41,6 +41,7 @@
   <component id="TileLayout" super="egret.gui.LayoutBase" show="false" module="egret.gui"/>
   <component id="TitleWindow" super="egret.gui.Panel" show="true" module="egret.gui"/>
   <component id="ToggleButton" super="egret.gui.ToggleButtonBase" show="true" module="egret.gui"/>
+  <component id="ToggleSwitch" super="egret.gui.ToggleButtonBase" show="true" module="egret.gui"/>
   <component id="ToggleButtonBase" super="egret.gui.ButtonBase" state="up,over,down,disabled,upAndSelected,overAndSelected,downAndSelected,disabledAndSelected" show="false" module="egret.gui"/>
   <component id="TrackBase" super="egret.gui.Range" show="false" module="egret.gui"/>
   <component id="Tree" super="egret.gui.List" show="true" module="egret.gui"/>

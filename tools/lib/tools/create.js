@@ -22,12 +22,14 @@ function run(currDir, args, opts) {
         globals.exit(1002);
     }
     var runtime = param.getOption(opts, "--runtime", ["html5", "native"]);
+    var type = param.getOption(opts, "--type", ["core", "gui"]);
     var egretSourceList = [];
     async.series([
 
         function (callback) {
             globals.log("正在创建新项目文件夹...");
-            file.copy(path.join(param.getEgretPath(), "tools/templates/game"),
+            var templatesPath = type=="gui"?"tools/templates/gui":"tools/templates/game";
+            file.copy(path.join(param.getEgretPath(), templatesPath),
                 projectPath);
             if (process.platform != "win32") {
                 var list = file.search(projectPath, "bat");
@@ -64,7 +66,14 @@ function help_title() {
 
 
 function help_example() {
-    return "egret create [project_name] [--runtime html5|native]";
+    var result = "\n";
+    result += "    egret create [project_name] [--type core|gui] [--runtime html5|native]\n";
+    result += "描述:\n";
+    result += "    " + help_title();
+    result += "参数说明:\n";
+    result += "    --type    要创建的项目类型 core或gui，默认值为core\n";
+    result += "    --runtime    设置构建方式为 html5 或者是 native方式，默认值为html5";
+    return result;
 }
 
 exports.run = run;

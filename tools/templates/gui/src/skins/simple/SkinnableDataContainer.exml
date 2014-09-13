@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<e:Skin xmlns:e="http://ns.egret-labs.org/egret" xmlns:w="http://ns.egret-labs.org/wing">
+    <w:HostComponent name="egret.gui.SkinnableDataContainer"/>
+    <e:states>
+        <e:State name="normal"/>
+        <e:State name="disabled"/>
+    </e:states>
+    <e:DataGroup id="dataGroup" itemRenderer="egret.gui.ItemRenderer">
+        <e:layout>
+            <e:VerticalLayout gap="0" horizontalAlign="contentJustify"/>
+        </e:layout>
+    </e:DataGroup>
+</e:Skin>

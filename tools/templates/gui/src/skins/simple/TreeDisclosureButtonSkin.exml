@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<e:Skin xmlns:e="http://ns.egret-labs.org/egret" xmlns:w="http://ns.egret-labs.org/wing"
+        minHeight="22">
+    <w:HostComponent name="egret.gui.ToggleButton" />
+    <e:states>
+        <e:State name="up" />
+        <e:State name="down" />
+        <e:State name="disabled" />
+        <e:State name="upAndSelected" />
+        <e:State name="downAndSelected" />
+        <e:State name="disabledAndSelected" />
+    </e:states>
+    <e:UIAsset width="100%" height="100%" source="tree_btnup_png"
+               source.down="tree_btndown_png" source.disabled="tree_btndisabled_png"
+               source.downAndSelected="tree_btndownselect_png"
+               source.upAndSelected="tree_btnupselect_png"
+               source.disabledAndSelected="tree_btndisabledselect_png" />
+</e:Skin>

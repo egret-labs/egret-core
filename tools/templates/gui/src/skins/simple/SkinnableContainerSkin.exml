@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<e:Skin xmlns:e="http://ns.egret-labs.org/egret" xmlns:w="http://ns.egret-labs.org/wing"
+        minHeight="230" minWidth="470" maxWidth="710">
+    <w:HostComponent name="egret.gui.SkinnableContainer" />
+    <e:states>
+        <e:State name="normal"/>
+        <e:State name="disabled"/>
+    </e:states>
+    <e:Group width="100%" height="100%" id="contentGroup">
+    </e:Group>
+</e:Skin>

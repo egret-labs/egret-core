@@ -74,6 +74,10 @@
 		"implements":["egret.IEventDispatcher"],
 		"super":"egret.HashObject"
 	},
+	"egret.FullScreen":
+	{
+		"super":"egret.ContentStrategy"
+	},
 	"egret.HashObject":
 	{
 		"implements":["egret.IHashObject"]
@@ -108,6 +112,13 @@
 		"translationMatrix":"any",
 		"vertexSrc":"any"
 	},
+	"egret.PromiseObject":
+	{
+		"onErrorFunc":"Function",
+		"onErrorThisObject":"any",
+		"onSuccessFunc":"Function",
+		"onSuccessThisObject":"any"
+	},
 	"egret.Rectangle":
 	{
 		"bottom":"number",
@@ -130,8 +141,13 @@
 	{
 		"super":"egret.DisplayObject"
 	},
+	"egret.ShowAll":
+	{
+		"super":"egret.ContentStrategy"
+	},
 	"egret.Sound":
 	{
+		"path":"string",
 		"type":"string"
 	},
 	"egret.Sprite":
@@ -164,7 +180,10 @@
 	},
 	"egret.TextInput":
 	{
-		"super":"egret.DisplayObject"
+		"size":"number",
+		"super":"egret.DisplayObject",
+		"text":"string",
+		"textColor":"number"
 	},
 	"egret.Texture":
 	{
@@ -411,6 +430,8 @@
 		"implements":["egret.gui.IStateClient","egret.gui.ISkin","egret.gui.IContainer"],
 		"maxHeight":"number",
 		"maxWidth":"number",
+		"measuredHeight":"number",
+		"measuredWidth":"number",
 		"minHeight":"number",
 		"minWidth":"number",
 		"states":"Array",
@@ -420,7 +441,7 @@
 	"egret.gui.SkinBasicLayout":
 	{
 		"super":"egret.HashObject",
-		"target":"egret.gui.SkinnableComponent"
+		"target":"egret.gui.Skin"
 	},
 	"egret.gui.SkinnableComponent":
 	{
@@ -530,6 +551,10 @@
 	{
 		"selected":"boolean",
 		"super":"egret.gui.ButtonBase"
+	},
+	"egret.gui.ToggleSwitch":
+	{
+		"super":"egret.gui.ToggleButtonBase"
 	},
 	"egret.gui.TrackBase":
 	{

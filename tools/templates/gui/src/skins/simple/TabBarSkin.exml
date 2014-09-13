@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<e:Skin xmlns:e="http://ns.egret-labs.org/egret" xmlns:w="http://ns.egret-labs.org/wing"
+        minWidth="60" minHeight="20">
+    <w:HostComponent name="egret.gui.TabBar"/>
+    <e:states>
+        <e:State name="normal"/>
+        <e:State name="disabled"/>
+    </e:states>
+    <e:DataGroup id="dataGroup" width="100%" height="100%" top="90" bottom="0"
+                 itemRenderer="egret.gui.TabBarButton" itemRendererSkinName="skins.simple.TabBarButtonSkin" >
+        <e:layout>
+            <e:HorizontalLayout gap="-1" horizontalAlign="justify"
+                                verticalAlign="contentJustify" />
+        </e:layout>
+    </e:DataGroup>
+</e:Skin>

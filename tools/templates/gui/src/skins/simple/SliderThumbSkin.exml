@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<e:Skin xmlns:e="http://ns.egret-labs.org/egret" xmlns:w="http://ns.egret-labs.org/wing"
+        width="0" height="0">
+    <w:HostComponent name="egret.gui.Button" />
+    <e:states>
+        <e:State name="up" />
+        <e:State name="down" />
+        <e:State name="disabled" />
+    </e:states>
+    <e:UIAsset source="hslider_thumb_png" x="-9" y="-9" />
+</e:Skin>

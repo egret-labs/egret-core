@@ -66,6 +66,7 @@
         "components/Label.ts",
         "components/Rect.ts",
         "components/Button.ts",
+        "components/ToggleSwitch.ts",
         "components/ToggleButton.ts",
         "components/CheckBox.ts",
         "components/RadioButtonGroup.ts",
