@@ -399,6 +399,7 @@ function generateGameFileList(projectPath,runtime) {
         }
         if(all_module.length==0){
             var projectConfig = require("../core/projectConfig.js");
+            projectConfig.init(projectPath);
             var moduleList = projectConfig.getModule(runtime);
             moduleList.map(function (module) {
                 var moduleConfig = getModuleConfig(module, projectPath);

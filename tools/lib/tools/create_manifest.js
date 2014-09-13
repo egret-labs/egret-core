@@ -353,16 +353,17 @@ function readTHMClassList(projectPath){
  * 过滤函数
  */
 function thmFilterFunc(item){
-    var ext = file.getExtension(item).toLowerCase();
-    if(!ext){
+    if(file.isDirectory(item)){
         if(item==searchPath+"/bin-debug"||
             item==searchPath+"/libs"||
+            item==searchPath+"/release"||
             item==searchPath+"/src"||
             item==searchPath+"/launcher"){
             return false;
         }
         return true;
     }
+    var ext = file.getExtension(item).toLowerCase();
     if(ext=="thm"){
         return true;
     }
