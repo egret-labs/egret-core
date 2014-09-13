@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<e:Skin xmlns:e="http://ns.egret-labs.org/egret" xmlns:w="http://ns.egret-labs.org/wing"
+        minHeight="22">
+    <w:HostComponent name="egret.gui.TreeItemRenderer"/>
+    <e:states>
+        <e:State name="up"/>
+        <e:State name="down"/>
+        <e:State name="disabled"/>
+    </e:states>
+    <e:Group id="contentGroup" top="0" bottom="0">
+        <e:layout>
+            <e:HorizontalLayout verticalAlign="middle" gap="1" />
+        </e:layout>
+        <e:ToggleButton id="disclosureButton" verticalCenter="0" skinName="skins.simple.TreeDisclosureButtonSkin"/>
+        <e:UIAsset id="iconDisplay" width="24" height="24" />
+        <e:Label id="labelDisplay" textColor="0x707070" textAlign="center"
+                 verticalAlign="middle" maxDisplayedLines="1" left="5" right="5" top="3"
+                 bottom="3" fontFamily="Tahoma" />
+    </e:Group>
+
+</e:Skin>

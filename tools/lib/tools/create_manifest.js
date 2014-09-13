@@ -58,9 +58,10 @@ var W = "http://ns.egret-labs.org/wing";
  * @param opts
  */
 function run(currDir, args, opts) {
+    var createAll = opts["-all"];
     currDir = globals.joinEgretDir(currDir, args[0]);
     var srcPath = file.joinPath(currDir,"src/");
-    var gameList = create(srcPath);
+    var gameList = create(srcPath,createAll);
     var length = gameList.length;
     for (var i = 0; i < length; i++) {
         var path = gameList[i];
@@ -97,10 +98,10 @@ function getClassToPathInfo(srcPath){
 /**
  * 创建manifest列表
  */
-function create(srcPath){
+function create(srcPath,createAll){
     srcPath = escapeSrcPath(srcPath);
     var manifest = getManifest(srcPath);
-    manifest = sortFileList(manifest,srcPath);
+    manifest = sortFileList(manifest,srcPath,createAll);
     return manifest;
 }
 /**
@@ -166,7 +167,7 @@ function filterFunc(item){
 /**
  * 按照引用关系排序指定的文件列表
  */
-function sortFileList(list,srcPath){
+function sortFileList(list,srcPath,createAll){
 
     var length = list.length;
     for (var i = 0; i < length; i++) {
@@ -232,28 +233,31 @@ function sortFileList(list,srcPath){
         gameList = list.concat(gameList);
     }
 
-    //删除文档类没有引用过的类名
-    var documentClass = globals.getDocumentClass(srcPath.substring(0,srcPath.length-4));
-    var docPath = classNameToPath[documentClass];
-    if(docPath){
-        var referenceList = [docPath];
-        getReferenceList(docPath,referenceList);
-        var thmClassList = readTHMClassList(file.joinPath(srcPath,".."));
-        var length = thmClassList.length;
-        for(var i=0;i<length;i++){
-            var thmPath = thmClassList[i];
-            if(referenceList.indexOf(thmPath)==-1){
-                referenceList.push(thmPath);
-                getReferenceList(thmPath,referenceList);
+    if(!createAll){
+        //删除文档类没有引用过的类名
+        var documentClass = globals.getDocumentClass(srcPath.substring(0,srcPath.length-4));
+        var docPath = classNameToPath[documentClass];
+        if(docPath){
+            var referenceList = [docPath];
+            getReferenceList(docPath,referenceList);
+            var thmClassList = readTHMClassList(file.joinPath(srcPath,".."));
+            var length = thmClassList.length;
+            for(var i=0;i<length;i++){
+                var thmPath = thmClassList[i];
+                if(referenceList.indexOf(thmPath)==-1){
+                    referenceList.push(thmPath);
+                    getReferenceList(thmPath,referenceList);
+                }
             }
-        }
-        for(var i=gameList.length-1;i>=0;i--){
-            var path = gameList[i];
-            if(referenceList.indexOf(path)==-1){
-                gameList.splice(i,1);
+            for(var i=gameList.length-1;i>=0;i--){
+                var path = gameList[i];
+                if(referenceList.indexOf(path)==-1){
+                    gameList.splice(i,1);
+                }
             }
         }
     }
+
     return gameList;
 }
 
@@ -1009,7 +1013,13 @@ function help_title() {
 
 
 function help_example() {
-    return "egret create_manifest [project_name]";
+    var result = "\n";
+    result += "    egret create_manifest [project_name] -all\n";
+    result += "描述:\n";
+    result += "    " + help_title();
+    result += "参数说明:\n";
+    result += "    -all     生成所有文件的清单,若不指定则只生成文档类有引用到的类清单";
+    return result;
 }
 
 exports.run = run;

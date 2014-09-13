@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<e:Skin xmlns:e="http://ns.egret-labs.org/egret" xmlns:w="http://ns.egret-labs.org/wing">
+    <w:HostComponent name="egret.gui.RadioButton"/>
+    <e:states>
+        <e:State name="up" />
+        <e:State name="down" />
+        <e:State name="disabled" />
+        <e:State name="upAndSelected" />
+        <e:State name="downAndSelected" />
+        <e:State name="disabledAndSelected" />
+    </e:states>
+    <e:Group>
+        <e:layout>
+            <e:HorizontalLayout verticalAlign="middle" gap="5" />
+        </e:layout>
+        <e:Group>
+            <e:UIAsset width="24" height="24" fillMode="scale"
+                        source="radiobutton_unselect_normal_png"
+                       source.down="radiobutton_select_over_png"
+                       source.disabled="radiobutton_unselect_disabled_png"
+                       source.upAndSelected="radiobutton_select_normal_png"
+                       source.downAndSelected="radiobutton_unselect_over_png"
+                       source.disabledAndSelected="radiobutton_select_disabled_png" verticalCenter="1" />
+        </e:Group>
+        <e:Label id="labelDisplay" size="20" textColor="0x707070"
+                 textAlign="center" verticalAlign="middle" maxDisplayedLines="1"
+                 fontFamily="Tahoma" />
+    </e:Group>
+</e:Skin>

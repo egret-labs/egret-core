@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<e:Skin xmlns:e="http://ns.egret-labs.org/egret" xmlns:w="http://ns.egret-labs.org/wing"
+	height="60" minWidth="140">
+	<w:HostComponent name="egret.gui.TabBarButton" />
+    <e:states>
+        <e:State name="up" />
+        <e:State name="down" />
+        <e:State name="disabled" />
+        <e:State name="upAndSelected" stateGroups="selected"/>
+        <e:State name="downAndSelected"  stateGroups="selected"/>
+        <e:State name="disabledAndSelected"  stateGroups="selected"/>
+    </e:states>
+	<e:UIAsset width="100%" height="100%" source="button_normal_png" source.selected = "button_down_png"
+		source.down="button_down_png" source.disabled="button_disabled_png" />
+	<e:Label id="labelDisplay" size="20" verticalAlign="middle"
+		textAlign="center" fontFamily="Tahoma" textColor="0x111111"
+		textColor.down="0x222222" textColor.selected="0x222222" textColor.disabled="0xcccccc" left="10"
+		right="10" top="8" bottom="12" />
+</e:Skin>
