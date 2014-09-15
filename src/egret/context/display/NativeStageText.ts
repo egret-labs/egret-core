@@ -80,7 +80,7 @@ module egret {
          * @param height {number}
          */
         public _open(x:number, y:number, width:number = 160, height:number = 21):void {
-
+            egret_native.TextInputOp.setKeybordOpen(true);
         }
 
         /**

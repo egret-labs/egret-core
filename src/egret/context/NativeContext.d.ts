@@ -119,4 +119,13 @@ declare module egret_native {
 
         function removeTexture(filePath:string):void;
     }
+
+
+    module TextInputOp {
+
+        function setKeybordOpen(isOpen:boolean):void
+
+
+
+    }
 }
