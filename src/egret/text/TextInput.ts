@@ -38,7 +38,7 @@ module egret {
             this.addChild(this._text);
             this._text.size = 30;
 
-            this.stageText = new egret.StageText();
+            this.stageText = egret.StageText.create();
             var point = this.localToGlobal();
             this.stageText._open(point.x, point.y, this._explicitWidth, this._explicitHeight);
         }
