@@ -333,7 +333,7 @@ module egret_h5_graphics {
             },
             this,
             [thickness, _colorStr]
-        ))
+        ));
 
         if (typeof(this.lineX) === "undefined") {
             this.lineX = 0;
@@ -351,7 +351,7 @@ module egret_h5_graphics {
             },
             this,
             [x, y]
-        ))
+        ));
         this.lineX = x;
         this.lineY = y;
     }
@@ -362,11 +362,12 @@ module egret_h5_graphics {
             function (x, y, ax, ay) {
                 var rendererContext = <egret.HTML5CanvasRenderer>this.renderContext;
                 var canvasContext:CanvasRenderingContext2D = this.canvasContext;
-                canvasContext.quadraticCurveTo(rendererContext._transformTx + x, rendererContext._transformTy + y, ax, ay);
+                canvasContext.quadraticCurveTo(rendererContext._transformTx + x, rendererContext._transformTy + y,
+                        rendererContext._transformTx + ax, rendererContext._transformTy + ay);
             },
             this,
             [controlX, controlY, anchorX, anchorY]
-        ))
+        ));
         this.lineX = anchorX;
         this.lineY = anchorY;
     }
