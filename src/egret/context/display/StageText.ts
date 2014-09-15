@@ -33,7 +33,7 @@ module egret {
      * @classdesc
      * @extends egret.HashObject
      */
-    export class StageText extends HashObject {
+    export class StageText extends EventDispatcher {
 
         private div:any;
         private inputElement:HTMLInputElement;
@@ -89,6 +89,13 @@ module egret {
             var inputElement = document.createElement("input");
             inputElement.type = "text";
             inputElement.style.fontSize = this._size + "px";
+            inputElement.style.lineHeight = this._size + "px";
+            inputElement.style.textAlign = "left";
+            inputElement.style.fontFamily = "Arial";
+            inputElement.style.fontStyle = "normal";
+            inputElement.style.fontWeight = "normal";
+
+
             inputElement.style.color = "#FFFFFF";
             inputElement.style.border = "none";
             inputElement.style.background = "none";
@@ -100,6 +107,7 @@ module egret {
             div.position.x = x * scaleX;
             div.position.y = y * scaleY;
             div.style.width = width + "px";
+            div.style.display = "none";
             div.scale.x = scaleX;
             div.scale.y = scaleY;
             div.transforms();
@@ -107,32 +115,52 @@ module egret {
 
             div.appendChild(inputElement);
 
+            var stageDelegateDiv = this.getStageDelegateDiv();
+            stageDelegateDiv.appendChild(div);
+
             this.div = div;
             this.inputElement = inputElement;
 
         }
 
         private _addListeners():void {
-            this.inputElement.addEventListener("MSPointerDown", this.onHandler);
-            this.inputElement.addEventListener("MSPointerMove", this.onHandler);
-            this.inputElement.addEventListener("MSPointerUp", this.onHandler);
-            this.inputElement.addEventListener("touchstart", this.onHandler);
-            this.inputElement.addEventListener("touchmove", this.onHandler);
-            this.inputElement.addEventListener("touchend", this.onHandler);
-            this.inputElement.addEventListener("touchcancel", this.onHandler);
+//            this.addListener("MSPointerDown");
+//            this.addListener("MSPointerMove");
+//            this.addListener("MSPointerUp");
+//            this.addListener("touchstart");
+//            this.addListener("touchmove");
+//            this.addListener("touchend");
+//            this.addListener("touchcancel");
+
+            this.addListener("focus");
+            this.addListener("blur");
         }
 
         private _removeListeners():void {
-            this.inputElement.removeEventListener("MSPointerDown", this.onHandler);
-            this.inputElement.removeEventListener("MSPointerMove", this.onHandler);
-            this.inputElement.removeEventListener("MSPointerUp", this.onHandler);
-            this.inputElement.removeEventListener("touchstart", this.onHandler);
-            this.inputElement.removeEventListener("touchmove", this.onHandler);
-            this.inputElement.removeEventListener("touchend", this.onHandler);
-            this.inputElement.removeEventListener("touchcancel", this.onHandler);
+//            this.removeListener("MSPointerDown");
+//            this.removeListener("MSPointerMove");
+//            this.removeListener("MSPointerUp");
+//            this.removeListener("touchstart");
+//            this.removeListener("touchmove");
+//            this.removeListener("touchend");
+//            this.removeListener("touchcancel");
+
+            this.removeListener("blur");
+            this.removeListener("focus");
+        }
+
+        private addListener(type:string):void {
+            this.inputElement.addEventListener(type, this.onHandler.bind(this));
+        }
+
+        private removeListener(type:string):void {
+            this.inputElement.removeEventListener(type, this.onHandler.bind(this));
         }
 
         private onHandler(e):void {
+            if (e.type == "blur") {
+                this.dispatchEvent(new egret.Event("blur"));
+            }
             e["isScroll"] = true;
         }
 
@@ -142,6 +170,7 @@ module egret {
                 stageDelegateDiv = egret.Browser.getInstance().$new("div");
                 stageDelegateDiv.id = "StageDelegateDiv";
                 stageDelegateDiv.style["top"] = egret.StageDelegate.getInstance().getOffSetY() + "px";
+                stageDelegateDiv.style["pointerEvents"] = "none";
                 var container = document.getElementById(egret.StageDelegate.canvas_div_name);
                 container.appendChild(stageDelegateDiv);
                 stageDelegateDiv.transforms();
@@ -152,12 +181,15 @@ module egret {
         /**
          * @method egret.StageText#add
          */
-        public _add():void {
+        public _show():void {
             var div = this.div;
             if (div && !div.parentNode) {
                 var stageDelegateDiv = this.getStageDelegateDiv();
                 stageDelegateDiv.appendChild(div);
             }
+            div.style.display = "block";
+
+            this.inputElement.focus();
 
             this._addListeners();
         }
@@ -170,6 +202,13 @@ module egret {
             if (div && div.parentNode) {
                 div.parentNode.removeChild(div);
             }
+
+            this._removeListeners();
+        }
+
+        public _hide():void {
+            var div = this.div;
+            div.style.display = "none";
 
             this._removeListeners();
         }
@@ -199,6 +238,18 @@ module egret {
 
         public setTextColor(value:string):void {
             this.inputElement.style.color = value;
+        }
+
+        public setTextFontFamily(value:string):void {
+            this.inputElement.style.fontFamily = value;
+        }
+
+        public setWidth(value:number):void{
+            this.inputElement.style.width = value + "px";
+        }
+
+        public setHeight(value:number):void{
+            this.inputElement.style.height = value + "px";
         }
     }
 }

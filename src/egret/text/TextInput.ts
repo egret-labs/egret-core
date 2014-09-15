@@ -27,12 +27,17 @@
 
 
 module egret {
-    export class TextInput extends DisplayObject {
+    export class TextInput extends Sprite {
 
+        private _text:TextField;
         private stageText:egret.StageText;
 
         constructor() {
             super();
+            this._text = new egret.TextField();
+            this.addChild(this._text);
+            this._text.size = 30;
+
             this.stageText = new egret.StageText();
             var point = this.localToGlobal();
             this.stageText._open(point.x, point.y, this._explicitWidth, this._explicitHeight);
@@ -40,9 +45,61 @@ module egret {
 
         public _onAddToStage():void {
             super._onAddToStage();
-            this.stageText._add();
+
+            this.graphics.beginFill(0xffffff, 0);
+            this.graphics.drawRect(0, 0, this.width, this.height);
+            this.graphics.endFill();
+
+            this.touchEnabled = true;
+
+            this.addFocusListeners();
+        }
+
+        private addFocusListeners():void {
+            this.stageText.removeEventListener("blur", this.onBlurHandler, this);
+            egret.MainContext.instance.stage.removeEventListener(egret.TouchEvent.TOUCH_BEGIN, this.onBlurHandler, this);
+
             this.addEventListener(egret.TouchEvent.TOUCH_BEGIN, this.onMouseDownHandler, this);
         }
+
+        private addBlurListeners():void {
+            this.removeEventListener(egret.TouchEvent.TOUCH_BEGIN, this.onMouseDownHandler, this);
+
+            this.stageText.addEventListener("blur", this.onBlurHandler, this);
+            egret.MainContext.instance.stage.addEventListener(egret.TouchEvent.TOUCH_BEGIN, this.onBlurHandler, this);
+        }
+
+        private onBlurHandler(event):void {
+            this._text.visible = true;
+            this._text.text = this.stageText._getText();
+            this.stageText._hide();
+
+            this.addFocusListeners();
+        }
+
+        private onMouseDownHandler(event:TouchEvent) {
+            event.stopPropagation();
+            this.stageText._show();
+
+            this._text.visible = false;
+
+            this.addBlurListeners();
+        }
+
+        public _onRemoveFromStage():void {
+            super._onRemoveFromStage();
+
+            this.stageText._remove();
+
+            this.removeEventListener(egret.TouchEvent.TOUCH_BEGIN, this.onMouseDownHandler, this);
+            this.stageText.removeEventListener("blur", this.onBlurHandler, this);
+            egret.MainContext.instance.stage.removeEventListener(egret.TouchEvent.TOUCH_BEGIN, this.onBlurHandler, this);
+        }
+
+//        public hitTest(x, y, ignoreTouchEnabled:boolean = false):DisplayObject {
+//            //它不能被点击
+//            return null;
+//        }
 
         /**
          * @deprecated
@@ -50,6 +107,7 @@ module egret {
          */
         public setText(value:string):void {
             Logger.warning("TextInput.setText()已废弃，请使用TextInput.text设置");
+            this._text.text = value;
             this.stageText._setText(value);
         }
 
@@ -63,6 +121,7 @@ module egret {
         }
 
         public set text(value:string) {
+            this._text.text = value;
             this.stageText._setText(value);
         }
 
@@ -79,22 +138,9 @@ module egret {
         }
 
 
-        private onMouseDownHandler(event:TouchEvent) {
-
-        }
-
-        public _onRemoveFromStage() {
-            this.stageText._remove();
-        }
-
-        public _measureBounds():egret.Rectangle {
-            return egret.Rectangle.identity;
-        }
-
-        public hitTest(x, y, ignoreTouchEnabled:boolean = false):DisplayObject {
-            //它不能被点击
-            return null;
-        }
+//        public _measureBounds():egret.Rectangle {
+//            return egret.Rectangle.identity;
+//        }
 
         public _updateTransform():void {
             //todo 等待worldTransform的性能优化完成，合并这块代码
@@ -131,6 +177,7 @@ module egret {
         public set size(value:number) {
             if (this._size != value) {
                 this._size = value;
+                this._text.size = value;
                 this.stageText.setSize(this._size);
             }
         }
@@ -150,8 +197,44 @@ module egret {
             if (this._textColor != value) {
                 this._textColor = value;
                 this._textColorString = toColorString(value);
+                this._text.textColor = value;
                 this.stageText.setTextColor(this._textColorString);
             }
+        }
+
+        /**
+         * 字体
+         * @member {any} egret.TextField#fontFamily
+         */
+        public _fontFamily = "Arial";
+
+        public get fontFamily():string {
+            return this._fontFamily;
+        }
+
+        public set fontFamily(value:string) {
+            this._setFontFamily(value);
+        }
+
+        public _setFontFamily(value:string):void {
+            if (this._fontFamily != value) {
+                this._fontFamily = value;
+                this.stageText.setTextFontFamily(value);
+            }
+        }
+
+        public _setWidth(value:number):void {
+            this._text.width = value;
+            this.stageText.setWidth(value);
+
+            super._setWidth(value);
+        }
+
+        public _setHeight(value:number):void {
+            this._text.height = value;
+            this.stageText.setHeight(value);
+
+            super._setHeight(value);
         }
     }
 }
