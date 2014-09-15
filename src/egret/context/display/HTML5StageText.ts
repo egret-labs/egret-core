@@ -39,16 +39,19 @@ module egret {
         private inputElement:HTMLInputElement;
         private _size:number = 30;
 
+        private _call;
         constructor() {
             super();
         }
 
+        private _isShow:boolean = true;
+        private _text:string = "";
         /**
          * @method egret.StageText#getText
          * @returns {string}
          */
         public _getText():string {
-            return this.inputElement.value;
+            return this._isShow ? this.inputElement.value : this._text;
         }
 
         /**
@@ -56,7 +59,7 @@ module egret {
          * @param value {string}
          */
         public _setText(value:string):void {
-            this.inputElement.value = value;
+            this._isShow ? this.inputElement.value = value : this._text = value
         }
 
         /**
@@ -95,19 +98,18 @@ module egret {
             inputElement.style.fontStyle = "normal";
             inputElement.style.fontWeight = "normal";
 
-
             inputElement.style.color = "#FFFFFF";
             inputElement.style.border = "none";
             inputElement.style.background = "none";
             inputElement.style.width = width + "px";
             inputElement.style.padding = "0";
             inputElement.style.outline = "medium";
+            inputElement.blur();
 
             var div = egret.Browser.getInstance().$new("div");
             div.position.x = x * scaleX;
             div.position.y = y * scaleY;
             div.style.width = width + "px";
-            div.style.display = "none";
             div.scale.x = scaleX;
             div.scale.y = scaleY;
             div.transforms();
@@ -121,45 +123,57 @@ module egret {
             this.div = div;
             this.inputElement = inputElement;
 
+            if (div && !div.parentNode) {
+                var stageDelegateDiv = this.getStageDelegateDiv();
+                stageDelegateDiv.appendChild(div);
+            }
+            div.style.display = "block";
+
+            this._call = this.onHandler.bind(this);
         }
 
         private _addListeners():void {
-//            this.addListener("MSPointerDown");
-//            this.addListener("MSPointerMove");
-//            this.addListener("MSPointerUp");
-//            this.addListener("touchstart");
-//            this.addListener("touchmove");
-//            this.addListener("touchend");
-//            this.addListener("touchcancel");
+            this.addListener("MSPointerDown");
+            this.addListener("MSPointerMove");
+            this.addListener("MSPointerUp");
+            this.addListener("touchstart");
+            this.addListener("touchmove");
+            this.addListener("touchend");
+            this.addListener("touchcancel");
 
             this.addListener("focus");
             this.addListener("blur");
         }
 
         private _removeListeners():void {
-//            this.removeListener("MSPointerDown");
-//            this.removeListener("MSPointerMove");
-//            this.removeListener("MSPointerUp");
-//            this.removeListener("touchstart");
-//            this.removeListener("touchmove");
-//            this.removeListener("touchend");
-//            this.removeListener("touchcancel");
+            this.removeListener("MSPointerDown");
+            this.removeListener("MSPointerMove");
+            this.removeListener("MSPointerUp");
+            this.removeListener("touchstart");
+            this.removeListener("touchmove");
+            this.removeListener("touchend");
+            this.removeListener("touchcancel");
 
             this.removeListener("blur");
             this.removeListener("focus");
         }
 
         private addListener(type:string):void {
-            this.inputElement.addEventListener(type, this.onHandler.bind(this));
+            this.inputElement.addEventListener(type, this._call);
         }
 
         private removeListener(type:string):void {
-            this.inputElement.removeEventListener(type, this.onHandler.bind(this));
+            this.inputElement.removeEventListener(type, this._call);
         }
 
+        private _isFocus:boolean = true;
         private onHandler(e):void {
             if (e.type == "blur") {
                 this.dispatchEvent(new egret.Event("blur"));
+                this._isFocus = false;
+            }
+            else if (e.type == "focus") {
+                this._isFocus = true;
             }
             e["isScroll"] = true;
         }
@@ -170,7 +184,6 @@ module egret {
                 stageDelegateDiv = egret.Browser.getInstance().$new("div");
                 stageDelegateDiv.id = "StageDelegateDiv";
                 stageDelegateDiv.style["top"] = egret.StageDelegate.getInstance().getOffSetY() + "px";
-                stageDelegateDiv.style["pointerEvents"] = "none";
                 var container = document.getElementById(egret.StageDelegate.canvas_div_name);
                 container.appendChild(stageDelegateDiv);
                 stageDelegateDiv.transforms();
@@ -178,20 +191,38 @@ module egret {
             return stageDelegateDiv;
         }
 
+        private _setShow:boolean = false;
         /**
          * @method egret.StageText#add
          */
         public _show():void {
-            var div = this.div;
-            if (div && !div.parentNode) {
-                var stageDelegateDiv = this.getStageDelegateDiv();
-                stageDelegateDiv.appendChild(div);
-            }
-            div.style.display = "block";
-
-            this.inputElement.focus();
-
+            this._setShow = true;
             this._addListeners();
+        }
+
+        public _hide():void {
+            this._setShow = false;
+
+            this._removeListeners();
+        }
+
+        public _draw():void {
+            if (this._setShow) {
+                if (!this._isShow) {
+                    this._isShow = true;
+                    this.inputElement.value = this._text;
+                    this.inputElement.focus();
+                }
+            } else {
+                if (this._isFocus) {
+                    this.inputElement.blur();
+                }
+                if (this._isShow) {
+                    this._isShow = false;
+                    this._text = this.inputElement.value;
+                    this.inputElement.value = "";
+                }
+            }
         }
 
         /**
@@ -202,13 +233,6 @@ module egret {
             if (div && div.parentNode) {
                 div.parentNode.removeChild(div);
             }
-
-            this._removeListeners();
-        }
-
-        public _hide():void {
-            var div = this.div;
-            div.style.display = "none";
 
             this._removeListeners();
         }

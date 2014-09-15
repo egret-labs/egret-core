@@ -31,6 +31,7 @@ module egret {
 
         private _text:TextField;
         private stageText:egret.StageText;
+        private _isFocus:boolean = false;
 
         constructor() {
             super();
@@ -52,38 +53,28 @@ module egret {
 
             this.touchEnabled = true;
 
-            this.addFocusListeners();
-        }
-
-        private addFocusListeners():void {
-            this.stageText.removeEventListener("blur", this.onBlurHandler, this);
-            egret.MainContext.instance.stage.removeEventListener(egret.TouchEvent.TOUCH_BEGIN, this.onBlurHandler, this);
-
-            this.addEventListener(egret.TouchEvent.TOUCH_BEGIN, this.onMouseDownHandler, this);
-        }
-
-        private addBlurListeners():void {
-            this.removeEventListener(egret.TouchEvent.TOUCH_BEGIN, this.onMouseDownHandler, this);
-
             this.stageText.addEventListener("blur", this.onBlurHandler, this);
+            this.addEventListener(egret.TouchEvent.TOUCH_BEGIN, this.onMouseDownHandler, this);
             egret.MainContext.instance.stage.addEventListener(egret.TouchEvent.TOUCH_BEGIN, this.onBlurHandler, this);
         }
 
         private onBlurHandler(event):void {
-            this._text.visible = true;
-            this._text.text = this.stageText._getText();
-            this.stageText._hide();
-
-            this.addFocusListeners();
+            if (this._isFocus) {
+                this._isFocus = false;
+                this._text.visible = true;
+                this._text.text = this.stageText._getText();
+                this.stageText._hide();
+            }
         }
 
         private onMouseDownHandler(event:TouchEvent) {
             event.stopPropagation();
-            this.stageText._show();
+            if (!this._isFocus) {
+                this.stageText._show();
 
-            this._text.visible = false;
-
-            this.addBlurListeners();
+                this._text.visible = false;
+                this._isFocus = true;
+            }
         }
 
         public _onRemoveFromStage():void {
@@ -137,11 +128,6 @@ module egret {
             return this.stageText._getTextType();
         }
 
-
-//        public _measureBounds():egret.Rectangle {
-//            return egret.Rectangle.identity;
-//        }
-
         public _updateTransform():void {
             //todo 等待worldTransform的性能优化完成，合并这块代码
             var oldTransFormA = this._worldTransform.a;
@@ -162,6 +148,11 @@ module egret {
                 this.stageText.changePosition(point.x, point.y);
                 this.stageText.changeSize(this._explicitWidth, this._explicitHeight);
             }
+        }
+
+        public _draw(renderContext:RendererContext):void {
+            super._draw(renderContext);
+            this.stageText._draw();
         }
 
         /**

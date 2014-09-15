@@ -103,6 +103,10 @@ module egret {
 
         }
 
+        public _draw():void {
+
+        }
+
         public changePosition(x:number, y:number):void {
 
         }
