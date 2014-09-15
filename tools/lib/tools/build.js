@@ -31,7 +31,7 @@ function run(dir, args, opts) {
     }
     task.push(
         function (callback) {
-            buildProject(callback, currDir, keepGeneratedTypescript);
+            buildProject(callback, currDir, keepGeneratedTypescript,runtime);
         },
 
         function (callback) {
@@ -52,7 +52,7 @@ function run(dir, args, opts) {
     })
 }
 
-function buildProject(callback, currDir, keepGeneratedTypescript) {
+function buildProject(callback, currDir, keepGeneratedTypescript,runtime) {
     var document_class = globals.getDocumentClass(currDir);
     if (document_class) {
         replaceDocumentClass("index.html", document_class, currDir);
@@ -72,7 +72,7 @@ function buildProject(callback, currDir, keepGeneratedTypescript) {
         file.remove(exmlDtsPath);
     }
     var libs = file.search(libsPath, "d.ts");
-    var sourceList = compiler.generateGameFileList(currDir);
+    var sourceList = compiler.generateGameFileList(currDir,runtime);
     compiler.compile(callback,
         path.join(currDir),
         sourceList.concat(libs),

@@ -1,6 +1,7 @@
 {
     "name":"gui",
     "dependence":["core"],
+    "decouple":"true",
     "output":"core/extension/gui",
     "source":"src/extension/gui",
     "file_list":
