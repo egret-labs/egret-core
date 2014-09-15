@@ -124,7 +124,7 @@ module egret {
          * @param textField {TextField}
          */
         public setupFont(textField:TextField):void {
-            egret_native.Label.createLabel("/system/fonts/DroidSansFallback.ttf", textField.size, "");
+            egret_native.Label.createLabel("/system/fonts/DroidSansFallback.ttf", textField._size, "");
         }
 
         /**
@@ -148,7 +148,7 @@ module egret {
          */
         public drawText(textField:egret.TextField, text:string, x:number, y:number, maxWidth:number) {
             Profiler.getInstance().onDrawImage();
-            egret_native.Label.setTextColor(textField.textColor);
+            egret_native.Label.setTextColor(textField._textColor);
             egret_native.Label.drawText(text, x, y);
         }
 
