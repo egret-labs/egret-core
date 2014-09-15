@@ -133,9 +133,10 @@ function compile(callback, projectDir, sourceList, keepGeneratedTypescript) {
             sourcemap = sourcemap ? "--sourcemap " : "";
 
             var cmd = sourcemap + tsList.join(" ") + " -t ES5 --outDir " + "\"" + output + "\"";
-            file.save("tsc_config_temp.txt", cmd);
             var typeScriptCompiler = require("./egret_compiler.js");
-            typeScriptCompiler.compile(function (code) {
+            typeScriptCompiler.compile(onCompileComplete, cmd);
+
+            function onCompileComplete(code) {
                 if (code == 0) {
                     cleanTempFile();
                     callback();
@@ -143,7 +144,7 @@ function compile(callback, projectDir, sourceList, keepGeneratedTypescript) {
                 else {
                     callback(1303);
                 }
-            });
+            }
         }
 
 
@@ -360,8 +361,6 @@ function removeInterface(text) {
 }
 
 
-
-
 function compileModule(callback, module, projectDir) {
 
 
@@ -395,15 +394,13 @@ function compileModule(callback, module, projectDir) {
 
         function (callback) {
             var cmd = sourcemap + tsList.join(" ") + " -t ES5 --outDir " + "\"" + output + "\"";
-            file.save("tsc_config_temp.txt", cmd);//todo performance-optimize
-            typeScriptCompiler.compile(callback);
+            typeScriptCompiler.compile(callback, cmd);
         },
 
 
         function (callback) {
             var cmd = sourcemap + tsList.join(" ") + " -d -t ES5 --out " + "\"" + path.join(output, moduleConfig.name + ".d.ts") + "\"";
-            file.save("tsc_config_temp.txt", cmd);
-            typeScriptCompiler.compile(callback);
+            typeScriptCompiler.compile(callback, cmd);
         },
 
         function (callback) {

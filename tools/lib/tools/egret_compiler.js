@@ -3,10 +3,11 @@
  */
 
 
+var file = require("../core/file.js");
 
 
-
-function typeScriptCompiler(quitFunc) {
+function typeScriptCompiler(quitFunc,cmd) {
+    file.save("tsc_config_temp.txt", cmd);//todo performance-optimize
     var TypeScript = require('../core/typescript/tsc.js');
     TypeScript.IO.arguments = ["@tsc_config_temp.txt"];
     TypeScript.IO.quit = quitFunc;
