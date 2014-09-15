@@ -38,8 +38,17 @@ module egret {
      */
     export class NativeStageText extends StageText {
 
+        private tf:egret.TextField;
+        private container:egret.DisplayObjectContainer;
+
         constructor() {
             super();
+            this.tf = new egret.TextField();
+            var tf:egret.TextField = this.tf;
+            tf.textColor = 0;
+            tf.text = "";
+            tf.textAlign = egret.HorizontalAlign.LEFT;
+            this.container = new egret.DisplayObjectContainer();
         }
 
         /**
@@ -47,7 +56,7 @@ module egret {
          * @returns {string}
          */
         public _getText():string {
-            return "";
+            return this.tf.text;
         }
 
         /**
@@ -55,6 +64,7 @@ module egret {
          * @param value {string}
          */
         public _setText(value:string):void {
+            this.tf.text = value;
         }
 
         /**
@@ -91,48 +101,48 @@ module egret {
 
             egret_native.TextInputOp.setKeybordOpen(true);
 
-
+            var container:egret.DisplayObjectContainer = this.container;
             var stage:egret.Stage = egret.MainContext.instance.stage;
-            var container:egret.DisplayObjectContainer = new egret.DisplayObjectContainer();
             stage.addChild(container);
 
 
             var shape:egret.Shape = new egret.Shape();
-            shape.graphics.beginFill(0x000000,.7);
-            shape.graphics.drawRect(0,0,stage.stageWidth,stage.stageHeight);
+            shape.graphics.beginFill(0x000000, .7);
+            shape.graphics.drawRect(0, 0, stage.stageWidth, stage.stageHeight);
             shape.graphics.endFill();
             container.addChild(shape);
 
 
             var textInputBackground:egret.Shape = new egret.Shape();
-            textInputBackground.graphics.lineStyle(5,0xff0000,1);
-            textInputBackground.graphics.beginFill(0xffffff,1);
-            textInputBackground.graphics.drawRect(0,0,stage.stageWidth,100);
+            textInputBackground.graphics.lineStyle(8, 0xff0000, 1);
+            textInputBackground.graphics.beginFill(0xffffff, 1);
+            textInputBackground.graphics.drawRect(0, 0, stage.stageWidth, 60);
             textInputBackground.graphics.endFill();
             container.addChild(textInputBackground);
 
-
-            var tf:egret.TextField = new egret.TextField();
-            tf.text = "";
+            var tf:egret.TextField = this.tf;
+            tf.x = tf.y = 15;
             container.addChild(tf);
-            tf.textAlign = egret.HorizontalAlign.LEFT;
+            tf.width = stage.stageWidth;
 
-            egret_native.EGT_TextInput = function(appendText:string){
+            egret_native.EGT_TextInput = function (appendText:string) {
                 var text = tf.text;
                 text += appendText;
                 tf.text = text;
             }
 
-            egret_native.EGT_deleteBackward = function(){
+            egret_native.EGT_deleteBackward = function () {
                 var text = tf.text;
-                text = text.substr(0,text.length - 1);
+                text = text.substr(0, text.length - 1);
                 tf.text = text;
             }
 
+            var self = this;
 
             egret_native.EGT_keyboardDidHide = function () {
-                if (container && container.parent){
+                if (container && container.parent) {
                     container.parent.removeChild(container);
+                    self.dispatchEvent(new egret.Event("blur"));
                 }
 
             }
@@ -142,6 +152,10 @@ module egret {
          * @method egret.StageText#remove
          */
         public _remove():void {
+            var container = this.container;
+            if (container && container.parent) {
+                container.parent.removeChild(container);
+            }
         }
 
         public _hide():void {
@@ -162,15 +176,15 @@ module egret {
         public setTextFontFamily(value:string):void {
         }
 
-        public setWidth(value:number):void{
+        public setWidth(value:number):void {
         }
 
-        public setHeight(value:number):void{
+        public setHeight(value:number):void {
         }
     }
 }
 
 
-egret.StageText.create = function(){
+egret.StageText.create = function () {
     return new egret.NativeStageText();
 }

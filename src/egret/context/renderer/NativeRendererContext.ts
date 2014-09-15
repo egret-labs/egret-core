@@ -172,7 +172,7 @@ var egret_native_graphics;
 (function (egret_native_graphics) {
     function beginFill(color, alpha) {
         this.commandQueue.push(new Command(function (color, alpha) {
-            if (!alpha) {
+            if (!alpha && alpha != 0) {
                 alpha = 1;
             }
             egret_native.Graphics.beginFill(color, alpha)
