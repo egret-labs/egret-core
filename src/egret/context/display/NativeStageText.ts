@@ -80,13 +80,62 @@ module egret {
          * @param height {number}
          */
         public _open(x:number, y:number, width:number = 160, height:number = 21):void {
-            egret_native.TextInputOp.setKeybordOpen(true);
+
+
         }
 
         /**
          * @method egret.StageText#add
          */
         public _show():void {
+
+            egret_native.TextInputOp.setKeybordOpen(true);
+
+
+            var stage:egret.Stage = egret.MainContext.instance.stage;
+            var container:egret.DisplayObjectContainer = new egret.DisplayObjectContainer();
+            stage.addChild(container);
+
+
+            var shape:egret.Shape = new egret.Shape();
+            shape.graphics.beginFill(0x000000,.7);
+            shape.graphics.drawRect(0,0,stage.stageWidth,stage.stageHeight);
+            shape.graphics.endFill();
+            container.addChild(shape);
+
+
+            var textInputBackground:egret.Shape = new egret.Shape();
+            textInputBackground.graphics.lineStyle(5,0xff0000,1);
+            textInputBackground.graphics.beginFill(0xffffff,1);
+            textInputBackground.graphics.drawRect(0,0,stage.stageWidth,100);
+            textInputBackground.graphics.endFill();
+            container.addChild(textInputBackground);
+
+
+            var tf:egret.TextField = new egret.TextField();
+            tf.text = "";
+            container.addChild(tf);
+            tf.textAlign = egret.HorizontalAlign.LEFT;
+
+            egret_native.EGT_TextInput = function(appendText:string){
+                var text = tf.text;
+                text += appendText;
+                tf.text = text;
+            }
+
+            egret_native.EGT_deleteBackward = function(){
+                var text = tf.text;
+                text = text.substr(0,text.length - 1);
+                tf.text = text;
+            }
+
+
+            egret_native.EGT_keyboardDidHide = function () {
+                if (container && container.parent){
+                    container.parent.removeChild(container);
+                }
+
+            }
         }
 
         /**

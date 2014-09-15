@@ -89,6 +89,18 @@ declare module egret_native {
 
         function popStencil():void;
 
+
+        function lineStyle(thickness:number, color:number):void;
+
+        function lineTo(x:number, y:number):void;
+
+        function moveTo(x:number, y:number):void;
+
+        function beginFill(color:number, alpha:number):void;
+
+        function endFill():void;
+
+
     }
 
     module Label {
@@ -126,6 +138,12 @@ declare module egret_native {
         function setKeybordOpen(isOpen:boolean):void
 
 
-
     }
+
+    function EGT_TextInput(text:string):void
+
+
+    function EGT_deleteBackward():void;
+
+    function EGT_keyboardDidHide():void;
 }
