@@ -40,6 +40,7 @@ module egret {
 
         private tf:egret.TextField;
         private container:egret.DisplayObjectContainer;
+        private textType:string;
 
         constructor() {
             super();
@@ -76,6 +77,7 @@ module egret {
          * @param type {string}
          */
         public _setTextType(type:string):void {
+            this.textType = type;
         }
 
         /**
@@ -83,7 +85,7 @@ module egret {
          * @returns {string}
          */
         public _getTextType():string {
-            return "";
+            return this.textType;
         }
 
         /**
@@ -138,7 +140,17 @@ module egret {
             egret_native.EGT_TextInput = function (appendText:string) {
                 var text = self._getText();
                 text += appendText;
-                tf.text = text;
+                if (self.textType == "password"){
+                    var passwordStr = "";
+                    for (var i = 0 ; i < text.length ; i++){
+                        passwordStr += "*";
+                    }
+                    tf.text = passwordStr;
+                }
+                else{
+                    tf.text = text;
+                }
+
             }
 
             egret_native.EGT_deleteBackward = function () {
