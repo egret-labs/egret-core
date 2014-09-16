@@ -137,7 +137,11 @@ module egret {
             container.addChild(tf);
             tf.width = stageWidth;
 
+
+            var self = this;
+
             egret_native.EGT_TextInput = function (appendText:string) {
+                if (appendText == "\n") return;
                 var text = self._getText();
                 text += appendText;
                 if (self.textType == "password"){
@@ -159,7 +163,7 @@ module egret {
                 tf.text = text;
             }
 
-            var self = this;
+
 
             egret_native.EGT_keyboardDidHide = function () {
                 if (container && container.parent) {
@@ -167,6 +171,11 @@ module egret {
                     self.dispatchEvent(new egret.Event("blur"));
                 }
 
+            }
+
+
+            egret_native.EGT_getTextEditerContentText = function(){
+                return self._getText();
             }
         }
 
