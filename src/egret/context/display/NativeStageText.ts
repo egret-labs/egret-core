@@ -106,24 +106,30 @@ module egret {
             stage.addChild(container);
 
 
+            var stageWidth:number = stage.stageWidth;
+            var stageHeight:number = stage.stageHeight;
+
             var shape:egret.Shape = new egret.Shape();
             shape.graphics.beginFill(0x000000, .7);
-            shape.graphics.drawRect(0, 0, stage.stageWidth, stage.stageHeight);
+            shape.graphics.drawRect(0, 0, stageWidth, stageHeight);
             shape.graphics.endFill();
+            shape.width = stageWidth;
+            shape.height = stageHeight;
+            shape.touchEnabled = true;
             container.addChild(shape);
 
 
             var textInputBackground:egret.Shape = new egret.Shape();
             textInputBackground.graphics.lineStyle(8, 0xff0000, 1);
             textInputBackground.graphics.beginFill(0xffffff, 1);
-            textInputBackground.graphics.drawRect(0, 0, stage.stageWidth, 60);
+            textInputBackground.graphics.drawRect(4, 4, stageWidth - 8, 52);
             textInputBackground.graphics.endFill();
             container.addChild(textInputBackground);
 
             var tf:egret.TextField = this.tf;
             tf.x = tf.y = 15;
             container.addChild(tf);
-            tf.width = stage.stageWidth;
+            tf.width = stageWidth;
 
             egret_native.EGT_TextInput = function (appendText:string) {
                 var text = tf.text;
