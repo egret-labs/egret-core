@@ -56,7 +56,11 @@ module egret {
          * @returns {string}
          */
         public _getText():string {
-            return this.tf.text;
+            var text = this.tf.text;
+            if (!text){
+                text = "";
+            }
+            return text;
         }
 
         /**
@@ -132,13 +136,13 @@ module egret {
             tf.width = stageWidth;
 
             egret_native.EGT_TextInput = function (appendText:string) {
-                var text = tf.text;
+                var text = self._getText();
                 text += appendText;
                 tf.text = text;
             }
 
             egret_native.EGT_deleteBackward = function () {
-                var text = tf.text;
+                var text = self._getText();
                 text = text.substr(0, text.length - 1);
                 tf.text = text;
             }
