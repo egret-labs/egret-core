@@ -134,19 +134,15 @@ module egret {
         public _addListeners():void {
             if (window.navigator.msPointerEnabled) {
                 this.addListener("MSPointerDown");
-//                this.addListener("MSPointerMove");
                 this.addListener("MSPointerUp");
             }
             else if(MainContext.deviceType == MainContext.DEVICE_MOBILE){
                 this.addListener("touchstart");
-//                this.addListener("touchmove");
                 this.addListener("touchend");
                 this.addListener("touchcancel");
-
             }
             else if(MainContext.deviceType == MainContext.DEVICE_PC){
                 this.addListener("mousedown");
-//                this.addListener("mousemove");
                 this.addListener("mouseup");
             }
 
@@ -161,19 +157,16 @@ module egret {
         public _removeListeners():void {
             if (window.navigator.msPointerEnabled) {
                 this.removeListener("MSPointerDown");
-//                this.removeListener("MSPointerMove");
                 this.removeListener("MSPointerUp");
             }
             else if(MainContext.deviceType == MainContext.DEVICE_MOBILE){
                 this.removeListener("touchstart");
-//                this.removeListener("touchmove");
                 this.removeListener("touchend");
                 this.removeListener("touchcancel");
 
             }
             else if(MainContext.deviceType == MainContext.DEVICE_PC){
                 this.removeListener("mousedown");
-//                this.removeListener("mousemove");
                 this.removeListener("mouseup");
             }
             this.removeListener("blur");
@@ -191,12 +184,10 @@ module egret {
         private onHandler(e):void {
             e["isScroll"] = true;
             if (e.type == "blur") {//失去焦点
-                console.log(e.type);
                 this.dispatchEvent(new egret.Event("blur"));
 
                 this._closeInput();
             } else if (e.type == "focus") {
-                console.log(e.type);
                 if (this._canUse) {//可以点击
                     this._canUse = false;
                     this._openInput();
@@ -210,10 +201,8 @@ module egret {
                 }
             }
             else if (e.type == "touchstart" || e.type == "mousedown" || e.type == "MSPointerDown") {
-                console.log(e.type);
                 if (this._isShow) {//已经打开中 强制
                     e.stopPropagation();
-//                    this.dispatchEvent(new egret.Event("focus"));
                 }
             }
         }
@@ -235,7 +224,6 @@ module egret {
 
         private _openInput():void {
             if (!this._isShow) {
-                console.log("打开");
                 this._isShow = true;
                 this.inputElement.value = this._text;
             }
@@ -243,7 +231,6 @@ module egret {
 
         private _closeInput():void {
             if (this._isShow) {
-                console.log("关闭");
                 this._isShow = false;
                 this._text = this.inputElement.value;
                 this.inputElement.value = "";

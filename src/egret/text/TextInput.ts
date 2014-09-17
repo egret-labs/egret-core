@@ -62,21 +62,16 @@ module egret {
         }
 
         private onFocusHandler(event):void {
-            console.log("onFocusHandler");
-
             this.hideText();
         }
 
         //显示文本
         private onBlurHandler(event):void {
-            console.log("onBlurHandler");
-
             this.showText();
         }
 
         //点中文本
         private onMouseDownHandler(event:TouchEvent) {
-            console.log("onMouseDownHandler");
             event.stopPropagation();
 
             this.stageText._show();
@@ -84,8 +79,6 @@ module egret {
 
         //未点中文本
         private onStageDownHandler(event:TouchEvent) {
-            console.log("onStageDownHandler");
-
             this.stageText._hide();
 
             this.showText();
@@ -95,7 +88,16 @@ module egret {
             if (this._isFocus) {
                 this._isFocus = false;
                 this._text.visible = true;
-                this._text.text = this.stageText._getText();
+
+                if (this.getTextType() == "password") {
+                    this._text.text = "";
+                    for (var i:number = 0, num = this.stageText._getText().length; i < num; i++) {
+                        this._text.text += "*";
+                    }
+                }
+                else {
+                    this._text.text = this.stageText._getText();
+                }
             }
         }
 
