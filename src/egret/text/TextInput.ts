@@ -53,25 +53,54 @@ module egret {
 
             this.touchEnabled = true;
 
+            this.stageText._addListeners();
+
             this.stageText.addEventListener("blur", this.onBlurHandler, this);
+            this.stageText.addEventListener("focus", this.onFocusHandler, this);
             this.addEventListener(egret.TouchEvent.TOUCH_BEGIN, this.onMouseDownHandler, this);
-            egret.MainContext.instance.stage.addEventListener(egret.TouchEvent.TOUCH_BEGIN, this.onBlurHandler, this);
+            egret.MainContext.instance.stage.addEventListener(egret.TouchEvent.TOUCH_BEGIN, this.onStageDownHandler, this);
         }
 
+        private onFocusHandler(event):void {
+            console.log("onFocusHandler");
+
+            this.hideText();
+        }
+
+        //显示文本
         private onBlurHandler(event):void {
+            console.log("onBlurHandler");
+
+            this.showText();
+        }
+
+        //点中文本
+        private onMouseDownHandler(event:TouchEvent) {
+            console.log("onMouseDownHandler");
+            event.stopPropagation();
+
+            this.stageText._show();
+        }
+
+        //未点中文本
+        private onStageDownHandler(event:TouchEvent) {
+            console.log("onStageDownHandler");
+
+            this.stageText._hide();
+
+            this.showText();
+        }
+
+        private showText():void {
             if (this._isFocus) {
                 this._isFocus = false;
                 this._text.visible = true;
                 this._text.text = this.stageText._getText();
-                this.stageText._hide();
             }
         }
 
-        private onMouseDownHandler(event:TouchEvent) {
-            event.stopPropagation();
+        private hideText():void {
             if (!this._isFocus) {
-                this.stageText._show();
-
                 this._text.visible = false;
                 this._isFocus = true;
             }
@@ -81,16 +110,13 @@ module egret {
             super._onRemoveFromStage();
 
             this.stageText._remove();
+            this.stageText._removeListeners();
 
-            this.removeEventListener(egret.TouchEvent.TOUCH_BEGIN, this.onMouseDownHandler, this);
             this.stageText.removeEventListener("blur", this.onBlurHandler, this);
-            egret.MainContext.instance.stage.removeEventListener(egret.TouchEvent.TOUCH_BEGIN, this.onBlurHandler, this);
+            this.stageText.removeEventListener("focus", this.onFocusHandler, this);
+            this.removeEventListener(egret.TouchEvent.TOUCH_BEGIN, this.onMouseDownHandler, this);
+            egret.MainContext.instance.stage.removeEventListener(egret.TouchEvent.TOUCH_BEGIN, this.onStageDownHandler, this);
         }
-
-//        public hitTest(x, y, ignoreTouchEnabled:boolean = false):DisplayObject {
-//            //它不能被点击
-//            return null;
-//        }
 
         /**
          * @deprecated

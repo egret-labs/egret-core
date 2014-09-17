@@ -107,6 +107,14 @@ module egret {
 
         }
 
+        public _addListeners():void {
+
+        }
+
+        public _removeListeners():void {
+
+        }
+
         public changePosition(x:number, y:number):void {
 
         }
