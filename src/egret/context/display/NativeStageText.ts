@@ -40,6 +40,7 @@ module egret {
 
         private tf:egret.TextField;
         private container:egret.DisplayObjectContainer;
+        private textType:string;
 
         constructor() {
             super();
@@ -56,7 +57,11 @@ module egret {
          * @returns {string}
          */
         public _getText():string {
-            return this.tf.text;
+            var text = this.tf.text;
+            if (!text){
+                text = "";
+            }
+            return text;
         }
 
         /**
@@ -72,6 +77,7 @@ module egret {
          * @param type {string}
          */
         public _setTextType(type:string):void {
+            this.textType = type;
         }
 
         /**
@@ -79,7 +85,7 @@ module egret {
          * @returns {string}
          */
         public _getTextType():string {
-            return "";
+            return this.textType;
         }
 
         /**
@@ -131,19 +137,33 @@ module egret {
             container.addChild(tf);
             tf.width = stageWidth;
 
+
+            var self = this;
+
             egret_native.EGT_TextInput = function (appendText:string) {
-                var text = tf.text;
+                if (appendText == "\n") return;
+                var text = self._getText();
                 text += appendText;
-                tf.text = text;
+                if (self.textType == "password"){
+                    var passwordStr = "";
+                    for (var i = 0 ; i < text.length ; i++){
+                        passwordStr += "*";
+                    }
+                    tf.text = passwordStr;
+                }
+                else{
+                    tf.text = text;
+                }
+
             }
 
             egret_native.EGT_deleteBackward = function () {
-                var text = tf.text;
+                var text = self._getText();
                 text = text.substr(0, text.length - 1);
                 tf.text = text;
             }
 
-            var self = this;
+
 
             egret_native.EGT_keyboardDidHide = function () {
                 if (container && container.parent) {
@@ -151,6 +171,11 @@ module egret {
                     self.dispatchEvent(new egret.Event("blur"));
                 }
 
+            }
+
+
+            egret_native.EGT_getTextEditerContentText = function(){
+                return self._getText();
             }
         }
 
