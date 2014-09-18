@@ -366,8 +366,8 @@ function run(dir, args, opts) {
 
     //扫描json数据
     if (opts["-compressjson"]) {
-        var compress = require(path.join("..", "core", "compress_json.js"));
-        compress.compress(path.join(currDir, "release"));
+        var compress = require(path.join("..", "tools", "compress_json.js"));
+        compress.run(path.join(currDir, "release"), []);
     }
 }
 
