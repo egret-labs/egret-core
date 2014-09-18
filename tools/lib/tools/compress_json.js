@@ -72,7 +72,6 @@ var run = function (dir, args, opts) {
         currDir = path.resolve(args[0]);
     }
 
-    console.log(currDir);
     compress(currDir);
 }
 
