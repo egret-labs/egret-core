@@ -379,7 +379,7 @@ function getModuleConfig(module, projectDir) {
     return moduleConfig
 }
 
-function generateGameFileList(projectPath) {
+function generateGameFileList(projectPath,runtime) {
     var manifestPath = path.join(projectPath, "manifest.json");
     var srcPath = path.join(projectPath, "src/");
     var manifest;
@@ -387,7 +387,29 @@ function generateGameFileList(projectPath) {
         manifest = getManifestJson(manifestPath, srcPath);
     }
     else {
-        manifest = create_manifest.create(srcPath);
+        var referenceInfo;
+        var referencePath = file.joinPath(srcPath, "../libs/module_reference.json");
+        if(file.exists(referencePath)){
+            var text = file.read(referencePath);
+            try{
+                referenceInfo = JSON.parse(text);
+            }
+            catch (e){
+            }
+        }
+        if(all_module.length==0){
+            var projectConfig = require("../core/projectConfig.js");
+            projectConfig.init(projectPath);
+            var moduleList = projectConfig.getModule(runtime);
+            moduleList.map(function (module) {
+                var moduleConfig = getModuleConfig(module, projectPath);
+                all_module.push(moduleConfig);
+            })
+        }
+        manifest = create_manifest.create(srcPath,false,referenceInfo);
+        var moduleReferenceList = create_manifest.getModuleReferenceList();
+
+        generateAllModuleFileList(projectPath,moduleReferenceList);
     }
     var fileListText = createFileList(manifest, srcPath);
     fileListText = "var game_file_list = " + fileListText + ";";
@@ -487,7 +509,7 @@ function getLastConstructor(classDecl) {
 
 function compileModule(callback, module, projectDir) {
 
-    var moduleConfig = getModuleConfig(module, projectDir)
+    var moduleConfig = getModuleConfig(module, projectDir);
     var output = moduleConfig.output ? moduleConfig.output : moduleConfig.name;
     output = path.join(projectDir, "libs", output);
     var tsList = moduleConfig.file_list;
@@ -572,7 +594,11 @@ function compileModules(callback, projectDir, runtime) {
 
     tasks.push(
         function (callback) {
-            generateAllModuleFileList(projectDir);
+            generateAllModuleReference(projectDir);
+            var manifestPath = path.join(projectDir, "manifest.json");
+            if (file.exists(manifestPath)) {
+                generateAllModuleFileList(projectDir);
+            }
             callback();
         }
     );
@@ -581,23 +607,40 @@ function compileModules(callback, projectDir, runtime) {
 
 }
 
-function generateAllModuleFileList(projectDir) {
+function generateAllModuleReference(projectDir){
+    var fileList = [];
+    all_module.map(function(moduleConfig){
+        moduleConfig.file_list.map(function(item){
+            var tsFile = file.joinPath(moduleConfig.prefix,moduleConfig.source,item)
+            var ext = file.getExtension(tsFile).toLowerCase();
+            if(ext=="ts"&&item.indexOf(".d.ts")==-1){
+                fileList.push(tsFile);
+            }
+        })
+    })
+    var referenceInfo = create_manifest.getModuleReferenceInfo(fileList);
+    var text = JSON.stringify(referenceInfo);
+    file.save(file.joinPath(projectDir, "libs/module_reference.json"),text);
+    return referenceInfo;
+}
 
+function generateAllModuleFileList(projectDir,moduleReferenceList) {
 
     var all_module_file_list = [];
-
-
     all_module.map(function(moduleConfig){
-
-
         moduleConfig.file_list.map(function(item){
-            var tsFile = path.join(moduleConfig.prefix,moduleConfig.source,item)
+            var tsFile = file.joinPath(moduleConfig.prefix,moduleConfig.source,item);
             if (item.indexOf(".d.ts") != -1) {
                 return;
             }
             var ext = file.getExtension(tsFile).toLowerCase();
-            if (ext == "ts" && isInterface(tsFile)) {
-                return;
+            if (ext == "ts") {
+                if(moduleConfig.decouple=="true"&&moduleReferenceList&&
+                    moduleReferenceList.indexOf(tsFile)==-1){
+                    return;
+                }
+                if(isInterface(tsFile))
+                    return;
             }
             var output = moduleConfig.output ? moduleConfig.output : moduleConfig.name;
             all_module_file_list.push(path.join(output,item));

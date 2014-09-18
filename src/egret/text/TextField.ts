@@ -147,7 +147,7 @@ module egret {
 
         public _textColorString:string = "#FFFFFF";
 
-        private _textColor:number = 0xFFFFFF;
+        public _textColor:number = 0xFFFFFF;
         /**
          * 文字颜色
          * @member {number} egret.TextField#textColor

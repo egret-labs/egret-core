@@ -33,6 +33,8 @@ module egret {
         public onSuccessThisObject:any;
         public onErrorFunc:Function;
         public onErrorThisObject:any;
+        public downloadingSizeFunc:Function;
+        public downloadingSizeThisObject:any;
 
         constructor() {
 
@@ -47,18 +49,24 @@ module egret {
             }
         }
 
-        private onSuccess(...args) {
+        private onSuccess(...args):void {
             if (this.onSuccessFunc) {
                 this.onSuccessFunc.apply(this.onSuccessThisObject, args);
             }
             this.destroy();
         }
 
-        private onError(...args) {
+        private onError(...args):void {
             if (this.onErrorFunc) {
                 this.onErrorFunc.apply(this.onErrorThisObject, args);
             }
             this.destroy();
+        }
+
+        private downloadingSize(...args):void {
+            if (this.downloadingSizeFunc) {
+                this.downloadingSizeFunc.apply(this.downloadingSizeThisObject, args);
+            }
         }
 
         private destroy() {
@@ -66,6 +74,8 @@ module egret {
             this.onSuccessThisObject = undefined;
             this.onErrorFunc = undefined;
             this.onErrorThisObject = undefined;
+            this.downloadingSizeFunc = undefined;
+            this.downloadingSizeThisObject = undefined;
             PromiseObject.promiseObjectList.push(this);
         }
     }

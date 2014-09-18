@@ -363,6 +363,12 @@ function run(dir, args, opts) {
     else if (runtime == "native") {
         compilerSingleFile(currDir, totalNativeFileList, "\""+launcherDir + "/game-min-native.js\"");
     }
+
+    //扫描json数据
+    if (opts["-compressjson"]) {
+        var compress = require(path.join("..", "tools", "compress_json.js"));
+        compress.run(path.join(currDir, "release"), []);
+    }
 }
 
 function compilerSingleFile(currDir, fileList, outputFile, callback) {
