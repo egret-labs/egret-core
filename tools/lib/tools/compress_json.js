@@ -8,6 +8,7 @@
 var path = require("path");
 var file = require("../core/file");
 var plist = require('../core/plist');
+var globals = require("../core/globals");
 
 var readFile = function(fileName) 
 {
@@ -65,4 +66,14 @@ var compress = function(realPath) {
 }
 
 
-exports.compress = compress;
+var run = function (dir, args, opts) {
+    var currDir = dir;
+    if (args[0]) {
+        currDir = path.resolve(args[0]);
+    }
+
+    console.log(currDir);
+    compress(currDir);
+}
+
+exports.run = run;
