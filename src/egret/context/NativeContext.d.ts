@@ -146,6 +146,7 @@ declare module egret_native {
     function EGT_deleteBackward():void;
 
     function EGT_keyboardDidHide():void;
+    function EGT_keyboardDidShow():void;
 
     function EGT_getTextEditerContentText():string;
 }

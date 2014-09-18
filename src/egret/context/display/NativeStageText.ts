@@ -173,6 +173,10 @@ module egret {
 
             }
 
+            egret_native.EGT_keyboardDidShow = function () {
+                self.dispatchEvent(new egret.Event("focus"));
+            }
+
 
             egret_native.EGT_getTextEditerContentText = function(){
                 return self._getText();
@@ -190,6 +194,8 @@ module egret {
         }
 
         public _hide():void {
+            egret_native.TextInputOp.setKeybordOpen(false);
+
         }
 
         public changePosition(x:number, y:number):void {
