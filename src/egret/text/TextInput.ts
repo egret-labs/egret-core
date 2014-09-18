@@ -89,15 +89,7 @@ module egret {
                 this._isFocus = false;
                 this._text.visible = true;
 
-                if (this.getTextType() == "password") {
-                    this._text.text = "";
-                    for (var i:number = 0, num = this.stageText._getText().length; i < num; i++) {
-                        this._text.text += "*";
-                    }
-                }
-                else {
-                    this._text.text = this.stageText._getText();
-                }
+                this.resetText();
             }
         }
 
@@ -126,8 +118,9 @@ module egret {
          */
         public setText(value:string):void {
             Logger.warning("TextInput.setText()已废弃，请使用TextInput.text设置");
-            this._text.text = value;
             this.stageText._setText(value);
+
+            this.resetText();
         }
 
         /**
@@ -140,8 +133,9 @@ module egret {
         }
 
         public set text(value:string) {
-            this._text.text = value;
             this.stageText._setText(value);
+
+            this.resetText();
         }
 
         public get text():string {
@@ -150,10 +144,24 @@ module egret {
 
         public setTextType(type:string):void {
             this.stageText._setTextType(type);
+
+            this.resetText();
         }
 
         public getTextType():string {
             return this.stageText._getTextType();
+        }
+
+        private resetText():void {
+            if (this.getTextType() == "password") {
+                this._text.text = "";
+                for (var i:number = 0, num = this.stageText._getText().length; i < num; i++) {
+                    this._text.text += "*";
+                }
+            }
+            else {
+                this._text.text = this.stageText._getText();
+            }
         }
 
         public _updateTransform():void {
