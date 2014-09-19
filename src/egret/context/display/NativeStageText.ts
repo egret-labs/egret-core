@@ -39,6 +39,7 @@ module egret {
     export class NativeStageText extends StageText {
 
         private tf:egret.TextField;
+        private textValue:string = "";
         private container:egret.DisplayObjectContainer;
         private textType:string;
 
@@ -57,11 +58,10 @@ module egret {
          * @returns {string}
          */
         public _getText():string {
-            var text = this.tf.text;
-            if (!text){
-                text = "";
+            if (!this.textValue){
+                this.textValue = "";
             }
-            return text;
+            return this.textValue;
         }
 
         /**
@@ -69,7 +69,9 @@ module egret {
          * @param value {string}
          */
         public _setText(value:string):void {
-            this.tf.text = value;
+            this.textValue = value;
+
+            this.resetText();
         }
 
         /**
@@ -78,6 +80,8 @@ module egret {
          */
         public _setTextType(type:string):void {
             this.textType = type;
+
+            this.resetText();
         }
 
         /**
@@ -98,6 +102,19 @@ module egret {
         public _open(x:number, y:number, width:number = 160, height:number = 21):void {
 
 
+        }
+
+        private resetText():void {
+            if (this.textType == "password"){
+                var passwordStr = "";
+                for (var i = 0 ; i < this.textValue.length ; i++){
+                    passwordStr += "*";
+                }
+                this.tf.text = passwordStr;
+            }
+            else{
+                this.tf.text = this.textValue;
+            }
         }
 
         /**
@@ -141,29 +158,23 @@ module egret {
             var self = this;
 
             egret_native.EGT_TextInput = function (appendText:string) {
-                if (appendText == "\n") return;
-                var text = self._getText();
-                text += appendText;
-                if (self.textType == "password"){
-                    var passwordStr = "";
-                    for (var i = 0 ; i < text.length ; i++){
-                        passwordStr += "*";
-                    }
-                    tf.text = passwordStr;
+                if (appendText == "\n")
+                {
+                    egret_native.TextInputOp.setKeybordOpen(true);
+                    return;
                 }
-                else{
-                    tf.text = text;
-                }
+                self.textValue += appendText;
 
+                self.resetText();
             }
 
             egret_native.EGT_deleteBackward = function () {
                 var text = self._getText();
                 text = text.substr(0, text.length - 1);
-                tf.text = text;
+                self.textValue = text;
+
+                self.resetText();
             }
-
-
 
             egret_native.EGT_keyboardDidHide = function () {
                 if (container && container.parent) {
