@@ -51,6 +51,8 @@ module egret {
             tf.text = "";
             tf.textAlign = egret.HorizontalAlign.LEFT;
             this.container = new egret.DisplayObjectContainer();
+
+            this.textValue = "";
         }
 
         /**
