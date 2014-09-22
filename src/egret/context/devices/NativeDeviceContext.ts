@@ -180,13 +180,13 @@ module egret_native_localStorage {
 
     export function save() {
 //        console.log("egret_native_localStorage::" + "WriteFile");
-        egret_native.writeFileSync(egret_native_localStorage.filePath, JSON.stringify(this.data));
+        egret_native.saveRecord(egret_native_localStorage.filePath, JSON.stringify(this.data));
     }
 
     export function init():void {
         if (egret_native.isFileExists(egret_native_localStorage.filePath)) {
 //            console.log("egret_native_localStorage::" + "文件存在");
-            var str:string = egret_native.readFileSync(egret_native_localStorage.filePath);
+            var str:string = egret_native.loadRecord(egret_native_localStorage.filePath);
 //            console.log("egret_native_localStorage::" + str);
             this.data = JSON.parse(str);
 //            console.log("egret_native_localStorage::" + "ReadFileSuccess");
