@@ -149,7 +149,7 @@ module egret {
         public drawText(textField:egret.TextField, text:string, x:number, y:number, maxWidth:number) {
             Profiler.getInstance().onDrawImage();
             egret_native.Label.setTextColor(textField._textColor);
-            egret_native.Label.drawText(text, x, y);
+            egret_native.Label.drawText(text, x, y - 2);
         }
 
         public pushMask(mask:Rectangle):void {
@@ -251,6 +251,7 @@ var egret_native_graphics;
     egret_native_graphics.endFill = endFill;
 
     function _draw(renderContext) {
+        return;
         var length = this.commandQueue.length;
         for (var i = 0; i < length; i++) {
             var command = this.commandQueue[i];
