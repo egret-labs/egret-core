@@ -114,7 +114,6 @@ module egret {
             }
 
             function onLoadComplete() {
-                egret_native.Audio.preloadEffect(savePath);
                 var sound = new egret.Sound();
                 sound.path = savePath;
                 loader.data = sound;
