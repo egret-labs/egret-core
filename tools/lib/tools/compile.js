@@ -49,7 +49,8 @@ function compile(callback, projectDir, sourceList, projectConfig) {
     var keepGeneratedTypescript = projectConfig.keepGeneratedTypescript;
 
     var srcPath = path.join(projectDir, "src");
-    var output = path.join(projectDir, "bin-debug/src");
+    var output = projectConfig.output ? projectConfig.output : projectDir;
+    output = path.join(output, "bin-debug/src");
 
 
     //=========================
@@ -277,7 +278,11 @@ function generateGameFileList(projectPath, runtime) {
     }
     var fileListText = createFileList(manifest, srcPath);
     fileListText = "var game_file_list = " + fileListText + ";";
-    file.save(path.join(projectPath, "bin-debug/src/game_file_list.js"), fileListText);
+
+    projectConfig = require("../core/projectConfig.js");
+    var output = projectConfig.getOutputDir();
+    output = output ? output : projectPath;
+    file.save(path.join(output, "bin-debug/src/game_file_list.js"), fileListText);
     return manifest;
 }
 
@@ -365,14 +370,15 @@ function removeInterface(text) {
 }
 
 
-function compileModule(callback, module, projectDir) {
+function compileModule(callback, module, projectDir,outputPrefix) {
 
 
     var typeScriptCompiler = require("./egret_compiler.js");
 
     var moduleConfig = getModuleConfig(module, projectDir);
     var output = moduleConfig.output ? moduleConfig.output : moduleConfig.name;
-    output = path.join(projectDir, "libs", output);
+    outputPrefix = outputPrefix ? path.join(outputPrefix,"libs") : path.join(projectDir, "libs");
+    output = path.join(outputPrefix, output);
     var tsList = moduleConfig.file_list;
     tsList = tsList.map(function (item) {
         return "\"" + path.join(moduleConfig.prefix, moduleConfig.source, item) + "\"";
@@ -438,8 +444,10 @@ function compileModule(callback, module, projectDir) {
 function compileModules(callback, projectDir, runtime) {
 
 
+
     var projectConfig = require("../core/projectConfig.js");
     projectConfig.init(projectDir);
+    var output = projectConfig.getOutputDir();
     var moduleList = projectConfig.getModule(runtime);
 
     var tasks = [];
@@ -447,7 +455,7 @@ function compileModules(callback, projectDir, runtime) {
         tasks.push(
             function (callback) {
                 compileModule(
-                    callback, module, projectDir);
+                    callback, module, projectDir,output);
             });
     })
 
@@ -485,6 +493,8 @@ function generateAllModuleReference(projectDir) {
 
 function generateAllModuleFileList(projectDir, moduleReferenceList) {
 
+    var projectConfig = require("../core/projectConfig.js");
+    var output = projectConfig.getOutputDir();
     var all_module_file_list = [];
     all_module.map(function (moduleConfig) {
         moduleConfig.file_list.map(function (item) {
@@ -511,7 +521,8 @@ function generateAllModuleFileList(projectDir, moduleReferenceList) {
     }).join(",\n");
     egretFileListText = "[\n" + egretFileListText + "];\n";
     egretFileListText = "var egret_file_list = " + egretFileListText + ";";
-    file.save(file.joinPath(projectDir, "bin-debug/lib/egret_file_list.js"), egretFileListText);
+    output = output ? output : projectDir;
+    file.save(file.joinPath(output, "bin-debug/lib/egret_file_list.js"), egretFileListText);
 
 }
 

@@ -25,13 +25,14 @@ function run(dir, args, opts) {
 
     if (needCompileEngine) {
 
+
         task.push(function (callback) {
-            compiler.compileModules(callback, currDir,runtime);
+            compiler.compileModules(callback, currDir, runtime);
         });
     }
     task.push(
         function (callback) {
-            buildProject(callback, currDir, keepGeneratedTypescript,runtime);
+            buildProject(callback, currDir, keepGeneratedTypescript, runtime);
         },
 
         function (callback) {
@@ -52,7 +53,7 @@ function run(dir, args, opts) {
     })
 }
 
-function buildProject(callback, currDir, keepGeneratedTypescript,runtime) {
+function buildProject(callback, currDir, keepGeneratedTypescript, runtime) {
     var document_class = globals.getDocumentClass(currDir);
     if (document_class) {
         replaceDocumentClass("index.html", document_class, currDir);
@@ -60,9 +61,13 @@ function buildProject(callback, currDir, keepGeneratedTypescript,runtime) {
         replaceDocumentClass("native_loader.js", document_class, currDir);
     }
 
+    var projectConfig = require("../core/projectConfig.js");
+    projectConfig.init(currDir);
+    var output = projectConfig.getOutputDir();
+
     var libsPath = path.join(currDir, "libs/");
     var srcPath = path.join(currDir, "src/");
-    var exmlList = file.search(srcPath,"exml");
+    var exmlList = file.search(srcPath, "exml");
     var dts = generateExmlDTS(exmlList, srcPath);
     var exmlDtsPath = path.join(currDir, "libs", "exml.d.ts");
     if (dts) {
@@ -74,15 +79,37 @@ function buildProject(callback, currDir, keepGeneratedTypescript,runtime) {
     var libs = file.search(libsPath, "d.ts");
 
     var compileConfig = {
-        keepGeneratedTypescript : true
+        keepGeneratedTypescript: keepGeneratedTypescript,
+        output: output
     }
 
-    var sourceList = compiler.generateGameFileList(currDir,runtime);
-    compiler.compile(callback,
-        path.join(currDir),
-        sourceList.concat(libs),
-        compileConfig
-    );
+    var sourceList = compiler.generateGameFileList(currDir, runtime);
+
+    async.series([
+        function (callback) {
+            compiler.compile(callback,
+                path.join(currDir),
+                sourceList.concat(libs),
+                compileConfig
+            );
+        },
+
+        function (callback) {
+            if (output){
+                var resource_dir = path.join(currDir,"resource");
+                var output_dir = path.join(output,"resource");
+                file.copy(resource_dir,output_dir);
+
+                var resource_dir = path.join(currDir,"launcher");
+                var output_dir = path.join(output,"launcher");
+                file.copy(resource_dir,output_dir);
+            }
+            callback();
+        }
+
+
+    ], callback)
+
 
 }
 
