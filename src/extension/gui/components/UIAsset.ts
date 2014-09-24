@@ -243,7 +243,6 @@ module egret.gui {
          * @private
          */
         public _measureBounds():egret.Rectangle {
-            var bounds:Rectangle = super._measureBounds();
             if(this._content instanceof Texture){
                 var texture:Texture = <Texture> this._content;
                 var textureW:number = texture._textureWidth;
@@ -252,20 +251,9 @@ module egret.gui {
                 var h:number = this.height;
                 var x:number = Math.floor(texture._offsetX*w/textureW);
                 var y:number = Math.floor(texture._offsetY*h/textureH);
-                if(x<bounds.x){
-                    bounds.x = x;
-                }
-                if(y<bounds.y){
-                    bounds.y = y;
-                }
-                if(x+w>bounds.right){
-                    bounds.right = x+w;
-                }
-                if(y+h>bounds.bottom){
-                    bounds.bottom = y+h;
-                }
+                return Rectangle.identity.initialize(x,y, w, h);
             }
-            return bounds;
+            return super._measureBounds();
         }
 
 		private static errorStr:string = "在此组件中不可用，若此组件为容器类，请使用";
