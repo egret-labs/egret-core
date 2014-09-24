@@ -33,8 +33,11 @@ module egret {
 
         private _isTouchDown:boolean = false;
 
-        constructor(private canvas:HTMLCanvasElement) {
+        private rootDiv:HTMLElement;
+        constructor() {
             super();
+
+            this.rootDiv = document.getElementById(egret.StageDelegate.canvas_div_name);
         }
 
         private prevent(event):void {
@@ -47,15 +50,15 @@ module egret {
         public run():void {
             var that = this;
             if (window.navigator.msPointerEnabled) {
-                document.body.addEventListener("MSPointerDown", function (event:any) {
+                this.rootDiv.addEventListener("MSPointerDown", function (event:any) {
                     that._onTouchBegin(event);
                     that.prevent(event);
                 }, false);
-                document.body.addEventListener("MSPointerMove", function (event:any) {
+                this.rootDiv.addEventListener("MSPointerMove", function (event:any) {
                     that._onTouchMove(event);
                     that.prevent(event);
                 }, false);
-                document.body.addEventListener("MSPointerUp", function (event:any) {
+                this.rootDiv.addEventListener("MSPointerUp", function (event:any) {
                     that._onTouchEnd(event);
                     that.prevent(event);
                 }, false);
@@ -88,41 +91,41 @@ module egret {
 
         private addMouseListener():void {
             var that = this;
-            document.body.addEventListener("mousedown", function (event) {
+            this.rootDiv.addEventListener("mousedown", function (event) {
                 that._onTouchBegin(event);
             });
-            document.body.addEventListener("mousemove", function (event) {
+            this.rootDiv.addEventListener("mousemove", function (event) {
                 that._onTouchMove(event);
             });
-            document.body.addEventListener("mouseup", function (event) {
+            this.rootDiv.addEventListener("mouseup", function (event) {
                 that._onTouchEnd(event);
             });
         }
 
         private addTouchListener():void {
             var that = this;
-            document.body.addEventListener("touchstart", function (event:any) {
+            this.rootDiv.addEventListener("touchstart", function (event:any) {
                 var l = event.changedTouches.length;
                 for (var i:number = 0; i < l; i++) {
                     that._onTouchBegin(event.changedTouches[i]);
                 }
                 that.prevent(event);
             }, false);
-            document.body.addEventListener("touchmove", function (event:any) {
+            this.rootDiv.addEventListener("touchmove", function (event:any) {
                 var l = event.changedTouches.length;
                 for (var i:number = 0; i < l; i++) {
                     that._onTouchMove(event.changedTouches[i]);
                 }
                 that.prevent(event);
             }, false);
-            document.body.addEventListener("touchend", function (event:any) {
+            this.rootDiv.addEventListener("touchend", function (event:any) {
                 var l = event.changedTouches.length;
                 for (var i:number = 0; i < l; i++) {
                     that._onTouchEnd(event.changedTouches[i]);
                 }
                 that.prevent(event);
             }, false);
-            document.body.addEventListener("touchcancel", function (event:any) {
+            this.rootDiv.addEventListener("touchcancel", function (event:any) {
                 var l = event.changedTouches.length;
                 for (var i:number = 0; i < l; i++) {
                     that._onTouchEnd(event.changedTouches[i]);
@@ -132,8 +135,11 @@ module egret {
         }
 
         private inOutOfCanvas(event):boolean {
-            var location = this.getLocation(this.canvas, event);
-            if (location.x < 0 || location.y < 0 || location.x > this.canvas.width || location.y > this.canvas.height) {
+            var location = this.getLocation(this.rootDiv, event);
+            if (location.x < 0
+                || location.y < 0
+                || location.x > egret.MainContext.instance.stage.width
+                || location.y > egret.MainContext.instance.stage.height) {
                 return true;
             }
             return false;
@@ -144,7 +150,7 @@ module egret {
         }
 
         private _onTouchBegin(event:any):void {
-            var location = this.getLocation(this.canvas, event);
+            var location = this.getLocation(this.rootDiv, event);
             var identifier = -1;
             if (event.hasOwnProperty("identifier")) {
                 identifier = event.identifier;
@@ -153,7 +159,7 @@ module egret {
         }
 
         private _onTouchMove(event:any):void {
-            var location = this.getLocation(this.canvas, event);
+            var location = this.getLocation(this.rootDiv, event);
             var identifier = -1;
             if (event.hasOwnProperty("identifier")) {
                 identifier = event.identifier;
@@ -163,7 +169,7 @@ module egret {
         }
 
         private _onTouchEnd(event:any):void {
-            var location = this.getLocation(this.canvas, event);
+            var location = this.getLocation(this.rootDiv, event);
             var identifier = -1;
             if (event.hasOwnProperty("identifier")) {
                 identifier = event.identifier;
@@ -172,13 +178,13 @@ module egret {
         }
 
 
-        private getLocation(canvas, event):Point {
+        private getLocation(rootDiv, event):Point {
             var doc = document.documentElement;
             var win = window;
             var left, top, tx, ty;
 
-            if (typeof canvas.getBoundingClientRect === 'function') {
-                var box = canvas.getBoundingClientRect();
+            if (typeof rootDiv.getBoundingClientRect === 'function') {
+                var box = rootDiv.getBoundingClientRect();
                 left = box.left;
                 top = box.top;
             } else {

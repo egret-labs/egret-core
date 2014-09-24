@@ -33,7 +33,7 @@ module egret {
      */
     export class WebGLRenderer extends RendererContext {
         public static blendModesWebGL = {};
-        private canvas;
+        private canvas:HTMLCanvasElement;
         private gl:any;
         private size:number = 2000;
         private vertices:Float32Array;
@@ -43,15 +43,15 @@ module egret {
         private projectionY:number;
         private shaderManager:WebGLShaderManager;
 
-        constructor(canvas) {
+        constructor(canvas?:HTMLCanvasElement) {
             super();
             console.log("使用WebGL模式");
-            this.canvas = canvas;
-            canvas.addEventListener("webglcontextlost", this.handleContextLost.bind(this), false);
-            canvas.addEventListener("webglcontextrestored", this.handleContextRestored.bind(this), false);
+            this.canvas = canvas || this.createCanvas();
+            this.canvas.addEventListener("webglcontextlost", this.handleContextLost.bind(this), false);
+            this.canvas.addEventListener("webglcontextrestored", this.handleContextRestored.bind(this), false);
 
-            this.projectionX = canvas.width / 2;
-            this.projectionY = -canvas.height / 2;
+            this.projectionX = this.canvas.width / 2;
+            this.projectionY = -this.canvas.height / 2;
 
             var numVerts = this.size * 4 * this.vertSize;
             var numIndices = this.size * 6;
@@ -84,6 +84,21 @@ module egret {
                 }
                 egret.DisplayObject.prototype._draw.call(textField, renderContext);
             };
+        }
+
+        private createCanvas():HTMLCanvasElement {
+            var canvas:HTMLCanvasElement = egret.Browser.getInstance().$("#egretCanvas");
+            if (!canvas) {
+                var container = document.getElementById(egret.StageDelegate.canvas_div_name);
+                canvas = egret.Browser.getInstance().$new("canvas");
+                canvas.id = "egretCanvas";
+                canvas.width = egret.MainContext.instance.stage.stageWidth; //stageW
+                canvas.height = egret.MainContext.instance.stage.stageHeight; //stageH
+                canvas.style.width = container.style.width;
+                canvas.style.height = container.style.height;
+                container.appendChild(canvas);
+            }
+            return canvas;
         }
 
         private contextLost:Boolean = false;

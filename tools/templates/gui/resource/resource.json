@@ -291,6 +291,6 @@
 	{
 		"name":"bgImage",
 		"type":"image",
-		"url":"asset/app/bg.jpg"
+		"url":"asset/bg.jpg"
 	}]
 }
