@@ -25,58 +25,49 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-module egret {
-    export class PromiseObject {
-        private static promiseObjectList = [];
+egret_h5 = {};
 
-        public onSuccessFunc:Function;
-        public onSuccessThisObject:any;
-        public onErrorFunc:Function;
-        public onErrorThisObject:any;
-        public downloadingSizeFunc:Function;
-        public downloadingSizeThisObject:any;
+egret_h5.prefix = "";
 
-        constructor() {
-
-        }
-
-        public static create() {
-            if (PromiseObject.promiseObjectList.length) {
-                return PromiseObject.promiseObjectList.pop();
+egret_h5.loadScript = function (list, callback) {
+    var loaded = 0;
+    var loadNext = function () {
+        egret_h5.loadSingleScript(egret_h5.prefix + list[loaded], function () {
+            loaded++;
+            if (loaded >= list.length) {
+                callback();
             }
             else {
-                return new egret.PromiseObject();
+                loadNext();
             }
-        }
+        })
+    };
+    loadNext();
+};
 
-        private onSuccess(...args):void {
-            if (this.onSuccessFunc) {
-                this.onSuccessFunc.apply(this.onSuccessThisObject, args);
-            }
-            this.destroy();
-        }
-
-        private onError(...args):void {
-            if (this.onErrorFunc) {
-                this.onErrorFunc.apply(this.onErrorThisObject, args);
-            }
-            this.destroy();
-        }
-
-        private downloadingSize(...args):void {
-            if (this.downloadingSizeFunc) {
-                this.downloadingSizeFunc.apply(this.downloadingSizeThisObject, args);
-            }
-        }
-
-        private destroy() {
-            this.onSuccessFunc = undefined;
-            this.onSuccessThisObject = undefined;
-            this.onErrorFunc = undefined;
-            this.onErrorThisObject = undefined;
-            this.downloadingSizeFunc = undefined;
-            this.downloadingSizeThisObject = undefined;
-            PromiseObject.promiseObjectList.push(this);
-        }
+egret_h5.loadSingleScript = function (src, callback) {
+    var s = document.createElement('script');
+    if (s.hasOwnProperty("async")) {
+        s.async = false;
     }
-}
+    s.src = src;
+    s.addEventListener('load', function () {
+        this.removeEventListener('load', arguments.callee, false);
+        callback();
+    }, false);
+    document.body.appendChild(s);
+};
+
+egret_h5.preloadScript = function (list, prefix) {
+    if (!egret_h5.preloadList) {
+        egret_h5.preloadList = [];
+    }
+    egret_h5.preloadList = egret_h5.preloadList.concat(list.map(function (item) {
+        return prefix + item;
+    }))
+};
+
+egret_h5.startLoading = function () {
+    var list = egret_h5.preloadList;
+    egret_h5.loadScript(list, egret_h5.startGame);
+};

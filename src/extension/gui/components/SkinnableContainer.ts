@@ -54,7 +54,6 @@ module egret.gui {
          * 实体容器实例化之前缓存子对象的容器
          */
         public _placeHolderGroup:Group;
-a
         /**
          * 获取当前的实体容器
          */
