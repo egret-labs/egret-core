@@ -86,6 +86,9 @@ module egret_native_external_interface {
             var value = data.value;
             listener.call(null, value);
         }
+        else {
+            egret.Logger.warning("ExternalInterface调用了js没有注册的方法:" + functionName);
+        }
     }
 
     export function init():void {
