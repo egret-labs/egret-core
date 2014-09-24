@@ -124,7 +124,7 @@ module egret {
          */
         public _show():void {
 
-            egret_native.TextInputOp.setKeybordOpen(true);
+
 
             var container:egret.DisplayObjectContainer = this.container;
             var stage:egret.Stage = egret.MainContext.instance.stage;
@@ -194,6 +194,9 @@ module egret {
             egret_native.EGT_getTextEditerContentText = function(){
                 return self._getText();
             }
+
+
+            egret_native.TextInputOp.setKeybordOpen(true);
         }
 
         /**
