@@ -9,6 +9,7 @@
         "interactive/NativeTouchContext.ts",
         "PromiseObject.ts",
         "net/NativeNetContext.ts",
-        "NativeContext.d.ts"
+        "NativeContext.d.ts",
+        "display/NativeStageText.ts"
     ]
 }

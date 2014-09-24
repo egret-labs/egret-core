@@ -94,6 +94,9 @@ function executeCommand(callback, script) {
     cmd.stderr.on("data", function (data) {
         console.log(data);
     })
+    cmd.stdout.on("data", function (data) {
+        console.log(data);
+    })
 
     cmd.on('exit', function (code) {
 

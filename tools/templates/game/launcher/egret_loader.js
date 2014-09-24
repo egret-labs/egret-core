@@ -39,7 +39,8 @@ egret_h5.startGame = function () {
     var scaleMode =  egret.MainContext.deviceType == egret.MainContext.DEVICE_MOBILE ? egret.StageScaleMode.SHOW_ALL : egret.StageScaleMode.NO_SCALE;
     context.stage.scaleMode = scaleMode;
 
-    //WebGL是egret的Beta特性，默认关闭
+    //WebGL是egret的Beta特性，默认关闭。
+    //开发者如果要开启 WebGL ，请务必先进行 userAgent 判断，因为特定浏览器可能存在虽然支持 WebGL，但是运行效率不佳的问题
     if(false){// egret.WebGLUtils.checkCanUseWebGL()) {
         context.rendererContext = new egret.WebGLRenderer(canvas);
     }

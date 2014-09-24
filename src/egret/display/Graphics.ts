@@ -68,7 +68,7 @@ module egret {
          * @param r? {number} 圆的半径（以像素为单位）,不设置就为直角矩形。
          */
         public drawRect(x:number, y:number, width:number, height:number):void{
-
+            this.checkRect(x, y, width, height);
         }
 
         /**
@@ -79,7 +79,7 @@ module egret {
          * @param r {number} 圆的半径（以像素为单位）。
          */
         public drawCircle(x:number, y:number, r:number):void {
-
+            this.checkRect(x - r, y - r, 2 * r, 2 * r);
         }
 
         /**
@@ -93,7 +93,7 @@ module egret {
          * @param ellipseHeight {number} 用于绘制圆角的椭圆的高度（以像素为单位）。 （可选）如果未指定值，则默认值与为 ellipseWidth 参数提供的值相匹配。
          */
         public drawRoundRect(x:number, y:number, width:number, height:number, ellipseWidth:number, ellipseHeight?:number):void{
-
+            this.checkRect(x, y, width, height);
         }
 
         /**
@@ -105,7 +105,7 @@ module egret {
          * @param height {number} 矩形的高度（以像素为单位）。
          */
         public drawEllipse(x:number, y:number, width:number, height:number):void{
-
+            this.checkRect(x - width, y - height, 2 * width, 2 * height);
         }
 
         /**
@@ -131,7 +131,7 @@ module egret {
          * @param y {number} 一个表示相对于父显示对象注册点的垂直位置的数字（以像素为单位）。
          */
         public lineTo(x:number, y:number):void {
-
+            this.checkPoint(x, y);
         }
 
         /**
@@ -144,8 +144,11 @@ module egret {
          * @param anchorX {number} 一个数字，指定下一个锚点相对于父显示对象注册点的水平位置。
          * @param anchorY {number} 一个数字，指定下一个锚点相对于父显示对象注册点的垂直位置。
          */
-        public curveTo(controlX:Number, controlY:Number, anchorX:Number, anchorY:Number):void {
+        public curveTo(controlX:number, controlY:number, anchorX:number, anchorY:number):void {
 
+
+            this.checkPoint(controlX, controlY);
+            this.checkPoint(anchorX, anchorY);
         }
 
         /**
@@ -155,7 +158,7 @@ module egret {
          * @param y {number} 一个表示相对于父显示对象注册点的垂直位置的数字（以像素为单位）。
          */
         public moveTo(x:number, y:number):void {
-
+            this.checkPoint(x, y);
         }
 
         /**
@@ -163,7 +166,10 @@ module egret {
          * @method egret.Graphics#clear
          */
         public clear():void {
-
+            this._minX = 0;
+            this._minY = 0;
+            this._maxX = 0;
+            this._maxY = 0;
         }
 
         /**
@@ -178,6 +184,32 @@ module egret {
         public _draw(renderContext:RendererContext):void {
 
         }
+
+        private _minX:number = 0;
+        private _minY:number = 0;
+        private _maxX:number = 0;
+        private _maxY:number = 0;
+        private checkRect(x:number, y:number, w:number, h:number):void {
+            this._minX = Math.min(this._minX, x);
+            this._minY = Math.min(this._minY, y);
+
+            this._maxX = Math.max(this._maxX, x + w);
+            this._maxY = Math.max(this._maxY, y + h);
+        }
+
+        private _lastX:number = 0;
+        private _lastY:number = 0;
+        private checkPoint(x:number, y:number):void {
+            this._minX = Math.min(this._minX, x);
+            this._minY = Math.min(this._minY, y);
+
+            this._maxX = Math.max(this._maxX, x);
+            this._maxY = Math.max(this._maxY, y);
+
+            this._lastX = x;
+            this._lastY = y;
+        }
+
     }
 
     class Command {
