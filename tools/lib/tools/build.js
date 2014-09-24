@@ -72,11 +72,16 @@ function buildProject(callback, currDir, keepGeneratedTypescript,runtime) {
         file.remove(exmlDtsPath);
     }
     var libs = file.search(libsPath, "d.ts");
+
+    var compileConfig = {
+        keepGeneratedTypescript : true
+    }
+
     var sourceList = compiler.generateGameFileList(currDir,runtime);
     compiler.compile(callback,
         path.join(currDir),
         sourceList.concat(libs),
-        keepGeneratedTypescript
+        compileConfig
     );
 
 }

@@ -40,9 +40,13 @@ function run(currentDir, args, opts) {
  * @param srcPath 源文件所在的文件夹
  * @param output 输出地址
  * @param sourceList 要编译的文件列表包含ts和exml
- * @param keepGeneratedTypescript 是否保留exml生成的ts文件
+ * @param compileConfig
+ *  @sub-param keepGeneratedTypescript 是否保留exml生成的ts文件
+ *  @sub-param outputDir 输出路径
  */
-function compile(callback, projectDir, sourceList, keepGeneratedTypescript) {
+function compile(callback, projectDir, sourceList, projectConfig) {
+    projectConfig = projectConfig ? projectConfig : {};
+    var keepGeneratedTypescript = projectConfig.keepGeneratedTypescript;
 
     var srcPath = path.join(projectDir, "src");
     var output = path.join(projectDir, "bin-debug/src");
