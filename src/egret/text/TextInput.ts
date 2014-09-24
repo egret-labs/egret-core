@@ -27,21 +27,89 @@
 
 
 module egret {
-    export class TextInput extends DisplayObject {
+    export class TextInput extends Sprite {
 
+        private _text:TextField;
         private stageText:egret.StageText;
+        private _isFocus:boolean = false;
 
         constructor() {
             super();
-            this.stageText = new egret.StageText();
+            this._text = new egret.TextField();
+            this.addChild(this._text);
+            this._text.size = 30;
+
+            this.stageText = egret.StageText.create();
             var point = this.localToGlobal();
             this.stageText._open(point.x, point.y, this._explicitWidth, this._explicitHeight);
         }
 
         public _onAddToStage():void {
             super._onAddToStage();
-            this.stageText._add();
+
+            this.graphics.beginFill(0xffffff, 0);
+            this.graphics.drawRect(0, 0, this.width, this.height);
+            this.graphics.endFill();
+
+            this.touchEnabled = true;
+
+            this.stageText._addListeners();
+
+            this.stageText.addEventListener("blur", this.onBlurHandler, this);
+            this.stageText.addEventListener("focus", this.onFocusHandler, this);
             this.addEventListener(egret.TouchEvent.TOUCH_BEGIN, this.onMouseDownHandler, this);
+            egret.MainContext.instance.stage.addEventListener(egret.TouchEvent.TOUCH_BEGIN, this.onStageDownHandler, this);
+        }
+
+        private onFocusHandler(event):void {
+            this.hideText();
+        }
+
+        //显示文本
+        private onBlurHandler(event):void {
+            this.showText();
+        }
+
+        //点中文本
+        private onMouseDownHandler(event:TouchEvent) {
+            event.stopPropagation();
+
+            this.stageText._show();
+        }
+
+        //未点中文本
+        private onStageDownHandler(event:TouchEvent) {
+            this.stageText._hide();
+
+            this.showText();
+        }
+
+        private showText():void {
+            if (this._isFocus) {
+                this._isFocus = false;
+                this._text.visible = true;
+
+                this.resetText();
+            }
+        }
+
+        private hideText():void {
+            if (!this._isFocus) {
+                this._text.visible = false;
+                this._isFocus = true;
+            }
+        }
+
+        public _onRemoveFromStage():void {
+            super._onRemoveFromStage();
+
+            this.stageText._remove();
+            this.stageText._removeListeners();
+
+            this.stageText.removeEventListener("blur", this.onBlurHandler, this);
+            this.stageText.removeEventListener("focus", this.onFocusHandler, this);
+            this.removeEventListener(egret.TouchEvent.TOUCH_BEGIN, this.onMouseDownHandler, this);
+            egret.MainContext.instance.stage.removeEventListener(egret.TouchEvent.TOUCH_BEGIN, this.onStageDownHandler, this);
         }
 
         /**
@@ -51,6 +119,8 @@ module egret {
         public setText(value:string):void {
             Logger.warning("TextInput.setText()已废弃，请使用TextInput.text设置");
             this.stageText._setText(value);
+
+            this.resetText();
         }
 
         /**
@@ -64,6 +134,8 @@ module egret {
 
         public set text(value:string) {
             this.stageText._setText(value);
+
+            this.resetText();
         }
 
         public get text():string {
@@ -72,28 +144,24 @@ module egret {
 
         public setTextType(type:string):void {
             this.stageText._setTextType(type);
+
+            this.resetText();
         }
 
         public getTextType():string {
             return this.stageText._getTextType();
         }
 
-
-        private onMouseDownHandler(event:TouchEvent) {
-
-        }
-
-        public _onRemoveFromStage() {
-            this.stageText._remove();
-        }
-
-        public _measureBounds():egret.Rectangle {
-            return egret.Rectangle.identity;
-        }
-
-        public hitTest(x, y, ignoreTouchEnabled:boolean = false):DisplayObject {
-            //它不能被点击
-            return null;
+        private resetText():void {
+            if (this.getTextType() == "password") {
+                this._text.text = "";
+                for (var i:number = 0, num = this.stageText._getText().length; i < num; i++) {
+                    this._text.text += "*";
+                }
+            }
+            else {
+                this._text.text = this.stageText._getText();
+            }
         }
 
         public _updateTransform():void {
@@ -118,6 +186,11 @@ module egret {
             }
         }
 
+        public _draw(renderContext:RendererContext):void {
+            super._draw(renderContext);
+            this.stageText._draw();
+        }
+
         /**
          * 字号
          * @member {number} egret.TextField#size
@@ -131,6 +204,7 @@ module egret {
         public set size(value:number) {
             if (this._size != value) {
                 this._size = value;
+                this._text.size = value;
                 this.stageText.setSize(this._size);
             }
         }
@@ -150,8 +224,44 @@ module egret {
             if (this._textColor != value) {
                 this._textColor = value;
                 this._textColorString = toColorString(value);
+                this._text.textColor = value;
                 this.stageText.setTextColor(this._textColorString);
             }
+        }
+
+        /**
+         * 字体
+         * @member {any} egret.TextField#fontFamily
+         */
+        public _fontFamily = "Arial";
+
+        public get fontFamily():string {
+            return this._fontFamily;
+        }
+
+        public set fontFamily(value:string) {
+            this._setFontFamily(value);
+        }
+
+        public _setFontFamily(value:string):void {
+            if (this._fontFamily != value) {
+                this._fontFamily = value;
+                this.stageText.setTextFontFamily(value);
+            }
+        }
+
+        public _setWidth(value:number):void {
+            this._text.width = value;
+            this.stageText.setWidth(value);
+
+            super._setWidth(value);
+        }
+
+        public _setHeight(value:number):void {
+            this._text.height = value;
+            this.stageText.setHeight(value);
+
+            super._setHeight(value);
         }
     }
 }
