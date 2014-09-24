@@ -67,7 +67,6 @@ function compile(exmlPath:string,srcPath:string):void{
 
 
 exports.compile = compile;
-
 class EXMLCompiler{
     /**
      * Egret命名空间
@@ -482,6 +481,10 @@ class EXMLCompiler{
             value = node[key];
             key = this.formatKey(key.substring(1),value);
             value  = this.formatValue(key,value,node);
+            if(!value)
+            {
+                continue;
+            }
             if(this.currentClass.containsVar(value)){//赋的值对象是一个id
                 var id:string = node.$id;
                 var codeLine:string = "this."+id+" = t;";
@@ -665,7 +668,7 @@ class EXMLCompiler{
      */
     private formatValue(key:string,value:string,node:any):string{
         if(!value){
-            return "";
+            value = "";
         }
         var stringValue:string = value;//除了字符串，其他类型都去除两端多余空格。
         value = value.trim();
@@ -838,6 +841,9 @@ class EXMLCompiler{
                 var key:string = itemName.substring(0,index);
                 key = this.formatKey(key,value);
                 var itemValue:string = this.formatValue(key,value,node);
+                if(!itemValue){
+                    continue;
+                }
                 var stateName:string = itemName.substr(index+1);
                 states = this.getStateByName(stateName,node);
                 var stateLength:number = states.length;
@@ -1049,6 +1055,9 @@ class EXMLCompiler{
                         var key:string = name.substring(0,index);
                         key = this.formatKey(key,value);
                         var value:string = this.formatValue(key,value,node);
+                        if(!value){
+                            continue;
+                        }
                         stateName = name.substr(index+1);
                         states = this.getStateByName(stateName,node);
                         var l:number = states.length;
@@ -2087,3 +2096,4 @@ class Modifiers{
     public static M_STATIC:string = "static";
 
 }
+compile("D:/Program/HTML5/egret/tools/lib/exml/src/code/skins/Panel.exml","D:/Program/HTML5/egret/tools/lib/exml/src/");

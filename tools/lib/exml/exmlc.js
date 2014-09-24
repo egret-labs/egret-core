@@ -70,7 +70,6 @@ function compile(exmlPath, srcPath) {
 ;
 
 exports.compile = compile;
-
 var EXMLCompiler = (function () {
     /**
     * 构造函数
@@ -432,6 +431,9 @@ var EXMLCompiler = (function () {
             value = node[key];
             key = this.formatKey(key.substring(1), value);
             value = this.formatValue(key, value, node);
+            if (!value) {
+                continue;
+            }
             if (this.currentClass.containsVar(value)) {
                 var id = node.$id;
                 var codeLine = "this." + id + " = t;";
@@ -607,7 +609,7 @@ var EXMLCompiler = (function () {
     */
     EXMLCompiler.prototype.formatValue = function (key, value, node) {
         if (!value) {
-            return "";
+            value = "";
         }
         var stringValue = value;
         value = value.trim();
@@ -775,6 +777,9 @@ var EXMLCompiler = (function () {
                 var key = itemName.substring(0, index);
                 key = this.formatKey(key, value);
                 var itemValue = this.formatValue(key, value, node);
+                if (!itemValue) {
+                    continue;
+                }
                 var stateName = itemName.substr(index + 1);
                 states = this.getStateByName(stateName, node);
                 var stateLength = states.length;
@@ -981,6 +986,9 @@ var EXMLCompiler = (function () {
                         var key = name.substring(0, index);
                         key = this.formatKey(key, value);
                         var value = this.formatValue(key, value, node);
+                        if (!value) {
+                            continue;
+                        }
                         stateName = name.substr(index + 1);
                         states = this.getStateByName(stateName, node);
                         var l = states.length;
@@ -1965,4 +1973,5 @@ var Modifiers = (function () {
     Modifiers.M_STATIC = "static";
     return Modifiers;
 })();
+compile("D:/Program/HTML5/egret/tools/lib/exml/src/code/skins/Panel.exml", "D:/Program/HTML5/egret/tools/lib/exml/src/");
 //# sourceMappingURL=exmlc.js.map
