@@ -2096,4 +2096,3 @@ class Modifiers{
     public static M_STATIC:string = "static";
 
 }
-compile("D:/Program/HTML5/egret/tools/lib/exml/src/code/skins/Panel.exml","D:/Program/HTML5/egret/tools/lib/exml/src/");
