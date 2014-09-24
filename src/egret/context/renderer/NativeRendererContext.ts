@@ -149,7 +149,7 @@ module egret {
         public drawText(textField:egret.TextField, text:string, x:number, y:number, maxWidth:number) {
             Profiler.getInstance().onDrawImage();
             egret_native.Label.setTextColor(textField._textColor);
-            egret_native.Label.drawText(text, x, y);
+            egret_native.Label.drawText(text, x, y - 2);
         }
 
         public pushMask(mask:Rectangle):void {
@@ -163,6 +163,123 @@ module egret {
 }
 
 
-egret.Graphics.prototype._draw = function () {
-    return;
-}
+//egret.Graphics.prototype._draw = function () {
+//    return;
+//}
+
+
+var egret_native_graphics;
+(function (egret_native_graphics) {
+    function beginFill(color, alpha) {
+        this.commandQueue.push(new Command(function (color, alpha) {
+            if (!alpha && alpha != 0) {
+                alpha = 1;
+            }
+            egret_native.Graphics.beginFill(color, alpha)
+        }, this, arguments));
+    }
+
+    egret_native_graphics.beginFill = beginFill;
+
+    function drawRect(x, y, width, height) {
+        this.commandQueue.push(new Command(function (x, y) {
+            egret_native.Graphics.moveTo(x, y)
+            egret_native.Graphics.lineTo(x + width, y);
+            egret_native.Graphics.lineTo(x + width, y + height);
+            egret_native.Graphics.lineTo(x, y + height);
+            egret_native.Graphics.lineTo(x, y);
+        }, this, arguments));
+
+    }
+
+    egret_native_graphics.drawRect = drawRect;
+
+    function drawCircle(x, y, r) {
+
+    }
+
+    egret_native_graphics.drawCircle = drawCircle;
+
+    function lineStyle(thickness, color, alpha, pixelHinting, scaleMode, caps, joints, miterLimit) {
+
+
+        this.commandQueue.push(new Command(function (thickness, color) {
+            egret_native.Graphics.lineStyle(thickness, color)
+        }, this, arguments));
+    }
+
+    egret_native_graphics.lineStyle = lineStyle;
+
+    function lineTo(x, y) {
+        this.commandQueue.push(new Command(function (x, y) {
+            egret_native.Graphics.lineTo(x, y)
+
+        }, this, arguments));
+    }
+
+    egret_native_graphics.lineTo = lineTo;
+
+    function curveTo(controlX, controlY, anchorX, anchorY) {
+
+    }
+
+    egret_native_graphics.curveTo = curveTo;
+
+    function moveTo(x, y) {
+        this.commandQueue.push(new Command(function (x, y) {
+            egret_native.Graphics.moveTo(x, y)
+        }, this, arguments));
+    }
+
+    egret_native_graphics.moveTo = moveTo;
+
+    function clear() {
+        this.commandQueue.splice(0, this.commandQueue.length);
+        egret_native.Graphics.lineStyle(0, 0)
+    }
+
+    egret_native_graphics.clear = clear;
+
+
+    function endFill() {
+        this.commandQueue.push(new Command(function () {
+            egret_native.Graphics.endFill();
+
+        }, this, arguments));
+    }
+
+    egret_native_graphics.endFill = endFill;
+
+    function _draw(renderContext) {
+        return;
+        var length = this.commandQueue.length;
+        for (var i = 0; i < length; i++) {
+            var command = this.commandQueue[i];
+            command.method.apply(command.thisObject, command.args);
+        }
+        egret_native.Graphics.lineStyle(0, 0);
+    }
+
+    egret_native_graphics._draw = _draw;
+
+    var Command = (function () {
+        function Command(method, thisObject, args) {
+            this.method = method;
+            this.thisObject = thisObject;
+            this.args = args;
+        }
+
+        return Command;
+    })();
+
+    function init() {
+        for (var key in egret_native_graphics) {
+            egret.Graphics.prototype[key] = egret_native_graphics[key];
+        }
+    }
+
+    egret_native_graphics.init = init;
+})(egret_native_graphics || (egret_native_graphics = {}));
+
+
+egret_native_graphics.init();
