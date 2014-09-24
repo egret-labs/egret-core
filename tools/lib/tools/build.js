@@ -46,6 +46,7 @@ function run(dir, args, opts) {
     async.series(task, function (err) {
         if (!err) {
             globals.log("构建成功");
+            process.exit(0);
         }
         else {
             globals.exit(err);
