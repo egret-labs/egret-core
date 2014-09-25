@@ -160,8 +160,6 @@ function upgradeTo_1_1_0() {
         file.save(path.join(projectDir, "launcher", "egret_require.js"), reqContent);
     }
 
-    var open = require("../core/open");
-    open("https://github.com/egret-labs/egret-core/wiki/Egret_Upgrade");
 
 }
 
