@@ -27,6 +27,7 @@ exports.error_code = {
     1605:"移动平台项目目录不能与html5项目目录为同一目录，请修改移动平台项目目录。",
     1701:"项目版本低于 egret 版本，请执行 egret upgrade {your_project} 命令升级您的项目",
     1702:"项目升级后，请执行一次 egret build {your_project} {color_green}-e{color_normal} 编译引擎",
+    1703:"升级完毕，{color_green}请执行一次 egret build {your_project} -e{color_normal} 编译引擎\n如果{color_red}适配或者显示有问题{color_normal} 请访问 {color_underline}https://github.com/egret-labs/egret-core/wiki/Egret_Upgrade{color_normal} 获取更多细节",
     9999:"未知错误:{0}",
     8001:"请输入命令行选项{color_green} {0} {color_normal}的参数,并确认是以下值之一: {color_green}[{1}]{color_normal}",
     8002:"{color_red}请选对正确的egret项目目录！{color_normal}\n\tEgret_Project\t\t{color_gray}//项目目录{color_normal}\n\t\t--launcher\t{color_gray}//启动目录{color_normal}\n\t\t--src\t\t{color_gray}//源代码目录{color_normal}",

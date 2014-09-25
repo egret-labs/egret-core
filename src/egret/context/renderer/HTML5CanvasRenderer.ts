@@ -53,10 +53,11 @@ module egret {
         private blendValue:string;
         private globalAlpha:number = 1;
 
-        public constructor(canvas) {
+        public constructor(canvas?:HTMLCanvasElement) {
             super();
-            this.canvas = canvas;
-            this.canvasContext = canvas.getContext("2d");
+
+            this.canvas = canvas || this.createCanvas();
+            this.canvasContext = this.canvas.getContext("2d");
             var f = this.canvasContext.setTransform;
             var that = this;
             this.canvasContext.setTransform = function (a, b, c, d, tx, ty) {
@@ -78,6 +79,21 @@ module egret {
             this._transformTx = 0;
             this._transformTy = 0;
             super();
+        }
+
+        private createCanvas():HTMLCanvasElement {
+            var canvas:HTMLCanvasElement = egret.Browser.getInstance().$("#egretCanvas");
+            if (!canvas) {
+                var container = document.getElementById(egret.StageDelegate.canvas_div_name);
+                canvas = egret.Browser.getInstance().$new("canvas");
+                canvas.id = "egretCanvas";
+                canvas.width = egret.MainContext.instance.stage.stageWidth; //stageW
+                canvas.height = egret.MainContext.instance.stage.stageHeight; //stageH
+                canvas.style.width = container.style.width;
+                canvas.style.height = container.style.height;
+                container.appendChild(canvas);
+            }
+            return canvas;
         }
 
         public clearScreen() {

@@ -1,8 +1,0 @@
-{
-    "update_mode": "0",
-    "package":"package/",
-    "game": "game.zip",
-    "update": {
-        "1.0": "update1.zip"
-    }
-}
