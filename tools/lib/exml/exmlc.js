@@ -1973,5 +1973,4 @@ var Modifiers = (function () {
     Modifiers.M_STATIC = "static";
     return Modifiers;
 })();
-compile("D:/Program/HTML5/egret/tools/lib/exml/src/code/skins/Panel.exml", "D:/Program/HTML5/egret/tools/lib/exml/src/");
 //# sourceMappingURL=exmlc.js.map

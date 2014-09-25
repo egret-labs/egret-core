@@ -140,11 +140,13 @@ declare module egret_native {
     module TextInputOp {
 
         function setKeybordOpen(isOpen:boolean):void
+        function isFullScreenKeyBoard():boolean
 
 
     }
 
     function EGT_TextInput(text:string):void
+    function EGT_keyboardFinish():void
 
 
     function EGT_deleteBackward():void;

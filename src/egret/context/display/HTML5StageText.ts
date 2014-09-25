@@ -36,7 +36,7 @@ module egret {
     export class HTML5StageText extends StageText {
 
         private div:any;
-        private inputElement:HTMLInputElement;
+        private inputElement:any;
         private _size:number = 30;
 
         private _call;
@@ -78,6 +78,12 @@ module egret {
             return this.inputElement.type;
         }
 
+        public _setMultiline(value:boolean):void {
+            super._setMultiline(value);
+
+            this._createInput();
+        }
+
         /**
          * @method egret.StageText#open
          * @param x {number}
@@ -89,22 +95,6 @@ module egret {
             var scaleX = egret.StageDelegate.getInstance().getScaleX();
             var scaleY = egret.StageDelegate.getInstance().getScaleY();
 
-            var inputElement = document.createElement("input");
-            inputElement.type = "text";
-            inputElement.style.fontSize = this._size + "px";
-            inputElement.style.lineHeight = this._size + "px";
-            inputElement.style.textAlign = "left";
-            inputElement.style.fontFamily = "Arial";
-            inputElement.style.fontStyle = "normal";
-            inputElement.style.fontWeight = "normal";
-
-            inputElement.style.color = "#FFFFFF";
-            inputElement.style.border = "none";
-            inputElement.style.background = "none";
-            inputElement.style.width = width + "px";
-            inputElement.style.padding = "0";
-            inputElement.style.outline = "medium";
-
             var div = egret.Browser.getInstance().$new("div");
             div.position.x = x * scaleX;
             div.position.y = y * scaleY;
@@ -114,13 +104,12 @@ module egret {
             div.transforms();
             div.style[egret_dom.getTrans("transformOrigin")] = "0% 0% 0px";
 
-            div.appendChild(inputElement);
-
             var stageDelegateDiv = this.getStageDelegateDiv();
             stageDelegateDiv.appendChild(div);
 
             this.div = div;
-            this.inputElement = inputElement;
+
+            this._createInput();
 
             if (div && !div.parentNode) {
                 var stageDelegateDiv = this.getStageDelegateDiv();
@@ -129,6 +118,51 @@ module egret {
             div.style.display = "block";
 
             this._call = this.onHandler.bind(this);
+        }
+
+        private _inputType:string = "";
+        private _createInput():void {
+            var isChanged:boolean = false;
+
+            var inputElement:any;
+            if (this._multiline && this._inputType != "textarea") {
+                isChanged = true;
+                this._inputType = "textarea";
+                inputElement = document.createElement("textarea");
+            }
+            else if (!this._multiline && this._inputType != "input") {
+                isChanged = true;
+                this._inputType = "input";
+                inputElement = document.createElement("input");
+            }
+
+            if (isChanged) {
+                inputElement.type = "text";
+                inputElement.style.fontSize = this._size + "px";
+                inputElement.style.lineHeight = this._size + "px";
+                inputElement.style.textAlign = "left";
+                inputElement.style.fontFamily = "Arial";
+                inputElement.style.fontStyle = "normal";
+                inputElement.style.fontWeight = "normal";
+
+                inputElement.style.color = "#FFFFFF";
+                inputElement.style.border = "none";
+                inputElement.style.background = "none";
+                inputElement.style.width = this.div.style.width;
+                inputElement.style.padding = "0";
+                inputElement.style.outline = "medium";
+
+                if (this.inputElement && this.inputElement.parentNode) {
+                    this.inputElement.parentNode.removeChild(this.inputElement);
+                    this._removeListeners();
+                    this.inputElement = inputElement;
+                    this._addListeners();
+                }
+                else {
+                    this.inputElement = inputElement;
+                }
+                this.div.appendChild(inputElement);
+            }
         }
 
         public _addListeners():void {
