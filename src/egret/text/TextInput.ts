@@ -57,6 +57,7 @@ module egret {
 
             this.stageText.addEventListener("blur", this.onBlurHandler, this);
             this.stageText.addEventListener("focus", this.onFocusHandler, this);
+            this.stageText.addEventListener("updateText", this.updateTextHandler, this);
             this.addEventListener(egret.TouchEvent.TOUCH_BEGIN, this.onMouseDownHandler, this);
             egret.MainContext.instance.stage.addEventListener(egret.TouchEvent.TOUCH_BEGIN, this.onStageDownHandler, this);
         }
@@ -108,8 +109,13 @@ module egret {
 
             this.stageText.removeEventListener("blur", this.onBlurHandler, this);
             this.stageText.removeEventListener("focus", this.onFocusHandler, this);
+            this.stageText.removeEventListener("updateText", this.updateTextHandler, this);
             this.removeEventListener(egret.TouchEvent.TOUCH_BEGIN, this.onMouseDownHandler, this);
             egret.MainContext.instance.stage.removeEventListener(egret.TouchEvent.TOUCH_BEGIN, this.onStageDownHandler, this);
+        }
+
+        private updateTextHandler(event):void {
+            this.resetText();
         }
 
         /**
@@ -262,6 +268,25 @@ module egret {
             this.stageText.setHeight(value);
 
             super._setHeight(value);
+        }
+
+
+        private _multiline:boolean = false;
+        public set multiline(value:boolean) {
+            this._setMultiline(value);
+        }
+        public _setMultiline(value:boolean):void {
+            this._multiline = value;
+            this.stageText._setMultiline(value);
+        }
+
+        /**
+         * 表示字段是否为多行文本字段。如果值为 true，则文本字段为多行文本字段；如果值为 false，则文本字段为单行文本字段。在类型为 TextFieldType.INPUT 的字段中，multiline 值将确定 Enter 键是否创建新行（如果值为 false，则将忽略 Enter 键）。如果将文本粘贴到其 multiline 值为 false 的 TextField 中，则文本中将除去新行。
+         * 默认值为 false。
+         * @returns {boolean}
+         */
+        public get multiline():boolean {
+            return this._multiline;
         }
     }
 }

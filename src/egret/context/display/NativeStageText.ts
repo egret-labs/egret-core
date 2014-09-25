@@ -38,8 +38,9 @@ module egret {
      */
     export class NativeStageText extends StageText {
 
-        private tf:egret.TextField;
         private textValue:string = "";
+
+        private tf:egret.TextField;
         private container:egret.DisplayObjectContainer;
         private textType:string;
 
@@ -55,12 +56,43 @@ module egret {
             this.textValue = "";
         }
 
+        private createText():void {
+            var container:egret.DisplayObjectContainer = this.container;
+            if (container.numChildren <= 0) {
+                var stage:egret.Stage = egret.MainContext.instance.stage;
+                var stageWidth:number = stage.stageWidth;
+                var stageHeight:number = stage.stageHeight;
+
+                var shape:egret.Shape = new egret.Shape();
+                shape.graphics.beginFill(0x000000, .7);
+                shape.graphics.drawRect(0, 0, stageWidth, stageHeight);
+                shape.graphics.endFill();
+                shape.width = stageWidth;
+                shape.height = stageHeight;
+                shape.touchEnabled = true;
+                container.addChild(shape);
+
+                var textInputBackground:egret.Shape = new egret.Shape();
+                textInputBackground.graphics.lineStyle(8, 0xff0000, 1);
+                textInputBackground.graphics.beginFill(0xffffff, 1);
+                textInputBackground.graphics.drawRect(4, 4, stageWidth - 8, 52);
+                textInputBackground.graphics.endFill();
+                container.addChild(textInputBackground);
+
+                var tf:egret.TextField = this.tf;
+                tf.x = tf.y = 15;
+                tf.touchEnabled = true;
+                container.addChild(tf);
+                tf.width = stageWidth;
+            }
+        }
+
         /**
          * @method egret.StageText#getText
          * @returns {string}
          */
         public _getText():string {
-            if (!this.textValue){
+            if (!this.textValue) {
                 this.textValue = "";
             }
             return this.textValue;
@@ -107,68 +139,79 @@ module egret {
         }
 
         private resetText():void {
-            if (this.textType == "password"){
+            if (this.textType == "password") {
                 var passwordStr = "";
-                for (var i = 0 ; i < this.textValue.length ; i++){
+                for (var i = 0; i < this.textValue.length; i++) {
                     passwordStr += "*";
                 }
                 this.tf.text = passwordStr;
             }
-            else{
+            else {
                 this.tf.text = this.textValue;
             }
         }
 
-        /**
-         * @method egret.StageText#add
-         */
-        public _show():void {
+        private isFinishDown:boolean = false;
+        //全屏键盘
+        private showScreenKeyboard():void {
+            var self = this;
+            egret_native.EGT_TextInput = function (appendText:string) {
+                if (self._multiline) {//多行文本
+                    if (self.isFinishDown) {
+                        self.isFinishDown = false;
 
+                        self.textValue = appendText;
+                        self.resetText();
 
+                        self.dispatchEvent(new egret.Event("updateText"));
+                    }
+                }
+                else {//单行文本
+                    self.textValue = appendText.replace(/[\n|\r]/, "");
+                    self.resetText();
 
+                    //关闭软键盘
+                    egret_native.TextInputOp.setKeybordOpen(false);
+
+                    self.dispatchEvent(new egret.Event("updateText"));
+                }
+            };
+
+            //点击完成
+            egret_native.EGT_keyboardFinish = function () {
+                if (self._multiline) {//多行文本
+                    this.isFinishDown = true;
+                }
+            };
+
+        }
+
+        private showPartKeyboard():void {
             var container:egret.DisplayObjectContainer = this.container;
             var stage:egret.Stage = egret.MainContext.instance.stage;
             stage.addChild(container);
-
-
-            var stageWidth:number = stage.stageWidth;
-            var stageHeight:number = stage.stageHeight;
-
-            var shape:egret.Shape = new egret.Shape();
-            shape.graphics.beginFill(0x000000, .7);
-            shape.graphics.drawRect(0, 0, stageWidth, stageHeight);
-            shape.graphics.endFill();
-            shape.width = stageWidth;
-            shape.height = stageHeight;
-            shape.touchEnabled = true;
-            container.addChild(shape);
-
-
-            var textInputBackground:egret.Shape = new egret.Shape();
-            textInputBackground.graphics.lineStyle(8, 0xff0000, 1);
-            textInputBackground.graphics.beginFill(0xffffff, 1);
-            textInputBackground.graphics.drawRect(4, 4, stageWidth - 8, 52);
-            textInputBackground.graphics.endFill();
-            container.addChild(textInputBackground);
-
-            var tf:egret.TextField = this.tf;
-            tf.x = tf.y = 15;
-            container.addChild(tf);
-            tf.width = stageWidth;
-
+            this.createText();
 
             var self = this;
 
             egret_native.EGT_TextInput = function (appendText:string) {
-                if (appendText == "\n")
-                {
-                    egret_native.TextInputOp.setKeybordOpen(true);
-                    return;
+                if (self._multiline) {//多行文本
+
+                }
+                else {
+                    if (appendText == "\n") {
+                        if (container && container.parent) {
+                            container.parent.removeChild(container);
+                            self.dispatchEvent(new egret.Event("blur"));
+                        }
+                        egret_native.TextInputOp.setKeybordOpen(false);
+                        return;
+                    }
                 }
                 self.textValue += appendText;
 
                 self.resetText();
-            }
+            };
 
             egret_native.EGT_deleteBackward = function () {
                 var text = self._getText();
@@ -176,25 +219,39 @@ module egret {
                 self.textValue = text;
 
                 self.resetText();
-            }
+            };
 
+            //系统关闭键盘
             egret_native.EGT_keyboardDidHide = function () {
                 if (container && container.parent) {
                     container.parent.removeChild(container);
                     self.dispatchEvent(new egret.Event("blur"));
                 }
+            };
 
-            }
+            self.dispatchEvent(new egret.Event("focus"));
+        }
+
+        /**
+         * @method egret.StageText#add
+         */
+        public _show():void {
+            var self = this;
+            egret_native.EGT_getTextEditerContentText = function () {
+                return self._getText();
+            };
 
             egret_native.EGT_keyboardDidShow = function () {
-                self.dispatchEvent(new egret.Event("focus"));
-            }
+                if (egret_native.TextInputOp.isFullScreenKeyBoard()) {//横屏
+                    self.showScreenKeyboard();
+                }
+                else {
+                    self.showPartKeyboard();
+                }
 
-
-            egret_native.EGT_getTextEditerContentText = function(){
-                return self._getText();
-            }
-
+                egret_native.EGT_keyboardDidShow = function () {
+                }
+            };
 
             egret_native.TextInputOp.setKeybordOpen(true);
         }
