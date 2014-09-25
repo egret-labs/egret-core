@@ -15,7 +15,7 @@ var upgradeConfig = {
     "1.0.4": upgradeTo_1_0_4,
     "1.0.5": upgradeTo_1_0_5,
     "1.0.6": upgradeTo_1_0_6,
-    "1.0.7": upgradeTo_1_0_7
+    "1.1.0": upgradeTo_1_1_0
 };
 
 var currDir;
@@ -38,7 +38,7 @@ function run(dir, a, opts) {
         }
     }
 
-    globals.exit(1702);
+    globals.exit(1703);
 }
 
 function upgradeTo_1_0_3() {
@@ -112,38 +112,23 @@ function upgradeTo_1_0_6(){
     projectConfig.save();
 }
 
+function upgradeTo_1_1_0() {
+    globals.log("正在更新到1.1.0");
 
-function upgradeTo_1_0_7() {
     projectConfig.init(currDir);
-    projectConfig.data.egret_version = "1.0.7";
+    projectConfig.data.egret_version = "1.1.0";
     projectConfig.save();
 
     //替换 全部 html
     var projectDir = currDir;
-    var reg = /<div(.|\n|\r)+\"gameDiv\"(.|\n|\r)*<canvas(.|\n|\r)+<\/canvas>[^<]*<\/div>/;
-    var newDiv = '<div style="position:relative;" id="gameDiv"></div>';
 
-    var fileList = file.getDirectoryListing(path.join(projectDir, "launcher"), true);
-    for (var key in fileList) {
-        var fileName = fileList[key];
-        var filePath = path.join(projectDir, "launcher", fileName);
-        if (file.isDirectory(fileStr)) {
-        }
-        else if (fileStr.indexOf(".html") >= 0) {
-            var fileContent = file.read(fileStr);
-            fileContent = fileContent.replace(reg, newDiv);
-            file.save(filePath, fileContent);
-        }
-    }
+    //生成html样板
+    var htmlContent = file.read(path.join("..", "..", "templates", "empty", "launcher", "index.html"));
+    file.save(path.join(projectDir, "launcher", "index_1_1_copy.html"), htmlContent);
 
-
-    //去掉egret_loader中有关canvas的字段
-    var loaderPath = file.read(path.join(projectDir, "launcher", "egret_loader.js"));
-    var loaderContent = file.read(loaderPath);
-    var reg3 = /\(canvas\)/g;
-    loaderContent = loaderContent.replace(reg3, "");
-    file.save(loaderPath, loaderContent);
-
+    //生成egret_loader.js样板
+    var fileContent = file.read(path.join("..", "..", "templates", "empty", "launcher", "egret_loader.js"));
+    file.save(path.join(projectDir, "launcher", "egret_loader_1_1_copy.js"), fileContent);
 }
 
 function getClassList(item) {
