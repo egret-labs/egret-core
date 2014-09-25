@@ -55,7 +55,7 @@ function run(dir, args, opts) {
         var projectName = args[0] ? args[0] : "";
         var projectNamePath = projectName ? projectName + "/" : "";
         var url = "http://" + ip + ":" + PORT + "/" + projectNamePath + "launcher/index.html";
-        var url = "http://" + ip + ":" + PORT + "/" + projectNamePath + "launcher/" + autoCompilerFlag;
+//        var url = "http://" + ip + ":" + PORT + "/" + projectNamePath + "launcher/" + autoCompilerFlag;
         if (OPEN) {
             open(url);
             console.log("Server runing at port: " + PORT + ".");
