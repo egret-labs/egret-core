@@ -145,7 +145,7 @@ function upgradeTo_1_1_0() {
         }
     }
 
-    var loaderPath = file.read(path.join(projectDir, "launcher", "egret_loader.js"));
+    var loaderPath = path.join(projectDir, "launcher", "egret_loader.js");
     var loaderContent = file.read(loaderPath);
     //保存副本
     file.save(path.join(projectDir, "launcher", "copy_egret_loader.js"), loaderContent);
