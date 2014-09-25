@@ -52,7 +52,7 @@ module egret {
          * @member egret.StageDelegate.canvas_name
          * @deprecated
          */
-        public static canvas_name:string = "gameCanvas";
+        public static canvas_name:string = "egretCanvas";
         /**
          * @member egret.StageDelegate.canvas_div_name
          */

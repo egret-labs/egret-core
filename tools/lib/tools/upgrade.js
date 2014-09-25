@@ -116,16 +116,49 @@ function upgradeTo_1_1_0() {
     projectConfig.data.egret_version = "1.1.0";
     projectConfig.save();
 
+
     //替换 全部 html
     var projectDir = currDir;
 
-    //生成html样板
-    var htmlContent = file.read(path.join(param.getEgretPath(), "tools", "templates", "empty", "launcher", "index.html"));
-    file.save(path.join(projectDir, "launcher", "index_1_1_copy.html"), htmlContent);
+    var reg1 = /<div(.|\n|\r)+\"gameDiv\"(.|\n|\r)*<canvas(.|\n|\r)+<\/canvas>[^<]*<\/div>/;
+    var newDiv = '<div style="position:relative;" id="gameDiv"></div>';
+
+    var fileList = file.getDirectoryListing(path.join(projectDir, "launcher"), true);
+    for (var key in fileList) {
+        var fileName = fileList[key];
+        var filePath = path.join(projectDir, "launcher", fileName);
+        if (file.isDirectory(filePath)) {
+        }
+        else if (filePath.indexOf(".html") >= 0) {
+            var fileContent = file.read(filePath);
+            //保存副本
+            file.save(path.join(projectDir, "launcher", "copy_" + fileName), fileContent);
+
+            //替换Div
+            fileContent = fileContent.replace(reg1, newDiv);
+            //是否存在egret_require.js
+            if (fileContent.indexOf("launcher/egret_require.js") < 0) {//不存在
+                fileContent = fileContent.replace('<script src="launcher/egret_loader.js"', '<script src="launcher/egret_require.js"></script>\n<script src="launcher/egret_loader.js"');
+            }
+
+            file.save(filePath, fileContent);
+        }
+    }
+
+    var loaderPath = file.read(path.join(projectDir, "launcher", "egret_loader.js"));
+    var loaderContent = file.read(loaderPath);
+    //保存副本
+    file.save(path.join(projectDir, "launcher", "copy_egret_loader.js"), loaderContent);
 
     //生成egret_loader.js样板
     var fileContent = file.read(path.join(param.getEgretPath(), "tools", "templates", "empty", "launcher", "egret_loader.js"));
-    file.save(path.join(projectDir, "launcher", "egret_loader_1_1_copy.js"), fileContent);
+    file.save(path.join(projectDir, "launcher", "egret_loader.js"), fileContent);
+
+    if (!file.exists(path.join(projectDir, "launcher", "egret_require.js"))) {
+        //生成require。js文件夹
+        var reqContent = file.read(path.join(param.getEgretPath(), "tools", "templates", "empty", "launcher", "egret_require.js"));
+        file.save(path.join(projectDir, "launcher", "egret_require.js"), reqContent);
+    }
 }
 
 function getClassList(item) {
