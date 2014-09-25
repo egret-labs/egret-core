@@ -23,11 +23,7 @@ function checkVersion(projectPath) {
     config.init(projectPath);
     var version = config.data.egret_version;
     if (!version) {
-
-        var open = require("../core/open");
-        open("https://github.com/egret-labs/egret-core/wiki/Egret_Upgrade/upgrade/index.html");
-
-        _exit(1703);
+        _exit(1701);
     }
 
 
@@ -37,10 +33,7 @@ function checkVersion(projectPath) {
 
     var result = compressVersion(version, egret_version);
     if (result < 0) {
-        var open = require("../core/open");
-        open("https://github.com/egret-labs/egret-core/wiki/Egret_Upgrade/upgrade/index.html");
-
-        _exit(1703);
+        _exit(1701);
     }
 
 
