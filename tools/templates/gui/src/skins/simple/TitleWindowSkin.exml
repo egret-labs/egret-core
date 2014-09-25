@@ -15,6 +15,6 @@
         <e:Button id="closeButton" verticalCenter="0" right="10" skinName="skins.simple.CloseButtonSkin"/>
     </e:Group>
 
-    <e:Group width="100%" bottom="0" top="51" id="contentGroup">
+    <e:Group width="100%" bottom="0" top="51" id="contentGroup" clipAndEnableScrolling="true">
     </e:Group>
 </e:Skin>

@@ -22,25 +22,26 @@ function run(currDir, args, opts) {
         globals.exit(1002);
     }
     var runtime = param.getOption(opts, "--runtime", ["html5", "native"]);
-    var type = param.getOption(opts, "--type", ["core", "gui"]);
+    var type = param.getOption(opts, "--type", ["core", "gui", "empty"]);
     var egretSourceList = [];
     async.series([
 
         function (callback) {
             globals.log("正在创建新项目文件夹...");
-            var templatesPath = type=="gui"?"tools/templates/gui":"tools/templates/game";
-            file.copy(path.join(param.getEgretPath(), templatesPath),
-                projectPath);
-            if (process.platform != "win32") {
-                var list = file.search(projectPath, "bat");
-                list = list.concat(file.search(projectPath, "cmd"));
-                for (var i = list.length - 1; i >= 0; i--) {
-                    file.remove(list[i]);
+            //拷贝空模板
+            copyFileDir(projectPath, "tools/templates/empty");
+
+            if (type != "empty") {
+                //拷贝core模板
+                copyFileDir(projectPath, "tools/templates/game");
+
+                //gui 用gui覆盖刚拷贝的文件
+                if (type == "gui") {
+                    copyFileDir(projectPath, "tools/templates/gui");
                 }
             }
             callback();
         },
-
 
         function (callback) {
                 compiler.compileModules(callback, projectPath,runtime);
@@ -56,9 +57,19 @@ function run(currDir, args, opts) {
         }
     ])
 
-
 }
 
+function copyFileDir(projectPath, dir) {
+    file.copy(path.join(param.getEgretPath(), dir),
+        projectPath);
+    if (process.platform != "win32") {
+        var list = file.search(projectPath, "bat");
+        list = list.concat(file.search(projectPath, "cmd"));
+        for (var i = list.length - 1; i >= 0; i--) {
+            file.remove(list[i]);
+        }
+    }
+}
 
 function help_title() {
     return "创建新项目\n";

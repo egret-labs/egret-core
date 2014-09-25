@@ -14,7 +14,8 @@ var upgradeConfig = {
     "1.0.3": upgradeTo_1_0_3,
     "1.0.4": upgradeTo_1_0_4,
     "1.0.5": upgradeTo_1_0_5,
-    "1.0.6": upgradeTo_1_0_6
+    "1.0.6": upgradeTo_1_0_6,
+    "1.1.0": upgradeTo_1_1_0
 };
 
 var currDir;
@@ -37,7 +38,7 @@ function run(dir, a, opts) {
         }
     }
 
-    globals.exit(1702);
+    globals.exit(1703);
 }
 
 function upgradeTo_1_0_3() {
@@ -96,9 +97,6 @@ function upgradeTo_1_0_5() {
     txt = txt.replace("egret.StageScaleMode.SHOW_ALL", "egret.StageScaleMode.NO_BORDER");
     file.save(releasePath, txt);
 
-
-
-
     projectConfig.init(currDir);
     projectConfig.data.egret_version = "1.0.5";
     projectConfig.data.native.path_ignore = [];
@@ -111,6 +109,61 @@ function upgradeTo_1_0_6(){
     projectConfig.save();
 }
 
+function upgradeTo_1_1_0() {
+    globals.log("正在更新到1.1.0");
+
+    projectConfig.init(currDir);
+    projectConfig.data.egret_version = "1.1.0";
+    projectConfig.save();
+
+
+    //替换 全部 html
+    var projectDir = currDir;
+
+    var reg1 = /<div(.|\n|\r)+\"gameDiv\"(.|\n|\r)*<canvas(.|\n|\r)+<\/canvas>[^<]*<\/div>/;
+    var newDiv = '<div style="position:relative;" id="gameDiv"></div>';
+
+    var fileList = file.getDirectoryListing(path.join(projectDir, "launcher"), true);
+    for (var key in fileList) {
+        var fileName = fileList[key];
+        var filePath = path.join(projectDir, "launcher", fileName);
+        if (file.isDirectory(filePath)) {
+        }
+        else if (filePath.indexOf(".html") >= 0) {
+            var fileContent = file.read(filePath);
+            //保存副本
+            file.save(path.join(projectDir, "launcher", "copy_" + fileName), fileContent);
+
+            //替换Div
+            fileContent = fileContent.replace(reg1, newDiv);
+            //是否存在egret_require.js
+            if (fileContent.indexOf("launcher/egret_require.js") < 0) {//不存在
+                fileContent = fileContent.replace('<script src="launcher/egret_loader.js"', '<script src="launcher/egret_require.js"></script>\n<script src="launcher/egret_loader.js"');
+            }
+
+            file.save(filePath, fileContent);
+        }
+    }
+
+    var loaderPath = path.join(projectDir, "launcher", "egret_loader.js");
+    var loaderContent = file.read(loaderPath);
+    //保存副本
+    file.save(path.join(projectDir, "launcher", "copy_egret_loader.js"), loaderContent);
+
+    //生成egret_loader.js样板
+    var fileContent = file.read(path.join(param.getEgretPath(), "tools", "templates", "empty", "launcher", "egret_loader.js"));
+    file.save(path.join(projectDir, "launcher", "egret_loader.js"), fileContent);
+
+    if (!file.exists(path.join(projectDir, "launcher", "egret_require.js"))) {
+        //生成require。js文件夹
+        var reqContent = file.read(path.join(param.getEgretPath(), "tools", "templates", "empty", "launcher", "egret_require.js"));
+        file.save(path.join(projectDir, "launcher", "egret_require.js"), reqContent);
+    }
+
+    var open = require("../core/open");
+    open("https://github.com/egret-labs/egret-core/wiki/Egret_Upgrade/upgrade/index.html");
+    globals.exit(1703);
+}
 
 function getClassList(item) {
     var basename = path.basename(item)

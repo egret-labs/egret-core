@@ -50,8 +50,9 @@ module egret {
 
         /**
          * @member egret.StageDelegate.canvas_name
+         * @deprecated
          */
-        public static canvas_name:string = "gameCanvas";
+        public static canvas_name:string = "egretCanvas";
         /**
          * @member egret.StageDelegate.canvas_div_name
          */
@@ -66,16 +67,14 @@ module egret {
 
         private _resolutionPolicy;
 
+        public _stageWidth:number = 0;
+        public _stageHeight:number = 0;
+
         /**
          * @method egret.StageDelegate#constructor
          */
         public constructor() {
             super();
-            var canvas:any = document.getElementById(StageDelegate.canvas_name);
-            var w = canvas.width, h = canvas.height;
-            this._designWidth = w;
-            this._designHeight = h;
-
         }
 
         /**
@@ -210,10 +209,6 @@ module egret {
                 style.marginBottom = style.marginBottom || "0px";
                 style.marginLeft = style.marginLeft || "0px";
             }
-//            var contStyle = document.getElementById(egret.StageDelegate.canvas_div_name).style;
-//            contStyle.position = "fixed";
-//            contStyle.left = contStyle.top = "0px";
-//            document.body.scrollTop = 0;
         }
     }
 
@@ -250,6 +245,16 @@ module egret {
          */
         public _apply(delegate:egret.StageDelegate, designedResolutionWidth:number, designedResolutionHeight:number):void {
         }
+
+        public setEgretSize(w:number, h:number, styleW:number, styleH:number, top:number = 0):void {
+            egret.StageDelegate.getInstance()._stageWidth = w;
+            egret.StageDelegate.getInstance()._stageHeight = h;
+
+            var container:HTMLElement = document.getElementById(StageDelegate.canvas_div_name);
+            container.style.width = styleW + "px";
+            container.style.height = styleH + "px";
+            container.style.top = top + "px";
+        }
     }
 
     /**
@@ -276,8 +281,6 @@ module egret {
          * @param designedResolutionHeight {any}
          */
         public _apply(delegate:StageDelegate, designedResolutionWidth:number, designedResolutionHeight:number):void {
-            var canvas:HTMLCanvasElement = <HTMLCanvasElement>document.getElementById(StageDelegate.canvas_name);
-            var container:HTMLElement = document.getElementById(StageDelegate.canvas_div_name);
             var viewPortWidth:number = document.documentElement.clientWidth;//分辨率宽
             var viewPortHeight:number = document.documentElement.clientHeight;//分辨率高
 
@@ -289,12 +292,9 @@ module egret {
             if (this.minWidth != 0) {
                 scale2 = Math.min(1, designW / this.minWidth);
             }
-            canvas.width = designW / scale2;
-            canvas.height = designH;
-            canvas.style.width = viewPortWidth + "px";
-            canvas.style.height = (viewPortHeight * scale2) + "px";
-            container.style.width = viewPortWidth + "px";
-            container.style.height = (viewPortHeight * scale2) + "px";
+
+            this.setEgretSize(designW / scale2, designH, viewPortWidth, viewPortHeight * scale2);
+
             delegate._scaleX = scale * scale2;
             delegate._scaleY = scale * scale2;
         }
@@ -319,8 +319,6 @@ module egret {
         }
 
         public _apply(delegate:StageDelegate, designedResolutionWidth:number, designedResolutionHeight:number):void {
-            var canvas:HTMLCanvasElement = <HTMLCanvasElement>document.getElementById(StageDelegate.canvas_name);
-            var container:HTMLElement = document.getElementById(StageDelegate.canvas_div_name);
             var viewPortWidth:number = document.documentElement.clientWidth;//分辨率宽
             var viewPortHeight:number = document.documentElement.clientHeight;//分辨率高
 
@@ -332,12 +330,9 @@ module egret {
             if (this.minHeight != 0) {
                 scale2 = Math.min(1, designH / this.minHeight);
             }
-            canvas.width = designW;
-            canvas.height = designH / scale2;
-            canvas.style.width = (viewPortWidth * scale2) + "px";
-            canvas.style.height = viewPortHeight + "px";
-            container.style.width = (viewPortWidth * scale2) + "px";
-            container.style.height = viewPortHeight + "px";
+
+            this.setEgretSize(designW, designH / scale2, viewPortWidth * scale2, viewPortHeight);
+
             delegate._scaleX = scale * scale2;
             delegate._scaleY = scale * scale2;
         }
@@ -367,18 +362,12 @@ module egret {
          * @param designedResolutionHeight {number}
          */
         public _apply(delegate:StageDelegate, designedResolutionWidth:number, designedResolutionHeight:number):void {
-            var canvas:HTMLCanvasElement = <HTMLCanvasElement>document.getElementById(StageDelegate.canvas_name);
-            var container:HTMLDivElement = <HTMLDivElement>document.getElementById(StageDelegate.canvas_div_name);
             var viewPortWidth = this.width;
             var viewPortHeight = this.height;
             var scale = viewPortWidth / designedResolutionWidth;
-            canvas.width = designedResolutionWidth;
-            canvas.height = viewPortHeight / scale;
 
-            canvas.style.width = viewPortWidth + "px";
-            canvas.style.height = viewPortHeight + "px";
-            container.style.width = viewPortWidth + "px";
-            container.style.height = viewPortHeight + "px";
+            this.setEgretSize(designedResolutionWidth, viewPortHeight / scale, viewPortWidth, viewPortHeight);
+
             delegate._scaleX = scale;
             delegate._scaleY = scale;
         }
@@ -403,11 +392,8 @@ module egret {
          * @param designedResolutionHeight {number}
          */
         public _apply(delegate:StageDelegate, designedResolutionWidth:number, designedResolutionHeight:number):void {
-            var canvas:HTMLCanvasElement = <HTMLCanvasElement>document.getElementById(StageDelegate.canvas_name);
-            canvas.width = designedResolutionWidth;
-            canvas.height = designedResolutionHeight;
-            canvas.style.width = designedResolutionWidth + "px";
-            canvas.style.height = designedResolutionHeight + "px";
+            this.setEgretSize(designedResolutionWidth, designedResolutionHeight, designedResolutionWidth, designedResolutionHeight);
+
             delegate._scaleX = 1;
             delegate._scaleY = 1;
         }
@@ -427,8 +413,6 @@ module egret {
          * @param designedResolutionHeight {number}
          */
         public _apply(delegate:StageDelegate, designedResolutionWidth:number, designedResolutionHeight:number):void {
-            var canvas:HTMLCanvasElement = <HTMLCanvasElement>document.getElementById(StageDelegate.canvas_name);
-            var container:HTMLElement = document.getElementById(StageDelegate.canvas_div_name);
             var viewPortWidth:number = document.documentElement.clientWidth;//分辨率宽
             var viewPortHeight:number = document.documentElement.clientHeight;//分辨率高
 
@@ -439,18 +423,11 @@ module egret {
             var viewPortWidth = designW * scale;
             var viewPortHeight = designH * scale;
 
-
             var scale2:number = 1;
 
-            canvas.width = designW;
-            canvas.height = designH / scale2;
-            canvas.style.width = (viewPortWidth * scale2) + "px";
-            canvas.style.height = viewPortHeight + "px";
-
             delegate._offSetY = Math.floor((document.documentElement.clientHeight - viewPortHeight) / 2);
-            canvas.style.top = delegate._offSetY + "px";
-            container.style.width = (viewPortWidth * scale2) + "px";
-            container.style.height = viewPortHeight + "px";
+            this.setEgretSize(designW, designH / scale2, viewPortWidth * scale2, viewPortHeight, delegate._offSetY);
+
             delegate._scaleX = scale * scale2;
             delegate._scaleY = scale * scale2;
 
@@ -471,8 +448,6 @@ module egret {
          * @param designedResolutionHeight {number}
          */
         public _apply(delegate:StageDelegate, designedResolutionWidth:number, designedResolutionHeight:number):void {
-            var canvas:HTMLCanvasElement = <HTMLCanvasElement>document.getElementById(StageDelegate.canvas_name);
-            var container:HTMLElement = document.getElementById(StageDelegate.canvas_div_name);
             var viewPortWidth:number = document.documentElement.clientWidth;//分辨率宽
             var viewPortHeight:number = document.documentElement.clientHeight;//分辨率高
 
@@ -484,12 +459,8 @@ module egret {
             viewPortWidth = designW * scalex;
             viewPortHeight = designH * scaley;
 
-            canvas.width = designW;
-            canvas.height = designH;
-            canvas.style.width = viewPortWidth + "px";
-            canvas.style.height = viewPortHeight + "px";
-            container.style.width = viewPortWidth + "px";
-            container.style.height = viewPortHeight + "px";
+            this.setEgretSize(designW, designH, viewPortWidth, viewPortHeight);
+
             delegate._scaleX = scalex;
             delegate._scaleY = scaley;
         }

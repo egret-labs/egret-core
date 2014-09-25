@@ -291,7 +291,7 @@
 	{
 		"name":"bgImage",
 		"type":"image",
-		"url":"asset/app/bg.jpg"
+		"url":"asset/bg.jpg"
 	},
 	{
 		"name":"app_list_item_cutlline_png",
