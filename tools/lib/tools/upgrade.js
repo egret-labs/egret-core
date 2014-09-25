@@ -123,11 +123,13 @@ function upgradeTo_1_1_0() {
     var projectDir = currDir;
 
     //生成html样板
-    var htmlContent = file.read(path.join("..", "..", "templates", "empty", "launcher", "index.html"));
+    var htmlContent = file.read(path.join(param.getEgretPath(), "tools", "templates", "empty", "launcher", "index.html"));
+    console.log(path.join(param.getEgretPath(), "tools", "templates", "empty", "launcher", "index.html"));
+    console.log(htmlContent);
     file.save(path.join(projectDir, "launcher", "index_1_1_copy.html"), htmlContent);
 
     //生成egret_loader.js样板
-    var fileContent = file.read(path.join("..", "..", "templates", "empty", "launcher", "egret_loader.js"));
+    var fileContent = file.read(path.join(param.getEgretPath(), "tools", "templates", "empty", "launcher", "egret_loader.js"));
     file.save(path.join(projectDir, "launcher", "egret_loader_1_1_copy.js"), fileContent);
 }
 
