@@ -159,6 +159,10 @@ function upgradeTo_1_1_0() {
         var reqContent = file.read(path.join(param.getEgretPath(), "tools", "templates", "empty", "launcher", "egret_require.js"));
         file.save(path.join(projectDir, "launcher", "egret_require.js"), reqContent);
     }
+
+    var open = require("../core/open");
+    open("https://github.com/egret-labs/egret-core/wiki/Egret_Upgrade");
+
 }
 
 function getClassList(item) {
