@@ -9,6 +9,15 @@ var file = require("../core/file.js");
 function typeScriptCompiler(quitFunc,cmd) {
     file.save("tsc_config_temp.txt", cmd);//todo performance-optimize
     var TypeScript = require('../core/typescript/tsc.js');
+
+    TypeScript.exit = function(){
+
+        setTimeout(quitFunc,10,arguments[0])
+    }
+    var timer = new Date().getTime();
+    TypeScript.executeCommandLine(["@tsc_config_temp.txt"]);
+    console.log (new Date().getTime() - timer)
+    return;
     TypeScript.IO.arguments = ["@tsc_config_temp.txt"];
     TypeScript.IO.quit = quitFunc;
     TypeScript.Emitter.prototype.emitClass = function (classDecl) {
