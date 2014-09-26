@@ -142,10 +142,11 @@ function upgradeTo_1_1_0() {
             var firstIndex = fileContent.match(/<div[^<]*gameDiv/).index;
             var endIndex = firstIndex + 1;
             var lastIndex = fileContent.indexOf('</div>', endIndex);
+
             while (lastIndex >= 0) {
                 if (fileContent.indexOf("<div", endIndex) < lastIndex) {
-                    endIndex = lastIndex + 1;
-                    lastIndex = fileContent.indexOf('</div>', endIndex);
+                    endIndex = lastIndex;
+                    lastIndex = fileContent.indexOf('</div>', endIndex + 1);
                 }
                 else {
                     endIndex = lastIndex;
@@ -153,7 +154,7 @@ function upgradeTo_1_1_0() {
                 }
             }
 
-            fileContent = fileContent.substring(0, firstIndex) + newDiv + fileContent.substring(endIndex - 1, fileContent.length);
+            fileContent = fileContent.substring(0, firstIndex) + newDiv + fileContent.substring(endIndex, fileContent.length);
 
             //是否存在egret_require.js
             if (fileContent.indexOf("launcher/egret_require.js") < 0) {//不存在
