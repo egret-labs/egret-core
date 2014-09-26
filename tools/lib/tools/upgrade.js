@@ -125,7 +125,7 @@ function upgradeTo_1_1_0() {
     var projectDir = currDir;
 
     var reg1 = /<div(.|\n|\r)+\"gameDiv\"(.|\n|\r)*<canvas(.|\n|\r)+<\/canvas>[^<]*<\/div>/;
-    var newDiv = '<div style="position:relative;" id="gameDiv"></div>';
+    var newDiv = '<div style="position:relative;" id="gameDiv">';
 
     var fileList = file.getDirectoryListing(path.join(projectDir, "launcher"), true);
     for (var key in fileList) {
@@ -139,7 +139,22 @@ function upgradeTo_1_1_0() {
             file.save(path.join(projectDir, "launcher", "copy_" + fileName), fileContent);
 
             //替换Div
-            fileContent = fileContent.replace(reg1, newDiv);
+            var firstIndex = fileContent.match(/<div[^<]*gameDiv/).index;
+            var endIndex = firstIndex + 1;
+            var lastIndex = fileContent.indexOf('</div>', endIndex);
+            while (lastIndex >= 0) {
+                if (fileContent.indexOf("<div", endIndex) < lastIndex) {
+                    endIndex = lastIndex + 1;
+                    lastIndex = fileContent.indexOf('</div>', endIndex);
+                }
+                else {
+                    endIndex = lastIndex;
+                    lastIndex = -1;
+                }
+            }
+
+            fileContent = fileContent.substring(0, firstIndex) + newDiv + fileContent.substring(endIndex, fileContent.length);
+
             //是否存在egret_require.js
             if (fileContent.indexOf("launcher/egret_require.js") < 0) {//不存在
                 fileContent = fileContent.replace('<script src="launcher/egret_loader.js"', '<script src="launcher/egret_require.js"></script>\n<script src="launcher/egret_loader.js"');
