@@ -40,12 +40,17 @@ function run(currentDir, args, opts) {
  * @param srcPath 源文件所在的文件夹
  * @param output 输出地址
  * @param sourceList 要编译的文件列表包含ts和exml
- * @param keepGeneratedTypescript 是否保留exml生成的ts文件
+ * @param compileConfig
+ *  @sub-param keepGeneratedTypescript 是否保留exml生成的ts文件
+ *  @sub-param outputDir 输出路径
  */
-function compile(callback, projectDir, sourceList, keepGeneratedTypescript) {
+function compile(callback, projectDir, sourceList, projectConfig) {
+    projectConfig = projectConfig ? projectConfig : {};
+    var keepGeneratedTypescript = projectConfig.keepGeneratedTypescript;
 
-    var srcPath = path.join(projectDir,"src");
-    var output = path.join(projectDir,"bin-debug/src");
+    var srcPath = path.join(projectDir, "src");
+    var output = projectConfig.output ? projectConfig.output : projectDir;
+    output = path.join(output, "bin-debug/src");
 
 
     //=========================
@@ -55,11 +60,11 @@ function compile(callback, projectDir, sourceList, keepGeneratedTypescript) {
     projectConfig.init(projectDir);
     var moduleList = projectConfig.getModule("html5");
     var moduleFileList = [];
-    for (var key in moduleList){
+    for (var key in moduleList) {
         var module = moduleList[key];
-        if (module.path){
+        if (module.path) {
 
-            var moduleConfig = getModuleConfig(module,projectDir);
+            var moduleConfig = getModuleConfig(module, projectDir);
             var file_list = moduleConfig.file_list;
             file_list = file_list.map(function (item) {
                 return  path.join(moduleConfig.prefix, moduleConfig.source, item);
@@ -133,8 +138,10 @@ function compile(callback, projectDir, sourceList, keepGeneratedTypescript) {
             sourcemap = sourcemap ? "--sourcemap " : "";
 
             var cmd = sourcemap + tsList.join(" ") + " -t ES5 --outDir " + "\"" + output + "\"";
-            file.save("tsc_config_temp.txt", cmd);
-            typeScriptCompiler(function (code) {
+            var typeScriptCompiler = require("./egret_compiler.js");
+            typeScriptCompiler.compile(onCompileComplete, cmd);
+
+            function onCompileComplete(code) {
                 if (code == 0) {
                     cleanTempFile();
                     callback();
@@ -142,7 +149,7 @@ function compile(callback, projectDir, sourceList, keepGeneratedTypescript) {
                 else {
                     callback(1303);
                 }
-            });
+            }
         }
 
 
@@ -206,148 +213,6 @@ function compile(callback, projectDir, sourceList, keepGeneratedTypescript) {
  }
  */
 
-function typeScriptCompiler(quitFunc) {
-    var TypeScript = require('../core/typescript/tsc.js');
-    TypeScript.IO.arguments = ["@tsc_config_temp.txt"];
-    TypeScript.IO.quit = quitFunc;
-    TypeScript.Emitter.prototype.emitClass = function (classDecl) {
-        var pullDecl = this.semanticInfoChain.getDeclForAST(classDecl);
-        this.pushDecl(pullDecl);
-
-        var svClassNode = this.thisClassNode;
-        this.thisClassNode = classDecl;
-        var className = classDecl.identifier.text();
-        this.emitComments(classDecl, true);
-        var temp = this.setContainer(3 /* Class */);
-
-        this.recordSourceMappingStart(classDecl);
-        this.writeToOutput("var " + className);
-
-        var hasBaseClass = TypeScript.ASTHelpers.getExtendsHeritageClause(classDecl.heritageClauses) !== null;
-        var baseTypeReference = null;
-        var varDecl = null;
-
-        if (hasBaseClass) {
-            this.writeLineToOutput(" = (function (_super) {");
-        } else {
-            this.writeLineToOutput(" = (function () {");
-        }
-
-        this.recordSourceMappingNameStart(className);
-        this.indenter.increaseIndent();
-
-        if (hasBaseClass) {
-            baseTypeReference = TypeScript.ASTHelpers.getExtendsHeritageClause(classDecl.heritageClauses).typeNames.nonSeparatorAt(0);
-            this.emitIndent();
-            this.writeToOutputWithSourceMapRecord("__extends(" + className + ", _super)", baseTypeReference);
-            this.writeLineToOutput(";");
-        }
-
-        this.emitIndent();
-
-        var constrDecl = getLastConstructor(classDecl);
-
-        if (constrDecl) {
-            this.emit(constrDecl);
-            this.writeLineToOutput("");
-        } else {
-            this.recordSourceMappingStart(classDecl);
-
-            this.indenter.increaseIndent();
-            this.writeLineToOutput("function " + classDecl.identifier.text() + "() {");
-            this.recordSourceMappingNameStart("constructor");
-            if (hasBaseClass) {
-                this.emitIndent();
-                this.writeToOutputWithSourceMapRecord("_super.apply(this, arguments)", baseTypeReference);
-                this.writeLineToOutput(";");
-            }
-
-            if (this.shouldCaptureThis(classDecl)) {
-                this.writeCaptureThisStatement(classDecl);
-            }
-
-            this.emitParameterPropertyAndMemberVariableAssignments();
-
-            this.indenter.decreaseIndent();
-            this.emitIndent();
-            this.writeToOutputWithSourceMapRecord("}", classDecl.closeBraceToken);
-            this.writeLineToOutput("");
-
-            this.recordSourceMappingNameEnd();
-            this.recordSourceMappingEnd(classDecl);
-        }
-
-        this.emitClassMembers(classDecl);
-
-        this.emitIndent();
-        this.writeToOutputWithSourceMapRecord("return " + className + ";", classDecl.closeBraceToken);
-        this.writeLineToOutput("");
-        this.indenter.decreaseIndent();
-        this.emitIndent();
-        this.writeToOutputWithSourceMapRecord("}", classDecl.closeBraceToken);
-        this.recordSourceMappingNameEnd();
-        this.recordSourceMappingStart(classDecl);
-        this.writeToOutput(")(");
-        if (hasBaseClass) {
-            this.emitJavascript(baseTypeReference, false);
-        }
-        this.writeToOutput(");");
-        this.recordSourceMappingEnd(classDecl);
-
-        if ((temp === 1 /* Module */ || temp === 2 /* DynamicModule */) && TypeScript.hasFlag(pullDecl.flags, 1 /* Exported */)) {
-            this.writeLineToOutput("");
-            this.emitIndent();
-            var modName = temp === 1 /* Module */ ? this.moduleName : "exports";
-            this.writeToOutputWithSourceMapRecord(modName + "." + className + " = " + className + ";", classDecl);
-
-            var fullClassName = pullDecl.name;
-            var parentDecl = pullDecl.getParentDecl();
-            while (parentDecl && !(parentDecl instanceof TypeScript.RootPullDecl)) {
-                fullClassName = parentDecl.name + "." + fullClassName;
-                parentDecl = parentDecl.getParentDecl();
-            }
-            this.writeLineToOutput("");
-            this.emitIndent();
-            this.writeToOutputWithSourceMapRecord(className + ".prototype.__class__ = \"" + fullClassName + "\";", classDecl);
-        }
-        else {
-            this.writeLineToOutput("");
-            this.emitIndent();
-            this.writeToOutputWithSourceMapRecord(className + ".prototype.__class__ = \"" + className + "\";", classDecl);
-        }
-
-        this.recordSourceMappingEnd(classDecl);
-        this.emitComments(classDecl, false);
-        this.setContainer(temp);
-        this.thisClassNode = svClassNode;
-
-        this.popDecl(pullDecl);
-    };
-
-    if (isQuickMode()) {//快速构建，去掉类型检查阶段
-        TypeScript.PullTypeResolver.typeCheck = function (compilationSettings, semanticInfoChain, document) {
-            var sourceUnit = document.sourceUnit();
-
-            var resolver = semanticInfoChain.getResolver();
-            var context = new TypeScript.PullTypeResolutionContext(resolver, true, sourceUnit.fileName());
-
-            if (resolver.canTypeCheckAST(sourceUnit, context)) {
-                resolver.resolveAST(sourceUnit, false, context);
-            }
-        };
-    }
-
-    var batch = new TypeScript.BatchCompiler(TypeScript.IO);
-    batch.batchCompile();
-}
-
-function isQuickMode() {
-    var opts = param.getArgv().opts;
-    if ((opts["-quick"] || opts["-q"]) && !opts["-e"]) {
-        return true;
-    }
-    return false;
-}
 
 function getModuleConfig(module, projectDir) {
     var moduleName;
@@ -379,7 +244,7 @@ function getModuleConfig(module, projectDir) {
     return moduleConfig
 }
 
-function generateGameFileList(projectPath,runtime) {
+function generateGameFileList(projectPath, runtime) {
     var manifestPath = path.join(projectPath, "manifest.json");
     var srcPath = path.join(projectPath, "src/");
     var manifest;
@@ -389,15 +254,15 @@ function generateGameFileList(projectPath,runtime) {
     else {
         var referenceInfo;
         var referencePath = file.joinPath(srcPath, "../libs/module_reference.json");
-        if(file.exists(referencePath)){
+        if (file.exists(referencePath)) {
             var text = file.read(referencePath);
-            try{
+            try {
                 referenceInfo = JSON.parse(text);
             }
-            catch (e){
+            catch (e) {
             }
         }
-        if(all_module.length==0){
+        if (all_module.length == 0) {
             var projectConfig = require("../core/projectConfig.js");
             projectConfig.init(projectPath);
             var moduleList = projectConfig.getModule(runtime);
@@ -406,14 +271,18 @@ function generateGameFileList(projectPath,runtime) {
                 all_module.push(moduleConfig);
             })
         }
-        manifest = create_manifest.create(srcPath,false,referenceInfo);
+        manifest = create_manifest.create(srcPath, false, referenceInfo);
         var moduleReferenceList = create_manifest.getModuleReferenceList();
 
-        generateAllModuleFileList(projectPath,moduleReferenceList);
+        generateAllModuleFileList(projectPath, moduleReferenceList);
     }
     var fileListText = createFileList(manifest, srcPath);
     fileListText = "var game_file_list = " + fileListText + ";";
-    file.save(path.join(projectPath, "bin-debug/src/game_file_list.js"), fileListText);
+
+    projectConfig = require("../core/projectConfig.js");
+    var output = projectConfig.getOutputDir();
+    output = output ? output : projectPath;
+    file.save(path.join(output, "bin-debug/src/game_file_list.js"), fileListText);
     return manifest;
 }
 
@@ -500,24 +369,22 @@ function removeInterface(text) {
     return tsText;
 }
 
-function getLastConstructor(classDecl) {
-    return classDecl.classElements.lastOrDefault(function (e) {
-        return e.kind() === 137 /* ConstructorDeclaration */;
-    });
-}
+
+function compileModule(callback, module, projectDir,outputPrefix) {
 
 
-function compileModule(callback, module, projectDir) {
+    var typeScriptCompiler = require("./egret_compiler.js");
 
     var moduleConfig = getModuleConfig(module, projectDir);
     var output = moduleConfig.output ? moduleConfig.output : moduleConfig.name;
-    output = path.join(projectDir, "libs", output);
+    outputPrefix = outputPrefix ? path.join(outputPrefix,"libs") : path.join(projectDir, "libs");
+    output = path.join(outputPrefix, output);
     var tsList = moduleConfig.file_list;
     tsList = tsList.map(function (item) {
         return "\"" + path.join(moduleConfig.prefix, moduleConfig.source, item) + "\"";
     }).filter(function (item) {
-            return item.indexOf(".js") == -1 //&& item.indexOf(".d.ts") == -1;
-        })
+        return item.indexOf(".js") == -1 //&& item.indexOf(".d.ts") == -1;
+    })
     var dependencyList = moduleConfig.dependence;
     if (dependencyList) {
         for (var i = 0; i < dependencyList.length; i++) {
@@ -537,21 +404,19 @@ function compileModule(callback, module, projectDir) {
 
         function (callback) {
             var cmd = sourcemap + tsList.join(" ") + " -t ES5 --outDir " + "\"" + output + "\"";
-            file.save("tsc_config_temp.txt", cmd);//todo performance-optimize
-            typeScriptCompiler(callback);
+            typeScriptCompiler.compile(callback, cmd);
         },
 
 
         function (callback) {
             var cmd = sourcemap + tsList.join(" ") + " -d -t ES5 --out " + "\"" + path.join(output, moduleConfig.name + ".d.ts") + "\"";
-            file.save("tsc_config_temp.txt", cmd);
-            typeScriptCompiler(callback);
+            typeScriptCompiler.compile(callback, cmd);
         },
 
         function (callback) {
             var jsList = moduleConfig.file_list;
             jsList = jsList.filter(function (item) {
-                return item.indexOf(".js") > -1 ||  item.indexOf(".d.ts") > -1;
+                return item.indexOf(".js") > -1 || item.indexOf(".d.ts") > -1;
             })
             jsList.map(function (item) {
                 var source = path.join(moduleConfig.prefix, moduleConfig.source, item);
@@ -579,8 +444,10 @@ function compileModule(callback, module, projectDir) {
 function compileModules(callback, projectDir, runtime) {
 
 
+
     var projectConfig = require("../core/projectConfig.js");
     projectConfig.init(projectDir);
+    var output = projectConfig.getOutputDir();
     var moduleList = projectConfig.getModule(runtime);
 
     var tasks = [];
@@ -588,7 +455,7 @@ function compileModules(callback, projectDir, runtime) {
         tasks.push(
             function (callback) {
                 compileModule(
-                    callback, module, projectDir);
+                    callback, module, projectDir,output);
             });
     })
 
@@ -607,52 +474,55 @@ function compileModules(callback, projectDir, runtime) {
 
 }
 
-function generateAllModuleReference(projectDir){
+function generateAllModuleReference(projectDir) {
     var fileList = [];
-    all_module.map(function(moduleConfig){
-        moduleConfig.file_list.map(function(item){
-            var tsFile = file.joinPath(moduleConfig.prefix,moduleConfig.source,item)
+    all_module.map(function (moduleConfig) {
+        moduleConfig.file_list.map(function (item) {
+            var tsFile = file.joinPath(moduleConfig.prefix, moduleConfig.source, item)
             var ext = file.getExtension(tsFile).toLowerCase();
-            if(ext=="ts"&&item.indexOf(".d.ts")==-1){
+            if (ext == "ts" && item.indexOf(".d.ts") == -1) {
                 fileList.push(tsFile);
             }
         })
     })
     var referenceInfo = create_manifest.getModuleReferenceInfo(fileList);
     var text = JSON.stringify(referenceInfo);
-    file.save(file.joinPath(projectDir, "libs/module_reference.json"),text);
+    file.save(file.joinPath(projectDir, "libs/module_reference.json"), text);
     return referenceInfo;
 }
 
-function generateAllModuleFileList(projectDir,moduleReferenceList) {
+function generateAllModuleFileList(projectDir, moduleReferenceList) {
 
+    var projectConfig = require("../core/projectConfig.js");
+    var output = projectConfig.getOutputDir();
     var all_module_file_list = [];
-    all_module.map(function(moduleConfig){
-        moduleConfig.file_list.map(function(item){
-            var tsFile = file.joinPath(moduleConfig.prefix,moduleConfig.source,item);
+    all_module.map(function (moduleConfig) {
+        moduleConfig.file_list.map(function (item) {
+            var tsFile = file.joinPath(moduleConfig.prefix, moduleConfig.source, item);
             if (item.indexOf(".d.ts") != -1) {
                 return;
             }
             var ext = file.getExtension(tsFile).toLowerCase();
             if (ext == "ts") {
-                if(moduleConfig.decouple=="true"&&moduleReferenceList&&
-                    moduleReferenceList.indexOf(tsFile)==-1){
+                if (moduleConfig.decouple == "true" && moduleReferenceList &&
+                    moduleReferenceList.indexOf(tsFile) == -1) {
                     return;
                 }
-                if(isInterface(tsFile))
+                if (isInterface(tsFile))
                     return;
             }
             var output = moduleConfig.output ? moduleConfig.output : moduleConfig.name;
-            all_module_file_list.push(path.join(output,item));
+            all_module_file_list.push(path.join(output, item));
         })
     })
 
     var egretFileListText = all_module_file_list.map(function (item) {
-        return "\"" + item.replace(".ts", ".js").replace(new RegExp(/\\/g),"/") + "\"";
+        return "\"" + item.replace(".ts", ".js").replace(new RegExp(/\\/g), "/") + "\"";
     }).join(",\n");
     egretFileListText = "[\n" + egretFileListText + "];\n";
     egretFileListText = "var egret_file_list = " + egretFileListText + ";";
-    file.save(file.joinPath(projectDir, "bin-debug/lib/egret_file_list.js"), egretFileListText);
+    output = output ? output : projectDir;
+    file.save(file.joinPath(output, "bin-debug/lib/egret_file_list.js"), egretFileListText);
 
 }
 
