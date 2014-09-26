@@ -1,6 +1,6 @@
 Egret Engine
 ================================================
-Current Version: v1.0.6
+Current Version: v1.1.0
 
 
 
