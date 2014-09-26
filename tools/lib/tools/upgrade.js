@@ -153,7 +153,7 @@ function upgradeTo_1_1_0() {
                 }
             }
 
-            fileContent = fileContent.substring(0, firstIndex) + newDiv + fileContent.substring(endIndex, fileContent.length);
+            fileContent = fileContent.substring(0, firstIndex) + newDiv + fileContent.substring(endIndex - 1, fileContent.length);
 
             //是否存在egret_require.js
             if (fileContent.indexOf("launcher/egret_require.js") < 0) {//不存在
