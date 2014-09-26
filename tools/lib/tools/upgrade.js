@@ -10,13 +10,13 @@ var path = require("path");
 var globals = require("../core/globals.js");
 var projectConfig = require("../core/projectConfig.js");
 
-var upgradeConfig = {
-    "1.0.3": upgradeTo_1_0_3,
-    "1.0.4": upgradeTo_1_0_4,
-    "1.0.5": upgradeTo_1_0_5,
-    "1.0.6": upgradeTo_1_0_6,
-    "1.1.0": upgradeTo_1_1_0
-};
+var upgradeConfigArr = [
+    {"v" : "1.0.3", "func":upgradeTo_1_0_3},
+    {"v" : "1.0.4", "func":upgradeTo_1_0_4},
+    {"v" : "1.0.5", "func":upgradeTo_1_0_5},
+    {"v" : "1.0.6", "func":upgradeTo_1_0_6},
+    {"v" : "1.1.0", "func":upgradeTo_1_1_0}
+];
 
 var currDir;
 var args;
@@ -31,14 +31,18 @@ function run(dir, a, opts) {
         version = "1.0.0";
     }
 
-    for (var key in upgradeConfig) {
+    for (var i = 0; i < upgradeConfigArr.length; i++) {
+        var info = upgradeConfigArr[i];
+        var key = info["v"];
+        var func = info["func"];
+
         var result = globals.compressVersion(version, key);
         if (result < 0) {
-            upgradeConfig[key]();
+            func();
         }
     }
 
-    globals.exit(1703);
+    globals.exit(1702);
 }
 
 function upgradeTo_1_0_3() {
