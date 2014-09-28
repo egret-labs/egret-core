@@ -251,7 +251,6 @@ var egret_native_graphics;
     egret_native_graphics.endFill = endFill;
 
     function _draw(renderContext) {
-        return;
         var length = this.commandQueue.length;
         for (var i = 0; i < length; i++) {
             var command = this.commandQueue[i];
