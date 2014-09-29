@@ -53,31 +53,7 @@ function compile(callback, projectDir, sourceList, projectConfig) {
     output = path.join(output, "bin-debug/src");
 
 
-    //=========================
-    // 这段逻辑的作用是把第三方 module 的 ts文件不要随着 game_file_list 编译进去，这里的代码以后需要重构
 
-    var projectConfig = require("../core/projectConfig.js");
-    projectConfig.init(projectDir);
-    var moduleList = projectConfig.getModule("html5");
-    var moduleFileList = [];
-    for (var key in moduleList) {
-        var module = moduleList[key];
-        if (module.path) {
-
-            var moduleConfig = getModuleConfig(module, projectDir);
-            var file_list = moduleConfig.file_list;
-            file_list = file_list.map(function (item) {
-                return  path.join(moduleConfig.prefix, moduleConfig.source, item);
-            }).filter(function (item) {
-                return item.indexOf(".js") == -1 && item.indexOf(".d.ts") == -1;
-            })
-
-
-            moduleFileList = moduleFileList.concat(file_list)
-        }
-    }
-
-    //=========================
 
 
     var exmlList = [];
@@ -89,7 +65,7 @@ function compile(callback, projectDir, sourceList, projectConfig) {
             continue;
         }
         var ext = file.getExtension(p).toLowerCase();
-        if (ext == "ts" && moduleFileList.indexOf(p) == -1) {
+        if (ext == "ts"){//} && moduleFileList.indexOf(p) == -1) {
             tsList.push(p);
         }
         else if (ext == "exml") {
@@ -276,6 +252,17 @@ function generateGameFileList(projectPath, runtime) {
 
         generateAllModuleFileList(projectPath, moduleReferenceList);
     }
+
+
+
+    //=========================
+    // 这段逻辑的作用是把第三方 module 的 ts文件不要随着 game_file_list 编译进去
+    var moduleFileList = getAllModuleTypeScriptFileList(projectPath);
+    manifest = manifest.filter(function(item){
+        return moduleFileList.indexOf(item) == -1;
+    });
+    //=========================
+
     var fileListText = createFileList(manifest, srcPath);
     fileListText = "var game_file_list = " + fileListText + ";";
 
@@ -524,6 +511,31 @@ function generateAllModuleFileList(projectDir, moduleReferenceList) {
     output = output ? output : projectDir;
     file.save(file.joinPath(output, "bin-debug/lib/egret_file_list.js"), egretFileListText);
 
+}
+
+
+function getAllModuleTypeScriptFileList(projectDir){
+    var projectConfig = require("../core/projectConfig.js");
+    projectConfig.init(projectDir);
+    var moduleList = projectConfig.getModule("html5");
+    var moduleFileList = [];
+    for (var key in moduleList) {
+        var module = moduleList[key];
+        if (module.path) {
+
+            var moduleConfig = getModuleConfig(module, projectDir);
+            var file_list = moduleConfig.file_list;
+            file_list = file_list.map(function (item) {
+                return  path.join(moduleConfig.prefix, moduleConfig.source, item);
+            }).filter(function (item) {
+                return item.indexOf(".js") == -1 && item.indexOf(".d.ts") == -1;
+            })
+
+
+            moduleFileList = moduleFileList.concat(file_list)
+        }
+    }
+    return moduleFileList;
 }
 
 exports.compileModules = compileModules;

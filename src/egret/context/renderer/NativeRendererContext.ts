@@ -124,7 +124,7 @@ module egret {
          * @param textField {TextField}
          */
         public setupFont(textField:TextField):void {
-            egret_native.Label.createLabel("/system/fonts/DroidSansFallback.ttf", textField._size, "");
+            egret_native.Label.createLabel(TextField.default_fontFamily, textField._size, "");
         }
 
         /**
@@ -251,7 +251,6 @@ var egret_native_graphics;
     egret_native_graphics.endFill = endFill;
 
     function _draw(renderContext) {
-        return;
         var length = this.commandQueue.length;
         for (var i = 0; i < length; i++) {
             var command = this.commandQueue[i];

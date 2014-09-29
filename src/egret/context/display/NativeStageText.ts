@@ -267,8 +267,8 @@ module egret {
         }
 
         public _hide():void {
+            this._remove();
             egret_native.TextInputOp.setKeybordOpen(false);
-
         }
 
         public changePosition(x:number, y:number):void {
