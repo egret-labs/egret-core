@@ -162,14 +162,14 @@ module egret {
                 var texture:Texture = new Texture();
                 texture._setBitmapData(image);
                 loader.data = texture;
-                callLater(Event.dispatchEvent, Event, loader, Event.COMPLETE);
-            };
+                __callAsync(Event.dispatchEvent, Event, loader, Event.COMPLETE);
+            }
 
             function onLoadError(event) {
                 image.onerror = null;
                 image.onload = null;
                 IOErrorEvent.dispatchIOErrorEvent(loader);
-            };
+            }
         }
     }
 }

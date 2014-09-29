@@ -143,7 +143,7 @@ module egret {
                 egret_native.download(url, url, promise);
             }
             else {
-                callLater(onLoadComplete, this);
+                __callAsync(onLoadComplete, this);
             }
 
             function onLoadComplete() {
