@@ -53,3 +53,6 @@ function getModule(runtime){
 exports.init = init
 exports.save = save
 exports.getModule = getModule
+exports.getOutputDir = function(){
+    return null;//"/Users/wander/Documents/egret_workspace/temp_build_for_native";
+}

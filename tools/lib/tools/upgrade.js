@@ -10,13 +10,13 @@ var path = require("path");
 var globals = require("../core/globals.js");
 var projectConfig = require("../core/projectConfig.js");
 
-var upgradeConfig = {
-    "1.0.3": upgradeTo_1_0_3,
-    "1.0.4": upgradeTo_1_0_4,
-    "1.0.5": upgradeTo_1_0_5,
-    "1.0.6": upgradeTo_1_0_6,
-    "1.1.0": upgradeTo_1_1_0
-};
+var upgradeConfigArr = [
+    {"v" : "1.0.3", "func":upgradeTo_1_0_3},
+    {"v" : "1.0.4", "func":upgradeTo_1_0_4},
+    {"v" : "1.0.5", "func":upgradeTo_1_0_5},
+    {"v" : "1.0.6", "func":upgradeTo_1_0_6},
+    {"v" : "1.1.0", "func":upgradeTo_1_1_0}
+];
 
 var currDir;
 var args;
@@ -31,14 +31,18 @@ function run(dir, a, opts) {
         version = "1.0.0";
     }
 
-    for (var key in upgradeConfig) {
+    for (var i = 0; i < upgradeConfigArr.length; i++) {
+        var info = upgradeConfigArr[i];
+        var key = info["v"];
+        var func = info["func"];
+
         var result = globals.compressVersion(version, key);
         if (result < 0) {
-            upgradeConfig[key]();
+            func();
         }
     }
 
-    globals.exit(1703);
+    globals.exit(1702);
 }
 
 function upgradeTo_1_0_3() {
@@ -121,7 +125,7 @@ function upgradeTo_1_1_0() {
     var projectDir = currDir;
 
     var reg1 = /<div(.|\n|\r)+\"gameDiv\"(.|\n|\r)*<canvas(.|\n|\r)+<\/canvas>[^<]*<\/div>/;
-    var newDiv = '<div style="position:relative;" id="gameDiv"></div>';
+    var newDiv = '<div style="position:relative;" id="gameDiv">';
 
     var fileList = file.getDirectoryListing(path.join(projectDir, "launcher"), true);
     for (var key in fileList) {
@@ -135,7 +139,23 @@ function upgradeTo_1_1_0() {
             file.save(path.join(projectDir, "launcher", "copy_" + fileName), fileContent);
 
             //替换Div
-            fileContent = fileContent.replace(reg1, newDiv);
+            var firstIndex = fileContent.match(/<div[^<]*gameDiv/).index;
+            var endIndex = firstIndex + 1;
+            var lastIndex = fileContent.indexOf('</div>', endIndex);
+
+            while (lastIndex >= 0) {
+                if (fileContent.indexOf("<div", endIndex) < lastIndex) {
+                    endIndex = lastIndex;
+                    lastIndex = fileContent.indexOf('</div>', endIndex + 1);
+                }
+                else {
+                    endIndex = lastIndex;
+                    lastIndex = -1;
+                }
+            }
+
+            fileContent = fileContent.substring(0, firstIndex) + newDiv + fileContent.substring(endIndex, fileContent.length);
+
             //是否存在egret_require.js
             if (fileContent.indexOf("launcher/egret_require.js") < 0) {//不存在
                 fileContent = fileContent.replace('<script src="launcher/egret_loader.js"', '<script src="launcher/egret_require.js"></script>\n<script src="launcher/egret_loader.js"');
@@ -145,7 +165,7 @@ function upgradeTo_1_1_0() {
         }
     }
 
-    var loaderPath = file.read(path.join(projectDir, "launcher", "egret_loader.js"));
+    var loaderPath = path.join(projectDir, "launcher", "egret_loader.js");
     var loaderContent = file.read(loaderPath);
     //保存副本
     file.save(path.join(projectDir, "launcher", "copy_egret_loader.js"), loaderContent);
@@ -159,6 +179,10 @@ function upgradeTo_1_1_0() {
         var reqContent = file.read(path.join(param.getEgretPath(), "tools", "templates", "empty", "launcher", "egret_require.js"));
         file.save(path.join(projectDir, "launcher", "egret_require.js"), reqContent);
     }
+
+    var open = require("../core/open");
+    open("https://github.com/egret-labs/egret-core/wiki/Egret_Upgrade/upgrade/index.html");
+    globals.exit(1703);
 }
 
 function getClassList(item) {
