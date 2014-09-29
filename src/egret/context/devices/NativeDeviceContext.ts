@@ -44,6 +44,7 @@ module egret {
          */
         public constructor() {
             super();
+            TextField.default_fontFamily = "/system/fonts/DroidSansFallback.ttf";
         }
 
         /**
