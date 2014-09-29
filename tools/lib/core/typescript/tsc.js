@@ -7590,7 +7590,6 @@ var ts;
                     emit(node.baseType.typeName);
                 }
                 write(");");
-                emitEnd(node);
                 if (node.flags & 1 /* Export */) {
                     writeLine();
                     emitStart(node);
@@ -7599,6 +7598,14 @@ var ts;
                     emit(node.name);
                     emitEnd(node);
                     write(";");
+
+
+                    writeLine();
+                    emit(node.name)
+                    write(".prototype.__class__ = \"");
+                    emitModuleMemberName(node);
+                    write("\";");
+
                 }
                 emitTrailingComments(node);
                 function emitConstructorOfClass() {
@@ -15448,7 +15455,7 @@ var ts;
         }
         return {
             getSourceFile: getSourceFile,
-            getDefaultLibFilename: function () { return ts.combinePaths(ts.getDirectoryPath(ts.normalizePath(sys.getExecutingFilePath())), "lib.d.ts"); },
+            getDefaultLibFilename: function () { return ts.combinePaths(ts.getDirectoryPath(ts.normalizePath(sys.getExecutingFilePath())), "../lib/core/typescript/lib.d.ts"); },
             writeFile: writeFile,
             getCurrentDirectory: function () { return currentDirectory || (currentDirectory = sys.getCurrentDirectory()); },
             useCaseSensitiveFileNames: function () { return sys.useCaseSensitiveFileNames; },
