@@ -91,6 +91,10 @@ module egret {
 
         }
 
+        public _add():void {
+
+        }
+
         /**
          * @method egret.StageText#remove
          */

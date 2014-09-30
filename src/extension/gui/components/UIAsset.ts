@@ -89,6 +89,8 @@ module egret.gui {
 			else{
 				this.sourceChanged = true;
 			}
+
+            this._setSizeDirty();
 		}
         
 		public _content:any;

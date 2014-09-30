@@ -255,6 +255,22 @@ module egret {
             container.style.height = styleH + "px";
             container.style.top = top + "px";
         }
+
+        /**
+         * 显示区域分辨率宽
+         * @returns {number}
+         */
+        public _getClientWidth():number {
+            return document.documentElement.clientWidth;
+        }
+
+        /**
+         * 显示区域分辨率高
+         * @returns {number}
+         */
+        public _getClientHeight():number {
+            return document.documentElement.clientHeight;
+        }
     }
 
     /**
@@ -281,8 +297,8 @@ module egret {
          * @param designedResolutionHeight {any}
          */
         public _apply(delegate:StageDelegate, designedResolutionWidth:number, designedResolutionHeight:number):void {
-            var viewPortWidth:number = document.documentElement.clientWidth;//分辨率宽
-            var viewPortHeight:number = document.documentElement.clientHeight;//分辨率高
+            var viewPortWidth:number = this._getClientWidth();//分辨率宽
+            var viewPortHeight:number = this._getClientHeight();//分辨率高
 
             var scale:number = viewPortHeight / designedResolutionHeight;
             var designW:number = viewPortWidth / scale;
@@ -319,8 +335,8 @@ module egret {
         }
 
         public _apply(delegate:StageDelegate, designedResolutionWidth:number, designedResolutionHeight:number):void {
-            var viewPortWidth:number = document.documentElement.clientWidth;//分辨率宽
-            var viewPortHeight:number = document.documentElement.clientHeight;//分辨率高
+            var viewPortWidth:number = this._getClientWidth();//分辨率宽
+            var viewPortHeight:number = this._getClientHeight();//分辨率高
 
             var scale:number = viewPortWidth / designedResolutionWidth;
             var designW:number = designedResolutionWidth;
@@ -413,8 +429,8 @@ module egret {
          * @param designedResolutionHeight {number}
          */
         public _apply(delegate:StageDelegate, designedResolutionWidth:number, designedResolutionHeight:number):void {
-            var viewPortWidth:number = document.documentElement.clientWidth;//分辨率宽
-            var viewPortHeight:number = document.documentElement.clientHeight;//分辨率高
+            var viewPortWidth:number = this._getClientWidth();//分辨率宽
+            var viewPortHeight:number = this._getClientHeight();//分辨率高
 
             var scale:number = ( viewPortWidth / designedResolutionWidth < viewPortHeight / designedResolutionHeight) ? viewPortWidth / designedResolutionWidth : viewPortHeight / designedResolutionHeight;
             var designW:number = designedResolutionWidth;
@@ -425,7 +441,7 @@ module egret {
 
             var scale2:number = 1;
 
-            delegate._offSetY = Math.floor((document.documentElement.clientHeight - viewPortHeight) / 2);
+            delegate._offSetY = Math.floor((this._getClientHeight() - viewPortHeight) / 2);
             this.setEgretSize(designW, designH / scale2, viewPortWidth * scale2, viewPortHeight, delegate._offSetY);
 
             delegate._scaleX = scale * scale2;
@@ -448,8 +464,8 @@ module egret {
          * @param designedResolutionHeight {number}
          */
         public _apply(delegate:StageDelegate, designedResolutionWidth:number, designedResolutionHeight:number):void {
-            var viewPortWidth:number = document.documentElement.clientWidth;//分辨率宽
-            var viewPortHeight:number = document.documentElement.clientHeight;//分辨率高
+            var viewPortWidth:number = this._getClientWidth();//分辨率宽
+            var viewPortHeight:number = this._getClientHeight();//分辨率高
 
             var designW:number = designedResolutionWidth;
             var designH:number = designedResolutionHeight;
