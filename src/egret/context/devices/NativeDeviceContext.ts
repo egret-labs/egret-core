@@ -44,6 +44,7 @@ module egret {
          */
         public constructor() {
             super();
+            TextField.default_fontFamily = "/system/fonts/DroidSansFallback.ttf";
         }
 
         /**
@@ -187,7 +188,7 @@ module egret_native_localStorage {
     }
 
     export function init():void {
-        if (egret_native.isFileExists(egret_native_localStorage.filePath)) {
+        if (egret_native.isRecordExists(egret_native_localStorage.filePath)) {
 //            console.log("egret_native_localStorage::" + "文件存在");
             var str:string = egret_native.loadRecord(egret_native_localStorage.filePath);
 //            console.log("egret_native_localStorage::" + str);

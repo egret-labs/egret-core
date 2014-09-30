@@ -78,7 +78,7 @@ module egret {
                 egret_native.download(url, url, promise);
             }
             else {
-                callLater(onLoadComplete, this);
+                __callAsync(onLoadComplete, this);
             }
 
             function onLoadComplete() {
@@ -110,14 +110,14 @@ module egret {
                 egret_native.download(url, url, promise);
             }
             else {
-                callLater(onLoadComplete, this);
+                __callAsync(onLoadComplete, this);
             }
 
             function onLoadComplete() {
                 var sound = new egret.Sound();
                 sound.path = savePath;
                 loader.data = sound;
-                egret.callLater(egret.Event.dispatchEvent, egret.Event, loader, egret.Event.COMPLETE);
+                Event.dispatchEvent(loader, Event.COMPLETE);
             }
         }
 
@@ -143,7 +143,7 @@ module egret {
                 egret_native.download(url, url, promise);
             }
             else {
-                callLater(onLoadComplete, this);
+                __callAsync(onLoadComplete, this);
             }
 
             function onLoadComplete() {

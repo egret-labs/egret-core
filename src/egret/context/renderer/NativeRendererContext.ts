@@ -124,7 +124,7 @@ module egret {
          * @param textField {TextField}
          */
         public setupFont(textField:TextField):void {
-            egret_native.Label.createLabel("/system/fonts/DroidSansFallback.ttf", textField._size, "");
+            egret_native.Label.createLabel(TextField.default_fontFamily, textField._size, "");
         }
 
         /**

@@ -115,6 +115,11 @@ module egret {
             if (functionList) {
                 this.doCallLaterList(functionList, thisList, argsList);
             }
+
+            if(__callAsyncFunctionList.length > 0) {
+                this.doCallAsyncList();
+            }
+
             var context = this.rendererContext;
             context.onRenderStart();
             context.clearScreen();
@@ -182,6 +187,21 @@ module egret {
                     func.apply(thisList[i], argsList[i]);
                 }
             }
+        }
+
+        /**
+         * 执行callAsync回调函数列表
+         */
+        private doCallAsyncList():void {
+            for (var i:number = 0; i < __callAsyncFunctionList.length; i++) {
+                var func:Function = __callAsyncFunctionList[i];
+                if (func != null) {
+                    func.apply(__callAsyncThisList[i], __callAsyncArgsList[i]);
+                }
+            }
+            __callAsyncFunctionList.length = 0;
+            __callAsyncThisList.length = 0;
+            __callAsyncArgsList.length = 0;
         }
 
         /**

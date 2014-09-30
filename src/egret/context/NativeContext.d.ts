@@ -46,6 +46,8 @@ declare module egret_native {
 
     function isFileExists(filepath:string):boolean;
 
+    function isRecordExists(filepath:string):boolean;
+
     function readFileSync(filepath:string):any;
 
     function writeFileSync(filepath:string, fileContent:string):any;

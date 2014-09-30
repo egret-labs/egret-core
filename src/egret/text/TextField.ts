@@ -35,6 +35,7 @@ module egret {
      * @extends egret.DisplayObject
      */
     export class TextField extends DisplayObject {
+        public static default_fontFamily:string = "Arial";
         /**
          * 显示文本
          * @member {string} egret.TextField#text
@@ -65,7 +66,7 @@ module egret {
          * 字体
          * @member {any} egret.TextField#fontFamily
          */
-        public _fontFamily = "Arial";
+        public _fontFamily = TextField.default_fontFamily;
 
         public get fontFamily():string {
             return this._fontFamily;

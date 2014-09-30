@@ -91,7 +91,7 @@ module egret {
                         loader.data = xhr.responseText;
                         break;
                 }
-                callLater(Event.dispatchEvent, Event, loader, Event.COMPLETE);
+                __callAsync(Event.dispatchEvent, Event, loader, Event.COMPLETE);
             };
         }
 
@@ -110,7 +110,7 @@ module egret {
                 var sound = new Sound();
                 sound._setAudio(audio);
                 loader.data = sound;
-                callLater(Event.dispatchEvent, Event, loader, Event.COMPLETE);
+                __callAsync(Event.dispatchEvent, Event, loader, Event.COMPLETE);
             };
 
             function soundPreloadErrorHandler(event) {
@@ -162,14 +162,14 @@ module egret {
                 var texture:Texture = new Texture();
                 texture._setBitmapData(image);
                 loader.data = texture;
-                callLater(Event.dispatchEvent, Event, loader, Event.COMPLETE);
-            };
+                __callAsync(Event.dispatchEvent, Event, loader, Event.COMPLETE);
+            }
 
             function onLoadError(event) {
                 image.onerror = null;
                 image.onload = null;
                 IOErrorEvent.dispatchIOErrorEvent(loader);
-            };
+            }
         }
     }
 }
