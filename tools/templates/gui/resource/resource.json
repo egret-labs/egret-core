@@ -1,7 +1,7 @@
 {
 	"groups":[
 	{
-		"keys":"checkbox_select_disabled_png,checkbox_select_normal_png,checkbox_select_over_png,checkbox_unselect_disabled_png,checkbox_unselect_normal_png,checkbox_unselect_over_png,hslider_fill_png,hslider_thumb_png,hslider_track_png,button_disabled_png,button_down_png,button_normal_png,button_over_png,panel_back_png,progressbar_fill_png,progressbar_track_png,radiobutton_select_disabled_png,radiobutton_select_normal_png,radiobutton_select_over_png,radiobutton_unselect_disabled_png,radiobutton_unselect_normal_png,radiobutton_unselect_over_png,togglebutton_disabled_png,togglebutton_normal_png,togglebutton_over_png,togglebutton_selected_png,tree_back_png,tree_btndisabled_png,tree_btndisabledselect_png,tree_btndown_png,tree_btndownselect_png,tree_btnup_png,tree_btnupselect_png,vslider_fill_png,vslider_thumb_png,vslider_track_png,onoffbutton_off_label_png,onoffbutton_off_thumb_png,onoffbutton_off_track_png,onoffbutton_on_label_png,onoffbutton_on_thumb_png,onoffbutton_on_track_png,dropdownlist_over_png,tree_icon_dir_png,tree_icon_file_png,panel_headeback_png,bgImage,app_list_item_cutlline_png,app_list_item_select_png,app_list_item_up_png,dropdownlist_arrow_down_png,dropdownlist_arrow_up_png,DropDownListButtonSkin_down_png,DropDownListButtonSkin_up_png,closebtn_disabledpng,closebtn_down_png,closebtn_up_png",
+		"keys":"checkbox_select_disabled_png,checkbox_select_normal_png,checkbox_unselect_disabled_png,checkbox_unselect_normal_png,hslider_fill_png,hslider_thumb_png,hslider_track_png,button_disabled_png,button_down_png,button_normal_png,panel_back_png,progressbar_fill_png,progressbar_track_png,radiobutton_select_disabled_png,radiobutton_select_normal_png,radiobutton_unselect_disabled_png,radiobutton_unselect_normal_png,togglebutton_disabled_png,togglebutton_normal_png,togglebutton_selected_png,tree_back_png,tree_btndisabled_png,tree_btndisabledselect_png,tree_btndown_png,tree_btndownselect_png,tree_btnup_png,tree_btnupselect_png,vslider_fill_png,vslider_thumb_png,vslider_track_png,onoffbutton_off_label_png,onoffbutton_off_thumb_png,onoffbutton_off_track_png,onoffbutton_on_label_png,onoffbutton_on_thumb_png,onoffbutton_on_track_png,tree_icon_dir_png,tree_icon_file_png,panel_headeback_png,bgImage,app_list_item_cutlline_png,app_list_item_select_png,app_list_item_up_png,dropdownlist_arrow_down_png,dropdownlist_arrow_up_png,DropDownListButtonSkin_down_png,DropDownListButtonSkin_up_png,closebtn_disabledpng,closebtn_down_png,closebtn_up_png",
 		"name":"preload"
 	}],
 	"resources":[
@@ -16,11 +16,6 @@
 		"url":"assets/simple/CheckBox/checkbox-select_normal.png"
 	},
 	{
-		"name":"checkbox_select_over_png",
-		"type":"image",
-		"url":"assets/simple/CheckBox/checkbox-select_over.png"
-	},
-	{
 		"name":"checkbox_unselect_disabled_png",
 		"type":"image",
 		"url":"assets/simple/CheckBox/checkbox-unselect_disabled.png"
@@ -29,11 +24,6 @@
 		"name":"checkbox_unselect_normal_png",
 		"type":"image",
 		"url":"assets/simple/CheckBox/checkbox-unselect_normal.png"
-	},
-	{
-		"name":"checkbox_unselect_over_png",
-		"type":"image",
-		"url":"assets/simple/CheckBox/checkbox-unselect_over.png"
 	},
 	{
 		"name":"hslider_fill_png",
@@ -71,12 +61,6 @@
 		"url":"assets/simple/NormalButton/button_normal.png"
 	},
 	{
-		"name":"button_over_png",
-		"scale9grid":"4,4,13,13",
-		"type":"image",
-		"url":"assets/simple/NormalButton/button_over.png"
-	},
-	{
 		"name":"panel_back_png",
 		"scale9grid":"19,21,15,13",
 		"type":"image",
@@ -104,11 +88,6 @@
 		"url":"assets/simple/RadioButton/RadioButton_select_normal.png"
 	},
 	{
-		"name":"radiobutton_select_over_png",
-		"type":"image",
-		"url":"assets/simple/RadioButton/RadioButton_select_over.png"
-	},
-	{
 		"name":"radiobutton_unselect_disabled_png",
 		"type":"image",
 		"url":"assets/simple/RadioButton/RadioButton_unselect_disabled.png"
@@ -117,11 +96,6 @@
 		"name":"radiobutton_unselect_normal_png",
 		"type":"image",
 		"url":"assets/simple/RadioButton/RadioButton_unselect_normal.png"
-	},
-	{
-		"name":"radiobutton_unselect_over_png",
-		"type":"image",
-		"url":"assets/simple/RadioButton/RadioButton_unselect_over.png"
 	},
 	{
 		"name":"togglebutton_disabled_png",
@@ -134,12 +108,6 @@
 		"scale9grid":"3,3,9,2",
 		"type":"image",
 		"url":"assets/simple/ToggleButton/togglebutton_normal.png"
-	},
-	{
-		"name":"togglebutton_over_png",
-		"scale9grid":"3,3,9,2",
-		"type":"image",
-		"url":"assets/simple/ToggleButton/togglebutton_over.png"
 	},
 	{
 		"name":"togglebutton_selected_png",
@@ -229,11 +197,6 @@
 		"name":"onoffbutton_on_track_png",
 		"type":"image",
 		"url":"assets/simple/ONOFFButton/onoffbutton_on_track.png"
-	},
-	{
-		"name":"dropdownlist_over_png",
-		"type":"image",
-		"url":"assets/simple/DropdownList/dropdownlist_over.png"
 	},
 	{
 		"name":"tree_icon_dir_png",
