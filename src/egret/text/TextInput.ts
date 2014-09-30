@@ -27,6 +27,12 @@
 
 
 module egret {
+    /**
+     * @class egret.TextInput
+     * @classdesc
+     * TextInput 类表示用于表示输入文本的显示对象。
+     * @extends egret.Sprite
+     */
     export class TextInput extends Sprite {
 
         private _text:TextField;
@@ -140,6 +146,10 @@ module egret {
             return this.stageText._getText();
         }
 
+        /**
+         * 作为文本字段中当前文本的字符串。
+         * @member {string} egret.TextInput#text
+         */
         public set text(value:string) {
             this.stageText._setText(value);
 
@@ -150,12 +160,30 @@ module egret {
             return this.stageText._getText();
         }
 
-        public setTextType(type:string):void {
-            this.stageText._setTextType(type);
+        /**
+         * 指定文本字段是否是密码文本字段。
+         * @member {boolean} egret.TextInput#displayAsPassword
+         */
+        public get displayAsPassword():boolean {
+            return this.stageText._getTextType() == "password";
+        }
+
+        public set displayAsPassword(value:boolean) {
+            this.stageText._setTextType(value ? "password" : "text");
 
             this.resetText();
         }
 
+        public setTextType(type:string):void {
+            this.stageText._setTextType(type);
+            this.resetText();
+        }
+
+        /**
+         * 请使用displayAsPassword代替
+         * @deprecated
+         * @returns {string}
+         */
         public getTextType():string {
             return this.stageText._getTextType();
         }
@@ -199,12 +227,12 @@ module egret {
             this.stageText._draw();
         }
 
-        /**
-         * 字号
-         * @member {number} egret.TextField#size
-         */
         public _size:number = 30;
 
+        /**
+         * 字号
+         * @member {number} egret.TextInput#size
+         */
         public get size():number {
             return this._size;
         }
@@ -222,7 +250,7 @@ module egret {
         private _textColor:number = 0xFFFFFF;
         /**
          * 文字颜色
-         * @member {number} egret.TextField#textColor
+         * @member {number} egret.TextInput#textColor
          */
         public get textColor():number {
             return this._textColor;
@@ -238,8 +266,8 @@ module egret {
         }
 
         /**
-         * 字体
-         * @member {any} egret.TextField#fontFamily
+         * 使用此文本格式的文本的字体名称，以字符串形式表示。
+         * @member {any} egret.TextInput#fontFamily
          */
         public _fontFamily = "Arial";
 
@@ -272,8 +300,8 @@ module egret {
             super._setHeight(value);
         }
 
-
         private _multiline:boolean = false;
+
         public set multiline(value:boolean) {
             this._setMultiline(value);
         }
@@ -283,9 +311,10 @@ module egret {
         }
 
         /**
-         * 表示字段是否为多行文本字段。如果值为 true，则文本字段为多行文本字段；如果值为 false，则文本字段为单行文本字段。在类型为 TextFieldType.INPUT 的字段中，multiline 值将确定 Enter 键是否创建新行（如果值为 false，则将忽略 Enter 键）。如果将文本粘贴到其 multiline 值为 false 的 TextField 中，则文本中将除去新行。
+         * 表示字段是否为多行文本字段。
+         * 如果值为 true，则文本字段为多行文本字段；如果值为 false，则文本字段为单行文本字段。multiline 值将确定 Enter 键是否创建新行（如果值为 false，则将忽略 Enter 键）。
          * 默认值为 false。
-         * @returns {boolean}
+         * @returns {boolean} egret.TextInput#multiline
          */
         public get multiline():boolean {
             return this._multiline;
