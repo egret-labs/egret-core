@@ -42,6 +42,7 @@ function run(dir, args, opts) {
     if (opts["-serveronly"]) {
         OPEN = false;
     }
+    var autoCompile = opts["-autoCompile"];
     var server = http.createServer(onGet);
     server.addListener("error", function () {
         globals.exit(1501);
@@ -54,8 +55,14 @@ function run(dir, args, opts) {
         var ip = findIP(opts);
         var projectName = args[0] ? args[0] : "";
         var projectNamePath = projectName ? projectName + "/" : "";
-        var url = "http://" + ip + ":" + PORT + "/" + projectNamePath + "launcher/index.html";
-//        var url = "http://" + ip + ":" + PORT + "/" + projectNamePath + "launcher/" + autoCompilerFlag;
+        if (autoCompile) {
+            var url = "http://" + ip + ":" + PORT + "/" + projectNamePath + "launcher/" + autoCompilerFlag;
+        }
+        else {
+            var url = "http://" + ip + ":" + PORT + "/" + projectNamePath + "launcher/index.html";
+        }
+
+
         if (OPEN) {
             open(url);
             console.log("Server runing at port: " + PORT + ".");
@@ -95,23 +102,23 @@ function onGet(request, response) {
 
     if (pathname.indexOf(autoCompilerFlag) == pathname.length - autoCompilerFlag.length) {
 
-        if (egretBuildCommand){
+        if (egretBuildCommand) {
 
-            writeText("dsfdsfsd",response)
+            writeText("正在编译中....请刷新重试", response)
             return;
         }
         pathname = pathname.substring(0, pathname.length - autoCompilerFlag.length) + "index.html";
         if (!fileWatcher) {
             fileWatcher = require("../core/filewatcher.js").createFileWatcher();
             // watch a file
-            fileWatcher.addAll(projectPath +"/src")
+            fileWatcher.addAll(projectPath + "/src")
             fileWatcher.on('change', function (file, mtime) {
                 console.log('File modified: %s', file)
                 if (mtime == -1) console.log('deleted')
 
 
                 var cp_exec = require("child_process").exec;
-                if (egretBuildCommand){
+                if (egretBuildCommand) {
                     egretBuildCommand.kill();
                 }
                 egretBuildCommand = cp_exec("egret build " + projectName + " -v");
@@ -123,16 +130,10 @@ function onGet(request, response) {
                 })
 
                 egretBuildCommand.on('exit', function (code) {
-                    if (code == 0){
+                    if (code == 0) {
                         egretBuildCommand = null;
                     }
                 });
-
-
-
-
-
-
 
 
             })
