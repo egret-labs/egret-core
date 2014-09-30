@@ -37,6 +37,9 @@ function run(currDir, args, opts) {
 
                 //gui 用gui覆盖刚拷贝的文件
                 if (type == "gui") {
+                    //删除assets文件夹
+                    file.remove(path.join(projectPath, "resource"));
+
                     copyFileDir(projectPath, "tools/templates/gui");
                 }
             }

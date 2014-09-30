@@ -8,304 +8,304 @@
 	{
 		"name":"checkbox_select_disabled_png",
 		"type":"image",
-		"url":"asset/simple/CheckBox/checkbox-select_disabled.png"
+		"url":"assets/simple/CheckBox/checkbox-select_disabled.png"
 	},
 	{
 		"name":"checkbox_select_normal_png",
 		"type":"image",
-		"url":"asset/simple/CheckBox/checkbox-select_normal.png"
+		"url":"assets/simple/CheckBox/checkbox-select_normal.png"
 	},
 	{
 		"name":"checkbox_select_over_png",
 		"type":"image",
-		"url":"asset/simple/CheckBox/checkbox-select_over.png"
+		"url":"assets/simple/CheckBox/checkbox-select_over.png"
 	},
 	{
 		"name":"checkbox_unselect_disabled_png",
 		"type":"image",
-		"url":"asset/simple/CheckBox/checkbox-unselect_disabled.png"
+		"url":"assets/simple/CheckBox/checkbox-unselect_disabled.png"
 	},
 	{
 		"name":"checkbox_unselect_normal_png",
 		"type":"image",
-		"url":"asset/simple/CheckBox/checkbox-unselect_normal.png"
+		"url":"assets/simple/CheckBox/checkbox-unselect_normal.png"
 	},
 	{
 		"name":"checkbox_unselect_over_png",
 		"type":"image",
-		"url":"asset/simple/CheckBox/checkbox-unselect_over.png"
+		"url":"assets/simple/CheckBox/checkbox-unselect_over.png"
 	},
 	{
 		"name":"hslider_fill_png",
 		"scale9grid":"1,1,13,2",
 		"type":"image",
-		"url":"asset/simple/HSlider/HSlider_fill.png"
+		"url":"assets/simple/HSlider/HSlider_fill.png"
 	},
 	{
 		"name":"hslider_thumb_png",
 		"type":"image",
-		"url":"asset/simple/HSlider/HSlider_thumb.png"
+		"url":"assets/simple/HSlider/HSlider_thumb.png"
 	},
 	{
 		"name":"hslider_track_png",
 		"scale9grid":"1,1,13,2",
 		"type":"image",
-		"url":"asset/simple/HSlider/HSlider_track.png"
+		"url":"assets/simple/HSlider/HSlider_track.png"
 	},
 	{
 		"name":"button_disabled_png",
 		"scale9grid":"3,4,14,13",
 		"type":"image",
-		"url":"asset/simple/NormalButton/button_disabled.png"
+		"url":"assets/simple/NormalButton/button_disabled.png"
 	},
 	{
 		"name":"button_down_png",
 		"scale9grid":"4,3,13,14",
 		"type":"image",
-		"url":"asset/simple/NormalButton/button_down.png"
+		"url":"assets/simple/NormalButton/button_down.png"
 	},
 	{
 		"name":"button_normal_png",
 		"scale9grid":"4,3,13,15",
 		"type":"image",
-		"url":"asset/simple/NormalButton/button_normal.png"
+		"url":"assets/simple/NormalButton/button_normal.png"
 	},
 	{
 		"name":"button_over_png",
 		"scale9grid":"4,4,13,13",
 		"type":"image",
-		"url":"asset/simple/NormalButton/button_over.png"
+		"url":"assets/simple/NormalButton/button_over.png"
 	},
 	{
 		"name":"panel_back_png",
 		"scale9grid":"19,21,15,13",
 		"type":"image",
-		"url":"asset/simple/Panel/Panel_back.png"
+		"url":"assets/simple/Panel/Panel_back.png"
 	},
 	{
 		"name":"progressbar_fill_png",
 		"type":"image",
-		"url":"asset/simple/ProgressBar/Progressbar_fill.png"
+		"url":"assets/simple/ProgressBar/Progressbar_fill.png"
 	},
 	{
 		"name":"progressbar_track_png",
 		"scale9grid":"1,1,28,8",
 		"type":"image",
-		"url":"asset/simple/ProgressBar/Progressbar_track.png"
+		"url":"assets/simple/ProgressBar/Progressbar_track.png"
 	},
 	{
 		"name":"radiobutton_select_disabled_png",
 		"type":"image",
-		"url":"asset/simple/RadioButton/RadioButton_select_disabled.png"
+		"url":"assets/simple/RadioButton/RadioButton_select_disabled.png"
 	},
 	{
 		"name":"radiobutton_select_normal_png",
 		"type":"image",
-		"url":"asset/simple/RadioButton/RadioButton_select_normal.png"
+		"url":"assets/simple/RadioButton/RadioButton_select_normal.png"
 	},
 	{
 		"name":"radiobutton_select_over_png",
 		"type":"image",
-		"url":"asset/simple/RadioButton/RadioButton_select_over.png"
+		"url":"assets/simple/RadioButton/RadioButton_select_over.png"
 	},
 	{
 		"name":"radiobutton_unselect_disabled_png",
 		"type":"image",
-		"url":"asset/simple/RadioButton/RadioButton_unselect_disabled.png"
+		"url":"assets/simple/RadioButton/RadioButton_unselect_disabled.png"
 	},
 	{
 		"name":"radiobutton_unselect_normal_png",
 		"type":"image",
-		"url":"asset/simple/RadioButton/RadioButton_unselect_normal.png"
+		"url":"assets/simple/RadioButton/RadioButton_unselect_normal.png"
 	},
 	{
 		"name":"radiobutton_unselect_over_png",
 		"type":"image",
-		"url":"asset/simple/RadioButton/RadioButton_unselect_over.png"
+		"url":"assets/simple/RadioButton/RadioButton_unselect_over.png"
 	},
 	{
 		"name":"togglebutton_disabled_png",
 		"scale9grid":"3,3,9,2",
 		"type":"image",
-		"url":"asset/simple/ToggleButton/togglebutton_disabled.png"
+		"url":"assets/simple/ToggleButton/togglebutton_disabled.png"
 	},
 	{
 		"name":"togglebutton_normal_png",
 		"scale9grid":"3,3,9,2",
 		"type":"image",
-		"url":"asset/simple/ToggleButton/togglebutton_normal.png"
+		"url":"assets/simple/ToggleButton/togglebutton_normal.png"
 	},
 	{
 		"name":"togglebutton_over_png",
 		"scale9grid":"3,3,9,2",
 		"type":"image",
-		"url":"asset/simple/ToggleButton/togglebutton_over.png"
+		"url":"assets/simple/ToggleButton/togglebutton_over.png"
 	},
 	{
 		"name":"togglebutton_selected_png",
 		"scale9grid":"3,3,9,2",
 		"type":"image",
-		"url":"asset/simple/ToggleButton/togglebutton_selected.png"
+		"url":"assets/simple/ToggleButton/togglebutton_selected.png"
 	},
 	{
 		"name":"tree_back_png",
 		"scale9grid":"4,5,26,25",
 		"type":"image",
-		"url":"asset/simple/Tree/tree_back.png"
+		"url":"assets/simple/Tree/tree_back.png"
 	},
 	{
 		"name":"tree_btndisabled_png",
 		"type":"image",
-		"url":"asset/simple/Tree/tree_btnDisabled.png"
+		"url":"assets/simple/Tree/tree_btnDisabled.png"
 	},
 	{
 		"name":"tree_btndisabledselect_png",
 		"type":"image",
-		"url":"asset/simple/Tree/tree_btnDisabledSelect.png"
+		"url":"assets/simple/Tree/tree_btnDisabledSelect.png"
 	},
 	{
 		"name":"tree_btndown_png",
 		"type":"image",
-		"url":"asset/simple/Tree/tree_btnDown.png"
+		"url":"assets/simple/Tree/tree_btnDown.png"
 	},
 	{
 		"name":"tree_btndownselect_png",
 		"type":"image",
-		"url":"asset/simple/Tree/tree_btnDownSelect.png"
+		"url":"assets/simple/Tree/tree_btnDownSelect.png"
 	},
 	{
 		"name":"tree_btnup_png",
 		"type":"image",
-		"url":"asset/simple/Tree/tree_btnUp.png"
+		"url":"assets/simple/Tree/tree_btnUp.png"
 	},
 	{
 		"name":"tree_btnupselect_png",
 		"type":"image",
-		"url":"asset/simple/Tree/tree_btnUpSelect.png"
+		"url":"assets/simple/Tree/tree_btnUpSelect.png"
 	},
 	{
 		"name":"vslider_fill_png",
 		"scale9grid":"1,1,2,13",
 		"type":"image",
-		"url":"asset/simple/VSlider/VSlider_fill.png"
+		"url":"assets/simple/VSlider/VSlider_fill.png"
 	},
 	{
 		"name":"vslider_thumb_png",
 		"type":"image",
-		"url":"asset/simple/VSlider/VSlider_thumb.png"
+		"url":"assets/simple/VSlider/VSlider_thumb.png"
 	},
 	{
 		"name":"vslider_track_png",
 		"scale9grid":"1,1,2,13",
 		"type":"image",
-		"url":"asset/simple/VSlider/VSlider_track.png"
+		"url":"assets/simple/VSlider/VSlider_track.png"
 	},
 	{
 		"name":"onoffbutton_off_label_png",
 		"type":"image",
-		"url":"asset/simple/ONOFFButton/onoffbutton_off_label.png"
+		"url":"assets/simple/ONOFFButton/onoffbutton_off_label.png"
 	},
 	{
 		"name":"onoffbutton_off_thumb_png",
 		"type":"image",
-		"url":"asset/simple/ONOFFButton/onoffbutton_off_thumb.png"
+		"url":"assets/simple/ONOFFButton/onoffbutton_off_thumb.png"
 	},
 	{
 		"name":"onoffbutton_off_track_png",
 		"type":"image",
-		"url":"asset/simple/ONOFFButton/onoffbutton_off_track.png"
+		"url":"assets/simple/ONOFFButton/onoffbutton_off_track.png"
 	},
 	{
 		"name":"onoffbutton_on_label_png",
 		"type":"image",
-		"url":"asset/simple/ONOFFButton/onoffbutton_on_label.png"
+		"url":"assets/simple/ONOFFButton/onoffbutton_on_label.png"
 	},
 	{
 		"name":"onoffbutton_on_thumb_png",
 		"type":"image",
-		"url":"asset/simple/ONOFFButton/onoffbutton_on_thumb.png"
+		"url":"assets/simple/ONOFFButton/onoffbutton_on_thumb.png"
 	},
 	{
 		"name":"onoffbutton_on_track_png",
 		"type":"image",
-		"url":"asset/simple/ONOFFButton/onoffbutton_on_track.png"
+		"url":"assets/simple/ONOFFButton/onoffbutton_on_track.png"
 	},
 	{
 		"name":"dropdownlist_over_png",
 		"type":"image",
-		"url":"asset/simple/DropdownList/dropdownlist_over.png"
+		"url":"assets/simple/DropdownList/dropdownlist_over.png"
 	},
 	{
 		"name":"tree_icon_dir_png",
 		"type":"image",
-		"url":"asset/simple/Tree/tree_icon_dir.png"
+		"url":"assets/simple/Tree/tree_icon_dir.png"
 	},
 	{
 		"name":"tree_icon_file_png",
 		"type":"image",
-		"url":"asset/simple/Tree/tree_icon_file.png"
+		"url":"assets/simple/Tree/tree_icon_file.png"
 	},
 	{
 		"name":"panel_headeback_png",
 		"scale9grid":"24,18,19,22",
 		"type":"image",
-		"url":"asset/simple/Panel/Panel_headeBack.png"
+		"url":"assets/simple/Panel/Panel_headeBack.png"
 	},
 	{
 		"name":"dropdownlist_arrow_down_png",
 		"type":"image",
-		"url":"asset/simple/DropdownList/dropdownlist_arrow_down.png"
+		"url":"assets/simple/DropdownList/dropdownlist_arrow_down.png"
 	},
 	{
 		"name":"dropdownlist_arrow_up_png",
 		"type":"image",
-		"url":"asset/simple/DropdownList/dropdownlist_arrow_up.png"
+		"url":"assets/simple/DropdownList/dropdownlist_arrow_up.png"
 	},
 	{
 		"name":"DropDownListButtonSkin_down_png",
 		"scale9grid":"3,3,4,19",
 		"type":"image",
-		"url":"asset/simple/DropdownList/DropDownListButtonSkin_down.png"
+		"url":"assets/simple/DropdownList/DropDownListButtonSkin_down.png"
 	},
 	{
 		"name":"DropDownListButtonSkin_up_png",
 		"scale9grid":"3,3,4,19",
 		"type":"image",
-		"url":"asset/simple/DropdownList/DropDownListButtonSkin_up.png"
+		"url":"assets/simple/DropdownList/DropDownListButtonSkin_up.png"
 	},
 	{
 		"name":"closebtn_disabledpng",
 		"type":"image",
-		"url":"asset/simple/TitleWindow/closebtn_disabled.png"
+		"url":"assets/simple/TitleWindow/closebtn_disabled.png"
 	},
 	{
 		"name":"closebtn_down_png",
 		"type":"image",
-		"url":"asset/simple/TitleWindow/closebtn_down.png"
+		"url":"assets/simple/TitleWindow/closebtn_down.png"
 	},
 	{
 		"name":"closebtn_up_png",
 		"type":"image",
-		"url":"asset/simple/TitleWindow/closebtn_up.png"
+		"url":"assets/simple/TitleWindow/closebtn_up.png"
 	},
 	{
 		"name":"bgImage",
 		"type":"image",
-		"url":"asset/bg.jpg"
+		"url":"assets/bg.jpg"
 	},
 	{
 		"name":"app_list_item_cutlline_png",
 		"type":"image",
-		"url":"asset/simple/ItemRenderer/app_list_item_cutlline.png"
+		"url":"assets/simple/ItemRenderer/app_list_item_cutlline.png"
 	},
 	{
 		"name":"app_list_item_select_png",
 		"type":"image",
-		"url":"asset/simple/ItemRenderer/app_list_item_select.png"
+		"url":"assets/simple/ItemRenderer/app_list_item_select.png"
 	},
 	{
 		"name":"app_list_item_up_png",
 		"type":"image",
-		"url":"asset/simple/ItemRenderer/app_list_item_up.png"
+		"url":"assets/simple/ItemRenderer/app_list_item_up.png"
 	}]
 }
