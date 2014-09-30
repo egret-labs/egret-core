@@ -47,6 +47,8 @@ module egret {
         public _onAddToStage():void {
             super._onAddToStage();
 
+            this.stageText._add();
+
             this.graphics.beginFill(0xffffff, 0);
             this.graphics.drawRect(0, 0, this.width, this.height);
             this.graphics.endFill();

@@ -104,17 +104,10 @@ module egret {
             div.transforms();
             div.style[egret_dom.getTrans("transformOrigin")] = "0% 0% 0px";
 
-            var stageDelegateDiv = this.getStageDelegateDiv();
-            stageDelegateDiv.appendChild(div);
-
             this.div = div;
 
             this._createInput();
 
-            if (div && !div.parentNode) {
-                var stageDelegateDiv = this.getStageDelegateDiv();
-                stageDelegateDiv.appendChild(div);
-            }
             div.style.display = "block";
 
             this._call = this.onHandler.bind(this);
@@ -153,10 +146,13 @@ module egret {
                 inputElement.style.outline = "medium";
 
                 if (this.inputElement && this.inputElement.parentNode) {
-                    this.inputElement.parentNode.removeChild(this.inputElement);
+                    var parentNode = this.inputElement.parentNode;
+                    parentNode.removeChild(this.inputElement);
                     this._removeListeners();
                     this.inputElement = inputElement;
+                    parentNode.appendChild(this.inputElement);
                     this._addListeners();
+
                 }
                 else {
                     this.inputElement = inputElement;
@@ -288,6 +284,14 @@ module egret {
                 stageDelegateDiv.transforms();
             }
             return stageDelegateDiv;
+        }
+
+        public _add():void {
+            var div = this.div;
+            if (div && !div.parentNode) {
+                var stageDelegateDiv = this.getStageDelegateDiv();
+                stageDelegateDiv.appendChild(div);
+            }
         }
 
         /**
