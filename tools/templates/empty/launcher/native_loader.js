@@ -23,7 +23,9 @@ egret_native.egtMain = function () {
         require(src);
     }
 
-
+    //egret.dom为空实现
+    egret.dom = {};
+    egret.dom.drawAsCanvas = function () {};
 
     egret.MainContext.type = egret.MainContext.TYPE_NATIVE;
     var context = egret.MainContext.instance;
