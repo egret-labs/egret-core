@@ -33,13 +33,6 @@ module egret {
          * @constant {string} egret.BlendMode.ADD
          */
         public static ADD = "add";
-        /**
-         * 强制为该显示对象创建一个透明度组。这意味着在对显示对象进行进一步处理之前，该对象已在临时缓冲区中预先构成。
-         * 在以下情况下将会自动完成预先构成操作：显示对象通过位图缓存进行预缓存，或者显示对象是一个显示对象容器，
-         * 该容器至少具有一个带有 blendMode 设置（而不是 "normal"）的子对象。
-         * @constant {string} egret.BlendMode.LAYER
-         */
-        public static LAYER = "layer";
 
     }
 }
