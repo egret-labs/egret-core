@@ -148,7 +148,7 @@ module egret {
                 this.canvasContext.globalAlpha = this.globalAlpha = alpha;
             }
             if (blendMode) {
-                this.blendValue = blendMode;
+                this.blendValue = blendMode == "lighter" ? "add" : blendMode;
                 this.canvasContext.globalCompositeOperation = blendMode;
             }
             else if (this.blendValue != egret.BlendMode.NORMAL) {
