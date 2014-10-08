@@ -46,6 +46,8 @@ module egret {
         public set text(value:string) {
             this._textChanged = true;
             this._text = value;
+
+            this._setSizeDirty();
         }
 
 		/**
