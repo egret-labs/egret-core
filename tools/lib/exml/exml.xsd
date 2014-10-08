@@ -139,15 +139,15 @@
       <xs:attributeGroup ref="egret.EventDispatcher"/>
     </xs:complexType>
   </xs:element>
-  <xs:attributeGroup name="egret.FullScreen">
-    <xs:attributeGroup ref="egret.ContentStrategy"/>
+  <xs:attributeGroup name="egret.HTML5StageText">
+    <xs:attributeGroup ref="egret.StageText"/>
   </xs:attributeGroup>
-  <xs:element name="FullScreen">
+  <xs:element name="HTML5StageText">
     <xs:complexType>
       <xs:choice minOccurs="0">
         <xs:any/>
       </xs:choice>
-      <xs:attributeGroup ref="egret.FullScreen"/>
+      <xs:attributeGroup ref="egret.HTML5StageText"/>
     </xs:complexType>
   </xs:element>
   <xs:attributeGroup name="egret.HashObject">
@@ -185,6 +185,17 @@
       <xs:attributeGroup ref="egret.MovieClip"/>
     </xs:complexType>
   </xs:element>
+  <xs:attributeGroup name="egret.NativeStageText">
+    <xs:attributeGroup ref="egret.StageText"/>
+  </xs:attributeGroup>
+  <xs:element name="NativeStageText">
+    <xs:complexType>
+      <xs:choice minOccurs="0">
+        <xs:any/>
+      </xs:choice>
+      <xs:attributeGroup ref="egret.NativeStageText"/>
+    </xs:complexType>
+  </xs:element>
   <xs:attributeGroup name="egret.Point">
     <xs:attributeGroup ref="egret.HashObject"/>
     <xs:attribute name="x" type="xs:decimal"/>
@@ -220,6 +231,8 @@
     </xs:complexType>
   </xs:element>
   <xs:attributeGroup name="egret.PromiseObject">
+    <xs:attribute name="downloadingSizeFunc" type="xs:string"/>
+    <xs:attribute name="downloadingSizeThisObject" type="xs:string"/>
     <xs:attribute name="onErrorFunc" type="xs:string"/>
     <xs:attribute name="onErrorThisObject" type="xs:string"/>
     <xs:attribute name="onSuccessFunc" type="xs:string"/>
@@ -329,7 +342,7 @@
     </xs:complexType>
   </xs:element>
   <xs:attributeGroup name="egret.StageText">
-    <xs:attributeGroup ref="egret.HashObject"/>
+    <xs:attributeGroup ref="egret.EventDispatcher"/>
   </xs:attributeGroup>
   <xs:element name="StageText">
     <xs:complexType>
@@ -381,7 +394,10 @@
     </xs:complexType>
   </xs:element>
   <xs:attributeGroup name="egret.TextInput">
-    <xs:attributeGroup ref="egret.DisplayObject"/>
+    <xs:attributeGroup ref="egret.Sprite"/>
+    <xs:attribute name="displayAsPassword" type="xs:boolean"/>
+    <xs:attribute name="fontFamily" type="xs:string"/>
+    <xs:attribute name="multiline" type="xs:boolean"/>
     <xs:attribute name="size" type="xs:decimal"/>
     <xs:attribute name="text" type="xs:string"/>
     <xs:attribute name="textColor" type="xs:decimal"/>
@@ -453,6 +469,7 @@
       <xs:element ref="Group"/>
       <xs:element ref="GroupBase"/>
       <xs:element ref="HSlider"/>
+      <xs:element ref="ItemRenderer"/>
       <xs:element ref="Label"/>
       <xs:element ref="List"/>
       <xs:element ref="ListBase"/>
@@ -477,6 +494,7 @@
       <xs:element ref="ToggleSwitch"/>
       <xs:element ref="TrackBase"/>
       <xs:element ref="Tree"/>
+      <xs:element ref="TreeItemRenderer"/>
       <xs:element ref="UIAsset"/>
       <xs:element ref="UIComponent"/>
       <xs:element ref="VSlider"/>
@@ -670,6 +688,20 @@
         <xs:any/>
       </xs:choice>
       <xs:attributeGroup ref="egret.gui.HorizontalLayout"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:attributeGroup name="egret.gui.ItemRenderer">
+    <xs:attributeGroup ref="egret.gui.ButtonBase"/>
+    <xs:attribute name="data" type="xs:string"/>
+    <xs:attribute name="itemIndex" type="xs:decimal"/>
+    <xs:attribute name="selected" type="xs:boolean"/>
+  </xs:attributeGroup>
+  <xs:element name="ItemRenderer">
+    <xs:complexType>
+      <xs:choice minOccurs="0">
+        <xs:any/>
+      </xs:choice>
+      <xs:attributeGroup ref="egret.gui.ItemRenderer"/>
     </xs:complexType>
   </xs:element>
   <xs:attributeGroup name="egret.gui.Label">
@@ -1223,6 +1255,25 @@
         <xs:any/>
       </xs:choice>
       <xs:attributeGroup ref="egret.gui.Tree"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:attributeGroup name="egret.gui.TreeItemRenderer">
+    <xs:attributeGroup ref="egret.gui.ItemRenderer"/>
+    <xs:attribute name="contentGroup" type="xs:string"/>
+    <xs:attribute name="depth" type="xs:decimal"/>
+    <xs:attribute name="disclosureButton" type="xs:string"/>
+    <xs:attribute name="hasChildren" type="xs:boolean"/>
+    <xs:attribute name="iconDisplay" type="xs:string"/>
+    <xs:attribute name="iconSkinName" type="xs:string"/>
+    <xs:attribute name="indentation" type="xs:decimal"/>
+    <xs:attribute name="opened" type="xs:boolean"/>
+  </xs:attributeGroup>
+  <xs:element name="TreeItemRenderer">
+    <xs:complexType>
+      <xs:choice minOccurs="0">
+        <xs:any/>
+      </xs:choice>
+      <xs:attributeGroup ref="egret.gui.TreeItemRenderer"/>
     </xs:complexType>
   </xs:element>
   <xs:attributeGroup name="egret.gui.UIAsset">
