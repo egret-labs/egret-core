@@ -378,7 +378,9 @@ function compileModule(callback, module, projectDir,outputPrefix) {
             var dependencyModule = getModuleConfig(dependencyList[i], projectDir);
             var dependencyModuleOutput = dependencyModule.output ? dependencyModule.output : dependencyModule.name;
             dependencyModuleOutput = path.join(projectDir, "libs", dependencyModuleOutput);
-            tsList.push(path.join(dependencyModuleOutput, dependencyModule.name + ".d.ts"));
+
+            var dtsFile = "\"" + path.join(dependencyModuleOutput, dependencyModule.name + ".d.ts") + "\"";
+            tsList.push(dtsFile);
         }
     }
 
