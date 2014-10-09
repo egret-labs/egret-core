@@ -106,6 +106,7 @@ declare module egret_native {
 
         function endFill():void;
 
+        function setBlendArg(src:number, des:number):void;
 
     }
 

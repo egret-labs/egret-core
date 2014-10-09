@@ -54,6 +54,7 @@ module egret {
          */
         public constructor() {
             super();
+            this.initBlendMode();
         }
 
         /**
@@ -115,8 +116,23 @@ module egret {
          */
         public setAlpha(value:number, blendMode:string) {
             egret_native.Graphics.setGlobalAlpha(value);
+            this.setBlendMode(blendMode);
         }
 
+        private currentBlendMode:string;
+
+        private setBlendMode(blendMode:string) {
+            if (!blendMode) {
+                blendMode = egret.BlendMode.NORMAL;
+            }
+            if (this.currentBlendMode != blendMode) {
+                var blendModeArg = this.blendModes[blendMode];
+                if (blendModeArg) {
+                    egret_native.Graphics.setBlendArg(blendModeArg[0], blendModeArg[1]);
+                    this.currentBlendMode = blendMode;
+                }
+            }
+        }
 
         /**
          * 设置渲染文本参数
@@ -158,6 +174,14 @@ module egret {
 
         public popMask():void {
             egret_native.Graphics.popStencil();
+        }
+
+        private blendModes:any;
+
+        private initBlendMode():void {
+            this.blendModes = {};
+            this.blendModes[BlendMode.NORMAL] = [1, 771];
+            this.blendModes[BlendMode.ADD] = [770, 772];
         }
     }
 }

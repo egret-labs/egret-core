@@ -32,7 +32,6 @@ module egret {
      * @extends egret.RendererContext
      */
     export class WebGLRenderer extends RendererContext {
-        public static blendModesWebGL = {};
         private canvas:HTMLCanvasElement;
         private gl:any;
         private size:number = 2000;
@@ -156,9 +155,12 @@ module egret {
             gl.colorMask(true, true, true, true);
         }
 
+        private blendModesWebGL:any;
+
         private initBlendMode():void {
-            WebGLRenderer.blendModesWebGL[BlendMode.NORMAL] = [this.gl.ONE, this.gl.ONE_MINUS_SRC_ALPHA];
-            WebGLRenderer.blendModesWebGL[BlendMode.ADD] = [this.gl.SRC_ALPHA, this.gl.DST_ALPHA];
+            this.blendModesWebGL = {};
+            this.blendModesWebGL[BlendMode.NORMAL] = [this.gl.ONE, this.gl.ONE_MINUS_SRC_ALPHA];
+            this.blendModesWebGL[BlendMode.ADD] = [this.gl.SRC_ALPHA, this.gl.DST_ALPHA];
         }
 
         private start():void {
@@ -202,7 +204,7 @@ module egret {
                 blendMode = egret.BlendMode.NORMAL;
             }
             if (this.currentBlendMode != blendMode) {
-                var blendModeWebGL = WebGLRenderer.blendModesWebGL[blendMode];
+                var blendModeWebGL = this.blendModesWebGL[blendMode];
                 if (blendModeWebGL) {
                     this.gl.blendFunc(blendModeWebGL[0], blendModeWebGL[1]);
                     this.currentBlendMode = blendMode;
