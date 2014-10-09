@@ -44,7 +44,12 @@ module egret {
                 return;
             }
             if (loader.dataFormat == URLLoaderDataFormat.SOUND) {
-                this.loadSound(loader);
+//                if(WebAudio.canUseWebAudio) {
+//                    this.loadWebAudio(loader);
+//                }
+//                else {
+                    this.loadSound(loader);
+//                }
                 return;
             }
 
@@ -101,7 +106,7 @@ module egret {
             audio["__timeoutId"] = window.setTimeout(soundPreloadCanplayHandler,100);
             audio.addEventListener('canplaythrough', soundPreloadCanplayHandler, false);
             audio.addEventListener("error", soundPreloadErrorHandler, false);
-            audio.load()
+            audio.load();
 
             function soundPreloadCanplayHandler(event) {
                 window.clearTimeout(audio["__timeoutId"]);
@@ -121,6 +126,31 @@ module egret {
             };
         }
 
+//        private loadWebAudio(loader:URLLoader):void {
+//            var url:string = loader._request.url;
+//            var request = new XMLHttpRequest();
+//            request.open("GET", url, true);
+//            request.responseType = "arraybuffer";
+//            console.log("loadWebAudio");
+//            request.onload = function () {
+//                WebAudio.ctx["decodeAudioData"](request.response, onSuccessHandler, onErrorHandler);
+//            };
+//            request.send();
+//
+//            function onSuccessHandler(buffer) {
+//                var audio = new WebAudio();
+//                audio._buffer = buffer;
+//
+//                var sound = new Sound();
+//                sound._setAudio(audio);
+//                loader.data = sound;
+//                __callAsync(Event.dispatchEvent, Event, loader, Event.COMPLETE);
+//            }
+//
+//            function onErrorHandler() {
+//                IOErrorEvent.dispatchIOErrorEvent(loader);
+//            }
+//        }
 
         private getXHR():any {
             if (window["XMLHttpRequest"]) {

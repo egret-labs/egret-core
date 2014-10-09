@@ -74,9 +74,9 @@
 		"implements":["egret.IEventDispatcher"],
 		"super":"egret.HashObject"
 	},
-	"egret.FullScreen":
+	"egret.HTML5StageText":
 	{
-		"super":"egret.ContentStrategy"
+		"super":"egret.StageText"
 	},
 	"egret.HashObject":
 	{
@@ -91,6 +91,10 @@
 	{
 		"frameRate":"number",
 		"super":"egret.DisplayObjectContainer"
+	},
+	"egret.NativeStageText":
+	{
+		"super":"egret.StageText"
 	},
 	"egret.Point":
 	{
@@ -114,6 +118,8 @@
 	},
 	"egret.PromiseObject":
 	{
+		"downloadingSizeFunc":"Function",
+		"downloadingSizeThisObject":"any",
 		"onErrorFunc":"Function",
 		"onErrorThisObject":"any",
 		"onSuccessFunc":"Function",
@@ -160,7 +166,7 @@
 	},
 	"egret.StageText":
 	{
-		"super":"egret.HashObject"
+		"super":"egret.EventDispatcher"
 	},
 	"egret.TextField":
 	{
@@ -180,8 +186,11 @@
 	},
 	"egret.TextInput":
 	{
+		"displayAsPassword":"boolean",
+		"fontFamily":"string",
+		"multiline":"boolean",
 		"size":"number",
-		"super":"egret.DisplayObject",
+		"super":"egret.Sprite",
 		"text":"string",
 		"textColor":"number"
 	},
@@ -299,6 +308,14 @@
 		"paddingTop":"number",
 		"super":"egret.gui.LayoutBase",
 		"verticalAlign":"string"
+	},
+	"egret.gui.ItemRenderer":
+	{
+		"data":"any",
+		"implements":["egret.gui.IItemRenderer"],
+		"itemIndex":"number",
+		"selected":"boolean",
+		"super":"egret.gui.ButtonBase"
 	},
 	"egret.gui.Label":
 	{
@@ -568,6 +585,19 @@
 		"iconField":"string",
 		"iconFunction":"Function",
 		"super":"egret.gui.List"
+	},
+	"egret.gui.TreeItemRenderer":
+	{
+		"contentGroup":"egret.DisplayObject",
+		"depth":"number",
+		"disclosureButton":"egret.gui.ToggleButtonBase",
+		"hasChildren":"boolean",
+		"iconDisplay":"egret.gui.UIAsset",
+		"iconSkinName":"any",
+		"implements":["egret.gui.ITreeItemRenderer"],
+		"indentation":"number",
+		"opened":"boolean",
+		"super":"egret.gui.ItemRenderer"
 	},
 	"egret.gui.UIAsset":
 	{
