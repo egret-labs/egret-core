@@ -435,6 +435,10 @@ function checkUserJava() {
     })
 }
 
+/**
+ * 生成指定目录下文件的版本信息manifest文件
+ * 不包括html和css文件
+ */
 function createManifest(currDir){
     var basePath = currDir + "/base.manifest";
     var versionPath = currDir + "/version.manifest";
