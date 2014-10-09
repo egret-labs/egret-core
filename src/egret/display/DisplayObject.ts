@@ -102,7 +102,7 @@ module egret {
          */
         public name:string;
 
-        public _texture_to_render:Texture;
+        public _texture_to_render:Texture = null;
 
         public _parent:DisplayObjectContainer = null;
 
@@ -389,7 +389,7 @@ module egret {
          * @member {boolean} egret.DisplayObject#touchEnabled
          * @default false
          */
-        public _touchEnabled:boolean;
+        public _touchEnabled:boolean = false;
 
         public get touchEnabled():boolean {
             return this._touchEnabled;
@@ -404,13 +404,13 @@ module egret {
          * BlendMode 类中的一个值，用于指定要使用的混合模式。
          * @member {BlendMode} egret.DisplayObject#blendMode
          */
-        public blendMode:string;
+        public blendMode:string = null;
 
         /**
          * 显示对象的滚动矩形范围。显示对象被裁切为矩形定义的大小，当您更改 scrollRect 对象的 x 和 y 属性时，它会在矩形内滚动。
          *  @member {egret.Rectangle} egret.DisplayObject#scrollRect
          */
-        public _scrollRect:Rectangle;
+        public _scrollRect:Rectangle = null;
 
         public get scrollRect():Rectangle {
             return this._scrollRect;
@@ -443,7 +443,7 @@ module egret {
          * 显式设置宽度
          * @returns {number}
          */
-        public _explicitWidth:number;
+        public _explicitWidth:number = 0;
 
         public get explicitWidth():number {
             return this._explicitWidth;
@@ -453,7 +453,7 @@ module egret {
          * 显式设置高度
          * @returns {number}
          */
-        public _explicitHeight:number;
+        public _explicitHeight:number = 0;
 
         public get explicitHeight():number {
             return this._explicitHeight;
@@ -517,10 +517,10 @@ module egret {
         /**
          * 调用显示对象被指定的 mask 对象遮罩
          */
-        public mask:Rectangle;
+        public mask:Rectangle = null;
 
         public _worldTransform:egret.Matrix;
-        public _worldBounds:egret.Rectangle;
+        public _worldBounds:egret.Rectangle = null;
         public worldAlpha:number = 1;
 
 

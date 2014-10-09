@@ -81,7 +81,7 @@ module egret {
          * 矩形区域，它定义位图对象的九个缩放区域。此属性仅当fillMode为BitmapFillMode.SCALE时有效。
          * @member {egret.Texture} egret.Bitmap#scale9Grid
          */
-        public scale9Grid:Rectangle;
+        public scale9Grid:Rectangle = null;
 
         /**
          * 确定位图填充尺寸的方式。默认值：BitmapFillMode.SCALE。
