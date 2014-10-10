@@ -145,13 +145,6 @@ function onGet(request, response) {
             })
         }
     }
-    if (pathname.indexOf("__compile__") > -1) {
-        executeCommand(function () {
-            writeText("success", response);
-        }, "egret build " + projectName + " -v");
-        return;
-    }
-
 
     writeFile(pathname, response);
 }

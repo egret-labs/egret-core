@@ -203,6 +203,11 @@
 	{
 		"super":"egret.EventDispatcher"
 	},
+	"egret.WebAudio":
+	{
+		"loop":"boolean",
+		"volume":"number"
+	},
 	"egret.gui.AddItems":
 	{
 		"position":"string",
@@ -664,11 +669,16 @@
 			"fillMode":"egret.BitmapFillMode"
 		},
 		"egret.BitmapFillMode":["repeat","scale"],
+		"egret.BlendMode":["normal","add"],
+		"egret.DisplayObject":
+		{
+			"blendMode":"egret.BlendMode"
+		},
 		"egret.HorizontalAlign":["left","right","center","justify","contentJustify"],
 		"egret.TextField":
 		{
-			"textAlign":"egret.HorizontalAlign",
-			"verticalAlign":"egret.VerticalAlign"
+			"textAlign":"text_textAlign",
+			"verticalAlign":"text_verticalAlign"
 		},
 		"egret.TextFieldType":["dynamic","input"],
 		"egret.VerticalAlign":["top","bottom","middle","justify","contentJustify"],
@@ -697,8 +707,8 @@
 		},
 		"egret.gui.TextBase":
 		{
-			"textAlign":"egret.HorizontalAlign",
-			"verticalAlign":"egret.VerticalAlign"
+			"textAlign":"text_textAlign",
+			"verticalAlign":"text_verticalAlign"
 		},
 		"egret.gui.TileLayout":
 		{
@@ -717,6 +727,8 @@
 		{
 			"horizontalAlign":"egret.HorizontalAlign",
 			"verticalAlign":"egret.VerticalAlign"
-		}
+		},
+		"text_textAlign":["left","right","center"],
+		"text_verticalAlign":["top","bottom","middle"]
 	}
 }

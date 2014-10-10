@@ -97,7 +97,6 @@ module egret {
         }
 
         public clearScreen() {
-//            this.setTransform(egret.Matrix.identity.identity());
             var list = RenderFilter.getInstance().getDrawAreaList();
             for (var i:number = 0 , l:number = list.length; i < l; i++) {
                 var area = list[i];
@@ -107,7 +106,8 @@ module egret {
         }
 
         public clearRect(x:number, y:number, w:number, h:number) {
-            this.canvasContext.clearRect(x, y, w, h);
+            this.canvasContext.fillRect(x, y, w, h);
+//            this.canvasContext.clearRect(x, y, w, h);
         }
 
         public drawImage(texture:Texture, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight) {
@@ -315,9 +315,9 @@ module egret_h5_graphics {
                 var r:number = (width > height) ? width : height;//选宽高较大者做为arc半径参数
                 var ratioX:number = width / r;//横轴缩放比率
                 var ratioY:number = height / r;//纵轴缩放比率
-                this.canvasContext.scale(ratioX,ratioY);//进行缩放(均匀压缩)
+                this.canvasContext.scale(ratioX, ratioY);//进行缩放(均匀压缩)
                 this.canvasContext.beginPath();
-                this.canvasContext.moveTo((_x + width) / ratioX,_y / ratioY);
+                this.canvasContext.moveTo((_x + width) / ratioX, _y / ratioY);
                 this.canvasContext.arc(_x / ratioX, _y / ratioY, r, 0, 2 * Math.PI);
                 this.canvasContext.closePath();
                 this.canvasContext.restore();
@@ -422,7 +422,7 @@ module egret_h5_graphics {
     }
 
     export function endFill():void {
-        if(this.fillStyleColor != null) {
+        if (this.fillStyleColor != null) {
             this._fill();
         }
         this.fillStyleColor = null;

@@ -67,6 +67,12 @@
       <xs:attributeGroup ref="egret.DefaultMovieClipDelegate"/>
     </xs:complexType>
   </xs:element>
+  <xs:simpleType name="egret.BlendMode">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="normal"/>
+      <xs:enumeration value="add"/>
+    </xs:restriction>
+  </xs:simpleType>
   <xs:attributeGroup name="egret.DisplayObject">
     <xs:attributeGroup ref="egret.EventDispatcher"/>
     <xs:attribute name="alpha" type="xs:decimal"/>
@@ -74,7 +80,7 @@
     <xs:attribute name="anchorOffsetY" type="xs:decimal"/>
     <xs:attribute name="anchorX" type="xs:decimal"/>
     <xs:attribute name="anchorY" type="xs:decimal"/>
-    <xs:attribute name="blendMode" type="xs:string"/>
+    <xs:attribute name="blendMode" type="egret.BlendMode"/>
     <xs:attribute name="cacheAsBitmap" type="xs:boolean"/>
     <xs:attribute name="height" type="xs:string"/>
     <xs:attribute name="mask" type="xs:string"/>
@@ -352,22 +358,18 @@
       <xs:attributeGroup ref="egret.StageText"/>
     </xs:complexType>
   </xs:element>
-  <xs:simpleType name="egret.HorizontalAlign">
+  <xs:simpleType name="text_textAlign">
     <xs:restriction base="xs:string">
       <xs:enumeration value="left"/>
       <xs:enumeration value="right"/>
       <xs:enumeration value="center"/>
-      <xs:enumeration value="justify"/>
-      <xs:enumeration value="contentJustify"/>
     </xs:restriction>
   </xs:simpleType>
-  <xs:simpleType name="egret.VerticalAlign">
+  <xs:simpleType name="text_verticalAlign">
     <xs:restriction base="xs:string">
       <xs:enumeration value="top"/>
       <xs:enumeration value="bottom"/>
       <xs:enumeration value="middle"/>
-      <xs:enumeration value="justify"/>
-      <xs:enumeration value="contentJustify"/>
     </xs:restriction>
   </xs:simpleType>
   <xs:attributeGroup name="egret.TextField">
@@ -381,9 +383,9 @@
     <xs:attribute name="stroke" type="xs:decimal"/>
     <xs:attribute name="strokeColor" type="xs:decimal"/>
     <xs:attribute name="text" type="xs:string"/>
-    <xs:attribute name="textAlign" type="egret.HorizontalAlign"/>
+    <xs:attribute name="textAlign" type="text_textAlign"/>
     <xs:attribute name="textColor" type="xs:decimal"/>
-    <xs:attribute name="verticalAlign" type="egret.VerticalAlign"/>
+    <xs:attribute name="verticalAlign" type="text_verticalAlign"/>
   </xs:attributeGroup>
   <xs:element name="TextField">
     <xs:complexType>
@@ -431,6 +433,18 @@
         <xs:any/>
       </xs:choice>
       <xs:attributeGroup ref="egret.Tween"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:attributeGroup name="egret.WebAudio">
+    <xs:attribute name="loop" type="xs:boolean"/>
+    <xs:attribute name="volume" type="xs:decimal"/>
+  </xs:attributeGroup>
+  <xs:element name="WebAudio">
+    <xs:complexType>
+      <xs:choice minOccurs="0">
+        <xs:any/>
+      </xs:choice>
+      <xs:attributeGroup ref="egret.WebAudio"/>
     </xs:complexType>
   </xs:element>
   <xs:attributeGroup name="egret.gui.AddItems">
@@ -671,6 +685,24 @@
       <xs:attributeGroup ref="egret.gui.HSlider"/>
     </xs:complexType>
   </xs:element>
+  <xs:simpleType name="egret.HorizontalAlign">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="left"/>
+      <xs:enumeration value="right"/>
+      <xs:enumeration value="center"/>
+      <xs:enumeration value="justify"/>
+      <xs:enumeration value="contentJustify"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="egret.VerticalAlign">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="top"/>
+      <xs:enumeration value="bottom"/>
+      <xs:enumeration value="middle"/>
+      <xs:enumeration value="justify"/>
+      <xs:enumeration value="contentJustify"/>
+    </xs:restriction>
+  </xs:simpleType>
   <xs:attributeGroup name="egret.gui.HorizontalLayout">
     <xs:attributeGroup ref="egret.gui.LayoutBase"/>
     <xs:attribute name="gap" type="xs:decimal"/>
@@ -1120,9 +1152,9 @@
     <xs:attribute name="lineSpacing" type="xs:decimal"/>
     <xs:attribute name="size" type="xs:decimal"/>
     <xs:attribute name="text" type="xs:string"/>
-    <xs:attribute name="textAlign" type="egret.HorizontalAlign"/>
+    <xs:attribute name="textAlign" type="text_textAlign"/>
     <xs:attribute name="textColor" type="xs:decimal"/>
-    <xs:attribute name="verticalAlign" type="egret.VerticalAlign"/>
+    <xs:attribute name="verticalAlign" type="text_verticalAlign"/>
   </xs:attributeGroup>
   <xs:element name="TextBase">
     <xs:complexType>

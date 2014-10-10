@@ -9,6 +9,7 @@ var compiler = require("./compile.js");
 var file = require("../core/file.js");
 var code_util = require("../core/code_util.js");
 var create_app = require("./create_app.js");
+var projectConfig = require("../core/projectConfig.js");
 
 
 function run(dir, args, opts) {
@@ -23,6 +24,8 @@ function run(dir, args, opts) {
 
     var runtime = param.getOption(opts, "--runtime", ["html5", "native"]);
 
+    copyProject(currDir);
+
     if (needCompileEngine) {
 
 
@@ -33,12 +36,6 @@ function run(dir, args, opts) {
     task.push(
         function (callback) {
             buildProject(callback, currDir, keepGeneratedTypescript, runtime);
-        },
-
-        function (callback) {
-            var create_app = require("./create_app.js");
-            create_app.build_copy_from(currDir);
-            callback();
         }
     )
 
@@ -54,6 +51,31 @@ function run(dir, args, opts) {
     })
 }
 
+/**
+ * 构建模式为native时候，拷贝一份到native目录
+ */
+function copyProject(currDir) {
+    var output = projectConfig.getOutputDir();
+    if (output) {
+        file.remove(output);
+        var ignorePathList = projectConfig.getIgnorePath();
+        var copyFilePathList = file.getDirectoryListing(currDir);
+        var isIgnore = false;
+        copyFilePathList.forEach(function(copyFilePath) {
+            isIgnore = false;
+            copyFilePath = path.basename(copyFilePath);
+            ignorePathList.forEach(function(ignorePath) {//检测忽略列表
+                if(copyFilePath.indexOf(ignorePath) != -1) {
+                    isIgnore = true;
+                }
+            });
+            if(!isIgnore) {//不在忽略列表的路径，拷贝过去
+                file.copy(path.join(currDir, copyFilePath),path.join(output, copyFilePath));
+            }
+        });
+    }
+}
+
 function buildProject(callback, currDir, keepGeneratedTypescript, runtime) {
     var document_class = globals.getDocumentClass(currDir);
     if (document_class) {
@@ -62,7 +84,6 @@ function buildProject(callback, currDir, keepGeneratedTypescript, runtime) {
         replaceDocumentClass("native_loader.js", document_class, currDir);
     }
 
-    var projectConfig = require("../core/projectConfig.js");
     projectConfig.init(currDir);
     var output = projectConfig.getOutputDir();
 
@@ -86,29 +107,13 @@ function buildProject(callback, currDir, keepGeneratedTypescript, runtime) {
 
     var sourceList = compiler.generateGameFileList(currDir, runtime);
 
-    async.series([
-        function (callback) {
+    async.series([function (callback) {
             compiler.compile(callback,
                 path.join(currDir),
                 sourceList.concat(libs),
                 compileConfig
             );
-        },
-
-        function (callback) {
-            if (output){
-                var resource_dir = path.join(currDir,"resource");
-                var output_dir = path.join(output,"resource");
-                file.copy(resource_dir,output_dir);
-
-                var resource_dir = path.join(currDir,"launcher");
-                var output_dir = path.join(output,"launcher");
-                file.copy(resource_dir,output_dir);
-            }
-            callback();
         }
-
-
     ], callback)
 
 

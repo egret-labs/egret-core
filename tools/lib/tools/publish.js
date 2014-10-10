@@ -4,6 +4,7 @@ var child_process = require("child_process");
 var globals = require("../core/globals");
 var file = require("../core/file.js");
 var compile = require("./compile.js");
+var crc32 = require("../core/crc32.js");
 
 var isDebug = false;
 
@@ -369,6 +370,10 @@ function run(dir, args, opts) {
         var compress = require(path.join("..", "tools", "compress_json.js"));
         compress.run(path.join(currDir, "release"), []);
     }
+
+    if (runtime == "native") {
+        //createManifest(releaseDir);
+    }
 }
 
 function compilerSingleFile(currDir, fileList, outputFile, callback) {
@@ -428,6 +433,48 @@ function checkUserJava() {
             console.log("检测成功");
         }
     })
+}
+
+/**
+ * 生成指定目录下文件的版本信息manifest文件
+ * 不包括html和css文件
+ */
+function createManifest(currDir){
+    var basePath = currDir + "/base.manifest";
+    var versionPath = currDir + "/version.manifest";
+    var oldVersion;
+    if(file.exists(basePath)) {
+        oldVersion = JSON.parse(file.read(basePath));
+    }
+
+    var list = file.search(currDir);
+    var currVersion = {};
+    var length = list.length;
+    for(var i = 0 ; i < length ; i++) {
+        var path = list[i];
+        if(path.indexOf(".html") != -1 || path.indexOf(".css") != -1 || path == basePath || path == versionPath) {
+            continue;
+        }
+        var txt = file.read(path);
+        var txtCrc32 = crc32(txt);
+        var savePath = path.replace(currDir + "/","");
+        if(oldVersion) {
+            if(oldVersion[savePath] == undefined || oldVersion[savePath] != txtCrc32) {
+                currVersion[savePath] = txtCrc32;
+            }
+        }
+        else {
+            currVersion[savePath] = txtCrc32;
+        }
+    }
+
+    if(oldVersion) {
+        file.save(versionPath, JSON.stringify(currVersion));
+    }
+    else {
+        file.save(basePath, JSON.stringify(currVersion));
+        file.save(versionPath, JSON.stringify(currVersion));
+    }
 }
 
 exports.run = run;

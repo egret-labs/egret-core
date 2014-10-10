@@ -4,6 +4,7 @@
 
 
 var file = require("../core/file.js");
+var param = require("./params_analyze.js");
 var path = require("path");
 var projectConfig;
 var projectName;
@@ -50,9 +51,21 @@ function getModule(runtime){
 
 
 
-exports.init = init
-exports.save = save
-exports.getModule = getModule
+exports.init = init;
+exports.save = save;
+exports.getModule = getModule;
 exports.getOutputDir = function(){
+    var argv = param.getArgv();
+    var runtime = param.getOption(argv.opts, "--runtime", ["html5", "native"]);
+    if(runtime == "native" && projectConfig && projectConfig.native && projectConfig.native.support_path) {
+        return projectConfig.native.support_path[0];
+    }
     return null;//"/Users/wander/Documents/egret_workspace/temp_build_for_native";
-}
+};
+
+exports.getIgnorePath = function(){
+    if(projectConfig && projectConfig.native && projectConfig.native.path_ignore) {
+        return projectConfig.native.path_ignore;
+    }
+    return [];
+};
