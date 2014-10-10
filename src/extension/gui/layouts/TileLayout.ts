@@ -721,8 +721,6 @@ module egret.gui {
 			var paddingR:number = isNaN(this._paddingRight)?padding:this._paddingRight;
 			var paddingT:number = isNaN(this._paddingTop)?padding:this._paddingTop;
 			var paddingB:number = isNaN(this._paddingBottom)?padding:this._paddingBottom;
-			var horizontalGap:number = isNaN(this._horizontalGap)?0:this._horizontalGap;
-			var verticalGap:number = isNaN(this._verticalGap)?0:this._verticalGap;
 			if(this.indexInViewCalculated){
 				this.indexInViewCalculated = false;
 			}
@@ -739,7 +737,7 @@ module egret.gui {
 				this.calculateRowAndColumn(width,height);
                 this.adjustForJustify(width,height);
 			}
-			
+
 			if(this.startIndex == -1||this.endIndex==-1){
 				this.target.setContentSize(0,0);
 				return;
@@ -752,6 +750,8 @@ module egret.gui {
 			var rowIndex:number;
 			var orientedByColumns:boolean = (this.orientation == TileOrientation.COLUMNS);
 			var index:number = this.startIndex;
+			var horizontalGap:number = isNaN(this._horizontalGap)?0:this._horizontalGap;
+			var verticalGap:number = isNaN(this._verticalGap)?0:this._verticalGap;
 			for(var i:number = this.startIndex;i <= this.endIndex;i++){
 				if(this.useVirtualLayout)
 					elt = <ILayoutElement> (this.target.getVirtualElementAt(i));
