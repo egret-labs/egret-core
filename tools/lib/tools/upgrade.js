@@ -130,14 +130,15 @@ function upgradeTo_1_1_0() {
         }
         else if (filePath.indexOf(".html") >= 0) {
             var fileContent = file.read(filePath);
-            //保存副本
-            file.save(path.join(projectDir, "launcher", "copy_" + fileName), fileContent);
-
             //替换Div
             var matchObj = fileContent.match(/<div[^<]*gameDiv/);
             if (matchObj == null || matchObj.index < 0) {
                 continue;
             }
+
+            //保存副本
+            file.save(path.join(projectDir, "launcher", "copy_" + fileName), fileContent);
+
             var firstIndex = matchObj.index;
             var endIndex = firstIndex + 1;
             var lastIndex = fileContent.indexOf('</div>', endIndex);
