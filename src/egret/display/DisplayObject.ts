@@ -57,7 +57,7 @@ module egret {
             this._cacheBounds = new egret.Rectangle(0, 0, 0, 0);
         }
 
-        private _normalDirty:boolean = true;
+        public _normalDirty:boolean = true;
         public _setDirty():void {
             this._normalDirty = true;
         }
@@ -396,9 +396,12 @@ module egret {
         }
 
         public set touchEnabled(value:boolean) {
-            this._touchEnabled = value;
+            this._setTouchEnabled(value);
         }
 
+        public _setTouchEnabled(value:boolean):void {
+            this._touchEnabled = value;
+        }
 
         /**
          * BlendMode 类中的一个值，用于指定要使用的混合模式。
