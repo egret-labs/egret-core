@@ -116,11 +116,6 @@ function upgradeTo_1_0_6(){
 function upgradeTo_1_1_0() {
     globals.log("正在更新到1.1.0");
 
-    projectConfig.init(currDir);
-    projectConfig.data.egret_version = "1.1.0";
-    projectConfig.save();
-
-
     //替换 全部 html
     var projectDir = currDir;
 
@@ -139,7 +134,11 @@ function upgradeTo_1_1_0() {
             file.save(path.join(projectDir, "launcher", "copy_" + fileName), fileContent);
 
             //替换Div
-            var firstIndex = fileContent.match(/<div[^<]*gameDiv/).index;
+            var matchObj = fileContent.match(/<div[^<]*gameDiv/);
+            if (matchObj == null || matchObj.index < 0) {
+                continue;
+            }
+            var firstIndex = matchObj.index;
             var endIndex = firstIndex + 1;
             var lastIndex = fileContent.indexOf('</div>', endIndex);
 
@@ -180,8 +179,13 @@ function upgradeTo_1_1_0() {
         file.save(path.join(projectDir, "launcher", "egret_require.js"), reqContent);
     }
 
+    projectConfig.init(currDir);
+    projectConfig.data.egret_version = "1.1.0";
+    projectConfig.save();
+
     var open = require("../core/open");
     open("https://github.com/egret-labs/egret-core/wiki/Egret_Upgrade/upgrade/index.html");
+
     globals.exit(1703);
 }
 
