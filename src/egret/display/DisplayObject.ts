@@ -443,7 +443,7 @@ module egret {
          * 显式设置宽度
          * @returns {number}
          */
-        public _explicitWidth:number = 0;
+        public _explicitWidth:number;
 
         public get explicitWidth():number {
             return this._explicitWidth;
@@ -453,7 +453,7 @@ module egret {
          * 显式设置高度
          * @returns {number}
          */
-        public _explicitHeight:number = 0;
+        public _explicitHeight:number;
 
         public get explicitHeight():number {
             return this._explicitHeight;
