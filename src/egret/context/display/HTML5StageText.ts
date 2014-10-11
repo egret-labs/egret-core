@@ -37,7 +37,6 @@ module egret {
 
         private div:any;
         private inputElement:any;
-        private _size:number = 30;
 
         private _call;
         constructor() {
@@ -45,45 +44,6 @@ module egret {
         }
 
         private _isShow:boolean = true;
-        private _text:string = "";
-        /**
-         * @method egret.StageText#getText
-         * @returns {string}
-         */
-        public _getText():string {
-            return this._isShow ? this.inputElement.value : this._text;
-        }
-
-        /**
-         * @method egret.StageText#setText
-         * @param value {string}
-         */
-        public _setText(value:string):void {
-            this._isShow ? this.inputElement.value = value : this._text = value
-        }
-
-        /**
-         * @method egret.StageText#setTextType
-         * @param type {string}
-         */
-        public _setTextType(type:string):void {
-            this.inputElement.type = type;
-        }
-
-        /**
-         * @method egret.StageText#getTextType
-         * @returns {string}
-         */
-        public _getTextType():string {
-            return this.inputElement.type;
-        }
-
-        public _setMultiline(value:boolean):void {
-            super._setMultiline(value);
-
-            this._createInput();
-        }
-
         /**
          * @method egret.StageText#open
          * @param x {number}
@@ -98,7 +58,6 @@ module egret {
             var div = egret.Browser.getInstance().$new("div");
             div.position.x = x * scaleX;
             div.position.y = y * scaleY;
-            div.style.width = width + "px";
             div.scale.x = scaleX;
             div.scale.y = scaleY;
             div.transforms();
@@ -109,56 +68,10 @@ module egret {
             this._createInput();
 
             div.style.display = "block";
+            div.style.background = "none";
+            div.style.pointerEvents = "none";
 
             this._call = this.onHandler.bind(this);
-        }
-
-        private _inputType:string = "";
-        private _createInput():void {
-            var isChanged:boolean = false;
-
-            var inputElement:any;
-            if (this._multiline && this._inputType != "textarea") {
-                isChanged = true;
-                this._inputType = "textarea";
-                inputElement = document.createElement("textarea");
-            }
-            else if (!this._multiline && this._inputType != "input") {
-                isChanged = true;
-                this._inputType = "input";
-                inputElement = document.createElement("input");
-            }
-
-            if (isChanged) {
-                inputElement.type = "text";
-                inputElement.style.fontSize = this._size + "px";
-                inputElement.style.lineHeight = this._size + "px";
-                inputElement.style.textAlign = "left";
-                inputElement.style.fontFamily = "Arial";
-                inputElement.style.fontStyle = "normal";
-                inputElement.style.fontWeight = "normal";
-
-                inputElement.style.color = "#FFFFFF";
-                inputElement.style.border = "none";
-                inputElement.style.background = "none";
-                inputElement.style.width = this.div.style.width;
-                inputElement.style.padding = "0";
-                inputElement.style.outline = "medium";
-
-                if (this.inputElement && this.inputElement.parentNode) {
-                    var parentNode = this.inputElement.parentNode;
-                    parentNode.removeChild(this.inputElement);
-                    this._removeListeners();
-                    this.inputElement = inputElement;
-                    parentNode.appendChild(this.inputElement);
-                    this._addListeners();
-
-                }
-                else {
-                    this.inputElement = inputElement;
-                }
-                this.div.appendChild(inputElement);
-            }
         }
 
         public _addListeners():void {
@@ -255,16 +168,22 @@ module egret {
         private _openInput():void {
             if (!this._isShow) {
                 this._isShow = true;
-                this.inputElement.value = this._text;
+                if (this._isFirstClick) {
+                    this._isFirstClick = false;
+                    this._text = this._defaultText;
+                    this.setElementValue(this._defaultText);
+                }
+                else {
+                    this.setElementValue(this._text);
+                }
             }
         }
 
         private _closeInput():void {
             if (this._isShow) {
-                this._isShow = false;
                 this._text = this.inputElement.value;
-                this.inputElement.value = "";
-
+                this._isShow = false;
+                this.setElementValue("");
             }
         }
 
@@ -278,7 +197,6 @@ module egret {
             if (!stageDelegateDiv) {
                 stageDelegateDiv = egret.Browser.getInstance().$new("div");
                 stageDelegateDiv.id = "StageDelegateDiv";
-//                stageDelegateDiv.style["top"] = egret.StageDelegate.getInstance().getOffSetY() + "px";
                 var container = document.getElementById(egret.StageDelegate.canvas_div_name);
                 container.appendChild(stageDelegateDiv);
                 stageDelegateDiv.transforms();
@@ -313,32 +231,143 @@ module egret {
             this.div.transforms();
         }
 
-        public changeSize(width:number, height:number):void {
-            this.inputElement.style.width = width + "px";
+        private _inputType:string = "";
+        private _isFirstClick:boolean = true;
+        private _createInput():void {
 
-            this.div.style.width = width + "px";
-            this.div.transforms();
+            var self = this;
+            var isChanged:boolean = false;
+
+            var inputElement:any;
+            if (this._multiline && self._inputType != "textarea") {
+                isChanged = true;
+                this._inputType = "textarea";
+                inputElement = document.createElement("textarea");
+                inputElement.type = "text";
+                inputElement.style.resize = "none";
+            }
+            else if (!this._multiline && self._inputType != "input") {
+                isChanged = true;
+                this._inputType = "input";
+                inputElement = document.createElement("input");
+                inputElement.type = "text";
+            }
+
+            if (isChanged) {//单、多行切换
+                this._styleInfoes = {};
+                this._isFirstClick = true;
+
+                if (self.inputElement && self.inputElement.parentNode) {
+                    var parentNode = self.inputElement.parentNode;
+                    parentNode.removeChild(self.inputElement);
+                    this._removeListeners();
+
+                    this.inputElement = inputElement;
+                    parentNode.appendChild(self.inputElement);
+                    this._addListeners();
+                }
+                else {
+                    this.inputElement = inputElement;
+                }
+                this.setElementValue(self._defaultText);
+                self.div.appendChild(inputElement);
+            }
+
+            //修改属性
+            self.setElementStyle("fontStyle", this._italic ? "italic" : "normal");
+            self.setElementStyle("fontWeight", this._bold ? "bold" : "normal");
+            self.setElementStyle("textAlign", this._textAlign);
+            self.setElementStyle("fontSize", self._size + "px");
+            self.setElementStyle("lineHeight", self._size + "px");
+            self.setElementStyle("fontFamily", self._fontFamily);
+            self.setElementStyle("color", self._color);
+            self.setElementStyle("width", self._width + "px");
+            self.setElementStyle("height", self._height + "px");
+            //默认值
+            self.setElementStyle("border", "none");
+            self.setElementStyle("background", "none");
+            self.setElementStyle("margin", "0");
+            self.setElementStyle("padding", "0");
+            self.setElementStyle("outline", "medium");
+            self.setElementStyle("verticalAlign", "top");
+
+            self.div.style.pointerEvents = self._visible ? "auto" : "none";
         }
 
-        public setSize(value:number):void {
-            this._size = value;
-            this.inputElement.style.fontSize = this._size + "px";
+        public _resetStageText():void {
+            this._createInput();
         }
 
-        public setTextColor(value:string):void {
-            this.inputElement.style.color = value;
+        private setElementValue(value:string):void {
+            if (!this._isFirstClick) {
+                this.inputElement.value = value;
+            }
         }
 
-        public setTextFontFamily(value:string):void {
-            this.inputElement.style.fontFamily = value;
+        private _text:string = "";
+
+        //默认文本内容，只有在创建输入文本的时候才可以使用
+        private _defaultText:string = "";
+        /**
+         * @method egret.StageText#getText
+         * @returns {string}
+         */
+        public _getText():string {
+            if (this._isShow) {
+                if (this._isFirstClick) {
+                    return this._defaultText;
+                }
+                return this.inputElement.value;
+            }
+            return this._text;
         }
 
-        public setWidth(value:number):void{
-            this.inputElement.style.width = value + "px";
+        /**
+         * @method egret.StageText#setText
+         * @param value {string}
+         */
+        public _setText(value:string):void {
+//            this._text = value;
+            this._defaultText = value;
+//            if (this._isShow) {
+//                this.setElementValue(value);
+//            }
         }
 
-        public setHeight(value:number):void{
-            this.inputElement.style.height = value + "px";
+        /**
+         * @method egret.StageText#setTextType
+         * @param type {string}
+         */
+        public _setTextType(type:string):void {
+            this.inputElement.type = type;
+        }
+
+        /**
+         * @method egret.StageText#getTextType
+         * @returns {string}
+         */
+        public _getTextType():string {
+            return this.inputElement.type;
+        }
+
+        private _width:number = 0;
+        public _setWidth(value:number):void{
+            this._width = value;
+        }
+
+        private _height:number = 0;
+        public _setHeight(value:number):void{
+            this._height = value;
+        }
+
+        private _styleInfoes:Object = {};
+        private setElementStyle(style:string, value:any):void {
+            if (this.inputElement) {
+                if (this._styleInfoes[style] != value) {
+                    this.inputElement.style[style] = value;
+                    this._styleInfoes[style] = value;
+                }
+            }
         }
     }
 }

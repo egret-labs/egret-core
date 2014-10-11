@@ -36,34 +36,145 @@ module egret {
      */
     export class TextField extends DisplayObject {
         public static default_fontFamily:string = "Arial";
+
+        private isInput():boolean {
+            return this._type == TextFieldType.INPUT;
+        }
+
+        public _inputEnabled:boolean = false;
+        public _setTouchEnabled(value:boolean):void {
+            super._setTouchEnabled(value);
+
+            if (this.isInput()) {
+                this._inputEnabled = true;
+            }
+        }
+
         /**
-         * 显示文本
-         * @member {string} egret.TextField#text
+         * 文本字段的类型。
+         * 以下 TextFieldType 常量中的任一个：TextFieldType.DYNAMIC（指定用户无法编辑的动态文本字段），或 TextFieldType.INPUT（指定用户可以编辑的输入文本字段）。
+         * 默认值为 dynamic。
+         * @member {string} egret.TextField#type
          */
-        public _text:string;
+        public _type:string = "";
+        private _inputUtils:InputController;
+        public set type(value:string) {
+            this._setType(value);
+        }
+
+        public _setType(value:string):void {
+            if (this._type != value) {
+                this._type = value;
+                if (this._type == TextFieldType.INPUT) {
+                    //创建stageText
+                    if (this._inputUtils == null) {
+                        this._inputUtils = new egret.InputController();
+                    }
+
+                    this._inputUtils.init(this);
+                    this._setDirty();
+
+                    if (this._stage) {
+                        this._inputUtils._addStageText();
+                    }
+                }
+                else {
+                    if (this._inputUtils) {
+                        this._inputUtils._removeStageText();
+                        this._inputUtils = null;
+                    }
+                }
+            }
+        }
+
+        public get type():string {
+            return this._type;
+        }
+
+        public _drawText:string;
 
         public get text():string {
-            return this._text;
+            return this._getText();
+        }
+
+        public _getText():string {
+            if (this._multiline) {//多行
+                return this._text;
+            }
+            else {
+                return this._text.replace(/[\r\n]/g, "");
+            }
         }
 
         public _setTextDirty():void {
             this._setSizeDirty();
-
         }
 
         public set text(value:string) {
             this._setText(value);
         }
 
-        public _setText(value:string):void {
-            if (this._text != value) {
+        /**
+         * 作为文本字段中当前文本的字符串
+         * @member {string} egret.TextField#text
+         */
+        public _text:string = "";
+
+        public _setBaseText(value:string):void {
+            if (this._text != value || this.displayAsPassword) {
                 this._setTextDirty();
                 this._text = value;
+                var text:string = "";
+                if (this._displayAsPassword) {
+                    for (var i:number = 0, num = this._text.length; i < num; i++) {
+                        switch (this._text.charAt(i)) {
+                            case '\n' :
+                                text += "\n";
+                                break;
+                            case '\r' :
+                                break;
+                            default :
+                                text += '*';
+                        }
+                    }
+                }
+                else {
+                    text = this._text;
+                }
+
+                this._drawText = text;
+            }
+        }
+
+        public _setText(value:string):void {
+            this._setBaseText(value);
+        }
+
+        /**
+         * 指定文本字段是否是密码文本字段。
+         * 如果此属性的值为 true，则文本字段被视为密码文本字段，并使用星号而不是实际字符来隐藏输入的字符。如果为 false，则不会将文本字段视为密码文本字段。
+         * 默认值为 false。
+         * @member {boolean} egret.TextInput#displayAsPassword
+         */
+        public _displayAsPassword:boolean = false;
+        public get displayAsPassword():boolean {
+            return this._displayAsPassword;
+        }
+
+        public set displayAsPassword(value:boolean) {
+            this._setDisplayAsPassword(value);
+        }
+
+        public _setDisplayAsPassword(value:boolean):void {
+            if (this._displayAsPassword != value) {
+                this._displayAsPassword = value;
+                this._setText(this._text);
             }
         }
 
         /**
-         * 字体
+         * 使用此文本格式的文本的字体名称，以字符串形式表示。
+         * 默认值 Arial。
          * @member {any} egret.TextField#fontFamily
          */
         public _fontFamily = TextField.default_fontFamily;
@@ -84,7 +195,8 @@ module egret {
         }
 
         /**
-         * 字号
+         * 使用此文本格式的文本的大小（以像素为单位）。
+         * 默认值为 30。
          * @member {number} egret.TextField#size
          */
         public _size:number = 30;
@@ -105,7 +217,9 @@ module egret {
         }
 
         /**
-         * 是否显示为斜体，默认false。
+         * 表示使用此文本格式的文本是否为斜体。
+         * 如果值为 true，则文本为斜体；false，则为不使用斜体。
+         * 默认值为 false。
          * @member {boolean} egret.TextField#italic
          */
         public _italic:boolean;
@@ -126,7 +240,9 @@ module egret {
         }
 
         /**
-         * 是否显示为粗体，默认false。
+         * 指定文本是否为粗体字。
+         * 如果值为 true，则文本为粗体字；false，则为非粗体字。
+         * 默认值为 false。
          * @member {boolean} egret.TextField#bold
          */
         public _bold:boolean;
@@ -148,11 +264,13 @@ module egret {
 
         public _textColorString:string = "#FFFFFF";
 
-        public _textColor:number = 0xFFFFFF;
         /**
-         * 文字颜色
+         * 表示文本的颜色。
+         * 包含三个 8 位 RGB 颜色成分的数字；例如，0xFF0000 为红色，0x00FF00 为绿色。
+         * 默认值为 0xFFFFFF。
          * @member {number} egret.TextField#textColor
          */
+        public _textColor:number = 0xFFFFFF;
         public get textColor():number {
             return this._textColor;
         }
@@ -171,11 +289,13 @@ module egret {
 
         public _strokeColorString:string = "#000000";
 
-        private _strokeColor:number = 0x000000;
         /**
-         * 描边颜色
+         * 表示文本的描边颜色。
+         * 包含三个 8 位 RGB 颜色成分的数字；例如，0xFF0000 为红色，0x00FF00 为绿色。
+         * 默认值为 0x000000。
          * @member {number} egret.TextField#strokeColor
          */
+        public _strokeColor:number = 0x000000;
         public get strokeColor():number {
             return this._strokeColor;
         }
@@ -193,7 +313,9 @@ module egret {
         }
 
         /**
-         * 描边宽度，0为没有描边
+         * 表示描边宽度。
+         * 0为没有描边。
+         * 默认值为 0。
          * @member {number} egret.TextField#stroke
          */
         public _stroke:number = 0;
@@ -214,7 +336,9 @@ module egret {
         }
 
         /**
-         * 文本水平对齐方式,使用HorizontalAlign定义的常量，默认值HorizontalAlign.LEFT。
+         * 文本水平对齐方式
+         * 使用HorizontalAlign定义的常量。
+         * 默认值为 HorizontalAlign.LEFT。
          * @member {string} egret.TextField#textAlign
          */
         public _textAlign:string = "left";
@@ -235,7 +359,9 @@ module egret {
         }
 
         /**
-         * 文本垂直对齐方式,使用VerticalAlign定义的常量，默认值VerticalAlign.TOP。
+         * 文本垂直对齐方式。
+         * 使用VerticalAlign定义的常量。
+         * 默认值为 VerticalAlign.TOP。
          * @member {string} egret.TextField#verticalAlign
          */
         public _verticalAlign:string = "top";
@@ -255,13 +381,12 @@ module egret {
             }
         }
 
-        /**
-         * @member {any} egret.TextField#maxWidth
-         */
         public maxWidth;
 
         /**
          * 行间距
+         * 一个整数，表示行与行之间的垂直间距量。
+         * 默认值为 0。
          * @member {number} egret.TextField#lineSpacing
          */
         public _lineSpacing:number = 0;
@@ -281,17 +406,71 @@ module egret {
             }
         }
 
-        private _numLines:number = 0;
         /**
-         * 文本行数
+         * 文本行数。[只读]
          * @member {number} egret.TextField#numLines
          */
+        private _numLines:number = 0;
         public get numLines():number {
             return this._numLines;
         }
 
+        /**
+         * 表示字段是否为多行文本字段。
+         * 如果值为 true，则文本字段为多行文本字段；如果值为 false，则文本字段为单行文本字段。在类型为 TextFieldType.INPUT 的字段中，multiline 值将确定 Enter 键是否创建新行（如果值为 false，则将忽略 Enter 键）。
+         * 默认值为 false。
+         * @member {number} egret.TextField#multiline
+         */
+        public _multiline:boolean = false;
+        public set multiline(value:boolean) {
+            this._setMultiline(value);
+        }
+        public _setMultiline(value:boolean):void {
+            this._multiline = value;
+
+            this._setDirty();
+        }
+
+        public get multiline():boolean {
+            return this._multiline;
+        }
+
         constructor() {
             super();
+        }
+
+        public _onRemoveFromStage():void {
+            super._onRemoveFromStage();
+
+            if (this._type == TextFieldType.INPUT) {
+                this._inputUtils._removeStageText();
+            }
+        }
+
+        public _onAddToStage():void {
+            super._onAddToStage();
+
+            if (this._type == TextFieldType.INPUT) {
+                this._inputUtils._addStageText();
+            }
+        }
+
+        public _updateBaseTransform():void {
+            super._updateTransform();
+        }
+
+        public _updateTransform():void {
+            if (this._type == TextFieldType.INPUT) {
+                if (this._normalDirty) {//本身有变化
+                    this._inputUtils._updateProperties();
+                }
+                else {//兼容可能父层有变化
+                    this._inputUtils._updateTransform();
+                }
+            }
+            else {
+                this._updateBaseTransform();
+            }
         }
 
         /**
@@ -375,7 +554,7 @@ module egret {
         private measuredWidths:Array<number> = [];
 
         private getTextLines(renderContext:RendererContext):Array<string>{
-            var text:string = this._text ? this._text.toString() : "";
+            var text:string = this._drawText ? this._drawText.toString() : "";
             if(!text){
                 return null;
             }

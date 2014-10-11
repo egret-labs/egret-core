@@ -20,8 +20,6 @@ module egret {
             this.stageText = egret.StageText.create();
             var point = this._text.localToGlobal();
             this.stageText._open(point.x, point.y, this._text._explicitWidth, this._text._explicitHeight);
-
-            this._setText(this._text._getText());
         }
 
         public _addStageText():void {
@@ -96,11 +94,6 @@ module egret {
             }
         }
 
-        public _setText(value:string):void {
-            this.stageText._setText(value);
-            this.resetText();
-        }
-
         private updateTextHandler(event):void {
             this.resetText();
         }
@@ -131,15 +124,40 @@ module egret {
         }
 
         public _updateProperties():void {
+            var stage:egret.Stage = this._text._stage;
+            if (stage == null) {
+                this.stageText._setVisible(false);
+            }
+            else {
+                var item:DisplayObject = this._text;
+                var visible:boolean = item._visible;
+                while (true) {
+                    if (!visible) {
+                        break;
+                    }
+                    item = item.parent;
+                    if (item == stage) {
+                        break;
+                    }
+                    visible = item._visible;
+                }
+                this.stageText._setVisible(visible);
+            }
+
             this.stageText._setMultiline(this._text._multiline);
-
-            this.stageText.setSize(this._text._size);
-            this.stageText.setTextColor(this._text._textColorString);
-            this.stageText.setTextFontFamily(this._text._fontFamily);
-            this.stageText.setWidth(this._text._getSize(Rectangle.identity).width);
-            this.stageText.setHeight(this._text._getSize(Rectangle.identity).height);
-
+            this.stageText._setSize(this._text._size);
+            this.stageText._setTextColor(this._text._textColorString);
+            this.stageText._setTextFontFamily(this._text._fontFamily);
+            this.stageText._setBold(this._text._bold);
+            this.stageText._setItalic(this._text._italic);
+            this.stageText._setTextAlign(this._text._textAlign);
+            this.stageText._setWidth(this._text._getSize(Rectangle.identity).width);
+            this.stageText._setHeight(this._text._getSize(Rectangle.identity).height);
             this.stageText._setTextType(this._text._displayAsPassword ? "password" : "text");
+            this.stageText._setText(this._text._text);
+
+            //整体修改
+            this.stageText._resetStageText();
 
             this._updateTransform();
         }
