@@ -372,7 +372,7 @@ function run(dir, args, opts) {
     }
 
     if (runtime == "native") {
-        //createManifest(releaseDir);
+        createManifest(releaseDir);
     }
 }
 
