@@ -116,33 +116,6 @@ module egret {
             return this;
         }
 
-
-        /**
-         * 前置矩阵
-         * @method egret.Matrix#prependMatrix
-         * @param matrix {number}
-         * @returns {egret.Matrix}
-         */
-        public prependMatrix(matrix:Matrix):Matrix {
-            this.prepend(matrix.a, matrix.b, matrix.c, matrix.d, matrix.tx, matrix.ty);
-//        this.prependProperties(matrix.alpha, matrix.shadow,  matrix.compositeOperation);
-            return this;
-        }
-
-
-        /**
-         * 后置矩阵
-         * @method egret.Matrix#appendMatrix
-         * @param matrix {egret.Matrix}
-         * @returns {egret.Matrix}
-         */
-        public appendMatrix(matrix:Matrix):Matrix {
-            this.append(matrix.a, matrix.b, matrix.c, matrix.d, matrix.tx, matrix.ty);
-//        this.appendProperties(matrix.alpha, matrix.shadow,  matrix.compositeOperation);
-            return this;
-        }
-
-
         /**
          * 前置矩阵
          * @method egret.Matrix#prependTransform
