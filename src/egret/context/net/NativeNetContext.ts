@@ -117,6 +117,7 @@ module egret {
             }
 
             function download() {
+//                console.log("download:" + url);
                 var promise = PromiseObject.create();
                 promise.onSuccessFunc = onLoadComplete;
                 promise.onErrorFunc = function () {

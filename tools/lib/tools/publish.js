@@ -451,13 +451,13 @@ function createManifest(currDir){
     var currVersion = {};
     var length = list.length;
     for(var i = 0 ; i < length ; i++) {
-        var path = list[i];
-        if(path.indexOf(".html") != -1 || path.indexOf(".css") != -1 || path == basePath || path == versionPath) {
+        var filePath = list[i];
+        if(filePath.indexOf(".html") != -1 || filePath.indexOf(".css") != -1 || filePath == basePath || filePath == versionPath) {
             continue;
         }
-        var txt = file.read(path);
+        var txt = file.read(filePath);
         var txtCrc32 = crc32(txt);
-        var savePath = path.replace(currDir + "/","");
+        var savePath = path.relative(currDir, filePath);
         if(oldVersion) {
             if(oldVersion[savePath] == undefined || oldVersion[savePath] != txtCrc32) {
                 currVersion[savePath] = txtCrc32;
