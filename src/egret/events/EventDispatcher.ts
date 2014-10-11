@@ -192,7 +192,7 @@ module egret {
          * 而 willTrigger() 方法检查整个事件流以查找由 type 参数指定的事件。
          * @method egret.EventDispatcher#willTrigger
          * @param type {string} 事件类型
-         * @returns {boolean} 是否发生碰撞，如果发生返回true，如果没有碰撞，返回false
+         * @returns {boolean} 是否注册过监听器，如果注册过返回true，反之返回false
          */
         public willTrigger(type:string):boolean {
             return this.hasEventListener(type);
