@@ -44,23 +44,23 @@ module egret {
         }
 
         /**
-         * 请使用TextInput.text获取
+         * 请使用TextInput.displayAsPassword设置
          * @deprecated
          * @param value
          */
         public setTextType(type:string):void {
-            Logger.warning("TextField.setTextType()已废弃，请使用TextInput.type设置");
-            this.type = type;
+            Logger.warning("TextField.setTextType()已废弃，请使用TextInput.displayAsPassword设置");
+            this.displayAsPassword = type == "password";
         }
 
         /**
-         * 请使用TextInput.type
+         * 请使用TextInput.displayAsPassword获取
          * @deprecated
          * @returns {string}
          */
         public getTextType():string {
-            Logger.warning("TextField.getTextType()已废弃，请使用TextInput.type获取");
-            return this.type;
+            Logger.warning("TextField.getTextType()已废弃，请使用TextInput.displayAsPassword获取");
+            return this.displayAsPassword ? "password" : "text";
         }
 
     }
