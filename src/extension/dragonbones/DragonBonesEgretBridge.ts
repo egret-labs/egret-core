@@ -69,6 +69,9 @@ module dragonBones {
 
             public updateTransform(matrix:geom.Matrix, transform:objects.DBTransform):void {
 
+                this._display.__hack_local_matrix = matrix;
+                this._display._setSizeDirty();
+                return;
 //                this._display.rotation = transform.getRotation() * 180 / Math.PI
                 this._display._x = matrix.tx;
                 this._display._y = matrix.ty;

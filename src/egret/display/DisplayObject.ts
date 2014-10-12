@@ -50,6 +50,9 @@ module egret {
      */
     export class DisplayObject extends EventDispatcher implements RenderData {
 
+
+        public __hack_local_matrix:any = null;
+
         public constructor() {
             super();
             this._worldTransform = new egret.Matrix();
@@ -661,6 +664,7 @@ module egret {
         private static identityMatrixForGetConcatenated = new Matrix();
 
         public _getConcatenatedMatrix():egret.Matrix {
+            //todo:采用local_matrix模式下这里的逻辑需要修改
             var matrix:Matrix = DisplayObject.identityMatrixForGetConcatenated.identity();
             var o = this;
             while (o != null) {
@@ -788,12 +792,22 @@ module egret {
             if (!parentMatrix) {
                 parentMatrix = Matrix.identity.identity();
             }
+
+
             var anchorX, anchorY;
             var resultPoint = this._getOffsetPoint();
             anchorX = resultPoint.x;
             anchorY = resultPoint.y;
-            parentMatrix.appendTransform(this._x, this._y, this._scaleX, this._scaleY, this._rotation,
-                this._skewX, this._skewY, anchorX, anchorY);
+
+            var matrix = this.__hack_local_matrix;
+            if (matrix) {
+                parentMatrix.append(matrix.a, matrix.b, matrix.c, matrix.d, matrix.tx, matrix.ty);
+                parentMatrix.append(1, 0, 0, 1, -anchorX, -anchorY);
+            }
+            else {
+                parentMatrix.appendTransform(this._x, this._y, this._scaleX, this._scaleY, this._rotation,
+                    this._skewX, this._skewY, anchorX, anchorY);
+            }
 
             var scrollRect = this._scrollRect;
             if (scrollRect) {
