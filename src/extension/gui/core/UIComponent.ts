@@ -594,7 +594,7 @@ module egret.gui {
 		public set x(value:number){
 			if(this._x==value)
 				return;
-			this._x = value;
+			this._setX(value);
 			this.invalidateProperties();
 			if (this._includeInLayout&&this.parent && this.parent instanceof UIComponent)
 				(<UIComponent><any> (this.parent))._childXYChanged();
@@ -617,7 +617,7 @@ module egret.gui {
 		public set y(value:number){
 			if(this._y==value)
 				return;
-			this._y = value;
+			this._setY(value);
 			this.invalidateProperties();
 			if (this._includeInLayout&&this.parent && this.parent instanceof UIComponent)
 				(<UIComponent> (this.parent))._childXYChanged();
