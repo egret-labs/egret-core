@@ -30,7 +30,8 @@ module egret {
     /**
 	 * @class egret.DisplayObjectContainer
 	 * @classdesc
-     * DisplayObjectContainer 类是显示列表中显示对象容器。
+     * DisplayObjectContainer 类是可用作显示列表中显示对象容器的所有对象的基类。
+     * 该显示列表管理运行时中显示的所有对象。使用 DisplayObjectContainer 类排列显示列表中的显示对象。每个 DisplayObjectContainer 对象都有自己的子级列表，用于组织对象的 Z 轴顺序。Z 轴顺序是由前至后的顺序，可确定哪个对象绘制在前，哪个对象绘制在后等。
      */
     export class DisplayObjectContainer extends DisplayObject {
 
@@ -47,6 +48,7 @@ module egret {
         public _touchChildren:boolean = true;
         /**
          * 指定此对象的子项以及子孙项是否接收鼠标/触摸事件
+         * 默认值为 true 即可以接收。
 		 * @member {boolean} egret.DisplayObjectContainer#touchChildren
          */
         public get touchChildren():boolean{
@@ -56,10 +58,10 @@ module egret {
             this._touchChildren = value;
         }
 
-        public _children:Array<DisplayObject>
+        public _children:Array<DisplayObject>;
 
 		/**
-         * 返回此对象的子项数目。
+         * 返回此对象的子项数目。【只读】
 		 * @member {number} egret.DisplayObjectContainer#numChildren
 		 */
         public get numChildren():number{
