@@ -102,6 +102,7 @@ module egret {
 
         /**
          * 表示 DisplayObject 的实例名称。
+         * 通过调用父显示对象容器的 getChildByName() 方法，可以在父显示对象容器的子列表中标识该对象。
          * @member {string} egret.DisplayObject#name
          */
         public name:string;
@@ -110,11 +111,9 @@ module egret {
 
         public _parent:DisplayObjectContainer = null;
 
-
-        private _cacheAsBitmap:boolean = false;
-
         /**
-         * 表示包含此显示对象的 DisplayObjectContainer 对象
+         * 表示包含此显示对象的 DisplayObjectContainer 对象。【只读】
+         * 使用 parent 属性可以指定高于显示列表层次结构中当前显示对象的显示对象的相对路径。
          * @member {egret.DisplayObjectContainer} egret.DisplayObject#parent
          */
         public get parent():DisplayObjectContainer {
@@ -127,6 +126,7 @@ module egret {
 
         /**
          * 表示 DisplayObject 实例相对于父级 DisplayObjectContainer 本地坐标的 x 坐标。
+         * 如果该对象位于具有变形的 DisplayObjectContainer 内，则它也位于包含 DisplayObjectContainer 的本地坐标系中。因此，对于逆时针旋转 90 度的 DisplayObjectContainer，该 DisplayObjectContainer 的子级将继承逆时针旋转 90 度的坐标系。
          * @member {number} egret.DisplayObject#x
          */
         public _x:number = 0;
@@ -150,6 +150,7 @@ module egret {
 
         /**
          * 表示 DisplayObject 实例相对于父级 DisplayObjectContainer 本地坐标的 y 坐标。
+         * 如果该对象位于具有变形的 DisplayObjectContainer 内，则它也位于包含 DisplayObjectContainer 的本地坐标系中。因此，对于逆时针旋转 90 度的 DisplayObjectContainer，该 DisplayObjectContainer 的子级将继承逆时针旋转 90 度的坐标系。
          * @member {number} egret.DisplayObject#y
          */
         public _y:number = 0;
@@ -173,6 +174,8 @@ module egret {
 
         /**
          * 表示从注册点开始应用的对象的水平缩放比例（百分比）。
+         * 缩放本地坐标系统将更改 x 和 y 属性值，这些属性值是以整像素定义的。
+         * 默认值为 1，即不缩放。
          * @member {number} egret.DisplayObject#scaleX
          * @default 1
          */
@@ -193,6 +196,8 @@ module egret {
 
         /**
          * 表示从对象注册点开始应用的对象的垂直缩放比例（百分比）。
+         * 缩放本地坐标系统将更改 x 和 y 属性值，这些属性值是以整像素定义的。
+         * 默认值为 1，即不缩放。
          * @member {number} egret.DisplayObject#scaleY
          * @default 1
          */
@@ -293,6 +298,8 @@ module egret {
 
         /**
          * 显示对象是否可见。
+         * 不可见的显示对象已被禁用。例如，如果实例的 visible=false，则无法单击该对象。
+         * 默认值为 true 可见
          * @member {boolean} egret.DisplayObject#visible
          */
         public _visible:boolean = true;
@@ -313,9 +320,10 @@ module egret {
         }
 
         /**
-         * 表示 DisplayObject 实例距其原始方向的旋转程度，以度为单位
+         * 表示 DisplayObject 实例距其原始方向的旋转程度，以度为单位。
+         * 从 0 到 180 的值表示顺时针方向旋转；从 0 到 -180 的值表示逆时针方向旋转。对于此范围之外的值，可以通过加上或减去 360 获得该范围内的值。例如，my_video.rotation = 450语句与 my_video.rotation = 90 是相同的。
          * @member {number} egret.DisplayObject#rotation
-         * @default 0
+         * @default 0 默认值为 0 不旋转。
          */
         public _rotation:number = 0;
 
@@ -332,9 +340,10 @@ module egret {
         }
 
         /**
-         * 表示指定对象的 Alpha 透明度值
+         * 表示指定对象的 Alpha 透明度值。
+         * 有效值为 0（完全透明）到 1（完全不透明）。alpha 设置为 0 的显示对象是活动的，即使它们不可见。
          * @member {number} egret.DisplayObject#alpha
-         *  @default 1
+         *  @default 1 默认值为 1。
          */
         public _alpha:number = 1;
 
@@ -391,7 +400,7 @@ module egret {
         /**
          * 指定此对象是否接收鼠标/触摸事件
          * @member {boolean} egret.DisplayObject#touchEnabled
-         * @default false
+         * @default false 默认为 false 即不可以接收。
          */
         public _touchEnabled:boolean = false;
 
@@ -409,6 +418,7 @@ module egret {
 
         /**
          * BlendMode 类中的一个值，用于指定要使用的混合模式。
+         * 内部绘制位图的方法有两种。 如果启用了混合模式或外部剪辑遮罩，则将通过向矢量渲染器添加有位图填充的正方形来绘制位图。 如果尝试将此属性设置为无效值，则运行时会将此值设置为 BlendMode.NORMAL。
          * @member {BlendMode} egret.DisplayObject#blendMode
          */
         public blendMode:string = null;
@@ -467,7 +477,8 @@ module egret {
         }
 
         /**
-         * 宽度，优先顺序为 显式设置宽度 > 测量宽度
+         * 表示显示对象的宽度，以像素为单位。
+         * 宽度是根据显示对象内容的范围来计算的。优先顺序为 显式设置宽度 > 测量宽度。
          * @member {number} egret.DisplayObject#width
          * @returns {number}
          */
@@ -476,7 +487,8 @@ module egret {
         }
 
         /**
-         * 高度，优先顺序为 显式设置高度 > 测量高度
+         * 表示显示对象的高度，以像素为单位。
+         * 高度是根据显示对象内容的范围来计算的。优先顺序为 显式设置高度 > 测量高度。
          * @member {number} egret.DisplayObject#height
          * @returns {number}
          */
@@ -523,7 +535,9 @@ module egret {
         }
 
         /**
-         * 调用显示对象被指定的 mask 对象遮罩
+         * 调用显示对象被指定的 mask 对象遮罩。
+         * 要确保当舞台缩放时蒙版仍然有效，mask 显示对象必须处于显示列表的活动部分。但不绘制 mask 对象本身。
+         * 将 mask 设置为 null 可删除蒙版。
          */
         public mask:Rectangle = null;
 
@@ -687,7 +701,7 @@ module egret {
          * @param x {number} 本地x坐标
          * @param y {number} 本地y坐标
          * @param resultPoint {Point} 可选参数，传入用于保存结果的Point对象，避免重复创建对象。
-         * @returns {egret.Point}
+         * @returns {egret.Point} 具有相对于舞台的坐标的 Point 对象。
          */
         public localToGlobal(x:number = 0, y:number = 0, resultPoint?:Point):Point {
             var mtx = this._getConcatenatedMatrix();
@@ -706,7 +720,7 @@ module egret {
          * @param x {number} 全局x坐标
          * @param y {number} 全局y坐标
          * @param resultPoint {Point} 可选参数，传入用于保存结果的Point对象，避免重复创建对象。
-         * @returns {egret.Point}
+         * @returns {egret.Point} 具有相对于显示对象的坐标的 Point 对象。
          */
         public globalToLocal(x:number = 0, y:number = 0, resultPoint?:Point):Point {
             var mtx = this._getConcatenatedMatrix();
@@ -881,7 +895,9 @@ module egret {
         public _stage:Stage = null;
 
         /**
-         * 获取舞台对象。当该显示对象不在舞台上时，此属性返回 null
+         * 显示对象的舞台。【只读】
+         * 例如，您可以创建多个显示对象并加载到显示列表中，每个显示对象的 stage 属性是指相同的 Stage 对象。
+         * 如果显示对象未添加到显示列表，则其 stage 属性会设置为 null。
          * @member {number} egret.DisplayObject#stage
          * @returns {egret.Stage}
          */
@@ -972,6 +988,9 @@ module egret {
             }
             return false;
         }
+
+
+        private _cacheAsBitmap:boolean = false;
 
         public get cacheAsBitmap():boolean {
             return this._cacheAsBitmap;
