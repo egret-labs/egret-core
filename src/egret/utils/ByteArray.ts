@@ -55,19 +55,24 @@ module egret
 
 
 	/**
-     * ByteArray 类提供用于优化读取、写入以及处理二进制数据的方法和属性。
 	 * @class egret.ByteArray
 	 * @classdesc
+     * ByteArray 类提供用于优化读取、写入以及处理二进制数据的方法和属性。
+     * 注意：ByteArray 类适用于需要在字节层访问数据的高级开发人员。
+     * 内存中的数据是一个压缩字节数组（数据类型的最紧凑表示形式），但可以使用标准数组访问运算符来操作 ByteArray 类的实例。
 	 */
     export class ByteArray
     {
 		/**
-         * 将文件指针的当前位置（以字节为单位）移动或返回到 ByteArray 对象中。下一次调用读取方法时将在此位置开始读取，或者下一次调用写入方法时将在此位置开始写入
+         * 将文件指针的当前位置（以字节为单位）移动或返回到 ByteArray 对象中。
+         * 下一次调用读取方法时将在此位置开始读取，或者下一次调用写入方法时将在此位置开始写入。
 		 * @member {number} egret.ByteArray#position
 		 */
         public position:number = 0;
+
 		/**
          * ByteArray 对象的长度（以字节为单位）。
+         * 如果将长度设置为大于当前长度的值，则用零填充字节数组的右侧；如果将长度设置为小于当前长度的值，将会截断该字节数组。
 		 * @member {number} egret.ByteArray#length
 		 */
         public length:number = 0;
@@ -79,6 +84,7 @@ module egret
         private _endian:string =  Endian.LITTLE_ENDIAN;
         private isLittleEndian:boolean = false;
 		/**
+         * 默认表示多字节数字的字节顺序的常量
 		 * @constant {string} egret.ByteArray.DEFAULT_ENDIAN
 		 */
         public static DEFAULT_ENDIAN:string = Endian.BIG_ENDIAN;
@@ -93,7 +99,8 @@ module egret
         }
 
 		/**
-         * 更改或读取数据的字节顺序；egret.Endian.BIG_ENDIAN 或 egret.Endian.LITTLE_ENDIAN。
+         * 更改或读取数据的字节顺序。
+         * 请使用egret.Endian.BIG_ENDIAN 或 egret.Endian.LITTLE_ENDIAN表示。
 		 * @member {string} egret.ByteArray#endian
 		 */
         public get endian():string{
@@ -120,7 +127,6 @@ module egret
 		 */
         public setArrayBuffer(aBuffer:ArrayBuffer):void
         {
-
             this.ensureSpace(aBuffer.byteLength);
 
             this.length = aBuffer.byteLength;
@@ -135,7 +141,7 @@ module egret
         }
 
 		/**
-         * 可从字节数组的当前位置到数组末尾读取的数据的字节数。
+         * 可从字节数组的当前位置到数组末尾读取的数据的字节数。【只读】
          * 每次访问 ByteArray 对象时，将 bytesAvailable 属性与读取方法结合使用，以确保读取有效的数据。
 		 * @method egret.ByteArray#getBytesAvailable
 		 * @returns {number}
@@ -163,9 +169,11 @@ module egret
         }
 
 		/**
+         * 在字节流中写入一个字节。
+         * 使用参数的低 8 位。忽略高 24 位。
 		 * @method egret.ByteArray#writeByte
-		 * @param b {number} 
-		 */
+		 * @param b {number}  一个 32 位整数。低 8 位将被写入字节流。
+         */
         public writeByte(b:number):void
         {
             this.ensureWriteableSpace(1);
@@ -221,8 +229,9 @@ module egret
         }
 
 		/**
+         * 在字节流中写入一个无符号的字节。
 		 * @method egret.ByteArray#writeUnsignedByte
-		 * @param b {number} 
+		 * @param b {number} 介于 0 到 255 之间的无符号字节。
 		 */
         public writeUnsignedByte(b:number)
         {
@@ -235,7 +244,9 @@ module egret
         }
 
 		/**
-		 * @method egret.ByteArray#readUnsignedByte
+         * 从字节流中读取无符号的字节。
+         * 返回值的范围是从 0 到 255。
+		 * @method egret.ByteArray#readUnsignedByte 介于 0 到 255 之间的无符号字节。
 		 */
         public readUnsignedByte()
         {
@@ -247,8 +258,9 @@ module egret
         }
 
 		/**
+         *在字节流中写入一个无符号的 16 位整数。
 		 * @method egret.ByteArray#writeUnsignedShort
-		 * @param b {number} 
+		 * @param b {number}  介于 0 到 65535 之间的无符号整数。
 		 */
         public writeUnsignedShort(b:number)
         {
@@ -270,9 +282,10 @@ module egret
         }
 
 		/**
+         * 从字节流中读取一个由 length 参数指定的 UTF-8 字节序列，并返回一个字符串。
 		 * @method egret.ByteArray#readUTFBytes
-		 * @param len {number} 
-		 * @returns {string}
+		 * @param len {number} 指明 UTF-8 字节长度的无符号短整型数。
+         * @returns {string} 由指定长度的 UTF-8 字节组成的字符串。
 		 */
         public readUTFBytes(len:number):string
         {
@@ -316,8 +329,10 @@ module egret
         }
 
 		/**
+         * 从字节流中读取一个带符号的 32 位整数。
+         * 返回值的范围是从 -2147483648 到 2147483647。
 		 * @method egret.ByteArray#readInt
-		 * @returns {number}
+		 * @returns {number} 介于 -2147483648 到 2147483647 之间的整数。
 		 */
         public readInt():number
         {
@@ -332,8 +347,10 @@ module egret
         }
 
 		/**
+         * 从字节流中读取一个带符号的 16 位整数。
+         * 返回值的范围是从 -32768 到 32767。
 		 * @method egret.ByteArray#readShort
-		 * @returns {number}
+		 * @returns {number} 介于 -32768 到 32767 之间的整数。
 		 */
         public readShort():number
         {
@@ -362,9 +379,12 @@ module egret
         }
 
 		/**
+         * 从字节流中读取一个无符号的 16 位整数。
+         * 返回值的范围是从 0 到 65535。
 		 * @method egret.ByteArray#readUnsignedShort
+         * @returns {number} 介于 0 到 65535 之间的无符号整数。
 		 */
-        public readUnsignedShort()
+        public readUnsignedShort():number
         {
             if (this.position > this.length + 2) {
                 throw "ByteArray out of bounds read. Position=" + this.position + ", Length=" + this.length;
@@ -373,7 +393,7 @@ module egret
                 var view = new Uint16Array(this.arraybytes);
                 var pa:number = this.position >> 1;
                 this.position += 2;
-                return view[ pa ];
+                return view[pa];
             } else {
                 var view = new Uint16Array(this.unalignedarraybytestemp, 0, 1);
                 var view2 = new Uint8Array(this.arraybytes, this.position, 2);
@@ -385,9 +405,10 @@ module egret
         }
 
 		/**
+         * 在字节流中写入一个无符号的 32 位整数。
 		 * @method egret.ByteArray#writeUnsignedInt
-		 * @param b {number} 
-		 */
+		 * @param b {number} 介于 0 和 4294967295 之间的无符号整数。
+         */
         public writeUnsignedInt(b:number)
         {
             this.ensureWriteableSpace(4);
@@ -435,8 +456,9 @@ module egret
         }
 
 		/**
+         * 在字节流中写入一个 IEEE 754 单精度（32 位）浮点数。
 		 * @method egret.ByteArray#writeFloat
-		 * @param b {number} 
+		 * @param b {number} 单精度（32 位）浮点数。
 		 */
         public writeFloat(b:number)
         {

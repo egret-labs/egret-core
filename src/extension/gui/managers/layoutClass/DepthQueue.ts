@@ -283,7 +283,7 @@ module egret.gui {
 		}
 	}
     /**
-	 * @class egret.DepthBin
+	 * @class egret.gui.DepthBin
 	 * @classdesc
      * 列表项
      */

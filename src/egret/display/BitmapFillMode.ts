@@ -31,16 +31,17 @@ module egret {
      * @class egret.BitmapFillMode
      * @classdesc
      * BitmapFillMode 类定义Bitmap的图像填充方式。
+     * BitmapFillMode 类定义了调整大小模式的一个枚举，这些模式确定 Bitmap 如何填充由布局系统指定的尺寸。
      */
     export class BitmapFillMode{
 
         /**
-         * 位图将重复以填充区域
+         * 重复位图以填充区域。
          * @constant {string} egret.BitmapFillMode.REPEAT
          */
         public static REPEAT:string = "repeat";
         /**
-         * 位图将拉伸以填充区域
+         * 位图填充拉伸以填充区域。
          * @constant {string} egret.BitmapFillMode.SCALE
          */
         public static SCALE:string = "scale";
