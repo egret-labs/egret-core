@@ -106,9 +106,9 @@ module egret {
 
         }
 
-        public _draw():void {
-
-        }
+//        public _draw():void {
+//
+//        }
 
         public _addListeners():void {
 
@@ -122,31 +122,54 @@ module egret {
 
         }
 
-        public changeSize(width:number, height:number):void {
+        public _size:number = 30;
+        public _setSize(value:number):void {
+            this._size = value;
+        }
+
+        public _color:string = "#FFFFFF";
+        public _setTextColor(value:string):void {
+            this._color = value;
+        }
+
+        public _fontFamily:string = "Arial";
+        public _setTextFontFamily(value:string):void {
+            this._fontFamily = value;
+        }
+
+        public _bold:boolean = false;
+        public _setBold(value:boolean):void {
+            this._bold = value;
+        }
+
+        public _italic:boolean = false;
+        public _setItalic(value:boolean):void {
+            this._italic = value;
+        }
+
+        public _textAlign:string = "left";
+        public _setTextAlign(value:string):void {
+            this._textAlign = value;
+        }
+
+        public _visible:boolean = false;
+        public _setVisible(value:boolean):void {
+            this._visible = value;
+        }
+
+        public _setWidth(value:number):void {
 
         }
 
-        public setSize(value:number):void {
-
-        }
-
-        public setTextColor(value:string):void {
-
-        }
-
-        public setTextFontFamily(value:string):void {
-
-        }
-
-        public setWidth(value:number):void {
-
-        }
-
-        public setHeight(value:number):void {
+        public _setHeight(value:number):void {
         }
 
         public _setMultiline(value:boolean):void {
             this._multiline = value;
+        }
+
+        public _resetStageText():void {
+
         }
 
         public static create():StageText {

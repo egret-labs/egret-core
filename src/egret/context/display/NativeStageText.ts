@@ -41,7 +41,11 @@ module egret {
         private textValue:string = "";
 
         private tf:egret.TextField;
+
         private container:egret.DisplayObjectContainer;
+        private textBg:egret.Shape;
+        private textBorder:egret.Shape;
+
         private textType:string;
 
         constructor() {
@@ -58,10 +62,10 @@ module egret {
 
         private createText():void {
             var container:egret.DisplayObjectContainer = this.container;
+            var stage:egret.Stage = egret.MainContext.instance.stage;
+            var stageWidth:number = stage.stageWidth;
+            var stageHeight:number = stage.stageHeight;
             if (container.numChildren <= 0) {
-                var stage:egret.Stage = egret.MainContext.instance.stage;
-                var stageWidth:number = stage.stageWidth;
-                var stageHeight:number = stage.stageHeight;
 
                 var shape:egret.Shape = new egret.Shape();
                 shape.graphics.beginFill(0x000000, .7);
@@ -73,18 +77,44 @@ module egret {
                 container.addChild(shape);
 
                 var textInputBackground:egret.Shape = new egret.Shape();
-                textInputBackground.graphics.lineStyle(8, 0xff0000, 1);
-                textInputBackground.graphics.beginFill(0xffffff, 1);
-                textInputBackground.graphics.drawRect(4, 4, stageWidth - 8, 52);
-                textInputBackground.graphics.endFill();
+                this.textBg = textInputBackground;
                 container.addChild(textInputBackground);
+                textInputBackground.touchEnabled = true;
 
                 var tf:egret.TextField = this.tf;
-                tf.x = tf.y = 15;
+                tf.x = 15;
                 tf.touchEnabled = true;
                 container.addChild(tf);
                 tf.width = stageWidth;
+                tf.size = 30;
+
+                var border:egret.Shape = new egret.Shape();
+                this.textBorder = border;
+                container.addChild(border);
+                border.touchEnabled = true;
+                this.textBg.width = stageWidth - 30;
+                this.textBorder.width = stageWidth - 30;
             }
+
+            this.textBg.graphics.clear();
+            this.textBorder.graphics.clear();
+            this.textBorder.graphics.lineStyle(8, 0xff0000, 1);
+            this.textBg.graphics.beginFill(0xffffff, 1);
+
+            var h:number = 30;
+            if (this._multiline) {
+                h = 90;
+            }
+            this.textBg.graphics.drawRect(4, 4, stageWidth - 8, h + 22);
+            this.textBorder.graphics.drawRect(4, 4, stageWidth - 8, h + 22);
+
+            var maxH:number = Math.max(this.tf.height, h);
+            this.tf.y = h - maxH + 15;
+            this.textBg.height = h + 22;
+            this.textBorder.height = h + 22;
+
+            this.textBg.graphics.endFill();
+            this.textBorder.graphics.endFill();
         }
 
         /**
@@ -142,13 +172,28 @@ module egret {
             if (this.textType == "password") {
                 var passwordStr = "";
                 for (var i = 0; i < this.textValue.length; i++) {
-                    passwordStr += "*";
+                    switch (this.textValue.charAt(i)) {
+                        case '\n' :
+                            passwordStr += "\n";
+                            break;
+                        case '\r' :
+                            break;
+                        default :
+                            passwordStr += '*';
+                    }
                 }
                 this.tf.text = passwordStr;
             }
             else {
                 this.tf.text = this.textValue;
             }
+
+            var h:number = 30;
+            if (this._multiline) {
+                h = 90;
+            }
+            var maxH:number = Math.max(this.tf.height, h);
+            this.tf.y = h - maxH + 15;
         }
 
         private isFinishDown:boolean = false;
@@ -180,10 +225,9 @@ module egret {
             //点击完成
             egret_native.EGT_keyboardFinish = function () {
                 if (self._multiline) {//多行文本
-                    this.isFinishDown = true;
+                    self.isFinishDown = true;
                 }
             };
-
         }
 
         private showPartKeyboard():void {
@@ -202,7 +246,6 @@ module egret {
                     if (appendText == "\n") {
                         if (container && container.parent) {
                             container.parent.removeChild(container);
-                            self.dispatchEvent(new egret.Event("blur"));
                         }
                         egret_native.TextInputOp.setKeybordOpen(false);
                         return;
@@ -211,6 +254,7 @@ module egret {
                 self.textValue += appendText;
 
                 self.resetText();
+                self.dispatchEvent(new egret.Event("updateText"));
             };
 
             egret_native.EGT_deleteBackward = function () {
@@ -219,17 +263,15 @@ module egret {
                 self.textValue = text;
 
                 self.resetText();
+                self.dispatchEvent(new egret.Event("updateText"));
             };
 
             //系统关闭键盘
             egret_native.EGT_keyboardDidHide = function () {
                 if (container && container.parent) {
                     container.parent.removeChild(container);
-                    self.dispatchEvent(new egret.Event("blur"));
                 }
             };
-
-            self.dispatchEvent(new egret.Event("focus"));
         }
 
         /**
@@ -269,27 +311,6 @@ module egret {
         public _hide():void {
             this._remove();
             egret_native.TextInputOp.setKeybordOpen(false);
-        }
-
-        public changePosition(x:number, y:number):void {
-        }
-
-        public changeSize(width:number, height:number):void {
-        }
-
-        public setSize(value:number):void {
-        }
-
-        public setTextColor(value:string):void {
-        }
-
-        public setTextFontFamily(value:string):void {
-        }
-
-        public setWidth(value:number):void {
-        }
-
-        public setHeight(value:number):void {
         }
     }
 }

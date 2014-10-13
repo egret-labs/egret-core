@@ -32,6 +32,7 @@ var mine = {
 
 
 var autoCompilerFlag = "autoCompile";
+var startCompileFlag = "startCompile";
 
 function run(dir, args, opts) {
     var PORT = 3000;
@@ -43,6 +44,7 @@ function run(dir, args, opts) {
         OPEN = false;
     }
     var autoCompile = opts["-autoCompile"];
+    var startCompile = opts["-startCompile"];
     var server = http.createServer(onGet);
     server.addListener("error", function () {
         globals.exit(1501);
@@ -57,6 +59,9 @@ function run(dir, args, opts) {
         var projectNamePath = projectName ? projectName + "/" : "";
         if (autoCompile) {
             var url = "http://" + ip + ":" + PORT + "/" + projectNamePath + "launcher/" + autoCompilerFlag;
+        }
+        else if (startCompile) {
+            var url = "http://" + ip + ":" + PORT + "/" + projectNamePath + "launcher/" + startCompileFlag;
         }
         else {
             var url = "http://" + ip + ":" + PORT + "/" + projectNamePath + "launcher/index.html";
@@ -98,6 +103,17 @@ function findIP(opts) {
 function onGet(request, response) {
     var projectName = exports.projectName;
     var pathname = url.parse(request.url).pathname;
+
+
+    if (pathname.indexOf(startCompileFlag) == pathname.length - startCompileFlag.length) {
+
+        var param = require("../core/params_analyze.js");
+        var egretPath = param.getEgretPath()
+        var serverPath = path.join (param.getEgretPath(),"tools/lib/server/compile.html")
+        console.log(egretPath);
+        writeFile(serverPath,response);
+        return;
+    }
 
 
     if (pathname.indexOf(autoCompilerFlag) == pathname.length - autoCompilerFlag.length) {
@@ -161,6 +177,7 @@ function writeText(text, response) {
 
 
 function writeFile(pathname, response) {
+    var realPath = pathname
     var realPath = path.join(process.cwd(), pathname);
     var ext = path.extname(realPath);
     ext = ext ? ext.slice(1) : 'unknown';

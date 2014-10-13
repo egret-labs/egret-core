@@ -193,15 +193,20 @@ module egret {
          * 执行callAsync回调函数列表
          */
         private doCallAsyncList():void {
-            for (var i:number = 0; i < __callAsyncFunctionList.length; i++) {
-                var func:Function = __callAsyncFunctionList[i];
-                if (func != null) {
-                    func.apply(__callAsyncThisList[i], __callAsyncArgsList[i]);
-                }
-            }
+            var locCallAsyncFunctionList = __callAsyncFunctionList.concat();
+            var locCallAsyncThisList = __callAsyncThisList.concat();
+            var locCallAsyncArgsList = __callAsyncArgsList.concat();
+
             __callAsyncFunctionList.length = 0;
             __callAsyncThisList.length = 0;
             __callAsyncArgsList.length = 0;
+
+            for (var i:number = 0; i < locCallAsyncFunctionList.length; i++) {
+                var func:Function = locCallAsyncFunctionList[i];
+                if (func != null) {
+                    func.apply(locCallAsyncThisList[i], locCallAsyncArgsList[i]);
+                }
+            }
         }
 
         /**

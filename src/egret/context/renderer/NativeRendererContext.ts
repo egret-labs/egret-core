@@ -107,6 +107,8 @@ module egret {
             egret_native.Graphics.setTransform(matrix.a, matrix.b, matrix.c, matrix.d, matrix.tx, matrix.ty);
         }
 
+        private currentAlpha:number;
+
         /**
          * 设置渲染alpha
          * @method egret.NativeRendererContext#setAlpha
@@ -115,7 +117,10 @@ module egret {
          * @param blendMode {egret.BlendMode}
          */
         public setAlpha(value:number, blendMode:string) {
-            egret_native.Graphics.setGlobalAlpha(value);
+            if(this.currentAlpha != value) {
+                egret_native.Graphics.setGlobalAlpha(value);
+                this.currentAlpha = value;
+            }
             this.setBlendMode(blendMode);
         }
 

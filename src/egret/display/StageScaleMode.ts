@@ -29,14 +29,34 @@
 module egret {
 
 
+    /**
+     * StageScaleMode 类为 Stage.scaleMode 属性提供值。
+     * @class egret.StageScaleMode
+     */
     export class StageScaleMode {
 
+        /**
+         * 指定整个应用程序填满指定区域，不会发生扭曲，但有可能会进行一些裁切，同时保持应用程序的原始高宽比。
+         * @member {string} egret.StageScaleMode.NO_BORDER
+         */
         public static NO_BORDER:string = "noBorder";
 
+        /**
+         * 指定应用程序的大小是固定的，因此，即使在更改播放器窗口大小时，它仍然保持不变。如果播放器窗口比内容小，则可能进行一些裁切。
+         * @member {string} egret.StageScaleMode.NO_SCALE
+         */
         public static NO_SCALE:string = "noScale";
 
+        /**
+         * 指定整个应用程序在指定区域中可见，且不会发生扭曲，同时保持应用程序的原始高宽比。应用程序的两侧可能会显示边框。
+         * @member {string} egret.StageScaleMode.SHOW_ALL
+         */
         public static SHOW_ALL:string = "showAll";
 
+        /**
+         * 指定整个应用程序在指定区域中可见，但不尝试保持原始高宽比。可能会发生扭曲。
+         * @member {string} egret.StageScaleMode.EXACT_FIT
+         */
         public static EXACT_FIT:string = "exactFit";
 
 }

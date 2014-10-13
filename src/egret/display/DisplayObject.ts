@@ -50,6 +50,9 @@ module egret {
      */
     export class DisplayObject extends EventDispatcher implements RenderData {
 
+
+        public __hack_local_matrix:any = null;
+
         public constructor() {
             super();
             this._worldTransform = new egret.Matrix();
@@ -57,7 +60,8 @@ module egret {
             this._cacheBounds = new egret.Rectangle(0, 0, 0, 0);
         }
 
-        private _normalDirty:boolean = true;
+        public _normalDirty:boolean = true;
+
         public _setDirty():void {
             this._normalDirty = true;
         }
@@ -396,9 +400,12 @@ module egret {
         }
 
         public set touchEnabled(value:boolean) {
-            this._touchEnabled = value;
+            this._setTouchEnabled(value);
         }
 
+        public _setTouchEnabled(value:boolean):void {
+            this._touchEnabled = value;
+        }
 
         /**
          * BlendMode 类中的一个值，用于指定要使用的混合模式。
@@ -497,6 +504,7 @@ module egret {
         }
 
         public _hasHeightSet:Boolean = false;
+
         /**
          * 显式设置高度
          * @param value
@@ -579,30 +587,26 @@ module egret {
          * @param renderContext
          */
         public _updateTransform():void {
-            this._calculateWorldform();
+            this._calculateWorldTransform();
         }
 
         /**
          * 计算全局数据
          * @private
          */
-        public _calculateWorldform():void {
+        public _calculateWorldTransform():void {
             var o = this;
-            o._worldTransform.identityMatrix(o._parent._worldTransform);
-            var anchorX, anchorY;
-            var resultPoint = o._getOffsetPoint();
-            anchorX = resultPoint.x;
-            anchorY = resultPoint.y;
-            o._worldTransform.appendTransform(o._x, o._y, o._scaleX, o._scaleY, o._rotation,
-                o._skewX, o._skewY, anchorX, anchorY);
-            if (o._scrollRect) {
-                o._worldTransform.append(1, 0, 0, 1, -o._scrollRect.x, -o._scrollRect.y);
-            }
+            var worldTransform = o._worldTransform;
+            var parent = o._parent;
+
+            worldTransform.identityMatrix(parent._worldTransform);
+            this._getMatrix(worldTransform)
+
             if (false) {//this._texture_to_render){ 暂时去掉worldBounds计算
                 var bounds:egret.Rectangle = DisplayObject.getTransformBounds(o._getSize(Rectangle.identity), o._worldTransform);
                 o._worldBounds.initialize(bounds.x, bounds.y, bounds.width, bounds.height);
             }
-            o.worldAlpha = o._parent.worldAlpha * o._alpha;
+            o.worldAlpha = parent.worldAlpha * o._alpha;
         }
 
         /**
@@ -623,21 +627,21 @@ module egret {
          */
         public getBounds(resultRect?:Rectangle):egret.Rectangle {
 //            if (this._cacheBounds.x == 0 && this._cacheBounds.y == 0 && this._cacheBounds.width == 0 && this._cacheBounds.height == 0) {
-                var rect:Rectangle = this._measureBounds();
-                var w:number = this._hasWidthSet ? this._explicitWidth : rect.width;
-                var h:number = this._hasHeightSet ? this._explicitHeight : rect.height;
-                var x:number = rect.x;
-                var y:number = rect.y;
-                var anchorX, anchorY;
-                if (this._anchorX != 0 || this._anchorY != 0) {
-                    anchorX = w * this._anchorX;
-                    anchorY = h * this._anchorY;
-                }
-                else {
-                    anchorX = this._anchorOffsetX;
-                    anchorY = this._anchorOffsetY;
-                }
-                this._cacheBounds.initialize(x - anchorX, y - anchorY, w, h);
+            var rect:Rectangle = this._measureBounds();
+            var w:number = this._hasWidthSet ? this._explicitWidth : rect.width;
+            var h:number = this._hasHeightSet ? this._explicitHeight : rect.height;
+            var x:number = rect.x;
+            var y:number = rect.y;
+            var anchorX, anchorY;
+            if (this._anchorX != 0 || this._anchorY != 0) {
+                anchorX = w * this._anchorX;
+                anchorY = h * this._anchorY;
+            }
+            else {
+                anchorX = this._anchorOffsetX;
+                anchorY = this._anchorOffsetY;
+            }
+            this._cacheBounds.initialize(x - anchorX, y - anchorY, w, h);
 //            }
             var result:egret.Rectangle = this._cacheBounds;
             if (!resultRect) {
@@ -660,6 +664,7 @@ module egret {
         private static identityMatrixForGetConcatenated = new Matrix();
 
         public _getConcatenatedMatrix():egret.Matrix {
+            //todo:采用local_matrix模式下这里的逻辑需要修改
             var matrix:Matrix = DisplayObject.identityMatrixForGetConcatenated.identity();
             var o = this;
             while (o != null) {
@@ -782,16 +787,34 @@ module egret {
         }
 
 
-        public _getMatrix():Matrix {
+        public _getMatrix(parentMatrix?:Matrix):Matrix {
 
-            var matrix = Matrix.identity.identity();
+            if (!parentMatrix) {
+                parentMatrix = Matrix.identity.identity();
+            }
+
+
             var anchorX, anchorY;
             var resultPoint = this._getOffsetPoint();
             anchorX = resultPoint.x;
             anchorY = resultPoint.y;
-            matrix.appendTransform(this._x, this._y, this._scaleX, this._scaleY, this._rotation,
-                this._skewX, this._skewY, anchorX, anchorY);
-            return matrix;
+
+            var matrix = this.__hack_local_matrix;
+            if (matrix) {
+                parentMatrix.append(matrix.a, matrix.b, matrix.c, matrix.d, matrix.tx, matrix.ty);
+                parentMatrix.append(1, 0, 0, 1, -anchorX, -anchorY);
+            }
+            else {
+                parentMatrix.appendTransform(this._x, this._y, this._scaleX, this._scaleY, this._rotation,
+                    this._skewX, this._skewY, anchorX, anchorY);
+            }
+
+            var scrollRect = this._scrollRect;
+            if (scrollRect) {
+                parentMatrix.append(1, 0, 0, 1, scrollRect.x, scrollRect.y);
+            }
+
+            return parentMatrix;
         }
 
         public _getSize(resultRect:Rectangle):Rectangle {
@@ -803,6 +826,7 @@ module egret {
 
         private _rectW:number = 0;
         private _rectH:number = 0;
+
         /**
          * 测量显示对象坐标与大小
          */
@@ -902,10 +926,10 @@ module egret {
             return !event._isDefaultPrevented;
         }
 
-        public _dispatchPropagationEvent(event:Event, list:Array<DisplayObject>,targetIndex?:number):void {
+        public _dispatchPropagationEvent(event:Event, list:Array<DisplayObject>, targetIndex?:number):void {
             var length:number = list.length;
             var eventPhase:number = 1;
-            for (var i:number = length - 1 ; i >= 0 ; i--){
+            for (var i:number = length - 1; i >= 0; i--) {
                 var currentTarget:DisplayObject = list[i];
                 event._currentTarget = currentTarget;
                 event._target = this;
@@ -927,7 +951,7 @@ module egret {
             }
 
             var eventPhase:number = 3;
-            for (i = 1 ; i < length ; i++){
+            for (i = 1; i < length; i++) {
                 var currentTarget:DisplayObject = list[i];
                 event._currentTarget = currentTarget;
                 event._target = this;

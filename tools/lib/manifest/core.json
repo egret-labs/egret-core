@@ -50,6 +50,7 @@
         "egret/text/TextFieldType.ts",
         "egret/display/SpriteSheet.ts",
         "egret/text/TextInput.ts",
+        "egret/text/InputController.ts",
         "egret/text/BitmapTextSpriteSheet.ts",
         "egret/display/MovieClip.ts",
         "egret/context/display/StageText.ts",

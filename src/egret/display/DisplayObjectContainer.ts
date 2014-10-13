@@ -398,16 +398,7 @@ module egret {
             var touchChildren = this._touchChildren;//这里不用考虑父级的touchChildren，从父级调用下来过程中已经判断过了。
             for (var i = l - 1; i >= 0; i--) {
                 var child = children[i];
-                var o = child;
-                var offsetPoint = o._getOffsetPoint();
-                var childX = o._x;
-                var childY = o._y;
-                if (this._scrollRect) {
-                    childX -= this._scrollRect.x;
-                    childY -= this._scrollRect.y;
-                }
-                var mtx = egret.Matrix.identity.identity().prependTransform(childX, childY, o._scaleX, o._scaleY, o._rotation, 0, 0, offsetPoint.x, offsetPoint.y);
-                mtx.invert();
+                var mtx = child._getMatrix().invert();
                 var point = egret.Matrix.transformCoords(mtx, x, y);
                 var childHitTestResult = child.hitTest(point.x, point.y, true);
                 if (childHitTestResult) {
