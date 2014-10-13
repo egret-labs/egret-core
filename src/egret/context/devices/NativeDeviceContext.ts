@@ -79,7 +79,7 @@ module egret_native_external_interface {
         egret_native_external_interface.callBackDic[functionName] = listener;
     }
 
-    export function onRecivedPluginInfo(info:string):void {
+    export function onReceivedPluginInfo(info:string):void {
         var data = JSON.parse(info);
         var functionName = data.functionName;
         var listener = egret_native_external_interface.callBackDic[functionName];
@@ -96,7 +96,7 @@ module egret_native_external_interface {
         for (var key in egret_native_external_interface) {
             egret.ExternalInterface[key] = egret_native_external_interface[key];
         }
-        egret_native.recivedPluginInfo = egret_native_external_interface.onRecivedPluginInfo;
+        egret_native.receivedPluginInfo = egret_native_external_interface.onReceivedPluginInfo;
     }
 }
 

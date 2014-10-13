@@ -58,7 +58,7 @@ declare module egret_native {
 
     function sendInfoToPlugin(info:string):void;
 
-    function recivedPluginInfo(info:string):void;
+    function receivedPluginInfo(info:string):void;
 
     function loadRecord(filepath:string):string;
 
