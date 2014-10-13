@@ -88,6 +88,7 @@ module RES {
 			if(this.itemListDic[groupName]||!groupName)
 				return;
 			if(!list||list.length==0){
+                Logger.warning("RES加载了不存在或空的资源组：\""+groupName+"\"");
 				var event:ResourceEvent = new ResourceEvent(ResourceEvent.GROUP_COMPLETE);
 				event.groupName = groupName;
 				this.dispatchEvent(event);
