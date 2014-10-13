@@ -1063,11 +1063,11 @@ module egret.gui {
             }
 			var changed:boolean = false;
 			if(this._x!=x){
-				this._x = x;
+				this._setX(x);
 				changed = true;
 			}
 			if(this._y!=y){
-				this._y = y;
+				this._setY(y);
 				changed = true;
 			}
 			if(changed){
