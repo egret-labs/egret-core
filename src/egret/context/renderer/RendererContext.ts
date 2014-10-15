@@ -167,7 +167,7 @@ module egret {
 
         }
 
-        public setGlobalColorTransform(colorTransformMatrix:Array):void {
+        public setGlobalColorTransform(colorTransformMatrix:Array<number>):void {
 
         }
 

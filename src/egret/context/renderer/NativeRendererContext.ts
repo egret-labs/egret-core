@@ -182,7 +182,7 @@ module egret {
         }
 
 
-        public setGlobalColorTransform(colorTransformMatrix:Array):void {
+        public setGlobalColorTransform(colorTransformMatrix:Array<any>):void {
             if (colorTransformMatrix){
                 egret_native.Graphics.setGlobalColorTransformEnabled(true);
                 egret_native.Graphics.setGlobalColorTransform(colorTransformMatrix);

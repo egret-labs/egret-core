@@ -1074,13 +1074,13 @@ module egret {
         /**
          * beta功能，请勿调用此方法
          */
-        public _colorTransform:ColorTransform = null;
+        private _colorTransform:ColorTransform = null;
 
         public get colorTransform():ColorTransform {
             return this._colorTransform;
         }
 
-        public set colorTransform(value:ColorTransform):void {
+        public set colorTransform(value:ColorTransform) {
             this._colorTransform = value;
         }
 
@@ -1088,9 +1088,9 @@ module egret {
 
 
 
-    class ColorTransform{
+    export class ColorTransform{
 
-        public matrix:Array = null;
+        public matrix:Array<number> = null;
 
         public updateColor(r:number,g:number,b:number,a:number,addR:number,addG:number,addB:number,addA:number):void{
             //todo;
