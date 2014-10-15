@@ -30,7 +30,9 @@ module egret {
 
     /**
      * @class egret.Graphics
-     * @classdesc Graphics 类包含一组可用来创建矢量形状的方法。支持绘制的显示对象包括 Sprite 和 Shape 对象。这些类中的每一个类都包括 graphics 属性，该属性是一个 Graphics 对象。
+     * @classdesc
+     * Graphics 类包含一组可用来创建矢量形状的方法。支持绘制的显示对象包括 Sprite 和 Shape 对象。这些类中的每一个类都包括 graphics 属性，该属性是一个 Graphics 对象。
+     * 以下是为便于使用而提供的一些辅助函数：drawRect()、drawRoundRect()、drawCircle() 和 drawEllipse()。
      */
     export class Graphics {
 
@@ -45,7 +47,8 @@ module egret {
         }
 
         /**
-         * 指定一种简单的单一颜色填充
+         * 指定一种简单的单一颜色填充，在绘制时该填充将在随后对其他 Graphics 方法（如 lineTo() 或 drawCircle()）的调用中使用。
+         * 调用 clear() 方法会清除填充。
          * @method egret.Graphics#beginFill
          * @param color {number} 填充的颜色
          * @param alpha {number} 填充的 Alpha 值

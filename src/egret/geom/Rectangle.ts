@@ -30,8 +30,10 @@ module egret {
 
     /**
      * @class egret.Rectangle
-     * @classdesc
-     * 矩形类
+     * @classdesc 矩形类
+     * Rectangle 对象是按其位置（由它左上角的点 (x, y) 确定）以及宽度和高度定义的区域。
+     * Rectangle 类的 x、y、width 和 height 属性相互独立；更改一个属性的值不会影响其他属性。
+     * 但是，right 和 bottom 属性与这四个属性是整体相关的。例如，如果更改 right 属性的值，则 width 属性的值将发生变化；如果更改 bottom 属性，则 height 属性的值将发生变化。
      * @extends egret.HashObject
      */
     export class Rectangle extends HashObject {
@@ -45,28 +47,28 @@ module egret {
         }
 
         /**
-         * 矩形x坐标
+         * 矩形左上角的 x 坐标。
          * @constant {number} egret.Rectangle#x
          */
         public x:number;
         /**
-         * 矩形y坐标
+         * 矩形左上角的 y 坐标。
          * @constant {number} egret.Rectangle#y
          */
         public y:number;
         /**
-         * 矩形宽度
+         * 矩形的宽度（以像素为单位）。
          * @member {number} egret.Rectangle#width
          */
         public width:number;
         /**
-         * 矩形高度
+         * 矩形的高度（以像素为单位）。
          * @member {number} egret.Rectangle#height
          */
         public height:number;
 
         /**
-         * x和width的和
+         * x 和 width 属性的和。
          * @member {number} egret.Rectangle#right
          */
         public get right():number {
@@ -78,7 +80,7 @@ module egret {
         }
 
         /**
-         * y和height的和
+         * y 和 height 属性的和。
          * @member {number} egret.Rectangle#bottom
          */
         public get bottom():number {
@@ -107,7 +109,7 @@ module egret {
         }
 
         /**
-         * 判断某坐标点是否存在于矩形内
+         * 确定由此 Rectangle 对象定义的矩形区域内是否包含指定的点。
          * @method egret.Rectangle#contains
          * @param x {number} 检测点的x轴
          * @param y {number} 检测点的y轴
@@ -166,7 +168,8 @@ module egret {
         public static identity:Rectangle = new Rectangle(0, 0, 0, 0);
 
         /**
-         * 是否包含某个点
+         * 确定由此 Rectangle 对象定义的矩形区域内是否包含指定的点。
+         * 此方法与 Rectangle.contains() 方法类似，只不过它采用 Point 对象作为参数。
          * @method egret.Rectangle#containsPoint
          * @param point {egret.Point} 包含点对象
          * @returns {boolean} 如果包含，返回true，否则返回false

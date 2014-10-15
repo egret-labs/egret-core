@@ -37,12 +37,12 @@ module egret {
         /**
          * @method egret.Matrix#constructor
          * @constructor
-         * @param a {number}
-         * @param b {number}
-         * @param c {number}
-         * @param d {number}
-         * @param tx {number}
-         * @param ty {number}
+         * @param a {number} 缩放或旋转图像时影响像素沿 x 轴定位的值。
+         * @param b {number} 旋转或倾斜图像时影响像素沿 y 轴定位的值。
+         * @param c {number} 旋转或倾斜图像时影响像素沿 x 轴定位的值。
+         * @param d {number} 缩放或旋转图像时影响像素沿 y 轴定位的值。
+         * @param tx {number} 沿 x 轴平移每个点的距离。
+         * @param ty {number} 沿 y 轴平移每个点的距离。
          */
         constructor(public a = 1, public b = 0, public c = 0, public d = 1, public tx = 0, public ty = 0) {
             super();
@@ -201,9 +201,10 @@ module egret {
         }
 
         /**
+         * 对 Matrix 对象应用旋转转换。
          * 矩阵旋转，以角度制为单位
          * @method egret.Matrix#rotate
-         * @param angle {number}
+         * @param angle {number} 角度
          * @returns {egret.Matrix}
          */
         public rotate(angle):Matrix {
@@ -258,10 +259,10 @@ module egret {
 
 
         /**
-         * 矩阵唯一
+         * 沿 x 和 y 轴平移矩阵，由 x 和 y 参数指定。
          * @method egret.Matrix#translate
-         * @param x {number}
-         * @param y {number}
+         * @param x {number} 沿 x 轴向右移动的量（以像素为单位）。
+         * @param y {number} 沿 y 轴向下移动的量（以像素为单位）。
          * @returns {egret.Matrix}
          */
         public translate(x, y):Matrix {
@@ -272,7 +273,9 @@ module egret {
 
 
         /**
-         * 矩阵重置
+         * 为每个矩阵属性设置一个值，该值将导致 null 转换。
+         * 通过应用恒等矩阵转换的对象将与原始对象完全相同。
+         * 调用 identity() 方法后，生成的矩阵具有以下属性：a=1、b=0、c=0、d=1、tx=0 和 ty=0。
          * @method egret.Matrix#identity
          * @returns {egret.Matrix}
          */
@@ -298,7 +301,8 @@ module egret {
         }
 
         /**
-         * 矩阵翻转
+         * 执行原始矩阵的逆转换。
+         * 您可以将一个逆矩阵应用于对象来撤消在应用原始矩阵时执行的转换。
          * @method egret.Matrix#invert
          * @returns {egret.Matrix}
          */
