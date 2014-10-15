@@ -174,7 +174,16 @@ module egret {
             gl.bindBuffer(gl.ARRAY_BUFFER, this.vertexBuffer);
             gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.indexBuffer);
 
-            var shader = this.shaderManager.defaultShader;
+            var shader;
+            if(this.colorTransformMatrix) {
+                shader = this.shaderManager.colorTransformShader;
+            }
+            else {
+                shader = this.shaderManager.defaultShader;
+            }
+            this.shaderManager.activateShader(shader);
+            shader.syncUniforms();
+
             gl.uniform2f(shader.projectionVector, this.projectionX, this.projectionY);
 
             var stride = this.vertSize * 4;
@@ -421,6 +430,24 @@ module egret {
             }
             if (this.maskList.length == 0) {
                 gl.disable(gl.STENCIL_TEST);
+            }
+        }
+
+        private colorTransformMatrix:Array<any>;
+
+        public setGlobalColorTransform(colorTransformMatrix:Array<any>):void {
+            if(this.colorTransformMatrix != colorTransformMatrix) {
+                this._draw();
+                this.colorTransformMatrix = colorTransformMatrix;
+                if(colorTransformMatrix) {
+                    var colorTransformMatrix = colorTransformMatrix.concat();
+                    var shader:ColorTransformShader = this.shaderManager.colorTransformShader;
+                    shader.uniforms.colorAdd.value.w = colorTransformMatrix.splice(19, 1)[0] / 255.0;
+                    shader.uniforms.colorAdd.value.z = colorTransformMatrix.splice(14, 1)[0] / 255.0;
+                    shader.uniforms.colorAdd.value.y = colorTransformMatrix.splice(9, 1)[0] / 255.0;
+                    shader.uniforms.colorAdd.value.x = colorTransformMatrix.splice(4, 1)[0] / 255.0;
+                    shader.uniforms.matrix.value = colorTransformMatrix;
+                }
             }
         }
 
