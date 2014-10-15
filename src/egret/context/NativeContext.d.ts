@@ -95,7 +95,7 @@ declare module egret_native {
 
         function popStencil():void;
 
-        function setGlobalColorTransform(colorTransformMatrix:Array):void;
+        function setGlobalColorTransform(colorTransformMatrix:Array<number>):void;
 
         function setGlobalColorTransformEnabled(bool:boolean):void;
 
