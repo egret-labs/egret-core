@@ -167,6 +167,10 @@ module egret {
 
         }
 
+        public setGlobalColorTransform(colorTransformMatrix:Array):void {
+
+        }
+
         public static createRendererContext(canvas:any):RendererContext {
             return null;
         }

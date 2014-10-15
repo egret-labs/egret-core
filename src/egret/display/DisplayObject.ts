@@ -561,6 +561,9 @@ module egret {
                 return;
             }
             var o = this;
+            if (o._colorTransform){
+                renderContext.setGlobalColorTransform(o._colorTransform.matrix);
+            }
             renderContext.setAlpha(o.worldAlpha, o.blendMode);
             renderContext.setTransform(o._worldTransform);
             var mask = o.mask || o._scrollRect;
@@ -570,6 +573,9 @@ module egret {
             this._render(renderContext);
             if (mask) {
                 renderContext.popMask();
+            }
+            if (o._colorTransform){
+                renderContext.setGlobalColorTransform(null);
             }
             this.destroyCacheBounds();
         }
@@ -1064,5 +1070,34 @@ module egret {
 
         }
 
+
+        /**
+         * beta功能，请勿调用此方法
+         */
+        public _colorTransform:ColorTransform = null;
+
+        public get colorTransform():ColorTransform {
+            return this._colorTransform;
+        }
+
+        public set colorTransform(value:ColorTransform):void {
+            this._colorTransform = value;
+        }
+
+    }
+
+
+
+    class ColorTransform{
+
+        public matrix:Array = null;
+
+        public updateColor(r:number,g:number,b:number,a:number,addR:number,addG:number,addB:number,addA:number):void{
+            //todo;
+        }
+
     }
 }
+
+
+
