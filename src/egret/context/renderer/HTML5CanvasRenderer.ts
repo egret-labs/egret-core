@@ -78,7 +78,7 @@ module egret {
 
             this._transformTx = 0;
             this._transformTy = 0;
-            super();
+            this.initBlendMode();
         }
 
         private createCanvas():HTMLCanvasElement {
@@ -148,13 +148,21 @@ module egret {
                 this.canvasContext.globalAlpha = this.globalAlpha = alpha;
             }
             if (blendMode) {
-                this.blendValue = blendMode == "add" ? "lighter" : blendMode;
+                this.blendValue = this.blendModes[blendMode];
                 this.canvasContext.globalCompositeOperation = this.blendValue;
             }
             else if (this.blendValue != egret.BlendMode.NORMAL) {
-                this.blendValue = egret.BlendMode.NORMAL;
-                this.canvasContext.globalCompositeOperation = egret.BlendMode.NORMAL;
+                this.blendValue = this.blendModes[egret.BlendMode.NORMAL];
+                this.canvasContext.globalCompositeOperation = this.blendValue;
             }
+        }
+
+        private blendModes:any;
+
+        private initBlendMode():void {
+            this.blendModes = {};
+            this.blendModes[BlendMode.NORMAL] = "source-over";
+            this.blendModes[BlendMode.ADD] = "lighter";
         }
 
         public setupFont(textField:TextField):void {
