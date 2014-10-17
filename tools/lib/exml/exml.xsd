@@ -1,4 +1,4 @@
-<xs:schema elementFormDefault="qualified" targetNamespace="http://ns.egret-labs.org/egret" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+<xs:schema elementFormDefault="qualified" targetNamespace="http://ns.egret-labs.org/egret" xmlns="http://ns.egret-labs.org/egret" xmlns:xs="http://www.w3.org/2001/XMLSchema">
   <xs:simpleType name="egret.BitmapFillMode">
     <xs:restriction base="xs:string">
       <xs:enumeration value="repeat"/>
@@ -15,7 +15,7 @@
   </xs:attributeGroup>
   <xs:element name="Bitmap">
     <xs:complexType>
-      <xs:choice minOccurs="0">
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
         <xs:any/>
       </xs:choice>
       <xs:attributeGroup ref="egret.Bitmap"/>
@@ -28,7 +28,7 @@
   </xs:attributeGroup>
   <xs:element name="BitmapText">
     <xs:complexType>
-      <xs:choice minOccurs="0">
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
         <xs:any/>
       </xs:choice>
       <xs:attributeGroup ref="egret.BitmapText"/>
@@ -39,7 +39,7 @@
   </xs:attributeGroup>
   <xs:element name="BitmapTextSpriteSheet">
     <xs:complexType>
-      <xs:choice minOccurs="0">
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
         <xs:any/>
       </xs:choice>
       <xs:attributeGroup ref="egret.BitmapTextSpriteSheet"/>
@@ -52,7 +52,7 @@
   </xs:attributeGroup>
   <xs:element name="ByteArray">
     <xs:complexType>
-      <xs:choice minOccurs="0">
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
         <xs:any/>
       </xs:choice>
       <xs:attributeGroup ref="egret.ByteArray"/>
@@ -61,7 +61,7 @@
   <xs:attributeGroup name="egret.DefaultMovieClipDelegate"/>
   <xs:element name="DefaultMovieClipDelegate">
     <xs:complexType>
-      <xs:choice minOccurs="0">
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
         <xs:any/>
       </xs:choice>
       <xs:attributeGroup ref="egret.DefaultMovieClipDelegate"/>
@@ -100,7 +100,7 @@
   </xs:attributeGroup>
   <xs:element name="DisplayObject">
     <xs:complexType>
-      <xs:choice minOccurs="0">
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
         <xs:any/>
       </xs:choice>
       <xs:attributeGroup ref="egret.DisplayObject"/>
@@ -112,7 +112,7 @@
   </xs:attributeGroup>
   <xs:element name="DisplayObjectContainer">
     <xs:complexType>
-      <xs:choice minOccurs="0">
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
         <xs:any/>
       </xs:choice>
       <xs:attributeGroup ref="egret.DisplayObjectContainer"/>
@@ -128,7 +128,7 @@
   </xs:attributeGroup>
   <xs:element name="EgretShader">
     <xs:complexType>
-      <xs:choice minOccurs="0">
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
         <xs:any/>
       </xs:choice>
       <xs:attributeGroup ref="egret.EgretShader"/>
@@ -139,7 +139,7 @@
   </xs:attributeGroup>
   <xs:element name="EventDispatcher">
     <xs:complexType>
-      <xs:choice minOccurs="0">
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
         <xs:any/>
       </xs:choice>
       <xs:attributeGroup ref="egret.EventDispatcher"/>
@@ -150,7 +150,7 @@
   </xs:attributeGroup>
   <xs:element name="HTML5StageText">
     <xs:complexType>
-      <xs:choice minOccurs="0">
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
         <xs:any/>
       </xs:choice>
       <xs:attributeGroup ref="egret.HTML5StageText"/>
@@ -161,7 +161,7 @@
   </xs:attributeGroup>
   <xs:element name="HashObject">
     <xs:complexType>
-      <xs:choice minOccurs="0">
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
         <xs:any/>
       </xs:choice>
       <xs:attributeGroup ref="egret.HashObject"/>
@@ -173,7 +173,7 @@
   </xs:attributeGroup>
   <xs:element name="Matrix">
     <xs:complexType>
-      <xs:choice minOccurs="0">
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
         <xs:any/>
       </xs:choice>
       <xs:attributeGroup ref="egret.Matrix"/>
@@ -185,7 +185,7 @@
   </xs:attributeGroup>
   <xs:element name="MovieClip">
     <xs:complexType>
-      <xs:choice minOccurs="0">
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
         <xs:any/>
       </xs:choice>
       <xs:attributeGroup ref="egret.MovieClip"/>
@@ -196,7 +196,7 @@
   </xs:attributeGroup>
   <xs:element name="NativeStageText">
     <xs:complexType>
-      <xs:choice minOccurs="0">
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
         <xs:any/>
       </xs:choice>
       <xs:attributeGroup ref="egret.NativeStageText"/>
@@ -209,7 +209,7 @@
   </xs:attributeGroup>
   <xs:element name="Point">
     <xs:complexType>
-      <xs:choice minOccurs="0">
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
         <xs:any/>
       </xs:choice>
       <xs:attributeGroup ref="egret.Point"/>
@@ -230,7 +230,7 @@
   </xs:attributeGroup>
   <xs:element name="PrimitiveShader">
     <xs:complexType>
-      <xs:choice minOccurs="0">
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
         <xs:any/>
       </xs:choice>
       <xs:attributeGroup ref="egret.PrimitiveShader"/>
@@ -246,7 +246,7 @@
   </xs:attributeGroup>
   <xs:element name="PromiseObject">
     <xs:complexType>
-      <xs:choice minOccurs="0">
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
         <xs:any/>
       </xs:choice>
       <xs:attributeGroup ref="egret.PromiseObject"/>
@@ -263,7 +263,7 @@
   </xs:attributeGroup>
   <xs:element name="Rectangle">
     <xs:complexType>
-      <xs:choice minOccurs="0">
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
         <xs:any/>
       </xs:choice>
       <xs:attributeGroup ref="egret.Rectangle"/>
@@ -274,7 +274,7 @@
   </xs:attributeGroup>
   <xs:element name="Recycler">
     <xs:complexType>
-      <xs:choice minOccurs="0">
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
         <xs:any/>
       </xs:choice>
       <xs:attributeGroup ref="egret.Recycler"/>
@@ -285,7 +285,7 @@
   </xs:attributeGroup>
   <xs:element name="RenderTexture">
     <xs:complexType>
-      <xs:choice minOccurs="0">
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
         <xs:any/>
       </xs:choice>
       <xs:attributeGroup ref="egret.RenderTexture"/>
@@ -296,21 +296,10 @@
   </xs:attributeGroup>
   <xs:element name="Shape">
     <xs:complexType>
-      <xs:choice minOccurs="0">
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
         <xs:any/>
       </xs:choice>
       <xs:attributeGroup ref="egret.Shape"/>
-    </xs:complexType>
-  </xs:element>
-  <xs:attributeGroup name="egret.ShowAll">
-    <xs:attributeGroup ref="egret.ContentStrategy"/>
-  </xs:attributeGroup>
-  <xs:element name="ShowAll">
-    <xs:complexType>
-      <xs:choice minOccurs="0">
-        <xs:any/>
-      </xs:choice>
-      <xs:attributeGroup ref="egret.ShowAll"/>
     </xs:complexType>
   </xs:element>
   <xs:attributeGroup name="egret.Sound">
@@ -319,7 +308,7 @@
   </xs:attributeGroup>
   <xs:element name="Sound">
     <xs:complexType>
-      <xs:choice minOccurs="0">
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
         <xs:any/>
       </xs:choice>
       <xs:attributeGroup ref="egret.Sound"/>
@@ -330,7 +319,7 @@
   </xs:attributeGroup>
   <xs:element name="Sprite">
     <xs:complexType>
-      <xs:choice minOccurs="0">
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
         <xs:any/>
       </xs:choice>
       <xs:attributeGroup ref="egret.Sprite"/>
@@ -341,7 +330,7 @@
   </xs:attributeGroup>
   <xs:element name="SpriteSheet">
     <xs:complexType>
-      <xs:choice minOccurs="0">
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
         <xs:any/>
       </xs:choice>
       <xs:attributeGroup ref="egret.SpriteSheet"/>
@@ -352,7 +341,7 @@
   </xs:attributeGroup>
   <xs:element name="StageText">
     <xs:complexType>
-      <xs:choice minOccurs="0">
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
         <xs:any/>
       </xs:choice>
       <xs:attributeGroup ref="egret.StageText"/>
@@ -375,38 +364,35 @@
   <xs:attributeGroup name="egret.TextField">
     <xs:attributeGroup ref="egret.DisplayObject"/>
     <xs:attribute name="bold" type="xs:boolean"/>
+    <xs:attribute name="displayAsPassword" type="xs:boolean"/>
     <xs:attribute name="fontFamily" type="xs:string"/>
     <xs:attribute name="italic" type="xs:boolean"/>
     <xs:attribute name="lineSpacing" type="xs:decimal"/>
     <xs:attribute name="maxWidth" type="xs:string"/>
+    <xs:attribute name="multiline" type="xs:boolean"/>
     <xs:attribute name="size" type="xs:decimal"/>
     <xs:attribute name="stroke" type="xs:decimal"/>
     <xs:attribute name="strokeColor" type="xs:decimal"/>
     <xs:attribute name="text" type="xs:string"/>
     <xs:attribute name="textAlign" type="text_textAlign"/>
     <xs:attribute name="textColor" type="xs:decimal"/>
+    <xs:attribute name="type" type="xs:string"/>
     <xs:attribute name="verticalAlign" type="text_verticalAlign"/>
   </xs:attributeGroup>
   <xs:element name="TextField">
     <xs:complexType>
-      <xs:choice minOccurs="0">
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
         <xs:any/>
       </xs:choice>
       <xs:attributeGroup ref="egret.TextField"/>
     </xs:complexType>
   </xs:element>
   <xs:attributeGroup name="egret.TextInput">
-    <xs:attributeGroup ref="egret.Sprite"/>
-    <xs:attribute name="displayAsPassword" type="xs:boolean"/>
-    <xs:attribute name="fontFamily" type="xs:string"/>
-    <xs:attribute name="multiline" type="xs:boolean"/>
-    <xs:attribute name="size" type="xs:decimal"/>
-    <xs:attribute name="text" type="xs:string"/>
-    <xs:attribute name="textColor" type="xs:decimal"/>
+    <xs:attributeGroup ref="egret.TextField"/>
   </xs:attributeGroup>
   <xs:element name="TextInput">
     <xs:complexType>
-      <xs:choice minOccurs="0">
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
         <xs:any/>
       </xs:choice>
       <xs:attributeGroup ref="egret.TextInput"/>
@@ -418,7 +404,7 @@
   </xs:attributeGroup>
   <xs:element name="Texture">
     <xs:complexType>
-      <xs:choice minOccurs="0">
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
         <xs:any/>
       </xs:choice>
       <xs:attributeGroup ref="egret.Texture"/>
@@ -429,7 +415,7 @@
   </xs:attributeGroup>
   <xs:element name="Tween">
     <xs:complexType>
-      <xs:choice minOccurs="0">
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
         <xs:any/>
       </xs:choice>
       <xs:attributeGroup ref="egret.Tween"/>
@@ -441,7 +427,7 @@
   </xs:attributeGroup>
   <xs:element name="WebAudio">
     <xs:complexType>
-      <xs:choice minOccurs="0">
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
         <xs:any/>
       </xs:choice>
       <xs:attributeGroup ref="egret.WebAudio"/>
@@ -456,7 +442,7 @@
   </xs:attributeGroup>
   <xs:element name="AddItems">
     <xs:complexType>
-      <xs:choice minOccurs="0">
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
         <xs:any/>
       </xs:choice>
       <xs:attributeGroup ref="egret.gui.AddItems"/>
@@ -517,10 +503,10 @@
   </xs:group>
   <xs:element name="Alert">
     <xs:complexType>
-      <xs:choice minOccurs="0">
-        <xs:any namespace="##other"/>
-        <xs:element ref="layout"/>
-        <xs:group ref="IVisualElement"/>
+      <xs:choice>
+        <xs:any namespace="##other" minOccurs="0" maxOccurs="unbounded"/>
+        <xs:element ref="layout" minOccurs="0"/>
+        <xs:group ref="IVisualElement" minOccurs="0" maxOccurs="unbounded"/>
       </xs:choice>
       <xs:attributeGroup ref="egret.gui.Alert"/>
     </xs:complexType>
@@ -531,9 +517,9 @@
   </xs:attributeGroup>
   <xs:element name="ArrayCollection">
     <xs:complexType>
-      <xs:choice minOccurs="0">
-        <xs:any namespace="##other"/>
-        <xs:group ref="baseTypeElements"/>
+      <xs:choice>
+        <xs:any namespace="##other" minOccurs="0" maxOccurs="unbounded"/>
+        <xs:group ref="baseTypeElements" minOccurs="0" maxOccurs="unbounded"/>
       </xs:choice>
       <xs:attributeGroup ref="egret.gui.ArrayCollection"/>
     </xs:complexType>
@@ -544,7 +530,7 @@
   </xs:attributeGroup>
   <xs:element name="BasicLayout">
     <xs:complexType>
-      <xs:choice minOccurs="0">
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
         <xs:any/>
       </xs:choice>
       <xs:attributeGroup ref="egret.gui.BasicLayout"/>
@@ -555,7 +541,7 @@
   </xs:attributeGroup>
   <xs:element name="Button">
     <xs:complexType>
-      <xs:choice minOccurs="0">
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
         <xs:any/>
       </xs:choice>
       <xs:attributeGroup ref="egret.gui.Button"/>
@@ -574,7 +560,7 @@
   </xs:attributeGroup>
   <xs:element name="ButtonBase">
     <xs:complexType>
-      <xs:choice minOccurs="0">
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
         <xs:any/>
       </xs:choice>
       <xs:attributeGroup ref="egret.gui.ButtonBase"/>
@@ -585,7 +571,7 @@
   </xs:attributeGroup>
   <xs:element name="CheckBox">
     <xs:complexType>
-      <xs:choice minOccurs="0">
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
         <xs:any/>
       </xs:choice>
       <xs:attributeGroup ref="egret.gui.CheckBox"/>
@@ -597,7 +583,7 @@
   </xs:attributeGroup>
   <xs:element name="ClassFactory">
     <xs:complexType>
-      <xs:choice minOccurs="0">
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
         <xs:any/>
       </xs:choice>
       <xs:attributeGroup ref="egret.gui.ClassFactory"/>
@@ -612,7 +598,7 @@
   </xs:attributeGroup>
   <xs:element name="DataGroup">
     <xs:complexType>
-      <xs:choice minOccurs="0">
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
         <xs:any/>
       </xs:choice>
       <xs:attributeGroup ref="egret.gui.DataGroup"/>
@@ -625,7 +611,7 @@
   </xs:attributeGroup>
   <xs:element name="DropDownList">
     <xs:complexType>
-      <xs:choice minOccurs="0">
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
         <xs:any/>
       </xs:choice>
       <xs:attributeGroup ref="egret.gui.DropDownList"/>
@@ -639,7 +625,7 @@
   </xs:attributeGroup>
   <xs:element name="DropDownListBase">
     <xs:complexType>
-      <xs:choice minOccurs="0">
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
         <xs:any/>
       </xs:choice>
       <xs:attributeGroup ref="egret.gui.DropDownListBase"/>
@@ -651,10 +637,10 @@
   </xs:attributeGroup>
   <xs:element name="Group">
     <xs:complexType>
-      <xs:choice minOccurs="0">
-        <xs:any namespace="##other"/>
-        <xs:element ref="layout"/>
-        <xs:group ref="IVisualElement"/>
+      <xs:choice>
+        <xs:any namespace="##other" minOccurs="0" maxOccurs="unbounded"/>
+        <xs:element ref="layout" minOccurs="0"/>
+        <xs:group ref="IVisualElement" minOccurs="0" maxOccurs="unbounded"/>
       </xs:choice>
       <xs:attributeGroup ref="egret.gui.Group"/>
     </xs:complexType>
@@ -668,7 +654,7 @@
   </xs:attributeGroup>
   <xs:element name="GroupBase">
     <xs:complexType>
-      <xs:choice minOccurs="0">
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
         <xs:any/>
       </xs:choice>
       <xs:attributeGroup ref="egret.gui.GroupBase"/>
@@ -679,7 +665,7 @@
   </xs:attributeGroup>
   <xs:element name="HSlider">
     <xs:complexType>
-      <xs:choice minOccurs="0">
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
         <xs:any/>
       </xs:choice>
       <xs:attributeGroup ref="egret.gui.HSlider"/>
@@ -716,7 +702,7 @@
   </xs:attributeGroup>
   <xs:element name="HorizontalLayout">
     <xs:complexType>
-      <xs:choice minOccurs="0">
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
         <xs:any/>
       </xs:choice>
       <xs:attributeGroup ref="egret.gui.HorizontalLayout"/>
@@ -730,7 +716,7 @@
   </xs:attributeGroup>
   <xs:element name="ItemRenderer">
     <xs:complexType>
-      <xs:choice minOccurs="0">
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
         <xs:any/>
       </xs:choice>
       <xs:attributeGroup ref="egret.gui.ItemRenderer"/>
@@ -747,7 +733,7 @@
   </xs:attributeGroup>
   <xs:element name="Label">
     <xs:complexType>
-      <xs:choice minOccurs="0">
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
         <xs:any/>
       </xs:choice>
       <xs:attributeGroup ref="egret.gui.Label"/>
@@ -761,7 +747,7 @@
   </xs:attributeGroup>
   <xs:element name="LayoutBase">
     <xs:complexType>
-      <xs:choice minOccurs="0">
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
         <xs:any/>
       </xs:choice>
       <xs:attributeGroup ref="egret.gui.LayoutBase"/>
@@ -775,7 +761,7 @@
   </xs:attributeGroup>
   <xs:element name="List">
     <xs:complexType>
-      <xs:choice minOccurs="0">
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
         <xs:any/>
       </xs:choice>
       <xs:attributeGroup ref="egret.gui.List"/>
@@ -792,7 +778,7 @@
   </xs:attributeGroup>
   <xs:element name="ListBase">
     <xs:complexType>
-      <xs:choice minOccurs="0">
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
         <xs:any/>
       </xs:choice>
       <xs:attributeGroup ref="egret.gui.ListBase"/>
@@ -806,9 +792,9 @@
   </xs:attributeGroup>
   <xs:element name="ObjectCollection">
     <xs:complexType>
-      <xs:choice minOccurs="0">
-        <xs:any namespace="##other"/>
-        <xs:group ref="baseTypeElements"/>
+      <xs:choice>
+        <xs:any namespace="##other" minOccurs="0" maxOccurs="unbounded"/>
+        <xs:group ref="baseTypeElements" minOccurs="0" maxOccurs="unbounded"/>
       </xs:choice>
       <xs:attributeGroup ref="egret.gui.ObjectCollection"/>
     </xs:complexType>
@@ -818,7 +804,7 @@
   </xs:attributeGroup>
   <xs:element name="OverrideBase">
     <xs:complexType>
-      <xs:choice minOccurs="0">
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
         <xs:any/>
       </xs:choice>
       <xs:attributeGroup ref="egret.gui.OverrideBase"/>
@@ -831,10 +817,10 @@
   </xs:attributeGroup>
   <xs:element name="Panel">
     <xs:complexType>
-      <xs:choice minOccurs="0">
-        <xs:any namespace="##other"/>
-        <xs:element ref="layout"/>
-        <xs:group ref="IVisualElement"/>
+      <xs:choice>
+        <xs:any namespace="##other" minOccurs="0" maxOccurs="unbounded"/>
+        <xs:element ref="layout" minOccurs="0"/>
+        <xs:group ref="IVisualElement" minOccurs="0" maxOccurs="unbounded"/>
       </xs:choice>
       <xs:attributeGroup ref="egret.gui.Panel"/>
     </xs:complexType>
@@ -861,7 +847,7 @@
   </xs:attributeGroup>
   <xs:element name="PopUpAnchor">
     <xs:complexType>
-      <xs:choice minOccurs="0">
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
         <xs:any/>
       </xs:choice>
       <xs:attributeGroup ref="egret.gui.PopUpAnchor"/>
@@ -886,7 +872,7 @@
   </xs:attributeGroup>
   <xs:element name="ProgressBar">
     <xs:complexType>
-      <xs:choice minOccurs="0">
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
         <xs:any/>
       </xs:choice>
       <xs:attributeGroup ref="egret.gui.ProgressBar"/>
@@ -900,7 +886,7 @@
   </xs:attributeGroup>
   <xs:element name="RadioButton">
     <xs:complexType>
-      <xs:choice minOccurs="0">
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
         <xs:any/>
       </xs:choice>
       <xs:attributeGroup ref="egret.gui.RadioButton"/>
@@ -914,7 +900,7 @@
   </xs:attributeGroup>
   <xs:element name="RadioButtonGroup">
     <xs:complexType>
-      <xs:choice minOccurs="0">
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
         <xs:any/>
       </xs:choice>
       <xs:attributeGroup ref="egret.gui.RadioButtonGroup"/>
@@ -930,7 +916,7 @@
   </xs:attributeGroup>
   <xs:element name="Range">
     <xs:complexType>
-      <xs:choice minOccurs="0">
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
         <xs:any/>
       </xs:choice>
       <xs:attributeGroup ref="egret.gui.Range"/>
@@ -946,7 +932,7 @@
   </xs:attributeGroup>
   <xs:element name="Rect">
     <xs:complexType>
-      <xs:choice minOccurs="0">
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
         <xs:any/>
       </xs:choice>
       <xs:attributeGroup ref="egret.gui.Rect"/>
@@ -975,10 +961,10 @@
   </xs:group>
   <xs:element name="Scroller">
     <xs:complexType>
-      <xs:choice minOccurs="0">
-        <xs:any namespace="##other"/>
-        <xs:element ref="viewport"/>
-        <xs:group ref="IViewport"/>
+      <xs:choice>
+        <xs:any namespace="##other" minOccurs="0" maxOccurs="unbounded"/>
+        <xs:element ref="viewport" minOccurs="0"/>
+        <xs:group ref="IViewport" minOccurs="0" maxOccurs="unbounded"/>
       </xs:choice>
       <xs:attributeGroup ref="egret.gui.Scroller"/>
     </xs:complexType>
@@ -991,7 +977,7 @@
   </xs:attributeGroup>
   <xs:element name="SetProperty">
     <xs:complexType>
-      <xs:choice minOccurs="0">
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
         <xs:any/>
       </xs:choice>
       <xs:attributeGroup ref="egret.gui.SetProperty"/>
@@ -1014,7 +1000,7 @@
   </xs:attributeGroup>
   <xs:element name="Skin">
     <xs:complexType>
-      <xs:choice minOccurs="0">
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
         <xs:any/>
       </xs:choice>
       <xs:attributeGroup ref="egret.gui.Skin"/>
@@ -1026,7 +1012,7 @@
   </xs:attributeGroup>
   <xs:element name="SkinBasicLayout">
     <xs:complexType>
-      <xs:choice minOccurs="0">
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
         <xs:any/>
       </xs:choice>
       <xs:attributeGroup ref="egret.gui.SkinBasicLayout"/>
@@ -1040,7 +1026,7 @@
   </xs:attributeGroup>
   <xs:element name="SkinnableComponent">
     <xs:complexType>
-      <xs:choice minOccurs="0">
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
         <xs:any/>
       </xs:choice>
       <xs:attributeGroup ref="egret.gui.SkinnableComponent"/>
@@ -1054,10 +1040,10 @@
   </xs:attributeGroup>
   <xs:element name="SkinnableContainer">
     <xs:complexType>
-      <xs:choice minOccurs="0">
-        <xs:any namespace="##other"/>
-        <xs:element ref="layout"/>
-        <xs:group ref="IVisualElement"/>
+      <xs:choice>
+        <xs:any namespace="##other" minOccurs="0" maxOccurs="unbounded"/>
+        <xs:element ref="layout" minOccurs="0"/>
+        <xs:group ref="IVisualElement" minOccurs="0" maxOccurs="unbounded"/>
       </xs:choice>
       <xs:attributeGroup ref="egret.gui.SkinnableContainer"/>
     </xs:complexType>
@@ -1073,7 +1059,7 @@
   </xs:attributeGroup>
   <xs:element name="SkinnableDataContainer">
     <xs:complexType>
-      <xs:choice minOccurs="0">
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
         <xs:any/>
       </xs:choice>
       <xs:attributeGroup ref="egret.gui.SkinnableDataContainer"/>
@@ -1088,7 +1074,7 @@
   </xs:attributeGroup>
   <xs:element name="SliderBase">
     <xs:complexType>
-      <xs:choice minOccurs="0">
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
         <xs:any/>
       </xs:choice>
       <xs:attributeGroup ref="egret.gui.SliderBase"/>
@@ -1099,7 +1085,7 @@
   </xs:attributeGroup>
   <xs:element name="Spacer">
     <xs:complexType>
-      <xs:choice minOccurs="0">
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
         <xs:any/>
       </xs:choice>
       <xs:attributeGroup ref="egret.gui.Spacer"/>
@@ -1113,7 +1099,7 @@
   </xs:attributeGroup>
   <xs:element name="State">
     <xs:complexType>
-      <xs:choice minOccurs="0">
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
         <xs:any/>
       </xs:choice>
       <xs:attributeGroup ref="egret.gui.State"/>
@@ -1124,7 +1110,7 @@
   </xs:attributeGroup>
   <xs:element name="TabBar">
     <xs:complexType>
-      <xs:choice minOccurs="0">
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
         <xs:any/>
       </xs:choice>
       <xs:attributeGroup ref="egret.gui.TabBar"/>
@@ -1138,7 +1124,7 @@
   </xs:attributeGroup>
   <xs:element name="TabBarButton">
     <xs:complexType>
-      <xs:choice minOccurs="0">
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
         <xs:any/>
       </xs:choice>
       <xs:attributeGroup ref="egret.gui.TabBarButton"/>
@@ -1158,7 +1144,7 @@
   </xs:attributeGroup>
   <xs:element name="TextBase">
     <xs:complexType>
-      <xs:choice minOccurs="0">
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
         <xs:any/>
       </xs:choice>
       <xs:attributeGroup ref="egret.gui.TextBase"/>
@@ -1205,7 +1191,7 @@
   </xs:attributeGroup>
   <xs:element name="TileLayout">
     <xs:complexType>
-      <xs:choice minOccurs="0">
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
         <xs:any/>
       </xs:choice>
       <xs:attributeGroup ref="egret.gui.TileLayout"/>
@@ -1220,10 +1206,10 @@
   </xs:attributeGroup>
   <xs:element name="TitleWindow">
     <xs:complexType>
-      <xs:choice minOccurs="0">
-        <xs:any namespace="##other"/>
-        <xs:element ref="layout"/>
-        <xs:group ref="IVisualElement"/>
+      <xs:choice>
+        <xs:any namespace="##other" minOccurs="0" maxOccurs="unbounded"/>
+        <xs:element ref="layout" minOccurs="0"/>
+        <xs:group ref="IVisualElement" minOccurs="0" maxOccurs="unbounded"/>
       </xs:choice>
       <xs:attributeGroup ref="egret.gui.TitleWindow"/>
     </xs:complexType>
@@ -1233,7 +1219,7 @@
   </xs:attributeGroup>
   <xs:element name="ToggleButton">
     <xs:complexType>
-      <xs:choice minOccurs="0">
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
         <xs:any/>
       </xs:choice>
       <xs:attributeGroup ref="egret.gui.ToggleButton"/>
@@ -1245,7 +1231,7 @@
   </xs:attributeGroup>
   <xs:element name="ToggleButtonBase">
     <xs:complexType>
-      <xs:choice minOccurs="0">
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
         <xs:any/>
       </xs:choice>
       <xs:attributeGroup ref="egret.gui.ToggleButtonBase"/>
@@ -1256,7 +1242,7 @@
   </xs:attributeGroup>
   <xs:element name="ToggleSwitch">
     <xs:complexType>
-      <xs:choice minOccurs="0">
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
         <xs:any/>
       </xs:choice>
       <xs:attributeGroup ref="egret.gui.ToggleSwitch"/>
@@ -1270,7 +1256,7 @@
   </xs:attributeGroup>
   <xs:element name="TrackBase">
     <xs:complexType>
-      <xs:choice minOccurs="0">
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
         <xs:any/>
       </xs:choice>
       <xs:attributeGroup ref="egret.gui.TrackBase"/>
@@ -1283,7 +1269,7 @@
   </xs:attributeGroup>
   <xs:element name="Tree">
     <xs:complexType>
-      <xs:choice minOccurs="0">
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
         <xs:any/>
       </xs:choice>
       <xs:attributeGroup ref="egret.gui.Tree"/>
@@ -1302,7 +1288,7 @@
   </xs:attributeGroup>
   <xs:element name="TreeItemRenderer">
     <xs:complexType>
-      <xs:choice minOccurs="0">
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
         <xs:any/>
       </xs:choice>
       <xs:attributeGroup ref="egret.gui.TreeItemRenderer"/>
@@ -1317,7 +1303,7 @@
   </xs:attributeGroup>
   <xs:element name="UIAsset">
     <xs:complexType>
-      <xs:choice minOccurs="0">
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
         <xs:any/>
       </xs:choice>
       <xs:attributeGroup ref="egret.gui.UIAsset"/>
@@ -1329,7 +1315,6 @@
     <xs:attribute name="enabled" type="xs:boolean"/>
     <xs:attribute name="excludeFrom" type="xs:string"/>
     <xs:attribute name="horizontalCenter" type="xs:decimal"/>
-    <xs:attribute name="id" type="xs:string"/>
     <xs:attribute name="includeIn" type="xs:string"/>
     <xs:attribute name="includeInLayout" type="xs:boolean"/>
     <xs:attribute name="initialized" type="xs:boolean"/>
@@ -1353,7 +1338,7 @@
   </xs:attributeGroup>
   <xs:element name="UIComponent">
     <xs:complexType>
-      <xs:choice minOccurs="0">
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
         <xs:any/>
       </xs:choice>
       <xs:attributeGroup ref="egret.gui.UIComponent"/>
@@ -1364,7 +1349,7 @@
   </xs:attributeGroup>
   <xs:element name="VSlider">
     <xs:complexType>
-      <xs:choice minOccurs="0">
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
         <xs:any/>
       </xs:choice>
       <xs:attributeGroup ref="egret.gui.VSlider"/>
@@ -1383,7 +1368,7 @@
   </xs:attributeGroup>
   <xs:element name="VerticalLayout">
     <xs:complexType>
-      <xs:choice minOccurs="0">
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
         <xs:any/>
       </xs:choice>
       <xs:attributeGroup ref="egret.gui.VerticalLayout"/>
@@ -1397,10 +1382,10 @@
   </xs:attributeGroup>
   <xs:element name="ViewStack">
     <xs:complexType>
-      <xs:choice minOccurs="0">
-        <xs:any namespace="##other"/>
-        <xs:element ref="layout"/>
-        <xs:group ref="IVisualElement"/>
+      <xs:choice>
+        <xs:any namespace="##other" minOccurs="0" maxOccurs="unbounded"/>
+        <xs:element ref="layout" minOccurs="0"/>
+        <xs:group ref="IVisualElement" minOccurs="0" maxOccurs="unbounded"/>
       </xs:choice>
       <xs:attributeGroup ref="egret.gui.ViewStack"/>
     </xs:complexType>
@@ -1423,14 +1408,11 @@
       <xs:group ref="layout_group"/>
     </xs:complexType>
   </xs:element>
-  <xs:group name="states_group">
-    <xs:choice>
-      <xs:element ref="State"/>
-    </xs:choice>
-  </xs:group>
   <xs:element name="states">
     <xs:complexType>
-      <xs:group ref="states_group"/>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element ref="State"/>
+      </xs:choice>
     </xs:complexType>
   </xs:element>
   <xs:element name="boolean" type="xs:boolean"/>

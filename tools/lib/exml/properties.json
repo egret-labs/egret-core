@@ -147,10 +147,6 @@
 	{
 		"super":"egret.DisplayObject"
 	},
-	"egret.ShowAll":
-	{
-		"super":"egret.ContentStrategy"
-	},
 	"egret.Sound":
 	{
 		"path":"string",
@@ -171,10 +167,12 @@
 	"egret.TextField":
 	{
 		"bold":"boolean",
+		"displayAsPassword":"boolean",
 		"fontFamily":"string",
 		"italic":"boolean",
 		"lineSpacing":"number",
 		"maxWidth":"any",
+		"multiline":"boolean",
 		"size":"number",
 		"stroke":"number",
 		"strokeColor":"number",
@@ -182,17 +180,12 @@
 		"text":"string",
 		"textAlign":"string",
 		"textColor":"number",
+		"type":"string",
 		"verticalAlign":"string"
 	},
 	"egret.TextInput":
 	{
-		"displayAsPassword":"boolean",
-		"fontFamily":"string",
-		"multiline":"boolean",
-		"size":"number",
-		"super":"egret.Sprite",
-		"text":"string",
-		"textColor":"number"
+		"super":"egret.TextField"
 	},
 	"egret.Texture":
 	{
