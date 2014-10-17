@@ -106,7 +106,8 @@ module egret {
             }
         }
 
-        public _setTextDirty():void {
+        public _setTextDirty(): void {
+            this._normalDirty = true;
             this._setSizeDirty();
         }
 
@@ -382,6 +383,33 @@ module egret {
         }
 
         public maxWidth;
+        public maxChars;
+        public get maxScrollV():number {
+            return this._numLines;
+        }
+
+        public set scrollH(value: number) {
+            Logger.warning("TextField.scrollH未实现");
+            //this._scrollRect.x = this._size * value;
+        }
+
+        public set scrollV(value: number) {
+            Logger.warning("TextField.scrollV未实现");
+            //this._scrollRect.y = this._getLineHeight() * value;
+        }
+
+        public get selectionBeginIndex():number {
+            return 0;
+        }
+        public get selectionEndIndex():number {
+            return 0;
+        }
+        public get caretIndex():number {
+            return 0;
+        }
+        public _setSelection(beginIndex:number, endIndex:number) {
+
+        }
 
         /**
          * 行间距
@@ -404,6 +432,10 @@ module egret {
                 this._setTextDirty();
                 this._lineSpacing = value;
             }
+        }
+
+        public _getLineHeight(): number {
+            return this._lineSpacing + this._size;
         }
 
         /**
@@ -433,6 +465,11 @@ module egret {
 
         public get multiline():boolean {
             return this._multiline;
+        }
+
+        public setFocus() {
+            //todo:
+            Logger.warning("TextField.setFocus 没有实现");
         }
 
         constructor() {

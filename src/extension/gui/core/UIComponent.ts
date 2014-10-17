@@ -493,9 +493,12 @@ module egret.gui {
 		/**
 		 * @member egret.gui.UIComponent#maxWidth
 		 */
-		public get maxWidth():number{
-			return this._maxWidth;
-		}
+        public get maxWidth(): number {
+            return this._maxWidth;
+        }
+        public _getMaxWidth(): number {
+            return this._maxWidth;
+        }
 		public set maxWidth(value:number){
 			if(this._maxWidth==value)
 				return;

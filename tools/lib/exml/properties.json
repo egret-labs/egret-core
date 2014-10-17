@@ -82,6 +82,10 @@
 	{
 		"implements":["egret.IHashObject"]
 	},
+	"egret.InputController":
+	{
+		"super":"egret.HashObject"
+	},
 	"egret.Matrix":
 	{
 		"a":"any",
@@ -171,10 +175,15 @@
 	"egret.TextField":
 	{
 		"bold":"boolean",
+		"displayAsPassword":"boolean",
 		"fontFamily":"string",
 		"italic":"boolean",
 		"lineSpacing":"number",
+		"maxChars":"any",
 		"maxWidth":"any",
+		"multiline":"boolean",
+		"scrollH":"number",
+		"scrollV":"number",
 		"size":"number",
 		"stroke":"number",
 		"strokeColor":"number",
@@ -182,17 +191,12 @@
 		"text":"string",
 		"textAlign":"string",
 		"textColor":"number",
+		"type":"string",
 		"verticalAlign":"string"
 	},
 	"egret.TextInput":
 	{
-		"displayAsPassword":"boolean",
-		"fontFamily":"string",
-		"multiline":"boolean",
-		"size":"number",
-		"super":"egret.Sprite",
-		"text":"string",
-		"textColor":"number"
+		"super":"egret.TextField"
 	},
 	"egret.Texture":
 	{
@@ -282,6 +286,22 @@
 		"dropDownController":"egret.gui.DropDownController",
 		"openButton":"egret.gui.ButtonBase",
 		"super":"egret.gui.List"
+	},
+	"egret.gui.EditableText":
+	{
+		"clipAndEnableScrolling":"boolean",
+		"displayAsPassword":"boolean",
+		"editable":"boolean",
+		"heightInLines":"number",
+		"horizontalScrollPosition":"number",
+		"implements":["egret.gui.IEditableText","egret.gui.IDisplayText","egret.gui.IViewport"],
+		"maxChars":"number",
+		"multiline":"boolean",
+		"restrict":"string",
+		"selectable":"boolean",
+		"super":"egret.gui.TextBase",
+		"verticalScrollPosition":"number",
+		"widthInChars":"number"
 	},
 	"egret.gui.Group":
 	{
@@ -492,6 +512,21 @@
 		"layout":"egret.gui.LayoutBase",
 		"super":"egret.gui.SkinnableComponent"
 	},
+	"egret.gui.SkinnableTextBase":
+	{
+		"displayAsPassword":"boolean",
+		"editable":"boolean",
+		"focusEnabled":"boolean",
+		"maxChars":"number",
+		"prompt":"string",
+		"promptDisplay":"egret.gui.IDisplayText",
+		"restrict":"string",
+		"selectable":"boolean",
+		"super":"egret.gui.SkinnableComponent",
+		"text":"string",
+		"textColor":"number",
+		"textDisplay":"egret.gui.IEditableText"
+	},
 	"egret.gui.SliderBase":
 	{
 		"liveDragging":"boolean",
@@ -523,9 +558,19 @@
 		"itemIndex":"number",
 		"super":"egret.gui.ToggleButtonBase"
 	},
+	"egret.gui.TextArea":
+	{
+		"heightInLines":"number",
+		"horizontalScrollPolicy":"string",
+		"scroller":"egret.gui.Scroller",
+		"super":"egret.gui.SkinnableTextBase",
+		"verticalScrollPolicy":"string",
+		"widthInChars":"number"
+	},
 	"egret.gui.TextBase":
 	{
 		"bold":"boolean",
+		"focusEnabled":"boolean",
 		"fontFamily":"string",
 		"implements":["egret.gui.IDisplayText"],
 		"italic":"boolean",
@@ -536,6 +581,11 @@
 		"textAlign":"string",
 		"textColor":"number",
 		"verticalAlign":"string"
+	},
+	"egret.gui.TextInput":
+	{
+		"super":"egret.gui.SkinnableTextBase",
+		"widthInChars":"number"
 	},
 	"egret.gui.TileLayout":
 	{

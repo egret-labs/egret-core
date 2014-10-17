@@ -327,11 +327,11 @@ module egret {
          * @param value {string}
          */
         public _setText(value:string):void {
-//            this._text = value;
+            this._text = value;
             this._defaultText = value;
-//            if (this._isShow) {
-//                this.setElementValue(value);
-//            }
+            if (this._isShow) {
+                this.setElementValue(value);
+            }
         }
 
         /**

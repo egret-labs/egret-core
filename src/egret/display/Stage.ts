@@ -160,5 +160,8 @@ module egret {
             }
         }
 
+        public get focus(): DisplayObject {
+            return null;
+        }
     }
 }
