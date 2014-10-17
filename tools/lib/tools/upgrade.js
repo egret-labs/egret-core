@@ -15,7 +15,8 @@ var upgradeConfigArr = [
     {"v" : "1.0.4", "func":upgradeTo_1_0_4},
     {"v" : "1.0.5", "func":upgradeTo_1_0_5},
     {"v" : "1.0.6", "func":upgradeTo_1_0_6},
-    {"v" : "1.1.0", "func":upgradeTo_1_1_0}
+    {"v" : "1.1.0", "func":upgradeTo_1_1_0},
+    {"v" : "1.1.1", "func":upgradeTo_1_1_1}
 ];
 
 var currDir;
@@ -188,6 +189,12 @@ function upgradeTo_1_1_0() {
     open("https://github.com/egret-labs/egret-core/wiki/Egret_Upgrade/upgrade/index.html");
 
     globals.exit(1703);
+}
+
+function upgradeTo_1_1_1(){
+    projectConfig.init(currDir);
+    projectConfig.data.egret_version = "1.1.1";
+    projectConfig.save();
 }
 
 function getClassList(item) {
