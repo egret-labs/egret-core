@@ -32,6 +32,12 @@ module egret {
      * @class egret.EventDispatcher
      * @classdesc
      * EventDispatcher是egret的事件派发器类，负责进行事件的发送和侦听。
+     *
+     * 事件目标是事件如何通过显示列表层次结构这一问题的焦点。当发生鼠标单击、触摸或按键等事件时，
+     * 引擎会将事件对象调度到从显示列表根开始的事件流中。然后该事件对象在显示列表中前进，直到到达事件目标，
+     * 然后从这一点开始其在显示列表中的回程。在概念上，到事件目标的此往返行程被划分为三个阶段：
+     * 捕获阶段包括从根到事件目标节点之前的最后一个节点的行程，目标阶段仅包括事件目标节点，冒泡阶段包括回程上遇到的任何后续节点到显示列表的根。
+     *
      * @extends egret.HashObject
      * @implements egret.IEventDispatcher
      *

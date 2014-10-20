@@ -108,7 +108,7 @@ module egret {
          */
         public static FINISH_UPDATE_TRANSFORM:string = "finishUpdateTransform";
         /**
-         * 离开舞台，参考Flash的Event.MOUSE_LEAVE
+         * 离开舞台。
          * @constant {string} egret.Event.LEAVE_STAGE
          */
         public static LEAVE_STAGE:string = "leaveStage";

@@ -62,31 +62,31 @@ module egret {
         }
 
         /**
-         * 轻触，参考Flash的MouseEvent.CLICK
+         * 轻触
 		 * @constant {string} egret.TouchEvent.TOUCH_TAP
          */
         public static TOUCH_TAP:string = "touchTap";
 
         /**
-         * 移动，参考FLash的MouseEvent.MOVE
+         * 移动
 		 * @constant {string} egret.TouchEvent.TOUCH_MOVE
          */
         public static TOUCH_MOVE:string = "touchMove";
 
         /**
-         * 开始触摸,参考Flash的MouseEvent.MOUSE_DOWN
+         * 开始触摸
 		 * @constant {string} egret.TouchEvent.TOUCH_BEGIN
          */
         public static TOUCH_BEGIN:string = "touchBegin";
 
         /**
-         * 在同一对象上结束触摸,参考Flash的MouseEvent.MOUSE_UP
+         * 在同一对象上结束触摸
 		 * @constant {string} egret.TouchEvent.TOUCH_END
          */
         public static TOUCH_END:string = "touchEnd";
 
         /**
-         * 在对象外部结束触摸，参考Flash的MouseEvent.RELEASE_OUTSIDE
+         * 在对象外部结束触摸
 		 * @constant {string} egret.TouchEvent.TOUCH_RELEASE_OUTSIDE
          */
         public static TOUCH_RELEASE_OUTSIDE:string = "touchReleaseOutside";

@@ -120,7 +120,7 @@ function onGet(request, response) {
 
         if (egretBuildCommand) {
 
-            writeText("正在编译中....请刷新重试", response)
+            writeText("Compiling... refresh me , please", response)
             return;
         }
         pathname = pathname.substring(0, pathname.length - autoCompilerFlag.length) + "index.html";
