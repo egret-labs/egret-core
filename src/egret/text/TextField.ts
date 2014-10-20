@@ -107,7 +107,6 @@ module egret {
         }
 
         public _setTextDirty(): void {
-            this._normalDirty = true;
             this._setSizeDirty();
         }
 
@@ -149,6 +148,9 @@ module egret {
 
         public _setText(value:string):void {
             this._setBaseText(value);
+            if (this._inputUtils) {
+                this._inputUtils._setText(this._text);
+            }
         }
 
         /**
@@ -386,16 +388,6 @@ module egret {
         public maxChars;
         public get maxScrollV():number {
             return this._numLines;
-        }
-
-        public set scrollH(value: number) {
-            Logger.warning("TextField.scrollH未实现");
-            //this._scrollRect.x = this._size * value;
-        }
-
-        public set scrollV(value: number) {
-            Logger.warning("TextField.scrollV未实现");
-            //this._scrollRect.y = this._getLineHeight() * value;
         }
 
         public get selectionBeginIndex():number {

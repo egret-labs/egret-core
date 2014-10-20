@@ -21,18 +21,10 @@ module egret.gui {
             super._setWidthInChars(value);
 		}
 		
-		/**
-		 * @inheritDoc
-		 */
-		public set text(value:string){
+
+        public _setText(value: string) {
             super._setText(value);
-			this.dispatchEvent(new Event(Event.CHANGE));
-        }
-        /**
-         * @inheritDoc
-         */
-        public get text() {
-            return this._getText();
+            this.dispatchEvent(new Event(Event.CHANGE));
         }
 		
 		/**
@@ -52,8 +44,9 @@ module egret.gui {
 		 * @inheritDoc
 		 */
 		public createSkinParts():void{
-			this.textDisplay = new EditableText();
-			this.textDisplay.widthInChars = 10;
+            this.textDisplay = new EditableText();
+            this.textDisplay.widthInChars = 10;
+            this.textDisplay.multiline = false;
 			this.textDisplay.left = 1;
 			this.textDisplay.right = 1;
 			this.textDisplay.top = 1;

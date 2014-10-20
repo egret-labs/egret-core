@@ -84,18 +84,9 @@ module egret.gui {
 		 */
 		public scroller:Scroller;
 
-        /**
-         * @inheritDoc
-         */
-        public set text(value: string) {
+        public _setText(value: string) {
             super._setText(value);
             this.dispatchEvent(new Event(Event.CHANGE));
-        }
-        /**
-         * @inheritDoc
-         */
-        public get text() {
-            return this._getText();
         }
 
 		/**

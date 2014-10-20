@@ -146,31 +146,23 @@ module egret.gui {
         /**
          * @inheritDoc
          */
-        public set size(value: number) {
+        public _setFontSize(value: number) {
             if (value === undefined)
                 value = 0;
             if (this._size == value)
                 return;
-            super._setSize(value);
+            super._setFontSize(value);
             this.heightInLinesChanged = true;
             this.widthInCharsChanged = true;
         }
-        /**
-         * @inheritDoc
-         */
-        public get size() {
-            return this._size;
-        }
 		
-		/**
-		 * @inheritDoc
-		 */
-        public set lineSpacing(value:number){
-			if(this.lineSpacing==value)
-				return;
+
+        public _setLineSpacing(value: number) {
+            if (this._lineSpacing == value)
+                return;
             super._setLineSpacing(value);
-			this.heightInLinesChanged = true;
-		}
+            this.heightInLinesChanged = true;
+        }
 		
 		private _heightInLines:number = NaN;
 		
@@ -256,14 +248,7 @@ module egret.gui {
 		public set horizontalScrollPosition(value:number){
 			if(this._horizontalScrollPosition == value)
 				return;
-			value = Math.round(value);
-			var oldValue:number = this._horizontalScrollPosition;
 			this._horizontalScrollPosition = value;
-			if (this._clipAndEnableScrolling){
-				if(this._textField)
-					this._textField.scrollH = value;
-				this.dispatchPropertyChangeEvent("horizontalScrollPosition",oldValue,value);
-			}
 		}
 		
 		private _verticalScrollPosition:number = 0
@@ -278,13 +263,7 @@ module egret.gui {
 			if(this._verticalScrollPosition == value)
 				return;
 			value = Math.round(value);
-			var oldValue:number = this._verticalScrollPosition;
 			this._verticalScrollPosition = value;
-			if (this._clipAndEnableScrolling){
-				if (this._textField)
-					this._textField.scrollV = this.getScrollVByVertitcalPos(value);
-				this.dispatchPropertyChangeEvent("verticalScrollPosition",oldValue,value);
-			}
 		}
 		
 		/**
@@ -402,18 +381,6 @@ module egret.gui {
 			if(this._clipAndEnableScrolling == value)
 				return;
 			this._clipAndEnableScrolling = value;
-			
-			if(this._textField){
-				if(value){
-					this._textField.scrollH = this._horizontalScrollPosition;
-					this._textField.scrollV = this.getScrollVByVertitcalPos(this._verticalScrollPosition);
-					this.updateContentSize();
-				}
-				else{
-					this._textField.scrollH = 0;
-					this._textField.scrollV = 1;
-				}
-			}
 		}
 		
 		
@@ -497,14 +464,8 @@ module egret.gui {
 		 */
 		public updateDisplayList(unscaledWidth:number, unscaledHeight:number):void{
 			this.isValidating = true;
-			var oldScrollH:number = this._textField.scrollH;
-			var oldScrollV:number = this._textField.scrollV;
 			super.updateDisplayList(unscaledWidth,unscaledHeight);
-			
 			this.updateContentSize();
-			
-			this._textField.scrollH = oldScrollH;
-			this._textField.scrollV = oldScrollV;
 			this.isValidating = false;
 		}
 		
@@ -613,10 +574,6 @@ module egret.gui {
             this._textField.addEventListener(TextEvent.TEXT_INPUT,
 				this.textField_textInputHandler,
 				this);
-			if(this._clipAndEnableScrolling){
-				this._textField.scrollH = this._horizontalScrollPosition;
-				this._textField.scrollV = this.getScrollVByVertitcalPos(this._verticalScrollPosition);
-			}
 		}
 		
 		private textField_changeHandler(event:Event):void{
@@ -634,12 +591,8 @@ module egret.gui {
 		/**
 		 *  @private
 		 */
-		private textField_scrollHandler(event:Event):void{
-			if(this.isValidating)
-				return;
-			this.horizontalScrollPosition = this._textField.scrollH;
-			this.verticalScrollPosition = this.getVerticalPosByScrollV(this._textField.scrollV);
-			
+        private textField_scrollHandler(event: Event): void{
+
 		}
 		
 		/**

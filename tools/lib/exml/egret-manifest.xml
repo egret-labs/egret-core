@@ -51,5 +51,5 @@
   <component id="VSlider" super="egret.gui.SliderBase" show="true" module="egret.gui"/>
   <component id="VerticalLayout" super="egret.gui.LayoutBase" show="false" module="egret.gui"/>
   <component id="ViewStack" super="egret.gui.Group" show="true" module="egret.gui"/>
-  <component id="EditableText" super="egret.gui.EditableText" show="true" module="egret.gui"/>
+  <component id="EditableText" super="egret.gui.TextBase" show="true" module="egret.gui"/>
 </componentPackage>

@@ -86,15 +86,19 @@ module egret.gui {
 		 * 字号大小,默认值30 。
 		 * @member egret.gui.TextBase#size
 		 */
-		public get size():number{
-			return this._size;
-		}
-		
-		public set size(value:number){
-            this._setSize(value);
+        public get size(): number{
+            return this._getFontSize();
         }
 
-        public _setSize(value: number) {
+        public _getFontSize():number {
+            return this._size;
+        }
+		
+		public set size(value:number){
+            this._setFontSize(value);
+        }
+
+        public _setFontSize(value: number) {
             if (this._size == value)
                 return;
             this._size = value;
@@ -207,12 +211,16 @@ module egret.gui {
 		}
 
         private lineSpacingChanged:boolean;
-        private _lineSpacing:number = 0;
+        public _lineSpacing:number = 0;
         /**
          * 行间距
 		 * @member egret.gui.TextBase#lineSpacing
          */
         public get lineSpacing():number{
+            return this._getLineSpacing();
+        }
+
+        public _getLineSpacing() {
             return this._lineSpacing;
         }
 
