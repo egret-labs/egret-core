@@ -749,6 +749,8 @@ module egret.gui {
 				
 				if (this.parent&&UIGlobals._layoutManager)
 					UIGlobals._layoutManager.invalidateDisplayList(this);
+
+                this._setSizeDirty();
 			}
 		}
 		
