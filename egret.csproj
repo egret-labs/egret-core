@@ -161,10 +161,8 @@
     <TypeScriptCompile Include="src\egret\events\Event.ts" />
     <TypeScriptCompile Include="src\egret\events\EventDispatcher.ts" />
     <TypeScriptCompile Include="src\egret\events\EventPhase.ts" />
-    <TypeScriptCompile Include="src\egret\events\FocusEvent.ts" />
     <TypeScriptCompile Include="src\egret\events\IEventDispatcher.ts" />
     <TypeScriptCompile Include="src\egret\events\IOErrorEvent.ts" />
-    <TypeScriptCompile Include="src\egret\events\TextEvent.ts" />
     <TypeScriptCompile Include="src\egret\events\TimerEvent.ts" />
     <TypeScriptCompile Include="src\egret\events\TouchEvent.ts" />
     <TypeScriptCompile Include="src\egret\geom\Matrix.ts" />

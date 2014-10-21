@@ -5,8 +5,8 @@ module egret.gui {
 		public constructor(){
 			super();
 			this.focusEnabled = true;
-			this.addEventListener(FocusEvent.FOCUS_IN, this.focusInHandler, this);
-			this.addEventListener(FocusEvent.FOCUS_OUT, this.focusOutHandler, this);
+			this.addEventListener("focus", this.focusInHandler, this);
+			this.addEventListener("blur", this.focusOutHandler, this);
         }
         public _focusEnabled: boolean = true;
         public get focusEnabled() {
@@ -19,7 +19,7 @@ module egret.gui {
 		/**
 		 * 焦点移入
 		 */		
-		private focusInHandler(event:FocusEvent):void{
+		private focusInHandler(event:Event):void{
 			if (event.target == this){
 				this.setFocus();
 				return;
@@ -29,7 +29,7 @@ module egret.gui {
 		/**
 		 * 焦点移出
 		 */		
-		private focusOutHandler(event:FocusEvent):void{
+		private focusOutHandler(event:Event):void{
 			if (event.target == this)
 				return;
 			this.invalidateSkinState();
@@ -397,7 +397,7 @@ module egret.gui {
 			if(instance == this.textDisplay){
 				this.textDisplayAdded();            
 				
-				this.textDisplay.addEventListener(TextEvent.TEXT_INPUT,
+				this.textDisplay.addEventListener("input",
 					this.textDisplay_changingHandler,
 					this);
 				
@@ -420,7 +420,7 @@ module egret.gui {
 			if(instance == this.textDisplay){
 				this.textDisplayRemoved();      
 				
-				this.textDisplay.removeEventListener(TextEvent.TEXT_INPUT,
+				this.textDisplay.removeEventListener("input",
 					this.textDisplay_changingHandler,
 					this);
 				
@@ -589,12 +589,14 @@ module egret.gui {
 		/**
 		 * textDisplay文字即将改变事件
 		 */		
-		private textDisplay_changingHandler(event:TextEvent):void{
-			
-			var newEvent:Event = event.clone();
-			this.dispatchEvent(newEvent);
-			if(newEvent.isDefaultPrevented())
-				event.preventDefault();
+		private textDisplay_changingHandler(event:Event):void{
+            var newEvent: Event =
+                new Event(event.type, false, true);
+            newEvent.data = event.data;
+            this.dispatchEvent(newEvent);
+
+            if (newEvent.isDefaultPrevented())
+                event.preventDefault();
         }
 	}
 }
