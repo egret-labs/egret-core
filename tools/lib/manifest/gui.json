@@ -45,6 +45,7 @@
         "states/State.ts",
         "utils/LayoutUtil.ts",
         "utils/getScale9Grid.ts",
+        "utils/setProperties.ts",
         "components/IItemRenderer.ts",
         "components/IItemRendererOwner.ts",
         "components/ITreeItemRenderer.ts",

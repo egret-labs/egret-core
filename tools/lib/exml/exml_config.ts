@@ -185,7 +185,7 @@ class EXMLConfig{
         if(!component)
             return "";
         return component.defaultProp;
-    } 
+    }
 
     private findDefaultProp(className:string):Component{
         var classData:any = properties[className];

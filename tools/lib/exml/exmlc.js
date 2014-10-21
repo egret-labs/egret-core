@@ -208,7 +208,7 @@ var EXMLCompiler = (function () {
             globals.exit(2017, this.exmlPath, this.toXMLString(this.currentXML));
         }
         this.addIds(this.currentXML.children);
-
+        this.currentClass.addVariable(new CpVariable("__s", Modifiers.M_PRIVATE, "Function", "egret.gui.setProperties"));
         this.createConstructFunc();
     };
 
@@ -432,6 +432,8 @@ var EXMLCompiler = (function () {
         }
         keyList.sort(); //排序一下防止出现随机顺序
         var length = keyList.length;
+        var values = [];
+        var keys = [];
         for (var i = 0; i < length; i++) {
             key = keyList[i];
             value = node[key];
@@ -459,7 +461,16 @@ var EXMLCompiler = (function () {
                 this.delayAssignmentDic[value] = delayCb;
                 value = "this." + value;
             }
-            cb.addAssignment(varName, value, key);
+            keys.push(key);
+            values.push(value);
+        }
+        var length = keys.length;
+        if (length > 1) {
+            var allKey = "[\"" + keys.join("\",\"") + "\"]";
+            var allValue = "[" + values.join(",") + "]";
+            cb.addCodeLine("this.__s(" + varName + "," + allKey + "," + allValue + ")");
+        } else if (length == 1) {
+            cb.addAssignment(varName, values[0], keys[0]);
         }
     };
 
@@ -651,12 +662,13 @@ var EXMLCompiler = (function () {
             }
             value = "egret.gui.getScale9Grid(\"" + value + "\")";
         } else {
+            var orgValue = value;
             switch (type) {
                 case "egret.gui.IFactory":
-                    value = "new egret.gui.ClassFactory(" + value + ")";
+                    value = "new egret.gui.ClassFactory(" + orgValue + ")";
                 case "Class":
-                    if (!this.exmlConfig.checkClassName(value)) {
-                        globals.exit(2015, this.exmlPath, value, this.toXMLString(node));
+                    if (!this.exmlConfig.checkClassName(orgValue)) {
+                        globals.exit(2015, this.exmlPath, orgValue, this.toXMLString(node));
                     }
                     if (value == this.currentClassName) {
                         globals.exit(2014, this.exmlPath, this.toXMLString(node));
