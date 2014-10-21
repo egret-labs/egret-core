@@ -16,8 +16,6 @@
         "egret/events/EventPhase.ts",
         "egret/events/IEventDispatcher.ts",
         "egret/events/EventDispatcher.ts",
-        "egret/events/FocusEvent.ts",
-        "egret/events/TextEvent.ts",
         "egret/context/MainContext.ts",
         "egret/utils/Profiler.ts",
         "egret/context/Ticker.ts",
