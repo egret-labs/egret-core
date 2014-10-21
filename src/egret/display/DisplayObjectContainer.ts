@@ -381,9 +381,9 @@ module egret {
                 return null;
             }
             if (this._scrollRect) {
-                if (x < 0 || y < 0
-                    || x > this._scrollRect.width
-                    || y > this._scrollRect.height) {
+                if (x < this._scrollRect.x || y < this._scrollRect.y
+                    || x > this._scrollRect.x + this._scrollRect.width
+                    || y > this._scrollRect.y + this._scrollRect.height) {
                     return null;
                 }
             }
@@ -400,7 +400,12 @@ module egret {
             var touchChildren = this._touchChildren;//这里不用考虑父级的touchChildren，从父级调用下来过程中已经判断过了。
             for (var i = l - 1; i >= 0; i--) {
                 var child = children[i];
-                var mtx = child._getMatrix().invert();
+                var mtx = child._getMatrix();
+                var scrollRect = child._scrollRect;
+                if (scrollRect) {
+                    mtx.append(1, 0, 0, 1, -scrollRect.x, -scrollRect.y);
+                }
+                mtx.invert();
                 var point = egret.Matrix.transformCoords(mtx, x, y);
                 var childHitTestResult = child.hitTest(point.x, point.y, true);
                 if (childHitTestResult) {
