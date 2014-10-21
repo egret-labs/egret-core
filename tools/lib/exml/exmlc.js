@@ -204,6 +204,9 @@ var EXMLCompiler = (function () {
             globals.warn(2101, this.exmlPath, list.join("\n"));
         }
 
+        if (!this.currentXML.namespace) {
+            globals.exit(2017, this.exmlPath, this.toXMLString(this.currentXML));
+        }
         this.addIds(this.currentXML.children);
 
         this.createConstructFunc();
@@ -244,6 +247,9 @@ var EXMLCompiler = (function () {
         var length = items.length;
         for (var i = 0; i < length; i++) {
             var node = items[i];
+            if (!node.namespace) {
+                globals.exit(2017, this.exmlPath, this.toXMLString(node));
+            }
             this.addIds(node.children);
             if (node.namespace == EXMLCompiler.W) {
             } else if (node["$id"]) {

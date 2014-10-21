@@ -48,6 +48,7 @@ exports.error_code = {
     2014:"{0}: error 不允许将皮肤类自身赋值给节点属性\n{1}",
     2015:"{0}: error 节点引用的类定义:{1}不存在\n{2}",
     2016:"{0}: error 节点上'scale9Grid'属性值的格式错误:{1}",
+    2017:"{0}: error 节点上缺少命名空间前缀:{1}",
     2101:"{0}: warning 在w:Declarations内的子节点，不允许使用includeIn和excludeFrom属性\n{1}",
     2102:"{0}: warning 在属性节点上找不到任何子节点\n{1}",
     2103:"{0}: warning 节点上的同一个属性'{1}'被多次赋值\n{2}"
