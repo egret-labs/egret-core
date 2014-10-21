@@ -652,6 +652,8 @@ var EXMLCompiler = (function () {
             value = "egret.gui.getScale9Grid(\"" + value + "\")";
         } else {
             switch (type) {
+                case "egret.gui.IFactory":
+                    value = "new egret.gui.ClassFactory(" + value + ")";
                 case "Class":
                     if (!this.exmlConfig.checkClassName(value)) {
                         globals.exit(2015, this.exmlPath, value, this.toXMLString(node));
@@ -659,6 +661,7 @@ var EXMLCompiler = (function () {
                     if (value == this.currentClassName) {
                         globals.exit(2014, this.exmlPath, this.toXMLString(node));
                     }
+                    break;
                 case "number":
                     if (value.indexOf("#") == 0)
                         value = "0x" + value.substring(1);
@@ -668,9 +671,7 @@ var EXMLCompiler = (function () {
                 case "boolean":
                     value = (value == "false" || !value) ? "false" : "true";
                     break;
-                case "egret.gui.IFactory":
-                    value = "new egret.gui.ClassFactory(" + value + ")";
-                    break;
+
                 case "string":
                 case "any":
                     value = this.formatString(stringValue);

@@ -715,6 +715,8 @@ class EXMLCompiler{
         }
         else{
             switch(type){
+                case "egret.gui.IFactory":
+                    value = "new egret.gui.ClassFactory("+value+")";
                 case "Class":
                     if(!this.exmlConfig.checkClassName(value)){
                         globals.exit(2015, this.exmlPath, value,this.toXMLString(node));
@@ -722,6 +724,7 @@ class EXMLCompiler{
                     if(value==this.currentClassName) {//防止无限循环。
                         globals.exit(2014, this.exmlPath, this.toXMLString(node));
                     }
+                    break;
                 case "number":
                     if(value.indexOf("#")==0)
                         value = "0x"+value.substring(1);
@@ -731,9 +734,7 @@ class EXMLCompiler{
                 case "boolean":
                     value = (value=="false"||!value)?"false":"true";
                     break;
-                case "egret.gui.IFactory":
-                    value = "new egret.gui.ClassFactory("+value+")";
-                    break;
+
                 case "string":
                 case "any":
                     value = this.formatString(stringValue);
