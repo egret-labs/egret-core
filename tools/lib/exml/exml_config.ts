@@ -185,7 +185,7 @@ class EXMLConfig{
         if(!component)
             return "";
         return component.defaultProp;
-    }
+    } 
 
     private findDefaultProp(className:string):Component{
         var classData:any = properties[className];
@@ -503,7 +503,7 @@ class EXMLConfig{
      * 检查classNameA是否是classNameB的子类或classNameA实现了接口classNameB
      */
     public isInstanceOf(classNameA:string,classNameB:string):boolean{
-        if(classNameB=="any"){
+        if(classNameB=="any"||classNameB=="Class"){
             return true;
         }
         if(classNameA==classNameB){
