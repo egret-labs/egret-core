@@ -82,10 +82,6 @@
 	{
 		"implements":["egret.IHashObject"]
 	},
-	"egret.InputController":
-	{
-		"super":"egret.HashObject"
-	},
 	"egret.Matrix":
 	{
 		"a":"any",
@@ -151,10 +147,6 @@
 	{
 		"super":"egret.DisplayObject"
 	},
-	"egret.ShowAll":
-	{
-		"super":"egret.ContentStrategy"
-	},
 	"egret.Sound":
 	{
 		"path":"string",
@@ -182,8 +174,6 @@
 		"maxChars":"any",
 		"maxWidth":"any",
 		"multiline":"boolean",
-		"scrollH":"number",
-		"scrollV":"number",
 		"size":"number",
 		"stroke":"number",
 		"strokeColor":"number",
@@ -350,6 +340,8 @@
 		"paddingLeft":"number",
 		"paddingRight":"number",
 		"paddingTop":"number",
+		"stroke":"number",
+		"strokeColor":"number",
 		"super":"egret.gui.TextBase"
 	},
 	"egret.gui.LayoutBase":
