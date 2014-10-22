@@ -91,6 +91,7 @@ module egret {
                 canvas.height = egret.MainContext.instance.stage.stageHeight; //stageH
                 canvas.style.width = container.style.width;
                 canvas.style.height = container.style.height;
+//                canvas.style.position = "absolute";
                 container.appendChild(canvas);
             }
             return canvas;
@@ -106,8 +107,8 @@ module egret {
         }
 
         public clearRect(x:number, y:number, w:number, h:number) {
-            this.canvasContext.fillRect(x, y, w, h);
-//            this.canvasContext.clearRect(x, y, w, h);
+//            this.canvasContext.fillRect(x, y, w, h);
+            this.canvasContext.clearRect(x, y, w, h);
         }
 
         public drawImage(texture:Texture, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight) {

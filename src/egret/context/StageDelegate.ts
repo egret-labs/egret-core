@@ -246,10 +246,9 @@ module egret {
         public _apply(delegate:egret.StageDelegate, designedResolutionWidth:number, designedResolutionHeight:number):void {
         }
 
-        public setEgretSize(w:number, h:number, styleW:number, styleH:number, top:number = 0):void {
+        public setEgretSize(w:number, h:number, styleW:number, styleH:number, left:number = 0, top:number = 0):void {
             egret.StageDelegate.getInstance()._stageWidth = w;
             egret.StageDelegate.getInstance()._stageHeight = h;
-
             var container:HTMLElement = document.getElementById(StageDelegate.canvas_div_name);
             container.style.width = styleW + "px";
             container.style.height = styleH + "px";
@@ -347,7 +346,9 @@ module egret {
                 scale2 = Math.min(1, designH / this.minHeight);
             }
 
-            this.setEgretSize(designW, designH / scale2, viewPortWidth * scale2, viewPortHeight);
+            var offsetX:number = viewPortWidth * ( 1 - scale2 ) / 2;
+
+            this.setEgretSize(designW, designH / scale2, viewPortWidth * scale2, viewPortHeight, offsetX);
 
             delegate._scaleX = scale * scale2;
             delegate._scaleY = scale * scale2;
@@ -408,7 +409,9 @@ module egret {
          * @param designedResolutionHeight {number}
          */
         public _apply(delegate:StageDelegate, designedResolutionWidth:number, designedResolutionHeight:number):void {
-            this.setEgretSize(designedResolutionWidth, designedResolutionHeight, designedResolutionWidth, designedResolutionHeight);
+            var offsetX:number = Math.floor((designedResolutionWidth - designedResolutionWidth) / 2);
+
+            this.setEgretSize(designedResolutionWidth, designedResolutionHeight, designedResolutionWidth, designedResolutionHeight, offsetX);
 
             delegate._scaleX = 1;
             delegate._scaleY = 1;
@@ -429,8 +432,11 @@ module egret {
          * @param designedResolutionHeight {number}
          */
         public _apply(delegate:StageDelegate, designedResolutionWidth:number, designedResolutionHeight:number):void {
-            var viewPortWidth:number = this._getClientWidth();//分辨率宽
-            var viewPortHeight:number = this._getClientHeight();//分辨率高
+            var clientWidth:number = this._getClientWidth();//分辨率宽
+            var clientHeight:number = this._getClientHeight();//分辨率宽
+
+            var viewPortWidth:number = clientWidth;
+            var viewPortHeight:number = clientHeight;
 
             var scale:number = ( viewPortWidth / designedResolutionWidth < viewPortHeight / designedResolutionHeight) ? viewPortWidth / designedResolutionWidth : viewPortHeight / designedResolutionHeight;
             var designW:number = designedResolutionWidth;
@@ -441,8 +447,9 @@ module egret {
 
             var scale2:number = 1;
 
-            delegate._offSetY = Math.floor((this._getClientHeight() - viewPortHeight) / 2);
-            this.setEgretSize(designW, designH / scale2, viewPortWidth * scale2, viewPortHeight, delegate._offSetY);
+            var offsetX:number = Math.floor((clientWidth - viewPortWidth) / 2);
+            delegate._offSetY = Math.floor((clientHeight - viewPortHeight) / 2);
+            this.setEgretSize(designW, designH / scale2, viewPortWidth * scale2, viewPortHeight, offsetX, delegate._offSetY);
 
             delegate._scaleX = scale * scale2;
             delegate._scaleY = scale * scale2;

@@ -468,12 +468,14 @@ function createManifest(currDir){
         }
     }
 
+    var str = JSON.stringify(currVersion);
+    str = str.replace(/\\\\/g,"/");
     if(oldVersion) {
-        file.save(versionPath, JSON.stringify(currVersion));
+        file.save(versionPath, str);
     }
     else {
-        file.save(basePath, JSON.stringify(currVersion));
-        file.save(versionPath, JSON.stringify(currVersion));
+        file.save(basePath, str);
+        file.save(versionPath, str);
     }
 }
 

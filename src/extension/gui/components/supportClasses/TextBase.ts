@@ -80,25 +80,53 @@ module egret.gui {
 			this.invalidateDisplayList();
 		}
 
-        private sizeChanged:boolean;
-		private _size:number = 30;
+        public _sizeChanged:boolean;
+		public _size:number = 30;
 		/**
 		 * 字号大小,默认值30 。
 		 * @member egret.gui.TextBase#size
 		 */
-		public get size():number{
-			return this._size;
-		}
+        public get size(): number{
+            return this._getFontSize();
+        }
+
+        public _getFontSize():number {
+            return this._size;
+        }
 		
 		public set size(value:number){
-			if(this._size==value)
-				return;
-			this._size = value;
-			this.sizeChanged = true;
-			this.invalidateProperties();
-			this.invalidateSize();
-			this.invalidateDisplayList();
-		}
+            this._setFontSize(value);
+        }
+
+        public _setFontSize(value: number) {
+            if (this._size == value)
+                return;
+            this._size = value;
+            this._sizeChanged = true;
+            this.invalidateProperties();
+            this.invalidateSize();
+            this.invalidateDisplayList();
+        }
+        public _focusEnabled = true;
+
+        public set focusEnabled(value: boolean) {
+            this._focusEnabled = value;
+        }
+
+        public get focusEnabled() {
+            return this._focusEnabled;
+        }
+        /**
+         * @inheritDoc
+         */
+        public setFocus(): void {
+            if (this._focusEnabled == false)
+                return;
+            if (this._textField)
+                this._textField.setFocus();
+            //else
+            //	super.setFocus();
+        }
 
         private boldChanged:boolean;
 		private _bold:boolean;
@@ -183,17 +211,25 @@ module egret.gui {
 		}
 
         private lineSpacingChanged:boolean;
-        private _lineSpacing:number = 0;
+        public _lineSpacing:number = 0;
         /**
          * 行间距
 		 * @member egret.gui.TextBase#lineSpacing
          */
         public get lineSpacing():number{
+            return this._getLineSpacing();
+        }
+
+        public _getLineSpacing() {
             return this._lineSpacing;
         }
 
-        public set lineSpacing(value:number){
-            if(this._lineSpacing==value)
+        public set lineSpacing(value: number) {
+            this._setLineSpacing(value);
+        }
+
+        public _setLineSpacing(value: number) {
+            if (this._lineSpacing == value)
                 return;
             this._lineSpacing = value;
             this.lineSpacingChanged = true;
@@ -228,7 +264,9 @@ module egret.gui {
 		/**
 		 * @member egret.gui.TextBase#text
 		 */
-        public get text():string{
+        public get text(): string{
+            if (this._textField)
+                return this._textField.text;
 			return this._text;
 		}
 		
@@ -247,7 +285,6 @@ module egret.gui {
 		 */
 		public createChildren():void{
 			super.createChildren();
-			
 			if (!this._textField){
 				this.checkTextField();
 			}
@@ -267,9 +304,9 @@ module egret.gui {
 				this._textField.fontFamily = this._fontFamily;
 				this.fontFamilyChanged = false;
 			}
-			if (this.sizeChanged){
+			if (this._sizeChanged){
 				this._textField.size = this._size;
-				this.sizeChanged = false;
+				this._sizeChanged = false;
 			}
 			if (this.boldChanged){
 				this._textField.bold = this._bold;
@@ -307,14 +344,14 @@ module egret.gui {
 		 */		
 		private checkTextField():void{
 			if(!this._textField){
-                this.createTextField();
+                this._createTextField();
 				this._textField.text = this._text;
 				this._textChanged = true;
 				this.invalidateProperties();
 			}
 		}
 
-        private createTextField():void
+        public _createTextField():void
         {
             this._textField = new TextField;
             this._textField.fontFamily = this._fontFamily;
@@ -355,6 +392,13 @@ module egret.gui {
 			super.updateDisplayList(unscaledWidth,unscaledHeight);
 			this._textField.width = unscaledWidth;
 			this._textField.height = unscaledHeight;
-		}
+        }
+
+
+        public dispatchPropertyChangeEvent(propertyName: string, oldValue: any, value: any) {
+            if (this.hasEventListener("propertyChange"))
+                PropertyChangeEvent.dispatchPropertyChangeEvent(this,
+                    PropertyChangeEventKind.UPDATE, propertyName, oldValue, value, this);
+        }
 	}
 }

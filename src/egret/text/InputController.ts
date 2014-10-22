@@ -52,6 +52,10 @@ module egret {
             egret.MainContext.instance.stage.removeEventListener(egret.TouchEvent.TOUCH_BEGIN, this.onStageDownHandler, this);
         }
 
+        public _setText(value:string) {
+            this.stageText._setText(value);
+        }
+
         private onFocusHandler(event):void {
             this.hideText();
         }
@@ -89,7 +93,7 @@ module egret {
 
         private hideText():void {
             if (!this._isFocus) {
-                this._text._setBaseText("");
+                this._text.visible = false;
                 this._isFocus = true;
             }
         }
@@ -99,6 +103,7 @@ module egret {
         }
 
         private resetText():void {
+            this._text.visible = true;
             this._text._setBaseText(this.stageText._getText());
         }
 

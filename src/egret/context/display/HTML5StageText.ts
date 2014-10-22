@@ -159,10 +159,12 @@ module egret {
         }
 
         public _hide():void {
-            this._canUse = false;
+            if(this._canUse) {
+                this._canUse = false;
 
-            this._closeInput();
-            this.closeKeyboard();
+                this._closeInput();
+                this.closeKeyboard();
+            }
         }
 
         private _openInput():void {
@@ -197,6 +199,7 @@ module egret {
             if (!stageDelegateDiv) {
                 stageDelegateDiv = egret.Browser.getInstance().$new("div");
                 stageDelegateDiv.id = "StageDelegateDiv";
+//                stageDelegateDiv.style.position = "absolute";
                 var container = document.getElementById(egret.StageDelegate.canvas_div_name);
                 container.appendChild(stageDelegateDiv);
                 stageDelegateDiv.transforms();
@@ -327,11 +330,11 @@ module egret {
          * @param value {string}
          */
         public _setText(value:string):void {
-//            this._text = value;
+            this._text = value;
             this._defaultText = value;
-//            if (this._isShow) {
-//                this.setElementValue(value);
-//            }
+            if (this._isShow) {
+                this.setElementValue(value);
+            }
         }
 
         /**

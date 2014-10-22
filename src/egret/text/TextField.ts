@@ -106,7 +106,7 @@ module egret {
             }
         }
 
-        public _setTextDirty():void {
+        public _setTextDirty(): void {
             this._setSizeDirty();
         }
 
@@ -148,6 +148,9 @@ module egret {
 
         public _setText(value:string):void {
             this._setBaseText(value);
+            if (this._inputUtils) {
+                this._inputUtils._setText(this._text);
+            }
         }
 
         /**
@@ -382,6 +385,23 @@ module egret {
         }
 
         public maxWidth;
+        public maxChars;
+        public get maxScrollV():number {
+            return this._numLines;
+        }
+
+        public get selectionBeginIndex():number {
+            return 0;
+        }
+        public get selectionEndIndex():number {
+            return 0;
+        }
+        public get caretIndex():number {
+            return 0;
+        }
+        public _setSelection(beginIndex:number, endIndex:number) {
+
+        }
 
         /**
          * 行间距
@@ -404,6 +424,10 @@ module egret {
                 this._setTextDirty();
                 this._lineSpacing = value;
             }
+        }
+
+        public _getLineHeight(): number {
+            return this._lineSpacing + this._size;
         }
 
         /**
@@ -435,6 +459,11 @@ module egret {
             return this._multiline;
         }
 
+        public setFocus() {
+            //todo:
+            Logger.warning("TextField.setFocus 没有实现");
+        }
+
         constructor() {
             super();
         }
@@ -462,6 +491,7 @@ module egret {
         public _updateTransform():void {
             if (this._type == TextFieldType.INPUT) {
                 if (this._normalDirty) {//本身有变化
+                    this._clearDirty();
                     this._inputUtils._updateProperties();
                 }
                 else {//兼容可能父层有变化

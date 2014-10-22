@@ -162,4 +162,15 @@ declare module egret_native {
     function EGT_keyboardDidShow():void;
 
     function EGT_getTextEditerContentText():string;
+
+    module EGTView {
+
+        function getFrameWidth():number;
+
+        function getFrameHeight():number;
+
+        function setVisibleRect(x:number, y:number, w:number, h:number):number;
+
+        function setDesignSize(w:number, h:number):number;
+    }
 }

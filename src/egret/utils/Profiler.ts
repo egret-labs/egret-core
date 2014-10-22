@@ -31,7 +31,7 @@ module egret {
 	 * @class egret.Profiler
 	 * @classdesc
      * Profiler是egret的性能检测分析类
-     * @todo GitHub文档，如何使用Profiler
+     * 请使用 egret.Profiler.getInstance().run();打开性能分析显示。
      */
     export class Profiler {
 
@@ -46,6 +46,8 @@ module egret {
                 Profiler.instance = new Profiler();
             }
             return Profiler.instance;
+
+
         }
 
 

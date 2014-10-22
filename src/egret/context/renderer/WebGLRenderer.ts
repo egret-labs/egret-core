@@ -95,6 +95,7 @@ module egret {
                 canvas.height = egret.MainContext.instance.stage.stageHeight; //stageH
                 canvas.style.width = container.style.width;
                 canvas.style.height = container.style.height;
+//                canvas.style.position = "absolute";
                 container.appendChild(canvas);
             }
             return canvas;

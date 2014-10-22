@@ -620,7 +620,12 @@ module egret {
             var parent = o._parent;
 
             worldTransform.identityMatrix(parent._worldTransform);
-            this._getMatrix(worldTransform)
+            this._getMatrix(worldTransform);
+
+            var scrollRect = this._scrollRect;
+            if (scrollRect) {
+                worldTransform.append(1, 0, 0, 1, -scrollRect.x, -scrollRect.y);
+            }
 
             if (false) {//this._texture_to_render){ 暂时去掉worldBounds计算
                 var bounds:egret.Rectangle = DisplayObject.getTransformBounds(o._getSize(Rectangle.identity), o._worldTransform);
@@ -756,8 +761,10 @@ module egret {
             if (0 <= x && x < bound.width && 0 <= y && y < bound.height) {
                 if (this.mask || this._scrollRect) {
                     if (this._scrollRect
-                        && x < this._scrollRect.width
-                        && y < this._scrollRect.height) {
+                        && x > this._scrollRect.x
+                        && x > this._scrollRect.y
+                        && x < this._scrollRect.x + this._scrollRect.width
+                        && y < this._scrollRect.y + this._scrollRect.height) {
                         return this;
                     }
                     else if (this.mask
@@ -827,11 +834,6 @@ module egret {
             else {
                 parentMatrix.appendTransform(this._x, this._y, this._scaleX, this._scaleY, this._rotation,
                     this._skewX, this._skewY, anchorX, anchorY);
-            }
-
-            var scrollRect = this._scrollRect;
-            if (scrollRect) {
-                parentMatrix.append(1, 0, 0, 1, scrollRect.x, scrollRect.y);
             }
 
             return parentMatrix;
