@@ -207,3 +207,29 @@ module egret_native_localStorage {
 }
 
 egret_native_localStorage.init();
+
+egret.ContainerStrategy.prototype._setupContainer = function (){
+
+};
+
+egret.ContentStrategy.prototype._getClientWidth = function (){
+    var result = egret_native.EGTView.getFrameWidth();
+//    console.log("获取屏幕宽度：" + result);
+    return result;
+};
+
+egret.ContentStrategy.prototype._getClientHeight = function (){
+    var result = egret_native.EGTView.getFrameHeight();
+//    console.log("获取屏幕高度：" + result);
+    return result;
+};
+
+egret.ContentStrategy.prototype.setEgretSize = function (w:number, h:number, styleW:number, styleH:number, left:number = 0, top:number = 0){
+    egret.StageDelegate.getInstance()._stageWidth = w;
+    egret.StageDelegate.getInstance()._stageHeight = h;
+
+    egret_native.EGTView.setDesignSize(w, h);
+
+//    console.log("setVisibleRect:" + left + "|" + top + "|" + styleW + "|" + styleH);
+    egret_native.EGTView.setVisibleRect(left, top, styleW, styleH);
+};
