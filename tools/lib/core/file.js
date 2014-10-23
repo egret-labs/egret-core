@@ -70,6 +70,7 @@ function read(path) {
     }
     try{
         text = fs.readFileSync(path,charset);
+        text = text.replace(/^\uFEFF/, '');
     }
     catch (err0) {
         return "";
