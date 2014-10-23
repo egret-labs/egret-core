@@ -186,7 +186,7 @@ module egret {
         private initBlendMode():void {
             this.blendModes = {};
             this.blendModes[BlendMode.NORMAL] = [1, 771];
-            this.blendModes[BlendMode.ADD] = [770, 772];
+            this.blendModes[BlendMode.ADD] = [770, 1];
         }
     }
 }
