@@ -82,6 +82,10 @@
 	{
 		"implements":["egret.IHashObject"]
 	},
+	"egret.InputController":
+	{
+		"super":"egret.HashObject"
+	},
 	"egret.Matrix":
 	{
 		"a":"any",
@@ -308,6 +312,10 @@
 		"super":"egret.gui.UIComponent",
 		"verticalScrollPosition":"number"
 	},
+	"egret.gui.HScrollBar":
+	{
+		"super":"egret.gui.HSlider"
+	},
 	"egret.gui.HSlider":
 	{
 		"super":"egret.gui.SliderBase"
@@ -442,9 +450,11 @@
 	},
 	"egret.gui.Scroller":
 	{
+		"hBar":"egret.gui.HScrollBar",
 		"horizontalScrollPolicy":"string",
 		"implements":["egret.gui.IVisualElementContainer"],
 		"super":"egret.gui.UIComponent",
+		"vBar":"egret.gui.VScrollBar",
 		"verticalScrollPolicy":"string",
 		"viewport":"egret.gui.IViewport"
 	},
@@ -679,6 +689,10 @@
 		"top":"number",
 		"updateCompletePendingFlag":"boolean",
 		"verticalCenter":"number"
+	},
+	"egret.gui.VScrollBar":
+	{
+		"super":"egret.gui.VSlider"
 	},
 	"egret.gui.VSlider":
 	{

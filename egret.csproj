@@ -18,6 +18,7 @@
     <IISExpressUseClassicPipelineMode />
   </PropertyGroup>
   <ItemGroup>
+    <Content Include="bin\src\extension\gui\components\HScrollBar.js" />
     <Content Include="src\jslib\base64.js" />
     <Content Include="src\jslib\box2d.js" />
     <Content Include="src\jslib\DEBUG.js" />
@@ -227,6 +228,7 @@
     <TypeScriptCompile Include="src\extension\gui\components\RadioButton.ts" />
     <TypeScriptCompile Include="src\extension\gui\components\RadioButtonGroup.ts" />
     <TypeScriptCompile Include="src\extension\gui\components\Rect.ts" />
+    <TypeScriptCompile Include="src\extension\gui\components\HScrollBar.ts" />
     <TypeScriptCompile Include="src\extension\gui\components\Scroller.ts" />
     <TypeScriptCompile Include="src\extension\gui\components\Skin.ts" />
     <TypeScriptCompile Include="src\extension\gui\components\SkinnableComponent.ts" />
@@ -261,6 +263,7 @@
     <TypeScriptCompile Include="src\extension\gui\components\Tree.ts" />
     <TypeScriptCompile Include="src\extension\gui\components\UIAsset.ts" />
     <TypeScriptCompile Include="src\extension\gui\components\ViewStack.ts" />
+    <TypeScriptCompile Include="src\extension\gui\components\VScrollBar.ts" />
     <TypeScriptCompile Include="src\extension\gui\components\VSlider.ts" />
     <TypeScriptCompile Include="src\extension\gui\core\ClassFactory.ts" />
     <TypeScriptCompile Include="src\extension\gui\core\IAssetAdapter.ts" />
