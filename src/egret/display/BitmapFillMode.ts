@@ -44,7 +44,7 @@ module egret {
          * 位图填充拉伸以填充区域。
          * @constant {string} egret.BitmapFillMode.SCALE
          */
-        public static SCALE:string = "scale";
+        public static SCALE: string = "scale";   
 
     }
 }

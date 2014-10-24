@@ -511,6 +511,7 @@ module egret {
          */
         public _setWidth(value:number):void {
             this._setSizeDirty();
+            this._setCacheDirty();
             this._explicitWidth = value;
             this._hasWidthSet = NumberUtils.isNumber(value);
         }
@@ -530,6 +531,7 @@ module egret {
          */
         public _setHeight(value:number):void {
             this._setSizeDirty();
+            this._setCacheDirty();
             this._explicitHeight = value;
             this._hasHeightSet = NumberUtils.isNumber(value);
         }
@@ -578,6 +580,11 @@ module egret {
         private drawCacheTexture(renderContext:RendererContext):boolean {
             var display:egret.DisplayObject = this;
             if (display._cacheAsBitmap) {
+
+                if (this._cacheDirty || this.width != this.renderTexture._sourceWidth || this.height != this.renderTexture._sourceHeight) {
+                    this._makeBitmapCache();
+                    this._cacheDirty = false;
+                }
                 var renderTexture = display._texture_to_render;
                 var offsetX = renderTexture._offsetX;
                 var offsetY = renderTexture._offsetY;
@@ -1003,15 +1010,25 @@ module egret {
         public set cacheAsBitmap(bool:boolean) {
             this._cacheAsBitmap = bool;
             if (bool) {
-                if (!this.renderTexture) {
-                    this.renderTexture = new egret.RenderTexture();
-                }
-                this.renderTexture.drawToTexture(this);
-                this._texture_to_render = this.renderTexture;
+                this._makeBitmapCache();
             }
             else {
                 this._texture_to_render = null;
             }
+        }
+
+        private _makeBitmapCache() {
+            if (!this.renderTexture) {
+                this.renderTexture = new egret.RenderTexture();
+            }
+            this.renderTexture.drawToTexture(this);
+            this._texture_to_render = this.renderTexture;
+        }
+
+        private _cacheDirty: boolean = false;
+
+        private _setCacheDirty(dirty = true) {
+            this._cacheDirty = dirty;
         }
 
         public static getTransformBounds(bounds:egret.Rectangle, mtx:egret.Matrix):egret.Rectangle {
