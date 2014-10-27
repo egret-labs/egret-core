@@ -105,7 +105,7 @@ function onGet(request, response) {
     var pathname = url.parse(request.url).pathname;
 
 
-    if (pathname.indexOf(startCompileFlag) == pathname.length - startCompileFlag.length) {
+    if (pathname.indexOf(startCompileFlag) != -1 && pathname.indexOf(startCompileFlag) == pathname.length - startCompileFlag.length) {
 
         var param = require("../core/params_analyze.js");
         var egretPath = param.getEgretPath()
@@ -116,7 +116,7 @@ function onGet(request, response) {
     }
 
 
-    if (pathname.indexOf(autoCompilerFlag) == pathname.length - autoCompilerFlag.length) {
+    if (pathname.indexOf(autoCompilerFlag) != -1 && pathname.indexOf(autoCompilerFlag) == pathname.length - autoCompilerFlag.length) {
 
         if (egretBuildCommand) {
 
