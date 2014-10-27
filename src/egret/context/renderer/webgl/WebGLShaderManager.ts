@@ -108,8 +108,7 @@ module egret {
             "void main(void) {\n" +
             "   gl_Position = vec4( ((aVertexPosition + offsetVector) / projectionVector) + center , 0.0, 1.0);\n" +
             "   vTextureCoord = aTextureCoord;\n" +
-            "   vec3 color = mod(vec3(aColor.y/65536.0, aColor.y/256.0, aColor.y), 256.0) / 256.0;\n" +
-            "   vColor = vec4(color * aColor.x, aColor.x);\n" +
+            "   vColor = vec4(aColor.x, aColor.x, aColor.x, aColor.x);\n" +
             "}";
 
         private gl:any;

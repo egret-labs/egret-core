@@ -36,7 +36,7 @@ module egret {
         private gl:any;
         private size:number = 2000;
         private vertices:Float32Array;
-        private vertSize:number = 6;
+        private vertSize:number = 5;
         private indices:Uint16Array;
         private projectionX:number;
         private projectionY:number;
@@ -161,7 +161,7 @@ module egret {
         private initBlendMode():void {
             this.blendModesWebGL = {};
             this.blendModesWebGL[BlendMode.NORMAL] = [this.gl.ONE, this.gl.ONE_MINUS_SRC_ALPHA];
-            this.blendModesWebGL[BlendMode.ADD] = [this.gl.SRC_ALPHA, this.gl.DST_ALPHA];
+            this.blendModesWebGL[BlendMode.ADD] = [this.gl.SRC_ALPHA, this.gl.ONE];
         }
 
         private start():void {
@@ -216,6 +216,7 @@ module egret {
             if (this.currentBlendMode != blendMode) {
                 var blendModeWebGL = this.blendModesWebGL[blendMode];
                 if (blendModeWebGL) {
+                    this._draw();
                     this.gl.blendFunc(blendModeWebGL[0], blendModeWebGL[1]);
                     this.currentBlendMode = blendMode;
                 }
@@ -285,7 +286,6 @@ module egret {
             var vertices:Float32Array = this.vertices;
             var index:number = this.currentBatchSize * 4 * this.vertSize;
             var alpha:number = this.worldAlpha;
-            var tint:number = 0xFFFFFF;
 
             // xy
             vertices[index++] = tx;
@@ -293,9 +293,8 @@ module egret {
             // uv
             vertices[index++] = sourceX;
             vertices[index++] = sourceY;
-            // color
+            // alpha
             vertices[index++] = alpha;
-            vertices[index++] = tint;
 
             // xy
             vertices[index++] = a * w + tx;
@@ -303,9 +302,8 @@ module egret {
             // uv
             vertices[index++] = sourceWidth + sourceX;
             vertices[index++] = sourceY;
-            // color
+            // alpha
             vertices[index++] = alpha;
-            vertices[index++] = tint;
 
             // xy
             vertices[index++] = a * w + c * h + tx;
@@ -313,9 +311,8 @@ module egret {
             // uv
             vertices[index++] = sourceWidth + sourceX;
             vertices[index++] = sourceHeight + sourceY;
-            // color
+            // alpha
             vertices[index++] = alpha;
-            vertices[index++] = tint;
 
             // xy
             vertices[index++] = c * h + tx;
@@ -323,9 +320,8 @@ module egret {
             // uv
             vertices[index++] = sourceX;
             vertices[index++] = sourceHeight + sourceY;
-            // color
+            // alpha
             vertices[index++] = alpha;
-            vertices[index++] = tint;
 
             this.currentBatchSize++;
         }

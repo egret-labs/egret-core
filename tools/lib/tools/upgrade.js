@@ -188,7 +188,7 @@ function upgradeTo_1_1_0() {
     var open = require("../core/open");
     open("https://github.com/egret-labs/egret-core/wiki/Egret_Upgrade/upgrade/index.html");
 
-    globals.exit(1703);
+    globals.warn(1703);
 }
 
 function upgradeTo_1_1_1(){

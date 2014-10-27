@@ -648,23 +648,26 @@ module egret {
          * 获取显示对象的测量边界
          * @method egret.DisplayObject#getBounds
          * @param resultRect {Rectangle} 可选参数，传入用于保存结果的Rectangle对象，避免重复创建对象。
+         * @param calculateAnchor {boolean} 可选参数，是否会计算锚点。
          * @returns {Rectangle}
          */
-        public getBounds(resultRect?:Rectangle):egret.Rectangle {
+        public getBounds(resultRect?:Rectangle, calculateAnchor:boolean = true):egret.Rectangle {
 //            if (this._cacheBounds.x == 0 && this._cacheBounds.y == 0 && this._cacheBounds.width == 0 && this._cacheBounds.height == 0) {
             var rect:Rectangle = this._measureBounds();
             var w:number = this._hasWidthSet ? this._explicitWidth : rect.width;
             var h:number = this._hasHeightSet ? this._explicitHeight : rect.height;
             var x:number = rect.x;
             var y:number = rect.y;
-            var anchorX, anchorY;
-            if (this._anchorX != 0 || this._anchorY != 0) {
-                anchorX = w * this._anchorX;
-                anchorY = h * this._anchorY;
-            }
-            else {
-                anchorX = this._anchorOffsetX;
-                anchorY = this._anchorOffsetY;
+            var anchorX = 0, anchorY = 0;
+            if(calculateAnchor) {
+                if (this._anchorX != 0 || this._anchorY != 0) {
+                    anchorX = w * this._anchorX;
+                    anchorY = h * this._anchorY;
+                }
+                else {
+                    anchorX = this._anchorOffsetX;
+                    anchorY = this._anchorOffsetY;
+                }
             }
             this._cacheBounds.initialize(x - anchorX, y - anchorY, w, h);
 //            }
@@ -762,7 +765,7 @@ module egret {
                 if (this.mask || this._scrollRect) {
                     if (this._scrollRect
                         && x > this._scrollRect.x
-                        && x > this._scrollRect.y
+                        && y > this._scrollRect.y
                         && x < this._scrollRect.x + this._scrollRect.width
                         && y < this._scrollRect.y + this._scrollRect.height) {
                         return this;
@@ -843,7 +846,7 @@ module egret {
             if (this._hasHeightSet && this._hasWidthSet) {
                 return resultRect.initialize(0, 0, this._explicitWidth, this._explicitHeight);
             }
-            return this._measureSize(Rectangle.identity);
+            return this._measureSize(resultRect);
         }
 
         private _rectW:number = 0;
@@ -863,6 +866,8 @@ module egret {
                 resultRect.width = this._rectW;
                 resultRect.height = this._rectH;
             }
+            resultRect.x = 0;
+            resultRect.y = 0;
             return resultRect;
         }
 
@@ -1021,13 +1026,13 @@ module egret {
         }
 
         public static getTransformBounds(bounds:egret.Rectangle, mtx:egret.Matrix):egret.Rectangle {
-//            var x = bounds.x, y = bounds.y;
-            var x, y;
+            var x = bounds.x, y = bounds.y;
+//            var x, y;
             var width = bounds.width, height = bounds.height;
 
-//            if (x || y) {
-//                mtx.appendTransform(0, 0, 1, 1, 0, 0, 0, -x, -y);
-//            }
+            if (x || y) {
+                mtx.appendTransform(0, 0, 1, 1, 0, 0, 0, -x, -y);
+            }
 //        if (matrix) { mtx.prependMatrix(matrix); }
 
             var x_a = width * mtx.a, x_b = width * mtx.b;
