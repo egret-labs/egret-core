@@ -759,7 +759,7 @@ module egret {
                 if (this.mask || this._scrollRect) {
                     if (this._scrollRect
                         && x > this._scrollRect.x
-                        && x > this._scrollRect.y
+                        && y > this._scrollRect.y
                         && x < this._scrollRect.x + this._scrollRect.width
                         && y < this._scrollRect.y + this._scrollRect.height) {
                         return this;
