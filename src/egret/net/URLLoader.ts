@@ -84,6 +84,8 @@ module egret {
             this.data = null;
             MainContext.instance.netContext.proceed(this);
         }
+
+        public _status:number = -1;
     }
 
 
