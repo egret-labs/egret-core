@@ -159,10 +159,12 @@ module egret {
         }
 
         public _hide():void {
-            this._canUse = false;
+            if(this._canUse) {
+                this._canUse = false;
 
-            this._closeInput();
-            this.closeKeyboard();
+                this._closeInput();
+                this.closeKeyboard();
+            }
         }
 
         private _openInput():void {

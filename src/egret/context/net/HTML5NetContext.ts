@@ -55,8 +55,8 @@ module egret {
 
             var request:URLRequest = loader._request;
             var xhr = this.getXHR();
-            xhr.onerror = onLoadError;
             xhr.onload = onLoadComplete;
+            xhr.onreadystatechange = onReadyStateChange;
 
             var url:string = NetContext._getUrl(request);
 
@@ -75,9 +75,21 @@ module egret {
                 xhr.send(request.data);
             }
 
-            function onLoadError(event) {
-                IOErrorEvent.dispatchIOErrorEvent(loader);
-            };
+
+            function onReadyStateChange() {
+                if (xhr.readyState == 4)
+                {// 4 = "loaded"
+                    if (xhr.status != loader._status) {
+                        loader._status = xhr.status;
+                        HTTPStatusEvent.dispatchHTTPStatusEvent(loader, xhr.status);
+                    }
+
+                    if (xhr.status >= 400 || xhr.status == 0)
+                    {//请求错误
+                        IOErrorEvent.dispatchIOErrorEvent(loader);
+                    }
+                }
+            }
 
             function onLoadComplete(event) {
                 switch (loader.dataFormat) {
@@ -97,7 +109,7 @@ module egret {
                         break;
                 }
                 __callAsync(Event.dispatchEvent, Event, loader, Event.COMPLETE);
-            };
+            }
         }
 
         private loadSound(loader:URLLoader):void{

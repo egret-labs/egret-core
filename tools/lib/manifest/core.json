@@ -10,6 +10,7 @@
         "egret/utils/callLater.ts",
         "egret/context/renderer/dom/DOMTrans.ts",
         "egret/events/Event.ts",
+        "egret/events/HTTPStatusEvent.ts",
         "egret/events/IOErrorEvent.ts",
         "egret/events/TouchEvent.ts",
         "egret/events/TimerEvent.ts",

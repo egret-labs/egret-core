@@ -26,18 +26,15 @@
  */
 
 
-module egret{
+module egret {
     /**
      * 这个类是HTML5的WebWrapper的第一个版本
      */
-    export class Browser extends HashObject{
+    export class Browser extends HashObject {
 
         private static instance:Browser;
-        private pfx:string;
-        private type:string;
         private trans:string;
         private ua;
-        private isHD:boolean;
 
         public static getInstance():Browser {
             if (Browser.instance == null) {
@@ -50,7 +47,7 @@ module egret{
          * @deprecated
          * @returns {boolean}
          */
-        public get isMobile():boolean{
+        public get isMobile():boolean {
             Logger.warning("Browser.isMobile接口参数已经变更，请尽快调整用法为 egret.MainContext.deviceType == egret.MainContext.DEVICE_MOBILE ")
             return egret.MainContext.deviceType == egret.MainContext.DEVICE_MOBILE;
         }
@@ -58,38 +55,34 @@ module egret{
         constructor() {
             super();
             this.ua = navigator.userAgent.toLowerCase();
-            var browserTypes = this.ua.match(/micromessenger|qqbrowser|mqqbrowser|ucbrowser|360browser|baidubrowser|maxthon|ie|opera|firefox/) || this.ua.match(/chrome|safari/);
-            if (browserTypes && browserTypes.length > 0) {
-                var el = browserTypes[0];
-                if (el == 'micromessenger') {
-                    this.type = 'wechat';
-                }
-                this.type = el;
+            this.trans = this._getTrans();
+        }
+
+
+        private _getHeader(tempStyle):string {
+            if ("transform" in tempStyle) {
+                return "";
             }
-            this.type = "unknow";
-            switch (this.type) {
-                case "firefox":
-                    this.pfx = "Moz";
-                    this.isHD = true;
-                    break;
-                case "chrome":
-                case "safari":
-                    this.pfx = "webkit";
-                    this.isHD = true;
-                    break;
-                case "opera":
-                    this.pfx = "O";
-                    this.isHD = false;
-                    break;
-                case "ie":
-                    this.pfx = "ms";
-                    this.isHD = false;
-                    break;
-                default:
-                    this.pfx = "webkit";
-                    this.isHD = true;
+
+            var transArr:Array<string> = ["webkit", "ms", "Moz", "O"];
+            for (var i:number = 0; i < transArr.length; i++) {
+                var transform:string = transArr[i] + 'Transform';
+                if (transform in tempStyle)
+                    return transArr[i];
             }
-            this.trans = this.pfx + "Transform";
+
+            return "";
+        }
+
+
+        private _getTrans():string {
+            var tempStyle = document.createElement('div').style;
+            var _header:string = this._getHeader(tempStyle);
+            var type = "transform";
+            if (_header == "") {
+                return type;
+            }
+            return _header + type.charAt(0).toUpperCase() + type.substr(1);
         }
 
         public $new(x) {
@@ -173,24 +166,40 @@ module egret{
             return el;
         }
 
-        public translate = (this.isHD) ? function (a) {
-            return "translate3d(" + a.x + "px, " + (a.y - MainContext.instance.stage.stageHeight) + "px, 0) "
-        } : function (a) {
+        public translate(a):string {
             return "translate(" + a.x + "px, " + a.y + "px) "
-        };
+        }
 
-        public rotate = (this.isHD) ? function (a) {
-            return "rotateZ(" + a + "deg) ";
-        } : function (a) {
+        public rotate(a):string {
             return "rotate(" + a + "deg) ";
-        };
+        }
 
-        public scale(a) {
+        public scale(a):string {
             return "scale(" + a.x + ", " + a.y + ") "
         }
 
-        public skew(a) {
+        public skew(a):string {
             return "skewX(" + -a.x + "deg) skewY(" + a.y + "deg)";
         }
+
+//        public translate = (this.isHD) ? function (a) {
+//            return "translate3d(" + a.x + "px, " + (a.y - MainContext.instance.stage.stageHeight) + "px, 0) "
+//        } : function (a) {
+//            return "translate(" + a.x + "px, " + a.y + "px) "
+//        };
+//
+//        public rotate = (this.isHD) ? function (a) {
+//            return "rotateZ(" + a + "deg) ";
+//        } : function (a) {
+//            return "rotate(" + a + "deg) ";
+//        };
+//
+//        public scale(a) {
+//            return "scale(" + a.x + ", " + a.y + ") "
+//        }
+//
+//        public skew(a) {
+//            return "skewX(" + -a.x + "deg) skewY(" + a.y + "deg)";
+//        }
     }
 }

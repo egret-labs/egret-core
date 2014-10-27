@@ -23,3 +23,5 @@ bin/
 obj/
 *.user
 *.suo
+*.sln
+*.csproj
