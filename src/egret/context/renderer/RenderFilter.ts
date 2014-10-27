@@ -85,7 +85,7 @@ module egret {
          * @param destWidth {any}
          * @param destHeight {any}
          */
-        public drawImage(renderContext:RendererContext, data:RenderData, sourceX:number, sourceY:number, sourceWidth:number, sourceHeight:number, destX:number, destY:number, destWidth:number, destHeight:number,repeat:string="no-repeat"):void {
+        public drawImage(renderContext:RendererContext, data:RenderData, sourceX:number, sourceY:number, sourceWidth:number, sourceHeight:number, destX:number, destY:number, destWidth:number, destHeight:number,repeat=undefined):void {
             destX = destX || 0;
             destY = destY || 0;
             var locTexture = data._texture_to_render;
