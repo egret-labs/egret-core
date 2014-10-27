@@ -123,6 +123,20 @@ module egret {
          */
         public static CHANGE:string = "change";
 
+        /**
+         * 游戏激活
+         * @constant {string} egret.Event.ACTIVATE
+         */
+        public static ACTIVATE:string = "activate";
+
+        /**
+         * 取消激活
+         * @constant {string} egret.Event.DEACTIVATE
+         */
+        public static DEACTIVATE:string = "deactivate";
+
+
+
         public data:any;
 
         public _type:string;

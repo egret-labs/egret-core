@@ -38,19 +38,25 @@ module egret {
             this.setContext(gl);
         }
 
+        public currentShader:any;
         public defaultShader:EgretShader;
         public primitiveShader:PrimitiveShader;
+        public colorTransformShader:ColorTransformShader;
 
         public setContext(gl:any) {
             this.gl = gl;
             this.primitiveShader = new PrimitiveShader(gl);
             this.defaultShader = new EgretShader(gl);
+            this.colorTransformShader = new ColorTransformShader(gl);
             this.activateShader(this.defaultShader);
         }
 
         public activateShader(shader) {
-            this.gl.useProgram(shader.program);
-            this.setAttribs(shader.attributes);
+            if (this.currentShader != shader) {
+                this.gl.useProgram(shader.program);
+                this.setAttribs(shader.attributes);
+                this.currentShader = shader;
+            }
         }
 
         private setAttribs(attribs) {
@@ -107,13 +113,14 @@ module egret {
 
         private gl:any;
         public program = null;
-        private fragmentSrc:string =
+        public fragmentSrc:string =
             "precision lowp float;\n" +
             "varying vec2 vTextureCoord;\n" +
             "varying vec4 vColor;\n" +
             "uniform sampler2D uSampler;\n" +
+
             "void main(void) {\n" +
-            "   gl_FragColor = texture2D(uSampler, vTextureCoord) * vColor ;\n" +
+            "gl_FragColor = texture2D(uSampler, vTextureCoord) * vColor ;\n" +
             "}";
         private uSampler;
         public projectionVector;
@@ -123,13 +130,14 @@ module egret {
         public aTextureCoord;
         public colorAttribute;
         public attributes:Array<any>;
+        public uniforms:any;
 
         constructor(gl:any) {
             this.gl = gl;
             this.init();
         }
 
-        private init():void {
+        public init():void {
             var gl = this.gl;
 
             var program = WebGLUtils.compileProgram(gl, this.defaultVertexSrc, this.fragmentSrc);
@@ -148,10 +156,120 @@ module egret {
                 this.colorAttribute = 2;
             }
             this.attributes = [this.aVertexPosition, this.aTextureCoord, this.colorAttribute];
+
+            for (var key in this.uniforms) {
+                this.uniforms[key].uniformLocation = gl.getUniformLocation(program, key);
+            }
+            this.initUniforms();
+
             this.program = program;
+        }
+
+        public initUniforms():void {
+            if (!this.uniforms) {
+                return;
+            }
+            var gl = this.gl;
+            var uniform;
+
+            for (var key in this.uniforms) {
+                uniform = this.uniforms[key];
+                var type = uniform.type;
+                if (type === 'mat2' || type === 'mat3' || type === 'mat4') {
+                    uniform.glMatrix = true;
+                    uniform.glValueLength = 1;
+
+                    if (type === 'mat2') {
+                        uniform.glFunc = gl.uniformMatrix2fv;
+                    }
+                    else if (type === 'mat3') {
+                        uniform.glFunc = gl.uniformMatrix3fv;
+                    }
+                    else if (type === 'mat4') {
+                        uniform.glFunc = gl.uniformMatrix4fv;
+                    }
+                }
+                else {
+                    uniform.glFunc = gl['uniform' + type];
+
+                    if (type === '2f' || type === '2i') {
+                        uniform.glValueLength = 2;
+                    }
+                    else if (type === '3f' || type === '3i') {
+                        uniform.glValueLength = 3;
+                    }
+                    else if (type === '4f' || type === '4i') {
+                        uniform.glValueLength = 4;
+                    }
+                    else {
+                        uniform.glValueLength = 1;
+                    }
+                }
+            }
+        }
+
+        public syncUniforms():void {
+            if (!this.uniforms) {
+                return;
+            }
+            var uniform;
+            var gl = this.gl;
+
+            for (var key in this.uniforms) {
+                uniform = this.uniforms[key];
+
+                if (uniform.glValueLength === 1) {
+                    if (uniform.glMatrix === true) {
+                        uniform.glFunc.call(gl, uniform.uniformLocation, uniform.transpose, uniform.value);
+                    }
+                    else {
+                        uniform.glFunc.call(gl, uniform.uniformLocation, uniform.value);
+                    }
+                }
+                else if (uniform.glValueLength === 2) {
+                    uniform.glFunc.call(gl, uniform.uniformLocation, uniform.value.x, uniform.value.y);
+                }
+                else if (uniform.glValueLength === 3) {
+                    uniform.glFunc.call(gl, uniform.uniformLocation, uniform.value.x, uniform.value.y, uniform.value.z);
+                }
+                else if (uniform.glValueLength === 4) {
+                    uniform.glFunc.call(gl, uniform.uniformLocation, uniform.value.x, uniform.value.y, uniform.value.z, uniform.value.w);
+                }
+            }
         }
     }
 
+    export class ColorTransformShader extends EgretShader {
+        public fragmentSrc =
+            "precision mediump float;\n" +
+            "varying vec2 vTextureCoord;\n" +
+            "varying vec4 vColor;\n" +
+            "uniform float invert;\n" +
+            "uniform mat4 matrix;\n" +
+            "uniform vec4 colorAdd;\n" +
+            "uniform sampler2D uSampler;\n" +
+
+            "void main(void) {\n" +
+                "vec4 locColor = texture2D(uSampler, vTextureCoord) * matrix;\n" +
+                "if(locColor.a != 0.0){\n" +
+                    "locColor += colorAdd;\n" +
+                "}\n" +
+                "gl_FragColor = locColor;\n" +
+            "}";
+
+        public uniforms = {
+            matrix: {type: 'mat4', value: [1, 0, 0, 0,
+                0, 1, 0, 0,
+                0, 0, 1, 0,
+                0, 0, 0, 1]},
+            colorAdd: {type: '4f', value: {x: 0, y: 0, z: 0, w: 0}}
+        };
+
+        constructor(gl:any) {
+            super(gl);
+            this.init();
+        }
+    }
     export class PrimitiveShader {
 
         private gl:any;
