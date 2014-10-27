@@ -132,14 +132,14 @@ module egret {
                 }
             }
             else{
-                Bitmap.drawRepeatImage(renderContext, thisObject, destW, destH);
+                Bitmap.drawRepeatImage(renderContext, thisObject, destW, destH, thisObject.fillMode);
             }
         }
 
         /**
          * 绘制平铺位图
          */
-        private static drawRepeatImage(renderContext:RendererContext, data:RenderData, destWidth:number, destHeight:number):void {
+        private static drawRepeatImage(renderContext:RendererContext, data:RenderData, destWidth:number, destHeight:number,repeat:string):void {
             var texture:Texture = data._texture_to_render;
             if (!texture) {
                 return;
@@ -154,13 +154,7 @@ module egret {
             var destY:number = texture._offsetY;
 
             var renderFilter:RenderFilter = RenderFilter.getInstance();
-            for (var x:number = destX; x < destWidth; x += textureWidth) {
-                for (var y:number = destY; y < destHeight; y += textureHeight) {
-                    var destW:number = Math.min(sourceWidth, destWidth - x);
-                    var destH:number = Math.min(sourceHeight, destHeight - y);
-                    renderFilter.drawImage(renderContext, data, sourceX, sourceY, destW, destH, x, y, destW, destH);
-                }
-            }
+            renderFilter.drawImage(renderContext, data, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight,repeat);
         }
 
         /**

@@ -38,7 +38,7 @@ module egret {
         /**
          * @member egret.HTML5CanvasRenderer#canvasContext
          */
-        public canvasContext;
+        public canvasContext:CanvasRenderingContext2D;
 
         private _matrixA:number;
         private _matrixB:number;
@@ -111,7 +111,8 @@ module egret {
             this.canvasContext.clearRect(x, y, w, h);
         }
 
-        public drawImage(texture:Texture, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight) {
+        public drawImage(texture: Texture, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, repeat=undefined) {
+
             var scale = egret.MainContext.instance.rendererContext.texture_scale_factor;
             sourceX = sourceX / scale;
             sourceY = sourceY / scale;
@@ -124,9 +125,34 @@ module egret {
             destX += this._transformTx;
             destY += this._transformTy;
             var beforeDraw = egret.getTimer();
-            this.canvasContext.drawImage(image, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight);
-            super.drawImage(image, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight);
+            if (repeat ===undefined) {
+                this.canvasContext.drawImage(image, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight);
+            }
+            else {
+                this.drawRepeatImage(texture, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, repeat);
+            }
+            super.drawImage(image, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight,repeat);
             this.renderCost += egret.getTimer() - beforeDraw;
+        }
+
+        public drawRepeatImage(texture: Texture, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, repeat) {
+            if(texture['pattern']===undefined){
+                var image = texture._bitmapData;
+                var tempImage = image;
+                if (image.width != sourceWidth || image.height != sourceHeight) {
+                    var tempCanvas = document.createElement("canvas");
+                    tempCanvas.width = sourceWidth;
+                    tempCanvas.height = sourceHeight;
+                    tempCanvas.getContext("2d").drawImage(image, sourceX, sourceY, sourceWidth, sourceHeight, 0, 0, sourceWidth, sourceHeight);
+                    tempImage = new Image();
+                    tempImage.src = tempCanvas.toDataURL();
+                }
+                var pat = this.canvasContext.createPattern(tempImage, repeat);
+                texture['pattern'] = pat;
+            }
+            var pattern = texture['pattern'];
+            this.canvasContext.fillStyle = pattern;
+            this.canvasContext.fillRect(destX, destY, destWidth, destHeight);
         }
 
         public setTransform(matrix:egret.Matrix) {

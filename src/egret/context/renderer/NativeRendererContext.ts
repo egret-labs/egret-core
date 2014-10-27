@@ -89,14 +89,30 @@ module egret {
          * @param destY {any}
          * @param destWidth {any}
          * @param destHeigh {any}
+         * @param repeat {string}
          */
-        public drawImage(texture:Texture, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight) {
+        public drawImage(texture:Texture, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, repeat=undefined) {
 
-            egret_native.Graphics.drawImage(texture._bitmapData, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight);
+            if (repeat !== undefined) {
+                this.drawRepeatImage(texture, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, repeat);
+                return;
+            }
+            else {
+                egret_native.Graphics.drawImage(texture._bitmapData, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight);
+            }
 
             Profiler.getInstance().onDrawImage();
         }
 
+        public drawRepeatImage(texture:Texture, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, repeat) {
+            for (var x:number = destX; x < destWidth; x += sourceWidth) {
+                for (var y:number = destY; y < destHeight; y += sourceHeight) {
+                    var destW:number = Math.min(sourceWidth, destWidth - x);
+                    var destH:number = Math.min(sourceHeight, destHeight - y);
+                    this.drawImage(texture, sourceX, sourceY, destW, destH, x, y, destW, destH);
+                }
+            }
+        }
         /**
          * 变换Context的当前渲染矩阵
          * @method egret.NativeRendererContext#setTransform

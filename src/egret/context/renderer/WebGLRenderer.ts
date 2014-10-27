@@ -217,8 +217,21 @@ module egret {
         private currentBaseTexture:Texture = null;
         private currentBatchSize:number = 0;
 
-        public drawImage(texture:Texture, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight) {
+        public drawRepeatImage(texture: Texture, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, repeat) {
+            for (var x: number = destX; x < destWidth; x += sourceWidth) {
+                for (var y: number = destY; y < destHeight; y += sourceHeight) {
+                    var destW: number = Math.min(sourceWidth, destWidth - x);
+                    var destH: number = Math.min(sourceHeight, destHeight - y);
+                    this.drawImage(texture, sourceX, sourceY, destW, destH, x, y, destW, destH);
+                }
+            }
+        }
+        public drawImage(texture:Texture, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight,repeat=undefined) {
             if (this.contextLost) {
+                return;
+            }
+            if (repeat !== undefined) {
+                this.drawRepeatImage(texture, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, repeat);
                 return;
             }
 
