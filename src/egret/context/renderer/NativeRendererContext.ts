@@ -93,21 +93,23 @@ module egret {
          */
         public drawImage(texture:Texture, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, repeat=undefined) {
 
-            if(repeat === undefined)
+            if (repeat !== undefined) {
+                this.drawRepeatImage(texture, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, repeat);
+                return;
+            }
+            else {
                 egret_native.Graphics.drawImage(texture._bitmapData, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight);
-            else
-                this.drawRepeatImage(texture,sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight,repeat);
+            }
 
             Profiler.getInstance().onDrawImage();
         }
 
         public drawRepeatImage(texture:Texture, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, repeat) {
-            var image = texture._bitmapData;
             for (var x:number = destX; x < destWidth; x += sourceWidth) {
                 for (var y:number = destY; y < destHeight; y += sourceHeight) {
                     var destW:number = Math.min(sourceWidth, destWidth - x);
                     var destH:number = Math.min(sourceHeight, destHeight - y);
-                    egret_native.Graphics.drawImage(image, sourceX, sourceY, destW, destH, x, y, destW, destH);
+                    this.drawImage(texture, sourceX, sourceY, destW, destH, x, y, destW, destH);
                 }
             }
         }
