@@ -30,7 +30,7 @@ module egret {
     /**
      * @class egret.Scroller
      * @classdesc
-     * Scroller 是用于滑动的辅助类
+     * Scroller 是用于滑动的辅助类，将一个显示对象传入构造函数即可
      * @extends egret.HashObject
      */
     export class Scroller extends DisplayObject {
@@ -38,7 +38,6 @@ module egret {
         private _lastTouchTime: number = 0;
         private _lastTouchEvent: TouchEvent = null;
         private _velocitys: Array<{ x: number; y: number }> = [];
-        private _animation: Tween = null;
 
         static animationData = { position: 0, duration: 0 };
 
@@ -46,12 +45,19 @@ module egret {
             super();
             content.touchEnabled = true;
             this.touchEnabled = true;
-            width = width === NaN ? content.width : width;
-            height = height === NaN ? content.height : height;
+            width = width === NaN ? content.explicitWidth || content.width : width;
+            height = height === NaN ? content.explicitHeight || content.height : height;
             content.scrollRect = new Rectangle(0, 0, width, height);
             this.width = width;
             this.height = height;
             this._addEvents();
+        }
+
+        public _onAddToStage() {
+            super._onAddToStage();
+            if (!this.content._parent) {
+                this._parent.addChildAt(this.content, this._parent.getChildIndex(this));
+            }
         }
 
         private _scrollLeft = 0;
@@ -122,10 +128,7 @@ module egret {
         public _onTouchBegin(e: TouchEvent) {
             if (e._isDefaultPrevented)
                 return;
-            if (this._animation) {
-                Tween.removeTweens(this);
-                this._animation = null;
-            }
+            Tween.removeTweens(this);
             this.stage.addEventListener(TouchEvent.TOUCH_MOVE, this._onTouchMove, this);
             this.stage.addEventListener(TouchEvent.TOUCH_END, this._onTouchEnd, this);
             this.stage.addEventListener(TouchEvent.LEAVE_STAGE, this._onTouchEnd, this);
@@ -205,19 +208,21 @@ module egret {
 
             var x = sum.x / totalW, y = sum.y / totalW;
             var pixelsPerMSX = Math.abs(x), pixelsPerMSY = Math.abs(y);
-            var maxLeft = this.content.width - this.width;
-            var maxTop =this.content.height - this.height
+            var maxLeft = (this.content.explicitWidth||this.content.width) - this.width;
+            var maxTop = (this.content.explicitHeight || this.content.height) - this.height;
             var datax = pixelsPerMSX > 0.02 ? this.getAnimationDatas(x, this._scrollLeft, maxLeft) : { position: this._scrollLeft,duration:0};
             var datay = pixelsPerMSX > 0.02 ? this.getAnimationDatas(y, this._scrollTop, maxTop) : { position: this._scrollTop, duration: 0 };
-            var duration = Math.max(datax.duration, datay.duration);
-            this._animation = egret.Tween.get(this)
-                .to({ scrollLeft: datax.position, scrollTop: datay.position }, duration, egret.Ease.quartOut);
-            var final = {
-                scrollLeft: Math.min(maxLeft, Math.max(datax.position, 0)),
-                scrollTop: Math.min(maxTop, Math.max(datay.position, 0))
-            };
-            if (final.scrollLeft != datax.position || final.scrollTop != datay.position) {
-                this._animation.to(final, 300, egret.Ease.quintOut);
+            var twx = egret.Tween.get(this).to({ scrollLeft: datax.position }, datax.duration, egret.Ease.quartOut);
+            var twy = egret.Tween.get(this).to({ scrollTop: datay.position }, datay.duration, egret.Ease.quartOut);
+
+            //恢复由于滚动超出界限的部分
+            var scrollLeft = Math.min(maxLeft, Math.max(datax.position, 0)),
+                scrollTop = Math.min(maxTop, Math.max(datay.position, 0));
+            if (scrollLeft != datax.position) {
+                twx.to({ scrollLeft: scrollLeft }, 300, egret.Ease.quintOut);
+            }
+            if (scrollTop != datay.position) {
+                twy.to({ scrollTop: scrollTop }, 300, egret.Ease.quintOut);
             }
         }
         private getAnimationDatas(pixelsPerMS: number, curPos: number, maxPos: number): { position: number; duration: number } {
@@ -245,7 +250,7 @@ module egret {
             }
 
             var result = {
-                position: Math.min(maxPos, Math.max(posTo, 0)),
+                position: Math.min(maxPos+50, Math.max(posTo, -50)),//允许越界50px
                 duration : duration
             }
             return result;
