@@ -146,6 +146,7 @@ module egret {
         }
 
         private dispatchLeaveStageEvent():void {
+            this.touchingIdentifiers.length = 0;
             egret.MainContext.instance.stage.dispatchEventWith(egret.Event.LEAVE_STAGE);
         }
 

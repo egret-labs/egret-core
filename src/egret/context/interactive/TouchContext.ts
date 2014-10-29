@@ -36,7 +36,7 @@ module egret {
         private _currentTouchTarget:any = {};
         public maxTouches:number = 2;
         private touchDownTarget:any = {};
-        private touchingIdentifiers:Array<any> = [];
+        public touchingIdentifiers:Array<any> = [];
 
         public constructor() {
             super();
