@@ -133,7 +133,7 @@ module egret {
          * @param blendMode {egret.BlendMode}
          */
         public setAlpha(value:number, blendMode:string) {
-            if(this.currentAlpha != value) {
+            if (this.currentAlpha != value) {
                 egret_native.Graphics.setGlobalAlpha(value);
                 this.currentAlpha = value;
             }
@@ -195,6 +195,18 @@ module egret {
 
         public popMask():void {
             egret_native.Graphics.popStencil();
+        }
+
+
+        public setGlobalColorTransform(colorTransformMatrix:Array<any>):void {
+            if (colorTransformMatrix){
+                egret_native.Graphics.setGlobalColorTransformEnabled(true);
+                egret_native.Graphics.setGlobalColorTransform(colorTransformMatrix);
+            }
+            else{
+                egret_native.Graphics.setGlobalColorTransformEnabled(false);
+            }
+
         }
 
         private blendModes:any;

@@ -126,23 +126,37 @@ module egret {
             }
         }
 
+        private _isActivate:boolean = true;
         private registerListener():void {
-
+            var self = this;
+            //失去焦点
+            var onBlurHandler = function () {
+                if (!self._isActivate) {
+                    return;
+                }
+                self._isActivate = false;
+                egret.MainContext.instance.stage.dispatchEvent(new Event(Event.DEACTIVATE));
+            };
+            //激活
             var onFocusHandler = function () {
+                if (self._isActivate) {
+                    return;
+                }
+                self._isActivate = true;
                 var context = HTML5DeviceContext.instance;
                 context.reset();
-            }
+
+                egret.MainContext.instance.stage.dispatchEvent(new Event(Event.ACTIVATE));
+            };
 
             var handleVisibilityChange = function () {
                 if (!document[hidden]) {
                     onFocusHandler();
                 }
-            }
-
-            window.onfocus = onFocusHandler
-            window.onblur = function () {
             };
 
+            window.onfocus = onFocusHandler;
+            window.onblur = onBlurHandler;
 
             var hidden, visibilityChange;
             if (typeof document.hidden !== "undefined") {
@@ -160,7 +174,7 @@ module egret {
             }
             if ("onpageshow" in window && "onpagehide" in window) {
                 window.addEventListener("pageshow", onFocusHandler, false);
-//                window.addEventListener("pagehide", handleBlur, false);
+                window.addEventListener("pagehide", onBlurHandler, false);
             }
             if (hidden && visibilityChange) {
                 document.addEventListener(visibilityChange, handleVisibilityChange, false);
