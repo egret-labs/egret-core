@@ -31,16 +31,21 @@ module egret {
      * @class egret.Scroller
      * @classdesc
      * Scroller 是用于滑动的辅助类，将一个显示对象传入构造函数即可
-     * @extends egret.HashObject
+     * @extends egret.DisplayObject
      */
     export class Scroller extends DisplayObject {
         private _lastTouchPosition: egret.Point = new Point(0, 0);
         private _lastTouchTime: number = 0;
         private _lastTouchEvent: TouchEvent = null;
         private _velocitys: Array<{ x: number; y: number }> = [];
-
-        static animationData = { position: 0, duration: 0 };
-
+        
+        /**
+         * 创建一个 egret.Scroller 对象
+		 * @method egret.Scroller#constructor
+         * @param content {egret.DisplayObject} 需要滚动的对象
+         * @param width {number} Scroller的宽度，默认值为content的宽度
+         * @param height {number} Scroller的高度，默认值为content的高度
+         */
         constructor(public content: DisplayObject,width=NaN,height=NaN) {
             super();
             content.touchEnabled = true;
@@ -59,9 +64,50 @@ module egret {
                 this._parent.addChildAt(this.content, this._parent.getChildIndex(this));
             }
         }
+        private _scrollXEnabled = true;
+        
+        /**
+         * 是否启用水平滚动
+         * @member {boolean} egret.Scroller#scrollXEnabled
+         * @returns {boolean}
+         */
+        public get scrollXEnabled() {
+            return this._scrollXEnabled;
+        }
+        public set scrollXEnabled(value: boolean) {
+            this._setScrollXEnabled(value);
+        }
+        public _setScrollXEnabled(value: boolean) {
+            if (this._scrollXEnabled == value)
+                return;
+            this._scrollXEnabled = value;
+        }
+        private _scrollYEnabled = true;
+        
+        /**
+         * 是否启用垂直滚动
+         * @member {boolean} egret.Scroller#scrollYEnabled
+         * @returns {boolean}
+         */
+        public get scrollYEnabled() {
+            return this._scrollYEnabled;
+        }
+        public set scrollYEnabled(value: boolean) {
+            this._setScrollYEnabled(value);
+        }
+        public _setScrollYEnabled(value:boolean) {
+            if (this._scrollYEnabled == value)
+                return;
+            this._scrollYEnabled = value;
+        }
 
         private _scrollLeft = 0;
-        public get scrollLeft() {
+        /**
+         * 获取或设置水平滚动位置,
+         * @member {number} egret.Scroller#scrollLeft
+         * @returns {number}
+         */
+        public get scrollLeft():number {
             return this._scrollLeft;
         }
         public set scrollLeft(value: number) {
@@ -72,6 +118,11 @@ module egret {
         }
 
         private _scrollTop = 0;
+        /**
+         * 获取或设置垂直滚动位置,
+         * @member {number} egret.Scroller#scrollTop
+         * @returns {number}
+         */
         public get scrollTop() {
             return this._scrollTop;
         }
@@ -81,8 +132,19 @@ module egret {
             this._scrollTop = value;
             this._updateContentPosition();
         }
-
+        
+        /**
+         * 设置滚动位置
+         * @method egret.Scroller#setScrollPosition
+         * @param top {number} 垂直滚动位置
+         * @param left {number} 水平滚动位置
+         * @param isOffset {boolean} 可选参数，默认是false，是否是滚动增加量，如 top=1 代表往上滚动1像素
+         */
         public setScrollPosition(top: number, left: number, isOffset= false) {
+            if (isOffset && top == 0 && left == 0)
+                return;
+            if (!isOffset && this._scrollTop == top && this._scrollLeft == left)
+                return;
             if (isOffset) {
                 this._scrollTop += top;
                 this._scrollLeft += left;
@@ -114,6 +176,7 @@ module egret {
         }
         public _updateContentPosition() {
             this.content.scrollRect = new Rectangle(this._scrollLeft, this._scrollTop, this.width, this.height);
+            this.dispatchEvent(new Event(Event.CHANGE));
         }
 
 
@@ -170,8 +233,8 @@ module egret {
 
         private _getPointChange(e: TouchEvent) {
             return {
-                x: this._lastTouchPosition.x - e.stageX,
-                y: this._lastTouchPosition.y - e.stageY
+                x: this._scrollXEnabled == false ? 0 : (this._lastTouchPosition.x - e.stageX),
+                y: this._scrollYEnabled == false ? 0 : (this._lastTouchPosition.y - e.stageY)
             };
         }
 
@@ -191,15 +254,14 @@ module egret {
             this._lastTouchPosition.x = e.stageX;
             this._lastTouchPosition.y = e.stageY;
         }
-
+        static weight = [1, 1.33, 1.66, 2, 2.33];
         private _moveAfterTouchEnd() {
             if (this._velocitys.length == 0)
                 return;
-            var weight = [1, 1.33, 1.66, 2, 2.33];
             var sum = { x: 0, y: 0 }, totalW = 0;
             for (var i = 0; i < this._velocitys.length; i++) {
                 var v = this._velocitys[i];
-                var w = weight[i];
+                var w = Scroller.weight[i];
                 sum.x += v.x * w;
                 sum.y += v.y * w;
                 totalW += w;
@@ -211,7 +273,7 @@ module egret {
             var maxLeft = (this.content.explicitWidth||this.content.width) - this.width;
             var maxTop = (this.content.explicitHeight || this.content.height) - this.height;
             var datax = pixelsPerMSX > 0.02 ? this.getAnimationDatas(x, this._scrollLeft, maxLeft) : { position: this._scrollLeft,duration:0};
-            var datay = pixelsPerMSX > 0.02 ? this.getAnimationDatas(y, this._scrollTop, maxTop) : { position: this._scrollTop, duration: 0 };
+            var datay = pixelsPerMSY > 0.02 ? this.getAnimationDatas(y, this._scrollTop, maxTop) : { position: this._scrollTop, duration: 0 };
             var twx = egret.Tween.get(this).to({ scrollLeft: datax.position }, datax.duration, egret.Ease.quartOut);
             var twy = egret.Tween.get(this).to({ scrollTop: datay.position }, datay.duration, egret.Ease.quartOut);
 
