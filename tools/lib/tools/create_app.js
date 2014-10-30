@@ -15,6 +15,8 @@ function run(dir, args, opts) {
 	var arg_h5_path = opts["-f"];
     var params = clean_params(arg_app_name, arg_h5_path, arg_template_path);
 
+    create_app_from(params["app_path"], params["h5_path"], params["template_path"], params["preferences"], params["app_data"]);
+
     globals.log("> compile html project to android/ios ...");
     // egert build h5_project -e --runtime native
     var cmd = "egret build " + params["h5_path"] + " --runtime native -e";
@@ -26,7 +28,7 @@ function run(dir, args, opts) {
     });
     build.on("exit", function(result) {
         if (result == 0) {
-            create_app_from(params["app_path"], params["h5_path"], params["template_path"], params["preferences"], params["app_data"]);
+            //create_app_from(params["app_path"], params["h5_path"], params["template_path"], params["preferences"], params["app_data"]);
         } else {
             globals.exit(1604);
         }
@@ -99,7 +101,7 @@ function create_app_from(app_path, h5_path, template_path, preferences, app_data
     preferences["native"]["support_path"] = target_list;
     file.save(path.join(h5_path, PREFERENCES), JSON.stringify(preferences, null, '\t'));
 
-    build_copy(h5_path, preferences["native"]["path_ignore"], target_list);
+    //build_copy(h5_path, preferences["native"]["path_ignore"], target_list);
     target_list.forEach(function(target) {
         file.remove(path.join(target, ".gitignore"));
     });
