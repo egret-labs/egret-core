@@ -359,10 +359,10 @@ function run(dir, args, opts) {
 
     var runtime = param.getOption(opts, "--runtime", ["html5", "native"]);
     if (runtime == "html5") {
-        compilerSingleFile(currDir, totalHTML5FileList, "\""+launcherDir + "/game-min.js\"");
+        compilerSingleFile(currDir, totalHTML5FileList, "\""+launcherDir + "/game-min.js\"", compilerComplete);
     }
     else if (runtime == "native") {
-        compilerSingleFile(currDir, totalNativeFileList, "\""+launcherDir + "/game-min-native.js\"");
+        compilerSingleFile(currDir, totalNativeFileList, "\""+launcherDir + "/game-min-native.js\"", compilerComplete);
     }
 
     //扫描json数据
@@ -374,7 +374,36 @@ function run(dir, args, opts) {
     if (runtime == "native") {
         createManifest(releaseDir);
     }
+
+    function compilerComplete() {
+        if (opts["-zip"]) {
+            createZipFile();
+        }
+    }
+
+    function createZipFile() {
+        globals.log("createZip");
+        var archive = new zip();
+        var launcherList = file.getDirectoryListing(launcherDir);
+        var length = launcherList.length;
+        var arr = [];
+        for(var i = 0 ; i < length ; i ++){
+            var filePath = launcherList[i];
+            arr.push({name : path.relative(releaseDir, filePath), path : filePath});
+        }
+        archive.addFiles(arr, function (err) {
+            if (err) return console.log("err while adding files", err);
+
+            var buff = archive.toBuffer();
+
+            fs.writeFile(releaseDir + "/game_code.zip", buff, function () {
+                globals.log("createZipFinished");
+            });
+        });
+    }
 }
+var fs = require("fs");
+var zip = require("../core/zip/zip.js");
 
 function compilerSingleFile(currDir, fileList, outputFile, callback) {
     var tempFile = path.join(currDir, "bin-debug/__temp.js");
@@ -408,6 +437,7 @@ function help_example() {
     result += "参数说明:\n";
     result += "    --version    设置发布之后的版本号，可以不设置\n";
     result += "    --runtime    设置发布方式为 html5 或者是 native方式，默认值为html5";
+    result += "    -zip         设置发布后生成launcher文件夹的zip文件";
     return result;
 }
 
