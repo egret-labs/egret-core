@@ -40,7 +40,7 @@ module egret.gui {
          * @param updateFunction {Function} 动画更新时的回调函数,updateFunction(animation:Animation):void
 		 * @param thisObject {an} 
          */
-        public constructor(updateFunction:Function,thisObject:any){
+        public constructor(updateFunction:(animation:Animation)=>void,thisObject:any){
             this.updateFunction = updateFunction;
             this.thisObject = thisObject;
         }
@@ -138,9 +138,9 @@ module egret.gui {
         public startFunction:Function;
         /**
          * 动画播放结束时的回调函数,可以是正常播放结束，也可以是被调用了end()方法导致结束。注意：stop()方法被调用不会触发这个函数。endFunction(animation:Animation):void
-		 * @member egret.gui.Animation#endFunction
+         * @member egret.gui.Animation#endFunction
          */
-        public endFunction:Function;
+        public endFunction: (animation: Animation) => void;
 
         /**
          * 动画更新时的回调函数,updateFunction(animation:Animation):void

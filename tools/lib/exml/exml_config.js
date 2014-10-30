@@ -471,7 +471,7 @@ var EXMLConfig = (function () {
     * 检查classNameA是否是classNameB的子类或classNameA实现了接口classNameB
     */
     EXMLConfig.prototype.isInstanceOf = function (classNameA, classNameB) {
-        if (classNameB == "any") {
+        if (classNameB == "any" || classNameB == "Class") {
             return true;
         }
         if (classNameA == classNameB) {

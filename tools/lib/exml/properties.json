@@ -151,10 +151,6 @@
 	{
 		"super":"egret.DisplayObject"
 	},
-	"egret.ShowAll":
-	{
-		"super":"egret.ContentStrategy"
-	},
 	"egret.Sound":
 	{
 		"path":"string",
@@ -182,8 +178,6 @@
 		"maxChars":"any",
 		"maxWidth":"any",
 		"multiline":"boolean",
-		"scrollH":"number",
-		"scrollV":"number",
 		"size":"number",
 		"stroke":"number",
 		"strokeColor":"number",
@@ -318,6 +312,10 @@
 		"super":"egret.gui.UIComponent",
 		"verticalScrollPosition":"number"
 	},
+	"egret.gui.HScrollBar":
+	{
+		"super":"egret.gui.HSlider"
+	},
 	"egret.gui.HSlider":
 	{
 		"super":"egret.gui.SliderBase"
@@ -350,6 +348,8 @@
 		"paddingLeft":"number",
 		"paddingRight":"number",
 		"paddingTop":"number",
+		"stroke":"number",
+		"strokeColor":"number",
 		"super":"egret.gui.TextBase"
 	},
 	"egret.gui.LayoutBase":
@@ -450,9 +450,11 @@
 	},
 	"egret.gui.Scroller":
 	{
+		"hBar":"egret.gui.HScrollBar",
 		"horizontalScrollPolicy":"string",
 		"implements":["egret.gui.IVisualElementContainer"],
 		"super":"egret.gui.UIComponent",
+		"vBar":"egret.gui.VScrollBar",
 		"verticalScrollPolicy":"string",
 		"viewport":"egret.gui.IViewport"
 	},
@@ -687,6 +689,10 @@
 		"top":"number",
 		"updateCompletePendingFlag":"boolean",
 		"verticalCenter":"number"
+	},
+	"egret.gui.VScrollBar":
+	{
+		"super":"egret.gui.VSlider"
 	},
 	"egret.gui.VSlider":
 	{

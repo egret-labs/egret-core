@@ -38,6 +38,7 @@
         "egret/utils/Injector.ts",
         "egret/display/BlendMode.ts",
         "egret/display/DisplayObject.ts",
+        "egret/display/Scroller.ts",
         "egret/display/DisplayObjectContainer.ts",
         "egret/display/Stage.ts",
         "egret/display/StageScaleMode.ts",

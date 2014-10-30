@@ -82,8 +82,11 @@ module egret {
             });
 
             window.addEventListener("mouseup", function (event) {
-                if (that._isTouchDown && that.inOutOfCanvas(event)) {
-                    that.dispatchLeaveStageEvent();
+                if (that._isTouchDown) {
+                    if (that.inOutOfCanvas(event))
+                        that.dispatchLeaveStageEvent();
+                    else
+                        that._onTouchEnd(event);
                 }
                 that._isTouchDown = false;
             });
@@ -136,16 +139,18 @@ module egret {
 
         private inOutOfCanvas(event):boolean {
             var location = this.getLocation(this.rootDiv, event);
-            if (location.x < 0
-                || location.y < 0
-                || location.x > egret.MainContext.instance.stage.width
-                || location.y > egret.MainContext.instance.stage.height) {
+            var x = location.x, y = location.y;
+            if (x < 0
+                || y < 0
+                || x > egret.MainContext.instance.stage.width
+                || y > egret.MainContext.instance.stage.height) {
                 return true;
             }
             return false;
         }
 
         private dispatchLeaveStageEvent():void {
+            this.touchingIdentifiers.length = 0;
             egret.MainContext.instance.stage.dispatchEventWith(egret.Event.LEAVE_STAGE);
         }
 

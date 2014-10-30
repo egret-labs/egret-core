@@ -39,8 +39,11 @@ declare module egret_native {
      * @param callback 主循环回调函数
      * @param thisObject
      */
-    function executeMainLoop(callback:Function, thisObject:any):void;
+    function executeMainLoop(callback: Function, thisObject: any): void;
 
+    function pauseApp(): void;
+
+    function resumeApp(): void;
 
     function readXML(filepath:string):any;
 
@@ -63,6 +66,10 @@ declare module egret_native {
     function loadRecord(filepath:string):string;
 
     function saveRecord(filepath:string, fileContent:string):void;
+
+    function pauseApp():void;
+
+    function resumeApp():void;
 
     module Audio {
         function preloadBackgroundMusic(path:string):void;

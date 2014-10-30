@@ -104,7 +104,7 @@ module egret.gui {
 		/**
 		 * 动画播放更新数值
 		 */	
-		private animationUpdateHandler(animation:Animation):void{
+		public _animationUpdateHandler(animation:Animation):void{
 			this.pendingValue = animation.currentValue["value"];
 		}
 		/**
@@ -210,7 +210,7 @@ module egret.gui {
 			if (newValue != this.pendingValue){
 				if (this.slideDuration != 0){
 					if (!this.animator){
-						this.animator = new Animation(this.animationUpdateHandler,this);
+						this.animator = new Animation(this._animationUpdateHandler,this);
 						this.animator.endFunction = this.animationEndHandler;
 					}
 					if (this.animator.isPlaying)

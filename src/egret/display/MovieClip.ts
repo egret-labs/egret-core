@@ -263,6 +263,9 @@ module egret {
             this._currentFrameIndex++;
             if (this._currentFrameIndex == this._totalFrame) {
                 this._currentFrameIndex = 0;
+                if(frameData.action != Event.COMPLETE) {
+                    this.movieClip.dispatchEventWith(Event.COMPLETE);
+                }
             }
         }
 

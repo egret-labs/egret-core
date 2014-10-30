@@ -250,8 +250,11 @@ class EXMLCompiler{
             globals.warn(2101,this.exmlPath,list.join("\n"));
         }
 
+        if(!this.currentXML.namespace){
+            globals.exit(2017,this.exmlPath,this.toXMLString(this.currentXML));
+        }
         this.addIds(this.currentXML.children);
-
+        this.currentClass.addVariable(new CpVariable("__s",Modifiers.M_PRIVATE,"Function","egret.gui.setProperties"));
         this.createConstructFunc();
     }
     /**
@@ -289,6 +292,9 @@ class EXMLCompiler{
         var length:number = items.length;
         for(var i:number=0;i<length;i++){
             var node:any = items[i];
+            if(!node.namespace){
+                globals.exit(2017,this.exmlPath,this.toXMLString(node));
+            }
             this.addIds(node.children);
             if(node.namespace==EXMLCompiler.W){
             }
@@ -476,6 +482,8 @@ class EXMLCompiler{
         }
         keyList.sort();//排序一下防止出现随机顺序
         var length:number = keyList.length;
+        var values:Array<any> = [];
+        var keys:Array<any> = [];
         for(var i:number=0;i<length;i++){
             key = keyList[i];
             value = node[key];
@@ -506,7 +514,17 @@ class EXMLCompiler{
                 this.delayAssignmentDic[value] = delayCb;
                 value = "this."+value;
             }
-            cb.addAssignment(varName,value,key);
+            keys.push(key);
+            values.push(value);
+        }
+        var length:number = keys.length;
+        if(length>1){
+            var allKey:string = "[\""+keys.join("\",\"")+"\"]";
+            var allValue:string = "["+values.join(",")+"]"
+            cb.addCodeLine("this.__s("+varName+","+allKey+","+allValue+")");
+        }
+        else if(length==1){
+            cb.addAssignment(varName,values[0],keys[0]);
         }
     }
     /**
@@ -708,14 +726,18 @@ class EXMLCompiler{
             value = "egret.gui.getScale9Grid(\""+value+"\")";
         }
         else{
+            var orgValue:string = value;
             switch(type){
+                case "egret.gui.IFactory":
+                    value = "new egret.gui.ClassFactory("+orgValue+")";
                 case "Class":
-                    if(!this.exmlConfig.checkClassName(value)){
-                        globals.exit(2015, this.exmlPath, value,this.toXMLString(node));
+                    if(!this.exmlConfig.checkClassName(orgValue)){
+                        globals.exit(2015, this.exmlPath, orgValue,this.toXMLString(node));
                     }
                     if(value==this.currentClassName) {//防止无限循环。
                         globals.exit(2014, this.exmlPath, this.toXMLString(node));
                     }
+                    break;
                 case "number":
                     if(value.indexOf("#")==0)
                         value = "0x"+value.substring(1);
@@ -725,9 +747,7 @@ class EXMLCompiler{
                 case "boolean":
                     value = (value=="false"||!value)?"false":"true";
                     break;
-                case "egret.gui.IFactory":
-                    value = "new egret.gui.ClassFactory("+value+")";
-                    break;
+
                 case "string":
                 case "any":
                     value = this.formatString(stringValue);

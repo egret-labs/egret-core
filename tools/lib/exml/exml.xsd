@@ -382,8 +382,6 @@
     <xs:attribute name="maxChars" type="xs:string"/>
     <xs:attribute name="maxWidth" type="xs:string"/>
     <xs:attribute name="multiline" type="xs:boolean"/>
-    <xs:attribute name="scrollH" type="xs:decimal"/>
-    <xs:attribute name="scrollV" type="xs:decimal"/>
     <xs:attribute name="size" type="xs:decimal"/>
     <xs:attribute name="stroke" type="xs:decimal"/>
     <xs:attribute name="strokeColor" type="xs:decimal"/>
@@ -483,6 +481,7 @@
       <xs:element ref="EditableText"/>
       <xs:element ref="Group"/>
       <xs:element ref="GroupBase"/>
+      <xs:element ref="HScrollBar"/>
       <xs:element ref="HSlider"/>
       <xs:element ref="ItemRenderer"/>
       <xs:element ref="Label"/>
@@ -515,6 +514,7 @@
       <xs:element ref="TreeItemRenderer"/>
       <xs:element ref="UIAsset"/>
       <xs:element ref="UIComponent"/>
+      <xs:element ref="VScrollBar"/>
       <xs:element ref="VSlider"/>
       <xs:element ref="ViewStack"/>
     </xs:choice>
@@ -680,7 +680,7 @@
       <xs:choice minOccurs="0">
         <xs:any namespace="##other" maxOccurs="unbounded"/>
         <xs:element ref="layout"/>
-        <xs:group ref="IVisualElement" maxOccurs="unbounded"/>
+        <xs:group ref="IVisualElement"/>
       </xs:choice>
       <xs:attributeGroup ref="egret.gui.Group"/>
     </xs:complexType>
@@ -698,6 +698,17 @@
         <xs:any maxOccurs="unbounded"/>
       </xs:choice>
       <xs:attributeGroup ref="egret.gui.GroupBase"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:attributeGroup name="egret.gui.HScrollBar">
+    <xs:attributeGroup ref="egret.gui.HSlider"/>
+  </xs:attributeGroup>
+  <xs:element name="HScrollBar">
+    <xs:complexType>
+      <xs:choice minOccurs="0">
+        <xs:any maxOccurs="unbounded"/>
+      </xs:choice>
+      <xs:attributeGroup ref="egret.gui.HScrollBar"/>
     </xs:complexType>
   </xs:element>
   <xs:attributeGroup name="egret.gui.HSlider">
@@ -770,6 +781,8 @@
     <xs:attribute name="paddingLeft" type="xs:decimal"/>
     <xs:attribute name="paddingRight" type="xs:decimal"/>
     <xs:attribute name="paddingTop" type="xs:decimal"/>
+    <xs:attribute name="stroke" type="xs:decimal"/>
+    <xs:attribute name="strokeColor" type="xs:decimal"/>
   </xs:attributeGroup>
   <xs:element name="Label">
     <xs:complexType>
@@ -987,7 +1000,9 @@
   </xs:simpleType>
   <xs:attributeGroup name="egret.gui.Scroller">
     <xs:attributeGroup ref="egret.gui.UIComponent"/>
+    <xs:attribute name="hBar" type="xs:string"/>
     <xs:attribute name="horizontalScrollPolicy" type="egret.gui.ScrollPolicy"/>
+    <xs:attribute name="vBar" type="xs:string"/>
     <xs:attribute name="verticalScrollPolicy" type="egret.gui.ScrollPolicy"/>
     <xs:attribute name="viewport" type="xs:string"/>
   </xs:attributeGroup>
@@ -1399,6 +1414,7 @@
     <xs:attribute name="enabled" type="xs:boolean"/>
     <xs:attribute name="excludeFrom" type="xs:string"/>
     <xs:attribute name="horizontalCenter" type="xs:decimal"/>
+    <xs:attribute name="id" type="xs:string"/>
     <xs:attribute name="includeIn" type="xs:string"/>
     <xs:attribute name="includeInLayout" type="xs:boolean"/>
     <xs:attribute name="initialized" type="xs:boolean"/>
@@ -1426,6 +1442,17 @@
         <xs:any maxOccurs="unbounded"/>
       </xs:choice>
       <xs:attributeGroup ref="egret.gui.UIComponent"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:attributeGroup name="egret.gui.VScrollBar">
+    <xs:attributeGroup ref="egret.gui.VSlider"/>
+  </xs:attributeGroup>
+  <xs:element name="VScrollBar">
+    <xs:complexType>
+      <xs:choice minOccurs="0">
+        <xs:any maxOccurs="unbounded"/>
+      </xs:choice>
+      <xs:attributeGroup ref="egret.gui.VScrollBar"/>
     </xs:complexType>
   </xs:element>
   <xs:attributeGroup name="egret.gui.VSlider">
@@ -1499,7 +1526,7 @@
   </xs:group>
   <xs:element name="states">
     <xs:complexType>
-      <xs:group ref="states_group" maxOccurs="unbounded"/>
+      <xs:group ref="states_group"/>
     </xs:complexType>
   </xs:element>
   <xs:element name="boolean" type="xs:boolean"/>
