@@ -138,21 +138,22 @@ module egret {
         public drawRepeatImage(texture: Texture, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, repeat) {
             if(texture['pattern']===undefined){
                 var image = texture._bitmapData;
-                var tempImage = image;
+                var tempImage:HTMLElement = image;
                 if (image.width != sourceWidth || image.height != sourceHeight) {
                     var tempCanvas = document.createElement("canvas");
                     tempCanvas.width = sourceWidth;
                     tempCanvas.height = sourceHeight;
                     tempCanvas.getContext("2d").drawImage(image, sourceX, sourceY, sourceWidth, sourceHeight, 0, 0, sourceWidth, sourceHeight);
-                    tempImage = new Image();
-                    tempImage.src = tempCanvas.toDataURL();
+                    tempImage = tempCanvas;
                 }
                 var pat = this.canvasContext.createPattern(tempImage, repeat);
                 texture['pattern'] = pat;
             }
             var pattern = texture['pattern'];
             this.canvasContext.fillStyle = pattern;
-            this.canvasContext.fillRect(destX, destY, destWidth, destHeight);
+            this.canvasContext.translate(destX, destY);
+            this.canvasContext.fillRect(0, 0, destWidth, destHeight);
+            this.canvasContext.translate(-destX, -destY);
         }
 
         public setTransform(matrix:egret.Matrix) {
