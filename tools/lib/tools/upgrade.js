@@ -11,12 +11,14 @@ var globals = require("../core/globals.js");
 var projectConfig = require("../core/projectConfig.js");
 
 var upgradeConfigArr = [
+    //todo
     {"v" : "1.0.3", "func":upgradeTo_1_0_3},
     {"v" : "1.0.4", "func":upgradeTo_1_0_4},
     {"v" : "1.0.5", "func":upgradeTo_1_0_5},
     {"v" : "1.0.6", "func":upgradeTo_1_0_6},
     {"v" : "1.1.0", "func":upgradeTo_1_1_0},
-    {"v" : "1.1.1", "func":upgradeTo_1_1_1}
+    {"v" : "1.1.1", "func":upgradeTo_1_1_1},
+    {"v" : "1.1.2", "func":upgradeTo_1_1_2}
 ];
 
 var currDir;
@@ -194,6 +196,12 @@ function upgradeTo_1_1_0() {
 function upgradeTo_1_1_1(){
     projectConfig.init(currDir);
     projectConfig.data.egret_version = "1.1.1";
+    projectConfig.save();
+}
+
+function upgradeTo_1_1_2(){
+    projectConfig.init(currDir);
+    projectConfig.data.egret_version = "1.1.2";
     projectConfig.save();
 }
 
