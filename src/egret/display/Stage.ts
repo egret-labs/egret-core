@@ -56,12 +56,12 @@ module egret {
         }
 
         /**
-         * @member {number} egret.Stage#scaleMode
          * 一个 StageScaleMode 类中指定要使用哪种缩放模式的值。以下是有效值：
          * StageScaleMode.EXACT_FIT -- 整个应用程序在指定区域中可见，但不尝试保持原始高宽比。可能会发生扭曲，应用程序可能会拉伸或压缩显示。
          * StageScaleMode.SHOW_ALL -- 整个应用程序在指定区域中可见，且不发生扭曲，同时保持应用程序的原始高宽比。应用程序的可能会显示边框。
          * StageScaleMode.NO_BORDER -- 整个应用程序填满指定区域，不发生扭曲，但有可能进行一些裁切，同时保持应用程序的原始高宽比。
          * StageScaleMode.NO_SCALE -- 整个应用程序的大小固定，因此，即使播放器窗口的大小更改，它也会保持不变。如果播放器窗口比内容小，则可能进行一些裁切。
+         * @member {number} egret.Stage#scaleMode
          */
         private _scaleMode:string;
 
@@ -93,8 +93,8 @@ module egret {
 
         private _stageWidth:number;
         /**
-         * @member {number} egret.Stage#stageWidth
          * 舞台宽度（坐标系宽度，非设备宽度）
+         * @member {number} egret.Stage#stageWidth
          */
         public get stageWidth():number {
             return this._stageWidth;
@@ -102,8 +102,8 @@ module egret {
 
         private _stageHeight:number;
         /**
-         * @member {number} egret.Stage#stageHeight
          * 舞台高度（坐标系高度，非设备高度）
+         * @member {number} egret.Stage#stageHeight
          */
         public get stageHeight():number {
             return this._stageHeight;

@@ -36,8 +36,8 @@ module egret {
 
         private delegate:MovieClipDelegate;
         /**
-         * @member {number} egret.MovieClip#frameRate
          * 动画的播放帧频
+         * @member {number} egret.MovieClip#frameRate
          */
         public frameRate:number = 60;
 
