@@ -153,10 +153,15 @@ module egret {
                 if (!document[hidden]) {
                     onFocusHandler();
                 }
+                else {
+                    onBlurHandler();
+                }
             };
 
-            window.onfocus = onFocusHandler;
-            window.onblur = onBlurHandler;
+//            window.onfocus = onFocusHandler;
+//            window.onblur = onBlurHandler;
+            window.addEventListener("focus", onFocusHandler, false);
+            window.addEventListener("blur", onBlurHandler, false);
 
             var hidden, visibilityChange;
             if (typeof document.hidden !== "undefined") {
@@ -171,6 +176,9 @@ module egret {
             } else if (typeof document["webkitHidden"] !== "undefined") {
                 hidden = "webkitHidden";
                 visibilityChange = "webkitvisibilitychange";
+            } else if (typeof document["oHidden"] !== "undefined") {
+                hidden = "oHidden";
+                visibilityChange = "ovisibilitychange";
             }
             if ("onpageshow" in window && "onpagehide" in window) {
                 window.addEventListener("pageshow", onFocusHandler, false);
