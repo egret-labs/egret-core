@@ -34,6 +34,7 @@ module egret {
         private _isTouchDown:boolean = false;
 
         private rootDiv:HTMLElement;
+
         constructor() {
             super();
 
@@ -63,11 +64,11 @@ module egret {
                     that.prevent(event);
                 }, false);
             }
-            else if(MainContext.deviceType == MainContext.DEVICE_MOBILE){
+            else if (MainContext.deviceType == MainContext.DEVICE_MOBILE) {
                 this.addTouchListener();
 
             }
-            else if(MainContext.deviceType == MainContext.DEVICE_PC){
+            else if (MainContext.deviceType == MainContext.DEVICE_PC) {
                 this.addTouchListener();
                 this.addMouseListener();
             }
@@ -140,10 +141,11 @@ module egret {
         private inOutOfCanvas(event):boolean {
             var location = this.getLocation(this.rootDiv, event);
             var x = location.x, y = location.y;
+            var stage = egret.MainContext.instance.stage;
             if (x < 0
                 || y < 0
-                || x > egret.MainContext.instance.stage.width
-                || y > egret.MainContext.instance.stage.height) {
+                || x > stage.stageWidth
+                || y > stage.stageHeight) {
                 return true;
             }
             return false;

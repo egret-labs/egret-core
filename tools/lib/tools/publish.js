@@ -359,10 +359,10 @@ function run(dir, args, opts) {
 
     var runtime = param.getOption(opts, "--runtime", ["html5", "native"]);
     if (runtime == "html5") {
-        compilerSingleFile(currDir, totalHTML5FileList, "\""+launcherDir + "/game-min.js\"");
+        compilerSingleFile(currDir, totalHTML5FileList, "\""+launcherDir + "/game-min.js\"", compilerComplete);
     }
     else if (runtime == "native") {
-        compilerSingleFile(currDir, totalNativeFileList, "\""+launcherDir + "/game-min-native.js\"");
+        compilerSingleFile(currDir, totalNativeFileList, "\""+launcherDir + "/game-min-native.js\"", compilerComplete);
     }
 
     //扫描json数据
@@ -374,7 +374,45 @@ function run(dir, args, opts) {
     if (runtime == "native") {
         createManifest(releaseDir);
     }
+
+    function compilerComplete() {
+        if (opts["-zip"]) {
+            createZipFile();
+        }
+    }
+
+    function createZipFile() {
+
+        //拷贝需要zip的文件
+        file.copy(launcherDir, releaseDir + "/ziptemp/launcher");
+
+        var compilerPath = path.join(param.getEgretPath(), "tools/lib/zip/EGTZipTool_v1.0.0.jar");
+        var zipFile = releaseDir + "/game_code.zip";
+        var password = "";
+        if (opts["--password"] && opts["--password"][0]) {
+            password = opts["--password"][0];
+        }
+        var cmd = 'java -jar ' + compilerPath + ' zip ' + zipFile + ' ' + releaseDir + '/ziptemp' + ' ' + password;
+        //console.log(cmd);
+        var build = cp_exec(cmd);
+//        build.stdout.on("data", function(data) {
+//            globals.log(data);
+//        });
+        build.stderr.on("data", function(data) {
+            globals.log(data);
+        });
+        build.on("exit", function(result) {
+            file.remove(releaseDir + "/ziptemp");
+            if (result == 0) {
+
+            } else {
+                //todo zip异常
+                //globals.warn(result);
+            }
+        });
+    }
 }
+var cp_exec = require('child_process').exec;
 
 function compilerSingleFile(currDir, fileList, outputFile, callback) {
     var tempFile = path.join(currDir, "bin-debug/__temp.js");
@@ -408,6 +446,8 @@ function help_example() {
     result += "参数说明:\n";
     result += "    --version    设置发布之后的版本号，可以不设置\n";
     result += "    --runtime    设置发布方式为 html5 或者是 native方式，默认值为html5";
+    result += "    -zip         设置发布后生成launcher文件夹的zip文件";
+    result += "    --password   设置发布zip文件的解压密码";
     return result;
 }
 
@@ -447,7 +487,7 @@ function createManifest(currDir){
         oldVersion = JSON.parse(file.read(basePath));
     }
 
-    var list = file.search(currDir);
+    var list = file.search(path.join(currDir, "resource"));
     var currVersion = {};
     var length = list.length;
     for(var i = 0 ; i < length ; i++) {
@@ -475,7 +515,7 @@ function createManifest(currDir){
     }
     else {
         file.save(basePath, str);
-        file.save(versionPath, str);
+        file.save(versionPath, "{}");
     }
 }
 

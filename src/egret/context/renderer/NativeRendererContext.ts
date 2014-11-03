@@ -91,7 +91,7 @@ module egret {
          * @param destHeigh {any}
          * @param repeat {string}
          */
-        public drawImage(texture:Texture, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, repeat=undefined) {
+        public drawImage(texture:Texture, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, repeat = undefined) {
 
             if (repeat !== undefined) {
                 this.drawRepeatImage(texture, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, repeat);
@@ -113,6 +113,7 @@ module egret {
                 }
             }
         }
+
         /**
          * 变换Context的当前渲染矩阵
          * @method egret.NativeRendererContext#setTransform
@@ -190,20 +191,20 @@ module egret {
         }
 
         public pushMask(mask:Rectangle):void {
-            egret_native.Graphics.pushRectStencil(mask.x, mask.y, mask.width, mask.height, 255, 0, 0, 0, 0, false);
+            egret_native.Graphics.pushClip(mask.x, mask.y, mask.width, mask.height);
         }
 
         public popMask():void {
-            egret_native.Graphics.popStencil();
+            egret_native.Graphics.popClip();
         }
 
 
         public setGlobalColorTransform(colorTransformMatrix:Array<any>):void {
-            if (colorTransformMatrix){
+            if (colorTransformMatrix) {
                 egret_native.Graphics.setGlobalColorTransformEnabled(true);
                 egret_native.Graphics.setGlobalColorTransform(colorTransformMatrix);
             }
-            else{
+            else {
                 egret_native.Graphics.setGlobalColorTransformEnabled(false);
             }
 

@@ -98,9 +98,9 @@ declare module egret_native {
 
         function setGlobalAlpha(alpha:number):void;
 
-        function pushRectStencil(x:number, y:number, w:number, h:number, r:number, g:number, b:number, a:number, hackFlag:number, forceCreateMask:boolean):void;
+        function pushClip(x:number, y:number, w:number, h:number):void;
 
-        function popStencil():void;
+        function popClip():void;
 
         function setGlobalColorTransform(colorTransformMatrix:Array<number>):void;
 
