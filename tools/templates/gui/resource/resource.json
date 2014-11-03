@@ -1,7 +1,7 @@
 {
 	"groups":[
 	{
-		"keys":"checkbox_select_disabled_png,checkbox_select_normal_png,checkbox_unselect_disabled_png,checkbox_unselect_normal_png,hslider_fill_png,hslider_thumb_png,hslider_track_png,button_disabled_png,button_down_png,button_normal_png,panel_back_png,progressbar_fill_png,progressbar_track_png,radiobutton_select_disabled_png,radiobutton_select_normal_png,radiobutton_unselect_disabled_png,radiobutton_unselect_normal_png,togglebutton_disabled_png,togglebutton_normal_png,togglebutton_selected_png,tree_back_png,tree_btndisabled_png,tree_btndisabledselect_png,tree_btndown_png,tree_btndownselect_png,tree_btnup_png,tree_btnupselect_png,vslider_fill_png,vslider_thumb_png,vslider_track_png,onoffbutton_off_label_png,onoffbutton_off_thumb_png,onoffbutton_off_track_png,onoffbutton_on_label_png,onoffbutton_on_thumb_png,onoffbutton_on_track_png,tree_icon_dir_png,tree_icon_file_png,panel_headeback_png,bgImage,app_list_item_cutlline_png,app_list_item_select_png,app_list_item_up_png,dropdownlist_arrow_down_png,dropdownlist_arrow_up_png,DropDownListButtonSkin_down_png,DropDownListButtonSkin_up_png,closebtn_disabledpng,closebtn_down_png,closebtn_up_png,togglebutton_over,checkbox-select_over,checkbox-unselect_over,RadioButton_select_over,RadioButton_unselect_over",
+		"keys":"checkbox_select_disabled_png,checkbox_select_normal_png,checkbox_unselect_disabled_png,checkbox_unselect_normal_png,hslider_fill_png,hslider_thumb_png,hslider_track_png,button_disabled_png,button_down_png,button_normal_png,panel_back_png,progressbar_fill_png,progressbar_track_png,radiobutton_select_disabled_png,radiobutton_select_normal_png,radiobutton_unselect_disabled_png,radiobutton_unselect_normal_png,togglebutton_disabled_png,togglebutton_normal_png,togglebutton_selected_png,tree_back_png,tree_btndisabled_png,tree_btndisabledselect_png,tree_btndown_png,tree_btndownselect_png,tree_btnup_png,tree_btnupselect_png,vslider_fill_png,vslider_thumb_png,vslider_track_png,onoffbutton_off_label_png,onoffbutton_off_thumb_png,onoffbutton_off_track_png,onoffbutton_on_label_png,onoffbutton_on_thumb_png,onoffbutton_on_track_png,tree_icon_dir_png,tree_icon_file_png,panel_headeback_png,bgImage,app_list_item_cutlline_png,app_list_item_select_png,app_list_item_up_png,dropdownlist_arrow_down_png,dropdownlist_arrow_up_png,DropDownListButtonSkin_down_png,DropDownListButtonSkin_up_png,closebtn_disabledpng,closebtn_down_png,closebtn_up_png,togglebutton_over,checkbox_select_over,checkbox_unselect_over,radiobutton_select_over,radiobutton_unselect_over",
 		"name":"preload"
 	}],
 	"resources":[
@@ -277,22 +277,22 @@
 		"url":"assets/simple/ToggleButton/togglebutton_over.png"
 	},
 	{
-		"name":"checkbox-select_over",
+		"name":"checkbox_select_over",
 		"type":"image",
 		"url":"assets/simple/CheckBox/checkbox-select_over.png"
 	},
 	{
-		"name":"checkbox-unselect_over",
+		"name":"checkbox_unselect_over",
 		"type":"image",
 		"url":"assets/simple/CheckBox/checkbox-unselect_over.png"
 	},
 	{
-		"name":"RadioButton_select_over",
+		"name":"radiobutton_select_over",
 		"type":"image",
 		"url":"assets/simple/RadioButton/RadioButton_select_over.png"
 	},
 	{
-		"name":"RadioButton_unselect_over",
+		"name":"radiobutton_unselect_over",
 		"type":"image",
 		"url":"assets/simple/RadioButton/RadioButton_unselect_over.png"
 	}]
