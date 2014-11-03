@@ -2,7 +2,7 @@
   <component id="ArrayCollection" super="egret.EventDispatcher" default="source" show="false" module="egret.gui"/>
   <component id="BasicLayout" super="egret.gui.LayoutBase" show="false" module="egret.gui"/>
   <component id="Button" super="egret.gui.ButtonBase" show="true" module="egret.gui"/>
-  <component id="ButtonBase" super="egret.gui.SkinnableComponent" default="label" state="up,over,down,disabled" show="false" module="egret.gui"/>
+  <component id="ButtonBase" super="egret.gui.SkinnableComponent" default="label" state="up,down,disabled" show="false" module="egret.gui"/>
   <component id="CheckBox" super="egret.gui.ToggleButtonBase" show="true" module="egret.gui"/>
   <component id="DataGroup" super="egret.gui.GroupBase" default="dataProvider" show="true" module="egret.gui"/>
   <component id="DropDownList" super="egret.gui.DropDownListBase" show="true" module="egret.gui"/>
@@ -42,7 +42,7 @@
   <component id="TitleWindow" super="egret.gui.Panel" show="true" module="egret.gui"/>
   <component id="ToggleButton" super="egret.gui.ToggleButtonBase" show="true" module="egret.gui"/>
   <component id="ToggleSwitch" super="egret.gui.ToggleButtonBase" show="true" module="egret.gui"/>
-  <component id="ToggleButtonBase" super="egret.gui.ButtonBase" state="up,over,down,disabled,upAndSelected,overAndSelected,downAndSelected,disabledAndSelected" show="false" module="egret.gui"/>
+  <component id="ToggleButtonBase" super="egret.gui.ButtonBase" state="up,down,disabled,upAndSelected,downAndSelected,disabledAndSelected" show="false" module="egret.gui"/>
   <component id="TrackBase" super="egret.gui.Range" show="false" module="egret.gui"/>
   <component id="Tree" super="egret.gui.List" show="true" module="egret.gui"/>
   <component id="TreeItemRenderer" super="egret.gui.ItemRenderer" show="false" module="egret.gui"/>
@@ -52,6 +52,9 @@
   <component id="VerticalLayout" super="egret.gui.LayoutBase" show="false" module="egret.gui"/>
   <component id="ViewStack" super="egret.gui.Group" show="true" module="egret.gui"/>
   <component id="EditableText" super="egret.gui.TextBase" show="true" module="egret.gui"/>
+  <component id="SkinnableTextBase" super="egret.gui.SkinnableComponent" show="true" module="egret.gui"/>
+  <component id="TextArea" super="egret.gui.SkinnableTextBase" show="true" module="egret.gui"/>
+  <component id="TextInput" super="egret.gui.SkinnableTextBase" show="true" module="egret.gui"/>
   <component id="HScrollBar" super="egret.gui.HSlider" show="true" module="egret.gui"/>
   <component id="VScrollBar" super="egret.gui.VSlider" show="true" module="egret.gui"/>
 </componentPackage>
