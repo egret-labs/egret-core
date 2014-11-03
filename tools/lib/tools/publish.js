@@ -382,28 +382,37 @@ function run(dir, args, opts) {
     }
 
     function createZipFile() {
-        globals.log("createZip");
-        var archive = new zip();
-        var launcherList = file.getDirectoryListing(launcherDir);
-        var length = launcherList.length;
-        var arr = [];
-        for(var i = 0 ; i < length ; i ++){
-            var filePath = launcherList[i];
-            arr.push({name : path.relative(releaseDir, filePath), path : filePath});
+
+        //拷贝需要zip的文件
+        file.copy(launcherDir, releaseDir + "/ziptemp/launcher");
+
+        var compilerPath = path.join(param.getEgretPath(), "tools/lib/zip/EGTZipTool_v1.0.0.jar");
+        var zipFile = releaseDir + "/game_code.zip";
+        var password = "";
+        if (opts["--password"] && opts["--password"][0]) {
+            password = opts["--password"][0];
         }
-        archive.addFiles(arr, function (err) {
-            if (err) return console.log("err while adding files", err);
+        var cmd = 'java -jar ' + compilerPath + ' zip ' + zipFile + ' ' + releaseDir + '/ziptemp' + ' ' + password;
+        //console.log(cmd);
+        var build = cp_exec(cmd);
+//        build.stdout.on("data", function(data) {
+//            globals.log(data);
+//        });
+        build.stderr.on("data", function(data) {
+            globals.log(data);
+        });
+        build.on("exit", function(result) {
+            file.remove(releaseDir + "/ziptemp");
+            if (result == 0) {
 
-            var buff = archive.toBuffer();
-
-            fs.writeFile(releaseDir + "/game_code.zip", buff, function () {
-                globals.log("createZipFinished");
-            });
+            } else {
+                //todo zip异常
+                //globals.warn(result);
+            }
         });
     }
 }
-var fs = require("fs");
-var zip = require("../core/zip/zip.js");
+var cp_exec = require('child_process').exec;
 
 function compilerSingleFile(currDir, fileList, outputFile, callback) {
     var tempFile = path.join(currDir, "bin-debug/__temp.js");
@@ -438,6 +447,7 @@ function help_example() {
     result += "    --version    设置发布之后的版本号，可以不设置\n";
     result += "    --runtime    设置发布方式为 html5 或者是 native方式，默认值为html5";
     result += "    -zip         设置发布后生成launcher文件夹的zip文件";
+    result += "    --password   设置发布zip文件的解压密码";
     return result;
 }
 
