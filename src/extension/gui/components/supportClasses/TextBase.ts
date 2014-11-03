@@ -52,7 +52,7 @@ module egret.gui {
 		 * 默认的文本测量高度
 		 * @constant egret.gui.TextBase.DEFAULT_MEASURED_HEIGHT
 		 */		
-		public static DEFAULT_MEASURED_HEIGHT:number = 35;
+		public static DEFAULT_MEASURED_HEIGHT:number = 22;
 		
 		/**
 		 * 呈示此文本的内部 TextField 
