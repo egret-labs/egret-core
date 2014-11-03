@@ -487,7 +487,7 @@ function createManifest(currDir){
         oldVersion = JSON.parse(file.read(basePath));
     }
 
-    var list = file.search(currDir);
+    var list = file.search(path.join(currDir, "resource"));
     var currVersion = {};
     var length = list.length;
     for(var i = 0 ; i < length ; i++) {
@@ -515,7 +515,7 @@ function createManifest(currDir){
     }
     else {
         file.save(basePath, str);
-        file.save(versionPath, str);
+        file.save(versionPath, "{}");
     }
 }
 
