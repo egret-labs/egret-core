@@ -137,8 +137,12 @@ module egret {
                 this.doSetChildIndex(child, index);
                 return child;
             }
+            
             if (host) {
-                host.removeChild(child);
+                var index = host._children.indexOf(child);
+                if (index >= 0) {
+                    host._doRemoveChild(index);
+                }
             }
 
             this._children.splice(index, 0, child);
