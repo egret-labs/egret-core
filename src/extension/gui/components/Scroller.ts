@@ -270,6 +270,28 @@ module egret.gui {
                 this.hBar._setValue(pos);
         }
 
+        /**
+         * 缓动到水平滚动位置
+         * @method egret.gui.Scroller#throwHorizontally
+         * @param hspTo {number} 
+         * @param duration {number} 
+         */
+        public throwHorizontally(hspTo: number, duration: number= 500): void {
+            if (!this._scroller)
+                return;
+            this._scroller.setScrollLeft(hspTo, duration);
+        }
+        /**
+         * 缓动到垂直滚动位置
+         * @method egret.gui.Scroller#throwVertically
+         * @param vspTo {number} 
+         * @param duration {number} 
+         */
+        public throwVertically(vspTo: number, duration: number= 500): void {
+            if (!this._scroller)
+                return;
+            this._scroller.setScrollTop(vspTo, duration);
+        }
 
 		/**
 		 * @member egret.gui.Scroller#numElements

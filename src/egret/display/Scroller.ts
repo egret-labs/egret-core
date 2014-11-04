@@ -278,21 +278,35 @@ module egret {
             var pixelsPerMSX = Math.abs(x), pixelsPerMSY = Math.abs(y);
             var maxLeft = this.getMaxScrollLeft();
             var maxTop = this.getMaxScrollTop();
-            var datax = pixelsPerMSX > 0.02 ? this.getAnimationDatas(x, this._scrollLeft, maxLeft) : { position: this._scrollLeft,duration:0};
-            var datay = pixelsPerMSY > 0.02 ? this.getAnimationDatas(y, this._scrollTop, maxTop) : { position: this._scrollTop, duration: 0 };
-            var twx = egret.Tween.get(this).to({ scrollLeft: datax.position }, datax.duration, egret.Ease.quartOut);
-            var twy = egret.Tween.get(this).to({ scrollTop: datay.position }, datay.duration, egret.Ease.quartOut);
+            var datax = pixelsPerMSX > 0.02 ? this.getAnimationDatas(x, this._scrollLeft, maxLeft) : { position: this._scrollLeft,duration:1};
+            var datay = pixelsPerMSY > 0.02 ? this.getAnimationDatas(y, this._scrollTop, maxTop) : { position: this._scrollTop, duration: 1 };
+            this.setScrollLeft(datax.position, datax.duration);
+            this.setScrollTop(datay.position, datay.duration);
+        }
 
-            //恢复由于滚动超出界限的部分
-            var scrollLeft = Math.min(maxLeft, Math.max(datax.position, 0)),
-                scrollTop = Math.min(maxTop, Math.max(datay.position, 0));
-            if (scrollLeft != datax.position) {
-                twx.to({ scrollLeft: scrollLeft }, 300, egret.Ease.quintOut);
+        public setScrollTop(scrollTop: number, duration: number = 0): egret.Tween {
+            var final = Math.min(this.getMaxScrollTop(), Math.max(scrollTop, 0));
+            if (duration == 0) {
+                this.scrollTop = final;
+                return null;
             }
-            if (scrollTop != datay.position) {
-                twy.to({ scrollTop: scrollTop }, 300, egret.Ease.quintOut);
+            var twy = egret.Tween.get(this).to({ scrollTop: scrollTop }, duration, egret.Ease.quartOut);
+            if (final != scrollTop) {
+                twy.to({ scrollTop: final }, 300, egret.Ease.quintOut);
             }
         }
+        public setScrollLeft(scrollLeft: number, duration: number = 0): egret.Tween {
+            var final = Math.min(this.getMaxScrollLeft(), Math.max(scrollLeft, 0));
+            if (duration == 0) {
+                this.scrollTop = final;
+                return null;
+            }
+            var tw = egret.Tween.get(this).to({ scrollLeft: scrollLeft }, duration, egret.Ease.quartOut);
+            if (final != scrollLeft) {
+                tw.to({ scrollLeft: final }, 300, egret.Ease.quintOut);
+            }
+        }
+
         private getAnimationDatas(pixelsPerMS: number, curPos: number, maxPos: number): { position: number; duration: number } {
             var absPixelsPerMS: number = Math.abs(pixelsPerMS);
             var extraFricition: number = 0.95;
@@ -302,7 +316,7 @@ module egret {
             var posTo: number = curPos + pixelsPerMS * 500;
             if (posTo < 0 || posTo > maxPos) {
                 posTo = curPos;
-                while (Math.abs(pixelsPerMS) > minVelocity) {
+                while (Math.abs(pixelsPerMS)!=Infinity && Math.abs(pixelsPerMS) > minVelocity) {
                     posTo += pixelsPerMS;
                     if (posTo < 0 || posTo > maxPos) {
                         pixelsPerMS *= friction * extraFricition;
