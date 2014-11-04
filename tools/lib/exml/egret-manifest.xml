@@ -52,7 +52,7 @@
   <component id="VerticalLayout" super="egret.gui.LayoutBase" show="false" module="egret.gui"/>
   <component id="ViewStack" super="egret.gui.Group" show="true" module="egret.gui"/>
   <component id="EditableText" super="egret.gui.TextBase" show="true" module="egret.gui"/>
-  <component id="SkinnableTextBase" super="egret.gui.SkinnableComponent" show="true" module="egret.gui"/>
+  <component id="SkinnableTextBase" super="egret.gui.SkinnableComponent" show="false" module="egret.gui"/>
   <component id="TextArea" super="egret.gui.SkinnableTextBase" show="true" module="egret.gui"/>
   <component id="TextInput" super="egret.gui.SkinnableTextBase" show="true" module="egret.gui"/>
   <component id="HScrollBar" super="egret.gui.HSlider" show="true" module="egret.gui"/>
