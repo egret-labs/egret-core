@@ -908,7 +908,6 @@ module egret {
         }
 
         public _onRemoveFromStage():void {
-            this._stage = null;
             DisplayObjectContainer.__EVENT__REMOVE_FROM_STAGE_LIST.push(this);
         }
 

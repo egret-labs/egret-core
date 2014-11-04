@@ -207,6 +207,7 @@ module egret {
                 while (list.length > 0) {
                     var childAddToStage = list.shift();
                     childAddToStage.dispatchEventWith(Event.REMOVED_FROM_STAGE);
+                    childAddToStage._stage = null;
                 }
             }
             child._parentChanged(null);
