@@ -64,16 +64,20 @@ module egret.gui {
         public updateDisplayList(unscaledWidth:number, unscaledHeight:number):void{
             this._viewport.setLayoutBoundsSize(unscaledWidth, unscaledHeight);
             if (this.hBar) {
-                this.hBar._setViewportMetric(unscaledWidth, this._viewport.contentWidth);
-                this.hBar._setWidth(unscaledWidth - 2);
-                this.hBar.x = 1;
-                this.hBar.y = unscaledHeight - this.hBar._height - 1;
+                if (this._horizontalScrollPolicy != "off") {
+                    this.hBar._setViewportMetric(unscaledWidth, this._viewport.contentWidth);
+                    this.hBar._setWidth(unscaledWidth - 2);
+                    this.hBar.x = 1;
+                    this.hBar.y = unscaledHeight - this.hBar._height - 1;
+                }
             }
             if (this.vBar) {
-                this.vBar._setViewportMetric(unscaledHeight, this._viewport.contentHeight);
-                this.vBar._setHeight(unscaledHeight - 2);
-                this.vBar.y = 1;
-                this.vBar.x = unscaledWidth - this.vBar.width - 1;
+                if (this._verticalScrollPolicy != "off") {
+                    this.vBar._setViewportMetric(unscaledHeight, this._viewport.contentHeight);
+                    this.vBar._setHeight(unscaledHeight - 2);
+                    this.vBar.y = 1;
+                    this.vBar.x = unscaledWidth - this.vBar.width - 1;
+                }
             }
         }
 
@@ -866,28 +870,49 @@ module egret.gui {
         }
 
         public _checkHbar() {
-            if (this._horizontalScrollPolicy != "off") {
-                var bar = new HScrollBar();
+            if (this._horizontalScrollPolicy == "off") {
+                if (this.hBar) {
+                    this._removeFromDisplayList(this.hBar);
+                }
+                return;
+            }
+            var bar: HScrollBar = null;
+            if (this.hBar) {
+                bar = this.hBar
+            }
+            else {
+                bar = new HScrollBar();
                 bar.createChildren();
                 if (bar.thumb == null)
                     return;
                 bar.addEventListener(Event.CHANGE, this.hBarChanged, this, false);
                 bar._setViewportMetric(this._viewport.width, this._viewport.contentWidth);
-                this.hBar = bar;
-                this._addToDisplayList(this.hBar);
             }
+            this.hBar = bar;
+            this._addToDisplayList(this.hBar);
         }
         public _checkVbar() {
-            if (this._verticalScrollPolicy != "off") {
-                var vbar = new VScrollBar();
+            if (this._verticalScrollPolicy == "off") {
+                if (this.vBar) {
+                    this._removeFromDisplayList(this.vBar);
+                }
+                return;
+            }
+
+            var vbar: VScrollBar = null;
+            if (this.vBar) {
+                vbar = this.vBar;
+            }
+            else {
+                vbar = new VScrollBar();
                 vbar.createChildren();
                 if (vbar.thumb == null)
                     return;
                 vbar.addEventListener(Event.CHANGE, this.vBarChanged, this, false);
                 vbar._setViewportMetric(this._viewport.height, this._viewport.contentHeight);
-                this.vBar = vbar;
-                this._addToDisplayList(this.vBar);
             }
+            this.vBar = vbar;
+            this._addToDisplayList(this.vBar);
         }
 
 
