@@ -101,7 +101,7 @@ module egret {
             this._scrollYEnabled = value;
         }
 
-        private _scrollLeft = 0;
+        public _scrollLeft = 0;
         /**
          * 获取或设置水平滚动位置,
          * @member {number} egret.Scroller#scrollLeft
@@ -117,7 +117,7 @@ module egret {
             this._updateContentPosition();
         }
 
-        private _scrollTop = 0;
+        public _scrollTop = 0;
         /**
          * 获取或设置垂直滚动位置,
          * @member {number} egret.Scroller#scrollTop
@@ -185,7 +185,7 @@ module egret {
         }
 
         public _removeEvents() {
-            this.content.removeEventListener(TouchEvent.TOUCH_BEGIN, this._onTouchBegin, this);;
+            this.content.removeEventListener(TouchEvent.TOUCH_BEGIN, this._onTouchBegin, this);
         }
 
         public _onTouchBegin(e: TouchEvent) {
@@ -254,6 +254,12 @@ module egret {
             this._lastTouchPosition.x = e.stageX;
             this._lastTouchPosition.y = e.stageY;
         }
+        public getMaxScrollLeft() {
+            return (this.content.explicitWidth || this.content.width) - this.width;
+        }
+        public getMaxScrollTop() {
+            return (this.content.explicitHeight || this.content.height) - this.height;
+        }
         static weight = [1, 1.33, 1.66, 2, 2.33];
         private _moveAfterTouchEnd() {
             if (this._velocitys.length == 0)
@@ -270,8 +276,8 @@ module egret {
 
             var x = sum.x / totalW, y = sum.y / totalW;
             var pixelsPerMSX = Math.abs(x), pixelsPerMSY = Math.abs(y);
-            var maxLeft = (this.content.explicitWidth||this.content.width) - this.width;
-            var maxTop = (this.content.explicitHeight || this.content.height) - this.height;
+            var maxLeft = this.getMaxScrollLeft();
+            var maxTop = this.getMaxScrollTop();
             var datax = pixelsPerMSX > 0.02 ? this.getAnimationDatas(x, this._scrollLeft, maxLeft) : { position: this._scrollLeft,duration:0};
             var datay = pixelsPerMSY > 0.02 ? this.getAnimationDatas(y, this._scrollTop, maxTop) : { position: this._scrollTop, duration: 0 };
             var twx = egret.Tween.get(this).to({ scrollLeft: datax.position }, datax.duration, egret.Ease.quartOut);
