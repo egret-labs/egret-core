@@ -55,7 +55,7 @@ module egret {
 
             var request:URLRequest = loader._request;
             var xhr = this.getXHR();
-            xhr.onload = onLoadComplete;
+//            xhr.onload = onLoadComplete;
             xhr.onreadystatechange = onReadyStateChange;
 
             var url:string = NetContext._getUrl(request);
@@ -88,10 +88,13 @@ module egret {
                     {//请求错误
                         IOErrorEvent.dispatchIOErrorEvent(loader);
                     }
+                    else {
+                        onLoadComplete();
+                    }
                 }
             }
 
-            function onLoadComplete(event) {
+            function onLoadComplete() {
                 switch (loader.dataFormat) {
                     case URLLoaderDataFormat.TEXT:
                         loader.data = xhr.responseText;
