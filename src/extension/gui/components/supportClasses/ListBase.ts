@@ -725,8 +725,15 @@ module egret.gui {
 				}
 			}
 			else if (event.kind == CollectionEventKind.REFRESH){
-				this._setSelectedIndex(ListBase.NO_SELECTION, false);
+				this.dataProviderRefreshed();
 			}
+		}
+
+		/**
+		 * 数据源刷新
+		 */
+		public dataProviderRefreshed():void{
+			this._setSelectedIndex(ListBase.NO_SELECTION, false);
 		}
 	}
 }

@@ -307,7 +307,15 @@ module egret.gui {
 			//导致target变化而无法抛出原生的click事件,所以此处监听MouseUp来抛出ItemClick事件。
 			renderer.addEventListener(TouchEvent.TOUCH_END, this.item_mouseUpHandler, this);
 		}
-
+		/**
+		 * 数据源发生刷新
+		 */
+		public dataProviderRefreshed():void{
+			if(this._allowMultipleSelection){
+				return;
+			}
+			super.dataProviderRefreshed();
+		}
 		/**
 		 * @method egret.gui.List#dataGroup_rendererRemoveHandler
 		 * @param event {RendererExistenceEvent} 
