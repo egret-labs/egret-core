@@ -547,7 +547,7 @@ module egret {
                 drawY += valign * (explicitHeight - textHeight);
             }
             drawY = Math.round(drawY);
-            var minY:number = drawY;
+//            var minY:number = drawY;
             var halign:number = 0;
             if (this._textAlign == HorizontalAlign.CENTER) {
                 halign = 0.5;
@@ -563,20 +563,20 @@ module egret {
             else {
                 maxWidth = this._textWidth;
             }
-            var minX:number = Number.POSITIVE_INFINITY;
+//            var minX:number = Number.POSITIVE_INFINITY;
             for (var i:number = 0; i < length; i++) {
                 var line:string = lines[i];
                 var measureW:number = measuredWidths[i];
                 var drawX:number = Math.round((maxWidth - measureW) * halign);
-                if (drawX < minX) {
-                    minX = drawX;
-                }
+//                if (drawX < minX) {
+//                    minX = drawX;
+//                }
                 if (!forMeasure && drawY < explicitHeight) {
                     renderContext.drawText(this, line, drawX, drawY, maxWidth);
                 }
                 drawY += hGap;
             }
-            return Rectangle.identity.initialize(minX, minY, maxWidth, textHeight);
+            return Rectangle.identity.initialize(0, 0, maxWidth, textHeight);
         }
 
         private _textWidth:number;
