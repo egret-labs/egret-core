@@ -663,6 +663,12 @@ module egret {
             var rect:Rectangle = this._measureBounds();
             var w:number = this._hasWidthSet ? this._explicitWidth : rect.width;
             var h:number = this._hasHeightSet ? this._explicitHeight : rect.height;
+
+            //记录测量宽高
+            this._rectW = rect.width;
+            this._rectH = rect.height;
+            this._clearSizeDirty();
+
             var x:number = rect.x;
             var y:number = rect.y;
             var anchorX = 0, anchorY = 0;
