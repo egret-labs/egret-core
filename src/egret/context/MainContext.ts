@@ -238,3 +238,7 @@ var testRuntimeType = function () {
 egret.MainContext.instance = new egret.MainContext();
 egret.MainContext.deviceType = testDeviceType() ? egret.MainContext.DEVICE_MOBILE : egret.MainContext.DEVICE_PC;
 egret.MainContext.runtimeType = testRuntimeType() ? egret.MainContext.RUNTIME_HTML5 : egret.MainContext.RUNTIME_NATIVE;
+
+
+delete testDeviceType;
+delete testRuntimeType;
