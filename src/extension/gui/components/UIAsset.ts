@@ -161,7 +161,9 @@ module egret.gui {
             this._content = content;
             if(oldContent!==content) {
                 if(oldContent instanceof DisplayObject){
-                    this._removeFromDisplayList(<DisplayObject> oldContent);
+					if((<DisplayObject> oldContent).parent==this){
+						this._removeFromDisplayList(<DisplayObject> oldContent);
+					}
                 }
                 if(content instanceof  DisplayObject){
                     this._addToDisplayListAt(<DisplayObject> content,0);
