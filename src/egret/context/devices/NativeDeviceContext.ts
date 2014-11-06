@@ -228,10 +228,9 @@ egret.ContentStrategy.prototype.setEgretSize = function (w:number, h:number, sty
     egret.StageDelegate.getInstance()._stageWidth = w;
     egret.StageDelegate.getInstance()._stageHeight = h;
 
-    egret_native.EGTView.setDesignSize(w, h);
-
 //    console.log("setVisibleRect:" + left + "|" + top + "|" + styleW + "|" + styleH);
     egret_native.EGTView.setVisibleRect(left, top, styleW, styleH);
+    egret_native.EGTView.setDesignSize(w, h);
 };
 
 
