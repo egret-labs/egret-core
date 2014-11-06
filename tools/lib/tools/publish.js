@@ -445,8 +445,8 @@ function help_example() {
     result += "    " + help_title();
     result += "参数说明:\n";
     result += "    --version    设置发布之后的版本号，可以不设置\n";
-    result += "    --runtime    设置发布方式为 html5 或者是 native方式，默认值为html5";
-    result += "    -zip         设置发布后生成launcher文件夹的zip文件";
+    result += "    --runtime    设置发布方式为 html5 或者是 native方式，默认值为html5\n";
+    result += "    -zip         设置发布后生成launcher文件夹的zip文件\n";
     result += "    --password   设置发布zip文件的解压密码";
     return result;
 }
