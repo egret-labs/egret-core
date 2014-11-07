@@ -43,6 +43,15 @@ function run(currDir, args, opts) {
                     copyFileDir(projectPath, "tools/templates/gui");
                 }
             }
+
+            //根据package.json写入项目配置文件中的egret版本号
+            var packageTxt = file.read(path.join(param.getEgretPath(), "package.json"));
+            var packageObj = JSON.parse(packageTxt);
+            var currentVersion = packageObj.version;
+            var egretPropertiesTxt = file.read(path.join(projectPath, "egretProperties.json"));
+            egretPropertiesTxt = egretPropertiesTxt.replace("{version_replace}",currentVersion);
+            file.save(path.join(projectPath, "egretProperties.json"), egretPropertiesTxt);
+
             callback();
         },
 
