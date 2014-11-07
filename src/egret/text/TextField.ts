@@ -530,9 +530,13 @@ module egret {
 
             var lines:Array<string> = this.getTextLines(renderContext);
             if (!lines) {
+                this._numLines = 0;
+                this._textHeight = 0;
+                this._textWidth = 0;
                 return Rectangle.identity.initialize(0, 0, 0, 0);
             }
             var length:number = lines.length;
+            this._numLines = length;
             var drawY:number = this._size * 0.5;
             var hGap:number = this._size + this._lineSpacing;
             var textHeight:number = length * hGap - this._lineSpacing;
