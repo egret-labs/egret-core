@@ -27,8 +27,6 @@ function linkChildren(fileUrl) {
         return;
     }
 
-    console.log("linkChildren" + fileUrl);
-
     try {
         var stuStr = file.read(fileUrl);
         var stuData = JSON.parse(stuStr);
@@ -67,13 +65,15 @@ function linkChildren(fileUrl) {
         setAnimation(dbArmature["animation"], stuAnimation["mov_data"]);
     }
 
+
     file.save(fileUrl.replace(".json", "_ske.json"), JSON.stringify(dbData, null, "\t"));
 
-    moveResources(fileUrl, stuData["texture_data"]);
+
+
+//    moveResources(fileUrl, stuData["texture_data"]);
 }
 
 function moveResources(fileUrl, resources) {
-    console.log("moveResources" + fileUrl);
     var fileName = file.getFileName(fileUrl);
     var filePath = fileUrl.substring(0, fileUrl.lastIndexOf(fileName));
 
@@ -86,7 +86,58 @@ function moveResources(fileUrl, resources) {
     }
 }
 
+var layersInfo = {};
+function setLayer(name, parent) {
+    if (layersInfo[name] == null) {
+        layersInfo[name] = [];
+    }
+
+    if (parent != null && parent != "") {
+        if (layersInfo[parent] == null) {
+            layersInfo[parent] = [];
+        }
+
+        layersInfo[parent].push(name);
+    }
+}
+
+var resultArr = [];
+function resortLayers() {
+    var tempArr = [];
+    for (var name in layersInfo) {
+        tempArr.push({"name" : name, "children" : layersInfo[name]});
+    }
+
+    while (tempArr.length > 0) {
+        for (var i = tempArr.length - 1; i >= 0; i--) {
+            var info = tempArr[i];
+            if (info["children"].length == 0) {
+                resultArr.push(info["name"]);
+
+                tempArr.splice(i, 1);
+
+                for (var j = 0; j < tempArr.length; j++) {
+                    var temp = tempArr[j];
+                    if (temp["children"].indexOf(info["name"]) >= 0) {
+                        var idx = temp["children"].indexOf(info["name"]);
+                        temp["children"].splice(idx, 1);
+                    }
+                }
+            }
+        }
+    }
+
+    resultArr.reverse();
+}
+
+function radianToAngle(radian) {
+    return radian * 180 / Math.PI;
+}
+
 function setBone(dbBones, stuBones) {
+    var tempBones = {};
+
+    //层级父子数组
     for (var i = 0; i < stuBones.length; i++) {
         var stuBone = stuBones[i];
 
@@ -94,12 +145,41 @@ function setBone(dbBones, stuBones) {
         dbBones.push(dbBone);
 
         dbBone["name"] = stuBone["name"];
+
+        if (stuBone["parent"] != null && stuBone["parent"] != "") {
+            dbBone["parent"] = stuBone["parent"];
+        }
+
+        setLayer(stuBone["name"], stuBone["parent"]);
+
         dbBone["transform"]["x"] = stuBone["x"];
         dbBone["transform"]["y"] = -stuBone["y"];
-        dbBone["transform"]["skX"] = stuBone["kX"];
-        dbBone["transform"]["skY"] = stuBone["kY"];
+        dbBone["transform"]["skX"] = radianToAngle(stuBone["kX"]);
+        dbBone["transform"]["skY"] = radianToAngle(stuBone["kY"]);
         dbBone["transform"]["scX"] = stuBone["cX"];
         dbBone["transform"]["scY"] = stuBone["cY"];
+
+        tempBones[stuBone["name"]] = dbBone;
+    }
+
+    resortLayers();
+    console.log(resultArr);
+
+    for (var i = 0; i < resultArr.length; i++) {
+        var nodeName = resultArr[i];
+
+        var bone = tempBones[nodeName];
+        if (bone["parent"] == null || bone["parent"] == "") {
+            continue;
+        }
+
+        var parentBone = tempBones[bone["parent"]];
+        bone["transform"]["x"] += parentBone["transform"]["x"];
+        bone["transform"]["y"] += parentBone["transform"]["y"];
+        bone["transform"]["scX"] *= parentBone["transform"]["scX"];
+        bone["transform"]["scY"] *= parentBone["transform"]["scY"];
+        bone["transform"]["skX"] += parentBone["transform"]["skX"];
+        bone["transform"]["skY"] += parentBone["transform"]["skY"];
     }
 }
 
@@ -113,7 +193,7 @@ function setSlot(dbSlots, stuSlots) {
         dbSlot["blendMode"] = "normal";
         dbSlot["z"] = i;
         dbSlot["name"] = stuSlot["name"];
-        dbSlot["parent"] = stuSlot["parent"];
+        dbSlot["parent"] = stuSlot["name"];
 
         dbSlot["display"] = [];
 
@@ -134,8 +214,8 @@ function setDisplay(dbDisplays, stuDisplays) {
         dbDisplay["transform"]["y"] = 0;//-stuDisplay[0]["y"];
         dbDisplay["transform"]["pX"] = stuDisplay["skin_data"][0]["x"];
         dbDisplay["transform"]["pY"] = -stuDisplay["skin_data"][0]["y"];
-        dbDisplay["transform"]["skX"] = stuDisplay["skin_data"][0]["kX"];
-        dbDisplay["transform"]["skY"] = stuDisplay["skin_data"][0]["kY"];
+        dbDisplay["transform"]["skX"] = radianToAngle(stuDisplay["skin_data"][0]["kX"]);
+        dbDisplay["transform"]["skY"] = radianToAngle(stuDisplay["skin_data"][0]["kY"]);
         dbDisplay["transform"]["scX"] = stuDisplay["skin_data"][0]["cX"];
         dbDisplay["transform"]["scY"] = stuDisplay["skin_data"][0]["cY"];
 
@@ -200,8 +280,8 @@ function setFrame(dbFrames, stuFrames) {
         dbFrame["transform"]["y"] = -stuFrame["y"];
         dbFrame["transform"]["pX"] = 0;//stuFrame[0]["x"];
         dbFrame["transform"]["pY"] = 0;//-stuFrame[0]["y"];
-        dbFrame["transform"]["skX"] = stuFrame["kX"];
-        dbFrame["transform"]["skY"] = stuFrame["kY"];
+        dbFrame["transform"]["skX"] = radianToAngle(stuFrame["kX"]);
+        dbFrame["transform"]["skY"] = radianToAngle(stuFrame["kY"]);
         dbFrame["transform"]["scX"] = stuFrame["cX"];
         dbFrame["transform"]["scY"] = stuFrame["cY"];
 
