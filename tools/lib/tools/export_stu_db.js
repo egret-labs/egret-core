@@ -278,8 +278,8 @@ function setFrame(dbFrames, stuFrames) {
 
         dbFrame["transform"]["x"] = stuFrame["x"];
         dbFrame["transform"]["y"] = -stuFrame["y"];
-        dbFrame["transform"]["pX"] = 0;//stuFrame[0]["x"];
-        dbFrame["transform"]["pY"] = 0;//-stuFrame[0]["y"];
+        dbFrame["transform"]["pX"] = 0.5;//stuFrame[0]["x"];
+        dbFrame["transform"]["pY"] = 0.5;//-stuFrame[0]["y"];
         dbFrame["transform"]["skX"] = radianToAngle(stuFrame["kX"]);
         dbFrame["transform"]["skY"] = radianToAngle(stuFrame["kY"]);
         dbFrame["transform"]["scX"] = stuFrame["cX"];
