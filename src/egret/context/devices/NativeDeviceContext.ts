@@ -165,9 +165,16 @@ module egret_native_localStorage {
         return this.data[key];
     }
 
-    export function setItem(key:string, value:string):void {
+    export function setItem(key:string, value:string):boolean {
         this.data[key] = value;
-        this.save();
+        try{
+            this.save();
+            return true;
+        }
+        catch(e){
+            console.log("egret_native_localStorage.setItem保存失败,key=" + key + "&value=" + value);
+            return false;
+        }
     }
 
     export function removeItem(key:string):void {

@@ -39,9 +39,10 @@ module egret.localStorage {
      * @method egret.localStorage.setItem
      * @param key {string} 要保存的键名称
      * @param value {string} 要保存的值
+     * @returns {boolean} 数据保存是否成功
      */
-    export function setItem(key:string, value:string):void {
-
+    export function setItem(key:string, value:string):boolean {
+        return false;
     }
 
     /**

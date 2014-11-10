@@ -198,8 +198,15 @@ module egret_html5_localStorage {
         return window.localStorage.getItem(key);
     }
 
-    export function setItem(key:string, value:string):void {
-        window.localStorage.setItem(key, value);
+    export function setItem(key:string, value:string):boolean {
+        try{
+            window.localStorage.setItem(key, value);
+            return true;
+        }
+        catch(e){
+            console.log("egret_html5_localStorage.setItem保存失败,key=" + key + "&value=" + value);
+            return false;
+        }
     }
 
     export function removeItem(key:string):void {
