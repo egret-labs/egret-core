@@ -372,6 +372,10 @@ function compileModule(callback, module, projectDir,outputPrefix) {
     }).filter(function (item) {
         return item.indexOf(".js") == -1 //&& item.indexOf(".d.ts") == -1;
     })
+    if (tsList.length == 0){
+        globals.exit(1307,moduleConfig.name);
+    }
+
     var dependencyList = moduleConfig.dependence;
     if (dependencyList) {
         for (var i = 0; i < dependencyList.length; i++) {
