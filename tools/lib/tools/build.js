@@ -56,7 +56,7 @@ function run(dir, args, opts) {
 function copyProject(currDir) {
     var output = projectConfig.getOutputDir();
     if (output) {
-        file.remove(output);
+//        file.remove(output);
         var ignorePathList = projectConfig.getIgnorePath();
         var copyFilePathList = file.getDirectoryListing(currDir);
         var isIgnore = false;

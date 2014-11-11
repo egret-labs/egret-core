@@ -282,16 +282,14 @@ function run(dir, args, opts) {
 
     isDebug = opts["-debug"] != null;
 
-    //发布版本
-    var version = "";
-    if (opts["--version"] && opts["--version"][0]) {
-        version = "/" + opts["--version"][0];
-    }
-    else if (opts["--v"] && opts["--v"][0]) {
-        version = "/" + opts["--v"][0];
-    }
+
+
+    var version = getVersion(opts);
+
+
 
     var currDir = globals.joinEgretDir(dir, args[0]);
+    currDir = getCurrentDir(currDir);
 
     //复制资源
     var releaseDir = currDir + "/release" + version;
@@ -306,74 +304,23 @@ function run(dir, args, opts) {
     file.remove(resourceDir);
     file.copy(currDir + "/resource", resourceDir);
 
-    var egret_file = path.join(currDir, "bin-debug/lib/egret_file_list.js");
-    var egretFileList = getFileList(egret_file);
 
-    var html5FileList = compile.getModuleConfig("html5").file_list;
-    var length = html5FileList.length;
-    for (var i = 0; i < length; i++) {
-        var filePath = html5FileList[i];
-        filePath = filePath.replace(".ts", ".js");
-        html5FileList[i] = filePath;
-        var index = egretFileList.indexOf(filePath);
-        if (index != -1) {
-            egretFileList.splice(index, 1);
-        }
-    }
-
-    var nativeFileList = compile.getModuleConfig("native").file_list;
-    length = nativeFileList.length;
-    for (i = 0; i < length; i++) {
-        filePath = nativeFileList[i];
-        if (filePath.indexOf(".d.ts") != -1) {
-            nativeFileList.splice(i, 1);
-            i--;
-            length--;
-            continue;
-        }
-        filePath = filePath.replace(".ts", ".js");
-        nativeFileList[i] = filePath;
-        index = egretFileList.indexOf(filePath);
-        if (index != -1) {
-            egretFileList.splice(index, 1);
-        }
-    }
-
-    var egretHTML5FileList = egretFileList.concat(html5FileList);
-    egretHTML5FileList = egretHTML5FileList.map(function (item) {
-        return path.join(currDir, "libs/", item);
-    });
-    var egretNativeFileList = egretFileList.concat(nativeFileList);
-    egretNativeFileList = egretNativeFileList.map(function (item) {
-        return path.join(currDir, "libs/", item);
-    });
-
-    var game_file = path.join(currDir, "bin-debug/src/game_file_list.js");
-    var gameFileList = getFileList(game_file);
-    gameFileList = gameFileList.map(function (item) {
-        return path.join(currDir + "/bin-debug/src/", item);
-    });
-
-    var totalHTML5FileList = egretHTML5FileList.concat(gameFileList);
-    var totalNativeFileList = egretNativeFileList.concat(gameFileList);
-
+    var file_list = getAllFileList(currDir,opts);
     var runtime = param.getOption(opts, "--runtime", ["html5", "native"]);
     if (runtime == "html5") {
-        compilerSingleFile(currDir, totalHTML5FileList, "\""+launcherDir + "/game-min.js\"", compilerComplete);
+        compilerSingleFile(currDir, file_list, "\""+launcherDir + "/game-min.js\"", compilerComplete);
     }
     else if (runtime == "native") {
-        compilerSingleFile(currDir, totalNativeFileList, "\""+launcherDir + "/game-min-native.js\"", compilerComplete);
+        compilerSingleFile(currDir, file_list, "\""+launcherDir + "/game-min-native.js\"", compilerComplete);
     }
 
-    //扫描json数据
-    if (opts["-compressjson"]) {
-        var compress = require(path.join("..", "tools", "compress_json.js"));
-        compress.run(path.join(currDir, "release"), []);
-    }
 
-    if (runtime == "native") {
-        createManifest(releaseDir);
-    }
+    compressJson(currDir,opts);
+
+//todo
+//    if (runtime == "native") {
+//        createManifest(releaseDir);
+//    }
 
     function compilerComplete() {
         if (opts["-zip"]) {
@@ -475,47 +422,98 @@ function checkUserJava() {
     })
 }
 
-/**
- * 生成指定目录下文件的版本信息manifest文件
- * 不包括html和css文件
- */
-function createManifest(currDir){
-    var basePath = currDir + "/base.manifest";
-    var versionPath = currDir + "/version.manifest";
-    var oldVersion;
-    if(file.exists(basePath)) {
-        oldVersion = JSON.parse(file.read(basePath));
+function getVersion(opts){
+    //发布版本
+    var version = "";
+    if (opts["--version"] && opts["--version"][0]) {
+        version = "/" + opts["--version"][0];
+    }
+    else if (opts["--v"] && opts["--v"][0]) {
+        version = "/" + opts["--v"][0];
+    }
+    return version;
+}
+
+
+
+function getCurrentDir(projectName){
+    var projectConfig = require("../core/projectConfig.js");
+    projectConfig.init(projectName);
+    var outputDir = projectConfig.getOutputDir()
+    if (outputDir){
+        return outputDir;
+    }
+    else{
+        return projectName;
+    }
+}
+
+function compressJson(currDir,opts){
+    //扫描json数据
+    if (opts["-compressjson"]) {
+        var compress = require(path.join("..", "tools", "compress_json.js"));
+        compress.run(path.join(currDir, "release"), []);
+    }
+}
+
+function getAllFileList(currDir,opts){
+    var egret_file = path.join(currDir, "bin-debug/lib/egret_file_list.js");
+    var egretFileList = getFileList(egret_file);
+    var html5FileList = compile.getModuleConfig("html5").file_list;
+    var length = html5FileList.length;
+    for (var i = 0; i < length; i++) {
+        var filePath = html5FileList[i];
+        filePath = filePath.replace(".ts", ".js");
+        html5FileList[i] = filePath;
+        var index = egretFileList.indexOf(filePath);
+        if (index != -1) {
+            egretFileList.splice(index, 1);
+        }
     }
 
-    var list = file.search(path.join(currDir, "resource"));
-    var currVersion = {};
-    var length = list.length;
-    for(var i = 0 ; i < length ; i++) {
-        var filePath = list[i];
-        if(filePath.indexOf(".html") != -1 || filePath.indexOf(".css") != -1 || filePath == basePath || filePath == versionPath) {
+    var nativeFileList = compile.getModuleConfig("native").file_list;
+    length = nativeFileList.length;
+    for (i = 0; i < length; i++) {
+        filePath = nativeFileList[i];
+        if (filePath.indexOf(".d.ts") != -1) {
+            nativeFileList.splice(i, 1);
+            i--;
+            length--;
             continue;
         }
-        var txt = file.read(filePath);
-        var txtCrc32 = crc32(txt);
-        var savePath = path.relative(currDir, filePath);
-        if(oldVersion) {
-            if(oldVersion[savePath] == undefined || oldVersion[savePath] != txtCrc32) {
-                currVersion[savePath] = txtCrc32;
-            }
-        }
-        else {
-            currVersion[savePath] = txtCrc32;
+        filePath = filePath.replace(".ts", ".js");
+        nativeFileList[i] = filePath;
+        index = egretFileList.indexOf(filePath);
+        if (index != -1) {
+            egretFileList.splice(index, 1);
         }
     }
 
-    var str = JSON.stringify(currVersion);
-    str = str.replace(/\\\\/g,"/");
-    if(oldVersion) {
-        file.save(versionPath, str);
+    var egretHTML5FileList = egretFileList.concat(html5FileList);
+    egretHTML5FileList = egretHTML5FileList.map(function (item) {
+        return path.join(currDir, "libs/", item);
+    });
+    var egretNativeFileList = egretFileList.concat(nativeFileList);
+    egretNativeFileList = egretNativeFileList.map(function (item) {
+        return path.join(currDir, "libs/", item);
+    });
+
+    var game_file = path.join(currDir, "bin-debug/src/game_file_list.js");
+    var gameFileList = getFileList(game_file);
+    gameFileList = gameFileList.map(function (item) {
+        return path.join(currDir + "/bin-debug/src/", item);
+    });
+
+    var totalHTML5FileList = egretHTML5FileList.concat(gameFileList);
+    var totalNativeFileList = egretNativeFileList.concat(gameFileList);
+
+    var runtime = param.getOption(opts, "--runtime", ["html5", "native"]);
+
+    if (runtime == "html5") {
+        return totalHTML5FileList;
     }
-    else {
-        file.save(basePath, str);
-        file.save(versionPath, "{}");
+    else{
+        return totalNativeFileList;
     }
 }
 
