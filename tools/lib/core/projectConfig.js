@@ -55,10 +55,27 @@ exports.init = init;
 exports.save = save;
 exports.getModule = getModule;
 exports.getOutputDir = function(){
+
     var argv = param.getArgv();
+    var currDir = process.cwd();
+    var projectName = argv.args[0];
+    if (projectName) {
+        currDir = path.resolve(projectName);
+    }
+
+    var stat2 = file.exists(path.join(currDir, "src"));
+    var stat3 = file.exists(path.join(currDir, "launcher"));
+    if (!stat2 || !stat3) {//存在egret项目缺少的文件目录
+        global.exit(8002);
+    }
+
+
     var runtime = param.getOption(argv.opts, "--runtime", ["html5", "native"]);
     if(runtime == "native" && projectConfig && projectConfig.native && projectConfig.native.support_path) {
-        return projectConfig.native.support_path[0];
+
+        var support_path = projectConfig.native.support_path[0];
+        support_path = path.join(currDir,support_path);
+        return support_path;
     }
     return null;//"/Users/wander/Documents/egret_workspace/temp_build_for_native";
 };
