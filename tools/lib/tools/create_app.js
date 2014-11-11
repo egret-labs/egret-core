@@ -3,6 +3,7 @@ var path = require('path');
 var globals = require("../core/globals");
 var param = require("../core/params_analyze.js");
 var file = require('../core/file.js');
+var projectConfig = require("../core/projectConfig.js");
 
 
 var CREATE_APP = "create_app.json";
@@ -10,10 +11,16 @@ var PREFERENCES = "egretProperties.json";
 
 
 function run(dir, args, opts) {
+
 	var arg_app_name = args[0];
     var arg_template_path = opts["-t"];
 	var arg_h5_path = opts["-f"];
+
     var params = clean_params(arg_app_name, arg_h5_path, arg_template_path);
+
+    var currDir = globals.joinEgretDir(dir, params.h5_path);
+    projectConfig.init(currDir);
+
 
     create_app_from(params["app_path"], params["h5_path"], params["template_path"], params["preferences"], params["app_data"]);
 
@@ -96,7 +103,9 @@ function create_app_from(app_path, h5_path, template_path, preferences, app_data
     }
     var target_list = [];
     app_data["game"]["target"].forEach(function(target) {
-        target_list.push(path.join(app_path, target));
+        var supportPath = path.join(app_path, target);
+        var relativePath = path.relative(projectConfig.projectGlobalPath,supportPath);
+        target_list.push(relativePath);
     });
     preferences["native"]["support_path"] = target_list;
     file.save(path.join(h5_path, PREFERENCES), JSON.stringify(preferences, null, '\t'));

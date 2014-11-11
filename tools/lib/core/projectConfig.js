@@ -34,6 +34,7 @@ function init(name){
         projectConfig.native = {};
     }
     exports.data = projectConfig;
+    exports.projectGlobalPath = name;
 }
 
 function save(){

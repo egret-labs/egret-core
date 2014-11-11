@@ -137,12 +137,15 @@ function _warn(code) {
     console.log(message);
 }
 
-function _joinEgretDir(dir, projectName) {
+function _joinEgretDir(dir, projectName,ignoreCheck) {
     var currDir = dir;
     if (projectName) {
         currDir = path.resolve(projectName);
     }
 
+    if (ignoreCheck){
+        return currDir;
+    }
     var stat2 = file.exists(path.join(currDir, "src"));
     var stat3 = file.exists(path.join(currDir, "launcher"));
     if (!stat2 || !stat3) {//存在egret项目缺少的文件目录
