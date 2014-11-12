@@ -49,11 +49,14 @@ module egret {
          */
         public texture_scale_factor:number = 1;
 
+        private profiler:Profiler;
+
         /**
          * @method egret.RendererContext#constructor
          */
         public constructor() {
             super();
+            this.profiler = Profiler.getInstance();
         }
 
         /**
@@ -90,7 +93,7 @@ module egret {
          * @param destHeigh {any}
          */
         public drawImage(texture: Texture, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, repeat="no-repeat") {
-            Profiler.getInstance().onDrawImage();
+            this.profiler.onDrawImage();
         }
 
         /**
@@ -144,7 +147,7 @@ module egret {
          * @param maxWidth {numbe}
          */
         public drawText(textField:egret.TextField, text:string, x:number, y:number, maxWidth:number) {
-            Profiler.getInstance().onDrawImage();
+            this.profiler.onDrawImage();
         }
 
         public strokeRect(x, y, w, h, color) {
