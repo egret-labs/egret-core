@@ -230,8 +230,8 @@ module egret.gui {
                     h = this._height;
                 }
                 else{
-                    w = texture.textureWidth;
-                    h = texture.textureHeight;
+                    w = texture._textureWidth;
+                    h = texture._textureHeight;
                 }
                 Bitmap._drawBitmap(renderContext,w,h,this);
             }

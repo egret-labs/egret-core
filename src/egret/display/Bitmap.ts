@@ -41,6 +41,8 @@ module egret {
          */
         public static debug:boolean = false;
 
+        private static renderFilter:RenderFilter = RenderFilter.getInstance();
+
         public constructor(texture?:Texture) {
             super();
             if(texture){
@@ -127,7 +129,7 @@ module egret {
                     var scaleY:number = destH/textureHeight;
                     offsetY = Math.round(offsetY*scaleY);
                     destH = Math.round(bitmapHeight*scaleY);
-                    RenderFilter.getInstance().drawImage(renderContext, thisObject, texture._bitmapX, texture._bitmapY,
+                    Bitmap.renderFilter.drawImage(renderContext, thisObject, texture._bitmapX, texture._bitmapY,
                         bitmapWidth, bitmapHeight, offsetX, offsetY, destW,destH);
                 }
             }
