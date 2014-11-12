@@ -73,7 +73,7 @@ module egret {
          * @param x {number}
          * @param y {number}
          * @param w {number}
-         * @param h {numbe}
+         * @param h {number}
          */
         public clearRect(x:number, y:number, w:number, h:number) {
 
@@ -99,7 +99,7 @@ module egret {
         /**
          * 变换Context的当前渲染矩阵
          * @method egret.RendererContext#setTransform
-         * @param matrix {egret.Matri}
+         * @param matrix {egret.Matrix}
          */
         public setTransform(matrix:egret.Matrix) {
 
@@ -109,7 +109,7 @@ module egret {
          * 设置渲染alpha
          * @method egret.RendererContext#setAlpha
          * @param value {number}
-         * @param blendMode {egret.BlendMod}
+         * @param blendMode {egret.BlendMode}
          */
         public setAlpha(value:number, blendMode:string) {
 
@@ -144,7 +144,7 @@ module egret {
          * @param text {string}
          * @param x {number}
          * @param y {number}
-         * @param maxWidth {numbe}
+         * @param maxWidth {number}
          */
         public drawText(textField:egret.TextField, text:string, x:number, y:number, maxWidth:number) {
             this.profiler.onDrawImage();
