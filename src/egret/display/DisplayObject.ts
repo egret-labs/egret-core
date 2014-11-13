@@ -938,7 +938,7 @@ module egret {
             var isEnterFrame:boolean = (type == Event.ENTER_FRAME);
             if (isEnterFrame || type == Event.RENDER) {
                 var list:Array<any> = isEnterFrame ? DisplayObject._enterFrameCallBackList : DisplayObject._renderCallBackList;
-                this._insertEventBin(list, listener, thisObject, priority);
+                this._insertEventBin(list, listener, thisObject, priority, this);
             }
         }
 

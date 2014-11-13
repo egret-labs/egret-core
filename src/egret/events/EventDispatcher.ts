@@ -119,7 +119,7 @@ module egret {
         /**
          * 在一个事件列表中按优先级插入事件对象
          */
-        public _insertEventBin(list:Array<any>, listener:Function, thisObject:any, priority:number):boolean {
+        public _insertEventBin(list:Array<any>, listener:Function, thisObject:any, priority:number, display = undefined):boolean {
             var insertIndex:number = -1;
             var length:number = list.length;
             for (var i:number = 0; i < length; i++) {
@@ -131,7 +131,10 @@ module egret {
                     insertIndex = i;
                 }
             }
-            var eventBin = {listener: listener, thisObject: thisObject, priority: priority};
+            var eventBin:any = {listener: listener, thisObject: thisObject, priority: priority};
+            if(display) {
+                eventBin.display = display;
+            }
             if (insertIndex != -1) {
                 list.splice(insertIndex, 0, eventBin);
             }
