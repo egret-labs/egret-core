@@ -35,12 +35,13 @@ module egret.gui {
         * 适用Viewport的滑动类
         * @extends egret.Scroller
         */
-    class ViewportScroller extends egret.Scroller {
+    class ViewportScroller extends egret.ScrollView {
         /**
             * @method egret.gui.GroupBase#constructor
             */
-        public constructor(public content: DisplayObject, width= NaN, height= NaN) {
-            super(content, width, height);
+        public constructor(public content: DisplayObject) {
+            super(content);
+            this._content = content;
         }
 
         public _updateContentPosition() {
@@ -60,6 +61,12 @@ module egret.gui {
             var content: IViewport = <any>this.content;
             return content.contentHeight - content.height;
         }
+        public _getContentWidth() {
+            return (<any>this._content).contentWidth;
+        }
+        public _getContentHeight() {
+            return (<any>this._content).contentHeight;
+        }
     }
     
 	/**
@@ -69,7 +76,7 @@ module egret.gui {
 	 * @extends egret.gui.UIComponent
 	 * @implements egret.gui.IVisualElementContainer
 	 */	
-    export class Scroller extends UIComponent implements IVisualElementContainer{
+    export class Scroller extends SkinnableComponent implements IVisualElementContainer{
         /**
          * 构造函数
 		 * @method egret.gui.Scroller#constructor
@@ -77,10 +84,33 @@ module egret.gui {
         public constructor(){
             super();
         }
+        /**
+		 * [SkinPart]水平滚动条
+		 */		
+        public horizontalScrollBar: HScrollBar;
+		/**
+		 * [SkinPart]垂直滚动条
+		 */		
+        public verticalScrollBar: VScrollBar;
 
-        public hBar: HScrollBar;
-        public vBar: VScrollBar;
-        public _scroller: egret.Scroller;
+        public set hBar(value: HScrollBar) {
+            Logger.warning("Scroller.hBar已废弃，请使用Scroller.horizontalScrollBar设置");
+            this.horizontalScrollBar = value;
+        }
+        public get hBar():HScrollBar {
+            Logger.warning("Scroller.hBar已废弃，请使用Scroller.horizontalScrollBar");
+            return this.horizontalScrollBar;
+        }
+        public set vBar(value: VScrollBar) {
+            Logger.warning("Scroller.vBar已废弃，请使用Scroller.verticalScrollBar设置");
+            this.verticalScrollBar = value;
+        }
+        public get vBar():VScrollBar {
+            Logger.warning("Scroller.vBar已废弃，请使用Scroller.verticalScrollBar");
+            return this.verticalScrollBar;
+        }
+
+        public _scroller: egret.ScrollView;
 
         /**
 		 * @method egret.gui.Scroller#measure
@@ -99,20 +129,20 @@ module egret.gui {
         public updateDisplayList(unscaledWidth:number, unscaledHeight:number):void{
             this._scroller._setWidth(unscaledWidth);
             this._scroller._setHeight(unscaledHeight);
-            if (this.hBar) {
+            if (this.horizontalScrollBar) {
                 if (this._horizontalScrollPolicy != "off") {
-                    this.hBar._setViewportMetric(unscaledWidth, this._viewport.contentWidth);
-                    this.hBar._setWidth(unscaledWidth - 2);
-                    this.hBar.x = 1;
-                    this.hBar.y = unscaledHeight - this.hBar._height - 1;
+                    this.horizontalScrollBar._setViewportMetric(unscaledWidth, this._viewport.contentWidth);
+                    this.horizontalScrollBar._setWidth(unscaledWidth - 2);
+                    this.horizontalScrollBar.x = 1;
+                    this.horizontalScrollBar.y = unscaledHeight - this.horizontalScrollBar._height - 1;
                 }
             }
-            if (this.vBar) {
+            if (this.verticalScrollBar) {
                 if (this._verticalScrollPolicy != "off") {
-                    this.vBar._setViewportMetric(unscaledHeight, this._viewport.contentHeight);
-                    this.vBar._setHeight(unscaledHeight - 2);
-                    this.vBar.y = 1;
-                    this.vBar.x = unscaledWidth - this.vBar.width - 1;
+                    this.verticalScrollBar._setViewportMetric(unscaledHeight, this._viewport.contentHeight);
+                    this.verticalScrollBar._setHeight(unscaledHeight - 2);
+                    this.verticalScrollBar.y = 1;
+                    this.verticalScrollBar.x = unscaledWidth - this.verticalScrollBar.width - 1;
                 }
             }
         }
@@ -134,7 +164,7 @@ module egret.gui {
             this._verticalScrollPolicy = value;
             this._checkVbar();
             if (this._scroller)
-                this._scroller._setScrollYEnabled(value != "off");
+                this._scroller.verticalScrollPolicy = value;
         }
 
         private _horizontalScrollPolicy:string = "auto";
@@ -153,7 +183,7 @@ module egret.gui {
             this._horizontalScrollPolicy = value;
             this._checkHbar();
             if (this._scroller)
-                this._scroller._setScrollXEnabled(value != "off");
+                this._scroller.horizontalScrollPolicy = value;
         }
 
         private _viewport:IViewport;
@@ -183,9 +213,9 @@ module egret.gui {
                 this.viewport.clipAndEnableScrolling = true;
                 this._scroller = new ViewportScroller(<DisplayObject><any>this.viewport);
                 this._scroller.addEventListener(egret.Event.CHANGE, this._scrollerChangedHandler, this);
-                this._scroller._setScrollXEnabled(this._horizontalCanScroll);
-                this._scroller._setScrollYEnabled(this._verticalCanScroll);
-                this._addToDisplayListAt(<DisplayObject><any> this.viewport, 0);
+                this._scroller.horizontalScrollPolicy = this._horizontalScrollPolicy;
+                this._scroller.verticalScrollPolicy = this._verticalScrollPolicy;
+                this._addToDisplayListAt(<DisplayObject><any> this._scroller, 0);
             }
             this._addScrollBars();
         }
@@ -205,52 +235,6 @@ module egret.gui {
             this._removeScrollBars();
         }
 
-        private _horizontalCanScroll:boolean;
-        private _verticalCanScroll:boolean;
-        /**
-         * 检查当前滚动策略，若有一个方向可以滚动，返回true。
-         */
-        private checkScrollPolicy():boolean{
-            var viewport:IViewport = this._viewport;
-            var hCanScroll:boolean;
-            switch (this._horizontalScrollPolicy){
-                case "auto":
-                    if(viewport.contentWidth>viewport.width){
-                        hCanScroll = true;
-                    }
-                    else{
-                        hCanScroll = false;
-                    }
-                    break;
-                case "on":
-                    hCanScroll = true;
-                    break;
-                case "off":
-                    hCanScroll = false;
-                    break;
-            }
-            this._horizontalCanScroll = hCanScroll;
-
-            var vCanScroll:boolean;
-            switch (this._verticalScrollPolicy){
-                case "auto":
-                    if(viewport.contentHeight>viewport.height){
-                        vCanScroll = true;
-                    }
-                    else{
-                        vCanScroll = false;
-                    }
-                    break;
-                case "on":
-                    vCanScroll = true;
-                    break;
-                case "off":
-                    vCanScroll = false;
-                    break;
-            }
-            this._verticalCanScroll = vCanScroll;
-            return hCanScroll||vCanScroll;
-        }
 
         private _scrollerChangedHandler(e: Event) {
             this.setViewportHScrollPosition(this._scroller.scrollLeft);
@@ -260,14 +244,14 @@ module egret.gui {
         private setViewportVScrollPosition(pos: number) {
             if (this._scroller.scrollTop != pos)
                 this._scroller.scrollTop = pos;
-            if (this.vBar && this.vBar.value != pos)
-                this.vBar.setPosition(pos);
+            if (this.verticalScrollBar && this.verticalScrollBar.value != pos)
+                this.verticalScrollBar.setPosition(pos);
         }
         private setViewportHScrollPosition(pos: number) {
             if (this._scroller.scrollLeft != pos)
                 this._scroller.scrollLeft = pos;
-            if (this.hBar&&this.hBar.value != pos)
-                this.hBar._setValue(pos);
+            if (this.horizontalScrollBar&&this.horizontalScrollBar.value != pos)
+                this.horizontalScrollBar._setValue(pos);
         }
 
         /**
@@ -501,69 +485,85 @@ module egret.gui {
 
         public _checkHbar() {
             if (this._horizontalScrollPolicy == "off") {
-                if (this.hBar) {
-                    this._removeFromDisplayList(this.hBar);
+                if (this.horizontalScrollBar) {
+                    this._removeFromDisplayList(this.horizontalScrollBar);
                 }
                 return;
             }
             var bar: HScrollBar = null;
-            if (this.hBar) {
-                bar = this.hBar
+            if (this.horizontalScrollBar) {
+                bar = this.horizontalScrollBar
             }
             else {
                 bar = new HScrollBar();
                 bar.createChildren();
                 if (bar.thumb == null)
                     return;
-                bar.addEventListener(Event.CHANGE, this.hBarChanged, this, false);
-                bar._setViewportMetric(this._viewport.width, this._viewport.contentWidth);
             }
-            this.hBar = bar;
-            this._addToDisplayList(this.hBar);
+            bar.addEventListener(Event.CHANGE, this.hBarChanged, this, false);
+            bar._setViewportMetric(this._viewport.width, this._viewport.contentWidth);
+            this.horizontalScrollBar = bar;
+            this._addToDisplayList(this.horizontalScrollBar);
         }
         public _checkVbar() {
             if (this._verticalScrollPolicy == "off") {
-                if (this.vBar) {
-                    this._removeFromDisplayList(this.vBar);
+                if (this.verticalScrollBar) {
+                    this._removeFromDisplayList(this.verticalScrollBar);
                 }
                 return;
             }
 
             var vbar: VScrollBar = null;
-            if (this.vBar) {
-                vbar = this.vBar;
+            if (this.verticalScrollBar) {
+                vbar = this.verticalScrollBar;
             }
             else {
                 vbar = new VScrollBar();
                 vbar.createChildren();
                 if (vbar.thumb == null)
                     return;
-                vbar.addEventListener(Event.CHANGE, this.vBarChanged, this, false);
-                vbar._setViewportMetric(this._viewport.height, this._viewport.contentHeight);
             }
-            this.vBar = vbar;
-            this._addToDisplayList(this.vBar);
+            vbar.addEventListener(Event.CHANGE, this.vBarChanged, this, false);
+            vbar._setViewportMetric(this._viewport.height, this._viewport.contentHeight);
+            this.verticalScrollBar = vbar;
+            this._addToDisplayList(this.verticalScrollBar);
         }
 
 
-        public _removeScrollBars(): void {
-            if (this.hBar) {
-                this._removeFromDisplayList(this.hBar);
-                this.hBar.removeEventListener(Event.CHANGE, this.hBarChanged, this, false);
-                this.hBar = null;
+        /**
+         * 若皮肤是ISkin,则调用此方法附加皮肤中的公共部件
+         * @method egret.gui.Scroller#partAdded
+         * @param partName {string} 
+         * @param instance {any} 
+         */
+        public partAdded(partName: string, instance: any): void {
+            super.partAdded(partName, instance);
+            if (instance == this.horizontalScrollBar) {
+                this._checkHbar();
             }
-            if (this.vBar) {
-                this._removeFromDisplayList(this.vBar);
-                this.vBar.removeEventListener(Event.CHANGE, this.vBarChanged, this, false);
-                this.vBar = null;
+            if (instance == this.verticalScrollBar) {
+                this._checkVbar();
+            }
+        }
+
+        public _removeScrollBars(): void {
+            if (this.horizontalScrollBar) {
+                this._removeFromDisplayList(this.horizontalScrollBar);
+                this.horizontalScrollBar.removeEventListener(Event.CHANGE, this.hBarChanged, this, false);
+                this.horizontalScrollBar = null;
+            }
+            if (this.verticalScrollBar) {
+                this._removeFromDisplayList(this.verticalScrollBar);
+                this.verticalScrollBar.removeEventListener(Event.CHANGE, this.vBarChanged, this, false);
+                this.verticalScrollBar = null;
             }
         }
 
         private hBarChanged(e: Event) {
-            this.setViewportHScrollPosition(this.hBar._getValue());
+            this.setViewportHScrollPosition(this.horizontalScrollBar._getValue());
         }
         private vBarChanged(e: Event) {
-            this.setViewportVScrollPosition(this.vBar.getPosition());
+            this.setViewportVScrollPosition(this.verticalScrollBar.getPosition());
         }
     }
 
