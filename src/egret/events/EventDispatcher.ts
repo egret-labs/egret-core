@@ -124,7 +124,7 @@ module egret {
             var length:number = list.length;
             for (var i:number = 0; i < length; i++) {
                 var bin:any = list[i];
-                if (bin.listener === listener && bin.thisObject === thisObject) {
+                if (bin.listener === listener && bin.thisObject === thisObject && bin.display === display) {
                     return false;
                 }
                 if (insertIndex == -1 && bin.priority < priority) {
