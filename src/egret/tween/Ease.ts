@@ -26,7 +26,7 @@
  */
 
 
-module egret{
+module egret {
     export class Ease {
         constructor() {
             egret.Logger.fatal("Ease不能被实例化");
@@ -104,8 +104,7 @@ module egret{
 
         public static getBackOut(amount):Function {
             return function (t) {
-                t = t - 1;
-                return (t * t * ((amount + 1) * t + amount) + 1);
+                return (--t * t * ((amount + 1) * t + amount) + 1);
             }
         }
 
@@ -126,7 +125,7 @@ module egret{
         }
 
         public static circOut(t):number {
-            return Math.sqrt(1 - (t) * t);
+            return Math.sqrt(1 - (--t) * t);
         }
 
         public static circInOut(t):number {
