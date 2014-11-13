@@ -27,6 +27,7 @@
   <component id="Range" super="egret.gui.SkinnableComponent" show="false" module="egret.gui"/>
   <component id="Rect" super="egret.gui.UIComponent" show="true" module="egret.gui"/>
   <component id="Rectangle" super="Object" show="false" module="egret"/>
+  <component id="ViewportScroller" super="egret.ScrollView" show="false" module="egret.gui"/>
   <component id="Scroller" super="egret.gui.UIComponent" default="viewport" show="true" module="egret.gui"/>
   <component id="Skin" super="egret.EventDispatcher" default="elementsContent" show="false" module="egret.gui"/>
   <component id="SkinnableComponent" super="egret.gui.UIAsset" state="normal,disabled" show="true" module="egret.gui"/>

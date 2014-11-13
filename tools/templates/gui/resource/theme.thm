@@ -20,6 +20,11 @@
         "egret.gui.TitleWindow":"skins.simple.TitleWindowSkin",
         "egret.gui.ToggleButton":"skins.simple.ToggleButtonSkin",
         "egret.gui.ToggleSwitch":"skins.simple.ToggleSwitchSkin",
-        "egret.gui.VSlider":"skins.simple.VSliderSkin"
+        "egret.gui.VSlider":"skins.simple.VSliderSkin",
+        "egret.gui.Scroller":"skins.simple.ScrollerSkin",
+        "egret.gui.HScrollBar":"skins.simple.HScrollBarSkin",
+        "egret.gui.VScrollBar":"skins.simple.VScrollBarSkin",
+        "egret.gui.TextInput":"skins.simple.TextInputSkin",
+        "egret.gui.TextArea":"skins.simple.TextAreaSkin"
     }
 }
