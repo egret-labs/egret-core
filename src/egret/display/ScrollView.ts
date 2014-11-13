@@ -43,8 +43,6 @@ module egret {
          * 创建一个 egret.ScrollView 对象
 		 * @method egret.ScrollView#constructor
          * @param content {egret.DisplayObject} 需要滚动的对象
-         * @param width {number} ScrollView的宽度，默认值为content的宽度
-         * @param height {number} ScrollView的高度，默认值为content的高度
          */
         constructor(content: DisplayObject = null) {
             super();
@@ -54,13 +52,18 @@ module egret {
             }
         }
         public _content: DisplayObject = null;
+        /**
+         * 设置需要滚动的对象
+		 * @method egret.ScrollView#setContent
+         * @param content {egret.DisplayObject} 需要滚动的对象
+         */
         public setContent(content: DisplayObject) {
             if (this._content) {
                 this._removeEvents();
                 super.removeChildAt(0);
             }
             this._content = content;
-            this.addChild(content);
+            super.addChild(content);
             this._addEvents();
             var w = this._explicitWidth || this._getContentWidth();
             var h = this._explicitHeight || this._getContentHeight();
@@ -461,6 +464,79 @@ module egret {
             evt._isDefaultPrevented = false;
             evt._target = event._target;
             return evt;
+        }
+
+        private throwNotSupportedError(): void {
+            throw new Error("此方法在ScrollView内不可用!");
+        }
+
+        /**
+         * @method egret.ScrollView#addChild
+         * @deprecated
+         * @param child {DisplayObject} 
+         * @returns {DisplayObject}
+         */
+        public addChild(child: DisplayObject): DisplayObject {
+            this.throwNotSupportedError();
+            return null;
+        }
+        /**
+         * @method egret.ScrollView#addChildAt
+         * @deprecated
+         * @param child {DisplayObject} 
+         * @param index {number} 
+         * @returns {DisplayObject}
+         */
+        public addChildAt(child: DisplayObject, index: number): DisplayObject {
+            this.throwNotSupportedError();
+            return null;
+        }
+        /**
+         * @method egret.ScrollView#removeChild
+         * @deprecated
+         * @param child {DisplayObject} 
+         * @returns {DisplayObject}
+         */
+        public removeChild(child: DisplayObject): DisplayObject {
+            this.throwNotSupportedError();
+            return null;
+        }
+        /**
+         * @method egret.ScrollView#removeChildAt
+         * @deprecated
+         * @param index {number} 
+         * @returns {DisplayObject}
+         */
+        public removeChildAt(index: number): DisplayObject {
+            this.throwNotSupportedError();
+            return null;
+        }
+        /**
+         * @method egret.ScrollView#setChildIndex
+         * @deprecated
+         * @param child {DisplayObject} 
+         * @param index {number} 
+         */
+        public setChildIndex(child: DisplayObject, index: number): void {
+            this.throwNotSupportedError();
+        }
+        /**
+         * @method egret.ScrollView#swapChildren
+         * @deprecated
+         * @param child1 {DisplayObject} 
+         * @param child2 {DisplayObject} 
+         */
+        public swapChildren(child1: DisplayObject, child2: DisplayObject): void {
+            this.throwNotSupportedError();
+        }
+        /**
+         * @method egret.ScrollView#swapChildrenAt
+         * @deprecated
+         * @param index1 {number} 
+         * @param index2 {number} 
+         */
+        public swapChildrenAt(index1: number, index2: number): void {
+            this.throwNotSupportedError();
         }
     }
 } 

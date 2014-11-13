@@ -83,6 +83,7 @@ module egret.gui {
          */
         public constructor(){
             super();
+            this.hostComponentKey = "egret.gui.Scroller";
         }
         /**
 		 * [SkinPart]水平滚动条
@@ -217,7 +218,7 @@ module egret.gui {
                 this._scroller.verticalScrollPolicy = this._verticalScrollPolicy;
                 this._addToDisplayListAt(<DisplayObject><any> this._scroller, 0);
             }
-            this._addScrollBars();
+            //this._addScrollBars();
         }
 
         _onAddToStage() {
@@ -473,15 +474,6 @@ module egret.gui {
             this.throwNotSupportedError();
         }
 
-        /**
-         * @method egret.gui.SliderBase#partAdded
-         * @param partName {string} 
-         * @param instance {any} 
-         */
-        public _addScrollBars(): void {
-            this._checkHbar();
-            this._checkVbar();
-        }
 
         public _checkHbar() {
             if (this._horizontalScrollPolicy == "off") {
@@ -490,16 +482,7 @@ module egret.gui {
                 }
                 return;
             }
-            var bar: HScrollBar = null;
-            if (this.horizontalScrollBar) {
-                bar = this.horizontalScrollBar
-            }
-            else {
-                bar = new HScrollBar();
-                bar.createChildren();
-                if (bar.thumb == null)
-                    return;
-            }
+            var bar = this.horizontalScrollBar;
             bar.addEventListener(Event.CHANGE, this.hBarChanged, this, false);
             bar._setViewportMetric(this._viewport.width, this._viewport.contentWidth);
             this.horizontalScrollBar = bar;
@@ -512,17 +495,7 @@ module egret.gui {
                 }
                 return;
             }
-
-            var vbar: VScrollBar = null;
-            if (this.verticalScrollBar) {
-                vbar = this.verticalScrollBar;
-            }
-            else {
-                vbar = new VScrollBar();
-                vbar.createChildren();
-                if (vbar.thumb == null)
-                    return;
-            }
+            var vbar = this.verticalScrollBar;
             vbar.addEventListener(Event.CHANGE, this.vBarChanged, this, false);
             vbar._setViewportMetric(this._viewport.height, this._viewport.contentHeight);
             this.verticalScrollBar = vbar;
