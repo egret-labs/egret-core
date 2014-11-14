@@ -360,6 +360,7 @@ module egret.gui {
             this._textField.verticalAlign = this._verticalAlign;
             this._textField.lineSpacing = this._lineSpacing;
             this._textField.textColor = this._textColor;
+			this._textField.multiline = true;
             this._addToDisplayList(this._textField);
         }
 		
