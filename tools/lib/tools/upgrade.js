@@ -19,7 +19,7 @@ var upgradeConfigArr = [
     {"v" : "1.1.0", "func":upgradeTo_1_1_0},
     {"v" : "1.1.1", "func":upgradeTo_1_1_1},
     {"v" : "1.1.2", "func":upgradeTo_1_1_2},
-    {"v" : "1.1.2", "func":upgradeTo_1_1_3}
+    {"v" : "1.1.3", "func":upgradeTo_1_1_3}
 ];
 
 var currDir;
