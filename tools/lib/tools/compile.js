@@ -486,12 +486,18 @@ function generateAllModuleReference(projectDir) {
 
 function generateAllModuleFileList(projectDir, moduleReferenceList) {
 
+    if(moduleReferenceList){
+        var length = moduleReferenceList.length;
+        for(var i=0;i<length;i++){
+            moduleReferenceList[i] = moduleReferenceList[i].toLowerCase();
+        }
+    }
     var projectConfig = require("../core/projectConfig.js");
     var output = projectConfig.getOutputDir();
     var all_module_file_list = [];
     all_module.map(function (moduleConfig) {
         moduleConfig.file_list.map(function (item) {
-            var tsFile = file.joinPath(moduleConfig.prefix, moduleConfig.source, item);
+            var tsFile = file.joinPath(moduleConfig.prefix, moduleConfig.source, item).toLowerCase();
             if (item.indexOf(".d.ts") != -1) {
                 return;
             }
