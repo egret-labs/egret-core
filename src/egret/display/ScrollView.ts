@@ -400,25 +400,25 @@ module egret {
         }
 
         public setScrollTop(scrollTop: number, duration: number = 0): egret.Tween {
-            var final = Math.min(this.getMaxScrollTop(), Math.max(scrollTop, 0));
+            var finalPosition = Math.min(this.getMaxScrollTop(), Math.max(scrollTop, 0));
             if (duration == 0) {
-                this.scrollTop = final;
+                this.scrollTop = finalPosition;
                 return null;
             }
             var twy = egret.Tween.get(this).to({ scrollTop: scrollTop }, duration, egret.Ease.quartOut);
-            if (final != scrollTop) {
-                twy.to({ scrollTop: final }, 300, egret.Ease.quintOut);
+            if (finalPosition != scrollTop) {
+                twy.to({ scrollTop: finalPosition }, 300, egret.Ease.quintOut);
             }
         }
         public setScrollLeft(scrollLeft: number, duration: number = 0): egret.Tween {
-            var final = Math.min(this.getMaxScrollLeft(), Math.max(scrollLeft, 0));
+            var finalPosition = Math.min(this.getMaxScrollLeft(), Math.max(scrollLeft, 0));
             if (duration == 0) {
-                this.scrollTop = final;
+                this.scrollLeft = finalPosition;
                 return null;
             }
             var tw = egret.Tween.get(this).to({ scrollLeft: scrollLeft }, duration, egret.Ease.quartOut);
-            if (final != scrollLeft) {
-                tw.to({ scrollLeft: final }, 300, egret.Ease.quintOut);
+            if (finalPosition != scrollLeft) {
+                tw.to({ scrollLeft: finalPosition }, 300, egret.Ease.quintOut);
             }
         }
 
