@@ -249,6 +249,7 @@ module egret.gui {
                 (<DisplayObject><any> (this.popUp))._scrollRect = new Rectangle(x,y,
                     this.popUp.width, this.popUp.height)
             }
+			(<DisplayObject><any> (this.popUp))._setScrollRect(rect);
 		}
 		
 		/**
