@@ -434,6 +434,10 @@ module egret {
         }
 
         public set scrollRect(value:Rectangle) {
+            this._setScrollRect(value);
+        }
+
+        public _setScrollRect(value:Rectangle):void{
             this._scrollRect = value;
 
             this._setSizeDirty();
