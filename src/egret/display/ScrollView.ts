@@ -370,10 +370,12 @@ module egret {
             return this._content.explicitHeight || this._content.height;
         }
         public getMaxScrollLeft() {
-            return this._getContentWidth() - this.width;
+            var max = this._getContentWidth() - this.width;
+            return Math.max(0, max);
         }
         public getMaxScrollTop() {
-            return this._getContentHeight() - this.height;
+            var max = this._getContentHeight() - this.height;
+            return Math.max(0, max);
         }
         static weight = [1, 1.33, 1.66, 2, 2.33];
         private _moveAfterTouchEnd() {

@@ -56,11 +56,13 @@ module egret.gui {
 
         public getMaxScrollLeft() {
             var content: IViewport = <any>this.content;
-            return content.contentWidth - content.width;
+            var max = content.contentWidth - content.width;
+            return Math.max(max, 0);
         }
         public getMaxScrollTop() {
             var content: IViewport = <any>this.content;
-            return content.contentHeight - content.height;
+            var max = content.contentHeight - content.height;
+            return Math.max(max, 0);
         }
         public _getContentWidth() {
             return (<any>this._content).contentWidth;
