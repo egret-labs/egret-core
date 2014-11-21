@@ -268,6 +268,10 @@ module egret {
         }
 
         public set anchorX(value:number) {
+            this._setAnchorX(value);
+        }
+
+        public _setAnchorX(value:number):void {
             if (NumberUtils.isNumber(value) && this._anchorX != value) {
                 this._anchorX = value;
 
@@ -288,6 +292,10 @@ module egret {
         }
 
         public set anchorY(value:number) {
+            this._setAnchorY(value);
+        }
+
+        public _setAnchorY(value:number):void {
             if (NumberUtils.isNumber(value) && this._anchorY != value) {
                 this._anchorY = value;
 
