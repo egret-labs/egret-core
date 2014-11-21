@@ -101,7 +101,7 @@ module egret {
                 egret_native.Graphics.drawImage(texture._bitmapData, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight);
             }
 
-            Profiler.getInstance().onDrawImage();
+            super.drawImage(texture, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight,repeat);
         }
 
         public drawRepeatImage(texture:Texture, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, repeat) {
@@ -184,9 +184,17 @@ module egret {
          * @param y {number}
          * @param maxWidth {numbe}
          */
-        public drawText(textField:egret.TextField, text:string, x:number, y:number, maxWidth:number) {
-            Profiler.getInstance().onDrawImage();
-            egret_native.Label.setTextColor(textField._textColor);
+        public drawText(textField:egret.TextField, text:string, x:number, y:number, maxWidth:number, style:Object) {
+            super.drawText(textField, text, x, y, maxWidth, style);
+
+            if (style["textColor"]) {
+                var textColor = style["textColor"];
+            }
+            else {
+                textColor = textField._textColor;
+            }
+
+            egret_native.Label.setTextColor(textColor);
             egret_native.Label.drawText(text, x, y - 2);
         }
 

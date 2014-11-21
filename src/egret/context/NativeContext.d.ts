@@ -155,6 +155,7 @@ declare module egret_native {
 
         function setKeybordOpen(isOpen:boolean):void
         function isFullScreenKeyBoard():boolean
+        function setInputTextMaxLenght(value:number):void;
 
 
     }
