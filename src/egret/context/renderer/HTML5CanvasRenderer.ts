@@ -131,7 +131,7 @@ module egret {
             else {
                 this.drawRepeatImage(texture, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, repeat);
             }
-            super.drawImage(image, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight,repeat);
+            super.drawImage(texture, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight,repeat);
             this.renderCost += egret.getTimer() - beforeDraw;
         }
 
@@ -210,10 +210,31 @@ module egret {
         }
 
 
-        public drawText(textField:egret.TextField, text:string, x:number, y:number, maxWidth:number) {
-            var textColor:string = textField._textColorString;
-            var strokeColor:string = textField._strokeColorString;
-            var outline = textField._stroke;
+        public drawText(textField:egret.TextField, text:string, x:number, y:number, maxWidth:number, style:Object) {
+            var textColor:string;
+            if (style["textColor"]) {
+                textColor = toColorString(style["textColor"]);
+            }
+            else {
+                textColor = textField._textColorString;
+            }
+
+            var strokeColor:string;
+            if (style["strokeColor"]) {
+                strokeColor = toColorString(style["strokeColor"]);
+            }
+            else {
+                strokeColor = textField._strokeColorString;
+            }
+
+            var outline;
+            if (style["outline"]) {
+                outline = style["outline"];
+            }
+            else {
+                outline = textField._stroke;
+            }
+
             var renderContext = this.canvasContext;
             renderContext.fillStyle = textColor;
             renderContext.strokeStyle = strokeColor;
@@ -222,7 +243,7 @@ module egret {
                 renderContext.strokeText(text, x + this._transformTx, y + this._transformTy, maxWidth || 0xFFFF);
             }
             renderContext.fillText(text, x + this._transformTx, y + this._transformTy, maxWidth || 0xFFFF);
-            super.drawText(textField, text, x, y, maxWidth);
+            super.drawText(textField, text, x, y, maxWidth, style);
         }
 
         public strokeRect(x, y, w, h, color) {

@@ -65,7 +65,14 @@ module egret {
         public _setType(value:string):void {
             if (this._type != value) {
                 this._type = value;
-                if (this._type == TextFieldType.INPUT) {
+                if (this._type == TextFieldType.INPUT) {//input，如果没有设置过宽高，则设置默认值为100，30
+                    if (!this._hasWidthSet) {
+                        this._setWidth(100);
+                    }
+                    if (!this._hasHeightSet) {
+                        this._setHeight(30);
+                    }
+
                     //创建stageText
                     if (this._inputUtils == null) {
                         this._inputUtils = new egret.InputController();
@@ -91,19 +98,16 @@ module egret {
             return this._type;
         }
 
-        public _drawText:string;
-
         public get text():string {
             return this._getText();
         }
 
         public _getText():string {
-            if (this._multiline) {//多行
-                return this._text;
+            if (this._type == egret.TextFieldType.INPUT) {
+                return this._inputUtils._getText();
             }
-            else {
-                return this._text.replace(/[\r\n]/g, "");
-            }
+
+            return this._text;
         }
 
         public _setTextDirty(): void {
@@ -121,6 +125,9 @@ module egret {
         public _text:string = "";
 
         public _setBaseText(value:string):void {
+            if (value == null) {
+                value = "";
+            }
             if (this._text != value || this._displayAsPassword) {
                 this._setTextDirty();
                 this._text = value;
@@ -142,11 +149,14 @@ module egret {
                     text = this._text;
                 }
 
-                this._drawText = text;
+                this.setMiddleStyle([[text]]);
             }
         }
 
         public _setText(value:string):void {
+            if (value == null) {
+                value = "";
+            }
             this._setBaseText(value);
             if (this._inputUtils) {
                 this._inputUtils._setText(this._text);
@@ -385,7 +395,29 @@ module egret {
         }
 
         public maxWidth;
-        public maxChars;
+
+        /**
+         * 文本字段中最多可包含的字符数（即用户输入的字符数）。
+         * 脚本可以插入比 maxChars 允许的字符数更多的文本；maxChars 属性仅表示用户可以输入多少文本。如果此属性的值为 0，则用户可以输入无限数量的文本。
+         * 默认值为 0。
+         * @type {number}
+         * @private
+         */
+        public _maxChars:number = 0;
+        public get maxChars():number {
+            return this._maxChars;
+        }
+
+        public set maxChars(value:number) {
+            this._setMaxChars(value);
+        }
+
+        public _setMaxChars(value:number):void {
+            if (this._maxChars != value) {
+                this._maxChars = value;
+            }
+        }
+
         public get maxScrollV():number {
             return this._numLines;
         }
@@ -440,7 +472,7 @@ module egret {
         }
 
         /**
-         * 表示字段是否为多行文本字段。
+         * 表示字段是否为多行文本字段。注意，此属性仅在type为TextFieldType.INPUT时才有效。
          * 如果值为 true，则文本字段为多行文本字段；如果值为 false，则文本字段为单行文本字段。在类型为 TextFieldType.INPUT 的字段中，multiline 值将确定 Enter 键是否创建新行（如果值为 false，则将忽略 Enter 键）。
          * 默认值为 false。
          * @member {boolean} egret.TextField#multiline
@@ -522,25 +554,151 @@ module egret {
         }
 
         /**
+         *
+         * @param textArr [["text1", {"color":0xffffff}], ["text2", {"color":0xff0000}]]
+         * @private
+         */
+        public _setTextArray(textArr:Array<any>):void {
+            var text:string = "";
+            for (var i:number = 0; i < textArr.length; i++) {
+                text += textArr[i][0];
+                textArr[i][0] = this.changeToPassText(textArr[i][0]);
+            }
+            this._text = text;
+            this.setMiddleStyle(textArr);
+        }
+
+        private changeToPassText(text:string):string {
+            if (this._displayAsPassword) {
+                var passText:string = "";
+                for (var i:number = 0, num = text.length; i < num; i++) {
+                    switch (text.charAt(i)) {
+                        case '\n' :
+                            passText += "\n";
+                            break;
+                        case '\r' :
+                            break;
+                        default :
+                            passText += '*';
+                    }
+                }
+                return passText;
+            }
+            return text;
+        }
+
+        private _textArr:Array<any> = [];
+        private _isArrayChanged:boolean = false;
+        private setMiddleStyle(textArr:Array<any>):void {
+            this._isArrayChanged = true;
+            this._textArr = textArr;
+        }
+
+        private _linesArr:Array<any> = [];
+        public _getLinesArr():Array<any> {
+            if (!this._isArrayChanged) {
+                return this._linesArr;
+            }
+            this._isArrayChanged = false;
+            var text2Arr:Array<any> = this._textArr;
+            var renderContext = egret.MainContext.instance.rendererContext;
+
+            this._linesArr = [];
+            var linesArr:Array<any> = this._linesArr;
+            var lineW:number = 0;
+            var lineH:number = 0;
+            var lineCount:number = 0;
+            for (var i:number = 0; i < text2Arr.length; i++) {
+                var textInfo:Array<any> = text2Arr[i];
+                textInfo[1] = textInfo[1] || {};
+                lineH = Math.max(lineH, textInfo[1]["size"] || this._size);
+                var text:string = textInfo[0].toString();
+                var textArr:Array<any> = text.split(/(?:\r\n|\r|\n)/);
+
+                for (var j:number = 0; j < textArr.length; j++) {
+                    if (linesArr[lineCount] == null) {
+                        linesArr[lineCount] = [];
+                        lineW = 0;
+                    }
+
+                    renderContext.setupFont(this);
+                    var w:number = renderContext.measureText(textArr[j]);
+                    if (!this._hasWidthSet) {//没有设置过宽
+                        lineW = w;
+
+                        linesArr[lineCount].push([textArr[j], textInfo[1], w]);
+                    }
+                    else {
+                        if (lineW + w < this._explicitWidth) {//在设置范围内
+                            linesArr[lineCount].push([textArr[j], textInfo[1], w]);
+                            lineW += w;
+                        }
+                        else {
+                            var k:number = 0;
+                            var ww:number = 0;
+                            var word:string = textArr[j];
+                            for (; k < word.length; k++) {
+                                w = renderContext.measureText(word.charAt(k));
+                                if (lineW + w > this._explicitWidth) {
+                                    break;
+                                }
+                                ww += w;
+                                lineW += w;
+                            }
+                            if (k > 0) {
+                                linesArr[lineCount].push([word.substring(0, k), textInfo[1], ww]);
+                                textArr[j] = word.substring(k);
+                            }
+
+                            j--;
+                        }
+                    }
+                    if (j < textArr.length - 1) {//非最后一个
+                        linesArr[lineCount].push([lineW, lineH]);
+                        if (this._type == TextFieldType.INPUT && !this._multiline) {
+                            return linesArr;
+                        }
+                        lineCount++;
+                    }
+                }
+
+                if (i == text2Arr.length - 1) {
+                    linesArr[lineCount].push([lineW, lineH]);
+                }
+            }
+
+            return linesArr;
+        }
+
+        /**
          * @private
          * @param renderContext
          * @returns {Rectangle}
          */
         private drawText(renderContext:RendererContext, forMeasure:boolean):Rectangle {
 
-            var lines:Array<string> = this.getTextLines(renderContext);
+            var lines:Array<any> = this._getLinesArr();
+            renderContext.setupFont(this);
+
             if (!lines) {
-                this._numLines = 0;
-                this._textHeight = 0;
-                this._textWidth = 0;
                 return Rectangle.identity.initialize(0, 0, 0, 0);
             }
             var length:number = lines.length;
-            this._numLines = length;
             var drawY:number = this._size * 0.5;
-            var hGap:number = this._size + this._lineSpacing;
-            var textHeight:number = length * hGap - this._lineSpacing;
-            this._textHeight = textHeight;
+
+            var textHeight:number = 0;
+            var maxWidth:number = 0;
+            for (var i:number = 0; i < lines.length; i++) {
+                var lineArr:Array<any> = lines[i];
+                textHeight += lineArr[lineArr.length - 1][1];
+                maxWidth = Math.max(lineArr[lineArr.length - 1][0], maxWidth);
+            }
+            textHeight += (length - 1) * this._lineSpacing;
+
+            if (this._hasWidthSet) {
+                maxWidth = this._explicitWidth;
+            }
+
             var explicitHeight:number = this._hasHeightSet?this._explicitHeight:Number.POSITIVE_INFINITY;
             if (this._hasHeightSet&&textHeight < explicitHeight) {
                 var valign:number = 0;
@@ -551,7 +709,6 @@ module egret {
                 drawY += valign * (explicitHeight - textHeight);
             }
             drawY = Math.round(drawY);
-//            var minY:number = drawY;
             var halign:number = 0;
             if (this._textAlign == HorizontalAlign.CENTER) {
                 halign = 0.5;
@@ -559,106 +716,32 @@ module egret {
             else if (this._textAlign == HorizontalAlign.RIGHT) {
                 halign = 1;
             }
-            var measuredWidths = this.measuredWidths;
-            var maxWidth:number;
-            if (this._hasWidthSet) {
-                maxWidth = this._explicitWidth;
-            }
-            else {
-                maxWidth = this._textWidth;
-            }
-//            var minX:number = Number.POSITIVE_INFINITY;
-            for (var i:number = 0; i < length; i++) {
-                var line:string = lines[i];
-                var measureW:number = measuredWidths[i];
-                var drawX:number = Math.round((maxWidth - measureW) * halign);
-//                if (drawX < minX) {
-//                    minX = drawX;
-//                }
-                if (!forMeasure && drawY < explicitHeight) {
-                    renderContext.drawText(this, line, drawX, drawY, maxWidth);
+
+            var drawX:number = 0;
+            for (var i = 0; i < length; i++) {
+                var lineArr:Array<any> = lines[i];
+
+                drawX = Math.round((maxWidth - lineArr[lineArr.length - 1][0]) * halign);
+
+                for (var j:number = 0; j < lineArr.length - 1; j++) {
+                    if (!forMeasure) {
+                        if (this._type == egret.TextFieldType.INPUT) {
+                            renderContext.drawText(this, lineArr[j][0], drawX, drawY, lineArr[j][2], {});
+                        }
+                        else {
+                            renderContext.drawText(this, lineArr[j][0], drawX, drawY, lineArr[j][2], lineArr[j][1]);
+                        }
+                    }
+                    drawX += lineArr[j][2];
                 }
-                drawY += hGap;
+                drawY += lineArr[lineArr.length - 1][1] + this._lineSpacing;
+
+                if (this._hasHeightSet && drawY - this._size * 0.5 > this._explicitHeight) {
+                    break;
+                }
             }
+
             return Rectangle.identity.initialize(0, 0, maxWidth, textHeight);
-        }
-
-        private _textWidth:number;
-        private _textHeight:number;
-        private measuredWidths:Array<number> = [];
-
-        private getTextLines(renderContext:RendererContext):Array<string>{
-            var text:string = this._drawText ? this._drawText.toString() : "";
-            if(!text){
-                return null;
-            }
-            var measuredWidths = this.measuredWidths;
-            measuredWidths.length = 0;
-            renderContext.setupFont(this);
-            var lines:Array<string> = text.split(/(?:\r\n|\r|\n)/);
-            var length:number = lines.length;
-            var maxWidth:number = 0;
-            if (this._hasWidthSet) {
-                var explicitWidth:number = this._explicitWidth;
-                for (var i:number = 0; i < length; i++) {
-                    var line:string = lines[i];
-                    var measureW:number = renderContext.measureText(line);
-                    if (measureW > explicitWidth) {
-                        var newLine:string = "";
-                        var lineWidth:number = 0;
-                        var len:number = line.length;
-                        for (var j:number = 0; j < len; j++) {
-                            var word:string = line.charAt(j);
-                            measureW = renderContext.measureText(word);
-                            if(lineWidth+measureW>explicitWidth){
-
-                                if(lineWidth==0){
-                                    lines.splice(i,0,word);
-                                    measuredWidths[i] = measureW;
-                                    if (maxWidth < measureW) {
-                                        maxWidth = measureW;
-                                    }
-                                    measureW = 0;
-                                    word = "";
-                                }
-                                else {
-                                    lines.splice(i, 0, newLine);
-                                    measuredWidths[i] = lineWidth;
-                                    if (maxWidth < lineWidth) {
-                                        maxWidth = lineWidth;
-                                    }
-                                    newLine = "";
-                                    lineWidth = 0;
-                                }
-                                i++;
-                                length++;
-                            }
-                            lineWidth += measureW;
-                            newLine += word;
-                        }
-                        lines[i]=newLine;
-                        measuredWidths[i] = lineWidth;
-                    }
-                    else {
-                        measuredWidths[i] = measureW;
-                        if (maxWidth < measureW) {
-                            maxWidth = measureW;
-                        }
-                    }
-                }
-            }
-            else {
-                for (i = 0; i < length; i++) {
-                    line = lines[i];
-                    measureW = renderContext.measureText(line);
-                    measuredWidths[i] = measureW;
-                    if (maxWidth < measureW) {
-                        maxWidth = measureW;
-                    }
-                }
-            }
-            this._textWidth = maxWidth;
-            return lines;
         }
     }
 }

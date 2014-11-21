@@ -295,6 +295,8 @@ module egret {
                 }
             };
 
+            egret_native.TextInputOp.setInputTextMaxLenght(self._maxChars > 0 ? self._maxChars : -1);
+
             egret_native.TextInputOp.setKeybordOpen(true);
         }
 

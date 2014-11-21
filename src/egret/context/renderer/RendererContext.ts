@@ -146,7 +146,7 @@ module egret {
          * @param y {number}
          * @param maxWidth {number}
          */
-        public drawText(textField:egret.TextField, text:string, x:number, y:number, maxWidth:number) {
+        public drawText(textField:egret.TextField, text:string, x:number, y:number, maxWidth:number, style:Object) {
             this.profiler.onDrawImage();
         }
 
