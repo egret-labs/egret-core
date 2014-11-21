@@ -71,10 +71,64 @@ module egret {
             this.getStageDelegateDiv().appendChild(this.div);
         }
 
+        private getStageDelegateDiv():any {
+            var stageDelegateDiv = egret.Browser.getInstance().$("#StageDelegateDiv");
+            if (!stageDelegateDiv) {
+                stageDelegateDiv = egret.Browser.getInstance().$new("div");
+                stageDelegateDiv.id = "StageDelegateDiv";
+//                stageDelegateDiv.style.position = "absolute";
+                var container = document.getElementById(egret.StageDelegate.canvas_div_name);
+                container.appendChild(stageDelegateDiv);
+                stageDelegateDiv.transforms();
+            }
+            return stageDelegateDiv;
+        }
+
         public _setMultiline(value:boolean):void {
             super._setMultiline(value);
 
             this.createInput();
+        }
+
+        private callHandler(e):void {
+            e.stopPropagation();
+        }
+
+        public _add():void {
+            if (this.div && this.div.parentNode == null) {
+                this.getStageDelegateDiv().appendChild(this.div);
+            }
+        }
+
+        /**
+         * @method egret.StageText#remove
+         */
+        public _remove():void {
+            if (this._shape && this._shape.parent) {
+                this._shape.parent.removeChild(this._shape);
+            }
+            if (this.div && this.div.parentNode) {
+                this.div.parentNode.removeChild(this.div);
+            }
+        }
+
+        private _hasListeners:boolean = false;
+        public _addListeners():void {
+            if (this.inputElement && !this._hasListeners) {
+                this._hasListeners = true;
+                this.inputElement.addEventListener("mousedown", this.callHandler);
+                this.inputElement.addEventListener("touchstart", this.callHandler);
+                this.inputElement.addEventListener("MSPointerDown", this.callHandler);
+            }
+        }
+
+        public _removeListeners():void {
+            if (this.inputElement && this._hasListeners) {
+                this._hasListeners = false;
+                this.inputElement.removeEventListener("mousedown", this.callHandler);
+                this.inputElement.removeEventListener("touchstart", this.callHandler);
+                this.inputElement.removeEventListener("MSPointerDown", this.callHandler);
+            }
         }
 
         private _inputType:string = "";
@@ -86,6 +140,7 @@ module egret {
 
             this._inputType = type;
             if (this.inputElement != null) {
+                this._removeListeners();
                 this.div.removeChild(this.inputElement);
             }
 
@@ -102,39 +157,18 @@ module egret {
 
             this.div.appendChild(inputElement);
 
-            var call = function (e) {
-                e.stopPropagation();
-                e.preventDefault();
-            };
-            inputElement.addEventListener("mousedown", call);
-            inputElement.addEventListener("touchstart", call);
-            inputElement.addEventListener("MSPointerDown", call);
+            this._addListeners();
 
             this.setElementStyle("width", 0 + "px");
-//            this.setElementStyle("height", 0 + "px");
 
             //默认值
             this.setElementStyle("border", "none");
-            //            this.setElementStyle("background", "none");
             this.setElementStyle("margin", "0");
             this.setElementStyle("padding", "0");
             this.setElementStyle("outline", "medium");
             this.setElementStyle("verticalAlign", "top");
             this.setElementStyle("wordBreak", "break-all");
             this.setElementStyle("overflow", "hidden");
-        }
-
-        private getStageDelegateDiv():any {
-            var stageDelegateDiv = egret.Browser.getInstance().$("#StageDelegateDiv");
-            if (!stageDelegateDiv) {
-                stageDelegateDiv = egret.Browser.getInstance().$new("div");
-                stageDelegateDiv.id = "StageDelegateDiv";
-//                stageDelegateDiv.style.position = "absolute";
-                var container = document.getElementById(egret.StageDelegate.canvas_div_name);
-                container.appendChild(stageDelegateDiv);
-                stageDelegateDiv.transforms();
-            }
-            return stageDelegateDiv;
         }
 
         /**
@@ -230,15 +264,6 @@ module egret {
                 window.scrollTo(0, 0);
             }, this, 50);
 
-            if (this._shape && this._shape.parent) {
-                this._shape.parent.removeChild(this._shape);
-            }
-        }
-
-        /**
-         * @method egret.StageText#remove
-         */
-        public _remove():void {
             if (this._shape && this._shape.parent) {
                 this._shape.parent.removeChild(this._shape);
             }
