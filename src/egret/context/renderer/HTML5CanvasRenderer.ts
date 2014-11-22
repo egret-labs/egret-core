@@ -309,19 +309,18 @@ module egret_h5_graphics {
         this._fill();
     }
 
-    export function drawCircle(x:number, y:number, r:number):void {
+    export function drawCircle(x:number, y:number, r:number, sAngle:number = 0, eAngle:number = Math.PI * 2):void {
 
         this.commandQueue.push(new Command(
-            function (x, y, r) {
+            function (x, y, r, sAngle, eAngle) {
                 var rendererContext = <egret.HTML5CanvasRenderer>this.renderContext;
                 this.canvasContext.beginPath();
                 this.canvasContext.arc(rendererContext._transformTx + x,
-                        rendererContext._transformTy + y, r, 0, Math.PI * 2);
-                this.canvasContext.closePath();
-
+                        rendererContext._transformTy + y, r, sAngle, eAngle);
+                // this.canvasContext.closePath();
             },
             this,
-            [ x, y, r]
+            [ x, y, r, sAngle, eAngle]
         ));
         this._fill();
     }
