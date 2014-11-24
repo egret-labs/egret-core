@@ -213,7 +213,8 @@ module egret {
         public drawText(textField:egret.TextField, text:string, x:number, y:number, maxWidth:number, style:Object) {
             var textColor:string;
             if (style["textColor"]) {
-                textColor = toColorString(style["textColor"]);
+
+                textColor = toColorString(parseInt(style["textColor"]));
             }
             else {
                 textColor = textField._textColorString;

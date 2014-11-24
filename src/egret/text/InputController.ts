@@ -30,8 +30,12 @@ module egret {
         private _isFocus:boolean = false;
 
         private _text:TextField;
+
+        private _isFirst:boolean = true;
         public constructor() {
             super();
+
+            this._isFirst = true;
         }
 
         public init(text:TextField):void {
@@ -141,12 +145,13 @@ module egret {
             var oldTransFormTy = this._text._worldTransform.ty;
             this._text._updateBaseTransform();
             var newTransForm = this._text._worldTransform;
-            if (oldTransFormA != newTransForm.a ||
+            if (this._isFirst || oldTransFormA != newTransForm.a ||
                 oldTransFormB != newTransForm.b ||
                 oldTransFormC != newTransForm.c ||
                 oldTransFormD != newTransForm.d ||
                 oldTransFormTx != newTransForm.tx ||
                 oldTransFormTy != newTransForm.ty) {
+                this._isFirst = false;
                 var point = this._text.localToGlobal();
                 this.stageText.changePosition(point.x, point.y);
 
