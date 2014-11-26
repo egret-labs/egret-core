@@ -58,6 +58,12 @@ module egret {
 
             this.canvas = canvas || this.createCanvas();
             this.canvasContext = this.canvas.getContext("2d");
+
+            this.canvasContext["imageSmoothingEnabled"] = RendererContext.imageSmoothingEnabled;
+            this.canvasContext["webkitImageSmoothingEnabled"] = RendererContext.imageSmoothingEnabled;
+            this.canvasContext["mozImageSmoothingEnabled"] = RendererContext.imageSmoothingEnabled;
+            this.canvasContext["msImageSmoothingEnabled"] = RendererContext.imageSmoothingEnabled;
+
             var f = this.canvasContext.setTransform;
             var that = this;
             this.canvasContext.setTransform = function (a, b, c, d, tx, ty) {
