@@ -214,13 +214,19 @@ module egret {
          */
         private saveVersion(url:string):void {
             var change = false;
-            if(this.currentVersionData && this.currentVersionData[url] && (this.localVersionData[url] != this.currentVersionData[url])) {
-                this.localVersionData[url] = this.currentVersionData[url];
-                change = true;
+            if(this.currentVersionData && this.currentVersionData[url])
+            {
+                if ((this.localVersionData[url] != this.currentVersionData[url]))
+                {
+                    this.localVersionData[url] = this.currentVersionData[url];
+                    change = true;
+                }
             }
-            else if (this.baseVersionData && this.baseVersionData[url] && (this.localVersionData[url] != this.baseVersionData[url])) {
-                this.localVersionData[url] = this.baseVersionData[url];
-                change = true;
+            else if (this.baseVersionData && this.baseVersionData[url]) {
+                if ((this.localVersionData[url] != this.baseVersionData[url])) {
+                    this.localVersionData[url] = this.baseVersionData[url];
+                    change = true;
+                }
             }
             if (change) {
 //                console.log("save:" + url);
