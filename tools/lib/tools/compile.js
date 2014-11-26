@@ -258,6 +258,10 @@ function generateGameFileList(projectPath, runtime) {
     //=========================
     // 这段逻辑的作用是把第三方 module 的 ts文件不要随着 game_file_list 编译进去
     var moduleFileList = getAllModuleTypeScriptFileList(projectPath);
+    //windows系统路径修正
+    moduleFileList = moduleFileList.map(function(item){
+        return item.replace(/\\/g,"/");
+    });
     manifest = manifest.filter(function(item){
         return moduleFileList.indexOf(item) == -1;
     });
@@ -486,12 +490,18 @@ function generateAllModuleReference(projectDir) {
 
 function generateAllModuleFileList(projectDir, moduleReferenceList) {
 
+    if(moduleReferenceList){
+        var length = moduleReferenceList.length;
+        for(var i=0;i<length;i++){
+            moduleReferenceList[i] = moduleReferenceList[i].toLowerCase();
+        }
+    }
     var projectConfig = require("../core/projectConfig.js");
     var output = projectConfig.getOutputDir();
     var all_module_file_list = [];
     all_module.map(function (moduleConfig) {
         moduleConfig.file_list.map(function (item) {
-            var tsFile = file.joinPath(moduleConfig.prefix, moduleConfig.source, item);
+            var tsFile = file.joinPath(moduleConfig.prefix, moduleConfig.source, item).toLowerCase();
             if (item.indexOf(".d.ts") != -1) {
                 return;
             }

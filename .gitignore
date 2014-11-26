@@ -25,3 +25,4 @@ obj/
 *.suo
 *.sln
 *.csproj
+*.ide/

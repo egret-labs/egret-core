@@ -24,6 +24,16 @@
 		"length":"number",
 		"position":"number"
 	},
+	"egret.ColorTransform":
+	{
+		"matrix":"Array"
+	},
+	"egret.ColorTransformShader":
+	{
+		"fragmentSrc":"any",
+		"super":"egret.EgretShader",
+		"uniforms":"any"
+	},
 	"egret.DefaultMovieClipDelegate":
 	{
 		"implements":["egret.MovieClipDelegate"]
@@ -37,6 +47,7 @@
 		"anchorY":"number",
 		"blendMode":"string",
 		"cacheAsBitmap":"boolean",
+		"colorTransform":"egret.ColorTransform",
 		"height":"number",
 		"implements":["egret.RenderData"],
 		"mask":"egret.Rectangle",
@@ -60,15 +71,6 @@
 		"super":"egret.DisplayObject",
 		"touchChildren":"boolean"
 	},
-	"egret.EgretShader":
-	{
-		"aTextureCoord":"any",
-		"aVertexPosition":"any",
-		"attributes":"Array",
-		"colorAttribute":"any",
-		"program":"any",
-		"projectionVector":"any"
-	},
 	"egret.EventDispatcher":
 	{
 		"implements":["egret.IEventDispatcher"],
@@ -81,10 +83,6 @@
 	"egret.HashObject":
 	{
 		"implements":["egret.IHashObject"]
-	},
-	"egret.InputController":
-	{
-		"super":"egret.HashObject"
 	},
 	"egret.Matrix":
 	{
@@ -146,6 +144,14 @@
 	"egret.RenderTexture":
 	{
 		"super":"egret.Texture"
+	},
+	"egret.ScrollView":
+	{
+		"horizontalScrollPolicy":"string",
+		"scrollLeft":"number",
+		"scrollTop":"number",
+		"super":"egret.DisplayObjectContainer",
+		"verticalScrollPolicy":"string"
 	},
 	"egret.Shape":
 	{
@@ -314,7 +320,9 @@
 	},
 	"egret.gui.HScrollBar":
 	{
-		"super":"egret.gui.HSlider"
+		"super":"egret.gui.HSlider",
+		"thumbAlpha":"any",
+		"trackAlpha":"any"
 	},
 	"egret.gui.HSlider":
 	{
@@ -451,10 +459,12 @@
 	"egret.gui.Scroller":
 	{
 		"hBar":"egret.gui.HScrollBar",
+		"horizontalScrollBar":"egret.gui.HScrollBar",
 		"horizontalScrollPolicy":"string",
 		"implements":["egret.gui.IVisualElementContainer"],
-		"super":"egret.gui.UIComponent",
+		"super":"egret.gui.SkinnableComponent",
 		"vBar":"egret.gui.VScrollBar",
+		"verticalScrollBar":"egret.gui.VScrollBar",
 		"verticalScrollPolicy":"string",
 		"viewport":"egret.gui.IViewport"
 	},
@@ -564,7 +574,7 @@
 	{
 		"heightInLines":"number",
 		"horizontalScrollPolicy":"string",
-		"scroller":"egret.gui.Scroller",
+		"scroller":"egret.Scroller",
 		"super":"egret.gui.SkinnableTextBase",
 		"verticalScrollPolicy":"string",
 		"widthInChars":"number"
@@ -692,7 +702,9 @@
 	},
 	"egret.gui.VScrollBar":
 	{
-		"super":"egret.gui.VSlider"
+		"super":"egret.gui.VSlider",
+		"thumbAlpha":"any",
+		"trackAlpha":"any"
 	},
 	"egret.gui.VSlider":
 	{
@@ -717,6 +729,10 @@
 		"selectedChild":"egret.gui.IVisualElement",
 		"selectedIndex":"number",
 		"super":"egret.gui.Group"
+	},
+	"egret.gui.ViewportScroller":
+	{
+		"super":"egret.ScrollView"
 	},
 	"eumn":
 	{
