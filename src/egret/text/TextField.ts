@@ -566,6 +566,7 @@ module egret {
             }
             this._text = text;
             this.setMiddleStyle(textArr);
+            this._setSizeDirty();
         }
 
         private changeToPassText(text:string):string {
@@ -624,7 +625,7 @@ module egret {
                     renderContext.setupFont(this);
                     var w:number = renderContext.measureText(textArr[j]);
                     if (!this._hasWidthSet) {//没有设置过宽
-                        lineW = w;
+                        lineW += w;
 
                         linesArr[lineCount].push([textArr[j], textInfo[1], w]);
                     }
