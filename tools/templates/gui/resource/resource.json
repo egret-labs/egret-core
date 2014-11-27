@@ -237,7 +237,7 @@
 		"url":"assets/simple/DropdownList/DropDownListButtonSkin_up.png"
 	},
 	{
-		"name":"closebtn_disabledpng",
+		"name":"closebtn_disabled_png",
 		"type":"image",
 		"url":"assets/simple/TitleWindow/closebtn_disabled.png"
 	},
@@ -272,7 +272,7 @@
 		"url":"assets/simple/ItemRenderer/app_list_item_up.png"
 	},
 	{
-		"name":"togglebutton_over",
+		"name":"togglebutton_over_png",
 		"type":"image",
 		"url":"assets/simple/ToggleButton/togglebutton_over.png"
 	},
@@ -297,29 +297,29 @@
 		"url":"assets/simple/RadioButton/RadioButton_unselect_over.png"
 	},
 	{
-		"name":"hscrollbtn",
+		"name":"hscrollbtn_png",
 		"scale9grid":"4,4,2,2",
 		"type":"image",
 		"url":"assets/simple/HScrollBar/hscrollbtn.png"
 	},
 	{
-		"name":"hscrolltrack",
+		"name":"hscrolltrack_png",
 		"type":"image",
 		"url":"assets/simple/HScrollBar/hscrolltrack.png"
 	},
 	{
-		"name":"vscrollbtn",
+		"name":"vscrollbtn_png",
 		"scale9grid":"4,4,2,2",
 		"type":"image",
 		"url":"assets/simple/VScrollBar/vscrollbtn.png"
 	},
 	{
-		"name":"vscrolltrack",
+		"name":"vscrolltrack_png",
 		"type":"image",
 		"url":"assets/simple/VScrollBar/vscrolltrack.png"
 	},
 	{
-		"name":"textbox",
+		"name":"textbox_png",
 		"scale9grid":"1,1,143,21",
 		"type":"image",
 		"url":"assets/simple/TextInput/textbox.png"

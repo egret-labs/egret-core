@@ -6,5 +6,5 @@
         <e:State name="down" />
         <e:State name="disabled" />
     </e:states>
-  <e:UIAsset source="hscrollbtn" height="10"  width="100%"  fillMode="scale" verticalCenter="0"  />
+  <e:UIAsset source="hscrollbtn_png" height="10"  width="100%"  fillMode="scale" verticalCenter="0"  />
 </e:Skin>
