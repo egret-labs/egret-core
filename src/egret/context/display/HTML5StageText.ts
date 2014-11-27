@@ -38,160 +38,37 @@ module egret {
         private div:any;
         private inputElement:any;
 
-        private _call;
+        private _shape:egret.Shape;
+
         constructor() {
             super();
-        }
 
-        private _isShow:boolean = true;
-        /**
-         * @method egret.StageText#open
-         * @param x {number}
-         * @param y {number}
-         * @param width {number}
-         * @param height {number}
-         */
-        public _open(x:number, y:number, width:number = 160, height:number = 21):void {
             var scaleX = egret.StageDelegate.getInstance().getScaleX();
             var scaleY = egret.StageDelegate.getInstance().getScaleY();
 
             var div = egret.Browser.getInstance().$new("div");
-            div.position.x = x * scaleX;
-            div.position.y = y * scaleY;
+            div.position.x = 0;
+            div.position.y = 0;
             div.scale.x = scaleX;
             div.scale.y = scaleY;
             div.transforms();
             div.style[egret_dom.getTrans("transformOrigin")] = "0% 0% 0px";
-
             this.div = div;
 
-            this._createInput();
+            var stage:egret.Stage = egret.MainContext.instance.stage;
+            var stageWidth:number = stage.stageWidth;
+            var stageHeight:number = stage.stageHeight;
+            var shape:egret.Shape = new egret.Shape();
+            shape.graphics.beginFill(0x000000, .3);
+            shape.graphics.drawRect(0, 0, stageWidth, stageHeight);
+            shape.graphics.endFill();
+            shape.width = stageWidth;
+            shape.height = stageHeight;
+            shape.touchEnabled = true;
 
-            div.style.display = "block";
-            div.style.background = "none";
-            div.style.pointerEvents = "none";
+            this._shape = shape;
 
-            this._call = this.onHandler.bind(this);
-        }
-
-        public _addListeners():void {
-            if (window.navigator.msPointerEnabled) {
-                this.addListener("MSPointerDown");
-                this.addListener("MSPointerUp");
-            }
-            else if(MainContext.deviceType == MainContext.DEVICE_MOBILE){
-                this.addListener("touchstart");
-                this.addListener("touchend");
-                this.addListener("touchcancel");
-            }
-            else if(MainContext.deviceType == MainContext.DEVICE_PC){
-                this.addListener("mousedown");
-                this.addListener("mouseup");
-            }
-
-            this.addListener("focus");
-            this.addListener("blur");
-
-            this._isShow = true;
-            this._closeInput();
-            this.closeKeyboard();
-        }
-
-        public _removeListeners():void {
-            if (window.navigator.msPointerEnabled) {
-                this.removeListener("MSPointerDown");
-                this.removeListener("MSPointerUp");
-            }
-            else if(MainContext.deviceType == MainContext.DEVICE_MOBILE){
-                this.removeListener("touchstart");
-                this.removeListener("touchend");
-                this.removeListener("touchcancel");
-
-            }
-            else if(MainContext.deviceType == MainContext.DEVICE_PC){
-                this.removeListener("mousedown");
-                this.removeListener("mouseup");
-            }
-            this.removeListener("blur");
-            this.removeListener("focus");
-        }
-
-        private addListener(type:string):void {
-            this.inputElement.addEventListener(type, this._call);
-        }
-
-        private removeListener(type:string):void {
-            this.inputElement.removeEventListener(type, this._call);
-        }
-
-        private onHandler(e):void {
-            e["isScroll"] = true;
-            if (e.type == "blur") {//失去焦点
-                this.dispatchEvent(new egret.Event("blur"));
-
-                this._closeInput();
-            } else if (e.type == "focus") {
-                if (this._canUse) {//可以点击
-                    this._canUse = false;
-                    this._openInput();
-
-                    this.dispatchEvent(new egret.Event("focus"));
-                }
-                else {//不可以点击
-                    e["isScroll"] = false;
-
-                    this.inputElement.blur();
-                }
-            }
-            else if (e.type == "touchstart" || e.type == "mousedown" || e.type == "MSPointerDown") {
-                if (this._isShow) {//已经打开中 强制
-                    e.stopPropagation();
-                }
-            }
-        }
-
-        private _canUse:boolean = false;
-        /**
-         * @method egret.StageText#add
-         */
-        public _show():void {
-            this._canUse = true;
-        }
-
-        public _hide():void {
-            if(this._canUse) {
-                this._canUse = false;
-
-                this._closeInput();
-                this.closeKeyboard();
-            }
-        }
-
-        private _openInput():void {
-            if (!this._isShow) {
-                this._isShow = true;
-                if (this._isFirstClick) {
-                    this._isFirstClick = false;
-                    this._text = this._defaultText;
-                    this.setElementValue(this._defaultText);
-                }
-                else {
-                    this.setElementValue(this._text);
-                }
-            }
-        }
-
-        private _closeInput():void {
-            if (this._isShow) {
-                this._text = this.inputElement.value;
-                this._isShow = false;
-                this.setElementValue("");
-            }
-        }
-
-        private closeKeyboard():void {
-            this.inputElement.focus();
-            this.inputElement.blur();
+            this.getStageDelegateDiv().appendChild(this.div);
         }
 
         private getStageDelegateDiv():any {
@@ -207,11 +84,19 @@ module egret {
             return stageDelegateDiv;
         }
 
+        public _setMultiline(value:boolean):void {
+            super._setMultiline(value);
+
+            this.createInput();
+        }
+
+        private callHandler(e):void {
+            e.stopPropagation();
+        }
+
         public _add():void {
-            var div = this.div;
-            if (div && !div.parentNode) {
-                var stageDelegateDiv = this.getStageDelegateDiv();
-                stageDelegateDiv.appendChild(div);
+            if (this.div && this.div.parentNode == null) {
+                this.getStageDelegateDiv().appendChild(this.div);
             }
         }
 
@@ -219,110 +104,181 @@ module egret {
          * @method egret.StageText#remove
          */
         public _remove():void {
-            var div = this.div;
-            if (div && div.parentNode) {
-                div.parentNode.removeChild(div);
+            if (this._shape && this._shape.parent) {
+                this._shape.parent.removeChild(this._shape);
+            }
+            if (this.div && this.div.parentNode) {
+                this.div.parentNode.removeChild(this.div);
             }
         }
 
+        private _hasListeners:boolean = false;
+        public _addListeners():void {
+            if (this.inputElement && !this._hasListeners) {
+                this._hasListeners = true;
+                this.inputElement.addEventListener("mousedown", this.callHandler);
+                this.inputElement.addEventListener("touchstart", this.callHandler);
+                this.inputElement.addEventListener("MSPointerDown", this.callHandler);
+            }
+        }
+
+        public _removeListeners():void {
+            if (this.inputElement && this._hasListeners) {
+                this._hasListeners = false;
+                this.inputElement.removeEventListener("mousedown", this.callHandler);
+                this.inputElement.removeEventListener("touchstart", this.callHandler);
+                this.inputElement.removeEventListener("MSPointerDown", this.callHandler);
+            }
+        }
+
+        private _inputType:string = "";
+        private createInput():void {
+            var type:string = this._multiline ? "textarea" : "input";
+            if (this._inputType == type) {
+                return;
+            }
+
+            this._inputType = type;
+            if (this.inputElement != null) {
+                this._removeListeners();
+                this.div.removeChild(this.inputElement);
+            }
+
+            if (this._multiline) {
+                var inputElement:any = document.createElement("textarea");
+                inputElement.style["resize"] = "none";
+            }
+            else {
+                inputElement = document.createElement("input");
+            }
+            inputElement.type = "text";
+            this.inputElement = inputElement;
+            this.inputElement.value = "";
+
+            this.div.appendChild(inputElement);
+
+            this._addListeners();
+
+            this.setElementStyle("width", 0 + "px");
+
+            //默认值
+            this.setElementStyle("border", "none");
+            this.setElementStyle("margin", "0");
+            this.setElementStyle("padding", "0");
+            this.setElementStyle("outline", "medium");
+            this.setElementStyle("verticalAlign", "top");
+            this.setElementStyle("wordBreak", "break-all");
+            this.setElementStyle("overflow", "hidden");
+        }
+
+        /**
+         * @method egret.StageText#open
+         * @param x {number}
+         * @param y {number}
+         * @param width {number}
+         * @param height {number}
+         */
+        public _open(x:number, y:number, width:number = 160, height:number = 21):void {
+
+        }
+
+        public _setScale(x:number, y:number):void {
+            super._setScale(x, y);
+
+            var scaleX = egret.StageDelegate.getInstance().getScaleX();
+            var scaleY = egret.StageDelegate.getInstance().getScaleY();
+            this.div.scale.x = scaleX * x;
+            this.div.scale.y = scaleY * y;
+            this.div.transforms();
+        }
+
         public changePosition(x:number, y:number):void {
+//            if (this._isShow) {
             var scaleX = egret.StageDelegate.getInstance().getScaleX();
             var scaleY = egret.StageDelegate.getInstance().getScaleY();
 
             this.div.position.x = x * scaleX;
             this.div.position.y = y * scaleY;
             this.div.transforms();
+//            }
         }
 
-        private _inputType:string = "";
-        private _isFirstClick:boolean = true;
-        private _createInput():void {
-
-            var self = this;
-            var isChanged:boolean = false;
-
-            var inputElement:any;
-            if (this._multiline && self._inputType != "textarea") {
-                isChanged = true;
-                this._inputType = "textarea";
-                inputElement = document.createElement("textarea");
-                inputElement.type = "text";
-                inputElement.style.resize = "none";
-            }
-            else if (!this._multiline && self._inputType != "input") {
-                isChanged = true;
-                this._inputType = "input";
-                inputElement = document.createElement("input");
-                inputElement.type = "text";
-            }
-
-            if (isChanged) {//单、多行切换
-                this._styleInfoes = {};
-                this._isFirstClick = true;
-
-                if (self.inputElement && self.inputElement.parentNode) {
-                    var parentNode = self.inputElement.parentNode;
-                    parentNode.removeChild(self.inputElement);
-                    this._removeListeners();
-
-                    this.inputElement = inputElement;
-                    parentNode.appendChild(self.inputElement);
-                    this._addListeners();
-                }
-                else {
-                    this.inputElement = inputElement;
-                }
-                this.setElementValue(self._defaultText);
-                self.div.appendChild(inputElement);
-            }
+        private setStyles():void {
 
             //修改属性
-            self.setElementStyle("fontStyle", this._italic ? "italic" : "normal");
-            self.setElementStyle("fontWeight", this._bold ? "bold" : "normal");
-            self.setElementStyle("textAlign", this._textAlign);
-            self.setElementStyle("fontSize", self._size + "px");
-            self.setElementStyle("lineHeight", self._size + "px");
-            self.setElementStyle("fontFamily", self._fontFamily);
-            self.setElementStyle("color", self._color);
-            self.setElementStyle("width", self._width + "px");
-            self.setElementStyle("height", self._height + "px");
-            //默认值
-            self.setElementStyle("border", "none");
-            self.setElementStyle("background", "none");
-            self.setElementStyle("margin", "0");
-            self.setElementStyle("padding", "0");
-            self.setElementStyle("outline", "medium");
-            self.setElementStyle("verticalAlign", "top");
+            this.setElementStyle("fontStyle", this._italic ? "italic" : "normal");
+            this.setElementStyle("fontWeight", this._bold ? "bold" : "normal");
+            this.setElementStyle("textAlign", this._textAlign);
+            this.setElementStyle("fontSize", this._size + "px");
 
-            self.div.style.pointerEvents = self._visible ? "auto" : "none";
+            this.setElementStyle("color", "#000000");
+            this.setElementStyle("width", this._width + "px");
+//            if (this._multiline) {
+                this.setElementStyle("height", this._height + "px");
+//            }
+            this.setElementStyle("border", "1px solid red");
         }
 
-        public _resetStageText():void {
-            this._createInput();
-        }
+        private _isShow:boolean = false;
+        /**
+         * @method egret.StageText#add
+         */
+        public _show():void {
+            this.inputElement.setAttribute("maxlength", this._maxChars > 0 ? this._maxChars : -1);
 
-        private setElementValue(value:string):void {
-            if (!this._isFirstClick) {
-                this.inputElement.value = value;
+            this._isShow = true;
+            //打开
+            var txt = this._getText();
+            this.inputElement.value = txt;
+            var self = this;
+            this.inputElement.oninput = function () {
+                self.textValue = self.inputElement.value;
+                self.dispatchEvent(new egret.Event("updateText"));
+            };
+            this.setStyles();
+            this.inputElement.focus();
+//            if (this._multiline) {
+            this.inputElement.selectionStart = txt.length;
+            this.inputElement.selectionEnd = txt.length;
+//            }
+
+            if (this._shape && this._shape.parent == null) {
+                egret.MainContext.instance.stage.addChild(this._shape);
             }
         }
 
-        private _text:string = "";
+        public _hide():void {
+            this._isShow = false;
+            this.inputElement.oninput = function () {
+            };
+            this.setElementStyle("border", "none");
+            //关闭
+            this.inputElement.value = "";
+            this.setElementStyle("width", 0 + "px");
 
-        //默认文本内容，只有在创建输入文本的时候才可以使用
-        private _defaultText:string = "";
+            window.scrollTo(0, 0);
+
+            var self = this;
+            egret.setTimeout(function () {
+                self.inputElement.blur();
+                window.scrollTo(0, 0);
+            }, this, 50);
+
+            if (this._shape && this._shape.parent) {
+                this._shape.parent.removeChild(this._shape);
+            }
+        }
+
+        private textValue:string = "";
         /**
          * @method egret.StageText#getText
          * @returns {string}
          */
         public _getText():string {
-            if (this._isShow) {
-                if (this._isFirstClick) {
-                    return this._defaultText;
-                }
-                return this.inputElement.value;
+            if (!this.textValue) {
+                this.textValue = "";
             }
-            return this._text;
+            return this.textValue;
         }
 
         /**
@@ -330,27 +286,15 @@ module egret {
          * @param value {string}
          */
         public _setText(value:string):void {
-            this._text = value;
-            this._defaultText = value;
-            if (this._isShow) {
-                this.setElementValue(value);
+            this.textValue = value;
+
+            this.resetText();
+        }
+
+        private resetText():void {
+            if (this.inputElement) {
+                this.inputElement.value = this.textValue;
             }
-        }
-
-        /**
-         * @method egret.StageText#setTextType
-         * @param type {string}
-         */
-        public _setTextType(type:string):void {
-            this.inputElement.type = type;
-        }
-
-        /**
-         * @method egret.StageText#getTextType
-         * @returns {string}
-         */
-        public _getTextType():string {
-            return this.inputElement.type;
         }
 
         private _width:number = 0;
@@ -362,6 +306,7 @@ module egret {
         public _setHeight(value:number):void{
             this._height = value;
         }
+
 
         private _styleInfoes:Object = {};
         private setElementStyle(style:string, value:any):void {

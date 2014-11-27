@@ -30,8 +30,12 @@ module egret {
         private _isFocus:boolean = false;
 
         private _text:TextField;
+
+        private _isFirst:boolean = true;
         public constructor() {
             super();
+
+            this._isFirst = true;
         }
 
         public init(text:TextField):void {
@@ -52,8 +56,8 @@ module egret {
             this.stageText.addEventListener("blur", this.onBlurHandler, this);
             this.stageText.addEventListener("focus", this.onFocusHandler, this);
             this.stageText.addEventListener("updateText", this.updateTextHandler, this);
-            this._text.addEventListener(egret.TouchEvent.TOUCH_BEGIN, this.onMouseDownHandler, this);
-            egret.MainContext.instance.stage.addEventListener(egret.TouchEvent.TOUCH_BEGIN, this.onStageDownHandler, this);
+            this._text.addEventListener(egret.TouchEvent.TOUCH_TAP, this.onMouseDownHandler, this);
+            egret.MainContext.instance.stage.addEventListener(egret.TouchEvent.TOUCH_TAP, this.onStageDownHandler, this);
         }
 
         public _removeStageText():void {
@@ -67,8 +71,12 @@ module egret {
             this.stageText.removeEventListener("blur", this.onBlurHandler, this);
             this.stageText.removeEventListener("focus", this.onFocusHandler, this);
             this.stageText.removeEventListener("updateText", this.updateTextHandler, this);
-            this._text.removeEventListener(egret.TouchEvent.TOUCH_BEGIN, this.onMouseDownHandler, this);
-            egret.MainContext.instance.stage.removeEventListener(egret.TouchEvent.TOUCH_BEGIN, this.onStageDownHandler, this);
+            this._text.removeEventListener(egret.TouchEvent.TOUCH_TAP, this.onMouseDownHandler, this);
+            egret.MainContext.instance.stage.removeEventListener(egret.TouchEvent.TOUCH_TAP, this.onStageDownHandler, this);
+        }
+
+        public _getText():string {
+            return this.stageText._getText();
         }
 
         public _setText(value:string) {
@@ -112,17 +120,18 @@ module egret {
 
         private hideText():void {
             if (!this._isFocus) {
-                this._text.visible = false;
+                this._text._setBaseText("");
                 this._isFocus = true;
             }
         }
 
         private updateTextHandler(event):void {
             this.resetText();
+            //抛出change事件
+            this._text.dispatchEvent(new egret.Event(egret.Event.CHANGE));
         }
 
         private resetText():void {
-            this._text.visible = true;
             this._text._setBaseText(this.stageText._getText());
         }
 
@@ -136,14 +145,20 @@ module egret {
             var oldTransFormTy = this._text._worldTransform.ty;
             this._text._updateBaseTransform();
             var newTransForm = this._text._worldTransform;
-            if (oldTransFormA != newTransForm.a ||
+            if (this._isFirst || oldTransFormA != newTransForm.a ||
                 oldTransFormB != newTransForm.b ||
                 oldTransFormC != newTransForm.c ||
                 oldTransFormD != newTransForm.d ||
                 oldTransFormTx != newTransForm.tx ||
                 oldTransFormTy != newTransForm.ty) {
+                this._isFirst = false;
                 var point = this._text.localToGlobal();
                 this.stageText.changePosition(point.x, point.y);
+
+                var self = this;
+                egret.callLater(function () {
+                    self.stageText._setScale(self._text._worldTransform.a, self._text._worldTransform.d);
+                }, this);
             }
         }
 
@@ -169,6 +184,8 @@ module egret {
             }
 
             this.stageText._setMultiline(this._text._multiline);
+            this.stageText._setMaxChars(this._text._maxChars);
+
             this.stageText._setSize(this._text._size);
             this.stageText._setTextColor(this._text._textColorString);
             this.stageText._setTextFontFamily(this._text._fontFamily);

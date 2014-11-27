@@ -258,6 +258,10 @@ function generateGameFileList(projectPath, runtime) {
     //=========================
     // 这段逻辑的作用是把第三方 module 的 ts文件不要随着 game_file_list 编译进去
     var moduleFileList = getAllModuleTypeScriptFileList(projectPath);
+    //windows系统路径修正
+    moduleFileList = moduleFileList.map(function(item){
+        return item.replace(/\\/g,"/");
+    });
     manifest = manifest.filter(function(item){
         return moduleFileList.indexOf(item) == -1;
     });
