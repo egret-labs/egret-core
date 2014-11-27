@@ -49,6 +49,12 @@ module egret {
          */
         public texture_scale_factor:number = 1;
 
+        /**
+         * 是否对图像使用平滑处理
+         * 该特性目前只支持Canvas
+         */
+        public static imageSmoothingEnabled:boolean = true;
+
         private profiler:Profiler;
 
         /**

@@ -6,5 +6,5 @@
         <e:State name="down" />
         <e:State name="disabled" />
     </e:states>
-  <e:UIAsset source="vscrollbtn" height="100%"  width="10"  fillMode="scale" horizontalCenter="0"  />
+  <e:UIAsset source="vscrollbtn_png" height="100%"  width="10"  fillMode="scale" horizontalCenter="0"  />
 </e:Skin>
