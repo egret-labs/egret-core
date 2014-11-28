@@ -56,7 +56,7 @@ module egret {
         public constructor() {
             super();
             this._worldTransform = new egret.Matrix();
-//            this._worldBounds = new egret.Rectangle(0, 0, 0, 0);
+            this._worldBounds = new egret.Rectangle(0, 0, 0, 0);
             this._cacheBounds = new egret.Rectangle(0, 0, 0, 0);
         }
 
@@ -268,6 +268,10 @@ module egret {
         }
 
         public set anchorX(value:number) {
+            this._setAnchorX(value);
+        }
+
+        public _setAnchorX(value:number):void {
             if (NumberUtils.isNumber(value) && this._anchorX != value) {
                 this._anchorX = value;
 
@@ -288,6 +292,10 @@ module egret {
         }
 
         public set anchorY(value:number) {
+            this._setAnchorY(value);
+        }
+
+        public _setAnchorY(value:number):void {
             if (NumberUtils.isNumber(value) && this._anchorY != value) {
                 this._anchorY = value;
 
@@ -434,6 +442,10 @@ module egret {
         }
 
         public set scrollRect(value:Rectangle) {
+            this._setScrollRect(value);
+        }
+
+        public _setScrollRect(value:Rectangle):void{
             this._scrollRect = value;
 
             this._setSizeDirty();
@@ -634,10 +646,10 @@ module egret {
                 worldTransform.append(1, 0, 0, 1, -scrollRect.x, -scrollRect.y);
             }
 
-            if (false) {//this._texture_to_render){ 暂时去掉worldBounds计算
-                var bounds:egret.Rectangle = DisplayObject.getTransformBounds(o._getSize(Rectangle.identity), o._worldTransform);
-                o._worldBounds.initialize(bounds.x, bounds.y, bounds.width, bounds.height);
-            }
+//            if (this._texture_to_render){
+//                var bounds:egret.Rectangle = DisplayObject.getTransformBounds(o._getSize(Rectangle.identity), o._worldTransform);
+//                o._worldBounds.initialize(bounds.x, bounds.y, bounds.width, bounds.height);
+//            }
             o.worldAlpha = parent.worldAlpha * o._alpha;
         }
 

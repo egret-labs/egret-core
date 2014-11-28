@@ -52,6 +52,10 @@ module egret {
             var bounds = displayObject.getBounds(Rectangle.identity);
             cacheCanvas.width = bounds.width;
             cacheCanvas.height = bounds.height;
+            if(this.renderContext._cacheCanvas) {
+                this.renderContext._cacheCanvas.width = bounds.width;
+                this.renderContext._cacheCanvas.height = bounds.height;
+            }
 
             displayObject._worldTransform.identity();
             displayObject.worldAlpha = 1;
@@ -76,7 +80,7 @@ module egret {
             var drawAreaList:Array<Rectangle> = renderFilter._drawAreaList.concat();
             renderFilter._drawAreaList.length = 0;
             this.renderContext.clearScreen();
-
+            this.renderContext.onRenderStart();
             this.webGLTexture = null;//gl.deleteTexture(this.webGLTexture);
             var mask = displayObject.mask || displayObject._scrollRect;
             if (mask) {
@@ -87,6 +91,7 @@ module egret {
                 this.renderContext.popMask();
             }
             renderFilter._drawAreaList = drawAreaList;
+            this.renderContext.onRenderFinish();
 
             this._textureWidth = this._bitmapData.width;
             this._textureHeight = this._bitmapData.height;

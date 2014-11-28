@@ -50,6 +50,14 @@ module egret {
         public texture_scale_factor:number = 1;
 
         /**
+         * 是否对图像使用平滑处理
+         * 该特性目前只支持Canvas
+         */
+        public static imageSmoothingEnabled:boolean = true;
+
+        private profiler:Profiler;
+
+        /**
          * @method egret.RendererContext#constructor
          */
         public constructor() {
@@ -144,7 +152,7 @@ module egret {
          * @param maxWidth {numbe}
          */
         public drawText(textField:egret.TextField, text:string, x:number, y:number, maxWidth:number, style:Object) {
-            Profiler.getInstance().onDrawImage();
+            this.profiler.onDrawImage();
         }
 
         public strokeRect(x, y, w, h, color) {

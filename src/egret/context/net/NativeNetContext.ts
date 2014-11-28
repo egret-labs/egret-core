@@ -50,7 +50,7 @@ module egret {
                 this.loadSound(loader);
                 return;
             }
-
+            var self = this;
             var request:URLRequest = loader._request;
             var url:string = NetContext._getUrl(request);
             if (url.indexOf("http://") == 0) {
@@ -93,6 +93,7 @@ module egret {
             }
 
             function onLoadComplete() {
+                self.saveVersion(url);
                 var content = egret_native.readFileSync(url);
                 loader.data = content;
                 Event.dispatchEvent(loader, Event.COMPLETE);
@@ -100,6 +101,7 @@ module egret {
         }
 
         private loadSound(loader:URLLoader) {
+            var self = this;
             var request = loader._request;
             var url = request.url;
 
@@ -127,6 +129,7 @@ module egret {
             }
 
             function onLoadComplete() {
+                self.saveVersion(url);
                 var sound = new egret.Sound();
                 sound.path = url;
                 loader.data = sound;
@@ -211,13 +214,19 @@ module egret {
          */
         private saveVersion(url:string):void {
             var change = false;
-            if(this.currentVersionData && this.currentVersionData[url]) {
-                this.localVersionData[url] = this.currentVersionData[url];
-                change = true;
+            if(this.currentVersionData && this.currentVersionData[url])
+            {
+                if ((this.localVersionData[url] != this.currentVersionData[url]))
+                {
+                    this.localVersionData[url] = this.currentVersionData[url];
+                    change = true;
+                }
             }
-            else if (this.baseVersionData && this.baseVersionData) {
-                this.localVersionData[url] = this.baseVersionData[url];
-                change = true;
+            else if (this.baseVersionData && this.baseVersionData[url]) {
+                if ((this.localVersionData[url] != this.baseVersionData[url])) {
+                    this.localVersionData[url] = this.baseVersionData[url];
+                    change = true;
+                }
             }
             if (change) {
 //                console.log("save:" + url);
