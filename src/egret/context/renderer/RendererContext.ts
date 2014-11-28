@@ -62,6 +62,7 @@ module egret {
          */
         public constructor() {
             super();
+            this.profiler = Profiler.getInstance();
         }
 
         /**
@@ -98,7 +99,7 @@ module egret {
          * @param destHeigh {any}
          */
         public drawImage(texture: Texture, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, repeat="no-repeat") {
-            Profiler.getInstance().onDrawImage();
+            this.profiler.onDrawImage();
         }
 
         /**
