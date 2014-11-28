@@ -74,6 +74,7 @@ module egret {
             if (this._txt == null) {
                 this._txt = new TextField();
                 this._txt.size = 28;
+                this._txt.multiline = true;
 
                 MainContext.instance.stage.addChild(this._txt);
             }

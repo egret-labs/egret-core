@@ -36,6 +36,8 @@ module egret.gui {
         * @extends egret.Scroller
         */
     class ViewportScroller extends egret.ScrollView {
+        _width = 0;
+        _height = 0;
         /**
             * @method egret.gui.GroupBase#constructor
             */
@@ -48,8 +50,7 @@ module egret.gui {
             var content: IViewport = <any>this.content;
             content.horizontalScrollPosition = this._scrollLeft;
             content.verticalScrollPosition = this._scrollTop;
-            content.width = this.width;
-            content.height = this.height;
+            content.setLayoutBoundsSize(this._width, this._height);
             this.dispatchEvent(new Event(Event.CHANGE));
         }
 
@@ -67,6 +68,40 @@ module egret.gui {
         public _getContentHeight() {
             return (<any>this._content).contentHeight;
         }
+
+        public _setHeight(value: number) {
+            this._height = value;
+            var content: IViewport = <any>this.content;
+            content.setLayoutBoundsSize(this._width, this._height);
+        }
+
+        public _setWidth(value:number) { 
+            this._width = value;
+            var content: IViewport = <any>this.content;
+            content.setLayoutBoundsSize(this._width, this._height);
+        }
+        public get height(): number {
+            return this._height;
+        }
+        public set height(value) { 
+            this._setHeight(value);
+        }
+
+        public get width(): number {
+            return this._width;
+        }
+        public set width(value) {
+            this._setWidth(value);
+        }
+
+        invalidateSize() {
+            var p = <UIComponent>this.parent;
+            p && p.invalidateSize();
+        }
+        invalidateDisplayList(){
+            var p = <UIComponent>this.parent;
+            p&&p.invalidateDisplayList();
+        }
     }
     
 	/**
@@ -77,6 +112,7 @@ module egret.gui {
 	 * @implements egret.gui.IVisualElementContainer
 	 */	
     export class Scroller extends SkinnableComponent implements IVisualElementContainer{
+
         /**
          * 构造函数
 		 * @method egret.gui.Scroller#constructor

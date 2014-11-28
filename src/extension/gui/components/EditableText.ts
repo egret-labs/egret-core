@@ -44,7 +44,7 @@ module egret.gui {
 		 * @inheritDoc
 		 */
 		public get editable():boolean{
-			if(this.enabled)
+			if(this._enabled)
 				return this._editable;
 			return this.pendingEditable;
 		}
@@ -52,7 +52,7 @@ module egret.gui {
 		public set editable(value:boolean){
 			if(this._editable==value)
 				return;
-			if(this.enabled){
+			if(this._enabled){
 				this._editable = value;
 				this.editableChanged = true;
 				this.invalidateProperties();
@@ -70,7 +70,7 @@ module egret.gui {
 				return;
 			
             this._enabled = value;
-			if(this.enabled){
+			if(this._enabled){
 				if(this._editable!=this.pendingEditable)
 					this.editableChanged = true;
 				this._editable = this.pendingEditable;
@@ -82,7 +82,10 @@ module egret.gui {
 				this._editable = false;
 			}
 			this.invalidateProperties();
-		}
+        }
+        public get enabled() {
+            return this._editable;
+        }
 		
 		private _maxChars:number = 0;
 		
