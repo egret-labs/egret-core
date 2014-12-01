@@ -7590,6 +7590,7 @@ var ts;
                     emit(node.baseType.typeName);
                 }
                 write(");");
+
                 if (node.flags & 1 /* Export */) {
                     writeLine();
                     emitStart(node);
@@ -7600,13 +7601,19 @@ var ts;
                     write(";");
 
 
-                    writeLine();
-                    emit(node.name)
-                    write(".prototype.__class__ = \"");
-                    emitModuleMemberName(node);
-                    write("\";");
+
 
                 }
+
+                writeLine();
+                emit(node.name)
+                write(".prototype.__class__ = \"");
+                emitModuleMemberName(node);
+                write("\";");
+
+
+
+
                 emitTrailingComments(node);
                 function emitConstructorOfClass() {
                     ts.forEach(node.members, function (member) {

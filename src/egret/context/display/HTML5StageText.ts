@@ -59,9 +59,9 @@ module egret {
             var stageWidth:number = stage.stageWidth;
             var stageHeight:number = stage.stageHeight;
             var shape:egret.Shape = new egret.Shape();
-            shape.graphics.beginFill(0x000000, .3);
-            shape.graphics.drawRect(0, 0, stageWidth, stageHeight);
-            shape.graphics.endFill();
+//            shape.graphics.beginFill(0x000000, .3);
+//            shape.graphics.drawRect(0, 0, stageWidth, stageHeight);
+//            shape.graphics.endFill();
             shape.width = stageWidth;
             shape.height = stageHeight;
             shape.touchEnabled = true;
@@ -207,6 +207,7 @@ module egret {
                 this.setElementStyle("height", this._height + "px");
 //            }
             this.setElementStyle("border", "1px solid red");
+            this.setElementStyle("display", "block");
         }
 
         private _isShow:boolean = false;
@@ -241,6 +242,7 @@ module egret {
             this.inputElement.oninput = function () {
             };
             this.setElementStyle("border", "none");
+            this.setElementStyle("display", "none");
             //关闭
             this.inputElement.value = "";
             this.setElementStyle("width", 0 + "px");

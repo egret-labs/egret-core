@@ -1,6 +1,6 @@
 Egret Engine
 ================================================
-Current Version: v1.1.3
+Current Version: v1.1.4
 
 
 
@@ -31,7 +31,7 @@ Egret Engine是一款使用JavaScript(TypeScript)编写的HTML5开源免费游�
 
 文档与教程
 -------------------------
-* 访问 [这里](https://github.com/egret-team/egret/wiki) 获取 Egret 的文档和教程
+* 访问 Egret 的[文档](http://docs.egret-labs.org/)和[教程](http://bbs.egret-labs.org/plugin.php?id=webpage&identifier=Egret)
 * 访问 [这里](http://docs.egret-labs.org/apis/) 获取 API 文档
 * 访问 [这里](https://github.com/egret-team/egret-examples) 获取示例项目
 
@@ -49,6 +49,8 @@ Egret Engine是一款使用JavaScript(TypeScript)编写的HTML5开源免费游�
 
 发布说明
 --------------------
+
+[Egret 1.1.4 Release Notes 2014-11-28](/docs/1.1.4_ReleaseNotes.md)
 
 [Egret 1.1.3 Release Notes 2014-11-14](/docs/1.1.3_ReleaseNotes.md)
 
