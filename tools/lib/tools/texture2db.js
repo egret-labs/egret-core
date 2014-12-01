@@ -40,7 +40,7 @@ function linkChildren(fileUrl) {
     }
 
     var fileName = file.getFileName(fileUrl);
-    var texture = {"imagePath":stuData["file"], "SubTexture":[], "name":"cca"};
+    var texture = {"imagePath":stuData["file"], "SubTexture":[], "name":fileName};
 
     for (var key in stuData["frames"]) {
         var frame = stuData["frames"][key];
@@ -55,7 +55,7 @@ function linkChildren(fileUrl) {
         texture["SubTexture"].push(temp);
     }
 
-    file.save(fileUrl.replace(".json", "_texture.json"), JSON.stringify(texture, null, "\t"));
+    file.save(fileUrl, JSON.stringify(texture, null, "\t"));
 }
 
 exports.run = run;

@@ -8,10 +8,15 @@ var file = require("../core/file");
 var fs = require("fs");
 var image = require("../core/image");
 
+var currentDir = "";
+
 function run(currDir, args, opts) {
     if (args[0]) {
         currDir = path.resolve(args[0]);
     }
+
+    currentDir = currDir;
+
     linkChildren(currDir);
 }
 
@@ -50,8 +55,15 @@ function linkChildren(fileUrl) {
     layersInfo = {};
 
     currentFileUrl = fileUrl;
+
+    var relativeUrl = fileUrl.replace(currentDir, "");
     var fileName = file.getFileName(fileUrl);
-    var dbData = {"armature":[], "version":2.3, "name" : fileName, "frameRate":60};
+
+    var filePathArr = relativeUrl.split("/");
+    filePathArr.splice(filePathArr.length - 2, 1);
+    filePathArr[filePathArr.length - 1] = fileName + "_" + filePathArr[filePathArr.length - 2];
+
+    var dbData = {"armature":[], "version":2.3, "name" : filePathArr[filePathArr.length - 1], "frameRate":60};
 
     //先补全父子关键帧
     fillStuFrames(stuData);
@@ -68,7 +80,7 @@ function linkChildren(fileUrl) {
         dbData["armature"].push(dbArmature);
 
         //设置name
-        dbArmature["name"] = stuArmature["name"];
+        dbArmature["name"] = filePathArr[filePathArr.length - 1];//stuArmature["name"];
 
         //设置bone
         setBone(dbArmature["bone"], stuArmature["bone_data"]);
@@ -87,12 +99,27 @@ function linkChildren(fileUrl) {
     moveDisplayOut(dbData);
     appendTail(dbData);
 
-    file.save(fileUrl.replace(".json", "_ske.json"), JSON.stringify(dbData, null, "\t"));
-
+    var skeUrl = path.join(currentDir, "..", "animations", filePathArr.join("/") + "_ske.json");
+    file.save(skeUrl, JSON.stringify(dbData, null, "\t"));
 
     moveResources(fileUrl, stuData["texture_data"]);
     console.log(fileUrl + "生成完毕");
 
+}
+
+function moveResources(fileUrl, resources) {
+    var fileName = file.getFileName(fileUrl);
+    var filePath = fileUrl.substring(0, fileUrl.lastIndexOf(fileName));
+
+    for (var i = 0; i < resources.length; i++) {
+        var name = resources[i]["name"];
+
+        var desResourceUrl = path.join(currentDir, "..", "animations", filePath.replace(currentDir, ""), fileName, name + ".png");
+        var desArr = desResourceUrl.split("/");
+        desArr.splice(desArr.length - 3, 1);
+
+        file.copy(path.join(filePath, "..", "Resources", name + ".png"), desArr.join("/"));
+    }
 }
 
 //补全studio中父子骨骼的关键帧，保证最终父子骨骼的关键帧位置完全相同
@@ -477,17 +504,6 @@ function removeMatrix(data) {
         else if (data[key] instanceof Object) {
             removeMatrix(data[key]);
         }
-    }
-}
-
-function moveResources(fileUrl, resources) {
-    var fileName = file.getFileName(fileUrl);
-    var filePath = fileUrl.substring(0, fileUrl.lastIndexOf(fileName));
-
-    for (var i = 0; i < resources.length; i++) {
-        var name = resources[i]["name"];
-
-        file.copy(path.join(filePath, "..", "Resources", name + ".png"), path.join(filePath, fileName, name + ".png"));
     }
 }
 
