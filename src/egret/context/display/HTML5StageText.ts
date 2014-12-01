@@ -29,9 +29,9 @@
 module egret {
 
     /**
-     * @class egret.StageText
+     * @class egret.HTML5StageText
      * @classdesc
-     * @extends egret.HashObject
+     * @extends egret.StageText
      */
     export class HTML5StageText extends StageText {
 
@@ -100,9 +100,6 @@ module egret {
             }
         }
 
-        /**
-         * @method egret.StageText#remove
-         */
         public _remove():void {
             if (this._shape && this._shape.parent) {
                 this._shape.parent.removeChild(this._shape);
@@ -171,13 +168,6 @@ module egret {
             this.setElementStyle("overflow", "hidden");
         }
 
-        /**
-         * @method egret.StageText#open
-         * @param x {number}
-         * @param y {number}
-         * @param width {number}
-         * @param height {number}
-         */
         public _open(x:number, y:number, width:number = 160, height:number = 21):void {
 
         }
@@ -220,9 +210,8 @@ module egret {
         }
 
         private _isShow:boolean = false;
-        /**
-         * @method egret.StageText#add
-         */
+
+
         public _show():void {
             this.inputElement.setAttribute("maxlength", this._maxChars > 0 ? this._maxChars : -1);
 
@@ -270,10 +259,8 @@ module egret {
         }
 
         private textValue:string = "";
-        /**
-         * @method egret.StageText#getText
-         * @returns {string}
-         */
+
+
         public _getText():string {
             if (!this.textValue) {
                 this.textValue = "";
@@ -281,10 +268,7 @@ module egret {
             return this.textValue;
         }
 
-        /**
-         * @method egret.StageText#setText
-         * @param value {string}
-         */
+
         public _setText(value:string):void {
             this.textValue = value;
 

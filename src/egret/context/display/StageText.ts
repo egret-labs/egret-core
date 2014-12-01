@@ -31,7 +31,7 @@ module egret {
     /**
      * @class egret.StageText
      * @classdesc
-     * @extends egret.HashObject
+     * @extends egret.EventDispatcher
      */
     export class StageText extends EventDispatcher {
 
@@ -40,7 +40,6 @@ module egret {
         }
 
         /**
-         * @method egret.StageText#getText
          * @returns {string}
          */
         public _getText():string {
@@ -48,7 +47,6 @@ module egret {
         }
 
         /**
-         * @method egret.StageText#setText
          * @param value {string}
          */
         public _setText(value:string):void {
@@ -56,7 +54,6 @@ module egret {
         }
 
         /**
-         * @method egret.StageText#setTextType
          * @param type {string}
          */
         public _setTextType(type:string):void {
@@ -64,7 +61,6 @@ module egret {
         }
 
         /**
-         * @method egret.StageText#getTextType
          * @returns {string}
          */
         public _getTextType():string {
@@ -72,7 +68,6 @@ module egret {
         }
 
         /**
-         * @method egret.StageText#open
          * @param x {number}
          * @param y {number}
          * @param width {number}
@@ -82,9 +77,6 @@ module egret {
 
         }
 
-        /**
-         * @method egret.StageText#add
-         */
         public _show():void {
 
         }
@@ -93,9 +85,6 @@ module egret {
 
         }
 
-        /**
-         * @method egret.StageText#remove
-         */
         public _remove():void {
 
         }
@@ -103,10 +92,6 @@ module egret {
         public _hide():void {
 
         }
-
-//        public _draw():void {
-//
-//        }
 
         public _addListeners():void {
 

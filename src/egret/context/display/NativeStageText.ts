@@ -32,9 +32,9 @@
 module egret {
 
     /**
-     * @class egret.StageText
+     * @class egret.NativeStageText
      * @classdesc
-     * @extends egret.HashObject
+     * @extends egret.StageText
      */
     export class NativeStageText extends StageText {
 
@@ -117,10 +117,6 @@ module egret {
             this.textBorder.graphics.endFill();
         }
 
-        /**
-         * @method egret.StageText#getText
-         * @returns {string}
-         */
         public _getText():string {
             if (!this.textValue) {
                 this.textValue = "";
@@ -128,41 +124,22 @@ module egret {
             return this.textValue;
         }
 
-        /**
-         * @method egret.StageText#setText
-         * @param value {string}
-         */
         public _setText(value:string):void {
             this.textValue = value;
 
             this.resetText();
         }
 
-        /**
-         * @method egret.StageText#setTextType
-         * @param type {string}
-         */
         public _setTextType(type:string):void {
             this.textType = type;
 
             this.resetText();
         }
 
-        /**
-         * @method egret.StageText#getTextType
-         * @returns {string}
-         */
         public _getTextType():string {
             return this.textType;
         }
 
-        /**
-         * @method egret.StageText#open
-         * @param x {number}
-         * @param y {number}
-         * @param width {number}
-         * @param height {number}
-         */
         public _open(x:number, y:number, width:number = 160, height:number = 21):void {
 
 
@@ -274,9 +251,6 @@ module egret {
             };
         }
 
-        /**
-         * @method egret.StageText#add
-         */
         public _show():void {
             var self = this;
             egret_native.EGT_getTextEditerContentText = function () {
@@ -300,9 +274,6 @@ module egret {
             egret_native.TextInputOp.setKeybordOpen(true);
         }
 
-        /**
-         * @method egret.StageText#remove
-         */
         public _remove():void {
             var container = this.container;
             if (container && container.parent) {
