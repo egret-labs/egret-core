@@ -48,19 +48,9 @@ module egret {
             super();
         }
 
-        /**
-         * @member {any} egret.Matrix.
-         */
-// static public properties:
-
         static identity = new Matrix();
 
         static DEG_TO_RAD = Math.PI / 180;
-
-        /**
-         * @member {any} egret.Matrix#
-         */
-// public methods:
 
         /**
          * 前置矩阵

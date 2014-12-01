@@ -40,7 +40,7 @@ module egret {
 
         /**
          *
-		 * @constructor egret.TimerEvent
+         * @method egret.TimerEvent#constructor
          * @param type {string} 事件的类型。事件侦听器可以通过继承的 type 属性访问此信息。
          * @param bubbles {boolean} 确定 Event 对象是否冒泡。事件侦听器可以通过继承的 bubbles 属性访问此信息。
          * @param cancelable {boolean} 确定是否可以取消 Event 对象。事件侦听器可以通过继承的 cancelable 属性访问此信息。

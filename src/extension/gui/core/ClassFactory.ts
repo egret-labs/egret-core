@@ -29,16 +29,13 @@
 module egret.gui {
 	/**
 	 * @class egret.gui.ClassFactory
-	 * @classdesc
+	 * @classdesc ClassFactory 实例是一个“工厂对象”，Egret 可用其生成其他类的实例，每个实例拥有相同的属性。
 	 * @extends egret.HashObject
 	 */
     export class ClassFactory extends HashObject{
 
         /**
-		 * @method egret.gui.ClassFactory#constructor
-         * @class egret.gui.ClassFactory
-         * @classdesc
-         * ClassFactory 实例是一个“工厂对象”，Egret 可用其生成其他类的实例，每个实例拥有相同的属性。
+         * @method egret.gui.ClassFactory#constructor
          * @param generator {any} newInstance() 方法根据工厂对象生成对象时使用的 Class。
          */
         public constructor(generator:any = null){
