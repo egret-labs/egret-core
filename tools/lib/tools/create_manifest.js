@@ -8,6 +8,14 @@ var exml_config = require("../exml/exml_config.js");
  */
 var classInfoList;
 /**
+ * 键是文件路径，值为这个类依赖的类文件路径,且所依赖的类都是被new出来的。
+ */
+var newClassInfoList;
+/**
+ * 键是文件路径，值为这个类实例化时需要依赖的类文件路径列表
+ */
+var subRelyOnInfoList;
+/**
  * 键为类名，值为这个类所在的文件路径
  */
 var classNameToPath;
@@ -117,6 +125,8 @@ function getModuleReferenceInfo(fileList){
     }
     var result = {referenceInfoList:referenceInfoList,classNameToPath:classNameToPath};
     classInfoList = null;
+    newClassInfoList = null;
+    subRelyOnInfoList = null;
     classNameToPath = null;
     classNameToModule = null;
     pathInfoList = null;
@@ -129,6 +139,8 @@ function getModuleReferenceInfo(fileList){
 
 function resetCache(){
     classInfoList = {};
+    newClassInfoList = {};
+    subRelyOnInfoList = {};
     classNameToPath = {};
     classNameToModule = {};
     pathInfoList = {};
@@ -457,7 +469,7 @@ function sortOnPathLevel(list,pathRelyInfo,throwError){
 /**
  * 设置文件引用深度
  */
-function setPathLevel(path, level, pathLevelInfo, map,pathRelyInfo,throwError) {
+function setPathLevel(path, level, pathLevelInfo, map,pathRelyInfo,throwError,checkNew) {
     if (pathLevelInfo[path] == null) {
         pathLevelInfo[path] = level;
     } else {
@@ -469,16 +481,34 @@ function setPathLevel(path, level, pathLevelInfo, map,pathRelyInfo,throwError) {
         }
     }
     var list = pathRelyInfo[path];
+    if(checkNew){
+        var list = list.concat();
+        var subList = subRelyOnInfoList[path];
+        if(subList){
+            for(i = subList.length-1;i>=0;i--){
+                relyPath = subList[i];
+                if(list.indexOf(relyPath)==-1){
+                    list.push(relyPath);
+                }
+            }
+        }
+    }
+    if(throwError){
+        var newList = newClassInfoList[path];
+    }
+
     var length = list.length;
     for (var i = 0; i < length; i++) {
         var relyPath = list[i];
         if (map.indexOf(relyPath) != -1) {
             if(throwError){
-                globals.exit(1103, path);
+                map.push(relyPath);
+                globals.exit(1103, map.join("\n"));
             }
             break;
         }
-        setPathLevel(relyPath, level + 1, pathLevelInfo, map.concat(relyPath),pathRelyInfo,throwError);
+        var checkNewFlag = checkNew||(newList&&newList.indexOf(relyPath)!=-1);
+        setPathLevel(relyPath, level + 1, pathLevelInfo, map.concat(relyPath),pathRelyInfo,throwError,checkNewFlag);
     }
 }
 /**
@@ -929,6 +959,7 @@ function readRelyOnFromBlock(text, path,fileRelyOnList,ns) {
         text = text.substring(index + 1);
         index = classBlock.indexOf("{");
         classBlock = classBlock.substring(index);
+        getSubRelyOnFromClass(classBlock,ns,className);
         getRelyOnFromStatic(classBlock, ns,className, relyOnList);
     }
 }
@@ -978,10 +1009,78 @@ function getFullClassName(word,ns) {
     return word;
 }
 
+
+/**
+ * 从类代码总读取构造函数和成员变量实例化的初始值。
+ */
+function getSubRelyOnFromClass(text,ns, className) {
+    if(!text)
+        return;
+    text = text.substring(1,text.length-1);
+    var list = [];
+    var functMap = {};
+    while (text.length > 0) {
+        var index = CodeUtil.getBracketEndIndex(text);
+        if (index == -1) {
+            index = text.length;
+        }
+        var codeText = text.substring(0,index+1);
+        text = text.substring(index+1);
+
+        index = codeText.indexOf("{");
+        if(index==-1){
+            index = codeText.length;
+        }
+        var funcText = codeText.substring(index);
+        codeText = codeText.substring(0,index);
+        index = CodeUtil.getBracketStartIndex(codeText,"(",")");
+        if(funcText&&index!=-1){
+            codeText = codeText.substring(0,index);
+            var word = CodeUtil.getLastWord(codeText);
+            if(word=="constructor"){
+                word = "__constructor";
+            }
+            functMap[word] = funcText;
+        }
+        findClassInLine(codeText,[className],ns,list);
+    }
+    readSubRelyOnFromFunctionCode("__constructor",functMap,ns,className,list);
+    for(var i=list.length- 1;i>=0;i--){
+        var name = list[i];
+        var path = classNameToPath[name];
+        if(path){
+            list[i] = path;
+        }
+        else{
+            list.splice(i,1);
+        }
+    }
+    path = classNameToPath[className];
+    subRelyOnInfoList[path] = list;
+}
+/**
+ * 从构造函数开始递归查询初始化时被引用过的类。
+ */
+function readSubRelyOnFromFunctionCode(funcName,functMap,ns,className,list){
+    var text = functMap[funcName];
+    if(!text)
+        return;
+    delete functMap[funcName];
+    findClassInLine(text,[className],ns,list);
+    for (funcName in functMap){
+        if(text.indexOf(funcName+"(")!=-1&&CodeUtil.containsVariable(funcName,text)){
+            readSubRelyOnFromFunctionCode(funcName,functMap,ns,className,list);
+        }
+    }
+}
+
+
 /**
  * 从代码的静态变量中读取依赖关系
  */
 function getRelyOnFromStatic(text,ns, className, relyOnList) {
+
+    var newList = [];
     while (text.length > 0) {
         var index = CodeUtil.getFirstVariableIndex("static", text);
         if (index == -1) {
@@ -1007,15 +1106,32 @@ function getRelyOnFromStatic(text,ns, className, relyOnList) {
             continue;
         }
         text = text.substring(1).trim();
+
         index = text.indexOf("\n");
         var line = text;
         if(index!=-1){
             line = text.substring(0,index);
             text = text.substring(index);
         }
+        if(line.indexOf("new")==0){
+            var code = CodeUtil.removeFirstVariable(line).trim();
+            index = code.indexOf("(");
+            if(index!=-1){
+                code = code.substring(0,index);
+            }
+            code = CodeUtil.trimVariable(code);
+            code = getFullClassName(code,ns);
+            var path = classNameToPath[code];
+            if(path&&code!=className&&newList.indexOf(path)==-1){
+                newList.push(path);
+            }
+        }
         escapFunctionLines(line,[className],ns,relyOnList);
     }
+    path = classNameToPath[className];
+    newClassInfoList[path] = newList;
 }
+
 /**
  * 排除代码段里的全局函数块。
  */
