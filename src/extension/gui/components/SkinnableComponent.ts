@@ -36,7 +36,7 @@ module egret.gui {
 	 * 并将皮肤的属性引用赋值到此类定义的同名属性(必须没有默认值)上,
 	 * 如果要对公共属性添加事件监听或其他操作，
 	 * 请覆盖partAdded()和partRemoved()方法
-	 * @extends egret.gui.SkinnableComponent
+	 * @extends egret.gui.UIComponent
 	 */
 	export class SkinnableComponent extends UIComponent implements ISkinnableClient{
 		/**
