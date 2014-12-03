@@ -42,6 +42,8 @@ module egret {
             this.renderContext = egret.RendererContext.createRendererContext(this._bitmapData);
         }
 
+        private static identityRectangle:egret.Rectangle = new egret.Rectangle();
+
 		/**
          * 将制定显示对象绘制为一个纹理
 		 * @method egret.RenderTexture#drawToTexture
@@ -56,6 +58,8 @@ module egret {
                 this.renderContext._cacheCanvas.width = bounds.width;
                 this.renderContext._cacheCanvas.height = bounds.height;
             }
+            RenderTexture.identityRectangle.width = bounds.width;
+            RenderTexture.identityRectangle.height = bounds.height;
 
             displayObject._worldTransform.identity();
             displayObject.worldAlpha = 1;
@@ -90,9 +94,9 @@ module egret {
             if (mask) {
                 this.renderContext.popMask();
             }
-            renderFilter._drawAreaList = drawAreaList;
+            renderFilter.addDrawArea(RenderTexture.identityRectangle);
             this.renderContext.onRenderFinish();
-
+            renderFilter._drawAreaList = drawAreaList;
             this._textureWidth = this._bitmapData.width;
             this._textureHeight = this._bitmapData.height;
             this._sourceWidth = this._textureWidth;
