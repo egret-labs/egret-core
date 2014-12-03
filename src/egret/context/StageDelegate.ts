@@ -247,8 +247,8 @@ module egret {
         }
 
         public setEgretSize(w:number, h:number, styleW:number, styleH:number, left:number = 0, top:number = 0):void {
-            egret.StageDelegate.getInstance()._stageWidth = w;
-            egret.StageDelegate.getInstance()._stageHeight = h;
+            egret.StageDelegate.getInstance()._stageWidth = Math.round(w);
+            egret.StageDelegate.getInstance()._stageHeight = Math.round(h);
             var container:HTMLElement = document.getElementById(StageDelegate.canvas_div_name);
             container.style.width = styleW + "px";
             container.style.height = styleH + "px";

@@ -305,6 +305,8 @@ module egret {
         }
 
         public _onTouchMove(event: TouchEvent) {
+            if (this._lastTouchPosition.x == event.stageX && this._lastTouchPosition.y == event.stageY)
+                return;
             if (this.delayTouchBeginEvent) {
                 this.delayTouchBeginEvent = null;
                 this.touchBeginTimer.stop();
@@ -317,11 +319,11 @@ module egret {
         }
 
         public _onTouchEnd(event: TouchEvent) {
-            this.stage.removeEventListener(TouchEvent.TOUCH_MOVE, this._onTouchMove, this);
-            this.stage.removeEventListener(TouchEvent.TOUCH_END, this._onTouchEnd, this);
-            this.stage.removeEventListener(TouchEvent.LEAVE_STAGE, this._onTouchEnd, this);
+            egret.MainContext.instance.stage.removeEventListener(TouchEvent.TOUCH_MOVE, this._onTouchMove, this);
+            egret.MainContext.instance.stage.removeEventListener(TouchEvent.TOUCH_END, this._onTouchEnd, this);
+            egret.MainContext.instance.stage.removeEventListener(TouchEvent.LEAVE_STAGE, this._onTouchEnd, this);
             this.removeEventListener(Event.ENTER_FRAME, this._onEnterFrame, this);
-
+            
             this._moveAfterTouchEnd();
         }
 
