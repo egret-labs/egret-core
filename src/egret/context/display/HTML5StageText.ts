@@ -214,7 +214,13 @@ module egret {
 
 
         public _show():void {
-            this.inputElement.setAttribute("maxlength", this._maxChars > 0 ? this._maxChars : -1);
+            if (this._maxChars > 0) {
+                this.inputElement.setAttribute("maxlength", this._maxChars);
+            }
+            else {
+                this.inputElement.removeAttribute("maxlength");
+            }
+
 
             this._isShow = true;
             //打开
