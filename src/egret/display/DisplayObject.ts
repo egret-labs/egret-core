@@ -80,7 +80,7 @@ module egret {
             }
         }
 
-        public _setSizeDirty() {
+        public _setSizeDirty():void {
             if (this._sizeDirty) {
                 return;
             }

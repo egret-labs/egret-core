@@ -110,6 +110,12 @@ module egret {
             return this._text;
         }
 
+        public _setSizeDirty():void {
+            super._setSizeDirty();
+
+            this._isArrayChanged = true;
+        }
+
         public _setTextDirty(): void {
             this._setSizeDirty();
         }
