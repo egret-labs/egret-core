@@ -1049,8 +1049,10 @@ module egret {
             if (!this.renderTexture) {
                 this.renderTexture = new egret.RenderTexture();
             }
-            this.renderTexture.drawToTexture(this);
-            this._texture_to_render = this.renderTexture;
+            var result:boolean = this.renderTexture.drawToTexture(this);
+            if(result) {
+                this._texture_to_render = this.renderTexture;
+            }
         }
 
         private _cacheDirty: boolean = false;

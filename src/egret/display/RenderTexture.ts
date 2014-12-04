@@ -49,9 +49,13 @@ module egret {
 		 * @method egret.RenderTexture#drawToTexture
 		 * @param displayObject {egret.DisplayObject} 
 		 */
-        public drawToTexture(displayObject:egret.DisplayObject):void {
+        public drawToTexture(displayObject:egret.DisplayObject):boolean {
             var cacheCanvas:HTMLCanvasElement = this._bitmapData;
             var bounds = displayObject.getBounds(Rectangle.identity);
+            if(bounds.width == 0 || bounds.height == 0) {
+                egret.Logger.warning("egret.RenderTexture#drawToTexture:显示对象测量结果宽高为0，请检查");
+                return false;
+            }
             cacheCanvas.width = bounds.width;
             cacheCanvas.height = bounds.height;
             if(this.renderContext._cacheCanvas) {
@@ -102,6 +106,7 @@ module egret {
             this._sourceWidth = this._textureWidth;
             this._sourceHeight = this._textureHeight;
 
+            return true;
             //测试代码
 //            this.renderContext.canvasContext.setTransform(1, 0, 0, 1, 0, 0);
 //            this.renderContext.strokeRect(0, 0,cacheCanvas.width,cacheCanvas.height,"#ff0000");
