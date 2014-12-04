@@ -1053,6 +1053,9 @@ module egret {
             if(result) {
                 this._texture_to_render = this.renderTexture;
             }
+            else  {
+                this._cacheAsBitmap = false;
+            }
         }
 
         private _cacheDirty: boolean = false;
