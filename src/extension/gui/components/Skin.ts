@@ -31,8 +31,7 @@ module egret.gui {
     /**
      * @class egret.gui.Skin
      * @classdesc
-     * 含有视图状态功能的皮肤基类。注意：为了减少嵌套层级，此皮肤没有继承显示对象，若需要显示对象版本皮肤，请使用Skin。
-     * @see org.flexlite.domUI.components.supportClasses.Skin
+     * 含有视图状态功能的皮肤基类。
      * @extends egret.EventDispatcher
      * @implements egret.gui.IStateClient
      * @implements egret.gui.ISkin

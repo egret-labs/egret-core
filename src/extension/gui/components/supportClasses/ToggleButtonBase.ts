@@ -69,10 +69,18 @@ module egret.gui {
 		 * @returns {string}
 		 */
 		public getCurrentSkinState():string{
-			if (!this.selected)
-				return super.getCurrentSkinState();
-			else
-				return super.getCurrentSkinState() + "AndSelected";
+			var state:string = super.getCurrentSkinState();
+			if (!this.selected){
+				return state;
+			}
+			else{
+				var selectedState:string = state + "AndSelected";
+				var skin:IStateClient = this.skin
+				if(skin&&skin.hasState(selectedState)){
+					return selectedState;
+				}
+				return state=="disabled"?"disabled":"down";
+			}
 		}
 		/**
 		 * 是否根据鼠标事件自动变换选中状态,默认true。仅框架内使用。
