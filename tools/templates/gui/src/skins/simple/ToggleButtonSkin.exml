@@ -17,10 +17,16 @@
                source.downAndSelected="togglebutton_over_png"
                source.upAndSelected="togglebutton_selected_png"
                source.disabledAndSelected="togglebutton_disabled_png" />
-    <e:Label id="labelDisplay" size="20" verticalAlign="middle"
-             textAlign="center" fontFamily="Tahoma" textColor="0x1e7465"
-             textColor.down="0x1e7465" textColor.disabled="0x727070"
-             textColor.downAndSelected="0x1e7465" textColor.upAndSelected="0xeeedec"
-             textColor.disabledAndSelected="0x727070" left="10" right="10" top="8"
-             bottom="12" />
+    <e:Group left="10" right="10" top="10" bottom="10">
+        <e:layout>
+            <e:HorizontalLayout gap="0" verticalAlign="middle" horizontalAlign="center"/>
+        </e:layout>
+        <e:UIAsset id="iconDisplay"/>
+        <e:Label id="labelDisplay" size="20" verticalAlign="middle"
+                 textAlign="center" fontFamily="Tahoma" textColor="0x1e7465"
+                 textColor.down="0x1e7465" textColor.disabled="0x727070"
+                 textColor.downAndSelected="0x1e7465" textColor.upAndSelected="0xeeedec"
+                 textColor.disabledAndSelected="0x727070" />
+    </e:Group>
+
 </e:Skin>

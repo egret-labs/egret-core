@@ -60,6 +60,11 @@ module egret.gui {
 		 * @member egret.gui.ButtonBase#labelDisplay
 		 */
 		public labelDisplay:IDisplayText;
+		/**
+		 * [SkinPart]按钮上的文本标签
+		 * @member egret.gui.ButtonBase#labelDisplay
+		 */
+		public iconDisplay:UIAsset;
 
 
 		private _autoRepeat:boolean = false;
@@ -165,6 +170,34 @@ module egret.gui {
             this._label = value;
             if(this.labelDisplay){
                 this.labelDisplay.text = value;
+            }
+        }
+		private _icon:any = "";
+        /**
+         * 要在按钮上显示的图标
+		 * @member egret.gui.ButtonBase#icon
+         */
+		public get icon():any{
+            return this._getIcon();
+		}
+
+        public _getIcon():any{
+            if(this.iconDisplay){
+                return this.iconDisplay.source;
+            }
+            else{
+                return this._icon;
+            }
+        }
+
+        public set icon(value:any){
+            this._setIcon(value);
+        }
+
+        public _setIcon(value:any):void{
+            this._icon = value;
+            if(this.iconDisplay){
+                this.iconDisplay.source = value;
             }
         }
 
@@ -422,6 +455,9 @@ module egret.gui {
 
 			if (instance == this.labelDisplay){
 				this.labelDisplay.text = this._label;
+			}
+			else if(instance==this.iconDisplay){
+				this.iconDisplay.source = this._icon;
 			}
 		}
 	}
