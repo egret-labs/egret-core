@@ -167,7 +167,7 @@ module egret {
 
                 //测试代码，把画出来的区域用红框标出来
 //                renderContext.strokeRect(destX, destY, destWidth, destHeight, "#ff0000");
-
+                break;
             }
         }
 
