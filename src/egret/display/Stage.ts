@@ -72,23 +72,38 @@ module egret {
         public set scaleMode(value:string){
             if (this._scaleMode != value){
                 this._scaleMode = value;
-
-               var  scaleModeEnum = {};
-                scaleModeEnum[StageScaleMode.NO_SCALE] = new NoScale();
-                scaleModeEnum[StageScaleMode.SHOW_ALL] = new ShowAll();
-                scaleModeEnum[StageScaleMode.NO_BORDER] = new FixedWidth();
-                scaleModeEnum[StageScaleMode.EXACT_FIT] = new FullScreen();
-                var content = scaleModeEnum[value];
-                if (!content){
-                    throw new Error("使用了尚未实现的ScaleMode");
-                }
-                var container = new egret.EqualToFrame();
-                var policy = new egret.ResolutionPolicy(container, content);
-                egret.StageDelegate.getInstance()._setResolutionPolicy(policy);
-                this._stageWidth = egret.StageDelegate.getInstance()._stageWidth;
-                this._stageHeight = egret.StageDelegate.getInstance()._stageHeight;
-                this.dispatchEventWith(Event.RESIZE);
+                this.setResolutionPolicy();
             }
+        }
+
+        /**
+         * 当屏幕尺寸改变时调用
+         */
+        public changeSize():void{
+            //重新设置屏幕适配策略
+            this.setResolutionPolicy();
+            //触发Event.RESIZE事件
+            this.dispatchEventWith(Event.RESIZE);
+        }
+
+        /**
+         * 设置屏幕适配策略
+         */
+        private setResolutionPolicy():void{
+            var  scaleModeEnum = {};
+            scaleModeEnum[StageScaleMode.NO_SCALE] = new NoScale();
+            scaleModeEnum[StageScaleMode.SHOW_ALL] = new ShowAll();
+            scaleModeEnum[StageScaleMode.NO_BORDER] = new FixedWidth();
+            scaleModeEnum[StageScaleMode.EXACT_FIT] = new FullScreen();
+            var content = scaleModeEnum[this._scaleMode];
+            if (!content){
+                throw new Error("使用了尚未实现的ScaleMode");
+            }
+            var container = new egret.EqualToFrame();
+            var policy = new egret.ResolutionPolicy(container, content);
+            egret.StageDelegate.getInstance()._setResolutionPolicy(policy);
+            this._stageWidth = egret.StageDelegate.getInstance()._stageWidth;
+            this._stageHeight = egret.StageDelegate.getInstance()._stageHeight;
         }
 
         private _stageWidth:number;

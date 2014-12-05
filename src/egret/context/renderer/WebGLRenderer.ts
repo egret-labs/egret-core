@@ -49,6 +49,8 @@ module egret {
             this.canvas.addEventListener("webglcontextlost", this.handleContextLost.bind(this), false);
             this.canvas.addEventListener("webglcontextrestored", this.handleContextRestored.bind(this), false);
 
+            this.onResize();
+
             this.projectionX = this.canvas.width / 2;
             this.projectionY = -this.canvas.height / 2;
 
@@ -91,14 +93,25 @@ module egret {
                 var container = document.getElementById(egret.StageDelegate.canvas_div_name);
                 canvas = egret.Browser.getInstance().$new("canvas");
                 canvas.id = "egretCanvas";
-                canvas.width = egret.MainContext.instance.stage.stageWidth; //stageW
-                canvas.height = egret.MainContext.instance.stage.stageHeight; //stageH
-                canvas.style.width = container.style.width;
-                canvas.style.height = container.style.height;
-//                canvas.style.position = "absolute";
                 container.appendChild(canvas);
             }
+            egret.MainContext.instance.stage.addEventListener(egret.Event.RESIZE, this.onResize, this);
             return canvas;
+        }
+
+        private onResize():void{
+            //设置canvas宽高
+            if (this.canvas) {
+                var container = document.getElementById(egret.StageDelegate.canvas_div_name);
+                this.canvas.width = egret.MainContext.instance.stage.stageWidth; //stageW
+                this.canvas.height = egret.MainContext.instance.stage.stageHeight; //stageH
+                this.canvas.style.width = container.style.width;
+                this.canvas.style.height = container.style.height;
+//              this.canvas.style.position = "absolute";
+
+                this.projectionX = this.canvas.width / 2;
+                this.projectionY = -this.canvas.height / 2;
+            }
         }
 
         private contextLost:Boolean = false;
