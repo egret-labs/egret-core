@@ -87,6 +87,7 @@ module egret {
             this._sizeDirty = true;
 
             this._setDirty();
+            this._setCacheDirty();
             this._setParentSizeDirty();
         }
 
@@ -364,6 +365,7 @@ module egret {
                 this._alpha = value;
 
                 this._setDirty();
+                this._setCacheDirty();
             }
         }
 
@@ -597,30 +599,31 @@ module egret {
 
         private drawCacheTexture(renderContext:RendererContext):boolean {
             var display:egret.DisplayObject = this;
-            if (display._cacheAsBitmap) {
-
-                if (display._cacheDirty || display._texture_to_render == null ||
-                    Math.round(display.width) != Math.round(display._texture_to_render._sourceWidth) ||
-                    Math.round(display.height) != Math.round(display._texture_to_render._sourceHeight)) {
-                    display._makeBitmapCache();
-                    display._cacheDirty = false;
-                }
-                var renderTexture = display._texture_to_render;
-                var offsetX = renderTexture._offsetX;
-                var offsetY = renderTexture._offsetY;
-                var width = renderTexture._textureWidth;
-                var height = renderTexture._textureHeight;
-                display._updateTransform();
-                renderContext.setAlpha(display.worldAlpha, display.blendMode);
-                renderContext.setTransform(display._worldTransform);
-                var scale_factor = egret.MainContext.instance.rendererContext.texture_scale_factor;
-                var renderFilter = egret.RenderFilter.getInstance();
-                renderFilter.drawImage(renderContext, display, 0, 0, width * scale_factor, height * scale_factor, offsetX, offsetY, width, height);
-                return true;
-            }
-            else {
+            if (display._cacheAsBitmap == false)
                 return false;
+            if (display._cacheDirty || display._texture_to_render == null ||
+                Math.round(display.width) != Math.round(display._texture_to_render._sourceWidth) ||
+                Math.round(display.height) != Math.round(display._texture_to_render._sourceHeight)) {
+                var cached = display._makeBitmapCache();
+                display._cacheDirty = !cached;
             }
+
+            //没有成功生成cache的情形
+            if (display._texture_to_render == null)
+                return false;
+            var renderTexture = display._texture_to_render;
+            var offsetX = renderTexture._offsetX;
+            var offsetY = renderTexture._offsetY;
+            var width = renderTexture._textureWidth;
+            var height = renderTexture._textureHeight;
+            display._updateTransform();
+            renderContext.setAlpha(display.worldAlpha, display.blendMode);
+            renderContext.setTransform(display._worldTransform);
+            var scale_factor = egret.MainContext.instance.rendererContext.texture_scale_factor;
+            var renderFilter = egret.RenderFilter.getInstance();
+            renderFilter.drawImage(renderContext, display, 0, 0, width * scale_factor, height * scale_factor, offsetX, offsetY, width, height);
+            return true;
+            
         }
 
         /**
@@ -1047,7 +1050,7 @@ module egret {
             }
         }
 
-        private _makeBitmapCache() {
+        private _makeBitmapCache():boolean {
             if (!this.renderTexture) {
                 this.renderTexture = new egret.RenderTexture();
             }
@@ -1056,8 +1059,9 @@ module egret {
                 this._texture_to_render = this.renderTexture;
             }
             else  {
-                this._cacheAsBitmap = false;
+                this._texture_to_render = null;
             }
+            return result;
         }
 
         private _cacheDirty: boolean = false;
