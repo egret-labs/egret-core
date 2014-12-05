@@ -599,9 +599,11 @@ module egret {
             var display:egret.DisplayObject = this;
             if (display._cacheAsBitmap) {
 
-                if (this._cacheDirty || this.width != this.renderTexture._sourceWidth || this.height != this.renderTexture._sourceHeight) {
-                    this._makeBitmapCache();
-                    this._cacheDirty = false;
+                if (display._cacheDirty || display._texture_to_render == null ||
+                    Math.round(display.width) != Math.round(display._texture_to_render._sourceWidth) ||
+                    Math.round(display.height) != Math.round(display._texture_to_render._sourceHeight)) {
+                    display._makeBitmapCache();
+                    display._cacheDirty = false;
                 }
                 var renderTexture = display._texture_to_render;
                 var offsetX = renderTexture._offsetX;
@@ -1038,7 +1040,7 @@ module egret {
         public set cacheAsBitmap(bool:boolean) {
             this._cacheAsBitmap = bool;
             if (bool) {
-                this._makeBitmapCache();
+                egret.callLater(this._makeBitmapCache, this);
             }
             else {
                 this._texture_to_render = null;

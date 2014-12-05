@@ -311,7 +311,7 @@ module egret {
                 this.delayTouchBeginEvent = null;
                 this.touchBeginTimer.stop();
             }
-                
+            this.touchChildren = false;   
             var offset = this._getPointChange(event);
             this.setScrollPosition(offset.y, offset.x, true);
             this._calcVelocitys(event);
@@ -319,6 +319,7 @@ module egret {
         }
 
         public _onTouchEnd(event: TouchEvent) {
+            this.touchChildren = true;
             egret.MainContext.instance.stage.removeEventListener(TouchEvent.TOUCH_MOVE, this._onTouchMove, this);
             egret.MainContext.instance.stage.removeEventListener(TouchEvent.TOUCH_END, this._onTouchEnd, this);
             egret.MainContext.instance.stage.removeEventListener(TouchEvent.LEAVE_STAGE, this._onTouchEnd, this);
