@@ -78,7 +78,7 @@
         "components/Group.ts",
         "components/ViewStack.ts",
         "components/Skin.ts",
-        "components/StateSkin.ts",
+        "components/ButtonSkin.ts",
         "components/DataGroup.ts",
         "components/SkinnableContainer.ts",
         "components/SkinnableDataContainer.ts",
