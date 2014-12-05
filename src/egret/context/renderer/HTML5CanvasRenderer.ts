@@ -72,6 +72,8 @@ module egret {
             this._cacheCanvasContext["mozImageSmoothingEnabled"] = RendererContext.imageSmoothingEnabled;
             this._cacheCanvasContext["msImageSmoothingEnabled"] = RendererContext.imageSmoothingEnabled;
 
+            this.onResize();
+
             var f = this.canvasContext.setTransform;
             var that = this;
             this._cacheCanvasContext.setTransform = function (a, b, c, d, tx, ty) {
@@ -101,14 +103,25 @@ module egret {
                 var container = document.getElementById(egret.StageDelegate.canvas_div_name);
                 canvas = egret.Browser.getInstance().$new("canvas");
                 canvas.id = "egretCanvas";
-                canvas.width = egret.MainContext.instance.stage.stageWidth; //stageW
-                canvas.height = egret.MainContext.instance.stage.stageHeight; //stageH
-                canvas.style.width = container.style.width;
-                canvas.style.height = container.style.height;
-//                canvas.style.position = "absolute";
                 container.appendChild(canvas);
             }
+            egret.MainContext.instance.stage.addEventListener(egret.Event.RESIZE, this.onResize, this);
             return canvas;
+        }
+
+        private onResize():void{
+            //设置canvas宽高
+            if (this.canvas) {
+                var container = document.getElementById(egret.StageDelegate.canvas_div_name);
+                this.canvas.width = egret.MainContext.instance.stage.stageWidth; //stageW
+                this.canvas.height = egret.MainContext.instance.stage.stageHeight; //stageH
+                this.canvas.style.width = container.style.width;
+                this.canvas.style.height = container.style.height;
+//              this.canvas.style.position = "absolute";
+
+                this._cacheCanvas.width = this.canvas.width;
+                this._cacheCanvas.height = this.canvas.height;
+            }
         }
 
         public clearScreen() {

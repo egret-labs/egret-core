@@ -193,6 +193,7 @@ module egret {
                 if (!this._defaultDrawAreaList) {
                     this._defaultDrawAreaList = [new egret.Rectangle(0, 0,
                         egret.MainContext.instance.stage.stageWidth, egret.MainContext.instance.stage.stageHeight)];
+                    egret.MainContext.instance.stage.addEventListener(egret.Event.RESIZE, this.onResize, this);
                 }
                 locDrawAreaList = this._defaultDrawAreaList;
             }
@@ -200,6 +201,14 @@ module egret {
                 locDrawAreaList = this._drawAreaList;
             }
             return locDrawAreaList;
+        }
+
+        /**
+         * 改变尺寸时使用
+         */
+        private onResize():void{
+            egret.MainContext.instance.stage.removeEventListener(egret.Event.RESIZE, this.onResize, this);
+            this._defaultDrawAreaList = null;
         }
     }
 

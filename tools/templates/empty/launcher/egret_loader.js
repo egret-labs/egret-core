@@ -64,4 +64,16 @@ egret_h5.startGame = function () {
     else{
         throw new Error("找不到文档类！");
     }
+
+    //处理屏幕大小改变
+    var resizeTimer = null;
+    var doResize = function () {
+        context.stage.changeSize();
+        resizeTimer = null;
+    };
+    window.onresize = function () {
+        if (resizeTimer == null) {
+            resizeTimer = setTimeout(doResize, 300);
+        }
+    };
 };
