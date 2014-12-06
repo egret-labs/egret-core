@@ -266,7 +266,6 @@ module egret.gui {
          * 使用指定的宽度进行测量
          */
         private measureUsingWidth(w:number):void{
-            var originalText:string = this._textField.text;
             if(this._textChanged){
                 this._textField.text = this._text;
             }
@@ -298,7 +297,6 @@ module egret.gui {
             this.measuredWidth += paddingL + paddingR;
             this.measuredHeight += paddingT + paddingB;
 
-            this._textField.text = originalText;
         }
 
         /**
