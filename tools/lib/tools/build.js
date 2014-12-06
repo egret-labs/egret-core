@@ -80,7 +80,7 @@ function buildProject(callback, currDir, keepGeneratedTypescript, runtime) {
     if (document_class) {
         replaceDocumentClass("index.html", document_class, currDir);
         replaceDocumentClass("release.html", document_class, currDir);
-        replaceDocumentClass("native_loader.js", document_class, currDir);
+        replaceDocumentClass("native_require.js", document_class, currDir);
     }
 
     projectConfig.init(currDir);
@@ -107,12 +107,12 @@ function buildProject(callback, currDir, keepGeneratedTypescript, runtime) {
     var sourceList = compiler.generateGameFileList(currDir, runtime);
 
     async.series([function (callback) {
-            compiler.compile(callback,
-                path.join(currDir),
-                sourceList.concat(libs),
-                compileConfig
-            );
-        }
+        compiler.compile(callback,
+            path.join(currDir),
+            sourceList.concat(libs),
+            compileConfig
+        );
+    }
     ], callback)
 
 

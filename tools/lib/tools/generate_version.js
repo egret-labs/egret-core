@@ -5,7 +5,6 @@
 var path = require("path");
 var fs = require("fs");
 var param = require("../core/params_analyze.js");
-var child_process = require("child_process");
 var globals = require("../core/globals");
 var file = require("../core/file.js");
 var compile = require("./compile.js");
@@ -20,13 +19,16 @@ var crc32 = require("../core/crc32.js");
 function createManifest(currDir){
     var basePath = currDir + "/base.manifest";
     var versionPath = currDir + "/version.manifest";
+
     var oldVersion;
     if(file.exists(basePath)) {
         oldVersion = JSON.parse(file.read(basePath));
     }
 
     var list = file.search(path.join(currDir, "resource"));
-    var currVersion = {};
+    var changeVersion = {};
+    var currentVersion = {};
+
     var length = list.length;
 
     for(var i = 0 ; i < length ; i++) {
@@ -36,34 +38,43 @@ function createManifest(currDir){
         }
         var txt = file.read(filePath);
         var txtCrc32 = crc32(txt);
-        console.log (filePath,txtCrc32)
         var savePath = path.relative(currDir, filePath);
         var crcstr = null;
         if(oldVersion) {
-            if(oldVersion[savePath] == undefined || oldVersion[savePath] != txtCrc32) {
+            if(oldVersion[savePath] == undefined || oldVersion[savePath]["v"] != txtCrc32) {
                 crcstr = txtCrc32;
             }
         }
         else {
             crcstr = txtCrc32;
         }
-        if (oldVersion && crcstr) {
-            crcstr = [crcstr, fs.statSync(filePath).size];
-        }
+
         if (crcstr) {
-            currVersion[savePath] = crcstr;
+            changeVersion[savePath] = {"v":crcstr, "s":fs.statSync(filePath).size};
+        }
+
+        currentVersion[savePath] = 1;
+    }
+
+    if (oldVersion == null) {
+        file.save(basePath, JSON.stringify(changeVersion));
+        file.save(versionPath, "{}");
+
+
+        file.copy(path.join(currDir, "resource/resource.json"), path.join(currDir, "baseResource.json"));
+        return;
+    }
+
+    for (var key in oldVersion) {
+        if (currentVersion[key] == null) {//文件已被删除
+            changeVersion[key] = {"d":1};
         }
     }
 
-    var str = JSON.stringify(currVersion);
+    var str = JSON.stringify(changeVersion);
     str = str.replace(/\\\\/g,"/");
     if(oldVersion) {
-        console.log (versionPath)
         file.save(versionPath, str);
-    }
-    else {
-        file.save(basePath, str);
-        file.save(versionPath, "{}");
     }
 }
 
