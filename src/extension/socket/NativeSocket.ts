@@ -36,11 +36,13 @@ module egret {
         private onConnect:Function;
         private onClose:Function;
         private onSocketData:Function;
+        private onError:Function;
         private thisObject:any;
-        public addCallBacks(onConnect:Function, onClose:Function, onSocketData:Function, thisObject:any):void {
+        public addCallBacks(onConnect:Function, onClose:Function, onSocketData:Function, onError:Function, thisObject:any):void {
             this.onConnect = onConnect;
             this.onClose = onClose;
             this.onSocketData = onSocketData;
+            this.onError = onError;
             this.thisObject = thisObject;
         }
 
@@ -68,6 +70,11 @@ module egret {
             socket.onClose = function () {
                 if (that.onClose) {
                     that.onClose.call(that.thisObject);
+                }
+            };
+            socket.onError = function (errorCode:number) {
+                if (that.onError) {
+                    that.onError.call(that.thisObject);
                 }
             };
             socket.onMessage = function (message) {

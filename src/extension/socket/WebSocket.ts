@@ -44,7 +44,7 @@ module egret {
             else {
                 this.socket = new NativeSocket();
             }
-            this.socket.addCallBacks(this.onConnect, this.onClose, this.onSocketData, this);
+            this.socket.addCallBacks(this.onConnect, this.onClose, this.onSocketData, this.onError, this);
         }
 
         public connect(host:string, port:number):void {
@@ -60,12 +60,15 @@ module egret {
             this.dispatchEventWith(egret.Event.CLOSE);
         }
 
+        private onError():void {
+            this.dispatchEventWith(egret.IOErrorEvent.IO_ERROR);
+        }
+
         private onSocketData(message:string):void {
             this._readMessage += message;
 
             egret.ProgressEvent.dispatchProgressEvent(this, egret.ProgressEvent.SOCKET_DATA);
         }
-
 
         public flush():void {
             if (!this._connect) {

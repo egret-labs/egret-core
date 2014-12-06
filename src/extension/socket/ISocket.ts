@@ -33,7 +33,7 @@ module egret {
         connect(host:string, port:number):void;
 
 
-        addCallBacks(onConnect:Function, onClose:Function, onSocketData:Function, thisObject:any):void;
+        addCallBacks(onConnect:Function, onClose:Function, onSocketData:Function, onError:Function, thisObject:any):void;
 
         send(message:string):void;
     }
