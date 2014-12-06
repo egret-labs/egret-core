@@ -569,6 +569,8 @@
   </xs:element>
   <xs:attributeGroup name="egret.gui.Button">
     <xs:attributeGroup ref="egret.gui.ButtonBase"/>
+    <xs:attribute name="icon" type="xs:string"/>
+    <xs:attribute name="iconDisplay" type="xs:string"/>
   </xs:attributeGroup>
   <xs:element name="Button">
     <xs:complexType>
@@ -582,8 +584,6 @@
     <xs:attributeGroup ref="egret.gui.SkinnableComponent"/>
     <xs:attribute name="autoRepeat" type="xs:boolean"/>
     <xs:attribute name="hovered" type="xs:boolean"/>
-    <xs:attribute name="icon" type="xs:string"/>
-    <xs:attribute name="iconDisplay" type="xs:string"/>
     <xs:attribute name="label" type="xs:string"/>
     <xs:attribute name="labelDisplay" type="xs:string"/>
     <xs:attribute name="mouseCaptured" type="xs:boolean"/>
@@ -1347,6 +1347,8 @@
   </xs:element>
   <xs:attributeGroup name="egret.gui.ToggleButton">
     <xs:attributeGroup ref="egret.gui.ToggleButtonBase"/>
+    <xs:attribute name="icon" type="xs:string"/>
+    <xs:attribute name="iconDisplay" type="xs:string"/>
   </xs:attributeGroup>
   <xs:element name="ToggleButton">
     <xs:complexType>
@@ -1412,6 +1414,7 @@
     <xs:attribute name="depth" type="xs:decimal"/>
     <xs:attribute name="disclosureButton" type="xs:string"/>
     <xs:attribute name="hasChildren" type="xs:boolean"/>
+    <xs:attribute name="iconDisplay" type="xs:string"/>
     <xs:attribute name="iconSkinName" type="xs:string"/>
     <xs:attribute name="indentation" type="xs:decimal"/>
     <xs:attribute name="opened" type="xs:boolean"/>

@@ -243,14 +243,14 @@
 	},
 	"egret.gui.Button":
 	{
+		"icon":"any",
+		"iconDisplay":"egret.gui.UIAsset",
 		"super":"egret.gui.ButtonBase"
 	},
 	"egret.gui.ButtonBase":
 	{
 		"autoRepeat":"boolean",
 		"hovered":"boolean",
-		"icon":"any",
-		"iconDisplay":"egret.gui.UIAsset",
 		"label":"string",
 		"labelDisplay":"egret.gui.IDisplayText",
 		"mouseCaptured":"boolean",
@@ -637,6 +637,8 @@
 	},
 	"egret.gui.ToggleButton":
 	{
+		"icon":"any",
+		"iconDisplay":"egret.gui.UIAsset",
 		"super":"egret.gui.ToggleButtonBase"
 	},
 	"egret.gui.ToggleButtonBase":
@@ -667,6 +669,7 @@
 		"depth":"number",
 		"disclosureButton":"egret.gui.ToggleButtonBase",
 		"hasChildren":"boolean",
+		"iconDisplay":"egret.gui.UIAsset",
 		"iconSkinName":"any",
 		"implements":["egret.gui.ITreeItemRenderer"],
 		"indentation":"number",
