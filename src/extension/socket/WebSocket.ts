@@ -28,33 +28,78 @@ module egret {
     export class WebSocket extends egret.EventDispatcher {
         private socket:ISocket;
 
-        constructor(host:string, port:string) {
+        private _writeMessage:string = "";
+        private _readMessage:string = "";
+
+        private _connect:boolean =false;
+        constructor(host:string = "", port:number = 0) {
             super();
+            this._connect = false;
+            this._writeMessage = "";
+            this._readMessage = "";
+
             if (MainContext.runtimeType == MainContext.RUNTIME_HTML5) {
-                this.socket = new HTML5WebSocket(host, port);
+                this.socket = new HTML5WebSocket();
             }
             else {
-                this.socket = new NativeSocket(host, port);
+                this.socket = new NativeSocket();
             }
-            this.socket.addEventListener(SocketEventType.OPEN, this.onEvent, this);
-            this.socket.addEventListener(SocketEventType.CLOSE, this.onEvent, this);
-            this.socket.addEventListener(SocketEventType.MESSAGE, this.onEvent, this);
+            this.socket.addCallBacks(this.onConnect, this.onClose, this.onSocketData, this);
         }
 
-        private onEvent(e:egret.Event):void {
-            this.dispatchEvent(e);
+        public connect(host:string, port:number):void {
+            this.socket.connect(host, port);
         }
 
-        public connect():void {
-            this.socket.connect();
+        private onConnect():void {
+            this._connect = true;
+            this.dispatchEventWith(egret.Event.CONNECT);
         }
 
-        public send(message:string):void {
-            this.socket.send(message);
+        private onClose():void {
+            this.dispatchEventWith(egret.Event.CLOSE);
         }
 
-        public close():void {
-            this.socket.close();
+        private onSocketData(message:string):void {
+            this._readMessage += message;
+
+            egret.ProgressEvent.dispatchProgressEvent(this, egret.ProgressEvent.SOCKET_DATA);
+        }
+
+
+        public flush():void {
+            if (!this._connect) {
+                egret.Logger.warning("请先连接Socket");
+                return;
+            }
+            this.socket.send(this._writeMessage);
+            this._writeMessage = "";
+            this._isReadSend = false;
+        }
+
+        private _isReadSend:boolean = false;
+        public writeUTF(message:string):void {
+            if (!this._connect) {
+                egret.Logger.warning("请先连接Socket");
+                return;
+            }
+            this._writeMessage += message;
+
+            if (this._isReadSend) {
+                return;
+            }
+            this._isReadSend = true;
+            egret.callLater(this.flush, this);
+        }
+
+        public readUTF():string {
+            var message:string = this._readMessage;
+            this._readMessage = "";
+            return message;
+        }
+
+        public get connected():boolean {
+            return this._connect;
         }
     }
 }

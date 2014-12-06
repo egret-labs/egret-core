@@ -25,20 +25,43 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 module egret {
-    export class SocketEventType {
-        /**
-         * 连接打开
-         */
-        public static OPEN:string = "socket_open";
+    export class ProgressEvent extends egret.Event {
 
         /**
-         * 连接关闭
+         * @constant {string} egret.ProgressEvent.PROGRESS
          */
-        public static CLOSE:string = "socket_close";
+        public static PROGRESS:string = "progress";
 
         /**
-         * 收到消息
+         * @constant {string} egret.ProgressEvent.SOCKET_DATA
          */
-        public static MESSAGE:string = "socket_message";
+        public static SOCKET_DATA:string = "socketData";
+
+        public bytesLoaded:number;
+        public bytesTotal:number;
+
+        /**
+         * @method egret.ProgressEvent#constructor
+         * @param type {string}
+         * @param bubbles {boolean}
+         * @param cancelable {boolean}
+         * @param bytesLoaded {number}
+         * @param bytesTotal {number}
+         */
+        public constructor(type:string, bubbles:boolean = false, cancelable:boolean = false, bytesLoaded:number = 0, bytesTotal:number = 0) {
+            super(type, bubbles, cancelable);
+
+            this.bytesLoaded = bytesLoaded;
+            this.bytesTotal = bytesTotal;
+        }
+
+        /**
+         * 使用指定的EventDispatcher对象来抛出Event事件对象。抛出的对象将会缓存在对象池上，供下次循环复用。
+         * @method egret.ProgressEvent.dispatchIOErrorEvent
+         * @param target {egret.IEventDispatcher}
+         */
+        public static dispatchProgressEvent(target:IEventDispatcher, type:string, bytesLoaded:number = 0, bytesTotal:number = 0):void {
+            Event._dispatchByTarget(ProgressEvent, target, type, {"bytesLoaded":bytesLoaded, "bytesTotal":bytesTotal});
+        }
     }
 }

@@ -30,18 +30,11 @@ module egret {
          * 连接
          * @method egret.ISocket#connect
          */
-        connect():void;
+        connect(host:string, port:number):void;
 
-        /**
-         * 发送字符串消息
-         * @method egret.ISocket#connect
-         */
+
+        addCallBacks(onConnect:Function, onClose:Function, onSocketData:Function, thisObject:any):void;
+
         send(message:string):void;
-
-        /**
-         * 关闭
-         * @method egret.ISocket#connect
-         */
-        close():void;
     }
 }

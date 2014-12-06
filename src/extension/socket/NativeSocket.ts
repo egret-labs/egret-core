@@ -29,11 +29,29 @@ module egret {
     export class NativeSocket extends EventDispatcher implements ISocket {
         private socket;
 
-        constructor(private host:string, private port:string) {
+        constructor() {
             super();
         }
 
-        public connect():void {
+        private onConnect:Function;
+        private onClose:Function;
+        private onSocketData:Function;
+        private thisObject:any;
+        public addCallBacks(onConnect:Function, onClose:Function, onSocketData:Function, thisObject:any):void {
+            this.onConnect = onConnect;
+            this.onClose = onClose;
+            this.onSocketData = onSocketData;
+            this.thisObject = thisObject;
+        }
+
+        private _connect:boolean;
+        private host:string;
+        private port:number;
+        public connect(host:string, port:number):void {
+            this._connect = false;
+            this.host = host;
+            this.port = port;
+
             var socketServerUrl = "ws://" + this.host + ":" + this.port;
             this.socket = new __global["egret_native"]["WebSocket"](socketServerUrl);
             this._bindEvent();
@@ -43,30 +61,25 @@ module egret {
             var that = this;
             var socket = this.socket;
             socket.onOpen = function () {
-                that.dispatchEventWith(SocketEventType.OPEN);
+                if (that.onConnect) {
+                    that.onConnect.call(that.thisObject);
+                }
             };
             socket.onClose = function () {
-                this.dispatchEventWith(SocketEventType.CLOSE);
+                if (that.onClose) {
+                    that.onClose.call(that.thisObject);
+                }
             };
             socket.onMessage = function (message) {
-                that.dispatchEventWith(SocketEventType.MESSAGE, false, message);
+                if (that.onSocketData) {
+                    that.onSocketData.call(that.thisObject, message);
+                }
             };
         }
 
         public send(message:string):void {
-            if(!this.socket) {
-                egret.Logger.warning("请先连接Socket");
-                return;
-            }
             this.socket.send(message);
         }
 
-        public close():void {
-            if(!this.socket) {
-                egret.Logger.warning("请先连接Socket");
-                return;
-            }
-            this.socket.close();
-        }
     }
 }

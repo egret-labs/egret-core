@@ -4,7 +4,6 @@
     "output":"core/extension/socket",
     "source":"src/extension/socket",
     "file_list": [
-        "SocketEventType.ts",
         "ISocket.ts",
         "HTML5WebSocket.ts",
         "NativeSocket.ts",
