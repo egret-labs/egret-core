@@ -43,6 +43,51 @@ module egret.gui {
 			super();
             this.hostComponentKey = "egret.gui.ToggleButton";
 		}
-		
+		/**
+		 * [SkinPart]按钮上的文本标签
+		 * @member egret.gui.ButtonBase#labelDisplay
+		 */
+		public iconDisplay:UIAsset;
+
+		private _icon:any;
+		/**
+		 * 要在按钮上显示的图标
+		 * @member egret.gui.ButtonBase#icon
+		 */
+		public get icon():any{
+			return this._getIcon();
+		}
+
+		public _getIcon():any{
+			if(this.iconDisplay){
+				return this.iconDisplay.source;
+			}
+			else{
+				return this._icon;
+			}
+		}
+
+		public set icon(value:any){
+			this._setIcon(value);
+		}
+
+		public _setIcon(value:any):void{
+			this._icon = value;
+			if(this.iconDisplay){
+				this.iconDisplay.source = value;
+			}
+		}
+
+		/**
+		 * @method egret.gui.ButtonBase#partAdded
+		 * @param partName {string}
+		 * @param instance {any}
+		 */
+		public partAdded(partName:string, instance:any):void{
+			super.partAdded(partName, instance);
+			if(instance==this.iconDisplay){
+				this.iconDisplay.source = this._icon;
+			}
+		}
 	}
 }
