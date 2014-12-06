@@ -172,7 +172,7 @@ module egret.gui {
                 this.labelDisplay.text = value;
             }
         }
-		private _icon:any = "";
+		private _icon:any;
         /**
          * 要在按钮上显示的图标
 		 * @member egret.gui.ButtonBase#icon
