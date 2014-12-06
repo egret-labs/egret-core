@@ -88,5 +88,8 @@ module egret {
             this.socket.send(message);
         }
 
+        public close():void {
+            this.socket.close();
+        }
     }
 }

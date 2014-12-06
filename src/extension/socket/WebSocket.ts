@@ -51,6 +51,10 @@ module egret {
             this.socket.connect(host, port);
         }
 
+        public close():void {
+            this.socket.close();
+        }
+
         private onConnect():void {
             this._connect = true;
             this.dispatchEventWith(egret.Event.CONNECT);
@@ -77,10 +81,10 @@ module egret {
             }
             this.socket.send(this._writeMessage);
             this._writeMessage = "";
-            this._isReadSend = false;
+            this._isReadySend = false;
         }
 
-        private _isReadSend:boolean = false;
+        private _isReadySend:boolean = false;
         public writeUTF(message:string):void {
             if (!this._connect) {
                 egret.Logger.warning("请先连接Socket");
@@ -88,10 +92,12 @@ module egret {
             }
             this._writeMessage += message;
 
-            if (this._isReadSend) {
+            this.flush();
+            return;
+            if (this._isReadySend) {
                 return;
             }
-            this._isReadSend = true;
+            this._isReadySend = true;
             egret.callLater(this.flush, this);
         }
 
