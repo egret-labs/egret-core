@@ -636,7 +636,7 @@ module egret {
                         linesArr[lineCount].push([textArr[j], textInfo[1], w]);
                     }
                     else {
-                        if (lineW + w < this._explicitWidth) {//在设置范围内
+                        if (lineW + w <= this._explicitWidth) {//在设置范围内
                             linesArr[lineCount].push([textArr[j], textInfo[1], w]);
                             lineW += w;
                         }

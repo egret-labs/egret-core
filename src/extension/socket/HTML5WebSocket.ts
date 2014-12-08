@@ -25,11 +25,10 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 module egret {
-    export class HTML5WebSocket extends EventDispatcher implements ISocket {
+    export class HTML5WebSocket implements ISocket {
         private socket;
 
         constructor() {
-            super();
             if (!window["WebSocket"]) {
                 egret.Logger.fatal("当前浏览器不支持WebSocket");
             }
@@ -48,11 +47,9 @@ module egret {
             this.thisObject = thisObject;
         }
 
-        private _connect:boolean;
         private host:string;
         private port:number;
         public connect(host:string, port:number):void {
-            this._connect = false;
             this.host = host;
             this.port = port;
 
