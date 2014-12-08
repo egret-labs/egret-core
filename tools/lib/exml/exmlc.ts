@@ -717,7 +717,7 @@ class EXMLCompiler{
                 globals.exit(2009,this.exmlPath,this.toXMLString(node));
             }
         }
-        else if(key=="skinName"&&type=="Class"&&value.indexOf("@ButtonSkin(")==0&&value.charAt(value.length-1)==")"){
+        else if(type=="Class"&&value.indexOf("@ButtonSkin(")==0&&value.charAt(value.length-1)==")"){
             value = value.substring(12,value.length-1);
             var skinNames:Array<string> = value.split(",");
             if(skinNames.length>3){
