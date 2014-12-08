@@ -77,12 +77,12 @@ module egret {
                 };
                 egret_native.requireHttp(url, this.urlData, promise);
             }
-//            else if (!egret_native.isFileExists(url)) {
-//                download();
-//            }
-            else if (!this.checkIsNewVersion(url)) {
+            else if (!egret_native.isFileExists(url)) {
                 download();
             }
+//            else if (!this.checkIsNewVersion(url)) {
+//                download();
+//            }
             else {
                 __callAsync(onLoadComplete, this);
             }

@@ -28,13 +28,11 @@ module egret {
     export class FileLoad extends egret.EventDispatcher{
 
         private _downCount:number = 0;
-        private _fileData:Object;
         private _path:string;
         private _bytesTotal:number;
 
         public load(path:string, bytesTotal:number):void {
             this._downCount = 0;
-            this._fileData = null;
             this._path = path;
             this._bytesTotal = bytesTotal;
 
@@ -48,14 +46,10 @@ module egret {
             }
 
             if (egret_native.isRecordExists(this._path)) {//卡里
-                var str:string = egret_native.loadRecord(this._path);
-                this._fileData = JSON.parse(str);
                 this.loadOver();
                 return;
             }
             else if (egret_native.isFileExists(this._path)){
-                var str:string = egret_native.readFileSync(this._path);
-                this._fileData = JSON.parse(str);
                 this.loadOver();
                 return;
             }
@@ -64,8 +58,6 @@ module egret {
                 var promise = egret.PromiseObject.create();
                 var self = this;
                 promise.onSuccessFunc = function () {
-                    var content = egret_native.readFileSync(this._path);
-                    self._fileData = JSON.parse(content);
                     self.loadOver();
                 };
                 promise.onErrorFunc = function () {
@@ -79,7 +71,7 @@ module egret {
         }
 
         private downloadingProgress(bytesLoaded:number) {
-            egret.ProgressEvent.dispatchProgressEvent(this, egret.ProgressEvent.PROGRESS, this._bytesTotal, bytesLoaded);
+            egret.ProgressEvent.dispatchProgressEvent(this, egret.ProgressEvent.PROGRESS, bytesLoaded, this._bytesTotal);
         }
 
         private downloadFileError() {

@@ -33,6 +33,7 @@ egret_native.loadAllChange = function () {
         else if (errorCount > 3) {//结束，加载出错
             loader.removeEventListener(egret.IOErrorEvent.IO_ERROR, loadError, this);
             loader.removeEventListener(egret.Event.COMPLETE, loadComplete, this);
+            loader.removeEventListener(egret.ProgressEvent.PROGRESS, loadProgress, this);
 
             egret_native.egretError();
         }
@@ -46,23 +47,27 @@ egret_native.loadAllChange = function () {
         else {//结束，加载成功
             loader.removeEventListener(egret.IOErrorEvent.IO_ERROR, loadError, this);
             loader.removeEventListener(egret.Event.COMPLETE, loadComplete, this);
+            loader.removeEventListener(egret.ProgressEvent.PROGRESS, loadProgress, this);
+
+            egret_native.removeUI();
 
             egret_native.egretStart();
         }
     }
 
     function loadComplete(e) {
-        loadBytes += list[0]["size"];
+        loadBytes += parseInt(list[0]["size"]);
+        list.shift();
         loadNext();
     }
 
     function loadProgress(e) {
-        egret_native.setProgress(loadBytes + e.bytesLoaded, totalBytes);
+        egret_native.setProgress(parseInt(loadBytes) + parseInt(e.bytesLoaded), totalBytes);
     }
 
     function loadError() {
         errorList.push(list[0]);
-        list.shift(0);
+        list.shift();
         loadComplete();
     }
 };
@@ -71,12 +76,17 @@ var textField;
 egret_native.initLoadingUI = function () {
     textField = new egret.TextField();
     egret.MainContext.instance.stage.addChild(textField);
-    textField.y = egret.MainContext.instance.stage.height / 2;
-    textField.x = egret.MainContext.instance.stage.width / 2;
+    textField.y = egret.MainContext.instance.stage.stageHeight / 2;
+    textField.x = egret.MainContext.instance.stage.stageWidth / 2;
     textField.textAlign = "center";
     textField.anchorX = textField.anchorY = 0.5;
 };
 
 egret_native.setProgress = function(current, total) {
-    this.textField.text = "资源加载中..." + Math.round(current / 1024) + "KB / " + Math.round(total / 1024) + "KB";
+    console.log("egret_native  " + Math.round(current / 1024) + "KB / " + Math.round(total / 1024) + "KB");
+    textField.text = "资源加载中..." + Math.round(current / 1024) + "KB / " + Math.round(total / 1024) + "KB";
+};
+
+egret_native.removeUI = function () {
+    egret.MainContext.instance.stage.removeChild(textField);
 };
