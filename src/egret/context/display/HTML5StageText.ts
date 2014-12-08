@@ -244,6 +244,9 @@ module egret {
         }
 
         public _hide():void {
+            if (this.inputElement == null) {
+                return;
+            }
             this._isShow = false;
             this.inputElement.oninput = function () {
             };
