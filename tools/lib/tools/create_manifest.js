@@ -528,6 +528,7 @@ function readReferenceFromExml(path){
         list.push(modeulClassToPath["egret.gui.getScale9Grid"]);
         list.push(modeulClassToPath["egret.gui.ClassFactory"]);
         list.push(modeulClassToPath["egret.gui.setProperties"]);
+        list.push(modeulClassToPath["egret.gui.ButtonSkin"]);
     }
     readReferenceFromNode(exml,list);
     referenceInfoList[path] = list;

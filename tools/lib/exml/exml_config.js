@@ -1,29 +1,29 @@
 /**
-* Copyright (c) 2014,Egret-Labs.org
-* All rights reserved.
-* Redistribution and use in source and binary forms, with or without
-* modification, are permitted provided that the following conditions are met:
-*
-*     * Redistributions of source code must retain the above copyright
-*       notice, this list of conditions and the following disclaimer.
-*     * Redistributions in binary form must reproduce the above copyright
-*       notice, this list of conditions and the following disclaimer in the
-*       documentation and/or other materials provided with the distribution.
-*     * Neither the name of the Egret-Labs.org nor the
-*       names of its contributors may be used to endorse or promote products
-*       derived from this software without specific prior written permission.
-*
-* THIS SOFTWARE IS PROVIDED BY EGRET-LABS.ORG AND CONTRIBUTORS "AS IS" AND ANY
-* EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
-* WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-* DISCLAIMED. IN NO EVENT SHALL EGRET-LABS.ORG AND CONTRIBUTORS BE LIABLE FOR ANY
-* DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
-* (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
-* LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
-* ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-* (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
-* SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-*/
+ * Copyright (c) 2014,Egret-Labs.org
+ * All rights reserved.
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *
+ *     * Redistributions of source code must retain the above copyright
+ *       notice, this list of conditions and the following disclaimer.
+ *     * Redistributions in binary form must reproduce the above copyright
+ *       notice, this list of conditions and the following disclaimer in the
+ *       documentation and/or other materials provided with the distribution.
+ *     * Neither the name of the Egret-Labs.org nor the
+ *       names of its contributors may be used to endorse or promote products
+ *       derived from this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY EGRET-LABS.ORG AND CONTRIBUTORS "AS IS" AND ANY
+ * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL EGRET-LABS.ORG AND CONTRIBUTORS BE LIABLE FOR ANY
+ * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+ * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
 /// <reference path="node.d.ts"/>
 var file = require("../core/file.js");
 var xml = require("../core/xml.js");
@@ -31,15 +31,14 @@ var param = require("../core/params_analyze.js");
 var CodeUtil = require("../core/code_util.js");
 var create_manifest = require("../tools/create_manifest.js");
 var properties = {};
-
 var EXMLConfig = (function () {
     /**
-    * 构造函数
-    */
+     * 构造函数
+     */
     function EXMLConfig() {
         /**
-        * 组件清单列表
-        */
+         * 组件清单列表
+         */
         this.componentDic = {};
         this.idMap = {};
         this.basicTypes = ["void", "any", "number", "string", "boolean", "Object", "Array", "Function"];
@@ -48,7 +47,6 @@ var EXMLConfig = (function () {
         var str = file.read(exmlPath + "egret-manifest.xml");
         var manifest = xml.parse(str);
         this.parseManifest(manifest);
-
         str = file.read(exmlPath + "properties.json");
         properties = JSON.parse(str);
     }
@@ -64,8 +62,6 @@ var EXMLConfig = (function () {
         enumerable: true,
         configurable: true
     });
-
-
     EXMLConfig.prototype.parseModules = function () {
         this.classNameToModule = {};
         for (var className in this.classNameToPath) {
@@ -84,10 +80,9 @@ var EXMLConfig = (function () {
             }
         }
     };
-
     /**
-    * 解析框架清单文件
-    */
+     * 解析框架清单文件
+     */
     EXMLConfig.prototype.parseManifest = function (manifest) {
         var children = manifest.children;
         var length = children.length;
@@ -99,15 +94,13 @@ var EXMLConfig = (function () {
         }
         for (var className in this.componentDic) {
             var component = this.componentDic[className];
-
             if (!component.defaultProp)
                 this.findProp(component);
         }
     };
-
     /**
-    * 递归查找默认属性
-    */
+     * 递归查找默认属性
+     */
     EXMLConfig.prototype.findProp = function (component) {
         if (component.defaultProp)
             return component.defaultProp;
@@ -120,19 +113,20 @@ var EXMLConfig = (function () {
         }
         return component.defaultProp;
     };
-
     /**
-    * @inheritDoc
-    */
+     * @inheritDoc
+     */
     EXMLConfig.prototype.getClassNameById = function (id, ns) {
         var name = "";
         if (this.basicTypes.indexOf(id) != -1) {
             return id;
         }
         if (ns == EXMLConfig.W) {
-        } else if (!ns || ns == EXMLConfig.E) {
+        }
+        else if (!ns || ns == EXMLConfig.E) {
             name = this.idMap[id];
-        } else {
+        }
+        else {
             name = ns.substring(0, ns.length - 1) + id;
             if (!this.classNameToPath[name]) {
                 name = "";
@@ -140,10 +134,9 @@ var EXMLConfig = (function () {
         }
         return name;
     };
-
     /**
-    * 检查一个类名是否存在
-    */
+     * 检查一个类名是否存在
+     */
     EXMLConfig.prototype.checkClassName = function (className) {
         if (!className) {
             return false;
@@ -156,10 +149,9 @@ var EXMLConfig = (function () {
         }
         return false;
     };
-
     /**
-    * @inheritDoc
-    */
+     * @inheritDoc
+     */
     EXMLConfig.prototype.getDefaultPropById = function (id, ns) {
         var className = this.getClassNameById(id, ns);
         var component = this.componentDic[className];
@@ -170,7 +162,6 @@ var EXMLConfig = (function () {
             return "";
         return component.defaultProp;
     };
-
     EXMLConfig.prototype.findDefaultProp = function (className) {
         var classData = properties[className];
         if (!classData) {
@@ -179,12 +170,14 @@ var EXMLConfig = (function () {
             var text = file.read(path);
             if (ext == "ts") {
                 classData = this.getPropertiesFromTs(text, className, "");
-            } else if (ext == "exml") {
+            }
+            else if (ext == "exml") {
                 classData = this.getPropertiesFromExml(text);
             }
             if (classData) {
                 properties[className] = classData;
-            } else {
+            }
+            else {
                 return null;
             }
         }
@@ -195,10 +188,9 @@ var EXMLConfig = (function () {
         }
         return component;
     };
-
     /**
-    * 获取指定类指定属性的类型
-    */
+     * 获取指定类指定属性的类型
+     */
     EXMLConfig.prototype.getPropertyType = function (prop, className) {
         if (className == "Object") {
             return "any";
@@ -206,7 +198,6 @@ var EXMLConfig = (function () {
         var type = this.findType(className, prop);
         return type;
     };
-
     EXMLConfig.prototype.findType = function (className, prop) {
         var classData = properties[className];
         if (!classData) {
@@ -216,12 +207,14 @@ var EXMLConfig = (function () {
             if (ext == "ts") {
                 text = CodeUtil.removeComment(text, path);
                 classData = this.getPropertiesFromTs(text, className, "");
-            } else if (ext == "exml") {
+            }
+            else if (ext == "exml") {
                 classData = this.getPropertiesFromExml(text);
             }
             if (classData) {
                 properties[className] = classData;
-            } else {
+            }
+            else {
                 return "";
             }
         }
@@ -231,10 +224,9 @@ var EXMLConfig = (function () {
         }
         return type;
     };
-
     /**
-    * 读取一个exml文件引用的类列表
-    */
+     * 读取一个exml文件引用的类列表
+     */
     EXMLConfig.prototype.getPropertiesFromExml = function (text) {
         var exml = xml.parse(text);
         if (!exml) {
@@ -248,10 +240,9 @@ var EXMLConfig = (function () {
         }
         return null;
     };
-
     /**
-    * 获取属性列表
-    */
+     * 获取属性列表
+     */
     EXMLConfig.prototype.getPropertiesFromTs = function (text, className, nsPrefiex) {
         index = className.lastIndexOf(".");
         var moduleName = "";
@@ -285,7 +276,8 @@ var EXMLConfig = (function () {
                     }
                     data = this.getPropFromBlock(block, className, ns);
                     break;
-                } else if (moduleName.indexOf(ns) == 0 && moduleName.charAt(ns.length) == ".") {
+                }
+                else if (moduleName.indexOf(ns) == 0 && moduleName.charAt(ns.length) == ".") {
                     var tail = moduleName.substring(ns.length + 1);
                     var prefix = moduleName.substring(0, ns.length);
                     if (nsPrefiex) {
@@ -297,13 +289,12 @@ var EXMLConfig = (function () {
                     }
                 }
             }
-        } else {
+        }
+        else {
             data = this.getPropFromBlock(text, className, nsPrefiex);
         }
-
         return data;
     };
-
     EXMLConfig.prototype.getPropFromBlock = function (block, targetClassName, ns) {
         var data;
         while (block.length > 0) {
@@ -341,7 +332,8 @@ var EXMLConfig = (function () {
                     if (inter) {
                         inter = this.getFullClassName(inter, ns);
                         arr[i] = inter;
-                    } else {
+                    }
+                    else {
                         arr.splice(i, 1);
                     }
                 }
@@ -356,10 +348,9 @@ var EXMLConfig = (function () {
         }
         return data;
     };
-
     /**
-    * 根据类类短名，和这个类被引用的时所在的module名来获取完整类名。
-    */
+     * 根据类类短名，和这个类被引用的时所在的module名来获取完整类名。
+     */
     EXMLConfig.prototype.getFullClassName = function (word, ns) {
         if (!ns || !word) {
             return word;
@@ -369,7 +360,8 @@ var EXMLConfig = (function () {
         var nsList;
         if (index == -1) {
             nsList = this.classNameToModule[word];
-        } else {
+        }
+        else {
             prefix = word.substring(0, index);
             nsList = this.classNameToModule[word.substring(index + 1)];
         }
@@ -384,7 +376,8 @@ var EXMLConfig = (function () {
                 var tail = superNs.substring(superNs.length - prefix.length);
                 if (tail == prefix) {
                     superNs = superNs.substring(0, superNs.length - prefix.length - 1);
-                } else {
+                }
+                else {
                     continue;
                 }
             }
@@ -399,7 +392,6 @@ var EXMLConfig = (function () {
         }
         return word;
     };
-
     EXMLConfig.prototype.readProps = function (text, data, ns) {
         var lines = text.split("\n");
         var length = lines.length;
@@ -414,7 +406,8 @@ var EXMLConfig = (function () {
                 continue;
             if (word == "get") {
                 continue;
-            } else if (word == "set") {
+            }
+            else if (word == "set") {
                 line = CodeUtil.removeFirstVariable(line);
                 word = CodeUtil.getFirstVariable(line);
                 if (!word || word.charAt(0) == "_") {
@@ -437,11 +430,13 @@ var EXMLConfig = (function () {
                             type = this.getFullClassName(type, ns);
                         }
                         data[word] = type;
-                    } else {
+                    }
+                    else {
                         data[word] = "any";
                     }
                 }
-            } else {
+            }
+            else {
                 line = CodeUtil.removeFirstVariable(line);
                 line = line.trim();
                 var firstChar = line.charAt(0);
@@ -460,16 +455,16 @@ var EXMLConfig = (function () {
                         type = this.getFullClassName(type, ns);
                     }
                     data[word] = type;
-                } else if (!line || firstChar == ";" || firstChar == "=") {
+                }
+                else if (!line || firstChar == ";" || firstChar == "=") {
                     data[word] = "any";
                 }
             }
         }
     };
-
     /**
-    * 检查classNameA是否是classNameB的子类或classNameA实现了接口classNameB
-    */
+     * 检查classNameA是否是classNameB的子类或classNameA实现了接口classNameB
+     */
     EXMLConfig.prototype.isInstanceOf = function (classNameA, classNameB) {
         if (classNameB == "any" || classNameB == "Class") {
             return true;
@@ -492,24 +487,28 @@ var EXMLConfig = (function () {
         }
         return this.isInstanceOf(dataA["super"], classNameB);
     };
+    /**
+     * Egret命名空间
+     */
     EXMLConfig.E = "http://ns.egret-labs.org/egret";
-
+    /**
+     * Wing命名空间
+     */
     EXMLConfig.W = "http://ns.egret-labs.org/wing";
     return EXMLConfig;
 })();
-
 var Component = (function () {
     /**
-    * 构造函数
-    */
+     * 构造函数
+     */
     function Component(item) {
         /**
-        * 父级类名
-        */
+         * 父级类名
+         */
         this.superClass = "";
         /**
-        * 默认属性
-        */
+         * 默认属性
+         */
         this.defaultProp = "";
         if (item) {
             this.id = item.$id;
@@ -522,7 +521,6 @@ var Component = (function () {
     }
     return Component;
 })();
-
 var exmlConfig;
 function getInstance() {
     if (!exmlConfig) {
@@ -530,7 +528,6 @@ function getInstance() {
     }
     return exmlConfig;
 }
-
 exports.EXMLConfig = EXMLConfig;
 exports.getInstance = getInstance;
 //# sourceMappingURL=exml_config.js.map

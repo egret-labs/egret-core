@@ -717,11 +717,30 @@ class EXMLCompiler{
                 globals.exit(2009,this.exmlPath,this.toXMLString(node));
             }
         }
+        else if(key=="skinName"&&type=="Class"&&value.indexOf("@ButtonSkin(")==0&&value.charAt(value.length-1)==")"){
+            value = value.substring(12,value.length-1);
+            var skinNames:Array<string> = value.split(",");
+            if(skinNames.length>3){
+                globals.exit(2018,this.exmlPath,this.toXMLString(node));
+            }
+            for(var i:number=skinNames.length-1;i>=0;i--){
+                var skinName:string = skinNames[i];
+                skinName = skinName.trim();
+                var firstChar:string = skinName.charAt(0);
+                var lastChar:string = skinName.charAt(skinName.length-1);
+                if(firstChar!=lastChar||(firstChar!="'"&&firstChar!="\"")){
+                    globals.exit(2018,this.exmlPath,this.toXMLString(node));
+                    break;
+                }
+                skinNames[i] = this.formatString(skinName.substring(1,skinName.length-1));
+            }
+            value = "new egret.gui.ButtonSkin("+skinNames.join(",")+")";
+        }
         else if(key=="scale9Grid"&&type=="egret.Rectangle"){
             var rect:Array<any> = value.split(",");
             if(rect.length!=4||isNaN(parseInt(rect[0]))||isNaN(parseInt(rect[1]))||
                 isNaN(parseInt(rect[2]))||isNaN(parseInt(rect[3]))){
-                globals.exit(2016,this.exmlPath,this.toXMLString(node))
+                globals.exit(2016,this.exmlPath,this.toXMLString(node));
             }
             value = "egret.gui.getScale9Grid(\""+value+"\")";
         }
@@ -1064,7 +1083,9 @@ class EXMLCompiler{
                     }
                 }
 
-                for(var name in node){
+                var name:string;
+
+                for(name in node){
                     var value:string = node[name];
 					if(name.charAt(0)!="$"){
                     	continue;

@@ -1,29 +1,29 @@
 /**
-* Copyright (c) 2014,Egret-Labs.org
-* All rights reserved.
-* Redistribution and use in source and binary forms, with or without
-* modification, are permitted provided that the following conditions are met:
-*
-*     * Redistributions of source code must retain the above copyright
-*       notice, this list of conditions and the following disclaimer.
-*     * Redistributions in binary form must reproduce the above copyright
-*       notice, this list of conditions and the following disclaimer in the
-*       documentation and/or other materials provided with the distribution.
-*     * Neither the name of the Egret-Labs.org nor the
-*       names of its contributors may be used to endorse or promote products
-*       derived from this software without specific prior written permission.
-*
-* THIS SOFTWARE IS PROVIDED BY EGRET-LABS.ORG AND CONTRIBUTORS "AS IS" AND ANY
-* EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
-* WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-* DISCLAIMED. IN NO EVENT SHALL EGRET-LABS.ORG AND CONTRIBUTORS BE LIABLE FOR ANY
-* DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
-* (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
-* LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
-* ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-* (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
-* SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-*/
+ * Copyright (c) 2014,Egret-Labs.org
+ * All rights reserved.
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *
+ *     * Redistributions of source code must retain the above copyright
+ *       notice, this list of conditions and the following disclaimer.
+ *     * Redistributions in binary form must reproduce the above copyright
+ *       notice, this list of conditions and the following disclaimer in the
+ *       documentation and/or other materials provided with the distribution.
+ *     * Neither the name of the Egret-Labs.org nor the
+ *       names of its contributors may be used to endorse or promote products
+ *       derived from this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY EGRET-LABS.ORG AND CONTRIBUTORS "AS IS" AND ANY
+ * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL EGRET-LABS.ORG AND CONTRIBUTORS BE LIABLE FOR ANY
+ * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+ * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
 var __extends = this.__extends || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -37,9 +37,7 @@ var globals = require("../core/globals.js");
 var CodeUtil = require("../core/code_util.js");
 var file = require("../core/file.js");
 var exml_config = require("./exml_config.js");
-
 var compiler;
-
 function compile(exmlPath, srcPath) {
     exmlPath = exmlPath.split("\\").join("/");
     srcPath = srcPath.split("\\").join("/");
@@ -52,9 +50,10 @@ function compile(exmlPath, srcPath) {
     var className = exmlPath.substring(srcPath.length, exmlPath.length - 5);
     className = className.split("/").join(".");
     var xmlString = file.read(exmlPath);
-    try  {
+    try {
         var xmlData = xml.parse(xmlString);
-    } catch (e) {
+    }
+    catch (e) {
         globals.exit(2002, exmlPath);
     }
     if (!xmlData) {
@@ -68,38 +67,37 @@ function compile(exmlPath, srcPath) {
     file.save(tsPath, tsText);
 }
 ;
-
 exports.compile = compile;
 var EXMLCompiler = (function () {
     /**
-    * 构造函数
-    */
+     * 构造函数
+     */
     function EXMLCompiler() {
         this.repeatedIdDic = {};
         this.exmlPath = "";
         this.basicTypes = ["Array", "boolean", "string", "number"];
         /**
-        * 延迟赋值字典
-        */
+         * 延迟赋值字典
+         */
         this.delayAssignmentDic = {};
         this.htmlEntities = [["<", "&lt;"], [">", "&gt;"], ["&", "&amp;"], ["\"", "&quot;"], ["'", "&apos;"]];
     }
     /**
-    * 获取重复的ID名
-    */
+     * 获取重复的ID名
+     */
     EXMLCompiler.prototype.getRepeatedIds = function (xml) {
         var result = [];
         this.getIds(xml, result);
         this.repeatedIdDic = {};
         return result;
     };
-
     EXMLCompiler.prototype.getIds = function (xml, result) {
         if (xml.namespace != EXMLCompiler.W && xml["$id"]) {
             var id = xml.$id;
             if (this.repeatedIdDic[id]) {
                 result.push(this.toXMLString(xml));
-            } else {
+            }
+            else {
                 this.repeatedIdDic[id] = true;
             }
         }
@@ -112,7 +110,6 @@ var EXMLCompiler = (function () {
             }
         }
     };
-
     EXMLCompiler.prototype.toXMLString = function (node) {
         if (!node) {
             return "";
@@ -130,18 +127,18 @@ var EXMLCompiler = (function () {
         }
         if (node.isSelfClosing) {
             str += "/>";
-        } else {
+        }
+        else {
             str += ">";
         }
         return str;
     };
-
     /**
-    * 编译指定的XML对象为TypeScript类。
-    * 注意:编译前要先注入egret-manifest.xml清单文件给manifestData属性。
-    * @param xmlData 要编译的EXML文件内容
-    * @param className 要编译成的完整类名，包括命名空间。
-    */
+     * 编译指定的XML对象为TypeScript类。
+     * 注意:编译前要先注入egret-manifest.xml清单文件给manifestData属性。
+     * @param xmlData 要编译的EXML文件内容
+     * @param className 要编译成的完整类名，包括命名空间。
+     */
     EXMLCompiler.prototype.compile = function (xmlData, className, srcPath, exmlPath) {
         if (!this.exmlConfig) {
             this.exmlConfig = new exml_config.getInstance();
@@ -164,7 +161,8 @@ var EXMLCompiler = (function () {
             this.currentClass.moduleName = className.substring(0, index);
             this.currentClass.className = className.substring(index + 1);
             this.currentClass.classPath = className.split(".").join("/") + ".ts";
-        } else {
+        }
+        else {
             this.currentClass.className = className;
         }
         this.startCompile();
@@ -172,19 +170,16 @@ var EXMLCompiler = (function () {
         this.currentClass = null;
         return resutlCode;
     };
-
     /**
-    * 开始编译
-    */
+     * 开始编译
+     */
     EXMLCompiler.prototype.startCompile = function () {
         var result = this.getRepeatedIds(this.currentXML);
         if (result.length > 0) {
             globals.exit(2004, this.exmlPath, result.join("\n"));
         }
         this.currentClass.superClass = this.getPackageByNode(this.currentXML);
-
         this.getStateNames();
-
         var children = this.currentXML.children;
         if (children) {
             var length = children.length;
@@ -196,14 +191,11 @@ var EXMLCompiler = (function () {
                 }
             }
         }
-
         var list = [];
         this.checkDeclarations(this.declarations, list);
-
         if (list.length > 0) {
             globals.warn(2101, this.exmlPath, list.join("\n"));
         }
-
         if (!this.currentXML.namespace) {
             globals.exit(2017, this.exmlPath, this.toXMLString(this.currentXML));
         }
@@ -211,10 +203,9 @@ var EXMLCompiler = (function () {
         this.currentClass.addVariable(new CpVariable("__s", Modifiers.M_PRIVATE, "Function", "egret.gui.setProperties"));
         this.createConstructFunc();
     };
-
     /**
-    * 清理声明节点里的状态标志
-    */
+     * 清理声明节点里的状态标志
+     */
     EXMLCompiler.prototype.checkDeclarations = function (declarations, list) {
         if (!declarations) {
             return;
@@ -236,10 +227,9 @@ var EXMLCompiler = (function () {
             }
         }
     };
-
     /**
-    * 添加必须的id
-    */
+     * 添加必须的id
+     */
     EXMLCompiler.prototype.addIds = function (items) {
         if (!items) {
             return;
@@ -252,7 +242,8 @@ var EXMLCompiler = (function () {
             }
             this.addIds(node.children);
             if (node.namespace == EXMLCompiler.W) {
-            } else if (node["$id"]) {
+            }
+            else if (node["$id"]) {
                 this.idToNode[node.$id] = node;
                 if (this.skinParts.indexOf(node.$id) == -1) {
                     this.skinParts.push(node.$id);
@@ -260,7 +251,8 @@ var EXMLCompiler = (function () {
                 this.createVarForNode(node);
                 if (this.isStateNode(node))
                     this.stateIds.push(node.$id);
-            } else if (node.localName) {
+            }
+            else if (node.localName) {
                 if (this.isProperty(node)) {
                     var prop = node.localName;
                     var index = prop.indexOf(".");
@@ -270,7 +262,8 @@ var EXMLCompiler = (function () {
                     }
                     var firstChild = children[0];
                     this.stateIds.push(firstChild.$id);
-                } else {
+                }
+                else {
                     this.createIdForNode(node);
                     this.idToNode[node.$id] = node;
                     if (this.isStateNode(node))
@@ -279,10 +272,9 @@ var EXMLCompiler = (function () {
             }
         }
     };
-
     /**
-    * 检测指定节点的属性是否含有视图状态
-    */
+     * 检测指定节点的属性是否含有视图状态
+     */
     EXMLCompiler.prototype.containsState = function (node) {
         if (node["$includeIn"] || node["$excludeFrom"]) {
             return true;
@@ -296,10 +288,9 @@ var EXMLCompiler = (function () {
         }
         return false;
     };
-
     /**
-    * 为指定节点创建id属性
-    */
+     * 为指定节点创建id属性
+     */
     EXMLCompiler.prototype.createIdForNode = function (node) {
         var idName = this.getNodeId(node);
         if (this.idDic[idName] == null)
@@ -309,19 +300,17 @@ var EXMLCompiler = (function () {
         idName += this.idDic[idName];
         node.$id = idName;
     };
-
     /**
-    * 获取节点ID
-    */
+     * 获取节点ID
+     */
     EXMLCompiler.prototype.getNodeId = function (node) {
         if (node["$id"])
             return node.$id;
         return "__";
     };
-
     /**
-    * 为指定节点创建变量
-    */
+     * 为指定节点创建变量
+     */
     EXMLCompiler.prototype.createVarForNode = function (node) {
         var moduleName = this.getPackageByNode(node);
         if (moduleName == "")
@@ -329,10 +318,9 @@ var EXMLCompiler = (function () {
         if (!this.currentClass.containsVar(node.$id))
             this.currentClass.addVariable(new CpVariable(node.$id, Modifiers.M_PUBLIC, moduleName));
     };
-
     /**
-    * 为指定节点创建初始化函数,返回函数名引用
-    */
+     * 为指定节点创建初始化函数,返回函数名引用
+     */
     EXMLCompiler.prototype.createFuncForNode = function (node) {
         var className = node.localName;
         if (this.isProperty(node))
@@ -350,17 +338,15 @@ var EXMLCompiler = (function () {
         var varName = "t";
         if (className == "Object") {
             cb.addVar(varName, "any", "{}");
-        } else {
+        }
+        else {
             cb.addVar(varName, moduleName, "new " + moduleName + "()");
         }
-
         var containsId = this.currentClass.containsVar(node.$id);
         if (containsId) {
             cb.addAssignment("this." + node.$id, varName);
         }
-
         this.addAttributesToCodeBlock(cb, varName, node);
-
         this.initlizeChildNode(node, cb, varName);
         if (this.delayAssignmentDic[id]) {
             cb.concat(this.delayAssignmentDic[id]);
@@ -370,17 +356,15 @@ var EXMLCompiler = (function () {
         this.currentClass.addFunction(func);
         return "this." + func.name + "()";
     };
-
     /**
-    * 检查目标类名是否是基本数据类型
-    */
+     * 检查目标类名是否是基本数据类型
+     */
     EXMLCompiler.prototype.isBasicTypeData = function (className) {
         return this.basicTypes.indexOf(className) != -1;
     };
-
     /**
-    * 为指定基本数据类型节点实例化,返回实例化后的值。
-    */
+     * 为指定基本数据类型节点实例化,返回实例化后的值。
+     */
     EXMLCompiler.prototype.createBasicTypeForNode = function (node) {
         var className = node.localName;
         var returnValue = "";
@@ -416,10 +400,9 @@ var EXMLCompiler = (function () {
             varItem.defaultValue = returnValue;
         return returnValue;
     };
-
     /**
-    * 将节点属性赋值语句添加到代码块
-    */
+     * 将节点属性赋值语句添加到代码块
+     */
     EXMLCompiler.prototype.addAttributesToCodeBlock = function (cb, varName, node) {
         var keyList = [];
         var key;
@@ -453,7 +436,8 @@ var EXMLCompiler = (function () {
                 var delayCb = new CpCodeBlock();
                 if (varName == KeyWords.KW_THIS) {
                     delayCb.addAssignment(varName, "this." + value, key);
-                } else {
+                }
+                else {
                     delayCb.startIf("this." + id);
                     delayCb.addAssignment("this." + id, "this." + value, key);
                     delayCb.endBlock();
@@ -469,14 +453,14 @@ var EXMLCompiler = (function () {
             var allKey = "[\"" + keys.join("\",\"") + "\"]";
             var allValue = "[" + values.join(",") + "]";
             cb.addCodeLine("this.__s(" + varName + "," + allKey + "," + allValue + ")");
-        } else if (length == 1) {
+        }
+        else if (length == 1) {
             cb.addAssignment(varName, values[0], keys[0]);
         }
     };
-
     /**
-    * 初始化子项
-    */
+     * 初始化子项
+     */
     EXMLCompiler.prototype.initlizeChildNode = function (node, cb, varName) {
         var children = node.children;
         if (!children || children.length == 0)
@@ -505,7 +489,8 @@ var EXMLCompiler = (function () {
                 }
                 var errorInfo = this.getPropertyStr(child);
                 this.addChildrenToProp(child.children, type, prop, cb, varName, errorInfo, propList);
-            } else {
+            }
+            else {
                 directChild.push(child);
             }
         }
@@ -519,10 +504,9 @@ var EXMLCompiler = (function () {
         }
         this.addChildrenToProp(directChild, defaultType, defaultProp, cb, varName, errorInfo, propList);
     };
-
     /**
-    * 添加多个子节点到指定的属性
-    */
+     * 添加多个子节点到指定的属性
+     */
     EXMLCompiler.prototype.addChildrenToProp = function (children, type, prop, cb, varName, errorInfo, propList) {
         var childFunc = "";
         var childLength = children.length;
@@ -538,7 +522,8 @@ var EXMLCompiler = (function () {
                     values.push(childFunc);
             }
             childFunc = "[" + values.join(",") + "]";
-        } else {
+        }
+        else {
             var firstChild = children[0];
             if (type == "Array") {
                 if (firstChild.localName == "Array") {
@@ -553,14 +538,16 @@ var EXMLCompiler = (function () {
                         }
                     }
                     childFunc = "[" + values.join(",") + "]";
-                } else {
+                }
+                else {
                     childFunc = this.createFuncForNode(firstChild);
                     if (!this.isStateNode(firstChild))
                         childFunc = "[" + childFunc + "]";
                     else
                         childFunc = "[]";
                 }
-            } else {
+            }
+            else {
                 var targetClass = this.exmlConfig.getClassNameById(firstChild.localName, firstChild.namespace);
                 if (!this.exmlConfig.isInstanceOf(targetClass, type)) {
                     globals.exit(2008, this.exmlPath, targetClass, prop, errorInfo);
@@ -573,22 +560,21 @@ var EXMLCompiler = (function () {
                 prop = this.formatKey(prop, childFunc);
             if (propList.indexOf(prop) == -1) {
                 propList.push(prop);
-            } else {
+            }
+            else {
                 globals.warn(2103, this.exmlPath, prop, errorInfo);
             }
             cb.addAssignment(varName, childFunc, prop);
         }
     };
-
     EXMLCompiler.prototype.getPropertyStr = function (child) {
         var parentStr = this.toXMLString(child.parent);
         var childStr = this.toXMLString(child).substring(5);
         return parentStr + "\n      \t" + childStr;
     };
-
     /**
-    * 指定节点是否是属性节点
-    */
+     * 指定节点是否是属性节点
+     */
     EXMLCompiler.prototype.isProperty = function (node) {
         var name = node.localName;
         if (name == null)
@@ -598,19 +584,17 @@ var EXMLCompiler = (function () {
         var firstChar = name.charAt(0);
         return firstChar < "A" || firstChar > "Z";
     };
-
     /**
-    * 是否是普通赋值的key
-    */
+     * 是否是普通赋值的key
+     */
     EXMLCompiler.prototype.isNormalKey = function (key) {
         if (!key || key.indexOf(".") != -1 || EXMLCompiler.wingKeys.indexOf(key) != -1)
             return false;
         return true;
     };
-
     /**
-    * 格式化key
-    */
+     * 格式化key
+     */
     EXMLCompiler.prototype.formatKey = function (key, value) {
         if (value.indexOf("%") != -1) {
             if (key == "height")
@@ -620,15 +604,14 @@ var EXMLCompiler = (function () {
         }
         return key;
     };
-
     /**
-    * 格式化值
-    */
+     * 格式化值
+     */
     EXMLCompiler.prototype.formatValue = function (key, value, node) {
         if (!value) {
             value = "";
         }
-        var stringValue = value;
+        var stringValue = value; //除了字符串，其他类型都去除两端多余空格。
         value = value.trim();
         var className = this.exmlConfig.getClassNameById(node.localName, node.namespace);
         var type = this.exmlConfig.getPropertyType(key, className);
@@ -652,16 +635,38 @@ var EXMLCompiler = (function () {
                 if (!this.exmlConfig.isInstanceOf(targetClass, type)) {
                     globals.exit(2008, this.exmlPath, targetClass, key, this.toXMLString(node));
                 }
-            } else {
+            }
+            else {
                 globals.exit(2009, this.exmlPath, this.toXMLString(node));
             }
-        } else if (key == "scale9Grid" && type == "egret.Rectangle") {
+        }
+        else if (key == "skinName" && type == "Class" && value.indexOf("@ButtonSkin(") == 0 && value.charAt(value.length - 1) == ")") {
+            value = value.substring(12, value.length - 1);
+            var skinNames = value.split(",");
+            if (skinNames.length > 3) {
+                globals.exit(2018, this.exmlPath, this.toXMLString(node));
+            }
+            for (var i = skinNames.length - 1; i >= 0; i--) {
+                var skinName = skinNames[i];
+                skinName = skinName.trim();
+                var firstChar = skinName.charAt(0);
+                var lastChar = skinName.charAt(skinName.length - 1);
+                if (firstChar != lastChar || (firstChar != "'" && firstChar != "\"")) {
+                    globals.exit(2018, this.exmlPath, this.toXMLString(node));
+                    break;
+                }
+                skinNames[i] = this.formatString(skinName.substring(1, skinName.length - 1));
+            }
+            value = "new egret.gui.ButtonSkin(" + skinNames.join(",") + ")";
+        }
+        else if (key == "scale9Grid" && type == "egret.Rectangle") {
             var rect = value.split(",");
             if (rect.length != 4 || isNaN(parseInt(rect[0])) || isNaN(parseInt(rect[1])) || isNaN(parseInt(rect[2])) || isNaN(parseInt(rect[3]))) {
                 globals.exit(2016, this.exmlPath, this.toXMLString(node));
             }
             value = "egret.gui.getScale9Grid(\"" + value + "\")";
-        } else {
+        }
+        else {
             var orgValue = value;
             switch (type) {
                 case "egret.gui.IFactory":
@@ -683,7 +688,6 @@ var EXMLCompiler = (function () {
                 case "boolean":
                     value = (value == "false" || !value) ? "false" : "true";
                     break;
-
                 case "string":
                 case "any":
                     value = this.formatString(stringValue);
@@ -695,10 +699,9 @@ var EXMLCompiler = (function () {
         }
         return value;
     };
-
     /**
-    * 格式化字符串
-    */
+     * 格式化字符串
+     */
     EXMLCompiler.prototype.formatString = function (value) {
         value = this.unescapeHTMLEntity(value);
         value = value.split("\n").join("\\n");
@@ -707,11 +710,10 @@ var EXMLCompiler = (function () {
         value = "\"" + value + "\"";
         return value;
     };
-
     /**
-    /**
-    * 转换HTML实体字符为普通字符
-    */
+     /**
+     * 转换HTML实体字符为普通字符
+     */
     EXMLCompiler.prototype.unescapeHTMLEntity = function (str) {
         if (!str)
             return "";
@@ -725,16 +727,14 @@ var EXMLCompiler = (function () {
         }
         return str;
     };
-
     /**
-    * 创建构造函数
-    */
+     * 创建构造函数
+     */
     EXMLCompiler.prototype.createConstructFunc = function () {
         var cb = new CpCodeBlock;
         cb.addEmptyLine();
         var varName = KeyWords.KW_THIS;
         this.addAttributesToCodeBlock(cb, varName, this.currentXML);
-
         if (this.declarations) {
             var children = this.declarations.children;
             if (children && children.length > 0) {
@@ -748,7 +748,6 @@ var EXMLCompiler = (function () {
                 }
             }
         }
-
         this.initlizeChildNode(this.currentXML, cb, varName);
         var id;
         if (this.stateIds.length > 0) {
@@ -759,7 +758,6 @@ var EXMLCompiler = (function () {
             }
             cb.addEmptyLine();
         }
-
         length = this.skinParts.length;
         if (length > 0) {
             for (i = 0; i < length; i++) {
@@ -778,9 +776,7 @@ var EXMLCompiler = (function () {
             skinPartFunc.codeBlock = skinPartCB;
             this.currentClass.addFunction(skinPartFunc);
         }
-
         this.currentXML.$id = "";
-
         //生成视图状态代码
         this.createStates(this.currentXML);
         var states;
@@ -810,7 +806,6 @@ var EXMLCompiler = (function () {
                 }
             }
         }
-
         //打印视图状态初始化代码
         if (this.stateCode.length > 0) {
             cb.addCodeLine("this.states = [");
@@ -834,20 +829,17 @@ var EXMLCompiler = (function () {
             }
             cb.addCodeLine("];");
         }
-
         this.currentClass.constructCode = cb;
     };
-
     /**
-    * 是否含有includeIn和excludeFrom属性
-    */
+     * 是否含有includeIn和excludeFrom属性
+     */
     EXMLCompiler.prototype.isStateNode = function (node) {
         return node.hasOwnProperty("$includeIn") || node.hasOwnProperty("$excludeFrom");
     };
-
     /**
-    * 获取视图状态名称列表
-    */
+     * 获取视图状态名称列表
+     */
     EXMLCompiler.prototype.getStateNames = function () {
         var stateNames = this.stateNames;
         var states;
@@ -863,7 +855,6 @@ var EXMLCompiler = (function () {
                 }
             }
         }
-
         if (states == null)
             return;
         if (states.length == 0) {
@@ -894,10 +885,9 @@ var EXMLCompiler = (function () {
             this.stateCode.push(new CpState(stateName, stateGroups));
         }
     };
-
     /**
-    * 解析视图状态代码
-    */
+     * 解析视图状态代码
+     */
     EXMLCompiler.prototype.createStates = function (parentNode) {
         var items = parentNode.children;
         if (!items) {
@@ -920,7 +910,6 @@ var EXMLCompiler = (function () {
                 }
                 var stateName = prop.substring(index + 1);
                 prop = prop.substring(0, index);
-
                 var type = this.exmlConfig.getPropertyType(prop, className);
                 if (type == "Array") {
                     globals.exit(2013, this.exmlPath, this.getPropertyStr(node));
@@ -940,7 +929,8 @@ var EXMLCompiler = (function () {
                         state.addOverride(new CpSetProperty(parentNode.$id, prop, value));
                     }
                 }
-            } else if (this.containsState(node)) {
+            }
+            else if (this.containsState(node)) {
                 var id = node.$id;
                 this.checkIdForState(node);
                 var stateName;
@@ -964,9 +954,9 @@ var EXMLCompiler = (function () {
                     var stateNames = [];
                     if (node.hasOwnProperty("$includeIn")) {
                         stateNames = node.$includeIn.split(",");
-                    } else {
+                    }
+                    else {
                         var excludeNames = node.$excludeFrom.split(",");
-
                         var stateLength = excludeNames.length;
                         for (var j = 0; j < stateLength; j++) {
                             var name = excludeNames[j];
@@ -979,7 +969,6 @@ var EXMLCompiler = (function () {
                                 stateNames.push(state.name);
                         }
                     }
-
                     var len = stateNames.length;
                     for (var k = 0; k < len; k++) {
                         stateName = stateNames[k];
@@ -993,8 +982,8 @@ var EXMLCompiler = (function () {
                         }
                     }
                 }
-
-                for (var name in node) {
+                var name;
+                for (name in node) {
                     var value = node[name];
                     if (name.charAt(0) != "$") {
                         continue;
@@ -1022,10 +1011,9 @@ var EXMLCompiler = (function () {
             }
         }
     };
-
     /**
-    * 检查指定的节点是否是显示对象
-    */
+     * 检查指定的节点是否是显示对象
+     */
     EXMLCompiler.prototype.isIVisualElement = function (node) {
         var className = this.exmlConfig.getClassNameById(node.localName, node.namespace);
         var result = this.exmlConfig.isInstanceOf(className, "egret.gui.IVisualElement");
@@ -1045,14 +1033,12 @@ var EXMLCompiler = (function () {
         if (this.isProperty(parent)) {
             return (parent.localName == "elementsContent");
         }
-
         var prop = this.exmlConfig.getDefaultPropById(parent.localName, parent.namespace);
         return prop == "elementsContent";
     };
-
     /**
-    * 检查指定的ID是否创建了类成员变量，若没创建则为其创建。
-    */
+     * 检查指定的ID是否创建了类成员变量，若没创建则为其创建。
+     */
     EXMLCompiler.prototype.checkIdForState = function (node) {
         if (!node || this.currentClass.containsVar(node.$id)) {
             return;
@@ -1071,10 +1057,9 @@ var EXMLCompiler = (function () {
             cb.addCodeLineAt(codeLine, 1);
         }
     };
-
     /**
-    * 通过视图状态名称获取对应的视图状态
-    */
+     * 通过视图状态名称获取对应的视图状态
+     */
     EXMLCompiler.prototype.getStateByName = function (name, node) {
         var states = [];
         var length = this.stateCode.length;
@@ -1083,7 +1068,8 @@ var EXMLCompiler = (function () {
             if (state.name == name) {
                 if (states.indexOf(state) == -1)
                     states.push(state);
-            } else if (state.stateGroups.length > 0) {
+            }
+            else if (state.stateGroups.length > 0) {
                 var found = false;
                 var len = state.stateGroups.length;
                 for (var j = 0; j < len; j++) {
@@ -1104,10 +1090,9 @@ var EXMLCompiler = (function () {
         }
         return states;
     };
-
     /**
-    * 寻找节点的临近节点ID和位置
-    */
+     * 寻找节点的临近节点ID和位置
+     */
     EXMLCompiler.prototype.findNearNodeId = function (node) {
         var parentNode = node.parent;
         var targetId = "";
@@ -1126,7 +1111,8 @@ var EXMLCompiler = (function () {
             if (item == node) {
                 found = true;
                 index = i;
-            } else {
+            }
+            else {
                 if (found && !afterItem && !this.isStateNode(item)) {
                     afterItem = item;
                 }
@@ -1152,10 +1138,9 @@ var EXMLCompiler = (function () {
         }
         return { position: "last", relativeTo: targetId };
     };
-
     /**
-    * 根据类名获取对应的包，并自动导入相应的包
-    */
+     * 根据类名获取对应的包，并自动导入相应的包
+     */
     EXMLCompiler.prototype.getPackageByNode = function (node) {
         var moduleName = this.exmlConfig.getClassNameById(node.localName, node.namespace);
         if (!moduleName) {
@@ -1163,23 +1148,27 @@ var EXMLCompiler = (function () {
         }
         return moduleName;
     };
-
     /**
-    * 检查变量是否是包名
-    */
+     * 检查变量是否是包名
+     */
     EXMLCompiler.prototype.isPackageName = function (name) {
         return name.indexOf(".") != -1;
     };
+    /**
+     * Egret命名空间
+     */
     EXMLCompiler.E = "http://ns.egret-labs.org/egret";
-
+    /**
+     * Wing命名空间
+     */
     EXMLCompiler.W = "http://ns.egret-labs.org/wing";
-
     EXMLCompiler.DECLARATIONS = "Declarations";
-
+    /**
+     * 命名空间为fs的属性名列表
+     */
     EXMLCompiler.wingKeys = ["$id", "$locked", "$includeIn", "$excludeFrom", "id", "locked", "includeIn", "excludeFrom"];
     return EXMLCompiler;
 })();
-
 //=================代码生成工具类===================
 var CodeBase = (function () {
     function CodeBase() {
@@ -1188,12 +1177,11 @@ var CodeBase = (function () {
     CodeBase.prototype.toCode = function () {
         return "";
     };
-
     /**
-    * 获取缩进字符串
-    */
+     * 获取缩进字符串
+     */
     CodeBase.prototype.getIndent = function (indent) {
-        if (typeof indent === "undefined") { indent = -1; }
+        if (indent === void 0) { indent = -1; }
         if (indent == -1)
             indent = this.indent;
         var str = "";
@@ -1204,12 +1192,11 @@ var CodeBase = (function () {
     };
     return CodeBase;
 })();
-
 var CpArguments = (function (_super) {
     __extends(CpArguments, _super);
     function CpArguments(name, type) {
-        if (typeof name === "undefined") { name = ""; }
-        if (typeof type === "undefined") { type = ""; }
+        if (name === void 0) { name = ""; }
+        if (type === void 0) { type = ""; }
         _super.call(this);
         this.name = "";
         this.type = "";
@@ -1221,61 +1208,59 @@ var CpArguments = (function (_super) {
     };
     return CpArguments;
 })(CodeBase);
-
 var CpClass = (function (_super) {
     __extends(CpClass, _super);
     function CpClass() {
         _super.call(this);
         /**
-        * 构造函数的参数列表
-        */
+         * 构造函数的参数列表
+         */
         this.argumentBlock = [];
         /**
-        * 类名
-        */
+         * 类名
+         */
         this.className = "CpClass";
         /**
-        * 类所在的路径，用于计算reference的相对路径
-        */
+         * 类所在的路径，用于计算reference的相对路径
+         */
         this.classPath = "";
         /**
-        * 包名
-        */
+         * 包名
+         */
         this.moduleName = "";
         /**
-        * 父类类名
-        */
+         * 父类类名
+         */
         this.superClass = "";
         /**
-        * 接口列表
-        */
+         * 接口列表
+         */
         this.interfaceBlock = [];
         /**
-        * 引用文件区块
-        */
+         * 引用文件区块
+         */
         this.referenceBlock = [];
         /**
-        * 变量定义区块
-        */
+         * 变量定义区块
+         */
         this.variableBlock = [];
         /**
-        * 函数定义区块
-        */
+         * 函数定义区块
+         */
         this.functionBlock = [];
         this.indent = 1;
     }
     /**
-    * 添加构造函数的参数
-    */
+     * 添加构造函数的参数
+     */
     CpClass.prototype.addArgument = function (argumentItem) {
         if (this.argumentBlock.indexOf(argumentItem) == -1) {
             this.argumentBlock.push(argumentItem);
         }
     };
-
     /**
-    * 添加接口
-    */
+     * 添加接口
+     */
     CpClass.prototype.addInterface = function (interfaceName) {
         if (interfaceName == null || interfaceName == "")
             return;
@@ -1283,10 +1268,9 @@ var CpClass = (function (_super) {
             this.interfaceBlock.push(interfaceName);
         }
     };
-
     /**
-    * 引用一个文件
-    */
+     * 引用一个文件
+     */
     CpClass.prototype.addReference = function (referenceItem) {
         if (referenceItem == null || referenceItem == "")
             return;
@@ -1294,19 +1278,17 @@ var CpClass = (function (_super) {
             this.referenceBlock.push(referenceItem);
         }
     };
-
     /**
-    * 添加变量
-    */
+     * 添加变量
+     */
     CpClass.prototype.addVariable = function (variableItem) {
         if (this.variableBlock.indexOf(variableItem) == -1) {
             this.variableBlock.push(variableItem);
         }
     };
-
     /**
-    * 根据变量名获取变量定义
-    */
+     * 根据变量名获取变量定义
+     */
     CpClass.prototype.getVariableByName = function (name) {
         var list = this.variableBlock;
         var length = list.length;
@@ -1318,10 +1300,9 @@ var CpClass = (function (_super) {
         }
         return null;
     };
-
     /**
-    * 是否包含指定名称的变量
-    */
+     * 是否包含指定名称的变量
+     */
     CpClass.prototype.containsVar = function (name) {
         var list = this.variableBlock;
         var length = list.length;
@@ -1333,9 +1314,8 @@ var CpClass = (function (_super) {
         }
         return false;
     };
-
     CpClass.prototype.sortOn = function (list, key, reverse) {
-        if (typeof reverse === "undefined") { reverse = false; }
+        if (reverse === void 0) { reverse = false; }
         var length = list.length;
         for (var i = 0; i < length; i++) {
             var min = i;
@@ -1343,7 +1323,8 @@ var CpClass = (function (_super) {
                 if (reverse) {
                     if (list[j][key] > list[min][key])
                         min = j;
-                } else {
+                }
+                else {
                     if (list[j][key] < list[min][key])
                         min = j;
                 }
@@ -1355,19 +1336,17 @@ var CpClass = (function (_super) {
             }
         }
     };
-
     /**
-    * 添加函数
-    */
+     * 添加函数
+     */
     CpClass.prototype.addFunction = function (functionItem) {
         if (this.functionBlock.indexOf(functionItem) == -1) {
             this.functionBlock.push(functionItem);
         }
     };
-
     /**
-    * 是否包含指定名称的函数
-    */
+     * 是否包含指定名称的函数
+     */
     CpClass.prototype.containsFunc = function (name) {
         var list = this.functionBlock;
         var length = list.length;
@@ -1379,10 +1358,9 @@ var CpClass = (function (_super) {
         }
         return false;
     };
-
     /**
-    * 根据函数名返回函数定义块
-    */
+     * 根据函数名返回函数定义块
+     */
     CpClass.prototype.getFuncByName = function (name) {
         var list = this.functionBlock;
         var length = list.length;
@@ -1394,7 +1372,6 @@ var CpClass = (function (_super) {
         }
         return null;
     };
-
     CpClass.prototype.getRelativePath = function (path) {
         var curs = this.classPath.split("/");
         var targets = path.split("/");
@@ -1419,7 +1396,6 @@ var CpClass = (function (_super) {
         }
         return paths.join("/");
     };
-
     CpClass.prototype.toCode = function () {
         //字符串排序
         this.referenceBlock.sort();
@@ -1427,17 +1403,15 @@ var CpClass = (function (_super) {
         this.sortOn(this.variableBlock, "isStatic", true);
         this.sortOn(this.functionBlock, "name");
         this.sortOn(this.functionBlock, "isGet", true);
-
         var isFirst = true;
         if (this.moduleName) {
             this.indent = 1;
-        } else {
+        }
+        else {
             this.indent = 0;
         }
         var indentStr = this.getIndent();
-
         var returnStr = "";
-
         //打印文件引用区域
         var index = 0;
         while (index < this.referenceBlock.length) {
@@ -1448,31 +1422,25 @@ var CpClass = (function (_super) {
         }
         if (returnStr)
             returnStr += "\n";
-
         var exportStr = "";
-
         //打印包名
         if (this.moduleName) {
             returnStr += KeyWords.KW_MODULE + " " + this.moduleName + "{\n";
             exportStr = KeyWords.KW_EXPORT + " ";
         }
-
         //打印注释
         if (this.notation != null) {
             this.notation.indent = this.indent;
             returnStr += this.notation.toCode() + "\n";
         }
         returnStr += indentStr + exportStr + KeyWords.KW_CLASS + " " + this.className;
-
         //打印父类
         if (this.superClass != null && this.superClass != "") {
             returnStr += " " + KeyWords.KW_EXTENDS + " " + this.superClass;
         }
-
         //打印接口列表
         if (this.interfaceBlock.length > 0) {
             returnStr += " " + KeyWords.KW_IMPLEMENTS + " ";
-
             index = 0;
             while (this.interfaceBlock.length > index) {
                 isFirst = true;
@@ -1480,14 +1448,14 @@ var CpClass = (function (_super) {
                 if (isFirst) {
                     returnStr += interfaceItem;
                     isFirst = false;
-                } else {
+                }
+                else {
                     returnStr += "," + interfaceItem;
                 }
                 index++;
             }
         }
         returnStr += "{\n";
-
         //打印变量列表
         index = 0;
         while (this.variableBlock.length > index) {
@@ -1497,7 +1465,6 @@ var CpClass = (function (_super) {
             index++;
         }
         returnStr += "\n";
-
         //打印构造函数
         returnStr += this.getIndent(this.indent + 1) + Modifiers.M_PUBLIC + " constructor(";
         isFirst = true;
@@ -1507,7 +1474,8 @@ var CpClass = (function (_super) {
             if (isFirst) {
                 returnStr += arg.toCode();
                 isFirst = false;
-            } else {
+            }
+            else {
                 returnStr += "," + arg.toCode();
             }
             index++;
@@ -1527,7 +1495,6 @@ var CpClass = (function (_super) {
             }
         }
         returnStr += this.getIndent(this.indent + 1) + "}\n\n";
-
         //打印函数列表
         index = 0;
         while (this.functionBlock.length > index) {
@@ -1536,7 +1503,6 @@ var CpClass = (function (_super) {
             returnStr += functionItem.toCode() + "\n";
             index++;
         }
-
         returnStr += indentStr + "}";
         if (this.moduleName) {
             returnStr += "\n}";
@@ -1545,7 +1511,6 @@ var CpClass = (function (_super) {
     };
     return CpClass;
 })(CodeBase);
-
 var CpCodeBlock = (function (_super) {
     __extends(CpCodeBlock, _super);
     function CpCodeBlock() {
@@ -1554,94 +1519,85 @@ var CpCodeBlock = (function (_super) {
         this.indent = 0;
     }
     /**
-    * 添加变量声明语句
-    * @param name 变量名
-    * @param type 变量类型
-    * @param value 变量初始值
-    */
+     * 添加变量声明语句
+     * @param name 变量名
+     * @param type 变量类型
+     * @param value 变量初始值
+     */
     CpCodeBlock.prototype.addVar = function (name, type, value) {
-        if (typeof value === "undefined") { value = ""; }
+        if (value === void 0) { value = ""; }
         var valueStr = "";
         if (value != null && value != "") {
             valueStr = " = " + value;
         }
         this.addCodeLine(KeyWords.KW_VAR + " " + name + ":" + type + valueStr + ";");
     };
-
     /**
-    * 添加赋值语句
-    * @param target 要赋值的目标
-    * @param value 值
-    * @param prop 目标的属性(用“.”访问)，不填则是对目标赋值
-    */
+     * 添加赋值语句
+     * @param target 要赋值的目标
+     * @param value 值
+     * @param prop 目标的属性(用“.”访问)，不填则是对目标赋值
+     */
     CpCodeBlock.prototype.addAssignment = function (target, value, prop) {
-        if (typeof prop === "undefined") { prop = ""; }
+        if (prop === void 0) { prop = ""; }
         var propStr = "";
         if (prop != null && prop != "") {
             propStr = "." + prop;
         }
         this.addCodeLine(target + propStr + " = " + value + ";");
     };
-
     /**
-    * 添加返回值语句
-    */
+     * 添加返回值语句
+     */
     CpCodeBlock.prototype.addReturn = function (data) {
         this.addCodeLine(KeyWords.KW_RETURN + " " + data + ";");
     };
-
     /**
-    * 添加一条空行
-    */
+     * 添加一条空行
+     */
     CpCodeBlock.prototype.addEmptyLine = function () {
         this.addCodeLine("");
     };
-
     /**
-    * 开始添加if语句块,自动调用startBlock();
-    */
+     * 开始添加if语句块,自动调用startBlock();
+     */
     CpCodeBlock.prototype.startIf = function (expression) {
         this.addCodeLine("if(" + expression + ")");
         this.startBlock();
     };
-
     /**
-    * 开始else语句块,自动调用startBlock();
-    */
+     * 开始else语句块,自动调用startBlock();
+     */
     CpCodeBlock.prototype.startElse = function () {
         this.addCodeLine("else");
         this.startBlock();
     };
-
     /**
-    * 开始else if语句块,自动调用startBlock();
-    */
+     * 开始else if语句块,自动调用startBlock();
+     */
     CpCodeBlock.prototype.startElseIf = function (expression) {
         this.addCodeLine("else if(" + expression + ")");
         this.startBlock();
     };
-
     /**
-    * 添加一个左大括号，开始新的语句块
-    */
+     * 添加一个左大括号，开始新的语句块
+     */
     CpCodeBlock.prototype.startBlock = function () {
         this.addCodeLine("{");
         this.indent++;
     };
-
     /**
-    * 添加一个右大括号,结束当前的语句块
-    */
+     * 添加一个右大括号,结束当前的语句块
+     */
     CpCodeBlock.prototype.endBlock = function () {
         this.indent--;
         this.addCodeLine("}");
     };
-
     /**
-    * 添加执行函数语句块
-    * @param functionName
-    * @param args
-    */
+     * 添加执行函数语句块
+     * @param functionName
+     * @param args
+     */
     CpCodeBlock.prototype.doFunction = function (functionName, args) {
         var argsStr = "";
         var isFirst = true;
@@ -1649,81 +1605,75 @@ var CpCodeBlock = (function (_super) {
             var arg = args.shift();
             if (isFirst) {
                 argsStr += arg;
-            } else {
+            }
+            else {
                 argsStr += "," + arg;
             }
         }
         this.addCodeLine(functionName + "(" + argsStr + ")");
     };
-
     /**
-    * 添加一行代码
-    */
+     * 添加一行代码
+     */
     CpCodeBlock.prototype.addCodeLine = function (code) {
         this.lines.push(this.getIndent() + code);
     };
-
     /**
-    * 添加一行代码到指定行
-    */
+     * 添加一行代码到指定行
+     */
     CpCodeBlock.prototype.addCodeLineAt = function (code, index) {
         this.lines.splice(index, 0, this.getIndent() + code);
     };
-
     /**
-    * 是否存在某行代码内容
-    */
+     * 是否存在某行代码内容
+     */
     CpCodeBlock.prototype.containsCodeLine = function (code) {
         return this.lines.indexOf(code) != -1;
     };
-
     /**
-    * 在结尾追加另一个代码块的内容
-    */
+     * 在结尾追加另一个代码块的内容
+     */
     CpCodeBlock.prototype.concat = function (cb) {
         this.lines = this.lines.concat(cb.lines);
     };
-
     CpCodeBlock.prototype.toCode = function () {
         return this.lines.join("\n");
     };
     return CpCodeBlock;
 })(CodeBase);
-
 var CpFunction = (function (_super) {
     __extends(CpFunction, _super);
     function CpFunction() {
         _super.call(this);
         /**
-        * 修饰符 ,默认Modifiers.M_PRIVATE
-        */
+         * 修饰符 ,默认Modifiers.M_PRIVATE
+         */
         this.modifierName = Modifiers.M_PRIVATE;
         /**
-        * 是否是静态 ，默认false
-        */
+         * 是否是静态 ，默认false
+         */
         this.isStatic = false;
         this.isSet = false;
         this.isGet = false;
         /**
-        *参数列表
-        */
+         *参数列表
+         */
         this.argumentBlock = [];
         /**
-        * 函数名
-        */
+         * 函数名
+         */
         this.name = "";
         this.returnType = DataType.DT_VOID;
         this.indent = 2;
     }
     /**
-    * 添加参数
-    */
+     * 添加参数
+     */
     CpFunction.prototype.addArgument = function (argumentItem) {
         if (this.argumentBlock.indexOf(argumentItem) == -1) {
             this.argumentBlock.push(argumentItem);
         }
     };
-
     CpFunction.prototype.toCode = function () {
         var index = 0;
         var indentStr = this.getIndent();
@@ -1733,15 +1683,14 @@ var CpFunction = (function (_super) {
             this.notation.indent = this.indent;
             noteStr = this.notation.toCode() + "\n";
         }
-
         var getSetStr = "";
         if (this.isGet) {
             getSetStr = "get ";
-        } else if (this.isSet) {
+        }
+        else if (this.isSet) {
             getSetStr = "set ";
         }
         var returnStr = noteStr + indentStr + this.modifierName + " " + staticStr + getSetStr + this.name + "(";
-
         var isFirst = true;
         index = 0;
         while (this.argumentBlock.length > index) {
@@ -1749,7 +1698,8 @@ var CpFunction = (function (_super) {
             if (isFirst) {
                 returnStr += arg.toCode();
                 isFirst = false;
-            } else {
+            }
+            else {
                 returnStr += "," + arg.toCode();
             }
             index++;
@@ -1768,17 +1718,15 @@ var CpFunction = (function (_super) {
                 index++;
             }
         }
-
         returnStr += indentStr + "}";
         return returnStr;
     };
     return CpFunction;
 })(CodeBase);
-
 var CpNotation = (function (_super) {
     __extends(CpNotation, _super);
     function CpNotation(notation) {
-        if (typeof notation === "undefined") { notation = ""; }
+        if (notation === void 0) { notation = ""; }
         _super.call(this);
         this.notation = "";
         this.notation = notation;
@@ -1798,32 +1746,31 @@ var CpNotation = (function (_super) {
     };
     return CpNotation;
 })(CodeBase);
-
 //=================常量定义===================
 var CpVariable = (function (_super) {
     __extends(CpVariable, _super);
     function CpVariable(name, modifierName, type, defaultValue, isStatic) {
-        if (typeof name === "undefined") { name = "varName"; }
-        if (typeof modifierName === "undefined") { modifierName = "public"; }
-        if (typeof type === "undefined") { type = "any"; }
-        if (typeof defaultValue === "undefined") { defaultValue = ""; }
-        if (typeof isStatic === "undefined") { isStatic = false; }
+        if (name === void 0) { name = "varName"; }
+        if (modifierName === void 0) { modifierName = "public"; }
+        if (type === void 0) { type = "any"; }
+        if (defaultValue === void 0) { defaultValue = ""; }
+        if (isStatic === void 0) { isStatic = false; }
         _super.call(this);
         /**
-        * 修饰符
-        */
+         * 修饰符
+         */
         this.modifierName = Modifiers.M_PUBLIC;
         /**
-        * 是否是静态
-        */
+         * 是否是静态
+         */
         this.isStatic = false;
         /**
-        * 常量名
-        */
+         * 常量名
+         */
         this.name = "varName";
         /**
-        * 默认值
-        */
+         * 默认值
+         */
         this.defaultValue = "";
         this.indent = 2;
         this.name = name;
@@ -1838,7 +1785,6 @@ var CpVariable = (function (_super) {
             this.notation.indent = this.indent;
             noteStr = this.notation.toCode() + "\n";
         }
-
         var staticStr = this.isStatic ? Modifiers.M_STATIC + " " : "";
         var valueStr = "";
         if (this.defaultValue != "" && this.defaultValue != null) {
@@ -1848,15 +1794,14 @@ var CpVariable = (function (_super) {
     };
     return CpVariable;
 })(CodeBase);
-
 var CpState = (function (_super) {
     __extends(CpState, _super);
     function CpState(name, stateGroups) {
-        if (typeof stateGroups === "undefined") { stateGroups = null; }
+        if (stateGroups === void 0) { stateGroups = null; }
         _super.call(this);
         /**
-        * 视图状态名称
-        */
+         * 视图状态名称
+         */
         this.name = "";
         this.stateGroups = [];
         this.addItems = [];
@@ -1866,15 +1811,14 @@ var CpState = (function (_super) {
             this.stateGroups = stateGroups;
     }
     /**
-    * 添加一个覆盖
-    */
+     * 添加一个覆盖
+     */
     CpState.prototype.addOverride = function (item) {
         if (item instanceof CpAddItems)
             this.addItems.push(item);
         else
             this.setProperty.push(item);
     };
-
     CpState.prototype.toCode = function () {
         var indentStr = this.getIndent(1);
         var returnStr = "new egret.gui.State (\"" + this.name + "\",\n" + indentStr + "[\n";
@@ -1901,7 +1845,6 @@ var CpState = (function (_super) {
     };
     return CpState;
 })(CodeBase);
-
 var CpAddItems = (function (_super) {
     __extends(CpAddItems, _super);
     function CpAddItems(target, propertyName, position, relativeTo) {
@@ -1918,7 +1861,6 @@ var CpAddItems = (function (_super) {
     };
     return CpAddItems;
 })(CodeBase);
-
 var CpSetProperty = (function (_super) {
     __extends(CpSetProperty, _super);
     function CpSetProperty(target, name, value) {
@@ -1933,62 +1875,40 @@ var CpSetProperty = (function (_super) {
     };
     return CpSetProperty;
 })(CodeBase);
-
 var DataType = (function () {
     function DataType() {
     }
     DataType.DT_VOID = "void";
-
     DataType.DT_NUMBER = "number";
-
     DataType.DT_BOOLEAN = "boolean";
-
     DataType.DT_ARRAY = "Array";
-
     DataType.DT_STRING = "string";
-
     DataType.DT_OBJECT = "Object";
-
     DataType.DT_FUNCTION = "Function";
     return DataType;
 })();
-
 var KeyWords = (function () {
     function KeyWords() {
     }
     KeyWords.KW_CLASS = "class";
-
     KeyWords.KW_FUNCTION = "function";
-
     KeyWords.KW_VAR = "var";
-
     KeyWords.KW_INTERFACE = "interface";
-
     KeyWords.KW_EXTENDS = "extends";
-
     KeyWords.KW_IMPLEMENTS = "implements";
-
     KeyWords.KW_MODULE = "module";
-
     KeyWords.KW_SUPER = "super";
-
     KeyWords.KW_THIS = "this";
-
     KeyWords.KW_OVERRIDE = "override";
-
     KeyWords.KW_RETURN = "return";
-
     KeyWords.KW_EXPORT = "export";
     return KeyWords;
 })();
-
 var Modifiers = (function () {
     function Modifiers() {
     }
     Modifiers.M_PUBLIC = "public";
-
     Modifiers.M_PRIVATE = "private";
-
     Modifiers.M_STATIC = "static";
     return Modifiers;
 })();
