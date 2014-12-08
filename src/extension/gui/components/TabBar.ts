@@ -118,7 +118,7 @@ module egret.gui {
 			
 			var renderer:IItemRenderer = event.renderer;
 			if (renderer){
-				renderer.addEventListener(TouchEvent.TOUCH_TAP, this.item_clickHandler, this);
+				renderer.addEventListener(TouchEvent.TOUCH_END, this.item_clickHandler, this);
 				if (renderer instanceof TabBarButton)
 					(<TabBarButton><any> renderer).allowDeselection = !this.requireSelection;
 			}
@@ -133,7 +133,7 @@ module egret.gui {
 			
 			var renderer:IItemRenderer = event.renderer;
 			if (renderer)
-				renderer.removeEventListener(TouchEvent.TOUCH_TAP, this.item_clickHandler, this);
+                renderer.removeEventListener(TouchEvent.TOUCH_END, this.item_clickHandler, this);
 		}
 		/**
 		 * 鼠标在条目上按下
