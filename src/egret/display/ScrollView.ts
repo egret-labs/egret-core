@@ -113,6 +113,7 @@ module egret {
             if (value == this._scrollLeft)
                 return;
             this._scrollLeft = value;
+            this._validatePosition(false, true);
             this._updateContentPosition();
         }
 
@@ -129,6 +130,7 @@ module egret {
             if (value == this._scrollTop)
                 return;
             this._scrollTop = value;
+            this._validatePosition(true, false);
             this._updateContentPosition();
         }
         
@@ -146,14 +148,41 @@ module egret {
                 && this._scrollLeft == left)
                 return;
             if (isOffset) {
-                this._scrollTop += top;
-                this._scrollLeft += left;
+                var isEdgeV = this._isOnTheEdge(true);
+                var isEdgeH = this._isOnTheEdge(false);
+                this._scrollTop += isEdgeV ? top / 2 : top;
+                this._scrollLeft += isEdgeH ? left / 2 : left;
             }
             else {
                 this._scrollTop = top;
                 this._scrollLeft = left;
             }
+            this._validatePosition(true, true);
             this._updateContentPosition();
+        }
+
+        private _isOnTheEdge(isVertical=true) { 
+            var top = this._scrollTop,
+                left = this._scrollLeft;
+            if (isVertical)
+                return top < 0 || top > this.getMaxScrollTop();
+            else
+                return left < 0 || left > this.getMaxScrollLeft();
+        }
+
+        private _validatePosition(top = false,left = false) {
+            if (top) {
+                var height = this.height;
+                var contentHeight = this._getContentHeight();
+                this._scrollTop = Math.max(this._scrollTop, (0 - height) / 2);
+                this._scrollTop = Math.min(this._scrollTop, contentHeight > height ? (contentHeight - height / 2) : contentHeight / 2);
+            }
+            if (left) {
+                var width = this.width;
+                var contentWidth = this._getContentWidth();
+                this._scrollLeft = Math.max(this._scrollLeft, (0 - width) / 2);
+                this._scrollLeft = Math.min(this._scrollLeft, contentWidth > width ? (contentWidth - width / 2) : contentWidth / 2);
+            }
         }
 
         /**
@@ -175,7 +204,10 @@ module egret {
             this._updateContentPosition();
         }
         public _updateContentPosition() {
-            this.scrollRect = new Rectangle(this._scrollLeft, this._scrollTop, this.width, this.height);
+            var size = this.getBounds(egret.Rectangle.identity);
+            var height = size.height;
+            var width = size.width;
+            this.scrollRect = new Rectangle(this._scrollLeft, this._scrollTop, width, height);
             this.dispatchEvent(new Event(Event.CHANGE));
         }
         private _hCanScroll = false;

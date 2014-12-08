@@ -44,6 +44,9 @@ module egret.gui {
         public constructor(public content: DisplayObject) {
             super(content);
             this._content = content;
+            var c: IViewport = <any>content;
+            this._scrollLeft = c.horizontalScrollPosition;
+            this._scrollTop = c.verticalScrollPosition;
         }
 
         public _updateContentPosition() {
@@ -254,6 +257,7 @@ module egret.gui {
                 this._scroller.addEventListener(egret.Event.CHANGE, this._scrollerChangedHandler, this);
                 this._scroller.horizontalScrollPolicy = this._horizontalScrollPolicy;
                 this._scroller.verticalScrollPolicy = this._verticalScrollPolicy;
+                this.viewport.addEventListener(egret.gui.PropertyChangeEvent.PROPERTY_CHANGE, this._viewportChangedHandler, this);
                 this._addToDisplayListAt(<DisplayObject><any> this._scroller, 0);
             }
             //this._addScrollBars();
@@ -269,11 +273,18 @@ module egret.gui {
         private uninstallViewport():void{
             if (this.viewport){
                 this.viewport.clipAndEnableScrolling = false;
+                this.viewport.removeEventListener(egret.gui.PropertyChangeEvent.PROPERTY_CHANGE, this._viewportChangedHandler, this);
                 this._removeFromDisplayList(<DisplayObject><any> this.viewport);
             }
             this._removeScrollBars();
         }
 
+        private _viewportChangedHandler(e: egret.gui.PropertyChangeEvent) {
+            if (e.property =="horizontalScrollPosition")
+                this.setViewportHScrollPosition(this.viewport.horizontalScrollPosition);
+            if (e.property == "verticalScrollPosition")
+                this.setViewportVScrollPosition(this.viewport.verticalScrollPosition);
+        }
 
         private _scrollerChangedHandler(e: Event) {
             this.setViewportHScrollPosition(this._scroller.scrollLeft);
