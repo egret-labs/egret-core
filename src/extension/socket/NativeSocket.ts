@@ -26,11 +26,10 @@
  */
 
 module egret {
-    export class NativeSocket extends EventDispatcher implements ISocket {
+    export class NativeSocket implements ISocket {
         private socket;
 
         constructor() {
-            super();
         }
 
         private onConnect:Function;
@@ -38,6 +37,7 @@ module egret {
         private onSocketData:Function;
         private onError:Function;
         private thisObject:any;
+
         public addCallBacks(onConnect:Function, onClose:Function, onSocketData:Function, onError:Function, thisObject:any):void {
             this.onConnect = onConnect;
             this.onClose = onClose;
@@ -46,11 +46,10 @@ module egret {
             this.thisObject = thisObject;
         }
 
-        private _connect:boolean;
         private host:string;
         private port:number;
+
         public connect(host:string, port:number):void {
-            this._connect = false;
             this.host = host;
             this.port = port;
 

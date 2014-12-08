@@ -25,7 +25,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 module egret {
-    export interface ISocket extends IEventDispatcher{
+    export interface ISocket {
         /**
          * 连接
          * @method egret.ISocket#connect

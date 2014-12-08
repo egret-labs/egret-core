@@ -31,10 +31,11 @@ module egret {
         private _writeMessage:string = "";
         private _readMessage:string = "";
 
-        private _connect:boolean =false;
+        private _connected:boolean = false;
+
         constructor(host:string = "", port:number = 0) {
             super();
-            this._connect = false;
+            this._connected = false;
             this._writeMessage = "";
             this._readMessage = "";
 
@@ -47,20 +48,29 @@ module egret {
             this.socket.addCallBacks(this.onConnect, this.onClose, this.onSocketData, this.onError, this);
         }
 
+        /**
+         * 将套接字连接到指定的主机和端口
+         * @method egret.WebSocket#connect
+         */
         public connect(host:string, port:number):void {
             this.socket.connect(host, port);
         }
 
+        /**
+         * 关闭套接字
+         * @method egret.WebSocket#close
+         */
         public close():void {
             this.socket.close();
         }
 
         private onConnect():void {
-            this._connect = true;
+            this._connected = true;
             this.dispatchEventWith(egret.Event.CONNECT);
         }
 
         private onClose():void {
+            this._connected = false;
             this.dispatchEventWith(egret.Event.CLOSE);
         }
 
@@ -74,8 +84,12 @@ module egret {
             egret.ProgressEvent.dispatchProgressEvent(this, egret.ProgressEvent.SOCKET_DATA);
         }
 
+        /**
+         * 对套接字输出缓冲区中积累的所有数据进行刷新
+         * @method egret.WebSocket#flush
+         */
         public flush():void {
-            if (!this._connect) {
+            if (!this._connected) {
                 egret.Logger.warning("请先连接Socket");
                 return;
             }
@@ -85,8 +99,13 @@ module egret {
         }
 
         private _isReadySend:boolean = false;
+
+        /**
+         * 将以下数据写入套接字：一个无符号 16 位整数，它表示了指定 UTF-8 字符串的长度（以字节为单位），后面跟随字符串本身
+         * @method egret.WebSocket#writeUTF
+         */
         public writeUTF(message:string):void {
-            if (!this._connect) {
+            if (!this._connected) {
                 egret.Logger.warning("请先连接Socket");
                 return;
             }
@@ -101,14 +120,21 @@ module egret {
             egret.callLater(this.flush, this);
         }
 
+        /**
+         * 从套接字读取一个 UTF-8 字符串
+         * @method egret.WebSocket#readUTF
+         */
         public readUTF():string {
             var message:string = this._readMessage;
             this._readMessage = "";
             return message;
         }
 
+        /**
+         * [只读] 表示此 Socket 对象目前是否已连接
+         */
         public get connected():boolean {
-            return this._connect;
+            return this._connected;
         }
     }
 }
