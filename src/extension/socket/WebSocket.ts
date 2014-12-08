@@ -50,6 +50,8 @@ module egret {
 
         /**
          * 将套接字连接到指定的主机和端口
+         * @param host 要连接到的主机的名称或 IP 地址
+         * @param port 要连接到的端口号
          * @method egret.WebSocket#connect
          */
         public connect(host:string, port:number):void {
@@ -101,7 +103,8 @@ module egret {
         private _isReadySend:boolean = false;
 
         /**
-         * 将以下数据写入套接字：一个无符号 16 位整数，它表示了指定 UTF-8 字符串的长度（以字节为单位），后面跟随字符串本身
+         * 将字符串数据写入套接字
+         * @param message 要写入套接字的字符串
          * @method egret.WebSocket#writeUTF
          */
         public writeUTF(message:string):void {
@@ -122,6 +125,7 @@ module egret {
 
         /**
          * 从套接字读取一个 UTF-8 字符串
+         * @returns {string}
          * @method egret.WebSocket#readUTF
          */
         public readUTF():string {
