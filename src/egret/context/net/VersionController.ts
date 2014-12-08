@@ -207,7 +207,7 @@ module egret {
         }
 
         private compareVersion(oldVersion:Object, newVersion:Object, url:string):boolean {
-            if (newVersion[url] == null) {
+            if (newVersion[url] == null || newVersion[url] == null) {
                 return false;
             }
             return oldVersion[url]["v"] == newVersion[url]["v"];
@@ -234,7 +234,21 @@ module egret {
          * 保存本地版本信息文件
          */
         public saveVersion(url:string):void {
-            if (!this.checkIsNewVersion(url)) {
+            var change = false;
+            if (this.changeVersionData[url] != null) {//在变化版本里
+                if (!this.compareVersion(this.changeVersionData, this.localVersionData, url)) {
+                    change = true;
+                    this.localVersionData[url] = this.changeVersionData[url];
+                }
+            }
+            else if (this.baseVersionData[url] != null) {//在基础版本里
+                if (!this.compareVersion(this.baseVersionData, this.localVersionData, url)) {
+                    change = true;
+                    this.localVersionData[url] = this.baseVersionData[url];
+                }
+            }
+
+            if (change) {
                 egret_native.saveRecord(this.localVersionDataPath, JSON.stringify(this.localVersionData));
             }
         }

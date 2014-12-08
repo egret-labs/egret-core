@@ -32,10 +32,14 @@ module egret {
 
         private _versionCtr:egret.VersionController;
 
+        private _needVersion:boolean = false;
+
         public constructor() {
             super();
 
             this._versionCtr = new egret.VersionController();
+
+            this._needVersion = true;
         }
 
         private urlData:any = {};
@@ -80,9 +84,9 @@ module egret {
             else if (!egret_native.isFileExists(url)) {
                 download();
             }
-//            else if (!this.checkIsNewVersion(url)) {
-//                download();
-//            }
+            else if (!this.checkIsNewVersion(url)) {
+                download();
+            }
             else {
                 __callAsync(onLoadComplete, this);
             }
@@ -115,15 +119,14 @@ module egret {
             else if (!egret_native.isFileExists(url)) {
                 download();
             }
-//            else if (!this.checkIsNewVersion(url)) {
-//                download();
-//            }
+            else if (!this.checkIsNewVersion(url)) {
+                download();
+            }
             else {
                 __callAsync(onLoadComplete, this);
             }
 
             function download() {
-//                console.log("download:" + url);
                 var promise = PromiseObject.create();
                 promise.onSuccessFunc = onLoadComplete;
                 promise.onErrorFunc = function () {
@@ -151,9 +154,9 @@ module egret {
             else if (!egret_native.isFileExists(url)) {
                 download();
             }
-//            else if (!this.checkIsNewVersion(url)) {
-//                download();
-//            }
+            else if (!this.checkIsNewVersion(url)) {
+                download();
+            }
             else {
                 egret.__callAsync(onLoadComplete, this);
             }
@@ -181,7 +184,10 @@ module egret {
          * 检查文件是否是最新版本
          */
         private checkIsNewVersion(url:string):boolean {
-            return this._versionCtr.checkIsNewVersion(url);
+            if (this._needVersion) {
+                return this._versionCtr.checkIsNewVersion(url);
+            }
+            return true;
         }
 
         /**
