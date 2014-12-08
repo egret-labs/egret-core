@@ -68,23 +68,34 @@ module egret {
          */
         private versionCodeData:Object;
 
+        private _baseCode:number = 0;
+        private _changeCode:number = 0;
 
         private _load:FileLoad;
+
+
         //获取当前版本号
         private fetchVersion():void {
             this._load = new egret.FileLoad();
             this._load.addEventListener(egret.IOErrorEvent.IO_ERROR, this.loadError, this);
             this._load.addEventListener(egret.Event.COMPLETE, this.fileLoadComplete, this);
 
+            this.versionCodeData = this.getLocalData(this.versionCodePath) || {"baseCode": 0, "changeCode":0};
+            this._baseCode = egret_native.getOption("baseVserion") || 0;
+            this._changeCode = egret_native.getOption("changeVserion") || 0;
+            if (this._baseCode != this.versionCodeData["baseCode"]) {
+                this.versionCodeData["changeCode"] = -1;
+            }
+
             this.loadBaseVersion();
         }
 
         private loadBaseVersion() {
-            this.localVersionData = this.getLocalData(this.localVersionDataPath);
-
             this.baseVersionData = this.getLocalData(this.baseVersionDataPath);
             this.changeVersionData = this.getLocalData(this.changeVersionDataPath);
 
+            //初始化localVersonData
+            this.localVersionData = this.getLocalData(this.localVersionDataPath);
             if (this.localVersionData == null) {
                 if (this.baseVersionData == null) {
                     this.localVersionData = {};
@@ -105,10 +116,15 @@ module egret {
                 }
             }
 
+            //加载baseVersionData
             var self = this;
-            if (this.baseVersionData == null) {
+            if (this.baseVersionData == null || this._baseCode != this.versionCodeData["baseCode"]) {
                 this.loadFile(this.baseVersionDataPath, function () {
                     self.baseVersionData = self.getLocalData(self.baseVersionDataPath);
+
+                    self.versionCodeData["baseCode"] = self._baseCode;
+                    egret_native.saveRecord(self.versionCodePath, JSON.stringify(self.versionCodeData));
+
                     self.loadChangeVersion();
                 });
             }
@@ -118,28 +134,19 @@ module egret {
         }
 
         private loadChangeVersion() {
-            this.versionCodeData = this.getLocalData(this.versionCodePath) || {"code": 1};
-            var serverVersionCode = 11;
-
             var self = this;
-            if (this.versionCodeData["code"] == serverVersionCode) {
-                if (this.changeVersionData == null) {
-                    this.loadFile(this.changeVersionDataPath, function () {
-                        self.changeVersionData = self.getLocalData(self.changeVersionDataPath);
-                        self.loadOver();
-                    });
-                }
-                else {
-                    this.loadOver();
-                }
-            }
-            else {//本地存储配置文件与服务器不同
-                //加载change
+            if (this.changeVersionData == null || this._changeCode != this.versionCodeData["changeCode"]) {
                 this.loadFile(this.changeVersionDataPath, function () {
                     self.changeVersionData = self.getLocalData(self.changeVersionDataPath);
-                    egret_native.saveRecord(self.versionCodePath, JSON.stringify({"code": serverVersionCode}));
+
+                    self.versionCodeData["changeCode"] = self._changeCode;
+                    egret_native.saveRecord(self.versionCodePath, JSON.stringify(self.versionCodeData));
+
                     self.loadOver();
                 });
+            }
+            else {
+                this.loadOver();
             }
         }
 
