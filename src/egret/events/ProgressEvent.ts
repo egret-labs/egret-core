@@ -24,70 +24,44 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+module egret {
+    export class ProgressEvent extends egret.Event {
 
+        /**
+         * @constant {string} egret.ProgressEvent.PROGRESS
+         */
+        public static PROGRESS:string = "progress";
 
-module egret.gui {
+        /**
+         * @constant {string} egret.ProgressEvent.SOCKET_DATA
+         */
+        public static SOCKET_DATA:string = "socketData";
 
-	/**
-	 * @class egret.gui.ToggleButton
-	 * @classdesc
-	 * 切换按钮
-	 * @extends egret.gui.ToggleButtonBase
-	 */	
-	export class ToggleButton extends ToggleButtonBase{
-		/**
-		 * 构造函数
-		 * @method egret.gui.ToggleButton#constructor
-		 */		
-		public constructor(){
-			super();
-            this.hostComponentKey = "egret.gui.ToggleButton";
-		}
-		/**
-		 * [SkinPart]按钮上的文本标签
-		 * @member egret.gui.ButtonBase#labelDisplay
-		 */
-		public iconDisplay:UIAsset;
+        public bytesLoaded:number;
+        public bytesTotal:number;
 
-		private _icon:any;
-		/**
-		 * 要在按钮上显示的图标
-		 * @member egret.gui.ButtonBase#icon
-		 */
-		public get icon():any{
-			return this._getIcon();
-		}
+        /**
+         * @method egret.ProgressEvent#constructor
+         * @param type {string}
+         * @param bubbles {boolean}
+         * @param cancelable {boolean}
+         * @param bytesLoaded {number}
+         * @param bytesTotal {number}
+         */
+        public constructor(type:string, bubbles:boolean = false, cancelable:boolean = false, bytesLoaded:number = 0, bytesTotal:number = 0) {
+            super(type, bubbles, cancelable);
 
-		public _getIcon():any{
-			if(this.iconDisplay){
-				return this.iconDisplay.source;
-			}
-			else{
-				return this._icon;
-			}
-		}
+            this.bytesLoaded = bytesLoaded;
+            this.bytesTotal = bytesTotal;
+        }
 
-		public set icon(value:any){
-			this._setIcon(value);
-		}
-
-		public _setIcon(value:any):void{
-			this._icon = value;
-			if(this.iconDisplay){
-				this.iconDisplay.source = value;
-			}
-		}
-
-		/**
-		 * @method egret.gui.ButtonBase#partAdded
-		 * @param partName {string}
-		 * @param instance {any}
-		 */
-		public partAdded(partName:string, instance:any):void{
-			super.partAdded(partName, instance);
-			if(instance==this.iconDisplay){
-				this.iconDisplay.source = this._icon;
-			}
-		}
-	}
+        /**
+         * 使用指定的EventDispatcher对象来抛出Event事件对象。抛出的对象将会缓存在对象池上，供下次循环复用。
+         * @method egret.ProgressEvent.dispatchIOErrorEvent
+         * @param target {egret.IEventDispatcher}
+         */
+        public static dispatchProgressEvent(target:IEventDispatcher, type:string, bytesLoaded:number = 0, bytesTotal:number = 0):void {
+            Event._dispatchByTarget(ProgressEvent, target, type, {"bytesLoaded":bytesLoaded, "bytesTotal":bytesTotal});
+        }
+    }
 }

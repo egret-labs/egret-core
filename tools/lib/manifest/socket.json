@@ -1,0 +1,12 @@
+{
+    "name": "socket",
+    "dependence": ["core"],
+    "output":"core/extension/socket",
+    "source":"src/extension/socket",
+    "file_list": [
+        "ISocket.ts",
+        "HTML5WebSocket.ts",
+        "NativeSocket.ts",
+        "WebSocket.ts"
+    ]
+}

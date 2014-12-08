@@ -181,7 +181,7 @@
 		"fontFamily":"string",
 		"italic":"boolean",
 		"lineSpacing":"number",
-		"maxChars":"any",
+		"maxChars":"number",
 		"maxWidth":"any",
 		"multiline":"boolean",
 		"size":"number",
@@ -243,6 +243,8 @@
 	},
 	"egret.gui.Button":
 	{
+		"icon":"any",
+		"iconDisplay":"egret.gui.UIAsset",
 		"super":"egret.gui.ButtonBase"
 	},
 	"egret.gui.ButtonBase":
@@ -256,6 +258,12 @@
 		"repeatInterval":"number",
 		"stickyHighlighting":"boolean",
 		"super":"egret.gui.SkinnableComponent"
+	},
+	"egret.gui.ButtonSkin":
+	{
+		"iconDisplay":"egret.gui.UIAsset",
+		"labelDisplay":"egret.gui.Label",
+		"super":"egret.gui.Skin"
 	},
 	"egret.gui.CheckBox":
 	{
@@ -629,6 +637,8 @@
 	},
 	"egret.gui.ToggleButton":
 	{
+		"icon":"any",
+		"iconDisplay":"egret.gui.UIAsset",
 		"super":"egret.gui.ToggleButtonBase"
 	},
 	"egret.gui.ToggleButtonBase":

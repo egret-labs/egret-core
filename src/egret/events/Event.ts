@@ -136,6 +136,19 @@ module egret {
         public static DEACTIVATE:string = "deactivate";
 
 
+        /**
+         * Event.CLOSE 常量定义 close 事件对象的 type 属性的值。
+         * @constant {string} egret.Event.CLOSE
+         */
+        public static CLOSE:string = "close";
+
+        /**
+         * Event.CONNECT 常量定义 connect 事件对象的 type 属性的值。
+         * @constant {string} egret.Event.CONNECT
+         */
+        public static CONNECT:string = "connect";
+
+
 
         public data:any;
 

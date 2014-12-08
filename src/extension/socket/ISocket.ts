@@ -24,70 +24,19 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+module egret {
+    export interface ISocket extends IEventDispatcher{
+        /**
+         * 连接
+         * @method egret.ISocket#connect
+         */
+        connect(host:string, port:number):void;
 
 
-module egret.gui {
+        addCallBacks(onConnect:Function, onClose:Function, onSocketData:Function, onError:Function, thisObject:any):void;
 
-	/**
-	 * @class egret.gui.ToggleButton
-	 * @classdesc
-	 * 切换按钮
-	 * @extends egret.gui.ToggleButtonBase
-	 */	
-	export class ToggleButton extends ToggleButtonBase{
-		/**
-		 * 构造函数
-		 * @method egret.gui.ToggleButton#constructor
-		 */		
-		public constructor(){
-			super();
-            this.hostComponentKey = "egret.gui.ToggleButton";
-		}
-		/**
-		 * [SkinPart]按钮上的文本标签
-		 * @member egret.gui.ButtonBase#labelDisplay
-		 */
-		public iconDisplay:UIAsset;
+        send(message:string):void;
 
-		private _icon:any;
-		/**
-		 * 要在按钮上显示的图标
-		 * @member egret.gui.ButtonBase#icon
-		 */
-		public get icon():any{
-			return this._getIcon();
-		}
-
-		public _getIcon():any{
-			if(this.iconDisplay){
-				return this.iconDisplay.source;
-			}
-			else{
-				return this._icon;
-			}
-		}
-
-		public set icon(value:any){
-			this._setIcon(value);
-		}
-
-		public _setIcon(value:any):void{
-			this._icon = value;
-			if(this.iconDisplay){
-				this.iconDisplay.source = value;
-			}
-		}
-
-		/**
-		 * @method egret.gui.ButtonBase#partAdded
-		 * @param partName {string}
-		 * @param instance {any}
-		 */
-		public partAdded(partName:string, instance:any):void{
-			super.partAdded(partName, instance);
-			if(instance==this.iconDisplay){
-				this.iconDisplay.source = this._icon;
-			}
-		}
-	}
+        close():void;
+    }
 }

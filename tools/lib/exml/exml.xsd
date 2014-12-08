@@ -392,7 +392,7 @@
     <xs:attribute name="fontFamily" type="xs:string"/>
     <xs:attribute name="italic" type="xs:boolean"/>
     <xs:attribute name="lineSpacing" type="xs:decimal"/>
-    <xs:attribute name="maxChars" type="xs:string"/>
+    <xs:attribute name="maxChars" type="xs:decimal"/>
     <xs:attribute name="maxWidth" type="xs:string"/>
     <xs:attribute name="multiline" type="xs:boolean"/>
     <xs:attribute name="size" type="xs:decimal"/>
@@ -569,6 +569,8 @@
   </xs:element>
   <xs:attributeGroup name="egret.gui.Button">
     <xs:attributeGroup ref="egret.gui.ButtonBase"/>
+    <xs:attribute name="icon" type="xs:string"/>
+    <xs:attribute name="iconDisplay" type="xs:string"/>
   </xs:attributeGroup>
   <xs:element name="Button">
     <xs:complexType>
@@ -595,6 +597,19 @@
         <xs:any/>
       </xs:choice>
       <xs:attributeGroup ref="egret.gui.ButtonBase"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:attributeGroup name="egret.gui.ButtonSkin">
+    <xs:attributeGroup ref="egret.gui.Skin"/>
+    <xs:attribute name="iconDisplay" type="xs:string"/>
+    <xs:attribute name="labelDisplay" type="xs:string"/>
+  </xs:attributeGroup>
+  <xs:element name="ButtonSkin">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:any/>
+      </xs:choice>
+      <xs:attributeGroup ref="egret.gui.ButtonSkin"/>
     </xs:complexType>
   </xs:element>
   <xs:attributeGroup name="egret.gui.CheckBox">
@@ -1332,6 +1347,8 @@
   </xs:element>
   <xs:attributeGroup name="egret.gui.ToggleButton">
     <xs:attributeGroup ref="egret.gui.ToggleButtonBase"/>
+    <xs:attribute name="icon" type="xs:string"/>
+    <xs:attribute name="iconDisplay" type="xs:string"/>
   </xs:attributeGroup>
   <xs:element name="ToggleButton">
     <xs:complexType>
