@@ -70,6 +70,8 @@ module egret {
 
         private _baseCode:number = 0;
         private _changeCode:number = 0;
+        private _needVersion:boolean = false;
+
 
         private _load:FileLoad;
 
@@ -83,6 +85,17 @@ module egret {
             this.versionCodeData = this.getLocalData(this.versionCodePath) || {"baseCode": 0, "changeCode":0};
             this._baseCode = egret_native.getOption("baseVserion") || 0;
             this._changeCode = egret_native.getOption("changeVserion") || 0;
+
+            if (this._baseCode == 0 && this._changeCode == 0) {//不需要版本控制
+                this.localVersionData = {};
+                this.baseVersionData = {};
+                this.changeVersionData = {};
+                this._needVersion = false;
+                this.loadOver();
+                return;
+            }
+
+            this._needVersion = true;
             if (this._baseCode != this.versionCodeData["baseCode"]) {
                 this.versionCodeData["changeCode"] = -1;
             }
@@ -224,6 +237,9 @@ module egret {
          * 检查文件是否是最新版本
          */
         public checkIsNewVersion(url:string):boolean {
+            if (!this._needVersion) {//不需要版本控制
+                return true;
+            }
             if (this.changeVersionData[url] != null) {//在变化版本里
                 if (this.compareVersion(this.changeVersionData, this.localVersionData, url)) {
                     return true;

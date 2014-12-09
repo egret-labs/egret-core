@@ -32,14 +32,10 @@ module egret {
 
         private _versionCtr:egret.VersionController;
 
-        private _needVersion:boolean = false;
-
         public constructor() {
             super();
 
             this._versionCtr = new egret.VersionController();
-
-            this._needVersion = true;
         }
 
         private urlData:any = {};
@@ -184,10 +180,7 @@ module egret {
          * 检查文件是否是最新版本
          */
         private checkIsNewVersion(url:string):boolean {
-            if (this._needVersion) {
-                return this._versionCtr.checkIsNewVersion(url);
-            }
-            return true;
+            return this._versionCtr.checkIsNewVersion(url);
         }
 
         /**
