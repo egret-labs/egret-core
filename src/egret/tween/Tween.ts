@@ -35,15 +35,18 @@ module egret {
 	 */
     export class Tween extends EventDispatcher {
 		/**
-		 * @constant {any} egret.Tween.NONE
+         * 不做特殊处理
+		 * @constant {number} egret.Tween.NONE
 		 */
         public static NONE = 0;
 		/**
-		 * @constant {any} egret.Tween.LOOP
+         * 循环
+		 * @constant {number} egret.Tween.LOOP
 		 */
         public static LOOP = 1;
 		/**
-		 * @constant {any} egret.Tween.REVERSE
+         * 倒序
+		 * @constant {number} egret.Tween.REVERSE
 		 */
         public static REVERSE = 2;
 

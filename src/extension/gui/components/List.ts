@@ -37,7 +37,7 @@ module egret.gui {
 	export class List extends ListBase{
 		public constructor(){
 			super();
-            this.hostComponentKey = "egret.gui.List";
+            
 			this.useVirtualLayout = true;
 		}
 		

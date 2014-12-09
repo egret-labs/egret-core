@@ -40,7 +40,7 @@ module egret.gui {
 		 */
 		public constructor(){
 			super();
-            this.hostComponentKey = "egret.gui.TitleWindow";
+            
 			this.addEventListener(TouchEvent.TOUCH_BEGIN,this.onWindowMouseDown,this,true,100);
 		}
 		/**

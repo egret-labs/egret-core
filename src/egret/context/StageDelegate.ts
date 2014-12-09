@@ -49,12 +49,10 @@ module egret {
         }
 
         /**
-         * @member egret.StageDelegate.canvas_name
          * @deprecated
          */
         public static canvas_name:string = "egretCanvas";
         /**
-         * @member egret.StageDelegate.canvas_div_name
          */
         public static canvas_div_name:string = "gameDiv";
 
@@ -78,9 +76,10 @@ module egret {
         }
 
         /**
+         * 设置舞台的宽高
          * @method egret.StageDelegate#setDesignSize
          * @param width {number}
-         * @param height {{number}}
+         * @param height {number}
          */
         public setDesignSize(width:number, height:number):void {
             this._designWidth = width;
@@ -93,7 +92,6 @@ module egret {
         }
 
         /**
-         * @method egret.StageDelegate#_setResolutionPolicy
          * @param resolutionPolic {any}
          */
         public _setResolutionPolicy(resolutionPolicy:ResolutionPolicy):void {
@@ -125,7 +123,6 @@ module egret {
     }
 
     /**
-     * @class egret.ResolutionPolicy
      * @classdesc
      */
     export class ResolutionPolicy {
@@ -160,8 +157,6 @@ module egret {
     }
 
     /**
-     * @class egret.ContainerStrategy
-     * @classdesc
      */
     export class ContainerStrategy {
         /**
@@ -213,7 +208,6 @@ module egret {
     }
 
     /**
-     * @class egret.EqualToFrame
      * @classdesc
      * @extends egret.ContainerStrategy
      */
@@ -224,8 +218,6 @@ module egret {
     }
 
     /**
-     * @class egret.ContentStrategy
-     * @classdesc
      */
     export class ContentStrategy {
 

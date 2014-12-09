@@ -46,12 +46,14 @@ module egret.gui {
 		public constructor(){
 			super();
 		}
+
+
         /**
          * 主机组件标识符。用于唯一确定一个组件的名称。
          * 用户自定义的组件若不对此属性赋值，将会继承父级的标识符定义。
          * @member {string} egret.gui.SkinnableComponent#hostComponentKey
          */
-        public hostComponentKey:string = "egret.gui.SkinnableComponent"
+        public hostComponentKey: string = null;
 
         /**
          * 外部显式设置了皮肤名
@@ -105,7 +107,7 @@ module egret.gui {
                 adapter = this.getSkinAdapter();
             }
 
-            var skin:any = adapter.getSkin(this._skinName,this.hostComponentKey);
+            var skin: any = adapter.getSkin(this._skinName, egret.getQualifiedClassName(this));
             if(!skin){
                 var theme:Theme = SkinnableComponent._defaultTheme;
                 if(theme){

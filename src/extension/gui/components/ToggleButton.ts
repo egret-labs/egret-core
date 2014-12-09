@@ -41,7 +41,7 @@ module egret.gui {
 		 */		
 		public constructor(){
 			super();
-            this.hostComponentKey = "egret.gui.ToggleButton";
+            
 		}
 		/**
 		 * [SkinPart]按钮上的文本标签

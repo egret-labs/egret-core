@@ -41,7 +41,7 @@ module egret.gui {
 		 */		
 		public constructor(){
 			super();
-            this.hostComponentKey = "egret.gui.Tree";
+            
 		}
 
         public static defaultTreeRendererFactory:ClassFactory = new ClassFactory(TreeItemRenderer);

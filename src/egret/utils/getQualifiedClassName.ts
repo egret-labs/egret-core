@@ -42,7 +42,39 @@ module egret {
         var constructorString:string = prototype.constructor.toString();
         var index:number = constructorString.indexOf("(");
         var className:string = constructorString.substring(9, index);
-        prototype["__class__"] = className;
+        Object.defineProperty(prototype, "__class__", {
+            value: className,
+            enumerable: false,
+            writable: true
+        });
         return className;
+    }
+
+    
+     /**
+     * 返回一个对象的父类完全限定名<br/>
+     * @method egret.getQualifiedSuperclassName
+     * @param value {any} 需要取得父类的对象，可以将任何 TypeScript / JavaScript值传递给此方法，包括所有可用的TypeScript / JavaScript类型、对象实例、原始类型（如number）和类对象
+     * @returns {Function}
+     * @example
+     *  egret.getQualifiedSuperclassName(egret.DisplayObjectContainer) //返回 "egret.DisplayObject"
+     */
+    export function getQualifiedSuperclassName(value: any):string {
+        var prototype: any = value.prototype ? value.prototype : value.__proto__;
+        if (prototype.hasOwnProperty("__superclass__")) {
+            return prototype["__superclass__"];
+        }
+        var superProto = Object.getPrototypeOf(prototype);
+        if (superProto == null)
+            return null;
+        var superClass = getQualifiedClassName(superProto.constructor);
+        if (!superClass)
+            return null;
+        Object.defineProperty(prototype, "__superclass__", {
+            value: superClass,
+            enumerable: false,
+            writable: true
+        });
+        return superClass;
     }
 }

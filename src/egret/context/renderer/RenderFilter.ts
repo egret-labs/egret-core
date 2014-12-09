@@ -28,7 +28,6 @@
 
 module egret {
     /**
-     * @class egret.RenderFilter
      * @classdesc
      * @extends egret.HashObject
      */

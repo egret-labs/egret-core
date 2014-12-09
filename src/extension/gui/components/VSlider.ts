@@ -41,7 +41,7 @@ module egret.gui {
 		 */		
 		public constructor(){
 			super();
-            this.hostComponentKey = "egret.gui.VSlider";
+            
 		}
 		
 		/**

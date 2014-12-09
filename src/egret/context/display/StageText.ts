@@ -29,7 +29,6 @@
 module egret {
 
     /**
-     * @class egret.StageText
      * @classdesc
      * @extends egret.EventDispatcher
      */
