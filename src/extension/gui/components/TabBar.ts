@@ -49,6 +49,14 @@ module egret.gui {
 		 * requireSelection改变标志
 		 */
 		private requireSelectionChanged_tabBar:boolean;
+
+        private _touchBeginItem: IItemRenderer;
+
+        /**
+         * 是否捕获ItemRenderer以便在MouseUp时抛出ItemClick事件
+         */
+        public _captureItemRenderer: boolean = true;
+
 		/**
 		 * @method egret.gui.TabBar#c
 		 * @param value {boolea} 
@@ -117,11 +125,13 @@ module egret.gui {
 			super.dataGroup_rendererAddHandler(event);
 			
 			var renderer:IItemRenderer = event.renderer;
-			if (renderer){
-				renderer.addEventListener(TouchEvent.TOUCH_END, this.item_clickHandler, this);
-				if (renderer instanceof TabBarButton)
-					(<TabBarButton><any> renderer).allowDeselection = !this.requireSelection;
-			}
+            if (!renderer)
+                return;
+
+            renderer.addEventListener(TouchEvent.TOUCH_BEGIN, this.item_touchBeginHandler, this);
+            renderer.addEventListener(TouchEvent.TOUCH_END, this.item_touchEndHandler, this);
+            if (renderer instanceof TabBarButton)
+                (<TabBarButton><any> renderer).allowDeselection = !this.requireSelection;
 		}
 		
 		/**
@@ -132,28 +142,55 @@ module egret.gui {
 			super.dataGroup_rendererRemoveHandler(event);
 			
 			var renderer:IItemRenderer = event.renderer;
-			if (renderer)
-                renderer.removeEventListener(TouchEvent.TOUCH_END, this.item_clickHandler, this);
+            if (!renderer)
+                return;
+            renderer.removeEventListener(TouchEvent.TOUCH_BEGIN, this.item_touchBeginHandler, this);
+            renderer.removeEventListener(TouchEvent.TOUCH_END, this.item_touchEndHandler, this);
 		}
 		/**
 		 * 鼠标在条目上按下
 		 */		
-		private item_clickHandler(event:TouchEvent):void{
+        private item_touchBeginHandler(event: TouchEvent): void {
+            if (event._isDefaultPrevented)
+                return;
 			var itemRenderer:IItemRenderer = <IItemRenderer><any> (event.currentTarget);
-			var newIndex:number
-			if (itemRenderer)
-				newIndex = itemRenderer.itemIndex;
-			else
-				newIndex = this.dataGroup.getElementIndex(<IVisualElement><any> (event.currentTarget));
-			
-			if (newIndex == this.selectedIndex){
-				if (!this.requireSelection)
-					this._setSelectedIndex(ListBase.NO_SELECTION, true);
-			}
-			else
-				this._setSelectedIndex(newIndex, true);
-			this._dispatchListEvent(event,ListEvent.ITEM_CLICK,itemRenderer);
+            this._touchBeginItem = itemRenderer;
+            UIGlobals.stage.addEventListener(TouchEvent.TOUCH_END, this.stage_touchEndHandler, this);
+            UIGlobals.stage.addEventListener(Event.LEAVE_STAGE, this.stage_touchEndHandler, this);
 		}
-		
+        
+		/**
+		 * 鼠标在项呈示器上弹起，抛出ItemClick事件。
+		 */	
+        private item_touchEndHandler(event: TouchEvent): void {
+            var itemRenderer: IItemRenderer = <IItemRenderer> (event.currentTarget);
+            if (itemRenderer != this._touchBeginItem)
+                return;
+
+            var newIndex: number
+            if (itemRenderer)
+                newIndex = itemRenderer.itemIndex;
+            else
+                newIndex = this.dataGroup.getElementIndex(<IVisualElement><any> (event.currentTarget));
+
+            if (newIndex == this.selectedIndex) {
+                if (!this.requireSelection)
+                    this._setSelectedIndex(ListBase.NO_SELECTION, true);
+            }
+            else
+                this._setSelectedIndex(newIndex, true);
+            if (!this._captureItemRenderer)
+                return;
+            this._dispatchListEvent(event, ListEvent.ITEM_CLICK, itemRenderer);
+        }
+
+        /**
+         * 鼠标在舞台上弹起
+         */
+        private stage_touchEndHandler(event: Event): void {
+            UIGlobals.stage.removeEventListener(TouchEvent.TOUCH_END, this.stage_touchEndHandler, this);
+            UIGlobals.stage.removeEventListener(Event.LEAVE_STAGE, this.stage_touchEndHandler, this);
+            this._touchBeginItem = null;
+        }
 	}
 }

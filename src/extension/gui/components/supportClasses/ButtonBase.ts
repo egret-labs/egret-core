@@ -330,14 +330,14 @@ module egret.gui {
 				}
 
 				case TouchEvent.TOUCH_END:{
-                    if (event.target == this || event._currentTarget == this) {
-                        this.hovered = true;
+					if (event.target == this){
+						this.hovered = true;
 
-                        if (this.mouseCaptured) {
-                            this.buttonReleased();
-                            this.mouseCaptured = false;
-                        }
-                    }
+						if (this.mouseCaptured){
+							this.buttonReleased();
+							this.mouseCaptured = false;
+						}
+					}
 					break;
 				}
 				case TouchEvent.TOUCH_TAP:{
