@@ -42,7 +42,7 @@ module egret.gui {
 		public constructor(){
 			super();
 			this.touchChildren = true;
-            this.hostComponentKey = "egret.gui.ItemRenderer";
+            
 		}
 		
 		private dataChangedFlag:boolean = false;

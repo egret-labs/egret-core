@@ -30,7 +30,7 @@ module egret.gui {
     export class VScrollBar extends VSlider {
         public constructor() {
             super();
-            this.hostComponentKey = "egret.gui.VScrollBar";
+            
         }
 
         public _setViewportMetric(height: number, contentHeight: number) {

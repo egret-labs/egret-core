@@ -46,12 +46,23 @@ module egret.gui {
 		public constructor(){
 			super();
 		}
+
+        public _hostComponentKey: string = null;
+
         /**
-         * 主机组件标识符。用于唯一确定一个组件的名称。
+         * [已废弃]主机组件标识符。用于唯一确定一个组件的名称。
          * 用户自定义的组件若不对此属性赋值，将会继承父级的标识符定义。
          * @member {string} egret.gui.SkinnableComponent#hostComponentKey
+		 * @deprecated
          */
-        public hostComponentKey:string = "egret.gui.SkinnableComponent"
+        public get hostComponentKey() {
+            return this._hostComponentKey;
+        }
+
+        public set hostComponentKey(val: string) {
+            this._hostComponentKey = val;
+            Logger.warning("SkinnableComponent.hostComponentKey已废弃，请直接使用类名全称如：egret.gui.List");
+        }
 
         /**
          * 外部显式设置了皮肤名
@@ -105,7 +116,7 @@ module egret.gui {
                 adapter = this.getSkinAdapter();
             }
 
-            var skin:any = adapter.getSkin(this._skinName,this.hostComponentKey);
+            var skin: any = adapter.getSkin(this._skinName, egret.getQualifiedClassName(this));
             if(!skin){
                 var theme:Theme = SkinnableComponent._defaultTheme;
                 if(theme){

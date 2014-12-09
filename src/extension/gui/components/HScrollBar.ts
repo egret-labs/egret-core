@@ -30,7 +30,7 @@ module egret.gui {
     export class HScrollBar extends HSlider {
         public constructor() {
             super();
-            this.hostComponentKey = "egret.gui.HScrollBar";
+            
         }
 
         public _setViewportMetric(width:number, contentWidth:number) {

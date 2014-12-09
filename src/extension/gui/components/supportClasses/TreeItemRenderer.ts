@@ -42,7 +42,7 @@ module egret.gui {
 		 */		
 		public constructor(){
 			super();
-            this.hostComponentKey = "egret.gui.TreeItemRenderer";
+            
 			this.addEventListener(TouchEvent.TOUCH_BEGIN,this.onItemMouseDown,this,false,1000);
 		}
 		
