@@ -29,60 +29,37 @@ function run(dir, args, opts) {
 
     projectConfig.init(currDir);
 
-    publishNative(currDir, password, needCompile);
+    var time = Math.round(Date.now() / 1000);
+    publishPlatform(currDir, "android", time, password, needCompile);
+    publishPlatform(currDir, "ios", time, password, needCompile);
     publisHtml5(currDir, password, needCompile);
 }
 
-function publishNative(currDir, password, needCompiler) {
-    var sourcePath = path.join(projectConfig.getSaveUrl("android"));
-    if (sourcePath == null) {
+function publishPlatform(currDir, platform, time, password, needCompiler) {
+    if (projectConfig.getSaveUrl(platform) == null) {//没有native项目
         return;
     }
 
-    //拷贝代码、资源文件到整体base目录
-    var releaseDir = path.join(currDir, "release", "nativeBase");
+    var sourcePath = path.join(projectConfig.getSaveUrl(platform));
+    genVer.run(sourcePath, [sourcePath]);
 
-    var launcherDir = path.join(releaseDir, "launcher");
-    var resourceDir = path.join(releaseDir, "resource");
-    var libs = path.join(releaseDir, "libs");
-    var bindebug = path.join(releaseDir, "bin-debug");
-
-    //删除原来
-    file.remove(launcherDir);
-    file.copy(path.join(sourcePath, "launcher"), launcherDir);
-    file.remove(resourceDir);
-    file.copy(path.join(sourcePath, "resource"), resourceDir);
-    file.remove(libs);
-    file.copy(path.join(sourcePath, "libs"), libs);
-    file.remove(bindebug);
-    file.copy(path.join(sourcePath, "bin-debug"), bindebug);
+    var output = path.join(currDir, "release", platform, time + "");
 
     //google压缩
-    var complieCount = 0;
-    var file_list = filelist.getAllFileList(sourcePath);
-    closureCompiler.compilerSingleFile(sourcePath, file_list["native"], path.join(launcherDir, "game-min-native.js"), compilerComplete);
-    function compilerComplete() {
-        complieCount++;
-        if (complieCount == 1) {//全部压缩完毕
-            createVersion();
-
+    if (needCompiler) {
+        var file_list = filelist.getAllFileList(sourcePath);
+        closureCompiler.compilerSingleFile(sourcePath, file_list["native"], path.join(sourcePath, "launcher", "game-min-native.js"), function compilerComplete() {
             createZips();
-        }
+        });
     }
-
-    //生成版本控制
-    function createVersion() {
-        genVer.run(sourcePath, [releaseDir]);
+    else {
+        createZips();
     }
 
     //生成zip包
     function createZips() {
-        var time = Math.round(Date.now() / 1000);
-        createZipFile(releaseDir, "android", password, needCompiler, function() {
-            copyPlatform("android", time);
-        });
-        createZipFile(releaseDir, "ios", password, needCompiler, function() {
-            copyPlatform("ios", time);
+        createZipFile(sourcePath, platform, password, needCompiler, function() {
+            copyPlatform(platform, time);
         });
     }
 
@@ -91,22 +68,21 @@ function publishNative(currDir, password, needCompiler) {
         //apk
         var projectUrl = projectConfig.getProjectAssetsUrl(platform);
         if (projectUrl != null) {
-            var url = path.join(currDir, "release", platform, time + "");
-            file.copy(path.join(releaseDir, "game_code_" + platform + ".zip"), path.join(url, "game_code_" + time +".zip"));
-            file.copy(path.join(releaseDir, "resource"), path.join(url, "resource"));
-            screening.run(path.join(url, "resource"), [], {"--platform":[platform]});
+            file.copy(path.join(sourcePath, "game_code_" + platform + ".zip"), path.join(output, "game_code_" + time +".zip"));
+            file.copy(path.join(sourcePath, "resource"), path.join(output, "resource"));
+            screening.run(path.join(output, "resource"), [], {"--platform":[platform]});
 
-            copyBaseManifest(platform, url);
-            genVer.run("", [url]);
+            copyBaseManifest(platform, output);
+            genVer.run("", [output]);
 
             file.remove(projectUrl);
-            file.copy(url, projectUrl);
+            file.copy(output, projectUrl);
         }
     }
 
     function copyBaseManifest(platform, url) {
-        var useList = screening.getUseFilelist(path.join(releaseDir, "baseResource.json"), platform);
-        var baseManifest = JSON.parse(file.read(path.join(releaseDir, "base.manifest")));
+        var useList = screening.getUseFilelist(path.join(sourcePath, "baseResource.json"), platform);
+        var baseManifest = JSON.parse(file.read(path.join(sourcePath, "base.manifest")));
 //        for (var key in baseManifest) {
 //            var i = 0;
 //            for (; i < useList.length; i++) {
@@ -119,8 +95,14 @@ function publishNative(currDir, password, needCompiler) {
 //            }
 //        }
         file.save(path.join(url, "base.manifest"), JSON.stringify(baseManifest));
+
+        end();
     }
 
+    function end() {
+        file.remove(path.join(sourcePath, "launcher", "game-min-native.js"));
+        file.remove(path.join(sourcePath, "game_code_" + platform + ".zip"));
+    }
 }
 
 function publisHtml5(currDir, password, needCompiler) {
@@ -178,6 +160,12 @@ function publisHtml5(currDir, password, needCompiler) {
         file.copy(path.join(releaseDir, "resource"), path.join(url, "resource"));
         file.copy(path.join(releaseDir, "base.manifest"), path.join(url, "base.manifest"));
         file.copy(path.join(releaseDir, "version.manifest"), path.join(url, "version.manifest"));
+
+        end();
+    }
+
+    function end() {
+        file.remove(releaseDir);
     }
 }
 
@@ -187,7 +175,6 @@ function createZipFile(releaseDir, platform, password, compiler, createZipComple
     file.copy(path.join(releaseDir, "launcher", "native_loader.js"), path.join(releaseDir, "ziptemp", "launcher", "native_loader.js"));
     file.copy(path.join(releaseDir, "launcher", "runtime_loader.js"), path.join(releaseDir, "ziptemp", "launcher", "runtime_loader.js"));
     file.copy(path.join(releaseDir, "launcher", "native_require.js"), path.join(releaseDir, "ziptemp", "launcher", "native_require.js"));
-    file.copy(path.join(releaseDir, "launcher", "game-min-native.js"), path.join(releaseDir, "ziptemp", "launcher", "game-min-native.js"));
 
 
     if (!compiler) {//不需要google压缩
@@ -195,6 +182,9 @@ function createZipFile(releaseDir, platform, password, compiler, createZipComple
         file.copy(path.join(releaseDir, "libs"), path.join(releaseDir, "ziptemp", "libs"));
 
         file.remove(path.join(releaseDir, "ziptemp", "launcher", "game-min-native.js"));
+    }
+    else {
+        file.copy(path.join(releaseDir, "launcher", "game-min-native.js"), path.join(releaseDir, "ziptemp", "launcher", "game-min-native.js"));
     }
 
     var zipFile = path.join(releaseDir, "game_code_" + platform + ".zip");
@@ -212,13 +202,12 @@ function help_title() {
 
 function help_example() {
     var result = "\n";
-    result += "    egret publish [project_name] --version [version] [--runtime html5|native]\n";
+    result += "    egret publish [project_name] -compile [--runtime html5|native]\n";
     result += "描述:\n";
     result += "    " + help_title();
     result += "参数说明:\n";
-    result += "    --version    设置发布之后的版本号，可以不设置\n";
     result += "    --runtime    设置发布方式为 html5 或者是 native方式，默认值为html5\n";
-    result += "    -zip         设置发布后生成launcher文件夹的zip文件\n";
+    result += "    -compile         设置发布后js文件是否需要压缩\n";
     result += "    --password   设置发布zip文件的解压密码";
     return result;
 }
