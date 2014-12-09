@@ -83,10 +83,6 @@ module egret.gui {
 			}
 		}
 		
-		/**
-		 * @method egret.gui.DropDownList#updateLabelDisplay
-		 * @param displayItem {any} 
-		 */
 		public updateLabelDisplay(displayItem:any = undefined):void{
 			if (this.labelDisplay){
 				if (displayItem == undefined)

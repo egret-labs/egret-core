@@ -44,12 +44,6 @@ module egret.gui {
             this.hostComponentKey = "egret.gui.HSlider";
 		}
 		
-		/**
-		 * @method egret.gui.HSlider#pointToValue
-		 * @param x {number} 
-		 * @param y {number} 
-		 * @returns {number}
-		 */
 		public pointToValue(x:number, y:number):number{
 			if (!this.thumb || !this.track)
 				return 0;
@@ -59,9 +53,6 @@ module egret.gui {
 			return this.minimum + ((thumbRange != 0) ? (x / thumbRange) * range : 0); 
 		}
 		
-		/**
-		 * @method egret.gui.HSlider#updateSkinDisplayList
-		 */
 		public updateSkinDisplayList():void{
 			if (!this.thumb || !this.track)
 				return;

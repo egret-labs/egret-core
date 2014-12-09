@@ -283,18 +283,10 @@ module egret.gui {
 		}
 	}
     /**
-	 * @class egret.gui.DepthBin
-	 * @classdesc
      * 列表项
      */
     export class DepthBin {
-		/**
-		 * @member egret.DepthBin#length
-		 */
         public length:number = 0;
-		/**
-		 * @member egret.DepthBin#items
-		 */
         public items:any = [];
     }
 }

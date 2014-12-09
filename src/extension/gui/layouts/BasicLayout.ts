@@ -63,44 +63,27 @@ module egret.gui {
 			this._mouseWheelSpeed = value;
 		}
 
-		/**
-		 * @method egret.gui.BasicLayout#getElementBoundsLeftOfScrollRect
-		 * @param scrollRect {Rectangle} 
-		 * @returns {Rectangle}
-		 */
 		public getElementBoundsLeftOfScrollRect(scrollRect:Rectangle):Rectangle{
 			var bounds:Rectangle = new Rectangle();
 			bounds.x = scrollRect.x - this._mouseWheelSpeed;
 			bounds.right = scrollRect.x;
 			return bounds;
 		}
-		/**
-		 * @method egret.gui.BasicLayout#getElementBoundsRightOfScrollRect
-		 * @param scrollRect {Rectangle} 
-		 * @returns {Rectangle}
-		 */
+
 		public getElementBoundsRightOfScrollRect(scrollRect:Rectangle):Rectangle{
 			var bounds:Rectangle = new Rectangle();
 			bounds.x = scrollRect.right;
 			bounds.right = scrollRect.right + this._mouseWheelSpeed;
 			return bounds;
 		}
-		/**
-		 * @method egret.gui.BasicLayout#getElementBoundsAboveScrollRect
-		 * @param scrollRect {Rectangle} 
-		 * @returns {Rectangle}
-		 */
+
 		public getElementBoundsAboveScrollRect(scrollRect:Rectangle):Rectangle{
 			var bounds:Rectangle = new Rectangle();
 			bounds.y = scrollRect.y - this._mouseWheelSpeed;
 			bounds.bottom = scrollRect.y;
 			return bounds;
 		}
-		/**
-		 * @method egret.gui.BasicLayout#getElementBoundsBelowScrollRect
-		 * @param scrollRect {Rectangle} 
-		 * @returns {Rectangle}
-		 */
+
 		public getElementBoundsBelowScrollRect(scrollRect:Rectangle):Rectangle{
 			var bounds:Rectangle = new Rectangle();
 			bounds.y = scrollRect.bottom;
@@ -108,9 +91,7 @@ module egret.gui {
 			return bounds;
 		}
 
-		/**
-		 * @method egret.gui.BasicLayout#measure
-		 */
+
 		public measure():void{
 			super.measure();
 
@@ -176,11 +157,7 @@ module egret.gui {
 		}
 
 
-		/**
-		 * @method egret.gui.BasicLayout#updateDisplayList
-		 * @param unscaledWidth {number} 
-		 * @param unscaledHeight {number} 
-		 */
+
 		public updateDisplayList(unscaledWidth:number, unscaledHeight:number):void{
 			super.updateDisplayList(unscaledWidth, unscaledHeight);
 

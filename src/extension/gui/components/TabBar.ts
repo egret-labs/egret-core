@@ -59,9 +59,9 @@ module egret.gui {
 
 		/**
 		 * @method egret.gui.TabBar#c
-		 * @param value {boolea} 
+		 * @param value {boolean}
 		 */
-		public c(value:boolean){
+		public set requireSelection(value:boolean){
 			if (value == this._requireSelection)
 				return;
 			
@@ -100,9 +100,6 @@ module egret.gui {
 		}
 		
 		
-		/**
-		 * @method egret.gui.TabBar#commitProperties
-		 */
 		public commitProperties():void{
 			super.commitProperties();
 			
@@ -117,10 +114,6 @@ module egret.gui {
 			}
 		}  
 		
-		/**
-		 * @method egret.gui.TabBar#dataGroup_rendererAddHandler
-		 * @param event {RendererExistenceEvent} 
-		 */
 		public dataGroup_rendererAddHandler(event:RendererExistenceEvent):void{
 			super.dataGroup_rendererAddHandler(event);
 			
@@ -134,11 +127,7 @@ module egret.gui {
                 (<TabBarButton><any> renderer).allowDeselection = !this.requireSelection;
 		}
 		
-		/**
-		 * @method egret.gui.TabBar#dataGroup_rendererRemoveHandler
-		 * @param event {RendererExistenceEvent} 
-		 */
-		public dataGroup_rendererRemoveHandler(event:RendererExistenceEvent):void{   
+		public dataGroup_rendererRemoveHandler(event:RendererExistenceEvent):void{
 			super.dataGroup_rendererRemoveHandler(event);
 			
 			var renderer:IItemRenderer = event.renderer;

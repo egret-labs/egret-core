@@ -235,8 +235,7 @@ module egret.gui {
 		}
 		/**
 		 * 改变高亮的选中项
-		 * @method egret.gui.DropDownListBase#_changeHighlightedSelection
-		 * @param newIndex {number} 
+		 * @param newIndex {number}
 		 * @param scrollToTop {boolean} 
 		 */		
 		public _changeHighlightedSelection(newIndex:number, scrollToTop:boolean = false):void{
@@ -245,11 +244,7 @@ module egret.gui {
 			this.itemSelected(this._userProposedSelectedIndex, true);
 		}
 		
-		/**
-		 * @method egret.gui.DropDownListBase#dataProvider_collectionChangeHandler
-		 * @param event {CollectionEvent} 
-		 */
-		public dataProvider_collectionChangeHandler(event:CollectionEvent):void{       
+		public dataProvider_collectionChangeHandler(event:CollectionEvent):void{
 			super.dataProvider_collectionChangeHandler(event);
 			
 			this._labelChanged = true;
@@ -271,9 +266,7 @@ module egret.gui {
 		}
 		/**
 		 * 控制器抛出打开列表事件
-		 * @method egret.gui.DropDownListBase#_dropDownController_openHandler
-		 * @param event {UIEvent} 
-		 */		
+		 */
 		public _dropDownController_openHandler(event:UIEvent):void{
 			this.addEventListener(UIEvent.UPDATE_COMPLETE, this._open_updateCompleteHandler, this);
 			this._userProposedSelectedIndex = this.selectedIndex;
@@ -281,10 +274,8 @@ module egret.gui {
 		}
 		/**
 		 * 打开列表后组件一次失效验证全部完成
-		 * @method egret.gui.DropDownListBase#_open_updateCompleteHandler
-		 * @param event {UIEvent} 
-		 */		
-		public _open_updateCompleteHandler(event:UIEvent):void{   
+		 */
+		public _open_updateCompleteHandler(event:UIEvent):void{
 			this.removeEventListener(UIEvent.UPDATE_COMPLETE, this._open_updateCompleteHandler, this);
 			UIEvent.dispatchUIEvent(this,UIEvent.OPEN);
 		}

@@ -249,13 +249,11 @@ module egret.gui {
 
         /**
          * 在更新显示列表时是否需要更新布局标志
-		 * @member egret.gui.GroupBase#_layoutInvalidateDisplayListFlag
          */
         public _layoutInvalidateDisplayListFlag:boolean = false;
 
         /**
          * 标记需要更新显示列表但不需要更新布局
-		 * @method egret.gui.GroupBase#_invalidateDisplayListExceptLayout
          */
         public _invalidateDisplayListExceptLayout():void{
             super.invalidateDisplayList();
@@ -269,9 +267,6 @@ module egret.gui {
             this._layoutInvalidateDisplayListFlag = true;
         }
 
-        /**
-		 * @method egret.gui.GroupBase#_childXYChanged
-         */
         public _childXYChanged():void{
             this.invalidateSize();
             this.invalidateDisplayList();
@@ -279,13 +274,11 @@ module egret.gui {
 
         /**
          * 在测量尺寸时是否需要测量布局的标志
-		 * @member egret.gui.GroupBase#_layoutInvalidateSizeFlag
          */
         public _layoutInvalidateSizeFlag:boolean = false;
 
         /**
          * 标记需要更新显示列表但不需要更新布局
-		 * @method egret.gui.GroupBase#_invalidateSizeExceptLayout
          */
         public _invalidateSizeExceptLayout():void{
             super.invalidateSize();
@@ -299,11 +292,6 @@ module egret.gui {
             this._layoutInvalidateSizeFlag = true;
         }
 
-        /**
-		 * @method egret.gui.GroupBase#updateDisplayList
-		 * @param unscaledWidth {number} 
-		 * @param unscaledHeight {number} 
-         */
         public updateDisplayList(unscaledWidth:number, unscaledHeight:number):void{
             super.updateDisplayList(unscaledWidth, unscaledHeight);
             if (this._layoutInvalidateDisplayListFlag&&this._layout){

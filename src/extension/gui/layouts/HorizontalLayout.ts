@@ -358,10 +358,6 @@ module egret.gui {
 			return totalSize;
 		}
 		
-		/**
-		 * @method egret.gui.HorizontalLayout#elementAdded
-		 * @param index {number} 
-		 */
 		public elementAdded(index:number):void{
 			if(!this.useVirtualLayout)
 				return;
@@ -370,10 +366,6 @@ module egret.gui {
 			this.elementSizeTable.splice(index,0,typicalWidth);
 		}
 		
-		/**
-		 * @method egret.gui.HorizontalLayout#elementRemoved
-		 * @param index {number} 
-		 */
 		public elementRemoved(index:number):void{
 			if(!this.useVirtualLayout)
 				return;
@@ -381,9 +373,6 @@ module egret.gui {
 			this.elementSizeTable.splice(index,1);
 		}
 		
-		/**
-		 * @method egret.gui.HorizontalLayout#clearVirtualLayoutCache
-		 */
 		public clearVirtualLayoutCache():void{
 			if(!this.useVirtualLayout)
 				return;
@@ -765,8 +754,7 @@ module egret.gui {
 		
 		/**
 		 * 为每个可变尺寸的子项分配空白区域
-		 * @method egret.gui.HorizontalLayout.flexChildrenProportionally
-		 * @param spaceForChildren {number} 
+		 * @param spaceForChildren {number}
 		 * @param spaceToDistribute {number} 
 		 * @param totalPercent {number} 
 		 * @param childInfoArray {Array<any>} 

@@ -212,13 +212,11 @@ module egret.gui {
 		
 		/**
 		 * 是否允许自定义的选中项
-		 * @member egret.gui.ListBase#_allowCustomSelectedItem
-		 */		
+		 */
 		public _allowCustomSelectedItem:boolean = false;
 		/**
 		 * 索引改变后是否需要抛出事件 
-		 * @member egret.gui.ListBase#_dispatchChangeAfterSelection
-		 */		
+		 */
 		public _dispatchChangeAfterSelection:boolean = false;
 		
 		/**

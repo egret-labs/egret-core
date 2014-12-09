@@ -203,11 +203,6 @@ module egret.gui {
             this.updateSkinDisplayList();
         }
 
-        /**
-		 * @method egret.gui.ProgressBar#partAdded
-		 * @param partName {string} 
-		 * @param instance {any} 
-         */
         public partAdded(partName:string, instance:any):void {
             if (instance == this.track) {
                 if (this.track instanceof UIComponent) {
@@ -217,11 +212,6 @@ module egret.gui {
             }
         }
 
-        /**
-		 * @method egret.gui.ProgressBar#partRemoved
-		 * @param partName {string} 
-		 * @param instance {any} 
-         */
         public partRemoved(partName:string, instance:any):void {
             if (instance == this.track) {
                 if (this.track instanceof UIComponent) {
@@ -241,9 +231,6 @@ module egret.gui {
             this.invalidateProperties();
         }
 
-		/**
-		 * @method egret.gui.ProgressBar#commitProperties
-		 */
         public commitProperties():void {
             super.commitProperties();
             if (this.trackResizedOrMoved) {

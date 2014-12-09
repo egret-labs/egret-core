@@ -48,8 +48,7 @@ module egret.gui {
 		private static groupCount:number = 0;
 		/**
 		 * 组名
-		 * @member egret.gui.RadioButtonGroup#_name
-		 */		
+		 */
 		public _name:string;
 		/**
 		 * 单选按钮列表
@@ -140,8 +139,7 @@ module egret.gui {
 		}
 		/**
 		 * 添加单选按钮到组内
-		 * @method egret.gui.RadioButtonGroup#_addInstance
-		 * @param instance {RadioButton} 
+		 * @param instance {RadioButton}
 		 */
 		public _addInstance(instance:RadioButton):void{
 			instance.addEventListener(Event.REMOVED, this.radioButton_removedHandler, this);
@@ -197,8 +195,7 @@ module egret.gui {
 		}
 		/**
 		 * 从组里移除单选按钮
-		 * @method egret.gui.RadioButtonGroup#_removeInstance
-		 * @param instance {RadioButton} 
+		 * @param instance {RadioButton}
 		 */		
 		public _removeInstance(instance:RadioButton):void{
 			this.doRemoveInstance(instance,false);
@@ -236,8 +233,7 @@ module egret.gui {
 		}
 		/**
 		 * 设置选中的单选按钮
-		 * @method egret.gui.RadioButtonGroup#_setSelection
-		 * @param value {RadioButton} 
+		 * @param value {RadioButton}
 		 * @param fireChange {boolean} 
 		 */		
 		public _setSelection(value:RadioButton, fireChange:boolean = true):void{

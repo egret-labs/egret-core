@@ -350,7 +350,6 @@ module egret.gui {
 
         /**
          * 添加一个显示元素到容器
-         * @method egret.gui.Skin#_elementAdded
          * @param element {IVisualElement}
          * @param index {number}
          * @param notifyListeners {boolean}
@@ -373,7 +372,6 @@ module egret.gui {
         }
         /**
          * 从容器移除一个显示元素
-         * @method egret.gui.Skin#_elementRemoved
          * @param element {IVisualElement}
          * @param index {number}
          * @param notifyListeners {boolean}

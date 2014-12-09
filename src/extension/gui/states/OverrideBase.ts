@@ -36,31 +36,16 @@ module egret.gui {
 	 * @implements egret.gui.IOverride
 	 */	
 	export class OverrideBase extends HashObject implements IOverride{
-		/**
-		 * @method egret.gui.OverrideBase#constructor
-		 */
 		public constructor() {
             super();
         }
-		/**
-		 * @method egret.gui.OverrideBase#initialize
-		 * @param parent {IStateClient} 
-		 */
 		public initialize(parent:IStateClient):void {
 		}
 		
-		/**
-		 * @method egret.gui.OverrideBase#apply
-		 * @param parent {IContainer} 
-		 */
 		public apply(parent:IContainer):void {
 			
 		}
 		
-		/**
-		 * @method egret.gui.OverrideBase#remove
-		 * @param parent {IContainer} 
-		 */
 		public remove(parent:IContainer):void {
 			if(parent===null)
             {

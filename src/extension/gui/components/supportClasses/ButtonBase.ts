@@ -411,11 +411,6 @@ module egret.gui {
 			return "up";
 		}
 
-		/**
-		 * @method egret.gui.ButtonBase#partAdded
-		 * @param partName {string}
-		 * @param instance {any}
-		 */
 		public partAdded(partName:string, instance:any):void{
 			super.partAdded(partName, instance);
 
