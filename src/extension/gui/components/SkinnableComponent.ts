@@ -47,22 +47,13 @@ module egret.gui {
 			super();
 		}
 
-        public _hostComponentKey: string = null;
 
         /**
-         * [已废弃]主机组件标识符。用于唯一确定一个组件的名称。
+         * 主机组件标识符。用于唯一确定一个组件的名称。
          * 用户自定义的组件若不对此属性赋值，将会继承父级的标识符定义。
          * @member {string} egret.gui.SkinnableComponent#hostComponentKey
-		 * @deprecated
          */
-        public get hostComponentKey() {
-            return this._hostComponentKey;
-        }
-
-        public set hostComponentKey(val: string) {
-            this._hostComponentKey = val;
-            Logger.warning("SkinnableComponent.hostComponentKey已废弃，请直接使用类名全称如：egret.gui.List");
-        }
+        public hostComponentKey: string = null;
 
         /**
          * 外部显式设置了皮肤名

@@ -109,7 +109,6 @@ module egret.gui {
                 superClass: any = client;
 
             while (!skinName && superClass) {
-                //兼容之前的hostComponentKey
                 hostKey = (<egret.gui.SkinnableComponent>superClass).hostComponentKey || egret.getQualifiedClassName(superClass);
                 skinName = skinMap[hostKey];
                 superClass = egret.getDefinitionByName(egret.getQualifiedSuperclassName(superClass));
