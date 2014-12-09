@@ -51,6 +51,7 @@
         "egret/display/Shape.ts",
         "egret/display/Sprite.ts",
         "egret/text/TextField.ts",
+        "egret/text/HtmlTextParser.ts",
         "egret/text/TextFieldType.ts",
         "egret/display/SpriteSheet.ts",
         "egret/text/TextInput.ts",

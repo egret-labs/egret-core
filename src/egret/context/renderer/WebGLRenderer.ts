@@ -479,7 +479,7 @@ module egret {
 
         private canvasContext = document.createElement("canvas").getContext("2d");
 
-        public setupFont(textField:TextField):void {
+        public setupFont(textField:TextField, style:egret.ITextStyle = null):void {
             var ctx = this.canvasContext;
             var font:string = textField.italic ? "italic " : "normal ";
             font += textField.bold ? "bold " : "normal ";
