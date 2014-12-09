@@ -698,7 +698,7 @@ function readRelyOnFromExml(path,srcPath){
  * 根据id和命名空间获取类名
  */
 function getClassNameById(id,ns){
-    if(ns==E||ns==W){
+    if(!ns||ns==E||ns==W){
         if(!exmlConfig){
             exmlConfig = exml_config.getInstance();
         }
