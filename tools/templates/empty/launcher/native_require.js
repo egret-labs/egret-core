@@ -28,7 +28,8 @@ egret_native.requireFiles = function () {
 };
 
 egret_native.egretInit = function () {
-    if (true) {
+    var needCompile = true;
+    if (needCompile) {
         egret_native.requireFiles();
     }
     else {

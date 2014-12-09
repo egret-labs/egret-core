@@ -9,6 +9,7 @@ var compiler = require("./compile.js");
 var file = require("../core/file.js");
 var code_util = require("../core/code_util.js");
 var projectConfig = require("../core/projectConfig.js");
+var global = require("../core/globals");
 
 
 function run(dir, args, opts) {
@@ -21,7 +22,13 @@ function run(dir, args, opts) {
     globals.checkVersion(currDir);
     var task = [];
 
+    projectConfig.init(currDir);
     var runtime = param.getOption(opts, "--runtime", ["html5", "native"]);
+    if (runtime == "native" && !projectConfig.hasNativeUrl()) {
+        global.exit(8004);
+        return null;
+    }
+
 
     copyProject(currDir);
 
@@ -36,7 +43,26 @@ function run(dir, args, opts) {
         function (callback) {
             buildProject(callback, currDir, keepGeneratedTypescript, runtime);
         }
-    )
+    );
+
+    task.push(
+        function (callback) {
+            if (runtime == "native") {
+                var output = projectConfig.getOutputDir();
+                if (!needCompileEngine) {
+                    file.remove(path.join(output, "libs"));
+                }
+                file.remove(path.join(output, "../temp"));
+                file.copy(output, path.join(output, "../temp"));
+
+                file.remove(path.join(output, "../proj.android/assets/egret-game"));
+                file.copy(path.join(output, "../temp"), path.join(output, "../proj.android/assets/egret-game"));
+
+                file.remove(output);
+            }
+            callback();
+        }
+    );
 
 
     async.series(task, function (err) {
@@ -56,7 +82,6 @@ function run(dir, args, opts) {
 function copyProject(currDir) {
     var output = projectConfig.getOutputDir();
     if (output) {
-//        file.remove(output);
         var ignorePathList = projectConfig.getIgnorePath();
         var copyFilePathList = file.getDirectoryListing(currDir);
         var isIgnore = false;
@@ -113,7 +138,7 @@ function buildProject(callback, currDir, keepGeneratedTypescript, runtime) {
             compileConfig
         );
     }
-    ], callback)
+    ], callback);
 
 
 }
