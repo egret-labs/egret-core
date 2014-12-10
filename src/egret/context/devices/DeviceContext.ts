@@ -30,7 +30,6 @@ module egret {
 
 
 	/**
-	 * @class egret.DeviceContext
 	 * @classdesc
 	 * @extends egret.HashObject
 	 */

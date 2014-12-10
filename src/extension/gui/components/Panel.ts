@@ -72,11 +72,6 @@ module egret.gui {
                 this.titleDisplay.text = this.title;
         }
 
-        /**
-		 * @method egret.gui.Panel#partAdded
-		 * @param partName {string} 
-		 * @param instance {any} 
-         */
         public partAdded(partName:string, instance:any):void {
             super.partAdded(partName, instance);
 

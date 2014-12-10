@@ -115,8 +115,7 @@ module egret
         }
 
 		/**
-		 * @method egret.ByteArray#ensureWriteableSpace
-		 * @param n {number} 
+		 * @param n {number}
 		 */
         public ensureWriteableSpace(n:number)
         {
@@ -124,8 +123,7 @@ module egret
         }
 
 		/**
-		 * @method egret.ByteArray#setArrayBuffer
-		 * @param aBuffer {egret.ArrayBuffer} 
+		 * @param aBuffer {egret.ArrayBuffer}
 		 */
         public setArrayBuffer(aBuffer:ArrayBuffer):void
         {
@@ -248,7 +246,8 @@ module egret
 		/**
          * 从字节流中读取无符号的字节。
          * 返回值的范围是从 0 到 255。
-		 * @method egret.ByteArray#readUnsignedByte 介于 0 到 255 之间的无符号字节。
+		 * @method egret.ByteArray#readUnsignedByte
+         * @returns {number} 介于 0 到 255 之间的无符号字节。
 		 */
         public readUnsignedByte()
         {

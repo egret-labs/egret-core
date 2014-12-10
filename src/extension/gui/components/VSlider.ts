@@ -45,8 +45,7 @@ module egret.gui {
 		}
 		
 		/**
-		 * @method egret.gui.VSlider#pointToValue
-		 * @param x {number} 
+		 * @param x {number}
 		 * @param y {number} 
 		 * @returns {number}
 		 */
@@ -60,7 +59,6 @@ module egret.gui {
 		}
 		
 		/**
-		 * @method egret.gui.VSlider#updateSkinDisplayList
 		 */
 		public updateSkinDisplayList():void{
 			if (!this.thumb || !this.track)

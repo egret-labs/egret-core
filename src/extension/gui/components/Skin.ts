@@ -116,16 +116,10 @@ module egret.gui {
          */
         public measuredHeight:number = 0;
 
-        /**
-         * @member egret.gui.Skin#preferredWidth
-         */
         public get preferredWidth():number{
             return this._hasWidthSet ? this._width:this.measuredWidth;
         }
 
-        /**
-         * @member egret.gui.Skin#preferredHeight
-         */
         public get preferredHeight():number{
             return this._hasHeightSet ? this._height:this.measuredHeight;
         }
@@ -350,7 +344,6 @@ module egret.gui {
 
         /**
          * 添加一个显示元素到容器
-         * @method egret.gui.Skin#_elementAdded
          * @param element {IVisualElement}
          * @param index {number}
          * @param notifyListeners {boolean}
@@ -373,7 +366,6 @@ module egret.gui {
         }
         /**
          * 从容器移除一个显示元素
-         * @method egret.gui.Skin#_elementRemoved
          * @param element {IVisualElement}
          * @param index {number}
          * @param notifyListeners {boolean}

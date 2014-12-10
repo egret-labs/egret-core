@@ -84,15 +84,13 @@ module egret.gui {
         }
 
         /**
-		 * @member egret.gui.SkinnableContainer#numElements
          */
         public get numElements():number {
             return this._getCurrentContentGroup().numElements;
         }
 
         /**
-		 * @method egret.gui.SkinnableContainer#getElementAt
-		 * @param index {number} 
+		 * @param index {number}
 		 * @returns {IVisualElement}
          */
         public getElementAt(index:number):IVisualElement {
@@ -100,8 +98,7 @@ module egret.gui {
         }
 
         /**
-		 * @method egret.gui.SkinnableContainer#addElement
-		 * @param element {IVisualElement} 
+		 * @param element {IVisualElement}
 		 * @returns {IVisualElement}
          */
         public addElement(element:IVisualElement):IVisualElement {
@@ -109,8 +106,7 @@ module egret.gui {
         }
 
         /**
-		 * @method egret.gui.SkinnableContainer#addElementAt
-		 * @param element {IVisualElement} 
+		 * @param element {IVisualElement}
 		 * @param index {number} 
 		 * @returns {IVisualElement}
          */
@@ -119,8 +115,7 @@ module egret.gui {
         }
 
         /**
-		 * @method egret.gui.SkinnableContainer#removeElement
-		 * @param element {IVisualElement} 
+		 * @param element {IVisualElement}
 		 * @returns {IVisualElement}
          */
         public removeElement(element:IVisualElement):IVisualElement {
@@ -128,8 +123,7 @@ module egret.gui {
         }
 
         /**
-		 * @method egret.gui.SkinnableContainer#removeElementAt
-		 * @param index {number} 
+		 * @param index {number}
 		 * @returns {IVisualElement}
          */
         public removeElementAt(index:number):IVisualElement {
@@ -137,15 +131,13 @@ module egret.gui {
         }
 
         /**
-		 * @method egret.gui.SkinnableContainer#removeAllElements
          */
         public removeAllElements():void {
             this._getCurrentContentGroup().removeAllElements();
         }
 
         /**
-		 * @method egret.gui.SkinnableContainer#getElementIndex
-		 * @param element {IVisualElement} 
+		 * @param element {IVisualElement}
 		 * @returns {number}
          */
         public getElementIndex(element:IVisualElement):number {
@@ -153,8 +145,7 @@ module egret.gui {
         }
 
         /**
-		 * @method egret.gui.SkinnableContainer#setElementIndex
-		 * @param element {IVisualElement} 
+		 * @param element {IVisualElement}
 		 * @param index {number} 
          */
         public setElementIndex(element:IVisualElement, index:number):void {
@@ -162,8 +153,7 @@ module egret.gui {
         }
 
         /**
-		 * @method egret.gui.SkinnableContainer#swapElements
-		 * @param element1 {IVisualElement} 
+		 * @param element1 {IVisualElement}
 		 * @param element2 {IVisualElement} 
          */
         public swapElements(element1:IVisualElement, element2:IVisualElement):void {
@@ -171,8 +161,7 @@ module egret.gui {
         }
 
         /**
-		 * @method egret.gui.SkinnableContainer#swapElementsAt
-		 * @param index1 {number} 
+		 * @param index1 {number}
 		 * @param index2 {number} 
          */
         public swapElementsAt(index1:number, index2:number):void {
@@ -203,8 +192,7 @@ module egret.gui {
         }
 
         /**
-		 * @method egret.gui.SkinnableContainer#partAdded
-		 * @param partName {string} 
+		 * @param partName {string}
 		 * @param instance {any} 
          */
         public partAdded(partName:string, instance:any):void {
@@ -240,8 +228,7 @@ module egret.gui {
         }
 
         /**
-		 * @method egret.gui.SkinnableContainer#partRemoved
-		 * @param partName {string} 
+		 * @param partName {string}
 		 * @param instance {any} 
          */
         public partRemoved(partName:string, instance:any):void {
@@ -269,8 +256,6 @@ module egret.gui {
 
         /**
          * 容器添加元素事件
-		 * @method egret.gui.SkinnableContainer#_contentGroup_elementAddedHandler
-		 * @param event {ElementExistenceEvent} 
          */
         public _contentGroup_elementAddedHandler(event:ElementExistenceEvent):void {
             event.element.ownerChanged(this);
@@ -279,8 +264,6 @@ module egret.gui {
 
         /**
          * 容器移除元素事件
-		 * @method egret.gui.SkinnableContainer#_contentGroup_elementRemovedHandler
-		 * @param event {ElementExistenceEvent} 
          */
         public _contentGroup_elementRemovedHandler(event:ElementExistenceEvent):void {
             event.element.ownerChanged(null);

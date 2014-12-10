@@ -29,6 +29,7 @@ module egret {
     /**
      * @class egret.WebGLRenderer
      * @classdesc
+     * WebGL的渲染类
      * @extends egret.RendererContext
      */
     export class WebGLRenderer extends RendererContext {

@@ -48,8 +48,7 @@ module egret.gui {
 		private static initlized:boolean = false;
 		/**
 		 * 初始化管理器
-		 * @method egret.gui.UIGlobals._initlize
-		 * @param stage {Stage} 
+		 * @param stage {Stage}
 		 */		
 		public static _initlize(stage:Stage):void{
 			if(UIGlobals.initlized)
@@ -60,8 +59,7 @@ module egret.gui {
 		}
 		/**
 		 * 延迟渲染布局管理器 
-		 * @member egret.gui.UIGlobals._layoutManager
-		 */		
+		 */
 		public static _layoutManager:LayoutManager;
 		/**
 		 * 系统管理器列表

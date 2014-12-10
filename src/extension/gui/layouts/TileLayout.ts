@@ -411,9 +411,6 @@ module egret.gui {
 			}
 		}
 		
-		/**
-		 * @method egret.gui.TileLayout#measure
-		 */
 		public measure():void{
 			if (!this.target)
 				return;
@@ -625,9 +622,6 @@ module egret.gui {
 		 */		
 		private indexInViewCalculated:boolean = false;
 		
-		/**
-		 * @method egret.gui.TileLayout#scrollPositionChanged
-		 */
 		public scrollPositionChanged():void{
 			super.scrollPositionChanged();
 			if(this.useVirtualLayout){
@@ -708,8 +702,7 @@ module egret.gui {
 		}
 		
 		/**
-		 * @method egret.gui.TileLayout#updateDisplayList
-		 * @param width {number} 
+		 * @param width {number}
 		 * @param height {number} 
 		 */
 		public updateDisplayList(width:number, height:number):void{

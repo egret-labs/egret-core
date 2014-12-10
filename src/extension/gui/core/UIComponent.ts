@@ -282,9 +282,7 @@ module egret.gui {
 		
 		/**
 		 * 即将添加一个子项
-		 * @method egret.gui.UIComponent#_addingChild
-		 * @param child {DisplayObject} 
-		 */		
+		 */
 		public _addingChild(child:DisplayObject):void{
 			if(child&&"nestLevel" in child){
 				(<ILayoutManagerClient><any>child).nestLevel = this._nestLevel+1;
@@ -738,14 +736,11 @@ module egret.gui {
 			return changed;
 		}
 		
-		/**
-		 * @member egret.gui.UIComponent#_invalidateDisplayListFlag
-		 */
 		public _invalidateDisplayListFlag:boolean = false;
 		
 		/**
 		 * @method egret.gui.UIComponent#invalidateDisplayList
-		 */		
+		 */
 		public invalidateDisplayList():void{
 			if (!this._invalidateDisplayListFlag){
 				this._invalidateDisplayListFlag = true;
@@ -792,9 +787,6 @@ module egret.gui {
 			}
 		}
 		
-		/**
-		 * @member egret.gui.UIComponent#_validateNowFlag
-		 */
 		public _validateNowFlag:boolean = false;
 		
 		/**
@@ -830,17 +822,14 @@ module egret.gui {
 		
 		/**
 		 * 是否可以跳过测量尺寸阶段,返回true则不执行measure()方法
-		 * @method egret.gui.UIComponent#canSkipMeasurement
-		 * @returns {boolean}
-		 */		
+		 */
 		public canSkipMeasurement():boolean{
 			return !isNaN(this._explicitWidth) && !isNaN(this._explicitHeight);
 		}
 		
 		/**
 		 * 提交属性，子类在调用完invalidateProperties()方法后，应覆盖此方法以应用属性
-		 * @method egret.gui.UIComponent#commitProperties
-		 */		
+		 */
 		public commitProperties():void{
 			if(this.oldWidth != this._width||this.oldHeight != this._height){
 				this.dispatchResizeEvent();

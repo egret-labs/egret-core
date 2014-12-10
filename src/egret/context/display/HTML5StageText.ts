@@ -29,7 +29,6 @@
 module egret {
 
     /**
-     * @class egret.HTML5StageText
      * @classdesc
      * @extends egret.StageText
      */

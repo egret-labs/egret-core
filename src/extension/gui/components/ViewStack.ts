@@ -87,8 +87,9 @@ module egret.gui {
 
 		private _selectedChild:IVisualElement;
 		/**
+		 * 当前选中的子项
 		 * @member egret.gui.ViewStack#selectedChild
-		 */	
+		 */
 		public get selectedChild():IVisualElement{
 			var index:number = this.selectedIndex;
 			if (index>=0&&index<this.numElements)
@@ -112,6 +113,7 @@ module egret.gui {
 		
 		public _selectedIndex:number = -1;
 		/**
+		 * 当前选中子项的索引
 		 * @member egret.gui.ViewStack#selectedIndex
 		 */	
 		public get selectedIndex():number{
@@ -141,8 +143,7 @@ module egret.gui {
 		
 		/**
 		 * 添加一个显示元素到容器
-		 * @method egret.gui.ViewStack#_elementAdded
-		 * @param element {IVisualElement} 
+		 * @param element {IVisualElement}
 		 * @param index {number} 
 		 * @param notifyListeners {boolean} 
 		 */		
@@ -173,8 +174,7 @@ module egret.gui {
 		
 		/**
 		 * 从容器移除一个显示元素
-		 * @method egret.gui.ViewStack#_elementRemoved
-		 * @param element {IVisualElement} 
+		 * @param element {IVisualElement}
 		 * @param index {number} 
 		 * @param notifyListeners {boolean} 
 		 */		
@@ -205,9 +205,6 @@ module egret.gui {
 		 */		
 		private childOrderingChanged:boolean = false;
 		
-		/**
-		 * @method egret.gui.ViewStack#commitProperties
-		 */
 		public commitProperties():void{
 			super.commitProperties();
 			if (this.proposedSelectedIndex != ViewStack.NO_PROPOSED_SELECTION){
@@ -259,14 +256,14 @@ module egret.gui {
 			this.invalidateDisplayList();
 		}
 		/**
+		 * 子项数量
 		 * @member egret.gui.ViewStack#length
 		 */	
 		public get length():number{
 			return this.numElements;
 		}
 		/**
-		 * @method egret.gui.ViewStack#getItemAt
-		 * @param index {number} 
+		 * @param index {number}
 		 * @returns {any}
 		 */			
 		public getItemAt(index:number):any{
@@ -276,8 +273,7 @@ module egret.gui {
 			return "";
 		}
 		/**
-		 * @method egret.gui.ViewStack#getItemIndex
-		 * @param item {any} 
+		 * @param item {any}
 		 * @returns {number}
 		 */		
 		public getItemIndex(item:any):number{

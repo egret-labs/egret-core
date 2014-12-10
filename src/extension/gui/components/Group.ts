@@ -295,8 +295,7 @@ module egret.gui {
 		}
 		/**
 		 * 添加一个显示元素到容器
-		 * @method egret.gui.Group#_elementAdded
-		 * @param element {IVisualElement} 
+		 * @param element {IVisualElement}
 		 * @param index {number} 
 		 * @param notifyListeners {boolean} 
 		 */		
@@ -317,8 +316,7 @@ module egret.gui {
 		}
 		/**
 		 * 从容器移除一个显示元素
-		 * @method egret.gui.Group#_elementRemoved
-		 * @param element {IVisualElement} 
+		 * @param element {IVisualElement}
 		 * @param index {number} 
 		 * @param notifyListeners {boolean} 
 		 */		
@@ -340,7 +338,6 @@ module egret.gui {
 		
 		private static errorStr:string = "在此组件中不可用，若此组件为容器类，请使用";
 		/**
-		 * @method egret.gui.Group#addChild
 		 * @deprecated
 		 * @param child {DisplayObject} 
 		 * @returns {DisplayObject}
@@ -349,7 +346,6 @@ module egret.gui {
 			throw(new Error("addChild()"+Group.errorStr+"addElement()代替"));
 		}
 		/**
-		 * @method egret.gui.Group#addChildAt
 		 * @deprecated
 		 * @param child {DisplayObject} 
 		 * @param index {number} 
@@ -359,7 +355,6 @@ module egret.gui {
 			throw(new Error("addChildAt()"+Group.errorStr+"addElementAt()代替"));
 		}
 		/**
-		 * @method egret.gui.Group#removeChild
 		 * @deprecated
 		 * @param child {DisplayObject} 
 		 * @returns {DisplayObject}
@@ -377,7 +372,6 @@ module egret.gui {
 			throw(new Error("removeChildAt()"+Group.errorStr+"removeElementAt()代替"));
 		}
 		/**
-		 * @method egret.gui.Group#setChildIndex
 		 * @deprecated
 		 * @param child {DisplayObject} 
 		 * @param index {number} 
@@ -386,7 +380,6 @@ module egret.gui {
 			throw(new Error("setChildIndex()"+Group.errorStr+"setElementIndex()代替"));
 		}
 		/**
-		 * @method egret.gui.Group#swapChildren
 		 * @deprecated
 		 * @param child1 {DisplayObject} 
 		 * @param child2 {DisplayObject} 

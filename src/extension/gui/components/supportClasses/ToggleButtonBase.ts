@@ -86,9 +86,6 @@ module egret.gui {
 		 * 是否根据鼠标事件自动变换选中状态,默认true。仅框架内使用。
 		 */		
 		public _autoSelected:boolean = true;
-		/**
-		 * @method egret.gui.ToggleButtonBase#buttonReleased
-		 */
 		public buttonReleased():void{
 			super.buttonReleased();
 			if(!this._autoSelected||!this.enabled)

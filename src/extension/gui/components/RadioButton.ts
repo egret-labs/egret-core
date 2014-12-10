@@ -47,13 +47,11 @@ module egret.gui {
 		
 		/**
 		 * 在RadioButtonGroup中的索引
-		 * @member egret.gui.RadioButton#_indexNumber
-		 */		
+		 */
 		public _indexNumber:number = 0;
 		/**
 		 * 所属的RadioButtonGroup
-		 * @member egret.gui.RadioButton#_radioButtonGroup
-		 */		
+		 */
 		public _radioButtonGroup:RadioButtonGroup = null;
 		
 		/**

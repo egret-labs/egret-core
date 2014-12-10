@@ -35,18 +35,12 @@ module egret.gui {
 	 * @extends egret.gui.ListBase
 	 */
 	export class List extends ListBase{
-		/**
-		 * @method egret.gui.List#constructor
-		 */
 		public constructor(){
 			super();
             
 			this.useVirtualLayout = true;
 		}
 		
-		/**
-		 * @method egret.gui.List#createChildren
-		 */
 		public createChildren():void{
 			if(!this.itemRenderer)
 				this.itemRenderer = DataGroup.defaultRendererFactory;
@@ -238,7 +232,6 @@ module egret.gui {
 		}
 		/**
 		 * 提交多项选中项属性
-		 * @method egret.gui.List#commitMultipleSelection
 		 */
 		public commitMultipleSelection():void{
 			var removedItems:Array<number> = [];
@@ -291,10 +284,6 @@ module egret.gui {
 			return super._isItemIndexSelected(index);
 		}
 
-		/**
-		 * @method egret.gui.List#dataGroup_rendererAddHandler
-		 * @param event {RendererExistenceEvent} 
-		 */
 		public dataGroup_rendererAddHandler(event:RendererExistenceEvent):void{
 			super.dataGroup_rendererAddHandler(event);
 
@@ -316,10 +305,6 @@ module egret.gui {
 			}
 			super.dataProviderRefreshed();
 		}
-		/**
-		 * @method egret.gui.List#dataGroup_rendererRemoveHandler
-		 * @param event {RendererExistenceEvent} 
-		 */
 		public dataGroup_rendererRemoveHandler(event:RendererExistenceEvent):void{
 			super.dataGroup_rendererRemoveHandler(event);
 

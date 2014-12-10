@@ -31,15 +31,10 @@ module egret {
      * @class egret.DisplayObject
      * @extends egret.EventDispatcher
      * @classdesc 类是可放在显示列表中的所有对象的基类。该显示列表管理运行时显示的所有对象。使用 DisplayObjectContainer 类排列显示列表中的显示对象。
-     *
      * DisplayObjectContainer 对象可以有子显示对象，而其他显示对象是“叶”节点，只有父级和同级，没有子级。
-     *
      * DisplayObject 类支持基本功能（如对象的 x 和 y 位置），也支持更高级的对象属性（如它的转换矩阵），所有显示对象都继承自 DisplayObject 类。
-     *
      * DisplayObject 类包含若干广播事件。通常，任何特定事件的目标均为一个特定的 DisplayObject 实例。
-     *
      * 若只有一个目标，则会将事件侦听器限制为只能放置到该目标上（在某些情况下，可放置到显示列表中该目标的祖代上），这意味着您可以向任何 DisplayObject 实例添加侦听器来侦听广播事件。
-     *
      * 任何继承自DisplayObject的类都必须实现以下方法
      * _render();
      * _measureBounds()
@@ -429,7 +424,7 @@ module egret {
         /**
          * BlendMode 类中的一个值，用于指定要使用的混合模式。
          * 内部绘制位图的方法有两种。 如果启用了混合模式或外部剪辑遮罩，则将通过向矢量渲染器添加有位图填充的正方形来绘制位图。 如果尝试将此属性设置为无效值，则运行时会将此值设置为 BlendMode.NORMAL。
-         * @member {BlendMode} egret.DisplayObject#blendMode
+         * @member {string} egret.DisplayObject#blendMode
          */
         public blendMode:string = null;
 

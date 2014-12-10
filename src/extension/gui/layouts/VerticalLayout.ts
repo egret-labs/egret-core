@@ -191,10 +191,6 @@ module egret.gui {
         }
 
 
-
-        /**
-		 * @method egret.gui.VerticalLayout#measure
-         */
         public measure():void{
             super.measure();
             if(!this.target)
@@ -275,8 +271,7 @@ module egret.gui {
         }
 
         /**
-		 * @method egret.gui.VerticalLayout#updateDisplayList
-		 * @param width {number} 
+		 * @param width {number}
 		 * @param height {number} 
          */
         public updateDisplayList(width:number, height:number):void{
@@ -360,8 +355,7 @@ module egret.gui {
         }
 
         /**
-		 * @method egret.gui.VerticalLayout#elementAdded
-		 * @param index {number} 
+		 * @param index {number}
          */
         public elementAdded(index:number):void{
             super.elementAdded(index);
@@ -370,17 +364,13 @@ module egret.gui {
         }
 
         /**
-		 * @method egret.gui.VerticalLayout#elementRemoved
-		 * @param index {number} 
+		 * @param index {number}
          */
         public elementRemoved(index:number):void{
             super.elementRemoved(index);
             this.elementSizeTable.splice(index,1);
         }
 
-        /**
-		 * @method egret.gui.VerticalLayout#clearVirtualLayoutCache
-         */
         public clearVirtualLayoutCache():void{
             super.clearVirtualLayoutCache();
             this.elementSizeTable = [];
@@ -421,7 +411,6 @@ module egret.gui {
         private indexInViewCalculated:boolean = false;
 
         /**
-		 * @method egret.gui.VerticalLayout#scrollPositionChanged
          */
         public scrollPositionChanged():void{
             super.scrollPositionChanged();

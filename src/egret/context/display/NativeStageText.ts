@@ -32,7 +32,6 @@
 module egret {
 
     /**
-     * @class egret.NativeStageText
      * @classdesc
      * @extends egret.StageText
      */

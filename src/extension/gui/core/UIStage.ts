@@ -182,7 +182,6 @@ module egret.gui {
 		}
 
 		/**
-		 * @member egret.gui.UIStage#scaleY
 		 */
         public get scaleY():number{
             return this._scaleY;
@@ -196,8 +195,7 @@ module egret.gui {
             this._setScaleY(value);
 		}
 		/**
-		 * @method egret.gui.UIStage#setActualSize
-		 * @param w {number} 
+		 * @param w {number}
 		 * @param h {number} 
 		 */
 		public setActualSize(w:number, h:number):void{
@@ -206,8 +204,7 @@ module egret.gui {
             super.setActualSize(w,h);
 		}
 		/**
-		 * @method egret.gui.UIStage#setLayoutBoundsPosition
-		 * @param x {number} 
+		 * @param x {number}
 		 * @param y {number} 
 		 */
 		public setLayoutBoundsPosition(x:number, y:number):void{
@@ -216,8 +213,7 @@ module egret.gui {
             super.setLayoutBoundsPosition(x,y);
 		}
 		/**
-		 * @method egret.gui.UIStage#setLayoutBoundsSize
-		 * @param layoutWidth {number} 
+		 * @param layoutWidth {number}
 		 * @param layoutHeight {number} 
 		 */
 		public setLayoutBoundsSize(layoutWidth:number, layoutHeight:number):void{
@@ -335,8 +331,7 @@ module egret.gui {
 		//                                复写容器操作方法
 		//==========================================================================
 		/**
-		 * @method egret.gui.UIStage#addElement
-		 * @param element {IVisualElement} 
+		 * @param element {IVisualElement}
 		 * @returns {IVisualElement}
 		 */
 		public addElement(element:IVisualElement):IVisualElement{
@@ -347,8 +342,7 @@ module egret.gui {
 		}
 		
 		/**
-		 * @method egret.gui.UIStage#addElementAt
-		 * @param element {IVisualElement} 
+		 * @param element {IVisualElement}
 		 * @param index {number} 
 		 * @returns {IVisualElement}
 		 */
@@ -378,8 +372,7 @@ module egret.gui {
 		}
 		
 		/**
-		 * @method egret.gui.UIStage#removeElement
-		 * @param element {IVisualElement} 
+		 * @param element {IVisualElement}
 		 * @returns {IVisualElement}
 		 */
 		public removeElement(element:IVisualElement):IVisualElement{
@@ -387,8 +380,7 @@ module egret.gui {
 		}
 		
 		/**
-		 * @method egret.gui.UIStage#removeElementAt
-		 * @param index {number} 
+		 * @param index {number}
 		 * @returns {IVisualElement}
 		 */
 		public removeElementAt(index:number):IVisualElement{
@@ -405,7 +397,6 @@ module egret.gui {
 		}
 		
 		/**
-		 * @method egret.gui.UIStage#removeAllElements
 		 */
 		public removeAllElements():void{
 			while(this._noTopMostIndex>0){
@@ -415,8 +406,7 @@ module egret.gui {
 		}
 		
 		/**
-		 * @method egret.gui.UIStage#_elementRemoved
-		 * @param element {IVisualElement} 
+		 * @param element {IVisualElement}
 		 * @param index {number} 
 		 * @param notifyListeners {boolean} 
 		 */

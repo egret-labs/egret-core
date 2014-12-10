@@ -30,10 +30,7 @@ module egret.gui {
 
 
     /**
-        * @class egret.gui.ViewportScroller
-        * @classdesc
         * 适用Viewport的滑动类
-        * @extends egret.Scroller
         */
     class ViewportScroller extends egret.ScrollView {
         _width = 0;
@@ -164,8 +161,7 @@ module egret.gui {
             this.measuredHeight = this._viewport.preferredHeight;
         }
         /**
-		 * @method egret.gui.Scroller#updateDisplayList
-		 * @param unscaledWidth {number} 
+		 * @param unscaledWidth {number}
 		 * @param unscaledHeight {number} 
          */
         public updateDisplayList(unscaledWidth:number, unscaledHeight:number):void{
@@ -341,8 +337,7 @@ module egret.gui {
             throw new RangeError("索引:\""+index+"\"超出可视元素索引范围");
         }
         /**
-		 * @method egret.gui.Scroller#getElementAt
-		 * @param index {number} 
+		 * @param index {number}
 		 * @returns {IVisualElement}
          */
         public getElementAt(index:number):IVisualElement{
@@ -354,8 +349,7 @@ module egret.gui {
         }
 
         /**
-		 * @method egret.gui.Scroller#getElementIndex
-		 * @param element {IVisualElement} 
+		 * @param element {IVisualElement}
 		 * @returns {number}
          */
         public getElementIndex(element:IVisualElement):number{
@@ -365,8 +359,7 @@ module egret.gui {
                 return -1;
         }
         /**
-		 * @method egret.gui.Scroller#containsElement
-		 * @param element {IVisualElement} 
+		 * @param element {IVisualElement}
 		 * @returns {boolean}
          */
         public containsElement(element:IVisualElement):boolean{
@@ -379,7 +372,6 @@ module egret.gui {
             throw new Error("此方法在Scroller组件内不可用!");
         }
         /**
-		 * @method egret.gui.Scroller#addElement
          * @deprecated
 		 * @param element {IVisualElement} 
 		 * @returns {IVisualElement}
@@ -389,7 +381,6 @@ module egret.gui {
             return null;
         }
         /**
-		 * @method egret.gui.Scroller#addElementAt
          * @deprecated
 		 * @param element {IVisualElement} 
 		 * @param index {number} 
@@ -400,7 +391,6 @@ module egret.gui {
             return null;
         }
         /**
-		 * @method egret.gui.Scroller#removeElement
          * @deprecated
 		 * @param element {IVisualElement} 
 		 * @returns {IVisualElement}
@@ -410,7 +400,6 @@ module egret.gui {
             return null;
         }
         /**
-		 * @method egret.gui.Scroller#removeElementAt
          * @deprecated
 		 * @param index {number} 
 		 * @returns {IVisualElement}
@@ -420,14 +409,12 @@ module egret.gui {
             return null;
         }
         /**
-		 * @method egret.gui.Scroller#removeAllElements
          * @deprecated
          */
         public removeAllElements():void{
             this.throwNotSupportedError();
         }
         /**
-		 * @method egret.gui.Scroller#setElementIndex
          * @deprecated
 		 * @param element {IVisualElement} 
 		 * @param index {number} 
@@ -436,7 +423,6 @@ module egret.gui {
             this.throwNotSupportedError();
         }
         /**
-		 * @method egret.gui.Scroller#swapElements
          * @deprecated
 		 * @param element1 {IVisualElement} 
 		 * @param element2 {IVisualElement} 
@@ -445,7 +431,6 @@ module egret.gui {
             this.throwNotSupportedError();
         }
         /**
-		 * @method egret.gui.Scroller#swapElementsAt
          * @deprecated
 		 * @param index1 {number} 
 		 * @param index2 {number} 
@@ -455,7 +440,6 @@ module egret.gui {
         }
 
         /**
-		 * @method egret.gui.Scroller#addChild
          * @deprecated
 		 * @param child {DisplayObject} 
 		 * @returns {DisplayObject}
@@ -465,7 +449,6 @@ module egret.gui {
             return null;
         }
         /**
-		 * @method egret.gui.Scroller#addChildAt
          * @deprecated
 		 * @param child {DisplayObject} 
 		 * @param index {number} 
@@ -476,7 +459,6 @@ module egret.gui {
             return null;
         }
         /**
-		 * @method egret.gui.Scroller#removeChild
          * @deprecated
 		 * @param child {DisplayObject} 
 		 * @returns {DisplayObject}
@@ -486,7 +468,6 @@ module egret.gui {
             return null;
         }
         /**
-		 * @method egret.gui.Scroller#removeChildAt
          * @deprecated
 		 * @param index {number} 
 		 * @returns {DisplayObject}
@@ -496,7 +477,6 @@ module egret.gui {
             return null;
         }
         /**
-		 * @method egret.gui.Scroller#setChildIndex
          * @deprecated
 		 * @param child {DisplayObject} 
 		 * @param index {number} 
@@ -505,7 +485,6 @@ module egret.gui {
             this.throwNotSupportedError();
         }
         /**
-		 * @method egret.gui.Scroller#swapChildren
          * @deprecated
 		 * @param child1 {DisplayObject} 
 		 * @param child2 {DisplayObject} 
@@ -514,7 +493,6 @@ module egret.gui {
             this.throwNotSupportedError();
         }
         /**
-		 * @method egret.gui.Scroller#swapChildrenAt
          * @deprecated
 		 * @param index1 {number} 
 		 * @param index2 {number} 
@@ -554,8 +532,7 @@ module egret.gui {
 
         /**
          * 若皮肤是ISkin,则调用此方法附加皮肤中的公共部件
-         * @method egret.gui.Scroller#partAdded
-         * @param partName {string} 
+         * @param partName {string}
          * @param instance {any} 
          */
         public partAdded(partName: string, instance: any): void {

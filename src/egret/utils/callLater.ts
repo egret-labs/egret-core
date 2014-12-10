@@ -49,7 +49,6 @@ module egret {
     export var __callAsyncArgsList:Array<any> = [];
     /**
      * 异步调用函数
-     * @method egret.__callAsync
      * @param method {Function} 要异步调用的函数
      * @param thisObject {any} 函数的this引用
      * @param ...args {any} 函数参数列表

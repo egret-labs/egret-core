@@ -97,8 +97,7 @@ module egret.gui {
 
 
 		/**
-		 * @method egret.gui.TitleWindow#partAdded
-		 * @param partName {string} 
+		 * @param partName {string}
 		 * @param instance {any} 
 		 */
 		public partAdded(partName:string, instance:any) : void{

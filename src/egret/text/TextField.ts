@@ -561,9 +561,10 @@ module egret {
 
         /**
          *
-         * @param textArr [["text1", {"color":0xffffff}], ["text2", {"color":0xff0000}]]
+         * @param
          * @private
          */
+        //textArr [["text1", {"color":0xffffff}], ["text2", {"color":0xff0000}]]
         public _setTextArray(textArr:Array<any>):void {
             var text:string = "";
             for (var i:number = 0; i < textArr.length; i++) {

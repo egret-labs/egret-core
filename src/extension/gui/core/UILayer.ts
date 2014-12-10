@@ -29,16 +29,12 @@
 module egret.gui {
 
 	/**
-	 * @class egret.gui.UILayer
-	 * @classdesc
 	 * UIStage的虚拟子容器
-	 * @implements egret.gui.IContainer
 	 */
 	export class UILayer implements IContainer{
 		/**
 		 * 构造函数
-		 * @method egret.gui.UILayer#constructor
-		 * @param owner {IUIStage} 
+		 * @param owner {IUIStage}
 		 * @param lowerBoundReference {string} 
 		 * @param upperBoundReference {strin} 
 		 */		
@@ -63,9 +59,7 @@ module egret.gui {
 		 * 容器上边界属性
 		 */		
 		private upperBoundReference:string;
-		/**
-		 * @member egret.gui.UILayer#numElements
-		 */
+
 		public get numElements():number{
 			return this.owner[this.upperBoundReference] - this.owner[this.lowerBoundReference];
 		}
@@ -76,22 +70,14 @@ module egret.gui {
 		private raw_removeElement:string = "raw_removeElement";
 		private raw_removeElementAt:string = "raw_removeElementAt";
 		private raw_setElementIndex:string = "raw_setElementIndex";
-		/**
-		 * @method egret.gui.UILayer#getElementAt
-		 * @param index {number} 
-		 * @returns {IVisualElement}
-		 */
+
 		public getElementAt(index:number):IVisualElement{
 			var retval:IVisualElement =
 				this.owner[this.raw_getElementAt](
 					this.owner[this.lowerBoundReference] + index);
 			return retval;
 		}
-		/**
-		 * @method egret.gui.UILayer#addElement
-		 * @param element {IVisualElement} 
-		 * @returns {IVisualElement}
-		 */
+
 		public addElement(element:IVisualElement):IVisualElement{
 			var index:number = this.owner[this.upperBoundReference];
 			if(element.parent===(<DisplayObjectContainer><any> this.owner))
@@ -101,12 +87,7 @@ module egret.gui {
 			element.ownerChanged(this);
 			return element;
 		}
-		/**
-		 * @method egret.gui.UILayer#addElementAt
-		 * @param element {IVisualElement} 
-		 * @param index {number} 
-		 * @returns {IVisualElement}
-		 */
+
 		public addElementAt(element:IVisualElement, index:number):IVisualElement{
 			this.owner[this.upperBoundReference]++;
 			this.owner[this.raw_addElementAt](
@@ -114,11 +95,7 @@ module egret.gui {
 			element.ownerChanged(this);
 			return element;
 		}
-		/**
-		 * @method egret.gui.UILayer#removeElement
-		 * @param element {IVisualElement} 
-		 * @returns {IVisualElement}
-		 */
+
 		public removeElement(element:IVisualElement):IVisualElement{
 			var index:number = this.owner[this.raw_getElementIndex](element);
 			if (this.owner[this.lowerBoundReference] <= index &&
@@ -129,11 +106,7 @@ module egret.gui {
 			element.ownerChanged(null);
 			return element;
 		}
-		/**
-		 * @method egret.gui.UILayer#removeElementAt
-		 * @param index {number} 
-		 * @returns {IVisualElement}
-		 */
+
 		public removeElementAt(index:number):IVisualElement{
 			index += this.owner[this.lowerBoundReference];
 			var element:IVisualElement;
@@ -145,21 +118,13 @@ module egret.gui {
 			element.ownerChanged(null);
 			return element;
 		}
-		/**
-		 * @method egret.gui.UILayer#getElementIndex
-		 * @param element {IVisualElement} 
-		 * @returns {number}
-		 */
+
 		public getElementIndex(element:IVisualElement):number{
 			var retval:number = this.owner[this.raw_getElementIndex](element);
 			retval -= this.owner[this.lowerBoundReference];
 			return retval;
 		}
-		/**
-		 * @method egret.gui.UILayer#setElementIndex
-		 * @param element {IVisualElement} 
-		 * @param index {number} 
-		 */
+
 		public setElementIndex(element:IVisualElement, index:number):void{
 			this.owner[this.raw_setElementIndex](
 				element, this.owner[this.lowerBoundReference] + index);

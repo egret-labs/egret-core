@@ -280,9 +280,6 @@ module egret.gui {
 			this.invalidateDisplayList();
 		}
 		
-		/**
-		 * @method egret.gui.TextBase#createChildren
-		 */
 		public createChildren():void{
 			super.createChildren();
 			if (!this._textField){
@@ -290,9 +287,6 @@ module egret.gui {
 			}
 		}
 		
-		/**
-		 * @method egret.gui.TextBase#commitProperties
-		 */
 		public commitProperties():void{
 			super.commitProperties();
 			
@@ -364,9 +358,6 @@ module egret.gui {
             this._addToDisplayList(this._textField);
         }
 		
-		/**
-		 * @method egret.gui.TextBase#measure
-		 */
 		public measure():void{
 			super.measure();
 			
@@ -376,8 +367,7 @@ module egret.gui {
 		
 		/**
 		 * 更新显示列表
-		 * @method egret.gui.TextBase#$updateDisplayList
-		 * @param unscaledWidth {number} 
+		 * @param unscaledWidth {number}
 		 * @param unscaledHeight {number} 
 		 */		
 		public $updateDisplayList(unscaledWidth:number, unscaledHeight:number):void{
@@ -385,8 +375,7 @@ module egret.gui {
 		}
 		
 		/**
-		 * @method egret.gui.TextBase#updateDisplayList
-		 * @param unscaledWidth {number} 
+		 * @param unscaledWidth {number}
 		 * @param unscaledHeight {number} 
 		 */
 		public updateDisplayList(unscaledWidth:number, unscaledHeight:number):void{
