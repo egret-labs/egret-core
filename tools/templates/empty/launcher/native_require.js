@@ -2,6 +2,8 @@
  * Created by huanghaiying on 14/12/5.
  */
 var console = {};
+var window = {};
+
 console.log = function (message) {
     egtlog(message);
 }
@@ -77,6 +79,17 @@ egret_native.loadVersion = function (completeCall) {
 };
 
 egret_native.egretStart = function () {
+
+    Object.defineProperty(egret.DisplayObject.prototype, "cacheAsBitmap", {
+        get: function () {
+            return false;
+        },
+        set: function (bool) {
+        },
+        enumerable: true,
+        configurable: true
+    });
+
     var document_class = "Main";
     var rootClass;
     if (document_class) {
