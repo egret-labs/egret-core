@@ -56,6 +56,8 @@ module egret {
                 egret.Logger.warning("egret.RenderTexture#drawToTexture:显示对象测量结果宽高为0，请检查");
                 return false;
             }
+            bounds.width = Math.floor(bounds.width);
+            bounds.height = Math.floor(bounds.height);
             cacheCanvas.width = bounds.width;
             cacheCanvas.height = bounds.height;
             if(this.renderContext._cacheCanvas) {
