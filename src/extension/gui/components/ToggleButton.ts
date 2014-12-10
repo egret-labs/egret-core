@@ -79,7 +79,6 @@ module egret.gui {
 		}
 
 		/**
-		 * @method egret.gui.ButtonBase#partAdded
 		 * @param partName {string}
 		 * @param instance {any}
 		 */

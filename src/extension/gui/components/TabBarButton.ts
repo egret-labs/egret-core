@@ -37,9 +37,6 @@ module egret.gui {
 	 */	
 	export class TabBarButton extends ToggleButtonBase implements IItemRenderer{
 		
-		/**
-		 * @method egret.gui.TabBarButton#constructor
-		 */
 		public constructor(){
 			super();
             
@@ -96,9 +93,6 @@ module egret.gui {
 			}
 		}
 		
-		/**
-		 * @method egret.gui.TabBarButton#buttonReleased
-		 */
 		public buttonReleased():void{
 			if (this.selected && !this.allowDeselection)
 				return;

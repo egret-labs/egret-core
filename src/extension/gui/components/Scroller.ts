@@ -30,10 +30,7 @@ module egret.gui {
 
 
     /**
-        * @class egret.gui.ViewportScroller
-        * @classdesc
         * 适用Viewport的滑动类
-        * @extends egret.Scroller
         */
     class ViewportScroller extends egret.ScrollView {
         _width = 0;

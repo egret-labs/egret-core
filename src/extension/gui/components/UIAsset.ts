@@ -104,7 +104,6 @@ module egret.gui {
 		
 		private createChildrenCalled:boolean = false;
 		/**
-		 * @method egret.gui.UIAsset#createChildren
 		 */
 		public createChildren():void{
 			super.createChildren();
@@ -200,8 +199,7 @@ module egret.gui {
          */
         public autoScale:boolean = true;
 		/**
-		 * @method egret.gui.UIAsset#updateDisplayList
-		 * @param unscaledWidth {number} 
+		 * @param unscaledWidth {number}
 		 * @param unscaledHeight {number} 
 		 */
 		public updateDisplayList(unscaledWidth:number, unscaledHeight:number):void{
@@ -242,7 +240,6 @@ module egret.gui {
         }
 
         /**
-         * @see egret.DisplayObject.measureBounds
          * @returns {Rectangle}
          * @private
          */
@@ -262,7 +259,6 @@ module egret.gui {
 
 		private static errorStr:string = "在此组件中不可用，若此组件为容器类，请使用";
 		/**
-		 * @method egret.gui.UIAsset#addChild
          * @deprecated
 		 * @param child {DisplayObject} 
 		 * @returns {DisplayObject}
@@ -271,7 +267,6 @@ module egret.gui {
 			throw(new Error("addChild()"+UIAsset.errorStr+"addElement()代替"));
 		}
 		/**
-		 * @method egret.gui.UIAsset#addChildAt
 		 * @deprecated
 		 * @param child {DisplayObject} 
 		 * @param index {number} 
@@ -281,7 +276,6 @@ module egret.gui {
 			throw(new Error("addChildAt()"+UIAsset.errorStr+"addElementAt()代替"));
 		}
 		/**
-		 * @method egret.gui.UIAsset#removeChild
 		 * @deprecated
 		 * @param child {DisplayObject} 
 		 * @returns {DisplayObject}
@@ -290,7 +284,6 @@ module egret.gui {
 			throw(new Error("removeChild()"+UIAsset.errorStr+"removeElement()代替"));
 		}
 		/**
-		 * @method egret.gui.UIAsset#removeChildAt
 		 * @deprecated
 		 * @param index {number} 
 		 * @returns {DisplayObject}
@@ -299,7 +292,6 @@ module egret.gui {
 			throw(new Error("removeChildAt()"+UIAsset.errorStr+"removeElementAt()代替"));
 		}
 		/**
-		 * @method egret.gui.UIAsset#setChildIndex
 		 * @deprecated
 		 * @param child {DisplayObject} 
 		 * @param index {number} 
@@ -308,7 +300,6 @@ module egret.gui {
 			throw(new Error("setChildIndex()"+UIAsset.errorStr+"setElementIndex()代替"));
 		}
 		/**
-		 * @method egret.gui.UIAsset#swapChildren
 		 * @deprecated
 		 * @param child1 {DisplayObject} 
 		 * @param child2 {DisplayObject} 
@@ -317,7 +308,6 @@ module egret.gui {
 			throw(new Error("swapChildren()"+UIAsset.errorStr+"swapElements()代替"));
 		}
 		/**
-		 * @method egret.gui.UIAsset#swapChildrenAt
 		 * @deprecated
 		 * @param index1 {number} 
 		 * @param index2 {number} 

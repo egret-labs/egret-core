@@ -116,16 +116,10 @@ module egret.gui {
          */
         public measuredHeight:number = 0;
 
-        /**
-         * @member egret.gui.Skin#preferredWidth
-         */
         public get preferredWidth():number{
             return this._hasWidthSet ? this._width:this.measuredWidth;
         }
 
-        /**
-         * @member egret.gui.Skin#preferredHeight
-         */
         public get preferredHeight():number{
             return this._hasHeightSet ? this._height:this.measuredHeight;
         }
