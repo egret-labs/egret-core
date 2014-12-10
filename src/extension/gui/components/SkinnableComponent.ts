@@ -106,8 +106,8 @@ module egret.gui {
             if(!adapter){
                 adapter = this.getSkinAdapter();
             }
-
-            var skin: any = adapter.getSkin(this._skinName, this.hostComponentKey);
+            var key = this.hostComponentKey || egret.getQualifiedClassName(this);
+            var skin: any = adapter.getSkin(this._skinName, key);
             if(!skin){
                 var theme:Theme = SkinnableComponent._defaultTheme;
                 if(theme){
