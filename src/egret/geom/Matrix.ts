@@ -36,7 +36,6 @@ module egret {
     export class Matrix extends HashObject {
         /**
          * @method egret.Matrix#constructor
-         * @constructor
          * @param a {number} 缩放或旋转图像时影响像素沿 x 轴定位的值。
          * @param b {number} 旋转或倾斜图像时影响像素沿 y 轴定位的值。
          * @param c {number} 旋转或倾斜图像时影响像素沿 x 轴定位的值。

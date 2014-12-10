@@ -38,6 +38,7 @@ module egret {
         /**
          * 全部Bitmap是否开启DEBUG模式
 		 * @member {boolean} egret.Bitmap.debug
+         * @private
          */
         public static debug:boolean = false;
 
@@ -54,12 +55,14 @@ module egret {
         /**
          * 单个Bitmap是否开启DEBUG模式
 		 * @member {boolean} egret.Bitmap#debug
+         * @private
          */
         public debug:boolean = false;
 
         /**
          * debug边框颜色，默认值为红色
 		 * @member {number} egret.Bitmap#debugColor
+         * @private
          */
         public debugColor:number = 0xff0000;
 
