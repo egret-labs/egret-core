@@ -222,11 +222,16 @@ module egret {
             this.blendModes[BlendMode.ADD] = "lighter";
         }
 
-        public setupFont(textField:TextField):void {
+        public setupFont(textField:TextField, style:egret.ITextStyle = null):void {
+            style = style || <egret.ITextStyle>{};
+            var italic:boolean = style["italic"] == null ? textField._italic : style["italic"];
+            var bold:boolean = style["bold"] == null ? textField._bold : style["bold"];
+            var size:number = style["size"] == null ? textField._size : style["size"];
+            var fontFamily:string = style["fontFamily"] == null ? textField._fontFamily : style["fontFamily"];
             var ctx = this._cacheCanvasContext;
-            var font:string = textField._italic ? "italic " : "normal ";
-            font += textField._bold ? "bold " : "normal ";
-            font += textField._size + "px " + textField._fontFamily;
+            var font:string = italic ? "italic " : "normal ";
+            font += bold ? "bold " : "normal ";
+            font += size + "px " + fontFamily;
             ctx.font = font;
             ctx.textAlign = "left";
             ctx.textBaseline = "middle";
@@ -238,27 +243,29 @@ module egret {
             return result.width;
         }
 
-        public drawText(textField:egret.TextField, text:string, x:number, y:number, maxWidth:number, style:Object) {
-            var textColor:string;
-            if (style["textColor"]) {
+        public drawText(textField:egret.TextField, text:string, x:number, y:number, maxWidth:number, style:egret.ITextStyle = null) {
+            this.setupFont(textField, style);
+            style = style || <egret.ITextStyle>{};
 
-                textColor = toColorString(parseInt(style["textColor"]));
+            var textColor:string;
+            if (style.textColor != null) {
+                textColor = toColorString(style.textColor);
             }
             else {
                 textColor = textField._textColorString;
             }
 
             var strokeColor:string;
-            if (style["strokeColor"]) {
-                strokeColor = toColorString(style["strokeColor"]);
+            if (style.strokeColor != null) {
+                strokeColor = toColorString(style.strokeColor);
             }
             else {
                 strokeColor = textField._strokeColorString;
             }
 
             var outline;
-            if (style["outline"]) {
-                outline = style["outline"];
+            if (style.stroke != null) {
+                outline = style.stroke;
             }
             else {
                 outline = textField._stroke;
