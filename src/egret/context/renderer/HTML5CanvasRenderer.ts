@@ -31,6 +31,7 @@ module egret {
      * @class egret.HTML5CanvasRenderer
      * @classdesc
      * @extends egret.RendererContext
+     * @private
      */
     export class HTML5CanvasRenderer extends RendererContext {
 

@@ -667,10 +667,6 @@ module egret {
                         lineH = 0;
                     }
 
-                    if (textArr[j] == "") {
-                        continue;
-                    }
-
                     if (this._type == egret.TextFieldType.INPUT) {
                         lineH = this._size;
                     }
@@ -678,39 +674,46 @@ module egret {
                         lineH = Math.max(lineH, element.style.size || this._size);
                     }
 
-                    if (this._isFlow) {
-                        renderContext.setupFont(this, element.style);
-                    }
-                    var w:number = renderContext.measureText(textArr[j]);
-                    if (!this._hasWidthSet) {//没有设置过宽
-                        lineW += w;
-                        lineElement.elements.push(<egret.IWTextElement>{width:w, text:textArr[j], style:element.style});
+
+                    if (textArr[j] == "") {
+
                     }
                     else {
-                        if (lineW + w <= this._explicitWidth) {//在设置范围内
-                            lineElement.elements.push(<egret.IWTextElement>{width:w, text:textArr[j], style:element.style});
+                        if (this._isFlow) {
+                            renderContext.setupFont(this, element.style);
+                        }
+                        var w:number = renderContext.measureText(textArr[j]);
+                        if (!this._hasWidthSet) {//没有设置过宽
                             lineW += w;
+                            lineElement.elements.push(<egret.IWTextElement>{width:w, text:textArr[j], style:element.style});
                         }
                         else {
-                            var k:number = 0;
-                            var ww:number = 0;
-                            var word:string = textArr[j];
-                            for (; k < word.length; k++) {
-                                w = renderContext.measureText(word.charAt(k));
-                                if (lineW + w > this._explicitWidth) {
-                                    break;
-                                }
-                                ww += w;
+                            if (lineW + w <= this._explicitWidth) {//在设置范围内
+                                lineElement.elements.push(<egret.IWTextElement>{width:w, text:textArr[j], style:element.style});
                                 lineW += w;
                             }
-                            if (k > 0) {
-                                lineElement.elements.push(<egret.IWTextElement>{width:ww, text:word.substring(0, k), style:element.style});
-                                textArr[j] = word.substring(k);
-                            }
+                            else {
+                                var k:number = 0;
+                                var ww:number = 0;
+                                var word:string = textArr[j];
+                                for (; k < word.length; k++) {
+                                    w = renderContext.measureText(word.charAt(k));
+                                    if (lineW + w > this._explicitWidth) {
+                                        break;
+                                    }
+                                    ww += w;
+                                    lineW += w;
+                                }
+                                if (k > 0) {
+                                    lineElement.elements.push(<egret.IWTextElement>{width:ww, text:word.substring(0, k), style:element.style});
+                                    textArr[j] = word.substring(k);
+                                }
 
-                            j--;
+                                j--;
+                            }
                         }
                     }
+
                     if (j < textArr.length - 1) {//非最后一个
                         lineElement.width = lineW;
                         lineElement.height = lineH;
