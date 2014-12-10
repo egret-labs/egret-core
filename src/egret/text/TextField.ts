@@ -624,9 +624,8 @@ module egret {
         }
 
         public appendElement(element:egret.ITextElement):void {
-            var linesArr:Array<egret.ILineElement> = this._getLinesArr();
-            var endLine:egret.ILineElement = linesArr[linesArr.length - 1];
-
+            this._textArr.push(element);
+            this.setMiddleStyle(this._textArr);
         }
 
         private _linesArr:Array<egret.ILineElement> = [];
