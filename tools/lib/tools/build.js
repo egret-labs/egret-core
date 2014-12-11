@@ -9,25 +9,50 @@ var compiler = require("./compile.js");
 var file = require("../core/file.js");
 var code_util = require("../core/code_util.js");
 var projectConfig = require("../core/projectConfig.js");
+var global = require("../core/globals");
 
 
 function run(dir, args, opts) {
+    var currDir = globals.joinEgretDir(dir, args[0]);
+    globals.checkVersion(currDir);
 
+    projectConfig.init(currDir);
+    var runtime = param.getOption(opts, "--runtime", ["html5", "native"]);
+    if (runtime == "native" && !projectConfig.hasNativeUrl()) {
+        global.exit(8004);
+        return null;
+    }
 
     var needCompileEngine = opts["-e"];
     var keepGeneratedTypescript = opts["-k"];
 
-    var currDir = globals.joinEgretDir(dir, args[0]);
-    globals.checkVersion(currDir);
+    if (runtime == "native") {
+        buildPlatform("android", currDir, needCompileEngine, keepGeneratedTypescript);
+        buildPlatform("ios", currDir, needCompileEngine, keepGeneratedTypescript);
+    }
+    else {
+        buildPlatform("html5", currDir, needCompileEngine, keepGeneratedTypescript);
+    }
+}
+
+function buildPlatform(platform, currDir, needCompileEngine, keepGeneratedTypescript) {
     var task = [];
+    var runtime = platform != "html5" ? "native" : "html5";
+    if (runtime == "native") {
+        var projectPath = projectConfig.getProjectUrl(platform);
+        if (projectPath == null) {
+            return;
+        }
 
-    var runtime = param.getOption(opts, "--runtime", ["html5", "native"]);
+        var tempPath = path.join(projectPath, "temp");
+        if (!file.exists(path.join(tempPath, "libs"))) {
+            needCompileEngine = true;
+        }
+    }
 
-    copyProject(currDir);
+    copyProject(currDir, platform);
 
     if (needCompileEngine) {
-
-
         task.push(function (callback) {
             compiler.compileModules(callback, currDir, runtime);
         });
@@ -36,13 +61,43 @@ function run(dir, args, opts) {
         function (callback) {
             buildProject(callback, currDir, keepGeneratedTypescript, runtime);
         }
-    )
+    );
+
+    if (runtime == "native") {
+        task.push(
+            function (callback) {
+                var output = path.join(projectConfig.getProjectUrl(platform), "__temp");
+                if (!needCompileEngine) {
+                    file.remove(path.join(output, "libs"));
+                }
+
+                if (file.exists(path.join(output, "../temp", "base.manifest"))) {
+                    file.copy(path.join(output, "../temp", "base.manifest"), path.join(output, "base.manifest"));
+                }
+                if (file.exists(path.join(output, "../temp", "baseResource.json"))) {
+                    file.copy(path.join(output, "../temp", "baseResource.json"), path.join(output, "baseResource.json"));
+                }
+                file.remove(path.join(output, "tsc_config_temp.txt"));
+
+
+                file.remove(path.join(output, "../temp"));
+                file.copy(output, path.join(output, "../temp"));
+
+                file.remove(projectConfig.getProjectAssetsUrl(platform));
+                file.copy(path.join(output, "../temp"), projectConfig.getProjectAssetsUrl(platform));
+
+                file.remove(output);
+
+                callback();
+            }
+        );
+    }
 
 
     async.series(task, function (err) {
         if (!err) {
             globals.log("构建成功");
-            process.exit(0);
+//            process.exit(0);
         }
         else {
             globals.exit(err);
@@ -50,13 +105,15 @@ function run(dir, args, opts) {
     })
 }
 
+
+
 /**
  * 构建模式为native时候，拷贝一份到native目录
  */
-function copyProject(currDir) {
-    var output = projectConfig.getOutputDir();
+function copyProject(currDir, platform) {
+    var output = projectConfig.getProjectUrl(platform);
     if (output) {
-//        file.remove(output);
+        output = path.join(output, "__temp");
         var ignorePathList = projectConfig.getIgnorePath();
         var copyFilePathList = file.getDirectoryListing(currDir);
         var isIgnore = false;
@@ -80,7 +137,7 @@ function buildProject(callback, currDir, keepGeneratedTypescript, runtime) {
     if (document_class) {
         replaceDocumentClass("index.html", document_class, currDir);
         replaceDocumentClass("release.html", document_class, currDir);
-        replaceDocumentClass("native_loader.js", document_class, currDir);
+        replaceDocumentClass("native_require.js", document_class, currDir);
     }
 
     projectConfig.init(currDir);
@@ -107,13 +164,13 @@ function buildProject(callback, currDir, keepGeneratedTypescript, runtime) {
     var sourceList = compiler.generateGameFileList(currDir, runtime);
 
     async.series([function (callback) {
-            compiler.compile(callback,
-                path.join(currDir),
-                sourceList.concat(libs),
-                compileConfig
-            );
-        }
-    ], callback)
+        compiler.compile(callback,
+            path.join(currDir),
+            sourceList.concat(libs),
+            compileConfig
+        );
+    }
+    ], callback);
 
 
 }

@@ -6,6 +6,7 @@
 var file = require("../core/file.js");
 var param = require("./params_analyze.js");
 var path = require("path");
+var global = require("../core/globals");
 var projectConfig;
 var projectName;
 
@@ -72,11 +73,16 @@ exports.getOutputDir = function(){
 
 
     var runtime = param.getOption(argv.opts, "--runtime", ["html5", "native"]);
-    if(runtime == "native" && projectConfig && projectConfig.native && projectConfig.native.support_path) {
-
-        var support_path = projectConfig.native.support_path[0];
-        support_path = path.join(currDir,support_path);
-        return support_path;
+    if (runtime == "native") {
+        if (projectConfig && projectConfig.native && projectConfig.native.android_path  && projectConfig.native.android_path != "") {
+            var support_path = projectConfig.native.android_path;
+            support_path = path.join(currDir, support_path, "__temp");
+            return support_path;
+        }
+        else {
+            global.exit(8004);
+            return null;
+        }
     }
     return null;//"/Users/wander/Documents/egret_workspace/temp_build_for_native";
 };
@@ -87,3 +93,48 @@ exports.getIgnorePath = function(){
     }
     return [];
 };
+
+function hasNativeUrl() {
+    if (getProjectUrl("android") == null && getProjectUrl("ios") == null) {
+        return false;
+    }
+    return true;
+}
+
+function getProjectUrl(platform) {
+    if (platform == "android" || platform == "ios") {
+        if (projectConfig && projectConfig.native && projectConfig.native[platform + "_path"]  && projectConfig.native[platform + "_path"] != "") {
+            var support_path = projectConfig.native[platform + "_path"];
+            return path.join(projectName, support_path);
+        }
+        else {
+            return null;
+        }
+    }
+};
+
+function getSaveUrl(platform) {
+    var url = getProjectUrl(platform);
+    if (url != null) {
+        return path.join(url, "temp");
+    }
+    return null;
+};
+
+function getProjectAssetsUrl(platform) {
+    var url = getProjectUrl(platform);
+    if (url != null) {
+        if (platform == "android") {
+            return path.join(url, "proj.android/assets/egret-game");
+        }
+        else if (platform == "ios") {
+            return path.join(url, "Resources/egret-game");
+        }
+    }
+    return null;
+};
+
+exports.hasNativeUrl = hasNativeUrl;
+exports.getProjectUrl = getProjectUrl;
+exports.getSaveUrl = getSaveUrl;
+exports.getProjectAssetsUrl = getProjectAssetsUrl;

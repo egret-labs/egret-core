@@ -71,6 +71,8 @@ declare module egret_native {
 
     function resumeApp():void;
 
+    function getOption(type:string):any;
+
     module Audio {
         function preloadBackgroundMusic(path:string):void;
 

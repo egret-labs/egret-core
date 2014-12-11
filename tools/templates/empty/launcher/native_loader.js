@@ -1,62 +1,92 @@
-var console = {};
-console.log = function (message) {
-    egtlog(message);
-}
-
-egret_native.setSearchPaths(["",
-    "src/",
-    "resource/",
-    "resource/assets/",
-    "resource/config"
-]);
+require("launcher/native_require.js");
 
 egret_native.egtMain = function () {
-    require("bin-debug/lib/egret_file_list.js");
-    require("bin-debug/src/game_file_list.js");
-    for (var key in egret_file_list) {
-        var src = "libs/" + egret_file_list[key];
-        require(src);
+    egret_native.egretInit();
 
+    egret_native.loadVersion(egret_native.loadAllChange);
+};
+
+egret_native.loadAllChange = function () {
+    egret_native.initLoadingUI();
+
+    var ctr = egret.MainContext.instance.netContext._versionCtr;
+    var list = ctr.getChangeList();
+    var errorList = [];
+    var errorCount = 0;
+
+    var loader = new egret.FileLoad();
+    loader.addEventListener(egret.IOErrorEvent.IO_ERROR, loadError, this);
+    loader.addEventListener(egret.Event.COMPLETE, loadComplete, this);
+    loader.addEventListener(egret.ProgressEvent.PROGRESS, loadProgress, this);
+
+    var loadBytes = 0;
+    var totalBytes = 0;
+    for (var key in list) {
+        totalBytes += list[key]["size"];
     }
-    for (var key in game_file_list) {
-        var src = "bin-debug/src/" + game_file_list[key];
-        require(src);
-    }
 
-    //egret.dom为空实现
-    egret.dom = {};
-    egret.dom.drawAsCanvas = function () {};
-
-    egret.MainContext.type = egret.MainContext.TYPE_NATIVE;
-    var context = egret.MainContext.instance;
-    context.rendererContext = new egret.NativeRendererContext();
-    context.netContext = new egret.NativeNetContext();
-    context.touchContext = new egret.NativeTouchContext();
-    context.deviceContext = new egret.NativeDeviceContext();
-
-    egret.StageDelegate.getInstance().setDesignSize(480, 800);
-    context.stage = new egret.Stage();
-    context.stage.scaleMode = egret.StageScaleMode.SHOW_ALL;
-    
-    egret.RendererContext.CONTENT_SCALE_FACTOR = 1;
-
-    context.run();
-
-    var document_class = "Main";
-    var rootClass;
-    if(document_class){
-        rootClass = egret.getDefinitionByName(document_class);
-    }
-    if(rootClass) {
-        var rootContainer = new rootClass();
-        if(rootContainer instanceof egret.DisplayObjectContainer){
-            context.stage.addChild(rootContainer);
+    loadNext();
+    function loadNext() {
+        if (list.length > 0) {
+            loader.load(list[0]["url"], list[0]["size"]);
         }
-        else{
-            throw new Error("文档类必须是egret.DisplayObjectContainer的子类!");
+        else if (errorCount > 3) {//结束，加载出错
+            loader.removeEventListener(egret.IOErrorEvent.IO_ERROR, loadError, this);
+            loader.removeEventListener(egret.Event.COMPLETE, loadComplete, this);
+            loader.removeEventListener(egret.ProgressEvent.PROGRESS, loadProgress, this);
+
+            egret_native.egretError();
+        }
+        else if (errorList.length > 0) {
+            list = errorList;
+            errorList = [];
+            errorCount++;
+
+            loadComplete();
+        }
+        else {//结束，加载成功
+            loader.removeEventListener(egret.IOErrorEvent.IO_ERROR, loadError, this);
+            loader.removeEventListener(egret.Event.COMPLETE, loadComplete, this);
+            loader.removeEventListener(egret.ProgressEvent.PROGRESS, loadProgress, this);
+
+            egret_native.removeUI();
+
+            egret_native.egretStart();
         }
     }
-    else{
-        throw new Error("找不到文档类！");
+
+    function loadComplete(e) {
+        loadBytes += parseInt(list[0]["size"]);
+        list.shift();
+        loadNext();
     }
-}
+
+    function loadProgress(e) {
+        egret_native.setProgress(parseInt(loadBytes) + parseInt(e.bytesLoaded), totalBytes);
+    }
+
+    function loadError() {
+        errorList.push(list[0]);
+        list.shift();
+        loadComplete();
+    }
+};
+
+var textField;
+egret_native.initLoadingUI = function () {
+    textField = new egret.TextField();
+    egret.MainContext.instance.stage.addChild(textField);
+    textField.y = egret.MainContext.instance.stage.stageHeight / 2;
+    textField.x = egret.MainContext.instance.stage.stageWidth / 2;
+    textField.textAlign = "center";
+    textField.anchorX = textField.anchorY = 0.5;
+};
+
+egret_native.setProgress = function(current, total) {
+    console.log("egret_native  " + Math.round(current / 1024) + "KB / " + Math.round(total / 1024) + "KB");
+    textField.text = "资源加载中..." + Math.round(current / 1024) + "KB / " + Math.round(total / 1024) + "KB";
+};
+
+egret_native.removeUI = function () {
+    egret.MainContext.instance.stage.removeChild(textField);
+};

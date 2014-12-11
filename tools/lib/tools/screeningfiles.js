@@ -10,8 +10,6 @@ var file = require("../core/file");
 var param = require("../core/params_analyze.js");
 
 var screeningFiles = function(resourcePath, platform) {
-    var lostUrls = [];//排除在外的文件
-
     var useUrls = [];
     if (!file.exists(path.join(resourcePath, "resource.json"))) {
         return;
@@ -21,35 +19,58 @@ var screeningFiles = function(resourcePath, platform) {
         var info = resourceJson.resources[key];
         if (info["subUrls"]) {
             if (info["subUrls"][platform]) {
-                lostUrls.push(info["url"]);
                 info["url"] = info["subUrls"][platform];
             }
-
-            for (var subKey in info["subUrls"]) {
-                if (subKey != platform) {
-                    lostUrls.push(info["subUrls"][subKey]);
-                }
-            }
-
             delete info["subUrls"];
         }
 
-        useUrls.push([info["url"]]);
+        useUrls.push(info["url"]);
     }
 
-    for (var i = 0; i < lostUrls.length; i++) {
-        var url = lostUrls[i];
-        if (useUrls.indexOf(url) < 0) {//没有使用
-            var fileUrl = path.join(resourcePath, url);
-            if (file.exists(fileUrl)) {
-                file.remove(fileUrl);
+    function removeFiles(filePath) {
+        if (file.isDirectory(filePath)) {
+            var fileList = file.getDirectoryListing(filePath, true);
+            for (var key in fileList) {
+                removeFiles(path.join(filePath, fileList[key]));
             }
+            return;
+        }
+
+        if (filePath == path.join(resourcePath, "resource.json")) {
+            return;
+        }
+
+        var i = 0;
+        for (; i < useUrls.length; i++) {
+            if (filePath.indexOf(useUrls[i]) >= 0) {
+                break;
+            }
+        }
+        if (i == useUrls.length) {
+            file.remove(filePath);
         }
     }
 
-    file.save(path.join(resourcePath, "resource.json"), JSON.stringify(resourceJson));
-}
+//    removeFiles(resourcePath);
+    file.save(path.join(resourcePath, "resource.json"), JSON.stringify(resourceJson, null, "\t"));
+};
 
+
+var getUseFilelist = function(resourceFile, platform) {
+    var useUrls = [];
+    var resourceJson = JSON.parse(file.read(resourceFile));
+    for (var key in resourceJson.resources) {
+        var info = resourceJson.resources[key];
+        if (info["subUrls"] && info["subUrls"][platform]) {
+            useUrls.push(info["subUrls"][platform]);
+        }
+        else {
+            useUrls.push(info["url"]);
+        }
+    }
+
+    return useUrls;
+}
 
 var run = function (dir, args, opts) {
     var currDir = dir;
@@ -63,3 +84,4 @@ var run = function (dir, args, opts) {
 }
 
 exports.run = run;
+exports.getUseFilelist = getUseFilelist;

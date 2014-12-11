@@ -108,6 +108,15 @@ function create_app_from(app_path, h5_path, template_path, preferences, app_data
         target_list.push(relativePath);
     });
     preferences["native"]["support_path"] = target_list;
+
+    if (app_data["template"]["source"][0] == "proj.android") {
+        preferences["native"]["android_path"] = path.relative(projectConfig.projectGlobalPath, app_path);
+    }
+    else {
+        preferences["native"]["ios_path"] = path.relative(projectConfig.projectGlobalPath, app_path);
+    }
+
+
     file.save(path.join(h5_path, PREFERENCES), JSON.stringify(preferences, null, '\t'));
 
     //build_copy(h5_path, preferences["native"]["path_ignore"], target_list);
