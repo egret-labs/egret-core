@@ -24,9 +24,9 @@
         <e:UIAsset id="iconDisplay"/>
         <e:Label id="labelDisplay" size="20" verticalAlign="middle"
                  textAlign="center" fontFamily="Tahoma" textColor="0x1e7465"
-                 textColor.down="0x1e7465" textColor.disabled="0x727070"
+                 textColor.down="0x1e7465" textColor.disabled="0xcccccc"
                  textColor.downAndSelected="0x1e7465" textColor.upAndSelected="0xeeedec"
-                 textColor.disabledAndSelected="0x727070" />
+                 textColor.disabledAndSelected="0xcccccc" />
     </e:Group>
 
 </e:Skin>
