@@ -45,6 +45,12 @@ function publishPlatform(currDir, platform, time, password, needCompiler) {
 
     var output = path.join(currDir, "release", platform, time + "");
 
+    //筛选文件
+    screening.run(path.join(sourcePath, "resource"), [], {"--platform":[platform]});
+    //版本控制文件
+    copyBaseManifest(platform, sourcePath);
+    genVer.run("", [sourcePath]);
+
     //google压缩
     if (needCompiler) {
         var file_list = filelist.getAllFileList(sourcePath);
@@ -70,13 +76,12 @@ function publishPlatform(currDir, platform, time, password, needCompiler) {
         if (projectUrl != null) {
             file.copy(path.join(sourcePath, "game_code_" + platform + ".zip"), path.join(output, "game_code_" + time +".zip"));
             file.copy(path.join(sourcePath, "resource"), path.join(output, "resource"));
-            screening.run(path.join(output, "resource"), [], {"--platform":[platform]});
-
-            copyBaseManifest(platform, output);
-            genVer.run("", [output]);
+            file.copy(path.join(sourcePath, "base.manifest"), path.join(output, "base.manifest"));
 
             file.remove(projectUrl);
             file.copy(output, projectUrl);
+
+            end();
         }
     }
 
@@ -96,7 +101,6 @@ function publishPlatform(currDir, platform, time, password, needCompiler) {
 //        }
         file.save(path.join(url, "base.manifest"), JSON.stringify(baseManifest));
 
-        end();
     }
 
     function end() {
@@ -175,6 +179,7 @@ function createZipFile(releaseDir, platform, password, compiler, createZipComple
     file.copy(path.join(releaseDir, "launcher", "native_loader.js"), path.join(releaseDir, "ziptemp", "launcher", "native_loader.js"));
     file.copy(path.join(releaseDir, "launcher", "runtime_loader.js"), path.join(releaseDir, "ziptemp", "launcher", "runtime_loader.js"));
     file.copy(path.join(releaseDir, "launcher", "native_require.js"), path.join(releaseDir, "ziptemp", "launcher", "native_require.js"));
+    file.copy(path.join(releaseDir, "version.manifest"), path.join(releaseDir, "ziptemp", "version.manifest"));
 
 
     if (!compiler) {//不需要google压缩
