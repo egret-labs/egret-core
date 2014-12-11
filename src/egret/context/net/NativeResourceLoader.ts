@@ -25,7 +25,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 module egret {
-    export class FileLoad extends egret.EventDispatcher{
+    export class NativeResourceLoader extends egret.EventDispatcher{
 
         private _downCount:number = 0;
         private _path:string;

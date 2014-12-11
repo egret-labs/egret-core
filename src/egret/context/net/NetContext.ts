@@ -50,5 +50,9 @@ module egret {
             }
             return url;
         }
+
+        public getChangeList():Array<any> {
+            return [];
+        }
     }
 }

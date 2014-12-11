@@ -9,12 +9,11 @@ egret_native.egtMain = function () {
 egret_native.loadAllChange = function () {
     egret_native.initLoadingUI();
 
-    var ctr = egret.MainContext.instance.netContext._versionCtr;
-    var list = ctr.getChangeList();
+    var list = egret.MainContext.instance.netContext.getChangeList();
     var errorList = [];
     var errorCount = 0;
 
-    var loader = new egret.FileLoad();
+    var loader = new egret.NativeResourceLoader();
     loader.addEventListener(egret.IOErrorEvent.IO_ERROR, loadError, this);
     loader.addEventListener(egret.Event.COMPLETE, loadComplete, this);
     loader.addEventListener(egret.ProgressEvent.PROGRESS, loadProgress, this);
@@ -35,7 +34,7 @@ egret_native.loadAllChange = function () {
             loader.removeEventListener(egret.Event.COMPLETE, loadComplete, this);
             loader.removeEventListener(egret.ProgressEvent.PROGRESS, loadProgress, this);
 
-            egret_native.egretError();
+            egret_native.loadError();
         }
         else if (errorList.length > 0) {
             list = errorList;
@@ -85,6 +84,10 @@ egret_native.initLoadingUI = function () {
 egret_native.setProgress = function(current, total) {
     console.log("egret_native  " + Math.round(current / 1024) + "KB / " + Math.round(total / 1024) + "KB");
     textField.text = "资源加载中..." + Math.round(current / 1024) + "KB / " + Math.round(total / 1024) + "KB";
+};
+
+egret_native.loadError = function () {
+    textField.text = "资源下载失败，请检查网络连接并退出重新进入游戏！";
 };
 
 egret_native.removeUI = function () {

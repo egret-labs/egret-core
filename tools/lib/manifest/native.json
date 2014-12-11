@@ -9,7 +9,7 @@
         "interactive/NativeTouchContext.ts",
         "PromiseObject.ts",
         "net/NativeNetContext.ts",
-        "net/FileLoad.ts",
+        "net/NativeResourceLoader.ts",
         "net/VersionController.ts",
         "NativeContext.d.ts",
         "display/NativeStageText.ts"

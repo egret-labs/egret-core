@@ -20,7 +20,8 @@ var upgradeConfigArr = [
     {"v" : "1.1.1", "func":upgradeTo_1_1_1},
     {"v" : "1.1.2", "func":upgradeTo_1_1_2},
     {"v" : "1.1.3", "func":upgradeTo_1_1_3},
-    {"v" : "1.1.4", "func":upgradeTo_1_1_4}
+    {"v" : "1.1.4", "func":upgradeTo_1_1_4},
+    {"v" : "1.5.0", "func":upgradeTo_1_5_0}
 ];
 
 var currDir;
@@ -217,6 +218,56 @@ function upgradeTo_1_1_4(){
     projectConfig.init(currDir);
     projectConfig.data.egret_version = "1.1.4";
     projectConfig.save();
+}
+
+function upgradeTo_1_5_0(){
+    globals.log("正在更新到1.5.0");
+
+    var projectDir = currDir;
+
+    //更新egretProperties.json
+    try {
+        var properties = JSON.parse(file.read(path.join(projectDir, "egretProperties.json")));
+        if (properties.native && properties.native.support_path && properties.native.support_path.length > 0) {
+            for (var i = 0; i < properties.native.support_path.length; i++) {
+                var supP = properties.native.support_path[i];
+                if (supP.indexOf("proj.android") >= 0) {
+                    properties.native.android_path = supP.substring(0, supP.indexOf("proj.android") - 1);
+                }
+                else if (supP.indexOf("proj.ios") >= 0) {
+                    properties.native.ios_path = supP.substring(0, supP.indexOf("proj.ios") - 1);
+                }
+            }
+
+            delete properties.native.support_path;
+            file.save(path.join(projectDir, "egretProperties.json"), JSON.stringify(properties, null, "\t"));
+        }
+    }
+    catch (e) {
+
+    }
+
+    //替换 native_loader.js
+    var loaderPath = path.join(projectDir, "launcher", "native_loader.js");
+    var loaderContent = file.read(loaderPath);
+    //保存副本
+    file.save(path.join(projectDir, "launcher", "copy_native_loader.js"), loaderContent);
+
+
+    //生成egret_loader.js样板
+    var fileContent = file.read(path.join(param.getEgretPath(), "tools", "templates", "empty", "launcher", "runtime_loader.js"));
+    file.save(path.join(projectDir, "launcher", "runtime_loader.js"), fileContent);
+    var fileContent = file.read(path.join(param.getEgretPath(), "tools", "templates", "empty", "launcher", "native_loader.js"));
+    file.save(path.join(projectDir, "launcher", "native_loader.js"), fileContent);
+    var fileContent = file.read(path.join(param.getEgretPath(), "tools", "templates", "empty", "launcher", "native_require.js"));
+    file.save(path.join(projectDir, "launcher", "native_require.js"), fileContent);
+
+    projectConfig.init(currDir);
+    projectConfig.data.egret_version = "1.5.0";
+    projectConfig.save();
+
+    var open = require("../core/open");
+    open("https://github.com/egret-labs/egret-core/wiki/Egret_Upgrade/upgrade/index.html");
 }
 
 function getClassList(item) {

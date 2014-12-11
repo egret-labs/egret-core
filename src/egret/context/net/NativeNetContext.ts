@@ -189,5 +189,9 @@ module egret {
         private saveVersion(url:string):void {
             this._versionCtr.saveVersion(url);
         }
+
+        public getChangeList():Array<any> {
+            return this._versionCtr.getChangeList();
+        }
     }
 }

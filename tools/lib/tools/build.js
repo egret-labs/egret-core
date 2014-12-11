@@ -209,7 +209,8 @@ function replaceDocumentClass(key, document_class, currDir) {
     var filePath = path.join(currDir, "launcher", key);
     var indexHtml = file.read(filePath);
     if (!indexHtml) {
-        globals.exit(1305, key);
+//        globals.exit(1305, key);
+        return;
     }
     var html = "";
     var found = false;

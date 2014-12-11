@@ -98,16 +98,13 @@ function create_app_from(app_path, h5_path, template_path, preferences, app_data
 
     // copy h5 res into here
     globals.log("> copy h5 resources into " + app_path + " ...");
-    if (preferences["native"]["support_path"] === undefined) {
-        preferences["native"]["support_path"] = [];
-    }
+
     var target_list = [];
     app_data["game"]["target"].forEach(function(target) {
         var supportPath = path.join(app_path, target);
         var relativePath = path.relative(projectConfig.projectGlobalPath,supportPath);
         target_list.push(relativePath);
     });
-    preferences["native"]["support_path"] = target_list;
 
     if (app_data["template"]["source"][0] == "proj.android") {
         preferences["native"]["android_path"] = path.relative(projectConfig.projectGlobalPath, app_path);
@@ -145,17 +142,6 @@ function build_copy(h5_path, ignore_list, target_path_list) {
     });
 }
 
-function build_copy_from(h5_path) {
-    var preferences = read_json_from(path.join(h5_path, PREFERENCES));
-    if (!preferences ||
-        preferences["native"] === undefined ||
-        preferences["native"]["path_ignore"] === undefined ||
-        preferences["native"]["support_path"] === undefined) {
-        return;
-    }
-    build_copy(h5_path, preferences["native"]["path_ignore"], preferences["native"]["support_path"]);
-}
-
 function help_title() {
     return "从h5游戏生成app\n";
 }
@@ -169,4 +155,3 @@ function help_example() {
 exports.run = run;
 exports.help_title = help_title;
 exports.help_example = help_example;
-exports.build_copy_from = build_copy_from;
