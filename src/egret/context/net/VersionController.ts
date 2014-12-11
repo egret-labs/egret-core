@@ -59,11 +59,11 @@ module egret {
          */
         private baseVersionData:Object;
 
-        private _load:FileLoad;
+        private _load:NativeResourceLoader;
 
         //获取当前版本号
         private fetchVersion():void {
-            this._load = new egret.FileLoad();
+            this._load = new egret.NativeResourceLoader();
             this._load.addEventListener(egret.IOErrorEvent.IO_ERROR, this.loadError, this);
             this._load.addEventListener(egret.Event.COMPLETE, this.fileLoadComplete, this);
 
