@@ -104,15 +104,24 @@ module egret.gui {
                 }
                 return null;
             }
-            var skinName: string = null,
-                hostKey: string = null,
-                superClass: any = client;
 
-            while (!skinName && superClass) {
-                hostKey = (<egret.gui.SkinnableComponent>superClass).hostComponentKey || egret.getQualifiedClassName(superClass);
+            var skinName: string;
+            var hostKey: string = client.hostComponentKey;
+            if(hostKey){
                 skinName = skinMap[hostKey];
-                superClass = egret.getDefinitionByName(egret.getQualifiedSuperclassName(superClass));
             }
+            else{
+                var superClass:any = client;
+                while (superClass) {
+                    hostKey = egret.getQualifiedClassName(superClass);
+                    skinName = skinMap[hostKey];
+                    if(skinName){
+                        break;
+                    }
+                    superClass = egret.getDefinitionByName(egret.getQualifiedSuperclassName(superClass));
+                }
+            }
+
             if(!skinName){
                 return null;
             }
