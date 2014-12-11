@@ -100,6 +100,10 @@
   <xs:attributeGroup name="egret.DisplayObject">
     <xs:attributeGroup ref="egret.EventDispatcher"/>
     <xs:attribute name="alpha" type="xs:decimal"/>
+    <xs:attribute name="anchorOffsetX" type="xs:decimal"/>
+    <xs:attribute name="anchorOffsetY" type="xs:decimal"/>
+    <xs:attribute name="anchorX" type="xs:decimal"/>
+    <xs:attribute name="anchorY" type="xs:decimal"/>
     <xs:attribute name="blendMode" type="egret.BlendMode"/>
     <xs:attribute name="cacheAsBitmap" type="xs:boolean"/>
     <xs:attribute name="colorTransform" type="xs:string"/>

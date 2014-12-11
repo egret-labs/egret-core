@@ -41,6 +41,10 @@
 	"egret.DisplayObject":
 	{
 		"alpha":"number",
+		"anchorOffsetX":"number",
+		"anchorOffsetY":"number",
+		"anchorX":"number",
+		"anchorY":"number",
 		"blendMode":"string",
 		"cacheAsBitmap":"boolean",
 		"colorTransform":"egret.ColorTransform",
