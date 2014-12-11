@@ -14,7 +14,7 @@
             <e:HorizontalLayout gap="0" verticalAlign="middle" horizontalAlign="center"/>
         </e:layout>
         <e:UIAsset id="iconDisplay"/>
-        <e:Label id="labelDisplay" size="20" verticalAlign="middle" width="100%" height="100%"
+        <e:Label id="labelDisplay" size="20" verticalAlign="middle" paddingLeft="5" paddingRight="5"
                  textAlign="center" fontFamily="Tahoma" textColor.up="0x111111"
                  textColor.down="0x222222" textColor.disabled="0xcccccc" />
     </e:Group>

@@ -75,6 +75,8 @@ module egret.gui {
             this.iconDisplay.includeInLayout = false;
             this.addElement(this.iconDisplay);
             this.labelDisplay.includeInLayout = false;
+            this.labelDisplay.paddingLeft = 5;
+            this.labelDisplay.paddingRight = 5;
             this.addElement(this.labelDisplay);
         }
         /**
