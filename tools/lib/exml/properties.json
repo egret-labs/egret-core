@@ -41,10 +41,6 @@
 	"egret.DisplayObject":
 	{
 		"alpha":"number",
-		"anchorOffsetX":"number",
-		"anchorOffsetY":"number",
-		"anchorX":"number",
-		"anchorY":"number",
 		"blendMode":"string",
 		"cacheAsBitmap":"boolean",
 		"colorTransform":"egret.ColorTransform",
@@ -93,6 +89,10 @@
 	{
 		"frameRate":"number",
 		"super":"egret.DisplayObjectContainer"
+	},
+	"egret.NativeResourceLoader":
+	{
+		"super":"egret.EventDispatcher"
 	},
 	"egret.NativeStageText":
 	{
@@ -184,6 +184,7 @@
 		"maxChars":"number",
 		"maxWidth":"any",
 		"multiline":"boolean",
+		"scrollV":"number",
 		"size":"number",
 		"stroke":"number",
 		"strokeColor":"number",
@@ -191,6 +192,7 @@
 		"text":"string",
 		"textAlign":"string",
 		"textColor":"number",
+		"textFlow":"Array",
 		"type":"string",
 		"verticalAlign":"string"
 	},
@@ -204,6 +206,10 @@
 		"webGLTexture":"any"
 	},
 	"egret.Tween":
+	{
+		"super":"egret.EventDispatcher"
+	},
+	"egret.VersionController":
 	{
 		"super":"egret.EventDispatcher"
 	},
