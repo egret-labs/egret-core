@@ -79,6 +79,8 @@ function buildPlatform(platform, currDir, needCompileEngine, keepGeneratedTypesc
                 }
                 file.remove(path.join(output, "tsc_config_temp.txt"));
 
+                var genVer = require("../tools/generate_version");
+                genVer.run("", [output]);
 
                 file.remove(path.join(output, "../temp"));
                 file.copy(output, path.join(output, "../temp"));
