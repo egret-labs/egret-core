@@ -90,6 +90,13 @@ function buildPlatform(platform, currDir, needCompileEngine, keepGeneratedTypesc
 
                 file.remove(output);
 
+                if (file.exists(projectConfig.getProjectAssetsUrl(platform), "launcher", "native_require.js")) {
+                    var native_require = file.read(path.join(projectConfig.getProjectAssetsUrl(platform), "launcher", "native_require.js"));
+                    native_require = native_require.replace(/var needCompile =.*/, "var needCompile = false;");
+                    file.save(path.join(projectConfig.getProjectAssetsUrl(platform), "launcher", "native_require.js"), native_require);
+                }
+
+
                 callback();
             }
         );

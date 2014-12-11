@@ -41,6 +41,13 @@ function publishPlatform(currDir, platform, time, password, needCompiler) {
     }
 
     var sourcePath = path.join(projectConfig.getSaveUrl(platform));
+
+    if (file.exists(path.join(sourcePath, "launcher", "native_require.js"))) {
+        var native_require = file.read(path.join(sourcePath, "launcher", "native_require.js"));
+        native_require = native_require.replace(/var needCompile =.*/, "var needCompile = " + (needCompiler ? "true" : "false") + ";");
+        file.save(path.join(sourcePath, "launcher", "native_require.js"), native_require);
+    }
+
     genVer.run(sourcePath, [sourcePath]);
 
     var output = path.join(currDir, "release", platform, time + "");
