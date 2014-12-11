@@ -31,6 +31,7 @@ module egret {
      *
      * @class egret.TouchContext
      * @classdesc TouchContext是egret的触摸Context
+     * @private
      */
     export class TouchContext extends HashObject {
         private _currentTouchTarget:any = {};

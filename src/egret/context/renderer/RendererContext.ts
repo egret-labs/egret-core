@@ -33,6 +33,7 @@ module egret {
      * RenderContext是游戏的渲染上下文。
      * 这是一个抽象基类，制定主要的接口
      * @extends egret.HashObject
+     * @private
      */
     export class RendererContext extends HashObject {
 

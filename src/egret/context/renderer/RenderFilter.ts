@@ -30,6 +30,7 @@ module egret {
     /**
      * @classdesc
      * @extends egret.HashObject
+     * @private
      */
     export class RenderFilter extends HashObject {
 
