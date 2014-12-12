@@ -472,7 +472,7 @@ module egret {
          * 文本行数。【只读】
          * @member {number} egret.TextField#numLines
          */
-        private _numLines:number = 0;
+        public _numLines:number = 0;
         public get numLines():number {
             return this._numLines;
         }
@@ -609,12 +609,12 @@ module egret {
             this._setSizeDirty();
         }
 
-        private _textMaxWidth:number = 0;//文本全部显示时宽
+        public _textMaxWidth:number = 0;//文本全部显示时宽
         public get textWidth():number {
             return this._textMaxWidth;
         }
 
-        private _textMaxHeight:number = 0;//文本全部显示时高（无行间距）
+        public _textMaxHeight:number = 0;//文本全部显示时高（无行间距）
         public get textHeight():number {
             return this._textMaxHeight;
         }
