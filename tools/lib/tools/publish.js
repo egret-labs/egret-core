@@ -55,7 +55,7 @@ function publishPlatform(currDir, platform, time, password, needCompiler) {
 
     genVer.run(sourcePath, [sourcePath]);
 
-    var output = path.join(projectConfig.getReleaseUrl(), platform, time + "");
+    var output = path.join(currDir, projectConfig.getReleaseUrl(), platform, time + "");
 
     //筛选文件
     screening.run(path.join(sourcePath, "resource"), [], {"--platform":[platform]});
@@ -125,7 +125,7 @@ function publisHtml5(currDir, password, needCompiler) {
     var sourcePath = currDir;
 
     //拷贝代码、资源文件到整体base目录
-    var releaseDir = path.join(projectConfig.getReleaseUrl(), "html5Base");
+    var releaseDir = path.join(currDir, projectConfig.getReleaseUrl(), "html5Base");
 
     var launcherDir = path.join(releaseDir, "launcher");
     var resourceDir = path.join(releaseDir, "resource");
@@ -163,7 +163,7 @@ function publisHtml5(currDir, password, needCompiler) {
     //拷贝到各个项目
     function copyPlatforms() {
         //html5
-        var url = path.join(projectConfig.getReleaseUrl(), "html5");
+        var url = path.join(currDir, projectConfig.getReleaseUrl(), "html5");
         file.remove(url);
 
         file.copy(path.join(releaseDir, "launcher"), path.join(url, "launcher"));
