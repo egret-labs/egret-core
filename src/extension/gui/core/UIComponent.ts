@@ -128,6 +128,7 @@ module egret.gui {
 				return;
 			this._initialized = value;
 			if (value){
+                this.childrenCreated()
                 UIEvent.dispatchUIEvent(this,UIEvent.CREATION_COMPLETE);
 			}
 		}
@@ -147,8 +148,10 @@ module egret.gui {
 			}
 			this.initializeCalled = true;
             UIEvent.dispatchUIEvent(this,UIEvent.INITIALIZE);
-			this.createChildren();
-			this.childrenCreated();
+            this.createChildren();
+            this.invalidateProperties();
+            this.invalidateSize();
+            this.invalidateDisplayList();
 		}
 		/**
 		 * 创建子项,子类覆盖此方法以完成组件子项的初始化操作，
@@ -162,10 +165,8 @@ module egret.gui {
 		 * 子项创建完成
 		 * @method egret.gui.UIComponent#childrenCreated
 		 */		
-		private childrenCreated():void{
-			this.invalidateProperties();
-			this.invalidateSize();
-			this.invalidateDisplayList();
+		public childrenCreated():void{
+
 		}
 		
 		
