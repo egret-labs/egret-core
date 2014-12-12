@@ -50,6 +50,8 @@ Egret Engine是一款使用JavaScript(TypeScript)编写的HTML5开源免费游�
 发布说明
 --------------------
 
+[Egret 1.5.0 Release Notes 2014-12-12](/docs/1.5.0_ReleaseNotes.md)
+
 [Egret 1.1.4 Release Notes 2014-11-28](/docs/1.1.4_ReleaseNotes.md)
 
 [Egret 1.1.3 Release Notes 2014-11-14](/docs/1.1.3_ReleaseNotes.md)

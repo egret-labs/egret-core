@@ -267,7 +267,7 @@ function upgradeTo_1_5_0(){
     projectConfig.save();
 
     var open = require("../core/open");
-    open("https://github.com/egret-labs/egret-core/wiki/Egret_Upgrade/upgrade/index.html");
+    open("https://github.com/egret-labs/egret-core/blob/master/docs/1.5.0_ReleaseNotes.md");
 }
 
 function getClassList(item) {
