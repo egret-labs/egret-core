@@ -12,7 +12,7 @@ var projectName;
 
 function init(name){
     projectName = name;
-    var projectPath = path.join(projectName,"egretProperties.json")
+    var projectPath = path.join(projectName,"egretProperties.json");
     var content = file.read(projectPath);
     if (!content){
         projectConfig = {
@@ -111,7 +111,7 @@ function getProjectUrl(platform) {
             return null;
         }
     }
-};
+}
 
 function getSaveUrl(platform) {
     var url = getProjectUrl(platform);
@@ -119,7 +119,7 @@ function getSaveUrl(platform) {
         return path.join(url, "temp");
     }
     return null;
-};
+}
 
 function getProjectAssetsUrl(platform) {
     var url = getProjectUrl(platform);
@@ -132,9 +132,18 @@ function getProjectAssetsUrl(platform) {
         }
     }
     return null;
-};
+}
+
+function getReleaseUrl() {
+    if (projectConfig.release && projectConfig.release != "") {
+        return projectConfig.release;
+    }
+
+    return "release";
+}
 
 exports.hasNativeUrl = hasNativeUrl;
 exports.getProjectUrl = getProjectUrl;
 exports.getSaveUrl = getSaveUrl;
 exports.getProjectAssetsUrl = getProjectAssetsUrl;
+exports.getReleaseUrl = getReleaseUrl;
