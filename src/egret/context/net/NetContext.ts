@@ -31,6 +31,7 @@ module egret {
 	 * @class egret.NetContext
 	 * @classdesc
 	 * @extends egret.HashObject
+     * @private
 	 */
     export class NetContext extends HashObject{
 

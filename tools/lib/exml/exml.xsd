@@ -200,6 +200,17 @@
       <xs:attributeGroup ref="egret.MovieClip"/>
     </xs:complexType>
   </xs:element>
+  <xs:attributeGroup name="egret.NativeResourceLoader">
+    <xs:attributeGroup ref="egret.EventDispatcher"/>
+  </xs:attributeGroup>
+  <xs:element name="NativeResourceLoader">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:any/>
+      </xs:choice>
+      <xs:attributeGroup ref="egret.NativeResourceLoader"/>
+    </xs:complexType>
+  </xs:element>
   <xs:attributeGroup name="egret.NativeStageText">
     <xs:attributeGroup ref="egret.StageText"/>
   </xs:attributeGroup>
@@ -395,12 +406,14 @@
     <xs:attribute name="maxChars" type="xs:decimal"/>
     <xs:attribute name="maxWidth" type="xs:string"/>
     <xs:attribute name="multiline" type="xs:boolean"/>
+    <xs:attribute name="scrollV" type="xs:decimal"/>
     <xs:attribute name="size" type="xs:decimal"/>
     <xs:attribute name="stroke" type="xs:decimal"/>
     <xs:attribute name="strokeColor" type="xs:string"/>
     <xs:attribute name="text" type="xs:string"/>
     <xs:attribute name="textAlign" type="text_textAlign"/>
     <xs:attribute name="textColor" type="xs:string"/>
+    <xs:attribute name="textFlow" type="xs:string"/>
     <xs:attribute name="type" type="xs:string"/>
     <xs:attribute name="verticalAlign" type="text_verticalAlign"/>
   </xs:attributeGroup>
@@ -444,6 +457,17 @@
         <xs:any/>
       </xs:choice>
       <xs:attributeGroup ref="egret.Tween"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:attributeGroup name="egret.VersionController">
+    <xs:attributeGroup ref="egret.EventDispatcher"/>
+  </xs:attributeGroup>
+  <xs:element name="VersionController">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:any/>
+      </xs:choice>
+      <xs:attributeGroup ref="egret.VersionController"/>
     </xs:complexType>
   </xs:element>
   <xs:attributeGroup name="egret.WebAudio">

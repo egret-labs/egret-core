@@ -31,6 +31,7 @@ module egret {
     /**
      * @classdesc
      * @extends egret.EventDispatcher
+     * @private
      */
     export class StageText extends EventDispatcher {
 

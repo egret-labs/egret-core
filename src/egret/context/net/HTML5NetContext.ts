@@ -31,6 +31,7 @@ module egret {
      * @class egret.HTML5NetContext
      * @classdesc
      * @extends egret.NetContext
+     * @private
      */
     export class HTML5NetContext extends NetContext {
 

@@ -31,6 +31,7 @@ module egret {
      * @classdesc
      * WebGL的渲染类
      * @extends egret.RendererContext
+     * @private
      */
     export class WebGLRenderer extends RendererContext {
         private canvas:HTMLCanvasElement;

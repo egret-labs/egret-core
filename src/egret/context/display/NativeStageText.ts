@@ -34,6 +34,7 @@ module egret {
     /**
      * @classdesc
      * @extends egret.StageText
+     * @private
      */
     export class NativeStageText extends StageText {
 

@@ -32,6 +32,7 @@ module egret {
      * @classdesc
      * StageDelegate负责处理屏幕适配策略
      * @extends egret.HashObject
+     * @private
      */
     export class StageDelegate extends HashObject {
         private static instance:StageDelegate;

@@ -94,6 +94,10 @@
 		"frameRate":"number",
 		"super":"egret.DisplayObjectContainer"
 	},
+	"egret.NativeResourceLoader":
+	{
+		"super":"egret.EventDispatcher"
+	},
 	"egret.NativeStageText":
 	{
 		"super":"egret.StageText"
@@ -184,6 +188,7 @@
 		"maxChars":"number",
 		"maxWidth":"any",
 		"multiline":"boolean",
+		"scrollV":"number",
 		"size":"number",
 		"stroke":"number",
 		"strokeColor":"number",
@@ -191,6 +196,7 @@
 		"text":"string",
 		"textAlign":"string",
 		"textColor":"number",
+		"textFlow":"Array",
 		"type":"string",
 		"verticalAlign":"string"
 	},
@@ -204,6 +210,10 @@
 		"webGLTexture":"any"
 	},
 	"egret.Tween":
+	{
+		"super":"egret.EventDispatcher"
+	},
+	"egret.VersionController":
 	{
 		"super":"egret.EventDispatcher"
 	},
