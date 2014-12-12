@@ -30,9 +30,15 @@ function run(dir, args, opts) {
     projectConfig.init(currDir);
 
     var time = Math.round(Date.now() / 1000);
-    publishPlatform(currDir, "android", time, password, needCompile);
-    publishPlatform(currDir, "ios", time, password, needCompile);
-    publisHtml5(currDir, password, needCompile);
+
+    var runtime = param.getOption(opts, "--runtime", ["html5", "native"]);
+    if (runtime == "native") {
+        publishPlatform(currDir, "android", time, password, needCompile);
+        publishPlatform(currDir, "ios", time, password, needCompile);
+    }
+    else {
+        publisHtml5(currDir, password, needCompile);
+    }
 }
 
 function publishPlatform(currDir, platform, time, password, needCompiler) {
