@@ -21,7 +21,6 @@ function run(dir, args, opts) {
     }
 
     var currDir = globals.joinEgretDir(dir, args[0]);
-    currDir = getCurrentDir(currDir);
 
     var password = getPassword(opts);
 
@@ -252,19 +251,6 @@ function compressJson(currDir,opts){
     if (opts["-compressjson"]) {
         var compress = require(path.join("..", "tools", "compress_json.js"));
         compress.run(path.join(currDir, "release"), []);
-    }
-}
-
-
-function getCurrentDir(projectName){
-    var projectConfig = require("../core/projectConfig.js");
-    projectConfig.init(projectName);
-    var outputDir = projectConfig.getOutputDir()
-    if (outputDir){
-        return outputDir;
-    }
-    else{
-        return projectName;
     }
 }
 
