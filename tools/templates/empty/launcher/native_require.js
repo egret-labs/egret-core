@@ -39,7 +39,6 @@ egret_native.egretInit = function () {
     egret.dom.drawAsCanvas = function () {
     };
 
-    egret.MainContext.type = egret.MainContext.TYPE_NATIVE;
     var context = egret.MainContext.instance;
     context.rendererContext = new egret.NativeRendererContext();
     context.netContext = new egret.NativeNetContext();
@@ -50,7 +49,7 @@ egret_native.egretInit = function () {
     context.stage = new egret.Stage();
     context.stage.scaleMode = egret.StageScaleMode.SHOW_ALL;
 
-    egret.RendererContext.CONTENT_SCALE_FACTOR = 1;
+    egret.RendererContext.texture_scale_factor = 1;
 
     context.run();
 };
