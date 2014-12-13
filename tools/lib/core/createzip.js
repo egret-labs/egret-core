@@ -9,7 +9,7 @@ var cp_exec = require('child_process').exec;
 
 function createZipFile(sourcePath, outputFile, call, password) {
     var compilerPath = path.join(param.getEgretPath(), "tools/lib/zip/EGTZipTool_v1.0.1.jar");
-
+    compilerPath = "\"" + compilerPath + "\"";
 
     var cmd = 'java -jar ' + compilerPath + ' zip ' + outputFile + ' ' + sourcePath + ' ' + (password || "");
     var build = cp_exec(cmd);
