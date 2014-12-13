@@ -57,9 +57,10 @@ function createManifest(currDir){
     }
 
     if (oldVersion == null) {
-        file.save(basePath, JSON.stringify(changeVersion));
+        var versionStr = JSON.stringify(changeVersion);
+        versionStr = versionStr.replace(/\\\\/g,"/");
+        file.save(basePath, versionStr);
         file.save(versionPath, "{}");
-
 
         file.copy(path.join(currDir, "resource/resource.json"), path.join(currDir, "baseResource.json"));
         return;
