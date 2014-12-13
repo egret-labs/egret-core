@@ -154,7 +154,7 @@ module egret {
          * @returns {Array<any>}
          */
         public getChangeList():Array<any> {
-            var list:Array<any> = [];
+            var changeDatas:Object = {};
             for (var key in this.changeVersionData) {
                 if (this.changeVersionData[key]["d"] == 1) {//被删除
                     delete this.baseVersionData[key];
@@ -166,8 +166,21 @@ module egret {
 
             for (var key in this.baseVersionData) {
                 if (this.localVersionData[key] == null || !this.compareVersion(this.localVersionData, this.baseVersionData, key)) {
-                    list.push({"url": key, "size": this.baseVersionData[key]["s"]})
+                    changeDatas[key] = {"url": key, "size": this.baseVersionData[key]["s"]};
                 }
+            }
+
+            for (var key in this.localVersionData) {
+                if (changeDatas[key] == null) {//不在将要下载的下载列表
+                    if (!egret_native.isRecordExists(key) && !egret_native.isFileExists(key)) {//没有下载过这个文件
+                        changeDatas[key] = {"url": key, "size": this.localVersionData[key]["s"]};
+                    }
+                }
+            }
+
+            var list:Array<any> = [];
+            for (var key in changeDatas) {
+                list.push(changeDatas[key]);
             }
             return list;
         }
