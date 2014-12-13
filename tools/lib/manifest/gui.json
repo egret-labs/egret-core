@@ -24,6 +24,7 @@
         "core/ISkinAdapter.ts",
         "core/ISkinnableClient.ts",
         "core/IStateClient.ts",
+        "core/IStyleClient.ts",
         "core/IUIComponent.ts",
         "core/IUIStage.ts",
         "core/IViewport.ts",

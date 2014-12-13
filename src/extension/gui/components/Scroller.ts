@@ -85,14 +85,14 @@ module egret.gui {
         public get height(): number {
             return this._height;
         }
-        public set height(value) { 
+        public set height(value:number) {
             this._setHeight(value);
         }
 
         public get width(): number {
             return this._width;
         }
-        public set width(value) {
+        public set width(value:number) {
             this._setWidth(value);
         }
 
@@ -247,13 +247,17 @@ module egret.gui {
          * 安装并初始化视域组件
          */
         private installViewport():void{
-            if (this.viewport){
-                this.viewport.clipAndEnableScrolling = true;
-                this._scroller = new ViewportScroller(<DisplayObject><any>this.viewport);
+            var viewport:IViewport = this.viewport;
+            if (viewport){
+                viewport.clipAndEnableScrolling = true;
+                this._scroller = new ViewportScroller(<DisplayObject><any>viewport);
                 this._scroller.addEventListener(egret.Event.CHANGE, this._scrollerChangedHandler, this);
                 this._scroller.horizontalScrollPolicy = this._horizontalScrollPolicy;
                 this._scroller.verticalScrollPolicy = this._verticalScrollPolicy;
-                this.viewport.addEventListener(egret.gui.PropertyChangeEvent.PROPERTY_CHANGE, this._viewportChangedHandler, this);
+                viewport.addEventListener(egret.gui.PropertyChangeEvent.PROPERTY_CHANGE, this._viewportChangedHandler, this);
+                if("_addToStyleProtoChain" in viewport){
+                    viewport["_addToStyleProtoChain"](this._styleProtoChain);
+                }
                 this._addToDisplayListAt(<DisplayObject><any> this._scroller, 0);
             }
             //this._addScrollBars();
@@ -513,6 +517,10 @@ module egret.gui {
             bar.addEventListener(Event.CHANGE, this.hBarChanged, this, false);
             bar._setViewportMetric(this._viewport.width, this._viewport.contentWidth);
             this.horizontalScrollBar = bar;
+            var host:any = bar.owner;
+            if(host&&"removeElement" in host){
+                (<IContainer> host).removeElement(bar);
+            }
             this._addToDisplayList(this.horizontalScrollBar);
         }
         public _checkVbar() {
@@ -526,6 +534,10 @@ module egret.gui {
             vbar.addEventListener(Event.CHANGE, this.vBarChanged, this, false);
             vbar._setViewportMetric(this._viewport.height, this._viewport.contentHeight);
             this.verticalScrollBar = vbar;
+            var host:any = vbar.owner;
+            if(host&&"removeElement" in host){
+                (<IContainer> host).removeElement(vbar);
+            }
             this._addToDisplayList(this.verticalScrollBar);
         }
 
@@ -563,6 +575,25 @@ module egret.gui {
         }
         private vBarChanged(e: Event) {
             this.setViewportVScrollPosition(this.verticalScrollBar.getPosition());
+        }
+
+        public _createStyleProtoChain(chain:any):void{
+            chain = super._createStyleProtoChain(chain);
+            var viewport:IViewport = this._viewport;
+            if(viewport&&"_addToStyleProtoChain" in viewport){
+                viewport["_addToStyleProtoChain"](chain);
+            }
+            return chain;
+        }
+        /**
+         * 添加到父级容器的样式原型链
+         */
+        public _addToStyleProtoChain(parentChain:any):void{
+            super._addToStyleProtoChain(parentChain);
+            var viewport:IViewport = this._viewport;
+            if(viewport&&"_addToStyleProtoChain" in viewport){
+                viewport["_addToStyleProtoChain"](parentChain);
+            }
         }
     }
 

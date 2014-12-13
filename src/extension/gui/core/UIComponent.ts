@@ -41,7 +41,7 @@ module egret.gui {
 	 */
 	export class UIComponent extends DisplayObjectContainer
 		implements IUIComponent,ILayoutManagerClient,ILayoutElement,
-		IInvalidating,IVisualElement{
+		IInvalidating,IVisualElement,IStyleClient{
 		/**
 		 * 构造函数
 		 * @method egret.gui.UIComponent#constructor
@@ -195,6 +195,76 @@ module egret.gui {
 				}
 			}
 		}
+		/**
+		 * 是否已经创建了自身的样式原型链
+		 */
+		public _hasOwnStyleChain:boolean = false;
+		/**
+		 * 样式原型链引用
+		 */
+		public _styleProtoChain:any = null;
+		/**
+		 * 获取指定的名称的样式属性值
+		 */
+		public getStyle(styleProp:string):any{
+			var chain:any = this._styleProtoChain;
+			if(!chain){
+				return undefined;
+			}
+			return chain[styleProp];
+		}
+		/**
+		 * 对此组件实例设置样式属性。在此组件上设置的样式会覆盖父级容器的同名样式。
+		 */
+		public setStyle(styleProp:string, newValue:any):void{
+			var chain:any = this._styleProtoChain;
+			if(!this._hasOwnStyleChain){
+				chain = this._createStyleProtoChain(chain);
+			}
+			chain[styleProp] = newValue;
+		}
+
+		public _createStyleProtoChain(chain:any):void{
+			this._hasOwnStyleChain = true;
+			this._styleProtoChain = {};
+			this._styleProtoChain.__proto__ = chain;
+			chain = this._styleProtoChain;
+			for(var i:number=this.numChildren-1;i>=0;i--){
+				var child:IStyleClient = <IStyleClient><any> (this.getChildAt(i));
+				if(child&&"_addToStyleProtoChain" in child){
+					child["_addToStyleProtoChain"](chain);
+				}
+			}
+			return chain;
+		}
+		/**
+		 * 清除在此组件实例上设置过的指定样式名。
+		 */
+		public clearStyle(styleProp:string):void{
+			if(!this._hasOwnStyleChain){
+				return;
+			}
+			var chain:any = this._styleProtoChain;
+			delete chain[styleProp];
+		}
+		/**
+		 * 添加到父级容器的样式原型链
+		 */
+		public _addToStyleProtoChain(parentChain:any):void{
+			if(this._hasOwnStyleChain){
+				this._styleProtoChain.__proto__ = parentChain;
+			}
+			else if(this._styleProtoChain!=parentChain){
+				this._styleProtoChain = parentChain;
+				for(var i:number=this.numChildren-1;i>=0;i--){
+					var child:IStyleClient = <IStyleClient><any> (this.getChildAt(i));
+					if(child&&"_addToStyleProtoChain" in child){
+						child["_addToStyleProtoChain"](parentChain);
+					}
+				}
+			}
+		}
+
 
         /**
          * 添加对象到显示列表,此接口仅预留给框架内部使用
@@ -280,13 +350,18 @@ module egret.gui {
 			this._childAdded(child);
 			return child;
 		}
-		
 		/**
 		 * 即将添加一个子项
 		 */
 		public _addingChild(child:DisplayObject):void{
-			if(child&&"nestLevel" in child){
+			if(!child){
+				return;
+			}
+			if("nestLevel" in child){
 				(<ILayoutManagerClient><any>child).nestLevel = this._nestLevel+1;
+			}
+			if("_addToStyleProtoChain" in child){
+				child["_addToStyleProtoChain"](this._styleProtoChain);
 			}
 		}
 		
@@ -330,7 +405,10 @@ module egret.gui {
 		 * 已经移除一个子项
 		 */
 		public _childRemoved(child:DisplayObject):void{
-			if(child&&"nestLevel" in child){
+			if(!child){
+				return;
+			}
+			if("nestLevel" in child){
 				(<ILayoutManagerClient> <any>child).nestLevel = 0;
 			}
 		}
