@@ -49,6 +49,7 @@ function createManifest(currDir){
             crcstr = txtCrc32;
         }
 
+        savePath = savePath.replace(/\\\\/g,"/");
         if (crcstr) {
             changeVersion[savePath] = {"v":crcstr, "s":fs.statSync(filePath).size};
         }
@@ -58,7 +59,6 @@ function createManifest(currDir){
 
     if (oldVersion == null) {
         var changeStr = JSON.stringify(changeVersion);
-        changeStr = changeStr.replace(/\\\\/g,"/");
         file.save(basePath, changeStr);
         file.save(versionPath, "{}");
 
@@ -73,7 +73,6 @@ function createManifest(currDir){
     }
 
     var str = JSON.stringify(changeVersion);
-    str = str.replace(/\\\\/g,"/");
     if(oldVersion) {
         file.save(versionPath, str);
     }
