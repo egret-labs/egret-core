@@ -39,6 +39,7 @@ function createManifest(currDir){
         var txt = file.read(filePath);
         var txtCrc32 = crc32(txt);
         var savePath = path.relative(currDir, filePath);
+        savePath = savePath.replace(/(\\\\|\\)/g,"/");
         var crcstr = null;
         if(oldVersion) {
             if(oldVersion[savePath] == undefined || oldVersion[savePath]["v"] != txtCrc32) {
@@ -49,7 +50,6 @@ function createManifest(currDir){
             crcstr = txtCrc32;
         }
 
-        savePath = savePath.replace(/\\\\/g,"/");
         if (crcstr) {
             changeVersion[savePath] = {"v":crcstr, "s":fs.statSync(filePath).size};
         }
