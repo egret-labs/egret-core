@@ -700,7 +700,7 @@
 		"enabled":"boolean",
 		"horizontalCenter":"number",
 		"id":"string",
-		"implements":["egret.gui.IUIComponent","egret.gui.ILayoutManagerClient","egret.gui.ILayoutElement","egret.gui.IInvalidating","egret.gui.IVisualElement"],
+		"implements":["egret.gui.IUIComponent","egret.gui.ILayoutManagerClient","egret.gui.ILayoutElement","egret.gui.IInvalidating","egret.gui.IVisualElement","egret.gui.IStyleClient"],
 		"includeInLayout":"boolean",
 		"initialized":"boolean",
 		"isPopUp":"boolean",
@@ -822,5 +822,9 @@
 		},
 		"text_textAlign":["left","right","center"],
 		"text_verticalAlign":["top","bottom","middle"]
+	},
+	"styles":
+	{
+		"egret.gui.TextBase":["bold","fontFamily","italic","size","textAlign","textColor","verticalAlign"]
 	}
 }

@@ -481,6 +481,7 @@ class EXMLCompiler{
             keyList.push(key);
         }
         keyList.sort();//排序一下防止出现随机顺序
+        var className:string = this.exmlConfig.getClassNameById(node.localName,node.namespace);
         var length:number = keyList.length;
         var values:Array<any> = [];
         var keys:Array<any> = [];
@@ -514,8 +515,13 @@ class EXMLCompiler{
                 this.delayAssignmentDic[value] = delayCb;
                 value = "this."+value;
             }
-            keys.push(key);
-            values.push(value);
+            if(this.exmlConfig.isStyleProperty(key,className)){
+                cb.addCodeLine(varName+".setStyle(\""+key+"\","+value+")");
+            }
+            else{
+                keys.push(key);
+                values.push(value);
+            }
         }
         var length:number = keys.length;
         if(length>1){
@@ -557,7 +563,7 @@ class EXMLCompiler{
                     continue;
                 }
                 var errorInfo:string = this.getPropertyStr(child);
-                this.addChildrenToProp(child.children,type,prop,cb,varName,errorInfo,propList)
+                this.addChildrenToProp(child.children,type,prop,cb,varName,errorInfo,propList,className)
             }
             else{
                 directChild.push(child);
@@ -572,13 +578,14 @@ class EXMLCompiler{
         if(!defaultProp||!defaultType){
             globals.exit(2012,this.exmlPath,errorInfo);
         }
-        this.addChildrenToProp(directChild,defaultType,defaultProp,cb,varName,errorInfo,propList);
+        this.addChildrenToProp(directChild,defaultType,defaultProp,cb,varName,errorInfo,propList,className);
     }
     /**
      * 添加多个子节点到指定的属性
      */
     private addChildrenToProp(children:Array<any>,type:string,prop:string,
-                              cb:CpCodeBlock,varName:string,errorInfo:string,propList:Array<string>):void{
+                              cb:CpCodeBlock,varName:string,errorInfo:string,
+                              propList:Array<string>,className:string):void{
         var childFunc:string = "";
         var childLength:number = children.length;
         if(childLength>1){
@@ -635,7 +642,12 @@ class EXMLCompiler{
             else{
                 globals.warn(2103,this.exmlPath,prop,errorInfo);
             }
-            cb.addAssignment(varName,childFunc,prop);
+            if(this.exmlConfig.isStyleProperty(prop,className)){
+                cb.addCodeLine(varName+".setStyle(\""+prop+"\","+childFunc+")");
+            }
+            else{
+                cb.addAssignment(varName,childFunc,prop);
+            }
         }
     }
 

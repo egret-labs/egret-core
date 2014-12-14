@@ -31,6 +31,7 @@ var param = require("../core/params_analyze.js");
 var CodeUtil = require("../core/code_util.js");
 var create_manifest = require("../tools/create_manifest.js");
 var properties = {};
+var stylesMap = {};
 var EXMLConfig = (function () {
     /**
      * 构造函数
@@ -49,7 +50,29 @@ var EXMLConfig = (function () {
         this.parseManifest(manifest);
         str = file.read(exmlPath + "properties.json");
         properties = JSON.parse(str);
+        this.findStyles(properties);
     }
+    EXMLConfig.prototype.findStyles = function (properties) {
+        var data = properties["styles"];
+        if (!data) {
+            return;
+        }
+        for (var key in data) {
+            var classData = properties[key];
+            if (!classData) {
+                continue;
+            }
+            var list = data[key];
+            var length = list.length;
+            for (var i = 0; i < length; i++) {
+                var prop = list[i];
+                var type = classData[prop];
+                if (type) {
+                    stylesMap[prop] = type;
+                }
+            }
+        }
+    };
     Object.defineProperty(EXMLConfig.prototype, "srcPath", {
         get: function () {
             return this._srcPath;
@@ -189,6 +212,12 @@ var EXMLConfig = (function () {
         return component;
     };
     /**
+     * 指定的属性是否为样式属性
+     */
+    EXMLConfig.prototype.isStyleProperty = function (prop, className) {
+        return (this.isInstanceOf(className, "egret.gui.UIComponent") && stylesMap[prop]);
+    };
+    /**
      * 获取指定类指定属性的类型
      */
     EXMLConfig.prototype.getPropertyType = function (prop, className) {
@@ -196,6 +225,11 @@ var EXMLConfig = (function () {
             return "any";
         }
         var type = this.findType(className, prop);
+        if (!type) {
+            if (this.isStyleProperty(prop, className)) {
+                return stylesMap[prop];
+            }
+        }
         return type;
     };
     EXMLConfig.prototype.findType = function (className, prop) {

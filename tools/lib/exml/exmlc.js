@@ -414,6 +414,7 @@ var EXMLCompiler = (function () {
             keyList.push(key);
         }
         keyList.sort(); //排序一下防止出现随机顺序
+        var className = this.exmlConfig.getClassNameById(node.localName, node.namespace);
         var length = keyList.length;
         var values = [];
         var keys = [];
@@ -445,8 +446,13 @@ var EXMLCompiler = (function () {
                 this.delayAssignmentDic[value] = delayCb;
                 value = "this." + value;
             }
-            keys.push(key);
-            values.push(value);
+            if (this.exmlConfig.isStyleProperty(key, className)) {
+                cb.addCodeLine(varName + ".setStyle(\"" + key + "\"," + value + ")");
+            }
+            else {
+                keys.push(key);
+                values.push(value);
+            }
         }
         var length = keys.length;
         if (length > 1) {
@@ -488,7 +494,7 @@ var EXMLCompiler = (function () {
                     continue;
                 }
                 var errorInfo = this.getPropertyStr(child);
-                this.addChildrenToProp(child.children, type, prop, cb, varName, errorInfo, propList);
+                this.addChildrenToProp(child.children, type, prop, cb, varName, errorInfo, propList, className);
             }
             else {
                 directChild.push(child);
@@ -502,12 +508,12 @@ var EXMLCompiler = (function () {
         if (!defaultProp || !defaultType) {
             globals.exit(2012, this.exmlPath, errorInfo);
         }
-        this.addChildrenToProp(directChild, defaultType, defaultProp, cb, varName, errorInfo, propList);
+        this.addChildrenToProp(directChild, defaultType, defaultProp, cb, varName, errorInfo, propList, className);
     };
     /**
      * 添加多个子节点到指定的属性
      */
-    EXMLCompiler.prototype.addChildrenToProp = function (children, type, prop, cb, varName, errorInfo, propList) {
+    EXMLCompiler.prototype.addChildrenToProp = function (children, type, prop, cb, varName, errorInfo, propList, className) {
         var childFunc = "";
         var childLength = children.length;
         if (childLength > 1) {
@@ -564,7 +570,12 @@ var EXMLCompiler = (function () {
             else {
                 globals.warn(2103, this.exmlPath, prop, errorInfo);
             }
-            cb.addAssignment(varName, childFunc, prop);
+            if (this.exmlConfig.isStyleProperty(prop, className)) {
+                cb.addCodeLine(varName + ".setStyle(\"" + prop + "\"," + childFunc + ")");
+            }
+            else {
+                cb.addAssignment(varName, childFunc, prop);
+            }
         }
     };
     EXMLCompiler.prototype.getPropertyStr = function (child) {

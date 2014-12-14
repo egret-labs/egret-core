@@ -1571,6 +1571,17 @@
       <xs:attributeGroup ref="egret.gui.ViewportScroller"/>
     </xs:complexType>
   </xs:element>
+  <xs:attributeGroup name="styles">
+    <xs:attribute name="egret.gui.TextBase" type="xs:string"/>
+  </xs:attributeGroup>
+  <xs:element name="styles">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:any/>
+      </xs:choice>
+      <xs:attributeGroup ref="styles"/>
+    </xs:complexType>
+  </xs:element>
   <xs:element name="viewport">
     <xs:complexType>
       <xs:group ref="IViewport"/>

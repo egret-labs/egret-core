@@ -33,6 +33,7 @@ var param = require("../core/params_analyze.js");
 var CodeUtil = require("../core/code_util.js");
 var create_manifest = require("../tools/create_manifest.js");
 var properties = {};
+var stylesMap = {};
 
 class EXMLConfig{
 
@@ -56,6 +57,29 @@ class EXMLConfig{
 
         str = file.read(exmlPath+"properties.json");
         properties = JSON.parse(str);
+        this.findStyles(properties);
+    }
+
+    private findStyles(properties:any):void{
+        var data:any = properties["styles"];
+        if(!data){
+            return;
+        }
+        for(var key in data){
+            var classData:any = properties[key];
+            if(!classData){
+                continue;
+            }
+            var list:Array<string> = data[key];
+            var length:number = list.length;
+            for(var i:number=0;i<length;i++){
+                var prop:string = list[i];
+                var type:string = classData[prop];
+                if(type){
+                    stylesMap[prop] = type;
+                }
+            }
+        }
     }
 
     private _srcPath:string;
@@ -213,6 +237,12 @@ class EXMLConfig{
         }
         return component;
     }
+    /**
+     * 指定的属性是否为样式属性
+     */
+    public isStyleProperty(prop:string,className:string):boolean{
+        return (this.isInstanceOf(className,"egret.gui.UIComponent")&&stylesMap[prop]);
+    }
 
     /**
      * 获取指定类指定属性的类型
@@ -222,6 +252,11 @@ class EXMLConfig{
             return "any";
         }
         var type:string = this.findType(className,prop);
+        if(!type){
+            if(this.isStyleProperty(prop,className)){
+                return stylesMap[prop];
+            }
+        }
         return type;
     }
 
