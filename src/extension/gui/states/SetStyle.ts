@@ -78,7 +78,7 @@ module egret.gui {
 			if(obj==null)
 				return;
 			this.oldValue = obj["getStyle"](this.name);
-			this.setPropertyValue(obj, this.name, this.value, this.oldValue);
+			this.setStyleValue(obj, this.name, this.value, this.oldValue);
 		}
 		
 		/**
@@ -89,14 +89,14 @@ module egret.gui {
 			var obj:any = this.target==null||this.target==""?parent:parent[this.target];
 			if(obj==null)
 				return;
-			this.setPropertyValue(obj, this.name, this.oldValue, this.oldValue);
+			this.setStyleValue(obj, this.name, this.oldValue, this.oldValue);
 			this.oldValue = null;
 		}
 		
 		/**
 		 * 设置属性值
 		 */		
-		private setPropertyValue(obj:any, name:string, value:any,
+		private setStyleValue(obj:any, name:string, value:any,
 										  valueForType:any):void{
 			if(value===undefined){
 				obj["clearStyle"](name);
