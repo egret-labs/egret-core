@@ -881,6 +881,7 @@ class EXMLCompiler{
         this.createStates(this.currentXML);
         var states:Array<CpState>;
         var node:any = this.currentXML;
+        var nodeClassName:string = this.exmlConfig.getClassNameById(node.localName,node.namespace);
         for(var itemName in node){
             var value:string = node[itemName];
 			if(itemName.charAt(0)!="$"){
@@ -901,7 +902,12 @@ class EXMLCompiler{
                 if(stateLength>0){
                     for(var i:number=0;i<stateLength;i++){
                         var state:CpState = states[i];
-                        state.addOverride(new CpSetProperty("",key,itemValue));
+                        if(this.exmlConfig.isStyleProperty(key,nodeClassName)){
+                            state.addOverride(new CpSetStyle("",key,itemValue));
+                        }
+                        else{
+                            state.addOverride(new CpSetProperty("",key,itemValue));
+                        }
                     }
                 }
             }
@@ -1008,6 +1014,7 @@ class EXMLCompiler{
             if(node.namespace==EXMLCompiler.W||!node.localName){
                 continue;
             }
+
             if(this.isProperty(node))
             {
                 var prop:string = node.localName;
@@ -1035,12 +1042,18 @@ class EXMLCompiler{
                 if(l>0){
                     for(var j:number=0;j<l;j++) {
                         state = states[j];
-                        state.addOverride(new CpSetProperty(parentNode.$id, prop, value));
+                        if(this.exmlConfig.isStyleProperty(prop,className)){
+                            state.addOverride(new CpSetStyle(parentNode.$id, prop, value));
+                        }
+                        else{
+                            state.addOverride(new CpSetProperty(parentNode.$id, prop, value));
+                        }
                     }
                 }
             }
             else if(this.containsState(node)){
                 var id:string = node.$id;
+                var nodeClassName:string = this.exmlConfig.getClassNameById(node.localName,node.namespace);
                 this.checkIdForState(node);
                 var stateName:string;
                 var states:Array<CpState>;
@@ -1096,7 +1109,6 @@ class EXMLCompiler{
                 }
 
                 var name:string;
-
                 for(name in node){
                     var value:string = node[name];
 					if(name.charAt(0)!="$"){
@@ -1117,7 +1129,12 @@ class EXMLCompiler{
                         if(l>0){
                             for(var j:number=0;j<l;j++) {
                                 state = states[j];
-                                state.addOverride(new CpSetProperty(id, key, value));
+                                if(this.exmlConfig.isStyleProperty(key,nodeClassName)){
+                                    state.addOverride(new CpSetStyle(id, key, value));
+                                }
+                                else{
+                                    state.addOverride(new CpSetProperty(id, key, value));
+                                }
                             }
                         }
                     }
@@ -2095,6 +2112,34 @@ class CpSetProperty extends CodeBase{
     public toCode():string{
         var indentStr:string = this.getIndent(1);
         return "new egret.gui.SetProperty(\""+this.target+"\",\""+this.name+"\","+this.value+")";
+    }
+}
+class CpSetStyle extends CodeBase{
+    public constructor(target:string,name:string,value:string){
+        super();
+        this.target = target;
+        this.name = name;
+        this.value = value;
+    }
+
+    /**
+     * 要修改的属性名
+     */
+    public name:string;
+
+    /**
+     * 目标实例名
+     */
+    public target:string;
+
+    /**
+     * 属性值
+     */
+    public value:string;
+
+    public toCode():string{
+        var indentStr:string = this.getIndent(1);
+        return "new egret.gui.SetStyle(\""+this.target+"\",\""+this.name+"\","+this.value+")";
     }
 }
 

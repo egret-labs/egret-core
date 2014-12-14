@@ -241,7 +241,8 @@ class EXMLConfig{
      * 指定的属性是否为样式属性
      */
     public isStyleProperty(prop:string,className:string):boolean{
-        return (this.isInstanceOf(className,"egret.gui.UIComponent")&&stylesMap[prop]);
+        var classData:any = properties[className];
+        return (classData&&!classData[prop]&&this.isInstanceOf(className,"egret.gui.UIComponent")&&stylesMap[prop]);
     }
 
     /**

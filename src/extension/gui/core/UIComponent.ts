@@ -274,6 +274,8 @@ module egret.gui {
 			}
 			var chain:any = this._styleProtoChain;
 			delete chain[styleProp];
+			this.styleChanged(styleProp);
+			this.notifyStyleChangeInChildren(styleProp);
 		}
 
 		private static emptyStyleChain:any = {};

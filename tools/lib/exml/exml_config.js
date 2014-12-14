@@ -215,7 +215,8 @@ var EXMLConfig = (function () {
      * 指定的属性是否为样式属性
      */
     EXMLConfig.prototype.isStyleProperty = function (prop, className) {
-        return (this.isInstanceOf(className, "egret.gui.UIComponent") && stylesMap[prop]);
+        var classData = properties[className];
+        return (classData && !classData[prop] && this.isInstanceOf(className, "egret.gui.UIComponent") && stylesMap[prop]);
     };
     /**
      * 获取指定类指定属性的类型

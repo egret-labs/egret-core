@@ -792,6 +792,7 @@ var EXMLCompiler = (function () {
         this.createStates(this.currentXML);
         var states;
         var node = this.currentXML;
+        var nodeClassName = this.exmlConfig.getClassNameById(node.localName, node.namespace);
         for (var itemName in node) {
             var value = node[itemName];
             if (itemName.charAt(0) != "$") {
@@ -812,7 +813,12 @@ var EXMLCompiler = (function () {
                 if (stateLength > 0) {
                     for (var i = 0; i < stateLength; i++) {
                         var state = states[i];
-                        state.addOverride(new CpSetProperty("", key, itemValue));
+                        if (this.exmlConfig.isStyleProperty(key, nodeClassName)) {
+                            state.addOverride(new CpSetStyle("", key, itemValue));
+                        }
+                        else {
+                            state.addOverride(new CpSetProperty("", key, itemValue));
+                        }
                     }
                 }
             }
@@ -937,12 +943,18 @@ var EXMLCompiler = (function () {
                 if (l > 0) {
                     for (var j = 0; j < l; j++) {
                         state = states[j];
-                        state.addOverride(new CpSetProperty(parentNode.$id, prop, value));
+                        if (this.exmlConfig.isStyleProperty(prop, className)) {
+                            state.addOverride(new CpSetStyle(parentNode.$id, prop, value));
+                        }
+                        else {
+                            state.addOverride(new CpSetProperty(parentNode.$id, prop, value));
+                        }
                     }
                 }
             }
             else if (this.containsState(node)) {
                 var id = node.$id;
+                var nodeClassName = this.exmlConfig.getClassNameById(node.localName, node.namespace);
                 this.checkIdForState(node);
                 var stateName;
                 var states;
@@ -1014,7 +1026,12 @@ var EXMLCompiler = (function () {
                         if (l > 0) {
                             for (var j = 0; j < l; j++) {
                                 state = states[j];
-                                state.addOverride(new CpSetProperty(id, key, value));
+                                if (this.exmlConfig.isStyleProperty(key, nodeClassName)) {
+                                    state.addOverride(new CpSetStyle(id, key, value));
+                                }
+                                else {
+                                    state.addOverride(new CpSetProperty(id, key, value));
+                                }
                             }
                         }
                     }
@@ -1885,6 +1902,20 @@ var CpSetProperty = (function (_super) {
         return "new egret.gui.SetProperty(\"" + this.target + "\",\"" + this.name + "\"," + this.value + ")";
     };
     return CpSetProperty;
+})(CodeBase);
+var CpSetStyle = (function (_super) {
+    __extends(CpSetStyle, _super);
+    function CpSetStyle(target, name, value) {
+        _super.call(this);
+        this.target = target;
+        this.name = name;
+        this.value = value;
+    }
+    CpSetStyle.prototype.toCode = function () {
+        var indentStr = this.getIndent(1);
+        return "new egret.gui.SetStyle(\"" + this.target + "\",\"" + this.name + "\"," + this.value + ")";
+    };
+    return CpSetStyle;
 })(CodeBase);
 var DataType = (function () {
     function DataType() {

@@ -43,6 +43,7 @@
         "states/OverrideBase.ts",
         "states/AddItems.ts",
         "states/SetProperty.ts",
+        "states/SetStyle.ts",
         "states/State.ts",
         "utils/LayoutUtil.ts",
         "utils/getScale9Grid.ts",
