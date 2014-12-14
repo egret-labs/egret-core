@@ -379,12 +379,12 @@ module egret.gui {
 		public _createTextField():void
 		{
 			this._textField = new TextField;
-			this._textField.fontFamily = this._fontFamily;
-			this._textField.size = this._size;
-			this._textField.textAlign = this._textAlign;
-			this._textField.verticalAlign = this._verticalAlign;
+			this._textField.fontFamily = this.fontFamily;
+			this._textField.size = this.size;
+			this._textField.textAlign = this.textAlign;
+			this._textField.verticalAlign = this.verticalAlign;
 			this._textField.lineSpacing = this._lineSpacing;
-			this._textField.textColor = this._textColor;
+			this._textField.textColor = this.textColor;
 			this._textField.multiline = true;
 			this._addToDisplayList(this._textField);
 		}
