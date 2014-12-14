@@ -36,15 +36,29 @@ module egret.gui {
     export interface IStyleClient{
         /**
          * 获取指定的名称的样式属性值
+         * @param styleProp 样式名称
          */
         getStyle(styleProp:string):any;
         /**
-         * 对此组件实例设置样式属性。在此组件上设置的样式会覆盖父级容器的同名样式。
+         * 对此组件实例设置样式属性。在此组件上设置的样式会覆盖父级容器的同名样式。推荐在子项较少的组件上使用，尽量避免在全局调用此方法，有可能造成性能问题。
+         * @param styleProp 样式名称
+         * @param newValue 样式值
          */
         setStyle(styleProp:string, newValue:any):void;
         /**
          * 清除在此组件实例上设置过的指定样式名。
+         * @param styleProp 样式名称
          */
         clearStyle(styleProp:string):void;
+        /**
+         * 组件上的样式发生改变
+         * @param styleProp 发生改变的样式名称，若为null表示所有样式都发生了改变。
+         */
+        styleChanged(styleProp:string):void;
+        /**
+         * 通知项列表样式发生改变
+         * @param styleProp 样式名称
+         */
+        notifyStyleChangeInChildren(styleProp:string):void;
     }
 }
