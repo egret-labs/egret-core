@@ -42,8 +42,6 @@ module egret.gui {
 		public constructor(){
 			super();
 			this._hasNoStyleChild = true;
-			//this._styleProtoChain = {textColor:0xFFFFFF,fontFamily:"SimSun",size:30,
-			//	bold:false,italic:false,textAlign:"left",verticalAlign:"top"};
 		}
 
 		/**
