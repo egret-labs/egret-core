@@ -215,8 +215,11 @@ var EXMLConfig = (function () {
      * 指定的属性是否为样式属性
      */
     EXMLConfig.prototype.isStyleProperty = function (prop, className) {
-        var classData = properties[className];
-        return (classData && !classData[prop] && this.isInstanceOf(className, "egret.gui.UIComponent") && stylesMap[prop]);
+        var type = this.findType(className, prop);
+        return !type && this.checkStyleProperty(prop, className);
+    };
+    EXMLConfig.prototype.checkStyleProperty = function (prop, className) {
+        return (this.isInstanceOf(className, "egret.gui.UIComponent") && stylesMap[prop]);
     };
     /**
      * 获取指定类指定属性的类型
@@ -227,7 +230,7 @@ var EXMLConfig = (function () {
         }
         var type = this.findType(className, prop);
         if (!type) {
-            if (this.isStyleProperty(prop, className)) {
+            if (this.checkStyleProperty(prop, className)) {
                 return stylesMap[prop];
             }
         }

@@ -240,9 +240,15 @@ class EXMLConfig{
     /**
      * 指定的属性是否为样式属性
      */
-    public isStyleProperty(prop:string,className:string):boolean{
-        var classData:any = properties[className];
-        return (classData&&!classData[prop]&&this.isInstanceOf(className,"egret.gui.UIComponent")&&stylesMap[prop]);
+    public isStyleProperty(prop:string,className:string):Boolean
+    {
+        var type:String = this.findType(className,prop);
+        return !type&&this.checkStyleProperty(prop,className);
+    }
+
+    private checkStyleProperty(prop:string,className:string):Boolean
+    {
+        return (this.isInstanceOf(className,"egret.gui.UIComponent")&&stylesMap[prop]);
     }
 
     /**
@@ -254,7 +260,7 @@ class EXMLConfig{
         }
         var type:string = this.findType(className,prop);
         if(!type){
-            if(this.isStyleProperty(prop,className)){
+            if(this.checkStyleProperty(prop,className)){
                 return stylesMap[prop];
             }
         }
