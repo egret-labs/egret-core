@@ -146,19 +146,13 @@ module egret.gui {
 			this.invalidateProperties();
 		}
 
-        /**
-         * @inheritDoc
-         */
-        public _setFontSize(value: number) {
-            if (value === undefined)
-                value = 0;
-            if (this._size == value)
-                return;
-            super._setFontSize(value);
-            this.heightInLinesChanged = true;
-            this.widthInCharsChanged = true;
-        }
-		
+		public styleChanged(styleProp:string):void{
+			super.styleChanged(styleProp);
+			if(!styleProp||styleProp=="size"){
+				this.heightInLinesChanged = true;
+				this.widthInCharsChanged = true;
+			}
+		}
 
         public _setLineSpacing(value: number) {
             if (this._lineSpacing == value)

@@ -595,6 +595,18 @@ module egret.gui {
                 viewport["_addToStyleProtoChain"](parentChain);
             }
         }
+
+        /**
+         * 通知项列表样式发生改变
+         */
+        public notifyStyleChangeInChildren(styleProp:string):void{
+            super.notifyStyleChangeInChildren(styleProp);
+            var viewport:IViewport = this._viewport;
+            if(viewport&&"styleChanged" in viewport){
+                viewport["styleChanged"](styleProp);
+                viewport["notifyStyleChangeInChildren"](styleProp);
+            }
+        }
     }
 
 }

@@ -214,7 +214,7 @@ module egret.gui {
 			return chain[styleProp];
 		}
 		/**
-		 * 对此组件实例设置样式属性。在此组件上设置的样式会覆盖父级容器的同名样式。
+		 * 对此组件实例设置样式属性。在此组件上设置的样式会覆盖父级容器的同名样式。推荐在子项较少的组件上使用，尽量避免在全局调用此方法，有可能造成性能问题。
 		 */
 		public setStyle(styleProp:string, newValue:any):void{
 			var chain:any = this._styleProtoChain;
@@ -222,12 +222,40 @@ module egret.gui {
 				chain = this._createStyleProtoChain(chain);
 			}
 			chain[styleProp] = newValue;
+			this.styleChanged(styleProp);
+			this.notifyStyleChangeInChildren(styleProp);
+		}
+
+		public styleChanged(styleProp:string):void{
+
+		}
+		/**
+		 * 一个性能优化的标志变量。某些子类可以设置为true显式表明自己不含有可设置样式的子项。
+		 */
+		public _hasNoStyleChild:boolean = false;
+		/**
+		 * 通知项列表样式发生改变
+		 */
+		public notifyStyleChangeInChildren(styleProp:string):void{
+			if(this._hasNoStyleChild){
+				return;
+			}
+			for(var i:number=this.numChildren-1;i>=0;i--){
+				var child:IStyleClient = <IStyleClient><any> (this.getChildAt(i));
+				if(!child){
+					continue;
+				}
+				if("styleChanged" in child){
+					child["styleChanged"](styleProp);
+					child["notifyStyleChangeInChildren"](styleProp);
+				}
+			}
 		}
 
 		public _createStyleProtoChain(chain:any):void{
 			this._hasOwnStyleChain = true;
 			this._styleProtoChain = {};
-			this._styleProtoChain.__proto__ = chain;
+			this._styleProtoChain.__proto__ = chain?chain:UIComponent.emptyStyleChain;
 			chain = this._styleProtoChain;
 			for(var i:number=this.numChildren-1;i>=0;i--){
 				var child:IStyleClient = <IStyleClient><any> (this.getChildAt(i));
@@ -247,12 +275,14 @@ module egret.gui {
 			var chain:any = this._styleProtoChain;
 			delete chain[styleProp];
 		}
+
+		private static emptyStyleChain:any = {};
 		/**
 		 * 添加到父级容器的样式原型链
 		 */
 		public _addToStyleProtoChain(parentChain:any):void{
 			if(this._hasOwnStyleChain){
-				this._styleProtoChain.__proto__ = parentChain;
+				this._styleProtoChain.__proto__ = parentChain?parentChain:UIComponent.emptyStyleChain;
 			}
 			else if(this._styleProtoChain!=parentChain){
 				this._styleProtoChain = parentChain;
@@ -360,8 +390,13 @@ module egret.gui {
 			if("nestLevel" in child){
 				(<ILayoutManagerClient><any>child).nestLevel = this._nestLevel+1;
 			}
-			if("_addToStyleProtoChain" in child){
-				child["_addToStyleProtoChain"](this._styleProtoChain);
+			if("styleChanged" in child){
+				var chain:any = this._styleProtoChain;
+				if(chain||child["_styleProtoChain"]){
+					child["_addToStyleProtoChain"](chain);
+					child["styleChanged"](null);
+					child["notifyStyleChangeInChildren"](null);
+				}
 			}
 		}
 		
