@@ -100,6 +100,8 @@ module egret.gui {
 										  valueForType:any):void{
 			if (value === undefined || value === null)
 				obj[name] = value;
+			else if (typeof(valueForType) == "number")
+				obj[name] = parseFloat(value);
 			else if (typeof(valueForType) == "boolean")
 				obj[name] = this.toBoolean(value);
 			else

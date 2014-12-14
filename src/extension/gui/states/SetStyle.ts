@@ -103,6 +103,8 @@ module egret.gui {
 			}
 			else if (value === null)
 				obj["setStyle"](name,value);
+			else if (typeof(valueForType) == "number")
+				obj["setStyle"](name,parseFloat(value));
 			else if (typeof(valueForType) == "boolean")
 				obj["setStyle"](name,this.toBoolean(value));
 			else
