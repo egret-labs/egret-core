@@ -135,23 +135,6 @@ module egret.gui {
 		 */		
         public verticalScrollBar: VScrollBar;
 
-        public set hBar(value: HScrollBar) {
-            Logger.warning("Scroller.hBar已废弃，请使用Scroller.horizontalScrollBar设置");
-            this.horizontalScrollBar = value;
-        }
-        public get hBar():HScrollBar {
-            Logger.warning("Scroller.hBar已废弃，请使用Scroller.horizontalScrollBar");
-            return this.horizontalScrollBar;
-        }
-        public set vBar(value: VScrollBar) {
-            Logger.warning("Scroller.vBar已废弃，请使用Scroller.verticalScrollBar设置");
-            this.verticalScrollBar = value;
-        }
-        public get vBar():VScrollBar {
-            Logger.warning("Scroller.vBar已废弃，请使用Scroller.verticalScrollBar");
-            return this.verticalScrollBar;
-        }
-
         public _scroller: egret.ScrollView;
 
         /**
