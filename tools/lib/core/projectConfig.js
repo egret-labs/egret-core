@@ -79,6 +79,11 @@ exports.getOutputDir = function(){
             support_path = path.join(currDir, support_path, "__temp");
             return support_path;
         }
+        else if (projectConfig && projectConfig.native && projectConfig.native.ios_path  && projectConfig.native.ios_path != "") {
+            var support_path = projectConfig.native.ios_path;
+            support_path = path.join(currDir, support_path, "__temp");
+            return support_path;
+        }
         else {
             global.exit(8004);
             return null;
