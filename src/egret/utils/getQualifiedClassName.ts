@@ -35,7 +35,7 @@ module egret {
      *  egret.getQualifiedClassName(egret.DisplayObject) //返回 "egret.DisplayObject"
      */
     export function getQualifiedClassName(value:any):string {
-        var prototype:any = value.prototype ? value.prototype : value.__proto__;
+        var prototype: any = value.prototype ? value.prototype : Object.getPrototypeOf(value);
         if(prototype.hasOwnProperty("__class__")){
             return prototype["__class__"];
         }
@@ -60,7 +60,7 @@ module egret {
      *  egret.getQualifiedSuperclassName(egret.DisplayObjectContainer) //返回 "egret.DisplayObject"
      */
     export function getQualifiedSuperclassName(value: any):string {
-        var prototype: any = value.prototype ? value.prototype : value.__proto__;
+        var prototype: any = value.prototype ? value.prototype : Object.getPrototypeOf(value);
         if (prototype.hasOwnProperty("__superclass__")) {
             return prototype["__superclass__"];
         }
