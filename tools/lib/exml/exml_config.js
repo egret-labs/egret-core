@@ -219,7 +219,7 @@ var EXMLConfig = (function () {
         return !type && this.checkStyleProperty(prop, className);
     };
     EXMLConfig.prototype.checkStyleProperty = function (prop, className) {
-        return (this.isInstanceOf(className, "egret.gui.UIComponent") && stylesMap[prop]);
+        return (this.isInstanceOf(className, "egret.gui.IStyleClient") && stylesMap[prop]);
     };
     /**
      * 获取指定类指定属性的类型

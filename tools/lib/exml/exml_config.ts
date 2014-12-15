@@ -248,7 +248,7 @@ class EXMLConfig{
 
     private checkStyleProperty(prop:string,className:string):Boolean
     {
-        return (this.isInstanceOf(className,"egret.gui.UIComponent")&&stylesMap[prop]);
+        return (this.isInstanceOf(className,"egret.gui.IStyleClient")&&stylesMap[prop]);
     }
 
     /**
