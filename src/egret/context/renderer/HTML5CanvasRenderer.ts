@@ -68,11 +68,6 @@ module egret {
             this._cacheCanvas.height = this.canvas.height;
             this._cacheCanvasContext = this._cacheCanvas.getContext("2d");
 
-            this._cacheCanvasContext["imageSmoothingEnabled"] = RendererContext.imageSmoothingEnabled;
-            this._cacheCanvasContext["webkitImageSmoothingEnabled"] = RendererContext.imageSmoothingEnabled;
-            this._cacheCanvasContext["mozImageSmoothingEnabled"] = RendererContext.imageSmoothingEnabled;
-            this._cacheCanvasContext["msImageSmoothingEnabled"] = RendererContext.imageSmoothingEnabled;
-
             this.onResize();
 
             var f = this.canvasContext.setTransform;
@@ -122,6 +117,11 @@ module egret {
 
                 this._cacheCanvas.width = this.canvas.width;
                 this._cacheCanvas.height = this.canvas.height;
+
+                this._cacheCanvasContext["imageSmoothingEnabled"] = RendererContext.imageSmoothingEnabled;
+                this._cacheCanvasContext["webkitImageSmoothingEnabled"] = RendererContext.imageSmoothingEnabled;
+                this._cacheCanvasContext["mozImageSmoothingEnabled"] = RendererContext.imageSmoothingEnabled;
+                this._cacheCanvasContext["msImageSmoothingEnabled"] = RendererContext.imageSmoothingEnabled;
             }
         }
 
