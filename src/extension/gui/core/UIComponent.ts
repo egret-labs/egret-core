@@ -219,7 +219,7 @@ module egret.gui {
 		public setStyle(styleProp:string, newValue:any):void{
 			var chain:any = this._styleProtoChain;
 			if(!this._hasOwnStyleChain){
-				chain = this._createStyleProtoChain(chain);
+				chain = this._createOwnStyleProtoChain(chain);
 			}
 			chain[styleProp] = newValue;
 			this.styleChanged(styleProp);
@@ -246,21 +246,21 @@ module egret.gui {
 					continue;
 				}
 				if("styleChanged" in child){
-					child["styleChanged"](styleProp);
-					child["notifyStyleChangeInChildren"](styleProp);
+					child.styleChanged(styleProp);
+					child.notifyStyleChangeInChildren(styleProp);
 				}
 			}
 		}
 
-		public _createStyleProtoChain(chain:any):void{
+		public _createOwnStyleProtoChain(chain:any):void{
 			this._hasOwnStyleChain = true;
 			this._styleProtoChain = {};
 			this._styleProtoChain.__proto__ = chain?chain:UIComponent.emptyStyleChain;
 			chain = this._styleProtoChain;
 			for(var i:number=this.numChildren-1;i>=0;i--){
 				var child:IStyleClient = <IStyleClient><any> (this.getChildAt(i));
-				if(child&&"_addToStyleProtoChain" in child){
-					child["_addToStyleProtoChain"](chain);
+				if(child&&"regenerateStyleCache" in child){
+					child["regenerateStyleCache"](chain);
 				}
 			}
 			return chain;
@@ -282,7 +282,7 @@ module egret.gui {
 		/**
 		 * 添加到父级容器的样式原型链
 		 */
-		public _addToStyleProtoChain(parentChain:any):void{
+		public regenerateStyleCache(parentChain:any):void{
 			if(this._hasOwnStyleChain){
 				this._styleProtoChain.__proto__ = parentChain?parentChain:UIComponent.emptyStyleChain;
 			}
@@ -290,8 +290,8 @@ module egret.gui {
 				this._styleProtoChain = parentChain;
 				for(var i:number=this.numChildren-1;i>=0;i--){
 					var child:IStyleClient = <IStyleClient><any> (this.getChildAt(i));
-					if(child&&"_addToStyleProtoChain" in child){
-						child["_addToStyleProtoChain"](parentChain);
+					if(child&&"regenerateStyleCache" in child){
+						child.regenerateStyleCache(parentChain);
 					}
 				}
 			}
@@ -395,7 +395,7 @@ module egret.gui {
 			if("styleChanged" in child){
 				var chain:any = this._styleProtoChain;
 				if(chain||child["_styleProtoChain"]){
-					child["_addToStyleProtoChain"](chain);
+					child["regenerateStyleCache"](chain);
 					child["styleChanged"](null);
 					child["notifyStyleChangeInChildren"](null);
 				}

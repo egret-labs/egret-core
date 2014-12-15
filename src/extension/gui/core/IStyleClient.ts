@@ -38,13 +38,13 @@ module egret.gui {
          * 获取指定的名称的样式属性值
          * @param styleProp 样式名称
          */
-        getStyle(styleProp:string):any;
+        getStyle(styleProp:String):any;
         /**
-         * 对此组件实例设置样式属性。在此组件上设置的样式会覆盖父级容器的同名样式。推荐在子项较少的组件上使用，尽量避免在全局调用此方法，有可能造成性能问题。
+         * 对此组件实例设置样式属性。在此组件上设置的样式会覆盖父级容器的同名样式。
          * @param styleProp 样式名称
          * @param newValue 样式值
          */
-        setStyle(styleProp:string, newValue:any):void;
+        setStyle(styleProp:String, newValue:any):void;
         /**
          * 清除在此组件实例上设置过的指定样式名。
          * @param styleProp 样式名称
@@ -60,5 +60,10 @@ module egret.gui {
          * @param styleProp 样式名称
          */
         notifyStyleChangeInChildren(styleProp:string):void;
+        /**
+         * 重新生成自身以及所有子项的原型链
+         * @param parentChain
+         */
+        regenerateStyleCache(parentChain:any):void;
     }
 }
