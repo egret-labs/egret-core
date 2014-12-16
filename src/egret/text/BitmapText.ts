@@ -59,11 +59,23 @@ module egret {
             return this._text;
         }
 
+        private _spriteSheet: BitmapTextSpriteSheet = null;
+        private _spriteSheetChanged: boolean = false;
         /**
          * BitmapTextSpriteSheet对象，缓存了所有文本的位图纹理
-		 * @member {egret.BitmapTextSpriteSheet} egret.BitmapText#spriteSheet
+         * @member {egret.BitmapTextSpriteSheet} egret.BitmapText#spriteSheet
          */
-        public spriteSheet:BitmapTextSpriteSheet;
+        public get spriteSheet(): BitmapTextSpriteSheet { 
+            return this._spriteSheet;
+        }
+
+        public set spriteSheet(val: BitmapTextSpriteSheet) { 
+            if (this._spriteSheet == val)
+                return;
+            this._spriteSheet = val;
+            this._spriteSheetChanged = true;
+            this._setSizeDirty();
+        }
 
         private _bitmapPool:Array<Bitmap>;
 
@@ -76,7 +88,7 @@ module egret {
             if (!this.visible) {
                 return;
             }
-            if (this._textChanged) {
+            if (this._textChanged || this._spriteSheetChanged) {
                 this._renderText();
             }
             super._updateTransform();
@@ -87,7 +99,7 @@ module egret {
             var tempW:number = 0;
             var tempH:number = 0;
 
-            if (this._textChanged) {
+            if (this._textChanged || this._spriteSheetChanged) {
                 this.removeChildren();
             }
             for (var i = 0, l = this.text.length; i < l; i++) {
@@ -100,7 +112,7 @@ module egret {
                 var offsetX = texture._offsetX;
                 var offsetY = texture._offsetY;
                 var characterWidth = texture._textureWidth;
-                if (this._textChanged) {//todo，不支持换行
+                if (this._textChanged || this._spriteSheetChanged) {//todo，不支持换行
                     var bitmap = this._bitmapPool[i];
                     if (!bitmap) {
                         bitmap = new Bitmap();
@@ -117,6 +129,7 @@ module egret {
             }
 
             this._textChanged = false;
+            this._spriteSheetChanged = false;
             var rect:Rectangle = Rectangle.identity.initialize(0, 0, tempW, tempH);
             return rect;
         }

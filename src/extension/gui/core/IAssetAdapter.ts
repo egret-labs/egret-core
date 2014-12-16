@@ -45,6 +45,6 @@ module egret.gui {
          * @param oldContent any 旧的内容对象,传入值有可能为null。
          * 对于某些类型素材，例如MovieClip，可以重用传入的显示对象,只修改其数据再返回。
          */
-        getAsset(source:any,compFunc:Function,thisObject:any,oldContent:any):void;
+        getAsset(source: any, compFunc: (content: any, source: any) => void, thisObject: any, oldContent: any): void;
     }
 }
