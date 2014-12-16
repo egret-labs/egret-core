@@ -39,6 +39,7 @@ function createManifest(currDir){
         var txt = file.read(filePath);
         var txtCrc32 = crc32(txt);
         var savePath = path.relative(currDir, filePath);
+        savePath = savePath.replace(/(\\\\|\\)/g,"/");
         var crcstr = null;
         if(oldVersion) {
             if(oldVersion[savePath] == undefined || oldVersion[savePath]["v"] != txtCrc32) {
@@ -57,9 +58,9 @@ function createManifest(currDir){
     }
 
     if (oldVersion == null) {
-        file.save(basePath, JSON.stringify(changeVersion));
+        var changeStr = JSON.stringify(changeVersion);
+        file.save(basePath, changeStr);
         file.save(versionPath, "{}");
-
 
         file.copy(path.join(currDir, "resource/resource.json"), path.join(currDir, "baseResource.json"));
         return;
@@ -72,7 +73,6 @@ function createManifest(currDir){
     }
 
     var str = JSON.stringify(changeVersion);
-    str = str.replace(/\\\\/g,"/");
     if(oldVersion) {
         file.save(versionPath, str);
     }
