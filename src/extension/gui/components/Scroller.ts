@@ -566,8 +566,8 @@ module egret.gui {
             this.setViewportVScrollPosition(this.verticalScrollBar.getPosition());
         }
 
-        public _createStyleProtoChain(chain:any):void{
-            chain = super._createStyleProtoChain(chain);
+        public _createOwnStyleProtoChain(chain:any):void{
+            chain = super._createOwnStyleProtoChain(chain);
             var viewport:IViewport = this._viewport;
             if(viewport&&"_addToStyleProtoChain" in viewport){
                 viewport["_addToStyleProtoChain"](chain);
@@ -577,11 +577,11 @@ module egret.gui {
         /**
          * 添加到父级容器的样式原型链
          */
-        public _addToStyleProtoChain(parentChain:any):void{
-            super._addToStyleProtoChain(parentChain);
+        public regenerateStyleCache(parentChain:any):void{
+            super.regenerateStyleCache(parentChain);
             var viewport:IViewport = this._viewport;
-            if(viewport&&"_addToStyleProtoChain" in viewport){
-                viewport["_addToStyleProtoChain"](parentChain);
+            if(viewport&&"regenerateStyleCache" in viewport){
+                viewport["regenerateStyleCache"](parentChain);
             }
         }
 
