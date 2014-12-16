@@ -200,10 +200,6 @@
 		"type":"string",
 		"verticalAlign":"string"
 	},
-	"egret.TextInput":
-	{
-		"super":"egret.TextField"
-	},
 	"egret.Texture":
 	{
 		"super":"egret.HashObject",
@@ -250,6 +246,19 @@
 	{
 		"mouseWheelSpeed":"number",
 		"super":"egret.gui.LayoutBase"
+	},
+	"egret.gui.BitmapLabel":
+	{
+		"implements":["egret.gui.IDisplayText"],
+		"padding":"number",
+		"paddingBottom":"number",
+		"paddingLeft":"number",
+		"paddingRight":"number",
+		"paddingTop":"number",
+		"spriteSheet":"egret.BitmapTextSpriteSheet",
+		"spriteSheetKey":"string",
+		"super":"egret.gui.UIComponent",
+		"text":"string"
 	},
 	"egret.gui.Button":
 	{
@@ -476,17 +485,22 @@
 	},
 	"egret.gui.Scroller":
 	{
-		"hBar":"egret.gui.HScrollBar",
 		"horizontalScrollBar":"egret.gui.HScrollBar",
 		"horizontalScrollPolicy":"string",
 		"implements":["egret.gui.IVisualElementContainer"],
 		"super":"egret.gui.SkinnableComponent",
-		"vBar":"egret.gui.VScrollBar",
 		"verticalScrollBar":"egret.gui.VScrollBar",
 		"verticalScrollPolicy":"string",
 		"viewport":"egret.gui.IViewport"
 	},
 	"egret.gui.SetProperty":
+	{
+		"name":"string",
+		"super":"egret.gui.OverrideBase",
+		"target":"string",
+		"value":"any"
+	},
+	"egret.gui.SetStyle":
 	{
 		"name":"string",
 		"super":"egret.gui.OverrideBase",
@@ -592,7 +606,7 @@
 	{
 		"heightInLines":"number",
 		"horizontalScrollPolicy":"string",
-		"scroller":"egret.Scroller",
+		"scroller":"egret.gui.Scroller",
 		"super":"egret.gui.SkinnableTextBase",
 		"verticalScrollPolicy":"string",
 		"widthInChars":"number"

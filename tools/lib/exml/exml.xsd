@@ -425,17 +425,6 @@
       <xs:attributeGroup ref="egret.TextField"/>
     </xs:complexType>
   </xs:element>
-  <xs:attributeGroup name="egret.TextInput">
-    <xs:attributeGroup ref="egret.TextField"/>
-  </xs:attributeGroup>
-  <xs:element name="TextInput">
-    <xs:complexType>
-      <xs:choice minOccurs="0" maxOccurs="unbounded">
-        <xs:any/>
-      </xs:choice>
-      <xs:attributeGroup ref="egret.TextInput"/>
-    </xs:complexType>
-  </xs:element>
   <xs:attributeGroup name="egret.Texture">
     <xs:attributeGroup ref="egret.HashObject"/>
     <xs:attribute name="webGLTexture" type="xs:string"/>
@@ -509,6 +498,7 @@
   <xs:group name="IVisualElement">
     <xs:choice>
       <xs:element ref="Alert"/>
+      <xs:element ref="BitmapLabel"/>
       <xs:element ref="Button"/>
       <xs:element ref="ButtonBase"/>
       <xs:element ref="CheckBox"/>
@@ -589,6 +579,25 @@
         <xs:any/>
       </xs:choice>
       <xs:attributeGroup ref="egret.gui.BasicLayout"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:attributeGroup name="egret.gui.BitmapLabel">
+    <xs:attributeGroup ref="egret.gui.UIComponent"/>
+    <xs:attribute name="padding" type="xs:decimal"/>
+    <xs:attribute name="paddingBottom" type="xs:decimal"/>
+    <xs:attribute name="paddingLeft" type="xs:decimal"/>
+    <xs:attribute name="paddingRight" type="xs:decimal"/>
+    <xs:attribute name="paddingTop" type="xs:decimal"/>
+    <xs:attribute name="spriteSheet" type="xs:string"/>
+    <xs:attribute name="spriteSheetKey" type="xs:string"/>
+    <xs:attribute name="text" type="xs:string"/>
+  </xs:attributeGroup>
+  <xs:element name="BitmapLabel">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:any/>
+      </xs:choice>
+      <xs:attributeGroup ref="egret.gui.BitmapLabel"/>
     </xs:complexType>
   </xs:element>
   <xs:attributeGroup name="egret.gui.Button">
@@ -1054,10 +1063,8 @@
   </xs:simpleType>
   <xs:attributeGroup name="egret.gui.Scroller">
     <xs:attributeGroup ref="egret.gui.SkinnableComponent"/>
-    <xs:attribute name="hBar" type="xs:string"/>
     <xs:attribute name="horizontalScrollBar" type="xs:string"/>
     <xs:attribute name="horizontalScrollPolicy" type="egret.gui.ScrollPolicy"/>
-    <xs:attribute name="vBar" type="xs:string"/>
     <xs:attribute name="verticalScrollBar" type="xs:string"/>
     <xs:attribute name="verticalScrollPolicy" type="egret.gui.ScrollPolicy"/>
     <xs:attribute name="viewport" type="xs:string"/>
@@ -1093,6 +1100,20 @@
         <xs:any/>
       </xs:choice>
       <xs:attributeGroup ref="egret.gui.SetProperty"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:attributeGroup name="egret.gui.SetStyle">
+    <xs:attributeGroup ref="egret.gui.OverrideBase"/>
+    <xs:attribute name="name" type="xs:string"/>
+    <xs:attribute name="target" type="xs:string"/>
+    <xs:attribute name="value" type="xs:string"/>
+  </xs:attributeGroup>
+  <xs:element name="SetStyle">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:any/>
+      </xs:choice>
+      <xs:attributeGroup ref="egret.gui.SetStyle"/>
     </xs:complexType>
   </xs:element>
   <xs:attributeGroup name="egret.gui.Skin">
@@ -1305,6 +1326,14 @@
     <xs:attributeGroup ref="egret.gui.SkinnableTextBase"/>
     <xs:attribute name="widthInChars" type="xs:decimal"/>
   </xs:attributeGroup>
+  <xs:element name="TextInput">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:any/>
+      </xs:choice>
+      <xs:attributeGroup ref="egret.gui.TextInput"/>
+    </xs:complexType>
+  </xs:element>
   <xs:simpleType name="egret.gui.ColumnAlign">
     <xs:restriction base="xs:string">
       <xs:enumeration value="left"/>
