@@ -35,7 +35,7 @@ module RES {
         /**
          * 最大并发加载数
          */
-        public thread:number = 2;
+        public thread: number = 2;
         /**
          * 正在加载的线程计数
          */
@@ -63,7 +63,11 @@ module RES {
 		 * 正在加载的组列表,key为groupName
 		 */		
 		private itemListDic:any = {};
-		
+
+        private retryTimesDic: any = {};
+        public maxRetryTimes = 3;
+        private failedList: Array<ResourceItem> = new Array<ResourceItem>();
+
 		/**
 		 * 优先级队列,key为priority，value为groupName列表
 		 */		
@@ -157,6 +161,8 @@ module RES {
 		 * 获取下一个待加载项
 		 */		
 		private getOneResourceItem():ResourceItem{
+            if (this.failedList.length > 0)
+                return this.failedList.shift();
 			var maxPriority:number = Number.NEGATIVE_INFINITY;
 			for(var p in this.priorityQueue){
 				maxPriority = Math.max(maxPriority,<number><any> p);
@@ -189,7 +195,17 @@ module RES {
             this.loadingCount--;
 			var groupName:string = resItem.groupName;
 			if(!resItem.loaded){//加载失败
-                ResourceEvent.dispatchResourceEvent(this.resInstance,ResourceEvent.ITEM_LOAD_ERROR,groupName,resItem);
+                var times = this.retryTimesDic[resItem.name] || 1;
+                if (times > this.maxRetryTimes) {
+                    delete this.retryTimesDic[resItem.name];
+                    ResourceEvent.dispatchResourceEvent(this.resInstance, ResourceEvent.ITEM_LOAD_ERROR, groupName, resItem);
+                }
+                else { 
+                    this.retryTimesDic[resItem.name] = times + 1;
+                    this.failedList.push(resItem);
+                    this.next();
+                    return;
+                }
 			}
 
 			if(groupName){
