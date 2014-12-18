@@ -375,6 +375,7 @@ function removeComment(codeText,path) {
     codeText = codeText.split("\\\\").join("\v0\v");
     codeText = codeText.split("\\\"").join("\v1\v");
     codeText = codeText.split("\\\'").join("\v2\v");
+    codeText = codeText.split("\r\n").join("\n").split("\r").join("\n");
     while (codeText.length > 0) {
         var quoteIndex = codeText.indexOf("\"");
         if (quoteIndex == -1)
