@@ -300,6 +300,19 @@ module egret.gui {
 			this.invalidateSize();
 			this.invalidateDisplayList();
 		}
+        public _textFlow: Array<egret.ITextElement> = null;
+        public _textFlowChanged:boolean = false;
+        public set textFlow(value: Array<egret.ITextElement>) {
+            this._textFlow = value;
+            this._textFlowChanged = true;
+            this.invalidateProperties();
+            this.invalidateSize();
+            this.invalidateDisplayList();
+        }
+
+        public get textFlow(): Array<egret.ITextElement> { 
+            return this._textFlow;
+        }
 
 		public createChildren():void{
 			super.createChildren();
@@ -361,6 +374,10 @@ module egret.gui {
 				this._textField.text = this._text;
 				this._textChanged = false;
 			}
+            if (this._textFlowChanged) { 
+                this._textField.textFlow = this._textFlow;
+                this._textFlowChanged = false;
+            }
 
 		}
 
@@ -370,8 +387,14 @@ module egret.gui {
 		private checkTextField():void{
 			if(!this._textField){
 				this._createTextField();
-				this._textField.text = this._text;
-				this._textChanged = true;
+                if (this._text) {
+                    this._textField.text = this._text;
+                    this._textChanged = true;
+                }
+                if (this._textFlow) {
+                    this._textField.textFlow = this._textFlow;
+                    this._textFlowChanged = true;
+                }
 				this.invalidateProperties();
 			}
 		}
