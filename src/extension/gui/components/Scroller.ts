@@ -74,16 +74,20 @@ module egret.gui {
             return (<any>this._content).contentHeight;
         }
 
-        public _setHeight(value: number):void {
+        public _setHeight(value: number): void {
+            this._explicitHeight = value;
+            this._hasHeightSet = NumberUtils.isNumber(value);
             this._height = value;
             var content: IViewport = <any>this._content;
-            content.setLayoutBoundsSize(this._width, this._height);
+            content && content.setLayoutBoundsSize(this._width, this._height);
         }
 
-        public _setWidth(value:number):void { 
+        public _setWidth(value: number): void {
+            this._explicitWidth = value;
+            this._hasWidthSet = NumberUtils.isNumber(value);
             this._width = value;
             var content: IViewport = <any>this._content;
-            content.setLayoutBoundsSize(this._width, this._height);
+            content && content.setLayoutBoundsSize(this._width, this._height);
         }
         public get height(): number {
             return this._height;
@@ -502,6 +506,8 @@ module egret.gui {
                 }
                 return;
             }
+            if (!this.horizontalScrollBar)
+                return;
             var bar = this.horizontalScrollBar;
             bar.addEventListener(Event.CHANGE, this.hBarChanged, this, false);
             bar._setViewportMetric(this._viewport.width, this._viewport.contentWidth);
@@ -519,6 +525,8 @@ module egret.gui {
                 }
                 return;
             }
+            if (!this.verticalScrollBar)
+                return;
             var vbar = this.verticalScrollBar;
             vbar.addEventListener(Event.CHANGE, this.vBarChanged, this, false);
             vbar._setViewportMetric(this._viewport.height, this._viewport.contentHeight);

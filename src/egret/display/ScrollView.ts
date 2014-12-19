@@ -255,6 +255,10 @@ module egret {
         public _onTouchBegin(e: TouchEvent):void {
             if (e._isDefaultPrevented)
                 return;
+            var canScroll: boolean = this._checkScrollPolicy();
+            if (!canScroll) {
+                return;
+            }
             Tween.removeTweens(this);
             this.stage.addEventListener(TouchEvent.TOUCH_MOVE, this._onTouchMove, this);
             this.stage.addEventListener(TouchEvent.TOUCH_END, this._onTouchEnd, this);
@@ -584,6 +588,13 @@ module egret {
          */
         public swapChildrenAt(index1: number, index2: number): void {
             this.throwNotSupportedError();
+        }
+
+        public hitTest(x: number, y: number, ignoreTouchEnabled: boolean = false): DisplayObject {
+            var childTouched = super.hitTest(x, y, ignoreTouchEnabled);
+            if (childTouched)
+                return childTouched;
+            return DisplayObject.prototype.hitTest.call(this, x, y, ignoreTouchEnabled);
         }
     }
 } 
