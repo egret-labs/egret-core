@@ -625,7 +625,7 @@ function readReferenceFromTs(path){
 
 function checkAllClassName(classNameToPath,path,list,moduleList,orgText){
     var exclude = pathToClassNames[path];
-    findClassInLine(orgText,exclude,"",list,classNameToPath,true)
+    findClassInLine(orgText,exclude,"",list,classNameToPath)
     for(var ns in moduleList){
         var text = moduleList[ns];
         findClassInLine(text,exclude,ns,list,classNameToPath);
@@ -1128,7 +1128,7 @@ function escapFunctionLines(text,classNames,ns,relyOnList){
 }
 
 
-function findClassInLine(text,classNames,ns,relyOnList,classNameToPath,ignoreNS){
+function findClassInLine(text,classNames,ns,relyOnList,classNameToPath){
     var word = "";
     var length = text.length;
     for (var i = 0; i < length; i++) {
@@ -1156,7 +1156,7 @@ function findClassInLine(text,classNames,ns,relyOnList,classNameToPath,ignoreNS)
                         found = true;
                         break;
                     }
-                    if(!ignoreNS&&ns){
+                    if(ns){
                         word = ns+"."+word;
                         path = classNameToPath[word];
                         if(path&&typeof(path)=="string"&&classNames.indexOf(word)==-1){
