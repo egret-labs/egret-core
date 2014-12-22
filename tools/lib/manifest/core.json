@@ -60,6 +60,7 @@
         "egret/net/URLRequestMethod.ts",
         "egret/net/URLLoaderDataFormat.ts",
         "egret/net/URLVariables.ts",
+        "egret/net/URLRequestHeader.ts",
         "egret/net/URLRequest.ts",
         "egret/net/URLLoader.ts",
         "egret/display/Texture.ts",
