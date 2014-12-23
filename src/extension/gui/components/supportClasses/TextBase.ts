@@ -296,6 +296,8 @@ module egret.gui {
 				return;
 			this._text = value;
 			this._textChanged = true;
+            this._textFlow = null;
+            this._textFlowChanged = false;
 			this.invalidateProperties();
 			this.invalidateSize();
 			this.invalidateDisplayList();
@@ -305,6 +307,8 @@ module egret.gui {
         public set textFlow(value: Array<egret.ITextElement>) {
             this._textFlow = value;
             this._textFlowChanged = true;
+            this._text = null;
+            this._textChanged = false;
             this.invalidateProperties();
             this.invalidateSize();
             this.invalidateDisplayList();

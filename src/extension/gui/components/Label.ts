@@ -269,6 +269,9 @@ module egret.gui {
             if(this._textChanged){
                 this._textField.text = this._text;
             }
+            if (this._textFlowChanged) { 
+                this._textField.textFlow = this._textFlow;
+            }
 
             var padding:number = isNaN(this._padding)?0:this._padding;
             var paddingL:number = isNaN(this._paddingLeft)?padding:this._paddingLeft;
