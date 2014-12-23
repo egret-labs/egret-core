@@ -294,7 +294,7 @@ module egret.gui {
 		public set text(value:string){
 			if (value == this._text)
 				return;
-			this._text = value;
+            this._text = value || "";
 			this._textChanged = true;
             this._textFlow = null;
             this._textFlowChanged = false;
@@ -305,7 +305,7 @@ module egret.gui {
         public _textFlow: Array<egret.ITextElement> = null;
         public _textFlowChanged:boolean = false;
         public set textFlow(value: Array<egret.ITextElement>) {
-            this._textFlow = value;
+            this._textFlow = value || [];
             this._textFlowChanged = true;
             this._text = null;
             this._textChanged = false;
@@ -315,6 +315,8 @@ module egret.gui {
         }
 
         public get textFlow(): Array<egret.ITextElement> { 
+            if (this._textField)
+                return this._textField.textFlow;
             return this._textFlow;
         }
 
