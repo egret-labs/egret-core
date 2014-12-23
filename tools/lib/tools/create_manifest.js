@@ -36,10 +36,6 @@ var pathInfoList;
  * 键为文件路径，值为这个文件引用的文件列表
  */
 var referenceInfoList;
-/**
- * 在静态变量或全局变量上被new出来的对象类名列表
- */
-var newClassNameList;
 
 var thmList;
 
@@ -55,7 +51,7 @@ var exmlConfig;
 /**
  * ts关键字
  */
-var functionKeys = ["static", "var", "export", "public", "private", "function", "get", "set", "class", "interface","module"];
+var functionKeys = ["static", "var", "export", "public", "private", "function", "get", "set", "class", "interface","module","extends","implements","super","this"];
 /**
  * Egret命名空间
  */
@@ -132,7 +128,6 @@ function getModuleReferenceInfo(fileList){
     pathInfoList = null;
     pathToClassNames = null;
     referenceInfoList = null;
-    newClassNameList = null;
     thmList = null;
     return result;
 }
@@ -146,7 +141,6 @@ function resetCache(){
     pathInfoList = {};
     pathToClassNames = {};
     referenceInfoList = {};
-    newClassNameList = [];
     thmList = [];
     moduleReferenceInfo = null;
     modeulClassToPath = null;
@@ -254,7 +248,6 @@ function sortFileList(list,srcPath){
             readReferenceFromTs(path);
         }
     }
-
 
     var paths = [];
     //把所有引用关系都合并到pathInfoList里，并把类名替换为对应文件路径。
@@ -419,19 +412,6 @@ function sortOnReference(list){
         }
         pathRelyInfo[path] = refList;
     }
-
-    var firstList = [];
-    var secondList = [];
-    for(i=0;i<length;i++){
-        path = list[i];
-        if(newClassNameList.indexOf(path)!=-1){
-            firstList.push(path);
-        }
-        else{
-            secondList.push(path);
-        }
-    }
-    list = firstList.concat(secondList);
 
     var pathList = sortOnPathLevel(list,pathRelyInfo,false);
     var gameList = [];
@@ -601,8 +581,10 @@ function readReferenceFromTs(path){
             block = text.substring(1, index);
             text = text.substring(index + 1);
             var ns = CodeUtil.getLastWord(preStr);
-            preStr = CodeUtil.removeLastWord(preStr);
+
+            preStr = CodeUtil.removeLastWord(preStr,ns);
             var word = CodeUtil.getLastWord(preStr);
+
             if (word == "module") {
                 if (tsText) {
                     tsText = "";
@@ -621,43 +603,32 @@ function readReferenceFromTs(path){
     }
 
     var list = [];
-    checkAllClassName(classNameToPath,path,list,moduleList,text,orgText);
-    if(modeulClassToPath){
-        checkAllClassName(modeulClassToPath,path,list,moduleList,text,orgText);
+    checkAllClassName(classNameToPath,path,list,moduleList,orgText);
+    var length = list.length;
+    for(var i=0;i<length;i++){
+        list[i] = classNameToPath[list[i]];
     }
+    if(modeulClassToPath){
+        var newList = []
+        checkAllClassName(modeulClassToPath,path,newList,moduleList,orgText);
+        length = newList.length;
+        for(i=0;i<length;i++){
+            var value = modeulClassToPath[newList[i]];
+            if(list.indexOf(value)==-1){
+                list.push(value);
+            }
+        }
+    }
+
     referenceInfoList[path] = list;
 }
 
-function checkAllClassName(classNameToPath,path,list,moduleList,text,orgText){
-    for(var className in classNameToPath){
-        if(CodeUtil.containsVariable(className,orgText)){
-            var p = classNameToPath[className];
-            if(p&&p!=path&&list.indexOf(p)==-1){
-                list.push(p);
-            }
-            continue;
-        }
-        var key = className;
-        var index = className.lastIndexOf(".");
-        if(index==-1){
-            continue;
-        }
-        key = className.substring(index+1);
-        var targetNS = className.substring(0,index);
-        targetNS = targetNS.split(".")[0];
-
-        for(var ns in moduleList){
-            if(ns.split(".")[0]==targetNS){
-                text = moduleList[ns];
-                if(CodeUtil.containsVariable(key,text)){
-                    p = classNameToPath[className];
-                    if(p&&p!=path&&list.indexOf(p)==-1){
-                        list.push(p);
-                    }
-                    break;
-                }
-            }
-        }
+function checkAllClassName(classNameToPath,path,list,moduleList,orgText){
+    var exclude = pathToClassNames[path];
+    findClassInLine(orgText,exclude,"",list,classNameToPath)
+    for(var ns in moduleList){
+        var text = moduleList[ns];
+        findClassInLine(text,exclude,ns,list,classNameToPath);
     }
 }
 
@@ -920,6 +891,7 @@ function analyzeModuleForRelyOn(text,path,fileRelyOnList,moduleName){
  * 从代码块中分析引用关系，代码块为一个Module，或类外的一段全局函数定义
  */
 function readRelyOnFromBlock(text, path,fileRelyOnList,ns) {
+
     while (text.length > 0) {
         var index = CodeUtil.getFirstVariableIndex("class", text);
         if(index==-1){
@@ -1016,8 +988,9 @@ function getFullClassName(word,ns) {
  * 从类代码总读取构造函数和成员变量实例化的初始值。
  */
 function getSubRelyOnFromClass(text,ns, className) {
-    if(!text)
+    if(!text){
         return;
+    }
     text = text.substring(1,text.length-1);
     var list = [];
     var functMap = {};
@@ -1028,8 +1001,8 @@ function getSubRelyOnFromClass(text,ns, className) {
         }
         var codeText = text.substring(0,index+1);
         text = text.substring(index+1);
-
         index = codeText.indexOf("{");
+
         if(index==-1){
             index = codeText.length;
         }
@@ -1044,7 +1017,7 @@ function getSubRelyOnFromClass(text,ns, className) {
             }
             functMap[word] = funcText;
         }
-        findClassInLine(codeText,[className],ns,list);
+        findClassInLine(codeText,[className],ns,list,classNameToPath);
     }
     readSubRelyOnFromFunctionCode("__constructor",functMap,ns,className,list);
     for(var i=list.length- 1;i>=0;i--){
@@ -1068,7 +1041,7 @@ function readSubRelyOnFromFunctionCode(funcName,functMap,ns,className,list){
     if(!text)
         return;
     delete functMap[funcName];
-    findClassInLine(text,[className],ns,list);
+    findClassInLine(text,[className],ns,list,classNameToPath);
     for (funcName in functMap){
         if(text.indexOf(funcName+"(")!=-1&&CodeUtil.containsVariable(funcName,text)){
             readSubRelyOnFromFunctionCode(funcName,functMap,ns,className,list);
@@ -1141,10 +1114,10 @@ function escapFunctionLines(text,classNames,ns,relyOnList){
     while(text.length>0){
         var index = CodeUtil.getFirstVariableIndex("function",text);
         if(index==-1){
-            findClassInLine(text,classNames,ns,relyOnList);
+            findClassInLine(text,classNames,ns,relyOnList,classNameToPath);
             break;
         }
-        findClassInLine(text.substring(0,index),classNames,ns,relyOnList);
+        findClassInLine(text.substring(0,index),classNames,ns,relyOnList,classNameToPath);
         text = text.substring(index);
         index = CodeUtil.getBracketEndIndex(text);
         if(index==-1){
@@ -1154,34 +1127,52 @@ function escapFunctionLines(text,classNames,ns,relyOnList){
     }
 }
 
-function findClassInLine(line,classNames,ns,relyOnList){
-    for(var name in classNameToPath){
-        if(classNames.indexOf(name)!=-1){
-            continue;
-        }
-        var found = false;
-        if(CodeUtil.containsVariable(name,line)){
 
-            found = true;
-        }
-        if(!found){
-            var index = name.lastIndexOf(".");
-            if(index!=-1&&name.substring(0,index)==ns){
-                if(CodeUtil.containsVariable(name.substring(index+1),line)){
-                    found = true;
+function findClassInLine(text,classNames,ns,relyOnList,classNameToPath){
+    var word = "";
+    var length = text.length;
+    for (var i = 0; i < length; i++) {
+        var char = text.charAt(i);
+        if (char <= "Z" && char >= "A" || char <= "z" && char >= "a" || char <= "9" && char >= "0" || char == "_" || char == "$"||char==".") {
+            word += char;
+        } else if(word){
+            if(functionKeys.indexOf(word)==-1&&classNames.indexOf(word)==-1){
+                var found = false;
+                var names;
+                if(word.indexOf(".")!=-1) {
+                    names = word.split(".");
+                }
+                else{
+                    names = [word];
+                }
+                var len = names.length;
+                for(var j=0;j<len;j++){
+                    if(j==0)
+                        word = names[0];
+                    else
+                        word += "."+names[j];
+                    var path = classNameToPath[word];
+                    if(path&&typeof(path)=="string"&&classNames.indexOf(word)==-1){
+                        found = true;
+                        break;
+                    }
+                    if(ns){
+                        word = ns+"."+word;
+                        path = classNameToPath[word];
+                        if(path&&typeof(path)=="string"&&classNames.indexOf(word)==-1){
+                            found = true;
+                            break;
+                        }
+                    }
+                }
+                if(found){
+                    if (relyOnList.indexOf(word) == -1) {
+                        relyOnList.push(word);
+                    }
                 }
             }
+            word = "";
         }
-
-        if(found){
-            if (relyOnList.indexOf(name) == -1) {
-                relyOnList.push(name);
-                if(newClassNameList.indexOf(name)==-1){
-                    newClassNameList.push(name);
-                }
-            }
-        }
-
     }
 }
 

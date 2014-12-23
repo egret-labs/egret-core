@@ -66,6 +66,13 @@ module egret {
                 else {
                     delete this.urlData["data"];
                 }
+                //写入header信息
+                if(request.requestHeaders) {
+                    this.urlData.header = this.getHeaderString(request);
+                }
+                else {
+                    delete this.urlData.header;
+                }
                 var promise = PromiseObject.create();
                 promise.onSuccessFunc = function (getted_str) {
                     loader.data = getted_str;
@@ -102,6 +109,16 @@ module egret {
                 loader.data = content;
                 Event.dispatchEvent(loader, Event.COMPLETE);
             }
+        }
+
+        private getHeaderString(request:URLRequest):string {
+            var headerObj = {};
+            var length = request.requestHeaders.length;
+            for(var i:number = 0 ; i < length ; i++){
+                var urlRequestHeader:egret.URLRequestHeader = request.requestHeaders[i];
+                headerObj[urlRequestHeader.name] = urlRequestHeader.value;
+            }
+            return JSON.stringify(headerObj);
         }
 
         private loadSound(loader:URLLoader) {

@@ -70,5 +70,13 @@ module egret {
 		 * @member {string} egret.URLRequest#url
 		 */
         public url:string;
+
+        /**
+         * 要追加到 HTTP 请求的 HTTP 请求标头的数组。该数组由 URLRequestHeader 对象组成。
+         * 数组中的每一对象必须是包含一个名称字符串和一个值字符串的 URLRequestHeader 对象。
+         * 由于浏览器兼容性原因，该属性在 html5 中并未实现
+         * @member {Array} egret.URLRequest#requestHeaders
+         */
+        public requestHeaders:Array<URLRequestHeader>;
     }
 }
