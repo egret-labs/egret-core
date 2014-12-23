@@ -194,10 +194,15 @@ module egret.gui {
 				this.addEventListener(Event.ADDED_TO_STAGE,this.checkInvalidateFlag,this);
 			else
 				this.removeEventListener(Event.ADDED_TO_STAGE,this.checkInvalidateFlag,this);
-
+			this._updateChildrenNestLevel();
+		}
+		/**
+		 * 更新子项的nestLevel属性
+		 */
+		public _updateChildrenNestLevel():void{
 			for(var i:number=this.numChildren-1;i>=0;i--){
 				var child:ILayoutManagerClient = <ILayoutManagerClient><any> (this.getChildAt(i));
-				if(child!=null){
+				if(child&&"nestLevel" in child){
 					child.nestLevel = this._nestLevel+1;
 				}
 			}
