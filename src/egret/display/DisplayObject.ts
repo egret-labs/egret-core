@@ -442,7 +442,7 @@ module egret {
             this._setScrollRect(value);
         }
 
-        public _setScrollRect(value:Rectangle):void{
+        public _setScrollRect(value:Rectangle):void {
             this._scrollRect = value;
 
             this._setSizeDirty();
@@ -572,7 +572,7 @@ module egret {
                 return;
             }
             var o = this;
-            if (o._colorTransform){
+            if (o._colorTransform) {
                 renderContext.setGlobalColorTransform(o._colorTransform.matrix);
             }
             renderContext.setAlpha(o.worldAlpha, o.blendMode);
@@ -585,7 +585,7 @@ module egret {
             if (mask) {
                 renderContext.popMask();
             }
-            if (o._colorTransform){
+            if (o._colorTransform) {
                 renderContext.setGlobalColorTransform(null);
             }
             this.destroyCacheBounds();
@@ -618,7 +618,7 @@ module egret {
             var renderFilter = egret.RenderFilter.getInstance();
             renderFilter.drawImage(renderContext, display, 0, 0, width * scale_factor, height * scale_factor, offsetX, offsetY, width, height);
             return true;
-            
+
         }
 
         /**
@@ -684,7 +684,7 @@ module egret {
             var x:number = rect.x;
             var y:number = rect.y;
             var anchorX = 0, anchorY = 0;
-            if(calculateAnchor) {
+            if (calculateAnchor) {
                 if (this._anchorX != 0 || this._anchorY != 0) {
                     anchorX = w * this._anchorX;
                     anchorY = h * this._anchorY;
@@ -728,6 +728,9 @@ module egret {
                 }
                 else {
                     matrix.prependTransform(o._x, o._y, o._scaleX, o._scaleY, o._rotation, o._skewX, o._skewY, o._anchorOffsetX, o._anchorOffsetY);
+                }
+                if (o._scrollRect) {
+                    matrix.prepend(1, 0, 0, 1, -o._scrollRect.x, -o._scrollRect.y);
                 }
                 o = o._parent;
             }
@@ -1050,16 +1053,16 @@ module egret {
                 this.renderTexture = new egret.RenderTexture();
             }
             var result:boolean = this.renderTexture.drawToTexture(this);
-            if(result) {
+            if (result) {
                 this._texture_to_render = this.renderTexture;
             }
-            else  {
+            else {
                 this._texture_to_render = null;
             }
             return result;
         }
 
-        private _cacheDirty: boolean = false;
+        private _cacheDirty:boolean = false;
 
         private _setCacheDirty(dirty = true) {
             this._cacheDirty = dirty;
@@ -1134,12 +1137,11 @@ module egret {
     }
 
 
-
-    export class ColorTransform{
+    export class ColorTransform {
 
         public matrix:Array<number> = null;
 
-        public updateColor(r:number,g:number,b:number,a:number,addR:number,addG:number,addB:number,addA:number):void{
+        public updateColor(r:number, g:number, b:number, a:number, addR:number, addG:number, addB:number, addA:number):void {
             //todo;
         }
 
