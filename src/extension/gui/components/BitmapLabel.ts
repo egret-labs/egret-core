@@ -68,45 +68,33 @@ module egret.gui {
             return this._text;
         }
 
+        private _spriteSheetInstanceChanged: boolean = false;
+        private _spriteSheetInstance: BitmapTextSpriteSheet = null;
+        private _spriteSheetNotLoaded: boolean = false;
+
+
+
+        private _spriteSheet: any = null;
         private _spriteSheetChanged: boolean = false;
-        private _spriteSheet: BitmapTextSpriteSheet = null;
-        private _spriteSheetLoading: boolean = false;
+        
         /**
-		 * @member egret.gui.BitmapLabel#spriteSheet
-         * 设置或获取font SpriteSheet
+		 * @member egret.gui.BitmapLabel#spriteSheetKey
+         * 设置或获取 Font SpriteSheet , 可以为 BitmapTextSpriteSheet 实例或在资源文件中的key
 		 */
-        public set spriteSheet(val: BitmapTextSpriteSheet) { 
+        public set spriteSheet(val: any) { 
             if (this._spriteSheet == val)
                 return;
             this._spriteSheet = val;
+            if (val instanceof BitmapTextSpriteSheet) { 
+                this._spriteSheetInstance = val;
+            }
             this._spriteSheetChanged = true;
             this.invalidateProperties();
             this.invalidateSize();
             this.invalidateDisplayList();
         }
-        public get spriteSheet():BitmapTextSpriteSheet { 
+        public get spriteSheet() { 
             return this._spriteSheet;
-        }
-
-
-        private _spriteSheetKey: string = null;
-        private _spriteSheetKeyChanged: boolean = false;
-        
-        /**
-		 * @member egret.gui.BitmapLabel#spriteSheetKey
-         * 设置或获取 Font SpriteSheet 在资源文件中的key
-		 */
-        public set spriteSheetKey(val: string) { 
-            if (this._spriteSheetKey == val)
-                return;
-            this._spriteSheetKey = val;
-            this._spriteSheetKeyChanged = true;
-            this.invalidateProperties();
-            this.invalidateSize();
-            this.invalidateDisplayList();
-        }
-        public get spriteSheetKey() { 
-            return this._spriteSheetKey;
         }
 
         /**
@@ -244,7 +232,7 @@ module egret.gui {
          * 使用指定的宽度进行测量
          */
         private measureUsingWidth(w:number):void{
-            if (this._spriteSheetLoading == true)
+            if (this._spriteSheetNotLoaded)
                 return;
             if(this._textChanged){
                 this._bitmapText.text = this._text;
@@ -319,16 +307,16 @@ module egret.gui {
 
         public createChildren(): void {
             super.createChildren();
-            if (!this._bitmapText) {
-                this.checkBitmapText();
-            }
+            this.checkBitmapText();
         }
-        private checkBitmapText() { 
-            if (this._spriteSheetLoading)
+        private checkBitmapText() {
+            if (this._bitmapText != null)
+                return; 
+            if (this._spriteSheetNotLoaded)
                 return;
         
             this._createBitmapText();
-            if (this._spriteSheetLoading)
+            if (this._spriteSheetNotLoaded)
                 return;
             this._bitmapText.text = this._text;
             this._textChanged = true;
@@ -338,25 +326,21 @@ module egret.gui {
         }
 
         private _createBitmapText() { 
-            var spriteSheet = this._spriteSheet;
-            if (!spriteSheet && !this._spriteSheetKey) {
-                Logger.warning("BitmapLabel 的 spriteSheet 和 spriteSheetKey 同时为空");
+            if (!this._spriteSheet) {
+                Logger.warning("BitmapLabel 的 spriteSheet 为空"); 
+                this._spriteSheetNotLoaded = true;
                 return;
             }
+            var spriteSheet = this._spriteSheetInstance;
+            spriteSheet = spriteSheet || RES.getRes(this._spriteSheet);
 
-            var sheet = RES.getRes(this._spriteSheetKey);
-            if (sheet) {
-                spriteSheet = sheet;
-            }
-            else {
-                this.loadSpriteSheet();
-                this._spriteSheetLoading = true;
-            }
-
-            if (spriteSheet != null) { 
+            if (spriteSheet) {
                 this._bitmapText = new BitmapText();
                 this._bitmapText.spriteSheet = spriteSheet;
                 this._bitmapText.cacheAsBitmap = true;
+            }
+            else {
+                this.loadSpriteSheet();
             }
         }
 
@@ -366,33 +350,40 @@ module egret.gui {
             if (!this._bitmapText) {
                 this.checkBitmapText();
             }
-            if (this._spriteSheetLoading)
+            if (this._spriteSheetNotLoaded)
                 return;
             if (this._textChanged) {
                 this._bitmapText.text = this._text;
                 this._textChanged = false;
             }
-            if (this._spriteSheetKeyChanged) { 
-                this.loadSpriteSheet();
-                this._spriteSheetKeyChanged = false;
-            }
             if (this._spriteSheetChanged) { 
-                this._bitmapText.spriteSheet = this._spriteSheet;
+                this.loadSpriteSheet();
                 this._spriteSheetChanged = false;
+            }
+            if (this._spriteSheetInstanceChanged) { 
+                this._bitmapText.spriteSheet = this._spriteSheetInstance;
+                this._spriteSheetInstanceChanged = false;
             }
         }
 
         private loadSpriteSheet() { 
+            this._spriteSheetNotLoaded = true;
             var adapter = this.getAdapter();
-            adapter.getAsset(this._spriteSheetKey, this.spriteSheetLoaded, this, null);
+            adapter.getAsset(this._spriteSheet, this.spriteSheetLoaded, this, null);
         }
 
-        private spriteSheetLoaded(content: any, source: string) {
-            if (!content)
-                Logger.warning("加载SpriteSheet失败:" + this._spriteSheetKey);
+        private spriteSheetLoaded(content: any, source: any) {
+            if (!content) {
+                Logger.warning("加载SpriteSheet失败:" + this._spriteSheet);
+            }
             else {
-                this.spriteSheet = content;
-                this._spriteSheetLoading = false;
+                this._spriteSheetNotLoaded = false;
+                this._spriteSheetInstance = content;
+                this.checkBitmapText();
+                this._spriteSheetInstanceChanged = true;
+                this.invalidateProperties();
+                this.invalidateSize();
+                this.invalidateDisplayList();
             }
         }
 
