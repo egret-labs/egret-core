@@ -68,33 +68,33 @@ module egret.gui {
             return this._text;
         }
 
-        private _spriteSheetInstanceChanged: boolean = false;
-        private _spriteSheetInstance: BitmapTextSpriteSheet = null;
+        private _spriteSheetChanged: boolean = false;
+        private _spriteSheet: BitmapTextSpriteSheet = null;
         private _spriteSheetNotLoaded: boolean = false;
 
 
 
-        private _spriteSheet: any = null;
-        private _spriteSheetChanged: boolean = false;
+        private _source: any = null;
+        private _sourceChanged: boolean = false;
         
         /**
-		 * @member egret.gui.BitmapLabel#spriteSheetKey
-         * 设置或获取 Font SpriteSheet , 可以为 BitmapTextSpriteSheet 实例或在资源文件中的key
+		 * @member egret.gui.BitmapLabel#source
+         * 设置或获取 source , 可以为 BitmapTextSpriteSheet 实例或在资源文件中的key
 		 */
-        public set spriteSheet(val: any) { 
-            if (this._spriteSheet == val)
+        public set source(val: any) { 
+            if (this._source == val)
                 return;
-            this._spriteSheet = val;
+            this._source = val;
             if (val instanceof BitmapTextSpriteSheet) { 
-                this._spriteSheetInstance = val;
+                this._spriteSheet = val;
             }
-            this._spriteSheetChanged = true;
+            this._sourceChanged = true;
             this.invalidateProperties();
             this.invalidateSize();
             this.invalidateDisplayList();
         }
-        public get spriteSheet() { 
-            return this._spriteSheet;
+        public get source() { 
+            return this._source;
         }
 
         /**
@@ -326,13 +326,13 @@ module egret.gui {
         }
 
         private _createBitmapText() { 
-            if (!this._spriteSheet) {
+            if (!this._source) {
                 Logger.warning("BitmapLabel 的 spriteSheet 为空"); 
                 this._spriteSheetNotLoaded = true;
                 return;
             }
-            var spriteSheet = this._spriteSheetInstance;
-            spriteSheet = spriteSheet || RES.getRes(this._spriteSheet);
+            var spriteSheet = this._spriteSheet;
+            spriteSheet = spriteSheet || RES.getRes(this._source);
 
             if (spriteSheet) {
                 this._bitmapText = new BitmapText();
@@ -356,31 +356,31 @@ module egret.gui {
                 this._bitmapText.text = this._text;
                 this._textChanged = false;
             }
-            if (this._spriteSheetChanged) { 
+            if (this._sourceChanged) { 
                 this.loadSpriteSheet();
-                this._spriteSheetChanged = false;
+                this._sourceChanged = false;
             }
-            if (this._spriteSheetInstanceChanged) { 
-                this._bitmapText.spriteSheet = this._spriteSheetInstance;
-                this._spriteSheetInstanceChanged = false;
+            if (this._spriteSheetChanged) { 
+                this._bitmapText.spriteSheet = this._spriteSheet;
+                this._spriteSheetChanged = false;
             }
         }
 
         private loadSpriteSheet() { 
             this._spriteSheetNotLoaded = true;
             var adapter = this.getAdapter();
-            adapter.getAsset(this._spriteSheet, this.spriteSheetLoaded, this, null);
+            adapter.getAsset(this._source, this.spriteSheetLoaded, this, null);
         }
 
         private spriteSheetLoaded(content: any, source: any) {
             if (!content) {
-                Logger.warning("加载SpriteSheet失败:" + this._spriteSheet);
+                Logger.warning("加载SpriteSheet失败:" + this._source);
             }
             else {
                 this._spriteSheetNotLoaded = false;
-                this._spriteSheetInstance = content;
+                this._spriteSheet = content;
                 this.checkBitmapText();
-                this._spriteSheetInstanceChanged = true;
+                this._spriteSheetChanged = true;
                 this.invalidateProperties();
                 this.invalidateSize();
                 this.invalidateDisplayList();

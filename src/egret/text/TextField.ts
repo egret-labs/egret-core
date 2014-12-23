@@ -567,6 +567,8 @@ module egret {
         public set textFlow(textArr:Array<egret.ITextElement>) {
             this._isFlow = true;
             var text:string = "";
+            if (textArr == null)
+                textArr = [];
             for (var i:number = 0; i < textArr.length; i++) {
                 var element:egret.ITextElement = textArr[i];
                 text += element.text;
@@ -579,6 +581,10 @@ module egret {
                 this._text = text;
                 this.setMiddleStyle(textArr);
             }
+        }
+
+        public get textFlow() { 
+            return this._textArr;
         }
 
         private changeToPassText(text:string):string {
