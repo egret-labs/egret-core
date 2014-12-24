@@ -36,20 +36,6 @@ module egret {
      */
     export class NativeRendererContext extends RendererContext {
 
-
-        /**
-         * 渲染全部纹理的时间开销
-         * @readonly
-         * @member egret.NativeRendererContext#renderCost
-         */
-        public renderCost:number = 0;
-
-        /**
-         * 绘制纹理的缩放比率，默认值为1
-         * @member egret.NativeRendererContext#texture_scale_factor
-         */
-        public texture_scale_factor:number = 1;
-
         /**
          * @method egret.NativeRendererContext#constructor
          */
@@ -106,11 +92,14 @@ module egret {
         }
 
         public drawRepeatImage(texture:Texture, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, repeat) {
+            var texture_scale_factor = egret.MainContext.instance.rendererContext.texture_scale_factor;
+            sourceWidth = sourceWidth * texture_scale_factor;
+            sourceHeight = sourceHeight * texture_scale_factor;
             for (var x:number = destX; x < destWidth; x += sourceWidth) {
                 for (var y:number = destY; y < destHeight; y += sourceHeight) {
                     var destW:number = Math.min(sourceWidth, destWidth - x);
                     var destH:number = Math.min(sourceHeight, destHeight - y);
-                    this.drawImage(texture, sourceX, sourceY, destW, destH, x, y, destW, destH);
+                    this.drawImage(texture, sourceX, sourceY, destW / texture_scale_factor, destH / texture_scale_factor, x, y, destW, destH);
                 }
             }
         }

@@ -143,11 +143,6 @@ module egret {
 
         public drawImage(texture: Texture, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, repeat=undefined) {
 
-            var scale = egret.MainContext.instance.rendererContext.texture_scale_factor;
-            sourceX = sourceX / scale;
-            sourceY = sourceY / scale;
-            sourceWidth = sourceWidth / scale;
-            sourceHeight = sourceHeight / scale;
 //            if (DEBUG && DEBUG.DRAW_IMAGE) {
 //                DEBUG.checkDrawImage(texture, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight);
 //            }
@@ -167,13 +162,14 @@ module egret {
 
         public drawRepeatImage(texture: Texture, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, repeat) {
             if(texture['pattern']===undefined){
+                var texture_scale_factor = egret.MainContext.instance.rendererContext.texture_scale_factor;
                 var image = texture._bitmapData;
                 var tempImage:HTMLElement = image;
-                if (image.width != sourceWidth || image.height != sourceHeight) {
+                if (image.width != sourceWidth || image.height != sourceHeight || texture_scale_factor != 1) {
                     var tempCanvas = document.createElement("canvas");
-                    tempCanvas.width = sourceWidth;
-                    tempCanvas.height = sourceHeight;
-                    tempCanvas.getContext("2d").drawImage(image, sourceX, sourceY, sourceWidth, sourceHeight, 0, 0, sourceWidth, sourceHeight);
+                    tempCanvas.width = sourceWidth * texture_scale_factor;
+                    tempCanvas.height = sourceHeight * texture_scale_factor;
+                    tempCanvas.getContext("2d").drawImage(image, sourceX, sourceY, sourceWidth, sourceHeight, 0, 0, sourceWidth * texture_scale_factor, sourceHeight * texture_scale_factor);
                     tempImage = tempCanvas;
                 }
                 var pat = this._cacheCanvasContext.createPattern(tempImage, repeat);

@@ -244,11 +244,14 @@ module egret {
         private currentBatchSize:number = 0;
 
         public drawRepeatImage(texture: Texture, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, repeat) {
+            var texture_scale_factor = egret.MainContext.instance.rendererContext.texture_scale_factor;
+            sourceWidth = sourceWidth * texture_scale_factor;
+            sourceHeight = sourceHeight * texture_scale_factor;
             for (var x: number = destX; x < destWidth; x += sourceWidth) {
                 for (var y: number = destY; y < destHeight; y += sourceHeight) {
                     var destW: number = Math.min(sourceWidth, destWidth - x);
                     var destH: number = Math.min(sourceHeight, destHeight - y);
-                    this.drawImage(texture, sourceX, sourceY, destW, destH, x, y, destW, destH);
+                    this.drawImage(texture, sourceX, sourceY, destW / texture_scale_factor, destH / texture_scale_factor, x, y, destW, destH);
                 }
             }
         }
@@ -260,12 +263,6 @@ module egret {
                 this.drawRepeatImage(texture, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, repeat);
                 return;
             }
-
-            var texture_scale_factor:number = MainContext.instance.rendererContext.texture_scale_factor;
-            sourceX = sourceX / texture_scale_factor;
-            sourceY = sourceY / texture_scale_factor;
-            sourceWidth = sourceWidth / texture_scale_factor;
-            sourceHeight = sourceHeight / texture_scale_factor;
 
             this.createWebGLTexture(texture);
 
