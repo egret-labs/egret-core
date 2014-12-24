@@ -74,17 +74,20 @@ module egret.gui {
 
 
 
-        private _source: any = null;
+        private _font: any = null;
         private _sourceChanged: boolean = false;
-        
         /**
-		 * @member egret.gui.BitmapLabel#source
-         * 设置或获取 source , 可以为 BitmapTextSpriteSheet 实例或在资源文件中的key
-		 */
-        public set source(val: any) { 
-            if (this._source == val)
+         * @member egret.gui.BitmapLabel#font
+         * 位图字体数据源，可以为 BitmapTextSpriteSheet 实例或在资源文件中的key
+         */
+        public get font() {
+            return this._font;
+        }
+
+        public set font(val: any) {
+            if (this._font == val)
                 return;
-            this._source = val;
+            this._font = val;
             if (val instanceof BitmapTextSpriteSheet) { 
                 this._spriteSheet = val;
             }
@@ -93,9 +96,7 @@ module egret.gui {
             this.invalidateSize();
             this.invalidateDisplayList();
         }
-        public get source() { 
-            return this._source;
-        }
+
 
         /**
          * 上一次测量的宽度
@@ -326,13 +327,13 @@ module egret.gui {
         }
 
         private _createBitmapText() { 
-            if (!this._source) {
+            if (!this._font) {
                 Logger.warning("BitmapLabel 的 spriteSheet 为空"); 
                 this._spriteSheetNotLoaded = true;
                 return;
             }
             var spriteSheet = this._spriteSheet;
-            spriteSheet = spriteSheet || RES.getRes(this._source);
+            spriteSheet = spriteSheet || RES.getRes(this._font);
 
             if (spriteSheet) {
                 this._bitmapText = new BitmapText();
@@ -369,12 +370,12 @@ module egret.gui {
         private loadSpriteSheet() { 
             this._spriteSheetNotLoaded = true;
             var adapter = this.getAdapter();
-            adapter.getAsset(this._source, this.spriteSheetLoaded, this, null);
+            adapter.getAsset(this._font, this.spriteSheetLoaded, this, null);
         }
 
         private spriteSheetLoaded(content: any, source: any) {
             if (!content) {
-                Logger.warning("加载SpriteSheet失败:" + this._source);
+                Logger.warning("加载SpriteSheet失败:" + this._font);
             }
             else {
                 this._spriteSheetNotLoaded = false;
