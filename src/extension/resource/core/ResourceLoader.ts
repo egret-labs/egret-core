@@ -63,6 +63,10 @@ module RES {
 		 * 正在加载的组列表,key为groupName
 		 */		
 		private itemListDic:any = {};
+		/**
+		 * 加载失败的组,key为groupName
+		 */
+		private groupErrorDic:any = {};
 
         private retryTimesDic: any = {};
         public maxRetryTimes = 3;
@@ -212,14 +216,23 @@ module RES {
 				this.numLoadedDic[groupName]++;
                 var itemsLoaded:number = this.numLoadedDic[groupName];
                 var itemsTotal:number = this.groupTotalDic[groupName];
+				if(!resItem.loaded){
+					this.groupErrorDic[groupName] = true;
+				}
                 ResourceEvent.dispatchResourceEvent(this.resInstance,ResourceEvent.GROUP_PROGRESS,groupName,resItem,itemsLoaded,itemsTotal);
 				if(itemsLoaded==itemsTotal){
+					var groupError:boolean = this.groupErrorDic[groupName];
 					this.removeGroupName(groupName);
 					delete this.groupTotalDic[groupName];
 					delete this.numLoadedDic[groupName];
 					delete this.itemListDic[groupName];
-
-                    ResourceEvent.dispatchResourceEvent(this,ResourceEvent.GROUP_COMPLETE,groupName);
+					delete this.groupErrorDic[groupName];
+					if(groupError){
+						ResourceEvent.dispatchResourceEvent(this,ResourceEvent.GROUP_LOAD_ERROR,groupName);
+					}
+					else{
+						ResourceEvent.dispatchResourceEvent(this,ResourceEvent.GROUP_COMPLETE,groupName);
+					}
 				}
 			}
             else{

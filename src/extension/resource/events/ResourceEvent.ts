@@ -31,20 +31,30 @@ module RES {
 		 */
 		public static ITEM_LOAD_ERROR:string = "itemLoadError";
 		/**
-		 * 配置文件加载并解析完成事件
+		 * 配置文件加载并解析完成事件。注意：若有配置文件加载失败，将不会抛出此事件，若要处理配置加载失败，请同时监听CONFIG_LOAD_ERROR事件。
 		 * @constant {string} RES.ResourceEvent.CONFIG_COMPLETE
 		 */		
 		public static CONFIG_COMPLETE:string = "configComplete";
+		/**
+		 * 配置文件加载失败事件
+		 * @constant {string} RES.ResourceEvent.CONFIG_COMPLETE
+		 */
+		public static CONFIG_LOAD_ERROR:string = "configLoadError";
 		/**
 		 * 延迟加载组资源加载进度事件
 		 * @constant {string} RES.ResourceEvent.GROUP_PROGRESS
 		 */		
 		public static GROUP_PROGRESS:string = "groupProgress";
 		/**
-		 * 延迟加载组资源加载完成事件
+		 * 延迟加载组资源加载完成事件。注意：若组内有资源项加载失败，将不会抛出此事件，若要处理组加载失败，请同时监听GROUP_LOAD_ERROR事件。
 		 * @constant {string} RES.ResourceEvent.GROUP_COMPLETE
 		 */		
 		public static GROUP_COMPLETE:string = "groupComplete";
+		/**
+		 * 延迟加载组资源加载失败事件
+		 * @constant {string} RES.ResourceEvent.GROUP_LOAD_ERROR
+		 */
+		public static GROUP_LOAD_ERROR:string = "groupLoadError";
 		/**
 		 * 构造函数
 		 * @method RES.ResourceEvent#constructor

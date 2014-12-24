@@ -209,6 +209,7 @@ module RES {
             this.resLoader.callBack = this.onResourceItemComp;
             this.resLoader.resInstance = this;
             this.resLoader.addEventListener(ResourceEvent.GROUP_COMPLETE,this.onGroupComp,this);
+            this.resLoader.addEventListener(ResourceEvent.GROUP_LOAD_ERROR,this.onGroupError,this);
         }
 
         /**
@@ -288,7 +289,7 @@ module RES {
          */
         public loadGroup(name:string,priority:number=0):void{
             if(this.loadedGroups.indexOf(name)!=-1){
-                egret.Logger.warning("RES.loadGroup(\""+name+"\")启动加载失败，该资源组已经加载完成。使用RES.isGroupLoaded()方法能够获取组加载状态。");
+                ResourceEvent.dispatchResourceEvent(this,ResourceEvent.GROUP_COMPLETE,name);
                 return;
             }
             if(this.resLoader.isGroupInLoading(name))
@@ -352,6 +353,18 @@ module RES {
                 this.dispatchEvent(event);
             }
 
+        }
+        /**
+         * 队列加载失败事件
+         */
+        private onGroupError(event:ResourceEvent):void{
+            if(event.groupName==Resource.GROUP_CONFIG){
+                this.loadingConfigList = null;
+                ResourceEvent.dispatchResourceEvent(this,ResourceEvent.CONFIG_LOAD_ERROR);
+            }
+            else{
+                this.dispatchEvent(event);
+            }
         }
         /**
          * 检查配置文件里是否含有指定的资源
