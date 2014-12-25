@@ -20,7 +20,8 @@ var upgradeConfigArr = [
     {"v" : "1.1.1", "func":upgradeTo_1_1_1},
     {"v" : "1.1.2", "func":upgradeTo_1_1_2},
     {"v" : "1.1.3", "func":upgradeTo_1_1_3},
-    {"v" : "1.1.4", "func":upgradeTo_1_1_4}
+    {"v" : "1.1.4", "func":upgradeTo_1_1_4},
+    {"v" : "1.5.1", "func":upgradeTo_1_5_1}
 ];
 
 var currDir;
@@ -219,6 +220,18 @@ function upgradeTo_1_1_4(){
     projectConfig.save();
 }
 
+function upgradeTo_1_5_1(){
+    globals.log("正在更新到1.5.1");
+
+    var extensionDir = path.join(currDir, "src");
+    var list = file.search(extensionDir, "ts");
+    list.forEach(fixSingleTypeScriptFile151);
+
+    projectConfig.init(currDir);
+    projectConfig.data.egret_version = "1.5.1";
+    projectConfig.save();
+}
+
 function getClassList(item) {
     var basename = path.basename(item)
     return basename.substring(0, basename.indexOf("."))
@@ -230,6 +243,23 @@ function fixSingleTypeScriptFile(item) {
     for (var key in gui_refactor_1_0_3) {
 
         var value = gui_refactor_1_0_3[key];
+
+        while (content) {
+            var index = code_util.getFirstVariableIndex(key, content);
+            if (index == -1) {
+                break;
+            }
+            content = content.substring(0, index) + value + content.substring(index + key.length);
+        }
+    }
+    file.save(item, content);
+}
+
+function fixSingleTypeScriptFile151(item) {
+    var content = file.read(item);
+    for (var key in dragonbones_refactor_1_5_1) {
+
+        var value = dragonbones_refactor_1_5_1[key];
 
         while (content) {
             var index = code_util.getFirstVariableIndex(key, content);
@@ -371,3 +401,13 @@ var gui_refactor_1_0_3 = { 'egret.ArrayCollection': 'egret.gui.ArrayCollection',
     'egret.State': 'egret.gui.State',
     'egret.LayoutUtil': 'egret.gui.LayoutUtil',
     'egret.getScale9Grid': 'egret.gui.getScale9Grid' }
+
+var dragonbones_refactor_1_5_1 = { 'dragonBones.geom': 'dragonBones',
+    'dragonBones.events': 'dragonBones',
+    'dragonBones.animation': 'dragonBones',
+    'dragonBones.objects': 'dragonBones',
+    'dragonBones.display': 'dragonBones',
+    'dragonBones.textures': 'dragonBones',
+    'dragonBones.factorys': 'dragonBones',
+    'dragonBones.utils': 'dragonBones',
+    'DataParser.parseSkeletonData':'DataParser.parseDragonBonesData'}
