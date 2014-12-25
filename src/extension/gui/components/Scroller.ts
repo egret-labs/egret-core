@@ -604,6 +604,17 @@ module egret.gui {
                 viewport["notifyStyleChangeInChildren"](styleProp);
             }
         }
+
+        /**
+         * 更新子项的nestLevel属性
+         */
+        public _updateChildrenNestLevel():void{
+            super._updateChildrenNestLevel();
+            var viewport:IViewport = this._viewport;
+            if(viewport&&"nestLevel" in viewport){
+                viewport["nestLevel"] = this.nestLevel+1;
+            }
+        }
     }
 
 }
