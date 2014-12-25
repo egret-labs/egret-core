@@ -109,16 +109,16 @@ module egret {
                 textureHeight = offsetY + bitmapHeight;
             }
             var texture:Texture = new Texture();
-
+            var scale = egret.MainContext.instance.rendererContext.texture_scale_factor;
             texture._bitmapData = this.bitmapData;
             texture._bitmapX = this._bitmapX + bitmapX;
             texture._bitmapY = this._bitmapY + bitmapY;
-            texture._bitmapWidth = bitmapWidth;
-            texture._bitmapHeight = bitmapHeight;
+            texture._bitmapWidth = bitmapWidth * scale;
+            texture._bitmapHeight = bitmapHeight * scale;
             texture._offsetX = offsetX;
             texture._offsetY = offsetY;
-            texture._textureWidth = textureWidth;
-            texture._textureHeight = textureHeight;
+            texture._textureWidth = textureWidth * scale;
+            texture._textureHeight = textureHeight * scale;
             texture._sourceWidth = this._sourceWidth;
             texture._sourceHeight = this._sourceHeight;
             this._textureMap[name] = texture;
