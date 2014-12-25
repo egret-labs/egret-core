@@ -121,9 +121,9 @@ module egret {
          */
         public prependTransform(x:number, y:number, scaleX:number, scaleY:number, rotation:number, skewX:number, skewY:number, regX:number, regY:number):Matrix {
             if (rotation % 360) {
-                var r = rotation * Matrix.DEG_TO_RAD;
-                var cos = Math.cos(r);
-                var sin = Math.sin(r);
+                var r = rotation;// * Matrix.DEG_TO_RAD;
+                var cos = NumberUtils.cos(r);
+                var sin = NumberUtils.sin(r);
             } else {
                 cos = 1;
                 sin = 0;
@@ -136,10 +136,10 @@ module egret {
             }
             if (skewX || skewY) {
                 // TODO: can this be combined into a single prepend operation?
-                skewX *= Matrix.DEG_TO_RAD;
-                skewY *= Matrix.DEG_TO_RAD;
+//                skewX *= Matrix.DEG_TO_RAD;
+//                skewY *= Matrix.DEG_TO_RAD;
                 this.prepend(cos * scaleX, sin * scaleX, -sin * scaleY, cos * scaleY, 0, 0);
-                this.prepend(Math.cos(skewY), Math.sin(skewY), -Math.sin(skewX), Math.cos(skewX), x, y);
+                this.prepend(NumberUtils.cos(skewY), NumberUtils.sin(skewY), -NumberUtils.sin(skewX), NumberUtils.cos(skewX), x, y);
             } else {
                 this.prepend(cos * scaleX, sin * scaleX, -sin * scaleY, cos * scaleY, x, y);
             }
@@ -163,9 +163,9 @@ module egret {
          */
         public appendTransform(x:number, y:number, scaleX:number, scaleY:number, rotation:number, skewX:number, skewY:number, regX:number, regY:number):Matrix {
             if (rotation % 360) {
-                var r = rotation * Matrix.DEG_TO_RAD;
-                var cos = Math.cos(r);
-                var sin = Math.sin(r);
+                var r = rotation;// * Matrix.DEG_TO_RAD;
+                var cos = NumberUtils.cos(r);
+                var sin = NumberUtils.sin(r);
             } else {
                 cos = 1;
                 sin = 0;
@@ -173,9 +173,9 @@ module egret {
 
             if (skewX || skewY) {
                 // TODO: can this be combined into a single append?
-                skewX *= Matrix.DEG_TO_RAD;
-                skewY *= Matrix.DEG_TO_RAD;
-                this.append(Math.cos(skewY), Math.sin(skewY), -Math.sin(skewX), Math.cos(skewX), x, y);
+//                skewX *= Matrix.DEG_TO_RAD;
+//                skewY *= Matrix.DEG_TO_RAD;
+                this.append(NumberUtils.cos(skewY), NumberUtils.sin(skewY), -NumberUtils.sin(skewX), NumberUtils.cos(skewX), x, y);
                 this.append(cos * scaleX, sin * scaleX, -sin * scaleY, cos * scaleY, 0, 0);
             } else {
                 this.append(cos * scaleX, sin * scaleX, -sin * scaleY, cos * scaleY, x, y);
@@ -222,9 +222,9 @@ module egret {
          * @returns {egret.Matrix}
          */
         public skew(skewX, skewY):Matrix {
-            skewX = skewX * Matrix.DEG_TO_RAD;
-            skewY = skewY * Matrix.DEG_TO_RAD;
-            this.append(Math.cos(skewY), Math.sin(skewY), -Math.sin(skewX), Math.cos(skewX), 0, 0);
+//            skewX = skewX * Matrix.DEG_TO_RAD;
+//            skewY = skewY * Matrix.DEG_TO_RAD;
+            this.append(NumberUtils.cos(skewY), NumberUtils.sin(skewY), -NumberUtils.sin(skewX), NumberUtils.cos(skewX), 0, 0);
             return this;
         }
 
