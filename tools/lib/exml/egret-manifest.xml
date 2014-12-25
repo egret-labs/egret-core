@@ -13,7 +13,6 @@
   <component id="HorizontalLayout" super="egret.gui.LayoutBase" show="false" module="egret.gui"/>
   <component id="ItemRenderer" super="egret.gui.ButtonBase" show="false" module="egret.gui"/>
   <component id="Label" super="egret.gui.TextBase" show="true" module="egret.gui"/>
-  <component id="BitmapLabel" super="egret.gui.UIComponent" show="true" module="egret.gui"/>
   <component id="LayoutBase" super="egret.EventDispatcher" show="false" module="egret.gui"/>
   <component id="List" super="egret.gui.ListBase" show="true" module="egret.gui"/>
   <component id="ListBase" super="egret.gui.SkinnableDataContainer" show="false" module="egret.gui"/>

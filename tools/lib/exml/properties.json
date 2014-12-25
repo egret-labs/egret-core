@@ -247,19 +247,6 @@
 		"mouseWheelSpeed":"number",
 		"super":"egret.gui.LayoutBase"
 	},
-	"egret.gui.BitmapLabel":
-	{
-		"implements":["egret.gui.IDisplayText"],
-		"padding":"number",
-		"paddingBottom":"number",
-		"paddingLeft":"number",
-		"paddingRight":"number",
-		"paddingTop":"number",
-		"spriteSheet":"egret.BitmapTextSpriteSheet",
-		"spriteSheetKey":"string",
-		"super":"egret.gui.UIComponent",
-		"text":"string"
-	},
 	"egret.gui.Button":
 	{
 		"icon":"any",
