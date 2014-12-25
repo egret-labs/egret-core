@@ -38,22 +38,29 @@ module dragonBones {
 			//_currentDataName = null;
 			//_currentTextureAtlasName = null;
 		}
-		
+
+        /**
+         * Returns a DragonBonesData instance.
+         * @param The name of an existing DragonBonesData instance.
+         * @return A DragonBonesData instance with given name (if exist).
+         */
+        public getDragonBonesData(name:string):DragonBonesData{
+            return this.dragonBonesDataDic[name];
+        }
+
 		/**
-		 * Returns a SkeletonData instance.
-		 * @param The name of an existing SkeletonData instance.
-		 * @return A SkeletonData instance with given name (if exist).
+		 * Recommend using getDragonBonesData API instead.
 		 */
 		public getSkeletonData(name:string):DragonBonesData{
-			return this.dragonBonesDataDic[name];
+			return this.getDragonBonesData(name);
 		}
 		
 		/**
-		 * Add a SkeletonData instance to this BaseFactory instance.
-		 * @param A SkeletonData instance.
-		 * @param (optional) A name for this SkeletonData instance.
+		 * Add a DragonBonesData instance to this BaseFactory instance.
+		 * @param A DragonBonesData instance.
+		 * @param (optional) A name for this DragonBonesData instance.
 		 */
-		public addSkeletonData(data:DragonBonesData, name:string = null):void{
+		public addDragonBonesData(data:DragonBonesData, name:string = null):void{
 			if(!data){
 				throw new Error();
 			}
@@ -66,15 +73,29 @@ module dragonBones {
 			}
 			this.dragonBonesDataDic[name] = data;
 		}
-		
+
+        /**
+         * Recommend using addDragonBonesData API instead.
+         */
+        public addSkeletonData(data:DragonBonesData, name:string = null):void{
+            this.addDragonBonesData(data, name);
+        }
+
 		/**
-		 * Remove a SkeletonData instance from this BaseFactory instance.
-		 * @param The name for the SkeletonData instance to remove.
+		 * Remove a DragonBonesData instance from this BaseFactory instance.
+		 * @param The name for the DragonBonesData instance to remove.
 		 */
-		public removeSkeletonData(name:string):void{
+		public removeDragonBonesData(name:string):void{
 			delete this.dragonBonesDataDic[name];
 		}
-		
+
+        /**
+         * Recommend using removeDragonBonesData API instead.
+         */
+        public removeSkeletonData(name:string):void{
+            delete this.dragonBonesDataDic[name];
+        }
+
 		/**
 		 * Return the TextureAtlas by name.
 		 * @param The name of the TextureAtlas to return.

@@ -26,25 +26,6 @@
  */
 module dragonBones {
     export class ColorTransform {
-        /*
-        public static ORIGIN_COLOR_TRANSFORM:ColorTransform = new ColorTransform();
-        private static tempColorTransform:ColorTransform = new ColorTransform();
-        public static createTempColorTransform(
-            aMultiplier:number = 0, rMultiplier:number = 0, gMultiplier:number = 0, bMultiplier:number = 0,
-            aOffset:number = 0, rOffset:number = 0, gOffset:number = 0, bOffset:number = 0):ColorTransform
-        {
-            ColorTransform.tempColorTransform.alphaMultiplier = aMultiplier;
-            ColorTransform.tempColorTransform.redMultiplier = rMultiplier;
-            ColorTransform.tempColorTransform.greenMultiplier = gMultiplier;
-            ColorTransform.tempColorTransform.blueMultiplier = bMultiplier;
-            ColorTransform.tempColorTransform.alphaOffset = aOffset;
-            ColorTransform.tempColorTransform.redOffset = rOffset;
-            ColorTransform.tempColorTransform.greenOffset = gOffset;
-            ColorTransform.tempColorTransform.blueOffset = bOffset;
-
-            return ColorTransform.tempColorTransform;
-        }
-*/
         public alphaMultiplier:number;
         public alphaOffset:number;
         public blueMultiplier:number;

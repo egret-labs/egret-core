@@ -1,4 +1,3 @@
-
 module dragonBones {
 
 	export class AnimationState{

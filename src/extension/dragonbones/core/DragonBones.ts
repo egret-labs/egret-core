@@ -1,4 +1,3 @@
-
 module dragonBones {
 	export class DragonBones{
 		public static DATA_VERSION:string = "2.3";

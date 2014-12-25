@@ -1,6 +1,3 @@
-/**
- * Created by Chenguang on 2014/12/4.
- */
 module dragonBones {
     export class EgretSlot extends Slot {
         private _egretDisplay:egret.DisplayObject;

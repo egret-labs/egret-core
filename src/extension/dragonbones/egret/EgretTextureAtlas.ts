@@ -1,6 +1,3 @@
-/**
- * Created by Chenguang on 2014/12/1.
- */
 module dragonBones {
     export class EgretTextureAtlas implements ITextureAtlas {
         public name:string;
