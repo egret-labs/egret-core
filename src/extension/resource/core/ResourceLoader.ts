@@ -97,7 +97,7 @@ module RES {
 				return;
 			if(!list||list.length==0){
                 egret.Logger.warning("RES加载了不存在或空的资源组：\""+groupName+"\"");
-				var event:ResourceEvent = new ResourceEvent(ResourceEvent.GROUP_COMPLETE);
+				var event:ResourceEvent = new ResourceEvent(ResourceEvent.GROUP_LOAD_ERROR);
 				event.groupName = groupName;
 				this.dispatchEvent(event);
 				return;
