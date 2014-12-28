@@ -32,7 +32,6 @@ module egret.gui {
 	 * @class egret.gui.DropDownList
 	 * @classdesc
 	 * 不可输入的下拉列表控件。带输入功能的下拉列表控件，请使用ComboBox。
-	 * @see org.flexlite.domUI.components.ComboBox
 	 * @extends egret.gui.DropDownListBase
 	 */	
 	export class DropDownList extends DropDownListBase{
