@@ -264,7 +264,7 @@ module egret.gui {
 			}
 		}
 
-		public _createOwnStyleProtoChain(chain:any):void{
+		public _createOwnStyleProtoChain(chain:any):any{
 			this._hasOwnStyleChain = true;
 			if(UIComponent.prototypeCanSet){
 				this._styleProtoChain = {};
