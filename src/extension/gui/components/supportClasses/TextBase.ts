@@ -286,8 +286,6 @@ module egret.gui {
 		 * @member egret.gui.TextBase#text
 		 */
 		public get text(): string{
-			if (this._textField)
-				return this._textField.text;
 			return this._text;
 		}
 
@@ -296,8 +294,8 @@ module egret.gui {
 				return;
             this._text = value || "";
 			this._textChanged = true;
-            this._textFlow = null;
             this._textFlowChanged = false;
+            this.syncTextWithTextFlow(true);
 			this.invalidateProperties();
 			this.invalidateSize();
 			this.invalidateDisplayList();
@@ -307,16 +305,14 @@ module egret.gui {
         public set textFlow(value: Array<egret.ITextElement>) {
             this._textFlow = value || [];
             this._textFlowChanged = true;
-            this._text = null;
             this._textChanged = false;
+            this.syncTextWithTextFlow(false);
             this.invalidateProperties();
             this.invalidateSize();
             this.invalidateDisplayList();
         }
 
         public get textFlow(): Array<egret.ITextElement> { 
-            if (this._textField)
-                return this._textField.textFlow;
             return this._textFlow;
         }
 
@@ -396,10 +392,12 @@ module egret.gui {
                 if (this._text) {
                     this._textField.text = this._text;
                     this._textChanged = true;
+                    this.syncTextWithTextFlow(true);
                 }
                 if (this._textFlow) {
                     this._textField.textFlow = this._textFlow;
                     this._textFlowChanged = true;
+                    this.syncTextWithTextFlow(false);
                 }
 				this.invalidateProperties();
 			}
@@ -450,5 +448,18 @@ module egret.gui {
 				PropertyChangeEvent.dispatchPropertyChangeEvent(this,
 					PropertyChangeEventKind.UPDATE, propertyName, oldValue, value, this);
 		}
+        //同步text和textFlow
+        private syncTextWithTextFlow(isTextChanged:boolean  = true) { 
+            if (isTextChanged) {
+                this._textFlow = [{
+                    text: this._text
+                }];
+            }
+            else { 
+                var textFlow = this._textFlow || [];
+                var text = textFlow.map(t=> t.text).join('');
+                this._text = text;
+            }
+        }
 	}
 }
