@@ -574,7 +574,7 @@ module egret.gui {
             this.setViewportVScrollPosition(this.verticalScrollBar.getPosition());
         }
 
-        public _createOwnStyleProtoChain(chain:any):void{
+        public _createOwnStyleProtoChain(chain:any):any{
             chain = super._createOwnStyleProtoChain(chain);
             var viewport:IViewport = this._viewport;
             if(viewport&&"_addToStyleProtoChain" in viewport){

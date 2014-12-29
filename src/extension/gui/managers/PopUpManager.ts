@@ -133,8 +133,7 @@ module egret.gui {
 		/**
 		 * 添加事件监听,参考PopUpEvent定义的常量。
 		 * @method egret.gui.PopUpManager.addEventListener
-		 * @see org.flexlite.domUI.events.PopUpEvent
-		 * @param type {string} 
+		 * @param type {string}
 		 * @param listener {Function} 
 		 * @param thisObject {any} 
 		 * @param useCapture {boolean} 
@@ -146,8 +145,7 @@ module egret.gui {
 		/**
 		 * 移除事件监听,参考PopUpEvent定义的常量。
 		 * @method egret.gui.PopUpManager.removeEventListener
-		 * @see org.flexlite.domUI.events.PopUpEvent
-		 * @param type {string} 
+		 * @param type {string}
 		 * @param listener {Function} 
 		 * @param thisObject {any} 
 		 * @param useCapture {boolean} 

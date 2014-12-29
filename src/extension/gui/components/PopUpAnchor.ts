@@ -124,7 +124,6 @@ module egret.gui {
 		private _popUpPosition:string = PopUpPosition.TOP_LEFT;
 		/**
 		 * popUp相对于PopUpAnchor的弹出位置。请使用PopUpPosition里定义的常量。默认值TOP_LEFT。
-		 * @see org.flexlite.domUI.core.PopUpPosition
 		 * @member egret.gui.PopUpAnchor#popUpPosition
 		 */		
 		public get popUpPosition():string{
