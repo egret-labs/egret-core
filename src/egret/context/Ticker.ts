@@ -28,13 +28,16 @@
 
 module egret {
     /**
-     * @class egret.Ticker
-     * @classdesc
-     * Ticker是egret引擎的心跳控制器，是游戏唯一的时间处理入口。开发者务必不要使用setTimeout / setInterval 等方法，而是统一使用Ticker
-     * @extends egret.EventDispatcher
+     * Ticker是egret引擎的心跳控制器，是游戏唯一的时间处理入口。开发者务必不要使用Ticker,应该使用egret.Timer。
      */
     export class Ticker extends EventDispatcher {
 
+        public constructor(){
+            super();
+            if (Ticker.instance != null) {
+                egret.Logger.fatal("egret.Ticker是框架内部使用的单例，不允许在外部实例化，计时器请使用egret.Timer类！");
+            }
+        }
 
         private _timeScale:number = 1;
         private _paused:boolean = false;
