@@ -29,15 +29,16 @@
 module egret.gui {
 
 	/**
-	 * @class egret.gui.SetProperty
+	 * @class egret.gui.SetStyle
 	 * @classdesc
 	 * 设置属性
 	 * @extends egret.gui.OverrideBase
+     * @private
 	 */	
 	export class SetStyle extends OverrideBase{
 		/**
 		 * 构造函数
-		 * @method egret.gui.SetProperty#constructor
+		 * @method egret.gui.SetStyle#constructor
 		 */		
 		public constructor(target:string,name:string,value:any){
 			super();
@@ -48,19 +49,19 @@ module egret.gui {
 		
 		/**
 		 * 要修改的属性名
-		 * @member egret.gui.SetProperty#name
+		 * @member egret.gui.SetStyle#name
 		 */		
 		public name:string;
 		
 		/**
 		 * 目标实例名
-		 * @member egret.gui.SetProperty#target
+		 * @member egret.gui.SetStyle#target
 		 */		
 		public target:string;
 		
 		/**
 		 * 属性值 
-		 * @member egret.gui.SetProperty#value
+		 * @member egret.gui.SetStyle#value
 		 */		
 		public value:any;
 		
@@ -70,7 +71,7 @@ module egret.gui {
 		private oldValue:any;
 		
 		/**
-		 * @method egret.gui.SetProperty#apply
+		 * @method egret.gui.SetStyle#apply
 		 * @param parent {IContainer} 
 		 */
 		public apply(parent:IContainer):void{   
@@ -82,7 +83,7 @@ module egret.gui {
 		}
 		
 		/**
-		 * @method egret.gui.SetProperty#remove
+		 * @method egret.gui.SetStyle#remove
 		 * @param parent {IContainer} 
 		 */
 		public remove(parent:IContainer):void{   
