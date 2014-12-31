@@ -874,7 +874,15 @@ module egret {
             if (this._hasHeightSet && this._hasWidthSet) {
                 return resultRect.initialize(0, 0, this._explicitWidth, this._explicitHeight);
             }
-            return this._measureSize(resultRect);
+
+            this._measureSize(resultRect);
+            if (this._hasWidthSet){
+                resultRect.width = this._explicitWidth;
+            }
+            if (this._hasHeightSet){
+                resultRect.height = this._explicitHeight;
+            }
+            return resultRect;
         }
 
         private _rectW:number = 0;

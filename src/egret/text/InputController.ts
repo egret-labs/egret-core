@@ -58,6 +58,7 @@ module egret {
             this.stageText.addEventListener("updateText", this.updateTextHandler, this);
             this._text.addEventListener(egret.TouchEvent.TOUCH_TAP, this.onMouseDownHandler, this);
             egret.MainContext.instance.stage.addEventListener(egret.TouchEvent.TOUCH_TAP, this.onStageDownHandler, this);
+            egret.MainContext.instance.stage.addEventListener(egret.Event.RESIZE, this.onResize, this);
         }
 
         public _removeStageText():void {
@@ -73,6 +74,11 @@ module egret {
             this.stageText.removeEventListener("updateText", this.updateTextHandler, this);
             this._text.removeEventListener(egret.TouchEvent.TOUCH_TAP, this.onMouseDownHandler, this);
             egret.MainContext.instance.stage.removeEventListener(egret.TouchEvent.TOUCH_TAP, this.onStageDownHandler, this);
+            egret.MainContext.instance.stage.removeEventListener(egret.Event.RESIZE, this.onResize, this);
+        }
+
+        private onResize():void {
+            this._isFirst = true;
         }
 
         public _getText():string {
