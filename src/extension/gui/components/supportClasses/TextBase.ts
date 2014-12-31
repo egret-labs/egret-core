@@ -295,7 +295,7 @@ module egret.gui {
             this._text = value || "";
 			this._textChanged = true;
             this._textFlowChanged = false;
-            this.syncTextWithTextFlow(true);
+            this._textFlow = [];
 			this.invalidateProperties();
 			this.invalidateSize();
 			this.invalidateDisplayList();
@@ -306,7 +306,7 @@ module egret.gui {
             this._textFlow = value || [];
             this._textFlowChanged = true;
             this._textChanged = false;
-            this.syncTextWithTextFlow(false);
+            this._text = "";
             this.invalidateProperties();
             this.invalidateSize();
             this.invalidateDisplayList();
@@ -374,10 +374,14 @@ module egret.gui {
 			}
 			if (this._textChanged){
 				this._textField.text = this._text;
-				this._textChanged = false;
 			}
             if (this._textFlowChanged) { 
                 this._textField.textFlow = this._textFlow;
+            }
+            if (this._textChanged || this._textFlowChanged) {
+                this._text = this._textField.text;
+                this._textFlow = this._textField.textFlow;
+                this._textChanged = false;
                 this._textFlowChanged = false;
             }
 
@@ -389,15 +393,11 @@ module egret.gui {
 		private checkTextField():void{
 			if(!this._textField){
 				this._createTextField();
-                if (this._text) {
+                if (this._textChanged) {
                     this._textField.text = this._text;
-                    this._textChanged = true;
-                    this.syncTextWithTextFlow(true);
                 }
-                if (this._textFlow) {
+                if (this._textFlowChanged) {
                     this._textField.textFlow = this._textFlow;
-                    this._textFlowChanged = true;
-                    this.syncTextWithTextFlow(false);
                 }
 				this.invalidateProperties();
 			}
@@ -448,18 +448,5 @@ module egret.gui {
 				PropertyChangeEvent.dispatchPropertyChangeEvent(this,
 					PropertyChangeEventKind.UPDATE, propertyName, oldValue, value, this);
 		}
-        //同步text和textFlow
-        private syncTextWithTextFlow(isTextChanged:boolean  = true) { 
-            if (isTextChanged) {
-                this._textFlow = [{
-                    text: this._text
-                }];
-            }
-            else { 
-                var textFlow = this._textFlow || [];
-                var text = textFlow.map(t=> t.text).join('');
-                this._text = text;
-            }
-        }
 	}
 }
