@@ -19,7 +19,6 @@ tools/nodejs/buildTS.local
 .DS_Store
 .[Tt]humb
 *.config
-bin/
 obj/
 *.user
 *.suo
