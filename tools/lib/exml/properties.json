@@ -28,12 +28,6 @@
 	{
 		"matrix":"Array"
 	},
-	"egret.ColorTransformShader":
-	{
-		"fragmentSrc":"any",
-		"super":"egret.EgretShader",
-		"uniforms":"any"
-	},
 	"egret.DefaultMovieClipDelegate":
 	{
 		"implements":["egret.MovieClipDelegate"]
@@ -107,20 +101,6 @@
 		"super":"egret.HashObject",
 		"x":"number",
 		"y":"number"
-	},
-	"egret.PrimitiveShader":
-	{
-		"aVertexPosition":"any",
-		"alpha":"any",
-		"attributes":"Array",
-		"colorAttribute":"any",
-		"fragmentSrc":"string",
-		"offsetVector":"any",
-		"program":"any",
-		"projectionVector":"any",
-		"tintColor":"any",
-		"translationMatrix":"any",
-		"vertexSrc":"any"
 	},
 	"egret.PromiseObject":
 	{
@@ -208,6 +188,11 @@
 	"egret.Tween":
 	{
 		"super":"egret.EventDispatcher"
+	},
+	"egret.URLRequestHeader":
+	{
+		"name":"string",
+		"value":"string"
 	},
 	"egret.VersionController":
 	{
@@ -611,6 +596,7 @@
 		"text":"string",
 		"textAlign":"string",
 		"textColor":"number",
+		"textFlow":"Array",
 		"verticalAlign":"string"
 	},
 	"egret.gui.TextInput":
