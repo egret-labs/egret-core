@@ -244,14 +244,21 @@ module egret {
             this.addEventListener(TouchEvent.TOUCH_BEGIN, this._onTouchBegin, this);
             this.addEventListener(TouchEvent.TOUCH_BEGIN, this._onTouchBeginCapture, this, true);
             this.addEventListener(TouchEvent.TOUCH_END, this._onTouchEndCapture, this, true);
+            this._content.addEventListener(egret.Event.ADDED, this._contentChanged, this);
+            this._content.addEventListener(egret.Event.REMOVED, this._contentChanged, this);
         }
 
         public _removeEvents(): void {
             this.removeEventListener(TouchEvent.TOUCH_BEGIN, this._onTouchBegin, this);
             this.removeEventListener(TouchEvent.TOUCH_BEGIN, this._onTouchBeginCapture, this, true);
             this.removeEventListener(TouchEvent.TOUCH_END, this._onTouchEndCapture, this, true);
+            this._content.removeEventListener(egret.Event.ADDED, this._contentChanged, this);
+            this._content.removeEventListener(egret.Event.REMOVED, this._contentChanged, this);
         }
-
+        private _contentChanged() {
+            this._setSizeDirty();
+            this._updateContentPosition();
+        }
         public _onTouchBegin(e: TouchEvent):void {
             if (e._isDefaultPrevented)
                 return;

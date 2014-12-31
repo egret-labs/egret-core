@@ -844,18 +844,18 @@ module egret {
     }
 
     export interface ITextStyle {
-        textColor:number;
-        strokeColor:number;
-        size:number;
-        stroke:number;
-        bold:boolean;
-        italic:boolean;
-        fontFamily:string;
+        textColor?:number;
+        strokeColor?:number;
+        size?:number;
+        stroke?:number;
+        bold?:boolean;
+        italic?:boolean;
+        fontFamily?:string;
     }
 
     export interface ITextElement {
         text:string;
-        style:ITextStyle;
+        style?:ITextStyle;
     }
 
     export interface IWTextElement extends ITextElement {
