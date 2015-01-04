@@ -558,7 +558,7 @@ function readReferenceFromNode(node,list){
  */
 function readReferenceFromTs(path){
     var text = file.read(path);
-    var orgText = text;
+    var orgText = CodeUtil.removeCommentExceptQuote(text);
     text = CodeUtil.removeComment(text,path);
     var block = "";
     var tsText = "";
