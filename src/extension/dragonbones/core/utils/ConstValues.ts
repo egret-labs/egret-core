@@ -59,7 +59,7 @@ module dragonBones {
 		public static A_IMAGE_PATH:string = "imagePath";
 		public static A_FRAME_RATE:string = "frameRate";
 		public static A_NAME:string = "name";
-        public static A_IS_RELATIVE:string = "isRelative";
+        public static A_IS_GLOBAL:string = "isGlobal";
 		public static A_PARENT:string = "parent";
 		public static A_LENGTH:string = "length";
 		public static A_TYPE:string = "type";

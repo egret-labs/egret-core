@@ -57,8 +57,8 @@ module dragonBones {
         {
 
         }
-		public static transformAnimationData(animationData:AnimationData, armatureData:ArmatureData, isRelativeData:boolean):void{
-            if(isRelativeData)
+		public static transformAnimationData(animationData:AnimationData, armatureData:ArmatureData, isGlobalData:boolean):void{
+            if(!isGlobalData)
             {
                 DBDataUtil.transformRelativeAnimationData(animationData, armatureData);
                 return;
