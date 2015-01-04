@@ -38,6 +38,11 @@ module egret {
         public static _invalidateRenderFlag:boolean = false;
 
         /**
+         * 是否会派发 RESIZE 事件
+         */
+        public _changeSizeDispatchFlag:boolean = true;
+
+        /**
          * 调用 invalidate() 方法后，在显示列表下次呈现时，Egret 会向每个已注册侦听 render 事件的显示对象发送一个 render 事件。
          * 每次您希望 Egret 发送 render 事件时，都必须调用 invalidate() 方法。
          * @method egret.Stage#invalidate
@@ -80,6 +85,9 @@ module egret {
          * 当屏幕尺寸改变时调用
          */
         public changeSize():void{
+            if(!this._changeSizeDispatchFlag) {
+                return;
+            }
             //重新设置屏幕适配策略
             this.setResolutionPolicy();
             //触发Event.RESIZE事件

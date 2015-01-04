@@ -55,6 +55,9 @@ module egret {
         }
 
         private update(advancedTime:number):void {
+            if (this._paused){
+                return;
+            }
             var list:Array<any> = this.callBackList.concat();
             var length:number = list.length;
 

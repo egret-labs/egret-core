@@ -872,6 +872,7 @@ module egret {
 
         public _getSize(resultRect:Rectangle):Rectangle {
             if (this._hasHeightSet && this._hasWidthSet) {
+                this._clearSizeDirty();
                 return resultRect.initialize(0, 0, this._explicitWidth, this._explicitHeight);
             }
 

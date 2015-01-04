@@ -558,7 +558,7 @@ function readReferenceFromNode(node,list){
  */
 function readReferenceFromTs(path){
     var text = file.read(path);
-    var orgText = text;
+    var orgText = CodeUtil.removeCommentExceptQuote(text);
     text = CodeUtil.removeComment(text,path);
     var block = "";
     var tsText = "";
@@ -742,27 +742,10 @@ function readClassFromBlock(text,list,ns){
         if(interfaceIndex==-1){
             interfaceIndex = Number.POSITIVE_INFINITY;
         }
-        var functionIndex = CodeUtil.getFirstVariableIndex("function", text);
-        if(functionIndex==-1){
-            functionIndex = Number.POSITIVE_INFINITY;
-        }
-        else if(ns){
-            if(CodeUtil.getLastWord(text.substring(0,functionIndex))!="export")
-            {
-                functionIndex = Number.POSITIVE_INFINITY;
-            }
-        }
-        var varIndex = CodeUtil.getFirstVariableIndex("var", text);
-        if(varIndex==-1){
-            varIndex = Number.POSITIVE_INFINITY;
-        }
-        else if(ns){
-            if(CodeUtil.getLastWord(text.substring(0,varIndex))!="export")
-            {
-                varIndex = Number.POSITIVE_INFINITY;
-            }
-        }
-        index = Math.min(interfaceIndex,index,functionIndex,varIndex);
+        var enumIndex = getFirstKeyWordIndex("enum",text,ns);
+        var functionIndex = getFirstKeyWordIndex("function", text,ns);
+        var varIndex = getFirstKeyWordIndex("var", text,ns);
+        index = Math.min(interfaceIndex,index,enumIndex,functionIndex,varIndex);
         if (index == Number.POSITIVE_INFINITY){
             break;
         }
@@ -817,6 +800,22 @@ function readClassFromBlock(text,list,ns){
             text = text.substring(index + 1);
         }
     }
+}
+/**
+ * 读取第一个关键字的索引
+ */
+function getFirstKeyWordIndex(key,text,ns){
+    var index = CodeUtil.getFirstVariableIndex(key, text);
+    if(index==-1){
+        index = Number.POSITIVE_INFINITY;
+    }
+    else if(ns){
+        if(CodeUtil.getLastWord(text.substring(0,index))!="export")
+        {
+            index = Number.POSITIVE_INFINITY;
+        }
+    }
+    return index;
 }
 
 /**

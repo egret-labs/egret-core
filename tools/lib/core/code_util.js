@@ -434,6 +434,75 @@ function removeComment(codeText,path) {
     return codeText;
 }
 
+/**
+ * 移除代码注释不移除字符串常量
+ */
+function removeCommentExceptQuote(codeText) {
+
+    var NBSP = "";
+    var trimText = "";
+
+    codeText = codeText.split("\\\\").join("\v0\v");
+    codeText = codeText.split("\\\"").join("\v1\v");
+    codeText = codeText.split("\\\'").join("\v2\v");
+    codeText = codeText.split("\r\n").join("\n").split("\r").join("\n");
+    while (codeText.length > 0) {
+        var quoteIndex = codeText.indexOf("\"");
+        if (quoteIndex == -1)
+            quoteIndex = Number.MAX_VALUE;
+        var squoteIndex = codeText.indexOf("'");
+        if (squoteIndex == -1)
+            squoteIndex = Number.MAX_VALUE;
+        var commentIndex = codeText.indexOf("/*");
+        if (commentIndex == -1)
+            commentIndex = Number.MAX_VALUE;
+        var lineCommonentIndex = codeText.indexOf("//");
+        if (lineCommonentIndex == -1)
+            lineCommonentIndex = Number.MAX_VALUE;
+        var index = Math.min(quoteIndex, squoteIndex, commentIndex, lineCommonentIndex);
+        if (index == Number.MAX_VALUE) {
+            trimText += codeText;
+            break;
+        }
+        trimText += codeText.substring(0, index) + NBSP;
+        codeText = codeText.substring(index);
+        switch (index) {
+            case quoteIndex:
+                codeText = codeText.substring(1);
+                index = codeText.indexOf("\"");
+                if (index == -1)
+                    index = codeText.length - 1;
+                trimText += codeText.substring(0,index + 1)
+                codeText = codeText.substring(index + 1);
+                break;
+            case squoteIndex:
+                codeText = codeText.substring(1);
+                index = codeText.indexOf("'");
+                if (index == -1)
+                    index = codeText.length - 1;
+                trimText += codeText.substring(0,index + 1)
+                codeText = codeText.substring(index + 1);
+                break;
+            case commentIndex:
+                index = codeText.indexOf("*/");
+                if (index == -1)
+                    index = codeText.length - 1;
+                codeText = codeText.substring(index + 2);
+                break;
+            case lineCommonentIndex:
+                index = codeText.indexOf("\n");
+                if (index == -1)
+                    index = codeText.length - 1;
+                codeText = codeText.substring(index);
+                break;
+        }
+    }
+    codeText = trimText.split("\v0\v").join("\\\\");
+    codeText = codeText.split("\v1\v").join("\\\"");
+    codeText = codeText.split("\v2\v").join("\\\'");
+    return codeText;
+}
+
 exports.isVariableWord = isVariableWord;
 exports.isVariableChar = isVariableChar;
 exports.isVariableFirstChar = isVariableFirstChar;
@@ -454,3 +523,4 @@ exports.trimVariable = trimVariable;
 exports.trimVariableLeft = trimVariableLeft;
 exports.trimVariableRight = trimVariableRight;
 exports.removeComment = removeComment;
+exports.removeCommentExceptQuote = removeCommentExceptQuote;
