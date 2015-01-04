@@ -43,10 +43,8 @@ function createFileList(manifest, srcPath) {
         gameList.push(filePath);
     }
 
-    length = gameList.length;
-    for (i = 0; i < length; i++) {
-        filePath = gameList[i];
-        filePath = filePath.substring(srcPath.length);
+    gameList = gameList.map(function(filePath) {
+        filePath = path.relative(srcPath, filePath);
         var ext = file.getExtension(filePath).toLowerCase();
         if (ext == "exml") {
             filePath = filePath.substring(0, filePath.length - 4) + "js";
@@ -54,21 +52,22 @@ function createFileList(manifest, srcPath) {
         else if (ext == "ts") {
             filePath = filePath.substring(0, filePath.length - 2) + "js";
         }
-        gameList[i] = filePath;
-    }
+        return filePath;
+    });
+
     return gameList;
 }
 
-function generateGameFileList(projectPath) {
+function generateGameFileList(projectPath, sourcePath) {
     var manifestPath = path.join(projectPath, "manifest.json");
-    var srcPath = path.join(projectPath, "src/");
+    var srcPath = path.join(projectPath, sourcePath);
     var manifest;
     if (file.exists(manifestPath)) {
         manifest = getManifestJson(manifestPath, srcPath);
     }
     else {
         var referenceInfo;
-        var referencePath = file.joinPath(srcPath, "../libs/module_reference.json");
+        var referencePath = file.joinPath(projectPath, "libs/module_reference.json");
         if (file.exists(referencePath)) {
             var text = file.read(referencePath);
             try {
@@ -82,6 +81,7 @@ function generateGameFileList(projectPath) {
 
     file.save(path.join(projectPath, "bin-debug/src/manifest.json"), JSON.stringify(manifest, null, "\t"));
 
+    console.log(srcPath);
     var gameList = createFileList(manifest, srcPath);
     var fileListText = "var game_file_list = " + JSON.stringify(gameList, null, "\t") + ";";
 

@@ -51,7 +51,7 @@ function build(properties, callback, keepGeneratedTypescript) {
     console.log(Date.now() + "  222");
 
     var sourceList;
-    if (true) {
+    if (false) {
         var gameListFile = file.read(path.join(projectPath, "bin-debug/src/manifest.json"));
         sourceList = JSON.parse(gameListFile);
 //        sourceList = sourceList.map(function(item) {
@@ -60,8 +60,10 @@ function build(properties, callback, keepGeneratedTypescript) {
     }
     else {
         var generateList = require("../core/gameFileList");
-        sourceList = generateList.generateGameFileList(projectPath);
+
+        sourceList = generateList.generateGameFileList(projectPath, "src");
     }
+
     console.log(Date.now() + "  222");
 
     async.series([function (callback) {
@@ -192,7 +194,7 @@ function compile(callback, projectDir, sourceList, projectConfig) {
             continue;
         }
         var ext = file.getExtension(p).toLowerCase();
-        if (ext == "ts"){
+        if (ext == "ts") {
             tsList.push(p);
         }
         else if (ext == "exml") {

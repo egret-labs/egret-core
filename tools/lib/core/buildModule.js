@@ -122,9 +122,26 @@ function compileAllModules(properties, callback) {
     projectProperties = properties;
     var task = [];
 
-    console.log(Date.now() + " 1111")
+    console.log(Date.now() + " 1111");
     var startTime = Date.now();
-    var moduleList = projectProperties.getAllModules();
+    var moduleList;
+    var exModules = param.getArgv()["opts"]["--module"];
+    if (exModules && exModules.length > 0) {
+//        exModules = exModules[0].split(",");
+
+        if (exModules.indexOf("core") >= 0) {
+            exModules.push("html5");
+            exModules.push("native");
+        }
+
+        moduleList = exModules;
+    }
+    else {
+        moduleList = projectProperties.getAllModules();
+        moduleList = moduleList.map(function (item) {
+            return item["name"];
+        });
+    }
 
     if (true) {
 ///////////////////////找出可以同时进行的module////////////////////////////////
@@ -132,14 +149,14 @@ function compileAllModules(properties, callback) {
         var tempUseModules = [];
         var tempModules = {};
         for (var i = 0; i < moduleList.length; i++) {
-            var module = moduleList[i];
-            var moduleConfig = projectProperties.getModuleConfig(module["name"]);
+            var moduleName = moduleList[i];
+            var moduleConfig = projectProperties.getModuleConfig(moduleName);
             if (moduleConfig["dependence"] && moduleConfig["dependence"].length > 0) {
-                tempModules[module["name"]] = moduleConfig["dependence"].concat();
+                tempModules[moduleName] = moduleConfig["dependence"].concat();
             }
             else {
-                modulesTask[0].push(module["name"]);
-                tempUseModules.push(module["name"]);
+                modulesTask[0].push(moduleName);
+                tempUseModules.push(moduleName);
             }
         }
 
@@ -149,8 +166,8 @@ function compileAllModules(properties, callback) {
             for (var key in tempModules) {
                 for (var j = 0; j < tempModules[key].length; j++) {
                     var tempModuleName = tempModules[key][j];
-                    if (tempUseModules.indexOf(tempModuleName) > -1) {
-                        tempModules[key].splice(j , 1);
+                    if (tempUseModules.indexOf(tempModuleName) > -1 || moduleList.indexOf(tempModuleName) == -1) {
+                        tempModules[key].splice(j, 1);
                         j--;
                     }
                 }
@@ -159,6 +176,8 @@ function compileAllModules(properties, callback) {
             modulesTask[count] = [];
             //
             for (var key in tempModules) {
+                console.log(key)
+                console.log(tempModules[key].length)
                 if (tempModules[key].length <= 0) {
                     modulesTask[count].push(key);
                     tempUseModules.push(key);

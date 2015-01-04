@@ -19,7 +19,7 @@ function run(dir, args, opts) {
 
     var runtime = param.getOption(opts, "--runtime", ["html5", "native"]);
 
-    var needCompileEngine = opts["-e"];
+    var needCompileEngine = opts["-e"] || opts["--module"];
     var keepGeneratedTypescript = opts["-k"];
 
     buildPlatform(needCompileEngine, keepGeneratedTypescript);
@@ -69,29 +69,92 @@ function buildPlatform(needCompileEngine, keepGeneratedTypescript) {
         });
     }
 
-    if (true) {//编译游戏
+
+    var onlyEngine = param.getArgv()["opts"]["--module"] != null;
+    if (!onlyEngine) {//编译游戏
         task.push(
-            function (callback) {
+            function (tempCallback) {
                 console.log(Date.now() + "  111");
 
                 var buildP = require("../core/buildProject");
-                buildP.build(projectProperties, callback, keepGeneratedTypescript);
+                buildP.build(projectProperties, tempCallback, keepGeneratedTypescript);
             }
         );
 
         task.push(//修改game_file_list.js文件
-            function (callback) {
-
+            function (tempCallback) {
+                tempCallback();
             }
         );
     }
 
-    if (false) {
-        task.push(//替换native项目内容
-            function (callback) {
+    var runtime = param.getOption(param.getArgv()["opts"], "--runtime", ["html5", "native"]);
 
+    if (runtime == "native") {
+        task.push(//替换native项目内容
+            function (tempCallback) {
+                if (projectProperties.getNativePath("android")) {
+                    var url = path.join(projectProperties.getProjectPath(), projectProperties.getNativePath("android"), "proj.android/assets");
+                    if (file.exists(url)) {//是egret的android项目
+                        copyFilesToNative(path.join(url, "egret-game"), "android");
+                    }
+                }
+
+                if (projectProperties.getNativePath("ios")) {
+                    var url1 = path.join(projectProperties.getProjectPath(), projectProperties.getNativePath("ios"), "proj.ios");
+                    var url2 = path.join(projectProperties.getProjectPath(), projectProperties.getNativePath("ios"), "Resources");
+
+                    if (file.exists(url1)
+                        && file.exists(url2)) {//是egret的ios项目
+                        copyFilesToNative(path.join(url2, "egret-game"), "ios");
+                    }
+                }
+
+                tempCallback();
             }
         );
+    }
+
+    function copyFilesToNative(url, platform) {
+        var startTime = Date.now();
+
+        //1、清除文件夹
+        file.remove(url);
+
+        var projectPath = projectProperties.getProjectPath();
+
+        //2、拷贝文件
+        //launcher
+        file.copy(path.join(projectPath, "launcher/native_loader.js"), path.join(url, "launcher/native_loader.js"));
+        file.copy(path.join(projectPath, "launcher/native_require.js"), path.join(url, "launcher/native_require.js"));
+
+        //resource
+        file.copy(path.join(projectPath, "resource"), path.join(url, "resource"));
+        file.copy(path.join(projectPath, "libs"), path.join(url, "libs"));
+
+        //js
+        file.copy(path.join(projectPath, "bin-debug/src"), path.join(url, "bin-debug/src"));
+        file.copy(path.join(projectPath, "bin-debug/lib/egret_file_list_native.js"), path.join(url, "bin-debug/lib/egret_file_list.js"));
+
+        //3、生成空版本控制文件
+        //编译版本控制文件 生成2个空文件
+        file.save(path.join(url, "base.manifest"), "{}");
+        file.save(path.join(url, "version.manifest"), "{}");
+
+        //4、修改native_require.js文件
+        var native_require = file.read(path.join(url, "launcher/native_require.js"));
+        native_require = native_require.replace(/var needCompile =.*/, "var needCompile = false;");
+        file.save(path.join(url, "launcher/native_require.js"), native_require);
+
+        //5、修改native入口文件
+        if (platform == "android") {
+
+        }
+        else if (platform == "ios") {
+
+        }
+
+        console.log("native拷贝共计耗时：%d秒", (Date.now() - startTime) / 1000);
     }
 
     async.series(task, function (err) {
