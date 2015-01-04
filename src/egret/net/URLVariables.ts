@@ -66,7 +66,21 @@ module egret {
             source = source.split("+").join(" ");
             var tokens, re = /[?&]?([^=]+)=([^&]*)/g;
             while (tokens = re.exec(source)) {
-                this.variables[decodeURIComponent(tokens[1])] = decodeURIComponent(tokens[2]);
+                var key = decodeURIComponent(tokens[1]),
+                    val = decodeURIComponent(tokens[2]);
+                //没有重复键值，直接赋值
+                if ((key in this.variables) == false) {
+                    this.variables[key] = val;
+                    continue;
+                }
+                //有重复键值，如果已经存在数组，直接push到数组，否则创建一个新数组
+                var value = this.variables[key];
+                if (value instanceof Array) {
+                    (<Array<string>>value).push(val)
+                }
+                else {
+                    this.variables[key] = [value, val];
+                }
             }
         }
 
@@ -79,19 +93,29 @@ module egret {
                 return "";
             }
             var variables:any = this.variables;
-            var str:string = "";
-            var isFirst:boolean = true;
+            var stringArray:string[] = [];
             for(var key in variables){
-                if(isFirst){
-                    isFirst = false;
-                }
-                else{
-                    str += "&";
-                }
-                str += key+"="+variables[key];
+                stringArray.push(this.encodeValue(key, variables[key]));
             }
-            return str;
+            return stringArray.join("&");
         }
 
+        private encodeValue(key: string, value: any) {
+            if (value instanceof Array) {
+                return this.encodeArray(key, value);
+            }
+            else {
+                return encodeURIComponent(key) + "=" + encodeURIComponent(value);
+            }
+        }
+
+        private encodeArray(key: string, value: string[]) {
+            if (!key)
+                return "";
+            if (value.length == 0) {
+                return encodeURIComponent(key) + "=";
+            }
+            return value.map(v=> encodeURIComponent(key) + "=" + encodeURIComponent(v)).join("&");
+        }
     }
 }
