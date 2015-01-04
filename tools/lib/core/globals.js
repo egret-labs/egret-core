@@ -185,6 +185,47 @@ function getDocumentClass(currDir) {
     return "";
 }
 
+function addQuotes(str) {
+    return "\"" + str + "\"";
+}
+
+
+var CodeUtil = require("../core/code_util.js");
+/**
+ * 这个文件是否只含有接口
+ */
+function isInterface(path) {
+    var text = file.read(path);
+    text = CodeUtil.removeComment(text, path);
+    text = removeInterface(text);
+
+    if (!CodeUtil.containsVariable("class", text) && !CodeUtil.containsVariable("var", text) && !CodeUtil.containsVariable("function", text)) {
+        return true;
+    }
+    return false;
+}
+
+/**
+ * 移除代码中的接口定义
+ */
+function removeInterface(text) {
+    var tsText = "";
+    while (text.length > 0) {
+        var index = CodeUtil.getFirstVariableIndex("interface", text);
+        if (index == -1) {
+            tsText += text;
+            break;
+        }
+        tsText += text.substring(0, index);
+        text = text.substring(index);
+        index = CodeUtil.getBracketEndIndex(text);
+        text = text.substring(index + 1);
+    }
+    return tsText;
+}
+
+
+exports.isInterface = isInterface;
 exports.require = _require;
 exports.exit = _exit;
 exports.warn = _warn;
@@ -195,3 +236,4 @@ exports.addCallBackWhenExit = addCallBackWhenExit;
 exports.getDocumentClass = getDocumentClass;
 exports.checkVersion = checkVersion;
 exports.compressVersion = compressVersion;
+exports.addQuotes = addQuotes;
