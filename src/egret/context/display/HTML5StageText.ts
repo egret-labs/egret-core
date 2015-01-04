@@ -215,6 +215,7 @@ module egret {
 
 
         public _show():void {
+            egret.MainContext.instance.stage._changeSizeDispatchFlag = false;
             if (this._maxChars > 0) {
                 this.inputElement.setAttribute("maxlength", this._maxChars);
             }
@@ -245,6 +246,8 @@ module egret {
         }
 
         public _hide():void {
+            egret.MainContext.instance.stage._changeSizeDispatchFlag = true;
+
             if (this.inputElement == null) {
                 return;
             }
