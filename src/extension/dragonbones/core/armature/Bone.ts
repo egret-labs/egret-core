@@ -45,7 +45,11 @@ module dragonBones {
 		 * Sometimes, we want slots controlled by a spedific animation state when animation is doing mix or addition.
 		 */
 		public displayController:string;
-		
+
+        public applyOffsetTranslationToChild:Boolean = true;
+        public applyOffsetRotationToChild:Boolean = true;
+        public applyOffsetScaleToChild:Boolean = false;
+
 		/** @private */
 		public _boneList:Array<Bone>;
 		
@@ -54,12 +58,6 @@ module dragonBones {
 		
 		/** @private */
 		public _timelineStateList:Array<TimelineState>;
-		
-		/**
-		 * AnimationState that slots belong to the bone will be controlled by.
-		 * Sometimes, we want slots controlled by a spedific animation state when animation is doing mix or addition.
-		 */
-		//public var displayController:String;
 		
 		/** @private */
 		public _tween:DBTransform;
@@ -72,13 +70,21 @@ module dragonBones {
 		
 		/** @private */
 		public _isColorChanged:boolean;
-		
+
+        /** @private */
+        public _globalTransformForChild:DBTransform;
+        /** @private */
+        public _globalTransformMatrixForChild:Matrix;
+
+        private _tempGlobalTransformForChild:DBTransform;
+        private _tempGlobalTransformMatrixForChild:Matrix;
+
 		public constructor(){
 			super();
 			
 			this._tween = new DBTransform();
 			this._tweenPivot = new Point();
-			this._tween.scaleX = this._tween.scaleY = 0;
+			this._tween.scaleX = this._tween.scaleY = 1;
 			
 			this._boneList = [];
 			this._slotList = [];
@@ -86,9 +92,6 @@ module dragonBones {
 			
 			this._needUpdate = 2;
 			this._isColorChanged = false;
-			
-			this.inheritRotation = true;
-			this.inheritScale = false;
 		}
 		
 		/**
@@ -262,7 +265,16 @@ module dragonBones {
 		public invalidUpdate():void{
 			this._needUpdate = 2;
 		}
-		
+
+        public _calculateRelativeParentTransform():void
+        {
+            this._global.scaleX = this._origin.scaleX * this._tween.scaleX * this._offset.scaleX;
+            this._global.scaleY = this._origin.scaleY * this._tween.scaleY * this._offset.scaleY;
+            this._global.skewX = this._origin.skewX + this._tween.skewX + this._offset.skewX;
+            this._global.skewY = this._origin.skewY + this._tween.skewY + this._offset.skewY;
+            this._global.x = this._origin.x + this._tween.x + this._offset.x;
+            this._global.y = this._origin.y + this._tween.y + this._offset.y;
+        }
 		/** @private */
 		public _update(needUpdate:boolean = false):void{
 			this._needUpdate --;
@@ -274,45 +286,70 @@ module dragonBones {
 			}
 			
 			this.blendingTimeline();
-			
-			this._global.scaleX = (this._origin.scaleX + this._tween.scaleX) * this._offset.scaleX;
-			this._global.scaleY = (this._origin.scaleY + this._tween.scaleY) * this._offset.scaleY;
-			
-			if(this._parent){
-				var x:number = this._origin.x + this._offset.x + this._tween.x;
-				var y:number = this._origin.y + this._offset.y + this._tween.y;
-				var parentMatrix:Matrix = this._parent._globalTransformMatrix;
-				
-				this._globalTransformMatrix.tx = this._global.x = parentMatrix.a * x + parentMatrix.c * y + parentMatrix.tx;
-				this._globalTransformMatrix.ty = this._global.y = parentMatrix.d * y + parentMatrix.b * x + parentMatrix.ty;
-				
-				if(this.inheritRotation){
-					this._global.skewX = this._origin.skewX + this._offset.skewX + this._tween.skewX + this._parent._global.skewX;
-					this._global.skewY = this._origin.skewY + this._offset.skewY + this._tween.skewY + this._parent._global.skewY;
-				}
-				else{
-					this._global.skewX = this._origin.skewX + this._offset.skewX + this._tween.skewX;
-					this._global.skewY = this._origin.skewY + this._offset.skewY + this._tween.skewY;
-				}
-				
-				if(this.inheritScale){
-					this._global.scaleX *= this._parent._global.scaleX;
-					this._global.scaleY *= this._parent._global.scaleY;
-				}
-			}
-			else{
-				this._globalTransformMatrix.tx = this._global.x = this._origin.x + this._offset.x + this._tween.x;
-				this._globalTransformMatrix.ty = this._global.y = this._origin.y + this._offset.y + this._tween.y;
-				
-				this._global.skewX = this._origin.skewX + this._offset.skewX + this._tween.skewX;
-				this._global.skewY = this._origin.skewY + this._offset.skewY + this._tween.skewY;
-			}
-			
-			this._globalTransformMatrix.a = this._global.scaleX * Math.cos(this._global.skewY);
-			this._globalTransformMatrix.b = this._global.scaleX * Math.sin(this._global.skewY);
-			this._globalTransformMatrix.c = -this._global.scaleY * Math.sin(this._global.skewX);
-			this._globalTransformMatrix.d = this._global.scaleY * Math.cos(this._global.skewX);
-		}
+
+            //计算global
+            var result:any = this._updateGlobal();
+            var parentGlobalTransform:DBTransform = result ? result.parentGlobalTransform : null;
+            var parentGlobalTransformMatrix:Matrix = result ? result.parentGlobalTransformMatrix : null;
+
+
+            //计算globalForChild
+            var ifExistOffsetTranslation:Boolean = this._offset.x != 0 || this._offset.y != 0;
+            var ifExistOffsetScale:Boolean = this._offset.scaleX != 0 || this._offset.scaleY != 0;
+            var ifExistOffsetRotation:Boolean = this._offset.skewX != 0 || this._offset.skewY != 0;
+
+            if(	(!ifExistOffsetTranslation || this.applyOffsetTranslationToChild) &&
+                (!ifExistOffsetScale || this.applyOffsetScaleToChild) &&
+                (!ifExistOffsetRotation || this.applyOffsetRotationToChild))
+            {
+                this._globalTransformForChild = this._global;
+                this._globalTransformMatrixForChild = this._globalTransformMatrix;
+            }
+            else
+            {
+                if(!this._tempGlobalTransformForChild)
+                {
+                    this._tempGlobalTransformForChild = new DBTransform();
+                }
+                this._globalTransformForChild = this._tempGlobalTransformForChild;
+
+                if(!this._tempGlobalTransformMatrixForChild)
+                {
+                    this._tempGlobalTransformMatrixForChild = new Matrix();
+                }
+                this._globalTransformMatrixForChild = this._tempGlobalTransformMatrixForChild;
+
+                this._globalTransformForChild.x = this._origin.x + this._tween.x;
+                this._globalTransformForChild.y = this._origin.y + this._tween.y;
+                this._globalTransformForChild.scaleX = this._origin.scaleX * this._tween.scaleX;
+                this._globalTransformForChild.scaleY = this._origin.scaleY * this._tween.scaleY;
+                this._globalTransformForChild.skewX = this._origin.skewX + this._tween.skewX;
+                this._globalTransformForChild.skewY = this._origin.skewY + this._tween.skewY;
+
+                if(this.applyOffsetTranslationToChild)
+                {
+                    this._globalTransformForChild.x += this._offset.x;
+                    this._globalTransformForChild.y += this._offset.y;
+                }
+                if(this.applyOffsetScaleToChild)
+                {
+                    this._globalTransformForChild.scaleX *= this._offset.scaleX;
+                    this._globalTransformForChild.scaleY *= this._offset.scaleY;
+                }
+                if(this.applyOffsetRotationToChild)
+                {
+                    this._globalTransformForChild.skewX += this._offset.skewX;
+                    this._globalTransformForChild.skewY += this._offset.skewY;
+                }
+
+                TransformUtil.transformToMatrix(this._globalTransformForChild, this._globalTransformMatrixForChild, true);
+                if(parentGlobalTransformMatrix)
+                {
+                    this._globalTransformMatrixForChild.concat(parentGlobalTransformMatrix);
+                    TransformUtil.matrixToTransform(this._globalTransformMatrixForChild, this._globalTransformForChild, this._globalTransformForChild.scaleX * parentGlobalTransform.scaleX >= 0, this._globalTransformForChild.scaleY * parentGlobalTransform.scaleY >= 0 );
+                }
+            }
+        }
 		
 		/** @private */
 		public _updateColor(
@@ -436,8 +473,8 @@ module dragonBones {
 				this._tween.y = transform.y * weight;
 				this._tween.skewX = transform.skewX * weight;
 				this._tween.skewY = transform.skewY * weight;
-				this._tween.scaleX = transform.scaleX * weight;
-				this._tween.scaleY = transform.scaleY * weight;
+				this._tween.scaleX = 1 + (transform.scaleX - 1)* weight;
+				this._tween.scaleY = 1 + (transform.scaleY - 1) * weight;
 				
 				this._tweenPivot.x = pivot.x * weight;
 				this._tweenPivot.y = pivot.y * weight;
@@ -485,8 +522,8 @@ module dragonBones {
 						y += transform.y * weight;
 						skewX += transform.skewX * weight;
 						skewY += transform.skewY * weight;
-						scaleX += transform.scaleX * weight;
-						scaleY += transform.scaleY * weight;
+						scaleX += (transform.scaleX - 1) * weight;
+						scaleY += (transform.scaleY - 1) * weight;
 						pivotX += pivot.x * weight;
 						pivotY += pivot.y * weight;
 						

@@ -29,6 +29,7 @@
 module dragonBones {
 	export class DragonBonesData{
 		public name:string;
+        public isRelative:boolean;
 		private _armatureDataList:Array<ArmatureData> = [];
 		private _displayDataDictionary:any = {};
 		
