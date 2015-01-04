@@ -734,8 +734,14 @@ function analyzeModule(text,list,moduleName)
  */
 function readClassFromBlock(text,list,ns){
     while (text.length > 0){
-        var index = getFirstKeyWordIndex("class", text,ns);
-        var interfaceIndex = getFirstKeyWordIndex("interface", text,ns);
+        var index = CodeUtil.getFirstVariableIndex("class", text);
+        if(index==-1){
+            index = Number.POSITIVE_INFINITY;
+        }
+        var interfaceIndex = CodeUtil.getFirstVariableIndex("interface", text);
+        if(interfaceIndex==-1){
+            interfaceIndex = Number.POSITIVE_INFINITY;
+        }
         var enumIndex = getFirstKeyWordIndex("enum",text,ns);
         var functionIndex = getFirstKeyWordIndex("function", text,ns);
         var varIndex = getFirstKeyWordIndex("var", text,ns);
