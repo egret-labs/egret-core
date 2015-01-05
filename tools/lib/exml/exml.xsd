@@ -69,19 +69,6 @@
       <xs:attributeGroup ref="egret.ColorTransform"/>
     </xs:complexType>
   </xs:element>
-  <xs:attributeGroup name="egret.ColorTransformShader">
-    <xs:attributeGroup ref="egret.EgretShader"/>
-    <xs:attribute name="fragmentSrc" type="xs:string"/>
-    <xs:attribute name="uniforms" type="xs:string"/>
-  </xs:attributeGroup>
-  <xs:element name="ColorTransformShader">
-    <xs:complexType>
-      <xs:choice minOccurs="0" maxOccurs="unbounded">
-        <xs:any/>
-      </xs:choice>
-      <xs:attributeGroup ref="egret.ColorTransformShader"/>
-    </xs:complexType>
-  </xs:element>
   <xs:attributeGroup name="egret.DefaultMovieClipDelegate"/>
   <xs:element name="DefaultMovieClipDelegate">
     <xs:complexType>
@@ -233,27 +220,6 @@
         <xs:any/>
       </xs:choice>
       <xs:attributeGroup ref="egret.Point"/>
-    </xs:complexType>
-  </xs:element>
-  <xs:attributeGroup name="egret.PrimitiveShader">
-    <xs:attribute name="aVertexPosition" type="xs:string"/>
-    <xs:attribute name="alpha" type="xs:string"/>
-    <xs:attribute name="attributes" type="xs:string"/>
-    <xs:attribute name="colorAttribute" type="xs:string"/>
-    <xs:attribute name="fragmentSrc" type="xs:string"/>
-    <xs:attribute name="offsetVector" type="xs:string"/>
-    <xs:attribute name="program" type="xs:string"/>
-    <xs:attribute name="projectionVector" type="xs:string"/>
-    <xs:attribute name="tintColor" type="xs:string"/>
-    <xs:attribute name="translationMatrix" type="xs:string"/>
-    <xs:attribute name="vertexSrc" type="xs:string"/>
-  </xs:attributeGroup>
-  <xs:element name="PrimitiveShader">
-    <xs:complexType>
-      <xs:choice minOccurs="0" maxOccurs="unbounded">
-        <xs:any/>
-      </xs:choice>
-      <xs:attributeGroup ref="egret.PrimitiveShader"/>
     </xs:complexType>
   </xs:element>
   <xs:attributeGroup name="egret.PromiseObject">
@@ -446,6 +412,18 @@
         <xs:any/>
       </xs:choice>
       <xs:attributeGroup ref="egret.Tween"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:attributeGroup name="egret.URLRequestHeader">
+    <xs:attribute name="name" type="xs:string"/>
+    <xs:attribute name="value" type="xs:string"/>
+  </xs:attributeGroup>
+  <xs:element name="URLRequestHeader">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:any/>
+      </xs:choice>
+      <xs:attributeGroup ref="egret.URLRequestHeader"/>
     </xs:complexType>
   </xs:element>
   <xs:attributeGroup name="egret.VersionController">
@@ -1292,6 +1270,7 @@
     <xs:attribute name="text" type="xs:string"/>
     <xs:attribute name="textAlign" type="text_textAlign"/>
     <xs:attribute name="textColor" type="xs:string"/>
+    <xs:attribute name="textFlow" type="xs:string"/>
     <xs:attribute name="verticalAlign" type="text_verticalAlign"/>
   </xs:attributeGroup>
   <xs:element name="TextBase">

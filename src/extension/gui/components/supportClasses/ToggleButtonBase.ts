@@ -41,8 +41,8 @@ module egret.gui {
 		public constructor(){
 			super();
 		}
-		
-		public _selected:boolean;
+
+        public _selected: boolean = false;
 		/**
 		 * 按钮处于按下状态时为 true，而按钮处于弹起状态时为 false。
 		 * @member egret.gui.ToggleButtonBase#selected

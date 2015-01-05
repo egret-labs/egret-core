@@ -197,16 +197,12 @@ module egret {
          */
         public checkIsNewVersion(url:string):boolean {
             if (this.changeVersionData[url] != null) {//在变化版本里
-                if (this.compareVersion(this.changeVersionData, this.localVersionData, url)) {
-                    return true;
-                }
+                return this.compareVersion(this.changeVersionData, this.localVersionData, url);
             }
             else if (this.baseVersionData[url] != null) {//在基础版本里
-                if (this.compareVersion(this.baseVersionData, this.localVersionData, url)) {
-                    return true;
-                }
+                return this.compareVersion(this.baseVersionData, this.localVersionData, url);
             }
-            return false;
+            return true;
         }
 
         /**

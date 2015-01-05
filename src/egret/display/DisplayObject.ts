@@ -338,8 +338,7 @@ module egret {
         public set rotation(value:number) {
             if (NumberUtils.isNumber(value) && this._rotation != value) {
                 this._rotation = value;
-
-                this._setSizeDirty();
+                this._setParentSizeDirty();
             }
         }
 
@@ -379,7 +378,7 @@ module egret {
             if (NumberUtils.isNumber(value) && this._skewX != value) {
                 this._skewX = value;
 
-                this._setSizeDirty();
+                this._setParentSizeDirty();
             }
         }
 
@@ -398,7 +397,7 @@ module egret {
             if (NumberUtils.isNumber(value) && this._skewY != value) {
                 this._skewY = value;
 
-                this._setSizeDirty();
+                this._setParentSizeDirty();
             }
         }
 
@@ -872,9 +871,18 @@ module egret {
 
         public _getSize(resultRect:Rectangle):Rectangle {
             if (this._hasHeightSet && this._hasWidthSet) {
+                this._clearSizeDirty();
                 return resultRect.initialize(0, 0, this._explicitWidth, this._explicitHeight);
             }
-            return this._measureSize(resultRect);
+
+            this._measureSize(resultRect);
+            if (this._hasWidthSet){
+                resultRect.width = this._explicitWidth;
+            }
+            if (this._hasHeightSet){
+                resultRect.height = this._explicitHeight;
+            }
+            return resultRect;
         }
 
         private _rectW:number = 0;

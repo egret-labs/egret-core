@@ -34,6 +34,11 @@ module egret {
             return typeof(value) === "number" && !isNaN(value);
         }
 
+        /**
+         * 得到对应角度值的sin近似值
+         * @param value {number} 角度值
+         * @returns {number} sin值
+         */
         public static sin(value:number):number {
             value = Math.round(value);
             value = value % 360;
@@ -52,6 +57,11 @@ module egret {
             return -egret_cos_map[value - 270];
         }
 
+        /**
+         * 得到对应角度值的cos近似值
+         * @param value {number} 角度值
+         * @returns {number} cos值
+         */
         public static cos(value:number):number {
             value = Math.round(value);
             value = value % 360;

@@ -87,7 +87,7 @@ module egret {
 
         /**
          * 绘制一个圆角矩形
-         * @method egret.Graphics#drawRect
+         * @method egret.Graphics#drawRoundRect
          * @param x {number} 圆心相对于父显示对象注册点的 x 位置（以像素为单位）。
          * @param y {number} 相对于父显示对象注册点的圆心的 y 位置（以像素为单位）。
          * @param width {number} 矩形的宽度（以像素为单位）。
