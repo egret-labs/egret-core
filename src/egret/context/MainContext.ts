@@ -79,6 +79,7 @@ module egret {
         public static RUNTIME_HTML5:string = "runtime_html5";
         public static RUNTIME_NATIVE:string = "runtime_native";
 
+        private _profileInstance:Profiler;
         /**
          * 游戏启动，开启主循环，参考Flash的滑动跑道模型
          * @method egret.MainContext#run
@@ -88,6 +89,8 @@ module egret {
             Ticker.getInstance().register(this.renderLoop, this, Number.NEGATIVE_INFINITY);
             Ticker.getInstance().register(this.broadcastEnterFrame, this, Number.POSITIVE_INFINITY);
             this.touchContext.run();
+
+            this._profileInstance = egret.Profiler.getInstance();
         }
 
         /**
@@ -131,6 +134,11 @@ module egret {
             stage._draw(context);
             event._type = Event.FINISH_RENDER;
             this.dispatchEvent(event);
+
+            if (this._profileInstance._isRunning) {
+                this._profileInstance._drawProfiler();
+            }
+
             context.onRenderFinish();
         }
 
