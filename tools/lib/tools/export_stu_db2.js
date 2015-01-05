@@ -334,18 +334,15 @@ function setFrame(dbFrames, stuFrames, bone, z) {
             }
         }
 
-        if (stuFrame["dI"] == -1) {
-            //dbFrame["displayIndex"] = 0;
+        if (stuFrame["dI"] < 0) {
             dbFrame["hide"] = 1;
         }
-
-        if (stuFrame["dI"] > 0) {
+        else if (stuFrame["dI"] > 0) {
             dbFrame["displayIndex"] = stuFrame["dI"];
         }
-        else if (stuFrame["dI"] == -1000) {
-            //dbFrame["displayIndex"] = 0;
-            dbFrame["hide"] = 1;
-        }
+//        else if (stuFrame["dI"] < -900) {
+//            dbFrame["hide"] = 1;
+//        }
 
 
         if (stuFrame["tweenFrame"] == false) {
