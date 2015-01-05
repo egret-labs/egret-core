@@ -131,8 +131,18 @@ function getNativePath(platform) {
 }
 
 function getTscLibUrl() {
-    return projectConfig["tscLib"];
+    if (projectConfig.tscLib && projectConfig.tscLib != null) {
+        return path.join(projectName, projectConfig["tscLib"]);
+    }
+    return null;
 }
+
+exports.getIgnorePath = function(){
+    if(projectConfig && projectConfig.native && projectConfig.native.path_ignore) {
+        return projectConfig.native.path_ignore;
+    }
+    return [];
+};
 
 exports.getTscLibUrl = getTscLibUrl;
 exports.getNativePath = getNativePath;
