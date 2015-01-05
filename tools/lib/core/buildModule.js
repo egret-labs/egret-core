@@ -12,7 +12,6 @@ var projectProperties;
 
 //编译单个模块
 function compileModule(callback, moduleName) {
-    console.log(moduleName);
     var typeScriptCompiler = require("../tools/egret_compiler.js");
 
     var moduleConfig = projectProperties.getModuleConfig(moduleName);
@@ -49,21 +48,24 @@ function compileModule(callback, moduleName) {
 
     async.series([
         function (callback) {
-            console.log(Date.now() + "  5555")
+            console.log(moduleName + " tsc编译生成js文件");
+            var tempTime = Date.now();
             var cmd = sourcemap + tsList.join(" ") + " -t ES5 --outDir " + globals.addQuotes(output);
             typeScriptCompiler.compile(callback, cmd, projectProperties.getTscLibUrl());
+            console.log("耗时：%d秒", (Date.now() - tempTime) / 1000);
         },
 
         function (callback) {
-            console.log(moduleName);
-            console.log(Date.now() + "  6666")
+            console.log(moduleName + " tsc编译生成 '.d.ts'");
+            var tempTime = Date.now();
             var cmd = sourcemap + tsList.join(" ") + " -d -t ES5 --out " + globals.addQuotes(path.join(output, moduleName + ".d.ts"));
             typeScriptCompiler.compile(callback, cmd, projectProperties.getTscLibUrl());
+            console.log("耗时：%d秒", (Date.now() - tempTime) / 1000);
         },
 
         function (callback) {
-            console.log(moduleConfig["name"]);
-            console.log(Date.now() + "  7777")
+            console.log(moduleName + " 拷贝其他文件");
+            var tempTime = Date.now();
             var jsList = moduleConfig.file_list;
 
             var dtsStr = "";
@@ -103,7 +105,7 @@ function compileModule(callback, moduleName) {
             }
             file.save(path.join(output, moduleName + ".d.json"), JSON.stringify({"file_list": jsList}, null, "\t"));
 
-            console.log(Date.now() + "  8888")
+            console.log("耗时：%d秒", (Date.now() - tempTime) / 1000);
             callback();
         }
     ], function (err) {
@@ -122,7 +124,6 @@ function compileAllModules(properties, callback) {
     projectProperties = properties;
     var task = [];
 
-    console.log(Date.now() + " 1111");
     var startTime = Date.now();
     var moduleList;
     var exModules = param.getArgv()["opts"]["--module"];
@@ -186,7 +187,7 @@ function compileAllModules(properties, callback) {
             count++;
         }
 
-        console.log(modulesTask);
+//        console.log(modulesTask);
         ///////////////////////////////////////////////////////
 
         var ii = 0;

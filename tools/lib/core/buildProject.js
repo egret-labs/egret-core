@@ -48,10 +48,12 @@ function build(properties, callback, keepGeneratedTypescript) {
         output: output
     };
 
-    console.log(Date.now() + "  222");
-
+    console.log("扫描项目列表");
+    var saoTime = Date.now();
     var sourceList;
-    if (false) {
+
+    var noscan = param.getArgv()["opts"]["-noscan"] != null;
+    if (noscan) {
         var gameListFile = file.read(path.join(projectPath, "bin-debug/src/manifest.json"));
         sourceList = JSON.parse(gameListFile);
 //        sourceList = sourceList.map(function(item) {
@@ -64,7 +66,7 @@ function build(properties, callback, keepGeneratedTypescript) {
         sourceList = generateList.generateGameFileList(projectPath, "src");
     }
 
-    console.log(Date.now() + "  222");
+    console.log("扫描耗时：%d秒", (Date.now() - saoTime) / 1000);
 
     async.series([function (callback) {
 
@@ -75,7 +77,7 @@ function build(properties, callback, keepGeneratedTypescript) {
         );
 
     }, function (tempCallback) {
-        console.log("共计耗时：%d秒", (Date.now() - time) / 1000);
+        console.log("项目共计编译耗时：%d秒", (Date.now() - time) / 1000);
         tempCallback();
     }
     ], callback);
@@ -238,14 +240,15 @@ function compile(callback, projectDir, sourceList, projectConfig) {
                 return globals.addQuotes(item);
             });
 
-            console.log(Date.now() + "  333");
             var sourcemap = param.getArgv()["opts"]["-sourcemap"];
             sourcemap = sourcemap ? "--sourcemap " : "";
 
+            console.log("执行tsc编译");
+            var tempTime = Date.now();
             var cmd = sourcemap + tsList.join(" ") + " -t ES5 --outDir " + globals.addQuotes(output);
             var typeScriptCompiler = require("../tools/egret_compiler.js");
             typeScriptCompiler.compile(onCompileComplete, cmd, projectProperties.getTscLibUrl());
-            console.log(Date.now() + "  444");
+            console.log("tsc编译耗时：%d秒", (Date.now() - tempTime) / 1000);
 
             function onCompileComplete(code) {
                 if (code == 0) {

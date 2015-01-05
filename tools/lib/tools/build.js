@@ -74,7 +74,7 @@ function buildPlatform(needCompileEngine, keepGeneratedTypescript) {
     if (!onlyEngine) {//编译游戏
         task.push(
             function (tempCallback) {
-                console.log(Date.now() + "  111");
+                console.log("编译项目：");
 
                 var buildP = require("../core/buildProject");
                 buildP.build(projectProperties, tempCallback, keepGeneratedTypescript);
