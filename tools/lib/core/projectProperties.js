@@ -122,6 +122,21 @@ function getModulesDts() {
     return libs;
 }
 
+function getNativePath(platform) {
+    if (projectConfig.native && projectConfig.native[platform + "_path"] && projectConfig.native[platform + "_path"] != "") {
+        return projectConfig.native[platform + "_path"];
+    }
+
+    return null;
+}
+
+function getTscLibUrl() {
+    return projectConfig["tscLib"];
+}
+
+exports.getTscLibUrl = getTscLibUrl;
+exports.getNativePath = getNativePath;
+
 exports.init = init;
 exports.getAllModules = getAllModules;
 exports.getModulePath = getModulePath;

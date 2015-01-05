@@ -244,7 +244,7 @@ function compile(callback, projectDir, sourceList, projectConfig) {
 
             var cmd = sourcemap + tsList.join(" ") + " -t ES5 --outDir " + globals.addQuotes(output);
             var typeScriptCompiler = require("../tools/egret_compiler.js");
-            typeScriptCompiler.compile(onCompileComplete, cmd);
+            typeScriptCompiler.compile(onCompileComplete, cmd, projectProperties.getTscLibUrl());
             console.log(Date.now() + "  444");
 
             function onCompileComplete(code) {

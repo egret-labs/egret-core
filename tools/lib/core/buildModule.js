@@ -51,14 +51,14 @@ function compileModule(callback, moduleName) {
         function (callback) {
             console.log(Date.now() + "  5555")
             var cmd = sourcemap + tsList.join(" ") + " -t ES5 --outDir " + globals.addQuotes(output);
-            typeScriptCompiler.compile(callback, cmd);
+            typeScriptCompiler.compile(callback, cmd, projectProperties.getTscLibUrl());
         },
 
         function (callback) {
             console.log(moduleName);
             console.log(Date.now() + "  6666")
             var cmd = sourcemap + tsList.join(" ") + " -d -t ES5 --out " + globals.addQuotes(path.join(output, moduleName + ".d.ts"));
-            typeScriptCompiler.compile(callback, cmd);
+            typeScriptCompiler.compile(callback, cmd, projectProperties.getTscLibUrl());
         },
 
         function (callback) {
@@ -85,7 +85,7 @@ function compileModule(callback, moduleName) {
                 else {
                     //纯interface从jslist中去掉
                     if (globals.isInterface(filePath)) {
-                        console.log(filePath);
+//                        console.log(filePath);
                         jsList.splice(i, 1);
                         i--;
                     }
@@ -176,8 +176,6 @@ function compileAllModules(properties, callback) {
             modulesTask[count] = [];
             //
             for (var key in tempModules) {
-                console.log(key)
-                console.log(tempModules[key].length)
                 if (tempModules[key].length <= 0) {
                     modulesTask[count].push(key);
                     tempUseModules.push(key);

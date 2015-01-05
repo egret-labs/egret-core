@@ -81,7 +81,6 @@ function generateGameFileList(projectPath, sourcePath) {
 
     file.save(path.join(projectPath, "bin-debug/src/manifest.json"), JSON.stringify(manifest, null, "\t"));
 
-    console.log(srcPath);
     var gameList = createFileList(manifest, srcPath);
     var fileListText = "var game_file_list = " + JSON.stringify(gameList, null, "\t") + ";";
 

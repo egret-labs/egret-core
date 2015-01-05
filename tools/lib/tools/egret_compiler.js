@@ -6,7 +6,7 @@
 var file = require("../core/file.js");
 
 
-function typeScriptCompiler(quitFunc,cmd) {
+function typeScriptCompiler(quitFunc,cmd, tscLibUrl) {
     file.save("tsc_config_temp.txt", cmd);//todo performance-optimize
     var TypeScript = require('../core/typescript/tsc.js');
 
@@ -14,7 +14,7 @@ function typeScriptCompiler(quitFunc,cmd) {
         setTimeout(quitFunc,1,arguments[0])
     }
 //    var timer = new Date().getTime();
-    TypeScript.executeCommandLine(["@tsc_config_temp.txt"]);
+    TypeScript.executeCommandLine(["@tsc_config_temp.txt"], tscLibUrl);
 //    console.log (new Date().getTime() - timer)
 
 //    if (isQuickMode()) {//快速构建，去掉类型检查阶段
