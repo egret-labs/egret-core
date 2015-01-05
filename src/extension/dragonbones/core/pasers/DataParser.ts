@@ -33,7 +33,6 @@ module dragonBones {
 		
 		public static parseTextureAtlasData(rawData:any, scale:number = 1):any{
 			var textureAtlasData:any = {};
-			textureAtlasData.__name = rawData[ConstValues.A_NAME];
 			var subTextureFrame:Rectangle;
 
             var subTextureList:any = rawData[ConstValues.SUB_TEXTURE];
