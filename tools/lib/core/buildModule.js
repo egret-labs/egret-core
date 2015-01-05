@@ -48,23 +48,23 @@ function compileModule(callback, moduleName) {
 
     async.series([
         function (callback) {
-            console.log(moduleName + " tsc编译生成js文件");
+            globals.debugLog(moduleName + " tsc编译生成js文件");
             var tempTime = Date.now();
             var cmd = sourcemap + tsList.join(" ") + " -t ES5 --outDir " + globals.addQuotes(output);
             typeScriptCompiler.compile(callback, cmd, projectProperties.getTscLibUrl());
-            console.log("耗时：%d秒", (Date.now() - tempTime) / 1000);
+            globals.debugLog("耗时：%d秒", (Date.now() - tempTime) / 1000);
         },
 
         function (callback) {
-            console.log(moduleName + " tsc编译生成 '.d.ts'");
+            globals.debugLog(moduleName + " tsc编译生成 '.d.ts'");
             var tempTime = Date.now();
             var cmd = sourcemap + tsList.join(" ") + " -d -t ES5 --out " + globals.addQuotes(path.join(output, moduleName + ".d.ts"));
             typeScriptCompiler.compile(callback, cmd, projectProperties.getTscLibUrl());
-            console.log("耗时：%d秒", (Date.now() - tempTime) / 1000);
+            globals.debugLog("耗时：%d秒", (Date.now() - tempTime) / 1000);
         },
 
         function (callback) {
-            console.log(moduleName + " 拷贝其他文件");
+            globals.debugLog(moduleName + " 拷贝其他文件");
             var tempTime = Date.now();
             var jsList = moduleConfig.file_list;
 
@@ -87,7 +87,6 @@ function compileModule(callback, moduleName) {
                 else {
                     //纯interface从jslist中去掉
                     if (globals.isInterface(filePath)) {
-//                        console.log(filePath);
                         jsList.splice(i, 1);
                         i--;
                     }
@@ -105,7 +104,7 @@ function compileModule(callback, moduleName) {
             }
             file.save(path.join(output, moduleName + ".d.json"), JSON.stringify({"file_list": jsList}, null, "\t"));
 
-            console.log("耗时：%d秒", (Date.now() - tempTime) / 1000);
+            globals.debugLog("耗时：%d秒", (Date.now() - tempTime) / 1000);
             callback();
         }
     ], function (err) {
@@ -187,7 +186,7 @@ function compileAllModules(properties, callback) {
             count++;
         }
 
-//        console.log(modulesTask);
+//        globals.debugLog(modulesTask);
         ///////////////////////////////////////////////////////
 
         var ii = 0;
@@ -241,7 +240,6 @@ function compileAllModules(properties, callback) {
             if (!err) {
                 globals.log("构建成功");
 
-                console.log(Date.now() - startTime);
                 callback();
             }
             else {

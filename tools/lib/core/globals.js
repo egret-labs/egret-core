@@ -224,6 +224,20 @@ function removeInterface(text) {
     return tsText;
 }
 
+var isShow;
+function setShowDebugLog(value) {
+    isShow = value;
+}
+
+function debugLog(logStr) {
+    if (isShow) {
+        console.log.apply(console, arguments);
+    }
+}
+
+exports.setShowDebugLog = setShowDebugLog;
+exports.debugLog = debugLog;
+
 
 exports.isInterface = isInterface;
 exports.require = _require;

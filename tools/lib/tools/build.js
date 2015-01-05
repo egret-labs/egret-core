@@ -14,6 +14,7 @@ var global = require("../core/globals");
 function run(dir, args, opts) {
     var currDir = globals.joinEgretDir(dir, args[0]);
     globals.checkVersion(currDir);
+    globals.setShowDebugLog(opts["-debugLog"] || opts["-debuglog"]);
 
     projectProperties.init(currDir);
 
@@ -69,12 +70,11 @@ function buildPlatform(needCompileEngine, keepGeneratedTypescript) {
         });
     }
 
-
     var onlyEngine = param.getArgv()["opts"]["--module"] != null;
     if (!onlyEngine) {//编译游戏
         task.push(
             function (tempCallback) {
-                console.log("编译项目：");
+                globals.debugLog("编译项目：");
 
                 var buildP = require("../core/buildProject");
                 buildP.build(projectProperties, tempCallback, keepGeneratedTypescript);
