@@ -338,8 +338,7 @@ module egret {
         public set rotation(value:number) {
             if (NumberUtils.isNumber(value) && this._rotation != value) {
                 this._rotation = value;
-
-                this._setSizeDirty();
+                this._setParentSizeDirty();
             }
         }
 
@@ -379,7 +378,7 @@ module egret {
             if (NumberUtils.isNumber(value) && this._skewX != value) {
                 this._skewX = value;
 
-                this._setSizeDirty();
+                this._setParentSizeDirty();
             }
         }
 
@@ -398,7 +397,7 @@ module egret {
             if (NumberUtils.isNumber(value) && this._skewY != value) {
                 this._skewY = value;
 
-                this._setSizeDirty();
+                this._setParentSizeDirty();
             }
         }
 
