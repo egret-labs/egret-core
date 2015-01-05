@@ -381,8 +381,8 @@ function setFrame(dbFrames, stuFrames, bone, z) {
         dbFrame["transform"] = {};
         dbFrame["transform"]["x"] = stuFrame["x"];
         dbFrame["transform"]["y"] = -stuFrame["y"];
-        dbFrame["transform"]["scX"] = stuFrame["cX"];
-        dbFrame["transform"]["scY"] = stuFrame["cY"];
+        dbFrame["transform"]["scX"] = (stuFrame["cX"] + bone["transform"]["scX"] - 1) / bone["transform"]["scX"];
+        dbFrame["transform"]["scY"] = (stuFrame["cY"] + bone["transform"]["scY"] - 1) / bone["transform"]["scY"];
         dbFrame["transform"]["skX"] = radianToAngle(stuFrame["kX"]);
         dbFrame["transform"]["skY"] = -radianToAngle(stuFrame["kY"]);
     }
