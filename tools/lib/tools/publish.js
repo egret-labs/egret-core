@@ -20,14 +20,25 @@ function run(dir, args, opts) {
         return;
     }
 
-    var timeMinSec = Date.now();
-    var time = Math.round(Date.now() / 1000);
-
     var currDir = globals.joinEgretDir(dir, args[0]);
     globals.checkVersion(currDir);
     globals.setShowDebugLog();
 
     projectProperties.init(currDir);
+
+    var runtime = param.getOption(opts, "--runtime", ["html5", "native"]);
+    if (runtime == "native") {
+        publishNative(opts);
+    }
+    else {
+        publishHtml5(opts);
+    }
+}
+
+function publishNative(opts) {
+
+    var timeMinSec = Date.now();
+    var time = Math.round(Date.now() / 1000);
 
     var projectPath = projectProperties.getProjectPath();
     var releasePath = path.join(projectPath, projectProperties.getReleaseUrl());
@@ -62,7 +73,7 @@ function run(dir, args, opts) {
             //拷贝到ziptemp目录中
             globals.debugLog("未压缩js文件，拷贝js文件");
             file_list.map(function (item) {
-               var re = path.relative(projectPath, item);
+                var re = path.relative(projectPath, item);
                 file.copy(item, path.join(ziptempPath, re));
             });
 
@@ -229,6 +240,119 @@ function run(dir, args, opts) {
         });
     }
 }
+
+function publishHtml5(opts) {
+    var timeMinSec = Date.now();
+    var time = Math.round(Date.now() / 1000);
+
+    var projectPath = projectProperties.getProjectPath();
+    var releasePath = path.join(projectPath, projectProperties.getReleaseUrl());
+
+    var releaseOutputPath = path.join(releasePath, "html5", time + "");
+    file.createDirectory(releaseOutputPath);
+
+    var task = [];
+
+    //js文件
+    //获取gamelist以及egretlist
+    var file_list = filelist.getAllFileList(projectPath, "html5");
+    var needCompile = (opts["-compile"] || opts["-compiler"]) ? true : false;
+
+    if (needCompile) {//压缩js文件，并拷贝到ziptemp目录中
+        task.push(function (tempCallback) {
+            var tempTime = Date.now();
+            globals.debugLog("开始压缩js文件");
+            closureCompiler.compilerSingleFile(path.join(releaseOutputPath, "launcher", "__game-min.js"),
+                file_list, path.join(releaseOutputPath, "launcher", "game-min.js"), function () {
+
+                    globals.debugLog("压缩js文件耗时：%d秒", (Date.now() - tempTime) / 1000);
+                    tempCallback();
+                });
+        });
+    }
+    else {
+        task.push(function (tempCallback) {
+            var tempTime = Date.now();
+            //拷贝到ziptemp目录中
+            globals.debugLog("未压缩js文件，拷贝js文件");
+            file_list.map(function (item) {
+                var re = path.relative(projectPath, item);
+                file.copy(item, path.join(ziptempPath, re));
+            });
+
+            file.copy(path.join(projectPath, "bin-debug", "lib", "file_list_native.js"), path.join(ziptempPath, "bin-debug", "lib", "egret_file_list.js"));
+            file.copy(path.join(projectPath, "bin-debug", "src", "game_file_list.js"), path.join(ziptempPath, "bin-debug", "src", "game_file_list.js"));
+
+            globals.debugLog("拷贝js文件耗时：%d秒", (Date.now() - tempTime) / 1000);
+            tempCallback();
+        });
+    }
+
+    //生成版本控制文件到nativeBase里
+    var noVerion = (opts["-noversion"]) ? true : false;
+    if (!noVerion) {
+        task.push(function (tempCallback) {
+            var tempTime = Date.now();
+            globals.debugLog("扫描版本控制文件");
+
+            genVer.generate(projectPath, path.join(releasePath, "html5Base"));
+
+            globals.debugLog("生成版本控制文件耗时：%d秒", (Date.now() - tempTime) / 1000);
+            tempCallback();
+        });
+    }
+
+
+    if (true) {//拷贝其他文件
+        task.push(function (tempCallback) {
+            //拷贝
+            file.copy(path.join(projectPath, "launcher"), path.join(releaseOutputPath, "launcher"));
+
+            if (noVerion) {
+                file.save(path.join(ziptempPath, "version.manifest"), "{}");
+            }
+            else {
+                file.copy(path.join(releasePath, "html5Base", "version.manifest"), path.join(releaseOutputPath, "version.manifest"));
+            }
+
+            file.copy(path.join(projectPath, "launcher", "release.html"), path.join(releaseOutputPath, "index.html"));
+
+            file.remove(path.join(releaseOutputPath, "launcher", "native_loader.js"));
+            file.remove(path.join(releaseOutputPath, "launcher", "runtime_loader.js"));
+            file.remove(path.join(releaseOutputPath, "launcher", "native_require.js"));
+            file.remove(path.join(releaseOutputPath, "launcher", "index.html"));
+            file.remove(path.join(releaseOutputPath, "launcher", "release.html"));
+
+            tempCallback();
+        });
+    }
+
+    //拷贝其他资源文件
+    if (true) {//拷贝
+        task.push(function (tempCallback) {
+            file.copy(path.join(projectPath, "resource"), path.join(releaseOutputPath, "resource"));
+
+            if (noVerion) {
+                file.save(path.join(releaseOutputPath, "base.manifest"), "{}");
+            }
+            else {
+                file.copy(path.join(releasePath, "nativeBase", "base.manifest"), path.join(releaseOutputPath, "base.manifest"));
+            }
+
+            tempCallback();
+        });
+    }
+
+    async.series(task, function (err) {
+        if (!err) {
+            console.log("发布完成共计耗时：%d秒", (Date.now() - timeMinSec) / 1000);
+        }
+        else {
+            globals.exit(err);
+        }
+    });
+}
+
 
 function help_title() {
     return "发布项目，使用GoogleClosureCompiler压缩代码\n";
