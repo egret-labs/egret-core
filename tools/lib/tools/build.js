@@ -96,7 +96,12 @@ function buildPlatform(needCompileEngine, keepGeneratedTypescript) {
                 if (projectProperties.getNativePath("android")) {
                     var url = path.join(projectProperties.getProjectPath(), projectProperties.getNativePath("android"), "proj.android/assets");
                     if (file.exists(url)) {//是egret的android项目
-                        copyFilesToNative(path.join(url, "egret-game"), "android");
+
+                        //拷贝项目到native工程中
+                        var cpFiles = require("../core/copyProjectFiles.js");
+                        cpFiles.copyFilesToNative(projectProperties.getProjectPath(),
+                            path.join(projectProperties.getProjectPath(), projectProperties.getNativePath("android")),
+                            "android", projectProperties.getIgnorePath());
                     }
                 }
 
@@ -106,7 +111,12 @@ function buildPlatform(needCompileEngine, keepGeneratedTypescript) {
 
                     if (file.exists(url1)
                         && file.exists(url2)) {//是egret的ios项目
-                        copyFilesToNative(path.join(url2, "egret-game"), "ios");
+
+                        //拷贝项目到native工程中
+                        var cpFiles = require("../core/copyProjectFiles.js");
+                        cpFiles.copyFilesToNative(projectProperties.getProjectPath(),
+                            path.join(projectProperties.getProjectPath(), projectProperties.getNativePath("ios")),
+                            "ios", projectProperties.getIgnorePath());
                     }
                 }
 
