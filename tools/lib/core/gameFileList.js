@@ -79,7 +79,10 @@ function generateGameFileList(projectPath, sourcePath) {
         manifest = create_manifest.create(srcPath, false, referenceInfo);
     }
 
-    file.save(path.join(projectPath, "bin-debug/src/manifest.json"), JSON.stringify(manifest, null, "\t"));
+    var tempManifest = manifest.map(function (item) {
+        return path.relative(srcPath, item);
+    });
+    file.save(path.join(projectPath, "bin-debug/src/manifest.json"), JSON.stringify(tempManifest, null, "\t"));
 
     var gameList = createFileList(manifest, srcPath);
     var fileListText = "var game_file_list = " + JSON.stringify(gameList, null, "\t") + ";";

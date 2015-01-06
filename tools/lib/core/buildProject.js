@@ -56,9 +56,9 @@ function build(properties, callback, keepGeneratedTypescript) {
     if (noscan) {
         var gameListFile = file.read(path.join(projectPath, "bin-debug/src/manifest.json"));
         sourceList = JSON.parse(gameListFile);
-//        sourceList = sourceList.map(function(item) {
-//            return path.join(projectPath, item);
-//        });
+        sourceList = sourceList.map(function(item) {
+            return path.join(projectPath, "src", item);
+        });
     }
     else {
         var generateList = require("../core/gameFileList");
