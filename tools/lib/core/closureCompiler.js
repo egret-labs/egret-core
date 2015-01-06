@@ -143,7 +143,7 @@ ClosureCompiler.prototype.compile = function (files, callback) {
     delete options["js"];
 
     var compilerPath = path.join(param.getEgretPath(), "tools/lib/google-closure/compiler.jar");
-    var args = '-client -jar "' + compilerPath + '"';
+    var args = '-client -jar "' + compilerPath + '" ' + ' --language_in ECMASCRIPT5 ';
 
     // Source files
     if (!(files instanceof Array)) {
@@ -253,8 +253,7 @@ ClosureCompiler.prototype.compile = function (files, callback) {
 };
 
 
-function compilerSingleFile(currDir, fileList, outputFile, callback) {
-    var tempFile = path.join(currDir, "bin-debug/__temp.js");
+function compilerSingleFile(tempFile, fileList, outputFile, callback) {
     combineToSingleJavaScriptFile(fileList, tempFile);
     ClosureCompiler.compile([tempFile],
         {js_output_file: outputFile, "warning_level": "QUIET"},

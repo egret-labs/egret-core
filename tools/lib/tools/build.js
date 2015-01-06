@@ -14,7 +14,7 @@ var global = require("../core/globals");
 function run(dir, args, opts) {
     var currDir = globals.joinEgretDir(dir, args[0]);
     globals.checkVersion(currDir);
-    globals.setShowDebugLog(opts["-debugLog"] || opts["-debuglog"]);
+    globals.setShowDebugLog();
 
     projectProperties.init(currDir);
 
@@ -128,13 +128,15 @@ function buildPlatform(needCompileEngine, keepGeneratedTypescript) {
         file.copy(path.join(projectPath, "launcher/native_loader.js"), path.join(url, "launcher/native_loader.js"));
         file.copy(path.join(projectPath, "launcher/native_require.js"), path.join(url, "launcher/native_require.js"));
 
-        //resource
-        file.copy(path.join(projectPath, "resource"), path.join(url, "resource"));
-        file.copy(path.join(projectPath, "libs"), path.join(url, "libs"));
-
         //js
         file.copy(path.join(projectPath, "bin-debug/src"), path.join(url, "bin-debug/src"));
         file.copy(path.join(projectPath, "bin-debug/lib/egret_file_list_native.js"), path.join(url, "bin-debug/lib/egret_file_list.js"));
+
+        //libs
+        file.copy(path.join(projectPath, "libs"), path.join(url, "libs"));
+
+        //resource
+        copyFilesWithIgnore(path.join(projectPath, "resource"), path.join(url, "resource"));
 
         //3、生成空版本控制文件
         //编译版本控制文件 生成2个空文件
@@ -155,6 +157,36 @@ function buildPlatform(needCompileEngine, keepGeneratedTypescript) {
         }
 
         console.log("native拷贝共计耗时：%d秒", (Date.now() - startTime) / 1000);
+    }
+
+    function copyFilesWithIgnore(sourceRootPath, desRootPath) {
+        var copyFilePathList = file.getDirectoryAllListing(path.join(sourceRootPath));
+
+        var ignorePathList = projectProperties.getIgnorePath();
+        ignorePathList = ignorePathList.map(function(item) {
+
+            var reg = new RegExp(item);
+            return reg;
+        });
+
+        var isIgnore = false;
+        copyFilePathList.forEach(function(copyFilePath) {
+            isIgnore = false;
+
+            for (var key in ignorePathList) {//检测忽略列表
+                var ignorePath = ignorePathList[key];
+
+                if (copyFilePath.match(ignorePath)) {
+                    isIgnore = true;
+                    break;
+                }
+            }
+
+            if(!isIgnore) {//不在忽略列表的路径，拷贝过去
+                var copyFileRePath = path.relative(sourceRootPath, copyFilePath);
+                file.copy(path.join(copyFilePath), path.join(desRootPath, copyFileRePath));
+            }
+        });
     }
 
     async.series(task, function (err) {

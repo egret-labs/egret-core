@@ -144,6 +144,18 @@ exports.getIgnorePath = function(){
     return [];
 };
 
+
+
+function getReleaseUrl() {
+    if (projectConfig.release && projectConfig.release != "") {
+        return projectConfig.release;
+    }
+
+    return "release";
+}
+
+exports.getReleaseUrl = getReleaseUrl;
+
 exports.getTscLibUrl = getTscLibUrl;
 exports.getNativePath = getNativePath;
 

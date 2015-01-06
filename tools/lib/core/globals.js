@@ -225,8 +225,10 @@ function removeInterface(text) {
 }
 
 var isShow;
-function setShowDebugLog(value) {
-    isShow = value;
+function setShowDebugLog() {
+    isShow = param.getArgv()["opts"]["-debugLog"] != null
+            || param.getArgv()["opts"]["-debuglog"] != null
+            || param.getArgv()["opts"]["-log"] != null;
 }
 
 function debugLog(logStr) {
