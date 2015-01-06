@@ -493,6 +493,8 @@ module RES {
                 case "png":
                 case "jpg":
                 case "gif":
+                case "jpeg":
+                case "bmp":
                     type = ResourceItem.TYPE_IMAGE;
                     break;
                 case "fnt":
