@@ -44,10 +44,21 @@ module RES {
             }
             var config:string;
             if(typeof(data)=="string"){
-                config = <string> data;
-                this.sheetMap[name] = config;
+                try{
+                    var str:string = <string> data;
+                    config = JSON.parse(str);
+                }
+                catch (e){
+                }
                 resItem.loaded = false;
-                resItem.url = this.getTexturePath(resItem.url,config);
+                if(config){
+                    resItem.url = this.getRelativePath(resItem.url,config["file"]);
+                }
+                else{
+                    config = <string> data;
+                    resItem.url = this.getTexturePath(resItem.url,config);
+                }
+                this.sheetMap[name] = config;
             }
             else{
                 var texture:egret.Texture = data;

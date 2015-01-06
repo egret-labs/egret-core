@@ -109,7 +109,7 @@ module RES {
             }
         }
 
-        private getRelativePath(url:string,file:string):string{
+        public getRelativePath(url:string,file:string):string{
             url = url.split("\\").join("/");
             var index:number = url.lastIndexOf("/");
             if(index!=-1){

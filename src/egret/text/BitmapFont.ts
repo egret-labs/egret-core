@@ -35,9 +35,18 @@ module egret {
      */
     export class BitmapFont extends SpriteSheet {
 
-        public constructor(texture:Texture, fntText:string) {
+        public constructor(texture:Texture, config:any) {
             super(texture);
-            this.charList = this.parseConfig(fntText);
+            if(typeof(config)=="string"){
+                this.charList = this.parseConfig(config);
+            }
+            else if(config&&config.hasOwnProperty("frames")){
+                this.charList = config.frames;
+            }
+            else{
+                this.charList = {};
+            }
+            console.log(JSON.stringify(this.charList));
         }
 
         private charList:any;
@@ -49,7 +58,7 @@ module egret {
                 if (!c) {
                     return null;
                 }
-                texture = this.createTexture(name, c.x, c.y, c.width, c.height, c.offsetX, c.offsetY);
+                texture = this.createTexture(name, c.x, c.y, c.w, c.h, c.offX, c.offY,c.sourceW,c.sourceH);
                 this._textureMap[name] = texture;
             }
             return texture;
@@ -68,10 +77,10 @@ module egret {
                 chars[letter] = c;
                 c["x"] = this.getConfigByKey(charText, "x");
                 c["y"] = this.getConfigByKey(charText, "y");
-                c["width"] = this.getConfigByKey(charText, "width");
-                c["height"] = this.getConfigByKey(charText, "height");
-                c["offsetX"] = this.getConfigByKey(charText, "xoffset");
-                c["offsetY"] = this.getConfigByKey(charText, "yoffset");
+                c["w"] = this.getConfigByKey(charText, "width");
+                c["h"] = this.getConfigByKey(charText, "height");
+                c["offX"] = this.getConfigByKey(charText, "xoffset");
+                c["offY"] = this.getConfigByKey(charText, "yoffset");
             }
             return chars;
         }
