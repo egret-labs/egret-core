@@ -54,9 +54,9 @@ module RES {
                 config = this.sheetMap[name];
                 delete this.sheetMap[name];
                 if(texture){
-                    var spriteSheet:egret.BitmapTextSpriteSheet =
-                        new egret.BitmapTextSpriteSheet(texture,config);
-                    this.fileDic[name] = spriteSheet;
+                    var bitmapFont:egret.BitmapFont =
+                        new egret.BitmapFont(texture,config);
+                    this.fileDic[name] = bitmapFont;
                 }
             }
         }

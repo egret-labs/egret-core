@@ -58,22 +58,34 @@ module egret {
             this._setSizeDirty();
         }
 
-        private _spriteSheet: BitmapTextSpriteSheet = null;
-        private _spriteSheetChanged: boolean = false;
+        private _font: BitmapFont = null;
+        private _fontChanged: boolean = false;
         /**
-         * BitmapTextSpriteSheet对象，缓存了所有文本的位图纹理
-         * @member {egret.BitmapTextSpriteSheet} egret.BitmapText#spriteSheet
+         * BitmapFont对象，缓存了所有文本的位图纹理
+         * @member {egret.BitmapFont} egret.BitmapText#font
          */
-        public get spriteSheet(): BitmapTextSpriteSheet { 
-            return this._spriteSheet;
+        public get font(): BitmapFont {
+            return this._font;
         }
 
-        public set spriteSheet(val: BitmapTextSpriteSheet) { 
-            if (this._spriteSheet == val)
+        public set font(value: BitmapFont) {
+            if (this._font == value)
                 return;
-            this._spriteSheet = val;
-            this._spriteSheetChanged = true;
+            this._font = value;
+            this._fontChanged = true;
             this._setSizeDirty();
+        }
+
+        /**
+         * @deprecated
+         * 此属性已经废弃，请使用BitmapText.font属性代替。
+         */
+        public get spriteSheet(): BitmapTextSpriteSheet {
+            return <BitmapTextSpriteSheet>this._font;
+        }
+
+        public set spriteSheet(value: BitmapTextSpriteSheet) {
+            this.font = value;
         }
 
         public _setSizeDirty():void {
@@ -87,7 +99,7 @@ module egret {
             if(length==0){
                 return;
             }
-            var bitmapFont:SpriteSheet = this._spriteSheet;
+            var bitmapFont:SpriteSheet = this._font;
             var yPos:number = 0;
             var maxHeight:number = this._hasHeightSet?this._explicitHeight:Number.POSITIVE_INFINITY;
             var lineHeights:Array<number> = this._lineHeights;
@@ -142,14 +154,14 @@ module egret {
             this.textLinesChange = false;
             var lineHeights:Array<number> = [];
             this._lineHeights = lineHeights;
-            if(!this._text||!this._spriteSheet){
+            if(!this._text||!this._font){
                 return textLines;
             }
             var textWidth:number = 0;
             var textHeight:number = 0;
             var hasWidthSet:boolean = this._hasWidthSet;
             var maxWidth:number = this._hasWidthSet?this._explicitWidth:Number.POSITIVE_INFINITY;
-            var bitmapFont:SpriteSheet = this._spriteSheet;
+            var bitmapFont:SpriteSheet = this._font;
             var text:string = this._text;
             var textArr:Array<string> = text.split(/(?:\r\n|\r|\n)/);
             var length:number = textArr.length;
