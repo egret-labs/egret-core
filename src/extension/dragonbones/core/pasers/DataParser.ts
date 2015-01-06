@@ -73,7 +73,9 @@ module dragonBones {
 			}
 			
 			var version:string = rawDataToParse[ConstValues.A_VERSION];
-            if(version.toString() != DragonBones.DATA_VERSION)
+            version = version.toString();
+            if( version.toString() != DragonBones.DATA_VERSION &&
+                version.toString() != DragonBones.PARENT_COORDINATE_DATA_VERSION)
             {
                 throw new Error("Nonsupport version!");
             }
