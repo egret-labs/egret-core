@@ -46,7 +46,6 @@ module egret {
             else{
                 this.charList = {};
             }
-            console.log(JSON.stringify(this.charList));
         }
 
         private charList:any;

@@ -1,6 +1,7 @@
 <componentPackage>
   <component id="ArrayCollection" super="egret.EventDispatcher" default="source" show="false" module="egret.gui"/>
   <component id="BasicLayout" super="egret.gui.LayoutBase" show="false" module="egret.gui"/>
+  <component id="BitmapLabel" super="egret.gui.UIComponent" show="true" module="egret.gui"/>
   <component id="Button" super="egret.gui.ButtonBase" show="true" module="egret.gui"/>
   <component id="ButtonBase" super="egret.gui.SkinnableComponent" default="label" state="up,down,disabled" show="false" module="egret.gui"/>
   <component id="CheckBox" super="egret.gui.ToggleButtonBase" show="true" module="egret.gui"/>

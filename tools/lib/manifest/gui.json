@@ -70,6 +70,7 @@
         "components/supportClasses/SkinnableTextBase.ts",
         "components/Spacer.ts",
         "components/Label.ts",
+        "components/BitmapLabel.ts",
         "components/Rect.ts",
         "components/Button.ts",
         "components/ToggleSwitch.ts",

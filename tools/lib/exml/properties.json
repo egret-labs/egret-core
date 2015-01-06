@@ -8,15 +8,20 @@
 		"super":"egret.DisplayObject",
 		"texture":"egret.Texture"
 	},
+	"egret.BitmapFont":
+	{
+		"super":"egret.SpriteSheet"
+	},
 	"egret.BitmapText":
 	{
+		"font":"egret.BitmapFont",
 		"spriteSheet":"egret.BitmapTextSpriteSheet",
-		"super":"egret.DisplayObjectContainer",
+		"super":"egret.DisplayObject",
 		"text":"string"
 	},
 	"egret.BitmapTextSpriteSheet":
 	{
-		"super":"egret.SpriteSheet"
+		"super":"egret.BitmapFont"
 	},
 	"egret.ByteArray":
 	{
@@ -231,6 +236,18 @@
 	{
 		"mouseWheelSpeed":"number",
 		"super":"egret.gui.LayoutBase"
+	},
+	"egret.gui.BitmapLabel":
+	{
+		"font":"any",
+		"implements":["egret.gui.IDisplayText"],
+		"padding":"number",
+		"paddingBottom":"number",
+		"paddingLeft":"number",
+		"paddingRight":"number",
+		"paddingTop":"number",
+		"super":"egret.gui.UIComponent",
+		"text":"string"
 	},
 	"egret.gui.Button":
 	{
