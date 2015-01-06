@@ -125,80 +125,6 @@ function buildPlatform(needCompileEngine, keepGeneratedTypescript) {
         );
     }
 
-    function copyFilesToNative(url, platform) {
-        var startTime = Date.now();
-
-        //1、清除文件夹
-        file.remove(url);
-
-        var projectPath = projectProperties.getProjectPath();
-
-        //2、拷贝文件
-        //launcher
-        file.copy(path.join(projectPath, "launcher/native_loader.js"), path.join(url, "launcher/native_loader.js"));
-        file.copy(path.join(projectPath, "launcher/native_require.js"), path.join(url, "launcher/native_require.js"));
-
-        //js
-        file.copy(path.join(projectPath, "bin-debug/src"), path.join(url, "bin-debug/src"));
-        file.copy(path.join(projectPath, "bin-debug/lib/egret_file_list_native.js"), path.join(url, "bin-debug/lib/egret_file_list.js"));
-
-        //libs
-        file.copy(path.join(projectPath, "libs"), path.join(url, "libs"));
-
-        //resource
-        copyFilesWithIgnore(path.join(projectPath, "resource"), path.join(url, "resource"));
-
-        //3、生成空版本控制文件
-        //编译版本控制文件 生成2个空文件
-        file.save(path.join(url, "base.manifest"), "{}");
-        file.save(path.join(url, "version.manifest"), "{}");
-
-        //4、修改native_require.js文件
-        var native_require = file.read(path.join(url, "launcher/native_require.js"));
-        native_require = native_require.replace(/var needCompile =.*/, "var needCompile = false;");
-        file.save(path.join(url, "launcher/native_require.js"), native_require);
-
-        //5、修改native入口文件
-        if (platform == "android") {
-
-        }
-        else if (platform == "ios") {
-
-        }
-
-        console.log("native拷贝共计耗时：%d秒", (Date.now() - startTime) / 1000);
-    }
-
-    function copyFilesWithIgnore(sourceRootPath, desRootPath) {
-        var copyFilePathList = file.getDirectoryAllListing(path.join(sourceRootPath));
-
-        var ignorePathList = projectProperties.getIgnorePath();
-        ignorePathList = ignorePathList.map(function(item) {
-
-            var reg = new RegExp(item);
-            return reg;
-        });
-
-        var isIgnore = false;
-        copyFilePathList.forEach(function(copyFilePath) {
-            isIgnore = false;
-
-            for (var key in ignorePathList) {//检测忽略列表
-                var ignorePath = ignorePathList[key];
-
-                if (copyFilePath.match(ignorePath)) {
-                    isIgnore = true;
-                    break;
-                }
-            }
-
-            if(!isIgnore) {//不在忽略列表的路径，拷贝过去
-                var copyFileRePath = path.relative(sourceRootPath, copyFilePath);
-                file.copy(path.join(copyFilePath), path.join(desRootPath, copyFileRePath));
-            }
-        });
-    }
-
     async.series(task, function (err) {
         if (!err) {
             globals.log("构建成功");
@@ -216,14 +142,15 @@ function help_title() {
 
 function help_example() {
     var result = "\n";
-    result += "    egret build [project_name] [-e] [--runtime html5|native] [-quick/-q]\n";
+    result += "    egret build [project_name] [-e|--module [core gui]] [-k] [--runtime native] [-noscan]\n";
     result += "描述:\n";
     result += "    " + help_title();
     result += "参数说明:\n";
     result += "    -e           编译指定项目的同时编译引擎目录\n";
+    result += "    --module     只编译引擎中指定的部分模块，不编译项目；不填则编译全部模块\n";
     result += "    -k           编译EXML文件时保留生成的TS文件\n";
-    result += "    --runtime    设置构建方式为 html5 或者是 native方式，默认值为html5";
-    result += "    -quick/-q    快速编译，跳过ts严格类型检查阶段";
+    result += "    --runtime    如果有native工程，则会将文件拷贝到工程里\n";
+    result += "    -noscan      编译游戏时，根据game_file_list获取编译列表";
     return result;
 }
 

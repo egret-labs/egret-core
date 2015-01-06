@@ -361,7 +361,7 @@ function help_title() {
 
 function help_example() {
     var result = "\n";
-    result += "    egret publish [project_name] -compile [--runtime html5|native]\n";
+    result += "    egret publish [project_name] [-compile] [--password your_passsword] [--runtime html5|native]\n";
     result += "描述:\n";
     result += "    " + help_title();
     result += "参数说明:\n";
