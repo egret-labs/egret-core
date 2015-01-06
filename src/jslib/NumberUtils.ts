@@ -30,7 +30,7 @@ module egret {
 
     export class NumberUtils {
 
-        public static isNumber(value:any):Boolean {
+        public static isNumber(value:any):boolean {
             return typeof(value) === "number" && !isNaN(value);
         }
 

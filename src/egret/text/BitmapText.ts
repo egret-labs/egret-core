@@ -31,32 +31,31 @@ module egret {
 	 * @classdesc
 	 * @class egret.BitmapText
      * 位图字体采用了Bitmap+SpriteSheet的方式来渲染文字。
-	 * @extends egret.DisplayObjectContainer
+	 * @extends egret.DisplayObject
      */
-    export class BitmapText extends DisplayObjectContainer {
+    export class BitmapText extends DisplayObject{
+
+        public constructor() {
+            super();
+        }
 
         /**
          * 设置文本
          */
         private _text:string = "";
         private _textChanged:boolean = false;
-//        private current_rendered_text:string;
-
-
+        /**
+         * 显示的文本内容
+         * @member {string} egret.BitmapText#text
+         */
+        public get text():string {
+            return this._text;
+        }
         public set text(value:string) {
             this._textChanged = true;
             this._text = value;
 
             this._setSizeDirty();
-        }
-
-		/**
-         * 显示的文本内容
-		 * @member {string} egret.BitmapText#text
-         *
-		 */
-        public get text():string {
-            return this._text;
         }
 
         private _spriteSheet: BitmapTextSpriteSheet = null;
@@ -77,65 +76,119 @@ module egret {
             this._setSizeDirty();
         }
 
-        private _bitmapPool:Array<Bitmap>;
-
-        constructor() {
-            super();
-            this._bitmapPool = [];
+        public _setSizeDirty():void {
+            super._setSizeDirty();
+            this.textLinesChange = true;
         }
 
-        public _updateTransform():void {
-            if (!this.visible) {
+        public _render(renderContext:RendererContext):void {
+            var textLines:Array<string> = this.getTextLines();
+            var length:number = textLines.length;
+            if(length==0){
                 return;
             }
-            if (this._textChanged || this._spriteSheetChanged) {
-                this._renderText();
-            }
-            super._updateTransform();
-        }
-
-        //todo:这里对bounds的处理和TextField非常类似，以后考虑重构
-        public _renderText(forMeasureContentSize:boolean = false):Rectangle {
-            var tempW:number = 0;
-            var tempH:number = 0;
-
-            if (this._textChanged || this._spriteSheetChanged) {
-                this.removeChildren();
-            }
-            for (var i = 0, l = this.text.length; i < l; i++) {
-                var character = this.text.charAt(i);
-                var texture = this.spriteSheet.getTexture(character);
-                if (texture == null) {
-                    console.log("当前没有位图文字：" + character);
-                    continue;
+            var bitmapFont:SpriteSheet = this._spriteSheet;
+            var yPos:number = 0;
+            var maxHeight:number = this._hasHeightSet?this._explicitHeight:Number.POSITIVE_INFINITY;
+            var lineHeights:Array<number> = this._lineHeights;
+            for(var i:number=0;i<length;i++){
+                var lineHeight:number = lineHeights[i];
+                if(i>0&&yPos+lineHeight>maxHeight){
+                    break;
                 }
-                var offsetX = texture._offsetX;
-                var offsetY = texture._offsetY;
-                var characterWidth = texture._textureWidth;
-                if (this._textChanged || this._spriteSheetChanged) {//todo，不支持换行
-                    var bitmap = this._bitmapPool[i];
-                    if (!bitmap) {
-                        bitmap = new Bitmap();
-                        this._bitmapPool.push(bitmap);
+                var line:string = textLines[i];
+                var len:number = line.length;
+                var xPos:number = 0;
+                for(var j:number=0;j<len;j++){
+                    var character = line.charAt(j);
+                    var texture = bitmapFont.getTexture(character);
+                    if (!texture) {
+                        egret.Logger.warning("BitmapText找不到文字所对应的纹理：\"" + character+"\"");
+                        continue;
                     }
-                    bitmap.texture = texture;
-                    this.addChild(bitmap);
-                    bitmap.x = tempW;
+                    var bitmapWidth:number = texture._bitmapWidth||texture._textureWidth;
+                    var bitmapHeight:number = texture._bitmapHeight||texture._textureHeight;
+                    this._texture_to_render = texture;
+                    RenderFilter.getInstance().drawImage(renderContext, this, texture._bitmapX, texture._bitmapY,
+                        bitmapWidth, bitmapHeight, xPos+texture._offsetX, yPos+texture._offsetY, bitmapWidth,bitmapHeight);
+                    xPos += texture._textureWidth;
                 }
-                tempW += characterWidth + offsetX;
-                if (offsetY + texture._textureHeight > tempH) {
-                    tempH = offsetY + texture._textureHeight;
-                }
+                yPos += lineHeight;
             }
-
-            this._textChanged = false;
-            this._spriteSheetChanged = false;
-            var rect:Rectangle = Rectangle.identity.initialize(0, 0, tempW, tempH);
-            return rect;
+            this._texture_to_render = null;
         }
 
-        public _measureBounds():Rectangle {
-            return this._renderText(true);
+        public _measureBounds():egret.Rectangle {
+            var lines:Array<string> = this.getTextLines();
+            if (lines.length==0) {
+                return Rectangle.identity.initialize(0, 0, 0, 0);
+            }
+            return Rectangle.identity.initialize(0, 0, this._textWidth, this._textHeight);
+        }
+
+        private _textWidth:number = 0;
+        private _textHeight:number = 0;
+
+        private textLinesChange:boolean = true;
+        private _textLines:Array<string>;
+        private _lineHeights:Array<number> = [];
+
+        private getTextLines():Array<string> {
+            if(!this.textLinesChange){
+                return this._textLines;
+            }
+            var textLines:Array<string> = [];
+            this._textLines = textLines;
+            this.textLinesChange = false;
+            var lineHeights:Array<number> = [];
+            this._lineHeights = lineHeights;
+            if(!this._text||!this._spriteSheet){
+                return textLines;
+            }
+            var textWidth:number = 0;
+            var textHeight:number = 0;
+            var hasWidthSet:boolean = this._hasWidthSet;
+            var maxWidth:number = this._hasWidthSet?this._explicitWidth:Number.POSITIVE_INFINITY;
+            var bitmapFont:SpriteSheet = this._spriteSheet;
+            var text:string = this._text;
+            var textArr:Array<string> = text.split(/(?:\r\n|\r|\n)/);
+            var length:number = textArr.length;
+            for (var i = 0; i < length; i++) {
+                var line:string = textArr[i];
+                var len = line.length;
+                var lineHeight:number = 0;
+                var xPos:number = 0;
+                for(var j=0;j<len;j++){
+                    var character = line.charAt(j);
+                    var texture = bitmapFont.getTexture(character);
+                    if (!texture) {
+                        egret.Logger.warning("BitmapText找不到文字所对应的纹理：\"" + character+"\"");
+                        continue;
+                    }
+                    var characterWidth = texture._textureWidth;
+                    if(hasWidthSet&&j>0&&xPos+characterWidth>maxWidth){
+                        textLines.push(line.substring(0,j));
+                        lineHeights.push(lineHeight);
+                        textHeight += lineHeight;
+                        textWidth = Math.max(xPos,textWidth);
+                        line = line.substring(j);
+                        len = line.length;
+                        j=0;
+                        xPos = characterWidth;
+                        lineHeight = texture._textureHeight;
+                        continue;
+                    }
+                    xPos += characterWidth;
+                    lineHeight = Math.max(texture._textureHeight,lineHeight);
+                }
+                textLines.push(line);
+                lineHeights.push(lineHeight);
+                textHeight += lineHeight;
+                textWidth = Math.max(xPos,textWidth);
+            }
+            this._textWidth = textWidth;
+            this._textHeight = textHeight;
+            return textLines;
         }
     }
 }

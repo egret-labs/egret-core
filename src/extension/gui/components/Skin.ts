@@ -70,7 +70,7 @@ module egret.gui {
          */
         public minHeight:number = 0;
 
-        public _hasWidthSet:Boolean = false;
+        public _hasWidthSet:boolean = false;
         public _width:number = NaN;
         /**
          * 组件宽度,默认值为NaN,设置为NaN将使用组件的measure()方法自动计算尺寸
@@ -86,7 +86,7 @@ module egret.gui {
             this._hasWidthSet = NumberUtils.isNumber(value);
         }
 
-        public _hasHeightSet:Boolean = false;
+        public _hasHeightSet:boolean = false;
 
         public _height:number = NaN;
         /**
