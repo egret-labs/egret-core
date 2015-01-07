@@ -938,6 +938,7 @@
       <xs:enumeration value="topLeft"/>
       <xs:enumeration value="left"/>
       <xs:enumeration value="right"/>
+      <xs:enumeration value="screenCenter"/>
     </xs:restriction>
   </xs:simpleType>
   <xs:attributeGroup name="egret.gui.PopUpAnchor">
