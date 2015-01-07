@@ -362,9 +362,11 @@ function setFrame(dbFrames, stuFrames, bone, z) {
             dbFrame["event"] = stuFrame["evt"];
         }
 
+        dbFrame["z"] = z;
 
-        dbFrame["z"] = z;//stuFrame["z"];
-        //dbFrame["tweenEasing"] = stuFrame["twE"];
+        if (stuFrame["bd_src"] == 700 && stuFrame["bd_dst"] == 1) {
+            dbFrame["blendMode"] = "add";
+        }
 
         if (stuFrame["color"]) {
             dbFrame["colorTransform"] = {};
