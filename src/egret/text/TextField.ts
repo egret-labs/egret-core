@@ -136,7 +136,7 @@ module egret {
             }
 
             this._isFlow = false;
-            if (this._text != value || this._displayAsPassword) {
+            if (this._text != value) {
                 this._setTextDirty();
                 this._text = value;
                 var text:string = "";
@@ -179,7 +179,17 @@ module egret {
         public _setDisplayAsPassword(value:boolean):void {
             if (this._displayAsPassword != value) {
                 this._displayAsPassword = value;
-                this._setText(this._text);
+                
+                this._setTextDirty();
+                var text:string = "";
+                if (this._displayAsPassword) {
+                    text = this.changeToPassText(this._text);
+                }
+                else {
+                    text = this._text;
+                }
+
+                this.setMiddleStyle([<egret.ITextElement>{text: text}]);
             }
         }
 
