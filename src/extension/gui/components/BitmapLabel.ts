@@ -362,7 +362,6 @@ module egret.gui {
             if (this._bitmapText)
                 return;
             this._bitmapText = new BitmapText();
-            this._bitmapText.cacheAsBitmap = true;
             this._bitmapText.text = this._text;
             this._textChanged = false;
             this._addToDisplayList(this._bitmapText);

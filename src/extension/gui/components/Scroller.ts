@@ -28,19 +28,19 @@
 
 module egret.gui {
 
-	/**
+    /**
 	 * @class egret.gui.Scroller
 	 * @classdesc
 	 * 滚动条组件
 	 * @extends egret.gui.UIComponent
 	 * @implements egret.gui.IVisualElementContainer
-	 */	
+        */
     export class Scroller extends SkinnableComponent implements IVisualElementContainer{
 
         /**
          * 构造函数
 		 * @method egret.gui.Scroller#constructor
-         */
+            */
         public constructor(){
             super();
             ScrollView.call(this);
@@ -81,7 +81,7 @@ module egret.gui {
             return (<any>this._content).contentHeight;
         }
 
-        /**
+	/**
 		 * [SkinPart]水平滚动条
 		 */		
         public horizontalScrollBar: HScrollBar;
@@ -119,7 +119,7 @@ module egret.gui {
                 hbar.x = hbar.left || 0;
                 hbar.y = unscaledHeight - this.horizontalScrollBar.layoutBoundsHeight;
                 hbar.visible = this._horizontalScrollPolicy == ScrollPolicy.ON || this._scroller._hCanScroll;
-            }
+                }
             if (this.verticalScrollBar && this._verticalScrollPolicy != "off") {
                 var vbar = this.verticalScrollBar;
                 vbar._setViewportMetric(unscaledHeight, this._viewport.contentHeight);
@@ -132,7 +132,7 @@ module egret.gui {
                 vbar.x = unscaledWidth - this.verticalScrollBar.layoutBoundsWidth;
                 vbar.visible = this._verticalScrollPolicy == ScrollPolicy.ON || this._scroller._vCanScroll;
             }
-        }
+                }
 
         private _verticalScrollPolicy:string = "auto";
 
@@ -150,7 +150,7 @@ module egret.gui {
                 return;
             this._verticalScrollPolicy = value;
             this._checkVbar();
-            this._scroller.verticalScrollPolicy = value;
+                this._scroller.verticalScrollPolicy = value;
         }
 
         private _horizontalScrollPolicy:string = "auto";
@@ -168,7 +168,7 @@ module egret.gui {
                 return;
             this._horizontalScrollPolicy = value;
             this._checkHbar();
-            this._scroller.horizontalScrollPolicy = value;
+                this._scroller.horizontalScrollPolicy = value;
         }
 
         private _viewport:IViewport;
@@ -202,8 +202,8 @@ module egret.gui {
                 this.setContent(<DisplayObject><any>viewport);
                 this._addToDisplayListAt(<DisplayObject><any>viewport, 0);
                 viewport.addEventListener(egret.gui.PropertyChangeEvent.PROPERTY_CHANGE, this._viewportChangedHandler, this);
-                if("_addToStyleProtoChain" in viewport){
-                    viewport["_addToStyleProtoChain"](this._styleProtoChain);
+                if("regenerateStyleCache" in viewport){
+                    viewport["regenerateStyleCache"](this._styleProtoChain);
                 }
             }
         }
@@ -331,7 +331,7 @@ module egret.gui {
             }
             else {
                 if (this._animatTargetIsShow == show)
-                    return;
+                return;
                 this._autoHideShowAnimat.isPlaying && this._autoHideShowAnimat.stop();
             }
             this._animatTargetIsShow = show;
@@ -602,8 +602,8 @@ module egret.gui {
         public _createOwnStyleProtoChain(chain:any):any{
             chain = super._createOwnStyleProtoChain(chain);
             var viewport:IViewport = this._viewport;
-            if(viewport&&"_addToStyleProtoChain" in viewport){
-                viewport["_addToStyleProtoChain"](chain);
+            if(viewport&&"regenerateStyleCache" in viewport){
+                viewport["regenerateStyleCache"](chain);
             }
             return chain;
         }
@@ -629,14 +629,14 @@ module egret.gui {
                 viewport["notifyStyleChangeInChildren"](styleProp);
             }
         }
-    }
+            }
     for (var p in egret.ScrollView.prototype)
         if (egret.ScrollView.prototype.hasOwnProperty(p) && !Scroller.prototype.hasOwnProperty(p)) {
             var desc = Object.getOwnPropertyDescriptor(egret.ScrollView.prototype, p);
             if (desc && (desc.get || desc.set)) {
                 Object.defineProperty(Scroller.prototype, p, desc);
-            }
+        }
             else
                 Scroller.prototype[p] = egret.ScrollView.prototype[p];
-        }
+    }
 }
