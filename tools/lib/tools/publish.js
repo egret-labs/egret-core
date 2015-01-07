@@ -278,11 +278,11 @@ function publishHtml5(opts) {
             globals.debugLog("未压缩js文件，拷贝js文件");
             file_list.map(function (item) {
                 var re = path.relative(projectPath, item);
-                file.copy(item, path.join(ziptempPath, re));
+                file.copy(item, path.join(releaseOutputPath, re));
             });
 
-            file.copy(path.join(projectPath, "bin-debug", "lib", "file_list_native.js"), path.join(ziptempPath, "bin-debug", "lib", "egret_file_list.js"));
-            file.copy(path.join(projectPath, "bin-debug", "src", "game_file_list.js"), path.join(ziptempPath, "bin-debug", "src", "game_file_list.js"));
+            file.copy(path.join(projectPath, "bin-debug", "lib", "egret_file_list.js"), path.join(releaseOutputPath, "bin-debug", "lib", "egret_file_list.js"));
+            file.copy(path.join(projectPath, "bin-debug", "src", "game_file_list.js"), path.join(releaseOutputPath, "bin-debug", "src", "game_file_list.js"));
 
             globals.debugLog("拷贝js文件耗时：%d秒", (Date.now() - tempTime) / 1000);
             tempCallback();
@@ -310,7 +310,7 @@ function publishHtml5(opts) {
             file.copy(path.join(projectPath, "launcher"), path.join(releaseOutputPath, "launcher"));
 
             if (noVerion) {
-                file.save(path.join(ziptempPath, "version.manifest"), "{}");
+                file.save(path.join(releaseOutputPath, "version.manifest"), "{}");
             }
             else {
                 file.copy(path.join(releasePath, "html5Base", "version.manifest"), path.join(releaseOutputPath, "version.manifest"));
@@ -337,7 +337,7 @@ function publishHtml5(opts) {
                 file.save(path.join(releaseOutputPath, "base.manifest"), "{}");
             }
             else {
-                file.copy(path.join(releasePath, "nativeBase", "base.manifest"), path.join(releaseOutputPath, "base.manifest"));
+                file.copy(path.join(releasePath, "html5Base", "base.manifest"), path.join(releaseOutputPath, "base.manifest"));
             }
 
 

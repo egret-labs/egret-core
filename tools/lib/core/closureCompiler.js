@@ -143,7 +143,7 @@ ClosureCompiler.prototype.compile = function (files, callback) {
     delete options["js"];
 
     var compilerPath = path.join(param.getEgretPath(), "tools/lib/google-closure/compiler.jar");
-    var args = '-client -jar "' + compilerPath + '" ' + ' --language_in ECMASCRIPT5 ';
+    var args = '-client -jar ' + globals.addQuotes(compilerPath) + ' ' + ' --language_in ECMASCRIPT5 ';
 
     // Source files
     if (!(files instanceof Array)) {
@@ -156,7 +156,7 @@ ClosureCompiler.prototype.compile = function (files, callback) {
         if (!file.isFile(files[i])) {
             throw(new Error("Source file not found: " + files[i]));
         }
-        args += ' --js "' + files[i] + '"';
+        args += ' --js ' + globals.addQuotes(files[i]) + '';
     }
 
     // Externs files
@@ -256,7 +256,7 @@ ClosureCompiler.prototype.compile = function (files, callback) {
 function compilerSingleFile(tempFile, fileList, outputFile, callback) {
     combineToSingleJavaScriptFile(fileList, tempFile);
     ClosureCompiler.compile([tempFile],
-        {js_output_file: outputFile, "warning_level": "QUIET"},
+        {js_output_file: globals.addQuotes(outputFile), "warning_level": "QUIET"},
         function afterCompile(err, stdout, stderr) {
             if (!err) {
                 file.remove(tempFile);

@@ -18,18 +18,19 @@ function run(dir, args, opts) {
 
     var platform = "";
 
-    if (file.exists(path.join(dir, template_path, "proj.android"))) {//android
+    if (file.exists(path.join(template_path, "proj.android"))) {//android
         platform = "android";
     }
-    else if (file.exists(path.join(dir, template_path, "proj.ios"))) {//ios
+    else if (file.exists(path.join(template_path, "proj.ios"))) {//ios
         platform = "ios";
     }
     else {
         globals.exit(1601);
     }
 
-    var projectPath = path.join(dir, arg_h5_path);
-    var nativePath = path.join(dir, arg_app_name);
+    var projectPath = path.join(arg_h5_path);
+    var nativePath = path.join(arg_app_name);
+
 
     file.remove(nativePath);
 
