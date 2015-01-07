@@ -81,6 +81,11 @@ module egret {
             }
         }
 
+        private _noBorderMode:number;
+        public set noBorderMode(value:number) {
+            this._noBorderMode = value;
+        }
+
         /**
          * 当屏幕尺寸改变时调用
          */
@@ -101,7 +106,12 @@ module egret {
             var  scaleModeEnum = {};
             scaleModeEnum[StageScaleMode.NO_SCALE] = new NoScale();
             scaleModeEnum[StageScaleMode.SHOW_ALL] = new ShowAll();
-            scaleModeEnum[StageScaleMode.NO_BORDER] = new FixedWidth();
+            if (this._noBorderMode == egret.NoBorderMode.FIXED_HEIGHT) {
+                scaleModeEnum[StageScaleMode.NO_BORDER] = new FixedHeight();
+            }
+            else {
+                scaleModeEnum[StageScaleMode.NO_BORDER] = new FixedWidth();
+            }
             scaleModeEnum[StageScaleMode.EXACT_FIT] = new FullScreen();
             var content = scaleModeEnum[this._scaleMode];
             if (!content){
