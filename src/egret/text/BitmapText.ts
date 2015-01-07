@@ -37,6 +37,7 @@ module egret {
 
         public constructor() {
             super();
+            this.cacheAsBitmap = true;
         }
 
         /**
