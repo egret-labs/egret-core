@@ -45,8 +45,8 @@ function publishNative(opts) {
     var ziptempPath = path.join(releasePath, "ziptemp");
     file.remove(ziptempPath);
 
-    var releaseNativeOutputPath = path.join(releasePath, "android", time + "");
-    file.createDirectory(releaseNativeOutputPath);
+    var releaseOutputPath = path.join(releasePath, "android", time + "");
+    file.createDirectory(releaseOutputPath);
 
     var task = [];
 
@@ -129,7 +129,7 @@ function publishNative(opts) {
         task.push(function (tempCallback) {
             var tempTime = Date.now();
             globals.debugLog("未打zip包，拷贝文件到release");
-            file.copy(ziptempPath, releaseNativeOutputPath);
+            file.copy(ziptempPath, releaseOutputPath);
             file.remove(ziptempPath);
             globals.debugLog("拷贝文件到release耗时：%d秒", (Date.now() - tempTime) / 1000);
             tempCallback();
@@ -140,7 +140,7 @@ function publishNative(opts) {
             var tempTime = Date.now();
             globals.debugLog("开始打zip包");
             var password = getPassword(opts);
-            var zipFile = path.join(releaseNativeOutputPath, "game_code_" + time + ".zip");
+            var zipFile = path.join(releaseOutputPath, "game_code_" + time + ".zip");
             zip.createZipFile(ziptempPath, zipFile, function () {
                 file.remove(ziptempPath);
 
@@ -151,17 +151,18 @@ function publishNative(opts) {
     }
 
     //拷贝其他资源文件
-    if (true) {//拷贝其他需要打到zip包里的文件
+    if (true) {//拷贝其他文件到发布目录
         task.push(function (tempCallback) {
-            copyFilesWithIgnore(path.join(projectPath, "resource"), path.join(releaseNativeOutputPath, "resource"));
+            copyFilesWithIgnore(path.join(projectPath, "resource"), path.join(releaseOutputPath, "resource"));
 
             if (noVerion) {
-                file.save(path.join(releaseNativeOutputPath, "base.manifest"), "{}");
+                file.save(path.join(releaseOutputPath, "base.manifest"), "{}");
             }
             else {
-                file.copy(path.join(releasePath, "nativeBase", "base.manifest"), path.join(releaseNativeOutputPath, "base.manifest"));
+                file.copy(path.join(releasePath, "nativeBase", "base.manifest"), path.join(releaseOutputPath, "base.manifest"));
             }
 
+            compressJson(releaseOutputPath);
             tempCallback();
         });
     }
@@ -177,7 +178,7 @@ function publishNative(opts) {
                 if (file.exists(url)) {//是egret的android项目
                     //1、清除文件夹
                     file.remove(url);
-                    file.copy(releaseNativeOutputPath, path.join(url, "egret-game"));
+                    file.copy(releaseOutputPath, path.join(url, "egret-game"));
                 }
             }
 
@@ -189,7 +190,7 @@ function publishNative(opts) {
                     && file.exists(url2)) {//是egret的ios项目
                     //1、清除文件夹
                     file.remove(url2);
-                    file.copy(releaseNativeOutputPath, path.join(url2, "egret-game"));
+                    file.copy(releaseOutputPath, path.join(url2, "egret-game"));
                 }
             }
 
@@ -339,6 +340,9 @@ function publishHtml5(opts) {
                 file.copy(path.join(releasePath, "nativeBase", "base.manifest"), path.join(releaseOutputPath, "base.manifest"));
             }
 
+
+            compressJson(releaseOutputPath);
+
             tempCallback();
         });
     }
@@ -388,11 +392,11 @@ function getPassword(opts) {
 }
 
 
-function compressJson(currDir, opts) {
+function compressJson(releasePath) {
     //扫描json数据
-    if (opts["-compressjson"]) {
-        var compress = require(path.join("..", "tools", "compress_json.js"));
-        compress.run(path.join(currDir, "release"), []);
+    if (param.getArgv()["opts"]["-compressjson"]) {
+        var compress = require("../tools/compress_json.js");
+        compress.run(releasePath, []);
     }
 }
 
