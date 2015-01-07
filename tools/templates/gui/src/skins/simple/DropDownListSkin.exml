@@ -13,7 +13,7 @@
                    popUpPosition="screenCenter"
                    displayPopUp.open="true" displayPopUp="false">
         <e:Group id="dropDown" visible="true" height="400">
-            <e:Scroller id="scroller" width="100%" height="100%">
+            <e:Scroller id="scroller" width="100%" height="100%" horizontalScrollPolicy="off">
                     <e:DataGroup id="dataGroup" width="100%" height="100%" itemRendererSkinName="skins.simple.DropDownListItemRendererSkin">
                         <e:layout>
                             <e:VerticalLayout gap="0" horizontalAlign="justify" />

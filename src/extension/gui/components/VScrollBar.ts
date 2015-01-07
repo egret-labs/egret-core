@@ -32,76 +32,42 @@ module egret.gui {
             super();
             
         }
-
+        private _thumbLengthRatio = 1;
         public _setViewportMetric(height: number, contentHeight: number) {
-            this._setMaximun(contentHeight - height);
+            var max = Math.max(0, contentHeight - height);
+            this._thumbLengthRatio = contentHeight <= height ? 1 : height / contentHeight;
+            this._setMaximun(max);
             this._setMinimun(0);
-            this._setValue(contentHeight - height);
-            this._setVisible(height < contentHeight);
-
-            var thumbLength = height * height / contentHeight;
-            this.thumb._setHeight(thumbLength);
         }
 
-        private _autoHideTimer = NaN;
-        private _autoHideDelay = 3000;
-        public trackAlpha = 0.4;
-        public thumbAlpha = 0.8;
+        public set trackAlpha(value: number) {
+            Logger.warning("VScrollBar.trackAlpha已经废弃")
+        }
+        public get trackAlpha(): number {
+            return 1;
+        }
+
+        public set thumbAlpha(value: number) {
+            Logger.warning("VScrollBar.thumbAlpha已经废弃")
+        }
+        public get thumbAlpha(): number {
+            return 1;
+        }
 
         public setPosition(value: number) {
-            this._setValue(this._maximum - value);
+            this._setValue(value);
         }
         public getPosition() {
-            return this._maximum - this._getValue();
+            return this._getValue();
         }
 
         public _setValue(value: number) {
             value = Math.max(0, value);
             super._setValue(value);
-            //被赋值时自动显示
-            this.hideOrShow(true);
-            this.autoHide();
         }
 
         public setValue(value: number) {
             super.setValue(value);
-            //被赋值时自动显示
-            this.hideOrShow(true);
-            this.autoHide();
-        }
-
-        private autoHide() {
-            if (this._autoHideDelay != NaN) {
-                egret.clearTimeout(this._autoHideDelay);
-            }
-            this._autoHideTimer = egret.setTimeout(this.hideOrShow.bind(this, false), this, this._autoHideDelay);
-        }
-
-        private _autoHideShowAnimat: Animation = null;
-        private _animatTargetIsShow: boolean = false;
-
-        private hideOrShow(show: boolean) {
-            if (this._autoHideShowAnimat == null) {
-                this._autoHideShowAnimat = new Animation(b=> {
-                    var a = b.currentValue["alpha"]
-                    this.thumb.alpha = this.thumbAlpha * a;
-                    this.track.alpha = this.trackAlpha * a;
-                }, this);
-            }
-            else {
-                if (this._animatTargetIsShow == show)
-                    return;
-                this._autoHideShowAnimat.isPlaying && this._autoHideShowAnimat.stop();
-            }
-            this._animatTargetIsShow = show;
-            var animat = this._autoHideShowAnimat;
-            animat.motionPaths = [{
-                prop: "alpha",
-                from: this.thumb.alpha / this.thumbAlpha,
-                to: show ? 1 : 0
-            }];
-            animat.duration = show ? 100 : 500;
-            animat.play();
         }
 
         public _animationUpdateHandler(animation: Animation): void {
@@ -110,29 +76,34 @@ module egret.gui {
             this.dispatchEventWith(Event.CHANGE);
         }
         /**
-         * @method egret.gui.SkinnableComponent#createChildren
+         * @param x {number}
+         * @param y {number} 
+         * @returns {number}
          */
-        //public createChildren(): void {
-        //    super.createChildren();
-        //    if (this.thumb == null) {
-        //        var skin = new egret.gui.Skin();
+        public pointToValue(x: number, y: number): number {
+            if (!this.thumb || !this.track)
+                return 0;
 
-        //        var rect = new egret.gui.Rect();
-        //        rect.fillColor = 0x666666;
-        //        rect.width = 10;
-        //        rect.percentHeight = 100;
+            var range: number = this.maximum - this.minimum;
+            var thumbRange: number = this.track.layoutBoundsHeight - this.thumb.layoutBoundsHeight;
+            return this.minimum + ((thumbRange != 0) ? ( y / thumbRange) * range : 0);
+        }
+        public updateSkinDisplayList(): void {
+            if (!this.thumb || !this.track)
+                return;
 
-        //        var rectb = new egret.gui.Rect();
-        //        rectb.fillColor = 0x333333;
-        //        rectb.width = 10;
-
-        //        skin["track"] = rect;
-        //        skin["thumb"] = rectb;
-
-        //        skin.elementsContent = [rect, rectb];
-        //        skin["skinParts"] = ["track", "thumb"];
-        //        this._setSkin(skin);
-        //    }
-        //}
+            var thumbHeight = this.track.layoutBoundsHeight * this._thumbLengthRatio;
+            var oldThumbHeight: number = this.thumb.layoutBoundsHeight;
+            var thumbRange: number = this.track.layoutBoundsHeight - thumbHeight;
+            var range: number = this.maximum - this.minimum;
+            var thumbPosTrackY: number = (range > 0) ? ((this.pendingValue - this.minimum) / range) * thumbRange : 0;
+            var thumbPos: Point = this.track.localToGlobal(0, thumbPosTrackY);
+            var thumbPosX: number = thumbPos.x;
+            var thumbPosY: number = thumbPos.y;
+            var thumbPosParentY: number = this.thumb.parent.globalToLocal(thumbPosX, thumbPosY, Point.identity).y;
+            this.thumb.setLayoutBoundsPosition(this.thumb.layoutBoundsX, Math.round(thumbPosParentY));
+            if (thumbHeight != oldThumbHeight)
+                this.thumb.setLayoutBoundsSize(this.thumb.layoutBoundsWidth, thumbHeight);
+        }
     }
 }

@@ -28,77 +28,70 @@
 
 module egret.gui {
     export class HScrollBar extends HSlider {
-        public constructor() {
-            super();
-            
-        }
 
+        private _thumbLengthRatio = 1;
         public _setViewportMetric(width:number, contentWidth:number) {
-            this._setMaximun(contentWidth - width);
+            var max = Math.max(0, contentWidth - width);
+            this._setMaximun(max);
             this._setMinimun(0);
-            this._setVisible(width < contentWidth);
-
-            var thumbLength = width * width / contentWidth;
-            this.thumb._setWidth(thumbLength);
+            this._thumbLengthRatio = (contentWidth > width) ? width / contentWidth : 1;
         }
 
-        private _autoHideTimer = NaN;
-        private _autoHideDelay = 3000;
-        public trackAlpha = 0.4;
-        public thumbAlpha = 0.8;
+        public set trackAlpha(value:number){
+            Logger.warning("HScrollBar.trackAlpha已经废弃")
+        }
+        public get trackAlpha():number {
+            return 1;
+        }
+
+        public set thumbAlpha(value: number) {
+            Logger.warning("HScrollBar.thumbAlpha已经废弃")
+        }
+        public get thumbAlpha():number {
+            return 1;
+        }
+
+
+        public setPosition(value: number) {
+            this._setValue(value);
+        }
+        public getPosition() {
+            return this._getValue();
+        }
+
         public _setValue(value: number) {
             value = Math.max(0, value);
             super._setValue(value);
-            //被赋值时自动显示
-            this.hideOrShow(true);
-            this.autoHide();
         }
 
         public setValue(value: number) {
             super.setValue(value);
-            //被赋值时自动显示
-            this.hideOrShow(true);
-            this.autoHide();
         }
 
-        private autoHide() {
-            if (this._autoHideDelay != NaN) {
-                egret.clearTimeout(this._autoHideDelay);
-            }
-            this._autoHideTimer = egret.setTimeout(this.hideOrShow.bind(this,false), this, this._autoHideDelay);
-        }
-
-        private _autoHideShowAnimat: Animation = null;
-        private _animatTargetIsShow: boolean = false;
-
-        private hideOrShow(show:boolean) {
-            if (this._autoHideShowAnimat == null) {
-                this._autoHideShowAnimat = new Animation(b=> {
-                    var a = b.currentValue["alpha"]
-                    this.thumb.alpha = this.thumbAlpha * a;
-                    this.track.alpha = this.trackAlpha * a;
-                }, this);
-            }
-            else {
-                if (this._animatTargetIsShow == show)
-                    return;
-                this._autoHideShowAnimat.isPlaying && this._autoHideShowAnimat.stop();
-            }
-            this._animatTargetIsShow = show;
-            var animat = this._autoHideShowAnimat;
-            animat.motionPaths = [{
-                prop: "alpha",
-                from: this.thumb.alpha/this.thumbAlpha,
-                to: show ? 1 : 0
-            }];
-            animat.duration = show ? 100 : 500;
-            animat.play();
-        }
+        
 
         public _animationUpdateHandler(animation: Animation): void {
             this.pendingValue = animation.currentValue["value"];
             this.value = animation.currentValue["value"];
             this.dispatchEventWith(Event.CHANGE);
+        }
+
+        public updateSkinDisplayList(): void {
+            if (!this.thumb || !this.track)
+                return;
+
+            var thumbWidth = this.track.layoutBoundsWidth * this._thumbLengthRatio;
+            var oldThumbWidth: number = this.thumb.layoutBoundsWidth;
+            var thumbRange: number = this.track.layoutBoundsWidth - this.thumb.layoutBoundsWidth;
+            var range: number = this.maximum - this.minimum;
+            var thumbPosTrackX: number = (range > 0) ? ((this.pendingValue - this.minimum) / range) * thumbRange : 0;
+            var thumbPos: Point = this.track.localToGlobal(thumbPosTrackX, 0);
+            var thumbPosX: number = thumbPos.x;
+            var thumbPosY: number = thumbPos.y;
+            var thumbPosParentX: number = this.thumb.parent.globalToLocal(thumbPosX, thumbPosY, Point.identity).x;
+            this.thumb.setLayoutBoundsPosition(Math.round(thumbPosParentX), this.thumb.layoutBoundsY);
+            if (thumbWidth != oldThumbWidth)
+                this.thumb.setLayoutBoundsSize(thumbWidth, this.thumb.layoutBoundsHeight);
         }
     }
 }
