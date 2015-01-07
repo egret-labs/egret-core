@@ -249,8 +249,8 @@ module egret.gui {
                 viewport.clipAndEnableScrolling = true;
                 this._scroller.setContent(<DisplayObject><any>viewport);
                 viewport.addEventListener(egret.gui.PropertyChangeEvent.PROPERTY_CHANGE, this._viewportChangedHandler, this);
-                if("_addToStyleProtoChain" in viewport){
-                    viewport["_addToStyleProtoChain"](this._styleProtoChain);
+                if("regenerateStyleCache" in viewport){
+                    viewport["regenerateStyleCache"](this._styleProtoChain);
                 }
             }
         }
@@ -577,8 +577,8 @@ module egret.gui {
         public _createOwnStyleProtoChain(chain:any):any{
             chain = super._createOwnStyleProtoChain(chain);
             var viewport:IViewport = this._viewport;
-            if(viewport&&"_addToStyleProtoChain" in viewport){
-                viewport["_addToStyleProtoChain"](chain);
+            if(viewport&&"regenerateStyleCache" in viewport){
+                viewport["regenerateStyleCache"](chain);
             }
             return chain;
         }
