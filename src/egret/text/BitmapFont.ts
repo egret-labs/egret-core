@@ -63,6 +63,36 @@ module egret {
             return texture;
         }
 
+        private firstCharHeight:number = 0;
+
+        public _getFirstCharHeight():number{
+            if(this.firstCharHeight!=0){
+                return this.firstCharHeight;
+            }
+            for(var str in this.charList){
+                var c:any = this.charList[str];
+                if(c){
+                    var sourceH:number = c.sourceH;
+                    if(sourceH===undefined){
+                        var h:number = c.h;
+                        if(h===undefined){
+                            h = 0;
+                        }
+                        var offY:number = c.offY;
+                        if(offY===undefined){
+                            offY = 0;
+                        }
+                        sourceH = h+offY;
+                    }
+                    if(sourceH<=0){
+                        continue;
+                    }
+                    this.firstCharHeight = sourceH;
+                    break;
+                }
+            }
+        }
+
         private parseConfig(fntText:string):any {
             fntText = fntText.split("\r\n").join("\n");
             var lines:Array<string> = fntText.split("\n");

@@ -53,7 +53,6 @@ module egret {
             var cacheCanvas:HTMLCanvasElement = this._bitmapData;
             var bounds = displayObject.getBounds(Rectangle.identity);
             if(bounds.width == 0 || bounds.height == 0) {
-                egret.Logger.warning("egret.RenderTexture#drawToTexture:显示对象测量结果宽高为0，请检查");
                 return false;
             }
             bounds.width = Math.floor(bounds.width);

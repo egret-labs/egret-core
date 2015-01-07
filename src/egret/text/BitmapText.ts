@@ -99,7 +99,9 @@ module egret {
             if(length==0){
                 return;
             }
-            var bitmapFont:SpriteSheet = this._font;
+            var bitmapFont:BitmapFont = this._font;
+            var emptyHeight:number = bitmapFont._getFirstCharHeight();
+            var emptyWidth:number = Math.ceil(emptyHeight*0.7);
             var yPos:number = 0;
             var maxHeight:number = this._hasHeightSet?this._explicitHeight:Number.POSITIVE_INFINITY;
             var lineHeights:Array<number> = this._lineHeights;
@@ -115,7 +117,12 @@ module egret {
                     var character = line.charAt(j);
                     var texture = bitmapFont.getTexture(character);
                     if (!texture) {
-                        egret.Logger.warning("BitmapText找不到文字所对应的纹理：\"" + character+"\"");
+                        if(character==" "){
+                            xPos += emptyWidth;
+                        }
+                        else{
+                            egret.Logger.warning("BitmapText找不到文字所对应的纹理：\"" + character+"\"");
+                        }
                         continue;
                     }
                     var bitmapWidth:number = texture._bitmapWidth||texture._textureWidth;
@@ -161,7 +168,9 @@ module egret {
             var textHeight:number = 0;
             var hasWidthSet:boolean = this._hasWidthSet;
             var maxWidth:number = this._hasWidthSet?this._explicitWidth:Number.POSITIVE_INFINITY;
-            var bitmapFont:SpriteSheet = this._font;
+            var bitmapFont:BitmapFont = this._font;
+            var emptyHeight:number = bitmapFont._getFirstCharHeight();
+            var emptyWidth:number = Math.ceil(emptyHeight*0.7);
             var text:string = this._text;
             var textArr:Array<string> = text.split(/(?:\r\n|\r|\n)/);
             var length:number = textArr.length;
@@ -172,13 +181,25 @@ module egret {
                 var xPos:number = 0;
                 for(var j=0;j<len;j++){
                     var character = line.charAt(j);
+                    var texureWidth:number;
+                    var textureHeight:number;
                     var texture = bitmapFont.getTexture(character);
                     if (!texture) {
-                        egret.Logger.warning("BitmapText找不到文字所对应的纹理：\"" + character+"\"");
-                        continue;
+                        if(character==" "){
+                            texureWidth = emptyWidth;
+                            textureHeight = emptyHeight;
+                        }
+                        else{
+                            egret.Logger.warning("BitmapText找不到文字所对应的纹理：\"" + character+"\"");
+                            continue;
+                        }
                     }
-                    var characterWidth = texture._textureWidth;
-                    if(hasWidthSet&&j>0&&xPos+characterWidth>maxWidth){
+                    else{
+                        texureWidth = texture._textureWidth;
+                        textureHeight = texture._textureHeight;
+                    }
+
+                    if(hasWidthSet&&j>0&&xPos+texureWidth>maxWidth){
                         textLines.push(line.substring(0,j));
                         lineHeights.push(lineHeight);
                         textHeight += lineHeight;
@@ -186,12 +207,12 @@ module egret {
                         line = line.substring(j);
                         len = line.length;
                         j=0;
-                        xPos = characterWidth;
-                        lineHeight = texture._textureHeight;
+                        xPos = texureWidth;
+                        lineHeight = textureHeight;
                         continue;
                     }
-                    xPos += characterWidth;
-                    lineHeight = Math.max(texture._textureHeight,lineHeight);
+                    xPos += texureWidth;
+                    lineHeight = Math.max(textureHeight,lineHeight);
                 }
                 textLines.push(line);
                 lineHeights.push(lineHeight);
