@@ -34,7 +34,7 @@ var clone = function (obj) {
 
             }
             else if (typeof(obj[key] == "number")) {
-                obj[key] = Number(obj[key].toFixed(3));
+                obj[key] = Number(obj[key].toFixed(4));
             }
         }
     }

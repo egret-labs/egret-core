@@ -409,7 +409,8 @@ var defaultProperty = {
     "aM": 100,
     "rM": 100,
     "gM": 100,
-    "bM": 100
+    "bM": 100,
+    "textureScale":1
 }
 
 function removeDefault(obj, parent, parentKey) {
@@ -513,6 +514,50 @@ Matrix.prototype.append = function (a, b, c, d, tx, ty) {
     return this;
 };
 
+function linkChildren(fileUrl) {
+    if (fileUrl.indexOf("Backup") >= 0) {
+        return;
+    }
+    if (file.isDirectory(fileUrl)) {
+        var fileList = file.getDirectoryListing(fileUrl, true);
+
+        for (var key in fileList) {
+            var fileName = fileList[key];
+
+            var tempFileUrl = path.join(fileUrl, fileName);
+            linkChildren(tempFileUrl);
+        }
+        return;
+    }
+
+    try {
+        var stuStr = file.read(fileUrl);
+        var stuData = JSON.parse(stuStr);
+
+        if (stuData["armature_data"] == null || stuData["animation_data"] == null) {
+            return;
+        }
+    }
+    catch (e) {
+
+        return;
+    }
+
+    var relativeUrl = fileUrl.replace(currentDir, "");
+
+    var filePathArr = relativeUrl.split("/");
+    filePathArr.splice(filePathArr.length - 2, 1);
+    filePathArr[filePathArr.length - 1] = filePathArr[filePathArr.length - 3] + "_" + filePathArr[filePathArr.length - 2];
+
+    var dbData = parseData(stuData, filePathArr[filePathArr.length - 1]);
+
+    var skeUrl = path.join(currentDir, "..", "animations", filePathArr.join("/") + "_ske.json");
+    file.save(skeUrl, JSON.stringify(dbData, null, 0));
+
+    console.log(fileUrl + "生成完毕");
+
+}
+
 
 function parseData(stuData, ccaName) {
     bones = {};
@@ -520,6 +565,7 @@ function parseData(stuData, ccaName) {
     layersInfo = {};
 
     var dbData = {"isGlobal": 0, "armature": [], "version": 2.3, "name": ccaName, "frameRate": 60};
+    dbData["textureScale"] = stuData["content_scale"] != null ? stuData["content_scale"] : 1;
 
     for (var i = 0; i < stuData["animation_data"].length; i++) {
         var stuAnimation = stuData["animation_data"][i];
