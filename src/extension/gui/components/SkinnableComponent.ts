@@ -75,19 +75,19 @@ module egret.gui {
                 return;
             this._skinName = value;
             this._skinNameExplicitlySet = true;
-            if(this.createChildrenCalled){
+            if(this._createChildrenCalled){
                 this.parseSkinName();
             }
         }
 
-        private createChildrenCalled:boolean = false;
+        public _createChildrenCalled:boolean = false;
         /**
          * @method egret.gui.SkinnableComponent#createChildren
          */
         public createChildren():void{
             super.createChildren();
             this.parseSkinName();
-            this.createChildrenCalled = true;
+            this._createChildrenCalled = true;
         }
 
         /**
