@@ -504,7 +504,7 @@ module egret {
             return this._getSize(Rectangle.identity).height;
         }
 
-        public _hasWidthSet:Boolean = false;
+        public _hasWidthSet:boolean = false;
 
         /**
          * 显式设置宽度
@@ -524,7 +524,7 @@ module egret {
             this._hasWidthSet = NumberUtils.isNumber(value);
         }
 
-        public _hasHeightSet:Boolean = false;
+        public _hasHeightSet:boolean = false;
 
         /**
          * 显式设置高度
@@ -613,9 +613,8 @@ module egret {
             display._updateTransform();
             renderContext.setAlpha(display.worldAlpha, display.blendMode);
             renderContext.setTransform(display._worldTransform);
-            var scale_factor = egret.MainContext.instance.rendererContext.texture_scale_factor;
             var renderFilter = egret.RenderFilter.getInstance();
-            renderFilter.drawImage(renderContext, display, 0, 0, width * scale_factor, height * scale_factor, offsetX, offsetY, width, height);
+            renderFilter.drawImage(renderContext, display, 0, 0, width, height, offsetX, offsetY, width, height);
             return true;
 
         }

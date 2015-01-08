@@ -425,6 +425,45 @@ module egret.gui {
 		}
 
 		/**
+		 * GUI范围内的组件不支持锚点属性。强行设置有可能会导致自动布局错误。
+		 * @deprecated
+		 * @member {number} egret.gui.UIComponent#anchorOffsetX
+		 * @default 0
+		 */
+		public get anchorOffsetX():number {
+			return this._anchorOffsetX;
+		}
+
+		/**
+		 * GUI范围内的组件不支持锚点属性。强行设置有可能会导致自动布局错误。
+		 * @deprecated
+		 * @member {number} egret.gui.UIComponent#anchorOffsetY
+		 * @default 0
+		 */
+		public get anchorOffsetY():number {
+			return this._anchorOffsetY;
+		}
+		/**
+		 * GUI范围内的组件不支持锚点属性。强行设置有可能会导致自动布局错误。
+		 * @deprecated
+		 * @member {number} egret.gui.UIComponent#anchorX
+		 * @default 0
+		 */
+		public get anchorX():number {
+			return this._anchorX;
+		}
+
+		/**
+		 * GUI范围内的组件不支持锚点属性。强行设置有可能会导致自动布局错误。
+		 * @deprecated
+		 * @member {number} egret.gui.UIComponent#anchorY
+		 * @default 0
+		 */
+		public get anchorY():number {
+			return this._anchorY;
+		}
+
+		/**
 		 * GUI范围内，请不要调用任何addChild方法，若是容器，请用addElement,若需要包装普通显示对象，请把显示对象赋值给UIAsset.source。
 		 * @deprecated
 		 * @method egret.gui.UIComponent#addChild

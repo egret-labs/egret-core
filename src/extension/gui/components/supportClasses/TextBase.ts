@@ -179,7 +179,7 @@ module egret.gui {
 		private italicChanged:boolean;
 		private _italic:boolean = false;
 		/**
-		 * 是否显示为粗体，默认false。
+		 * 是否显示为斜体，默认false。
 		 * @member egret.gui.TextBase#italic
 		 */
 		public get italic():boolean{

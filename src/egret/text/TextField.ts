@@ -136,7 +136,7 @@ module egret {
             }
 
             this._isFlow = false;
-            if (this._text != value || this._displayAsPassword) {
+            if (this._text != value) {
                 this._setTextDirty();
                 this._text = value;
                 var text:string = "";
@@ -179,7 +179,17 @@ module egret {
         public _setDisplayAsPassword(value:boolean):void {
             if (this._displayAsPassword != value) {
                 this._displayAsPassword = value;
-                this._setText(this._text);
+                
+                this._setTextDirty();
+                var text:string = "";
+                if (this._displayAsPassword) {
+                    text = this.changeToPassText(this._text);
+                }
+                else {
+                    text = this._text;
+                }
+
+                this.setMiddleStyle([<egret.ITextElement>{text: text}]);
             }
         }
 
@@ -555,7 +565,11 @@ module egret {
          * 测量显示对象坐标与大小
          */
         public _measureBounds():egret.Rectangle {
-            return this.measureText();
+            var lines:Array<egret.ILineElement> = this._getLinesArr();
+            if (!lines) {
+                return Rectangle.identity.initialize(0, 0, 0, 0);
+            }
+            return Rectangle.identity.initialize(0, 0, this._textMaxWidth, this._textMaxHeight);
         }
 
 
@@ -752,18 +766,6 @@ module egret {
 
             this._numLines = linesArr.length;
             return linesArr;
-        }
-
-        private measureText():Rectangle {
-            var lines:Array<egret.ILineElement> = this._getLinesArr();
-            if (!lines) {
-                return Rectangle.identity.initialize(0, 0, 0, 0);
-            }
-
-            var maxWidth:number = this._hasWidthSet ? this._explicitWidth : this._textMaxWidth;
-            var maxHeight:number = this._hasHeightSet ? this._explicitHeight : this._textMaxHeight + (this._numLines - 1) * this._lineSpacing;
-
-            return Rectangle.identity.initialize(0, 0, maxWidth, maxHeight);
         }
 
         /**

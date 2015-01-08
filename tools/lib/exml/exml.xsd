@@ -21,8 +21,20 @@
       <xs:attributeGroup ref="egret.Bitmap"/>
     </xs:complexType>
   </xs:element>
+  <xs:attributeGroup name="egret.BitmapFont">
+    <xs:attributeGroup ref="egret.SpriteSheet"/>
+  </xs:attributeGroup>
+  <xs:element name="BitmapFont">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:any/>
+      </xs:choice>
+      <xs:attributeGroup ref="egret.BitmapFont"/>
+    </xs:complexType>
+  </xs:element>
   <xs:attributeGroup name="egret.BitmapText">
-    <xs:attributeGroup ref="egret.DisplayObjectContainer"/>
+    <xs:attributeGroup ref="egret.DisplayObject"/>
+    <xs:attribute name="font" type="xs:string"/>
     <xs:attribute name="spriteSheet" type="xs:string"/>
     <xs:attribute name="text" type="xs:string"/>
   </xs:attributeGroup>
@@ -35,7 +47,7 @@
     </xs:complexType>
   </xs:element>
   <xs:attributeGroup name="egret.BitmapTextSpriteSheet">
-    <xs:attributeGroup ref="egret.SpriteSheet"/>
+    <xs:attributeGroup ref="egret.BitmapFont"/>
   </xs:attributeGroup>
   <xs:element name="BitmapTextSpriteSheet">
     <xs:complexType>
@@ -476,6 +488,7 @@
   <xs:group name="IVisualElement">
     <xs:choice>
       <xs:element ref="Alert"/>
+      <xs:element ref="BitmapLabel"/>
       <xs:element ref="Button"/>
       <xs:element ref="ButtonBase"/>
       <xs:element ref="CheckBox"/>
@@ -556,6 +569,24 @@
         <xs:any/>
       </xs:choice>
       <xs:attributeGroup ref="egret.gui.BasicLayout"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:attributeGroup name="egret.gui.BitmapLabel">
+    <xs:attributeGroup ref="egret.gui.UIComponent"/>
+    <xs:attribute name="font" type="xs:string"/>
+    <xs:attribute name="padding" type="xs:decimal"/>
+    <xs:attribute name="paddingBottom" type="xs:decimal"/>
+    <xs:attribute name="paddingLeft" type="xs:decimal"/>
+    <xs:attribute name="paddingRight" type="xs:decimal"/>
+    <xs:attribute name="paddingTop" type="xs:decimal"/>
+    <xs:attribute name="text" type="xs:string"/>
+  </xs:attributeGroup>
+  <xs:element name="BitmapLabel">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:any/>
+      </xs:choice>
+      <xs:attributeGroup ref="egret.gui.BitmapLabel"/>
     </xs:complexType>
   </xs:element>
   <xs:attributeGroup name="egret.gui.Button">
@@ -907,6 +938,7 @@
       <xs:enumeration value="topLeft"/>
       <xs:enumeration value="left"/>
       <xs:enumeration value="right"/>
+      <xs:enumeration value="screenCenter"/>
     </xs:restriction>
   </xs:simpleType>
   <xs:attributeGroup name="egret.gui.PopUpAnchor">

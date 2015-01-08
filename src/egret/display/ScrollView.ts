@@ -185,13 +185,13 @@ module egret {
                 var height = this.height;
                 var contentHeight = this._getContentHeight();
                 this._scrollTop = Math.max(this._scrollTop, (0 - height) / 2);
-                this._scrollTop = Math.min(this._scrollTop, contentHeight > height ? (contentHeight - height / 2) : contentHeight / 2);
+                this._scrollTop = Math.min(this._scrollTop, contentHeight > height ? (contentHeight - height / 2) : height / 2);
             }
             if (left) {
                 var width = this.width;
                 var contentWidth = this._getContentWidth();
                 this._scrollLeft = Math.max(this._scrollLeft, (0 - width) / 2);
-                this._scrollLeft = Math.min(this._scrollLeft, contentWidth > width ? (contentWidth - width / 2) : contentWidth / 2);
+                this._scrollLeft = Math.min(this._scrollLeft, contentWidth > width ? (contentWidth - width / 2) : width / 2);
             }
         }
 
@@ -220,9 +220,9 @@ module egret {
             this.scrollRect = new Rectangle(this._scrollLeft, this._scrollTop, width, height);
             this.dispatchEvent(new Event(Event.CHANGE));
         }
-        private _hCanScroll:boolean = false;
-        private _vCanScroll:boolean = false;
-        private _checkScrollPolicy():boolean {
+        public _hCanScroll:boolean = false;
+        public _vCanScroll:boolean = false;
+        public _checkScrollPolicy():boolean {
             var hpolicy = this._horizontalScrollPolicy;
             var hCanScroll = this.__checkScrollPolicy(hpolicy, this._getContentWidth(), this.width);
             this._hCanScroll = hCanScroll;
@@ -244,21 +244,14 @@ module egret {
             this.addEventListener(TouchEvent.TOUCH_BEGIN, this._onTouchBegin, this);
             this.addEventListener(TouchEvent.TOUCH_BEGIN, this._onTouchBeginCapture, this, true);
             this.addEventListener(TouchEvent.TOUCH_END, this._onTouchEndCapture, this, true);
-            this._content.addEventListener(egret.Event.ADDED, this._contentChanged, this);
-            this._content.addEventListener(egret.Event.REMOVED, this._contentChanged, this);
         }
 
         public _removeEvents(): void {
             this.removeEventListener(TouchEvent.TOUCH_BEGIN, this._onTouchBegin, this);
             this.removeEventListener(TouchEvent.TOUCH_BEGIN, this._onTouchBeginCapture, this, true);
             this.removeEventListener(TouchEvent.TOUCH_END, this._onTouchEndCapture, this, true);
-            this._content.removeEventListener(egret.Event.ADDED, this._contentChanged, this);
-            this._content.removeEventListener(egret.Event.REMOVED, this._contentChanged, this);
         }
-        private _contentChanged() {
-            this._setSizeDirty();
-            this._updateContentPosition();
-        }
+
         public _onTouchBegin(e: TouchEvent):void {
             if (e._isDefaultPrevented)
                 return;

@@ -120,7 +120,7 @@ module egret.gui {
 			
 			this.dispatchEventWith("popUpChanged");
 		}
-		
+        private _relativeToStage = false;
 		private _popUpPosition:string = PopUpPosition.TOP_LEFT;
 		/**
 		 * popUp相对于PopUpAnchor的弹出位置。请使用PopUpPosition里定义的常量。默认值TOP_LEFT。
@@ -132,7 +132,7 @@ module egret.gui {
 		public set popUpPosition(value:string){
 			if (this._popUpPosition == value)
 				return;
-			
+            this._relativeToStage = value == PopUpPosition.SCREEN_CENTER;
 			this._popUpPosition = value;
 			this.invalidateDisplayList();    
 		}
@@ -157,8 +157,11 @@ module egret.gui {
 		 * 计算popUp的弹出位置
 		 */		
 		private calculatePopUpPosition():Point{
-			var registrationPoint:Point = Point.identity;
-			switch(this._popUpPosition){
+            var registrationPoint: Point = Point.identity;
+            switch (this._popUpPosition) {
+                case PopUpPosition.SCREEN_CENTER:
+                    //由popup manager负责居中显示
+                    break;
 				case PopUpPosition.BELOW:
 					registrationPoint.x = 0;
 					registrationPoint.y = this.height;
@@ -181,9 +184,9 @@ module egret.gui {
 					break;            
 				case PopUpPosition.TOP_LEFT:
 					break;
-			}
-			registrationPoint = this.localToGlobal(registrationPoint.x,registrationPoint.y,registrationPoint);
-			registrationPoint = this.popUp.parent.globalToLocal(registrationPoint.x,registrationPoint.y,registrationPoint);
+            }
+            registrationPoint = this.localToGlobal(registrationPoint.x, registrationPoint.y, registrationPoint);
+            registrationPoint = this.popUp.parent.globalToLocal(registrationPoint.x, registrationPoint.y, registrationPoint);  
 			return registrationPoint;
 		}
 		
@@ -273,7 +276,7 @@ module egret.gui {
 				return;
 			
 			if (this.popUp.parent == null && this.displayPopUp){
-				PopUpManager.addPopUp(this.popUp,false,false);
+                PopUpManager.addPopUp(this.popUp, this._relativeToStage, this._relativeToStage);
 				this.popUp.ownerChanged(this);
 				this.popUpIsDisplayed = true;
 				if(this.inAnimation)

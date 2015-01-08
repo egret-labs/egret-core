@@ -53,11 +53,15 @@ module egret {
             var cacheCanvas:HTMLCanvasElement = this._bitmapData;
             var bounds = displayObject.getBounds(Rectangle.identity);
             if(bounds.width == 0 || bounds.height == 0) {
-//                egret.Logger.warning("egret.RenderTexture#drawToTexture:显示对象测量结果宽高为0，请检查");
                 return false;
             }
             bounds.width = Math.floor(bounds.width);
             bounds.height = Math.floor(bounds.height);
+
+            var texture_scale_factor = egret.MainContext.instance.rendererContext.texture_scale_factor;
+            bounds.width /= texture_scale_factor;
+            bounds.height /= texture_scale_factor;
+
             cacheCanvas.width = bounds.width;
             cacheCanvas.height = bounds.height;
             if(this.renderContext._cacheCanvas) {
@@ -68,6 +72,9 @@ module egret {
             RenderTexture.identityRectangle.height = bounds.height;
 
             displayObject._worldTransform.identity();
+            displayObject._worldTransform.a = 1 / texture_scale_factor;
+            displayObject._worldTransform.d = 1 / texture_scale_factor;
+            this.renderContext.setTransform(displayObject._worldTransform);
             displayObject.worldAlpha = 1;
             if (displayObject instanceof egret.DisplayObjectContainer) {
                 var anchorOffsetX:number = displayObject._anchorOffsetX;
@@ -103,16 +110,18 @@ module egret {
             renderFilter.addDrawArea(RenderTexture.identityRectangle);
             this.renderContext.onRenderFinish();
             renderFilter._drawAreaList = drawAreaList;
-            this._textureWidth = this._bitmapData.width;
-            this._textureHeight = this._bitmapData.height;
+            this._textureWidth = this._bitmapData.width * texture_scale_factor;
+            this._textureHeight = this._bitmapData.height * texture_scale_factor;
             this._sourceWidth = this._textureWidth;
             this._sourceHeight = this._textureHeight;
 
-            return true;
+
             //测试代码
 //            this.renderContext.canvasContext.setTransform(1, 0, 0, 1, 0, 0);
 //            this.renderContext.strokeRect(0, 0,cacheCanvas.width,cacheCanvas.height,"#ff0000");
 //            document.documentElement.appendChild(cacheCanvas);
+
+            return true;
         }
     }
 }

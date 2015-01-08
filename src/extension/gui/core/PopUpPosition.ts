@@ -64,7 +64,12 @@ module egret.gui {
 		 * @constant egret.gui.PopUpPosition.RIGHT
 		 */		
 		public static RIGHT:string = "right";
-		
+        
+		/**
+		 * 在屏幕中心弹出
+		 * @constant egret.gui.PopUpPosition.SCREEN_CENTER
+		 */		
+        public static SCREEN_CENTER: string = "screenCenter";
 		
 	}
 }

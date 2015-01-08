@@ -116,7 +116,7 @@ module egret {
             }
         }
 
-        private contextLost:Boolean = false;
+        private contextLost:boolean = false;
 
         private handleContextLost() {
             this.contextLost = true;
