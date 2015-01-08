@@ -613,9 +613,8 @@ module egret {
             display._updateTransform();
             renderContext.setAlpha(display.worldAlpha, display.blendMode);
             renderContext.setTransform(display._worldTransform);
-            var scale_factor = egret.MainContext.instance.rendererContext.texture_scale_factor;
             var renderFilter = egret.RenderFilter.getInstance();
-            renderFilter.drawImage(renderContext, display, 0, 0, width * scale_factor, height * scale_factor, offsetX, offsetY, width, height);
+            renderFilter.drawImage(renderContext, display, 0, 0, width, height, offsetX, offsetY, width, height);
             return true;
 
         }
