@@ -247,3 +247,21 @@ egret_native.pauseApp = function () {
 egret_native.resumeApp = function () {
     egret.MainContext.instance.stage.dispatchEvent(new egret.Event(egret.Event.ACTIVATE));
 };
+
+egret.RenderTexture.prototype.init = function () {
+
+};
+
+egret.RenderTexture.prototype.setSize = function (width:number, height:number) {
+    //todo 复用
+    this._bitmapData = new egret_native.RenderTexture(width, height);
+    this.renderContext = new egret.NativeRendererContext();
+};
+
+egret.RenderTexture.prototype.begin = function () {
+    this._bitmapData.begin();
+};
+
+egret.RenderTexture.prototype.end = function () {
+    this._bitmapData.end();
+};

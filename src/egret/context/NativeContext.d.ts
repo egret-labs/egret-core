@@ -183,4 +183,12 @@ declare module egret_native {
 
         function setDesignSize(w:number, h:number):number;
     }
+
+    class RenderTexture{
+        constructor(width:number, height:number);
+
+        begin();
+
+        end();
+    }
 }
