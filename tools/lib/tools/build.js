@@ -30,6 +30,14 @@ function run(dir, args, opts) {
 function buildPlatform(needCompileEngine, keepGeneratedTypescript) {
     var task = [];
 
+    var needClean = param.getArgv()["opts"]["-clean"] != null;
+    if (needClean) {
+        if (param.getArgv()["opts"]["-e"] != null) {
+            file.remove(path.join(projectProperties.getProjectPath(), "libs"));
+        }
+        file.remove(path.join(projectProperties.getProjectPath(), "bin-debug"));
+    }
+
     if (needCompileEngine) {//编译第三方库
         task.push(function (callback) {
             buildModule.compileAllModules(projectProperties, callback);
