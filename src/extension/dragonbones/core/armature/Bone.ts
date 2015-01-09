@@ -397,7 +397,7 @@ module dragonBones {
 				var length:number = this._slotList.length;
 				for(var i:number = 0;i < length;i++){
 					childSlot = this._slotList[i];
-                    childSlot.blendMode = tansformFrame.blendMode;
+                    //childSlot.blendMode = tansformFrame.blendMode;
 					childSlot._changeDisplay(displayIndex);
 					childSlot._updateDisplayVisible(tansformFrame.visible);
 					if(displayIndex >= 0){
