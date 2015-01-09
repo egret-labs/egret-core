@@ -125,10 +125,11 @@ module egret {
             this.renderContext.onRenderFinish();
             this.end();
             renderFilter._drawAreaList = drawAreaList;
-            this._textureWidth = RenderTexture.identityRectangle.width * texture_scale_factor;
-            this._textureHeight = RenderTexture.identityRectangle.height * texture_scale_factor;
-            this._sourceWidth = this._textureWidth;
-            this._sourceHeight = this._textureHeight;
+            this._sourceWidth = RenderTexture.identityRectangle.width;
+            this._sourceHeight = RenderTexture.identityRectangle.height;
+            this._textureWidth = this._sourceWidth * texture_scale_factor;
+            this._textureHeight = this._sourceHeight * texture_scale_factor;
+
 
 
             //测试代码
