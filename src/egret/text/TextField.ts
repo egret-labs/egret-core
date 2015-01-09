@@ -569,7 +569,8 @@ module egret {
             if (!lines) {
                 return Rectangle.identity.initialize(0, 0, 0, 0);
             }
-            return Rectangle.identity.initialize(0, 0, this._textMaxWidth, this._textMaxHeight);
+
+            return Rectangle.identity.initialize(0, 0, this._textMaxWidth, this._textMaxHeight + (this._numLines - 1) * this._lineSpacing);
         }
 
 
