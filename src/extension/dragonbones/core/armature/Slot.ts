@@ -124,41 +124,21 @@ module dragonBones {
 			if(this._parent._needUpdate <= 0){
 				return;
 			}
-			
-			var x:number = this._origin.x + this._offset.x + this._parent._tweenPivot.x;
-			var y:number = this._origin.y + this._offset.y + this._parent._tweenPivot.y;
-			
-			var parentMatrix:Matrix = this._parent._globalTransformMatrix;
-			
-			this._globalTransformMatrix.tx = this._global.x = parentMatrix.a * x + parentMatrix.c * y + parentMatrix.tx;
-			this._globalTransformMatrix.ty = this._global.y = parentMatrix.d * y + parentMatrix.b * x + parentMatrix.ty;
-			
-			if(this.inheritRotation){
-				this._global.skewX = this._origin.skewX + this._offset.skewX + this._parent._global.skewX;
-				this._global.skewY = this._origin.skewY + this._offset.skewY + this._parent._global.skewY;
-			}
-			else{
-				this._global.skewX = this._origin.skewX + this._offset.skewX;
-				this._global.skewY = this._origin.skewY + this._offset.skewY;
-			}
-			
-			if(this.inheritScale){
-				this._global.scaleX = this._origin.scaleX * this._offset.scaleX * this._parent._global.scaleX;
-				this._global.scaleY = this._origin.scaleY * this._offset.scaleY * this._parent._global.scaleY;
-			}
-			else{
-				this._global.scaleX = this._origin.scaleX * this._offset.scaleX;
-				this._global.scaleY = this._origin.scaleY * this._offset.scaleY;
-			}
-			
-			this._globalTransformMatrix.a = this._global.scaleX * Math.cos(this._global.skewY);
-			this._globalTransformMatrix.b = this._global.scaleX * Math.sin(this._global.skewY);
-			this._globalTransformMatrix.c = -this._global.scaleY * Math.sin(this._global.skewX);
-			this._globalTransformMatrix.d = this._global.scaleY * Math.cos(this._global.skewX);
-			
-			this._updateTransform();
+
+            this._updateGlobal();
+            this._updateTransform();
 		}
-		
+
+        public _calculateRelativeParentTransform():void
+        {
+            this._global.scaleX = this._origin.scaleX * this._offset.scaleX;
+            this._global.scaleY = this._origin.scaleY * this._offset.scaleY;
+            this._global.skewX = this._origin.skewX + this._offset.skewX;
+            this._global.skewY = this._origin.skewY + this._offset.skewY;
+            this._global.x = this._origin.x + this._offset.x + this._parent._tweenPivot.x;
+            this._global.y = this._origin.y + this._offset.y + this._parent._tweenPivot.y;
+        }
+
 		private updateChildArmatureAnimation():void{
 			if(this.childArmature){
 				if(this._isShowDisplay){
