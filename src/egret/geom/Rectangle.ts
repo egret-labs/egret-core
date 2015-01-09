@@ -129,27 +129,15 @@ module egret {
          * @returns {boolean} 如果两个矩形相交，返回true，否则返回false
          */
         public intersects(toIntersect:Rectangle):boolean {
-            var toIntersect_right = toIntersect.right;
-            var toIntersect_bottom = toIntersect.bottom;
-            var self_right = this.right;
-            var self_bottom = this.bottom;
-            if (this.contains(toIntersect.x, toIntersect.y))
-                return true;
-            else if (this.contains(toIntersect.x, toIntersect_bottom))
-                return true;
-            else if (this.contains(toIntersect_right, toIntersect.y))
-                return true;
-            else if (this.contains(toIntersect_right, toIntersect_bottom))
-                return true;
-            else if (toIntersect.contains(this.x, this.y))
-                return true;
-            else if (toIntersect.contains(this.x, self_bottom))
-                return true;
-            else if (toIntersect.contains(self_right, this.y))
-                return true;
-            else if (toIntersect.contains(self_right, self_bottom))
-                return true;
-            return false;
+            return Math.max(this.x, toIntersect.x) <= Math.min(this.right, toIntersect.right)
+                && Math.max(this.y, toIntersect.y) <= Math.min(this.bottom, toIntersect.bottom);
+        }
+
+        public setEmpty(): void {
+            this.x = 0;
+            this.y = 0;
+            this.width = 0;
+            this.height = 0;
         }
 
         /**
