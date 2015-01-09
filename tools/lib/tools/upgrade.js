@@ -22,7 +22,8 @@ var upgradeConfigArr = [
     {"v" : "1.1.3", "func":upgradeTo_1_1_3},
     {"v" : "1.1.4", "func":upgradeTo_1_1_4},
     {"v" : "1.5.0", "func":upgradeTo_1_5_0},
-    {"v" : "1.5.1", "func":upgradeTo_1_5_1}
+    {"v" : "1.5.1", "func":upgradeTo_1_5_1},
+    {"v" : "1.5.2", "func":upgradeTo_1_5_2}
 ];
 
 var currDir;
@@ -283,8 +284,23 @@ function upgradeTo_1_5_1(){
     projectConfig.save();
 }
 
+function upgradeTo_1_5_2(){
+    globals.log("正在更新到1.5.2");
+
+    var native_require_path = path.join(currDir, "launcher", "native_require.js");
+    if(file.exists(native_require_path)){
+        var fileContent = file.read(native_require_path);
+        fileContent = fileContent.replace("ctr.removeEventListener(egret.Event.COMPLETE, loadComplete, this);","ctr.removeEventListener(egret.Event.COMPLETE, loadComplete, this);\n\n        console.log(\"版本控制文件加载失败，请检查\");\n        completeCall();");
+        file.save(native_require_path, fileContent);
+    }
+
+    projectConfig.init(currDir);
+    projectConfig.data.egret_version = "1.5.2";
+    projectConfig.save();
+}
+
 function getClassList(item) {
-    var basename = path.basename(item)
+    var basename = path.basename(item);
     return basename.substring(0, basename.indexOf("."))
 }
 
