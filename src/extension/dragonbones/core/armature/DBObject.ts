@@ -45,13 +45,21 @@ module dragonBones {
 		 * 
 		 */
 		public inheritScale:boolean;
-		
+
+        /**
+         *
+         */
+        public inheritTranslation:boolean;
+
+        /** @private */
+        public _global:DBTransform;
 		/** @private */
 		public _globalTransformMatrix:Matrix;
-		
-		/** @private */
-		public _global:DBTransform;
-		/**
+
+        public static _tempParentGlobalTransformMatrix:Matrix = new Matrix();
+        public static _tempParentGlobalTransform:DBTransform = new DBTransform();
+
+        /**
 		 * This DBObject instance global transform instance.
 		 * @see dragonBones.objects.DBTransform
 		 */
@@ -122,6 +130,10 @@ module dragonBones {
 			this._parent = null;
 			
 			this.userData = null;
+
+            this.inheritRotation = true;
+            this.inheritScale = true;
+            this.inheritTranslation = true;
 		}
 		
 		/**
@@ -138,5 +150,57 @@ module dragonBones {
 			this._armature = null;
 			this._parent = null;
 		}
+
+        public _calculateRelativeParentTransform():void
+        {
+
+        }
+
+        public _calculateParentTransform():any
+        {
+            if(this.parent && (this.inheritTranslation || this.inheritRotation || this.inheritScale))
+            {
+                var parentGlobalTransform:DBTransform = this._parent._globalTransformForChild;
+                var parentGlobalTransformMatrix:Matrix = this._parent._globalTransformMatrixForChild;
+
+                if(!this.inheritTranslation || !this.inheritRotation || !this.inheritScale)
+                {
+                    parentGlobalTransform = DBObject._tempParentGlobalTransform;
+                    parentGlobalTransform.copy(this._parent._globalTransformForChild);
+                    if(!this.inheritTranslation)
+                    {
+                        parentGlobalTransform.x = 0;
+                        parentGlobalTransform.y = 0;
+                    }
+                    if(!this.inheritScale)
+                    {
+                        parentGlobalTransform.scaleX = 1;
+                        parentGlobalTransform.scaleY = 1;
+                    }
+                    if(!this.inheritRotation)
+                    {
+                        parentGlobalTransform.skewX = 0;
+                        parentGlobalTransform.skewY = 0;
+                    }
+
+                    parentGlobalTransformMatrix = DBObject._tempParentGlobalTransformMatrix;
+                    TransformUtil.transformToMatrix(parentGlobalTransform, parentGlobalTransformMatrix, true);
+                }
+                return {parentGlobalTransform:parentGlobalTransform, parentGlobalTransformMatrix:parentGlobalTransformMatrix};
+            }
+            return null;
+        }
+
+        public _updateGlobal():any {
+            this._calculateRelativeParentTransform();
+            TransformUtil.transformToMatrix(this._global, this._globalTransformMatrix, true);
+
+            var output:any = this._calculateParentTransform();
+            if (output) {
+                this._globalTransformMatrix.concat(output.parentGlobalTransformMatrix);
+                TransformUtil.matrixToTransform(this._globalTransformMatrix, this._global, this._global.scaleX * output.parentGlobalTransform.scaleX >= 0, this._global.scaleY * output.parentGlobalTransform.scaleY >= 0);
+            }
+            return output;
+        }
 	}
 }

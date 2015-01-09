@@ -44,6 +44,9 @@ module dragonBones {
 			super();
 			
 			this.originTransform = new DBTransform();
+            this.originTransform.scaleX = 1;
+            this.originTransform.scaleY = 1;
+
 			this.originPivot = new Point();
 			this.offset = 0;
 		}

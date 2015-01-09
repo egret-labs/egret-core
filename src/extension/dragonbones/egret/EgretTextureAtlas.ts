@@ -66,8 +66,6 @@ module dragonBones {
 
         private parseData(textureAtlasRawData:any):void {
             this._textureDatas = DataParser.parseTextureAtlasData(textureAtlasRawData, this.scale);
-            name = this._textureDatas.__name;
-            delete this._textureDatas.__name;
         }
     }
 }

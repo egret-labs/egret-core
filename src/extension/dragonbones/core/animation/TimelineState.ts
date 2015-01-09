@@ -160,8 +160,8 @@ module dragonBones {
 			
 			this._transform.x = 0;
 			this._transform.y = 0;
-			this._transform.scaleX = 0;
-			this._transform.scaleY = 0;
+			this._transform.scaleX = 1;
+			this._transform.scaleY = 1;
 			this._transform.skewX = 0;
 			this._transform.skewY = 0;
 			this._pivot.x = 0;
@@ -169,8 +169,8 @@ module dragonBones {
 			
 			this._durationTransform.x = 0;
 			this._durationTransform.y = 0;
-			this._durationTransform.scaleX = 0;
-			this._durationTransform.scaleY = 0;
+			this._durationTransform.scaleX = 1;
+			this._durationTransform.scaleY = 1;
 			this._durationTransform.skewX = 0;
 			this._durationTransform.skewY = 0;
 			this._durationPivot.x = 0;
@@ -504,8 +504,8 @@ module dragonBones {
 					this._transform.y = this._originTransform.y + currentFrame.transform.y;
 					this._transform.skewX = this._originTransform.skewX + currentFrame.transform.skewX;
 					this._transform.skewY = this._originTransform.skewY + currentFrame.transform.skewY;
-					this._transform.scaleX = this._originTransform.scaleX + currentFrame.transform.scaleX;
-					this._transform.scaleY = this._originTransform.scaleY + currentFrame.transform.scaleY;
+					this._transform.scaleX = this._originTransform.scaleX * currentFrame.transform.scaleX;
+					this._transform.scaleY = this._originTransform.scaleY * currentFrame.transform.scaleY;
 					
 					this._pivot.x = this._originPivot.x + currentFrame.pivot.x;
 					this._pivot.y = this._originPivot.y + currentFrame.pivot.y;
@@ -519,8 +519,8 @@ module dragonBones {
 					this._transform.scaleY = currentFrame.transform.scaleY;
 				}
 				else{
-					this._transform.scaleX = this._originTransform.scaleX + currentFrame.transform.scaleX;
-					this._transform.scaleY = this._originTransform.scaleY + currentFrame.transform.scaleY;
+					this._transform.scaleX = this._originTransform.scaleX * currentFrame.transform.scaleX;
+					this._transform.scaleY = this._originTransform.scaleY * currentFrame.transform.scaleY;
 				}
 			}
 			
@@ -576,8 +576,8 @@ module dragonBones {
 					this._transform.skewX = this._originTransform.skewX + currentTransform.skewX + this._durationTransform.skewX * progress;
 					this._transform.skewY = this._originTransform.skewY + currentTransform.skewY + this._durationTransform.skewY * progress;
 					if(this._tweenScale){
-						this._transform.scaleX = this._originTransform.scaleX + currentTransform.scaleX + this._durationTransform.scaleX * progress;
-						this._transform.scaleY = this._originTransform.scaleY + currentTransform.scaleY + this._durationTransform.scaleY * progress;
+						this._transform.scaleX = this._originTransform.scaleX * currentTransform.scaleX + this._durationTransform.scaleX * progress;
+						this._transform.scaleY = this._originTransform.scaleY * currentTransform.scaleY + this._durationTransform.scaleY * progress;
 					}
 					
 					this._pivot.x = this._originPivot.x + currentPivot.x + this._durationPivot.x * progress;
@@ -628,31 +628,37 @@ module dragonBones {
 			
 			this._blendEnabled = currentFrame.displayIndex >= 0;
 			if(this._blendEnabled){
-				/**
-				 * 单帧的timeline，第一个关键帧的transform为0
-				 * timeline.originTransform = firstFrame.transform;
-				 * eachFrame.transform = eachFrame.transform - timeline.originTransform;
-				 * firstFrame.transform == 0;
-				 */
+                /**
+                 * <使用绝对数据>
+                 * 单帧的timeline，第一个关键帧的transform为0
+                 * timeline.originTransform = firstFrame.transform;
+                 * eachFrame.transform = eachFrame.transform - timeline.originTransform;
+                 * firstFrame.transform == 0;
+                 *
+                 * <使用相对数据>
+                 * 使用相对数据时，timeline.originTransform = 0，第一个关键帧的transform有可能不为 0
+                 */
 				if(this._animationState.additiveBlending){
-					//additive blending
-					//singleFrame.transform (0)
-					this._transform.x = 
-						this._transform.y = 
-						this._transform.skewX = 
-						this._transform.skewY = 
-						this._transform.scaleX = 
-						this._transform.scaleY = 0;
-					
-					this._pivot.x = 0;
-					this._pivot.y = 0;
+                    this._transform.x = currentFrame.transform.x;
+                    this._transform.y = currentFrame.transform.y;
+                    this._transform.skewX = currentFrame.transform.skewX;
+                    this._transform.skewY = currentFrame.transform.skewY;
+                    this._transform.scaleX = currentFrame.transform.scaleX;
+                    this._transform.scaleY = currentFrame.transform.scaleY;
+
+                    this._pivot.x = currentFrame.pivot.x;
+                    this._pivot.y = currentFrame.pivot.y;
 				}
 				else{
-					//normal blending
-					//timeline.originTransform + singleFrame.transform (0)
-					this._transform.copy(this._originTransform);
-					this._pivot.x = this._originPivot.x;
-					this._pivot.y = this._originPivot.y;
+                    this._transform.x = this._originTransform.x + currentFrame.transform.x;
+                    this._transform.y = this._originTransform.y + currentFrame.transform.y;
+                    this._transform.skewX = this._originTransform.skewX + currentFrame.transform.skewX;
+                    this._transform.skewY = this._originTransform.skewY + currentFrame.transform.skewY;
+                    this._transform.scaleX = this._originTransform.scaleX * currentFrame.transform.scaleX;
+                    this._transform.scaleY = this._originTransform.scaleY * currentFrame.transform.scaleY;
+
+                    this._pivot.x = this._originPivot.x + currentFrame.pivot.x;
+                    this._pivot.y = this._originPivot.y + currentFrame.pivot.y;
 				}
 				
 				this._bone.invalidUpdate();
