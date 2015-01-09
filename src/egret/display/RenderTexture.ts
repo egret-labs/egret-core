@@ -55,15 +55,18 @@ module egret {
             if(bounds.width == 0 || bounds.height == 0) {
                 return false;
             }
-            bounds.width = Math.floor(bounds.width);
-            bounds.height = Math.floor(bounds.height);
 
             var texture_scale_factor = egret.MainContext.instance.rendererContext.texture_scale_factor;
             bounds.width /= texture_scale_factor;
             bounds.height /= texture_scale_factor;
 
+            bounds.width = Math.round(bounds.width);
+            bounds.height = Math.round(bounds.height);
+
             cacheCanvas.width = bounds.width;
             cacheCanvas.height = bounds.height;
+            cacheCanvas.style.width = bounds.width + "px";
+            cacheCanvas.style.height = bounds.height + "px";
             if(this.renderContext._cacheCanvas) {
                 this.renderContext._cacheCanvas.width = bounds.width;
                 this.renderContext._cacheCanvas.height = bounds.height;
@@ -86,6 +89,13 @@ module egret {
                 this._offsetX = bounds.x + anchorOffsetX;
                 this._offsetY = bounds.y + anchorOffsetY;
                 displayObject._worldTransform.append(1, 0, 0, 1, -this._offsetX, -this._offsetY);
+                if(this._offsetX > 0) {
+                    this._offsetX = 0;
+
+                }
+                if(this._offsetY > 0) {
+                    this._offsetY = 0;
+                }
                 var list = (<egret.DisplayObjectContainer>displayObject)._children;
                 for (var i = 0 , length = list.length; i < length; i++) {
                     var child:DisplayObject = list[i];
