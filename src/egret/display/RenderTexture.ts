@@ -61,17 +61,19 @@ module egret {
                 return false;
             }
 
+            var x = bounds.x;
+            var y = bounds.y;
+            var width = bounds.width;
+            var height = bounds.height;
+
             var texture_scale_factor = egret.MainContext.instance.rendererContext.texture_scale_factor;
-            bounds.width /= texture_scale_factor;
-            bounds.height /= texture_scale_factor;
+            width /= texture_scale_factor;
+            height /= texture_scale_factor;
 
-            bounds.width = Math.round(bounds.width);
-            bounds.height = Math.round(bounds.height);
+            width = Math.round(width);
+            height = Math.round(height);
 
-            RenderTexture.identityRectangle.width = bounds.width;
-            RenderTexture.identityRectangle.height = bounds.height;
-
-            this.setSize(bounds.width, bounds.height);
+            this.setSize(width, height);
             this.begin();
 
             displayObject._worldTransform.identity();
@@ -87,11 +89,11 @@ module egret {
                 var anchorOffsetX:number = displayObject._anchorOffsetX;
                 var anchorOffsetY:number = displayObject._anchorOffsetY;
                 if(displayObject._anchorX != 0 || displayObject._anchorY != 0) {
-                    anchorOffsetX = displayObject._anchorX * bounds.width;
-                    anchorOffsetY = displayObject._anchorY * bounds.height;
+                    anchorOffsetX = displayObject._anchorX * width;
+                    anchorOffsetY = displayObject._anchorY * height;
                 }
-                this._offsetX = bounds.x + anchorOffsetX;
-                this._offsetY = bounds.y + anchorOffsetY;
+                this._offsetX = x + anchorOffsetX;
+                this._offsetY = y + anchorOffsetY;
                 displayObject._worldTransform.append(1, 0, 0, 1, -this._offsetX, -this._offsetY);
                 if(this._offsetX > 0) {
                     this._offsetX = 0;
@@ -121,12 +123,14 @@ module egret {
             if (mask) {
                 this.renderContext.popMask();
             }
+            RenderTexture.identityRectangle.width = width;
+            RenderTexture.identityRectangle.height = height;
             renderFilter.addDrawArea(RenderTexture.identityRectangle);
             this.renderContext.onRenderFinish();
             this.end();
             renderFilter._drawAreaList = drawAreaList;
-            this._sourceWidth = RenderTexture.identityRectangle.width;
-            this._sourceHeight = RenderTexture.identityRectangle.height;
+            this._sourceWidth = width;
+            this._sourceHeight = height;
             this._textureWidth = this._sourceWidth * texture_scale_factor;
             this._textureHeight = this._sourceHeight * texture_scale_factor;
 
