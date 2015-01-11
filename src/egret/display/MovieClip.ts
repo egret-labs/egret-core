@@ -24,7 +24,6 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
 module egret {
 
     /**
@@ -32,255 +31,416 @@ module egret {
      * @classdesc 影片剪辑，可以通过影片剪辑播放序列帧动画。
      * @extends egret.DisplayObjectContainer
      */
-    export class MovieClip extends DisplayObjectContainer {
+    export class MovieClip extends DisplayObjectContainer{
 
-        private delegate:MovieClipDelegate;
-        /**
-         * 动画的播放帧频
-         * @member {number} egret.MovieClip#frameRate
-         */
-        public frameRate:number = 60;
+    //Data Property
+        public _textureData:any;
+        public _spriteSheet:any;
+        private _frames:any[];
+        private _frameLabels:any[];
 
-        constructor(data, texture?:Texture) {
+        private _eventPool:string[] = [];
+        private _bitmap:Bitmap;
+
+    //Animation Property
+        private _isPlaying:boolean;
+        private _isStopped:boolean;
+        private _playTimes:number;
+
+        private _frameRate:number;
+        private _frameIntervalTime:number;
+
+        private _totalFrames:number;
+        public _currentFrameNum:number;
+        public _nextFrameNum:number;
+        private _displayedKeyFrameNum:number;
+
+        private _passedTime:number = 0;
+
+        constructor() {
             super();
-            if (data instanceof DefaultMovieClipDelegate){
-                Logger.warning("MovieClip#constructor接口参数已经变更，请尽快调整用法为 new MovieClip(data,texture)")
-                this.delegate = data;
+            this._playTimes = -1;
+            this._bitmap = new egret.Bitmap();
+            this.addChild(this._bitmap);
+        }
+
+        public _initFramesData(framesData:any[]):void{
+            var frames:any[] = [];
+            var length:number = framesData.length;
+            var keyFramePosition:number;
+            for(var i=0; i < length; i++){
+                var frameData:any = framesData[i];
+                frames.push(frameData);
+                if(frameData.duration){
+                    var duration:number = parseInt(frameData.duration);
+                    if(duration > 1){
+                        keyFramePosition = frames.length;
+                        for(var j=1; j < duration; j++){
+                            frames.push({"frame":keyFramePosition})
+                        }
+                    }
+                }
             }
-            else{
-                this.delegate = new DefaultMovieClipDelegate(data, texture);
+            this._frames = frames;
+            this._totalFrames = frames.length;
+        }
+        public _initFrameLabels(frameLabelsData:any[]):void{
+            if(frameLabelsData){
+                var length:number = frameLabelsData.length;
+                if(length > 0){
+                    this._frameLabels = [];
+                    for(var i=0; i < length; i++){
+                        var label:any = frameLabelsData[i];
+                        this._frameLabels.push(new FrameLabel(label.name, label.frame));
+                    }
+                }
             }
-            this.delegate.setMovieClip(this);
+        }
+
+        public dispose():void {
+            this._textureData = null;
+            this._spriteSheet = null;
+            this._frames = null;
+            this._frameLabels = null;
+            this._eventPool = null;
+            this._bitmap = null;
+        }
+    //Data Function
+        /**
+         * 返回帧标签为指定字符串的FrameLabel对象
+         * @method egret.MovieClip#getFrameLabelByName
+         * @param labelName {string} 帧标签名
+         * @param ignoreCase {boolean} 是否忽略大小写，可选参数，默认false
+         */
+        public getFrameLabelByName(labelName: string, ignoreCase: boolean = false): FrameLabel {
+            if (ignoreCase) {
+                labelName = labelName.toLowerCase();
+            }
+            var outputFramelabel:FrameLabel = null;
+            var frameLabels = this._frameLabels;
+            for (var i = 0; i < frameLabels.length; i++) {
+                outputFramelabel = frameLabels[i];
+                if (ignoreCase ? outputFramelabel.name.toLowerCase() === labelName : outputFramelabel.name === labelName) {
+                    return outputFramelabel;
+                }
+            }
+            return null;
         }
 
         /**
-         * 播放指定动画
-         * @method egret.MovieClip#gotoAndPlay
-         * @param frameName {string} 指定帧的帧名称
-
+         * 返回指定序号的帧的FrameLabel对象
+         * @method egret.MovieClip#getFrameLabelByFrame
+         * @param frame {number} 帧序号
          */
-        public gotoAndPlay(frameName:string) {
-            this.delegate.gotoAndPlay(frameName);
+        public getFrameLabelByFrame(frame: number): FrameLabel {
+            var outputFramelabel:FrameLabel = null;
+            var frameLabels = this._frameLabels;
+            for (var i = 0; i < frameLabels.length; i++) {
+                outputFramelabel = frameLabels[i];
+                if (outputFramelabel.frame === frame) {
+                    return outputFramelabel;
+                }
+            }
+            return null;
         }
 
         /**
-         * 播放并暂停指定动画
-         * @method egret.MovieClip#gotoAndStop
-         * @param frameName {string} 指定帧的帧名称
-
+         * 返回指定序号的帧对应的FrameLabel对象，如果当前帧没有标签，则返回前面最近的有标签的帧的FrameLabel对象
+         * @method egret.MovieClip#getFrameLabelForFrame
+         * @param frame {number} 帧序号
          */
-        public gotoAndStop(frameName:string) {
-            this.delegate.gotoAndStop(frameName);
+        public getFrameLabelForFrame(frame: number): FrameLabel{
+            var outputFrameLabel:FrameLabel = null;
+            var tempFrameLabel:FrameLabel = null;
+            var frameLabels = this._frameLabels;
+            for (var i = 0; i < frameLabels.length; i++) {
+                tempFrameLabel = frameLabels[i];
+                if (tempFrameLabel.frame > frame) {
+                    return outputFrameLabel;
+                }
+                outputFrameLabel = tempFrameLabel;
+            }
+            return outputFrameLabel;
         }
 
+    //Animation Function
+
+        /**
+         * 继续播放当前动画
+         * @method egret.MovieClip#stop
+         * @param playTimes {number} 播放次数。 参数为整数，可选参数，>=1：设定播放次数，<0：循环播放，默认值 0：不改变播放次数，
+         */
+        public play(playTimes:number = 0): void {
+            this._isPlaying = true;
+            this.playTimes = playTimes;
+            if (this._totalFrames > 1) {
+                this.isStopped = false;
+            }
+        }
 
         /**
          * 暂停动画
          * @method egret.MovieClip#stop
          */
-        public stop() {
-            this.delegate.stop();
-        }
-
-        /**
-         * @method egret.MovieClip#dispose
-         */
-        public dispose():void {
-            this.delegate.dispose();
-
-        }
-
-        /**
-         * 方法名改为 dispose
-         * @method egret.MovieClip#release
-         * @deprecated
-         */
-        public release() {
-            Logger.warning("MovieClip#release方法即将废弃");
-            this.dispose();
-        }
-
-
-        /**
-         * @method egret.MovieClip#getCurrentFrameIndex
-         * @deprecated
-         * @returns {number}
-         */
-        public getCurrentFrameIndex():number {
-            Logger.warning("MovieClip#getCurrentFrameIndex方法即将废弃");
-            return this.delegate["_currentFrameIndex"];
-        }
-
-        /**
-         * 获取当前影片剪辑的帧频数
-         * @method egret.MovieClip#getTotalFrame
-         * @deprecated
-         * @returns {number}
-         */
-        public getTotalFrame():number {
-            Logger.warning("MovieClip#getTotalFrame方法即将废弃");
-            return this.delegate["_totalFrame"];
-        }
-
-        /**
-         * @method egret.MovieClip#setInterval
-         * @deprecated
-         * @param value {number}
-         */
-        public setInterval(value:number) {
-            Logger.warning("MovieClip#setInterval方法即将废弃,请使用MovieClip#frameRate代替");
-            this.frameRate = 60 / value;
-        }
-
-        /**
-         * @method egret.MovieClip#getIsPlaying
-         * @deprecated
-         * @returns {boolean}
-         */
-        public getIsPlaying():boolean {
-            Logger.warning("MovieClip#getIsPlaying方法即将废弃");
-            return this.delegate["isPlaying"];
-        }
-    }
-
-    export interface MovieClipDelegate {
-
-
-        gotoAndPlay(frameName:string):void;
-
-
-        gotoAndStop(frameName:string):void;
-
-
-        stop():void;
-
-
-        dispose():void;
-
-
-        setMovieClip(movieclip:MovieClip):void;
-    }
-
-
-    export class DefaultMovieClipDelegate implements MovieClipDelegate {
-        private _frameData;
-        private _totalFrame:number = 0;
-        private _spriteSheet:SpriteSheet;
-        private _passTime:number = 0;
-        private _currentFrameIndex:number = 0;
-        private _currentFrameName:string;
-
-        private _isPlaying:boolean = false;
-        private movieClip:MovieClip;
-
-        private bitmap:Bitmap;
-
-
-
-        constructor(public data, texture:Texture) {
-            this._frameData = data;
-            this._spriteSheet = new SpriteSheet(texture);
-        }
-
-
-        public setMovieClip(movieClip:MovieClip):void {
-            this.movieClip = movieClip;
-            this.bitmap = new egret.Bitmap();
-            this.movieClip.addChild(this.bitmap);
-
-        }
-
-        public gotoAndPlay(frameName:string):void {
-            this.checkHasFrame(frameName);
-            this._isPlaying = true;
-            this._currentFrameIndex = 0;
-            this._currentFrameName = frameName;
-            this._totalFrame = this._frameData.frames[frameName].totalFrame;
-            this.playNextFrame();
-            this._passTime = 0;
-            Ticker.getInstance().register(this.update, this);
-        }
-
-
-        public gotoAndStop(frameName:string):void {
-            this.checkHasFrame(frameName);
-            this.stop();
-            this._passTime = 0;
-            this._currentFrameIndex = 0;
-            this._currentFrameName = frameName;
-            this._totalFrame = this._frameData.frames[frameName].totalFrame;
-            this.playNextFrame();
-        }
-
-
-        public stop():void {
+        public stop(): void {
             this._isPlaying = false;
-            Ticker.getInstance().unregister(this.update, this);
+            this.isStopped = true;
         }
 
-
-        public dispose():void {
-
+        /**
+         * 跳到前一帧并暂停
+         * @method egret.MovieClip#prevFrame
+         */
+        public prevFrame(): void {
+            this.gotoAndStop(this._currentFrameNum - 1);
         }
 
-        private checkHasFrame(name:string) {
-            if (this._frameData.frames[name] == undefined) {
-                egret.Logger.fatal("MovieClip没有对应的frame：", name);
+        /**
+         * 跳到后一帧并暂停
+         * @method egret.MovieClip#prevFrame
+         */
+        public nextFrame(): void {
+            this.gotoAndStop(this._currentFrameNum + 1);
+        }
+
+        /**
+         * 跳到指定帧并播放
+         * @method egret.MovieClip#gotoAndPlay
+         * @param frame {any} 指定帧的帧号或帧标签
+         * @param playTimes {number} 播放次数。 参数为整数，可选参数，>=1：设定播放次数，<0：循环播放，默认值 0：不改变播放次数，
+         */
+        public gotoAndPlay(frame: any, playTimes:number = 0): void{
+            if (arguments.length === 0 || arguments.length > 2) {
+                throw new Error("MovieClip.gotoAndPlay() ArgumentError");
             }
+            this.play(playTimes);
+            this._gotoFrame(frame);
         }
 
-        private update(advancedTime:number):void {
+        /**
+         * 跳到指定帧并停止
+         * @method egret.MovieClip#gotoAndPlay
+         * @param frame {any} 指定帧的帧号或帧标签
+         */
+        public gotoAndStop(frame: any): void {
+            if (arguments.length != 1) {
+                throw new Error("MovieClip.gotoAndStop() ArgumentError");
+            }
+            this.stop();
+            this._gotoFrame(frame);
+        }
 
-            var oneFrameTime = 1000 / this.movieClip.frameRate;
-            var last = this._passTime % oneFrameTime;
-            var num = Math.floor((last + advancedTime) / oneFrameTime);
-            while (num >= 1) {
-                if (num == 1) {
-                    this.playNextFrame();
+        public _gotoFrame(frame:any): void
+        {
+            var frameNum:number;
+            if(typeof frame === "string"){
+                frameNum = this.getFrameLabelByName(frame).frame;
+            }else{
+                frameNum = parseInt(frame+'', 10);
+                if(<any>frameNum != frame)
+                {
+                    throw new Error("Frame Label Not Found ArgumentError");
                 }
-                else {
-                    this.playNextFrame(false);
-                }
+            }
+
+            if (frameNum < 1) {
+                frameNum = 1;
+            } else if (frameNum > this._totalFrames) {
+                frameNum = this._totalFrames;
+            }
+            if (frameNum === this._nextFrameNum) {
+                return;
+            }
+
+            this._nextFrameNum = frameNum;
+            this._advanceFrame();
+            this._constructFrame();
+            this._handlePendingEvent();
+        }
+
+        public _advanceTime(advancedTime:number):void{
+            var frameIntervalTime:number = this._frameIntervalTime;
+            var currentTime = this._passedTime + advancedTime;
+            this._passedTime = currentTime % frameIntervalTime;
+
+            var num:number = currentTime / frameIntervalTime;
+            if(num < 1){
+                return;
+            }
+            while(num >= 1) {
                 num--;
+                this._nextFrameNum++;
+                if(this._nextFrameNum > this._totalFrames){
+                    if(this._playTimes == -1){
+                        this._eventPool.push(Event.LOOP_COMPLETE);
+                        this._nextFrameNum = 1;
+                    }
+                    else{
+                        this._playTimes--;
+                        if(this._playTimes > 0){
+                            this._eventPool.push(Event.LOOP_COMPLETE);
+                            this._nextFrameNum = 1;
+                        }
+                        else{
+                            this._nextFrameNum = this._totalFrames;
+                            this._eventPool.push(Event.COMPLETE);
+                            this.stop();
+                            break;
+                        }
+                    }
+                }
+                this._advanceFrame();
             }
-            this._passTime += advancedTime;
+            this._constructFrame();
+            this._handlePendingEvent();
         }
 
-        private playNextFrame(needShow:boolean = true) {
-            var frameData = this._frameData.frames[this._currentFrameName].childrenFrame[this._currentFrameIndex];
-            if (needShow) {
+        public _advanceFrame(): void{
+            this._currentFrameNum = this._nextFrameNum
+        }
+
+        private _constructFrame() {
+            var currentFrameNum:number = this._currentFrameNum;
+            if(this._displayedKeyFrameNum == currentFrameNum){
+                return;
+            }
+            var bitmap = this._bitmap;
+            var frameData = this._frames[currentFrameNum-1];
+            if(frameData.frame){
+                if(this._displayedKeyFrameNum == parseInt(frameData.frame)){
+                    return;
+                }
+                frameData =  this._frames[frameData.frame-1];
+            }
+            if(frameData.res){
                 var texture:Texture = this.getTexture(frameData.res);
-                var bitmap = this.bitmap;
                 bitmap.x = frameData.x;
                 bitmap.y = frameData.y;
                 bitmap.texture = texture;
+                return true;
+            }else{
+                bitmap.texture = null;
             }
 
-            if (frameData.action != null) {
-                this.movieClip.dispatchEventWith(frameData.action);
-            }
-
-            this._currentFrameIndex++;
-            if (this._currentFrameIndex == this._totalFrame) {
-                this._currentFrameIndex = 0;
-                if(frameData.action != Event.COMPLETE) {
-                    this.movieClip.dispatchEventWith(Event.COMPLETE);
-                }
-            }
+            this._displayedKeyFrameNum = currentFrameNum;
         }
 
         private getTexture(name:string):Texture {
-            var resData = this._frameData.res[name];
+            var textureData = this._textureData[name];
             var texture = this._spriteSheet.getTexture(name);
             if (!texture) {
-                texture = this._spriteSheet.createTexture(name, resData.x, resData.y, resData.w, resData.h);
+                texture = this._spriteSheet.createTexture(name, textureData.x, textureData.y, textureData.w, textureData.h);
             }
             return texture;
         }
 
+        public _handlePendingEvent():void{
+            if(this._eventPool.length != 0) {
+                this._eventPool.reverse();
+                var eventPool:any[] = this._eventPool;
+                var length:number = eventPool.length;
+                var isComplete:boolean = false;
+                var isLoopComplete:boolean = false;
 
+                for (var i = 0; i < length; i++) {
+                    var event:string = eventPool.pop();
+                    if(event == Event.LOOP_COMPLETE){
+                        isLoopComplete = true;
+                    }else if(event == Event.COMPLETE){
+                        isComplete = true;
+                    }
+                    else
+                    {
+                        console.log(event);
+                        this.dispatchEventWith(event);
+                    }
+                }
+
+                if(isLoopComplete){
+                    console.log(Event.LOOP_COMPLETE);
+                    this.dispatchEventWith(Event.LOOP_COMPLETE);
+                }
+                if(isComplete){
+                    console.log(Event.COMPLETE);
+                    this.dispatchEventWith(Event.COMPLETE);
+                }
+            }
+        }
+
+    //Properties
+        /**
+         * 总帧数
+         * @member {number} egret.MovieClip#totalFrames
+         */
+        public get totalFrames():number{
+            return this._totalFrames;
+        }
+        /**
+         * 当前播放的帧的序号
+         * @member {number} egret.MovieClip#currentFrame
+         */
+        public get currentFrame():number{
+            return this._currentFrameNum;
+        }
+        /**
+         * 当前播放的帧的标签
+         * @member {number} egret.MovieClip#currentFrame
+         */
+        public get currentFrameLabel(): string {
+            var label = this.getFrameLabelByFrame(this._currentFrameNum);
+            return label && label.name;
+        }
+        /**
+         * 当前播放的帧对应的标签，如果当前帧没有标签，则返回前面最近的有标签的帧的标签
+         * @member {number} egret.MovieClip#currentFrame
+         */
+        public get currentLabel(): string {
+            var label: FrameLabel = this.getFrameLabelForFrame(this._currentFrameNum);
+            return label ? label.name : null;
+        }
+
+        /**
+         * 帧频
+         * @member {number} egret.MovieClip#frameRate
+         */
+        public get frameRate():number{
+            return this._frameRate;
+        }
+        public set frameRate(value:number){
+            if(value == this._frameRate){
+                return;
+            }
+            this._frameRate = value;
+            this._frameIntervalTime = 1000 / this._frameRate;
+        }
+
+        /**
+         * 是否正在播放
+         * @member {boolean} egret.MovieClip#isPlaying
+         */
+        public get isPlaying(): boolean {
+            return this._isPlaying;
+        }
+
+        private set playTimes(value:number){
+            if(value < 0 && value >= 1)
+            {
+                this._playTimes = value < 0 ? -1 : Math.floor(value);
+            }
+        }
+
+        private set isStopped(value:boolean){
+            if(this._isStopped == value) {
+                return;
+            }
+            this._isStopped = value;
+            if(value){
+                Ticker.getInstance().unregister(this._advanceTime, this);
+            }else{
+                Ticker.getInstance().register(this._advanceTime, this);
+            }
+        }
     }
-
 }
 
 
