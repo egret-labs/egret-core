@@ -48,8 +48,8 @@ module egret {
                     for(var i=0; i < length; i++){
                         var scriptData:any = frameScriptsData[i];
                         var func:any = this[scriptData.func];
-                        var args:any[] = scriptData.args;
-                        this._frameScripts[scriptData.frame] = {"func":func, "args":args};
+                        var args = scriptData.args;
+                        this._frameScripts[scriptData.frame] = {"func":func, "args":args ? args : []};
                     }
                 }
             }
