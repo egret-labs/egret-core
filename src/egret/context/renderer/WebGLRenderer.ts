@@ -101,7 +101,7 @@ module egret {
             return canvas;
         }
 
-        private onResize():void{
+        private onResize():void {
             //设置canvas宽高
             if (this.canvas) {
                 var container = document.getElementById(egret.StageDelegate.canvas_div_name);
@@ -130,7 +130,7 @@ module egret {
 
         private initWebGL() {
             var options = {
-                stencil: true//设置可以使用模板（用于遮罩实现）
+//                stencil: true//设置可以使用模板（用于遮罩实现）
             };
             var gl:any;
             var names = ["experimental-webgl", "webgl"];
@@ -191,7 +191,7 @@ module egret {
             gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.indexBuffer);
 
             var shader;
-            if(this.colorTransformMatrix) {
+            if (this.colorTransformMatrix) {
                 shader = this.shaderManager.colorTransformShader;
             }
             else {
@@ -243,19 +243,20 @@ module egret {
         private currentBaseTexture:Texture = null;
         private currentBatchSize:number = 0;
 
-        public drawRepeatImage(texture: Texture, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, repeat) {
+        public drawRepeatImage(texture:Texture, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, repeat) {
             var texture_scale_factor = egret.MainContext.instance.rendererContext.texture_scale_factor;
             sourceWidth = sourceWidth * texture_scale_factor;
             sourceHeight = sourceHeight * texture_scale_factor;
-            for (var x: number = destX; x < destWidth; x += sourceWidth) {
-                for (var y: number = destY; y < destHeight; y += sourceHeight) {
-                    var destW: number = Math.min(sourceWidth, destWidth - x);
-                    var destH: number = Math.min(sourceHeight, destHeight - y);
+            for (var x:number = destX; x < destWidth; x += sourceWidth) {
+                for (var y:number = destY; y < destHeight; y += sourceHeight) {
+                    var destW:number = Math.min(sourceWidth, destWidth - x);
+                    var destH:number = Math.min(sourceHeight, destHeight - y);
                     this.drawImage(texture, sourceX, sourceY, destW / texture_scale_factor, destH / texture_scale_factor, x, y, destW, destH);
                 }
             }
         }
-        public drawImage(texture:Texture, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight,repeat=undefined) {
+
+        public drawImage(texture:Texture, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, repeat = undefined) {
             if (this.contextLost) {
                 return;
             }
@@ -413,57 +414,87 @@ module egret {
             this._draw();
             var gl:any = this.gl;
             if (this.maskList.length == 0) {
-                gl.enable(gl.STENCIL_TEST);
-                gl.stencilFunc(gl.ALWAYS, 1, 1);
+                gl.enable(gl.SCISSOR_TEST);
             }
 
-            var maskData:any = this.maskDataFreeList.pop();
-            if (!maskData) {
-                maskData = {x: mask.x, y: mask.y, w: mask.width, h: mask.height};
+            var maskData:egret.Rectangle = this.getScissorRect(mask);
+            this.maskList.push(maskData);
+            this.scissor(maskData.x, maskData.y, maskData.width, maskData.height);
+        }
+
+        private getScissorRect(mask:egret.Rectangle):any {
+            var prevMask:egret.Rectangle = this.maskList[this.maskList.length - 1];
+            var x:number;
+            var y:number;
+            var w:number;
+            var h:number;
+            if (prevMask) {
+                if (prevMask.intersects(prevMask)) {
+                    x = Math.max(mask.x + this.worldTransform.tx, prevMask.x);
+                    y = Math.max(mask.y + this.worldTransform.ty, prevMask.y);
+                    w = Math.min(mask.x + this.worldTransform.tx + mask.width, prevMask.x + prevMask.width) - x;
+                    h = Math.min(mask.y + this.worldTransform.ty + mask.height, prevMask.y + prevMask.height) - y;
+                }
+                else {
+                    x = 0;
+                    y = 0;
+                    w = 0;
+                    h = 0;
+                }
             }
             else {
-                maskData.x = mask.x;
-                maskData.y = mask.y;
-                maskData.w = mask.width;
-                maskData.h = mask.height;
+                x = mask.x + this.worldTransform.tx;
+                y = mask.y + this.worldTransform.ty;
+                w = mask.width;
+                h = mask.height;
             }
-            this.maskList.push(maskData);
-
-            gl.colorMask(false, false, false, false);
-            gl.stencilOp(gl.KEEP, gl.KEEP, gl.INCR);
-
-            this.renderGraphics(maskData);
-
-            gl.colorMask(true, true, true, true);
-            gl.stencilFunc(gl.NOTEQUAL, 0, this.maskList.length);
-            gl.stencilOp(gl.KEEP, gl.KEEP, gl.KEEP);
+            var maskData:egret.Rectangle = this.maskDataFreeList.pop();
+            if (!maskData) {
+                maskData = new egret.Rectangle(x, y, w, h);
+            }
+            else {
+                maskData.x = x;
+                maskData.y = y;
+                maskData.width = w;
+                maskData.height = h;
+            }
+            return maskData;
         }
 
         public popMask():void {
             this._draw();
             var gl:any = this.gl;
             var maskData = this.maskList.pop();
-            if (maskData) {
-                gl.colorMask(false, false, false, false);
-                gl.stencilOp(gl.KEEP, gl.KEEP, gl.DECR);
-                this.renderGraphics(maskData);
-                gl.colorMask(true, true, true, true);
-                gl.stencilFunc(gl.NOTEQUAL, 0, this.maskList.length);
-                gl.stencilOp(gl.KEEP, gl.KEEP, gl.KEEP);
-                this.maskDataFreeList.push(maskData);
+            this.maskDataFreeList.push(maskData);
+            if (this.maskList.length != 0) {
+                maskData = this.maskList[0];
+                if (maskData.width > 0 || maskData.height > 0) {
+                    this.scissor(maskData.x, maskData.y, maskData.width, maskData.height);
+                }
             }
-            if (this.maskList.length == 0) {
-                gl.disable(gl.STENCIL_TEST);
+            else {
+                gl.disable(gl.SCISSOR_TEST);
             }
+        }
+
+        private scissor(x:number, y:number, w:number, h:number):void {
+            var gl:any = this.gl;
+            if (w < 0) {
+                w = 0;
+            }
+            if (h < 0) {
+                h = 0;
+            }
+            gl.scissor(x, -y + MainContext.instance.stage.stageHeight - h, w, h);
         }
 
         private colorTransformMatrix:Array<any>;
 
         public setGlobalColorTransform(colorTransformMatrix:Array<any>):void {
-            if(this.colorTransformMatrix != colorTransformMatrix) {
+            if (this.colorTransformMatrix != colorTransformMatrix) {
                 this._draw();
                 this.colorTransformMatrix = colorTransformMatrix;
-                if(colorTransformMatrix) {
+                if (colorTransformMatrix) {
                     var colorTransformMatrix = colorTransformMatrix.concat();
                     var shader:ColorTransformShader = this.shaderManager.colorTransformShader;
                     shader.uniforms.colorAdd.value.w = colorTransformMatrix.splice(19, 1)[0] / 255.0;
