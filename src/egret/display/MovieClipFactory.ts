@@ -27,68 +27,38 @@
 
 module egret {
     export class MovieClipFactory extends EventDispatcher {
-        private _mcData:any;
+        private _mcDataCollection:any;
         private _spriteSheet:SpriteSheet;
 
         constructor(data:any = null, texture:Texture = null) {
             super();
-            this._mcData = data;
+            this._mcDataCollection = data;
             if (texture) {
                 this._spriteSheet = new SpriteSheet(texture);
             }
         }
 
         public buildMovieClip(movieClipName:string):MovieClip {
-            var frameData:any = this._mcData.mc[movieClipName];
-            if (frameData) {
-                var outputMovieClip:MovieClip = new MovieClip();
-                if(this.initMovieClipWithRawData(outputMovieClip, frameData, this._mcData.res, this._spriteSheet))
-                {
-                    return outputMovieClip;
-                }
+            var mcData:any = this._mcDataCollection.mc[movieClipName];
+            if (mcData) {
+                return this._generateMovieClip(new MovieClip(), mcData);
             }
             return null;
         }
 
-        public buildRichMovieClip(movieClipName:string):RichMovieClip{
-            var frameData:any = this._mcData.mc[movieClipName];
-            if (frameData) {
-                var outputMovieClip:RichMovieClip = new RichMovieClip();
-                if(this.initRichMovieClipWithRawData(outputMovieClip, frameData, this._mcData.res, this._spriteSheet))
-                {
-                    return outputMovieClip;
-                }
+        public buildRichMovieClip(movieClipName:string):RichMovieClip {
+            var mcData:any = this._mcDataCollection.mc[movieClipName];
+            if (mcData) {
+                return <RichMovieClip>this._generateMovieClip(new RichMovieClip(), mcData);
             }
             return null;
         }
 
-        private initMovieClipWithRawData(outputMovieClip:MovieClip, frameData:any, textureData:any, spriteSheet:SpriteSheet):boolean{
-            if(this.checkDataValid(frameData, textureData, spriteSheet)){
-                outputMovieClip._textureData = textureData;
-                outputMovieClip._spriteSheet = spriteSheet;
-                outputMovieClip.frameRate = frameData["frameRate"] || 24;
-                outputMovieClip._initFramesData(frameData.frames);
-                outputMovieClip._initFrameLabels(frameData.labels);
-                return true;
+        private _generateMovieClip(movieClip:MovieClip, mcData:any):MovieClip{
+            if( movieClip._init(mcData, this._mcDataCollection.res, this._spriteSheet)){
+                return movieClip;
             }
-            return false;
-        }
-
-        private initRichMovieClipWithRawData(outputMovieClip:RichMovieClip, frameData:any, textureData:any, spriteSheet:SpriteSheet):boolean{
-            if(this.initMovieClipWithRawData(outputMovieClip, frameData, textureData, spriteSheet)){
-                outputMovieClip._initFrameScripts(frameData.scripts);
-                outputMovieClip._initFrameActions(frameData.actions);
-                return true;
-            }
-            return false;
-        }
-
-        private checkDataValid(frameData:any, textureData:any, spriteSheet:SpriteSheet):boolean{
-            var framesData:any = frameData["frames"];
-            if(!framesData || !textureData || !spriteSheet){
-                return false;
-            }
-            return true;
+            return null;
         }
     }
 }

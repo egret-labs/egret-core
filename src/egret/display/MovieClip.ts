@@ -34,12 +34,12 @@ module egret {
     export class MovieClip extends DisplayObjectContainer{
 
     //Data Property
+        public _frames:any[];
         public _textureData:any;
         public _spriteSheet:any;
-        private _frames:any[];
-        private _frameLabels:any[];
 
-        private _eventPool:string[] = [];
+        public _frameLabels:any[];
+        public _eventPool:string[] = [];
         private _bitmap:Bitmap;
 
     //Animation Property
@@ -51,20 +51,40 @@ module egret {
         private _frameIntervalTime:number;
 
         private _totalFrames:number;
-        public _currentFrameNum:number;
-        public _nextFrameNum:number;
-        private _displayedKeyFrameNum:number;
+        public _currentFrameNum:number = 0;
+        public _nextFrameNum:number = 1;
+        private _displayedKeyFrameNum:number = 0;
 
         private _passedTime:number = 0;
 
+    //Construct Function
         constructor() {
             super();
             this._playTimes = -1;
+            this._isPlaying = false;
+            this._isStopped = true;
             this._bitmap = new egret.Bitmap();
             this.addChild(this._bitmap);
         }
 
-        public _initFramesData(framesData:any[]):void{
+        public _init(mcData:any, textureData:any, spriteSheet:SpriteSheet):boolean{
+            if(!mcData["frames"] || !textureData || !spriteSheet){
+                return false;
+            }
+            this._textureData = textureData;
+            this._spriteSheet = spriteSheet;
+            this._initData(mcData);
+            this._initFrame();
+            return true;
+        }
+
+        public _initData(mcData:any):void{
+            this.frameRate = mcData["frameRate"] || 24;
+            this._initFramesData(mcData.frames);
+            this._initFrameLabelsData(mcData.labels);
+        }
+
+        private _initFramesData(framesData:any[]):void{
             var frames:any[] = [];
             var length:number = framesData.length;
             var keyFramePosition:number;
@@ -84,7 +104,7 @@ module egret {
             this._frames = frames;
             this._totalFrames = frames.length;
         }
-        public _initFrameLabels(frameLabelsData:any[]):void{
+        private _initFrameLabelsData(frameLabelsData:any[]):void{
             if(frameLabelsData){
                 var length:number = frameLabelsData.length;
                 if(length > 0){
@@ -96,8 +116,17 @@ module egret {
                 }
             }
         }
+        private _initFrame():void{
+            this._advanceFrame();
+            this._constructFrame();
+        }
 
+        /**
+         * 销毁MovieClip对象
+         * @method egret.MovieClip#dispose
+         */
         public dispose():void {
+            this.stop();
             this._textureData = null;
             this._spriteSheet = null;
             this._frames = null;
@@ -105,6 +134,7 @@ module egret {
             this._eventPool = null;
             this._bitmap = null;
         }
+
     //Data Function
         /**
          * 返回帧标签为指定字符串的FrameLabel对象
@@ -296,7 +326,8 @@ module egret {
         }
 
         public _advanceFrame(): void{
-            this._currentFrameNum = this._nextFrameNum
+            this._currentFrameNum = this._nextFrameNum;
+            console.log(this._currentFrameNum);
         }
 
         private _constructFrame() {
@@ -334,7 +365,7 @@ module egret {
             return texture;
         }
 
-        public _handlePendingEvent():void{
+        private _handlePendingEvent():void{
             if(this._eventPool.length != 0) {
                 this._eventPool.reverse();
                 var eventPool:any[] = this._eventPool;
@@ -423,8 +454,7 @@ module egret {
         }
 
         private set playTimes(value:number){
-            if(value < 0 && value >= 1)
-            {
+            if(value < 0 || value >= 1){
                 this._playTimes = value < 0 ? -1 : Math.floor(value);
             }
         }

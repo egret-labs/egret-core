@@ -24,17 +24,23 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+
 module egret {
     export class RichMovieClip extends MovieClip{
         private _frameScripts:any;
         private _frameActions:any;
-        private _eventPool:string[] = [];
 
         constructor() {
             super();
         }
 
-        public _initFrameScripts(frameScriptsData:any[]):void{
+        public _initData(mcData:any):void{
+            super._initData(mcData);
+            this._initFrameScripts(mcData.scripts);
+            this._initFrameActions(mcData.actions);
+        }
+
+        private _initFrameScripts(frameScriptsData:any[]):void{
             if(frameScriptsData){
                 var length:number = frameScriptsData.length;
                 if(length > 0){
@@ -49,9 +55,8 @@ module egret {
             }
         }
 
-        public _initFrameActions(frameActionsData:any[]):void{
-            if(frameActionsData)
-            {
+        private _initFrameActions(frameActionsData:any[]):void{
+            if(frameActionsData){
                 var length:number = frameActionsData.length;
                 if(length > 0){
                     this._frameActions = {};
@@ -61,6 +66,12 @@ module egret {
                     }
                 }
             }
+        }
+
+        public dispose():void {
+            super.dispose();
+            this._frameScripts = null;
+            this._frameActions = null;
         }
 
         public _advanceFrame(): void {
@@ -86,9 +97,7 @@ module egret {
                     }
                 }
             }
-            this._currentFrameNum = this._nextFrameNum;
+            super._advanceFrame();
         }
     }
 }
-
-
