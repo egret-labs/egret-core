@@ -38,56 +38,62 @@ module egret {
         private renderContext;
         constructor() {
             super();
+            this.init();
+        }
+
+        public init():void {
             this._bitmapData = document.createElement("canvas");
             this.renderContext = egret.RendererContext.createRendererContext(this._bitmapData);
         }
 
-        private static identityRectangle:egret.Rectangle = new egret.Rectangle();
+        public static identityRectangle:egret.Rectangle = new egret.Rectangle();
 
 		/**
          * 将制定显示对象绘制为一个纹理
 		 * @method egret.RenderTexture#drawToTexture
 		 * @param displayObject {egret.DisplayObject} 
+		 * @param clipBounds {egret.Rectangle}
+		 * @param scale number
 		 */
-        public drawToTexture(displayObject:egret.DisplayObject):boolean {
-            var cacheCanvas:HTMLCanvasElement = this._bitmapData;
-            var bounds = displayObject.getBounds(Rectangle.identity);
+        public drawToTexture(displayObject:egret.DisplayObject, clipBounds?:Rectangle, scale?:number):boolean {
+            var bounds = clipBounds || displayObject.getBounds(Rectangle.identity);
             if(bounds.width == 0 || bounds.height == 0) {
                 return false;
             }
 
+            var x = bounds.x;
+            var y = bounds.y;
+            var width = bounds.width;
+            var height = bounds.height;
+
             var texture_scale_factor = egret.MainContext.instance.rendererContext.texture_scale_factor;
-            bounds.width /= texture_scale_factor;
-            bounds.height /= texture_scale_factor;
+            width /= texture_scale_factor;
+            height /= texture_scale_factor;
 
-            bounds.width = Math.round(bounds.width);
-            bounds.height = Math.round(bounds.height);
+            width = Math.round(width);
+            height = Math.round(height);
 
-            cacheCanvas.width = bounds.width;
-            cacheCanvas.height = bounds.height;
-            cacheCanvas.style.width = bounds.width + "px";
-            cacheCanvas.style.height = bounds.height + "px";
-            if(this.renderContext._cacheCanvas) {
-                this.renderContext._cacheCanvas.width = bounds.width;
-                this.renderContext._cacheCanvas.height = bounds.height;
-            }
-            RenderTexture.identityRectangle.width = bounds.width;
-            RenderTexture.identityRectangle.height = bounds.height;
+            this.setSize(width, height);
+            this.begin();
 
             displayObject._worldTransform.identity();
             displayObject._worldTransform.a = 1 / texture_scale_factor;
             displayObject._worldTransform.d = 1 / texture_scale_factor;
+            if(scale){
+                displayObject._worldTransform.a *= scale;
+                displayObject._worldTransform.d *= scale;
+            }
             this.renderContext.setTransform(displayObject._worldTransform);
             displayObject.worldAlpha = 1;
             if (displayObject instanceof egret.DisplayObjectContainer) {
                 var anchorOffsetX:number = displayObject._anchorOffsetX;
                 var anchorOffsetY:number = displayObject._anchorOffsetY;
                 if(displayObject._anchorX != 0 || displayObject._anchorY != 0) {
-                    anchorOffsetX = displayObject._anchorX * bounds.width;
-                    anchorOffsetY = displayObject._anchorY * bounds.height;
+                    anchorOffsetX = displayObject._anchorX * width;
+                    anchorOffsetY = displayObject._anchorY * height;
                 }
-                this._offsetX = bounds.x + anchorOffsetX;
-                this._offsetY = bounds.y + anchorOffsetY;
+                this._offsetX = x + anchorOffsetX;
+                this._offsetY = y + anchorOffsetY;
                 displayObject._worldTransform.append(1, 0, 0, 1, -this._offsetX, -this._offsetY);
                 if(this._offsetX > 0) {
                     this._offsetX = 0;
@@ -117,21 +123,47 @@ module egret {
             if (mask) {
                 this.renderContext.popMask();
             }
+            RenderTexture.identityRectangle.width = width;
+            RenderTexture.identityRectangle.height = height;
             renderFilter.addDrawArea(RenderTexture.identityRectangle);
             this.renderContext.onRenderFinish();
+            this.end();
             renderFilter._drawAreaList = drawAreaList;
-            this._textureWidth = this._bitmapData.width * texture_scale_factor;
-            this._textureHeight = this._bitmapData.height * texture_scale_factor;
-            this._sourceWidth = this._textureWidth;
-            this._sourceHeight = this._textureHeight;
+            this._sourceWidth = width;
+            this._sourceHeight = height;
+            this._textureWidth = this._sourceWidth * texture_scale_factor;
+            this._textureHeight = this._sourceHeight * texture_scale_factor;
+
 
 
             //测试代码
+//            var cacheCanvas:HTMLCanvasElement = this._bitmapData;
 //            this.renderContext.canvasContext.setTransform(1, 0, 0, 1, 0, 0);
 //            this.renderContext.strokeRect(0, 0,cacheCanvas.width,cacheCanvas.height,"#ff0000");
 //            document.documentElement.appendChild(cacheCanvas);
 
             return true;
+        }
+
+        public setSize(width:number, height:number):void {
+            var cacheCanvas:HTMLCanvasElement = this._bitmapData;
+            cacheCanvas.width = width;
+            cacheCanvas.height = height;
+            cacheCanvas.style.width = width + "px";
+            cacheCanvas.style.height = height + "px";
+
+            if(this.renderContext._cacheCanvas) {
+                this.renderContext._cacheCanvas.width = width;
+                this.renderContext._cacheCanvas.height = height;
+            }
+        }
+
+        public begin():void {
+
+        }
+
+        public end():void {
+
         }
     }
 }

@@ -33,7 +33,6 @@ module dragonBones {
 		
 		public static parseTextureAtlasData(rawData:any, scale:number = 1):any{
 			var textureAtlasData:any = {};
-			textureAtlasData.__name = rawData[ConstValues.A_NAME];
 			var subTextureFrame:Rectangle;
 
             var subTextureList:any = rawData[ConstValues.SUB_TEXTURE];
@@ -74,7 +73,9 @@ module dragonBones {
 			}
 			
 			var version:string = rawDataToParse[ConstValues.A_VERSION];
-            if(version.toString() != DragonBones.DATA_VERSION)
+            version = version.toString();
+            if( version.toString() != DragonBones.DATA_VERSION &&
+                version.toString() != DragonBones.PARENT_COORDINATE_DATA_VERSION)
             {
                 throw new Error("Nonsupport version!");
             }
@@ -83,6 +84,7 @@ module dragonBones {
 			
 			var outputDragonBonesData:DragonBonesData =  new DragonBonesData();
 			outputDragonBonesData.name = rawDataToParse[ConstValues.A_NAME];
+            outputDragonBonesData.isGlobal = rawDataToParse[ConstValues.A_IS_GLOBAL] == "0" ? false : true;
             DataParser.tempDragonBonesData = outputDragonBonesData;
 
             var armatureList:any = rawDataToParse[ConstValues.ARMATURE];
@@ -97,7 +99,7 @@ module dragonBones {
 			return outputDragonBonesData;
 		}
 		
-		private static parseArmatureData(armatureDataToParse:any, frameRate:number = 0):ArmatureData{
+		private static parseArmatureData(armatureDataToParse:any, frameRate:number):ArmatureData{
 			var outputArmatureData:ArmatureData = new ArmatureData();
 			outputArmatureData.name = armatureDataToParse[ConstValues.A_NAME];
 
@@ -113,8 +115,10 @@ module dragonBones {
                 var skinObject:any = skinList[key];
                 outputArmatureData.addSkinData(DataParser.parseSkinData(skinObject));
             }
-			
-			DBDataUtil.transformArmatureData(outputArmatureData);
+			if(DataParser.tempDragonBonesData.isGlobal)
+            {
+                DBDataUtil.transformArmatureData(outputArmatureData);
+            }
 			outputArmatureData.sortBoneDataList();
 
             var animationList:any = armatureDataToParse[ConstValues.ANIMATION];
@@ -123,7 +127,7 @@ module dragonBones {
                 var animationObject:any = animationList[key];
                 var animationData:AnimationData = DataParser.parseAnimationData(animationObject, frameRate);
                 DBDataUtil.addHideTimeline(animationData, outputArmatureData);
-                DBDataUtil.transformAnimationData(animationData, outputArmatureData);
+                DBDataUtil.transformAnimationData(animationData, outputArmatureData, DataParser.tempDragonBonesData.isGlobal);
                 outputArmatureData.addAnimationData(animationData);
             }
 			
@@ -137,10 +141,13 @@ module dragonBones {
 			boneData.parent = boneObject[ConstValues.A_PARENT];
 			boneData.length = Number(boneObject[ConstValues.A_LENGTH]) || 0;
 			boneData.inheritRotation = DataParser.getBoolean(boneObject, ConstValues.A_INHERIT_ROTATION, true);
-			boneData.inheritScale = DataParser.getBoolean(boneObject, ConstValues.A_INHERIT_SCALE, false);
+			boneData.inheritScale = DataParser.getBoolean(boneObject, ConstValues.A_INHERIT_SCALE, true);
 			
-			DataParser.parseTransform(boneObject[ConstValues.TRANSFORM], boneData.global);
-			boneData.transform.copy(boneData.global);
+			DataParser.parseTransform(boneObject[ConstValues.TRANSFORM], boneData.transform);
+            if(DataParser.tempDragonBonesData.isGlobal)//绝对数据
+            {
+                boneData.global.copy(boneData.transform);
+            }
 			
 			return boneData;
 		}
@@ -164,6 +171,7 @@ module dragonBones {
 			slotData.name = slotObject[ConstValues.A_NAME];
 			slotData.parent = slotObject[ConstValues.A_PARENT];
 			slotData.zOrder = <number><any> (slotObject[ConstValues.A_Z_ORDER]);
+            slotData.zOrder = DataParser.getNumber(slotObject,ConstValues.A_Z_ORDER,0)||0;
 			slotData.blendMode = slotObject[ConstValues.A_BLENDMODE];
 
             var displayList:any = slotObject[ConstValues.DISPLAY];
@@ -190,12 +198,13 @@ module dragonBones {
 		}
 		
 		/** @private */
-		private static parseAnimationData(animationObject:any, frameRate:number = 0):AnimationData{
+		private static parseAnimationData(animationObject:any, frameRate:number):AnimationData{
 			var animationData:AnimationData = new AnimationData();
 			animationData.name = animationObject[ConstValues.A_NAME];
 			animationData.frameRate = frameRate;
 			animationData.duration = Math.round((DataParser.getNumber(animationObject, ConstValues.A_DURATION, 1) || 1) * 1000 / frameRate);
-			animationData.playTimes = DataParser.getNumber(animationObject, ConstValues.A_LOOP, 0) || 0;
+			animationData.playTimes = DataParser.getNumber(animationObject, ConstValues.A_LOOP, 1);
+            animationData.playTimes = animationData.playTimes != NaN ? animationData.playTimes : 1;
 			animationData.fadeTime = DataParser.getNumber(animationObject, ConstValues.A_FADE_IN_TIME, 0) || 0;
 			animationData.scale = DataParser.getNumber(animationObject, ConstValues.A_SCALE, 1) || 0;
 			//use frame tweenEase, NaN
@@ -233,11 +242,13 @@ module dragonBones {
 			return animationData;
 		}
 		
-		private static parseTransformTimeline(timelineObject:any, duration:number, frameRate:number = 0):TransformTimeline{
+		private static parseTransformTimeline(timelineObject:any, duration:number, frameRate:number):TransformTimeline{
 			var outputTimeline:TransformTimeline = new TransformTimeline();
 			outputTimeline.name = timelineObject[ConstValues.A_NAME];
 			outputTimeline.scale = DataParser.getNumber(timelineObject, ConstValues.A_SCALE, 1) || 0;
 			outputTimeline.offset = DataParser.getNumber(timelineObject, ConstValues.A_OFFSET, 0) || 0;
+            outputTimeline.originPivot.x = DataParser.getNumber(timelineObject, ConstValues.A_PIVOT_X, 0) || 0;
+            outputTimeline.originPivot.y = DataParser.getNumber(timelineObject, ConstValues.A_PIVOT_Y, 0) || 0;
 			outputTimeline.duration = duration;
 
             var frameList:any = timelineObject[ConstValues.FRAME];
@@ -253,26 +264,30 @@ module dragonBones {
 			return outputTimeline;
 		}
 		
-		private static parseTransformFrame(frameObject:any, frameRate:number = 0):TransformFrame{
+		private static parseTransformFrame(frameObject:any, frameRate:number):TransformFrame{
 			var outputFrame:TransformFrame = new TransformFrame();
             DataParser.parseFrame(frameObject, outputFrame, frameRate);
 			
 			outputFrame.visible = !DataParser.getBoolean(frameObject, ConstValues.A_HIDE, false);
 			
 			//NaN:no tween, 10:auto tween, [-1, 0):ease in, 0:line easing, (0, 1]:ease out, (1, 2]:ease in out
-			outputFrame.tweenEasing = DataParser.getNumber(frameObject, ConstValues.A_TWEEN_EASING, 10);
-			outputFrame.tweenRotate = DataParser.getNumber(frameObject, ConstValues.A_TWEEN_ROTATE, 0);
+			outputFrame.tweenEasing = DataParser.getNumber(frameObject, ConstValues.A_TWEEN_EASING, 10) || 10;
+			outputFrame.tweenRotate = Math.floor(DataParser.getNumber(frameObject, ConstValues.A_TWEEN_ROTATE, 0) || 0);
 			outputFrame.tweenScale = DataParser.getBoolean(frameObject, ConstValues.A_TWEEN_SCALE, true);
-			outputFrame.displayIndex = DataParser.getNumber(frameObject, ConstValues.A_DISPLAY_INDEX, 0)|| 0;
-			
+			outputFrame.displayIndex = Math.floor(DataParser.getNumber(frameObject, ConstValues.A_DISPLAY_INDEX, 0)|| 0);
+            //outputFrame.blendMode = frameObject[ConstValues.A_BLENDMODE] || "normal";
+
 			//如果为NaN，则说明没有改变过zOrder
-			outputFrame.zOrder = DataParser.getNumber(frameObject, ConstValues.A_Z_ORDER, NaN);
+			outputFrame.zOrder = DataParser.getNumber(frameObject, ConstValues.A_Z_ORDER, DataParser.tempDragonBonesData.isGlobal ? NaN : 0);
 			
-			DataParser.parseTransform(frameObject[ConstValues.TRANSFORM], outputFrame.global, outputFrame.pivot);
-			outputFrame.transform.copy(outputFrame.global);
+			DataParser.parseTransform(frameObject[ConstValues.TRANSFORM], outputFrame.transform, outputFrame.pivot);
+            if(DataParser.tempDragonBonesData.isGlobal)//绝对数据
+            {
+                outputFrame.global.copy(outputFrame.transform);
+            }
 			
-			outputFrame.scaleOffset.x = DataParser.getNumber(frameObject, ConstValues.A_SCALE_X_OFFSET, 0);
-			outputFrame.scaleOffset.y = DataParser.getNumber(frameObject, ConstValues.A_SCALE_Y_OFFSET, 0);
+			outputFrame.scaleOffset.x = DataParser.getNumber(frameObject, ConstValues.A_SCALE_X_OFFSET, 0)||0;
+			outputFrame.scaleOffset.y = DataParser.getNumber(frameObject, ConstValues.A_SCALE_Y_OFFSET, 0)||0;
 			
 			var colorTransformObject:any = frameObject[ConstValues.COLOR_TRANSFORM];
 			if(colorTransformObject){
@@ -342,7 +357,7 @@ module dragonBones {
 		}
 		
 		private static getBoolean(data:any, key:string, defaultValue:boolean):boolean{
-			if(key in data){
+			if(data && key in data){
 				switch(String(data[key])){
 					case "0":
 					case "NaN":
@@ -362,7 +377,7 @@ module dragonBones {
 		}
 		
 		private static getNumber(data:any, key:string, defaultValue:number):number{
-			if(key in data){
+			if(data && key in data){
 				switch(String(data[key])){
 					case "NaN":
 					case "":

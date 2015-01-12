@@ -30,23 +30,21 @@ module dragonBones {
 	export class TransformUtil{
 		private static HALF_PI:number = Math.PI * 0.5;
 		private static DOUBLE_PI:number = Math.PI * 2;
-		
-		private static _helpMatrix:Matrix = new Matrix();
-		
-		public static transformPointWithParent(transform:DBTransform, parent:DBTransform):void{
-			TransformUtil.transformToMatrix(parent, TransformUtil._helpMatrix, true);
-			TransformUtil._helpMatrix.invert();
-			
-			var x:number = transform.x;
-			var y:number = transform.y;
-			
-			transform.x = TransformUtil._helpMatrix.a * x + TransformUtil._helpMatrix.c * y + TransformUtil._helpMatrix.tx;
-			transform.y = TransformUtil._helpMatrix.d * y + TransformUtil._helpMatrix.b * x + TransformUtil._helpMatrix.ty;
-			
-			transform.skewX = TransformUtil.formatRadian(transform.skewX - parent.skewX);
-			transform.skewY = TransformUtil.formatRadian(transform.skewY - parent.skewY);
-		}
-		
+
+        private static _helpTransformMatrix:Matrix = new Matrix();
+        private static _helpParentTransformMatrix:Matrix = new Matrix();
+
+        public static globalToLocal(transform:DBTransform, parent:DBTransform):void
+        {
+            TransformUtil.transformToMatrix(transform, TransformUtil._helpTransformMatrix, true);
+            TransformUtil.transformToMatrix(parent, TransformUtil._helpParentTransformMatrix, true);
+
+            TransformUtil._helpParentTransformMatrix.invert();
+            TransformUtil._helpTransformMatrix.concat(TransformUtil._helpParentTransformMatrix);
+
+            TransformUtil.matrixToTransform(TransformUtil._helpTransformMatrix, transform, transform.scaleX * parent.scaleX >= 0, transform.scaleY * parent.scaleY >= 0);
+        }
+
 		public static transformToMatrix(transform:DBTransform, matrix:Matrix, keepScale:boolean = false):void{
 			if(keepScale){
 				matrix.a = transform.scaleX * Math.cos(transform.skewY)
@@ -65,7 +63,45 @@ module dragonBones {
 				matrix.ty = transform.y;
 			}
 		}
-		
+
+        public static matrixToTransform(matrix:Matrix, transform:DBTransform, scaleXF:Boolean, scaleYF:Boolean):void
+        {
+            transform.x = matrix.tx;
+            transform.y = matrix.ty;
+            transform.scaleX = Math.sqrt(matrix.a * matrix.a + matrix.b * matrix.b) * (scaleXF ? 1 : -1);
+            transform.scaleY = Math.sqrt(matrix.d * matrix.d + matrix.c * matrix.c) * (scaleYF ? 1 : -1);
+
+            var skewXArray:Array<number> = [];
+            skewXArray[0] = Math.acos(matrix.d / transform.scaleY);
+            skewXArray[1] = -skewXArray[0];
+            skewXArray[2] = Math.asin(-matrix.c / transform.scaleY);
+            skewXArray[3] = skewXArray[2] >= 0 ? Math.PI - skewXArray[2] : skewXArray[2] - Math.PI;
+
+            if(Number(skewXArray[0]).toFixed(4) == Number(skewXArray[2]).toFixed(4) || Number(skewXArray[0]).toFixed(4) == Number(skewXArray[3]).toFixed(4))
+            {
+                transform.skewX = skewXArray[0];
+            }
+            else
+            {
+                transform.skewX = skewXArray[1];
+            }
+
+            var skewYArray:Array<number> = [];
+            skewYArray[0] = Math.acos(matrix.a / transform.scaleX);
+            skewYArray[1] = -skewYArray[0];
+            skewYArray[2] = Math.asin(matrix.b / transform.scaleX);
+            skewYArray[3] = skewYArray[2] >= 0 ? Math.PI - skewYArray[2] : skewYArray[2] - Math.PI;
+
+            if(Number(skewYArray[0]).toFixed(4) == Number(skewYArray[2]).toFixed(4) || Number(skewYArray[0]).toFixed(4) == Number(skewYArray[3]).toFixed(4))
+            {
+                transform.skewY = skewYArray[0];
+            }
+            else
+            {
+                transform.skewY = skewYArray[1];
+            }
+
+        }
 		public static formatRadian(radian:number):number{
 			//radian %= DOUBLE_PI;
 			if (radian > Math.PI){

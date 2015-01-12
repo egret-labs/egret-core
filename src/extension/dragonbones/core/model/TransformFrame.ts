@@ -36,6 +36,7 @@ module dragonBones {
 		//补间是否对Scale起作用
         public tweenScale:boolean;
 		public displayIndex:number = 0;
+        //public blendMode:string = "normal";
 		public visible:boolean;
 		public zOrder:number;
 		

@@ -59,5 +59,29 @@ module dragonBones {
             this.tx = (c1 * this.ty - d1 * tx1) / n;
             this.ty = -(a1 * this.ty - b1 * tx1) / n;
         }
+
+        public concat(m:Matrix):void
+        {
+            var ma = m.a;
+            var mb = m.b;
+            var mc = m.c;
+            var md = m.d;
+            var tx1 = this.tx;
+            var ty1 = this.ty;
+
+            if (ma != 1 || mb != 0 || mc != 0 || md != 1) {
+                var a1 = this.a;
+                var b1 = this.b;
+                var c1 = this.c;
+                var d1 = this.d;
+
+                this.a = a1 * ma + b1 * mc;
+                this.b = a1 * mb + b1 * md;
+                this.c = c1 * ma + d1 * mc;
+                this.d = c1 * mb + d1 * md;
+            }
+            this.tx = tx1 * ma + ty1 * mc + m.tx;
+            this.ty = tx1 * mb + ty1 * md + m.ty;
+        }
     }
 }

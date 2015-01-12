@@ -29,7 +29,7 @@
 module dragonBones {
 	export class DragonBones{
 		public static DATA_VERSION:string = "2.3";
-		public static VERSION:string = "3.0.0";
+        public static PARENT_COORDINATE_DATA_VERSION:String = "3.0";
 		
 		public constructor(){
 		}

@@ -60,12 +60,18 @@ module RES {
             if(resItem.loaded){
                 this.analyzeData(resItem,loader.data)
             }
+            else{
+                resItem.url = resItem.data.url;
+                compFunc.call(data.thisObject,resItem);
+                return;
+            }
             if(typeof(loader.data)=="string"){
                 this._dataFormat = egret.URLLoaderDataFormat.TEXTURE;
                 this.loadFile(resItem,compFunc,data.thisObject);
                 this._dataFormat = egret.URLLoaderDataFormat.TEXT;
             }
             else{
+                resItem.url = resItem.data.url;
                 compFunc.call(data.thisObject,resItem);
             }
         }
@@ -144,6 +150,23 @@ module RES {
                 }
             }
             return spriteSheet;
+        }
+
+        /**
+         * @inheritDoc
+         */
+        public destroyRes(name:string):boolean{
+            var sheet:egret.SpriteSheet = this.fileDic[name];
+            if(sheet){
+                delete this.fileDic[name];
+                for(var subkey in sheet._textureMap){
+                    if(this.textureMap[subkey]){
+                        delete this.textureMap[subkey];
+                    }
+                }
+                return true;
+            }
+            return false;
         }
     }
 }

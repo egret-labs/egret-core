@@ -154,6 +154,9 @@ module egret {
          * @returns {Array<any>}
          */
         public getChangeList():Array<any> {
+            if(!this.baseVersionData) {
+                return [];
+            }
             var changeDatas:Object = {};
             for (var key in this.changeVersionData) {
                 if (this.changeVersionData[key]["d"] == 1) {//被删除
@@ -196,6 +199,9 @@ module egret {
          * 检查文件是否是最新版本
          */
         public checkIsNewVersion(url:string):boolean {
+            if(!this.baseVersionData) {
+                return true;
+            }
             if (this.changeVersionData[url] != null) {//在变化版本里
                 return this.compareVersion(this.changeVersionData, this.localVersionData, url);
             }
@@ -209,6 +215,9 @@ module egret {
          * 保存本地版本信息文件
          */
         public saveVersion(url:string):void {
+            if(!this.baseVersionData) {
+                return;
+            }
             var change = false;
             if (this.changeVersionData[url] != null) {//在变化版本里
                 if (!this.compareVersion(this.changeVersionData, this.localVersionData, url)) {
