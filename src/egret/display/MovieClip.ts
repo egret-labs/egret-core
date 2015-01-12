@@ -36,7 +36,7 @@ module egret {
     //Data Property
         public _frames:any[];
         public _textureData:any;
-        public _spriteSheet:any;
+        public _spriteSheet:SpriteSheet;
 
         public _frameLabels:any[];
         public _eventPool:string[] = [];
@@ -67,7 +67,7 @@ module egret {
             this.addChild(this._bitmap);
         }
 
-        public _init(mcData:any, textureData:any, spriteSheet:SpriteSheet):boolean{
+        public init(mcData:any, textureData:any, spriteSheet:SpriteSheet):boolean{
             if(!mcData["frames"] || !textureData || !spriteSheet){
                 return false;
             }
@@ -260,7 +260,7 @@ module egret {
             this._gotoFrame(frame);
         }
 
-        public _gotoFrame(frame:any): void
+        private _gotoFrame(frame:any): void
         {
             var frameNum:number;
             if(typeof frame === "string"){
@@ -288,7 +288,7 @@ module egret {
             this._handlePendingEvent();
         }
 
-        public _advanceTime(advancedTime:number):void{
+        private _advanceTime(advancedTime:number):void{
             var frameIntervalTime:number = this._frameIntervalTime;
             var currentTime = this._passedTime + advancedTime;
             this._passedTime = currentTime % frameIntervalTime;

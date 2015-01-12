@@ -27,19 +27,17 @@
 
 module egret {
     export class MovieClipFactory extends EventDispatcher {
-        private _mcDataCollection:any;
+        private _mcDataSet:any;
         private _spriteSheet:SpriteSheet;
 
         constructor(data:any = null, texture:Texture = null) {
             super();
-            this._mcDataCollection = data;
-            if (texture) {
-                this._spriteSheet = new SpriteSheet(texture);
-            }
+            this._mcDataSet = data;
+            this.texture = texture;
         }
 
         public buildMovieClip(movieClipName:string):MovieClip {
-            var mcData:any = this._mcDataCollection.mc[movieClipName];
+            var mcData:any = this._mcDataSet.mc[movieClipName];
             if (mcData) {
                 return this._generateMovieClip(new MovieClip(), mcData);
             }
@@ -47,7 +45,7 @@ module egret {
         }
 
         public buildRichMovieClip(movieClipName:string):RichMovieClip {
-            var mcData:any = this._mcDataCollection.mc[movieClipName];
+            var mcData:any = this._mcDataSet.mc[movieClipName];
             if (mcData) {
                 return <RichMovieClip>this._generateMovieClip(new RichMovieClip(), mcData);
             }
@@ -55,10 +53,25 @@ module egret {
         }
 
         private _generateMovieClip(movieClip:MovieClip, mcData:any):MovieClip{
-            if( movieClip._init(mcData, this._mcDataCollection.res, this._spriteSheet)){
+            if( movieClip.init(mcData, this._mcDataSet.res, this._spriteSheet)){
                 return movieClip;
             }
             return null;
+        }
+
+        public get mcDataSet():any{
+            return this._mcDataSet;
+        }
+        public set mcDataSet(value:any){
+            this._mcDataSet = value;
+        }
+
+        public set texture(value:Texture){
+            this._spriteSheet = value ? new SpriteSheet(value) : null;
+        }
+
+        public get spriteSheet():SpriteSheet{
+            return this._spriteSheet;
         }
     }
 }
