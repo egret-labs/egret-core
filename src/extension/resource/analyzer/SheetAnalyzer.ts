@@ -145,5 +145,22 @@ module RES {
             }
             return spriteSheet;
         }
+
+        /**
+         * @inheritDoc
+         */
+        public destroyRes(name:string):boolean{
+            var sheet:egret.SpriteSheet = this.fileDic[name];
+            if(sheet){
+                delete this.fileDic[name];
+                for(var subkey in sheet._textureMap){
+                    if(this.textureMap[subkey]){
+                        delete this.textureMap[subkey];
+                    }
+                }
+                return true;
+            }
+            return false;
+        }
     }
 }
