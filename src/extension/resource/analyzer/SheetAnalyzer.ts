@@ -61,6 +61,7 @@ module RES {
                 this.analyzeData(resItem,loader.data)
             }
             else{
+                resItem.url = resItem.data.url;
                 compFunc.call(data.thisObject,resItem);
                 return;
             }
@@ -70,6 +71,7 @@ module RES {
                 this._dataFormat = egret.URLLoaderDataFormat.TEXT;
             }
             else{
+                resItem.url = resItem.data.url;
                 compFunc.call(data.thisObject,resItem);
             }
         }
