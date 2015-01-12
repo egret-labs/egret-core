@@ -345,9 +345,9 @@ module egret {
                 frameData =  this._frames[frameData.frame-1];
             }
             if(frameData.res){
-                var texture:Texture = this.getTexture(frameData.res);
-                bitmap.x = frameData.x;
-                bitmap.y = frameData.y;
+                var texture:Texture = this._getTexture(frameData.res);
+                bitmap.x = frameData.x | 0;
+                bitmap.y = frameData.y | 0;
                 bitmap.texture = texture;
                 return true;
             }else{
@@ -357,7 +357,7 @@ module egret {
             this._displayedKeyFrameNum = currentFrameNum;
         }
 
-        private getTexture(name:string):Texture {
+        private _getTexture(name:string):Texture {
             var textureData = this._textureData[name];
             var texture = this._spriteSheet.getTexture(name);
             if (!texture) {
