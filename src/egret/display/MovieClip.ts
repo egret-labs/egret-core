@@ -328,7 +328,6 @@ module egret {
 
         public _advanceFrame(): void{
             this._currentFrameNum = this._nextFrameNum;
-            console.log(this._currentFrameNum);
         }
 
         private _constructFrame() {
@@ -380,20 +379,15 @@ module egret {
                         isLoopComplete = true;
                     }else if(event == Event.COMPLETE){
                         isComplete = true;
-                    }
-                    else
-                    {
-                        console.log(event);
+                    }else{
                         this.dispatchEventWith(event);
                     }
                 }
 
                 if(isLoopComplete){
-                    console.log(Event.LOOP_COMPLETE);
                     this.dispatchEventWith(Event.LOOP_COMPLETE);
                 }
                 if(isComplete){
-                    console.log(Event.COMPLETE);
                     this.dispatchEventWith(Event.COMPLETE);
                 }
             }
