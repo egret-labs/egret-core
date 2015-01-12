@@ -60,6 +60,10 @@ module RES {
             if(resItem.loaded){
                 this.analyzeData(resItem,loader.data)
             }
+            else{
+                compFunc.call(data.thisObject,resItem);
+                return;
+            }
             if(typeof(loader.data)=="string"){
                 this._dataFormat = egret.URLLoaderDataFormat.TEXTURE;
                 this.loadFile(resItem,compFunc,data.thisObject);
