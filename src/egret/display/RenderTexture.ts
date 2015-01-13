@@ -98,13 +98,6 @@ module egret {
                 this._offsetX = x + anchorOffsetX;
                 this._offsetY = y + anchorOffsetY;
                 displayObject._worldTransform.append(1, 0, 0, 1, -this._offsetX, -this._offsetY);
-                if(this._offsetX > 0) {
-                    this._offsetX = 0;
-
-                }
-                if(this._offsetY > 0) {
-                    this._offsetY = 0;
-                }
                 var list = (<egret.DisplayObjectContainer>displayObject)._children;
                 for (var i = 0 , length = list.length; i < length; i++) {
                     var child:DisplayObject = list[i];
