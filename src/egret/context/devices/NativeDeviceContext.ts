@@ -254,6 +254,7 @@ egret.RenderTexture.prototype.init = function () {
 
 egret.RenderTexture.prototype.setSize = function (width:number, height:number) {
     //todo 复用
+    this.dispose();
     this._bitmapData = new egret_native.RenderTexture(width, height);
     this.renderContext = new egret.NativeRendererContext();
 };
@@ -264,4 +265,12 @@ egret.RenderTexture.prototype.begin = function () {
 
 egret.RenderTexture.prototype.end = function () {
     this._bitmapData.end();
+};
+
+egret.RenderTexture.prototype.dispose = function () {
+    if(this._bitmapData) {
+        this._bitmapData.dispose();
+        this.renderContext = null;
+        this._bitmapData = null;
+    }
 };
