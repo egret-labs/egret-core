@@ -38,7 +38,6 @@ module egret {
         private renderContext;
         constructor() {
             super();
-            this.init();
         }
 
         public init():void {
@@ -59,6 +58,10 @@ module egret {
             var bounds = clipBounds || displayObject.getBounds(Rectangle.identity);
             if(bounds.width == 0 || bounds.height == 0) {
                 return false;
+            }
+
+            if(!this._bitmapData) {
+                this.init();
             }
 
             var x = bounds.x;
@@ -164,6 +167,13 @@ module egret {
 
         public end():void {
 
+        }
+
+        public dispose():void {
+            if(this._bitmapData) {
+                this._bitmapData = null;
+                this.renderContext = null;
+            }
         }
     }
 }
