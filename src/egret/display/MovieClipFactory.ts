@@ -39,7 +39,7 @@ module egret {
         public buildMovieClip(movieClipName:string):MovieClip {
             var mcData:any = this._mcDataSet.mc[movieClipName];
             if (mcData) {
-                return this._generateMovieClip(new MovieClip(), mcData);
+                return new MovieClip(mcData, this._mcDataSet.res, this._spriteSheet);
             }
             return null;
         }
@@ -47,14 +47,11 @@ module egret {
         public buildRichMovieClip(movieClipName:string):RichMovieClip {
             var mcData:any = this._mcDataSet.mc[movieClipName];
             if (mcData) {
-                return <RichMovieClip>this._generateMovieClip(new RichMovieClip(), mcData);
-            }
-            return null;
-        }
-
-        private _generateMovieClip(movieClip:MovieClip, mcData:any):MovieClip{
-            if( movieClip.init(mcData, this._mcDataSet.res, this._spriteSheet)){
-                return movieClip;
+                var m:RichMovieClip = new RichMovieClip();
+                m.mcData = mcData;
+                m.textureData = this._mcDataSet.res;
+                m.spriteSheet = this._spriteSheet;
+                return m;
             }
             return null;
         }

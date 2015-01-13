@@ -30,17 +30,17 @@ module egret {
         private _frameScripts:any;
         private _frameActions:any;
 
-        constructor() {
-            super();
+        constructor(mcData?:any, textureData?:any, spriteSheet?:SpriteSheet) {
+            super(mcData, textureData, spriteSheet);
         }
 
-        public _initData(mcData:any):void{
-            super._initData(mcData);
-            this._initFrameScripts(mcData.scripts);
-            this._initFrameActions(mcData.actions);
+        public _fillMCData(mcData:any):void{
+            super._fillMCData(mcData);
+            this._fillFrameScripts(mcData.scripts);
+            this._fillFrameActions(mcData.actions);
         }
 
-        private _initFrameScripts(frameScriptsData:any[]):void{
+        private _fillFrameScripts(frameScriptsData:any[]):void{
             if(frameScriptsData){
                 var length:number = frameScriptsData.length;
                 if(length > 0){
@@ -55,7 +55,7 @@ module egret {
             }
         }
 
-        private _initFrameActions(frameActionsData:any[]):void{
+        private _fillFrameActions(frameActionsData:any[]):void{
             if(frameActionsData){
                 var length:number = frameActionsData.length;
                 if(length > 0){
@@ -66,12 +66,6 @@ module egret {
                     }
                 }
             }
-        }
-
-        public dispose():void {
-            super.dispose();
-            this._frameScripts = null;
-            this._frameActions = null;
         }
 
         public _advanceFrame(): void {

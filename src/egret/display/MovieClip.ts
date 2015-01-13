@@ -40,8 +40,10 @@ module egret {
         public _spriteSheet:SpriteSheet;
 
         public _frameLabels:any[];
-        public _eventPool:string[] = [];
+        public _eventPool:string[];
         private _bitmap:Bitmap;
+        private _dataInitialized:boolean;
+        private _frameInitialized:boolean;
 
     //Animation Property
         private _isPlaying:boolean;
@@ -52,40 +54,55 @@ module egret {
         private _frameIntervalTime:number;
 
         private _totalFrames:number;
-        public _currentFrameNum:number = 0;
-        public _nextFrameNum:number = 1;
-        private _displayedKeyFrameNum:number = 0;
+        public _currentFrameNum:number;
+        public _nextFrameNum:number;
+        private _displayedKeyFrameNum:number;
 
-        private _passedTime:number = 0;
+        private _passedTime:number;
 
     //Construct Function
-        constructor() {
+        constructor(mcData?:any, textureData?:any, spriteSheet?:SpriteSheet) {
             super();
-            this._playTimes = -1;
-            this._isPlaying = false;
-            this._isStopped = true;
             this._bitmap = new egret.Bitmap();
             this.addChild(this._bitmap);
-        }
+            this._reset();
 
-        public init(mcData:any, textureData:any, spriteSheet:SpriteSheet):boolean{
-            if(!mcData["frames"] || !textureData || !spriteSheet){
-                return false;
-            }
             this._textureData = textureData;
             this._spriteSheet = spriteSheet;
             this._initData(mcData);
             this._initFrame();
-            return true;
+        }
+
+        public _reset():void{
+            this._frames = null;
+            this._textureData = null;
+            this._spriteSheet = null;
+            this._dataInitialized = false;
+            this._frameInitialized = false;
+            this._playTimes = -1;
+            this._isPlaying = false;
+            this.setIsStopped(true);
+            this._currentFrameNum = 0;
+            this._nextFrameNum = 1;
+            this._displayedKeyFrameNum = 0;
+            this._passedTime = 0;
+            this._eventPool = [];
         }
 
         public _initData(mcData:any):void{
-            this.frameRate = mcData["frameRate"] || 24;
-            this._initFramesData(mcData.frames);
-            this._initFrameLabelsData(mcData.labels);
+            if(mcData && mcData["frames"]){
+                this._fillMCData(mcData);
+                this._dataInitialized = true;
+            }
         }
 
-        private _initFramesData(framesData:any[]):void{
+        public _fillMCData(mcData:any):void{
+            this.frameRate = mcData["frameRate"] || 24;
+            this._fillFramesData(mcData.frames);
+            this._fillFrameLabelsData(mcData.labels);
+        }
+
+        private _fillFramesData(framesData:any[]):void{
             var frames:any[] = [];
             var length:number = framesData.length;
             var keyFramePosition:number;
@@ -105,7 +122,8 @@ module egret {
             this._frames = frames;
             this._totalFrames = frames.length;
         }
-        private _initFrameLabelsData(frameLabelsData:any[]):void{
+
+        private _fillFrameLabelsData(frameLabelsData:any[]):void{
             if(frameLabelsData){
                 var length:number = frameLabelsData.length;
                 if(length > 0){
@@ -117,23 +135,13 @@ module egret {
                 }
             }
         }
-        private _initFrame():void{
-            this._advanceFrame();
-            this._constructFrame();
-        }
 
-        /**
-         * 销毁MovieClip对象
-         * @method egret.MovieClip#dispose
-         */
-        public dispose():void {
-            this.stop();
-            this._textureData = null;
-            this._spriteSheet = null;
-            this._frames = null;
-            this._frameLabels = null;
-            this._eventPool = null;
-            this._bitmap = null;
+        private _initFrame():void{
+            if(this._textureData && this._spriteSheet && this._dataInitialized){
+                this._advanceFrame();
+                this._constructFrame();
+                this._frameInitialized = true;
+            }
         }
 
     //Data Function
@@ -143,7 +151,7 @@ module egret {
          * @param labelName {string} 帧标签名
          * @param ignoreCase {boolean} 是否忽略大小写，可选参数，默认false
          */
-        public getFrameLabelByName(labelName: string, ignoreCase: boolean = false): FrameLabel {
+        public _getFrameLabelByName(labelName: string, ignoreCase: boolean = false): FrameLabel {
             if (ignoreCase) {
                 labelName = labelName.toLowerCase();
             }
@@ -163,7 +171,7 @@ module egret {
          * @method egret.MovieClip#getFrameLabelByFrame
          * @param frame {number} 帧序号
          */
-        public getFrameLabelByFrame(frame: number): FrameLabel {
+        public _getFrameLabelByFrame(frame: number): FrameLabel {
             var outputFramelabel:FrameLabel = null;
             var frameLabels = this._frameLabels;
             for (var i = 0; i < frameLabels.length; i++) {
@@ -180,7 +188,7 @@ module egret {
          * @method egret.MovieClip#getFrameLabelForFrame
          * @param frame {number} 帧序号
          */
-        public getFrameLabelForFrame(frame: number): FrameLabel{
+        public _getFrameLabelForFrame(frame: number): FrameLabel{
             var outputFrameLabel:FrameLabel = null;
             var tempFrameLabel:FrameLabel = null;
             var frameLabels = this._frameLabels;
@@ -198,14 +206,14 @@ module egret {
 
         /**
          * 继续播放当前动画
-         * @method egret.MovieClip#stop
+         * @method egret.MovieClip#play
          * @param playTimes {number} 播放次数。 参数为整数，可选参数，>=1：设定播放次数，<0：循环播放，默认值 0：不改变播放次数，
          */
         public play(playTimes:number = 0): void {
             this._isPlaying = true;
-            this.playTimes = playTimes;
+            this.setPlayTimes(playTimes);
             if (this._totalFrames > 1) {
-                this.isStopped = false;
+                this.setIsStopped(false);
             }
         }
 
@@ -215,7 +223,7 @@ module egret {
          */
         public stop(): void {
             this._isPlaying = false;
-            this.isStopped = true;
+            this.setIsStopped(true);
         }
 
         /**
@@ -265,7 +273,7 @@ module egret {
         {
             var frameNum:number;
             if(typeof frame === "string"){
-                frameNum = this.getFrameLabelByName(frame).frame;
+                frameNum = this._getFrameLabelByName(frame).frame;
             }else{
                 frameNum = parseInt(frame+'', 10);
                 if(<any>frameNum != frame)
@@ -413,7 +421,7 @@ module egret {
          * @member {number} egret.MovieClip#currentFrame
          */
         public get currentFrameLabel(): string {
-            var label = this.getFrameLabelByFrame(this._currentFrameNum);
+            var label = this._getFrameLabelByFrame(this._currentFrameNum);
             return label && label.name;
         }
         /**
@@ -421,7 +429,7 @@ module egret {
          * @member {number} egret.MovieClip#currentFrame
          */
         public get currentLabel(): string {
-            var label: FrameLabel = this.getFrameLabelForFrame(this._currentFrameNum);
+            var label: FrameLabel = this._getFrameLabelForFrame(this._currentFrameNum);
             return label ? label.name : null;
         }
 
@@ -448,13 +456,52 @@ module egret {
             return this._isPlaying;
         }
 
-        private set playTimes(value:number){
+        /**
+         * 数据源
+         * @member {any} egret.MovieClip#dataSource
+         */
+        public set mcData(value:any){
+            if(!this._frameInitialized) {
+                this._initData(value);
+                this._initFrame();
+            }
+        }
+
+        /**
+         * 纹理数据
+         * @member {any} egret.MovieClip#textureData
+         */
+        public set textureData(value:any){
+            if(!this._frameInitialized){
+                this._textureData = value;
+                this._initFrame();
+            }
+        }
+        public get textureData():any{
+            return this._textureData;
+        }
+
+        /**
+         * 纹理集
+         * @member {any} egret.MovieClip#spriteSheet
+         */
+        public get spriteSheet():any{
+            return this._spriteSheet;
+        }
+        public set spriteSheet(value:any){
+            if(!this._frameInitialized) {
+                this._spriteSheet = value;
+                this._initFrame();
+            }
+        }
+
+        private setPlayTimes(value:number){
             if(value < 0 || value >= 1){
                 this._playTimes = value < 0 ? -1 : Math.floor(value);
             }
         }
 
-        private set isStopped(value:boolean){
+        private setIsStopped(value:boolean){
             if(this._isStopped == value) {
                 return;
             }
