@@ -53,6 +53,9 @@ module egret {
             return this._text;
         }
         public set text(value:string) {
+            if(this._text==value){
+                return;
+            }
             this._textChanged = true;
             this._text = value;
 
