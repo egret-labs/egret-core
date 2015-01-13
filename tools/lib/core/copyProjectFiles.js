@@ -24,6 +24,7 @@ function copyFilesToNative(projectPath, nativePath, platform, ignorePathList) {
     //2、拷贝文件
     //launcher
 
+    file.copy(path.join(projectPath, "launcher/runtime_loader.js"), path.join(url, "launcher/runtime_loader.js"));
     file.copy(path.join(projectPath, "launcher/native_loader.js"), path.join(url, "launcher/native_loader.js"));
     file.copy(path.join(projectPath, "launcher/native_require.js"), path.join(url, "launcher/native_require.js"));
 
