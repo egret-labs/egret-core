@@ -66,31 +66,31 @@ module egret {
         private firstCharHeight:number = 0;
 
         public _getFirstCharHeight():number{
-            if(this.firstCharHeight!=0){
-                return this.firstCharHeight;
-            }
-            for(var str in this.charList){
-                var c:any = this.charList[str];
-                if(c){
-                    var sourceH:number = c.sourceH;
-                    if(sourceH===undefined){
-                        var h:number = c.h;
-                        if(h===undefined){
-                            h = 0;
+            if(this.firstCharHeight==0){
+                for(var str in this.charList){
+                    var c:any = this.charList[str];
+                    if(c){
+                        var sourceH:number = c.sourceH;
+                        if(sourceH===undefined){
+                            var h:number = c.h;
+                            if(h===undefined){
+                                h = 0;
+                            }
+                            var offY:number = c.offY;
+                            if(offY===undefined){
+                                offY = 0;
+                            }
+                            sourceH = h+offY;
                         }
-                        var offY:number = c.offY;
-                        if(offY===undefined){
-                            offY = 0;
+                        if(sourceH<=0){
+                            continue;
                         }
-                        sourceH = h+offY;
+                        this.firstCharHeight = sourceH;
+                        break;
                     }
-                    if(sourceH<=0){
-                        continue;
-                    }
-                    this.firstCharHeight = sourceH;
-                    break;
                 }
             }
+            return this.firstCharHeight;
         }
 
         private parseConfig(fntText:string):any {
