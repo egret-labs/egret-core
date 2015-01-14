@@ -35,31 +35,29 @@ module egret {
     export class MovieClip extends DisplayObjectContainer{
 
     //Data Property
-        public _mcData:any;
-        public _frames:any[];
-        public _textureData:any;
-        public _spriteSheet:SpriteSheet;
+        public _mcData:any = null;
+        public _frames:any[] = null;
+        public _textureData:any = null;
+        public _spriteSheet:SpriteSheet = null;
 
-        public _frameLabels:any[];
-        public _eventPool:string[];
-        private _bitmap:Bitmap;
-        private _dataInitialized:boolean;
-        private _frameInitialized:boolean;
+        public _frameLabels:any[] = null;
+        public _eventPool:string[] = null;
+        private _bitmap:Bitmap = null;
 
     //Animation Property
-        private _isPlaying:boolean;
-        private _isStopped:boolean;
-        private _playTimes:number;
+        private _isPlaying:boolean = false;
+        private _isStopped:boolean = true;
+        private _playTimes:number = 0;
 
-        private _frameRate:number;
-        private _frameIntervalTime:number;
+        private _frameRate:number = 0;
+        private _frameIntervalTime:number = 0;
 
-        private _totalFrames:number;
-        public _currentFrameNum:number;
-        public _nextFrameNum:number;
-        private _displayedKeyFrameNum:number;
+        private _totalFrames:number = 0;
+        public _currentFrameNum:number = 0;
+        public _nextFrameNum:number = 0;
+        private _displayedKeyFrameNum:number = 0;
 
-        private _passedTime:number;
+        private _passedTime:number = 0;
 
     //Construct Function
         constructor(movieClipData?:MovieClipData) {
@@ -73,10 +71,12 @@ module egret {
             this._reset();
             var movieClipData:MovieClipData = this.movieClipData;
             if(movieClipData){
-                this._fillMCData(movieClipData._mcData);
                 this._textureData = movieClipData._textureData;
                 this._spriteSheet = movieClipData._spriteSheet;
-                this._initFrame();
+                if(movieClipData._mcData){
+                    this._fillMCData(movieClipData._mcData);
+                    this._initFrame();
+                }
             }
         }
 
@@ -84,8 +84,6 @@ module egret {
             this._frames = null;
             this._textureData = null;
             this._spriteSheet = null;
-            this._dataInitialized = false;
-            this._frameInitialized = false;
             this._playTimes = -1;
             this._isPlaying = false;
             this.setIsStopped(true);
@@ -104,7 +102,7 @@ module egret {
 
         private _fillFramesData(framesData:any[]):void{
             var frames:any[] = [];
-            var length:number = framesData.length;
+            var length:number = framesData ? framesData.length : 0;
             var keyFramePosition:number;
             for(var i=0; i < length; i++){
                 var frameData:any = framesData[i];
@@ -137,10 +135,9 @@ module egret {
         }
 
         private _initFrame():void{
-            if(this._textureData && this._spriteSheet && this._dataInitialized){
+            if(this._textureData && this._spriteSheet && this._totalFrames>0){
                 this._advanceFrame();
                 this._constructFrame();
-                this._frameInitialized = true;
             }
         }
 
@@ -155,12 +152,14 @@ module egret {
             if (ignoreCase) {
                 labelName = labelName.toLowerCase();
             }
-            var outputFramelabel:FrameLabel = null;
             var frameLabels = this._frameLabels;
-            for (var i = 0; i < frameLabels.length; i++) {
-                outputFramelabel = frameLabels[i];
-                if (ignoreCase ? outputFramelabel.name.toLowerCase() === labelName : outputFramelabel.name === labelName) {
-                    return outputFramelabel;
+            if(frameLabels){
+                var outputFramelabel:FrameLabel = null;
+                for (var i = 0; i < frameLabels.length; i++) {
+                    outputFramelabel = frameLabels[i];
+                    if (ignoreCase ? outputFramelabel.name.toLowerCase() === labelName : outputFramelabel.name === labelName) {
+                        return outputFramelabel;
+                    }
                 }
             }
             return null;
@@ -172,12 +171,14 @@ module egret {
          * @param frame {number} 帧序号
          */
         public _getFrameLabelByFrame(frame: number): FrameLabel {
-            var outputFramelabel:FrameLabel = null;
             var frameLabels = this._frameLabels;
-            for (var i = 0; i < frameLabels.length; i++) {
-                outputFramelabel = frameLabels[i];
-                if (outputFramelabel.frame === frame) {
-                    return outputFramelabel;
+            if(frameLabels){
+                var outputFramelabel:FrameLabel = null;
+                for (var i = 0; i < frameLabels.length; i++) {
+                    outputFramelabel = frameLabels[i];
+                    if (outputFramelabel.frame === frame) {
+                        return outputFramelabel;
+                    }
                 }
             }
             return null;
@@ -192,12 +193,14 @@ module egret {
             var outputFrameLabel:FrameLabel = null;
             var tempFrameLabel:FrameLabel = null;
             var frameLabels = this._frameLabels;
-            for (var i = 0; i < frameLabels.length; i++) {
-                tempFrameLabel = frameLabels[i];
-                if (tempFrameLabel.frame > frame) {
-                    return outputFrameLabel;
+            if(frameLabels){
+                for (var i = 0; i < frameLabels.length; i++) {
+                    tempFrameLabel = frameLabels[i];
+                    if (tempFrameLabel.frame > frame) {
+                        return outputFrameLabel;
+                    }
+                    outputFrameLabel = tempFrameLabel;
                 }
-                outputFrameLabel = tempFrameLabel;
             }
             return outputFrameLabel;
         }
