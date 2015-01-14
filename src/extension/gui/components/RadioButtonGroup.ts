@@ -49,7 +49,7 @@ module egret.gui {
 		/**
 		 * 组名
 		 */
-		public _name:string;
+        public _name: string = null;
 		/**
 		 * 单选按钮列表
 		 */		
@@ -79,7 +79,7 @@ module egret.gui {
 			return this.radioButtons.length;
 		}
 		
-		private _selectedValue:any;
+        private _selectedValue: any = null;
 		/**
 		 * 当前被选中的单选按钮的value属性值。注意，此属性仅当目标RadioButton在显示列表时有效。
 		 * @member egret.gui.RadioButtonGroup#selectedValue
@@ -112,7 +112,7 @@ module egret.gui {
 			}
 		}
 		
-		private _selection:RadioButton;
+        private _selection: RadioButton = null;
 		/**
 		 * 当前被选中的单选按钮引用,注意，此属性仅当目标RadioButton在显示列表时有效。
 		 * @member egret.gui.RadioButtonGroup#selection

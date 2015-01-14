@@ -45,9 +45,9 @@ module egret.gui {
 		/**
 		 * 鼠标按下标志
 		 */		
-		private mouseIsDown:boolean;
+		private mouseIsDown:boolean = false;
 			
-		private _openButton:ButtonBase;
+        private _openButton: ButtonBase = null;
 		/**
 		 * 下拉按钮实例
 		 * @member egret.gui.DropDownController#openButton
@@ -70,7 +70,7 @@ module egret.gui {
 		 */		
 		public hitAreaAdditions:Array<DisplayObject>;
 		
-		private _dropDown:DisplayObject;
+        private _dropDown: DisplayObject = null;
 		/**
 		 * 下拉区域显示对象
 		 * @member egret.gui.DropDownController#dropDown
@@ -117,7 +117,7 @@ module egret.gui {
 		
 		private _rollOverOpenDelay:number = NaN;
 		
-		private rollOverOpenDelayTimer:Timer;
+        private rollOverOpenDelayTimer: Timer = null;
 		/**
 		 * 指定滑过锚点按钮时打开下拉列表要等待的延迟（以毫秒为单位）。
 		 * 如果设置为 NaN，则下拉列表会在单击时打开，而不是在滑过时打开。默认值NaN

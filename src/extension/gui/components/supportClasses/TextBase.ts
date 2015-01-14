@@ -58,7 +58,7 @@ module egret.gui {
 		/**
 		 * 呈示此文本的内部 TextField
 		 */
-		public _textField:TextField;
+        public _textField: TextField = null;
 
 		private allStyleChanged:boolean = false;
 
@@ -99,7 +99,7 @@ module egret.gui {
 			this.invalidateDisplayList();
 		}
 
-		private fontFamilyChanged:boolean;
+		private fontFamilyChanged:boolean = false;
 		private _fontFamily:string = "SimSun";
 		/**
 		 * 字体名称 。默认值：SimSun
@@ -117,7 +117,7 @@ module egret.gui {
 			this.setStyle("fontFamily",value);
 		}
 
-		public _sizeChanged:boolean;
+		public _sizeChanged:boolean = false;
 		private _size:number = 30;
 		/**
 		 * 字号大小,默认值30 。
@@ -158,7 +158,7 @@ module egret.gui {
 			//	super.setFocus();
 		}
 
-		private boldChanged:boolean;
+		private boldChanged:boolean = false;
 		private _bold:boolean = false;
 		/**
 		 * 是否显示为粗体，默认false。
@@ -176,7 +176,7 @@ module egret.gui {
 			this.setStyle("bold",value);
 		}
 
-		private italicChanged:boolean;
+		private italicChanged:boolean = false;
 		private _italic:boolean = false;
 		/**
 		 * 是否显示为斜体，默认false。
@@ -194,7 +194,7 @@ module egret.gui {
 			this.setStyle("italic",value);
 		}
 
-		private textAlignChanged:boolean;
+		private textAlignChanged:boolean = false;
 		private _textAlign:string = HorizontalAlign.LEFT;
 		/**
 		 * 文字的水平对齐方式 ,请使用HorizontalAlign中定义的常量。
@@ -213,7 +213,7 @@ module egret.gui {
 			this.setStyle("textAlign",value);
 		}
 
-		private verticalAlignChanged:boolean;
+		private verticalAlignChanged:boolean = false;
 		private _verticalAlign:string = VerticalAlign.TOP;
 		/**
 		 * 文字的垂直对齐方式 ,请使用VerticalAlign中定义的常量。
@@ -232,7 +232,7 @@ module egret.gui {
 			this.setStyle("verticalAlign",value);
 		}
 
-		private lineSpacingChanged:boolean;
+		private lineSpacingChanged:boolean = false;
 		public _lineSpacing:number = 0;
 		/**
 		 * 行间距
@@ -260,7 +260,7 @@ module egret.gui {
 			this.invalidateDisplayList();
 		}
 
-		private textColorChanged:boolean;
+		private textColorChanged:boolean = false;
 		private _textColor:number = 0xFFFFFF;
 		/**
 		 * @member egret.gui.TextBase#textColor
@@ -280,7 +280,7 @@ module egret.gui {
 		/**
 		 * @member egret.gui.TextBase#_textChanged
 		 */
-		public _textChanged:boolean;
+		public _textChanged:boolean = false;
 		public _text:string = "";
 		/**
 		 * @member egret.gui.TextBase#text

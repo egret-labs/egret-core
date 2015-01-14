@@ -56,10 +56,10 @@ module egret.gui {
 				UIComponent.prototypeCanSet = (chain.__proto__!==undefined);
 			}
 		}
-		/**
-		 * __proto__属性是否可以设置的标志，兼容IE9，IE10。
-		 */
-		private static prototypeCanSet:boolean;
+        /**
+         * __proto__属性是否可以设置的标志，兼容IE9，IE10。
+         */
+        private static prototypeCanSet: boolean = undefined;
 		/**
 		 * 添加到舞台
 		 */
@@ -71,7 +71,7 @@ module egret.gui {
 				this.checkInvalidateFlag();
 		}
 
-		private _id:string;
+        private _id: string = null;
 		/**
 		 * 组件 ID。此值将作为对象的实例名称，因此不应包含任何空格或特殊字符。应用程序中的每个组件都应具有唯一的 ID。
 		 * @constant egret.gui.UIComponent#id
@@ -84,7 +84,7 @@ module egret.gui {
 			this._id = value;
 		}
 
-		private _isPopUp:boolean;
+        private _isPopUp: boolean = false;
 		/**
 		 * @member egret.gui.UIComponent#isPopUp
 		 */
@@ -95,7 +95,7 @@ module egret.gui {
 			this._isPopUp = value;
 		}
 
-		private _owner:any;
+        private _owner: any = null;
 		/**
 		 * @member egret.gui.UIComponent#owner
 		 */
@@ -593,10 +593,10 @@ module egret.gui {
 			this._enabled = value;
 		}
 
-		/**
-		 * 属性提交前组件旧的宽度
-		 */
-		private oldWidth:number;
+        /**
+         * 属性提交前组件旧的宽度
+         */
+        private oldWidth: number = NaN;
 
 		public _width:number = 0;
 		/**
@@ -626,10 +626,10 @@ module egret.gui {
 			return this._width;
 		}
 
-		/**
-		 * 属性提交前组件旧的高度
-		 */
-		private oldHeight:number;
+        /**
+         * 属性提交前组件旧的高度
+         */
+        private oldHeight: number = NaN;
 
 		public _height:number = 0;
 		/**
@@ -803,11 +803,11 @@ module egret.gui {
 			}
 		}
 
-		/**
-		 * 属性提交前组件旧的X
-		 * @member egret.gui.UIComponent#oldX
-		 */
-		private oldX:number;
+        /**
+         * 属性提交前组件旧的X
+         * @member egret.gui.UIComponent#oldX
+         */
+        private oldX: number = NaN;
 		/**
 		 * @constant egret.gui.UIComponent#x
 		 */
@@ -826,11 +826,11 @@ module egret.gui {
 				(<UIComponent><any> (this.parent))._childXYChanged();
 		}
 
-		/**
-		 * 属性提交前组件旧的Y
-		 * @member egret.gui.UIComponent#oldY
-		 */
-		private oldY:number;
+        /**
+         * 属性提交前组件旧的Y
+         * @member egret.gui.UIComponent#oldY
+         */
+        private oldY: number = NaN;
 		/**
 		 * @constant egret.gui.UIComponent#y
 		 */
@@ -913,16 +913,16 @@ module egret.gui {
 				this._invalidateSizeFlag = false;
 			}
 		}
-		/**
-		 * 上一次测量的首选宽度
-		 * @member egret.gui.UIComponent#_oldPreferWidth
-		 */
-		public _oldPreferWidth:number;
-		/**
-		 * 上一次测量的首选高度
-		 * @member egret.gui.UIComponent#_oldPreferHeight
-		 */
-		public _oldPreferHeight:number;
+        /**
+         * 上一次测量的首选宽度
+         * @member egret.gui.UIComponent#_oldPreferWidth
+         */
+        public _oldPreferWidth: number = NaN;
+        /**
+         * 上一次测量的首选高度
+         * @member egret.gui.UIComponent#_oldPreferHeight
+         */
+        public _oldPreferHeight: number = NaN;
 		/**
 		 * 测量组件尺寸，返回尺寸是否发生变化
 		 */
@@ -1116,7 +1116,7 @@ module egret.gui {
 		}
 
 
-		private _left:number;
+		private _left:number = NaN;
 
 		/**
 		 * @member egret.gui.UIComponent#left
@@ -1131,7 +1131,7 @@ module egret.gui {
 			this.invalidateParentSizeAndDisplayList();
 		}
 
-		private _right:number;
+        private _right: number = NaN;
 		/**
 		 * @member egret.gui.UIComponent#right
 		 */
@@ -1145,7 +1145,7 @@ module egret.gui {
 			this.invalidateParentSizeAndDisplayList();
 		}
 
-		private _top:number;
+        private _top: number = NaN;
 		/**
 		 * @member egret.gui.UIComponent#top
 		 */
@@ -1159,7 +1159,7 @@ module egret.gui {
 			this.invalidateParentSizeAndDisplayList();
 		}
 
-		private _bottom:number;
+        private _bottom: number = NaN;
 		/**
 		 * @member egret.gui.UIComponent#bottom
 		 */
@@ -1174,7 +1174,7 @@ module egret.gui {
 		}
 
 
-		private _horizontalCenter:number;
+        private _horizontalCenter: number = NaN;
 		/**
 		 * @member egret.gui.UIComponent#horizontalCenter
 		 */
@@ -1188,7 +1188,7 @@ module egret.gui {
 			this.invalidateParentSizeAndDisplayList();
 		}
 
-		private _verticalCenter:number;
+        private _verticalCenter: number = NaN;
 		/**
 		 * @member egret.gui.UIComponent#verticalCenter
 		 */
@@ -1203,7 +1203,7 @@ module egret.gui {
 		}
 
 
-		private _percentWidth:number;
+        private _percentWidth: number = NaN;
 		/**
 		 * @member egret.gui.UIComponent#percentWidth
 		 */
@@ -1218,7 +1218,7 @@ module egret.gui {
 		}
 
 
-		private _percentHeight:number;
+        private _percentHeight: number = NaN;
 
 		/**
 		 * @member egret.gui.UIComponent#percentHeight

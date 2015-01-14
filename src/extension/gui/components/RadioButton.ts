@@ -70,12 +70,12 @@ module egret.gui {
             this._setEnabled(value);
         }
 
-		/**
-		 * 存储根据groupName自动创建的RadioButtonGroup列表
-		 */		
-		private static automaticRadioButtonGroups:Object;
+        /**
+         * 存储根据groupName自动创建的RadioButtonGroup列表
+         */
+        private static automaticRadioButtonGroups: Object = null;
 		
-		private _group:RadioButtonGroup;
+		private _group:RadioButtonGroup = null;
 		/**
 		 * 此单选按钮所属的组。同一个组的多个单选按钮之间互斥。
 		 * 若不设置此属性，则根据groupName属性自动创建一个唯一的RadioButtonGroup。
@@ -139,7 +139,7 @@ module egret.gui {
 			this.invalidateDisplayList();
 		}
 		
-		private _value:any;
+        private _value: any = null;
 		/**
 		 * 与此单选按钮关联的自定义数据。
 		 * 当被点击时，所属的RadioButtonGroup对象会把此属性赋值给ItemClickEvent.item属性并抛出事件。

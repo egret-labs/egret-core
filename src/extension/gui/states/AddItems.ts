@@ -84,13 +84,13 @@ module egret.gui {
 		 * 相对的显示元素的实例名
 		 * @member egret.gui.AddItems#relativeTo
 		 */		
-		public relativeTo:string;
+        public relativeTo: string = null;
 		
 		/**
 		 * 目标实例名
 		 * @member egret.gui.AddItems#target
 		 */		
-		public target:string;
+        public target: string = null;
 		
 		/**
 		 * @method egret.gui.AddItems#initialize

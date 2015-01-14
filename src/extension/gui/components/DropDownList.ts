@@ -48,7 +48,7 @@ module egret.gui {
 		 * [SkinPart]选中项文本
 		 * @member egret.gui.DropDownList#labelDisplay
 		 */		
-		public labelDisplay:IDisplayText;
+		public labelDisplay:IDisplayText = null;
 		
 		private _prompt:string = "";
 		/**

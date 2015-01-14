@@ -174,7 +174,7 @@ module egret.gui {
             this.updateModal(UIGlobals.uiStage);
         }
 
-        private modalMask:Rect;
+        private modalMask: Rect = null;
         /**
          * 更新窗口模态效果
          */
@@ -273,11 +273,11 @@ module egret.gui {
         /**
          * @member egret.PopUpData#popUp
          */
-        public popUp:IVisualElement;
+        public popUp: IVisualElement = null;
 
         /**
          * @member egret.PopUpData#modal
          */
-        public modal:boolean;
+        public modal:boolean = false;
     }
 }

@@ -233,7 +233,7 @@ module egret.gui {
 				this._setLayout(value);
 		}
 		
-		private _popUpContainer:UILayer;
+        private _popUpContainer: UILayer = null;
 		/**
 		 * 弹出窗口层容器。
 		 * @member egret.gui.UIStage#popUpContainer
@@ -246,7 +246,7 @@ module egret.gui {
 			return this._popUpContainer;
 		}
 		
-		private _toolTipContainer:UILayer;
+        private _toolTipContainer: UILayer = null;
 		/**
 		 * 工具提示层容器。
 		 * @member egret.gui.UIStage#toolTipContainer
@@ -259,7 +259,7 @@ module egret.gui {
 			return this._toolTipContainer;
 		}
 		
-		private _cursorContainer:UILayer;
+        private _cursorContainer: UILayer = null;
 		/**
 		 * 鼠标样式层容器。
 		 * @member egret.gui.UIStage#cursorContainer

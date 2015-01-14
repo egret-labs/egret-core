@@ -69,13 +69,13 @@ module egret.gui {
 		 * 进行更改之后的从零开始的索引。
 		 * @member egret.gui.IndexChangeEvent#newIndex
 		 */
-		public newIndex:number;
+		public newIndex:number = NaN;
 		
 		/**
 		 * 进行更改之前的从零开始的索引。
 		 * @member egret.gui.IndexChangeEvent#oldIndex
 		 */		
-		public oldIndex:number;
+		public oldIndex:number = NaN;
 
         /**
          * 使用指定的EventDispatcher对象来抛出事件对象。抛出的对象将会缓存在对象池上，供下次循环复用。

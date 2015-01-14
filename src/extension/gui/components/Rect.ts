@@ -44,7 +44,7 @@ module egret.gui {
             this.touchChildren = false;
         }
 
-        private _graphics:Graphics;
+        private _graphics: Graphics = null;
 
         public get graphics():Graphics {
             if (!this._graphics) {

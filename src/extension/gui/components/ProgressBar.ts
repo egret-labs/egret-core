@@ -47,19 +47,19 @@ module egret.gui {
          * [SkinPart]进度高亮显示对象。
 		 * @member egret.gui.ProgressBar#thumb
          */
-        public thumb:DisplayObject;
+        public thumb:DisplayObject = null;
         /**
          * [SkinPart]轨道显示对象，用于确定thumb要覆盖的区域。
 		 * @member egret.gui.ProgressBar#track
          */
-        public track:DisplayObject;
+        public track: DisplayObject = null;
         /**
          * [SkinPart]进度条文本
 		 * @member egret.gui.ProgressBar#labelDisplay
          */
-        public labelDisplay:Label;
+        public labelDisplay: Label = null;
 
-        private _labelFunction:Function;
+        private _labelFunction: Function = null;
         /**
          * 进度条文本格式化回调函数。示例：labelFunction(value:Number,maximum:Number):String;
 		 * @member egret.gui.ProgressBar#labelFunction
@@ -128,11 +128,11 @@ module egret.gui {
         /**
          * 动画实例
          */
-        private animator:Animation;
+        private animator: Animation = null;
         /**
          * 动画播放结束时要到达的value。
          */
-        private slideToValue:number;
+        private slideToValue:number = NaN;
 
         /**
          * 进度条的当前值。

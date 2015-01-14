@@ -85,7 +85,7 @@ module egret.gui {
 		}
 
 
-		private _selectedChild:IVisualElement;
+        private _selectedChild: IVisualElement = null;
 		/**
 		 * 当前选中的子项
 		 * @member egret.gui.ViewStack#selectedChild

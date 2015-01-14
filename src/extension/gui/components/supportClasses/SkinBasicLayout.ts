@@ -42,7 +42,7 @@ module egret.gui {
             super();
         }
 
-        private _target:Skin;
+        private _target: Skin = null;
 
         /**
          * 目标布局对象

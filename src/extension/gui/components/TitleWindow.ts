@@ -56,13 +56,13 @@ module egret.gui {
 		 * [SkinPart]关闭按钮
 		 * @member egret.gui.TitleWindow#closeButton
 		 */	
-		public closeButton:Button;
+        public closeButton: Button = null;
 		
 		/**
 		 * [SkinPart]可移动区域
 		 * @member egret.gui.TitleWindow#moveArea
 		 */		
-		public moveArea:DisplayObject;
+        public moveArea: DisplayObject = null;
 		
 		private _showCloseButton:boolean = true;
 		/**
@@ -138,8 +138,8 @@ module egret.gui {
 		/**
 		 * 鼠标按下时的偏移量
 		 */		
-		private _offsetPointX:number;
-		private _offsetPointY:number;
+		private _offsetPointX:number = NaN;
+		private _offsetPointY:number = NaN;
 		/**
 		 * 鼠标在可移动区域按下
 		 * @method egret.gui.TitleWindow#moveArea_mouseDownHandler

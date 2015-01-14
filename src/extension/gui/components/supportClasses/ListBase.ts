@@ -65,7 +65,7 @@ module egret.gui {
 		 */		
 		public _doingWholesaleChanges:boolean = false;
 		
-		private dataProviderChanged:boolean;
+		private dataProviderChanged:boolean = false;
 
         public _setDataProvider(value):void{
             if (this.dataProvider)
@@ -105,7 +105,7 @@ module egret.gui {
 		
 		private _labelField:string = "label";
 		
-		private labelFieldOrFunctionChanged:boolean; 
+        private labelFieldOrFunctionChanged: boolean = false; 
 		
 		/**
 		 * 数据项如果是一个对象，此属性为数据项中用来显示标签文字的字段名称。
@@ -128,7 +128,7 @@ module egret.gui {
             this.invalidateProperties();
         }
 
-		private _labelFunction:Function; 
+        private _labelFunction: Function = null; 
 		
 		/**
 		 * 用户提供的函数，在每个项目上运行以确定其标签。
@@ -237,9 +237,9 @@ module egret.gui {
 		/**
 		 *  在属性提交前缓存真实选中项的数据源
 		 */
-		public _pendingSelectedItem:any;
+        public _pendingSelectedItem: any = undefined;
 		
-		private _selectedItem:any;
+        private _selectedItem: any = null;
 		
 		/**
 		 * 当前已选中的项目。设置此属性会取消选中当前选定的项目并选择新指定的项目。<br/>

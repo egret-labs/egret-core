@@ -51,9 +51,9 @@ module egret.gui {
          */
         public easerFunction:Function = Ease.sineInOut;
 
-        private thisObject:any;
+        private thisObject: any = null;
 
-        private _isPlaying:boolean
+        private _isPlaying: boolean = false;
         /**
          * 是否正在播放动画，不包括延迟等待和暂停的阶段
 		 * @member egret.gui.Animation#isPlaying
@@ -135,24 +135,24 @@ module egret.gui {
          * 动画开始播放时的回调函数,只会在首次延迟等待结束时触发一次,若有重复播放，之后将触发repeatFunction。startFunction(animation:Animation):void
 		 * @member egret.gui.Animation#startFunction
          */
-        public startFunction:Function;
+        public startFunction: Function = null;
         /**
          * 动画播放结束时的回调函数,可以是正常播放结束，也可以是被调用了end()方法导致结束。注意：stop()方法被调用不会触发这个函数。endFunction(animation:Animation):void
          * @member egret.gui.Animation#endFunction
          */
-        public endFunction: (animation: Animation) => void;
+        public endFunction: (animation: Animation) => void = null;
 
         /**
          * 动画更新时的回调函数,updateFunction(animation:Animation):void
 		 * @member egret.gui.Animation#updateFunction
          */
-        public updateFunction:Function;
+        public updateFunction: Function = null;
 
         /**
          * 动画被停止的回调函数，即stop()方法被调用。stopFunction(animation:Animation):void
 		 * @member egret.gui.Animation#stopFunction
          */
-        public stopFunction:Function;
+        public stopFunction: Function = null;
 
         /**
          * 开始正向播放动画,无论何时调用都重新从零时刻开始，若设置了延迟会首先进行等待。

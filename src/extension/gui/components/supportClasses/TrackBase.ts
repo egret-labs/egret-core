@@ -68,13 +68,13 @@ module egret.gui {
 		 * [SkinPart]实体滑块组件
 		 * @member egret.gui.TrackBase#thumb
 		 */		
-		public thumb:Button;
+        public thumb: Button = null;
 		
 		/**
 		 * [SkinPart]实体轨道组件
 		 * @member egret.gui.TrackBase#track
 		 */
-		public track:Button;
+        public track: Button = null;
 
         /**
          * 最大有效值
@@ -215,8 +215,8 @@ module egret.gui {
 		/**
 		 * 记录鼠标在thumb上按下的位置
 		 */		
-		public _clickOffsetX:number;
-		public _clickOffsetY:number;
+		public _clickOffsetX:number = NaN;
+		public _clickOffsetY:number = NaN;
 
 		/**
 		 * 更新皮肤部件（通常为滑块）的大小和可见性。<br/>
@@ -307,8 +307,8 @@ module egret.gui {
 			}
 		}
 
-        public _moveStageX:number;
-        public _moveStageY:number;
+        public _moveStageX: number = NaN;
+        public _moveStageY: number = NaN;
 
 		/**
 		 * 鼠标移动事件
@@ -355,7 +355,7 @@ module egret.gui {
 		public track_mouseDownHandler(event:TouchEvent):void { 
 		}
 		
-		private mouseDownTarget:DisplayObject;
+        private mouseDownTarget: DisplayObject = null;
 		
 		/**
 		 * 当在组件上按下鼠标时记录被按下的子显示对象

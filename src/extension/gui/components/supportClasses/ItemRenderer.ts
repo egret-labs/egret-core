@@ -46,7 +46,7 @@ module egret.gui {
 		}
 		
 		private dataChangedFlag:boolean = false;
-		private _data:any;
+        private _data: any = null;
 		/**
 		 * @member egret.gui.ItemRenderer#data
 		 */

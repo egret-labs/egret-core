@@ -50,24 +50,24 @@ module egret.gui {
 		 * 要修改的属性名
 		 * @member egret.gui.SetProperty#name
 		 */		
-		public name:string;
+        public name: string = null;
 		
 		/**
 		 * 目标实例名
 		 * @member egret.gui.SetProperty#target
 		 */		
-		public target:string;
+        public target: string = null;
 		
 		/**
 		 * 属性值 
 		 * @member egret.gui.SetProperty#value
 		 */		
-		public value:any;
+        public value: any = null;
 		
 		/**
 		 * 旧的属性值 
 		 */		
-		private oldValue:any;
+        private oldValue: any = null;
 		
 		/**
 		 * @method egret.gui.SetProperty#apply

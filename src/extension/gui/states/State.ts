@@ -53,7 +53,7 @@ module egret.gui {
 		 * 视图状态的名称。给定组件的状态名称必须唯一。必须设置此属性。
 		 * @member egret.gui.State#name
 		 */		
-		public name:string;
+        public name: string = null;
 		
 		/**
 		 * 该视图状态的覆盖，表现为实现 IOverride 接口的对象的数组。

@@ -64,7 +64,7 @@ module egret.gui {
 		/**
 		 * [SkinPart]实体文本输入组件
 		 */		
-		public textDisplay:IEditableText;
+        public textDisplay: IEditableText = null;
 		/**
 		 * textDisplay改变时传递的参数
 		 */		
@@ -72,9 +72,9 @@ module egret.gui {
 		/**
 		 * [SkinPart]当text属性为空字符串时要显示的文本。
 		 */		
-		public promptDisplay:IDisplayText;
+        public promptDisplay: IDisplayText = null;
 		
-		private _prompt:string;
+        private _prompt: string = null;
 		/**
 		 * 当text属性为空字符串时要显示的文本内容。 <p/>
 		 * 先创建文本控件时将显示提示文本。控件获得焦点时或控件的 text 属性为非空字符串时，提示文本将消失。

@@ -78,7 +78,7 @@ module egret.gui {
 		 * [SkinPart]数据项目容器实体
 		 * @member egret.gui.SkinnableDataContainer#dataGroup
 		 */		
-		public dataGroup:DataGroup;
+        public dataGroup: DataGroup = null;
 		/**
 		 * dataGroup发生改变时传递的参数 
 		 */		

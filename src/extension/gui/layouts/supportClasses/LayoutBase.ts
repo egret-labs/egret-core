@@ -42,7 +42,7 @@ module egret.gui {
 			super();
 		}
 		
-		private _target:GroupBase;
+        private _target: GroupBase = null;
 		/**
 		 * 目标容器
 		 * @member egret.gui.LayoutBase#target
@@ -84,7 +84,7 @@ module egret.gui {
 				this.target.invalidateDisplayList();
 		}
 		
-		private _typicalLayoutRect:Rectangle;
+        private _typicalLayoutRect: Rectangle = null;
 		
 		/**
 		 * 由虚拟布局所使用，以估计尚未滚动到视图中的布局元素的大小。 

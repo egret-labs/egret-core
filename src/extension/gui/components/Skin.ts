@@ -134,7 +134,7 @@ module egret.gui {
 
         }
 
-        private _hostComponent:SkinnableComponent;
+        private _hostComponent: SkinnableComponent = null;
         /**
          * @member egret.gui.Skin#hostComponent
          */
@@ -388,7 +388,7 @@ module egret.gui {
         }
 
 
-        private skinLayout:SkinBasicLayout;
+        private skinLayout: SkinBasicLayout = null;
         /**
          * 测量组件尺寸
          * @method egret.gui.Skin#measure
@@ -455,13 +455,13 @@ module egret.gui {
         /**
          * 当前视图状态发生改变的标志
          */
-        private currentStateChanged:boolean;
+        private currentStateChanged:boolean = false;
 
-        private _currentState:string;
+        private _currentState: string = null;
         /**
          * 存储还未验证的视图状态
          */
-        private requestedCurrentState:string;
+        private requestedCurrentState: string = null;
         /**
          * 组件的当前视图状态。将其设置为 "" 或 null 可将组件重置回其基本状态。
          * @member egret.StateClientHelper#currentState

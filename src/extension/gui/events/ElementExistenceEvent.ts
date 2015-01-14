@@ -64,13 +64,13 @@ module egret.gui {
 		 * 指向已添加或删除元素的位置的索引。 
 		 * @member egret.gui.ElementExistenceEvent#index
 		 */		
-		public index:number;
+		public index:number = NaN;
 		
 		/**
 		 * 对已添加或删除的视觉元素的引用。 
 		 * @member egret.gui.ElementExistenceEvent#element
 		 */		
-		public element:IVisualElement;
+        public element: IVisualElement = null;
 
         /**
          * 使用指定的EventDispatcher对象来抛出事件对象。抛出的对象将会缓存在对象池上，供下次循环复用。

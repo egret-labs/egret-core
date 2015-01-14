@@ -72,23 +72,23 @@ module egret.gui {
 		 * 触发鼠标事件的项呈示器数据源项。
 		 * @member egret.gui.TreeEvent#item
 		 */
-		public item:any;
+        public item: any = null;
 		
 		/**
 		 * 触发鼠标事件的项呈示器。 
 		 * @member egret.gui.TreeEvent#itemRenderer
 		 */		
-		public itemRenderer:ITreeItemRenderer;
-		/**
-		 * 触发鼠标事件的项索引
-		 * @member egret.gui.TreeEvent#itemIndex
-		 */		
-		public itemIndex:number;
+        public itemRenderer: ITreeItemRenderer = null;
+        /**
+         * 触发鼠标事件的项索引
+         * @member egret.gui.TreeEvent#itemIndex
+         */
+        public itemIndex: number = NaN;
 		/**
 		 * 当事件类型为ITEM_OPENING时，true表示即将打开节点，反之关闭。
 		 * @member egret.gui.TreeEvent#opening
 		 */		
-		public opening:boolean;
+		public opening:boolean = false;
 
         /**
          * 使用指定的EventDispatcher对象来抛出事件对象。抛出的对象将会缓存在对象池上，供下次循环复用。
