@@ -140,9 +140,9 @@ module egret {
             }
             
             if (host) {
-                var index = host._children.indexOf(child);
-                if (index >= 0) {
-                    host._doRemoveChild(index);
+                var hostIndex = host._children.indexOf(child);
+                if (hostIndex >= 0) {
+                    host._doRemoveChild(hostIndex);
                 }
             }
 

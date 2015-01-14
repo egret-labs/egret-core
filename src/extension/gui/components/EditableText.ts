@@ -600,7 +600,7 @@ module egret.gui {
 		}
 		
 		private textField_changeHandler(event:Event):void{
-			//this._textFieldChanged(false);
+			this._textFieldChanged();
 			event.stopImmediatePropagation();
 			this.dispatchEvent(new Event(Event.CHANGE));
 			this.invalidateSize();
