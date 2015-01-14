@@ -152,6 +152,7 @@ module egret {
          * @param textField {TextField}
          */
         public setupFont(textField:TextField, style:egret.ITextStyle = null):void {
+            style = style || <egret.ITextStyle>{};
             var size:number = style["size"] == null ? textField._size : style["size"];
 
             egret_native.Label.createLabel(TextField.default_fontFamily, size, "");
@@ -165,7 +166,7 @@ module egret {
          */
         public measureText(text:string):number {
             return egret_native.Label.getTextSize(text)[0];
-        }
+        
 
         /**
          * 绘制文本
