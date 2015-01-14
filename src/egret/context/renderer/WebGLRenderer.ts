@@ -509,10 +509,15 @@ module egret {
         private canvasContext = document.createElement("canvas").getContext("2d");
 
         public setupFont(textField:TextField, style:egret.ITextStyle = null):void {
+            style = style || <egret.ITextStyle>{};
+            var italic:boolean = style["italic"] == null ? textField._italic : style["italic"];
+            var bold:boolean = style["bold"] == null ? textField._bold : style["bold"];
+            var size:number = style["size"] == null ? textField._size : style["size"];
+            var fontFamily:string = style["fontFamily"] == null ? textField._fontFamily : style["fontFamily"];
             var ctx = this.canvasContext;
-            var font:string = textField.italic ? "italic " : "normal ";
-            font += textField.bold ? "bold " : "normal ";
-            font += textField.size + "px " + textField.fontFamily;
+            var font:string = italic ? "italic " : "normal ";
+            font += bold ? "bold " : "normal ";
+            font += size + "px " + fontFamily;
             ctx.font = font;
             ctx.textAlign = "left";
             ctx.textBaseline = "middle";

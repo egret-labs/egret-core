@@ -152,7 +152,9 @@ module egret {
          * @param textField {TextField}
          */
         public setupFont(textField:TextField, style:egret.ITextStyle = null):void {
-            egret_native.Label.createLabel(TextField.default_fontFamily, textField._size, "");
+            var size:number = style["size"] == null ? textField._size : style["size"];
+
+            egret_native.Label.createLabel(TextField.default_fontFamily, size, "");
         }
 
         /**
@@ -175,18 +177,37 @@ module egret {
          * @param maxWidth {numbe}
          */
         public drawText(textField:egret.TextField, text:string, x:number, y:number, maxWidth:number, style:egret.ITextStyle = null) {
-            super.drawText(textField, text, x, y, maxWidth, style);
+            this.setupFont(textField, style);
             style = style || <egret.ITextStyle>{};
 
-            if (style["textColor"]) {
-                var textColor = style["textColor"];
+            var textColor:number;
+            if (style.textColor != null) {
+                textColor = style.textColor;
             }
             else {
                 textColor = textField._textColor;
             }
 
+            var strokeColor:string;
+            if (style.strokeColor != null) {
+                strokeColor = toColorString(style.strokeColor);
+            }
+            else {
+                strokeColor = textField._strokeColorString;
+            }
+
+            var outline;
+            if (style.stroke != null) {
+                outline = style.stroke;
+            }
+            else {
+                outline = textField._stroke;
+            }
+
             egret_native.Label.setTextColor(textColor);
             egret_native.Label.drawText(text, x, y - 2);
+
+            super.drawText(textField, text, x, y, maxWidth, style);
         }
 
         public pushMask(mask:Rectangle):void {
