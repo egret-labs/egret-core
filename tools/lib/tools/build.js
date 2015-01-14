@@ -34,8 +34,8 @@ function buildPlatform(needCompileEngine, keepGeneratedTypescript) {
     if (needClean) {
         if (param.getArgv()["opts"]["-e"] != null) {
             file.remove(path.join(projectProperties.getProjectPath(), "libs"));
+            file.remove(path.join(projectProperties.getProjectPath(), "bin-debug"));
         }
-        file.remove(path.join(projectProperties.getProjectPath(), "bin-debug"));
     }
 
     if (needCompileEngine) {//编译第三方库
