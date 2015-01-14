@@ -147,9 +147,9 @@ module egret {
 
 
 
-        public data:any;
+        public data:any = null;
 
-        public _type:string;
+        public _type:string = "";
         /**
          * 事件的类型。类型区分大小写。
          * @member {string} egret.Event#type
@@ -158,7 +158,7 @@ module egret {
             return this._type;
         }
 
-        public _bubbles:boolean;
+        public _bubbles:boolean = false;
         /**
          * 表示事件是否为冒泡事件。如果事件可以冒泡，则此值为 true；否则为 false。
          * @member {boolean} egret.Event#bubbles
@@ -167,7 +167,7 @@ module egret {
             return this._bubbles;
         }
 
-        private _cancelable:boolean;
+        private _cancelable:boolean = false;
         /**
          * 表示是否可以阻止与事件相关联的行为。如果可以取消该行为，则此值为 true；否则为 false。
          * @member {boolean} egret.Event#cancelable
@@ -188,7 +188,7 @@ module egret {
             return this._eventPhase;
         }
 
-        public _currentTarget:any;
+        public _currentTarget:any = null;
         /**
          * 当前正在使用某个事件侦听器处理 Event 对象的对象。例如，如果用户单击“确定”按钮，
          * 则当前目标可以是包含该按钮的节点，也可以是它的已为该事件注册了事件侦听器的始祖之一。
@@ -198,7 +198,7 @@ module egret {
             return this._currentTarget;
         }
 
-        public _target:any;
+        public _target:any = null;
         /**
          * 事件目标。此属性包含目标节点。例如，如果用户单击“确定”按钮，则目标节点就是包含该按钮的显示列表节点。
          * @member {any} egret.Event#target

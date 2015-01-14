@@ -28,8 +28,8 @@ module egret {
     export class NativeResourceLoader extends egret.EventDispatcher{
 
         private _downCount:number = 0;
-        private _path:string;
-        private _bytesTotal:number;
+        private _path:string = null;
+        private _bytesTotal:number = 0;
 
         public load(path:string, bytesTotal:number):void {
             this._downCount = 0;

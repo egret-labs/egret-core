@@ -154,30 +154,30 @@ module egret {
          * 分配给触摸点的唯一标识号
 		 * @member {number} egret.TouchEvent#touchPointID
          */
-        public touchPointID:number;
+        public touchPointID:number = NaN;
         /**
          * 事件发生时ctrl键是否被按下。 (Mac OS下为 Cmd 或 Ctrl)
          * @deprecated
 		 * @member {boolean} egret.TouchEvent#ctrlKey
          */
-        public ctrlKey:boolean;
+        public ctrlKey:boolean = false;
         /**
          * 事件发生时shift键是否被按下。
          * @deprecated
 		 * @member {boolean} egret.TouchEvent#shiftKey
          */
-        public shiftKey:boolean;
+        public shiftKey:boolean = false;
         /**
          * 事件发生时alt键是否被按下。
          * @deprecated
 		 * @member {boolean} egret.TouchEvent#altKey
          */
-        public altKey:boolean;
+        public altKey:boolean = false;
         /**
          * 表示触摸已按下 (true) 还是未按下 (false)。
 		 * @member {boolean} egret.TouchEvent#touchDown
          */
-        public touchDown:boolean;
+        public touchDown:boolean = false;
 
         /**
          * 使用指定的EventDispatcher对象来抛出Event事件对象。抛出的对象将会缓存在对象池上，供下次循环复用。

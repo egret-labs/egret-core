@@ -101,7 +101,7 @@ module egret {
          * 通过调用父显示对象容器的 getChildByName() 方法，可以在父显示对象容器的子列表中标识该对象。
          * @member {string} egret.DisplayObject#name
          */
-        public name:string;
+        public name:string = null;
 
         public _texture_to_render:Texture = null;
 
@@ -468,7 +468,7 @@ module egret {
          * 显式设置宽度
          * @returns {number}
          */
-        public _explicitWidth:number;
+        public _explicitWidth:number = NaN;
 
         public get explicitWidth():number {
             return this._explicitWidth;
@@ -478,7 +478,7 @@ module egret {
          * 显式设置高度
          * @returns {number}
          */
-        public _explicitHeight:number;
+        public _explicitHeight:number = NaN;
 
         public get explicitHeight():number {
             return this._explicitHeight;
@@ -812,7 +812,7 @@ module egret {
             }
         }
 
-        private _hitTestPointTexture:RenderTexture;
+        private _hitTestPointTexture:RenderTexture = null;
 
         /**
          * 计算显示对象，以确定它是否与 x 和 y 参数指定的点重叠或相交。x 和 y 参数指定舞台的坐标空间中的点，而不是包含显示对象的显示对象容器中的点（除非显示对象容器是舞台）。
@@ -1043,7 +1043,7 @@ module egret {
             return this._cacheAsBitmap;
         }
 
-        private renderTexture:RenderTexture;
+        private renderTexture:RenderTexture = null;
 
         public set cacheAsBitmap(bool:boolean) {
             this._cacheAsBitmap = bool;

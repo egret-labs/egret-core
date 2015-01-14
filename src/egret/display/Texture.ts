@@ -90,18 +90,18 @@ module egret {
         /**
          * 表示bitmapData.width
          */
-        public _sourceWidth:number;
+        public _sourceWidth:number = 0;
         /**
          * 表示bitmapData.height
          */
-        public _sourceHeight:number;
+        public _sourceHeight:number = 0;
 
-        public _bitmapData;
+        public _bitmapData:any = null;
         /**
          * 纹理对象中得位图数据
          * @member {any} egret.Texture#bitmapData
          */
-        public get bitmapData() {
+        public get bitmapData():any {
             return this._bitmapData;
         }
 

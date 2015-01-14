@@ -38,7 +38,7 @@ module egret {
      */
     export class Rectangle extends HashObject {
 
-        constructor(x:number = 0, y:number = 0, width:number = 0, height = 0) {
+        constructor(x:number = 0, y:number = 0, width:number = 0, height:number = 0) {
             super();
             this.x = x;
             this.y = y;

@@ -68,7 +68,7 @@ module egret {
          * StageScaleMode.NO_SCALE -- 整个应用程序的大小固定，因此，即使播放器窗口的大小更改，它也会保持不变。如果播放器窗口比内容小，则可能进行一些裁切。
          * @member {number} egret.Stage#scaleMode
          */
-        private _scaleMode:string;
+        private _scaleMode:string = "";
 
         public get scaleMode():string{
             return this._scaleMode;
@@ -114,7 +114,7 @@ module egret {
             this._stageHeight = egret.StageDelegate.getInstance()._stageHeight;
         }
 
-        private _stageWidth:number;
+        private _stageWidth:number = NaN;
         /**
          * 舞台宽度（坐标系宽度，非设备宽度）
          * @member {number} egret.Stage#stageWidth
@@ -123,7 +123,7 @@ module egret {
             return this._stageWidth;
         }
 
-        private _stageHeight:number;
+        private _stageHeight:number = NaN;
         /**
          * 舞台高度（坐标系高度，非设备高度）
          * @member {number} egret.Stage#stageHeight

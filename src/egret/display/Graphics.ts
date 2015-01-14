@@ -36,11 +36,11 @@ module egret {
      */
     export class Graphics {
 
-        private canvasContext:CanvasRenderingContext2D;
-        private commandQueue:Array<Command>;
-        private renderContext:RendererContext;
-        private strokeStyleColor:string;
-        private fillStyleColor:string;
+        private canvasContext:CanvasRenderingContext2D = null;
+        private commandQueue:Array<Command> = null;
+        private renderContext:RendererContext = null;
+        private strokeStyleColor:string = null;
+        private fillStyleColor:string = null;
 
         constructor() {
             this.commandQueue = [];

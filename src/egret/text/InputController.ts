@@ -29,7 +29,7 @@ module egret {
         private stageText:egret.StageText;
         private _isFocus:boolean = false;
 
-        private _text:TextField;
+        private _text:TextField = null;
 
         private _isFirst:boolean = true;
         public constructor() {

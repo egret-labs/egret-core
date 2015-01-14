@@ -60,7 +60,7 @@ module egret {
             return this._currentCount;
         }
 
-        private _running:boolean;
+        private _running:boolean = false;
 
 		/**
 		 * @member {boolean} egret.Timer#running
@@ -101,7 +101,7 @@ module egret {
             this._running = false;
         }
 
-        private lastTime:number;
+        private lastTime:number = 0;
 
         private onEnterFrame(frameTime:number) {
             var now = getTimer();

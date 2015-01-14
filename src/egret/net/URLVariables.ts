@@ -52,7 +52,7 @@ module egret {
          * 此 URLVariables 储存的键值对数据对象。
          * @member egret.URLVariables#variables
          */
-        public variables:Object;
+        public variables:Object = null;
 
 		/**
          * 将变量字符串转换为此 URLVariables.variables 对象的属性。

@@ -26,7 +26,7 @@
  */
 module egret {
     export class WebGLShaderManager {
-        private gl:any;
+        private gl:any = null;
         private maxAttibs:number = 10;
         private attribState:Array<any> = [];
         private tempAttribState:Array<any> = [];
@@ -38,10 +38,10 @@ module egret {
             this.setContext(gl);
         }
 
-        public currentShader:any;
-        public defaultShader:EgretShader;
-        public primitiveShader:PrimitiveShader;
-        public colorTransformShader:ColorTransformShader;
+        public currentShader:any = null;
+        public defaultShader:EgretShader = null;
+        public primitiveShader:PrimitiveShader = null;
+        public colorTransformShader:ColorTransformShader = null;
 
         public setContext(gl:any) {
             this.gl = gl;
@@ -111,7 +111,7 @@ module egret {
             "   vColor = vec4(aColor.x, aColor.x, aColor.x, aColor.x);\n" +
             "}";
 
-        private gl:any;
+        private gl:any = null;
         public program = null;
         public fragmentSrc:string =
             "precision lowp float;\n" +
@@ -130,7 +130,7 @@ module egret {
         public aTextureCoord;
         public colorAttribute;
         public attributes:Array<any>;
-        public uniforms:any;
+        public uniforms:any = null;
 
         constructor(gl:any) {
             this.gl = gl;
@@ -272,7 +272,7 @@ module egret {
     }
     export class PrimitiveShader {
 
-        private gl:any;
+        private gl:any = null;
         public program = null;
         public projectionVector = null;
         public offsetVector = null;

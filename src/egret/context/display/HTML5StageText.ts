@@ -35,8 +35,8 @@ module egret {
      */
     export class HTML5StageText extends StageText {
 
-        private div:any;
-        private inputElement:any;
+        private div:any = null;
+        private inputElement:any = null;
 
         private _shape:egret.Shape;
 

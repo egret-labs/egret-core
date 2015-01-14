@@ -70,9 +70,9 @@ module egret {
          * 如果 dataFormat 属性是 URLLoaderDataFormat.VARIABLES，则所接收的数据是一个包含 URL 编码变量的 URLVariables 对象。
 		 * @member {any} egret.URLLoader#data
 		 */
-        public data:any;
+        public data:any = null;
 
-        public _request:URLRequest;
+        public _request:URLRequest = null;
 		/**
          * 从指定的 URL 发送和加载数据。可以以文本、原始二进制数据或 URL 编码变量格式接收数据，这取决于为 dataFormat 属性所设置的值。
          * 请注意 dataFormat 属性的默认值为文本。如果想将数据发送至指定的 URL，则可以在 URLRequest 对象中设置 data 属性。

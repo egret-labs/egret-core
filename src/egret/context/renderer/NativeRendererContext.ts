@@ -114,7 +114,7 @@ module egret {
             egret_native.Graphics.setTransform(matrix.a, matrix.b, matrix.c, matrix.d, matrix.tx, matrix.ty);
         }
 
-        private currentAlpha:number;
+        private currentAlpha:number = NaN;
 
         /**
          * 设置渲染alpha
@@ -131,7 +131,7 @@ module egret {
             this.setBlendMode(blendMode);
         }
 
-        private currentBlendMode:string;
+        private currentBlendMode:string = null;
 
         private setBlendMode(blendMode:string) {
             if (!blendMode) {
@@ -209,7 +209,7 @@ module egret {
 
         }
 
-        private blendModes:any;
+        private blendModes:any = null;
 
         private initBlendMode():void {
             this.blendModes = {};

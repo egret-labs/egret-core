@@ -63,17 +63,17 @@ module egret {
         /**
          * 事件抛出对象
          */
-        private _eventTarget:IEventDispatcher;
+        private _eventTarget:IEventDispatcher = null;
         /**
          * 引擎内部调用
          * @private
          */
-        public _eventsMap:Object;
+        public _eventsMap:Object = null;
         /**
          * 引擎内部调用
          * @private
          */
-        public _captureEventsMap:Object;
+        public _captureEventsMap:Object = null;
 
         /**
          * 添加事件侦听器

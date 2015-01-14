@@ -34,15 +34,15 @@ module egret {
      * @private
      */
     export class WebGLRenderer extends RendererContext {
-        private canvas:HTMLCanvasElement;
-        private gl:any;
+        private canvas:HTMLCanvasElement = null;
+        private gl:any = null;
         private size:number = 2000;
-        private vertices:Float32Array;
+        private vertices:Float32Array = null;
         private vertSize:number = 5;
-        private indices:Uint16Array;
-        private projectionX:number;
-        private projectionY:number;
-        private shaderManager:WebGLShaderManager;
+        private indices:Uint16Array = null;
+        private projectionX:number = NaN;
+        private projectionY:number = NaN;
+        private shaderManager:WebGLShaderManager = null;
 
         constructor(canvas?:HTMLCanvasElement) {
             super();
@@ -171,7 +171,7 @@ module egret {
             gl.colorMask(true, true, true, true);
         }
 
-        private blendModesWebGL:any;
+        private blendModesWebGL:any = NaN;
 
         private initBlendMode():void {
             this.blendModesWebGL = {};
@@ -370,7 +370,7 @@ module egret {
             Profiler.getInstance().onDrawImage();
         }
 
-        private worldTransform:Matrix;
+        private worldTransform:Matrix = null;
 
         public setTransform(matrix:Matrix):void {
             var locWorldTransform:Matrix = this.worldTransform;
@@ -382,7 +382,7 @@ module egret {
             locWorldTransform.ty = matrix.ty;
         }
 
-        private worldAlpha:number;
+        private worldAlpha:number = NaN;
 
         public setAlpha(value:number, blendMode:string):void {
             this.worldAlpha = value;
@@ -523,10 +523,10 @@ module egret {
             return result.width;
         }
 
-        private graphicsPoints:Array<any>;
-        private graphicsIndices:Array<any>;
-        private graphicsBuffer:any;
-        private graphicsIndexBuffer:any;
+        private graphicsPoints:Array<any> = null;
+        private graphicsIndices:Array<any> = null;
+        private graphicsBuffer:any = null;
+        private graphicsIndexBuffer:any = null;
 
         private renderGraphics(graphics) {
             var gl:any = this.gl;

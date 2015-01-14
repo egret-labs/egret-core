@@ -28,9 +28,9 @@ module egret {
     export class WebAudio {
         public static canUseWebAudio = false;//window["AudioContext"] || window["webkitAudioContext"] || window["mozAudioContext"];
         public static ctx = WebAudio.canUseWebAudio ? new (window["AudioContext"] || window["webkitAudioContext"] || window["mozAudioContext"])() : undefined;
-        private _sourceNode:any;
-        private _volumeNode:any;
-        public _buffer:any;
+        private _sourceNode:any = null;
+        private _volumeNode:any = null;
+        public _buffer:any = null;
         private _volume:number = 1;
         private _stopped:boolean = false;
         private _loop:boolean = false;
