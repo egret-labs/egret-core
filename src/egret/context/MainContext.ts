@@ -95,7 +95,7 @@ module egret {
 
         public static __DRAW_COMMAND_LIST:Array<RenderCommand> = [];
         //是否使用新的draw机制
-        public static __use_new_draw:boolean = false;
+        public static __use_new_draw:boolean = true;
         /**
          * renderLoop阶段，引擎内部使用，暂未实现完全
          */
