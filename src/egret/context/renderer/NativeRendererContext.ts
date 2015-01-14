@@ -166,7 +166,7 @@ module egret {
          */
         public measureText(text:string):number {
             return egret_native.Label.getTextSize(text)[0];
-        
+        }
 
         /**
          * 绘制文本
