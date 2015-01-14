@@ -416,6 +416,11 @@ module egret.gui {
 			this._addToDisplayList(this._textField);
 		}
 
+        public _textFieldChanged(): void {
+            this._text = this._textField.text;
+            this._textFlow = this._textField.textFlow;
+        }
+
 		public measure():void{
 			super.measure();
 
