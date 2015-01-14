@@ -30,8 +30,8 @@ module egret {
         private _frameScripts:any;
         private _frameActions:any;
 
-        constructor(mcData?:any, textureData?:any, spriteSheet?:SpriteSheet) {
-            super(mcData, textureData, spriteSheet);
+        constructor(movieClipData?:MovieClipData) {
+            super(movieClipData);
         }
 
         public _fillMCData(mcData:any):void{

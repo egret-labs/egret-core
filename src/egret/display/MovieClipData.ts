@@ -26,51 +26,27 @@
  */
 
 module egret {
-    export class MovieClipFactory extends EventDispatcher {
-        private _mcDataSet:any;
-        private _spriteSheet:SpriteSheet;
-
-        constructor(data:any = null, texture:Texture = null) {
+    export class MovieClipData extends HashObject{
+        constructor(mcData?:any, textureData?:any, spriteSheet?:SpriteSheet) {
             super();
-            this._mcDataSet = data;
-            this.texture = texture;
+            this._mcData = mcData;
+            this._textureData = textureData;
+            this._spriteSheet = spriteSheet;
         }
 
-        public buildMovieClip(movieClipName:string):MovieClip {
-            var mcData:any = this._mcDataSet.mc[movieClipName];
-            if (mcData) {
-                return new MovieClip(mcData, this._mcDataSet.res, this._spriteSheet);
-            }
-            return null;
-        }
+        /**
+         * MovieClip数据
+         */
+        public _mcData:any;
 
-        public buildRichMovieClip(movieClipName:string):RichMovieClip {
-            var mcData:any = this._mcDataSet.mc[movieClipName];
-            if (mcData) {
-                var m:RichMovieClip = new RichMovieClip();
-                m.mcData = mcData;
-                m.textureData = this._mcDataSet.res;
-                m.spriteSheet = this._spriteSheet;
-                return m;
-            }
-            return null;
-        }
+        /**
+         * 纹理数据
+         */
+        public _textureData:any;
 
-        public get mcDataSet():any{
-            return this._mcDataSet;
-        }
-        public set mcDataSet(value:any){
-            this._mcDataSet = value;
-        }
-
-        public set texture(value:Texture){
-            this._spriteSheet = value ? new SpriteSheet(value) : null;
-        }
-
-        public get spriteSheet():SpriteSheet{
-            return this._spriteSheet;
-        }
+        /**
+         * 纹理集
+         */
+        public _spriteSheet:SpriteSheet;
     }
 }
-
-

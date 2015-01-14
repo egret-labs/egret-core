@@ -35,6 +35,7 @@ module egret {
     export class MovieClip extends DisplayObjectContainer{
 
     //Data Property
+        public _mcData:any;
         public _frames:any[];
         public _textureData:any;
         public _spriteSheet:SpriteSheet;
@@ -61,16 +62,22 @@ module egret {
         private _passedTime:number;
 
     //Construct Function
-        constructor(mcData?:any, textureData?:any, spriteSheet?:SpriteSheet) {
+        constructor(movieClipData?:MovieClipData) {
             super();
             this._bitmap = new egret.Bitmap();
             this.addChild(this._bitmap);
-            this._reset();
+            this._setMovieClipData(movieClipData);
+        }
 
-            this._textureData = textureData;
-            this._spriteSheet = spriteSheet;
-            this._initData(mcData);
-            this._initFrame();
+        public _init(){
+            this._reset();
+            var movieClipData:MovieClipData = this.movieClipData;
+            if(movieClipData){
+                this._fillMCData(movieClipData._mcData);
+                this._textureData = movieClipData._textureData;
+                this._spriteSheet = movieClipData._spriteSheet;
+                this._initFrame();
+            }
         }
 
         public _reset():void{
@@ -87,13 +94,6 @@ module egret {
             this._displayedKeyFrameNum = 0;
             this._passedTime = 0;
             this._eventPool = [];
-        }
-
-        public _initData(mcData:any):void{
-            if(mcData && mcData["frames"]){
-                this._fillMCData(mcData);
-                this._dataInitialized = true;
-            }
         }
 
         public _fillMCData(mcData:any):void{
@@ -457,42 +457,22 @@ module egret {
         }
 
         /**
-         * 数据源
+         * MovieClip数据源
          * @member {any} egret.MovieClip#dataSource
          */
-        public set mcData(value:any){
-            if(!this._frameInitialized) {
-                this._initData(value);
-                this._initFrame();
-            }
+        public set movieClipData(value:MovieClipData){
+            this._setMovieClipData(value);
+        }
+        public get movieClipData():MovieClipData{
+            return this._mcData;
         }
 
-        /**
-         * 纹理数据
-         * @member {any} egret.MovieClip#textureData
-         */
-        public set textureData(value:any){
-            if(!this._frameInitialized){
-                this._textureData = value;
-                this._initFrame();
+        private _setMovieClipData(value:MovieClipData){
+            if(this._mcData == value){
+                return;
             }
-        }
-        public get textureData():any{
-            return this._textureData;
-        }
-
-        /**
-         * 纹理集
-         * @member {any} egret.MovieClip#spriteSheet
-         */
-        public get spriteSheet():any{
-            return this._spriteSheet;
-        }
-        public set spriteSheet(value:any){
-            if(!this._frameInitialized) {
-                this._spriteSheet = value;
-                this._initFrame();
-            }
+            this._mcData = value;
+            this._init();
         }
 
         private setPlayTimes(value:number){
@@ -514,5 +494,3 @@ module egret {
         }
     }
 }
-
-
