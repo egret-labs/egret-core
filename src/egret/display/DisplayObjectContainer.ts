@@ -321,7 +321,6 @@ module egret {
             if (!o._visible) {
                 return;
             }
-            super._updateTransform();
             if (o._colorTransform) {
                 RenderCommand.push(this._setGlobalColorTransform, this);
             }
@@ -329,9 +328,12 @@ module egret {
             if(mask) {
                 RenderCommand.push(this._pushMask, this);
             }
-            for (var i = 0 , length = o._children.length; i < length; i++) {
-                var child:DisplayObject = o._children[i];
-                child._updateTransform();
+            super._updateTransform();
+            if(!this["_cacheAsBitmap"] || !this._texture_to_render) {
+                for (var i = 0 , length = o._children.length; i < length; i++) {
+                    var child:DisplayObject = o._children[i];
+                    child._updateTransform();
+                }
             }
             if (o._colorTransform) {
                 RenderCommand.push(this._removeGlobalColorTransform, this);
