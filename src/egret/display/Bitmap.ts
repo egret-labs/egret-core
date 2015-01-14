@@ -66,7 +66,7 @@ module egret {
          */
         public debugColor:number = 0xff0000;
 
-        private _texture:Texture;
+        private _texture:Texture = null;
         /**
          * 渲染纹理
 		 * @member {egret.Texture} egret.Bitmap#texture

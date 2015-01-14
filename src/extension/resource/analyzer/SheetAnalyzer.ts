@@ -58,63 +58,65 @@ module RES {
             var compFunc:Function = data.func;
             resItem.loaded = (event.type==egret.Event.COMPLETE);
             if(resItem.loaded){
-                this.analyzeData(resItem,loader.data)
+                if(typeof(loader.data)=="string"){
+                    resItem.loaded = false;
+                    var imageUrl:string = this.analyzeConfig(resItem,loader.data);
+                    if(imageUrl){
+                        resItem.url = imageUrl;
+                        this._dataFormat = egret.URLLoaderDataFormat.TEXTURE;
+                        this.loadFile(resItem,compFunc,data.thisObject);
+                        this._dataFormat = egret.URLLoaderDataFormat.TEXT;
+                        return;
+                    }
+                }
+                else{
+                    this.analyzeBitmap(resItem,loader.data);
+                }
             }
-            else{
-                resItem.url = resItem.data.url;
-                compFunc.call(data.thisObject,resItem);
-                return;
-            }
-            if(typeof(loader.data)=="string"){
-                this._dataFormat = egret.URLLoaderDataFormat.TEXTURE;
-                this.loadFile(resItem,compFunc,data.thisObject);
-                this._dataFormat = egret.URLLoaderDataFormat.TEXT;
-            }
-            else{
-                resItem.url = resItem.data.url;
-                compFunc.call(data.thisObject,resItem);
-            }
+            resItem.url = resItem.data.url;
+            compFunc.call(data.thisObject,resItem);
         }
 
         public sheetMap:any = {};
 
         private textureMap:any = {};
         /**
-         * 解析并缓存加载成功的数据
+         * 解析并缓存加载成功的配置文件
          */
-        public analyzeData(resItem:ResourceItem,data:any):void{
+        public analyzeConfig(resItem:ResourceItem,data:string):string{
             var name:string = resItem.name;
-            if(this.fileDic[name]||!data){
+            var config:any;
+            var imageUrl:string = "";
+            try{
+                var str:string = <string> data;
+                config = JSON.parse(str);
+            }
+            catch (e){
+                egret.Logger.warning("JSON文件格式不正确: "+resItem.url);
+            }
+            if(config){
+                this.sheetMap[name] = config;
+                imageUrl = this.getRelativePath(resItem.url,config["file"]);
+            }
+            return imageUrl;
+        }
+        /**
+         * 解析并缓存加载成功的位图数据
+         */
+        public analyzeBitmap(resItem:ResourceItem,data:egret.Texture):void {
+            var name:string = resItem.name;
+            if (this.fileDic[name] || !data) {
                 return;
             }
-            var config:any;
-            if(typeof(data)=="string"){
-                try{
-                    var str:string = <string> data;
-                    config = JSON.parse(str);
-                }
-                catch (e){
-                    egret.Logger.warning("JSON文件格式不正确: "+resItem.url);
-                }
-                if(!config){
-                    return;
-                }
-                this.sheetMap[name] = config;
-                resItem.loaded = false;
-                resItem.url = this.getRelativePath(resItem.url,config["file"]);
-            }
-            else{
-                var texture:egret.Texture = data;
-                config = this.sheetMap[name];
-                delete this.sheetMap[name];
-                if(texture){
-                    var targetName:string = resItem.data&&resItem.data.subkeys?"":name;
-                    var spriteSheet:egret.SpriteSheet = this.parseSpriteSheet(texture,config,targetName);
-                    this.fileDic[name] = spriteSheet;
-                }
-            }
+            var config:any = this.sheetMap[name];
+            delete this.sheetMap[name];
+            var targetName:string = resItem.data && resItem.data.subkeys ? "" : name;
+            var spriteSheet:egret.SpriteSheet = this.parseSpriteSheet(data, config, targetName);
+            this.fileDic[name] = spriteSheet;
         }
-
+        /**
+         * 获取相对位置
+         */
         public getRelativePath(url:string,file:string):string{
             url = url.split("\\").join("/");
             var index:number = url.lastIndexOf("/");

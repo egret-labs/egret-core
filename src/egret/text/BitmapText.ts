@@ -53,6 +53,9 @@ module egret {
             return this._text;
         }
         public set text(value:string) {
+            if(this._text==value){
+                return;
+            }
             this._textChanged = true;
             this._text = value;
 
@@ -94,6 +97,8 @@ module egret {
             this.textLinesChange = true;
         }
 
+        private static EMPTY_FACTOR:number = 0.33;
+
         public _render(renderContext:RendererContext):void {
             var textLines:Array<string> = this.getTextLines();
             var length:number = textLines.length;
@@ -102,7 +107,7 @@ module egret {
             }
             var bitmapFont:BitmapFont = this._font;
             var emptyHeight:number = bitmapFont._getFirstCharHeight();
-            var emptyWidth:number = Math.ceil(emptyHeight*0.7);
+            var emptyWidth:number = Math.ceil(emptyHeight*BitmapText.EMPTY_FACTOR);
             var yPos:number = 0;
             var maxHeight:number = this._hasHeightSet?this._explicitHeight:Number.POSITIVE_INFINITY;
             var lineHeights:Array<number> = this._lineHeights;
@@ -171,7 +176,7 @@ module egret {
             var maxWidth:number = this._hasWidthSet?this._explicitWidth:Number.POSITIVE_INFINITY;
             var bitmapFont:BitmapFont = this._font;
             var emptyHeight:number = bitmapFont._getFirstCharHeight();
-            var emptyWidth:number = Math.ceil(emptyHeight*0.7);
+            var emptyWidth:number = Math.ceil(emptyHeight*BitmapText.EMPTY_FACTOR);
             var text:string = this._text;
             var textArr:Array<string> = text.split(/(?:\r\n|\r|\n)/);
             var length:number = textArr.length;

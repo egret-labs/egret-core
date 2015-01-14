@@ -66,7 +66,7 @@ module egret.gui {
 		 */		
 		private horizontalScrollPolicyChanged:boolean = false;
 		
-		private _horizontalScrollPolicy:string;
+        private _horizontalScrollPolicy: string = null;
 
 		/**
 		 * 水平滚动条显示策略，参见ScrollPolicy类定义的常量。
@@ -88,7 +88,7 @@ module egret.gui {
 		 */		
 		private verticalScrollPolicyChanged:boolean = false;
 		
-		private _verticalScrollPolicy:string;
+        private _verticalScrollPolicy: string = null;
 		/**
 		 * 垂直滚动条显示策略，参见ScrollPolicy类定义的常量。
 		 */
@@ -108,7 +108,7 @@ module egret.gui {
 		/**
 		 * [SkinPart]实体滚动条组件
 		 */
-		public scroller:Scroller;
+        public scroller: Scroller = null;
 
         public _setText(value: string) {
             super._setText(value);

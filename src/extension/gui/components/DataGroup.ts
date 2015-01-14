@@ -52,7 +52,7 @@ module egret.gui {
         /**
          * 项呈示器的主机组件
          */
-		public _rendererOwner:IItemRendererOwner;
+		public _rendererOwner:IItemRendererOwner = null;
 
 		private useVirtualLayoutChanged:boolean = false;
 
@@ -242,7 +242,7 @@ module egret.gui {
 			}
 		}
 		
-		private cleanTimer:Timer;
+		private cleanTimer:Timer = null;
 		/**
 		 * 虚拟布局结束清理不可见的项呈示器
 		 */		
@@ -308,7 +308,7 @@ module egret.gui {
 		
 		private dataProviderChanged:boolean = false;
 		
-		private _dataProvider:ICollection;
+		private _dataProvider:ICollection = null;
 		/**
 		 * 列表数据源，请使用实现了ICollection接口的数据类型，例如ArrayCollection
 		 * @member egret.gui.DataGroup#dataProvider
@@ -528,11 +528,11 @@ module egret.gui {
 		/**
 		 * 项呈示器改变
 		 */		
-		private itemRendererChanged:boolean;
+		private itemRendererChanged:boolean = false;
         /**
          * 这里不直接使用Class类型是因为JS里不能用对象作为键，所以需要hashCode。而只有实例对象才有hashCode，Class无法作为键。
          */
-		private _itemRenderer:IFactory;
+		private _itemRenderer:IFactory = null;
 		/**
 		 * 用于数据项目的项呈示器。该类必须实现 IItemRenderer 接口。<br/>
 		 * rendererClass获取顺序：itemRendererFunction > itemRenderer > 默认ItemRenerer。
@@ -555,7 +555,7 @@ module egret.gui {
 		
 		private itemRendererSkinNameChange:boolean = false;
 		
-		private _itemRendererSkinName:any;
+		private _itemRendererSkinName:any = null;
 		/**
 		 * 条目渲染器的可选皮肤标识符。在实例化itemRenderer时，若其内部没有设置过skinName,则将此属性的值赋值给它的skinName。
 		 * 注意:若itemRenderer不是ISkinnableClient，则此属性无效。
@@ -575,7 +575,7 @@ module egret.gui {
 		}
 
 
-		private _itemRendererFunction:Function;
+		private _itemRendererFunction:Function = null;
 		/**
 		 * 为某个特定项目返回一个项呈示器Class的函数。<br/>
 		 * rendererClass获取顺序：itemRendererFunction > itemRenderer > 默认ItemRenerer。<br/>
@@ -761,7 +761,7 @@ module egret.gui {
 		/**
 		 * 项呈示器的默认尺寸
 		 */		
-		private typicalLayoutRect:Rectangle;
+		private typicalLayoutRect:Rectangle = null;
 		/**
 		 * 设置项目默认大小
 		 */		

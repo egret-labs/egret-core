@@ -48,17 +48,17 @@ module egret.gui {
 		/**
 		 * 实体容器
 		 */		
-		private owner:IUIStage;
+        private owner: IUIStage = null;
 		
 		/**
 		 * 容器下边界属性
 		 */		
-		private lowerBoundReference:string;
+        private lowerBoundReference: string = null;
 		
 		/**
 		 * 容器上边界属性
 		 */		
-		private upperBoundReference:string;
+        private upperBoundReference: string = null;
 
 		public get numElements():number{
 			return this.owner[this.upperBoundReference] - this.owner[this.lowerBoundReference];

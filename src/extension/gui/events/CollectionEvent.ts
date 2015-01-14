@@ -68,17 +68,17 @@ module egret.gui {
          * 指示发生的事件类型。此属性值可以是 CollectionEventKind 类中的一个值，也可以是 null，用于指示类型未知。
          * @member egret.gui.CollectionEvent#kind
          */
-        public kind:string;
+        public kind: string = null;
         /**
          * 受事件影响的项目的列表
          * @member egret.gui.CollectionEvent#items
          */
-        public items:Array<any>;
+        public items: Array<any> = null;
         /**
          * 仅当kind的值为CollectionEventKind.REPLACE时，表示替换前的项目列表
          * @member egret.gui.CollectionEvent#oldItems
          */
-        public oldItems:Array<any>;
+        public oldItems: Array<any> = null;
         /**
          * 如果 kind 值为 CollectionEventKind.ADD、 CollectionEventKind.MOVE、
          * CollectionEventKind.REMOVE 或 CollectionEventKind.REPLACE，

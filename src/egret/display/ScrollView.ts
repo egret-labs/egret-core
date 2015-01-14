@@ -268,8 +268,8 @@ module egret {
             this._logTouchEvent(e);
             e.preventDefault();
         }
-        private delayTouchBeginEvent: TouchEvent;
-        private touchBeginTimer: Timer;
+        private delayTouchBeginEvent: TouchEvent = null;
+        private touchBeginTimer: Timer = null;
         public _onTouchBeginCapture(event: TouchEvent):void {
             var canScroll: boolean = this._checkScrollPolicy();
             if (!canScroll) {

@@ -138,7 +138,7 @@ module egret.gui {
         /**
          * 对话框关闭回调函数
          */
-        private closeHandler:Function;
+        private closeHandler:Function = null;
         /**
          * 关闭事件
          */
@@ -173,17 +173,17 @@ module egret.gui {
          * [SkinPart]文本内容显示对象
          * @member egret.gui.Alert#contentDisplay
          */
-        public contentDisplay:IDisplayText;
+        public contentDisplay:IDisplayText = null;
         /**
          * [SkinPart]第一个按钮，通常是"确定"。
          * @member egret.gui.Alert#firstButton
          */
-        public firstButton:Button;
+        public firstButton:Button = null;
         /**
          * [SkinPart]第二个按钮，通常是"取消"。
          * @member egret.gui.Alert#secondButton
          */
-        public secondButton:Button;
+        public secondButton:Button = null;
         /**
          * @method egret.gui.Alert#partAdded
          * @param partName {string}

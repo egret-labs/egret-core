@@ -52,13 +52,13 @@ module egret.gui {
 		/**
 		 * 要从item中获取子项列表的属性名
 		 */		
-		private childrenKey:string;
+        private childrenKey: string = "children";
 		/**
 		 * 要从item中获取父级项的属性名
 		 */		
-		private parentKey:string;
-		
-		private _source:any;
+        private parentKey: string = "parent";
+
+        private _source: any = null;
 		/**
 		 * 数据源。注意：设置source会同时清空openNodes。
 		 * @member egret.gui.ObjectCollection#source

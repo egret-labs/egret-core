@@ -38,7 +38,7 @@ module egret {
         /**
          * 本地版本信息文件，记录了本地文件版本信息
          */
-        private localVersionData:Object;
+        private localVersionData:Object = null;
 
 
         /**
@@ -48,7 +48,7 @@ module egret {
         /**
          * 当前版本信息文件，记录了当前版本中相对于基础版本变化的文件
          */
-        private changeVersionData:Object;
+        private changeVersionData:Object = null;
 
         /**
          * 本地版本信息文件存储路径
@@ -57,9 +57,9 @@ module egret {
         /**
          * 基础版本信息文件
          */
-        private baseVersionData:Object;
+        private baseVersionData:Object = null;
 
-        private _load:NativeResourceLoader;
+        private _load:NativeResourceLoader = null;
 
         //获取当前版本号
         private fetchVersion():void {
@@ -109,7 +109,7 @@ module egret {
         }
 
 
-        private _call:Function;
+        private _call:Function = null;
 
         private loadFile(file:string, call:Function = null) {
             this._call = call;

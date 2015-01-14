@@ -47,9 +47,9 @@ module egret.gui {
 		 * [SkinPart]按钮上的文本标签
 		 * @member egret.gui.ButtonBase#labelDisplay
 		 */
-		public iconDisplay:UIAsset;
+        public iconDisplay: UIAsset = null;
 
-		private _icon:any;
+        private _icon: any = null;
 		/**
 		 * 要在按钮上显示的图标
 		 * @member egret.gui.ButtonBase#icon

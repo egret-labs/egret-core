@@ -43,8 +43,6 @@ module egret {
             super();
             var bitmapData:any = texture.bitmapData;
             this.bitmapData = bitmapData;
-            this._textureMap = {};
-
             this._sourceWidth = bitmapData.width;
             this._sourceHeight = bitmapData.height;
 
@@ -55,27 +53,27 @@ module egret {
         /**
          * 表示bitmapData.width
          */
-        public _sourceWidth:number;
+        public _sourceWidth:number = 0;
         /**
          * 表示bitmapData.height
          */
-        public _sourceHeight:number;
+        public _sourceHeight:number = 0;
         /**
          * 表示这个SpriteSheet的位图区域在bitmapData上的起始位置x。
          */
-        private _bitmapX:number;
+        private _bitmapX:number = 0;
         /**
          * 表示这个SpriteSheet的位图区域在bitmapData上的起始位置y。
          */
-        private _bitmapY:number;
+        private _bitmapY:number = 0;
         /**
          * 共享的位图数据
          */
-        private bitmapData:any;
+        private bitmapData:any = 0;
         /**
          * 纹理缓存字典
          */
-        public _textureMap:Object;
+        public _textureMap:Object = {};
 
         /**
          * 根据指定纹理名称获取一个缓存的Texture对象

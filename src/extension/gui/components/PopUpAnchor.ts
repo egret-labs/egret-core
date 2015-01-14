@@ -104,7 +104,7 @@ module egret.gui {
 		}
 		
 		
-		private _popUp:IVisualElement;
+		private _popUp:IVisualElement = null;
 		/**
 		 * 要弹出或移除的目标显示对象。
 		 * @member egret.gui.PopUpAnchor#popUp

@@ -57,7 +57,7 @@ module egret {
          * 否则，该对象会转换为字符串，并且该字符串会用作 POST 或 GET 数据。
 		 * @member {any} egret.URLRequest#data
 		 */
-        public data:any;
+        public data:any = null;
 
 		/**
          * 请求方式，有效值为URLRequestMethod.GET 或 URLRequestMethod.POST。
@@ -69,7 +69,7 @@ module egret {
          * 所请求的 URL。
 		 * @member {string} egret.URLRequest#url
 		 */
-        public url:string;
+        public url:string = "";
 
         /**
          * 要追加到 HTTP 请求的 HTTP 请求标头的数组。该数组由 URLRequestHeader 对象组成。

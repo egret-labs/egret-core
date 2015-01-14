@@ -44,12 +44,12 @@ module RES {
          * 一项加载结束回调函数。无论加载成功或者出错都将执行回调函数。示例：callBack(resItem:ResourceItem):void;
 		 * @member {Function} RES.ResourceLoader#callBack
          */
-        public callBack:Function;
+        public callBack:Function = null;
         /**
          * RES单例的引用
 		 * @member {any} RES.ResourceLoader#resInstance
          */
-        public resInstance:any;
+        public resInstance:any = null;
 		
 		/**
 		 * 当前组加载的项总个数,key为groupName

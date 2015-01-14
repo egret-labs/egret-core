@@ -49,13 +49,13 @@ module egret.gui {
          * [SkinPart]标题显示对象
 		 * @member egret.gui.Panel#titleDisplay
          */
-        public titleDisplay:IDisplayText;
+        public titleDisplay:IDisplayText = null;
 
         private _title:string = "";
         /**
          * 标题内容改变
          */
-        private titleChanged:boolean;
+        private titleChanged:boolean = false;
 
         /**
          * 标题文本内容

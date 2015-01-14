@@ -74,7 +74,7 @@ module egret.gui {
             this.handleDelyList();
         }
 
-        private skinMap:any;
+        private skinMap: any = {};
 
         private delyList:Array<SkinnableComponent> = [];
 

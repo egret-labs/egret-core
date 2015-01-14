@@ -46,7 +46,7 @@ module egret {
         private textBg:egret.Shape;
         private textBorder:egret.Shape;
 
-        private textType:string;
+        private textType:string = null;
 
         constructor() {
             super();

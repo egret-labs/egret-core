@@ -46,7 +46,7 @@ module egret.gui {
          * newInstance() 方法根据工厂对象生成对象时使用的 Class。
 		 * @member egret.egret#generator
          */
-        public generator:any;
+        public generator: any = null;
         /**
          * 生产一个新的实例
 		 * @method egret.egret#newInstance

@@ -97,12 +97,12 @@ module RES {
          * 所属组名
 		 * @member {string} RES.ResourceItem#groupName
          */
-		public groupName:string;
+		public groupName:string = "";
 		/**
 		 * 被引用的原始数据对象
 		 * @member {any} RES.ResourceItem#data
 		 */		
-		public data:any;
+		public data:any = null;
 		
 		private _loaded:boolean = false;
 		/**

@@ -34,42 +34,38 @@ module RES {
             super();
         }
 
-        /**
-         * 解析并缓存加载成功的数据
-         */
-        public analyzeData(resItem:ResourceItem,data:any):void{
+        public analyzeConfig(resItem:ResourceItem,data:string):string{
             var name:string = resItem.name;
-            if(this.fileDic[name]||!data){
-                return;
+            var config:any;
+            var imageUrl:string = "";
+            try{
+                var str:string = <string> data;
+                config = JSON.parse(str);
             }
-            var config:string;
-            if(typeof(data)=="string"){
-                try{
-                    var str:string = <string> data;
-                    config = JSON.parse(str);
-                }
-                catch (e){
-                }
-                resItem.loaded = false;
-                if(config){
-                    resItem.url = this.getRelativePath(resItem.url,config["file"]);
-                }
-                else{
-                    config = <string> data;
-                    resItem.url = this.getTexturePath(resItem.url,config);
-                }
-                this.sheetMap[name] = config;
+            catch (e){
+            }
+            if(config){
+                imageUrl = this.getRelativePath(resItem.url,config["file"]);
             }
             else{
-                var texture:egret.Texture = data;
-                config = this.sheetMap[name];
-                delete this.sheetMap[name];
-                if(texture){
-                    var bitmapFont:egret.BitmapFont =
-                        new egret.BitmapFont(texture,config);
-                    this.fileDic[name] = bitmapFont;
-                }
+                config = <string> data;
+                imageUrl = this.getTexturePath(resItem.url,config);
             }
+            this.sheetMap[name] = config;
+            return imageUrl;
+        }
+
+        public analyzeBitmap(resItem:ResourceItem,data:egret.Texture):void {
+
+            var name:string = resItem.name;
+            if (this.fileDic[name] || !data) {
+                return;
+            }
+            var texture:egret.Texture = data;
+            var config:any = this.sheetMap[name];
+            delete this.sheetMap[name];
+            var bitmapFont:egret.BitmapFont = new egret.BitmapFont(texture,config);
+            this.fileDic[name] = bitmapFont;
         }
 
         private getTexturePath(url:string,fntText:string):string{

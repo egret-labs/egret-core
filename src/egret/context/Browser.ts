@@ -33,8 +33,8 @@ module egret {
     export class Browser extends HashObject {
 
         private static instance:Browser;
-        private trans:string;
-        private ua;
+        private trans:string = null;
+        private ua:string;
 
         public static getInstance():Browser {
             if (Browser.instance == null) {

@@ -320,7 +320,7 @@ module egret.gui {
 		 */
 		public _captureItemRenderer:boolean = true;
 
-		private mouseDownItemRenderer:IItemRenderer;
+		private mouseDownItemRenderer:IItemRenderer = null;
 		/**
 		 * 鼠标在项呈示器上按下
 		 * @method egret.gui.List#item_mouseDownHandler

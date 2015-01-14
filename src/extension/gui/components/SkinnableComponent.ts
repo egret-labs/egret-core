@@ -60,7 +60,7 @@ module egret.gui {
          */
         public _skinNameExplicitlySet:any = false;
 
-        public _skinName:any;
+        public _skinName:any = null;
         /**
          * 皮肤标识符。可以为Class,String,或DisplayObject实例等任意类型，具体规则由项目注入的素材适配器决定，
          * 适配器根据此属性值解析获取对应的显示对象，并赋值给skin属性。
@@ -93,11 +93,11 @@ module egret.gui {
         /**
          * 皮肤解析适配器
          */
-        private static skinAdapter:ISkinAdapter;
+        private static skinAdapter:ISkinAdapter = null;
         /**
          * 默认皮肤主题解析器
          */
-        public static _defaultTheme:Theme;
+        public static _defaultTheme:Theme = null;
         /**
          * 解析skinName
          */
@@ -131,7 +131,7 @@ module egret.gui {
             return adapter;
         }
 
-        public _skin:any;
+        public _skin:any = null;
         /**
          * 皮肤对象实例。
          * @member egret.gui.SkinnableComponent#skin

@@ -58,7 +58,7 @@ module egret {
         private _updateTransformPerformanceCost:number = 0;
         private _preDrawCount:number = 0;
 
-        private _txt:TextField;
+        private _txt:TextField = null;
         private _tick:number = 0;
         private _maxDeltaTime:number = 500;
         private _totalDeltaTime:number = 0;

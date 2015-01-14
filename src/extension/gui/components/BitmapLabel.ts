@@ -91,8 +91,9 @@ module egret.gui {
             else{
                 this.fontChanged = true;
             }
-
-            this._setSizeDirty();
+            this.invalidateProperties();
+            this.invalidateSize();
+            this.invalidateDisplayList();
         }
 
         private createChildrenCalled:boolean = false;

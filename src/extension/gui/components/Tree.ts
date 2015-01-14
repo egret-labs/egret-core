@@ -138,7 +138,7 @@ module egret.gui {
 		 */		
 		private iconFieldOrFunctionChanged:boolean = false;
 		
-		private _iconField:string;
+        private _iconField: string = null;
 		/**
 		 * 数据项中用来确定图标skinName属性值的字段名称。另请参考UIAsset.skinName。
 		 * 若设置了iconFunction，则设置此属性无效。
@@ -155,7 +155,7 @@ module egret.gui {
 			this.invalidateProperties();
 		}
 		
-		private _iconFunction:Function;
+        private _iconFunction: Function = null;
 		/**
 		 * 用户提供的函数，在每个数据项目上运行以确定其图标的skinName值。另请参考UIAsset.skinName。
 		 * 示例：iconFunction(item:Object):Object

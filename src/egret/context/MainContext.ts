@@ -43,33 +43,33 @@ module egret {
          * 渲染Context
          * @member egret.MainContext#rendererContext
          */
-        public rendererContext:RendererContext;
+        public rendererContext:RendererContext = null;
 
         /**
          * 触摸Context
          * @member egret.MainContext#touchContext
          */
-        public touchContext:TouchContext;
+        public touchContext:TouchContext = null;
 
         /**
          * 网络Context
          * @member egret.MainContext#netContext
          */
-        public netContext:NetContext;
+        public netContext:NetContext = null;
 
         /**
          * 设备divice
          * @member egret.MainContext#deviceContext
          */
-        public deviceContext:DeviceContext;
+        public deviceContext:DeviceContext = null;
 
         /**
          * 舞台
          * @member egret.MainContext#stage
          */
-        public stage:Stage;
+        public stage:Stage = null;
 
-        public static deviceType:string;
+        public static deviceType:string = null;
 
         public static DEVICE_PC:string = "web";
         public static DEVICE_MOBILE:string = "native";

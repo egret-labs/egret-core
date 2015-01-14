@@ -271,7 +271,7 @@ module egret {
      * @extends egret.ContentStrategy
      */
     export class FixedHeight extends ContentStrategy {
-        private minWidth:number;
+        private minWidth:number = NaN;
 
         /**
          * 构造函数
@@ -315,7 +315,7 @@ module egret {
      */
     export class FixedWidth extends ContentStrategy {
 
-        private minHeight:number;
+        private minHeight:number = NaN;
 
         /**
          * 构造函数

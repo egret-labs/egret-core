@@ -47,7 +47,7 @@ module egret.gui {
         }
         private _scrollLeft: number = 0;
         private _scrollTop: number = 0;
-        private _content: IViewport;
+        private _content: IViewport = null;
 
         public setContent(content: IViewport) {
             this._content = content;
@@ -85,11 +85,11 @@ module egret.gui {
         /**
              * [SkinPart]水平滚动条
              */
-        public horizontalScrollBar: HScrollBar;
+        public horizontalScrollBar: HScrollBar = null;
         /**
          * [SkinPart]垂直滚动条
          */
-        public verticalScrollBar: VScrollBar;
+        public verticalScrollBar: VScrollBar = null;
 
         public _scroller: egret.ScrollView = <any>this;
 
@@ -174,7 +174,7 @@ module egret.gui {
             this._scroller.horizontalScrollPolicy = value;
         }
 
-        private _viewport: IViewport;
+        private _viewport: IViewport = null;
 
         /**
          * 要滚动的视域组件。

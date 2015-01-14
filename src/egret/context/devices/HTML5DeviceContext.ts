@@ -39,7 +39,7 @@ module egret {
 
         private _time:number = 0;
 
-        private static instance:HTML5DeviceContext;
+        private static instance:HTML5DeviceContext = null;
 
         /**
          * @method egret.HTML5DeviceContext#constructor
@@ -82,15 +82,15 @@ module egret {
             this.registerListener();
         }
 
-        static requestAnimationFrame:Function;
+        static requestAnimationFrame:Function = null;
 
-        static cancelAnimationFrame:Function;
+        static cancelAnimationFrame:Function = null;
 
-        static _thisObject:any;
+        static _thisObject:any = null;
 
-        static _callback:Function;
+        static _callback:Function = null;
 
-        private _requestAnimationId:number;
+        private _requestAnimationId:number = NaN;
 
 
         private enterFrame():void {

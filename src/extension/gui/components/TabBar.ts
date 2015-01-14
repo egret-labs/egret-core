@@ -48,9 +48,9 @@ module egret.gui {
 		/**
 		 * requireSelection改变标志
 		 */
-		private requireSelectionChanged_tabBar:boolean;
+		private requireSelectionChanged_tabBar:boolean = false;
 
-        private _touchBeginItem: IItemRenderer;
+        private _touchBeginItem: IItemRenderer = null;
 
         /**
          * 是否捕获ItemRenderer以便在MouseUp时抛出ItemClick事件

@@ -56,17 +56,17 @@ module egret.gui {
 		 * [SkinPart]图标显示对象
 		 * @member egret.gui.TreeItemRenderer#iconDisplay
 		 */
-		public iconDisplay:UIAsset;
+        public iconDisplay: UIAsset = null;
 		/**
 		 * [SkinPart]子节点开启按钮
 		 * @member egret.gui.TreeItemRenderer#disclosureButton
 		 */
-		public disclosureButton:ToggleButtonBase;
+        public disclosureButton: ToggleButtonBase = null;
 		/**
 		 * [SkinPart]用于调整缩进值的容器对象。
 		 * @member egret.gui.TreeItemRenderer#contentGroup
 		 */
-		public contentGroup:DisplayObject;
+        public contentGroup: DisplayObject = null;
 		
 		private _indentation:number = 17;
 		/**
@@ -80,7 +80,7 @@ module egret.gui {
 			this._indentation = value;
 		}
 		
-		private _iconSkinName:any;
+        private _iconSkinName: any = null;
 		/**
 		 * @member egret.gui.TreeItemRenderer#iconSkinName
 		 */

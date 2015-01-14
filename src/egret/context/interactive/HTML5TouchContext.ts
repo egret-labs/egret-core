@@ -33,7 +33,7 @@ module egret {
 
         private _isTouchDown:boolean = false;
 
-        private rootDiv:HTMLElement;
+        private rootDiv:HTMLElement = null;
 
         constructor() {
             super();

@@ -35,7 +35,7 @@ module egret {
 
         public static MUSIC:string = "music";
         public static EFFECT:string = "effect";
-        public path:string;
+        public path:string = "";
 
         constructor() {
 
@@ -45,7 +45,7 @@ module egret {
          * audio音频对象
          * @member {any} egret.Sound#audio
          */
-        private audio:any;
+        private audio:any = null;
 
         public type:string = Sound.EFFECT;
 

@@ -37,8 +37,8 @@ module egret {
          */
         public static SOCKET_DATA:string = "socketData";
 
-        public bytesLoaded:number;
-        public bytesTotal:number;
+        public bytesLoaded:number = 0;
+        public bytesTotal:number = 0;
 
         /**
          * @method egret.ProgressEvent#constructor

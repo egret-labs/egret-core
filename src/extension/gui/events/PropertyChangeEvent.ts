@@ -73,31 +73,31 @@ module egret.gui {
 		 * 指定更改的类型。可能的值为 PropertyChangeEventKind.UPDATE、PropertyChangeEventKind.DELETE 和 null。 
 		 * @member egret.gui.PropertyChangeEvent#kind
 		 */		
-		public kind:string;
+        public kind: string = null;
 		
 		/**
 		 * 更改后的属性的值。 
 		 * @member egret.gui.PropertyChangeEvent#newValue
 		 */		
-		public newValue:any;
+        public newValue: any = null;
 		
 		/**
 		 * 更改后的属性的值。 
 		 * @member egret.gui.PropertyChangeEvent#oldValue
 		 */
-		public oldValue:any;
+        public oldValue: any = null;
 		
 		/**
 		 * 指定已更改属性的 String、QName 或 int。 
 		 * @member egret.gui.PropertyChangeEvent#property
 		 */
-		public property:any;
+        public property: any = null;
 		
 		/**
 		 * 发生更改的对象。 
 		 * @member egret.gui.PropertyChangeEvent#source
 		 */		
-		public source:any;
+        public source: any = null;
 
         /**
          * 使用指定的EventDispatcher对象来抛出事件对象。抛出的对象将会缓存在对象池上，供下次循环复用。

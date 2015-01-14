@@ -35,6 +35,7 @@ module egret {
      * @extends egret.DisplayObject
      */
     export class TextField extends DisplayObject {
+
         public static default_fontFamily:string = "Arial";
 
         private isInput():boolean {
@@ -57,7 +58,7 @@ module egret {
          * @member {string} egret.TextField#type
          */
         public _type:string = "";
-        private _inputUtils:InputController;
+        private _inputUtils:InputController = null;
         public set type(value:string) {
             this._setType(value);
         }
@@ -243,7 +244,7 @@ module egret {
          * 默认值为 false。
          * @member {boolean} egret.TextField#italic
          */
-        public _italic:boolean;
+        public _italic:boolean = false;
 
         public get italic():boolean {
             return this._italic;
@@ -266,7 +267,7 @@ module egret {
          * 默认值为 false。
          * @member {boolean} egret.TextField#bold
          */
-        public _bold:boolean;
+        public _bold:boolean = false;
 
         public get bold():boolean {
             return this._bold;

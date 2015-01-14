@@ -48,7 +48,7 @@ module egret.gui {
 		 * [SkinPart]轨道高亮显示对象
 		 * @member egret.gui.SliderBase#trackHighlight
 		 */		
-		public trackHighlight:DisplayObject;
+        public trackHighlight: DisplayObject = null;
 		
 		private _showTrackHighlight:boolean = true;
 		
@@ -74,7 +74,7 @@ module egret.gui {
 		/**
 		 * 动画实例
 		 */	
-		private animator:Animation;
+        private animator: Animation = null;
 		
 		private _pendingValue:number = 0;
 		/**
@@ -110,7 +110,7 @@ module egret.gui {
 		/**
 		 * 动画播放结束时要到达的value。
 		 */		
-		private slideToValue:number;
+		private slideToValue:number = NaN;
 		/**
 		 * 动画播放完毕
 		 */	

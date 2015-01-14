@@ -47,8 +47,8 @@ module egret {
             this.thisObject = thisObject;
         }
 
-        private host:string;
-        private port:number;
+        private host:string = "";
+        private port:number = 0;
         public connect(host:string, port:number):void {
             this.host = host;
             this.port = port;

@@ -67,13 +67,13 @@ module egret.gui {
 		 * 组件正在进入的视图状态的名称。
 		 * @member egret.gui.StateChangeEvent#newState
 		 */		
-		public newState:string;
+        public newState: string = null;
 		
 		/**
 		 * 组件正在退出的视图状态的名称。
 		 * @member egret.gui.StateChangeEvent#oldState
 		 */		
-		public oldState:string;
+        public oldState: string = null;
 
         /**
          * 使用指定的EventDispatcher对象来抛出事件对象。抛出的对象将会缓存在对象池上，供下次循环复用。

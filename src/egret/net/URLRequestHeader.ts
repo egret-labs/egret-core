@@ -31,13 +31,13 @@ module egret {
          * HTTP 请求标头名称，如 Content-Type
          * @member {string} egret.URLRequestHeader#name
          */
-        public name:string;
+        public name:string = "";
 
         /**
          * 与 name 属性相关联的值，如 text/plain
          * @member {string} egret.URLRequestHeader#value
          */
-        public value:string;
+        public value:string = "";
 
         constructor(name:string, value:string) {
             this.name = name;

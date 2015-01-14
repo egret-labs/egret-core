@@ -832,7 +832,7 @@ module egret.gui {
 		/**
 		 * @member egret.ChildInfo#layoutElement
 		 */
-        public layoutElement:ILayoutElement;
+        public layoutElement: ILayoutElement = null;
 
 		/**
 		 * @member egret.ChildInfo#size
@@ -842,16 +842,16 @@ module egret.gui {
 		/**
 		 * @member egret.ChildInfo#percent
 		 */
-        public percent:number;
+        public percent:number = NaN;
 
 		/**
 		 * @member egret.ChildInfo#min
 		 */
-        public min:number;
+        public min:number = NaN;
 
 		/**
 		 * @member egret.ChildInfo#max
 		 */
-        public max:number;
+        public max:number = NaN;
     }
 }

@@ -56,7 +56,7 @@ module egret.gui {
 			this._allowDeselection = value;
 		}
 		
-		private _data:any;
+        private _data: any = null;
 		/**
 		 * @member egret.gui.TabBarButton#data
 		 */
@@ -69,7 +69,7 @@ module egret.gui {
 			this.dispatchEventWith("dataChange");
 		}
 		
-		private _itemIndex:number;
+		private _itemIndex:number = NaN;
 		/**
 		 * @member egret.gui.TabBarButton#itemIndex
 		 */

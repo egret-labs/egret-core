@@ -79,12 +79,12 @@ module RES {
 		 * 资源组名
 		 * @member {string} RES.ResourceEvent#groupName
 		 */		
-		public groupName:string;
+		public groupName:string = "";
 		/**
 		 * 一次加载项加载结束的项信息对象
 		 * @member {egret.ResourceItem} RES.ResourceEvent#resItem
 		 */		
-		public resItem:ResourceItem;
+		public resItem:ResourceItem = null;
 
         /**
          * 使用指定的EventDispatcher对象来抛出事件对象。抛出的对象将会缓存在对象池上，供下次循环复用。

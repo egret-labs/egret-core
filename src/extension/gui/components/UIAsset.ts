@@ -56,7 +56,7 @@ module egret.gui {
          * 注意:此属性仅在source的解析结果为Texture并且fileMode为BitmapFillMode.SCALE时有效。
          * @member {egret.Texture} egret.gui.UIAsset#scale9Grid
          */
-        public scale9Grid:Rectangle;
+        public scale9Grid: Rectangle = null;
 
         /**
          * 确定位图填充尺寸的方式。默认值：BitmapFillMode.SCALE。
@@ -69,7 +69,7 @@ module egret.gui {
 		
 		private sourceChanged:boolean = false;
 
-		public _source:any;
+        public _source: any = null;
 		/**
 		 * 素材标识符。可以为Class,String,或DisplayObject实例等任意类型，具体规则由项目注入的素材适配器决定，
 		 * 适配器根据此属性值解析获取对应的显示对象，并赋值给content属性。
@@ -93,7 +93,7 @@ module egret.gui {
             this._setSizeDirty();
 		}
         
-		public _content:any;
+        public _content: any = null;
 		/**
 		 * 解析source得到的对象，通常为显示对象或Texture。
 		 * @member egret.gui.UIAsset#content
@@ -116,7 +116,7 @@ module egret.gui {
 		/**
 		 * 皮肤解析适配器
 		 */		
-		private static assetAdapter:IAssetAdapter;
+        private static assetAdapter: IAssetAdapter = null;
 		private contentReused:boolean = false;
 		/**
 		 * 解析source

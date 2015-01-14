@@ -29,12 +29,12 @@ module egret {
     export class PromiseObject {
         private static promiseObjectList = [];
 
-        public onSuccessFunc:Function;
-        public onSuccessThisObject:any;
-        public onErrorFunc:Function;
-        public onErrorThisObject:any;
-        public downloadingSizeFunc:Function;
-        public downloadingSizeThisObject:any;
+        public onSuccessFunc:Function = null;
+        public onSuccessThisObject:any = null;
+        public onErrorFunc:Function = null;
+        public onErrorThisObject:any = null;
+        public downloadingSizeFunc:Function = null;
+        public downloadingSizeThisObject:any = null;
 
         constructor() {
 

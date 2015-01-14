@@ -36,8 +36,8 @@ module egret {
      */
     export class NativeDeviceContext extends HashObject {
 
-        private callback:Function;
-        private thisObject:any;
+        private callback:Function = null;
+        private thisObject:any = null;
 
         /**
          * @method egret.NativeDeviceContext#constructor

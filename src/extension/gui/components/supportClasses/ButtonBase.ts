@@ -53,13 +53,13 @@ module egret.gui {
 		/**
 		 * 重发buttonDown事件计时器
 		 */
-		private autoRepeatTimer:Timer;
+        private autoRepeatTimer: Timer = null;
 
 		/**
 		 * [SkinPart]按钮上的文本标签
 		 * @member egret.gui.ButtonBase#labelDisplay
 		 */
-		public labelDisplay:IDisplayText;
+        public labelDisplay: IDisplayText = null;
 
 		private _autoRepeat:boolean = false;
 		/**

@@ -49,12 +49,12 @@ module egret.gui {
 		 * [SkinPart]下拉区域显示对象
 		 * @member egret.gui.DropDownListBase#dropDown
 		 */		
-		public dropDown:DisplayObject;
+        public dropDown: DisplayObject = null;
 		/**
 		 * [SkinPart]下拉触发按钮
 		 * @member egret.gui.DropDownListBase#openButton
 		 */		
-		public openButton:ButtonBase;
+        public openButton: ButtonBase = null;
 		
 		
 		/**
@@ -101,7 +101,7 @@ module egret.gui {
 			this.invalidateProperties();
 		}
 		
-		private _dropDownController:DropDownController; 
+        private _dropDownController: DropDownController = null; 
 		/**
 		 * 下拉控制器
 		 * @member egret.gui.DropDownListBase#dropDownController

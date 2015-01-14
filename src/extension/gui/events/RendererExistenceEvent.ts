@@ -69,19 +69,19 @@ module egret.gui {
 		 * 呈示器的数据项目。 
 		 * @member egret.gui.RendererExistenceEvent#data
 		 */		
-		public data:any;
+        public data: any = null;
 		
 		/**
 		 * 指向已添加或删除项呈示器的位置的索引。 
 		 * @member egret.gui.RendererExistenceEvent#index
 		 */		
-		public index:number;
+		public index:number = NaN;
 		
 		/**
 		 * 对已添加或删除的项呈示器的引用。 
 		 * @member egret.gui.RendererExistenceEvent#renderer
 		 */		
-		public renderer:IItemRenderer;
+        public renderer: IItemRenderer = null;
 
         /**
          * 使用指定的EventDispatcher对象来抛出事件对象。抛出的对象将会缓存在对象池上，供下次循环复用。

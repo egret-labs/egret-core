@@ -106,7 +106,7 @@ module egret.gui {
             this.setContentHeight(height);
         }
 
-        public _layout:LayoutBase;
+        public _layout: LayoutBase = null;
         /**
          * 此容器的布局对象
 		 * @member egret.gui.GroupBase#layout
