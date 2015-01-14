@@ -34,6 +34,19 @@ module egret {
             this._spriteSheet = spriteSheet;
         }
 
+        public getTexture(textureName:string):Texture{
+            var textureData = this._textureData[textureName];
+            var texture = this._spriteSheet.getTexture(name);
+            if (!texture) {
+                texture = this._spriteSheet.createTexture(name, textureData.x, textureData.y, textureData.w, textureData.h);
+            }
+            return texture;
+        }
+
+        public _isTextureValid():boolean{
+            return this._textureData && this._spriteSheet;
+        }
+
         /**
          * MovieClip数据
          */

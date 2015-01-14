@@ -35,10 +35,8 @@ module egret {
     export class MovieClip extends DisplayObjectContainer{
 
     //Data Property
-        public _mcData:any = null;
+        public _movieClipData:any = null;
         public _frames:any[] = null;
-        public _textureData:any = null;
-        public _spriteSheet:SpriteSheet = null;
 
         public _frameLabels:any[] = null;
         public _eventPool:string[] = null;
@@ -69,21 +67,15 @@ module egret {
 
         public _init(){
             this._reset();
-            var movieClipData:MovieClipData = this.movieClipData;
-            if(movieClipData){
-                this._textureData = movieClipData._textureData;
-                this._spriteSheet = movieClipData._spriteSheet;
-                if(movieClipData._mcData){
-                    this._fillMCData(movieClipData._mcData);
-                    this._initFrame();
-                }
+            var movieClipData:MovieClipData = this._movieClipData;
+            if(movieClipData && movieClipData._mcData){
+                this._fillMCData(movieClipData._mcData);
+                this._initFrame();
             }
         }
 
         public _reset():void{
             this._frames = null;
-            this._textureData = null;
-            this._spriteSheet = null;
             this._playTimes = -1;
             this._isPlaying = false;
             this.setIsStopped(true);
@@ -135,7 +127,7 @@ module egret {
         }
 
         private _initFrame():void{
-            if(this._textureData && this._spriteSheet && this._totalFrames>0){
+            if(this._movieClipData._isTextureValid()){
                 this._advanceFrame();
                 this._constructFrame();
             }
@@ -355,7 +347,7 @@ module egret {
                 frameData =  this._frames[frameData.frame-1];
             }
             if(frameData.res){
-                var texture:Texture = this._getTexture(frameData.res);
+                var texture:Texture = this._movieClipData.getTexture(frameData.res);
                 bitmap.x = frameData.x | 0;
                 bitmap.y = frameData.y | 0;
                 bitmap.texture = texture;
@@ -365,15 +357,6 @@ module egret {
             }
 
             this._displayedKeyFrameNum = currentFrameNum;
-        }
-
-        private _getTexture(name:string):Texture {
-            var textureData = this._textureData[name];
-            var texture = this._spriteSheet.getTexture(name);
-            if (!texture) {
-                texture = this._spriteSheet.createTexture(name, textureData.x, textureData.y, textureData.w, textureData.h);
-            }
-            return texture;
         }
 
         private _handlePendingEvent():void{
@@ -467,14 +450,14 @@ module egret {
             this._setMovieClipData(value);
         }
         public get movieClipData():MovieClipData{
-            return this._mcData;
+            return this._movieClipData;
         }
 
         private _setMovieClipData(value:MovieClipData){
-            if(this._mcData == value){
+            if(this._movieClipData == value){
                 return;
             }
-            this._mcData = value;
+            this._movieClipData = value;
             this._init();
         }
 
