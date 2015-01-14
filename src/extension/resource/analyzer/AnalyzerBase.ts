@@ -26,7 +26,7 @@ module RES {
             this.resourceConfig = <ResourceConfig>(RES["configInstance"]);
         }
 
-        private resourceConfig:ResourceConfig;
+        private resourceConfig:ResourceConfig = null;
         /**
          * 添加一个二级键名到配置列表。
          * @method RES.ResourceConfig#addSubkey
