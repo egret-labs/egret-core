@@ -317,20 +317,36 @@ module egret {
         }
 
         public _updateTransform():void {
-            if (!this._visible) {
+            var o = this;
+            if (!o._visible) {
                 return;
             }
             super._updateTransform();
-            for (var i = 0 , length = this._children.length; i < length; i++) {
-                var child:DisplayObject = this._children[i];
+            if (o._colorTransform) {
+                RenderCommand.push(this._setGlobalColorTransform, this);
+            }
+            var mask = o.mask || o._scrollRect;
+            if(mask) {
+                RenderCommand.push(this._pushMask, this);
+            }
+            for (var i = 0 , length = o._children.length; i < length; i++) {
+                var child:DisplayObject = o._children[i];
                 child._updateTransform();
+            }
+            if (o._colorTransform) {
+                RenderCommand.push(this._removeGlobalColorTransform, this);
+            }
+            if(mask) {
+                RenderCommand.push(this._popMask, this);
             }
         }
 
         public _render(renderContext:RendererContext):void {
-            for (var i = 0 , length = this._children.length; i < length; i++) {
-                var child:DisplayObject = this._children[i];
-                child._draw(renderContext);
+            if(!MainContext.__use_new_draw) {
+                for (var i = 0 , length = this._children.length; i < length; i++) {
+                    var child:DisplayObject = this._children[i];
+                    child._draw(renderContext);
+                }
             }
         }
 

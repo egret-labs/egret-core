@@ -93,6 +93,14 @@ module egret {
             this._profileInstance = egret.Profiler.getInstance();
         }
 
+        public static __DRAW_COMMAND_LIST:Array<RenderCommand> = [];
+        //是否使用新的draw机制
+        public static __use_new_draw:boolean = false;
+        /**
+         * renderLoop阶段，引擎内部使用，暂未实现完全
+         */
+        public static _renderLoopPhase:string;
+
         /**
          * 滑动跑道模型，渲染部分
          */
@@ -127,11 +135,19 @@ module egret {
             context.onRenderStart();
             context.clearScreen();
 
+            MainContext.__DRAW_COMMAND_LIST = [];
+            MainContext._renderLoopPhase = "updateTransform";
             stage._updateTransform();
+            MainContext._renderLoopPhase = "draw";
             event._type = Event.FINISH_UPDATE_TRANSFORM;
             this.dispatchEvent(event);
 
-            stage._draw(context);
+            if(MainContext.__use_new_draw){
+                this._draw(context);
+            }
+            else {
+                stage._draw(context);
+            }
             event._type = Event.FINISH_RENDER;
             this.dispatchEvent(event);
 
@@ -140,6 +156,16 @@ module egret {
             }
 
             context.onRenderFinish();
+        }
+
+        private _draw(context:RendererContext):void {
+            var list:Array<RenderCommand> = MainContext.__DRAW_COMMAND_LIST;
+            var length:number = list.length;
+            for(var i:number = 0 ; i < length ; i++){
+                var cmd:RenderCommand = list[i];
+                cmd.call(context);
+                cmd.dispose();
+            }
         }
 
         private reuseEvent:Event = new Event("")

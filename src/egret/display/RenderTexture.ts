@@ -115,7 +115,10 @@ module egret {
             if (mask) {
                 this.renderContext.pushMask(mask);
             }
+            var __use_new_draw = MainContext.__use_new_draw;
+            MainContext.__use_new_draw = false;
             displayObject._render(this.renderContext);
+            MainContext.__use_new_draw = __use_new_draw;
             if (mask) {
                 this.renderContext.popMask();
             }
