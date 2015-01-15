@@ -665,7 +665,6 @@ module egret {
 
             //宽度被设置为0
             if (this._hasWidthSet && this._explicitWidth == 0) {
-                console.warn("文本宽度被设置为0");
 
                 this._numLines = 0;
                 return [{ width: 0, height: 0, elements: [] }];
