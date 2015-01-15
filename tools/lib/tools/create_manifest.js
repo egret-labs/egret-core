@@ -20,6 +20,7 @@ var subRelyOnInfoList;
  */
 var classNameToPath;
 
+var noneExportClassName;
 /**
  * 键是不含命名空间的类名，值是命名空间
  */
@@ -124,6 +125,7 @@ function getModuleReferenceInfo(fileList){
     newClassInfoList = null;
     subRelyOnInfoList = null;
     classNameToPath = null;
+    noneExportClassName = null;
     classNameToModule = null;
     pathInfoList = null;
     pathToClassNames = null;
@@ -137,6 +139,7 @@ function resetCache(){
     newClassInfoList = {};
     subRelyOnInfoList = {};
     classNameToPath = {};
+    noneExportClassName = {};
     classNameToModule = {};
     pathInfoList = {};
     pathToClassNames = {};
@@ -689,7 +692,11 @@ function readClassNamesFromTs(path) {
     var text = file.read(path);
     text = CodeUtil.removeComment(text,path);
     var list = [];
-    analyzeModule(text,list,"");
+    var noneExportList = [];
+    analyzeModule(text,list,noneExportList,"");
+    if(noneExportList.length>0){
+        noneExportClassName[path] = noneExportList;
+    }
     var length = list.length;
     for (var i = 0; i < length; i++) {
         var className = list[i]
@@ -712,25 +719,33 @@ function checkRepeatClass(newPath,oldPath,className){
     if(p1==p2){
         return;
     }
+    var list = noneExportClassName[newPath];
+    if(list&&list.indexOf(className)!=-1){
+        return;
+    }
+    list = noneExportClassName[oldPath];
+    if(list&&list.indexOf(className)!=-1){
+        return;
+    }
     globals.exit(1308,className,newPath,oldPath);
 }
 
 /**
  * 分析一个ts文件
  */
-function analyzeModule(text,list,moduleName)
+function analyzeModule(text,list,noneExportList,moduleName)
 {
     var block = "";
     while (text.length > 0){
         var index = CodeUtil.getFirstVariableIndex("module",text);
         if (index == -1){
-            readClassFromBlock(text,list,moduleName);
+            readClassFromBlock(text,list,noneExportList,moduleName);
             break;
         }
         else{
             var preStr = text.substring(0, index).trim();
             if(preStr){
-                readClassFromBlock(preStr,list,moduleName);
+                readClassFromBlock(preStr,list,noneExportList,moduleName);
             }
             text = text.substring(index+6);
             var ns = CodeUtil.getFirstWord(text);
@@ -739,12 +754,14 @@ function analyzeModule(text,list,moduleName)
             if (index == -1){
                 break;
             }
-            block = text.substring(0, index+1);
+            block = text.substring(0, index);
             text = text.substring(index + 1);
+            index = block.indexOf("{");
+            block = block.substring(index+1);
             if(moduleName){
                 ns = moduleName+"."+ns;
             }
-            analyzeModule(block,list,ns);
+            analyzeModule(block,list,noneExportList,ns);
         }
     }
 }
@@ -752,21 +769,57 @@ function analyzeModule(text,list,moduleName)
 /**
  * 从代码块中读取类名，接口名，全局函数和全局变量，代码块为一个Module，或类外的一段全局函数定义
  */
-function readClassFromBlock(text,list,ns){
+function readClassFromBlock(text,list,noneExportList,ns){
+    var newText = "";
+    while(text.length>0){
+        var index = text.indexOf("{");
+        if(index==-1){
+            newText += text;
+            break;
+        }
+        newText += text.substring(0,index);
+        text = text.substring(index);
+        index = CodeUtil.getBracketEndIndex(text);
+        if(index==-1){
+            newText += text;
+            break;
+        }
+        text = text.substring(index+1);
+    }
+    text = newText;
     while (text.length > 0){
-        var index = getFirstKeyWordIndex("class", text,ns);
-        var interfaceIndex = getFirstKeyWordIndex("interface", text,ns);
+        var noneExported = false;
+        var classIndex = CodeUtil.getFirstVariableIndex("class", text);
+        if(classIndex==-1){
+            classIndex = Number.POSITIVE_INFINITY;
+        }
+        else if(ns){
+            if(CodeUtil.getLastWord(text.substring(0,classIndex))!="export")
+            {
+                noneExported = true;
+            }
+        }
+        var interfaceIndex = CodeUtil.getFirstVariableIndex("interface", text);
+        if(interfaceIndex==-1){
+            interfaceIndex = Number.POSITIVE_INFINITY;
+        }
+        else if(ns){
+            if(CodeUtil.getLastWord(text.substring(0,interfaceIndex))!="export")
+            {
+                noneExported = true;
+            }
+        }
         var enumIndex = getFirstKeyWordIndex("enum",text,ns);
         var functionIndex = getFirstKeyWordIndex("function", text,ns);
         var varIndex = getFirstKeyWordIndex("var", text,ns);
-        index = Math.min(interfaceIndex,index,enumIndex,functionIndex,varIndex);
-        if (index == Number.POSITIVE_INFINITY){
+        classIndex = Math.min(interfaceIndex,classIndex,enumIndex,functionIndex,varIndex);
+        if (classIndex == Number.POSITIVE_INFINITY){
             break;
         }
 
-        var isVar = (index==varIndex);
+        var isVar = (classIndex==varIndex);
         var keyLength = 5;
-        switch (index){
+        switch (classIndex){
             case varIndex:
                 keyLength = 3;
                 break;
@@ -781,7 +834,7 @@ function readClassFromBlock(text,list,ns){
                 break;
         }
 
-        text = text.substring(index + keyLength);
+        text = text.substring(classIndex + keyLength);
         var word = CodeUtil.getFirstVariable(text);
         if (word) {
             var className;
@@ -793,6 +846,9 @@ function readClassFromBlock(text,list,ns){
             }
             if (list.indexOf(className) == -1){
                 list.push(className);
+                if(noneExported){
+                    noneExportList.push(className);
+                }
                 if(ns){
                     var nsList = classNameToModule[word];
                     if(!nsList){
@@ -806,15 +862,15 @@ function readClassFromBlock(text,list,ns){
             text = CodeUtil.removeFirstVariable(text);
         }
         if(isVar){
-            index = text.indexOf("\n");
-            if(index==-1){
-                index = text.length;
+            classIndex = text.indexOf("\n");
+            if(classIndex==-1){
+                classIndex = text.length;
             }
-            text = text.substring(index);
+            text = text.substring(classIndex);
         }
         else{
-            index = CodeUtil.getBracketEndIndex(text);
-            text = text.substring(index + 1);
+            classIndex = CodeUtil.getBracketEndIndex(text);
+            text = text.substring(classIndex + 1);
         }
     }
 }
