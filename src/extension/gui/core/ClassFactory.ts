@@ -32,7 +32,7 @@ module egret.gui {
 	 * @classdesc ClassFactory 实例是一个“工厂对象”，Egret 可用其生成其他类的实例，每个实例拥有相同的属性。
 	 * @extends egret.HashObject
 	 */
-    export class ClassFactory extends HashObject{
+    export class ClassFactory extends HashObject implements IFactory{
 
         /**
          * @method egret.gui.ClassFactory#constructor
