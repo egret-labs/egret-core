@@ -244,7 +244,7 @@ module egret {
         private currentBatchSize:number = 0;
 
         public drawRepeatImage(texture:Texture, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, repeat) {
-            var texture_scale_factor = egret.MainContext.instance.rendererContext.texture_scale_factor;
+            var texture_scale_factor = egret.MainContext.instance.rendererContext._texture_scale_factor;
             sourceWidth = sourceWidth * texture_scale_factor;
             sourceHeight = sourceHeight * texture_scale_factor;
             for (var x:number = destX; x < destWidth; x += sourceWidth) {

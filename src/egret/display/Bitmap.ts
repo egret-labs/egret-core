@@ -167,7 +167,7 @@ module egret {
          */
         private static drawScale9GridImage(renderContext:RendererContext, data:RenderData, scale9Grid:Rectangle,
                                    destWidth:number, destHeight:number):void {
-            var texture_scale_factor = egret.MainContext.instance.rendererContext.texture_scale_factor;
+            var texture_scale_factor = egret.MainContext.instance.rendererContext._texture_scale_factor;
             var texture:Texture = data._texture_to_render;
             if (!texture || !scale9Grid) {
                 return;
