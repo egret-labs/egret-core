@@ -776,6 +776,9 @@ function readClassFromBlock(text,list,ns){
             case functionIndex:
                 keyLength = 8;
                 break;
+            case enumIndex:
+                keyLength = 4;
+                break;
         }
 
         text = text.substring(index + keyLength);
