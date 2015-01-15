@@ -607,11 +607,14 @@ module egret {
 
         private drawCacheTexture(renderContext:RendererContext):boolean {
             var display:egret.DisplayObject = this;
-            if (display._cacheAsBitmap == false)
+            if (display._cacheAsBitmap == false) {
                 return false;
+            }
+            var bounds = display.getBounds();
+            var texture_scale_factor = egret.MainContext.instance.rendererContext.texture_scale_factor;
             if (display._cacheDirty || display._texture_to_render == null ||
-                Math.round(display.width) != Math.round(display._texture_to_render._sourceWidth) ||
-                Math.round(display.height) != Math.round(display._texture_to_render._sourceHeight)) {
+                Math.round(bounds.width) != Math.round(display._texture_to_render._sourceWidth * texture_scale_factor) ||
+                Math.round(bounds.height) != Math.round(display._texture_to_render._sourceHeight * texture_scale_factor)) {
                 var cached = display._makeBitmapCache();
                 display._cacheDirty = !cached;
             }
