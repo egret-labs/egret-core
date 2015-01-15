@@ -641,6 +641,12 @@ module egret {
         }
 
         /**
+         * 强制每帧执行_draw函数
+         * @public
+         */
+        public forceDraw:boolean = false;
+
+        /**
          * @private
          * @param renderContext
          */
@@ -648,7 +654,7 @@ module egret {
             var o = this;
             o._calculateWorldTransform();
             if(MainContext._renderLoopPhase == "updateTransform") {
-                if(o._texture_to_render || o instanceof TextField || o instanceof Bitmap || o["graphics"]) {
+                if(o.forceDraw || o._texture_to_render || o instanceof TextField || o instanceof Bitmap || o["graphics"]) {
                     RenderCommand.push(this._draw, this);
                 }
             }
