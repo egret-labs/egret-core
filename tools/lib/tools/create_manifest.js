@@ -643,6 +643,9 @@ function readClassNamesFromExml(path,srcPath){
     }
     var className = path.substring(srcPath.length,path.length-5);
     className = className.split("/").join(".");
+    if(classNameToPath[className]){
+        checkRepeatClass(path,classNameToPath[className],className);
+    }
     classNameToPath[className] = path;
     pathToClassNames[path] = [className];
 }
@@ -689,10 +692,27 @@ function readClassNamesFromTs(path) {
     analyzeModule(text,list,"");
     var length = list.length;
     for (var i = 0; i < length; i++) {
-        var className = list[i];
+        var className = list[i]
+        if(classNameToPath[className]){
+            checkRepeatClass(path,classNameToPath[className],className);
+        }
         classNameToPath[className] = path;
     }
     pathToClassNames[path] = list;
+}
+
+function checkRepeatClass(newPath,oldPath,className){
+    if(newPath==oldPath||!newPath||!oldPath){
+        return;
+    }
+    var index = newPath.lastIndexOf(".");
+    var p1 = newPath.substring(0,index);
+    index = oldPath.lastIndexOf(".");
+    var p2 = oldPath.substring(0,index);
+    if(p1==p2){
+        return;
+    }
+    globals.exit(1308,className,newPath,oldPath);
 }
 
 /**
@@ -734,14 +754,8 @@ function analyzeModule(text,list,moduleName)
  */
 function readClassFromBlock(text,list,ns){
     while (text.length > 0){
-        var index = CodeUtil.getFirstVariableIndex("class", text);
-        if(index==-1){
-            index = Number.POSITIVE_INFINITY;
-        }
-        var interfaceIndex = CodeUtil.getFirstVariableIndex("interface", text);
-        if(interfaceIndex==-1){
-            interfaceIndex = Number.POSITIVE_INFINITY;
-        }
+        var index = getFirstKeyWordIndex("class", text,ns);
+        var interfaceIndex = getFirstKeyWordIndex("interface", text,ns);
         var enumIndex = getFirstKeyWordIndex("enum",text,ns);
         var functionIndex = getFirstKeyWordIndex("function", text,ns);
         var varIndex = getFirstKeyWordIndex("var", text,ns);
