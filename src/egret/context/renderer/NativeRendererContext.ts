@@ -48,7 +48,8 @@ module egret {
         public _setTextureScaleFactor(value:number):void {
             super._setTextureScaleFactor(value);
 
-            egret_native.Graphics.setTextureScaleFactor(value);
+            //todo
+            //egret_native.Graphics.setTextureScaleFactor(value);
         }
 
         /**
