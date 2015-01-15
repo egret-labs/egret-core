@@ -48,7 +48,19 @@ module egret {
          * 绘制纹理的缩放比率，默认值为1
          * @member egret.RendererContext#texture_scale_factor
          */
-        public texture_scale_factor:number = 1;
+        public _texture_scale_factor:number = 1;
+
+        public set texture_scale_factor(value:number) {
+            this._setTextureScaleFactor(value);
+        }
+
+        public _setTextureScaleFactor(value:number):void {
+            this._texture_scale_factor = value;
+        }
+
+        public  get texture_scale_factor():number {
+            return this._texture_scale_factor;
+        }
 
         /**
          * 是否对图像使用平滑处理

@@ -69,7 +69,7 @@ module egret {
             var width = bounds.width;
             var height = bounds.height;
 
-            var texture_scale_factor = egret.MainContext.instance.rendererContext.texture_scale_factor;
+            var texture_scale_factor = egret.MainContext.instance.rendererContext._texture_scale_factor;
             width /= texture_scale_factor;
             height /= texture_scale_factor;
 
