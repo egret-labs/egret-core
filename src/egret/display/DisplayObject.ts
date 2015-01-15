@@ -74,6 +74,11 @@ module egret {
                 parent._setSizeDirty();
             }
         }
+        /**
+         * 尺寸发生改变的回调函数。若此对象被添加到UIAsset里，此函数将被赋值，在尺寸发生改变时通知UIAsset重新测量。
+         */
+        public _sizeChangeCallBack:Function = null;
+        public _sizeChangeCallTarget:any = null;
 
         public _setSizeDirty():void {
             if (this._sizeDirty) {
@@ -84,6 +89,15 @@ module egret {
             this._setDirty();
             this._setCacheDirty();
             this._setParentSizeDirty();
+            if(this._sizeChangeCallBack!=null){
+                if(this._sizeChangeCallTarget==this._parent){
+                    this._sizeChangeCallBack.call(this._sizeChangeCallTarget);
+                }
+                else{
+                    this._sizeChangeCallBack = null;
+                    this._sizeChangeCallTarget = null;
+                }
+            }
         }
 
         public _clearDirty():void {
@@ -614,11 +628,14 @@ module egret {
 
         private drawCacheTexture(renderContext:RendererContext):boolean {
             var display:egret.DisplayObject = this;
-            if (display._cacheAsBitmap == false)
+            if (display._cacheAsBitmap == false) {
                 return false;
+            }
+            var bounds = display.getBounds();
+            var texture_scale_factor = egret.MainContext.instance.rendererContext.texture_scale_factor;
             if (display._cacheDirty || display._texture_to_render == null ||
-                Math.round(display.width) != Math.round(display._texture_to_render._sourceWidth) ||
-                Math.round(display.height) != Math.round(display._texture_to_render._sourceHeight)) {
+                Math.round(bounds.width) != Math.round(display._texture_to_render._sourceWidth * texture_scale_factor) ||
+                Math.round(bounds.height) != Math.round(display._texture_to_render._sourceHeight * texture_scale_factor)) {
                 var cached = display._makeBitmapCache();
                 display._cacheDirty = !cached;
             }

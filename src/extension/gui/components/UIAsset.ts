@@ -31,9 +31,7 @@ module egret.gui {
 	/**
 	 * @class egret.gui.UIAsset
 	 * @classdesc
-	 * 素材包装器。<p/>
-	 * 注意：UIAsset仅在添content时测量一次初始尺寸， 请不要在外部直接修改content尺寸，
-	 * 若做了引起content尺寸发生变化的操作, 需手动调用UIAsset的invalidateSize()进行重新测量。
+	 * 素材和非GUI显示对象包装器包装器。<p/>
 	 * @extends egret.gui.UIComponent
 	 * @implements egret.gui.ISkinnableClient
 	 */
@@ -167,10 +165,14 @@ module egret.gui {
             if(oldContent!==content) {
                 if(oldContent instanceof DisplayObject){
 					if((<DisplayObject> oldContent).parent==this){
+						(<DisplayObject> oldContent)._sizeChangeCallBack = null;
+						(<DisplayObject> oldContent)._sizeChangeCallTarget = null;
 						this._removeFromDisplayList(<DisplayObject> oldContent);
 					}
                 }
                 if(content instanceof  DisplayObject){
+					(<DisplayObject> content)._sizeChangeCallBack = this.invalidateSize;
+					(<DisplayObject> content)._sizeChangeCallTarget = this;
                     this._addToDisplayListAt(<DisplayObject> content,0);
                 }
             }
@@ -191,8 +193,14 @@ module egret.gui {
                     this.measuredHeight = (<ILayoutElement><any> (content)).preferredHeight;
                 }
                 else{
-                    this.measuredWidth = content.width*content.scaleX;
-                    this.measuredHeight = content.height*content.scaleY;
+					var oldW:number = content.explicitWidth;
+					var oldH:number = content.explicitHeight;
+					content.width = NaN;
+					content.height = NaN;
+                    this.measuredWidth = content.measuredWidth*content.scaleX;
+					this.measuredHeight = content.measuredHeight*content.scaleY;
+					content.width = oldW;
+					content.height = oldH;
                 }
             }
             else if(content instanceof Texture){
