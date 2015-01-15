@@ -44,6 +44,13 @@ module egret {
             this.initBlendMode();
         }
 
+
+        public _setTextureScaleFactor(value:number):void {
+            super._setTextureScaleFactor(value);
+
+            egret_native.Graphics.setTextureScaleFactor(value);
+        }
+
         /**
          * @method egret.NativeRendererContext#clearScreen
          * @private
