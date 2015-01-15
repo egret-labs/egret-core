@@ -337,8 +337,8 @@
 	"egret.gui.HScrollBar":
 	{
 		"super":"egret.gui.HSlider",
-		"thumbAlpha":"any",
-		"trackAlpha":"any"
+		"thumbAlpha":"number",
+		"trackAlpha":"number"
 	},
 	"egret.gui.HSlider":
 	{
@@ -474,6 +474,8 @@
 	},
 	"egret.gui.Scroller":
 	{
+		"autoHideDelay":"number",
+		"autoHideScrollBars":"boolean",
 		"horizontalScrollBar":"egret.gui.HScrollBar",
 		"horizontalScrollPolicy":"string",
 		"implements":["egret.gui.IVisualElementContainer"],
@@ -727,8 +729,8 @@
 	"egret.gui.VScrollBar":
 	{
 		"super":"egret.gui.VSlider",
-		"thumbAlpha":"any",
-		"trackAlpha":"any"
+		"thumbAlpha":"number",
+		"trackAlpha":"number"
 	},
 	"egret.gui.VSlider":
 	{
@@ -753,10 +755,6 @@
 		"selectedChild":"egret.gui.IVisualElement",
 		"selectedIndex":"number",
 		"super":"egret.gui.Group"
-	},
-	"egret.gui.ViewportScroller":
-	{
-		"super":"egret.ScrollView"
 	},
 	"eumn":
 	{

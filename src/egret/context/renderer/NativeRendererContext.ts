@@ -44,6 +44,13 @@ module egret {
             this.initBlendMode();
         }
 
+
+        public _setTextureScaleFactor(value:number):void {
+            super._setTextureScaleFactor(value);
+
+            egret_native.Graphics.setTextureScaleFactor(value);
+        }
+
         /**
          * @method egret.NativeRendererContext#clearScreen
          * @private
@@ -92,7 +99,7 @@ module egret {
         }
 
         public drawRepeatImage(texture:Texture, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, repeat) {
-            var texture_scale_factor = egret.MainContext.instance.rendererContext.texture_scale_factor;
+            var texture_scale_factor = egret.MainContext.instance.rendererContext._texture_scale_factor;
             sourceWidth = sourceWidth * texture_scale_factor;
             sourceHeight = sourceHeight * texture_scale_factor;
             for (var x:number = destX; x < destWidth; x += sourceWidth) {

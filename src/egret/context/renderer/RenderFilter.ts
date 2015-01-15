@@ -92,7 +92,7 @@ module egret {
             if (locTexture == null || sourceHeight == 0 || sourceWidth == 0 || destWidth == 0 || destHeight == 0) {
                 return;
             }
-            var texture_scale_factor = egret.MainContext.instance.rendererContext.texture_scale_factor;
+            var texture_scale_factor = egret.MainContext.instance.rendererContext._texture_scale_factor;
             sourceWidth = sourceWidth / texture_scale_factor;
             sourceHeight = sourceHeight / texture_scale_factor;
             if (this._drawAreaList.length == 0 || !MainContext.instance.rendererContext["_cacheCanvasContext"]) {

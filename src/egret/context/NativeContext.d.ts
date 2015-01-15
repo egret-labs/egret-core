@@ -121,6 +121,7 @@ declare module egret_native {
 
         function setBlendArg(src:number, des:number):void;
 
+        function setTextureScaleFactor(value:number):void;
     }
 
     module Label {
