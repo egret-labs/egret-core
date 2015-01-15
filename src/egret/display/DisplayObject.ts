@@ -74,6 +74,11 @@ module egret {
                 parent._setSizeDirty();
             }
         }
+        /**
+         * 尺寸发生改变的回调函数。若此对象被添加到UIAsset里，此函数将被赋值，在尺寸发生改变时通知UIAsset重新测量。
+         */
+        public _sizeChangeCallBack:Function = null;
+        public _sizeChangeCallTarget:any = null;
 
         public _setSizeDirty():void {
             if (this._sizeDirty) {
@@ -84,6 +89,15 @@ module egret {
             this._setDirty();
             this._setCacheDirty();
             this._setParentSizeDirty();
+            if(this._sizeChangeCallBack!=null){
+                if(this._sizeChangeCallTarget==this._parent){
+                    this._sizeChangeCallBack.call(this._sizeChangeCallTarget);
+                }
+                else{
+                    this._sizeChangeCallBack = null;
+                    this._sizeChangeCallTarget = null;
+                }
+            }
         }
 
         public _clearDirty():void {
