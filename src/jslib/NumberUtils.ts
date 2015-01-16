@@ -24,94 +24,80 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
-module egret {
-
-
-    export class NumberUtils {
-
-        public static isNumber(value:any):boolean {
-            return typeof(value) === "number" && !isNaN(value);
+var egret;
+(function (egret) {
+    var NumberUtils = (function () {
+        function NumberUtils() {
         }
-
-        /**
-         * 得到对应角度值的sin近似值
-         * @param value {number} 角度值
-         * @returns {number} sin值
-         */
-        public static sin(value:number):number {
-            value = Math.round(value);
+        NumberUtils.isNumber = function (value) {
+            return typeof (value) === "number" && !isNaN(value);
+        };
+        NumberUtils.sin = function (value) {
             value = value % 360;
             if (value < 0) {
                 value += 360;
             }
             if (value < 90) {
-                return egret_sin_map[value];
+                return egret_sin_map[NumberUtils.toDecimal(value)];
             }
             if (value < 180) {
-                return egret_cos_map[value - 90];
+                return egret_cos_map[NumberUtils.toDecimal(value - 90)];
             }
             if (value < 270) {
-                return -egret_sin_map[value - 180];
+                return -egret_sin_map[NumberUtils.toDecimal(value - 180)];
             }
-            return -egret_cos_map[value - 270];
-        }
-
-        /**
-         * 得到对应角度值的cos近似值
-         * @param value {number} 角度值
-         * @returns {number} cos值
-         */
-        public static cos(value:number):number {
-            value = Math.round(value);
+            return -egret_cos_map[NumberUtils.toDecimal(value - 270)];
+        };
+        NumberUtils.cos = function (value) {
             value = value % 360;
             if (value < 0) {
                 value += 360;
             }
             if (value < 90) {
-                return egret_cos_map[value];
+                return egret_cos_map[NumberUtils.toDecimal(value)];
             }
             if (value < 180) {
-                return -egret_sin_map[value - 90];
+                return -egret_sin_map[NumberUtils.toDecimal(value - 90)];
             }
             if (value < 270) {
-                return -egret_cos_map[value - 180];
+                return -egret_cos_map[NumberUtils.toDecimal(value - 180)];
             }
-            return egret_sin_map[value - 270];
-        }
-    }
-}
-
+            return egret_sin_map[NumberUtils.toDecimal(value - 270)];
+        };
+        NumberUtils.toDecimal = function (x) {
+            var f = parseFloat(x);
+            if (isNaN(f)) {
+                return;
+            }
+            f = Math.round(x * 10) / 10;
+            return f;
+        };
+        return NumberUtils;
+    })();
+    egret.NumberUtils = NumberUtils;
+    NumberUtils.prototype.__class__ = "egret.NumberUtils";
+})(egret || (egret = {}));
 var egret_sin_map = {};
 var egret_cos_map = {};
-
-for (var i = 0; i <= 90; i++) {
+var i = 0;
+while (i <= 90) {
+    i = egret.NumberUtils.toDecimal(i);
     egret_sin_map[i] = Math.sin(i * egret.Matrix.DEG_TO_RAD);
     egret_cos_map[i] = Math.cos(i * egret.Matrix.DEG_TO_RAD);
+    i += 0.1;
 }
-
 //对未提供bind的浏览器实现bind机制
 if (!Function.prototype.bind) {
     Function.prototype.bind = function (oThis) {
         if (typeof this !== "function") {
-            // closest thing possible to the ECMAScript 5 internal IsCallable function
             throw new TypeError("Function.prototype.bind - what is trying to be bound is not callable");
         }
-
-        var aArgs = Array.prototype.slice.call(arguments, 1),
-            fToBind = this,
-            fNOP = function () {
-            },
-            fBound = function () {
-                return fToBind.apply(this instanceof fNOP && oThis
-                        ? this
-                        : oThis,
-                    aArgs.concat(Array.prototype.slice.call(arguments)));
-            };
-
+        var aArgs = Array.prototype.slice.call(arguments, 1), fToBind = this, fNOP = function () {
+        }, fBound = function () {
+            return fToBind.apply(this instanceof fNOP && oThis ? this : oThis, aArgs.concat(Array.prototype.slice.call(arguments)));
+        };
         fNOP.prototype = this.prototype;
         fBound.prototype = new fNOP();
-
         return fBound;
     };
 }
