@@ -81,10 +81,92 @@ module egret {
 
             MainContext.instance.addEventListener(Event.FINISH_RENDER, this._draw, this);
 
+            egret.TextField.prototype._makeBitmapCache = function () {
+                if (!this.renderTexture) {
+                    this.renderTexture = new egret.RenderTexture();
+                }
+                var bounds = this.getBounds(Rectangle.identity);
+                if(bounds.width == 0 || bounds.height == 0) {
+                    this._texture_to_render = null;
+                    return false;
+                }
+
+                if(!this._bitmapData) {
+                    this._bitmapData = document.createElement("canvas");
+                    this.renderContext = egret.RendererContext.createRendererContext(this._bitmapData);
+                }
+                var width = bounds.width;
+                var height = bounds.height;
+
+                var texture_scale_factor = egret.MainContext.instance.rendererContext._texture_scale_factor;
+                width /= texture_scale_factor;
+                height /= texture_scale_factor;
+
+                width = Math.round(width);
+                height = Math.round(height);
+
+                var cacheCanvas:HTMLCanvasElement = this._bitmapData;
+                cacheCanvas.width = width;
+                cacheCanvas.height = height;
+                cacheCanvas.style.width = width + "px";
+                cacheCanvas.style.height = height + "px";
+
+                if(this.renderContext._cacheCanvas) {
+                    this.renderContext._cacheCanvas.width = width;
+                    this.renderContext._cacheCanvas.height = height;
+                }
+
+                this._worldTransform.identity();
+                this._worldTransform.a = 1 / texture_scale_factor;
+                this._worldTransform.d = 1 / texture_scale_factor;
+                this.renderContext.setTransform(this._worldTransform);
+                this.worldAlpha = 1;
+
+                var renderFilter = egret.RenderFilter.getInstance();
+                var drawAreaList:Array<Rectangle> = renderFilter._drawAreaList.concat();
+                renderFilter._drawAreaList.length = 0;
+                this.renderContext.clearScreen();
+                this.renderContext.onRenderStart();
+                this.webGLTexture = null;//gl.deleteTexture(this.webGLTexture);
+                if (this._colorTransform) {
+                    this.renderContext.setGlobalColorTransform(this._colorTransform.matrix);
+                }
+                var mask = this.mask || this._scrollRect;
+                if (mask) {
+                    this.renderContext.pushMask(mask);
+                }
+                this._render(this.renderContext);
+                if (mask) {
+                    this.renderContext.popMask();
+                }
+                if (this._colorTransform) {
+                    this.renderContext.setGlobalColorTransform(null);
+                }
+                RenderTexture.identityRectangle.width = width;
+                RenderTexture.identityRectangle.height = height;
+                renderFilter.addDrawArea(RenderTexture.identityRectangle);
+                this.renderContext.onRenderFinish();
+                renderFilter._drawAreaList = drawAreaList;
+
+                this.renderTexture._bitmapData = this._bitmapData;
+                this.renderTexture._sourceWidth = width;
+                this.renderTexture._sourceHeight = height;
+                this.renderTexture._textureWidth = this.renderTexture._sourceWidth * texture_scale_factor;
+                this.renderTexture._textureHeight = this.renderTexture._sourceHeight * texture_scale_factor;
+
+                this._texture_to_render = this.renderTexture;
+                return true;
+            };
+
             egret.TextField.prototype._draw = function (renderContext) {
                 var textField:egret.TextField = <egret.TextField>this;
                 if (textField.getDirty()) {
-                    textField.cacheAsBitmap = true;
+//                    textField.cacheAsBitmap = true;
+
+
+
+                    this._texture_to_render = this.renderTexture;
+                    this._cacheAsBitmap = true;
                 }
                 egret.DisplayObject.prototype._draw.call(textField, renderContext);
             };
@@ -636,11 +718,13 @@ egret.RenderTexture.prototype.setSize = function (width, height) {
     cacheCanvas.style.width = width + "px";
     cacheCanvas.style.height = height + "px";
 
-    var cacheCanvas:HTMLCanvasElement = this._webglBitmapData;
-    cacheCanvas.width = width;
-    cacheCanvas.height = height;
-    cacheCanvas.style.width = width + "px";
-    cacheCanvas.style.height = height + "px";
+    if(this._webglBitmapData) {
+        var cacheCanvas:HTMLCanvasElement = this._webglBitmapData;
+        cacheCanvas.width = width;
+        cacheCanvas.height = height;
+        cacheCanvas.style.width = width + "px";
+        cacheCanvas.style.height = height + "px";
+    }
 };
 
 egret.RenderTexture.prototype.end = function () {

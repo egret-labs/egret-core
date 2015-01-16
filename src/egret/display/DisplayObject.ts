@@ -1105,7 +1105,7 @@ module egret {
             }
         }
 
-        private _makeBitmapCache():boolean {
+        public _makeBitmapCache():boolean {
             if (!this.renderTexture) {
                 this.renderTexture = new egret.RenderTexture();
             }
