@@ -48,7 +48,6 @@ module egret {
 
         constructor(canvas?:HTMLCanvasElement) {
             super();
-            console.log("使用WebGL模式");
             this.canvas = canvas || this.createCanvas();
             this.canvas.addEventListener("webglcontextlost", this.handleContextLost.bind(this), false);
             this.canvas.addEventListener("webglcontextrestored", this.handleContextRestored.bind(this), false);
