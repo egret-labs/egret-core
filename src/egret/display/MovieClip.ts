@@ -32,7 +32,10 @@ module egret {
      * @classdesc 影片剪辑，可以通过影片剪辑播放序列帧动画。MovieClip 类从以下类继承而来：DisplayObjectContainer、DisplayObject 和 EventDispatcher。不同于 DisplayObjectContainer 对象，MovieClip 对象拥有一个时间轴。
      * @extends egret.DisplayObjectContainer
      */
-    export class MovieClip extends DisplayObjectContainer{
+    export class MovieClip extends DisplayObject{
+
+    //Render Property
+        private static renderFilter:RenderFilter = RenderFilter.getInstance();
 
     //Data Property
         public _movieClipData:MovieClipData = null;
@@ -41,7 +44,7 @@ module egret {
         public _frameLabels:any[] = null;
         private _frameIntervalTime:number = 0;
         public _eventPool:string[] = null;
-        private _bitmap:Bitmap = null;
+        private _textureToRender:Texture = null;
 
     //Animation Property
         private _isPlaying:boolean = false;
@@ -63,8 +66,6 @@ module egret {
          */
         constructor(movieClipData?:MovieClipData) {
             super();
-            this._bitmap = new egret.Bitmap();
-            this.addChild(this._bitmap);
             this._setMovieClipData(movieClipData);
         }
 
@@ -95,6 +96,21 @@ module egret {
             if(this._movieClipData._isTextureValid()){
                 this._advanceFrame();
                 this._constructFrame();
+            }
+        }
+
+        public _render(renderContext:RendererContext):void {
+            var texture = this._textureToRender;
+            this._texture_to_render = texture;
+            if (texture) {
+                var offsetX:number = Math.round(texture._offsetX);
+                var offsetY:number = Math.round(texture._offsetY);
+                var bitmapWidth:number = texture._bitmapWidth||texture._textureWidth;
+                var bitmapHeight:number = texture._bitmapHeight||texture._textureHeight;
+                var destW:number = Math.round(bitmapWidth);
+                var destH:number = Math.round(bitmapHeight);
+                MovieClip.renderFilter.drawImage(renderContext, this, texture._bitmapX, texture._bitmapY,
+                    bitmapWidth, bitmapHeight, offsetX, offsetY, destW,destH);
             }
         }
 
@@ -303,7 +319,6 @@ module egret {
             if(this._displayedKeyFrameNum == currentFrameNum){
                 return;
             }
-            var bitmap = this._bitmap;
             var frameData = this._movieClipData.frames[currentFrameNum-1];
             if(frameData.frame){
                 if(this._displayedKeyFrameNum == parseInt(frameData.frame)){
@@ -311,16 +326,17 @@ module egret {
                 }
                 frameData = this._movieClipData.frames[frameData.frame-1];
             }
+
             if(frameData.res){
-                var texture:Texture = this._movieClipData.getTexture(frameData.res);
-                bitmap.x = frameData.x | 0;
-                bitmap.y = frameData.y | 0;
-                bitmap.texture = texture;
+                this._textureToRender = this._movieClipData.getTexture(frameData.res);
+                this._textureToRender._offsetX = frameData.x | 0;
+                this._textureToRender._offsetY = frameData.y | 0;
                 return true;
             }else{
-                bitmap.texture = null;
+                this._textureToRender = null;
+                this._textureToRender._offsetX = 0;
+                this._textureToRender._offsetY = 0;
             }
-
             this._displayedKeyFrameNum = currentFrameNum;
         }
 
