@@ -296,7 +296,6 @@ module egret {
 
         public _advanceFrame(): void{
             this._currentFrameNum = this._nextFrameNum;
-            console.log(this._currentFrameNum);
         }
 
         private _constructFrame() {
