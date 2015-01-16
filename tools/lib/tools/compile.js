@@ -501,7 +501,7 @@ function generateAllModuleFileList(projectDir, moduleReferenceList) {
     var all_module_file_list = [];
     all_module.map(function (moduleConfig) {
         moduleConfig.file_list.map(function (item) {
-            var tsFile = file.joinPath(moduleConfig.prefix, moduleConfig.source, item).toLowerCase();
+            var tsFile = file.joinPath(moduleConfig.prefix, moduleConfig.source, item);
             if (item.indexOf(".d.ts") != -1) {
                 return;
             }
