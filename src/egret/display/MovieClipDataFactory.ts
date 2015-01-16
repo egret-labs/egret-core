@@ -50,6 +50,11 @@ module egret {
             this._mcDataCache = {};
         }
 
+        /**
+         * 根据名字生成一个MovieClipData实例
+         * @method egret.MovieClipDataFactory#generateMovieClipData
+         * @param movieClipName {string} MovieClip名字
+         */
         public generateMovieClipData(movieClipName:string):MovieClipData {
             var mcDataCache:any = this._mcDataCache;
             if(this.enableCache && mcDataCache[movieClipName]) {
