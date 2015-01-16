@@ -34,50 +34,47 @@ module egret {
             return typeof(value) === "number" && !isNaN(value);
         }
 
-        /**
-         * 得到对应角度值的sin近似值
-         * @param value {number} 角度值
-         * @returns {number} sin值
-         */
         public static sin(value:number):number {
-            value = Math.round(value);
             value = value % 360;
             if (value < 0) {
                 value += 360;
             }
             if (value < 90) {
-                return egret_sin_map[value];
+                return egret_sin_map[NumberUtils.toDecimal(value)];
             }
             if (value < 180) {
-                return egret_cos_map[value - 90];
+                return egret_cos_map[NumberUtils.toDecimal(value - 90)];
             }
             if (value < 270) {
-                return -egret_sin_map[value - 180];
+                return -egret_sin_map[NumberUtils.toDecimal(value - 180)];
             }
-            return -egret_cos_map[value - 270];
+            return -egret_cos_map[NumberUtils.toDecimal(value - 270)];
         }
 
-        /**
-         * 得到对应角度值的cos近似值
-         * @param value {number} 角度值
-         * @returns {number} cos值
-         */
         public static cos(value:number):number {
-            value = Math.round(value);
             value = value % 360;
             if (value < 0) {
                 value += 360;
             }
             if (value < 90) {
-                return egret_cos_map[value];
+                return egret_cos_map[NumberUtils.toDecimal(value)];
             }
             if (value < 180) {
-                return -egret_sin_map[value - 90];
+                return -egret_sin_map[NumberUtils.toDecimal(value - 90)];
             }
             if (value < 270) {
-                return -egret_cos_map[value - 180];
+                return -egret_cos_map[NumberUtils.toDecimal(value - 180)];
             }
-            return egret_sin_map[value - 270];
+            return egret_sin_map[NumberUtils.toDecimal(value - 270)];
+        }
+
+        public static toDecimal(x) {
+            var f = parseFloat(x);
+            if (isNaN(f)) {
+                return;
+            }
+            f = Math.round(x * 10) / 10;
+            return f;
         }
     }
 }
@@ -85,9 +82,12 @@ module egret {
 var egret_sin_map = {};
 var egret_cos_map = {};
 
-for (var i = 0; i <= 90; i++) {
+var i = 0;
+while (i <= 90) {
+    i = egret.NumberUtils.toDecimal(i);
     egret_sin_map[i] = Math.sin(i * egret.Matrix.DEG_TO_RAD);
     egret_cos_map[i] = Math.cos(i * egret.Matrix.DEG_TO_RAD);
+    i += 0.1;
 }
 
 //对未提供bind的浏览器实现bind机制
