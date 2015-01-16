@@ -154,6 +154,26 @@ function getReleaseUrl() {
     return "release";
 }
 
+function getVersionCode(runtime) {
+    if (hasKeys(projectConfig, ["publish", runtime, "baseVersion"])) {
+        return projectConfig["publish"][runtime]["baseVersion"];
+    }
+
+    return 1;
+}
+
+function hasKeys(obj, keys) {
+    var temp = obj;
+    for (var i = 0; i < keys.length; i++) {
+        temp = temp[keys[i]];
+        if (temp == null) {
+            return false;
+        }
+    }
+    return true;
+}
+
+exports.getVersionCode = getVersionCode;
 exports.getReleaseUrl = getReleaseUrl;
 
 exports.getTscLibUrl = getTscLibUrl;

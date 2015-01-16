@@ -59,6 +59,10 @@ module egret {
          */
         private baseVersionData:Object = null;
 
+        private newCode:number;
+        private localVersionCodePath = "localCode.manifest";
+        private serverVersionCodePath = "code.manifest";
+
         private _load:NativeResourceLoader = null;
 
         //获取当前版本号
@@ -67,16 +71,33 @@ module egret {
             this._load.addEventListener(egret.IOErrorEvent.IO_ERROR, this.loadError, this);
             this._load.addEventListener(egret.Event.COMPLETE, this.fileLoadComplete, this);
 
-            this.loadBaseVersion();
+            this.loadCodeVersion();
         }
 
-        private loadBaseVersion():void {
+        private loadCodeVersion():void {
+            var localCode:number = 1;
+            this.newCode = 1;
+
+            var localVersionCode = this.getLocalData(this.localVersionCodePath);
+            if (localVersionCode != null) {
+                localCode = localVersionCode["code"];
+            }
+
+            var serverVersionCode = this.getLocalData(this.serverVersionCodePath);
+            if (serverVersionCode != null) {
+                this.newCode = serverVersionCode["code"];
+            }
+
+            this.loadBaseVersion(localCode == this.newCode);
+        }
+
+        private loadBaseVersion(neesUpdate:boolean):void {
             this.baseVersionData = this.getLocalData(this.baseVersionDataPath);
             this.changeVersionData = this.getLocalData(this.changeVersionDataPath);
 
             //加载baseVersionData
             var self = this;
-            if (this.baseVersionData == null) {
+            if (this.baseVersionData == null || neesUpdate) {
                 this.loadFile(this.baseVersionDataPath, function () {
                     self.baseVersionData = self.getLocalData(self.baseVersionDataPath);
 
@@ -89,6 +110,9 @@ module egret {
         }
 
         private initLocalVersionData():void {
+            //保存localCode文件
+            egret_native.saveRecord(this.localVersionCodePath, JSON.stringify({"code" : this.newCode}));
+
             //初始化localVersonData
             this.localVersionData = this.getLocalData(this.localVersionDataPath);
             if (this.localVersionData == null) {

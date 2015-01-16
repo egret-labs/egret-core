@@ -94,13 +94,12 @@ function publishNative(opts) {
             var tempTime = Date.now();
             globals.debugLog("扫描版本控制文件");
 
-            genVer.generate(projectPath, path.join(releasePath, "nativeBase"));
+            genVer.generate(projectPath, path.join(releasePath, "nativeBase"), projectProperties.getVersionCode("native"));
 
             globals.debugLog("生成版本控制文件耗时：%d秒", (Date.now() - tempTime) / 1000);
             tempCallback();
         });
     }
-
 
     if (true) {//拷贝其他需要打到zip包里的文件
         task.push(function (tempCallback) {
@@ -110,9 +109,11 @@ function publishNative(opts) {
             file.copy(path.join(projectPath, "launcher", "native_require.js"), path.join(ziptempPath, "launcher", "native_require.js"));
             if (noVerion) {
                 file.save(path.join(ziptempPath, "version.manifest"), "{}");
+                file.save(path.join(ziptempPath, "code.manifest"), JSON.stringify({code:1}));
             }
             else {
                 file.copy(path.join(releasePath, "nativeBase", "version.manifest"), path.join(ziptempPath, "version.manifest"));
+                file.copy(path.join(releasePath, "nativeBase", "code.manifest"), path.join(ziptempPath, "code.manifest"));
             }
 
 
@@ -294,18 +295,18 @@ function publishHtml5(opts) {
     }
 
     //生成版本控制文件到nativeBase里
-    var noVerion = (opts["-noversion"]) ? true : false;
-    if (!noVerion) {
-        task.push(function (tempCallback) {
-            var tempTime = Date.now();
-            globals.debugLog("扫描版本控制文件");
-
-            genVer.generate(projectPath, path.join(releasePath, "html5Base"));
-
-            globals.debugLog("生成版本控制文件耗时：%d秒", (Date.now() - tempTime) / 1000);
-            tempCallback();
-        });
-    }
+    var noVerion = true;//(opts["-noversion"]) ? true : false;
+    //if (!noVerion) {
+    //    task.push(function (tempCallback) {
+    //        var tempTime = Date.now();
+    //        globals.debugLog("扫描版本控制文件");
+    //
+    //        genVer.generate(projectPath, path.join(releasePath, "html5Base"), projectProperties.getVersionCode("html5"));
+    //
+    //        globals.debugLog("生成版本控制文件耗时：%d秒", (Date.now() - tempTime) / 1000);
+    //        tempCallback();
+    //    });
+    //}
 
 
     if (true) {//拷贝其他文件

@@ -16,13 +16,22 @@ var crc32 = require("../core/crc32.js");
  * 生成指定目录下文件的版本信息manifest文件
  * 不包括html和css文件
  */
-function createManifest(projectPath, outputPath){
+function createManifest(projectPath, outputPath, newCode){
     var basePath = path.join(outputPath, "base.manifest");
     var versionPath = path.join(outputPath, "version.manifest");
+    var codePath = path.join(outputPath, "code.manifest");
 
     var oldVersion;
     if(file.exists(basePath)) {
         oldVersion = JSON.parse(file.read(basePath));
+    }
+
+    var oldCode = 1;
+    if(file.exists(codePath)) {
+        oldCode = JSON.parse(file.read(codePath))["code"] || 1;
+    }
+    else {
+        file.save(codePath, JSON.stringify({code:oldCode}));
     }
 
     var list = file.search(path.join(projectPath, "resource"));
@@ -57,9 +66,10 @@ function createManifest(projectPath, outputPath){
         currentVersion[savePath] = 1;
     }
 
-    if (oldVersion == null) {
+    if (oldVersion == null || oldCode < newCode) {
         var changeStr = JSON.stringify(changeVersion);
         file.save(basePath, changeStr);
+        file.save(codePath, JSON.stringify({code:newCode}));
         file.save(versionPath, "{}");
 
         file.copy(path.join(projectPath, "resource/resource.json"), path.join(outputPath, "resource.json"));
@@ -87,9 +97,9 @@ function run(currDir, args, opts){
     createManifest(currentPath, currentPath);
 }
 
-function generate(projectPath, outputPath) {
+function generate(projectPath, outputPath, newCode) {
 
-    createManifest(projectPath, outputPath);
+    createManifest(projectPath, outputPath, newCode);
 }
 
 exports.generate = generate;
