@@ -155,8 +155,8 @@ function getReleaseUrl() {
 }
 
 function getVersionCode(runtime) {
-    if (hasKeys(projectConfig, ["publish", runtime, "baseVersion"])) {
-        return projectConfig["publish"][runtime]["baseVersion"];
+    if (hasKeys(projectConfig, ["publish", "baseVersion"])) {
+        return projectConfig["publish"]["baseVersion"];
     }
 
     return 1;
