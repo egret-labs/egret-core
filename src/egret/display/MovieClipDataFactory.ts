@@ -35,6 +35,7 @@ module egret {
         public _mcDataSet:any;
         public _spriteSheet:SpriteSheet;
         public _mcDataCache:any = {};
+        public _richMCDataCache:any = {};
 
         constructor(movieClipDataSet?:any, texture?:Texture) {
             super();
@@ -48,34 +49,54 @@ module egret {
          */
         public clearCache():void{
             this._mcDataCache = {};
+            this._richMCDataCache = {};
         }
 
         /**
-         * 根据名字生成一个MovieClipData实例
+         * 根据名字生成一个MovieClipData实例。可以用于创建MovieClip。
          * @method egret.MovieClipDataFactory#generateMovieClipData
          * @param movieClipName {string} MovieClip名字
          */
         public generateMovieClipData(movieClipName:string):MovieClipData {
-            var mcDataCache:any = this._mcDataCache;
-            if(this.enableCache && mcDataCache[movieClipName]) {
-                return mcDataCache[movieClipName];
+            var output:MovieClipData = this._findFromCache(movieClipName, this._mcDataCache);
+            if(!output){
+                output = new MovieClipData();
+                this._fillData(movieClipName, output, this._mcDataCache);
             }
-            var outputMovieClipData:MovieClipData = this.createNewMovieClipData(movieClipName);
-            if(this.enableCache){
-                mcDataCache[movieClipName] = outputMovieClipData;
-            }
-            return outputMovieClipData;
-
+            return output;
         }
 
-        private createNewMovieClipData(movieClipName:string):MovieClipData{
+        /**
+         * 根据名字生成一个RichMovieClipData实例。可以用于创建RichMovieClip。
+         * @method egret.MovieClipDataFactory#generateMovieClipData
+         * @param movieClipName {string} MovieClip名字
+         */
+        public generateRichMovieClipData(movieClipName:string):RichMovieClipData{
+            var output:RichMovieClipData = this._findFromCache(movieClipName, this._richMCDataCache);
+            if(!output){
+                output = new RichMovieClipData();
+                this._fillData(movieClipName, output, this._richMCDataCache);
+            }
+            return output;
+        }
+
+        private _findFromCache(movieClipName:string, cache:any):any{
+            if(this.enableCache && cache[movieClipName]) {
+                return cache[movieClipName];
+            }
+            return null;
+        }
+
+        private _fillData(movieClipName:string, movieClip:MovieClipData, cache:any):void{
             if(this._mcDataSet){
                 var mcData = this._mcDataSet.mc[movieClipName];
                 if (mcData) {
-                    return new MovieClipData(mcData, this._mcDataSet.res, this._spriteSheet);
+                    movieClip._init(mcData, this._mcDataSet.res, this._spriteSheet);
+                    if(this.enableCache){
+                        cache[movieClipName] = movieClip;
+                    }
                 }
             }
-            return null;
         }
 
         /**

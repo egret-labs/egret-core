@@ -27,17 +27,25 @@
 
 module egret {
     export class RichMovieClip extends MovieClip{
-        private _frameScripts:any;
-        private _frameActions:any;
+        private _frameScripts:any; // 这个地方不要赋初值
+        private _frameActions:any; // 这个地方不要赋初值
 
-        constructor(movieClipData?:MovieClipData) {
+        /**
+         * 创建新的 RichMovieClip 实例。创建 RichMovieClip 之后，调用舞台上的显示对象容器的addElement方法。
+         * @method egret.RichMovieClip#constructor
+         * @param movieClipData {MovieClipData} 被引用的 MovieClipData 对象
+         */
+        constructor(movieClipData?:RichMovieClipData) {
             super(movieClipData);
         }
 
-        public _fillMCData(mcData:any):void{
-            super._fillMCData(mcData);
-            this._fillFrameScripts(mcData.scripts);
-            this._fillFrameActions(mcData.actions);
+        public _init(){
+            super._init();
+            var movieClipData:RichMovieClipData = <RichMovieClipData>this._movieClipData;
+            if(movieClipData && movieClipData._isDataValid()){
+                this._frameActions = movieClipData.frameActions;
+                this._fillFrameScripts(movieClipData.frameScripts);
+            }
         }
 
         private _fillFrameScripts(frameScriptsData:any[]):void{
@@ -50,19 +58,6 @@ module egret {
                         var func:any = this[scriptData.func];
                         var args = scriptData.args;
                         this._frameScripts[scriptData.frame] = {"func":func, "args":args ? args : []};
-                    }
-                }
-            }
-        }
-
-        private _fillFrameActions(frameActionsData:any[]):void{
-            if(frameActionsData){
-                var length:number = frameActionsData.length;
-                if(length > 0){
-                    this._frameActions = {};
-                    for(var i=0; i < length; i++){
-                        var actionData:any = frameActionsData[i];
-                        this._frameActions[actionData.frame] = actionData.name;
                     }
                 }
             }
@@ -86,8 +81,9 @@ module egret {
                     try {
                         frameScript.func.apply(this, frameScript.args)
                     } catch (e) {
-                        this.stop();
-                        throw e;
+                        //ignore Error
+                        //this.stop();
+                        //throw e;
                     }
                 }
             }

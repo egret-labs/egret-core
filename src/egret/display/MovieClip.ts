@@ -29,16 +29,17 @@ module egret {
 
     /**
      * @class egret.MovieClip
-     * @classdesc 影片剪辑，可以通过影片剪辑播放序列帧动画。
+     * @classdesc 影片剪辑，可以通过影片剪辑播放序列帧动画。MovieClip 类从以下类继承而来：DisplayObjectContainer、DisplayObject 和 EventDispatcher。不同于 DisplayObjectContainer 对象，MovieClip 对象拥有一个时间轴。
      * @extends egret.DisplayObjectContainer
      */
     export class MovieClip extends DisplayObjectContainer{
 
     //Data Property
-        public _movieClipData:any = null;
-        public _frames:any[] = null;
-
+        public _movieClipData:MovieClipData = null;
+        private _frames:any[] = null;
+        private _totalFrames:number = 0;
         public _frameLabels:any[] = null;
+        private _frameIntervalTime:number = 0;
         public _eventPool:string[] = null;
         private _bitmap:Bitmap = null;
 
@@ -47,10 +48,6 @@ module egret {
         private _isStopped:boolean = true;
         private _playTimes:number = 0;
 
-        private _frameRate:number = 0;
-        private _frameIntervalTime:number = 0;
-
-        private _totalFrames:number = 0;
         public _currentFrameNum:number = 0;
         public _nextFrameNum:number = 0;
         private _displayedKeyFrameNum:number = 0;
@@ -58,6 +55,12 @@ module egret {
         private _passedTime:number = 0;
 
     //Construct Function
+
+        /**
+         * 创建新的 MovieClip 实例。创建 MovieClip 之后，调用舞台上的显示对象容器的addElement方法。
+         * @method egret.MovieClip#constructor
+         * @param movieClipData {MovieClipData} 被引用的 MovieClipData 对象
+         */
         constructor(movieClipData?:MovieClipData) {
             super();
             this._bitmap = new egret.Bitmap();
@@ -68,8 +71,10 @@ module egret {
         public _init(){
             this._reset();
             var movieClipData:MovieClipData = this._movieClipData;
-            if(movieClipData && movieClipData._mcData){
-                this._fillMCData(movieClipData._mcData);
+            if(movieClipData && movieClipData._isDataValid()){
+                this._totalFrames = movieClipData.numFrames;
+                this._frameIntervalTime = 1000 / movieClipData.frameRate;
+                this._frameLabels = movieClipData.labels;
                 this._initFrame();
             }
         }
@@ -84,46 +89,6 @@ module egret {
             this._displayedKeyFrameNum = 0;
             this._passedTime = 0;
             this._eventPool = [];
-        }
-
-        public _fillMCData(mcData:any):void{
-            this.frameRate = mcData["frameRate"] || 24;
-            this._fillFramesData(mcData.frames);
-            this._fillFrameLabelsData(mcData.labels);
-        }
-
-        private _fillFramesData(framesData:any[]):void{
-            var frames:any[] = [];
-            var length:number = framesData ? framesData.length : 0;
-            var keyFramePosition:number;
-            for(var i=0; i < length; i++){
-                var frameData:any = framesData[i];
-                frames.push(frameData);
-                if(frameData.duration){
-                    var duration:number = parseInt(frameData.duration);
-                    if(duration > 1){
-                        keyFramePosition = frames.length;
-                        for(var j=1; j < duration; j++){
-                            frames.push({"frame":keyFramePosition})
-                        }
-                    }
-                }
-            }
-            this._frames = frames;
-            this._totalFrames = frames.length;
-        }
-
-        private _fillFrameLabelsData(frameLabelsData:any[]):void{
-            if(frameLabelsData){
-                var length:number = frameLabelsData.length;
-                if(length > 0){
-                    this._frameLabels = [];
-                    for(var i=0; i < length; i++){
-                        var label:any = frameLabelsData[i];
-                        this._frameLabels.push(new FrameLabel(label.name, label.frame));
-                    }
-                }
-            }
         }
 
         private _initFrame():void{
@@ -213,7 +178,7 @@ module egret {
         }
 
         /**
-         * 暂停动画
+         * 暂停播放动画
          * @method egret.MovieClip#stop
          */
         public stop(): void {
@@ -222,7 +187,7 @@ module egret {
         }
 
         /**
-         * 跳到前一帧并暂停
+         * 将播放头移到前帧并停止
          * @method egret.MovieClip#prevFrame
          */
         public prevFrame(): void {
@@ -230,7 +195,7 @@ module egret {
         }
 
         /**
-         * 跳到后一帧并暂停
+         * 跳到后一帧并停止
          * @method egret.MovieClip#prevFrame
          */
         public nextFrame(): void {
@@ -238,7 +203,7 @@ module egret {
         }
 
         /**
-         * 跳到指定帧并播放
+         * 将播放头移到指定帧并播放
          * @method egret.MovieClip#gotoAndPlay
          * @param frame {any} 指定帧的帧号或帧标签
          * @param playTimes {number} 播放次数。 参数为整数，可选参数，>=1：设定播放次数，<0：循环播放，默认值 0：不改变播放次数，
@@ -252,7 +217,7 @@ module egret {
         }
 
         /**
-         * 跳到指定帧并停止
+         * 将播放头移到指定帧并停止
          * @method egret.MovieClip#gotoAndPlay
          * @param frame {any} 指定帧的帧号或帧标签
          */
@@ -331,6 +296,7 @@ module egret {
 
         public _advanceFrame(): void{
             this._currentFrameNum = this._nextFrameNum;
+            console.log(this._currentFrameNum);
         }
 
         private _constructFrame() {
@@ -339,12 +305,12 @@ module egret {
                 return;
             }
             var bitmap = this._bitmap;
-            var frameData = this._frames[currentFrameNum-1];
+            var frameData = this._movieClipData.frames[currentFrameNum-1];
             if(frameData.frame){
                 if(this._displayedKeyFrameNum == parseInt(frameData.frame)){
                     return;
                 }
-                frameData =  this._frames[frameData.frame-1];
+                frameData = this._movieClipData.frames[frameData.frame-1];
             }
             if(frameData.res){
                 var texture:Texture = this._movieClipData.getTexture(frameData.res);
@@ -389,21 +355,21 @@ module egret {
 
     //Properties
         /**
-         * 总帧数
+         * MovieClip 实例中帧的总数
          * @member {number} egret.MovieClip#totalFrames
          */
         public get totalFrames():number{
             return this._totalFrames;
         }
         /**
-         * 当前播放的帧的序号
+         * MovieClip 实例当前播放的帧的序号
          * @member {number} egret.MovieClip#currentFrame
          */
         public get currentFrame():number{
             return this._currentFrameNum;
         }
         /**
-         * 当前播放的帧的标签
+         * MovieClip 实例当前播放的帧的标签。如果当前帧没有标签，则 currentFrameLabel返回null。
          * @member {number} egret.MovieClip#currentFrame
          */
         public get currentFrameLabel(): string {
@@ -411,7 +377,7 @@ module egret {
             return label && label.name;
         }
         /**
-         * 当前播放的帧对应的标签，如果当前帧没有标签，则返回前面最近的有标签的帧的标签
+         * 当前播放的帧对应的标签，如果当前帧没有标签，则currentLabel返回包含标签的先前帧的标签。如果当前帧和先前帧都不包含标签，currentLabel返回null。
          * @member {number} egret.MovieClip#currentFrame
          */
         public get currentLabel(): string {
@@ -420,22 +386,22 @@ module egret {
         }
 
         /**
-         * 帧频
+         * MovieClip 实例的帧频
          * @member {number} egret.MovieClip#frameRate
          */
         public get frameRate():number{
-            return this._frameRate;
+            return this.movieClipData.frameRate;
         }
         public set frameRate(value:number){
-            if(value == this._frameRate){
+            if(value == this._movieClipData.frameRate){
                 return;
             }
-            this._frameRate = value;
-            this._frameIntervalTime = 1000 / this._frameRate;
+            this._movieClipData.frameRate = value;
+            this._frameIntervalTime = 1000 / this._movieClipData.frameRate;
         }
 
         /**
-         * 是否正在播放
+         * MovieClip 实例当前是否正在播放
          * @member {boolean} egret.MovieClip#isPlaying
          */
         public get isPlaying(): boolean {
