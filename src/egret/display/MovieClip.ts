@@ -73,9 +73,10 @@ module egret {
             this._reset();
             var movieClipData:MovieClipData = this._movieClipData;
             if(movieClipData && movieClipData._isDataValid()){
+                this._frames = movieClipData.frames;
                 this._totalFrames = movieClipData.numFrames;
-                this._frameIntervalTime = 1000 / movieClipData.frameRate;
                 this._frameLabels = movieClipData.labels;
+                this._frameIntervalTime = 1000 / movieClipData.frameRate;
                 this._initFrame();
             }
         }
@@ -322,24 +323,7 @@ module egret {
             if(this._displayedKeyFrameNum == currentFrameNum){
                 return;
             }
-            var frameData = this._movieClipData.frames[currentFrameNum-1];
-            if(frameData.frame){
-                if(this._displayedKeyFrameNum == frameData.frame){
-                    return;
-                }
-                frameData = this._movieClipData.frames[frameData.frame-1];
-            }
-
-            if(frameData.res){
-                this._textureToRender = this._movieClipData.getTexture(frameData.res);
-                this._textureToRender._offsetX = frameData.x | 0;
-                this._textureToRender._offsetY = frameData.y | 0;
-                return true;
-            }else{
-                this._textureToRender = null;
-                this._textureToRender._offsetX = 0;
-                this._textureToRender._offsetY = 0;
-            }
+            this._textureToRender = this._movieClipData.getTextureByFrame(currentFrameNum);
             this._displayedKeyFrameNum = currentFrameNum;
         }
 

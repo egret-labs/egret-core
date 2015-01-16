@@ -78,16 +78,41 @@ module egret {
         }
 
         /**
-         * 根据指定纹理名称获取一个Texture对象
-         * @method egret.MovieClipData#getTexture
-         * @param textureName {string} 纹理名称
+         * 根据指定帧序号获取该帧对应的关键帧数据
+         * @method egret.MovieClipData#getKeyFrameData
+         * @param frame {number} 帧序号
+         * @returns {any} 帧数据对象
+         */
+        public getKeyFrameData(frame:number):any{
+            var outputFrameData = this.frames[frame - 1];
+            if(outputFrameData.frame){
+                outputFrameData = this.frames[outputFrameData.frame - 1];
+            }
+            return outputFrameData;
+        }
+
+        /**
+         * 根据指定帧序号获取该帧对应的Texture对象
+         * @method egret.MovieClipData#getTextureByFrame
+         * @param frame {number} 帧序号
          * @returns {egret.Texture} Texture对象
          */
-        public getTexture(textureName:string):Texture{
-            var texture = this.spriteSheet.getTexture(textureName);
+        public getTextureByFrame(frame:number):Texture{
+            var frameData = this.getKeyFrameData(frame);
+            if(frameData.res){
+                var outputTexture:Texture = this.getTextureByResName(frameData.res);
+                outputTexture._offsetX = frameData.x | 0;
+                outputTexture._offsetY = frameData.y | 0;
+                return outputTexture;
+            }
+            return null;
+        }
+
+        private getTextureByResName(resName:string):Texture{
+            var texture = this.spriteSheet.getTexture(resName);
             if (!texture) {
-                var textureData = this.textureData[textureName];
-                texture = this.spriteSheet.createTexture(textureName, textureData.x, textureData.y, textureData.w, textureData.h);
+                var textureData = this.textureData[resName];
+                texture = this.spriteSheet.createTexture(resName, textureData.x, textureData.y, textureData.w, textureData.h);
             }
             return texture;
         }
