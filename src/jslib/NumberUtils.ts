@@ -24,15 +24,17 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-var egret;
-(function (egret) {
-    var NumberUtils = (function () {
-        function NumberUtils() {
+
+module egret {
+
+
+    export class NumberUtils {
+
+        public static isNumber(value:any):Boolean {
+            return typeof(value) === "number" && !isNaN(value);
         }
-        NumberUtils.isNumber = function (value) {
-            return typeof (value) === "number" && !isNaN(value);
-        };
-        NumberUtils.sin = function (value) {
+
+        public static sin(value:number):number {
             value = value % 360;
             if (value < 0) {
                 value += 360;
@@ -41,14 +43,15 @@ var egret;
                 return egret_sin_map[NumberUtils.toDecimal(value)];
             }
             if (value < 180) {
-                return egret_cos_map[NumberUtils.toDecimal(value - 90)];
+                return egret_cos_map[NumberUtils.toDecimal(value-90)];
             }
             if (value < 270) {
-                return -egret_sin_map[NumberUtils.toDecimal(value - 180)];
+                return -egret_sin_map[NumberUtils.toDecimal(value-180)];
             }
-            return -egret_cos_map[NumberUtils.toDecimal(value - 270)];
-        };
-        NumberUtils.cos = function (value) {
+            return -egret_cos_map[NumberUtils.toDecimal(value-270)];
+        }
+
+        public static cos(value:number):number {
             value = value % 360;
             if (value < 0) {
                 value += 360;
@@ -57,28 +60,28 @@ var egret;
                 return egret_cos_map[NumberUtils.toDecimal(value)];
             }
             if (value < 180) {
-                return -egret_sin_map[NumberUtils.toDecimal(value - 90)];
+                return -egret_sin_map[NumberUtils.toDecimal(value-90)];
             }
             if (value < 270) {
-                return -egret_cos_map[NumberUtils.toDecimal(value - 180)];
+                return -egret_cos_map[NumberUtils.toDecimal(value-180)];
             }
-            return egret_sin_map[NumberUtils.toDecimal(value - 270)];
-        };
-        NumberUtils.toDecimal = function (x) {
+            return egret_sin_map[NumberUtils.toDecimal(value-270)];
+        }
+
+        public static toDecimal(x) {
             var f = parseFloat(x);
             if (isNaN(f)) {
                 return;
             }
             f = Math.round(x * 10) / 10;
             return f;
-        };
-        return NumberUtils;
-    })();
-    egret.NumberUtils = NumberUtils;
-    NumberUtils.prototype.__class__ = "egret.NumberUtils";
-})(egret || (egret = {}));
+        }
+    }
+}
+
 var egret_sin_map = {};
 var egret_cos_map = {};
+
 var i = 0;
 while (i <= 90) {
     i = egret.NumberUtils.toDecimal(i);
@@ -86,18 +89,29 @@ while (i <= 90) {
     egret_cos_map[i] = Math.cos(i * egret.Matrix.DEG_TO_RAD);
     i += 0.1;
 }
+
 //对未提供bind的浏览器实现bind机制
 if (!Function.prototype.bind) {
     Function.prototype.bind = function (oThis) {
         if (typeof this !== "function") {
+            // closest thing possible to the ECMAScript 5 internal IsCallable function
             throw new TypeError("Function.prototype.bind - what is trying to be bound is not callable");
         }
-        var aArgs = Array.prototype.slice.call(arguments, 1), fToBind = this, fNOP = function () {
-        }, fBound = function () {
-            return fToBind.apply(this instanceof fNOP && oThis ? this : oThis, aArgs.concat(Array.prototype.slice.call(arguments)));
-        };
+
+        var aArgs = Array.prototype.slice.call(arguments, 1),
+            fToBind = this,
+            fNOP = function () {
+            },
+            fBound = function () {
+                return fToBind.apply(this instanceof fNOP && oThis
+                        ? this
+                        : oThis,
+                    aArgs.concat(Array.prototype.slice.call(arguments)));
+            };
+
         fNOP.prototype = this.prototype;
         fBound.prototype = new fNOP();
+
         return fBound;
     };
 }
