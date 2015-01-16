@@ -40,6 +40,8 @@ function publishNative(opts) {
     var timeMinSec = Date.now();
     var time = Math.round(Date.now() / 1000);
 
+    console.log("开始发布%s版本：%d", "native", time);
+
     var projectPath = projectProperties.getProjectPath();
     var releasePath = path.join(projectPath, projectProperties.getReleaseUrl());
     var ziptempPath = path.join(releasePath, "ziptemp");
@@ -245,6 +247,8 @@ function publishNative(opts) {
 function publishHtml5(opts) {
     var timeMinSec = Date.now();
     var time = Math.round(Date.now() / 1000);
+
+    console.log("开始发布%s版本：%d", "html5", time);
 
     var projectPath = projectProperties.getProjectPath();
     var releasePath = path.join(projectPath, projectProperties.getReleaseUrl());
