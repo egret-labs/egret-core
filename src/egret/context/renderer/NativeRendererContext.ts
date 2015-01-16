@@ -281,7 +281,7 @@ var egret_native_graphics;
 
     egret_native_graphics.drawRect = drawRect;
 
-    function drawCircle(x, y, r) {
+    function drawCircle(x, y, r, sAngle, eAngle) {
 
     }
 

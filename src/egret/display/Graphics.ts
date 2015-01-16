@@ -80,8 +80,10 @@ module egret {
          * @param x {number} 圆心相对于父显示对象注册点的 x 位置（以像素为单位）。
          * @param y {number} 相对于父显示对象注册点的圆心的 y 位置（以像素为单位）。
          * @param r {number} 圆的半径（以像素为单位）。
+         * @param sAngle? {number} 圆的起始弧度（以弧度为单位），默认值为0
+         * @param eAngle? {number} 圆的结束弧度（以弧度为单位），默认值为Math.PI * 2
          */
-        public drawCircle(x:number, y:number, r:number):void {
+        public drawCircle(x:number, y:number, r:number, sAngle:number = 0, eAngle:number = Math.PI * 2):void {
             this.checkRect(x - r, y - r, 2 * r, 2 * r);
         }
 
