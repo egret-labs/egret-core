@@ -1148,7 +1148,7 @@ module egret {
         /**
          * beta功能，请勿调用此方法
          */
-        private _colorTransform:ColorTransform = null;
+        public _colorTransform:ColorTransform = null;
 
         public get colorTransform():ColorTransform {
             return this._colorTransform;
