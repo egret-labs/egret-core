@@ -34,8 +34,10 @@ module egret {
      * @private
      */
     export class WebGLRenderer extends RendererContext {
+        private static glID = 0;
         private canvas:HTMLCanvasElement = null;
         private gl:any = null;
+        private glID:number;
         private size:number = 2000;
         private vertices:Float32Array = null;
         private vertSize:number = 5;
@@ -146,6 +148,8 @@ module egret {
             if (!gl) {
                 throw new Error("当前浏览器不支持webgl");
             }
+            WebGLRenderer.glID++;
+            this.glID = WebGLRenderer.glID;
             this.setContext(gl);
         }
 
@@ -266,10 +270,10 @@ module egret {
             }
 
             this.createWebGLTexture(texture);
-
-            if (texture.webGLTexture !== this.currentBaseTexture || this.currentBatchSize >= this.size - 1) {
+            var webGLTexture = texture.webGLTexture[this.glID];
+            if (webGLTexture !== this.currentBaseTexture || this.currentBatchSize >= this.size - 1) {
                 this._draw();
-                this.currentBaseTexture = texture.webGLTexture;
+                this.currentBaseTexture = webGLTexture;
             }
 
             //计算出绘制矩阵，之后把矩阵还原回之前的
@@ -391,9 +395,12 @@ module egret {
 
         public createWebGLTexture(texture:Texture):void {
             if (!texture.webGLTexture) {
+                texture.webGLTexture = {};
+            }
+            if (!texture.webGLTexture[this.glID]) {
                 var gl:any = this.gl;
-                texture.webGLTexture = gl.createTexture();
-                gl.bindTexture(gl.TEXTURE_2D, texture.webGLTexture);
+                texture.webGLTexture[this.glID] = gl.createTexture();
+                gl.bindTexture(gl.TEXTURE_2D, texture.webGLTexture[this.glID]);
                 gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, true);
 
                 gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, texture._bitmapData);
@@ -615,3 +622,30 @@ module egret {
         }
     }
 }
+
+egret.RenderTexture.prototype.init = function () {
+    this._bitmapData = document.createElement("canvas");
+    this.canvasContext = this._bitmapData.getContext("2d");
+    this._webglBitmapData = document.createElement("canvas");
+    this.renderContext = new egret.WebGLRenderer(this._webglBitmapData);
+};
+
+egret.RenderTexture.prototype.setSize = function (width, height) {
+    var cacheCanvas:HTMLCanvasElement = this._bitmapData;
+    cacheCanvas.width = width;
+    cacheCanvas.height = height;
+    cacheCanvas.style.width = width + "px";
+    cacheCanvas.style.height = height + "px";
+
+    var cacheCanvas:HTMLCanvasElement = this._webglBitmapData;
+    cacheCanvas.width = width;
+    cacheCanvas.height = height;
+    cacheCanvas.style.width = width + "px";
+    cacheCanvas.style.height = height + "px";
+};
+
+egret.RenderTexture.prototype.end = function () {
+    this.renderContext["_draw"]();
+
+    this.canvasContext.drawImage(this._webglBitmapData, 0, 0, this._textureWidth, this._textureHeight, 0, 0, this._textureWidth, this._textureHeight);
+};

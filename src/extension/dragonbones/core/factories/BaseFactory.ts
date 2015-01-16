@@ -294,6 +294,7 @@ module dragonBones {
 				outputBuildArmatureDataPackage.dragonBonesDataName = dragonBonesDataName;
 				outputBuildArmatureDataPackage.dragonBonesData = this.dragonBonesDataDic[dragonBonesDataName];
 				outputBuildArmatureDataPackage.armatureData = outputBuildArmatureDataPackage.dragonBonesData.getArmatureDataByName(armatureName);
+                return true;
 			}
 			else{
 				for(dragonBonesDataName in this.dragonBonesDataDic){
