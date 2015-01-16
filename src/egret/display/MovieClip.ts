@@ -29,13 +29,14 @@ module egret {
 
     /**
      * @class egret.MovieClip
-     * @classdesc 影片剪辑，可以通过影片剪辑播放序列帧动画。MovieClip 类从以下类继承而来：DisplayObjectContainer、DisplayObject 和 EventDispatcher。不同于 DisplayObjectContainer 对象，MovieClip 对象拥有一个时间轴。
+     * @classdesc 影片剪辑，可以通过影片剪辑播放序列帧动画。MovieClip 类从以下类继承而来：DisplayObject 和 EventDispatcher。不同于 DisplayObject 对象，MovieClip 对象拥有一个时间轴。
      * @extends egret.DisplayObjectContainer
      */
     export class MovieClip extends DisplayObject{
 
     //Render Property
         private static renderFilter:RenderFilter = RenderFilter.getInstance();
+        private _textureToRender:Texture = null;
 
     //Data Property
         public _movieClipData:MovieClipData = null;
@@ -44,7 +45,6 @@ module egret {
         public _frameLabels:any[] = null;
         private _frameIntervalTime:number = 0;
         public _eventPool:string[] = null;
-        private _textureToRender:Texture = null;
 
     //Animation Property
         private _isPlaying:boolean = false;
@@ -120,6 +120,7 @@ module egret {
          * @method egret.MovieClip#getFrameLabelByName
          * @param labelName {string} 帧标签名
          * @param ignoreCase {boolean} 是否忽略大小写，可选参数，默认false
+         * @returns {egret.FrameLabel} FrameLabel对象
          */
         public _getFrameLabelByName(labelName: string, ignoreCase: boolean = false): FrameLabel {
             if (ignoreCase) {
@@ -142,6 +143,7 @@ module egret {
          * 返回指定序号的帧的FrameLabel对象
          * @method egret.MovieClip#getFrameLabelByFrame
          * @param frame {number} 帧序号
+         * @returns {egret.FrameLabel} FrameLabel对象
          */
         public _getFrameLabelByFrame(frame: number): FrameLabel {
             var frameLabels = this._frameLabels;
@@ -161,6 +163,7 @@ module egret {
          * 返回指定序号的帧对应的FrameLabel对象，如果当前帧没有标签，则返回前面最近的有标签的帧的FrameLabel对象
          * @method egret.MovieClip#getFrameLabelForFrame
          * @param frame {number} 帧序号
+         * @returns {egret.FrameLabel} FrameLabel对象
          */
         public _getFrameLabelForFrame(frame: number): FrameLabel{
             var outputFrameLabel:FrameLabel = null;
@@ -321,7 +324,7 @@ module egret {
             }
             var frameData = this._movieClipData.frames[currentFrameNum-1];
             if(frameData.frame){
-                if(this._displayedKeyFrameNum == parseInt(frameData.frame)){
+                if(this._displayedKeyFrameNum == frameData.frame){
                     return;
                 }
                 frameData = this._movieClipData.frames[frameData.frame-1];

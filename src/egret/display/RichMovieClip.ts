@@ -26,6 +26,11 @@
  */
 
 module egret {
+    /**
+     * @class egret.RichMovieClip
+     * @classdesc 富影片剪辑。不同于 MovieClip 对象，RichMovieClip 支持脚本处理抛出自定义事件。
+     * @extends egret.MovieClip
+     */
     export class RichMovieClip extends MovieClip{
         private _frameScripts:any; // 这个地方不要赋初值
         private _frameActions:any; // 这个地方不要赋初值
@@ -33,7 +38,7 @@ module egret {
         /**
          * 创建新的 RichMovieClip 实例。创建 RichMovieClip 之后，调用舞台上的显示对象容器的addElement方法。
          * @method egret.RichMovieClip#constructor
-         * @param movieClipData {MovieClipData} 被引用的 MovieClipData 对象
+         * @param movieClipData {RichMovieClipData} 被引用的 RichMovieClipData 对象
          */
         constructor(movieClipData?:RichMovieClipData) {
             super(movieClipData);

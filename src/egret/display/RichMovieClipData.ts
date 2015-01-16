@@ -26,6 +26,12 @@
  */
 
 module egret {
+    /**
+     * @class egret.RichMovieClipData
+     * @classdesc RichMovieClipData 继承 MovieClipData，不同于 MovieClipData 对象，RichMovieClipData 支持脚本和自定义事件。
+     * 目前支持如下脚本 play, stop, gotoAndPlay, gotoAndStop, prevFrame, nextFrame
+     * @extends egret.MovieClipData
+     */
     export class RichMovieClipData extends MovieClipData{
         public frameScripts:any;
         public frameActions:any;

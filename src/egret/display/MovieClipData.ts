@@ -26,6 +26,11 @@
  */
 
 module egret {
+    /**
+     * @class egret.MovieClipData
+     * @classdesc 使用 MovieClipData 类，您可以创建 MovieClip 对象和处理 MovieClip 对象的数据。MovieClipData 一般由MovieClipDataFactory生成
+     * @extends egret.HashObject
+     */
     export class MovieClipData extends HashObject{
         /**
          * MovieClip数据
