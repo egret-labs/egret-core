@@ -35,6 +35,7 @@ module egret {
      */
     export class WebGLRenderer extends RendererContext {
         private static glID = 0;
+        private static isInit:boolean = false;
         private canvas:HTMLCanvasElement = null;
         private gl:any = null;
         private glID:number;
@@ -81,6 +82,14 @@ module egret {
 
             MainContext.instance.addEventListener(Event.FINISH_RENDER, this._draw, this);
 
+            this.initAll();
+        }
+
+        private initAll():void {
+            if(WebGLRenderer.isInit) {
+                return;
+            }
+            WebGLRenderer.isInit = true;
             egret.TextField.prototype._makeBitmapCache = function () {
                 if (!this.renderTexture) {
                     this.renderTexture = new egret.RenderTexture();
@@ -161,14 +170,42 @@ module egret {
             egret.TextField.prototype._draw = function (renderContext) {
                 var textField:egret.TextField = <egret.TextField>this;
                 if (textField.getDirty()) {
-//                    textField.cacheAsBitmap = true;
-
-
-
                     this._texture_to_render = this.renderTexture;
                     this._cacheAsBitmap = true;
                 }
                 egret.DisplayObject.prototype._draw.call(textField, renderContext);
+            };
+
+
+            egret.RenderTexture.prototype.init = function () {
+                var o:any = this;
+                o._bitmapData = document.createElement("canvas");
+                o.canvasContext = o._bitmapData.getContext("2d");
+                o._webglBitmapData = document.createElement("canvas");
+                o.renderContext = new egret.WebGLRenderer(o._webglBitmapData);
+            };
+
+            egret.RenderTexture.prototype.setSize = function (width, height) {
+                var o:any = this;
+                var cacheCanvas:HTMLCanvasElement = o._bitmapData;
+                cacheCanvas.width = width;
+                cacheCanvas.height = height;
+                cacheCanvas.style.width = width + "px";
+                cacheCanvas.style.height = height + "px";
+
+                if(o._webglBitmapData) {
+                    var cacheCanvas:HTMLCanvasElement = o._webglBitmapData;
+                    cacheCanvas.width = width;
+                    cacheCanvas.height = height;
+                    cacheCanvas.style.width = width + "px";
+                    cacheCanvas.style.height = height + "px";
+                }
+            };
+
+            egret.RenderTexture.prototype.end = function () {
+                var o:any = this;
+                o.renderContext["_draw"]();
+                o.canvasContext.drawImage(o._webglBitmapData, 0, 0, o._textureWidth, o._textureHeight, 0, 0, o._textureWidth, o._textureHeight);
             };
         }
 
@@ -703,32 +740,3 @@ module egret {
         }
     }
 }
-
-egret.RenderTexture.prototype.init = function () {
-    this._bitmapData = document.createElement("canvas");
-    this.canvasContext = this._bitmapData.getContext("2d");
-    this._webglBitmapData = document.createElement("canvas");
-    this.renderContext = new egret.WebGLRenderer(this._webglBitmapData);
-};
-
-egret.RenderTexture.prototype.setSize = function (width, height) {
-    var cacheCanvas:HTMLCanvasElement = this._bitmapData;
-    cacheCanvas.width = width;
-    cacheCanvas.height = height;
-    cacheCanvas.style.width = width + "px";
-    cacheCanvas.style.height = height + "px";
-
-    if(this._webglBitmapData) {
-        var cacheCanvas:HTMLCanvasElement = this._webglBitmapData;
-        cacheCanvas.width = width;
-        cacheCanvas.height = height;
-        cacheCanvas.style.width = width + "px";
-        cacheCanvas.style.height = height + "px";
-    }
-};
-
-egret.RenderTexture.prototype.end = function () {
-    this.renderContext["_draw"]();
-
-    this.canvasContext.drawImage(this._webglBitmapData, 0, 0, this._textureWidth, this._textureHeight, 0, 0, this._textureWidth, this._textureHeight);
-};
