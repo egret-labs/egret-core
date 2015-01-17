@@ -684,8 +684,9 @@ module egret {
             var gl:any = this.gl;
             var maskData = this.maskList.pop();
             this.maskDataFreeList.push(maskData);
-            if (this.maskList.length != 0) {
-                maskData = this.maskList[0];
+            var length = this.maskList.length;
+            if (length != 0) {
+                maskData = this.maskList[length - 1];
                 if (maskData.width > 0 || maskData.height > 0) {
                     this.scissor(maskData.x, maskData.y, maskData.width, maskData.height);
                 }
