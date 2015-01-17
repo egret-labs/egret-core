@@ -340,12 +340,12 @@ module egret_h5_graphics {
         var _colorStr = "rgba(" + _colorRed + "," + _colorGreen + "," + _colorBlue + "," + alpha + ")";
         this.fillStyleColor = _colorStr;
 
-        this.commandQueue.push(new Command(this._setStyle, this, [_colorStr]))
+        this._pushCommand(new Command(this._setStyle, this, [_colorStr]))
 
     }
 
     export function drawRect(x:number, y:number, width:number, height:number):void {
-        this.commandQueue.push(new Command(
+        this._pushCommand(new Command(
                 function (x, y, width, height) {
                     var rendererContext = <egret.HTML5CanvasRenderer>this.renderContext;
                     this.canvasContext.beginPath();
@@ -364,7 +364,7 @@ module egret_h5_graphics {
 
     export function drawCircle(x:number, y:number, r:number):void {
 
-        this.commandQueue.push(new Command(
+        this._pushCommand(new Command(
             function (x, y, r) {
                 var rendererContext = <egret.HTML5CanvasRenderer>this.renderContext;
                 this.canvasContext.beginPath();
@@ -381,7 +381,7 @@ module egret_h5_graphics {
 
     export function drawRoundRect(x:number, y:number, width:number, height:number, ellipseWidth:number, ellipseHeight?:number):void {
         //非等值椭圆角实现
-        this.commandQueue.push(new Command(
+        this._pushCommand(new Command(
                 function (x, y, width, height, ellipseWidth, ellipseHeight?) {
                     var rendererContext = <egret.HTML5CanvasRenderer>this.renderContext;
                     var _x:number = rendererContext._transformTx + x;//控制X偏移
@@ -416,7 +416,7 @@ module egret_h5_graphics {
 
     export function drawEllipse(x:number, y:number, width:number, height:number):void {
         //基于均匀压缩算法
-        this.commandQueue.push(new Command(
+        this._pushCommand(new Command(
             function (x, y, width, height) {
                 var rendererContext = <egret.HTML5CanvasRenderer>this.renderContext;
                 this.canvasContext.save();
@@ -442,7 +442,7 @@ module egret_h5_graphics {
     export function lineStyle(thickness:number = NaN, color:number = 0, alpha:number = 1.0, pixelHinting:boolean = false, scaleMode:string = "normal", caps:string = null, joints:string = null, miterLimit:number = 3):void {
         if (this.strokeStyleColor) {
             this.createEndLineCommand();
-            this.commandQueue.push(this.endLineCommand);
+            this._pushCommand(this.endLineCommand);
         }
 
         var _colorBlue = color & 0x0000FF;
@@ -451,7 +451,7 @@ module egret_h5_graphics {
         var _colorStr = "rgba(" + _colorRed + "," + _colorGreen + "," + _colorBlue + "," + alpha + ")";
         this.strokeStyleColor = _colorStr;
 
-        this.commandQueue.push(new Command(
+        this._pushCommand(new Command(
             function (lineWidth, strokeStyle) {
                 this.canvasContext.lineWidth = lineWidth;
                 this.canvasContext.strokeStyle = strokeStyle;
@@ -469,7 +469,7 @@ module egret_h5_graphics {
     }
 
     export function lineTo(x:number, y:number):void {
-        this.commandQueue.push(new Command(
+        this._pushCommand(new Command(
             function (x, y) {
                 var rendererContext = <egret.HTML5CanvasRenderer>this.renderContext;
                 var canvasContext:CanvasRenderingContext2D = this.canvasContext;
@@ -484,7 +484,7 @@ module egret_h5_graphics {
 
     export function curveTo(controlX:Number, controlY:Number, anchorX:Number, anchorY:Number):void {
 
-        this.commandQueue.push(new Command(
+        this._pushCommand(new Command(
             function (x, y, ax, ay) {
                 var rendererContext = <egret.HTML5CanvasRenderer>this.renderContext;
                 var canvasContext:CanvasRenderingContext2D = this.canvasContext;
@@ -499,7 +499,7 @@ module egret_h5_graphics {
     }
 
     export function moveTo(x:number, y:number):void {
-        this.commandQueue.push(new Command(
+        this._pushCommand(new Command(
             function (x, y) {
                 var rendererContext = <egret.HTML5CanvasRenderer>this.renderContext;
                 var canvasContext:CanvasRenderingContext2D = this.canvasContext;
@@ -517,6 +517,7 @@ module egret_h5_graphics {
         this.lineY = 0;
         this.strokeStyleColor = null;
         this.fillStyleColor = null;
+        this._dirty = false;
     }
 
     export function createEndFillCommand():void {
@@ -541,7 +542,7 @@ module egret_h5_graphics {
     export function _fill():void {
         if (this.fillStyleColor) {
             this.createEndFillCommand();
-            this.commandQueue.push(this.endFillCommand);
+            this._pushCommand(this.endFillCommand);
         }
     }
 
@@ -557,6 +558,11 @@ module egret_h5_graphics {
         }
     }
 
+    export function _pushCommand(cmd:any):void {
+        this.commandQueue.push(cmd);
+        this._dirty = true;
+    }
+
     export function _draw(renderContext:egret.RendererContext):void {
         var length = this.commandQueue.length;
         if (length == 0) {
@@ -569,7 +575,7 @@ module egret_h5_graphics {
         canvasContext.save();
         if (this.strokeStyleColor && length > 0 && this.commandQueue[length - 1] != this.endLineCommand) {
             this.createEndLineCommand();
-            this.commandQueue.push(this.endLineCommand);
+            this._pushCommand(this.endLineCommand);
             length = this.commandQueue.length;
         }
         for (var i = 0; i < length; i++) {
@@ -577,6 +583,7 @@ module egret_h5_graphics {
             command.method.apply(command.thisObject, command.args);
         }
         canvasContext.restore();
+        this._dirty = false;
     }
 
     class Command {
