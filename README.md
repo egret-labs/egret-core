@@ -8,6 +8,11 @@ Current Version: v1.5.2
 
 Egret Engine是一款使用JavaScript(TypeScript)编写的HTML5开源免费游戏引擎。Egret 引擎的核心定位是开放，高效，优雅。基于它，你可以快速轻松地构建HTML5移动游戏或原生游戏。
 
+修改的功能
+-------------------
+1.显示对象rotation精度由1精度提高到0.1精度
+	修改了NumberUtils.ts源码
+
 
 支持平台
 --------------------
