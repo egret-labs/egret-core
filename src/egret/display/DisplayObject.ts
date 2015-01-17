@@ -585,20 +585,22 @@ module egret {
                 return;
             }
             var o = this;
-            if (o._colorTransform) {
+            var isContainer = o instanceof DisplayObjectContainer;
+            var isCommandPush = MainContext.__use_new_draw && isContainer;
+            if (o._colorTransform && !isCommandPush) {
                 renderContext.setGlobalColorTransform(o._colorTransform.matrix);
             }
             renderContext.setAlpha(o.worldAlpha, o.blendMode);
             renderContext.setTransform(o._worldTransform);
             var mask = o.mask || o._scrollRect;
-            if (mask) {
+            if (mask && !isCommandPush) {
                 renderContext.pushMask(mask);
             }
             this._render(renderContext);
-            if (mask) {
+            if (mask && !isCommandPush) {
                 renderContext.popMask();
             }
-            if (o._colorTransform) {
+            if (o._colorTransform && !isCommandPush) {
                 renderContext.setGlobalColorTransform(null);
             }
             this.destroyCacheBounds();
