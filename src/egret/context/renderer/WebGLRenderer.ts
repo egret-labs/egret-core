@@ -55,7 +55,7 @@ module egret {
 
             this.html5Canvas = document.createElement("canvas");
             this.canvasContext = new HTML5CanvasRenderer(this.html5Canvas);
-            
+
             this.onResize();
 
             this.projectionX = this.canvas.width / 2;
@@ -215,6 +215,9 @@ module egret {
                 if (clipBounds && (clipBounds.width == 0 || clipBounds.height == 0)) {
                     return false;
                 }
+                if(typeof scale == "undefined") {
+                    scale = 1;
+                }
                 if (!this._bitmapData) {
                     this._bitmapData = document.createElement("canvas");
                     this.canvasContext = this._bitmapData.getContext("2d");
@@ -230,10 +233,8 @@ module egret {
                 var y = bounds.y;
                 var width = bounds.width;
                 var height = bounds.height;
-                if (scale) {
-                    width /= scale;
-                    height /= scale;
-                }
+                width /= scale;
+                height /= scale;
                 var texture_scale_factor = egret.MainContext.instance.rendererContext._texture_scale_factor;
                 width = Math.round(width);
                 height = Math.round(height);
@@ -302,9 +303,8 @@ module egret {
                 //测试代码
                 //document.documentElement.appendChild(this._bitmapData);
                 return true;
-            }
+            };
 
-            var f = egret.Graphics.prototype._draw;
             egret.Graphics.prototype._draw = function (renderContext:WebGLRenderer) {
                 var stage = egret.MainContext.instance.stage;
                 var stageW = stage.stageWidth;
