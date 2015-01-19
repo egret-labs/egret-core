@@ -60,6 +60,7 @@ function linkChildren(fileUrl) {
     filePathArr[filePathArr.length - 1] = filePathArr[filePathArr.length - 3] + "_" + filePathArr[filePathArr.length - 2];
 
     var dbData = {"isGlobal": 0, "armature": [], "version": 2.3, "name": filePathArr[filePathArr.length - 1], "frameRate": 60};
+    dbData["textureScale"] = stuData["content_scale"] != null ? stuData["content_scale"] : 1;
 
     for (var i = 0; i < stuData["animation_data"].length; i++) {
         var stuAnimation = stuData["animation_data"][i];
@@ -72,15 +73,15 @@ function linkChildren(fileUrl) {
         dbArmature["name"] = filePathArr[filePathArr.length - 1];//stuArmature["name"];
 
         //设置bone
-        setBone(dbArmature["bone"], stuArmature["bone_data"]);
+        setBone(dbArmature["bone"], stuArmature["bone_data"],dbData);
 
         //设置skin
         var skin = {"name": 0, "slot": []};
         dbArmature["skin"].push(skin);
-        setSlot(skin["slot"], stuArmature["bone_data"]);
+        setSlot(skin["slot"], stuArmature["bone_data"], dbData);
 
         //设置动画
-        setAnimation(dbArmature["animation"], stuAnimation["mov_data"]);
+        setAnimation(dbArmature["animation"], stuAnimation["mov_data"],dbData);
     }
     removeDefault(dbArmature);
 
@@ -166,7 +167,7 @@ function sortArrayObj(arrayObj, resultArray) {
 }
 
 var bones = {};
-function setBone(dbBones, stuBones) {
+function setBone(dbBones, stuBones, dbData) {
     var tempDbBones = {};
     for (var i = 0; i < stuBones.length; i++) {
         var stuBone = stuBones[i];
@@ -182,8 +183,8 @@ function setBone(dbBones, stuBones) {
 
         setLayer(stuBone["name"], stuBone["parent"]);
 
-        dbBone["transform"]["x"] = stuBone["x"];
-        dbBone["transform"]["y"] = -stuBone["y"];
+        dbBone["transform"]["x"] = stuBone["x"]*dbData["textureScale"];
+        dbBone["transform"]["y"] = -stuBone["y"]*dbData["textureScale"];
         dbBone["transform"]["skX"] = radianToAngle(stuBone["kX"]);
         dbBone["transform"]["skY"] = -radianToAngle(stuBone["kY"]);
         dbBone["transform"]["scX"] = stuBone["cX"];
@@ -201,7 +202,7 @@ function setBone(dbBones, stuBones) {
     resortLayers();
 }
 
-function setSlot(dbSlots, stuSlots) {
+function setSlot(dbSlots, stuSlots, dbData) {
     var tempDbSlots = {};
     for (var i = 0; i < stuSlots.length; i++) {
         var stuSlot = stuSlots[i];
@@ -216,7 +217,7 @@ function setSlot(dbSlots, stuSlots) {
 
         dbSlot["display"] = [];
 
-        setDisplay(dbSlot["display"], stuSlot["display_data"]);
+        setDisplay(dbSlot["display"], stuSlot["display_data"], dbData);
     }
 
     sortArrayObj(tempDbSlots, dbSlots);
@@ -227,7 +228,7 @@ function setSlot(dbSlots, stuSlots) {
 
 }
 
-function setDisplay(dbDisplays, stuDisplays) {
+function setDisplay(dbDisplays, stuDisplays, dbData) {
     for (var i = 0; stuDisplays && i < stuDisplays.length; i++) {
         var stuDisplay = stuDisplays[i];
 
@@ -236,8 +237,8 @@ function setDisplay(dbDisplays, stuDisplays) {
 
         dbDisplay["name"] = stuDisplay["name"].replace(/(\.png)|(\.jpg)/, "");
         dbDisplay["type"] = stuDisplay["displayType"] == 0 ? "image" : "image";
-        dbDisplay["transform"]["x"] = stuDisplay["skin_data"][0]["x"];
-        dbDisplay["transform"]["y"] = -stuDisplay["skin_data"][0]["y"];
+        dbDisplay["transform"]["x"] = stuDisplay["skin_data"][0]["x"]*dbData["textureScale"];
+        dbDisplay["transform"]["y"] = -stuDisplay["skin_data"][0]["y"]*dbData["textureScale"];
         dbDisplay["transform"]["pX"] = 0.5;
         dbDisplay["transform"]["pY"] = 0.5;
         dbDisplay["transform"]["skX"] = radianToAngle(stuDisplay["skin_data"][0]["kX"]);
@@ -247,7 +248,7 @@ function setDisplay(dbDisplays, stuDisplays) {
     }
 }
 
-function setAnimation(dbAnimations, stuAnimations) {
+function setAnimation(dbAnimations, stuAnimations,dbData) {
     for (var i = 0; i < stuAnimations.length; i++) {
         var stuAnimation = stuAnimations[i];
 
@@ -262,13 +263,13 @@ function setAnimation(dbAnimations, stuAnimations) {
         dbAnimation["scale"] = 1.0 / stuAnimation["sc"];
 
         dbAnimation["timeline"] = [];
-        setTimeline(dbAnimation["timeline"], stuAnimation["mov_bone_data"]);
+        setTimeline(dbAnimation["timeline"], stuAnimation["mov_bone_data"],dbData);
     }
 }
 
 var timelines = {};
 var count = 0;
-function setTimeline(dbTimelines, stuTimelines) {
+function setTimeline(dbTimelines, stuTimelines,dbData) {
     count++;
     var tempDbTimelines = {};
 
@@ -289,7 +290,7 @@ function setTimeline(dbTimelines, stuTimelines) {
 
         dbTimeline["pX"] = 0;
         dbTimeline["pY"] = 0;
-        setFrame(dbTimeline["frame"], stuTimeline["frame_data"], bones[dbTimeline["name"]], i);
+        setFrame(dbTimeline["frame"], stuTimeline["frame_data"], bones[dbTimeline["name"]], i,dbData);
     }
 
     sortArrayObj(tempDbTimelines, dbTimelines);
@@ -319,7 +320,7 @@ function clone(frame, result) {
 }
 
 
-function setFrame(dbFrames, stuFrames, bone, z) {
+function setFrame(dbFrames, stuFrames, bone, z,dbData) {
 
     for (var i = 0; i < stuFrames.length; i++) {
         var stuFrame = stuFrames[i];
@@ -381,8 +382,8 @@ function setFrame(dbFrames, stuFrames, bone, z) {
         }
 
         dbFrame["transform"] = {};
-        dbFrame["transform"]["x"] = stuFrame["x"];
-        dbFrame["transform"]["y"] = -stuFrame["y"];
+        dbFrame["transform"]["x"] = stuFrame["x"]*dbData["textureScale"];
+        dbFrame["transform"]["y"] = -stuFrame["y"]*dbData["textureScale"];
         dbFrame["transform"]["scX"] = (stuFrame["cX"] + bone["transform"]["scX"] - 1) / bone["transform"]["scX"];
         dbFrame["transform"]["scY"] = (stuFrame["cY"] + bone["transform"]["scY"] - 1) / bone["transform"]["scY"];
         dbFrame["transform"]["skX"] = radianToAngle(stuFrame["kX"]);
@@ -580,15 +581,15 @@ function parseData(stuData, ccaName) {
         dbArmature["name"] = ccaName;
 
         //设置bone
-        setBone(dbArmature["bone"], stuArmature["bone_data"]);
+        setBone(dbArmature["bone"], stuArmature["bone_data"], dbData);
 
         //设置skin
         var skin = {"name": 0, "slot": []};
         dbArmature["skin"].push(skin);
-        setSlot(skin["slot"], stuArmature["bone_data"]);
+        setSlot(skin["slot"], stuArmature["bone_data"], dbData);
 
         //设置动画
-        setAnimation(dbArmature["animation"], stuAnimation["mov_data"]);
+        setAnimation(dbArmature["animation"], stuAnimation["mov_data"],dbData);
     }
     removeDefault(dbArmature);
 
