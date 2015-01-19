@@ -213,7 +213,7 @@ module egret {
                 if (clipBounds && (clipBounds.width == 0 || clipBounds.height == 0)) {
                     return false;
                 }
-                if(typeof scale == "undefined") {
+                if (typeof scale == "undefined") {
                     scale = 1;
                 }
                 if (!this._bitmapData) {
@@ -326,7 +326,7 @@ module egret {
                 this.canvasContext.clearRect(0, 0, stageW, stageH);
                 this.canvasContext.save();
                 var worldTransform:Matrix = renderContext.worldTransform;
-                renderContext.canvasContext.setTransform(worldTransform);
+                this.canvasContext.setTransform(worldTransform.a, worldTransform.b, worldTransform.c, worldTransform.d, worldTransform.tx, worldTransform.ty);
                 var worldAlpha:number = renderContext.worldAlpha;
                 renderContext.canvasContext.setAlpha(worldAlpha, null);
                 if (this.strokeStyleColor && length > 0 && commandQueue[length - 1] != this.endLineCommand) {
@@ -338,9 +338,9 @@ module egret {
                     var command = commandQueue[i];
                     command.method.apply(command.thisObject, command.args);
                 }
-                this.renderContext.canvasContext.clearRect(0,0,stageW,stageH);
+                this.renderContext.canvasContext.clearRect(0, 0, stageW, stageH);
                 this.renderContext.canvasContext.drawImage(this.renderContext._cacheCanvas, 0, 0, stageW, stageH, 0, 0, stageW, stageH);
-                
+
                 if (!this["graphics_webgl_texture"]) {
                     this["graphics_webgl_texture"] = new egret.Texture();
                 }
@@ -378,7 +378,7 @@ module egret {
                 this.projectionX = this.canvas.width / 2;
                 this.projectionY = -this.canvas.height / 2;
             }
-            if(this.html5Canvas){
+            if (this.html5Canvas) {
                 this.html5Canvas.width = egret.MainContext.instance.stage.stageWidth; //stageW
                 this.html5Canvas.height = egret.MainContext.instance.stage.stageHeight; //stageH
                 this.html5Canvas.style.width = container.style.width;
@@ -476,7 +476,7 @@ module egret {
             var gl:any = this.gl;
             gl.colorMask(true, true, true, true);
             var list = RenderFilter.getInstance().getDrawAreaList();
-            for (var i:number = 0 , l:number = list.length; i < l; i++) {
+            for (var i:number = 0, l:number = list.length; i < l; i++) {
                 var area = list[i];
                 gl.viewport(area.x, area.y, area.width, area.height);
                 gl.bindFramebuffer(gl.FRAMEBUFFER, null);
