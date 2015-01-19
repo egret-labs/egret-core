@@ -137,7 +137,7 @@ module egret {
                 renderFilter._drawAreaList.length = 0;
                 this.renderContext.clearScreen();
                 this.renderContext.onRenderStart();
-                this.webGLTexture = null;//gl.deleteTexture(this.webGLTexture);
+                RendererContext.deleteTexture(this);
                 if (this._colorTransform) {
                     this.renderContext.setGlobalColorTransform(this._colorTransform.matrix);
                 }
@@ -273,7 +273,7 @@ module egret {
                 gl.clearColor(0, 0, 0, 0);
                 gl.clear(gl.COLOR_BUFFER_BIT);
                 this.renderContext.onRenderStart();
-                this.webGLTexture = null; //gl.deleteTexture(this.webGLTexture);
+                RendererContext.deleteTexture(this);
                 if (displayObject._colorTransform) {
                     this.renderContext.setGlobalColorTransform(displayObject._colorTransform.matrix);
                 }
@@ -321,6 +321,7 @@ module egret {
                 this.renderContext = renderContext.canvasContext;
                 this.canvasContext = this.renderContext._cacheCanvasContext || this.renderContext.canvasContext;
                 this.canvasContext.clearRect(0, 0, stageW, stageH);
+                this.canvasContext.save();
                 var worldTransform:Matrix = renderContext.worldTransform;
                 renderContext.canvasContext.setTransform(worldTransform);
                 var worldAlpha:number = renderContext.worldAlpha;
@@ -341,9 +342,10 @@ module egret {
                     this["graphics_webgl_texture"] = new egret.Texture();
                 }
                 this["graphics_webgl_texture"]._setBitmapData(renderContext.html5Canvas);
-                this["graphics_webgl_texture"].webGLTexture = null;
+                RendererContext.deleteTexture(this["graphics_webgl_texture"]);
                 renderContext.setTransform(egret.Matrix.identity.identity());
                 renderContext.drawImage(this["graphics_webgl_texture"], 0, 0, stageW, stageH, 0, 0, stageW, stageH);
+                this.canvasContext.restore();
                 this._dirty = false;
             }
         }
