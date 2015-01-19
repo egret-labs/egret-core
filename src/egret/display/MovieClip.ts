@@ -83,7 +83,7 @@ module egret {
 
         public _reset():void{
             this._frames = null;
-            this._playTimes = -1;
+            this._playTimes = 0;
             this._isPlaying = false;
             this.setIsStopped(true);
             this._currentFrameNum = 0;
@@ -441,8 +441,10 @@ module egret {
             }
             this._isStopped = value;
             if(value){
+                this._playTimes = 0;
                 Ticker.getInstance().unregister(this._advanceTime, this);
             }else{
+                this._playTimes = this._playTimes == 0 ? 1 : this._playTimes;
                 Ticker.getInstance().register(this._advanceTime, this);
             }
         }
