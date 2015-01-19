@@ -40,7 +40,6 @@ module egret {
         public _mcDataSet:any;
         public _spriteSheet:SpriteSheet;
         public _mcDataCache:any = {};
-        public _richMCDataCache:any = {};
 
         constructor(movieClipDataSet?:any, texture?:Texture) {
             super();
@@ -54,7 +53,6 @@ module egret {
          */
         public clearCache():void{
             this._mcDataCache = {};
-            this._richMCDataCache = {};
         }
 
         /**
@@ -64,23 +62,9 @@ module egret {
          */
         public generateMovieClipData(movieClipName:string):MovieClipData {
             var output:MovieClipData = this._findFromCache(movieClipName, this._mcDataCache);
-            if(!output){
+            if (!output) {
                 output = new MovieClipData();
                 this._fillData(movieClipName, output, this._mcDataCache);
-            }
-            return output;
-        }
-
-        /**
-         * 根据名字生成一个RichMovieClipData实例。可以用于创建RichMovieClip。
-         * @method egret.MovieClipDataFactory#generateMovieClipData
-         * @param movieClipName {string} MovieClip名字
-         */
-        public generateRichMovieClipData(movieClipName:string):RichMovieClipData{
-            var output:RichMovieClipData = this._findFromCache(movieClipName, this._richMCDataCache);
-            if(!output){
-                output = new RichMovieClipData();
-                this._fillData(movieClipName, output, this._richMCDataCache);
             }
             return output;
         }
