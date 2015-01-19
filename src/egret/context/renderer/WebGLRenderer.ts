@@ -309,41 +309,42 @@ module egret {
             };
 
             egret.Graphics.prototype._draw = function (renderContext:WebGLRenderer) {
-                var stage = egret.MainContext.instance.stage;
-                var stageW = stage.stageWidth;
-                var stageH = stage.stageHeight;
-                renderContext.canvasContext.setTransform(egret.Matrix.identity.identity());
-                renderContext.canvasContext.clearRect(0, 0, stageW, stageH);
-                var worldTransform = renderContext.worldTransform;
-                renderContext.canvasContext.setTransform(worldTransform);
-
+                //todo dirty
                 var commandQueue = this["commandQueue"];
-                var length = commandQueue.length;
+                var length:number = commandQueue.length;
                 if (length == 0) {
                     return;
                 }
+                var stage:Stage = egret.MainContext.instance.stage;
+                var stageW:number = stage.stageWidth;
+                var stageH:number = stage.stageHeight;
+
                 this.renderContext = renderContext.canvasContext;
                 this.canvasContext = this.renderContext._cacheCanvasContext || this.renderContext.canvasContext;
-                this.renderContext.onRenderStart();
+                this.canvasContext.clearRect(0, 0, stageW, stageH);
+                var worldTransform:Matrix = renderContext.worldTransform;
+                renderContext.canvasContext.setTransform(worldTransform);
+                var worldAlpha:number = renderContext.worldAlpha;
+                renderContext.canvasContext.setAlpha(worldAlpha, null);
                 if (this.strokeStyleColor && length > 0 && commandQueue[length - 1] != this.endLineCommand) {
                     this.createEndLineCommand();
                     commandQueue.push(this.endLineCommand);
                     length = commandQueue.length;
                 }
-                for (var i = 0; i < length; i++) {
+                for (var i:number = 0; i < length; i++) {
                     var command = commandQueue[i];
                     command.method.apply(command.thisObject, command.args);
                 }
-                this.renderContext.onRenderFinish();
-
-                if(!this["graphics_webgl_texture"]) {
-                    this["graphics_webgl_texture"] = new Texture();
+                this.renderContext.canvasContext.clearRect(0,0,stageW,stageH);
+                this.renderContext.canvasContext.drawImage(this.renderContext._cacheCanvas, 0, 0, stageW, stageH, 0, 0, stageW, stageH);
+                
+                if (!this["graphics_webgl_texture"]) {
+                    this["graphics_webgl_texture"] = new egret.Texture();
                 }
                 this["graphics_webgl_texture"]._setBitmapData(renderContext.html5Canvas);
-                if(this._dirty) {
-                    this["graphics_webgl_texture"].webGLTexture = null;
-                }
-                renderContext.drawImage(this["graphics_webgl_texture"],0,0,stageW,stageH,0,0,stageW,stageH);
+                this["graphics_webgl_texture"].webGLTexture = null;
+                renderContext.setTransform(egret.Matrix.identity.identity());
+                renderContext.drawImage(this["graphics_webgl_texture"], 0, 0, stageW, stageH, 0, 0, stageW, stageH);
                 this._dirty = false;
             }
         }
