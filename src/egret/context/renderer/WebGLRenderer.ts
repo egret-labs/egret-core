@@ -137,7 +137,7 @@ module egret {
                 renderFilter._drawAreaList.length = 0;
                 this.renderContext.clearScreen();
                 this.renderContext.onRenderStart();
-                RendererContext.deleteTexture(this);
+                RendererContext.deleteTexture(this.renderTexture);
                 if (this._colorTransform) {
                     this.renderContext.setGlobalColorTransform(this._colorTransform.matrix);
                 }
