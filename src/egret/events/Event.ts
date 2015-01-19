@@ -84,6 +84,13 @@ module egret {
          * @constant {string} egret.Event.COMPLETE
          */
         public static COMPLETE:string = "complete";
+
+        /**
+         * 循环完成
+         * @constant {string} egret.Event.LOOP_COMPLETE
+         */
+        public static LOOP_COMPLETE:string = "loopcomplete";
+
         /**
          * 主循环：进入新的一帧
          * @constant {string} egret.Event.ENTER_FRAME
