@@ -25,3 +25,4 @@ obj/
 *.sln
 *.csproj
 *.ide/
+npm-debug.log
