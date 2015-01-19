@@ -81,8 +81,6 @@ module egret {
 
             this.worldTransform = new Matrix();
 
-            this.initBlendMode();
-
             MainContext.instance.addEventListener(Event.FINISH_RENDER, this._draw, this);
 
             this.initAll();
@@ -440,14 +438,6 @@ module egret {
             gl.colorMask(true, true, true, true);
         }
 
-        private blendModesWebGL:any = NaN;
-
-        private initBlendMode():void {
-            this.blendModesWebGL = {};
-            this.blendModesWebGL[BlendMode.NORMAL] = [this.gl.ONE, this.gl.ONE_MINUS_SRC_ALPHA];
-            this.blendModesWebGL[BlendMode.ADD] = [this.gl.SRC_ALPHA, this.gl.ONE];
-        }
-
         private start():void {
             if (this.contextLost) {
                 return;
@@ -500,7 +490,7 @@ module egret {
                 blendMode = egret.BlendMode.NORMAL;
             }
             if (this.currentBlendMode != blendMode) {
-                var blendModeWebGL = this.blendModesWebGL[blendMode];
+                var blendModeWebGL = RendererContext.blendModesForGL[blendMode];
                 if (blendModeWebGL) {
                     this._draw();
                     this.gl.blendFunc(blendModeWebGL[0], blendModeWebGL[1]);

@@ -41,7 +41,6 @@ module egret {
          */
         public constructor() {
             super();
-            this.initBlendMode();
         }
 
 
@@ -146,7 +145,7 @@ module egret {
                 blendMode = egret.BlendMode.NORMAL;
             }
             if (this.currentBlendMode != blendMode) {
-                var blendModeArg = this.blendModes[blendMode];
+                var blendModeArg = RendererContext.blendModesForGL[blendMode];
                 if (blendModeArg) {
                     egret_native.Graphics.setBlendArg(blendModeArg[0], blendModeArg[1]);
                     this.currentBlendMode = blendMode;
@@ -236,15 +235,6 @@ module egret {
             else {
                 egret_native.Graphics.setGlobalColorTransformEnabled(false);
             }
-
-        }
-
-        private blendModes:any = null;
-
-        private initBlendMode():void {
-            this.blendModes = {};
-            this.blendModes[BlendMode.NORMAL] = [1, 771];
-            this.blendModes[BlendMode.ADD] = [770, 1];
         }
     }
 }
