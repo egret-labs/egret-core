@@ -475,6 +475,7 @@ var EXMLCompiler = (function () {
         var directChild = [];
         var length = children.length;
         var propList = [];
+        var isContainer = this.exmlConfig.isInstanceOf(className, "egret.gui.IContainer");
         for (var i = 0; i < length; i++) {
             var child = children[i];
             var prop = child.localName;
@@ -494,7 +495,7 @@ var EXMLCompiler = (function () {
                     continue;
                 }
                 var errorInfo = this.getPropertyStr(child);
-                this.addChildrenToProp(child.children, type, prop, cb, varName, errorInfo, propList, className);
+                this.addChildrenToProp(child.children, type, prop, cb, varName, errorInfo, propList, className, isContainer);
             }
             else {
                 directChild.push(child);
@@ -508,12 +509,12 @@ var EXMLCompiler = (function () {
         if (!defaultProp || !defaultType) {
             globals.exit(2012, this.exmlPath, errorInfo);
         }
-        this.addChildrenToProp(directChild, defaultType, defaultProp, cb, varName, errorInfo, propList, className);
+        this.addChildrenToProp(directChild, defaultType, defaultProp, cb, varName, errorInfo, propList, className, isContainer);
     };
     /**
      * 添加多个子节点到指定的属性
      */
-    EXMLCompiler.prototype.addChildrenToProp = function (children, type, prop, cb, varName, errorInfo, propList, className) {
+    EXMLCompiler.prototype.addChildrenToProp = function (children, type, prop, cb, varName, errorInfo, propList, className, isContainer) {
         var childFunc = "";
         var childLength = children.length;
         if (childLength > 1) {
@@ -524,6 +525,10 @@ var EXMLCompiler = (function () {
             for (var j = 0; j < childLength; j++) {
                 var item = children[j];
                 childFunc = this.createFuncForNode(item);
+                var childClassName = this.exmlConfig.getClassNameById(item.localName, item.namespace);
+                if (isContainer && !this.exmlConfig.isInstanceOf(childClassName, "egret.gui.IVisualElement")) {
+                    globals.exit(2019, this.exmlPath, this.toXMLString(item));
+                }
                 if (!this.isStateNode(item))
                     values.push(childFunc);
             }
@@ -539,6 +544,10 @@ var EXMLCompiler = (function () {
                         for (var k = 0; k < len; k++) {
                             item = firstChild.children[k];
                             childFunc = this.createFuncForNode(item);
+                            childClassName = this.exmlConfig.getClassNameById(item.localName, item.namespace);
+                            if (isContainer && !this.exmlConfig.isInstanceOf(childClassName, "egret.gui.IVisualElement")) {
+                                globals.exit(2019, this.exmlPath, this.toXMLString(item));
+                            }
                             if (!this.isStateNode(item))
                                 values.push(childFunc);
                         }
@@ -547,6 +556,10 @@ var EXMLCompiler = (function () {
                 }
                 else {
                     childFunc = this.createFuncForNode(firstChild);
+                    var childClassName = this.exmlConfig.getClassNameById(firstChild.localName, firstChild.namespace);
+                    if (isContainer && !this.exmlConfig.isInstanceOf(childClassName, "egret.gui.IVisualElement")) {
+                        globals.exit(2019, this.exmlPath, this.toXMLString(firstChild));
+                    }
                     if (!this.isStateNode(firstChild))
                         childFunc = "[" + childFunc + "]";
                     else

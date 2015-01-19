@@ -41,6 +41,7 @@ module egret {
         private renderContext:RendererContext = null;
         private strokeStyleColor:string = null;
         private fillStyleColor:string = null;
+        private _dirty:boolean = false;
 
         constructor() {
             this.commandQueue = [];
@@ -68,7 +69,6 @@ module egret {
          * @param y {number} 相对于父显示对象注册点的圆心的 y 位置（以像素为单位）。
          * @param width {number} 矩形的宽度（以像素为单位）。
          * @param height {number} 矩形的高度（以像素为单位）。
-         * @param r? {number} 圆的半径（以像素为单位）,不设置就为直角矩形。
          */
         public drawRect(x:number, y:number, width:number, height:number):void{
             this.checkRect(x, y, width, height);

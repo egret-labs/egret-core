@@ -111,6 +111,9 @@ module egret {
             this.renderContext.clearScreen();
             this.renderContext.onRenderStart();
             this.webGLTexture = null;//gl.deleteTexture(this.webGLTexture);
+            if (displayObject._colorTransform) {
+                this.renderContext.setGlobalColorTransform(displayObject._colorTransform.matrix);
+            }
             var mask = displayObject.mask || displayObject._scrollRect;
             if (mask) {
                 this.renderContext.pushMask(mask);
@@ -119,18 +122,20 @@ module egret {
             if (mask) {
                 this.renderContext.popMask();
             }
+            if (displayObject._colorTransform) {
+                this.renderContext.setGlobalColorTransform(null);
+            }
             RenderTexture.identityRectangle.width = width;
             RenderTexture.identityRectangle.height = height;
             renderFilter.addDrawArea(RenderTexture.identityRectangle);
             this.renderContext.onRenderFinish();
-            this.end();
             renderFilter._drawAreaList = drawAreaList;
             this._sourceWidth = width;
             this._sourceHeight = height;
             this._textureWidth = this._sourceWidth * texture_scale_factor;
             this._textureHeight = this._sourceHeight * texture_scale_factor;
 
-
+            this.end();
 
             //测试代码
 //            var cacheCanvas:HTMLCanvasElement = this._bitmapData;

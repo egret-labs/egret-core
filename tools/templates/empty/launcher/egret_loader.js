@@ -39,6 +39,7 @@ egret_h5.startGame = function () {
     //WebGL是egret的Beta特性，默认关闭
     var rendererType = 0;
     if (rendererType == 1) {// egret.WebGLUtils.checkCanUseWebGL()) {
+        console.log("使用WebGL模式");
         context.rendererContext = new egret.WebGLRenderer();
     }
     else {
