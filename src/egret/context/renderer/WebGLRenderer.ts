@@ -269,7 +269,11 @@ module egret {
                 var renderFilter = egret.RenderFilter.getInstance();
                 var drawAreaList = renderFilter._drawAreaList.concat();
                 renderFilter._drawAreaList.length = 0;
-                this.renderContext.clearScreen();
+                var gl = this.renderContext.gl;
+                gl.viewport(0, 0, width, height);
+                gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+                gl.clearColor(0, 0, 0, 0);
+                gl.clear(gl.COLOR_BUFFER_BIT);
                 this.renderContext.onRenderStart();
                 this.webGLTexture = null; //gl.deleteTexture(this.webGLTexture);
                 if (displayObject._colorTransform) {
