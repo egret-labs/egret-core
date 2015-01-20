@@ -34,11 +34,11 @@ module egret {
      * @private
      */
     export class WebGLRenderer extends RendererContext {
-        private static glID = 0;
+        private static glID:number = 0;
         private static isInit:boolean = false;
         private canvas:HTMLCanvasElement = null;
-        private gl:any = null;
-        private glID:number;
+        private gl:WebGLRenderingContext = null;
+        private glID:number = null;
         private size:number = 2000;
         private vertices:Float32Array = null;
         private vertSize:number = 5;
