@@ -78,6 +78,15 @@ module RES {
         return instance.hasRes(key);
     }
     /**
+     * 运行时动态解析一个配置文件,
+     * @method RES.parseConfig
+     * @param data {any} 配置文件数据，请参考resource.json的配置文件格式。传入对应的json对象即可。
+     * @param folder {string} 加载项的路径前缀。
+     */
+    export function parseConfig(data:any, folder:string=""):void {
+        instance.parseConfig(data,folder);
+    }
+    /**
      * 同步方式获取缓存的已经加载成功的资源。<br/>
 	 * @method RES.getRes
      * @param key {string} 对应配置文件里的name属性或sbuKeys属性的一项。
@@ -340,17 +349,24 @@ module RES {
                 this.configComplete = true;
                 this.loadingConfigList = null;
                 ResourceEvent.dispatchResourceEvent(this,ResourceEvent.CONFIG_COMPLETE);
-                var groupNameList:Array<any> = this.groupNameList;
-                var length:number = groupNameList.length;
-                for(var i:number=0;i<length;i++){
-                    var item:any = groupNameList[i];
-                    this.loadGroup(item.name,item.priority);
-                }
-                this.groupNameList = [];
+                this.loadDelayGroups();
             }
             else{
                 this.loadedGroups.push(event.groupName);
                 this.dispatchEvent(event);
+            }
+
+        }
+        /**
+         * 启动延迟的组加载
+         */
+        private loadDelayGroups():void{
+            var groupNameList:Array<any> = this.groupNameList;
+            this.groupNameList = [];
+            var length:number = groupNameList.length;
+            for(var i:number=0;i<length;i++){
+                var item:any = groupNameList[i];
+                this.loadGroup(item.name,item.priority);
             }
 
         }
@@ -382,6 +398,18 @@ module RES {
                 }
             }
             return true;
+        }
+        /**
+         * 运行时动态解析一个配置文件,
+         * @param data {any} 配置文件数据，请参考resource.json的配置文件格式。传入对应的json对象即可。
+         * @param folder {string} 加载项的路径前缀。
+         */
+        public parseConfig(data:any, folder:string):void {
+            this.resConfig.parseConfig(data,folder);
+            if(!this.configComplete&&!this.loadingConfigList){
+                this.configComplete = true;
+                this.loadDelayGroups();
+            }
         }
         /**
          * 通过key同步获取资源
