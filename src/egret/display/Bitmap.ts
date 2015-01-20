@@ -85,7 +85,7 @@ module egret {
         /**
          * 矩形区域，它定义位图对象的九个缩放区域。此属性仅当fillMode为BitmapFillMode.SCALE时有效。
          * scale9Grid的x、y、width、height分别代表九宫图中中间那块的左上点的x、y以及中间方块的宽高。
-         * @member {egret.Texture} egret.Bitmap#scale9Grid
+         * @member {egret.Rectangle} egret.Bitmap#scale9Grid
          */
         public scale9Grid:Rectangle = null;
 
@@ -93,7 +93,7 @@ module egret {
          * 确定位图填充尺寸的方式。
          * 设置为 BitmapFillMode.REPEAT时，位图将重复以填充区域；BitmapFillMode.SCALE时，位图将拉伸以填充区域。
          * 默认值：BitmapFillMode.SCALE。
-         * @member {egret.Texture} egret.Bitmap#fillMode
+         * @member {string} egret.Bitmap#fillMode
          */
         public fillMode:string = "scale";
 

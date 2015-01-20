@@ -34,11 +34,11 @@ module egret {
      * @private
      */
     export class WebGLRenderer extends RendererContext {
-        private static glID = 0;
+        private static glID:number = 0;
         private static isInit:boolean = false;
         private canvas:HTMLCanvasElement = null;
-        private gl:any = null;
-        private glID:number;
+        private gl:WebGLRenderingContext = null;
+        private glID:number = null;
         private size:number = 2000;
         private vertices:Float32Array = null;
         private vertSize:number = 5;
@@ -81,11 +81,11 @@ module egret {
 
             this.worldTransform = new Matrix();
 
-            this.initBlendMode();
-
-            MainContext.instance.addEventListener(Event.FINISH_RENDER, this._draw, this);
-
             this.initAll();
+        }
+
+        public onRenderFinish():void {
+            this._draw();
         }
 
         private initAll():void {
@@ -139,7 +139,7 @@ module egret {
                 renderFilter._drawAreaList.length = 0;
                 this.renderContext.clearScreen();
                 this.renderContext.onRenderStart();
-                this.webGLTexture = null;//gl.deleteTexture(this.webGLTexture);
+                RendererContext.deleteTexture(this.renderTexture);
                 if (this._colorTransform) {
                     this.renderContext.setGlobalColorTransform(this._colorTransform.matrix);
                 }
@@ -215,7 +215,7 @@ module egret {
                 if (clipBounds && (clipBounds.width == 0 || clipBounds.height == 0)) {
                     return false;
                 }
-                if(typeof scale == "undefined") {
+                if (typeof scale == "undefined") {
                     scale = 1;
                 }
                 if (!this._bitmapData) {
@@ -275,7 +275,7 @@ module egret {
                 gl.clearColor(0, 0, 0, 0);
                 gl.clear(gl.COLOR_BUFFER_BIT);
                 this.renderContext.onRenderStart();
-                this.webGLTexture = null; //gl.deleteTexture(this.webGLTexture);
+                RendererContext.deleteTexture(this);
                 if (displayObject._colorTransform) {
                     this.renderContext.setGlobalColorTransform(displayObject._colorTransform.matrix);
                 }
@@ -323,8 +323,9 @@ module egret {
                 this.renderContext = renderContext.canvasContext;
                 this.canvasContext = this.renderContext._cacheCanvasContext || this.renderContext.canvasContext;
                 this.canvasContext.clearRect(0, 0, stageW, stageH);
+                this.canvasContext.save();
                 var worldTransform:Matrix = renderContext.worldTransform;
-                renderContext.canvasContext.setTransform(worldTransform);
+                this.canvasContext.setTransform(worldTransform.a, worldTransform.b, worldTransform.c, worldTransform.d, worldTransform.tx, worldTransform.ty);
                 var worldAlpha:number = renderContext.worldAlpha;
                 renderContext.canvasContext.setAlpha(worldAlpha, null);
                 if (this.strokeStyleColor && length > 0 && commandQueue[length - 1] != this.endLineCommand) {
@@ -336,16 +337,17 @@ module egret {
                     var command = commandQueue[i];
                     command.method.apply(command.thisObject, command.args);
                 }
-                this.renderContext.canvasContext.clearRect(0,0,stageW,stageH);
+                this.renderContext.canvasContext.clearRect(0, 0, stageW, stageH);
                 this.renderContext.canvasContext.drawImage(this.renderContext._cacheCanvas, 0, 0, stageW, stageH, 0, 0, stageW, stageH);
-                
+
                 if (!this["graphics_webgl_texture"]) {
                     this["graphics_webgl_texture"] = new egret.Texture();
                 }
                 this["graphics_webgl_texture"]._setBitmapData(renderContext.html5Canvas);
-                this["graphics_webgl_texture"].webGLTexture = null;
+                RendererContext.deleteTexture(this["graphics_webgl_texture"]);
                 renderContext.setTransform(egret.Matrix.identity.identity());
                 renderContext.drawImage(this["graphics_webgl_texture"], 0, 0, stageW, stageH, 0, 0, stageW, stageH);
+                this.canvasContext.restore();
                 this._dirty = false;
             }
         }
@@ -375,7 +377,7 @@ module egret {
                 this.projectionX = this.canvas.width / 2;
                 this.projectionY = -this.canvas.height / 2;
             }
-            if(this.html5Canvas){
+            if (this.html5Canvas) {
                 this.html5Canvas.width = egret.MainContext.instance.stage.stageWidth; //stageW
                 this.html5Canvas.height = egret.MainContext.instance.stage.stageHeight; //stageH
                 this.html5Canvas.style.width = container.style.width;
@@ -440,14 +442,6 @@ module egret {
             gl.colorMask(true, true, true, true);
         }
 
-        private blendModesWebGL:any = NaN;
-
-        private initBlendMode():void {
-            this.blendModesWebGL = {};
-            this.blendModesWebGL[BlendMode.NORMAL] = [this.gl.ONE, this.gl.ONE_MINUS_SRC_ALPHA];
-            this.blendModesWebGL[BlendMode.ADD] = [this.gl.SRC_ALPHA, this.gl.ONE];
-        }
-
         private start():void {
             if (this.contextLost) {
                 return;
@@ -481,7 +475,7 @@ module egret {
             var gl:any = this.gl;
             gl.colorMask(true, true, true, true);
             var list = RenderFilter.getInstance().getDrawAreaList();
-            for (var i:number = 0 , l:number = list.length; i < l; i++) {
+            for (var i:number = 0, l:number = list.length; i < l; i++) {
                 var area = list[i];
                 gl.viewport(area.x, area.y, area.width, area.height);
                 gl.bindFramebuffer(gl.FRAMEBUFFER, null);
@@ -500,7 +494,7 @@ module egret {
                 blendMode = egret.BlendMode.NORMAL;
             }
             if (this.currentBlendMode != blendMode) {
-                var blendModeWebGL = this.blendModesWebGL[blendMode];
+                var blendModeWebGL = RendererContext.blendModesForGL[blendMode];
                 if (blendModeWebGL) {
                     this._draw();
                     this.gl.blendFunc(blendModeWebGL[0], blendModeWebGL[1]);

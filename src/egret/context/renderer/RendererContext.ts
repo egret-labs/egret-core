@@ -76,6 +76,9 @@ module egret {
         public constructor() {
             super();
             this.profiler = Profiler.getInstance();
+            if(!RendererContext.blendModesForGL) {
+                RendererContext.initBlendMode();
+            }
         }
 
         /**
@@ -195,6 +198,44 @@ module egret {
 
         public static createRendererContext(canvas:any):RendererContext {
             return null;
+        }
+
+        public static deleteTexture(texture:Texture):void {
+            var context = egret.MainContext.instance.rendererContext;
+            var gl:any = context["gl"];
+            var webGLTexture = texture.webGLTexture;
+            if(webGLTexture && gl) {
+                for(var key in webGLTexture) {
+                    var glTexture = webGLTexture[key];
+                    gl.deleteTexture(glTexture);
+                }
+            }
+            texture.webGLTexture = null;
+        }
+
+        public static blendModesForGL:any = null;
+
+        private static initBlendMode():void {
+            RendererContext.blendModesForGL = {};
+            RendererContext.blendModesForGL[BlendMode.NORMAL] = [1, 771];
+            RendererContext.blendModesForGL[BlendMode.ADD] = [770, 1];
+        }
+
+        /**
+         * 设置 gl 模式下的blendMode，canvas模式下不会生效
+         * @method egret.RendererContext#registerBlendModeForGL
+         * @param key {string} 键值
+         * @param src {number} 源颜色因子
+         * @param dst {number} 目标颜色因子
+         * @param override {boolean} 是否覆盖
+         */
+        public static registerBlendModeForGL(key:string, src:number, dst:number, override?:boolean){
+            if(RendererContext.blendModesForGL[key] && !override) {
+                egret.Logger.warning("设置了已经存在的blendMode：" + key);
+            }
+            else {
+                RendererContext.blendModesForGL[key] = [src, dst];
+            }
         }
     }
 }

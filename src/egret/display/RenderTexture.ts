@@ -110,7 +110,7 @@ module egret {
             renderFilter._drawAreaList.length = 0;
             this.renderContext.clearScreen();
             this.renderContext.onRenderStart();
-            this.webGLTexture = null;//gl.deleteTexture(this.webGLTexture);
+            RendererContext.deleteTexture(this);
             if (displayObject._colorTransform) {
                 this.renderContext.setGlobalColorTransform(displayObject._colorTransform.matrix);
             }
