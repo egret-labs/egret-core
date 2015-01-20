@@ -536,13 +536,13 @@ module egret_h5_graphics {
         if (this.fillStyleColor != null) {
             this._fill();
         }
-        this.fillStyleColor = null;
     }
 
     export function _fill():void {
         if (this.fillStyleColor) {
             this.createEndFillCommand();
             this._pushCommand(this.endFillCommand);
+            this.fillStyleColor = null;
         }
     }
 
