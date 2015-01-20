@@ -81,9 +81,11 @@ module egret {
 
             this.worldTransform = new Matrix();
 
-            MainContext.instance.addEventListener(Event.FINISH_RENDER, this._draw, this);
-
             this.initAll();
+        }
+
+        public onRenderFinish():void {
+            this._draw();
         }
 
         private initAll():void {
