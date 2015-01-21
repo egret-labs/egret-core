@@ -93,6 +93,7 @@ module egret {
                 return;
             }
             WebGLRenderer.isInit = true;
+            egret_webgl_graphics.init();
             egret.TextField.prototype._makeBitmapCache = function () {
                 if (!this.renderTexture) {
                     this.renderTexture = new egret.RenderTexture();
@@ -312,47 +313,47 @@ module egret {
                 return true;
             };
 
-            egret.Graphics.prototype._draw = function (renderContext:WebGLRenderer) {
-                //todo dirty
-                var commandQueue = this["commandQueue"];
-                var length:number = commandQueue.length;
-                if (length == 0) {
-                    return;
-                }
-                var stage:Stage = egret.MainContext.instance.stage;
-                var stageW:number = stage.stageWidth;
-                var stageH:number = stage.stageHeight;
-
-                this.renderContext = renderContext.canvasContext;
-                this.canvasContext = this.renderContext._cacheCanvasContext || this.renderContext.canvasContext;
-                this.canvasContext.clearRect(0, 0, stageW, stageH);
-                this.canvasContext.save();
-                var worldTransform:Matrix = renderContext.worldTransform;
-                this.canvasContext.setTransform(worldTransform.a, worldTransform.b, worldTransform.c, worldTransform.d, worldTransform.tx, worldTransform.ty);
-                var worldAlpha:number = renderContext.worldAlpha;
-                renderContext.canvasContext.setAlpha(worldAlpha, null);
-                if (this.strokeStyleColor && length > 0 && commandQueue[length - 1] != this.endLineCommand) {
-                    this.createEndLineCommand();
-                    commandQueue.push(this.endLineCommand);
-                    length = commandQueue.length;
-                }
-                for (var i:number = 0; i < length; i++) {
-                    var command = commandQueue[i];
-                    command.method.apply(command.thisObject, command.args);
-                }
-                this.renderContext.canvasContext.clearRect(0, 0, stageW, stageH);
-                this.renderContext.canvasContext.drawImage(this.renderContext._cacheCanvas, 0, 0, stageW, stageH, 0, 0, stageW, stageH);
-
-                if (!this["graphics_webgl_texture"]) {
-                    this["graphics_webgl_texture"] = new egret.Texture();
-                }
-                this["graphics_webgl_texture"]._setBitmapData(renderContext.html5Canvas);
-                RendererContext.deleteTexture(this["graphics_webgl_texture"]);
-                renderContext.setTransform(egret.Matrix.identity.identity());
-                renderContext.drawImage(this["graphics_webgl_texture"], 0, 0, stageW, stageH, 0, 0, stageW, stageH);
-                this.canvasContext.restore();
-                this._dirty = false;
-            }
+            //egret.Graphics.prototype._draw = function (renderContext:WebGLRenderer) {
+            //    //todo dirty
+            //    var commandQueue = this["commandQueue"];
+            //    var length:number = commandQueue.length;
+            //    if (length == 0) {
+            //        return;
+            //    }
+            //    var stage:Stage = egret.MainContext.instance.stage;
+            //    var stageW:number = stage.stageWidth;
+            //    var stageH:number = stage.stageHeight;
+            //
+            //    this.renderContext = renderContext.canvasContext;
+            //    this.canvasContext = this.renderContext._cacheCanvasContext || this.renderContext.canvasContext;
+            //    this.canvasContext.clearRect(0, 0, stageW, stageH);
+            //    this.canvasContext.save();
+            //    var worldTransform:Matrix = renderContext.worldTransform;
+            //    this.canvasContext.setTransform(worldTransform.a, worldTransform.b, worldTransform.c, worldTransform.d, worldTransform.tx, worldTransform.ty);
+            //    var worldAlpha:number = renderContext.worldAlpha;
+            //    renderContext.canvasContext.setAlpha(worldAlpha, null);
+            //    if (this.strokeStyleColor && length > 0 && commandQueue[length - 1] != this.endLineCommand) {
+            //        this.createEndLineCommand();
+            //        commandQueue.push(this.endLineCommand);
+            //        length = commandQueue.length;
+            //    }
+            //    for (var i:number = 0; i < length; i++) {
+            //        var command = commandQueue[i];
+            //        command.method.apply(command.thisObject, command.args);
+            //    }
+            //    this.renderContext.canvasContext.clearRect(0, 0, stageW, stageH);
+            //    this.renderContext.canvasContext.drawImage(this.renderContext._cacheCanvas, 0, 0, stageW, stageH, 0, 0, stageW, stageH);
+            //
+            //    if (!this["graphics_webgl_texture"]) {
+            //        this["graphics_webgl_texture"] = new egret.Texture();
+            //    }
+            //    this["graphics_webgl_texture"]._setBitmapData(renderContext.html5Canvas);
+            //    RendererContext.deleteTexture(this["graphics_webgl_texture"]);
+            //    renderContext.setTransform(egret.Matrix.identity.identity());
+            //    renderContext.drawImage(this["graphics_webgl_texture"], 0, 0, stageW, stageH, 0, 0, stageW, stageH);
+            //    this.canvasContext.restore();
+            //    this._dirty = false;
+            //}
         }
 
         private createCanvas():HTMLCanvasElement {
@@ -460,7 +461,7 @@ module egret {
             if (this.colorTransformMatrix) {
                 shader = this.shaderManager.colorTransformShader;
             }
-            else if(this.filterData && this.filterData.type == "blur") {
+            else if (this.filterData && this.filterData.type == "blur") {
                 shader = this.shaderManager.blurShader;
             }
             else {
@@ -804,7 +805,8 @@ module egret {
         private graphicsBuffer:any = null;
         private graphicsIndexBuffer:any = null;
 
-        private renderGraphics(graphics) {
+        public renderGraphics(graphics) {
+            this._draw();
             var gl:any = this.gl;
             var shader = this.shaderManager.primitiveShader;
 
@@ -861,10 +863,10 @@ module egret {
             var width:number = graphicsData.w;
             var height:number = graphicsData.h;
 
-            var r:number = 0;
-            var g:number = 0;
-            var b:number = 0;
-            var alpha:number = 1;
+            var alpha:number = this.graphicsStyle.a;
+            var r:number = this.graphicsStyle.r * alpha;
+            var g:number = this.graphicsStyle.g * alpha;
+            var b:number = this.graphicsStyle.b * alpha;
 
             var verts:Array<any> = this.graphicsPoints;
             var indices:Array<any> = this.graphicsIndices;
@@ -884,5 +886,106 @@ module egret {
 
             indices.push(vertPos, vertPos, vertPos + 1, vertPos + 2, vertPos + 3, vertPos + 3);
         }
+
+        private graphicsStyle:any = {};
+
+        public setGraphicsStyle(r:number, g:number, b:number, a:number):void {
+            this.graphicsStyle.r = r;
+            this.graphicsStyle.g = g;
+            this.graphicsStyle.b = b;
+            this.graphicsStyle.a = a;
+        }
     }
+}
+
+
+module egret_webgl_graphics {
+
+    export function beginFill(color:number, alpha:number = 1):void {
+        var _colorBlue = (color & 0x0000FF) / 255;
+        var _colorGreen = ((color & 0x00ff00) >> 8) / 255;
+        var _colorRed = (color >> 16) / 255;
+
+        this._pushCommand(new Command(this._setStyle, this, [_colorRed, _colorBlue, _colorGreen, alpha]))
+    }
+
+    export function drawRect(x:number, y:number, width:number, height:number):void {
+        this._pushCommand(new Command(
+                function (data) {
+                    var rendererContext = <egret.WebGLRenderer>this.renderContext;
+                    rendererContext.renderGraphics(data);
+                },
+                this,
+                [{x: x, y: y, w: width, h: height}]
+            )
+        );
+    }
+
+    export function drawCircle(x:number, y:number, r:number):void {
+
+    }
+
+    export function drawRoundRect(x:number, y:number, width:number, height:number, ellipseWidth:number, ellipseHeight?:number):void {
+
+    }
+
+    export function drawEllipse(x:number, y:number, width:number, height:number):void {
+
+    }
+
+    export function lineStyle(thickness:number = NaN, color:number = 0, alpha:number = 1.0, pixelHinting:boolean = false, scaleMode:string = "normal", caps:string = null, joints:string = null, miterLimit:number = 3):void {
+
+    }
+
+    export function lineTo(x:number, y:number):void {
+    }
+
+    export function curveTo(controlX:Number, controlY:Number, anchorX:Number, anchorY:Number):void {
+    }
+
+    export function moveTo(x:number, y:number):void {
+
+    }
+
+    export function clear():void {
+        this.commandQueue.length = 0;
+    }
+
+    export function endFill():void {
+
+    }
+
+    export function _pushCommand(cmd:any):void {
+        this.commandQueue.push(cmd);
+    }
+
+    export function _draw(renderContext:egret.WebGLRenderer):void {
+        var length = this.commandQueue.length;
+        if (length == 0) {
+            return;
+        }
+        this.renderContext = renderContext;
+        for (var i = 0; i < length; i++) {
+            var command:Command = this.commandQueue[i];
+            command.method.apply(command.thisObject, command.args);
+        }
+    }
+
+    class Command {
+
+        constructor(public method:Function, public thisObject:any, public args:Array<any>) {
+
+        }
+    }
+
+    export function _setStyle(r:number, g:number, b:number, a:number):void {
+        this.renderContext.setGraphicsStyle(r, g, b, a);
+    }
+
+    export function init():void {
+        for (var key in egret_webgl_graphics) {
+            egret.Graphics.prototype[key] = egret_webgl_graphics[key];
+        }
+    }
+
 }
