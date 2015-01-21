@@ -50,6 +50,7 @@ module egret {
                 this._texture = texture;
                 this._setSizeDirty();
             }
+            this.needDraw = true;
         }
 
         /**

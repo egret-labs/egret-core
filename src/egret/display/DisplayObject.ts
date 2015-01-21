@@ -569,6 +569,7 @@ module egret {
         public _worldBounds:egret.Rectangle = null;
         public worldAlpha:number = 1;
 
+        public _isContainer:boolean = false;
 
         /**
          * @private
@@ -585,8 +586,10 @@ module egret {
                 return;
             }
             var o = this;
-            var isContainer = o instanceof DisplayObjectContainer;
-            var isCommandPush = MainContext.__use_new_draw && isContainer;
+            var isCommandPush = MainContext.__use_new_draw && o._isContainer;
+            if(o._filter && !isCommandPush) {
+                renderContext.setGlobalFilter(o._filter);
+            }
             if (o._colorTransform && !isCommandPush) {
                 renderContext.setGlobalColorTransform(o._colorTransform.matrix);
             }
@@ -603,7 +606,19 @@ module egret {
             if (o._colorTransform && !isCommandPush) {
                 renderContext.setGlobalColorTransform(null);
             }
+            if(o._filter && !isCommandPush) {
+                renderContext.setGlobalFilter(null);
+            }
             this.destroyCacheBounds();
+        }
+
+        public _setGlobalFilter(renderContext:RendererContext):void {
+            var o = this;
+            renderContext.setGlobalFilter(o._filter);
+        }
+
+        public _removeGlobalFilter(renderContext:RendererContext):void {
+            renderContext.setGlobalFilter(null);
         }
 
         public _setGlobalColorTransform(renderContext:RendererContext):void {
@@ -673,7 +688,7 @@ module egret {
             var o = this;
             o._calculateWorldTransform();
             if(MainContext._renderLoopPhase == "updateTransform") {
-                if(o.needDraw || o._texture_to_render || o instanceof TextField || o instanceof Bitmap || o["graphics"]) {
+                if(o.needDraw || o._texture_to_render || o["graphics"]) {
                     RenderCommand.push(this._draw, this);
                 }
             }
@@ -1193,6 +1208,18 @@ module egret {
             this._colorTransform = value;
         }
 
+        /**
+         * beta功能，请勿调用此方法
+         */
+        public _filter:Filter = null;
+
+        public get filter():Filter {
+            return this._filter;
+        }
+
+        public set filter(value:Filter) {
+            this._filter = value;
+        }
     }
 
 
@@ -1203,6 +1230,12 @@ module egret {
         public updateColor(r:number, g:number, b:number, a:number, addR:number, addG:number, addB:number, addA:number):void {
             //todo;
         }
+
+    }
+
+    export class Filter {
+
+        public type:string = null;
 
     }
 }

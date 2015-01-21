@@ -34,11 +34,11 @@ module egret {
      * @private
      */
     export class WebGLRenderer extends RendererContext {
-        private static glID = 0;
+        private static glID:number = 0;
         private static isInit:boolean = false;
         private canvas:HTMLCanvasElement = null;
-        private gl:any = null;
-        private glID:number;
+        private gl:WebGLRenderingContext = null;
+        private glID:number = null;
         private size:number = 2000;
         private vertices:Float32Array = null;
         private vertSize:number = 5;
@@ -81,9 +81,11 @@ module egret {
 
             this.worldTransform = new Matrix();
 
-            MainContext.instance.addEventListener(Event.FINISH_RENDER, this._draw, this);
-
             this.initAll();
+        }
+
+        public onRenderFinish():void {
+            this._draw();
         }
 
         private initAll():void {
@@ -458,6 +460,9 @@ module egret {
             if (this.colorTransformMatrix) {
                 shader = this.shaderManager.colorTransformShader;
             }
+            else if(this.filterData && this.filterData.type == "blur") {
+                shader = this.shaderManager.blurShader;
+            }
             else {
                 shader = this.shaderManager.defaultShader;
             }
@@ -756,7 +761,7 @@ module egret {
             gl.scissor(x, -y + MainContext.instance.stage.stageHeight - h, w, h);
         }
 
-        private colorTransformMatrix:Array<any>;
+        private colorTransformMatrix:Array<any> = null;
 
         public setGlobalColorTransform(colorTransformMatrix:Array<any>):void {
             if (this.colorTransformMatrix != colorTransformMatrix) {
@@ -771,6 +776,15 @@ module egret {
                     shader.uniforms.colorAdd.value.x = colorTransformMatrix.splice(4, 1)[0] / 255.0;
                     shader.uniforms.matrix.value = colorTransformMatrix;
                 }
+            }
+        }
+
+        private filterData:Filter = null;
+
+        public setGlobalFilter(filterData:Filter):void {
+            if (this.filterData != filterData) {
+                this._draw();
+                this.filterData = filterData;
             }
         }
 

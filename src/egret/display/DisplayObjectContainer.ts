@@ -43,6 +43,7 @@ module egret {
         constructor() {
             super();
             this._children = [];
+            this._isContainer = true;
 
         }
 
@@ -321,6 +322,9 @@ module egret {
             if (!o._visible) {
                 return;
             }
+            if(o._filter) {
+                RenderCommand.push(this._setGlobalFilter, this);
+            }
             if (o._colorTransform) {
                 RenderCommand.push(this._setGlobalColorTransform, this);
             }
@@ -335,11 +339,14 @@ module egret {
                     child._updateTransform();
                 }
             }
+            if(mask) {
+                RenderCommand.push(this._popMask, this);
+            }
             if (o._colorTransform) {
                 RenderCommand.push(this._removeGlobalColorTransform, this);
             }
-            if(mask) {
-                RenderCommand.push(this._popMask, this);
+            if(o._filter) {
+                RenderCommand.push(this._removeGlobalFilter, this);
             }
         }
 

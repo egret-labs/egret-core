@@ -108,6 +108,8 @@ declare module egret_native {
 
         function setGlobalColorTransformEnabled(bool:boolean):void;
 
+        function setGlobalShader(filterData:any):void;
+
 
         function lineStyle(thickness:number, color:number):void;
 
