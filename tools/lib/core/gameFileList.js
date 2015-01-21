@@ -52,6 +52,8 @@ function createFileList(manifest, srcPath) {
         else if (ext == "ts") {
             filePath = filePath.substring(0, filePath.length - 2) + "js";
         }
+
+        filePath = filePath.replace(/(\\\\|\\)/g, "/");
         return filePath;
     });
 

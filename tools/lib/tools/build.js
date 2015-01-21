@@ -57,6 +57,7 @@ function buildPlatform(needCompileEngine, keepGeneratedTypescript) {
                         item = item.replace(".ts", ".js");
                         var url = path.join((module["output"] ? module["output"] : module["name"]), item);
 
+                        url = url.replace(/(\\\\|\\)/g, "/");
                         if (module["name"] == "html5") {
                             html5List.push(url);
                         }
