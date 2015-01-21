@@ -236,6 +236,10 @@ module egret {
                 egret_native.Graphics.setGlobalColorTransformEnabled(false);
             }
         }
+
+        public setGlobalFilter(filterData:Filter):void {
+            egret_native.Graphics.setGlobalShader(filterData);
+        }
     }
 }
 

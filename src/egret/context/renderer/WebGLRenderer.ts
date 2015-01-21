@@ -460,6 +460,9 @@ module egret {
             if (this.colorTransformMatrix) {
                 shader = this.shaderManager.colorTransformShader;
             }
+            else if(this.filterData && this.filterData.type == "blur") {
+                shader = this.shaderManager.blurShader;
+            }
             else {
                 shader = this.shaderManager.defaultShader;
             }
@@ -758,7 +761,7 @@ module egret {
             gl.scissor(x, -y + MainContext.instance.stage.stageHeight - h, w, h);
         }
 
-        private colorTransformMatrix:Array<any>;
+        private colorTransformMatrix:Array<any> = null;
 
         public setGlobalColorTransform(colorTransformMatrix:Array<any>):void {
             if (this.colorTransformMatrix != colorTransformMatrix) {
@@ -773,6 +776,15 @@ module egret {
                     shader.uniforms.colorAdd.value.x = colorTransformMatrix.splice(4, 1)[0] / 255.0;
                     shader.uniforms.matrix.value = colorTransformMatrix;
                 }
+            }
+        }
+
+        private filterData:Filter = null;
+
+        public setGlobalFilter(filterData:Filter):void {
+            if (this.filterData != filterData) {
+                this._draw();
+                this.filterData = filterData;
             }
         }
 

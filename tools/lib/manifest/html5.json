@@ -10,6 +10,7 @@
         "renderer/webgl/WebGLUtils.ts",
         "renderer/webgl/shaders/EgretShader.ts",
         "renderer/webgl/shaders/ColorTransformShader.ts",
+        "renderer/webgl/shaders/BlurShader.ts",
         "renderer/webgl/shaders/PrimitiveShader.ts",
         "renderer/webgl/WebGLShaderManager.ts",
         "net/HTML5NetContext.ts",

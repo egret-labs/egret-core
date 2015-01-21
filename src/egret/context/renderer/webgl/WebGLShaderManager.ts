@@ -42,12 +42,14 @@ module egret {
         public defaultShader:EgretShader = null;
         public primitiveShader:PrimitiveShader = null;
         public colorTransformShader:ColorTransformShader = null;
+        public blurShader:BlurShader = null;
 
         public setContext(gl:any) {
             this.gl = gl;
             this.primitiveShader = new PrimitiveShader(gl);
             this.defaultShader = new EgretShader(gl);
             this.colorTransformShader = new ColorTransformShader(gl);
+            this.blurShader = new BlurShader(gl);
             this.activateShader(this.defaultShader);
         }
 
