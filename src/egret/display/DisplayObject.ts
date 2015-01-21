@@ -1234,9 +1234,9 @@ module egret {
     }
 
     export class Filter {
-
         public type:string = null;
-
+        public dirX:number = 0;
+        public dirY:number = 0;
     }
 }
 
