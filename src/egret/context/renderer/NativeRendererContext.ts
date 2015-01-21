@@ -47,8 +47,7 @@ module egret {
         public _setTextureScaleFactor(value:number):void {
             super._setTextureScaleFactor(value);
 
-            //todo
-            //egret_native.Graphics.setTextureScaleFactor(value);
+            egret_native.Graphics.setTextureScaleFactor(value);
         }
 
         /**
@@ -131,10 +130,10 @@ module egret {
          * @param blendMode {egret.BlendMode}
          */
         public setAlpha(value:number, blendMode:string) {
-            if (this.currentAlpha != value) {
+            //if (this.currentAlpha != value) {
                 egret_native.Graphics.setGlobalAlpha(value);
-                this.currentAlpha = value;
-            }
+                //this.currentAlpha = value;
+            //}
             this.setBlendMode(blendMode);
         }
 
@@ -144,13 +143,13 @@ module egret {
             if (!blendMode) {
                 blendMode = egret.BlendMode.NORMAL;
             }
-            if (this.currentBlendMode != blendMode) {
+            //if (this.currentBlendMode != blendMode) {
                 var blendModeArg = RendererContext.blendModesForGL[blendMode];
                 if (blendModeArg) {
                     egret_native.Graphics.setBlendArg(blendModeArg[0], blendModeArg[1]);
                     this.currentBlendMode = blendMode;
                 }
-            }
+            //}
         }
 
         /**
