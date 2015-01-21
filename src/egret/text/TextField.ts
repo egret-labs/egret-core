@@ -515,6 +515,7 @@ module egret {
 
         constructor() {
             super();
+            this.needDraw = true;
         }
 
         public _onRemoveFromStage():void {

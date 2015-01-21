@@ -43,6 +43,7 @@ module egret {
         constructor() {
             super();
             this._children = [];
+            this._isContainer = true;
 
         }
 

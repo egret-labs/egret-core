@@ -569,6 +569,7 @@ module egret {
         public _worldBounds:egret.Rectangle = null;
         public worldAlpha:number = 1;
 
+        public _isContainer:boolean = false;
 
         /**
          * @private
@@ -585,8 +586,7 @@ module egret {
                 return;
             }
             var o = this;
-            var isContainer = o instanceof DisplayObjectContainer;
-            var isCommandPush = MainContext.__use_new_draw && isContainer;
+            var isCommandPush = MainContext.__use_new_draw && o._isContainer;
             if (o._colorTransform && !isCommandPush) {
                 renderContext.setGlobalColorTransform(o._colorTransform.matrix);
             }
@@ -673,7 +673,7 @@ module egret {
             var o = this;
             o._calculateWorldTransform();
             if(MainContext._renderLoopPhase == "updateTransform") {
-                if(o.needDraw || o._texture_to_render || o instanceof TextField || o instanceof Bitmap || o["graphics"]) {
+                if(o.needDraw || o._texture_to_render || o["graphics"]) {
                     RenderCommand.push(this._draw, this);
                 }
             }
