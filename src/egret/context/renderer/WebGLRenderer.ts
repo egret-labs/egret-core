@@ -645,7 +645,7 @@ module egret {
             locWorldTransform.ty = matrix.ty;
         }
 
-        private worldAlpha:number = NaN;
+        private worldAlpha:number = 1;
 
         public setAlpha(value:number, blendMode:string):void {
             this.worldAlpha = value;

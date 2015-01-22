@@ -34,6 +34,7 @@ module egret {
      */
     export class MovieClip extends DisplayObject{
 
+        private _isAddedToStage:boolean = false;
     //Render Property
         private static renderFilter:RenderFilter = RenderFilter.getInstance();
         private _textureToRender:Texture = null;
@@ -115,6 +116,20 @@ module egret {
             }
         }
 
+        public _onAddToStage():void {
+            super._onAddToStage();
+            this._isAddedToStage = true;
+            if(this._isPlaying && this._totalFrames>1){
+                this.setIsStopped(false);
+            }
+        }
+
+        public _onRemoveFromStage():void {
+            super._onRemoveFromStage();
+            this._isAddedToStage = false;
+            this.setIsStopped(true);
+        }
+
     //Data Function
         /**
          * 返回帧标签为指定字符串的FrameLabel对象
@@ -192,7 +207,7 @@ module egret {
         public play(playTimes:number = 0): void {
             this._isPlaying = true;
             this.setPlayTimes(playTimes);
-            if (this._totalFrames > 1) {
+            if (this._totalFrames > 1 && this._isAddedToStage) {
                 this.setIsStopped(false);
             }
         }

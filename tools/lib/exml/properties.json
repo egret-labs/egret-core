@@ -33,10 +33,6 @@
 	{
 		"matrix":"Array"
 	},
-	"egret.DefaultMovieClipDelegate":
-	{
-		"implements":["egret.MovieClipDelegate"]
-	},
 	"egret.DisplayObject":
 	{
 		"alpha":"number",
@@ -85,17 +81,37 @@
 	},
 	"egret.Matrix":
 	{
-		"a":"any",
-		"super":"egret.HashObject"
+		"a":"number",
+		"b":"number",
+		"c":"number",
+		"d":"number",
+		"super":"egret.HashObject",
+		"tx":"number",
+		"ty":"number"
 	},
 	"egret.MovieClip":
 	{
 		"frameRate":"number",
-		"super":"egret.DisplayObjectContainer"
+		"movieClipData":"egret.MovieClipData",
+		"super":"egret.DisplayObject"
 	},
-	"egret.NativeResourceLoader":
+	"egret.MovieClipData":
 	{
-		"super":"egret.EventDispatcher"
+		"frameRate":"number",
+		"frames":"any",
+		"labels":"any",
+		"mcData":"egret.MovieClipData",
+		"numFrames":"number",
+		"spriteSheet":"egret.SpriteSheet",
+		"super":"egret.HashObject",
+		"textureData":"any"
+	},
+	"egret.MovieClipDataFactory":
+	{
+		"enableCache":"boolean",
+		"mcDataSet":"any",
+		"super":"egret.EventDispatcher",
+		"texture":"egret.Texture"
 	},
 	"egret.NativeStageText":
 	{
@@ -107,15 +123,6 @@
 		"x":"number",
 		"y":"number"
 	},
-	"egret.PromiseObject":
-	{
-		"downloadingSizeFunc":"Function",
-		"downloadingSizeThisObject":"any",
-		"onErrorFunc":"Function",
-		"onErrorThisObject":"any",
-		"onSuccessFunc":"Function",
-		"onSuccessThisObject":"any"
-	},
 	"egret.Rectangle":
 	{
 		"bottom":"number",
@@ -126,30 +133,9 @@
 		"x":"number",
 		"y":"number"
 	},
-	"egret.Recycler":
-	{
-		"super":"egret.HashObject"
-	},
-	"egret.RenderTexture":
-	{
-		"super":"egret.Texture"
-	},
-	"egret.ScrollView":
-	{
-		"horizontalScrollPolicy":"string",
-		"scrollLeft":"number",
-		"scrollTop":"number",
-		"super":"egret.DisplayObjectContainer",
-		"verticalScrollPolicy":"string"
-	},
 	"egret.Shape":
 	{
 		"super":"egret.DisplayObject"
-	},
-	"egret.Sound":
-	{
-		"path":"string",
-		"type":"string"
 	},
 	"egret.Sprite":
 	{
@@ -189,24 +175,6 @@
 	{
 		"super":"egret.HashObject",
 		"webGLTexture":"any"
-	},
-	"egret.Tween":
-	{
-		"super":"egret.EventDispatcher"
-	},
-	"egret.URLRequestHeader":
-	{
-		"name":"string",
-		"value":"string"
-	},
-	"egret.VersionController":
-	{
-		"super":"egret.EventDispatcher"
-	},
-	"egret.WebAudio":
-	{
-		"loop":"boolean",
-		"volume":"number"
 	},
 	"egret.gui.AddItems":
 	{
@@ -280,6 +248,7 @@
 	"egret.gui.ClassFactory":
 	{
 		"generator":"any",
+		"implements":["egret.gui.IFactory"],
 		"super":"egret.HashObject"
 	},
 	"egret.gui.DataGroup":

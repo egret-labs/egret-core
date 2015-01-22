@@ -58,9 +58,20 @@ module egret {
         /**
          * 根据名字生成一个MovieClipData实例。可以用于创建MovieClip。
          * @method egret.MovieClipDataFactory#generateMovieClipData
-         * @param movieClipName {string} MovieClip名字
+         * @param movieClipName {string} MovieClip名字. 可选参数，默认为"", 相当于取第一个MovieClip数据
+         * @returns {MovieClipData} 生成的MovieClipData对象
          */
-        public generateMovieClipData(movieClipName:string):MovieClipData {
+        public generateMovieClipData(movieClipName:string=""):MovieClipData {
+            if(movieClipName == ""){
+                if(this._mcDataSet){
+                    for(movieClipName in this._mcDataSet.mc){
+                        break;
+                    }
+                }
+            }
+            if(movieClipName == ""){
+                return null;
+            }
             var output:MovieClipData = this._findFromCache(movieClipName, this._mcDataCache);
             if (!output) {
                 output = new MovieClipData();
