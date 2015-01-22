@@ -60,7 +60,17 @@ module egret {
          * @method egret.MovieClipDataFactory#generateMovieClipData
          * @param movieClipName {string} MovieClip名字
          */
-        public generateMovieClipData(movieClipName:string):MovieClipData {
+        public generateMovieClipData(movieClipName:string=""):MovieClipData {
+            if(movieClipName == ""){
+                if(this._mcDataSet){
+                    for(movieClipName in this._mcDataSet.mc){
+                        break;
+                    }
+                }
+            }
+            if(movieClipName == ""){
+                return null;
+            }
             var output:MovieClipData = this._findFromCache(movieClipName, this._mcDataCache);
             if (!output) {
                 output = new MovieClipData();
