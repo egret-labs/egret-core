@@ -111,6 +111,9 @@ module egret {
             this.renderContext.clearScreen();
             this.renderContext.onRenderStart();
             RendererContext.deleteTexture(this);
+            if(displayObject._filter) {
+                this.renderContext.setGlobalFilter(displayObject._filter);
+            }
             if (displayObject._colorTransform) {
                 this.renderContext.setGlobalColorTransform(displayObject._colorTransform.matrix);
             }
@@ -127,6 +130,9 @@ module egret {
             }
             if (displayObject._colorTransform) {
                 this.renderContext.setGlobalColorTransform(null);
+            }
+            if(displayObject._filter) {
+                this.renderContext.setGlobalFilter(null);
             }
             RenderTexture.identityRectangle.width = width;
             RenderTexture.identityRectangle.height = height;

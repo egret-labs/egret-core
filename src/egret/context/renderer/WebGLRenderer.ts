@@ -279,6 +279,9 @@ module egret {
                 gl.clear(gl.COLOR_BUFFER_BIT);
                 this.renderContext.onRenderStart();
                 RendererContext.deleteTexture(this);
+                if(displayObject._filter) {
+                    this.renderContext.setGlobalFilter(displayObject._filter);
+                }
                 if (displayObject._colorTransform) {
                     this.renderContext.setGlobalColorTransform(displayObject._colorTransform.matrix);
                 }
@@ -294,6 +297,9 @@ module egret {
                 }
                 if (displayObject._colorTransform) {
                     this.renderContext.setGlobalColorTransform(null);
+                }
+                if(displayObject._filter) {
+                    this.renderContext.setGlobalFilter(null);
                 }
                 egret.RenderTexture.identityRectangle.width = width;
                 egret.RenderTexture.identityRectangle.height = height;
@@ -461,7 +467,7 @@ module egret {
             if (this.colorTransformMatrix) {
                 shader = this.shaderManager.colorTransformShader;
             }
-            else if (this.filterData && this.filterData.type == "blur") {
+            else if (this.filterType == "blur") {
                 shader = this.shaderManager.blurShader;
             }
             else {
@@ -652,7 +658,7 @@ module egret {
             locWorldTransform.ty = matrix.ty;
         }
 
-        private worldAlpha:number = NaN;
+        private worldAlpha:number = 1;
 
         public setAlpha(value:number, blendMode:string):void {
             this.worldAlpha = value;
@@ -780,17 +786,26 @@ module egret {
             }
         }
 
-        private filterData:Filter = null;
-
         public setGlobalFilter(filterData:Filter):void {
-            if (this.filterData != filterData) {
-                this._draw();
-                this.filterData = filterData;
-                if(filterData) {
-                    var shader:BlurShader = this.shaderManager.blurShader;
-                    shader.uniforms.dir.value.x = filterData.dirX;
-                    shader.uniforms.dir.value.y = filterData.dirY;
+            this._draw();
+            this.setFilterProperties(filterData);
+        }
+
+        private filterType:string = null;
+
+        private setFilterProperties(filterData:Filter):void {
+            if (filterData) {
+                this.filterType = filterData.type;
+                switch (filterData.type) {
+                    case "blur":
+                        var shader:BlurShader = this.shaderManager.blurShader;
+                        shader.uniforms.blur.value.x = (<BlurFilter>filterData).blurX;
+                        shader.uniforms.blur.value.y = (<BlurFilter>filterData).blurY;
+                        break;
                 }
+            }
+            else {
+                this.filterType = null;
             }
         }
 
