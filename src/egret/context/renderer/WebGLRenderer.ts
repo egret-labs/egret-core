@@ -786,6 +786,11 @@ module egret {
             if (this.filterData != filterData) {
                 this._draw();
                 this.filterData = filterData;
+                if(filterData) {
+                    var shader:BlurShader = this.shaderManager.blurShader;
+                    shader.uniforms.dir.value.x = filterData.dirX;
+                    shader.uniforms.dir.value.y = filterData.dirY;
+                }
             }
         }
 
