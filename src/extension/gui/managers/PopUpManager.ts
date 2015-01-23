@@ -64,10 +64,10 @@ module egret.gui {
 		 * 模态遮罩的填充颜色
 		 * @member egret.gui.PopUpManager#modalColor
 		 */
-		public get modalColor():number{
+		public static get modalColor():number{
 			return PopUpManager.getImpl().modalColor;
 		}
-		public set modalColor(value:number){
+		public static set modalColor(value:number){
 			PopUpManager.getImpl().modalColor = value;
 		}
 		
@@ -75,10 +75,10 @@ module egret.gui {
 		 * 模态遮罩的透明度
 		 * @member egret.gui.PopUpManager#modalAlpha
 		 */
-		public get modalAlpha():number{
+		public static get modalAlpha():number{
 			return PopUpManager.getImpl().modalAlpha;
 		}
-		public set modalAlpha(value:number){
+		public static set modalAlpha(value:number){
 			PopUpManager.getImpl().modalAlpha = value;
 		}
 		

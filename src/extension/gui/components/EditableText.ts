@@ -156,7 +156,8 @@ module egret.gui {
 		
 		private restrictChanged:boolean = false;
 		/**
-		 * @inheritDoc
+		 * @deprecated
+		 * TextFiled里还没实现这个接口，等实现之后再去掉废弃标志。目前暂时不要使用它。
 		 */
 		public get restrict():string{
 			return this._restrict;
@@ -444,10 +445,10 @@ module egret.gui {
 			
 			if (this.restrictChanged){
 				//this._textField.restrict = this._restrict;
-				
+
 				this.restrictChanged = false;
 			}
-			
+
 			if(this.heightInLinesChanged){
 				this.heightInLinesChanged = false;
 				if(isNaN(this._heightInLines)){

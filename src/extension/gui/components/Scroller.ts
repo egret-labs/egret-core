@@ -615,7 +615,19 @@ module egret.gui {
         private vBarChanged(e: Event): void {
             this.setViewportVScrollPosition(this.verticalScrollBar.getPosition());
         }
+        public hitTest(x: number, y: number, ignoreTouchEnabled: boolean = false): DisplayObject {
+            var childTouched = super.hitTest(x, y, ignoreTouchEnabled);
+            if (childTouched)
+                return childTouched;
 
+            if (!this._visible || (!ignoreTouchEnabled && !this._touchEnabled)) {
+                return null;
+            }
+            if (0 <= x && x < this.width && 0 <= y && y < this.height) {
+                return this;
+            }
+            return null;
+        }
     }
     //增加ScrollView方法
     for (var p in egret.ScrollView.prototype) {
