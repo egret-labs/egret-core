@@ -23,7 +23,8 @@ var upgradeConfigArr = [
     {"v" : "1.1.4", "func":upgradeTo_1_1_4},
     {"v" : "1.5.0", "func":upgradeTo_1_5_0},
     {"v" : "1.5.1", "func":upgradeTo_1_5_1},
-    {"v" : "1.5.2", "func":upgradeTo_1_5_2}
+    {"v" : "1.5.2", "func":upgradeTo_1_5_2},
+    {"v" : "1.5.3", "func":upgradeTo_1_5_3}
 ];
 
 var currDir;
@@ -296,6 +297,14 @@ function upgradeTo_1_5_2(){
 
     projectConfig.init(currDir);
     projectConfig.data.egret_version = "1.5.2";
+    projectConfig.save();
+}
+
+function upgradeTo_1_5_3(){
+    globals.log("正在更新到1.5.3");
+
+    projectConfig.init(currDir);
+    projectConfig.data.egret_version = "1.5.3";
     projectConfig.save();
 }
 
