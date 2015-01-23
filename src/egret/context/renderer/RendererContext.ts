@@ -119,6 +119,23 @@ module egret {
         }
 
         /**
+         * 绘制9宫图片
+         * @method egret.RendererContext#drawImageScale9
+         * @param texture {Texture}
+         * @param sourceX {any}
+         * @param sourceY {any}
+         * @param sourceWidth {any}
+         * @param sourceHeight {any}
+         * @param destX {any}
+         * @param destY {any}
+         * @param destWidth {any}
+         * @param destHeigh {any}
+         */
+        public drawImageScale9(texture: Texture, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, rect):boolean {
+            return false;
+        }
+
+        /**
          * 变换Context的当前渲染矩阵
          * @method egret.RendererContext#setTransform
          * @param matrix {egret.Matri}

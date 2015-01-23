@@ -95,6 +95,7 @@ declare module egret_native {
         function clearScreen(r:number, g:number, b:number):void;
 
         function drawImage(texture:any, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight):void;
+        function drawImageScale9(texture:any, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, x, y, width, height):boolean;
 
         function setTransform(a:number, b:number, c:number, d:number, tx:number, ty:number):void;
 

@@ -172,7 +172,6 @@ module egret {
             if (!texture || !scale9Grid) {
                 return;
             }
-            var renderFilter:RenderFilter = RenderFilter.getInstance();
             var textureWidth:number = texture._textureWidth;
             var textureHeight:number = texture._textureHeight;
             var sourceX:number = texture._bitmapX;
@@ -182,14 +181,20 @@ module egret {
             var destX:number = texture._offsetX / texture_scale_factor;
             var destY:number = texture._offsetY / texture_scale_factor;
 
+            destWidth -= textureWidth-sourceWidth;
+            destHeight -= textureHeight-sourceHeight;
+
+            if (renderContext.drawImageScale9(texture, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, scale9Grid)) {
+                return;
+            }
+
+            var renderFilter:RenderFilter = RenderFilter.getInstance();
 
             var s9g:Rectangle = Rectangle.identity.initialize(
                     scale9Grid.x - Math.round(destX), scale9Grid.y - Math.round(destX),
                 scale9Grid.width, scale9Grid.height);
             var roundedDrawX:number = Math.round(destX);
             var roundedDrawY:number = Math.round(destY);
-            destWidth -= textureWidth-sourceWidth;
-            destHeight -= textureHeight-sourceHeight;
 
             //防止空心的情况出现。
             if (s9g.y == s9g.bottom) {

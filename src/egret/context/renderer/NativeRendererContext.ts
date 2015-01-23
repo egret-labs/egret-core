@@ -47,8 +47,9 @@ module egret {
         public _setTextureScaleFactor(value:number):void {
             super._setTextureScaleFactor(value);
 
-            //todo
-            //egret_native.Graphics.setTextureScaleFactor(value);
+            if (egret_native.Graphics.setTextureScaleFactor != null) {
+                egret_native.Graphics.setTextureScaleFactor(value);
+            }
         }
 
         /**
@@ -96,6 +97,28 @@ module egret {
             }
 
             super.drawImage(texture, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight,repeat);
+        }
+
+        /**
+         * 绘制9宫图片
+         * @method egret.RendererContext#drawImageScale9
+         * @param texture {Texture}
+         * @param sourceX {any}
+         * @param sourceY {any}
+         * @param sourceWidth {any}
+         * @param sourceHeight {any}
+         * @param destX {any}
+         * @param destY {any}
+         * @param destWidth {any}
+         * @param destHeigh {any}
+         */
+        public drawImageScale9(texture: Texture, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, rect):boolean {
+            if (egret_native.Graphics.drawImageScale9 != null) {
+                egret_native.Graphics.drawImageScale9(texture._bitmapData, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, rect.x, rect.y, rect.width, rect.height);
+                return true;
+            }
+
+            return false;
         }
 
         public drawRepeatImage(texture:Texture, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, repeat) {
