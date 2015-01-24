@@ -135,6 +135,10 @@ module egret {
             return false;
         }
 
+        public _addOneDraw():void {
+            this.profiler.onDrawImage();
+        }
+
         /**
          * 变换Context的当前渲染矩阵
          * @method egret.RendererContext#setTransform

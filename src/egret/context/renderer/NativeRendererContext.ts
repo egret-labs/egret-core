@@ -115,6 +115,7 @@ module egret {
         public drawImageScale9(texture: Texture, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, rect):boolean {
             if (egret_native.Graphics.drawImageScale9 != null) {
                 egret_native.Graphics.drawImageScale9(texture._bitmapData, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, rect.x, rect.y, rect.width, rect.height);
+                this._addOneDraw();
                 return true;
             }
 
