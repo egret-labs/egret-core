@@ -207,7 +207,7 @@ module egret {
 //            if (this._multiline) {
                 this.setElementStyle("height", this._height + "px");
 //            }
-            this.setElementStyle("border", "1px solid red");
+//            this.setElementStyle("border", "1px solid red");
             this.setElementStyle("display", "block");
         }
 
