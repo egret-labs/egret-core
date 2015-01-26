@@ -148,11 +148,13 @@ module egret {
             if (lines.length==0) {
                 return Rectangle.identity.initialize(0, 0, 0, 0);
             }
-            return Rectangle.identity.initialize(0, 0, this._textWidth, this._textHeight);
+            return Rectangle.identity.initialize(this._textOffsetX, this._textOffsetY, this._textWidth, this._textHeight);
         }
 
         private _textWidth:number = 0;
         private _textHeight:number = 0;
+        private _textOffsetX:number = 0;
+        private _textOffsetY:number = 0;
 
         private textLinesChange:boolean = true;
         private _textLines:Array<string>;
@@ -172,6 +174,8 @@ module egret {
             }
             var textWidth:number = 0;
             var textHeight:number = 0;
+            var textStartX:number = 0;
+            var textStartY:number = 0;
             var hasWidthSet:boolean = this._hasWidthSet;
             var maxWidth:number = this._hasWidthSet?this._explicitWidth:Number.POSITIVE_INFINITY;
             var bitmapFont:BitmapFont = this._font;
@@ -180,15 +184,19 @@ module egret {
             var text:string = this._text;
             var textArr:Array<string> = text.split(/(?:\r\n|\r|\n)/);
             var length:number = textArr.length;
+            var isFirstLine:boolean = true;
             for (var i = 0; i < length; i++) {
                 var line:string = textArr[i];
                 var len = line.length;
                 var lineHeight:number = 0;
                 var xPos:number = 0;
+                var isFistChar:boolean = true;
                 for(var j=0;j<len;j++){
                     var character = line.charAt(j);
                     var texureWidth:number;
                     var textureHeight:number;
+                    var offsetX:number = 0;
+                    var offsetY:number = 0;
                     var texture = bitmapFont.getTexture(character);
                     if (!texture) {
                         if(character==" "){
@@ -197,14 +205,25 @@ module egret {
                         }
                         else{
                             egret.Logger.warning("BitmapText找不到文字所对应的纹理：\"" + character+"\"");
+                            if(isFistChar){
+                                isFistChar = false;
+                            }
                             continue;
                         }
                     }
                     else{
                         texureWidth = texture._textureWidth;
                         textureHeight = texture._textureHeight;
+                        offsetX = texture._offsetX;
+                        offsetY = texture._offsetY;
                     }
-
+                    if(isFistChar){
+                        isFistChar = false;
+                        textStartX = Math.min(offsetX,textStartX);
+                    }
+                    if(isFirstLine){
+                        textStartY = Math.min(offsetY,textStartY);
+                    }
                     if(hasWidthSet&&j>0&&xPos+texureWidth>maxWidth){
                         textLines.push(line.substring(0,j));
                         lineHeights.push(lineHeight);
@@ -220,6 +239,9 @@ module egret {
                     xPos += texureWidth;
                     lineHeight = Math.max(textureHeight,lineHeight);
                 }
+                if(isFirstLine){
+                    isFirstLine = false;
+                }
                 textLines.push(line);
                 lineHeights.push(lineHeight);
                 textHeight += lineHeight;
@@ -227,6 +249,8 @@ module egret {
             }
             this._textWidth = textWidth;
             this._textHeight = textHeight;
+            this._textOffsetX = textStartX;
+            this._textOffsetY = textStartY;
             return textLines;
         }
     }
