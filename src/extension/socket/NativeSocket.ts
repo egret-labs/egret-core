@@ -83,7 +83,7 @@ module egret {
             };
         }
 
-        public send(message:string):void {
+        public send(message:any):void {
             this.socket.send(message);
         }
 
