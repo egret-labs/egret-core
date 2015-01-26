@@ -148,7 +148,7 @@ module egret {
             if (lines.length==0) {
                 return Rectangle.identity.initialize(0, 0, 0, 0);
             }
-            return Rectangle.identity.initialize(this._textOffsetX, this._textOffsetY, this._textWidth, this._textHeight);
+            return Rectangle.identity.initialize(this._textOffsetX, this._textOffsetY, this._textWidth-this._textOffsetX, this._textHeight-this._textOffsetY);
         }
 
         private _textWidth:number = 0;
