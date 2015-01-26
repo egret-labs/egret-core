@@ -179,15 +179,16 @@ module egret {
             var sourceY:number = texture._bitmapY;
             var sourceWidth:number = texture._bitmapWidth||textureWidth;
             var sourceHeight:number = texture._bitmapHeight||textureHeight;
-            var destX:number = texture._offsetX / texture_scale_factor;
-            var destY:number = texture._offsetY / texture_scale_factor;
 
             destWidth -= textureWidth-sourceWidth;
             destHeight -= textureHeight-sourceHeight;
 
-            if (renderContext.drawImageScale9(texture, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, scale9Grid)) {
+            if (renderContext.drawImageScale9(texture, sourceX, sourceY, sourceWidth, sourceHeight, texture._offsetX, texture._offsetY, destWidth, destHeight, scale9Grid)) {
                 return;
             }
+
+            var destX:number = texture._offsetX / texture_scale_factor;
+            var destY:number = texture._offsetY / texture_scale_factor;
 
             var renderFilter:RenderFilter = RenderFilter.getInstance();
 

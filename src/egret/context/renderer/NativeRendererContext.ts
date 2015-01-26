@@ -112,9 +112,13 @@ module egret {
          * @param destWidth {any}
          * @param destHeigh {any}
          */
-        public drawImageScale9(texture: Texture, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, rect):boolean {
+        public drawImageScale9(texture: Texture, sourceX, sourceY, sourceWidth, sourceHeight, offX, offY, destWidth, destHeight, rect):boolean {
             if (egret_native.Graphics.drawImageScale9 != null) {
-                egret_native.Graphics.drawImageScale9(texture._bitmapData, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, rect.x, rect.y, rect.width, rect.height);
+                var texture_scale_factor = egret.MainContext.instance.rendererContext._texture_scale_factor;
+                var destX:number = offX / texture_scale_factor;
+                var destY:number = offY / texture_scale_factor;
+
+                egret_native.Graphics.drawImageScale9(texture._bitmapData, sourceX, sourceY, sourceWidth / texture_scale_factor, sourceHeight / texture_scale_factor, destX, destY, destWidth, destHeight, rect.x - offX, rect.y - offY, rect.width, rect.height);
                 this._addOneDraw();
                 return true;
             }
