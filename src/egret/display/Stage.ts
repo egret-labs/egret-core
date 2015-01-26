@@ -97,13 +97,8 @@ module egret {
         /**
          * 设置屏幕适配策略
          */
-        private setResolutionPolicy():void{
-            var  scaleModeEnum = {};
-            scaleModeEnum[StageScaleMode.NO_SCALE] = new NoScale();
-            scaleModeEnum[StageScaleMode.SHOW_ALL] = new ShowAll();
-            scaleModeEnum[StageScaleMode.NO_BORDER] = new FixedWidth();
-            scaleModeEnum[StageScaleMode.EXACT_FIT] = new FullScreen();
-            var content = scaleModeEnum[this._scaleMode];
+        private setResolutionPolicy():void {
+            var content = Stage.SCALE_MODE_ENUM[this._scaleMode];
             if (!content){
                 throw new Error("使用了尚未实现的ScaleMode");
             }
@@ -192,5 +187,30 @@ module egret {
         public get focus(): DisplayObject {
             return null;
         }
+
+        public static SCALE_MODE_ENUM:any = {};
+
+        /**
+         * 设置屏幕适配模式
+         * @param key {string} 键值
+         * @param value {egret.ContentStrategy} 适配模式
+         * @param override {boolean} 是否覆盖
+         * @method egret.Stage#registerScaleMode
+         */
+        public static registerScaleMode(key:string, value:ContentStrategy, override?:boolean) {
+            if(Stage.SCALE_MODE_ENUM[key] && !override) {
+                egret.Logger.warning("设置了已经存在的适配模式：" + key);
+            }
+            else {
+                Stage.SCALE_MODE_ENUM[key] = value;
+            }
+        }
     }
 }
+
+egret.Stage.SCALE_MODE_ENUM[egret.StageScaleMode.NO_SCALE] = new egret.NoScale();
+egret.Stage.SCALE_MODE_ENUM[egret.StageScaleMode.SHOW_ALL] = new egret.ShowAll();
+egret.Stage.SCALE_MODE_ENUM[egret.StageScaleMode.NO_BORDER] = new egret.FixedWidth();
+egret.Stage.SCALE_MODE_ENUM[egret.StageScaleMode.EXACT_FIT] = new egret.FullScreen();
+
+
