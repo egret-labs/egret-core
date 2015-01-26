@@ -248,24 +248,24 @@ module egret {
                 cacheCanvas.style.height = cacheCanvasHeight + "px";
                 this.begin();
                 displayObject._worldTransform.identity();
-                this.renderContext.setTransform(displayObject._worldTransform);
+                var anchorOffsetX = displayObject._anchorOffsetX;
+                var anchorOffsetY = displayObject._anchorOffsetY;
+                if (displayObject._anchorX != 0 || displayObject._anchorY != 0) {
+                    anchorOffsetX = displayObject._anchorX * width;
+                    anchorOffsetY = displayObject._anchorY * height;
+                }
+                this._offsetX = x + anchorOffsetX;
+                this._offsetY = y + anchorOffsetY;
+                displayObject._worldTransform.append(1, 0, 0, 1, -this._offsetX, -this._offsetY);
                 displayObject.worldAlpha = 1;
                 if (displayObject instanceof egret.DisplayObjectContainer) {
-                    var anchorOffsetX = displayObject._anchorOffsetX;
-                    var anchorOffsetY = displayObject._anchorOffsetY;
-                    if (displayObject._anchorX != 0 || displayObject._anchorY != 0) {
-                        anchorOffsetX = displayObject._anchorX * width;
-                        anchorOffsetY = displayObject._anchorY * height;
-                    }
-                    this._offsetX = x + anchorOffsetX;
-                    this._offsetY = y + anchorOffsetY;
-                    displayObject._worldTransform.append(1, 0, 0, 1, -this._offsetX, -this._offsetY);
                     var list = (<DisplayObjectContainer>displayObject)._children;
                     for (var i = 0, length = list.length; i < length; i++) {
                         var child = list[i];
                         child._updateTransform();
                     }
                 }
+                this.renderContext.setTransform(displayObject._worldTransform);
                 var renderFilter = egret.RenderFilter.getInstance();
                 var drawAreaList = renderFilter._drawAreaList.concat();
                 renderFilter._drawAreaList.length = 0;

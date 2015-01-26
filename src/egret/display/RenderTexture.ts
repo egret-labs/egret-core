@@ -27,15 +27,16 @@
 
 
 module egret {
-	/**
-	 * @class egret.RenderTexture
-	 * @classdesc
+    /**
+     * @class egret.RenderTexture
+     * @classdesc
      * RenderTexture 是动态纹理类，他实现了将显示对象及其子对象绘制成为一个纹理的功能
-	 * @extends egret.Texture
-	 */
+     * @extends egret.Texture
+     */
     export class RenderTexture extends Texture {
 
         private renderContext;
+
         constructor() {
             super();
         }
@@ -47,20 +48,20 @@ module egret {
 
         public static identityRectangle:egret.Rectangle = new egret.Rectangle();
 
-		/**
+        /**
          * 将制定显示对象绘制为一个纹理
-		 * @method egret.RenderTexture#drawToTexture
-		 * @param displayObject {egret.DisplayObject} 
-		 * @param clipBounds {egret.Rectangle}
-		 * @param scale number
-		 */
+         * @method egret.RenderTexture#drawToTexture
+         * @param displayObject {egret.DisplayObject}
+         * @param clipBounds {egret.Rectangle}
+         * @param scale number
+         */
         public drawToTexture(displayObject:egret.DisplayObject, clipBounds?:Rectangle, scale?:number):boolean {
             var bounds = clipBounds || displayObject.getBounds(Rectangle.identity);
-            if(bounds.width == 0 || bounds.height == 0) {
+            if (bounds.width == 0 || bounds.height == 0) {
                 return false;
             }
 
-            if(!this._bitmapData) {
+            if (!this._bitmapData) {
                 this.init();
             }
 
@@ -82,28 +83,28 @@ module egret {
             displayObject._worldTransform.identity();
             displayObject._worldTransform.a = 1 / texture_scale_factor;
             displayObject._worldTransform.d = 1 / texture_scale_factor;
-            if(scale){
+            if (scale) {
                 displayObject._worldTransform.a *= scale;
                 displayObject._worldTransform.d *= scale;
             }
-            this.renderContext.setTransform(displayObject._worldTransform);
+            var anchorOffsetX:number = displayObject._anchorOffsetX;
+            var anchorOffsetY:number = displayObject._anchorOffsetY;
+            if (displayObject._anchorX != 0 || displayObject._anchorY != 0) {
+                anchorOffsetX = displayObject._anchorX * width;
+                anchorOffsetY = displayObject._anchorY * height;
+            }
+            this._offsetX = x + anchorOffsetX;
+            this._offsetY = y + anchorOffsetY;
+            displayObject._worldTransform.append(1, 0, 0, 1, -this._offsetX, -this._offsetY);
             displayObject.worldAlpha = 1;
             if (displayObject instanceof egret.DisplayObjectContainer) {
-                var anchorOffsetX:number = displayObject._anchorOffsetX;
-                var anchorOffsetY:number = displayObject._anchorOffsetY;
-                if(displayObject._anchorX != 0 || displayObject._anchorY != 0) {
-                    anchorOffsetX = displayObject._anchorX * width;
-                    anchorOffsetY = displayObject._anchorY * height;
-                }
-                this._offsetX = x + anchorOffsetX;
-                this._offsetY = y + anchorOffsetY;
-                displayObject._worldTransform.append(1, 0, 0, 1, -this._offsetX, -this._offsetY);
                 var list = (<egret.DisplayObjectContainer>displayObject)._children;
-                for (var i = 0 , length = list.length; i < length; i++) {
+                for (var i = 0, length = list.length; i < length; i++) {
                     var child:DisplayObject = list[i];
                     child._updateTransform();
                 }
             }
+            this.renderContext.setTransform(displayObject._worldTransform);
 
             var renderFilter = egret.RenderFilter.getInstance();
             var drawAreaList:Array<Rectangle> = renderFilter._drawAreaList.concat();
@@ -153,7 +154,7 @@ module egret {
             cacheCanvas.style.width = width + "px";
             cacheCanvas.style.height = height + "px";
 
-            if(this.renderContext._cacheCanvas) {
+            if (this.renderContext._cacheCanvas) {
                 this.renderContext._cacheCanvas.width = width;
                 this.renderContext._cacheCanvas.height = height;
             }
@@ -168,7 +169,7 @@ module egret {
         }
 
         public dispose():void {
-            if(this._bitmapData) {
+            if (this._bitmapData) {
                 this._bitmapData = null;
                 this.renderContext = null;
             }
