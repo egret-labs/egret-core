@@ -7,6 +7,9 @@ var window = {};
 console.log = function (message) {
     egtlog(message);
 }
+console.warn = function(message){
+    egtlog(message);
+}
 
 egret_native.setSearchPaths([""]);
 

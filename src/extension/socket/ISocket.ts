@@ -35,7 +35,7 @@ module egret {
 
         addCallBacks(onConnect:Function, onClose:Function, onSocketData:Function, onError:Function, thisObject:any):void;
 
-        send(message:string):void;
+        send(message:any):void;
 
         close():void;
     }

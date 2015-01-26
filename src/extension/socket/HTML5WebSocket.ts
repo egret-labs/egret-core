@@ -55,6 +55,7 @@ module egret {
 
             var socketServerUrl = "ws://" + this.host + ":" + this.port;
             this.socket = new window["WebSocket"](socketServerUrl);
+            this.socket.binaryType = "arraybuffer";
             this._bindEvent();
         }
 
@@ -83,7 +84,7 @@ module egret {
             };
         }
 
-        public send(message:string):void {
+        public send(message:any):void {
             this.socket.send(message);
         }
 
