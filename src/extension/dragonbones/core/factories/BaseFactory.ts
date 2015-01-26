@@ -96,9 +96,10 @@ module dragonBones {
 			if(!name){
 				throw new Error("Unnamed data!");
 			}
+            /*
 			if(this.dragonBonesDataDic[name]){
 				throw new Error();
-			}
+			}*/
 			this.dragonBonesDataDic[name] = data;
 		}
 
@@ -154,9 +155,10 @@ module dragonBones {
 			if(!name){
 				throw new Error("Unnamed data!");
 			}
+            /*
 			if(this.textureAtlasDic[name]){
 				throw new Error();
-			}
+			}*/
 			this.textureAtlasDic[name] = textureAtlas;
 		}
 		
