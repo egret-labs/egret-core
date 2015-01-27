@@ -31,7 +31,7 @@ module egret.gui {
 	/**
 	 * @class egret.gui.UIAsset
 	 * @classdesc
-	 * 素材和非GUI显示对象包装器包装器。<p/>
+	 * 素材和非GUI显示对象包装器。<p/>
 	 * @extends egret.gui.UIComponent
 	 * @implements egret.gui.ISkinnableClient
 	 */

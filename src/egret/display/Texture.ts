@@ -82,7 +82,7 @@ module egret {
         public _textureHeight:number = 0;
         /**
          * 纹理高度
-         * @member {number} egret.Texture#textureWidth
+         * @member {number} egret.Texture#textureHeight
          */
         public get textureHeight():number {
             return this._textureHeight;

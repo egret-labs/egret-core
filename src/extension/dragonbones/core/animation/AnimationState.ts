@@ -28,6 +28,11 @@
 
 module dragonBones {
 
+	/**
+	 * @class dragonBones.AnimationState
+	 * @classdesc
+	 * @private
+	 */
 	export class AnimationState{
 		private static _pool:Array<AnimationState> =[];
 		
@@ -156,8 +161,8 @@ module dragonBones {
 		
 		/**
 		 * Adds a bone which should be animated. This allows you to reduce the number of animations you have to create.
-		 * @param boneName Bone's name.
-		 * @param ifInvolveChildBones if involve child bone's animation.
+		 * @param boneName {string} Bone's name.
+		 * @param ifInvolveChildBones {boolean} if involve child bone's animation.
 		 */
 		public addBoneMask(boneName:string, ifInvolveChildBones:boolean = true):AnimationState{
 			this.addBoneToBoneMask(currentBone.name);
@@ -182,8 +187,8 @@ module dragonBones {
 		
 		/**
 		 * Removes a bone which was supposed be animated.
-		 * @param boneName Bone's timeline name.
-		 * @param ifInvolveChildBones If involved child bone's timeline.
+		 * @param boneName {string} Bone's timeline name.
+		 * @param ifInvolveChildBones {boolean} If involved child bone's timeline.
 		 */
 		public removeBoneMask(boneName:string, ifInvolveChildBones:boolean = true):AnimationState{
 			this.removeBoneFromBoneMask(boneName);
@@ -352,8 +357,8 @@ module dragonBones {
 		
 		/**
 		 * Fade out the animation state
-		 * @param fadeTotalTime fadeOutTime
-		 * @param pausePlayhead pauseBeforeFadeOutComplete pause the animation before fade out complete
+		 * @param fadeTotalTime {number} fadeOutTime
+		 * @param pausePlayhead {boolean} pauseBeforeFadeOutComplete pause the animation before fade out complete
 		 */
 		public fadeOut(fadeTotalTime:number, pausePlayhead:boolean):AnimationState{
 			if(!this._armature){
