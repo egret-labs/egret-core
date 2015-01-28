@@ -68,18 +68,29 @@ module egret.gui {
         public getMaxScrollLeft(): number {
             var content: IViewport = <any>this._content;
             var max = content.contentWidth - content.width;
-            return Math.max(max, 0);
+            var min = (<UIComponent><any>content).initialized ? 0 : (content.horizontalScrollPosition || 0);
+            return Math.max(max, min);
         }
         public getMaxScrollTop(): number {
             var content: IViewport = <any>this._content;
             var max = content.contentHeight - content.height;
-            return Math.max(max, 0);
+            var min = (<UIComponent><any>content).initialized ? 0 : (content.verticalScrollPosition || 0);
+            return Math.max(max, min);
         }
         public _getContentWidth(): number {
             return (<any>this._content).contentWidth;
         }
         public _getContentHeight(): number {
             return (<any>this._content).contentHeight;
+        }
+
+        public _onScrollStarted(): void {
+            ScrollView.prototype._onScrollStarted.call(this);
+            UIEvent.dispatchUIEvent(this, UIEvent.CHANGE_START);
+        }
+        public _onScrollFinished(): void {
+            ScrollView.prototype._onScrollFinished.call(this);
+            UIEvent.dispatchUIEvent(this, UIEvent.CHANGE_END);
         }
 
         /**

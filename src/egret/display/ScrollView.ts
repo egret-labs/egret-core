@@ -38,6 +38,10 @@ module egret {
         private _lastTouchTime: number = 0;
         private _lastTouchEvent: TouchEvent = null;
         private _velocitys: Array<{ x: number; y: number }> = [];
+        private _isHTweenPlaying: boolean = false;
+        private _isVTweenPlaying: boolean = false;
+        private _hScrollTween: Tween = null;
+        private _vScrollTween: Tween = null;
         
         /**
          * 创建一个 egret.ScrollView 对象
@@ -259,7 +263,10 @@ module egret {
             if (!canScroll) {
                 return;
             }
-            Tween.removeTweens(this);
+
+            if (this._isHTweenPlaying || this._isVTweenPlaying) {
+                this._onScrollFinished();
+            }
             this.stage.addEventListener(TouchEvent.TOUCH_MOVE, this._onTouchMove, this);
             this.stage.addEventListener(TouchEvent.TOUCH_END, this._onTouchEnd, this);
             this.stage.addEventListener(TouchEvent.LEAVE_STAGE, this._onTouchEnd, this);
@@ -450,16 +457,44 @@ module egret {
             this.setScrollTop(datay.position, datay.duration);
         }
 
+        public _onTweenFinished(tw: Tween) {
+            if (tw == this._vScrollTween)
+                this._isVTweenPlaying = false;
+            if (tw == this._hScrollTween)
+                this._isHTweenPlaying = false;
+            if (this._isHTweenPlaying == false && this._isVTweenPlaying == false) {
+                this._onScrollFinished();
+            }
+        }
+
+        public _onScrollStarted(): void {
+
+        }
+
+        public _onScrollFinished(): void {
+            Tween.removeTweens(this);
+            this._hScrollTween = null;
+            this._vScrollTween = null;
+            this._isHTweenPlaying = false;
+            this._isVTweenPlaying = false
+            this.dispatchEvent(new Event(Event.COMPLETE));
+        }
         public setScrollTop(scrollTop: number, duration: number = 0): egret.Tween {
             var finalPosition = Math.min(this.getMaxScrollTop(), Math.max(scrollTop, 0));
             if (duration == 0) {
                 this.scrollTop = finalPosition;
                 return null;
             }
-            var twy = egret.Tween.get(this).to({ scrollTop: scrollTop }, duration, egret.Ease.quartOut);
+            var vtween = egret.Tween.get(this).to({ scrollTop: scrollTop }, duration, egret.Ease.quartOut);
             if (finalPosition != scrollTop) {
-                twy.to({ scrollTop: finalPosition }, 300, egret.Ease.quintOut);
+                vtween.to({ scrollTop: finalPosition }, 300, egret.Ease.quintOut);
             }
+            this._isVTweenPlaying = true;
+            this._vScrollTween = vtween;
+            vtween.call(this._onTweenFinished, this, [vtween]);
+            if(!this._isHTweenPlaying)
+                this._onScrollStarted();
+            return vtween;
         }
         public setScrollLeft(scrollLeft: number, duration: number = 0): egret.Tween {
             var finalPosition = Math.min(this.getMaxScrollLeft(), Math.max(scrollLeft, 0));
@@ -467,10 +502,16 @@ module egret {
                 this.scrollLeft = finalPosition;
                 return null;
             }
-            var tw = egret.Tween.get(this).to({ scrollLeft: scrollLeft }, duration, egret.Ease.quartOut);
+            var htween = egret.Tween.get(this).to({ scrollLeft: scrollLeft }, duration, egret.Ease.quartOut);
             if (finalPosition != scrollLeft) {
-                tw.to({ scrollLeft: finalPosition }, 300, egret.Ease.quintOut);
+                htween.to({ scrollLeft: finalPosition }, 300, egret.Ease.quintOut);
             }
+            this._isHTweenPlaying = true;
+            this._hScrollTween = htween;
+            htween.call(this._onTweenFinished, this, [htween]);
+            if (!this._isVTweenPlaying)
+                this._onScrollStarted();
+            return htween;
         }
 
         private getAnimationDatas(pixelsPerMS: number, curPos: number, maxPos: number): { position: number; duration: number } {
