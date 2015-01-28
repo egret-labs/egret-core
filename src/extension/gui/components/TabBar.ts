@@ -56,7 +56,7 @@ module egret.gui {
          * 是否捕获ItemRenderer以便在MouseUp时抛出ItemClick事件
          */
         public _captureItemRenderer: boolean = true;
-        
+
         public get requireSelection():boolean{
             return this._requireSelection;
         }
