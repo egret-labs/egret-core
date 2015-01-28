@@ -725,14 +725,16 @@ module egret {
                                 var k:number = 0;
                                 var ww:number = 0;
                                 var word:string = textArr[j];
-                                for (; k < word.length; k++) {
+                                var wl:number = word.length;
+                                for (; k < wl; k++) {
                                     w = renderContext.measureText(word.charAt(k));
-                                    if (lineW + w > this._explicitWidth) {
+                                    if (lineW + w > this._explicitWidth && lineW + k != 0) {
                                         break;
                                     }
                                     ww += w;
                                     lineW += w;
                                 }
+
                                 if (k > 0) {
                                     lineElement.elements.push(<egret.IWTextElement>{width:ww, text:word.substring(0, k), style:element.style});
                                     textArr[j] = word.substring(k);
