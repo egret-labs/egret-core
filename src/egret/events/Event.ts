@@ -279,6 +279,12 @@ module egret {
             this._eventPhase = 2;
         }
 
+        public __recycle():void {
+            this._currentTarget = null;
+            this._target = null;
+            this.data = null;
+        }
+
         public static _dispatchByTarget(EventClass:any,target:IEventDispatcher,type:string,props?:Object,
                                         bubbles:boolean=false,cancelable:boolean = false):boolean{
             var recycler:Recycler = EventClass.eventRecycler;
