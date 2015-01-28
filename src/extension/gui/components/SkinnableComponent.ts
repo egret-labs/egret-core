@@ -211,18 +211,20 @@ module egret.gui {
 		 * @param skin {any} 
 		 */		
 		public detachSkin(skin:any):void{
-            if(skin&&"skinParts" in skin){
-                var skinParts:Array<any> = skin.skinParts;
-                var length:number = skinParts.length;
-				for(var i:number=0;i<length;i++){
-                    var partName:string = skinParts[i];
-					if(!(partName in this))
-						continue;
-					if (this[partName] != null){
-						this.partRemoved(partName,this[partName]);
-					}
-					this[partName] = null;
-				}
+            if(skin){
+                if("skinParts" in skin){
+                    var skinParts:Array<any> = skin.skinParts;
+                    var length:number = skinParts.length;
+                    for(var i:number=0;i<length;i++){
+                        var partName:string = skinParts[i];
+                        if(!(partName in this))
+                            continue;
+                        if (this[partName] != null){
+                            this.partRemoved(partName,this[partName]);
+                        }
+                        this[partName] = null;
+                    }
+                }
 				(<ISkin> skin).hostComponent = null;
 			}
 		}
