@@ -37,8 +37,6 @@ module egret {
      */
     export class Texture extends HashObject{
 
-        public webGLTexture;
-
         public constructor(){
             super();
         }
