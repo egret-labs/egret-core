@@ -39,7 +39,7 @@ module egret {
 
         /**
          * HTTPStatusEvent.HTTP_STATUS 常量定义 httpStatus 事件对象的 type 属性值。
-         * @constant {string} egret.IOErrorEvent.IO_ERROR
+         * @constant {string} egret.HTTPStatusEvent.HTTP_STATUS
          */
         public static HTTP_STATUS:string = "httpStatus";
 

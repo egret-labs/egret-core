@@ -28,6 +28,12 @@
 
 module dragonBones {
 
+	/**
+	 * @class dragonBones.BaseFactory
+	 * @classdesc
+	 * @extends dragonBones.EventDispatcher
+	 * @private
+	 */
 	export class BaseFactory  extends EventDispatcher{
 		public static _helpMatrix:Matrix = new Matrix();
 		
@@ -46,7 +52,7 @@ module dragonBones {
 		
 		/**
 		 * Cleans up resources used by this BaseFactory instance.
-		 * @param (optional) Destroy all internal references.
+		 * @param  disposeData {boolean} (optional) Destroy all internal references.
 		 */
 		public dispose(disposeData:boolean = true):void{
 			if(disposeData){
@@ -69,8 +75,8 @@ module dragonBones {
 
         /**
          * Returns a DragonBonesData instance.
-         * @param The name of an existing DragonBonesData instance.
-         * @return A DragonBonesData instance with given name (if exist).
+         * @param name {string} The name of an existing DragonBonesData instance.
+         * @returns {dragonBones.DragonBonesData} A DragonBonesData instance with given name (if exist).
          */
         public getDragonBonesData(name:string):DragonBonesData{
             return this.dragonBonesDataDic[name];
@@ -85,8 +91,8 @@ module dragonBones {
 		
 		/**
 		 * Add a DragonBonesData instance to this BaseFactory instance.
-		 * @param A DragonBonesData instance.
-		 * @param (optional) A name for this DragonBonesData instance.
+		 * @param data {dragonBones.DragonBonesData} A DragonBonesData instance.
+		 * @param name {string} (optional) A name for this DragonBonesData instance.
 		 */
 		public addDragonBonesData(data:DragonBonesData, name:string = null):void{
 			if(!data){
@@ -112,7 +118,7 @@ module dragonBones {
 
 		/**
 		 * Remove a DragonBonesData instance from this BaseFactory instance.
-		 * @param The name for the DragonBonesData instance to remove.
+		 * @param name {string} The name for the DragonBonesData instance to remove.
 		 */
 		public removeDragonBonesData(name:string):void{
 			delete this.dragonBonesDataDic[name];
@@ -127,8 +133,8 @@ module dragonBones {
 
 		/**
 		 * Return the TextureAtlas by name.
-		 * @param The name of the TextureAtlas to return.
-		 * @return A textureAtlas.
+		 * @param name {string} The name of the TextureAtlas to return.
+		 * @returns {any} A textureAtlas.
 		 */
 		public getTextureAtlas(name:string):any{
 			return this.textureAtlasDic[name];
@@ -136,8 +142,8 @@ module dragonBones {
 		
 		/**
 		 * Add a textureAtlas to this BaseFactory instance.
-		 * @param A textureAtlas to add to this BaseFactory instance.
-		 * @param (optional) A name for this TextureAtlas.
+		 * @param textureAtlas {any} A textureAtlas to add to this BaseFactory instance.
+		 * @param name {string} (optional) A name for this TextureAtlas.
 		 */
 		public addTextureAtlas(textureAtlas:any, name:string = null):void{
 			if(!textureAtlas){
@@ -164,7 +170,7 @@ module dragonBones {
 		
 		/**
 		 * Remove a textureAtlas from this baseFactory instance.
-		 * @param The name of the TextureAtlas to remove.
+		 * @param name {string} The name of the TextureAtlas to remove.
 		 */
 		public removeTextureAtlas(name:string):void{
 			delete this.textureAtlasDic[name];
@@ -172,11 +178,11 @@ module dragonBones {
 		
 		/**
 		 * Return the TextureDisplay.
-		 * @param The name of this Texture.
-		 * @param The name of the TextureAtlas.
-		 * @param The registration pivotX position.
-		 * @param The registration pivotY position.
-		 * @return An Object.
+		 * @param textureName {string} The name of this Texture.
+		 * @param textureAtlasName {string} The name of the TextureAtlas.
+		 * @param pivotX {number} The registration pivotX position.
+		 * @param pivotY {number} The registration pivotY position.
+		 * @returns {any} An Object.
 		 */
 		public getTextureDisplay(textureName:string, textureAtlasName:string = null, pivotX:number = NaN, pivotY:number = NaN):any{
 			var targetTextureAtlas:any;
@@ -422,7 +428,7 @@ module dragonBones {
 		/**
 		 * @private
 		 * Generates an Armature instance.
-		 * @return Armature An Armature instance.
+		 * @returns {dragonBones.Armature} Armature An Armature instance.
 		 */
 		public _generateArmature():Armature{
 			return null;
@@ -431,7 +437,7 @@ module dragonBones {
 		/**
 		 * @private
 		 * Generates an Slot instance.
-		 * @return Slot An Slot instance.
+		 * @returns {dragonBones.Slot} Slot An Slot instance.
 		 */
 		public _generateSlot():Slot{
 			return null;
@@ -440,11 +446,11 @@ module dragonBones {
 		/**
 		 * @private
 		 * Generates a DisplayObject
-		 * @param textureAtlas The TextureAtlas.
-		 * @param fullName A qualified name.
-		 * @param pivotX A pivot x based value.
-		 * @param pivotY A pivot y based value.
-		 * @return
+		 * @param textureAtlas {any} The TextureAtlas.
+		 * @param fullName {string} A qualified name.
+		 * @param pivotX {number} A pivot x based value.
+		 * @param pivotY {number} A pivot y based value.
+		 * @returns {any}
 		 */
 		public _generateDisplay(textureAtlas:any, fullName:string, pivotX:number, pivotY:number):any{
 			return null;

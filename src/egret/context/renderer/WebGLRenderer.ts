@@ -249,26 +249,26 @@ module egret {
                 cacheCanvas.style.height = cacheCanvasHeight + "px";
                 this.begin();
                 displayObject._worldTransform.identity();
-                this.renderContext.setTransform(displayObject._worldTransform);
+                var anchorOffsetX = displayObject._anchorOffsetX;
+                var anchorOffsetY = displayObject._anchorOffsetY;
+                if (displayObject._anchorX != 0 || displayObject._anchorY != 0) {
+                    anchorOffsetX = displayObject._anchorX * width;
+                    anchorOffsetY = displayObject._anchorY * height;
+                }
+                this._offsetX = x + anchorOffsetX;
+                this._offsetY = y + anchorOffsetY;
+                displayObject._worldTransform.append(1, 0, 0, 1, -this._offsetX, -this._offsetY);
                 displayObject.worldAlpha = 1;
                 var __use_new_draw = MainContext.__use_new_draw;
                 MainContext.__use_new_draw = false;
                 if (displayObject instanceof egret.DisplayObjectContainer) {
-                    var anchorOffsetX = displayObject._anchorOffsetX;
-                    var anchorOffsetY = displayObject._anchorOffsetY;
-                    if (displayObject._anchorX != 0 || displayObject._anchorY != 0) {
-                        anchorOffsetX = displayObject._anchorX * width;
-                        anchorOffsetY = displayObject._anchorY * height;
-                    }
-                    this._offsetX = x + anchorOffsetX;
-                    this._offsetY = y + anchorOffsetY;
-                    displayObject._worldTransform.append(1, 0, 0, 1, -this._offsetX, -this._offsetY);
                     var list = (<DisplayObjectContainer>displayObject)._children;
                     for (var i = 0, length = list.length; i < length; i++) {
                         var child = list[i];
                         child._updateTransform();
                     }
                 }
+                this.renderContext.setTransform(displayObject._worldTransform);
                 var renderFilter = egret.RenderFilter.getInstance();
                 var drawAreaList = renderFilter._drawAreaList.concat();
                 renderFilter._drawAreaList.length = 0;
@@ -542,7 +542,7 @@ module egret {
             }
 
             this.createWebGLTexture(texture);
-            var webGLTexture = texture.webGLTexture[this.glID];
+            var webGLTexture = texture._bitmapData.webGLTexture[this.glID];
             if (webGLTexture !== this.currentBaseTexture || this.currentBatchSize >= this.size - 1) {
                 this._draw();
                 this.currentBaseTexture = webGLTexture;
@@ -666,16 +666,17 @@ module egret {
         }
 
         public createWebGLTexture(texture:Texture):void {
-            if (!texture.webGLTexture) {
-                texture.webGLTexture = {};
+            var bitmapData:any = texture._bitmapData;
+            if (!bitmapData.webGLTexture) {
+                bitmapData.webGLTexture = {};
             }
-            if (!texture.webGLTexture[this.glID]) {
+            if (!bitmapData.webGLTexture[this.glID]) {
                 var gl:any = this.gl;
-                texture.webGLTexture[this.glID] = gl.createTexture();
-                gl.bindTexture(gl.TEXTURE_2D, texture.webGLTexture[this.glID]);
+                bitmapData.webGLTexture[this.glID] = gl.createTexture();
+                gl.bindTexture(gl.TEXTURE_2D, bitmapData.webGLTexture[this.glID]);
                 gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, true);
 
-                gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, texture._bitmapData);
+                gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, bitmapData);
                 gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
                 gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
 

@@ -227,15 +227,18 @@ module egret {
 
         public static deleteTexture(texture:Texture):void {
             var context = egret.MainContext.instance.rendererContext;
-            var gl:any = context["gl"];
-            var webGLTexture = texture.webGLTexture;
-            if(webGLTexture && gl) {
-                for(var key in webGLTexture) {
-                    var glTexture = webGLTexture[key];
-                    gl.deleteTexture(glTexture);
+            var gl:WebGLRenderingContext = context["gl"];
+            var bitmapData = texture._bitmapData;
+            if(bitmapData) {
+                var webGLTexture = bitmapData.webGLTexture;
+                if(webGLTexture && gl) {
+                    for(var key in webGLTexture) {
+                        var glTexture = webGLTexture[key];
+                        gl.deleteTexture(glTexture);
+                    }
                 }
+                bitmapData.webGLTexture = null;
             }
-            texture.webGLTexture = null;
         }
 
         public static blendModesForGL:any = null;
