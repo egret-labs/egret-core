@@ -37,7 +37,7 @@ module egret {
 
 		/**
 		 * @method egret.Recycler#constructor
-		 * @param autoDisposeTime {number} 
+		 * @param autoDisposeTime {number}
 		 */
         public constructor(autoDisposeTime:number = 300){
             super();
@@ -75,12 +75,16 @@ module egret {
         /**
          * 缓存一个对象以复用
 		 * @method egret.Recycler#push
-         * @param object {any} 
+         * @param object {any}
          */
         public push(object:any):void{
             var pool:Array<any> = this.objectPool;
             if(pool.indexOf(object)==-1){
                 pool.push(object);
+                if (object.__recycle) {
+                    object.__recycle();
+                }
+
                 this._length++;
                 if(this.frameCount==0){
                     this.frameCount = this.autoDisposeTime;

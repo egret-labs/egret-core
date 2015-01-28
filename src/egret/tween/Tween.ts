@@ -151,7 +151,7 @@ module egret {
             var tweens:Tween[] = Tween._tweens;
             if (value) {
                 if (target) {
-                    target.tween_count = target.tween_count ? target.tween_count + 1 : 1;
+                    target.tween_count = target.tween_count > 0 ? target.tween_count + 1 : 1;
                 }
                 tweens.push(tween);
                 if (!Tween._inited) {
