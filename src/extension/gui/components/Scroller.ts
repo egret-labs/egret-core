@@ -132,6 +132,8 @@ module egret.gui {
                     hbar.x = hbar.left || 0;
                     hbar.y = unscaledHeight - this.horizontalScrollBar.layoutBoundsHeight;
                     hbar.visible = this._horizontalScrollPolicy == ScrollPolicy.ON || this._scroller._hCanScroll;
+                    if (this._autoHideScrollBars)
+                        hbar.alpha = 0;
                 }
             }
             if (this._verticalScrollPolicy != "off") {
@@ -146,6 +148,8 @@ module egret.gui {
                     vbar.y = vbar.top || 0;
                     vbar.x = unscaledWidth - this.verticalScrollBar.layoutBoundsWidth;
                     vbar.visible = this._verticalScrollPolicy == ScrollPolicy.ON || this._scroller._vCanScroll;
+                    if (this._autoHideScrollBars)
+                        vbar.alpha = 0;
                 }
             }
         }
@@ -303,7 +307,7 @@ module egret.gui {
         }
 
         private _autoHideTimer = NaN;
-        private _autoHideDelay = 3000;
+        private _autoHideDelay = 300;
         public set autoHideDelay(value: number) {
             if (this._autoHideDelay == value)
                 return;
@@ -314,7 +318,7 @@ module egret.gui {
             return this._autoHideDelay;
         }
         private setAutoHideTimer() {
-            if (!this._autoHideScrollBars)
+            if (!this._autoHideScrollBars || !this.initialized)
                 return;
             if (!this.horizontalScrollBar && !this.verticalScrollBar)
                 return;
@@ -328,7 +332,7 @@ module egret.gui {
         private _animatTargetIsShow: boolean = false;
 
         private hideOrShow(show: boolean) {
-            if (!this.horizontalScrollBar && !this.verticalScrollBar)
+            if (!this.initialized || (!this.horizontalScrollBar && !this.verticalScrollBar))
                 return;
             if (this._autoHideShowAnimat == null) {
                 this._autoHideShowAnimat = new Animation(b=> {
@@ -351,7 +355,7 @@ module egret.gui {
                 from: show ? 0 : 1,
                 to: show ? 1 : 0
             }];
-            animat.duration = show ? 100 : 500;
+            animat.duration = show ? 100 : 300;
             animat.play();
         }
 
