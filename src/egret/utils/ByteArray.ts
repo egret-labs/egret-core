@@ -61,7 +61,7 @@ module egret {
         private static SIZE_OF_FLOAT32:number = 4;
         private static SIZE_OF_FLOAT64:number = 8;
 
-        private BUFFER_EXT_SIZE:number = 1024;//Buffer expansion size
+        private BUFFER_EXT_SIZE:number = 0;//Buffer expansion size
 
         public array:Uint8Array = null;
         public data:DataView;
@@ -597,6 +597,7 @@ module egret {
         /**********************/
         private validateBuffer(len:number):void {
             this.write_position = len > this.write_position ? len : this.write_position;
+            len += this._position;
             if (this.data.byteLength < len) {
                 var tmp:Uint8Array = new Uint8Array(new ArrayBuffer(len + this.BUFFER_EXT_SIZE));
                 tmp.set(new Uint8Array(this.data.buffer));
