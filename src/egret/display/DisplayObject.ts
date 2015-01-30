@@ -803,7 +803,7 @@ module egret {
             if (!this._visible || (!ignoreTouchEnabled && !this._touchEnabled)) {
                 return null;
             }
-            var bound:Rectangle = this.getBounds(Rectangle.identity);
+            var bound:Rectangle = this.getBounds(Rectangle.identity, false);
             x -= bound.x;
             y -= bound.y;
             if (0 <= x && x < bound.width && 0 <= y && y < bound.height) {
