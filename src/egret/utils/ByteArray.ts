@@ -63,10 +63,10 @@ module egret {
 
         private BUFFER_EXT_SIZE:number = 0;//Buffer expansion size
 
-        public array:Uint8Array = null;
-        public data:DataView;
+        //public array:Uint8Array = null;
+        private data:DataView;
         private _position:number;
-        public write_position:number;
+        private write_position:number;
         public endian:string;
 
         constructor(buffer?:ArrayBuffer) {
