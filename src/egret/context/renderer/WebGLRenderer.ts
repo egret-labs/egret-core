@@ -892,7 +892,7 @@ module egret_webgl_graphics {
         var _colorGreen = ((color & 0x00ff00) >> 8) / 255;
         var _colorRed = (color >> 16) / 255;
 
-        this._pushCommand(new Command(this._setStyle, this, [_colorRed, _colorBlue, _colorGreen, alpha]))
+        this._pushCommand(new Command(this._setStyle, this, [_colorRed, _colorGreen, _colorBlue, alpha]))
     }
 
     export function drawRect(x:number, y:number, width:number, height:number):void {
