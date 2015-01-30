@@ -255,15 +255,16 @@ module egret.gui {
 		 * @method egret.gui.DropDownListBase#item_mouseDownHandler
 		 * @param event {TouchEvent} 
 		 */
-		public item_mouseDownHandler(event:TouchEvent):void{
-			super.item_mouseDownHandler(event);
-			
-			var itemRenderer:IItemRenderer = <IItemRenderer><any> (event.currentTarget);
-			this._dispatchListEvent(event,ListEvent.ITEM_CLICK,itemRenderer);
-			
-			this._userProposedSelectedIndex = this.selectedIndex;
-			this.closeDropDown(true);
-		}
+        public _item_touchEndHandler(event: TouchEvent): void {
+            super._item_touchEndHandler(event);
+
+            var itemRenderer: IItemRenderer = <IItemRenderer> (event.currentTarget);
+            if (itemRenderer != this._mouseDownItemRenderer)
+                return;
+            this._dispatchListEvent(event, ListEvent.ITEM_CLICK, itemRenderer);
+            this._userProposedSelectedIndex = this.selectedIndex;
+            this.closeDropDown(true);
+        }
 		/**
 		 * 控制器抛出打开列表事件
 		 */

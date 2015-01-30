@@ -227,7 +227,7 @@ module egret.gui {
 		/**
 		 * 是否是有效的索引
 		 */
-		private isValidIndex(item:number, index:number, v:Array<number>):boolean{
+		private isValidIndex = (item:number, index:number, v:Array<number>):boolean => {
 			return this.dataProvider && (item >= 0) && (item < this.dataProvider.length);
 		}
 		/**
@@ -291,10 +291,10 @@ module egret.gui {
 			if (renderer == null)
 				return;
 
-			renderer.addEventListener(TouchEvent.TOUCH_BEGIN, this.item_mouseDownHandler, this);
+			renderer.addEventListener(TouchEvent.TOUCH_BEGIN, this._item_touchBeginHandler, this);
 			//由于ItemRenderer.mouseChildren有可能不为false，在鼠标按下时会出现切换素材的情况，
 			//导致target变化而无法抛出原生的click事件,所以此处监听MouseUp来抛出ItemClick事件。
-			renderer.addEventListener(TouchEvent.TOUCH_END, this.item_mouseUpHandler, this);
+			renderer.addEventListener(TouchEvent.TOUCH_END, this._item_touchEndHandler, this);
 		}
 		/**
 		 * 数据源发生刷新
@@ -312,41 +312,28 @@ module egret.gui {
 			if (renderer == null)
 				return;
 
-			renderer.removeEventListener(TouchEvent.TOUCH_BEGIN, this.item_mouseDownHandler, this);
-			renderer.removeEventListener(TouchEvent.TOUCH_END, this.item_mouseUpHandler, this);
+			renderer.removeEventListener(TouchEvent.TOUCH_BEGIN, this._item_touchBeginHandler, this);
+			renderer.removeEventListener(TouchEvent.TOUCH_END, this._item_touchEndHandler, this);
 		}
 		/**
 		 * 是否捕获ItemRenderer以便在MouseUp时抛出ItemClick事件
 		 */
 		public _captureItemRenderer:boolean = true;
 
-		private mouseDownItemRenderer:IItemRenderer = null;
+		public _mouseDownItemRenderer:IItemRenderer = null;
 		/**
 		 * 鼠标在项呈示器上按下
 		 * @method egret.gui.List#item_mouseDownHandler
 		 * @param event {TouchEvent} 
 		 */
-		public item_mouseDownHandler(event:TouchEvent):void{
+		public _item_touchBeginHandler(event:TouchEvent):void{
 			if (event._isDefaultPrevented)
 				return;
 
 			var itemRenderer:IItemRenderer = <IItemRenderer> (event.currentTarget);
-			var newIndex:number;
-			if (itemRenderer)
-				newIndex = itemRenderer.itemIndex;
-			else
-				newIndex = this.dataGroup.getElementIndex(<IVisualElement> (event.currentTarget));
-			if(this._allowMultipleSelection){
-				this._setSelectedIndices(this.calculateSelectedIndices(newIndex, event.shiftKey, event.ctrlKey), true);
-			}
-			else{
-				this._setSelectedIndex(newIndex, true);
-			}
-			if(!this._captureItemRenderer)
-				return;
-			this.mouseDownItemRenderer = itemRenderer;
-			UIGlobals.stage.addEventListener(TouchEvent.TOUCH_END,this.stage_mouseUpHandler,this);
-			UIGlobals.stage.addEventListener(Event.LEAVE_STAGE,this.stage_mouseUpHandler,this);
+			this._mouseDownItemRenderer = itemRenderer;
+			UIGlobals.stage.addEventListener(TouchEvent.TOUCH_END,this.stage_touchEndHandler,this);
+			UIGlobals.stage.addEventListener(Event.LEAVE_STAGE,this.stage_touchEndHandler,this);
 		}
 		/**
 		 * 计算当前的选中项列表
@@ -408,20 +395,35 @@ module egret.gui {
 		/**
 		 * 鼠标在项呈示器上弹起，抛出ItemClick事件。
 		 */	
-		private item_mouseUpHandler(event:TouchEvent):void{
+		public _item_touchEndHandler(event:TouchEvent):void{
 			var itemRenderer:IItemRenderer = <IItemRenderer> (event.currentTarget);
-			if(itemRenderer!=this.mouseDownItemRenderer)
-				return;
+			if(itemRenderer!=this._mouseDownItemRenderer)
+                return;
+
+            var newIndex: number;
+            if (itemRenderer)
+                newIndex = itemRenderer.itemIndex;
+            else
+                newIndex = this.dataGroup.getElementIndex(<IVisualElement> (event.currentTarget));
+
+            if (this._allowMultipleSelection) {
+                this._setSelectedIndices(this.calculateSelectedIndices(newIndex, event.shiftKey, event.ctrlKey), true);
+            }
+            else {
+                this._setSelectedIndex(newIndex, true);
+            }
+            if (!this._captureItemRenderer)
+                return;
 			this._dispatchListEvent(event,ListEvent.ITEM_CLICK,itemRenderer);
 		}
 		
 		/**
 		 * 鼠标在舞台上弹起
 		 */		
-		private stage_mouseUpHandler(event:Event):void{
-			UIGlobals.stage.removeEventListener(TouchEvent.TOUCH_END,this.stage_mouseUpHandler,this);
-			UIGlobals.stage.removeEventListener(Event.LEAVE_STAGE,this.stage_mouseUpHandler,this);
-			this.mouseDownItemRenderer = null;
+		private stage_touchEndHandler(event:Event):void{
+			UIGlobals.stage.removeEventListener(TouchEvent.TOUCH_END,this.stage_touchEndHandler,this);
+			UIGlobals.stage.removeEventListener(Event.LEAVE_STAGE,this.stage_touchEndHandler,this);
+			this._mouseDownItemRenderer = null;
 		}
 	}
 }
