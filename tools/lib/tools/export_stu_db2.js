@@ -419,7 +419,9 @@ var defaultProperty = {
 function removeDefault(obj, parent, parentKey) {
     for (var key in obj) {
         if (obj[key] instanceof Array) {
-            removeDefault(obj[key]);
+            if (obj[key].length > 0) {
+                removeDefault(obj[key]);
+            }
         }
         else if (obj[key] instanceof Object) {//
             removeDefault(obj[key], obj, key);

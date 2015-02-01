@@ -32,6 +32,8 @@ module egret {
 
         private _versionCtr:egret.VersionController;
 
+        private static __use_asyn:boolean = false;
+
         public constructor() {
             super();
 
@@ -171,7 +173,12 @@ module egret {
                 download();
             }
             else {
-                egret.__callAsync(onLoadComplete, this);
+                if (NativeNetContext.__use_asyn) {
+                    onLoadComplete();
+                }
+                else {
+                    egret.__callAsync(onLoadComplete, this);
+                }
             }
 
             function download() {
@@ -185,11 +192,27 @@ module egret {
 
             function onLoadComplete() {
                 self.saveVersion(url);
-                var bitmapData = egret_native.Texture.addTexture(url);
-                var texture = new egret.Texture();
-                texture._setBitmapData(bitmapData);
-                loader.data = texture;
-                egret.Event.dispatchEvent(loader, egret.Event.COMPLETE);
+
+                if (NativeNetContext.__use_asyn) {//异步的
+                    var promise = egret.PromiseObject.create();
+                    promise.onSuccessFunc = function (bitmapData) {
+                        var texture = new egret.Texture();
+                        texture._setBitmapData(bitmapData);
+                        loader.data = texture;
+                        egret.Event.dispatchEvent(loader, egret.Event.COMPLETE);
+                    };
+                    promise.onErrorFunc = function () {
+                        egret.IOErrorEvent.dispatchIOErrorEvent(loader);
+                    };
+                    egret_native.Texture.addTextureUnsyn(url, promise);
+                }
+                else {
+                    var bitmapData = egret_native.Texture.addTexture(url);
+                    var texture = new egret.Texture();
+                    texture._setBitmapData(bitmapData);
+                    loader.data = texture;
+                    egret.Event.dispatchEvent(loader, egret.Event.COMPLETE);
+                }
             }
         }
 
