@@ -116,6 +116,18 @@ module egret {
             }
         }
 
+        public _measureBounds():egret.Rectangle {
+            var texture:Texture = this._textureToRender;
+            if(!texture){
+                return super._measureBounds();
+            }
+            var x:number = texture._offsetX;
+            var y:number = texture._offsetY;
+            var w:number = texture._textureWidth;
+            var h:number = texture._textureHeight;
+            return Rectangle.identity.initialize(x,y, w, h);
+        }
+
         public _onAddToStage():void {
             super._onAddToStage();
             this._isAddedToStage = true;

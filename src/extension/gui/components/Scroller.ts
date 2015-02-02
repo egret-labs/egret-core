@@ -49,6 +49,21 @@ module egret.gui {
         private _scrollTop: number = 0;
         private _content: IViewport = null;
 
+
+        /**
+         * 开始滚动的阈值，当触摸点偏离初始触摸点的距离超过这个值时才会触发滚动
+         * @member {number} egret.gui.Scroller#scrollBeginThreshold
+         */
+        public scrollBeginThreshold: number = 10;
+
+        
+        /**
+         * 滚动速度，这个值为需要的速度与默认速度的比值。 
+         * 取值范围为 scrollSpeed > 0 赋值为 2 时，速度是默认速度的 2 倍
+         * @member {number} egret.gui.Scroller#scrollSpeed
+         */
+        public scrollSpeed: number = 1;
+
         public setContent(content: IViewport) {
             this._content = content;
             this._scroller._removeEvents();
@@ -132,6 +147,8 @@ module egret.gui {
                     hbar.x = hbar.left || 0;
                     hbar.y = unscaledHeight - this.horizontalScrollBar.layoutBoundsHeight;
                     hbar.visible = this._horizontalScrollPolicy == ScrollPolicy.ON || this._scroller._hCanScroll;
+                    if (this._autoHideScrollBars)
+                        hbar.alpha = 0;
                 }
             }
             if (this._verticalScrollPolicy != "off") {
@@ -146,6 +163,8 @@ module egret.gui {
                     vbar.y = vbar.top || 0;
                     vbar.x = unscaledWidth - this.verticalScrollBar.layoutBoundsWidth;
                     vbar.visible = this._verticalScrollPolicy == ScrollPolicy.ON || this._scroller._vCanScroll;
+                    if (this._autoHideScrollBars)
+                        vbar.alpha = 0;
                 }
             }
         }
@@ -303,7 +322,7 @@ module egret.gui {
         }
 
         private _autoHideTimer = NaN;
-        private _autoHideDelay = 3000;
+        private _autoHideDelay = 300;
         public set autoHideDelay(value: number) {
             if (this._autoHideDelay == value)
                 return;
@@ -314,7 +333,7 @@ module egret.gui {
             return this._autoHideDelay;
         }
         private setAutoHideTimer() {
-            if (!this._autoHideScrollBars)
+            if (!this._autoHideScrollBars || !this.initialized)
                 return;
             if (!this.horizontalScrollBar && !this.verticalScrollBar)
                 return;
@@ -328,7 +347,7 @@ module egret.gui {
         private _animatTargetIsShow: boolean = false;
 
         private hideOrShow(show: boolean) {
-            if (!this.horizontalScrollBar && !this.verticalScrollBar)
+            if (!this.initialized || (!this.horizontalScrollBar && !this.verticalScrollBar))
                 return;
             if (this._autoHideShowAnimat == null) {
                 this._autoHideShowAnimat = new Animation(b=> {
@@ -351,7 +370,7 @@ module egret.gui {
                 from: show ? 0 : 1,
                 to: show ? 1 : 0
             }];
-            animat.duration = show ? 100 : 500;
+            animat.duration = show ? 100 : 300;
             animat.play();
         }
 

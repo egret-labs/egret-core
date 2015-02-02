@@ -34,7 +34,7 @@ module egret.gui {
 	 * 选项卡组件
 	 * @extends egret.gui.ListBase
 	 */	
-	export class TabBar extends ListBase{
+	export class TabBar extends List{
 		/**
 		 * 构造函数
 		 * @method egret.gui.TabBar#constructor
@@ -50,15 +50,11 @@ module egret.gui {
 		 */
 		private requireSelectionChanged_tabBar:boolean = false;
 
-        private _touchBeginItem: IItemRenderer = null;
-
-        /**
-         * 是否捕获ItemRenderer以便在MouseUp时抛出ItemClick事件
-         */
-        public _captureItemRenderer: boolean = true;
-
+        public get requireSelection():boolean{
+            return this._requireSelection;
+        }
 		/**
-		 * @method egret.gui.TabBar#c
+		 * @method egret.gui.TabBar#requireSelection
 		 * @param value {boolean}
 		 */
 		public set requireSelection(value:boolean){
@@ -115,45 +111,19 @@ module egret.gui {
 		}  
 		
 		public dataGroup_rendererAddHandler(event:RendererExistenceEvent):void{
-			super.dataGroup_rendererAddHandler(event);
-			
-			var renderer:IItemRenderer = event.renderer;
-            if (!renderer)
+            super.dataGroup_rendererAddHandler(event);
+            if (event.renderer == null)
                 return;
-
-            renderer.addEventListener(TouchEvent.TOUCH_BEGIN, this.item_touchBeginHandler, this);
-            renderer.addEventListener(TouchEvent.TOUCH_END, this.item_touchEndHandler, this);
-            if (renderer instanceof TabBarButton)
-                (<TabBarButton><any> renderer).allowDeselection = !this.requireSelection;
-		}
-		
-		public dataGroup_rendererRemoveHandler(event:RendererExistenceEvent):void{
-			super.dataGroup_rendererRemoveHandler(event);
-			
-			var renderer:IItemRenderer = event.renderer;
-            if (!renderer)
-                return;
-            renderer.removeEventListener(TouchEvent.TOUCH_BEGIN, this.item_touchBeginHandler, this);
-            renderer.removeEventListener(TouchEvent.TOUCH_END, this.item_touchEndHandler, this);
-		}
-		/**
-		 * 鼠标在条目上按下
-		 */		
-        private item_touchBeginHandler(event: TouchEvent): void {
-            if (event._isDefaultPrevented)
-                return;
-			var itemRenderer:IItemRenderer = <IItemRenderer><any> (event.currentTarget);
-            this._touchBeginItem = itemRenderer;
-            UIGlobals.stage.addEventListener(TouchEvent.TOUCH_END, this.stage_touchEndHandler, this);
-            UIGlobals.stage.addEventListener(Event.LEAVE_STAGE, this.stage_touchEndHandler, this);
+            if (event.renderer instanceof TabBarButton)
+                (<TabBarButton><any> event.renderer).allowDeselection = !this.requireSelection;
 		}
         
 		/**
 		 * 鼠标在项呈示器上弹起，抛出ItemClick事件。
 		 */	
-        private item_touchEndHandler(event: TouchEvent): void {
+        public _item_touchEndHandler(event: TouchEvent): void {
             var itemRenderer: IItemRenderer = <IItemRenderer> (event.currentTarget);
-            if (itemRenderer != this._touchBeginItem)
+            if (itemRenderer != this._mouseDownItemRenderer)
                 return;
 
             var newIndex: number
@@ -171,15 +141,6 @@ module egret.gui {
             if (!this._captureItemRenderer)
                 return;
             this._dispatchListEvent(event, ListEvent.ITEM_CLICK, itemRenderer);
-        }
-
-        /**
-         * 鼠标在舞台上弹起
-         */
-        private stage_touchEndHandler(event: Event): void {
-            UIGlobals.stage.removeEventListener(TouchEvent.TOUCH_END, this.stage_touchEndHandler, this);
-            UIGlobals.stage.removeEventListener(Event.LEAVE_STAGE, this.stage_touchEndHandler, this);
-            this._touchBeginItem = null;
         }
 	}
 }

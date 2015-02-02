@@ -35,6 +35,8 @@ module egret {
      */
     export class ScrollView extends DisplayObjectContainer {
         private _lastTouchPosition: egret.Point = new Point(0, 0);
+        private _touchStartPosition: egret.Point = new Point(0, 0);
+        private _scrollStarted: boolean = false;
         private _lastTouchTime: number = 0;
         private _lastTouchEvent: TouchEvent = null;
         private _velocitys: Array<{ x: number; y: number }> = [];
@@ -42,7 +44,20 @@ module egret {
         private _isVTweenPlaying: boolean = false;
         private _hScrollTween: Tween = null;
         private _vScrollTween: Tween = null;
+
+        /**
+         * 开始滚动的阈值，当触摸点偏离初始触摸点的距离超过这个值时才会触发滚动
+         * @member {number} egret.ScrollView#scrollBeginThreshold
+         */
+        public scrollBeginThreshold: number = 10;
+
         
+        /**
+         * 滚动速度，这个值为需要的速度与默认速度的比值。 
+         * 取值范围为 scrollSpeed > 0 赋值为 2 时，速度是默认速度的 2 倍
+         * @member {number} egret.ScrollView#scrollSpeed
+         */
+        public scrollSpeed: number = 1;
         /**
          * 创建一个 egret.ScrollView 对象
 		 * @method egret.ScrollView#constructor
@@ -263,7 +278,8 @@ module egret {
             if (!canScroll) {
                 return;
             }
-
+            this._touchStartPosition.x = e.stageX;
+            this._touchStartPosition.y = e.stageY;
             if (this._isHTweenPlaying || this._isVTweenPlaying) {
                 this._onScrollFinished();
             }
@@ -360,6 +376,16 @@ module egret {
         public _onTouchMove(event: TouchEvent): void {
             if (this._lastTouchPosition.x == event.stageX && this._lastTouchPosition.y == event.stageY)
                 return;
+            if (!this._scrollStarted) {
+                var x = event.stageX - this._touchStartPosition.x,
+                    y = event.stageY - this._touchStartPosition.y;
+                var distance = Math.sqrt(x * x + y * y);
+                if (distance < this.scrollBeginThreshold) {
+                    this._logTouchEvent(event);
+                    return;
+                }
+            }
+            this._scrollStarted = true;
             if (this.delayTouchBeginEvent) {
                 this.delayTouchBeginEvent = null;
                 this.touchBeginTimer.stop();
@@ -373,6 +399,7 @@ module egret {
 
         public _onTouchEnd(event: TouchEvent): void {
             this.touchChildren = true;
+            this._scrollStarted = false;
             egret.MainContext.instance.stage.removeEventListener(TouchEvent.TOUCH_MOVE, this._onTouchMove, this);
             egret.MainContext.instance.stage.removeEventListener(TouchEvent.TOUCH_END, this._onTouchEnd, this);
             egret.MainContext.instance.stage.removeEventListener(TouchEvent.LEAVE_STAGE, this._onTouchEnd, this);
@@ -447,7 +474,9 @@ module egret {
             }
             this._velocitys.length = 0;
 
-            var x = sum.x / totalW, y = sum.y / totalW;
+            if (this.scrollSpeed <= 0)
+                this.scrollSpeed = 1;
+            var x = sum.x / totalW * this.scrollSpeed, y = sum.y / totalW * this.scrollSpeed;
             var pixelsPerMSX = Math.abs(x), pixelsPerMSY = Math.abs(y);
             var maxLeft = this.getMaxScrollLeft();
             var maxTop = this.getMaxScrollTop();
@@ -539,9 +568,9 @@ module egret {
             }
 
             var result = {
-                position: Math.min(maxPos+50, Math.max(posTo, -50)),//允许越界50px
-                duration : duration
-            }
+                position: Math.min(maxPos + 50, Math.max(posTo, -50)),//允许越界50px
+                duration: duration
+            };
             return result;
         }
         private cloneTouchEvent(event: TouchEvent): TouchEvent {

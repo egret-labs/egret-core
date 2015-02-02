@@ -39,8 +39,8 @@ module egret {
             this._writeMessage = "";
             this._readMessage = "";
 
-            this._readByte = new ByteArray();
-            this._writeByte = new ByteArray();
+            //this._readByte = new ByteArray();
+            //this._writeByte = new ByteArray();
 
             if (MainContext.runtimeType == MainContext.RUNTIME_HTML5) {
                 this.socket = new HTML5WebSocket();
@@ -161,16 +161,16 @@ module egret {
          * @param length 要写入的字节数。默认值 0 导致从 offset 参数指定的值开始写入整个缓冲区
          * @method egret.WebSocket#writeBytes
          */
-        public writeBytes(bytes:ByteArray, offset:number = 0, length:number = 0):void {
-            if (!this._connected) {
-                egret.Logger.warning("请先连接Socket");
-                return;
-            }
-            this._bytesWrite = true;
-            this._writeByte.writeBytes(bytes);
-            //bytes.readBytes(this._byteMessage, offset, length);
-            this.flush();
-        }
+        //public writeBytes(bytes:ByteArray, offset:number = 0, length:number = 0):void {
+        //    if (!this._connected) {
+        //        egret.Logger.warning("请先连接Socket");
+        //        return;
+        //    }
+        //    this._bytesWrite = true;
+        //    this._writeByte.writeBytes(bytes);
+        //    //bytes.readBytes(this._byteMessage, offset, length);
+        //    this.flush();
+        //}
 
         /**
          * 从套接字读取 length 参数指定的数据字节数。从 offset 所表示的位置开始，将这些字节读入指定的字节数组
@@ -179,11 +179,11 @@ module egret {
          * @param length 要读取的字节数。默认值 0 导致读取所有可用的数据
          * @method egret.WebSocket#readBytes
          */
-        public readBytes(bytes:ByteArray, offset:number = 0, length:number = 0):void {
-            this._readByte.position = 0;
-            this._readByte.readBytes(bytes, offset, length);
-            this._readByte.clear();
-        }
+        //public readBytes(bytes:ByteArray, offset:number = 0, length:number = 0):void {
+        //    this._readByte.position = 0;
+        //    this._readByte.readBytes(bytes, offset, length);
+        //    this._readByte.clear();
+        //}
 
         /**
          * [只读] 表示此 Socket 对象目前是否已连接

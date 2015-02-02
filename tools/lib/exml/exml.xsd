@@ -147,15 +147,43 @@
     </xs:complexType>
   </xs:element>
   <xs:attributeGroup name="egret.ByteArray">
+    <xs:attribute name="array" type="xs:string"/>
+    <xs:attribute name="buffer" type="xs:string"/>
+    <xs:attribute name="data" type="xs:string"/>
+    <xs:attribute name="dataView" type="xs:string"/>
     <xs:attribute name="endian" type="xs:string"/>
     <xs:attribute name="length" type="xs:decimal"/>
     <xs:attribute name="position" type="xs:decimal"/>
+    <xs:attribute name="write_position" type="xs:decimal"/>
   </xs:attributeGroup>
+  <xs:group name="Uint8Array">
+    <xs:choice/>
+  </xs:group>
+  <xs:complexType name="Uint8Array">
+    <xs:group ref="Uint8Array"/>
+  </xs:complexType>
+  <xs:group name="ArrayBuffer">
+    <xs:choice/>
+  </xs:group>
+  <xs:complexType name="ArrayBuffer">
+    <xs:group ref="ArrayBuffer"/>
+  </xs:complexType>
+  <xs:group name="DataView">
+    <xs:choice/>
+  </xs:group>
+  <xs:complexType name="DataView">
+    <xs:group ref="DataView"/>
+  </xs:complexType>
   <xs:group name="ByteArray_attributeElement">
     <xs:choice>
+      <xs:element name="array" type="Uint8Array"/>
+      <xs:element name="buffer" type="ArrayBuffer"/>
+      <xs:element name="data" type="DataView"/>
+      <xs:element name="dataView" type="DataView"/>
       <xs:element name="endian" type="string"/>
       <xs:element name="length" type="number"/>
       <xs:element name="position" type="number"/>
+      <xs:element name="write_position" type="number"/>
     </xs:choice>
   </xs:group>
   <xs:element name="ByteArray">
@@ -665,12 +693,10 @@
   </xs:element>
   <xs:attributeGroup name="egret.Texture">
     <xs:attributeGroup ref="egret.HashObject"/>
-    <xs:attribute name="webGLTexture" type="xs:string"/>
   </xs:attributeGroup>
   <xs:group name="Texture_attributeElement">
     <xs:choice>
       <xs:group ref="HashObject_attributeElement"/>
-      <xs:element name="webGLTexture" type="any"/>
     </xs:choice>
   </xs:group>
   <xs:element name="Texture">
@@ -1801,6 +1827,8 @@
     <xs:attribute name="autoHideScrollBars" type="xs:boolean"/>
     <xs:attribute name="horizontalScrollBar" type="xs:string"/>
     <xs:attribute name="horizontalScrollPolicy" type="egret.gui.ScrollPolicy"/>
+    <xs:attribute name="scrollBeginThreshold" type="xs:decimal"/>
+    <xs:attribute name="scrollSpeed" type="xs:decimal"/>
     <xs:attribute name="verticalScrollBar" type="xs:string"/>
     <xs:attribute name="verticalScrollPolicy" type="egret.gui.ScrollPolicy"/>
     <xs:attribute name="viewport" type="xs:string"/>
@@ -1840,6 +1868,8 @@
       <xs:element name="autoHideScrollBars" type="boolean"/>
       <xs:element name="horizontalScrollBar" type="egret.gui.HScrollBar"/>
       <xs:element name="horizontalScrollPolicy" type="string"/>
+      <xs:element name="scrollBeginThreshold" type="number"/>
+      <xs:element name="scrollSpeed" type="number"/>
       <xs:element name="verticalScrollBar" type="egret.gui.VScrollBar"/>
       <xs:element name="verticalScrollPolicy" type="string"/>
       <xs:element name="viewport" type="egret.gui.IViewport"/>

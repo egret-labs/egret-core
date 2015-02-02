@@ -25,9 +25,14 @@
 	},
 	"egret.ByteArray":
 	{
+		"array":"Uint8Array",
+		"buffer":"ArrayBuffer",
+		"data":"DataView",
+		"dataView":"DataView",
 		"endian":"string",
 		"length":"number",
-		"position":"number"
+		"position":"number",
+		"write_position":"number"
 	},
 	"egret.ColorTransform":
 	{
@@ -173,8 +178,7 @@
 	},
 	"egret.Texture":
 	{
-		"super":"egret.HashObject",
-		"webGLTexture":"any"
+		"super":"egret.HashObject"
 	},
 	"egret.gui.AddItems":
 	{
@@ -448,6 +452,8 @@
 		"horizontalScrollBar":"egret.gui.HScrollBar",
 		"horizontalScrollPolicy":"string",
 		"implements":["egret.gui.IVisualElementContainer"],
+		"scrollBeginThreshold":"number",
+		"scrollSpeed":"number",
 		"super":"egret.gui.SkinnableComponent",
 		"verticalScrollBar":"egret.gui.VScrollBar",
 		"verticalScrollPolicy":"string",

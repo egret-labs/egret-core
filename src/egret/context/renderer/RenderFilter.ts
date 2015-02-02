@@ -71,6 +71,8 @@ module egret {
             this._drawAreaList = [];
         }
 
+        private static identityRectangle:Rectangle = new Rectangle();
+
         /**
          * 先检查有没有不需要绘制的区域，再把需要绘制的区域绘制出来
          * @method egret.egret#drawImage
@@ -101,7 +103,7 @@ module egret {
             }
 
             //计算worldBounds
-            var bounds:egret.Rectangle = DisplayObject.getTransformBounds(data._getSize(Rectangle.identity), data._worldTransform);
+            var bounds:egret.Rectangle = DisplayObject.getTransformBounds(data._getSize(RenderFilter.identityRectangle), data._worldTransform);
             data._worldBounds.initialize(bounds.x, bounds.y, bounds.width, bounds.height);
 
             var originalData = this._originalData;
