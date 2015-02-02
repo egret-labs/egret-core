@@ -94,14 +94,14 @@ module egret {
             if (this.localVersionData == null) {
                 this.localVersionData = this.baseVersionData;
 
-                for (var key in this.changeVersionData) {
-                    if (this.changeVersionData[key]["d"] == 1) {//被删除
-                        delete this.localVersionData[key];
-                    }
-                    else {
-                        this.localVersionData[key] = this.changeVersionData[key];
-                    }
-                }
+                //for (var key in this.changeVersionData) {
+                //    if (this.changeVersionData[key]["d"] == 1) {//被删除
+                //        delete this.localVersionData[key];
+                //    }
+                //    else {
+                //        this.localVersionData[key] = this.changeVersionData[key];
+                //    }
+                //}
                 egret_native.saveRecord(this.localVersionDataPath, JSON.stringify(this.localVersionData));
             }
 
