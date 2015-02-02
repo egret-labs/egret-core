@@ -147,7 +147,7 @@ module dragonBones {
 			}
 			
 			if(childBone == this || childBone.contains(this)){
-				throw new Error("An Bone cannot be added as a child to itself or one of its children (or children's children, etc.)");
+				throw new Error(egret.getString(4000));
 			}
 			
 			if(childBone.parent == this){

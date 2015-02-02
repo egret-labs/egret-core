@@ -588,7 +588,7 @@ module egret {
         }
 
         private throwNotSupportedError(): void {
-            throw new Error("此方法在ScrollView内不可用!");
+            throw new Error(getString(1023));
         }
 
         /**

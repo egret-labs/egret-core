@@ -105,7 +105,7 @@ module egret {
 				delete this.mapClassDic[requestName];
 				return instance;
 			}
-			throw new Error("调用了未配置的注入规则:"+requestName+"。 请先在项目初始化里配置指定的注入规则，再调用对应单例。");
+			throw new Error(getString(1028, requestName));
 		}
 	}
 }

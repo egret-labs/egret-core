@@ -243,7 +243,7 @@ module egret.gui {
                 maxIndex++;
 
             if (index < 0 || index > maxIndex)
-                throw new RangeError("索引:\""+index+"\"超出可视元素索引范围");
+                throw new RangeError(getString(3011, index));
         }
         /**
          * @method egret.gui.Skin#addElement

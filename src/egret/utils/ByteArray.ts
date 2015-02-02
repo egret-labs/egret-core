@@ -588,7 +588,7 @@ module egret {
             if (this.data.byteLength > 0 && this._position + len <= this.data.byteLength) {
                 return true;
             } else {
-                throw "遇到文件尾";
+                throw getString(1025);
             }
         }
 
@@ -736,12 +736,12 @@ module egret {
         }
 
         private encoderError(code_point) {
-            throw 'EncodingError! The code point ' + code_point + ' could not be encoded.';
+            throw getString(1026, code_point);
         }
 
         private decoderError(fatal, opt_code_point?):number {
             if (fatal) {
-                throw 'DecodingError';
+                throw getString(1027);
             }
             return opt_code_point || 0xFFFD;
         }

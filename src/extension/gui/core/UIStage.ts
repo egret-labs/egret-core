@@ -52,7 +52,7 @@ module egret.gui {
 		 */		
 		private onAddToStage(event:Event=null):void{
             if(UIGlobals._uiStage){
-                throw new Error("UIStage是GUI根容器，只能有一个此实例在显示列表中！");
+                throw new Error(getString(3013));
             }
             UIGlobals._uiStage = this;
             if(this._autoResize){
