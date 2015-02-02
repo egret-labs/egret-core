@@ -81,7 +81,7 @@ module egret {
             }
 
             if (xmlDoc == null) {
-                egret.Logger.info("xml not found!");
+                egret.Logger.infoWithErrorId(1015);
             }
             return xmlDoc;
         }

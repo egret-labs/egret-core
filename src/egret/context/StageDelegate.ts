@@ -86,7 +86,7 @@ module egret {
             this._designWidth = width;
             this._designHeight = height;
             if (arguments[2]) {
-                Logger.warning("该方法目前不应传入 resolutionPolicy 参数，请在 docs/1.0_Final_ReleaseNote中查看如何升级")
+                Logger.warningWithErrorId(1001);
                 var resolutionPolicy:ResolutionPolicy = arguments[2];
                 this._setResolutionPolicy(resolutionPolicy);
             }

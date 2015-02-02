@@ -35,7 +35,7 @@ module egret {
 
         public constructor(texture:Texture, fntText:string) {
             super(texture,fntText);
-            egret.Logger.warning("egret.BitmapTextSpriteSheet已废弃，请使用egret.BitmapFont代替。");
+            egret.Logger.warningWithErrorId(1012);
         }
     }
 }

@@ -204,7 +204,7 @@ module egret_html5_localStorage {
             return true;
         }
         catch(e){
-            console.log("egret_html5_localStorage.setItem保存失败,key=" + key + "&value=" + value);
+            egret.Logger.infoWithErrorId(1018, key, value);
             return false;
         }
     }

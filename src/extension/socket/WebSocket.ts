@@ -99,7 +99,7 @@ module egret {
          */
         public flush():void {
             if (!this._connected) {
-                egret.Logger.warning("请先连接Socket");
+                egret.Logger.warningWithErrorId(3101);
                 return;
             }
             if(this._writeMessage) {
@@ -123,7 +123,7 @@ module egret {
          */
         public writeUTF(message:string):void {
             if (!this._connected) {
-                egret.Logger.warning("请先连接Socket");
+                egret.Logger.warningWithErrorId(3101);
                 return;
             }
             this._writeMessage += message;

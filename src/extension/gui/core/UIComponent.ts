@@ -404,7 +404,7 @@ module egret.gui {
 				return child;
 			}
 			else {
-				egret.Logger.fatal("child未被addChild到该parent");
+				egret.Logger.fatalWithErrorId(1008);
 				return null;
 			}
 		}
@@ -419,7 +419,7 @@ module egret.gui {
 				return child;
 			}
 			else {
-				egret.Logger.fatal("提供的索引超出范围");
+				egret.Logger.fatalWithErrorId(1007);
 				return null;
 			}
 		}

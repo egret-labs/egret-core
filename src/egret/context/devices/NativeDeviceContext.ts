@@ -88,7 +88,7 @@ module egret_native_external_interface {
             listener.call(null, value);
         }
         else {
-            egret.Logger.warning("ExternalInterface调用了js没有注册的方法:" + functionName);
+            egret.Logger.warningWithErrorId(1004, functionName);
         }
     }
 
@@ -172,7 +172,7 @@ module egret_native_localStorage {
             return true;
         }
         catch(e){
-            console.log("egret_native_localStorage.setItem保存失败,key=" + key + "&value=" + value);
+            egret.Logger.infoWithErrorId(1018, key, value);
             return false;
         }
     }

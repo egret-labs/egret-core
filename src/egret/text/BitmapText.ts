@@ -127,7 +127,7 @@ module egret {
                             xPos += emptyWidth;
                         }
                         else{
-                            egret.Logger.warning("BitmapText找不到文字所对应的纹理：\"" + character+"\"");
+                            egret.Logger.warningWithErrorId(1011, character);
                         }
                         continue;
                     }
@@ -204,7 +204,7 @@ module egret {
                             textureHeight = emptyHeight;
                         }
                         else{
-                            egret.Logger.warning("BitmapText找不到文字所对应的纹理：\"" + character+"\"");
+                            egret.Logger.warningWithErrorId(1011, character);
                             if(isFistChar){
                                 isFistChar = false;
                             }

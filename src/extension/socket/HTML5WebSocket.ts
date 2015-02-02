@@ -30,7 +30,7 @@ module egret {
 
         constructor() {
             if (!window["WebSocket"]) {
-                egret.Logger.fatal("当前浏览器不支持WebSocket");
+                egret.Logger.fatalWithErrorId(3100);
             }
         }
 

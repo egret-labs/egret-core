@@ -41,14 +41,14 @@ module egret.gui {
         }
 
         public set trackAlpha(value: number) {
-            Logger.warning("VScrollBar.trackAlpha已经废弃")
+            Logger.warningWithErrorId(1016, "VScrollBar.trackAlpha");
         }
         public get trackAlpha(): number {
             return 1;
         }
 
         public set thumbAlpha(value: number) {
-            Logger.warning("VScrollBar.thumbAlpha已经废弃")
+            Logger.warningWithErrorId(1016, "VScrollBar.thumbAlpha");
         }
         public get thumbAlpha(): number {
             return 1;

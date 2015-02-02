@@ -199,7 +199,7 @@ module egret {
          */
         public static registerScaleMode(key:string, value:ContentStrategy, override?:boolean) {
             if(Stage.SCALE_MODE_ENUM[key] && !override) {
-                egret.Logger.warning("设置了已经存在的适配模式：" + key);
+                egret.Logger.warningWithErrorId(1009, key);
             }
             else {
                 Stage.SCALE_MODE_ENUM[key] = value;

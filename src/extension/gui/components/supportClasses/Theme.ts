@@ -63,14 +63,14 @@ module egret.gui {
                 this.skinMap = data.skins;
             }
             catch (e){
-                egret.Logger.warning("JSON文件格式不正确: "+loader._request.url + "\ndata:" + loader.data);
+                egret.Logger.warningWithErrorId(1017, loader._request.url, loader.data);
             }
             this.handleDelyList();
         }
 
         private onLoadError(event:IOErrorEvent):void{
             var loader:egret.URLLoader = <egret.URLLoader> (event.target);
-            egret.Logger.warning("主题配置文件加载失败: "+loader._request.url);
+            egret.Logger.warningWithErrorId(2001, loader._request.url);
             this.handleDelyList();
         }
 
@@ -127,7 +127,7 @@ module egret.gui {
             }
             var skinClass:any = egret.getDefinitionByName(skinName);
             if(!skinClass){
-                egret.Logger.warning("找不到主题中所配置的皮肤类名: "+skinName);
+                egret.Logger.warningWithErrorId(2002, skinName);
                 return null;
             }
             return new skinClass();

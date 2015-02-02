@@ -48,7 +48,7 @@ module egret {
          * @returns {boolean}
          */
         public get isMobile():boolean {
-            Logger.warning("Browser.isMobile接口参数已经变更，请尽快调整用法为 egret.MainContext.deviceType == egret.MainContext.DEVICE_MOBILE ")
+            Logger.warningWithErrorId(1000);
             return egret.MainContext.deviceType == egret.MainContext.DEVICE_MOBILE;
         }
 

@@ -27,8 +27,8 @@
 
 module egret {
     /**
-	 * @class egret.Logger
-	 * @classdesc
+     * @class egret.Logger
+     * @classdesc
      * Logger是引擎的日志处理模块入口
      * @stable B 目前Logger的接口设计没有问题，但是考虑到跨平台，需要将其改为一个Context，并且允许开发者自由扩展以实现自身游戏的日志分析收集需求
      * todo:GitHub文档，如何利用日志帮助游戏持续改进
@@ -36,33 +36,68 @@ module egret {
     export class Logger {
         /**
          * 表示出现了致命错误，开发者必须修复错误
-		 * @method egret.Logger.fatal
+         * @method egret.Logger.fatal
          * @param actionCode {string} 错误信息
          * @param value {Object} 错误描述信息
          */
-        public static fatal(actionCode:string, value:Object = null){
-            egret.Logger.traceToConsole("Fatal",actionCode,value);
+        public static fatal(actionCode:string, value:Object = null) {
+            egret.Logger.traceToConsole("Fatal", actionCode, value);
             throw new Error(egret.Logger.getTraceCode("Fatal", actionCode, value));
         }
 
         /**
          * 记录正常的Log信息
-		 * @method egret.Logger.info
+         * @method egret.Logger.info
          * @param actionCode {string} 错误信息
          * @param value {Object} 错误描述信息
          */
-        public static info(actionCode:string, value:Object = null){
-            egret.Logger.traceToConsole("Info",actionCode,value);
+        public static info(actionCode:string, value:Object = null) {
+            egret.Logger.traceToConsole("Info", actionCode, value);
         }
 
         /**
          * 记录可能会出现问题的Log信息
-		 * @method egret.Logger.warning
+         * @method egret.Logger.warning
          * @param actionCode {string} 错误信息
          * @param value {Object} 错误描述信息
          */
-        public static warning(actionCode:string, value:Object = null){
-            egret.Logger.traceToConsole("Warning",actionCode,value);
+        public static warning(actionCode:string, value:Object = null) {
+            egret.Logger.traceToConsole("Warning", actionCode, value);
+        }
+
+        public static fatalWithErrorId(errorId:number, ...args) {
+            var actionCode = this.getErrorCode(errorId, args);
+            if (actionCode) {
+                Logger.fatal(actionCode);
+            }
+            else {
+                Logger.warning(this.getErrorCode(-1, [errorId]));
+            }
+        }
+
+        public static infoWithErrorId(errorId:number, ...args) {
+            var actionCode = this.getErrorCode(errorId, args);
+            if (actionCode) {
+                Logger.info(actionCode);
+            }
+        }
+
+        public static warningWithErrorId(errorId:number, ...args) {
+            var actionCode = this.getErrorCode(errorId, args);
+            if (actionCode) {
+                Logger.warning(actionCode);
+            }
+        }
+
+        private static getErrorCode(errorId:number, args:Array<string> = []):string {
+            var message = error_code[errorId];
+            if (message) {
+                var length = args.length;
+                for (var i = 0; i < length; i++) {
+                    message = message.replace("{" + i + "}", args[i]);
+                }
+            }
+            return message;
         }
 
         /**
@@ -71,7 +106,7 @@ module egret {
          * @param actionCode
          * @param value
          */
-        private static traceToConsole(type:String,actionCode:String,value:Object){
+        private static traceToConsole(type:string, actionCode:string, value:Object) {
             console.log(egret.Logger.getTraceCode(type, actionCode, value));
         }
 
@@ -82,8 +117,41 @@ module egret {
          * @param value
          * @returns {string}
          */
-        private static getTraceCode(type:String,actionCode:String,value:Object){
-            return "[" + type + "]" + actionCode + ":" + (value == null ? "" : value);
+        private static getTraceCode(type:string, actionCode:string, value:Object) {
+            return "[" + type + "]" + actionCode + (value == null ? "" : ":" + value);
         }
     }
+
+    export var error_code = {};
+    error_code[-1] = "不存在的errorId:{0}";
+    error_code[1000] = "Browser.isMobile接口参数已经变更，请尽快调整用法为 egret.MainContext.deviceType == egret.MainContext.DEVICE_MOBILE";
+    error_code[1001] = "该方法目前不应传入 resolutionPolicy 参数，请在 docs/1.0_Final_ReleaseNote中查看如何升级";
+    error_code[1002] = "egret.Ticker是框架内部使用的单例，不允许在外部实例化，计时器请使用egret.Timer类！";
+    error_code[1003] = "Ticker#setTimeout方法即将废弃,请使用egret.setTimeout";
+    error_code[1004] = "ExternalInterface调用了js没有注册的方法: {0}";
+    error_code[1005] = "设置了已经存在的blendMode: {0}";
+    error_code[1006] = "child不在当前容器内";
+    error_code[1007] = "提供的索引超出范围";
+    error_code[1008] = "child未被addChild到该parent";
+    error_code[1009] = "设置了已经存在的适配模式:{0}";
+    error_code[1010] = "addEventListener侦听函数不能为空";
+    error_code[1011] = "BitmapText找不到文字所对应的纹理:\"{0}\"";
+    error_code[1012] = "egret.BitmapTextSpriteSheet已废弃，请使用egret.BitmapFont代替。";
+    error_code[1013] = "TextField.setFocus 没有实现";
+    error_code[1014] = "Ease不能被实例化";
+    error_code[1015] = "xml not found!";
+    error_code[1016] = "{0}已经废弃";
+    error_code[1017] = "JSON文件格式不正确: {0}\ndata: {1}";
+    error_code[1018] = "egret_html5_localStorage.setItem保存失败,key={0}&value={1}";
+    error_code[1019] = "网络异常:{0}";
+    error_code[1020] = "无法初始化着色器";
+
+    error_code[2001] = "主题配置文件加载失败: {0}";
+    error_code[2002] = "找不到主题中所配置的皮肤类名: {0}";
+
+    error_code[3000] = "RES.createGroup()传入了配置中不存在的键值: {0}";
+    error_code[3001] = "RES加载了不存在或空的资源组:\"{0}\"";
+
+    error_code[3100] = "当前浏览器不支持WebSocket";
+    error_code[3101] = "请先连接Socket";
 }
