@@ -96,7 +96,7 @@ module RES {
 			if(this.itemListDic[groupName]||!groupName)
 				return;
 			if(!list||list.length==0){
-                egret.Logger.warningWithErrorId(3001, groupName);
+                egret.Logger.warningWithErrorId(2001, groupName);
 				var event:ResourceEvent = new ResourceEvent(ResourceEvent.GROUP_LOAD_ERROR);
 				event.groupName = groupName;
 				this.dispatchEvent(event);

@@ -151,12 +151,13 @@ module egret {
     egret_string_code[1026] = "EncodingError! The code point {0} could not be encoded.";
     egret_string_code[1027] = "DecodingError";
     egret_string_code[1028] = "调用了未配置的注入规则:{0}。 请先在项目初始化里配置指定的注入规则，再调用对应单例。";
+    egret_string_code[1029] = "Function.prototype.bind - what is trying to be bound is not callable";
 
-    egret_string_code[2001] = "主题配置文件加载失败: {0}";
-    egret_string_code[2002] = "找不到主题中所配置的皮肤类名: {0}";
+    egret_string_code[2000] = "RES.createGroup()传入了配置中不存在的键值: {0}";
+    egret_string_code[2001] = "RES加载了不存在或空的资源组:\"{0}\"";
 
-    egret_string_code[3000] = "RES.createGroup()传入了配置中不存在的键值: {0}";
-    egret_string_code[3001] = "RES加载了不存在或空的资源组:\"{0}\"";
+    egret_string_code[3000] = "主题配置文件加载失败: {0}";
+    egret_string_code[3001] = "找不到主题中所配置的皮肤类名: {0}";
     egret_string_code[3002] = "索引:\"{0}\"超出集合元素索引范围";
     egret_string_code[3003] = "在此组件中不可用，若此组件为容器类，请使用";
     egret_string_code[3004] = "addChild(){0}addElement()代替";

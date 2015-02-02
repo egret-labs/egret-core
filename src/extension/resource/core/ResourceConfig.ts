@@ -92,7 +92,7 @@ module RES {
                             group.push(item);
                     }
                     else{
-                        egret.Logger.warningWithErrorId(3000, key);
+                        egret.Logger.warningWithErrorId(2000, key);
                     }
                 }
 

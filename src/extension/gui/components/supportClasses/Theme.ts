@@ -70,7 +70,7 @@ module egret.gui {
 
         private onLoadError(event:IOErrorEvent):void{
             var loader:egret.URLLoader = <egret.URLLoader> (event.target);
-            egret.Logger.warningWithErrorId(2001, loader._request.url);
+            egret.Logger.warningWithErrorId(3000, loader._request.url);
             this.handleDelyList();
         }
 
@@ -127,7 +127,7 @@ module egret.gui {
             }
             var skinClass:any = egret.getDefinitionByName(skinName);
             if(!skinClass){
-                egret.Logger.warningWithErrorId(2002, skinName);
+                egret.Logger.warningWithErrorId(3001, skinName);
                 return null;
             }
             return new skinClass();
