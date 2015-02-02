@@ -91,6 +91,12 @@ function publishNative(opts) {
     var noVerion = (opts["-noversion"]) ? true : false;
     if (!noVerion) {
         task.push(function (tempCallback) {
+            //是否要重新生成当前版本的baseVersion文件
+            var freshBaseVersion = (opts["-freshBaseVersion"]) ? true : false;
+            if (freshBaseVersion) {
+                file.remove(path.join(releasePath, "nativeBase"));
+            }
+
             var tempTime = Date.now();
             globals.debugLog("扫描版本控制文件");
 
