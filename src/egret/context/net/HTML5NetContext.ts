@@ -119,13 +119,13 @@ module egret {
         private loadSound(loader:URLLoader):void{
             var request:URLRequest = loader._request;
             var audio = new Audio(request.url);
-            audio["__timeoutId"] = window.setTimeout(soundPreloadCanplayHandler,100);
+            audio["__timeoutId"] = egret.setTimeout(soundPreloadCanplayHandler, this, 100);
             audio.addEventListener('canplaythrough', soundPreloadCanplayHandler, false);
             audio.addEventListener("error", soundPreloadErrorHandler, false);
             audio.load();
 
             function soundPreloadCanplayHandler(event) {
-                window.clearTimeout(audio["__timeoutId"]);
+                egret.clearTimeout(audio["__timeoutId"]);
                 audio.removeEventListener('canplaythrough', soundPreloadCanplayHandler, false);
                 audio.removeEventListener("error", soundPreloadErrorHandler, false);
                 var sound = new Sound();
@@ -135,7 +135,7 @@ module egret {
             };
 
             function soundPreloadErrorHandler(event) {
-                window.clearTimeout(audio["__timeoutId"]);
+                egret.clearTimeout(audio["__timeoutId"]);
                 audio.removeEventListener('canplaythrough', soundPreloadCanplayHandler, false);
                 audio.removeEventListener("error", soundPreloadErrorHandler, false);
                 IOErrorEvent.dispatchIOErrorEvent(loader);
