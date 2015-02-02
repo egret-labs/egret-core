@@ -105,7 +105,7 @@ module egret {
                 this.newCode = serverVersionCode["code"];
             }
 
-            this.loadBaseVersion(localCode == this.newCode);
+            this.loadBaseVersion(localCode != this.newCode);
         }
 
         private loadBaseVersion(neesUpdate:boolean):void {
