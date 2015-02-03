@@ -502,13 +502,14 @@ function generateAllModuleFileList(projectDir, moduleReferenceList) {
     all_module.map(function (moduleConfig) {
         moduleConfig.file_list.map(function (item) {
             var tsFile = file.joinPath(moduleConfig.prefix, moduleConfig.source, item);
+            var tsFileLowerCase = file.joinPath(moduleConfig.prefix, moduleConfig.source, item).toLowerCase();
             if (item.indexOf(".d.ts") != -1) {
                 return;
             }
             var ext = file.getExtension(tsFile).toLowerCase();
             if (ext == "ts") {
                 if (moduleConfig.decouple == "true" && moduleReferenceList &&
-                    moduleReferenceList.indexOf(tsFile) == -1) {
+                    moduleReferenceList.indexOf(tsFileLowerCase) == -1) {
                     return;
                 }
                 if (isInterface(tsFile))
