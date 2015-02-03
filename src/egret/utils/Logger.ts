@@ -121,7 +121,7 @@ module egret {
     }
 
     export var egret_string_code = {};
-    egret_string_code[-1] = "不存在的errorId:{0}";
+    egret_string_code[-1] = "不存在的stringId:{0}";
     egret_string_code[1000] = "Browser.isMobile接口参数已经变更，请尽快调整用法为 egret.MainContext.deviceType == egret.MainContext.DEVICE_MOBILE";
     egret_string_code[1001] = "该方法目前不应传入 resolutionPolicy 参数，请在 docs/1.0_Final_ReleaseNote中查看如何升级";
     egret_string_code[1002] = "egret.Ticker是框架内部使用的单例，不允许在外部实例化，计时器请使用egret.Timer类！";
@@ -152,6 +152,7 @@ module egret {
     egret_string_code[1027] = "DecodingError";
     egret_string_code[1028] = "调用了未配置的注入规则:{0}。 请先在项目初始化里配置指定的注入规则，再调用对应单例。";
     egret_string_code[1029] = "Function.prototype.bind - what is trying to be bound is not callable";
+    egret_string_code[1030] = "该API已废弃";
 
     egret_string_code[2000] = "RES.createGroup()传入了配置中不存在的键值: {0}";
     egret_string_code[2001] = "RES加载了不存在或空的资源组:\"{0}\"";

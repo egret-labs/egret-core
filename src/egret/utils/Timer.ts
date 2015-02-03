@@ -56,7 +56,12 @@ module egret {
 		 * @method egret.Timer#currentCount
 		 * @returns {number}
 		 */
-        public currentCount():number{
+        public get currentCount():number {
+            return this._currentCount;
+        }
+
+        public currentCount():number {
+            egret.Logger.warningWithErrorId(1030);
             return this._currentCount;
         }
 
@@ -84,9 +89,6 @@ module egret {
             if(this._running)
                 return;
             this.lastTime = getTimer();
-            if (this._currentCount != 0) {
-                this._currentCount = 0;
-            }
             Ticker.getInstance().register(this.onEnterFrame, this);
             this._running = true;
         }
@@ -110,7 +112,7 @@ module egret {
                 this.lastTime = now;
                 this._currentCount++;
                 TimerEvent.dispatchTimerEvent(this,TimerEvent.TIMER);
-                if (this.repeatCount >0 && this._currentCount >= this.repeatCount) {
+                if (this.repeatCount > 0 && this._currentCount >= this.repeatCount) {
                     this.stop();
                     TimerEvent.dispatchTimerEvent(this,TimerEvent.TIMER_COMPLETE);
                 }
