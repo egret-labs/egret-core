@@ -648,7 +648,7 @@ module egret {
             if (display._cacheAsBitmap == false) {
                 return false;
             }
-            var bounds = display.getBounds();
+            var bounds = display.getBounds(Rectangle.identity);
             var texture_scale_factor = egret.MainContext.instance.rendererContext._texture_scale_factor;
             if (display._cacheDirty || display._texture_to_render == null ||
                 Math.round(bounds.width) != Math.round(display._texture_to_render._sourceWidth * texture_scale_factor) ||

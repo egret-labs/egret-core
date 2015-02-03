@@ -3,6 +3,7 @@
     "dependence": [],
     "source":"src",
     "file_list": [
+        "egret/utils/Logger.ts",
         "egret/utils/IHashObject.ts",
         "egret/utils/HashObject.ts",
         "egret/utils/Recycler.ts",
@@ -33,7 +34,6 @@
         "egret/geom/Matrix.ts",
         "egret/geom/Point.ts",
         "egret/geom/Rectangle.ts",
-        "egret/utils/Logger.ts",
         "egret/utils/SAXParser.ts",
         "egret/context/StageDelegate.ts",
         "egret/context/renderer/RenderFilter.ts",

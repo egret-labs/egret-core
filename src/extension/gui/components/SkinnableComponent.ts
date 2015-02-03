@@ -441,7 +441,6 @@ module egret.gui {
             }
 		}
 
-        private static errorStr:string = "在此组件中不可用，若此组件为容器类，请使用";
         /**
          * @method egret.gui.SkinnableComponent#addChild
          * @deprecated
@@ -449,7 +448,7 @@ module egret.gui {
          * @returns {DisplayObject}
          */
         public addChild(child:DisplayObject):DisplayObject{
-            throw(new Error("addChild()"+SkinnableComponent.errorStr+"addElement()代替"));
+            throw(new Error(getString(3004, getString(3003))));
         }
         /**
          * @method egret.gui.SkinnableComponent#addChildAt
@@ -459,7 +458,7 @@ module egret.gui {
          * @returns {DisplayObject}
          */
         public addChildAt(child:DisplayObject, index:number):DisplayObject{
-            throw(new Error("addChildAt()"+SkinnableComponent.errorStr+"addElementAt()代替"));
+            throw(new Error(getString(3005, getString(3003))));
         }
         /**
          * @method egret.gui.SkinnableComponent#removeChild
@@ -468,7 +467,7 @@ module egret.gui {
          * @returns {DisplayObject}
          */
         public removeChild(child:DisplayObject):DisplayObject{
-            throw(new Error("removeChild()"+SkinnableComponent.errorStr+"removeElement()代替"));
+            throw(new Error(getString(3006, getString(3003))));
         }
         /**
          * @method egret.gui.SkinnableComponent#removeChildAt
@@ -477,7 +476,7 @@ module egret.gui {
          * @returns {DisplayObject}
          */
         public removeChildAt(index:number):DisplayObject{
-            throw(new Error("removeChildAt()"+SkinnableComponent.errorStr+"removeElementAt()代替"));
+            throw(new Error(getString(3007, getString(3003))));
         }
         /**
          * @method egret.gui.SkinnableComponent#setChildIndex
@@ -486,7 +485,7 @@ module egret.gui {
          * @param index {number}
          */
         public setChildIndex(child:DisplayObject, index:number):void{
-            throw(new Error("setChildIndex()"+SkinnableComponent.errorStr+"setElementIndex()代替"));
+            throw(new Error(getString(3008, getString(3003))));
         }
         /**
          * @method egret.gui.SkinnableComponent#swapChildren
@@ -495,7 +494,7 @@ module egret.gui {
          * @param child2 {DisplayObject}
          */
         public swapChildren(child1:DisplayObject, child2:DisplayObject):void{
-            throw(new Error("swapChildren()"+SkinnableComponent.errorStr+"swapElements()代替"));
+            throw(new Error(getString(3009, getString(3003))));
         }
         /**
          * @method egret.gui.SkinnableComponent#swapChildrenAt
@@ -504,7 +503,7 @@ module egret.gui {
          * @param index2 {number}
          */
         public swapChildrenAt(index1:number, index2:number):void{
-            throw(new Error("swapChildrenAt()"+SkinnableComponent.errorStr+"swapElementsAt()代替"));
+            throw(new Error(getString(3010, getString(3003))));
         }
 	}
 }

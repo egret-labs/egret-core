@@ -267,14 +267,13 @@ module egret.gui {
             return super._measureBounds();
         }
 
-		private static errorStr:string = "在此组件中不可用，若此组件为容器类，请使用";
 		/**
          * @deprecated
 		 * @param child {DisplayObject} 
 		 * @returns {DisplayObject}
 		 */		
 		public addChild(child:DisplayObject):DisplayObject{
-			throw(new Error("addChild()"+UIAsset.errorStr+"addElement()代替"));
+			throw(new Error(getString(3004, getString(3003))));
 		}
 		/**
 		 * @deprecated
@@ -283,7 +282,7 @@ module egret.gui {
 		 * @returns {DisplayObject}
 		 */		
 		public addChildAt(child:DisplayObject, index:number):DisplayObject{
-			throw(new Error("addChildAt()"+UIAsset.errorStr+"addElementAt()代替"));
+			throw(new Error(getString(3005, getString(3003))));
 		}
 		/**
 		 * @deprecated
@@ -291,7 +290,7 @@ module egret.gui {
 		 * @returns {DisplayObject}
 		 */		
 		public removeChild(child:DisplayObject):DisplayObject{
-			throw(new Error("removeChild()"+UIAsset.errorStr+"removeElement()代替"));
+			throw(new Error(getString(3006, getString(3003))));
 		}
 		/**
 		 * @deprecated
@@ -299,7 +298,7 @@ module egret.gui {
 		 * @returns {DisplayObject}
 		 */		
 		public removeChildAt(index:number):DisplayObject{
-			throw(new Error("removeChildAt()"+UIAsset.errorStr+"removeElementAt()代替"));
+			throw(new Error(getString(3007, getString(3003))));
 		}
 		/**
 		 * @deprecated
@@ -307,7 +306,7 @@ module egret.gui {
 		 * @param index {number} 
 		 */		
 		public setChildIndex(child:DisplayObject, index:number):void{
-			throw(new Error("setChildIndex()"+UIAsset.errorStr+"setElementIndex()代替"));
+			throw(new Error(getString(3008, getString(3003))));
 		}
 		/**
 		 * @deprecated
@@ -315,7 +314,7 @@ module egret.gui {
 		 * @param child2 {DisplayObject} 
 		 */		
 		public swapChildren(child1:DisplayObject, child2:DisplayObject):void{
-			throw(new Error("swapChildren()"+UIAsset.errorStr+"swapElements()代替"));
+			throw(new Error(getString(3009, getString(3003))));
 		}
 		/**
 		 * @deprecated
@@ -323,7 +322,7 @@ module egret.gui {
 		 * @param index2 {number} 
 		 */		
 		public swapChildrenAt(index1:number, index2:number):void{
-			throw(new Error("swapChildrenAt()"+UIAsset.errorStr+"swapElementsAt()代替"));
+			throw(new Error(getString(3010, getString(3003))));
 		}
 	}
 }

@@ -96,7 +96,7 @@ module egret {
                 priority = 0;
             }
             if (!listener) {
-                Logger.fatal("addEventListener侦听函数不能为空");
+                Logger.fatalWithErrorId(1010);
             }
             var eventMap:Object;
             if (useCapture) {

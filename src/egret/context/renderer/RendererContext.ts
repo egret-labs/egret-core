@@ -259,7 +259,7 @@ module egret {
          */
         public static registerBlendModeForGL(key:string, src:number, dst:number, override?:boolean){
             if(RendererContext.blendModesForGL[key] && !override) {
-                egret.Logger.warning("设置了已经存在的blendMode：" + key);
+                egret.Logger.warningWithErrorId(1005, key);
             }
             else {
                 RendererContext.blendModesForGL[key] = [src, dst];

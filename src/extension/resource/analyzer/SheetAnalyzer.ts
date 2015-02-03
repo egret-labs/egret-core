@@ -92,7 +92,7 @@ module RES {
                 config = JSON.parse(str);
             }
             catch (e){
-                egret.Logger.warning("JSON文件格式不正确: "+resItem.url);
+                egret.Logger.warningWithErrorId(1017, resItem.url, data);
             }
             if(config){
                 this.sheetMap[name] = config;

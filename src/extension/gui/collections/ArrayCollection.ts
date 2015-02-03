@@ -92,7 +92,7 @@ module egret.gui {
          */
         private checkIndex(index:number):void{
             if(index<0||index>=this._source.length){
-                throw new RangeError("索引:\""+index+"\"超出集合元素索引范围");
+                throw new RangeError(getString(3002, index));
             }
         }
 
@@ -126,7 +126,7 @@ module egret.gui {
          */
         public addItemAt(item:any, index:number):void{
             if(index<0||index>this._source.length){
-                throw new RangeError("索引:\""+index+"\"超出集合元素索引范围");
+                throw new RangeError(getString(3002, index));
             }
             this._source.splice(index,0,item);
             this.dispatchCoEvent(CollectionEventKind.ADD,index,-1,[item]);

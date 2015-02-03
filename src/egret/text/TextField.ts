@@ -510,7 +510,7 @@ module egret {
 
         public setFocus() {
             //todo:
-            Logger.warning("TextField.setFocus 没有实现");
+            Logger.warningWithErrorId(1013);
         }
 
         constructor() {

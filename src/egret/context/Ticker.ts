@@ -35,7 +35,7 @@ module egret {
         public constructor(){
             super();
             if (Ticker.instance != null) {
-                egret.Logger.fatal("egret.Ticker是框架内部使用的单例，不允许在外部实例化，计时器请使用egret.Timer类！");
+                egret.Logger.fatalWithErrorId(1002);
             }
         }
 
@@ -107,7 +107,7 @@ module egret {
          * @deprecated
          */
         public setTimeout(listener:Function, thisObject, delay:number, ...parameters):void {
-            Logger.warning("Ticker#setTimeout方法即将废弃,请使用egret.setTimeout");
+            Logger.warningWithErrorId(1003);
             egret.setTimeout.apply(null, [listener,thisObject,delay].concat(parameters));
         }
 

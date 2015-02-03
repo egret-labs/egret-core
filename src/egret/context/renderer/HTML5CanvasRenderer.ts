@@ -35,11 +35,11 @@ module egret {
      */
     export class HTML5CanvasRenderer extends RendererContext {
 
-        private canvas;
+        private canvas:HTMLCanvasElement;
         /**
          * @member egret.HTML5CanvasRenderer#canvasContext
          */
-        public canvasContext:CanvasRenderingContext2D;
+        private canvasContext:CanvasRenderingContext2D;
 
         private _matrixA:number;
         private _matrixB:number;
@@ -54,32 +54,42 @@ module egret {
         private blendValue:string;
         private globalAlpha:number = 1;
 
-        private _cacheCanvas;
-        public _cacheCanvasContext;
+        private _cacheCanvas:HTMLCanvasElement;
+        private _cacheCanvasContext:CanvasRenderingContext2D;
 
-        public constructor(canvas?:HTMLCanvasElement) {
+        private useCacheCanvas:boolean;
+        public drawCanvasContext:CanvasRenderingContext2D;
+
+        public constructor(canvas?:HTMLCanvasElement, useCacheCanvas:boolean = true) {
             super();
+            this.useCacheCanvas = useCacheCanvas;
 
             this.canvas = canvas || this.createCanvas();
             this.canvasContext = this.canvas.getContext("2d");
 
-            this._cacheCanvas = document.createElement("canvas");
-            this._cacheCanvas.width = this.canvas.width;
-            this._cacheCanvas.height = this.canvas.height;
-            this._cacheCanvasContext = this._cacheCanvas.getContext("2d");
+            if(useCacheCanvas) {
+                this._cacheCanvas = document.createElement("canvas");
+                this._cacheCanvas.width = this.canvas.width;
+                this._cacheCanvas.height = this.canvas.height;
+                this._cacheCanvasContext = this._cacheCanvas.getContext("2d");
+                this.drawCanvasContext = this._cacheCanvasContext;
+            }
+            else {
+                this.drawCanvasContext = this.canvasContext;
+            }
 
             this.onResize();
 
-            var f = this.canvasContext.setTransform;
+            var f = this.drawCanvasContext.setTransform;
             var that = this;
-            this._cacheCanvasContext.setTransform = function (a, b, c, d, tx, ty) {
+            this.drawCanvasContext.setTransform = function (a, b, c, d, tx, ty) {
                 that._matrixA = a;
                 that._matrixB = b;
                 that._matrixC = c;
                 that._matrixD = d;
                 that._matrixTx = tx;
                 that._matrixTy = ty;
-                f.call(that._cacheCanvasContext, a, b, c, d, tx, ty);
+                f.call(that.drawCanvasContext, a, b, c, d, tx, ty);
             };
             this._matrixA = 1;
             this._matrixB = 0;
@@ -115,13 +125,15 @@ module egret {
                 this.canvas.style.height = container.style.height;
 //              this.canvas.style.position = "absolute";
 
-                this._cacheCanvas.width = this.canvas.width;
-                this._cacheCanvas.height = this.canvas.height;
+                if(this.useCacheCanvas) {
+                    this._cacheCanvas.width = this.canvas.width;
+                    this._cacheCanvas.height = this.canvas.height;
+                }
 
-                this._cacheCanvasContext["imageSmoothingEnabled"] = RendererContext.imageSmoothingEnabled;
-                this._cacheCanvasContext["webkitImageSmoothingEnabled"] = RendererContext.imageSmoothingEnabled;
-                this._cacheCanvasContext["mozImageSmoothingEnabled"] = RendererContext.imageSmoothingEnabled;
-                this._cacheCanvasContext["msImageSmoothingEnabled"] = RendererContext.imageSmoothingEnabled;
+                this.drawCanvasContext["imageSmoothingEnabled"] = RendererContext.imageSmoothingEnabled;
+                this.drawCanvasContext["webkitImageSmoothingEnabled"] = RendererContext.imageSmoothingEnabled;
+                this.drawCanvasContext["mozImageSmoothingEnabled"] = RendererContext.imageSmoothingEnabled;
+                this.drawCanvasContext["msImageSmoothingEnabled"] = RendererContext.imageSmoothingEnabled;
             }
         }
 
@@ -132,7 +144,9 @@ module egret {
                 this.clearRect(area.x, area.y, area.width, area.height);
             }
             var stage:Stage = egret.MainContext.instance.stage;
-            this._cacheCanvasContext.clearRect(0, 0, stage.stageWidth, stage.stageHeight);
+            if(this.useCacheCanvas) {
+                this._cacheCanvasContext.clearRect(0, 0, stage.stageWidth, stage.stageHeight);
+            }
             this.renderCost = 0;
         }
 
@@ -151,7 +165,7 @@ module egret {
             destY += this._transformTy;
             var beforeDraw = egret.getTimer();
             if (repeat === undefined) {
-                this._cacheCanvasContext.drawImage(image, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight);
+                this.drawCanvasContext.drawImage(image, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight);
             }
             else {
                 this.drawRepeatImage(texture, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, repeat);
@@ -172,14 +186,14 @@ module egret {
                     tempCanvas.getContext("2d").drawImage(image, sourceX, sourceY, sourceWidth, sourceHeight, 0, 0, sourceWidth * texture_scale_factor, sourceHeight * texture_scale_factor);
                     tempImage = tempCanvas;
                 }
-                var pat = this._cacheCanvasContext.createPattern(tempImage, repeat);
+                var pat = this.drawCanvasContext.createPattern(tempImage, repeat);
                 texture['pattern'] = pat;
             }
             var pattern = texture['pattern'];
-            this._cacheCanvasContext.fillStyle = pattern;
-            this._cacheCanvasContext.translate(destX, destY);
-            this._cacheCanvasContext.fillRect(0, 0, destWidth, destHeight);
-            this._cacheCanvasContext.translate(-destX, -destY);
+            this.drawCanvasContext.fillStyle = pattern;
+            this.drawCanvasContext.translate(destX, destY);
+            this.drawCanvasContext.fillRect(0, 0, destWidth, destHeight);
+            this.drawCanvasContext.translate(-destX, -destY);
         }
 
         public setTransform(matrix:egret.Matrix) {
@@ -193,21 +207,21 @@ module egret {
             this._transformTx = this._transformTy = 0;
             if (this._matrixA != matrix.a || this._matrixB != matrix.b || this._matrixC != matrix.c
                 || this._matrixD != matrix.d || this._matrixTx != matrix.tx || this._matrixTy != matrix.ty) {
-                this._cacheCanvasContext.setTransform(matrix.a, matrix.b, matrix.c, matrix.d, matrix.tx, matrix.ty);
+                this.drawCanvasContext.setTransform(matrix.a, matrix.b, matrix.c, matrix.d, matrix.tx, matrix.ty);
             }
         }
 
         public setAlpha(alpha:number, blendMode:string) {
             if (alpha != this.globalAlpha) {
-                this._cacheCanvasContext.globalAlpha = this.globalAlpha = alpha;
+                this.drawCanvasContext.globalAlpha = this.globalAlpha = alpha;
             }
             if (blendMode) {
                 this.blendValue = this.blendModes[blendMode];
-                this._cacheCanvasContext.globalCompositeOperation = this.blendValue;
+                this.drawCanvasContext.globalCompositeOperation = this.blendValue;
             }
             else if (this.blendValue != egret.BlendMode.NORMAL) {
                 this.blendValue = this.blendModes[egret.BlendMode.NORMAL];
-                this._cacheCanvasContext.globalCompositeOperation = this.blendValue;
+                this.drawCanvasContext.globalCompositeOperation = this.blendValue;
             }
         }
 
@@ -225,7 +239,7 @@ module egret {
             var bold:boolean = style["bold"] == null ? textField._bold : style["bold"];
             var size:number = style["size"] == null ? textField._size : style["size"];
             var fontFamily:string = style["fontFamily"] == null ? textField._fontFamily : style["fontFamily"];
-            var ctx = this._cacheCanvasContext;
+            var ctx = this.drawCanvasContext;
             var font:string = italic ? "italic " : "normal ";
             font += bold ? "bold " : "normal ";
             font += size + "px " + fontFamily;
@@ -236,7 +250,7 @@ module egret {
 
 
         public measureText(text:string):number {
-            var result = this._cacheCanvasContext.measureText(text);
+            var result = this.drawCanvasContext.measureText(text);
             return result.width;
         }
 
@@ -268,7 +282,7 @@ module egret {
                 outline = textField._stroke;
             }
 
-            var renderContext = this._cacheCanvasContext;
+            var renderContext = this.drawCanvasContext;
             renderContext.fillStyle = textColor;
             renderContext.strokeStyle = strokeColor;
             if (outline) {
@@ -280,50 +294,52 @@ module egret {
         }
 
         public strokeRect(x, y, w, h, color) {
-            this._cacheCanvasContext.strokeStyle = color;
-            this._cacheCanvasContext.strokeRect(x, y, w, h);
+            this.drawCanvasContext.strokeStyle = color;
+            this.drawCanvasContext.strokeRect(x, y, w, h);
         }
 
 
         public pushMask(mask:Rectangle):void {
-            this._cacheCanvasContext.save();
-            this._cacheCanvasContext.beginPath();
-            this._cacheCanvasContext.rect(mask.x + this._transformTx, mask.y + this._transformTy, mask.width, mask.height);
-            this._cacheCanvasContext.clip();
-            this._cacheCanvasContext.closePath();
+            this.drawCanvasContext.save();
+            this.drawCanvasContext.beginPath();
+            this.drawCanvasContext.rect(mask.x + this._transformTx, mask.y + this._transformTy, mask.width, mask.height);
+            this.drawCanvasContext.clip();
+            this.drawCanvasContext.closePath();
         }
 
         public popMask():void {
-            this._cacheCanvasContext.restore();
-            this._cacheCanvasContext.setTransform(1, 0, 0, 1, 0, 0);
+            this.drawCanvasContext.restore();
+            this.drawCanvasContext.setTransform(1, 0, 0, 1, 0, 0);
         }
 
 
         public onRenderStart():void {
-            this._cacheCanvasContext.save();
+            this.drawCanvasContext.save();
         }
 
         public onRenderFinish():void {
-            this._cacheCanvasContext.restore();
-            this._cacheCanvasContext.setTransform(1, 0, 0, 1, 0, 0);
+            this.drawCanvasContext.restore();
+            this.drawCanvasContext.setTransform(1, 0, 0, 1, 0, 0);
 
-            var canvasWidth = this._cacheCanvas.width;
-            var canvasHeight = this._cacheCanvas.height;
-            var list = RenderFilter.getInstance().getDrawAreaList();
-            for (var i:number = 0 , l:number = list.length; i < l; i++) {
-                var area:Rectangle = list[i];
-                var areaX = area.x;
-                var areaY = area.y;
-                var areaWidth = area.width;
-                var areaHeight = area.height;
-                if (areaX + areaWidth > canvasWidth) {
-                    areaWidth = canvasWidth - areaX;
-                }
-                if (areaY + areaHeight > canvasHeight) {
-                    areaHeight = canvasHeight - areaY;
-                }
-                if (areaWidth > 0 && areaHeight > 0) {
-                    this.canvasContext.drawImage(this._cacheCanvas, areaX, areaY, areaWidth, areaHeight, areaX, areaY, areaWidth, areaHeight);
+            if(this.useCacheCanvas) {
+                var canvasWidth = this._cacheCanvas.width;
+                var canvasHeight = this._cacheCanvas.height;
+                var list = RenderFilter.getInstance().getDrawAreaList();
+                for (var i:number = 0 , l:number = list.length; i < l; i++) {
+                    var area:Rectangle = list[i];
+                    var areaX = area.x;
+                    var areaY = area.y;
+                    var areaWidth = area.width;
+                    var areaHeight = area.height;
+                    if (areaX + areaWidth > canvasWidth) {
+                        areaWidth = canvasWidth - areaX;
+                    }
+                    if (areaY + areaHeight > canvasHeight) {
+                        areaHeight = canvasHeight - areaY;
+                    }
+                    if (areaWidth > 0 && areaHeight > 0) {
+                        this.canvasContext.drawImage(this._cacheCanvas, areaX, areaY, areaWidth, areaHeight, areaX, areaY, areaWidth, areaHeight);
+                    }
                 }
             }
         }
@@ -569,7 +585,7 @@ module egret_h5_graphics {
             return;
         }
         this.renderContext = renderContext;
-        this.canvasContext = (<egret.HTML5CanvasRenderer>this.renderContext)._cacheCanvasContext || (<egret.HTML5CanvasRenderer>this.renderContext).canvasContext;
+        this.canvasContext = (<egret.HTML5CanvasRenderer>this.renderContext).drawCanvasContext;
         var canvasContext:CanvasRenderingContext2D = this.canvasContext;
 
         canvasContext.save();
@@ -606,7 +622,7 @@ module egret_h5_graphics {
             egret.Graphics.prototype[key] = egret_h5_graphics[key];
         }
         egret.RendererContext.createRendererContext = function (canvas:any) {
-            return new egret.HTML5CanvasRenderer(canvas);
+            return new egret.HTML5CanvasRenderer(canvas, false);
         }
     }
 

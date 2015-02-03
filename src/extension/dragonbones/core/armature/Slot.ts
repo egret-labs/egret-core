@@ -54,7 +54,7 @@ module dragonBones {
 			super();
 			
 			if(self != this){
-				throw new Error("Abstract class can not be instantiated!");
+				throw new Error(egret.getString(4001));
 			}
 			
 			this._displayList = [];
@@ -365,14 +365,14 @@ module dragonBones {
 		 * @private
 		 */
 		public _updateDisplay(value:any):void{
-			throw new Error("Abstract method needs to be implemented in subclass!");
+			throw new Error("");
 		}
 		
 		/**
 		 * @private
 		 */
 		public _getDisplayIndex():number{
-			throw new Error("Abstract method needs to be implemented in subclass!");
+			throw new Error(egret.getString(4001));
 		}
 		
 		/**
@@ -382,7 +382,7 @@ module dragonBones {
 		 * @param index
 		 */
 		public _addDisplayToContainer(container:any, index:number = -1):void{
-			throw new Error("Abstract method needs to be implemented in subclass!");
+			throw new Error(egret.getString(4001));
 		}
 		
 		/**
@@ -390,7 +390,7 @@ module dragonBones {
 		 * remove the original display object from its parent.
 		 */
 		public _removeDisplayFromContainer():void{
-			throw new Error("Abstract method needs to be implemented in subclass!");
+			throw new Error(egret.getString(4001));
 		}
 		
 		/**
@@ -398,7 +398,7 @@ module dragonBones {
 		 * Updates the transform of the slot.
 		 */
 		public _updateTransform():void{
-			throw new Error("Abstract method needs to be implemented in subclass!");
+			throw new Error(egret.getString(4001));
 		}
 		
 		/**
@@ -409,7 +409,7 @@ module dragonBones {
 			 * bone.visible && slot.visible && updateVisible
 			 * this._parent.visible && this._visible && value;
 			 */
-			throw new Error("Abstract method needs to be implemented in subclass!");
+			throw new Error(egret.getString(4001));
 		}
 		
 		/**
@@ -450,7 +450,7 @@ module dragonBones {
 		 * @param value The blend mode to use. 
 		 */
 		public _updateDisplayBlendMode(value:string):void{
-			throw new Error("Abstract method needs to be implemented in subclass!");
+			throw new Error(egret.getString(4001));
 		}
 	}
 }

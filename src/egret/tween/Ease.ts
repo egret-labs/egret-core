@@ -29,7 +29,7 @@
 module egret {
     export class Ease {
         constructor() {
-            egret.Logger.fatal("Ease不能被实例化");
+            egret.Logger.fatalWithErrorId(1014);
         }
 
         public static get(amount):Function {

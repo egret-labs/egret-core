@@ -385,7 +385,7 @@ module egret.gui {
          * 抛出索引越界异常
          */
         private throwRangeError(index: number): void {
-            throw new RangeError("索引:\"" + index + "\"超出可视元素索引范围");
+            throw new RangeError(getString(3011, index));
         }
         /**
          * @param index {number}
@@ -420,7 +420,7 @@ module egret.gui {
         }
 
         private throwNotSupportedError(): void {
-            throw new Error("此方法在Scroller组件内不可用!");
+            throw new Error(getString(3012));
         }
         /**
          * @deprecated

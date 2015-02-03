@@ -77,7 +77,7 @@ module dragonBones {
             if( version.toString() != DragonBones.DATA_VERSION &&
                 version.toString() != DragonBones.PARENT_COORDINATE_DATA_VERSION)
             {
-                throw new Error("Nonsupport version!");
+                throw new Error(egret.getString(4003));
             }
 			
 			var frameRate:number = DataParser.getNumber(rawDataToParse, ConstValues.A_FRAME_RATE, 0) || 0;

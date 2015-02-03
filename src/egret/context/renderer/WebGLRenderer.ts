@@ -423,7 +423,7 @@ module egret {
                 }
             }
             if (!gl) {
-                throw new Error("当前浏览器不支持webgl");
+                throw new Error(getString(1021));
             }
             WebGLRenderer.glID++;
             this.glID = WebGLRenderer.glID;

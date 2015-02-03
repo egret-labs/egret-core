@@ -100,7 +100,7 @@ module egret {
         private setResolutionPolicy():void{
             var content = Stage.SCALE_MODE_ENUM[this._scaleMode];
             if (!content){
-                throw new Error("使用了尚未实现的ScaleMode");
+                throw new Error(getString(1024));
             }
             var container = new egret.EqualToFrame();
             var policy = new egret.ResolutionPolicy(container, content);
@@ -199,7 +199,7 @@ module egret {
          */
         public static registerScaleMode(key:string, value:ContentStrategy, override?:boolean) {
             if(Stage.SCALE_MODE_ENUM[key] && !override) {
-                egret.Logger.warning("设置了已经存在的适配模式：" + key);
+                egret.Logger.warningWithErrorId(1009, key);
             }
             else {
                 Stage.SCALE_MODE_ENUM[key] = value;
