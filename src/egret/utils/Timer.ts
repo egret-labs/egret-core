@@ -60,11 +60,6 @@ module egret {
             return this._currentCount;
         }
 
-        public currentCount():number {
-            egret.Logger.warningWithErrorId(1030);
-            return this._currentCount;
-        }
-
         private _running:boolean = false;
 
 		/**
