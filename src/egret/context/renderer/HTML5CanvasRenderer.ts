@@ -376,6 +376,7 @@ module egret_h5_graphics {
             )
         );
         this._fill();
+        this.checkRect(x, y, width, height);
     }
 
     export function drawCircle(x:number, y:number, r:number):void {
@@ -393,6 +394,7 @@ module egret_h5_graphics {
             [ x, y, r]
         ));
         this._fill();
+        this.checkRect(x - r, y - r, 2 * r, 2 * r);
     }
 
     export function drawRoundRect(x:number, y:number, width:number, height:number, ellipseWidth:number, ellipseHeight?:number):void {
@@ -428,6 +430,7 @@ module egret_h5_graphics {
             )
         );
         this._fill();
+        this.checkRect(x, y, width, height);
     }
 
     export function drawEllipse(x:number, y:number, width:number, height:number):void {
@@ -453,6 +456,7 @@ module egret_h5_graphics {
             [ x, y, width, height]
         ));
         this._fill();
+        this.checkRect(x - width, y - height, 2 * width, 2 * height);
     }
 
     export function lineStyle(thickness:number = NaN, color:number = 0, alpha:number = 1.0, pixelHinting:boolean = false, scaleMode:string = "normal", caps:string = null, joints:string = null, miterLimit:number = 3):void {
@@ -496,6 +500,7 @@ module egret_h5_graphics {
         ));
         this.lineX = x;
         this.lineY = y;
+        this.checkPoint(x, y);
     }
 
     export function curveTo(controlX:Number, controlY:Number, anchorX:Number, anchorY:Number):void {
@@ -512,6 +517,8 @@ module egret_h5_graphics {
         ));
         this.lineX = anchorX;
         this.lineY = anchorY;
+        this.checkPoint(controlX, controlY);
+        this.checkPoint(anchorX, anchorY);
     }
 
     export function moveTo(x:number, y:number):void {
@@ -524,7 +531,7 @@ module egret_h5_graphics {
             this,
             [x, y]
         ))
-
+        this.checkPoint(x, y);
     }
 
     export function clear():void {
@@ -534,6 +541,10 @@ module egret_h5_graphics {
         this.strokeStyleColor = null;
         this.fillStyleColor = null;
         this._dirty = false;
+        this._minX = 0;
+        this._minY = 0;
+        this._maxX = 0;
+        this._maxY = 0;
     }
 
     export function createEndFillCommand():void {

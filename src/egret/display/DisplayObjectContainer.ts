@@ -461,7 +461,7 @@ module egret {
             if (result) {
                 return result;
             }
-            else if (this._texture_to_render || this["graphics"]) {
+            else if (this._texture_to_render) {
                 return super.hitTest(x, y, ignoreTouchEnabled);
             }
             return null;

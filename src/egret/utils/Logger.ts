@@ -178,7 +178,7 @@ module egret {
     egret_string_code[4003] = "Nonsupport version!";
 
     egret_string_code[3100] = "当前浏览器不支持WebSocket";
-    egret_string_code[3101] = "请先连接Socket";
+    egret_string_code[3101] = "请先连接WebSocket";
 
     export function getString(id:number, ...args):string {
         var message = egret_string_code[id];

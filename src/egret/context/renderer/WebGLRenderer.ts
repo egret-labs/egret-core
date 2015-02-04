@@ -941,6 +941,7 @@ module egret_webgl_graphics {
                 [{x: x, y: y, w: width, h: height}]
             )
         );
+        this.checkRect(x, y, width, height);
     }
 
     export function drawCircle(x:number, y:number, r:number):void {
@@ -971,6 +972,10 @@ module egret_webgl_graphics {
 
     export function clear():void {
         this.commandQueue.length = 0;
+        this._minX = 0;
+        this._minY = 0;
+        this._maxX = 0;
+        this._maxY = 0;
     }
 
     export function endFill():void {

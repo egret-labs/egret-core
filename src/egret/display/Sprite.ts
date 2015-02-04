@@ -59,5 +59,60 @@ module egret {
             super._render(renderContext);
         }
 
+        public _measureBounds():egret.Rectangle {
+
+            var minX = 0, maxX = 0, minY = 0, maxY = 0;
+            var l = this._children.length;
+            for (var i = 0; i < l; i++) {
+                var child = this._children[i];
+                if (!child._visible) {
+                    continue;
+                }
+
+                var childBounds:Rectangle = child.getBounds(Rectangle.identity, false);
+                var childBoundsX:number = childBounds.x;
+                var childBoundsY:number = childBounds.y;
+                var childBoundsW:number = childBounds.width;
+                var childBoundsH:number = childBounds.height;
+
+                var childMatrix:Matrix = child._getMatrix();
+
+                var bounds:Rectangle = DisplayObject.getTransformBounds(Rectangle.identity.initialize(childBoundsX, childBoundsY, childBoundsW, childBoundsH), childMatrix);
+                var x1 = bounds.x , y1 = bounds.y,
+                    x2 = bounds.width + bounds.x,
+                    y2 = bounds.height + bounds.y;
+                if (x1 < minX || i == 0) {
+                    minX = x1;
+                }
+                if (x2 > maxX || i == 0) {
+                    maxX = x2;
+                }
+                if (y1 < minY || i == 0) {
+                    minY = y1;
+                }
+                if (y2 > maxY || i == 0) {
+                    maxY = y2;
+                }
+            }
+            if(this._graphics) {
+                var graphicsBounds:Rectangle = this._graphics._measureBounds();
+                var x1 = graphicsBounds.x , y1 = graphicsBounds.y,
+                    x2 = graphicsBounds.width + graphicsBounds.x,
+                    y2 = graphicsBounds.height + graphicsBounds.y;
+                if (x1 < minX || i == 0) {
+                    minX = x1;
+                }
+                if (x2 > maxX || i == 0) {
+                    maxX = x2;
+                }
+                if (y1 < minY || i == 0) {
+                    minY = y1;
+                }
+                if (y2 > maxY || i == 0) {
+                    maxY = y2;
+                }
+            }
+            return Rectangle.identity.initialize(minX, minY, maxX - minX, maxY - minY);
+        }
     }
 }

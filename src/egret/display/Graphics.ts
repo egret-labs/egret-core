@@ -213,6 +213,9 @@ module egret {
             this._lastY = y;
         }
 
+        public _measureBounds():egret.Rectangle {
+            return Rectangle.identity.initialize(this._minX, this._minY, this._maxX - this._minX, this._maxY - this._minY);
+        }
     }
 
     class Command {
