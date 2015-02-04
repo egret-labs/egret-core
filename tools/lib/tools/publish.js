@@ -376,13 +376,14 @@ function help_title() {
 
 function help_example() {
     var result = "\n";
-    result += "    egret publish [project_name] [-compile] [--password your_passsword] [--runtime html5|native]\n";
+    result += "    egret publish [project_name] [-compile] [--password your_passsword] [--runtime html5|native] [-log]\n";
     result += "描述:\n";
     result += "    " + help_title();
     result += "参数说明:\n";
     result += "    --runtime    设置发布方式为 html5 或者是 native方式，默认值为html5\n";
     result += "    -compile         设置发布后js文件是否需要压缩\n";
     result += "    --password   设置发布zip文件的解压密码";
+    result += "    -log   显示执行过程";
     return result;
 }
 
