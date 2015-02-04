@@ -36,7 +36,9 @@ function copyFilesToNative(projectPath, nativePath, platform, ignorePathList) {
     file.copy(path.join(projectPath, "libs"), path.join(url, "libs"));
 
     //resource
-    copyFilesWithIgnore(path.join(projectPath, "resource"), path.join(url, "resource"), ignorePathList);
+    if (file.exists(path.join(projectPath, "resource"))) {
+        copyFilesWithIgnore(path.join(projectPath, "resource"), path.join(url, "resource"), ignorePathList);
+    }
 
     //3、生成空版本控制文件
     //编译版本控制文件 生成2个空文件
