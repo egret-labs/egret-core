@@ -57,5 +57,12 @@ module egret {
                 this._graphics._draw(renderContext);
         }
 
+        public _measureBounds():egret.Rectangle {
+            var graphics:Graphics = this._graphics;
+            if(!graphics){
+                return super._measureBounds();
+            }
+            return graphics._measureBounds();
+        }
     }
 }

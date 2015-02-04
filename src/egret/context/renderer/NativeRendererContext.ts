@@ -294,7 +294,7 @@ var egret_native_graphics;
             egret_native.Graphics.lineTo(x, y + height);
             egret_native.Graphics.lineTo(x, y);
         }, this, arguments));
-
+        this.checkRect(x, y, width, height);
     }
 
     egret_native_graphics.drawRect = drawRect;
@@ -320,6 +320,7 @@ var egret_native_graphics;
             egret_native.Graphics.lineTo(x, y)
 
         }, this, arguments));
+        this.checkPoint(x, y);
     }
 
     egret_native_graphics.lineTo = lineTo;
@@ -334,13 +335,18 @@ var egret_native_graphics;
         this.commandQueue.push(new Command(function (x, y) {
             egret_native.Graphics.moveTo(x, y)
         }, this, arguments));
+        this.checkPoint(x, y);
     }
 
     egret_native_graphics.moveTo = moveTo;
 
     function clear() {
         this.commandQueue.splice(0, this.commandQueue.length);
-        egret_native.Graphics.lineStyle(0, 0)
+        egret_native.Graphics.lineStyle(0, 0);
+        this._minX = 0;
+        this._minY = 0;
+        this._maxX = 0;
+        this._maxY = 0;
     }
 
     egret_native_graphics.clear = clear;
