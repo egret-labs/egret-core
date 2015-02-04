@@ -151,15 +151,17 @@ function help_title() {
 
 function help_example() {
     var result = "\n";
-    result += "    egret build [project_name] [-e|--module [core gui]] [-k] [--runtime native] [-noscan]\n";
+    result += "    egret build [project_name] [-e [-clean]|--module [core gui]] [-k] [--runtime native][-noscan] [-log]\n";
     result += "描述:\n";
     result += "    " + help_title();
     result += "参数说明:\n";
     result += "    -e           编译指定项目的同时编译引擎目录\n";
+    result += "    -clean       清除libs以及bin-debug文件夹，只有在-e的前提下才会生效\n";
     result += "    --module     只编译引擎中指定的部分模块，不编译项目；不填则编译全部模块\n";
     result += "    -k           编译EXML文件时保留生成的TS文件\n";
     result += "    --runtime    如果有native工程，则会将文件拷贝到工程里\n";
     result += "    -noscan      编译游戏时，根据game_file_list获取编译列表";
+    result += "    -log   显示执行过程";
     return result;
 }
 
