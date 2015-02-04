@@ -185,6 +185,26 @@ function getDocumentClass(currDir) {
     return "";
 }
 
+function getGlobalJava () {
+    var JAVA_EXT = process.platform == 'win32' ? '.exe' : '';
+
+    var java = path.join(process.execPath,"../jre/bin","java" + JAVA_EXT);
+    if(!file.exists(java)){
+        java = null;
+        if (process.env["JAVA_HOME"]) {
+            java = path.join(process.env["JAVA_HOME"], "bin", "java" + JAVA_EXT);
+            if (!file.exists(java)) {
+                java = null;
+            }
+        }
+    }
+    if (!java) {
+        java = "java";
+    }
+    return java;
+}
+
+exports.getGlobalJava = getGlobalJava;
 exports.require = _require;
 exports.exit = _exit;
 exports.warn = _warn;

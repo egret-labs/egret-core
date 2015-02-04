@@ -11,7 +11,7 @@ function createZipFile(sourcePath, outputFile, call, password) {
     var compilerPath = path.join(param.getEgretPath(), "tools/lib/zip/EGTZipTool_v1.0.1.jar");
     compilerPath = "\"" + compilerPath + "\"";
 
-    var cmd = 'java -jar ' + compilerPath + ' zip ' + outputFile + ' ' + sourcePath + ' ' + (password || "");
+    var cmd = globals.getGlobalJava() + ' -jar ' + compilerPath + ' zip ' + outputFile + ' ' + sourcePath + ' ' + (password || "");
     var build = cp_exec(cmd);
 //        build.stdout.on("data", function(data) {
 //            globals.log(data);
