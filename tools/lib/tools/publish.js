@@ -270,7 +270,7 @@ function publishHtml5(opts) {
     var file_list = filelist.getAllFileList(projectPath, "html5");
     var needCompile = (opts["-compile"] || opts["-compiler"]) ? true : false;
 
-    if (needCompile) {//压缩js文件，并拷贝到ziptemp目录中
+    if (true) {//压缩js文件，并拷贝到ziptemp目录中
         task.push(function (tempCallback) {
             var tempTime = Date.now();
             globals.debugLog("开始压缩js文件");
