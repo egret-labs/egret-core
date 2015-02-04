@@ -156,6 +156,12 @@ module egret.gui {
 				return;
             var oldContent:any = this._content;
             this._content = content;
+            if(this._content instanceof Texture){
+                this._texture_to_render = content;
+            }
+            else{
+                this._texture_to_render = null;
+            }
             if(oldContent!==content) {
                 if(oldContent instanceof DisplayObject){
 					if((<DisplayObject> oldContent).parent==this){
@@ -228,7 +234,6 @@ module egret.gui {
         public _render(renderContext:RendererContext):void {
             if(this._content instanceof Texture){
                 var texture:Texture = <Texture> this._content;
-                this._texture_to_render = texture;
                 var w:number;
                 var h:number;
                 if(this.autoScale){
@@ -240,9 +245,6 @@ module egret.gui {
                     h = texture._textureHeight;
                 }
                 Bitmap._drawBitmap(renderContext,w,h,this);
-            }
-            else{
-                this._texture_to_render = null;
             }
             super._render(renderContext);
         }

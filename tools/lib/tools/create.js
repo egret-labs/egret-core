@@ -21,11 +21,10 @@ function run(currDir, args, opts) {
     if(file.exists(projectPath)) {
         globals.exit(1002);
     }
-    var runtime = param.getOption(opts, "--runtime", ["html5", "native"]);
     var type = param.getOption(opts, "--type", ["core", "gui", "empty"]);
-    var egretSourceList = [];
     async.series([
 
+        //创建新工程
         function (callback) {
             globals.log("正在创建新项目文件夹...");
             //拷贝空模板
@@ -55,13 +54,10 @@ function run(currDir, args, opts) {
             callback();
         },
 
+        //编译工程
         function (callback) {
-                compiler.compileModules(callback, projectPath,runtime);
-        },
-
-        function (callback) {
-            globals.log("正在编译项目...");
-            build.buildProject(callback, projectPath,false,runtime);
+            console.log("正在编译项目...");
+            build.run(currDir, [projectName], {"-e":[]});
         },
 
         function (callback) {

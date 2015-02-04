@@ -43,6 +43,7 @@ module egret {
         constructor() {
             super();
             this._children = [];
+            this._isContainer = true;
 
         }
 
@@ -317,20 +318,44 @@ module egret {
         }
 
         public _updateTransform():void {
-            if (!this._visible) {
+            var o = this;
+            if (!o._visible) {
                 return;
             }
+            if(o._filter) {
+                RenderCommand.push(this._setGlobalFilter, this);
+            }
+            if (o._colorTransform) {
+                RenderCommand.push(this._setGlobalColorTransform, this);
+            }
+            var mask = o.mask || o._scrollRect;
+            if(mask) {
+                RenderCommand.push(this._pushMask, this);
+            }
             super._updateTransform();
-            for (var i = 0 , length = this._children.length; i < length; i++) {
-                var child:DisplayObject = this._children[i];
-                child._updateTransform();
+            if(!this["_cacheAsBitmap"] || !this._texture_to_render) {
+                for (var i = 0 , length = o._children.length; i < length; i++) {
+                    var child:DisplayObject = o._children[i];
+                    child._updateTransform();
+                }
+            }
+            if(mask) {
+                RenderCommand.push(this._popMask, this);
+            }
+            if (o._colorTransform) {
+                RenderCommand.push(this._removeGlobalColorTransform, this);
+            }
+            if(o._filter) {
+                RenderCommand.push(this._removeGlobalFilter, this);
             }
         }
 
         public _render(renderContext:RendererContext):void {
-            for (var i = 0 , length = this._children.length; i < length; i++) {
-                var child:DisplayObject = this._children[i];
-                child._draw(renderContext);
+            if(!MainContext.__use_new_draw) {
+                for (var i = 0 , length = this._children.length; i < length; i++) {
+                    var child:DisplayObject = this._children[i];
+                    child._draw(renderContext);
+                }
             }
         }
 

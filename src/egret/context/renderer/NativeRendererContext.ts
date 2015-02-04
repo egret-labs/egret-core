@@ -112,9 +112,9 @@ module egret {
          * @param destWidth {any}
          * @param destHeigh {any}
          */
-        public drawImageScale9(texture: Texture, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, rect):boolean {
+        public drawImageScale9(texture: Texture, sourceX, sourceY, sourceWidth, sourceHeight, offX, offY, destWidth, destHeight, rect):boolean {
             if (egret_native.Graphics.drawImageScale9 != null) {
-                egret_native.Graphics.drawImageScale9(texture._bitmapData, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, rect.x, rect.y, rect.width, rect.height);
+                egret_native.Graphics.drawImageScale9(texture._bitmapData, sourceX, sourceY, sourceWidth, sourceHeight, offX, offY, destWidth, destHeight, rect.x, rect.y, rect.width, rect.height);
                 this._addOneDraw();
                 return true;
             }
@@ -155,10 +155,10 @@ module egret {
          * @param blendMode {egret.BlendMode}
          */
         public setAlpha(value:number, blendMode:string) {
-            if (this.currentAlpha != value) {
+            //if (this.currentAlpha != value) {
                 egret_native.Graphics.setGlobalAlpha(value);
-                this.currentAlpha = value;
-            }
+                //this.currentAlpha = value;
+            //}
             this.setBlendMode(blendMode);
         }
 
@@ -168,13 +168,13 @@ module egret {
             if (!blendMode) {
                 blendMode = egret.BlendMode.NORMAL;
             }
-            if (this.currentBlendMode != blendMode) {
+            //if (this.currentBlendMode != blendMode) {
                 var blendModeArg = RendererContext.blendModesForGL[blendMode];
                 if (blendModeArg) {
                     egret_native.Graphics.setBlendArg(blendModeArg[0], blendModeArg[1]);
                     this.currentBlendMode = blendMode;
                 }
-            }
+            //}
         }
 
         /**
@@ -259,6 +259,10 @@ module egret {
             else {
                 egret_native.Graphics.setGlobalColorTransformEnabled(false);
             }
+        }
+
+        public setGlobalFilter(filterData:Filter):void {
+            egret_native.Graphics.setGlobalShader(filterData);
         }
     }
 }

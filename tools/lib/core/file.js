@@ -259,6 +259,21 @@ function getDirectoryListing(path){
     }
     return list;
 }
+
+function getDirectoryAllListing(path) {
+    var list = [];
+    if (isDirectory(path)) {
+        var fileList = getDirectoryListing(path);
+        for (var key in fileList) {
+            list = list.concat(getDirectoryAllListing(fileList[key]));
+        }
+
+        return list;
+    }
+
+    return [path];
+}
+
 /**
  * 使用指定扩展名搜索文件夹及其子文件夹下所有的文件
  * @param dir 要搜索的文件夹
@@ -443,6 +458,7 @@ exports.copy = copy;
 exports.remove = remove;
 exports.exists = exists;
 exports.search = search;
+exports.getDirectoryAllListing = getDirectoryAllListing;
 exports.getDirectoryListing = getDirectoryListing;
 exports.isDirectory = isDirectory;
 exports.isSymbolicLink = isSymbolicLink;

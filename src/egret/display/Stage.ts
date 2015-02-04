@@ -27,7 +27,7 @@
 
 
 module egret {
-    
+
     /**
      * @class egret.Stage
      * @classdesc Stage 类代表主绘图区。
@@ -97,7 +97,7 @@ module egret {
         /**
          * 设置屏幕适配策略
          */
-        private setResolutionPolicy():void {
+        private setResolutionPolicy():void{
             var content = Stage.SCALE_MODE_ENUM[this._scaleMode];
             if (!content){
                 throw new Error(getString(1024));

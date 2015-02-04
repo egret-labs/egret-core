@@ -515,6 +515,7 @@ module egret {
 
         constructor() {
             super();
+            this.needDraw = true;
         }
 
         public _onRemoveFromStage():void {
@@ -540,7 +541,7 @@ module egret {
         public _updateTransform():void {
             if (this._type == TextFieldType.INPUT) {
                 if (this._normalDirty) {//本身有变化
-                    this._clearDirty();
+                    //this._clearDirty();
                     this._inputUtils._updateProperties();
                 }
                 else {//兼容可能父层有变化

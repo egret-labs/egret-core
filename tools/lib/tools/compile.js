@@ -49,8 +49,7 @@ function compile(callback, projectDir, sourceList, projectConfig) {
     var keepGeneratedTypescript = projectConfig.keepGeneratedTypescript;
 
     var srcPath = path.join(projectDir, "src");
-    var output = projectConfig.output ? projectConfig.output : projectDir;
-    output = path.join(output, "bin-debug/src");
+    var output = path.join(projectDir, "bin-debug/src");
 
 
 
@@ -110,12 +109,14 @@ function compile(callback, projectDir, sourceList, projectConfig) {
                 return "\"" + item + "\"";
             });
 
+            console.log(Date.now() + "  333");
             var sourcemap = param.getArgv()["opts"]["-sourcemap"];
             sourcemap = sourcemap ? "--sourcemap " : "";
 
             var cmd = sourcemap + tsList.join(" ") + " -t ES5 --outDir " + "\"" + output + "\"";
             var typeScriptCompiler = require("./egret_compiler.js");
             typeScriptCompiler.compile(onCompileComplete, cmd);
+            console.log(Date.now() + "  444");
 
             function onCompileComplete(code) {
                 if (code == 0) {
@@ -220,7 +221,7 @@ function getModuleConfig(module, projectDir) {
     return moduleConfig
 }
 
-function generateGameFileList(projectPath, runtime) {
+function generateGameFileList(projectPath) {
     var manifestPath = path.join(projectPath, "manifest.json");
     var srcPath = path.join(projectPath, "src/");
     var manifest;
@@ -238,42 +239,45 @@ function generateGameFileList(projectPath, runtime) {
             catch (e) {
             }
         }
-        if (all_module.length == 0) {
-            var projectConfig = require("../core/projectConfig.js");
-            projectConfig.init(projectPath);
-            var moduleList = projectConfig.getModule(runtime);
-            moduleList.map(function (module) {
-                var moduleConfig = getModuleConfig(module, projectPath);
-                all_module.push(moduleConfig);
-            })
-        }
+//        if (all_module.length == 0) {
+//            var projectConfig = require("../core/projectConfig.js");
+//            projectConfig.init(projectPath);
+//            var moduleList = projectConfig.getModule(runtime);
+//            moduleList.map(function (module) {
+//                var moduleConfig = getModuleConfig(module, projectPath);
+//                all_module.push(moduleConfig);
+//            })
+//        }
         manifest = create_manifest.create(srcPath, false, referenceInfo);
         var moduleReferenceList = create_manifest.getModuleReferenceList();
 
-        generateAllModuleFileList(projectPath, moduleReferenceList);
+        //todo
+//        generateAllModuleFileList(projectPath, moduleReferenceList);
     }
 
 
 
-    //=========================
-    // 这段逻辑的作用是把第三方 module 的 ts文件不要随着 game_file_list 编译进去
-    var moduleFileList = getAllModuleTypeScriptFileList(projectPath);
-    //windows系统路径修正
-    moduleFileList = moduleFileList.map(function(item){
-        return item.replace(/\\/g,"/");
-    });
-    manifest = manifest.filter(function(item){
-        return moduleFileList.indexOf(item) == -1;
-    });
-    //=========================
+//    //=========================
+//    // 这段逻辑的作用是把第三方 module 的 ts文件不要随着 game_file_list 编译进去
+//    var moduleFileList = getAllModuleTypeScriptFileList(projectPath);
+//    //windows系统路径修正
+//    moduleFileList = moduleFileList.map(function(item){
+//        return item.replace(/\\/g,"/");
+//    });
+//    manifest = manifest.filter(function(item){
+//        return moduleFileList.indexOf(item) == -1;
+//    });
+//    //=========================
+
+    file.save(path.join(projectPath, "bin-debug/src/manifest.json"), JSON.stringify(manifest, null, "\t"));
 
     var fileListText = createFileList(manifest, srcPath);
     fileListText = "var game_file_list = " + fileListText + ";";
 
-    projectConfig = require("../core/projectConfig.js");
-    var output = projectConfig.getOutputDir();
-    output = output ? output : projectPath;
-    file.save(path.join(output, "bin-debug/src/game_file_list.js"), fileListText);
+//    projectConfig = require("../core/projectConfig.js");
+//    var output = projectConfig.getOutputDir();
+//    output = output ? output : projectPath;
+    file.save(path.join(projectPath, "bin-debug/src/game_file_list.js"), fileListText);
     return manifest;
 }
 

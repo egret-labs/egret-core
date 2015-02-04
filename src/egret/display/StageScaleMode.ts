@@ -61,6 +61,17 @@ module egret {
 
 }
 
-
+    export class NoBorderMode {
+        /**
+         * 固定宽，默认固定宽
+         * @member {string} egret.NoBorderMode.FIXED_WIDTH
+         */
+        public static FIXED_WIDTH:number = 1;
+        /**
+         * 固定高
+         * @member {string} egret.NoBorderMode.FIXED_HEIGHT
+         */
+        public static FIXED_HEIGHT:number = 2;
+    }
 
 }

@@ -260,6 +260,8 @@ module egret {
                 this._offsetY = y + anchorOffsetY;
                 displayObject._worldTransform.append(1, 0, 0, 1, -this._offsetX, -this._offsetY);
                 displayObject.worldAlpha = 1;
+                var __use_new_draw = MainContext.__use_new_draw;
+                MainContext.__use_new_draw = false;
                 if (displayObject instanceof egret.DisplayObjectContainer) {
                     var list = (<DisplayObjectContainer>displayObject)._children;
                     for (var i = 0, length = list.length; i < length; i++) {
@@ -278,6 +280,9 @@ module egret {
                 gl.clear(gl.COLOR_BUFFER_BIT);
                 this.renderContext.onRenderStart();
                 RendererContext.deleteTexture(this);
+                if(displayObject._filter) {
+                    this.renderContext.setGlobalFilter(displayObject._filter);
+                }
                 if (displayObject._colorTransform) {
                     this.renderContext.setGlobalColorTransform(displayObject._colorTransform.matrix);
                 }
@@ -287,11 +292,15 @@ module egret {
                 }
                 displayObject._render(this.renderContext);
                 this.renderContext["_draw"]();
+                MainContext.__use_new_draw = __use_new_draw;
                 if (mask) {
                     this.renderContext.popMask();
                 }
                 if (displayObject._colorTransform) {
                     this.renderContext.setGlobalColorTransform(null);
+                }
+                if(displayObject._filter) {
+                    this.renderContext.setGlobalFilter(null);
                 }
                 egret.RenderTexture.identityRectangle.width = width;
                 egret.RenderTexture.identityRectangle.height = height;
@@ -458,6 +467,9 @@ module egret {
             var shader;
             if (this.colorTransformMatrix) {
                 shader = this.shaderManager.colorTransformShader;
+            }
+            else if (this.filterType == "blur") {
+                shader = this.shaderManager.blurShader;
             }
             else {
                 shader = this.shaderManager.defaultShader;
@@ -773,6 +785,29 @@ module egret {
                     shader.uniforms.colorAdd.value.x = colorTransformMatrix.splice(4, 1)[0] / 255.0;
                     shader.uniforms.matrix.value = colorTransformMatrix;
                 }
+            }
+        }
+
+        public setGlobalFilter(filterData:Filter):void {
+            this._draw();
+            this.setFilterProperties(filterData);
+        }
+
+        private filterType:string = null;
+
+        private setFilterProperties(filterData:Filter):void {
+            if (filterData) {
+                this.filterType = filterData.type;
+                switch (filterData.type) {
+                    case "blur":
+                        var shader:BlurShader = this.shaderManager.blurShader;
+                        shader.uniforms.blur.value.x = (<BlurFilter>filterData).blurX;
+                        shader.uniforms.blur.value.y = (<BlurFilter>filterData).blurY;
+                        break;
+                }
+            }
+            else {
+                this.filterType = null;
             }
         }
 

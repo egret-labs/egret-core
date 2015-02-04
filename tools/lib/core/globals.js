@@ -185,7 +185,59 @@ function getDocumentClass(currDir) {
     return "";
 }
 
-function getGlobalJava () {
+function addQuotes(str) {
+    return "\"" + str + "\"";
+}
+
+
+var CodeUtil = require("../core/code_util.js");
+/**
+ * 这个文件是否只含有接口
+ */
+function isInterface(path) {
+    var text = file.read(path);
+    text = CodeUtil.removeComment(text, path);
+    text = removeInterface(text);
+
+    if (!CodeUtil.containsVariable("class", text) && !CodeUtil.containsVariable("var", text) && !CodeUtil.containsVariable("function", text)) {
+        return true;
+    }
+    return false;
+}
+
+/**
+ * 移除代码中的接口定义
+ */
+function removeInterface(text) {
+    var tsText = "";
+    while (text.length > 0) {
+        var index = CodeUtil.getFirstVariableIndex("interface", text);
+        if (index == -1) {
+            tsText += text;
+            break;
+        }
+        tsText += text.substring(0, index);
+        text = text.substring(index);
+        index = CodeUtil.getBracketEndIndex(text);
+        text = text.substring(index + 1);
+    }
+    return tsText;
+}
+
+var isShow;
+function setShowDebugLog() {
+    isShow = param.getArgv()["opts"]["-debugLog"] != null
+            || param.getArgv()["opts"]["-debuglog"] != null
+            || param.getArgv()["opts"]["-log"] != null;
+}
+
+function debugLog(logStr) {
+    if (isShow) {
+        console.log.apply(console, arguments);
+    }
+}
+
+function getGlobalJava() {
     var JAVA_EXT = process.platform == 'win32' ? '.exe' : '';
 
     var java = path.join(process.execPath,"../jre/bin","java" + JAVA_EXT);
@@ -203,8 +255,13 @@ function getGlobalJava () {
     }
     return java;
 }
-
 exports.getGlobalJava = getGlobalJava;
+
+exports.setShowDebugLog = setShowDebugLog;
+exports.debugLog = debugLog;
+
+
+exports.isInterface = isInterface;
 exports.require = _require;
 exports.exit = _exit;
 exports.warn = _warn;
@@ -215,3 +272,4 @@ exports.addCallBackWhenExit = addCallBackWhenExit;
 exports.getDocumentClass = getDocumentClass;
 exports.checkVersion = checkVersion;
 exports.compressVersion = compressVersion;
+exports.addQuotes = addQuotes;

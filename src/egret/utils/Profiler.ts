@@ -28,8 +28,8 @@
 
 module egret {
     /**
-	 * @class egret.Profiler
-	 * @classdesc
+     * @class egret.Profiler
+     * @classdesc
      * Profiler是egret的性能检测分析类
      * 请使用 egret.Profiler.getInstance().run();打开性能分析显示。
      */
@@ -63,26 +63,57 @@ module egret {
         private _maxDeltaTime:number = 500;
         private _totalDeltaTime:number = 0;
 
+        public _isRunning:boolean = false;
+
+        public stop():void {
+            if (!this._isRunning) {
+                return;
+            }
+
+            this._isRunning = false;
+            Ticker.getInstance().unregister(this.update, this);
+
+            var context = MainContext.instance;
+            context.removeEventListener(Event.ENTER_FRAME, this.onEnterFrame, this);
+            context.removeEventListener(Event.RENDER, this.onStartRender, this);
+            context.removeEventListener(Event.FINISH_RENDER, this.onFinishRender, this);
+            context.removeEventListener(Event.FINISH_UPDATE_TRANSFORM, this.onFinishUpdateTransform, this);
+        }
 
         /**
          * 启动Profiler
-		 * @method egret.Profiler#run
+         * @method egret.Profiler#run
          */
         public run() {
             //todo 加入debug参数
-            Ticker.getInstance().register(this.update, this);
             if (this._txt == null) {
                 this._txt = new TextField();
                 this._txt.size = 28;
                 this._txt.multiline = true;
-
-                MainContext.instance.stage.addChild(this._txt);
+                this._txt._parent = new egret.DisplayObjectContainer();
             }
+
+            if (this._isRunning) {
+                return;
+            }
+
+            this._isRunning = true;
+            Ticker.getInstance().register(this.update, this);
+
             var context = MainContext.instance;
             context.addEventListener(Event.ENTER_FRAME, this.onEnterFrame, this);
             context.addEventListener(Event.RENDER, this.onStartRender, this);
             context.addEventListener(Event.FINISH_RENDER, this.onFinishRender, this);
             context.addEventListener(Event.FINISH_UPDATE_TRANSFORM, this.onFinishUpdateTransform, this);
+        }
+
+        public _drawProfiler():void {
+            this._txt._updateTransform();
+            this._txt._draw(egret.MainContext.instance.rendererContext);
+        }
+
+        public _setTxtFontSize(fontSize:number){
+            this._txt.size = fontSize;
         }
 
         /**
@@ -124,7 +155,7 @@ module egret {
             this._tick++;
             this._totalDeltaTime += frameTime;
             if (this._totalDeltaTime >= this._maxDeltaTime) {
-                var drawStr = (this._preDrawCount - 1).toString();
+                var drawStr = (this._preDrawCount - 3).toString();
                 var timeStr = Math.ceil(this._logicPerformanceCost).toString() + ","
                     + Math.ceil(this._updateTransformPerformanceCost).toString() + ","
                     + Math.ceil(this._renderPerformanceCost).toString() + ","
@@ -140,7 +171,7 @@ module egret {
         }
 
         /**
-		 * @method egret.Profiler#onDrawImage
+         * @method egret.Profiler#onDrawImage
          * @private
          */
         public onDrawImage() {

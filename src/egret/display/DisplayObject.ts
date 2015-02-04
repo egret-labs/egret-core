@@ -569,6 +569,7 @@ module egret {
         public _worldBounds:egret.Rectangle = null;
         public worldAlpha:number = 1;
 
+        public _isContainer:boolean = false;
 
         /**
          * @private
@@ -585,25 +586,62 @@ module egret {
                 return;
             }
             var o = this;
-            if (o._colorTransform) {
+            var isCommandPush = MainContext.__use_new_draw && o._isContainer;
+            if(o._filter && !isCommandPush) {
+                renderContext.setGlobalFilter(o._filter);
+            }
+            if (o._colorTransform && !isCommandPush) {
                 renderContext.setGlobalColorTransform(o._colorTransform.matrix);
             }
             renderContext.setAlpha(o.worldAlpha, o.blendMode);
             renderContext.setTransform(o._worldTransform);
             var mask = o.mask || o._scrollRect;
-            if (mask) {
+            if (mask && !isCommandPush) {
                 renderContext.pushMask(mask);
             }
             this._render(renderContext);
-            if (mask) {
+            if (mask && !isCommandPush) {
                 renderContext.popMask();
             }
-            if (o._colorTransform) {
+            if (o._colorTransform && !isCommandPush) {
                 renderContext.setGlobalColorTransform(null);
+            }
+            if(o._filter && !isCommandPush) {
+                renderContext.setGlobalFilter(null);
             }
             this.destroyCacheBounds();
         }
 
+        public _setGlobalFilter(renderContext:RendererContext):void {
+            var o = this;
+            renderContext.setGlobalFilter(o._filter);
+        }
+
+        public _removeGlobalFilter(renderContext:RendererContext):void {
+            renderContext.setGlobalFilter(null);
+        }
+
+        public _setGlobalColorTransform(renderContext:RendererContext):void {
+            var o = this;
+            renderContext.setGlobalColorTransform(o._colorTransform.matrix);
+        }
+
+        public _removeGlobalColorTransform(renderContext:RendererContext):void {
+            renderContext.setGlobalColorTransform(null);
+        }
+
+        public _pushMask(renderContext:RendererContext):void {
+            var o = this;
+            renderContext.setTransform(o._worldTransform);
+            var mask = o.mask || o._scrollRect;
+            if (mask) {
+                renderContext.pushMask(mask);
+            }
+        }
+
+        public _popMask(renderContext:RendererContext):void {
+            renderContext.popMask();
+        }
 
         private drawCacheTexture(renderContext:RendererContext):boolean {
             var display:egret.DisplayObject = this;
@@ -637,11 +675,23 @@ module egret {
         }
 
         /**
+         * 强制每帧执行_draw函数
+         * @public
+         */
+        public needDraw:boolean = false;
+
+        /**
          * @private
          * @param renderContext
          */
         public _updateTransform():void {
-            this._calculateWorldTransform();
+            var o = this;
+            o._calculateWorldTransform();
+            if(MainContext._renderLoopPhase == "updateTransform") {
+                if(o.needDraw || o._texture_to_render || o["graphics"]) {
+                    RenderCommand.push(this._draw, this);
+                }
+            }
         }
 
         /**
@@ -1160,6 +1210,18 @@ module egret {
             this._colorTransform = value;
         }
 
+        /**
+         * beta功能，请勿调用此方法
+         */
+        public _filter:Filter = null;
+
+        public get filter():Filter {
+            return this._filter;
+        }
+
+        public set filter(value:Filter) {
+            this._filter = value;
+        }
     }
 
 

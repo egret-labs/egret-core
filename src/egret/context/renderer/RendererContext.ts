@@ -131,7 +131,7 @@ module egret {
          * @param destWidth {any}
          * @param destHeigh {any}
          */
-        public drawImageScale9(texture: Texture, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, rect):boolean {
+        public drawImageScale9(texture: Texture, sourceX, sourceY, sourceWidth, sourceHeight, offX, offY, destWidth, destHeight, rect):boolean {
             return false;
         }
 
@@ -214,6 +214,10 @@ module egret {
         }
 
         public setGlobalColorTransform(colorTransformMatrix:Array<number>):void {
+
+        }
+
+        public setGlobalFilter(filterData:Filter):void {
 
         }
 
