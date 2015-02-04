@@ -330,7 +330,9 @@ module egret {
             this.touchBeginTimer.stop();
             var event: TouchEvent = this.delayTouchBeginEvent;
             this.delayTouchBeginEvent = null;
-            this.dispatchPropagationEvent(event);
+            //Dispatch event only if the scroll view is still on the stage
+            if(this.stage)
+                this.dispatchPropagationEvent(event);
         }
 
         private dispatchPropagationEvent(event: TouchEvent): void {

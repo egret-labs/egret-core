@@ -208,6 +208,7 @@ module egret {
 
             };
 
+            //todo 如果是文本会有问题
             RenderTexture.prototype.drawToTexture = function (displayObject:egret.DisplayObject, clipBounds?:Rectangle, scale?:number):boolean {
                 var bounds = clipBounds || displayObject.getBounds(egret.Rectangle.identity);
                 if (bounds.width == 0 || bounds.height == 0) {
