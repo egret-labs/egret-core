@@ -15489,6 +15489,15 @@ var ts;
             getNewLine: function () { return sys.newLine; }
         };
     }
+
+    function executeApi(args, defaultLibUrl) {
+        var commandLine = ts.parseCommandLine(["@tsc_config_temp.txt"]);
+        var compilerOptions = commandLine.options;
+        var compilerHost = createCompilerHost(compilerOptions, defaultLibUrl);
+        var program = compile(commandLine, compilerHost).program;
+        return program.getSourceFiles();
+    }
+
     function executeCommandLine(args, defaultLibUrl) {
         var commandLine = ts.parseCommandLine(args);
         var compilerOptions = commandLine.options;
@@ -15531,6 +15540,7 @@ var ts;
         }
     }
     ts.executeCommandLine = executeCommandLine;
+    ts.executeApi = executeApi;
     function watchProgram(commandLine, compilerHost) {
         var watchers = {};
         var updatedFiles = {};
@@ -15692,6 +15702,7 @@ var ts;
     }
 })(ts || (ts = {}));
 exports.executeCommandLine = ts.executeCommandLine;
+exports.executeApi = ts.executeApi;
 exports.exit = null;
 sys.exit = function(code){
     exports.exit(code);
