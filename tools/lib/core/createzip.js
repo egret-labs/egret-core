@@ -13,7 +13,7 @@ function createZipFile(sourcePath, outputFile, call, password) {
     outputFile = globals.addQuotes(outputFile);
     sourcePath = globals.addQuotes(sourcePath);
 
-    var cmd = 'java -jar ' + compilerPath + ' zip ' + outputFile + ' ' + sourcePath + ' ' + (password || "");
+    var cmd = globals.getGlobalJava() + ' -jar ' + compilerPath + ' zip ' + outputFile + ' ' + sourcePath + ' ' + (password || "");
     var build = cp_exec(cmd);
 //        build.stdout.on("data", function(data) {
 //            globals.log(data);
