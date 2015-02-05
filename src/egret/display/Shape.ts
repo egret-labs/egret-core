@@ -46,8 +46,8 @@ module egret {
 
         public get graphics():Graphics{
             if(!this._graphics){
-                var rendererContext = egret.MainContext.instance.rendererContext;
                 this._graphics = new Graphics();
+                this.needDraw = true;
             }
             return this._graphics;
         }
