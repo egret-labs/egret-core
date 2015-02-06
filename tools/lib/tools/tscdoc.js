@@ -14,7 +14,6 @@ function run(dir, args, opts) {
     var outputPath = "/Volumes/WORK/Sites/api/js/data/";
 
     var moduleArr = ["core", "html5", "native", "gui", "socket", "dragonbones"];
-    moduleArr = ["core"];
     var tsList = [];
     for (var i = 0; i < moduleArr.length; i++) {
         tsList = tsList.concat(getModuleList(moduleArr[i]));
