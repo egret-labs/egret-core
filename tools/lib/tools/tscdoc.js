@@ -10,8 +10,11 @@ var sdoc = require("./save_docs");
 var addExtends = require("./addExtends");
 
 function run(dir, args, opts) {
-
-    var outputPath = "/Volumes/WORK/Sites/api/js/data/";
+    if (opts["--output"] == null || opts["--output"].length == 0 || opts["--output"][0] == "") {
+        console.log("请设置输出api地址  egret tscdoc --output path");
+        return;
+    }
+    var outputPath = opts["--output"][0] || "";
 
     var moduleArr = ["core", "html5", "native", "gui", "socket", "dragonbones"];
     var tsList = [];
@@ -30,6 +33,7 @@ function run(dir, args, opts) {
     globals.debugLog("耗时：%d秒", (Date.now() - tempTime) / 1000);
 
     var tempClassArr = sdoc.screening(apiArr);
+    tempClassArr = addExtends.addChildClasses(tempClassArr);
     var extendsObj = addExtends.addExtends(tempClassArr);
 
     file.remove(outputPath);

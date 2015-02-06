@@ -4,6 +4,7 @@
 
 
 var file = require("../core/file.js");
+var trim = require("./trim");
 
 function typeScriptCompiler(quitFunc,cmd, tscLibUrl) {
     file.save("tsc_config_temp.txt", cmd);//todo performance-optimize
@@ -214,8 +215,15 @@ function check(obj, parent, text) {
                 check(obj.exports[key], parent[objName]["$_tree_"], text);
             }
 
-            if (obj["valueDeclaration"]) {
-                initExtends(obj["valueDeclaration"]["baseType"], parent[objName]);
+            if (obj["declarations"] && obj["declarations"].length) {
+                var docInfo = obj["declarations"][0];
+                if (docInfo["baseTypes"] && docInfo["baseTypes"].length) {
+                    initExtends(docInfo["baseTypes"][0], parent[objName]);
+                }
+
+                parent[objName]["api"] = text.substring(docInfo.pos, docInfo.end);
+
+                addDoc(parent[objName]["api"], parent[objName]);
             }
             break;
         case 16://类
@@ -472,7 +480,12 @@ function analyze(doc) {
         else if (item.indexOf("classdesc") == 0) {
             if (item.match(/^classdesc(\s)+/)) {
                 var temp = item.match(/^classdesc(\s)+/)[0];
-                docInfo["description"] = changeDescription(item.substring(temp.length));
+                if (docInfo["description"] == null) {
+                    docInfo["description"] = changeDescription(item.substring(temp.length));
+                }
+                else {
+                    docInfo["description"] += "\n" + changeDescription(item.substring(temp.length));
+                }
             }
             else {
                 //console.log("sdf");
@@ -483,11 +496,10 @@ function analyze(doc) {
 
             docInfo["return"] = item.substring(temp.length);
         }
-        //else {
-        //    docInfo["description"] = item;
-        //}
-
-        //docs[i] = "@" + docs[i];
+        else {
+            var docName = item.match(/^(\S)+/)[0];
+            docInfo[docName] = trim.trimAll(changeDescription(item.substring(docName.length)) || "");
+        }
     }
 
     return docInfo;

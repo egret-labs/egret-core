@@ -3,6 +3,7 @@
  */
 
 var path = require("path");
+var trim = require("./trim");
 
 var classesArr = {};
 var windowArr = [];
@@ -79,7 +80,7 @@ exports.screening = function (apiArr) {
         _analyze(apiArr[i], [], apiArr[i]["filename"]);
     }
 
-    //加入extends 和  implements
+    //补全 extends、implements
     for (var key in classesArr) {
         var classinfo = classesArr[key];
 
@@ -222,7 +223,7 @@ function analyze(item, name, parent, filename) {
             tempClass["classdesc"] = tempClass["description"];
             delete tempClass["description"];
 
-            tempClass["extends"] = item["extends"];
+            tempClass["tempExtends"] = item["extends"];
 
             addExtendsClass(name, tempClass["memberof"], tempClass["tempExtends"]);
 
@@ -348,12 +349,12 @@ function analyze(item, name, parent, filename) {
             member["description"] = member["description"].replace(/(\s)*$/, "");
 
             if (member["description"] != "") {
-                if (rwType == 1) {
-                    member["description"] += "【只读】";
-                }
-                else if (rwType == 2){
-                    member["description"] += "【只写】";
-                }
+                //if (rwType == 1) {
+                //    member["description"] += "【只读】";
+                //}
+                //else if (rwType == 2){
+                //    member["description"] += "【只写】";
+                //}
             }
 
             member["description"] = changeDescription(member["description"]);
@@ -449,13 +450,13 @@ function initDesc(docs, parameters, obj, notTrans) {
         }
 
         if (doc["link"]) {
-            obj["exampleU"] = trimAll(doc["link"]);
+            obj["exampleU"] = trim.trimAll(doc["link"]);
         }
         //if (doc["see"]) {
         //    obj["see"] = doc["see"];
         //}
         if (doc["example"]) {
-            obj["exampleC"] = trimAll(doc["example"]);
+            obj["exampleC"] = trim.trimAll(doc["example"]);
         }
 
         if (doc["params"]) {
@@ -493,11 +494,11 @@ function addOtherPropertis(item, orgItem) {
     }
 
     if (orgItem["link"]) {
-        item["link"] = trimAll(orgItem["link"]);
+        item["link"] = trim.trimAll(orgItem["link"]);
     }
 
     if (orgItem["example"]) {
-        item["example"] = trimAll(orgItem["example"]);
+        item["example"] = trim.trimAll(orgItem["example"]);
     }
 
     if (orgItem["pType"]) {
@@ -533,16 +534,4 @@ function clone(frame, result) {
         }
     }
     return result;
-}
-
-function trimLeft(str) {
-   return str.replace(/^(\s)*/, "");
-}
-
-function trimRight(str) {
-    return str.replace(/(\s)*$/, "");
-}
-
-function trimAll(str) {
-    return trimRight(trimLeft(str));
 }

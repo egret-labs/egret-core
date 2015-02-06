@@ -9,6 +9,36 @@ var file = require("../core/file.js");
  *
  * @param tempClassArr 已经排除了不需要的方法以及属性
  */
+exports.addChildClasses = function (tempClassArr) {
+    var classChildren = {};
+    for (var tempKey in tempClassArr) {
+        var item = tempClassArr[tempKey];
+
+        if (item.class) {//class interface
+            var classInfo = item.class;
+            if (classInfo["augments"] && classInfo["augments"].length) {
+                var classParent = classInfo["augments"][0];
+                if (classChildren[classParent] == null) {
+                    classChildren[classParent] = [];
+                }
+                classChildren[classParent].push(tempKey);
+            }
+        }
+    }
+
+    for (var key in tempClassArr) {
+        var item = tempClassArr[key];
+
+        if (item.class) {//class interface
+            if (classChildren[key]) {
+                var classInfo = item.class;
+                classInfo["children"] = classChildren[key];
+            }
+        }
+    }
+    return tempClassArr;
+};
+
 exports.addExtends = function (tempClassArr) {
 
     var classArr = {};//所有的class
@@ -102,16 +132,16 @@ exports.addExtends = function (tempClassArr) {
                     classInfo["function"].unshift(cons);
                 }
                 else {
-                    var cons = {
-                        "kind": "function",
-                        "name": className,
-                        "memberof": key,
-                        "scope": "instance",
-                        "description": "<p>构造函数</p>"
-                    };
-
-                    classInfo["function"] = classInfo["function"] || [];
-                    classInfo["function"].unshift(cons);
+                    //var cons = {
+                    //    "kind": "function",
+                    //    "name": className,
+                    //    "memberof": key,
+                    //    "scope": "instance",
+                    //    "description": "<p>构造函数</p>"
+                    //};
+                    //
+                    //classInfo["function"] = classInfo["function"] || [];
+                    //classInfo["function"].unshift(cons);
                 }
             }
         }
