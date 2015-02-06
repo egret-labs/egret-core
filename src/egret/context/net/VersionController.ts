@@ -214,7 +214,7 @@ module egret {
         }
 
         private compareVersion(oldVersion:Object, newVersion:Object, url:string):boolean {
-            if (newVersion[url] == null || newVersion[url] == null) {
+            if (oldVersion[url] == null || newVersion[url] == null) {
                 return false;
             }
             return oldVersion[url]["v"] == newVersion[url]["v"];

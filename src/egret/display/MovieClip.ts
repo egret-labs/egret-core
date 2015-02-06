@@ -68,6 +68,7 @@ module egret {
         constructor(movieClipData?:MovieClipData) {
             super();
             this._setMovieClipData(movieClipData);
+            this.needDraw = true;
         }
 
         public _init(){
