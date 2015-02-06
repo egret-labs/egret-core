@@ -34,6 +34,9 @@ Egret Engine是一款使用JavaScript(TypeScript)编写的HTML5开源免费游�
 * 访问 [这里](http://docs.egret-labs.org/apis/) 获取 API 文档
 * 访问 [这里](https://github.com/egret-team/egret-examples) 获取示例项目
 
+第三方库
+* Egret 团队针对引擎封装维护了一些功能强大的第三方库，包括Google Adsense广告,MD5，手势，DOM元素渲染支持，粒子系统，物理系统等。访问[这里](https://github.com/egret-labs/egret-game-library)
+
 工具
 -------------------------
 * [Egret Wing](http://www.egret-labs.org/download/wing-download.html) , Egret GUI Visual Editor
