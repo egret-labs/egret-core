@@ -77,8 +77,13 @@ exports.addExtends = function (tempClassArr) {
             }
 
             //排序
-            classInfo["function"].sort();
-            classInfo["member"].sort();
+            classInfo["function"].sort(function (a, b) {
+                return a["name"] > b["name"] ? 1 : -1
+            });
+            classInfo["member"].sort(function (a, b) {
+                return a["name"] > b["name"] ? 1 : -1
+            });
+
 
             if (classInfo.class.kind == "class") {
                 for (var i = 0; i < classInfo["function"].length; i++) {
@@ -127,7 +132,7 @@ exports.addExtends = function (tempClassArr) {
         }
     }
 
-    return {"classes" : classArr, "modules" : moduleGlobals}
+    return {"classes": classArr, "modules": moduleGlobals}
 };
 
 exports.save = function (apiObj, outputPath) {
@@ -151,10 +156,10 @@ exports.save = function (apiObj, outputPath) {
         var item = tempModules[key];
 
         if (item["globalMember"] && item["globalMember"].length) {
-            file.save(path.join(outputPath, "finalClasses", key + "." + "globalMember.json"), JSON.stringify({"globalMember" : item["globalMember"]}, null, "\t"));
+            file.save(path.join(outputPath, "finalClasses", key + "." + "globalMember.json"), JSON.stringify({"globalMember": item["globalMember"]}, null, "\t"));
         }
         if (item["globalFunction"] && item["globalFunction"].length) {
-            file.save(path.join(outputPath, "finalClasses", key + "." + "globalFunction.json"), JSON.stringify({"globalFunction" : item["globalFunction"]}, null, "\t"));
+            file.save(path.join(outputPath, "finalClasses", key + "." + "globalFunction.json"), JSON.stringify({"globalFunction": item["globalFunction"]}, null, "\t"));
         }
     }
 
