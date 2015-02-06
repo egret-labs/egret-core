@@ -27,7 +27,6 @@ function run(dir, args, opts) {
     var tempTime = Date.now();
     var cmd = tsList.join(" ") + " -d -t ES5 --out " + outputPath + "a.d.ts";
     var apiArr = typeScriptCompiler.compile(function () {
-        console.log("sdfasf");
     }, cmd, null);
 
     globals.debugLog("耗时：%d秒", (Date.now() - tempTime) / 1000);
@@ -39,8 +38,7 @@ function run(dir, args, opts) {
     file.remove(outputPath);
     addExtends.save(extendsObj, outputPath);
 
-
-
+    file.remove("tsc_config_temp.txt");
 }
 
 function getModuleList(moduleName) {

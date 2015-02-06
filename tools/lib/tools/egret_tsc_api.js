@@ -39,10 +39,6 @@ function typeScriptCompiler(quitFunc,cmd, tscLibUrl) {
                 check(item.locals[key], root["$_tree_"], item.text);
             }
         }
-
-        if (item.filename.indexOf("VerticalAlign") >= 0) {
-                console.log("dfsf");
-        }
     });
 
     return apiArr;
