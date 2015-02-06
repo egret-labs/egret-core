@@ -63,7 +63,7 @@ function build(properties, callback, keepGeneratedTypescript) {
     else {
         var generateList = require("../core/gameFileList");
 
-        sourceList = generateList.generateGameFileList(projectPath, "src");
+        sourceList = generateList.generateGameFileList(projectPath, "src", projectProperties);
     }
 
     globals.debugLog("扫描耗时：%d秒", (Date.now() - saoTime) / 1000);

@@ -21,7 +21,7 @@ function compileModule(callback, moduleName) {
     output = path.join(libsPath, output);
 
     //获取源文件地址
-    var tsList = moduleConfig.file_list;
+    var tsList = moduleConfig.file_list.concat();
     tsList = tsList.map(function (item) {
         return globals.addQuotes(path.join(moduleConfig.prefix, moduleConfig.source, item));
     }).filter(function (item) {
@@ -66,7 +66,7 @@ function compileModule(callback, moduleName) {
         function (callback) {
             globals.debugLog(moduleName + " 拷贝其他文件");
             var tempTime = Date.now();
-            var jsList = moduleConfig.file_list;
+            var jsList = moduleConfig.file_list.concat();
 
             var dtsStr = "";
             for (var i = 0; i < jsList.length; i++) {

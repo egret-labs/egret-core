@@ -60,7 +60,7 @@ function createFileList(manifest, srcPath) {
     return gameList;
 }
 
-function generateGameFileList(projectPath, sourcePath) {
+function generateGameFileList(projectPath, sourcePath, projectProperties) {
     var manifestPath = path.join(projectPath, "manifest.json");
     var srcPath = path.join(projectPath, sourcePath);
     var manifest;
@@ -81,12 +81,31 @@ function generateGameFileList(projectPath, sourcePath) {
         manifest = create_manifest.create(srcPath, false, referenceInfo);
     }
 
+    if (true) {
+        var modules = projectProperties.getAllModules();
+        var moduleList = [];
+        for (var tempKey in modules) {
+            var mConfig = projectProperties.getModuleConfig(modules[tempKey]["name"]);
+            moduleList = moduleList.concat(mConfig["file_list"].map(function (item) {
+                return file.joinPath(mConfig.prefix, mConfig.source, item);
+            }));
+        }
+
+        manifest = manifest.filter(function (item) {
+            if (moduleList.indexOf(item) < 0) {
+                return true;
+            }
+            return false;
+        });
+    }
+
     var tempManifest = manifest.map(function (item) {
         return path.relative(srcPath, item);
     });
     file.save(path.join(projectPath, "bin-debug/src/manifest.json"), JSON.stringify(tempManifest, null, "\t"));
 
     var gameList = createFileList(manifest, srcPath);
+
     var fileListText = "var game_file_list = " + JSON.stringify(gameList, null, "\t") + ";";
 
     file.save(path.join(projectPath, "bin-debug/src/game_file_list.js"), fileListText);
