@@ -7,14 +7,14 @@ var globals = require("../core/globals");
 var param = require("../core/params_analyze.js");
 var file = require("../core/file.js");
 var sdoc = require("./save_docs");
+var addExtends = require("./addExtends");
 
 function run(dir, args, opts) {
-    var currDir = globals.joinEgretDir(dir, args[0]);
 
     var outputPath = "/Volumes/WORK/Sites/api/js/data/";
 
-
     var moduleArr = ["core", "html5", "native", "gui", "socket", "dragonbones"];
+    moduleArr = ["core"];
     var tsList = [];
     for (var i = 0; i < moduleArr.length; i++) {
         tsList = tsList.concat(getModuleList(moduleArr[i]));
@@ -30,7 +30,14 @@ function run(dir, args, opts) {
 
     globals.debugLog("耗时：%d秒", (Date.now() - tempTime) / 1000);
 
-    sdoc.save(apiArr, outputPath);
+    var tempClassArr = sdoc.screening(apiArr);
+    var extendsObj = addExtends.addExtends(tempClassArr);
+
+    file.remove(outputPath);
+    addExtends.save(extendsObj, outputPath);
+
+
+
 }
 
 function getModuleList(moduleName) {

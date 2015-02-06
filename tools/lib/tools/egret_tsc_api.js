@@ -38,149 +38,172 @@ function typeScriptCompiler(quitFunc,cmd, tscLibUrl) {
                 check(item.locals[key], root["$_tree_"], item.text);
             }
         }
+
+        if (item.filename.indexOf("VerticalAlign") >= 0) {
+                console.log("dfsf");
+        }
     });
 
     return apiArr;
 }
 
 function check(obj, parent, text) {
-    parent[obj.name] = {};
-    if (obj.valueDeclaration) {
-        parent[obj.name]["api"] = text.substring(obj.valueDeclaration.pos, obj.valueDeclaration.end);
-
-
-        addDoc(parent[obj.name]["api"], parent[obj.name]);
-    }
-
+    var objName = obj.name;
     if (obj.name == "__constructor") {
-        parent[obj.name]["api"] = text.substring(obj.declarations[0].pos, obj.declarations[0].end);
+        objName = "constructor";
+        parent[objName] = {};
+        parent[objName]["api"] = text.substring(obj.declarations[0].pos, obj.declarations[0].end);
 
-        addDoc(parent[obj.name]["api"], parent[obj.name]);
+        addDoc(parent[objName]["api"], parent[objName]);
     }
+    else if (obj.valueDeclaration) {
+        parent[objName] = {};
+        parent[objName]["api"] = text.substring(obj.valueDeclaration.pos, obj.valueDeclaration.end);
+
+        addDoc(parent[objName]["api"], parent[objName]);
+    }
+    else {
+        parent[objName] = {};
+    }
+
 
 
     switch (obj.flags) {
         case 128: //module
         case 256: //module
-            parent[obj.name]["$_tree_"] = {};
+            parent[objName]["$_tree_"] = {};
 
-            parent[obj.name]["bodyType"] = "module";
+            parent[objName]["bodyType"] = "module";
             for (var key in obj.exports) {
                 if (["__proto__", "flags", "mergeId", "name", "parent"].indexOf(key) >= 0) {
                     continue;
                 }
 
-                check(obj.exports[key], parent[obj.name]["$_tree_"], text);
+                check(obj.exports[key], parent[objName]["$_tree_"], text);
             }
 
             break;
         case 1://module var
-            parent[obj.name]["bodyType"] = "modulevar";
+            parent[objName]["bodyType"] = "modulevar";
 
             if (obj.valueDeclaration && obj.valueDeclaration.type) {
-                parent[obj.name]["type"] = text.substring(obj.valueDeclaration.type.pos, obj.valueDeclaration.type.end);
+                parent[objName]["type"] = text.substring(obj.valueDeclaration.type.pos, obj.valueDeclaration.type.end);
             }
-            addPublic(parent[obj.name]["content"], parent[obj.name], obj.name);
+            addPublic(parent[objName]["content"], parent[objName], objName);
             break;
         case 2://变量
-            parent[obj.name]["bodyType"] = "var";
+            parent[objName]["bodyType"] = "var";
 
             if (obj.valueDeclaration && obj.valueDeclaration.type) {
-                parent[obj.name]["type"] = text.substring(obj.valueDeclaration.type.pos, obj.valueDeclaration.type.end);
+                parent[objName]["type"] = text.substring(obj.valueDeclaration.type.pos, obj.valueDeclaration.type.end);
             }
 
-            addStatic(parent[obj.name]["content"], parent[obj.name]);
-            addPublic(parent[obj.name]["content"], parent[obj.name], obj.name);
+            addStatic(parent[objName]["content"], parent[objName]);
+            addPublic(parent[objName]["content"], parent[objName], objName);
             break;
         case 8192://module var  get
-            parent[obj.name]["bodyType"] = "get";
+            parent[objName]["bodyType"] = "get";
 
             for (var i = 0; i < obj.declarations.length; i++) {
                 var decla = obj.declarations[i];
                 if (decla.parameters.length == 1) {//使用set
                 }
                 else {
-                    initGetParamObject(parent[obj.name], decla, text);
+                    initGetParamObject(parent[objName], decla, text);
                 }
             }
 
             if (obj.valueDeclaration && obj.valueDeclaration.type) {
-                parent[obj.name]["type"] = text.substring(obj.valueDeclaration.type.pos, obj.valueDeclaration.type.end);
+                parent[objName]["type"] = text.substring(obj.valueDeclaration.type.pos, obj.valueDeclaration.type.end);
             }
 
             break;
         case 16384://module var set
-            parent[obj.name]["bodyType"] = "set";
+            parent[objName]["bodyType"] = "set";
 
             for (var i = 0; i < obj.declarations.length; i++) {
                 var decla = obj.declarations[i];
                 if (decla.parameters.length == 1) {//使用set
-                    initSetParamObject(parent[obj.name], decla, text);
+                    initSetParamObject(parent[objName], decla, text);
                 }
             }
 
             if (obj.valueDeclaration && obj.valueDeclaration.type) {
-                parent[obj.name]["type"] = text.substring(obj.valueDeclaration.type.pos, obj.valueDeclaration.type.end);
+                parent[objName]["type"] = text.substring(obj.valueDeclaration.type.pos, obj.valueDeclaration.type.end);
             }
 
             break;
         case 24576://module var set get
-            parent[obj.name]["bodyType"] = "set get";
+            parent[objName]["bodyType"] = "set get";
 
             for (var i = 0; i < obj.declarations.length; i++) {
                 var decla = obj.declarations[i];
                 if (decla.parameters.length == 1) {//使用set
-                    initSetParamObject(parent[obj.name], decla, text);
+                    initSetParamObject(parent[objName], decla, text);
                 }
                 else {
-                    initGetParamObject(parent[obj.name], decla, text);
+                    initGetParamObject(parent[objName], decla, text);
                 }
             }
 
             if (obj.valueDeclaration && obj.valueDeclaration.type) {
-                parent[obj.name]["type"] = text.substring(obj.valueDeclaration.type.pos, obj.valueDeclaration.type.end);
+                parent[objName]["type"] = text.substring(obj.valueDeclaration.type.pos, obj.valueDeclaration.type.end);
             }
 
             break;
         case 8://方法
-            parent[obj.name]["bodyType"] = "modulefunction";
+            parent[objName]["bodyType"] = "modulefunction";
             if (obj.valueDeclaration && obj.valueDeclaration.parameters) {
-                parent[obj.name]["parameters"] = [];
+                parent[objName]["parameters"] = [];
 
-                addParams(obj.valueDeclaration.parameters, parent[obj.name]["parameters"], text);
+                addParams(obj.valueDeclaration.parameters, parent[objName]["parameters"], text);
             }
 
             if (obj.valueDeclaration && obj.valueDeclaration.type) {
-                parent[obj.name]["type"] = text.substring(obj.valueDeclaration.type.pos, obj.valueDeclaration.type.end);
+                parent[objName]["type"] = text.substring(obj.valueDeclaration.type.pos, obj.valueDeclaration.type.end);
             }
 
-            addPublic(parent[obj.name]["content"], parent[obj.name], obj.name);
+            addPublic(parent[objName]["content"], parent[objName], objName);
+            break;
+        case 4096://构造函数
+            parent[objName]["bodyType"] = "function";
+
+            var declarations = obj.declarations[0];
+
+            if (declarations && declarations.parameters) {
+                parent[objName]["parameters"] = [];
+
+                addParams(declarations.parameters, parent[objName]["parameters"], text);
+            }
+
+            parent[objName]["type"] = null;
+            addStatic(parent[objName]["content"], parent[objName]);
+            addPublic(parent[objName]["content"], parent[objName], objName);
             break;
         case 2048://方法
-            parent[obj.name]["bodyType"] = "function";
+            parent[objName]["bodyType"] = "function";
 
             if (obj.valueDeclaration && obj.valueDeclaration.parameters) {
-                parent[obj.name]["parameters"] = [];
+                parent[objName]["parameters"] = [];
 
-                addParams(obj.valueDeclaration.parameters, parent[obj.name]["parameters"], text);
+                addParams(obj.valueDeclaration.parameters, parent[objName]["parameters"], text);
             }
 
             if (obj.valueDeclaration && obj.valueDeclaration.type) {
-                parent[obj.name]["type"] = text.substring(obj.valueDeclaration.type.pos, obj.valueDeclaration.type.end);
+                parent[objName]["type"] = text.substring(obj.valueDeclaration.type.pos, obj.valueDeclaration.type.end);
             }
-
-            addStatic(parent[obj.name]["content"], parent[obj.name]);
-            addPublic(parent[obj.name]["content"], parent[obj.name], obj.name);
+            addStatic(parent[objName]["content"], parent[objName]);
+            addPublic(parent[objName]["content"], parent[objName], objName);
             break;
         case 32://接口
-            parent[obj.name]["$_tree_"] = {};
-            parent[obj.name]["bodyType"] = "interface";
+            parent[objName]["$_tree_"] = {};
+            parent[objName]["bodyType"] = "interface";
             for (var key in obj.members) {
                 if (["__proto__", "name"].indexOf(key) >= 0) {
                     continue;
                 }
 
-                check(obj.members[key], parent[obj.name]["$_tree_"], text);
+                check(obj.members[key], parent[objName]["$_tree_"], text);
             }
 
             for (var key in obj.exports) {
@@ -188,22 +211,22 @@ function check(obj, parent, text) {
                     continue;
                 }
 
-                check(obj.exports[key], parent[obj.name]["$_tree_"], text);
+                check(obj.exports[key], parent[objName]["$_tree_"], text);
             }
 
             if (obj["valueDeclaration"]) {
-                initExtends(obj["valueDeclaration"]["baseType"], parent[obj.name]);
+                initExtends(obj["valueDeclaration"]["baseType"], parent[objName]);
             }
             break;
         case 16://类
-            parent[obj.name]["$_tree_"] = {};
-            parent[obj.name]["bodyType"] = "class";
+            parent[objName]["$_tree_"] = {};
+            parent[objName]["bodyType"] = "class";
 
             for (var key in obj.members) {
                 if (["__proto__", "name"].indexOf(key) >= 0) {
                     continue;
                 }
-                check(obj.members[key], parent[obj.name]["$_tree_"], text);
+                check(obj.members[key], parent[objName]["$_tree_"], text);
             }
 
             for (var key in obj.exports) {
@@ -211,12 +234,12 @@ function check(obj, parent, text) {
                     continue;
                 }
 
-                check(obj.exports[key], parent[obj.name]["$_tree_"], text);
+                check(obj.exports[key], parent[objName]["$_tree_"], text);
             }
 
             if (obj["valueDeclaration"]) {
-                initExtends(obj["valueDeclaration"]["baseType"], parent[obj.name]);
-                initImplements(obj["valueDeclaration"]["implementedTypes"], parent[obj.name]);
+                initExtends(obj["valueDeclaration"]["baseType"], parent[objName]);
+                initImplements(obj["valueDeclaration"]["implementedTypes"], parent[objName]);
             }
             break;
 
@@ -242,7 +265,7 @@ function addDoc(text, obj) {
                 text = text.replace(/^(\s)*/, "");
             }
             else {
-                arr.push(text.match(/(.)*/)[0]);
+                //arr.push(text.match(/(.)*/)[0]);
                 text = text.replace(/(.)*/, "");
 
                 text = text.replace(/^(\s)*/, "");
@@ -435,13 +458,16 @@ function analyze(doc) {
             docInfo["params"][paramName] = des;
         }
         else if (item.indexOf("see") == 0) {
-            docInfo["see"] = item;
+            var temp = item.match(/^see(\s)+/)[0];
+            docInfo["see"] = item.substring(temp.length);
         }
         else if (item.indexOf("link") == 0) {
-            docInfo["link"] = item;
+            var temp = item.match(/^link(\s)+/)[0];
+            docInfo["link"] = item.substring(temp.length);
         }
         else if (item.indexOf("example") == 0) {
-            docInfo["example"] = item;
+            var temp = item.match(/^example(\s)+/)[0];
+            docInfo["example"] = item.substring(temp.length);
         }
         else if (item.indexOf("classdesc") == 0) {
             if (item.match(/^classdesc(\s)+/)) {

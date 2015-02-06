@@ -2,7 +2,6 @@
  * Created by huanghaiying on 15/2/5.
  */
 
-var file = require("../core/file.js");
 var path = require("path");
 
 var classesArr = {};
@@ -75,7 +74,7 @@ function addExtendsClass(name, memberof, parent) {
     }
 }
 
-exports.save = function (apiArr, outputPath) {
+exports.screening = function (apiArr) {
     for (var i = 0; i < apiArr.length; i++) {
         _analyze(apiArr[i], [], apiArr[i]["filename"]);
     }
@@ -129,53 +128,7 @@ exports.save = function (apiArr, outputPath) {
     clone(classesArr, tempClassArr);
     removeDefault(tempClassArr);
 
-
-    var tempModulesArr = {};
-    var tempMemberGlobals = {};
-    var tempFunctionGlobals = {};
-    for (var key in tempClassArr) {
-        var item = tempClassArr[key];
-        if (item.class) {
-            if (tempModulesArr[item.class.memberof] == null) {
-                tempModulesArr[item.class.memberof] = [];
-            }
-            tempModulesArr[item.class.memberof].push(item.class.name);
-
-            file.save("/Volumes/WORK/Sites/api/js/data/finalClasses/" + key + ".json", JSON.stringify(tempClassArr[key], null, "\t"));
-        }
-        else {
-            var modeName = key;
-            if (item.memberof && item.memberof != "") {
-                modeName = item.memberof + "." + key;
-            }
-
-            if (item.globalMember.length) {
-                tempMemberGlobals[modeName] = true;
-                var globalM = {"member":[], "function":[], "globalMember":item.globalMember, "globalFunction":[]};
-                file.save(path.join(outputPath, "finalClasses", modeName + "." + "globalMember.json"), JSON.stringify(globalM, null, "\t"));
-            }
-            if (item.globalFunction.length) {
-                tempFunctionGlobals[modeName] = true;
-                var globalF = {"member":[], "function":[], "globalMember":[], "globalFunction":item.globalFunction};
-                file.save(path.join(outputPath, "finalClasses",modeName + "." + "globalFunction.json"), JSON.stringify(globalF, null, "\t"));
-            }
-        }
-    }
-
-    for (var key in tempModulesArr) {
-        var mod = tempModulesArr[key];
-        mod.sort();
-
-        if (tempMemberGlobals[key]) {
-            mod.unshift("globalMember");
-        }
-        if (tempFunctionGlobals[key]) {
-            mod.unshift("globalFunction");
-        }
-    }
-    file.save(path.join(outputPath, "relation/egret_list.json"), JSON.stringify(tempModulesArr, null, "\t"));
-
-    console.log("asdf");
+    return tempClassArr;
 };
 
 function removeDefault(tempObj) {
@@ -369,8 +322,7 @@ function analyze(item, name, parent, filename) {
             member["type"] = item["type"];
             member["name"] = name;
             member["memberof"] = tempParent.join(".");
-            member["scope"] = item["scope"];
-            member["rw"] = "setget";
+            member["scope"] = "instance";
 
             var tempItem;
             if (rwType == 1) {
@@ -387,15 +339,23 @@ function analyze(item, name, parent, filename) {
                 delete member["params"];
             }
             if (member["description"] == "" && rwType == 3) {
-                member["description"] = getDesc(item["get"]["docs"]);
+                member["description"] = getDesc(item["get"]["docs"]) || "";
             }
 
-            if (rwType == 1) {
-                member["description"] += "【只读】";
+            member["description"] = member["description"] || "";
+
+            member["description"] = member["description"].replace(/^(\s)*/, "");
+            member["description"] = member["description"].replace(/(\s)*$/, "");
+
+            if (member["description"] != "") {
+                if (rwType == 1) {
+                    member["description"] += "【只读】";
+                }
+                else if (rwType == 2){
+                    member["description"] += "【只写】";
+                }
             }
-            else if (rwType == 2){
-                member["description"] += "【只写】";
-            }
+
             member["description"] = changeDescription(member["description"]);
 
             classesArr[member["memberof"]]["member"].push(member);
@@ -488,6 +448,16 @@ function initDesc(docs, parameters, obj, notTrans) {
             obj["returns"] = {"description" : changeDescription(doc["return"])};
         }
 
+        if (doc["link"]) {
+            obj["exampleU"] = trimAll(doc["link"]);
+        }
+        //if (doc["see"]) {
+        //    obj["see"] = doc["see"];
+        //}
+        if (doc["example"]) {
+            obj["exampleC"] = trimAll(doc["example"]);
+        }
+
         if (doc["params"]) {
             paramsDoc = doc["params"];
         }
@@ -523,11 +493,11 @@ function addOtherPropertis(item, orgItem) {
     }
 
     if (orgItem["link"]) {
-        item["link"] = orgItem["link"];
+        item["link"] = trimAll(orgItem["link"]);
     }
 
     if (orgItem["example"]) {
-        item["example"] = orgItem["example"];
+        item["example"] = trimAll(orgItem["example"]);
     }
 
     if (orgItem["pType"]) {
@@ -563,4 +533,16 @@ function clone(frame, result) {
         }
     }
     return result;
+}
+
+function trimLeft(str) {
+   return str.replace(/^(\s)*/, "");
+}
+
+function trimRight(str) {
+    return str.replace(/(\s)*$/, "");
+}
+
+function trimAll(str) {
+    return trimRight(trimLeft(str));
 }
