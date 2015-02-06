@@ -44,6 +44,7 @@ module egret.gui {
 		 */		
 		public constructor(){
 			super();
+            this.touchEnabled = false;
 			this.addEventListener(Event.ADDED_TO_STAGE,this.onAddToStage,this);
 			this.addEventListener(Event.REMOVED_FROM_STAGE,this.onRemoveFromStage,this);
 		}
