@@ -688,7 +688,7 @@ module egret {
             var o = this;
             o._calculateWorldTransform();
             if(MainContext._renderLoopPhase == "updateTransform") {
-                if(o.needDraw || o._texture_to_render) {
+                if(o.needDraw || o._texture_to_render || o._cacheAsBitmap) {
                     RenderCommand.push(this._draw, this);
                 }
             }
