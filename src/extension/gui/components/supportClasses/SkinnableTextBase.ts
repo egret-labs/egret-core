@@ -28,6 +28,9 @@
 module egret.gui {
 
 	export class SkinnableTextBase extends SkinnableComponent{
+		/**
+		 * 构造函数
+		 */
 		public constructor(){
 			super();
 			this.focusEnabled = true;
@@ -400,6 +403,7 @@ module egret.gui {
 		}
 		
 		/**
+		 * 返回要应用到外观的状态的名称
 		 * @inheritDoc
 		 */
 		public getCurrentSkinState():string{
@@ -415,6 +419,7 @@ module egret.gui {
 		}
 		
 		/**
+		 * 添加外观部件时调用
 		 * @inheritDoc
 		 */
 		public partAdded(partName:string, instance:any):void{
@@ -437,6 +442,7 @@ module egret.gui {
 		}
 		
 		/**
+		 * 正删除外观部件的实例时调用
 		 * @inheritDoc
 		 */
 		public partRemoved(partName:string, 
@@ -457,6 +463,7 @@ module egret.gui {
 		}
 		
 		/**
+		 * 设置此组件的焦点
 		 * @inheritDoc
 		 */
         public setFocus(): void{

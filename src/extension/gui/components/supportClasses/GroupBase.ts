@@ -37,6 +37,7 @@ module egret.gui {
 	 */
     export class GroupBase extends UIComponent implements IViewport{
 		/**
+         * 构造函数
 		 * @method egret.gui.GroupBase#constructor
 		 */
         public constructor(){
@@ -45,6 +46,7 @@ module egret.gui {
         }
 
         /**
+         * 如果尚未设置布局对象，则 createChildren() 会为该容器指定默认布局对象 BasicLayout
          * @method egret.gui.GroupBase#createChildren
          */
         public createChildren():void{
@@ -57,12 +59,17 @@ module egret.gui {
         private _contentWidth:number = 0;
 
         /**
+         * 视域的内容的宽度
 		 * @member egret.gui.GroupBase#contentWidth
          */
         public get contentWidth():number {
             return this._contentWidth;
         }
 
+        /**
+         * 设置setContentWidth
+         * @param value
+         */
         private setContentWidth(value:number):void {
             if (value == this._contentWidth)
                 return;
@@ -76,12 +83,17 @@ module egret.gui {
         private _contentHeight:number = 0;
 
         /**
+         * 视域的内容的高度
 		 * @member egret.gui.GroupBase#contentHeight
          */
         public get contentHeight():number {
             return this._contentHeight;
         }
 
+        /**
+         * 设置ContentHeight
+         * @param value
+         */
         private setContentHeight(value:number):void {
             if (value == this._contentHeight)
                 return;
@@ -238,6 +250,7 @@ module egret.gui {
         }
 
         /**
+         * 计算组件的默认大小和（可选）默认最小大小
 		 * @method egret.gui.GroupBase#measure
          */
         public measure():void{
@@ -260,6 +273,7 @@ module egret.gui {
         }
 
         /**
+         * 标记组件，以便在稍后屏幕更新期间调用该组件的 updateDisplayList() 方法
 		 * @method egret.gui.GroupBase#invalidateDisplayList
          */
         public invalidateDisplayList():void{
@@ -285,6 +299,7 @@ module egret.gui {
         }
 
         /**
+         * 标记组件，以便在稍后屏幕更新期间调用该组件的 measure() 方法
 		 * @method egret.gui.GroupBase#invalidateSize
          */
         public invalidateSize():void{
@@ -292,6 +307,11 @@ module egret.gui {
             this._layoutInvalidateSizeFlag = true;
         }
 
+        /**
+         * 绘制对象和/或设置其子项的大小和位置
+         * @param unscaledWidth
+         * @param unscaledHeight
+         */
         public updateDisplayList(unscaledWidth:number, unscaledHeight:number):void{
             super.updateDisplayList(unscaledWidth, unscaledHeight);
             if (this._layoutInvalidateDisplayListFlag&&this._layout){

@@ -37,6 +37,7 @@ module egret.gui {
 	 */
 	export class TextBase extends UIComponent implements IDisplayText{
 		/**
+		 * 构造函数
 		 * @method egret.gui.TextBase#constructor
 		 */
 		public constructor(){
@@ -62,6 +63,10 @@ module egret.gui {
 
 		private allStyleChanged:boolean = false;
 
+		/**
+		 * 检测对样式属性的更改
+		 * @param styleProp
+		 */
 		public styleChanged(styleProp:string):void{
 			if(this.allStyleChanged){
 				return;
@@ -147,6 +152,7 @@ module egret.gui {
 			return this._focusEnabled;
 		}
 		/**
+		 * 设置此组件的焦点
 		 * @inheritDoc
 		 */
 		public setFocus(): void {
@@ -263,6 +269,7 @@ module egret.gui {
 		private textColorChanged:boolean = false;
 		private _textColor:number = 0xFFFFFF;
 		/**
+		 * 文本颜色
 		 * @member egret.gui.TextBase#textColor
 		 */
 		public get textColor():number{
@@ -282,7 +289,9 @@ module egret.gui {
 		 */
 		public _textChanged:boolean = false;
 		public _text:string = "";
+
 		/**
+		 * 获得文体内容
 		 * @member egret.gui.TextBase#text
 		 */
 		public get text(): string{
@@ -316,6 +325,9 @@ module egret.gui {
             return this._textFlow;
         }
 
+		/**
+		 * 创建组件的子对象
+		 */
 		public createChildren():void{
 			super.createChildren();
 			if (!this._textField){
@@ -323,6 +335,9 @@ module egret.gui {
 			}
 		}
 
+		/**
+		 * 处理对组件设置的属性
+		 */
 		public commitProperties():void{
 			super.commitProperties();
 
@@ -421,6 +436,9 @@ module egret.gui {
             this._textFlow = this._textField.textFlow;
         }
 
+		/**
+		 * 计算组件的默认大小和（可选）默认最小大小
+		 */
 		public measure():void{
 			super.measure();
 
@@ -447,7 +465,12 @@ module egret.gui {
 			this._textField.height = unscaledHeight;
 		}
 
-
+		/**
+		 * 更新属性时调度 PropertyChangeEvent 的 Helper 方法
+		 * @param propertyName
+		 * @param oldValue
+		 * @param value
+		 */
 		public dispatchPropertyChangeEvent(propertyName: string, oldValue: any, value: any) {
 			if (this.hasEventListener("propertyChange"))
 				PropertyChangeEvent.dispatchPropertyChangeEvent(this,

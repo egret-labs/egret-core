@@ -37,6 +37,7 @@ module egret.gui {
 	 */
 	export class ItemRenderer extends ButtonBase implements IItemRenderer{
 		/**
+		 * 构造函数
 		 * @method egret.gui.ItemRenderer#constructor
 		 */
 		public constructor(){
@@ -103,6 +104,7 @@ module egret.gui {
 		}
 		
 		/**
+		 * 处理对组件设置的属性
 		 * @method egret.gui.ItemRenderer#commitProperties
 		 */
 		public commitProperties():void{
@@ -114,6 +116,7 @@ module egret.gui {
 		}
 		
 		/**
+		 * 返回要应用到呈示器的状态的名称
 		 * @method egret.gui.ItemRenderer#getCurrentSkinState
 		 * @returns {string}
 		 */

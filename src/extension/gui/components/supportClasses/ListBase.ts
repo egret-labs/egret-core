@@ -53,6 +53,7 @@ module egret.gui {
 		public static CUSTOM_SELECTED_ITEM:number = -3;
 		
 		/**
+		 * 构造函数
 		 * @method egret.gui.ListBase#constructor
 		 */
 		public constructor(){
@@ -310,6 +311,7 @@ module egret.gui {
 		
 		
 		/**
+		 * 处理对组件设置的属性
 		 * @method egret.gui.ListBase#commitProperties
 		 */
 		public commitProperties():void{
@@ -398,6 +400,7 @@ module egret.gui {
 		}
 		
 		/**
+		 * 添加外观部件时调用
 		 * @method egret.gui.ListBase#partAdded
 		 * @param partName {string} 
 		 * @param instance {any} 
@@ -417,6 +420,7 @@ module egret.gui {
 		}
 		
 		/**
+		 * 正删除外观部件的实例时调用
 		 * @method egret.gui.ListBase#partRemoved
 		 * @param partName {string} 
 		 * @param instance {any} 
@@ -433,6 +437,7 @@ module egret.gui {
 		}
 		
 		/**
+		 * 更新项呈示器，以备使用或重用
 		 * @method egret.gui.ListBase#updateRenderer
 		 * @param renderer {IItemRenderer} 
 		 * @param itemIndex {number} 
@@ -445,6 +450,7 @@ module egret.gui {
 		}
 		
 		/**
+		 * 如果有一个数据项目，则返回呈示器应该显示的正确文本，同时将 labelField 和 labelFunction 属性考虑在内
 		 * @method egret.gui.ListBase#itemToLabel
 		 * @param item {any} 
 		 * @returns {string}

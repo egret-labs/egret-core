@@ -138,6 +138,7 @@ module egret.gui {
 		private _userProposedSelectedIndex:number = ListBase.NO_SELECTION;
 				
 		/**
+		 * 处理对组件设置的属性
 		 * @method egret.gui.DropDownListBase#commitProperties
 		 */
 		public commitProperties():void{
@@ -150,6 +151,7 @@ module egret.gui {
 		}
 		
 		/**
+		 * 添加外观部件时调用
 		 * @method egret.gui.DropDownListBase#partAdded
 		 * @param partName {string} 
 		 * @param instance {any} 
@@ -167,6 +169,7 @@ module egret.gui {
 		}
 		
 		/**
+		 * 正删除外观部件的实例时调用
 		 * @method egret.gui.DropDownListBase#partRemoved
 		 * @param partName {string} 
 		 * @param instance {any} 
@@ -184,6 +187,7 @@ module egret.gui {
 		}
 		
 		/**
+		 * 返回要应用到外观的状态的名称
 		 * @method egret.gui.DropDownListBase#getCurrentSkinState
 		 * @returns {string}
 		 */
@@ -243,7 +247,7 @@ module egret.gui {
 			this._userProposedSelectedIndex = newIndex;
 			this.itemSelected(this._userProposedSelectedIndex, true);
 		}
-		
+
 		public dataProvider_collectionChangeHandler(event:CollectionEvent):void{
 			super.dataProvider_collectionChangeHandler(event);
 			

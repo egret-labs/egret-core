@@ -38,12 +38,12 @@ module egret {
             super();
         }
 
+        private _graphics:Graphics = null;
+
         /**
          * 获取 Shape 中的 Graphics 对象。【只读】
          * @member {egret.Graphics} egret.Shape#graphics
          */
-        private _graphics:Graphics = null;
-
         public get graphics():Graphics{
             if(!this._graphics){
                 this._graphics = new Graphics();

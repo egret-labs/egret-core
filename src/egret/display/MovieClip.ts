@@ -30,7 +30,7 @@ module egret {
     /**
      * @class egret.MovieClip
      * @classdesc 影片剪辑，可以通过影片剪辑播放序列帧动画。MovieClip 类从以下类继承而来：DisplayObject 和 EventDispatcher。不同于 DisplayObject 对象，MovieClip 对象拥有一个时间轴。
-     * @extends egret.DisplayObjectContainer
+     * @extends egret.DisplayObject
      */
     export class MovieClip extends DisplayObject{
 
@@ -440,7 +440,7 @@ module egret {
 
         /**
          * MovieClip数据源
-         * @member {any} egret.MovieClip#dataSource
+         * @member {any} egret.MovieClip#movieClipData
          */
         public set movieClipData(value:MovieClipData){
             this._setMovieClipData(value);

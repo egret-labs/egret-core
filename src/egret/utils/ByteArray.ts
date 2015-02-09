@@ -554,7 +554,7 @@ module egret {
 
             this.data.setUint16(this.position, length, this.endian === Endian.LITTLE_ENDIAN);
             this.position += ByteArray.SIZE_OF_UINT16;
-            this._writeUint8Array(utf8bytes);
+            this._writeUint8Array(utf8bytes, false);
         }
 
         /**
@@ -574,9 +574,12 @@ module egret {
         /**
          * 将 Uint8Array 写入字节流
          * @param bytes 要写入的Uint8Array
+         * @param validateBuffer
          */
-        public _writeUint8Array(bytes:Uint8Array):void {
-            this.validateBuffer(this.position + bytes.length);
+        public _writeUint8Array(bytes:Uint8Array, validateBuffer:boolean = true):void {
+            if(validateBuffer){
+                this.validateBuffer(this.position + bytes.length);
+            }
 
             for (var i = 0; i < bytes.length; i++) {
                 this.data.setUint8(this.position++, bytes[i]);

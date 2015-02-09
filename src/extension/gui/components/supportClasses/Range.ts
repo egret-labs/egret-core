@@ -196,6 +196,7 @@ module egret.gui {
         }
 
         /**
+         * 处理对组件设置的属性
 		 * @method egret.gui.Range#commitProperties
          */
         public commitProperties():void {

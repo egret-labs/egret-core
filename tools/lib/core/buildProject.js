@@ -77,7 +77,7 @@ function build(properties, callback, keepGeneratedTypescript) {
         );
 
     }, function (tempCallback) {
-        console.log("项目共计编译耗时：%d秒", (Date.now() - time) / 1000);
+        globals.debugLog("项目共计编译耗时：%d秒", (Date.now() - time) / 1000);
         tempCallback();
     }
     ], callback);

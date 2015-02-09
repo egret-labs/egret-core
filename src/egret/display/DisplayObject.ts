@@ -30,7 +30,7 @@ module egret {
     /**
      * @class egret.DisplayObject
      * @extends egret.EventDispatcher
-     * @classdesc 类是可放在显示列表中的所有对象的基类。该显示列表管理运行时显示的所有对象。使用 DisplayObjectContainer 类排列显示列表中的显示对象。
+     * @classdesc DisplayObject 类是可放在显示列表中的所有对象的基类。该显示列表管理运行时显示的所有对象。使用 DisplayObjectContainer 类排列显示列表中的显示对象。
      * DisplayObjectContainer 对象可以有子显示对象，而其他显示对象是“叶”节点，只有父级和同级，没有子级。
      * DisplayObject 类支持基本功能（如对象的 x 和 y 位置），也支持更高级的对象属性（如它的转换矩阵），所有显示对象都继承自 DisplayObject 类。
      * DisplayObject 类包含若干广播事件。通常，任何特定事件的目标均为一个特定的 DisplayObject 实例。
@@ -44,7 +44,6 @@ module egret {
      *
      */
     export class DisplayObject extends EventDispatcher implements RenderData {
-
 
         public __hack_local_matrix:any = null;
 
@@ -134,13 +133,13 @@ module egret {
             this._parent = parent;
         }
 
+        public _x:number = 0;
+
         /**
          * 表示 DisplayObject 实例相对于父级 DisplayObjectContainer 本地坐标的 x 坐标。
          * 如果该对象位于具有变形的 DisplayObjectContainer 内，则它也位于包含 DisplayObjectContainer 的本地坐标系中。因此，对于逆时针旋转 90 度的 DisplayObjectContainer，该 DisplayObjectContainer 的子级将继承逆时针旋转 90 度的坐标系。
          * @member {number} egret.DisplayObject#x
          */
-        public _x:number = 0;
-
         public get x():number {
             return this._x;
         }
@@ -158,13 +157,13 @@ module egret {
             }
         }
 
+        public _y:number = 0;
+
         /**
          * 表示 DisplayObject 实例相对于父级 DisplayObjectContainer 本地坐标的 y 坐标。
          * 如果该对象位于具有变形的 DisplayObjectContainer 内，则它也位于包含 DisplayObjectContainer 的本地坐标系中。因此，对于逆时针旋转 90 度的 DisplayObjectContainer，该 DisplayObjectContainer 的子级将继承逆时针旋转 90 度的坐标系。
          * @member {number} egret.DisplayObject#y
          */
-        public _y:number = 0;
-
         public get y():number {
             return this._y;
         }
@@ -182,6 +181,8 @@ module egret {
             }
         }
 
+        public _scaleX:number = 1;
+
         /**
          * 表示从注册点开始应用的对象的水平缩放比例（百分比）。
          * 缩放本地坐标系统将更改 x 和 y 属性值，这些属性值是以整像素定义的。
@@ -189,8 +190,6 @@ module egret {
          * @member {number} egret.DisplayObject#scaleX
          * @default 1
          */
-        public _scaleX:number = 1;
-
         public get scaleX():number {
             return this._scaleX;
         }
@@ -204,6 +203,8 @@ module egret {
             }
         }
 
+        public _scaleY:number = 1;
+
         /**
          * 表示从对象注册点开始应用的对象的垂直缩放比例（百分比）。
          * 缩放本地坐标系统将更改 x 和 y 属性值，这些属性值是以整像素定义的。
@@ -211,8 +212,6 @@ module egret {
          * @member {number} egret.DisplayObject#scaleY
          * @default 1
          */
-        public _scaleY:number = 1;
-
         public get scaleY():number {
             return this._scaleY;
         }
@@ -226,13 +225,13 @@ module egret {
             }
         }
 
+        public _anchorOffsetX:number = 0;
+
         /**
          * 表示从对象绝对锚点X。
          * @member {number} egret.DisplayObject#anchorOffsetX
          * @default 0
          */
-        public _anchorOffsetX:number = 0;
-
         public get anchorOffsetX():number {
             return this._anchorOffsetX;
         }
@@ -246,13 +245,13 @@ module egret {
             }
         }
 
+        public _anchorOffsetY:number = 0;
+
         /**
          * 表示从对象绝对锚点Y。
          * @member {number} egret.DisplayObject#anchorOffsetY
          * @default 0
          */
-        public _anchorOffsetY:number = 0;
-
         public get anchorOffsetY():number {
             return this._anchorOffsetY;
         }
@@ -266,13 +265,13 @@ module egret {
             }
         }
 
+        public _anchorX:number = 0;
+
         /**
          * 表示从对象相对锚点X。
          * @member {number} egret.DisplayObject#anchorX
          * @default 0
          */
-        public _anchorX:number = 0;
-
         public get anchorX():number {
             return this._anchorX;
         }
@@ -290,13 +289,13 @@ module egret {
             }
         }
 
+        public _anchorY:number = 0;
+
         /**
          * 表示从对象相对锚点Y。
          * @member {number} egret.DisplayObject#anchorY
          * @default 0
          */
-        public _anchorY:number = 0;
-
         public get anchorY():number {
             return this._anchorY;
         }
@@ -314,14 +313,14 @@ module egret {
             }
         }
 
+        public _visible:boolean = true;
+
         /**
          * 显示对象是否可见。
          * 不可见的显示对象已被禁用。例如，如果实例的 visible=false，则无法单击该对象。
          * 默认值为 true 可见
          * @member {boolean} egret.DisplayObject#visible
          */
-        public _visible:boolean = true;
-
         public get visible():boolean {
             return this._visible;
         }
@@ -337,14 +336,14 @@ module egret {
             }
         }
 
+        public _rotation:number = 0;
+
         /**
          * 表示 DisplayObject 实例距其原始方向的旋转程度，以度为单位。
          * 从 0 到 180 的值表示顺时针方向旋转；从 0 到 -180 的值表示逆时针方向旋转。对于此范围之外的值，可以通过加上或减去 360 获得该范围内的值。例如，my_video.rotation = 450语句与 my_video.rotation = 90 是相同的。
          * @member {number} egret.DisplayObject#rotation
          * @default 0 默认值为 0 不旋转。
          */
-        public _rotation:number = 0;
-
         public get rotation():number {
             return this._rotation;
         }
@@ -356,14 +355,14 @@ module egret {
             }
         }
 
+        public _alpha:number = 1;
+
         /**
          * 表示指定对象的 Alpha 透明度值。
          * 有效值为 0（完全透明）到 1（完全不透明）。alpha 设置为 0 的显示对象是活动的，即使它们不可见。
          * @member {number} egret.DisplayObject#alpha
          *  @default 1 默认值为 1。
          */
-        public _alpha:number = 1;
-
         public get alpha():number {
             return this._alpha;
         }
@@ -377,13 +376,13 @@ module egret {
             }
         }
 
+        public _skewX:number = 0;
+
         /**
          * 表示DisplayObject的x方向斜切
          * @member {number} egret.DisplayObject#skewX
          * @default 0
          */
-        public _skewX:number = 0;
-
         public get skewX():number {
             return this._skewX;
         }
@@ -396,13 +395,13 @@ module egret {
             }
         }
 
+        public _skewY:number = 0;
+
         /**
          * 表示DisplayObject的y方向斜切
          * @member {number} egret.DisplayObject#skewY
          * @default 0
          */
-        public _skewY:number = 0;
-
         public get skewY():number {
             return this._skewY;
         }
@@ -415,13 +414,13 @@ module egret {
             }
         }
 
+        public _touchEnabled:boolean = false;
+
         /**
          * 指定此对象是否接收鼠标/触摸事件
          * @member {boolean} egret.DisplayObject#touchEnabled
          * @default false 默认为 false 即不可以接收。
          */
-        public _touchEnabled:boolean = false;
-
         public get touchEnabled():boolean {
             return this._touchEnabled;
         }
@@ -441,12 +440,12 @@ module egret {
          */
         public blendMode:string = null;
 
+        public _scrollRect:Rectangle = null;
+
         /**
          * 显示对象的滚动矩形范围。显示对象被裁切为矩形定义的大小，当您更改 scrollRect 对象的 x 和 y 属性时，它会在矩形内滚动。
          *  @member {egret.Rectangle} egret.DisplayObject#scrollRect
          */
-        public _scrollRect:Rectangle = null;
-
         public get scrollRect():Rectangle {
             return this._scrollRect;
         }
@@ -465,6 +464,7 @@ module egret {
         /**
          * 测量宽度
          * @returns {number}
+         * @member {egret.Rectangle} egret.DisplayObject#measuredWidth
          */
         public get measuredWidth():number {
             return this._measureBounds().width;
@@ -473,27 +473,28 @@ module egret {
         /**
          * 测量高度
          * @returns {number}
+         * @member {egret.Rectangle} egret.DisplayObject#measuredWidth
          */
         public get measuredHeight():number {
             return this._measureBounds().height;
         }
 
+        public _explicitWidth:number = NaN;
+
         /**
          * 显式设置宽度
          * @returns {number}
          */
-        public _explicitWidth:number = NaN;
-
         public get explicitWidth():number {
             return this._explicitWidth;
         }
+
+        public _explicitHeight:number = NaN;
 
         /**
          * 显式设置高度
          * @returns {number}
          */
-        public _explicitHeight:number = NaN;
-
         public get explicitHeight():number {
             return this._explicitHeight;
         }
@@ -520,10 +521,6 @@ module egret {
 
         public _hasWidthSet:boolean = false;
 
-        /**
-         * 显式设置宽度
-         * @param value
-         */
         public set width(value:number) {
             this._setWidth(value);
         }
@@ -540,10 +537,6 @@ module egret {
 
         public _hasHeightSet:boolean = false;
 
-        /**
-         * 显式设置高度
-         * @param value
-         */
         public set height(value:number) {
             this._setHeight(value);
         }
@@ -567,6 +560,9 @@ module egret {
 
         public _worldTransform:egret.Matrix;
         public _worldBounds:egret.Rectangle = null;
+        /**
+         * @private
+         */
         public worldAlpha:number = 1;
 
         public _isContainer:boolean = false;
@@ -643,6 +639,9 @@ module egret {
             renderContext.popMask();
         }
 
+        /**
+         * @private
+         */
         private drawCacheTexture(renderContext:RendererContext):boolean {
             var display:egret.DisplayObject = this;
             if (display._cacheAsBitmap == false) {
@@ -677,6 +676,7 @@ module egret {
         /**
          * 强制每帧执行_draw函数
          * @public
+         * @member {string} egret.DisplayObject#blendMode
          */
         public needDraw:boolean = false;
 
@@ -804,6 +804,7 @@ module egret {
 
         /**
          * 将 point 对象从显示对象的（本地）坐标转换为舞台（全局）坐标。
+         * 此方法允许您将任何给定的 x 和 y 坐标从相对于特定显示对象原点 (0,0) 的值（本地坐标）转换为相对于舞台原点的值（全局坐标）。
          * @method egret.DisplayObject#localToGlobal
          * @param x {number} 本地x坐标
          * @param y {number} 本地y坐标
@@ -846,7 +847,7 @@ module egret {
          * @method egret.DisplayObject#hitTest
          * @param x {number} 检测坐标的x轴
          * @param y {number} 检测坐标的y轴
-         * @param ignoreTouchEnabled {boolean} 是否忽略TouchEnabled
+         * @param ignoreTouchEnabled {boolean} 是否忽略 touchEnabled 属性
          * @returns {*}
          */
         public hitTest(x:number, y:number, ignoreTouchEnabled:boolean = false):DisplayObject {
@@ -1108,6 +1109,12 @@ module egret {
 
         private _cacheAsBitmap:boolean = false;
 
+        /**
+         * 如果设置为 true，则 egret 运行时将缓存显示对象的内部位图表示形式。此缓存可以提高包含复杂矢量内容的显示对象的性能。
+         * 具有已缓存位图的显示对象的所有矢量数据都将被绘制到位图而不是主显示。像素按一对一与父对象进行映射。如果位图的边界发生更改，则将重新创建位图而不会拉伸它。
+         * 除非将 cacheAsBitmap 属性设置为 true，否则不会创建内部位图。
+         * @member {number} egret.DisplayObject#cacheAsBitmap
+         */
         public get cacheAsBitmap():boolean {
             return this._cacheAsBitmap;
         }
