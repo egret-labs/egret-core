@@ -395,6 +395,7 @@ module egret.gui {
 		}
 
 		/**
+		 * 返回要应用到外观的状态的名称
 		 * @method egret.gui.ButtonBase#getCurrentSkinState
 		 * @returns {string}
 		 */
@@ -411,6 +412,11 @@ module egret.gui {
 			return "up";
 		}
 
+		/**
+		 * 添加外观部件时调用
+		 * @param partName
+		 * @param instance
+		 */
 		public partAdded(partName:string, instance:any):void{
 			super.partAdded(partName, instance);
 
