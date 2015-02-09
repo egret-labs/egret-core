@@ -67,6 +67,7 @@ module egret.gui {
 		 * @member egret.gui.TreeItemRenderer#contentGroup
 		 */
         public contentGroup: DisplayObject = null;
+
 		/**
 		 *
 		 * @type {number}

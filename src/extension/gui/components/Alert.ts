@@ -100,6 +100,11 @@ module egret.gui {
                 this.firstButton.label = value;
         }
 
+        /**
+         *
+         * @type {string}
+         * @private
+         */
         private _secondButtonLabel:string = "";
         /**
          * 第二个按钮上显示的文本
@@ -119,7 +124,11 @@ module egret.gui {
             }
         }
 
-
+        /**
+         *
+         * @type {string}
+         * @private
+         */
         private _contentText:string = "";
         /**
          * 文本内容
@@ -185,6 +194,7 @@ module egret.gui {
          */
         public secondButton:Button = null;
         /**
+         * 添加外观部件时调用
          * @method egret.gui.Alert#partAdded
          * @param partName {string}
          * @param instance {any}
@@ -206,6 +216,7 @@ module egret.gui {
             }
         }
         /**
+         * 删除外观部件的实例时调用
          * @method egret.gui.Alert#partRemoved
          * @param partName {string}
          * @param instance {any}
