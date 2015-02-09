@@ -25,6 +25,10 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 module egret {
+    /**
+     *
+     * @private
+     */
     export class WebAudio {
         public static canUseWebAudio = false;//window["AudioContext"] || window["webkitAudioContext"] || window["mozAudioContext"];
         public static ctx = WebAudio.canUseWebAudio ? new (window["AudioContext"] || window["webkitAudioContext"] || window["mozAudioContext"])() : undefined;

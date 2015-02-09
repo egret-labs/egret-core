@@ -32,6 +32,7 @@ module egret {
      * @classdesc
      * MainContext是游戏的核心跨平台接口，组合了多个功能Context，并是游戏启动的主入口
      * @extends egret.EventDispatcher
+     * @private
      */
     export class MainContext extends EventDispatcher {
 

@@ -26,6 +26,9 @@
  */
 
 module egret {
+    /**
+     * @private
+     */
     export class PromiseObject {
         private static promiseObjectList = [];
 

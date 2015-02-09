@@ -25,6 +25,10 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 module egret {
+    /**
+     *
+     * @private
+     */
     export class WebGLShaderManager {
         private gl:WebGLRenderingContext = null;
         private maxAttibs:number = 10;

@@ -32,6 +32,9 @@ module egret {
      * @classdesc
      * BitmapFillMode 类定义Bitmap的图像填充方式。
      * BitmapFillMode 类定义了调整大小模式的一个枚举，这些模式确定 Bitmap 如何填充由布局系统指定的尺寸。
+     * <div style="margin-top: 20px"><b>了解详细信息</b>
+     * <a href="http://docs.egret-labs.org/post/manual/bitmap/bitmapfillmode.html" style="padding-left: 20px"  >纹理的填充方式</a>
+     * </div>
      */
     export class BitmapFillMode{
 

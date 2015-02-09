@@ -25,6 +25,9 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 module egret {
+    /**
+     * @private
+     */
     export class WebGLUtils {
         public static compileProgram(gl:WebGLRenderingContext, vertexSrc:string, fragmentSrc:string):WebGLProgram {
             var fragmentShader:WebGLShader = WebGLUtils.compileFragmentShader(gl, fragmentSrc);

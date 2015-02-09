@@ -29,6 +29,7 @@
 module egret {
     /**
      * 这个类是HTML5的WebWrapper的第一个版本
+     * @private
      */
     export class Browser extends HashObject {
 
