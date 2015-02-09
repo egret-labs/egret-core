@@ -30,12 +30,11 @@ module egret {
 
     /**
      * @class egret.SpriteSheet
-     * @classdesc SpriteSheet是一张由多个子位图拼接而成的集合位图，它包含多个Texture对象。
-     * 每一个Texture都共享SpriteSheet的集合位图，但是指向它的不同的区域。
+     * @classdesc SpriteSheet 是一张由多个子位图拼接而成的集合位图，它包含多个 Texture 对象。
+     * 每一个 Texture 都共享 SpriteSheet 的集合位图，但是指向它的不同的区域。
      * 在WebGL / OpenGL上，这种做法可以显著提升性能
      * 同时，SpriteSheet可以很方便的进行素材整合，降低HTTP请求数量
      * SpriteSheet 格式的具体规范可以参见此文档  https://github.com/egret-labs/egret-core/wiki/Egret-SpriteSheet-Specification
-     *
      */
     export class SpriteSheet extends HashObject {
 
@@ -76,28 +75,28 @@ module egret {
         public _textureMap:Object = {};
 
         /**
-         * 根据指定纹理名称获取一个缓存的Texture对象
+         * 根据指定纹理名称获取一个缓存的 Texture 对象
          * @method egret.SpriteSheet#getTexture
-         * @param name {string} 缓存这个Texture对象所使用的名称
-         * @returns {egret.Texture} Texture对象
+         * @param name {string} 缓存这个 Texture 对象所使用的名称
+         * @returns {egret.Texture} Texture 对象
          */
         public getTexture(name:string):Texture {
             return this._textureMap[name];
         }
 
         /**
-         * 为SpriteSheet上的指定区域创建一个新的Texture对象并缓存它
+         * 为 SpriteSheet 上的指定区域创建一个新的 Texture 对象并缓存它
          * @method egret.SpriteSheet#createTexture
-         * @param name {string} 缓存这个Texture对象所使用的名称，如果名称已存在，将会覆盖之前的Texture对象
-         * @param bitmapX {number} 纹理区域在bitmapData上的起始坐标x
-         * @param bitmapY {number} 纹理区域在bitmapData上的起始坐标y
-         * @param bitmapWidth {number} 纹理区域在bitmapData上的宽度
-         * @param bitmapHeight {number} 纹理区域在bitmapData上的高度
-         * @param offsetX {number} 原始位图的非透明区域x起始点
-         * @param offsetY {number} 原始位图的非透明区域y起始点
-         * @param textureWidth {number} 原始位图的高度，若不传入，则使用bitmapWidth的值。
-         * @param textureHeight {number} 原始位图的宽度，若不传入，这使用bitmapHeight值。
-         * @returns {egret.Texture} 创建的Texture对象
+         * @param name {string} 缓存这个 Texture 对象所使用的名称，如果名称已存在，将会覆盖之前的 Texture 对象
+         * @param bitmapX {number} 纹理区域在 bitmapData 上的起始坐标x
+         * @param bitmapY {number} 纹理区域在 bitmapData 上的起始坐标y
+         * @param bitmapWidth {number} 纹理区域在 bitmapData 上的宽度
+         * @param bitmapHeight {number} 纹理区域在 bitmapData 上的高度
+         * @param offsetX {number} 原始位图的非透明区域 x 起始点
+         * @param offsetY {number} 原始位图的非透明区域 y 起始点
+         * @param textureWidth {number} 原始位图的高度，若不传入，则使用 bitmapWidth 的值。
+         * @param textureHeight {number} 原始位图的宽度，若不传入，则使用 bitmapHeight 的值。
+         * @returns {egret.Texture} 创建的 Texture 对象
          */
         public createTexture(name:string, bitmapX:number, bitmapY:number, bitmapWidth:number, bitmapHeight:number, offsetX:number = 0, offsetY:number = 0, textureWidth?:number, textureHeight?:number):Texture {
             if (typeof textureWidth === "undefined") {

@@ -27,9 +27,8 @@
 
 
 module egret {
-
-
     /**
+     * @classdesc
      * StageScaleMode 类为 Stage.scaleMode 属性提供值。
      * @class egret.StageScaleMode
      */
@@ -58,20 +57,5 @@ module egret {
          * @member {string} egret.StageScaleMode.EXACT_FIT
          */
         public static EXACT_FIT:string = "exactFit";
-
-}
-
-    export class NoBorderMode {
-        /**
-         * 固定宽，默认固定宽
-         * @member {string} egret.NoBorderMode.FIXED_WIDTH
-         */
-        public static FIXED_WIDTH:number = 1;
-        /**
-         * 固定高
-         * @member {string} egret.NoBorderMode.FIXED_HEIGHT
-         */
-        public static FIXED_HEIGHT:number = 2;
     }
-
 }
