@@ -43,6 +43,11 @@ module egret.gui {
 			super();
 		}
 
+		/**
+		 *
+		 * @type {boolean}
+		 * @private
+		 */
         public _selected: boolean = false;
 		/**
 		 * 按钮处于按下状态时为 true，而按钮处于弹起状态时为 false。
@@ -56,6 +61,11 @@ module egret.gui {
 			this._setSelected(value);
 		}
 
+		/**
+		 *
+		 * @param value
+		 * @private
+		 */
         public _setSelected(value:boolean):void{
             if (value == this._selected)
                 return;
@@ -86,6 +96,7 @@ module egret.gui {
 		}
 		/**
 		 * 是否根据鼠标事件自动变换选中状态,默认true。仅框架内使用。
+		 * @private
 		 */		
 		public _autoSelected:boolean = true;
 

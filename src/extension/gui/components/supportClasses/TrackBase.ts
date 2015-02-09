@@ -151,6 +151,7 @@ module egret.gui {
 		
 		
 		/**
+		 * 按 stepSize 增大或减小 value
 		 * @method egret.gui.TrackBase#changeValueByStep
 		 * @param increase {boolean} 
 		 */
@@ -164,6 +165,7 @@ module egret.gui {
 		}
 		
 		/**
+		 * 添加外观部件时调用
 		 * @method egret.gui.TrackBase#partAdded
 		 * @param partName {string} 
 		 * @param instance {any} 
@@ -184,6 +186,7 @@ module egret.gui {
 		}
 		
 		/**
+		 * 删除外观部件的实例时调用
 		 * @method egret.gui.TrackBase#partRemoved
 		 * @param partName {string} 
 		 * @param instance {any} 
@@ -203,6 +206,7 @@ module egret.gui {
 		}
 		
 		/**
+		 * 绘制对象和/或设置其子项的大小和位置
 		 * @method egret.gui.TrackBase#updateDisplayList
 		 * @param w {number} 
 		 * @param h {number} 
@@ -212,10 +216,18 @@ module egret.gui {
 			this.updateSkinDisplayList();
 		}
 		
+
 		/**
 		 * 记录鼠标在thumb上按下的位置
-		 */		
+		 * @type {number}
+		 * @private
+		 */
 		public _clickOffsetX:number = NaN;
+		/**
+		 *
+		 * @type {number}
+		 * @private
+		 */
 		public _clickOffsetY:number = NaN;
 
 		/**
@@ -307,7 +319,17 @@ module egret.gui {
 			}
 		}
 
+		/**
+		 *
+		 * @type {number}
+		 * @private
+		 */
         public _moveStageX: number = NaN;
+		/**
+		 *
+		 * @type {number}
+		 * @private
+		 */
         public _moveStageY: number = NaN;
 
 		/**

@@ -67,7 +67,11 @@ module egret.gui {
 		 * @member egret.gui.TreeItemRenderer#contentGroup
 		 */
         public contentGroup: DisplayObject = null;
-		
+		/**
+		 *
+		 * @type {number}
+		 * @private
+		 */
 		private _indentation:number = 17;
 		/**
 		 * 子节点相对父节点的缩进值，以像素为单位。默认17。
@@ -79,7 +83,12 @@ module egret.gui {
 		public set indentation(value:number){
 			this._indentation = value;
 		}
-		
+
+		/**
+		 *
+		 * @type {null}
+		 * @private
+		 */
         private _iconSkinName: any = null;
 		/**
 		 * @member egret.gui.TreeItemRenderer#iconSkinName
@@ -96,6 +105,11 @@ module egret.gui {
 			}
 		}
 
+		/**
+		 *
+		 * @type {number}
+		 * @private
+		 */
 		private _depth:number = 0;
 		/**
 		 * @member egret.gui.TreeItemRenderer#depth
@@ -111,7 +125,12 @@ module egret.gui {
 				this.contentGroup.x = this._depth*this._indentation;
 			}
 		}
-		
+
+		/**
+		 *
+		 * @type {boolean}
+		 * @private
+		 */
 		private _hasChildren:boolean = false;
 		/**
 		 * @member egret.gui.TreeItemRenderer#hasChildren
@@ -127,7 +146,12 @@ module egret.gui {
 				this.disclosureButton.visible = this._hasChildren;
 			}
 		}
-		
+
+		/**
+		 *
+		 * @type {boolean}
+		 * @private
+		 */
 		private _isOpen:boolean = false;
 		/**
 		 * @member egret.gui.TreeItemRenderer#opened
@@ -145,6 +169,7 @@ module egret.gui {
 		}
 
 		/**
+		 * 添加外观部件时调用
 		 * @method egret.gui.TreeItemRenderer#partAdded
 		 * @param partName {string} 
 		 * @param instance {any} 
@@ -168,6 +193,7 @@ module egret.gui {
 		}
 		
 		/**
+		 * 删除外观部件的实例时调用
 		 * @method egret.gui.TreeItemRenderer#partRemoved
 		 * @param partName {string} 
 		 * @param instance {any} 
