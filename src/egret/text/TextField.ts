@@ -429,6 +429,12 @@ module egret {
         }
 
         public _scrollV:number = -1;
+        /**
+         * 文本在文本字段中的垂直位置。scrollV 属性可帮助用户定位到长篇文章的特定段落，还可用于创建滚动文本字段。
+         * 垂直滚动的单位是行，而水平滚动的单位是像素。
+         * 如果显示的第一行是文本字段中的第一行，则 scrollV 设置为 1（而非 0）。
+         * @param value
+         */
         public set scrollV(value:number) {
             this._scrollV = value;
 
@@ -849,6 +855,79 @@ module egret {
                 drawY += h / 2 + this._lineSpacing;
             }
         }
+
+        public _getTextElement(x:number, y:number):ITextElement {
+            var hitTextEle:IHitTextElement = this._getHit(x, y);
+
+            var lineArr:Array<egret.ILineElement>  = this._getLinesArr();
+            if (lineArr[hitTextEle.lineIndex] && lineArr[hitTextEle.lineIndex].elements[hitTextEle.textElementIndex]) {
+                return lineArr[hitTextEle.lineIndex].elements[hitTextEle.textElementIndex];
+            }
+            return null;
+        }
+
+        public _getHit(x:number, y:number):IHitTextElement {
+            var line:number = Math.floor(y / (this._size + this._lineSpacing));
+            var temp = line * (this._size + this._lineSpacing);
+            if (y <= temp + this._size) {//在字上
+
+                var startLine:number = 0;
+                if (this._hasHeightSet) {//
+                    var textHeight:number = this._textMaxHeight + (this._numLines - 1) * this._lineSpacing;
+                    if (textHeight > this._explicitHeight) {//最大高度比需要显示的高度大
+                        startLine = Math.max(this._scrollV - 1, 0);
+                        startLine = Math.min(this._numLines - 1, startLine);
+                    }
+                }
+                line = line + 1 + startLine;
+            }
+            else {//在空白处
+                return null;
+            }
+
+            var lineArr:Array<egret.ILineElement>  = this._getLinesArr();
+            if (lineArr.length < line) {//点击在空白处外
+                return null;
+            }
+
+            var lineElement:egret.ILineElement = lineArr[line - 1];
+            var lineW:number = 0;
+            for (var i:number = 0; i < lineElement.elements.length; i++) {
+                var iwTE:IWTextElement = lineElement.elements[i];
+
+                if (lineW + iwTE.width < x) {
+                    lineW += iwTE.width;
+                }
+                else {
+                    var renderContext = egret.MainContext.instance.rendererContext;
+                    renderContext.setupFont(this, iwTE.style);
+                    var j:number = 0;
+                    for (j = 0; j < iwTE.text.length; j++) {
+                        var wordWidth:number = renderContext.measureText(iwTE.text[j]);
+
+                        if (lineW + wordWidth < x) {
+                            lineW += wordWidth;
+                        }
+                        else {
+                            break;
+                        }
+                    }
+
+                    return {"lineIndex" : line - 1, "textElementIndex" : i, "wordIndex" : j};
+                }
+            }
+
+            return null;
+        }
+    }
+
+    /**
+     * @private
+     */
+    export interface IHitTextElement {
+        lineIndex:number;
+        textElementIndex:number;
+        wordIndex:number;
     }
 
     export interface ITextStyle {
