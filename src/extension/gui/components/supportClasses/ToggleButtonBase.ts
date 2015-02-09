@@ -36,6 +36,7 @@ module egret.gui {
 	 */	
 	export class ToggleButtonBase extends ButtonBase{
 		/**
+		 * 构造函数
 		 * @method egret.gui.ToggleButtonBase#constructor
 		 */
 		public constructor(){
@@ -65,6 +66,7 @@ module egret.gui {
         }
 		
 		/**
+		 * 返回要应用到外观的状态的名称
 		 * @method egret.gui.ToggleButtonBase#getCurrentSkinState
 		 * @returns {string}
 		 */
@@ -86,6 +88,10 @@ module egret.gui {
 		 * 是否根据鼠标事件自动变换选中状态,默认true。仅框架内使用。
 		 */		
 		public _autoSelected:boolean = true;
+
+		/**
+		 * 当在用户单击按钮之后处理 MouseEvent.MOUSE_UP 事件时，将调用此方法
+		 */
 		public buttonReleased():void{
 			super.buttonReleased();
 			if(!this._autoSelected||!this.enabled)
