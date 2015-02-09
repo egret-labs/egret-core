@@ -37,6 +37,9 @@ module egret {
      */
     export class Texture extends HashObject{
 
+        /**
+         * 创建一个 egret.Texture 对象
+         */
         public constructor(){
             super();
         }

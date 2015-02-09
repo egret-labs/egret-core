@@ -39,7 +39,7 @@ module egret {
     export class TimerEvent extends Event{
 
         /**
-         *
+         * 创建一个 egret.TimerEvent 对象
          * @method egret.TimerEvent#constructor
          * @param type {string} 事件的类型。事件侦听器可以通过继承的 type 属性访问此信息。
          * @param bubbles {boolean} 确定 Event 对象是否冒泡。事件侦听器可以通过继承的 bubbles 属性访问此信息。
@@ -64,8 +64,8 @@ module egret {
         /**
          * 使用指定的EventDispatcher对象来抛出Event事件对象。抛出的对象将会缓存在对象池上，供下次循环复用。
 		 * @method egret.TimerEvent.dispatchTimerEvent
-		 * @param target {egret.IEventDispatcher} 
-		 * @param type {string} 
+		 * @param target {egret.IEventDispatcher} 派发事件目标
+		 * @param type {string} 事件类型
          */
         public static dispatchTimerEvent(target:IEventDispatcher,type:string):void{
             var eventClass:any = TimerEvent;

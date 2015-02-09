@@ -44,21 +44,22 @@ module egret {
         public static HTTP_STATUS:string = "httpStatus";
 
         /**
+         * 创建一个 egret.HTTPStatusEvent 对象
          * @method egret.HTTPStatusEvent#constructor
-         * @param type {string}
-         * @param bubbles {boolean}
-         * @param cancelable {boolean}
+         * @param type {string} 事件的类型，可以作为 Event.type 访问。
+         * @param bubbles {boolean} 确定 Event 对象是否参与事件流的冒泡阶段。默认值为 false。
+         * @param cancelable {boolean} 确定是否可以取消 Event 对象。默认值为 false。
          */
         public constructor(type:string, bubbles:boolean = false, cancelable:boolean = false) {
             super(type, bubbles, cancelable);
         }
 
+        private _status:number = 0;
         /**
          * 由服务器返回的 HTTP 状态代码。【只读】
          * @type {number}
          * @private
          */
-        private _status:number = 0;
         public get status():number {
             return this._status;
         }
@@ -67,7 +68,8 @@ module egret {
         /**
          * 使用指定的EventDispatcher对象来抛出Event事件对象。抛出的对象将会缓存在对象池上，供下次循环复用。
          * @method egret.IOErrorEvent.dispatchIOErrorEvent
-         * @param target {egret.IEventDispatcher}
+         * @param target {egret.IEventDispatcher} 派发事件目标
+         * @param status {number} 由服务器返回的 HTTP 状态代码
          */
         public static dispatchHTTPStatusEvent(target:IEventDispatcher, status:number):void {
             if (HTTPStatusEvent.httpStatusEvent == null) {

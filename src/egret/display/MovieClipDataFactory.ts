@@ -41,6 +41,11 @@ module egret {
         public _spriteSheet:SpriteSheet;
         public _mcDataCache:any = {};
 
+        /**
+         * 创建一个 egret.MovieClipDataFactory 对象
+         * @param movieClipDataSet {any} MovieClip数据集
+         * @param texture {Texture} 纹理
+         */
         constructor(movieClipDataSet?:any, texture?:Texture) {
             super();
             this._mcDataSet = movieClipDataSet;

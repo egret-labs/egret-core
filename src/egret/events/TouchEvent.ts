@@ -35,15 +35,14 @@ module egret {
     export class TouchEvent extends Event {
 
         /**
-         * 创建一个作为参数传递给事件侦听器的 Event 对象。
-		 *
+         * 创建一个 egret.TouchEvent 对象，其中包含有关Touch事件的信息
          * @constructor egret.TouchEvent
          * @param type {string} 事件的类型，可以作为 Event.type 访问。
          * @param bubbles {boolean} 确定 Event 对象是否参与事件流的冒泡阶段。默认值为 false。
          * @param cancelable {boolean} 确定是否可以取消 Event 对象。默认值为 false。
-		 * @param touchPointID {number} 
-		 * @param stageX {number} 
-		 * @param stageY {number} 
+		 * @param touchPointID {number} 分配给触摸点的唯一标识号
+		 * @param stageX {number} 事件发生点在全局舞台坐标中的水平坐标
+		 * @param stageY {number} 事件发生点在全局舞台坐标中的垂直坐标
 		 * @param ctrlKey {boolean} 
 		 * @param altKey {boolean} 
 		 * @param shiftKey {boolean} 
@@ -182,11 +181,11 @@ module egret {
         /**
          * 使用指定的EventDispatcher对象来抛出Event事件对象。抛出的对象将会缓存在对象池上，供下次循环复用。
 		 * @method egret.TouchEvent.dispatchTouchEvent
-		 * @param target {egret.IEventDispatcher} 
-		 * @param type {string} 
-		 * @param touchPointID {number} 
-		 * @param stageX {number} 
-		 * @param stageY {number} 
+		 * @param target {egret.IEventDispatcher} 派发事件目标
+		 * @param type {string} 事件类型
+		 * @param touchPointID {number} 分配给触摸点的唯一标识号
+		 * @param stageX {number} 事件发生点在全局舞台坐标中的水平坐标
+		 * @param stageY {number} 事件发生点在全局舞台坐标中的垂直坐标
 		 * @param ctrlKey {boolean} 
 		 * @param altKey {boolean} 
 		 * @param shiftKey {boolean} 

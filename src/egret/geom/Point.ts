@@ -29,18 +29,18 @@
 module egret {
 
     /**
-	 * @class egret.Point
+     * @class egret.Point
      * @classdesc
      * Point 对象表示二维坐标系统中的某个位置，其中 x 表示水平轴，y 表示垂直轴。
-	 * @extends egret.HashObject
+     * @extends egret.HashObject
      */
     export class Point extends HashObject {
 
-        static identity = new Point(0, 0);
+        public static identity:Point = new Point(0, 0);
 
         /**
          * 创建一个 egret.Point 对象
-		 * @method egret.Point#constructor
+         * @method egret.Point#constructor
          * @param x {number} 该对象的x属性值，默认为0
          * @param y {number} 该对象的y属性值，默认为0
          */
@@ -52,19 +52,19 @@ module egret {
 
         /**
          * 该点的水平坐标。默认值为 0。
-		 * @constant {number} egret.Point#x
+         * @constant {number} egret.Point#x
          */
         public x:number;
         /**
          * 该点的垂直坐标。默认值为 0。
-		 * @constant {number} egret.Point#y
+         * @constant {number} egret.Point#y
          */
         public y:number;
 
         /**
          * 克隆点对象
-		 * @method egret.Point#clone
-		 * @returns {egret.Point}
+         * @method egret.Point#clone
+         * @returns {egret.Point}
          */
         public clone():Point {
             return new Point(this.x, this.y);
@@ -77,7 +77,7 @@ module egret {
          * @param {egret.Point} toCompare 要比较的点。
          * @returns {boolean} 如果该对象与此 Point 对象相同，则为 true 值，如果不相同，则为 false。
          */
-        public equals(toCompare:Point):boolean{
+        public equals(toCompare:Point):boolean {
             return this.x == toCompare.x && this.y == toCompare.y;
         }
 
@@ -88,8 +88,8 @@ module egret {
          * @param p2 {egret.Point} 第二个点
          * @returns {number} 第一个点和第二个点之间的距离。
          */
-        public static distance(p1:egret.Point, p2:egret.Point):number{
-            return Math.sqrt((p1.x - p2.x)*(p1.x - p2.x) + (p1.y - p2.y)*(p1.y - p2.y))
+        public static distance(p1:egret.Point, p2:egret.Point):number {
+            return Math.sqrt((p1.x - p2.x) * (p1.x - p2.x) + (p1.y - p2.y) * (p1.y - p2.y))
         }
 
     }

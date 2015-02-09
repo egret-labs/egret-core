@@ -39,6 +39,10 @@ module egret {
 
         private static renderFilter:RenderFilter = RenderFilter.getInstance();
 
+        /**
+         * 初始化 Bitmap 对象以引用指定的 Texture 对象
+         * @param texture {Texture} 纹理
+         */
         public constructor(texture?:Texture) {
             super();
             if(texture){

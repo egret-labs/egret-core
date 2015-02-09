@@ -47,6 +47,9 @@ module egret {
 
         public __hack_local_matrix:any = null;
 
+        /**
+         * 创建一个 egret.DisplayObject 对象
+         */
         public constructor() {
             super();
             this._worldTransform = new egret.Matrix();

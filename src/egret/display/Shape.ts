@@ -34,6 +34,9 @@ module egret {
      */
     export class Shape extends egret.DisplayObject {
 
+        /**
+         * 创建一个 egret.Shape 对象
+         */
         public constructor() {
             super();
         }
