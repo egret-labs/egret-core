@@ -26,3 +26,4 @@ obj/
 *.csproj
 *.ide/
 npm-debug.log
+src/tsc_config_temp.txt

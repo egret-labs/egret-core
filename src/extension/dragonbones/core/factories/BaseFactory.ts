@@ -32,7 +32,6 @@ module dragonBones {
 	 * @class dragonBones.BaseFactory
 	 * @classdesc
 	 * @extends dragonBones.EventDispatcher
-	 * @private
 	 */
 	export class BaseFactory  extends EventDispatcher{
 		public static _helpMatrix:Matrix = new Matrix();
