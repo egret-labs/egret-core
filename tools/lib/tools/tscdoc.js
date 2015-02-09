@@ -42,14 +42,16 @@ function run(dir, args, opts) {
 }
 
 function getModuleList(moduleName) {
-    var modulePath = path.join(process.argv[1], "../../../tools/lib/manifest", moduleName + ".json");
+    var egretPath = path.join(process.argv[1], "../../../");
+
+    var modulePath = path.join(egretPath, "tools/lib/manifest", moduleName + ".json");
 
     var moduleConfig = JSON.parse(file.read(modulePath));
 
     //获取源文件地址
     var tsList = moduleConfig.file_list;
     tsList = tsList.map(function (item) {
-        return globals.addQuotes(path.join(param.getEgretPath(), moduleConfig.source, item));
+        return globals.addQuotes(path.join(egretPath, moduleConfig.source, item));
     }).filter(function (item) {
         return item.indexOf(".js") == -1;
     });
