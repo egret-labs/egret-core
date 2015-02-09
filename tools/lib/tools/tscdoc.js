@@ -42,7 +42,7 @@ function run(dir, args, opts) {
 }
 
 function getModuleList(moduleName) {
-    var modulePath = path.join(param.getEgretPath(), "tools/lib/manifest", moduleName + ".json");
+    var modulePath = path.join(process.argv[1], "../../../tools/lib/manifest", moduleName + ".json");
 
     var moduleConfig = JSON.parse(file.read(modulePath));
 
