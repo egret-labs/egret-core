@@ -30,7 +30,10 @@ module egret {
 
     /**
      * @class egret.Stage
-     * @classdesc Stage 类代表主绘图区。
+     * @classdesc
+     * * Stage 类代表主绘图区，表示显示 Egret 内容的整个区域。
+     * 可以以全局方式访问 Stage 对象(egret.MainContext.instance.stage)。也可以利用 DisplayObject 实例的 stage 属性进行访问。
+     * Stage 类具有多个祖代类 -- DisplayObjectContainer、DisplayObject 和 EventDispatcher，属性和方法便是从这些类继承而来的。从这些继承的许多属性和方法不适用于 Stage 对象。
      * <div style="margin-top: 20px"><b>了解详细信息</b>
      * <a href="http://docs.egret-labs.org/jksubj/scalemode.html" style="padding-left: 20px" target="_blank" >理解Egret中的各种屏幕适配策略并做出选择</a>
      * </div>
