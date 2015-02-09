@@ -72,6 +72,9 @@ exports.addExtends = function (tempClassArr) {
 
             for (var i = 0; i < extendsArr.length; i++) {
                 var parentClassInfo = tempClassArr[extendsArr[i]];
+                if (parentClassInfo == null) {
+                    continue;
+                }
 
                 //继承function
                 var parentFunctions = parentClassInfo["function"] || [];

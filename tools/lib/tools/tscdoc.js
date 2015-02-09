@@ -25,7 +25,7 @@ function run(dir, args, opts) {
     var typeScriptCompiler = require("../tools/egret_tsc_api.js");
 
     var tempTime = Date.now();
-    var cmd = tsList.join(" ") + " -d -t ES5 --out " + outputPath + "a.d.ts";
+    var cmd = tsList.join(" ") + " -d -t ES5 --out " + globals.addQuotes(path.join(outputPath, "a.d.ts"));
     var apiArr = typeScriptCompiler.compile(function () {
     }, cmd, null);
 
