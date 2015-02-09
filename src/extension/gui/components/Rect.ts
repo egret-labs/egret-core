@@ -182,5 +182,16 @@ module egret.gui {
             g.drawRect(0, 0, unscaledWidth, unscaledHeight);
             g.endFill();
         }
+
+        public hitTest(x:number, y:number, ignoreTouchEnabled:boolean = false):DisplayObject {
+            var result:DisplayObject = super.hitTest(x, y, ignoreTouchEnabled);
+            if (result) {
+                return result;
+            }
+            else if (this._graphics) {
+                return DisplayObject.prototype.hitTest.call(this, x, y, ignoreTouchEnabled);
+            }
+            return null;
+        }
     }
 }

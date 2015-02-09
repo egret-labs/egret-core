@@ -115,5 +115,16 @@ module egret {
             }
             return Rectangle.identity.initialize(minX, minY, maxX - minX, maxY - minY);
         }
+
+        public hitTest(x:number, y:number, ignoreTouchEnabled:boolean = false):DisplayObject {
+            var result:DisplayObject = super.hitTest(x, y, ignoreTouchEnabled);
+            if (result) {
+                return result;
+            }
+            else if (this._graphics) {
+                return DisplayObject.prototype.hitTest.call(this, x, y, ignoreTouchEnabled);
+            }
+            return null;
+        }
     }
 }
