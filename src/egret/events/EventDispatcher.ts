@@ -40,6 +40,9 @@ module egret {
      *
      * @extends egret.HashObject
      * @implements egret.IEventDispatcher
+     * <div style="margin-top: 20px"><b>了解详细信息</b>
+     * <a href="http://docs.egret-labs.org/post/manual/event/eventlistener.html" style="padding-left: 20px" target="_blank" >事件侦听器</a>
+     * </div>
      *
      */
     export class EventDispatcher extends HashObject implements IEventDispatcher {

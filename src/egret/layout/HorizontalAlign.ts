@@ -30,6 +30,9 @@ module egret {
 	/**
 	 * @class egret.HorizontalAlign
 	 * @classdesc 水平对齐方式
+     * <div style="margin-top: 20px"><b>了解详细信息</b>
+     * <a href="http://docs.egret-labs.org/post/manual/text/textlayout.html" style="padding-left: 20px" target="_blank" >文本布局</a>
+     * </div>
 	 */
 	export class HorizontalAlign{
         /**

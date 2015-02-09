@@ -35,7 +35,7 @@ module egret {
      * 在OpenGL / WebGL中，资源是一个提交GPU后获取的纹理id
      * Texture类封装了这些底层实现的细节，开发者只需要关心接口即可
      * <div style="margin-top: 20px"><b>了解详细信息</b>
-     * <a href="docs.egret-labs.org/post/manual/bitmap/textures.html" style="padding-left: 20px" target="_blank" >纹理集的使用</a>
+     * <a href="http://docs.egret-labs.org/post/manual/bitmap/textures.html" style="padding-left: 20px" target="_blank" >纹理集的使用</a>
      * <a href="http://docs.egret-labs.org/post/manual/loader/getres.html" style="padding-left: 20px" target="_blank" >获取资源的几种方式</a>
      * </div>
      */
