@@ -35,7 +35,7 @@ module egret {
      * 以下是为便于使用而提供的一些辅助函数：drawRect()、drawRoundRect()、drawCircle() 和 drawEllipse()。
      * <div style="margin-top: 20px"><b>了解详细信息</b>
      * <a href="http://docs.egret-labs.org/post/manual/graphics/drawrect.html
-     " style="padding-left: 20px"  >绘制矩形</a>
+     " style="padding-left: 20px" target="_blank" >绘制矩形</a>
      * </div>
      */
     export class Graphics {
