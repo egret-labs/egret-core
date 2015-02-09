@@ -132,11 +132,7 @@ exports.screening = function (apiArr) {
     return tempClassArr;
 };
 
-function removeDefault(tempObj) {
-    if (!(tempObj instanceof Object)) {
-        return false;
-    }
-
+function exclude (tempObj) {
     if (tempObj["pType"] == "private" || tempObj["pType"] == "protected") {
         return true;
     }
@@ -145,6 +141,17 @@ function removeDefault(tempObj) {
     }
 
     if (tempObj["noDes"] == true) {
+        return true;
+    }
+    return false;
+}
+
+function removeDefault(tempObj) {
+    if (!(tempObj instanceof Object)) {
+        return false;
+    }
+
+    if (exclude(tempObj)) {
         return true;
     }
 
@@ -157,6 +164,13 @@ function removeDefault(tempObj) {
     }
     else {
         for (var key in tempObj) {
+            if (tempObj[key] && tempObj[key].class) {//类或者接口
+                if (exclude(tempObj[key].class)) {
+                    delete tempObj[key];
+                    continue;
+                }
+            }
+
             if (removeDefault(tempObj[key])) {
                 delete tempObj[key];
             }
@@ -445,30 +459,33 @@ function initDesc(docs, parameters, obj, notTrans) {
     if (docs && docs.length) {
         var doc = docs[docs.length - 1];
 
-        if (doc["return"]) {
-            obj["returns"] = {"description" : changeDescription(doc["return"])};
+        for (var key in doc) {
+            switch (key)  {
+                case "return" :
+                    obj["returns"] = {"description" : changeDescription(doc["return"])};
+                    break;
+                case "link" :
+                    obj["exampleU"] = trim.trimAll(doc["link"]);
+                    break;
+                case "example" :
+                    obj["exampleC"] = trim.trimAll(doc["example"]);
+                    break;
+                case "params" :
+                    paramsDoc = doc["params"];
+                    break;
+                case "description" :
+                    if (!notTrans) {
+                        obj["description"] = changeDescription(doc["description"]);
+                    }
+                    else {
+                        obj["description"] = doc["description"];
+                    }
+                    break;
+                default :
+                    obj[key] = doc[key];
+            }
         }
 
-        if (doc["link"]) {
-            obj["exampleU"] = trim.trimAll(doc["link"]);
-        }
-        //if (doc["see"]) {
-        //    obj["see"] = doc["see"];
-        //}
-        if (doc["example"]) {
-            obj["exampleC"] = trim.trimAll(doc["example"]);
-        }
-
-        if (doc["params"]) {
-            paramsDoc = doc["params"];
-        }
-
-        if (!notTrans) {
-            obj["description"] = changeDescription(doc["description"]);
-        }
-        else {
-            obj["description"] = doc["description"];
-        }
     }
 
     if (parameters && parameters.length) {
