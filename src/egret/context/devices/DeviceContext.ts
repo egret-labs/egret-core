@@ -32,7 +32,8 @@ module egret {
 	/**
 	 * @classdesc
 	 * @extends egret.HashObject
-	 */
+     * @private
+     */
     export class DeviceContext extends HashObject{
 
 

@@ -25,6 +25,9 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 module egret {
+    /**
+     * @private
+     */
     export class BlurShader extends EgretShader {
         public fragmentSrc =
             "precision mediump float;"+

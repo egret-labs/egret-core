@@ -33,6 +33,7 @@ module egret {
      * @class egret.HTML5DeviceContext
      * @classdesc
      * @extends egret.DeviceContext
+     * @private
      */
     export class HTML5DeviceContext extends DeviceContext {
 

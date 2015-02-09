@@ -26,6 +26,9 @@
  */
 
 module egret {
+    /**
+     * @private
+     */
     export class InteractionMode{
         /**
          * 使用鼠标交互模式。

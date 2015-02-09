@@ -26,6 +26,9 @@
  */
 
 module egret {
+    /**
+     * @private
+     */
     export class EgretShader {
         private defaultVertexSrc =
             "attribute vec2 aVertexPosition;\n" +

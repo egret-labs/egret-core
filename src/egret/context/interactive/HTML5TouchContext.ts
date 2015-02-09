@@ -29,6 +29,9 @@
 module egret {
 
 
+    /**
+     * @private
+     */
     export class HTML5TouchContext extends TouchContext {
 
         private _isTouchDown:boolean = false;

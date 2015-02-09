@@ -26,6 +26,9 @@
  */
 
 module egret {
+    /**
+     * @private
+     */
     export class PrimitiveShader {
 
         private gl:WebGLRenderingContext = null;

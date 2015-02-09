@@ -28,7 +28,9 @@
 
 module egret {
 
-
+    /**
+     * @private
+     */
     export class NativeTouchContext extends TouchContext {
 
         constructor() {

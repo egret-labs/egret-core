@@ -28,6 +28,9 @@
 
 module egret {
 
+    /**
+     * @private
+     */
     export class NativeNetContext extends NetContext {
 
         private _versionCtr:egret.VersionController;

@@ -33,6 +33,7 @@ module egret {
      * @class egret.NativeDeviceContext
      * @classdesc
      * @extends egret.HashObject
+     * @private
      */
     export class NativeDeviceContext extends HashObject {
 
