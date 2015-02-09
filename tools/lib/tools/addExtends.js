@@ -178,7 +178,7 @@ exports.save = function (apiObj, outputPath) {
         }
         tempModulesArr[item.class.memberof].push(item.class.name);
 
-        file.save("/Volumes/WORK/Sites/api/js/data/finalClasses/" + key + ".json", JSON.stringify(tempClassArr[key], null, "\t"));
+        file.save(path.join(outputPath, "finalClasses/" + key + ".json"), JSON.stringify(tempClassArr[key], null, "\t"));
     }
 
     var tempModules = apiObj["modules"];
