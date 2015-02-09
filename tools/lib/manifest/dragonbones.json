@@ -46,6 +46,7 @@
         "core/armature/Armature.ts",
         "egret/EgretFactory.ts",
         "egret/EgretSlot.ts",
-        "egret/EgretTextureAtlas.ts"
+        "egret/EgretTextureAtlas.ts",
+        "egret/EgretSheetAtlas.ts"
     ]
 }
