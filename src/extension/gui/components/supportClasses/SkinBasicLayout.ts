@@ -36,6 +36,7 @@ module egret.gui {
 	 */
     export class SkinBasicLayout extends HashObject{
 		/**
+         * 构造函数
 		 * @method egret.gui.SkinBasicLayout#constructor
 		 */
         public constructor() {
