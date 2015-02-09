@@ -49,6 +49,7 @@ module egret.gui {
         public get graphics():Graphics {
             if (!this._graphics) {
                 this._graphics = new Graphics();
+                this.needDraw = true;
             }
             return this._graphics;
         }
