@@ -247,7 +247,7 @@ module egret.gui {
 			this._userProposedSelectedIndex = newIndex;
 			this.itemSelected(this._userProposedSelectedIndex, true);
 		}
-		
+
 		public dataProvider_collectionChangeHandler(event:CollectionEvent):void{
 			super.dataProvider_collectionChangeHandler(event);
 			
