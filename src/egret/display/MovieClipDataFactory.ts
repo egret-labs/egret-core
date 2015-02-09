@@ -30,6 +30,9 @@ module egret {
      * @class egret.MovieClipDataFactory
      * @classdesc 使用 MovieClipDataFactory 类，可以生成 MovieClipData 对象用于创建MovieClip
      * @extends egret.EventDispatcher
+     * <div style="margin-top: 20px"><b>了解详细信息</b>
+     * <a href="http://docs.egret-labs.org/post/manual/displaycon/movieclip.html" style="padding-left: 20px" target="_blank" >MovieClip序列帧动画</a>
+     * </div>
      */
     export class MovieClipDataFactory extends EventDispatcher {
         /**

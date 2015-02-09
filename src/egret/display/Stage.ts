@@ -31,6 +31,9 @@ module egret {
     /**
      * @class egret.Stage
      * @classdesc Stage 类代表主绘图区。
+     * <div style="margin-top: 20px"><b>了解详细信息</b>
+     * <a href="http://docs.egret-labs.org/jksubj/scalemode.html" style="padding-left: 20px" target="_blank" >理解Egret中的各种屏幕适配策略并做出选择</a>
+     * </div>
      */
     export class Stage extends DisplayObjectContainer {
 
