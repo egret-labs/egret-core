@@ -49,11 +49,11 @@ module egret {
         public static identityRectangle:egret.Rectangle = new egret.Rectangle();
 
         /**
-         * 将制定显示对象绘制为一个纹理
+         * 将指定显示对象绘制为一个纹理
          * @method egret.RenderTexture#drawToTexture
-         * @param displayObject {egret.DisplayObject}
-         * @param clipBounds {egret.Rectangle}
-         * @param scale number
+         * @param displayObject {egret.DisplayObject} 需要绘制的显示对象
+         * @param clipBounds {egret.Rectangle} 绘制矩形区域
+         * @param scale {number} 缩放比例
          */
         public drawToTexture(displayObject:egret.DisplayObject, clipBounds?:Rectangle, scale?:number):boolean {
             var bounds = clipBounds || displayObject.getBounds(Rectangle.identity);

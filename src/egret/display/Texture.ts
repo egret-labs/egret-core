@@ -41,28 +41,28 @@ module egret {
             super();
         }
         /**
-         * 表示这个纹理在bitmapData上的x起始位置
+         * 表示这个纹理在 bitmapData 上的 x 起始位置
          */
         public _bitmapX:number = 0;
         /**
-         * 表示这个纹理在bitmapData上的y起始位置
+         * 表示这个纹理在 bitmapData 上的 y 起始位置
          */
         public _bitmapY:number = 0;
         /**
-         * 表示这个纹理在bitmapData上的宽度
+         * 表示这个纹理在 bitmapData 上的宽度
          */
         public _bitmapWidth:number = 0;
         /**
-         * 表示这个纹理在bitmapData上的高度
+         * 表示这个纹理在 bitmapData 上的高度
          */
         public _bitmapHeight:number = 0;
 
         /**
-         * 表示这个纹理显示了之后在x方向的渲染偏移量
+         * 表示这个纹理显示了之后在 x 方向的渲染偏移量
          */
         public _offsetX = 0;
         /**
-         * 表示这个纹理显示了之后在y方向的渲染偏移量
+         * 表示这个纹理显示了之后在 y 方向的渲染偏移量
          */
         public _offsetY = 0;
 
