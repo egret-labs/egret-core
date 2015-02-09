@@ -98,6 +98,7 @@ module egret.gui {
 
         private createChildrenCalled:boolean = false;
         /**
+         * 创建子对象
          */
         public createChildren():void{
             super.createChildren();
@@ -196,6 +197,11 @@ module egret.gui {
             this.invalidateDisplayList();
         }
 
+        /**
+         *
+         * @type {number}
+         * @private
+         */
         private _paddingRight:number = NaN;
         /**
          * 文字距离右边缘的空白像素,若为NaN将使用padding的值，默认值：NaN。
@@ -214,6 +220,11 @@ module egret.gui {
             this.invalidateDisplayList();
         }
 
+        /**
+         *
+         * @type {number}
+         * @private
+         */
         private _paddingTop:number = NaN;
         /**
          * 文字距离顶部边缘的空白像素,若为NaN将使用padding的值，默认值：NaN。
@@ -232,6 +243,11 @@ module egret.gui {
             this.invalidateDisplayList();
         }
 
+        /**
+         *
+         * @type {number}
+         * @private
+         */
         private _paddingBottom:number = NaN;
         /**
          * 文字距离底部边缘的空白像素,若为NaN将使用padding的值，默认值：NaN。
@@ -251,6 +267,7 @@ module egret.gui {
         }
 
         /**
+         * 计算 Panel 容器默认大小的最小值和最大值
          * @method egret.gui.BitmapLabel#measure
          */
         public measure():void{
@@ -318,6 +335,7 @@ module egret.gui {
         }
 
         /**
+         * 通过设置此容器子项的位置和大小来响应大小更改
          * @method egret.gui.BitmapLabel#updateDisplayList
          * @param unscaledWidth {number}
          * @param unscaledHeight {number}
@@ -368,6 +386,9 @@ module egret.gui {
             this._addToDisplayList(this._bitmapText);
         }
 
+        /**
+         * 处理对组件设置的属性
+         */
         public commitProperties(): void {
             super.commitProperties();
 
