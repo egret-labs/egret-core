@@ -28,15 +28,15 @@
 
 module egret {
 
+    /**
+     * @classdesc
+     * TouchEvent事件类
+     */
     export class TouchEvent extends Event {
 
         /**
          * 创建一个作为参数传递给事件侦听器的 Event 对象。
 		 *
-         * @class egret.TouchEvent
-         * @classdesc
-         * TouchEvent事件类
-         * @extends egret.Event
          * @constructor egret.TouchEvent
          * @param type {string} 事件的类型，可以作为 Event.type 访问。
          * @param bubbles {boolean} 确定 Event 对象是否参与事件流的冒泡阶段。默认值为 false。
