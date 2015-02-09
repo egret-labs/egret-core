@@ -73,6 +73,7 @@ exports.addExtends = function (tempClassArr) {
             for (var i = 0; i < extendsArr.length; i++) {
                 var parentClassInfo = tempClassArr[extendsArr[i]];
                 if (parentClassInfo == null) {
+                    console.log(extendsArr[i] + "从api中移除");
                     continue;
                 }
 
