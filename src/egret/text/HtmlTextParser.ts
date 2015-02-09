@@ -28,8 +28,7 @@ module egret {
 
     /**
      * @class egret.HtmlTextParser
-     * @classdesc
-     *
+     * @classdesc 将html格式文本转换为可赋值给 egret.TextField#textFlow 属性的对象
      */
     export class HtmlTextParser{
 
@@ -38,6 +37,13 @@ module egret {
         }
 
         private resutlArr:Array<egret.ITextElement> = [];
+
+        /**
+         * 将html格式文本转换为可赋值给 egret.TextField#textFlow 属性的对象
+         * @param htmltext {string} html文本
+         * @method egret.HtmlTextParser#parser
+         * @returns {Array<egret.ITextElement>} 可赋值给 egret.TextField#textFlow 属性的对象
+         */
         public parser(htmltext:string):Array<egret.ITextElement> {
             this.stackArray = [];
             this.resutlArr = [];

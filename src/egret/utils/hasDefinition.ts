@@ -30,9 +30,9 @@ module egret {
 
      /**
       * 检查指定的应用程序域之内是否存在一个公共定义。该定义可以是一个类、一个命名空间或一个函数的定义。
-	 * @method egret.hasDefinition
+	  * @method egret.hasDefinition
       * @param name {string} 定义的名称。
-	 * @returns {boolean}
+	  * @returns {boolean} 公共定义是否存在
       * @example
       * egret.hasDefinition("egret.DisplayObject") //返回 true
       */

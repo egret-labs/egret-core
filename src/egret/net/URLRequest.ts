@@ -28,24 +28,24 @@
 
 module egret {
 
-	/**
-	 * @class egret.URLRequest
-	 * @classdesc URLRequest 类可捕获单个 HTTP 请求中的所有信息。
-	 * @extends egret.HashObject
-	 */
-    export class URLRequest extends HashObject{
+    /**
+     * @class egret.URLRequest
+     * @classdesc URLRequest 类可捕获单个 HTTP 请求中的所有信息。
+     * @extends egret.HashObject
+     */
+    export class URLRequest extends HashObject {
 
-		/**
-         * 实例化一个URLRequest对象
-		 * @method egret.URLRequest#constructor
-		 * @param url {string} 进行网络请求的地址
-		 */
-        public constructor(url:string=null){
+        /**
+         * 创建一个 egret.URLRequest 对象
+         * @method egret.URLRequest#constructor
+         * @param url {string} 进行网络请求的地址
+         */
+        public constructor(url:string = null) {
             super();
             this.url = url;
         }
 
-		/**
+        /**
          * 一个对象，它包含将随 URL 请求一起传输的数据。
          * 该属性与 method 属性配合使用。当 method 值为 GET 时，将使用 HTTP 查询字符串语法将 data 值追加到 URLRequest.url 值。
          * 当 method 值为 POST（或 GET 之外的任何值）时，将在 HTTP 请求体中传输 data 值。
@@ -55,20 +55,20 @@ module egret {
          * 如果该对象是 URLVariables 对象，并且该方法是 POST，则使用 x-www-form-urlencoded 格式对变量进行编码，并且生成的字符串会用作 POST 数据。
          * 如果该对象是 URLVariables 对象，并且该方法是 GET，则 URLVariables 对象将定义要随 URLRequest 对象一起发送的变量。
          * 否则，该对象会转换为字符串，并且该字符串会用作 POST 或 GET 数据。
-		 * @member {any} egret.URLRequest#data
-		 */
+         * @member {any} egret.URLRequest#data
+         */
         public data:any = null;
 
-		/**
+        /**
          * 请求方式，有效值为URLRequestMethod.GET 或 URLRequestMethod.POST。
-		 * @member {string} egret.URLRequest#method
-		 */
+         * @member {string} egret.URLRequest#method
+         */
         public method:string = URLRequestMethod.GET;
 
-		/**
+        /**
          * 所请求的 URL。
-		 * @member {string} egret.URLRequest#url
-		 */
+         * @member {string} egret.URLRequest#url
+         */
         public url:string = "";
 
         /**

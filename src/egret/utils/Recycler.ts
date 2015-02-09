@@ -36,8 +36,9 @@ module egret {
     export class Recycler extends HashObject{
 
 		/**
+         * 创建一个 egret.Recycler 对象
 		 * @method egret.Recycler#constructor
-		 * @param autoDisposeTime {number}
+		 * @param autoDisposeTime {number} 多少帧后自动销毁对象，默认值300
 		 */
         public constructor(autoDisposeTime:number = 300){
             super();
@@ -75,7 +76,7 @@ module egret {
         /**
          * 缓存一个对象以复用
 		 * @method egret.Recycler#push
-         * @param object {any}
+         * @param object {any} 需要缓存的对象
          */
         public push(object:any):void{
             var pool:Array<any> = this.objectPool;
@@ -95,7 +96,7 @@ module egret {
         /**
          * 获取一个缓存的对象
 		 * @method egret.Recycler#pop
-		 * @returns {any}
+		 * @returns {any} 获得的缓存对象
          */
         public pop():any{
             if(this._length==0)

@@ -35,6 +35,9 @@ module egret {
      */
     export class BitmapText extends DisplayObject{
 
+        /**
+         * 创建一个 egret.BitmapText 对象
+         */
         public constructor() {
             super();
             this.cacheAsBitmap = true;

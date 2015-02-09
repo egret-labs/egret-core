@@ -31,7 +31,7 @@ module egret {
      * 转换数字为颜色字符串
 	 * @method egret.toColorString
 	 * @param value {number} 
-	 * @returns {string}
+	 * @returns {string} 颜色字符串，例如"#ffffff"。
      */
     export function toColorString(value:number):string{
         if(isNaN(value)||value < 0)

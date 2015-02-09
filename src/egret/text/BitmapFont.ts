@@ -35,6 +35,11 @@ module egret {
      */
     export class BitmapFont extends SpriteSheet {
 
+        /**
+         * 创建一个 egret.BitmapFont 对象
+         * @param texture {egret.Texture} 纹理集
+         * @param config {any} 配置数据
+         */
         public constructor(texture:Texture, config:any) {
             super(texture);
             if(typeof(config)=="string"){
@@ -50,6 +55,12 @@ module egret {
 
         private charList:any;
 
+        /**
+         * 通过 name 属性获取对应纹理
+         * @param name {string} name属性
+         * @method egret.BitmapFont#getTexture
+         * @returns {egret.Texture}
+         */
         public getTexture(name:string):Texture {
             var texture:Texture = this._textureMap[name];
             if (!texture) {

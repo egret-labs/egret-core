@@ -52,7 +52,7 @@ module egret {
     /**
      * 清除指定延迟后运行的函数。
 	 * @method egret.clearTimeout
-     * @param key {number} 
+     * @param key {number} egret.setTimeout所返回的索引
      */
     export function clearTimeout(key:number):void {
         delete __setTimeout__cache[key];

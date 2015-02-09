@@ -33,10 +33,21 @@ module egret {
      */
     export class Sound {
 
+        /**
+         * 背景音乐
+         * @constant egret.Sound.MUSIC
+         */
         public static MUSIC:string = "music";
+        /**
+         * 音效
+         * @constant egret.Sound.EFFECT
+         */
         public static EFFECT:string = "effect";
         public path:string = "";
 
+        /**
+         * 创建 egret.Sound 对象
+         */
         constructor() {
 
         }
@@ -47,6 +58,11 @@ module egret {
          */
         private audio:any = null;
 
+        /**
+         * 类型，默认为 egret.Sound.EFFECT。
+         * 在 native 和 runtime 环境下，背景音乐同时只能播放一个，音效长度尽量不要太长。
+         * @member {any} egret.Sound#audio
+         */
         public type:string = Sound.EFFECT;
 
         /**

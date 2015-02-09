@@ -39,6 +39,9 @@ module egret {
          */
         public value:string = "";
 
+        /**
+         * 创建一个 egret.URLRequestHeader 对象
+         */
         constructor(name:string, value:string) {
             this.name = name;
             this.value = value;

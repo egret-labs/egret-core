@@ -73,11 +73,10 @@ module egret {
         private passive:boolean = false;
 
 		/**
-         * 激活一个显示对象，对其添加 Tween 动画
-		 * @method egret.Tween.get
-         * @param target {egret.DisplayObject} 要激活的显示对象
+         * 激活一个对象，对其添加 Tween 动画
+         * @param target 要激活的对象
 		 */
-        public static get(target, props = null, pluginData = null, override = false):Tween {
+        public static get(target:any, props = null, pluginData = null, override = false):Tween {
             if (override) {
                 Tween.removeTweens(target);
             }
@@ -85,9 +84,9 @@ module egret {
         }
 
 		/**
-         * 删除一个显示对象上的全部 Tween 动画
+         * 删除一个对象上的全部 Tween 动画
 		 * @method egret.Tween.removeTweens
-		 * @param target {egret.DisplayObject}
+		 * @param target  需要移除 Tween 的对象
 		 */
         public static removeTweens(target:any):void {
             if (!target.tween_count) {
@@ -104,8 +103,8 @@ module egret {
         }
 
         /**
-         * 暂停某个元件的所有缓动
-         * @param target
+         * 暂停某个对象的所有 Tween
+         * @param target 要暂停 Tween 的对象
          */
         public static pauseTweens(target:any):void {
             if (!target.tween_count) {
@@ -120,8 +119,8 @@ module egret {
         }
 
         /**
-         * 继续播放某个元件的所有缓动
-         * @param target
+         * 继续播放某个对象的所有缓动
+         * @param target 要继续播放 Tween 的对象
          */
         public static resumeTweens(target:any):void {
             if (!target.tween_count) {
@@ -173,7 +172,7 @@ module egret {
         }
 
 		/**
-		 * @method egret.Tween.removeAllTweens
+         * 删除所有 Tween
 		 */
         public static removeAllTweens():void {
             var tweens:Tween[] = Tween._tweens;
@@ -185,6 +184,9 @@ module egret {
             tweens.length = 0;
         }
 
+        /**
+         * 创建一个 egret.Tween 对象
+         */
         constructor(target, props, pluginData) {
             super();
             this.initialize(target, props, pluginData);
@@ -356,9 +358,10 @@ module egret {
         }
 
 		/**
+         * 设置是否暂停
 		 * @method egret.Tween#setPaused
-		 * @param value {boolean} 
-		 * @returns {egret.Tween}
+		 * @param value {boolean} 是否暂停
+		 * @returns Tween对象本身
 		 */
         public setPaused(value:boolean):Tween {
             this.paused = value;
@@ -434,8 +437,8 @@ module egret {
          * 等待指定毫秒后执行下一个动画
 		 * @method egret.Tween#wait
 		 * @param duration {number} 要等待的时间，以毫秒为单位
-		 * @param passive {boolean}
-		 * @returns {egret.Tween}
+		 * @param passive {boolean} 等待期间属性是否会更新
+		 * @returns Tween对象本身
 		 */
         public wait(duration:number, passive?:boolean):Tween {
             if (duration == null || duration <= 0) {
@@ -451,7 +454,7 @@ module egret {
 		 * @param props {Object} 对象的属性集合
 		 * @param duration {number} 持续时间
 		 * @param ease {egret.Ease} 缓动算法
-		 * @returns {egret.Tween}
+		 * @returns {egret.Tween} Tween对象本身
 		 */
         public to(props, duration:number, ease = undefined):Tween {
             if (isNaN(duration) || duration < 0) {
@@ -463,12 +466,12 @@ module egret {
 		/**
          * 执行回调函数
 		 * @method egret.Tween#call
-		 * @param callback {Function} 
-		 * @param thisObj {Object}
-		 * @param params {Object}
-		 * @returns {egret.Tween}
+		 * @param callback {Function} 回调方法
+		 * @param thisObj {any} 回调方法this作用域
+		 * @param params {Array<any>} 回调方法参数
+		 * @returns {egret.Tween} Tween对象本身
 		 */
-        public call(callback:Function, thisObj = undefined, params = undefined):Tween {
+        public call(callback:Function, thisObj:any = undefined, params:Array<any> = undefined):Tween {
             return this._addAction({f: callback, p: params ? params : [], o: thisObj ? thisObj : this._target});
         }
 
@@ -477,9 +480,10 @@ module egret {
         }
 
 		/**
+         * 执行
 		 * @method egret.Tween#play
-		 * @param tween {egret.Tween} 
-		 * @returns {egret.Tween}
+		 * @param tween {egret.Tween} 需要操作的 Tween 对象，默认this
+		 * @returns {egret.Tween} Tween对象本身
 		 */
         public play(tween?:Tween):Tween {
             if (!tween) {
@@ -489,9 +493,10 @@ module egret {
         }
 
 		/**
+         * 暂停
 		 * @method egret.Tween#pause
-		 * @param tween {egret.Tween} 
-		 * @returns {egret.Tween}
+		 * @param tween {egret.Tween} 需要操作的 Tween 对象，默认this
+		 * @returns {egret.Tween} Tween对象本身
 		 */
         public pause(tween?:Tween):Tween {
             if (!tween) {
@@ -502,7 +507,8 @@ module egret {
 
 		/**
 		 * @method egret.Tween#tick
-		 * @param delta {number} 
+		 * @param delta {number}
+         * @private
 		 */
         public tick(delta:number):void {
             if (this.paused) {

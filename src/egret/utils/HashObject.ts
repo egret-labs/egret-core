@@ -40,6 +40,7 @@ module egret {
     export class HashObject implements IHashObject{
 
         /**
+         * 创建一个 egret.HashObject 对象
 		 * @method egret.HashObject#constructor
          */
         public constructor() {
