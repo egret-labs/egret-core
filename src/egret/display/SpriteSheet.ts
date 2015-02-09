@@ -38,6 +38,10 @@ module egret {
      */
     export class SpriteSheet extends HashObject {
 
+        /**
+         * 创建一个 egret.SpriteSheet 对象
+         * @param texture {Texture} 纹理
+         */
         public constructor(texture:Texture) {
             super();
             var bitmapData:any = texture.bitmapData;

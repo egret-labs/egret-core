@@ -31,7 +31,7 @@ module egret {
      *
      * @class egret.EventDispatcher
      * @classdesc
-     * EventDispatcher是egret的事件派发器类，负责进行事件的发送和侦听。
+     * EventDispatcher 是 Egret 的事件派发器类，负责进行事件的发送和侦听。
      *
      * 事件目标是事件如何通过显示列表层次结构这一问题的焦点。当发生鼠标单击、触摸或按键等事件时，
      * 引擎会将事件对象调度到从显示列表根开始的事件流中。然后该事件对象在显示列表中前进，直到到达事件目标，
@@ -45,9 +45,9 @@ module egret {
     export class EventDispatcher extends HashObject implements IEventDispatcher {
 
         /**
-         * EventDispatcher 类是可调度事件的所有类的基类。EventDispatcher 类实现 IEventDispatcher 接口
-         * ，并且是 DisplayObject 类的基类。EventDispatcher 类允许显示列表上的任何对象都是一个事件目标，
-         * 同样允许使用 IEventDispatcher 接口的方法。
+         * EventDispatcher 类是可调度事件的所有类的基类。
+         * EventDispatcher 类实现 IEventDispatcher 接口 ，并且是 DisplayObject 类的基类。
+         * EventDispatcher 类允许显示列表上的任何对象都是一个事件目标，同样允许使用 IEventDispatcher 接口的方法。
          */
         public constructor(target:IEventDispatcher = null) {
             super();

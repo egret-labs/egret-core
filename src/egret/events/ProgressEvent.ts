@@ -37,12 +37,21 @@ module egret {
          */
         public static SOCKET_DATA:string = "socketData";
 
+        /**
+         * 在侦听器处理事件时加载的项数或字节数。
+         * @member {number} egret.ProgressEvent#bytesLoaded
+         */
         public bytesLoaded:number = 0;
+        /**
+         * 如果加载过程成功，将加载的总项数或总字节数。
+         * @member {number} egret.ProgressEvent#bytesTotal
+         */
         public bytesTotal:number = 0;
 
         /**
+         * 创建一个 egret.ProgressEvent 对象
          * @method egret.ProgressEvent#constructor
-         * @param type {string}
+         * @param type {string} 事件类型
          * @param bubbles {boolean}
          * @param cancelable {boolean}
          * @param bytesLoaded {number}
@@ -58,7 +67,10 @@ module egret {
         /**
          * 使用指定的EventDispatcher对象来抛出Event事件对象。抛出的对象将会缓存在对象池上，供下次循环复用。
          * @method egret.ProgressEvent.dispatchIOErrorEvent
-         * @param target {egret.IEventDispatcher}
+         * @param target {egret.IEventDispatcher} 派发事件目标
+         * @param type {string} 事件类型
+         * @param bytesLoaded {number} 加载的项数或字节数
+         * @param bytesTotal {number} 加载的总项数或总字节数
          */
         public static dispatchProgressEvent(target:IEventDispatcher, type:string, bytesLoaded:number = 0, bytesTotal:number = 0):void {
             Event._dispatchByTarget(ProgressEvent, target, type, {"bytesLoaded":bytesLoaded, "bytesTotal":bytesTotal});

@@ -51,6 +51,11 @@ module egret {
             Stage._invalidateRenderFlag = true;
         }
 
+        /**
+         * 创建一个 egret.Stage 对象
+         * @param width {number} 舞台宽度
+         * @param height {number} 舞台高度
+         */
         public constructor(width:number = 480, height:number = 800) {
             super();
             this.touchEnabled = true;

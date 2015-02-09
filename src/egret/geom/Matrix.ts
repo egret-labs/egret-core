@@ -35,6 +35,7 @@ module egret {
      */
     export class Matrix extends HashObject {
         /**
+         * 创建一个 egret.Matrix 对象
          * @method egret.Matrix#constructor
          * @param a {number} 缩放或旋转图像时影响像素沿 x 轴定位的值。
          * @param b {number} 旋转或倾斜图像时影响像素沿 y 轴定位的值。
@@ -43,7 +44,7 @@ module egret {
          * @param tx {number} 沿 x 轴平移每个点的距离。
          * @param ty {number} 沿 y 轴平移每个点的距离。
          */
-        constructor(a:number = 1, b:number = 0, c:number = 0, d:number = 1,tx:number = 0, ty:number = 0) {
+        constructor(a:number = 1, b:number = 0, c:number = 0, d:number = 1, tx:number = 0, ty:number = 0) {
             super();
             this.a = a;
             this.b = b;
@@ -53,26 +54,50 @@ module egret {
             this.ty = ty;
         }
 
+        /**
+         * 缩放或旋转图像时影响像素沿 x 轴定位的值
+         * @member egret.Matrix#a
+         */
         public a:number;
+        /**
+         * 旋转或倾斜图像时影响像素沿 y 轴定位的值
+         * @member egret.Matrix#b
+         */
         public b:number;
+        /**
+         * 旋转或倾斜图像时影响像素沿 x 轴定位的值
+         * @member egret.Matrix#c
+         */
         public c:number;
+        /**
+         * 缩放或旋转图像时影响像素沿 y 轴定位的值
+         * @member egret.Matrix#d
+         */
         public d:number;
+        /**
+         * 沿 x 轴平移每个点的距离
+         * @member egret.Matrix#tx
+         */
         public tx:number;
+        /**
+         * 沿 y 轴平移每个点的距离
+         * @member egret.Matrix#ty
+         */
         public ty:number;
 
-        static identity = new Matrix();
+        public static identity:Matrix = new Matrix();
 
-        static DEG_TO_RAD = Math.PI / 180;
+        public static DEG_TO_RAD:number = Math.PI / 180;
 
         /**
          * 前置矩阵
          * @method egret.Matrix#prepend
-         * @param a {number}
-         * @param b {number}
-         * @param c {number}
-         * @param d {number}
-         * @param tx {number}
-         * @param ty {number}
+         * @param a {number} 缩放或旋转图像时影响像素沿 x 轴定位的值
+         * @param b {number} 缩放或旋转图像时影响像素沿 y 轴定位的值
+         * @param c {number} 缩放或旋转图像时影响像素沿 x 轴定位的值
+         * @param d {number} 缩放或旋转图像时影响像素沿 y 轴定位的值
+         * @param tx {number} 沿 x 轴平移每个点的距离
+         * @param ty {number} 沿 y 轴平移每个点的距离
          * @returns {egret.Matrix}
          */
         public prepend(a:number, b:number, c:number, d:number, tx:number, ty:number):Matrix {
@@ -94,15 +119,15 @@ module egret {
         /**
          * 后置矩阵
          * @method egret.Matrix#append
-         * @param a {number}
-         * @param b {number}
-         * @param c {number}
-         * @param d {number}
-         * @param tx {number}
-         * @param ty {number}
+         * @param a {number} 缩放或旋转图像时影响像素沿 x 轴定位的值
+         * @param b {number} 缩放或旋转图像时影响像素沿 y 轴定位的值
+         * @param c {number} 缩放或旋转图像时影响像素沿 x 轴定位的值
+         * @param d {number} 缩放或旋转图像时影响像素沿 y 轴定位的值
+         * @param tx {number} 沿 x 轴平移每个点的距离
+         * @param ty {number} 沿 y 轴平移每个点的距离
          * @returns {egret.Matrix}
          */
-        public append(a, b, c, d, tx, ty):Matrix {
+        public append(a:number, b:number, c:number, d:number, tx:number, ty:number):Matrix {
             var a1 = this.a;
             var b1 = this.b;
             var c1 = this.c;
@@ -121,15 +146,15 @@ module egret {
         /**
          * 前置矩阵
          * @method egret.Matrix#prependTransform
-         * @param x {number}
-         * @param y {number}
-         * @param scaleX {number}
-         * @param scaleY {number}
-         * @param rotation {number}
-         * @param skewX {number}
-         * @param skewY {number}
-         * @param regX {number}
-         * @param regY {number}
+         * @param x {number} x值
+         * @param y {number} y值
+         * @param scaleX {number} 水平缩放
+         * @param scaleY {number} 垂直缩放
+         * @param rotation {number} 旋转
+         * @param skewX {number} x方向斜切
+         * @param skewY {number} y方向斜切
+         * @param regX {number} x值偏移
+         * @param regY {number} y值偏移
          * @returns {egret.Matrix}
          */
         public prependTransform(x:number, y:number, scaleX:number, scaleY:number, rotation:number, skewX:number, skewY:number, regX:number, regY:number):Matrix {
@@ -163,15 +188,15 @@ module egret {
         /**
          * 后置矩阵
          * @method egret.Matrix#appendTransform
-         * @param x {number}
-         * @param y {number}
-         * @param scaleX {number}
-         * @param scaleY {number}
-         * @param rotation {number}
-         * @param skewX {number}
-         * @param skewY {number}
-         * @param regX {number}
-         * @param regY {number}
+         * @param x {number} x值
+         * @param y {number} y值
+         * @param scaleX {number} 水平缩放
+         * @param scaleY {number} 垂直缩放
+         * @param rotation {number} 旋转
+         * @param skewX {number} x方向斜切
+         * @param skewY {number} y方向斜切
+         * @param regX {number} x值偏移
+         * @param regY {number} y值偏移
          * @returns {egret.Matrix}
          */
         public appendTransform(x:number, y:number, scaleX:number, scaleY:number, rotation:number, skewX:number, skewY:number, regX:number, regY:number):Matrix {
@@ -209,7 +234,7 @@ module egret {
          * @param angle {number} 角度
          * @returns {egret.Matrix}
          */
-        public rotate(angle):Matrix {
+        public rotate(angle:number):Matrix {
             var cos = Math.cos(angle);
             var sin = Math.sin(angle);
 
@@ -230,11 +255,11 @@ module egret {
         /**
          * 矩阵斜切，以角度值为单位
          * @method egret.Matrix#skew
-         * @param skewX {number}
-         * @param skewY {number}
+         * @param skewX {number} x方向斜切
+         * @param skewY {number} y方向斜切
          * @returns {egret.Matrix}
          */
-        public skew(skewX, skewY):Matrix {
+        public skew(skewX:number, skewY:number):Matrix {
 //            skewX = skewX * Matrix.DEG_TO_RAD;
 //            skewY = skewY * Matrix.DEG_TO_RAD;
             this.append(NumberUtils.cos(skewY), NumberUtils.sin(skewY), -NumberUtils.sin(skewX), NumberUtils.cos(skewX), 0, 0);
@@ -245,11 +270,11 @@ module egret {
         /**
          * 矩阵缩放
          * @method egret.Matrix#scale
-         * @param x {number}
-         * @param y {number}
+         * @param x {number} 水平缩放
+         * @param y {number} 垂直缩放
          * @returns {egret.Matrix}
          */
-        public scale(x, y):Matrix {
+        public scale(x:number, y:number):Matrix {
             this.a *= x;
             this.d *= y;
             this.c *= x;
@@ -267,7 +292,7 @@ module egret {
          * @param y {number} 沿 y 轴向下移动的量（以像素为单位）。
          * @returns {egret.Matrix}
          */
-        public translate(x, y):Matrix {
+        public translate(x:number, y:number):Matrix {
             this.tx += x;
             this.ty += y;
             return this;
@@ -290,6 +315,7 @@ module egret {
         /**
          * 矩阵重置为目标矩阵
          * @method egret.Matrix#identityMatrix
+         * @param matrix {egret.Matrix} 重置的目标矩阵
          * @returns {egret.Matrix}
          */
         public identityMatrix(matrix:Matrix):Matrix {

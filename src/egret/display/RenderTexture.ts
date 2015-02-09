@@ -37,6 +37,9 @@ module egret {
 
         private renderContext;
 
+        /**
+         * 创建一个 egret.RenderTexture 对象
+         */
         constructor() {
             super();
         }

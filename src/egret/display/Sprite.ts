@@ -35,6 +35,9 @@ module egret {
      */
     export class Sprite extends DisplayObjectContainer {
 
+        /**
+         * 创建一个 egret.Sprite 对象
+         */
         public constructor() {
             super();
         }

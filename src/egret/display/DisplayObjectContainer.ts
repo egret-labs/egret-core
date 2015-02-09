@@ -40,6 +40,9 @@ module egret {
         public static __EVENT__ADD_TO_STAGE_LIST:Array<DisplayObject> = [];
         public static __EVENT__REMOVE_FROM_STAGE_LIST:Array<DisplayObject> = [];
 
+        /**
+         * 创建一个 egret.DisplayObjectContainer 对象
+         */
         constructor() {
             super();
             this._children = [];

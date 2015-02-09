@@ -67,6 +67,9 @@ module egret {
          */
         public spriteSheet:SpriteSheet = null;
 
+        /**
+         * 创建一个 egret.MovieClipData 对象
+         */
         constructor() {
             super();
         }
