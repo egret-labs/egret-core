@@ -67,10 +67,6 @@ declare module egret_native {
 
     function saveRecord(filepath:string, fileContent:string):void;
 
-    function pauseApp():void;
-
-    function resumeApp():void;
-
     function getOption(type:string):any;
 
     module Audio {
