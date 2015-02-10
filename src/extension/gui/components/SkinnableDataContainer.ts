@@ -46,6 +46,7 @@ module egret.gui {
 		}
 		
 		/**
+		 * 更新项呈示器，以备使用或重用
 		 * @method egret.gui.SkinnableDataContainer#updateRenderer
 		 * @param renderer {IItemRenderer} 
 		 * @param itemIndex {number} 
@@ -202,6 +203,7 @@ module egret.gui {
         }
 		
 		/**
+		 * [覆盖] 添加外观部件时调用
 		 * @method egret.gui.SkinnableDataContainer#partAdded
 		 * @param partName {string} 
 		 * @param instance {any} 
@@ -252,6 +254,7 @@ module egret.gui {
 		}
 		
 		/**
+		 * [覆盖] 正删除外观部件的实例时调用
 		 * @method egret.gui.SkinnableDataContainer#partRemoved
 		 * @param partName {string} 
 		 * @param instance {any} 
@@ -283,6 +286,7 @@ module egret.gui {
 		}
 		
 		/**
+		 * 使用 EventDispatcher 对象注册事件侦听器对象，以使侦听器能够接收事件通知
 		 * @method egret.gui.SkinnableDataContainer#addEventListener
 		 * @param type {string} 
 		 * @param listener {Function} 
@@ -305,6 +309,7 @@ module egret.gui {
 		}
 		
 		/**
+		 * 从 EventDispatcher 对象中删除侦听器
 		 * @method egret.gui.SkinnableDataContainer#removeEventListener
 		 * @param type {string} 
 		 * @param listener {Function} 
