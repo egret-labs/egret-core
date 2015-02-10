@@ -16,6 +16,7 @@
         "egret/events/IOErrorEvent.ts",
         "egret/events/TouchEvent.ts",
         "egret/events/TimerEvent.ts",
+        "egret/events/TextEvent.ts",
         "egret/events/ProgressEvent.ts",
         "egret/events/EventPhase.ts",
         "egret/events/IEventDispatcher.ts",

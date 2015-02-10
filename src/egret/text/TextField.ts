@@ -529,6 +529,8 @@ module egret {
         public _onRemoveFromStage():void {
             super._onRemoveFromStage();
 
+            this._removeEvent();
+
             if (this._type == TextFieldType.INPUT) {
                 this._inputUtils._removeStageText();
             }
@@ -536,6 +538,8 @@ module egret {
 
         public _onAddToStage():void {
             super._onAddToStage();
+
+            this._addEvent();
 
             if (this._type == TextFieldType.INPUT) {
                 this._inputUtils._addStageText();
@@ -609,7 +613,7 @@ module egret {
             }
         }
 
-        public get textFlow() { 
+        public get textFlow():Array<egret.ITextElement> {
             return this._textArr;
         }
 
@@ -857,6 +861,31 @@ module egret {
             }
         }
 
+        //增加点击事件
+        private _addEvent():void {
+            this.addEventListener(egret.TouchEvent.TOUCH_TAP, this.onTapHandler, this);
+        }
+
+        //释放点击事件
+        private _removeEvent():void {
+            this.removeEventListener(egret.TouchEvent.TOUCH_TAP, this.onTapHandler, this);
+        }
+
+        //处理富文本中有href的
+        private onTapHandler(e:egret.TouchEvent):void {
+            var style:egret.ITextStyle = this._getTextElement(e.localX, e.localY).style;
+
+            if (style && style.href) {
+                if (style.href.match(/^event:/)) {
+                    var type:string = style.href.match(/^event:/)[0];
+                    egret.TextEvent.dispatchTextEvent(this, egret.TextEvent.LINK, style.href.substring(type.length));
+                }
+                else {
+
+                }
+            }
+        }
+
         public _getTextElement(x:number, y:number):ITextElement {
             var hitTextEle:IHitTextElement = this._getHit(x, y);
 
@@ -926,6 +955,7 @@ module egret {
         bold?:boolean;
         italic?:boolean;
         fontFamily?:string;
+        href?:string;
     }
 
     export interface ITextElement {
