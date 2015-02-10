@@ -46,6 +46,7 @@ module egret.gui {
 
         public static defaultTreeRendererFactory:ClassFactory = new ClassFactory(TreeItemRenderer);
 		/**
+		 * 创建该容器的子元素对象
 		 * @method egret.gui.Tree#createChildren
 		 */
 		public createChildren():void{
@@ -55,6 +56,7 @@ module egret.gui {
 		}
 		
 		/**
+		 * 更新项呈示器，以备使用或重用
 		 * @method egret.gui.Tree#updateRenderer
 		 * @param renderer {IItemRenderer} 
 		 * @param itemIndex {number} 
@@ -216,6 +218,7 @@ module egret.gui {
 		}
 		
 		/**
+		 * 处理对组件设置的属性
 		 * @method egret.gui.Tree#commitProperties
 		 */
 		public commitProperties():void{
