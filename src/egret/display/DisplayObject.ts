@@ -512,6 +512,10 @@ module egret {
          * @returns {number}
          */
         public get width():number {
+            return this._getWidth();
+        }
+
+        public _getWidth():number {
             return this._getSize(Rectangle.identity).width;
         }
 
@@ -522,6 +526,10 @@ module egret {
          * @returns {number}
          */
         public get height():number {
+            return this._getHeight();
+        }
+
+        public _getHeight():number {
             return this._getSize(Rectangle.identity).height;
         }
 
@@ -795,7 +803,7 @@ module egret {
                 if (o._anchorX != 0 || o._anchorY != 0) {
                     var bounds = o._getSize(Rectangle.identity);
                     matrix.prependTransform(o._x, o._y, o._scaleX, o._scaleY, o._rotation, o._skewX, o._skewY,
-                            bounds.width * o._anchorX, bounds.height * o._anchorY);
+                        bounds.width * o._anchorX, bounds.height * o._anchorY);
                 }
                 else {
                     matrix.prependTransform(o._x, o._y, o._scaleX, o._scaleY, o._rotation, o._skewX, o._skewY, o._anchorOffsetX, o._anchorOffsetY);

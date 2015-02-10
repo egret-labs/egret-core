@@ -864,54 +864,42 @@ module egret {
             return null;
         }
 
-        public _getHit(x:number, y:number):IHitTextElement {
-            var line:number = Math.floor(y / (this._size + this._lineSpacing));
-            var temp = line * (this._size + this._lineSpacing);
-            if (y <= temp + this._size) {//在字上
-
-                var startLine:number = 0;
-                if (this._hasHeightSet) {//
-                    var textHeight:number = this._textMaxHeight + (this._numLines - 1) * this._lineSpacing;
-                    if (textHeight > this._explicitHeight) {//最大高度比需要显示的高度大
-                        startLine = Math.max(this._scrollV - 1, 0);
-                        startLine = Math.min(this._numLines - 1, startLine);
-                    }
-                }
-                line = line + 1 + startLine;
-            }
-            else {//在空白处
-                return null;
-            }
+        private _getHit(x:number, y:number):IHitTextElement {
+            var line:number = 0;
 
             var lineArr:Array<egret.ILineElement>  = this._getLinesArr();
             if (lineArr.length < line) {//点击在空白处外
                 return null;
             }
 
+            var lineH:number = 0;
+            for (var i:number = 0; i < lineArr.length; i++) {
+                var lineEle:egret.ILineElement = lineArr[i];
+                if (lineH + lineEle.height >= y) {
+                    line = i + 1;
+                    break;
+                }
+                else {
+                    lineH += lineEle.height;
+                }
+
+                if (lineH + this._lineSpacing > y) {
+                    return null;
+                }
+
+                lineH += this._lineSpacing;
+            }
+
             var lineElement:egret.ILineElement = lineArr[line - 1];
             var lineW:number = 0;
-            for (var i:number = 0; i < lineElement.elements.length; i++) {
+            for (i = 0; i < lineElement.elements.length; i++) {
                 var iwTE:IWTextElement = lineElement.elements[i];
 
                 if (lineW + iwTE.width < x) {
                     lineW += iwTE.width;
                 }
                 else {
-                    var renderContext = egret.MainContext.instance.rendererContext;
-                    renderContext.setupFont(this, iwTE.style);
-                    var j:number = 0;
-                    for (j = 0; j < iwTE.text.length; j++) {
-                        var wordWidth:number = renderContext.measureText(iwTE.text[j]);
-
-                        if (lineW + wordWidth < x) {
-                            lineW += wordWidth;
-                        }
-                        else {
-                            break;
-                        }
-                    }
-
-                    return {"lineIndex" : line - 1, "textElementIndex" : i, "wordIndex" : j};
+                    return {"lineIndex" : line - 1, "textElementIndex" : i};
                 }
             }
 
@@ -925,7 +913,6 @@ module egret {
     export interface IHitTextElement {
         lineIndex:number;
         textElementIndex:number;
-        wordIndex:number;
     }
 
     export interface ITextStyle {
