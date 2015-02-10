@@ -32,7 +32,6 @@ module egret {
      * 注意：自定义对象请直接继承HashObject，而不是实现此接口。否则会导致hashCode不唯一。
      * @interface
 	 * @class egret.IHashObject
-     * @private
      */
     export interface IHashObject {
         /**
