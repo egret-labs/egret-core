@@ -82,6 +82,7 @@ module egret.gui {
 
         public _createChildrenCalled:boolean = false;
         /**
+         * 创建该容器的子元素对象
          * @method egret.gui.SkinnableComponent#createChildren
          */
         public createChildren():void{
@@ -380,6 +381,7 @@ module egret.gui {
 		//========================皮肤视图状态===================end========================
 		
 		/**
+         * 处理对组件设置的属性
 		 * @method egret.gui.SkinnableComponent#commitProperties
 		 */
 		public commitProperties():void{
@@ -390,13 +392,20 @@ module egret.gui {
 			}
 		}
 
+        /**
+         *
+         * @private
+         */
 		public _childXYChanged():void{
 			if(this.skinLayoutEnabled){
 				this.invalidateSize();
 				this.invalidateDisplayList();
 			}
 		}
-		
+
+        /**
+         * 计算组件的默认大小和（可选）默认最小大小
+         */
 		public measure():void{
             super.measure();
             var skin:any = this._skin;
@@ -420,6 +429,7 @@ module egret.gui {
 		}
 		
 		/**
+         * 绘制对象和/或设置其子项的大小和位置
 		 * @method egret.gui.SkinnableComponent#updateDisplayList
 		 * @param unscaledWidth {number} 
 		 * @param unscaledHeight {number} 
@@ -442,6 +452,7 @@ module egret.gui {
 		}
 
         /**
+         * 不支持此方法
          * @method egret.gui.SkinnableComponent#addChild
          * @deprecated
          * @param child {DisplayObject}
@@ -451,6 +462,7 @@ module egret.gui {
             throw(new Error(getString(3004, getString(3003))));
         }
         /**
+         *  不支持此方法
          * @method egret.gui.SkinnableComponent#addChildAt
          * @deprecated
          * @param child {DisplayObject}
@@ -461,6 +473,7 @@ module egret.gui {
             throw(new Error(getString(3005, getString(3003))));
         }
         /**
+         *  不支持此方法
          * @method egret.gui.SkinnableComponent#removeChild
          * @deprecated
          * @param child {DisplayObject}
@@ -470,6 +483,7 @@ module egret.gui {
             throw(new Error(getString(3006, getString(3003))));
         }
         /**
+         *  不支持此方法
          * @method egret.gui.SkinnableComponent#removeChildAt
          * @deprecated
          * @param index {number}
@@ -479,6 +493,7 @@ module egret.gui {
             throw(new Error(getString(3007, getString(3003))));
         }
         /**
+         *  不支持此方法
          * @method egret.gui.SkinnableComponent#setChildIndex
          * @deprecated
          * @param child {DisplayObject}
@@ -488,6 +503,7 @@ module egret.gui {
             throw(new Error(getString(3008, getString(3003))));
         }
         /**
+         *  不支持此方法
          * @method egret.gui.SkinnableComponent#swapChildren
          * @deprecated
          * @param child1 {DisplayObject}
@@ -497,6 +513,7 @@ module egret.gui {
             throw(new Error(getString(3009, getString(3003))));
         }
         /**
+         *  不支持此方法
          * @method egret.gui.SkinnableComponent#swapChildrenAt
          * @deprecated
          * @param index1 {number}
