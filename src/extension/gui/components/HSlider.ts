@@ -43,7 +43,13 @@ module egret.gui {
 			super();
             
 		}
-		
+
+		/**
+		 * 将相对于轨道的 x,y 像素位置转换为介于最小值和最大值（包括两者）之间的一个值
+		 * @param x
+		 * @param y
+		 * @returns {number}
+		 */
 		public pointToValue(x:number, y:number):number{
 			if (!this.thumb || !this.track)
 				return 0;
@@ -52,7 +58,10 @@ module egret.gui {
 			var thumbRange:number = this.track.layoutBoundsWidth - this.thumb.layoutBoundsWidth;
 			return this.minimum + ((thumbRange != 0) ? (x / thumbRange) * range : 0); 
 		}
-		
+
+		/**
+		 * 设置外观部件的边界，这些外观部件的几何图形不是完全由外观的布局指定的
+		 */
 		public updateSkinDisplayList():void{
 			if (!this.thumb || !this.track)
 				return;

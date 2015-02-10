@@ -27,9 +27,21 @@
 
 
 module egret.gui {
+    /**
+     *  @classdesc
+     * HScrollBar（水平 ScrollBar）控件可以在因数据太多而不能在显示区域中以水平方向完全显示时控制显示的数据部分。
+     尽管可以使用 HScrollBar 控件作为独立控件，但通常将其结合作为另一组组件的一部分来提供滚动功能
+     */
     export class HScrollBar extends HSlider {
 
         private _thumbLengthRatio = 1;
+
+        /**
+         *
+         * @param width
+         * @param contentWidth
+         * @private
+         */
         public _setViewportMetric(width:number, contentWidth:number) {
             var max = Math.max(0, contentWidth - width);
             this._setMaximun(max);
@@ -59,23 +71,39 @@ module egret.gui {
             return this._getValue();
         }
 
+        /**
+         *
+         * @param value
+         * @private
+         */
         public _setValue(value: number) {
             value = Math.max(0, value);
             super._setValue(value);
         }
 
+        /**
+         * [覆盖] 更新 value 属性，并且如果 viewport 为非 null，则将其 horizontalScrollPosition 设置为 value
+         * @param value
+         */
         public setValue(value: number) {
             super.setValue(value);
         }
 
-        
 
+        /**
+         *
+         * @param animation
+         * @private
+         */
         public _animationUpdateHandler(animation: Animation): void {
             this.pendingValue = animation.currentValue["value"];
             this.value = animation.currentValue["value"];
             this.dispatchEventWith(Event.CHANGE);
         }
 
+        /**
+         * 设置外观部件的边界，这些外观部件的几何图形不是完全由外观的布局指定的
+         */
         public updateSkinDisplayList(): void {
             if (!this.thumb || !this.track)
                 return;
