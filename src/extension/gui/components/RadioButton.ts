@@ -31,7 +31,7 @@ module egret.gui {
 	/**
 	 * @class egret.gui.RadioButton
 	 * @classdesc
-	 * 单选按钮
+	 * RadioButton 组件使用户可在一组互相排斥的选择中做出一种选择
 	 * @extends egret.gui.ToggleButtonBase
 	 */
 	export class RadioButton extends ToggleButtonBase{
@@ -55,6 +55,7 @@ module egret.gui {
 		public _radioButtonGroup:RadioButtonGroup = null;
 		
 		/**
+		 * 组件是否可以接受用户交互。默认值为true。设置此属性将影响组内所有单选按钮
 		 * @member egret.gui.RadioButton#enabled
 		 */
 		public get enabled():boolean{
@@ -131,8 +132,11 @@ module egret.gui {
 			this.invalidateProperties();
 			this.invalidateDisplayList();
 		}
+
 		/**
-		 * @inheritDoc
+		 *
+		 * @param value
+		 * @private
 		 */
 		public _setSelected(value:boolean){
 			super._setSelected(value);
@@ -158,6 +162,7 @@ module egret.gui {
                 UIEvent.dispatchUIEvent(this.group,UIEvent.VALUE_COMMIT);
 		}
 		/**
+		 * 处理对组件设置的属性
 		 * @method egret.gui.RadioButton#commitProperties
 		 */
 		public commitProperties():void{
@@ -168,6 +173,7 @@ module egret.gui {
 			super.commitProperties();
 		}
 		/**
+		 * 绘制对象和/或设置其子项的大小和位置
 		 * @method egret.gui.RadioButton#updateDisplayList
 		 * @param unscaledWidth {number} 
 		 * @param unscaledHeight {number} 
@@ -183,6 +189,7 @@ module egret.gui {
 			}
 		}
 		/**
+		 * 当在用户单击按钮之后处理 MouseEvent.MOUSE_UP 事件时，将调用此方法
 		 * @method egret.gui.RadioButton#buttonReleased
 		 */
 		public buttonReleased():void{

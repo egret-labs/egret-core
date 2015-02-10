@@ -120,6 +120,7 @@ module egret.gui {
         public _scroller: egret.ScrollView = <any>this;
 
         /**
+         * 计算组件的默认大小和（可选）默认最小大小
          * @method egret.gui.Scroller#measure
          */
         public measure(): void {
@@ -129,6 +130,7 @@ module egret.gui {
             this.measuredHeight = this._viewport.preferredHeight;
         }
         /**
+         * 绘制对象和/或设置其子项的大小和位置
          * @param unscaledWidth {number}
          * @param unscaledHeight {number} 
          */
@@ -248,6 +250,11 @@ module egret.gui {
             }
         }
 
+        /**
+         *
+         * @param e
+         * @private
+         */
         private _viewportChangedHandler(e: egret.gui.PropertyChangeEvent): void {
             if (e.property == "horizontalScrollPosition")
                 this.setViewportHScrollPosition(this.viewport.horizontalScrollPosition);
@@ -259,11 +266,20 @@ module egret.gui {
             }
         }
 
+        /**
+         *
+         * @param e
+         * @private
+         */
         private _scrollerChangedHandler(e: Event) {
             this.setViewportHScrollPosition(this._scroller.scrollLeft);
             this.setViewportVScrollPosition(this._scroller.scrollTop);
         }
 
+        /**
+         *
+         * @param pos
+         */
         private setViewportVScrollPosition(pos: number): void {
             if (this._scroller.scrollTop != pos)
                 this._scroller.scrollTop = pos;
@@ -388,6 +404,7 @@ module egret.gui {
             throw new RangeError(getString(3011, index));
         }
         /**
+         * 如果存在视域，且传入的索引为 0，则返回该视域
          * @param index {number}
          * @returns {IVisualElement}
          */
@@ -400,6 +417,7 @@ module egret.gui {
         }
 
         /**
+         * 如果传入的元素是视域，则返回 0
          * @param element {IVisualElement}
          * @returns {number}
          */
@@ -410,6 +428,7 @@ module egret.gui {
                 return -1;
         }
         /**
+         * 确定指定显示对象是 DisplayObjectContainer 实例的子项还是该实例本身
          * @param element {IVisualElement}
          * @returns {boolean}
          */
@@ -423,6 +442,7 @@ module egret.gui {
             throw new Error(getString(3012));
         }
         /**
+         * Scroller 不支持该操作
          * @deprecated
          * @param element {IVisualElement} 
          * @returns {IVisualElement}
@@ -432,6 +452,7 @@ module egret.gui {
             return null;
         }
         /**
+         * Scroller 不支持该操作
          * @deprecated
          * @param element {IVisualElement} 
          * @param index {number} 
@@ -442,6 +463,7 @@ module egret.gui {
             return null;
         }
         /**
+         * Scroller 不支持该操作
          * @deprecated
          * @param element {IVisualElement} 
          * @returns {IVisualElement}
@@ -451,6 +473,7 @@ module egret.gui {
             return null;
         }
         /**
+         * Scroller 不支持该操作
          * @deprecated
          * @param index {number} 
          * @returns {IVisualElement}
@@ -460,12 +483,14 @@ module egret.gui {
             return null;
         }
         /**
+         * Scroller 不支持该操作
          * @deprecated
          */
         public removeAllElements(): void {
             this.throwNotSupportedError();
         }
         /**
+         * Scroller 不支持该操作
          * @deprecated
          * @param element {IVisualElement} 
          * @param index {number} 
@@ -474,6 +499,7 @@ module egret.gui {
             this.throwNotSupportedError();
         }
         /**
+         * Scroller 不支持该操作
          * @deprecated
          * @param element1 {IVisualElement} 
          * @param element2 {IVisualElement} 
@@ -482,6 +508,7 @@ module egret.gui {
             this.throwNotSupportedError();
         }
         /**
+         * Scroller 不支持该操作
          * @deprecated
          * @param index1 {number} 
          * @param index2 {number} 
@@ -491,6 +518,7 @@ module egret.gui {
         }
 
         /**
+         * Scroller 不支持该操作
          * @deprecated
          * @param child {DisplayObject} 
          * @returns {DisplayObject}
@@ -500,6 +528,7 @@ module egret.gui {
             return null;
         }
         /**
+         * Scroller 不支持该操作
          * @deprecated
          * @param child {DisplayObject} 
          * @param index {number} 
@@ -510,6 +539,7 @@ module egret.gui {
             return null;
         }
         /**
+         * Scroller 不支持该操作
          * @deprecated
          * @param child {DisplayObject} 
          * @returns {DisplayObject}
@@ -519,6 +549,7 @@ module egret.gui {
             return null;
         }
         /**
+         * Scroller 不支持该操作
          * @deprecated
          * @param index {number} 
          * @returns {DisplayObject}
@@ -528,6 +559,7 @@ module egret.gui {
             return null;
         }
         /**
+         * Scroller 不支持该操作
          * @deprecated
          * @param child {DisplayObject} 
          * @param index {number} 
@@ -536,6 +568,7 @@ module egret.gui {
             this.throwNotSupportedError();
         }
         /**
+         * Scroller 不支持该操作
          * @deprecated
          * @param child1 {DisplayObject} 
          * @param child2 {DisplayObject} 
@@ -544,6 +577,7 @@ module egret.gui {
             this.throwNotSupportedError();
         }
         /**
+         * Scroller 不支持该操作
          * @deprecated
          * @param index1 {number} 
          * @param index2 {number} 
@@ -552,7 +586,10 @@ module egret.gui {
             this.throwNotSupportedError();
         }
 
-
+        /**
+         *
+         * @private
+         */
         public _checkHbar(): void {
             if (this._horizontalScrollPolicy == "off") {
                 this._uninstallHorizontalScrollBar();
@@ -568,6 +605,11 @@ module egret.gui {
             }
             this._addToDisplayList(this.horizontalScrollBar);
         }
+
+        /**
+         *
+         * @private
+         */
         public _checkVbar(): void {
             if (this._verticalScrollPolicy == "off") {
                 this._uninstallVerticalScrollBar();
@@ -586,7 +628,9 @@ module egret.gui {
             this._addToDisplayList(this.verticalScrollBar);
         }
 
-
+        /**
+         * 创建容器的子元素
+         */
         public createChildren(): void {
             super.createChildren();
             this.installViewport();

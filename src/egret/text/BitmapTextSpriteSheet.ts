@@ -24,22 +24,19 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+
+
 module egret {
     /**
+     * @deprecated
+     * 位图字体,此类已废弃，请使用egret.BitmapFont代替。
      * @private
      */
-    export interface ISocket {
-        /**
-         * 连接
-         * @method egret.ISocket#connect
-         */
-        connect(host:string, port:number):void;
+    export class BitmapTextSpriteSheet extends BitmapFont {
 
-
-        addCallBacks(onConnect:Function, onClose:Function, onSocketData:Function, onError:Function, thisObject:any):void;
-
-        send(message:any):void;
-
-        close():void;
+        public constructor(texture:Texture, fntText:string) {
+            super(texture,fntText);
+            egret.Logger.warningWithErrorId(1012);
+        }
     }
 }
