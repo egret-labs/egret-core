@@ -124,7 +124,7 @@ module egret {
     }
 
     /**
-     * @classdesc
+     * @private
      */
     export class ResolutionPolicy {
 
@@ -158,6 +158,7 @@ module egret {
     }
 
     /**
+     * @private
      */
     export class ContainerStrategy {
         /**
@@ -211,6 +212,7 @@ module egret {
     /**
      * @classdesc
      * @extends egret.ContainerStrategy
+     * @private
      */
     export class EqualToFrame extends ContainerStrategy {
         public _apply(view) {
@@ -219,6 +221,7 @@ module egret {
     }
 
     /**
+     * @private
      */
     export class ContentStrategy {
 
@@ -269,6 +272,7 @@ module egret {
      * @class egret.FixedHeight
      * @classdesc
      * @extends egret.ContentStrategy
+     * @private
      */
     export class FixedHeight extends ContentStrategy {
         private minWidth:number = NaN;
@@ -312,6 +316,7 @@ module egret {
      * @class egret.FixedWidth
      * @classdesc
      * @extends egret.ContentStrategy
+     * @private
      */
     export class FixedWidth extends ContentStrategy {
 
@@ -353,6 +358,7 @@ module egret {
      * @class egret.FixedSize
      * @classdesc
      * @extends egret.ContentStrategy
+     * @private
      */
     export class FixedSize extends ContentStrategy {
 
@@ -388,6 +394,7 @@ module egret {
      * @class egret.NoScale
      * @classdesc
      * @extends egret.ContentStrategy
+     * @private
      */
     export class NoScale extends ContentStrategy {
 
@@ -411,6 +418,10 @@ module egret {
         }
     }
 
+
+    /**
+     * @private
+     */
     export class ShowAll extends ContentStrategy {
 
         constructor(){
@@ -450,6 +461,9 @@ module egret {
         }
     }
 
+    /**
+     * @private
+     */
     export class FullScreen extends ContentStrategy {
 
         constructor(){

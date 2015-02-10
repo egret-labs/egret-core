@@ -26,7 +26,6 @@
  */
 module egret {
     /**
-     *
      * @private
      */
     export class WebAudio {
