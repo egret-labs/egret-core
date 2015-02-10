@@ -1245,7 +1245,9 @@ module egret {
         }
     }
 
-
+    /**
+     * @private
+     */
     export class ColorTransform {
 
         public matrix:Array<number> = null;

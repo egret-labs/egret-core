@@ -25,6 +25,9 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 module egret {
+    /**
+     * @private
+     */
     export class InputController extends HashObject {
         private stageText:egret.StageText;
         private _isFocus:boolean = false;

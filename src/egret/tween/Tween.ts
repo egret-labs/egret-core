@@ -32,6 +32,9 @@ module egret {
 	 * @classdesc
      * Tween是Egret的动画缓动类
 	 * @extends egret.EventDispatcher
+     * <div style="margin-top: 20px"><b>了解详细信息</b>
+     * <a href="http://docs.egret-labs.org/post/manual/anim/tween.html" style="padding-left: 20px" target="_blank" >Tween缓动动画</a>
+     * </div>
 	 */
     export class Tween extends EventDispatcher {
 		/**

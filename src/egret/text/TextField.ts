@@ -33,6 +33,9 @@ module egret {
      * TextField是egret的文本渲染类，采用浏览器/设备的API进行渲染，在不同的浏览器/设备中由于字体渲染方式不一，可能会有渲染差异
      * 如果开发者希望所有平台完全无差异，请使用BitmapText
      * @extends egret.DisplayObject
+     * <div style="margin-top: 20px"><b>了解详细信息</b>
+     * <a href="http://docs.egret-labs.org/post/manual/text/createtext.html" style="padding-left: 20px" target="_blank" >创建文本</a>
+     * </div>
      */
     export class TextField extends DisplayObject {
 

@@ -26,6 +26,9 @@
  */
 
 module egret {
+    /**
+     * @private
+     */
     export class RenderCommand {
         public static __freeList:Array<RenderCommand> = [];
 

@@ -83,18 +83,6 @@ module egret {
             this._setSizeDirty();
         }
 
-        /**
-         * @deprecated
-         * 此属性已经废弃，请使用BitmapText.font属性代替。
-         */
-        public get spriteSheet(): BitmapTextSpriteSheet {
-            return <BitmapTextSpriteSheet>this._font;
-        }
-
-        public set spriteSheet(value: BitmapTextSpriteSheet) {
-            this.font = value;
-        }
-
         public _setSizeDirty():void {
             super._setSizeDirty();
             this.textLinesChange = true;

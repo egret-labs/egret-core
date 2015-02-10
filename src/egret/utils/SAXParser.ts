@@ -29,6 +29,7 @@
 module egret {
     /**
      * @deprecated
+     * @private
      */
     export class SAXParser extends HashObject {
         static _instance:SAXParser = null;
