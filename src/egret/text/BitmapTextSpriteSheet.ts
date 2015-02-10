@@ -30,6 +30,7 @@ module egret {
     /**
      * @deprecated
      * 位图字体,此类已废弃，请使用egret.BitmapFont代替。
+     * @private
      */
     export class BitmapTextSpriteSheet extends BitmapFont {
 
