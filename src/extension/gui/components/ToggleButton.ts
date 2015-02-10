@@ -79,6 +79,7 @@ module egret.gui {
 		}
 
 		/**
+		 * [覆盖] 添加外观部件时调用
 		 * @param partName {string}
 		 * @param instance {any}
 		 */
