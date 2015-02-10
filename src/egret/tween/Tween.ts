@@ -459,7 +459,7 @@ module egret {
 		 * @param ease {egret.Ease} 缓动算法
 		 * @returns {egret.Tween} Tween对象本身
 		 */
-        public to(props, duration:number, ease = undefined):Tween {
+        public to(props, duration:number, ease:Function = undefined):Tween {
             if (isNaN(duration) || duration < 0) {
                 duration = 0;
             }

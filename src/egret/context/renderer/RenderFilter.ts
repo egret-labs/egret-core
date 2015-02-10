@@ -218,10 +218,7 @@ module egret {
     }
 
     /**
-     * @class egret.RenderData
-     * @interface
-     * @classdesc
-     * @private
+     * 用于显示对象的接口定义，开发者不需要用到该类
      */
     export interface RenderData {
         /**

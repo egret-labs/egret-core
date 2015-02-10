@@ -27,6 +27,12 @@
 
 
 module egret {
+    /**
+     * 缓动函数集合，使用不同的缓动函数使得动画按照对应的方程进行
+     * <div style="margin-top: 20px"><b>了解详细信息</b>
+     * <a href="http://bbs.egret-labs.org/thread-392-1-1.html" style="padding-left: 20px" target="_blank" >Tween和Ease</a>
+     * </div>
+     */
     export class Ease {
         constructor() {
             egret.Logger.fatalWithErrorId(1014);
