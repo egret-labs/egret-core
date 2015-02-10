@@ -26,6 +26,12 @@
  */
 
 module egret {
+    /**
+     * @class egret.URLRequestHeader
+     * @classdesc
+     * URLRequestHeader 对象封装了一个 HTTP 请求标头并由一个名称/值对组成。URLRequestHeader 对象在 URLRequest 类的 requestHeaders 属性中使用。
+     * 注意：由于浏览器兼容性原因，在 html5 中并未实现
+     */
     export class URLRequestHeader {
         /**
          * HTTP 请求标头名称，如 Content-Type

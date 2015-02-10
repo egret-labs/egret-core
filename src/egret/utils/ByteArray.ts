@@ -50,6 +50,12 @@ module egret {
 
     }
 
+    /**
+     * @class egret.ByteArray
+     * @classdesc
+     * ByteArray 类提供用于优化读取、写入以及处理二进制数据的方法和属性。
+     * 注意：ByteArray 类适用于需要在字节层访问数据的高级 开发人员。
+     */
     export class ByteArray {
         private static SIZE_OF_BOOLEAN:number = 1;
         private static SIZE_OF_INT8:number = 1;
@@ -127,7 +133,7 @@ module egret {
 
         public set position(value:number) {
             if (this._position < value) {
-                if (!this.validate(this._position - value)) {
+                if (!this.validate(value - this._position)) {
                     return;
                 }
             }
@@ -193,11 +199,15 @@ module egret {
             if (length == 0) {
                 length = this.bytesAvailable;
             }
-            else if (!this.validate(length)) return null;
+            else if (!this.validate(length)) {
+                return null;
+            }
 
-            //Offset argument ignored
-            bytes.dataView = new DataView(this.data.buffer, this.bufferOffset + this.position, length);
-            this.position += length;
+            bytes = bytes == null ? new ByteArray(new ArrayBuffer(length)) : bytes;
+            //This method is expensive
+            for (var i = 0; i < length; i++) {
+                bytes.data.setUint8(i + offset, this.data.getUint8(this.position++));
+            }
         }
 
         //public get leftBytes():ArrayBuffer {
@@ -459,7 +469,7 @@ module egret {
             this.validateBuffer(length);
 
             var tmp_data = new DataView(bytes.buffer);
-            for (var i = 0; i < bytes.length; i++) {
+            for (var i = offset; i < bytes.length && i < length + offset; i++) {
                 this.data.setUint8(this.position++, tmp_data.getUint8(i));
             }
         }
@@ -577,7 +587,7 @@ module egret {
          * @param validateBuffer
          */
         public _writeUint8Array(bytes:Uint8Array, validateBuffer:boolean = true):void {
-            if(validateBuffer){
+            if (validateBuffer) {
                 this.validateBuffer(this.position + bytes.length);
             }
 
