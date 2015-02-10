@@ -58,7 +58,6 @@
         "egret/display/SpriteSheet.ts",
         "egret/text/InputController.ts",
         "egret/text/BitmapFont.ts",
-        "egret/text/BitmapTextSpriteSheet.ts",
         "egret/display/MovieClip.ts",
         "egret/display/FrameLabel.ts",
         "egret/display/MovieClipData.ts",

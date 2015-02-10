@@ -15,7 +15,7 @@
 	"egret.BitmapText":
 	{
 		"font":"egret.BitmapFont",
-		"spriteSheet":"egret.BitmapTextSpriteSheet",
+		"spriteSheet":"egret.BitmapFont",
 		"super":"egret.DisplayObject",
 		"text":"string"
 	},
