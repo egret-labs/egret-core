@@ -25,6 +25,13 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 module egret {
+    /**
+     * @class egret.WebSocket
+     * @classdesc
+     * egret.WebSocket 类启用代码以建立传输控制协议 (TCP) 套接字连接，用于发送和接收字符串或二进制数据。
+     * 要使用 egret.WebSocket 类的方法，请先使用构造函数 new egret.WebSocket 创建一个 egret.WebSocket 对象。
+     * 套接字以异步方式传输和接收数据。
+     */
     export class WebSocket extends egret.EventDispatcher {
         private socket:ISocket;
 
@@ -33,6 +40,10 @@ module egret {
 
         private _connected:boolean = false;
 
+        /**
+         * 创建一个 egret.WebSocket 对象
+         * 参数为预留参数，现版本暂不处理，连接地址和端口号在 connect 函数中传入
+         */
         constructor(host:string = "", port:number = 0) {
             super();
             this._connected = false;
