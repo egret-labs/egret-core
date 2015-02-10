@@ -27,6 +27,9 @@
 
 module egret.gui {
 
+	/**
+	 *
+	 */
 	export class EditableText extends TextBase 
 		implements IEditableText,IDisplayText,IViewport{
 		public constructor(){
@@ -409,6 +412,7 @@ module egret.gui {
 		
 		
 		/**
+		 * 处理对组件设置的属性
 		 * @inheritDoc
 		 */
 		public commitProperties():void{
@@ -484,6 +488,7 @@ module egret.gui {
 		
 		
 		/**
+		 * 通过设置此容器子项的位置和大小来响应大小更改
 		 * @inheritDoc
 		 */
 		public updateDisplayList(unscaledWidth:number, unscaledHeight:number):void{
@@ -569,6 +574,7 @@ module egret.gui {
 		private defaultWidth:number = NaN;
 		
 		/**
+		 * 计算  容器默认大小的最小值和最大值
 		 * @inheritDoc
 		 */
 		public measure():void{

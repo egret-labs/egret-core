@@ -49,6 +49,7 @@ module egret.gui {
 		private createChildrenCalled:boolean = false;
 		
 		/**
+		 * 创建子对象
 		 * @method egret.gui.Group#createChildren
 		 */
 		public createChildren():void{
@@ -122,6 +123,7 @@ module egret.gui {
 		
 		
 		/**
+		 * 获得容器中的子对象数
 		 * @member egret.gui.Group#numElements
 		 */
 		public get numElements():number{
@@ -129,6 +131,7 @@ module egret.gui {
 		}
 		
 		/**
+		 * 返回指定索引处的可视元素
 		 * @method egret.gui.Group#getElementAt
 		 * @param index {number} 
 		 * @returns {IVisualElement}
@@ -148,6 +151,7 @@ module egret.gui {
 				throw new RangeError(getString(3011, index));
 		}
 		/**
+		 * 将可视元素添加到此容器中
 		 * @method egret.gui.Group#addElement
 		 * @param element {IVisualElement} 
 		 * @returns {IVisualElement}
@@ -161,6 +165,7 @@ module egret.gui {
 			return this.addElementAt(element, index);
 		}
 		/**
+		 * 将可视元素添加到此容器中
 		 * @method egret.gui.Group#addElementAt
 		 * @param element {IVisualElement} 
 		 * @param index {number} 
@@ -189,6 +194,7 @@ module egret.gui {
 			return element;
 		}
 		/**
+		 * 从此容器的子列表中删除指定的可视元素
 		 * @method egret.gui.Group#removeElement
 		 * @param element {IVisualElement} 
 		 * @returns {IVisualElement}
@@ -197,6 +203,7 @@ module egret.gui {
 			return this.removeElementAt(this.getElementIndex(element));
 		}
 		/**
+		 * 从容器中的指定索引位置删除可视元素
 		 * @method egret.gui.Group#removeElementAt
 		 * @param index {number} 
 		 * @returns {IVisualElement}
@@ -214,6 +221,7 @@ module egret.gui {
 			return element;
 		}
 		/**
+		 * 删除容器中的所有子元素
 		 * @method egret.gui.Group#removeAllElements
 		 */
 		public removeAllElements():void{
@@ -223,6 +231,7 @@ module egret.gui {
 		}
 		
 		/**
+		 * 返回可视元素的索引位置
 		 * @method egret.gui.Group#getElementIndex
 		 * @param element {IVisualElement} 
 		 * @returns {number}
@@ -231,6 +240,7 @@ module egret.gui {
 			return this._elementsContent.indexOf(element);
 		}
 		/**
+		 * 在可视容器中更改现有可视元素的位置
 		 * @method egret.gui.Group#setElementIndex
 		 * @param element {IVisualElement} 
 		 * @param index {number} 
@@ -252,6 +262,7 @@ module egret.gui {
 				this._elementAdded(element, index, false);
 		}
 		/**
+		 * 交换两个指定可视元素的索引
 		 * @method egret.gui.Group#swapElements
 		 * @param element1 {IVisualElement} 
 		 * @param element2 {IVisualElement} 
@@ -260,6 +271,7 @@ module egret.gui {
 			this.swapElementsAt(this.getElementIndex(element1), this.getElementIndex(element2));
 		}
 		/**
+		 * 交换容器中位于两个指定索引位置的可视元素
 		 * @method egret.gui.Group#swapElementsAt
 		 * @param index1 {number} 
 		 * @param index2 {number} 
@@ -337,6 +349,7 @@ module egret.gui {
 		}
 
 		/**
+		 * 将可视元素添加到此容器中
 		 * @deprecated
 		 * @param child {DisplayObject} 
 		 * @returns {DisplayObject}
@@ -345,6 +358,7 @@ module egret.gui {
 			throw(new Error(getString(3004, getString(3003))));
 		}
 		/**
+		 * 将可视元素添加到此容器中
 		 * @deprecated
 		 * @param child {DisplayObject} 
 		 * @param index {number} 
@@ -353,7 +367,7 @@ module egret.gui {
 		public addChildAt(child:DisplayObject, index:number):DisplayObject{
 			throw(new Error(getString(3005, getString(3003))));
 		}
-		/**
+		/**从此容器的子列表中删除指定的可视元素
 		 * @deprecated
 		 * @param child {DisplayObject} 
 		 * @returns {DisplayObject}
@@ -362,6 +376,7 @@ module egret.gui {
 			throw(new Error(getString(3006, getString(3003))));
 		}
 		/**
+		 * 从此容器的子列表中删除指定的可视元素
 		 * @method egret.gui.Group#removeChildAt
 		 * @deprecated
 		 * @param index {number} 
@@ -371,6 +386,7 @@ module egret.gui {
 			throw(new Error(getString(3007, getString(3003))));
 		}
 		/**
+		 * 在可视容器中更改现有可视元素的位置
 		 * @deprecated
 		 * @param child {DisplayObject} 
 		 * @param index {number} 
@@ -379,6 +395,7 @@ module egret.gui {
 			throw(new Error(getString(3008, getString(3003))));
 		}
 		/**
+		 * 交换两个指定可视元素的索引
 		 * @deprecated
 		 * @param child1 {DisplayObject} 
 		 * @param child2 {DisplayObject} 
@@ -387,6 +404,7 @@ module egret.gui {
 			throw(new Error(getString(3009, getString(3003))));
 		}
 		/**
+		 * 交换容器中位于两个指定索引位置的可视元素
 		 * @method egret.gui.Group#swapChildrenAt
 		 * @deprecated
 		 * @param index1 {number} 

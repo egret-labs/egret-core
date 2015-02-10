@@ -267,7 +267,7 @@ module egret.gui {
         }
 
         /**
-         * 计算 Panel 容器默认大小的最小值和最大值
+         * 计算  容器默认大小的最小值和最大值
          * @method egret.gui.BitmapLabel#measure
          */
         public measure():void{
