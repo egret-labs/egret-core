@@ -82,7 +82,7 @@ module egret {
 
         private _setArrayBuffer(buffer:ArrayBuffer):void {
             this.write_position = buffer.byteLength;
-            this.data = new DataView(buffer, 0, buffer.byteLength);
+            this.data = new DataView(buffer);
             this._position = 0;
         }
 
