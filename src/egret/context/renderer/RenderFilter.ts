@@ -221,6 +221,7 @@ module egret {
      * @class egret.RenderData
      * @interface
      * @classdesc
+     * @private
      */
     export interface RenderData {
         /**

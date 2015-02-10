@@ -947,6 +947,10 @@ module egret {
         textElementIndex:number;
     }
 
+
+    /**
+     * @private
+     */
     export interface ITextStyle {
         textColor?:number;
         strokeColor?:number;
@@ -963,10 +967,16 @@ module egret {
         style?:ITextStyle;
     }
 
+    /**
+     * @private
+     */
     export interface IWTextElement extends ITextElement {
         width:number;
     }
 
+    /**
+     * @private
+     */
     export interface ILineElement {
         width:number;
         height:number;
