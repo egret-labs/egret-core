@@ -139,6 +139,9 @@ module egret {
                 case "fontFamily" :
                     info.fontFamily = valueArr[1];
                     break;
+                case "href" :
+                    info.href = valueArr[1];
+                    break;
             }
         }
 
