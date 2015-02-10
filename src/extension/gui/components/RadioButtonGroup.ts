@@ -31,7 +31,7 @@ module egret.gui {
 	/**
 	 * @class egret.gui.RadioButtonGroup
 	 * @classdesc
-	 * 单选按钮组
+	 * RadioButtonGroup 组件定义一组 RadioButton 组件，这些组件相互排斥；因此，用户每次只能选择一个 RadioButton 组件
 	 * @extends egret.EventDispatcher
 	 */
 	export class RadioButtonGroup extends EventDispatcher{
