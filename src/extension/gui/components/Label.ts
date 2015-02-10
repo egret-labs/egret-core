@@ -209,6 +209,7 @@ module egret.gui {
         }
 
         /**
+         * 处理对组件设置的属性
          * @method egret.gui.TextBase#commitProperties
          */
         public commitProperties():void {
@@ -225,6 +226,7 @@ module egret.gui {
 
         }
         /**
+         * 计算组件的默认大小和（可选）默认最小大小
          * @method egret.gui.Label#measure
          */
         public measure():void{
@@ -303,6 +305,7 @@ module egret.gui {
         }
 
         /**
+         * 绘制对象和/或设置其子项的大小和位置
          * @method egret.gui.Label#updateDisplayList
          * @param unscaledWidth {number}
          * @param unscaledHeight {number}

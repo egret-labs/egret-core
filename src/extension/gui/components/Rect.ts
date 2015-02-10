@@ -167,6 +167,7 @@ module egret.gui {
         }
 
         /**
+         * 绘制对象和/或设置其子项的大小和位置
          * @method egret.gui.Rect#updateDisplayList
          * @param unscaledWidth {number}
          * @param unscaledHeight {number}
@@ -183,6 +184,13 @@ module egret.gui {
             g.endFill();
         }
 
+        /**
+         * 碰撞检测
+         * @param x
+         * @param y
+         * @param ignoreTouchEnabled
+         * @returns {*}
+         */
         public hitTest(x:number, y:number, ignoreTouchEnabled:boolean = false):DisplayObject {
             var result:DisplayObject = super.hitTest(x, y, ignoreTouchEnabled);
             if (result) {

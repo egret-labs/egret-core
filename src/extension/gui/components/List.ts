@@ -40,7 +40,10 @@ module egret.gui {
             
 			this.useVirtualLayout = true;
 		}
-		
+
+		/**
+		 * 创建容器的子元素
+		 */
 		public createChildren():void{
 			if(!this.itemRenderer)
 				this.itemRenderer = DataGroup.defaultRendererFactory;
@@ -159,6 +162,7 @@ module egret.gui {
 		}
 
 		/**
+		 * 处理对组件设置的属性
 		 * @method egret.gui.List#commitProperties
 		 */
 		public commitProperties():void{
@@ -277,6 +281,12 @@ module egret.gui {
 			this._proposedSelectedIndices = null;
 		}
 
+		/**
+		 *
+		 * @param index
+		 * @returns {boolean}
+		 * @private
+		 */
 		public _isItemIndexSelected(index:number):boolean{
 			if (this._allowMultipleSelection)
 				return this._selectedIndices.indexOf(index) != -1;

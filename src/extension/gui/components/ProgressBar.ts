@@ -194,6 +194,7 @@ module egret.gui {
         }
 
         /**
+         * 绘制对象和/或设置其子项的大小和位置
 		 * @method egret.gui.ProgressBar#updateDisplayList
 		 * @param unscaledWidth {number} 
 		 * @param unscaledHeight {number} 
@@ -203,6 +204,11 @@ module egret.gui {
             this.updateSkinDisplayList();
         }
 
+        /**
+         * [覆盖] 添加外观部件时调用
+         * @param partName
+         * @param instance
+         */
         public partAdded(partName:string, instance:any):void {
             if (instance == this.track) {
                 if (this.track instanceof UIComponent) {
@@ -212,6 +218,11 @@ module egret.gui {
             }
         }
 
+        /**
+         * [覆盖] 正删除外观部件的实例时调用
+         * @param partName
+         * @param instance
+         */
         public partRemoved(partName:string, instance:any):void {
             if (instance == this.track) {
                 if (this.track instanceof UIComponent) {
@@ -231,6 +242,9 @@ module egret.gui {
             this.invalidateProperties();
         }
 
+        /**
+         * 处理对组件设置的属性
+         */
         public commitProperties():void {
             super.commitProperties();
             if (this.trackResizedOrMoved) {

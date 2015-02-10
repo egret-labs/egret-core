@@ -72,6 +72,11 @@ module egret.gui {
                 this.titleDisplay.text = this.title;
         }
 
+        /**
+         * [覆盖] 添加外观部件时调用
+         * @param partName
+         * @param instance
+         */
         public partAdded(partName:string, instance:any):void {
             super.partAdded(partName, instance);
 
