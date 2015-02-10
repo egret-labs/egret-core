@@ -51,6 +51,11 @@ module egret.gui {
             this._setStates(["up","down","disabled"]);
         }
 
+        /**
+         *
+         * @type {string[]}
+         * @private
+         */
         private static _skinParts:Array<string> = ["labelDisplay","iconDisplay"];
 
         public get skinParts():Array<string>{
@@ -64,6 +69,7 @@ module egret.gui {
         public iconDisplay:UIAsset = new egret.gui.UIAsset();
 
         /**
+         * 创建容器的子对象
          * @inheritDoc
          */
         public createChildren():void{
@@ -91,6 +97,9 @@ module egret.gui {
             }
         }
 
+        /**
+         * 计算 Panel 容器默认大小的最小值和最大值
+         */
         public measure():void{
             super.measure();
             var w:number = this.iconDisplay.preferredWidth+this.labelDisplay.preferredWidth+20;
@@ -116,6 +125,11 @@ module egret.gui {
             }
         }
 
+        /**
+         * 通过设置此容器子项的位置和大小来响应大小更改
+         * @param unscaledWidth
+         * @param unscaledHeight
+         */
         public updateDisplayList(unscaledWidth: number, unscaledHeight: number):void{
             super.updateDisplayList(unscaledWidth, unscaledHeight);
             var iconWidth:number = this.iconDisplay.layoutBoundsWidth;

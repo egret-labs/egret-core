@@ -175,6 +175,7 @@ module egret.gui {
 		private createNewRendererFlag:boolean = false;
 		
 		/**
+		 * 标记组件，以便在稍后屏幕更新期间调用该组件的 measure() 方法
 		 * @method egret.gui.DataGroup#invalidateSize
 		 */
 		public invalidateSize():void{
@@ -631,6 +632,7 @@ module egret.gui {
 		
 		
 		/**
+		 * 处理对组件设置的属性
 		 * @method egret.gui.DataGroup#commitProperties
 		 */
 		public commitProperties():void{
@@ -685,6 +687,7 @@ module egret.gui {
 		}
 		
 		/**
+		 * 计算组件的默认大小和（可选）默认最小大小
 		 * @method egret.gui.DataGroup#measure
 		 */
 		public measure():void{
@@ -700,6 +703,7 @@ module egret.gui {
 		private virtualLayoutUnderway:boolean = false;
 		
 		/**
+		 * 绘制对象和/或设置其子项的大小和位置
 		 * @method egret.gui.DataGroup#updateDisplayList
 		 * @param unscaledWidth {number} 
 		 * @param unscaledHeight {number} 
@@ -868,6 +872,7 @@ module egret.gui {
 		}
 		
 		/**
+		 * 返回位于指定索引处的子显示对象实例
 		 * @method egret.gui.DataGroup#getElementAt
 		 * @param index {number} 
 		 * @returns {IVisualElement}
@@ -877,6 +882,7 @@ module egret.gui {
 		}
 		
 		/**
+		 * 返回 element 实例的索引位置
 		 * @method egret.gui.DataGroup#getElementIndex
 		 * @param element {IVisualElement} 
 		 * @returns {number}
@@ -888,6 +894,7 @@ module egret.gui {
 		}
 		
 		/**
+		 * 获得对象容器的子对象总数
 		 * @member egret.gui.DataGroup#numElements
 		 */
 		public get numElements():number{
@@ -897,6 +904,7 @@ module egret.gui {
 		}
 		
 		/**
+		 * 将一个 DisplayObject 子实例添加到该 DisplayObjectContainer 实例中
 		 * @method egret.gui.DataGroup#addChild
 		 * @deprecated
 		 * @param child {DisplayObject} 
@@ -906,6 +914,7 @@ module egret.gui {
 			throw(new Error(getString(3004, getString(3003))));
 		}
 		/**
+		 * 将一个 DisplayObject 子实例添加到该 DisplayObjectContainer 实例中
 		 * @method egret.gui.DataGroup#addChildAt
 		 * @deprecated
 		 * @param child {DisplayObject} 
@@ -916,6 +925,7 @@ module egret.gui {
 			throw(new Error(getString(3005, getString(3003))));
 		}
 		/**
+		 * 从 DisplayObjectContainer 实例的子列表中删除指定的 child DisplayObject 实例
 		 * @method egret.gui.DataGroup#removeChild
 		 * @deprecated
 		 * @param child {DisplayObject} 
@@ -925,6 +935,7 @@ module egret.gui {
 			throw(new Error(getString(3006, getString(3003))));
 		}
 		/**
+		 * 从 DisplayObjectContainer 的子列表中指定的 index 位置删除子 DisplayObject
 		 * @method egret.gui.DataGroup#removeChildAt
 		 * @deprecated
 		 * @param index {number} 
@@ -934,6 +945,7 @@ module egret.gui {
 			throw(new Error(getString(3007, getString(3003))));
 		}
 		/**
+		 * 更改现有子项在显示对象容器中的位置
 		 * @method egret.gui.DataGroup#setChildIndex
 		 * @deprecated
 		 * @param child {DisplayObject} 
@@ -943,6 +955,7 @@ module egret.gui {
 			throw(new Error(getString(3008, getString(3003))));
 		}
 		/**
+		 * 交换两个指定子对象的 Z 轴顺序（从前到后顺序）
 		 * @method egret.gui.DataGroup#swapChildren
 		 * @deprecated
 		 * @param child1 {DisplayObject} 
@@ -952,6 +965,7 @@ module egret.gui {
 			throw(new Error(getString(3009, getString(3003))));
 		}
 		/**
+		 * 在子级列表中两个指定的索引位置，交换子对象的 Z 轴顺序（前后顺序）
 		 * @method egret.gui.DataGroup#swapChildrenAt
 		 * @deprecated
 		 * @param index1 {number} 

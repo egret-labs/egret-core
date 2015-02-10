@@ -57,6 +57,11 @@ module egret.gui {
 			return this._getIcon();
 		}
 
+		/**
+		 *
+		 * @returns {any}
+		 * @private
+		 */
 		public _getIcon():any{
 			if(this.iconDisplay){
 				return this.iconDisplay.source;
@@ -70,6 +75,11 @@ module egret.gui {
 			this._setIcon(value);
 		}
 
+		/**
+		 *
+		 * @param value
+		 * @private
+		 */
 		public _setIcon(value:any):void{
 			this._icon = value;
 			if(this.iconDisplay){
@@ -78,6 +88,7 @@ module egret.gui {
 		}
 
 		/**
+		 * 添加外观部件时调用
 		 * @method egret.gui.ButtonBase#partAdded
 		 * @param partName {string}
 		 * @param instance {any}
