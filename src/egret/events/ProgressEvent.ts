@@ -25,6 +25,12 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 module egret {
+    /**
+     * @class egret.ProgressEvent
+     * @classdesc
+     * 当加载操作已开始或套接字已接收到数据时，将调度 ProgressEvent 对象。
+     * 有两种类型的进程事件：ProgressEvent.PROGRESS 和 ProgressEvent.SOCKET_DATA。
+     */
     export class ProgressEvent extends egret.Event {
 
         /**

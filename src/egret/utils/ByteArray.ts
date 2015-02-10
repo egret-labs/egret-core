@@ -50,6 +50,12 @@ module egret {
 
     }
 
+    /**
+     * @class egret.ByteArray
+     * @classdesc
+     * ByteArray 类提供用于优化读取、写入以及处理二进制数据的方法和属性。
+     * 注意：ByteArray 类适用于需要在字节层访问数据的高级 开发人员。
+     */
     export class ByteArray {
         private static SIZE_OF_BOOLEAN:number = 1;
         private static SIZE_OF_INT8:number = 1;
