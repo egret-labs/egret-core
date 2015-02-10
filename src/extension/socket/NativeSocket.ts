@@ -26,6 +26,9 @@
  */
 
 module egret {
+    /**
+     * @private
+     */
     export class NativeSocket implements ISocket {
         private socket;
 

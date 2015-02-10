@@ -25,6 +25,9 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 module egret {
+    /**
+     * @private
+     */
     export class HTML5WebSocket implements ISocket {
         private socket;
 

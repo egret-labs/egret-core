@@ -25,6 +25,11 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 module egret {
+    /**
+     * <div style="margin-top: 20px"><b>了解详细信息</b>
+     * <a href="http://docs.egret-labs.org/jkdoc/manual-net-websocket.html" style="padding-left: 20px" target="_blank" >WebSocket</a>
+     * </div>
+     */
     export class WebSocket extends egret.EventDispatcher {
         private socket:ISocket;
 
