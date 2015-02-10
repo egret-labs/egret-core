@@ -202,8 +202,12 @@ module egret {
             else if (!this.validate(length)) {
                 return null;
             }
-
-            bytes = bytes == null ? new ByteArray(new ArrayBuffer(length)) : bytes;
+            if(bytes) {
+                bytes.validateBuffer(length);
+            }
+            else {
+                bytes = new ByteArray(new ArrayBuffer(length));
+            }
             //This method is expensive
             for (var i = 0; i < length; i++) {
                 bytes.data.setUint8(i + offset, this.data.getUint8(this.position++));

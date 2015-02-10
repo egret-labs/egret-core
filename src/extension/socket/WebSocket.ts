@@ -167,8 +167,7 @@ module egret {
         //        return;
         //    }
         //    this._bytesWrite = true;
-        //    this._writeByte.writeBytes(bytes);
-        //    //bytes.readBytes(this._byteMessage, offset, length);
+        //    this._writeByte.writeBytes(bytes, offset, length);
         //    this.flush();
         //}
 
