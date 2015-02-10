@@ -176,6 +176,7 @@ module egret {
             this._minY = 0;
             this._maxX = 0;
             this._maxY = 0;
+            this._firstCheck = true;
         }
 
         /**
@@ -191,26 +192,45 @@ module egret {
 
         }
 
+        private _firstCheck:boolean = true;
         private _minX:number = 0;
         private _minY:number = 0;
         private _maxX:number = 0;
         private _maxY:number = 0;
         private checkRect(x:number, y:number, w:number, h:number):void {
-            this._minX = Math.min(this._minX, x);
-            this._minY = Math.min(this._minY, y);
+            if(this._firstCheck) {
+                this._firstCheck = false;
+                this._minX = x;
+                this._minY = y;
+                this._maxX = x + w;
+                this._maxY = y + h;
+            }
+            else {
+                this._minX = Math.min(this._minX, x);
+                this._minY = Math.min(this._minY, y);
 
-            this._maxX = Math.max(this._maxX, x + w);
-            this._maxY = Math.max(this._maxY, y + h);
+                this._maxX = Math.max(this._maxX, x + w);
+                this._maxY = Math.max(this._maxY, y + h);
+            }
         }
 
         private _lastX:number = 0;
         private _lastY:number = 0;
         private checkPoint(x:number, y:number):void {
-            this._minX = Math.min(this._minX, x);
-            this._minY = Math.min(this._minY, y);
+            if(this._firstCheck) {
+                this._firstCheck = false;
+                this._minX = x;
+                this._minY = y;
+                this._maxX = x;
+                this._maxY = y;
+            }
+            else {
+                this._minX = Math.min(this._minX, x);
+                this._minY = Math.min(this._minY, y);
 
-            this._maxX = Math.max(this._maxX, x);
-            this._maxY = Math.max(this._maxY, y);
+                this._maxX = Math.max(this._maxX, x);
+                this._maxY = Math.max(this._maxY, y);
+            }
 
             this._lastX = x;
             this._lastY = y;
