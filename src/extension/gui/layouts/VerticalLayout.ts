@@ -190,7 +190,9 @@ module egret.gui {
             }
         }
 
-
+        /**
+         * 基于目标的内容测量其默认大小，并（可选）测量目标的默认最小大小
+         */
         public measure():void{
             super.measure();
             if(!this.target)
@@ -271,6 +273,7 @@ module egret.gui {
         }
 
         /**
+         * 调整目标的元素的大小并定位这些元素
 		 * @param width {number}
 		 * @param height {number} 
          */
@@ -371,6 +374,9 @@ module egret.gui {
             this.elementSizeTable.splice(index,1);
         }
 
+        /**
+         * 如果 useVirtualLayout 为 true，则当布局目标改变时，布局目标可以使用此方法来清除已缓存布局信息
+         */
         public clearVirtualLayoutCache():void{
             super.clearVirtualLayoutCache();
             this.elementSizeTable = [];
@@ -411,6 +417,7 @@ module egret.gui {
         private indexInViewCalculated:boolean = false;
 
         /**
+         * verticalScrollPosition 或 horizontalScrollPosition 属性更改时调用
          */
         public scrollPositionChanged():void{
             super.scrollPositionChanged();

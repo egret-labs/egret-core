@@ -91,7 +91,9 @@ module egret.gui {
 			return bounds;
 		}
 
-
+		/**
+		 *基于目标的内容测量其默认大小，并（可选）测量目标的默认最小大小
+		 */
 		public measure():void{
 			super.measure();
 
@@ -157,7 +159,11 @@ module egret.gui {
 		}
 
 
-
+		/**
+		 * 调整目标的元素的大小并定位这些元素
+		 * @param unscaledWidth
+		 * @param unscaledHeight
+		 */
 		public updateDisplayList(unscaledWidth:number, unscaledHeight:number):void{
 			super.updateDisplayList(unscaledWidth, unscaledHeight);
 

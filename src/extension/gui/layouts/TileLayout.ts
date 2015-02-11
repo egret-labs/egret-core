@@ -410,7 +410,10 @@ module egret.gui {
 				this.target.invalidateDisplayList();
 			}
 		}
-		
+
+		/**
+		 * 基于目标的内容测量其默认大小，并（可选）测量目标的默认最小大小
+		 */
 		public measure():void{
 			if (!this.target)
 				return;
@@ -601,6 +604,7 @@ module egret.gui {
 		}
 		
 		/**
+		 * 如果 useVirtualLayout 为 true，则当布局目标改变时，布局目标可以使用此方法来清除已缓存布局信息
 		 * @method egret.gui.TileLayout#clearVirtualLayoutCache
 		 */
 		public clearVirtualLayoutCache():void{
@@ -621,7 +625,10 @@ module egret.gui {
 		 * 视图的第一个和最后一个元素的索引值已经计算好的标志 
 		 */		
 		private indexInViewCalculated:boolean = false;
-		
+
+		/**
+		 * verticalScrollPosition 或 horizontalScrollPosition 属性更改时调用
+		 */
 		public scrollPositionChanged():void{
 			super.scrollPositionChanged();
 			if(this.useVirtualLayout){
@@ -702,6 +709,7 @@ module egret.gui {
 		}
 		
 		/**
+		 * 调整目标的元素的大小并定位这些元素
 		 * @param width {number}
 		 * @param height {number} 
 		 */
