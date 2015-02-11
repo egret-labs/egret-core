@@ -233,8 +233,9 @@ module egret {
             if(!texture){
                 return super._measureBounds();
             }
-            var x:number = texture._offsetX;
-            var y:number = texture._offsetY;
+            //点击区域要包含原图中得透明区域，所以xy均返回0
+            var x:number = 0;//texture._offsetX;
+            var y:number = 0;//texture._offsetY;
             var w:number = texture._textureWidth;
             var h:number = texture._textureHeight;
             return Rectangle.identity.initialize(x,y, w, h);
