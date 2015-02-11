@@ -71,6 +71,11 @@ module egret.gui {
 		private raw_removeElementAt:string = "raw_removeElementAt";
 		private raw_setElementIndex:string = "raw_setElementIndex";
 
+		/**
+		 * 返回指定索引处的可视元素
+		 * @param index
+		 * @returns {IVisualElement}
+		 */
 		public getElementAt(index:number):IVisualElement{
 			var retval:IVisualElement =
 				this.owner[this.raw_getElementAt](
@@ -78,6 +83,11 @@ module egret.gui {
 			return retval;
 		}
 
+		/**
+		 * 将可视元素添加到此容器中
+		 * @param element
+		 * @returns {IVisualElement}
+		 */
 		public addElement(element:IVisualElement):IVisualElement{
 			var index:number = this.owner[this.upperBoundReference];
 			if(element.parent===(<DisplayObjectContainer><any> this.owner))
@@ -88,6 +98,12 @@ module egret.gui {
 			return element;
 		}
 
+		/**
+		 * 将可视元素添加到此容器中
+		 * @param element
+		 * @param index
+		 * @returns {IVisualElement}
+		 */
 		public addElementAt(element:IVisualElement, index:number):IVisualElement{
 			this.owner[this.upperBoundReference]++;
 			this.owner[this.raw_addElementAt](
@@ -96,6 +112,11 @@ module egret.gui {
 			return element;
 		}
 
+		/**
+		 * 从此容器的子列表中删除指定的可视元素
+		 * @param element
+		 * @returns {IVisualElement}
+		 */
 		public removeElement(element:IVisualElement):IVisualElement{
 			var index:number = this.owner[this.raw_getElementIndex](element);
 			if (this.owner[this.lowerBoundReference] <= index &&
@@ -107,6 +128,11 @@ module egret.gui {
 			return element;
 		}
 
+		/**
+		 * 从容器中的指定索引位置删除可视元素
+		 * @param index
+		 * @returns {IVisualElement}
+		 */
 		public removeElementAt(index:number):IVisualElement{
 			index += this.owner[this.lowerBoundReference];
 			var element:IVisualElement;
@@ -119,12 +145,22 @@ module egret.gui {
 			return element;
 		}
 
+		/**
+		 * 返回可视元素的索引位置
+		 * @param element
+		 * @returns {number}
+		 */
 		public getElementIndex(element:IVisualElement):number{
 			var retval:number = this.owner[this.raw_getElementIndex](element);
 			retval -= this.owner[this.lowerBoundReference];
 			return retval;
 		}
 
+		/**
+		 * 在可视容器中更改现有可视元素的位置
+		 * @param element
+		 * @param index
+		 */
 		public setElementIndex(element:IVisualElement, index:number):void{
 			this.owner[this.raw_setElementIndex](
 				element, this.owner[this.lowerBoundReference] + index);
