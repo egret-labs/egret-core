@@ -873,7 +873,11 @@ module egret {
 
         //处理富文本中有href的
         private onTapHandler(e:egret.TouchEvent):void {
-            var style:egret.ITextStyle = this._getTextElement(e.localX, e.localY).style;
+            var ele:ITextElement = this._getTextElement(e.localX, e.localY);
+            if (ele == null) {
+                return;
+            }
+            var style:egret.ITextStyle = ele.style;
 
             if (style && style.href) {
                 if (style.href.match(/^event:/)) {
@@ -897,12 +901,11 @@ module egret {
         }
 
         private _getHit(x:number, y:number):IHitTextElement {
-            var line:number = 0;
-
             var lineArr:Array<egret.ILineElement>  = this._getLinesArr();
-            if (lineArr.length < line) {//点击在空白处外
+            if (lineArr.length == 0) {//点击在空白处外
                 return null;
             }
+            var line:number = 0;
 
             var lineH:number = 0;
             for (var i:number = 0; i < lineArr.length; i++) {
