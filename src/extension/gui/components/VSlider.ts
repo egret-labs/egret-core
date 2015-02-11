@@ -45,6 +45,7 @@ module egret.gui {
 		}
 		
 		/**
+		 * 将相对于轨道的 x,y 像素位置转换为介于最小值和最大值（包括两者）之间的一个值
 		 * @param x {number}
 		 * @param y {number} 
 		 * @returns {number}
@@ -59,6 +60,7 @@ module egret.gui {
 		}
 		
 		/**
+		 * 设置外观部件（通常为滑块）的边界，这些外观部件的几何图形不是完全由外观的布局指定的
 		 */
 		public updateSkinDisplayList():void{
 			if (!this.thumb || !this.track)

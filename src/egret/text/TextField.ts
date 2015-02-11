@@ -947,6 +947,10 @@ module egret {
         textElementIndex:number;
     }
 
+
+    /**
+     * @private
+     */
     export interface ITextStyle {
         textColor?:number;
         strokeColor?:number;
@@ -958,15 +962,27 @@ module egret {
         href?:string;
     }
 
+    /**
+     * 用于建立多种样式混合文本的基本结构，主要用于设置 textFlow 属性
+     * <div style="margin-top: 20px"><b>了解详细信息</b>
+     * <a href="http://docs.egret-labs.org/jkdoc/manual-text-multiformat.html" style="padding-left: 20px" target="_blank" >多种样式文本混合</a>
+     * </div>
+     */
     export interface ITextElement {
         text:string;
         style?:ITextStyle;
     }
 
+    /**
+     * @private
+     */
     export interface IWTextElement extends ITextElement {
         width:number;
     }
 
+    /**
+     * @private
+     */
     export interface ILineElement {
         width:number;
         height:number;

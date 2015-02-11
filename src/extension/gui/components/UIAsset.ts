@@ -102,6 +102,7 @@ module egret.gui {
 		
 		private createChildrenCalled:boolean = false;
 		/**
+		 * 创建该容器的子元素对象
 		 */
 		public createChildren():void{
 			super.createChildren();
@@ -184,6 +185,9 @@ module egret.gui {
 			}
 		}
 
+		/**
+		 * 计算组件的默认大小和（可选）默认最小大小
+		 */
 		public measure():void{
 			super.measure();
             var content:any = this._content;
@@ -213,6 +217,7 @@ module egret.gui {
          */
         public autoScale:boolean = true;
 		/**
+		 * 绘制对象和/或设置其子项的大小和位置
 		 * @param unscaledWidth {number}
 		 * @param unscaledHeight {number} 
 		 */
@@ -231,6 +236,11 @@ module egret.gui {
             this._setSizeDirty();
 		}
 
+		/**
+		 *
+		 * @param renderContext
+		 * @private
+		 */
         public _render(renderContext:RendererContext):void {
             if(this._content instanceof Texture){
                 var texture:Texture = <Texture> this._content;
@@ -268,6 +278,7 @@ module egret.gui {
         }
 
 		/**
+		 * 此方法不支持
          * @deprecated
 		 * @param child {DisplayObject} 
 		 * @returns {DisplayObject}
@@ -276,6 +287,7 @@ module egret.gui {
 			throw(new Error(getString(3004, getString(3003))));
 		}
 		/**
+		 * 此方法不支持
 		 * @deprecated
 		 * @param child {DisplayObject} 
 		 * @param index {number} 
@@ -285,6 +297,7 @@ module egret.gui {
 			throw(new Error(getString(3005, getString(3003))));
 		}
 		/**
+		 * 此方法不支持
 		 * @deprecated
 		 * @param child {DisplayObject} 
 		 * @returns {DisplayObject}
@@ -293,6 +306,7 @@ module egret.gui {
 			throw(new Error(getString(3006, getString(3003))));
 		}
 		/**
+		 * 此方法不支持
 		 * @deprecated
 		 * @param index {number} 
 		 * @returns {DisplayObject}
@@ -301,6 +315,7 @@ module egret.gui {
 			throw(new Error(getString(3007, getString(3003))));
 		}
 		/**
+		 * 此方法不支持
 		 * @deprecated
 		 * @param child {DisplayObject} 
 		 * @param index {number} 
@@ -309,6 +324,7 @@ module egret.gui {
 			throw(new Error(getString(3008, getString(3003))));
 		}
 		/**
+		 * 此方法不支持
 		 * @deprecated
 		 * @param child1 {DisplayObject} 
 		 * @param child2 {DisplayObject} 
@@ -317,6 +333,7 @@ module egret.gui {
 			throw(new Error(getString(3009, getString(3003))));
 		}
 		/**
+		 * 此方法不支持
 		 * @deprecated
 		 * @param index1 {number} 
 		 * @param index2 {number} 

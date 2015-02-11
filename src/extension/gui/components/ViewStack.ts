@@ -204,7 +204,10 @@ module egret.gui {
 		 * 子项显示列表顺序发生改变。
 		 */		
 		private childOrderingChanged:boolean = false;
-		
+
+		/**
+		 * 处理对组件设置的属性
+		 */
 		public commitProperties():void{
 			super.commitProperties();
 			if (this.proposedSelectedIndex != ViewStack.NO_PROPOSED_SELECTION){
@@ -229,7 +232,11 @@ module egret.gui {
 				this.dispatchEventWith("IndexChanged");//通知TabBar自己的选中项发生改变
 			}
 		}
-		
+
+		/**
+		 *
+		 * @param newIndex
+		 */
 		private commitSelection(newIndex:number):void{
 			var oldIndex:number = this._selectedIndex;
 			if(newIndex>=0&&newIndex<this.numElements){

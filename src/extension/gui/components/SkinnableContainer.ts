@@ -90,6 +90,7 @@ module egret.gui {
         }
 
         /**
+         * 返回指定索引处的可视元素
 		 * @param index {number}
 		 * @returns {IVisualElement}
          */
@@ -98,6 +99,7 @@ module egret.gui {
         }
 
         /**
+         * 将可视元素添加到此容器中
 		 * @param element {IVisualElement}
 		 * @returns {IVisualElement}
          */
@@ -106,6 +108,7 @@ module egret.gui {
         }
 
         /**
+         * 将可视元素添加到此容器中
 		 * @param element {IVisualElement}
 		 * @param index {number} 
 		 * @returns {IVisualElement}
@@ -115,6 +118,7 @@ module egret.gui {
         }
 
         /**
+         * 从此容器的子列表中删除指定的可视元素
 		 * @param element {IVisualElement}
 		 * @returns {IVisualElement}
          */
@@ -123,6 +127,7 @@ module egret.gui {
         }
 
         /**
+         * 从容器中的指定索引位置删除可视元素
 		 * @param index {number}
 		 * @returns {IVisualElement}
          */
@@ -131,12 +136,14 @@ module egret.gui {
         }
 
         /**
+         * 删除容器中的所有子元素
          */
         public removeAllElements():void {
             this._getCurrentContentGroup().removeAllElements();
         }
 
         /**
+         * 获取子元素对象在容器中的索引值
 		 * @param element {IVisualElement}
 		 * @returns {number}
          */
@@ -145,6 +152,7 @@ module egret.gui {
         }
 
         /**
+         * 根据索引设置子元素的显示
 		 * @param element {IVisualElement}
 		 * @param index {number} 
          */
@@ -153,6 +161,7 @@ module egret.gui {
         }
 
         /**
+         * 交换两个指定可视元素的索引
 		 * @param element1 {IVisualElement}
 		 * @param element2 {IVisualElement} 
          */
@@ -161,6 +170,7 @@ module egret.gui {
         }
 
         /**
+         * 交换容器中位于两个指定索引位置的可视元素
 		 * @param index1 {number}
 		 * @param index2 {number} 
          */
@@ -192,6 +202,7 @@ module egret.gui {
         }
 
         /**
+         * [覆盖] 添加外观部件时调用
 		 * @param partName {string}
 		 * @param instance {any} 
          */
@@ -228,6 +239,7 @@ module egret.gui {
         }
 
         /**
+         * [覆盖] 正删除外观部件的实例时调用
 		 * @param partName {string}
 		 * @param instance {any} 
          */

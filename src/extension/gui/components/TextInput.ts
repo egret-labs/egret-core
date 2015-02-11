@@ -26,7 +26,10 @@
  */
 
 module egret.gui {
-
+	/**
+	 * TextInput 是一个文本输入控件，供用户输入和编辑单行统一格式文本
+	 * @classic
+	 */
 	export class TextInput extends SkinnableTextBase{
 		/**
 		 * 构造函数
@@ -54,6 +57,7 @@ module egret.gui {
         }
 		
 		/**
+		 * 添加外观部件时调用
 		 * @inheritDoc
 		 */
 		public partAdded(partName:string, instance:any):void{
@@ -67,6 +71,7 @@ module egret.gui {
 		}
 		
 		/**
+		 *  创建外观部件的引用
 		 * @inheritDoc
 		 */
 		public createSkinParts():void{

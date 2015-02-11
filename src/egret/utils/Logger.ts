@@ -179,6 +179,7 @@ module egret {
 
     egret_string_code[3100] = "当前浏览器不支持WebSocket";
     egret_string_code[3101] = "请先连接WebSocket";
+    egret_string_code[3102] = "请先设置type为二进制类型";
 
     export function getString(id:number, ...args):string {
         var message = egret_string_code[id];

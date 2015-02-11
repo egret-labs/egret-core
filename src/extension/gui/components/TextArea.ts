@@ -116,6 +116,7 @@ module egret.gui {
         }
 
 		/**
+		 * 处理对组件设置的属性
 		 * @inheritDoc
 		 */
 		public commitProperties():void{
@@ -135,6 +136,7 @@ module egret.gui {
 		}
 
 		/**
+		 * 添加外观部件时调用
 		 * @inheritDoc
 		 */
 		public partAdded(partName:string, instance:any):void{
@@ -152,6 +154,7 @@ module egret.gui {
 		}
 
 		/**
+		 * 创建外观部件的引用
 		 * @inheritDoc
 		 */
 		public createSkinParts():void{

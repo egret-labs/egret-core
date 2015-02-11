@@ -27,12 +27,23 @@
 
 
 module egret.gui {
+    /**
+     * @classic
+     * VScrollBar（垂直 ScrollBar）控件可以在因数据太多而不能在显示区域中以垂直方向完全显示时控制显示的数据部分
+     */
     export class VScrollBar extends VSlider {
         public constructor() {
             super();
             
         }
         private _thumbLengthRatio = 1;
+
+        /**
+         *
+         * @param height
+         * @param contentHeight
+         * @private
+         */
         public _setViewportMetric(height: number, contentHeight: number) {
             var max = Math.max(0, contentHeight - height);
             this._thumbLengthRatio = contentHeight <= height ? 1 : height / contentHeight;
@@ -76,6 +87,7 @@ module egret.gui {
             this.dispatchEventWith(Event.CHANGE);
         }
         /**
+         * 将相对于轨道的 x,y 像素位置转换为介于最小值和最大值（包括两者）之间的一个值
          * @param x {number}
          * @param y {number} 
          * @returns {number}
@@ -88,6 +100,10 @@ module egret.gui {
             var thumbRange: number = this.track.layoutBoundsHeight - this.thumb.layoutBoundsHeight;
             return this.minimum + ((thumbRange != 0) ? ( y / thumbRange) * range : 0);
         }
+
+        /**
+         * 设置外观部件（通常为滑块）的边界，这些外观部件的几何图形不是完全由外观的布局指定的
+         */
         public updateSkinDisplayList(): void {
             if (!this.thumb || !this.track)
                 return;

@@ -94,8 +94,10 @@ module egret.gui {
 		private onViewStackIndexChange(event:Event):void{
 			this._setSelectedIndex((<ViewStack><any> (this.dataProvider)).selectedIndex, false);
 		}
-		
-		
+
+		/**
+		 * 处理对组件设置的属性
+		 */
 		public commitProperties():void{
 			super.commitProperties();
 			
