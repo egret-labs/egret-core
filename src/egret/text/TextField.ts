@@ -890,7 +890,7 @@ module egret {
             var hitTextEle:IHitTextElement = this._getHit(x, y);
 
             var lineArr:Array<egret.ILineElement>  = this._getLinesArr();
-            if (lineArr[hitTextEle.lineIndex] && lineArr[hitTextEle.lineIndex].elements[hitTextEle.textElementIndex]) {
+            if (hitTextEle && lineArr[hitTextEle.lineIndex] && lineArr[hitTextEle.lineIndex].elements[hitTextEle.textElementIndex]) {
                 return lineArr[hitTextEle.lineIndex].elements[hitTextEle.textElementIndex];
             }
             return null;
