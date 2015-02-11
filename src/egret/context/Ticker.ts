@@ -54,20 +54,24 @@ module egret {
             context.executeMainLoop(this.update, this);
         }
 
+        private _callIndex:number = -1;
+        private _callList:Array<any>;
         private update(advancedTime:number):void {
             if (this._paused){
                 return;
             }
-            var list:Array<any> = this.callBackList.concat();
-            var length:number = list.length;
-
             var frameTime:number = advancedTime * this._timeScale;
 
             frameTime *= this._timeScale;
-            for (var i:number = 0; i < length; i++) {
-                var eventBin:any = list[i];
+            this._callList = this.callBackList.concat();
+            this._callIndex = 0;
+            for (; this._callIndex < this._callList.length; this._callIndex++) {
+                var eventBin:any = this._callList[this._callIndex];
                 eventBin.listener.call(eventBin.thisObject, frameTime);
             }
+
+            this._callIndex = -1;
+            this._callList = null;
         }
 
         private callBackList:Array<any> = [];
@@ -95,6 +99,15 @@ module egret {
         public unregister(listener:Function, thisObject:any):void {
             var list:Array<any> = this.callBackList;
             this._removeEventBin(list, listener, thisObject);
+
+            if (this._callList) {
+                var idx:number = this._removeEventBin(this._callList, listener, thisObject);
+                if (idx > -1) {
+                    if (idx <= this._callIndex) {
+                        this._callIndex--;
+                    }
+                }
+            }
         }
 
         /**
