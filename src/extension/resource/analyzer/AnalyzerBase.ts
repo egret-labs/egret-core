@@ -18,7 +18,9 @@
 
 
 module RES {
-
+    /**
+     * @classic
+     */
     export class AnalyzerBase extends egret.HashObject{
 
         public constructor(){

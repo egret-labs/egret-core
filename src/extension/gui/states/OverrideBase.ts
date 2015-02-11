@@ -39,13 +39,14 @@ module egret.gui {
 		public constructor() {
             super();
         }
+
 		public initialize(parent:IStateClient):void {
 		}
-		
+
 		public apply(parent:IContainer):void {
 			
 		}
-		
+
 		public remove(parent:IContainer):void {
 			if(parent===null)
             {
