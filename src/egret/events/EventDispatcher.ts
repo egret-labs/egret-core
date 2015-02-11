@@ -174,7 +174,7 @@ module egret {
             var length:number = list.length;
             for (var i:number = fromIdx; i < length; i++) {
                 var bin:any = list[i];
-                if (bin.listener === listener && bin.thisObject === thisObject && (!display || (display && bin.display === display))) {
+                if (bin.listener === listener && bin.thisObject === thisObject && bin.display == display) {
                     list.splice(i, 1);
                     return true;
                 }
