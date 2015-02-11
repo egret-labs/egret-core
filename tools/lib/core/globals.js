@@ -253,6 +253,9 @@ function getGlobalJava() {
     if (!java) {
         java = "java";
     }
+    else {
+        java = '"' + java + '"';
+    }
     return java;
 }
 exports.getGlobalJava = getGlobalJava;
