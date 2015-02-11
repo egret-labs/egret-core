@@ -36,6 +36,15 @@ module egret {
      * </div>
      */
     export class WebSocket extends egret.EventDispatcher {
+        /**
+         * 以字符串格式发送和接收数据
+         */
+        public static TYPE_STRING:string = "WebSocket_type_string";
+        /**
+         * 以二进制格式发送和接收数据
+         */
+        public static TYPE_BINARY:string = "WebSocket_type_binary";
+
         private socket:ISocket;
 
         private _writeMessage:string = "";
@@ -52,9 +61,6 @@ module egret {
             this._connected = false;
             this._writeMessage = "";
             this._readMessage = "";
-
-            //this._readByte = new ByteArray();
-            //this._writeByte = new ByteArray();
 
             if (MainContext.runtimeType == MainContext.RUNTIME_HTML5) {
                 this.socket = new HTML5WebSocket();
@@ -98,7 +104,7 @@ module egret {
         }
 
         private onSocketData(message:any):void {
-            if(typeof message == "string") {
+            if (typeof message == "string") {
                 this._readMessage += message;
             }
             else {
@@ -116,15 +122,15 @@ module egret {
                 egret.Logger.warningWithErrorId(3101);
                 return;
             }
-            if(this._writeMessage) {
+            if (this._writeMessage) {
                 this.socket.send(this._writeMessage);
+                this._writeMessage = "";
             }
-            if(this._bytesWrite) {
+            if (this._bytesWrite) {
                 this.socket.send(this._writeByte.buffer);
                 this._bytesWrite = false;
                 this._writeByte.clear();
             }
-            this._writeMessage = "";
             this._isReadySend = false;
         }
 
@@ -140,7 +146,13 @@ module egret {
                 egret.Logger.warningWithErrorId(3101);
                 return;
             }
-            this._writeMessage += message;
+            if (this._type == WebSocket.TYPE_BINARY) {
+                this._bytesWrite = true;
+                this._writeByte.writeUTF(message);
+            }
+            else {
+                this._writeMessage += message;
+            }
 
             this.flush();
             return;
@@ -157,8 +169,16 @@ module egret {
          * @method egret.WebSocket#readUTF
          */
         public readUTF():string {
-            var message:string = this._readMessage;
-            this._readMessage = "";
+            var message:string;
+            if (this._type == WebSocket.TYPE_BINARY) {
+                this._readByte.position = 0;
+                message = this._readByte.readUTF();
+                this._readByte.clear();
+            }
+            else {
+                message = this._readMessage;
+                this._readMessage = "";
+            }
             return message;
         }
 
@@ -175,15 +195,19 @@ module egret {
          * @param length 要写入的字节数。默认值 0 导致从 offset 参数指定的值开始写入整个缓冲区
          * @method egret.WebSocket#writeBytes
          */
-        //public writeBytes(bytes:ByteArray, offset:number = 0, length:number = 0):void {
-        //    if (!this._connected) {
-        //        egret.Logger.warning("请先连接Socket");
-        //        return;
-        //    }
-        //    this._bytesWrite = true;
-        //    this._writeByte.writeBytes(bytes, offset, length);
-        //    this.flush();
-        //}
+        public writeBytes(bytes:ByteArray, offset:number = 0, length:number = 0):void {
+            if (!this._connected) {
+                egret.Logger.warningWithErrorId(3101);
+                return;
+            }
+            if (!this._writeByte) {
+                egret.Logger.warningWithErrorId(3102);
+                return;
+            }
+            this._bytesWrite = true;
+            this._writeByte.writeBytes(bytes, offset, length);
+            this.flush();
+        }
 
         /**
          * 从套接字读取 length 参数指定的数据字节数。从 offset 所表示的位置开始，将这些字节读入指定的字节数组
@@ -192,17 +216,38 @@ module egret {
          * @param length 要读取的字节数。默认值 0 导致读取所有可用的数据
          * @method egret.WebSocket#readBytes
          */
-        //public readBytes(bytes:ByteArray, offset:number = 0, length:number = 0):void {
-        //    this._readByte.position = 0;
-        //    this._readByte.readBytes(bytes, offset, length);
-        //    this._readByte.clear();
-        //}
+        public readBytes(bytes:ByteArray, offset:number = 0, length:number = 0):void {
+            if (!this._readByte) {
+                egret.Logger.warningWithErrorId(3102);
+                return;
+            }
+            this._readByte.position = 0;
+            this._readByte.readBytes(bytes, offset, length);
+            this._readByte.clear();
+        }
 
         /**
          * [只读] 表示此 Socket 对象目前是否已连接
          */
         public get connected():boolean {
             return this._connected;
+        }
+
+        private _type:string = WebSocket.TYPE_STRING;
+
+        public get type():string {
+            return this._type;
+        }
+
+        /**
+         * 发送和接收数据的格式，默认是字符串格式
+         */
+        public set type(value:string) {
+            this._type = value;
+            if (value == WebSocket.TYPE_BINARY && !this._writeByte) {
+                this._readByte = new ByteArray();
+                this._writeByte = new ByteArray();
+            }
         }
     }
 }
