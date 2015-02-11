@@ -100,13 +100,8 @@ module egret {
             var list:Array<any> = this.callBackList;
             this._removeEventBin(list, listener, thisObject);
 
-            if (this._callList) {
-                var idx:number = this._removeEventBin(this._callList, listener, thisObject);
-                if (idx > -1) {
-                    if (idx <= this._callIndex) {
-                        this._callIndex--;
-                    }
-                }
+            if (this._callList && this._callIndex > -1) {
+                this._removeEventBin(this._callList, listener, thisObject, null, this._callIndex + 1);
             }
         }
 

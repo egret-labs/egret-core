@@ -170,16 +170,16 @@ module egret {
         /**
          * 在一个事件列表中按优先级插入事件对象
          */
-        public _removeEventBin(list:Array<any>, listener:Function, thisObject:any, display = undefined):number {
+        public _removeEventBin(list:Array<any>, listener:Function, thisObject:any, display = undefined, fromIdx:number = 0):boolean {
             var length:number = list.length;
-            for (var i:number = 0; i < length; i++) {
+            for (var i:number = fromIdx; i < length; i++) {
                 var bin:any = list[i];
                 if (bin.listener === listener && bin.thisObject === thisObject && bin.display === display) {
                     list.splice(i, 1);
-                    return i;
+                    return true;
                 }
             }
-            return -1;
+            return false;
         }
 
         /**
