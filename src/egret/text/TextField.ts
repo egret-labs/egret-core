@@ -873,6 +873,9 @@ module egret {
 
         //处理富文本中有href的
         private onTapHandler(e:egret.TouchEvent):void {
+            if (this._type == egret.TextFieldType.INPUT) {
+                return;
+            }
             var ele:ITextElement = this._getTextElement(e.localX, e.localY);
             if (ele == null) {
                 return;
