@@ -2,6 +2,70 @@
  * Created by apple on 14-4-28.
  */
 
+exports.help_def_publish =
+{
+   "command" : "publish"
+
+   ,"desc" : "发布项目，使用GoogleClosureCompiler压缩代码"
+
+   ,"parameters" : [
+   {
+      "placeholder" : "project_name"
+      ,"optional" : "true"
+      ,"desc" : "项目名称，按照操作系统的命名规范命名"
+   }
+]
+
+   ,"configs" : [
+   {
+      "name" : "version"
+      ,"prefix": "--"
+      ,"desc" : "设置发布之后的版本号，可以不设置"
+      ,"optional" : "true"
+
+      ,"config-paras" : [
+      {
+         "placeholder" : "version"
+         ,"type" : "num"
+         ,"optional" : "true"
+      }
+   ]
+
+   }
+   ,{
+      "name" : "runtime"
+      ,"prefix": "--"
+      ,"desc" : "设置发布方式为 html5 或者是 native方式，默认值为html5"
+      ,"optional" : "true"
+
+      ,"config-paras" : [
+         {
+            "enum-list" : [ "html5" ,"native" ]
+            ,"type" : "enum"
+            ,"optional" : "false"
+         }
+      ]
+   }
+   ,{
+      "name" : "zip"
+      ,"prefix": "-"
+      ,"desc" : "设置发布后生成launcher文件夹的zip文件"
+      ,"optional" : "true"
+
+      ,"config-paras" : [ ]
+   }
+   ,{
+      "name" : "password"
+      ,"prefix": "--"
+      ,"desc" : "设置发布zip文件的解压密码"
+      ,"optional" : "true"
+
+      ,"config-paras" : [ ]
+   }
+]
+
+}
+
 exports.error_code = {
 
     0:"执行成功",
