@@ -2,7 +2,10 @@
  * Created by apple on 14-4-28.
  */
 
-exports.help_def_publish =
+
+exports.help_def = {};
+
+exports.help_def.publish =
 {
    "command" : "publish"
 

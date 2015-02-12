@@ -50,7 +50,11 @@ DetailBody.prototype.joinWithSpaceAlign = function (iGapSpace) {
 
 function logHelpDef(help_def) {
 
-   var json = JSON.parse(help_def);
+    var zh_cn = require("../core/locale/zh-CN.js");
+    var json = zh_cn["help_def"][help_def];
+    if (!json){
+        return false;
+    }
 
    /// 帮助信息分为三部分 用法 描述 和参数说明。先放在三个字符串元素中，最后再组合。
    var sDesc;
@@ -155,6 +159,9 @@ function logHelpDef(help_def) {
 
    console.log( aConsoleOut.join(newLine) );
 
+
+    return true;
+
 }
 
 /// 获得 已考虑可选项标记的范式单词   Form Word Consider Optional
@@ -172,3 +179,5 @@ function getRepeatString(sBase, nRepeat) {
       return sProd;
    }
 }
+
+exports.logHelpDef = logHelpDef;

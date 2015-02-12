@@ -15,8 +15,15 @@ function run(currDir, args, opts) {
 
     if (args[0]) {
         try {
-            var tool = require("./" + args[0] + ".js");
-            console.log("用法: " + tool.help_example());
+
+            var parser_help = require("../core/parser_help_def.js");
+            var result = parser_help.logHelpDef(args[0]);
+            if (!result){
+                var tool = require("./" + args[0] + ".js");
+                console.log("用法: " + tool.help_example());
+            }
+            return;
+
         }
         catch (e) {
             console.log("未找到" + args[0] + "命令的帮助文档");
