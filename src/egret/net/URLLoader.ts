@@ -92,10 +92,10 @@ module egret {
         public _status:number = -1;
 
 
-        //public __recycle():void {
-        //    this._request = null;
-        //    this.data = null;
-        //}
+        public __recycle():void {
+            this._request = null;
+            this.data = null;
+        }
 
     }
 
