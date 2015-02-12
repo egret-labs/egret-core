@@ -43,8 +43,15 @@ module egret.gui {
 			super();
             
 			this.requireSelection = true;
-		}
-		
+        }
+
+		/**
+		 * 创建容器的子元素
+		 */
+        public createChildren(): void {
+            ListBase.prototype.createChildren.call(this);
+        }
+
 		/**
 		 * requireSelection改变标志
 		 */

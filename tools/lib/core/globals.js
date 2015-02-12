@@ -73,13 +73,31 @@ function compressVersion(v1, v2) {
     }
 }
 
-
+//第三方调用时，可能不支持颜色显示，可通过添加 -nocoloroutput 移除颜色信息
+var ColorOutputReplacements = {
+    "{color_green}": "\033[1;32;1m",
+    "{color_red}": "\033[0;31m",
+    "{color_normal}": "\033[0m",
+    "{color_gray}": "\033[0;37m",
+    "{color_underline}": "\033[4;36;1m"
+};
+var NoColorOutputReplacements = {
+    "{color_green}": "",
+    "{color_red}": "",
+    "{color_normal}": "",
+    "{color_gray}": "",
+    "{color_underline}": "",
+    "\n": "\\n",
+    "\r": ""
+};
 function formatStdoutString(message) {
-    return message.split("{color_green}").join("\033[1;32;1m")
-        .split("{color_red}").join("\033[0;31m")
-        .split("{color_normal}").join("\033[0m")
-        .split("{color_gray}").join("\033[0;37m")
-        .split("{color_underline}").join("\033[4;36;1m");
+    var opt = param.getArgv().opts;
+    var nocolor = opt.hasOwnProperty("-nocoloroutput");
+    var replacements = nocolor ? NoColorOutputReplacements : ColorOutputReplacements;
+    for (var raw in replacements) {
+        message = message.split(raw).join(replacements[raw]);
+    }
+    return message;
 }
 
 var callBackList = [];
