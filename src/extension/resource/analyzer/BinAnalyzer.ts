@@ -73,13 +73,13 @@ module RES {
 			var loader:egret.URLLoader = <egret.URLLoader> (event.target);
 			var data:any = this.resItemDic[loader.hashCode];
 			delete this.resItemDic[loader.hashCode];
-			this.recycler.push(loader);
 			var resItem:ResourceItem = data.item;
 			var compFunc:Function = data.func;
 			resItem.loaded = (event.type==egret.Event.COMPLETE);
 			if(resItem.loaded){
                 this.analyzeData(resItem,loader.data)
 			}
+			this.recycler.push(loader);
 			compFunc.call(data.thisObject,resItem);
 		}
         /**
