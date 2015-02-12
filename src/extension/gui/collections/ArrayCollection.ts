@@ -53,6 +53,9 @@ module egret.gui {
             }
         }
 
+        /**
+         *
+         */
         private _source:Array<any>;
         /**
          * 数据源
@@ -132,6 +135,7 @@ module egret.gui {
             this.dispatchCoEvent(CollectionEventKind.ADD,index,-1,[item]);
         }
         /**
+         * 获取指定索引处的项目
          * @method egret.gui.ArrayCollection#getItemAt
          * @param index {number}
          * @returns {any}
@@ -140,6 +144,7 @@ module egret.gui {
             return this._source[index];
         }
         /**
+         * 如果项目位于列表中,返回该项目的索引。否则返回-1。
          * @method egret.gui.ArrayCollection#getItemIndex
          * @param item {any}
          * @returns {number}
