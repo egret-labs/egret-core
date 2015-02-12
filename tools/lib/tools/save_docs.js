@@ -353,7 +353,7 @@ function analyze(item, name, parent, filename) {
 
                 delete member["params"];
             }
-            if (member["description"] == "" && rwType == 3) {
+            if ((member["description"] == null || member["description"] == "") && rwType == 3) {
                 member["description"] = getDesc(item["get"]["docs"]) || "";
             }
 
