@@ -48,10 +48,13 @@ DetailBody.prototype.joinWithSpaceAlign = function (iGapSpace) {
    return this.word + getRepeatString(space, iGapSpace - this.word.length) + this.desc;
 }
 
-function logHelpDef(help_def) {
+function logHelpDef( command ) {
 
-    var zh_cn = require("../core/locale/zh-CN.js");
-    var json = zh_cn["help_def"][help_def];
+   console.log( "logHelpDef logHelpDef head:" );
+    var help_def_set = require("../core/commands/set.js");
+   console.log( "logHelpDef logHelpDef:", help_def_set );
+   //console.log( "logHelpDef logHelpDef:", help_def_set["commands"], "\n:", help_def_set["commands"][ commands ] );
+    var json = help_def_set["help_def"][ command ];
     if (!json){
         return false;
     }

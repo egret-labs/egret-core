@@ -16,9 +16,10 @@ function run(currDir, args, opts) {
     if (args[0]) {
         try {
 
-            var parser_help = require("../core/parser_help_def.js");
-            var result = parser_help.logHelpDef(args[0]);
-            if (!result){
+            var parser_help = require("../core/commands/parser.js");
+            var result = parser_help.logHelpDef( args[0] );
+           //console.log( "help.js >>>: " + result );
+            if ( !result ){
                 var tool = require("./" + args[0] + ".js");
                 console.log("用法: " + tool.help_example());
             }
@@ -26,7 +27,7 @@ function run(currDir, args, opts) {
 
         }
         catch (e) {
-            console.log("未找到" + args[0] + "命令的帮助文档");
+            console.log( "无法找到" + args[0] + "命令的帮助文档", e );
         }
 
 
