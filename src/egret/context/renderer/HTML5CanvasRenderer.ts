@@ -52,7 +52,6 @@ module egret {
         public _transformTy:number;
 
         private blendValue:string;
-        private globalAlpha:number = 1;
 
         private _cacheCanvas:HTMLCanvasElement;
         private _cacheCanvasContext:CanvasRenderingContext2D;
@@ -212,9 +211,7 @@ module egret {
         }
 
         public setAlpha(alpha:number, blendMode:string) {
-            if (alpha != this.globalAlpha) {
-                this.drawCanvasContext.globalAlpha = this.globalAlpha = alpha;
-            }
+            this.drawCanvasContext.globalAlpha = alpha;
             if (blendMode) {
                 this.blendValue = this.blendModes[blendMode];
                 this.drawCanvasContext.globalCompositeOperation = this.blendValue;
