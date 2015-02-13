@@ -86,12 +86,11 @@ function help_title() {
 
 function help_example() {
     var result = "\n";
-    result += "    egret create [project_name] [--type core|gui] [--runtime html5|native]\n";
+    result += "    egret create [project_name] [--type empty|core|gui]\n";
     result += "描述:\n";
     result += "    " + help_title();
     result += "参数说明:\n";
     result += "    --type    要创建的项目类型 core或gui，默认值为core\n";
-    result += "    --runtime    设置构建方式为 html5 或者是 native方式，默认值为html5";
     return result;
 }
 
