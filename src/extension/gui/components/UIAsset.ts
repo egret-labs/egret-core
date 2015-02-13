@@ -92,6 +92,7 @@ module egret.gui {
 		}
         
         public _content: any = null;
+        public _contentIsTexture: boolean = false;
 		/**
 		 * 解析source得到的对象，通常为显示对象或Texture。
 		 * @member egret.gui.UIAsset#content
@@ -159,9 +160,11 @@ module egret.gui {
             this._content = content;
             if(this._content instanceof Texture){
                 this._texture_to_render = content;
+				this._contentIsTexture = true;
             }
             else{
                 this._texture_to_render = null;
+				this._contentIsTexture = false;
             }
             if(oldContent!==content) {
                 if(oldContent instanceof DisplayObject){
@@ -207,7 +210,7 @@ module egret.gui {
 					content.height = oldH;
                 }
             }
-            else if(content instanceof Texture){
+            else if(this._contentIsTexture){
                 this.measuredWidth = (<Texture> content)._textureWidth;
                 this.measuredHeight = (<Texture> content)._textureHeight;
             }
@@ -242,7 +245,7 @@ module egret.gui {
 		 * @private
 		 */
         public _render(renderContext:RendererContext):void {
-            if(this._content instanceof Texture){
+            if(this._contentIsTexture){
                 var texture:Texture = <Texture> this._content;
                 var w:number;
                 var h:number;
@@ -254,6 +257,7 @@ module egret.gui {
                     w = texture._textureWidth;
                     h = texture._textureHeight;
                 }
+				this._texture_to_render = texture;
                 Bitmap._drawBitmap(renderContext,w,h,this);
             }
             super._render(renderContext);
@@ -264,7 +268,7 @@ module egret.gui {
          * @private
          */
         public _measureBounds():egret.Rectangle {
-            if(this._content instanceof Texture){
+            if(this._contentIsTexture){
                 var texture:Texture = <Texture> this._content;
                 var textureW:number = texture._textureWidth;
                 var textureH:number = texture._textureHeight;
