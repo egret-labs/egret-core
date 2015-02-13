@@ -16,7 +16,7 @@ function run(currDir, args, opts) {
     if (args[0]) {
         try {
 
-           var auto = false;
+           var auto = true;
 
            if(auto){
               var parser = require("../core/commands/parser.js");
@@ -32,6 +32,7 @@ function run(currDir, args, opts) {
 
         }
         catch (e) {
+            console.log (e)
             console.log("无法找到" + args[0] + "命令的帮助文档");
         }
 
