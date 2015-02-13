@@ -357,6 +357,8 @@ module egret {
         public set rotation(value:number) {
             if (NumberUtils.isNumber(value) && this._rotation != value) {
                 this._rotation = value;
+
+                this._setDirty();
                 this._setParentSizeDirty();
             }
         }
@@ -397,6 +399,7 @@ module egret {
             if (NumberUtils.isNumber(value) && this._skewX != value) {
                 this._skewX = value;
 
+                this._setDirty();
                 this._setParentSizeDirty();
             }
         }
@@ -416,6 +419,7 @@ module egret {
             if (NumberUtils.isNumber(value) && this._skewY != value) {
                 this._skewY = value;
 
+                this._setDirty();
                 this._setParentSizeDirty();
             }
         }
@@ -586,16 +590,16 @@ module egret {
          * @param renderContext
          */
         public _draw(renderContext:RendererContext):void {
-            if (!this._visible) {
-                this.destroyCacheBounds();
-                return;
-            }
-            var hasDrawCache = this.drawCacheTexture(renderContext);
-            if (hasDrawCache) {
-                this.destroyCacheBounds();
-                return;
-            }
             var o = this;
+            if (!o._visible) {
+                o.destroyCacheBounds();
+                return;
+            }
+            var hasDrawCache = o.drawCacheTexture(renderContext);
+            if (hasDrawCache) {
+                o.destroyCacheBounds();
+                return;
+            }
             var isCommandPush = MainContext.__use_new_draw && o._isContainer;
             if(o._filter && !isCommandPush) {
                 renderContext.setGlobalFilter(o._filter);
@@ -700,6 +704,9 @@ module egret {
          */
         public _updateTransform():void {
             var o = this;
+            if (!o._visible) {
+                return;
+            }
             o._calculateWorldTransform();
             if(MainContext._renderLoopPhase == "updateTransform") {
                 if(o.needDraw || o._texture_to_render || o._cacheAsBitmap) {
