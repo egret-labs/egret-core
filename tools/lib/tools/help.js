@@ -21,7 +21,7 @@ function run(currDir, args, opts) {
            if(auto){
               var parser = require("../core/commands/parser.js");
               var result = parser.logHelpDef( args[0] );
-              console.log( ">>>: " + result );
+              //console.log( ">>>: " + result );
            }
 
             if ( !result ){

@@ -1,9 +1,9 @@
 /**
  * Created by egret on 2015/2/12.
  */
-console.log( "help_def_set head:" );
+//console.log( "help_def_set head:" );
 var locale = require( "../locale/zh-CN.js" );
-console.log( "help_def_set after zh-CN:" );
+//console.log( "help_def_set after zh-CN:" );
 
 exports.help_def = {};
 

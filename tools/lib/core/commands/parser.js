@@ -50,10 +50,10 @@ DetailBody.prototype.joinWithSpaceAlign = function (iGapSpace) {
 
 function logHelpDef( command ) {
 
-   console.log( "logHelpDef head:" );
+   //console.log( "logHelpDef head:" );
     var help_def_set = require("./set.js");
-   console.log( "logHelpDef logHelpDef:", help_def_set );
-   console.log( "logHelpDef required set:", help_def_set["help_def"], "\n:", help_def_set["help_def"][ command ] );
+   //console.log( "logHelpDef logHelpDef:", help_def_set );
+   //console.log( "logHelpDef required set:", help_def_set["help_def"], "\n:", help_def_set["help_def"][ command ] );
     var json = help_def_set["help_def"][ command ];
     if (!json){
         return false;
@@ -161,7 +161,7 @@ function logHelpDef( command ) {
    var aConsoleOut = [sFormBuffer, sDescBuffer, sDetailBuffer];
 
    console.log( aConsoleOut.join(newLine) );
-
+   console.log( "(output from help def configuration!)" );
 
     return true;
 
