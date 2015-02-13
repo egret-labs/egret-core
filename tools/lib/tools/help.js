@@ -19,8 +19,8 @@ function run(currDir, args, opts) {
            var auto = false;
 
            if(auto){
-              var parser_help = require("../core/parser_help_def.js");
-              var result = parser_help.logHelpDef( args[0] );
+              var parser = require("../core/commands/parser.js");
+              var result = parser.logHelpDef( args[0] );
               console.log( ">>>: " + result );
            }
 
