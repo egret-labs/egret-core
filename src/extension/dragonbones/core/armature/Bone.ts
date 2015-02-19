@@ -28,6 +28,12 @@
 
 module dragonBones {
 
+    /**
+     * @class dragonBones.Bone
+     * @classdesc
+     * A Bone instance represents a single joint in an Armature instance. An Armature instance can be made up of many Bone instances.
+     * @extends dragonBones.DBObject
+     */
 	export class Bone extends DBObject{
 		public static initWithBoneData(boneData:BoneData):Bone{
 			var outputBone:Bone = new Bone();
