@@ -140,7 +140,7 @@ module egret.gui {
 		 * @param priority {number} 
 		 */		
 		public static addEventListener(type:string,listener:Function,thisObject:any,useCapture:boolean = false,priority:number = 0):void{
-			PopUpManager.getImpl().addEventListener(type,listener,this,useCapture,priority);
+			PopUpManager.getImpl().addEventListener(type,listener,thisObject,useCapture,priority);
 		}
 		/**
 		 * 移除事件监听,参考PopUpEvent定义的常量。
