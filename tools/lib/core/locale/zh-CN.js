@@ -3,12 +3,25 @@
  */
 
 exports.help_dict = {
-    "pub1":"发布项目，使用GoogleClosureCompiler压缩代码"
-   ,"pub2":"项目名称，按照操作系统的命名规范命名"
+   "common_proj_name":"项目名称，按照操作系统的命名规范命名"
+
+   ,"pub1":"发布项目，使用GoogleClosureCompiler压缩代码"
    ,"pub3":"设置发布之后的版本号，可以不设置"
    ,"pub4":"设置发布方式为 html5 或者是 native方式，默认值为html5"
    ,"pub5":"设置发布后生成launcher文件夹的zip文件"
    ,"pub6":"设置发布zip文件的解压密码"
+
+   ,"create1":"创建新项目"
+   ,"create2":"要创建的项目类型 core或gui，默认值为core"
+
+   ,"build0":"构建指定项目,编译指定项目的 TypeScript 文件"
+   ,"build1":"编译指定项目的同时编译引擎目录"
+   ,"build2":"清除libs以及bin-debug文件夹，只有在-e的前提下才会生效"
+   ,"build3":"只编译引擎中指定的部分模块，不编译项目；不填则编译全部模块"
+   ,"build4":"编译EXML文件时保留生成的TS文件"
+   ,"build5":"如果有native工程，则会将文件拷贝到工程里"
+   ,"build6":"编译游戏时，根据game_file_list获取编译列表"
+   ,"build7":"显示执行过程"
 }
 
 exports.error_code = {
