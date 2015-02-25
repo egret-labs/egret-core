@@ -31,7 +31,7 @@ module dragonBones {
     /**
      * @class dragonBones.Armature
      * @classdesc
-     * Armature 是 DragonBones 骨骼动画系统的和核心。他包含需要加到场景的显示对象，所有的骨骼逻辑和动画系统
+     * Armature 是 DragonBones 骨骼动画系统的核心。他包含需要加到场景的显示对象，所有的骨骼逻辑和动画系统
      * A Armature instance is the core of the skeleton animation system. It contains the object to display, all sub-bones and the object animation(s).
      * @extends dragonBones.EventDispatcher
      */
