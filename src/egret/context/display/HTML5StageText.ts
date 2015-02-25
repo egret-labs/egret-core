@@ -52,7 +52,7 @@ module egret {
             div.scale.x = scaleX;
             div.scale.y = scaleY;
             div.transforms();
-            div.style[egret_dom.getTrans("transformOrigin")] = "0% 0% 0px";
+            div.style[HTML5StageText.getTrans("transformOrigin")] = "0% 0% 0px";
             this.div = div;
 
             var stage:egret.Stage = egret.MainContext.instance.stage;
@@ -69,6 +69,37 @@ module egret {
             this._shape = shape;
 
             this.getStageDelegateDiv().appendChild(this.div);
+        }
+
+        private static header:string = "";
+
+        /**
+         * 获取当前浏览器类型
+         * @type {string}
+         */
+        private static getTrans(type:string):string {
+        if (HTML5StageText.header == "") {
+            HTML5StageText.header = HTML5StageText.getHeader();
+        }
+
+        return HTML5StageText.header + type.substring(1, type.length);
+    }
+
+        /**
+         * 获取当前浏览器的类型
+         * @returns {string}
+         */
+        private static getHeader():string {
+            var tempStyle = document.createElement('div').style;
+            var transArr:Array<string> = ["t", "webkitT", "msT", "MozT", "OT"];
+            for (var i:number = 0; i < transArr.length; i++) {
+                var transform:string = transArr[i] + 'ransform';
+
+                if (transform in tempStyle)
+                    return transArr[i];
+            }
+
+            return transArr[0];
         }
 
         private getStageDelegateDiv():any {
