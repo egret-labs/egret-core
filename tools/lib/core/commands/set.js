@@ -8,6 +8,26 @@ var locale = require( "../locale/zh-CN.js" );
 exports.help_def = {};
 
 
+exports.help_def.upgrade =
+{
+    "command" : "upgrade"
+
+    ,"desc" : locale.help_dict.upgrade0
+
+    ,"parameters" : [
+    {
+        "placeholder" : "project_name"
+        ,"optional" : "true"
+        ,"desc" : locale.help_dict.common_proj_name
+    }
+]
+
+    , "configs" : [
+]
+
+}
+
+
 exports.help_def.startserver =
 {
     "command" : "startserver"
