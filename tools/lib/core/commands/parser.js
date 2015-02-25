@@ -2,6 +2,8 @@
  * Created by egret on 2014/12/10.
  */
 
+var locale = require( "../locale/zh-CN.js" );
+
 /// 参数说明中的文字说明与关键字之间的最小间隔
 var GAP_WORD_AND_ITS_DESC = 3;
 
@@ -66,9 +68,9 @@ function logHelpDef( command ) {
    var sPlaceHolder;
    var bOptional;
 
-   var sFormBuffer = "用法:";
-   var sDescBuffer = "描述:";
-   var sDetailBuffer = "参数说明:";
+   var sFormBuffer = locale.help_dict.form + ":";
+   var sDescBuffer = locale.help_dict.desc +":";
+   var sDetailBuffer = locale.help_dict.detail +":";
 
    /// 命令总体描述 最简单，先取出值。 之后专心分析 用法 和 参数说明
    sDescBuffer += newLine + indent + json[HelpDefParserKey.DESC];
@@ -156,9 +158,19 @@ function logHelpDef( command ) {
    sFormBuffer += newLine + indent + aFormCollection.join(space);
 
    //// 参数/配置说明 缓冲集合
-   sDetailBuffer += newLine + indent + aDetailCollection.join(newLine + indent);
+   if( aDetailCollection.length ){
+      sDetailBuffer += newLine + indent + aDetailCollection.join(newLine + indent);
+   }else{
+      sDetailBuffer = "";
+   }
 
-   var aConsoleOut = [sFormBuffer, sDescBuffer, sDetailBuffer];
+   var aConsoleOut;
+
+   if( sDetailBuffer.length ){
+      aConsoleOut = [sFormBuffer, sDescBuffer, sDetailBuffer];
+   }else{
+      aConsoleOut = [sFormBuffer, sDescBuffer];
+   }
 
    console.log( aConsoleOut.join(newLine) );
    console.log( "(output from help def configuration!)" );

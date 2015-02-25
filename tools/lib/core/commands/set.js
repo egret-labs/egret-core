@@ -8,6 +8,51 @@ var locale = require( "../locale/zh-CN.js" );
 exports.help_def = {};
 
 
+exports.help_def.info =
+{
+    "command" : "info"
+
+    ,"desc" : locale.help_dict.info0
+
+    ,"parameters" : [
+    ]
+
+    , "configs": [
+
+]
+
+}
+
+
+exports.help_def.create_manifest =
+{
+    "command" : "create_manifest"
+
+    ,"desc" : locale.help_dict.create_manifest0
+
+    ,"parameters" : [
+    {
+        "placeholder" : "app_name"
+        ,"optional" : "true"
+        ,"desc" : locale.help_dict.common_app_name
+    }
+]
+
+    , "configs" : [
+    {
+        "name" : "all"
+        ,"prefix": "-"
+        ,"desc" : locale.help_dict.create_manifest1
+        ,"optional" : "true"
+
+        ,"config-paras" : [
+        ]
+    }
+]
+
+}
+
+
 exports.help_def.create_app =
 {
     "command" : "create_app"

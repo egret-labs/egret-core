@@ -6,6 +6,15 @@ exports.help_dict = {
     "common_proj_name":"项目名称，按照操作系统的命名规范命名"
    ,"common_app_name":"移动应用项目名称，按照操作系统的命名规范命名"
 
+   , "form" : "用法"
+   , "desc" : "描述"
+   , "detail" : "参数说明"
+
+   , "info0" : "当前Egret版本，以及安装路径"
+
+   , "create_manifest0" : "在工程目录下生成manifest.json清单文件"
+   , "create_manifest1" : "生成所有文件的清单,若不指定则只生成文档类有引用到的类清单"
+
    , "create_app1":"app项目所对应h5项目的路径"
    , "create_app2":"模板路径"
 
