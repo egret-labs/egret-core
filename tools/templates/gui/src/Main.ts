@@ -77,7 +77,7 @@ class Main extends egret.DisplayObjectContainer {
     */
     private onResourceLoadError(event: RES.ResourceEvent): void {
         //TODO
-        console.warn("Group:" + event.groupName + " 中有加载失败的项目");
+        console.warn("Group:" + event.groupName + " has failed to load");
         //忽略加载失败的项目
         this.onResourceLoadComplete(event);
     }
@@ -112,14 +112,14 @@ class Main extends egret.DisplayObjectContainer {
         var button: egret.gui.Button = new egret.gui.Button();
         button.horizontalCenter = 0;
         button.verticalCenter = 0;
-        button.label = "点击弹窗";
+        button.label = "click";
         button.addEventListener(egret.TouchEvent.TOUCH_TAP, this.onButtonClick, this);
         //在GUI范围内一律使用addElement等方法替代addChild等方法。
         this.guiLayer.addElement(button);
     }
 
     private onButtonClick(event: egret.TouchEvent): void {
-        egret.gui.Alert.show("这是一个GUI弹窗!", "弹窗")
+        egret.gui.Alert.show("Message", "Title")
     }
 }
 
