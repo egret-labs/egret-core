@@ -34,7 +34,7 @@ HelpDefParserKey.ENUM_LIST = "enum-list";
 
 var CfgParaType = function () {
 }
-CfgParaType.NUM = "num";
+CfgParaType.STRING = "string";
 CfgParaType.ENUM = "enum";
 
 /// 结构体类 参数/配置说明单位，需要填充完毕后进行对齐
@@ -124,7 +124,7 @@ function logHelpDef( command ) {
          bOptSubLv1 = oCfgPara[HelpDefParserKey.OPTIONAL] == "true";
 
          switch (sType) {
-            case  CfgParaType.NUM:
+            case  CfgParaType.STRING:
                sPlaceHolder = oCfgPara[HelpDefParserKey.PLACEHOLDER];
                fwcoSubLv1 = getFwco(sPlaceHolder, bOptSubLv1);
                break;

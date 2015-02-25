@@ -3,7 +3,11 @@
  */
 
 exports.help_dict = {
-   "common_proj_name":"项目名称，按照操作系统的命名规范命名"
+    "common_proj_name":"项目名称，按照操作系统的命名规范命名"
+   ,"common_app_name":"移动应用项目名称，按照操作系统的命名规范命名"
+
+   , "create_app1":"app项目所对应h5项目的路径"
+   , "create_app2":"模板路径"
 
    ,"pub1":"发布项目，使用GoogleClosureCompiler压缩代码"
    ,"pub3":"设置发布之后的版本号，可以不设置"

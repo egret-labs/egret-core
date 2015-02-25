@@ -8,6 +8,54 @@ var locale = require( "../locale/zh-CN.js" );
 exports.help_def = {};
 
 
+exports.help_def.create_app =
+{
+    "command" : "create_app"
+
+    ,"desc" : locale.help_dict.build0
+
+    ,"parameters" : [
+    {
+        "placeholder" : "app_name"
+        ,"optional" : "true"
+        ,"desc" : locale.help_dict.common_app_name
+    }
+]
+
+    , "configs" : [
+    {
+        "name" : "f"
+        ,"prefix": "-"
+        ,"desc" : locale.help_dict.create_app1
+        ,"optional" : "true"
+
+        ,"config-paras" : [
+            {
+                "placeholder" : "h5_game_path"
+                ,"type" : "string"
+                ,"optional" : "true"
+            }
+        ]
+    }
+    ,{
+        "name" : "t"
+        ,"prefix": "-"
+        ,"desc" : locale.help_dict.create_app2
+        ,"optional" : "true"
+
+        ,"config-paras" : [
+            {
+                "placeholder" : "template_path"
+                ,"type" : "string"
+                ,"optional" : "true"
+            }
+        ]
+    }
+]
+
+}
+
+
 exports.help_def.build_doing =
 {
     "command" : "build"
@@ -127,7 +175,7 @@ exports.help_def.publish =
             ,"config-paras" : [
             {
                 "placeholder" : "version"
-                ,"type" : "num"
+                ,"type" : "string"
                 ,"optional" : "true"
             }
         ]
