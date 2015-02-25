@@ -16,9 +16,9 @@ function run(currDir, args, opts) {
     if (args[0]) {
         try {
 
-           var auto = true;
+           var bParseConfig = true;
 
-           if(auto){
+           if( bParseConfig ){
               var parser = require("../core/commands/parser.js");
               var result = parser.logHelpDef( args[0] );
               //console.log( ">>>: " + result );
