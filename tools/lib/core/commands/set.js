@@ -8,6 +8,58 @@ var locale = require( "../locale/zh-CN.js" );
 exports.help_def = {};
 
 
+exports.help_def.startserver =
+{
+    "command" : "startserver"
+
+    ,"desc" : locale.help_dict.ss0
+
+    ,"parameters" : [
+    {
+        "placeholder" : "project_name"
+        ,"optional" : "true"
+        ,"desc" : locale.help_dict.common_proj_name
+    }
+]
+
+    , "configs" : [
+    {
+        "name" : "port"
+        ,"prefix": "--"
+        ,"desc" : locale.help_dict.ss1
+        ,"optional" : "true"
+
+        ,"config-paras" : [
+        {
+            "placeholder":"3000"
+            , "type" : "string"
+            , "optional" : "false"
+        }
+    ]
+    }
+    ,{
+        "name" : "ip"
+        ,"prefix": "-"
+        ,"desc" : locale.help_dict.ss2
+        ,"optional" : "true"
+
+        ,"config-paras" : [
+    ]
+    }
+    ,{
+        "name" : "serveronly"
+        ,"prefix": "-"
+        ,"desc" : locale.help_dict.ss3
+        ,"optional" : "true"
+
+        ,"config-paras" : [
+        ]
+    }
+]
+
+}
+
+
 exports.help_def.info =
 {
     "command" : "info"

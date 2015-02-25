@@ -12,6 +12,11 @@ exports.help_dict = {
 
    , "info0" : "当前Egret版本，以及安装路径"
 
+   , "ss0" : "启动Egret内置的服务器，并可立即在浏览器中运行项目"
+   , "ss1" : "指定端口号"
+   , "ss2" : "是否使用本机IP"
+   , "ss3" : "是否只运行服务器"
+
    , "create_manifest0" : "在工程目录下生成manifest.json清单文件"
    , "create_manifest1" : "生成所有文件的清单,若不指定则只生成文档类有引用到的类清单"
 
