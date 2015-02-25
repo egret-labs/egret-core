@@ -27,6 +27,15 @@
 
 
 module dragonBones {
+    /**
+     * @class dragonBones.Animation
+     * @classdesc
+     * Animation实例隶属于Armature,用于控制Armature的动画播放。
+     * An Animation instance is used to control the animation state of an Armature.
+     * @see dragonBones.Bone
+     * @see dragonBones.Armature
+     * @see dragonBones.AnimationState
+     */
 	export class Animation{
 		public static NONE:string = "none";
 		public static SAME_LAYER:string = "sameLayer";
@@ -34,9 +43,12 @@ module dragonBones {
 		public static SAME_LAYER_AND_GROUP:string = "sameLayerAndGroup";
 		public static ALL:string = "all";
 
-		/**
-		 * Whether animation tweening is enabled or not.
-		 */
+        /**
+         * 标记是否开启自动补间。
+         * 设置为 true时，Animation会根据动画数据的内容，在关键帧之间自动补间。设置为false时，所有动画均不补间
+         * 默认值：true。
+         * @member {boolean} dragonbones.Animation#tweenEnabled
+         */
 		public tweenEnabled:boolean;
 		private _armature:Armature;
 		private _animationStateList:Array<AnimationState>;
