@@ -191,20 +191,15 @@ module egret_native_localStorage {
     }
 
     export function save() {
-//        console.log("egret_native_localStorage::" + "WriteFile");
         egret_native.saveRecord(egret_native_localStorage.filePath, JSON.stringify(this.data));
     }
 
     export function init():void {
         if (egret_native.isRecordExists(egret_native_localStorage.filePath)) {
-//            console.log("egret_native_localStorage::" + "文件存在");
             var str:string = egret_native.loadRecord(egret_native_localStorage.filePath);
-//            console.log("egret_native_localStorage::" + str);
             this.data = JSON.parse(str);
-//            console.log("egret_native_localStorage::" + "ReadFileSuccess");
         }
         else {
-//            console.log("egret_native_localStorage::" + "文件不存在");
             this.data = {};
         }
 
@@ -222,13 +217,11 @@ egret.ContainerStrategy.prototype._setupContainer = function () {
 
 egret.ContentStrategy.prototype._getClientWidth = function () {
     var result = egret_native.EGTView.getFrameWidth();
-//    console.log("获取屏幕宽度：" + result);
     return result;
 };
 
 egret.ContentStrategy.prototype._getClientHeight = function () {
     var result = egret_native.EGTView.getFrameHeight();
-//    console.log("获取屏幕高度：" + result);
     return result;
 };
 

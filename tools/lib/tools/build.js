@@ -160,8 +160,8 @@ function help_example() {
     result += "    --module     只编译引擎中指定的部分模块，不编译项目；不填则编译全部模块\n";
     result += "    -k           编译EXML文件时保留生成的TS文件\n";
     result += "    --runtime    如果有native工程，则会将文件拷贝到工程里\n";
-    result += "    -noscan      编译游戏时，根据game_file_list获取编译列表";
-    result += "    -log   显示执行过程";
+    result += "    -noscan      编译游戏时，根据game_file_list获取编译列表\n";
+    result += "    -log         显示执行过程";
     return result;
 }
 
