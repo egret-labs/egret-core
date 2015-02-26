@@ -202,7 +202,7 @@ module egret {
             else if (!this.validate(length)) {
                 return null;
             }
-            if(bytes) {
+            if (bytes) {
                 bytes.validateBuffer(length);
             }
             else {
@@ -470,11 +470,26 @@ module egret {
          * @method egret.ByteArray#writeBytes
          */
         public writeBytes(bytes:ByteArray, offset:number = 0, length:number = 0):void {
-            this.validateBuffer(length);
+            var writeLength:number;
+            if (offset < 0) {
+                return;
+            }
+            if (length < 0) {
+                return;
+            }
+            else if (length == 0) {
+                writeLength = bytes.length - offset;
+            }
+            else {
+                writeLength = Math.min(bytes.length - offset, length);
+            }
+            if (writeLength > 0) {
+                this.validateBuffer(writeLength);
 
-            var tmp_data = new DataView(bytes.buffer);
-            for (var i = offset; i < bytes.length && i < length + offset; i++) {
-                this.data.setUint8(this.position++, tmp_data.getUint8(i));
+                var tmp_data = new DataView(bytes.buffer);
+                for (var i = offset; i < writeLength + offset; i++) {
+                    this.data.setUint8(this.position++, tmp_data.getUint8(i));
+                }
             }
         }
 
