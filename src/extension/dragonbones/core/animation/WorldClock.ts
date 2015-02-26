@@ -114,7 +114,7 @@ module dragonBones {
 		public clear():void{
 			this._animatableList.length = 0;
 		}
-		
+
         /**
          * 更新所有包含的 IAnimatable 实例，将他们的动画向前播放指定的时间。一般来说，这个方法需要在 ENTERFRAME 事件的响应函数中被调用
          * @param passedTime {number} 前进的时间

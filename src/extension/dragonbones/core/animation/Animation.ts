@@ -411,7 +411,7 @@ module dragonBones {
 
         /**
 		 * 所有动画名称列表.
-		 * @member {Array<string>} dragonBones.Animation#animationList
+		 * @member {string[]} dragonBones.Animation#animationList
 		 */
 		public get animationList():Array<string>{
 			return this._animationList;
@@ -463,7 +463,7 @@ module dragonBones {
 		
 		/**
 		 * 包含的所有动画数据列表
-		 * @member {Array<AnimationData>} dragonBones.Animation#animationDataList
+		 * @member {AnimationData[]} dragonBones.Animation#animationDataList
 		 * @see dragonBones.AnimationData.
 		 */
 		public get animationDataList():Array<AnimationData>{
