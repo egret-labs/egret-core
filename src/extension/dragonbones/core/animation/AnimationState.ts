@@ -28,11 +28,14 @@
 
 module dragonBones {
 
-	/**
-	 * @class dragonBones.AnimationState
-	 * @classdesc
-	 * @private
-	 */
+    /**
+     * @class dragonBones.AnimationState
+     * @classdesc
+     * AnimationState 实例由 Animation 实例播放动画时产生， 用于控制单个动画的播放。
+     * @see dragonBones.Animation
+     * @see dragonBones.AnimationData
+     * @see dragonBones.TimelineState
+     */
 	export class AnimationState{
 		private static _pool:Array<AnimationState> =[];
 		
@@ -63,38 +66,49 @@ module dragonBones {
 			
 			TimelineState._clear();
 		}
-		
-		/**
-		 * Sometimes, we want slots controlled by a spedific animation state when animation is doing mix or addition.
-		 * It determine if animation's color change, displayIndex change, visible change can apply to its display
+
+        /**
+		 * 标记是否控制display的切换。
+		 * 设置为 true时，该 AnimationState 会控制display的切换
+		 * 默认值：true。
+		 * @member {boolean} dragonBones.AnimationState#displayControl
+		 * @see dragonBones.Bone#displayController
+		 * @see dragonBones.Bone#display
 		 */
 		public displayControl:boolean;
-		
-		/**
-		 * If animation mixing use additive blending.
-		 */
+
 		public additiveBlending:boolean;
-		
-		/**
-		 * If animation auto fade out after play complete.
+
+        /**
+		 * 标记动画播放完毕时是否自动淡出。
+		 * 默认值：true。
+		 * @member {boolean} dragonBones.AnimationState#autoFadeOut
 		 */
 		public autoFadeOut:boolean;
-		/**
-		 * Duration of fade out. By default, it equals to fade in time.
+
+        /**
+		 * 淡出时间。
+		 * @member {number} dragonBones.AnimationState#fadeOutTime
 		 */
 		public fadeOutTime:number;
-		
-		/**
-		 * The weight of animation.
+
+        /**
+		 * 动画权重(0~1)。
+		 * 默认值：1。
+		 * @member {number} dragonBones.AnimationState#weight
 		 */
 		public weight:number;
 
-		/**
-		 * If auto genterate tween between keyframes.
+        /**
+		 * 是否自动补间。
+		 * @member {boolean} dragonBones.AnimationState#autoTween
 		 */
 		public autoTween:boolean;
-		/**
-		 * If generate tween between the lastFrame to the first frame for loop animation.
+
+        /**
+		 * 动画循环播放时，从最后一帧到第一帧是否自动补间。
+		 * 默认值：true
+		 * @member {boolean} dragonBones.AnimationState#lastFrameAutoTween
 		 */
 		public lastFrameAutoTween:boolean;
 		
@@ -155,14 +169,21 @@ module dragonBones {
 		}
 		
 //骨架装配
+
+        /**
+		 * 检查指定名称的骨头是否在遮罩中。只有在遮罩中的骨头动画才会被播放
+		 * @param boneName {string} dragonBones.AnimationState#containsBoneMask
+		 * @returns {boolean}
+		 */
 		public containsBoneMask(boneName:string):boolean{
 			return this._boneMasks.length == 0 || this._boneMasks.indexOf(boneName) >= 0;
 		}
 		
 		/**
-		 * Adds a bone which should be animated. This allows you to reduce the number of animations you have to create.
-		 * @param boneName {string} Bone's name.
-		 * @param ifInvolveChildBones {boolean} if involve child bone's animation.
+		 * 将一个骨头加入遮罩。只有加入遮罩的骨头的动画才会被播放，如果没有骨头加入遮罩，则所有骨头的动画都会播放。通过这个API可以实现只播放角色的一部分.
+		 * @param boneName {string} 骨头名称.
+		 * @param ifInvolveChildBones {boolean} 是否影响子骨头。默认值：true.
+		 * @returns {AnimationState} 动画播放状态实例
 		 */
 		public addBoneMask(boneName:string, ifInvolveChildBones:boolean = true):AnimationState{
 			this.addBoneToBoneMask(currentBone.name);
@@ -186,9 +207,10 @@ module dragonBones {
 		}
 		
 		/**
-		 * Removes a bone which was supposed be animated.
-		 * @param boneName {string} Bone's timeline name.
-		 * @param ifInvolveChildBones {boolean} If involved child bone's timeline.
+		 * 将一个指定名称的骨头从遮罩中移除.
+		 * @param boneName {string} 骨头名称.
+		 * @param ifInvolveChildBones {boolean} 是否影响子骨头。默认值：true.
+		 * @returns {AnimationState} 动画播放状态实例
 		 */
 		public removeBoneMask(boneName:string, ifInvolveChildBones:boolean = true):AnimationState{
 			this.removeBoneFromBoneMask(boneName);
@@ -210,7 +232,11 @@ module dragonBones {
 			
 			return this;
 		}
-		
+
+        /**
+		 * 清空骨头遮罩.
+		 * @returns {AnimationState} 动画播放状态实例
+		 */
 		public removeAllMixingTransform():AnimationState{
 			this._boneMasks.length = 0;
 			this._updateTimelineStates();
@@ -292,7 +318,8 @@ module dragonBones {
 		
 	//动画
 		/**
-		 * Play the current animation. 如果动画已经播放完毕, 将不会继续播放.
+		 * 播放当前动画。如果动画已经播放完毕, 将不会继续播放.
+		 * @returns {AnimationState} 动画播放状态实例
 		 */
 		public play():AnimationState{
 			this._isPlaying = true;
@@ -300,7 +327,8 @@ module dragonBones {
 		}
 		
 		/**
-		 * Stop playing current animation.
+		 * 暂停当前动画的播放。
+		 * @returns {AnimationState} 动画播放状态实例
 		 */
 		public stop():AnimationState{
 			this._isPlaying = false;
@@ -356,9 +384,9 @@ module dragonBones {
 		}
 		
 		/**
-		 * Fade out the animation state
-		 * @param fadeTotalTime {number} fadeOutTime
-		 * @param pausePlayhead {boolean} pauseBeforeFadeOutComplete pause the animation before fade out complete
+		 * 淡出当前动画
+		 * @param fadeTotalTime {number} 淡出时间
+		 * @param pausePlayhead {boolean} 淡出时动画是否暂停。
 		 */
 		public fadeOut(fadeTotalTime:number, pausePlayhead:boolean):AnimationState{
 			if(!this._armature){
@@ -749,68 +777,77 @@ module dragonBones {
 		}
 		
 		/**
-		 * The name of the animation state.
+		 * 动画的名字
+		 * @member {string} dragonBones.AnimationState#name
 		 */
 		public get name():string{
 			return this._name;
 		}
-		
-		/**
-		 * The layer of the animation. When calculating the final blend weights, animations in higher layers will get their weights.
+
+        /**
+		 * 动画所在的层
+		 * @member {number} dragonBones.AnimationState#layer
 		 */
 		public get layer():number{
 			return this._layer;
 		}
-		
-		/**
-		 * The group of the animation.
+
+        /**
+		 * 动画所在的组
+		 * @member {string} dragonBones.AnimationState#group
 		 */
 		public get group():string{
 			return this._group;
 		}
-		
-		/**
-		 * The clip that is being played by this animation state.
-		 * @see dragonBones.objects.AnimationData.
+
+        /**
+		 * 动画包含的动画数据
+		 * @member {AnimationData} dragonBones.AnimationState#clip
 		 */
 		public get clip():AnimationData{
 			return this._clip;
 		}
-		
-		/**
-		 * Is animation complete.
+
+        /**
+		 * 是否播放完成
+		 * @member {boolean} dragonBones.AnimationState#isComplete
 		 */
 		public get isComplete():boolean{
 			return this._isComplete; 
 		}
-		/**
-		 * Is animation playing.
+
+        /**
+		 * 是否正在播放
+		 * @member {boolean} dragonBones.AnimationState#isPlaying
 		 */
 		public get isPlaying():boolean{
 			return (this._isPlaying && !this._isComplete);
 		}
-		
-		/**
-		 * Current animation played times
+
+        /**
+		 * 当前播放次数
+		 * @member {number} dragonBones.AnimationState#currentPlayTimes
 		 */
 		public get currentPlayTimes():number{
 			return this._currentPlayTimes < 0 ? 0 : this._currentPlayTimes;
 		}
-		
-		/**
-		 * The length of the animation clip in seconds.
+
+        /**
+		 * 动画总时长（单位：秒）
+		 * @member {number} dragonBones.AnimationState#totalTime
 		 */
 		public get totalTime():number{
 			return this._totalTime * 0.001;
 		}
-		
-		/**
-		 * The current time of the animation.
+
+        /**
+		 * 动画当前播放时间（单位：秒）
+		 * @member {number} dragonBones.AnimationState#currentTime
 		 */
 		public get currentTime():number{
 			return this._currentTime < 0 ? 0 : this._currentTime * 0.001;
 		}
-		
+
 		public get fadeWeight():number{
 			return this._fadeWeight;
 		}
@@ -822,16 +859,18 @@ module dragonBones {
 		public get fadeTotalTime():number{
 			return this._fadeTotalTime;
 		}
-		
-		/**
-		 * The amount by which passed time should be scaled. Used to slow down or speed up the animation. Defaults to 1.
+
+        /**
+		 * 时间缩放系数。用于调节动画播放速度
+		 * @member {number} dragonBones.AnimationState#timeScale
 		 */
 		public get timeScale():number{
 			return this._timeScale;
 		}
-		
-		/**
-		 * playTimes Play times(0:loop forever, 1~+∞:play times, -1~-∞:will fade animation after play complete).
+
+        /**
+		 * 播放次数 (0:循环播放， >0:播放次数)
+		 * @member {number} dragonBones.AnimationState#playTimes
 		 */
 		public get playTimes():number{
 			return this._playTimes;
