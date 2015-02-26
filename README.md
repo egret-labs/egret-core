@@ -99,5 +99,6 @@ Egret Engine是一款使用JavaScript(TypeScript)编写的HTML5开源免费游�
 -------------------
 * 开发者论坛: http://bbs.egret-labs.org
 * 开发者群:
-  * 1群：141578440
-  * 2群：397297607
+  * 1群：141578440 (2000 members capacity / Full)
+  * 2群：397297607 (1000 members capacity / avaliable)
+  * 3群：399919028 (1000 members capacity / avaliable)
