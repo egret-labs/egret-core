@@ -166,7 +166,7 @@ module dragonBones {
 		}
 
         /**
-         * 强制更新指定名称的 Bone 及其包含的所有 Slot 的动画。
+         * 在下一帧强制更新指定名称的 Bone 及其包含的所有 Slot 的动画。
          * @param boneName {string} 骨头名。 默认值：null，相当于更新所有骨头。
          */
 		public invalidUpdate(boneName:string = null):void{
