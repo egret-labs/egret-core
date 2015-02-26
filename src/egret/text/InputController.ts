@@ -108,7 +108,9 @@ module egret {
             if (!this._text._visible) {
                 return;
             }
-
+            //强制更新输入框位置
+            this._isFirst = true;
+            this._updateTransform();
             this.stageText._show();
         }
 

@@ -2,7 +2,8 @@
     "document_class": "Main",
     "modules": [
         {
-            "name": "core"
+            "name": "core",
+            "name": "res"
         }
     ],
     "native": {
