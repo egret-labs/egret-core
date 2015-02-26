@@ -38,7 +38,7 @@ module dragonBones {
      */
 	export interface IAnimatable{
         /**
-         * 使用这个方法更新动画状态。一般来说，这个方法会在 ENTERFRAME 时间的响应函数中被调用
+         * 使用这个方法更新动画状态。一般来说，这个方法需要在 ENTERFRAME 事件的响应函数中被调用
          * @param passedTime 动画向前播放的时间（单位：秒）
          */
 		advanceTime(passedTime:number):void;
