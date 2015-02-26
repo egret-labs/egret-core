@@ -40,7 +40,7 @@ module egret {
          * @param actionCode {string} 错误信息
          * @param value {Object} 错误描述信息
          */
-        public static fatal(actionCode:string, value:Object = null) {
+        private static fatal(actionCode:string, value:Object = null) {
             egret.Logger.traceToConsole("Fatal", actionCode, value);
             throw new Error(egret.Logger.getTraceCode("Fatal", actionCode, value));
         }
@@ -61,7 +61,7 @@ module egret {
          * @param actionCode {string} 错误信息
          * @param value {Object} 错误描述信息
          */
-        public static warning(actionCode:string, value:Object = null) {
+        private static warning(actionCode:string, value:Object = null) {
             egret.Logger.traceToConsole("Warning", actionCode, value);
         }
 
