@@ -28,17 +28,50 @@
 
 module dragonBones {
 
+	/**
+	 * @class dragonBones.BoneData
+	 * @classdesc
+	 * 骨骼数据
+	 */
 	export class BoneData{
+		/**
+		 * 骨骼的名字
+		 * @member {string} dragonBones.BoneData#name
+		 */
 		public name:string;
+		/**
+		 * 父骨骼的名字
+		 * @member {string} dragonBones.BoneData#parent
+		 */
 		public parent:string;
+		/**
+		 * 长度，目前没什么用，默认值为0
+		 * @member {number} dragonBones.BoneData#length
+		 */
 		public length:number;
-		
+		/**
+		 * 绝对的transform
+		 * @member {dragonBones.DBTransform} dragonBones.BoneData#global
+		 */
 		public global:DBTransform;
+		/**
+		 * 相对的transform
+		 * @member {dragonBones.DBTransform} dragonBones.BoneData#transform
+		 */
 		public transform:DBTransform;
-		
+		/**
+		 * 是否继承父骨骼的缩放属性
+		 * @member {boolean} dragonBones.BoneData#inheritScale
+		 */
 		public inheritScale:boolean;
+		/**
+		 * 是否继承父骨骼的旋转属性
+		 * @member {boolean} dragonBones.BoneData#inheritRotation
+		 */
 		public inheritRotation:boolean;
-		
+		/**
+		 * 初始化各个属性
+		 */
 		public constructor(){
 			this.length = 0;
 			this.global = new DBTransform();
@@ -46,7 +79,9 @@ module dragonBones {
 			this.inheritRotation = true;
 			this.inheritScale = false;
 		}
-		
+		/**
+		 *释放资源
+		 */
 		public dispose():void{
 			this.global = null;
 			this.transform = null;

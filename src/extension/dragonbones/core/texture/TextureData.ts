@@ -28,11 +28,33 @@
 
 module dragonBones {
 
+	/**
+	 * @class dragonBones.TextureData
+	 * @classdesc
+	 * 纹理数据
+	 */
 	export class TextureData{
+		/**
+		 * 区域
+		 * @member {dragonBones.Rectangle} dragonBones.TextureData#region
+		 */
 		public region:Rectangle;
+		/**
+		 * 帧的区域
+		 * @member {dragonBones.Rectangle} dragonBones.TextureData#frame
+		 */
 		public frame:Rectangle;
+		/**
+		 *是否有旋转
+		 */
 		public rotated:boolean;
-		
+
+		/**
+		 *创建一个 TextureData 实例
+		 * @param region 区域
+		 * @param frame 帧的区域
+		 * @param rotated
+		 */
 		public constructor(region:Rectangle, frame:Rectangle, rotated:boolean){
 			this.region = region;
 			this.frame = frame;

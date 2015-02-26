@@ -28,7 +28,19 @@
 
 module dragonBones {
 
+	/**
+	 * @class dragonBones.ArmatureData
+	 * @classdesc
+	 * armature数据 一个armature数据包含一个角色的骨骼，皮肤，动画的数据
+	 * @see  dragonBones.BoneData
+	 * @see  dragonBones.SkinData
+	 * @see  dragonBones.AnimationData
+	 */
 	export class ArmatureData{
+		/**
+		 * armature数据的名字
+		 * @member {string} dragonBones.ArmatureData#name
+		 */
 		public name:string;
 		
 		private _boneDataList:Array<BoneData>;
@@ -42,6 +54,9 @@ module dragonBones {
             return object1[0] > object2[0] ? -1 : 1;
         }
 
+		/**
+		 * 创建一个ArmatureData实例
+		 */
 		public constructor(){
 			this._boneDataList = [];
 			this._skinDataList = [];
@@ -49,7 +64,10 @@ module dragonBones {
 			
 			//_areaDataList = new Vector.<IAreaData>(0, true);
 		}
-		
+
+		/**
+		 * 释放资源
+		 */
 		public dispose():void{
 			var i:number = this._boneDataList.length;
 			while(i --){
@@ -68,7 +86,12 @@ module dragonBones {
 			this._skinDataList = null;
 			this._animationDataList = null;
 		}
-		
+
+		/**
+		 * 根据骨骼的名字获取到骨骼数据
+		 * @param boneName 骨骼的名字
+		 * @returns {*} 骨骼数据
+		 */
 		public getBoneData(boneName:string):BoneData{
 			var i:number = this._boneDataList.length;
 			while(i --){
@@ -78,7 +101,12 @@ module dragonBones {
 			}
 			return null;
 		}
-		
+
+		/**
+		 * 根据皮肤的名字获取到皮肤数据
+		 * @param skinName  皮肤的名字
+		 * @returns {*}  皮肤数据
+		 */
 		public getSkinData(skinName:string):SkinData{
 			if(!skinName && this._skinDataList.length > 0){
 				return this._skinDataList[0];
@@ -92,7 +120,12 @@ module dragonBones {
 			
 			return null;
 		}
-		
+
+		/**
+		 * 根据动画的名字获取动画数据
+		 * @param animationName 动画的名字
+		 * @returns {*} 动画数据
+		 */
 		public getAnimationData(animationName:string):AnimationData{
 			var i:number = this._animationDataList.length;
 			while(i --){
@@ -102,7 +135,11 @@ module dragonBones {
 			}
 			return null;
 		}
-		
+
+		/**
+		 *添加一个骨骼数据
+		 * @param boneData
+		 */
 		public addBoneData(boneData:BoneData):void{
 			if(!boneData){
 				throw new Error();
@@ -115,7 +152,11 @@ module dragonBones {
 				throw new Error();
 			}
 		}
-		
+
+		/**
+		 * 添加一个皮肤数据
+		 * @param skinData
+		 */
 		public addSkinData(skinData:SkinData):void{
 			if(!skinData){
 				throw new Error();
@@ -128,7 +169,11 @@ module dragonBones {
 				throw new Error();
 			}
 		}
-		
+
+		/**
+		 * 添加一个动画数据
+		 * @param animationData
+		 */
 		public addAnimationData(animationData:AnimationData):void{
 			if(!animationData){
 				throw new Error();
@@ -138,7 +183,10 @@ module dragonBones {
 				this._animationDataList[this._animationDataList.length] = animationData;
 			}
 		}
-		
+
+		/**
+		 * 对骨骼按照骨骼数的层级关系排序
+		 */
 		public sortBoneDataList():void{
 			var i:number = this._boneDataList.length;
 			if(i == 0){
@@ -166,13 +214,26 @@ module dragonBones {
 		}
 
 
-
+		/**
+		 * 获取骨骼数据列表
+		 * @returns {Array<BoneData>}
+		 */
 		public get boneDataList():Array<BoneData>{
 			return this._boneDataList;
 		}
+
+		/**
+		 * 获取皮肤数据列表
+		 * @returns {Array<SkinData>}
+		 */
 		public get skinDataList():Array<SkinData>{
 			return this._skinDataList;
 		}
+
+		/**
+		 * 获得动画数据列表
+		 * @returns {Array<AnimationData>}
+		 */
 		public get animationDataList():Array<AnimationData>{
 			return this._animationDataList;
 		}

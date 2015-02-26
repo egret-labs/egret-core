@@ -28,19 +28,24 @@
 
 module dragonBones {
 
+	/**
+	 * @class dragonBones.ITextureAltas
+	 * @classdesc
+	 * 纹理集的接口
+	 */
 	export interface ITextureAtlas{
 		/**
-		 * The name of this ITextureAtlas.
+		 * 这个ITextureAtlas的名字
 		 */
 		name:string;
 		/**
-		 * Clean up resources.
+		 * 释放资源
 		 */
 		dispose():void;
 		/**
-		 * Get the specific region of the TextureAtlas occupied by assets defined by that name.
-		 * @param name The name of the assets represented by that name.
-		 * @return Rectangle The rectangle area occupied by those assets.
+		 * 获得纹理集TextureAltas中的由name指定的资源的那块矩形区域
+		 * @param name 资源的名字
+		 * @return Rectangle 资源的矩形区域
 		 */
 		getRegion(name:string):Rectangle
 	}

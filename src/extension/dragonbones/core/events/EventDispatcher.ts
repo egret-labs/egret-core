@@ -27,12 +27,22 @@
 
 
 module dragonBones {
+    /**
+     * @class dragonBones.EventDispatcher
+     * @classdesc
+     * 事件派发者
+     */
     export class EventDispatcher {
         private _listenersMap:Object;
 
         constructor() {
         }
 
+        /**
+         *是否有指定类型的事件侦听函数
+         * @param type 事件类型
+         * @returns {boolean}
+         */
         public hasEventListener(type:string):boolean {
             if(this._listenersMap && this._listenersMap[type]) {
                 return true;
@@ -40,6 +50,11 @@ module dragonBones {
             return false;
         }
 
+        /**
+         *添加一个针对指定类型的事件侦听函数
+         * @param type 事件类型
+         * @param listener 事件侦听函数
+         */
         public addEventListener(type:string, listener:Function):void {
             if (type && listener) {
                 if (!this._listenersMap) {
@@ -58,6 +73,11 @@ module dragonBones {
             }
         }
 
+        /**
+         *移除一个指定类型的事件侦听函数
+         * @param type 事件类型
+         * @param listener 需要移除的事件侦听函数
+         */
         public removeEventListener(type:string, listener:Function):void {
             if (!this._listenersMap || !type || !listener) {
                 return;
@@ -79,6 +99,10 @@ module dragonBones {
             }
         }
 
+        /**
+         *移除指定类型的所有的事件侦听函数
+         * @param type 事件类型
+         */
         public removeAllEventListeners(type:string):void {
             if (type) {
                 delete this._listenersMap[type];
@@ -88,6 +112,10 @@ module dragonBones {
             }
         }
 
+        /**
+         * 派发事件
+         * @param event 被派发的事件
+         */
         public dispatchEvent(event:Event):void {
             if (event) {
                 var listeners:Array<Function> = this._listenersMap[event.type];

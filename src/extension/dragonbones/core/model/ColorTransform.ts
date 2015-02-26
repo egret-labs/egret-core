@@ -27,14 +27,51 @@
 
 
 module dragonBones {
+    /**
+     * @class dragonBones.ColorTransform
+     * @classdesc
+     * 表示颜色的transform
+     */
     export class ColorTransform {
+        /**
+         * 透明度增幅，计算时用乘法
+         * @member {number} dragonBones.ColorTransform#alphaMultiplier
+         */
         public alphaMultiplier:number;
+        /**
+         * 透明度偏移，计算时用加法
+         * @member {number} dragonBones.ColorTransform#alphaOffset
+         */
         public alphaOffset:number;
+        /**
+         * 蓝色值增幅，计算时用乘法
+         * @member {number} dragonBones.ColorTransform#buleMultiplier
+         */
         public blueMultiplier:number;
+        /**
+         *蓝色值偏移，计算时用加法
+         * @member {number} dragonBones.ColorTransform#buleOffset
+         */
         public blueOffset:number;
+        /**
+         *绿色值增幅，计算时用乘法
+         * @member {number} dragonBones.ColorTransform#greenMultiplier
+         */
         public greenMultiplier:number;
+        /**
+         *绿色值偏移，计算时用加法
+         * @member {number} dragonBones.ColorTransform#greenOffset
+         */
         public greenOffset:number;
+        /**
+         *红色值增幅，计算时用乘法
+         * @member {number} dragonBones.ColorTransform#redMultiplier
+         */
         public redMultiplier:number;
+        /**
+         *红色值偏移，计算时用加法
+         * @member {number} dragonBones.ColorTransform#redOffset
+         */
         public redOffset:number;
 
         constructor() {

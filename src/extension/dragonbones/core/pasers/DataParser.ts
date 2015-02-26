@@ -27,10 +27,20 @@
 
 
 module dragonBones {
-
+	/**
+	 *@class dragonBones.DataParser
+	 * @classdesc
+	 * 数据解析
+	 */
 	export class DataParser{
 		private static tempDragonBonesData:DragonBonesData;
-		
+
+		/**
+		 *解析纹理集数据
+		 * @param rawData纹理集数据xml或者json
+		 * @param scale纹理资源的缩放，默认为1，不缩放
+		 * @returns {any}返回纹理集数据，存放TexutrueData的字典类型
+		 */
 		public static parseTextureAtlasData(rawData:any, scale:number = 1):any{
 			var textureAtlasData:any = {};
 			var subTextureFrame:Rectangle;
@@ -66,7 +76,12 @@ module dragonBones {
 			
 			return textureAtlasData;
 		}
-		
+
+		/**
+		 * 解析DragonBones的数据，xml或者json，该数据包含了骨骼，皮肤，动画的数据
+		 * @param rawDataToParse DragonBones的数据，xml或者json格式
+		 * @returns {DragonBonesData} 返回DragonBones引擎使用的数据格式
+		 */
 		public static parseDragonBonesData(rawDataToParse:any):DragonBonesData{
 			if(!rawDataToParse){
 				throw new Error();

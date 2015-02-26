@@ -27,15 +27,34 @@
 
 
 module dragonBones {
+	/**
+	 * @class dragonBones.DragonBonesData
+	 * @classdesc
+	 * DragonBones的数据，包含了骨架数据和显示对象数据
+	 */
 	export class DragonBonesData{
+		/**
+		 * DrabonBones数据的名字
+		 * @member {string} dragonBones.DragonBonesData#name
+		 */
 		public name:string;
-        public isGlobal:boolean;
+		/**
+		 * 数据的类型，是否是全局数据
+		 * @member {boolean} dragonBones.DragonBonesData#isGlobal
+		 */
+		public isGlobal:boolean;
 		private _armatureDataList:Array<ArmatureData> = [];
 		private _displayDataDictionary:any = {};
-		
+
+		/**
+		 * 构造函数，实例化一个DragonBonesData类
+		 */
 		public constructor(){
 		}
-		
+
+		/**
+		 * 释放资源
+		 */
 		public dispose():void{
             for(var key in this._armatureDataList)
             {
@@ -48,11 +67,20 @@ module dragonBones {
 			this.removeAllDisplayData();
 			this._displayDataDictionary = null;
 		}
-		
+
+		/**
+		 * 获取所有的骨架数据
+		 * @returns {Array<ArmatureData>}
+		 */
 		public get armatureDataList():Array<ArmatureData>{
 			return this._armatureDataList;
 		}
-		
+
+		/**
+		 * 通过骨架的名字获取骨架的数据
+		 * @param armatureName 想要获取的骨架的名字
+		 * @returns {*} 骨架数据 ArmatureData
+		 */
 		public getArmatureDataByName(armatureName:string):ArmatureData{
 			var i:number = this._armatureDataList.length;
 			while(i --){
@@ -63,7 +91,11 @@ module dragonBones {
 			
 			return null;
 		}
-		
+
+		/**
+		 * 添加一个骨架数据
+		 * @param armatureData
+		 */
 		public addArmatureData(armatureData:ArmatureData):void{
 			if(!armatureData){
 				throw new Error();
@@ -76,14 +108,22 @@ module dragonBones {
 				throw new Error();
 			}
 		}
-		
+
+		/**
+		 * 移除一个骨架数据
+		 * @param armatureData
+		 */
 		public removeArmatureData(armatureData:ArmatureData):void{
 			var index:number = this._armatureDataList.indexOf(armatureData);
 			if(index >= 0){
 				this._armatureDataList.splice(index, 1);
 			}
 		}
-		
+
+		/**
+		 * 根据骨架的名字，移除该骨架的数据
+		 * @param armatureName 想要移除的骨架的名字
+		 */
 		public removeArmatureDataByName(armatureName:string):void{
 			var i:number = this._armatureDataList.length;
 			while(i --){
@@ -92,19 +132,35 @@ module dragonBones {
 				}
 			}
 		}
-		
+
+		/**
+		 * 根据名字获取显示对象数据
+		 * @param name 想要获取的显示对象数据的名字
+		 * @returns {any} 显示对象数据 DisplayData
+		 */
 		public getDisplayDataByName(name:string):DisplayData{
 			return this._displayDataDictionary[name];
 		}
-		
+
+		/**
+		 *添加一个显示对象数据
+		 * @param displayData 需要被添加的显示对象数据
+		 */
 		public addDisplayData(displayData:DisplayData):void{
 			this._displayDataDictionary[displayData.name] = displayData;
 		}
-		
+
+		/**
+		 *根据显示对象的名字移除该显示对象数据
+		 * @param name 显示对象的名字
+		 */
 		public removeDisplayDataByName(name:string):void{
 			delete this._displayDataDictionary[name]
 		}
-		
+
+		/**
+		 *移除所有的显示对象数据
+		 */
 		public removeAllDisplayData():void{
 			for(var name in this._displayDataDictionary){
 				delete this._displayDataDictionary[name];

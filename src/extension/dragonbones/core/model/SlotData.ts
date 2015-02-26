@@ -28,19 +28,49 @@
 
 module dragonBones {
 
+	/**
+	 * @class dragonBones.SlotData
+	 * @classdesc
+	 * 插槽数据，插槽是由骨骼控制的，可以装入显示对象的容器，显示对象可以是图片或者子骨架
+	 * 插槽可插入一个或者多个显示对象，但是同一时刻只能显示一个显示对象
+	 * 插槽支持关键帧动画，如果有多个显示对象，可以指定哪一帧显示哪一个显示对象
+	 */
 	export class SlotData{
+		/**
+		 * 插槽数据的名字
+		 * @member {string} dragonBones.SlotData#name
+		 */
 		public name:string;
+		/**
+		 * 绑定的骨骼的名字，一个插槽仅受一个骨骼控制
+		 * @member {string} dragonBones.SlotData#parent
+		 */
 		public parent:string;
+		/**
+		 * z轴排序，z轴是垂直于屏幕的轴，zOrder约小，越靠里
+		 * 所以如果有重叠，zOrder大的插槽会挡住zOrder小的插槽
+		 * @member {number} dragonBones.SlotData#zOrder
+		 */
 		public zOrder:number;
-        public blendMode:string;
+		/**
+		 * 混合模式
+		 * @member {string} dragonBones.SlotData#blendMode
+		 */
+		public blendMode:string;
 		
 		private _displayDataList:Array<DisplayData>;
-		
+
+		/**
+		 * 构造函数，实例化一个SlotData类
+		 */
 		public constructor(){
 			this._displayDataList = [];
 			this.zOrder = 0;
 		}
-		
+
+		/**
+		 * 释放资源
+		 */
 		public dispose():void{
 			var i:number = this._displayDataList.length;
 			while(i --){
@@ -48,7 +78,11 @@ module dragonBones {
 			}
 			this._displayDataList = null;
 		}
-		
+
+		/**
+		 * 添加一个显示对象数据
+		 * @param displayData
+		 */
 		public addDisplayData(displayData:DisplayData):void{
 			if(!displayData){
 				throw new Error();
@@ -60,7 +94,12 @@ module dragonBones {
 				throw new Error();
 			}
 		}
-		
+
+		/**
+		 * 根据显示对象的名字获取显示对象数据
+		 * @param displayName 想要获取的显示对象的名字
+		 * @returns {*} 返回显示对象昂数据，如果没有返回null
+		 */
 		public getDisplayData(displayName:string):DisplayData{
 			var i:number = this._displayDataList.length;
 			while(i --){
@@ -71,7 +110,11 @@ module dragonBones {
 			
 			return null;
 		}
-		
+
+		/**
+		 * 获取所有的显示对象
+		 * @returns {Array<DisplayData>}
+		 */
 		public get displayDataList():Array<DisplayData>{
 			return this._displayDataList;
 		}

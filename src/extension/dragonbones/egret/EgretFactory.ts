@@ -27,6 +27,12 @@
 
 
 module dragonBones {
+    /**
+     * @class dragonBones.EgretFactory
+     * @extends dragonBones.BaseFactory
+     * @classdesc
+     * Egret引擎使用的dragonBones工厂
+     */
     export class EgretFactory extends BaseFactory {
         constructor() {
             super(this);

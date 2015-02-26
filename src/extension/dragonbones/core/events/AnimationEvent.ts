@@ -28,6 +28,12 @@
 
 module dragonBones {
 
+	/**
+	 * @class dragonBones.AnimationEvent
+	 * @extends dragonBones.Event
+	 * @classdesc
+	 * 动画事件
+	 */
 	export class AnimationEvent extends Event{
 		/**
 		 * 不推荐使用.
@@ -37,66 +43,74 @@ module dragonBones {
 		}
 		
 		/**
-		 * Dispatched when the playback of an animation fade in.
+		 * 当动画缓入的时候派发
 		 */
 		public static FADE_IN:string = "fadeIn";
 		
 		/**
-		 * Dispatched when the playback of an animation fade out.
+		 * 当动画缓出的时候派发
 		 */
 		public static FADE_OUT:string = "fadeOut";
 		
 		/**
-		 * Dispatched when the playback of an animation starts.
+		 * 当动画开始播放时派发
 		 */
 		public static START:string = "start";
 		
 		/**
-		 * Dispatched when the playback of a animation stops.
+		 * 当动画停止时派发
 		 */
 		public static COMPLETE:string = "complete";
 		
 		/**
-		 * Dispatched when the playback of a animation completes a loop.
+		 * 当动画播放完一轮后派发
 		 */
 		public static LOOP_COMPLETE:string = "loopComplete";
 		
 		/**
-		 * Dispatched when the playback of an animation fade in complete.
+		 * 当动画缓入完成时派发
 		 */
 		public static FADE_IN_COMPLETE:string = "fadeInComplete";
 		
 		/**
-		 * Dispatched when the playback of an animation fade out complete.
+		 * 当动画缓出结束后派发
 		 */
 		public static FADE_OUT_COMPLETE:string = "fadeOutComplete";
 		
 		/**
 		 * 不推荐的API.
+		 * @member {string} dragonBones.AnimationEvent#movementID
 		 */
 		public get movementID():string{
 			return this.animationName;
 		}
 		
 		/**
-		 * The animationState instance.
+		 * animationState 的实例.
+		 * @member {dragonBones.AnimationState} dragonBones.AnimationEvent#animationState
 		 */
 		public animationState:AnimationState;
 		
 		/**
-		 * The armature that is the taget of this event.
+		 * 配发出事件的骨架
+		 * @member {dragonBones.Armature} dragonBones.AnimationEvent#armature
 		 */
 		public get armature():Armature{
 			return <Armature><any> (this.target);
 		}
-		
+
+		/**
+		 * 获取动画的名字
+		 * @returns {string}
+		 * @member {string} dragonBones.AnimationEvent#animationName
+		 */
 		public get animationName():string{
 			return this.animationState.name;
 		}
 		
 		/**
-		 * Creates a new AnimationEvent instance.
-		 * @param type
+		 * 创建一个新的 AnimationEvent 的实例
+		 * @param type 事件的类型
 		 * @param cancelable
 		 */
 		public constructor(type:string, cancelable:boolean = false){

@@ -27,19 +27,51 @@
 
 
 module dragonBones {
+	/**
+	 * @class dragonBones.Frame
+	 * @classdesc
+	 *关键帧数据
+	 */
 	export class Frame{
+		/**
+		 *位置
+		 * @type {number}
+		 * @member {number} dragonBones.Frame#position
+		 */
 		public position:number = 0;
+		/**
+		 *持续时间
+		 * @type {number}
+		 * @member {number} dragonBones.Frame#duration
+		 */
 		public duration:number = 0;
-		
+		/**
+		 *帧标签
+		 * @member {string} dragonBones.Frame#action
+		 */
 		public action:string;
+		/**
+		 *帧时间
+		 * @member {string} dragonBones.Frame#event
+		 */
 		public event:string;
+		/**
+		 *帧声音
+		 * @member {string} dragonBones.Frame#sound
+		 */
 		public sound:string;
-		
+
+		/**
+		 *构造函数
+		 */
 		public constructor(){
 			this.position = 0;
 			this.duration = 0;
 		}
-		
+
+		/**
+		 *释放资源
+		 */
 		public dispose():void{
 		}
 	}

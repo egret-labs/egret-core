@@ -27,15 +27,39 @@
 
 
 module dragonBones {
+    /**
+     * @class dragonBones.Point
+     * @classdesc
+     * Point 对象表示二维坐标系统中的某个位置，其中 x 表示水平轴，y 表示垂直轴。
+     * 下面的代码在 (0,0) 处创建一个点：
+     *   var myPoint:Point = new Point();
+     */
     export class Point {
+        /**
+         *该点的水平坐标。
+         * @member {number} dragonBones.Point#x
+         */
         public x:number;
+        /**
+         *该点的垂直坐标。
+         * @member {number} dragonBones.Point#y
+         */
         public y:number;
 
+        /**
+         *创建一个新点。
+         * @param x 该点的水平坐标。
+         * @param y 该点的垂直坐标。
+         */
         constructor(x:number = 0, y:number = 0) {
             this.x = x;
             this.y = y;
         }
 
+        /**
+         *返回包含 x 和 y 坐标的值的字符串。
+         * @returns {string}
+         */
         public toString():string {
             return "[Point (x=" + this.x + " y=" + this.y + ")]";
         }

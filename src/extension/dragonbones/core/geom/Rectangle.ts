@@ -27,12 +27,41 @@
 
 
 module dragonBones {
+    /**
+     * @class dragonBones.geom
+     * @classdesc
+     * Rectangle 对象是按其位置（由它左上角的点 (x, y) 确定）以及宽度和高度定义的区域。
+     * Rectangle 类的 x、y、width 和 height 属性相互独立；更改一个属性的值不会影响其他属性。
+     */
     export class Rectangle {
+        /**
+         * 矩形左上角的 x 坐标。
+         * @member {number} dragonBones.Rectangle#x
+         */
         public x:number;
+        /**
+         * 矩形左上角的 y 坐标。
+         * @member {number} dragonBones.Rectangle#y
+         */
         public y:number;
+        /**
+         * 矩形的宽度（以像素为单位）
+         * @member {number} dragonBones.Rectangle#width
+         */
         public width:number;
+        /**
+         * 矩形的高度（以像素为单位）。
+         * @member {number} dragonBones.Rectangle#height
+         */
         public height:number;
 
+        /**
+         *创建一个新 Rectangle 对象，其左上角由 x 和 y 参数指定，并具有指定的 width 和 height 参数。
+         * @param x 矩形左上角的 x 坐标。
+         * @param y 矩形左上角的 y 坐标。
+         * @param width 矩形的宽度（以像素为单位）
+         * @param height 矩形的高度（以像素为单位）。
+         */
         constructor(x:number = 0, y:number = 0, width:number = 0, height:number = 0) {
             this.x = x;
             this.y = y;
