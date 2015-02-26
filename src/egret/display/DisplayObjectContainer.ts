@@ -162,7 +162,9 @@ module egret {
                 var list = DisplayObjectContainer.__EVENT__ADD_TO_STAGE_LIST;
                 while (list.length > 0) {
                     var childAddToStage = list.shift();
-                    childAddToStage.dispatchEventWith(Event.ADDED_TO_STAGE);
+                    if (notifyListeners){
+                        childAddToStage.dispatchEventWith(Event.ADDED_TO_STAGE);
+                    }
                 }
             }
 
@@ -207,14 +209,18 @@ module egret {
         public _doRemoveChild(index:number, notifyListeners:boolean = true):DisplayObject {
             var locChildren = this._children;
             var child:DisplayObject = locChildren[index];
-            if (notifyListeners)
-                child.dispatchEventWith(Event.REMOVED, true)
+            if (notifyListeners){
+                child.dispatchEventWith(Event.REMOVED, true);
+            }
+
             if (this._stage) {//在舞台上
                 child._onRemoveFromStage();
                 var list = DisplayObjectContainer.__EVENT__REMOVE_FROM_STAGE_LIST
                 while (list.length > 0) {
                     var childAddToStage = list.shift();
-                    childAddToStage.dispatchEventWith(Event.REMOVED_FROM_STAGE);
+                    if (notifyListeners){
+                        childAddToStage.dispatchEventWith(Event.REMOVED_FROM_STAGE);
+                    }
                     childAddToStage._stage = null;
                 }
             }
