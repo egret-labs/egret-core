@@ -28,11 +28,19 @@
 
 module dragonBones {
 
+    /**
+     * @class dragonBones.IAnimatable
+     * @classdesc
+     * TimelineState 负责计算 Bone 的时间轴动画。
+     * TimelineState 实例隶属于 AnimationState. AnimationState在创建时会为每个包含动作的 Bone生成一个 TimelineState 实例.
+     * @see dragonBones.WorldClock
+     * @see dragonBones.Armature
+     */
 	export interface IAnimatable{
-		/**
-		 * Update the animation using this method typically in an ENTERFRAME Event or with a Timer.
-		 * @param The amount of second to move the playhead ahead.
-		 */
+        /**
+         * 使用这个方法更新动画状态。一般来说，这个方法会在 ENTERFRAME 时间的响应函数中被调用
+         * @param passedTime 动画向前播放的时间（单位：秒）
+         */
 		advanceTime(passedTime:number):void;
 	}
 }

@@ -34,7 +34,6 @@ module dragonBones {
      * AnimationState 实例由 Animation 实例播放动画时产生， 用于控制单个动画的播放。
      * @see dragonBones.Animation
      * @see dragonBones.AnimationData
-     * @see dragonBones.TimelineState
      */
 	export class AnimationState{
 		private static _pool:Array<AnimationState> =[];
