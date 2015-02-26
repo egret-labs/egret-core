@@ -28,26 +28,37 @@
 
 module dragonBones {
 
+    /**
+     * @class dragonBones.DBObject
+     * @classdesc
+     * DBObject 是 Bone 和 Slot 的基类
+     * @see dragonBones.Bone
+     * @see dragonBones.Slot
+     */
 	export class DBObject{
 		public name:string;
-		
-		/**
-		 * An object that can contain any user extra data.
-		 */
+
+        /**
+         * 存储额外的用户数据。
+         * @member {any} dragonBones.DBObject#userData
+         */
 		public userData:any;
-		
-		/**
-		 * 
-		 */
+
+        /**
+         * 是否继承父亲的旋转属性。
+         * @member {boolean} dragonBones.DBObject#inheritRotation
+         */
 		public inheritRotation:boolean;
-		
-		/**
-		 * 
-		 */
+
+        /**
+         * 是否继承父亲的缩放属性。
+         * @member {boolean} dragonBones.DBObject#inheritScale
+         */
 		public inheritScale:boolean;
 
         /**
-         *
+         * 是否继承父亲的平移属性。
+         * @member {boolean} dragonBones.DBObject#inheritTranslation
          */
         public inheritTranslation:boolean;
 
@@ -60,29 +71,30 @@ module dragonBones {
         public static _tempParentGlobalTransform:DBTransform = new DBTransform();
 
         /**
-		 * This DBObject instance global transform instance.
-		 * @see dragonBones.objects.DBTransform
-		 */
+         * 相对世界坐标的 DBTransform 实例。
+         * @member {DBTransform} dragonBones.DBObject#global
+         */
 		public get global():DBTransform{
 			return this._global;
 		}
 		
 		/** @private */
 		public _origin:DBTransform;
-		/**
-		 * This DBObject instance related to parent transform instance.
-		 * @see dragonBones.objects.DBTransform
-		 */
+        /**
+         * 骨架数据中的原始的相对父亲的 DBTransform 实例。
+         * @member {DBTransform} dragonBones.DBObject#origin
+         */
 		public get origin():DBTransform{
 			return this._origin;
 		}
 		
 		/** @private */
 		public _offset:DBTransform;
-		/**
-		 * This DBObject instance offset transform instance (For manually control).
-		 * @see dragonBones.objects.DBTransform
-		 */
+
+        /**
+         * 用于运行时动态调整的 DBTransform 实例。
+         * @member {DBTransform} dragonBones.DBObject#offset
+         */
 		public get offset():DBTransform{
 			return this._offset;
 		}
@@ -135,10 +147,10 @@ module dragonBones {
             this.inheritScale = true;
             this.inheritTranslation = true;
 		}
-		
-		/**
-		 * Cleans up any resources used by this DBObject instance.
-		 */
+
+        /**
+         * 清理使用的资源用于垃圾回收
+         */
 		public dispose():void{
 			this.userData = null;
 			

@@ -31,7 +31,7 @@ module dragonBones {
     /**
      * @class dragonBones.Bone
      * @classdesc
-     * A Bone instance represents a single joint in an Armature instance. An Armature instance can be made up of many Bone instances.
+     * Bone 实例代表 Armature 中的一个骨头。一个Armature实例可以由很多 Bone组成。
      * @extends dragonBones.DBObject
      */
 	export class Bone extends DBObject{
@@ -45,16 +45,39 @@ module dragonBones {
 			
 			return outputBone;
 		}
-		
-		/**
-		 * AnimationState that slots belong to the bone will be controlled by.
-		 * Sometimes, we want slots controlled by a spedific animation state when animation is doing mix or addition.
-		 */
+
+        /**
+         * display控制者的名字，该名字对应一个 AnimationState 实例。
+         * 当动画中有多个 AnimationState 存在时，我们可以通过指定 displayController 实现只有某个 AnimationState 能够控制 display 的切换。
+         * 默认值：null。意味着所有 AnimationState 都能控制display的切换
+         * @member {string} dragonBones.Bone#displayController
+         * @see dragonBones.AnimationState.
+         */
 		public displayController:string;
 
-        public applyOffsetTranslationToChild:Boolean = true;
-        public applyOffsetRotationToChild:Boolean = true;
-        public applyOffsetScaleToChild:Boolean = false;
+        /**
+         * 标记是否将offset中的平移分量作用到子骨头
+         * 默认值：true
+         * @member {true} dragonBones.Bone#applyOffsetTranslationToChild
+         * @see dragonBones.Bone#offset
+         */
+        public applyOffsetTranslationToChild:boolean = true;
+
+        /**
+         * 标记是否将offset中的旋转分量作用到子骨头
+         * 默认值：true
+         * @member {true} dragonBones.Bone#applyOffsetRotationToChild
+         * @see dragonBones.Bone#offset
+         */
+        public applyOffsetRotationToChild:boolean = true;
+
+        /**
+         * 标记是否将offset中的缩放分量作用到子骨头
+         * 默认值：true
+         * @member {true} dragonBones.Bone#applyOffsetScaleToChild
+         * @see dragonBones.Bone#offset
+         */
+        public applyOffsetScaleToChild:boolean = false;
 
 		/** @private */
 		public _boneList:Array<Bone>;
@@ -127,12 +150,11 @@ module dragonBones {
 		}
 		
 //骨架装配
-		/**
-		 * If contains some bone or slot
-		 * @param Slot or Bone instance
-		 * @return Boolean
-		 * @see dragonBones.core.DBObject
-		 */
+        /**
+         * 检查是否包含指定的 Bone 或者 Slot
+         * @param child {DBObject} Bone 实例 或者 Slot 实例
+         * @returns {boolean}
+         */
 		public contains(child:DBObject):boolean{
 			if(!child){
 				throw new Error();
@@ -146,14 +168,19 @@ module dragonBones {
 			}
 			return ancestor == this;
 		}
-		
+
+        /**
+         * 添加指定的 Bone 实例做为当前 Bone 实例的子骨头
+         * @param childBone {Bone} 需要添加的 Bone 实例
+         * @param updateLater {boolean} 是否延迟更新。默认false。当需要一次性添加很多 Bone 时，开启延迟更新能够提高效率
+         */
 		public addChildBone(childBone:Bone, updateLater:boolean = false):void{
 			if(!childBone){
 				throw new Error();
 			}
 			
 			if(childBone == this || childBone.contains(this)){
-				throw new Error(egret.getString(4000));
+				throw new Error();
 			}
 			
 			if(childBone.parent == this){
@@ -172,7 +199,12 @@ module dragonBones {
 				this._armature._updateAnimationAfterBoneListChanged();
 			}
 		}
-		
+
+        /**
+         * 从当前 Bone 实例中移除指定的子骨头
+         * @param childBone {Bone} 需要移除的 Bone 实例
+         * @param updateLater {boolean} 是否延迟更新。默认false。当需要一次性移除很多 Bone 时，开启延迟更新能够提高效率
+         */
 		public removeChildBone(childBone:Bone, updateLater:boolean = false):void{
 			if(!childBone){
 				throw new Error();
@@ -191,7 +223,11 @@ module dragonBones {
 				this._armature._updateAnimationAfterBoneListChanged(false);
 			}
 		}
-		
+
+        /**
+         * 向当前 Bone 实例中添加指定的 Slot 实例
+         * @param childSlot {Slot} 需要添加的 Slot 实例
+         */
 		public addSlot(childSlot:Slot):void{
 			if(!childSlot){
 				throw new Error();
@@ -205,7 +241,11 @@ module dragonBones {
 			childSlot._setParent(this);
 			childSlot.setArmature(this._armature);
 		}
-		
+
+        /**
+         * 从当前 Bone 实例中移除指定的 Slot 实例
+         * @param childSlot {Slot} 需要移除的 Slot 实例
+         */
 		public removeSlot(childSlot:Slot):void{
 			if(!childSlot){
 				throw new Error();
@@ -245,29 +285,30 @@ module dragonBones {
 				this._slotList[i].setArmature(this._armature);
 			}
 		}
-		
-		/**
-		 * Get all Bone instance associated with this bone.
-		 * @return A Vector.&lt;Slot&gt; instance.
-		 * @see dragonBones.Slot
-		 */
+
+        /**
+         * 获取当前骨头包含的所有 Bone 实例
+         * @param returnCopy {boolean} 是否返回拷贝。默认：true
+         * @returns {Bone[]}
+         */
 		public getBones(returnCopy:boolean = true):Array<Bone>{
 			return returnCopy?this._boneList.concat():this._boneList;
 		}
-		
-		/**
-		 * Get all Slot instance associated with this bone.
-		 * @return A Vector.&lt;Slot&gt; instance.
-		 * @see dragonBones.Slot
-		 */
+
+        /**
+         * 获取当前骨头包含的所有 Slot 实例
+         * @param returnCopy {boolean} 是否返回拷贝。默认：true
+         * @returns {Slot[]}
+         */
 		public getSlots(returnCopy:boolean = true):Array<Slot>{
 			return returnCopy?this._slotList.concat():this._slotList;
 		}
 
 //动画
-		/**
-		 * Force update the bone in next frame even if the bone is not moving.
-		 */
+
+        /**
+         * 在下一帧强制更新当前 Bone 实例及其包含的所有 Slot 的动画。
+         */
 		public invalidUpdate():void{
 			this._needUpdate = 2;
 		}
@@ -300,9 +341,9 @@ module dragonBones {
 
 
             //计算globalForChild
-            var ifExistOffsetTranslation:Boolean = this._offset.x != 0 || this._offset.y != 0;
-            var ifExistOffsetScale:Boolean = this._offset.scaleX != 0 || this._offset.scaleY != 0;
-            var ifExistOffsetRotation:Boolean = this._offset.skewX != 0 || this._offset.skewY != 0;
+            var ifExistOffsetTranslation:boolean = this._offset.x != 0 || this._offset.y != 0;
+            var ifExistOffsetScale:boolean = this._offset.scaleX != 0 || this._offset.scaleY != 0;
+            var ifExistOffsetRotation:boolean = this._offset.skewX != 0 || this._offset.skewY != 0;
 
             if(	(!ifExistOffsetTranslation || this.applyOffsetTranslationToChild) &&
                 (!ifExistOffsetScale || this.applyOffsetScaleToChild) &&
@@ -554,7 +595,7 @@ module dragonBones {
 		}
 		
 		/**
-		 * Unrecommended API. Recommend use slot.childArmature.
+		 * 不推荐的API,建议使用 slot.childArmature 替代
 		 */
 		public get childArmature():Armature{
 			if(this.slot){
@@ -562,10 +603,10 @@ module dragonBones {
 			}
 			return null;
 		}
-		
-		/**
-		 * Unrecommended API. Recommend use slot.display.
-		 */
+
+        /**
+         * 不推荐的API,建议使用 slot.display 替代
+         */
 		public get display():any{
 			if(this.slot){
 				return this.slot.display;
@@ -577,16 +618,13 @@ module dragonBones {
 				this.slot.display = value;
 			}
 		}
-		
-		/**
-		 * Unrecommended API. Recommend use offset.
-		 */
+
+        /**
+         * 不推荐的API,建议使用 offset 替代
+         */
 		public get node():DBTransform{
 			return this._offset;
 		}
-		
-		
-		
 		
 		/** @private */
 		public set visible(value:boolean){
@@ -599,9 +637,11 @@ module dragonBones {
 				}
 			}
 		}
-		
-		
-		
+
+        /**
+         * 返回当前 Bone 实例包含的第一个 Slot 实例
+         * @member {Slot} dragonBones.Bone#slot
+         */
 		public get slot():Slot{
 			return this._slotList.length > 0?this._slotList[0]:null;
 		}
