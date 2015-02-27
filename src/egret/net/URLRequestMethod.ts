@@ -31,9 +31,7 @@ module egret {
 	 * @class egret.URLRequestMethod
 	 * @classdesc URLRequestMethod 类提供了一些值，这些值可指定在将数据发送到服务器时，
      * URLRequest 对象应使用 POST 方法还是 GET 方法。
-     * <div style="margin-top: 20px"><b>了解详细信息</b>
-     * <a href="http://docs.egret-labs.org/post/manual/net/postget.html" style="padding-left: 20px" target="_blank" >POST与GET</a>
-     * </div>
+     * @link http://docs.egret-labs.org/post/manual/net/postget.html POST与GET
 	 */
     export class URLRequestMethod {
 

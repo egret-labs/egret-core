@@ -41,10 +41,7 @@ module egret {
      * 不允许重写以下方法
      * _draw();
      * getBounds();
-     * <div style="margin-top: 20px"><b>了解详细信息</b>
-     * <a href="http://docs.egret-labs.org/post/manual/displayobj/aboutdisplayobj.html" style="padding-left: 20px" target="_blank" >显示对象的基本概念</a>
-     * </div>
-     *
+     * @link http://docs.egret-labs.org/post/manual/displayobj/aboutdisplayobj.html 显示对象的基本概念
      */
     export class DisplayObject extends EventDispatcher implements RenderData {
 

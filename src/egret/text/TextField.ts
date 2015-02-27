@@ -33,9 +33,7 @@ module egret {
      * TextField是egret的文本渲染类，采用浏览器/设备的API进行渲染，在不同的浏览器/设备中由于字体渲染方式不一，可能会有渲染差异
      * 如果开发者希望所有平台完全无差异，请使用BitmapText
      * @extends egret.DisplayObject
-     * <div style="margin-top: 20px"><b>了解详细信息</b>
-     * <a href="http://docs.egret-labs.org/post/manual/text/createtext.html" style="padding-left: 20px" target="_blank" >创建文本</a>
-     * </div>
+     * @link http://docs.egret-labs.org/post/manual/text/createtext.html 创建文本
      */
     export class TextField extends DisplayObject {
 
@@ -978,9 +976,7 @@ module egret {
 
     /**
      * 用于建立多种样式混合文本的基本结构，主要用于设置 textFlow 属性
-     * <div style="margin-top: 20px"><b>了解详细信息</b>
-     * <a href="http://docs.egret-labs.org/jkdoc/manual-text-multiformat.html" style="padding-left: 20px" target="_blank" >多种样式文本混合</a>
-     * </div>
+     * @link http://docs.egret-labs.org/jkdoc/manual-text-multiformat.html 多种样式文本混合
      */
     export interface ITextElement {
         text:string;

@@ -21,9 +21,7 @@ module egret {
      * @class egret.BlendMode
      * @classdesc
      * 提供混合模式可视效果的常量值的类。
-     * <div style="margin-top: 20px"><b>了解详细信息</b>
-     * <a href="http://docs.egret-labs.org/as2ts/webglcode/blendMode.html" style="padding-left: 20px" target="_blank" >BlendMode实例代码对比</a>
-     * </div>
+     * @link http://docs.egret-labs.org/as2ts/webglcode/blendMode.html BlendMode实例代码对比
      */
     export class BlendMode {
 

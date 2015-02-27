@@ -475,7 +475,7 @@ function initDesc(docs, parameters, obj, notTrans) {
                         var uo = {};
                         obj["exampleU"].push(uo);
                         uo["u"] = u.match(/^(\S)+/)[0];
-                        uo["t"] = u.substring(uo["u"].length);
+                        uo["t"] = trim.trimAll(u.substring(uo["u"].length));
                     }
 
                     break;
