@@ -37,7 +37,14 @@ module egret {
      *          <item value="item1"/>
      *      </root>
      * 将解析为:
-     * {"name":"root","$value":"abc","children":[{"name":"item","$value":"item0"},{"name":"item","$value":"item0"}]};
+     *      {
+     *          "name": "root",
+     *          "$value": "abc",
+     *          "children": [
+     *              {"name": "item", "$value": "item0"},
+     *              {"name": "item", "$value": "item1"}
+     *          ]
+     *      }
      * 其中XML上的属性节点都使用$+"属性名"的方式表示,子节点都存放在children属性的列表里，name表示节点名称。
      */
     export class XML {
