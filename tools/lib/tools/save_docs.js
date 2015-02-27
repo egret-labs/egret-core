@@ -92,6 +92,7 @@ exports.screening = function (apiArr) {
             classDes = classinfo["interface"];
         }
         else {
+            setFullType(classinfo);
             continue;
         }
 
