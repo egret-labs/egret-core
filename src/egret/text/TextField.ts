@@ -184,7 +184,7 @@ module egret {
         public _setDisplayAsPassword(value:boolean):void {
             if (this._displayAsPassword != value) {
                 this._displayAsPassword = value;
-                
+
                 this._setTextDirty();
                 var text:string = "";
                 if (this._displayAsPassword) {
@@ -547,6 +547,11 @@ module egret {
         }
 
         public _updateBaseTransform():void {
+            this._getLinesArr();
+            if (this._textMaxWidth == 0) {
+                return;
+            }
+
             super._updateTransform();
         }
 
@@ -565,6 +570,14 @@ module egret {
             }
         }
 
+        public _draw(renderContext:RendererContext):void {
+            if (this._textMaxWidth == 0) {
+                return;
+            }
+
+            super._draw(renderContext);
+        }
+
         /**
          * @see egret.DisplayObject._render
          * @param renderContext
@@ -579,8 +592,8 @@ module egret {
          * 测量显示对象坐标与大小
          */
         public _measureBounds():egret.Rectangle {
-            var lines:Array<egret.ILineElement> = this._getLinesArr();
-            if (!lines) {
+            this._getLinesArr();
+            if (this._textMaxWidth == 0) {
                 return Rectangle.identity.initialize(0, 0, 0, 0);
             }
 
@@ -792,13 +805,10 @@ module egret {
          */
         private drawText(renderContext:RendererContext):void {
             var lines:Array<egret.ILineElement> = this._getLinesArr();
-            if (!lines) {
+            if (this._textMaxWidth == 0) {
                 return;
             }
 
-            if (!this._isFlow) {//非富文本
-                renderContext.setupFont(this);
-            }
 
             var maxWidth:number = this._hasWidthSet ? this._explicitWidth : this._textMaxWidth;
             var textHeight:number = this._textMaxHeight + (this._numLines - 1) * this._lineSpacing;
@@ -849,10 +859,6 @@ module egret {
                         renderContext.drawText(this, element.text, drawX, drawY + (h - size) / 2, element.width);
                     }
                     else {
-                        if (this._isFlow) {
-                            renderContext.setupFont(this, element.style);
-                        }
-
                         renderContext.drawText(this, element.text, drawX, drawY + (h - size) / 2, element.width, element.style);
                     }
                     drawX += element.width;
@@ -905,7 +911,7 @@ module egret {
 
         private _getHit(x:number, y:number):IHitTextElement {
             var lineArr:Array<egret.ILineElement>  = this._getLinesArr();
-            if (lineArr.length == 0) {//点击在空白处外
+            if (this._textMaxWidth == 0) {//文本可点击区域
                 return null;
             }
             var line:number = 0;
