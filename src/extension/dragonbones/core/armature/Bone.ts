@@ -33,6 +33,9 @@ module dragonBones {
      * @classdesc
      * Bone 实例代表 Armature 中的一个骨头。一个Armature实例可以由很多 Bone组成。
      * @extends dragonBones.DBObject
+     * @see dragonBones.Armature
+     * @see dragonBones.Slot
+     * @see dragonBones.BoneData
      */
 	export class Bone extends DBObject{
 		public static initWithBoneData(boneData:BoneData):Bone{

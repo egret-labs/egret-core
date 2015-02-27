@@ -28,6 +28,17 @@
 
 module dragonBones {
 
+    /**
+     * @class dragonBones.Slot
+     * @classdesc
+     * Slot 实例是骨头上的一个插槽，是显示图片的容器。
+     * 一个 Bone 上可以有多个Slot，每个Slot中同一时间都会有一张图片用于显示，不同的Slot中的图片可以同时显示。
+     * 每个 Slot 中可以包含多张图片，同一个 Slot 中的不同图片不能同时显示，但是可以在动画进行的过程中切换，用于实现帧动画。
+     * @extends dragonBones.DBObject
+     * @see dragonBones.Armature
+     * @see dragonBones.Bone
+     * @see dragonBones.SlotData
+     */
 	export class Slot extends DBObject{
 		/** @private Need to keep the reference of DisplayData. When slot switch displayObject, it need to restore the display obect's origional pivot. */
 		public _displayDataList:Array<DisplayData>;
@@ -72,7 +83,11 @@ module dragonBones {
 			this.inheritRotation = true;
 			this.inheritScale = true;
 		}
-		
+
+        /**
+         * 通过传入 SlotData 初始化Slot
+         * @param slotData
+         */
 		public initWithSlotData(slotData:SlotData):void{
 			this.name = slotData.name;
 			this.blendMode = slotData.blendMode;
@@ -250,10 +265,11 @@ module dragonBones {
 				this._updateDisplayVisible(this._visible);
 			}
 		}
-		
-		/**
-		 * The DisplayObject list belonging to this Slot instance (display or armature). Replace it to implement switch texture.
-		 */
+
+        /**
+         * 显示对象列表(包含 display 或者 子骨架)
+         * @member {any[]} dragonBones.Slot#displayList
+         */
 		public get displayList():Array<any>{
 			return this._displayList;
 		}
@@ -276,10 +292,11 @@ module dragonBones {
 			this._currentDisplayIndex = -1;
 			this._changeDisplay(displayIndexBackup);
 		}
-		
-		/**
-		 * The DisplayObject belonging to this Slot instance. Instance type of this object varies from flash.display.DisplayObject to startling.display.DisplayObject and subclasses.
-		 */
+
+        /**
+         * 当前的显示对象(可能是 display 或者 子骨架)
+         * @member {any} dragonBones.Slot#display
+         */
 		public get display():any{
 			return this._currentDisplay;
 		}
@@ -297,8 +314,7 @@ module dragonBones {
 		}
 
         /**
-         * Unrecommended API. Please use .display instead.
-         * @returns {any}
+         * 不推荐的 API. 使用 display 属性代替
          */
         public getDisplay():any
         {
@@ -306,17 +322,17 @@ module dragonBones {
         }
 
         /**
-         * Unrecommended API. Please use .display = instead.
-         * @returns {any}
+         * 不推荐的 API. 使用 display 属性代替
          */
         public setDisplay(value:any):void
         {
             this.display = value;
         }
 
-		/**
-		 * The sub-armature of this Slot instance.
-		 */
+        /**
+         * 当前的子骨架
+         * @member {Armature} dragonBones.Slot#childArmature
+         */
 		public get childArmature():Armature{
             if(this._displayList[this._currentDisplayIndex] instanceof Armature)
             {
@@ -330,8 +346,8 @@ module dragonBones {
 		}
 		
 		/**
-		 * zOrder. Support decimal for ensure dynamically added slot work toghther with animation controled slot.  
-		 * @return zOrder.
+		 * 显示顺序。(支持小数用于实现动态插入slot)
+         * @member {number} dragonBones.Slot#zOrder
 		 */
 		public get zOrder():number{
 			return this._originZOrder + this._tweenZOrder + this._offsetZOrder;
@@ -346,8 +362,8 @@ module dragonBones {
 		}
 		
 		/**
-		 * blendMode
-		 * @return blendMode.
+		 * 混合模式
+         * @member {string} dragonBones.Slot#blendMode
 		 */
 		public get blendMode():string{
 			return this._blendMode;
