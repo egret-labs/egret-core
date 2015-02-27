@@ -115,7 +115,7 @@ module dragonBones {
 		 * @param pauseFadeOut {boolean} 动画淡出时暂停播放
 		 * @param pauseFadeIn {boolean} 动画淡入时暂停播放
 		 * @returns {AnimationState} 动画播放状态实例
-		 * @see dragonBones..AnimationState.
+		 * @see dragonBones.AnimationState.
 		 */
 		public gotoAndPlay(
 			animationName:string, 
