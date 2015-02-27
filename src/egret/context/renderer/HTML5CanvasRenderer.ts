@@ -228,6 +228,7 @@ module egret {
             this.blendModes = {};
             this.blendModes[BlendMode.NORMAL] = "source-over";
             this.blendModes[BlendMode.ADD] = "lighter";
+            this.blendModes[BlendMode.ERASE] = "destination-in";
         }
 
         public setupFont(textField:TextField, style:egret.ITextStyle = null):void {

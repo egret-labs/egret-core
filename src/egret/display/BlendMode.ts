@@ -38,6 +38,10 @@ module egret {
          * @constant {string} egret.BlendMode.ADD
          */
         public static ADD = "add";
-
+        /**
+         * 根据显示对象的 Alpha 值擦除背景。
+         * @constant {string} egret.BlendMode.ERASE
+         */
+        public static ERASE = "erase";
     }
 }
