@@ -547,7 +547,8 @@ function changeDescription(des) {
 
     //var arr = des.split("\n");
     //return "<p>" + arr.join("</p><p>") + "</p>";
-    return "<p>" + des + "</p>";
+    //return "<p>" + des + "</p>";
+    return des;
 }
 
 function clone(frame, result) {

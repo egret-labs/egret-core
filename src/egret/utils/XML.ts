@@ -31,10 +31,11 @@ module egret {
      * @classdesc
      * XML文件解析工具，它将XML文件解析为标准的JSON对象返回。
      * 用法类似JSON.parse(),传入一个XML字符串给XML.parse()，将能得到一个标准JSON对象。
-     * 示例：<root value="abc">
+     * 示例：
+     *      <root value="abc">
      *          <item value="item0"/>
      *          <item value="item1"/>
-     *       </root>
+     *      </root>
      * 将解析为:
      * {"name":"root","$value":"abc","children":[{"name":"item","$value":"item0"},{"name":"item","$value":"item0"}]};
      * 其中XML上的属性节点都使用$+"属性名"的方式表示,子节点都存放在children属性的列表里，name表示节点名称。
