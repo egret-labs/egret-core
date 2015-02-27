@@ -325,7 +325,18 @@ function upgradeTo_1_5_5(){
     //更新egretProperties.json， 将res变成一个单独的模块
     try {
         var properties = JSON.parse(file.read(path.join(projectDir, "egretProperties.json")));
-        properties.modules.splice(1, 0, {"name" : "res"});
+
+        var hasRes = false;
+        for (var key in properties.modules) {
+            var module = properties.modules[key];
+            if (module.name == "res") {
+                hasRes = true;
+                break;
+            }
+        }
+        if (!hasRes) {
+            properties.modules.splice(1, 0, {"name" : "res"});
+        }
         file.save(path.join(projectDir, "egretProperties.json"), JSON.stringify(properties, null, "\t"));
     }
     catch (e) {
