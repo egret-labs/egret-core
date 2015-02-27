@@ -152,7 +152,7 @@ exports.addExtends = function (tempClassArr) {
         else {//module
             var modeName = key;
             if (item.memberof && item.memberof != "") {
-                modeName = item.memberof + "." + key;
+                //modeName = item.memberof + "." + key;
             }
 
             moduleGlobals[modeName] = {};

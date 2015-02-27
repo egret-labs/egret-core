@@ -465,7 +465,19 @@ function initDesc(docs, parameters, obj, notTrans) {
                     obj["returns"] = {"description" : changeDescription(doc["return"])};
                     break;
                 case "link" :
-                    obj["exampleU"] = trim.trimAll(doc["link"]);
+                    obj["exampleU"] = [];
+
+                    var links = trim.trimAll(doc["link"]);
+                    var arr = links.split("\n");
+                    for (var m = 0; m < arr.length; m++) {
+                        var u = arr[m];
+
+                        var uo = {};
+                        obj["exampleU"].push(uo);
+                        uo["u"] = u.match(/^(\S)+/)[0];
+                        uo["t"] = u.substring(uo["u"].length);
+                    }
+
                     break;
                 case "example" :
                     obj["exampleC"] = trim.trimAll(doc["example"]);
