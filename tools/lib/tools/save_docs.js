@@ -233,7 +233,7 @@ function analyze(item, name, parent, filename) {
             tempClass["memberof"] = tempParent.join(".");
             tempClass["filename"] = filename;
 
-            initDesc(item["docs"], item["parameters"], tempClass);
+            initDesc(item["docs"], item["parameters"], tempClass, true);
             tempClass["classdesc"] = tempClass["description"];
             delete tempClass["description"];
 
@@ -262,7 +262,7 @@ function analyze(item, name, parent, filename) {
             tempClass["memberof"] = tempParent.join(".");
             tempClass["filename"] = filename;
 
-            initDesc(item["docs"], item["parameters"], tempClass);
+            initDesc(item["docs"], item["parameters"], tempClass, true);
             tempClass["classdesc"] = tempClass["description"];
             delete tempClass["description"];
 
