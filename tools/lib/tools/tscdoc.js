@@ -16,7 +16,7 @@ function run(dir, args, opts) {
     }
     var outputPath = opts["--output"][0] || "";
 
-    var moduleArr = ["core", "html5", "native", "gui", "socket", "dragonbones"];
+    var moduleArr = ["core", "res", "html5", "native", "gui", "socket", "dragonbones"];
     var tsList = [];
     for (var i = 0; i < moduleArr.length; i++) {
         tsList = tsList.concat(getModuleList(moduleArr[i]));
