@@ -42,7 +42,6 @@ module dragonBones {
 		public name:string;
 		/**
 		 * 动画的帧率，表示每一秒钟播放多少帧
-		 * @type {number}
 		 * @member {number} dragonBones.AnimationData#frameRate
 		 */
 		public frameRate:number = 0;
@@ -53,7 +52,6 @@ module dragonBones {
 		public fadeTime:number;
 		/**
 		 * 	播放次数 0为一直播放，默认为0
-		 * @type {number}
 		 * @member {number} dragonBones.AnimationData#playTimes
 		 */
 		public playTimes:number = 0;
@@ -70,7 +68,6 @@ module dragonBones {
 		public autoTween:boolean;
 		/**
 		 * 最后一帧持续的帧数
-		 * @type {number}
 		 * @member {number} dragonBones.AnimationData#lastFrameDuration
 		 */
 		public lastFrameDuration:number = 0;

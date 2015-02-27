@@ -35,12 +35,10 @@ module dragonBones {
 	export class DragonBones{
 		/**
 		 * 数据的版本号
-		 * @type {string}
 		 */
 		public static DATA_VERSION:string = "2.3";
 		/**
 		 *
-		 * @type {string}
 		 */
         public static PARENT_COORDINATE_DATA_VERSION:String = "3.0";
 		

@@ -35,13 +35,11 @@ module dragonBones {
 	export class Frame{
 		/**
 		 *位置
-		 * @type {number}
 		 * @member {number} dragonBones.Frame#position
 		 */
 		public position:number = 0;
 		/**
 		 *持续时间
-		 * @type {number}
 		 * @member {number} dragonBones.Frame#duration
 		 */
 		public duration:number = 0;

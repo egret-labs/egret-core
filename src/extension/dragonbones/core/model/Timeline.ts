@@ -36,7 +36,6 @@ module dragonBones {
 	export class Timeline{
 		/**
 		 * 持续时间，单位是帧
-		 * @type {number}
 		 * @member {number} dragonBones.Timeline#duration
 		 */
 		public duration:number = 0;

@@ -36,12 +36,10 @@ module dragonBones {
 	export class DisplayData{
 		/**
 		 * 子骨架类型
-		 * @type {string}
 		 */
 		public static ARMATURE:string = "armature";
 		/**
 		 * 图片类型
-		 * @type {string}
 		 */
 		public static IMAGE:string = "image";
 		/**

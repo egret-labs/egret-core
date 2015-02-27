@@ -50,7 +50,6 @@ module dragonBones {
 		public tweenEasing:number;
 		/**
 		 * 旋转几圈
-		 * @type {number}
 		 * @member {number} dragonBones.TransformFrame#tweenRotate
 		 */
         public tweenRotate:number = 0;
@@ -61,7 +60,6 @@ module dragonBones {
         public tweenScale:boolean;
 		/**
 		 *绑定到该骨骼的插槽的显示序号，当插槽有多个显示对象时，指定显示哪一个显示对象
-		 * @type {number}
 		 * @member {number} dragonBones.TransformFrame#displayIndex
 		 */
 		public displayIndex:number = 0;
