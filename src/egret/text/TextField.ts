@@ -709,14 +709,14 @@ module egret {
                 renderContext.setupFont(self);
             }
 
-            for (var i:number = 0; i < text2Arr.length; i++) {
+            for (var i:number = 0, text2ArrLength:number = text2Arr.length; i < text2ArrLength; i++) {
                 var element:egret.ITextElement = text2Arr[i];
                 element.style = element.style || <egret.ITextStyle>{};
 
                 var text:string = element.text.toString();
                 var textArr:Array<string> = text.split(/(?:\r\n|\r|\n)/);
 
-                for (var j:number = 0; j < textArr.length; j++) {
+                for (var j:number = 0, textArrLength:number = textArr.length; j < textArrLength; j++) {
                     if (linesArr[lineCount] == null) {
                         lineElement = <egret.ILineElement>{width:0, height:0, elements:[]};
                         linesArr[lineCount] = lineElement;
@@ -842,7 +842,7 @@ module egret {
             }
 
             var drawX:number = 0;
-            for (var i = startLine; i < self._numLines; i++) {
+            for (var i:number = startLine, numLinesLength:number = self._numLines; i < numLinesLength; i++) {
                 var line:egret.ILineElement = lines[i];
                 var h:number = line.height;
                 drawY += h / 2;
@@ -853,7 +853,7 @@ module egret {
 
                 drawX = Math.round((maxWidth - line.width) * halign);
 
-                for (var j:number = 0; j < line.elements.length; j++) {
+                for (var j:number = 0, elementsLength:number = line.elements.length; j < elementsLength; j++) {
                     var element:egret.IWTextElement = line.elements[j];
                     var size:number = element.style.size || self._size;
 
