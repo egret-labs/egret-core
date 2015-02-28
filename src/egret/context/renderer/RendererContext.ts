@@ -258,7 +258,7 @@ module egret {
          * @param dst {number} 目标颜色因子
          * @param override {boolean} 是否覆盖
          */
-        public static registerBlendModeForGL(key:string, src:number, dst:number, override?:boolean){
+        public static registerBlendModeForGL(key:string, src:number, dst:number, override?:boolean):void {
             if(RendererContext.blendModesForGL[key] && !override) {
                 egret.Logger.warningWithErrorId(1005, key);
             }

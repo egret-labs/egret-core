@@ -1,7 +1,42 @@
 Egret Engine
 ================================================
-Current Version: v1.5.4
+Current Version: v1.5.5
 
+
+Egret Engine is an open source game engine written in Typescript language. The core characteristics of Egret Engine is Open, Efficient and Elegant.
+Egret game engine allows game designers to create HTML5 mobile games quickly, and also to compile the project to the native app of the target mobile device or platform.
+
+Platforms:
+--------------------
+#### PC
+* Chrome
+* Safari
+* FireFox
+* IE9+
+
+#### Mobile Browsers / WebView
+* iOS 5.0+
+* Android 2.3+
+* Windows Phone 8
+
+#### Mobile App
+* Android 2.3+
+* iOS 7.0+
+* Windows Phone 8
+
+3rd Party Library
+-------------------------
+* Egret Team encapsulated some powerful 3rd party libraries,including Google AdSense,Dom,Gesture,MD5,Particle,Physics. For more information,you can visit [here](https://github.com/egret-labs/egret-game-library)
+
+Tools
+-------------------------
+* [Egret Wing](http://www.egret-labs.org/download/wing-download.html) , Egret GUI Visual Editor
+* [TS Conversion](http://www.egret-labs.org/download/conversion-tool-download.html) ,AS3-to-TS Code transformation tool
+* [Res Depot](http://www.egret-labs.org/download/restool-download.html) ,Resource configuration and management tool
+* [Texture Merger](http://www.egret-labs.org/download/egret-texturetool-download.html) ,SpriteSheet tool
+* StarlingSWF
+    * StarlingSWF is an useful tool that can convert SWF file created by FlashPro to the supported format of starling/Features. It has been widely used in Flash Mobile project development.
+    * StarlingSWF already supports to export to the supported format of Egret.
 
 简介
 -------------------
