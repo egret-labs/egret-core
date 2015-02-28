@@ -38,6 +38,11 @@ Tools
     * StarlingSWF is an useful tool that can convert SWF file created by FlashPro to the supported format of starling/Features. It has been widely used in Flash Mobile project development.
     * StarlingSWF already supports to export to the supported format of Egret.
 
+Release Notes
+--------------------
+[Egret 1.5.5 Release Notes 2015-2-28](/docs/en/1.5.5_ReleaseNotes.md)
+
+
 简介
 -------------------
 
@@ -88,47 +93,49 @@ Egret Engine是一款使用JavaScript(TypeScript)编写的HTML5开源免费游�
 发布说明
 --------------------
 
-[Egret 1.5.4 Release Notes 2015-2-6](/docs/1.5.4_ReleaseNotes.md)
+[Egret 1.5.5 Release Notes 2015-2-28](/docs/cn/1.5.5_ReleaseNotes.md)
 
-[Egret 1.5.3 Release Notes 2015-1-23](/docs/1.5.3_ReleaseNotes.md)
+[Egret 1.5.4 Release Notes 2015-2-6](/docs/cn/1.5.4_ReleaseNotes.md)
 
-[Egret 1.5.2 Release Notes 2015-1-9](/docs/1.5.2_ReleaseNotes.md)
+[Egret 1.5.3 Release Notes 2015-1-23](/docs/cn/1.5.3_ReleaseNotes.md)
 
-[Egret 1.5.1 Release Notes 2014-12-26](/docs/1.5.1_ReleaseNotes.md)
+[Egret 1.5.2 Release Notes 2015-1-9](/docs/cn/1.5.2_ReleaseNotes.md)
 
-[Egret 1.5.0 Release Notes 2014-12-12](/docs/1.5.0_ReleaseNotes.md)
+[Egret 1.5.1 Release Notes 2014-12-26](/docs/cn/1.5.1_ReleaseNotes.md)
 
-[Egret 1.1.4 Release Notes 2014-11-28](/docs/1.1.4_ReleaseNotes.md)
+[Egret 1.5.0 Release Notes 2014-12-12](/docs/cn/1.5.0_ReleaseNotes.md)
 
-[Egret 1.1.3 Release Notes 2014-11-14](/docs/1.1.3_ReleaseNotes.md)
+[Egret 1.1.4 Release Notes 2014-11-28](/docs/cn/1.1.4_ReleaseNotes.md)
 
-[Egret 1.1.2 Release Notes 2014-10-31](/docs/1.1.2_ReleaseNotes.md)
+[Egret 1.1.3 Release Notes 2014-11-14](/docs/cn/1.1.3_ReleaseNotes.md)
 
-[Egret 1.1.1 Release Notes 2014-10-17](/docs/1.1.1_ReleaseNotes.md)
+[Egret 1.1.2 Release Notes 2014-10-31](/docs/cn/1.1.2_ReleaseNotes.md)
 
-[Egret 1.1.0 Release Notes 2014-9-26](/docs/1.1.0_ReleaseNotes.md)
+[Egret 1.1.1 Release Notes 2014-10-17](/docs/cn/1.1.1_ReleaseNotes.md)
 
-[Egret 1.0.6 Release Notes 2014-9-12](/docs/1.0.6_ReleaseNotes.md)
+[Egret 1.1.0 Release Notes 2014-9-26](/docs/cn/1.1.0_ReleaseNotes.md)
 
-[Egret 1.0.5 Release Notes 2014-8-29](/docs/1.0.5_ReleaseNotes.md)
+[Egret 1.0.6 Release Notes 2014-9-12](/docs/cn/1.0.6_ReleaseNotes.md)
 
-[Egret 1.0.4 Release Notes 2014-8-17](/docs/1.0.4_ReleaseNotes.md)
+[Egret 1.0.5 Release Notes 2014-8-29](/docs/cn/1.0.5_ReleaseNotes.md)
 
-[Egret 1.0.3 Final Release Notes 2014-8-8](/docs/1.0_Final_ReleaseNotes.md)
+[Egret 1.0.4 Release Notes 2014-8-17](/docs/cn/1.0.4_ReleaseNotes.md)
 
-[Egret 1.0.2 Release Candidate 2 Release Notes 2014-7-25](/docs/ReleaseCandidate_2_ReleaseNotes.md)
+[Egret 1.0.3 Final Release Notes 2014-8-8](/docs/cn/1.0_Final_ReleaseNotes.md)
 
-[Egret 1.0.1 Release Candidate 1 Release Notes 2014-7-10](/docs/ReleaseCandidate_ReleaseNotes.md)
+[Egret 1.0.2 Release Candidate 2 Release Notes 2014-7-25](/docs/cn/ReleaseCandidate_2_ReleaseNotes.md)
 
-[Egret 1.0.0 beta Release Notes 2014-5-30](/docs/PublicBeta_ReleaseNotes.md)
+[Egret 1.0.1 Release Candidate 1 Release Notes 2014-7-10](/docs/cn/ReleaseCandidate_ReleaseNotes.md)
 
-[Egret 0.9.4 Release Notes 2014-5-15](/docs/Prerelease_ReleaseNotes.md)
+[Egret 1.0.0 beta Release Notes 2014-5-30](/docs/cn/PublicBeta_ReleaseNotes.md)
 
-[Egret 0.9.3  Release Notes 2014-4-30](/docs/Prerelease_ReleaseNotes.md)
+[Egret 0.9.4 Release Notes 2014-5-15](/docs/cn/Prerelease_ReleaseNotes.md)
 
-[Egret 0.9.2  Release Notes 2014-3-27](/docs/Prerelease_ReleaseNotes.md)
+[Egret 0.9.3  Release Notes 2014-4-30](/docs/cn/Prerelease_ReleaseNotes.md)
 
-[Egret 0.9.1  Release Notes 2014-3-24](/docs/Prerelease_ReleaseNotes.md)
+[Egret 0.9.2  Release Notes 2014-3-27](/docs/cn/Prerelease_ReleaseNotes.md)
+
+[Egret 0.9.1  Release Notes 2014-3-24](/docs/cn/Prerelease_ReleaseNotes.md)
 
 联系我们
 -------------------

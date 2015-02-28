@@ -933,7 +933,9 @@ module egret {
 
                 lineH += this._lineSpacing;
             }
-
+            if(line === 0) {
+                return null;
+            }
             var lineElement:egret.ILineElement = lineArr[line - 1];
             var lineW:number = 0;
             for (i = 0; i < lineElement.elements.length; i++) {
