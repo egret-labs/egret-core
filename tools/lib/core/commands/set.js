@@ -173,7 +173,7 @@ exports.help_def.create_app =
 }
 
 
-exports.help_def.build_doing =
+exports.help_def.build =
 {
     "command" : "build"
 
@@ -189,13 +189,29 @@ exports.help_def.build_doing =
 
     , "configs" : [
     {
+        "name" : "e"
+        ,"prefix": "-"
+        ,"desc" : locale.help_dict.build1
+        ,"optional" : "true"
+
+        ,"config-paras" : [
+            {
+                "placeholder" : "clean"
+                ,"optional" : "true"
+                ,"type" : "string"
+                ,"prefix": "-"
+                ,"desc" : locale.help_dict.build2
+            }
+        ]
+    }
+    ,{
         "name" : "k"
         ,"prefix": "-"
         ,"desc" : locale.help_dict.build4
         ,"optional" : "true"
 
         ,"config-paras" : [
-    ]
+        ]
     }
     ,{
         "name" : "runtime"
@@ -209,15 +225,6 @@ exports.help_def.build_doing =
                 ,"type" : "enum"
                 ,"optional" : "false"
             }
-        ]
-    }
-    ,{
-        "name" : "noscan"
-        ,"prefix": "-"
-        ,"desc" : locale.help_dict.build6
-        ,"optional" : "true"
-
-        ,"config-paras" : [
         ]
     }
     ,{

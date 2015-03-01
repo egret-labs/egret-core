@@ -301,7 +301,7 @@ module egret {
 
             var target: DisplayObject = event.target;
             while (target != this) {
-                if (target instanceof ScrollView) {
+                if ("_checkScrollPolicy" in target) {
                     canScroll = (<ScrollView><any> target)._checkScrollPolicy();
                     if (canScroll) {
                         return;
@@ -339,29 +339,27 @@ module egret {
             var list: Array<DisplayObject> = [];
 
             var target: DisplayObject = event._target;
+            var scrollerIndex = 0;
             while (target) {
+                if (target == this)
+                    scrollerIndex = list.length;
                 list.push(target);
                 target = target.parent;
             }
 
-            var content = this._content;
-            for (var i: number = 1; ; i += 2) {
-                target = list[i];
-                if (!target || target === content) {
-                    break;
-                }
-                list.unshift(target);
-            }
-            this._dispatchPropagationEvent(event, list);
+            var captureList = list.slice(0, scrollerIndex);
+            captureList = captureList.reverse();
+            list = captureList.concat(list);
+            var targetIndex = scrollerIndex;
+            this._dispatchPropagationEvent(event, list, targetIndex);
         }
 
-        //todo 此处代码是为了兼容之前的实现，应该尽快更优化的实现后删除
+        
         public _dispatchPropagationEvent(event: Event, list: Array<DisplayObject>, targetIndex?: number): void {
             var length: number = list.length;
             for (var i: number = 0; i < length; i++) {
                 var currentTarget: DisplayObject = list[i];
                 event._currentTarget = currentTarget;
-                event._target = this;
                 if (i < targetIndex)
                     event._eventPhase = 1;
                 else if (i == targetIndex)

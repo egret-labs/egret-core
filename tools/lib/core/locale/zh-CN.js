@@ -37,10 +37,10 @@ exports.help_dict = {
    ,"build0":"构建指定项目,编译指定项目的 TypeScript 文件"
    ,"build1":"编译指定项目的同时编译引擎目录"
    ,"build2":"清除libs以及bin-debug文件夹，只有在-e的前提下才会生效"
-   ,"build3":"只编译引擎中指定的部分模块，不编译项目；不填则编译全部模块"
+   //,"build3":"只编译引擎中指定的部分模块，不编译项目；不填则编译全部模块"
    ,"build4":"编译EXML文件时保留生成的TS文件"
    ,"build5":"如果有native工程，则会将文件拷贝到工程里"
-   ,"build6":"编译游戏时，根据game_file_list获取编译列表"
+   //,"build6":"编译游戏时，根据game_file_list获取编译列表"
    ,"build7":"显示执行过程"
 }
 

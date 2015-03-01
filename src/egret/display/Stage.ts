@@ -208,7 +208,7 @@ module egret {
          * @param override {boolean} 是否覆盖
          * @method egret.Stage#registerScaleMode
          */
-        public static registerScaleMode(key:string, value:ContentStrategy, override?:boolean) {
+        public static registerScaleMode(key:string, value:ContentStrategy, override?:boolean):void {
             if(Stage.SCALE_MODE_ENUM[key] && !override) {
                 egret.Logger.warningWithErrorId(1009, key);
             }
