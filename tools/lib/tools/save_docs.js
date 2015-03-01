@@ -28,6 +28,7 @@ function getExtendsClassName(className) {
 }
 
 function getClassFullName(className) {
+    className = trim.trimAll(className);
     var memberof = getMemberof(className);
 
     if (memberof.length) {
@@ -542,6 +543,7 @@ function changeDescription(des) {
     }
     des = des.replace(/^(\s)*/, "");
     des = des.replace(/(\s)*$/, "");
+    des = des.replace(/<br\/>/g, "\n");
     if (des == "") {
         return des;
     }
