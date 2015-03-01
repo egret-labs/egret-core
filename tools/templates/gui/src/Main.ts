@@ -119,7 +119,7 @@ class Main extends egret.DisplayObjectContainer {
     }
 
     private onButtonClick(event: egret.TouchEvent): void {
-        egret.gui.Alert.show("Message", "Title")
+        egret.gui.Alert.show("Message", "Title");
     }
 }
 
