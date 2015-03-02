@@ -6,9 +6,9 @@
 var file = require("../core/file.js");
 var trim = require("./trim");
 
-function typeScriptCompiler(quitFunc,cmd, tscLibUrl) {
+function typeScriptCompiler(quitFunc,cmd) {
     file.save("tsc_config_temp.txt", cmd);//todo performance-optimize
-    var TypeScript = require('../core/typescript/tsc.js');
+    var TypeScript = require('../core/typescript/tscapi.js');
 
     TypeScript.exit = function(){
         setTimeout(quitFunc,1,arguments[0])
@@ -20,7 +20,7 @@ function typeScriptCompiler(quitFunc,cmd, tscLibUrl) {
 
     var apiArr = [];
     var dtsArr = [];
-    var arr = TypeScript.executeApi(["@tsc_config_temp.txt"], tscLibUrl);
+    var arr = TypeScript.executeApi(["@tsc_config_temp.txt"]);
     arr.forEach(function (item) {
         if (item.filename.indexOf(".d.ts") >= 0) {
             dtsArr.push(item.locals);
@@ -68,6 +68,7 @@ function check(obj, parent, text) {
     switch (obj.flags) {
         case 128: //module
         case 256: //module
+        {
             parent[objName]["$_tree_"] = {};
 
             parent[objName]["bodyType"] = "module";
@@ -80,7 +81,9 @@ function check(obj, parent, text) {
             }
 
             break;
+        }
         case 1://module var
+        {
             parent[objName]["bodyType"] = "modulevar";
 
             if (obj.valueDeclaration && obj.valueDeclaration.type) {
@@ -88,7 +91,9 @@ function check(obj, parent, text) {
             }
             addPublic(parent[objName]["content"], parent[objName], objName);
             break;
+        }
         case 2://变量
+        {
             parent[objName]["bodyType"] = "var";
 
             if (obj.valueDeclaration && obj.valueDeclaration.type) {
@@ -98,7 +103,9 @@ function check(obj, parent, text) {
             addStatic(parent[objName]["content"], parent[objName]);
             addPublic(parent[objName]["content"], parent[objName], objName);
             break;
+        }
         case 8192://module var  get
+        {
             parent[objName]["bodyType"] = "get";
 
             for (var i = 0; i < obj.declarations.length; i++) {
@@ -115,7 +122,9 @@ function check(obj, parent, text) {
             }
 
             break;
+        }
         case 16384://module var set
+        {
             parent[objName]["bodyType"] = "set";
 
             for (var i = 0; i < obj.declarations.length; i++) {
@@ -130,7 +139,9 @@ function check(obj, parent, text) {
             }
 
             break;
+        }
         case 24576://module var set get
+        {
             parent[objName]["bodyType"] = "set get";
 
             for (var i = 0; i < obj.declarations.length; i++) {
@@ -148,7 +159,9 @@ function check(obj, parent, text) {
             }
 
             break;
+        }
         case 8://方法
+        {
             parent[objName]["bodyType"] = "modulefunction";
             if (obj.valueDeclaration && obj.valueDeclaration.parameters) {
                 parent[objName]["parameters"] = [];
@@ -162,7 +175,9 @@ function check(obj, parent, text) {
 
             addPublic(parent[objName]["content"], parent[objName], objName);
             break;
+        }
         case 4096://构造函数
+        {
             parent[objName]["bodyType"] = "function";
 
             var declarations = obj.declarations[0];
@@ -177,7 +192,9 @@ function check(obj, parent, text) {
             addStatic(parent[objName]["content"], parent[objName]);
             addPublic(parent[objName]["content"], parent[objName], objName);
             break;
+        }
         case 2048://方法
+        {
             parent[objName]["bodyType"] = "function";
 
             if (obj.valueDeclaration && obj.valueDeclaration.parameters) {
@@ -192,7 +209,9 @@ function check(obj, parent, text) {
             addStatic(parent[objName]["content"], parent[objName]);
             addPublic(parent[objName]["content"], parent[objName], objName);
             break;
+        }
         case 32://接口
+        {
             parent[objName]["$_tree_"] = {};
             parent[objName]["bodyType"] = "interface";
             for (var key in obj.members) {
@@ -222,7 +241,9 @@ function check(obj, parent, text) {
                 addDoc(parent[objName]["api"], parent[objName]);
             }
             break;
+        }
         case 16://类
+        {
             parent[objName]["$_tree_"] = {};
             parent[objName]["bodyType"] = "class";
 
@@ -246,6 +267,7 @@ function check(obj, parent, text) {
                 initImplements(obj["valueDeclaration"]["implementedTypes"], parent[objName]);
             }
             break;
+        }
 
     }
 }

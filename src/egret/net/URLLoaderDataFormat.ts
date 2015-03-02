@@ -30,9 +30,7 @@ module egret {
 	/**
 	 * @class egret.URLLoaderDataFormat
 	 * @classdesc URLLoaderDataFormat 类提供了一些用于指定如何接收已下载数据的值。
-     * <div style="margin-top: 20px"><b>了解详细信息</b>
-     * <a href="http://docs.egret-labs.org/post/manual/net/netformat.html" style="padding-left: 20px" target="_blank" >读取不同数据格式</a>
-     * </div>
+     * @link http://docs.egret-labs.org/post/manual/net/netformat.html 读取不同数据格式
 	 */
     export class URLLoaderDataFormat {
 

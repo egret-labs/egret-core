@@ -16,7 +16,7 @@ function run(dir, args, opts) {
     }
     var outputPath = opts["--output"][0] || "";
 
-    var moduleArr = ["core", "html5", "native", "gui", "socket", "dragonbones"];
+    var moduleArr = ["core", "res", "html5", "native", "gui", "socket", "dragonbones"];
     var tsList = [];
     for (var i = 0; i < moduleArr.length; i++) {
         tsList = tsList.concat(getModuleList(moduleArr[i]));
@@ -27,7 +27,7 @@ function run(dir, args, opts) {
     var tempTime = Date.now();
     var cmd = tsList.join(" ") + " -d -t ES5 --out " + globals.addQuotes(path.join(outputPath, "a.d.ts"));
     var apiArr = typeScriptCompiler.compile(function () {
-    }, cmd, null);
+    }, cmd);
 
     globals.debugLog("耗时：%d秒", (Date.now() - tempTime) / 1000);
 

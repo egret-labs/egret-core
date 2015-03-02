@@ -3,6 +3,9 @@
     "modules": [
         {
             "name": "core"
+        },
+        {
+            "name": "res"
         }
     ],
     "native": {

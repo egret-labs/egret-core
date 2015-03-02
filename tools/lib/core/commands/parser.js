@@ -64,6 +64,7 @@ function logHelpDef( command ) {
    /// 帮助信息分为三部分 用法 描述 和参数说明。先放在三个字符串元素中，最后再组合。
    var sDesc;
    var sPrefix;
+   var sPrefixCfgPara;
    var sName;
    var sPlaceHolder;
    var bOptional;
@@ -128,17 +129,31 @@ function logHelpDef( command ) {
          switch (sType) {
             case  CfgParaType.STRING:
                sPlaceHolder = oCfgPara[HelpDefParserKey.PLACEHOLDER];
-               fwcoSubLv1 = getFwco(sPlaceHolder, bOptSubLv1);
+
+               /// 配置参数不一定需要描述，需要判断描述是否为空来进行处理
+               sDesc = oCfgPara[HelpDefParserKey.DESC];
+               /// 前缀是否存在往往与描述是否存在一致，即要么都没，要么都有
+               sPrefixCfgPara = oCfgPara[HelpDefParserKey.PREFIX];
+                //console.log( "sPrefix:", sPrefix );
+
+               if( sDesc ){
+                  /// 配置说明拼接 并最高长度记录
+                  iWordLenMax = Math.max(iWordLenMax, (sPrefixCfgPara + sPlaceHolder).length);
+                  aDetailBody.push(new DetailBody(sPrefixCfgPara + sPlaceHolder, sDesc));
+               }
+
+               fwcoSubLv1 = getFwco( sPrefixCfgPara ? sPrefixCfgPara + sPlaceHolder : sPlaceHolder, bOptSubLv1 );
                break;
             case  CfgParaType.ENUM:
                var aEnumList = oCfgPara[HelpDefParserKey.ENUM_LIST];
-               fwcoSubLv1 = getFwco(aEnumList.join("|"), bOptSubLv1);
+               fwcoSubLv1 = getFwco( aEnumList.join("|"), bOptSubLv1 );
                break;
          }
       }
 
-      aFormCollection.push(getFwco(
-         sPrefix + sName + ( fwcoSubLv1.length ? space + fwcoSubLv1 : ''), bOptional));
+      aFormCollection.push( getFwco(
+         sPrefix + sName + ( fwcoSubLv1.length ? space + fwcoSubLv1 : ''), bOptional )
+      );
 
    }
 

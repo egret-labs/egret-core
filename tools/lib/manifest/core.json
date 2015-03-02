@@ -10,7 +10,6 @@
         "egret/utils/getTimer.ts",
         "egret/utils/callLater.ts",
         "egret/utils/RenderCommand.ts",
-        "egret/context/renderer/dom/DOMTrans.ts",
         "egret/events/Event.ts",
         "egret/events/HTTPStatusEvent.ts",
         "egret/events/IOErrorEvent.ts",
@@ -85,20 +84,6 @@
         "egret/tween/Tween.ts",
         "egret/tween/Ease.ts",
         "egret/media/Sound.ts",
-        "jslib/NumberUtils.ts",
-        "extension/resource/events/ResourceEvent.ts",
-        "extension/resource/core/ResourceItem.ts",
-        "extension/resource/core/ResourceConfig.ts",
-        "extension/resource/core/ResourceLoader.ts",
-        "extension/resource/analyzer/AnalyzerBase.ts",
-        "extension/resource/analyzer/BinAnalyzer.ts",
-        "extension/resource/analyzer/ImageAnalyzer.ts",
-        "extension/resource/analyzer/JsonAnalyzer.ts",
-        "extension/resource/analyzer/TextAnalyzer.ts",
-        "extension/resource/analyzer/SheetAnalyzer.ts",
-        "extension/resource/analyzer/FontAnalyzer.ts",
-        "extension/resource/analyzer/SoundAnalyzer.ts",
-        "extension/resource/analyzer/XMLAnalyzer.ts",
-        "extension/resource/Resource.ts"
+        "jslib/NumberUtils.ts"
     ]
 }

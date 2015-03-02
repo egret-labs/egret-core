@@ -4,6 +4,9 @@
         {
             "name": "core"
         },
+        {
+            "name":"res"
+        },
 		{
             "name": "gui"
         }

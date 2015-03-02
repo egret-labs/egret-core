@@ -28,6 +28,7 @@ function getExtendsClassName(className) {
 }
 
 function getClassFullName(className) {
+    className = trim.trimAll(className);
     var memberof = getMemberof(className);
 
     if (memberof.length) {
@@ -92,6 +93,7 @@ exports.screening = function (apiArr) {
             classDes = classinfo["interface"];
         }
         else {
+            setFullType(classinfo);
             continue;
         }
 
@@ -233,7 +235,7 @@ function analyze(item, name, parent, filename) {
             tempClass["memberof"] = tempParent.join(".");
             tempClass["filename"] = filename;
 
-            initDesc(item["docs"], item["parameters"], tempClass);
+            initDesc(item["docs"], item["parameters"], tempClass, true);
             tempClass["classdesc"] = tempClass["description"];
             delete tempClass["description"];
 
@@ -262,7 +264,7 @@ function analyze(item, name, parent, filename) {
             tempClass["memberof"] = tempParent.join(".");
             tempClass["filename"] = filename;
 
-            initDesc(item["docs"], item["parameters"], tempClass);
+            initDesc(item["docs"], item["parameters"], tempClass, true);
             tempClass["classdesc"] = tempClass["description"];
             delete tempClass["description"];
 
@@ -329,10 +331,13 @@ function analyze(item, name, parent, filename) {
             }
         case "set get":
         {
+            var member = {};
             if (rwType == 0) {
                 rwType = 3;
             }
-            var member = {};
+            else {
+                member["rwType"] = rwType;
+            }
             member["kind"] = "member";
             member["type"] = item["type"];
             member["name"] = name;
@@ -465,7 +470,19 @@ function initDesc(docs, parameters, obj, notTrans) {
                     obj["returns"] = {"description" : changeDescription(doc["return"])};
                     break;
                 case "link" :
-                    obj["exampleU"] = trim.trimAll(doc["link"]);
+                    obj["exampleU"] = [];
+
+                    var links = trim.trimAll(doc["link"]);
+                    var arr = links.split("\n");
+                    for (var m = 0; m < arr.length; m++) {
+                        var u = arr[m];
+
+                        var uo = {};
+                        obj["exampleU"].push(uo);
+                        uo["u"] = u.match(/^(\S)+/)[0];
+                        uo["t"] = trim.trimAll(u.substring(uo["u"].length));
+                    }
+
                     break;
                 case "example" :
                     obj["exampleC"] = trim.trimAll(doc["example"]);
@@ -529,13 +546,15 @@ function changeDescription(des) {
     }
     des = des.replace(/^(\s)*/, "");
     des = des.replace(/(\s)*$/, "");
+    des = des.replace(/<br\/>/g, "\n");
     if (des == "") {
         return des;
     }
 
     //var arr = des.split("\n");
     //return "<p>" + arr.join("</p><p>") + "</p>";
-    return "<p>" + des + "</p>";
+    //return "<p>" + des + "</p>";
+    return des;
 }
 
 function clone(frame, result) {

@@ -33,9 +33,7 @@ module egret {
      * @classdesc
      * DisplayObjectContainer 类是可用作显示列表中显示对象容器的所有对象的基类。
      * 该显示列表管理运行时中显示的所有对象。使用 DisplayObjectContainer 类排列显示列表中的显示对象。每个 DisplayObjectContainer 对象都有自己的子级列表，用于组织对象的 Z 轴顺序。Z 轴顺序是由前至后的顺序，可确定哪个对象绘制在前，哪个对象绘制在后等。
-     * <div style="margin-top: 20px"><b>了解详细信息</b>
-     * <a href="http://docs.egret-labs.org/post/manual/displaycon/aboutdisplaycon.html" style="padding-left: 20px" target="_blank" >显示容器的概念与实现</a>
-     * </div>
+     * @link http://docs.egret-labs.org/post/manual/displaycon/aboutdisplaycon.html 显示容器的概念与实现
      */
     export class DisplayObjectContainer extends DisplayObject {
 
@@ -70,7 +68,7 @@ module egret {
         public _children:Array<DisplayObject>;
 
         /**
-         * 返回此对象的子项数目。【只读】
+         * 返回此对象的子项数目。
          * @member {number} egret.DisplayObjectContainer#numChildren
          */
         public get numChildren():number {
@@ -162,7 +160,9 @@ module egret {
                 var list = DisplayObjectContainer.__EVENT__ADD_TO_STAGE_LIST;
                 while (list.length > 0) {
                     var childAddToStage = list.shift();
-                    childAddToStage.dispatchEventWith(Event.ADDED_TO_STAGE);
+                    if (notifyListeners){
+                        childAddToStage.dispatchEventWith(Event.ADDED_TO_STAGE);
+                    }
                 }
             }
 
@@ -207,14 +207,18 @@ module egret {
         public _doRemoveChild(index:number, notifyListeners:boolean = true):DisplayObject {
             var locChildren = this._children;
             var child:DisplayObject = locChildren[index];
-            if (notifyListeners)
-                child.dispatchEventWith(Event.REMOVED, true)
+            if (notifyListeners){
+                child.dispatchEventWith(Event.REMOVED, true);
+            }
+
             if (this._stage) {//在舞台上
                 child._onRemoveFromStage();
                 var list = DisplayObjectContainer.__EVENT__REMOVE_FROM_STAGE_LIST
                 while (list.length > 0) {
                     var childAddToStage = list.shift();
-                    childAddToStage.dispatchEventWith(Event.REMOVED_FROM_STAGE);
+                    if (notifyListeners){
+                        childAddToStage.dispatchEventWith(Event.REMOVED_FROM_STAGE);
+                    }
                     childAddToStage._stage = null;
                 }
             }

@@ -29,9 +29,7 @@ module egret {
     /**
      * @class egret.HtmlTextParser
      * @classdesc 将html格式文本转换为可赋值给 egret.TextField#textFlow 属性的对象
-     * <div style="margin-top: 20px"><b>了解详细信息</b>
-     * <a href="http://docs.egret-labs.org/jkdoc/manual-text-multiformat.html" style="padding-left: 20px" target="_blank" >多种样式文本混合</a>
-     * </div>
+     * @link http://docs.egret-labs.org/jkdoc/manual-text-multiformat.html 多种样式文本混合
      */
     export class HtmlTextParser{
 

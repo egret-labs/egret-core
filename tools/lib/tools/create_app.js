@@ -5,6 +5,9 @@ var param = require("../core/params_analyze.js");
 var file = require('../core/file.js');
 
 function run(dir, args, opts) {
+    if(!args || !args[0] || !opts["-f"] || !opts["-t"]) {
+        globals.exit(1601);
+    }
 	var arg_app_name = args[0];
     var template_path = opts["-t"][0];
 	var arg_h5_path = opts["-f"][0];
