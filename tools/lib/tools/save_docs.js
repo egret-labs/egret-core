@@ -331,10 +331,13 @@ function analyze(item, name, parent, filename) {
             }
         case "set get":
         {
+            var member = {};
             if (rwType == 0) {
                 rwType = 3;
             }
-            var member = {};
+            else {
+                member["rwType"] = rwType;
+            }
             member["kind"] = "member";
             member["type"] = item["type"];
             member["name"] = name;

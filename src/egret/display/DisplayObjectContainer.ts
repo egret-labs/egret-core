@@ -68,7 +68,7 @@ module egret {
         public _children:Array<DisplayObject>;
 
         /**
-         * 返回此对象的子项数目。【只读】
+         * 返回此对象的子项数目。
          * @member {number} egret.DisplayObjectContainer#numChildren
          */
         public get numChildren():number {

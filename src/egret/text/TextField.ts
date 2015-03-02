@@ -487,7 +487,7 @@ module egret {
 
         public _numLines:number = 0;
         /**
-         * 文本行数。【只读】
+         * 文本行数。
          * @member {number} egret.TextField#numLines
          */
         public get numLines():number {
