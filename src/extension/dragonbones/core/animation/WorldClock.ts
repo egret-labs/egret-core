@@ -39,7 +39,7 @@ module dragonBones {
 	export class WorldClock implements IAnimatable{
         /**
          * 可以直接使用的全局静态时钟实例.
-         * @type {dragonBones.WorldClock}
+         * @type dragonBones.WorldClock
          */
 		public static clock:WorldClock = new WorldClock();
 		
