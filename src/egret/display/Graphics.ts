@@ -43,6 +43,8 @@ module egret {
         private strokeStyleColor:string = null;
         private fillStyleColor:string = null;
         private _dirty:boolean = false;
+        private lineX:number = 0;
+        private lineY:number = 0;
 
         constructor() {
             this.commandQueue = [];

@@ -27,10 +27,27 @@
 
 
 module dragonBones {
+    /**
+     * @class dragonBones.Event
+     * @classdesc
+     * 事件
+     */
     export class Event {
+        /**
+         * 事件的类型
+         * @member {string} dragonBones.Event#type
+         */
         public type:string;
+        /**
+         * 派发事件的对象
+         * @member {dragonBones.EventDispatcher} dragonBones.Event#target
+         */
         public target:EventDispatcher;
 
+        /**
+         * 创建一个Event实例
+         * @param type 事件的类型
+         */
         constructor(type:string) {
             this.type = type;
         }

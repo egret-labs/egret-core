@@ -28,12 +28,28 @@
 
 module dragonBones {
 
+	/**
+	 * @class dragonBones.Timeline
+	 * @classdesc
+	 * 保存时间轴相关的数据，包括关键帧，持续时间，时间缩放
+	 */
 	export class Timeline{
+		/**
+		 * 持续时间，单位是帧
+		 * @member {number} dragonBones.Timeline#duration
+		 */
 		public duration:number = 0;
+		/**
+		 * 时间缩放，设置为2，时间放慢一倍，设置为0.5，时间加快一倍，默认为1
+		 * @member {number} dragonBones.Timeline#scale
+		 */
 		public scale:number;
 		
 		private _frameList:Array<Frame>;
-		
+
+		/**
+		 * 初始化数据duration为0，scale为1
+		 */
 		public constructor(){
 			this._frameList = [];
 			this.duration = 0;
@@ -47,7 +63,12 @@ module dragonBones {
 			}
 			this._frameList = null;
 		}
-		
+
+		/**
+		 * 添加一个关键帧数据
+		 * @param frame 关键帧数据
+		 * @see extension.dragonbones.model.Frame
+		 */
 		public addFrame(frame:Frame):void{
 			if(!frame){
 				throw new Error();
@@ -60,7 +81,11 @@ module dragonBones {
 				throw new Error();
 			}
 		}
-		
+
+		/**
+		 * 获取关键帧列表
+		 * @returns {Array<Frame>}
+		 */
 		public get frameList():Array<Frame>{
 			return this._frameList;
 		}

@@ -28,13 +28,23 @@
 
 module dragonBones {
 
+	/**
+	 * @class dragonBones.ArmatureEvent
+	 * @extends dragonBones.Event
+	 * @classdesc
+	 * 骨架事件
+	 */
 	export class ArmatureEvent extends Event{
 	
 		/**
-		 * Dispatched after a successful z order update.
+		 * 当zOrder成功更新后派发
 		 */
 		public static Z_ORDER_UPDATED:string = "zOrderUpdated";
-		
+
+		/**
+		 * 创建一个 ArmatureEvent 的实例
+		 * @param type 事件类型
+		 */
 		public constructor(type:string){
 			super(type);
 		}

@@ -27,15 +27,27 @@
 
 
 module dragonBones {
+    /**
+     * @class dragonBones.EgretSlot
+     * @extends dragonBones.Slot
+     * @classdesc
+     * egret引擎使用的插槽
+     */
     export class EgretSlot extends Slot {
         private _egretDisplay:egret.DisplayObject;
 
+        /**
+         * 创建一个新的 EgretSlot 实例
+         */
         public constructor(){
             super(this);
 
             this._egretDisplay = null;
         }
 
+        /**
+         * 释放资源
+         */
         public dispose():void{
             var length:number = this._displayList.length;
             for(var i:number = 0;i < length;i++){

@@ -31,6 +31,7 @@ module dragonBones {
 	/**
 	 * @class dragonBones.BaseFactory
 	 * @classdesc
+	 * 工厂的基类
 	 * @extends dragonBones.EventDispatcher
 	 */
 	export class BaseFactory  extends EventDispatcher{
@@ -50,8 +51,8 @@ module dragonBones {
 		}
 		
 		/**
-		 * Cleans up resources used by this BaseFactory instance.
-		 * @param  disposeData {boolean} (optional) Destroy all internal references.
+		 * 释放资源
+		 * @param  disposeData {boolean} (optional) 是否释放所有内部的引用
 		 */
 		public dispose(disposeData:boolean = true):void{
 			if(disposeData){
@@ -73,25 +74,26 @@ module dragonBones {
 		}
 
         /**
-         * Returns a DragonBonesData instance.
-         * @param name {string} The name of an existing DragonBonesData instance.
-         * @returns {dragonBones.DragonBonesData} A DragonBonesData instance with given name (if exist).
+         * 根据名字获取一个DragonBonesData
+         * @param name {string} 想要获取的DragonBonesData的名字
+         * @returns {dragonBones.DragonBonesData} 返回指定名字的DragonBonesData（如果存在的话）
          */
         public getDragonBonesData(name:string):DragonBonesData{
             return this.dragonBonesDataDic[name];
         }
 
 		/**
-		 * Recommend using getDragonBonesData API instead.
+		 * 根据名字获取一个DragonBonesData（不推荐使用）
+		 * 建议使用方法getDragonBonesData来代替这个方法
 		 */
 		public getSkeletonData(name:string):DragonBonesData{
 			return this.getDragonBonesData(name);
 		}
 		
 		/**
-		 * Add a DragonBonesData instance to this BaseFactory instance.
-		 * @param data {dragonBones.DragonBonesData} A DragonBonesData instance.
-		 * @param name {string} (optional) A name for this DragonBonesData instance.
+		 * 添加一个DragonBonesData实例
+		 * @param data {dragonBones.DragonBonesData} 一个DragonBonesData实例
+		 * @param name {string} (optional) DragonBonesData的名字
 		 */
 		public addDragonBonesData(data:DragonBonesData, name:string = null):void{
 			if(!data){
@@ -109,40 +111,42 @@ module dragonBones {
 		}
 
         /**
-         * Recommend using addDragonBonesData API instead.
+         * 添加一个DragonBonesData实例（不推荐使用）
+		 * 建议使用方法addDragonBonesData来代替
          */
         public addSkeletonData(data:DragonBonesData, name:string = null):void{
             this.addDragonBonesData(data, name);
         }
 
 		/**
-		 * Remove a DragonBonesData instance from this BaseFactory instance.
-		 * @param name {string} The name for the DragonBonesData instance to remove.
+		 * 根据名字移除一个DragonBonesData实例.
+		 * @param name {string} 想要移除的DragonBonesData的名字
 		 */
 		public removeDragonBonesData(name:string):void{
 			delete this.dragonBonesDataDic[name];
 		}
 
         /**
-         * Recommend using removeDragonBonesData API instead.
+		 * 根据名字移除一个DragonBonesData实例.（不推荐使用）
+		 * 建议使用方法removeDragonBonesData代替
          */
         public removeSkeletonData(name:string):void{
             delete this.dragonBonesDataDic[name];
         }
 
 		/**
-		 * Return the TextureAtlas by name.
-		 * @param name {string} The name of the TextureAtlas to return.
-		 * @returns {any} A textureAtlas.
+		 * 根据名字获取纹理集TextureAtlas
+		 * @param name {string} 需要获取的纹理集TextureAtlas的名字
+		 * @returns {any} 纹理集TextureAtlas
 		 */
 		public getTextureAtlas(name:string):any{
 			return this.textureAtlasDic[name];
 		}
 		
 		/**
-		 * Add a textureAtlas to this BaseFactory instance.
-		 * @param textureAtlas {any} A textureAtlas to add to this BaseFactory instance.
-		 * @param name {string} (optional) A name for this TextureAtlas.
+		 * 添加一个纹理集
+		 * @param textureAtlas {any} 需要被添加的纹理集
+		 * @param name {string} (optional) 需要被添加的纹理集的名字
 		 */
 		public addTextureAtlas(textureAtlas:any, name:string = null):void{
 			if(!textureAtlas){
@@ -168,20 +172,20 @@ module dragonBones {
 		}
 		
 		/**
-		 * Remove a textureAtlas from this baseFactory instance.
-		 * @param name {string} The name of the TextureAtlas to remove.
+		 * 移除指定名字的纹理集
+		 * @param name {string} 需要移除的纹理集的名字
 		 */
 		public removeTextureAtlas(name:string):void{
 			delete this.textureAtlasDic[name];
 		}
 		
 		/**
-		 * Return the TextureDisplay.
-		 * @param textureName {string} The name of this Texture.
-		 * @param textureAtlasName {string} The name of the TextureAtlas.
-		 * @param pivotX {number} The registration pivotX position.
-		 * @param pivotY {number} The registration pivotY position.
-		 * @returns {any} An Object.
+		 * 获取TextureDisplay
+		 * @param textureName {string} 纹理的名字
+		 * @param textureAtlasName {string} 纹理集的名字
+		 * @param pivotX {number} 轴点的x坐标
+		 * @param pivotY {number} 轴点的y坐标
+		 * @returns {any} 返回的TextureDisplay
 		 */
 		public getTextureDisplay(textureName:string, textureAtlasName:string = null, pivotX:number = NaN, pivotY:number = NaN):any{
 			var targetTextureAtlas:any;
@@ -217,9 +221,17 @@ module dragonBones {
 			
 			return this._generateDisplay(targetTextureAtlas, textureName, pivotX, pivotY);
 		}
-		
-		//一般情况下dragonBonesData和textureAtlas是一对一的，通过相同的key对应。
-		//TO DO 以后会支持一对多的情况
+
+		/**
+		 * 构建骨架
+		 * 一般情况下dragonBonesData和textureAtlas是一对一的，通过相同的key对应。
+		 * TO DO 以后会支持一对多的情况
+		 * @param armatureName 骨架的名字
+		 * @param fromDragonBonesDataName 骨架数据的名字 可选参数
+		 * @param fromTextureAtlasName 纹理集的名字 可选参数
+		 * @param skinName 皮肤的名字 可选参数
+		 * @returns {*}
+		 */
 		public buildArmature(armatureName:string, fromDragonBonesDataName:string = null, fromTextureAtlasName:string = null, skinName:string = null):Armature{
 			var buildArmatureDataPackage:any = {};
 			if(this.fillBuildArmatureDataPackageArmatureInfo(armatureName, fromDragonBonesDataName, buildArmatureDataPackage)){
@@ -236,7 +248,15 @@ module dragonBones {
 			
 			return this.buildArmatureUsingArmatureDataFromTextureAtlas(dragonBonesData, armatureData, textureAtlas, skinName);
 		}
-		
+
+		/**
+		 * 用dragonBones数据，骨架数据，纹理集数据来构建骨架
+		 * @param dragonBonesData dragonBones数据
+		 * @param armatureData 骨架数据
+		 * @param textureAtlas 纹理集
+		 * @param skinName 皮肤名称 可选参数
+		 * @returns {Armature}
+		 */
 		public buildArmatureUsingArmatureDataFromTextureAtlas(dragonBonesData:DragonBonesData, armatureData:ArmatureData, textureAtlas:any, skinName:string = null):Armature{
 			var outputArmature:Armature = this._generateArmature();
 			outputArmature.name = armatureData.name;
@@ -252,7 +272,15 @@ module dragonBones {
 			return outputArmature;
 		}
 
-//暂时不支持ifRemoveOriginalAnimationList为false的情况
+		/**
+		 * 拷贝动画到骨架中
+		 * 暂时不支持ifRemoveOriginalAnimationList为false的情况
+		 * @param toArmature  拷贝到的那个骨架
+		 * @param fromArmatreName 从哪个骨架里拷贝，骨架的名字
+		 * @param fromDragonBonesDataName 从哪个DragonBones数据中拷贝，Dragonbones数据的名字
+		 * @param ifRemoveOriginalAnimationList 是否移除原骨架里的动画，暂时不支持为false的情况
+		 * @returns {boolean}
+		 */
 		public copyAnimationsToArmature(toArmature:Armature, fromArmatreName:string, fromDragonBonesDataName:string = null, ifRemoveOriginalAnimationList:boolean = true):boolean{
 			var buildArmatureDataPackage:any = {};
 			if(!this.fillBuildArmatureDataPackageArmatureInfo(fromArmatreName, fromDragonBonesDataName, buildArmatureDataPackage)){

@@ -27,7 +27,15 @@
 
 
 module dragonBones {
-
+    /**
+     * @class dragonBones.TimelineState
+     * @classdesc
+     * TimelineState 负责计算 Bone 的时间轴动画。
+     * TimelineState 实例隶属于 AnimationState. AnimationState在创建时会为每个包含动作的 Bone生成一个 TimelineState 实例.
+     * @see dragonBones.Animation
+     * @see dragonBones.AnimationState
+     * @see dragonBones.Bone
+     */
 	export class TimelineState{
 		private static HALF_PI:number = Math.PI * 0.5;
 		private static DOUBLE_PI:number = Math.PI * 2;

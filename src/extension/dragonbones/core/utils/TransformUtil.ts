@@ -27,13 +27,23 @@
 
 
 module dragonBones {
-	export class TransformUtil{
+    /**
+     * @class dragonBones.TransformUtils
+     * @classdesc
+     * 提供了一些常用的转换的静态方法
+     */
+    export class TransformUtil{
 		private static HALF_PI:number = Math.PI * 0.5;
 		private static DOUBLE_PI:number = Math.PI * 2;
 
         private static _helpTransformMatrix:Matrix = new Matrix();
         private static _helpParentTransformMatrix:Matrix = new Matrix();
 
+        /**
+         * 全局坐标系转成成局部坐标系
+         * @param transform 全局坐标系下的变换
+         * @param parent 父亲的坐标变换
+         */
         public static globalToLocal(transform:DBTransform, parent:DBTransform):void
         {
             TransformUtil.transformToMatrix(transform, TransformUtil._helpTransformMatrix, true);
@@ -45,6 +55,12 @@ module dragonBones {
             TransformUtil.matrixToTransform(TransformUtil._helpTransformMatrix, transform, transform.scaleX * parent.scaleX >= 0, transform.scaleY * parent.scaleY >= 0);
         }
 
+        /**
+         *把transform数据转成成矩阵数据
+         * @param transform 需要转换的transform数据
+         * @param matrix 转换后的矩阵数据
+         * @param keepScale 是否保持缩放
+         */
 		public static transformToMatrix(transform:DBTransform, matrix:Matrix, keepScale:boolean = false):void{
 			if(keepScale){
 				matrix.a = transform.scaleX * Math.cos(transform.skewY)
@@ -64,6 +80,13 @@ module dragonBones {
 			}
 		}
 
+        /**
+         *把 矩阵数据转成成transform数据
+         * @param matrix 需要转换的矩阵数据
+         * @param transform 转换后的transform数据
+         * @param scaleXF x方向的缩放
+         * @param scaleYF y方向的缩放
+         */
         public static matrixToTransform(matrix:Matrix, transform:DBTransform, scaleXF:Boolean, scaleYF:Boolean):void
         {
             transform.x = matrix.tx;
@@ -102,6 +125,12 @@ module dragonBones {
             }
 
         }
+
+        /**
+         * 标准化弧度值，把弧度制换算到[-PI，PI]之间
+         * @param radian 输入一个弧度值
+         * @returns {number} 输出标准化后的弧度制
+         */
 		public static formatRadian(radian:number):number{
 			//radian %= DOUBLE_PI;
 			if (radian > Math.PI){

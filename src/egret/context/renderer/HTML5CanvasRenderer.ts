@@ -479,10 +479,6 @@ module egret_h5_graphics {
             [thickness, _colorStr]
         ));
 
-        if (typeof(this.lineX) === "undefined") {
-            this.lineX = 0;
-            this.lineY = 0;
-        }
         this.moveTo(this.lineX, this.lineY);
     }
 
@@ -496,6 +492,7 @@ module egret_h5_graphics {
             this,
             [x, y]
         ));
+        this.checkPoint(this.lineX, this.lineY);
         this.lineX = x;
         this.lineY = y;
         this.checkPoint(x, y);
@@ -513,6 +510,7 @@ module egret_h5_graphics {
             this,
             [controlX, controlY, anchorX, anchorY]
         ));
+        this.checkPoint(this.lineX, this.lineY);
         this.lineX = anchorX;
         this.lineY = anchorY;
         this.checkPoint(controlX, controlY);
@@ -528,8 +526,7 @@ module egret_h5_graphics {
             },
             this,
             [x, y]
-        ))
-        this.checkPoint(x, y);
+        ));
     }
 
     export function clear():void {
@@ -543,6 +540,7 @@ module egret_h5_graphics {
         this._minY = 0;
         this._maxX = 0;
         this._maxY = 0;
+        this._firstCheck = true;
     }
 
     export function createEndFillCommand():void {

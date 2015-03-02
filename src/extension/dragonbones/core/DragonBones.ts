@@ -27,8 +27,19 @@
 
 
 module dragonBones {
+	/**
+	 * @class dragonBones.DragonBones
+	 * @classdesc
+	 * DragonBones
+	 */
 	export class DragonBones{
+		/**
+		 * 数据的版本号
+		 */
 		public static DATA_VERSION:string = "2.3";
+		/**
+		 *
+		 */
         public static PARENT_COORDINATE_DATA_VERSION:String = "3.0";
 		
 		public constructor(){

@@ -320,6 +320,9 @@ var egret_native_graphics;
             egret_native.Graphics.lineTo(x, y)
 
         }, this, arguments));
+        this.checkPoint(this.lineX, this.lineY);
+        this.lineX = x;
+        this.lineY = y;
         this.checkPoint(x, y);
     }
 
@@ -335,18 +338,20 @@ var egret_native_graphics;
         this.commandQueue.push(new Command(function (x, y) {
             egret_native.Graphics.moveTo(x, y)
         }, this, arguments));
-        this.checkPoint(x, y);
     }
 
     egret_native_graphics.moveTo = moveTo;
 
     function clear() {
         this.commandQueue.splice(0, this.commandQueue.length);
+        this.lineX = 0;
+        this.lineY = 0;
         egret_native.Graphics.lineStyle(0, 0);
         this._minX = 0;
         this._minY = 0;
         this._maxX = 0;
         this._maxY = 0;
+        this._firstCheck = true;
     }
 
     egret_native_graphics.clear = clear;

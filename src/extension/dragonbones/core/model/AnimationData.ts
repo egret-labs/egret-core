@@ -28,24 +28,64 @@
 
 module dragonBones {
 
+	/**
+	 * @class dragonbones.AnimationData
+	 * @extends dragonbones.Timeline
+	 * @classdesc
+	 * 保存动画数据
+	 */
 	export class AnimationData extends Timeline{
+		/**
+		 * 动画的名字
+		 * @member {string} dragonBones.AnimationData#name
+		 */
 		public name:string;
+		/**
+		 * 动画的帧率，表示每一秒钟播放多少帧
+		 * @member {number} dragonBones.AnimationData#frameRate
+		 */
 		public frameRate:number = 0;
+		/**
+		 * 动画过渡时间，表示从其他动画过渡到这个动画需要的时间
+		 * @member {number} dragonBones.AnimationData#fadeTime
+		 */
 		public fadeTime:number;
+		/**
+		 * 	播放次数 0为一直播放，默认为0
+		 * @member {number} dragonBones.AnimationData#playTimes
+		 */
 		public playTimes:number = 0;
-		//use frame tweenEase, NaN
-		//overwrite frame tweenEase, [-1, 0):ease in, 0:line easing, (0, 1]:ease out, (1, 2]:ease in out
+		/**
+		 * 动画的缓动参数，取值范围是[-1,2],其中[-1, 0)表示缓进，(0, 1]表示缓出(1, 2]表示缓进缓出，0表示不缓动，线性渐变
+		 * 这个参数会被帧数据中的tweenEasing覆盖
+		 * @member {number} dragonBones.AnimationData#tweenEasing
+		 */
 		public tweenEasing:number;
+		/**
+		 * 是否开启缓动，默认是true，就是开启缓动
+		 * @member {boolean} dragonBones.AnimationData#autoTween
+		 */
 		public autoTween:boolean;
+		/**
+		 * 最后一帧持续的帧数
+		 * @member {number} dragonBones.AnimationData#lastFrameDuration
+		 */
 		public lastFrameDuration:number = 0;
 		
 		public hideTimelineNameMap:Array<string>;
 		
 		private _timelineList:Array<TransformTimeline>;
+		/**
+		 * 时间轴列表
+		 * @returns {Array<TransformTimeline>}
+		 */
 		public get timelineList():Array<TransformTimeline>{
 			return this._timelineList;
 		}
-		
+
+		/**
+		 * 创建一个AnimationData实例
+		 */
 		public constructor(){
 			super();
 			this.fadeTime = 0;
@@ -56,7 +96,10 @@ module dragonBones {
 			
 			this._timelineList = [];
 		}
-		
+
+		/**
+		 * 释放资源
+		 */
 		public dispose():void{
 			super.dispose();
 			this.hideTimelineNameMap = null;
@@ -69,7 +112,12 @@ module dragonBones {
 
 			this._timelineList = null;
 		}
-		
+
+		/**
+		 * 根据时间轴的名字获取时间轴数据
+		 * @param timelineName 时间轴的名字
+		 * @returns {*} 时间轴数据
+		 */
 		public getTimeline(timelineName:string):TransformTimeline{
 			var i:number = this._timelineList.length;
 			while(i --){
@@ -79,7 +127,11 @@ module dragonBones {
 			}
 			return null;
 		}
-		
+
+		/**
+		 * 添加一个时间轴数据
+		 * @param timeline 需要被添加的时间轴数据
+		 */
 		public addTimeline(timeline:TransformTimeline):void{
 			if(!timeline){
 				throw new Error();

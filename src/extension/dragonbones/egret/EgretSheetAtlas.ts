@@ -27,13 +27,37 @@
 
 
 module dragonBones {
+    /**
+     * @class dragonBones.EgretSheetAtlas
+     * @implements dragonBones.ITextureAtlas
+     * @classdesc
+     * Egret 引擎使用的sheet纹理集
+     */
     export class EgretSheetAtlas implements ITextureAtlas {
         private static Region:egret.Rectangle = new egret.Rectangle();
+        /**
+         * 纹理集的名称
+         * @member {string} dragonBones.EgretSheetAtlas#name
+         */
         public name:string;
+        /**
+         * 纹理集的缩放
+         * @member {number} dragonBones.EgretSheetAtlas#scale
+         */
         public scale:number;
+        /**
+         * spriteSheet
+         * @member {egret.SpriteSheet} dragonBones.EgretSheetAtlas#spriteSheet
+         */
         public spriteSheet:egret.SpriteSheet;
         private _textureDatas:any = {};
 
+        /**
+         * 创建一个新的EgretSheetAltas 实例
+         * @param texture 纹理
+         * @param textureData 纹理数据
+         * @param scale 缩放
+         */
         constructor(public texture:egret.Texture, private textureData:any, scale:number = 1) {
             this.scale = scale;
             this.name = textureData[ConstValues.A_NAME];
@@ -42,6 +66,11 @@ module dragonBones {
             this._textureDatas = textureData["frames"];
         }
 
+        /**
+         *通过纹理的名字来获取纹理
+         * @param fullName 纹理的名字
+         * @returns {egret.Texture} 获取到的纹理
+         */
         public getTexture(fullName:string):egret.Texture {
             var result = this.spriteSheet.getTexture(fullName);
             if (!result) {
@@ -51,10 +80,18 @@ module dragonBones {
             return result;
         }
 
+        /**
+         *释放资源
+         */
         public dispose():void {
             this.texture = null;
         }
 
+        /**
+         * 根据子纹理的名字获取子纹理的矩形区域
+         * @param subTextureName 子纹理的名字
+         * @returns {*} 获取到的矩形区域
+         */
         public getRegion(subTextureName:string):Rectangle {
             var textureData:any = this._textureDatas[subTextureName];
             if (textureData) {

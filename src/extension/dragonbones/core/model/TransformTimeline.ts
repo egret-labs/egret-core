@@ -28,18 +28,42 @@
 
 module dragonBones {
 
+	/**
+	 * @class dragonBones.TransformTimeline
+	 * @extends dragonBones.Timeline
+	 * @classdesc
+	 * 骨骼的时间轴数据，包含一个和多个关键帧数据
+	 */
 	export class TransformTimeline extends Timeline{
+		/**
+		 *时间轴的名称
+		 * @member {string} dragonBones.TransformTimeline#name
+		 */
 		public name:string;
+		/**
+		 * 是否有动画
+		 * @member {boolean} dragonBones.TransformTimeline#transformed
+		 */
 		public transformed:boolean;
-		
-		//第一帧的Transform
+		/**
+		 * 第一帧的Transform
+		 * @member {dragonBones.DBTransform} dragonBones.TransformTimeline#originTransform
+		 */
 		public originTransform:DBTransform;
-		
-		//第一帧的骨头的轴点
+		/**
+		 * 第一帧的骨头的轴点
+		 * @member {dragonBones.Point} dragonBones.TransformTimeline#originPivot
+		 */
 		public originPivot:Point;
-		
+		/**
+		 * 偏移量
+		 * @member {number} dragonBones.TransformTimeline#offset
+		 */
 		public offset:number;
-		
+
+		/**
+		 * 构造函数，实例化一个TransformTimeline
+		 */
 		public constructor(){
 			super();
 			
@@ -50,7 +74,10 @@ module dragonBones {
 			this.originPivot = new Point();
 			this.offset = 0;
 		}
-		
+
+		/**
+		 * 释放资源
+		 */
 		public dispose():void{
 			super.dispose();
 			

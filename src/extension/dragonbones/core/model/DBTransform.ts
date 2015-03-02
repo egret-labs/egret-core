@@ -28,33 +28,46 @@
 
 module dragonBones {
 
+	/**
+	 * @class dragonBones.DBTransform
+	 * @classdesc
+	 * Dragonbones中使用的transform
+	 * 可以表示位移，旋转，缩放三种属性
+	 */
 	export class DBTransform{
 		/**
-		 * Position on the x axis.
+		 * x坐标值
+		 * @member {number} dragonBones.DBTransform#x
 		 */
 		public x:number;
 		/**
-		 * Position on the y axis.
+		 * y坐标值
+		 * @member {number} dragonBones.DBTransform#y
 		 */
 		public y:number;
 		/**
-		 * Skew on the x axis.
+		 * x方向的斜切，一般和skewY一起变化，可以表示旋转
+		 * @member {number} dragonBones.DBTransform#skewX
 		 */
 		public skewX:number;
 		/**
-		 * skew on the y axis.
+		 * y方向的斜切，一般和skewX一起变化，可以表示旋转
+		 * @member {number} dragonBones.DBTransform#skewY
 		 */
 		public skewY:number;
 		/**
-		 * Scale on the x axis.
+		 * x方向的缩放
+		 * @member {number} dragonBones.DBTransform#scaleX
 		 */
 		public scaleX:number;
 		/**
-		 * Scale on the y axis.
+		 * y方向的缩放
+		 * @member {number} dragonBones.DBTransform#scaleY
 		 */
 		public scaleY:number;
 		/**
-		 * The rotation of that DBTransform instance.
+		 * 旋转，用弧度表示
+		 * @member {number} dragonBones.DBTransform#rotation
 		 */
 		public get rotation():number{
 			return this.skewX;
@@ -63,7 +76,7 @@ module dragonBones {
 			this.skewX = this.skewY = value;
 		}
 		/**
-		 * Creat a new DBTransform instance.
+		 * 创建一个 DBTransform 实例.
 		 */
 		public constructor(){
 			this.x = 0;
@@ -74,7 +87,7 @@ module dragonBones {
 			this.scaleY = 1;
 		}
 		/**
-		 * Copy all properties from this DBTransform instance to the passed DBTransform instance.
+		 * 拷贝传入的transfrom实例的所有属性
 		 * @param node
 		 */
 		public copy(transform:DBTransform):void{
@@ -86,8 +99,8 @@ module dragonBones {
 			this.scaleY = transform.scaleY;
 		}
 		/**
-		 * Get a string representing all DBTransform property values.
-		 * @return String All property values in a formatted string.
+		 * 把DBTransform的所有属性转成用String类型表示
+		 * @return 一个字符串包含有DBTransform的所有属性
 		 */
 		public toString():string{
 			var string:string = "x:" + this.x + " y:" + this.y + " skewX:" + this.skewX + " skewY:" + this.skewY + " scaleX:" + this.scaleX + " scaleY:" + this.scaleY;

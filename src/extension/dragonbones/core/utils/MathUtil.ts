@@ -27,6 +27,12 @@
 
 
 module dragonBones {
+
+	/**
+	 * @class dragonBones.MathUtil
+	 * @classdesc
+	 * 内部使用的有关数学计算的工具类
+	 */
 	export class MathUtil{
 		/** @private */
 		public static getEaseValue(value:number, easing:number):number{
