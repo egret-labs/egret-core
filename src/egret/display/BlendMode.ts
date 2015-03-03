@@ -37,7 +37,7 @@ module egret {
          */
         public static ADD:string = "add";
         /**
-         * 根据显示对象的 Alpha 值擦除背景。Alpha 值不为0的区域将被擦除。该API暂未实现。
+         * 根据显示对象的 Alpha 值擦除背景。Alpha 值不为0的区域将被擦除。
          * @constant {string} egret.BlendMode.ERASE
          * @private
          */
