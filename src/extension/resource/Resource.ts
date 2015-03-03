@@ -133,6 +133,14 @@ module RES {
     export function setMaxLoadingThread(thread:number):void{
         instance.setMaxLoadingThread(thread);
     }
+    
+    /**
+     * 设置资源加载失败时的重试次数，默认值是 3。
+     * @param retry 要设置的重试次数。
+     */
+    export function setMaxRetryTimes(retry: number): void {
+        instance.setMaxRetryTimes(retry);
+    }
 
     /**
      * 添加事件侦听器,参考ResourceEvent定义的常量。
@@ -604,6 +612,15 @@ module RES {
                 thread = 1;
             }
             this.resLoader.thread = thread;
+        }
+
+        /**
+         * 设置资源加载失败时的重试次数。
+         * @param retry 要设置的重试次数。
+         */
+        public setMaxRetryTimes(retry:number):void{
+            retry = Math.max(retry, 0);
+            this.resLoader.maxRetryTimes = retry;
         }
     }
     /**
