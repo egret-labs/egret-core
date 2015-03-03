@@ -26,28 +26,38 @@ function run(dir, args, opts) {
 
     projectProperties.init(currDir);
 
+    var versionFile = "";
+    if (opts["--version"]) {
+        versionFile = opts["--version"][0];
+    }
+    if (versionFile == null || versionFile == "") {
+        versionFile = Math.round(Date.now() / 1000);
+    }
+
     var runtime = param.getOption(opts, "--runtime", ["html5", "native"]);
     if (runtime == "native") {
-        publishNative(opts);
+        publishNative(opts, versionFile);
     }
     else {
-        publishHtml5(opts);
+        publishHtml5(opts, versionFile);
     }
 }
 
-function publishNative(opts) {
+function publishNative(opts, versionFile) {
 
     var timeMinSec = Date.now();
-    var time = Math.round(Date.now() / 1000);
 
-    console.log("开始发布%s版本：%d", "native", time);
+    console.log("开始发布%s版本：%s", "native", versionFile + "");
 
     var projectPath = projectProperties.getProjectPath();
     var releasePath = path.join(projectPath, projectProperties.getReleaseUrl());
     var ziptempPath = path.join(releasePath, "ziptemp");
     file.remove(ziptempPath);
 
-    var releaseOutputPath = path.join(releasePath, "android", time + "");
+    var releaseOutputPath = path.join(releasePath, "android", versionFile + "");
+    if (file.exists(releaseOutputPath)) {
+        file.remove(releaseOutputPath);
+    }
     file.createDirectory(releaseOutputPath);
 
     var task = [];
@@ -149,7 +159,7 @@ function publishNative(opts) {
             var tempTime = Date.now();
             globals.debugLog("开始打zip包");
             var password = getPassword(opts);
-            var zipFile = path.join(releaseOutputPath, "game_code_" + time + ".zip");
+            var zipFile = path.join(releaseOutputPath, "game_code_" + versionFile + ".zip");
             zip.createZipFile(ziptempPath, zipFile, function () {
                 file.remove(ziptempPath);
 
@@ -251,16 +261,18 @@ function publishNative(opts) {
     }
 }
 
-function publishHtml5(opts) {
+function publishHtml5(opts, versionFile) {
     var timeMinSec = Date.now();
-    var time = Math.round(Date.now() / 1000);
 
-    console.log("开始发布%s版本：%d", "html5", time);
+    console.log("开始发布%s版本：%s", "html5", versionFile + "");
 
     var projectPath = projectProperties.getProjectPath();
     var releasePath = path.join(projectPath, projectProperties.getReleaseUrl());
 
-    var releaseOutputPath = path.join(releasePath, "html5", time + "");
+    var releaseOutputPath = path.join(releasePath, "html5", versionFile + "");
+    if (file.exists(releaseOutputPath)) {
+        file.remove(releaseOutputPath);
+    }
     file.createDirectory(releaseOutputPath);
 
     var task = [];
@@ -376,7 +388,7 @@ function help_title() {
 
 function help_example() {
     var result = "\n";
-    result += "    egret publish [project_name] [-compile] [--password your_passsword] [--runtime html5|native] [-log]\n";
+    result += "    egret publish [project_name] [-compile] [--password your_passsword] [--runtime html5|native] [-log] [--version your_version]\n";
     result += "描述:\n";
     result += "    " + help_title();
     result += "参数说明:\n";
@@ -384,6 +396,7 @@ function help_example() {
     result += "    -compile         设置发布后js文件是否需要压缩\n";
     result += "    --password   设置发布zip文件的解压密码";
     result += "    -log   显示执行过程";
+    result += "    --version   自定义版本号";
     return result;
 }
 
