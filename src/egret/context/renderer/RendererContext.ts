@@ -247,7 +247,8 @@ module egret {
             RendererContext.blendModesForGL = {};
             RendererContext.blendModesForGL[BlendMode.NORMAL] = [1, 771];
             RendererContext.blendModesForGL[BlendMode.ADD] = [770, 1];
-            RendererContext.blendModesForGL[BlendMode.ERASE] = [0, 770];
+            RendererContext.blendModesForGL[BlendMode.ERASE] = [0, 771];
+            RendererContext.blendModesForGL[BlendMode.ERASE_REVERSE] = [0, 770];
         }
 
         /**
