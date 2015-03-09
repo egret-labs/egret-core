@@ -1,9 +1,9 @@
 var file = require("../core/file.js");
 var param = require("../core/params_analyze.js");
+var globals = require("../core/globals");
 
 function run(currDir, args, opts) {
-    var txt = file.read(param.getEgretPath() + "/package.json");
-    var config = JSON.parse(txt);
+    var config = globals.getPackageJsonConfig();
     console.log("当前Egret版本：" + config.version);
     console.log("Egret安装路径：" + param.getEgretPath());
 }

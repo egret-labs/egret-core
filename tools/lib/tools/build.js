@@ -72,6 +72,11 @@ function buildPlatform(needCompileEngine, keepGeneratedTypescript) {
                 }
             }
 
+            //写入语言包文件
+            url = "core/egret/i18n/" + globals.getPackageJsonConfig().i18n + ".js";
+            html5List.unshift(url);
+            nativeList.unshift(url);
+
             file.save(path.join(projectProperties.getProjectPath(), "bin-debug", "lib", "egret_file_list.js"), "var egret_file_list = " + JSON.stringify(html5List, null, "\t") + ";");
             file.save(path.join(projectProperties.getProjectPath(), "bin-debug", "lib", "egret_file_list_native.js"), "var egret_file_list = " + JSON.stringify(nativeList, null, "\t") + ";");
 

@@ -26,19 +26,22 @@ function checkVersion(projectPath) {
         _exit(1701);
     }
 
-
-    var txt = file.read(param.getEgretPath() + "/package.json");
-    var config = JSON.parse(txt);
-    var egret_version = config.version;
+    var egret_version = getPackageJsonConfig().version;
 
     var result = compressVersion(version, egret_version);
     if (result < 0) {
         _exit(1701);
     }
-
-
 }
 
+var packageJsonConfig;
+function getPackageJsonConfig() {
+    if(!packageJsonConfig) {
+        var txt = file.read(param.getEgretPath() + "/package.json");
+        packageJsonConfig = JSON.parse(txt);
+    }
+    return packageJsonConfig;
+}
 
 function compressVersion(v1, v2) {
     var version1Arr = v1.split(".");
@@ -294,3 +297,4 @@ exports.getDocumentClass = getDocumentClass;
 exports.checkVersion = checkVersion;
 exports.compressVersion = compressVersion;
 exports.addQuotes = addQuotes;
+exports.getPackageJsonConfig = getPackageJsonConfig;
