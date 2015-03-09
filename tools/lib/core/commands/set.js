@@ -134,7 +134,7 @@ exports.help_def.create_app =
     ,"parameters" : [
     {
         "placeholder" : "app_name"
-        ,"optional" : "true"
+        ,"optional" : "false"
         ,"desc" : locale.help_dict.common_app_name
     }
 ]
@@ -144,13 +144,13 @@ exports.help_def.create_app =
         "name" : "f"
         ,"prefix": "-"
         ,"desc" : locale.help_dict.create_app1
-        ,"optional" : "true"
+        ,"optional" : "false"
 
         ,"config-paras" : [
             {
                 "placeholder" : "h5_game_path"
                 ,"type" : "string"
-                ,"optional" : "true"
+                ,"optional" : "false"
             }
         ]
     }
@@ -158,13 +158,13 @@ exports.help_def.create_app =
         "name" : "t"
         ,"prefix": "-"
         ,"desc" : locale.help_dict.create_app2
-        ,"optional" : "true"
+        ,"optional" : "false"
 
         ,"config-paras" : [
             {
                 "placeholder" : "template_path"
                 ,"type" : "string"
-                ,"optional" : "true"
+                ,"optional" : "false"
             }
         ]
     }
