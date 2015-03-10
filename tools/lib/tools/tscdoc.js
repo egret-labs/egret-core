@@ -29,7 +29,7 @@ function run(dir, args, opts) {
     var apiArr = typeScriptCompiler.compile(function () {
     }, cmd);
 
-    globals.debugLog("耗时：%d秒", (Date.now() - tempTime) / 1000);
+    globals.debugLog(3, (Date.now() - tempTime) / 1000);
 
     var tempClassArr = sdoc.screening(apiArr);
     tempClassArr = addExtends.addChildClasses(tempClassArr);

@@ -88,7 +88,7 @@ function buildPlatform(needCompileEngine, keepGeneratedTypescript) {
     if (!onlyEngine) {//编译游戏
         task.push(
             function (tempCallback) {
-                globals.debugLog("编译项目：");
+                globals.debugLog(1105);
 
                 var buildP = require("../core/buildProject");
                 buildP.build(projectProperties, tempCallback, keepGeneratedTypescript);
@@ -141,7 +141,7 @@ function buildPlatform(needCompileEngine, keepGeneratedTypescript) {
 
     async.series(task, function (err) {
         if (!err) {
-            globals.log("构建成功");
+            globals.log(1104);
         }
         else {
             globals.exit(err);

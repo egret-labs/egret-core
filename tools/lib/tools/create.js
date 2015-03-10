@@ -26,7 +26,7 @@ function run(currDir, args, opts) {
 
         //创建新工程
         function (callback) {
-            globals.log("正在创建新项目文件夹...");
+            globals.log(1003);
             //拷贝空模板
             copyFileDir(projectPath, "tools/templates/empty");
 
@@ -54,12 +54,12 @@ function run(currDir, args, opts) {
 
         //编译工程
         function (callback) {
-            console.log("正在编译项目...");
+            globals.log2(1004);
             build.run(currDir, [projectName], {"-e":[]});
         },
 
         function (callback) {
-            globals.log("创建成功");
+            globals.log(1005);
         }
     ])
 

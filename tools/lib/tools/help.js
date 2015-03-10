@@ -26,14 +26,14 @@ function run(currDir, args, opts) {
 
             if ( !result ){
                 var tool = require("./" + args[0] + ".js");
-                console.log("用法: " + tool.help_example());
+                globals.log2(1902, tool.help_example());
             }
             return;
 
         }
         catch (e) {
             console.log (e)
-            console.log("无法找到" + args[0] + "命令的帮助文档");
+            globals.log2(1901, args[0]);
         }
 
 
@@ -41,8 +41,10 @@ function run(currDir, args, opts) {
     }
 
     var list = file.getDirectoryListing(__dirname,true);
-    console.log("用法: egret <command> [-v]\n");
-    console.log("command 列表:\n")
+    globals.log2(1903);
+    console.log("");
+    globals.log2(1904);
+    console.log("");
     list.forEach(function (item) {
         if (item.indexOf(".js") == -1) {
             return;
@@ -53,11 +55,12 @@ function run(currDir, args, opts) {
             var title = tool.help_title();
             console.log(getSpace(4) + tool_name + getSpace(30 - tool_name.length) + title);
         }
-    })
-    console.log("参数列表:\n");
-    console.log(getSpace(4) + "-v" + getSpace(30 - 2) + "打印详细日志");
+    });
+    globals.log2(1905);
     console.log("");
-    console.log("使用 egret help <command> 了解各个 command 的细节")
+    globals.log2(1906, getSpace(4) + "-v" + getSpace(30 - 2));
+    console.log("");
+    globals.log2(1907)
 }
 
 function getSpace(num) {

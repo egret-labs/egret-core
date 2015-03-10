@@ -83,7 +83,7 @@ function run(currDir, args, opts) {
     }
     var fileListText = "[\n" + gameList.join(",\n") + "\n]";
     file.save(file.joinPath(currDir,"manifest.json"),fileListText);
-    globals.log("manifest.json生成成功");
+    globals.log(6);
 }
 /**
  * 格式化srcPath

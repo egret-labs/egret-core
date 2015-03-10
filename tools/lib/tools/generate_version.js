@@ -91,7 +91,7 @@ function createManifest(projectPath, outputPath, newCode){
 function run(currDir, args, opts){
     var currentPath = args[0];
     if (!currentPath){
-        console.log ("请确定执行路径");
+        globals.log2(5);
         return;
     }
     createManifest(currentPath, currentPath);
