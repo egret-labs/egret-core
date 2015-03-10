@@ -250,7 +250,7 @@ exports.help_def.create =
    ,"parameters" : [
    {
       "placeholder" : "project_name"
-      ,"optional" : "true"
+      ,"optional" : "false"
       ,"desc" : locale.help_dict.common_proj_name
    }
 ]
