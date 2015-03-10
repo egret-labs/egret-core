@@ -219,7 +219,9 @@ module egret.gui {
 					this.slideToValue = newValue;
 					this.animator.duration = this.slideDuration *
 						(Math.abs(this.pendingValue - this.slideToValue) / (this.maximum - this.minimum));
-					this.animator.motionPaths = [{prop:"value", from:this.pendingValue, to:this.slideToValue}];
+					this.animator.motionPaths = [
+                        new SimpleMotionPath("value",this.pendingValue,this.slideToValue)
+                    ];
 					UIEvent.dispatchUIEvent(this,UIEvent.CHANGE_START);
 					this.animator.play();
 				}
@@ -228,7 +230,6 @@ module egret.gui {
 					this.dispatchEventWith(Event.CHANGE);
 				}
 			}
-
 		}
 		
 		/**
