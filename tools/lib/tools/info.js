@@ -4,8 +4,8 @@ var globals = require("../core/globals");
 
 function run(currDir, args, opts) {
     var config = globals.getPackageJsonConfig();
-    globals.log2("当前Egret版本：" + config.version);
-    globals.log2("Egret安装路径：" + param.getEgretPath());
+    globals.log2(1801, config.version);
+    globals.log2(1802, param.getEgretPath());
 }
 
 exports.run = run;
