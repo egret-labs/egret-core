@@ -380,26 +380,6 @@ function publishHtml5(opts, versionFile) {
     });
 }
 
-
-function help_title() {
-    return "发布项目，使用GoogleClosureCompiler压缩代码\n";
-}
-
-
-function help_example() {
-    var result = "\n";
-    result += "    egret publish [project_name] [-compile] [--password your_passsword] [--runtime html5|native] [-log] [--version your_version]\n";
-    result += "描述:\n";
-    result += "    " + help_title();
-    result += "参数说明:\n";
-    result += "    --runtime    设置发布方式为 html5 或者是 native方式，默认值为html5\n";
-    result += "    -compile         设置发布后js文件是否需要压缩\n";
-    result += "    --password   设置发布zip文件的解压密码";
-    result += "    -log   显示执行过程";
-    result += "    --version   自定义版本号";
-    return result;
-}
-
 function getOptsValue(opts, typeArr) {
     for (var key in typeArr) {
         var type = typeArr[key];
@@ -427,5 +407,3 @@ function compressJson(releasePath) {
 
 
 exports.run = run;
-exports.help_title = help_title;
-exports.help_example = help_example;

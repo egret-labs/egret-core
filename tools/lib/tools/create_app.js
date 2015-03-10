@@ -92,17 +92,4 @@ function read_json_from(json_file) {
     }
 }
 
-
-function help_title() {
-    return "从h5游戏生成app\n";
-}
-
-
-function help_example() {
-    return "egret create_app [app_name] -f [h5_game_path] -t [template_path]";
-}
-
-
 exports.run = run;
-exports.help_title = help_title;
-exports.help_example = help_example;

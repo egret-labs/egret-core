@@ -1,7 +1,7 @@
 var globals = require("../core/globals");
 var path = require("path");
 var file = require("../core/file");
-
+var locale = require( "../core/locale/zh-CN.js" );
 
 function run(currDir, args, opts) {
 
@@ -51,9 +51,9 @@ function run(currDir, args, opts) {
         }
         var tool = require("./" + item);
         var tool_name = item.split(".")[0];
-        if (tool.help_title) {
-            var title = tool.help_title();
-            console.log(getSpace(4) + tool_name + getSpace(30 - tool_name.length) + title);
+        var title = locale.help_dict["title_" + tool_name];
+        if (title) {
+            console.log(getSpace(4) + tool_name + getSpace(30 - tool_name.length) + title + "\n");
         }
     });
     globals.log2(1905);

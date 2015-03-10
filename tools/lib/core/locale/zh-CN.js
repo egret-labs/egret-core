@@ -42,7 +42,17 @@ exports.help_dict = {
    ,"build5":"如果有native工程，则会将文件拷贝到工程里"
    //,"build6":"编译游戏时，根据game_file_list获取编译列表"
    ,"build7":"显示执行过程"
-}
+
+    //titles
+   ,"title_build":"构建指定项目,编译指定项目的 TypeScript 文件"
+   ,"title_create":"创建新项目"
+   ,"title_create_app":"从h5游戏生成app"
+   ,"title_create_manifest":"在工程目录下生成manifest.json清单文件"
+   ,"title_info":"获得Egret信息"
+   ,"title_publish":"发布项目，使用GoogleClosureCompiler压缩代码"
+   ,"title_startserver":"启动HttpServer,并在默认浏览器中打开指定项目"
+   ,"title_upgrade":"升级项目代码"
+};
 
 exports.error_code = {
 

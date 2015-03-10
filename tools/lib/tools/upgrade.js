@@ -393,17 +393,7 @@ function fixSingleTypeScriptFile151(item) {
     file.save(item, content);
 }
 
-function help_title() {
-    return "升级项目代码\n";
-}
-
-function help_example() {
-    return "egret upgrade { your_project }";
-}
-
 exports.run = run;
-exports.help_title = help_title;
-exports.help_example = help_example;
 
 
 var gui_refactor_1_0_3 = { 'egret.ArrayCollection': 'egret.gui.ArrayCollection',

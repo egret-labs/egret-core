@@ -77,21 +77,4 @@ function copyFileDir(projectPath, dir) {
     }
 }
 
-function help_title() {
-    return "创建新项目\n";
-}
-
-
-function help_example() {
-    var result = "\n";
-    result += "    egret create [project_name] [--type empty|core|gui]\n";
-    result += "描述:\n";
-    result += "    " + help_title();
-    result += "参数说明:\n";
-    result += "    --type    要创建的项目类型 core或gui，默认值为core\n";
-    return result;
-}
-
 exports.run = run;
-exports.help_title = help_title;
-exports.help_example = help_example;
