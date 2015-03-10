@@ -77,6 +77,8 @@
         "effect/Rotate.ts",
         "effect/Scale.ts",
         "effect/Fade.ts",
+        "states/InterruptionBehavior.ts",
+        "states/Transition.ts",
 
         "components/IItemRenderer.ts",
         "components/IItemRendererOwner.ts",
