@@ -22,7 +22,8 @@ function run(dir, args, opts) {
         tsList = tsList.concat(getModuleList(moduleArr[i]));
     }
 
-    tsList.push("tools/lib/tools/api/StringCode.ts");
+    var egretPath = path.join(process.argv[1], "../../../");
+    tsList.push(path.join(egretPath, "tools/lib/tools/api/StringCode.ts"));
 
     var typeScriptCompiler = require("../tools/egret_tsc_api.js");
 
