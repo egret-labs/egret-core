@@ -47,11 +47,20 @@ module egret.gui {
 		 * 如果为 true，则对目标对象禁用任何布局约束。效果完成时，将还原这些属性。
 		 */
 		public disableLayout:boolean;
-		
-		/**
-		 * 此效果的缓动行为。
-		 */
-		public easerFunction:Function;
+
+        private _easer:IEaser;
+        /**
+         * 此效果的缓动行为，默认为Sine(.5)
+         */
+        public get easer():IEaser
+        {
+            return this._easer;
+        }
+
+        public set easer(value:IEaser)
+        {
+            this._easer = value;
+        }
 		
 		private _interpolator:IInterpolator;
 		/**
@@ -214,7 +223,7 @@ module egret.gui {
 			this.animation.repeatCount = this.repeatCount;
 			this.animation.repeatDelay = this.repeatDelay;
 			this.animation.repeatBehavior = this.repeatBehavior;
-			this.animation.easerFunction = this.easerFunction;
+			this.animation.easer = this.easer;
 			this.animation.startDelay = this.startDelay;
 			
 			this.animation.play();

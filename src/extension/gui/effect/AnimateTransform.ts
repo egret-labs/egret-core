@@ -105,7 +105,7 @@ module egret.gui {
 			}
 			var mp:MotionPath = new MotionPath(property);
 			mp.keyframes = [new Keyframe(0, valueFrom), new Keyframe(this.duration, valueTo, valueBy)];
-			mp.keyframes[1].easerFunction = this.easerFunction;
+			mp.keyframes[1].easer = this.easer;
 			
 			if (this.motionPaths){
 				var n:number = this.motionPaths.length;

@@ -49,6 +49,13 @@
         "utils/getScale9Grid.ts",
         "utils/setProperties.ts",
 
+        "effect/easing/IEaser.ts",
+        "effect/easing/EaseInOutBase.ts",
+        "effect/easing/Bounce.ts",
+        "effect/easing/Elastic.ts",
+        "effect/easing/Linear.ts",
+        "effect/easing/Power.ts",
+        "effect/easing/Sine.ts",
         "effect/IEffect.ts",
         "effect/IEffectInstance.ts",
         "effect/interpolation/IInterpolator.ts",

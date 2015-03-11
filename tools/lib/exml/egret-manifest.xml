@@ -74,4 +74,9 @@
   <component id="Sequence" super="egret.gui.CompositeEffect" show="false" module="egret.gui"/>
   <component id="SimpleMotionPath" super="egret.gui.MotionPath" show="false" module="egret.gui"/>
   <component id="Transition" super="Object" default="effect" show="false" module="egret.gui"/>
+  <component id="Bounce" super="Object" show="false" module="egret.gui"/>
+  <component id="Elastic" super="Object" show="false" module="egret.gui"/>
+  <component id="Linear" super="Object" show="false" module="egret.gui"/>
+  <component id="Power" super="egret.gui.EaseInOutBase" show="false" module="egret.gui"/>
+  <component id="Sine" super="egret.gui.EaseInOutBase" show="false" module="egret.gui"/>
 </componentPackage>

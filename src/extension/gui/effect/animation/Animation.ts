@@ -15,10 +15,24 @@ module egret.gui {
             this.thisObject = thisObject;
         }
 
+        private static defaultEaser:IEaser = new Sine(.5);
+        private _easer:IEaser = Animation.defaultEaser;
         /**
-         * 此动画的缓动行为。设置为null意味着不使用缓动，默认值为Ease.sineInOut()
+         * 此效果的缓动行为，默认为Sine(.5)
          */
-        public easerFunction:Function = egret.Ease.sineInOut;
+        public get easer():IEaser
+        {
+            return this._easer;
+        }
+
+        public set easer(value:IEaser)
+        {
+            if (!value)
+            {
+                value = Animation.defaultEaser;
+            }
+            this._easer = value;
+        }
 
         private thisObject: any = null;
 
@@ -383,10 +397,7 @@ module egret.gui {
             if (this._invertValues)
                 currentTime = this.duration - currentTime;
 
-            if(this.easerFunction == null)
-                this._cycleFraction = currentTime/this.duration;
-            else
-                this._cycleFraction = this.easerFunction(currentTime/this.duration);
+            this._cycleFraction = this.easer.ease(currentTime/this.duration);
 
             if (this.motionPaths)
                 for (i = 0; i < this.motionPaths.length; ++i)

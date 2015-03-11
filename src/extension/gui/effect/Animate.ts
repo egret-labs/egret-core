@@ -23,10 +23,19 @@ module egret.gui {
             this._motionPaths = value;
         }
 
+        private _easer:IEaser;
         /**
-		 * 此效果的缓动行为。默认情况下，Animate 的缓动是Ease.sinInOut
-		 */
-		public easerFunction:Function = egret.Ease.sineInOut;
+         * 此效果的缓动行为，默认为Sine(.5)
+         */
+        public get easer():IEaser
+        {
+            return this._easer;
+        }
+
+        public set easer(value:IEaser)
+        {
+            this._easer = value;
+        }
 
 		
 		private _interpolator:IInterpolator = null;
@@ -75,7 +84,7 @@ module egret.gui {
 			if (this.numUpdateListeners > 0)
 				animateInstance.addEventListener(EffectEvent.EFFECT_UPDATE, this.animationEventHandler, this);
 			
-				animateInstance.easerFunction = this.easerFunction;
+				animateInstance.easer = this.easer;
 			
 			if (this.interpolator)
 				animateInstance.interpolator = this.interpolator;

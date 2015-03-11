@@ -23,7 +23,7 @@ module egret.gui {
 		 */
 		public clone():Keyframe{
 			var kf:Keyframe = new Keyframe(this.time, this.value, this.valueBy);
-			kf.easerFunction = this.easerFunction;
+			kf.easer = this.easer;
 			kf.timeFraction = this.timeFraction;
 			return kf;
 		}
@@ -45,7 +45,7 @@ module egret.gui {
 		 * 对运动路径中前一个 Keyframe 对象与此 Keyframe 对象之间的运动所应用的缓动行为。
 		 * 默认情况下，缓动是线性的，或者根本就没有缓动。 
 		 */
-		public easerFunction:Function;
+		public easer:IEaser;
 		
 		/**
 		 * 用于计算此关键帧或前一个关键帧中的 value 的可选参数（如果已指定）。

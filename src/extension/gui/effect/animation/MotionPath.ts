@@ -61,8 +61,8 @@ module egret.gui {
 				return null;
 			var n:number = this.keyframes.length;
 			if (n == 2 && this.keyframes[1].timeFraction == 1){
-				var easedF:number = (this.keyframes[1].easerFunction!=null) ? 
-					this.keyframes[1].easerFunction(fraction) : 
+				var easedF:number = (this.keyframes[1].easer!=null) ?
+					this.keyframes[1].easer.ease(fraction) :
 					fraction;
 				return this.interpolator.interpolate(easedF, this.keyframes[0].value,
 					this.keyframes[1].value);
@@ -75,7 +75,7 @@ module egret.gui {
 				var kf:Keyframe = this.keyframes[i];
 				if (fraction >= prevT && fraction < kf.timeFraction){
 					var t:number = (fraction - prevT) / (kf.timeFraction - prevT);
-					var easedT:number = (kf.easerFunction!=null) ? kf.easerFunction(t) : t;
+					var easedT:number = (kf.easer!=null) ? kf.easer.ease(t) : t;
 					return this.interpolator.interpolate(easedT, prevValue, kf.value);
 				}
 				prevT = kf.timeFraction;
