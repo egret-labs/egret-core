@@ -52,7 +52,6 @@ function createManifest(projectPath, outputPath, newCode, ignorePathList){
         }
 
         if(!isIgnore) {//不在忽略列表的路径，拷贝过去
-            console.log(copyFilePath);
             return true;
         }
     });
