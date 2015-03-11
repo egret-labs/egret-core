@@ -198,6 +198,7 @@ function publishNative(opts, versionFile) {
                 if (file.exists(url1)) {//是egret的android项目
                     //1、清除文件夹
                     file.remove(url2);
+                    file.createDirectory(path.join(url2, "egret-game"));
                     file.copy(releaseOutputPath, path.join(url2, "egret-game"));
 
                     //修改java文件

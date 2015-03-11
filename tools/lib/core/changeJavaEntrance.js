@@ -18,15 +18,18 @@ function init(url, platform) {
     for (var i = 0; i < activities.length; i++) {
         var activity = activities[i];
         if (activity.hasAttribute("android:name") && activity.getAttribute("android:label") == "@string/app_name") {
-            javaName = activity.getAttribute('android:name');
+            javaName = activity.getAttribute('android:name').replace(/\./g, "/");
+            break;
         }
     }
 
     if (file.exists(path.join(url, "src", javaName + ".java"))) {
-        javaContent = file.read(path.join(url, "src", javaName + ".java"));
+        javaPath = path.join(url, "src", javaName + ".java");
+        javaContent = file.read(javaPath);
     }
     else if (file.exists(path.join(url, "src", filePath, javaName + ".java"))) {
-        javaContent = file.read(path.join(url, "src", filePath, javaName + ".java"));
+        javaPath = path.join(url, "src", filePath, javaName + ".java");
+        javaContent = file.read(javaPath);
     }
     else {
         javaContent = null;
