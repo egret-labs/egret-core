@@ -110,7 +110,7 @@ function publishNative(opts, versionFile) {
             var tempTime = Date.now();
             globals.debugLog(1407);
 
-            genVer.generate(projectPath, path.join(releasePath, "nativeBase"), projectProperties.getVersionCode("native"));
+            genVer.generate(projectPath, path.join(releasePath, "nativeBase"), projectProperties.getVersionCode("native"), projectProperties.getIgnorePath());
 
             globals.debugLog(1408, (Date.now() - tempTime) / 1000);
             tempCallback();
