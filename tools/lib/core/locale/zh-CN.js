@@ -28,7 +28,7 @@ exports.help_dict = {
    ,"pub1":"发布项目，使用GoogleClosureCompiler压缩代码"
    ,"pub3":"设置发布之后的版本号，可以不设置"
    ,"pub4":"设置发布方式为 html5 或者是 native方式，默认值为html5"
-   ,"pub5":"设置发布后生成launcher文件夹的zip文件"
+   ,"pub5":"设置发布后js文件是否需要压缩，通常用于原生打包同步过程"
    ,"pub6":"设置发布zip文件的解压密码"
 
    ,"create1":"创建新项目"
