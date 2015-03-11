@@ -832,16 +832,23 @@
   <xs:attributeGroup name="egret.gui.Animate">
     <xs:attributeGroup ref="egret.gui.Effect"/>
     <xs:attribute name="disableLayout" type="xs:boolean"/>
-    <xs:attribute name="easerFunction" type="xs:string"/>
+    <xs:attribute name="easer" type="xs:string"/>
     <xs:attribute name="interpolator" type="xs:string"/>
     <xs:attribute name="motionPaths" type="xs:string"/>
     <xs:attribute name="repeatBehavior" type="egret.gui.RepeatBehavior"/>
   </xs:attributeGroup>
-  <xs:group name="Function">
-    <xs:choice/>
+  <xs:group name="egret.gui.IEaser">
+    <xs:choice>
+      <xs:element ref="Bounce"/>
+      <xs:element ref="EaseInOutBase"/>
+      <xs:element ref="Elastic"/>
+      <xs:element ref="Linear"/>
+      <xs:element ref="Power"/>
+      <xs:element ref="Sine"/>
+    </xs:choice>
   </xs:group>
-  <xs:complexType name="Function">
-    <xs:group ref="Function"/>
+  <xs:complexType name="egret.gui.IEaser">
+    <xs:group ref="egret.gui.IEaser"/>
   </xs:complexType>
   <xs:group name="egret.gui.IInterpolator">
     <xs:choice>
@@ -864,7 +871,7 @@
     <xs:choice>
       <xs:group ref="Effect_attributeElement"/>
       <xs:element name="disableLayout" type="boolean"/>
-      <xs:element name="easerFunction" type="Function"/>
+      <xs:element name="easer" type="egret.gui.IEaser"/>
       <xs:element name="interpolator" type="egret.gui.IInterpolator"/>
       <xs:element name="motionPaths" type="Array_egret.gui.MotionPath"/>
       <xs:element name="repeatBehavior" type="string"/>
@@ -885,7 +892,7 @@
     <xs:attribute name="animation" type="xs:string"/>
     <xs:attribute name="autoRemoveTarget" type="xs:boolean"/>
     <xs:attribute name="disableLayout" type="xs:boolean"/>
-    <xs:attribute name="easerFunction" type="xs:string"/>
+    <xs:attribute name="easer" type="xs:string"/>
     <xs:attribute name="interpolator" type="xs:string"/>
     <xs:attribute name="motionPaths" type="xs:string"/>
     <xs:attribute name="repeatBehavior" type="xs:string"/>
@@ -902,7 +909,7 @@
       <xs:element name="animation" type="egret.gui.Animation"/>
       <xs:element name="autoRemoveTarget" type="boolean"/>
       <xs:element name="disableLayout" type="boolean"/>
-      <xs:element name="easerFunction" type="Function"/>
+      <xs:element name="easer" type="egret.gui.IEaser"/>
       <xs:element name="interpolator" type="egret.gui.IInterpolator"/>
       <xs:element name="motionPaths" type="Array_egret.gui.MotionPath"/>
       <xs:element name="repeatBehavior" type="string"/>
@@ -1041,6 +1048,9 @@
       </xs:choice>
       <xs:attributeGroup ref="egret.gui.BitmapLabel"/>
     </xs:complexType>
+  </xs:element>
+  <xs:element name="Bounce">
+    <xs:complexType/>
   </xs:element>
   <xs:attributeGroup name="egret.gui.Button">
     <xs:attributeGroup ref="egret.gui.ButtonBase"/>
@@ -1259,6 +1269,12 @@
   <xs:complexType name="egret.gui.IFactory">
     <xs:group ref="egret.gui.IFactory"/>
   </xs:complexType>
+  <xs:group name="Function">
+    <xs:choice/>
+  </xs:group>
+  <xs:complexType name="Function">
+    <xs:group ref="Function"/>
+  </xs:complexType>
   <xs:group name="Class">
     <xs:choice/>
   </xs:group>
@@ -1413,6 +1429,23 @@
         <xs:group ref="egret.gui.ICollection"/>
       </xs:choice>
       <xs:attributeGroup ref="egret.gui.DropDownListBase"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:attributeGroup name="egret.gui.EaseInOutBase">
+    <xs:attribute name="easeInFraction" type="xs:decimal"/>
+  </xs:attributeGroup>
+  <xs:group name="EaseInOutBase_attributeElement">
+    <xs:choice>
+      <xs:element name="easeInFraction" type="number"/>
+    </xs:choice>
+  </xs:group>
+  <xs:element name="EaseInOutBase">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:any namespace="##other"/>
+        <xs:group ref="EaseInOutBase_attributeElement"/>
+      </xs:choice>
+      <xs:attributeGroup ref="egret.gui.EaseInOutBase"/>
     </xs:complexType>
   </xs:element>
   <xs:attributeGroup name="egret.gui.EditableText">
@@ -1577,6 +1610,9 @@
       </xs:choice>
       <xs:attributeGroup ref="egret.gui.EffectInstance"/>
     </xs:complexType>
+  </xs:element>
+  <xs:element name="Elastic">
+    <xs:complexType/>
   </xs:element>
   <xs:attributeGroup name="egret.gui.Fade">
     <xs:attributeGroup ref="egret.gui.Animate"/>
@@ -1846,7 +1882,7 @@
     </xs:complexType>
   </xs:element>
   <xs:attributeGroup name="egret.gui.Keyframe">
-    <xs:attribute name="easerFunction" type="xs:string"/>
+    <xs:attribute name="easer" type="xs:string"/>
     <xs:attribute name="time" type="xs:decimal"/>
     <xs:attribute name="timeFraction" type="xs:decimal"/>
     <xs:attribute name="value" type="xs:string"/>
@@ -1854,7 +1890,7 @@
   </xs:attributeGroup>
   <xs:group name="Keyframe_attributeElement">
     <xs:choice>
-      <xs:element name="easerFunction" type="Function"/>
+      <xs:element name="easer" type="egret.gui.IEaser"/>
       <xs:element name="time" type="number"/>
       <xs:element name="timeFraction" type="number"/>
       <xs:element name="value" type="any"/>
@@ -1935,6 +1971,25 @@
         <xs:group ref="LayoutBase_attributeElement"/>
       </xs:choice>
       <xs:attributeGroup ref="egret.gui.LayoutBase"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:attributeGroup name="egret.gui.Linear">
+    <xs:attribute name="easeInFraction" type="xs:decimal"/>
+    <xs:attribute name="easeOutFraction" type="xs:decimal"/>
+  </xs:attributeGroup>
+  <xs:group name="Linear_attributeElement">
+    <xs:choice>
+      <xs:element name="easeInFraction" type="number"/>
+      <xs:element name="easeOutFraction" type="number"/>
+    </xs:choice>
+  </xs:group>
+  <xs:element name="Linear">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:any namespace="##other"/>
+        <xs:group ref="Linear_attributeElement"/>
+      </xs:choice>
+      <xs:attributeGroup ref="egret.gui.Linear"/>
     </xs:complexType>
   </xs:element>
   <xs:attributeGroup name="egret.gui.List">
@@ -2187,6 +2242,25 @@
         <xs:group ref="egret.gui.IVisualElement"/>
       </xs:choice>
       <xs:attributeGroup ref="egret.gui.PopUpAnchor"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:attributeGroup name="egret.gui.Power">
+    <xs:attributeGroup ref="egret.gui.EaseInOutBase"/>
+    <xs:attribute name="exponent" type="xs:decimal"/>
+  </xs:attributeGroup>
+  <xs:group name="Power_attributeElement">
+    <xs:choice>
+      <xs:group ref="EaseInOutBase_attributeElement"/>
+      <xs:element name="exponent" type="number"/>
+    </xs:choice>
+  </xs:group>
+  <xs:element name="Power">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:any namespace="##other"/>
+        <xs:group ref="Power_attributeElement"/>
+      </xs:choice>
+      <xs:attributeGroup ref="egret.gui.Power"/>
     </xs:complexType>
   </xs:element>
   <xs:simpleType name="egret.gui.ProgressBarDirection">
@@ -2571,6 +2645,23 @@
         <xs:group ref="Array"/>
       </xs:choice>
       <xs:attributeGroup ref="egret.gui.SimpleMotionPath"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:attributeGroup name="egret.gui.Sine">
+    <xs:attributeGroup ref="egret.gui.EaseInOutBase"/>
+  </xs:attributeGroup>
+  <xs:group name="Sine_attributeElement">
+    <xs:choice>
+      <xs:group ref="EaseInOutBase_attributeElement"/>
+    </xs:choice>
+  </xs:group>
+  <xs:element name="Sine">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:any namespace="##other"/>
+        <xs:group ref="Sine_attributeElement"/>
+      </xs:choice>
+      <xs:attributeGroup ref="egret.gui.Sine"/>
     </xs:complexType>
   </xs:element>
   <xs:attributeGroup name="egret.gui.Skin">

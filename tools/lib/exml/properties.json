@@ -211,7 +211,7 @@
 	"egret.gui.Animate":
 	{
 		"disableLayout":"boolean",
-		"easerFunction":"Function",
+		"easer":"egret.gui.IEaser",
 		"interpolator":"egret.gui.IInterpolator",
 		"motionPaths":"Array",
 		"repeatBehavior":"string",
@@ -222,7 +222,7 @@
 		"animation":"egret.gui.Animation",
 		"autoRemoveTarget":"boolean",
 		"disableLayout":"boolean",
-		"easerFunction":"Function",
+		"easer":"egret.gui.IEaser",
 		"interpolator":"egret.gui.IInterpolator",
 		"motionPaths":"Array",
 		"repeatBehavior":"string",
@@ -264,6 +264,10 @@
 		"paddingTop":"number",
 		"super":"egret.gui.UIComponent",
 		"text":"string"
+	},
+	"egret.gui.Bounce":
+	{
+		"implements":["egret.gui.IEaser"]
 	},
 	"egret.gui.Button":
 	{
@@ -333,6 +337,11 @@
 		"openButton":"egret.gui.ButtonBase",
 		"super":"egret.gui.List"
 	},
+	"egret.gui.EaseInOutBase":
+	{
+		"easeInFraction":"number",
+		"implements":["egret.gui.IEaser"]
+	},
 	"egret.gui.EditableText":
 	{
 		"clipAndEnableScrolling":"boolean",
@@ -383,6 +392,10 @@
 		"stopRepeat":"boolean",
 		"super":"egret.EventDispatcher",
 		"target":"any"
+	},
+	"egret.gui.Elastic":
+	{
+		"implements":["egret.gui.IEaser"]
 	},
 	"egret.gui.Fade":
 	{
@@ -443,7 +456,7 @@
 	},
 	"egret.gui.Keyframe":
 	{
-		"easerFunction":"Function",
+		"easer":"egret.gui.IEaser",
 		"time":"number",
 		"timeFraction":"number",
 		"value":"any",
@@ -467,6 +480,12 @@
 		"target":"egret.gui.GroupBase",
 		"typicalLayoutRect":"egret.Rectangle",
 		"useVirtualLayout":"boolean"
+	},
+	"egret.gui.Linear":
+	{
+		"easeInFraction":"number",
+		"easeOutFraction":"number",
+		"implements":["egret.gui.IEaser"]
 	},
 	"egret.gui.List":
 	{
@@ -542,6 +561,11 @@
 		"popUpPosition":"string",
 		"popUpWidthMatchesAnchorWidth":"boolean",
 		"super":"egret.gui.UIComponent"
+	},
+	"egret.gui.Power":
+	{
+		"exponent":"number",
+		"super":"egret.gui.EaseInOutBase"
 	},
 	"egret.gui.ProgressBar":
 	{
@@ -644,6 +668,10 @@
 		"valueBy":"any",
 		"valueFrom":"any",
 		"valueTo":"any"
+	},
+	"egret.gui.Sine":
+	{
+		"super":"egret.gui.EaseInOutBase"
 	},
 	"egret.gui.Skin":
 	{
