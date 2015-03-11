@@ -599,10 +599,7 @@ class EXMLCompiler{
                 var item:any = children[j];
                 childFunc = this.createFuncForNode(item);
                 var childClassName:string = this.exmlConfig.getClassNameById(item.localName,item.namespace);
-                if(isContainer&&!this.exmlConfig.isInstanceOf(childClassName,"egret.gui.IVisualElement"))
-                {
-                    globals.exit(2019,this.exmlPath,this.toXMLString(item));
-                }
+
                 if(!this.isStateNode(item))
                     values.push(childFunc);
             }
@@ -619,10 +616,7 @@ class EXMLCompiler{
                             item = firstChild.children[k];
                             childFunc = this.createFuncForNode(item);
                             childClassName = this.exmlConfig.getClassNameById(item.localName,item.namespace);
-                            if(isContainer&&!this.exmlConfig.isInstanceOf(childClassName,"egret.gui.IVisualElement"))
-                            {
-                                globals.exit(2019,this.exmlPath,this.toXMLString(item));
-                            }
+
                             if(!this.isStateNode(item))
                                 values.push(childFunc);
                         }
@@ -632,10 +626,7 @@ class EXMLCompiler{
                 else{
                     childFunc = this.createFuncForNode(firstChild);
                     var childClassName:string = this.exmlConfig.getClassNameById(firstChild.localName,firstChild.namespace);
-                    if(isContainer&&!this.exmlConfig.isInstanceOf(childClassName,"egret.gui.IVisualElement"))
-                    {
-                        globals.exit(2019,this.exmlPath,this.toXMLString(firstChild));
-                    }
+
                     if(!this.isStateNode(firstChild))
                         childFunc = "["+childFunc+"]";
                     else
