@@ -21,9 +21,12 @@ function init(url, platform) {
             javaName = activity.getAttribute('android:name');
         }
     }
-    javaPath = path.join(url, "src", filePath, javaName + ".java");
-    if (file.exists(javaPath)) {
-        javaContent = file.read(javaPath);
+
+    if (file.exists(path.join(url, "src", javaName + ".java"))) {
+        javaContent = file.read(path.join(url, "src", javaName + ".java"));
+    }
+    else if (file.exists(path.join(url, "src", filePath, javaName + ".java"))) {
+        javaContent = file.read(path.join(url, "src", filePath, javaName + ".java"));
     }
     else {
         javaContent = null;

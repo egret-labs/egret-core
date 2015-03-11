@@ -214,6 +214,8 @@ function publishNative(opts, versionFile) {
                     && file.exists(url2)) {//是egret的ios项目
                     //1、清除文件夹
                     file.remove(url2);
+
+                    file.createDirectory(path.join(url2, "egret-game"));
                     file.copy(releaseOutputPath, path.join(url2, "egret-game"));
                 }
             }
