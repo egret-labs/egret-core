@@ -108,23 +108,25 @@ function buildPlatform(needCompileEngine, keepGeneratedTypescript) {
         task.push(//替换native项目内容
             function (tempCallback) {
                 if (projectProperties.getNativePath("android")) {
-                    var url = path.join(projectProperties.getProjectPath(), projectProperties.getNativePath("android"), "proj.android/assets");
-                    if (file.exists(url)) {//是egret的android项目
+                    var url1 = path.join(projectProperties.getProjectPath(), projectProperties.getNativePath("android"), "proj.android");
+                    if (file.exists(url1)) {//是egret的android项目
 
                         //拷贝项目到native工程中
                         var cpFiles = require("../core/copyProjectFiles.js");
                         cpFiles.copyFilesToNative(projectProperties.getProjectPath(),
                             path.join(projectProperties.getProjectPath(), projectProperties.getNativePath("android")),
                             "android", projectProperties.getIgnorePath());
+
+                        //修改java文件
+                        var javaEntr = require('../core/changeJavaEntrance');
+                        javaEntr.changeBuild(url1, "android");
                     }
                 }
 
                 if (projectProperties.getNativePath("ios")) {
                     var url1 = path.join(projectProperties.getProjectPath(), projectProperties.getNativePath("ios"), "proj.ios");
-                    var url2 = path.join(projectProperties.getProjectPath(), projectProperties.getNativePath("ios"), "Resources");
 
-                    if (file.exists(url1)
-                        && file.exists(url2)) {//是egret的ios项目
+                    if (file.exists(url1)) {//是egret的ios项目
 
                         //拷贝项目到native工程中
                         var cpFiles = require("../core/copyProjectFiles.js");

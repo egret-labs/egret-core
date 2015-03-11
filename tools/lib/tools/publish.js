@@ -193,11 +193,16 @@ function publishNative(opts, versionFile) {
 
             //apk
             if (projectProperties.getNativePath("android")) {
-                var url = path.join(projectProperties.getProjectPath(), projectProperties.getNativePath("android"), "proj.android/assets");
-                if (file.exists(url)) {//是egret的android项目
+                var url1 = path.join(projectProperties.getProjectPath(), projectProperties.getNativePath("android"), "proj.android");
+                var url2 = path.join(projectProperties.getProjectPath(), projectProperties.getNativePath("android"), "proj.android/assets");
+                if (file.exists(url1)) {//是egret的android项目
                     //1、清除文件夹
-                    file.remove(url);
-                    file.copy(releaseOutputPath, path.join(url, "egret-game"));
+                    file.remove(url2);
+                    file.copy(releaseOutputPath, path.join(url2, "egret-game"));
+
+                    //修改java文件
+                    var javaEntr = require('../core/changeJavaEntrance');
+                    javaEntr.changePublish(url1, "android", versionFile);
                 }
             }
 
