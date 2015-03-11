@@ -22,6 +22,8 @@ function run(dir, args, opts) {
         tsList = tsList.concat(getModuleList(moduleArr[i]));
     }
 
+    tsList.push("tools/lib/tools/api/StringCode.ts");
+
     var typeScriptCompiler = require("../tools/egret_tsc_api.js");
 
     var tempTime = Date.now();
