@@ -320,7 +320,7 @@ exports.help_def.publish =
             ]
         }
         ,{
-            "name" : "zip"
+            "name" : "compile"
             ,"prefix": "-"
             ,"desc" : locale.help_dict.pub5
             ,"optional" : "true"
