@@ -222,9 +222,9 @@ function compileAllModules(properties, callback) {
 
         async.series(task, function(err) {
             if (!err) {
-                globals.log("构建成功");
+                globals.log(1104);
 
-                console.log("第三方库共计耗时：%d秒", (Date.now() - startTime) / 1000);
+                globals.log2(1115, (Date.now() - startTime) / 1000);
                 callback();
             }
             else {
@@ -242,7 +242,7 @@ function compileAllModules(properties, callback) {
 
         async.series(task, function (err) {
             if (!err) {
-                globals.log("构建成功");
+                globals.log(1104);
 
                 callback();
             }
