@@ -1,7 +1,3 @@
-/**
- * Created by apple on 14-4-28.
- */
-
 exports.help_dict = {
     "common_proj_name":"项目名称，按照操作系统的命名规范命名"
    ,"common_app_name":"移动应用项目名称，按照操作系统的命名规范命名"
