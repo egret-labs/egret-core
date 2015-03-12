@@ -42,7 +42,30 @@ function buildPlatform(needCompileEngine, keepGeneratedTypescript) {
         task.push(function (callback) {
             buildModule.compileAllModules(projectProperties, callback);
         });
+    }
 
+    var moduleReferenceList = null;
+    var onlyEngine = param.getArgv()["opts"]["--module"] != null;
+    if (!onlyEngine) {//编译游戏
+        task.push(
+            function (tempCallback) {
+                globals.debugLog(1105);
+
+                var buildP = require("../core/buildProject");
+                buildP.build(projectProperties, tempCallback, keepGeneratedTypescript);
+                moduleReferenceList = buildP.getModuleReferenceList();
+
+            }
+        );
+
+        task.push(//修改game_file_list.js文件
+            function (tempCallback) {
+                tempCallback();
+            }
+        );
+    }
+
+    if ((needCompileEngine) || moduleReferenceList) {//修改第三方库列表
         task.push(function (tempCallback) {//修改egret_file_list.js文件
             var moduleList = projectProperties.getAllModules();
             var html5List = [];
@@ -54,8 +77,16 @@ function buildPlatform(needCompileEngine, keepGeneratedTypescript) {
                 for (var j = 0; j < list.length; j++) {
                     var item = list[j];
                     if (item.indexOf(".d.ts") == -1) {
-                        item = item.replace(".ts", ".js");
-                        var url = path.join((module["output"] ? module["output"] : module["name"]), item);
+                        var tsFile = file.joinPath(module.prefix, module.source, item);
+                        if (module.decouple == "true" && moduleReferenceList && moduleReferenceList.indexOf(tsFile) == -1) {
+                            continue;
+                        }
+
+                        if (globals.isInterface(tsFile)) {
+                            continue;
+                        }
+                        var item2 = item.replace(".ts", ".js");
+                        var url = path.join((module["output"] ? module["output"] : module["name"]), item2);
 
                         url = url.replace(/(\\\\|\\)/g, "/");
                         if (module["name"] == "html5") {
@@ -84,23 +115,7 @@ function buildPlatform(needCompileEngine, keepGeneratedTypescript) {
         });
     }
 
-    var onlyEngine = param.getArgv()["opts"]["--module"] != null;
-    if (!onlyEngine) {//编译游戏
-        task.push(
-            function (tempCallback) {
-                globals.debugLog(1105);
 
-                var buildP = require("../core/buildProject");
-                buildP.build(projectProperties, tempCallback, keepGeneratedTypescript);
-            }
-        );
-
-        task.push(//修改game_file_list.js文件
-            function (tempCallback) {
-                tempCallback();
-            }
-        );
-    }
 
     var runtime = param.getOption(param.getArgv()["opts"], "--runtime", ["html5", "native"]);
 

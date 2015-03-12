@@ -13,6 +13,8 @@ var exmlc = require("../exml/exmlc.js");
 
 var projectProperties;
 var projectPath;
+var moduleReferenceList;
+
 function build(properties, callback, keepGeneratedTypescript) {
     projectProperties = properties;
     projectPath = projectProperties.getProjectPath();
@@ -59,18 +61,20 @@ function build(properties, callback, keepGeneratedTypescript) {
         sourceList = sourceList.map(function(item) {
             return path.join(projectPath, "src", item);
         });
+
+        moduleReferenceList = null;
     }
     else {
         var generateList = require("../core/gameFileList");
 
         sourceList = generateList.generateGameFileList(projectPath, "src", projectProperties);
+        moduleReferenceList = generateList.getModuleReferenceList();
     }
 
     globals.debugLog(1107, (Date.now() - saoTime) / 1000);
 
-    async.series([function (callback) {
-
-        compile(callback,
+    async.series([function (tempCallback) {
+        compile(tempCallback,
             path.join(projectPath),
             sourceList.concat(libs),
             compileConfig
@@ -276,4 +280,7 @@ function compile(callback, projectDir, sourceList, projectConfig) {
     }
 }
 
+exports.getModuleReferenceList = function() {
+    return moduleReferenceList;
+};
 exports.build = build;
