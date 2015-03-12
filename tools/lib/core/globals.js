@@ -1,4 +1,4 @@
-var locale = require("./locale/zh-CN.js");
+var locale = require("./locale/local.js");
 var param = require("../core/params_analyze.js");
 var path = require("path");
 var file = require("./file");

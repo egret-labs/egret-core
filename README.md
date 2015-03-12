@@ -26,7 +26,7 @@ Platforms:
 
 3rd Party Library
 -------------------------
-* Egret Team encapsulated some powerful 3rd party libraries,including Google AdSense,Dom,Gesture,MD5,Particle,Physics. For more information,you can visit [here](https://github.com/egret-labs/egret-game-library)
+* Egret Team encapsulated some powerful 3rd party libraries,including Google AdSense,DOM support,Gesture,MD5,Particle,Physics. For more information,you can visit [here](https://github.com/egret-labs/egret-game-library)
 
 Tools
 -------------------------

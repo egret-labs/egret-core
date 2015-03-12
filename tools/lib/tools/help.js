@@ -1,7 +1,7 @@
 var globals = require("../core/globals");
 var path = require("path");
 var file = require("../core/file");
-var locale = require( "../core/locale/zh-CN.js" );
+var locale = require( "../core/locale/local.js" );
 
 function run(currDir, args, opts) {
 

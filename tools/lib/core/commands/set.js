@@ -2,7 +2,7 @@
  * Created by egret on 2015/2/12.
  */
 //console.log( "help_def_set head:" );
-var locale = require( "../locale/zh-CN.js" );
+var locale = require( "../locale/local.js" );
 //console.log( "help_def_set after zh-CN:" );
 
 exports.help_def = {};

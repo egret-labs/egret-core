@@ -1,7 +1,3 @@
-/**
- * Created by apple on 14-4-28.
- */
-
 exports.help_dict = {
     "common_proj_name":"项目名称，按照操作系统的命名规范命名"
    ,"common_app_name":"移动应用项目名称，按照操作系统的命名规范命名"
@@ -85,6 +81,7 @@ exports.error_code = {
     1112:"耗时：{0}秒",
     1113:"{0} tsc编译生成 '.d.ts'",
     1114:"{0} 拷贝其他文件",
+    1115:"第三方库共计耗时：{0}秒",
     //compile
     1301:"在编译路径 {0} 下找不到 egret_file_list.js 或 game_file_list.js，请检查编译路径是否正确",
     1302:"请输入编译路径。例:{color_green}egret compile --source [your_typescript_source_dir] --output [your_output_dir]{color_normal}",
