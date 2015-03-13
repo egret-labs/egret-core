@@ -104,7 +104,7 @@ function executeCommand(callback, script) {
             callback();
         }
         else {
-            globals.log("脚本执行失败");
+            globals.log(4);
         }
 
     });

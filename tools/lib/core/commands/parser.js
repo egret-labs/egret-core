@@ -2,7 +2,7 @@
  * Created by egret on 2014/12/10.
  */
 
-var locale = require( "../locale/zh-CN.js" );
+var locale = require( "../locale/local.js" );
 
 /// 参数说明中的文字说明与关键字之间的最小间隔
 var GAP_WORD_AND_ITS_DESC = 3;

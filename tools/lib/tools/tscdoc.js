@@ -22,6 +22,8 @@ function run(dir, args, opts) {
         tsList = tsList.concat(getModuleList(moduleArr[i]));
     }
 
+    tsList.push( path.join( process.argv[1], "../../../", "tools/lib/tools/api/StringCode.ts" ) );
+
     var typeScriptCompiler = require("../tools/egret_tsc_api.js");
 
     var tempTime = Date.now();
@@ -29,7 +31,7 @@ function run(dir, args, opts) {
     var apiArr = typeScriptCompiler.compile(function () {
     }, cmd);
 
-    globals.debugLog("耗时：%d秒", (Date.now() - tempTime) / 1000);
+    globals.debugLog(3, (Date.now() - tempTime) / 1000);
 
     var tempClassArr = sdoc.screening(apiArr);
     tempClassArr = addExtends.addChildClasses(tempClassArr);

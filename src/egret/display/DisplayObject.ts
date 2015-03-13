@@ -610,7 +610,7 @@ module egret {
             if (mask && !isCommandPush) {
                 renderContext.pushMask(mask);
             }
-            this._render(renderContext);
+            o._render(renderContext);
             if (mask && !isCommandPush) {
                 renderContext.popMask();
             }
@@ -620,7 +620,7 @@ module egret {
             if(o._filter && !isCommandPush) {
                 renderContext.setGlobalFilter(null);
             }
-            this.destroyCacheBounds();
+            o.destroyCacheBounds();
         }
 
         public _setGlobalFilter(renderContext:RendererContext):void {
@@ -707,7 +707,7 @@ module egret {
             o._calculateWorldTransform();
             if(MainContext._renderLoopPhase == "updateTransform") {
                 if(o.needDraw || o._texture_to_render || o._cacheAsBitmap) {
-                    RenderCommand.push(this._draw, this);
+                    RenderCommand.push(o._draw, o);
                 }
             }
         }

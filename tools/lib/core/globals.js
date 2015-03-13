@@ -1,10 +1,9 @@
-var locale = require("./locale/zh-CN.js");
+var locale = require("./locale/local.js");
 var param = require("../core/params_analyze.js");
 var path = require("path");
 var file = require("./file");
 
 var _require = function (moduleName) {
-
     var module;
     try {
         module = require(path.join(param.getEgretPath(), moduleName));
@@ -15,8 +14,7 @@ var _require = function (moduleName) {
         process.exit(1);
     }
     return module;
-
-}
+};
 
 function checkVersion(projectPath) {
     var config = require("../core/projectConfig.js");
@@ -26,19 +24,22 @@ function checkVersion(projectPath) {
         _exit(1701);
     }
 
-
-    var txt = file.read(param.getEgretPath() + "/package.json");
-    var config = JSON.parse(txt);
-    var egret_version = config.version;
+    var egret_version = getPackageJsonConfig().version;
 
     var result = compressVersion(version, egret_version);
     if (result < 0) {
         _exit(1701);
     }
-
-
 }
 
+var packageJsonConfig;
+function getPackageJsonConfig() {
+    if(!packageJsonConfig) {
+        var txt = file.read(param.getEgretPath() + "/package.json");
+        packageJsonConfig = JSON.parse(txt);
+    }
+    return packageJsonConfig;
+}
 
 function compressVersion(v1, v2) {
     var version1Arr = v1.split(".");
@@ -107,11 +108,10 @@ function addCallBackWhenExit(callBack) {
 }
 
 function _exit(code) {
-    var message = locale.error_code[code];
+    var message = getString(code);
     if (!message) {
         _exit(9999, code);
     }
-    message = formatStdoutString(message);
     var length = arguments.length;
     for (var i = 1; i < length; i++) {
         message = message.replace("{" + (i - 1) + "}", arguments[i]);
@@ -136,18 +136,21 @@ function _log() {
     var opt = param.getArgv().opts;
     var vebose = opt.hasOwnProperty("-v");
     if (vebose) {
-        console.log.apply(console, arguments);
+        var message = getString.apply(null, arguments);
+        console.log(message);
     }
+}
 
-
+function _log2() {
+    var message = getString.apply(null, arguments);
+    console.log(message);
 }
 
 function _warn(code) {
-    var message = locale.error_code[code];
+    var message = getString(code);
     if (!message) {
         _exit(9999, code);
     }
-    message = formatStdoutString(message);
     var length = arguments.length;
     for (var i = 1; i < length; i++) {
         message = message.replace("{" + (i - 1) + "}", arguments[i]);
@@ -251,7 +254,7 @@ function setShowDebugLog() {
 
 function debugLog(logStr) {
     if (isShow) {
-        console.log.apply(console, arguments);
+        _log2.apply(null, arguments);
     }
 }
 
@@ -276,6 +279,23 @@ function getGlobalJava() {
     }
     return java;
 }
+
+function getString(id) {
+    var args = [];
+    for (var _i = 1; _i < arguments.length; _i++) {
+        args[_i - 1] = arguments[_i];
+    }
+    var message = locale.error_code[id];
+    if (message) {
+        var length = args.length;
+        for (var i = 0; i < length; i++) {
+            message = message.replace("{" + i + "}", args[i]);
+        }
+        message = formatStdoutString(message);
+    }
+    return message;
+}
+
 exports.getGlobalJava = getGlobalJava;
 
 exports.setShowDebugLog = setShowDebugLog;
@@ -287,6 +307,7 @@ exports.require = _require;
 exports.exit = _exit;
 exports.warn = _warn;
 exports.log = _log;
+exports.log2 = _log2;
 exports.joinEgretDir = _joinEgretDir;
 exports.getConfig = getConfig;
 exports.addCallBackWhenExit = addCallBackWhenExit;
@@ -294,3 +315,4 @@ exports.getDocumentClass = getDocumentClass;
 exports.checkVersion = checkVersion;
 exports.compressVersion = compressVersion;
 exports.addQuotes = addQuotes;
+exports.getPackageJsonConfig = getPackageJsonConfig;

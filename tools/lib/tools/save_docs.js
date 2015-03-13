@@ -538,6 +538,10 @@ function addOtherPropertis(item, orgItem) {
     if (orgItem["pType"]) {
         item["pType"] = orgItem["pType"];
     }
+
+    if (orgItem["version"]) {
+        item["version"] = orgItem["version"];
+    }
 }
 
 function changeDescription(des) {

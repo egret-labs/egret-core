@@ -60,12 +60,14 @@ function createFileList(manifest, srcPath) {
     return gameList;
 }
 
+var moduleReferenceList;
 function generateGameFileList(projectPath, sourcePath, projectProperties) {
     var manifestPath = path.join(projectPath, "manifest.json");
     var srcPath = path.join(projectPath, sourcePath);
     var manifest;
     if (file.exists(manifestPath)) {
         manifest = getManifestJson(manifestPath, srcPath);
+        moduleReferenceList = null;
     }
     else {
         var referenceInfo;
@@ -78,8 +80,14 @@ function generateGameFileList(projectPath, sourcePath, projectProperties) {
             catch (e) {
             }
         }
+        else {
+            referenceInfo = getModuleReferenceInfo(projectProperties);
+        }
         manifest = create_manifest.create(srcPath, false, referenceInfo);
+        moduleReferenceList = create_manifest.getModuleReferenceList();
+
     }
+
 
     if (true) {
         var modules = projectProperties.getAllModules();
@@ -112,4 +120,26 @@ function generateGameFileList(projectPath, sourcePath, projectProperties) {
     return manifest;
 }
 
+function getModuleReferenceInfo(projectProperties) {
+    var fileList = [];
+    var modules = projectProperties.getAllModules();
+    modules.map(function (moduleConfig) {
+        var moduleConfig = projectProperties.getModuleConfig(moduleConfig["name"]);
+        moduleConfig.file_list.map(function (item) {
+            var tsFile = file.joinPath(moduleConfig.prefix, moduleConfig.source, item);
+            var ext = file.getExtension(tsFile).toLowerCase();
+            if (ext == "ts" && item.indexOf(".d.ts") == -1) {
+                fileList.push(tsFile);
+            }
+        })
+    });
+    var referenceInfo = create_manifest.getModuleReferenceInfo(fileList);
+    return referenceInfo;
+}
+
+
+
+exports.getModuleReferenceList = function() {
+    return moduleReferenceList;
+};
 exports.generateGameFileList = generateGameFileList;

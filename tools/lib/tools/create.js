@@ -26,7 +26,7 @@ function run(currDir, args, opts) {
 
         //创建新工程
         function (callback) {
-            globals.log("正在创建新项目文件夹...");
+            globals.log(1003);
             //拷贝空模板
             copyFileDir(projectPath, "tools/templates/empty");
 
@@ -44,9 +44,7 @@ function run(currDir, args, opts) {
             }
 
             //根据package.json写入项目配置文件中的egret版本号
-            var packageTxt = file.read(path.join(param.getEgretPath(), "package.json"));
-            var packageObj = JSON.parse(packageTxt);
-            var currentVersion = packageObj.version;
+            var currentVersion = globals.getPackageJsonConfig().version;
             var egretPropertiesTxt = file.read(path.join(projectPath, "egretProperties.json"));
             egretPropertiesTxt = egretPropertiesTxt.replace("{version_replace}",currentVersion);
             file.save(path.join(projectPath, "egretProperties.json"), egretPropertiesTxt);
@@ -56,12 +54,12 @@ function run(currDir, args, opts) {
 
         //编译工程
         function (callback) {
-            console.log("正在编译项目...");
+            globals.log2(1004);
             build.run(currDir, [projectName], {"-e":[]});
         },
 
         function (callback) {
-            globals.log("创建成功");
+            globals.log(1005);
         }
     ])
 
@@ -79,21 +77,4 @@ function copyFileDir(projectPath, dir) {
     }
 }
 
-function help_title() {
-    return "创建新项目\n";
-}
-
-
-function help_example() {
-    var result = "\n";
-    result += "    egret create [project_name] [--type empty|core|gui]\n";
-    result += "描述:\n";
-    result += "    " + help_title();
-    result += "参数说明:\n";
-    result += "    --type    要创建的项目类型 core或gui，默认值为core\n";
-    return result;
-}
-
 exports.run = run;
-exports.help_title = help_title;
-exports.help_example = help_example;

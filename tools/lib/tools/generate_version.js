@@ -16,7 +16,7 @@ var crc32 = require("../core/crc32.js");
  * 生成指定目录下文件的版本信息manifest文件
  * 不包括html和css文件
  */
-function createManifest(projectPath, outputPath, newCode){
+function createManifest(projectPath, outputPath, newCode, ignorePathList){
     var basePath = path.join(outputPath, "base.manifest");
     var versionPath = path.join(outputPath, "version.manifest");
     var codePath = path.join(outputPath, "code.manifest");
@@ -35,6 +35,28 @@ function createManifest(projectPath, outputPath, newCode){
     }
 
     var list = file.search(path.join(projectPath, "resource"));
+    ignorePathList = ignorePathList.map(function(item) {
+        var reg = new RegExp(item);
+        return reg;
+    });
+    var isIgnore = false;
+    list = list.filter(function(copyFilePath) {
+        isIgnore = false;
+        for (var key in ignorePathList) {//检测忽略列表
+            var ignorePath = ignorePathList[key];
+
+            if (copyFilePath.match(ignorePath)) {
+                isIgnore = true;
+                break;
+            }
+        }
+
+        if(!isIgnore) {//不在忽略列表的路径，拷贝过去
+            return true;
+        }
+    });
+
+
     var changeVersion = {};
     var currentVersion = {};
 
@@ -91,15 +113,15 @@ function createManifest(projectPath, outputPath, newCode){
 function run(currDir, args, opts){
     var currentPath = args[0];
     if (!currentPath){
-        console.log ("请确定执行路径");
+        globals.log2(5);
         return;
     }
-    createManifest(currentPath, currentPath);
+    createManifest(currentPath, currentPath, []);
 }
 
-function generate(projectPath, outputPath, newCode) {
+function generate(projectPath, outputPath, newCode, ignorePathList) {
 
-    createManifest(projectPath, outputPath, newCode);
+    createManifest(projectPath, outputPath, newCode, ignorePathList);
 }
 
 exports.generate = generate;
