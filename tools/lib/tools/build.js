@@ -104,7 +104,7 @@ function buildPlatform(needCompileEngine, keepGeneratedTypescript) {
             }
 
             //写入语言包文件
-            url = "core/egret/i18n/" + globals.getPackageJsonConfig().i18n + ".js";
+            url = "core/egret/i18n/" + globals.getLanguageInfo() + ".js";
             html5List.unshift(url);
             nativeList.unshift(url);
 

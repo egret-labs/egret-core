@@ -24,7 +24,7 @@ function compileModule(callback, moduleName) {
     var tsList = moduleConfig.file_list.concat();
     //写入语言包文件
     if(moduleName == "core") {
-        tsList.unshift("egret/i18n/" + globals.getPackageJsonConfig().i18n + ".ts");
+        tsList.unshift("egret/i18n/" + globals.getLanguageInfo() + ".ts");
     }
     tsList = tsList.map(function (item) {
         return globals.addQuotes(path.join(moduleConfig.prefix, moduleConfig.source, item));
