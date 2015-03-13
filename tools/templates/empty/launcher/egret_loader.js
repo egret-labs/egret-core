@@ -36,10 +36,11 @@ egret_h5.startGame = function () {
     var scaleMode =  egret.MainContext.deviceType == egret.MainContext.DEVICE_MOBILE ? egret.StageScaleMode.SHOW_ALL : egret.StageScaleMode.NO_SCALE;
     context.stage.scaleMode = scaleMode;
 
+    //WebGL is a Egret's beta property. It's off by default.
     //WebGL是egret的Beta特性，默认关闭
     var rendererType = 0;
     if (rendererType == 1) {// egret.WebGLUtils.checkCanUseWebGL()) {
-        console.log("使用WebGL模式");
+        console.log("Use WebGL mode");
         context.rendererContext = new egret.WebGLRenderer();
     }
     else {
@@ -59,14 +60,15 @@ egret_h5.startGame = function () {
             context.stage.addChild(rootContainer);
         }
         else{
-            throw new Error("文档类必须是egret.DisplayObjectContainer的子类!");
+            throw new Error("Document Class must be the subclass to egret.DisplayObjectContainer!");
         }
     }
     else{
-        throw new Error("找不到文档类！");
+        throw new Error("Document Class is not found！");
     }
 
     //处理屏幕大小改变
+    //implement for screen size change
     var resizeTimer = null;
     var doResize = function () {
         context.stage.changeSize();
