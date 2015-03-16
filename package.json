@@ -1,6 +1,6 @@
 {
     "name": "egret",
-    "version": "1.5.5",
+    "version": "1.6.0",
     "private": true,
     "author":"egret-labs",
     "scripts": {
@@ -8,6 +8,7 @@
     },
     "bin": {
         "egret": "./tools/bin/egret"
-    }
+    },
+    "i18n":"cn"
 }
 

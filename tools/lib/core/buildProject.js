@@ -13,6 +13,8 @@ var exmlc = require("../exml/exmlc.js");
 
 var projectProperties;
 var projectPath;
+var moduleReferenceList;
+
 function build(properties, callback, keepGeneratedTypescript) {
     projectProperties = properties;
     projectPath = projectProperties.getProjectPath();
@@ -48,7 +50,7 @@ function build(properties, callback, keepGeneratedTypescript) {
         output: output
     };
 
-    globals.debugLog("扫描项目列表");
+    globals.debugLog(1106);
     var saoTime = Date.now();
     var sourceList;
 
@@ -59,25 +61,27 @@ function build(properties, callback, keepGeneratedTypescript) {
         sourceList = sourceList.map(function(item) {
             return path.join(projectPath, "src", item);
         });
+
+        moduleReferenceList = null;
     }
     else {
         var generateList = require("../core/gameFileList");
 
         sourceList = generateList.generateGameFileList(projectPath, "src", projectProperties);
+        moduleReferenceList = generateList.getModuleReferenceList();
     }
 
-    globals.debugLog("扫描耗时：%d秒", (Date.now() - saoTime) / 1000);
+    globals.debugLog(1107, (Date.now() - saoTime) / 1000);
 
-    async.series([function (callback) {
-
-        compile(callback,
+    async.series([function (tempCallback) {
+        compile(tempCallback,
             path.join(projectPath),
             sourceList.concat(libs),
             compileConfig
         );
 
     }, function (tempCallback) {
-        globals.debugLog("项目共计编译耗时：%d秒", (Date.now() - time) / 1000);
+        globals.debugLog(1108, (Date.now() - time) / 1000);
         tempCallback();
     }
     ], callback);
@@ -243,12 +247,12 @@ function compile(callback, projectDir, sourceList, projectConfig) {
             var sourcemap = param.getArgv()["opts"]["-sourcemap"];
             sourcemap = sourcemap ? "--sourcemap " : "";
 
-            globals.debugLog("执行tsc编译");
+            globals.debugLog(1109);
             var tempTime = Date.now();
             var cmd = sourcemap + tsList.join(" ") + " -t ES5 --outDir " + globals.addQuotes(output);
             var typeScriptCompiler = require("../tools/egret_compiler.js");
             typeScriptCompiler.compile(onCompileComplete, cmd, projectProperties.getTscLibUrl());
-            globals.debugLog("tsc编译耗时：%d秒", (Date.now() - tempTime) / 1000);
+            globals.debugLog(1110, (Date.now() - tempTime) / 1000);
 
             function onCompileComplete(code) {
                 if (code == 0) {
@@ -276,4 +280,7 @@ function compile(callback, projectDir, sourceList, projectConfig) {
     }
 }
 
+exports.getModuleReferenceList = function() {
+    return moduleReferenceList;
+};
 exports.build = build;

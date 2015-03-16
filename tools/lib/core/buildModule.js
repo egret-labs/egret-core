@@ -22,6 +22,10 @@ function compileModule(callback, moduleName) {
 
     //获取源文件地址
     var tsList = moduleConfig.file_list.concat();
+    //写入语言包文件
+    if(moduleName == "core") {
+        tsList.unshift("egret/i18n/" + globals.getLanguageInfo() + ".ts");
+    }
     tsList = tsList.map(function (item) {
         return globals.addQuotes(path.join(moduleConfig.prefix, moduleConfig.source, item));
     }).filter(function (item) {
@@ -48,23 +52,23 @@ function compileModule(callback, moduleName) {
 
     async.series([
         function (callback) {
-            globals.debugLog(moduleName + " tsc编译生成js文件");
+            globals.debugLog(1111, moduleName);
             var tempTime = Date.now();
             var cmd = sourcemap + tsList.join(" ") + " -t ES5 --outDir " + globals.addQuotes(output);
             typeScriptCompiler.compile(callback, cmd, projectProperties.getTscLibUrl());
-            globals.debugLog("耗时：%d秒", (Date.now() - tempTime) / 1000);
+            globals.debugLog(1112, (Date.now() - tempTime) / 1000);
         },
 
         function (callback) {
-            globals.debugLog(moduleName + " tsc编译生成 '.d.ts'");
+            globals.debugLog(1113, moduleName);
             var tempTime = Date.now();
             var cmd = sourcemap + tsList.join(" ") + " -d -t ES5 --out " + globals.addQuotes(path.join(output, moduleName + ".d.ts"));
             typeScriptCompiler.compile(callback, cmd, projectProperties.getTscLibUrl());
-            globals.debugLog("耗时：%d秒", (Date.now() - tempTime) / 1000);
+            globals.debugLog(1112, (Date.now() - tempTime) / 1000);
         },
 
         function (callback) {
-            globals.debugLog(moduleName + " 拷贝其他文件");
+            globals.debugLog(1114, moduleName);
             var tempTime = Date.now();
             var jsList = moduleConfig.file_list.concat();
 
@@ -104,7 +108,7 @@ function compileModule(callback, moduleName) {
             }
             file.save(path.join(output, moduleName + ".d.json"), JSON.stringify({"file_list": jsList}, null, "\t"));
 
-            globals.debugLog("耗时：%d秒", (Date.now() - tempTime) / 1000);
+            globals.debugLog(1112, (Date.now() - tempTime) / 1000);
             callback();
         }
     ], function (err) {
@@ -218,9 +222,9 @@ function compileAllModules(properties, callback) {
 
         async.series(task, function(err) {
             if (!err) {
-                globals.log("构建成功");
+                globals.log(1104);
 
-                console.log("第三方库共计耗时：%d秒", (Date.now() - startTime) / 1000);
+                globals.log2(1115, (Date.now() - startTime) / 1000);
                 callback();
             }
             else {
@@ -238,7 +242,7 @@ function compileAllModules(properties, callback) {
 
         async.series(task, function (err) {
             if (!err) {
-                globals.log("构建成功");
+                globals.log(1104);
 
                 callback();
             }

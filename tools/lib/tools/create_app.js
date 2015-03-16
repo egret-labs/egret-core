@@ -52,18 +52,18 @@ function run(dir, args, opts) {
     var cpFiles = require("../core/copyProjectFiles.js");
     cpFiles.copyFilesToNative(projectPath, nativePath, platform, properties["native"]["path_ignore"] || []);
 
-    console.log("创建完毕，共计耗时：%d秒", (Date.now() - startTime) / 1000);
+    globals.log2(1606, (Date.now() - startTime) / 1000);
 }
 
 function create_app_from(app_path, template_path, app_data) {
     // copy from project template
-    globals.log("> copy from project template ...");
+    globals.log(1607);
     app_data["template"]["source"].forEach(function(source) {
         file.copy(path.join(template_path, source), path.join(app_path, source));
     });
 
     // replace keyword in content
-    globals.log("> replace all configure elements ...");
+    globals.log(1608);
     app_data["rename_tree"]["content"].forEach(function(content) {
         var target_path = path.join(app_path, content);
         var c = file.read(target_path);
@@ -72,7 +72,7 @@ function create_app_from(app_path, template_path, app_data) {
     });
 
     // rename keyword in project name
-    globals.log("> rename project name ...");
+    globals.log(1609);
     app_data["rename_tree"]["file_name"].forEach(function(f) {
         var str = path.join(app_path, f);
         var offset = app_data["template_name"].length;
@@ -92,17 +92,4 @@ function read_json_from(json_file) {
     }
 }
 
-
-function help_title() {
-    return "从h5游戏生成app\n";
-}
-
-
-function help_example() {
-    return "egret create_app [app_name] -f [h5_game_path] -t [template_path]";
-}
-
-
 exports.run = run;
-exports.help_title = help_title;
-exports.help_example = help_example;

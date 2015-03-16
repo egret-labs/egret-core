@@ -3,6 +3,7 @@
  */
 var path = require("path");
 var file = require("../core/file.js");
+var globals = require("../core/globals");
 
 //projectPath html5工程绝对路径
 //nativePath native工程绝对路径
@@ -58,7 +59,7 @@ function copyFilesToNative(projectPath, nativePath, platform, ignorePathList) {
 
     }
 
-    console.log("native拷贝共计耗时：%d秒", (Date.now() - startTime) / 1000);
+    globals.log2(7, (Date.now() - startTime) / 1000);
 }
 
 

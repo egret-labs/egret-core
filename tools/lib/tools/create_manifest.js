@@ -83,7 +83,7 @@ function run(currDir, args, opts) {
     }
     var fileListText = "[\n" + gameList.join(",\n") + "\n]";
     file.save(file.joinPath(currDir,"manifest.json"),fileListText);
-    globals.log("manifest.json生成成功");
+    globals.log(6);
 }
 /**
  * 格式化srcPath
@@ -1264,27 +1264,8 @@ function trimKeyWords(codeText) {
     return codeText;
 }
 
-
-
-function help_title() {
-    return "在工程目录下生成manifest.json清单文件\n";
-}
-
-
-function help_example() {
-    var result = "\n";
-    result += "    egret create_manifest [project_name] -all\n";
-    result += "描述:\n";
-    result += "    " + help_title();
-    result += "参数说明:\n";
-    result += "    -all     生成所有文件的清单,若不指定则只生成文档类有引用到的类清单";
-    return result;
-}
-
 exports.run = run;
 exports.create = create;
 exports.getClassToPathInfo = getClassToPathInfo;
 exports.getModuleReferenceInfo = getModuleReferenceInfo;
 exports.getModuleReferenceList = getModuleReferenceList;
-exports.help_title = help_title;
-exports.help_example = help_example;

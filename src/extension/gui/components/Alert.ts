@@ -65,7 +65,7 @@ module egret.gui {
          * @returns {Alert}
          */
         public static show(text:string="",title:string="",closeHandler:Function=null,
-                                    firstButtonLabel:string="确定",secondButtonLabel:string="",
+                                    firstButtonLabel:string="OK",secondButtonLabel:string="",
                                     modal:boolean=true,center:boolean=true):Alert{
             var alert:Alert = new Alert();
             alert.contentText = text;

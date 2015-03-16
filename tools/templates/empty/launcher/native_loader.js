@@ -29,7 +29,9 @@ egret_native.loadAllChange = function () {
         if (list.length > 0) {
             loader.load(list[0]["url"], list[0]["size"]);
         }
-        else if (errorCount > 3) {//结束，加载出错
+        else if (errorCount > 3) {
+        //结束，加载出错
+        //End with loading error
             loader.removeEventListener(egret.IOErrorEvent.IO_ERROR, loadError, this);
             loader.removeEventListener(egret.Event.COMPLETE, loadComplete, this);
             loader.removeEventListener(egret.ProgressEvent.PROGRESS, loadProgress, this);
@@ -43,7 +45,9 @@ egret_native.loadAllChange = function () {
 
             loadComplete();
         }
-        else {//结束，加载成功
+        else {
+        //结束，加载成功
+        //End with loading successfully
             loader.removeEventListener(egret.IOErrorEvent.IO_ERROR, loadError, this);
             loader.removeEventListener(egret.Event.COMPLETE, loadComplete, this);
             loader.removeEventListener(egret.ProgressEvent.PROGRESS, loadProgress, this);
@@ -83,11 +87,11 @@ egret_native.initLoadingUI = function () {
 
 egret_native.setProgress = function(current, total) {
     console.log("egret_native  " + Math.round(current / 1024) + "KB / " + Math.round(total / 1024) + "KB");
-    textField.text = "资源加载中..." + Math.round(current / 1024) + "KB / " + Math.round(total / 1024) + "KB";
+    textField.text = "Loading Resource..." + Math.round(current / 1024) + "KB / " + Math.round(total / 1024) + "KB";
 };
 
 egret_native.loadError = function () {
-    textField.text = "资源下载失败，请检查网络连接并退出重新进入游戏！";
+    textField.text = "Resource loading failed，please check the network connection and exit back into the game！";
 };
 
 egret_native.removeUI = function () {
