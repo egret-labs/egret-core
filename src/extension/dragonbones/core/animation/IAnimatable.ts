@@ -31,8 +31,8 @@ module dragonBones {
     /**
      * @class dragonBones.IAnimatable
      * @classdesc
-     * TimelineState 负责计算 Bone 的时间轴动画。
-     * TimelineState 实例隶属于 AnimationState. AnimationState在创建时会为每个包含动作的 Bone生成一个 TimelineState 实例.
+     * 可播放动画组件接口，Armature 和 WordClock都实现了该接口
+     * 实现该接口的实例可以加到WorldClock时钟中统一由时钟控制动画的播放
      * @see dragonBones.WorldClock
      * @see dragonBones.Armature
      */
