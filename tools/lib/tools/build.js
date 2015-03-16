@@ -82,7 +82,8 @@ function buildPlatform(needCompileEngine, keepGeneratedTypescript) {
                             continue;
                         }
 
-                        if (globals.isInterface(tsFile)) {
+                        var ext = file.getExtension(tsFile).toLowerCase();
+                        if (ext == "ts" && globals.isInterface(tsFile)) {
                             continue;
                         }
                         var item2 = item.replace(".ts", ".js");
