@@ -338,8 +338,7 @@ function publishHtml5(opts, versionFile) {
     if (true) {//拷贝其他文件
         task.push(function (tempCallback) {
             //拷贝
-            file.copy(path.join(projectPath, "launcher"), path.join(releaseOutputPath, "launcher"));
-
+            //拷贝版本控制文件
             if (noVerion) {
                 file.save(path.join(releaseOutputPath, "version.manifest"), "{}");
             }
@@ -347,14 +346,12 @@ function publishHtml5(opts, versionFile) {
                 file.copy(path.join(releasePath, "html5Base", "version.manifest"), path.join(releaseOutputPath, "version.manifest"));
             }
 
+            //拷贝release.html到外面，并且改名为index.html
             file.copy(path.join(projectPath, "launcher", "release.html"), path.join(releaseOutputPath, "index.html"));
 
-            file.remove(path.join(releaseOutputPath, "launcher", "native_loader.js"));
-            file.remove(path.join(releaseOutputPath, "launcher", "runtime_loader.js"));
-            file.remove(path.join(releaseOutputPath, "launcher", "native_require.js"));
-            file.remove(path.join(releaseOutputPath, "launcher", "index.html"));
-            file.remove(path.join(releaseOutputPath, "launcher", "release.html"));
-
+            //拷贝其他的launcher内文件
+            copyFilesWithIgnoreList(path.join(projectPath, "launcher"), path.join(releaseOutputPath, "launcher"),
+                ["game-min.js", "index.html", "release.html", "native_loader.js", "runtime_loader.js", "native_require.js"]);
             tempCallback();
         });
     }
@@ -387,6 +384,35 @@ function publishHtml5(opts, versionFile) {
         }
     });
 }
+
+function copyFilesWithIgnoreList(sourceRootPath, destRootPath, ignorePathList) {
+    var copyFilePathList = file.getDirectoryAllListing(path.join(sourceRootPath));
+
+    ignorePathList = ignorePathList.map(function(item) {
+        var reg = new RegExp(item);
+        return reg;
+    });
+
+    var isIgnore = false;
+    copyFilePathList.forEach(function(copyFilePath) {
+        isIgnore = false;
+
+        for (var key in ignorePathList) {//检测忽略列表
+            var ignorePath = ignorePathList[key];
+
+            if (copyFilePath.match(ignorePath)) {
+                isIgnore = true;
+                break;
+            }
+        }
+
+        if(!isIgnore) {//不在忽略列表的路径，拷贝过去
+            var copyFileRePath = path.relative(sourceRootPath, copyFilePath);
+            file.copy(path.join(copyFilePath), path.join(destRootPath, copyFileRePath));
+        }
+    });
+}
+
 
 function getOptsValue(opts, typeArr) {
     for (var key in typeArr) {
