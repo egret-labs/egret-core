@@ -78,9 +78,9 @@ function buildPlatform(needCompileEngine, keepGeneratedTypescript) {
                     var item = list[j];
                     if (item.indexOf(".d.ts") == -1) {
                         var tsFile = file.joinPath(module.prefix, module.source, item);
-                        if (module.decouple == "true" && moduleReferenceList && moduleReferenceList.indexOf(tsFile) == -1) {
-                            continue;
-                        }
+                        //if (module.decouple == "true" && moduleReferenceList && moduleReferenceList.indexOf(tsFile) == -1) {
+                        //    continue;
+                        //}
 
                         var ext = file.getExtension(tsFile).toLowerCase();
                         if (ext == "ts" && globals.isInterface(tsFile)) {
