@@ -142,7 +142,7 @@ module egret {
                 case "size" :
                     info.size = parseInt(valueArr[1]);
                     break;
-                case "fontFamily" :
+                case "fontfamily" :
                     info.fontFamily = valueArr[1];
                     break;
                 case "href" :
