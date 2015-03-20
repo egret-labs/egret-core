@@ -233,7 +233,7 @@ function check(obj, parent, text) {
             if (obj["declarations"] && obj["declarations"].length) {
                 var docInfo = obj["declarations"][0];
                 if (docInfo["baseTypes"] && docInfo["baseTypes"].length) {
-                    initExtends(docInfo["baseTypes"][0], parent[objName]);
+                    initExtends(docInfo["baseTypes"][0], parent[objName], text);
                 }
 
                 parent[objName]["api"] = text.substring(docInfo.pos, docInfo.end);
@@ -263,8 +263,8 @@ function check(obj, parent, text) {
             }
 
             if (obj["valueDeclaration"]) {
-                initExtends(obj["valueDeclaration"]["baseType"], parent[objName]);
-                initImplements(obj["valueDeclaration"]["implementedTypes"], parent[objName]);
+                initExtends(obj["valueDeclaration"]["baseType"], parent[objName], text);
+                initImplements(obj["valueDeclaration"]["implementedTypes"], parent[objName], text);
             }
             break;
         }
@@ -422,21 +422,21 @@ function initSetParamObject(obj, decla, text) {
 }
 
 //extends
-function initExtends(baseType, obj) {
+function initExtends(baseType, obj, text) {
     if (baseType == null) {
         return;
     }
-    obj["extends"] = baseType["typeName"]["text"];
+    obj["extends"] = baseType["typeName"]["text"] || text.substring(baseType["typeName"].pos, baseType["typeName"].end);
 }
 
 //implements
-function initImplements(implementedTypes, obj) {
+function initImplements(implementedTypes, obj, text) {
     if (implementedTypes == null) {
         return;
     }
     obj["implements"] = [];
     for (var i = 0; i < implementedTypes.length; i++) {
-        obj["implements"].push(implementedTypes[i]["typeName"]["text"]);
+        obj["implements"].push(implementedTypes[i]["typeName"]["text"] || text.substring(baseType["typeName"].pos, baseType["typeName"].end));
     }
 }
 
