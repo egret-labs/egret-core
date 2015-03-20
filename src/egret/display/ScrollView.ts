@@ -170,7 +170,7 @@ module egret {
          * @param left {number} 水平滚动位置
          * @param isOffset {boolean} 可选参数，默认是false，是否是滚动增加量，如 top=1 代表往上滚动1像素
          */
-        public setScrollPosition(top: number, left: number, isOffset= false):void {
+        public setScrollPosition(top: number, left: number, isOffset: boolean = false): void {
             if (isOffset && top == 0 && left == 0)
                 return;
             if (!isOffset && this._scrollTop == top
