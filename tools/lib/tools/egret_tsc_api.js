@@ -100,8 +100,20 @@ function check(obj, parent, text) {
                 parent[objName]["type"] = text.substring(obj.valueDeclaration.type.pos, obj.valueDeclaration.type.end);
             }
 
-            addStatic(parent[objName]["content"], parent[objName]);
-            addPublic(parent[objName]["content"], parent[objName], objName);
+            var content = parent[objName]["content"];
+            addStatic(content, parent[objName]);
+
+            //获取值
+            var firstIdx = content.indexOf('=');
+            var endIdx = content.indexOf(';');
+            if (endIdx > 0) {
+                parent[objName]["value"] = trim.trimAll(content.substring(firstIdx + 1, endIdx));
+            }
+            else {
+                parent[objName]["value"] = trim.trimAll(content.substring(firstIdx + 1));
+            }
+
+            addPublic(content, parent[objName], objName);
             break;
         }
         case 8192://module var  get
