@@ -63,26 +63,26 @@ module dragonBones {
          */
 		public static transformToMatrix(transform:DBTransform, matrix:Matrix, keepScale:boolean = false):void{
 			if(keepScale){
-//				matrix.a = transform.scaleX * NumberUtils.cos(transform.skewY);
-//				matrix.b = transform.scaleX * NumberUtils.sin(transform.skewY);
-//				matrix.c = -transform.scaleY * NumberUtils.sin(transform.skewX);
-//				matrix.d = transform.scaleY * NumberUtils.cos(transform.skewX);
-                matrix.a = transform.scaleX * Math.cos(transform.skewY);
-                matrix.b = transform.scaleX * Math.sin(transform.skewY);
-                matrix.c = -transform.scaleY * Math.sin(transform.skewX);
-                matrix.d = transform.scaleY * Math.cos(transform.skewX);
+				matrix.a = transform.scaleX * MathUtil.cos(transform.skewY);
+				matrix.b = transform.scaleX * MathUtil.sin(transform.skewY);
+				matrix.c = -transform.scaleY * MathUtil.sin(transform.skewX);
+				matrix.d = transform.scaleY * MathUtil.cos(transform.skewX);
+//                matrix.a = transform.scaleX * Math.cos(transform.skewY);
+//                matrix.b = transform.scaleX * Math.sin(transform.skewY);
+//                matrix.c = -transform.scaleY * Math.sin(transform.skewX);
+//                matrix.d = transform.scaleY * Math.cos(transform.skewX);
 				matrix.tx = transform.x;
 				matrix.ty = transform.y;
 			}
 			else{
-//				matrix.a = NumberUtils.cos(transform.skewY)
-//				matrix.b = NumberUtils.sin(transform.skewY)
-//				matrix.c = -NumberUtils.sin(transform.skewX);
-//				matrix.d = NumberUtils.cos(transform.skewX);
-                matrix.a = Math.cos(transform.skewY)
-                matrix.b = Math.sin(transform.skewY)
-                matrix.c = -Math.sin(transform.skewX);
-                matrix.d = Math.cos(transform.skewX);
+				matrix.a = MathUtil.cos(transform.skewY);
+				matrix.b = MathUtil.sin(transform.skewY);
+				matrix.c = -MathUtil.sin(transform.skewX);
+				matrix.d = MathUtil.cos(transform.skewX);
+//                matrix.a = Math.cos(transform.skewY);
+//                matrix.b = Math.sin(transform.skewY);
+//                matrix.c = -Math.sin(transform.skewX);
+//                matrix.d = Math.cos(transform.skewX);
 				matrix.tx = transform.x;
 				matrix.ty = transform.y;
 			}
