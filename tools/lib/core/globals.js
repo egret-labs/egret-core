@@ -41,6 +41,14 @@ function getPackageJsonConfig() {
     return packageJsonConfig;
 }
 
+function getLanguageInfo() {
+    var i18n = getPackageJsonConfig().i18n;
+    if(!i18n) {
+        i18n = "cn";
+    }
+    return i18n;
+}
+
 function compressVersion(v1, v2) {
     var version1Arr = v1.split(".");
     var version1_1 = version1Arr[0];
@@ -316,3 +324,4 @@ exports.checkVersion = checkVersion;
 exports.compressVersion = compressVersion;
 exports.addQuotes = addQuotes;
 exports.getPackageJsonConfig = getPackageJsonConfig;
+exports.getLanguageInfo = getLanguageInfo;

@@ -34,11 +34,11 @@ var txt = file.read(getEgretPath() + "/package.json");
 var packageJsonConfig = JSON.parse(txt);
 var i18n = packageJsonConfig.i18n;
 var locale;
-if(i18n == "cn") {
-    locale = require("./zh-CN.js");
+if(i18n == "en") {
+    locale = require("./en-US.js");
 }
 else {
-    locale = require("./en-US.js");
+    locale = require("./zh-CN.js");
 }
 
 exports.help_dict = locale.help_dict;

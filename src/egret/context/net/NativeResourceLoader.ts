@@ -48,15 +48,15 @@ module egret {
                 return;
             }
 
-            if (egret_native.isRecordExists(this._path)) {//卡里
-                this.loadOver();
-                return;
-            }
-            else if (egret_native.isFileExists(this._path)){
-                this.loadOver();
-                return;
-            }
-            else {
+            //if (egret_native.isRecordExists(this._path)) {//卡里
+            //    this.loadOver();
+            //    return;
+            //}
+            //else if (egret_native.isFileExists(this._path)){
+            //    this.loadOver();
+            //    return;
+            //}
+            //else {
                 this._downCount++;
                 var promise = egret.PromiseObject.create();
                 var self = this;
@@ -70,7 +70,7 @@ module egret {
                     self.downloadingProgress(bytesLoaded);
                 };
                 egret_native.download(this._path, this._path, promise);
-            }
+            //}
         }
 
         private downloadingProgress(bytesLoaded:number) {

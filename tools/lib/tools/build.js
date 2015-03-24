@@ -78,11 +78,12 @@ function buildPlatform(needCompileEngine, keepGeneratedTypescript) {
                     var item = list[j];
                     if (item.indexOf(".d.ts") == -1) {
                         var tsFile = file.joinPath(module.prefix, module.source, item);
-                        if (module.decouple == "true" && moduleReferenceList && moduleReferenceList.indexOf(tsFile) == -1) {
-                            continue;
-                        }
+                        //if (module.decouple == "true" && moduleReferenceList && moduleReferenceList.indexOf(tsFile) == -1) {
+                        //    continue;
+                        //}
 
-                        if (globals.isInterface(tsFile)) {
+                        var ext = file.getExtension(tsFile).toLowerCase();
+                        if (ext == "ts" && globals.isInterface(tsFile)) {
                             continue;
                         }
                         var item2 = item.replace(".ts", ".js");
@@ -104,7 +105,7 @@ function buildPlatform(needCompileEngine, keepGeneratedTypescript) {
             }
 
             //写入语言包文件
-            url = "core/egret/i18n/" + globals.getPackageJsonConfig().i18n + ".js";
+            url = "core/egret/i18n/" + globals.getLanguageInfo() + ".js";
             html5List.unshift(url);
             nativeList.unshift(url);
 

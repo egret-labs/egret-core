@@ -27,10 +27,20 @@ function getExtendsClassName(className) {
     return null;
 }
 
-function getClassFullName(className) {
+//获取类全称
+function getClassFullName(className, memberof) {
     className = trim.trimAll(className);
-    var memberof = getMemberof(className);
 
+    if (classesArr[className]) {
+        return className;
+    }
+
+    if (memberof) {
+        if (classesArr[memberof + "." + className]) {
+            return memberof + "." + className;
+        }
+    }
+    var memberof = getMemberof(className);
     if (memberof.length) {
         var arr = className.split(".");
         return memberof + "." + arr[arr.length - 1];
@@ -100,8 +110,7 @@ exports.screening = function (apiArr) {
         //继承
         if (classDes["tempExtends"]) {
             classDes["augments"] = [];
-
-            var parent = getClassFullName(classDes["tempExtends"]);
+            var parent = getClassFullName(classDes["tempExtends"], classDes["memberof"]);
             classDes["augments"].push(parent);
 
             while (parent = getExtendsClassName(parent)) {
@@ -116,7 +125,7 @@ exports.screening = function (apiArr) {
             for (var i = 0; i < classDes["tempImplements"].length; i++) {
                 var tempIm = classDes["tempImplements"][i];
 
-                classDes["implements"].push({"name" : getClassFullName(tempIm)});
+                classDes["implements"].push({"name" : getClassFullName(tempIm, classDes["memberof"])});
             }
         }
 
@@ -522,25 +531,17 @@ function addOtherPropertis(item, orgItem) {
     if (orgItem["deprecated"]) {
         item["deprecated"] = true;
     }
-
-    if (orgItem["see"]) {
-        item["see"] = orgItem["see"];
-    }
-
-    if (orgItem["link"]) {
-        item["link"] = trim.trimAll(orgItem["link"]);
-    }
-
-    if (orgItem["example"]) {
-        item["example"] = trim.trimAll(orgItem["example"]);
-    }
-
-    if (orgItem["pType"]) {
-        item["pType"] = orgItem["pType"];
-    }
-
-    if (orgItem["version"]) {
-        item["version"] = orgItem["version"];
+    var otherKeys = ["link", "example", "see", "pType", "version", "value"];
+    for (var i= 0; i < otherKeys.length; i++) {
+        var key = otherKeys[i];
+        if (orgItem[key]) {
+            if (orgItem[key] instanceof String) {
+                item[key] = trim.trimAll(orgItem[key].toString());
+            }
+            else {
+                item[key] = orgItem[key];
+            }
+        }
     }
 }
 
@@ -555,9 +556,6 @@ function changeDescription(des) {
         return des;
     }
 
-    //var arr = des.split("\n");
-    //return "<p>" + arr.join("</p><p>") + "</p>";
-    //return "<p>" + des + "</p>";
     return des;
 }
 
