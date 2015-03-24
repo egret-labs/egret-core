@@ -48,6 +48,6 @@ module egret {
          * 注意：由于 CanvasAPI 的限制，只会保留 Alpha 值不为1的区域。
          * @constant {string} egret.BlendMode.ERASE
          */
-        public static ERASE_REVERSE:string = "erase_reverse";
+        public static ERASE_REVERSE:string = "eraseReverse";
     }
 }
