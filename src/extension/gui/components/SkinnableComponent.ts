@@ -171,16 +171,17 @@ module egret.gui {
 		 * @method egret.gui.SkinnableComponent#attachSkin
 		 * @param skin {any} 
 		 */		
-		public attachSkin(skin:any):void{
+        public attachSkin(skin: any): void {
+            if (skin && !(skin instanceof DisplayObject))
+                this.skinLayoutEnabled = true;
+            else
+                this.skinLayoutEnabled = false;
+
 			if(skin&&"hostComponent" in skin){
 				var newSkin:ISkin = <ISkin> skin;
 				newSkin.hostComponent = this;
 				this.findSkinParts();
 			}
-			if(skin&&!(skin instanceof DisplayObject))
-				this.skinLayoutEnabled = true;
-			else
-				this.skinLayoutEnabled = false;
 		}
 		/**
 		 * 匹配皮肤和主机组件的公共变量，并完成实例的注入。此方法在附加皮肤时会自动执行一次。
