@@ -8,7 +8,7 @@ var trim = require("./trim");
 
 function typeScriptCompiler(quitFunc,cmd) {
     file.save("tsc_config_temp.txt", cmd);//todo performance-optimize
-    var TypeScript = require('../core/typescript/tscapi.js');
+    //var TypeScript = require('../core/typescript/tscapi.js');
 
     TypeScript.exit = function(){
         setTimeout(quitFunc,1,arguments[0])
