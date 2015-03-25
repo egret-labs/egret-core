@@ -40,6 +40,8 @@ Tools
 
 Release Notes
 --------------------
+[Egret 1.6.0 Release Notes 2015-3-20](/docs/en/1.6.0_ReleaseNotes.md)
+
 [Egret 1.5.5 Release Notes 2015-2-28](/docs/en/1.5.5_ReleaseNotes.md)
 
 

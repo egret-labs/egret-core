@@ -37,11 +37,11 @@ module egret {
         /**
          * 以字符串格式发送和接收数据
          */
-        public static TYPE_STRING:string = "WebSocket_type_string";
+        public static TYPE_STRING:string = "webSocketTypeString";
         /**
          * 以二进制格式发送和接收数据
          */
-        public static TYPE_BINARY:string = "WebSocket_type_binary";
+        public static TYPE_BINARY:string = "webSocketTypeBinary";
 
         private socket:ISocket;
 

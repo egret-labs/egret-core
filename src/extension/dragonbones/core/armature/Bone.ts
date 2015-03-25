@@ -535,8 +535,8 @@ module dragonBones {
 				var y:number = 0;
 				var skewX:number = 0;
 				var skewY:number = 0;
-				var scaleX:number = 0;
-				var scaleY:number = 0;
+				var scaleX:number = 1;
+				var scaleY:number = 1;
 				var pivotX:number = 0;
 				var pivotY:number = 0;
 				

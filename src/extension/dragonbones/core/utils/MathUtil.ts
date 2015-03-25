@@ -25,7 +25,6 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-
 module dragonBones {
 
 	/**
@@ -40,7 +39,7 @@ module dragonBones {
 			if(easing > 1)    //ease in out
 			{
                 //valueEase = 0.5 * (1 - NumberUtils.cos(value * Math.PI));
-				valueEase = 0.5 * (1 - Math.cos(value * Math.PI));
+				valueEase = 0.5 * (1 - MathUtil.cos(value * Math.PI));
 				easing -= 1;
 			}else if (easing > 0)    //ease out
             {
@@ -54,5 +53,66 @@ module dragonBones {
 			
 			return (valueEase - value) * easing + value;
 		}
-	}
+
+        /**
+         * 角度转换为弧度
+         */
+        public static ANGLE_TO_RADIAN:number = Math.PI / 180;
+        /**
+         * 弧度转换为角度
+         */
+        public static RADIAN_TO_ANGLE:number = 180 / Math.PI;
+
+        public static isNumber(value:any):boolean {
+            return typeof(value) === "number" && !isNaN(value);
+        }
+
+        /**
+         * 得到对应角度值的sin近似值
+         * @param value {number} 角度值
+         * @returns {number} sin值
+         */
+        public static sin(value:number):number {
+            value *= MathUtil.RADIAN_TO_ANGLE;
+            var valueFloor:number = Math.floor(value);
+            var valueCeil:number = valueFloor + 1;
+
+            var resultFloor:number = MathUtil.sinInt(valueFloor);
+            var resultCeil:number = MathUtil.sinInt(valueCeil);
+
+            return (value - valueFloor) * resultCeil + (valueCeil - value) * resultFloor;
+        }
+
+        private static sinInt(value:number):number
+        {
+            value = value % 360;
+            if (value < 0) {
+                value += 360;
+            }
+            if (value < 90) {
+                return db_sin_map[value];
+            }
+            if (value < 180) {
+                return db_sin_map[180 - value];
+            }
+            if (value < 270) {
+                return -db_sin_map[value - 180];
+            }
+            return -db_sin_map[360 - value];
+        }
+        /**
+         * 得到对应角度值的cos近似值
+         * @param value {number} 角度值
+         * @returns {number} cos值
+         */
+        public static cos(value:number):number {
+            return MathUtil.sin(Math.PI/2 - value);
+        }
+    }
+}
+
+var db_sin_map = {};
+
+for (var i = 0; i <= 90; i++) {
+    db_sin_map[i] = Math.sin(i * dragonBones.MathUtil.ANGLE_TO_RADIAN);
 }
