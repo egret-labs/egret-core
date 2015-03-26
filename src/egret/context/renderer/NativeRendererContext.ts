@@ -156,8 +156,8 @@ module egret {
          */
         public setAlpha(value:number, blendMode:string) {
             //if (this.currentAlpha != value) {
-                egret_native.Graphics.setGlobalAlpha(value);
-                //this.currentAlpha = value;
+            egret_native.Graphics.setGlobalAlpha(value);
+            //this.currentAlpha = value;
             //}
             this.setBlendMode(blendMode);
         }
@@ -169,11 +169,11 @@ module egret {
                 blendMode = egret.BlendMode.NORMAL;
             }
             //if (this.currentBlendMode != blendMode) {
-                var blendModeArg = RendererContext.blendModesForGL[blendMode];
-                if (blendModeArg) {
-                    egret_native.Graphics.setBlendArg(blendModeArg[0], blendModeArg[1]);
-                    this.currentBlendMode = blendMode;
-                }
+            var blendModeArg = RendererContext.blendModesForGL[blendMode];
+            if (blendModeArg) {
+                egret_native.Graphics.setBlendArg(blendModeArg[0], blendModeArg[1]);
+                this.currentBlendMode = blendMode;
+            }
             //}
         }
 
@@ -186,7 +186,16 @@ module egret {
             style = style || <egret.ITextStyle>{};
             var size:number = style["size"] == null ? textField._size : style["size"];
 
-            egret_native.Label.createLabel(TextField.default_fontFamily, size, "");
+            var outline;
+            if (style.stroke != null) {
+                outline = style.stroke;
+            }
+            else {
+                outline = textField._stroke;
+            }
+
+
+            egret_native.Label.createLabel(TextField.default_fontFamily, size, "", outline);
         }
 
         /**
@@ -220,23 +229,16 @@ module egret {
                 textColor = textField._textColor;
             }
 
-            var strokeColor:string;
+            var strokeColor:number;
             if (style.strokeColor != null) {
-                strokeColor = toColorString(style.strokeColor);
+                strokeColor = style.strokeColor;
             }
             else {
-                strokeColor = textField._strokeColorString;
-            }
-
-            var outline;
-            if (style.stroke != null) {
-                outline = style.stroke;
-            }
-            else {
-                outline = textField._stroke;
+                strokeColor = textField._strokeColor;
             }
 
             egret_native.Label.setTextColor(textColor);
+            egret_native.Label.setStrokeColor(strokeColor);
             egret_native.Label.drawText(text, x, y - 2);
 
             super.drawText(textField, text, x, y, maxWidth, style);

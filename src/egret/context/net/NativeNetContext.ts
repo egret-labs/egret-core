@@ -33,14 +33,18 @@ module egret {
      */
     export class NativeNetContext extends NetContext {
 
-        private _versionCtr:egret.VersionController;
+        public _versionCtr:egret.IVersionController;
 
-        private static __use_asyn:boolean = false;
+        public static __use_asyn:boolean = false;
 
         public constructor() {
             super();
 
-            this._versionCtr = new egret.VersionController();
+            this.initVersion(new egret.VersionController());
+        }
+
+        public initVersion(versionCtr:egret.IVersionController):void {
+            this._versionCtr = versionCtr;
         }
 
         private urlData:any = {};
@@ -97,7 +101,24 @@ module egret {
                 download();
             }
             else {
-                __callAsync(onLoadComplete, this);
+                if (NativeNetContext.__use_asyn) {
+                    //异步读取
+                    readFileAsync();
+                }
+                else {
+                    //同步读取
+                    __callAsync(onLoadComplete, this);
+                }
+            }
+
+            function readFileAsync() {
+                var promise = new egret.PromiseObject();
+                promise.onSuccessFunc = function(content){
+                    self.saveVersion(url);
+                    loader.data = content;
+                    Event.dispatchEvent(loader, Event.COMPLETE);
+                };
+                egret_native.readFileAsync(url, promise);
             }
 
             function download() {
@@ -178,11 +199,32 @@ module egret {
             }
             else {
                 if (NativeNetContext.__use_asyn) {
-                    onLoadComplete();
+                    addTextureAsync();
                 }
                 else {
                     egret.__callAsync(onLoadComplete, this);
+
                 }
+            }
+
+            function addTexture(bitmapData) {
+                self.saveVersion(url);
+
+                var texture = new egret.Texture();
+                texture._setBitmapData(bitmapData);
+                loader.data = texture;
+                egret.Event.dispatchEvent(loader, egret.Event.COMPLETE);
+            }
+
+            function addTextureAsync() {
+                var promise = new egret.PromiseObject();
+                promise.onSuccessFunc = function(bitmapData){
+                    addTexture(bitmapData);
+                };
+                promise.onErrorFunc = function () {
+                    egret.IOErrorEvent.dispatchIOErrorEvent(loader);
+                };
+                egret_native.Texture.addTextureAsyn(url, promise);
             }
 
             function download() {
@@ -195,27 +237,13 @@ module egret {
             }
 
             function onLoadComplete() {
-                self.saveVersion(url);
 
                 if (NativeNetContext.__use_asyn) {//异步的
-                    var promise = egret.PromiseObject.create();
-                    promise.onSuccessFunc = function (bitmapData) {
-                        var texture = new egret.Texture();
-                        texture._setBitmapData(bitmapData);
-                        loader.data = texture;
-                        egret.Event.dispatchEvent(loader, egret.Event.COMPLETE);
-                    };
-                    promise.onErrorFunc = function () {
-                        egret.IOErrorEvent.dispatchIOErrorEvent(loader);
-                    };
-                    egret_native.Texture.addTextureUnsyn(url, promise);
+                    addTextureAsync();
                 }
                 else {
                     var bitmapData = egret_native.Texture.addTexture(url);
-                    var texture = new egret.Texture();
-                    texture._setBitmapData(bitmapData);
-                    loader.data = texture;
-                    egret.Event.dispatchEvent(loader, egret.Event.COMPLETE);
+                    addTexture(bitmapData);
                 }
             }
         }
@@ -224,18 +252,26 @@ module egret {
          * 检查文件是否是最新版本
          */
         private checkIsNewVersion(url:string):boolean {
-            return this._versionCtr.checkIsNewVersion(url);
+            if (this._versionCtr) {
+                return this._versionCtr.checkIsNewVersion(url);
+            }
+            return true;
         }
 
         /**
          * 保存本地版本信息文件
          */
         private saveVersion(url:string):void {
-            this._versionCtr.saveVersion(url);
+            if (this._versionCtr) {
+                this._versionCtr.saveVersion(url);
+            }
         }
 
         public getChangeList():Array<any> {
-            return this._versionCtr.getChangeList();
+            if (this._versionCtr) {
+                return this._versionCtr.getChangeList();
+            }
+            return [];
         }
     }
 }

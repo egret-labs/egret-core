@@ -57,19 +57,19 @@ module egret {
             //    return;
             //}
             //else {
-                this._downCount++;
-                var promise = egret.PromiseObject.create();
-                var self = this;
-                promise.onSuccessFunc = function () {
-                    self.loadOver();
-                };
-                promise.onErrorFunc = function () {
-                    self.reload();
-                };
-                promise.downloadingSizeFunc = function (bytesLoaded:number) {
-                    self.downloadingProgress(bytesLoaded);
-                };
-                egret_native.download(this._path, this._path, promise);
+            this._downCount++;
+            var promise = egret.PromiseObject.create();
+            var self = this;
+            promise.onSuccessFunc = function () {
+                self.loadOver();
+            };
+            promise.onErrorFunc = function () {
+                self.reload();
+            };
+            promise.downloadingSizeFunc = function (bytesLoaded:number) {
+                self.downloadingProgress(bytesLoaded);
+            };
+            egret_native.download(this._path, this._path, promise);
             //}
         }
 
