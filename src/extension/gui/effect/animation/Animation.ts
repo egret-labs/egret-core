@@ -1,14 +1,44 @@
+/**
+ * Copyright (c) 2014,Egret-Labs.org
+ * All rights reserved.
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *
+ *     * Redistributions of source code must retain the above copyright
+ *       notice, this list of conditions and the following disclaimer.
+ *     * Redistributions in binary form must reproduce the above copyright
+ *       notice, this list of conditions and the following disclaimer in the
+ *       documentation and/or other materials provided with the distribution.
+ *     * Neither the name of the Egret-Labs.org nor the
+ *       names of its contributors may be used to endorse or promote products
+ *       derived from this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY EGRET-LABS.ORG AND CONTRIBUTORS "AS IS" AND ANY
+ * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL EGRET-LABS.ORG AND CONTRIBUTORS BE LIABLE FOR ANY
+ * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+ * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
+
 
 module egret.gui {
-
+    /**
+     * @class egret.gui.Animation
+     * @classdesc
+     * Animation 类定义在指定的时间段上在属性的开始值和结束值之间发生的动画。
+     */
     export class Animation{
         private static TIMER_RESOLUTION:number = 1000 / 60;
 
         /**
-         * 构造函数
-         * @method egret.gui.Animation#constructor
          * @param updateFunction {Function} 动画更新时的回调函数,updateFunction(animation:Animation):void
          * @param thisObject {an}
+         * @method egret.gui.Animation#constructor
          */
         public constructor(updateFunction:(animation:Animation)=>void,thisObject:any){
             this.updateFunction = updateFunction;
@@ -19,6 +49,7 @@ module egret.gui {
         private _easer:IEaser = Animation.defaultEaser;
         /**
          * 此效果的缓动行为，默认为Sine(.5)
+         * @member egret.gui.Animation#easer
          */
         public get easer():IEaser
         {
@@ -39,23 +70,28 @@ module egret.gui {
         /**
          * 动画开始播放时的回调函数,只会在首次延迟等待结束时触发一次,若有重复播放，之后将触发repeatFunction。
          * startFunction(animation:Animation):void
+         * @member egret.gui.Animation#startFunction
          */
         public startFunction:Function = null;
         /**
          * 动画播放结束时的回调函数,可以是正常播放结束，也可以是被调用了end()方法导致结束。注意：stop()方法被调用不会触发这个函数。
          * endFunction(animation:Animation):void
+         * @member egret.gui.Animation#endFunction
          */
         public endFunction:Function = null;
         /**
          * 动画更新时的回调函数,updateFunction(animation:Animation):void
+         * @member egret.gui.Animation#updateFunction
          */
         public updateFunction:Function = null;
         /**
          * 动画被停止的回调函数，即stop()方法被调用。stopFunction(animation:Animation):void
+         * @member egret.gui.Animation#stopFunction
          */
         public stopFunction:Function = null;
         /**
          * 动画重复的回调函数，repeatFunction(animation:Animation):void
+         * @member egret.gui.Animation#repeatFunction
          */
         public repeatFunction:Function = null;
 
@@ -82,11 +118,13 @@ module egret.gui {
         /**
          * 直到 Animation 的当前帧，包含计算的值的对象。
          * 会使用属性名作为键，将这些值存储为 map 值。
+         * @member egret.gui.Animation#currentValue
          */
         public currentValue:any;
 
         /**
          * MotionPath 对象集，它定义随着时间的推移 Animation 将设置动画的属性和值。
+         * @member egret.gui.Animation#motionPaths
          */
         public motionPaths:Array<MotionPath>;
 
@@ -94,6 +132,7 @@ module egret.gui {
         /**
          * 动画的总计已过去时间，包括任何开始延迟和重复。
          * 对于播放了第一个循环的动画，此值将等于 cycleTime 的值。
+         * @member egret.gui.Animation#playheadTime
          */
         public get playheadTime():number{
             return this._playheadTime + this.startDelay;
@@ -104,6 +143,7 @@ module egret.gui {
         /**
          * 如果为 true，则表示当前正在播放动画。
          * 除非已播放动画且尚未停止（以编程方式或自动）或暂停它，否则该值为 false。
+         * @member egret.gui.Animation#isPlaying
          */
         public get isPlaying():boolean{
             return this._isPlaying;
@@ -111,6 +151,7 @@ module egret.gui {
 
         /**
          * 动画的时长（以毫秒为单位），不计算由 repeatCount 属性定义的任何重复。
+         * @member egret.gui.Animation#duration
          */
         public duration:number = 500;
 
@@ -120,6 +161,7 @@ module egret.gui {
          * 重复动画已将 repeatCount 属性设置为 0 或某个大于 1 的值。
          * 此值应该为 RepeatBehavior.LOOP（意味着每次动画按相同的顺序重复）
          * 或 RepeatBehavior.REVERSE（意味着对于每个迭代，动画都倒转方向）。
+         * @member egret.gui.Animation#repeatBehavior
          */
         public get repeatBehavior():string{
             return this._repeatBehavior;
@@ -131,14 +173,15 @@ module egret.gui {
 
         private _repeatCount:number = 1;
         /**
-         * 此动画重复的次数。值为 0 意味着它会无限期地重复。
+         * 此动画重复的次数。值为 0 意味着它会无限期地重复。默认值为1
+         * @member egret.gui.Animation#repeatCount
          */
-        public set repeatCount(value:number){
-            this._repeatCount = value;
-        }
-
         public get repeatCount():number{
             return this._repeatCount;
+        }
+
+        public set repeatCount(value:number){
+            this._repeatCount = value;
         }
 
         private _repeatDelay:number = 0;
@@ -147,27 +190,32 @@ module egret.gui {
          * 将此值设置为一个非零数字会恰好在其结束值处结束上一个动画循环。
          * 但是，不延迟的重复可能会完全跳过该值，因为动画会从在一个循环的结尾附近平滑地过渡到越过下一个循环的开始处。
          * 必须将此属性设置为大于等于 0 的一个值。
+         * @member egret.gui.Animation#repeatDelay
          */
-        public set repeatDelay(value:number){
-            this._repeatDelay = value;
-        }
         public get repeatDelay():number{
             return this._repeatDelay;
+        }
+
+        public set repeatDelay(value:number){
+            this._repeatDelay = value;
         }
 
         private _startDelay:number = 0;
         /**
          * 在动画开始之前等待的时间数量。必须将此属性设置为大于等于 0 的一个值。
+         * @member egret.gui.Animation#startDelay
          */
-        public set startDelay(value:number){
-            this._startDelay = value;
-        }
         public get startDelay():number{
             return this._startDelay;
         }
 
+        public set startDelay(value:number){
+            this._startDelay = value;
+        }
+
         /**
          * Animation 实例所用的插补器，用于计算属性的开始值和结束值之间的值。
+         * @member egret.gui.Animation#interpolator
          */
         public interpolator:IInterpolator = null;
 
@@ -176,6 +224,7 @@ module egret.gui {
          * 在当前周期动画中的当前毫秒位置。该值介于 0 和 duration 之间。
          * 动画的“周期”被定义为动画的单一重复，其中 repeatCount 属性用于定义将播放的周期数。
          * 使用 seek() 方法更改动画的位置。
+         * @member egret.gui.Animation#cycleTime
          */
         public get cycleTime():number{
             return this._cycleTime;
@@ -185,6 +234,7 @@ module egret.gui {
         /**
          * 在已应用缓动之后，在动画中已过去的当前部分。
          * 此值在 0 和 1 之间。动画的“周期”被定义为动画的单一重复，其中 repeatCount 属性用于定义将播放的周期数。
+         * @member egret.gui.Animation#cycleFraction
          */
         public get cycleFraction():number{
             return this._cycleFraction;
@@ -195,6 +245,7 @@ module egret.gui {
         /**
          * 如果为 true，则反向播放动画。
          * 如果当前播放动画的方向与 playReversed 的指定值相反，则动画将以动态方式更改方向。
+         * @member egret.gui.Animation#playReversed
          */
         public get playReversed():boolean{
             return this._playReversed;
@@ -257,10 +308,8 @@ module egret.gui {
         }
 
         private static timerHandler(event:egret.TimerEvent):void{
-            var oldTime:number = Animation.intervalTime;
             Animation.intervalTime = Timeline.pulse();
 
-            var n:number = Animation.activeAnimations.length;
             var i:number = 0;
 
             while (i < Animation.activeAnimations.length){
@@ -383,7 +432,7 @@ module egret.gui {
         private calculateValue(currentTime:number):void{
             var i:number = 0;
 
-            this.currentValue = new Object();
+            this.currentValue = {};
             if (this.duration == 0){
                 for (i = 0; i < this.motionPaths.length; ++i){
                     this.currentValue[this.motionPaths[i].property] =
@@ -419,6 +468,7 @@ module egret.gui {
 
         /**
          * 中断动画，立即跳到动画的结尾，并对 animationTarget 调用 animationEnd() 函数。
+         * @method egret.gui.Animation#end
          */
         public end():void{
             if (this.startDelay > 0 && Animation.delayedStartAnims.length > 0){
@@ -476,6 +526,7 @@ module egret.gui {
 
         /**
          * 开始动画。如果动画已在播放，则会首先停止它，然后播放它。
+         * @method egret.gui.Animation#play
          */
         public play():void{
             this.stopAnimation();
@@ -500,7 +551,7 @@ module egret.gui {
                 }
             }
             for (i = 0; i < this.motionPaths.length; ++i)
-                this.motionPaths[i].scaleKeyframes(this.duration);
+                this.motionPaths[i]._scaleKeyframes(this.duration);
 
             if (this._doReverse)
                 this._invertValues = true;
@@ -563,6 +614,7 @@ module egret.gui {
 
         /**
          * 从当前位置反向播放效果
+         * @method egret.gui.Animation#reverse
          */
         public reverse():void{
             if (this._isPlaying){
@@ -576,15 +628,8 @@ module egret.gui {
         }
 
         /**
-         * 更新时间轴上的时间
-         */
-        public static pulse():void{
-            if (Animation.timer)
-                Timeline.pulse();
-        }
-
-        /**
          * 在调用 resume() 方法之前暂停该效果。如果在 resume() 之前调用 stop()，则无法继续该动画。
+         * @method egret.gui.Animation#pause
          */
         public pause():void{
             if (this.delayedStartTime>=0){
@@ -605,6 +650,7 @@ module egret.gui {
         }
         /**
          * 停止播放动画，且结束时不调用 end() 方法。将对 animationTarget 调用 animationStop() 函数。
+         * @method egret.gui.Animation#stop
          */
         public stop():void{
             this.stopAnimation();
@@ -613,6 +659,7 @@ module egret.gui {
 
         /**
          * 在效果由 pause() 方法暂停后继续播放效果。
+         * @method egret.gui.Animation#resume
          */
         public resume():void{
             this._isPlaying = true;
