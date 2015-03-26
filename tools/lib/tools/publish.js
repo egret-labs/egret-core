@@ -43,6 +43,17 @@ function run(dir, args, opts) {
     }
 }
 
+function getCompilePath(opts) {
+    var compilepath = "";
+    if (param.getArgv()["opts"]["--method"] && param.getArgv()["opts"]["--method"] == "uglify") {
+        compilepath = "../uglify-js/uglify_adapt";
+    }
+    else {
+        compilepath = "../core/closureCompiler";
+    }
+    return compilepath;
+}
+
 function publishNative(opts, versionFile) {
 
     var timeMinSec = Date.now();
@@ -66,17 +77,17 @@ function publishNative(opts, versionFile) {
     //获取gamelist以及egretlist
     var file_list = filelist.getAllFileList(projectPath, "native");
     var needCompile = (opts["-compile"] || opts["-compiler"]) ? true : false;
-
     if (needCompile) {//压缩js文件，并拷贝到ziptemp目录中
         task.push(function (tempCallback) {
             var tempTime = Date.now();
             globals.debugLog(1403);
-            closureCompiler.compilerSingleFile(path.join(ziptempPath, "launcher", "__game-min-native.js"),
-                file_list, path.join(ziptempPath, "launcher", "game-min-native.js"), function () {
 
-                    globals.debugLog(1404, (Date.now() - tempTime) / 1000);
-                    tempCallback();
-                });
+            var compilePath = getCompilePath();
+            var adapt = require(compilePath);
+            adapt.compilerSingleFile(file_list, path.join(ziptempPath, "launcher", "game-min-native.js"), path.join(ziptempPath, "launcher", "__game-min-native.js"), function() {
+                globals.debugLog(1404, (Date.now() - tempTime) / 1000);
+                tempCallback();
+            });
         });
     }
     else {
@@ -144,7 +155,8 @@ function publishNative(opts, versionFile) {
     }
 
     //打zip包
-    if (opts["-nozip"]) {//不需要打zip包
+    var nozip = opts["-nozip"];
+    if (nozip) {//不需要打zip包
         task.push(function (tempCallback) {
             var tempTime = Date.now();
             globals.debugLog(1414);
@@ -174,11 +186,31 @@ function publishNative(opts, versionFile) {
         task.push(function (tempCallback) {
             copyFilesWithIgnore(path.join(projectPath, "resource"), path.join(releaseOutputPath, "resource"));
 
+            if (nozip) {
+                file.save(path.join(releaseOutputPath, "appVersion.manifest"), JSON.stringify({"version":Date.now(), "debug":1}));
+            }
+            else {
+                file.save(path.join(releaseOutputPath, "appVersion.manifest"), JSON.stringify({"version":Date.now()}));
+            }
+
             if (noVerion) {
                 file.save(path.join(releaseOutputPath, "base.manifest"), "{}");
             }
             else {
                 file.copy(path.join(releasePath, "nativeBase", "base.manifest"), path.join(releaseOutputPath, "base.manifest"));
+
+                var baseJson = JSON.parse(file.read(path.join(releasePath, "nativeBase", "base.manifest")));
+                var versionJson = JSON.parse(file.read(path.join(releasePath, "nativeBase", "version.manifest")));
+
+                for (var key in versionJson) {
+                    if (versionJson[key]["d"] == 1) {
+                        delete baseJson[key];
+                    }
+                    else if (baseJson[key] == null || versionJson[key]["v"] != baseJson[key]["v"]) {
+                        baseJson[key] = versionJson[key];
+                    }
+                }
+                file.save(path.join(releaseOutputPath, "localVersion.manifest"), JSON.stringify(baseJson));
             }
 
             compressJson(releaseOutputPath);
@@ -203,7 +235,12 @@ function publishNative(opts, versionFile) {
 
                     //修改java文件
                     var javaEntr = require('../core/changeJavaEntrance');
-                    javaEntr.changePublish(url1, "android", versionFile);
+                    if (nozip) {
+                        javaEntr.changeBuild(url1, "android");
+                    }
+                    else {
+                        javaEntr.changePublish(url1, "android", versionFile);
+                    }
                 }
             }
 
@@ -294,12 +331,13 @@ function publishHtml5(opts, versionFile) {
         task.push(function (tempCallback) {
             var tempTime = Date.now();
             globals.debugLog(1403);
-            closureCompiler.compilerSingleFile(path.join(releaseOutputPath, "launcher", "__game-min.js"),
-                file_list, path.join(releaseOutputPath, "launcher", "game-min.js"), function () {
 
-                    globals.debugLog(1404, (Date.now() - tempTime) / 1000);
-                    tempCallback();
-                });
+            var compilePath = getCompilePath();
+            var adapt = require(compilePath);
+            adapt.compilerSingleFile(file_list, path.join(releaseOutputPath, "launcher", "game-min.js"), path.join(releaseOutputPath, "launcher", "__game-min.js"), function() {
+                globals.debugLog(1404, (Date.now() - tempTime) / 1000);
+                tempCallback();
+            });
         });
     }
     else {

@@ -3,6 +3,7 @@
     "dependence": [],
     "source":"src",
     "file_list": [
+        "egret/utils/extends.ts",
         "egret/utils/Logger.ts",
         "egret/utils/IHashObject.ts",
         "egret/utils/HashObject.ts",

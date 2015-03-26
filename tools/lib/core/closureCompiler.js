@@ -253,7 +253,7 @@ ClosureCompiler.prototype.compile = function (files, callback) {
 };
 
 
-function compilerSingleFile(tempFile, fileList, outputFile, callback) {
+function compilerSingleFile(fileList, outputFile, tempFile, callback) {
     combineToSingleJavaScriptFile(fileList, tempFile);
     ClosureCompiler.compile([tempFile],
         {js_output_file: globals.addQuotes(outputFile), "warning_level": "QUIET"},

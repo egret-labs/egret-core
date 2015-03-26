@@ -34,6 +34,54 @@ module egret {
      * todo:GitHub文档，如何利用日志帮助游戏持续改进
      */
     export class Logger {
+        public static ALL:string = "all";
+        public static DEBUG:string = "debug";
+        public static INFO:string = "info";
+        public static WARN:string = "warn";
+        public static ERROR:string ="error";
+        public static OFF:string = "off";
+
+        private static logFuncs:Object;
+        /**
+         * @private
+         * @param logType
+         */
+        public static openLogByType(logType:string):void {
+            if (Logger.logFuncs == null) {
+                Logger.logFuncs = { "error":console.error,
+                                    "debug":console.debug,
+                                    "warn":console.warn,
+                                    "info":console.info,
+                                    "log":console.log
+                                  };
+             }
+            switch (logType) {
+                case Logger.OFF:
+                    console.error = function () {};
+                case Logger.ERROR:
+                    console.warn = function () {};
+                case Logger.WARN:
+                    console.info = function () {};
+                    console.log = function () {};
+                case Logger.INFO:
+                    console.debug = function () {};
+                default : break;
+            }
+
+            switch (logType) {
+                case Logger.ALL:
+                    console.debug = Logger.logFuncs["debug"];
+                case Logger.INFO:
+                    console.log = Logger.logFuncs["log"];
+                    console.info = Logger.logFuncs["info"];
+                case Logger.WARN:
+                    console.warn = Logger.logFuncs["warn"];
+                case Logger.ERROR:
+                    console.error = Logger.logFuncs["error"];
+                default : break;
+            }
+        }
+
         /**
          * 表示出现了致命错误，开发者必须修复错误
          * @method egret.Logger.fatal

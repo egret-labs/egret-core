@@ -45,6 +45,8 @@ function copyFilesToNative(projectPath, nativePath, platform, ignorePathList) {
     //编译版本控制文件 生成2个空文件
     file.save(path.join(url, "base.manifest"), "{}");
     file.save(path.join(url, "version.manifest"), "{}");
+    file.save(path.join(url, "localVersion.manifest"), "{}");
+    file.save(path.join(url, "appVersion.manifest"), JSON.stringify({"version":Date.now(), "debug":1}));
 
     //4、修改native_require.js文件
     var native_require = file.read(path.join(url, "launcher/native_require.js"));
