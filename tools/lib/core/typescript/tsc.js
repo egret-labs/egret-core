@@ -8182,10 +8182,10 @@ var ts;
             var firstIdentifier = getFirstIdentifier(entityName);
             var symbol = resolveName(enclosingDeclaration, firstIdentifier.text, meaning, undefined, undefined);
             return (symbol && hasVisibleDeclarations(symbol)) || {
-                accessibility: 1 /* NotAccessible */,
-                errorSymbolName: ts.getTextOfNode(firstIdentifier),
-                errorNode: firstIdentifier
-            };
+                    accessibility: 1 /* NotAccessible */,
+                    errorSymbolName: ts.getTextOfNode(firstIdentifier),
+                    errorNode: firstIdentifier
+                };
         }
         function writeKeyword(writer, kind) {
             writer.writeKeyword(ts.tokenToString(kind));
@@ -8593,19 +8593,19 @@ var ts;
                 buildReturnTypeDisplay(signature, writer, enclosingDeclaration, flags, typeStack);
             }
             return _displayBuilder || (_displayBuilder = {
-                symbolToString: symbolToString,
-                typeToString: typeToString,
-                buildSymbolDisplay: buildSymbolDisplay,
-                buildTypeDisplay: buildTypeDisplay,
-                buildTypeParameterDisplay: buildTypeParameterDisplay,
-                buildParameterDisplay: buildParameterDisplay,
-                buildDisplayForParametersAndDelimiters: buildDisplayForParametersAndDelimiters,
-                buildDisplayForTypeParametersAndDelimiters: buildDisplayForTypeParametersAndDelimiters,
-                buildDisplayForTypeArgumentsAndDelimiters: buildDisplayForTypeArgumentsAndDelimiters,
-                buildTypeParameterDisplayFromSymbol: buildTypeParameterDisplayFromSymbol,
-                buildSignatureDisplay: buildSignatureDisplay,
-                buildReturnTypeDisplay: buildReturnTypeDisplay
-            });
+                    symbolToString: symbolToString,
+                    typeToString: typeToString,
+                    buildSymbolDisplay: buildSymbolDisplay,
+                    buildTypeDisplay: buildTypeDisplay,
+                    buildTypeParameterDisplay: buildTypeParameterDisplay,
+                    buildParameterDisplay: buildParameterDisplay,
+                    buildDisplayForParametersAndDelimiters: buildDisplayForParametersAndDelimiters,
+                    buildDisplayForTypeParametersAndDelimiters: buildDisplayForTypeParametersAndDelimiters,
+                    buildDisplayForTypeArgumentsAndDelimiters: buildDisplayForTypeArgumentsAndDelimiters,
+                    buildTypeParameterDisplayFromSymbol: buildTypeParameterDisplayFromSymbol,
+                    buildSignatureDisplay: buildSignatureDisplay,
+                    buildReturnTypeDisplay: buildReturnTypeDisplay
+                });
         }
         function isDeclarationVisible(node) {
             function getContainingExternalModule(node) {
@@ -18840,6 +18840,11 @@ var ts;
                 });
             }
             function emitMemberFunctions(node) {
+                writeLine();
+                write("var __egretProto__ = ");
+                emitNode(node.name);
+                write(".prototype;");
+                writeLine();
                 ts.forEach(node.members, function (member) {
                     if (member.kind === 128 /* MethodDeclaration */ || node.kind === 127 /* MethodSignature */) {
                         if (!member.body) {
@@ -18849,9 +18854,12 @@ var ts;
                         emitLeadingComments(member);
                         emitStart(member);
                         emitStart(member.name);
-                        emitNode(node.name);
                         if (!(member.flags & 128 /* Static */)) {
-                            write(".prototype");
+                            //emitNode(node.name);
+                            write("__egretProto__");
+                        }
+                        else {
+                            emitNode(node.name);
                         }
                         emitMemberAccessForPropertyName(member.name);
                         emitEnd(member.name);
@@ -18870,9 +18878,12 @@ var ts;
                             emitStart(member);
                             write("Object.defineProperty(");
                             emitStart(member.name);
-                            emitNode(node.name);
                             if (!(member.flags & 128 /* Static */)) {
-                                write(".prototype");
+                                //emitNode(node.name);
+                                write("__egretProto__");
+                            }
+                            else {
+                                emitNode(node.name);
                             }
                             write(", ");
                             emitExpressionForPropertyName(member.name);
@@ -19323,20 +19334,20 @@ var ts;
                 emitDetachedComments(node);
                 var startIndex = emitDirectivePrologues(node.statements, false);
                 if (!extendsEmitted && resolver.getNodeCheckFlags(node) & 8 /* EmitExtends */) {
-                    writeLine();
-                    write("var __extends = this.__extends || function (d, b) {");
-                    increaseIndent();
-                    writeLine();
-                    write("for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];");
-                    writeLine();
-                    write("function __() { this.constructor = d; }");
-                    writeLine();
-                    write("__.prototype = b.prototype;");
-                    writeLine();
-                    write("d.prototype = new __();");
-                    decreaseIndent();
-                    writeLine();
-                    write("};");
+                    /*writeLine();
+                     write("var __extends = this.__extends || function (d, b) {");
+                     increaseIndent();
+                     writeLine();
+                     write("for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];");
+                     writeLine();
+                     write("function __() { this.constructor = d; }");
+                     writeLine();
+                     write("__.prototype = b.prototype;");
+                     writeLine();
+                     write("d.prototype = new __();");
+                     decreaseIndent();
+                     writeLine();
+                     write("};");*/
                     extendsEmitted = true;
                 }
                 if (ts.isExternalModule(node)) {
