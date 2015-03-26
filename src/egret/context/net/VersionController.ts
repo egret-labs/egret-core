@@ -104,7 +104,6 @@ module egret {
                 else {
                     var sdVersionJson = self.getData(versionPath, false);
                     if (sdVersionJson == null || sdVersionJson["version"] != appVersionJson["version"]) {//包被替换或者新安装
-                        console.log("getChangeList 1111 22 ")
                         self.localVersionData = self.getData(self.localVersionDataPath, true);
                         if (self.localVersionData == null) {
                             self.localVersionData = {};
@@ -281,9 +280,6 @@ module egret {
 
             for (var key in this.baseVersionData) {
                 if (this.localVersionData[key] == null || !this.compareVersion(this.localVersionData, this.baseVersionData, key)) {
-                    console.log("getChangeList " + key);
-                    console.log("getChangeList localVersionData=" + this.localVersionData[key]["v"]);
-                    console.log("getChangeList baseVersionData=" + this.baseVersionData[key]["v"]);
 
                     changeDatas[key] = {"url": key, "size": this.baseVersionData[key]["s"]};
                 }
