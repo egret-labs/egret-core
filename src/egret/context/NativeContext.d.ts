@@ -34,6 +34,8 @@ declare module egret_native {
      */
     function startGame():void;
 
+    function loglevel(logType):void;
+
     /**
      * 启动主循环
      * @param callback 主循环回调函数
