@@ -410,7 +410,11 @@ class EXMLCompiler{
 
         this.initlizeChildNode(node,cb,varName);
         if(this.delayAssignmentDic[id]){
-            cb.concat(this.delayAssignmentDic[id]);
+            var length = this.delayAssignmentDic[id].length;
+            for(var i:number=0;i<length;i++){
+                var delaycb:any = this.delayAssignmentDic[id][i];
+                cb.concat(delaycb);
+            }
         }
         cb.addReturn(varName);
         func.codeBlock = cb;
@@ -512,7 +516,12 @@ class EXMLCompiler{
                     delayCb.addAssignment("this."+id,"this."+value,key);
                     delayCb.endBlock();
                 }
-                this.delayAssignmentDic[value] = delayCb;
+
+                if(!this.delayAssignmentDic[value])
+                {
+                    this.delayAssignmentDic[value] = [];
+                }
+                this.delayAssignmentDic[value].push(delayCb);
                 value = "this."+value;
             }
             if(this.exmlConfig.isStyleProperty(key,className)){

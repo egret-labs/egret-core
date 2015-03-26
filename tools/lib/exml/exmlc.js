@@ -349,7 +349,11 @@ var EXMLCompiler = (function () {
         this.addAttributesToCodeBlock(cb, varName, node);
         this.initlizeChildNode(node, cb, varName);
         if (this.delayAssignmentDic[id]) {
-            cb.concat(this.delayAssignmentDic[id]);
+            var length = this.delayAssignmentDic[id].length;
+            for (var i = 0; i < length; i++) {
+                var delaycb = this.delayAssignmentDic[id][i];
+                cb.concat(delaycb);
+            }
         }
         cb.addReturn(varName);
         func.codeBlock = cb;
@@ -443,7 +447,10 @@ var EXMLCompiler = (function () {
                     delayCb.addAssignment("this." + id, "this." + value, key);
                     delayCb.endBlock();
                 }
-                this.delayAssignmentDic[value] = delayCb;
+                if (!this.delayAssignmentDic[value]) {
+                    this.delayAssignmentDic[value] = [];
+                }
+                this.delayAssignmentDic[value].push(delayCb);
                 value = "this." + value;
             }
             if (this.exmlConfig.isStyleProperty(key, className)) {
@@ -1958,3 +1965,4 @@ var Modifiers = (function () {
     Modifiers.M_STATIC = "static";
     return Modifiers;
 })();
+//# sourceMappingURL=exmlc.js.map
