@@ -27,7 +27,6 @@
 
 module egret {
     /**
-     * @private
      */
     export class ExternalInterface {
 

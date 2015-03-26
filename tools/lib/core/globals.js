@@ -1,4 +1,4 @@
-var locale = require("./locale/zh-CN.js");
+var locale = require("./locale/local.js");
 var param = require("../core/params_analyze.js");
 var path = require("path");
 var file = require("./file");
@@ -39,6 +39,14 @@ function getPackageJsonConfig() {
         packageJsonConfig = JSON.parse(txt);
     }
     return packageJsonConfig;
+}
+
+function getLanguageInfo() {
+    var i18n = getPackageJsonConfig().i18n;
+    if(!i18n) {
+        i18n = "cn";
+    }
+    return i18n;
 }
 
 function compressVersion(v1, v2) {
@@ -316,3 +324,4 @@ exports.checkVersion = checkVersion;
 exports.compressVersion = compressVersion;
 exports.addQuotes = addQuotes;
 exports.getPackageJsonConfig = getPackageJsonConfig;
+exports.getLanguageInfo = getLanguageInfo;

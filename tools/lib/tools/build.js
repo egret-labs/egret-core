@@ -42,7 +42,30 @@ function buildPlatform(needCompileEngine, keepGeneratedTypescript) {
         task.push(function (callback) {
             buildModule.compileAllModules(projectProperties, callback);
         });
+    }
 
+    var moduleReferenceList = null;
+    var onlyEngine = param.getArgv()["opts"]["--module"] != null;
+    if (!onlyEngine) {//编译游戏
+        task.push(
+            function (tempCallback) {
+                globals.debugLog(1105);
+
+                var buildP = require("../core/buildProject");
+                buildP.build(projectProperties, tempCallback, keepGeneratedTypescript);
+                moduleReferenceList = buildP.getModuleReferenceList();
+
+            }
+        );
+
+        task.push(//修改game_file_list.js文件
+            function (tempCallback) {
+                tempCallback();
+            }
+        );
+    }
+
+    if ((needCompileEngine) || moduleReferenceList) {//修改第三方库列表
         task.push(function (tempCallback) {//修改egret_file_list.js文件
             var moduleList = projectProperties.getAllModules();
             var html5List = [];
@@ -54,8 +77,17 @@ function buildPlatform(needCompileEngine, keepGeneratedTypescript) {
                 for (var j = 0; j < list.length; j++) {
                     var item = list[j];
                     if (item.indexOf(".d.ts") == -1) {
-                        item = item.replace(".ts", ".js");
-                        var url = path.join((module["output"] ? module["output"] : module["name"]), item);
+                        var tsFile = file.joinPath(module.prefix, module.source, item);
+                        //if (module.decouple == "true" && moduleReferenceList && moduleReferenceList.indexOf(tsFile) == -1) {
+                        //    continue;
+                        //}
+
+                        var ext = file.getExtension(tsFile).toLowerCase();
+                        if (ext == "ts" && globals.isInterface(tsFile)) {
+                            continue;
+                        }
+                        var item2 = item.replace(".ts", ".js");
+                        var url = path.join((module["output"] ? module["output"] : module["name"]), item2);
 
                         url = url.replace(/(\\\\|\\)/g, "/");
                         if (module["name"] == "html5") {
@@ -73,7 +105,7 @@ function buildPlatform(needCompileEngine, keepGeneratedTypescript) {
             }
 
             //写入语言包文件
-            url = "core/egret/i18n/" + globals.getPackageJsonConfig().i18n + ".js";
+            url = "core/egret/i18n/" + globals.getLanguageInfo() + ".js";
             html5List.unshift(url);
             nativeList.unshift(url);
 
@@ -84,23 +116,7 @@ function buildPlatform(needCompileEngine, keepGeneratedTypescript) {
         });
     }
 
-    var onlyEngine = param.getArgv()["opts"]["--module"] != null;
-    if (!onlyEngine) {//编译游戏
-        task.push(
-            function (tempCallback) {
-                globals.debugLog(1105);
 
-                var buildP = require("../core/buildProject");
-                buildP.build(projectProperties, tempCallback, keepGeneratedTypescript);
-            }
-        );
-
-        task.push(//修改game_file_list.js文件
-            function (tempCallback) {
-                tempCallback();
-            }
-        );
-    }
 
     var runtime = param.getOption(param.getArgv()["opts"], "--runtime", ["html5", "native"]);
 
@@ -108,23 +124,25 @@ function buildPlatform(needCompileEngine, keepGeneratedTypescript) {
         task.push(//替换native项目内容
             function (tempCallback) {
                 if (projectProperties.getNativePath("android")) {
-                    var url = path.join(projectProperties.getProjectPath(), projectProperties.getNativePath("android"), "proj.android/assets");
-                    if (file.exists(url)) {//是egret的android项目
+                    var url1 = path.join(projectProperties.getProjectPath(), projectProperties.getNativePath("android"), "proj.android");
+                    if (file.exists(url1)) {//是egret的android项目
 
                         //拷贝项目到native工程中
                         var cpFiles = require("../core/copyProjectFiles.js");
                         cpFiles.copyFilesToNative(projectProperties.getProjectPath(),
                             path.join(projectProperties.getProjectPath(), projectProperties.getNativePath("android")),
                             "android", projectProperties.getIgnorePath());
+
+                        //修改java文件
+                        var javaEntr = require('../core/changeJavaEntrance');
+                        javaEntr.changeBuild(url1, "android");
                     }
                 }
 
                 if (projectProperties.getNativePath("ios")) {
                     var url1 = path.join(projectProperties.getProjectPath(), projectProperties.getNativePath("ios"), "proj.ios");
-                    var url2 = path.join(projectProperties.getProjectPath(), projectProperties.getNativePath("ios"), "Resources");
 
-                    if (file.exists(url1)
-                        && file.exists(url2)) {//是egret的ios项目
+                    if (file.exists(url1)) {//是egret的ios项目
 
                         //拷贝项目到native工程中
                         var cpFiles = require("../core/copyProjectFiles.js");

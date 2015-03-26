@@ -64,7 +64,8 @@ module egret {
             var url:string = NetContext._getUrl(request);
             if (url.indexOf("http://") == 0) {
                 this.urlData.type = request.method;
-                if (request.method == URLRequestMethod.POST && request.data && request.data instanceof URLVariables) {
+                //写入POST数据
+                if (request.method == URLRequestMethod.POST && request.data) {
                     var urlVars:URLVariables = <URLVariables> request.data;
                     this.urlData.data = urlVars.toString();
                 }

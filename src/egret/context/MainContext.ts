@@ -77,8 +77,8 @@ module egret {
 
         public static runtimeType:string;
 
-        public static RUNTIME_HTML5:string = "runtime_html5";
-        public static RUNTIME_NATIVE:string = "runtime_native";
+        public static RUNTIME_HTML5:string = "runtimeHtml5";
+        public static RUNTIME_NATIVE:string = "runtimeNative";
 
         private _profileInstance:Profiler;
         /**

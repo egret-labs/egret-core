@@ -24,7 +24,7 @@ function compileModule(callback, moduleName) {
     var tsList = moduleConfig.file_list.concat();
     //写入语言包文件
     if(moduleName == "core") {
-        tsList.unshift("egret/i18n/" + globals.getPackageJsonConfig().i18n + ".ts");
+        tsList.unshift("egret/i18n/" + globals.getLanguageInfo() + ".ts");
     }
     tsList = tsList.map(function (item) {
         return globals.addQuotes(path.join(moduleConfig.prefix, moduleConfig.source, item));
@@ -222,9 +222,9 @@ function compileAllModules(properties, callback) {
 
         async.series(task, function(err) {
             if (!err) {
-                globals.log("构建成功");
+                globals.log(1104);
 
-                console.log("第三方库共计耗时：%d秒", (Date.now() - startTime) / 1000);
+                globals.log2(1115, (Date.now() - startTime) / 1000);
                 callback();
             }
             else {
@@ -242,7 +242,7 @@ function compileAllModules(properties, callback) {
 
         async.series(task, function (err) {
             if (!err) {
-                globals.log("构建成功");
+                globals.log(1104);
 
                 callback();
             }

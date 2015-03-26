@@ -75,9 +75,12 @@ module egret {
 
 		/**
          * 激活一个对象，对其添加 Tween 动画
-         * @param target 要激活的对象
+         * @param target {any} 要激活 Tween 的对象
+         * @param props {any} 参数，例如：{loop:true}
+         * @param pluginData {any} 暂未实现
+         * @param override {boolean} 是否移除对象之前添加的tween，默认值false
 		 */
-        public static get(target:any, props = null, pluginData = null, override = false):Tween {
+        public static get(target:any, props:any = null, pluginData:any = null, override:boolean = false):Tween {
             if (override) {
                 Tween.removeTweens(target);
             }
@@ -187,13 +190,14 @@ module egret {
 
         /**
          * 创建一个 egret.Tween 对象
+         * @private
          */
-        constructor(target, props, pluginData) {
+        constructor(target:any, props:any, pluginData:any) {
             super();
             this.initialize(target, props, pluginData);
         }
 
-        private initialize(target, props:any, pluginData):void {
+        private initialize(target:any, props:any, pluginData:any):void {
             this._target = target;
             if (props) {
                 this._useTicks = props.useTicks;
