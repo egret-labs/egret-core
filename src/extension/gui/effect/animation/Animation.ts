@@ -347,7 +347,7 @@ module egret.gui {
                 if (currentTime >= this.duration){
                     var numRepeats:number = 2;
                     if ((this.duration + this.repeatDelay) > 0)
-                        numRepeats += (this._playheadTime - this.duration) / (this.duration + this.repeatDelay);
+                        numRepeats += Math.floor((this._playheadTime - this.duration) / (this.duration + this.repeatDelay));
                     if (this.repeatCount == 0 || numRepeats <= this.repeatCount){
                         if (this.repeatDelay == 0){
                             this._cycleTime = currentTime % this.duration;
