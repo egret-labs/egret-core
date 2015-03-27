@@ -60,7 +60,6 @@
         "effect/IEffectInstance.ts",
         "effect/interpolation/IInterpolator.ts",
         "effect/interpolation/NumberInterpolator.ts",
-        "effect/animation/Timeline.ts",
         "effect/animation/RepeatBehavior.ts",
         "effect/animation/Keyframe.ts",
         "effect/animation/MotionPath.ts",

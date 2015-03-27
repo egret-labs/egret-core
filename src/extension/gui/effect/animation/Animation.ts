@@ -138,6 +138,7 @@ module egret.gui {
             return this._playheadTime + this.startDelay;
         }
         public set playheadTime(value:number){
+            this._invertValues = false;
             this.seek(value, true);
         }
         /**
@@ -281,12 +282,12 @@ module egret.gui {
             }
 
             if (!Animation.timer){
-                Timeline.pulse();
+                Animation.pulse();
                 Animation.timer = new egret.Timer(Animation.TIMER_RESOLUTION);
                 Animation.timer.addEventListener(egret.TimerEvent.TIMER, Animation.timerHandler, Animation);
                 Animation.timer.start();
             }
-            Animation.intervalTime = Timeline.currentTime;
+            Animation.intervalTime = Animation.currentTime;
             animation.cycleStartTime = Animation.intervalTime;
         }
 
@@ -308,7 +309,7 @@ module egret.gui {
         }
 
         private static timerHandler(event:egret.TimerEvent):void{
-            Animation.intervalTime = Timeline.pulse();
+            Animation.intervalTime = Animation.pulse();
 
             var i:number = 0;
 
@@ -324,7 +325,7 @@ module egret.gui {
             while (Animation.delayedStartAnims.length > 0){
                 var anim:Animation = <Animation><any> (Animation.delayedStartAnims[0]);
                 var animStartTime:number = anim.delayedStartTime;
-                if (animStartTime < Timeline.currentTime)
+                if (animStartTime < Animation.currentTime)
                     if (anim.playReversed)
                         anim.end();
                     else
@@ -503,12 +504,12 @@ module egret.gui {
 
         private addToDelayedAnimations(timeToDelay:number):void{
             if (!Animation.timer){
-                Timeline.pulse();
+                Animation.pulse();
                 Animation.timer = new egret.Timer(Animation.TIMER_RESOLUTION);
                 Animation.timer.addEventListener(egret.TimerEvent.TIMER, Animation.timerHandler, Animation);
                 Animation.timer.start();
             }
-            var animStartTime:number = Timeline.currentTime + timeToDelay;
+            var animStartTime:number = Animation.currentTime + timeToDelay;
             var insertIndex:number = -1;
             for (var i:number = 0; i < Animation.delayedStartAnims.length; ++i){
                 var timeAtIndex:number = Animation.delayedStartAnims[i].delayedStartTime;
@@ -571,7 +572,7 @@ module egret.gui {
 
             if (!this._isPlaying || this.playReversed){
                 var isPlayingTmp:boolean = this._isPlaying;
-                Animation.intervalTime = Timeline.currentTime;
+                Animation.intervalTime = Animation.currentTime;
                 if (includeStartDelay && this.startDelay > 0){
                     if (this.delayedStartTime>=0){
                         this.removeFromDelayedAnimations();
@@ -633,7 +634,7 @@ module egret.gui {
          */
         public pause():void{
             if (this.delayedStartTime>=0){
-                this.delayTime = this.delayedStartTime - Timeline.currentTime;
+                this.delayTime = this.delayedStartTime - Animation.currentTime;
                 this.removeFromDelayedAnimations();
             }
             this._isPlaying = false;
@@ -689,7 +690,7 @@ module egret.gui {
         private start(event:egret.TimerEvent = null):void{
             var actualStartTime:number = 0;
             if (!this.playReversed && this.delayedStartTime>=0){
-                var overrun:number = Timeline.currentTime - this.delayedStartTime;
+                var overrun:number = Animation.currentTime - this.delayedStartTime;
                 if (overrun > 0)
                     actualStartTime = Math.min(overrun, this.duration);
                 this.removeFromDelayedAnimations();
@@ -704,6 +705,25 @@ module egret.gui {
             if (actualStartTime > 0)
                 this.seek(actualStartTime);
             this.started = true;
+        }
+
+        private static startTime:number = -1;
+        private static _currentTime:number = -1;
+        private static pulse():number{
+            if (Animation.startTime < 0){
+                Animation.startTime = egret.getTimer();
+                Animation._currentTime = 0;
+                return Animation._currentTime;
+            }
+            Animation._currentTime = egret.getTimer() - Animation.startTime;
+            return Animation._currentTime;
+        }
+
+        private static get currentTime():number{
+            if (Animation._currentTime < 0){
+                return Animation.pulse();
+            }
+            return Animation._currentTime;
         }
     }
 }
