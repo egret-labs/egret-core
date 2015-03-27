@@ -226,46 +226,46 @@ module egret.gui {
          * 就使用上次的值。
          */
         private lastTranslationPoint:Point;
-        
+        private static position:egret.Point = new egret.Point();
         public applyValues(anim:Animation):void{
             var tmpScaleX:number;
             var tmpScaleY:number;
             var tmpPosition:egret.Point;
             var tmpRotation:number;
-            
+
             for (var i:number = 0; i < this.motionPaths.length; ++i){
                 if (this.currentValues[this.motionPaths[i].property] !== undefined)
-                    this.currentValues[this.motionPaths[i].property] = 
+                    this.currentValues[this.motionPaths[i].property] =
                         anim.currentValue[this.motionPaths[i].property];
                 else
-                    this.setValue(this.motionPaths[i].property, 
+                    this.setValue(this.motionPaths[i].property,
                         anim.currentValue[this.motionPaths[i].property]);
             }
-            
-            tmpRotation = !isNaN(this.currentValues.rotation) ? 
+
+            tmpRotation = !isNaN(this.currentValues.rotation) ?
                 this.currentValues.rotation : this.getCurrentValue("rotation");
-            tmpScaleX = !isNaN(this.currentValues.scaleX) ? 
+            tmpScaleX = !isNaN(this.currentValues.scaleX) ?
                 this.currentValues.scaleX : this.getCurrentValue("scaleX");
-            tmpScaleY = !isNaN(this.currentValues.scaleY) ? 
+            tmpScaleY = !isNaN(this.currentValues.scaleY) ?
                 this.currentValues.scaleY : this.getCurrentValue("scaleY");
-            
-            Point.identity.x = !isNaN(this.currentValues.translationX) ?
-                this.currentValues.translationX : 
+
+            AnimateTransformInstance.position.x = !isNaN(this.currentValues.translationX) ?
+                this.currentValues.translationX :
                 this.getCurrentValue("translationX");
-            Point.identity.y = !isNaN(this.currentValues.translationY) ?
-                this.currentValues.translationY : 
+            AnimateTransformInstance.position.y = !isNaN(this.currentValues.translationY) ?
+                this.currentValues.translationY :
                 this.getCurrentValue("translationY");
-            
+
             if(!this.lastTranslationPoint)
-                this.lastTranslationPoint = Point.identity.clone();
-            if(isNaN(this.currentValues.translationX) && Math.abs(Point.identity.x-this.lastTranslationPoint.x)<0.1)
-                Point.identity.x = this.lastTranslationPoint.x;
-            if(isNaN(this.currentValues.translationY) && Math.abs(Point.identity.y-this.lastTranslationPoint.y)<0.1)
-                Point.identity.y = this.lastTranslationPoint.y;
-            this.lastTranslationPoint.x = Point.identity.x;
-            this.lastTranslationPoint.y = Point.identity.y;
-            tmpPosition = Point.identity;
-            
+                this.lastTranslationPoint = AnimateTransformInstance.position.clone();
+            if(isNaN(this.currentValues.translationX) && Math.abs(AnimateTransformInstance.position.x-this.lastTranslationPoint.x)<0.1)
+                AnimateTransformInstance.position.x = this.lastTranslationPoint.x;
+            if(isNaN(this.currentValues.translationY) && Math.abs(AnimateTransformInstance.position.y-this.lastTranslationPoint.y)<0.1)
+                AnimateTransformInstance.position.y = this.lastTranslationPoint.y;
+            this.lastTranslationPoint.x = AnimateTransformInstance.position.x;
+            this.lastTranslationPoint.y = AnimateTransformInstance.position.y;
+            tmpPosition = AnimateTransformInstance.position;
+
             TransformUtil.transformAround(<egret.DisplayObject><any> (this.target),
                 this.transformCenter,tmpPosition,tmpScaleX,tmpScaleY,tmpRotation);
         }
