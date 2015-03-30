@@ -113,6 +113,6 @@ module dragonBones {
 
 var db_sin_map = {};
 
-for (var i = 0; i <= 90; i++) {
-    db_sin_map[i] = Math.sin(i * dragonBones.MathUtil.ANGLE_TO_RADIAN);
+for (var dbMathIndex = 0; dbMathIndex <= 90; dbMathIndex++) {
+    db_sin_map[dbMathIndex] = Math.sin(dbMathIndex * dragonBones.MathUtil.ANGLE_TO_RADIAN);
 }
