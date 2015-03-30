@@ -234,6 +234,9 @@ egret.ContentStrategy.prototype.setEgretSize = function (w:number, h:number, sty
     egret_native.EGTView.setDesignSize(w, h);
 };
 
+egret.Logger.openLogByType = function (logType:string) {
+    egret_native.loglevel(logType);
+};
 
 egret_native.pauseApp = function () {
     egret.MainContext.instance.stage.dispatchEvent(new egret.Event(egret.Event.DEACTIVATE));

@@ -45,6 +45,10 @@ module egret.gui {
 		 * @constant egret.gui.StateChangeEvent.CURRENT_STATE_CHANGING
 		 */		
 		public static CURRENT_STATE_CHANGING:string = "currentStateChanging";
+        /**
+         * 状态过渡完成
+         */
+        public static STATE_CHANGE_COMPLETE:string = "stateChangeComplete";
 		
 		/**
 		 * @method egret.gui.StateChangeEvent#constructor

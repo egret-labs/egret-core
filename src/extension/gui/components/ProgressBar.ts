@@ -165,7 +165,7 @@ module egret.gui {
                     (Math.abs(this.animationValue - this.slideToValue) / (this.maximum - this.minimum));
                 this.animator.duration = duration === Infinity ? 0 : duration;
                 this.animator.motionPaths = [
-                    {prop: "value", from: this.animationValue, to: this.slideToValue}
+                    new SimpleMotionPath("value",this.animationValue,this.slideToValue)
                 ];
                 this.animator.play();
             }

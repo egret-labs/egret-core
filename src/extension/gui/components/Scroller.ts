@@ -381,11 +381,9 @@ module egret.gui {
             }
             this._animatTargetIsShow = show;
             var animat = this._autoHideShowAnimat;
-            animat.motionPaths = [{
-                prop: "alpha",
-                from: show ? 0 : 1,
-                to: show ? 1 : 0
-            }];
+            animat.motionPaths = [
+                new SimpleMotionPath("alpha",show ? 0 : 1,show ? 1 : 0)
+            ];
             animat.duration = show ? 100 : 300;
             animat.play();
         }

@@ -59,4 +59,24 @@
   <component id="TextInput" super="egret.gui.SkinnableTextBase" show="true" module="egret.gui"/>
   <component id="HScrollBar" super="egret.gui.HSlider" show="true" module="egret.gui"/>
   <component id="VScrollBar" super="egret.gui.VSlider" show="true" module="egret.gui"/>
+  
+  <!--Effects-->
+  <component id="Animate" super="egret.gui.Effect" default="motionPaths" show="false" module="egret.gui"/>
+  <component id="AnimateTransform" super="egret.gui.Animate" show="false" module="egret.gui"/>
+  <component id="CompositeEffect" super="egret.gui.Effect" default="children" show="false" module="egret.gui"/>
+  <component id="Fade" super="egret.gui.Animate" show="false" module="egret.gui"/>
+  <component id="Keyframe" super="Object" show="false" module="egret.gui"/>
+  <component id="MotionPath" super="Object" default="keyframes" show="false" module="egret.gui"/>
+  <component id="Move" super="egret.gui.AnimateTransform" show="false" module="egret.gui"/>
+  <component id="Parallel" super="egret.gui.CompositeEffect" show="false" module="egret.gui"/>
+  <component id="Rotate" super="egret.gui.Animate" show="false" module="egret.gui"/>
+  <component id="Scale" super="egret.gui.Animate" show="false" module="egret.gui"/>
+  <component id="Sequence" super="egret.gui.CompositeEffect" show="false" module="egret.gui"/>
+  <component id="SimpleMotionPath" super="egret.gui.MotionPath" show="false" module="egret.gui"/>
+  <component id="Transition" super="Object" default="effect" show="false" module="egret.gui"/>
+  <component id="Bounce" super="Object" show="false" module="egret.gui"/>
+  <component id="Elastic" super="Object" show="false" module="egret.gui"/>
+  <component id="Linear" super="Object" show="false" module="egret.gui"/>
+  <component id="Power" super="egret.gui.EaseInOutBase" show="false" module="egret.gui"/>
+  <component id="Sine" super="egret.gui.EaseInOutBase" show="false" module="egret.gui"/>
 </componentPackage>
