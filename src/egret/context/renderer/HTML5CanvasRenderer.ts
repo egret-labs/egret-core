@@ -568,6 +568,10 @@ module egret_h5_graphics {
             this._pushCommand(this.endFillCommand);
             this.fillStyleColor = null;
         }
+        if (this.strokeStyleColor) {
+            this.createEndLineCommand();
+            this._pushCommand(this.endLineCommand);
+        }
     }
 
     export function createEndLineCommand():void {

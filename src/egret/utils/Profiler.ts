@@ -57,6 +57,7 @@ module egret {
         private _renderPerformanceCost:number = 0;
         private _updateTransformPerformanceCost:number = 0;
         private _preDrawCount:number = 0;
+        private _calculatePreDrawCount:boolean = true;
 
         private _txt:TextField = null;
         private _tick:number = 0;
@@ -107,9 +108,13 @@ module egret {
             context.addEventListener(Event.FINISH_UPDATE_TRANSFORM, this.onFinishUpdateTransform, this);
         }
 
-        public _drawProfiler():void {
+        public _drawProfiler(context:RendererContext):void {
+            if("_drawWebGL" in context) {
+                context["_drawWebGL"]();
+            }
+            this._calculatePreDrawCount = false;
             this._txt._updateTransform();
-            this._txt._draw(egret.MainContext.instance.rendererContext);
+            this._txt._draw(context);
         }
 
         public _setTxtFontSize(fontSize:number){
@@ -155,7 +160,7 @@ module egret {
             this._tick++;
             this._totalDeltaTime += frameTime;
             if (this._totalDeltaTime >= this._maxDeltaTime) {
-                var drawStr = (this._preDrawCount - 3).toString();
+                var drawStr = (this._preDrawCount).toString();
                 var timeStr = Math.ceil(this._logicPerformanceCost).toString() + ","
                     + Math.ceil(this._updateTransformPerformanceCost).toString() + ","
                     + Math.ceil(this._renderPerformanceCost).toString() + ","
@@ -168,6 +173,7 @@ module egret {
                 this._tick = 0;
             }
             this._preDrawCount = 0;
+            this._calculatePreDrawCount = true;
         }
 
         /**
@@ -175,7 +181,9 @@ module egret {
          * @private
          */
         public onDrawImage() {
-            this._preDrawCount++;
+            if(this._calculatePreDrawCount) {
+                this._preDrawCount++;
+            }
         }
     }
 }
