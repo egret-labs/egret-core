@@ -85,7 +85,7 @@ module egret {
         }
 
         public onRenderFinish():void {
-            this._draw();
+            this._drawWebGL();
         }
 
         private initAll():void {
@@ -291,7 +291,7 @@ module egret {
                     this.renderContext.pushMask(mask);
                 }
                 displayObject._render(this.renderContext);
-                this.renderContext["_draw"]();
+                this.renderContext["_drawWebGL"]();
                 MainContext.__use_new_draw = __use_new_draw;
                 if (mask) {
                     this.renderContext.popMask();
@@ -510,7 +510,7 @@ module egret {
             if (this.currentBlendMode != blendMode) {
                 var blendModeWebGL = RendererContext.blendModesForGL[blendMode];
                 if (blendModeWebGL) {
-                    this._draw();
+                    this._drawWebGL();
                     this.gl.blendFunc(blendModeWebGL[0], blendModeWebGL[1]);
                     this.currentBlendMode = blendMode;
                 }
@@ -545,7 +545,7 @@ module egret {
             this.createWebGLTexture(texture);
             var webGLTexture = texture._bitmapData.webGLTexture[this.glID];
             if (webGLTexture !== this.currentBaseTexture || this.currentBatchSize >= this.size - 1) {
-                this._draw();
+                this._drawWebGL();
                 this.currentBaseTexture = webGLTexture;
             }
 
@@ -631,7 +631,7 @@ module egret {
             this.currentBatchSize++;
         }
 
-        private _draw():void {
+        private _drawWebGL():void {
             if (this.currentBatchSize == 0 || this.contextLost) {
                 return;
             }
@@ -692,7 +692,7 @@ module egret {
         private maskDataFreeList:Array<any> = [];
 
         public pushMask(mask:Rectangle):void {
-            this._draw();
+            this._drawWebGL();
             var gl:any = this.gl;
             if (this.maskList.length == 0) {
                 gl.enable(gl.SCISSOR_TEST);
@@ -743,7 +743,7 @@ module egret {
         }
 
         public popMask():void {
-            this._draw();
+            this._drawWebGL();
             var gl:any = this.gl;
             var maskData = this.maskList.pop();
             this.maskDataFreeList.push(maskData);
@@ -774,7 +774,7 @@ module egret {
 
         public setGlobalColorTransform(colorTransformMatrix:Array<any>):void {
             if (this.colorTransformMatrix != colorTransformMatrix) {
-                this._draw();
+                this._drawWebGL();
                 this.colorTransformMatrix = colorTransformMatrix;
                 if (colorTransformMatrix) {
                     var colorTransformMatrix = colorTransformMatrix.concat();
@@ -789,7 +789,7 @@ module egret {
         }
 
         public setGlobalFilter(filterData:Filter):void {
-            this._draw();
+            this._drawWebGL();
             this.setFilterProperties(filterData);
         }
 
@@ -828,7 +828,7 @@ module egret {
         private graphicsIndexBuffer:any = null;
 
         public renderGraphics(graphics) {
-            this._draw();
+            this._drawWebGL();
             var gl:any = this.gl;
             var shader = this.shaderManager.primitiveShader;
 
