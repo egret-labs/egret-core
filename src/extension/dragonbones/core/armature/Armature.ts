@@ -358,7 +358,7 @@ module dragonBones {
 		}
 
         /**
-         * 在股价中为指定名称的 Bone 添加一个子 Bone
+         * 在骨架中为指定名称的 Bone 添加一个子 Bone
          * @param bone {Bone} Bone 实例
          * @param parentName {string} 父骨头名称 默认：null
          * @param updateLater {boolean} 是否延迟更新 默认：false，当需要一次添加很多Bone时，开启延迟更新能够提高效率

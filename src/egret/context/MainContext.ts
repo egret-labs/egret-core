@@ -153,7 +153,7 @@ module egret {
             this.dispatchEvent(event);
 
             if (this._profileInstance._isRunning) {
-                this._profileInstance._drawProfiler();
+                this._profileInstance._drawProfiler(context);
             }
 
             context.onRenderFinish();
