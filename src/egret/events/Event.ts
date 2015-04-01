@@ -335,7 +335,7 @@ module egret {
         public static dispatchEvent(target:IEventDispatcher,type:string,bubbles:boolean=false,data?:any):void{
             var eventClass:any = Event;
             var props:any = Event._getPropertyData(eventClass);
-            if(data){
+            if(data != undefined) {
                 props.data = data;
             }
             Event._dispatchByTarget(eventClass,target,type,props,bubbles);
