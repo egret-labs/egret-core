@@ -45,7 +45,7 @@ module egret {
          */
         public constructor(texture:Texture) {
             super();
-            var bitmapData:any = texture.bitmapData;
+            var bitmapData:any = texture._bitmapData;
             this.bitmapData = bitmapData;
             this._sourceWidth = bitmapData.width;
             this._sourceHeight = bitmapData.height;

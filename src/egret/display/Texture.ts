@@ -101,13 +101,6 @@ module egret {
         public _sourceHeight:number = 0;
 
         public _bitmapData:any = null;
-        /**
-         * 纹理对象中得位图数据
-         * @member {any} egret.Texture#bitmapData
-         */
-        public get bitmapData():any {
-            return this._bitmapData;
-        }
 
         public _setBitmapData(value:any) {
             var scale = egret.MainContext.instance.rendererContext._texture_scale_factor;
@@ -131,6 +124,13 @@ module egret {
         public getPixel32(x:number, y:number):number[]{
             var result:any = this._bitmapData.getContext("2d").getImageData(x,y,1,1);
             return result.data;
+        }
+
+        public dispose(){
+            var bitmapData = this._bitmapData;
+            if (bitmapData.dispose){
+                bitmapData.dispose();
+            }
         }
     }
 }

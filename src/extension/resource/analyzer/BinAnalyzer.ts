@@ -110,10 +110,14 @@ module RES {
 		 */
 		public destroyRes(name:string):boolean{
 			if(this.fileDic[name]){
+				this.onResourceDestroy(this.fileDic[name]);
 				delete this.fileDic[name];
 				return true;
 			}
 			return false;
+		}
+
+		protected onResourceDestroy(resource:any){
 		}
 	}
 }
