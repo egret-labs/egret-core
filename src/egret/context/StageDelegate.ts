@@ -55,7 +55,9 @@ module egret {
         public static canvas_name:string = "egretCanvas";
         /**
          */
-        public static canvas_div_name:string = "gameDiv";
+        public static egret_root_div:string = "gameDiv";
+
+        public static canvas_div_name:string = "canvasDiv";
 
         private _designWidth:number = 0;
         private _designHeight:number = 0;
@@ -245,7 +247,19 @@ module egret {
         public setEgretSize(w:number, h:number, styleW:number, styleH:number, left:number = 0, top:number = 0):void {
             egret.StageDelegate.getInstance()._stageWidth = Math.round(w);
             egret.StageDelegate.getInstance()._stageHeight = Math.round(h);
-            var container:HTMLElement = document.getElementById(StageDelegate.canvas_div_name);
+
+            var canvasDiv:any = document.getElementById(StageDelegate.canvas_div_name);
+            var container:any = document.getElementById(StageDelegate.egret_root_div);
+            if (!canvasDiv) {
+                canvasDiv = egret.Browser.getInstance().$new("div");
+                canvasDiv.id = StageDelegate.canvas_div_name;
+                container.appendChild(canvasDiv);
+            }
+
+            canvasDiv.style.width = styleW + "px";
+            canvasDiv.style.height = styleH + "px";
+            canvasDiv.style.top = top + "px";
+
             container.style.width = styleW + "px";
             container.style.height = styleH + "px";
             container.style.top = top + "px";

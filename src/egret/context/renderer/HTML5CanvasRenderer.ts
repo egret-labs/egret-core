@@ -342,6 +342,16 @@ module egret {
                 }
             }
         }
+
+        public drawCursor(x1:number, y1:number, x2:number, y2:number):void {
+            this.drawCanvasContext.strokeStyle = "#40a5ff";
+            this.drawCanvasContext.lineWidth = 2;
+            this.drawCanvasContext.beginPath();
+            this.drawCanvasContext.moveTo(Math.round(x1 + this._transformTx), Math.round(y1 + this._transformTy));
+            this.drawCanvasContext.lineTo(Math.round(x2 + this._transformTx), Math.round(y2 + this._transformTy));
+            this.drawCanvasContext.closePath();
+            this.drawCanvasContext.stroke();
+        }
     }
 }
 

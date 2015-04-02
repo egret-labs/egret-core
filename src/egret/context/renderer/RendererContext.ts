@@ -221,6 +221,9 @@ module egret {
 
         }
 
+        public drawCursor(x1:number, y1:number, x2:number, y2:number):void {
+        }
+
         public static createRendererContext(canvas:any):RendererContext {
             return null;
         }

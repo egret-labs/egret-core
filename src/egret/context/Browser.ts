@@ -56,35 +56,40 @@ module egret {
         constructor() {
             super();
             this.ua = navigator.userAgent.toLowerCase();
-            this.trans = this._getTrans();
+            this.trans = this.getTrans("transform");
         }
 
+        private header:string = "";
 
-        private _getHeader(tempStyle):string {
-            if ("transform" in tempStyle) {
-                return "";
+        /**
+         * 获取当前浏览器对应style类型
+         * @type {string}
+         */
+        public getTrans(type:string):string {
+            if (this.header == "") {
+                this.header = this.getHeader();
             }
 
-            var transArr:Array<string> = ["webkit", "ms", "Moz", "O"];
+            return this.header + type.substring(1, type.length);
+        }
+
+        /**
+         * 获取当前浏览器的类型
+         * @returns {string}
+         */
+        private getHeader():string {
+            var tempStyle = document.createElement('div').style;
+            var transArr:Array<string> = ["t", "webkitT", "msT", "MozT", "OT"];
             for (var i:number = 0; i < transArr.length; i++) {
-                var transform:string = transArr[i] + 'Transform';
+                var transform:string = transArr[i] + 'ransform';
+
                 if (transform in tempStyle)
                     return transArr[i];
             }
 
-            return "";
+            return transArr[0];
         }
 
-
-        private _getTrans():string {
-            var tempStyle = document.createElement('div').style;
-            var _header:string = this._getHeader(tempStyle);
-            var type = "transform";
-            if (_header == "") {
-                return type;
-            }
-            return _header + type.charAt(0).toUpperCase() + type.substr(1);
-        }
 
         public $new(x) {
             return this.$(document.createElement(x));
