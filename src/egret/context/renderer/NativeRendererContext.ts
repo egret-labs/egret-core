@@ -184,14 +184,15 @@ module egret {
          */
         public setupFont(textField:TextField, style:egret.ITextStyle = null):void {
             style = style || <egret.ITextStyle>{};
-            var size:number = style["size"] == null ? textField._size : style["size"];
+            var properties:egret.TextFieldProperties = textField._properties;
+            var size:number = style["size"] == null ? properties._size : style["size"];
 
             var outline;
             if (style.stroke != null) {
                 outline = style.stroke;
             }
             else {
-                outline = textField._stroke;
+                outline = properties._stroke;
             }
 
 
@@ -220,13 +221,14 @@ module egret {
         public drawText(textField:egret.TextField, text:string, x:number, y:number, maxWidth:number, style:egret.ITextStyle = null) {
             this.setupFont(textField, style);
             style = style || <egret.ITextStyle>{};
+            var properties:egret.TextFieldProperties = textField._properties;
 
             var textColor:number;
             if (style.textColor != null) {
                 textColor = style.textColor;
             }
             else {
-                textColor = textField._textColor;
+                textColor = properties._textColor;
             }
 
             var strokeColor:number;
@@ -234,7 +236,7 @@ module egret {
                 strokeColor = style.strokeColor;
             }
             else {
-                strokeColor = textField._strokeColor;
+                strokeColor = properties._strokeColor;
             }
 
             egret_native.Label.setTextColor(textColor);

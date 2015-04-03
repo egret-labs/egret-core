@@ -88,8 +88,8 @@ module egret {
 
             this._resetStageText();
 
-            if (this._textfield._maxChars > 0) {
-                this.inputElement.setAttribute("maxlength", this._textfield._maxChars);
+            if (this._textfield._properties._maxChars > 0) {
+                this.inputElement.setAttribute("maxlength", this._textfield._properties._maxChars);
             }
             else {
                 this.inputElement.removeAttribute("maxlength");
@@ -174,16 +174,17 @@ module egret {
         public _resetStageText():void {
             if (this.inputElement) {
                 var textfield:egret.TextField = this._textfield;
-                this.setElementStyle("fontFamily", textfield._fontFamily);
-                this.setElementStyle("fontStyle", textfield._italic ? "italic" : "normal");
-                this.setElementStyle("fontWeight", textfield._bold ? "bold" : "normal");
-                this.setElementStyle("textAlign", textfield._textAlign);
-                this.setElementStyle("fontSize", textfield._size + "px");
-                this.setElementStyle("lineHeight", textfield._size + "px");
-                this.setElementStyle("color", textfield._textColorString);
+                var propertie:egret.TextFieldProperties = textfield._properties;
+                this.setElementStyle("fontFamily", propertie._fontFamily);
+                this.setElementStyle("fontStyle", propertie._italic ? "italic" : "normal");
+                this.setElementStyle("fontWeight", propertie._bold ? "bold" : "normal");
+                this.setElementStyle("textAlign", propertie._textAlign);
+                this.setElementStyle("fontSize", propertie._size + "px");
+                this.setElementStyle("lineHeight", propertie._size + "px");
+                this.setElementStyle("color", propertie._textColorString);
                 this.setElementStyle("width", textfield._getSize(Rectangle.identity).width + "px");
                 this.setElementStyle("height", textfield._getSize(Rectangle.identity).height + "px");
-                this.setElementStyle("verticalAlign", textfield._verticalAlign);
+                this.setElementStyle("verticalAlign", propertie._verticalAlign);
             }
         }
     }
