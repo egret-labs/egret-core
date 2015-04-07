@@ -568,7 +568,7 @@ module egret {
             }
             if (properties._background || properties._border) {
                 if (graphics == null) {
-                    graphics = new egret.Graphics();
+                    graphics = self._bgGraphics = new egret.Graphics();
                 }
                 if (properties._background) {
                     graphics.beginFill(properties._backgroundColor, 1);
@@ -926,7 +926,7 @@ module egret {
             }
 
             var maxWidth:number = self._hasWidthSet ? self._explicitWidth : properties._textMaxWidth;
-            var textHeight:number = properties._multiline ? properties._textMaxHeight + (properties._numLines - 1) * properties._lineSpacing : properties._size;
+            var textHeight:number = (egret.TextFieldType.INPUT != self._properties._type || properties._multiline) ? properties._textMaxHeight + (properties._numLines - 1) * properties._lineSpacing : properties._size;
 
             var drawY:number = 0;
             var startLine:number = TextFieldUtils._getStartLine(this);
