@@ -59,6 +59,10 @@ module egret {
             this.trans = this.getTrans("transform");
         }
 
+        public getUserAgent():string {
+            return this.ua;
+        }
+
         private header:string = "";
 
         /**

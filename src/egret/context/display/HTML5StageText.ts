@@ -42,17 +42,18 @@ module egret {
         private inputElement:any = null;
         private inputDiv:any = null;
 
+
+        private _gscaleX:number = 0;
+        private _gscaleY:number = 0;
         public _initElement(x:number, y:number, cX:number, cY:number):void {
             var scaleX = egret.StageDelegate.getInstance().getScaleX();
             var scaleY = egret.StageDelegate.getInstance().getScaleY();
 
-            this.inputDiv.position.x = x * scaleX;
-            this.inputDiv.position.y = y * scaleY;
+            this.inputDiv.style.left = x * scaleX + "px";
+            this.inputDiv.style.top = y * scaleY + "px";
 
-            this.inputDiv.scale.x = scaleX * cX;
-            this.inputDiv.scale.y = scaleY * cY;
-
-            this.inputDiv.transforms();
+            this._gscaleX = scaleX * cX;
+            this._gscaleY = scaleY * cY;
         }
 
         public _show(multiline:boolean, size:number, width:number, height:number):void {
@@ -105,7 +106,9 @@ module egret {
             //标记当前点击其他地方关闭
             this._isNeesHide = true;
 
-            HTMLInput.getInstance().disconnectStageText(this);
+            if (Browser.getInstance().getUserAgent().indexOf("ios") >= 0) {//ios
+                HTMLInput.getInstance().disconnectStageText(this);
+            }
         }
 
         private textValue:string = "";
@@ -181,11 +184,11 @@ module egret {
                 this.setElementStyle("fontStyle", propertie._italic ? "italic" : "normal");
                 this.setElementStyle("fontWeight", propertie._bold ? "bold" : "normal");
                 this.setElementStyle("textAlign", propertie._textAlign);
-                this.setElementStyle("fontSize", propertie._size + "px");
-                this.setElementStyle("lineHeight", propertie._size + "px");
+                this.setElementStyle("fontSize", propertie._size * this._gscaleY + "px");
+                this.setElementStyle("lineHeight", propertie._size * this._gscaleY + "px");
                 this.setElementStyle("color", propertie._textColorString);
-                this.setElementStyle("width", textfield._getSize(Rectangle.identity).width + "px");
-                this.setElementStyle("height", textfield._getSize(Rectangle.identity).height + "px");
+                this.setElementStyle("width", textfield._getSize(Rectangle.identity).width * this._gscaleX + "px");
+                this.setElementStyle("height", textfield._getSize(Rectangle.identity).height * this._gscaleY + "px");
                 this.setElementStyle("verticalAlign", propertie._verticalAlign);
             }
         }
@@ -226,7 +229,6 @@ module egret {
                 stageDelegateDiv.id = "StageDelegateDiv";
                 var container = document.getElementById(egret.StageDelegate.egret_root_div);
                 container.appendChild(stageDelegateDiv);
-                stageDelegateDiv.transforms();
 
                 self.initValue(stageDelegateDiv);
 
@@ -238,11 +240,9 @@ module egret {
                 self._inputDIV.style.width = "0px";
                 self._inputDIV.style.height = "0px";
 
-                self._inputDIV.position.x = 0;
-                self._inputDIV.position.y = -100;
-                self._inputDIV.scale.x = 1;
-                self._inputDIV.scale.y = 1;
-                self._inputDIV.transforms();
+                self._inputDIV.style.left = 0 + "px";
+                self._inputDIV.style.top = "-100px";
+
                 self._inputDIV.style[Browser.getInstance().getTrans("transformOrigin")] = "0% 0% 0px";
                 stageDelegateDiv.appendChild(self._inputDIV);
 
@@ -354,9 +354,9 @@ module egret {
                 }
                 otherElement.style.display = "block";
 
-                self._inputDIV.position.x = 0;
-                self._inputDIV.position.y = -100;
-                self._inputDIV.transforms();
+                self._inputDIV.style.left = 0 + "px";
+                self._inputDIV.style.top = "-100px";
+
             }
 
             if (self._stageText) {
