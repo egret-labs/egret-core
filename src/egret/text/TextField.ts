@@ -676,7 +676,7 @@ module egret {
                 return Rectangle.identity.initialize(0, 0, 0, 0);
             }
 
-            return Rectangle.identity.initialize(0, 0, properties._textMaxWidth, properties._textMaxHeight + (properties._numLines - 1) * properties._lineSpacing);
+            return Rectangle.identity.initialize(0, 0, properties._textMaxWidth, TextFieldUtils._getTextHeight(self));
         }
 
 
@@ -744,7 +744,7 @@ module egret {
         }
 
         public get textHeight():number {
-            return this._properties._textMaxHeight;
+            return TextFieldUtils._getTextHeight(this);
         }
 
         public appendText(text:string):void {
@@ -912,8 +912,6 @@ module egret {
         private drawText(renderContext:RendererContext):void {
             var self = this;
             var properties:egret.TextFieldProperties = self._properties;
-            var lines:Array<egret.ILineElement> = self._getLinesArr();
-
 
             if (properties._type == egret.TextFieldType.INPUT) {
                 if (self._isTyping) {
@@ -921,6 +919,8 @@ module egret {
                 }
             }
 
+            //先算出需要的数值
+            var lines:Array<egret.ILineElement> = self._getLinesArr();
             if (properties._textMaxWidth == 0) {
                 return;
             }
@@ -929,9 +929,9 @@ module egret {
             var textHeight:number = TextFieldUtils._getTextHeight(self);
 
             var drawY:number = 0;
-            var startLine:number = TextFieldUtils._getStartLine(this);
-            var valign:number = TextFieldUtils._getValign(this);
+            var startLine:number = TextFieldUtils._getStartLine(self);
             if (self._hasHeightSet && self._explicitHeight > textHeight) {
+                var valign:number = TextFieldUtils._getValign(self);
                 drawY += valign * (self._explicitHeight - textHeight);
             }
             drawY = Math.round(drawY);
