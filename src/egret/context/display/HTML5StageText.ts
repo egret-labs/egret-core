@@ -104,6 +104,8 @@ module egret {
         public _hide():void {
             //标记当前点击其他地方关闭
             this._isNeesHide = true;
+
+            HTMLInput.getInstance().disconnectStageText(this);
         }
 
         private textValue:string = "";
@@ -321,10 +323,12 @@ module egret {
         }
 
         public disconnectStageText(stageText):void {
-            if (this._stageText == stageText) {
+            if (this._stageText == null || this._stageText == stageText) {
                 this.clearInputElement();
 
-                this._inputElement.blur();
+                if (this._inputElement) {
+                    this._inputElement.blur();
+                }
             }
         }
 
