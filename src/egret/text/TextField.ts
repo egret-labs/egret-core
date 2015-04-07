@@ -926,12 +926,12 @@ module egret {
             }
 
             var maxWidth:number = self._hasWidthSet ? self._explicitWidth : properties._textMaxWidth;
-            var textHeight:number = (egret.TextFieldType.INPUT != self._properties._type || properties._multiline) ? properties._textMaxHeight + (properties._numLines - 1) * properties._lineSpacing : properties._size;
+            var textHeight:number = TextFieldUtils._getTextHeight(self);
 
             var drawY:number = 0;
             var startLine:number = TextFieldUtils._getStartLine(this);
             var valign:number = TextFieldUtils._getValign(this);
-            if (self._hasHeightSet) {
+            if (self._hasHeightSet && self._explicitHeight > textHeight) {
                 drawY += valign * (self._explicitHeight - textHeight);
             }
             drawY = Math.round(drawY);

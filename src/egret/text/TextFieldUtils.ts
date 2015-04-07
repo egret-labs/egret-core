@@ -39,7 +39,7 @@ module egret {
          * @private
          */
         public static _getStartLine(textfield:egret.TextField):number {
-            var textHeight:number = (egret.TextFieldType.INPUT != textfield._properties._type || textfield._properties._multiline) ? textfield._properties._textMaxHeight + (textfield._properties._numLines - 1) * textfield._properties._lineSpacing : textfield._properties._size;
+            var textHeight:number = TextFieldUtils._getTextHeight(textfield);
             var startLine:number = 0;
             if (textfield._hasHeightSet) {//
                 if (textHeight < textfield._explicitHeight) {//最大高度比需要显示的高度小
@@ -82,6 +82,11 @@ module egret {
             return halign;
         }
 
+        public static _getTextHeight(textfield:egret.TextField):number {
+            var textHeight:number = (egret.TextFieldType.INPUT == textfield._properties._type && !textfield._properties._multiline) ? textfield._properties._size : (textfield._properties._textMaxHeight + (textfield._properties._numLines - 1) * textfield._properties._lineSpacing);
+            return textHeight;
+        }
+
         /**
          * 获取垂直比例
          * @param textfield 文本
@@ -89,7 +94,7 @@ module egret {
          * @private
          */
         public static _getValign(textfield:egret.TextField):number{
-            var textHeight:number = textfield._properties._multiline ? textfield._properties._textMaxHeight + (textfield._properties._numLines - 1) * textfield._properties._lineSpacing : textfield._properties._size;
+            var textHeight:number = TextFieldUtils._getTextHeight(textfield);
             if (textfield._properties._type == egret.TextFieldType.INPUT) {
                 if (textfield._properties._multiline) {
                     return 0;
