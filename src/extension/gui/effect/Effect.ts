@@ -60,18 +60,6 @@ module egret.gui {
          */
         public _parentCompositeEffect:Effect;
 
-        /**
-         * 效果类的短名
-         * @member egret.gui.Effect#className
-         */
-        public get className():string{
-            var name:string = egret.getQualifiedClassName(this);
-            var index:number = name.indexOf("::");
-            if (index != -1)
-                name = name.substr(index + 2);
-            return name;
-        }
-        
         private _duration:number = 500;
         public durationExplicitlySet:boolean = false;
         /**

@@ -91,18 +91,6 @@ module egret.gui {
             return value;
         }
 
-        /**
-         * 效果实例类的短名
-         * @member egret.gui.EffectInstance#className
-         */
-        public get className():string{
-            var name:string = egret.getQualifiedClassName(this);
-            var index:number = name.indexOf("::");
-            if (index != -1)
-                name = name.substr(index + 2);
-            return name;
-        }
-        
         private _duration:number = 500;
         /**
          * 效果的持续时间（以毫秒为单位）。

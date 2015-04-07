@@ -30,11 +30,6 @@ module egret.gui {
 
     export interface IEffect extends IEventDispatcher{
         /**
-         * 效果类的短名
-         */
-        className:string;
-        
-        /** 
          * 效果的持续时间（以毫秒为单位）。 
          */
         duration:number;
