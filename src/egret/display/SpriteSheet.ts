@@ -57,11 +57,11 @@ module egret {
         /**
          * 表示bitmapData.width
          */
-        public _sourceWidth:number = 0;
+        private _sourceWidth:number = 0;
         /**
          * 表示bitmapData.height
          */
-        public _sourceHeight:number = 0;
+        private _sourceHeight:number = 0;
         /**
          * 表示这个SpriteSheet的位图区域在bitmapData上的起始位置x。
          */
