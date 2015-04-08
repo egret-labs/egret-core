@@ -132,5 +132,11 @@ module egret {
                 bitmapData.dispose();
             }
         }
+
+        public clone():Texture{
+            var texture = new Texture();
+            texture._bitmapData = this._bitmapData;
+            return texture;
+        }
     }
 }
