@@ -72,25 +72,16 @@ module egret {
          */
         public _offsetY = 0;
 
-
-        public _textureWidth:number = 0;
         /**
          * 纹理宽度
-         * @member {number} egret.Texture#textureWidth
          */
-        public get textureWidth():number {
-            return this._textureWidth;
-        }
+        public _textureWidth:number = 0;
 
-
-        public _textureHeight:number = 0;
         /**
          * 纹理高度
-         * @member {number} egret.Texture#textureHeight
          */
-        public get textureHeight():number {
-            return this._textureHeight;
-        }
+        public _textureHeight:number = 0;
+
         /**
          * 表示bitmapData.width
          */
