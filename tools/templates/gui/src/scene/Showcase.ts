@@ -63,12 +63,30 @@ class Showcase extends egret.gui.SkinnableComponent
     //  them in the constructor. You can use these components in the 
     //  "childrenCreated" method.
 
-    //  "ShowcaseSkin.exml" :
-    //  <e:Button id="btnShowMessage" label="click" y="539" horizontalCenter="0"/>
+    //  
+    //  
+
+    /**
+     * [SkinPart] 
+     *  点击显示 list 中选择的数据
+     *  A button, click to show the selection of the list
+     *
+     *      "ShowcaseSkin.exml" :
+     *      <e:Button id="btnShowMessage" label="click" y="539" horizontalCenter="0"/>
+     */
     public btnShowMessage: egret.gui.Button;
 
-    //  "ShowcaseSkin.exml" :
-    //  <e:List id="list"  height="255"  skinName="skins.simple.ListSkin" y="141" ...
+    //  
+    //  
+    
+    /**
+     * [SkinPart] 
+     *  List 组件
+     *  A list to show some data
+     *
+     *      "ShowcaseSkin.exml" :
+     *      <e:List id="list"  height="255"  skinName="skins.simple.ListSkin" y="141" ...
+     */
     public list: egret.gui.List;
 
 
