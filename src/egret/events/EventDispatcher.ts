@@ -187,7 +187,7 @@ module egret {
          * @stable A
          */
         public hasEventListener(type:string):boolean {
-            return (this._eventsMap && this._eventsMap[type] ||
+            return !!(this._eventsMap && this._eventsMap[type] ||
                 this._captureEventsMap && this._captureEventsMap[type]);
         }
 

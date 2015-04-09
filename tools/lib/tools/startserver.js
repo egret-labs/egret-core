@@ -70,7 +70,7 @@ function run(dir, args, opts) {
 
         if (OPEN) {
             open(url);
-            console.log("Server runing at port: " + PORT + ".");
+            console.log("Server running at port: " + PORT + ".");
         }
         console.log("Url:" + url);
         exports.projectName = projectName;
