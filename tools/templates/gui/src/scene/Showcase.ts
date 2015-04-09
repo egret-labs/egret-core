@@ -49,22 +49,20 @@ class Showcase extends egret.gui.SkinnableComponent
 
 
 
-
-    //  在皮肤中（skins/scene/ShowcaseSkin.exml），如果组件有 id 属性，
-    //  那么皮肤中的这个组件会被赋值给逻辑类（Showcase）中与这个 id 同名
-    //  的属性（皮肤部件）。
-    //  由于皮肤绑定的过程是延迟处理的，在构造函数并不能访问这些属性。
-    //  你可以在 "childrenCreated" 方法中使用这些组件。
-    //
-    //  Components in the skin（skins/scene/ShowcaseSkin.exml） with "id" 
-    //  will be assigned to the properties with the same name （aka Skin Parts） 
-    //  in the logic class（Showcase）.
-    //  As the skin is created after the constructor, you should not use 
-    //  them in the constructor. You can use these components in the 
-    //  "childrenCreated" method.
-
-    //  
-    //  
+    /*
+        在皮肤中（skins/scene/ShowcaseSkin.exml），如果组件有 id 属性，
+        那么皮肤中的这个组件会被赋值给逻辑类（Showcase）中与这个 id 同名
+        的属性（皮肤部件）。
+        由于皮肤绑定的过程是延迟处理的，在构造函数并不能访问这些属性。
+        你可以在 "childrenCreated" 方法中使用这些组件。
+      
+        Components in the skin（skins/scene/ShowcaseSkin.exml） with "id" 
+        will be assigned to the properties with the same name （aka Skin Parts） 
+        in the logic class（Showcase）.
+        As the skin is created after the constructor, you should not use 
+        them in the constructor. You can use these components in the 
+        "childrenCreated" method.
+    */
 
     /**
      * [SkinPart] 
@@ -75,9 +73,7 @@ class Showcase extends egret.gui.SkinnableComponent
      *      <e:Button id="btnShowMessage" label="click" y="539" horizontalCenter="0"/>
      */
     public btnShowMessage: egret.gui.Button;
-
-    //  
-    //  
+ 
     
     /**
      * [SkinPart] 
@@ -101,22 +97,27 @@ class Showcase extends egret.gui.SkinnableComponent
 
 
 
-    //  所有子项和皮肤中的组件都已经创建完毕并完成测量，可以使用
-    //
-    //  All the components in the children and skin have been 
-    //  created and measured, you can use them now.
+    /**  
+        所有子项和皮肤中的组件都已经创建完毕并完成测量，可以使用
+      
+        All the components in the children and skin have been 
+        created and measured, you can use them now.
+    */
     public childrenCreated(){
         this.btnShowMessage.addEventListener(egret.TouchEvent.TOUCH_TAP, this.onButtonClick, this);
         this.list.addEventListener(egret.gui.IndexChangeEvent.CHANGE, this.onListSelectionChange, this);
     }
 
-    //  partAdded 是皮肤部件赋值到逻辑类的入口，你可以在这里进行
-    //  必要的初始化操作。比如需要随屏幕改变组件的尺寸，写在这里
-    //  可以避免写在 childrenCreated 中造成的多次测量
-    //
-    //  The method "partAdded" will be called just after the
-    //  skin parts is assigned to the property. You can make 
-    //  changes will effect to the layout or other components.
+    /**
+        partAdded 是皮肤部件赋值到逻辑类的入口，你可以在这里进行
+        必要的初始化操作。比如需要随屏幕改变组件的尺寸，写在这里
+        可以避免写在 childrenCreated 中修改造成的多次测量。
+        
+      
+        The method "partAdded" will be called just after the
+        skin parts is assigned to the property. You can make 
+        changes will effect to the layout or other components.
+    */
     public partAdded(partName:string,instance:any):void {
         super.partAdded(partName,instance);
         if( instance == this.list )
