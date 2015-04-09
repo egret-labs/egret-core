@@ -39,16 +39,17 @@ module egret {
      */
     export class SpriteSheet extends HashObject {
 
+
+
         /**
          * 创建一个 egret.SpriteSheet 对象
          * @param texture {Texture} 纹理
          */
         public constructor(texture:Texture) {
             super();
-            var bitmapData:any = texture._bitmapData;
-            this.bitmapData = bitmapData;
-            this._sourceWidth = bitmapData.width;
-            this._sourceHeight = bitmapData.height;
+            this.texture = texture;
+            this._sourceWidth = texture._sourceWidth;
+            this._sourceHeight = texture._sourceHeight;
 
             this._bitmapX = texture._bitmapX - texture._offsetX;
             this._bitmapY = texture._bitmapY - texture._offsetY;
@@ -57,11 +58,11 @@ module egret {
         /**
          * 表示bitmapData.width
          */
-        public _sourceWidth:number = 0;
+        private _sourceWidth:number = 0;
         /**
          * 表示bitmapData.height
          */
-        public _sourceHeight:number = 0;
+        private _sourceHeight:number = 0;
         /**
          * 表示这个SpriteSheet的位图区域在bitmapData上的起始位置x。
          */
@@ -73,7 +74,7 @@ module egret {
         /**
          * 共享的位图数据
          */
-        private bitmapData:any = 0;
+        private texture:Texture;
         /**
          * 纹理缓存字典
          */
@@ -110,9 +111,8 @@ module egret {
             if (typeof textureHeight === "undefined") {
                 textureHeight = offsetY + bitmapHeight;
             }
-            var texture:Texture = new Texture();
+            var texture:Texture = this.texture.clone();
             var scale = egret.MainContext.instance.rendererContext._texture_scale_factor;
-            texture._bitmapData = this.bitmapData;
             texture._bitmapX = this._bitmapX + bitmapX;
             texture._bitmapY = this._bitmapY + bitmapY;
             texture._bitmapWidth = bitmapWidth * scale;
