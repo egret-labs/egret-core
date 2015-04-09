@@ -29,12 +29,12 @@
   <component id="Rect" super="egret.gui.UIComponent" show="true" module="egret.gui"/>
   <component id="Rectangle" super="Object" show="false" module="egret"/>
   <component id="ViewportScroller" super="egret.ScrollView" show="false" module="egret.gui"/>
-  <component id="Scroller" super="egret.gui.UIComponent" default="viewport" show="true" module="egret.gui"/>
   <component id="Skin" super="egret.EventDispatcher" default="elementsContent" show="false" module="egret.gui"/>
   <component id="SkinnableComponent" super="egret.gui.UIAsset" state="normal,disabled" show="true" module="egret.gui"/>
   <component id="SkinnableContainer" super="egret.gui.SkinnableComponent" default="elementsContent" show="true" module="egret.gui"/>
   <component id="SkinnableDataContainer" super="egret.gui.SkinnableComponent" default="dataProvider" show="true" module="egret.gui"/>
   <component id="SliderBase" super="egret.gui.TrackBase" show="false" module="egret.gui"/>
+  <component id="Scroller" super="egret.gui.SkinnableComponent" default="viewport" show="true" module="egret.gui"/>
   <component id="Spacer" super="egret.gui.UIComponent" show="true" module="egret.gui"/>
   <component id="State" super="egret.EventDispatcher" default="overrides" show="false" module="egret.gui"/>
   <component id="TabBar" super="egret.gui.ListBase" show="true" module="egret.gui"/>
