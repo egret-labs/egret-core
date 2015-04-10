@@ -140,7 +140,8 @@ module egret {
                 renderFilter._drawAreaList.length = 0;
                 this.renderContext.clearScreen();
                 this.renderContext.onRenderStart();
-                RendererContext.deleteTexture(this.renderTexture);
+                this.renderTexture.dispose();
+                //RendererContext.deleteTexture(this.renderTexture); todo-texture
                 if (this._colorTransform) {
                     this.renderContext.setGlobalColorTransform(this._colorTransform.matrix);
                 }
@@ -279,7 +280,7 @@ module egret {
                 gl.clearColor(0, 0, 0, 0);
                 gl.clear(gl.COLOR_BUFFER_BIT);
                 this.renderContext.onRenderStart();
-                RendererContext.deleteTexture(this);
+                //RendererContext.deleteTexture(this);  todo-texture
                 if(displayObject._filter) {
                     this.renderContext.setGlobalFilter(displayObject._filter);
                 }

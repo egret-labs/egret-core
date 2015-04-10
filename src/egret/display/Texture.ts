@@ -35,17 +35,18 @@ module egret {
      * 在OpenGL / WebGL中，资源是一个提交GPU后获取的纹理id
      * Texture类封装了这些底层实现的细节，开发者只需要关心接口即可
      * @link
-     * http://docs.egret-labs.org/post/manual/bitmap/textures.html 纹理集的使用
+        * http://docs.egret-labs.org/post/manual/bitmap/textures.html 纹理集的使用
      * http://docs.egret-labs.org/post/manual/loader/getres.html 获取资源的几种方式
      */
-    export class Texture extends HashObject{
+    export class Texture extends HashObject {
 
         /**
          * 创建一个 egret.Texture 对象
          */
-        public constructor(){
+        public constructor() {
             super();
         }
+
         /**
          * 表示这个纹理在 bitmapData 上的 x 起始位置
          */
@@ -112,39 +113,44 @@ module egret {
          * @param y {number} 像素点的Y轴坐标
          * @returns {number} 指定像素点的颜色值
          */
-        public getPixel32(x:number, y:number):number[]{
-            var result:any = this._bitmapData.getContext("2d").getImageData(x,y,1,1);
+        public getPixel32(x:number, y:number):number[] {
+            var result:any = this._bitmapData.getContext("2d").getImageData(x, y, 1, 1);
             return result.data;
         }
 
-        public dispose(){
+        public dispose() {
         }
 
-        public clone():Texture{
+        public clone():Texture {
             var texture = new Texture();
             texture._bitmapData = this._bitmapData;
             return texture;
         }
 
-        public draw(context:any,sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight,renderType){
+        public draw(context:any, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, renderType) {
 
         }
 
-        public _drawForCanvas(context:CanvasRenderingContext2D,sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight,renderType){
+        public _drawForCanvas(context:CanvasRenderingContext2D, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, renderType) {
 
             var bitmapData = this._bitmapData;
-            if (!bitmapData["avaliable"]){
+            if (!bitmapData["avaliable"]) {
                 return;
             }
-            if (renderType != undefined){
-                this._drawRepeatImageForCanvas(context,sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight,renderType)
+            if (renderType != undefined) {
+                this._drawRepeatImageForCanvas(context, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, renderType)
             }
-            else{
-                context.drawImage(bitmapData,sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight);
+            else {
+                context.drawImage(bitmapData, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight);
             }
         }
 
-        public _drawRepeatImageForCanvas(context:CanvasRenderingContext2D,sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, repeat) {
+        public _drawForNative(context:any, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, renderType) {
+            context.drawImage(this._bitmapData, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight);
+        }
+
+
+        public _drawRepeatImageForCanvas(context:CanvasRenderingContext2D, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, repeat) {
             if (this['pattern'] === undefined) {
                 var texture_scale_factor = egret.MainContext.instance.rendererContext._texture_scale_factor;
                 var image = this._bitmapData;
@@ -166,7 +172,7 @@ module egret {
             context.translate(-destX, -destY);
         }
 
-        public _disposeForCanvas():void{
+        public _disposeForCanvas():void {
             var bitmapData = this._bitmapData;
             bitmapData.onload = null;
             bitmapData.onerror = null;
@@ -174,23 +180,62 @@ module egret {
             bitmapData["avaliable"] = false;
         }
 
-        public static createBitmapData(  url:string, callback:(code:number,bitmapData:HTMLImageElement)=>void ){
+        public _disposeForNative():void {
+
+            var bitmapData = this._bitmapData;
+            egret_native.Texture.removeTexture(bitmapData);
+
+
+        }
+
+        public _disposeForWebGL():void {
+
+            var context = egret.MainContext.instance.rendererContext;
+            var gl:WebGLRenderingContext = context["gl"];
+            var bitmapData = this._bitmapData;
+            if(bitmapData) {
+                var webGLTexture = bitmapData.webGLTexture;
+                if(webGLTexture && gl) {
+                    for(var key in webGLTexture) {
+                        var glTexture = webGLTexture[key];
+                        gl.deleteTexture(glTexture);
+                    }
+                }
+                bitmapData.webGLTexture = null;
+            }
+        }
+
+        public static createBitmapData(url:string, callback:(code:number, bitmapData:HTMLImageElement)=>void) {
 
             var bitmapData:HTMLImageElement = Texture._bitmapDataFactory[url];
-            if (!bitmapData){
+            if (!bitmapData) {
                 bitmapData = document.createElement("img");
                 Texture._bitmapDataFactory[url] = bitmapData;
             }
-            bitmapData.onload = function(){
+            bitmapData.onload = function () {
                 bitmapData["avaliable"] = true;
-                callback(0,bitmapData);
+                callback(0, bitmapData);
             }
-            bitmapData.onerror = function(){
-                callback(1,bitmapData);
+            bitmapData.onerror = function () {
+                callback(1, bitmapData);
             }
             bitmapData.src = url;
         }
 
         private static _bitmapDataFactory:any = {};
+    }
+}
+
+
+declare module egret_native {
+
+
+    module Texture {
+
+        function addTexture(filePath:string):any;
+        function addTextureAsyn(filePath:string, promise:any):any;
+        function addTextureUnsyn(filePath:string, promise:any):any;
+
+        function removeTexture(filePath:string):void;
     }
 }
