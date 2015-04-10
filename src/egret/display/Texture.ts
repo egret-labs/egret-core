@@ -118,10 +118,6 @@ module egret {
         }
 
         public dispose(){
-            var bitmapData = this._bitmapData;
-            if (bitmapData.dispose){
-                bitmapData.dispose();
-            }
         }
 
         public clone():Texture{
@@ -129,5 +125,72 @@ module egret {
             texture._bitmapData = this._bitmapData;
             return texture;
         }
+
+        public draw(context:any,sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight,renderType){
+
+        }
+
+        public _drawForCanvas(context:CanvasRenderingContext2D,sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight,renderType){
+
+            var bitmapData = this._bitmapData;
+            if (!bitmapData["avaliable"]){
+                return;
+            }
+            if (renderType != undefined){
+                this._drawRepeatImageForCanvas(context,sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight,renderType)
+            }
+            else{
+                context.drawImage(bitmapData,sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight);
+            }
+        }
+
+        public _drawRepeatImageForCanvas(context:CanvasRenderingContext2D,sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, repeat) {
+            if (this['pattern'] === undefined) {
+                var texture_scale_factor = egret.MainContext.instance.rendererContext._texture_scale_factor;
+                var image = this._bitmapData;
+                var tempImage:HTMLElement = image;
+                if (image.width != sourceWidth || image.height != sourceHeight || texture_scale_factor != 1) {
+                    var tempCanvas = document.createElement("canvas");
+                    tempCanvas.width = sourceWidth * texture_scale_factor;
+                    tempCanvas.height = sourceHeight * texture_scale_factor;
+                    tempCanvas.getContext("2d").drawImage(image, sourceX, sourceY, sourceWidth, sourceHeight, 0, 0, sourceWidth * texture_scale_factor, sourceHeight * texture_scale_factor);
+                    tempImage = tempCanvas;
+                }
+                var pat = context.createPattern(tempImage, repeat);
+                this['pattern'] = pat;
+            }
+            var pattern = this['pattern'];
+            context.fillStyle = pattern;
+            context.translate(destX, destY);
+            context.fillRect(0, 0, destWidth, destHeight);
+            context.translate(-destX, -destY);
+        }
+
+        public _disposeForCanvas():void{
+            var bitmapData = this._bitmapData;
+            bitmapData.onload = null;
+            bitmapData.onerror = null;
+            bitmapData.src = null;
+            bitmapData["avaliable"] = false;
+        }
+
+        public static createBitmapData(  url:string, callback:(code:number,bitmapData:HTMLImageElement)=>void ){
+
+            var bitmapData:HTMLImageElement = Texture._bitmapDataFactory[url];
+            if (!bitmapData){
+                bitmapData = document.createElement("img");
+                Texture._bitmapDataFactory[url] = bitmapData;
+            }
+            bitmapData.onload = function(){
+                bitmapData["avaliable"] = true;
+                callback(0,bitmapData);
+            }
+            bitmapData.onerror = function(){
+                callback(1,bitmapData);
+            }
+            bitmapData.src = url;
+        }
+
+        private static _bitmapDataFactory:any = {};
     }
 }

@@ -43,7 +43,8 @@ module RES {
             }
         }
 
-        protected onResourceDestroy(resource:any){
+        protected onResourceDestroy(texture:any){
+            texture.dispose();
             //console.log (resource);
         }
     }

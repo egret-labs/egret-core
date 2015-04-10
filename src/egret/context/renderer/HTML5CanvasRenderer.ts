@@ -63,10 +63,14 @@ module egret {
             super();
             this.useCacheCanvas = useCacheCanvas;
 
+
+            Texture.prototype.draw = Texture.prototype._drawForCanvas;
+            Texture.prototype.dispose = Texture.prototype._disposeForCanvas;
+
             this.canvas = canvas || this.createCanvas();
             this.canvasContext = this.canvas.getContext("2d");
 
-            if(useCacheCanvas) {
+            if (useCacheCanvas) {
                 this._cacheCanvas = document.createElement("canvas");
                 this._cacheCanvas.width = this.canvas.width;
                 this._cacheCanvas.height = this.canvas.height;
@@ -124,7 +128,7 @@ module egret {
                 this.canvas.style.height = container.style.height;
 //              this.canvas.style.position = "absolute";
 
-                if(this.useCacheCanvas) {
+                if (this.useCacheCanvas) {
                     this._cacheCanvas.width = this.canvas.width;
                     this._cacheCanvas.height = this.canvas.height;
                 }
@@ -138,12 +142,12 @@ module egret {
 
         public clearScreen() {
             var list = RenderFilter.getInstance().getDrawAreaList();
-            for (var i:number = 0 , l:number = list.length; i < l; i++) {
+            for (var i:number = 0, l:number = list.length; i < l; i++) {
                 var area = list[i];
                 this.clearRect(area.x, area.y, area.width, area.height);
             }
             var stage:Stage = egret.MainContext.instance.stage;
-            if(this.useCacheCanvas) {
+            if (this.useCacheCanvas) {
                 this._cacheCanvasContext.clearRect(0, 0, stage.stageWidth, stage.stageHeight);
             }
             this.renderCost = 0;
@@ -154,46 +158,16 @@ module egret {
             this.canvasContext.clearRect(x, y, w, h);
         }
 
-        public drawImage(texture:Texture, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, repeat = undefined) {
+        public drawImage(texture:Texture, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, renderType = undefined) {
 
-//            if (DEBUG && DEBUG.DRAW_IMAGE) {
-//                DEBUG.checkDrawImage(texture, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight);
-//            }
-            var image = texture._bitmapData;
             destX += this._transformTx;
             destY += this._transformTy;
             var beforeDraw = egret.getTimer();
-            if (repeat === undefined) {
-                this.drawCanvasContext.drawImage(image, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight);
-            }
-            else {
-                this.drawRepeatImage(texture, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, repeat);
-            }
-            super.drawImage(texture, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, repeat);
+            texture.draw(this.drawCanvasContext, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, renderType);
+            super.drawImage(texture, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, renderType);
             this.renderCost += egret.getTimer() - beforeDraw;
         }
 
-        public drawRepeatImage(texture:Texture, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, repeat) {
-            if (texture['pattern'] === undefined) {
-                var texture_scale_factor = egret.MainContext.instance.rendererContext._texture_scale_factor;
-                var image = texture._bitmapData;
-                var tempImage:HTMLElement = image;
-                if (image.width != sourceWidth || image.height != sourceHeight || texture_scale_factor != 1) {
-                    var tempCanvas = document.createElement("canvas");
-                    tempCanvas.width = sourceWidth * texture_scale_factor;
-                    tempCanvas.height = sourceHeight * texture_scale_factor;
-                    tempCanvas.getContext("2d").drawImage(image, sourceX, sourceY, sourceWidth, sourceHeight, 0, 0, sourceWidth * texture_scale_factor, sourceHeight * texture_scale_factor);
-                    tempImage = tempCanvas;
-                }
-                var pat = this.drawCanvasContext.createPattern(tempImage, repeat);
-                texture['pattern'] = pat;
-            }
-            var pattern = texture['pattern'];
-            this.drawCanvasContext.fillStyle = pattern;
-            this.drawCanvasContext.translate(destX, destY);
-            this.drawCanvasContext.fillRect(0, 0, destWidth, destHeight);
-            this.drawCanvasContext.translate(-destX, -destY);
-        }
 
         public setTransform(matrix:egret.Matrix) {
             //在没有旋转缩放斜切的情况下，先不进行矩阵偏移，等下次绘制的时候偏移
@@ -322,11 +296,11 @@ module egret {
             this.drawCanvasContext.restore();
             this.drawCanvasContext.setTransform(1, 0, 0, 1, 0, 0);
 
-            if(this.useCacheCanvas) {
+            if (this.useCacheCanvas) {
                 var canvasWidth = this._cacheCanvas.width;
                 var canvasHeight = this._cacheCanvas.height;
                 var list = RenderFilter.getInstance().getDrawAreaList();
-                for (var i:number = 0 , l:number = list.length; i < l; i++) {
+                for (var i:number = 0, l:number = list.length; i < l; i++) {
                     var area:Rectangle = list[i];
                     var areaX = area.x;
                     var areaY = area.y;
@@ -377,13 +351,13 @@ module egret_h5_graphics {
                     var rendererContext = <egret.HTML5CanvasRenderer>this.renderContext;
                     this.canvasContext.beginPath();
                     this.canvasContext.rect(rendererContext._transformTx + x,
-                            rendererContext._transformTy + y,
+                        rendererContext._transformTy + y,
                         width,
                         height);
                     this.canvasContext.closePath();
                 },
                 this,
-                [ x, y, width, height]
+                [x, y, width, height]
             )
         );
         this._fill();
@@ -397,12 +371,12 @@ module egret_h5_graphics {
                 var rendererContext = <egret.HTML5CanvasRenderer>this.renderContext;
                 this.canvasContext.beginPath();
                 this.canvasContext.arc(rendererContext._transformTx + x,
-                        rendererContext._transformTy + y, r, 0, Math.PI * 2);
+                    rendererContext._transformTy + y, r, 0, Math.PI * 2);
                 this.canvasContext.closePath();
 
             },
             this,
-            [ x, y, r]
+            [x, y, r]
         ));
         this._fill();
         this.checkRect(x - r, y - r, 2 * r, 2 * r);
@@ -437,7 +411,7 @@ module egret_h5_graphics {
                     this.canvasContext.closePath();
                 },
                 this,
-                [ x, y, width, height, ellipseWidth, ellipseHeight]
+                [x, y, width, height, ellipseWidth, ellipseHeight]
             )
         );
         this._fill();
@@ -464,7 +438,7 @@ module egret_h5_graphics {
                 this.canvasContext.stroke();
             },
             this,
-            [ x, y, width, height]
+            [x, y, width, height]
         ));
         this._fill();
         this.checkRect(x - width, y - height, 2 * width, 2 * height);
@@ -518,7 +492,7 @@ module egret_h5_graphics {
                 var rendererContext = <egret.HTML5CanvasRenderer>this.renderContext;
                 var canvasContext:CanvasRenderingContext2D = this.canvasContext;
                 canvasContext.quadraticCurveTo(rendererContext._transformTx + x, rendererContext._transformTy + y,
-                        rendererContext._transformTx + ax, rendererContext._transformTy + ay);
+                    rendererContext._transformTx + ax, rendererContext._transformTy + ay);
             },
             this,
             [controlX, controlY, anchorX, anchorY]
