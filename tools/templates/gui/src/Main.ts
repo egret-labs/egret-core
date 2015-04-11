@@ -121,19 +121,13 @@ class Main extends egret.DisplayObjectContainer {
         this.guiLayer = new egret.gui.UIStage();
         this.addChild(this.guiLayer);
 
-        var button: egret.gui.Button = new egret.gui.Button();
-        button.horizontalCenter = 0;
-        button.verticalCenter = 0;
-        button.label = "click";
-        button.addEventListener(egret.TouchEvent.TOUCH_TAP, this.onButtonClick, this);
+        var showcase:Showcase = new Showcase();
         //在GUI范围内一律使用addElement等方法替代addChild等方法。
         //Within GUI scope, addChild methods should be replaced by addElement methods.
-        this.guiLayer.addElement(button);
+        this.guiLayer.addElement(showcase);
     }
 
-    private onButtonClick(event: egret.TouchEvent): void {
-        egret.gui.Alert.show("Message", "Title");
-    }
+
 }
 
 

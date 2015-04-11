@@ -62,17 +62,19 @@ module egret.gui {
          * @param secondButtonLabel {string} 第二个按钮上显示的文本，若为null，则不显示第二个按钮。
          * @param modal {boolean} 是否启用模态。即禁用弹出框以下的鼠标事件。默认true。
          * @param center {boolean} 是否居中。默认true。
+         * @param thisObject {any} 回掉函数绑定的this对象
          * @returns {Alert}
          */
         public static show(text:string="",title:string="",closeHandler:Function=null,
                                     firstButtonLabel:string="OK",secondButtonLabel:string="",
-                                    modal:boolean=true,center:boolean=true):Alert{
+                                    modal:boolean=true,center:boolean=true,thisObject?:any):Alert{
             var alert:Alert = new Alert();
             alert.contentText = text;
             alert.title = title;
             alert._firstButtonLabel = firstButtonLabel;
             alert._secondButtonLabel = secondButtonLabel;
             alert.closeHandler = closeHandler;
+            alert.thisObject = thisObject;
             PopUpManager.addPopUp(alert,modal,center);
             return alert;
         }
@@ -147,7 +149,13 @@ module egret.gui {
         /**
          * 对话框关闭回调函数
          */
-        private closeHandler:Function = null;
+        private closeHandler: Function = null;
+
+        /**
+        * 对话框关闭回调函数对应的this对象
+        */
+        private thisObject: any;
+
         /**
          * 关闭事件
          */
@@ -163,7 +171,7 @@ module egret.gui {
                         closeEvent.detail = Alert.SECOND_BUTTON;
                         break;
                 }
-                this.closeHandler(closeEvent);
+                this.callCloseHandler(closeEvent);
             }
         }
         /**
@@ -174,8 +182,14 @@ module egret.gui {
             super.closeButton_clickHandler(event);
             PopUpManager.removePopUp(this);
             var closeEvent:CloseEvent = new CloseEvent(CloseEvent.CLOSE,false,false,Alert.CLOSE_BUTTON);
-            if(this.closeHandler!=null)
-                this.closeHandler(closeEvent);
+            this.callCloseHandler(closeEvent);
+        }
+
+        private callCloseHandler(closeEvent: CloseEvent) {
+            if (this.closeHandler == null)
+                return;
+            var target = this.thisObject || this;
+            this.closeHandler.call(target, closeEvent);
         }
 
         /**

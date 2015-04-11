@@ -258,7 +258,6 @@ module egret {
 
             canvasDiv.style.width = styleW + "px";
             canvasDiv.style.height = styleH + "px";
-            canvasDiv.style.top = top + "px";
 
             container.style.width = styleW + "px";
             container.style.height = styleH + "px";

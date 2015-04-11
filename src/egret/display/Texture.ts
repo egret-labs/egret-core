@@ -79,9 +79,25 @@ module egret {
         public _textureWidth:number = 0;
 
         /**
+         * 纹理宽度
+         * @member {number} egret.Texture#textureWidth
+         */
+        public get textureWidth():number {
+            return this._textureWidth;
+        }
+
+        /**
          * 纹理高度
          */
         public _textureHeight:number = 0;
+
+        /**
+         * 纹理高度
+         * @member {number} egret.Texture#textureHeight
+         */
+        public get textureHeight():number {
+            return this._textureHeight;
+        }
 
         /**
          * 表示bitmapData.width
@@ -119,9 +135,13 @@ module egret {
         }
 
         public dispose() {
+            var bitmapData = this._bitmapData;
+            if (bitmapData.dispose) {
+                bitmapData.dispose();
+            }
         }
 
-        public clone():Texture {
+        public _clone():Texture {
             var texture = new Texture();
             texture._bitmapData = this._bitmapData;
             return texture;

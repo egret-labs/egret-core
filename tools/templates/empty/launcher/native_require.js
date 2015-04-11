@@ -1,15 +1,4 @@
-/**
- * Created by huanghaiying on 14/12/5.
- */
-var console = {};
 var window = {};
-
-console.log = function (message) {
-    egtlog(message);
-}
-console.warn = function(message){
-    egtlog(message);
-}
 
 egret_native.setSearchPaths([""]);
 
