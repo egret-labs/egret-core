@@ -7,7 +7,6 @@
         "devices/NativeDeviceContext.ts",
         "renderer/NativeRendererContext.ts",
         "interactive/NativeTouchContext.ts",
-        "PromiseObject.ts",
         "net/NativeNetContext.ts",
         "net/IVersionController.ts",
         "NativeContext.d.ts",

@@ -49,6 +49,9 @@ module egret {
 
         constructor(canvas?:HTMLCanvasElement) {
             super();
+
+            Texture.prototype.dispose = Texture.prototype._disposeForCanvas;
+
             this.canvas = canvas || this.createCanvas();
             this.canvas.addEventListener("webglcontextlost", this.handleContextLost.bind(this), false);
             this.canvas.addEventListener("webglcontextrestored", this.handleContextRestored.bind(this), false);
@@ -141,7 +144,7 @@ module egret {
                 this.renderContext.clearScreen();
                 this.renderContext.onRenderStart();
                 this.renderTexture.dispose();
-                //RendererContext.deleteTexture(this.renderTexture); todo-texture
+                Texture.deleteWebGLTexture(this.renderTexture);
                 if (this._colorTransform) {
                     this.renderContext.setGlobalColorTransform(this._colorTransform.matrix);
                 }
@@ -280,7 +283,7 @@ module egret {
                 gl.clearColor(0, 0, 0, 0);
                 gl.clear(gl.COLOR_BUFFER_BIT);
                 this.renderContext.onRenderStart();
-                //RendererContext.deleteTexture(this);  todo-texture
+                Texture.deleteWebGLTexture(this);
                 if(displayObject._filter) {
                     this.renderContext.setGlobalFilter(displayObject._filter);
                 }
@@ -356,7 +359,7 @@ module egret {
             //        this["graphics_webgl_texture"] = new egret.Texture();
             //    }
             //    this["graphics_webgl_texture"]._setBitmapData(renderContext.html5Canvas);
-            //    RendererContext.deleteTexture(this["graphics_webgl_texture"]);
+            //    RendererContext.deleteTexture(this);
             //    renderContext.setTransform(egret.Matrix.identity.identity());
             //    renderContext.drawImage(this["graphics_webgl_texture"], 0, 0, stageW, stageH, 0, 0, stageW, stageH);
             //    this.canvasContext.restore();
@@ -536,6 +539,10 @@ module egret {
 
         public drawImage(texture:Texture, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, repeat = undefined) {
             if (this.contextLost) {
+                return;
+            }
+            var bitmapData = texture._bitmapData;
+            if (!bitmapData["avaliable"]) {
                 return;
             }
             if (repeat !== undefined) {

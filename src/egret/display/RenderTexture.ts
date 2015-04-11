@@ -114,7 +114,7 @@ module egret {
             renderFilter._drawAreaList.length = 0;
             this.renderContext.clearScreen();
             this.renderContext.onRenderStart();
-            //RendererContext.deleteTexture(this); todo-texture
+            Texture.deleteWebGLTexture(this);
             if(displayObject._filter) {
                 this.renderContext.setGlobalFilter(displayObject._filter);
             }

@@ -37,6 +37,7 @@ module egret {
 
         public constructor() {
             super();
+            Texture.createBitmapData = Texture._createBitmapDataForCanvasAndWebGl;
         }
 
         public proceed(loader:URLLoader):void {
@@ -196,7 +197,7 @@ module egret {
         private loadTexture(loader:URLLoader):void {
 
             var request:URLRequest = loader._request;
-            Texture.createBitmapData(request.url,function(code:number,bitmapData:HTMLImageElement){
+            Texture.createBitmapData(request.url, function(code:number,bitmapData:HTMLImageElement){
                 if (code != 0){
                     IOErrorEvent.dispatchIOErrorEvent(loader);
                     return;

@@ -39,7 +39,7 @@ module egret {
 
         public constructor() {
             super();
-
+            Texture.createBitmapData = Texture._createBitmapDataForNative;
             this.initVersion(new egret.VersionController());
         }
 
@@ -54,7 +54,6 @@ module egret {
          * @param loader {URLLoader}
          */
         public proceed(loader:URLLoader):void {
-
             if (loader.dataFormat == URLLoaderDataFormat.TEXTURE) {
                 this.loadTexture(loader);
                 return;
@@ -77,7 +76,7 @@ module egret {
                     delete this.urlData["data"];
                 }
                 //写入header信息
-                if(request.requestHeaders) {
+                if (request.requestHeaders) {
                     this.urlData.header = this.getHeaderString(request);
                 }
                 else {
@@ -113,7 +112,7 @@ module egret {
 
             function readFileAsync() {
                 var promise = new egret.PromiseObject();
-                promise.onSuccessFunc = function(content){
+                promise.onSuccessFunc = function (content) {
                     self.saveVersion(url);
                     loader.data = content;
                     Event.dispatchEvent(loader, Event.COMPLETE);
@@ -141,7 +140,7 @@ module egret {
         private getHeaderString(request:URLRequest):string {
             var headerObj = {};
             var length = request.requestHeaders.length;
-            for(var i:number = 0 ; i < length ; i++){
+            for (var i:number = 0; i < length; i++) {
                 var urlRequestHeader:egret.URLRequestHeader = request.requestHeaders[i];
                 headerObj[urlRequestHeader.name] = urlRequestHeader.value;
             }
@@ -199,52 +198,41 @@ module egret {
             }
             else {
                 if (NativeNetContext.__use_asyn) {
-                    addTextureAsync();
+                    createBitmapData();
                 }
                 else {
-                    egret.__callAsync(onLoadComplete, this);
-
+                    egret.__callAsync(createBitmapData, this);
                 }
             }
 
-            function addTexture(bitmapData) {
+            function createBitmapData() {
+                Texture.createBitmapData(url, function (code:number, bitmapData:any) {
+                    if (code == 0) {
+                        onComplete(bitmapData);
+                    }
+                    else {
+                        egret.IOErrorEvent.dispatchIOErrorEvent(loader);
+                    }
+                });
+            }
+
+            function onComplete(bitmapData) {
                 self.saveVersion(url);
 
                 var texture = new egret.Texture();
                 texture._setBitmapData(bitmapData);
                 loader.data = texture;
+                console.log("onComplete:" + url);
                 egret.Event.dispatchEvent(loader, egret.Event.COMPLETE);
-            }
-
-            function addTextureAsync() {
-                var promise = new egret.PromiseObject();
-                promise.onSuccessFunc = function(bitmapData){
-                    addTexture(bitmapData);
-                };
-                promise.onErrorFunc = function () {
-                    egret.IOErrorEvent.dispatchIOErrorEvent(loader);
-                };
-                egret_native.Texture.addTextureAsyn(url, promise);
             }
 
             function download() {
                 var promise = egret.PromiseObject.create();
-                promise.onSuccessFunc = onLoadComplete;
+                promise.onSuccessFunc = createBitmapData;
                 promise.onErrorFunc = function () {
                     egret.IOErrorEvent.dispatchIOErrorEvent(loader);
                 };
                 egret_native.download(url, url, promise);
-            }
-
-            function onLoadComplete() {
-
-                if (NativeNetContext.__use_asyn) {//异步的
-                    addTextureAsync();
-                }
-                else {
-                    var bitmapData = egret_native.Texture.addTexture(url);
-                    addTexture(bitmapData);
-                }
             }
         }
 

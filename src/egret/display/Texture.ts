@@ -134,7 +134,7 @@ module egret {
             return result.data;
         }
 
-        public dispose() {
+        public dispose():void {
             var bitmapData = this._bitmapData;
             if (bitmapData.dispose) {
                 bitmapData.dispose();
@@ -166,7 +166,11 @@ module egret {
         }
 
         public _drawForNative(context:any, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, renderType) {
-            context.drawImage(this._bitmapData, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight);
+            var bitmapData = this._bitmapData;
+            if (!bitmapData["avaliable"]) {
+                return;
+            }
+            context.drawImage(bitmapData, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight);
         }
 
 
@@ -193,6 +197,7 @@ module egret {
         }
 
         public _disposeForCanvas():void {
+            Texture.deleteWebGLTexture(this);
             var bitmapData = this._bitmapData;
             bitmapData.onload = null;
             bitmapData.onerror = null;
@@ -201,18 +206,16 @@ module egret {
         }
 
         public _disposeForNative():void {
-
             var bitmapData = this._bitmapData;
-            egret_native.Texture.removeTexture(bitmapData);
-
-
+            bitmapData.dispose();
+            bitmapData["avaliable"] = false;
+            console.log("_disposeForNative");
         }
 
-        public _disposeForWebGL():void {
-
+        public static deleteWebGLTexture(texture:Texture):void {
             var context = egret.MainContext.instance.rendererContext;
             var gl:WebGLRenderingContext = context["gl"];
-            var bitmapData = this._bitmapData;
+            var bitmapData = texture._bitmapData;
             if(bitmapData) {
                 var webGLTexture = bitmapData.webGLTexture;
                 if(webGLTexture && gl) {
@@ -225,8 +228,11 @@ module egret {
             }
         }
 
-        public static createBitmapData(url:string, callback:(code:number, bitmapData:HTMLImageElement)=>void) {
+        public static createBitmapData(url:string, callback:(code:number, bitmapData:any)=>void):void {
 
+        }
+
+        public static _createBitmapDataForCanvasAndWebGl(url:string, callback:(code:number, bitmapData:any)=>void):void {
             var bitmapData:HTMLImageElement = Texture._bitmapDataFactory[url];
             if (!bitmapData) {
                 bitmapData = document.createElement("img");
@@ -235,11 +241,44 @@ module egret {
             bitmapData.onload = function () {
                 bitmapData["avaliable"] = true;
                 callback(0, bitmapData);
-            }
+            };
             bitmapData.onerror = function () {
                 callback(1, bitmapData);
-            }
+            };
             bitmapData.src = url;
+        }
+
+        public static _createBitmapDataForNative(url:string, callback:(code:number, bitmapData:any)=>void):void {
+            console.log("_createBitmapDataForNative:" + url);
+            var bitmapData:any = Texture._bitmapDataFactory[url];
+            if (!bitmapData) {
+                if (egret["NativeNetContext"].__use_asyn) {//异步的
+                    var promise = new egret.PromiseObject();
+                    promise.onSuccessFunc = function(bitmapData) {
+                        Texture._bitmapDataFactory[url] = bitmapData;
+                        bitmapData["avaliable"] = true;
+                        callback(0, bitmapData);
+                    };
+                    promise.onErrorFunc = function () {
+                        callback(1, null);
+                    };
+                    console.log("addTextureAsyn");
+                    egret_native.Texture.addTextureAsyn(url, promise);
+                }
+                else {
+                    console.log("addTexture");
+                    bitmapData = egret_native.Texture.addTexture(url);
+                    Texture._bitmapDataFactory[url] = bitmapData;
+                    bitmapData["avaliable"] = true;
+                    callback(0, bitmapData);
+                }
+            }
+            else {
+                console.log("reload");
+                bitmapData.reload();
+                bitmapData["avaliable"] = true;
+                callback(0, bitmapData);
+            }
         }
 
         private static _bitmapDataFactory:any = {};
