@@ -188,8 +188,10 @@ module egret {
             egret.RenderTexture.prototype.init = function () {
                 var o:any = this;
                 o._bitmapData = document.createElement("canvas");
+                o._bitmapData["avaliable"] = true;
                 o.canvasContext = o._bitmapData.getContext("2d");
                 o._webglBitmapData = document.createElement("canvas");
+                o._bitmapData["avaliable"] = true;
                 o.renderContext = new egret.WebGLRenderer(o._webglBitmapData);
             };
 
@@ -226,10 +228,12 @@ module egret {
                 }
                 if (!this._bitmapData) {
                     this._bitmapData = document.createElement("canvas");
+                    this._bitmapData["avaliable"] = true;
                     this.canvasContext = this._bitmapData.getContext("2d");
                     //todo 多层嵌套会有隐患
                     if (!RenderTexture["WebGLCanvas"]) {
                         RenderTexture["WebGLCanvas"] = document.createElement("canvas");
+                        RenderTexture["WebGLCanvas"]["avaliable"] = true;
                         RenderTexture["WebGLRenderer"] = new egret.WebGLRenderer(RenderTexture["WebGLCanvas"]);
                     }
                     this._webglBitmapData = RenderTexture["WebGLCanvas"];

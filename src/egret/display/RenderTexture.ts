@@ -46,6 +46,7 @@ module egret {
 
         public init():void {
             this._bitmapData = document.createElement("canvas");
+            this._bitmapData["avaliable"] = true;
             this.renderContext = egret.RendererContext.createRendererContext(this._bitmapData);
         }
 
