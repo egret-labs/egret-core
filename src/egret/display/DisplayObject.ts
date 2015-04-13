@@ -373,6 +373,10 @@ module egret {
         }
 
         public set alpha(value:number) {
+            this._setAlpha(value);
+        }
+
+        public _setAlpha(value:number):void {
             if (NumberUtils.isNumber(value) && this._alpha != value) {
                 this._alpha = value;
 
