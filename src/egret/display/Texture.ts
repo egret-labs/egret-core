@@ -203,6 +203,7 @@ module egret {
             bitmapData.onerror = null;
             bitmapData.src = null;
             bitmapData["avaliable"] = false;
+            console.log("_disposeForCanvas");
         }
 
         public _disposeForNative():void {
