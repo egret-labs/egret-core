@@ -229,7 +229,7 @@ function publishNative(opts, versionFile) {
                 var url2 = path.join(projectProperties.getProjectPath(), projectProperties.getNativePath("android"), "proj.android/assets");
                 if (file.exists(url1)) {//是egret的android项目
                     //1、清除文件夹
-                    file.remove(url2);
+                    file.remove(path.join(url2, "egret-game"));
                     file.createDirectory(path.join(url2, "egret-game"));
                     file.copy(releaseOutputPath, path.join(url2, "egret-game"));
 
@@ -251,7 +251,7 @@ function publishNative(opts, versionFile) {
                 if (file.exists(url1)
                     && file.exists(url2)) {//是egret的ios项目
                     //1、清除文件夹
-                    file.remove(url2);
+                    file.remove(path.join(url2, "egret-game"));
 
                     file.createDirectory(path.join(url2, "egret-game"));
                     file.copy(releaseOutputPath, path.join(url2, "egret-game"));
