@@ -298,12 +298,12 @@ module egret.gui {
 				return;
 			this._autoMouseEnabled = value;
 			if(this._autoMouseEnabled){
-				this._touchChildren = this.enabled ? this.explicitMouseChildren : false;
-				this._touchEnabled  = this.enabled ? this.explicitMouseEnabled  : false;
+                this._setFlag(DisplayObjectFlags.TOUCH_CHILDREN, this.enabled ? this.explicitMouseChildren : false);
+                this._setFlag(DisplayObjectFlags.TOUCH_ENABLED, this.enabled ? this.explicitMouseEnabled  : false);
 			}
 			else{
-				this._touchChildren = this.explicitMouseChildren;
-                this._touchEnabled  = this.explicitMouseEnabled;
+                this._setFlag(DisplayObjectFlags.TOUCH_CHILDREN, this.explicitMouseChildren);
+                this._setFlag(DisplayObjectFlags.TOUCH_ENABLED, this.explicitMouseEnabled);
 			}
 		}
 		
@@ -316,14 +316,14 @@ module egret.gui {
 		 * @member egret.gui.SkinnableComponent#touchChildren
 		 */
         public get touchChildren():boolean{
-            return this._touchChildren;
+            return this._getFlag(DisplayObjectFlags.TOUCH_CHILDREN);
         }
 		/**
 		 * @inheritDoc
 		 */		
 		public set touchChildren(value:boolean){
 			if(this.enabled)
-				this._touchChildren = value;
+            this._setFlag(DisplayObjectFlags.TOUCH_CHILDREN, value);
 			this.explicitMouseChildren = value;
 		}
 		/**
@@ -335,14 +335,14 @@ module egret.gui {
 		 * @member egret.gui.SkinnableComponent#touchEnabled
 		 */
         public get touchEnabled():boolean{
-            return this._touchEnabled;
+            return this._getFlag(DisplayObjectFlags.TOUCH_ENABLED);
         }
 		/**
 		 * @inheritDoc
 		 */	
 		public set touchEnabled(value:boolean){
 			if(this.enabled)
-				this._touchEnabled = value;
+            this._setFlag(DisplayObjectFlags.TOUCH_ENABLED, value);
 			this.explicitMouseEnabled = value;
 		}
 
@@ -364,8 +364,8 @@ module egret.gui {
                 return;
             this._enabled = value;
             if(this._autoMouseEnabled){
-                this._touchChildren = value ? this.explicitMouseChildren : false;
-                this._touchEnabled  = value ? this.explicitMouseEnabled  : false;
+                this._setFlag(DisplayObjectFlags.TOUCH_CHILDREN, value ? this.explicitMouseChildren : false);
+                this._setFlag(DisplayObjectFlags.TOUCH_ENABLED, value ? this.explicitMouseEnabled  : false);
             }
             this.invalidateSkinState();
         }

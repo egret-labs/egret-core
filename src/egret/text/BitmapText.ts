@@ -101,7 +101,7 @@ module egret {
             var emptyHeight:number = bitmapFont._getFirstCharHeight();
             var emptyWidth:number = Math.ceil(emptyHeight*BitmapText.EMPTY_FACTOR);
             var yPos:number = 0;
-            var maxHeight:number = this._hasHeightSet?this._explicitHeight:Number.POSITIVE_INFINITY;
+            var maxHeight:number = this._getFlag(DisplayObjectFlags.HAS_HEIGHT_SET)?this._explicitHeight:Number.POSITIVE_INFINITY;
             var lineHeights:Array<number> = this._lineHeights;
             for(var i:number=0;i<length;i++){
                 var lineHeight:number = lineHeights[i];
@@ -168,8 +168,8 @@ module egret {
             var textHeight:number = 0;
             var textStartX:number = 0;
             var textStartY:number = 0;
-            var hasWidthSet:boolean = this._hasWidthSet;
-            var maxWidth:number = this._hasWidthSet?this._explicitWidth:Number.POSITIVE_INFINITY;
+            var hasWidthSet:boolean = this._getFlag(DisplayObjectFlags.HAS_WIDTH_SET);
+            var maxWidth:number = this._getFlag(DisplayObjectFlags.HAS_WIDTH_SET)?this._explicitWidth:Number.POSITIVE_INFINITY;
             var bitmapFont:BitmapFont = this._font;
             var emptyHeight:number = bitmapFont._getFirstCharHeight();
             var emptyWidth:number = Math.ceil(emptyHeight*BitmapText.EMPTY_FACTOR);

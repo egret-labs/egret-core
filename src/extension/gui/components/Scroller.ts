@@ -692,7 +692,7 @@ module egret.gui {
             if (childTouched)
                 return childTouched;
 
-            if (!this._visible || (!ignoreTouchEnabled && !this._touchEnabled)) {
+            if (!this._getFlag(DisplayObjectFlags.VISIBLE) || (!ignoreTouchEnabled && !this._getFlag(DisplayObjectFlags.TOUCH_ENABLED))) {
                 return null;
             }
             if (0 <= x && x < this.width && 0 <= y && y < this.height) {

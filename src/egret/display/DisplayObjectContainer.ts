@@ -47,22 +47,22 @@ module egret {
         constructor() {
             super();
             this._children = [];
-            this._isContainer = true;
 
+            this._setFlag(DisplayObjectFlags.IS_CONTAINER, true);
+            this._setFlag(DisplayObjectFlags.TOUCH_CHILDREN, true);
         }
 
-        public _touchChildren:boolean = true;
         /**
          * 指定此对象的子项以及子孙项是否接收鼠标/触摸事件
          * 默认值为 true 即可以接收。
          * @member {boolean} egret.DisplayObjectContainer#touchChildren
          */
         public get touchChildren():boolean {
-            return this._touchChildren;
+            return this._getFlag(DisplayObjectFlags.TOUCH_CHILDREN);
         }
 
         public set touchChildren(value:boolean) {
-            this._touchChildren = value;
+            this._setFlag(DisplayObjectFlags.TOUCH_CHILDREN, value);
         }
 
         public _children:Array<DisplayObject>;
@@ -330,7 +330,7 @@ module egret {
         public _updateTransform():void {
             var o = this;
 
-            if (!o._visible) {
+            if (!o._getFlag(DisplayObjectFlags.VISIBLE)) {
                 return;
             }
             if(o._filter) {
@@ -385,7 +385,7 @@ module egret {
 
             for (var i = 0; i < l; i++) {
                 var child = children[i];
-                if (!child._visible) {
+                if (!child._getFlag(DisplayObjectFlags.VISIBLE)) {
                     continue;
                 }
 
@@ -430,7 +430,7 @@ module egret {
         public hitTest(x:number, y:number, ignoreTouchEnabled:boolean = false):DisplayObject {
             var o = this;
             var result:DisplayObject;
-            if (!o._visible) {
+            if (!o._getFlag(DisplayObjectFlags.VISIBLE)) {
                 return null;
             }
             if (o._scrollRect) {
@@ -450,7 +450,7 @@ module egret {
             }
             var children = o._children;
             var l = children.length;
-            var touchChildren = o._touchChildren;//这里不用考虑父级的touchChildren，从父级调用下来过程中已经判断过了。
+            var touchChildren = o._getFlag(DisplayObjectFlags.TOUCH_CHILDREN);//这里不用考虑父级的touchChildren，从父级调用下来过程中已经判断过了。
             for (var i = l - 1; i >= 0; i--) {
                 var child = children[i];
                 var mtx = child._getMatrix();
@@ -466,7 +466,7 @@ module egret {
                         return o;
                     }
 
-                    if (childHitTestResult._touchEnabled && touchChildren) {
+                    if (childHitTestResult._getFlag(DisplayObjectFlags.TOUCH_ENABLED) && touchChildren) {
                         return childHitTestResult;
                     }
 

@@ -42,6 +42,7 @@
         "egret/filters/Filter.ts",
         "egret/filters/BlurFilter.ts",
         "egret/display/BlendMode.ts",
+        "egret/display/DisplayObjectFlags.ts",
         "egret/display/DisplayObject.ts",
         "egret/display/DisplayObjectContainer.ts",
         "egret/display/StageScaleMode.ts",

@@ -43,12 +43,11 @@ module egret {
             return this._properties._type == TextFieldType.INPUT;
         }
 
-        public _inputEnabled:boolean = false;
         public _setTouchEnabled(value:boolean):void {
             super._setTouchEnabled(value);
 
             if (this.isInput()) {
-                this._inputEnabled = true;
+                this._setFlag(DisplayObjectFlags.INPUT_ENABLED, true);
             }
         }
 
@@ -70,10 +69,10 @@ module egret {
             if (properties._type != value) {
                 properties._type = value;
                 if (properties._type == TextFieldType.INPUT) {//input，如果没有设置过宽高，则设置默认值为100，30
-                    if (!this._hasWidthSet) {
+                    if (!this._getFlag(DisplayObjectFlags.HAS_WIDTH_SET)) {
                         this._setWidth(100);
                     }
-                    if (!this._hasHeightSet) {
+                    if (!this._getFlag(DisplayObjectFlags.HAS_HEIGHT_SET)) {
                         this._setHeight(30);
                     }
 
@@ -117,7 +116,7 @@ module egret {
         public _setSizeDirty():void {
             super._setSizeDirty();
 
-            this._isArrayChanged = true;
+            this._setFlag(DisplayObjectFlags.IS_ARRAY_CHANGED, true);
         }
 
         public _setTextDirty():void {
@@ -140,7 +139,7 @@ module egret {
             var self = this;
             var properties:egret.TextFieldProperties = self._properties;
 
-            this._isFlow = false;
+            this._setFlag(DisplayObjectFlags.IS_FLOW, false);
             if (properties._text != value) {
                 this._setTextDirty();
                 properties._text = value;
@@ -647,7 +646,7 @@ module egret {
 
         public _updateTransform():void {
             if (this._properties._type == TextFieldType.INPUT) {
-                if (this._normalDirty) {//本身有变化
+                if (this._getFlag(DisplayObjectFlags.NORMAL_DIRTY)) {//本身有变化
                     //this._clearDirty();
                     this._inputUtils._updateProperties();
                 }
@@ -665,7 +664,7 @@ module egret {
             var properties:egret.TextFieldProperties = self._properties;
 
             if (properties._type == egret.TextFieldType.INPUT) {
-                if (self._isTyping) {
+                if (self._getFlag(DisplayObjectFlags.IS_TYPING)) {
                     return;
                 }
             }
@@ -703,9 +702,6 @@ module egret {
             return Rectangle.identity.initialize(0, 0, properties._textMaxWidth, TextFieldUtils._getTextHeight(self));
         }
 
-
-        private _isFlow:boolean = false;
-
         /**
          * 设置富文本
          * @param textArr 富文本数据
@@ -713,7 +709,7 @@ module egret {
         public set textFlow(textArr:Array<egret.ITextElement>) {
             var self = this;
             var properties:egret.TextFieldProperties = self._properties;
-            this._isFlow = true;
+            this._setFlag(DisplayObjectFlags.IS_FLOW, true);
             var text:string = "";
             if (textArr == null)
                 textArr = [];
@@ -755,10 +751,9 @@ module egret {
         }
 
         private _textArr:Array<egret.ITextElement> = [];
-        private _isArrayChanged:boolean = false;
 
         private setMiddleStyle(textArr:Array<egret.ITextElement>):void {
-            this._isArrayChanged = true;
+            this._setFlag(DisplayObjectFlags.IS_ARRAY_CHANGED, true);
             this._textArr = textArr;
             this._setSizeDirty();
         }
@@ -784,11 +779,10 @@ module egret {
         public _getLinesArr():Array<egret.ILineElement> {
             var self = this;
             var properties:egret.TextFieldProperties = self._properties;
-            if (!self._isArrayChanged) {
+            if (!self._getFlag(DisplayObjectFlags.IS_ARRAY_CHANGED)) {
                 return self._linesArr;
             }
-
-            self._isArrayChanged = false;
+            self._setFlag(DisplayObjectFlags.IS_ARRAY_CHANGED, false);
             var text2Arr:Array<egret.ITextElement> = self._textArr;
             var renderContext = egret.MainContext.instance.rendererContext;
 
@@ -797,12 +791,12 @@ module egret {
             properties._textMaxWidth = 0;
 
             //宽度被设置为0
-            if (self._hasWidthSet && self._explicitWidth == 0) {
+            if (self._getFlag(DisplayObjectFlags.HAS_WIDTH_SET) && self._explicitWidth == 0) {
                 properties._numLines = 0;
                 return [{ width: 0, height: 0, charNum:0, elements: [], hasNextLine:false }];
             }
 
-            if (!self._isFlow) {
+            if (!self._getFlag(DisplayObjectFlags.IS_FLOW)) {
                 renderContext.setupFont(self);
             }
 
@@ -843,11 +837,11 @@ module egret {
                         }
                     }
                     else {
-                        if (self._isFlow) {
+                        if (self._getFlag(DisplayObjectFlags.IS_FLOW)) {
                             renderContext.setupFont(self, element.style);
                         }
                         var w:number = renderContext.measureText(textArr[j]);
-                        if (!self._hasWidthSet) {//没有设置过宽
+                        if (!self._getFlag(DisplayObjectFlags.HAS_WIDTH_SET)) {//没有设置过宽
                             lineW += w;
                             lineCharNum += textArr[j].length;
                             lineElement.elements.push(<egret.IWTextElement>{width:w, text:textArr[j], style:element.style});
@@ -927,7 +921,6 @@ module egret {
             return linesArr;
         }
 
-        public _isTyping:boolean = false;
         /**
          * @private
          * @param renderContext
@@ -943,12 +936,12 @@ module egret {
                 return;
             }
 
-            var maxWidth:number = self._hasWidthSet ? self._explicitWidth : properties._textMaxWidth;
+            var maxWidth:number = self._getFlag(DisplayObjectFlags.HAS_WIDTH_SET) ? self._explicitWidth : properties._textMaxWidth;
             var textHeight:number = TextFieldUtils._getTextHeight(self);
 
             var drawY:number = 0;
             var startLine:number = TextFieldUtils._getStartLine(self);
-            if (self._hasHeightSet && self._explicitHeight > textHeight) {
+            if (self._getFlag(DisplayObjectFlags.HAS_HEIGHT_SET) && self._explicitHeight > textHeight) {
                 var valign:number = TextFieldUtils._getValign(self);
                 drawY += valign * (self._explicitHeight - textHeight);
             }
@@ -964,7 +957,7 @@ module egret {
                     if (properties._type == egret.TextFieldType.INPUT && !properties._multiline) {
                         break;
                     }
-                    if (self._hasHeightSet && drawY > self._explicitHeight) {
+                    if (self._getFlag(DisplayObjectFlags.HAS_HEIGHT_SET) && drawY > self._explicitHeight) {
                         break;
                     }
                 }

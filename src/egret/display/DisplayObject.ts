@@ -45,6 +45,21 @@ module egret {
      */
     export class DisplayObject extends EventDispatcher implements RenderData {
 
+
+        public _displayObjectFlags:number = 0;
+
+        public _getORFlag(flag1:DisplayObjectFlags, flag2:DisplayObjectFlags):boolean {
+            return (this._displayObjectFlags & (flag1 | flag2)) != 0;
+        }
+
+        public _getFlag(flag:DisplayObjectFlags):boolean {
+            return (this._displayObjectFlags & flag) === flag;
+        }
+
+        public _setFlag(flag:DisplayObjectFlags, value:boolean):void {
+            this._displayObjectFlags = value ? (this._displayObjectFlags | flag) : (this._displayObjectFlags & ~flag);
+        }
+
         public __hack_local_matrix:any = null;
 
         /**
@@ -52,27 +67,29 @@ module egret {
          */
         public constructor() {
             super();
+
+            this._setFlag(DisplayObjectFlags.NORMAL_DIRTY, true);
+            this._setFlag(DisplayObjectFlags.SIZE_DIRTY, true);
+            this._setFlag(DisplayObjectFlags.VISIBLE, true);
+
+
             this._worldTransform = new egret.Matrix();
             this._worldBounds = new egret.Rectangle(0, 0, 0, 0);
             this._cacheBounds = new egret.Rectangle(0, 0, 0, 0);
         }
 
-        public _normalDirty:boolean = true;
-
         public _setDirty():void {
-            this._normalDirty = true;
+            this._setFlag(DisplayObjectFlags.NORMAL_DIRTY, true);
         }
 
         public getDirty():boolean {
-            return this._normalDirty || this._sizeDirty;
+            return this._getORFlag(DisplayObjectFlags.NORMAL_DIRTY, DisplayObjectFlags.SIZE_DIRTY);
         }
 
         //对宽高有影响
-        private _sizeDirty:boolean = true;
-
         public _setParentSizeDirty():void {
             var parent = this._parent;
-            if (parent && (!(parent._hasWidthSet || parent._hasHeightSet))) {
+            if (parent && (!(parent._getFlag(DisplayObjectFlags.HAS_WIDTH_SET) || parent._getFlag(DisplayObjectFlags.HAS_HEIGHT_SET)))) {
                 parent._setSizeDirty();
             }
         }
@@ -83,10 +100,10 @@ module egret {
         public _sizeChangeCallTarget:any = null;
 
         public _setSizeDirty():void {
-            if (this._sizeDirty) {
+            if (this._getFlag(DisplayObjectFlags.SIZE_DIRTY)) {
                 return;
             }
-            this._sizeDirty = true;
+            this._setFlag(DisplayObjectFlags.SIZE_DIRTY, true);
 
             this._setDirty();
             this._setCacheDirty();
@@ -104,12 +121,12 @@ module egret {
 
         public _clearDirty():void {
             //todo 这个除了文本的，其他都没有clear过
-            this._normalDirty = false;
+            this._setFlag(DisplayObjectFlags.NORMAL_DIRTY, false);
         }
 
         public _clearSizeDirty():void {
             //todo 最好在enterFrame都重新算一遍
-            this._sizeDirty = false;
+            this._setFlag(DisplayObjectFlags.SIZE_DIRTY, false);
         }
 
         /**
@@ -316,8 +333,6 @@ module egret {
             }
         }
 
-        public _visible:boolean = true;
-
         /**
          * 显示对象是否可见。
          * 不可见的显示对象已被禁用。例如，如果实例的 visible=false，则无法单击该对象。
@@ -325,7 +340,7 @@ module egret {
          * @member {boolean} egret.DisplayObject#visible
          */
         public get visible():boolean {
-            return this._visible;
+            return this._getFlag(DisplayObjectFlags.VISIBLE);
         }
 
         public set visible(value:boolean) {
@@ -333,8 +348,8 @@ module egret {
         }
 
         public _setVisible(value:boolean):void {
-            if (this._visible != value) {
-                this._visible = value;
+            if (this._getFlag(DisplayObjectFlags.VISIBLE) != value) {
+                this._setFlag(DisplayObjectFlags.VISIBLE, value);
                 this._setSizeDirty();
             }
         }
@@ -425,15 +440,13 @@ module egret {
             }
         }
 
-        public _touchEnabled:boolean = false;
-
         /**
          * 指定此对象是否接收鼠标/触摸事件
          * @member {boolean} egret.DisplayObject#touchEnabled
          * @default false 默认为 false 即不可以接收。
          */
         public get touchEnabled():boolean {
-            return this._touchEnabled;
+            return this._getFlag(DisplayObjectFlags.TOUCH_ENABLED);
         }
 
         public set touchEnabled(value:boolean) {
@@ -441,7 +454,7 @@ module egret {
         }
 
         public _setTouchEnabled(value:boolean):void {
-            this._touchEnabled = value;
+            this._setFlag(DisplayObjectFlags.TOUCH_ENABLED, value);
         }
 
         /**
@@ -538,8 +551,6 @@ module egret {
             return this._getSize(Rectangle.identity).height;
         }
 
-        public _hasWidthSet:boolean = false;
-
         public set width(value:number) {
             this._setWidth(value);
         }
@@ -551,10 +562,8 @@ module egret {
             this._setSizeDirty();
             this._setCacheDirty();
             this._explicitWidth = value;
-            this._hasWidthSet = NumberUtils.isNumber(value);
+            this._setFlag(DisplayObjectFlags.HAS_WIDTH_SET, NumberUtils.isNumber(value));
         }
-
-        public _hasHeightSet:boolean = false;
 
         public set height(value:number) {
             this._setHeight(value);
@@ -567,7 +576,7 @@ module egret {
             this._setSizeDirty();
             this._setCacheDirty();
             this._explicitHeight = value;
-            this._hasHeightSet = NumberUtils.isNumber(value);
+            this._setFlag(DisplayObjectFlags.HAS_HEIGHT_SET, NumberUtils.isNumber(value));
         }
 
         /**
@@ -584,15 +593,13 @@ module egret {
          */
         public worldAlpha:number = 1;
 
-        public _isContainer:boolean = false;
-
         /**
          * @private
          * @param renderContext
          */
         public _draw(renderContext:RendererContext):void {
             var o = this;
-            if (!o._visible) {
+            if (!o._getFlag(DisplayObjectFlags.VISIBLE)) {
                 o.destroyCacheBounds();
                 return;
             }
@@ -601,7 +608,7 @@ module egret {
                 o.destroyCacheBounds();
                 return;
             }
-            var isCommandPush = MainContext.__use_new_draw && o._isContainer;
+            var isCommandPush = MainContext.__use_new_draw && o._getFlag(DisplayObjectFlags.IS_CONTAINER);
             if(o._filter && !isCommandPush) {
                 renderContext.setGlobalFilter(o._filter);
             }
@@ -663,16 +670,16 @@ module egret {
          */
         private drawCacheTexture(renderContext:RendererContext):boolean {
             var display:egret.DisplayObject = this;
-            if (display._cacheAsBitmap == false) {
+            if (display._getFlag(DisplayObjectFlags.CACHE_AS_BITMAP) == false) {
                 return false;
             }
             var bounds = display.getBounds(Rectangle.identity);
             var texture_scale_factor = egret.MainContext.instance.rendererContext._texture_scale_factor;
-            if (display._cacheDirty || display._texture_to_render == null ||
+            if (display._getFlag(DisplayObjectFlags.CACHE_DIRTY) || display._texture_to_render == null ||
                 Math.round(bounds.width) != Math.round(display._texture_to_render._sourceWidth * texture_scale_factor) ||
                 Math.round(bounds.height) != Math.round(display._texture_to_render._sourceHeight * texture_scale_factor)) {
                 var cached = display._makeBitmapCache();
-                display._cacheDirty = !cached;
+                display._setFlag(DisplayObjectFlags.CACHE_DIRTY, !cached);
             }
 
             //没有成功生成cache的情形
@@ -697,7 +704,13 @@ module egret {
          * @public
          * @member {string} egret.DisplayObject#blendMode
          */
-        public needDraw:boolean = false;
+        public set needDraw(value:boolean) {
+            this._setFlag(DisplayObjectFlags.NEED_DRAW, value);
+        }
+
+        public get needDraw():boolean {
+            return this._getFlag(DisplayObjectFlags.NEED_DRAW);
+        }
 
         /**
          * @private
@@ -705,12 +718,12 @@ module egret {
          */
         public _updateTransform():void {
             var o = this;
-            if (!o._visible) {
+            if (!o._getFlag(DisplayObjectFlags.VISIBLE)) {
                 return;
             }
             o._calculateWorldTransform();
             if(MainContext._renderLoopPhase == "updateTransform") {
-                if(o.needDraw || o._texture_to_render || o._cacheAsBitmap) {
+                if(o._getFlag(DisplayObjectFlags.NEED_DRAW) || o._texture_to_render || o._getFlag(DisplayObjectFlags.CACHE_AS_BITMAP)) {
                     RenderCommand.push(o._draw, o);
                 }
             }
@@ -760,8 +773,8 @@ module egret {
         public getBounds(resultRect?:Rectangle, calculateAnchor:boolean = true):egret.Rectangle {
 //            if (this._cacheBounds.x == 0 && this._cacheBounds.y == 0 && this._cacheBounds.width == 0 && this._cacheBounds.height == 0) {
             var rect:Rectangle = this._measureBounds();
-            var w:number = this._hasWidthSet ? this._explicitWidth : rect.width;
-            var h:number = this._hasHeightSet ? this._explicitHeight : rect.height;
+            var w:number = this._getFlag(DisplayObjectFlags.HAS_WIDTH_SET) ? this._explicitWidth : rect.width;
+            var h:number = this._getFlag(DisplayObjectFlags.HAS_HEIGHT_SET) ? this._explicitHeight : rect.height;
 
             //记录测量宽高
             this._rectW = rect.width;
@@ -873,7 +886,7 @@ module egret {
          * @returns {*}
          */
         public hitTest(x:number, y:number, ignoreTouchEnabled:boolean = false):DisplayObject {
-            if (!this._visible || (!ignoreTouchEnabled && !this._touchEnabled)) {
+            if (!this._getFlag(DisplayObjectFlags.VISIBLE) || (!ignoreTouchEnabled && !this._getFlag(DisplayObjectFlags.TOUCH_ENABLED))) {
                 return null;
             }
             var bound:Rectangle = this.getBounds(Rectangle.identity, false);
@@ -961,16 +974,16 @@ module egret {
         }
 
         public _getSize(resultRect:Rectangle):Rectangle {
-            if (this._hasHeightSet && this._hasWidthSet) {
+            if (this._getFlag(DisplayObjectFlags.HAS_HEIGHT_SET) && this._getFlag(DisplayObjectFlags.HAS_WIDTH_SET)) {
                 this._clearSizeDirty();
                 return resultRect.initialize(0, 0, this._explicitWidth, this._explicitHeight);
             }
 
             this._measureSize(resultRect);
-            if (this._hasWidthSet){
+            if (this._getFlag(DisplayObjectFlags.HAS_WIDTH_SET)){
                 resultRect.width = this._explicitWidth;
             }
-            if (this._hasHeightSet){
+            if (this._getFlag(DisplayObjectFlags.HAS_HEIGHT_SET)){
                 resultRect.height = this._explicitHeight;
             }
             return resultRect;
@@ -983,7 +996,7 @@ module egret {
          * 测量显示对象坐标与大小
          */
         public _measureSize(resultRect:Rectangle):egret.Rectangle {
-            if (this._sizeDirty) {
+            if (this._getFlag(DisplayObjectFlags.SIZE_DIRTY)) {
                 resultRect = this._measureBounds();
                 this._rectW = resultRect.width;
                 this._rectH = resultRect.height;
@@ -1128,9 +1141,6 @@ module egret {
             return false;
         }
 
-
-        private _cacheAsBitmap:boolean = false;
-
         /**
          * 如果设置为 true，则 egret 运行时将缓存显示对象的内部位图表示形式。此缓存可以提高包含复杂矢量内容的显示对象的性能。
          * 具有已缓存位图的显示对象的所有矢量数据都将被绘制到位图而不是主显示。像素按一对一与父对象进行映射。如果位图的边界发生更改，则将重新创建位图而不会拉伸它。
@@ -1138,13 +1148,13 @@ module egret {
          * @member {number} egret.DisplayObject#cacheAsBitmap
          */
         public get cacheAsBitmap():boolean {
-            return this._cacheAsBitmap;
+            return this._getFlag(DisplayObjectFlags.CACHE_AS_BITMAP);
         }
 
         private renderTexture:RenderTexture = null;
 
         public set cacheAsBitmap(bool:boolean) {
-            this._cacheAsBitmap = bool;
+            this._setFlag(DisplayObjectFlags.CACHE_AS_BITMAP, bool);
             if (bool) {
                 egret.callLater(this._makeBitmapCache, this);
             }
@@ -1167,10 +1177,8 @@ module egret {
             return result;
         }
 
-        private _cacheDirty:boolean = false;
-
         private _setCacheDirty(dirty = true) {
-            this._cacheDirty = dirty;
+            this._setFlag(DisplayObjectFlags.CACHE_DIRTY, dirty);
         }
 
         public static getTransformBounds(bounds:egret.Rectangle, mtx:egret.Matrix):egret.Rectangle {

@@ -91,8 +91,8 @@ module egret {
                 return;
             }
             this._texture_to_render = texture;
-            var destW:number = this._hasWidthSet?this._explicitWidth:texture._textureWidth;
-            var destH:number = this._hasHeightSet?this._explicitHeight:texture._textureHeight;
+            var destW:number = this._getFlag(DisplayObjectFlags.HAS_WIDTH_SET)?this._explicitWidth:texture._textureWidth;
+            var destH:number = this._getFlag(DisplayObjectFlags.HAS_HEIGHT_SET)?this._explicitHeight:texture._textureHeight;
             Bitmap._drawBitmap(renderContext,destW,destH,this);
         }
 
