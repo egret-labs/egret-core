@@ -1259,7 +1259,7 @@ module egret.gui {
 		 * @member egret.gui.UIComponent#preferredWidth
 		 */
 		public get preferredWidth():number{
-			var w:number = this._getFlag(DisplayObjectFlags.HAS_WIDTH_SET) ? this._explicitWidth:this._measuredWidth;
+			var w:number = this._hasWidthSet ? this._explicitWidth:this._measuredWidth;
 			var scaleX:number = this._scaleX;
 			if(scaleX<0){
 				scaleX = -scaleX;
@@ -1271,7 +1271,7 @@ module egret.gui {
 		 * @member egret.gui.UIComponent#preferredHeight
 		 */
 		public get preferredHeight():number{
-			var h:number = this._getFlag(DisplayObjectFlags.HAS_HEIGHT_SET) ? this._explicitHeight:this._measuredHeight;
+			var h:number = this._hasHeightSet ? this._explicitHeight:this._measuredHeight;
 			var scaleY:number = this._scaleY;
 			if(scaleY<0){
 				scaleY = -scaleY;
@@ -1329,7 +1329,7 @@ module egret.gui {
 			if(this._layoutWidthExplicitlySet){
 				w = this._width;
 			}
-			else if(this._getFlag(DisplayObjectFlags.HAS_WIDTH_SET)){
+			else if(this._hasWidthSet){
 				w = this._explicitWidth;
 			}
 			else{
@@ -1351,7 +1351,7 @@ module egret.gui {
 			if(this._layoutHeightExplicitlySet){
 				h = this._height;
 			}
-			else if(this._getFlag(DisplayObjectFlags.HAS_HEIGHT_SET)){
+			else if(this._hasHeightSet){
 				h = this._explicitHeight;
 			}
 			else{

@@ -175,14 +175,14 @@ module egret {
                 var textField:egret.TextField = <egret.TextField>this;
                 var properties:egret.TextFieldProperties = textField._properties;
                 if (properties._type == egret.TextFieldType.INPUT) {
-                    if (textField._getFlag(DisplayObjectFlags.IS_TYPING)) {
+                    if (textField._isTyping) {
                         return;
                     }
                 }
 
                 if (textField.getDirty()) {
                     this._texture_to_render = this.renderTexture;
-                    this._setFlag(egret.DisplayObjectFlags.CACHE_AS_BITMAP, true);
+                    this._cacheAsBitmap = true;
                 }
                 egret.DisplayObject.prototype._draw.call(textField, renderContext);
             };

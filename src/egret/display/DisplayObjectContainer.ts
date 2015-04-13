@@ -47,22 +47,22 @@ module egret {
         constructor() {
             super();
             this._children = [];
+            this._isContainer = true;
 
-            this._setFlag(DisplayObjectFlags.IS_CONTAINER, true);
-            this._setFlag(DisplayObjectFlags.TOUCH_CHILDREN, true);
         }
 
+        public _touchChildren:boolean = true;
         /**
          * 指定此对象的子项以及子孙项是否接收鼠标/触摸事件
          * 默认值为 true 即可以接收。
          * @member {boolean} egret.DisplayObjectContainer#touchChildren
          */
         public get touchChildren():boolean {
-            return this._getFlag(DisplayObjectFlags.TOUCH_CHILDREN);
+            return this._touchChildren;
         }
 
         public set touchChildren(value:boolean) {
-            this._setFlag(DisplayObjectFlags.TOUCH_CHILDREN, value);
+            this._touchChildren = value;
         }
 
         public _children:Array<DisplayObject>;
@@ -330,7 +330,7 @@ module egret {
         public _updateTransform():void {
             var o = this;
 
-            if (!o._getFlag(DisplayObjectFlags.VISIBLE)) {
+            if (!o._visible) {
                 return;
             }
             if(o._filter) {
@@ -344,7 +344,7 @@ module egret {
                 RenderCommand.push(o._pushMask, o);
             }
             super._updateTransform();
-            if(!o._getFlag(egret.DisplayObjectFlags.CACHE_AS_BITMAP) || !o._texture_to_render) {
+            if(!o["_cacheAsBitmap"] || !o._texture_to_render) {
                 for (var i = 0, children = o._children, length = children.length; i < length; i++) {
                     var child:DisplayObject = children[i];
                     child._updateTransform();
@@ -385,7 +385,7 @@ module egret {
 
             for (var i = 0; i < l; i++) {
                 var child = children[i];
-                if (!child._getFlag(DisplayObjectFlags.VISIBLE)) {
+                if (!child._visible) {
                     continue;
                 }
 
@@ -430,7 +430,7 @@ module egret {
         public hitTest(x:number, y:number, ignoreTouchEnabled:boolean = false):DisplayObject {
             var o = this;
             var result:DisplayObject;
-            if (!o._getFlag(DisplayObjectFlags.VISIBLE)) {
+            if (!o._visible) {
                 return null;
             }
             if (o._scrollRect) {
@@ -450,7 +450,7 @@ module egret {
             }
             var children = o._children;
             var l = children.length;
-            var touchChildren = o._getFlag(DisplayObjectFlags.TOUCH_CHILDREN);//这里不用考虑父级的touchChildren，从父级调用下来过程中已经判断过了。
+            var touchChildren = o._touchChildren;//这里不用考虑父级的touchChildren，从父级调用下来过程中已经判断过了。
             for (var i = l - 1; i >= 0; i--) {
                 var child = children[i];
                 var mtx = child._getMatrix();
@@ -466,7 +466,7 @@ module egret {
                         return o;
                     }
 
-                    if (childHitTestResult._getFlag(DisplayObjectFlags.TOUCH_ENABLED) && touchChildren) {
+                    if (childHitTestResult._touchEnabled && touchChildren) {
                         return childHitTestResult;
                     }
 

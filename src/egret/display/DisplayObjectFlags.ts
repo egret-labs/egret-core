@@ -26,28 +26,5 @@
  */
 module egret {
     export const enum DisplayObjectFlags{
-        //DisplayObject
-        VISIBLE = 0x0001,
-        CACHE_AS_BITMAP = 0x0002,
-        TOUCH_ENABLED = 0x0004,
-
-        HAS_WIDTH_SET = 0x0010,
-        HAS_HEIGHT_SET = 0x0020,
-
-        NORMAL_DIRTY = 0x0040,
-        SIZE_DIRTY = 0x0080,
-        CACHE_DIRTY = 0x0100,
-
-        IS_CONTAINER = 0x0200,
-        NEED_DRAW = 0x0400,
-
-        //DisplayObjectContainer
-        TOUCH_CHILDREN = 0x0008,
-
-        //TextField
-        IS_TYPING = 0X0800,
-        IS_ARRAY_CHANGED = 0X1000,
-        IS_FLOW = 0X2000,
-        INPUT_ENABLED = 0X4000,
     }
 }

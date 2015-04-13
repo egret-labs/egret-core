@@ -146,11 +146,11 @@ module egret {
          * @returns {egret.DisplayObject}
          */
         public hitTest(x, y, ignoreTouchEnabled:boolean = false):DisplayObject {
-            if (!this._getFlag(DisplayObjectFlags.TOUCH_ENABLED)) {
+            if (!this._touchEnabled) {
                 return null;
             }
             var result:DisplayObject;
-            if (!this._getFlag(DisplayObjectFlags.TOUCH_CHILDREN)) {
+            if (!this._touchChildren) {
                 return this;
             }
             var children = this._children;
@@ -166,7 +166,7 @@ module egret {
                 var point = Matrix.transformCoords(mtx, x, y);
                 result = child.hitTest(point.x, point.y, true);
                 if (result) {
-                    if (result._getFlag(DisplayObjectFlags.TOUCH_ENABLED)) {
+                    if (result._touchEnabled) {
                         return result;
                     }
                 }

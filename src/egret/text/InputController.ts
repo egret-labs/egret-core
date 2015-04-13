@@ -45,8 +45,8 @@ module egret {
         }
 
         public _addStageText():void {
-            if (!this._text._getFlag(DisplayObjectFlags.INPUT_ENABLED)) {
-                this._text._setFlag(DisplayObjectFlags.TOUCH_ENABLED, true);
+            if (!this._text._inputEnabled) {
+                this._text._touchEnabled = true;
             }
 
             this.stageText._add();
@@ -61,8 +61,8 @@ module egret {
         }
 
         public _removeStageText():void {
-            if (!this._text._getFlag(DisplayObjectFlags.INPUT_ENABLED)) {
-                this._text._setFlag(DisplayObjectFlags.TOUCH_ENABLED, false);
+            if (!this._text._inputEnabled) {
+                this._text._touchEnabled = false;
             }
 
             this.stageText._remove();
@@ -88,13 +88,13 @@ module egret {
         private focusHandler(event:Event):void {
             //不再显示竖线，并且输入框显示最开始
             this._isFocus = true;
-            this._text._setFlag(DisplayObjectFlags.IS_TYPING, true);
+            this._text._isTyping = true;
         }
 
         private blurHandler(event:Event):void {
             //不再显示竖线，并且输入框显示最开始
             this._isFocus = false;
-            this._text._setFlag(DisplayObjectFlags.IS_TYPING, false);
+            this._text._isTyping = false;
         }
 
         //点中文本
@@ -102,7 +102,7 @@ module egret {
             event.stopPropagation();
 
             var self = this;
-            if (!this._text._getFlag(DisplayObjectFlags.VISIBLE)) {
+            if (!this._text._visible) {
                 return;
             }
 
@@ -141,7 +141,7 @@ module egret {
         public _updateTransform():void {//
             this._text._updateBaseTransform();
 
-            if (!this._text._getFlag(DisplayObjectFlags.VISIBLE) && this.stageText) {
+            if (!this._text._visible && this.stageText) {
                 this._hideInput();
             }
         }
@@ -158,7 +158,7 @@ module egret {
             }
             else {
                 var item:DisplayObject = this._text;
-                var visible:boolean = item._getFlag(DisplayObjectFlags.VISIBLE);
+                var visible:boolean = item._visible;
                 while (true) {
                     if (!visible) {
                         break;
@@ -167,7 +167,7 @@ module egret {
                     if (item == stage) {
                         break;
                     }
-                    visible = item._getFlag(DisplayObjectFlags.VISIBLE);
+                    visible = item._visible;
                 }
                 this.stageText._setVisible(visible);
             }
