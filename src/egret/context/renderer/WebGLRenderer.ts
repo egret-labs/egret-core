@@ -178,6 +178,13 @@ module egret {
 
             egret.TextField.prototype._draw = function (renderContext) {
                 var textField:egret.TextField = <egret.TextField>this;
+                var properties:egret.TextFieldProperties = textField._properties;
+                if (properties._type == egret.TextFieldType.INPUT) {
+                    if (textField._isTyping) {
+                        return;
+                    }
+                }
+
                 if (textField.getDirty()) {
                     this._texture_to_render = this.renderTexture;
                     this._cacheAsBitmap = true;

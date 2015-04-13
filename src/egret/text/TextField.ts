@@ -664,7 +664,12 @@ module egret {
             var self = this;
             var properties:egret.TextFieldProperties = self._properties;
 
-            if (properties._textMaxWidth == 0 && properties._type != TextFieldType.INPUT) {
+            if (properties._type == egret.TextFieldType.INPUT) {
+                if (self._isTyping) {
+                    return;
+                }
+            }
+            else if (properties._textMaxWidth == 0) {
                 return;
             }
 
@@ -931,12 +936,6 @@ module egret {
         private drawText(renderContext:RendererContext):void {
             var self = this;
             var properties:egret.TextFieldProperties = self._properties;
-
-            if (properties._type == egret.TextFieldType.INPUT) {
-                if (self._isTyping) {
-                    return;
-                }
-            }
 
             //先算出需要的数值
             var lines:Array<egret.ILineElement> = self._getLinesArr();
