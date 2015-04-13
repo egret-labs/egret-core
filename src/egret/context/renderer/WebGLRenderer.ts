@@ -182,7 +182,7 @@ module egret {
 
                 if (textField.getDirty()) {
                     this._texture_to_render = this.renderTexture;
-                    this._cacheAsBitmap = true;
+                    this._setFlag(egret.DisplayObjectFlags.CACHE_AS_BITMAP, true);
                 }
                 egret.DisplayObject.prototype._draw.call(textField, renderContext);
             };
