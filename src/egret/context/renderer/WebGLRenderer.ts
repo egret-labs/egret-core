@@ -175,7 +175,7 @@ module egret {
                 var textField:egret.TextField = <egret.TextField>this;
                 var properties:egret.TextFieldProperties = textField._properties;
                 if (properties._type == egret.TextFieldType.INPUT) {
-                    if (textField._isTyping) {
+                    if (textField._getFlag(DisplayObjectFlags.IS_TYPING)) {
                         return;
                     }
                 }
