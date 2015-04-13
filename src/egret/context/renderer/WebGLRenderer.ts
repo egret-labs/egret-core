@@ -144,8 +144,8 @@ module egret {
                 renderFilter._drawAreaList.length = 0;
                 this.renderContext.clearScreen();
                 this.renderContext.onRenderStart();
-                this.renderTexture.dispose();
                 Texture.deleteWebGLTexture(this.renderTexture);
+                this.renderTexture.dispose();
                 if (this._colorTransform) {
                     this.renderContext.setGlobalColorTransform(this._colorTransform.matrix);
                 }
