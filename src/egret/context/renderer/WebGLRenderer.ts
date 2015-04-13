@@ -109,6 +109,7 @@ module egret {
 
                 if (!this._bitmapData) {
                     this._bitmapData = document.createElement("canvas");
+                    this._bitmapData["avaliable"] = true;
                     this.renderContext = egret.RendererContext.createRendererContext(this._bitmapData);
                 }
                 var width = bounds.width;
