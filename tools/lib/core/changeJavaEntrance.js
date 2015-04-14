@@ -12,7 +12,7 @@ function init(url, platform) {
     var DOMParser = require('../core/xmldom/dom-parser').DOMParser;
     var xmlContent = file.read(path.join(url, "AndroidManifest.xml"));
     var doc = new DOMParser().parseFromString(xmlContent);
-    var filePath = doc.documentElement. getElementsByTagName('manifest')._node. getAttribute('package').replace(/\./g, "/");
+    var filePath = doc.documentElement.getElementsByTagName('manifest')._node.getAttribute('package').replace(/\./g, "/");
     var javaName;
     var activities = doc.documentElement.getElementsByTagName("activity");
     for (var i = 0; i < activities.length; i++) {
