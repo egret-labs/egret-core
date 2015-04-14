@@ -272,3 +272,8 @@ egret.RenderTexture.prototype.dispose = function () {
         this._bitmapData = null;
     }
 };
+
+egret.getOption = function (key:string) {
+    console.log("egret_native.getOption");
+    return egret_native.getOption(key);
+};

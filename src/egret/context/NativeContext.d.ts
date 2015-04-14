@@ -74,7 +74,7 @@ declare module egret_native {
 
     function saveRecord(filepath:string, fileContent:string):void;
 
-    function getOption(type:string):any;
+    function getOption(type:string):string;
 
     module Audio {
         function preloadBackgroundMusic(path:string):void;
