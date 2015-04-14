@@ -91,15 +91,8 @@ module RES {
             return url;
         }
 
-        /**
-         * @inheritDoc
-         */
-        public destroyRes(name:string):boolean{
-            if(this.fileDic[name]){
-                delete this.fileDic[name];
-                return true;
-            }
-            return false;
+        protected onResourceDestroy(font:egret.BitmapFont){
+            font.dispose();
         }
     }
 }

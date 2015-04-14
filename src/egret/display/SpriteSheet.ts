@@ -126,5 +126,11 @@ module egret {
             this._textureMap[name] = texture;
             return texture;
         }
+
+        public dispose():void {
+            if(this.texture) {
+                this.texture.dispose();
+            }
+        }
     }
 }
