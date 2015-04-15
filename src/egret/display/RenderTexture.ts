@@ -71,8 +71,10 @@ module egret {
 
             var x = bounds.x;
             var y = bounds.y;
-            var width = bounds.width;
-            var height = bounds.height;
+            var originalWidth = bounds.width;
+            var originalHeight = bounds.height;
+            var width = originalWidth;
+            var height = originalHeight;
 
             var texture_scale_factor = egret.MainContext.instance.rendererContext._texture_scale_factor;
             width /= texture_scale_factor;
@@ -146,8 +148,8 @@ module egret {
             renderFilter._drawAreaList = drawAreaList;
             this._sourceWidth = width;
             this._sourceHeight = height;
-            this._textureWidth = this._sourceWidth * texture_scale_factor;
-            this._textureHeight = this._sourceHeight * texture_scale_factor;
+            this._textureWidth = originalWidth;
+            this._textureHeight = originalHeight;
 
             this.end();
 

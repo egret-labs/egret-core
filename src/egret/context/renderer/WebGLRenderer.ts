@@ -112,8 +112,10 @@ module egret {
                     this._bitmapData["avaliable"] = true;
                     this.renderContext = egret.RendererContext.createRendererContext(this._bitmapData);
                 }
-                var width = bounds.width;
-                var height = bounds.height;
+                var originalWidth = bounds.width;
+                var originalHeight = bounds.height;
+                var width = originalWidth;
+                var height = originalHeight;
 
                 var texture_scale_factor = egret.MainContext.instance.rendererContext._texture_scale_factor;
                 width /= texture_scale_factor;
@@ -169,8 +171,8 @@ module egret {
                 this.renderTexture._bitmapData = this._bitmapData;
                 this.renderTexture._sourceWidth = width;
                 this.renderTexture._sourceHeight = height;
-                this.renderTexture._textureWidth = this.renderTexture._sourceWidth * texture_scale_factor;
-                this.renderTexture._textureHeight = this.renderTexture._sourceHeight * texture_scale_factor;
+                this.renderTexture._textureWidth = originalWidth;
+                this.renderTexture._textureHeight = originalHeight;
 
                 this._texture_to_render = this.renderTexture;
                 return true;

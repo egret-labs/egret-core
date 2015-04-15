@@ -93,11 +93,11 @@ module egret {
                     var lastLocalVersionData = self.getData(self.localVersionDataPath, false);
                     if (lastLocalVersionData) {//清理不同的文件
                         for (var key in lastLocalVersionData) {
-                            egret_native.deleteUpdateFile(key);
+                            self.deleteFile(key);
                         }
                     }
-                    egret_native.deleteUpdateFile(self.localVersionDataPath);
-                    egret_native.deleteUpdateFile(self.localVersionCodePath);
+                    self.deleteFile(self.localVersionDataPath);
+                    self.deleteFile(self.localVersionCodePath);
                     self.loadOver();
                     return;
                 }
@@ -110,7 +110,7 @@ module egret {
                         }
 
                         //删除版本号对比
-                        egret_native.deleteUpdateFile(self.localVersionCodePath);
+                        self.deleteFile(self.localVersionCodePath);
 
                         self.save(versionPath, JSON.stringify(appVersionJson));
 
@@ -119,7 +119,7 @@ module egret {
                         if (lastLocalVersionData) {//清理不同的文件
                             for (var key in lastLocalVersionData) {
                                 if (lastLocalVersionData[key] != self.localVersionData[key]) {
-                                    egret_native.deleteUpdateFile(key);
+                                    self.deleteFile(key);
                                 }
                             }
                         }
@@ -129,7 +129,7 @@ module egret {
 
                         for (var key in self.localVersionData) {
                             if (lastLocalVersionData[key] != self.localVersionData[key]) {
-                                egret_native.deleteUpdateFile(key);
+                                self.deleteFile(key);
                             }
                         }
 
@@ -155,6 +155,12 @@ module egret {
             }
 
             self.loadCodeVersion();
+        }
+
+        private deleteFile(file:string):void {
+            if (egret_native.deleteUpdateFile) {
+                egret_native.deleteUpdateFile(file);
+            }
         }
 
         //初始化本地版本控制号数据
@@ -229,35 +235,64 @@ module egret {
         }
 
         private save(path:string, value:string):void {
-            //egret_native.saveRecord(this.localVersionCodePath, JSON.stringify({"code" : this.newCode}));
-            egret_native.writeFileSync(path, value);
+
+            if (egret_native.writeFileSync) {
+                egret_native.writeFileSync(path, value);
+            }
+            else if (egret_native.saveRecord) {
+                egret_native.saveRecord(path, value);
+            }
         }
 
         private getData(filePath, isApp:boolean):Object {
-            if (isApp) {
-                var str:string = egret_native.readResourceFileSync(filePath);
-                return str != null ? JSON.parse(str) : null;
+            if (egret_native.readUpdateFileSync && egret_native.readResourceFileSync) {
+                if (isApp) {
+                    var str:string = egret_native.readResourceFileSync(filePath);
+                    return str != null ? JSON.parse(str) : null;
+                }
+                else {
+                    var str:string = egret_native.readUpdateFileSync(filePath);
+                    return str != null ? JSON.parse(str) : null;
+                }
             }
             else {
-                var str:string = egret_native.readUpdateFileSync(filePath);
-                return str != null ? JSON.parse(str) : null;
+                return this.getLocalDataByOld(filePath);
             }
         }
 
         private getLocalData(filePath):Object {
-            //先取更新目录
-            var content:string = egret_native.readUpdateFileSync(filePath);
-            if (content != null) {
-                return JSON.parse(content);
-            }
+            if (egret_native.readUpdateFileSync && egret_native.readResourceFileSync) {
+                //先取更新目录
+                var content:string = egret_native.readUpdateFileSync(filePath);
+                if (content != null) {
+                    return JSON.parse(content);
+                }
 
-            //再取资源目录
-            content = egret_native.readResourceFileSync(filePath);
-            if (content != null) {
-                return JSON.parse(content);
-            }
+                //再取资源目录
+                content = egret_native.readResourceFileSync(filePath);
+                if (content != null) {
+                    return JSON.parse(content);
+                }
 
-            return null;
+                return null;
+            }
+            else {
+                return this.getLocalDataByOld(filePath);
+            }
+        }
+
+        //todo 旧方式
+        private getLocalDataByOld(filePath):Object {
+            var data:Object = null;
+            if (egret_native.isRecordExists(filePath)) {
+                var str:string = egret_native.loadRecord(filePath);
+                data = JSON.parse(str);
+            }
+            else if (egret_native.isFileExists(filePath)) {
+                var str:string = egret_native.readFileSync(filePath);
+                data = JSON.parse(str);
+            }
+            return data;
         }
 
         /**
