@@ -497,7 +497,7 @@ module RES {
             var name:string = url;
             var res:any = analyzer.getRes(name);
             if(res){
-                compFunc.call(thisObject,res);
+                compFunc.call(thisObject,res,name);
                 return;
             }
             var args:any = {key:name,compFunc:compFunc,thisObject:thisObject};
