@@ -121,7 +121,7 @@ module egret {
             var length:number = list.length;
             for (var i:number = 0; i < length; i++) {
                 var bin:any = list[i];
-                if (bin.listener === listener && bin.thisObject === thisObject && bin.display === display) {
+                if (bin.listener == listener && bin.thisObject == thisObject && bin.display == display) {
                     return false;
                 }
                 if (insertIndex == -1 && bin.priority < priority) {
@@ -171,7 +171,7 @@ module egret {
             var length:number = list.length;
             for (var i:number = fromIdx; i < length; i++) {
                 var bin:any = list[i];
-                if (bin.listener === listener && bin.thisObject === thisObject && bin.display == display) {
+                if (bin.listener == listener && bin.thisObject == thisObject && bin.display == display) {
                     list.splice(i, 1);
                     return true;
                 }
