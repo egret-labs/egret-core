@@ -239,14 +239,39 @@ module egret {
                 bitmapData = document.createElement("img");
                 Texture._bitmapDataFactory[url] = bitmapData;
             }
-            bitmapData.onload = function () {
-                bitmapData["avaliable"] = true;
-                callback(0, bitmapData);
-            };
-            bitmapData.onerror = function () {
-                callback(1, bitmapData);
-            };
-            bitmapData.src = url;
+
+            var winURL = window["URL"] || window["webkitURL"];
+            if (typeof history.pushState == "function") {
+                var xhr = new XMLHttpRequest();
+                xhr.open("get", url, true);
+                xhr.responseType = "blob";
+                xhr.onload = function() {
+                    if (this.status == 200) {
+                        var blob = this.response;
+
+                        bitmapData.onload = function() {
+                            winURL.revokeObjectURL(bitmapData.src); // 清除释放
+
+                            bitmapData["avaliable"] = true;
+                            callback(0, bitmapData);
+                        };
+                        bitmapData.onerror = function () {
+                            callback(1, bitmapData);
+                        };
+                        bitmapData.src = winURL.createObjectURL(blob);
+                    }
+                };
+                xhr.send();
+            } else {
+                bitmapData.onload = function () {
+                    bitmapData["avaliable"] = true;
+                    callback(0, bitmapData);
+                };
+                bitmapData.onerror = function () {
+                    callback(1, bitmapData);
+                };
+                bitmapData.src = url;
+            }
         }
 
         public static _createBitmapDataForNative(url:string, callback:(code:number, bitmapData:any)=>void):void {
