@@ -258,7 +258,7 @@ module egret {
             }
 
             var winURL = window["URL"] || window["webkitURL"];
-            if (typeof history.pushState == "function") {
+            if (winURL) {
                 var xhr = new XMLHttpRequest();
                 xhr.open("get", url, true);
                 xhr.responseType = "blob";
