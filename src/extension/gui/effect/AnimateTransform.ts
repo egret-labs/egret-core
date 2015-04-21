@@ -223,7 +223,12 @@ module egret.gui {
             this.startDelay = tmpStartDelay;
             this.motionPaths = tmpAnimProps;
             transformInstance.duration = Math.max(this.duration, adjustedDuration);
+            if(getQualifiedClassName(this) != getQualifiedClassName(AnimateTransform))
+                transformInstance.easer = AnimateTransform.linearEaser;
         }
+
+        /**子效果默认的缓动函数*/
+        private static linearEaser:Linear = new Linear();
         
         private getGlobalStartTime():number{
             var globalStartTime:number = 0;
