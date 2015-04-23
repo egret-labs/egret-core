@@ -141,6 +141,7 @@
         "components/DropDownList.ts",
         "components/TabBarButton.ts",
         "components/TabBar.ts",
+        "components/ScrollerProperties.ts",
         "components/Scroller.ts",
         "components/EditableText.ts",
         "components/TextArea.ts",
