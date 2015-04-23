@@ -276,7 +276,7 @@ module egret {
 
                             bitmapData.onload = function () {
                                 winURL.revokeObjectURL(bitmapData.src); // 清除释放
-
+                                bitmapData["avaliable"] = true;
                                 Texture._onLoad(url, bitmapData);
                             };
                             bitmapData.onerror = function () {
