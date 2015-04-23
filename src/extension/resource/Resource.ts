@@ -578,7 +578,7 @@ module RES {
          */
         public destroyRes(name:string):boolean{
             var group:Array<any> = this.resConfig.getRawGroupByName(name);
-            if(group){
+            if(group && group.length > 0){
                 var index:number = this.loadedGroups.indexOf(name);
                 if(index!=-1){
                     this.loadedGroups.splice(index,1);
