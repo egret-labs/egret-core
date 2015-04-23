@@ -828,8 +828,8 @@ module egret {
             //todo:采用local_matrix模式下这里的逻辑需要修改
             var matrix:Matrix = DisplayObject.identityMatrixForGetConcatenated.identity();
             var o = this;
-            var do_props = o._DO_Props_;
             while (o != null) {
+                var do_props = o._DO_Props_;
                 if (do_props._anchorX != 0 || do_props._anchorY != 0) {
                     var bounds = o._getSize(Rectangle.identity);
                     matrix.prependTransform(do_props._x, do_props._y, do_props._scaleX, do_props._scaleY, do_props._rotation, do_props._skewX, do_props._skewY,

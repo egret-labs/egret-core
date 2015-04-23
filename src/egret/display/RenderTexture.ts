@@ -35,7 +35,7 @@ module egret {
      */
     export class RenderTexture extends Texture {
 
-        private renderContext;
+        public renderContext;
 
         /**
          * 创建一个 egret.RenderTexture 对象

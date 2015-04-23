@@ -74,7 +74,7 @@ module egret {
          * @param height {number} 矩形的高度（以像素为单位）。
          */
         public drawRect(x:number, y:number, width:number, height:number):void{
-            this.checkRect(x, y, width, height);
+            this._checkRect(x, y, width, height);
         }
 
         /**
@@ -85,7 +85,7 @@ module egret {
          * @param r {number} 圆的半径（以像素为单位）。
          */
         public drawCircle(x:number, y:number, r:number):void {
-            this.checkRect(x - r, y - r, 2 * r, 2 * r);
+            this._checkRect(x - r, y - r, 2 * r, 2 * r);
         }
 
         /**
@@ -99,7 +99,7 @@ module egret {
          * @param ellipseHeight {number} 用于绘制圆角的椭圆的高度（以像素为单位）。 （可选）如果未指定值，则默认值与为 ellipseWidth 参数提供的值相匹配。
          */
         public drawRoundRect(x:number, y:number, width:number, height:number, ellipseWidth:number, ellipseHeight?:number):void{
-            this.checkRect(x, y, width, height);
+            this._checkRect(x, y, width, height);
         }
 
         /**
@@ -111,7 +111,7 @@ module egret {
          * @param height {number} 矩形的高度（以像素为单位）。
          */
         public drawEllipse(x:number, y:number, width:number, height:number):void{
-            this.checkRect(x - width, y - height, 2 * width, 2 * height);
+            this._checkRect(x - width, y - height, 2 * width, 2 * height);
         }
 
         /**
@@ -137,7 +137,7 @@ module egret {
          * @param y {number} 一个表示相对于父显示对象注册点的垂直位置的数字（以像素为单位）。
          */
         public lineTo(x:number, y:number):void {
-            this.checkPoint(x, y);
+            this._checkPoint(x, y);
         }
 
         /**
@@ -153,8 +153,8 @@ module egret {
         public curveTo(controlX:number, controlY:number, anchorX:number, anchorY:number):void {
 
 
-            this.checkPoint(controlX, controlY);
-            this.checkPoint(anchorX, anchorY);
+            this._checkPoint(controlX, controlY);
+            this._checkPoint(anchorX, anchorY);
         }
 
         /**
@@ -164,7 +164,7 @@ module egret {
          * @param y {number} 一个表示相对于父显示对象注册点的垂直位置的数字（以像素为单位）。
          */
         public moveTo(x:number, y:number):void {
-            this.checkPoint(x, y);
+            this._checkPoint(x, y);
         }
 
         /**
@@ -197,7 +197,7 @@ module egret {
         private _minY:number = 0;
         private _maxX:number = 0;
         private _maxY:number = 0;
-        private checkRect(x:number, y:number, w:number, h:number):void {
+        public _checkRect(x:number, y:number, w:number, h:number):void {
             if(this._firstCheck) {
                 this._firstCheck = false;
                 this._minX = x;
@@ -216,7 +216,7 @@ module egret {
 
         private _lastX:number = 0;
         private _lastY:number = 0;
-        private checkPoint(x:number, y:number):void {
+        public _checkPoint(x:number, y:number):void {
             if(this._firstCheck) {
                 this._firstCheck = false;
                 this._minX = x;

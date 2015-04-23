@@ -298,7 +298,7 @@ var egret_native_graphics;
             egret_native.Graphics.lineTo(x, y + height);
             egret_native.Graphics.lineTo(x, y);
         }, this, arguments));
-        this.checkRect(x, y, width, height);
+        this._checkRect(x, y, width, height);
     }
 
     egret_native_graphics.drawRect = drawRect;
@@ -324,10 +324,10 @@ var egret_native_graphics;
             egret_native.Graphics.lineTo(x, y)
 
         }, this, arguments));
-        this.checkPoint(this.lineX, this.lineY);
+        this._checkPoint(this.lineX, this.lineY);
         this.lineX = x;
         this.lineY = y;
-        this.checkPoint(x, y);
+        this._checkPoint(x, y);
     }
 
     egret_native_graphics.lineTo = lineTo;

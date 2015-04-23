@@ -134,7 +134,7 @@ module egret {
             return result.data;
         }
 
-        public dispose() {
+        public dispose():void {
             var bitmapData = this._bitmapData;
             if (bitmapData.dispose) {
                 bitmapData.dispose();
