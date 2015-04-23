@@ -86,6 +86,7 @@
         "egret/context/localStorage/localStorage.ts",
         "egret/utils/XML.ts",
         "egret/utils/ByteArray.ts",
+        "egret/utils/getOption.ts",
         "egret/tween/Tween.ts",
         "egret/tween/Ease.ts",
         "egret/media/Sound.ts",

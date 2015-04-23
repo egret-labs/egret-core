@@ -172,6 +172,7 @@ module egret {
         //全屏键盘
         private showScreenKeyboard():void {
             var self = this;
+            self.dispatchEvent(new egret.Event("blur"));
             egret_native.EGT_TextInput = function (appendText:string) {
                 if (self._multiline) {//多行文本
                     if (self.isFinishDown) {
@@ -196,7 +197,6 @@ module egret {
 
             //点击完成
             egret_native.EGT_keyboardFinish = function () {
-                self.dispatchEvent(new egret.Event("blur"));
                 if (self._multiline) {//多行文本
                     self.isFinishDown = true;
                 }

@@ -108,8 +108,10 @@ module egret {
                     this._bitmapData = document.createElement("canvas");
                     this.renderContext = egret.RendererContext.createRendererContext(this._bitmapData);
                 }
-                var width = bounds.width;
-                var height = bounds.height;
+                var originalWidth = bounds.width;
+                var originalHeight = bounds.height;
+                var width = originalWidth;
+                var height = originalHeight;
 
                 var texture_scale_factor = egret.MainContext.instance.rendererContext._texture_scale_factor;
                 width /= texture_scale_factor;
@@ -164,8 +166,8 @@ module egret {
                 this.renderTexture._bitmapData = this._bitmapData;
                 this.renderTexture._sourceWidth = width;
                 this.renderTexture._sourceHeight = height;
-                this.renderTexture._textureWidth = this.renderTexture._sourceWidth * texture_scale_factor;
-                this.renderTexture._textureHeight = this.renderTexture._sourceHeight * texture_scale_factor;
+                this.renderTexture._textureWidth = originalWidth;
+                this.renderTexture._textureHeight = originalHeight;
 
                 this._texture_to_render = this.renderTexture;
                 return true;
@@ -221,9 +223,6 @@ module egret {
                 if (bounds.width == 0 || bounds.height == 0) {
                     return false;
                 }
-                if (clipBounds && (clipBounds.width == 0 || clipBounds.height == 0)) {
-                    return false;
-                }
                 if (typeof scale == "undefined") {
                     scale = 1;
                 }
@@ -266,6 +265,10 @@ module egret {
                 this._offsetX = x + anchorOffsetX;
                 this._offsetY = y + anchorOffsetY;
                 displayObject._worldTransform.append(1, 0, 0, 1, -this._offsetX, -this._offsetY);
+                if(clipBounds) {
+                    this._offsetX -= x;
+                    this._offsetY -= y;
+                }
                 displayObject.worldAlpha = 1;
                 var __use_new_draw = MainContext.__use_new_draw;
                 MainContext.__use_new_draw = false;
