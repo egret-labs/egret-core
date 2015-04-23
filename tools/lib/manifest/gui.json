@@ -34,6 +34,7 @@
         "managers/ILayoutManagerClient.ts",
         "managers/IPopUpManager.ts",
         "core/UIGlobals.ts",
+        "core/UIComponentProperties.ts",
         "core/UIComponent.ts",
         "core/PopUpPosition.ts",
         "core/ScrollPolicy.ts",

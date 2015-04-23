@@ -256,11 +256,11 @@ module egret {
                 cacheCanvas.style.height = cacheCanvasHeight + "px";
                 this.begin();
                 displayObject._worldTransform.identity();
-                var anchorOffsetX = displayObject._anchorOffsetX;
-                var anchorOffsetY = displayObject._anchorOffsetY;
-                if (displayObject._anchorX != 0 || displayObject._anchorY != 0) {
-                    anchorOffsetX = displayObject._anchorX * width;
-                    anchorOffsetY = displayObject._anchorY * height;
+                var anchorOffsetX = displayObject._DO_Props_._anchorOffsetX;
+                var anchorOffsetY = displayObject._DO_Props_._anchorOffsetY;
+                if (displayObject._DO_Props_._anchorX != 0 || displayObject._DO_Props_._anchorY != 0) {
+                    anchorOffsetX = displayObject._DO_Props_._anchorX * width;
+                    anchorOffsetY = displayObject._DO_Props_._anchorY * height;
                 }
                 this._offsetX = x + anchorOffsetX;
                 this._offsetY = y + anchorOffsetY;
@@ -290,13 +290,13 @@ module egret {
                 gl.clear(gl.COLOR_BUFFER_BIT);
                 this.renderContext.onRenderStart();
                 RendererContext.deleteTexture(this);
-                if(displayObject._filter) {
-                    this.renderContext.setGlobalFilter(displayObject._filter);
+                if(displayObject._DO_Props_._filter) {
+                    this.renderContext.setGlobalFilter(displayObject._DO_Props_._filter);
                 }
-                if (displayObject._colorTransform) {
-                    this.renderContext.setGlobalColorTransform(displayObject._colorTransform.matrix);
+                if (displayObject._DO_Props_._colorTransform) {
+                    this.renderContext.setGlobalColorTransform(displayObject._DO_Props_._colorTransform.matrix);
                 }
-                var mask = displayObject.mask || displayObject._scrollRect;
+                var mask = displayObject.mask || displayObject._DO_Props_._scrollRect;
                 if (mask) {
                     this.renderContext.pushMask(mask);
                 }
@@ -306,10 +306,10 @@ module egret {
                 if (mask) {
                     this.renderContext.popMask();
                 }
-                if (displayObject._colorTransform) {
+                if (displayObject._DO_Props_._colorTransform) {
                     this.renderContext.setGlobalColorTransform(null);
                 }
-                if(displayObject._filter) {
+                if(displayObject._DO_Props_._filter) {
                     this.renderContext.setGlobalFilter(null);
                 }
                 egret.RenderTexture.identityRectangle.width = width;

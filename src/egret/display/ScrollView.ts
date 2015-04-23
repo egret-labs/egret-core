@@ -218,7 +218,7 @@ module egret {
          * @inheritDoc
          */
         public _setWidth(value: number): void {
-            if (this._explicitWidth == value)
+            if (this._DO_Props_._explicitWidth == value)
                 return;
             super._setWidth(value);
             this._updateContentPosition();
@@ -227,7 +227,7 @@ module egret {
          * @inheritDoc
          */
         public _setHeight(value: number): void {
-            if (this._explicitHeight == value)
+            if (this._DO_Props_._explicitHeight == value)
                 return;
             super._setHeight(value);
             this._updateContentPosition();

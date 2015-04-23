@@ -231,12 +231,12 @@ module egret.gui {
          */
         public measure():void{
             //先提交属性，防止样式发生改变导致的测量不准确问题。
-            if(this._invalidatePropertiesFlag)
+            if(this._UIC_Props_._invalidatePropertiesFlag)
                 this.validateProperties();
             if (this.isSpecialCase()){
                 if (isNaN(this.lastUnscaledWidth)){
-                    this._oldPreferWidth = NaN;
-                    this._oldPreferHeight = NaN;
+                    this._UIC_Props_._oldPreferWidth = NaN;
+                    this._UIC_Props_._oldPreferHeight = NaN;
                 }
                 else{
                     this.measureUsingWidth(this.lastUnscaledWidth);
@@ -326,15 +326,15 @@ module egret.gui {
                     this.lastUnscaledWidth != unscaledWidth;
                 this.lastUnscaledWidth = unscaledWidth;
                 if (firstTime){
-                    this._oldPreferWidth = NaN;
-                    this._oldPreferHeight = NaN;
+                    this._UIC_Props_._oldPreferWidth = NaN;
+                    this._UIC_Props_._oldPreferHeight = NaN;
                     this.invalidateSize();
                     return;
                 }
             }
             //防止在父级validateDisplayList()阶段改变的text属性值，
             //接下来直接调用自身的updateDisplayList()而没有经过measure(),使用的测量尺寸是上一次的错误值。
-            if(this._invalidateSizeFlag)
+            if(this._UIC_Props_._invalidateSizeFlag)
                 this.validateSize();
 
             if(!this._textField.visible)//解决初始化时文本闪烁问题

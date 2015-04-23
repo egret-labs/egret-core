@@ -42,12 +42,16 @@ module egret.gui {
 	export class UIComponent extends DisplayObjectContainer
 	implements IUIComponent,ILayoutManagerClient,ILayoutElement,
 		IInvalidating,IVisualElement,IStyleClient{
+
+		public _UIC_Props_:UIComponentProperties;
+
 		/**
 		 * 构造函数
 		 * @method egret.gui.UIComponent#constructor
 		 */
 		public constructor(){
 			super();
+			this._UIC_Props_ = new egret.gui.UIComponentProperties();
 			this.touchEnabled = true;
 			this.addEventListener(Event.ADDED_TO_STAGE,this.onAddedToStage,this);
 			this.addEventListener(Event.ADDED_TO_STAGE,this.checkInvalidateFlag,this);
@@ -67,93 +71,84 @@ module egret.gui {
 			this.removeEventListener(Event.ADDED_TO_STAGE,this.onAddedToStage,this);
 			this._initialize();
 			UIGlobals._initlize(this.stage);
-			if(this._nestLevel>0)
+			if(this._UIC_Props_._nestLevel>0)
 				this.checkInvalidateFlag();
 		}
 
-        private _id: string = null;
 		/**
 		 * 组件 ID。此值将作为对象的实例名称，因此不应包含任何空格或特殊字符。应用程序中的每个组件都应具有唯一的 ID。
 		 * @constant egret.gui.UIComponent#id
 		 */
 		public get id():string{
-			return this._id;
+			return this._UIC_Props_._id;
 		}
 
 		public set id(value:string){
-			this._id = value;
+			this._UIC_Props_._id = value;
 		}
 
-        private _isPopUp: boolean = false;
 		/**
 		 * @member egret.gui.UIComponent#isPopUp
 		 */
 		public get isPopUp():boolean{
-			return this._isPopUp;
+			return this._UIC_Props_._isPopUp;
 		}
 		public set isPopUp(value:boolean){
-			this._isPopUp = value;
+			this._UIC_Props_._isPopUp = value;
 		}
 
-        private _owner: any = null;
 		/**
 		 * @member egret.gui.UIComponent#owner
 		 */
 		public get owner():any{
-			return this._owner? this._owner : this.parent;
+			return this._UIC_Props_._owner? this._UIC_Props_._owner : this.parent;
 		}
 		/**
 		 * @method egret.gui.UIComponent#ownerChanged
 		 * @param value {any}
 		 */
 		public ownerChanged(value:any):void{
-			this._owner = value;
+			this._UIC_Props_._owner = value;
 		}
 
 
-		private _updateCompletePendingFlag:boolean = false;
 		/**
 		 * @member egret.gui.UIComponent#updateCompletePendingFlag
 		 */
 		public get updateCompletePendingFlag():boolean{
-			return this._updateCompletePendingFlag;
+			return this._UIC_Props_._updateCompletePendingFlag;
 		}
 		public set updateCompletePendingFlag(value:boolean){
-			this._updateCompletePendingFlag = value;
+			this._UIC_Props_._updateCompletePendingFlag = value;
 		}
 
-		private _initialized:boolean = false;
 
 		/**
 		 * @member egret.gui.UIComponent#initialized
 		 */
 		public get initialized():boolean{
-			return this._initialized;
+			return this._UIC_Props_._initialized;
 		}
 		public set initialized(value:boolean){
-			if(this._initialized==value)
+			if(this._UIC_Props_._initialized==value)
 				return;
-			this._initialized = value;
+			this._UIC_Props_._initialized = value;
 			if (value){
 				this.childrenCreated()
 				UIEvent.dispatchUIEvent(this,UIEvent.CREATION_COMPLETE);
 			}
 		}
 		/**
-		 * _initialize()方法被调用过的标志。
-		 */
-		private initializeCalled:boolean = false;
-		/**
 		 * 初始化组件
 		 * @method egret.gui.UIComponent#_initialize
 		 */
 		public _initialize():void{
-			if(this.initializeCalled)
+			if(this._UIC_Props_._initializeCalled)
 				return;
 			if(UIGlobals.stage){
 				this.removeEventListener(Event.ADDED_TO_STAGE,this.onAddedToStage,this);
 			}
-			this.initializeCalled = true;
+			this._UIC_Props_._initializeCalled = true;
 			UIEvent.dispatchUIEvent(this,UIEvent.INITIALIZE);
 			this.createChildren();
 			this.invalidateProperties();
@@ -177,20 +172,19 @@ module egret.gui {
 		}
 
 
-		private _nestLevel:number = 0;
 		/**
 		 * @member egret.gui.UIComponent#nestLevel
 		 */
 		public get nestLevel():number{
-			return this._nestLevel;
+			return this._UIC_Props_._nestLevel;
 		}
 
 		public set nestLevel(value:number){
-			if(this._nestLevel==value)
+			if(this._UIC_Props_._nestLevel==value)
 				return;
-			this._nestLevel = value;
+			this._UIC_Props_._nestLevel = value;
 
-			if(this._nestLevel==0)
+			if(this._UIC_Props_._nestLevel==0)
 				this.addEventListener(Event.ADDED_TO_STAGE,this.checkInvalidateFlag,this);
 			else
 				this.removeEventListener(Event.ADDED_TO_STAGE,this.checkInvalidateFlag,this);
@@ -203,23 +197,15 @@ module egret.gui {
 			for(var i:number=this.numChildren-1;i>=0;i--){
 				var child:ILayoutManagerClient = <ILayoutManagerClient><any> (this.getChildAt(i));
 				if(child&&"nestLevel" in child){
-					child.nestLevel = this._nestLevel+1;
+					child.nestLevel = this._UIC_Props_._nestLevel+1;
 				}
 			}
 		}
 		/**
-		 * 是否已经创建了自身的样式原型链
-		 */
-		public _hasOwnStyleChain:boolean = false;
-		/**
-		 * 样式原型链引用
-		 */
-		public _styleProtoChain:any = null;
-		/**
 		 * 获取指定的名称的样式属性值
 		 */
 		public getStyle(styleProp:string):any{
-			var chain:any = this._styleProtoChain;
+			var chain:any = this._UIC_Props_._styleProtoChain;
 			if(!chain){
 				return undefined;
 			}
@@ -229,8 +215,8 @@ module egret.gui {
 		 * 对此组件实例设置样式属性。在此组件上设置的样式会覆盖父级容器的同名样式。推荐在子项较少的组件上使用，尽量避免在全局调用此方法，有可能造成性能问题。
 		 */
 		public setStyle(styleProp:string, newValue:any):void{
-			var chain:any = this._styleProtoChain;
-			if(!this._hasOwnStyleChain){
+			var chain:any = this._UIC_Props_._styleProtoChain;
+			if(!this._UIC_Props_._hasOwnStyleChain){
 				chain = this._createOwnStyleProtoChain(chain);
 			}
 			chain[styleProp] = newValue;
@@ -242,14 +228,10 @@ module egret.gui {
 
 		}
 		/**
-		 * 一个性能优化的标志变量。某些子类可以设置为true显式表明自己不含有可设置样式的子项。
-		 */
-		public _hasNoStyleChild:boolean = false;
-		/**
 		 * 通知子项列表样式发生改变
 		 */
 		public notifyStyleChangeInChildren(styleProp:string):void{
-			if(this._hasNoStyleChild){
+			if(this._UIC_Props_._hasNoStyleChild){
 				return;
 			}
 			for(var i:number=this.numChildren-1;i>=0;i--){
@@ -265,16 +247,16 @@ module egret.gui {
 		}
 
 		public _createOwnStyleProtoChain(chain:any):any{
-			this._hasOwnStyleChain = true;
+			this._UIC_Props_._hasOwnStyleChain = true;
 			if(UIComponent.prototypeCanSet){
-				this._styleProtoChain = {};
-				this._styleProtoChain.__proto__ = chain?chain:UIComponent.emptyStyleChain;
+				this._UIC_Props_._styleProtoChain = {};
+				this._UIC_Props_._styleProtoChain.__proto__ = chain?chain:UIComponent.emptyStyleChain;
 			}
 			else{
-				this._styleProtoChain = this.createProtoChain(chain);
+				this._UIC_Props_._styleProtoChain = this.createProtoChain(chain);
 			}
-			chain = this._styleProtoChain;
-			if(!this._hasNoStyleChild){
+			chain = this._UIC_Props_._styleProtoChain;
+			if(!this._UIC_Props_._hasNoStyleChild){
 				for(var i:number=this.numChildren-1;i>=0;i--){
 					var child:IStyleClient = <IStyleClient><any> (this.getChildAt(i));
 					if(child&&"regenerateStyleCache" in child){
@@ -300,10 +282,10 @@ module egret.gui {
 		 * 清除在此组件实例上设置过的指定样式名。
 		 */
 		public clearStyle(styleProp:string):void{
-			if(!this._hasOwnStyleChain){
+			if(!this._UIC_Props_._hasOwnStyleChain){
 				return;
 			}
-			var chain:any = this._styleProtoChain;
+			var chain:any = this._UIC_Props_._styleProtoChain;
 			delete chain[styleProp];
 			this.styleChanged(styleProp);
 			this.notifyStyleChangeInChildren(styleProp);
@@ -318,11 +300,11 @@ module egret.gui {
 				this.regenerateStyleCacheForIE(parentChain);
 				return;
 			}
-			if(this._hasOwnStyleChain){
-				this._styleProtoChain.__proto__ = parentChain?parentChain:UIComponent.emptyStyleChain;
+			if(this._UIC_Props_._hasOwnStyleChain){
+				this._UIC_Props_._styleProtoChain.__proto__ = parentChain?parentChain:UIComponent.emptyStyleChain;
 			}
-			else if(this._styleProtoChain!=parentChain){
-				this._styleProtoChain = parentChain;
+			else if(this._UIC_Props_._styleProtoChain!=parentChain){
+				this._UIC_Props_._styleProtoChain = parentChain;
 				for(var i:number=this.numChildren-1;i>=0;i--){
 					var child:IStyleClient = <IStyleClient><any> (this.getChildAt(i));
 					if(child&&"regenerateStyleCache" in child){
@@ -336,9 +318,9 @@ module egret.gui {
 		 */
 		public regenerateStyleCacheForIE(parentChain:any):void
 		{
-			if(this._hasOwnStyleChain)
+			if(this._UIC_Props_._hasOwnStyleChain)
 			{
-				var chain:any = this._styleProtoChain;
+				var chain:any = this._UIC_Props_._styleProtoChain;
 				var childChain:any = this.createProtoChain(parentChain);
 				for(var key in chain)
 				{
@@ -347,14 +329,14 @@ module egret.gui {
 						childChain[key] = chain[key];
 					}
 				}
-				this._styleProtoChain = childChain;
+				this._UIC_Props_._styleProtoChain = childChain;
 				parentChain = childChain;
 			}
 			else
 			{
-				this._styleProtoChain = parentChain;
+				this._UIC_Props_._styleProtoChain = parentChain;
 			}
-			if(!this._hasNoStyleChild)
+			if(!this._UIC_Props_._hasNoStyleChild)
 			{
 				for(var i:number=this.numChildren-1;i>=0;i--)
 				{
@@ -460,10 +442,10 @@ module egret.gui {
 				return;
 			}
 			if("nestLevel" in child){
-				(<ILayoutManagerClient><any>child).nestLevel = this._nestLevel+1;
+				(<ILayoutManagerClient><any>child).nestLevel = this._UIC_Props_._nestLevel+1;
 			}
 			if("styleChanged" in child){
-				var chain:any = this._styleProtoChain;
+				var chain:any = this._UIC_Props_._styleProtoChain;
 				if(chain||child["_styleProtoChain"]){
 					child["regenerateStyleCache"](chain);
 					child["styleChanged"](null);
@@ -526,40 +508,34 @@ module egret.gui {
 		private checkInvalidateFlag(event:Event=null):void{
 			if(!UIGlobals._layoutManager)
 				return;
-			if(this._invalidatePropertiesFlag){
+			if(this._UIC_Props_._invalidatePropertiesFlag){
 				UIGlobals._layoutManager.invalidateProperties(this);
 			}
-			if(this._invalidateSizeFlag){
+			if(this._UIC_Props_._invalidateSizeFlag){
 				UIGlobals._layoutManager.invalidateSize(this);
 			}
-			if(this._invalidateDisplayListFlag){
+			if(this._UIC_Props_._invalidateDisplayListFlag){
 				UIGlobals._layoutManager.invalidateDisplayList(this);
 			}
-			if(this._validateNowFlag){
+			if(this._UIC_Props_._validateNowFlag){
 				UIGlobals._layoutManager.validateClient(this);
-				this._validateNowFlag = false;
+				this._UIC_Props_._validateNowFlag = false;
 			}
 		}
 
 
-		public _enabled:boolean = true;
 		/**
 		 * @member egret.gui.UIComponent#enabled
 		 */
 		public get enabled():boolean{
-			return this._enabled;
+			return this._UIC_Props_._enabled;
 		}
 
 		public set enabled(value:boolean){
-			this._enabled = value;
+			this._UIC_Props_._enabled = value;
 		}
 
-        /**
-         * 属性提交前组件旧的宽度
-         */
-        private oldWidth: number = NaN;
 
-		public _width:number = 0;
 		/**
 		 * 组件宽度,默认值为NaN,设置为NaN将使用组件的measure()方法自动计算尺寸
 		 */
@@ -568,13 +544,13 @@ module egret.gui {
 		}
 
 		public _setWidth(value:number):void{
-			if(this._width==value&&this._explicitWidth==value)
+			if(this._UIC_Props_._width==value&&this._DO_Props_._explicitWidth==value)
 				return;
 			super._setWidth(value);
 			if(isNaN(value))
 				this.invalidateSize();
 			else
-				this._width = value;
+				this._UIC_Props_._width = value;
 			this.invalidateProperties();
 			this.invalidateDisplayList();
 			this.invalidateParentSizeAndDisplayList();
@@ -584,15 +560,10 @@ module egret.gui {
 		 * @member egret.gui.UIComponent#width
 		 */
 		public get width():number{
-			return this._width;
+			return this._UIC_Props_._width;
 		}
 
-        /**
-         * 属性提交前组件旧的高度
-         */
-        private oldHeight: number = NaN;
 
-		public _height:number = 0;
 		/**
 		 * 组件高度,默认值为NaN,设置为NaN将使用组件的measure()方法自动计算尺寸
 		 */
@@ -601,13 +572,13 @@ module egret.gui {
 		}
 
 		public _setHeight(value:number):void{
-			if(this._height==value&&this._explicitHeight==value)
+			if(this._UIC_Props_._height==value&&this._DO_Props_._explicitHeight==value)
 				return;
 			super._setHeight(value);
 			if(isNaN(value))
 				this.invalidateSize();
 			else
-				this._height = value;
+				this._UIC_Props_._height = value;
 			this.invalidateProperties();
 			this.invalidateDisplayList();
 			this.invalidateParentSizeAndDisplayList();
@@ -617,13 +588,13 @@ module egret.gui {
 		 * @member egret.gui.UIComponent#height
 		 */
 		public get height():number{
-			return this._height;
+			return this._UIC_Props_._height;
 		}
 		/**
 		 * @member egret.gui.UIComponent#scaleX
 		 */
 		public get scaleX():number{
-			return this._scaleX;
+			return this._DO_Props_._scaleX;
 		}
 		/**
 		 * @inheritDoc
@@ -633,9 +604,9 @@ module egret.gui {
 		}
 
 		public _setScaleX(value:number):void{
-			if(this._scaleX == value)
+			if(this._DO_Props_._scaleX == value)
 				return;
-			this._scaleX = value;
+			this._DO_Props_._scaleX = value;
 			this.invalidateParentSizeAndDisplayList();
 		}
 
@@ -643,7 +614,7 @@ module egret.gui {
 		 * @member egret.gui.UIComponent#scaleY
 		 */
 		public get scaleY():number{
-			return this._scaleY;
+			return this._DO_Props_._scaleY;
 		}
 		/**
 		 * @inheritDoc
@@ -653,95 +624,89 @@ module egret.gui {
 		}
 
 		public _setScaleY(value:number):void{
-			if(this._scaleY == value)
+			if(this._DO_Props_._scaleY == value)
 				return;
-			this._scaleY = value;
+			this._DO_Props_._scaleY = value;
 			this.invalidateParentSizeAndDisplayList();
 		}
 
-		private _minWidth:number = 0;
 		/**
 		 * @member egret.gui.UIComponent#minWidth
 		 */
 		public get minWidth():number{
-			return this._minWidth;
+			return this._UIC_Props_._minWidth;
 		}
 		public set minWidth(value:number){
-			if(this._minWidth==value)
+			if(this._UIC_Props_._minWidth==value)
 				return;
-			this._minWidth = value;
+			this._UIC_Props_._minWidth = value;
 			this.invalidateSize();
 		}
 
-		private _maxWidth:number = 10000;
 		/**
 		 * @member egret.gui.UIComponent#maxWidth
 		 */
 		public get maxWidth(): number {
-			return this._maxWidth;
+			return this._UIC_Props_._maxWidth;
 		}
 		public _getMaxWidth(): number {
-			return this._maxWidth;
+			return this._UIC_Props_._maxWidth;
 		}
 		public set maxWidth(value:number){
-			if(this._maxWidth==value)
+			if(this._UIC_Props_._maxWidth==value)
 				return;
-			this._maxWidth = value;
+			this._UIC_Props_._maxWidth = value;
 			this.invalidateSize();
 		}
 
-		private _minHeight:number = 0;
 		/**
 		 * @member egret.gui.UIComponent#minHeight
 		 */
 		public get minHeight():number{
-			return this._minHeight;
+			return this._UIC_Props_._minHeight;
 		}
 		public set minHeight(value:number){
-			if(this._minHeight==value)
+			if(this._UIC_Props_._minHeight==value)
 				return;
-			this._minHeight = value;
+			this._UIC_Props_._minHeight = value;
 			this.invalidateSize();
 		}
 
-		private _maxHeight:number = 10000;
 		/**
 		 * @member egret.gui.UIComponent#maxHeight
 		 */
 		public get maxHeight():number{
-			return this._maxHeight;
+			return this._UIC_Props_._maxHeight;
 		}
 		public set maxHeight(value:number){
-			if(this._maxHeight==value)
+			if(this._UIC_Props_._maxHeight==value)
 				return;
-			this._maxHeight = value;
+			this._UIC_Props_._maxHeight = value;
 			this.invalidateSize();
 		}
 
 
 
-		private _measuredWidth:number = 0;
 		/**
 		 * 组件的默认宽度（以像素为单位）。此值由 measure() 方法设置。
 		 * @member egret.gui.UIComponent#measuredWidth
 		 */
 		public get measuredWidth():number{
-			return this._measuredWidth;
+			return this._UIC_Props_._measuredWidth;
 		}
 		public set measuredWidth(value:number){
-			this._measuredWidth = value;
+			this._UIC_Props_._measuredWidth = value;
 		}
 
-		private _measuredHeight:number = 0;
 		/**
 		 * 组件的默认高度（以像素为单位）。此值由 measure() 方法设置。
 		 * @member egret.gui.UIComponent#measuredHeight
 		 */
 		public get measuredHeight():number{
-			return this._measuredHeight;
+			return this._UIC_Props_._measuredHeight;
 		}
 		public set measuredHeight(value:number){
-			this._measuredHeight = value;
+			this._UIC_Props_._measuredHeight = value;
 		}
 		/**
 		 * @method egret.gui.UIComponent#setActualSize
@@ -750,12 +715,12 @@ module egret.gui {
 		 */
 		public setActualSize(w:number, h:number):void{
 			var change:boolean = false;
-			if(this._width != w){
-				this._width = w;
+			if(this._UIC_Props_._width != w){
+				this._UIC_Props_._width = w;
 				change = true;
 			}
-			if(this._height != h){
-				this._height = h;
+			if(this._UIC_Props_._height != h){
+				this._UIC_Props_._height = h;
 				change = true;
 			}
 			if(change){
@@ -764,62 +729,48 @@ module egret.gui {
 			}
 		}
 
-        /**
-         * 属性提交前组件旧的X
-         * @member egret.gui.UIComponent#oldX
-         */
-        private oldX: number = NaN;
 		/**
 		 * @constant egret.gui.UIComponent#x
 		 */
 		public get x():number {
-			return this._x;
+			return this._DO_Props_._x;
 		}
 		/**
 		 * @inheritDoc
 		 */
 		public set x(value:number){
-			if(this._x==value)
+			if(this._DO_Props_._x==value)
 				return;
 			this._setX(value);
 			this.invalidateProperties();
-			if (this._includeInLayout&&this.parent && this.parent instanceof UIComponent)
+			if (this._UIC_Props_._includeInLayout&&this.parent && this.parent instanceof UIComponent)
 				(<UIComponent><any> (this.parent))._childXYChanged();
 		}
 
-        /**
-         * 属性提交前组件旧的Y
-         * @member egret.gui.UIComponent#oldY
-         */
-        private oldY: number = NaN;
 		/**
 		 * @constant egret.gui.UIComponent#y
 		 */
 		public get y():number {
-			return this._y;
+			return this._DO_Props_._y;
 		}
 		/**
 		 * @inheritDoc
 		 */
 		public set y(value:number){
-			if(this._y==value)
+			if(this._DO_Props_._y==value)
 				return;
 			this._setY(value);
 			this.invalidateProperties();
-			if (this._includeInLayout&&this.parent && this.parent instanceof UIComponent)
+			if (this._UIC_Props_._includeInLayout&&this.parent && this.parent instanceof UIComponent)
 				(<UIComponent> (this.parent))._childXYChanged();
 		}
 
 		/**
-		 * @member egret.gui.UIComponent#_invalidatePropertiesFlag
-		 */
-		public _invalidatePropertiesFlag:boolean = false;
-		/**
 		 * @method egret.gui.UIComponent#invalidateProperties
 		 */
 		public invalidateProperties():void{
-			if (!this._invalidatePropertiesFlag){
-				this._invalidatePropertiesFlag = true;
+			if (!this._UIC_Props_._invalidatePropertiesFlag){
+				this._UIC_Props_._invalidatePropertiesFlag = true;
 
 				if (this.parent&&UIGlobals._layoutManager)
 					UIGlobals._layoutManager.invalidateProperties(this);
@@ -829,24 +780,20 @@ module egret.gui {
 		 * @method egret.gui.UIComponent#validateProperties
 		 */
 		public validateProperties():void{
-			if (this._invalidatePropertiesFlag){
+			if (this._UIC_Props_._invalidatePropertiesFlag){
 				this.commitProperties();
 
-				this._invalidatePropertiesFlag = false;
+				this._UIC_Props_._invalidatePropertiesFlag = false;
 			}
 		}
 
-		/**
-		 * @member egret.gui.UIComponent#_invalidateSizeFlag
-		 */
-		public _invalidateSizeFlag:boolean = false;
 
 		/**
 		 * @method egret.gui.UIComponent#invalidateSize
 		 */
 		public invalidateSize():void{
-			if (!this._invalidateSizeFlag){
-				this._invalidateSizeFlag = true;
+			if (!this._UIC_Props_._invalidateSizeFlag){
+				this._UIC_Props_._invalidateSizeFlag = true;
 
 				if (this.parent&&UIGlobals._layoutManager)
 					UIGlobals._layoutManager.invalidateSize(this);
@@ -865,32 +812,22 @@ module egret.gui {
 						(<ILayoutManagerClient> <any>child ).validateSize(true);
 				}
 			}
-			if (this._invalidateSizeFlag){
+			if (this._UIC_Props_._invalidateSizeFlag){
 				var changed:boolean = this.measureSizes();
 				if(changed){
 					this.invalidateDisplayList();
 					this.invalidateParentSizeAndDisplayList();
 				}
-				this._invalidateSizeFlag = false;
+				this._UIC_Props_._invalidateSizeFlag = false;
 			}
 		}
-        /**
-         * 上一次测量的首选宽度
-         * @member egret.gui.UIComponent#_oldPreferWidth
-         */
-        public _oldPreferWidth: number = NaN;
-        /**
-         * 上一次测量的首选高度
-         * @member egret.gui.UIComponent#_oldPreferHeight
-         */
-        public _oldPreferHeight: number = NaN;
 		/**
 		 * 测量组件尺寸，返回尺寸是否发生变化
 		 */
 		private measureSizes():boolean{
 			var changed:boolean = false;
 
-			if (!this._invalidateSizeFlag)
+			if (!this._UIC_Props_._invalidateSizeFlag)
 				return changed;
 
 			if (!this.canSkipMeasurement()){
@@ -908,28 +845,27 @@ module egret.gui {
 					this.measuredHeight = this.maxHeight
 				}
 			}
-			if(isNaN(this._oldPreferWidth)){
-				this._oldPreferWidth = this.preferredWidth;
-				this._oldPreferHeight = this.preferredHeight;
+			if(isNaN(this._UIC_Props_._oldPreferWidth)){
+				this._UIC_Props_._oldPreferWidth = this.preferredWidth;
+				this._UIC_Props_._oldPreferHeight = this.preferredHeight;
 				changed = true;
 			}
 			else{
-				if(this.preferredWidth!=this._oldPreferWidth||this.preferredHeight!=this._oldPreferHeight)
+				if(this.preferredWidth!=this._UIC_Props_._oldPreferWidth||this.preferredHeight!=this._UIC_Props_._oldPreferHeight)
 					changed = true;
-				this._oldPreferWidth = this.preferredWidth;
-				this._oldPreferHeight = this.preferredHeight;
+				this._UIC_Props_._oldPreferWidth = this.preferredWidth;
+				this._UIC_Props_._oldPreferHeight = this.preferredHeight;
 			}
 			return changed;
 		}
 
-		public _invalidateDisplayListFlag:boolean = false;
 
 		/**
 		 * @method egret.gui.UIComponent#invalidateDisplayList
 		 */
 		public invalidateDisplayList():void{
-			if (!this._invalidateDisplayListFlag){
-				this._invalidateDisplayListFlag = true;
+			if (!this._UIC_Props_._invalidateDisplayListFlag){
+				this._UIC_Props_._invalidateDisplayListFlag = true;
 
 				if (this.parent&&UIGlobals._layoutManager)
 					UIGlobals._layoutManager.invalidateDisplayList(this);
@@ -942,23 +878,23 @@ module egret.gui {
 		 * @method egret.gui.UIComponent#validateDisplayList
 		 */
 		public validateDisplayList():void{
-			if (this._invalidateDisplayListFlag){
+			if (this._UIC_Props_._invalidateDisplayListFlag){
 				var unscaledWidth:number = 0;
 				var unscaledHeight:number = 0;
-				if(this._layoutWidthExplicitlySet){
-					unscaledWidth = this._width;
+				if(this._UIC_Props_._layoutWidthExplicitlySet){
+					unscaledWidth = this._UIC_Props_._width;
 				}
 				else if(!isNaN(this.explicitWidth)){
-					unscaledWidth = this._explicitWidth;
+					unscaledWidth = this._DO_Props_._explicitWidth;
 				}
 				else{
 					unscaledWidth = this.measuredWidth;
 				}
-				if(this._layoutHeightExplicitlySet){
-					unscaledHeight = this._height;
+				if(this._UIC_Props_._layoutHeightExplicitlySet){
+					unscaledHeight = this._UIC_Props_._height;
 				}
 				else if(!isNaN(this.explicitHeight)){
-					unscaledHeight = this._explicitHeight;
+					unscaledHeight = this._DO_Props_._explicitHeight;
 				}
 				else{
 					unscaledHeight = this.measuredHeight;
@@ -969,28 +905,27 @@ module egret.gui {
 					unscaledHeight = 0;
 				this.setActualSize(unscaledWidth,unscaledHeight);
 				this.updateDisplayList(unscaledWidth,unscaledHeight);
-				this._invalidateDisplayListFlag = false;
+				this._UIC_Props_._invalidateDisplayListFlag = false;
 			}
 		}
 
-		public _validateNowFlag:boolean = false;
 
 		/**
 		 * @method egret.gui.UIComponent#validateNow
 		 * @param skipDisplayList {boolean}
 		 */
 		public validateNow(skipDisplayList:boolean = false):void{
-			if(!this._validateNowFlag&&UIGlobals._layoutManager!=null)
+			if(!this._UIC_Props_._validateNowFlag&&UIGlobals._layoutManager!=null)
 				UIGlobals._layoutManager.validateClient(this,skipDisplayList);
 			else
-				this._validateNowFlag = true;
+				this._UIC_Props_._validateNowFlag = true;
 		}
 		/**
 		 * 标记父级容器的尺寸和显示列表为失效
 		 * @method egret.gui.UIComponent#invalidateParentSizeAndDisplayList
 		 */
 		public invalidateParentSizeAndDisplayList():void{
-			if (!this.parent||!this._includeInLayout||!("invalidateSize" in this.parent))
+			if (!this.parent||!this._UIC_Props_._includeInLayout||!("invalidateSize" in this.parent))
 				return;
 			var p:IInvalidating = <IInvalidating><any>(this.parent);
 			p.invalidateSize();
@@ -1010,17 +945,17 @@ module egret.gui {
 		 * 是否可以跳过测量尺寸阶段,返回true则不执行measure()方法
 		 */
 		public canSkipMeasurement():boolean{
-			return !isNaN(this._explicitWidth) && !isNaN(this._explicitHeight);
+			return !isNaN(this._DO_Props_._explicitWidth) && !isNaN(this._DO_Props_._explicitHeight);
 		}
 
 		/**
 		 * 提交属性，子类在调用完invalidateProperties()方法后，应覆盖此方法以应用属性
 		 */
 		public commitProperties():void{
-			if(this.oldWidth != this._width||this.oldHeight != this._height){
+			if(this._UIC_Props_._oldWidth != this._UIC_Props_._width||this._UIC_Props_._oldHeight != this._UIC_Props_._height){
 				this.dispatchResizeEvent();
 			}
-			if(this.oldX != this.x||this.oldY != this.y){
+			if(this._UIC_Props_._oldX != this.x||this._UIC_Props_._oldY != this.y){
 				this.dispatchMoveEvent();
 			}
 		}
@@ -1029,18 +964,18 @@ module egret.gui {
 		 * @method egret.gui.UIComponent#measure
 		 */
 		public measure():void{
-			this._measuredHeight = 0;
-			this._measuredWidth = 0;
+			this._UIC_Props_._measuredHeight = 0;
+			this._UIC_Props_._measuredWidth = 0;
 		}
 		/**
 		 *  抛出移动事件
 		 */
 		private dispatchMoveEvent():void{
 			if (this.hasEventListener(MoveEvent.MOVE)){
-				MoveEvent.dispatchMoveEvent(this,this.oldX,this.oldY);
+				MoveEvent.dispatchMoveEvent(this,this._UIC_Props_._oldX,this._UIC_Props_._oldY);
 			}
-			this.oldX = this.x;
-			this.oldY = this.y;
+			this._UIC_Props_._oldX = this.x;
+			this._UIC_Props_._oldY = this.y;
 		}
 
 		/**
@@ -1055,156 +990,135 @@ module egret.gui {
 		 */
 		private dispatchResizeEvent():void{
 			if (this.hasEventListener(ResizeEvent.RESIZE)){
-				ResizeEvent.dispatchResizeEvent(this,this.oldWidth,this.oldHeight);
+				ResizeEvent.dispatchResizeEvent(this,this._UIC_Props_._oldWidth,this._UIC_Props_._oldHeight);
 			}
-			this.oldWidth = this._width;
-			this.oldHeight = this._height;
+			this._UIC_Props_._oldWidth = this._UIC_Props_._width;
+			this._UIC_Props_._oldHeight = this._UIC_Props_._height;
 		}
 
-		public _includeInLayout:boolean = true;
 		/**
 		 * @member egret.gui.UIComponent#includeInLayout
 		 */
 		public get includeInLayout():boolean{
-			return this._includeInLayout;
+			return this._UIC_Props_._includeInLayout;
 		}
 		public set includeInLayout(value:boolean){
-			if(this._includeInLayout==value)
+			if(this._UIC_Props_._includeInLayout==value)
 				return;
-			this._includeInLayout = true;
+			this._UIC_Props_._includeInLayout = true;
 			this.invalidateParentSizeAndDisplayList();
-			this._includeInLayout = value;
+			this._UIC_Props_._includeInLayout = value;
 		}
 
 
-		private _left:number = NaN;
 
 		/**
 		 * @member egret.gui.UIComponent#left
 		 */
 		public get left():number{
-			return this._left;
+			return this._UIC_Props_._left;
 		}
 		public set left(value:number){
-			if(this._left == value)
+			if(this._UIC_Props_._left == value)
 				return;
-			this._left = value;
+			this._UIC_Props_._left = value;
 			this.invalidateParentSizeAndDisplayList();
 		}
 
-        private _right: number = NaN;
 		/**
 		 * @member egret.gui.UIComponent#right
 		 */
 		public get right():number{
-			return this._right;
+			return this._UIC_Props_._right;
 		}
 		public set right(value:number){
-			if(this._right == value)
+			if(this._UIC_Props_._right == value)
 				return;
-			this._right = value;
+			this._UIC_Props_._right = value;
 			this.invalidateParentSizeAndDisplayList();
 		}
 
-        private _top: number = NaN;
 		/**
 		 * @member egret.gui.UIComponent#top
 		 */
 		public get top():number{
-			return this._top;
+			return this._UIC_Props_._top;
 		}
 		public set top(value:number){
-			if(this._top == value)
+			if(this._UIC_Props_._top == value)
 				return;
-			this._top = value;
+			this._UIC_Props_._top = value;
 			this.invalidateParentSizeAndDisplayList();
 		}
 
-        private _bottom: number = NaN;
 		/**
 		 * @member egret.gui.UIComponent#bottom
 		 */
 		public get bottom():number{
-			return this._bottom;
+			return this._UIC_Props_._bottom;
 		}
 		public set bottom(value:number){
-			if(this._bottom == value)
+			if(this._UIC_Props_._bottom == value)
 				return;
-			this._bottom = value;
+			this._UIC_Props_._bottom = value;
 			this.invalidateParentSizeAndDisplayList();
 		}
 
 
-        private _horizontalCenter: number = NaN;
 		/**
 		 * @member egret.gui.UIComponent#horizontalCenter
 		 */
 		public get horizontalCenter():number{
-			return this._horizontalCenter;
+			return this._UIC_Props_._horizontalCenter;
 		}
 		public set horizontalCenter(value:number){
-			if(this._horizontalCenter == value)
+			if(this._UIC_Props_._horizontalCenter == value)
 				return;
-			this._horizontalCenter = value;
+			this._UIC_Props_._horizontalCenter = value;
 			this.invalidateParentSizeAndDisplayList();
 		}
 
-        private _verticalCenter: number = NaN;
 		/**
 		 * @member egret.gui.UIComponent#verticalCenter
 		 */
 		public get verticalCenter():number{
-			return this._verticalCenter;
+			return this._UIC_Props_._verticalCenter;
 		}
 		public set verticalCenter(value:number){
-			if(this._verticalCenter == value)
+			if(this._UIC_Props_._verticalCenter == value)
 				return;
-			this._verticalCenter = value;
+			this._UIC_Props_._verticalCenter = value;
 			this.invalidateParentSizeAndDisplayList();
 		}
 
 
-        private _percentWidth: number = NaN;
 		/**
 		 * @member egret.gui.UIComponent#percentWidth
 		 */
 		public get percentWidth():number{
-			return this._percentWidth;
+			return this._UIC_Props_._percentWidth;
 		}
 		public set percentWidth(value:number){
-			if(this._percentWidth == value)
+			if(this._UIC_Props_._percentWidth == value)
 				return;
-			this._percentWidth = value;
+			this._UIC_Props_._percentWidth = value;
 			this.invalidateParentSizeAndDisplayList();
 		}
 
 
-        private _percentHeight: number = NaN;
 
 		/**
 		 * @member egret.gui.UIComponent#percentHeight
 		 */
 		public get percentHeight():number{
-			return this._percentHeight;
+			return this._UIC_Props_._percentHeight;
 		}
 		public set percentHeight(value:number){
-			if(this._percentHeight == value)
+			if(this._UIC_Props_._percentHeight == value)
 				return;
-			this._percentHeight = value;
+			this._UIC_Props_._percentHeight = value;
 			this.invalidateParentSizeAndDisplayList();
 		}
-
-		/**
-		 * 父级布局管理器设置了组件的宽度标志，尺寸设置优先级：自动布局>显式设置>自动测量
-		 * @member egret.gui.UIComponent#_layoutWidthExplicitlySet
-		 */
-		public _layoutWidthExplicitlySet:boolean = false;
-
-		/**
-		 * 父级布局管理器设置了组件的高度标志，尺寸设置优先级：自动布局>显式设置>自动测量
-		 * @member egret.gui.UIComponent#_layoutHeightExplicitlySet
-		 */
-		public _layoutHeightExplicitlySet:boolean = false;
 
 		/**
 		 * @method egret.gui.UIComponent#setLayoutBoundsSize
@@ -1213,21 +1127,21 @@ module egret.gui {
 		 */
 		public setLayoutBoundsSize(layoutWidth:number,layoutHeight:number):void{
 			if(isNaN(layoutWidth)){
-				this._layoutWidthExplicitlySet = false;
+				this._UIC_Props_._layoutWidthExplicitlySet = false;
 				layoutWidth = this.preferredWidth;
 			}
 			else{
-				this._layoutWidthExplicitlySet = true;
+				this._UIC_Props_._layoutWidthExplicitlySet = true;
 			}
 			if(isNaN(layoutHeight)){
-				this._layoutHeightExplicitlySet = false;
+				this._UIC_Props_._layoutHeightExplicitlySet = false;
 				layoutHeight = this.preferredHeight;
 			}
 			else{
-				this._layoutHeightExplicitlySet = true;
+				this._UIC_Props_._layoutHeightExplicitlySet = true;
 			}
 
-			this.setActualSize(layoutWidth/this._scaleX,layoutHeight/this._scaleY);
+			this.setActualSize(layoutWidth/this._DO_Props_._scaleX,layoutHeight/this._DO_Props_._scaleY);
 		}
 		/**
 		 * @method egret.gui.UIComponent#setLayoutBoundsPosition
@@ -1235,18 +1149,18 @@ module egret.gui {
 		 * @param y {number}
 		 */
 		public setLayoutBoundsPosition(x:number,y:number):void{
-			if(this._scaleX<0){
+			if(this._DO_Props_._scaleX<0){
 				x += this.layoutBoundsWidth;
 			}
-			if(this._scaleY<0){
+			if(this._DO_Props_._scaleY<0){
 				y += this.layoutBoundsHeight;
 			}
 			var changed:boolean = false;
-			if(this._x!=x){
+			if(this._DO_Props_._x!=x){
 				this._setX(x);
 				changed = true;
 			}
-			if(this._y!=y){
+			if(this._DO_Props_._y!=y){
 				this._setY(y);
 				changed = true;
 			}
@@ -1259,8 +1173,8 @@ module egret.gui {
 		 * @member egret.gui.UIComponent#preferredWidth
 		 */
 		public get preferredWidth():number{
-			var w:number = this._hasWidthSet ? this._explicitWidth:this._measuredWidth;
-			var scaleX:number = this._scaleX;
+			var w:number = this._DO_Props_._hasWidthSet ? this._DO_Props_._explicitWidth:this._UIC_Props_._measuredWidth;
+			var scaleX:number = this._DO_Props_._scaleX;
 			if(scaleX<0){
 				scaleX = -scaleX;
 			}
@@ -1271,8 +1185,8 @@ module egret.gui {
 		 * @member egret.gui.UIComponent#preferredHeight
 		 */
 		public get preferredHeight():number{
-			var h:number = this._hasHeightSet ? this._explicitHeight:this._measuredHeight;
-			var scaleY:number = this._scaleY;
+			var h:number = this._DO_Props_._hasHeightSet ? this._DO_Props_._explicitHeight:this._UIC_Props_._measuredHeight;
+			var scaleY:number = this._DO_Props_._scaleY;
 			if(scaleY<0){
 				scaleY = -scaleY;
 			}
@@ -1283,42 +1197,42 @@ module egret.gui {
 		 * @member egret.gui.UIComponent#preferredX
 		 */
 		public get preferredX():number{
-			if(this._scaleX>=0){
-				return this._x;
+			if(this._DO_Props_._scaleX>=0){
+				return this._DO_Props_._x;
 			}
 			var w:number = this.preferredWidth;
-			return this._x - w;
+			return this._DO_Props_._x - w;
 		}
 
 		/**
 		 * @member egret.gui.UIComponent#preferredY
 		 */
 		public get preferredY():number{
-			if(this._scaleY>=0){
-				return this._y;
+			if(this._DO_Props_._scaleY>=0){
+				return this._DO_Props_._y;
 			}
 			var h:number = this.preferredHeight;
-			return this._y - h;
+			return this._DO_Props_._y - h;
 		}
 		/**
 		 * @member egret.gui.UIComponent#layoutBoundsX
 		 */
 		public get layoutBoundsX():number{
-			if(this._scaleX>=0){
-				return this._x;
+			if(this._DO_Props_._scaleX>=0){
+				return this._DO_Props_._x;
 			}
 			var w:number = this.layoutBoundsWidth;
-			return this._x - w;
+			return this._DO_Props_._x - w;
 		}
 		/**
 		 * @member egret.gui.UIComponent#layoutBoundsY
 		 */
 		public get layoutBoundsY():number{
-			if(this._scaleY>=0){
-				return this._y;
+			if(this._DO_Props_._scaleY>=0){
+				return this._DO_Props_._y;
 			}
 			var h:number = this.layoutBoundsHeight;
-			return this._y - h;
+			return this._DO_Props_._y - h;
 		}
 
 		/**
@@ -1326,16 +1240,16 @@ module egret.gui {
 		 */
 		public get layoutBoundsWidth():number{
 			var w:number =  0;
-			if(this._layoutWidthExplicitlySet){
-				w = this._width;
+			if(this._UIC_Props_._layoutWidthExplicitlySet){
+				w = this._UIC_Props_._width;
 			}
-			else if(this._hasWidthSet){
-				w = this._explicitWidth;
+			else if(this._DO_Props_._hasWidthSet){
+				w = this._DO_Props_._explicitWidth;
 			}
 			else{
-				w = this._measuredWidth;
+				w = this._UIC_Props_._measuredWidth;
 			}
-			var scaleX:number = this._scaleX;
+			var scaleX:number = this._DO_Props_._scaleX;
 			if(scaleX<0){
 				scaleX = -scaleX;
 			}
@@ -1348,14 +1262,14 @@ module egret.gui {
 		 */
 		public get layoutBoundsHeight():number{
 			var h:number =  0
-			if(this._layoutHeightExplicitlySet){
-				h = this._height;
+			if(this._UIC_Props_._layoutHeightExplicitlySet){
+				h = this._UIC_Props_._height;
 			}
-			else if(this._hasHeightSet){
-				h = this._explicitHeight;
+			else if(this._DO_Props_._hasHeightSet){
+				h = this._DO_Props_._explicitHeight;
 			}
 			else{
-				h = this._measuredHeight;
+				h = this._UIC_Props_._measuredHeight;
 			}
 			var scaleY:number = this.scaleY;
 			if(scaleY<0){

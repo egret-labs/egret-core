@@ -76,7 +76,7 @@ module egret.gui {
             var content: IViewport = <any>this._content;
             content.horizontalScrollPosition = this._scrollLeft;
             content.verticalScrollPosition = this._scrollTop;
-            content.setLayoutBoundsSize(this._width, this._height);
+            content.setLayoutBoundsSize(this._UIC_Props_._width, this._UIC_Props_._height);
             this.dispatchEvent(new Event(Event.CHANGE));
         }
 
@@ -692,7 +692,7 @@ module egret.gui {
             if (childTouched)
                 return childTouched;
 
-            if (!this._visible || (!ignoreTouchEnabled && !this._touchEnabled)) {
+            if (!this._DO_Props_._visible || (!ignoreTouchEnabled && !this._DO_Props_._touchEnabled)) {
                 return null;
             }
             if (0 <= x && x < this.width && 0 <= y && y < this.height) {

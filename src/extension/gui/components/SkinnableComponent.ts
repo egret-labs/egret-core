@@ -299,11 +299,11 @@ module egret.gui {
 			this._autoMouseEnabled = value;
 			if(this._autoMouseEnabled){
 				this._touchChildren = this.enabled ? this.explicitMouseChildren : false;
-				this._touchEnabled  = this.enabled ? this.explicitMouseEnabled  : false;
+				this._DO_Props_._touchEnabled  = this.enabled ? this.explicitMouseEnabled  : false;
 			}
 			else{
 				this._touchChildren = this.explicitMouseChildren;
-                this._touchEnabled  = this.explicitMouseEnabled;
+                this._DO_Props_._touchEnabled  = this.explicitMouseEnabled;
 			}
 		}
 		
@@ -335,14 +335,14 @@ module egret.gui {
 		 * @member egret.gui.SkinnableComponent#touchEnabled
 		 */
         public get touchEnabled():boolean{
-            return this._touchEnabled;
+            return this._DO_Props_._touchEnabled;
         }
 		/**
 		 * @inheritDoc
 		 */	
 		public set touchEnabled(value:boolean){
 			if(this.enabled)
-				this._touchEnabled = value;
+				this._DO_Props_._touchEnabled = value;
 			this.explicitMouseEnabled = value;
 		}
 
@@ -350,7 +350,7 @@ module egret.gui {
 		 * @member egret.gui.SkinnableComponent#enabled
          */
         public get enabled():boolean{
-            return this._enabled;
+            return this._UIC_Props_._enabled;
         }
 		/**
 		 * @inheritDoc
@@ -360,12 +360,12 @@ module egret.gui {
 		}
 
         public _setEnabled(value:boolean):void{
-            if(this._enabled==value)
+            if(this._UIC_Props_._enabled==value)
                 return;
-            this._enabled = value;
+            this._UIC_Props_._enabled = value;
             if(this._autoMouseEnabled){
                 this._touchChildren = value ? this.explicitMouseChildren : false;
-                this._touchEnabled  = value ? this.explicitMouseEnabled  : false;
+                this._DO_Props_._touchEnabled  = value ? this.explicitMouseEnabled  : false;
             }
             this.invalidateSkinState();
         }
