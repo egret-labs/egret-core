@@ -366,6 +366,7 @@ module egret {
                         var promise = new egret.PromiseObject();
                         promise.onSuccessFunc = function (bitmapData) {
                             Texture._bitmapDataFactory[url] = bitmapData;
+                            bitmapData["avaliable"] = true;
                             Texture._onLoad(url, bitmapData);
                         };
                         promise.onErrorFunc = function () {
