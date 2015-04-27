@@ -30,49 +30,13 @@ module egret {
     /**
      * @private
      */
-    export class DisplayObjectProperties {
-        public _name:string = null;
-        public _explicitWidth:number = NaN;
-        public _explicitHeight:number = NaN;
-        public _x:number = 0;
-        public _y:number = 0;
-        public _scaleX:number = 1;
-        public _scaleY:number = 1;
-        public _anchorOffsetX:number = 0;
-        public _anchorOffsetY:number = 0;
-        public _anchorX:number = 0;
-        public _anchorY:number = 0;
-        public _rotation:number = 0;
-        public _alpha:number = 1;
-        public _skewX:number = 0;
-        public _skewY:number = 0;
-        public _blendMode:string = null;
-        public _touchEnabled:boolean = false;
-        public _visible:boolean = true;
-        public _worldAlpha:number = 1;
-        public _scrollRect:Rectangle = null;
-        public _cacheAsBitmap:boolean = false;
-        public _parent:DisplayObjectContainer = null;
-        public _stage:Stage = null;
-        public _needDraw:boolean = false;
-        /**
-         * beta功能，请勿调用此方法
-         */
-        public _colorTransform:ColorTransform = null;
+    export class DisplayObjectPrivateProperties {
+        public _cacheBounds:egret.Rectangle;
+        public _hitTestPointTexture:RenderTexture = null;
+        public _rectW:number = 0;
+        public _rectH:number = 0;
+        public _cacheDirty:boolean = false;
 
-        /**
-         * beta功能，请勿调用此方法
-         */
-        public _filter:Filter = null;
-
-
-
-        public _hasWidthSet:boolean = false;
-        public _hasHeightSet:boolean = false;
-        public _normalDirty:boolean = true;
-        //对宽高有影响
-        public _sizeDirty:boolean = true;
-        public _isContainer:boolean = false;
         constructor() {
         }
     }

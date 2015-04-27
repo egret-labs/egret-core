@@ -46,22 +46,23 @@ module egret {
     export class DisplayObject extends EventDispatcher implements RenderData {
 
 
-        public _displayObjectFlags:number = 0;
-
-        public _getORFlag(flag1:DisplayObjectFlags, flag2:DisplayObjectFlags):boolean {
-            return (this._displayObjectFlags & (flag1 | flag2)) != 0;
-        }
-
-        public _getFlag(flag:DisplayObjectFlags):boolean {
-            return (this._displayObjectFlags & flag) === flag;
-        }
-
-        public _setFlag(flag:DisplayObjectFlags, value:boolean):void {
-            this._displayObjectFlags = value ? (this._displayObjectFlags | flag) : (this._displayObjectFlags & ~flag);
-        }
+        //public _displayObjectFlags:number = 0;
+        //
+        //public _getORFlag(flag1:DisplayObjectFlags, flag2:DisplayObjectFlags):boolean {
+        //    return (this._displayObjectFlags & (flag1 | flag2)) != 0;
+        //}
+        //
+        //public _getFlag(flag:DisplayObjectFlags):boolean {
+        //    return (this._displayObjectFlags & flag) === flag;
+        //}
+        //
+        //public _setFlag(flag:DisplayObjectFlags, value:boolean):void {
+        //    this._displayObjectFlags = value ? (this._displayObjectFlags | flag) : (this._displayObjectFlags & ~flag);
+        //}
 
 
         public _DO_Props_:DisplayObjectProperties;
+        private _DO_Privs_:DisplayObjectPrivateProperties;
 
         /**
          * 创建一个 egret.DisplayObject 对象
@@ -70,10 +71,11 @@ module egret {
             super();
 
             this._DO_Props_ = new egret.DisplayObjectProperties();
+            this._DO_Privs_ = new egret.DisplayObjectPrivateProperties();
 
             this._worldTransform = new egret.Matrix();
             this._worldBounds = new egret.Rectangle(0, 0, 0, 0);
-            this._DO_Props_._cacheBounds = new egret.Rectangle(0, 0, 0, 0);
+            this._DO_Privs_._cacheBounds = new egret.Rectangle(0, 0, 0, 0);
         }
 
         public _texture_to_render:Texture = null;
@@ -679,11 +681,11 @@ module egret {
                 return false;
             }
             var bounds = display.getBounds(Rectangle.identity);
-            if (display._DO_Props_._cacheDirty || display._texture_to_render == null ||
+            if (display._DO_Privs_._cacheDirty || display._texture_to_render == null ||
                 bounds.width - display._texture_to_render._textureWidth > 1 ||
                 bounds.height - display._texture_to_render._textureHeight > 1) {
                 var cached = display._makeBitmapCache();
-                display._DO_Props_._cacheDirty = !cached;
+                display._DO_Privs_._cacheDirty = !cached;
             }
 
             //没有成功生成cache的情形
@@ -778,14 +780,15 @@ module egret {
         public getBounds(resultRect?:Rectangle, calculateAnchor:boolean = true):egret.Rectangle {
 
             var do_props = this._DO_Props_;
+            var do_privs = this._DO_Privs_;
 //            if (do_props._cacheBounds.x == 0 && do_props._cacheBounds.y == 0 && do_props._cacheBounds.width == 0 && do_props._cacheBounds.height == 0) {
             var rect:Rectangle = this._measureBounds();
             var w:number = do_props._hasWidthSet ? do_props._explicitWidth : rect.width;
             var h:number = do_props._hasHeightSet ? do_props._explicitHeight : rect.height;
 
             //记录测量宽高
-            do_props._rectW = rect.width;
-            do_props._rectH = rect.height;
+            do_privs._rectW = rect.width;
+            do_privs._rectH = rect.height;
             this._clearSizeDirty();
 
             var x:number = rect.x;
@@ -801,9 +804,9 @@ module egret {
                     anchorY = do_props._anchorOffsetY;
                 }
             }
-            do_props._cacheBounds.initialize(x - anchorX, y - anchorY, w, h);
+            do_privs._cacheBounds.initialize(x - anchorX, y - anchorY, w, h);
 //            }
-            var result:egret.Rectangle = do_props._cacheBounds;
+            var result:egret.Rectangle = do_privs._cacheBounds;
             if (!resultRect) {
                 resultRect = new Rectangle();
             }
@@ -811,11 +814,11 @@ module egret {
         }
 
         private destroyCacheBounds():void {
-            var do_props = this._DO_Props_;
-            do_props._cacheBounds.x = 0;
-            do_props._cacheBounds.y = 0;
-            do_props._cacheBounds.width = 0;
-            do_props._cacheBounds.height = 0;
+            var do_privs = this._DO_Privs_;
+            do_privs._cacheBounds.x = 0;
+            do_privs._cacheBounds.y = 0;
+            do_privs._cacheBounds.width = 0;
+            do_privs._cacheBounds.height = 0;
         }
 
         /**
@@ -941,17 +944,18 @@ module egret {
         public hitTestPoint(x:number, y:number, shapeFlag?:boolean):boolean {
             var self = this;
             var do_props = self._DO_Props_;
+            var do_privs = self._DO_Privs_;
             var p:egret.Point = self.globalToLocal(x, y);
             if (!shapeFlag) {
                 return !!self.hitTest(p.x, p.y, true);
             }
             else {
-                if (!do_props._hitTestPointTexture) {
-                    do_props._hitTestPointTexture = new RenderTexture();
+                if (!do_privs._hitTestPointTexture) {
+                    do_privs._hitTestPointTexture = new RenderTexture();
                 }
-                var testTexture:Texture = do_props._hitTestPointTexture;
+                var testTexture:Texture = do_privs._hitTestPointTexture;
                 (<RenderTexture>testTexture).drawToTexture(self);
-                var pixelData:number[] = testTexture.getPixel32(p.x - do_props._hitTestPointTexture._offsetX, p.y - do_props._hitTestPointTexture._offsetY);
+                var pixelData:number[] = testTexture.getPixel32(p.x - do_privs._hitTestPointTexture._offsetX, p.y - do_privs._hitTestPointTexture._offsetY);
                 if (pixelData[3] != 0) {
                     return true;
                 }
@@ -1010,15 +1014,16 @@ module egret {
         public _measureSize(resultRect:Rectangle):egret.Rectangle {
             var self = this;
             var do_props = self._DO_Props_;
+            var do_privs = self._DO_Privs_;
             if (do_props._sizeDirty) {
                 resultRect = this._measureBounds();
-                do_props._rectW = resultRect.width;
-                do_props._rectH = resultRect.height;
+                do_privs._rectW = resultRect.width;
+                do_privs._rectH = resultRect.height;
                 this._clearSizeDirty();
             }
             else {
-                resultRect.width = do_props._rectW;
-                resultRect.height = do_props._rectH;
+                resultRect.width = do_privs._rectW;
+                resultRect.height = do_privs._rectH;
             }
             resultRect.x = 0;
             resultRect.y = 0;
@@ -1195,7 +1200,7 @@ module egret {
 
 
         private _setCacheDirty(dirty = true) {
-            this._DO_Props_._cacheDirty = dirty;
+            this._DO_Privs_._cacheDirty = dirty;
         }
 
         public static getTransformBounds(bounds:egret.Rectangle, mtx:egret.Matrix):egret.Rectangle {
