@@ -668,8 +668,8 @@ module egret {
             }
             var bounds = display.getBounds(Rectangle.identity);
             if (display._cacheDirty || display._texture_to_render == null ||
-                bounds.width - display._texture_to_render._textureWidth > 1 ||
-                bounds.height - display._texture_to_render._textureHeight > 1) {
+                Math.round(bounds.width) - display._texture_to_render._textureWidth >= 1 ||
+                Math.round(bounds.height) - display._texture_to_render._textureHeight >= 1) {
                 var cached = display._makeBitmapCache();
                 display._cacheDirty = !cached;
             }
