@@ -31,8 +31,6 @@ module egret.gui {
      * @private
      */
     export class ScrollerProperties {
-        public _verticalScrollPolicy: string = "auto";
-        public _horizontalScrollPolicy: string = "auto";
         public _viewport: IViewport = null;
         public _autoHideScrollBars: boolean = true;
 
