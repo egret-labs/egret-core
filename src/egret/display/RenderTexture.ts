@@ -151,8 +151,8 @@ module egret {
             renderFilter._drawAreaList = drawAreaList;
             this._sourceWidth = width;
             this._sourceHeight = height;
-            this._textureWidth = originalWidth;
-            this._textureHeight = originalHeight;
+            this._textureWidth = Math.round(originalWidth);
+            this._textureHeight = Math.round(originalHeight);
 
             this.end();
 
