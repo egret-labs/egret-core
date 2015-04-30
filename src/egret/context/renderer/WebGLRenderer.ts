@@ -230,9 +230,6 @@ module egret {
                 if (bounds.width == 0 || bounds.height == 0) {
                     return false;
                 }
-                if (clipBounds && (clipBounds.width == 0 || clipBounds.height == 0)) {
-                    return false;
-                }
                 if (typeof scale == "undefined") {
                     scale = 1;
                 }
@@ -277,6 +274,10 @@ module egret {
                 this._offsetX = x + anchorOffsetX;
                 this._offsetY = y + anchorOffsetY;
                 displayObject._worldTransform.append(1, 0, 0, 1, -this._offsetX, -this._offsetY);
+                if(clipBounds) {
+                    this._offsetX -= x;
+                    this._offsetY -= y;
+                }
                 displayObject.worldAlpha = 1;
                 var __use_new_draw = MainContext.__use_new_draw;
                 MainContext.__use_new_draw = false;

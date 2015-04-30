@@ -424,24 +424,23 @@ module egret_h5_graphics {
             function (x, y, width, height) {
                 var rendererContext = <egret.HTML5CanvasRenderer>this.renderContext;
                 this.canvasContext.save();
-                var _x:number = rendererContext._transformTx + x;//控制X偏移
-                var _y:number = rendererContext._transformTy + y;//控制Y偏移
+                var _x:number = rendererContext._transformTx + x + width / 2;//控制X偏移
+                var _y:number = rendererContext._transformTy + y + height / 2;//控制Y偏移
                 var r:number = (width > height) ? width : height;//选宽高较大者做为arc半径参数
                 var ratioX:number = width / r;//横轴缩放比率
                 var ratioY:number = height / r;//纵轴缩放比率
+                r /= 2;
                 this.canvasContext.scale(ratioX, ratioY);//进行缩放(均匀压缩)
                 this.canvasContext.beginPath();
-                this.canvasContext.moveTo((_x + width) / ratioX, _y / ratioY);
                 this.canvasContext.arc(_x / ratioX, _y / ratioY, r, 0, 2 * Math.PI);
                 this.canvasContext.closePath();
                 this.canvasContext.restore();
-                this.canvasContext.stroke();
             },
             this,
             [x, y, width, height]
         ));
         this._fill();
-        this.checkRect(x - width, y - height, 2 * width, 2 * height);
+        this.checkRect(x, y, width, height);
     }
 
     export function lineStyle(thickness:number = NaN, color:number = 0, alpha:number = 1.0, pixelHinting:boolean = false, scaleMode:string = "normal", caps:string = null, joints:string = null, miterLimit:number = 3):void {

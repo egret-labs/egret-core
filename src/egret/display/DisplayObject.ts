@@ -72,8 +72,13 @@ module egret {
 
         public _setParentSizeDirty():void {
             var parent = this._parent;
-            if (parent && (!(parent._hasWidthSet || parent._hasHeightSet))) {
-                parent._setSizeDirty();
+            if (parent) {
+                if(!(parent._hasWidthSet || parent._hasHeightSet)) {
+                    parent._setSizeDirty();
+                }
+                else {
+                    parent._setCacheDirty();
+                }
             }
         }
         /**
@@ -668,8 +673,8 @@ module egret {
             }
             var bounds = display.getBounds(Rectangle.identity);
             if (display._cacheDirty || display._texture_to_render == null ||
-                bounds.width - display._texture_to_render._textureWidth > 1 ||
-                bounds.height - display._texture_to_render._textureHeight > 1) {
+                Math.round(bounds.width) - display._texture_to_render._textureWidth >= 1 ||
+                Math.round(bounds.height) - display._texture_to_render._textureHeight >= 1) {
                 var cached = display._makeBitmapCache();
                 display._cacheDirty = !cached;
             }
@@ -1168,7 +1173,7 @@ module egret {
 
         private _cacheDirty:boolean = false;
 
-        private _setCacheDirty(dirty = true) {
+        public _setCacheDirty(dirty = true) {
             this._cacheDirty = dirty;
         }
 

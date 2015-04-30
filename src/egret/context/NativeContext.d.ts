@@ -157,6 +157,7 @@ declare module egret_native {
 
     module Texture {
 
+        function create(filePath:string):any;
         function addTexture(filePath:string):any;
         function addTextureAsyn(filePath:string, promise:any):any;
         function addTextureUnsyn(filePath:string, promise:any):any;

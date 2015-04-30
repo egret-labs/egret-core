@@ -792,7 +792,7 @@ module egret {
             var text2Arr:Array<egret.ITextElement> = self._textArr;
             var renderContext = egret.MainContext.instance.rendererContext;
 
-            self._linesArr = [];
+            self._linesArr.length = 0;
             properties._textMaxHeight = 0;
             properties._textMaxWidth = 0;
 

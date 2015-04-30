@@ -13,10 +13,11 @@ egret_native.loadAllChange = function () {
     var errorList = [];
     var errorCount = 0;
 
+    var self = this;
     var loader = new egret.NativeResourceLoader();
-    loader.addEventListener(egret.IOErrorEvent.IO_ERROR, loadError, this);
-    loader.addEventListener(egret.Event.COMPLETE, loadComplete, this);
-    loader.addEventListener(egret.ProgressEvent.PROGRESS, loadProgress, this);
+    loader.addEventListener(egret.IOErrorEvent.IO_ERROR, loadError, self);
+    loader.addEventListener(egret.Event.COMPLETE, loadComplete, self);
+    loader.addEventListener(egret.ProgressEvent.PROGRESS, loadProgress, self);
 
     var loadBytes = 0;
     var totalBytes = 0;
@@ -32,9 +33,9 @@ egret_native.loadAllChange = function () {
         else if (errorCount > 3) {
         //结束，加载出错
         //End with loading error
-            loader.removeEventListener(egret.IOErrorEvent.IO_ERROR, loadError, this);
-            loader.removeEventListener(egret.Event.COMPLETE, loadComplete, this);
-            loader.removeEventListener(egret.ProgressEvent.PROGRESS, loadProgress, this);
+            loader.removeEventListener(egret.IOErrorEvent.IO_ERROR, loadError, self);
+            loader.removeEventListener(egret.Event.COMPLETE, loadComplete, self);
+            loader.removeEventListener(egret.ProgressEvent.PROGRESS, loadProgress, self);
 
             egret_native.loadError();
         }
@@ -48,9 +49,9 @@ egret_native.loadAllChange = function () {
         else {
         //结束，加载成功
         //End with loading successfully
-            loader.removeEventListener(egret.IOErrorEvent.IO_ERROR, loadError, this);
-            loader.removeEventListener(egret.Event.COMPLETE, loadComplete, this);
-            loader.removeEventListener(egret.ProgressEvent.PROGRESS, loadProgress, this);
+            loader.removeEventListener(egret.IOErrorEvent.IO_ERROR, loadError, self);
+            loader.removeEventListener(egret.Event.COMPLETE, loadComplete, self);
+            loader.removeEventListener(egret.ProgressEvent.PROGRESS, loadProgress, self);
 
             egret_native.removeUI();
 
