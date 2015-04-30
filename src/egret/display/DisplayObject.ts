@@ -72,8 +72,13 @@ module egret {
 
         public _setParentSizeDirty():void {
             var parent = this._parent;
-            if (parent && (!(parent._hasWidthSet || parent._hasHeightSet))) {
-                parent._setSizeDirty();
+            if (parent) {
+                if(!(parent._hasWidthSet || parent._hasHeightSet)) {
+                    parent._setSizeDirty();
+                }
+                else {
+                    parent._setCacheDirty();
+                }
             }
         }
         /**
@@ -1168,7 +1173,7 @@ module egret {
 
         private _cacheDirty:boolean = false;
 
-        private _setCacheDirty(dirty = true) {
+        public _setCacheDirty(dirty = true) {
             this._cacheDirty = dirty;
         }
 

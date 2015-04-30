@@ -242,6 +242,10 @@ module egret {
                     addTextureAsync();
                 }
                 else {
+                    // 返回一个js的Texture对象，并将filePath设置为其属性
+                    //var texture = egret_native.Texture.create(url);
+                    //texture.uploadSync();
+                    //addTexture(texture);
                     var bitmapData = egret_native.Texture.addTexture(url);
                     addTexture(bitmapData);
                 }
