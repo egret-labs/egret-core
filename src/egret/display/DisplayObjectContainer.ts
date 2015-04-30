@@ -344,7 +344,7 @@ module egret {
                 RenderCommand.push(o._pushMask, o);
             }
             super._updateTransform();
-            if(!o["_cacheAsBitmap"] || !o._texture_to_render) {
+            if(!o._DO_Props_._cacheAsBitmap || !o._texture_to_render) {
                 for (var i = 0, children = o._children, length = children.length; i < length; i++) {
                     var child:DisplayObject = children[i];
                     child._updateTransform();
