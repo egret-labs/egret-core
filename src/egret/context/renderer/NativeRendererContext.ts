@@ -185,7 +185,7 @@ module egret {
         public setupFont(textField:TextField, style:egret.ITextStyle = null):void {
             style = style || <egret.ITextStyle>{};
             var properties:egret.TextFieldProperties = textField._properties;
-            var size:number = style["size"] == null ? properties._size : style["size"];
+            var size:number = style.size == null ? properties._size : style.size;
 
             var outline;
             if (style.stroke != null) {

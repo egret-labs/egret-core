@@ -235,10 +235,10 @@ module egret {
         public setupFont(textField:TextField, style:egret.ITextStyle = null):void {
             style = style || <egret.ITextStyle>{};
             var properties:egret.TextFieldProperties = textField._properties;
-            var italic:boolean = style["italic"] == null ? properties._italic : style["italic"];
-            var bold:boolean = style["bold"] == null ? properties._bold : style["bold"];
-            var size:number = style["size"] == null ? properties._size : style["size"];
-            var fontFamily:string = style["fontFamily"] == null ? properties._fontFamily : style["fontFamily"];
+            var italic:boolean = style.italic == null ? properties._italic : style.italic;
+            var bold:boolean = style.bold == null ? properties._bold : style.bold;
+            var size:number = style.size == null ? properties._size : style.size;
+            var fontFamily:string = style.fontFamily == null ? properties._fontFamily : style.fontFamily;
             var ctx = this.drawCanvasContext;
             var font:string = italic ? "italic " : "normal ";
             font += bold ? "bold " : "normal ";

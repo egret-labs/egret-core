@@ -446,7 +446,7 @@ module egret.gui {
 			}
 			if("styleChanged" in child){
 				var chain:any = this._UIC_Props_._styleProtoChain;
-				if(chain||child["_styleProtoChain"]){
+				if(chain|| ((<UIComponent>child)._UIC_Props_ && (<UIComponent>child)._UIC_Props_._styleProtoChain)){
 					child["regenerateStyleCache"](chain);
 					child["styleChanged"](null);
 					child["notifyStyleChangeInChildren"](null);
