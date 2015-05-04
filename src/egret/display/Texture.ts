@@ -261,12 +261,9 @@ module egret {
                 return;
             }
             var winURL = window["URL"] || window["webkitURL"];
-            if (winURL) {
-                if (Texture._bitmapCallbackMap[url]) {//正在加载中
-                    Texture._addToCallbackList(url, callback);
-                }
-                else {
-                    Texture._addToCallbackList(url, callback);
+            if (Texture._bitmapCallbackMap[url] == null) {//非正在加载中
+                Texture._addToCallbackList(url, callback);
+                if (url.indexOf("http:") != 0 && url.indexOf("https:") != 0 && Browser.getInstance().isIOS() && winURL) {
                     var xhr = new XMLHttpRequest();
                     xhr.open("get", url, true);
                     xhr.responseType = "blob";
@@ -289,12 +286,7 @@ module egret {
                     };
                     xhr.send();
                 }
-            } else {
-                if (Texture._bitmapCallbackMap[url]) {//正在加载中
-                    Texture._addToCallbackList(url, callback);
-                }
                 else {
-                    Texture._addToCallbackList(url, callback);
                     bitmapData.onload = function () {
                         Texture._onLoad(url, bitmapData);
                     };
@@ -303,6 +295,9 @@ module egret {
                     };
                     bitmapData.src = url;
                 }
+            }
+            else {
+                Texture._addToCallbackList(url, callback);
             }
         }
 

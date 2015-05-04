@@ -53,6 +53,14 @@ module egret {
             return egret.MainContext.deviceType == egret.MainContext.DEVICE_MOBILE;
         }
 
+        /**
+         * 判断是否是ios
+         * @returns {boolean}
+         */
+        public isIOS():boolean {
+            return this.ua.indexOf("iphone") >= 0 || this.ua.indexOf("ipad") >= 0 || this.ua.indexOf("ipod") >= 0;
+        }
+
         constructor() {
             super();
             this.ua = navigator.userAgent.toLowerCase();
