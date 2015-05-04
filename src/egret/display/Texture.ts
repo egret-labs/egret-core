@@ -276,7 +276,6 @@ module egret {
 
                             bitmapData.onload = function () {
                                 winURL.revokeObjectURL(bitmapData.src); // 清除释放
-                                bitmapData["avaliable"] = true;
                                 Texture._onLoad(url, bitmapData);
                             };
                             bitmapData.onerror = function () {
@@ -296,40 +295,25 @@ module egret {
                 }
                 else {
                     Texture._addToCallbackList(url, callback);
-                    bitmapData.onload = onLoad;
-                    bitmapData.onerror = onError;
+                    bitmapData.onload = function () {
+                        Texture._onLoad(url, bitmapData);
+                    };
+                    bitmapData.onerror = function () {
+                        Texture._onError(url, bitmapData);
+                    };
                     bitmapData.src = url;
-                }
-            }
-
-            function onLoad() {
-                var bitmapData = this;
-                bitmapData["avaliable"] = true;
-                for (var key in Texture._bitmapCallbackMap) {
-                    if (Texture._bitmapCallbackMap[key] == bitmapData) {
-                        break;
-                    }
-                }
-                if (key) {
-                    Texture._onLoad(key, bitmapData);
-                }
-            }
-
-            function onError() {
-                var bitmapData = this;
-                bitmapData["avaliable"] = true;
-                for (var key in Texture._bitmapCallbackMap) {
-                    if (Texture._bitmapCallbackMap[key] == bitmapData) {
-                        break;
-                    }
-                }
-                if (key) {
-                    Texture._onError(key, bitmapData);
                 }
             }
         }
 
         public static _onLoad(url, bitmapData):void {
+            bitmapData["avaliable"] = true;
+            if(bitmapData.onload){
+                bitmapData.onload = null;
+            }
+            if(bitmapData.onerror){
+                bitmapData.onerror = null;
+            }
             var list = Texture._bitmapCallbackMap[url];
             if (list && list.length) {
                 var l = list.length;
@@ -366,7 +350,6 @@ module egret {
                         var promise = new egret.PromiseObject();
                         promise.onSuccessFunc = function (bitmapData) {
                             Texture._bitmapDataFactory[url] = bitmapData;
-                            bitmapData["avaliable"] = true;
                             Texture._onLoad(url, bitmapData);
                         };
                         promise.onErrorFunc = function () {
