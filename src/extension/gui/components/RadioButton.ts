@@ -59,7 +59,7 @@ module egret.gui {
 		 * @member egret.gui.RadioButton#enabled
 		 */
 		public get enabled():boolean{
-			if (!this._enabled)
+			if (!this._UIC_Props_._enabled)
 				return false;
 			return !this._radioButtonGroup || 
 				this._radioButtonGroup.enabled;

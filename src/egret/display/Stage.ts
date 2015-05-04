@@ -63,7 +63,7 @@ module egret {
         public constructor(width:number = 480, height:number = 800) {
             super();
             this.touchEnabled = true;
-            this._stage = this;
+            this._DO_Props_._stage = this;
             this._stageWidth = width;
             this._stageHeight = height;
 
@@ -146,7 +146,7 @@ module egret {
          * @returns {egret.DisplayObject}
          */
         public hitTest(x, y, ignoreTouchEnabled:boolean = false):DisplayObject {
-            if (!this._touchEnabled) {
+            if (!this._DO_Props_._touchEnabled) {
                 return null;
             }
             var result:DisplayObject;
@@ -158,7 +158,7 @@ module egret {
             for (var i = l - 1; i >= 0; i--) {
                 var child = children[i];
                 var mtx = child._getMatrix();
-                var scrollRect = child._scrollRect;
+                var scrollRect = child._DO_Props_._scrollRect;
                 if (scrollRect) {
                     mtx.append(1, 0, 0, 1, -scrollRect.x, -scrollRect.y);
                 }
@@ -166,7 +166,7 @@ module egret {
                 var point = Matrix.transformCoords(mtx, x, y);
                 result = child.hitTest(point.x, point.y, true);
                 if (result) {
-                    if (result._touchEnabled) {
+                    if (result._DO_Props_._touchEnabled) {
                         return result;
                     }
                 }

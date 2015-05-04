@@ -46,7 +46,7 @@ module egret {
 
         public _addStageText():void {
             if (!this._text._inputEnabled) {
-                this._text._touchEnabled = true;
+                this._text._DO_Props_._touchEnabled = true;
             }
 
             this.stageText._add();
@@ -62,7 +62,7 @@ module egret {
 
         public _removeStageText():void {
             if (!this._text._inputEnabled) {
-                this._text._touchEnabled = false;
+                this._text._DO_Props_._touchEnabled = false;
             }
 
             this.stageText._remove();
@@ -102,7 +102,7 @@ module egret {
             event.stopPropagation();
 
             var self = this;
-            if (!this._text._visible) {
+            if (!this._text._DO_Props_._visible) {
                 return;
             }
 
@@ -141,7 +141,7 @@ module egret {
         public _updateTransform():void {//
             this._text._updateBaseTransform();
 
-            if (!this._text._visible && this.stageText) {
+            if (!this._text._DO_Props_._visible && this.stageText) {
                 this._hideInput();
             }
         }
@@ -152,13 +152,13 @@ module egret {
                 return;
             }
 
-            var stage:egret.Stage = this._text._stage;
+            var stage:egret.Stage = this._text._DO_Props_._stage;
             if (stage == null) {
                 this.stageText._setVisible(false);
             }
             else {
                 var item:DisplayObject = this._text;
-                var visible:boolean = item._visible;
+                var visible:boolean = item._DO_Props_._visible;
                 while (true) {
                     if (!visible) {
                         break;
@@ -167,7 +167,7 @@ module egret {
                     if (item == stage) {
                         break;
                     }
-                    visible = item._visible;
+                    visible = item._DO_Props_._visible;
                 }
                 this.stageText._setVisible(visible);
             }

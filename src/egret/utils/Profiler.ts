@@ -91,7 +91,7 @@ module egret {
                 this._txt = new TextField();
                 this._txt.size = 28;
                 this._txt.multiline = true;
-                this._txt._parent = new egret.DisplayObjectContainer();
+                this._txt._DO_Props_._parent = new egret.DisplayObjectContainer();
             }
 
             if (this._isRunning) {

@@ -250,8 +250,8 @@ module egret.gui {
                 var w:number;
                 var h:number;
                 if(this.autoScale){
-                    w = this._width;
-                    h = this._height;
+                    w = this._UIC_Props_._width;
+                    h = this._UIC_Props_._height;
                 }
                 else{
                     w = texture._textureWidth;

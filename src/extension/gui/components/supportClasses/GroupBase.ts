@@ -230,7 +230,7 @@ module egret.gui {
          */
         private updateScrollRect(w:number, h:number):void{
 
-            var rect:Rectangle = this._scrollRect;
+            var rect:Rectangle = this._DO_Props_._scrollRect;
             if(this._clipAndEnableScrolling){
                 if(rect){
                     rect.x = this._horizontalScrollPosition;
@@ -239,12 +239,12 @@ module egret.gui {
                     rect.height = h;
                 }
                 else{
-                    this._scrollRect = new Rectangle(this._horizontalScrollPosition,
+                    this._DO_Props_._scrollRect = new Rectangle(this._horizontalScrollPosition,
                         this._verticalScrollPosition, w, h)
                 }
             }
             else if(rect){
-                this._scrollRect = null;
+                this._DO_Props_._scrollRect = null;
             }
 
         }

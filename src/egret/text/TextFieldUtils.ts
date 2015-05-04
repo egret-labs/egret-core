@@ -41,11 +41,11 @@ module egret {
         public static _getStartLine(textfield:egret.TextField):number {
             var textHeight:number = TextFieldUtils._getTextHeight(textfield);
             var startLine:number = 0;
-            if (textfield._hasHeightSet) {//
-                if (textHeight < textfield._explicitHeight) {//最大高度比需要显示的高度小
+            if (textfield._DO_Props_._hasHeightSet) {//
+                if (textHeight < textfield._DO_Props_._explicitHeight) {//最大高度比需要显示的高度小
 
                 }
-                else if (textHeight > textfield._explicitHeight) {//最大高度比需要显示的高度大
+                else if (textHeight > textfield._DO_Props_._explicitHeight) {//最大高度比需要显示的高度大
                     startLine = Math.max(textfield._properties._scrollV - 1, 0);
                     startLine = Math.min(textfield._properties._numLines - 1, startLine);
                 }
@@ -101,8 +101,8 @@ module egret {
                 }
                 return 0.5;
             }
-            if (textfield._hasHeightSet) {//
-                if (textHeight < textfield._explicitHeight) {//最大高度比需要显示的高度小
+            if (textfield._DO_Props_._hasHeightSet) {//
+                if (textHeight < textfield._DO_Props_._explicitHeight) {//最大高度比需要显示的高度小
                     var valign:number = 0;
                     if (textfield._properties._verticalAlign == VerticalAlign.MIDDLE)
                         valign = 0.5;

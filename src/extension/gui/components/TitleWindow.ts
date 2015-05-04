@@ -152,7 +152,7 @@ module egret.gui {
 				var offsetPoint:Point = this.globalToLocal(event.stageX, event.stageY,Point.identity);
                 this._offsetPointX = offsetPoint.x;
                 this._offsetPointY = offsetPoint.y;
-				this._includeInLayout = false;
+				this._UIC_Props_._includeInLayout = false;
 				UIGlobals.stage.addEventListener(
 					TouchEvent.TOUCH_MOVE, this.moveArea_mouseMoveHandler, this);
 				UIGlobals.stage.addEventListener(

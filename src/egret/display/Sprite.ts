@@ -70,7 +70,7 @@ module egret {
             var l = this._children.length;
             for (var i = 0; i < l; i++) {
                 var child = this._children[i];
-                if (!child._visible) {
+                if (!child._DO_Props_._visible) {
                     continue;
                 }
 

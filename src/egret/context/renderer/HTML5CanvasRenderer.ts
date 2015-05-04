@@ -209,10 +209,10 @@ module egret {
         public setupFont(textField:TextField, style:egret.ITextStyle = null):void {
             style = style || <egret.ITextStyle>{};
             var properties:egret.TextFieldProperties = textField._properties;
-            var italic:boolean = style["italic"] == null ? properties._italic : style["italic"];
-            var bold:boolean = style["bold"] == null ? properties._bold : style["bold"];
-            var size:number = style["size"] == null ? properties._size : style["size"];
-            var fontFamily:string = style["fontFamily"] == null ? properties._fontFamily : style["fontFamily"];
+            var italic:boolean = style.italic == null ? properties._italic : style.italic;
+            var bold:boolean = style.bold == null ? properties._bold : style.bold;
+            var size:number = style.size == null ? properties._size : style.size;
+            var fontFamily:string = style.fontFamily == null ? properties._fontFamily : style.fontFamily;
             var ctx = this.drawCanvasContext;
             var font:string = italic ? "italic " : "normal ";
             font += bold ? "bold " : "normal ";
@@ -361,7 +361,7 @@ module egret_h5_graphics {
             )
         );
         this._fill();
-        this.checkRect(x, y, width, height);
+        this._checkRect(x, y, width, height);
     }
 
     export function drawCircle(x:number, y:number, r:number):void {
@@ -379,7 +379,7 @@ module egret_h5_graphics {
             [x, y, r]
         ));
         this._fill();
-        this.checkRect(x - r, y - r, 2 * r, 2 * r);
+        this._checkRect(x - r, y - r, 2 * r, 2 * r);
     }
 
     export function drawRoundRect(x:number, y:number, width:number, height:number, ellipseWidth:number, ellipseHeight?:number):void {
@@ -415,7 +415,7 @@ module egret_h5_graphics {
             )
         );
         this._fill();
-        this.checkRect(x, y, width, height);
+        this._checkRect(x, y, width, height);
     }
 
     export function drawEllipse(x:number, y:number, width:number, height:number):void {
@@ -440,7 +440,7 @@ module egret_h5_graphics {
             [x, y, width, height]
         ));
         this._fill();
-        this.checkRect(x, y, width, height);
+        this._checkRect(x, y, width, height);
     }
 
     export function lineStyle(thickness:number = NaN, color:number = 0, alpha:number = 1.0, pixelHinting:boolean = false, scaleMode:string = "normal", caps:string = null, joints:string = null, miterLimit:number = 3):void {
@@ -478,10 +478,10 @@ module egret_h5_graphics {
             this,
             [x, y]
         ));
-        this.checkPoint(this.lineX, this.lineY);
+        (<egret.Graphics>this)._checkPoint(this.lineX, this.lineY);
         this.lineX = x;
         this.lineY = y;
-        this.checkPoint(x, y);
+        this._checkPoint(x, y);
     }
 
     export function curveTo(controlX:Number, controlY:Number, anchorX:Number, anchorY:Number):void {
@@ -496,11 +496,11 @@ module egret_h5_graphics {
             this,
             [controlX, controlY, anchorX, anchorY]
         ));
-        this.checkPoint(this.lineX, this.lineY);
+        this._checkPoint(this.lineX, this.lineY);
         this.lineX = anchorX;
         this.lineY = anchorY;
-        this.checkPoint(controlX, controlY);
-        this.checkPoint(anchorX, anchorY);
+        this._checkPoint(controlX, controlY);
+        this._checkPoint(anchorX, anchorY);
     }
 
     export function moveTo(x:number, y:number):void {

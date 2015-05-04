@@ -238,7 +238,7 @@ module egret.gui {
 		 * 动画播放过程中触发的更新数值函数
 		 */		
 		private animationUpdateHandler(animation:Animation):void{
-            var rect:Rectangle = (<DisplayObject><any> (this.popUp))._scrollRect;
+            var rect:Rectangle = (<DisplayObject><any> (this.popUp))._DO_Props_._scrollRect;
             var x:number = Math.round(animation.currentValue["x"]);
             var y:number = Math.round(animation.currentValue["y"]);
             if(rect){
@@ -249,7 +249,7 @@ module egret.gui {
                 (<DisplayObject><any> (this.popUp))._setScrollRect(rect);
             }
             else{
-                (<DisplayObject><any> (this.popUp))._scrollRect = new Rectangle(x,y,
+                (<DisplayObject><any> (this.popUp))._DO_Props_._scrollRect = new Rectangle(x,y,
                     this.popUp.width, this.popUp.height)
             }
 		}

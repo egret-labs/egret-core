@@ -47,7 +47,7 @@ module egret {
         constructor() {
             super();
             this._children = [];
-            this._isContainer = true;
+            this._DO_Props_._isContainer = true;
 
         }
 
@@ -110,7 +110,7 @@ module egret {
         public addChild(child:DisplayObject):DisplayObject {
             var index:number = this._children.length;
 
-            if (child._parent == this)
+            if (child._DO_Props_._parent == this)
                 index--;
 
             return this._doAddChild(child, index);
@@ -138,7 +138,7 @@ module egret {
                 return child;
             }
 
-            var host:DisplayObjectContainer = child._parent;
+            var host:DisplayObjectContainer = child._DO_Props_._parent;
             if (host == this) {
                 this.doSetChildIndex(child, index);
                 return child;
@@ -155,7 +155,7 @@ module egret {
             child._parentChanged(this);
             if (notifyListeners)
                 child.dispatchEventWith(Event.ADDED, true);
-            if (this._stage) {//当前容器在舞台
+            if (this._DO_Props_._stage) {//当前容器在舞台
                 child._onAddToStage();
                 var list = DisplayObjectContainer.__EVENT__ADD_TO_STAGE_LIST;
                 while (list.length > 0) {
@@ -211,7 +211,7 @@ module egret {
                 child.dispatchEventWith(Event.REMOVED, true);
             }
 
-            if (this._stage) {//在舞台上
+            if (this._DO_Props_._stage) {//在舞台上
                 child._onRemoveFromStage();
                 var list = DisplayObjectContainer.__EVENT__REMOVE_FROM_STAGE_LIST
                 while (list.length > 0) {
@@ -219,7 +219,7 @@ module egret {
                     if (notifyListeners){
                         childAddToStage.dispatchEventWith(Event.REMOVED_FROM_STAGE);
                     }
-                    childAddToStage._stage = null;
+                    childAddToStage._DO_Props_._stage = null;
                 }
             }
             child._parentChanged(null);
@@ -258,7 +258,7 @@ module egret {
                 if (child == this) {
                     return true;
                 }
-                child = child._parent;
+                child = child._DO_Props_._parent;
             }
             return false;
         }
@@ -330,21 +330,21 @@ module egret {
         public _updateTransform():void {
             var o = this;
 
-            if (!o._visible) {
+            if (!o._DO_Props_._visible) {
                 return;
             }
-            if(o._filter) {
+            if(o._DO_Props_._filter) {
                 RenderCommand.push(o._setGlobalFilter, o);
             }
-            if (o._colorTransform) {
+            if (o._DO_Props_._colorTransform) {
                 RenderCommand.push(o._setGlobalColorTransform, o);
             }
-            var mask = o.mask || o._scrollRect;
+            var mask = o.mask || o._DO_Props_._scrollRect;
             if(mask) {
                 RenderCommand.push(o._pushMask, o);
             }
             super._updateTransform();
-            if(!o["_cacheAsBitmap"] || !o._texture_to_render) {
+            if(!o._DO_Props_._cacheAsBitmap || !o._texture_to_render) {
                 for (var i = 0, children = o._children, length = children.length; i < length; i++) {
                     var child:DisplayObject = children[i];
                     child._updateTransform();
@@ -353,10 +353,10 @@ module egret {
             if(mask) {
                 RenderCommand.push(o._popMask, o);
             }
-            if (o._colorTransform) {
+            if (o._DO_Props_._colorTransform) {
                 RenderCommand.push(o._removeGlobalColorTransform, o);
             }
-            if(o._filter) {
+            if(o._DO_Props_._filter) {
                 RenderCommand.push(o._removeGlobalFilter, o);
             }
         }
@@ -385,7 +385,7 @@ module egret {
 
             for (var i = 0; i < l; i++) {
                 var child = children[i];
-                if (!child._visible) {
+                if (!child._DO_Props_._visible) {
                     continue;
                 }
 
@@ -430,13 +430,13 @@ module egret {
         public hitTest(x:number, y:number, ignoreTouchEnabled:boolean = false):DisplayObject {
             var o = this;
             var result:DisplayObject;
-            if (!o._visible) {
+            if (!o._DO_Props_._visible) {
                 return null;
             }
-            if (o._scrollRect) {
-                if (x < o._scrollRect.x || y < o._scrollRect.y
-                    || x > o._scrollRect.x + o._scrollRect.width
-                    || y > o._scrollRect.y + o._scrollRect.height) {
+            if (o._DO_Props_._scrollRect) {
+                if (x < o._DO_Props_._scrollRect.x || y < o._DO_Props_._scrollRect.y
+                    || x > o._DO_Props_._scrollRect.x + o._DO_Props_._scrollRect.width
+                    || y > o._DO_Props_._scrollRect.y + o._DO_Props_._scrollRect.height) {
                     return null;
                 }
             }
@@ -454,7 +454,7 @@ module egret {
             for (var i = l - 1; i >= 0; i--) {
                 var child = children[i];
                 var mtx = child._getMatrix();
-                var scrollRect = child._scrollRect;
+                var scrollRect = child._DO_Props_._scrollRect;
                 if (scrollRect) {
                     mtx.append(1, 0, 0, 1, -scrollRect.x, -scrollRect.y);
                 }
@@ -466,7 +466,7 @@ module egret {
                         return o;
                     }
 
-                    if (childHitTestResult._touchEnabled && touchChildren) {
+                    if (childHitTestResult._DO_Props_._touchEnabled && touchChildren) {
                         return childHitTestResult;
                     }
 
