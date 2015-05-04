@@ -134,7 +134,7 @@ module egret {
             return result.data;
         }
 
-        public dispose() {
+        public dispose():void {
             var bitmapData = this._bitmapData;
             if (bitmapData.dispose) {
                 bitmapData.dispose();
@@ -146,5 +146,279 @@ module egret {
             texture._bitmapData = this._bitmapData;
             return texture;
         }
+
+        public draw(context:any, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, renderType) {
+
+        }
+
+        public _drawForCanvas(context:CanvasRenderingContext2D, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, renderType) {
+
+            var bitmapData = this._bitmapData;
+            if (!bitmapData["avaliable"]) {
+                return;
+            }
+            if (renderType != undefined) {
+                this._drawRepeatImageForCanvas(context, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, renderType)
+            }
+            else {
+                context.drawImage(bitmapData, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight);
+            }
+        }
+
+        public _drawForNative(context:any, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, renderType) {
+            var bitmapData = this._bitmapData;
+            if (!bitmapData["avaliable"]) {
+                return;
+            }
+            if (renderType !== undefined) {
+                this._drawRepeatImageForNative(context, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, renderType);
+            }
+            else {
+                context.drawImage(bitmapData, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight);
+            }
+        }
+
+        public _drawRepeatImageForNative(context:any, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, repeat) {
+            var texture_scale_factor = egret.MainContext.instance.rendererContext._texture_scale_factor;
+            sourceWidth = sourceWidth * texture_scale_factor;
+            sourceHeight = sourceHeight * texture_scale_factor;
+            for (var x:number = destX; x < destWidth; x += sourceWidth) {
+                for (var y:number = destY; y < destHeight; y += sourceHeight) {
+                    var destW:number = Math.min(sourceWidth, destWidth - x);
+                    var destH:number = Math.min(sourceHeight, destHeight - y);
+                    this._drawForNative(context, sourceX, sourceY, destW / texture_scale_factor, destH / texture_scale_factor, x, y, destW, destH, undefined);
+                }
+            }
+        }
+
+        public _drawRepeatImageForCanvas(context:CanvasRenderingContext2D, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, repeat) {
+            if (this['pattern'] === undefined) {
+                var texture_scale_factor = egret.MainContext.instance.rendererContext._texture_scale_factor;
+                var image = this._bitmapData;
+                var tempImage:HTMLElement = image;
+                if (image.width != sourceWidth || image.height != sourceHeight || texture_scale_factor != 1) {
+                    var tempCanvas = document.createElement("canvas");
+                    tempCanvas.width = sourceWidth * texture_scale_factor;
+                    tempCanvas.height = sourceHeight * texture_scale_factor;
+                    tempCanvas.getContext("2d").drawImage(image, sourceX, sourceY, sourceWidth, sourceHeight, 0, 0, sourceWidth * texture_scale_factor, sourceHeight * texture_scale_factor);
+                    tempImage = tempCanvas;
+                }
+                var pat = context.createPattern(tempImage, repeat);
+                this['pattern'] = pat;
+            }
+            var pattern = this['pattern'];
+            context.fillStyle = pattern;
+            context.translate(destX, destY);
+            context.fillRect(0, 0, destWidth, destHeight);
+            context.translate(-destX, -destY);
+        }
+
+        public _disposeForCanvas():void {
+            Texture.deleteWebGLTexture(this);
+            var bitmapData = this._bitmapData;
+            bitmapData.onload = null;
+            bitmapData.onerror = null;
+            bitmapData.src = null;
+            bitmapData["avaliable"] = false;
+            console.log("_disposeForCanvas");
+        }
+
+        public _disposeForNative():void {
+            var bitmapData = this._bitmapData;
+            bitmapData.dispose();
+            bitmapData["avaliable"] = false;
+            console.log("_disposeForNative");
+        }
+
+        public static deleteWebGLTexture(texture:Texture):void {
+            var context = egret.MainContext.instance.rendererContext;
+            var gl:WebGLRenderingContext = context["gl"];
+            var bitmapData = texture._bitmapData;
+            if (bitmapData) {
+                var webGLTexture = bitmapData.webGLTexture;
+                if (webGLTexture && gl) {
+                    for (var key in webGLTexture) {
+                        var glTexture = webGLTexture[key];
+                        gl.deleteTexture(glTexture);
+                    }
+                }
+                bitmapData.webGLTexture = null;
+            }
+        }
+
+        public static createBitmapData(url:string, callback:(code:number, bitmapData:any)=>void):void {
+
+        }
+
+        public static _createBitmapDataForCanvasAndWebGl(url:string, callback:(code:number, bitmapData:any)=>void):void {
+            var bitmapData:HTMLImageElement = Texture._bitmapDataFactory[url];
+            if (!bitmapData) {
+                bitmapData = document.createElement("img");
+                Texture._bitmapDataFactory[url] = bitmapData;
+            }
+            if (bitmapData["avaliable"]) {//已经加载完成
+                callback(0, bitmapData);
+                return;
+            }
+            var winURL = window["URL"] || window["webkitURL"];
+            if (winURL) {
+                if (Texture._bitmapCallbackMap[url]) {//正在加载中
+                    Texture._addToCallbackList(url, callback);
+                }
+                else {
+                    Texture._addToCallbackList(url, callback);
+                    var xhr = new XMLHttpRequest();
+                    xhr.open("get", url, true);
+                    xhr.responseType = "blob";
+                    xhr.onload = function () {
+                        if (this.status == 200) {
+                            var blob = this.response;
+
+                            bitmapData.onload = function () {
+                                winURL.revokeObjectURL(bitmapData.src); // 清除释放
+                                bitmapData["avaliable"] = true;
+                                Texture._onLoad(url, bitmapData);
+                            };
+                            bitmapData.onerror = function () {
+                                Texture._onError(url, bitmapData);
+                            };
+                            bitmapData.src = winURL.createObjectURL(blob);
+                        }
+                        else {
+                            callback(1, null);
+                        }
+                    };
+                    xhr.send();
+                }
+            } else {
+                if (Texture._bitmapCallbackMap[url]) {//正在加载中
+                    Texture._addToCallbackList(url, callback);
+                }
+                else {
+                    Texture._addToCallbackList(url, callback);
+                    bitmapData.onload = onLoad;
+                    bitmapData.onerror = onError;
+                    bitmapData.src = url;
+                }
+            }
+
+            function onLoad() {
+                var bitmapData = this;
+                bitmapData["avaliable"] = true;
+                for (var key in Texture._bitmapCallbackMap) {
+                    if (Texture._bitmapCallbackMap[key] == bitmapData) {
+                        break;
+                    }
+                }
+                if (key) {
+                    Texture._onLoad(key, bitmapData);
+                }
+            }
+
+            function onError() {
+                var bitmapData = this;
+                bitmapData["avaliable"] = true;
+                for (var key in Texture._bitmapCallbackMap) {
+                    if (Texture._bitmapCallbackMap[key] == bitmapData) {
+                        break;
+                    }
+                }
+                if (key) {
+                    Texture._onError(key, bitmapData);
+                }
+            }
+        }
+
+        public static _onLoad(url, bitmapData):void {
+            var list = Texture._bitmapCallbackMap[url];
+            if (list && list.length) {
+                var l = list.length;
+                for (var i:number = 0; i < l; i++) {
+                    var callback = list[i];
+                    callback(0, bitmapData);
+                }
+                delete Texture._bitmapCallbackMap[url];
+            }
+        }
+
+        public static _onError(url, bitmapData):void {
+            var list = Texture._bitmapCallbackMap[url];
+            if (list && list.length) {
+                var l = list.length;
+                for (var i:number = 0; i < l; i++) {
+                    var callback = list[i];
+                    callback(1, bitmapData);
+                }
+                delete Texture._bitmapCallbackMap[url];
+            }
+        }
+
+        public static _createBitmapDataForNative(url:string, callback:(code:number, bitmapData:any)=>void):void {
+            console.log("_createBitmapDataForNative:" + url);
+            var bitmapData:any = Texture._bitmapDataFactory[url];
+            if (!bitmapData) {
+                if (egret["NativeNetContext"].__use_asyn) {//异步的
+                    if (Texture._bitmapCallbackMap[url]) {
+                        Texture._addToCallbackList(url, callback);
+                    }
+                    else {
+                        Texture._addToCallbackList(url, callback);
+                        var promise = new egret.PromiseObject();
+                        promise.onSuccessFunc = function (bitmapData) {
+                            Texture._bitmapDataFactory[url] = bitmapData;
+                            bitmapData["avaliable"] = true;
+                            Texture._onLoad(url, bitmapData);
+                        };
+                        promise.onErrorFunc = function () {
+                            Texture._onError(url, null);
+                        };
+                        console.log("addTextureAsyn");
+                        egret_native.Texture.addTextureAsyn(url, promise);
+                    }
+                }
+                else {
+                    console.log("addTexture");
+                    bitmapData = egret_native.Texture.addTexture(url);
+                    Texture._bitmapDataFactory[url] = bitmapData;
+                    bitmapData["avaliable"] = true;
+                    callback(0, bitmapData);
+                }
+            }
+            else if (bitmapData["avaliable"]) {
+                callback(0, bitmapData);
+            }
+            else {
+                console.log("reload");
+                bitmapData.reload();
+                bitmapData["avaliable"] = true;
+                callback(0, bitmapData);
+            }
+        }
+
+        private static _addToCallbackList(url, callback) {
+            var list = Texture._bitmapCallbackMap[url];
+            if (!list) {
+                list = [];
+            }
+            list.push(callback);
+            Texture._bitmapCallbackMap[url] = list;
+        }
+
+        private static _bitmapDataFactory:any = {};
+        private static _bitmapCallbackMap:any = {};
+    }
+}
+
+
+declare module egret_native {
+
+
+    module Texture {
+
+        function addTexture(filePath:string):any;
+        function addTextureAsyn(filePath:string, promise:any):any;
+        function addTextureUnsyn(filePath:string, promise:any):any;
+
+        function removeTexture(filePath:string):void;
     }
 }

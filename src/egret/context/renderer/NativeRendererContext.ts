@@ -41,6 +41,8 @@ module egret {
          */
         public constructor() {
             super();
+            Texture.prototype.draw = Texture.prototype._drawForNative;
+            Texture.prototype.dispose = Texture.prototype._disposeForNative;
         }
 
 
@@ -88,13 +90,7 @@ module egret {
          */
         public drawImage(texture:Texture, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, repeat = undefined) {
 
-            if (repeat !== undefined) {
-                this.drawRepeatImage(texture, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, repeat);
-                return;
-            }
-            else {
-                egret_native.Graphics.drawImage(texture._bitmapData, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight);
-            }
+            texture.draw(egret_native.Graphics, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, repeat);
 
             super.drawImage(texture, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight,repeat);
         }

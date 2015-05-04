@@ -37,6 +37,7 @@ module egret {
 
         public constructor() {
             super();
+            Texture.createBitmapData = Texture._createBitmapDataForCanvasAndWebGl;
         }
 
         public proceed(loader:URLLoader):void {
@@ -196,26 +197,16 @@ module egret {
         private loadTexture(loader:URLLoader):void {
 
             var request:URLRequest = loader._request;
-            var image = new Image();
-//            image.crossOrigin = "Anonymous";
-            image.onload = onImageComplete;
-            image.onerror = onLoadError;
-            image.src = request.url;
-
-            function onImageComplete(event) {
-                image.onerror = null;
-                image.onload = null;
+            Texture.createBitmapData(request.url, function(code:number,bitmapData:HTMLImageElement){
+                if (code != 0){
+                    IOErrorEvent.dispatchIOErrorEvent(loader);
+                    return;
+                }
                 var texture:Texture = new Texture();
-                texture._setBitmapData(image);
+                texture._setBitmapData(bitmapData);
                 loader.data = texture;
                 __callAsync(Event.dispatchEvent, Event, loader, Event.COMPLETE);
-            }
-
-            function onLoadError(event) {
-                image.onerror = null;
-                image.onload = null;
-                IOErrorEvent.dispatchIOErrorEvent(loader);
-            }
+            })
         }
     }
 }

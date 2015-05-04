@@ -46,6 +46,7 @@ module egret {
 
         public init():void {
             this._bitmapData = document.createElement("canvas");
+            this._bitmapData["avaliable"] = true;
             this.renderContext = egret.RendererContext.createRendererContext(this._bitmapData);
         }
 
@@ -120,7 +121,7 @@ module egret {
             renderFilter._drawAreaList.length = 0;
             this.renderContext.clearScreen();
             this.renderContext.onRenderStart();
-            RendererContext.deleteTexture(this);
+            Texture.deleteWebGLTexture(this);
             if(displayObject._filter) {
                 this.renderContext.setGlobalFilter(displayObject._filter);
             }

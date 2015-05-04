@@ -167,9 +167,14 @@ module RES {
                         delete this.textureMap[subkey];
                     }
                 }
+                this.onResourceDestroy(sheet);
                 return true;
             }
             return false;
+        }
+
+        protected onResourceDestroy(sheet:any){
+            sheet.dispose();
         }
     }
 }

@@ -49,6 +49,9 @@ module egret {
 
         constructor(canvas?:HTMLCanvasElement) {
             super();
+
+            Texture.prototype.dispose = Texture.prototype._disposeForCanvas;
+
             this.canvas = canvas || this.createCanvas();
             this.canvas.addEventListener("webglcontextlost", this.handleContextLost.bind(this), false);
             this.canvas.addEventListener("webglcontextrestored", this.handleContextRestored.bind(this), false);
@@ -106,6 +109,7 @@ module egret {
 
                 if (!this._bitmapData) {
                     this._bitmapData = document.createElement("canvas");
+                    this._bitmapData["avaliable"] = true;
                     this.renderContext = egret.RendererContext.createRendererContext(this._bitmapData);
                 }
                 var originalWidth = bounds.width;
@@ -142,7 +146,8 @@ module egret {
                 renderFilter._drawAreaList.length = 0;
                 this.renderContext.clearScreen();
                 this.renderContext.onRenderStart();
-                RendererContext.deleteTexture(this.renderTexture);
+                Texture.deleteWebGLTexture(this.renderTexture);
+                this.renderTexture.dispose();
                 if (this._colorTransform) {
                     this.renderContext.setGlobalColorTransform(this._colorTransform.matrix);
                 }
@@ -193,8 +198,10 @@ module egret {
             egret.RenderTexture.prototype.init = function () {
                 var o:any = this;
                 o._bitmapData = document.createElement("canvas");
+                o._bitmapData["avaliable"] = true;
                 o.canvasContext = o._bitmapData.getContext("2d");
                 o._webglBitmapData = document.createElement("canvas");
+                o._bitmapData["avaliable"] = true;
                 o.renderContext = new egret.WebGLRenderer(o._webglBitmapData);
             };
 
@@ -228,10 +235,12 @@ module egret {
                 }
                 if (!this._bitmapData) {
                     this._bitmapData = document.createElement("canvas");
+                    this._bitmapData["avaliable"] = true;
                     this.canvasContext = this._bitmapData.getContext("2d");
                     //todo 多层嵌套会有隐患
                     if (!RenderTexture["WebGLCanvas"]) {
                         RenderTexture["WebGLCanvas"] = document.createElement("canvas");
+                        RenderTexture["WebGLCanvas"]["avaliable"] = true;
                         RenderTexture["WebGLRenderer"] = new egret.WebGLRenderer(RenderTexture["WebGLCanvas"]);
                     }
                     this._webglBitmapData = RenderTexture["WebGLCanvas"];
@@ -289,7 +298,7 @@ module egret {
                 gl.clearColor(0, 0, 0, 0);
                 gl.clear(gl.COLOR_BUFFER_BIT);
                 this.renderContext.onRenderStart();
-                RendererContext.deleteTexture(this);
+                Texture.deleteWebGLTexture(this);
                 if(displayObject._filter) {
                     this.renderContext.setGlobalFilter(displayObject._filter);
                 }
@@ -365,7 +374,7 @@ module egret {
             //        this["graphics_webgl_texture"] = new egret.Texture();
             //    }
             //    this["graphics_webgl_texture"]._setBitmapData(renderContext.html5Canvas);
-            //    RendererContext.deleteTexture(this["graphics_webgl_texture"]);
+            //    RendererContext.deleteTexture(this);
             //    renderContext.setTransform(egret.Matrix.identity.identity());
             //    renderContext.drawImage(this["graphics_webgl_texture"], 0, 0, stageW, stageH, 0, 0, stageW, stageH);
             //    this.canvasContext.restore();
@@ -545,6 +554,10 @@ module egret {
 
         public drawImage(texture:Texture, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, repeat = undefined) {
             if (this.contextLost) {
+                return;
+            }
+            var bitmapData = texture._bitmapData;
+            if (!bitmapData["avaliable"]) {
                 return;
             }
             if (repeat !== undefined) {

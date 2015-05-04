@@ -120,10 +120,11 @@ module RES {
      * 销毁单个资源文件或一组资源的缓存数据,返回是否删除成功。
      * @method RES.destroyRes
      * @param name {string} 配置文件中加载项的name属性或资源组名
+     * @param force {boolean} 销毁一个资源组时其他资源组有同样资源情况资源是否会被删除，默认值true
      * @returns {boolean}
      */
-    export function destroyRes(name:string):boolean{
-        return instance.destroyRes(name);
+    export function destroyRes(name:string, force?:boolean):boolean{
+        return instance.destroyRes(name, force);
     }
     /**
      * 设置最大并发加载线程数量，默认值是2.
@@ -574,11 +575,12 @@ module RES {
          * 销毁单个资源文件或一组资源的缓存数据,返回是否删除成功。
 		 * @method RES.destroyRes
          * @param name {string} 配置文件中加载项的name属性或资源组名
+         * @param force {boolean} 销毁一个资源组时其他资源组有同样资源情况资源是否会被删除，默认值true
 		 * @returns {boolean}
          */
-        public destroyRes(name:string):boolean{
+        public destroyRes(name:string, force:boolean = true):boolean{
             var group:Array<any> = this.resConfig.getRawGroupByName(name);
-            if(group){
+            if(group && group.length > 0){
                 var index:number = this.loadedGroups.indexOf(name);
                 if(index!=-1){
                     this.loadedGroups.splice(index,1);
@@ -586,10 +588,15 @@ module RES {
                 var length:number = group.length;
                 for(var i:number=0;i<length;i++){
                     var item:any = group[i];
-                    item.loaded = false;
-                    var analyzer:AnalyzerBase = this.getAnalyzerByType(item.type);
-                    analyzer.destroyRes(item.name);
-                    this.removeLoadedGroupsByItemName(item.name);
+                    if(!force && this.isResInLoadedGroup(item.name)) {
+
+                    }
+                    else {
+                        item.loaded = false;
+                        var analyzer:AnalyzerBase = this.getAnalyzerByType(item.type);
+                        analyzer.destroyRes(item.name);
+                        this.removeLoadedGroupsByItemName(item.name);
+                    }
                 }
                 return true;
             }
@@ -621,6 +628,21 @@ module RES {
                     }
                 }
             }
+        }
+        private isResInLoadedGroup(name:string):boolean {
+            var loadedGroups:Array<string> = this.loadedGroups;
+            var loadedGroupLength:number = loadedGroups.length;
+            for(var i:number = 0 ; i < loadedGroupLength ; i++) {
+                var group:Array<any> = this.resConfig.getRawGroupByName(loadedGroups[i]);
+                var length:number = group.length;
+                for(var j:number = 0 ; j < length ; j++) {
+                    var item:any = group[j];
+                    if(item.name == name) {
+                        return true;
+                    }
+                }
+            }
+            return false;
         }
         /**
          * 设置最大并发加载线程数量，默认值是2.
