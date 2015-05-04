@@ -1,4 +1,4 @@
-Copyright (c) 2014,Egret-Labs.org
+Copyright (c) 2014,egret.com
 All rights reserved.
 Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions are met:
@@ -8,7 +8,7 @@ modification, are permitted provided that the following conditions are met:
 * Redistributions in binary form must reproduce the above copyright
   notice, this list of conditions and the following disclaimer in the
   documentation and/or other materials provided with the distribution.
-* Neither the name of the Egret-Labs.org nor the
+* Neither the name of the egret.com nor the
   names of its contributors may be used to endorse or promote products
   derived from this software without specific prior written permission.
 
