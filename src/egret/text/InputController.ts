@@ -112,7 +112,7 @@ module egret {
             this._isFocus = true;
 
             //强制更新输入框位置
-            this.stageText._show(this._text._properties._multiline, this._text.size, this._text.width, this._text.height);
+            this.stageText._show(this._text._TF_Props_._multiline, this._text.size, this._text.width, this._text.height);
 
             var point = this._text.localToGlobal();
             this.stageText._initElement(point.x, point.y, self._text._worldTransform.a, self._text._worldTransform.d);
@@ -172,10 +172,10 @@ module egret {
                 this.stageText._setVisible(visible);
             }
 
-            this.stageText._setMultiline(this._text._properties._multiline);
+            this.stageText._setMultiline(this._text._TF_Props_._multiline);
 
-            this.stageText._setTextType(this._text._properties._displayAsPassword ? "password" :  "text");
-            this.stageText._setText(this._text._properties._text);
+            this.stageText._setTextType(this._text._TF_Props_._displayAsPassword ? "password" :  "text");
+            this.stageText._setText(this._text._TF_Props_._text);
 
             //整体修改
             this.stageText._resetStageText();

@@ -462,7 +462,7 @@ module egret.gui {
                     //todo:没有文字时的测量
 					var hInLine:number = parseInt(<any>this.heightInLines);
 					var lineHeight:number = 22;
-					var properties:egret.TextFieldProperties = this._textField._properties;
+					var properties:egret.TextFieldProperties = this._textField._TF_Props_;
 					if(properties._text.length>0){
                         lineHeight = this._textField._getLineHeight();
 					}

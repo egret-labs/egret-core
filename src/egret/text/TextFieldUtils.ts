@@ -46,13 +46,13 @@ module egret {
 
                 }
                 else if (textHeight > textfield._DO_Props_._explicitHeight) {//最大高度比需要显示的高度大
-                    startLine = Math.max(textfield._properties._scrollV - 1, 0);
-                    startLine = Math.min(textfield._properties._numLines - 1, startLine);
+                    startLine = Math.max(textfield._TF_Props_._scrollV - 1, 0);
+                    startLine = Math.min(textfield._TF_Props_._numLines - 1, startLine);
                 }
 
-                if (!textfield._properties._multiline) {
-                    startLine = Math.max(textfield._properties._scrollV - 1, 0);
-                    startLine = Math.min(textfield._properties._numLines - 1, startLine);
+                if (!textfield._TF_Props_._multiline) {
+                    startLine = Math.max(textfield._TF_Props_._scrollV - 1, 0);
+                    startLine = Math.min(textfield._TF_Props_._numLines - 1, startLine);
                 }
             }
 
@@ -68,14 +68,14 @@ module egret {
         public static _getHalign(textfield:egret.TextField):number {
             var lineArr:Array<egret.ILineElement>  = textfield._getLinesArr();
             var halign:number = 0;
-            if (textfield._properties._textAlign == HorizontalAlign.CENTER) {
+            if (textfield._TF_Props_._textAlign == HorizontalAlign.CENTER) {
                 halign = 0.5;
             }
-            else if (textfield._properties._textAlign == HorizontalAlign.RIGHT) {
+            else if (textfield._TF_Props_._textAlign == HorizontalAlign.RIGHT) {
                 halign = 1;
             }
 
-            if (textfield._properties._type == egret.TextFieldType.INPUT && !textfield._properties._multiline && lineArr.length > 1) {
+            if (textfield._TF_Props_._type == egret.TextFieldType.INPUT && !textfield._TF_Props_._multiline && lineArr.length > 1) {
                 halign = 0;
             }
 
@@ -83,7 +83,7 @@ module egret {
         }
 
         public static _getTextHeight(textfield:egret.TextField):number {
-            var textHeight:number = (egret.TextFieldType.INPUT == textfield._properties._type && !textfield._properties._multiline) ? textfield._properties._size : (textfield._properties._textMaxHeight + (textfield._properties._numLines - 1) * textfield._properties._lineSpacing);
+            var textHeight:number = (egret.TextFieldType.INPUT == textfield._TF_Props_._type && !textfield._TF_Props_._multiline) ? textfield._TF_Props_._size : (textfield._TF_Props_._textMaxHeight + (textfield._TF_Props_._numLines - 1) * textfield._TF_Props_._lineSpacing);
             return textHeight;
         }
 
@@ -95,8 +95,8 @@ module egret {
          */
         public static _getValign(textfield:egret.TextField):number{
             var textHeight:number = TextFieldUtils._getTextHeight(textfield);
-            if (textfield._properties._type == egret.TextFieldType.INPUT) {
-                if (textfield._properties._multiline) {
+            if (textfield._TF_Props_._type == egret.TextFieldType.INPUT) {
+                if (textfield._TF_Props_._multiline) {
                     return 0;
                 }
                 return 0.5;
@@ -104,9 +104,9 @@ module egret {
             if (textfield._DO_Props_._hasHeightSet) {//
                 if (textHeight < textfield._DO_Props_._explicitHeight) {//最大高度比需要显示的高度小
                     var valign:number = 0;
-                    if (textfield._properties._verticalAlign == VerticalAlign.MIDDLE)
+                    if (textfield._TF_Props_._verticalAlign == VerticalAlign.MIDDLE)
                         valign = 0.5;
-                    else if (textfield._properties._verticalAlign == VerticalAlign.BOTTOM)
+                    else if (textfield._TF_Props_._verticalAlign == VerticalAlign.BOTTOM)
                         valign = 1;
 
                     return valign;
@@ -143,7 +143,7 @@ module egret {
          */
         public static _getHit(textfield:egret.TextField, x:number, y:number):IHitTextElement {
             var lineArr:Array<egret.ILineElement>  = textfield._getLinesArr();
-            if (textfield._properties._textMaxWidth == 0) {//文本可点击区域
+            if (textfield._TF_Props_._textMaxWidth == 0) {//文本可点击区域
                 return null;
             }
             var line:number = 0;
@@ -159,11 +159,11 @@ module egret {
                     lineH += lineEle.height;
                 }
 
-                if (lineH + textfield._properties._lineSpacing > y) {
+                if (lineH + textfield._TF_Props_._lineSpacing > y) {
                     return null;
                 }
 
-                lineH += textfield._properties._lineSpacing;
+                lineH += textfield._TF_Props_._lineSpacing;
             }
             if(line === 0) {
                 return null;
@@ -192,7 +192,7 @@ module egret {
          */
         public static _getScrollNum(textfield:egret.TextField):number {
             var scrollNum:number = 1;
-            if (textfield._properties._multiline) {
+            if (textfield._TF_Props_._multiline) {
                 var height = textfield.height;
                 var size = textfield.size;
                 var lineSpacing = textfield.lineSpacing;

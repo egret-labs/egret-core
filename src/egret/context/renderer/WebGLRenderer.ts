@@ -185,7 +185,7 @@ module egret {
 
             egret.TextField.prototype._draw = function (renderContext) {
                 var self:egret.TextField = this;
-                var properties:egret.TextFieldProperties = self._properties;
+                var properties:egret.TextFieldProperties = self._TF_Props_;
                 if (properties._type == egret.TextFieldType.INPUT) {
                     if (self._isTyping) {
                         return;

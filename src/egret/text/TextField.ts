@@ -40,7 +40,7 @@ module egret {
         public static default_fontFamily:string = "Arial";
 
         private isInput():boolean {
-            return this._properties._type == TextFieldType.INPUT;
+            return this._TF_Props_._type == TextFieldType.INPUT;
         }
 
         public _inputEnabled:boolean = false;
@@ -66,7 +66,7 @@ module egret {
 
         public _setType(value:string):void {
             var self = this;
-            var properties:egret.TextFieldProperties = self._properties;
+            var properties:egret.TextFieldProperties = self._TF_Props_;
             if (properties._type != value) {
                 properties._type = value;
                 if (properties._type == TextFieldType.INPUT) {//input，如果没有设置过宽高，则设置默认值为100，30
@@ -99,7 +99,7 @@ module egret {
         }
 
         public get type():string {
-            return this._properties._type;
+            return this._TF_Props_._type;
         }
 
         public get text():string {
@@ -107,11 +107,11 @@ module egret {
         }
 
         public _getText():string {
-            if (this._properties._type == egret.TextFieldType.INPUT) {
+            if (this._TF_Props_._type == egret.TextFieldType.INPUT) {
                 return this._inputUtils._getText();
             }
 
-            return this._properties._text;
+            return this._TF_Props_._text;
         }
 
         public _setSizeDirty():void {
@@ -138,7 +138,7 @@ module egret {
                 value = "";
             }
             var self = this;
-            var properties:egret.TextFieldProperties = self._properties;
+            var properties:egret.TextFieldProperties = self._TF_Props_;
 
             this._isFlow = false;
             if (properties._text != value) {
@@ -162,12 +162,12 @@ module egret {
             }
             this._setBaseText(value);
             if (this._inputUtils) {
-                this._inputUtils._setText(this._properties._text);
+                this._inputUtils._setText(this._TF_Props_._text);
             }
         }
 
         public get displayAsPassword():boolean {
-            return this._properties._displayAsPassword;
+            return this._TF_Props_._displayAsPassword;
         }
 
         /**
@@ -182,7 +182,7 @@ module egret {
 
         public _setDisplayAsPassword(value:boolean):void {
             var self = this;
-            var properties:egret.TextFieldProperties = self._properties;
+            var properties:egret.TextFieldProperties = self._TF_Props_;
             if (properties._displayAsPassword != value) {
                 properties._displayAsPassword = value;
 
@@ -201,7 +201,7 @@ module egret {
 
 
         public get fontFamily():string {
-            return this._properties._fontFamily;
+            return this._TF_Props_._fontFamily;
         }
 
         /**
@@ -214,15 +214,15 @@ module egret {
         }
 
         public _setFontFamily(value:string):void {
-            if (this._properties._fontFamily != value) {
+            if (this._TF_Props_._fontFamily != value) {
                 this._setTextDirty();
-                this._properties._fontFamily = value;
+                this._TF_Props_._fontFamily = value;
             }
         }
 
 
         public get size():number {
-            return this._properties._size;
+            return this._TF_Props_._size;
         }
 
         /**
@@ -235,15 +235,15 @@ module egret {
         }
 
         public _setSize(value:number):void {
-            if (this._properties._size != value) {
+            if (this._TF_Props_._size != value) {
                 this._setTextDirty();
-                this._properties._size = value;
+                this._TF_Props_._size = value;
             }
         }
 
 
         public get italic():boolean {
-            return this._properties._italic;
+            return this._TF_Props_._italic;
         }
 
         /**
@@ -257,15 +257,15 @@ module egret {
         }
 
         public _setItalic(value:boolean):void {
-            if (this._properties._italic != value) {
+            if (this._TF_Props_._italic != value) {
                 this._setTextDirty();
-                this._properties._italic = value;
+                this._TF_Props_._italic = value;
             }
         }
 
 
         public get bold():boolean {
-            return this._properties._bold;
+            return this._TF_Props_._bold;
         }
 
         /**
@@ -279,14 +279,14 @@ module egret {
         }
 
         public _setBold(value:boolean):void {
-            if (this._properties._bold != value) {
+            if (this._TF_Props_._bold != value) {
                 this._setTextDirty();
-                this._properties._bold = value;
+                this._TF_Props_._bold = value;
             }
         }
 
         public get textColor():number {
-            return this._properties._textColor;
+            return this._TF_Props_._textColor;
         }
 
         /**
@@ -300,15 +300,15 @@ module egret {
         }
 
         public _setTextColor(value:number):void {
-            if (this._properties._textColor != value) {
+            if (this._TF_Props_._textColor != value) {
                 this._setTextDirty();
-                this._properties._textColor = value;
-                this._properties._textColorString = toColorString(value);
+                this._TF_Props_._textColor = value;
+                this._TF_Props_._textColorString = toColorString(value);
             }
         }
 
         public get strokeColor():number {
-            return this._properties._strokeColor;
+            return this._TF_Props_._strokeColor;
         }
 
         /**
@@ -322,16 +322,16 @@ module egret {
         }
 
         public _setStrokeColor(value:number):void {
-            if (this._properties._strokeColor != value) {
+            if (this._TF_Props_._strokeColor != value) {
                 this._setTextDirty();
-                this._properties._strokeColor = value;
-                this._properties._strokeColorString = toColorString(value);
+                this._TF_Props_._strokeColor = value;
+                this._TF_Props_._strokeColorString = toColorString(value);
             }
         }
 
 
         public get stroke():number {
-            return this._properties._stroke;
+            return this._TF_Props_._stroke;
         }
 
         /**
@@ -345,15 +345,15 @@ module egret {
         }
 
         public _setStroke(value:number):void {
-            if (this._properties._stroke != value) {
+            if (this._TF_Props_._stroke != value) {
                 this._setTextDirty();
-                this._properties._stroke = value;
+                this._TF_Props_._stroke = value;
             }
         }
 
 
         public get textAlign():string {
-            return this._properties._textAlign;
+            return this._TF_Props_._textAlign;
         }
 
         /**
@@ -367,15 +367,15 @@ module egret {
         }
 
         public _setTextAlign(value:string):void {
-            if (this._properties._textAlign != value) {
+            if (this._TF_Props_._textAlign != value) {
                 this._setTextDirty();
-                this._properties._textAlign = value;
+                this._TF_Props_._textAlign = value;
             }
         }
 
 
         public get verticalAlign():string {
-            return this._properties._verticalAlign;
+            return this._TF_Props_._verticalAlign;
         }
 
         /**
@@ -389,16 +389,16 @@ module egret {
         }
 
         public _setVerticalAlign(value:string):void {
-            if (this._properties._verticalAlign != value) {
+            if (this._TF_Props_._verticalAlign != value) {
                 this._setTextDirty();
-                this._properties._verticalAlign = value;
+                this._TF_Props_._verticalAlign = value;
             }
         }
 
         public maxWidth;
 
         public get maxChars():number {
-            return this._properties._maxChars;
+            return this._TF_Props_._maxChars;
         }
 
         /**
@@ -411,8 +411,8 @@ module egret {
         }
 
         public _setMaxChars(value:number):void {
-            if (this._properties._maxChars != value) {
-                this._properties._maxChars = value;
+            if (this._TF_Props_._maxChars != value) {
+                this._TF_Props_._maxChars = value;
             }
         }
 
@@ -423,13 +423,13 @@ module egret {
          * @param value
          */
         public set scrollV(value:number) {
-            this._properties._scrollV = Math.max(value, 1);
+            this._TF_Props_._scrollV = Math.max(value, 1);
 
             this._setDirty();
         }
 
         public get scrollV():number {
-            return Math.min(Math.max(this._properties._scrollV, 1), this.maxScrollV);
+            return Math.min(Math.max(this._TF_Props_._scrollV, 1), this.maxScrollV);
         }
 
         /**
@@ -438,7 +438,7 @@ module egret {
          */
         public get maxScrollV():number {
             this._getLinesArr();
-            return Math.max(this._properties._numLines - TextFieldUtils._getScrollNum(this) + 1, 1);
+            return Math.max(this._TF_Props_._numLines - TextFieldUtils._getScrollNum(this) + 1, 1);
         }
 
         public get selectionBeginIndex():number {
@@ -456,7 +456,7 @@ module egret {
 
 
         public get lineSpacing():number {
-            return this._properties._lineSpacing;
+            return this._TF_Props_._lineSpacing;
         }
 
         /**
@@ -470,14 +470,14 @@ module egret {
         }
 
         public _setLineSpacing(value:number):void {
-            if (this._properties._lineSpacing != value) {
+            if (this._TF_Props_._lineSpacing != value) {
                 this._setTextDirty();
-                this._properties._lineSpacing = value;
+                this._TF_Props_._lineSpacing = value;
             }
         }
 
         public _getLineHeight():number {
-            return this._properties._lineSpacing + this._properties._size;
+            return this._TF_Props_._lineSpacing + this._TF_Props_._size;
         }
 
         /**
@@ -485,7 +485,7 @@ module egret {
          * @member {number} egret.TextField#numLines
          */
         public get numLines():number {
-            return this._properties._numLines;
+            return this._TF_Props_._numLines;
         }
 
         /**
@@ -498,13 +498,13 @@ module egret {
             this._setMultiline(value);
         }
         public _setMultiline(value:boolean):void {
-            this._properties._multiline = value;
+            this._TF_Props_._multiline = value;
 
             this._setDirty();
         }
 
         public get multiline():boolean {
-            return this._properties._multiline;
+            return this._TF_Props_._multiline;
         }
 
         public _setWidth(value:number):void {
@@ -529,11 +529,11 @@ module egret {
          * @member {boolean} egret.TextField#border
          */
         public set border(value:boolean) {
-            this._properties._border = value;
+            this._TF_Props_._border = value;
             this.fillBackground();
         }
         public get border():boolean {
-            return this._properties._border;
+            return this._TF_Props_._border;
         }
 
         /**
@@ -542,11 +542,11 @@ module egret {
          * @member {number} egret.TextField#borderColor
          */
         public set borderColor(value:number) {
-            this._properties._borderColor = value;
+            this._TF_Props_._borderColor = value;
             this.fillBackground();
         }
         public get borderColor():number {
-            return this._properties._borderColor;
+            return this._TF_Props_._borderColor;
         }
 
         /**
@@ -557,11 +557,11 @@ module egret {
          * @member {boolean} egret.TextField#background
          */
         public set background(value:boolean) {
-            this._properties._background = value;
+            this._TF_Props_._background = value;
             this.fillBackground();
         }
         public get background():boolean {
-            return this._properties._background;
+            return this._TF_Props_._background;
         }
 
         /**
@@ -570,18 +570,18 @@ module egret {
          * @member {number} egret.TextField#backgroundColor
          */
         public set backgroundColor(value:number) {
-            this._properties._backgroundColor = value;
+            this._TF_Props_._backgroundColor = value;
             this.fillBackground();
         }
 
         public get backgroundColor():number {
-            return this._properties._backgroundColor;
+            return this._TF_Props_._backgroundColor;
         }
 
         private fillBackground():void {
             var self = this;
             var graphics:egret.Graphics = self._bgGraphics;
-            var properties:egret.TextFieldProperties = self._properties;
+            var properties:egret.TextFieldProperties = self._TF_Props_;
             if (graphics) {
                 graphics.clear();
             }
@@ -605,13 +605,13 @@ module egret {
             Logger.warningWithErrorId(1013);
         }
 
-        public _properties:TextFieldProperties;
+        public _TF_Props_:TextFieldProperties;
 
         constructor() {
             super();
             this.needDraw = true;
 
-            this._properties = new egret.TextFieldProperties();
+            this._TF_Props_ = new egret.TextFieldProperties();
         }
 
         public _onRemoveFromStage():void {
@@ -619,7 +619,7 @@ module egret {
 
             this._removeEvent();
 
-            if (this._properties._type == TextFieldType.INPUT) {
+            if (this._TF_Props_._type == TextFieldType.INPUT) {
                 this._inputUtils._removeStageText();
             }
         }
@@ -629,14 +629,14 @@ module egret {
 
             this._addEvent();
 
-            if (this._properties._type == TextFieldType.INPUT) {
+            if (this._TF_Props_._type == TextFieldType.INPUT) {
                 this._inputUtils._addStageText();
             }
         }
 
         public _updateBaseTransform():void {
             this._getLinesArr();
-            if (this._properties._textMaxWidth == 0 && this._properties._type != TextFieldType.INPUT) {
+            if (this._TF_Props_._textMaxWidth == 0 && this._TF_Props_._type != TextFieldType.INPUT) {
                 return;
             }
 
@@ -646,7 +646,7 @@ module egret {
         }
 
         public _updateTransform():void {
-            if (this._properties._type == TextFieldType.INPUT) {
+            if (this._TF_Props_._type == TextFieldType.INPUT) {
                 if (this._DO_Props_._normalDirty) {//本身有变化
                     //this._clearDirty();
                     this._inputUtils._updateProperties();
@@ -662,7 +662,7 @@ module egret {
 
         public _draw(renderContext:RendererContext):void {
             var self = this;
-            var properties:egret.TextFieldProperties = self._properties;
+            var properties:egret.TextFieldProperties = self._TF_Props_;
 
             if (properties._type == egret.TextFieldType.INPUT) {
                 if (self._isTyping) {
@@ -694,7 +694,7 @@ module egret {
          */
         public _measureBounds():egret.Rectangle {
             var self = this;
-            var properties:egret.TextFieldProperties = self._properties;
+            var properties:egret.TextFieldProperties = self._TF_Props_;
             this._getLinesArr();
             if (properties._textMaxWidth == 0) {
                 return Rectangle.identity.initialize(0, 0, 0, 0);
@@ -712,7 +712,7 @@ module egret {
          */
         public set textFlow(textArr:Array<egret.ITextElement>) {
             var self = this;
-            var properties:egret.TextFieldProperties = self._properties;
+            var properties:egret.TextFieldProperties = self._TF_Props_;
             this._isFlow = true;
             var text:string = "";
             if (textArr == null)
@@ -736,7 +736,7 @@ module egret {
         }
 
         private changeToPassText(text:string):string {
-            if (this._properties._displayAsPassword) {
+            if (this._TF_Props_._displayAsPassword) {
                 var passText:string = "";
                 for (var i:number = 0, num = text.length; i < num; i++) {
                     switch (text.charAt(i)) {
@@ -764,7 +764,7 @@ module egret {
         }
 
         public get textWidth():number {
-            return this._properties._textMaxWidth;
+            return this._TF_Props_._textMaxWidth;
         }
 
         public get textHeight():number {
@@ -783,7 +783,7 @@ module egret {
         private _linesArr:Array<egret.ILineElement> = [];
         public _getLinesArr():Array<egret.ILineElement> {
             var self = this;
-            var properties:egret.TextFieldProperties = self._properties;
+            var properties:egret.TextFieldProperties = self._TF_Props_;
             if (!self._isArrayChanged) {
                 return self._linesArr;
             }
@@ -935,7 +935,7 @@ module egret {
          */
         private drawText(renderContext:RendererContext):void {
             var self = this;
-            var properties:egret.TextFieldProperties = self._properties;
+            var properties:egret.TextFieldProperties = self._TF_Props_;
 
             //先算出需要的数值
             var lines:Array<egret.ILineElement> = self._getLinesArr();
@@ -993,7 +993,7 @@ module egret {
 
         //处理富文本中有href的
         private onTapHandler(e:egret.TouchEvent):void {
-            if (this._properties._type == egret.TextFieldType.INPUT) {
+            if (this._TF_Props_._type == egret.TextFieldType.INPUT) {
                 return;
             }
             var ele:ITextElement = TextFieldUtils._getTextElement(this, e.localX, e.localY);

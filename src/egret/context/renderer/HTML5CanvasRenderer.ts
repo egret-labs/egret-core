@@ -208,7 +208,7 @@ module egret {
 
         public setupFont(textField:TextField, style:egret.ITextStyle = null):void {
             style = style || <egret.ITextStyle>{};
-            var properties:egret.TextFieldProperties = textField._properties;
+            var properties:egret.TextFieldProperties = textField._TF_Props_;
             var italic:boolean = style.italic == null ? properties._italic : style.italic;
             var bold:boolean = style.bold == null ? properties._bold : style.bold;
             var size:number = style.size == null ? properties._size : style.size;
@@ -231,7 +231,7 @@ module egret {
         public drawText(textField:egret.TextField, text:string, x:number, y:number, maxWidth:number, style:egret.ITextStyle = null) {
             this.setupFont(textField, style);
             style = style || <egret.ITextStyle>{};
-            var properties:egret.TextFieldProperties = textField._properties;
+            var properties:egret.TextFieldProperties = textField._TF_Props_;
 
             var textColor:string;
             if (style.textColor != null) {

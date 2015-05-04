@@ -89,8 +89,8 @@ module egret {
 
             this._resetStageText();
 
-            if (this._textfield._properties._maxChars > 0) {
-                this.inputElement.setAttribute("maxlength", this._textfield._properties._maxChars);
+            if (this._textfield._TF_Props_._maxChars > 0) {
+                this.inputElement.setAttribute("maxlength", this._textfield._TF_Props_._maxChars);
             }
             else {
                 this.inputElement.removeAttribute("maxlength");
@@ -179,7 +179,7 @@ module egret {
         public _resetStageText():void {
             if (this.inputElement) {
                 var textfield:egret.TextField = this._textfield;
-                var propertie:egret.TextFieldProperties = textfield._properties;
+                var propertie:egret.TextFieldProperties = textfield._TF_Props_;
                 this.setElementStyle("fontFamily", propertie._fontFamily);
                 this.setElementStyle("fontStyle", propertie._italic ? "italic" : "normal");
                 this.setElementStyle("fontWeight", propertie._bold ? "bold" : "normal");
