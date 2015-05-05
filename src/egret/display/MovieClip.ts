@@ -38,7 +38,7 @@ module egret {
         private _isAddedToStage:boolean = false;
     //Render Property
         private static renderFilter:RenderFilter = RenderFilter.getInstance();
-        private _textureToRender:Texture = null;
+        public _textureToRender:Texture = null;
 
     //Data Property
         public _movieClipData:MovieClipData = null;
@@ -307,9 +307,10 @@ module egret {
         }
 
         private _advanceTime(advancedTime:number):void{
-            var frameIntervalTime:number = this._frameIntervalTime;
-            var currentTime = this._passedTime + advancedTime;
-            this._passedTime = currentTime % frameIntervalTime;
+            var self = this;
+            var frameIntervalTime:number = self._frameIntervalTime;
+            var currentTime = self._passedTime + advancedTime;
+            self._passedTime = currentTime % frameIntervalTime;
 
             var num:number = currentTime / frameIntervalTime;
             if(num < 1){
@@ -317,30 +318,31 @@ module egret {
             }
             while(num >= 1) {
                 num--;
-                this._nextFrameNum++;
-                if(this._nextFrameNum > this._totalFrames){
-                    if(this._playTimes == -1){
-                        this._eventPool.push(Event.LOOP_COMPLETE);
-                        this._nextFrameNum = 1;
+                self._nextFrameNum++;
+                if(self._nextFrameNum > self._totalFrames){
+                    if(self._playTimes == -1){
+                        self._eventPool.push(Event.LOOP_COMPLETE);
+                        self._nextFrameNum = 1;
                     }
                     else{
-                        this._playTimes--;
-                        if(this._playTimes > 0){
-                            this._eventPool.push(Event.LOOP_COMPLETE);
-                            this._nextFrameNum = 1;
+                        self._playTimes--;
+                        if(self._playTimes > 0){
+                            self._eventPool.push(Event.LOOP_COMPLETE);
+                            self._nextFrameNum = 1;
                         }
                         else{
-                            this._nextFrameNum = this._totalFrames;
-                            this._eventPool.push(Event.COMPLETE);
-                            this.stop();
+                            self._nextFrameNum = self._totalFrames;
+                            self._eventPool.push(Event.COMPLETE);
+                            self.stop();
                             break;
                         }
                     }
                 }
-                this._advanceFrame();
+                self._advanceFrame();
             }
-            this._constructFrame();
-            this._handlePendingEvent();
+            self._constructFrame();
+            self._handlePendingEvent();
+            self._setDirty();
         }
 
         public _advanceFrame(): void{

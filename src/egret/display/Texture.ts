@@ -254,6 +254,7 @@ module egret {
             var bitmapData:HTMLImageElement = Texture._bitmapDataFactory[url];
             if (!bitmapData) {
                 bitmapData = document.createElement("img");
+                bitmapData.setAttribute("bitmapSrc", url);
                 Texture._bitmapDataFactory[url] = bitmapData;
             }
             if (bitmapData["avaliable"]) {//已经加载完成
