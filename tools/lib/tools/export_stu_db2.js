@@ -239,8 +239,8 @@ function setDisplay(dbDisplays, stuDisplays, dbData) {
         dbDisplay["type"] = stuDisplay["displayType"] == 0 ? "image" : "image";
         dbDisplay["transform"]["x"] = stuDisplay["skin_data"][0]["x"]*dbData["textureScale"];
         dbDisplay["transform"]["y"] = -stuDisplay["skin_data"][0]["y"]*dbData["textureScale"];
-        dbDisplay["transform"]["pX"] = 0.5;
-        dbDisplay["transform"]["pY"] = 0.5;
+        dbDisplay["transform"]["pX"] = dbTexture[dbDisplay["name"]] ? dbTexture[dbDisplay["name"]]["pX"] : 0.5;
+        dbDisplay["transform"]["pY"] = dbTexture[dbDisplay["name"]] ? (1 - dbTexture[dbDisplay["name"]]["pY"]) : 0.5;
         dbDisplay["transform"]["skX"] = radianToAngle(stuDisplay["skin_data"][0]["kX"]);
         dbDisplay["transform"]["skY"] = -radianToAngle(stuDisplay["skin_data"][0]["kY"]);
         dbDisplay["transform"]["scX"] = stuDisplay["skin_data"][0]["cX"];
@@ -427,13 +427,12 @@ function removeDefault(obj, parent, parentKey) {
             removeDefault(obj[key], obj, key);
         }
         else {
+            if (typeof(obj[key]) == "number") {
+                obj[key] = Number(obj[key].toFixed(4));
+            }
+
             if (defaultProperty[key] != null && obj[key] == defaultProperty[key]) {
                 delete obj[key];
-            }
-            else {
-                if (typeof(obj[key]) == "number") {
-                    obj[key] = Number(obj[key].toFixed(4));
-                }
             }
         }
     }
@@ -446,7 +445,7 @@ function removeDefault(obj, parent, parentKey) {
         }
 
         if (!hasKey) {
-            console.log(parentKey)
+            //console.log(parentKey)
             delete parent[parentKey];
         }
     }
@@ -519,6 +518,7 @@ Matrix.prototype.append = function (a, b, c, d, tx, ty) {
     return this;
 };
 
+var dbTexture = {};
 function linkChildren(fileUrl) {
     if (fileUrl.indexOf("Backup") >= 0) {
         return;
@@ -547,6 +547,8 @@ function linkChildren(fileUrl) {
 
         return;
     }
+
+    parseTexture(dbTexture, stuData["texture_data"]);
 
     var relativeUrl = fileUrl.replace(currentDir, "");
 
@@ -598,6 +600,14 @@ function parseData(stuData, ccaName) {
     console.log(ccaName + "生成完毕");
     return dbData;
 }
+
+function parseTexture(stuTexture, ccTexture) {
+    for (var key in ccTexture) {
+        var textureData = ccTexture[key];
+        stuTexture[textureData["name"]] = textureData;
+    }
+}
+
 exports.parseData = parseData;
 
 
