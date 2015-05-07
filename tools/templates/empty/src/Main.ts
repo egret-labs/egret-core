@@ -27,7 +27,7 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 
-class Main extends egret.DisplayObjectContainer{
+class Main extends egret.DisplayObjectContainer {
 
     public constructor() {
         super();

@@ -27,12 +27,13 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 
-class LoadingUI extends egret.Sprite{
+class LoadingUI extends egret.Sprite {
 
-    public constructor(){
+    public constructor() {
         super();
         this.createView();
     }
+
     private textField:egret.TextField;
 
     private createView():void {

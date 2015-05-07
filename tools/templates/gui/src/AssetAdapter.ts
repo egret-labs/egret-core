@@ -28,7 +28,7 @@
 //////////////////////////////////////////////////////////////////////////////////////
 
 
-class AssetAdapter implements egret.gui.IAssetAdapter{
+class AssetAdapter implements egret.gui.IAssetAdapter {
 
     /**
      * 解析素材
@@ -40,31 +40,31 @@ class AssetAdapter implements egret.gui.IAssetAdapter{
      * @param oldContent any 旧的内容对象,传入值有可能为null。
      * 对于某些类型素材，例如MovieClip，可以重用传入的显示对象,只修改其数据再返回。
      */
-    public getAsset(source:any,compFunc:Function,thisObject:any,oldContent:any):void{
+    public getAsset(source:any, compFunc:Function, thisObject:any, oldContent:any):void {
 
-        function onGetRes(data:any):void{
-            compFunc.call(thisObject,data,source);
+        function onGetRes(data:any):void {
+            compFunc.call(thisObject, data, source);
         }
 
         var content:any = source;
-        if(source.prototype){
+        if (source.prototype) {
             content = new source();
         }
-        if(content instanceof egret.DisplayObject||content instanceof egret.Texture){
-            compFunc.call(thisObject,content,source);
+        if (content instanceof egret.DisplayObject || content instanceof egret.Texture) {
+            compFunc.call(thisObject, content, source);
         }
-        else if(typeof(source)=="string"){
-            if(RES.hasRes(source)){
-                RES.getResAsync(source,onGetRes,this);
+        else if (typeof(source) == "string") {
+            if (RES.hasRes(source)) {
+                RES.getResAsync(source, onGetRes, this);
             }
-            else{
-               RES.getResByUrl(source,onGetRes,this);
+            else {
+                RES.getResByUrl(source, onGetRes, this);
             }
 
 
         }
-        else{
-            compFunc.call(thisObject,content,source);
+        else {
+            compFunc.call(thisObject, content, source);
         }
     }
 
