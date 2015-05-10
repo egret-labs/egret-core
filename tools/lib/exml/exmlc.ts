@@ -249,7 +249,7 @@ class EXMLCompiler{
         this.checkDeclarations(this.declarations,list);
 
         if(list.length>0){
-            globals.warn(2101,this.exmlPath,list.join("\n"));
+            globals.exit(2020,this.exmlPath,list.join("\n"));
         }
 
         if(!this.currentXML.namespace){

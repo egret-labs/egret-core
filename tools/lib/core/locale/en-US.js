@@ -162,7 +162,7 @@ exports.error_code = {
     2017:"{0}: error namespace prefix missing on the node: {1}",
     2018:"{0}: error format error of 'skinName' property value on the node: {1}",
     2019:"{0}: error the container’s child item must be visible nodes: {1}",
-    2101:"{0}: warning for child nodes in w: Declarations, the includeIn and excludeFrom properties are not allowed to use \n {1}",
+    2020:"{0}: error for child nodes in w: Declarations, the includeIn and excludeFrom properties are not allowed to use \n {1}",
     2102:"{0}: warning no child node can be found on the property code \n {1}",
     2103:"{0}: warning the same property '{1}' on the node is assigned multiple times \n {2}"
 };
