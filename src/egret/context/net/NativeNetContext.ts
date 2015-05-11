@@ -37,7 +37,7 @@ module egret {
 
         public _versionCtr:egret.IVersionController;
 
-        public static __use_asyn:boolean = false;
+        public static __use_asyn:boolean = egret_native.readFileAsync == null ? false : true;
 
         public constructor() {
             super();
