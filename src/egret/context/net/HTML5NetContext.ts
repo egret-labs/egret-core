@@ -48,12 +48,12 @@ module egret {
                 return;
             }
             if (loader.dataFormat == URLLoaderDataFormat.SOUND) {
-//                if(WebAudio.canUseWebAudio) {
-//                    this.loadWebAudio(loader);
-//                }
-//                else {
+                if(egret.Browser.getInstance().isIOS() && WebAudio.canUseWebAudio) {
+                    this.loadWebAudio(loader);
+                }
+                else {
                     this.loadSound(loader);
-//                }
+                }
                 return;
             }
 
@@ -145,31 +145,27 @@ module egret {
             };
         }
 
-//        private loadWebAudio(loader:URLLoader):void {
-//            var url:string = loader._request.url;
-//            var request = new XMLHttpRequest();
-//            request.open("GET", url, true);
-//            request.responseType = "arraybuffer";
-//            console.log("loadWebAudio");
-//            request.onload = function () {
-//                WebAudio.ctx["decodeAudioData"](request.response, onSuccessHandler, onErrorHandler);
-//            };
-//            request.send();
-//
-//            function onSuccessHandler(buffer) {
-//                var audio = new WebAudio();
-//                audio._buffer = buffer;
-//
-//                var sound = new Sound();
-//                sound._setAudio(audio);
-//                loader.data = sound;
-//                __callAsync(Event.dispatchEvent, Event, loader, Event.COMPLETE);
-//            }
-//
-//            function onErrorHandler() {
-//                IOErrorEvent.dispatchIOErrorEvent(loader);
-//            }
-//        }
+        private loadWebAudio(loader:URLLoader):void {
+            var url:string = loader._request.url;
+            var request = new XMLHttpRequest();
+            request.open("GET", url, true);
+            request.responseType = "arraybuffer";
+            console.log("loadWebAudio");
+            request.onload = function () {
+                var audio = new WebAudio();
+                audio.arrayBuffer = request.response;
+
+                var sound = new Sound();
+                sound._setAudio(audio);
+                loader.data = sound;
+                __callAsync(Event.dispatchEvent, Event, loader, Event.COMPLETE);
+            };
+            request.send();
+
+            //function onErrorHandler() {
+            //    IOErrorEvent.dispatchIOErrorEvent(loader);
+            //}
+        }
 
         private getXHR():any {
             if (window["XMLHttpRequest"]) {

@@ -31,76 +31,71 @@ module egret {
      * @private
      */
     export class WebAudio {
-        public static canUseWebAudio = false;//window["AudioContext"] || window["webkitAudioContext"] || window["mozAudioContext"];
+        public static canUseWebAudio = window["AudioContext"] || window["webkitAudioContext"] || window["mozAudioContext"];
         public static ctx = WebAudio.canUseWebAudio ? new (window["AudioContext"] || window["webkitAudioContext"] || window["mozAudioContext"])() : undefined;
-        private _sourceNode:any = null;
-        private _volumeNode:any = null;
-        public _buffer:any = null;
-        private _volume:number = 1;
-        private _stopped:boolean = false;
-        private _loop:boolean = false;
+
+        /**
+         * audio音频对象
+         * @member {any} egret.Sound#audio
+         */
+        private audioBuffer: AudioBuffer;
+        private _arrayBuffer: ArrayBuffer;
+        private context = WebAudio.ctx;
+        private gain;
+        private bufferSource: AudioBufferSourceNode = null;
+        private paused = true;
 
         constructor() {
             if (WebAudio.ctx["createGain"]) {
-                this._volumeNode = WebAudio.ctx["createGain"]();
+                this.gain = WebAudio.ctx["createGain"]();
             }
             else {
-                this._volumeNode = WebAudio.ctx["createGainNode"]();
+                this.gain = WebAudio.ctx["createGainNode"]();
             }
         }
 
-        public play():void {
-            var self = this;
-            var sourceNode = self._sourceNode = WebAudio.ctx["createBufferSource"]();
-            var volumeNode = self._volumeNode;
-            var offset:number = 0;//todo
-
-            sourceNode.buffer = self._buffer;
-            volumeNode["gain"].value = self._volume;
-            sourceNode["connect"](volumeNode);
-            volumeNode["connect"](WebAudio.ctx["destination"]);
-            sourceNode.loop = this._loop;
-
-            sourceNode["onended"] = function () {
-                self._stopped = true;
+        private _loop:boolean = false;
+        /**
+         * 播放声音
+         * @method egret.Sound#play
+         * @param loop {boolean} 是否循环播放，默认为false
+         */
+        play(): void {
+            var context = this.context;
+            var gain = this.gain;
+            var bufferSource = context.createBufferSource();
+            bufferSource.buffer = this.audioBuffer;
+            bufferSource.connect(gain);
+            gain.connect(context.destination);
+            bufferSource.start(0, 0);
+            bufferSource.onended = ()=> {
+                bufferSource.stop(0);
+                bufferSource.disconnect();
+                if (this._loop && !this.paused)
+                    this.play();
             };
-
-            self._stopped = false;
-
-            if (sourceNode.start) {
-                sourceNode.start(0, offset);
-            }
-            else if (sourceNode["noteGrainOn"]) {
-                var duration = sourceNode.buffer.duration;
-                if (this._loop) {
-                    sourceNode["noteGrainOn"](0, offset, duration);
-                }
-                else {
-                    sourceNode["noteGrainOn"](0, offset, duration - offset);
-                }
-            }
-            else {
-                sourceNode["noteOn"](0);
-            }
+            this.bufferSource = bufferSource;
+            this.paused = false;
+        }
+        /**
+         * 暂停声音
+         * @method egret.Sound#pause
+         */
+        pause(): void {
+            this.paused = true;
+            this.bufferSource.stop();
+        }
+        /**
+         * 重新加载声音
+         * @method egret.Sound#load
+         */
+        load(): void {
+            this.arrayBuffer = this._arrayBuffer;
         }
 
-        public pause():void {
-            var self = this;
-            if (self._stopped) {
-                return;
-            }
-            var sourceNode = self._sourceNode;
-            if (sourceNode.stop) {
-                sourceNode.stop(0);
-            }
-            else {
-                sourceNode.noteOff(0);
-            }
-            self._stopped = true;
-        }
-
-        public load():void {
-
+        public set arrayBuffer(buffer:ArrayBuffer) {
+            this._arrayBuffer = buffer;
+            this.context.decodeAudioData(buffer, audioBuffer=> this.audioBuffer = audioBuffer);
         }
 
         /**
@@ -121,17 +116,31 @@ module egret {
 
         }
 
+        /**
+         * 获取当前音量值
+         * @returns number
+         */
         public get volume():number {
-            return this._volume;
+            return this.gain.gain.value;
         }
 
         public set volume(value:number) {
-            this._volume = value;
-            this._volumeNode["gain"].value = value;
+            this.gain.gain.value = value;
         }
 
         public set loop(value:boolean) {
             this._loop = value;
         }
     }
+}
+
+/**
+ * @private
+ */
+interface AudioBuffer {}
+/**
+ * @private
+ */
+interface AudioBufferSourceNode {
+    stop(when?: number): void;
 }
