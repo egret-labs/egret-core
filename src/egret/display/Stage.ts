@@ -160,7 +160,7 @@ module egret {
             for (var i = l - 1; i >= 0; i--) {
                 var child = children[i];
                 var mtx = child._getMatrix();
-                var scrollRect = child._DO_Props_._scrollRect;
+                var scrollRect = child.scrollRect;
                 if (scrollRect) {
                     mtx.append(1, 0, 0, 1, -scrollRect.x, -scrollRect.y);
                 }
@@ -168,7 +168,7 @@ module egret {
                 var point = Matrix.transformCoords(mtx, x, y);
                 result = child.hitTest(point.x, point.y, true);
                 if (result) {
-                    if (result._DO_Props_._touchEnabled) {
+                    if (result.touchEnabled) {
                         return result;
                     }
                 }

@@ -112,7 +112,7 @@ module egret {
         public addChild(child:DisplayObject):DisplayObject {
             var index:number = this._children.length;
 
-            if (child._DO_Props_._parent == this)
+            if (child.parent == this)
                 index--;
 
             return this._doAddChild(child, index);
@@ -140,7 +140,7 @@ module egret {
                 return child;
             }
 
-            var host:DisplayObjectContainer = child._DO_Props_._parent;
+            var host:DisplayObjectContainer = child.parent;
             if (host == this) {
                 this.doSetChildIndex(child, index);
                 return child;
@@ -221,7 +221,7 @@ module egret {
                     if (notifyListeners){
                         childAddToStage.dispatchEventWith(Event.REMOVED_FROM_STAGE);
                     }
-                    childAddToStage._DO_Props_._stage = null;
+                    childAddToStage.stage = null;
                 }
             }
             child._parentChanged(null);
@@ -260,7 +260,7 @@ module egret {
                 if (child == this) {
                     return true;
                 }
-                child = child._DO_Props_._parent;
+                child = child.parent;
             }
             return false;
         }
@@ -387,7 +387,7 @@ module egret {
 
             for (var i = 0; i < l; i++) {
                 var child = children[i];
-                if (!child._DO_Props_._visible) {
+                if (!child.visible) {
                     continue;
                 }
 
@@ -456,7 +456,8 @@ module egret {
             for (var i = l - 1; i >= 0; i--) {
                 var child = children[i];
                 var mtx = child._getMatrix();
-                var scrollRect = child._DO_Props_._scrollRect;
+                //todo
+                var scrollRect = child.scrollRect;
                 if (scrollRect) {
                     mtx.append(1, 0, 0, 1, -scrollRect.x, -scrollRect.y);
                 }
