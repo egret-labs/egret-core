@@ -106,11 +106,13 @@ module egret_native_external_interface {
 egret_native_external_interface.init();
 
 module egret_native_sound {
+    export var currentPath = "";
     export function play(loop:boolean):void {
         if (typeof loop == "undefined") {
             loop = false;
         }
         if (this.type == egret.Sound.MUSIC) {
+            egret_native_sound.currentPath = this.path;
             egret_native.Audio.playBackgroundMusic(this.path, loop);
         }
         else if (this.type == egret.Sound.EFFECT) {
@@ -120,7 +122,9 @@ module egret_native_sound {
 
     export function pause() {
         if (this.type == egret.Sound.MUSIC) {
-            egret_native.Audio.stopBackgroundMusic(false);
+            if (this.path == egret_native_sound.currentPath) {
+                egret_native.Audio.stopBackgroundMusic(false);
+            }
         }
         else if (this.type == egret.Sound.EFFECT) {
             if (this.effect_id) {
@@ -134,13 +138,39 @@ module egret_native_sound {
 
     }
 
-    export function preload(type) {
+    export function destroy() {
+        if (this.type == egret.Sound.EFFECT) {
+            egret_native.Audio.unloadEffect(this.path);
+        }
+        else if (egret_native_sound.currentPath == this.path){
+            egret_native.Audio.stopBackgroundMusic(true);
+        }
+    }
+
+    export function preload(type:string, callback:Function = null, thisObj:any = null) {
         this.type = type;
         if (this.type == egret.Sound.MUSIC) {
             egret_native.Audio.preloadBackgroundMusic(this.path);
+            if (callback) {
+                egret.callLater(callback, thisObj);
+            }
         }
         else if (this.type == egret.Sound.EFFECT) {
-            egret_native.Audio.preloadEffect(this.path);
+            if (egret.NativeNetContext.__use_asyn) {
+                var promise = new egret.PromiseObject();
+                promise.onSuccessFunc = function(soundId){
+                    if (callback) {
+                        callback.call(thisObj);
+                    }
+                };
+                egret_native.Audio.preloadEffectAsync(this.path, promise);
+            }
+            else {
+                egret_native.Audio.preloadEffect(this.path);
+                if (callback) {
+                    egret.callLater(callback, thisObj);
+                }
+            }
         }
     }
 

@@ -155,12 +155,20 @@ module egret {
             return this.audio ? this.audio.volume : 0;
         }
 
-        public preload(type:string):void {
+        public preload(type:string, callback:Function = null, thisObj:any = null):void {
             this.type = type;
+            egret.callLater(callback, thisObj);
         }
 
         public _setAudio(value:any):void {
             this.audio = value;
+        }
+
+        /**
+         * 释放当前音频
+         */
+        public destroy():void {
+
         }
     }
 }
