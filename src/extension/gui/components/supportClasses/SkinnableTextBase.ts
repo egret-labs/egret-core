@@ -36,8 +36,6 @@ module egret.gui {
 		public constructor(){
 			super();
 			this.focusEnabled = true;
-			this.addEventListener("focus", this.focusInHandler, this);
-			this.addEventListener("blur", this.focusOutHandler, this);
         }
         public _focusEnabled: boolean = true;
         public get focusEnabled() {
@@ -47,10 +45,13 @@ module egret.gui {
         public set focusEnabled(value: boolean) {
             this._focusEnabled = value;
         }
+
+        private isFocus:boolean = false;
 		/**
 		 * 焦点移入
 		 */		
 		private focusInHandler(event:Event):void{
+            this.isFocus = true;
 			if (event.target == this){
 				this.setFocus();
 				return;
@@ -61,7 +62,8 @@ module egret.gui {
 		 * 焦点移出
 		 */		
 		private focusOutHandler(event:Event):void{
-			if (event.target == this)
+            this.isFocus = false;
+            if (event.target == this)
 				return;
 			this.invalidateSkinState();
 		}
@@ -358,7 +360,7 @@ module egret.gui {
 			var richEditableText:EditableText = <EditableText><any> (this.textDisplay);
 			
 			if (richEditableText)
-				return richEditableText.widthInChars
+				return richEditableText.widthInChars;
 			
 			var v:any = this.textDisplay ? undefined : this.textDisplayProperties.widthInChars;
 			return (v === undefined) ? NaN : v;
@@ -409,9 +411,8 @@ module egret.gui {
 		 * @inheritDoc
 		 */
 		public getCurrentSkinState():string{
-			var focus:DisplayObject = UIGlobals.stage.focus;
 			var skin:any = this.skin;
-			if(this._prompt&&(!focus||!this.contains(focus))&&this.text==""){
+			if(this._prompt&&!this.isFocus&&this.text==""){
 				if (this.enabled&&(<IStateClient><any> skin).hasState("normalWithPrompt"))
 					return "normalWithPrompt";
 				if (!this.enabled&&(<IStateClient><any> skin).hasState("disabledWithPrompt"))
@@ -428,8 +429,12 @@ module egret.gui {
 			super.partAdded(partName, instance);
 			
 			if(instance == this.textDisplay){
-				this.textDisplayAdded();            
-				
+				this.textDisplayAdded();
+                if(this.textDisplay instanceof EditableText)
+                {
+                    (<EditableText>this.textDisplay)._textField.addEventListener(FocusEvent.FOCUS_IN, this.focusInHandler, this);
+                    (<EditableText>this.textDisplay)._textField.addEventListener(FocusEvent.FOCUS_OUT, this.focusOutHandler, this);
+                }
 				this.textDisplay.addEventListener("input",
 					this.textDisplay_changingHandler,
 					this);
@@ -447,13 +452,17 @@ module egret.gui {
 		 * 正删除外观部件的实例时调用
 		 * @inheritDoc
 		 */
-		public partRemoved(partName:string, 
-												instance:any):void{
+		public partRemoved(partName:string, instance:any):void{
 			super.partRemoved(partName, instance);
 			
 			if(instance == this.textDisplay){
-				this.textDisplayRemoved();      
-				
+				this.textDisplayRemoved();
+                if(this.textDisplay instanceof EditableText)
+                {
+                    (<EditableText>this.textDisplay)._textField.removeEventListener(FocusEvent.FOCUS_IN, this.focusInHandler, this);
+                    (<EditableText>this.textDisplay)._textField.removeEventListener(FocusEvent.FOCUS_OUT, this.focusOutHandler, this);
+                }
+
 				this.textDisplay.removeEventListener("input",
 					this.textDisplay_changingHandler,
 					this);
