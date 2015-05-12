@@ -41,17 +41,17 @@ module egret {
          * 不做特殊处理
 		 * @constant {number} egret.Tween.NONE
 		 */
-        public static NONE = 0;
+        private static NONE = 0;
 		/**
          * 循环
 		 * @constant {number} egret.Tween.LOOP
 		 */
-        public static LOOP = 1;
+        private static LOOP = 1;
 		/**
          * 倒序
 		 * @constant {number} egret.Tween.REVERSE
 		 */
-        public static REVERSE = 2;
+        private static REVERSE = 2;
 
         private static _tweens:Tween[] = [];
         private static IGNORE = {};
