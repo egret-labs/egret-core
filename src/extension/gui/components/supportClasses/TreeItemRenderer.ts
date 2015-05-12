@@ -221,7 +221,7 @@ module egret.gui {
 		 */		
 		public disclosureButton_mouseDownHandler(event:TouchEvent):void{
             TreeEvent.dispatchTreeEvent(this,
-                TreeEvent.ITEM_OPENING,this.itemIndex,this.data,this,!this._isOpen);
+                TreeEvent.ITEM_OPENING,this.itemIndex,this.data,this,!this._isOpen,false,true);
 		}
 	}
 }

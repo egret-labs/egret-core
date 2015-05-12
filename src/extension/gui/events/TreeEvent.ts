@@ -97,14 +97,15 @@ module egret.gui {
          * @method egret.gui.TreeEvent.dispatchTreeEvent
          */
         public static dispatchTreeEvent(target:IEventDispatcher,type:string,itemIndex:number = -1,
-                                         item:any = null,itemRenderer:ITreeItemRenderer = null,opening:boolean=false):void{
+                                         item:any = null,itemRenderer:ITreeItemRenderer = null,opening:boolean=false,
+                                         bubbles:boolean = false,cancelable:boolean = false):void{
             var eventClass:any = TreeEvent;
             var props:any = Event._getPropertyData(eventClass);
             props.itemIndex = itemIndex;
             props.item = item;
             props.itemRenderer = itemRenderer;
             props.opening = opening;
-            Event._dispatchByTarget(eventClass,target,type,props);
+            Event._dispatchByTarget(eventClass,target,type,props,bubbles,cancelable);
         }
 	}
 }
