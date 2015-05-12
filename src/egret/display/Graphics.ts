@@ -44,7 +44,7 @@ module egret {
         private renderContext:RendererContext = null;
         private strokeStyleColor:string = null;
         private fillStyleColor:string = null;
-        private _dirty:boolean = false;
+        public _dirty:boolean = false;
         private lineX:number = 0;
         private lineY:number = 0;
 
@@ -179,6 +179,7 @@ module egret {
             this._maxX = 0;
             this._maxY = 0;
             this._firstCheck = true;
+            this._dirty = true;
         }
 
         /**
@@ -214,6 +215,7 @@ module egret {
                 this._maxX = Math.max(this._maxX, x + w);
                 this._maxY = Math.max(this._maxY, y + h);
             }
+            this._dirty = true;
         }
 
         private _lastX:number = 0;
@@ -236,6 +238,7 @@ module egret {
 
             this._lastX = x;
             this._lastY = y;
+            this._dirty = true;
         }
 
         public _measureBounds():egret.Rectangle {

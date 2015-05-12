@@ -354,6 +354,7 @@ var egret_native_graphics;
         this._maxX = 0;
         this._maxY = 0;
         this._firstCheck = true;
+        this._dirty = true;
     }
 
     egret_native_graphics.clear = clear;

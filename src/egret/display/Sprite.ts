@@ -60,6 +60,13 @@ module egret {
             return this._graphics;
         }
 
+        public _draw(renderContext:RendererContext):void {
+            if(this._graphics && this._graphics._dirty) {
+                this._setCacheDirty();
+            }
+            super._draw(renderContext);
+        }
+
         public _render(renderContext:RendererContext):void {
             if (this._graphics)
                 this._graphics._draw(renderContext);
