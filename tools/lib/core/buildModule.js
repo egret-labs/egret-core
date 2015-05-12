@@ -95,7 +95,7 @@ function compileModule(callback, moduleName) {
                         i--;
                     }
                     else {
-                        jsList[i] = item.replace(".ts", ".js");
+                        jsList[i] = item;
                     }
                 }
             }

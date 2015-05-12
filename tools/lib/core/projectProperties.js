@@ -173,6 +173,39 @@ function hasKeys(obj, keys) {
     return true;
 }
 
+function getModuleDetailConfig(name) {
+    var moduleConfig = initModuleConfig(name);
+    var jsList = moduleConfig.file_list;
+
+    for (var i = 0; i < jsList.length; i++) {
+        var item = jsList[i];
+
+        var filePath = path.join(moduleConfig.prefix, moduleConfig.source, item);
+        if (item.indexOf(".d.ts") > -1) {
+            jsList.splice(i, 1);
+            i--;
+            continue;
+        }
+        else if (item.indexOf(".js") > -1) {//将js文件拷贝到libs中
+        }
+        else {
+            //纯interface从jslist中去掉
+            if (globals.isInterface(filePath)) {
+                jsList.splice(i, 1);
+                i--;
+                continue;
+            }
+            else {
+            }
+        }
+    }
+    return moduleConfig;
+}
+
+
+
+exports.getModuleDetailConfig = getModuleDetailConfig;
+
 exports.getVersionCode = getVersionCode;
 exports.getReleaseUrl = getReleaseUrl;
 

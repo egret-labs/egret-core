@@ -107,6 +107,7 @@ function generateGameFileList(projectPath, sourcePath, projectProperties) {
         });
     }
 
+
     var tempManifest = manifest.map(function (item) {
         return path.relative(srcPath, item);
     });
