@@ -235,7 +235,6 @@
     <xs:attribute name="touchEnabled" type="xs:boolean"/>
     <xs:attribute name="visible" type="xs:boolean"/>
     <xs:attribute name="width" type="xs:string"/>
-    <xs:attribute name="worldAlpha" type="xs:decimal"/>
     <xs:attribute name="x" type="xs:decimal"/>
     <xs:attribute name="y" type="xs:decimal"/>
   </xs:attributeGroup>
@@ -285,7 +284,6 @@
       <xs:element name="touchEnabled" type="boolean"/>
       <xs:element name="visible" type="boolean"/>
       <xs:element name="width" type="number"/>
-      <xs:element name="worldAlpha" type="number"/>
       <xs:element name="x" type="number"/>
       <xs:element name="y" type="number"/>
     </xs:choice>

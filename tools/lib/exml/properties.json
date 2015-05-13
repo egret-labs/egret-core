@@ -65,7 +65,6 @@
 		"touchEnabled":"boolean",
 		"visible":"boolean",
 		"width":"number",
-		"worldAlpha":"number",
 		"x":"number",
 		"y":"number"
 	},
