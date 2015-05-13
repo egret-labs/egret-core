@@ -110,6 +110,25 @@ module egret {
             return this._letterSpacing;
         }
 
+        public _lineSpacing:number = 0;
+        /**
+         * 行与行之间的距离
+         * @default 0
+         * @version 1.7.2
+         * @param value
+         */
+        public set lineSpacing(value:number) {
+            this._setLineSpacing(value);
+        }
+
+        public _setLineSpacing(value:number):void {
+            this._lineSpacing = value;
+        }
+
+        public get lineSpacing():number {
+            return this._lineSpacing;
+        }
+
         public _setSizeDirty():void {
             super._setSizeDirty();
             this.textLinesChange = true;
@@ -157,7 +176,7 @@ module egret {
                         bitmapWidth, bitmapHeight, xPos + texture._offsetX, yPos + texture._offsetY, bitmapWidth, bitmapHeight);
                     xPos += texture._textureWidth + self._letterSpacing;
                 }
-                yPos += lineHeight;
+                yPos += lineHeight + self._lineSpacing;
             }
             self._texture_to_render = null;
         }
@@ -167,7 +186,7 @@ module egret {
             if (lines.length == 0) {
                 return Rectangle.identity.initialize(0, 0, 0, 0);
             }
-            return Rectangle.identity.initialize(this._textOffsetX, this._textOffsetY, this._textWidth - this._textOffsetX, this._textHeight - this._textOffsetY);
+            return Rectangle.identity.initialize(this._textOffsetX, this._textOffsetY, this._textWidth - this._textOffsetX, this._textHeight - this._textOffsetY + (lines.length - 1) * this._lineSpacing);
         }
 
         private _textWidth:number = 0;

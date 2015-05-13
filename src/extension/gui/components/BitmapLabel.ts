@@ -126,6 +126,31 @@ module egret.gui {
             return this._letterSpacing;
         }
 
+        private _isLineSpacingChanged:boolean = false;
+        public _lineSpacing:number = 0;
+        /**
+         * 行与行之间的距离
+         * @default 0
+         * @version 1.7.2
+         * @param value
+         */
+        public set lineSpacing(value:number) {
+            this._setLineSpacing(value);
+        }
+
+        public _setLineSpacing(value:number):void {
+            this._lineSpacing = value;
+
+            this._isLineSpacingChanged = true;
+            this.invalidateProperties();
+            this.invalidateSize();
+            this.invalidateDisplayList();
+        }
+
+        public get lineSpacing():number {
+            return this._lineSpacing;
+        }
+
         private createChildrenCalled:boolean = false;
 
         /**
@@ -350,6 +375,9 @@ module egret.gui {
             if (this._isLetterSpacingChanged) {
                 this._bitmapText.letterSpacing = this._letterSpacing;
             }
+            if (this._isLineSpacingChanged) {
+                this._bitmapText.lineSpacing = this._lineSpacing;
+            }
 
             var padding:number = isNaN(this._padding) ? 0 : this._padding;
             var paddingL:number = isNaN(this._paddingLeft) ? padding : this._paddingLeft;
@@ -424,6 +452,7 @@ module egret.gui {
             this._bitmapText.letterSpacing = this._letterSpacing;
             this._textChanged = false;
             this._isLetterSpacingChanged = false;
+            this._isLineSpacingChanged = false;
             this._addToDisplayList(this._bitmapText);
         }
 
@@ -443,6 +472,10 @@ module egret.gui {
             if (this._isLetterSpacingChanged) {
                 this._bitmapText.letterSpacing = this._letterSpacing;
                 this._isLetterSpacingChanged = false;
+            }
+            if (this._isLineSpacingChanged) {
+                this._bitmapText.lineSpacing = this._lineSpacing;
+                this._isLineSpacingChanged = false;
             }
         }
 
