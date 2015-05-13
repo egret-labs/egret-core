@@ -81,7 +81,7 @@ function build(properties, callback, keepGeneratedTypescript) {
             var detailCfg = properties.getModuleDetailConfig(moduleName);
 
             var list = detailCfg["file_list"].filter(function (item) {
-                var item = path.join(detailCfg.prefix, detailCfg.source, item);
+                var item = path.join(detailCfg.prefix, detailCfg.source, item).replace(/\\\\|\\/g, "/");
 
                 if (item.indexOf(".js") >= 0) {
                     return true;
@@ -97,8 +97,8 @@ function build(properties, callback, keepGeneratedTypescript) {
             var output = moduleConfig.output || moduleConfig.name;
             file.save(path.join(projectProperties.getProjectPath(), "libs", output, moduleName + ".d.json"), JSON.stringify({"file_list": list}, null, "\t"));
 
-            file.save(moduleName + ".d.s.json", JSON.stringify(list, null, 4));
-            file.save("moduleReferenceList.d.s.json", JSON.stringify(moduleReferenceList, null, 4));
+            //file.save(moduleName + ".d.s.json", JSON.stringify(list, null, 4));
+            //file.save("moduleReferenceList.d.s.json", JSON.stringify(moduleReferenceList, null, 4));
         }
     }
 
