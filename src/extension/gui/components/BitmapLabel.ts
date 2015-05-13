@@ -450,6 +450,7 @@ module egret.gui {
             this._bitmapText = new BitmapText();
             this._bitmapText.text = this._text;
             this._bitmapText.letterSpacing = this._letterSpacing;
+            this._bitmapText.lineSpacing = this._lineSpacing;
             this._textChanged = false;
             this._isLetterSpacingChanged = false;
             this._isLineSpacingChanged = false;
