@@ -223,7 +223,7 @@ module egret {
 
         public _needShow:boolean = false;
 
-        private initStageDelegateDiv():any {
+        public _initStageDelegateDiv():any {
             var self = this;
             var stageDelegateDiv = egret.Browser.getInstance().$("#StageDelegateDiv");
             if (!stageDelegateDiv) {
@@ -399,7 +399,6 @@ module egret {
         public static getInstance():HTMLInput {
             if (HTMLInput._instance == null) {
                 HTMLInput._instance = new egret.HTMLInput();
-                HTMLInput._instance.initStageDelegateDiv();
             }
 
             return HTMLInput._instance;
@@ -408,5 +407,6 @@ module egret {
 }
 
 egret.StageText.create = function () {
+    egret.HTMLInput.getInstance()._initStageDelegateDiv();
     return new egret.HTML5StageText();
 };
