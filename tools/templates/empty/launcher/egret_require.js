@@ -54,6 +54,7 @@ egret_h5.loadSingleScript = function (src, callback) {
     }
     s.src = src;
     s.addEventListener('load', function () {
+        s.parentNode.removeChild(s);
         this.removeEventListener('load', arguments.callee, false);
         callback();
     }, false);
