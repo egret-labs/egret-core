@@ -30,12 +30,12 @@
 
 module egret {
     /**
-	 * @classdesc
-	 * @class egret.BitmapText
+     * @classdesc
+     * @class egret.BitmapText
      * 位图字体采用了Bitmap+SpriteSheet的方式来渲染文字。
-	 * @extends egret.DisplayObject
+     * @extends egret.DisplayObject
      */
-    export class BitmapText extends DisplayObject{
+    export class BitmapText extends DisplayObject {
 
         /**
          * 创建一个 egret.BitmapText 对象
@@ -51,6 +51,7 @@ module egret {
          */
         private _text:string = "";
         private _textChanged:boolean = false;
+
         /**
          * 显示的文本内容
          * @member {string} egret.BitmapText#text
@@ -58,8 +59,9 @@ module egret {
         public get text():string {
             return this._text;
         }
+
         public set text(value:string) {
-            if(this._text==value){
+            if (this._text == value) {
                 return;
             }
             this._textChanged = true;
@@ -68,22 +70,44 @@ module egret {
             this._setSizeDirty();
         }
 
-        public _font: BitmapFont = null;
-        private _fontChanged: boolean = false;
+        public _font:BitmapFont = null;
+        private _fontChanged:boolean = false;
+
         /**
          * BitmapFont对象，缓存了所有文本的位图纹理
          * @member {egret.BitmapFont} egret.BitmapText#font
          */
-        public get font(): BitmapFont {
+        public get font():BitmapFont {
             return this._font;
         }
 
-        public set font(value: BitmapFont) {
+        public set font(value:BitmapFont) {
             if (this._font == value)
                 return;
             this._font = value;
             this._fontChanged = true;
             this._setSizeDirty();
+        }
+
+        public _letterSpacing:number = 0;
+        /**
+         * 字符之间的距离
+         * @default 0
+         * @version 1.7.2
+         * @param value
+         */
+        public set letterSpacing(value:number) {
+            this._setLetterSpacing(value);
+        }
+
+        public _setLetterSpacing(value:number):void {
+            this._letterSpacing = value;
+
+            this._setSizeDirty();
+        }
+
+        public get letterSpacing():number {
+            return this._letterSpacing;
         }
 
         public _setSizeDirty():void {
@@ -94,55 +118,56 @@ module egret {
         public static EMPTY_FACTOR:number = 0.33;
 
         public _render(renderContext:RendererContext):void {
-            var textLines:Array<string> = this._getTextLines();
+            var self = this;
+            var textLines:Array<string> = self._getTextLines();
             var length:number = textLines.length;
-            if(length==0){
+            if (length == 0) {
                 return;
             }
-            var bitmapFont:BitmapFont = this._font;
+            var bitmapFont:BitmapFont = self._font;
             var emptyHeight:number = bitmapFont._getFirstCharHeight();
-            var emptyWidth:number = Math.ceil(emptyHeight*BitmapText.EMPTY_FACTOR);
+            var emptyWidth:number = Math.ceil(emptyHeight * BitmapText.EMPTY_FACTOR);
             var yPos:number = 0;
-            var maxHeight:number = this._DO_Props_._hasHeightSet?this._DO_Props_._explicitHeight:Number.POSITIVE_INFINITY;
-            var lineHeights:Array<number> = this._lineHeights;
-            for(var i:number=0;i<length;i++){
+            var maxHeight:number = self._DO_Props_._hasHeightSet ? self._DO_Props_._explicitHeight : Number.POSITIVE_INFINITY;
+            var lineHeights:Array<number> = self._lineHeights;
+            for (var i:number = 0; i < length; i++) {
                 var lineHeight:number = lineHeights[i];
-                if(i>0&&yPos+lineHeight>maxHeight){
+                if (i > 0 && yPos + lineHeight > maxHeight) {
                     break;
                 }
                 var line:string = textLines[i];
                 var len:number = line.length;
                 var xPos:number = 0;
-                for(var j:number=0;j<len;j++){
+                for (var j:number = 0; j < len; j++) {
                     var character = line.charAt(j);
                     var texture = bitmapFont.getTexture(character);
                     if (!texture) {
-                        if(character==" "){
+                        if (character == " ") {
                             xPos += emptyWidth;
                         }
-                        else{
+                        else {
                             egret.Logger.warningWithErrorId(1011, character);
                         }
                         continue;
                     }
-                    var bitmapWidth:number = texture._bitmapWidth||texture._textureWidth;
-                    var bitmapHeight:number = texture._bitmapHeight||texture._textureHeight;
-                    this._texture_to_render = texture;
-                    RenderFilter.getInstance().drawImage(renderContext, this, texture._bitmapX, texture._bitmapY,
-                        bitmapWidth, bitmapHeight, xPos+texture._offsetX, yPos+texture._offsetY, bitmapWidth,bitmapHeight);
-                    xPos += texture._textureWidth;
+                    var bitmapWidth:number = texture._bitmapWidth || texture._textureWidth;
+                    var bitmapHeight:number = texture._bitmapHeight || texture._textureHeight;
+                    self._texture_to_render = texture;
+                    RenderFilter.getInstance().drawImage(renderContext, self, texture._bitmapX, texture._bitmapY,
+                        bitmapWidth, bitmapHeight, xPos + texture._offsetX, yPos + texture._offsetY, bitmapWidth, bitmapHeight);
+                    xPos += texture._textureWidth + self._letterSpacing;
                 }
                 yPos += lineHeight;
             }
-            this._texture_to_render = null;
+            self._texture_to_render = null;
         }
 
         public _measureBounds():egret.Rectangle {
             var lines:Array<string> = this._getTextLines();
-            if (lines.length==0) {
+            if (lines.length == 0) {
                 return Rectangle.identity.initialize(0, 0, 0, 0);
             }
-            return Rectangle.identity.initialize(this._textOffsetX, this._textOffsetY, this._textWidth-this._textOffsetX, this._textHeight-this._textOffsetY);
+            return Rectangle.identity.initialize(this._textOffsetX, this._textOffsetY, this._textWidth - this._textOffsetX, this._textHeight - this._textOffsetY);
         }
 
         private _textWidth:number = 0;
@@ -155,27 +180,28 @@ module egret {
         public _lineHeights:Array<number> = [];
 
         public _getTextLines():Array<string> {
-            if(!this.textLinesChange){
-                return this._textLines;
+            var self = this;
+            if (!self.textLinesChange) {
+                return self._textLines;
             }
             var textLines:Array<string> = [];
-            this._textLines = textLines;
-            this.textLinesChange = false;
+            self._textLines = textLines;
+            self.textLinesChange = false;
             var lineHeights:Array<number> = [];
-            this._lineHeights = lineHeights;
-            if(!this._text||!this._font){
+            self._lineHeights = lineHeights;
+            if (!self._text || !self._font) {
                 return textLines;
             }
             var textWidth:number = 0;
             var textHeight:number = 0;
             var textStartX:number = 0;
             var textStartY:number = 0;
-            var hasWidthSet:boolean = this._DO_Props_._hasWidthSet;
-            var maxWidth:number = this._DO_Props_._hasWidthSet?this._DO_Props_._explicitWidth:Number.POSITIVE_INFINITY;
-            var bitmapFont:BitmapFont = this._font;
+            var hasWidthSet:boolean = self._DO_Props_._hasWidthSet;
+            var maxWidth:number = self._DO_Props_._hasWidthSet ? self._DO_Props_._explicitWidth : Number.POSITIVE_INFINITY;
+            var bitmapFont:BitmapFont = self._font;
             var emptyHeight:number = bitmapFont._getFirstCharHeight();
-            var emptyWidth:number = Math.ceil(emptyHeight*BitmapText.EMPTY_FACTOR);
-            var text:string = this._text;
+            var emptyWidth:number = Math.ceil(emptyHeight * BitmapText.EMPTY_FACTOR);
+            var text:string = self._text;
             var textArr:Array<string> = text.split(/(?:\r\n|\r|\n)/);
             var length:number = textArr.length;
             var isFirstLine:boolean = true;
@@ -184,8 +210,12 @@ module egret {
                 var len = line.length;
                 var lineHeight:number = 0;
                 var xPos:number = 0;
-                var isFistChar:boolean = true;
-                for(var j=0;j<len;j++){
+                var isFirstChar:boolean = true;
+                for (var j = 0; j < len; j++) {
+                    if (!isFirstChar) {
+                        xPos += self._letterSpacing;
+                    }
+
                     var character = line.charAt(j);
                     var texureWidth:number;
                     var textureHeight:number;
@@ -193,58 +223,58 @@ module egret {
                     var offsetY:number = 0;
                     var texture = bitmapFont.getTexture(character);
                     if (!texture) {
-                        if(character==" "){
+                        if (character == " ") {
                             texureWidth = emptyWidth;
                             textureHeight = emptyHeight;
                         }
-                        else{
+                        else {
                             egret.Logger.warningWithErrorId(1011, character);
-                            if(isFistChar){
-                                isFistChar = false;
+                            if (isFirstChar) {
+                                isFirstChar = false;
                             }
                             continue;
                         }
                     }
-                    else{
+                    else {
                         texureWidth = texture._textureWidth;
                         textureHeight = texture._textureHeight;
                         offsetX = texture._offsetX;
                         offsetY = texture._offsetY;
                     }
-                    if(isFistChar){
-                        isFistChar = false;
-                        textStartX = Math.min(offsetX,textStartX);
+                    if (isFirstChar) {
+                        isFirstChar = false;
+                        textStartX = Math.min(offsetX, textStartX);
                     }
-                    if(isFirstLine){
-                        textStartY = Math.min(offsetY,textStartY);
+                    if (isFirstLine) {
+                        textStartY = Math.min(offsetY, textStartY);
                     }
-                    if(hasWidthSet&&j>0&&xPos+texureWidth>maxWidth){
-                        textLines.push(line.substring(0,j));
+                    if (hasWidthSet && j > 0 && xPos + texureWidth > maxWidth) {
+                        textLines.push(line.substring(0, j));
                         lineHeights.push(lineHeight);
                         textHeight += lineHeight;
-                        textWidth = Math.max(xPos,textWidth);
+                        textWidth = Math.max(xPos, textWidth);
                         line = line.substring(j);
                         len = line.length;
-                        j=0;
+                        j = 0;
                         xPos = texureWidth;
                         lineHeight = textureHeight;
                         continue;
                     }
                     xPos += texureWidth;
-                    lineHeight = Math.max(textureHeight,lineHeight);
+                    lineHeight = Math.max(textureHeight, lineHeight);
                 }
-                if(isFirstLine){
+                if (isFirstLine) {
                     isFirstLine = false;
                 }
                 textLines.push(line);
                 lineHeights.push(lineHeight);
                 textHeight += lineHeight;
-                textWidth = Math.max(xPos,textWidth);
+                textWidth = Math.max(xPos, textWidth);
             }
-            this._textWidth = textWidth;
-            this._textHeight = textHeight;
-            this._textOffsetX = textStartX;
-            this._textOffsetY = textStartY;
+            self._textWidth = textWidth;
+            self._textHeight = textHeight;
+            self._textOffsetX = textStartX;
+            self._textOffsetY = textStartY;
             return textLines;
         }
     }
