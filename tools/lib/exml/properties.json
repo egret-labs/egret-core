@@ -766,7 +766,6 @@
 	},
 	"egret.gui.TextArea":
 	{
-		"heightInLines":"number",
 		"horizontalScrollPolicy":"string",
 		"scroller":"egret.gui.Scroller",
 		"super":"egret.gui.SkinnableTextBase",

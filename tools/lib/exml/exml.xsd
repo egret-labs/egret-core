@@ -3011,7 +3011,6 @@
   </xs:element>
   <xs:attributeGroup name="egret.gui.TextArea">
     <xs:attributeGroup ref="egret.gui.SkinnableTextBase"/>
-    <xs:attribute name="heightInLines" type="xs:decimal"/>
     <xs:attribute name="horizontalScrollPolicy" type="xs:string"/>
     <xs:attribute name="scroller" type="xs:string"/>
     <xs:attribute name="verticalScrollPolicy" type="xs:string"/>
@@ -3028,7 +3027,6 @@
   <xs:group name="TextArea_attributeElement">
     <xs:choice>
       <xs:group ref="SkinnableTextBase_attributeElement"/>
-      <xs:element name="heightInLines" type="number"/>
       <xs:element name="horizontalScrollPolicy" type="string"/>
       <xs:element name="scroller" type="egret.gui.Scroller"/>
       <xs:element name="verticalScrollPolicy" type="string"/>
