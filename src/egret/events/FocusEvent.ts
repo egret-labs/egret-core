@@ -26,51 +26,38 @@
 //  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 //////////////////////////////////////////////////////////////////////////////////////
+module egret {
+    /**
+     * @class egret.FocusEvent
+     * @classdesc
+     * 用户将焦点从显示列表中的一个对象更改到另一个对象时，对象将调度 FocusEvent 对象。目前只支持输入文本。
+     * 有四种类型的焦点事件：FocusEvent.FOCUS_IN FocusEvent.FOCUS_OUT
+     */
+    export class FocusEvent extends egret.Event {
 
-egret_h5 = {};
+        /**
+         * 获得焦点
+         * @constant {string} egret.FocusEvent.FOCUS_IN
+         */
+        public static FOCUS_IN:string = "focusIn";
 
-egret_h5.prefix = "";
+        /**
+         * 失去焦点
+         * @constant {string} egret.FocusEvent.FOCUS_OUT
+         */
+        public static FOCUS_OUT:string = "focusOut";
 
-egret_h5.loadScript = function (list, callback) {
-    var loaded = 0;
-    var loadNext = function () {
-        egret_h5.loadSingleScript(egret_h5.prefix + list[loaded], function () {
-            loaded++;
-            if (loaded >= list.length) {
-                callback();
-            }
-            else {
-                loadNext();
-            }
-        })
-    };
-    loadNext();
-};
+        /**
+         * 创建一个 egret.FocusEvent 对象
+         * @param type {string} 事件类型
+         * @param bubbles {boolean}
+         * @param cancelable {boolean}
+         * @param bytesLoaded {number}
+         * @param bytesTotal {number}
+         */
+        public constructor(type:string, bubbles:boolean = false, cancelable:boolean = false) {
+            super(type, bubbles, cancelable);
 
-egret_h5.loadSingleScript = function (src, callback) {
-    var s = document.createElement('script');
-    if (s.hasOwnProperty("async")) {
-        s.async = false;
+        }
     }
-    s.src = src;
-    s.addEventListener('load', function () {
-        s.parentNode.removeChild(s);
-        this.removeEventListener('load', arguments.callee, false);
-        callback();
-    }, false);
-    document.body.appendChild(s);
-};
-
-egret_h5.preloadScript = function (list, prefix) {
-    if (!egret_h5.preloadList) {
-        egret_h5.preloadList = [];
-    }
-    egret_h5.preloadList = egret_h5.preloadList.concat(list.map(function (item) {
-        return prefix + item;
-    }))
-};
-
-egret_h5.startLoading = function () {
-    var list = egret_h5.preloadList;
-    egret_h5.loadScript(list, egret_h5.startGame);
-};
+}

@@ -523,12 +523,12 @@ module egret_h5_graphics {
         this.lineY = 0;
         this.strokeStyleColor = null;
         this.fillStyleColor = null;
-        this._dirty = false;
         this._minX = 0;
         this._minY = 0;
         this._maxX = 0;
         this._maxY = 0;
         this._firstCheck = true;
+        this._dirty = true;
     }
 
     export function createEndFillCommand():void {
@@ -546,6 +546,7 @@ module egret_h5_graphics {
     export function endFill():void {
         if (this.fillStyleColor != null) {
             this._fill();
+            this.fillStyleColor = null;
         }
     }
 
@@ -553,7 +554,6 @@ module egret_h5_graphics {
         if (this.fillStyleColor) {
             this.createEndFillCommand();
             this._pushCommand(this.endFillCommand);
-            this.fillStyleColor = null;
         }
         if (this.strokeStyleColor) {
             this.createEndLineCommand();

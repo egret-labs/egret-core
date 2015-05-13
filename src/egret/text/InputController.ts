@@ -91,12 +91,16 @@ module egret {
             //不再显示竖线，并且输入框显示最开始
             this._isFocus = true;
             this._text._isTyping = true;
+
+            this._text.dispatchEvent(new egret.FocusEvent(egret.FocusEvent.FOCUS_IN));
         }
 
         private blurHandler(event:Event):void {
             //不再显示竖线，并且输入框显示最开始
             this._isFocus = false;
             this._text._isTyping = false;
+
+            this._text.dispatchEvent(new egret.FocusEvent(egret.FocusEvent.FOCUS_OUT));
         }
 
         //点中文本

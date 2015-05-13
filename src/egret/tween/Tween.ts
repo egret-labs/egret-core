@@ -40,18 +40,21 @@ module egret {
 		/**
          * 不做特殊处理
 		 * @constant {number} egret.Tween.NONE
+         * @private
 		 */
-        public static NONE = 0;
+        private static NONE = 0;
 		/**
          * 循环
 		 * @constant {number} egret.Tween.LOOP
+         * @private
 		 */
-        public static LOOP = 1;
+        private static LOOP = 1;
 		/**
          * 倒序
 		 * @constant {number} egret.Tween.REVERSE
+         * @private
 		 */
-        public static REVERSE = 2;
+        private static REVERSE = 2;
 
         private static _tweens:Tween[] = [];
         private static IGNORE = {};
