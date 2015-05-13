@@ -167,7 +167,6 @@ module egret.gui {
 		}
 		
 		/**
-		 *  @private
 		 */
 		public set columnWidth(value:number){
 			if (value == this._columnWidth)
@@ -192,7 +191,6 @@ module egret.gui {
 		}
 		
 		/**
-		 *  @private
 		 */
 		public set rowHeight(value:number){
 			if (value == this._rowHeight)
