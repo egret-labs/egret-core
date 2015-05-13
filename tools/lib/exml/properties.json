@@ -13,6 +13,8 @@
 	"egret.BitmapText":
 	{
 		"font":"egret.BitmapFont",
+		"letterSpacing":"number",
+		"lineSpacing":"number",
 		"super":"egret.DisplayObject",
 		"text":"string"
 	},
@@ -166,7 +168,11 @@
 	},
 	"egret.TextField":
 	{
+		"background":"boolean",
+		"backgroundColor":"number",
 		"bold":"boolean",
+		"border":"boolean",
+		"borderColor":"number",
 		"displayAsPassword":"boolean",
 		"fontFamily":"string",
 		"italic":"boolean",
@@ -220,7 +226,6 @@
 	"egret.gui.AnimateInstance":
 	{
 		"animation":"egret.gui.Animation",
-		"autoRemoveTarget":"boolean",
 		"disableLayout":"boolean",
 		"easer":"egret.gui.IEaser",
 		"interpolator":"egret.gui.IInterpolator",
@@ -257,6 +262,8 @@
 	{
 		"font":"any",
 		"implements":["egret.gui.IDisplayText"],
+		"letterSpacing":"number",
+		"lineSpacing":"number",
 		"padding":"number",
 		"paddingBottom":"number",
 		"paddingLeft":"number",
@@ -310,11 +317,7 @@
 	},
 	"egret.gui.CompositeEffectInstance":
 	{
-		"activeEffectQueue":"Array",
-		"childSets":"Array",
-		"endEffectCalled":"boolean",
-		"super":"egret.gui.EffectInstance",
-		"timerAnimation":"egret.gui.Animation"
+		"super":"egret.gui.EffectInstance"
 	},
 	"egret.gui.DataGroup":
 	{
@@ -364,7 +367,6 @@
 		"durationExplicitlySet":"boolean",
 		"implements":["egret.gui.IEffect"],
 		"instanceClass":"any",
-		"parentCompositeEffect":"egret.gui.Effect",
 		"perElementOffset":"number",
 		"playReversed":"boolean",
 		"playheadTime":"number",
@@ -377,19 +379,16 @@
 	},
 	"egret.gui.EffectInstance":
 	{
-		"delayTimer":"egret.Timer",
 		"duration":"number",
 		"durationExplicitlySet":"boolean",
 		"effect":"egret.gui.IEffect",
 		"implements":["egret.gui.IEffectInstance"],
 		"parentCompositeEffectInstance":"egret.gui.EffectInstance",
-		"playCount":"number",
 		"playReversed":"boolean",
 		"playheadTime":"number",
 		"repeatCount":"number",
 		"repeatDelay":"number",
 		"startDelay":"number",
-		"stopRepeat":"boolean",
 		"super":"egret.EventDispatcher",
 		"target":"any"
 	},
@@ -458,7 +457,6 @@
 	{
 		"easer":"egret.gui.IEaser",
 		"time":"number",
-		"timeFraction":"number",
 		"value":"any",
 		"valueBy":"any"
 	},
@@ -633,8 +631,6 @@
 		"horizontalScrollBar":"egret.gui.HScrollBar",
 		"horizontalScrollPolicy":"string",
 		"implements":["egret.gui.IVisualElementContainer"],
-		"scrollBeginThreshold":"number",
-		"scrollSpeed":"number",
 		"super":"egret.gui.SkinnableComponent",
 		"verticalScrollBar":"egret.gui.VScrollBar",
 		"verticalScrollPolicy":"string",
