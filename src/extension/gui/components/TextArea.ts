@@ -55,10 +55,7 @@ module egret.gui {
 		public get heightInLines():number{
 			return this._getHeightInLines();
 		}
-		
-		/**
-		 *  @private
-		 */
+
 		public set heightInLines(value:number){
 			this._setHeightInLines(value);
 		}

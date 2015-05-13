@@ -1173,6 +1173,9 @@ module egret {
             }
         }
 
+        /**
+         * @private
+         */
         public renderTexture:RenderTexture = null;
         public _makeBitmapCache():boolean {
             if (!this.renderTexture) {
