@@ -396,13 +396,13 @@ module dragonBones {
 			if(!skinData){
 				return;
 			}
+			armature.armatureData.setSkinData(skinName);
 			var displayList:Array<any> = [];
-			var slotDataList:Array<SlotData> = skinData.slotDataList;
+			var slotDataList:Array<SlotData> = armature.armatureData.slotDataList;
 			var slotData:SlotData;
 			var slot:Slot;
 			var bone:Bone;
 			for(var i:number = 0; i < slotDataList.length; i++){
-				displayList.length = 0;
 				slotData = slotDataList[i];
 				bone = armature.getBone(slotData.parent);
 				if(!bone){

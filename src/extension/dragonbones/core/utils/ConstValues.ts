@@ -33,291 +33,292 @@ module dragonBones {
 	/**
 	 * @class dragonBones.ConstValues
 	 * @classdesc
-	 *å®šä¹‰äº†å¸¸ç”¨çš„å¸¸é‡
+	 *¶¨ÒåÁË³£ÓÃµÄ³£Á¿
 	 */
 	export class ConstValues{
 		/**
-		 * è§’åº¦è½¬æ¢ä¸ºå¼§åº¦
+		 * ½Ç¶È×ª»»Îª»¡¶È
 		 */
 		public static ANGLE_TO_RADIAN:number = Math.PI / 180;
 		/**
-		 * å¼§åº¦è½¬æ¢ä¸ºè§’åº¦
+		 * »¡¶È×ª»»Îª½Ç¶È
 		 */
 		public static RADIAN_TO_ANGLE:number = 180 / Math.PI;
 		/**
-		 *é¾™éª¨
+		 *Áú¹Ç
 		 */
 		public static DRAGON_BONES:string = "dragonBones";
 		/**
-		 * éª¨æ¶
+		 * ¹Ç¼Ü
 		 */
 		public static ARMATURE:string = "armature";
 		/**
-		 *çš®è‚¤
+		 *Æ¤·ô
 		 */
 		public static SKIN:string = "skin";
 		/**
-		 * éª¨éª¼
+		 * ¹Ç÷À
 		 */
 		public static BONE:string = "bone";
 		/**
-		 * æ’æ§½
+		 * ²å²Û
 		 */
 		public static SLOT:string = "slot";
 		/**
-		 * æ˜¾ç¤ºå¯¹è±¡
+		 * ÏÔÊ¾¶ÔÏó
 		 */
 		public static DISPLAY:string = "display";
 		/**
-		 * åŠ¨ç”»
+		 * ¶¯»­
 		 */
 		public static ANIMATION:string = "animation";
 		/**
-		 * æ—¶é—´è½´
+		 * Ê±¼äÖá
 		 */
 		public static TIMELINE:string = "timeline";
 		/**
-		 * å¸§
+		 * Ö¡
 		 */
 		public static FRAME:string = "frame";
 		/**
-		 * å˜æ¢
+		 * ±ä»»
 		 */
 		public static TRANSFORM:string = "transform";
 		/**
-		 * é¢œè‰²å˜æ¢
+		 * ÑÕÉ«±ä»»
 		 */
 		public static COLOR_TRANSFORM:string = "colorTransform";
+		public static COLOR:string = "color";
 		/**
-		 * çŸ©å½¢
+		 * ¾ØĞÎ
 		 */
 		public static RECTANGLE:string = "rectangle";
 		/**
-		 * æ¤­åœ†
+		 * ÍÖÔ²
 		 */
 		public static ELLIPSE:string = "ellipse";
 		/**
-		 * çº¹ç†é›†
+		 * ÎÆÀí¼¯
 		 */
 		public static TEXTURE_ATLAS:string = "TextureAtlas";
 		/**
-		 * å­çº¹ç†
+		 * ×ÓÎÆÀí
 		 */
 		public static SUB_TEXTURE:string = "SubTexture";
 		/**
-		 * æ—‹è½¬
+		 * Ğı×ª
 		 */
 		public static A_ROTATED:string = "rotated";
 		/**
-		 * å¸§çš„xåæ ‡
+		 * Ö¡µÄx×ø±ê
 		 */
 		public static A_FRAME_X:string = "frameX";
 		/**
-		 * å¸§çš„yåæ ‡
+		 * Ö¡µÄy×ø±ê
 		 */
 		public static A_FRAME_Y:string = "frameY";
 		/**
-		 * å¸§çš„å®½åº¦
+		 * Ö¡µÄ¿í¶È
 		 */
 		public static A_FRAME_WIDTH:string = "frameWidth";
 		/**
-		 * å¸§çš„é«˜åº¦
+		 * Ö¡µÄ¸ß¶È
 		 */
 		public static A_FRAME_HEIGHT:string = "frameHeight";
 		/**
-		 * ç‰ˆæœ¬
+		 * °æ±¾
 		 */
 		public static A_VERSION:string = "version";
 		/**
-		 * å›¾ç‰‡è·¯å¾„
+		 * Í¼Æ¬Â·¾¶
 		 */
 		public static A_IMAGE_PATH:string = "imagePath";
 		/**
-		 * å¸§é€Ÿç‡
+		 * Ö¡ËÙÂÊ
 		 */
 		public static A_FRAME_RATE:string = "frameRate";
 		/**
-		 * åå­—
+		 * Ãû×Ö
 		 */
 		public static A_NAME:string = "name";
 		/**
-		 * æ˜¯å¦æ˜¯å…¨å±€
+		 * ÊÇ·ñÊÇÈ«¾Ö
 		 */
         public static A_IS_GLOBAL:string = "isGlobal";
 		/**
-		 * çˆ¶äº²
+		 * ¸¸Ç×
 		 */
 		public static A_PARENT:string = "parent";
 		/**
-		 * é•¿åº¦
+		 * ³¤¶È
 		 */
 		public static A_LENGTH:string = "length";
 		/**
-		 * ç±»å‹
+		 * ÀàĞÍ
 		 */
 		public static A_TYPE:string = "type";
 		/**
-		 * ç¼“å…¥äº‹ä»¶
+		 * »ºÈëÊÂ¼ş
 		 */
 		public static A_FADE_IN_TIME:string = "fadeInTime";
 		/**
-		 * æŒç»­æ—¶é•¿
+		 * ³ÖĞøÊ±³¤
 		 */
 		public static A_DURATION:string = "duration";
 		/**
-		 * ç¼©æ”¾
+		 * Ëõ·Å
 		 */
 		public static A_SCALE:string = "scale";
 		/**
-		 * åç§»
+		 * Æ«ÒÆ
 		 */
 		public static A_OFFSET:string = "offset";
 		/**
-		 * å¾ªç¯
+		 * Ñ­»·
 		 */
 		public static A_LOOP:string = "loop";
 		/**
-		 * äº‹ä»¶
+		 * ÊÂ¼ş
 		 */
 		public static A_EVENT:string = "event";
 		/**
-		 * äº‹ä»¶å‚æ•°
+		 * ÊÂ¼ş²ÎÊı
 		 */
 		public static A_EVENT_PARAMETERS:string = "eventParameters";
 		/**
-		 * å£°éŸ³
+		 * ÉùÒô
 		 */
 		public static A_SOUND:string = "sound";
 		/**
-		 * åŠ¨ä½œ
+		 * ¶¯×÷
 		 */
 		public static A_ACTION:string = "action";
 		/**
-		 * éšè—
+		 * Òş²Ø
 		 */
 		public static A_HIDE:string = "hide";
 		/**
-		 * è‡ªåŠ¨è¡¥é—´
+		 * ×Ô¶¯²¹¼ä
 		 */
 		public static A_AUTO_TWEEN:string ="autoTween";
 		/**
-		 * è¡¥é—´ç¼“åŠ¨
+		 * ²¹¼ä»º¶¯
 		 */
 		public static A_TWEEN_EASING:string = "tweenEasing";
 		/**
-		 * è¡¥é—´æ—‹è½¬
+		 * ²¹¼äĞı×ª
 		 */
 		public static A_TWEEN_ROTATE:string = "tweenRotate";
 		/**
-		 * è¡¥é—´ç¼©æ”¾
+		 * ²¹¼äËõ·Å
 		 */
 		public static A_TWEEN_SCALE:string = "tweenScale";
 		/**
-		 * æ˜¾ç¤ºå¯¹è±¡åºå·
+		 * ÏÔÊ¾¶ÔÏóĞòºÅ
 		 */
 		public static A_DISPLAY_INDEX:string = "displayIndex";
 		/**
-		 * zè½´
+		 * zÖá
 		 */
 		public static A_Z_ORDER:string = "z";
 		/**
-		 * æ··åˆæ¨¡å¼
+		 * »ìºÏÄ£Ê½
 		 */
         public static A_BLENDMODE:string = "blendMode";
 		/**
-		 * å®½åº¦
+		 * ¿í¶È
 		 */
 		public static A_WIDTH:string = "width";
 		/**
-		 * é«˜åº¦
+		 * ¸ß¶È
 		 */
 		public static A_HEIGHT:string = "height";
 		/**
-		 * ç»§æ‰¿ç¼©æ”¾
+		 * ¼Ì³ĞËõ·Å
 		 */
 		public static A_INHERIT_SCALE:string = "inheritScale";
 		/**
-		 * ç»§æ‰¿æ—‹è½¬
+		 * ¼Ì³ĞĞı×ª
 		 */
 		public static A_INHERIT_ROTATION:string = "inheritRotation";
 		/**
-		 * xè½´
+		 * xÖá
 		 */
 		public static A_X:string = "x";
 		/**
-		 * yè½´
+		 * yÖá
 		 */
 		public static A_Y:string = "y";
 		/**
-		 * xæ–¹å‘æ–œåˆ‡
+		 * x·½ÏòĞ±ÇĞ
 		 */
 		public static A_SKEW_X:string = "skX";
 		/**
-		 * yæ–¹å‘æ–œåˆ‡
+		 * y·½ÏòĞ±ÇĞ
 		 */
 		public static A_SKEW_Y:string = "skY";
 		/**
-		 * xæ–¹å‘ç¼©æ”¾
+		 * x·½ÏòËõ·Å
 		 */
 		public static A_SCALE_X:string = "scX";
 		/**
-		 * yæ–¹å‘ç¼©æ”¾
+		 * y·½ÏòËõ·Å
 		 */
 		public static A_SCALE_Y:string = "scY";
 		/**
-		 * è½´ç‚¹çš„xåæ ‡
+		 * ÖáµãµÄx×ø±ê
 		 */
 		public static A_PIVOT_X:string = "pX";
 		/**
-		 * è½´ç‚¹çš„yåæ ‡
+		 * ÖáµãµÄy×ø±ê
 		 */
 		public static A_PIVOT_Y:string = "pY";
 		/**
-		 * é€æ˜åº¦çš„åç§»
+		 * Í¸Ã÷¶ÈµÄÆ«ÒÆ
 		 */
 		public static A_ALPHA_OFFSET:string = "aO";
 		/**
-		 * çº¢è‰²çš„åç§»
+		 * ºìÉ«µÄÆ«ÒÆ
 		 */
 		public static A_RED_OFFSET:string = "rO";
 		/**
-		 * ç»¿è‰²çš„åç§»
+		 * ÂÌÉ«µÄÆ«ÒÆ
 		 */
 		public static A_GREEN_OFFSET:string = "gO";
 		/**
-		 * è“è‰²çš„åç§»
+		 * À¶É«µÄÆ«ÒÆ
 		 */
 		public static A_BLUE_OFFSET:string = "bO";
 		/**
-		 * é€æ˜åº¦çš„å€æ•°
+		 * Í¸Ã÷¶ÈµÄ±¶Êı
 		 */
 		public static A_ALPHA_MULTIPLIER:string = "aM";
 		/**
-		 * çº¢è‰²çš„å€æ•°
+		 * ºìÉ«µÄ±¶Êı
 		 */
 		public static A_RED_MULTIPLIER:string = "rM";
 		/**
-		 * ç»¿è‰²çš„å€æ•°
+		 * ÂÌÉ«µÄ±¶Êı
 		 */
 		public static A_GREEN_MULTIPLIER:string = "gM";
 		/**
-		 * è“è‰²çš„å€æ•°
+		 * À¶É«µÄ±¶Êı
 		 */
 		public static A_BLUE_MULTIPLIER:string = "bM";
 		/**
-		 * xæ–¹å‘ç¼©æ”¾çš„åç§»
+		 * x·½ÏòËõ·ÅµÄÆ«ÒÆ
 		 */
 		public static A_SCALE_X_OFFSET:string = "scXOffset";
 		/**
-		 * yæ–¹å‘çš„åç§»
+		 * y·½ÏòµÄÆ«ÒÆ
 		 */
 		public static A_SCALE_Y_OFFSET:string = "scYOffset";
 		/**
-		 * ç¼©æ”¾æ¨¡å¼
+		 * Ëõ·ÅÄ£Ê½
 		 */
 		public static A_SCALE_MODE:string = "scaleMode";
 		/**
-		 * æ—‹è½¬ä¿®æ­£
+		 * Ğı×ªĞŞÕı
 		 */
 		public static A_FIXED_ROTATION:string = "fixedRotation";
 	}

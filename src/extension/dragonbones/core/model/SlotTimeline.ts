@@ -31,90 +31,42 @@
 module dragonBones {
 
 	/**
-	 * @class dragonBones.SlotData
+	 * @class dragonBones.SlotTimeline
+	 * @extends dragonBones.Timeline
 	 * @classdesc
-	 * ²å²ÛÊı¾İ£¬²å²ÛÊÇÓÉ¹Ç÷À¿ØÖÆµÄ£¬¿ÉÒÔ×°ÈëÏÔÊ¾¶ÔÏóµÄÈİÆ÷£¬ÏÔÊ¾¶ÔÏó¿ÉÒÔÊÇÍ¼Æ¬»òÕß×Ó¹Ç¼Ü
-	 * ²å²Û¿É²åÈëÒ»¸ö»òÕß¶à¸öÏÔÊ¾¶ÔÏó£¬µ«ÊÇÍ¬Ò»Ê±¿ÌÖ»ÄÜÏÔÊ¾Ò»¸öÏÔÊ¾¶ÔÏó
-	 * ²å²ÛÖ§³Ö¹Ø¼üÖ¡¶¯»­£¬Èç¹ûÓĞ¶à¸öÏÔÊ¾¶ÔÏó£¬¿ÉÒÔÖ¸¶¨ÄÄÒ»Ö¡ÏÔÊ¾ÄÄÒ»¸öÏÔÊ¾¶ÔÏó
+	 * æ’æ§½çš„æ—¶é—´è½´æ•°æ®ï¼ŒåŒ…å«ä¸€ä¸ªå’Œå¤šä¸ªå…³é”®å¸§æ•°æ®
 	 */
-	export class SlotData{
+	export class SlotTimeline extends Timeline{
 		/**
-		 * ²å²ÛÊı¾İµÄÃû×Ö
-		 * @member {string} dragonBones.SlotData#name
+		 *æ—¶é—´è½´çš„åç§°
+		 * @member {string} dragonBones.SlotTimeline#name
 		 */
 		public name:string;
 		/**
-		 * °ó¶¨µÄ¹Ç÷ÀµÄÃû×Ö£¬Ò»¸ö²å²Û½öÊÜÒ»¸ö¹Ç÷À¿ØÖÆ
-		 * @member {string} dragonBones.SlotData#parent
+		 * æ˜¯å¦æœ‰åŠ¨ç”»
+		 * @member {boolean} dragonBones.SlotTimeline#transformed
 		 */
-		public parent:string;
+		public transformed:boolean;
 		/**
-		 * zÖáÅÅĞò£¬zÖáÊÇ´¹Ö±ÓÚÆÁÄ»µÄÖá£¬zOrderÔ¼Ğ¡£¬Ô½¿¿Àï
-		 * ËùÒÔÈç¹ûÓĞÖØµş£¬zOrder´óµÄ²å²Û»áµ²×¡zOrderĞ¡µÄ²å²Û
-		 * @member {number} dragonBones.SlotData#zOrder
+		 * åç§»é‡
+		 * @member {number} dragonBones.SlotTimeline#offset
 		 */
-		public zOrder:number;
-		/**
-		 * »ìºÏÄ£Ê½
-		 * @member {string} dragonBones.SlotData#blendMode
-		 */
-		public blendMode:string;
+		public offset:number;
 		
-		private _displayDataList:Array<DisplayData>;
-
 		/**
-		 * ¹¹Ôìº¯Êı£¬ÊµÀı»¯Ò»¸öSlotDataÀà
+		 * æ„é€ å‡½æ•°ï¼Œå®ä¾‹åŒ–ä¸€ä¸ªSlotTimeline
 		 */
 		public constructor(){
-			this._displayDataList = [];
-			this.zOrder = 0;
+			super();
+
+			this.offset = 0;
 		}
 
 		/**
-		 * ÊÍ·Å×ÊÔ´
+		 * é‡Šæ”¾èµ„æº
 		 */
 		public dispose():void{
-			this._displayDataList.length = 0;
-		}
-
-		/**
-		 * Ìí¼ÓÒ»¸öÏÔÊ¾¶ÔÏóÊı¾İ
-		 * @param displayData
-		 */
-		public addDisplayData(displayData:DisplayData):void{
-			if(!displayData){
-				throw new Error();
-			}
-			if (this._displayDataList.indexOf(displayData) < 0){
-				this._displayDataList[this._displayDataList.length] = displayData;
-			}
-			else{
-				throw new Error();
-			}
-		}
-
-		/**
-		 * ¸ù¾İÏÔÊ¾¶ÔÏóµÄÃû×Ö»ñÈ¡ÏÔÊ¾¶ÔÏóÊı¾İ
-		 * @param displayName ÏëÒª»ñÈ¡µÄÏÔÊ¾¶ÔÏóµÄÃû×Ö
-		 * @returns {*} ·µ»ØÏÔÊ¾¶ÔÏó°ºÊı¾İ£¬Èç¹ûÃ»ÓĞ·µ»Ønull
-		 */
-		public getDisplayData(displayName:string):DisplayData{
-			var i:number = this._displayDataList.length;
-			while(i --){
-				if(this._displayDataList[i].name == displayName){
-					return this._displayDataList[i];
-				}
-			}
-			
-			return null;
-		}
-
-		/**
-		 * »ñÈ¡ËùÓĞµÄÏÔÊ¾¶ÔÏó
-		 * @returns {Array<DisplayData>}
-		 */
-		public get displayDataList():Array<DisplayData>{
-			return this._displayDataList;
+			super.dispose();
 		}
 	}
 }

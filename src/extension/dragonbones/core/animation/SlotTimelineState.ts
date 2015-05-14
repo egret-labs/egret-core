@@ -29,33 +29,34 @@
 
 
 module dragonBones {
-    /**
-     * @class dragonBones.TimelineState
+
+	/**
+     * @class dragonBones.SlotTimelineState
      * @classdesc
-     * TimelineState 负责计算 Bone 的时间轴动画。
-     * TimelineState 实例隶属于 AnimationState. AnimationState在创建时会为每个包含动作的 Bone生成一个 TimelineState 实例.
+     * TimelineState 负责计算 Slot 的时间轴动画。
+     * TimelineState 实例隶属于 AnimationState. AnimationState在创建时会为每个包含动作的 Slot生成一个 SlotTimelineState 实例.
      * @see dragonBones.Animation
      * @see dragonBones.AnimationState
      * @see dragonBones.Bone
      */
-	export class TimelineState{
+	export class SlotTimelineState{
 		private static HALF_PI:number = Math.PI * 0.5;
 		private static DOUBLE_PI:number = Math.PI * 2;
 		
-		private static _pool:Array<TimelineState> =[];
+		private static _pool:Array<SlotTimelineState> =[];
 		
 		/** @private */
-		public static _borrowObject():TimelineState{
-			if(TimelineState._pool.length == 0){
-				return new TimelineState();
+		public static _borrowObject():SlotTimelineState{
+			if(SlotTimelineState._pool.length == 0){
+				return new SlotTimelineState();
 			}
-			return TimelineState._pool.pop();
+			return SlotTimelineState._pool.pop();
 		}
 		
 		/** @private */
-		public static _returnObject(timeline:TimelineState):void{
-			if(TimelineState._pool.indexOf(timeline) < 0){
-				TimelineState._pool[TimelineState._pool.length] = timeline;
+		public static _returnObject(timeline:SlotTimelineState):void{
+			if(SlotTimelineState._pool.indexOf(timeline) < 0){
+				SlotTimelineState._pool[SlotTimelineState._pool.length] = timeline;
 			}
 			
 			timeline.clear();
@@ -63,23 +64,17 @@ module dragonBones {
 		
 		/** @private */
 		public static _clear():void{
-			var i:number = TimelineState._pool.length;
+			var i:number = SlotTimelineState._pool.length;
 			while(i --){
-				TimelineState._pool[i].clear();
+				SlotTimelineState._pool[i].clear();
 			}
-			TimelineState._pool.length = 0;
+			SlotTimelineState._pool.length = 0;
 		}
 		
 		public name:string;
 		
 		/** @private */
 		public _weight:number;
-		
-		/** @private */
-		public _transform:DBTransform;
-		
-		/** @private */
-		public _pivot:Point;
 
 		/** @private */
 		public _blendEnabled:boolean;
@@ -98,8 +93,6 @@ module dragonBones {
 		private _currentFrameDuration:number = 0;
 		
 		private _tweenEasing:number;
-		private _tweenTransform:boolean;
-		private _tweenScale:boolean;
 		private _tweenColor:boolean;
 		
 		private _rawAnimationScale:number;
@@ -109,49 +102,35 @@ module dragonBones {
 		
 		private _armature:Armature;
 		private _animation:Animation;
-		private _bone:Bone;
+		private _slot:Slot;
 		
-		private _timelineData:TransformTimeline;
-		private _originTransform:DBTransform;
-		private _originPivot:Point;
-		
-		private _durationTransform:DBTransform;
-		private _durationPivot:Point;
+		private _timelineData:SlotTimeline;
 		private _durationColor:ColorTransform;
 		
 		
 		public constructor(){
-			this._transform = new DBTransform();
-			this._pivot = new Point();
-			
-			this._durationTransform = new DBTransform();
-			this._durationPivot = new Point();
 			this._durationColor = new ColorTransform();
 		}
 		
 		private clear():void{
-			if(this._bone){
-				this._bone._removeState(this);
-				this._bone = null;
+			if(this._slot){
+				this._slot._removeState(this);
+				this._slot = null;
 			}
 			this._armature = null;
 			this._animation = null;
 			this._animationState = null;
 			this._timelineData = null;
-			this._originTransform = null;
-			this._originPivot = null;
 		}
 		
 	//动画开始结束
 		/** @private */
-		public _fadeIn(bone:Bone, animationState:AnimationState, timelineData:TransformTimeline):void{
-			this._bone = bone;
-			this._armature = this._bone.armature;
+		public _fadeIn(slot:Slot, animationState:AnimationState, timelineData:SlotTimeline):void{
+			this._slot = slot;
+			this._armature = this._slot.armature;
 			this._animation = this._armature.animation;
 			this._animationState = animationState;
 			this._timelineData = timelineData;
-			this._originTransform = this._timelineData.originTransform;
-			this._originPivot = this._timelineData.originPivot;
 			
 			this.name = timelineData.name;
 			
@@ -160,36 +139,17 @@ module dragonBones {
 			
 			this._isComplete = false;
 			this._blendEnabled = false;
-			this._tweenTransform = false;
-			this._tweenScale = false;
+			this._tweenColor = false;
 			this._currentFrameIndex = -1;
 			this._currentTime = -1;
 			this._tweenEasing = NaN;
 			this._weight = 1;
 			
-			this._transform.x = 0;
-			this._transform.y = 0;
-			this._transform.scaleX = 1;
-			this._transform.scaleY = 1;
-			this._transform.skewX = 0;
-			this._transform.skewY = 0;
-			this._pivot.x = 0;
-			this._pivot.y = 0;
-			
-			this._durationTransform.x = 0;
-			this._durationTransform.y = 0;
-			this._durationTransform.scaleX = 1;
-			this._durationTransform.scaleY = 1;
-			this._durationTransform.skewX = 0;
-			this._durationTransform.skewY = 0;
-			this._durationPivot.x = 0;
-			this._durationPivot.y = 0;
-			
 			switch(this._timelineData.frameList.length){
 				case 0:
 					this._updateMode = 0;
 					break;
-				
+
 				case 1:
 					this._updateMode = 1;
 					break;
@@ -199,13 +159,11 @@ module dragonBones {
 					break;
 			}
 			
-			this._bone._addState(this);
+			this._slot._addState(this);
 		}
 		
 		/** @private */
 		public _fadeOut():void{
-			this._transform.skewX = TransformUtil.formatRadian(this._transform.skewX);
-			this._transform.skewY = TransformUtil.formatRadian(this._transform.skewY);
 		}
 		
 	//动画进行中
@@ -283,8 +241,8 @@ module dragonBones {
 				this._currentTime = currentTime;
 				
 				var frameList:Array<Frame> = this._timelineData.frameList;
-				var prevFrame:TransformFrame;
-				var currentFrame:TransformFrame;
+				var prevFrame:SlotFrame;
+				var currentFrame:SlotFrame;
 				
 				for (var i:number = 0, l:number = this._timelineData.frameList.length; i < l; ++i){
 					if(this._currentFrameIndex < 0){
@@ -305,10 +263,10 @@ module dragonBones {
 					else{
 						break;
 					}
-					currentFrame = <TransformFrame><any> (frameList[this._currentFrameIndex]);
+					currentFrame = <SlotFrame><any> (frameList[this._currentFrameIndex]);
 					
 					if(prevFrame){
-						this._bone._arriveAtFrame(prevFrame, this, this._animationState, true);
+						this._slot._arriveAtFrame(prevFrame, this, this._animationState, true);
 					}
 					
 					this._currentFrameDuration = currentFrame.duration;
@@ -317,7 +275,7 @@ module dragonBones {
 				}
 				
 				if(currentFrame){
-					this._bone._arriveAtFrame(currentFrame, this, this._animationState, false);
+					this._slot._arriveAtFrame(currentFrame, this, this._animationState, false);
 					
 					this._blendEnabled = currentFrame.displayIndex >= 0;
 					if(this._blendEnabled){
@@ -325,8 +283,6 @@ module dragonBones {
 					}
 					else{
 						this._tweenEasing = NaN;
-						this._tweenTransform = false;
-						this._tweenScale = false;
 						this._tweenColor = false;
 					}
 				}
@@ -342,8 +298,8 @@ module dragonBones {
 			if(nextFrameIndex >= this._timelineData.frameList.length){
 				nextFrameIndex = 0;
 			}
-			var currentFrame:TransformFrame = <TransformFrame><any> (this._timelineData.frameList[this._currentFrameIndex]);
-			var nextFrame:TransformFrame = <TransformFrame><any> (this._timelineData.frameList[nextFrameIndex]);
+			var currentFrame:SlotFrame = <SlotFrame><any> (this._timelineData.frameList[this._currentFrameIndex]);
+			var nextFrame:SlotFrame = <SlotFrame><any> (this._timelineData.frameList[nextFrameIndex]);
 			var tweenEnabled:boolean = false;
 			if(
 				nextFrameIndex == 0 &&
@@ -399,81 +355,85 @@ module dragonBones {
 			}
 			
 			if(tweenEnabled){
-				//transform
-				this._durationTransform.x = nextFrame.transform.x - currentFrame.transform.x;
-				this._durationTransform.y = nextFrame.transform.y - currentFrame.transform.y;
-				this._durationTransform.skewX = nextFrame.transform.skewX - currentFrame.transform.skewX;
-				this._durationTransform.skewY = nextFrame.transform.skewY - currentFrame.transform.skewY;
-				
-				this._durationTransform.scaleX = nextFrame.transform.scaleX - currentFrame.transform.scaleX + nextFrame.scaleOffset.x;
-				this._durationTransform.scaleY = nextFrame.transform.scaleY - currentFrame.transform.scaleY + nextFrame.scaleOffset.y;
-				
-				if(nextFrameIndex == 0){
-					this._durationTransform.skewX = TransformUtil.formatRadian(this._durationTransform.skewX);
-					this._durationTransform.skewY = TransformUtil.formatRadian(this._durationTransform.skewY);
+
+				//color
+				if(currentFrame.color && nextFrame.color){
+					this._durationColor.alphaOffset = nextFrame.color.alphaOffset - currentFrame.color.alphaOffset;
+					this._durationColor.redOffset = nextFrame.color.redOffset - currentFrame.color.redOffset;
+					this._durationColor.greenOffset = nextFrame.color.greenOffset - currentFrame.color.greenOffset;
+					this._durationColor.blueOffset = nextFrame.color.blueOffset - currentFrame.color.blueOffset;
+					
+					this._durationColor.alphaMultiplier = nextFrame.color.alphaMultiplier - currentFrame.color.alphaMultiplier;
+					this._durationColor.redMultiplier = nextFrame.color.redMultiplier - currentFrame.color.redMultiplier;
+					this._durationColor.greenMultiplier = nextFrame.color.greenMultiplier - currentFrame.color.greenMultiplier;
+					this._durationColor.blueMultiplier = nextFrame.color.blueMultiplier - currentFrame.color.blueMultiplier;
+					
+					if(
+						this._durationColor.alphaOffset ||
+						this._durationColor.redOffset ||
+						this._durationColor.greenOffset ||
+						this._durationColor.blueOffset ||
+						this._durationColor.alphaMultiplier ||
+						this._durationColor.redMultiplier ||
+						this._durationColor.greenMultiplier ||
+						this._durationColor.blueMultiplier 
+					){
+						this._tweenColor = true;
+					}
+					else{
+						this._tweenColor = false;
+					}
 				}
-				
-				this._durationPivot.x = nextFrame.pivot.x - currentFrame.pivot.x;
-				this._durationPivot.y = nextFrame.pivot.y - currentFrame.pivot.y;
-				
-				if(
-					this._durationTransform.x ||
-					this._durationTransform.y ||
-					this._durationTransform.skewX ||
-					this._durationTransform.skewY ||
-					this._durationTransform.scaleX ||
-					this._durationTransform.scaleY ||
-					this._durationPivot.x ||
-					this._durationPivot.y
-				){
-					this._tweenTransform = true;
-					this._tweenScale = currentFrame.tweenScale;
+				else if(currentFrame.color){
+					this._tweenColor = true;
+					this._durationColor.alphaOffset = -currentFrame.color.alphaOffset;
+					this._durationColor.redOffset = -currentFrame.color.redOffset;
+					this._durationColor.greenOffset = -currentFrame.color.greenOffset;
+					this._durationColor.blueOffset = -currentFrame.color.blueOffset;
+					
+					this._durationColor.alphaMultiplier = 1 - currentFrame.color.alphaMultiplier;
+					this._durationColor.redMultiplier = 1 - currentFrame.color.redMultiplier;
+					this._durationColor.greenMultiplier = 1 - currentFrame.color.greenMultiplier;
+					this._durationColor.blueMultiplier = 1 - currentFrame.color.blueMultiplier;
+				}
+				else if(nextFrame.color){
+					this._tweenColor = true;
+					this._durationColor.alphaOffset = nextFrame.color.alphaOffset;
+					this._durationColor.redOffset = nextFrame.color.redOffset;
+					this._durationColor.greenOffset = nextFrame.color.greenOffset;
+					this._durationColor.blueOffset = nextFrame.color.blueOffset;
+					
+					this._durationColor.alphaMultiplier = nextFrame.color.alphaMultiplier - 1;
+					this._durationColor.redMultiplier = nextFrame.color.redMultiplier - 1;
+					this._durationColor.greenMultiplier = nextFrame.color.greenMultiplier - 1;
+					this._durationColor.blueMultiplier = nextFrame.color.blueMultiplier - 1;
 				}
 				else{
-					this._tweenTransform = false;
-					this._tweenScale = false;
+					this._tweenColor = false;
 				}
 			}
 			else{
-				this._tweenTransform = false;
-				this._tweenScale = false;
+				this._tweenColor = false;
 			}
-			
-			if(!this._tweenTransform){
-				if(this._animationState.additiveBlending){
-					this._transform.x = currentFrame.transform.x;
-					this._transform.y = currentFrame.transform.y;
-					this._transform.skewX = currentFrame.transform.skewX;
-					this._transform.skewY = currentFrame.transform.skewY;
-					this._transform.scaleX = currentFrame.transform.scaleX;
-					this._transform.scaleY = currentFrame.transform.scaleY;
-					
-					this._pivot.x = currentFrame.pivot.x;
-					this._pivot.y = currentFrame.pivot.y;
+
+			if(!this._tweenColor && this._animationState.displayControl){
+				if(currentFrame.color){
+					this._slot._updateDisplayColor(
+						currentFrame.color.alphaOffset,
+						currentFrame.color.redOffset,
+						currentFrame.color.greenOffset,
+						currentFrame.color.blueOffset,
+						currentFrame.color.alphaMultiplier,
+						currentFrame.color.redMultiplier,
+						currentFrame.color.greenMultiplier,
+						currentFrame.color.blueMultiplier,
+						true
+					);
 				}
-				else{
-					this._transform.x = this._originTransform.x + currentFrame.transform.x;
-					this._transform.y = this._originTransform.y + currentFrame.transform.y;
-					this._transform.skewX = this._originTransform.skewX + currentFrame.transform.skewX;
-					this._transform.skewY = this._originTransform.skewY + currentFrame.transform.skewY;
-					this._transform.scaleX = this._originTransform.scaleX * currentFrame.transform.scaleX;
-					this._transform.scaleY = this._originTransform.scaleY * currentFrame.transform.scaleY;
-					
-					this._pivot.x = this._originPivot.x + currentFrame.pivot.x;
-					this._pivot.y = this._originPivot.y + currentFrame.pivot.y;
+				else if(this._slot._isColorChanged){
+					this._slot._updateDisplayColor(0, 0, 0, 0, 1, 1, 1, 1, false);
 				}
 				
-				this._bone.invalidUpdate();
-			}
-			else if(!this._tweenScale){
-				if(this._animationState.additiveBlending){
-					this._transform.scaleX = currentFrame.transform.scaleX;
-					this._transform.scaleY = currentFrame.transform.scaleY;
-				}
-				else{
-					this._transform.scaleX = this._originTransform.scaleX * currentFrame.transform.scaleX;
-					this._transform.scaleY = this._originTransform.scaleY * currentFrame.transform.scaleY;
-				}
 			}
 		}
 		
@@ -483,50 +443,43 @@ module dragonBones {
 				progress = MathUtil.getEaseValue(progress, this._tweenEasing);
 			}
 			
-			var currentFrame:TransformFrame = <TransformFrame><any> (this._timelineData.frameList[this._currentFrameIndex]);
-			if(this._tweenTransform){
-				var currentTransform:DBTransform = currentFrame.transform;
-				var currentPivot:Point = currentFrame.pivot;
-				if(this._animationState.additiveBlending){
-					//additive blending
-					this._transform.x = currentTransform.x + this._durationTransform.x * progress;
-					this._transform.y = currentTransform.y + this._durationTransform.y * progress;
-					this._transform.skewX = currentTransform.skewX + this._durationTransform.skewX * progress;
-					this._transform.skewY = currentTransform.skewY + this._durationTransform.skewY * progress;
-					if(this._tweenScale){
-						this._transform.scaleX = currentTransform.scaleX + this._durationTransform.scaleX * progress;
-						this._transform.scaleY = currentTransform.scaleY + this._durationTransform.scaleY * progress;
-					}
-					
-					this._pivot.x = currentPivot.x + this._durationPivot.x * progress;
-					this._pivot.y = currentPivot.y + this._durationPivot.y * progress;
+			var currentFrame:SlotFrame = <SlotFrame><any> (this._timelineData.frameList[this._currentFrameIndex]);
+			
+			if(this._tweenColor && this._animationState.displayControl){
+				if(currentFrame.color){
+					this._slot._updateDisplayColor(
+						currentFrame.color.alphaOffset + this._durationColor.alphaOffset * progress,
+						currentFrame.color.redOffset + this._durationColor.redOffset * progress,
+						currentFrame.color.greenOffset + this._durationColor.greenOffset * progress,
+						currentFrame.color.blueOffset + this._durationColor.blueOffset * progress,
+						currentFrame.color.alphaMultiplier + this._durationColor.alphaMultiplier * progress,
+						currentFrame.color.redMultiplier + this._durationColor.redMultiplier * progress,
+						currentFrame.color.greenMultiplier + this._durationColor.greenMultiplier * progress,
+						currentFrame.color.blueMultiplier + this._durationColor.blueMultiplier * progress,
+						true
+					);
 				}
 				else{
-					//normal blending
-					this._transform.x = this._originTransform.x + currentTransform.x + this._durationTransform.x * progress;
-					this._transform.y = this._originTransform.y + currentTransform.y + this._durationTransform.y * progress;
-					this._transform.skewX = this._originTransform.skewX + currentTransform.skewX + this._durationTransform.skewX * progress;
-					this._transform.skewY = this._originTransform.skewY + currentTransform.skewY + this._durationTransform.skewY * progress;
-					if(this._tweenScale){
-						this._transform.scaleX = this._originTransform.scaleX * currentTransform.scaleX + this._durationTransform.scaleX * progress;
-						this._transform.scaleY = this._originTransform.scaleY * currentTransform.scaleY + this._durationTransform.scaleY * progress;
-					}
-					
-					this._pivot.x = this._originPivot.x + currentPivot.x + this._durationPivot.x * progress;
-					this._pivot.y = this._originPivot.y + currentPivot.y + this._durationPivot.y * progress;
+					this._slot._updateDisplayColor(
+						this._durationColor.alphaOffset * progress,
+						this._durationColor.redOffset * progress,
+						this._durationColor.greenOffset * progress,
+						this._durationColor.blueOffset * progress,
+						1 + this._durationColor.alphaMultiplier * progress,
+						1 + this._durationColor.redMultiplier * progress,
+						1 + this._durationColor.greenMultiplier * progress,
+						1 + this._durationColor.blueMultiplier * progress,
+						true
+					);
 				}
-				
-				this._bone.invalidUpdate();
 			}
 		}
 		
 		private updateSingleFrame():void{
-			var currentFrame:TransformFrame = <TransformFrame><any> (this._timelineData.frameList[0]);
-			this._bone._arriveAtFrame(currentFrame, this, this._animationState, false);
+			var currentFrame:SlotFrame = <SlotFrame><any> (this._timelineData.frameList[0]);
+			this._slot._arriveAtFrame(currentFrame, this, this._animationState, false);
 			this._isComplete = true;
 			this._tweenEasing = NaN;
-			this._tweenTransform = false;
-			this._tweenScale = false;
 			this._tweenColor = false;
 			
 			this._blendEnabled = currentFrame.displayIndex >= 0;
@@ -541,31 +494,26 @@ module dragonBones {
                  * <使用相对数据>
                  * 使用相对数据时，timeline.originTransform = 0，第一个关键帧的transform有可能不为 0
                  */
-				if(this._animationState.additiveBlending){
-                    this._transform.x = currentFrame.transform.x;
-                    this._transform.y = currentFrame.transform.y;
-                    this._transform.skewX = currentFrame.transform.skewX;
-                    this._transform.skewY = currentFrame.transform.skewY;
-                    this._transform.scaleX = currentFrame.transform.scaleX;
-                    this._transform.scaleY = currentFrame.transform.scaleY;
-
-                    this._pivot.x = currentFrame.pivot.x;
-                    this._pivot.y = currentFrame.pivot.y;
+				if(this._animationState.displayControl){
+					if(currentFrame.color){
+						this._slot._updateDisplayColor(
+                            currentFrame.color.alphaOffset,
+                            currentFrame.color.redOffset,
+                            currentFrame.color.greenOffset,
+                            currentFrame.color.blueOffset,
+                            currentFrame.color.alphaMultiplier,
+                            currentFrame.color.redMultiplier,
+                            currentFrame.color.greenMultiplier,
+                            currentFrame.color.blueMultiplier,
+                            true);
+					}
+					else if(this._slot._isColorChanged){
+                        this._slot._updateDisplayColor(0,0,0,0,1,1,1,1,false);
+					}
 				}
-				else{
-                    this._transform.x = this._originTransform.x + currentFrame.transform.x;
-                    this._transform.y = this._originTransform.y + currentFrame.transform.y;
-                    this._transform.skewX = this._originTransform.skewX + currentFrame.transform.skewX;
-                    this._transform.skewY = this._originTransform.skewY + currentFrame.transform.skewY;
-                    this._transform.scaleX = this._originTransform.scaleX * currentFrame.transform.scaleX;
-                    this._transform.scaleY = this._originTransform.scaleY * currentFrame.transform.scaleY;
-
-                    this._pivot.x = this._originPivot.x + currentFrame.pivot.x;
-                    this._pivot.y = this._originPivot.y + currentFrame.pivot.y;
-				}
-				
-				this._bone.invalidUpdate();
 			}
 		}
+		
+		
 	}
 }

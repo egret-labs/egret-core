@@ -34,42 +34,42 @@ module dragonBones {
 	 * @class dragonbones.AnimationData
 	 * @extends dragonbones.Timeline
 	 * @classdesc
-	 * ä¿å­˜åŠ¨ç”»æ•°æ®
+	 * ±£´æ¶¯»­Êı¾İ
 	 */
 	export class AnimationData extends Timeline{
 		/**
-		 * åŠ¨ç”»çš„åå­—
+		 * ¶¯»­µÄÃû×Ö
 		 * @member {string} dragonBones.AnimationData#name
 		 */
 		public name:string;
 		/**
-		 * åŠ¨ç”»çš„å¸§ç‡ï¼Œè¡¨ç¤ºæ¯ä¸€ç§’é’Ÿæ’­æ”¾å¤šå°‘å¸§
+		 * ¶¯»­µÄÖ¡ÂÊ£¬±íÊ¾Ã¿Ò»ÃëÖÓ²¥·Å¶àÉÙÖ¡
 		 * @member {number} dragonBones.AnimationData#frameRate
 		 */
 		public frameRate:number = 0;
 		/**
-		 * åŠ¨ç”»è¿‡æ¸¡æ—¶é—´ï¼Œè¡¨ç¤ºä»å…¶ä»–åŠ¨ç”»è¿‡æ¸¡åˆ°è¿™ä¸ªåŠ¨ç”»éœ€è¦çš„æ—¶é—´
+		 * ¶¯»­¹ı¶ÉÊ±¼ä£¬±íÊ¾´ÓÆäËû¶¯»­¹ı¶Éµ½Õâ¸ö¶¯»­ĞèÒªµÄÊ±¼ä
 		 * @member {number} dragonBones.AnimationData#fadeTime
 		 */
 		public fadeTime:number;
 		/**
-		 * 	æ’­æ”¾æ¬¡æ•° 0ä¸ºä¸€ç›´æ’­æ”¾ï¼Œé»˜è®¤ä¸º0
+		 * 	²¥·Å´ÎÊı 0ÎªÒ»Ö±²¥·Å£¬Ä¬ÈÏÎª0
 		 * @member {number} dragonBones.AnimationData#playTimes
 		 */
 		public playTimes:number = 0;
 		/**
-		 * åŠ¨ç”»çš„ç¼“åŠ¨å‚æ•°ï¼Œå–å€¼èŒƒå›´æ˜¯[-1,2],å…¶ä¸­[-1, 0)è¡¨ç¤ºç¼“è¿›ï¼Œ(0, 1]è¡¨ç¤ºç¼“å‡º(1, 2]è¡¨ç¤ºç¼“è¿›ç¼“å‡ºï¼Œ0è¡¨ç¤ºä¸ç¼“åŠ¨ï¼Œçº¿æ€§æ¸å˜
-		 * è¿™ä¸ªå‚æ•°ä¼šè¢«å¸§æ•°æ®ä¸­çš„tweenEasingè¦†ç›–
+		 * ¶¯»­µÄ»º¶¯²ÎÊı£¬È¡Öµ·¶Î§ÊÇ[-1,2],ÆäÖĞ[-1, 0)±íÊ¾»º½ø£¬(0, 1]±íÊ¾»º³ö(1, 2]±íÊ¾»º½ø»º³ö£¬0±íÊ¾²»»º¶¯£¬ÏßĞÔ½¥±ä
+		 * Õâ¸ö²ÎÊı»á±»Ö¡Êı¾İÖĞµÄtweenEasing¸²¸Ç
 		 * @member {number} dragonBones.AnimationData#tweenEasing
 		 */
 		public tweenEasing:number;
 		/**
-		 * æ˜¯å¦å¼€å¯ç¼“åŠ¨ï¼Œé»˜è®¤æ˜¯trueï¼Œå°±æ˜¯å¼€å¯ç¼“åŠ¨
+		 * ÊÇ·ñ¿ªÆô»º¶¯£¬Ä¬ÈÏÊÇtrue£¬¾ÍÊÇ¿ªÆô»º¶¯
 		 * @member {boolean} dragonBones.AnimationData#autoTween
 		 */
 		public autoTween:boolean;
 		/**
-		 * æœ€åä¸€å¸§æŒç»­çš„å¸§æ•°
+		 * ×îºóÒ»Ö¡³ÖĞøµÄÖ¡Êı
 		 * @member {number} dragonBones.AnimationData#lastFrameDuration
 		 */
 		public lastFrameDuration:number = 0;
@@ -78,15 +78,19 @@ module dragonBones {
 		
 		private _timelineList:Array<TransformTimeline>;
 		/**
-		 * æ—¶é—´è½´åˆ—è¡¨
+		 * Ê±¼äÖáÁĞ±í
 		 * @returns {Array<TransformTimeline>}
 		 */
 		public get timelineList():Array<TransformTimeline>{
 			return this._timelineList;
 		}
-
+		private _slotTimelineList:Array<SlotTimeline>;
+		public get slotTimelineList():Array<SlotTimeline>{
+			return this._slotTimelineList;
+		}
+		
 		/**
-		 * åˆ›å»ºä¸€ä¸ªAnimationDataå®ä¾‹
+		 * ´´½¨Ò»¸öAnimationDataÊµÀı
 		 */
 		public constructor(){
 			super();
@@ -97,10 +101,11 @@ module dragonBones {
 			this.hideTimelineNameMap = [];
 			
 			this._timelineList = [];
+			this._slotTimelineList = [];
 		}
 
 		/**
-		 * é‡Šæ”¾èµ„æº
+		 * ÊÍ·Å×ÊÔ´
 		 */
 		public dispose():void{
 			super.dispose();
@@ -113,12 +118,18 @@ module dragonBones {
             }
 
 			this._timelineList = null;
+			for(var slotKey in this._slotTimelineList)
+			{
+				var slotTimeline:SlotTimeline =  this._slotTimelineList[slotKey];
+				slotTimeline.dispose();
+			}
+			this._slotTimelineList = null;
 		}
 
 		/**
-		 * æ ¹æ®æ—¶é—´è½´çš„åå­—è·å–æ—¶é—´è½´æ•°æ®
-		 * @param timelineName æ—¶é—´è½´çš„åå­—
-		 * @returns {*} æ—¶é—´è½´æ•°æ®
+		 * ¸ù¾İÊ±¼äÖáµÄÃû×Ö»ñÈ¡Ê±¼äÖáÊı¾İ
+		 * @param timelineName Ê±¼äÖáµÄÃû×Ö
+		 * @returns {*} Ê±¼äÖáÊı¾İ
 		 */
 		public getTimeline(timelineName:string):TransformTimeline{
 			var i:number = this._timelineList.length;
@@ -131,8 +142,8 @@ module dragonBones {
 		}
 
 		/**
-		 * æ·»åŠ ä¸€ä¸ªæ—¶é—´è½´æ•°æ®
-		 * @param timeline éœ€è¦è¢«æ·»åŠ çš„æ—¶é—´è½´æ•°æ®
+		 * Ìí¼ÓÒ»¸öÊ±¼äÖáÊı¾İ
+		 * @param timeline ĞèÒª±»Ìí¼ÓµÄÊ±¼äÖáÊı¾İ
 		 */
 		public addTimeline(timeline:TransformTimeline):void{
 			if(!timeline){
@@ -141,6 +152,26 @@ module dragonBones {
 			
 			if(this._timelineList.indexOf(timeline) < 0){
 				this._timelineList[this._timelineList.length] = timeline;
+			}
+		}
+
+		public getSlotTimeline(timelineName:string):SlotTimeline{
+			var i:number = this._slotTimelineList.length;
+			while(i --){
+				if(this._slotTimelineList[i].name == timelineName){
+					return this._slotTimelineList[i];
+				}
+			}
+			return null;
+		}
+
+		public addSlotTimeline(timeline:SlotTimeline):void{
+			if(!timeline){
+				throw new Error();
+			}
+
+			if(this._slotTimelineList.indexOf(timeline) < 0){
+				this._slotTimelineList[this._slotTimelineList.length] = timeline;
 			}
 		}
 	}

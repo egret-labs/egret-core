@@ -36,9 +36,9 @@ module dragonBones {
 	 */
 	export class DragonBones{
 		/**
-		 * 鏁版嵁鐨勭増鏈彿
+		 * 数据的版本号
 		 */
-		public static DATA_VERSION:string = "2.3";
+		public static DATA_VERSION:string = "4.0";
 		/**
 		 *
 		 */

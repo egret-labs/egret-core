@@ -120,6 +120,7 @@ module dragonBones {
 		
 		private _armature:Armature;
 		private _timelineStateList:Array<TimelineState>;
+		private _slotTimelineStateList:Array<SlotTimelineState>;
 		private _boneMasks:Array<string>;
 		
 		private _isPlaying:boolean;
@@ -154,6 +155,7 @@ module dragonBones {
 		
 		public constructor(){ 
 			this._timelineStateList =[];
+			this._slotTimelineStateList=[];
 			this._boneMasks = [];
 		}
 		
@@ -163,6 +165,13 @@ module dragonBones {
 				TimelineState._returnObject(this._timelineStateList[i]);
 			}
 			this._timelineStateList.length = 0;
+
+			i = this._slotTimelineStateList.length;
+			while(i --){
+				SlotTimelineState._returnObject(this._slotTimelineStateList[i])
+			}
+			this._slotTimelineStateList.length = 0;
+
 			this._boneMasks.length = 0;
 			
 			this._armature = null;
@@ -263,6 +272,7 @@ module dragonBones {
 		 */
 		public _updateTimelineStates():void{
 			var timelineState:TimelineState;
+			var slotTimelineState:SlotTimelineState;
 			var i:number = this._timelineStateList.length;
 			while(i --){
 				timelineState = this._timelineStateList[i];
@@ -270,7 +280,14 @@ module dragonBones {
 					this.removeTimelineState(timelineState);
 				}
 			}
-			
+
+			i = this._slotTimelineStateList.length;
+			while(i --){
+				slotTimelineState = this._slotTimelineStateList[i];
+				if(!this._armature.getSlot(slotTimelineState.name)){
+					this.removeSlotTimelineState(slotTimelineState);
+				}
+			}
 			if(this._boneMasks.length > 0){
 				i = this._timelineStateList.length;
 				while(i --){
@@ -292,6 +309,12 @@ module dragonBones {
                     var timeline:TransformTimeline = this._clip.timelineList[key];
                     this.addTimelineState(timeline.name);
                 }
+			}
+
+			for(var slotKey in this._clip.slotTimelineList)
+			{
+				var slotTimeline:SlotTimeline = this._clip.slotTimelineList[slotKey];
+				this.addSlotTimelineState(slotTimeline.name);
 			}
 		}
 		
@@ -315,6 +338,28 @@ module dragonBones {
 			var index:number = this._timelineStateList.indexOf(timelineState);
 			this._timelineStateList.splice(index, 1);
 			TimelineState._returnObject(timelineState);
+		}
+
+		private addSlotTimelineState(timelineName:string):void{
+			var slot:Slot = this._armature.getSlot(timelineName);
+			if(slot){
+				for(var key in this._slotTimelineStateList)
+				{
+					var eachState:SlotTimelineState = this._slotTimelineStateList[key];
+					if(eachState.name == timelineName){
+						return;
+					}
+				}
+				var timelineState:SlotTimelineState = SlotTimelineState._borrowObject();
+				timelineState._fadeIn(slot, this, this._clip.getSlotTimeline(timelineName));
+				this._slotTimelineStateList.push(timelineState);
+			}
+		}
+
+		private removeSlotTimelineState(timelineState:SlotTimelineState):void{
+			var index:number = this._slotTimelineStateList.indexOf(timelineState);
+			this._slotTimelineStateList.splice(index, 1);
+			SlotTimelineState._returnObject(timelineState);
 		}
 		
 	//动画
@@ -606,7 +651,11 @@ module dragonBones {
                 timeline._update(progress);
                 this._isComplete = timeline._isComplete && this._isComplete;
             }
-			
+			for(var slotKey in this._slotTimelineStateList) {
+				var slotTimeline:SlotTimelineState = this._slotTimelineStateList[slotKey];
+				slotTimeline._update(progress);
+				this._isComplete = timeline._isComplete && this._isComplete;
+			}
 			//update main timeline
 			if(this._currentTime != currentTime){
 				if(this._currentPlayTimes != currentPlayTimes)    //check loop complete

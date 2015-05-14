@@ -102,7 +102,8 @@ module dragonBones {
 			for(var i:number = 0;i < boneDataList.length;i ++){
 				var boneData:BoneData = boneDataList[i];
 				var timeline:TransformTimeline = animationData.getTimeline(boneData.name);
-				if(!timeline){
+				var slotTimeline:SlotTimeline = animationData.getSlotTimeline(boneData.name);
+				if(!timeline && !slotTimeline){
 					continue;
 				}
 				
@@ -119,7 +120,10 @@ module dragonBones {
 				}
 				
 				var frameList:Array<Frame> = timeline.frameList;
-				
+				if(slotTimeline)
+				{
+					var slotFrameList:Array<Frame> = slotTimeline.frameList;
+				}
 				var originTransform:DBTransform = null;
 				var originPivot:Point = null;
 				var prevFrame:TransformFrame = null;
@@ -135,13 +139,7 @@ module dragonBones {
 					frame.transform.skewY -= boneData.transform.skewY;
 					frame.transform.scaleX /= boneData.transform.scaleX;
 					frame.transform.scaleY /= boneData.transform.scaleY;
-					
-					if(!timeline.transformed){
-						if(slotData){
-							frame.zOrder -= slotData.zOrder;
-						}
-					}
-					
+
 					//如果originTransform不存在说明当前帧是第一帧，将当前帧的transform保存至timeline的originTransform
 					if(!originTransform){
 						originTransform = timeline.originTransform;
@@ -199,6 +197,22 @@ module dragonBones {
 						}
 					}
 					prevFrame = frame;
+				}
+				if(slotTimeline && slotFrameList)
+				{
+					frameListLength = slotFrameList.length;
+					for(var j:number = 0;j<frameListLength; j++)
+					{
+						var slotFrame:SlotFrame = <SlotFrame><any> slotFrameList[j];
+						if(!slotTimeline.transformed)
+						{
+							if(slotData)
+							{
+								slotFrame.zOrder -= slotData.zOrder;
+							}
+						}
+					}
+					slotTimeline.transformed = true;
 				}
 				timeline.transformed = true;
 			}

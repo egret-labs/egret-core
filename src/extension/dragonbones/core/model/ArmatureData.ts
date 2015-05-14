@@ -33,20 +33,21 @@ module dragonBones {
 	/**
 	 * @class dragonBones.ArmatureData
 	 * @classdesc
-	 * armatureæ•°æ® ä¸€ä¸ªarmatureæ•°æ®åŒ…å«ä¸€ä¸ªè§’è‰²çš„éª¨éª¼ï¼Œçš®è‚¤ï¼ŒåŠ¨ç”»çš„æ•°æ®
+	 * armatureÊı¾İ Ò»¸öarmatureÊı¾İ°üº¬Ò»¸ö½ÇÉ«µÄ¹Ç÷À£¬Æ¤·ô£¬¶¯»­µÄÊı¾İ
 	 * @see  dragonBones.BoneData
 	 * @see  dragonBones.SkinData
 	 * @see  dragonBones.AnimationData
 	 */
 	export class ArmatureData{
 		/**
-		 * armatureæ•°æ®çš„åå­—
+		 * armatureÊı¾İµÄÃû×Ö
 		 * @member {string} dragonBones.ArmatureData#name
 		 */
 		public name:string;
 		
 		private _boneDataList:Array<BoneData>;
 		private _skinDataList:Array<SkinData>;
+		private _slotDataList:Array<SlotData>;
 		private _animationDataList:Array<AnimationData>;
 
         public static sortBoneDataHelpArray(object1:any, object2:any):number {
@@ -57,18 +58,66 @@ module dragonBones {
         }
 
 		/**
-		 * åˆ›å»ºä¸€ä¸ªArmatureDataå®ä¾‹
+		 * ´´½¨Ò»¸öArmatureDataÊµÀı
 		 */
 		public constructor(){
 			this._boneDataList = [];
 			this._skinDataList = [];
+			this._slotDataList = [];
 			this._animationDataList = [];
 			
 			//_areaDataList = new Vector.<IAreaData>(0, true);
 		}
 
+		public setSkinData(skinName:String):void
+		{
+			var i:number = 0;
+			var len:number = this._slotDataList.length
+			for (i = 0; i < len; i++)
+			{
+				this._slotDataList[i].dispose();
+			}
+			var skinData:SkinData;
+			if(!skinName && this._skinDataList.length > 0)
+			{
+				skinData = this._skinDataList[0];
+			}
+			else
+			{
+				i = 0,
+				len = this._skinDataList.length
+				for (; i < len; i++)
+				{
+					if (this._skinDataList[i].name == skinName)
+					{
+						skinData = this._skinDataList[i];
+						break;
+					}
+				}
+			}
+
+			if (skinData)
+			{
+				var slotData:SlotData;
+				i = 0, len = skinData.slotDataList.length
+				for (i = 0; i < len; i++)
+				{
+					slotData = this.getSlotData(skinData.slotDataList[i].name);
+					if (slotData)
+					{
+						var j:number = 0;
+						var jLen:number = skinData.slotDataList[i].displayDataList.length;
+						for (j = 0; j < jLen; j++)
+						{
+							slotData.addDisplayData(skinData.slotDataList[i].displayDataList[j]);
+						}
+					}
+				}
+			}
+		}
+
 		/**
-		 * é‡Šæ”¾èµ„æº
+		 * ÊÍ·Å×ÊÔ´
 		 */
 		public dispose():void{
 			var i:number = this._boneDataList.length;
@@ -79,20 +128,25 @@ module dragonBones {
 			while(i --){
 				this._skinDataList[i].dispose();
 			}
+			i = this._slotDataList.length;
+			while(i --){
+				this._slotDataList[i].dispose();
+			}
 			i = this._animationDataList.length;
 			while(i --){
 				this._animationDataList[i].dispose();
 			}
 
 			this._boneDataList = null;
+			this._slotDataList = null;
 			this._skinDataList = null;
 			this._animationDataList = null;
 		}
 
 		/**
-		 * æ ¹æ®éª¨éª¼çš„åå­—è·å–åˆ°éª¨éª¼æ•°æ®
-		 * @param boneName éª¨éª¼çš„åå­—
-		 * @returns {*} éª¨éª¼æ•°æ®
+		 * ¸ù¾İ¹Ç÷ÀµÄÃû×Ö»ñÈ¡µ½¹Ç÷ÀÊı¾İ
+		 * @param boneName ¹Ç÷ÀµÄÃû×Ö
+		 * @returns {*} ¹Ç÷ÀÊı¾İ
 		 */
 		public getBoneData(boneName:string):BoneData{
 			var i:number = this._boneDataList.length;
@@ -104,10 +158,20 @@ module dragonBones {
 			return null;
 		}
 
+		public getSlotData(slotName:string):SlotData{
+			var i:number = this._slotDataList.length;
+			while(i --){
+				if(this._slotDataList[i].name == slotName){
+					return this._slotDataList[i];
+				}
+			}
+			return null;
+		}
+
 		/**
-		 * æ ¹æ®çš®è‚¤çš„åå­—è·å–åˆ°çš®è‚¤æ•°æ®
-		 * @param skinName  çš®è‚¤çš„åå­—
-		 * @returns {*}  çš®è‚¤æ•°æ®
+		 * ¸ù¾İÆ¤·ôµÄÃû×Ö»ñÈ¡µ½Æ¤·ôÊı¾İ
+		 * @param skinName  Æ¤·ôµÄÃû×Ö
+		 * @returns {*}  Æ¤·ôÊı¾İ
 		 */
 		public getSkinData(skinName:string):SkinData{
 			if(!skinName && this._skinDataList.length > 0){
@@ -124,9 +188,9 @@ module dragonBones {
 		}
 
 		/**
-		 * æ ¹æ®åŠ¨ç”»çš„åå­—è·å–åŠ¨ç”»æ•°æ®
-		 * @param animationName åŠ¨ç”»çš„åå­—
-		 * @returns {*} åŠ¨ç”»æ•°æ®
+		 * ¸ù¾İ¶¯»­µÄÃû×Ö»ñÈ¡¶¯»­Êı¾İ
+		 * @param animationName ¶¯»­µÄÃû×Ö
+		 * @returns {*} ¶¯»­Êı¾İ
 		 */
 		public getAnimationData(animationName:string):AnimationData{
 			var i:number = this._animationDataList.length;
@@ -139,7 +203,7 @@ module dragonBones {
 		}
 
 		/**
-		 *æ·»åŠ ä¸€ä¸ªéª¨éª¼æ•°æ®
+		 *Ìí¼ÓÒ»¸ö¹Ç÷ÀÊı¾İ
 		 * @param boneData
 		 */
 		public addBoneData(boneData:BoneData):void{
@@ -155,8 +219,20 @@ module dragonBones {
 			}
 		}
 
+		public addSlotData(slotData:SlotData):void{
+			if(!slotData){
+				throw new Error();
+			}
+
+			if(this._slotDataList.indexOf(slotData) < 0){
+				this._slotDataList[this._slotDataList.length] = slotData;
+			}
+			else{
+				throw new Error();
+			}
+		}
 		/**
-		 * æ·»åŠ ä¸€ä¸ªçš®è‚¤æ•°æ®
+		 * Ìí¼ÓÒ»¸öÆ¤·ôÊı¾İ
 		 * @param skinData
 		 */
 		public addSkinData(skinData:SkinData):void{
@@ -173,7 +249,7 @@ module dragonBones {
 		}
 
 		/**
-		 * æ·»åŠ ä¸€ä¸ªåŠ¨ç”»æ•°æ®
+		 * Ìí¼ÓÒ»¸ö¶¯»­Êı¾İ
 		 * @param animationData
 		 */
 		public addAnimationData(animationData:AnimationData):void{
@@ -187,7 +263,7 @@ module dragonBones {
 		}
 
 		/**
-		 * å¯¹éª¨éª¼æŒ‰ç…§éª¨éª¼æ•°çš„å±‚çº§å…³ç³»æ’åº
+		 * ¶Ô¹Ç÷À°´ÕÕ¹Ç÷ÀÊıµÄ²ã¼¶¹ØÏµÅÅĞò
 		 */
 		public sortBoneDataList():void{
 			var i:number = this._boneDataList.length;
@@ -217,15 +293,18 @@ module dragonBones {
 
 
 		/**
-		 * è·å–éª¨éª¼æ•°æ®åˆ—è¡¨
+		 * »ñÈ¡¹Ç÷ÀÊı¾İÁĞ±í
 		 * @returns {Array<BoneData>}
 		 */
 		public get boneDataList():Array<BoneData>{
 			return this._boneDataList;
 		}
+		public get slotDataList():Array<SlotData>{
+			return this._slotDataList;
+		}
 
 		/**
-		 * è·å–çš®è‚¤æ•°æ®åˆ—è¡¨
+		 * »ñÈ¡Æ¤·ôÊı¾İÁĞ±í
 		 * @returns {Array<SkinData>}
 		 */
 		public get skinDataList():Array<SkinData>{
@@ -233,7 +312,7 @@ module dragonBones {
 		}
 
 		/**
-		 * è·å¾—åŠ¨ç”»æ•°æ®åˆ—è¡¨
+		 * »ñµÃ¶¯»­Êı¾İÁĞ±í
 		 * @returns {Array<AnimationData>}
 		 */
 		public get animationDataList():Array<AnimationData>{

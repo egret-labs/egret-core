@@ -31,90 +31,65 @@
 module dragonBones {
 
 	/**
-	 * @class dragonBones.SlotData
+	 * @class dragonBones.SlotFrame
+	 * @extends dragonBones.Frame
 	 * @classdesc
-	 * ²å²ÛÊı¾İ£¬²å²ÛÊÇÓÉ¹Ç÷À¿ØÖÆµÄ£¬¿ÉÒÔ×°ÈëÏÔÊ¾¶ÔÏóµÄÈİÆ÷£¬ÏÔÊ¾¶ÔÏó¿ÉÒÔÊÇÍ¼Æ¬»òÕß×Ó¹Ç¼Ü
-	 * ²å²Û¿É²åÈëÒ»¸ö»òÕß¶à¸öÏÔÊ¾¶ÔÏó£¬µ«ÊÇÍ¬Ò»Ê±¿ÌÖ»ÄÜÏÔÊ¾Ò»¸öÏÔÊ¾¶ÔÏó
-	 * ²å²ÛÖ§³Ö¹Ø¼üÖ¡¶¯»­£¬Èç¹ûÓĞ¶à¸öÏÔÊ¾¶ÔÏó£¬¿ÉÒÔÖ¸¶¨ÄÄÒ»Ö¡ÏÔÊ¾ÄÄÒ»¸öÏÔÊ¾¶ÔÏó
+	 * æ’æ§½çš„å…³é”®å¸§æ•°æ®ï¼ŒåŒ…å«
+	 * æ’æ§½çš„æ˜¾ç¤ºåºå·ï¼Œå¯è§åº¦ï¼ŒzOrderï¼ŒcolorTransformæ•°æ®
 	 */
-	export class SlotData{
+	export class SlotFrame extends Frame{
 		/**
-		 * ²å²ÛÊı¾İµÄÃû×Ö
-		 * @member {string} dragonBones.SlotData#name
+		 * NaN:no tween, 10:auto tween, [-1, 0):ease in, 0:line easing, (0, 1]:ease out, (1, 2]:ease in out
+		 * ç¼“åŠ¨å€¼ï¼Œ
+		 * å½“å€¼ä¸ºNaNæ—¶ï¼Œæ²¡æœ‰ç¼“åŠ¨
+		 * å½“å€¼ä¸º10æ—¶ï¼Œä¸ºè‡ªåŠ¨
+		 * å½“å€¼ä¸º[-1,0)æ—¶ï¼Œä¸ºç¼“è¿›
+		 * å½“å€¼ä¸º0æ—¶ï¼Œä¸ºçº¿æ€§ç¼“åŠ¨
+		 * å½“å€¼ä¸º(0, 1]æ—¶ï¼Œä¸ºç¼“å‡º
+		 * å½“å€¼ä¸º(1, 2]æ—¶ï¼Œä¸ºç¼“è¿›ç¼“å‡º
+		 * @member {number} dragonBones.TransformFrame#tweenEasing
 		 */
-		public name:string;
+		public tweenEasing:number;
+
 		/**
-		 * °ó¶¨µÄ¹Ç÷ÀµÄÃû×Ö£¬Ò»¸ö²å²Û½öÊÜÒ»¸ö¹Ç÷À¿ØÖÆ
-		 * @member {string} dragonBones.SlotData#parent
+		 *ç»‘å®šåˆ°è¯¥æ’æ§½çš„æ˜¾ç¤ºåºå·ï¼Œå½“æ’æ§½æœ‰å¤šä¸ªæ˜¾ç¤ºå¯¹è±¡æ—¶ï¼ŒæŒ‡å®šæ˜¾ç¤ºå“ªä¸€ä¸ªæ˜¾ç¤ºå¯¹è±¡
+		 * @member {number} dragonBones.SlotFrame#displayIndex
 		 */
-		public parent:string;
+		public displayIndex:number = 0;
 		/**
-		 * zÖáÅÅĞò£¬zÖáÊÇ´¹Ö±ÓÚÆÁÄ»µÄÖá£¬zOrderÔ¼Ğ¡£¬Ô½¿¿Àï
-		 * ËùÒÔÈç¹ûÓĞÖØµş£¬zOrder´óµÄ²å²Û»áµ²×¡zOrderĞ¡µÄ²å²Û
-		 * @member {number} dragonBones.SlotData#zOrder
+		 *æ˜¯å¦å¯è§
+		 * @member {boolean} dragonBones.SlotFrame#visible
+		 */
+		public visible:boolean;
+		/**
+		 *ç»‘å®šåˆ°è¯¥æ’æ§½çš„zOrderå€¼
+		 * @member {number} dragonBones.SlotFrame#zOrder
 		 */
 		public zOrder:number;
 		/**
-		 * »ìºÏÄ£Ê½
-		 * @member {string} dragonBones.SlotData#blendMode
+		 *ç»‘å®šåˆ°æ’æ§½çš„é¢œè‰²transformï¼Œé¢œè‰²çš„transformå¯ä»¥è¡¨ç¤ºé¢œè‰²åœ¨çº¢è“ç»¿é€æ˜å››ä¸ªé€šé“çš„å˜åŒ–
+		 * @member {dragonBones.ColorTransform} dragonBones.SlotFrame#color
 		 */
-		public blendMode:string;
+		public color:ColorTransform;
 		
-		private _displayDataList:Array<DisplayData>;
-
 		/**
-		 * ¹¹Ôìº¯Êı£¬ÊµÀı»¯Ò»¸öSlotDataÀà
+		 *æ„é€ å‡½æ•°ï¼Œå®ä¾‹åŒ–ä¸€ä¸ªSlotFrame
 		 */
 		public constructor(){
-			this._displayDataList = [];
-			this.zOrder = 0;
+			super();
+			
+			this.tweenEasing = 10;
+			this.displayIndex = 0;
+			this.visible = true;
+			this.zOrder = NaN;
 		}
-
+		
 		/**
-		 * ÊÍ·Å×ÊÔ´
+		 *é‡Šæ”¾èµ„æº
 		 */
 		public dispose():void{
-			this._displayDataList.length = 0;
-		}
-
-		/**
-		 * Ìí¼ÓÒ»¸öÏÔÊ¾¶ÔÏóÊı¾İ
-		 * @param displayData
-		 */
-		public addDisplayData(displayData:DisplayData):void{
-			if(!displayData){
-				throw new Error();
-			}
-			if (this._displayDataList.indexOf(displayData) < 0){
-				this._displayDataList[this._displayDataList.length] = displayData;
-			}
-			else{
-				throw new Error();
-			}
-		}
-
-		/**
-		 * ¸ù¾İÏÔÊ¾¶ÔÏóµÄÃû×Ö»ñÈ¡ÏÔÊ¾¶ÔÏóÊı¾İ
-		 * @param displayName ÏëÒª»ñÈ¡µÄÏÔÊ¾¶ÔÏóµÄÃû×Ö
-		 * @returns {*} ·µ»ØÏÔÊ¾¶ÔÏó°ºÊı¾İ£¬Èç¹ûÃ»ÓĞ·µ»Ønull
-		 */
-		public getDisplayData(displayName:string):DisplayData{
-			var i:number = this._displayDataList.length;
-			while(i --){
-				if(this._displayDataList[i].name == displayName){
-					return this._displayDataList[i];
-				}
-			}
-			
-			return null;
-		}
-
-		/**
-		 * »ñÈ¡ËùÓĞµÄÏÔÊ¾¶ÔÏó
-		 * @returns {Array<DisplayData>}
-		 */
-		public get displayDataList():Array<DisplayData>{
-			return this._displayDataList;
+			super.dispose();
+			this.color = null;
 		}
 	}
 }
