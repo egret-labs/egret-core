@@ -42,7 +42,16 @@ module egret {
          * @returns {number} sin值
          */
         public static sin(value:number):number {
-            value = Math.round(value);
+            var valueFloor:number = Math.floor(value);
+            var valueCeil:number = valueFloor + 1;
+            var resultFloor:number = NumberUtils.sinInt(valueFloor);
+            var resultCeil:number = NumberUtils.sinInt(valueCeil);
+
+            return (value - valueFloor) * resultCeil + (valueCeil - value) * resultFloor;
+        }
+
+        private static sinInt(value:number):number
+        {
             value = value % 360;
             if (value < 0) {
                 value += 360;
@@ -65,7 +74,16 @@ module egret {
          * @returns {number} cos值
          */
         public static cos(value:number):number {
-            value = Math.round(value);
+            var valueFloor:number = Math.floor(value);
+            var valueCeil:number = valueFloor + 1;
+            var resultFloor:number = NumberUtils.cosInt(valueFloor);
+            var resultCeil:number = NumberUtils.cosInt(valueCeil);
+
+            return (value - valueFloor) * resultCeil + (valueCeil - value) * resultFloor;
+        }
+
+        private static cosInt(value:number):number
+        {
             value = value % 360;
             if (value < 0) {
                 value += 360;
@@ -81,6 +99,7 @@ module egret {
             }
             return egret_sin_map[value - 270];
         }
+
     }
 }
 
