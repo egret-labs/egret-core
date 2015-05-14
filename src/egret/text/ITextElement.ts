@@ -25,36 +25,71 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-module egret_dom {
-
-    export var header:string = "";
+module egret {
 
     /**
-     * 获取当前浏览器的类型
-     * @returns {string}
+     * @private
      */
-    export function getHeader():string {
-        var tempStyle = document.createElement('div').style;
-        var transArr:Array<string> = ["t", "webkitT", "msT", "MozT", "OT"];
-        for (var i:number = 0; i < transArr.length; i++) {
-            var transform:string = transArr[i] + 'ransform';
+    export interface IHitTextElement {
+        lineIndex:number;
+        textElementIndex:number;
+    }
 
-            if (transform in tempStyle)
-                return transArr[i];
-        }
 
-        return transArr[0];
+    /**
+     * @private
+     */
+    export interface ITextStyle {
+        textColor?:number;
+        strokeColor?:number;
+        size?:number;
+        stroke?:number;
+        bold?:boolean;
+        italic?:boolean;
+        fontFamily?:string;
+        href?:string;
     }
 
     /**
-     * 获取当前浏览器类型
-     * @type {string}
+     * 用于建立多种样式混合文本的基本结构，主要用于设置 textFlow 属性
+     * @link http://docs.egret-labs.org/jkdoc/manual-text-multiformat.html 多种样式文本混合
      */
-    export function getTrans(type:string):string {
-        if (header == "") {
-            header = getHeader();
-        }
+    export interface ITextElement {
+        text:string;
+        style?:ITextStyle;
+    }
 
-        return header + type.substring(1, type.length);
+    /**
+     * @private
+     */
+    export interface IWTextElement extends ITextElement {
+        width:number;
+    }
+
+    /**
+     * 文本最终解析的一行数据格式
+     * @private
+     */
+    export interface ILineElement {
+        /**
+         * 文本占用宽度
+         */
+        width:number;
+        /**
+         * 文本占用高度
+         */
+        height:number;
+        /**
+         * 当前文本字符总数量（包括换行符）
+         */
+        charNum:number;
+        /**
+         * 是否含有换行符
+         */
+        hasNextLine:boolean;
+        /**
+         * 本行文本内容
+         */
+        elements:Array<IWTextElement>;
     }
 }

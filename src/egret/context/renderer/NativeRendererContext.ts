@@ -156,8 +156,8 @@ module egret {
          */
         public setAlpha(value:number, blendMode:string) {
             //if (this.currentAlpha != value) {
-                egret_native.Graphics.setGlobalAlpha(value);
-                //this.currentAlpha = value;
+            egret_native.Graphics.setGlobalAlpha(value);
+            //this.currentAlpha = value;
             //}
             this.setBlendMode(blendMode);
         }
@@ -169,11 +169,11 @@ module egret {
                 blendMode = egret.BlendMode.NORMAL;
             }
             //if (this.currentBlendMode != blendMode) {
-                var blendModeArg = RendererContext.blendModesForGL[blendMode];
-                if (blendModeArg) {
-                    egret_native.Graphics.setBlendArg(blendModeArg[0], blendModeArg[1]);
-                    this.currentBlendMode = blendMode;
-                }
+            var blendModeArg = RendererContext.blendModesForGL[blendMode];
+            if (blendModeArg) {
+                egret_native.Graphics.setBlendArg(blendModeArg[0], blendModeArg[1]);
+                this.currentBlendMode = blendMode;
+            }
             //}
         }
 
@@ -184,9 +184,19 @@ module egret {
          */
         public setupFont(textField:TextField, style:egret.ITextStyle = null):void {
             style = style || <egret.ITextStyle>{};
-            var size:number = style["size"] == null ? textField._size : style["size"];
+            var properties:egret.TextFieldProperties = textField._properties;
+            var size:number = style["size"] == null ? properties._size : style["size"];
 
-            egret_native.Label.createLabel(TextField.default_fontFamily, size, "");
+            var outline;
+            if (style.stroke != null) {
+                outline = style.stroke;
+            }
+            else {
+                outline = properties._stroke;
+            }
+
+
+            egret_native.Label.createLabel(TextField.default_fontFamily, size, "", outline);
         }
 
         /**
@@ -211,32 +221,26 @@ module egret {
         public drawText(textField:egret.TextField, text:string, x:number, y:number, maxWidth:number, style:egret.ITextStyle = null) {
             this.setupFont(textField, style);
             style = style || <egret.ITextStyle>{};
+            var properties:egret.TextFieldProperties = textField._properties;
 
             var textColor:number;
             if (style.textColor != null) {
                 textColor = style.textColor;
             }
             else {
-                textColor = textField._textColor;
+                textColor = properties._textColor;
             }
 
-            var strokeColor:string;
+            var strokeColor:number;
             if (style.strokeColor != null) {
-                strokeColor = toColorString(style.strokeColor);
+                strokeColor = style.strokeColor;
             }
             else {
-                strokeColor = textField._strokeColorString;
-            }
-
-            var outline;
-            if (style.stroke != null) {
-                outline = style.stroke;
-            }
-            else {
-                outline = textField._stroke;
+                strokeColor = properties._strokeColor;
             }
 
             egret_native.Label.setTextColor(textColor);
+            egret_native.Label.setStrokeColor(strokeColor);
             egret_native.Label.drawText(text, x, y - 2);
 
             super.drawText(textField, text, x, y, maxWidth, style);
@@ -320,6 +324,9 @@ var egret_native_graphics;
             egret_native.Graphics.lineTo(x, y)
 
         }, this, arguments));
+        this.checkPoint(this.lineX, this.lineY);
+        this.lineX = x;
+        this.lineY = y;
         this.checkPoint(x, y);
     }
 
@@ -335,18 +342,20 @@ var egret_native_graphics;
         this.commandQueue.push(new Command(function (x, y) {
             egret_native.Graphics.moveTo(x, y)
         }, this, arguments));
-        this.checkPoint(x, y);
     }
 
     egret_native_graphics.moveTo = moveTo;
 
     function clear() {
         this.commandQueue.splice(0, this.commandQueue.length);
+        this.lineX = 0;
+        this.lineY = 0;
         egret_native.Graphics.lineStyle(0, 0);
         this._minX = 0;
         this._minY = 0;
         this._maxX = 0;
         this._maxY = 0;
+        this._firstCheck = true;
     }
 
     egret_native_graphics.clear = clear;

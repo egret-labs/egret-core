@@ -281,6 +281,18 @@ module egret.gui {
             super.updateDisplayList(width, height);
             if(!this.target)
                 return;
+
+            if (this.target.numElements == 0)
+            {
+                var padding:number = isNaN(this._padding)?0:this._padding;
+                var paddingL:number = isNaN(this._paddingLeft)?padding:this._paddingLeft;
+                var paddingR:number = isNaN(this._paddingRight)?padding:this._paddingRight;
+                var paddingT:number = isNaN(this._paddingTop)?padding:this._paddingTop;
+                var paddingB:number = isNaN(this._paddingBottom)?padding:this._paddingBottom;
+                this.target.setContentSize(Math.ceil(paddingL+paddingR),Math.ceil(paddingT+paddingB));
+                return;
+            }
+
             if(this.useVirtualLayout){
                 this.updateDisplayListVirtual(width,height);
             }

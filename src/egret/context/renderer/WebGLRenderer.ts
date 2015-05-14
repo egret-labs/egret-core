@@ -85,7 +85,7 @@ module egret {
         }
 
         public onRenderFinish():void {
-            this._draw();
+            this._drawWebGL();
         }
 
         private initAll():void {
@@ -108,8 +108,10 @@ module egret {
                     this._bitmapData = document.createElement("canvas");
                     this.renderContext = egret.RendererContext.createRendererContext(this._bitmapData);
                 }
-                var width = bounds.width;
-                var height = bounds.height;
+                var originalWidth = bounds.width;
+                var originalHeight = bounds.height;
+                var width = originalWidth;
+                var height = originalHeight;
 
                 var texture_scale_factor = egret.MainContext.instance.rendererContext._texture_scale_factor;
                 width /= texture_scale_factor;
@@ -164,8 +166,8 @@ module egret {
                 this.renderTexture._bitmapData = this._bitmapData;
                 this.renderTexture._sourceWidth = width;
                 this.renderTexture._sourceHeight = height;
-                this.renderTexture._textureWidth = this.renderTexture._sourceWidth * texture_scale_factor;
-                this.renderTexture._textureHeight = this.renderTexture._sourceHeight * texture_scale_factor;
+                this.renderTexture._textureWidth = originalWidth;
+                this.renderTexture._textureHeight = originalHeight;
 
                 this._texture_to_render = this.renderTexture;
                 return true;
@@ -173,6 +175,13 @@ module egret {
 
             egret.TextField.prototype._draw = function (renderContext) {
                 var textField:egret.TextField = <egret.TextField>this;
+                var properties:egret.TextFieldProperties = textField._properties;
+                if (properties._type == egret.TextFieldType.INPUT) {
+                    if (textField._isTyping) {
+                        return;
+                    }
+                }
+
                 if (textField.getDirty()) {
                     this._texture_to_render = this.renderTexture;
                     this._cacheAsBitmap = true;
@@ -212,9 +221,6 @@ module egret {
             RenderTexture.prototype.drawToTexture = function (displayObject:egret.DisplayObject, clipBounds?:Rectangle, scale?:number):boolean {
                 var bounds = clipBounds || displayObject.getBounds(egret.Rectangle.identity);
                 if (bounds.width == 0 || bounds.height == 0) {
-                    return false;
-                }
-                if (clipBounds && (clipBounds.width == 0 || clipBounds.height == 0)) {
                     return false;
                 }
                 if (typeof scale == "undefined") {
@@ -259,6 +265,10 @@ module egret {
                 this._offsetX = x + anchorOffsetX;
                 this._offsetY = y + anchorOffsetY;
                 displayObject._worldTransform.append(1, 0, 0, 1, -this._offsetX, -this._offsetY);
+                if(clipBounds) {
+                    this._offsetX -= x;
+                    this._offsetY -= y;
+                }
                 displayObject.worldAlpha = 1;
                 var __use_new_draw = MainContext.__use_new_draw;
                 MainContext.__use_new_draw = false;
@@ -291,7 +301,7 @@ module egret {
                     this.renderContext.pushMask(mask);
                 }
                 displayObject._render(this.renderContext);
-                this.renderContext["_draw"]();
+                this.renderContext["_drawWebGL"]();
                 MainContext.__use_new_draw = __use_new_draw;
                 if (mask) {
                     this.renderContext.popMask();
@@ -510,7 +520,7 @@ module egret {
             if (this.currentBlendMode != blendMode) {
                 var blendModeWebGL = RendererContext.blendModesForGL[blendMode];
                 if (blendModeWebGL) {
-                    this._draw();
+                    this._drawWebGL();
                     this.gl.blendFunc(blendModeWebGL[0], blendModeWebGL[1]);
                     this.currentBlendMode = blendMode;
                 }
@@ -545,7 +555,7 @@ module egret {
             this.createWebGLTexture(texture);
             var webGLTexture = texture._bitmapData.webGLTexture[this.glID];
             if (webGLTexture !== this.currentBaseTexture || this.currentBatchSize >= this.size - 1) {
-                this._draw();
+                this._drawWebGL();
                 this.currentBaseTexture = webGLTexture;
             }
 
@@ -631,7 +641,7 @@ module egret {
             this.currentBatchSize++;
         }
 
-        private _draw():void {
+        private _drawWebGL():void {
             if (this.currentBatchSize == 0 || this.contextLost) {
                 return;
             }
@@ -692,7 +702,7 @@ module egret {
         private maskDataFreeList:Array<any> = [];
 
         public pushMask(mask:Rectangle):void {
-            this._draw();
+            this._drawWebGL();
             var gl:any = this.gl;
             if (this.maskList.length == 0) {
                 gl.enable(gl.SCISSOR_TEST);
@@ -743,7 +753,7 @@ module egret {
         }
 
         public popMask():void {
-            this._draw();
+            this._drawWebGL();
             var gl:any = this.gl;
             var maskData = this.maskList.pop();
             this.maskDataFreeList.push(maskData);
@@ -774,7 +784,7 @@ module egret {
 
         public setGlobalColorTransform(colorTransformMatrix:Array<any>):void {
             if (this.colorTransformMatrix != colorTransformMatrix) {
-                this._draw();
+                this._drawWebGL();
                 this.colorTransformMatrix = colorTransformMatrix;
                 if (colorTransformMatrix) {
                     var colorTransformMatrix = colorTransformMatrix.concat();
@@ -789,7 +799,7 @@ module egret {
         }
 
         public setGlobalFilter(filterData:Filter):void {
-            this._draw();
+            this._drawWebGL();
             this.setFilterProperties(filterData);
         }
 
@@ -828,7 +838,7 @@ module egret {
         private graphicsIndexBuffer:any = null;
 
         public renderGraphics(graphics) {
-            this._draw();
+            this._drawWebGL();
             var gl:any = this.gl;
             var shader = this.shaderManager.primitiveShader;
 

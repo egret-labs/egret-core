@@ -70,10 +70,9 @@ function run(dir, args, opts) {
 
         if (OPEN) {
             open(url);
-            console.log("Server runing at port: " + PORT + ".");
-        } else {
-            console.log("Url:" + url);
+            console.log("Server running at port: " + PORT + ".");
         }
+        console.log("Url:" + url);
         exports.projectName = projectName;
     });
 
@@ -231,26 +230,9 @@ function executeCommand(callback, script) {
             callback();
         }
         else {
-            globals.log("脚本执行失败");
+            globals.log2(4);
         }
     });
 }
 
-
-function help_title() {
-    return "启动HttpServer,并在默认浏览器中打开指定项目\n";
-}
-
-
-function help_example() {
-    var result = "egret startserver [project_name] [--port 3000] [-ip] [-serveronly]\n";
-    result += "参数说明:\n";
-    result += "    --port           指定端口号\n";
-    result += "    -ip              是否使用本机IP\n";
-    result += "    -serveronly      是否只运行服务器";
-    return result;
-}
-
 exports.run = run;
-exports.help_title = help_title;
-exports.help_example = help_example;

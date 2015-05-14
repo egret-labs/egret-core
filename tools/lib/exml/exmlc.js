@@ -349,7 +349,11 @@ var EXMLCompiler = (function () {
         this.addAttributesToCodeBlock(cb, varName, node);
         this.initlizeChildNode(node, cb, varName);
         if (this.delayAssignmentDic[id]) {
-            cb.concat(this.delayAssignmentDic[id]);
+            var length = this.delayAssignmentDic[id].length;
+            for (var i = 0; i < length; i++) {
+                var delaycb = this.delayAssignmentDic[id][i];
+                cb.concat(delaycb);
+            }
         }
         cb.addReturn(varName);
         func.codeBlock = cb;
@@ -443,7 +447,10 @@ var EXMLCompiler = (function () {
                     delayCb.addAssignment("this." + id, "this." + value, key);
                     delayCb.endBlock();
                 }
-                this.delayAssignmentDic[value] = delayCb;
+                if (!this.delayAssignmentDic[value]) {
+                    this.delayAssignmentDic[value] = [];
+                }
+                this.delayAssignmentDic[value].push(delayCb);
                 value = "this." + value;
             }
             if (this.exmlConfig.isStyleProperty(key, className)) {
@@ -526,9 +533,6 @@ var EXMLCompiler = (function () {
                 var item = children[j];
                 childFunc = this.createFuncForNode(item);
                 var childClassName = this.exmlConfig.getClassNameById(item.localName, item.namespace);
-                if (isContainer && !this.exmlConfig.isInstanceOf(childClassName, "egret.gui.IVisualElement")) {
-                    globals.exit(2019, this.exmlPath, this.toXMLString(item));
-                }
                 if (!this.isStateNode(item))
                     values.push(childFunc);
             }
@@ -545,9 +549,6 @@ var EXMLCompiler = (function () {
                             item = firstChild.children[k];
                             childFunc = this.createFuncForNode(item);
                             childClassName = this.exmlConfig.getClassNameById(item.localName, item.namespace);
-                            if (isContainer && !this.exmlConfig.isInstanceOf(childClassName, "egret.gui.IVisualElement")) {
-                                globals.exit(2019, this.exmlPath, this.toXMLString(item));
-                            }
                             if (!this.isStateNode(item))
                                 values.push(childFunc);
                         }
@@ -557,9 +558,6 @@ var EXMLCompiler = (function () {
                 else {
                     childFunc = this.createFuncForNode(firstChild);
                     var childClassName = this.exmlConfig.getClassNameById(firstChild.localName, firstChild.namespace);
-                    if (isContainer && !this.exmlConfig.isInstanceOf(childClassName, "egret.gui.IVisualElement")) {
-                        globals.exit(2019, this.exmlPath, this.toXMLString(firstChild));
-                    }
                     if (!this.isStateNode(firstChild))
                         childFunc = "[" + childFunc + "]";
                     else

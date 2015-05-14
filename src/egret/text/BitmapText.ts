@@ -41,6 +41,7 @@ module egret {
         public constructor() {
             super();
             this.cacheAsBitmap = true;
+            this.needDraw = true;
         }
 
         /**
@@ -65,7 +66,7 @@ module egret {
             this._setSizeDirty();
         }
 
-        private _font: BitmapFont = null;
+        public _font: BitmapFont = null;
         private _fontChanged: boolean = false;
         /**
          * BitmapFont对象，缓存了所有文本的位图纹理
@@ -88,10 +89,10 @@ module egret {
             this.textLinesChange = true;
         }
 
-        private static EMPTY_FACTOR:number = 0.33;
+        public static EMPTY_FACTOR:number = 0.33;
 
         public _render(renderContext:RendererContext):void {
-            var textLines:Array<string> = this.getTextLines();
+            var textLines:Array<string> = this._getTextLines();
             var length:number = textLines.length;
             if(length==0){
                 return;
@@ -135,7 +136,7 @@ module egret {
         }
 
         public _measureBounds():egret.Rectangle {
-            var lines:Array<string> = this.getTextLines();
+            var lines:Array<string> = this._getTextLines();
             if (lines.length==0) {
                 return Rectangle.identity.initialize(0, 0, 0, 0);
             }
@@ -149,9 +150,9 @@ module egret {
 
         private textLinesChange:boolean = true;
         private _textLines:Array<string>;
-        private _lineHeights:Array<number> = [];
+        public _lineHeights:Array<number> = [];
 
-        private getTextLines():Array<string> {
+        public _getTextLines():Array<string> {
             if(!this.textLinesChange){
                 return this._textLines;
             }

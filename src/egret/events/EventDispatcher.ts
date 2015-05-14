@@ -37,10 +37,7 @@ module egret {
      * 引擎会将事件对象调度到从显示列表根开始的事件流中。然后该事件对象在显示列表中前进，直到到达事件目标，
      * 然后从这一点开始其在显示列表中的回程。在概念上，到事件目标的此往返行程被划分为三个阶段：
      * 捕获阶段包括从根到事件目标节点之前的最后一个节点的行程，目标阶段仅包括事件目标节点，冒泡阶段包括回程上遇到的任何后续节点到显示列表的根。
-     * <div style="margin-top: 20px"><b>了解详细信息</b>
-     * <a href="http://docs.egret-labs.org/post/manual/event/eventlistener.html" style="padding-left: 20px" target="_blank" >事件侦听器</a>
-     * </div>
-     *
+     * @link http://docs.egret-labs.org/post/manual/event/eventlistener.html 事件侦听器
      */
     export class EventDispatcher extends HashObject implements IEventDispatcher {
 
@@ -124,7 +121,7 @@ module egret {
             var length:number = list.length;
             for (var i:number = 0; i < length; i++) {
                 var bin:any = list[i];
-                if (bin.listener === listener && bin.thisObject === thisObject && bin.display === display) {
+                if (bin.listener == listener && bin.thisObject == thisObject && bin.display == display) {
                     return false;
                 }
                 if (insertIndex == -1 && bin.priority < priority) {
@@ -174,7 +171,7 @@ module egret {
             var length:number = list.length;
             for (var i:number = fromIdx; i < length; i++) {
                 var bin:any = list[i];
-                if (bin.listener === listener && bin.thisObject === thisObject && bin.display == display) {
+                if (bin.listener == listener && bin.thisObject == thisObject && bin.display == display) {
                     list.splice(i, 1);
                     return true;
                 }
@@ -190,7 +187,7 @@ module egret {
          * @stable A
          */
         public hasEventListener(type:string):boolean {
-            return (this._eventsMap && this._eventsMap[type] ||
+            return !!(this._eventsMap && this._eventsMap[type] ||
                 this._captureEventsMap && this._captureEventsMap[type]);
         }
 

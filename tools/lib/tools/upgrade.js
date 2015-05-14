@@ -25,7 +25,12 @@ var upgradeConfigArr = [
     {"v" : "1.5.1", "func":upgradeTo_1_5_1},
     {"v" : "1.5.2", "func":upgradeTo_1_5_2},
     {"v" : "1.5.3", "func":upgradeTo_1_5_3},
-    {"v" : "1.5.4", "func":upgradeTo_1_5_4}
+    {"v" : "1.5.4", "func":upgradeTo_1_5_4},
+    {"v" : "1.5.5", "func":upgradeTo_1_5_5},
+    {"v" : "1.6.0", "func":upgradeTo_1_6_0},
+    {"v" : "1.6.1", "func":upgradeTo_1_6_1},
+    {"v" : "1.6.2", "func":upgradeTo_1_6_2},
+    {"v" : "1.7.0", "func":upgradeTo_1_7_0}
 ];
 
 var currDir;
@@ -56,14 +61,14 @@ function run(dir, a, opts) {
 }
 
 function upgradeTo_1_0_3() {
-    globals.log("正在更新到1.0.3");
+    globals.log(1704, "1.0.3");
     var extensionDir = path.join(currDir, "src");
     var list = file.search(extensionDir, "ts");
     list.forEach(fixSingleTypeScriptFile);
 }
 
 function upgradeTo_1_0_4() {
-    globals.log("正在更新到1.0.4");
+    globals.log(1704, "1.0.4");
     //新的publish改之后，需要把base给删掉
     var releasePath = currDir + "/launcher/release.html";
     var txt = file.read(releasePath);
@@ -93,7 +98,7 @@ function upgradeTo_1_0_4() {
 
 
 function upgradeTo_1_0_5() {
-    globals.log("正在更新到1.0.5");
+    globals.log(1704, "1.0.5");
     var releasePath = currDir + "/launcher/index.html";
     var txt = file.read(releasePath);
     txt = txt.replace("\"libs/core/\"", "\"libs/\"");
@@ -124,7 +129,7 @@ function upgradeTo_1_0_6(){
 }
 
 function upgradeTo_1_1_0() {
-    globals.log("正在更新到1.1.0");
+    globals.log(1704, "1.1.0");
 
     //替换 全部 html
     var projectDir = currDir;
@@ -201,31 +206,35 @@ function upgradeTo_1_1_0() {
 }
 
 function upgradeTo_1_1_1(){
+    globals.log(1704, "1.1.1");
     projectConfig.init(currDir);
     projectConfig.data.egret_version = "1.1.1";
     projectConfig.save();
 }
 
 function upgradeTo_1_1_2(){
+    globals.log(1704, "1.1.2");
     projectConfig.init(currDir);
     projectConfig.data.egret_version = "1.1.2";
     projectConfig.save();
 }
 
 function upgradeTo_1_1_3(){
+    globals.log(1704, "1.1.3");
     projectConfig.init(currDir);
     projectConfig.data.egret_version = "1.1.3";
     projectConfig.save();
 }
 
 function upgradeTo_1_1_4(){
+    globals.log(1704, "1.1.4");
     projectConfig.init(currDir);
     projectConfig.data.egret_version = "1.1.4";
     projectConfig.save();
 }
 
 function upgradeTo_1_5_0(){
-    globals.log("正在更新到1.5.0");
+    globals.log(1704, "1.5.0");
 
     var projectDir = currDir;
 
@@ -275,7 +284,7 @@ function upgradeTo_1_5_0(){
 }
 
 function upgradeTo_1_5_1(){
-    globals.log("正在更新到1.5.1");
+    globals.log(1704, "1.5.1");
 
     var extensionDir = path.join(currDir, "src");
     var list = file.search(extensionDir, "ts");
@@ -287,7 +296,7 @@ function upgradeTo_1_5_1(){
 }
 
 function upgradeTo_1_5_2(){
-    globals.log("正在更新到1.5.2");
+    globals.log(1704, "1.5.2");
 
     var native_require_path = path.join(currDir, "launcher", "native_require.js");
     if(file.exists(native_require_path)){
@@ -302,7 +311,7 @@ function upgradeTo_1_5_2(){
 }
 
 function upgradeTo_1_5_3(){
-    globals.log("正在更新到1.5.3");
+    globals.log(1704, "1.5.3");
 
     projectConfig.init(currDir);
     projectConfig.data.egret_version = "1.5.3";
@@ -310,10 +319,72 @@ function upgradeTo_1_5_3(){
 }
 
 function upgradeTo_1_5_4(){
-    globals.log("正在更新到1.5.4");
+    globals.log(1704, "1.5.4");
 
     projectConfig.init(currDir);
     projectConfig.data.egret_version = "1.5.4";
+    projectConfig.save();
+}
+
+function upgradeTo_1_5_5(){
+    globals.log(1704, "1.5.5");
+
+    var projectDir = currDir;
+    //更新egretProperties.json， 将res变成一个单独的模块
+    try {
+        var properties = JSON.parse(file.read(path.join(projectDir, "egretProperties.json")));
+
+        var hasRes = false;
+        for (var key in properties.modules) {
+            var module = properties.modules[key];
+            if (module.name == "res") {
+                hasRes = true;
+                break;
+            }
+        }
+        if (!hasRes) {
+            properties.modules.splice(1, 0, {"name" : "res"});
+        }
+        file.save(path.join(projectDir, "egretProperties.json"), JSON.stringify(properties, null, "\t"));
+    }
+    catch (e) {
+
+    }
+
+    projectConfig.init(currDir);
+    projectConfig.data.egret_version = "1.5.5";
+    projectConfig.save();
+}
+
+function upgradeTo_1_6_0(){
+    globals.log(1704, "1.6.0");
+
+    projectConfig.init(currDir);
+    projectConfig.data.egret_version = "1.6.0";
+    projectConfig.save();
+}
+
+function upgradeTo_1_6_1(){
+    globals.log(1704, "1.6.1");
+
+    projectConfig.init(currDir);
+    projectConfig.data.egret_version = "1.6.1";
+    projectConfig.save();
+}
+
+function upgradeTo_1_6_2(){
+    globals.log(1704, "1.6.2");
+
+    projectConfig.init(currDir);
+    projectConfig.data.egret_version = "1.6.2";
+    projectConfig.save();
+}
+
+function upgradeTo_1_7_0(){
+    globals.log(1704, "1.7.0");
+
+    projectConfig.init(currDir);
+    projectConfig.data.egret_version = "1.7.0";
     projectConfig.save();
 }
 
@@ -358,17 +429,7 @@ function fixSingleTypeScriptFile151(item) {
     file.save(item, content);
 }
 
-function help_title() {
-    return "升级项目代码\n";
-}
-
-function help_example() {
-    return "egret upgrade { your_project }";
-}
-
 exports.run = run;
-exports.help_title = help_title;
-exports.help_example = help_example;
 
 
 var gui_refactor_1_0_3 = { 'egret.ArrayCollection': 'egret.gui.ArrayCollection',

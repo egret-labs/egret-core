@@ -34,19 +34,19 @@ module egret {
      * 在HTML5中，资源是一个HTMLElement对象
      * 在OpenGL / WebGL中，资源是一个提交GPU后获取的纹理id
      * Texture类封装了这些底层实现的细节，开发者只需要关心接口即可
-     * <div style="margin-top: 20px"><b>了解详细信息</b>
-     * <a href="http://docs.egret-labs.org/post/manual/bitmap/textures.html" style="padding-left: 20px" target="_blank" >纹理集的使用</a>
-     * <a href="http://docs.egret-labs.org/post/manual/loader/getres.html" style="padding-left: 20px" target="_blank" >获取资源的几种方式</a>
-     * </div>
+     * @link
+        * http://docs.egret-labs.org/post/manual/bitmap/textures.html 纹理集的使用
+     * http://docs.egret-labs.org/post/manual/loader/getres.html 获取资源的几种方式
      */
-    export class Texture extends HashObject{
+    export class Texture extends HashObject {
 
         /**
          * 创建一个 egret.Texture 对象
          */
-        public constructor(){
+        public constructor() {
             super();
         }
+
         /**
          * 表示这个纹理在 bitmapData 上的 x 起始位置
          */
@@ -73,8 +73,11 @@ module egret {
          */
         public _offsetY = 0;
 
-
+        /**
+         * 纹理宽度
+         */
         public _textureWidth:number = 0;
+
         /**
          * 纹理宽度
          * @member {number} egret.Texture#textureWidth
@@ -83,8 +86,11 @@ module egret {
             return this._textureWidth;
         }
 
-
+        /**
+         * 纹理高度
+         */
         public _textureHeight:number = 0;
+
         /**
          * 纹理高度
          * @member {number} egret.Texture#textureHeight
@@ -92,6 +98,7 @@ module egret {
         public get textureHeight():number {
             return this._textureHeight;
         }
+
         /**
          * 表示bitmapData.width
          */
@@ -102,13 +109,6 @@ module egret {
         public _sourceHeight:number = 0;
 
         public _bitmapData:any = null;
-        /**
-         * 纹理对象中得位图数据
-         * @member {any} egret.Texture#bitmapData
-         */
-        public get bitmapData():any {
-            return this._bitmapData;
-        }
 
         public _setBitmapData(value:any) {
             var scale = egret.MainContext.instance.rendererContext._texture_scale_factor;
@@ -129,9 +129,22 @@ module egret {
          * @param y {number} 像素点的Y轴坐标
          * @returns {number} 指定像素点的颜色值
          */
-        public getPixel32(x:number, y:number):number[]{
-            var result:any = this._bitmapData.getContext("2d").getImageData(x,y,1,1);
+        public getPixel32(x:number, y:number):number[] {
+            var result:any = this._bitmapData.getContext("2d").getImageData(x, y, 1, 1);
             return result.data;
+        }
+
+        public dispose() {
+            var bitmapData = this._bitmapData;
+            if (bitmapData.dispose) {
+                bitmapData.dispose();
+            }
+        }
+
+        public _clone():Texture {
+            var texture = new Texture();
+            texture._bitmapData = this._bitmapData;
+            return texture;
         }
     }
 }

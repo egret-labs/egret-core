@@ -35,11 +35,11 @@ module egret {
      * 在WebGL / OpenGL上，这种做法可以显著提升性能
      * 同时，SpriteSheet可以很方便的进行素材整合，降低HTTP请求数量
      * SpriteSheet 格式的具体规范可以参见此文档  https://github.com/egret-labs/egret-core/wiki/Egret-SpriteSheet-Specification
-     * <div style="margin-top: 20px"><b>了解详细信息</b>
-     * <a href="http://docs.egret-labs.org/post/manual/bitmap/textures.html" style="padding-left: 20px" target="_blank" >纹理集的使用</a>
-     * </div>
+     * @link http://docs.egret-labs.org/post/manual/bitmap/textures.html 纹理集的使用
      */
     export class SpriteSheet extends HashObject {
+
+
 
         /**
          * 创建一个 egret.SpriteSheet 对象
@@ -47,10 +47,9 @@ module egret {
          */
         public constructor(texture:Texture) {
             super();
-            var bitmapData:any = texture.bitmapData;
-            this.bitmapData = bitmapData;
-            this._sourceWidth = bitmapData.width;
-            this._sourceHeight = bitmapData.height;
+            this.texture = texture;
+            this._sourceWidth = texture._sourceWidth;
+            this._sourceHeight = texture._sourceHeight;
 
             this._bitmapX = texture._bitmapX - texture._offsetX;
             this._bitmapY = texture._bitmapY - texture._offsetY;
@@ -59,11 +58,11 @@ module egret {
         /**
          * 表示bitmapData.width
          */
-        public _sourceWidth:number = 0;
+        private _sourceWidth:number = 0;
         /**
          * 表示bitmapData.height
          */
-        public _sourceHeight:number = 0;
+        private _sourceHeight:number = 0;
         /**
          * 表示这个SpriteSheet的位图区域在bitmapData上的起始位置x。
          */
@@ -75,7 +74,7 @@ module egret {
         /**
          * 共享的位图数据
          */
-        private bitmapData:any = 0;
+        private texture:Texture;
         /**
          * 纹理缓存字典
          */
@@ -112,9 +111,8 @@ module egret {
             if (typeof textureHeight === "undefined") {
                 textureHeight = offsetY + bitmapHeight;
             }
-            var texture:Texture = new Texture();
+            var texture:Texture = this.texture._clone();
             var scale = egret.MainContext.instance.rendererContext._texture_scale_factor;
-            texture._bitmapData = this.bitmapData;
             texture._bitmapX = this._bitmapX + bitmapX;
             texture._bitmapY = this._bitmapY + bitmapY;
             texture._bitmapWidth = bitmapWidth * scale;

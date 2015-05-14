@@ -253,7 +253,7 @@ ClosureCompiler.prototype.compile = function (files, callback) {
 };
 
 
-function compilerSingleFile(tempFile, fileList, outputFile, callback) {
+function compilerSingleFile(fileList, outputFile, tempFile, callback) {
     combineToSingleJavaScriptFile(fileList, tempFile);
     ClosureCompiler.compile([tempFile],
         {js_output_file: globals.addQuotes(outputFile), "warning_level": "QUIET"},
@@ -282,14 +282,14 @@ function combineToSingleJavaScriptFile(filelist, name) {
 
 function checkUserJava() {
     var globalJava = ClosureCompiler.getGlobalJava();
-    console.log("正在执行检测命令:" + globalJava + " -version");
-    console.log("您可以修改 JAVA_HOME 环境变量来修改 JAVA 路径");
+    globals.log2(1415,globalJava + " -version");
+    globals.log2(1416);
     ClosureCompiler.testJava(globalJava, function (isSuccess) {
         if (!isSuccess) {
             globals.exit(1401);
         }
         else {
-            console.log("检测成功");
+            globals.log2(1417);
         }
     })
 }

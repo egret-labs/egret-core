@@ -37,6 +37,12 @@ module egret {
 
         constructor() {
             super();
+
+        }
+
+        public _textfield:egret.TextField;
+        public _setTextField(textfield:egret.TextField):void {
+            this._textfield = textfield;
         }
 
         /**
@@ -67,17 +73,7 @@ module egret {
             return null;
         }
 
-        /**
-         * @param x {number}
-         * @param y {number}
-         * @param width {number}
-         * @param height {number}
-         */
-        public _open(x:number, y:number, width:number = 160, height:number = 21):void {
-
-        }
-
-        public _show():void {
+        public _show(multiline:boolean, size:number, width:number, height:number):void {
 
         }
 
@@ -142,16 +138,24 @@ module egret {
             this._textAlign = value;
         }
 
+        public _verticalAlign:string = "top";
+        public _setVerticalAlign(value:string):void {
+            this._verticalAlign = value;
+        }
+
         public _visible:boolean = false;
         public _setVisible(value:boolean):void {
             this._visible = value;
         }
 
+        public _width:number = 0;
         public _setWidth(value:number):void {
-
+            this._width = value;
         }
 
+        public _height:number = 0;
         public _setHeight(value:number):void {
+            this._height = value;
         }
 
         public _multiline:boolean = false;
@@ -165,6 +169,14 @@ module egret {
         }
 
         public _resetStageText():void {
+
+        }
+
+        public _initElement(x:number, y:number, cX:number, cY:number):void {
+
+        }
+
+        public _removeInput():void {
 
         }
 

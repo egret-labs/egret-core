@@ -70,8 +70,10 @@ module egret {
 
             var x = bounds.x;
             var y = bounds.y;
-            var width = bounds.width;
-            var height = bounds.height;
+            var originalWidth = bounds.width;
+            var originalHeight = bounds.height;
+            var width = originalWidth;
+            var height = originalHeight;
 
             var texture_scale_factor = egret.MainContext.instance.rendererContext._texture_scale_factor;
             width /= texture_scale_factor;
@@ -99,6 +101,10 @@ module egret {
             this._offsetX = x + anchorOffsetX;
             this._offsetY = y + anchorOffsetY;
             displayObject._worldTransform.append(1, 0, 0, 1, -this._offsetX, -this._offsetY);
+            if(clipBounds) {
+                this._offsetX -= x;
+                this._offsetY -= y;
+            }
             displayObject.worldAlpha = 1;
             if (displayObject instanceof egret.DisplayObjectContainer) {
                 var list = (<egret.DisplayObjectContainer>displayObject)._children;
@@ -145,8 +151,8 @@ module egret {
             renderFilter._drawAreaList = drawAreaList;
             this._sourceWidth = width;
             this._sourceHeight = height;
-            this._textureWidth = this._sourceWidth * texture_scale_factor;
-            this._textureHeight = this._sourceHeight * texture_scale_factor;
+            this._textureWidth = Math.round(originalWidth);
+            this._textureHeight = Math.round(originalHeight);
 
             this.end();
 

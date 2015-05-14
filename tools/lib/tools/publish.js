@@ -26,28 +26,49 @@ function run(dir, args, opts) {
 
     projectProperties.init(currDir);
 
+    var versionFile = "";
+    if (opts["--version"]) {
+        versionFile = opts["--version"][0];
+    }
+    if (versionFile == null || versionFile == "") {
+        versionFile = Math.round(Date.now() / 1000);
+    }
+
     var runtime = param.getOption(opts, "--runtime", ["html5", "native"]);
     if (runtime == "native") {
-        publishNative(opts);
+        publishNative(opts, versionFile);
     }
     else {
-        publishHtml5(opts);
+        publishHtml5(opts, versionFile);
     }
 }
 
-function publishNative(opts) {
+function getCompilePath(opts) {
+    var compilepath = "";
+    if (param.getArgv()["opts"]["--method"] && param.getArgv()["opts"]["--method"] == "uglify") {
+        compilepath = "../uglify-js/uglify_adapt";
+    }
+    else {
+        compilepath = "../core/closureCompiler";
+    }
+    return compilepath;
+}
+
+function publishNative(opts, versionFile) {
 
     var timeMinSec = Date.now();
-    var time = Math.round(Date.now() / 1000);
 
-    console.log("开始发布%s版本：%d", "native", time);
+    globals.log2(1402, "native", versionFile + "");
 
     var projectPath = projectProperties.getProjectPath();
     var releasePath = path.join(projectPath, projectProperties.getReleaseUrl());
     var ziptempPath = path.join(releasePath, "ziptemp");
     file.remove(ziptempPath);
 
-    var releaseOutputPath = path.join(releasePath, "android", time + "");
+    var releaseOutputPath = path.join(releasePath, "android", versionFile + "");
+    if (file.exists(releaseOutputPath)) {
+        file.remove(releaseOutputPath);
+    }
     file.createDirectory(releaseOutputPath);
 
     var task = [];
@@ -56,24 +77,24 @@ function publishNative(opts) {
     //获取gamelist以及egretlist
     var file_list = filelist.getAllFileList(projectPath, "native");
     var needCompile = (opts["-compile"] || opts["-compiler"]) ? true : false;
-
     if (needCompile) {//压缩js文件，并拷贝到ziptemp目录中
         task.push(function (tempCallback) {
             var tempTime = Date.now();
-            globals.debugLog("开始压缩js文件");
-            closureCompiler.compilerSingleFile(path.join(ziptempPath, "launcher", "__game-min-native.js"),
-                file_list, path.join(ziptempPath, "launcher", "game-min-native.js"), function () {
+            globals.debugLog(1403);
 
-                    globals.debugLog("压缩js文件耗时：%d秒", (Date.now() - tempTime) / 1000);
-                    tempCallback();
-                });
+            var compilePath = getCompilePath();
+            var adapt = require(compilePath);
+            adapt.compilerSingleFile(file_list, path.join(ziptempPath, "launcher", "game-min-native.js"), path.join(ziptempPath, "launcher", "__game-min-native.js"), function() {
+                globals.debugLog(1404, (Date.now() - tempTime) / 1000);
+                tempCallback();
+            });
         });
     }
     else {
         task.push(function (tempCallback) {
             var tempTime = Date.now();
             //拷贝到ziptemp目录中
-            globals.debugLog("未压缩js文件，拷贝js文件");
+            globals.debugLog(1405);
             file_list.map(function (item) {
                 var re = path.relative(projectPath, item);
                 file.copy(item, path.join(ziptempPath, re));
@@ -82,7 +103,7 @@ function publishNative(opts) {
             file.copy(path.join(projectPath, "bin-debug", "lib", "egret_file_list_native.js"), path.join(ziptempPath, "bin-debug", "lib", "egret_file_list.js"));
             file.copy(path.join(projectPath, "bin-debug", "src", "game_file_list.js"), path.join(ziptempPath, "bin-debug", "src", "game_file_list.js"));
 
-            globals.debugLog("拷贝js文件耗时：%d秒", (Date.now() - tempTime) / 1000);
+            globals.debugLog(1406, (Date.now() - tempTime) / 1000);
             tempCallback();
         });
     }
@@ -98,11 +119,11 @@ function publishNative(opts) {
             }
 
             var tempTime = Date.now();
-            globals.debugLog("扫描版本控制文件");
+            globals.debugLog(1407);
 
-            genVer.generate(projectPath, path.join(releasePath, "nativeBase"), projectProperties.getVersionCode("native"));
+            genVer.generate(projectPath, path.join(releasePath, "nativeBase"), projectProperties.getVersionCode("native"), projectProperties.getIgnorePath());
 
-            globals.debugLog("生成版本控制文件耗时：%d秒", (Date.now() - tempTime) / 1000);
+            globals.debugLog(1408, (Date.now() - tempTime) / 1000);
             tempCallback();
         });
     }
@@ -134,26 +155,27 @@ function publishNative(opts) {
     }
 
     //打zip包
-    if (opts["-nozip"]) {//不需要打zip包
+    var nozip = opts["-nozip"];
+    if (nozip) {//不需要打zip包
         task.push(function (tempCallback) {
             var tempTime = Date.now();
-            globals.debugLog("未打zip包，拷贝文件到release");
+            globals.debugLog(1414);
             file.copy(ziptempPath, releaseOutputPath);
             file.remove(ziptempPath);
-            globals.debugLog("拷贝文件到release耗时：%d秒", (Date.now() - tempTime) / 1000);
+            globals.debugLog(1409, (Date.now() - tempTime) / 1000);
             tempCallback();
         });
     }
     else {//打zip包
         task.push(function (tempCallback) {
             var tempTime = Date.now();
-            globals.debugLog("开始打zip包");
+            globals.debugLog(1410);
             var password = getPassword(opts);
-            var zipFile = path.join(releaseOutputPath, "game_code_" + time + ".zip");
+            var zipFile = path.join(releaseOutputPath, "game_code_" + versionFile + ".zip");
             zip.createZipFile(ziptempPath, zipFile, function () {
                 file.remove(ziptempPath);
 
-                globals.debugLog("打zip包耗时：%d秒", (Date.now() - tempTime) / 1000);
+                globals.debugLog(1411, (Date.now() - tempTime) / 1000);
                 tempCallback();
             }, password);
         });
@@ -164,11 +186,31 @@ function publishNative(opts) {
         task.push(function (tempCallback) {
             copyFilesWithIgnore(path.join(projectPath, "resource"), path.join(releaseOutputPath, "resource"));
 
+            if (nozip) {
+                file.save(path.join(releaseOutputPath, "appVersion.manifest"), JSON.stringify({"version":Date.now(), "debug":1}));
+            }
+            else {
+                file.save(path.join(releaseOutputPath, "appVersion.manifest"), JSON.stringify({"version":Date.now()}));
+            }
+
             if (noVerion) {
                 file.save(path.join(releaseOutputPath, "base.manifest"), "{}");
             }
             else {
                 file.copy(path.join(releasePath, "nativeBase", "base.manifest"), path.join(releaseOutputPath, "base.manifest"));
+
+                var baseJson = JSON.parse(file.read(path.join(releasePath, "nativeBase", "base.manifest")));
+                var versionJson = JSON.parse(file.read(path.join(releasePath, "nativeBase", "version.manifest")));
+
+                for (var key in versionJson) {
+                    if (versionJson[key]["d"] == 1) {
+                        delete baseJson[key];
+                    }
+                    else if (baseJson[key] == null || versionJson[key]["v"] != baseJson[key]["v"]) {
+                        baseJson[key] = versionJson[key];
+                    }
+                }
+                file.save(path.join(releaseOutputPath, "localVersion.manifest"), JSON.stringify(baseJson));
             }
 
             compressJson(releaseOutputPath);
@@ -183,11 +225,22 @@ function publishNative(opts) {
 
             //apk
             if (projectProperties.getNativePath("android")) {
-                var url = path.join(projectProperties.getProjectPath(), projectProperties.getNativePath("android"), "proj.android/assets");
-                if (file.exists(url)) {//是egret的android项目
+                var url1 = path.join(projectProperties.getProjectPath(), projectProperties.getNativePath("android"), "proj.android");
+                var url2 = path.join(projectProperties.getProjectPath(), projectProperties.getNativePath("android"), "proj.android/assets");
+                if (file.exists(url1)) {//是egret的android项目
                     //1、清除文件夹
-                    file.remove(url);
-                    file.copy(releaseOutputPath, path.join(url, "egret-game"));
+                    file.remove(path.join(url2, "egret-game"));
+                    file.createDirectory(path.join(url2, "egret-game"));
+                    file.copy(releaseOutputPath, path.join(url2, "egret-game"));
+
+                    //修改java文件
+                    var javaEntr = require('../core/changeJavaEntrance');
+                    if (nozip) {
+                        javaEntr.changeBuild(url1, "android");
+                    }
+                    else {
+                        javaEntr.changePublish(url1, "android", versionFile);
+                    }
                 }
             }
 
@@ -198,12 +251,14 @@ function publishNative(opts) {
                 if (file.exists(url1)
                     && file.exists(url2)) {//是egret的ios项目
                     //1、清除文件夹
-                    file.remove(url2);
+                    file.remove(path.join(url2, "egret-game"));
+
+                    file.createDirectory(path.join(url2, "egret-game"));
                     file.copy(releaseOutputPath, path.join(url2, "egret-game"));
                 }
             }
 
-            console.log("native拷贝共计耗时：%d秒", (Date.now() - startTime) / 1000);
+            globals.log2(1412, (Date.now() - startTime) / 1000);
 
             tempCallback();
         });
@@ -212,7 +267,7 @@ function publishNative(opts) {
 
     async.series(task, function (err) {
         if (!err) {
-            console.log("发布完成共计耗时：%d秒", (Date.now() - timeMinSec) / 1000);
+            globals.log2(1413, (Date.now() - timeMinSec) / 1000);
         }
         else {
             globals.exit(err);
@@ -251,16 +306,18 @@ function publishNative(opts) {
     }
 }
 
-function publishHtml5(opts) {
+function publishHtml5(opts, versionFile) {
     var timeMinSec = Date.now();
-    var time = Math.round(Date.now() / 1000);
 
-    console.log("开始发布%s版本：%d", "html5", time);
+    globals.log2(1402, "html5", versionFile + "");
 
     var projectPath = projectProperties.getProjectPath();
     var releasePath = path.join(projectPath, projectProperties.getReleaseUrl());
 
-    var releaseOutputPath = path.join(releasePath, "html5", time + "");
+    var releaseOutputPath = path.join(releasePath, "html5", versionFile + "");
+    if (file.exists(releaseOutputPath)) {
+        file.remove(releaseOutputPath);
+    }
     file.createDirectory(releaseOutputPath);
 
     var task = [];
@@ -273,20 +330,21 @@ function publishHtml5(opts) {
     if (true) {//压缩js文件，并拷贝到ziptemp目录中
         task.push(function (tempCallback) {
             var tempTime = Date.now();
-            globals.debugLog("开始压缩js文件");
-            closureCompiler.compilerSingleFile(path.join(releaseOutputPath, "launcher", "__game-min.js"),
-                file_list, path.join(releaseOutputPath, "launcher", "game-min.js"), function () {
+            globals.debugLog(1403);
 
-                    globals.debugLog("压缩js文件耗时：%d秒", (Date.now() - tempTime) / 1000);
-                    tempCallback();
-                });
+            var compilePath = getCompilePath();
+            var adapt = require(compilePath);
+            adapt.compilerSingleFile(file_list, path.join(releaseOutputPath, "launcher", "game-min.js"), path.join(releaseOutputPath, "launcher", "__game-min.js"), function() {
+                globals.debugLog(1404, (Date.now() - tempTime) / 1000);
+                tempCallback();
+            });
         });
     }
     else {
         task.push(function (tempCallback) {
             var tempTime = Date.now();
             //拷贝到ziptemp目录中
-            globals.debugLog("未压缩js文件，拷贝js文件");
+            globals.debugLog(1405);
             file_list.map(function (item) {
                 var re = path.relative(projectPath, item);
                 file.copy(item, path.join(releaseOutputPath, re));
@@ -295,7 +353,7 @@ function publishHtml5(opts) {
             file.copy(path.join(projectPath, "bin-debug", "lib", "egret_file_list.js"), path.join(releaseOutputPath, "bin-debug", "lib", "egret_file_list.js"));
             file.copy(path.join(projectPath, "bin-debug", "src", "game_file_list.js"), path.join(releaseOutputPath, "bin-debug", "src", "game_file_list.js"));
 
-            globals.debugLog("拷贝js文件耗时：%d秒", (Date.now() - tempTime) / 1000);
+            globals.debugLog(1406, (Date.now() - tempTime) / 1000);
             tempCallback();
         });
     }
@@ -318,8 +376,7 @@ function publishHtml5(opts) {
     if (true) {//拷贝其他文件
         task.push(function (tempCallback) {
             //拷贝
-            file.copy(path.join(projectPath, "launcher"), path.join(releaseOutputPath, "launcher"));
-
+            //拷贝版本控制文件
             if (noVerion) {
                 file.save(path.join(releaseOutputPath, "version.manifest"), "{}");
             }
@@ -327,14 +384,12 @@ function publishHtml5(opts) {
                 file.copy(path.join(releasePath, "html5Base", "version.manifest"), path.join(releaseOutputPath, "version.manifest"));
             }
 
+            //拷贝release.html到外面，并且改名为index.html
             file.copy(path.join(projectPath, "launcher", "release.html"), path.join(releaseOutputPath, "index.html"));
 
-            file.remove(path.join(releaseOutputPath, "launcher", "native_loader.js"));
-            file.remove(path.join(releaseOutputPath, "launcher", "runtime_loader.js"));
-            file.remove(path.join(releaseOutputPath, "launcher", "native_require.js"));
-            file.remove(path.join(releaseOutputPath, "launcher", "index.html"));
-            file.remove(path.join(releaseOutputPath, "launcher", "release.html"));
-
+            //拷贝其他的launcher内文件
+            copyFilesWithIgnoreList(path.join(projectPath, "launcher"), path.join(releaseOutputPath, "launcher"),
+                ["game-min.js", "index.html", "release.html", "native_loader.js", "runtime_loader.js", "native_require.js"]);
             tempCallback();
         });
     }
@@ -360,7 +415,7 @@ function publishHtml5(opts) {
 
     async.series(task, function (err) {
         if (!err) {
-            console.log("发布完成共计耗时：%d秒", (Date.now() - timeMinSec) / 1000);
+            globals.log2(1413, (Date.now() - timeMinSec) / 1000);
         }
         else {
             globals.exit(err);
@@ -368,24 +423,34 @@ function publishHtml5(opts) {
     });
 }
 
+function copyFilesWithIgnoreList(sourceRootPath, destRootPath, ignorePathList) {
+    var copyFilePathList = file.getDirectoryAllListing(path.join(sourceRootPath));
 
-function help_title() {
-    return "发布项目，使用GoogleClosureCompiler压缩代码\n";
+    ignorePathList = ignorePathList.map(function(item) {
+        var reg = new RegExp(item);
+        return reg;
+    });
+
+    var isIgnore = false;
+    copyFilePathList.forEach(function(copyFilePath) {
+        isIgnore = false;
+
+        for (var key in ignorePathList) {//检测忽略列表
+            var ignorePath = ignorePathList[key];
+
+            if (copyFilePath.match(ignorePath)) {
+                isIgnore = true;
+                break;
+            }
+        }
+
+        if(!isIgnore) {//不在忽略列表的路径，拷贝过去
+            var copyFileRePath = path.relative(sourceRootPath, copyFilePath);
+            file.copy(path.join(copyFilePath), path.join(destRootPath, copyFileRePath));
+        }
+    });
 }
 
-
-function help_example() {
-    var result = "\n";
-    result += "    egret publish [project_name] [-compile] [--password your_passsword] [--runtime html5|native] [-log]\n";
-    result += "描述:\n";
-    result += "    " + help_title();
-    result += "参数说明:\n";
-    result += "    --runtime    设置发布方式为 html5 或者是 native方式，默认值为html5\n";
-    result += "    -compile         设置发布后js文件是否需要压缩\n";
-    result += "    --password   设置发布zip文件的解压密码";
-    result += "    -log   显示执行过程";
-    return result;
-}
 
 function getOptsValue(opts, typeArr) {
     for (var key in typeArr) {
@@ -414,5 +479,3 @@ function compressJson(releasePath) {
 
 
 exports.run = run;
-exports.help_title = help_title;
-exports.help_example = help_example;

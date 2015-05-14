@@ -29,7 +29,7 @@ function run(currentDir, args, opts) {
         globals.exit(1302);
     }
     compile(function () {
-        console.log("编译成功");
+        globals.log2(1309);
     }, source, output)
 }
 

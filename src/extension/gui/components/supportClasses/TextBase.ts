@@ -324,6 +324,20 @@ module egret.gui {
         public get textFlow(): Array<egret.ITextElement> { 
             return this._textFlow;
         }
+        
+        /**
+         * 文本全部显示时的高度（无行间距）
+         */
+        public get textHeight():number {
+            return this._textField == null ? 0 : this._textField.textHeight;
+        }
+
+        /**
+         * 文本全部显示时宽
+         */
+        public get textWidth(): number {
+            return this._textField == null ? 0 : this._textField.textWidth;
+        }
 
 		/**
 		 * 创建组件的子对象

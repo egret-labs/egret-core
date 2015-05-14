@@ -41,10 +41,7 @@ module egret {
      * 不允许重写以下方法
      * _draw();
      * getBounds();
-     * <div style="margin-top: 20px"><b>了解详细信息</b>
-     * <a href="http://docs.egret-labs.org/post/manual/displayobj/aboutdisplayobj.html" style="padding-left: 20px" target="_blank" >显示对象的基本概念</a>
-     * </div>
-     *
+     * @link http://docs.egret-labs.org/post/manual/displayobj/aboutdisplayobj.html 显示对象的基本概念
      */
     export class DisplayObject extends EventDispatcher implements RenderData {
 
@@ -127,7 +124,7 @@ module egret {
         public _parent:DisplayObjectContainer = null;
 
         /**
-         * 表示包含此显示对象的 DisplayObjectContainer 对象。【只读】
+         * 表示包含此显示对象的 DisplayObjectContainer 对象。
          * 使用 parent 属性可以指定高于显示列表层次结构中当前显示对象的显示对象的相对路径。
          * @member {egret.DisplayObjectContainer} egret.DisplayObject#parent
          */
@@ -376,6 +373,10 @@ module egret {
         }
 
         public set alpha(value:number) {
+            this._setAlpha(value);
+        }
+
+        public _setAlpha(value:number):void {
             if (NumberUtils.isNumber(value) && this._alpha != value) {
                 this._alpha = value;
 
@@ -613,7 +614,7 @@ module egret {
             if (mask && !isCommandPush) {
                 renderContext.pushMask(mask);
             }
-            this._render(renderContext);
+            o._render(renderContext);
             if (mask && !isCommandPush) {
                 renderContext.popMask();
             }
@@ -623,7 +624,7 @@ module egret {
             if(o._filter && !isCommandPush) {
                 renderContext.setGlobalFilter(null);
             }
-            this.destroyCacheBounds();
+            o.destroyCacheBounds();
         }
 
         public _setGlobalFilter(renderContext:RendererContext):void {
@@ -666,10 +667,9 @@ module egret {
                 return false;
             }
             var bounds = display.getBounds(Rectangle.identity);
-            var texture_scale_factor = egret.MainContext.instance.rendererContext._texture_scale_factor;
             if (display._cacheDirty || display._texture_to_render == null ||
-                Math.round(bounds.width) != Math.round(display._texture_to_render._sourceWidth * texture_scale_factor) ||
-                Math.round(bounds.height) != Math.round(display._texture_to_render._sourceHeight * texture_scale_factor)) {
+                Math.round(bounds.width) - display._texture_to_render._textureWidth >= 1 ||
+                Math.round(bounds.height) - display._texture_to_render._textureHeight >= 1) {
                 var cached = display._makeBitmapCache();
                 display._cacheDirty = !cached;
             }
@@ -710,7 +710,7 @@ module egret {
             o._calculateWorldTransform();
             if(MainContext._renderLoopPhase == "updateTransform") {
                 if(o.needDraw || o._texture_to_render || o._cacheAsBitmap) {
-                    RenderCommand.push(this._draw, this);
+                    RenderCommand.push(o._draw, o);
                 }
             }
         }
@@ -1033,7 +1033,7 @@ module egret {
         public _stage:Stage = null;
 
         /**
-         * 显示对象的舞台。【只读】
+         * 显示对象的舞台。
          * 例如，您可以创建多个显示对象并加载到显示列表中，每个显示对象的 stage 属性是指相同的 Stage 对象。
          * 如果显示对象未添加到显示列表，则其 stage 属性会设置为 null。
          * @member {number} egret.DisplayObject#stage

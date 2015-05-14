@@ -246,12 +246,12 @@ module egret.gui {
                 rect.y = y;
                 rect.width = this.popUp.width;
                 rect.height = this.popUp.height;
+                (<DisplayObject><any> (this.popUp))._setScrollRect(rect);
             }
             else{
                 (<DisplayObject><any> (this.popUp))._scrollRect = new Rectangle(x,y,
                     this.popUp.width, this.popUp.height)
             }
-			(<DisplayObject><any> (this.popUp))._setScrollRect(rect);
 		}
 		
 		/**
@@ -351,35 +351,35 @@ module egret.gui {
 		/**
 		 * 创建动画轨迹
 		 */		
-		private createMotionPath():Array<any>{
-			var xPath:any = {prop:"x"};
-			var yPath:any = {prop:"y"};
-			var path:Array<any> = [xPath,yPath];
+		private createMotionPath():Array<MotionPath>{
+			var xPath:SimpleMotionPath = new SimpleMotionPath("x");
+			var yPath:SimpleMotionPath = new SimpleMotionPath("y");
+			var path:Array<MotionPath> = [xPath,yPath];
 			switch(this._popUpPosition){
 				case PopUpPosition.TOP_LEFT:
 				case PopUpPosition.CENTER:
 				case PopUpPosition.BELOW:
-					xPath.from = xPath.to = 0;
-					yPath.from = this.popUp.height;
-					yPath.to = 0;
+					xPath.valueFrom = xPath.valueTo = 0;
+					yPath.valueFrom = this.popUp.height;
+					yPath.valueTo = 0;
 					this.valueRange = this.popUp.height;
 					break;
 				case PopUpPosition.ABOVE:
-					xPath.from = xPath.to = 0;
-					yPath.from = -this.popUp.height;
-					yPath.to = 0;
+					xPath.valueFrom = xPath.valueTo = 0;
+					yPath.valueFrom = -this.popUp.height;
+					yPath.valueTo = 0;
 					this.valueRange = this.popUp.height;
 					break;
 				case PopUpPosition.LEFT:
-					yPath.from = yPath.to = 0;
-					xPath.from = -this.popUp.width;
-					xPath.to = 0;
+					yPath.valueFrom = yPath.valueTo = 0;
+					xPath.valueFrom = -this.popUp.width;
+					xPath.valueTo = 0;
 					this.valueRange = this.popUp.width;
 					break;
 				case PopUpPosition.RIGHT:
-					yPath.from = yPath.to = 0;
-					xPath.from = this.popUp.width;
-					xPath.to = 0;
+					yPath.valueFrom = yPath.valueTo = 0;
+					xPath.valueFrom = this.popUp.width;
+					xPath.valueTo = 0;
 					this.valueRange = this.popUp.width;
 					break;    
 				default:
@@ -388,12 +388,12 @@ module egret.gui {
 			}
 			this.valueRange = Math.abs(this.valueRange);
 			if(!this.popUpIsDisplayed){
-				var tempValue:number = xPath.from;
-				xPath.from = xPath.to;
-				xPath.to = tempValue;
-				tempValue = yPath.from;
-				yPath.from = yPath.to;
-				yPath.to = tempValue;
+				var tempValue:number = xPath.valueFrom;
+				xPath.valueFrom = xPath.valueTo;
+				xPath.valueTo = tempValue;
+				tempValue = yPath.valueFrom;
+				yPath.valueFrom = yPath.valueTo;
+				yPath.valueTo = tempValue;
 			}
 			return path;
 		}

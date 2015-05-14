@@ -34,6 +34,8 @@ declare module egret_native {
      */
     function startGame():void;
 
+    function loglevel(logType):void;
+
     /**
      * 启动主循环
      * @param callback 主循环回调函数
@@ -52,6 +54,11 @@ declare module egret_native {
     function isRecordExists(filepath:string):boolean;
 
     function readFileSync(filepath:string):any;
+    function readResourceFileSync(filepath:string):any;
+    function readUpdateFileSync(filepath:string):any;
+    function deleteUpdateFile(filepath:string):void;
+
+    function readFileAsync(filepath:string, promise:egret.PromiseObject):any;
 
     function writeFileSync(filepath:string, fileContent:string):any;
 
@@ -67,7 +74,7 @@ declare module egret_native {
 
     function saveRecord(filepath:string, fileContent:string):void;
 
-    function getOption(type:string):any;
+    function getOption(type:string):string;
 
     module Audio {
         function preloadBackgroundMusic(path:string):void;
@@ -77,8 +84,10 @@ declare module egret_native {
         function stopBackgroundMusic(isRelease:boolean):void;
 
         function preloadEffect(path:string):void;
+        function preloadEffectAsync(path:string, promise:egret.PromiseObject):void;
 
         function playEffect(path:string, loop:boolean):void;
+        function unloadEffect(path:string):void;
 
         function stopEffect(effectId:number):void;
     }
@@ -125,9 +134,10 @@ declare module egret_native {
 
     module Label {
 
-        function createLabel(font:string, size:number, defaultString:string):void;
+        function createLabel(font:string, size:number, defaultString:string, defaultStroke:number):void;
 
         function setTextColor(color:number):void;
+        function setStrokeColor(color:number):void;
 
         function drawText(text:string, x:number, y:number):void;
 
@@ -148,6 +158,7 @@ declare module egret_native {
     module Texture {
 
         function addTexture(filePath:string):any;
+        function addTextureAsyn(filePath:string, promise:any):any;
         function addTextureUnsyn(filePath:string, promise:any):any;
 
         function removeTexture(filePath:string):void;

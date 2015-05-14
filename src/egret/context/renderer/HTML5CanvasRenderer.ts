@@ -228,14 +228,17 @@ module egret {
             this.blendModes = {};
             this.blendModes[BlendMode.NORMAL] = "source-over";
             this.blendModes[BlendMode.ADD] = "lighter";
+            this.blendModes[BlendMode.ERASE] = "destination-out";
+            this.blendModes[BlendMode.ERASE_REVERSE] = "destination-in";
         }
 
         public setupFont(textField:TextField, style:egret.ITextStyle = null):void {
             style = style || <egret.ITextStyle>{};
-            var italic:boolean = style["italic"] == null ? textField._italic : style["italic"];
-            var bold:boolean = style["bold"] == null ? textField._bold : style["bold"];
-            var size:number = style["size"] == null ? textField._size : style["size"];
-            var fontFamily:string = style["fontFamily"] == null ? textField._fontFamily : style["fontFamily"];
+            var properties:egret.TextFieldProperties = textField._properties;
+            var italic:boolean = style["italic"] == null ? properties._italic : style["italic"];
+            var bold:boolean = style["bold"] == null ? properties._bold : style["bold"];
+            var size:number = style["size"] == null ? properties._size : style["size"];
+            var fontFamily:string = style["fontFamily"] == null ? properties._fontFamily : style["fontFamily"];
             var ctx = this.drawCanvasContext;
             var font:string = italic ? "italic " : "normal ";
             font += bold ? "bold " : "normal ";
@@ -254,13 +257,14 @@ module egret {
         public drawText(textField:egret.TextField, text:string, x:number, y:number, maxWidth:number, style:egret.ITextStyle = null) {
             this.setupFont(textField, style);
             style = style || <egret.ITextStyle>{};
+            var properties:egret.TextFieldProperties = textField._properties;
 
             var textColor:string;
             if (style.textColor != null) {
                 textColor = toColorString(style.textColor);
             }
             else {
-                textColor = textField._textColorString;
+                textColor = properties._textColorString;
             }
 
             var strokeColor:string;
@@ -268,7 +272,7 @@ module egret {
                 strokeColor = toColorString(style.strokeColor);
             }
             else {
-                strokeColor = textField._strokeColorString;
+                strokeColor = properties._strokeColorString;
             }
 
             var outline;
@@ -276,7 +280,7 @@ module egret {
                 outline = style.stroke;
             }
             else {
-                outline = textField._stroke;
+                outline = properties._stroke;
             }
 
             var renderContext = this.drawCanvasContext;
@@ -339,6 +343,16 @@ module egret {
                     }
                 }
             }
+        }
+
+        public drawCursor(x1:number, y1:number, x2:number, y2:number):void {
+            this.drawCanvasContext.strokeStyle = "#40a5ff";
+            this.drawCanvasContext.lineWidth = 2;
+            this.drawCanvasContext.beginPath();
+            this.drawCanvasContext.moveTo(Math.round(x1 + this._transformTx), Math.round(y1 + this._transformTy));
+            this.drawCanvasContext.lineTo(Math.round(x2 + this._transformTx), Math.round(y2 + this._transformTy));
+            this.drawCanvasContext.closePath();
+            this.drawCanvasContext.stroke();
         }
     }
 }
@@ -436,24 +450,23 @@ module egret_h5_graphics {
             function (x, y, width, height) {
                 var rendererContext = <egret.HTML5CanvasRenderer>this.renderContext;
                 this.canvasContext.save();
-                var _x:number = rendererContext._transformTx + x;//控制X偏移
-                var _y:number = rendererContext._transformTy + y;//控制Y偏移
+                var _x:number = rendererContext._transformTx + x + width / 2;//控制X偏移
+                var _y:number = rendererContext._transformTy + y + height / 2;//控制Y偏移
                 var r:number = (width > height) ? width : height;//选宽高较大者做为arc半径参数
                 var ratioX:number = width / r;//横轴缩放比率
                 var ratioY:number = height / r;//纵轴缩放比率
+                r /= 2;
                 this.canvasContext.scale(ratioX, ratioY);//进行缩放(均匀压缩)
                 this.canvasContext.beginPath();
-                this.canvasContext.moveTo((_x + width) / ratioX, _y / ratioY);
                 this.canvasContext.arc(_x / ratioX, _y / ratioY, r, 0, 2 * Math.PI);
                 this.canvasContext.closePath();
                 this.canvasContext.restore();
-                this.canvasContext.stroke();
             },
             this,
             [ x, y, width, height]
         ));
         this._fill();
-        this.checkRect(x - width, y - height, 2 * width, 2 * height);
+        this.checkRect(x, y, width, height);
     }
 
     export function lineStyle(thickness:number = NaN, color:number = 0, alpha:number = 1.0, pixelHinting:boolean = false, scaleMode:string = "normal", caps:string = null, joints:string = null, miterLimit:number = 3):void {
@@ -478,10 +491,6 @@ module egret_h5_graphics {
             [thickness, _colorStr]
         ));
 
-        if (typeof(this.lineX) === "undefined") {
-            this.lineX = 0;
-            this.lineY = 0;
-        }
         this.moveTo(this.lineX, this.lineY);
     }
 
@@ -495,6 +504,7 @@ module egret_h5_graphics {
             this,
             [x, y]
         ));
+        this.checkPoint(this.lineX, this.lineY);
         this.lineX = x;
         this.lineY = y;
         this.checkPoint(x, y);
@@ -512,6 +522,7 @@ module egret_h5_graphics {
             this,
             [controlX, controlY, anchorX, anchorY]
         ));
+        this.checkPoint(this.lineX, this.lineY);
         this.lineX = anchorX;
         this.lineY = anchorY;
         this.checkPoint(controlX, controlY);
@@ -527,8 +538,7 @@ module egret_h5_graphics {
             },
             this,
             [x, y]
-        ))
-        this.checkPoint(x, y);
+        ));
     }
 
     export function clear():void {
@@ -542,6 +552,7 @@ module egret_h5_graphics {
         this._minY = 0;
         this._maxX = 0;
         this._maxY = 0;
+        this._firstCheck = true;
     }
 
     export function createEndFillCommand():void {
@@ -567,6 +578,10 @@ module egret_h5_graphics {
             this.createEndFillCommand();
             this._pushCommand(this.endFillCommand);
             this.fillStyleColor = null;
+        }
+        if (this.strokeStyleColor) {
+            this.createEndLineCommand();
+            this._pushCommand(this.endLineCommand);
         }
     }
 

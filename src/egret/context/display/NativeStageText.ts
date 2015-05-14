@@ -140,11 +140,6 @@ module egret {
             return this.textType;
         }
 
-        public _open(x:number, y:number, width:number = 160, height:number = 21):void {
-
-
-        }
-
         private resetText():void {
             if (this.textType == "password") {
                 var passwordStr = "";
@@ -177,6 +172,7 @@ module egret {
         //全屏键盘
         private showScreenKeyboard():void {
             var self = this;
+            self.dispatchEvent(new egret.Event("blur"));
             egret_native.EGT_TextInput = function (appendText:string) {
                 if (self._multiline) {//多行文本
                     if (self.isFinishDown) {
@@ -222,6 +218,7 @@ module egret {
                 else {
                     if (appendText == "\n") {
                         if (container && container.parent) {
+                            self.dispatchEvent(new egret.Event("blur"));
                             container.parent.removeChild(container);
                         }
                         egret_native.TextInputOp.setKeybordOpen(false);
@@ -246,12 +243,13 @@ module egret {
             //系统关闭键盘
             egret_native.EGT_keyboardDidHide = function () {
                 if (container && container.parent) {
+                    self.dispatchEvent(new egret.Event("blur"));
                     container.parent.removeChild(container);
                 }
             };
         }
 
-        public _show():void {
+        public _show(multiline:boolean, size:number, width:number, height:number):void {
             var self = this;
             egret_native.EGT_getTextEditerContentText = function () {
                 return self._getText();
@@ -283,6 +281,7 @@ module egret {
 
         public _hide():void {
             this._remove();
+            this.dispatchEvent(new egret.Event("blur"));
             egret_native.TextInputOp.setKeybordOpen(false);
         }
     }

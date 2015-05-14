@@ -289,6 +289,7 @@ module egret.gui {
             else
                 this._value = value;
             this.valueChanged = false;
+            UIEvent.dispatchUIEvent(this,UIEvent.VALUE_COMMIT);
         }
 
         /**

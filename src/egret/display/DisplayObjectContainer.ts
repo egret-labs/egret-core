@@ -33,9 +33,7 @@ module egret {
      * @classdesc
      * DisplayObjectContainer 类是可用作显示列表中显示对象容器的所有对象的基类。
      * 该显示列表管理运行时中显示的所有对象。使用 DisplayObjectContainer 类排列显示列表中的显示对象。每个 DisplayObjectContainer 对象都有自己的子级列表，用于组织对象的 Z 轴顺序。Z 轴顺序是由前至后的顺序，可确定哪个对象绘制在前，哪个对象绘制在后等。
-     * <div style="margin-top: 20px"><b>了解详细信息</b>
-     * <a href="http://docs.egret-labs.org/post/manual/displaycon/aboutdisplaycon.html" style="padding-left: 20px" target="_blank" >显示容器的概念与实现</a>
-     * </div>
+     * @link http://docs.egret-labs.org/post/manual/displaycon/aboutdisplaycon.html 显示容器的概念与实现
      */
     export class DisplayObjectContainer extends DisplayObject {
 
@@ -70,7 +68,7 @@ module egret {
         public _children:Array<DisplayObject>;
 
         /**
-         * 返回此对象的子项数目。【只读】
+         * 返回此对象的子项数目。
          * @member {number} egret.DisplayObjectContainer#numChildren
          */
         public get numChildren():number {
@@ -162,7 +160,9 @@ module egret {
                 var list = DisplayObjectContainer.__EVENT__ADD_TO_STAGE_LIST;
                 while (list.length > 0) {
                     var childAddToStage = list.shift();
-                    childAddToStage.dispatchEventWith(Event.ADDED_TO_STAGE);
+                    if (notifyListeners){
+                        childAddToStage.dispatchEventWith(Event.ADDED_TO_STAGE);
+                    }
                 }
             }
 
@@ -207,14 +207,18 @@ module egret {
         public _doRemoveChild(index:number, notifyListeners:boolean = true):DisplayObject {
             var locChildren = this._children;
             var child:DisplayObject = locChildren[index];
-            if (notifyListeners)
-                child.dispatchEventWith(Event.REMOVED, true)
+            if (notifyListeners){
+                child.dispatchEventWith(Event.REMOVED, true);
+            }
+
             if (this._stage) {//在舞台上
                 child._onRemoveFromStage();
                 var list = DisplayObjectContainer.__EVENT__REMOVE_FROM_STAGE_LIST
                 while (list.length > 0) {
                     var childAddToStage = list.shift();
-                    childAddToStage.dispatchEventWith(Event.REMOVED_FROM_STAGE);
+                    if (notifyListeners){
+                        childAddToStage.dispatchEventWith(Event.REMOVED_FROM_STAGE);
+                    }
                     childAddToStage._stage = null;
                 }
             }
@@ -325,41 +329,43 @@ module egret {
 
         public _updateTransform():void {
             var o = this;
+
             if (!o._visible) {
                 return;
             }
             if(o._filter) {
-                RenderCommand.push(this._setGlobalFilter, this);
+                RenderCommand.push(o._setGlobalFilter, o);
             }
             if (o._colorTransform) {
-                RenderCommand.push(this._setGlobalColorTransform, this);
+                RenderCommand.push(o._setGlobalColorTransform, o);
             }
             var mask = o.mask || o._scrollRect;
             if(mask) {
-                RenderCommand.push(this._pushMask, this);
+                RenderCommand.push(o._pushMask, o);
             }
             super._updateTransform();
-            if(!this["_cacheAsBitmap"] || !this._texture_to_render) {
-                for (var i = 0 , length = o._children.length; i < length; i++) {
-                    var child:DisplayObject = o._children[i];
+            if(!o["_cacheAsBitmap"] || !o._texture_to_render) {
+                for (var i = 0, children = o._children, length = children.length; i < length; i++) {
+                    var child:DisplayObject = children[i];
                     child._updateTransform();
                 }
             }
             if(mask) {
-                RenderCommand.push(this._popMask, this);
+                RenderCommand.push(o._popMask, o);
             }
             if (o._colorTransform) {
-                RenderCommand.push(this._removeGlobalColorTransform, this);
+                RenderCommand.push(o._removeGlobalColorTransform, o);
             }
             if(o._filter) {
-                RenderCommand.push(this._removeGlobalFilter, this);
+                RenderCommand.push(o._removeGlobalFilter, o);
             }
         }
 
         public _render(renderContext:RendererContext):void {
             if(!MainContext.__use_new_draw) {
-                for (var i = 0 , length = this._children.length; i < length; i++) {
-                    var child:DisplayObject = this._children[i];
+                var o = this;
+                for (var i = 0, children = o._children, length = children.length; i < length; i++) {
+                    var child:DisplayObject = children[i];
                     child._draw(renderContext);
                 }
             }
@@ -372,11 +378,13 @@ module egret {
          * @private
          */
         public _measureBounds():egret.Rectangle {
-
+            var o = this;
             var minX = 0, maxX = 0, minY = 0, maxY = 0;
-            var l = this._children.length;
+            var children = o._children;
+            var l = children.length;
+
             for (var i = 0; i < l; i++) {
-                var child = this._children[i];
+                var child = children[i];
                 if (!child._visible) {
                     continue;
                 }
@@ -420,28 +428,29 @@ module egret {
          * @returns {egret.DisplayObject} 返回所发生碰撞的DisplayObject对象
          */
         public hitTest(x:number, y:number, ignoreTouchEnabled:boolean = false):DisplayObject {
+            var o = this;
             var result:DisplayObject;
-            if (!this._visible) {
+            if (!o._visible) {
                 return null;
             }
-            if (this._scrollRect) {
-                if (x < this._scrollRect.x || y < this._scrollRect.y
-                    || x > this._scrollRect.x + this._scrollRect.width
-                    || y > this._scrollRect.y + this._scrollRect.height) {
+            if (o._scrollRect) {
+                if (x < o._scrollRect.x || y < o._scrollRect.y
+                    || x > o._scrollRect.x + o._scrollRect.width
+                    || y > o._scrollRect.y + o._scrollRect.height) {
                     return null;
                 }
             }
-            else if (this.mask) {
-                if (this.mask.x > x
-                    || x > this.mask.x + this.mask.width
-                    || this.mask.y > y
-                    || y > this.mask.y + this.mask.height) {
+            else if (o.mask) {
+                if (o.mask.x > x
+                    || x > o.mask.x + o.mask.width
+                    || o.mask.y > y
+                    || y > o.mask.y + o.mask.height) {
                     return null;
                 }
             }
-            var children = this._children;
+            var children = o._children;
             var l = children.length;
-            var touchChildren = this._touchChildren;//这里不用考虑父级的touchChildren，从父级调用下来过程中已经判断过了。
+            var touchChildren = o._touchChildren;//这里不用考虑父级的touchChildren，从父级调用下来过程中已经判断过了。
             for (var i = l - 1; i >= 0; i--) {
                 var child = children[i];
                 var mtx = child._getMatrix();
@@ -454,20 +463,20 @@ module egret {
                 var childHitTestResult = child.hitTest(point.x, point.y, true);
                 if (childHitTestResult) {
                     if (!touchChildren) {
-                        return this;
+                        return o;
                     }
 
                     if (childHitTestResult._touchEnabled && touchChildren) {
                         return childHitTestResult;
                     }
 
-                    result = this;
+                    result = o;
                 }
             }
             if (result) {
                 return result;
             }
-            else if (this._texture_to_render) {
+            else if (o._texture_to_render) {
                 return super.hitTest(x, y, ignoreTouchEnabled);
             }
             return null;
@@ -475,8 +484,10 @@ module egret {
 
 
         public _onAddToStage():void {
+            var o = this;
             super._onAddToStage();
-            var length = this._children.length;
+            var children = o._children;
+            var length = children.length;
             for (var i = 0; i < length; i++) {
                 var child:DisplayObject = this._children[i];
                 child._onAddToStage();
@@ -484,10 +495,12 @@ module egret {
         }
 
         public _onRemoveFromStage():void {
+            var o = this;
             super._onRemoveFromStage();
-            var length = this._children.length;
+            var children = o._children;
+            var length = children.length;
             for (var i = 0; i < length; i++) {
-                var child:DisplayObject = this._children[i];
+                var child:DisplayObject = children[i];
                 child._onRemoveFromStage();
             }
         }

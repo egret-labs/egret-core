@@ -9,6 +9,6 @@
     </e:states>
     <e:UIAsset width="100%" height="100%" source="DropDownListButtonSkin_up_png"
                source.down="DropDownListButtonSkin_down_png"/>
-    <e:UIAsset  verticalCenter="0" right="4" source.up="dropdownlist_arrow_up_png"
+    <e:UIAsset  verticalCenter="0" right="4" source="dropdownlist_arrow_up_png"
                 source.down="dropdownlist_arrow_down_png"/>
 </e:Skin>
