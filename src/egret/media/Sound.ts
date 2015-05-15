@@ -144,7 +144,7 @@ module egret {
             if (!sound) {
                 return;
             }
-            sound.volume = value;
+            sound.volume = Math.max(0, Math.min(value, 1));
         }
 
         /**
