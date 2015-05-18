@@ -138,11 +138,11 @@ module egret {
          * 重新加载声音
          */
         public load():void {
-            //var sound = this.audio;
-            //if (!sound) {
-            //    return;
-            //}
-            //sound.load();
+            var sound = this.audio;
+            if (!sound) {
+                return;
+            }
+            sound.load();
         }
 
         private _listeners:Array<any> = [];
