@@ -153,12 +153,13 @@ module egret {
             console.log("loadWebAudio");
             request.onload = function () {
                 var audio = new WebAudio();
-                audio.arrayBuffer = request.response;
+                audio._setArrayBuffer(request.response, function () {
+                    var sound = new Sound();
+                    sound._setAudio(audio);
+                    loader.data = sound;
+                    __callAsync(Event.dispatchEvent, Event, loader, Event.COMPLETE);
+                });
 
-                var sound = new Sound();
-                sound._setAudio(audio);
-                loader.data = sound;
-                __callAsync(Event.dispatchEvent, Event, loader, Event.COMPLETE);
             };
             request.send();
 

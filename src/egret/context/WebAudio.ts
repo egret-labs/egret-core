@@ -89,13 +89,21 @@ module egret {
          * 重新加载声音
          * @method egret.Sound#load
          */
-        load(): void {
-            this.arrayBuffer = this._arrayBuffer;
+        public load():void {
+            this._setArrayBuffer(this._arrayBuffer, null);
         }
 
-        public set arrayBuffer(buffer:ArrayBuffer) {
+        public _setArrayBuffer(buffer:ArrayBuffer, callback:Function) {
+            var self = this;
             this._arrayBuffer = buffer;
-            this.context.decodeAudioData(buffer, audioBuffer=> this.audioBuffer = audioBuffer);
+
+            this.context.decodeAudioData(buffer, function (audioBuffer) {
+                self.audioBuffer = audioBuffer;
+
+                if (callback) {
+                    callback();
+                }
+            });
         }
 
         /**
