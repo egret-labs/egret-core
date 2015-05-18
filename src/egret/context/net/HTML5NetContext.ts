@@ -157,7 +157,7 @@ module egret {
             request.onload = function () {
                 var audio = new WebAudio();
 
-                audio.setArrayBuffer(request.response, function () {
+                audio._setArrayBuffer(request.response, function () {
                     var sound = new Sound();
                     sound._setAudio(audio);
                     loader.data = sound;
