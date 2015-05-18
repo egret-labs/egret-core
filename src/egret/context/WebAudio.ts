@@ -61,22 +61,50 @@ module egret {
          * @param loop {boolean} 是否循环播放，默认为false
          */
         play(): void {
+            if (this.bufferSource) {
+                this.clear();
+            }
             var context = this.context;
             var gain = this.gain;
             var bufferSource = context.createBufferSource();
+            this.bufferSource = bufferSource;
+            this.initStart();
             bufferSource.buffer = this.audioBuffer;
             bufferSource.connect(gain);
             gain.connect(context.destination);
-            bufferSource.start(0, 0);
+            bufferSource.start(0, this._currentTime);
             bufferSource.onended = ()=> {
-                bufferSource.stop(0);
-                bufferSource.disconnect();
-                if (this._loop && !this.paused)
-                    this.play();
+                this.clear();
             };
-            this.bufferSource = bufferSource;
             this.paused = false;
         }
+
+        private clear():void {
+            this.initEnd();
+            this.bufferSource.stop(0);
+            this.bufferSource.disconnect();
+            this.bufferSource = null;
+            if (this._loop && !this.paused)
+                this.play();
+
+        }
+
+        private initStart():void {
+            var self = this;
+            for (var i = 0; i < self._listeners.length; i++) {
+                var bin = self._listeners[i];
+                this.bufferSource.addEventListener(bin.type, bin.listener, bin.useCapture);
+            }
+        }
+
+        private initEnd():void {
+            var self = this;
+            for (var i = 0; i < self._listeners.length; i++) {
+                var bin = self._listeners[i];
+                this.bufferSource.removeEventListener(bin.type, bin.listener, bin.useCapture);
+            }
+        }
+
         /**
          * 暂停声音
          * @method egret.Sound#pause
@@ -98,22 +126,36 @@ module egret {
             this.context.decodeAudioData(buffer, audioBuffer=> this.audioBuffer = audioBuffer);
         }
 
+        private _listeners:Array<any> = [];
         /**
          * 添加事件监听
          * @param type 事件类型
          * @param listener 监听函数
          */
-        public addEventListener(type:string, listener:Function):void {
-
+        public addEventListener(type:string, listener:Function, useCapture:boolean = false):void {
+            this._listeners.push({ type: type, listener: listener, useCapture: useCapture });
+            if (this.bufferSource) {
+                this.bufferSource.addEventListener(type, listener, useCapture);
+            }
         }
 
-        /**
+        /**s
          * 移除事件监听
          * @param type 事件类型
          * @param listener 监听函数
          */
-        public removeEventListener(type:string, listener:Function):void {
-
+        public removeEventListener(type:string, listener:Function, useCapture:boolean = false):void {
+            var self = this;
+            for (var i = 0; i < self._listeners.length; i++) {
+                var bin = self._listeners[i];
+                if (bin.listener == listener && bin.useCapture == useCapture && bin.type == type) {
+                    self._listeners.splice(i, 1);
+                    if (this.bufferSource) {
+                        this.bufferSource.removeEventListener(type, listener, useCapture);
+                    }
+                    break;
+                }
+            }
         }
 
         /**
@@ -131,6 +173,14 @@ module egret {
         public set loop(value:boolean) {
             this._loop = value;
         }
+
+        private _currentTime:number = 0;
+        public get currentTime():number {
+            if (this.bufferSource) {
+                return this.bufferSource.context.currentTime;
+            }
+            return 0;
+        }
     }
 }
 
@@ -142,5 +192,9 @@ interface AudioBuffer {}
  * @private
  */
 interface AudioBufferSourceNode {
+    context:any;
     stop(when?: number): void;
+    addEventListener(type:string, listener:Function, useCapture?:boolean);
+    removeEventListener(type:string, listener:Function, useCapture?:boolean);
+    disconnect();
 }

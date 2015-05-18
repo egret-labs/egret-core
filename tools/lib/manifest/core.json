@@ -13,6 +13,7 @@
         "egret/utils/RenderCommand.ts",
         "egret/events/Event.ts",
         "egret/events/HTTPStatusEvent.ts",
+        "egret/events/SoundEvent.ts",
         "egret/events/FocusEvent.ts",
         "egret/events/IOErrorEvent.ts",
         "egret/events/TouchEvent.ts",
