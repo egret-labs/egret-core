@@ -93,6 +93,7 @@
         "egret/utils/getOption.ts",
         "egret/tween/Tween.ts",
         "egret/tween/Ease.ts",
+        "egret/media/IAudio.ts",
         "egret/media/Sound.ts",
         "jslib/NumberUtils.ts",
         "egret/context/PromiseObject.ts"

@@ -54,14 +54,14 @@ module egret {
          * 创建 egret.Sound 对象
          */
         constructor() {
-
+            super();
         }
 
         /**
          * audio音频对象
          * @member {any} egret.Sound#audio
          */
-        private audio:any = null;
+        private audio:IAudio = null;
 
         /**
          * 类型，默认为 egret.Sound.EFFECT。
@@ -74,28 +74,30 @@ module egret {
          * 当播放声音时，position 属性表示声音文件中当前播放的位置（以毫秒为单位）
          * @returns {number}
          */
-        public get position():void {
+        public get position():number {
             return this.audio ? this.audio.currentTime : 0;
         }
 
         /**
          * 播放声音
-         * @method egret.Sound#play
-         * @param loop {boolean} 是否循环播放，默认为false
+         * @param loop  是否循环播放，默认为false
+         * @param position  是否从刚开始播放
          */
-        public play(position:number = 0, loop:boolean = false):void {
-            if (position === void 0) { position = 0; }
-            if (loop === void 0) { loop = false; }
+        public play(loop:boolean = false, position:number = 0):void {
             var sound = this.audio;
             if (!sound) {
                 return;
             }
             sound.currentTime = position / 1000;
-            sound.loop = loop;
-            sound.play();
+            sound.setLoop(loop);
+            sound.play(this.type);
         }
 
         private _pauseTime:number = 0;
+
+        /**
+         * 声音停止播放
+         */
         public stop():void {
             var sound = this.audio;
             if (!sound) {
@@ -108,17 +110,20 @@ module egret {
 
         /**
          * 暂停声音
-         * @method egret.Sound#pause
          */
         public pause():void {
             var sound = this.audio;
             if (!sound) {
                 return;
             }
+            this._pauseTime = sound.currentTime;
             sound.pause();
         }
 
-        public replay():void {
+        /**
+         * 继续从上次暂停的位置播放
+         */
+        public resume():void {
             var sound = this.audio;
             if (!sound) {
                 return;
@@ -129,15 +134,15 @@ module egret {
         }
 
         /**
+         * @deprecated
          * 重新加载声音
-         * @method egret.Sound#load
          */
         public load():void {
-            var sound = this.audio;
-            if (!sound) {
-                return;
-            }
-            sound.load();
+            //var sound = this.audio;
+            //if (!sound) {
+            //    return;
+            //}
+            //sound.load();
         }
 
         private _listeners:Array<any> = [];
@@ -146,8 +151,8 @@ module egret {
          * @param type 事件类型
          * @param listener 监听函数
          */
-        public addEventListener(type:string, listener:Function, thisObject:any, useCapture:boolean = false):void {
-            super.addEventListener(type, listener, thisObject, useCapture);
+        public addEventListener(type:string, listener:Function, thisObject:any = null):void {
+            super.addEventListener(type, listener, thisObject);
             var self = this;
             var sound = this.audio;
             if (!sound) {
@@ -163,7 +168,7 @@ module egret {
                     return;
                 }
             }
-            this._listeners.push({ type: virtualType, listener: listener, thisObject: thisObject, useCapture: useCapture, func: func });
+            this._listeners.push({ type: virtualType, listener: listener, thisObject: thisObject, func: func });
             this.audio.addEventListener(virtualType, func, false);
         }
 
@@ -172,8 +177,8 @@ module egret {
          * @param type 事件类型
          * @param listener 监听函数
          */
-        public removeEventListener(type:string, listener:Function, thisObject:any, useCapture:boolean = false):void {
-            super.removeEventListener(type, listener, thisObject, useCapture);
+        public removeEventListener(type:string, listener:Function, thisObject:any = null):void {
+            super.removeEventListener(type, listener, thisObject);
             var self = this;
             var sound = this.audio;
             if (!sound) {
@@ -182,7 +187,7 @@ module egret {
             var virtualType = self.getVirtualType(type);
             for (var i = 0; i < self._listeners.length; i++) {
                 var bin = self._listeners[i];
-                if (bin.listener == listener && bin.thisObject == thisObject && bin.type == virtualType && bin.useCapture == useCapture) {
+                if (bin.listener == listener && bin.thisObject == thisObject && bin.type == virtualType) {
                     self._listeners.splice(i, 1);
                     self.audio.removeEventListener(virtualType, bin.func, false);
                     break;
@@ -233,12 +238,19 @@ module egret {
             return this.volume;
         }
 
+        /**
+         * 将声音文件加载到内存
+         * @param type
+         * @param callback
+         * @param thisObj
+         */
         public preload(type:string, callback:Function = null, thisObj:any = null):void {
             this.type = type;
-            egret.callLater(callback, thisObj);
+
+            this.audio.preload(type, callback, thisObj);
         }
 
-        public _setAudio(value:any):void {
+        public _setAudio(value:IAudio):void {
             this.audio = value;
         }
 
@@ -246,7 +258,7 @@ module egret {
          * 释放当前音频
          */
         public destroy():void {
-
+            this.audio.destroy();
         }
     }
 }

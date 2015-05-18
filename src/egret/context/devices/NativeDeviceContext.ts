@@ -105,7 +105,7 @@ module egret_native_external_interface {
 
 egret_native_external_interface.init();
 
-module egret_native_sound {
+/*module egret_native_sound {
     export var currentPath = "";
     export function play(loop:boolean):void {
         if (typeof loop == "undefined") {
@@ -187,9 +187,9 @@ module egret_native_sound {
             egret.Sound.prototype[key] = egret_native_sound[key];
         }
     }
-}
+}*/
 
-egret_native_sound.init();
+//egret_native_sound.init();
 
 module egret_native_localStorage {
     export var filePath:string = "LocalStorage.local";

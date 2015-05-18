@@ -30,100 +30,66 @@ module egret {
     /**
      * @private
      */
-    export class WebAudio {
-        public static canUseWebAudio = window["AudioContext"] || window["webkitAudioContext"] || window["mozAudioContext"];
-        public static ctx = WebAudio.canUseWebAudio ? new (window["AudioContext"] || window["webkitAudioContext"] || window["mozAudioContext"])() : undefined;
-
+    export class Html5Audio implements IAudio{
         /**
          * audio音频对象
          * @member {any} egret.Sound#audio
          */
-        private audioBuffer: AudioBuffer;
-        private _arrayBuffer: ArrayBuffer;
-        private context = WebAudio.ctx;
-        private gain;
-        private bufferSource: AudioBufferSourceNode = null;
-        private paused = true;
-
         constructor() {
-            if (WebAudio.ctx["createGain"]) {
-                this.gain = WebAudio.ctx["createGain"]();
-            }
-            else {
-                this.gain = WebAudio.ctx["createGainNode"]();
-            }
         }
 
+        private _audio;
         private _loop:boolean = false;
         /**
          * 播放声音
          * @method egret.Sound#play
          * @param loop {boolean} 是否循环播放，默认为false
          */
-        play(): void {
-            if (this.bufferSource) {
-                this.clear();
-            }
-            var context = this.context;
-            var gain = this.gain;
-            var bufferSource = context.createBufferSource();
-            this.bufferSource = bufferSource;
-            this.initStart();
-            bufferSource.buffer = this.audioBuffer;
-            bufferSource.connect(gain);
-            gain.connect(context.destination);
-            bufferSource.start(0, this._currentTime);
-            bufferSource.onended = ()=> {
-                this.clear();
-            };
+        play(type?:string): void {
             this.paused = false;
+            this._audio.currentTime = this._startTime;
+            this._audio.play();
         }
 
         private clear():void {
-            this.initEnd();
-            this.bufferSource.stop(0);
-            this.bufferSource.disconnect();
-            this.bufferSource = null;
+            this._audio.pause();
             if (this._loop && !this.paused)
                 this.play();
+        }
 
+        private paused = true;
+        /**
+         * 暂停声音
+         * @method egret.Sound#pause
+         */
+        public pause(): void {
+            this.paused = true;
+            this._audio.pause();
+        }
+
+        /**
+         * 重新加载声音
+         * @method egret.Sound#load
+         */
+        public load(): void {
+            this._audio.load();
+        }
+
+        public _setAudio(audio) {
+            this._audio = audio;
+
+            this._audio.onended = ()=> {
+                this.clear();
+            };
+            this.initStart();
         }
 
         private initStart():void {
             var self = this;
             for (var i = 0; i < self._listeners.length; i++) {
                 var bin = self._listeners[i];
-                this.bufferSource.addEventListener(bin.type, bin.listener, bin.useCapture);
+                this._audio.addEventListener(bin.type, bin.listener, bin.useCapture);
             }
-        }
-
-        private initEnd():void {
-            var self = this;
-            for (var i = 0; i < self._listeners.length; i++) {
-                var bin = self._listeners[i];
-                this.bufferSource.removeEventListener(bin.type, bin.listener, bin.useCapture);
-            }
-        }
-
-        /**
-         * 暂停声音
-         * @method egret.Sound#pause
-         */
-        pause(): void {
-            this.paused = true;
-            this.bufferSource.stop();
-        }
-        /**
-         * 重新加载声音
-         * @method egret.Sound#load
-         */
-        load(): void {
-            this.arrayBuffer = this._arrayBuffer;
-        }
-
-        public set arrayBuffer(buffer:ArrayBuffer) {
-            this._arrayBuffer = buffer;
-            this.context.decodeAudioData(buffer, audioBuffer=> this.audioBuffer = audioBuffer);
         }
 
         private _listeners:Array<any> = [];
@@ -134,8 +100,8 @@ module egret {
          */
         public addEventListener(type:string, listener:Function, useCapture:boolean = false):void {
             this._listeners.push({ type: type, listener: listener, useCapture: useCapture });
-            if (this.bufferSource) {
-                this.bufferSource.addEventListener(type, listener, useCapture);
+            if (this._audio) {
+                this._audio.addEventListener(type, listener, useCapture);
             }
         }
 
@@ -150,12 +116,20 @@ module egret {
                 var bin = self._listeners[i];
                 if (bin.listener == listener && bin.useCapture == useCapture && bin.type == type) {
                     self._listeners.splice(i, 1);
-                    if (this.bufferSource) {
-                        this.bufferSource.removeEventListener(type, listener, useCapture);
+                    if (this._audio) {
+                        this._audio.removeEventListener(type, listener, useCapture);
                     }
                     break;
                 }
             }
+        }
+
+        public preload(type:string, callback:Function = null, thisObj:any = null):void {
+            egret.callLater(callback, thisObj);
+        }
+
+        public destroy():void {
+
         }
 
         /**
@@ -163,38 +137,28 @@ module egret {
          * @returns number
          */
         public get volume():number {
-            return this.gain.gain.value;
+            return this._audio.volume;
         }
 
         public set volume(value:number) {
-            this.gain.gain.value = value;
+            this._audio.volume = Math.max(0, Math.min(value, 1));
         }
 
-        public set loop(value:boolean) {
+        public setLoop(value:boolean):void {
             this._loop = value;
         }
 
-        private _currentTime:number = 0;
-        public get currentTime():number {
-            if (this.bufferSource) {
-                return this.bufferSource.context.currentTime;
-            }
+        public get totalTime():number {
             return 0;
         }
-    }
-}
 
-/**
- * @private
- */
-interface AudioBuffer {}
-/**
- * @private
- */
-interface AudioBufferSourceNode {
-    context:any;
-    stop(when?: number): void;
-    addEventListener(type:string, listener:Function, useCapture?:boolean);
-    removeEventListener(type:string, listener:Function, useCapture?:boolean);
-    disconnect();
+        private _startTime:number = 0;
+        public get currentTime():number {
+            return this._audio.currentTime;
+        }
+
+        public set currentTime(value:number) {
+            this._startTime = value;
+        }
+    }
 }

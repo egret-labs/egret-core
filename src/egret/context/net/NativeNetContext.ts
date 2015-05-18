@@ -178,8 +178,11 @@ module egret {
 
             function onLoadComplete() {
                 self.saveVersion(url);
+                var nativeAudio:NativeAudio = new NativeAudio();
+                nativeAudio._setAudio(url);
+
                 var sound = new egret.Sound();
-                sound.path = url;
+                sound._setAudio(nativeAudio);
                 loader.data = sound;
                 Event.dispatchEvent(loader, Event.COMPLETE);
             }

@@ -131,8 +131,11 @@ module egret {
                 egret.clearTimeout(audio["__timeoutId"]);
                 audio.removeEventListener('canplaythrough', soundPreloadCanplayHandler, false);
                 audio.removeEventListener("error", soundPreloadErrorHandler, false);
+                var htmlAudio:Html5Audio = new Html5Audio();
+                htmlAudio._setAudio(audio);
+
                 var sound = new Sound();
-                sound._setAudio(audio);
+                sound._setAudio(htmlAudio);
                 loader.data = sound;
                 __callAsync(Event.dispatchEvent, Event, loader, Event.COMPLETE);
             };
@@ -153,12 +156,13 @@ module egret {
             console.log("loadWebAudio");
             request.onload = function () {
                 var audio = new WebAudio();
-                audio.arrayBuffer = request.response;
 
-                var sound = new Sound();
-                sound._setAudio(audio);
-                loader.data = sound;
-                __callAsync(Event.dispatchEvent, Event, loader, Event.COMPLETE);
+                audio.setArrayBuffer(request.response, function () {
+                    var sound = new Sound();
+                    sound._setAudio(audio);
+                    loader.data = sound;
+                    __callAsync(Event.dispatchEvent, Event, loader, Event.COMPLETE);
+                });
             };
             request.send();
 

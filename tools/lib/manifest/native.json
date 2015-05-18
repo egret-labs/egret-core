@@ -12,6 +12,7 @@
         "NativeContext.d.ts",
         "display/NativeStageText.ts",
         "net/VersionController.ts",
-        "net/NativeResourceLoader.ts"
+        "net/NativeResourceLoader.ts",
+        "audio/NativeAudio.ts"
     ]
 }
