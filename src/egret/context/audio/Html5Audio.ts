@@ -30,7 +30,7 @@ module egret {
     /**
      * @private
      */
-    export class Html5Audio implements IAudio{
+    export class Html5Audio implements IAudio {
         /**
          * audio音频对象
          * @member {any} egret.Sound#audio
@@ -40,12 +40,13 @@ module egret {
 
         private _audio;
         private _loop:boolean = false;
+
         /**
          * 播放声音
          * @method egret.Sound#play
          * @param loop {boolean} 是否循环播放，默认为false
          */
-        play(type?:string): void {
+        play(type?:string):void {
             this.paused = false;
             this._audio.currentTime = this._startTime;
             this._audio.play();
@@ -58,11 +59,12 @@ module egret {
         }
 
         private paused = true;
+
         /**
          * 暂停声音
          * @method egret.Sound#pause
          */
-        public pause(): void {
+        public pause():void {
             this.paused = true;
             this._audio.pause();
         }
@@ -71,7 +73,7 @@ module egret {
          * 重新加载声音
          * @method egret.Sound#load
          */
-        public load(): void {
+        public load():void {
             this._audio.load();
         }
 
@@ -93,13 +95,14 @@ module egret {
         }
 
         private _listeners:Array<any> = [];
+
         /**
          * 添加事件监听
          * @param type 事件类型
          * @param listener 监听函数
          */
         public addEventListener(type:string, listener:Function, useCapture:boolean = false):void {
-            this._listeners.push({ type: type, listener: listener, useCapture: useCapture });
+            this._listeners.push({type: type, listener: listener, useCapture: useCapture});
             if (this._audio) {
                 this._audio.addEventListener(type, listener, useCapture);
             }
@@ -153,6 +156,7 @@ module egret {
         }
 
         private _startTime:number = 0;
+
         public get currentTime():number {
             return this._audio.currentTime;
         }

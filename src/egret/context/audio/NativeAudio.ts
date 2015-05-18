@@ -30,7 +30,7 @@ module egret {
     /**
      * @private
      */
-    export class NativeAudio implements IAudio{
+    export class NativeAudio implements IAudio {
         /**
          * audio音频对象
          * @member {any} egret.Sound#audio
@@ -45,6 +45,7 @@ module egret {
 
         private _effectId;
         private _path:string = "";
+
         /**
          * 播放声音
          * @method egret.Sound#play
@@ -64,11 +65,12 @@ module egret {
         }
 
         private paused = true;
+
         /**
          * 暂停声音
          * @method egret.Sound#pause
          */
-        public pause(): void {
+        public pause():void {
             this.paused = true;
 
             if (this._type == egret.Sound.MUSIC) {
@@ -88,7 +90,7 @@ module egret {
          * 重新加载声音
          * @method egret.Sound#load
          */
-        public load(): void {
+        public load():void {
         }
 
         public preload(type:string, callback:Function = null, thisObj:any = null):void {
@@ -102,7 +104,7 @@ module egret {
             else if (this._type == egret.Sound.EFFECT) {
                 if (egret.NativeNetContext.__use_asyn) {
                     var promise = new egret.PromiseObject();
-                    promise.onSuccessFunc = function(soundId){
+                    promise.onSuccessFunc = function (soundId) {
                         if (callback) {
                             callback.call(thisObj);
                         }
@@ -131,6 +133,7 @@ module egret {
         }
 
         private _listeners:Array<any> = [];
+
         /**
          * 添加事件监听
          * @param type 事件类型
@@ -184,6 +187,7 @@ module egret {
         }
 
         private _startTime:number = 0;
+
         public get currentTime():number {
             //return this._audio.currentTime;
             return 0;
@@ -197,7 +201,7 @@ module egret {
             if (this._type == egret.Sound.EFFECT) {
                 egret_native.Audio.unloadEffect(this._path);
             }
-            else if (egret_native_sound.currentPath == this._path){
+            else if (egret_native_sound.currentPath == this._path) {
                 egret_native.Audio.stopBackgroundMusic(true);
             }
         }

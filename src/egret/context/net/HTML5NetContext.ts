@@ -48,7 +48,7 @@ module egret {
                 return;
             }
             if (loader.dataFormat == URLLoaderDataFormat.SOUND) {
-                if(egret.Browser.getInstance().isIOS() && WebAudio.canUseWebAudio) {
+                if (egret.Browser.getInstance().isIOS() && WebAudio.canUseWebAudio) {
                     this.loadWebAudio(loader);
                 }
                 else {
@@ -81,15 +81,13 @@ module egret {
 
 
             function onReadyStateChange() {
-                if (xhr.readyState == 4)
-                {// 4 = "loaded"
+                if (xhr.readyState == 4) {// 4 = "loaded"
                     if (xhr.status != loader._status) {
                         loader._status = xhr.status;
                         HTTPStatusEvent.dispatchHTTPStatusEvent(loader, xhr.status);
                     }
 
-                    if (xhr.status >= 400 || xhr.status == 0)
-                    {//请求错误
+                    if (xhr.status >= 400 || xhr.status == 0) {//请求错误
                         IOErrorEvent.dispatchIOErrorEvent(loader);
                     }
                     else {
@@ -119,7 +117,7 @@ module egret {
             }
         }
 
-        private loadSound(loader:URLLoader):void{
+        private loadSound(loader:URLLoader):void {
             var request:URLRequest = loader._request;
             var audio = new Audio(request.url);
             audio["__timeoutId"] = egret.setTimeout(soundPreloadCanplayHandler, this, 100);
@@ -199,8 +197,8 @@ module egret {
         private loadTexture(loader:URLLoader):void {
 
             var request:URLRequest = loader._request;
-            Texture.createBitmapData(request.url, function(code:number,bitmapData:HTMLImageElement){
-                if (code != 0){
+            Texture.createBitmapData(request.url, function (code:number, bitmapData:HTMLImageElement) {
+                if (code != 0) {
                     IOErrorEvent.dispatchIOErrorEvent(loader);
                     return;
                 }

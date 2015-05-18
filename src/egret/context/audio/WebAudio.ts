@@ -118,7 +118,6 @@ module egret {
             this.bufferSource.stop(0);
         }
 
-        
 
         private _listeners:Array<any> = [];
 
@@ -190,7 +189,7 @@ module egret {
             this.gain.gain.value = value;
         }
 
-        public setLoop(value:boolean) :void{
+        public setLoop(value:boolean):void {
             this._loop = value;
         }
 
