@@ -48,6 +48,11 @@ module egret {
          * @constant egret.Sound.EFFECT
          */
         public static EFFECT:string = "effect";
+
+        /**
+         * @deprecated
+         * @type {string}
+         */
         public path:string = "";
 
         /**
