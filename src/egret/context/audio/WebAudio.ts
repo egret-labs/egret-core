@@ -75,6 +75,8 @@ module egret {
             gain.connect(context.destination);
             bufferSource.onended = ()=> {
                 this.clear();
+                if (this._loop && !this.paused)
+                    this.play();
             };
 
             this.paused = false;
@@ -89,8 +91,6 @@ module egret {
             this.bufferSource.stop(0);
             this.bufferSource.disconnect();
             this.bufferSource = null;
-            if (this._loop && !this.paused)
-                this.play();
         }
 
         private initStart():void {
