@@ -71,7 +71,8 @@ module egret {
         public type:string = Sound.EFFECT;
 
         /**
-         * 当播放声音时，position 属性表示声音文件中当前播放的位置（以毫秒为单位）
+         * 当播放声音时，position 属性表示声音文件中当前播放的位置（以毫秒为单位）。
+         * h5支持，native不支持
          * @returns {number}
          */
         public get position():number {
@@ -134,7 +135,6 @@ module egret {
         }
 
         /**
-         * @deprecated
          * 重新加载声音
          */
         public load():void {
@@ -148,8 +148,10 @@ module egret {
         private _listeners:Array<any> = [];
         /**
          * 添加事件监听
+         * h5支持，native不支持
          * @param type 事件类型
          * @param listener 监听函数
+         * @param thisObj 侦听函数绑定的this对象
          */
         public addEventListener(type:string, listener:Function, thisObject:any = null):void {
             super.addEventListener(type, listener, thisObject);
@@ -174,8 +176,10 @@ module egret {
 
         /**
          * 移除事件监听
+         * h5支持，native不支持
          * @param type 事件类型
          * @param listener 监听函数
+         * @param thisObj 侦听函数绑定的this对象
          */
         public removeEventListener(type:string, listener:Function, thisObject:any = null):void {
             super.removeEventListener(type, listener, thisObject);
@@ -206,6 +210,7 @@ module egret {
 
         /**
          * 音量范围从 0（静音）至 1（最大音量）。
+         * h5支持，native不支持
          * @returns number
          */
         public set volume(value:number) {
@@ -226,6 +231,7 @@ module egret {
          * @param value 值需大于0 小于等于 1
          */
         public setVolume(value:number):void {
+            console.warn("use this.volume = value instead");
             this.volume = value;
         }
 
@@ -235,14 +241,16 @@ module egret {
          * @returns number
          */
         public getVolume():number {
+            console.warn("use this.volume instead");
             return this.volume;
         }
 
         /**
-         * 将声音文件加载到内存
-         * @param type
-         * @param callback
-         * @param thisObj
+         * 将声音文件加载到内存，
+         * native中使用，html5里为空实现
+         * @param type 声音类型
+         * @param callback 回调函数
+         * @param thisObj 侦听函数绑定的this对象
          */
         public preload(type:string, callback:Function = null, thisObj:any = null):void {
             this.type = type;
@@ -256,6 +264,7 @@ module egret {
 
         /**
          * 释放当前音频
+         * native中使用，html5里为空实现
          */
         public destroy():void {
             this.audio.destroy();
