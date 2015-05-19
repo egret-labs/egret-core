@@ -51,16 +51,24 @@ module egret.gui {
             this._thumbLengthRatio = (contentWidth > width) ? width / contentWidth : 1;
         }
 
+        /**
+         * @deprecated
+         */
         public set trackAlpha(value:number){
             Logger.warningWithErrorId(1016, "HScrollBar.trackAlpha");
         }
+
         public get trackAlpha():number {
             return 1;
         }
 
+        /**
+         * @deprecated
+         */
         public set thumbAlpha(value: number) {
             Logger.warningWithErrorId(1016, "HScrollBar.thumbAlpha");
         }
+
         public get thumbAlpha():number {
             return 1;
         }

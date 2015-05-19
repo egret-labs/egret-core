@@ -304,6 +304,10 @@ module egret.gui {
          * 是否自动隐藏滚动条
          * @member egret.gui.Scroller#autoHideScrollBars
          */
+        public get autoHideScrollBars(): boolean {
+            return this._Scr_Props_._autoHideScrollBars;
+        }
+
         public set autoHideScrollBars(value: boolean) {
             if (this._Scr_Props_._autoHideScrollBars == value)
                 return;
@@ -314,8 +318,12 @@ module egret.gui {
                 this.hideOrShow(true);
         }
 
-        public get autoHideScrollBars(): boolean {
-            return this._Scr_Props_._autoHideScrollBars;
+        /**
+         * 自动隐藏滚动条延时时间(毫秒)，当autoHideScrollBars为true时有效
+         * @member egret.gui.Scroller#autoHideDelay
+         */
+        public get autoHideDelay() {
+            return this._Scr_Props_._autoHideDelay;
         }
 
         public set autoHideDelay(value: number) {
@@ -324,9 +332,6 @@ module egret.gui {
             this._Scr_Props_._autoHideDelay = value;
         }
 
-        public get autoHideDelay() {
-            return this._Scr_Props_._autoHideDelay;
-        }
         private setAutoHideTimer() {
             if (!this._Scr_Props_._autoHideScrollBars || !this.initialized)
                 return;
