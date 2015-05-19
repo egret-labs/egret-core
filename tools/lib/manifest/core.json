@@ -13,6 +13,7 @@
         "egret/utils/RenderCommand.ts",
         "egret/events/Event.ts",
         "egret/events/HTTPStatusEvent.ts",
+        "egret/events/SoundEvent.ts",
         "egret/events/FocusEvent.ts",
         "egret/events/IOErrorEvent.ts",
         "egret/events/TouchEvent.ts",
@@ -92,6 +93,7 @@
         "egret/utils/getOption.ts",
         "egret/tween/Tween.ts",
         "egret/tween/Ease.ts",
+        "egret/media/IAudio.ts",
         "egret/media/Sound.ts",
         "jslib/NumberUtils.ts",
         "egret/context/PromiseObject.ts"

@@ -105,92 +105,6 @@ module egret_native_external_interface {
 
 egret_native_external_interface.init();
 
-module egret_native_sound {
-    export var currentPath = "";
-    export function play(loop:boolean):void {
-        if (typeof loop == "undefined") {
-            loop = false;
-        }
-        if (this.type == egret.Sound.MUSIC) {
-            egret_native_sound.currentPath = this.path;
-            egret_native.Audio.playBackgroundMusic(this.path, loop);
-        }
-        else if (this.type == egret.Sound.EFFECT) {
-            this.effect_id = egret_native.Audio.playEffect(this.path, loop);
-        }
-    }
-
-    export function pause() {
-        if (this.type == egret.Sound.MUSIC) {
-            if (this.path == egret_native_sound.currentPath) {
-                egret_native.Audio.stopBackgroundMusic(false);
-            }
-        }
-        else if (this.type == egret.Sound.EFFECT) {
-            if (this.effect_id) {
-                egret_native.Audio.stopEffect(this.effect_id);
-                this.effect_id = null;
-            }
-        }
-    }
-
-    export function load() {
-
-    }
-
-    export function destroy() {
-        if (this.type == egret.Sound.EFFECT) {
-            egret_native.Audio.unloadEffect(this.path);
-        }
-        else if (egret_native_sound.currentPath == this.path){
-            egret_native.Audio.stopBackgroundMusic(true);
-        }
-    }
-
-    export function preload(type:string, callback:Function = null, thisObj:any = null) {
-        this.type = type;
-        if (this.type == egret.Sound.MUSIC) {
-            egret_native.Audio.preloadBackgroundMusic(this.path);
-            if (callback) {
-                egret.callLater(callback, thisObj);
-            }
-        }
-        else if (this.type == egret.Sound.EFFECT) {
-            if (egret.NativeNetContext.__use_asyn) {
-                var promise = new egret.PromiseObject();
-                promise.onSuccessFunc = function(soundId){
-                    if (callback) {
-                        callback.call(thisObj);
-                    }
-                };
-                egret_native.Audio.preloadEffectAsync(this.path, promise);
-            }
-            else {
-                egret_native.Audio.preloadEffect(this.path);
-                if (callback) {
-                    egret.callLater(callback, thisObj);
-                }
-            }
-        }
-    }
-
-    export function setVolume(value) {
-        this.volume = value;
-    }
-
-    export function getVolume() {
-        return this.volume;
-    }
-
-    export function init():void {
-        for (var key in egret_native_sound) {
-            egret.Sound.prototype[key] = egret_native_sound[key];
-        }
-    }
-}
-
-egret_native_sound.init();
-
 module egret_native_localStorage {
     export var filePath:string = "LocalStorage.local";
 
@@ -200,11 +114,11 @@ module egret_native_localStorage {
 
     export function setItem(key:string, value:string):boolean {
         this.data[key] = value;
-        try{
+        try {
             this.save();
             return true;
         }
-        catch(e){
+        catch (e) {
             egret.Logger.infoWithErrorId(1018, key, value);
             return false;
         }
@@ -298,7 +212,7 @@ egret.RenderTexture.prototype.end = function () {
 };
 
 egret.RenderTexture.prototype.dispose = function () {
-    if(this._bitmapData) {
+    if (this._bitmapData) {
         this._bitmapData.dispose();
         this.renderContext = null;
         this._bitmapData = null;
