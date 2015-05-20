@@ -53,18 +53,26 @@ module egret.gui {
             this._setMinimun(0);
         }
 
-        public set trackAlpha(value: number) {
-            Logger.warningWithErrorId(1016, "VScrollBar.trackAlpha");
-        }
         public get trackAlpha(): number {
             return 1;
         }
 
-        public set thumbAlpha(value: number) {
-            Logger.warningWithErrorId(1016, "VScrollBar.thumbAlpha");
+        /**
+         * @deprecated
+         */
+        public set trackAlpha(value: number) {
+            Logger.warningWithErrorId(1016, "VScrollBar.trackAlpha");
         }
+
         public get thumbAlpha(): number {
             return 1;
+        }
+
+        /**
+         * @deprecated
+         */
+        public set thumbAlpha(value: number) {
+            Logger.warningWithErrorId(1016, "VScrollBar.thumbAlpha");
         }
 
         public setPosition(value: number) {

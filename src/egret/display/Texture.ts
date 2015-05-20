@@ -267,7 +267,7 @@ module egret {
             var winURL = window["URL"] || window["webkitURL"];
             if (Texture._bitmapCallbackMap[url] == null) {//非正在加载中
                 Texture._addToCallbackList(url, callback);
-                if (url.indexOf("http:") != 0 && url.indexOf("https:") != 0 && Browser.getInstance().isIOS() && winURL) {
+                if (url.indexOf("http:") != 0 && url.indexOf("https:") != 0 && (Browser.getInstance().isIOS() && parseInt(Browser.getInstance().getIOSVersion().charAt(0)) >= 7) && winURL) {
                     var xhr = new XMLHttpRequest();
                     xhr.open("get", url, true);
                     xhr.responseType = "blob";

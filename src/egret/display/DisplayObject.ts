@@ -1173,6 +1173,9 @@ module egret {
             }
         }
 
+        /**
+         * @private
+         */
         public renderTexture:RenderTexture = null;
         public _makeBitmapCache():boolean {
             if (!this.renderTexture) {
@@ -1250,6 +1253,9 @@ module egret {
             return this._DO_Props_._colorTransform;
         }
 
+        /**
+         * @private
+         */
         public set colorTransform(value:ColorTransform) {
             this._DO_Props_._colorTransform = value;
         }
@@ -1258,6 +1264,9 @@ module egret {
             return this._DO_Props_._filter;
         }
 
+        /**
+         * @private
+         */
         public set filter(value:Filter) {
             this._DO_Props_._filter = value;
         }

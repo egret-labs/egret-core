@@ -38,6 +38,9 @@ module egret.gui {
 			this.focusEnabled = true;
         }
         public _focusEnabled: boolean = true;
+        /**
+         * 是否能够自动获得焦点的标志
+         */
         public get focusEnabled() {
             return this._focusEnabled;
         }

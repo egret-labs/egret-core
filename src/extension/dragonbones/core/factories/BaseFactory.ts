@@ -402,6 +402,7 @@ module dragonBones {
 			var slot:Slot;
 			var bone:Bone;
 			for(var i:number = 0; i < slotDataList.length; i++){
+				displayList.length = 0;
 				slotData = slotDataList[i];
 				bone = armature.getBone(slotData.parent);
 				if(!bone){

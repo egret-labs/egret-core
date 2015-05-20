@@ -102,24 +102,7 @@ module egret {
                 download();
             }
             else {
-                if (NativeNetContext.__use_asyn) {
-                    //异步读取
-                    readFileAsync();
-                }
-                else {
-                    //同步读取
-                    __callAsync(onLoadComplete, this);
-                }
-            }
-
-            function readFileAsync() {
-                var promise = new egret.PromiseObject();
-                promise.onSuccessFunc = function (content) {
-                    self.saveVersion(url);
-                    loader.data = content;
-                    Event.dispatchEvent(loader, Event.COMPLETE);
-                };
-                egret_native.readFileAsync(url, promise);
+                __callAsync(onLoadComplete, this);
             }
 
             function download() {
@@ -132,10 +115,30 @@ module egret {
             }
 
             function onLoadComplete() {
-                self.saveVersion(url);
-                var content = egret_native.readFileSync(url);
-                loader.data = content;
-                Event.dispatchEvent(loader, Event.COMPLETE);
+                if (NativeNetContext.__use_asyn) {
+                    //异步读取
+                    readFileAsync();
+                }
+                else {
+                    //同步读取
+                    self.saveVersion(url);
+                    var content = egret_native.readFileSync(url);
+                    loader.data = content;
+                    Event.dispatchEvent(loader, Event.COMPLETE);
+                }
+            }
+
+            function readFileAsync() {
+                var promise = new egret.PromiseObject();
+                promise.onSuccessFunc = function (content) {
+                    self.saveVersion(url);
+                    loader.data = content;
+                    Event.dispatchEvent(loader, Event.COMPLETE);
+                };
+                promise.onErrorFunc = function () {
+                    Event.dispatchEvent(loader, IOErrorEvent.IO_ERROR);
+                };
+                egret_native.readFileAsync(url, promise);
             }
         }
 
@@ -178,8 +181,11 @@ module egret {
 
             function onLoadComplete() {
                 self.saveVersion(url);
+                var nativeAudio:NativeAudio = new NativeAudio();
+                nativeAudio._setAudio(url);
+
                 var sound = new egret.Sound();
-                sound.path = url;
+                sound._setAudio(nativeAudio);
                 loader.data = sound;
                 Event.dispatchEvent(loader, Event.COMPLETE);
             }
@@ -199,12 +205,13 @@ module egret {
                 download();
             }
             else {
-                if (NativeNetContext.__use_asyn) {
-                    createBitmapData();
-                }
-                else {
+                //todo
+                //if (NativeNetContext.__use_asyn) {
+                //    createBitmapData();
+                //}
+                //else {
                     egret.__callAsync(createBitmapData, this);
-                }
+                //}
             }
 
             function createBitmapData() {

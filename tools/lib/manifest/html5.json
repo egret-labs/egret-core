@@ -17,6 +17,7 @@
         "net/HTML5NetContext.ts",
         "interactive/HTML5TouchContext.ts",
         "display/HTML5StageText.ts",
-        "WebAudio.ts"
+        "audio/Html5Audio.ts",
+        "audio/WebAudio.ts"
     ]
 }

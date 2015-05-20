@@ -29,8 +29,6 @@
 	},
 	"egret.ByteArray":
 	{
-		"buffer":"ArrayBuffer",
-		"dataView":"DataView",
 		"endian":"string",
 		"length":"number",
 		"position":"number"
@@ -48,8 +46,6 @@
 		"anchorY":"number",
 		"blendMode":"string",
 		"cacheAsBitmap":"boolean",
-		"colorTransform":"egret.ColorTransform",
-		"filter":"egret.Filter",
 		"height":"number",
 		"implements":["egret.RenderData"],
 		"mask":"egret.Rectangle",
@@ -65,7 +61,6 @@
 		"touchEnabled":"boolean",
 		"visible":"boolean",
 		"width":"number",
-		"worldAlpha":"number",
 		"x":"number",
 		"y":"number"
 	},
@@ -425,9 +420,7 @@
 	},
 	"egret.gui.HScrollBar":
 	{
-		"super":"egret.gui.HSlider",
-		"thumbAlpha":"number",
-		"trackAlpha":"number"
+		"super":"egret.gui.HSlider"
 	},
 	"egret.gui.HSlider":
 	{
@@ -908,9 +901,7 @@
 	},
 	"egret.gui.VScrollBar":
 	{
-		"super":"egret.gui.VSlider",
-		"thumbAlpha":"number",
-		"trackAlpha":"number"
+		"super":"egret.gui.VSlider"
 	},
 	"egret.gui.VSlider":
 	{

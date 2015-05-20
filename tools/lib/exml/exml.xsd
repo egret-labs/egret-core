@@ -148,28 +148,12 @@
     </xs:complexType>
   </xs:element>
   <xs:attributeGroup name="egret.ByteArray">
-    <xs:attribute name="buffer" type="xs:string"/>
-    <xs:attribute name="dataView" type="xs:string"/>
     <xs:attribute name="endian" type="xs:string"/>
     <xs:attribute name="length" type="xs:decimal"/>
     <xs:attribute name="position" type="xs:decimal"/>
   </xs:attributeGroup>
-  <xs:group name="ArrayBuffer">
-    <xs:choice/>
-  </xs:group>
-  <xs:complexType name="ArrayBuffer">
-    <xs:group ref="ArrayBuffer"/>
-  </xs:complexType>
-  <xs:group name="DataView">
-    <xs:choice/>
-  </xs:group>
-  <xs:complexType name="DataView">
-    <xs:group ref="DataView"/>
-  </xs:complexType>
   <xs:group name="ByteArray_attributeElement">
     <xs:choice>
-      <xs:element name="buffer" type="ArrayBuffer"/>
-      <xs:element name="dataView" type="DataView"/>
       <xs:element name="endian" type="string"/>
       <xs:element name="length" type="number"/>
       <xs:element name="position" type="number"/>
@@ -220,8 +204,6 @@
     <xs:attribute name="alpha" type="xs:decimal"/>
     <xs:attribute name="blendMode" type="egret.BlendMode"/>
     <xs:attribute name="cacheAsBitmap" type="xs:boolean"/>
-    <xs:attribute name="colorTransform" type="xs:string"/>
-    <xs:attribute name="filter" type="xs:string"/>
     <xs:attribute name="height" type="xs:string"/>
     <xs:attribute name="mask" type="xs:string"/>
     <xs:attribute name="name" type="xs:string"/>
@@ -235,7 +217,6 @@
     <xs:attribute name="touchEnabled" type="xs:boolean"/>
     <xs:attribute name="visible" type="xs:boolean"/>
     <xs:attribute name="width" type="xs:string"/>
-    <xs:attribute name="worldAlpha" type="xs:decimal"/>
     <xs:attribute name="x" type="xs:decimal"/>
     <xs:attribute name="y" type="xs:decimal"/>
   </xs:attributeGroup>
@@ -247,31 +228,12 @@
   <xs:complexType name="boolean">
     <xs:group ref="boolean"/>
   </xs:complexType>
-  <xs:group name="egret.ColorTransform">
-    <xs:choice>
-      <xs:element ref="ColorTransform"/>
-    </xs:choice>
-  </xs:group>
-  <xs:complexType name="egret.ColorTransform">
-    <xs:group ref="egret.ColorTransform"/>
-  </xs:complexType>
-  <xs:group name="egret.Filter">
-    <xs:choice>
-      <xs:element ref="BlurFilter"/>
-      <xs:element ref="Filter"/>
-    </xs:choice>
-  </xs:group>
-  <xs:complexType name="egret.Filter">
-    <xs:group ref="egret.Filter"/>
-  </xs:complexType>
   <xs:group name="DisplayObject_attributeElement">
     <xs:choice>
       <xs:group ref="EventDispatcher_attributeElement"/>
       <xs:element name="alpha" type="number"/>
       <xs:element name="blendMode" type="string"/>
       <xs:element name="cacheAsBitmap" type="boolean"/>
-      <xs:element name="colorTransform" type="egret.ColorTransform"/>
-      <xs:element name="filter" type="egret.Filter"/>
       <xs:element name="height" type="number"/>
       <xs:element name="mask" type="egret.Rectangle"/>
       <xs:element name="name" type="string"/>
@@ -285,7 +247,6 @@
       <xs:element name="touchEnabled" type="boolean"/>
       <xs:element name="visible" type="boolean"/>
       <xs:element name="width" type="number"/>
-      <xs:element name="worldAlpha" type="number"/>
       <xs:element name="x" type="number"/>
       <xs:element name="y" type="number"/>
     </xs:choice>
@@ -1745,14 +1706,10 @@
   </xs:element>
   <xs:attributeGroup name="egret.gui.HScrollBar">
     <xs:attributeGroup ref="egret.gui.HSlider"/>
-    <xs:attribute name="thumbAlpha" type="xs:decimal"/>
-    <xs:attribute name="trackAlpha" type="xs:decimal"/>
   </xs:attributeGroup>
   <xs:group name="HScrollBar_attributeElement">
     <xs:choice>
       <xs:group ref="HSlider_attributeElement"/>
-      <xs:element name="thumbAlpha" type="number"/>
-      <xs:element name="trackAlpha" type="number"/>
     </xs:choice>
   </xs:group>
   <xs:element name="HScrollBar">
@@ -3488,14 +3445,10 @@
   </xs:element>
   <xs:attributeGroup name="egret.gui.VScrollBar">
     <xs:attributeGroup ref="egret.gui.VSlider"/>
-    <xs:attribute name="thumbAlpha" type="xs:decimal"/>
-    <xs:attribute name="trackAlpha" type="xs:decimal"/>
   </xs:attributeGroup>
   <xs:group name="VScrollBar_attributeElement">
     <xs:choice>
       <xs:group ref="VSlider_attributeElement"/>
-      <xs:element name="thumbAlpha" type="number"/>
-      <xs:element name="trackAlpha" type="number"/>
     </xs:choice>
   </xs:group>
   <xs:element name="VScrollBar">

@@ -39,9 +39,13 @@ module egret.gui {
 			this.selectable = true;
 		}
         private _selectable: boolean = true;
+        /**
+         * @inheritDoc
+         */
         public get selectable() {
             return this._selectable;
         }
+
         public set selectable(value: boolean) {
             this._selectable = value;
         }
@@ -92,10 +96,14 @@ module egret.gui {
 				this.pendingEditable = value;
 			}
 		}
-		
-		/**
-		 * @inheritDoc
-		 */		
+
+        /**
+         * @inheritDoc
+         */
+        public get enabled() {
+            return this._editable;
+        }
+
 		public set enabled(value:boolean){
 			if (value == this._UIC_Props_._enabled)
 				return;
@@ -113,9 +121,6 @@ module egret.gui {
 				this._editable = false;
 			}
 			this.invalidateProperties();
-        }
-        public get enabled() {
-            return this._editable;
         }
 		
 		private _maxChars:number = 0;
@@ -237,7 +242,9 @@ module egret.gui {
 
 		
 		private _contentWidth:number = 0;
-		
+        /**
+         * @inheritDoc
+         */
 		public get contentWidth():number{
 			return this._contentWidth;
 		}
@@ -252,7 +259,9 @@ module egret.gui {
 		}
 		
 		private _contentHeight:number = 0;
-		
+        /**
+         * @inheritDoc
+         */
 		public get contentHeight():number{
 			return this._contentHeight;
 		}

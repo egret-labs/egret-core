@@ -99,15 +99,15 @@ module egret.gui {
             this.invalidateProperties();
         }
 
+        private _stroke:number = 0;
+        private strokeChanged:boolean = false;
+
         /**
          * 表示描边宽度。
          * 0为没有描边。
          * 默认值为 0。
          * @member {number} egret.TextField#stroke
          */
-        private _stroke:number = 0;
-        private strokeChanged:boolean = false;
-
         public get stroke():number {
             return this._stroke;
         }

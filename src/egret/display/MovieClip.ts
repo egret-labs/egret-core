@@ -427,6 +427,7 @@ module egret {
         public get frameRate():number{
             return this.movieClipData.frameRate;
         }
+
         public set frameRate(value:number){
             if(value == this._movieClipData.frameRate){
                 return;

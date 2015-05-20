@@ -250,6 +250,7 @@ module egret {
                         RenderTexture["WebGLCanvas"] = document.createElement("canvas");
                         RenderTexture["WebGLCanvas"]["avaliable"] = true;
                         RenderTexture["WebGLRenderer"] = new egret.WebGLRenderer(RenderTexture["WebGLCanvas"]);
+                        RenderTexture["WebGLRenderer"].setAlpha(1);
                     }
                     self._webglBitmapData = RenderTexture["WebGLCanvas"];
                     self.renderContext = RenderTexture["WebGLRenderer"];

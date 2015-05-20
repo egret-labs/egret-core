@@ -114,6 +114,7 @@ module egret {
         public get mcDataSet():any{
             return this._mcDataSet;
         }
+
         public set mcDataSet(value:any){
             this._mcDataSet = value;
         }
