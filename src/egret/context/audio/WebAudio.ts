@@ -63,13 +63,15 @@ module egret {
          */
         play(type?:string):void {
             if (this.bufferSource) {
-                this.clear();
+                //this.clear();
+                this._removeListeners();
+                this.bufferSource = null;
             }
             var context = this.context;
             var gain = this.gain;
             var bufferSource = context.createBufferSource();
             this.bufferSource = bufferSource;
-            this.initStart();
+            this._addListeners();
             bufferSource.buffer = this.audioBuffer;
             bufferSource.connect(gain);
             gain.connect(context.destination);
@@ -87,13 +89,13 @@ module egret {
         }
 
         private clear():void {
-            this.initEnd();
+            this._removeListeners();
             this.bufferSource.stop(0);
             this.bufferSource.disconnect();
             this.bufferSource = null;
         }
 
-        private initStart():void {
+        private _addListeners():void {
             var self = this;
             for (var i = 0; i < self._listeners.length; i++) {
                 var bin = self._listeners[i];
@@ -101,7 +103,7 @@ module egret {
             }
         }
 
-        private initEnd():void {
+        private _removeListeners():void {
             var self = this;
             for (var i = 0; i < self._listeners.length; i++) {
                 var bin = self._listeners[i];
