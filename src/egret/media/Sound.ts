@@ -81,7 +81,7 @@ module egret {
          * @returns {number}
          */
         public get position():number {
-            return this.audio ? this.audio._getCurrentTime() : 0;
+            return this.audio ? Math.floor(this.audio._getCurrentTime() * 1000) : 0;
         }
 
         /**
