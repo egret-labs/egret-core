@@ -64,6 +64,8 @@ module egret {
         public _play(type?:string):void {
             if (this.bufferSource) {
                 //this.clear();
+
+                this.bufferSource.onended = null;
                 this.removeListeners();
                 this.bufferSource = null;
             }
@@ -75,8 +77,13 @@ module egret {
             bufferSource.buffer = this.audioBuffer;
             bufferSource.connect(gain);
             gain.connect(context.destination);
-            bufferSource.onended = ()=> {
+            bufferSource.onended = (e)=> {
                 this.clear();
+
+                if (this._onEndedCall) {
+                    this._onEndedCall.call(null, e);
+                }
+
                 if (this._loop && !this.paused)
                     this._play();
             };
@@ -89,10 +96,18 @@ module egret {
         }
 
         private clear():void {
-            this.removeListeners();
-            this.bufferSource.stop(0);
-            this.bufferSource.disconnect();
-            this.bufferSource = null;
+            if (this.bufferSource) {
+                this.removeListeners();
+                var sourceNode = this.bufferSource;
+                if (sourceNode.stop) {
+                    sourceNode.stop(0);
+                }
+                else {
+                    sourceNode.noteOff(0);
+                }
+                this.bufferSource.disconnect();
+                this.bufferSource = null;
+            }
         }
 
         private addListeners():void {
@@ -117,18 +132,22 @@ module egret {
          */
         public _pause():void {
             this.paused = true;
-            this.bufferSource.stop(0);
+            this.clear();
         }
-
 
         private _listeners:Array<any> = [];
 
+        private _onEndedCall:Function = null;
         /**
          * 添加事件监听
          * @param type 事件类型
          * @param listener 监听函数
          */
         public _addEventListener(type:string, listener:Function, useCapture:boolean = false):void {
+            if (type == "ended") {
+                this._onEndedCall = listener;
+                return;
+            }
             this._listeners.push({type: type, listener: listener, useCapture: useCapture});
             if (this.bufferSource) {
                 this.bufferSource.addEventListener(type, listener, useCapture);
@@ -141,6 +160,10 @@ module egret {
          * @param listener 监听函数
          */
         public _removeEventListener(type:string, listener:Function, useCapture:boolean = false):void {
+            if (type == "ended") {
+                this._onEndedCall = null;
+                return;
+            }
             var self = this;
             for (var i = 0; i < self._listeners.length; i++) {
                 var bin = self._listeners[i];
@@ -227,7 +250,9 @@ interface AudioBuffer {
 interface AudioBufferSourceNode {
     buffer:any;
     context:any;
+    onended:Function;
     stop(when?:number): void;
+    noteOff(when?:number): void;
     addEventListener(type:string, listener:Function, useCapture?:boolean);
     removeEventListener(type:string, listener:Function, useCapture?:boolean);
     disconnect();

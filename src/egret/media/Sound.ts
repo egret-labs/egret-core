@@ -162,23 +162,32 @@ module egret {
          */
         public addEventListener(type:string, listener:Function, thisObject:any = null):void {
             super.addEventListener(type, listener, thisObject);
+
             var self = this;
+
             var sound = this.audio;
             if (!sound) {
                 return;
             }
-            var func = function () {
-                self.dispatchEvent(new egret.SoundEvent(egret.SoundEvent.SOUND_COMPLETE));
-            };
-            var virtualType = self.getVirtualType(type);
-            for (var i = 0; i < self._listeners.length; i++) {
-                var bin = self._listeners[i];
-                if (bin.listener == listener && bin.thisObject == thisObject && bin.type == virtualType) {
-                    return;
+
+            if (this._eventsMap[type].length == 1) {
+                var func;
+                if (type == egret.SoundEvent.SOUND_COMPLETE) {
+                    func = function (e) {
+                        self.dispatchEvent(new egret.SoundEvent(egret.SoundEvent.SOUND_COMPLETE));
+                    };
                 }
+                else {
+                    func = function (e) {
+                        self.dispatchEvent(e);
+                    };
+                }
+
+                this._listeners.push({type: type, func: func});
+
+                var virtualType = self.getVirtualType(type);
+                this.audio._addEventListener(virtualType, func, false);
             }
-            this._listeners.push({type: virtualType, listener: listener, thisObject: thisObject, func: func});
-            this.audio._addEventListener(virtualType, func, false);
         }
 
         /**
@@ -190,18 +199,23 @@ module egret {
          */
         public removeEventListener(type:string, listener:Function, thisObject:any = null):void {
             super.removeEventListener(type, listener, thisObject);
+
             var self = this;
             var sound = this.audio;
             if (!sound) {
                 return;
             }
-            var virtualType = self.getVirtualType(type);
-            for (var i = 0; i < self._listeners.length; i++) {
-                var bin = self._listeners[i];
-                if (bin.listener == listener && bin.thisObject == thisObject && bin.type == virtualType) {
-                    self._listeners.splice(i, 1);
-                    self.audio._removeEventListener(virtualType, bin.func, false);
-                    break;
+
+            if (!this._eventsMap || !this._eventsMap[type] || this._eventsMap[type].length == 0) {
+                for (var i = 0; i < self._listeners.length; i++) {
+                    var bin = self._listeners[i];
+                    if (bin.type == type) {
+                        self._listeners.splice(i, 1);
+
+                        var virtualType = self.getVirtualType(type);
+                        self.audio._removeEventListener(virtualType, bin.func, false);
+                        break;
+                    }
                 }
             }
         }
