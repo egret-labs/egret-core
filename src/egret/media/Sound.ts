@@ -137,7 +137,7 @@ module egret {
             }
             sound._setCurrentTime(this._pauseTime);
             this._pauseTime = 0;
-            sound._play();
+            sound._play(this.type);
         }
 
         /**
