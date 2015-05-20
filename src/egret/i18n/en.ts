@@ -13,7 +13,7 @@ module egret {
     egret_string_code[1009] = "Set an adaptor pattern that already exist:{0}";
     egret_string_code[1010] = "addEventListener listener function should not be empty";
     egret_string_code[1011] = "BitmapText cannot find the corresponding texture:\"{0}\"";
-    egret_string_code[1012] = "egret.BitmapTextSpriteSheet has been oboseleted，please us egret.BitmapFont to replace。";
+    egret_string_code[1012] = "egret.BitmapTextSpriteSheet has been deprecated，please us egret.BitmapFont to replace。";
     egret_string_code[1013] = "TextField.setFocus is not implemented";
     egret_string_code[1014] = "Ease cannot be instantiated";
     egret_string_code[1015] = "xml not found!";
@@ -31,6 +31,9 @@ module egret {
     egret_string_code[1027] = "DecodingError";
     egret_string_code[1028] = "Called unconfigurated injection rules:{0}。 Please config specified injection rules in the initialization of the project, then call corresponding singleton。";
     egret_string_code[1029] = "Function.prototype.bind - what is trying to be bound is not callable";
+    egret_string_code[1030] = "This API has deprecated";
+    egret_string_code[1031] = "setVolume has deprecated,use this.volume = value instead";
+    egret_string_code[1032] = "getVolume has deprecated,use this.volume instead";
 
     egret_string_code[2000] = "RES.createGroup() passed in non-existed key value in configuration: {0}";
     egret_string_code[2001] = "RES loaded non-existed or empty resource group:\"{0}\"";

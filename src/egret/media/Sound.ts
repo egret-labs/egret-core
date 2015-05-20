@@ -238,7 +238,7 @@ module egret {
          * @param value 值需大于0 小于等于 1
          */
         public setVolume(value:number):void {
-            console.warn("use this.volume = value instead");
+            Logger.warningWithErrorId(1031);
             this.volume = value;
         }
 
@@ -248,7 +248,7 @@ module egret {
          * @returns number
          */
         public getVolume():number {
-            console.warn("use this.volume instead");
+            Logger.warningWithErrorId(1032);
             return this.volume;
         }
 
