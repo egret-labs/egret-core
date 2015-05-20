@@ -52,7 +52,7 @@ module egret {
          * @param loop {boolean} 是否循环播放，默认为false
          */
 
-        play(type?:string):void {
+        public _play(type?:string):void {
             this._type = type;
 
             if (this._type == egret.Sound.MUSIC) {
@@ -64,13 +64,13 @@ module egret {
             }
         }
 
-        private paused = true;
+        private paused:boolean = true;
 
         /**
          * 暂停声音
          * @method egret.Sound#pause
          */
-        public pause():void {
+        public _pause():void {
             this.paused = true;
 
             if (this._type == egret.Sound.MUSIC) {
@@ -90,10 +90,10 @@ module egret {
          * 重新加载声音
          * @method egret.Sound#load
          */
-        public load():void {
+        public _load():void {
         }
 
-        public preload(type:string, callback:Function = null, thisObj:any = null):void {
+        public _preload(type:string, callback:Function = null, thisObj:any = null):void {
             this._type = type;
             if (this._type == egret.Sound.MUSIC) {
                 egret_native.Audio.preloadBackgroundMusic(this._path);
@@ -139,7 +139,7 @@ module egret {
          * @param type 事件类型
          * @param listener 监听函数
          */
-        public addEventListener(type:string, listener:Function, useCapture:boolean = false):void {
+        public _addEventListener(type:string, listener:Function, useCapture:boolean = false):void {
             //this._listeners.push({ type: type, listener: listener, useCapture: useCapture });
             //if (this._audio) {
             //    this._audio.addEventListener(type, listener, useCapture);
@@ -151,7 +151,7 @@ module egret {
          * @param type 事件类型
          * @param listener 监听函数
          */
-        public removeEventListener(type:string, listener:Function, useCapture:boolean = false):void {
+        public _removeEventListener(type:string, listener:Function, useCapture:boolean = false):void {
             //var self = this;
             //for (var i = 0; i < self._listeners.length; i++) {
             //    var bin = self._listeners[i];
@@ -169,35 +169,31 @@ module egret {
          * 获取当前音量值
          * @returns number
          */
-        public get volume():number {
+        public _getVolume():number {
             //return this._audio.volume;
             return 1;
         }
 
-        public set volume(value:number) {
+        public _setVolume(value:number):void {
             //this._audio.volume = Math.max(0, Math.min(value, 1));
         }
 
-        public setLoop(value:boolean):void {
+        public _setLoop(value:boolean):void {
             this._loop = value;
-        }
-
-        public get totalTime():number {
-            return 0;
         }
 
         private _startTime:number = 0;
 
-        public get currentTime():number {
+        public _getCurrentTime():number {
             //return this._audio.currentTime;
             return 0;
         }
 
-        public set currentTime(value:number) {
+        public _setCurrentTime(value:number):void {
             this._startTime = value;
         }
 
-        public destroy():void {
+        public _destroy():void {
             if (this._type == egret.Sound.EFFECT) {
                 egret_native.Audio.unloadEffect(this._path);
             }

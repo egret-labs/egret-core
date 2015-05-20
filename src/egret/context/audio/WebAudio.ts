@@ -61,24 +61,24 @@ module egret {
          * @method egret.Sound#play
          * @param loop {boolean} 是否循环播放，默认为false
          */
-        play(type?:string):void {
+        public _play(type?:string):void {
             if (this.bufferSource) {
                 //this.clear();
-                this._removeListeners();
+                this.removeListeners();
                 this.bufferSource = null;
             }
             var context = this.context;
             var gain = this.gain;
             var bufferSource = context.createBufferSource();
             this.bufferSource = bufferSource;
-            this._addListeners();
+            this.addListeners();
             bufferSource.buffer = this.audioBuffer;
             bufferSource.connect(gain);
             gain.connect(context.destination);
             bufferSource.onended = ()=> {
                 this.clear();
                 if (this._loop && !this.paused)
-                    this.play();
+                    this._play();
             };
 
             this.paused = false;
@@ -89,13 +89,13 @@ module egret {
         }
 
         private clear():void {
-            this._removeListeners();
+            this.removeListeners();
             this.bufferSource.stop(0);
             this.bufferSource.disconnect();
             this.bufferSource = null;
         }
 
-        private _addListeners():void {
+        private addListeners():void {
             var self = this;
             for (var i = 0; i < self._listeners.length; i++) {
                 var bin = self._listeners[i];
@@ -103,7 +103,7 @@ module egret {
             }
         }
 
-        private _removeListeners():void {
+        private removeListeners():void {
             var self = this;
             for (var i = 0; i < self._listeners.length; i++) {
                 var bin = self._listeners[i];
@@ -115,7 +115,7 @@ module egret {
          * 暂停声音
          * @method egret.Sound#pause
          */
-        public pause():void {
+        public _pause():void {
             this.paused = true;
             this.bufferSource.stop(0);
         }
@@ -128,7 +128,7 @@ module egret {
          * @param type 事件类型
          * @param listener 监听函数
          */
-        public addEventListener(type:string, listener:Function, useCapture:boolean = false):void {
+        public _addEventListener(type:string, listener:Function, useCapture:boolean = false):void {
             this._listeners.push({type: type, listener: listener, useCapture: useCapture});
             if (this.bufferSource) {
                 this.bufferSource.addEventListener(type, listener, useCapture);
@@ -140,7 +140,7 @@ module egret {
          * @param type 事件类型
          * @param listener 监听函数
          */
-        public removeEventListener(type:string, listener:Function, useCapture:boolean = false):void {
+        public _removeEventListener(type:string, listener:Function, useCapture:boolean = false):void {
             var self = this;
             for (var i = 0; i < self._listeners.length; i++) {
                 var bin = self._listeners[i];
@@ -158,7 +158,7 @@ module egret {
          * 重新加载声音
          * @method egret.Sound#load
          */
-        public load():void {
+        public _load():void {
             this._setArrayBuffer(this._arrayBuffer, null);
         }
 
@@ -175,7 +175,7 @@ module egret {
             });
         }
 
-        public preload(type:string, callback:Function = null, thisObj:any = null):void {
+        public _preload(type:string, callback:Function = null, thisObj:any = null):void {
             egret.callLater(callback, thisObj);
         }
 
@@ -183,39 +183,33 @@ module egret {
          * 获取当前音量值
          * @returns number
          */
-        public get volume():number {
+        public _getVolume():number {
             return this.gain.gain.value;
         }
 
-        public set volume(value:number) {
+        public _setVolume(value:number) {
             this.gain.gain.value = value;
         }
 
-        public setLoop(value:boolean):void {
+        public _setLoop(value:boolean):void {
             this._loop = value;
-        }
-
-        public get totalTime():number {
-            if (this.bufferSource) {
-                return this.bufferSource.buffer.duration;
-            }
-            return 0;
         }
 
         private _startTime:number = 0;
         private _currentTime:number = 0;
-        public get currentTime():number {
+
+        public _getCurrentTime():number {
             if (this.bufferSource) {
                 return (Date.now() - this._startTime) / 1000;
             }
             return 0;
         }
 
-        public set currentTime(value:number) {
+        public _setCurrentTime(value:number) {
             this._currentTime = value;
         }
 
-        public destroy():void {
+        public _destroy():void {
 
         }
 

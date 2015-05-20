@@ -31,20 +31,23 @@
 //////////////////////////////////////////////////////////////////////////////////////
 module egret {
     export interface IAudio {
-        currentTime:number;
-        volume:number;
+        _setCurrentTime(value:number):void;
+        _getCurrentTime():number;
 
-        setLoop(value:boolean):void;
+        _setVolume(value:number):void;
+        _getVolume():number;
 
-        play(type?:string):void;
-        pause():void;
-        load():void;
+        _setLoop(value:boolean):void;
 
-        preload(type:string, callback?:Function, thisObj?:any):void;
+        _play(type?:string):void;
+        _pause():void;
+        _load():void;
 
-        addEventListener(type:string, listener:Function, useCapture?:boolean):void;
-        removeEventListener(type:string, listener:Function, useCapture?:boolean):void;
+        _preload(type:string, callback?:Function, thisObj?:any):void;
 
-        destroy();
+        _addEventListener(type:string, listener:Function, useCapture?:boolean):void;
+        _removeEventListener(type:string, listener:Function, useCapture?:boolean):void;
+
+        _destroy():void;
     }
 }
