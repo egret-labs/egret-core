@@ -27,6 +27,7 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 module egret {
+
     /**
      * @private
      */
@@ -44,6 +45,29 @@ module egret {
         private gain;
         private bufferSource:AudioBufferSourceNode = null;
         private paused = true;
+
+        private static decodeArr:Array<any> = [];
+        private static isDecoding:boolean = false;
+        static decodeAudios() {
+            if (WebAudio.decodeArr.length <= 0) {
+                return;
+            }
+            if (WebAudio.isDecoding) {
+                return;
+            }
+            WebAudio.isDecoding = true;
+            var decodeInfo = WebAudio.decodeArr.shift();
+
+            WebAudio.ctx.decodeAudioData(decodeInfo["buffer"], function (audioBuffer) {
+                decodeInfo["self"].audioBuffer = audioBuffer;
+
+                if (decodeInfo["callback"]) {
+                    decodeInfo["callback"]();
+                }
+                WebAudio.isDecoding = false;
+                WebAudio.decodeAudios();
+            });
+        }
 
         constructor() {
             if (WebAudio.ctx["createGain"]) {
@@ -189,13 +213,8 @@ module egret {
             var self = this;
             this._arrayBuffer = buffer;
 
-            this.context.decodeAudioData(buffer, function (audioBuffer) {
-                self.audioBuffer = audioBuffer;
-
-                if (callback) {
-                    callback();
-                }
-            });
+            WebAudio.decodeArr.push({"buffer" : buffer, "callback" : callback, "self":self});
+            WebAudio.decodeAudios();
         }
 
         public _preload(type:string, callback:Function = null, thisObj:any = null):void {
