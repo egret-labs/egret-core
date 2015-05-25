@@ -315,24 +315,26 @@ module egret {
             }
             var list = Texture._bitmapCallbackMap[url];
             if (list && list.length) {
+                delete Texture._bitmapCallbackMap[url];
+
                 var l = list.length;
                 for (var i:number = 0; i < l; i++) {
                     var callback = list[i];
                     callback(0, bitmapData);
                 }
-                delete Texture._bitmapCallbackMap[url];
             }
         }
 
         public static _onError(url, bitmapData):void {
             var list = Texture._bitmapCallbackMap[url];
             if (list && list.length) {
+                delete Texture._bitmapCallbackMap[url];
+
                 var l = list.length;
                 for (var i:number = 0; i < l; i++) {
                     var callback = list[i];
                     callback(1, bitmapData);
                 }
-                delete Texture._bitmapCallbackMap[url];
             }
         }
 

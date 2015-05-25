@@ -160,7 +160,7 @@ module egret {
          * @param listener 监听函数
          * @param thisObj 侦听函数绑定的this对象
          */
-        public addEventListener(type:string, listener:Function, thisObject:any = null):void {
+        public addEventListener(type:string, listener:Function, thisObject:any):void {
             super.addEventListener(type, listener, thisObject);
 
             var self = this;
@@ -174,12 +174,12 @@ module egret {
                 var func;
                 if (type == egret.SoundEvent.SOUND_COMPLETE) {
                     func = function (e) {
-                        self.dispatchEvent(new egret.SoundEvent(egret.SoundEvent.SOUND_COMPLETE));
+                        egret.Event._dispatchByTarget(egret.SoundEvent, self, egret.SoundEvent.SOUND_COMPLETE);
                     };
                 }
                 else {
                     func = function (e) {
-                        self.dispatchEvent(e);
+                        egret.Event._dispatchByTarget(egret.Event, self, e.type);
                     };
                 }
 
@@ -197,7 +197,7 @@ module egret {
          * @param listener 监听函数
          * @param thisObj 侦听函数绑定的this对象
          */
-        public removeEventListener(type:string, listener:Function, thisObject:any = null):void {
+        public removeEventListener(type:string, listener:Function, thisObject:any):void {
             super.removeEventListener(type, listener, thisObject);
 
             var self = this;

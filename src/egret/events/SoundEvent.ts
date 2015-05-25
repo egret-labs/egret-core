@@ -42,12 +42,6 @@ module egret {
         public static SOUND_COMPLETE:string = "soundComplete";
 
         /**
-         * 失去焦点
-         * @constant {string} egret.FocusEvent.FOCUS_OUT
-         */
-        public static FOCUS_OUT:string = "focusOut";
-
-        /**
          * 创建一个 egret.SoundEvent 对象
          * @param type {string} 事件类型
          * @param bubbles {boolean}
