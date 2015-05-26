@@ -80,8 +80,6 @@ function build(properties, callback, keepGeneratedTypescript) {
             //解耦的需要重新生成 .d.json文件
             var detailCfg = properties.getModuleDetailConfig(moduleName);
 
-            file.save("gui111.d.s.json", JSON.stringify(detailCfg["file_list"], null, 4));
-
             var array = [];
             var list = detailCfg["file_list"].filter(function (item) {
                 var item = path.join(detailCfg.prefix, detailCfg.source, item).replace(/\\\\|\\/g, "/");
@@ -100,9 +98,6 @@ function build(properties, callback, keepGeneratedTypescript) {
 
             var output = moduleConfig.output || moduleConfig.name;
             file.save(path.join(projectProperties.getProjectPath(), "libs", output, moduleName + ".d.json"), JSON.stringify({"file_list": list}, null, "\t"));
-
-            file.save(moduleName + ".d.s.json", JSON.stringify(array, null, 4));
-            file.save("moduleReferenceList.d.s.json", JSON.stringify(moduleReferenceList, null, 4));
         }
     }
 

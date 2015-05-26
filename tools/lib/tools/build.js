@@ -42,6 +42,13 @@ function buildPlatform(needCompileEngine, keepGeneratedTypescript) {
         task.push(function (callback) {
             buildModule.compileAllModules(projectProperties, callback);
         });
+
+        task.push(function (callback) {
+            var referenceInfo = projectProperties.getModuleReferenceInfo();
+            var text = JSON.stringify(referenceInfo);
+            file.save(file.joinPath(projectProperties.getProjectPath(), "libs/module_reference.json"), text);
+            callback();
+        });
     }
 
     var moduleReferenceList = null;

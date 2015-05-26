@@ -203,6 +203,26 @@ function getModuleDetailConfig(name) {
 }
 
 
+function getModuleReferenceInfo() {
+    var fileList = [];
+    var modules = getAllModules();
+    modules.map(function (moduleConfig) {
+        var moduleConfig = getModuleConfig(moduleConfig["name"]);
+        moduleConfig.file_list.map(function (item) {
+            var tsFile = file.joinPath(moduleConfig.prefix, moduleConfig.source, item);
+            var ext = file.getExtension(tsFile).toLowerCase();
+            if (ext == "ts" && item.indexOf(".d.ts") == -1) {
+                fileList.push(tsFile);
+            }
+        })
+    });
+    var create_manifest = require("../tools/create_manifest.js");
+    var referenceInfo = create_manifest.getModuleReferenceInfo(fileList);
+    return referenceInfo;
+}
+
+exports.getModuleReferenceInfo = getModuleReferenceInfo;
+
 
 exports.getModuleDetailConfig = getModuleDetailConfig;
 

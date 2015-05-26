@@ -81,11 +81,10 @@ function generateGameFileList(projectPath, sourcePath, projectProperties) {
             }
         }
         else {
-            referenceInfo = getModuleReferenceInfo(projectProperties);
+            referenceInfo = projectProperties.getModuleReferenceInfo();
         }
         manifest = create_manifest.create(srcPath, false, referenceInfo);
         moduleReferenceList = create_manifest.getModuleReferenceList();
-
     }
 
 
@@ -120,24 +119,6 @@ function generateGameFileList(projectPath, sourcePath, projectProperties) {
     file.save(path.join(projectPath, "bin-debug/src/game_file_list.js"), fileListText);
     return manifest;
 }
-
-function getModuleReferenceInfo(projectProperties) {
-    var fileList = [];
-    var modules = projectProperties.getAllModules();
-    modules.map(function (moduleConfig) {
-        var moduleConfig = projectProperties.getModuleConfig(moduleConfig["name"]);
-        moduleConfig.file_list.map(function (item) {
-            var tsFile = file.joinPath(moduleConfig.prefix, moduleConfig.source, item);
-            var ext = file.getExtension(tsFile).toLowerCase();
-            if (ext == "ts" && item.indexOf(".d.ts") == -1) {
-                fileList.push(tsFile);
-            }
-        })
-    });
-    var referenceInfo = create_manifest.getModuleReferenceInfo(fileList);
-    return referenceInfo;
-}
-
 
 
 exports.getModuleReferenceList = function() {
