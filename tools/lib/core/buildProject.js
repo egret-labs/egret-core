@@ -71,6 +71,37 @@ function build(properties, callback, keepGeneratedTypescript) {
         moduleReferenceList = generateList.getModuleReferenceList();
     }
 
+    //重新对模块文件进行处理
+    var moduleList = projectProperties.getAllModules();
+    for (var i = 0; i < moduleList.length; i++) {
+        var moduleName = moduleList[i]["name"];
+        var moduleConfig = projectProperties.getModuleConfig(moduleName);
+        if (moduleConfig["decouple"] != null && (moduleConfig["decouple"] == "true" || moduleConfig["decouple"] == true)) {
+            //解耦的需要重新生成 .d.json文件
+            var detailCfg = properties.getModuleDetailConfig(moduleName);
+
+            var array = [];
+            var list = detailCfg["file_list"].filter(function (item) {
+                var item = path.join(detailCfg.prefix, detailCfg.source, item).replace(/\\\\|\\/g, "/");
+                array.push(item);
+
+                if (item.indexOf(".js") >= 0) {
+                    return true;
+                }
+
+                if (moduleReferenceList.indexOf(item) >= 0) {
+                    return true;
+                }
+
+                return false;
+            });
+
+            var output = moduleConfig.output || moduleConfig.name;
+            file.save(path.join(projectProperties.getProjectPath(), "libs", output, moduleName + ".d.json"), JSON.stringify({"file_list": list}, null, "\t"));
+        }
+    }
+
+
     globals.debugLog(1107, (Date.now() - saoTime) / 1000);
 
     async.series([function (tempCallback) {
@@ -81,7 +112,7 @@ function build(properties, callback, keepGeneratedTypescript) {
         );
 
     }, function (tempCallback) {
-        globals.debugLog(1108, (Date.now() - time) / 1000);
+        globals.log2(1108, (Date.now() - time) / 1000);
         tempCallback();
     }
     ], callback);
