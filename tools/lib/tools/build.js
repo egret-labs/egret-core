@@ -45,7 +45,7 @@ function buildPlatform(needCompileEngine, keepGeneratedTypescript) {
 
         task.push(function (callback) {
             var referenceInfo = projectProperties.getModuleReferenceInfo();
-            var text = JSON.stringify(referenceInfo);
+            var text = JSON.stringify(referenceInfo, null, "\t");
             file.save(file.joinPath(projectProperties.getProjectPath(), "libs/module_reference.json"), text);
             callback();
         });
