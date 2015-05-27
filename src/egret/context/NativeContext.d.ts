@@ -206,4 +206,32 @@ declare module egret_native {
 
         end();
     }
+
+    module rastergl {
+        function arc(x:number, y:number, radius:number, startAngle:number, endAngle:number, anticlockwise?:boolean): void;
+        function quadraticCurveTo(cpx:number, cpy:number, x:number, y:number): void;
+        function lineTo(x:number, y:number): void;
+        function fill(fillRule?:string): void;
+        function closePath(): void;
+        function rect(x:number, y:number, w:number, h:number): void;
+        function moveTo(x:number, y:number): void;
+        function fillRect(x:number, y:number, w:number, h:number): void;
+        function bezierCurveTo(cp1x:number, cp1y:number, cp2x:number, cp2y:number, x:number, y:number): void;
+        function stroke(): void;
+        function strokeRect(x:number, y:number, w:number, h:number): void;
+        function beginPath(): void;
+        function arcTo(x1:number, y1:number, x2:number, y2:number, radius:number): void;
+
+        function transform(m11:number, m12:number, m21:number, m22:number, dx:number, dy:number): void;
+        function translate(x:number, y:number): void;
+        function scale(x:number, y:number): void;
+        function rotate(angle:number): void;
+
+        function save(): void;
+        function restore(): void;
+
+        export var lineWidth:number;
+        export var strokeStyle: any;
+        export var fillStyle: any;
+    }
 }
