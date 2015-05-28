@@ -1,0 +1,9 @@
+{
+    "name": "version_old",
+    "dependence": ["core","html5","native"],
+    "output": "core/extension/oldVersion",
+    "source": "src/extension/oldVersion",
+    "file_list": [
+        "NativeVersionController.ts"
+    ]
+}

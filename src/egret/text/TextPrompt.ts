@@ -28,21 +28,52 @@
 //////////////////////////////////////////////////////////////////////////////////////
 
 module egret {
+
     /**
      * @private
      */
-    export interface IVersionController {
-        fetchVersion():void;
+    export class TextPrompt extends TextField {
 
-        checkIsNewVersion(url:string):boolean;
-        saveVersion(url:string):void;
+        constructor() {
+            super();
 
-        /**
-         * 获取所有有变化的文件
-         * @returns {Array<string>}
-         */
-        getChangeList():Array<string>;
+            this.touchEnabled = true;
+        }
 
-        getVirtualUrl(url:string):string;
+        public _onRemoveFromStage():void {
+            if (egret.MainContext.deviceType == egret.MainContext.RUNTIME_NATIVE) {
+                super._onRemoveFromStage();
+                return;
+            }
+
+            DisplayObjectContainer.__EVENT__REMOVE_FROM_STAGE_LIST.push(this);
+            this._removePromptEvent();
+        }
+
+        public _onAddToStage():void {
+            if (egret.MainContext.deviceType == egret.MainContext.RUNTIME_NATIVE) {
+                super._onAddToStage();
+                return;
+            }
+
+            this._DO_Props_._stage = MainContext.instance.stage;
+            DisplayObjectContainer.__EVENT__ADD_TO_STAGE_LIST.push(this);
+            this._addPromptEvent();
+        }
+
+        //增加点击事件
+        private _addPromptEvent():void {
+            this.addEventListener(egret.TouchEvent.TOUCH_TAP, this.onPrompTapHandler, this);
+        }
+
+        //释放点击事件
+        private _removePromptEvent():void {
+            this.removeEventListener(egret.TouchEvent.TOUCH_TAP, this.onPrompTapHandler, this);
+        }
+
+        //处理富文本中有href的
+        private onPrompTapHandler(e:egret.TouchEvent):void {
+            this.text = prompt("", this.text);
+        }
     }
 }

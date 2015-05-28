@@ -32,7 +32,8 @@ var upgradeConfigArr = [
     {"v" : "1.6.2", "func":upgradeTo_1_6_2},
     {"v" : "1.7.0", "func":upgradeTo_1_7_0},
     {"v" : "1.7.1", "func":upgradeTo_1_7_1},
-    {"v" : "1.7.2", "func":upgradeTo_1_7_2}
+    {"v" : "1.7.2", "func":upgradeTo_1_7_2},
+    {"v" : "1.7.3", "func":upgradeTo_1_7_3}
 ];
 
 var currDir;
@@ -398,11 +399,54 @@ function upgradeTo_1_7_1(){
     projectConfig.save();
 }
 
-function upgradeTo_1_7_2(){
+function upgradeTo_1_7_2() {
     globals.log(1704, "1.7.2");
 
     projectConfig.init(currDir);
     projectConfig.data.egret_version = "1.7.2";
+    projectConfig.save();
+}
+
+function upgradeTo_1_7_3(){
+    globals.log(1704, "1.7.3");
+
+    var projectDir = currDir;
+    //更新egretProperties.json， 将版本控制变成一个单独的模块，并且将新的版本控制作为默认模块
+    try {
+        var properties = JSON.parse(file.read(path.join(projectDir, "egretProperties.json")));
+
+        var hasRes = false;
+        for (var key in properties.modules) {
+            var module = properties.modules[key];
+            if (module.name == "version" && !module.path) {
+                hasRes = true;
+                break;
+            }
+            else if (module.name == "version_old" && !module.path) {
+                hasRes = true;
+                break;
+            }
+        }
+        if (!hasRes) {
+            properties.modules.splice(1, 0, {"name" : "version"});
+        }
+        file.save(path.join(projectDir, "egretProperties.json"), JSON.stringify(properties, null, "\t"));
+    }
+    catch (e) {
+
+    }
+
+    //修改native_require.js
+    var native_require_path = path.join(currDir, "launcher", "native_require.js");
+    if(file.exists(native_require_path)){
+        var fileContent = file.read(native_require_path);
+        fileContent = fileContent.replace(/var(\s)+ctr(\s)*=(\s)*egret.MainContext.instance.netContext._versionCtr.*/,"//版本控制自动修改 请勿更改\n    //This variable is used to load the file judgement, please do not change it\n    var egretNeedVersionCtr = false;\n    if (!egretNeedVersionCtr) {\n        completeCall();\n        return;\n    }\n\n    var ctr = new egret.NativeVersionController();\n    egret.MainContext.instance.netContext.initVersion(ctr);\n");
+        file.save(native_require_path, fileContent);
+    }
+
+
+    projectConfig.init(currDir);
+    projectConfig.data.egret_version = "1.7.3";
     projectConfig.save();
 }
 

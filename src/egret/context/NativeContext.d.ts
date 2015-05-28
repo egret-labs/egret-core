@@ -206,4 +206,9 @@ declare module egret_native {
 
         end();
     }
+
+    module Game {
+        function listResource(root, promise);
+        function listUpdate(root, promise);
+    }
 }

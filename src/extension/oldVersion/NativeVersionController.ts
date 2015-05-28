@@ -30,7 +30,7 @@ module egret {
     /**
      * @private
      */
-    export class VersionController extends egret.EventDispatcher implements IVersionController {
+    export class NativeVersionController extends egret.EventDispatcher implements IVersionController {
 
         public constructor() {
             super();
@@ -299,9 +299,9 @@ module egret {
 
         /**
          * 获取所有有变化的文件
-         * @returns {Array<any>}
+         * @returns {Array<string>}
          */
-        public getChangeList():Array<any> {
+        public getChangeList():Array<string> {
             if (!this.baseVersionData) {
                 return [];
             }
@@ -321,14 +321,6 @@ module egret {
                     changeDatas[key] = {"url": key, "size": this.baseVersionData[key]["s"]};
                 }
             }
-
-            //for (var key in this.localVersionData) {
-            //    if (changeDatas[key] == null) {//不在将要下载的下载列表
-            //        if (!egret_native.isRecordExists(key) && !egret_native.isFileExists(key)) {//没有下载过这个文件
-            //            changeDatas[key] = {"url": key, "size": this.localVersionData[key]["s"]};
-            //        }
-            //    }
-            //}
 
             var list:Array<any> = [];
             for (var key in changeDatas) {
@@ -384,6 +376,10 @@ module egret {
             if (change) {
                 this.save(this.localVersionDataPath, JSON.stringify(this.localVersionData));
             }
+        }
+
+        public getVirtualUrl(url:string):string {
+            return url;
         }
     }
 }
