@@ -8,7 +8,6 @@
         "renderer/NativeRendererContext.ts",
         "interactive/NativeTouchContext.ts",
         "net/NativeNetContext.ts",
-        "net/IVersionController.ts",
         "NativeContext.d.ts",
         "display/NativeStageText.ts",
         "net/NativeResourceLoader.ts",

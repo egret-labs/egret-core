@@ -1,6 +1,6 @@
 {
     "name": "version_old",
-    "dependence": ["core","html5","native"],
+    "dependence": ["core","native"],
     "output": "core/extension/oldVersion",
     "source": "src/extension/oldVersion",
     "file_list": [
