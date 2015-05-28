@@ -15,23 +15,23 @@ var upgradeConfigArr = [
     {"v" : "1.0.3", "func":upgradeTo_1_0_3},
     {"v" : "1.0.4", "func":upgradeTo_1_0_4},
     {"v" : "1.0.5", "func":upgradeTo_1_0_5},
-    {"v" : "1.0.6", "func":upgradeTo_1_0_6},
+    //{"v" : "1.0.6", "func":upgradeTo_1_0_6},
     {"v" : "1.1.0", "func":upgradeTo_1_1_0},
-    {"v" : "1.1.1", "func":upgradeTo_1_1_1},
-    {"v" : "1.1.2", "func":upgradeTo_1_1_2},
-    {"v" : "1.1.3", "func":upgradeTo_1_1_3},
-    {"v" : "1.1.4", "func":upgradeTo_1_1_4},
+    //{"v" : "1.1.1", "func":upgradeTo_1_1_1},
+    //{"v" : "1.1.2", "func":upgradeTo_1_1_2},
+    //{"v" : "1.1.3", "func":upgradeTo_1_1_3},
+    //{"v" : "1.1.4", "func":upgradeTo_1_1_4},
     {"v" : "1.5.0", "func":upgradeTo_1_5_0},
     {"v" : "1.5.1", "func":upgradeTo_1_5_1},
     {"v" : "1.5.2", "func":upgradeTo_1_5_2},
-    {"v" : "1.5.3", "func":upgradeTo_1_5_3},
-    {"v" : "1.5.4", "func":upgradeTo_1_5_4},
+    //{"v" : "1.5.3", "func":upgradeTo_1_5_3},
+    //{"v" : "1.5.4", "func":upgradeTo_1_5_4},
     {"v" : "1.5.5", "func":upgradeTo_1_5_5},
-    {"v" : "1.6.0", "func":upgradeTo_1_6_0},
-    {"v" : "1.6.1", "func":upgradeTo_1_6_1},
-    {"v" : "1.6.2", "func":upgradeTo_1_6_2},
-    {"v" : "1.7.0", "func":upgradeTo_1_7_0},
-    {"v" : "1.7.1", "func":upgradeTo_1_7_1},
+    //{"v" : "1.6.0", "func":upgradeTo_1_6_0},
+    //{"v" : "1.6.1", "func":upgradeTo_1_6_1},
+    //{"v" : "1.6.2", "func":upgradeTo_1_6_2},
+    //{"v" : "1.7.0", "func":upgradeTo_1_7_0},
+    //{"v" : "1.7.1", "func":upgradeTo_1_7_1},
     {"v" : "1.7.2", "func":upgradeTo_1_7_2},
     {"v" : "1.7.3", "func":upgradeTo_1_7_3}
 ];
@@ -125,12 +125,6 @@ function upgradeTo_1_0_5() {
     projectConfig.save();
 }
 
-function upgradeTo_1_0_6(){
-    projectConfig.init(currDir);
-    projectConfig.data.egret_version = "1.0.6";
-    projectConfig.save();
-}
-
 function upgradeTo_1_1_0() {
     globals.log(1704, "1.1.0");
 
@@ -206,34 +200,6 @@ function upgradeTo_1_1_0() {
     open("https://github.com/egret-labs/egret-core/wiki/Egret_Upgrade/upgrade/index.html");
 
     globals.warn(1703);
-}
-
-function upgradeTo_1_1_1(){
-    globals.log(1704, "1.1.1");
-    projectConfig.init(currDir);
-    projectConfig.data.egret_version = "1.1.1";
-    projectConfig.save();
-}
-
-function upgradeTo_1_1_2(){
-    globals.log(1704, "1.1.2");
-    projectConfig.init(currDir);
-    projectConfig.data.egret_version = "1.1.2";
-    projectConfig.save();
-}
-
-function upgradeTo_1_1_3(){
-    globals.log(1704, "1.1.3");
-    projectConfig.init(currDir);
-    projectConfig.data.egret_version = "1.1.3";
-    projectConfig.save();
-}
-
-function upgradeTo_1_1_4(){
-    globals.log(1704, "1.1.4");
-    projectConfig.init(currDir);
-    projectConfig.data.egret_version = "1.1.4";
-    projectConfig.save();
 }
 
 function upgradeTo_1_5_0(){
@@ -313,22 +279,6 @@ function upgradeTo_1_5_2(){
     projectConfig.save();
 }
 
-function upgradeTo_1_5_3(){
-    globals.log(1704, "1.5.3");
-
-    projectConfig.init(currDir);
-    projectConfig.data.egret_version = "1.5.3";
-    projectConfig.save();
-}
-
-function upgradeTo_1_5_4(){
-    globals.log(1704, "1.5.4");
-
-    projectConfig.init(currDir);
-    projectConfig.data.egret_version = "1.5.4";
-    projectConfig.save();
-}
-
 function upgradeTo_1_5_5(){
     globals.log(1704, "1.5.5");
 
@@ -356,46 +306,6 @@ function upgradeTo_1_5_5(){
 
     projectConfig.init(currDir);
     projectConfig.data.egret_version = "1.5.5";
-    projectConfig.save();
-}
-
-function upgradeTo_1_6_0(){
-    globals.log(1704, "1.6.0");
-
-    projectConfig.init(currDir);
-    projectConfig.data.egret_version = "1.6.0";
-    projectConfig.save();
-}
-
-function upgradeTo_1_6_1(){
-    globals.log(1704, "1.6.1");
-
-    projectConfig.init(currDir);
-    projectConfig.data.egret_version = "1.6.1";
-    projectConfig.save();
-}
-
-function upgradeTo_1_6_2(){
-    globals.log(1704, "1.6.2");
-
-    projectConfig.init(currDir);
-    projectConfig.data.egret_version = "1.6.2";
-    projectConfig.save();
-}
-
-function upgradeTo_1_7_0(){
-    globals.log(1704, "1.7.0");
-
-    projectConfig.init(currDir);
-    projectConfig.data.egret_version = "1.7.0";
-    projectConfig.save();
-}
-
-function upgradeTo_1_7_1(){
-    globals.log(1704, "1.7.1");
-
-    projectConfig.init(currDir);
-    projectConfig.data.egret_version = "1.7.1";
     projectConfig.save();
 }
 
