@@ -428,7 +428,7 @@ function upgradeTo_1_7_3(){
             }
         }
         if (!hasRes) {
-            properties.modules.splice(1, 0, {"name" : "version"});
+            properties.modules.splice(1, 0, {"name" : "version_old"});
         }
         file.save(path.join(projectDir, "egretProperties.json"), JSON.stringify(properties, null, "\t"));
     }
