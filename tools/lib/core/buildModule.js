@@ -54,7 +54,7 @@ function compileModule(callback, moduleName) {
         function (callback) {
             globals.debugLog(1111, moduleName);
             var tempTime = Date.now();
-            var cmd = sourcemap + tsList.join(" ") + " -t ES5 --outDir " + globals.addQuotes(output);
+            var cmd = sourcemap + tsList.join(" ") + "-d -t ES5 --outDir " + globals.addQuotes(output);
             typeScriptCompiler.compile(callback, cmd, projectProperties.getTscLibUrl());
             globals.debugLog(1112, (Date.now() - tempTime) / 1000);
         },
@@ -62,9 +62,44 @@ function compileModule(callback, moduleName) {
         function (callback) {
             globals.debugLog(1113, moduleName);
             var tempTime = Date.now();
-            var cmd = sourcemap + tsList.join(" ") + " -d -t ES5 --out " + globals.addQuotes(path.join(output, moduleName + ".d.ts"));
-            typeScriptCompiler.compile(callback, cmd, projectProperties.getTscLibUrl());
+
+            //获取源文件地址
+            var tempList = moduleConfig.file_list.concat();
+            //写入语言包文件
+            if(moduleName == "core") {
+                tempList.unshift("egret/i18n/" + globals.getLanguageInfo() + ".ts");
+            }
+
+            var str = "";
+            tempList.map(function (item) {
+                if (item.indexOf(".js") >= 0) {
+                    return;
+                }
+                else {
+                    var fpath, fcontent;
+                    if (item.indexOf(".d.ts") >= 0) {
+                        fpath = path.join(moduleConfig.prefix, moduleConfig.source, item);
+                        fcontent = file.read(fpath);
+                        str += fcontent + "\n";
+                    }
+                    else {
+                        fpath = path.join(output, item).replace(".ts", ".d.ts");
+                        fcontent = file.read(fpath);
+                        str += fcontent + "\n";
+                        file.remove(fpath);
+                    }
+                }
+                return path.join(output, item);
+            });
+
+            file.save(path.join(output, moduleName + ".d.ts"), str);
             globals.debugLog(1112, (Date.now() - tempTime) / 1000);
+            callback();
+
+            //var tempTime = Date.now();
+            //var cmd = sourcemap + tsList.join(" ") + " -d -t ES5 --out " + globals.addQuotes(path.join(output, moduleName + ".j.d.ts"));
+            //typeScriptCompiler.compile(callback, cmd, projectProperties.getTscLibUrl());
+            //globals.debugLog(1112, (Date.now() - tempTime) / 1000);
         },
 
         function (callback) {
@@ -72,15 +107,11 @@ function compileModule(callback, moduleName) {
             var tempTime = Date.now();
             var jsList = moduleConfig.file_list.concat();
 
-            var dtsStr = "";
             for (var i = 0; i < jsList.length; i++) {
                 var item = jsList[i];
 
                 var filePath = path.join(moduleConfig.prefix, moduleConfig.source, item);
                 if (item.indexOf(".d.ts") > -1) {
-                    var str = file.read(filePath);
-                    dtsStr += "\n" + str;
-
                     jsList.splice(i, 1);
                     i--;
                 }
@@ -100,12 +131,6 @@ function compileModule(callback, moduleName) {
                 }
             }
 
-            if (dtsStr != "") {//有其他的ts文件需要合并
-                var moduleTsPath = path.join(output, moduleName + ".d.ts");
-                var modulets = file.read(moduleTsPath);
-                modulets += dtsStr;
-                file.save(moduleTsPath, modulets);
-            }
             file.save(path.join(output, moduleName + ".d.json"), JSON.stringify({"file_list": jsList}, null, "\t"));
 
             globals.debugLog(1112, (Date.now() - tempTime) / 1000);

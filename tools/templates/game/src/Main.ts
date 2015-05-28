@@ -100,14 +100,13 @@ class Main extends egret.DisplayObjectContainer {
         }
     }
 
-    private textContainer:egret.Sprite;
+    private textfield:egret.TextField;
 
     /**
      * 创建游戏场景
      * Create a game scene
      */
     private createGameScene():void {
-
         var sky:egret.Bitmap = this.createBitmapByName("bgImage");
         this.addChild(sky);
         var stageW:number = this.stage.stageWidth;
@@ -141,14 +140,14 @@ class Main extends egret.DisplayObjectContainer {
         colorLabel.size = 20;
         this.addChild(colorLabel);
 
-        var textContainer:egret.Sprite = new egret.Sprite();
-        textContainer.anchorX = textContainer.anchorY = 0.5;
-        this.addChild(textContainer);
-        textContainer.x = stageW / 2;
-        textContainer.y = stageH / 2 + 100;
-        textContainer.alpha = 0;
+        var textfield:egret.TextField = new egret.TextField();
+        textfield.anchorX = textfield.anchorY = 0.5;
+        this.addChild(textfield);
+        textfield.x = stageW / 2;
+        textfield.y = stageH / 2 + 100;
+        textfield.alpha = 0;
 
-        this.textContainer = textContainer;
+        this.textfield = textfield;
 
         //根据name关键字，异步获取一个json配置文件，name属性请参考resources/resource.json配置文件的内容。
         // Get asynchronously a json configuration file according to name keyword. As for the property of name please refer to the configuration file of resources/resource.json.
@@ -171,24 +170,31 @@ class Main extends egret.DisplayObjectContainer {
      * Description file loading is successful, start to play the animation
      */
     private startAnimation(result:Array<any>):void {
-        var textContainer:egret.Sprite = this.textContainer;
-        var count:number = -1;
         var self:any = this;
+
+        var parser:egret.HtmlTextParser = new egret.HtmlTextParser();
+        var textflowArr:Array<Array<egret.ITextElement>> = [];
+        for (var i:number = 0; i < result.length; i++) {
+            textflowArr.push(parser.parser(result[i]));
+        }
+
+        var textfield:egret.TextField = self.textfield;
+        var count:number = -1;
         var change:Function = function () {
             count++;
-            if (count >= result.length) {
+            if (count >= textflowArr.length) {
                 count = 0;
             }
-            var lineArr = result[count];
+            var lineArr = textflowArr[count];
 
-            self.changeDescription(textContainer, lineArr);
+            self.changeDescription(textfield, lineArr);
 
-            var tw = egret.Tween.get(textContainer);
+            var tw = egret.Tween.get(textfield);
             tw.to({"alpha": 1}, 200);
             tw.wait(2000);
             tw.to({"alpha": 0}, 200);
-            tw.call(change, this);
-        }
+            tw.call(change, self);
+        };
 
         change();
     }
@@ -197,21 +203,8 @@ class Main extends egret.DisplayObjectContainer {
      * 切换描述内容
      * Switch to described content
      */
-    private changeDescription(textContainer:egret.Sprite, lineArr:Array<any>):void {
-        textContainer.removeChildren();
-        var w:number = 0;
-        for (var i:number = 0; i < lineArr.length; i++) {
-            var info:any = lineArr[i];
-            var colorLabel:egret.TextField = new egret.TextField();
-            colorLabel.x = w;
-            colorLabel.anchorX = colorLabel.anchorY = 0;
-            colorLabel.textColor = parseInt(info["textColor"]);
-            colorLabel.text = info["text"];
-            colorLabel.size = 30;
-            textContainer.addChild(colorLabel);
-
-            w += colorLabel.width;
-        }
+    private changeDescription(textfield:egret.TextField, textFlow:Array<egret.ITextElement>):void {
+        textfield.textFlow = textFlow;
     }
 }
 
