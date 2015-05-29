@@ -21,6 +21,8 @@ function createManifest(projectPath, outputPath, newCode, ignorePathList){
     var versionPath = path.join(outputPath, "version.manifest");
     var codePath = path.join(outputPath, "code.manifest");
 
+    var allPath = path.join(outputPath, "all.manifest");
+
     var oldVersion;
     if(file.exists(basePath)) {
         oldVersion = JSON.parse(file.read(basePath));
@@ -59,6 +61,7 @@ function createManifest(projectPath, outputPath, newCode, ignorePathList){
 
     var changeVersion = {};
     var currentVersion = {};
+    var allVersion = {};
 
     var length = list.length;
 
@@ -81,12 +84,17 @@ function createManifest(projectPath, outputPath, newCode, ignorePathList){
             crcstr = txtCrc32;
         }
 
+        allVersion[savePath] = {"v":txtCrc32, "s":fs.statSync(filePath).size};
+
         if (crcstr) {
             changeVersion[savePath] = {"v":crcstr, "s":fs.statSync(filePath).size};
         }
 
         currentVersion[savePath] = 1;
     }
+
+
+    file.save(allPath, JSON.stringify(allVersion));
 
     if (oldVersion == null || oldCode < newCode) {
         var changeStr = JSON.stringify(changeVersion);

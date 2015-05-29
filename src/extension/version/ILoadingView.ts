@@ -28,21 +28,13 @@
 //////////////////////////////////////////////////////////////////////////////////////
 
 module egret {
+
     /**
      * @private
      */
-    export interface IVersionController {
-        fetchVersion():void;
-
-        checkIsNewVersion(url:string):boolean;
-        saveVersion(url:string):void;
-
-        /**
-         * 获取所有有变化的文件
-         * @returns {Array<string>}
-         */
-        getChangeList():Array<string>;
-
-        getVirtualUrl(url:string):string;
+    export interface ILoadingView {
+        init():void;
+        setProgress(current, total):void;
+        loadError():void;
     }
 }
