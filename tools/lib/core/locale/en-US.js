@@ -78,7 +78,7 @@ exports.error_code = {
     1109:"Implement tsc compilation ",
     1110:"tsc compiling time: {0} second",
     1111:"{0} tsc compiles and generates js file",
-    1112:"Time: {0} seconds",
+    1112:"{0} uses time: {1} seconds",
     1113:"{0} tsc compiles and generates '.d.ts'",
     1114:"{0} Copy other documents",
     1115:"The total elapsed time of the 3rd party libraries: {0} secs",
