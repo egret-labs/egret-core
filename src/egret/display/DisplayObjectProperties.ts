@@ -57,15 +57,11 @@ module egret {
         public _parent:DisplayObjectContainer = null;
         public _stage:Stage = null;
         public _needDraw:boolean = false;
-        /**
-         * beta功能，请勿调用此方法
-         */
-        public _colorTransform:ColorTransform = null;
 
         /**
          * beta功能，请勿调用此方法
          */
-        public _filter:Filter = null;
+        public _filters:Array<Filter> = null;
 
 
 

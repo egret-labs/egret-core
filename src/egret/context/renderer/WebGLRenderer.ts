@@ -155,8 +155,8 @@ module egret {
                 (<egret.IWebGLTemplate><any>self).renderContext.onRenderStart();
                 Texture.deleteWebGLTexture(self.renderTexture);
                 this.renderTexture.dispose();
-                if (self._DO_Props_._colorTransform) {
-                    (<egret.IWebGLTemplate><any>self).renderContext.setGlobalColorTransform(self._DO_Props_._colorTransform.matrix);
+                if (self._hasFilters()) {
+                    self._setGlobalFilters((<egret.IWebGLTemplate><any>self).renderContext);
                 }
                 var mask = self.mask || self._DO_Props_._scrollRect;
                 if (mask) {
@@ -166,8 +166,8 @@ module egret {
                 if (mask) {
                     (<egret.IWebGLTemplate><any>self).renderContext.popMask();
                 }
-                if (self._DO_Props_._colorTransform) {
-                    (<egret.IWebGLTemplate><any>self).renderContext.setGlobalColorTransform(null);
+                if (self._hasFilters()) {
+                    self._removeGlobalFilters((<egret.IWebGLTemplate><any>self).renderContext);
                 }
                 RenderTexture.identityRectangle.width = width;
                 RenderTexture.identityRectangle.height = height;
@@ -283,7 +283,7 @@ module egret {
                 self._offsetX = x + anchorOffsetX;
                 self._offsetY = y + anchorOffsetY;
                 displayObject._worldTransform.append(1, 0, 0, 1, -self._offsetX, -self._offsetY);
-                if(clipBounds) {
+                if (clipBounds) {
                     self._offsetX -= x;
                     self._offsetY -= y;
                 }
@@ -308,11 +308,8 @@ module egret {
                 gl.clear(gl.COLOR_BUFFER_BIT);
                 self.renderContext.onRenderStart();
                 Texture.deleteWebGLTexture(self);
-                if(displayObject._DO_Props_._filter) {
-                    self.renderContext.setGlobalFilter(displayObject._DO_Props_._filter);
-                }
-                if (displayObject._DO_Props_._colorTransform) {
-                    self.renderContext.setGlobalColorTransform(displayObject._DO_Props_._colorTransform.matrix);
+                if (displayObject._hasFilters()) {
+                    displayObject._setGlobalFilters(self.renderContext);
                 }
                 var mask = displayObject.mask || displayObject._DO_Props_._scrollRect;
                 if (mask) {
@@ -324,11 +321,8 @@ module egret {
                 if (mask) {
                     self.renderContext.popMask();
                 }
-                if (displayObject._DO_Props_._colorTransform) {
-                    self.renderContext.setGlobalColorTransform(null);
-                }
-                if(displayObject._DO_Props_._filter) {
-                    self.renderContext.setGlobalFilter(null);
+                if (displayObject._hasFilters()) {
+                    displayObject._removeGlobalFilters(self.renderContext);
                 }
                 egret.RenderTexture.identityRectangle.width = width;
                 egret.RenderTexture.identityRectangle.height = height;
@@ -493,7 +487,7 @@ module egret {
             gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.indexBuffer);
 
             var shader;
-            if (this.colorTransformMatrix) {
+            if (this.filterType == "colorTransform") {
                 shader = this.shaderManager.colorTransformShader;
             }
             else if (this.filterType == "blur") {
@@ -820,22 +814,29 @@ module egret {
             }
         }
 
-        public setGlobalFilter(filterData:Filter):void {
+        public setGlobalFilters(filtersData:Array<Filter>):void {
             this._drawWebGL();
-            this.setFilterProperties(filterData);
+            this.setFilterProperties(filtersData);
         }
 
         private filterType:string = null;
 
-        private setFilterProperties(filterData:Filter):void {
-            if (filterData) {
-                this.filterType = filterData.type;
-                switch (filterData.type) {
-                    case "blur":
-                        var shader:BlurShader = this.shaderManager.blurShader;
-                        shader.uniforms.blur.value.x = (<BlurFilter>filterData).blurX;
-                        shader.uniforms.blur.value.y = (<BlurFilter>filterData).blurY;
-                        break;
+        private setFilterProperties(filtersData:Array<Filter>):void {
+            //todo
+            if (filtersData && filtersData.length) {
+                for (var i = 0; i < 1; i++) {
+                    var filterData = filtersData[i];
+                    this.filterType = filterData.type;
+                    switch (filterData.type) {
+                        case "blur":
+                            var shader:BlurShader = this.shaderManager.blurShader;
+                            shader.uniforms.blur.value.x = (<BlurFilter>filterData).blurX;
+                            shader.uniforms.blur.value.y = (<BlurFilter>filterData).blurY;
+                            break;
+                        case "colorTransform":
+                            this.setGlobalColorTransform((<ColorMatrixFilter>filterData)._matrix);
+                            break;
+                    }
                 }
             }
             else {

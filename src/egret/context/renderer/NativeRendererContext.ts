@@ -94,7 +94,7 @@ module egret {
 
             texture.draw(egret_native.Graphics, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, repeat);
 
-            super.drawImage(texture, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight,repeat);
+            super.drawImage(texture, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, repeat);
         }
 
         /**
@@ -110,7 +110,7 @@ module egret {
          * @param destWidth {any}
          * @param destHeigh {any}
          */
-        public drawImageScale9(texture: Texture, sourceX, sourceY, sourceWidth, sourceHeight, offX, offY, destWidth, destHeight, rect):boolean {
+        public drawImageScale9(texture:Texture, sourceX, sourceY, sourceWidth, sourceHeight, offX, offY, destWidth, destHeight, rect):boolean {
             if (egret_native.Graphics.drawImageScale9 != null) {
                 egret_native.Graphics.drawImageScale9(texture._bitmapData, sourceX, sourceY, sourceWidth, sourceHeight, offX, offY, destWidth, destHeight, rect.x, rect.y, rect.width, rect.height);
                 this._addOneDraw();
@@ -253,18 +253,44 @@ module egret {
         }
 
 
-        public setGlobalColorTransform(colorTransformMatrix:Array<any>):void {
-            if (colorTransformMatrix) {
-                egret_native.Graphics.setGlobalColorTransformEnabled(true);
-                egret_native.Graphics.setGlobalColorTransform(colorTransformMatrix);
+        //public setGlobalColorTransform(colorTransformMatrix:Array<any>):void {
+        //    if (colorTransformMatrix) {
+        //        egret_native.Graphics.setGlobalColorTransformEnabled(true);
+        //        egret_native.Graphics.setGlobalColorTransform(colorTransformMatrix);
+        //    }
+        //    else {
+        //        egret_native.Graphics.setGlobalColorTransformEnabled(false);
+        //    }
+        //}
+
+        private globalColorTransformEnabled = false;
+
+        public setGlobalFilters(filtersData:Array<Filter>):void {
+            //todo
+            if (filtersData && filtersData.length) {
+                for (var i = 0; i < 1; i++) {
+                    var filter:Filter = filtersData[0];
+                    if (filter.type == "colorTransform") {
+                        var colorTransformMatrix = (<ColorMatrixFilter>filter)._matrix;
+                        if (colorTransformMatrix) {
+                            egret_native.Graphics.setGlobalColorTransformEnabled(true);
+                            egret_native.Graphics.setGlobalColorTransform(colorTransformMatrix);
+                            this.globalColorTransformEnabled = true;
+                        }
+                    }
+                    else {
+                        egret_native.Graphics.setGlobalShader(filter);
+                    }
+                }
             }
             else {
-                egret_native.Graphics.setGlobalColorTransformEnabled(false);
+                if (this.globalColorTransformEnabled) {
+                    egret_native.Graphics.setGlobalColorTransformEnabled(false);
+                    this.globalColorTransformEnabled = false;
+                }
+                egret_native.Graphics.setGlobalShader(null);
             }
-        }
 
-        public setGlobalFilter(filterData:Filter):void {
-            egret_native.Graphics.setGlobalShader(filterData);
         }
     }
 }

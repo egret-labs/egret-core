@@ -30,7 +30,50 @@ module egret {
     /**
      * @private
      */
-    export class Filter extends HashObject{
-        public type:string = null;
+    export class Transform extends HashObject {
+        private _display:DisplayObject;
+
+        constructor(display:DisplayObject) {
+            super();
+            this._display = display;
+        }
+
+        private _matrix:Matrix = new Matrix();
+        private _matrix2:Matrix = new Matrix();
+
+        public get matrix():Matrix {
+            this._matrix2.identityMatrix(this._matrix);
+            return this._matrix2;
+        }
+
+        public set matrix(value:Matrix) {
+            this._setMatrix(value);
+        }
+
+        private _setMatrix(value:Matrix):void {
+            if(!this._display.__hack_local_matrix) {
+                this._display.__hack_local_matrix = new Matrix();
+            }
+            this._display.__hack_local_matrix.identityMatrix(value);
+        }
+
+        /**
+         * @private
+         */
+        public _colorTransform:ColorTransform = new ColorTransform();
+        private _colorTransform2:ColorTransform = new ColorTransform();
+
+        public get colorTransform():ColorTransform {
+            this._colorTransform2.identityColorTransform(this._colorTransform);
+            return this._colorTransform2;
+        }
+
+        public set colorTransform(value:ColorTransform) {
+            this._setColorTransform(value);
+        }
+
+        private _setColorTransform(value:ColorTransform):void {
+            this._colorTransform.identityColorTransform(value);
+        }
     }
 }

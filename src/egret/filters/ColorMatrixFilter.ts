@@ -30,7 +30,34 @@ module egret {
     /**
      * @private
      */
-    export class Filter extends HashObject{
-        public type:string = null;
+    export class ColorMatrixFilter extends Filter {
+        /**
+         * @private
+         */
+        public _matrix:Array<number> = [];
+        private _matrix2:Array<number> = [];
+
+        constructor(matrix:Array<number> = null) {
+            super();
+            this.type = "colorTransform";
+            this._setMatrix(matrix);
+        }
+
+        public get matrix():Array<number> {
+            for (var i = 0; i < 20; i++) {
+                this._matrix2[i] = this._matrix[i];
+            }
+            return this._matrix2;
+        }
+
+        public set matrix(value:Array<number>) {
+            this._setMatrix(value);
+        }
+
+        private _setMatrix(value:Array<number>):void {
+            for (var i = 0; i < 20; i++) {
+                this._matrix[i] = (value && value[i]) || 0;
+            }
+        }
     }
 }
