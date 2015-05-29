@@ -56,8 +56,6 @@ egret_native.loadVersion = function (completeCall) {
         return;
     }
 
-    //版本控制自动修改 请勿更改
-    //This variable is used to load the file judgement, please do not change it
     var ctr = new egret.NativeVersionController();
     egret.MainContext.instance.netContext.initVersion(ctr);
 
