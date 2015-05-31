@@ -34,42 +34,42 @@ module dragonBones {
 	 * @class dragonbones.AnimationData
 	 * @extends dragonbones.Timeline
 	 * @classdesc
-	 * ±£´æ¶¯»­Êı¾İ
+	 * ä¿å­˜åŠ¨ç”»æ•°æ®
 	 */
 	export class AnimationData extends Timeline{
 		/**
-		 * ¶¯»­µÄÃû×Ö
+		 * åŠ¨ç”»çš„åå­—
 		 * @member {string} dragonBones.AnimationData#name
 		 */
 		public name:string;
 		/**
-		 * ¶¯»­µÄÖ¡ÂÊ£¬±íÊ¾Ã¿Ò»ÃëÖÓ²¥·Å¶àÉÙÖ¡
+		 * åŠ¨ç”»çš„å¸§ç‡ï¼Œè¡¨ç¤ºæ¯ä¸€ç§’é’Ÿæ’­æ”¾å¤šå°‘å¸§
 		 * @member {number} dragonBones.AnimationData#frameRate
 		 */
 		public frameRate:number = 0;
 		/**
-		 * ¶¯»­¹ı¶ÉÊ±¼ä£¬±íÊ¾´ÓÆäËû¶¯»­¹ı¶Éµ½Õâ¸ö¶¯»­ĞèÒªµÄÊ±¼ä
+		 * åŠ¨ç”»è¿‡æ¸¡æ—¶é—´ï¼Œè¡¨ç¤ºä»å…¶ä»–åŠ¨ç”»è¿‡æ¸¡åˆ°è¿™ä¸ªåŠ¨ç”»éœ€è¦çš„æ—¶é—´
 		 * @member {number} dragonBones.AnimationData#fadeTime
 		 */
 		public fadeTime:number;
 		/**
-		 * 	²¥·Å´ÎÊı 0ÎªÒ»Ö±²¥·Å£¬Ä¬ÈÏÎª0
+		 * 	æ’­æ”¾æ¬¡æ•° 0ä¸ºä¸€ç›´æ’­æ”¾ï¼Œé»˜è®¤ä¸º0
 		 * @member {number} dragonBones.AnimationData#playTimes
 		 */
 		public playTimes:number = 0;
 		/**
-		 * ¶¯»­µÄ»º¶¯²ÎÊı£¬È¡Öµ·¶Î§ÊÇ[-1,2],ÆäÖĞ[-1, 0)±íÊ¾»º½ø£¬(0, 1]±íÊ¾»º³ö(1, 2]±íÊ¾»º½ø»º³ö£¬0±íÊ¾²»»º¶¯£¬ÏßĞÔ½¥±ä
-		 * Õâ¸ö²ÎÊı»á±»Ö¡Êı¾İÖĞµÄtweenEasing¸²¸Ç
+		 * åŠ¨ç”»çš„ç¼“åŠ¨å‚æ•°ï¼Œå–å€¼èŒƒå›´æ˜¯[-1,2],å…¶ä¸­[-1, 0)è¡¨ç¤ºç¼“è¿›ï¼Œ(0, 1]è¡¨ç¤ºç¼“å‡º(1, 2]è¡¨ç¤ºç¼“è¿›ç¼“å‡ºï¼Œ0è¡¨ç¤ºä¸ç¼“åŠ¨ï¼Œçº¿æ€§æ¸å˜
+		 * è¿™ä¸ªå‚æ•°ä¼šè¢«å¸§æ•°æ®ä¸­çš„tweenEasingè¦†ç›–
 		 * @member {number} dragonBones.AnimationData#tweenEasing
 		 */
 		public tweenEasing:number;
 		/**
-		 * ÊÇ·ñ¿ªÆô»º¶¯£¬Ä¬ÈÏÊÇtrue£¬¾ÍÊÇ¿ªÆô»º¶¯
+		 * æ˜¯å¦å¼€å¯ç¼“åŠ¨ï¼Œé»˜è®¤æ˜¯trueï¼Œå°±æ˜¯å¼€å¯ç¼“åŠ¨
 		 * @member {boolean} dragonBones.AnimationData#autoTween
 		 */
 		public autoTween:boolean;
 		/**
-		 * ×îºóÒ»Ö¡³ÖĞøµÄÖ¡Êı
+		 * æœ€åä¸€å¸§æŒç»­çš„å¸§æ•°
 		 * @member {number} dragonBones.AnimationData#lastFrameDuration
 		 */
 		public lastFrameDuration:number = 0;
@@ -78,7 +78,7 @@ module dragonBones {
 		
 		private _timelineList:Array<TransformTimeline>;
 		/**
-		 * Ê±¼äÖáÁĞ±í
+		 * æ—¶é—´è½´åˆ—è¡¨
 		 * @returns {Array<TransformTimeline>}
 		 */
 		public get timelineList():Array<TransformTimeline>{
@@ -90,7 +90,7 @@ module dragonBones {
 		}
 		
 		/**
-		 * ´´½¨Ò»¸öAnimationDataÊµÀı
+		 * åˆ›å»ºä¸€ä¸ªAnimationDataå®ä¾‹
 		 */
 		public constructor(){
 			super();
@@ -105,7 +105,7 @@ module dragonBones {
 		}
 
 		/**
-		 * ÊÍ·Å×ÊÔ´
+		 * é‡Šæ”¾èµ„æº
 		 */
 		public dispose():void{
 			super.dispose();
@@ -127,9 +127,9 @@ module dragonBones {
 		}
 
 		/**
-		 * ¸ù¾İÊ±¼äÖáµÄÃû×Ö»ñÈ¡Ê±¼äÖáÊı¾İ
-		 * @param timelineName Ê±¼äÖáµÄÃû×Ö
-		 * @returns {*} Ê±¼äÖáÊı¾İ
+		 * æ ¹æ®æ—¶é—´è½´çš„åå­—è·å–æ—¶é—´è½´æ•°æ®
+		 * @param timelineName æ—¶é—´è½´çš„åå­—
+		 * @returns {*} æ—¶é—´è½´æ•°æ®
 		 */
 		public getTimeline(timelineName:string):TransformTimeline{
 			var i:number = this._timelineList.length;
@@ -142,8 +142,8 @@ module dragonBones {
 		}
 
 		/**
-		 * Ìí¼ÓÒ»¸öÊ±¼äÖáÊı¾İ
-		 * @param timeline ĞèÒª±»Ìí¼ÓµÄÊ±¼äÖáÊı¾İ
+		 * æ·»åŠ ä¸€ä¸ªæ—¶é—´è½´æ•°æ®
+		 * @param timeline éœ€è¦è¢«æ·»åŠ çš„æ—¶é—´è½´æ•°æ®
 		 */
 		public addTimeline(timeline:TransformTimeline):void{
 			if(!timeline){
