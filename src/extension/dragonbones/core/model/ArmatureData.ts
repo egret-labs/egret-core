@@ -33,14 +33,14 @@ module dragonBones {
 	/**
 	 * @class dragonBones.ArmatureData
 	 * @classdesc
-	 * armatureÊı¾İ Ò»¸öarmatureÊı¾İ°üº¬Ò»¸ö½ÇÉ«µÄ¹Ç÷À£¬Æ¤·ô£¬¶¯»­µÄÊı¾İ
+	 * armatureæ•°æ® ä¸€ä¸ªarmatureæ•°æ®åŒ…å«ä¸€ä¸ªè§’è‰²çš„éª¨éª¼ï¼Œçš®è‚¤ï¼ŒåŠ¨ç”»çš„æ•°æ®
 	 * @see  dragonBones.BoneData
 	 * @see  dragonBones.SkinData
 	 * @see  dragonBones.AnimationData
 	 */
 	export class ArmatureData{
 		/**
-		 * armatureÊı¾İµÄÃû×Ö
+		 * armatureæ•°æ®çš„åå­—
 		 * @member {string} dragonBones.ArmatureData#name
 		 */
 		public name:string;
@@ -58,7 +58,7 @@ module dragonBones {
         }
 
 		/**
-		 * ´´½¨Ò»¸öArmatureDataÊµÀı
+		 * åˆ›å»ºä¸€ä¸ªArmatureDataå®ä¾‹
 		 */
 		public constructor(){
 			this._boneDataList = [];
@@ -117,7 +117,7 @@ module dragonBones {
 		}
 
 		/**
-		 * ÊÍ·Å×ÊÔ´
+		 * é‡Šæ”¾èµ„æº
 		 */
 		public dispose():void{
 			var i:number = this._boneDataList.length;
@@ -144,9 +144,9 @@ module dragonBones {
 		}
 
 		/**
-		 * ¸ù¾İ¹Ç÷ÀµÄÃû×Ö»ñÈ¡µ½¹Ç÷ÀÊı¾İ
-		 * @param boneName ¹Ç÷ÀµÄÃû×Ö
-		 * @returns {*} ¹Ç÷ÀÊı¾İ
+		 * æ ¹æ®éª¨éª¼çš„åå­—è·å–åˆ°éª¨éª¼æ•°æ®
+		 * @param boneName éª¨éª¼çš„åå­—
+		 * @returns {*} éª¨éª¼æ•°æ®
 		 */
 		public getBoneData(boneName:string):BoneData{
 			var i:number = this._boneDataList.length;
@@ -169,9 +169,9 @@ module dragonBones {
 		}
 
 		/**
-		 * ¸ù¾İÆ¤·ôµÄÃû×Ö»ñÈ¡µ½Æ¤·ôÊı¾İ
-		 * @param skinName  Æ¤·ôµÄÃû×Ö
-		 * @returns {*}  Æ¤·ôÊı¾İ
+		 * æ ¹æ®çš®è‚¤çš„åå­—è·å–åˆ°çš®è‚¤æ•°æ®
+		 * @param skinName  çš®è‚¤çš„åå­—
+		 * @returns {*}  çš®è‚¤æ•°æ®
 		 */
 		public getSkinData(skinName:string):SkinData{
 			if(!skinName && this._skinDataList.length > 0){
@@ -188,9 +188,9 @@ module dragonBones {
 		}
 
 		/**
-		 * ¸ù¾İ¶¯»­µÄÃû×Ö»ñÈ¡¶¯»­Êı¾İ
-		 * @param animationName ¶¯»­µÄÃû×Ö
-		 * @returns {*} ¶¯»­Êı¾İ
+		 * æ ¹æ®åŠ¨ç”»çš„åå­—è·å–åŠ¨ç”»æ•°æ®
+		 * @param animationName åŠ¨ç”»çš„åå­—
+		 * @returns {*} åŠ¨ç”»æ•°æ®
 		 */
 		public getAnimationData(animationName:string):AnimationData{
 			var i:number = this._animationDataList.length;
@@ -203,7 +203,7 @@ module dragonBones {
 		}
 
 		/**
-		 *Ìí¼ÓÒ»¸ö¹Ç÷ÀÊı¾İ
+		 *æ·»åŠ ä¸€ä¸ªéª¨éª¼æ•°æ®
 		 * @param boneData
 		 */
 		public addBoneData(boneData:BoneData):void{
@@ -232,7 +232,7 @@ module dragonBones {
 			}
 		}
 		/**
-		 * Ìí¼ÓÒ»¸öÆ¤·ôÊı¾İ
+		 * æ·»åŠ ä¸€ä¸ªçš®è‚¤æ•°æ®
 		 * @param skinData
 		 */
 		public addSkinData(skinData:SkinData):void{
@@ -249,7 +249,7 @@ module dragonBones {
 		}
 
 		/**
-		 * Ìí¼ÓÒ»¸ö¶¯»­Êı¾İ
+		 * æ·»åŠ ä¸€ä¸ªåŠ¨ç”»æ•°æ®
 		 * @param animationData
 		 */
 		public addAnimationData(animationData:AnimationData):void{
@@ -263,7 +263,7 @@ module dragonBones {
 		}
 
 		/**
-		 * ¶Ô¹Ç÷À°´ÕÕ¹Ç÷ÀÊıµÄ²ã¼¶¹ØÏµÅÅĞò
+		 * å¯¹éª¨éª¼æŒ‰ç…§éª¨éª¼æ•°çš„å±‚çº§å…³ç³»æ’åº
 		 */
 		public sortBoneDataList():void{
 			var i:number = this._boneDataList.length;
@@ -293,7 +293,7 @@ module dragonBones {
 
 
 		/**
-		 * »ñÈ¡¹Ç÷ÀÊı¾İÁĞ±í
+		 * è·å–éª¨éª¼æ•°æ®åˆ—è¡¨
 		 * @returns {Array<BoneData>}
 		 */
 		public get boneDataList():Array<BoneData>{
@@ -304,7 +304,7 @@ module dragonBones {
 		}
 
 		/**
-		 * »ñÈ¡Æ¤·ôÊı¾İÁĞ±í
+		 * è·å–çš®è‚¤æ•°æ®åˆ—è¡¨
 		 * @returns {Array<SkinData>}
 		 */
 		public get skinDataList():Array<SkinData>{
@@ -312,7 +312,7 @@ module dragonBones {
 		}
 
 		/**
-		 * »ñµÃ¶¯»­Êı¾İÁĞ±í
+		 * è·å¾—åŠ¨ç”»æ•°æ®åˆ—è¡¨
 		 * @returns {Array<AnimationData>}
 		 */
 		public get animationDataList():Array<AnimationData>{
