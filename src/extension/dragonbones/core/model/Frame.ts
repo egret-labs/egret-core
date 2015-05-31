@@ -51,7 +51,7 @@ module dragonBones {
 		 */
 		public action:string;
 		/**
-		 *帧时间
+		 *帧事件
 		 * @member {string} dragonBones.Frame#event
 		 */
 		public event:string;
