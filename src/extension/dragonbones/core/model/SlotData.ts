@@ -33,29 +33,29 @@ module dragonBones {
 	/**
 	 * @class dragonBones.SlotData
 	 * @classdesc
-	 * ²å²ÛÊı¾İ£¬²å²ÛÊÇÓÉ¹Ç÷À¿ØÖÆµÄ£¬¿ÉÒÔ×°ÈëÏÔÊ¾¶ÔÏóµÄÈİÆ÷£¬ÏÔÊ¾¶ÔÏó¿ÉÒÔÊÇÍ¼Æ¬»òÕß×Ó¹Ç¼Ü
-	 * ²å²Û¿É²åÈëÒ»¸ö»òÕß¶à¸öÏÔÊ¾¶ÔÏó£¬µ«ÊÇÍ¬Ò»Ê±¿ÌÖ»ÄÜÏÔÊ¾Ò»¸öÏÔÊ¾¶ÔÏó
-	 * ²å²ÛÖ§³Ö¹Ø¼üÖ¡¶¯»­£¬Èç¹ûÓĞ¶à¸öÏÔÊ¾¶ÔÏó£¬¿ÉÒÔÖ¸¶¨ÄÄÒ»Ö¡ÏÔÊ¾ÄÄÒ»¸öÏÔÊ¾¶ÔÏó
+	 * æ’æ§½æ•°æ®ï¼Œæ’æ§½æ˜¯ç”±éª¨éª¼æ§åˆ¶çš„ï¼Œå¯ä»¥è£…å…¥æ˜¾ç¤ºå¯¹è±¡çš„å®¹å™¨ï¼Œæ˜¾ç¤ºå¯¹è±¡å¯ä»¥æ˜¯å›¾ç‰‡æˆ–è€…å­éª¨æ¶
+	 * æ’æ§½å¯æ’å…¥ä¸€ä¸ªæˆ–è€…å¤šä¸ªæ˜¾ç¤ºå¯¹è±¡ï¼Œä½†æ˜¯åŒä¸€æ—¶åˆ»åªèƒ½æ˜¾ç¤ºä¸€ä¸ªæ˜¾ç¤ºå¯¹è±¡
+	 * æ’æ§½æ”¯æŒå…³é”®å¸§åŠ¨ç”»ï¼Œå¦‚æœæœ‰å¤šä¸ªæ˜¾ç¤ºå¯¹è±¡ï¼Œå¯ä»¥æŒ‡å®šå“ªä¸€å¸§æ˜¾ç¤ºå“ªä¸€ä¸ªæ˜¾ç¤ºå¯¹è±¡
 	 */
 	export class SlotData{
 		/**
-		 * ²å²ÛÊı¾İµÄÃû×Ö
+		 * æ’æ§½æ•°æ®çš„åå­—
 		 * @member {string} dragonBones.SlotData#name
 		 */
 		public name:string;
 		/**
-		 * °ó¶¨µÄ¹Ç÷ÀµÄÃû×Ö£¬Ò»¸ö²å²Û½öÊÜÒ»¸ö¹Ç÷À¿ØÖÆ
+		 * ç»‘å®šçš„éª¨éª¼çš„åå­—ï¼Œä¸€ä¸ªæ’æ§½ä»…å—ä¸€ä¸ªéª¨éª¼æ§åˆ¶
 		 * @member {string} dragonBones.SlotData#parent
 		 */
 		public parent:string;
 		/**
-		 * zÖáÅÅĞò£¬zÖáÊÇ´¹Ö±ÓÚÆÁÄ»µÄÖá£¬zOrderÔ¼Ğ¡£¬Ô½¿¿Àï
-		 * ËùÒÔÈç¹ûÓĞÖØµş£¬zOrder´óµÄ²å²Û»áµ²×¡zOrderĞ¡µÄ²å²Û
+		 * zè½´æ’åºï¼Œzè½´æ˜¯å‚ç›´äºå±å¹•çš„è½´ï¼ŒzOrderçº¦å°ï¼Œè¶Šé é‡Œ
+		 * æ‰€ä»¥å¦‚æœæœ‰é‡å ï¼ŒzOrderå¤§çš„æ’æ§½ä¼šæŒ¡ä½zOrderå°çš„æ’æ§½
 		 * @member {number} dragonBones.SlotData#zOrder
 		 */
 		public zOrder:number;
 		/**
-		 * »ìºÏÄ£Ê½
+		 * æ··åˆæ¨¡å¼
 		 * @member {string} dragonBones.SlotData#blendMode
 		 */
 		public blendMode:string;
@@ -63,7 +63,7 @@ module dragonBones {
 		private _displayDataList:Array<DisplayData>;
 
 		/**
-		 * ¹¹Ôìº¯Êı£¬ÊµÀı»¯Ò»¸öSlotDataÀà
+		 * æ„é€ å‡½æ•°ï¼Œå®ä¾‹åŒ–ä¸€ä¸ªSlotDataç±»
 		 */
 		public constructor(){
 			this._displayDataList = [];
@@ -71,14 +71,14 @@ module dragonBones {
 		}
 
 		/**
-		 * ÊÍ·Å×ÊÔ´
+		 * é‡Šæ”¾èµ„æº
 		 */
 		public dispose():void{
 			this._displayDataList.length = 0;
 		}
 
 		/**
-		 * Ìí¼ÓÒ»¸öÏÔÊ¾¶ÔÏóÊı¾İ
+		 * æ·»åŠ ä¸€ä¸ªæ˜¾ç¤ºå¯¹è±¡æ•°æ®
 		 * @param displayData
 		 */
 		public addDisplayData(displayData:DisplayData):void{
@@ -94,9 +94,9 @@ module dragonBones {
 		}
 
 		/**
-		 * ¸ù¾İÏÔÊ¾¶ÔÏóµÄÃû×Ö»ñÈ¡ÏÔÊ¾¶ÔÏóÊı¾İ
-		 * @param displayName ÏëÒª»ñÈ¡µÄÏÔÊ¾¶ÔÏóµÄÃû×Ö
-		 * @returns {*} ·µ»ØÏÔÊ¾¶ÔÏó°ºÊı¾İ£¬Èç¹ûÃ»ÓĞ·µ»Ønull
+		 * æ ¹æ®æ˜¾ç¤ºå¯¹è±¡çš„åå­—è·å–æ˜¾ç¤ºå¯¹è±¡æ•°æ®
+		 * @param displayName æƒ³è¦è·å–çš„æ˜¾ç¤ºå¯¹è±¡çš„åå­—
+		 * @returns {*} è¿”å›æ˜¾ç¤ºå¯¹è±¡æ˜‚æ•°æ®ï¼Œå¦‚æœæ²¡æœ‰è¿”å›null
 		 */
 		public getDisplayData(displayName:string):DisplayData{
 			var i:number = this._displayDataList.length;
@@ -110,7 +110,7 @@ module dragonBones {
 		}
 
 		/**
-		 * »ñÈ¡ËùÓĞµÄÏÔÊ¾¶ÔÏó
+		 * è·å–æ‰€æœ‰çš„æ˜¾ç¤ºå¯¹è±¡
 		 * @returns {Array<DisplayData>}
 		 */
 		public get displayDataList():Array<DisplayData>{

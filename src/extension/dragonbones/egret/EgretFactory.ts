@@ -33,7 +33,7 @@ module dragonBones {
      * @class dragonBones.EgretFactory
      * @extends dragonBones.BaseFactory
      * @classdesc
-     * EgretÒýÇæÊ¹ÓÃµÄdragonBones¹¤³§
+     * Egretå¼•æ“Žä¸­DragonBoneså·¥åŽ‚çš„åŸºç±»å®žçŽ°
      */
     export class EgretFactory extends BaseFactory {
         constructor() {
