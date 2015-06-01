@@ -49,7 +49,12 @@ module egret {
         public _skewX:number = 0;
         public _skewY:number = 0;
         public _blendMode:string = null;
-        public _touchEnabled:boolean = false;
+        /**
+         * 每个显示对象初始化时默认的 touchEnabled 属性值
+         * @default false
+         */
+        public static defaultTouchEnabled:boolean = false;
+        public _touchEnabled:boolean = DisplayObjectProperties.defaultTouchEnabled;
         public _visible:boolean = true;
         public _worldAlpha:number = 1;
         public _scrollRect:Rectangle = null;
