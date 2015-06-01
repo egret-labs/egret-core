@@ -196,7 +196,7 @@ module dragonBones {
 		 * @returns {AnimationState} 动画播放状态实例
 		 */
 		public addBoneMask(boneName:string, ifInvolveChildBones:boolean = true):AnimationState{
-			this.addBoneToBoneMask(currentBone.name);
+			this.addBoneToBoneMask(boneName);
 			
 			if(ifInvolveChildBones){
 				var currentBone:Bone = this._armature.getBone(boneName);
