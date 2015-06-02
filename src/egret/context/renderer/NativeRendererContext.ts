@@ -334,6 +334,10 @@ var egret_native_graphics;
 
     }
 
+    function cubicCurveTo(controlX1, controlY1, controlX2, controlY2, anchorX, anchorY) {
+
+    }
+
     egret_native_graphics.curveTo = curveTo;
 
     function moveTo(x, y) {
@@ -399,5 +403,29 @@ var egret_native_graphics;
     egret_native_graphics.init = init;
 })(egret_native_graphics || (egret_native_graphics = {}));
 
+if(egret_native.rastergl) {
+    egret.Graphics.prototype._setupDraw = function (renderContext:egret.RendererContext) {
+        var self:egret.Graphics = this;
+        self._renderContext = egret_native.rastergl;
+    };
 
-egret_native_graphics.init();
+    egret.Graphics.prototype._parseColor = function (color:number, alpha:number) {
+        var fill = function (s) {
+            if(s.length < 2) {
+                s = "0" + s;
+            }
+            return s;
+        };
+        var _colorBlue = color & 0x0000FF;
+        var _colorGreen = (color & 0x00ff00) >> 8;
+        var _colorRed = color >> 16;
+        var a = parseInt(<any>(alpha * 255)).toString(16);
+        var r = _colorRed.toString(16);
+        var g = _colorGreen.toString(16);
+        var b = _colorBlue.toString(16);
+        return "#" + fill(a) + fill(r) + fill(g) + fill(b);
+    };
+}
+else {
+    egret_native_graphics.init();
+}
