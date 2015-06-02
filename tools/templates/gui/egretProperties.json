@@ -5,7 +5,10 @@
             "name": "core"
         },
         {
-            "name":"res"
+            "name": "version_old"
+        },
+        {
+            "name": "res"
         },
 		{
             "name": "gui"

@@ -60,7 +60,7 @@ module egret {
          * @returns {boolean}
          */
         public isIOS():boolean {
-            return this.ua.indexOf("iphone") >= 0 || this.ua.indexOf("ipad") >= 0 || this.ua.indexOf("ipod") >= 0;
+            return this.ua.indexOf("windows") < 0 && (this.ua.indexOf("iphone") >= 0 || this.ua.indexOf("ipad") >= 0 || this.ua.indexOf("ipod") >= 0);
         }
 
         /**
