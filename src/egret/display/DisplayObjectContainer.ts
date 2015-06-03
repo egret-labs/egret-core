@@ -217,11 +217,11 @@ module egret {
                 child._onRemoveFromStage();
                 var list = DisplayObjectContainer.__EVENT__REMOVE_FROM_STAGE_LIST
                 while (list.length > 0) {
-                    var childAddToStage = list.shift();
+                    var childAddToStage:DisplayObject = list.shift();
                     if (notifyListeners){
                         childAddToStage.dispatchEventWith(Event.REMOVED_FROM_STAGE);
                     }
-                    childAddToStage.stage = null;
+                    childAddToStage._DO_Props_._stage = null;
                 }
             }
             child._parentChanged(null);
