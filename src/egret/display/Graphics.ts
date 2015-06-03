@@ -96,7 +96,7 @@ module egret {
                     [x, y, width, height]
                 )
             );
-            this._fill();
+            //this._fill();
             this._checkRect(x, y, width, height);
         }
 
@@ -118,7 +118,7 @@ module egret {
                 this,
                 [x, y, r]
             ));
-            this._fill();
+            //this._fill();
             this._checkRect(x - r, y - r, 2 * r, 2 * r);
         }
 
@@ -163,7 +163,7 @@ module egret {
                     [x, y, width, height, ellipseWidth, ellipseHeight]
                 )
             );
-            this._fill();
+            //this._fill();
             this._checkRect(x, y, width, height);
         }
 
@@ -194,7 +194,7 @@ module egret {
                 this,
                 [x, y, width, height]
             ));
-            this._fill();
+            //this._fill();
             this._checkRect(x, y, width, height);
         }
 
@@ -362,13 +362,23 @@ module egret {
             this._setupDraw(renderContext);
 
             //this._renderContext.save();
-            if (this.strokeStyleColor && length > 0 && this.commandQueue[length - 1] != this._endLineCommand) {
-                this._createEndLineCommand();
-                this._pushCommand(this._endLineCommand);
-                length = this.commandQueue.length;
-            }
+            //if (this.strokeStyleColor && length > 0 && this.commandQueue[length - 1] != this._endLineCommand) {
+            //    this._createEndLineCommand();
+            //    this._pushCommand(this._endLineCommand);
+            //    length = this.commandQueue.length;
+            //}
             for (var i = 0; i < length; i++) {
                 var command:Command = this.commandQueue[i];
+                command.method.apply(command.thisObject, command.args);
+            }
+            if (this.fillStyleColor) {
+                this._createEndFillCommand();
+                command = this._endFillCommand;
+                command.method.apply(command.thisObject, command.args);
+            }
+            if (this.strokeStyleColor) {
+                this._createEndLineCommand();
+                command = this._endLineCommand;
                 command.method.apply(command.thisObject, command.args);
             }
             //this._renderContext.restore();

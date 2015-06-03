@@ -566,7 +566,7 @@ module egret {
                 return;
             }
             var bitmapData = texture._bitmapData;
-            if (!bitmapData["avaliable"]) {
+            if (!bitmapData || !bitmapData["avaliable"]) {
                 return;
             }
             if (repeat !== undefined) {
@@ -706,6 +706,7 @@ module egret {
             if (!bitmapData.webGLTexture[this.glID]) {
                 var gl:any = this.gl;
                 bitmapData.webGLTexture[this.glID] = gl.createTexture();
+                bitmapData.webGLTexture[this.glID].glContext = gl;
                 gl.bindTexture(gl.TEXTURE_2D, bitmapData.webGLTexture[this.glID]);
                 gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, true);
 
