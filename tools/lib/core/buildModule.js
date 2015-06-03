@@ -123,8 +123,6 @@ function compileModules(callback, moduleNames) {
 
     }
 
-    file.save(path.join("game_list.l.js"), JSON.stringify(tsList, null, 4));
-
     var sourcemap = param.getArgv()["opts"]["-sourcemap"];
     sourcemap = sourcemap ? "--sourcemap " : "";
 
