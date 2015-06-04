@@ -89,7 +89,7 @@ function build(properties, callback, keepGeneratedTypescript) {
                     return true;
                 }
 
-                if (moduleReferenceList.indexOf(item) >= 0) {
+                if (!moduleReferenceList || moduleReferenceList.indexOf(item) >= 0) {
                     return true;
                 }
 

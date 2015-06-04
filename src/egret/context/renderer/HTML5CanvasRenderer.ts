@@ -632,13 +632,22 @@ egret.RendererContext.createRendererContext = function (canvas:any) {
     return new egret.HTML5CanvasRenderer(canvas, false);
 };
 
-egret.Graphics.prototype._setupDraw = function (renderContext:egret.HTML5CanvasRenderer) {
+egret.Graphics.prototype._beginDraw = function (renderContext:egret.HTML5CanvasRenderer) {
     var self:egret.Graphics = this;
     self._renderContext = renderContext.drawCanvasContext;
     var _transformTx = renderContext._transformTx;
     var _transformTy = renderContext._transformTy;
     if (_transformTx != 0 || _transformTy != 0) {
         self._renderContext.translate(_transformTx, _transformTy);
-        renderContext._transformTx = renderContext._transformTy = 0;
+    }
+};
+
+egret.Graphics.prototype._endDraw = function (renderContext:egret.HTML5CanvasRenderer) {
+    var self:egret.Graphics = this;
+    self._renderContext = renderContext.drawCanvasContext;
+    var _transformTx = renderContext._transformTx;
+    var _transformTy = renderContext._transformTy;
+    if (_transformTx != 0 || _transformTy != 0) {
+        self._renderContext.translate(-_transformTx, -_transformTy);
     }
 };

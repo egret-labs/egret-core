@@ -404,7 +404,7 @@ var egret_native_graphics;
 })(egret_native_graphics || (egret_native_graphics = {}));
 
 if(egret_native.rastergl) {
-    egret.Graphics.prototype._setupDraw = function (renderContext:egret.RendererContext) {
+    egret.Graphics.prototype._beginDraw = function (renderContext:egret.RendererContext) {
         var self:egret.Graphics = this;
         self._renderContext = egret_native.rastergl;
     };
