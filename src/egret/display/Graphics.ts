@@ -349,7 +349,11 @@ module egret {
             }
         }
 
-        public _setupDraw(renderContext:RendererContext):void {
+        public _beginDraw(renderContext:RendererContext):void {
+
+        }
+
+        public _endDraw(renderContext:RendererContext):void {
 
         }
 
@@ -359,7 +363,7 @@ module egret {
                 return;
             }
 
-            this._setupDraw(renderContext);
+            this._beginDraw(renderContext);
 
             //this._renderContext.save();
             //if (this.strokeStyleColor && length > 0 && this.commandQueue[length - 1] != this._endLineCommand) {
@@ -381,7 +385,7 @@ module egret {
                 command = this._endLineCommand;
                 command.method.apply(command.thisObject, command.args);
             }
-            //this._renderContext.restore();
+            this._endDraw(renderContext);
             this._dirty = false;
         }
 
