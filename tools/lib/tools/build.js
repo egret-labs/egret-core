@@ -85,7 +85,7 @@ function buildPlatform(needCompileEngine, keepGeneratedTypescript) {
                 var dJson = path.join(modulelibspath, module["name"] + ".d.json");
                 var dList = JSON.parse(file.read(dJson));
                 var fileList = dList.file_list.map(function (item) {
-                    return path.relative(rootPath, path.join(modulelibspath, item)).replace(".ts", ".js");
+                    return path.relative(rootPath, path.join(modulelibspath, item)).replace(".ts", ".js").replace(/\\\\|\\/g, "/");
                 });
 
                 if (module["name"] == "html5") {
