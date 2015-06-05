@@ -1,4 +1,7 @@
 module egret {
+    /**
+     * @private
+     */
     export var egret_string_code = {};
     egret_string_code[-1] = "non-existent errorId:{0}";
     egret_string_code[1000] = "Browser.isMobile interface parameter has been modified，please change the method t o egret.MainContext.deviceType == egret.MainContext.DEVICE_MOBILE";

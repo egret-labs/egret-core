@@ -626,7 +626,7 @@ module egret.gui {
             else
             {
                 if (this.hasEventListener(StateChangeEvent.STATE_CHANGE_COMPLETE)){
-                    StateChangeEvent.dispatchStateChangeEvent(this,StateChangeEvent.CURRENT_STATE_CHANGE);
+                    StateChangeEvent.dispatchStateChangeEvent(this,StateChangeEvent.STATE_CHANGE_COMPLETE);
                 }
             }
         }
@@ -635,7 +635,7 @@ module egret.gui {
         {
             this._currentTransition = null;
             if (this.hasEventListener(StateChangeEvent.STATE_CHANGE_COMPLETE)){
-                StateChangeEvent.dispatchStateChangeEvent(this,StateChangeEvent.CURRENT_STATE_CHANGE);
+                StateChangeEvent.dispatchStateChangeEvent(this,StateChangeEvent.STATE_CHANGE_COMPLETE);
             }
         }
 

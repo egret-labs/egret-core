@@ -156,7 +156,7 @@ module egret {
         public _drawForCanvas(context:CanvasRenderingContext2D, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, renderType) {
 
             var bitmapData = this._bitmapData;
-            if (!bitmapData["avaliable"]) {
+            if (!bitmapData || !bitmapData["avaliable"]) {
                 return;
             }
             if (renderType != undefined) {
@@ -169,7 +169,7 @@ module egret {
 
         public _drawForNative(context:any, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, renderType) {
             var bitmapData = this._bitmapData;
-            if (!bitmapData["avaliable"]) {
+            if (!bitmapData || !bitmapData["avaliable"]) {
                 return;
             }
             if (renderType !== undefined) {
@@ -234,14 +234,13 @@ module egret {
         }
 
         public static deleteWebGLTexture(texture:Texture):void {
-            var context = egret.MainContext.instance.rendererContext;
-            var gl:WebGLRenderingContext = context["gl"];
             var bitmapData = texture._bitmapData;
             if (bitmapData) {
                 var webGLTexture = bitmapData.webGLTexture;
-                if (webGLTexture && gl) {
+                if (webGLTexture) {
                     for (var key in webGLTexture) {
                         var glTexture = webGLTexture[key];
+                        var gl = glTexture.glContext;
                         gl.deleteTexture(glTexture);
                     }
                 }
@@ -257,6 +256,7 @@ module egret {
             var bitmapData:HTMLImageElement = Texture._bitmapDataFactory[url];
             if (!bitmapData) {
                 bitmapData = document.createElement("img");
+                bitmapData.crossOrigin = "anonymous";
                 bitmapData.setAttribute("bitmapSrc", url);
                 Texture._bitmapDataFactory[url] = bitmapData;
             }

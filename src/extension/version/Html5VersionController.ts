@@ -28,21 +28,36 @@
 //////////////////////////////////////////////////////////////////////////////////////
 
 module egret {
+
     /**
      * @private
      */
-    export interface IVersionController {
-        fetchVersion():void;
+    export class Html5VersionController extends egret.EventDispatcher implements IVersionController {
 
-        checkIsNewVersion(url:string):boolean;
-        saveVersion(url:string):void;
+        constructor() {
+            super();
+        }
+
+        public fetchVersion():void {
+        }
+
+        public checkIsNewVersion(virtualUrl:string):boolean {
+            return false;
+        }
+
+        public saveVersion(virtualUrl:string):void {
+        }
 
         /**
          * 获取所有有变化的文件
          * @returns {Array<string>}
          */
-        getChangeList():Array<string>;
+        public getChangeList():Array<string> {
+            return [];
+        }
 
-        getVirtualUrl(url:string):string;
+        public getVirtualUrl(url:string):string {
+            return url;
+        }
     }
 }

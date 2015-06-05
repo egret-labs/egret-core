@@ -11,6 +11,7 @@
         "egret/utils/getTimer.ts",
         "egret/utils/callLater.ts",
         "egret/utils/RenderCommand.ts",
+        "egret/player/RenderContext.ts",
         "egret/events/Event.ts",
         "egret/events/HTTPStatusEvent.ts",
         "egret/events/SoundEvent.ts",
@@ -99,6 +100,7 @@
         "egret/media/IAudio.ts",
         "egret/media/Sound.ts",
         "jslib/NumberUtils.ts",
-        "egret/context/PromiseObject.ts"
+        "egret/context/PromiseObject.ts",
+        "egret/context/net/IVersionController.ts"
     ]
 }

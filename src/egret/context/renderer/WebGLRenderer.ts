@@ -560,7 +560,7 @@ module egret {
                 return;
             }
             var bitmapData = texture._bitmapData;
-            if (!bitmapData["avaliable"]) {
+            if (!bitmapData || !bitmapData["avaliable"]) {
                 return;
             }
             if (repeat !== undefined) {
@@ -700,6 +700,7 @@ module egret {
             if (!bitmapData.webGLTexture[this.glID]) {
                 var gl:any = this.gl;
                 bitmapData.webGLTexture[this.glID] = gl.createTexture();
+                bitmapData.webGLTexture[this.glID].glContext = gl;
                 gl.bindTexture(gl.TEXTURE_2D, bitmapData.webGLTexture[this.glID]);
                 gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, true);
 
@@ -996,7 +997,10 @@ module egret_webgl_graphics {
     export function lineTo(x:number, y:number):void {
     }
 
-    export function curveTo(controlX:Number, controlY:Number, anchorX:Number, anchorY:Number):void {
+    export function curveTo(controlX:number, controlY:number, anchorX:number, anchorY:number):void {
+    }
+    export function cubicCurveTo(controlX1:number, controlY1:number, controlX2:number, controlY2:number, anchorX:number, anchorY:number):void {
+
     }
 
     export function moveTo(x:number, y:number):void {

@@ -37,12 +37,18 @@ module egret {
      */
     export class HTML5NetContext extends NetContext {
 
+        public _versionCtr:egret.IVersionController;
         public constructor() {
             super();
             Texture.createBitmapData = Texture._createBitmapDataForCanvasAndWebGl;
         }
 
+        public initVersion(versionCtr:egret.IVersionController):void {
+            this._versionCtr = versionCtr;
+        }
+
         public proceed(loader:URLLoader):void {
+            var self = this;
             if (loader.dataFormat == URLLoaderDataFormat.TEXTURE) {
                 this.loadTexture(loader);
                 return;
@@ -59,12 +65,11 @@ module egret {
 
             var request:URLRequest = loader._request;
             var xhr = this.getXHR();
-//            xhr.onload = onLoadComplete;
             xhr.onreadystatechange = onReadyStateChange;
 
-            var url:string = NetContext._getUrl(request);
+            var virtualUrl:string = self.getVirtualUrl(NetContext._getUrl(request));
 
-            xhr.open(request.method, url, true);
+            xhr.open(request.method, virtualUrl, true);
             this.setResponseType(xhr, loader.dataFormat);
             if (request.method == URLRequestMethod.GET || !request.data) {
                 xhr.send();
@@ -118,8 +123,8 @@ module egret {
         }
 
         private loadSound(loader:URLLoader):void {
-            var request:URLRequest = loader._request;
-            var audio = new Audio(request.url);
+            var virtualUrl:string = this.getVirtualUrl(loader._request.url);
+            var audio = new Audio(virtualUrl);
             audio["__timeoutId"] = egret.setTimeout(soundPreloadCanplayHandler, this, 100);
             audio.addEventListener('canplaythrough', soundPreloadCanplayHandler, false);
             audio.addEventListener("error", soundPreloadErrorHandler, false);
@@ -147,9 +152,9 @@ module egret {
         }
 
         private loadWebAudio(loader:URLLoader):void {
-            var url:string = loader._request.url;
+            var virtualUrl:string = this.getVirtualUrl(loader._request.url);
             var request = new XMLHttpRequest();
-            request.open("GET", url, true);
+            request.open("GET", virtualUrl, true);
             request.responseType = "arraybuffer";
             console.log("loadWebAudio");
             request.onload = function () {
@@ -195,9 +200,8 @@ module egret {
         }
 
         private loadTexture(loader:URLLoader):void {
-
-            var request:URLRequest = loader._request;
-            Texture.createBitmapData(request.url, function (code:number, bitmapData:HTMLImageElement) {
+            var virtualUrl:string = this.getVirtualUrl(loader._request.url);
+            Texture.createBitmapData(virtualUrl, function (code:number, bitmapData:HTMLImageElement) {
                 if (code != 0) {
                     IOErrorEvent.dispatchIOErrorEvent(loader);
                     return;
@@ -208,5 +212,18 @@ module egret {
                 __callAsync(Event.dispatchEvent, Event, loader, Event.COMPLETE);
             })
         }
+
+        /**
+         * 获取虚拟url
+         * @param url
+         * @returns {string}
+         */
+        private getVirtualUrl(url:string):string {
+            if (this._versionCtr) {
+                return this._versionCtr.getVirtualUrl(url);
+            }
+            return url;
+        }
+
     }
 }

@@ -28,21 +28,35 @@
 //////////////////////////////////////////////////////////////////////////////////////
 
 module egret {
+
     /**
      * @private
      */
-    export interface IVersionController {
-        fetchVersion():void;
+    export class DefaultLoadingView extends DisplayObjectContainer implements ILoadingView{
 
-        checkIsNewVersion(url:string):boolean;
-        saveVersion(url:string):void;
+        private textField;
+        constructor() {
+            super();
 
-        /**
-         * 获取所有有变化的文件
-         * @returns {Array<string>}
-         */
-        getChangeList():Array<string>;
+        }
 
-        getVirtualUrl(url:string):string;
+        init():void {
+            this.textField = new egret.TextField();
+            this.addChild(this.textField);
+            this.textField.y = egret.MainContext.instance.stage.stageHeight / 2;
+            this.textField.x = egret.MainContext.instance.stage.stageWidth / 2;
+            this.textField.textAlign = "center";
+            this.textField.anchorX = this.textField.anchorY = 0.5;
+        }
+
+        setProgress(current, total):void {
+            console.log("egret_native  " + Math.round(current / 1024) + "KB / " + Math.round(total / 1024) + "KB");
+            this.textField.text = "Loading Resource..." + Math.round(current / 1024) + "KB / " + Math.round(total / 1024) + "KB";
+
+        }
+
+        loadError():void {
+            this.textField.text = "Resource loading failed，please check the network connection and exit back into the game！";
+        }
     }
 }

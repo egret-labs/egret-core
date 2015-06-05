@@ -85,7 +85,7 @@ function buildPlatform(needCompileEngine, keepGeneratedTypescript) {
                 var dJson = path.join(modulelibspath, module["name"] + ".d.json");
                 var dList = JSON.parse(file.read(dJson));
                 var fileList = dList.file_list.map(function (item) {
-                    return path.relative(rootPath, path.join(modulelibspath, item)).replace(".ts", ".js");
+                    return path.relative(rootPath, path.join(modulelibspath, item)).replace(".ts", ".js").replace(/\\\\|\\/g, "/");
                 });
 
                 if (module["name"] == "html5") {
@@ -118,6 +118,11 @@ function buildPlatform(needCompileEngine, keepGeneratedTypescript) {
     if (runtime == "native") {
         task.push(//替换native项目内容
             function (tempCallback) {
+
+                var versionCtr = require('../tools/version/' + require("../tools/version/getVersionCtr").getVersionCtrName(projectProperties.getProjectPath()));
+                var fileModify = require("../core/fileAutoChange");
+                fileModify.modifyNativeRequire(projectProperties.getProjectPath(), false, true, versionCtr.getClassName());
+
                 if (projectProperties.getNativePath("android")) {
                     var url1 = path.join(projectProperties.getProjectPath(), projectProperties.getNativePath("android"), "proj.android");
                     if (file.exists(url1)) {//是egret的android项目
@@ -129,8 +134,8 @@ function buildPlatform(needCompileEngine, keepGeneratedTypescript) {
                             "android", projectProperties.getIgnorePath());
 
                         //修改java文件
-                        var javaEntr = require('../core/changeJavaEntrance');
-                        javaEntr.changeBuild(url1, "android");
+                        var entrance = require('../core/changePlatformEntrance');
+                        entrance.changeBuild(url1, "android");
                     }
                 }
 
@@ -138,12 +143,15 @@ function buildPlatform(needCompileEngine, keepGeneratedTypescript) {
                     var url1 = path.join(projectProperties.getProjectPath(), projectProperties.getNativePath("ios"), "proj.ios");
 
                     if (file.exists(url1)) {//是egret的ios项目
-
                         //拷贝项目到native工程中
                         var cpFiles = require("../core/copyProjectFiles.js");
                         cpFiles.copyFilesToNative(projectProperties.getProjectPath(),
                             path.join(projectProperties.getProjectPath(), projectProperties.getNativePath("ios")),
                             "ios", projectProperties.getIgnorePath());
+
+                        //修改java文件
+                        var entrance = require('../core/changePlatformEntrance');
+                        entrance.changeBuild(url1, "ios");
                     }
                 }
 
