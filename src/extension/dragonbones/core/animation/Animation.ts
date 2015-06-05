@@ -475,9 +475,9 @@ module dragonBones {
 			this._animationDataList = value;
 			this._animationList.length = 0;
 
-            for(var key in this._animationDataList)
+            for(var i:number = 0,len:number = this._animationDataList.length; i < len; i++)
             {
-                var animationData:AnimationData = this._animationDataList[key];
+                var animationData:AnimationData = this._animationDataList[i];
                 this._animationList[this._animationList.length] = animationData.name;
             }
 		}

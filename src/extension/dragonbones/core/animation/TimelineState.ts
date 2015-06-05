@@ -93,6 +93,7 @@ module dragonBones {
 		private _totalTime:number = 0; //duration
 		
 		private _currentTime:number = 0;
+        private _lastTime: number = 0;
 		private _currentFrameIndex:number = 0;
 		private _currentFramePosition:number = 0;
 		private _currentFrameDuration:number = 0;
@@ -280,7 +281,8 @@ module dragonBones {
 			}
 			
 			if(this._currentTime != currentTime){
-				this._currentTime = currentTime;
+				this._lastTime = this._currentTime;
+                this._currentTime = currentTime;
 				
 				var frameList:Array<Frame> = this._timelineData.frameList;
 				var prevFrame:TransformFrame;
@@ -290,8 +292,9 @@ module dragonBones {
 					if(this._currentFrameIndex < 0){
 						this._currentFrameIndex = 0;
 					}
-					else if(this._currentTime < this._currentFramePosition || this._currentTime >= this._currentFramePosition + this._currentFrameDuration){
+					else if(this._currentTime < this._currentFramePosition || this._currentTime >= this._currentFramePosition + this._currentFrameDuration || this._currentTime < this._lastTime){
 						this._currentFrameIndex ++;
+                        this._lastTime = this._currentTime;
 						if(this._currentFrameIndex >= frameList.length){
 							if(this._isComplete){
 								this._currentFrameIndex --;

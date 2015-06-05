@@ -177,6 +177,7 @@ module dragonBones {
 		 * 循环
 		 */
 		public static A_LOOP:string = "loop";
+        public static A_PLAY_TIMES: string = "playTimes";
 		/**
 		 * 事件
 		 */

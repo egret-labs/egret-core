@@ -204,27 +204,36 @@ module dragonBones {
 			animationData.autoTween = Data3Parser.getBoolean(animationObject, ConstValues.A_AUTO_TWEEN, true);
 
             var frameObjectList:Array<any> = animationObject[ConstValues.FRAME];
-            for(var index in frameObjectList)
-            {
-                var frameObject:any = frameObjectList[index];
-                var frame:Frame = Data3Parser.parseTransformFrame(frameObject, frameRate);
-                animationData.addFrame(frame);
-            }
+			var i:number = 0;
+			var len:number = 0;
+			if(frameObjectList)
+			{
+				for(i = 0,len = frameObjectList.length; i< len; i++)
+				{
+					var frameObject:any = frameObjectList[i];
+					var frame:Frame = Data3Parser.parseTransformFrame(frameObject, frameRate);
+					animationData.addFrame(frame);
+				}
+			}
+            
 
             Data3Parser.parseTimeline(animationObject, animationData);
 			
 			var lastFrameDuration:number = animationData.duration;
 
             var timelineObjectList:Array<any> = animationObject[ConstValues.TIMELINE];
-            for(var index in timelineObjectList) {
-                var timelineObject:any = timelineObjectList[index];
-                var timeline:TransformTimeline = Data3Parser.parseTransformTimeline(timelineObject, animationData.duration, frameRate);
-                timeline = Data3Parser.parseTransformTimeline(timelineObject, animationData.duration, frameRate);
-                lastFrameDuration = Math.min(lastFrameDuration, timeline.frameList[timeline.frameList.length - 1].duration);
-                animationData.addTimeline(timeline);
-				var slotTimeline:SlotTimeline = Data3Parser.parseSlotTimeline(timelineObject, animationData.duration, frameRate);
-				animationData.addSlotTimeline(slotTimeline);
-            }
+			if(timelineObjectList)
+			{
+				for(i = 0,len = timelineObjectList.length; i < len; i++) {
+					var timelineObject:any = timelineObjectList[i];
+					var timeline:TransformTimeline = Data3Parser.parseTransformTimeline(timelineObject, animationData.duration, frameRate);
+					timeline = Data3Parser.parseTransformTimeline(timelineObject, animationData.duration, frameRate);
+					lastFrameDuration = Math.min(lastFrameDuration, timeline.frameList[timeline.frameList.length - 1].duration);
+					animationData.addTimeline(timeline);
+					var slotTimeline:SlotTimeline = Data3Parser.parseSlotTimeline(timelineObject, animationData.duration, frameRate);
+					animationData.addSlotTimeline(slotTimeline);
+				}
+			}
 			
 			if(animationData.frameList.length > 0){
 				lastFrameDuration = Math.min(lastFrameDuration, animationData.frameList[animationData.frameList.length - 1].duration);

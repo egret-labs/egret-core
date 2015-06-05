@@ -72,7 +72,7 @@ module dragonBones {
 		public setSkinData(skinName:String):void
 		{
 			var i:number = 0;
-			var len:number = this._slotDataList.length
+			var len:number = this._slotDataList.length;
 			for (i = 0; i < len; i++)
 			{
 				this._slotDataList[i].dispose();
@@ -85,7 +85,7 @@ module dragonBones {
 			else
 			{
 				i = 0,
-				len = this._skinDataList.length
+				len = this._skinDataList.length;
 				for (; i < len; i++)
 				{
 					if (this._skinDataList[i].name == skinName)
@@ -99,7 +99,7 @@ module dragonBones {
 			if (skinData)
 			{
 				var slotData:SlotData;
-				i = 0, len = skinData.slotDataList.length
+				i = 0, len = skinData.slotDataList.length;
 				for (i = 0; i < len; i++)
 				{
 					slotData = this.getSlotData(skinData.slotDataList[i].name);

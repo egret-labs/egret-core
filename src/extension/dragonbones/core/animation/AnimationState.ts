@@ -145,6 +145,7 @@ module dragonBones {
 		private _currentPlayTimes:number = 0;
 		private _totalTime:number = 0;
 		private _currentTime:number = 0;
+        private _lastTime: number = 0;
 		//-1 beforeFade, 0 fading, 1 fadeComplete
 		private _fadeState:number = 0;
 		private _fadeTotalTime:number;
@@ -274,6 +275,7 @@ module dragonBones {
 			var timelineState:TimelineState;
 			var slotTimelineState:SlotTimelineState;
 			var i:number = this._timelineStateList.length;
+			var len:number;
 			while(i --){
 				timelineState = this._timelineStateList[i];
 				if(!this._armature.getBone(timelineState.name)){
@@ -297,23 +299,23 @@ module dragonBones {
 					}
 				}
 
-                for(var key in this._boneMasks)
+                for(i = 0,len = this._boneMasks.length; i < len; i++)
                 {
-                    var timelineName:string = this._boneMasks[key];
+                    var timelineName:string = this._boneMasks[i];
                     this.addTimelineState(timelineName);
                 }
 			}
 			else{
-                for(var key in this._clip.timelineList)
+                for(i = 0,len = this._clip.timelineList.length; i < len; i++)
                 {
-                    var timeline:TransformTimeline = this._clip.timelineList[key];
+                    var timeline:TransformTimeline = this._clip.timelineList[i];
                     this.addTimelineState(timeline.name);
                 }
 			}
 
-			for(var slotKey in this._clip.slotTimelineList)
+			for(i = 0,len = this._clip.slotTimelineList.length; i < len; i++)
 			{
-				var slotTimeline:SlotTimeline = this._clip.slotTimelineList[slotKey];
+				var slotTimeline:SlotTimeline = this._clip.slotTimelineList[i];
 				this.addSlotTimelineState(slotTimeline.name);
 			}
 		}
@@ -321,9 +323,9 @@ module dragonBones {
 		private addTimelineState(timelineName:string):void{
 			var bone:Bone = this._armature.getBone(timelineName);
 			if(bone){
-                for(var key in this._timelineStateList)
+                for(var i:number = 0,len:number = this._timelineStateList.length; i < len; i++)
                 {
-                    var eachState:TimelineState = this._timelineStateList[key];
+                    var eachState:TimelineState = this._timelineStateList[i];
                     if(eachState.name == timelineName){
                         return;
                     }
@@ -343,9 +345,9 @@ module dragonBones {
 		private addSlotTimelineState(timelineName:string):void{
 			var slot:Slot = this._armature.getSlot(timelineName);
 			if(slot){
-				for(var key in this._slotTimelineStateList)
+				for(var i:number = 0, len:number = this._slotTimelineStateList.length; i < len; i++)
 				{
-					var eachState:SlotTimelineState = this._slotTimelineStateList[key];
+					var eachState:SlotTimelineState = this._slotTimelineStateList[i];
 					if(eachState.name == timelineName){
 						return;
 					}
@@ -454,9 +456,9 @@ module dragonBones {
 			else{
 				//第一次淡出
 				//The first time to fade out.
-                for(var key in this._timelineStateList)
+                for(var i:number = 0,len:number = this._timelineStateList.length; i < len; i++)
                 {
-                    var timelineState:TimelineState = this._timelineStateList[key];
+                    var timelineState:TimelineState = this._timelineStateList[i];
                     timelineState._fadeOut();
                 }
 			}
@@ -645,14 +647,15 @@ module dragonBones {
 			//update timeline
 			this._isComplete = isThisComplete;
 			var progress:number = this._time * 1000 / this._totalTime;
-
-            for(var key in this._timelineStateList) {
-                var timeline:TimelineState = this._timelineStateList[key];
+			var i:number = 0;
+			var len:number = 0;
+            for(i = 0,len = this._timelineStateList.length; i < len; i++) {
+                var timeline:TimelineState = this._timelineStateList[i];
                 timeline._update(progress);
                 this._isComplete = timeline._isComplete && this._isComplete;
             }
-			for(var slotKey in this._slotTimelineStateList) {
-				var slotTimeline:SlotTimelineState = this._slotTimelineStateList[slotKey];
+			for(i = 0,len = this._slotTimelineStateList.length; i < len; i++) {
+				var slotTimeline:SlotTimelineState = this._slotTimelineStateList[i];
 				slotTimeline._update(progress);
 				this._isComplete = timeline._isComplete && this._isComplete;
 			}
@@ -675,7 +678,7 @@ module dragonBones {
 				{
 					completeFlg = true;
 				}
-				
+                this._lastTime = this._currentTime;
 				this._currentTime = currentTime;
 				/*
 				if(isThisComplete)
@@ -724,8 +727,9 @@ module dragonBones {
 					if(this._currentFrameIndex < 0){
 						this._currentFrameIndex = 0;
 					}
-					else if(this._currentTime < this._currentFramePosition || this._currentTime >= this._currentFramePosition + this._currentFrameDuration){
+					else if(this._currentTime < this._currentFramePosition || this._currentTime >= this._currentFramePosition + this._currentFrameDuration || this._currentTime < this._lastTime){
 						this._currentFrameIndex ++;
+                        this._lastTime = this._currentTime;
 						if(this._currentFrameIndex >= frameList.length){
 							if(isThisComplete){
 								this._currentFrameIndex --;
@@ -758,9 +762,9 @@ module dragonBones {
 		
 		private hideBones():void{
 
-            for(var key in this._clip.hideTimelineNameMap)
+            for(var i:number = 0,len:number = this._clip.hideTimelineNameMap.length; i < len; i++)
             {
-                var timelineName:string = this._clip.hideTimelineNameMap[key];
+                var timelineName:string = this._clip.hideTimelineNameMap[i];
                 var bone:Bone = this._armature.getBone(timelineName);
                 if(bone){
                     bone._hideSlots();

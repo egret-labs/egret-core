@@ -110,17 +110,18 @@ module dragonBones {
 		public dispose():void{
 			super.dispose();
 			this.hideTimelineNameMap = null;
-
-            for(var key in this._timelineList)
+			var i:number = 0;
+			var len:number = 0;
+            for(i = 0,len = this._timelineList.length; i < len; i++)
             {
-                var timeline:TransformTimeline = this._timelineList[key];
+                var timeline:TransformTimeline = this._timelineList[i];
                 timeline.dispose();
             }
 
 			this._timelineList = null;
-			for(var slotKey in this._slotTimelineList)
+			for(i = 0,len = this._slotTimelineList.length; i < len; i++)
 			{
-				var slotTimeline:SlotTimeline =  this._slotTimelineList[slotKey];
+				var slotTimeline:SlotTimeline =  this._slotTimelineList[i];
 				slotTimeline.dispose();
 			}
 			this._slotTimelineList = null;

@@ -238,7 +238,7 @@ module dragonBones {
 			animationData.name = animationObject[ConstValues.A_NAME];
 			animationData.frameRate = frameRate;
 			animationData.duration = Math.round((DataParser.getNumber(animationObject, ConstValues.A_DURATION, 1) || 1) * 1000 / frameRate);
-			animationData.playTimes = DataParser.getNumber(animationObject, ConstValues.A_LOOP, 1);
+			animationData.playTimes = DataParser.getNumber(animationObject, ConstValues.A_PLAY_TIMES, 1);
             animationData.playTimes = animationData.playTimes != NaN ? animationData.playTimes : 1;
 			animationData.fadeTime = DataParser.getNumber(animationObject, ConstValues.A_FADE_IN_TIME, 0) || 0;
 			animationData.scale = DataParser.getNumber(animationObject, ConstValues.A_SCALE, 1) || 0;
@@ -248,41 +248,52 @@ module dragonBones {
 			animationData.autoTween = DataParser.getBoolean(animationObject, ConstValues.A_AUTO_TWEEN, true);
 
             var frameObjectList:Array<any> = animationObject[ConstValues.FRAME];
-            for(var index in frameObjectList)
-            {
-                var frameObject:any = frameObjectList[index];
-                var frame:Frame = DataParser.parseTransformFrame(frameObject, frameRate);
-                animationData.addFrame(frame);
-            }
+			var i:number = 0;
+			var len:number = 0;
+			if(frameObjectList)
+			{
+				for (i = 0, len = frameObjectList.length; i < len; i++)
+				{
+					var frameObject:any = frameObjectList[i];
+					var frame:Frame = DataParser.parseTransformFrame(frameObject, frameRate);
+					animationData.addFrame(frame);
+				}
+			}
 
             DataParser.parseTimeline(animationObject, animationData);
 			
 			var lastFrameDuration:number = animationData.duration;
 
             var timelineObjectList:Array<any> = animationObject[ConstValues.BONE];
-            for(var index in timelineObjectList) {
-                var timelineObject:any = timelineObjectList[index];
-				if(timelineObject)
-				{
-					var timeline:TransformTimeline = DataParser.parseTransformTimeline(timelineObject, animationData.duration, frameRate);
-					if(timeline.frameList.length > 0)
+			if(timelineObjectList)
+			{
+				for(i = 0,len = timelineObjectList.length; i < len; i++) {
+					var timelineObject:any = timelineObjectList[i];
+					if(timelineObject)
 					{
-						lastFrameDuration = Math.min(lastFrameDuration, timeline.frameList[timeline.frameList.length - 1].duration);
+						var timeline:TransformTimeline = DataParser.parseTransformTimeline(timelineObject, animationData.duration, frameRate);
+						if(timeline.frameList.length > 0)
+						{
+							lastFrameDuration = Math.min(lastFrameDuration, timeline.frameList[timeline.frameList.length - 1].duration);
+						}
+						animationData.addTimeline(timeline);
 					}
-					animationData.addTimeline(timeline);
 				}
-            }
+			}
 
 			var slotTimelineObjectList:Array<any> = animationObject[ConstValues.SLOT];
-			for(var index in slotTimelineObjectList) {
-				var slotTimelineObject:any = slotTimelineObjectList[index];
-				if(slotTimelineObject){
-					var slotTimeline:SlotTimeline = DataParser.parseSlotTimeline(slotTimelineObject, animationData.duration, frameRate);
-					if(slotTimeline.frameList.length > 0)
-					{
-						lastFrameDuration = Math.min(lastFrameDuration, slotTimeline.frameList[slotTimeline.frameList.length - 1].duration);
+			if(slotTimelineObjectList)
+			{
+				for(i = 0, len = slotTimelineObjectList.length; i < len; i++) {
+					var slotTimelineObject:any = slotTimelineObjectList[i];
+					if(slotTimelineObject){
+						var slotTimeline:SlotTimeline = DataParser.parseSlotTimeline(slotTimelineObject, animationData.duration, frameRate);
+						if(slotTimeline.frameList.length > 0)
+						{
+							lastFrameDuration = Math.min(lastFrameDuration, slotTimeline.frameList[slotTimeline.frameList.length - 1].duration);
+						}
+						animationData.addSlotTimeline(slotTimeline);
 					}
-					animationData.addSlotTimeline(slotTimeline);
 				}
 			}
 
@@ -344,7 +355,7 @@ module dragonBones {
 			outputFrame.visible = !DataParser.getBoolean(frameObject, ConstValues.A_HIDE, false);
 			
 			//NaN:no tween, 10:auto tween, [-1, 0):ease in, 0:line easing, (0, 1]:ease out, (1, 2]:ease in out
-			outputFrame.tweenEasing = DataParser.getNumber(frameObject, ConstValues.A_TWEEN_EASING, 10) || 10;
+			outputFrame.tweenEasing = DataParser.getNumber(frameObject, ConstValues.A_TWEEN_EASING, 10);
 			outputFrame.tweenRotate = Math.floor(DataParser.getNumber(frameObject, ConstValues.A_TWEEN_ROTATE, 0) || 0);
 			outputFrame.tweenScale = DataParser.getBoolean(frameObject, ConstValues.A_TWEEN_SCALE, true);
 			outputFrame.displayIndex = Math.floor(DataParser.getNumber(frameObject, ConstValues.A_DISPLAY_INDEX, 0)|| 0);
@@ -428,7 +439,8 @@ module dragonBones {
 		
 		private static parseColorTransform(colorTransformObject:any, colorTransform:ColorTransform):void{
 			if(colorTransformObject){
-				if(colorTransform){
+                console.log("color:", colorTransformObject);	
+            if(colorTransform){
 					colorTransform.alphaOffset =DataParser.getNumber(colorTransformObject, ConstValues.A_ALPHA_OFFSET, 0);
 					colorTransform.redOffset = DataParser.getNumber(colorTransformObject, ConstValues.A_RED_OFFSET, 0);
 					colorTransform.greenOffset = DataParser.getNumber(colorTransformObject, ConstValues.A_GREEN_OFFSET, 0);
@@ -438,6 +450,7 @@ module dragonBones {
 					colorTransform.redMultiplier = DataParser.getNumber(colorTransformObject, ConstValues.A_RED_MULTIPLIER, 100) * 0.01;
 					colorTransform.greenMultiplier =DataParser.getNumber(colorTransformObject, ConstValues.A_GREEN_MULTIPLIER, 100) * 0.01;
 					colorTransform.blueMultiplier = DataParser.getNumber(colorTransformObject, ConstValues.A_BLUE_MULTIPLIER, 100) * 0.01;
+                    console.log("a", colorTransform);
 				}
 			}
 		}

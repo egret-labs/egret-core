@@ -58,9 +58,9 @@ module dragonBones {
 		 * 释放资源
 		 */
 		public dispose():void{
-            for(var key in this._armatureDataList)
+            for(var i:number = 0, len:number = this._armatureDataList.length; i < len; i++)
             {
-                var armatureData:ArmatureData = this._armatureDataList[key];
+                var armatureData:ArmatureData = this._armatureDataList[i];
                 armatureData.dispose();
             }
 

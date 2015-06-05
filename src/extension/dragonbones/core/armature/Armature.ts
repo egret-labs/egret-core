@@ -226,9 +226,9 @@ module dragonBones {
 			}
 			
 			if(this._eventList.length > 0){
-                for(var key in this._eventList)
+                for(var i:number = 0,len:number = this._eventList.length; i< len; i++)
                 {
-                    var event:Event = this._eventList[key];
+                    var event:Event = this._eventList[i];
                     this.dispatchEvent(event);
                 }
 				this._eventList.length = 0;
