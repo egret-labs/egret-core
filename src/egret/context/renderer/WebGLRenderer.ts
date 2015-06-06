@@ -693,8 +693,8 @@ module egret {
             var blurX:number = filter.blurX / 10;
             var blurY:number = filter.blurY / 10;
             var offset:number = 10;
-            var textureWidth:number = destWidth + blurX * 2 + offset * 2 + distanceX;
-            var textureHeight:number = destHeight + blurY * 2 + offset * 2 + distanceY;
+            var textureWidth:number = destWidth + blurX * 2 + offset * 2 + Math.abs(distanceX);
+            var textureHeight:number = destHeight + blurY * 2 + offset * 2 + Math.abs(distanceY);
 
             WebGLRenderer.initWebGLCanvas();
             var renderContext:WebGLRenderer = RenderTexture["WebGLRenderer"];
