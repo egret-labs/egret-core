@@ -41,8 +41,9 @@ module egret {
             "uniform sampler2D uSampler;\n" +
 
             "void main(void) {\n" +
-                "vec4 locColor = texture2D(uSampler, vTextureCoord) * matrix;\n" +
-                "if(locColor.a != 0.0){\n" +
+                "vec4 texColor = texture2D(uSampler, vTextureCoord);\n" +
+                "vec4 locColor = texColor * matrix;\n" +
+                "if(texColor.a != 0.0){\n" +
                     "locColor += colorAdd;\n" +
                 "}\n" +
                 "gl_FragColor = vec4(locColor.rgb*locColor.a,locColor.a);\n" +

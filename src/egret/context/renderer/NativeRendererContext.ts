@@ -91,10 +91,100 @@ module egret {
          * @param repeat {string}
          */
         public drawImage(texture:Texture, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, repeat = undefined) {
-
+            if (this.filters) {
+                for (var i = 0; i < 1; i++) {
+                    var filter:Filter = this.filters[0];
+                    if (filter.type == "glow") {
+                        this.useGlow(texture, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight);
+                        return;
+                    }
+                }
+            }
             texture.draw(egret_native.Graphics, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, repeat);
 
             super.drawImage(texture, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, repeat);
+        }
+
+        private useGlow(texture:Texture, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight):void {
+            var filter:DropShadowFilter = <DropShadowFilter>this.filters[0];
+            var distance:number = filter.distance || 0;
+            var angle:number = filter.angle || 0;
+            var distanceX:number = 0;
+            var distanceY:number = 0;
+            if(distance != 0 && angle != 0) {
+                distanceX = Math.ceil(distance * egret.NumberUtils.cos(angle));
+                distanceY = Math.ceil(distance * egret.NumberUtils.sin(angle));
+            }
+            var quality:number = filter.quality;
+            var strength:number = filter.strength;
+            var blurX:number = filter.blurX / 10;
+            var blurY:number = filter.blurY / 10;
+            var offset:number = 10;
+            var textureWidth:number = destWidth + blurX * 2 + offset * 2 + distanceX;
+            var textureHeight:number = destHeight + blurY * 2 + offset * 2 + distanceY;
+
+
+            var renderTextureA:RenderTexture = new RenderTexture();
+            renderTextureA.setSize(textureWidth, textureHeight);
+            var renderContextA:RendererContext = renderTextureA.renderContext;
+            var renderTextureB:RenderTexture = new RenderTexture();
+            renderTextureB.setSize(textureWidth, textureHeight);
+            var renderContextB:RendererContext = renderTextureB.renderContext;
+
+            //绘制纯色图
+            renderTextureA.begin();
+            renderContextA.clearScreen();
+            //egret_native.Graphics.clearScreen(0, 255, 0);
+            egret_native.Graphics.setGlobalColorTransformEnabled(true);
+            egret_native.Graphics.setGlobalColorTransform([
+                0, 0, 0, 0, filter._red,
+                0, 0, 0, 0, filter._green,
+                0, 0, 0, 0, filter._blue,
+                0, 0, 0, 0, filter.alpha * 255
+            ]);
+            renderContextA.setAlpha(1, BlendMode.NORMAL);
+            renderContextA.setTransform(new Matrix(1, 0, 0, 1, 0, 0));
+            renderContextA.drawImage(texture, sourceX, sourceY, sourceWidth, sourceHeight, blurX + offset, blurY + offset, destWidth, destHeight);
+            egret_native.Graphics.setGlobalColorTransformEnabled(false);
+            renderTextureA.end();
+
+            //blur x
+            renderTextureB.begin();
+            renderContextB.clearScreen();
+            renderContextB.setAlpha(1, BlendMode.NORMAL);
+            renderContextB.setTransform(new Matrix(1, 0, 0, 1, 0, 0));
+            egret_native.Graphics.setGlobalShader({type: "blur", blurX: blurX, blurY: 0});
+            renderContextB.drawImage(renderTextureA, blurX, blurY, textureWidth - blurX * 2, textureHeight - blurY * 2, blurX, blurY, textureWidth - blurX * 2, textureHeight - blurY * 2);
+            renderTextureB.end();
+
+            ////blur y
+            renderTextureA.begin();
+            renderContextA.clearScreen();
+            renderContextA.setAlpha(1, BlendMode.NORMAL);
+            renderContextA.setTransform(new Matrix(1, 0, 0, 1, 0, 0));
+            egret_native.Graphics.setGlobalShader({type: "blur", blurX: 0, blurY: blurY});
+            renderContextA.drawImage(renderTextureB,  0, blurY, textureWidth, textureHeight - blurY * 2, 0, blurY + offset / 2, textureWidth, textureHeight - blurY * 2);
+            egret_native.Graphics.setGlobalShader(null);
+            renderTextureA.end();
+
+            //画回B 应用强度
+            renderTextureB.begin();
+            renderContextB.clearScreen();
+            renderContextB.setAlpha(1, BlendMode.NORMAL);
+            renderContextB.setTransform(new Matrix(1, 0, 0, 1, 0, 0));
+            for (var i:number = 0 ; i < quality ; i++) {
+                renderContextB.drawImage(renderTextureA, 0, 0, textureWidth, textureHeight, distanceX, distanceY, textureWidth, textureHeight);
+            }
+            //原图
+            egret_native.Graphics.setBlendArg(770, 771);
+            renderContextB.drawImage(texture, sourceX, sourceY, sourceWidth, sourceHeight, destX + blurX + offset, destY + blurY + offset * 1.5, destWidth, destHeight);
+            renderTextureB.end();
+
+            egret_native.Graphics.drawImage(renderTextureB._bitmapData, 0, 0, textureWidth, textureHeight, destX - blurX - offset, destY - blurY - offset * 1.5, textureWidth, textureHeight);
+            renderTextureA.dispose();
+            renderTextureB.dispose();
+
+            egret_native.Graphics.setGlobalShader(null);
         }
 
         /**
@@ -264,9 +354,10 @@ module egret {
         //}
 
         private globalColorTransformEnabled = false;
+        private filters:Array<Filter>;
 
         public setGlobalFilters(filtersData:Array<Filter>):void {
-            //todo
+            this.filters = filtersData;
             if (filtersData && filtersData.length) {
                 for (var i = 0; i < 1; i++) {
                     var filter:Filter = filtersData[0];
@@ -278,7 +369,7 @@ module egret {
                             this.globalColorTransformEnabled = true;
                         }
                     }
-                    else {
+                    else if (filter.type == "blur") {
                         egret_native.Graphics.setGlobalShader(filter);
                     }
                 }
@@ -429,7 +520,7 @@ var egret_native_graphics;
     egret_native_graphics.init = init;
 })(egret_native_graphics || (egret_native_graphics = {}));
 
-if(egret_native.rastergl) {
+if (egret_native.rastergl) {
     egret.Graphics.prototype._beginDraw = function (renderContext:egret.RendererContext) {
         var self:egret.Graphics = this;
         self._renderContext = egret_native.rastergl;
@@ -437,7 +528,7 @@ if(egret_native.rastergl) {
 
     egret.Graphics.prototype._parseColor = function (color:number, alpha:number) {
         var fill = function (s) {
-            if(s.length < 2) {
+            if (s.length < 2) {
                 s = "0" + s;
             }
             return s;

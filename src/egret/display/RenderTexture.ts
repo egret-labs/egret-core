@@ -104,7 +104,7 @@ module egret {
             this._offsetX = x + anchorOffsetX;
             this._offsetY = y + anchorOffsetY;
             displayObject._worldTransform.append(1, 0, 0, 1, -this._offsetX, -this._offsetY);
-            if(clipBounds) {
+            if (clipBounds) {
                 this._offsetX -= x;
                 this._offsetY -= y;
             }
@@ -124,7 +124,7 @@ module egret {
             this.renderContext.clearScreen();
             this.renderContext.onRenderStart();
             Texture.deleteWebGLTexture(this);
-            if(displayObject._hasFilters()) {
+            if (displayObject._hasFilters()) {
                 displayObject._setGlobalFilters(this.renderContext);
             }
             var mask = displayObject.mask || displayObject._DO_Props_._scrollRect;
@@ -138,7 +138,7 @@ module egret {
             if (mask) {
                 this.renderContext.popMask();
             }
-            if(displayObject._hasFilters()) {
+            if (displayObject._hasFilters()) {
                 displayObject._removeGlobalFilters(this.renderContext);
             }
             RenderTexture.identityRectangle.width = width;
@@ -188,6 +188,19 @@ module egret {
                 this._bitmapData = null;
                 this.renderContext = null;
             }
+        }
+
+        private static _pool:Array<RenderTexture> = [];
+
+        public static create():RenderTexture {
+            if (RenderTexture._pool.length) {
+                return RenderTexture._pool.pop();
+            }
+            return new RenderTexture();
+        }
+
+        public static release(value:RenderTexture):void {
+            RenderTexture._pool.push(value);
         }
     }
 }
