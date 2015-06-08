@@ -55,6 +55,7 @@ module egret {
                 this._display.__hack_local_matrix = new Matrix();
             }
             this._display.__hack_local_matrix.identityMatrix(value);
+            this._matrix.identityMatrix(value);
         }
 
         /**
