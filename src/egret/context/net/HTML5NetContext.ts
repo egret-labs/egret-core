@@ -155,7 +155,7 @@ module egret {
         }
 
         private loadQQAudio(loader:URLLoader):void {
-            var virtualUrl:string = this.getVirtualUrl(loader._request.url);
+            var virtualUrl:string = Html5Capatibility._QQRootPath + this.getVirtualUrl(loader._request.url);
             console.log("loadQQAudio");
 
             QZAppExternal.preloadSound(

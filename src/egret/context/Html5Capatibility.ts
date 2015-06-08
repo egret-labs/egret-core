@@ -46,11 +46,15 @@ module egret {
         public static _audioType:number = 0;
         public static _AudioClass;
 
-        constructor () {
+
+        public static _QQRootPath:string = "";
+
+        constructor() {
             super();
         }
 
         private static ua:string = "";
+
         public static _init():void {
             var ua:string = navigator.userAgent.toLowerCase();
             Html5Capatibility.ua = ua;
@@ -64,12 +68,25 @@ module egret {
 
             }
             else if (ua.indexOf("android") >= 0) {//android
-                //if (window.hasOwnProperty("QZAppExternal") && ua.indexOf("qzone") >= 0) {
-                //    Html5Capatibility._AudioClass = egret.QQAudio;
-                //    Html5Capatibility._audioType = AudioType.QQ_AUDIO;
-                //
-                //    window.document.getElementsByTagName("base");
-                //}
+                if (window.hasOwnProperty("QZAppExternal") && ua.indexOf("qzone") >= 0) {
+                    Html5Capatibility._AudioClass = egret.QQAudio;
+                    Html5Capatibility._audioType = AudioType.QQ_AUDIO;
+
+                    var bases = document.getElementsByTagName('base');
+                    if (bases && bases.length > 0) {
+                        Html5Capatibility._QQRootPath = bases[0].baseURI;
+                    }
+                    else {
+                        var endIdx = window.location.href.indexOf("?");
+                        if (endIdx == -1) {
+                            endIdx = window.location.href.length;
+                        }
+                        var url = window.location.href.substring(0, endIdx);
+                        url = url.substring(0, url.lastIndexOf("/"));
+
+                        Html5Capatibility._QQRootPath = url + "/";
+                    }
+                }
             }
             else if (ua.indexOf("iphone") >= 0 || ua.indexOf("ipad") >= 0 || ua.indexOf("ipod") >= 0) {//ios
                 if (Html5Capatibility.getIOSVersion() >= 7) {
