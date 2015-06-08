@@ -239,6 +239,7 @@ function isInterface(path) {
  */
 function removeInterface(text) {
     var tsText = "";
+
     while (text.length > 0) {
         var index = CodeUtil.getFirstVariableIndex("interface", text);
         if (index == -1) {
@@ -248,7 +249,12 @@ function removeInterface(text) {
         tsText += text.substring(0, index);
         text = text.substring(index);
         index = CodeUtil.getBracketEndIndex(text);
-        text = text.substring(index + 1);
+        if (index == -1) {
+            text = text.substring(9);
+        }
+        else {
+            text = text.substring(index + 1);
+        }
     }
     return tsText;
 }
