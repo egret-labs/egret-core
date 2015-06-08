@@ -67,7 +67,7 @@ module egret {
         public _worldTransform:egret.Matrix;
         public _worldBounds:egret.Rectangle = null;
 
-        public __hack_local_matrix:Matrix = null;
+        public __hack_local_matrix:any = null;
         //尺寸发生改变的回调函数。若此对象被添加到UIAsset里，此函数将被赋值，在尺寸发生改变时通知UIAsset重新测量。
         public _sizeChangeCallBack:Function = null;
         public _sizeChangeCallTarget:any = null;
