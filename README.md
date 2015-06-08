@@ -1,6 +1,6 @@
 Egret Engine
 ================================================
-Current Version: v1.7.2
+Current Version: v1.7.3
 
 
 Egret Engine is an open source game engine written in Typescript language. The core characteristics of Egret Engine is Open, Efficient and Elegant.
@@ -40,6 +40,8 @@ Tools
 
 Release Notes
 --------------------
+[Egret 1.7.3 Release Notes 2015-6-4](/docs/en/1.7.3_ReleaseNotes.md)
+
 [Egret 1.7.2 Release Notes 2015-5-21](/docs/en/1.7.2_ReleaseNotes.md)
 
 [Egret 1.7.1 Release Notes 2015-5-8](/docs/en/1.7.1_ReleaseNotes.md)
@@ -104,6 +106,8 @@ Egret Engine是一款使用JavaScript(TypeScript)编写的HTML5开源免费游�
 
 发布说明
 --------------------
+
+[Egret 1.7.3 Release Notes 2015-6-4](/docs/cn/1.7.3_ReleaseNotes.md)
 
 [Egret 1.7.2 Release Notes 2015-5-21](/docs/cn/1.7.2_ReleaseNotes.md)
 

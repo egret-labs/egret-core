@@ -26,11 +26,12 @@
 //  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 //////////////////////////////////////////////////////////////////////////////////////
+
 module egret {
     /**
      * @private
      */
-    export class Filter {
+    export class Filter extends HashObject {
         public type:string = null;
     }
 }

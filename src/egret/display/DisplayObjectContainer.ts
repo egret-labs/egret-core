@@ -335,11 +335,8 @@ module egret {
             if (!o._DO_Props_._visible) {
                 return;
             }
-            if(o._DO_Props_._filter) {
-                RenderCommand.push(o._setGlobalFilter, o);
-            }
-            if (o._DO_Props_._colorTransform) {
-                RenderCommand.push(o._setGlobalColorTransform, o);
+            if(o._hasFilters()) {
+                RenderCommand.push(o._setGlobalFilters, o);
             }
             var mask = o.mask || o._DO_Props_._scrollRect;
             if(mask) {
@@ -355,11 +352,8 @@ module egret {
             if(mask) {
                 RenderCommand.push(o._popMask, o);
             }
-            if (o._DO_Props_._colorTransform) {
-                RenderCommand.push(o._removeGlobalColorTransform, o);
-            }
-            if(o._DO_Props_._filter) {
-                RenderCommand.push(o._removeGlobalFilter, o);
+            if(o._hasFilters()) {
+                RenderCommand.push(o._removeGlobalFilters, o);
             }
         }
 

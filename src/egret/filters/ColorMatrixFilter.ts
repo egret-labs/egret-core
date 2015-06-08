@@ -26,57 +26,38 @@
 //  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 //////////////////////////////////////////////////////////////////////////////////////
-
-
 module egret {
     /**
      * @private
      */
-    export class DisplayObjectProperties {
-        public _name:string = null;
-        public _explicitWidth:number = NaN;
-        public _explicitHeight:number = NaN;
-        public _x:number = 0;
-        public _y:number = 0;
-        public _scaleX:number = 1;
-        public _scaleY:number = 1;
-        public _anchorOffsetX:number = 0;
-        public _anchorOffsetY:number = 0;
-        public _anchorX:number = 0;
-        public _anchorY:number = 0;
-        public _rotation:number = 0;
-        public _alpha:number = 1;
-        public _skewX:number = 0;
-        public _skewY:number = 0;
-        public _blendMode:string = null;
+    export class ColorMatrixFilter extends Filter {
         /**
-         * 每个显示对象初始化时默认的 touchEnabled 属性值
-         * @default false
+         * @private
          */
-        public static defaultTouchEnabled:boolean = false;
-        public _touchEnabled:boolean = DisplayObjectProperties.defaultTouchEnabled;
-        public _visible:boolean = true;
-        public _worldAlpha:number = 1;
-        public _scrollRect:Rectangle = null;
-        public _cacheAsBitmap:boolean = false;
-        public _parent:DisplayObjectContainer = null;
-        public _stage:Stage = null;
-        public _needDraw:boolean = false;
+        public _matrix:Array<number> = [];
+        private _matrix2:Array<number> = [];
 
-        /**
-         * beta功能，请勿调用此方法
-         */
-        public _filters:Array<Filter> = null;
+        constructor(matrix:Array<number> = null) {
+            super();
+            this.type = "colorTransform";
+            this._setMatrix(matrix);
+        }
 
+        public get matrix():Array<number> {
+            for (var i = 0; i < 20; i++) {
+                this._matrix2[i] = this._matrix[i];
+            }
+            return this._matrix2;
+        }
 
+        public set matrix(value:Array<number>) {
+            this._setMatrix(value);
+        }
 
-        public _hasWidthSet:boolean = false;
-        public _hasHeightSet:boolean = false;
-        public _normalDirty:boolean = true;
-        //对宽高有影响
-        public _sizeDirty:boolean = true;
-        public _isContainer:boolean = false;
-        constructor() {
+        private _setMatrix(value:Array<number>):void {
+            for (var i = 0; i < 20; i++) {
+                this._matrix[i] = (value && value[i]) || 0;
+            }
         }
     }
 }
