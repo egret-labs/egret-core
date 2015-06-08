@@ -2,7 +2,7 @@
  * Created by huanghaiying on 15/1/3.
  */
 
-var path = require("path");
+var path = require("../core/path");
 var async = require('../core/async');
 var globals = require("../core/globals");
 var param = require("../core/params_analyze.js");
@@ -82,7 +82,7 @@ function build(properties, callback, keepGeneratedTypescript) {
 
             var array = [];
             var list = detailCfg["file_list"].filter(function (item) {
-                var item = path.join(detailCfg.prefix, detailCfg.source, item).replace(/\\\\|\\/g, "/");
+                var item = path.join(detailCfg.prefix, detailCfg.source, item);
                 array.push(item);
 
                 if (item.indexOf(".js") >= 0) {

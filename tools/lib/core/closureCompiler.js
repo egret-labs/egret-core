@@ -1,4 +1,4 @@
-var path = require("path");
+var path = require("../core/path");
 var file = require("../core/file.js");
 var child_process = require("child_process");
 var param = require("../core/params_analyze.js");

@@ -37,6 +37,10 @@ exports.extname = function() {
     return changeToUnixpath(path.extname.apply(null, arguments));
 };
 
+exports.existsSync = function() {
+    return path.existsSync.apply(null, arguments);
+};
+
 
 function changeToUnixpath (path) {
     return path.replace(/\\\\|\\/g, "/");

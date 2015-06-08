@@ -2,7 +2,7 @@
  * Created by yjtx on 15-5-27.
  */
 var file = require("../../core/file.js");
-var path = require("path");
+var path = require("../../core/path");
 
 exports.getVersionCtrName = function getVersionCtrName(projectPath) {
     var egretProperties = JSON.parse(file.read(path.join(projectPath, "egretProperties.json")));

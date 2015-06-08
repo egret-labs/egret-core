@@ -2,7 +2,7 @@
  * Created by wander on 14-11-4.
  */
 
-var path = require("path");
+var path = require("../core/path");
 var fs = require("fs");
 var param = require("../core/params_analyze.js");
 var globals = require("../core/globals");
@@ -73,7 +73,6 @@ function createManifest(projectPath, outputPath, newCode, ignorePathList){
         var txt = file.read(filePath);
         var txtCrc32 = crc32(txt);
         var savePath = path.relative(projectPath, filePath);
-        savePath = savePath.replace(/(\\\\|\\)/g,"/");
         var crcstr = null;
         if(oldVersion) {
             if(oldVersion[savePath] == undefined || oldVersion[savePath]["v"] != txtCrc32) {

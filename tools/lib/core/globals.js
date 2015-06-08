@@ -1,6 +1,6 @@
 var locale = require("./locale/local.js");
 var param = require("../core/params_analyze.js");
-var path = require("path");
+var path = require("../core/path");
 var file = require("./file");
 
 var _require = function (moduleName) {
@@ -309,10 +309,6 @@ function getString(id) {
     }
     return message;
 }
-
-exports.changeToUnixpath = function (path) {
-  return path.replace(/\\\\|\\/g, "/");
-};
 
 exports.getGlobalJava = getGlobalJava;
 

@@ -1,5 +1,5 @@
 var globals = require("./globals.js");
-var path = require("path");
+var path = require("../core/path");
 var file = require("../core/file.js")
 
 var argv;
@@ -71,7 +71,7 @@ exports.getEnv = _getEnv;
  * @returns {*}
  */
 exports.getEgretPath = function () {
-    var path = require("path");
+    var path = require("../core/path");
     var obj = _getEnv();
     var egret_path = _getEnv().EGRET_PATH;
     if (!egret_path) {

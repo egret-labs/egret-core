@@ -39,7 +39,7 @@
 var DOMParser = require("../core/xmldom/dom-parser").DOMParser;
 
 var file = require("../core/file");
-var path = require("path");
+var path = require("../core/path");
 
 var xml_digester = require('../core/xml-digester');
 var digester = xml_digester.XmlDigester({});
