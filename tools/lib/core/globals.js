@@ -310,6 +310,10 @@ function getString(id) {
     return message;
 }
 
+exports.changeToUnixpath = function (path) {
+  return path.replace(/\\\\|\\/g, "/");
+};
+
 exports.getGlobalJava = getGlobalJava;
 
 exports.setShowDebugLog = setShowDebugLog;

@@ -3,11 +3,12 @@
  */
 var path = require("path");
 var file = require("../../core/file.js");
+var globals = require("../../core/globals.js");
 exports.copyFilesWithIgnore = function (sourceRootPath, desRootPath, versionInfo) {
     var copyFilePathList = file.getDirectoryAllListing(path.join(sourceRootPath, "resource"));
 
     copyFilePathList.forEach(function (copyFilePath) {
-        var filePath = path.relative(sourceRootPath, copyFilePath);
+        var filePath = globals.changeToUnixpath(path.relative(sourceRootPath, copyFilePath));
         if (versionInfo[filePath]) {//不在忽略列表的路径，拷贝过去
             var copyFileRePath = path.relative(sourceRootPath, copyFilePath);
             file.copy(path.join(copyFilePath), path.join(desRootPath, copyFileRePath));
