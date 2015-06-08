@@ -54,8 +54,11 @@ module egret {
                 return;
             }
             if (loader.dataFormat == URLLoaderDataFormat.SOUND) {
-                if (egret.Browser.getInstance().isIOS() && WebAudio.canUseWebAudio) {
+                if (Html5Capatibility._audioType == egret.AudioType.WEB_AUDIO) {
                     this.loadWebAudio(loader);
+                }
+                else if (Html5Capatibility._audioType == egret.AudioType.QQ_AUDIO) {
+                    this.loadQQAudio(loader);
                 }
                 else {
                     this.loadSound(loader);
@@ -149,6 +152,32 @@ module egret {
                 audio.removeEventListener("error", soundPreloadErrorHandler, false);
                 IOErrorEvent.dispatchIOErrorEvent(loader);
             };
+        }
+
+        private loadQQAudio(loader:URLLoader):void {
+            var virtualUrl:string = this.getVirtualUrl(loader._request.url);
+            console.log("loadQQAudio");
+
+            QZAppExternal.preloadSound(
+                function(data){
+                    if (data.code == 0) {
+                        var audio = new QQAudio();
+                        audio._setPath(virtualUrl);
+
+                        var sound = new Sound();
+                        sound._setAudio(audio);
+                        loader.data = sound;
+
+                        __callAsync(Event.dispatchEvent, Event, loader, Event.COMPLETE);
+                    }
+                    else {
+                        IOErrorEvent.dispatchIOErrorEvent(loader);
+                    }
+                },{
+                    bid : -1,
+                    url : virtualUrl,
+                    refresh : 1
+                });
         }
 
         private loadWebAudio(loader:URLLoader):void {
