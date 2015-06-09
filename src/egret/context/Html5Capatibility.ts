@@ -74,7 +74,7 @@ module egret {
 
                     var bases = document.getElementsByTagName('base');
                     if (bases && bases.length > 0) {
-                        Html5Capatibility._QQRootPath = bases[0].baseURI;
+                        Html5Capatibility._QQRootPath = bases[0]["baseURI"];
                     }
                     else {
                         var endIdx = window.location.href.indexOf("?");
