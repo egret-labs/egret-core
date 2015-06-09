@@ -1,7 +1,7 @@
 /**
  * Created by yjtx on 15-5-27.
  */
-var path = require("path");
+var path = require("../core/path");
 var file = require("../core/file.js");
 
 exports.modifyNativeRequire = function (url, needCompile, debug, versonCtrClassName) {

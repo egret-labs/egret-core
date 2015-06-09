@@ -1,7 +1,7 @@
 /**
  * Created by huanghaiying on 14/12/4.
  */
-var path = require("path");
+var path = require("../core/path");
 var param = require("../core/params_analyze.js");
 var file = require("../core/file.js");
 var globals = require("../core/globals");

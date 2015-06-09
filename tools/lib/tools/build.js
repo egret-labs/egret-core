@@ -1,7 +1,7 @@
 /**
  * 将TypeScript和EXML编译为JavaScript
  */
-var path = require("path");
+var path = require("../core/path");
 var async = require('../core/async');
 var globals = require("../core/globals");
 var param = require("../core/params_analyze.js");
@@ -85,7 +85,7 @@ function buildPlatform(needCompileEngine, keepGeneratedTypescript) {
                 var dJson = path.join(modulelibspath, module["name"] + ".d.json");
                 var dList = JSON.parse(file.read(dJson));
                 var fileList = dList.file_list.map(function (item) {
-                    return path.relative(rootPath, path.join(modulelibspath, item)).replace(".ts", ".js").replace(/\\\\|\\/g, "/");
+                    return path.relative(rootPath, path.join(modulelibspath, item)).replace(".ts", ".js");
                 });
 
                 if (module["name"] == "html5") {

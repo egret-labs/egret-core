@@ -5,7 +5,7 @@
  * Time: PM11:55
  * To change this template use File | Settings | File Templates.
  */
-var path = require("path");
+var path = require("../core/path");
 var file = require("../core/file");
 var param = require("../core/params_analyze.js");
 

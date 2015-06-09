@@ -1,7 +1,7 @@
 /**
  * Created by huanghaiying on 15/1/6.
  */
-var path = require("path");
+var path = require("../core/path");
 var file = require("../core/file.js");
 var globals = require("../core/globals");
 

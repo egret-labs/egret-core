@@ -1,4 +1,4 @@
-var path = require("path");
+var path = require("../core/path");
 var fs = require("fs");
 
 var name_map = {
