@@ -252,11 +252,16 @@ module egret {
 
         }
 
+        /**
+         * 当从其他站点加载一个图片时，指定是否启用跨域资源共享(CORS)，默认值为null。
+         * 可以设置为"anonymous","use-credentials"或null。
+         */
+        public static crossOrigin:string = null;
+
         public static _createBitmapDataForCanvasAndWebGl(url:string, callback:(code:number, bitmapData:any)=>void):void {
             var bitmapData:HTMLImageElement = Texture._bitmapDataFactory[url];
             if (!bitmapData) {
                 bitmapData = document.createElement("img");
-                bitmapData.crossOrigin = "anonymous";
                 bitmapData.setAttribute("bitmapSrc", url);
                 Texture._bitmapDataFactory[url] = bitmapData;
             }
@@ -264,6 +269,7 @@ module egret {
                 callback(0, bitmapData);
                 return;
             }
+            bitmapData.crossOrigin = Texture.crossOrigin;
             var winURL = window["URL"] || window["webkitURL"];
             if (Texture._bitmapCallbackMap[url] == null) {//非正在加载中
                 Texture._addToCallbackList(url, callback);
