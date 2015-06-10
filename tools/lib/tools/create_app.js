@@ -3,6 +3,7 @@ var path = require('path');
 var globals = require("../core/globals");
 var param = require("../core/params_analyze.js");
 var file = require('../core/file.js');
+var cp_exec = require('child_process').exec;
 
 function run(dir, args, opts) {
     if(!args || !args[0] || !opts["-f"] || !opts["-t"]) {
@@ -58,10 +59,17 @@ function run(dir, args, opts) {
 function create_app_from(app_path, template_path, app_data) {
     // copy from project template
     globals.log(1607);
-    app_data["template"]["source"].forEach(function(source) {
-        file.copy(path.join(template_path, source), path.join(app_path, source));
-    });
+    if (app_data["template"]["zip"]) {
+        run_unzip(app_path, template_path, app_data);
+    } else {
+        app_data["template"]["source"].forEach(function(source) {
+            file.copy(path.join(template_path, source), path.join(app_path, source));
+        });
+        rename_app(app_path, template_path, app_data);
+    }
+}
 
+function rename_app(app_path, template_path, app_data) {
     // replace keyword in content
     globals.log(1608);
     app_data["rename_tree"]["content"].forEach(function(content) {
@@ -80,6 +88,25 @@ function create_app_from(app_path, template_path, app_data) {
         if (index > 0) {
             var target_str = str.substring(0, index) + path.basename(app_path) + str.substring(index + offset);
             fs.renameSync(str, target_str);
+        }
+    });
+}
+
+function run_unzip(app_path, template_path, app_data) {
+    var template_zip_path = path.join(template_path, app_data["template"]["zip"]);
+    var cmd = "unzip -q " + template_zip_path + " -d " + app_path;
+
+    console.log(cmd);
+
+    var build = cp_exec(cmd);
+    build.stderr.on("data", function(data) {
+        globals.log(data);
+    });
+    build.on("exit", function(result) {
+        if (result == 0) {
+            rename_app(app_path, template_path, app_data);
+        } else {
+            console.error("unzip出现异常！");
         }
     });
 }
