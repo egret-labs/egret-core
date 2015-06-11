@@ -48,8 +48,17 @@ module egret {
          */
         public _play(type?:string):void {
             this.paused = false;
-            this._audio.currentTime = this._startTime;
-            this._audio.play();
+
+            this._audio.load();
+            try {
+                this._audio.currentTime = this._startTime;
+            }
+            catch(e) {
+
+            }
+            finally {
+                this._audio.play();
+            }
         }
 
         private clear():void {
