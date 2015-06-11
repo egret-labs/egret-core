@@ -30,7 +30,7 @@ Platforms:
 
 Tools
 -------------------------
-* [Egret Wing](http://www.egret-labs.org/download/wing-download.html) , Egret GUI Visual Editor
+* [Egret Wing](http://www.egret-labs.org/download/wing-download.html) , Egret IDE.
 * [TS Conversion](http://www.egret-labs.org/download/conversion-tool-download.html) ,AS3-to-TS Code transformation tool
 * [Res Depot](http://www.egret-labs.org/download/restool-download.html) ,Resource configuration and management tool
 * [Texture Merger](http://www.egret-labs.org/download/egret-texturetool-download.html) ,SpriteSheet tool
@@ -94,7 +94,7 @@ Egret Engine是一款使用JavaScript(TypeScript)编写的HTML5开源免费游�
 
 工具
 -------------------------
-* [Egret Wing](http://www.egret-labs.org/download/wing-download.html) , Egret GUI Visual Editor
+* [Egret Wing](http://www.egret-labs.org/download/wing-download.html) , Egret IDE
 * [TS Conversion](http://www.egret-labs.org/download/conversion-tool-download.html) ,AS3到TS的代码转换工具
 * [Res Depot](http://www.egret-labs.org/download/restool-download.html) ,RES资源模块配置文件管理工具
 * [Texture Merger](http://www.egret-labs.org/download/egret-texturetool-download.html) ,SpriteSheet工具
