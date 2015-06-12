@@ -29,50 +29,44 @@
 
 
 module dragonBones {
-	/**
-	 * @class dragonBones.Frame
-	 * @classdesc
-	 *关键帧数据
-	 */
-	export class Frame{
-		/**
-		 *位置
-		 * @member {number} dragonBones.Frame#position
-		 */
-		public position:number = 0;
-		/**
-		 *持续时间
-		 * @member {number} dragonBones.Frame#duration
-		 */
-		public duration:number = 0;
-		/**
-		 *帧标签
-		 * @member {string} dragonBones.Frame#action
-		 */
-		public action:string;
-		/**
-		 *帧事件
-		 * @member {string} dragonBones.Frame#event
-		 */
-		public event:string;
-		/**
-		 *帧声音
-		 * @member {string} dragonBones.Frame#sound
-		 */
-		public sound:string;
 
+	/**
+	 * @class dragonBones.SlotTimeline
+	 * @extends dragonBones.Timeline
+	 * @classdesc
+	 * 插槽的时间轴数据，包含一个和多个关键帧数据
+	 */
+	export class SlotTimeline extends Timeline{
 		/**
-		 *构造函数
+		 *时间轴的名称
+		 * @member {string} dragonBones.SlotTimeline#name
+		 */
+		public name:string;
+		/**
+		 * 是否有动画
+		 * @member {boolean} dragonBones.SlotTimeline#transformed
+		 */
+		public transformed:boolean;
+		/**
+		 * 偏移量
+		 * @member {number} dragonBones.SlotTimeline#offset
+		 */
+		public offset:number;
+		
+		/**
+		 * 构造函数，实例化一个SlotTimeline
 		 */
 		public constructor(){
-			this.position = 0;
-			this.duration = 0;
+			super();
+
+			this.offset = 0;
 		}
 
 		/**
-		 *释放资源
+		 * 释放资源
 		 */
 		public dispose():void{
+			super.dispose();
 		}
 	}
 }

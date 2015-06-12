@@ -119,7 +119,7 @@ module dragonBones {
 
         /**
          * 更新所有包含的 IAnimatable 实例，将他们的动画向前播放指定的时间。一般来说，这个方法需要在 ENTERFRAME 事件的响应函数中被调用
-         * @param passedTime {number} 前进的时间
+         * @param passedTime {number} 前进的时间，默认值为-1，DragonBones会自动为你计算当前帧与上一帧的时间差
          */
 		public advanceTime(passedTime:number = -1):void{
 			if(passedTime < 0){

@@ -84,7 +84,11 @@ module dragonBones {
 		public get timelineList():Array<TransformTimeline>{
 			return this._timelineList;
 		}
-
+		private _slotTimelineList:Array<SlotTimeline>;
+		public get slotTimelineList():Array<SlotTimeline>{
+			return this._slotTimelineList;
+		}
+		
 		/**
 		 * 创建一个AnimationData实例
 		 */
@@ -97,6 +101,7 @@ module dragonBones {
 			this.hideTimelineNameMap = [];
 			
 			this._timelineList = [];
+			this._slotTimelineList = [];
 		}
 
 		/**
@@ -105,14 +110,21 @@ module dragonBones {
 		public dispose():void{
 			super.dispose();
 			this.hideTimelineNameMap = null;
-
-            for(var key in this._timelineList)
+			var i:number = 0;
+			var len:number = 0;
+            for(i = 0,len = this._timelineList.length; i < len; i++)
             {
-                var timeline:TransformTimeline = this._timelineList[key];
+                var timeline:TransformTimeline = this._timelineList[i];
                 timeline.dispose();
             }
 
 			this._timelineList = null;
+			for(i = 0,len = this._slotTimelineList.length; i < len; i++)
+			{
+				var slotTimeline:SlotTimeline =  this._slotTimelineList[i];
+				slotTimeline.dispose();
+			}
+			this._slotTimelineList = null;
 		}
 
 		/**
@@ -141,6 +153,26 @@ module dragonBones {
 			
 			if(this._timelineList.indexOf(timeline) < 0){
 				this._timelineList[this._timelineList.length] = timeline;
+			}
+		}
+
+		public getSlotTimeline(timelineName:string):SlotTimeline{
+			var i:number = this._slotTimelineList.length;
+			while(i --){
+				if(this._slotTimelineList[i].name == timelineName){
+					return this._slotTimelineList[i];
+				}
+			}
+			return null;
+		}
+
+		public addSlotTimeline(timeline:SlotTimeline):void{
+			if(!timeline){
+				throw new Error();
+			}
+
+			if(this._slotTimelineList.indexOf(timeline) < 0){
+				this._slotTimelineList[this._slotTimelineList.length] = timeline;
 			}
 		}
 	}

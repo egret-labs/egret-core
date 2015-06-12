@@ -88,6 +88,7 @@ module dragonBones {
 		 * 颜色变换
 		 */
 		public static COLOR_TRANSFORM:string = "colorTransform";
+		public static COLOR:string = "color";
 		/**
 		 * 矩形
 		 */
@@ -176,6 +177,7 @@ module dragonBones {
 		 * 循环
 		 */
 		public static A_LOOP:string = "loop";
+        public static A_PLAY_TIMES: string = "playTimes";
 		/**
 		 * 事件
 		 */
