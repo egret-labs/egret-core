@@ -2,7 +2,7 @@
  * Created by huanghaiying on 15/1/4.
  */
 
-var path = require("path");
+var path = require("../core/path");
 var async = require('../core/async');
 var globals = require("../core/globals");
 var param = require("../core/params_analyze.js");
@@ -53,7 +53,6 @@ function createFileList(manifest, srcPath) {
             filePath = filePath.substring(0, filePath.length - 2) + "js";
         }
 
-        filePath = filePath.replace(/(\\\\|\\)/g, "/");
         return filePath;
     });
 

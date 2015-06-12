@@ -18,6 +18,8 @@
         "interactive/HTML5TouchContext.ts",
         "display/HTML5StageText.ts",
         "audio/Html5Audio.ts",
-        "audio/WebAudio.ts"
+        "audio/WebAudio.ts",
+        "audio/QQAudio.ts",
+        "Html5Capatibility.ts"
     ]
 }

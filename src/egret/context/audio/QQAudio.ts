@@ -26,84 +26,65 @@
 //  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 //////////////////////////////////////////////////////////////////////////////////////
+
+declare module QZAppExternal {
+    function playLocalSound(call, data);
+    function playLocalBackSound(data);
+    function preloadSound(call, data);
+    function stopSound();
+    function stopBackSound();
+}
+
 module egret {
     /**
      * @private
      */
-    export class Html5Audio implements IAudio {
-        /**
-         * audio音频对象
-         * @member {any} egret.Sound#audio
-         */
+    export class QQAudio implements IAudio {
+
         constructor() {
         }
 
-        private _audio;
         private _loop:boolean = false;
 
+        private _type:string;
         /**
          * 播放声音
          * @method egret.Sound#play
          * @param loop {boolean} 是否循环播放，默认为false
          */
         public _play(type?:string):void {
-            this.paused = false;
-
-            this._audio.load();
-            try {
-                this._audio.currentTime = this._startTime;
+            this._type = type;
+            if (type == egret.Sound.EFFECT) {
+                QZAppExternal.playLocalSound(
+                    function(data){
+                        alert(JSON.stringify(data));
+                    },{
+                        bid : -1,
+                        url : this._path,
+                        loop : this._loop? -1:0
+                    });
             }
-            catch(e) {
-
-            }
-            finally {
-                this._audio.play();
+            else {
+                QZAppExternal.playLocalBackSound({
+                    bid : -1,
+                    url : this._path,
+                    loop : this._loop? -1:0
+                });
             }
         }
-
-        private clear():void {
-            this._audio.pause();
-            if (this._loop && !this.paused)
-                this._play();
-        }
-
-        private paused:boolean = true;
 
         /**
          * 暂停声音
          * @method egret.Sound#pause
          */
         public _pause():void {
-            this.paused = true;
-            this._audio.pause();
-        }
-
-        /**
-         * 重新加载声音
-         * @method egret.Sound#load
-         */
-        public _load():void {
-            this._audio.load();
-        }
-
-        public _setAudio(audio):void {
-            this._audio = audio;
-
-            this._audio.onended = ()=> {
-                this.clear();
-            };
-            this.initStart();
-        }
-
-        private initStart():void {
-            var self = this;
-            for (var i = 0; i < self._listeners.length; i++) {
-                var bin = self._listeners[i];
-                this._audio.addEventListener(bin.type, bin.listener, bin.useCapture);
+            if (this._type == egret.Sound.EFFECT) {
+                QZAppExternal.stopSound();
+            }
+            else {
+                QZAppExternal.stopBackSound();
             }
         }
-
-        private _listeners:Array<any> = [];
 
         /**
          * 添加事件监听
@@ -111,10 +92,7 @@ module egret {
          * @param listener 监听函数
          */
         public _addEventListener(type:string, listener:Function, useCapture:boolean = false):void {
-            this._listeners.push({type: type, listener: listener, useCapture: useCapture});
-            if (this._audio) {
-                this._audio.addEventListener(type, listener, useCapture);
-            }
+
         }
 
         /**s
@@ -123,25 +101,23 @@ module egret {
          * @param listener 监听函数
          */
         public _removeEventListener(type:string, listener:Function, useCapture:boolean = false):void {
-            var self = this;
-            for (var i = 0; i < self._listeners.length; i++) {
-                var bin = self._listeners[i];
-                if (bin.listener == listener && bin.useCapture == useCapture && bin.type == type) {
-                    self._listeners.splice(i, 1);
-                    if (this._audio) {
-                        this._audio.removeEventListener(type, listener, useCapture);
-                    }
-                    break;
-                }
-            }
+
+        }
+
+        /**
+         * 重新加载声音
+         * @method egret.Sound#load
+         */
+        public _load():void {
         }
 
         public _preload(type:string, callback:Function = null, thisObj:any = null):void {
             egret.callLater(callback, thisObj);
         }
 
-        public _destroy():void {
-
+        private _path:string;
+        public _setPath(path:string):void {
+            this._path = path;
         }
 
         /**
@@ -149,25 +125,29 @@ module egret {
          * @returns number
          */
         public _getVolume():number {
-            return this._audio.volume;
+            return 1;
         }
 
-        public _setVolume(value:number):void {
-            this._audio.volume = Math.max(0, Math.min(value, 1));
+        public _setVolume(value:number) {
         }
 
         public _setLoop(value:boolean):void {
             this._loop = value;
         }
 
-        private _startTime:number = 0;
+        private _currentTime:number = 0;
 
         public _getCurrentTime():number {
-            return this._audio.currentTime;
+            return 0;
         }
 
-        public _setCurrentTime(value:number):void {
-            this._startTime = value;
+        public _setCurrentTime(value:number) {
+            this._currentTime = value;
         }
+
+        public _destroy():void {
+
+        }
+
     }
 }

@@ -6,7 +6,7 @@
 var file = require("../core/file.js");
 var param = require("../core/params_analyze.js");
 var code_util = require("../core/code_util.js");
-var path = require("path");
+var path = require("../core/path");
 var globals = require("../core/globals.js");
 var projectConfig = require("../core/projectConfig.js");
 

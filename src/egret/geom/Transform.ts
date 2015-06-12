@@ -26,57 +26,55 @@
 //  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 //////////////////////////////////////////////////////////////////////////////////////
-
-
 module egret {
     /**
      * @private
      */
-    export class DisplayObjectProperties {
-        public _name:string = null;
-        public _explicitWidth:number = NaN;
-        public _explicitHeight:number = NaN;
-        public _x:number = 0;
-        public _y:number = 0;
-        public _scaleX:number = 1;
-        public _scaleY:number = 1;
-        public _anchorOffsetX:number = 0;
-        public _anchorOffsetY:number = 0;
-        public _anchorX:number = 0;
-        public _anchorY:number = 0;
-        public _rotation:number = 0;
-        public _alpha:number = 1;
-        public _skewX:number = 0;
-        public _skewY:number = 0;
-        public _blendMode:string = null;
-        /**
-         * 每个显示对象初始化时默认的 touchEnabled 属性值
-         * @default false
-         */
-        public static defaultTouchEnabled:boolean = false;
-        public _touchEnabled:boolean = DisplayObjectProperties.defaultTouchEnabled;
-        public _visible:boolean = true;
-        public _worldAlpha:number = 1;
-        public _scrollRect:Rectangle = null;
-        public _cacheAsBitmap:boolean = false;
-        public _parent:DisplayObjectContainer = null;
-        public _stage:Stage = null;
-        public _needDraw:boolean = false;
+    export class Transform extends HashObject {
+        private _display:DisplayObject;
+
+        constructor(display:DisplayObject) {
+            super();
+            this._display = display;
+        }
+
+        private _matrix:Matrix = new Matrix();
+        private _matrix2:Matrix = new Matrix();
+
+        public get matrix():Matrix {
+            this._matrix2.identityMatrix(this._matrix);
+            return this._matrix2;
+        }
+
+        public set matrix(value:Matrix) {
+            this._setMatrix(value);
+        }
+
+        private _setMatrix(value:Matrix):void {
+            if(!this._display.__hack_local_matrix) {
+                this._display.__hack_local_matrix = new Matrix();
+            }
+            this._display.__hack_local_matrix.identityMatrix(value);
+            this._matrix.identityMatrix(value);
+        }
 
         /**
-         * beta功能，请勿调用此方法
+         * @private
          */
-        public _filters:Array<Filter> = null;
+        public _colorTransform:ColorTransform = new ColorTransform();
+        private _colorTransform2:ColorTransform = new ColorTransform();
 
+        public get colorTransform():ColorTransform {
+            this._colorTransform2.identityColorTransform(this._colorTransform);
+            return this._colorTransform2;
+        }
 
+        public set colorTransform(value:ColorTransform) {
+            this._setColorTransform(value);
+        }
 
-        public _hasWidthSet:boolean = false;
-        public _hasHeightSet:boolean = false;
-        public _normalDirty:boolean = true;
-        //对宽高有影响
-        public _sizeDirty:boolean = true;
-        public _isContainer:boolean = false;
-        constructor() {
+        private _setColorTransform(value:ColorTransform):void {
+            this._colorTransform.identityColorTransform(value);
         }
     }
 }

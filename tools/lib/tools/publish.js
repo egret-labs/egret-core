@@ -1,4 +1,4 @@
-var path = require("path");
+var path = require("../core/path");
 var param = require("../core/params_analyze.js");
 var globals = require("../core/globals");
 var file = require("../core/file.js");

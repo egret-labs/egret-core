@@ -156,7 +156,7 @@ module egret {
         public _drawForCanvas(context:CanvasRenderingContext2D, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, renderType) {
 
             var bitmapData = this._bitmapData;
-            if (!bitmapData["avaliable"]) {
+            if (!bitmapData || !bitmapData["avaliable"]) {
                 return;
             }
             if (renderType != undefined) {
@@ -169,7 +169,7 @@ module egret {
 
         public _drawForNative(context:any, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, renderType) {
             var bitmapData = this._bitmapData;
-            if (!bitmapData["avaliable"]) {
+            if (!bitmapData || !bitmapData["avaliable"]) {
                 return;
             }
             if (renderType !== undefined) {
@@ -234,14 +234,13 @@ module egret {
         }
 
         public static deleteWebGLTexture(texture:Texture):void {
-            var context = egret.MainContext.instance.rendererContext;
-            var gl:WebGLRenderingContext = context["gl"];
             var bitmapData = texture._bitmapData;
             if (bitmapData) {
                 var webGLTexture = bitmapData.webGLTexture;
-                if (webGLTexture && gl) {
+                if (webGLTexture) {
                     for (var key in webGLTexture) {
                         var glTexture = webGLTexture[key];
+                        var gl = glTexture.glContext;
                         gl.deleteTexture(glTexture);
                     }
                 }
@@ -252,6 +251,12 @@ module egret {
         public static createBitmapData(url:string, callback:(code:number, bitmapData:any)=>void):void {
 
         }
+
+        /**
+         * 当从其他站点加载一个图片时，指定是否启用跨域资源共享(CORS)，默认值为null。
+         * 可以设置为"anonymous","use-credentials"或null。
+         */
+        public static crossOrigin:string = null;
 
         public static _createBitmapDataForCanvasAndWebGl(url:string, callback:(code:number, bitmapData:any)=>void):void {
             var bitmapData:HTMLImageElement = Texture._bitmapDataFactory[url];
@@ -264,6 +269,7 @@ module egret {
                 callback(0, bitmapData);
                 return;
             }
+            bitmapData.crossOrigin = Texture.crossOrigin;
             var winURL = window["URL"] || window["webkitURL"];
             if (Texture._bitmapCallbackMap[url] == null) {//非正在加载中
                 Texture._addToCallbackList(url, callback);

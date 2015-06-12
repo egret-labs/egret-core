@@ -1,5 +1,5 @@
 var file = require("../file");
-var path = require("path");
+var path = require("../../core/path");
 var getEgretPath = function () {
     var egret_path = process.env.EGRET_PATH;
     if (!egret_path) {

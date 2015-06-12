@@ -1,5 +1,5 @@
 var globals = require("../core/globals");
-var path = require("path");
+var path = require("../core/path");
 var file = require("../core/file");
 var locale = require( "../core/locale/local.js" );
 

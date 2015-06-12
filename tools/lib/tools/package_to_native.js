@@ -26,7 +26,7 @@ function run(current, arg, opt) {
     var project = config.project;
     var native_folder = config["egret-native"];
     var jscmaker = config["jsc-maker"];
-    var join = require("path").join;
+    var join = require("../core/path").join;
 
     async.series(
         [

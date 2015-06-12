@@ -1,7 +1,7 @@
 /**
  * aotu refresh java activity
  */
-var path = require("path");
+var path = require("../core/path");
 var file = require("../core/file.js");
 
 var platformPath;
