@@ -83,6 +83,27 @@ module egret {
                 this.drawCanvasContext = this.canvasContext;
             }
 
+            var context = this.drawCanvasContext;
+            if (context["imageSmoothingEnabled"] == undefined) {
+                var keys:Array<string> = ["webkitImageSmoothingEnabled", "mozImageSmoothingEnabled", "msImageSmoothingEnabled"];
+                for (var i:number = 0; i < keys.length; i++) {
+                    var key = keys[i];
+                    if (context[key] != undefined) {
+                        break;
+                    }
+                }
+                Object.defineProperty(context, "imageSmoothingEnabled", {
+                    get: function () {
+                        return this[key];
+                    },
+                    set: function (value) {
+                        this[key] = value;
+                    },
+                    enumerable: true,
+                    configurable: true
+                });
+            }
+
             this.onResize();
 
             var f = this.drawCanvasContext.setTransform;
@@ -134,11 +155,7 @@ module egret {
                     this._cacheCanvas.width = this.canvas.width;
                     this._cacheCanvas.height = this.canvas.height;
                 }
-
-                this.drawCanvasContext["imageSmoothingEnabled"] = RendererContext.imageSmoothingEnabled;
-                this.drawCanvasContext["webkitImageSmoothingEnabled"] = RendererContext.imageSmoothingEnabled;
-                this.drawCanvasContext["mozImageSmoothingEnabled"] = RendererContext.imageSmoothingEnabled;
-                this.drawCanvasContext["msImageSmoothingEnabled"] = RendererContext.imageSmoothingEnabled;
+                this.drawCanvasContext["imageSmoothingEnabled"] = egret.RendererContext.imageSmoothingEnabled;
             }
         }
 
