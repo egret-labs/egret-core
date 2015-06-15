@@ -44,12 +44,17 @@ module egret {
 
         private static instance:HTML5DeviceContext = null;
 
+        private static countTime = 0;
         /**
          * @method egret.HTML5DeviceContext#constructor
          */
         public constructor(public frameRate:number = 60) {
             super();
-            if (frameRate == 60) {
+
+            HTML5DeviceContext.countTime = 0;
+            if ((60 % frameRate) == 0) {
+                HTML5DeviceContext.countTime = 60 / frameRate - 1;
+
                 HTML5DeviceContext.requestAnimationFrame = window["requestAnimationFrame"] ||
                     window["webkitRequestAnimationFrame"] ||
                     window["mozRequestAnimationFrame"] ||
@@ -68,6 +73,7 @@ module egret {
                     window["webkitCancelRequestAnimationFrame"];
 
             }
+
             if (!HTML5DeviceContext.requestAnimationFrame) {
                 HTML5DeviceContext.requestAnimationFrame = function (callback) {
                     return window.setTimeout(callback, 1000 / frameRate);
@@ -95,7 +101,7 @@ module egret {
 
         private _requestAnimationId:number = NaN;
 
-
+        private static count:number = 0;
         private enterFrame():void {
             var context = HTML5DeviceContext.instance;
             var thisObject = HTML5DeviceContext._thisObject;
@@ -103,6 +109,12 @@ module egret {
             var thisTime = egret.getTimer();
             var advancedTime = thisTime - context._time;
             context._requestAnimationId = HTML5DeviceContext.requestAnimationFrame.call(window, HTML5DeviceContext.prototype.enterFrame);
+
+            if (HTML5DeviceContext.count < HTML5DeviceContext.countTime) {
+                HTML5DeviceContext.count++;
+                return;
+            }
+            HTML5DeviceContext.count = 0;
             callback.call(thisObject, advancedTime);
             context._time = thisTime;
 
@@ -211,7 +223,7 @@ module egret {
                     else if (eventType == "app_enter_foreground"){
                         onFocusHandler();
                     }
-                }
+                };
                 window["browser"] = browser;
             }
         }
