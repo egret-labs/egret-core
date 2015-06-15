@@ -115,6 +115,7 @@ module egret {
             this.paused = false;
 
             this._startTime = Date.now();
+            this.gain.gain.value = this._volume;
             bufferSource.start(0, this._currentTime);
             this._currentTime = 0;
         }
@@ -221,15 +222,17 @@ module egret {
             egret.callLater(callback, thisObj);
         }
 
+        private _volume:number = 1;
         /**
          * 获取当前音量值
          * @returns number
          */
         public _getVolume():number {
-            return this.gain.gain.value;
+            return this._volume;
         }
 
         public _setVolume(value:number) {
+            this._volume = value;
             this.gain.gain.value = value;
         }
 
