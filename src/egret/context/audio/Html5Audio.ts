@@ -49,7 +49,9 @@ module egret {
         public _play(type?:string):void {
             this.removeListeners();
 
-            this._audio = this._audio.cloneNode();
+            if (Html5Capatibility._System_OS != SystemOSType.WPHONE) {
+                this._audio = this._audio.cloneNode();
+            }
             this.paused = false;
             this._audio.autoplay = true;
             this._audio.volume = this._volume;
