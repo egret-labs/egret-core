@@ -190,6 +190,30 @@ module egret {
             if (hidden && visibilityChange) {
                 document.addEventListener(visibilityChange, handleVisibilityChange, false);
             }
+
+
+            var ua = navigator.userAgent;
+            var isWX = /micromessenger/gi.test(ua);
+            var isQQBrowser = /mqq/ig.test(ua);
+            var isQQ = /mobile.*qq/gi.test(ua);
+
+            if (isQQ || isWX) {
+                isQQBrowser = false;
+            }
+            if(isQQBrowser)
+            {
+                var browser = window["browser"] || {};
+                browser.execWebFn =  browser.execWebFn || {};
+                browser.execWebFn.postX5GamePlayerMessage = function(eventType){
+                    if (eventType == "app_enter_background"){
+                        onBlurHandler();
+                    }
+                    else if (eventType == "app_enter_foreground"){
+                        onFocusHandler();
+                    }
+                }
+                window["browser"] = browser;
+            }
         }
     }
 
