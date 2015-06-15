@@ -216,7 +216,8 @@ module egret {
             {
                 var browser = window["browser"] || {};
                 browser.execWebFn =  browser.execWebFn || {};
-                browser.execWebFn.postX5GamePlayerMessage = function(eventType){
+                browser.execWebFn.postX5GamePlayerMessage = function(event){
+                    var eventType = event.type;
                     if (eventType == "app_enter_background"){
                         onBlurHandler();
                     }
