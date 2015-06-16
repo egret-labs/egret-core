@@ -101,9 +101,10 @@ module egret {
                 Html5Capatibility._System_OS = SystemOSType.IOS;
                 if (Html5Capatibility.getIOSVersion() >= 7) {
                     Html5Capatibility._canUseBlob = true;
+                    
+                    Html5Capatibility._AudioClass = egret.WebAudio;
+                    Html5Capatibility._audioType = AudioType.WEB_AUDIO;
                 }
-                Html5Capatibility._AudioClass = egret.WebAudio;
-                Html5Capatibility._audioType = AudioType.WEB_AUDIO;
             }
 
             var winURL = window["URL"] || window["webkitURL"];
