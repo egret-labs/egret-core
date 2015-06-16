@@ -104,7 +104,7 @@ module egret {
             this._offsetX = x + anchorOffsetX;
             this._offsetY = y + anchorOffsetY;
             displayObject._worldTransform.append(1, 0, 0, 1, -this._offsetX, -this._offsetY);
-            if(clipBounds) {
+            if (clipBounds) {
                 this._offsetX -= x;
                 this._offsetY -= y;
             }
@@ -124,11 +124,8 @@ module egret {
             this.renderContext.clearScreen();
             this.renderContext.onRenderStart();
             Texture.deleteWebGLTexture(this);
-            if(displayObject._DO_Props_._filter) {
-                this.renderContext.setGlobalFilter(displayObject._DO_Props_._filter);
-            }
-            if (displayObject._DO_Props_._colorTransform) {
-                this.renderContext.setGlobalColorTransform(displayObject._DO_Props_._colorTransform.matrix);
+            if (displayObject._hasFilters()) {
+                displayObject._setGlobalFilters(this.renderContext);
             }
             var mask = displayObject.mask || displayObject._DO_Props_._scrollRect;
             if (mask) {
@@ -141,11 +138,8 @@ module egret {
             if (mask) {
                 this.renderContext.popMask();
             }
-            if (displayObject._DO_Props_._colorTransform) {
-                this.renderContext.setGlobalColorTransform(null);
-            }
-            if(displayObject._DO_Props_._filter) {
-                this.renderContext.setGlobalFilter(null);
+            if (displayObject._hasFilters()) {
+                displayObject._removeGlobalFilters(this.renderContext);
             }
             RenderTexture.identityRectangle.width = width;
             RenderTexture.identityRectangle.height = height;
@@ -194,6 +188,19 @@ module egret {
                 this._bitmapData = null;
                 this.renderContext = null;
             }
+        }
+
+        private static _pool:Array<RenderTexture> = [];
+
+        public static create():RenderTexture {
+            if (RenderTexture._pool.length) {
+                return RenderTexture._pool.pop();
+            }
+            return new RenderTexture();
+        }
+
+        public static release(value:RenderTexture):void {
+            RenderTexture._pool.push(value);
         }
     }
 }

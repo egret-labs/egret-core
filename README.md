@@ -1,6 +1,6 @@
 Egret Engine
 ================================================
-Current Version: v1.7.1
+Current Version: v1.7.3
 
 
 Egret Engine is an open source game engine written in Typescript language. The core characteristics of Egret Engine is Open, Efficient and Elegant.
@@ -30,7 +30,7 @@ Platforms:
 
 Tools
 -------------------------
-* [Egret Wing](http://www.egret-labs.org/download/wing-download.html) , Egret GUI Visual Editor
+* [Egret Wing](http://www.egret-labs.org/download/wing-download.html) , Egret IDE.
 * [TS Conversion](http://www.egret-labs.org/download/conversion-tool-download.html) ,AS3-to-TS Code transformation tool
 * [Res Depot](http://www.egret-labs.org/download/restool-download.html) ,Resource configuration and management tool
 * [Texture Merger](http://www.egret-labs.org/download/egret-texturetool-download.html) ,SpriteSheet tool
@@ -40,6 +40,10 @@ Tools
 
 Release Notes
 --------------------
+[Egret 1.7.3 Release Notes 2015-6-4](/docs/en/1.7.3_ReleaseNotes.md)
+
+[Egret 1.7.2 Release Notes 2015-5-21](/docs/en/1.7.2_ReleaseNotes.md)
+
 [Egret 1.7.1 Release Notes 2015-5-8](/docs/en/1.7.1_ReleaseNotes.md)
 
 [Egret 1.7.0 Release Notes 2015-4-24](/docs/en/1.7.0_ReleaseNotes.md)
@@ -90,7 +94,7 @@ Egret Engine是一款使用JavaScript(TypeScript)编写的HTML5开源免费游�
 
 工具
 -------------------------
-* [Egret Wing](http://www.egret-labs.org/download/wing-download.html) , Egret GUI Visual Editor
+* [Egret Wing](http://www.egret-labs.org/download/wing-download.html) , Egret IDE
 * [TS Conversion](http://www.egret-labs.org/download/conversion-tool-download.html) ,AS3到TS的代码转换工具
 * [Res Depot](http://www.egret-labs.org/download/restool-download.html) ,RES资源模块配置文件管理工具
 * [Texture Merger](http://www.egret-labs.org/download/egret-texturetool-download.html) ,SpriteSheet工具
@@ -102,6 +106,10 @@ Egret Engine是一款使用JavaScript(TypeScript)编写的HTML5开源免费游�
 
 发布说明
 --------------------
+
+[Egret 1.7.3 Release Notes 2015-6-4](/docs/cn/1.7.3_ReleaseNotes.md)
+
+[Egret 1.7.2 Release Notes 2015-5-21](/docs/cn/1.7.2_ReleaseNotes.md)
 
 [Egret 1.7.1 Release Notes 2015-5-8](/docs/cn/1.7.1_ReleaseNotes.md)
 

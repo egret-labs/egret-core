@@ -1,7 +1,7 @@
 /**
  * 将TypeScript和EXML编译为JavaScript
  */
-var path = require("path");
+var path = require("../core/path");
 var async = require('../core/async');
 var globals = require("../core/globals");
 var param = require("../core/params_analyze.js");
@@ -42,6 +42,13 @@ function buildPlatform(needCompileEngine, keepGeneratedTypescript) {
         task.push(function (callback) {
             buildModule.compileAllModules(projectProperties, callback);
         });
+
+        task.push(function (callback) {
+            var referenceInfo = projectProperties.getModuleReferenceInfo();
+            var text = JSON.stringify(referenceInfo, null, "\t");
+            file.save(file.joinPath(projectProperties.getProjectPath(), "libs/module_reference.json"), text);
+            callback();
+        });
     }
 
     var moduleReferenceList = null;
@@ -65,42 +72,31 @@ function buildPlatform(needCompileEngine, keepGeneratedTypescript) {
         );
     }
 
-    if ((needCompileEngine) || moduleReferenceList) {//修改第三方库列表
+    if (true/*(needCompileEngine) || moduleReferenceList*/) {//修改第三方库列表
         task.push(function (tempCallback) {//修改egret_file_list.js文件
             var moduleList = projectProperties.getAllModules();
             var html5List = [];
             var nativeList = [];
+
+            var rootPath = path.join(projectProperties.getProjectPath(), "libs");
             for (var i = 0; i < moduleList.length; i++) {
                 var module = projectProperties.getModuleConfig(moduleList[i]["name"]);
-                var list = module["file_list"];
+                var modulelibspath = path.join(projectProperties.getProjectPath(), "libs", module["output"]||module["name"]);
+                var dJson = path.join(modulelibspath, module["name"] + ".d.json");
+                var dList = JSON.parse(file.read(dJson));
+                var fileList = dList.file_list.map(function (item) {
+                    return path.relative(rootPath, path.join(modulelibspath, item)).replace(".ts", ".js");
+                });
 
-                for (var j = 0; j < list.length; j++) {
-                    var item = list[j];
-                    if (item.indexOf(".d.ts") == -1) {
-                        var tsFile = file.joinPath(module.prefix, module.source, item);
-                        //if (module.decouple == "true" && moduleReferenceList && moduleReferenceList.indexOf(tsFile) == -1) {
-                        //    continue;
-                        //}
-
-                        var ext = file.getExtension(tsFile).toLowerCase();
-                        if (ext == "ts" && globals.isInterface(tsFile)) {
-                            continue;
-                        }
-                        var item2 = item.replace(".ts", ".js");
-                        var url = path.join((module["output"] ? module["output"] : module["name"]), item2);
-
-                        url = url.replace(/(\\\\|\\)/g, "/");
-                        if (module["name"] == "html5") {
-                            html5List.push(url);
-                        }
-                        else if (module["name"] == "native") {
-                            nativeList.push(url);
-                        }
-                        else {
-                            html5List.push(url);
-                            nativeList.push(url);
-                        }
-                    }
+                if (module["name"] == "html5") {
+                    html5List = html5List.concat(fileList);
+                }
+                else if (module["name"] == "native") {
+                    nativeList = nativeList.concat(fileList);
+                }
+                else {
+                    html5List = html5List.concat(fileList);
+                    nativeList = nativeList.concat(fileList);
                 }
             }
 
@@ -117,12 +113,16 @@ function buildPlatform(needCompileEngine, keepGeneratedTypescript) {
     }
 
 
-
     var runtime = param.getOption(param.getArgv()["opts"], "--runtime", ["html5", "native"]);
 
     if (runtime == "native") {
         task.push(//替换native项目内容
             function (tempCallback) {
+
+                var versionCtr = require('../tools/version/' + require("../tools/version/getVersionCtr").getVersionCtrName(projectProperties.getProjectPath()));
+                var fileModify = require("../core/fileAutoChange");
+                fileModify.modifyNativeRequire(projectProperties.getProjectPath(), false, true, versionCtr.getClassName());
+
                 if (projectProperties.getNativePath("android")) {
                     var url1 = path.join(projectProperties.getProjectPath(), projectProperties.getNativePath("android"), "proj.android");
                     if (file.exists(url1)) {//是egret的android项目
@@ -134,8 +134,8 @@ function buildPlatform(needCompileEngine, keepGeneratedTypescript) {
                             "android", projectProperties.getIgnorePath());
 
                         //修改java文件
-                        var javaEntr = require('../core/changeJavaEntrance');
-                        javaEntr.changeBuild(url1, "android");
+                        var entrance = require('../core/changePlatformEntrance');
+                        entrance.changeBuild(url1, "android");
                     }
                 }
 
@@ -143,12 +143,15 @@ function buildPlatform(needCompileEngine, keepGeneratedTypescript) {
                     var url1 = path.join(projectProperties.getProjectPath(), projectProperties.getNativePath("ios"), "proj.ios");
 
                     if (file.exists(url1)) {//是egret的ios项目
-
                         //拷贝项目到native工程中
                         var cpFiles = require("../core/copyProjectFiles.js");
                         cpFiles.copyFilesToNative(projectProperties.getProjectPath(),
                             path.join(projectProperties.getProjectPath(), projectProperties.getNativePath("ios")),
                             "ios", projectProperties.getIgnorePath());
+
+                        //修改java文件
+                        var entrance = require('../core/changePlatformEntrance');
+                        entrance.changeBuild(url1, "ios");
                     }
                 }
 

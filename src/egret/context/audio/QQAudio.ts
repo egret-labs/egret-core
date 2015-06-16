@@ -26,76 +26,64 @@
 //  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 //////////////////////////////////////////////////////////////////////////////////////
+
+declare module QZAppExternal {
+    function playLocalSound(call, data);
+    function playLocalBackSound(data);
+    function preloadSound(call, data);
+    function stopSound();
+    function stopBackSound();
+}
+
 module egret {
     /**
      * @private
      */
-    export class WebAudio {
-        public static canUseWebAudio = window["AudioContext"] || window["webkitAudioContext"] || window["mozAudioContext"];
-        public static ctx = WebAudio.canUseWebAudio ? new (window["AudioContext"] || window["webkitAudioContext"] || window["mozAudioContext"])() : undefined;
-
-        /**
-         * audio音频对象
-         * @member {any} egret.Sound#audio
-         */
-        private audioBuffer: AudioBuffer;
-        private _arrayBuffer: ArrayBuffer;
-        private context = WebAudio.ctx;
-        private gain;
-        private bufferSource: AudioBufferSourceNode = null;
-        private paused = true;
+    export class QQAudio implements IAudio {
 
         constructor() {
-            if (WebAudio.ctx["createGain"]) {
-                this.gain = WebAudio.ctx["createGain"]();
-            }
-            else {
-                this.gain = WebAudio.ctx["createGainNode"]();
-            }
         }
 
         private _loop:boolean = false;
+
+        private _type:string;
         /**
          * 播放声音
          * @method egret.Sound#play
          * @param loop {boolean} 是否循环播放，默认为false
          */
-        play(): void {
-            var context = this.context;
-            var gain = this.gain;
-            var bufferSource = context.createBufferSource();
-            bufferSource.buffer = this.audioBuffer;
-            bufferSource.connect(gain);
-            gain.connect(context.destination);
-            bufferSource.start(0, 0);
-            bufferSource.onended = ()=> {
-                bufferSource.stop(0);
-                bufferSource.disconnect();
-                if (this._loop && !this.paused)
-                    this.play();
-            };
-            this.bufferSource = bufferSource;
-            this.paused = false;
+        public _play(type?:string):void {
+            this._type = type;
+            if (type == egret.Sound.EFFECT) {
+                QZAppExternal.playLocalSound(
+                    function(data){
+                        alert(JSON.stringify(data));
+                    },{
+                        bid : -1,
+                        url : this._path,
+                        loop : this._loop? -1:0
+                    });
+            }
+            else {
+                QZAppExternal.playLocalBackSound({
+                    bid : -1,
+                    url : this._path,
+                    loop : this._loop? -1:0
+                });
+            }
         }
+
         /**
          * 暂停声音
          * @method egret.Sound#pause
          */
-        pause(): void {
-            this.paused = true;
-            this.bufferSource.stop();
-        }
-        /**
-         * 重新加载声音
-         * @method egret.Sound#load
-         */
-        load(): void {
-            this.arrayBuffer = this._arrayBuffer;
-        }
-
-        public set arrayBuffer(buffer:ArrayBuffer) {
-            this._arrayBuffer = buffer;
-            this.context.decodeAudioData(buffer, audioBuffer=> this.audioBuffer = audioBuffer);
+        public _pause():void {
+            if (this._type == egret.Sound.EFFECT) {
+                QZAppExternal.stopSound();
+            }
+            else {
+                QZAppExternal.stopBackSound();
+            }
         }
 
         /**
@@ -103,44 +91,63 @@ module egret {
          * @param type 事件类型
          * @param listener 监听函数
          */
-        public addEventListener(type:string, listener:Function):void {
+        public _addEventListener(type:string, listener:Function, useCapture:boolean = false):void {
 
         }
 
-        /**
+        /**s
          * 移除事件监听
          * @param type 事件类型
          * @param listener 监听函数
          */
-        public removeEventListener(type:string, listener:Function):void {
+        public _removeEventListener(type:string, listener:Function, useCapture:boolean = false):void {
 
+        }
+
+        /**
+         * 重新加载声音
+         * @method egret.Sound#load
+         */
+        public _load():void {
+        }
+
+        public _preload(type:string, callback:Function = null, thisObj:any = null):void {
+            egret.callLater(callback, thisObj);
+        }
+
+        private _path:string;
+        public _setPath(path:string):void {
+            this._path = path;
         }
 
         /**
          * 获取当前音量值
          * @returns number
          */
-        public get volume():number {
-            return this.gain.gain.value;
+        public _getVolume():number {
+            return 1;
         }
 
-        public set volume(value:number) {
-            this.gain.gain.value = value;
+        public _setVolume(value:number) {
         }
 
-        public set loop(value:boolean) {
+        public _setLoop(value:boolean):void {
             this._loop = value;
         }
-    }
-}
 
-/**
- * @private
- */
-interface AudioBuffer {}
-/**
- * @private
- */
-interface AudioBufferSourceNode {
-    stop(when?: number): void;
+        private _currentTime:number = 0;
+
+        public _getCurrentTime():number {
+            return 0;
+        }
+
+        public _setCurrentTime(value:number) {
+            this._currentTime = value;
+        }
+
+        public _destroy():void {
+
+        }
+
+    }
 }

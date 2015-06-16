@@ -150,8 +150,19 @@ module egret {
             }
             var line:number = 0;
 
+            var textHeight:number = TextFieldUtils._getTextHeight(textfield);
+            var startY:number = 0;
+            if (textfield._DO_Props_._hasHeightSet && textfield._DO_Props_._explicitHeight > textHeight) {
+                var valign:number = TextFieldUtils._getValign(textfield);
+                startY = valign * (textfield._DO_Props_._explicitHeight - textHeight);
+                if (startY != 0) {
+                    y -= startY;
+                }
+            }
+
+            var startLine:number = TextFieldUtils._getStartLine(textfield);
             var lineH:number = 0;
-            for (var i:number = 0; i < lineArr.length; i++) {
+            for (var i:number = startLine; i < lineArr.length; i++) {
                 var lineEle:egret.ILineElement = lineArr[i];
                 if (lineH + lineEle.height >= y) {
                     line = i + 1;

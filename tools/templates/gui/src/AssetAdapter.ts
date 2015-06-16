@@ -58,10 +58,8 @@ class AssetAdapter implements egret.gui.IAssetAdapter {
                 RES.getResAsync(source, onGetRes, this);
             }
             else {
-                RES.getResByUrl(source, onGetRes, this);
+                RES.getResByUrl(source, onGetRes, this, RES.ResourceItem.TYPE_IMAGE);
             }
-
-
         }
         else {
             compFunc.call(thisObject, content, source);

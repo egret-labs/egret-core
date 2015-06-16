@@ -215,11 +215,7 @@ module egret {
 
         }
 
-        public setGlobalColorTransform(colorTransformMatrix:Array<number>):void {
-
-        }
-
-        public setGlobalFilter(filterData:Filter):void {
+        public setGlobalFilters(filterData:Array<Filter>):void {
 
         }
 

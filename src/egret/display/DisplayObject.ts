@@ -84,7 +84,7 @@ module egret {
         public _setParentSizeDirty():void {
             var parent = this._DO_Props_._parent;
             if (parent) {
-                if(!(parent._DO_Props_._hasWidthSet || parent._DO_Props_._hasHeightSet)) {
+                if (!(parent._DO_Props_._hasWidthSet || parent._DO_Props_._hasHeightSet)) {
                     parent._setSizeDirty();
                 }
                 else {
@@ -92,6 +92,7 @@ module egret {
                 }
             }
         }
+
         public _setSizeDirty():void {
             var self = this;
             var do_props = self._DO_Props_;
@@ -103,11 +104,11 @@ module egret {
             this._setDirty();
             this._setCacheDirty();
             this._setParentSizeDirty();
-            if(self._sizeChangeCallBack!=null){
-                if(self._sizeChangeCallTarget==do_props._parent){
+            if (self._sizeChangeCallBack != null) {
+                if (self._sizeChangeCallTarget == do_props._parent) {
                     self._sizeChangeCallBack.call(self._sizeChangeCallTarget);
                 }
-                else{
+                else {
                     self._sizeChangeCallBack = null;
                     self._sizeChangeCallTarget = null;
                 }
@@ -605,11 +606,8 @@ module egret {
                 return;
             }
             var isCommandPush = MainContext.__use_new_draw && o._DO_Props_._isContainer;
-            if(o._DO_Props_._filter && !isCommandPush) {
-                renderContext.setGlobalFilter(o._DO_Props_._filter);
-            }
-            if (o._DO_Props_._colorTransform && !isCommandPush) {
-                renderContext.setGlobalColorTransform(o._DO_Props_._colorTransform.matrix);
+            if (o._hasFilters() && !isCommandPush) {
+                this._setGlobalFilters(renderContext);
             }
             renderContext.setAlpha(o.worldAlpha, o.blendMode);
             renderContext.setTransform(o._worldTransform);
@@ -621,31 +619,62 @@ module egret {
             if (mask && !isCommandPush) {
                 renderContext.popMask();
             }
-            if (o._DO_Props_._colorTransform && !isCommandPush) {
-                renderContext.setGlobalColorTransform(null);
-            }
-            if(o._DO_Props_._filter && !isCommandPush) {
-                renderContext.setGlobalFilter(null);
+            if (o._hasFilters() && !isCommandPush) {
+                this._removeGlobalFilters(renderContext);
             }
             o.destroyCacheBounds();
         }
 
-        public _setGlobalFilter(renderContext:RendererContext):void {
+        private static color:Array<number> = [
+            1, 0, 0, 0, 0,
+            0, 1, 0, 0, 0,
+            0, 0, 1, 0, 0,
+            0, 0, 0, 1, 0
+        ];
+        private static colorMatrixFilter:ColorMatrixFilter = new ColorMatrixFilter();
+
+        public _setGlobalFilters(renderContext:RendererContext):void {
             var o = this;
-            renderContext.setGlobalFilter(o._DO_Props_._filter);
+            var arr;
+            if (o._DO_Props_._filters) {
+                arr = o._DO_Props_._filters.concat();
+            }
+            else {
+                arr = [];
+            }
+            if (this._transform) {
+                var colorTransform = this._transform._colorTransform;
+                var color = DisplayObject.color;
+                color[0] = colorTransform._redMultiplier;
+                color[4] = colorTransform._redOffset;
+                color[6] = colorTransform._greenMultiplier;
+                color[9] = colorTransform._greenOffset;
+                color[12] = colorTransform._blueMultiplier;
+                color[14] = colorTransform._blueOffset;
+                color[18] = colorTransform._alphaMultiplier;
+                color[19] = colorTransform._alphaOffset;
+                DisplayObject.colorMatrixFilter._matrix = color;
+                arr.push(DisplayObject.colorMatrixFilter);
+            }
+            renderContext.setGlobalFilters(arr);
         }
 
-        public _removeGlobalFilter(renderContext:RendererContext):void {
-            renderContext.setGlobalFilter(null);
+        public _removeGlobalFilters(renderContext:RendererContext):void {
+            renderContext.setGlobalFilters(null);
         }
 
-        public _setGlobalColorTransform(renderContext:RendererContext):void {
-            var o = this;
-            renderContext.setGlobalColorTransform(o._DO_Props_._colorTransform.matrix);
-        }
-
-        public _removeGlobalColorTransform(renderContext:RendererContext):void {
-            renderContext.setGlobalColorTransform(null);
+        public _hasFilters():boolean {
+            var result:boolean = this._DO_Props_._filters && this._DO_Props_._filters.length > 0;
+            if (this._transform) {
+                var colorTransform = this._transform._colorTransform;
+                if (colorTransform._redMultiplier != 1 || colorTransform._redOffset != 0 ||
+                    colorTransform._greenMultiplier != 1 || colorTransform._greenOffset != 0 ||
+                    colorTransform._blueMultiplier != 1 || colorTransform._blueOffset != 0 ||
+                    colorTransform._alphaMultiplier != 1 || colorTransform._alphaOffset != 0) {
+                    result = true;
+                }
+            }
+            return result;
         }
 
         public _pushMask(renderContext:RendererContext):void {
@@ -719,8 +748,8 @@ module egret {
                 return;
             }
             o._calculateWorldTransform();
-            if(MainContext._renderLoopPhase == "updateTransform") {
-                if(o.needDraw || o._texture_to_render || do_props._cacheAsBitmap) {
+            if (MainContext._renderLoopPhase == "updateTransform") {
+                if (o.needDraw || o._texture_to_render || do_props._cacheAsBitmap) {
                     RenderCommand.push(o._draw, o);
                 }
             }
@@ -989,10 +1018,10 @@ module egret {
             }
 
             this._measureSize(resultRect);
-            if (do_props._hasWidthSet){
+            if (do_props._hasWidthSet) {
                 resultRect.width = do_props._explicitWidth;
             }
-            if (do_props._hasHeightSet){
+            if (do_props._hasHeightSet) {
                 resultRect.height = do_props._explicitHeight;
             }
             return resultRect;
@@ -1151,7 +1180,6 @@ module egret {
         }
 
 
-
         /**
          * 如果设置为 true，则 egret 运行时将缓存显示对象的内部位图表示形式。此缓存可以提高包含复杂矢量内容的显示对象的性能。
          * 具有已缓存位图的显示对象的所有矢量数据都将被绘制到位图而不是主显示。像素按一对一与父对象进行映射。如果位图的边界发生更改，则将重新创建位图而不会拉伸它。
@@ -1177,6 +1205,7 @@ module egret {
          * @private
          */
         public renderTexture:RenderTexture = null;
+
         public _makeBitmapCache():boolean {
             if (!this.renderTexture) {
                 this.renderTexture = new egret.RenderTexture();
@@ -1244,39 +1273,27 @@ module egret {
             }
 
             return bounds.initialize(minX, minY, maxX - minX, maxY - minY);
-
         }
 
-
-
-        public get colorTransform():ColorTransform {
-            return this._DO_Props_._colorTransform;
+        public get filters():Array<Filter> {
+            return this._DO_Props_._filters;
         }
 
-        public set colorTransform(value:ColorTransform) {
-            this._DO_Props_._colorTransform = value;
+        /**
+         * @private
+         */
+        public set filters(value:Array<Filter>) {
+            this._DO_Props_._filters = value;
         }
 
-        public get filter():Filter {
-            return this._DO_Props_._filter;
+        private _transform:Transform;
+
+        public get transform():Transform {
+            if (!this._transform) {
+                this._transform = new Transform(this);
+            }
+            return this._transform;
         }
-
-        public set filter(value:Filter) {
-            this._DO_Props_._filter = value;
-        }
-    }
-
-    /**
-     * @private
-     */
-    export class ColorTransform {
-
-        public matrix:Array<number> = null;
-
-        public updateColor(r:number, g:number, b:number, a:number, addR:number, addG:number, addB:number, addA:number):void {
-            //todo;
-        }
-
     }
 }
 

@@ -76,6 +76,8 @@ module egret {
             if (this.touchingIdentifiers.length == this.maxTouches) {
                 return;
             }
+            this.lastTouchX = x;
+            this.lastTouchY = y;
             var stage = MainContext.instance.stage;
             var result:any = stage.hitTest(x, y);
             if (result) {

@@ -32,13 +32,17 @@ module egret {
      * @private
      */
     export interface IVersionController {
+        fetchVersion():void;
+
         checkIsNewVersion(url:string):boolean;
         saveVersion(url:string):void;
 
         /**
          * 获取所有有变化的文件
-         * @returns {Array<any>}
+         * @returns {Array<string>}
          */
-        getChangeList():Array<any>;
+        getChangeList():Array<string>;
+
+        getVirtualUrl(url:string):string;
     }
 }

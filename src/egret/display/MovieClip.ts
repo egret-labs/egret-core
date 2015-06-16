@@ -357,6 +357,7 @@ module egret {
                 return;
             }
             this._textureToRender = this._movieClipData.getTextureByFrame(currentFrameNum);
+            this._DO_Props_._sizeDirty = true;
             this._displayedKeyFrameNum = currentFrameNum;
         }
 
@@ -427,6 +428,7 @@ module egret {
         public get frameRate():number{
             return this.movieClipData.frameRate;
         }
+
         public set frameRate(value:number){
             if(value == this._movieClipData.frameRate){
                 return;

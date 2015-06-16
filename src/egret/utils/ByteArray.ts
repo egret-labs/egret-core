@@ -114,6 +114,9 @@ module egret {
         //    return newarraybuffer;
         //}
 
+        /**
+         * @private
+         */
         public set buffer(value:ArrayBuffer) {
             this.data = new DataView(value);
         }
@@ -122,6 +125,9 @@ module egret {
             return this.data;
         }
 
+        /**
+         * @private
+         */
         public set dataView(value:DataView) {
             this.data = value;
             this.write_position = value.byteLength;

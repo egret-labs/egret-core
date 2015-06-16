@@ -3,7 +3,7 @@
  */
 
 
-var path = require("path");
+var path = require("../core/path");
 var async = require('../core/async');
 var globals = require("../core/globals");
 var param = require("../core/params_analyze.js");

@@ -2,7 +2,7 @@
  * Created by huanghaiying on 15/1/4.
  */
 
-var path = require("path");
+var path = require("../core/path");
 var async = require('../core/async');
 var globals = require("../core/globals");
 var param = require("../core/params_analyze.js");
@@ -53,7 +53,6 @@ function createFileList(manifest, srcPath) {
             filePath = filePath.substring(0, filePath.length - 2) + "js";
         }
 
-        filePath = filePath.replace(/(\\\\|\\)/g, "/");
         return filePath;
     });
 
@@ -81,11 +80,10 @@ function generateGameFileList(projectPath, sourcePath, projectProperties) {
             }
         }
         else {
-            referenceInfo = getModuleReferenceInfo(projectProperties);
+            referenceInfo = projectProperties.getModuleReferenceInfo();
         }
         manifest = create_manifest.create(srcPath, false, referenceInfo);
         moduleReferenceList = create_manifest.getModuleReferenceList();
-
     }
 
 
@@ -107,6 +105,7 @@ function generateGameFileList(projectPath, sourcePath, projectProperties) {
         });
     }
 
+
     var tempManifest = manifest.map(function (item) {
         return path.relative(srcPath, item);
     });
@@ -119,24 +118,6 @@ function generateGameFileList(projectPath, sourcePath, projectProperties) {
     file.save(path.join(projectPath, "bin-debug/src/game_file_list.js"), fileListText);
     return manifest;
 }
-
-function getModuleReferenceInfo(projectProperties) {
-    var fileList = [];
-    var modules = projectProperties.getAllModules();
-    modules.map(function (moduleConfig) {
-        var moduleConfig = projectProperties.getModuleConfig(moduleConfig["name"]);
-        moduleConfig.file_list.map(function (item) {
-            var tsFile = file.joinPath(moduleConfig.prefix, moduleConfig.source, item);
-            var ext = file.getExtension(tsFile).toLowerCase();
-            if (ext == "ts" && item.indexOf(".d.ts") == -1) {
-                fileList.push(tsFile);
-            }
-        })
-    });
-    var referenceInfo = create_manifest.getModuleReferenceInfo(fileList);
-    return referenceInfo;
-}
-
 
 
 exports.getModuleReferenceList = function() {

@@ -5,7 +5,7 @@
 
 var file = require("../core/file.js");
 var param = require("./params_analyze.js");
-var path = require("path");
+var path = require("../core/path");
 var globals = require("../core/globals");
 var projectConfig;
 var projectName;
@@ -172,6 +172,59 @@ function hasKeys(obj, keys) {
     }
     return true;
 }
+
+function getModuleDetailConfig(name) {
+    var moduleConfig = initModuleConfig(name);
+    var jsList = moduleConfig.file_list;
+
+    for (var i = 0; i < jsList.length; i++) {
+        var item = jsList[i];
+
+        var filePath = path.join(moduleConfig.prefix, moduleConfig.source, item);
+        if (item.indexOf(".d.ts") > -1) {
+            jsList.splice(i, 1);
+            i--;
+            continue;
+        }
+        else if (item.indexOf(".js") > -1) {//将js文件拷贝到libs中
+        }
+        else {
+            //纯interface从jslist中去掉
+            if (globals.isInterface(filePath)) {
+                jsList.splice(i, 1);
+                i--;
+                continue;
+            }
+            else {
+            }
+        }
+    }
+    return moduleConfig;
+}
+
+
+function getModuleReferenceInfo() {
+    var fileList = [];
+    var modules = getAllModules();
+    modules.map(function (moduleConfig) {
+        var moduleConfig = getModuleConfig(moduleConfig["name"]);
+        moduleConfig.file_list.map(function (item) {
+            var tsFile = file.joinPath(moduleConfig.prefix, moduleConfig.source, item);
+            var ext = file.getExtension(tsFile).toLowerCase();
+            if (ext == "ts" && item.indexOf(".d.ts") == -1) {
+                fileList.push(tsFile);
+            }
+        })
+    });
+    var create_manifest = require("../tools/create_manifest.js");
+    var referenceInfo = create_manifest.getModuleReferenceInfo(fileList);
+    return referenceInfo;
+}
+
+exports.getModuleReferenceInfo = getModuleReferenceInfo;
+
+
+exports.getModuleDetailConfig = getModuleDetailConfig;
 
 exports.getVersionCode = getVersionCode;
 exports.getReleaseUrl = getReleaseUrl;

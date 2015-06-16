@@ -60,7 +60,16 @@ module egret {
          * @returns {boolean}
          */
         public isIOS():boolean {
-            return this.ua.indexOf("iphone") >= 0 || this.ua.indexOf("ipad") >= 0 || this.ua.indexOf("ipod") >= 0;
+            return this.ua.indexOf("windows") < 0 && (this.ua.indexOf("iphone") >= 0 || this.ua.indexOf("ipad") >= 0 || this.ua.indexOf("ipod") >= 0);
+        }
+
+        /**
+         * 获取ios版本
+         * @returns {string}
+         */
+        public getIOSVersion():string {
+            var value = this.ua.toLowerCase().match(/cpu [^\d]*\d.*like mac os x/)[0];
+            return value.match(/\d(_\d)*/)[0];
         }
 
         constructor() {

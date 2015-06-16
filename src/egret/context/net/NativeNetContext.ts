@@ -42,7 +42,6 @@ module egret {
         public constructor() {
             super();
             Texture.createBitmapData = Texture._createBitmapDataForNative;
-            this.initVersion(new egret.VersionController());
         }
 
         public initVersion(versionCtr:egret.IVersionController):void {
@@ -56,33 +55,34 @@ module egret {
          * @param loader {URLLoader}
          */
         public proceed(loader:URLLoader):void {
+            var self = this;
             if (loader.dataFormat == URLLoaderDataFormat.TEXTURE) {
-                this.loadTexture(loader);
+                self.loadTexture(loader);
                 return;
             }
             if (loader.dataFormat == URLLoaderDataFormat.SOUND) {
-                this.loadSound(loader);
+                self.loadSound(loader);
                 return;
             }
-            var self = this;
             var request:URLRequest = loader._request;
-            var url:string = NetContext._getUrl(request);
-            if (url.indexOf("http://") == 0) {
-                this.urlData.type = request.method;
+            var virtualUrl:string = self.getVirtualUrl(NetContext._getUrl(request));
+
+            if (self.isNetUrl(virtualUrl)) {//网络请求
+                self.urlData.type = request.method;
                 //写入POST数据
                 if (request.method == URLRequestMethod.POST && request.data) {
                     var urlVars:URLVariables = <URLVariables> request.data;
-                    this.urlData.data = urlVars.toString();
+                    self.urlData.data = urlVars.toString();
                 }
                 else {
-                    delete this.urlData["data"];
+                    delete self.urlData["data"];
                 }
                 //写入header信息
                 if (request.requestHeaders) {
-                    this.urlData.header = this.getHeaderString(request);
+                    self.urlData.header = self.getHeaderString(request);
                 }
                 else {
-                    delete this.urlData.header;
+                    delete self.urlData.header;
                 }
                 var promise = PromiseObject.create();
                 promise.onSuccessFunc = function (getted_str) {
@@ -93,12 +93,12 @@ module egret {
                     egret.Logger.infoWithErrorId(1019, error_code);
                     IOErrorEvent.dispatchIOErrorEvent(loader);
                 };
-                egret_native.requireHttp(url, this.urlData, promise);
+                egret_native.requireHttp(virtualUrl, self.urlData, promise);
             }
-            else if (!egret_native.isFileExists(url)) {
+            else if (!egret_native.isFileExists(virtualUrl)) {
                 download();
             }
-            else if (!this.checkIsNewVersion(url)) {
+            else if (!self.checkIsNewVersion(virtualUrl)) {
                 download();
             }
             else {
@@ -108,32 +108,32 @@ module egret {
                 }
                 else {
                     //同步读取
-                    __callAsync(onLoadComplete, this);
+                    __callAsync(onLoadComplete, self);
                 }
             }
 
             function readFileAsync() {
                 var promise = new egret.PromiseObject();
                 promise.onSuccessFunc = function (content) {
-                    self.saveVersion(url);
+                    self.saveVersion(virtualUrl);
                     loader.data = content;
                     Event.dispatchEvent(loader, Event.COMPLETE);
                 };
-                egret_native.readFileAsync(url, promise);
+                egret_native.readFileAsync(virtualUrl, promise);
             }
 
             function download() {
                 var promise = PromiseObject.create();
                 promise.onSuccessFunc = onLoadComplete;
                 promise.onErrorFunc = function () {
-                    egret.IOErrorEvent.dispatchIOErrorEvent(loader);
+                    Event.dispatchEvent(loader, IOErrorEvent.IO_ERROR);
                 };
-                egret_native.download(url, url, promise);
+                egret_native.download(virtualUrl, virtualUrl, promise);
             }
 
             function onLoadComplete() {
-                self.saveVersion(url);
-                var content = egret_native.readFileSync(url);
+                self.saveVersion(virtualUrl);
+                var content = egret_native.readFileSync(virtualUrl);
                 loader.data = content;
                 Event.dispatchEvent(loader, Event.COMPLETE);
             }
@@ -152,19 +152,19 @@ module egret {
         private loadSound(loader:URLLoader) {
             var self = this;
             var request = loader._request;
-            var url = request.url;
+            var virtualUrl:string = self.getVirtualUrl(request.url);
 
-            if (url.indexOf("http://") != -1) {
+            if (self.isNetUrl(virtualUrl)) {//网络请求
                 download();
             }
-            else if (!egret_native.isFileExists(url)) {
+            else if (!egret_native.isFileExists(virtualUrl)) {
                 download();
             }
-            else if (!this.checkIsNewVersion(url)) {
+            else if (!self.checkIsNewVersion(virtualUrl)) {
                 download();
             }
             else {
-                __callAsync(onLoadComplete, this);
+                __callAsync(onLoadComplete, self);
             }
 
             function download() {
@@ -173,13 +173,16 @@ module egret {
                 promise.onErrorFunc = function () {
                     egret.IOErrorEvent.dispatchIOErrorEvent(loader);
                 };
-                egret_native.download(url, url, promise);
+                egret_native.download(virtualUrl, virtualUrl, promise);
             }
 
             function onLoadComplete() {
-                self.saveVersion(url);
+                self.saveVersion(virtualUrl);
+                var nativeAudio:NativeAudio = new NativeAudio();
+                nativeAudio._setAudio(virtualUrl);
+
                 var sound = new egret.Sound();
-                sound.path = url;
+                sound._setAudio(nativeAudio);
                 loader.data = sound;
                 Event.dispatchEvent(loader, Event.COMPLETE);
             }
@@ -188,27 +191,29 @@ module egret {
         private loadTexture(loader:URLLoader):void {
             var self = this;
             var request = loader._request;
-            var url = request.url;
-            if (url.indexOf("http://") != -1) {
+            var virtualUrl:string = self.getVirtualUrl(request.url);
+
+            if (self.isNetUrl(virtualUrl)) {//网络请求
                 download();
             }
-            else if (!egret_native.isFileExists(url)) {
+            else if (!egret_native.isFileExists(virtualUrl)) {
                 download();
             }
-            else if (!this.checkIsNewVersion(url)) {
+            else if (!self.checkIsNewVersion(virtualUrl)) {
                 download();
             }
             else {
-                if (NativeNetContext.__use_asyn) {
-                    createBitmapData();
-                }
-                else {
-                    egret.__callAsync(createBitmapData, this);
-                }
+                //todo
+                //if (NativeNetContext.__use_asyn) {
+                //    createBitmapData();
+                //}
+                //else {
+                    egret.__callAsync(createBitmapData, self);
+                //}
             }
 
             function createBitmapData() {
-                Texture.createBitmapData(url, function (code:number, bitmapData:any) {
+                Texture.createBitmapData(virtualUrl, function (code:number, bitmapData:any) {
                     if (code == 0) {
                         onComplete(bitmapData);
                     }
@@ -219,12 +224,11 @@ module egret {
             }
 
             function onComplete(bitmapData) {
-                self.saveVersion(url);
+                self.saveVersion(virtualUrl);
 
                 var texture = new egret.Texture();
                 texture._setBitmapData(bitmapData);
                 loader.data = texture;
-                console.log("onComplete:" + url);
                 egret.Event.dispatchEvent(loader, egret.Event.COMPLETE);
             }
 
@@ -234,16 +238,37 @@ module egret {
                 promise.onErrorFunc = function () {
                     egret.IOErrorEvent.dispatchIOErrorEvent(loader);
                 };
-                egret_native.download(url, url, promise);
+                egret_native.download(virtualUrl, virtualUrl, promise);
             }
+        }
+
+        /**
+         * 是否是网络地址
+         * @param url
+         * @returns {boolean}
+         */
+        private isNetUrl(url:string):boolean {
+            return url.indexOf("http://") != -1;
+        }
+
+        /**
+         * 获取虚拟url
+         * @param url
+         * @returns {string}
+         */
+        private getVirtualUrl(url:string):string {
+            if (this._versionCtr) {
+                return this._versionCtr.getVirtualUrl(url);
+            }
+            return url;
         }
 
         /**
          * 检查文件是否是最新版本
          */
-        private checkIsNewVersion(url:string):boolean {
+        private checkIsNewVersion(virtualUrl:string):boolean {
             if (this._versionCtr) {
-                return this._versionCtr.checkIsNewVersion(url);
+                return this._versionCtr.checkIsNewVersion(virtualUrl);
             }
             return true;
         }
@@ -251,12 +276,17 @@ module egret {
         /**
          * 保存本地版本信息文件
          */
-        private saveVersion(url:string):void {
+        private saveVersion(virtualUrl:string):void {
             if (this._versionCtr) {
-                this._versionCtr.saveVersion(url);
+                this._versionCtr.saveVersion(virtualUrl);
             }
         }
 
+        /**
+         * 获取变化列表
+         * @deprecated
+         * @returns {any}
+         */
         public getChangeList():Array<any> {
             if (this._versionCtr) {
                 return this._versionCtr.getChangeList();

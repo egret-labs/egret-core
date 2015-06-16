@@ -1,7 +1,7 @@
 /**
  * Created by huanghaiying on 15/1/6.
  */
-var path = require("path");
+var path = require("../core/path");
 var file = require("../core/file.js");
 var globals = require("../core/globals");
 
@@ -22,9 +22,9 @@ function copyFilesToNative(projectPath, nativePath, platform, ignorePathList) {
     //1、清除文件夹
     file.remove(url);
 
+
     //2、拷贝文件
     //launcher
-
     file.copy(path.join(projectPath, "launcher/runtime_loader.js"), path.join(url, "launcher/runtime_loader.js"));
     file.copy(path.join(projectPath, "launcher/native_loader.js"), path.join(url, "launcher/native_loader.js"));
     file.copy(path.join(projectPath, "launcher/native_require.js"), path.join(url, "launcher/native_require.js"));
@@ -40,18 +40,6 @@ function copyFilesToNative(projectPath, nativePath, platform, ignorePathList) {
     if (file.exists(path.join(projectPath, "resource"))) {
         copyFilesWithIgnore(path.join(projectPath, "resource"), path.join(url, "resource"), ignorePathList);
     }
-
-    //3、生成空版本控制文件
-    //编译版本控制文件 生成2个空文件
-    file.save(path.join(url, "base.manifest"), "{}");
-    file.save(path.join(url, "version.manifest"), "{}");
-    file.save(path.join(url, "localVersion.manifest"), "{}");
-    file.save(path.join(url, "appVersion.manifest"), JSON.stringify({"version":Date.now(), "debug":1}));
-
-    //4、修改native_require.js文件
-    var native_require = file.read(path.join(url, "launcher/native_require.js"));
-    native_require = native_require.replace(/var needCompile =.*/, "var needCompile = false;");
-    file.save(path.join(url, "launcher/native_require.js"), native_require);
 
     //5、修改native入口文件
     if (platform == "android") {
