@@ -438,8 +438,6 @@ module dragonBones {
 		}
 		
 		private static parseColorTransform(colorTransformObject:any, colorTransform:ColorTransform):void{
-			if(colorTransformObject){
-                console.log("color:", colorTransformObject);	
             if(colorTransform){
 					colorTransform.alphaOffset =DataParser.getNumber(colorTransformObject, ConstValues.A_ALPHA_OFFSET, 0);
 					colorTransform.redOffset = DataParser.getNumber(colorTransformObject, ConstValues.A_RED_OFFSET, 0);
@@ -450,7 +448,6 @@ module dragonBones {
 					colorTransform.redMultiplier = DataParser.getNumber(colorTransformObject, ConstValues.A_RED_MULTIPLIER, 100) * 0.01;
 					colorTransform.greenMultiplier =DataParser.getNumber(colorTransformObject, ConstValues.A_GREEN_MULTIPLIER, 100) * 0.01;
 					colorTransform.blueMultiplier = DataParser.getNumber(colorTransformObject, ConstValues.A_BLUE_MULTIPLIER, 100) * 0.01;
-                    console.log("a", colorTransform);
 				}
 			}
 		}
