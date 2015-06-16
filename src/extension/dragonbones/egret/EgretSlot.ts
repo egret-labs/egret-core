@@ -51,11 +51,14 @@ module dragonBones {
          * 释放资源
          */
         public dispose():void{
-            var length:number = this._displayList.length;
-            for(var i:number = 0;i < length;i++){
-                var content:any = this._displayList[i];
-                if(content instanceof Armature){
-                    (<Armature><any> content).dispose();
+            if(this._displayList != null)
+            {
+                var length:number = this._displayList.length;
+                for(var i:number = 0;i < length;i++){
+                    var content:any = this._displayList[i];
+                    if(content instanceof Armature){
+                        (<Armature><any> content).dispose();
+                    }
                 }
             }
             super.dispose();
