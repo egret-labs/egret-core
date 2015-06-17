@@ -74,11 +74,7 @@ module dragonBones {
 		 * 释放资源
 		 */
 		public dispose():void{
-			var i:number = this._displayDataList.length;
-			while(i --){
-				this._displayDataList[i].dispose();
-			}
-			this._displayDataList = null;
+			this._displayDataList.length = 0;
 		}
 
 		/**

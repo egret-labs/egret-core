@@ -33,7 +33,7 @@ module dragonBones {
      * @class dragonBones.EgretFactory
      * @extends dragonBones.BaseFactory
      * @classdesc
-     * Egret引擎使用的dragonBones工厂
+     * Egret引擎中DragonBones工厂的基类实现
      */
     export class EgretFactory extends BaseFactory {
         constructor() {
@@ -56,8 +56,16 @@ module dragonBones {
         public _generateDisplay(textureAtlas:EgretTextureAtlas, fullName:string, pivotX:number, pivotY:number):any {
             var bitmap:egret.Bitmap = new egret.Bitmap();
             bitmap.texture = textureAtlas.getTexture(fullName);
-            bitmap.anchorOffsetX = pivotX;
-            bitmap.anchorOffsetY = pivotY;
+            if(isNaN(pivotX)||isNaN(pivotY))
+            {
+                bitmap.anchorOffsetX = bitmap.width/2;
+                bitmap.anchorOffsetY = bitmap.height/2;
+            }
+            else
+            {
+                bitmap.anchorOffsetX = pivotX;
+                bitmap.anchorOffsetY = pivotY;
+            }
             return bitmap;
         }
     }

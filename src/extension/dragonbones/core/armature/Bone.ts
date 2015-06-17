@@ -446,19 +446,6 @@ module dragonBones {
 				var tansformFrame:TransformFrame = <TransformFrame><any> frame;
 				var displayIndex:number = tansformFrame.displayIndex;
 				var childSlot:Slot;
-				var length:number = this._slotList.length;
-				for(var i:number = 0;i < length;i++){
-					childSlot = this._slotList[i];
-                    //childSlot.blendMode = tansformFrame.blendMode;
-					childSlot._changeDisplay(displayIndex);
-					childSlot._updateDisplayVisible(tansformFrame.visible);
-					if(displayIndex >= 0){
-						if(!isNaN(tansformFrame.zOrder) && tansformFrame.zOrder != childSlot._tweenZOrder){
-							childSlot._tweenZOrder = tansformFrame.zOrder;
-							this._armature._slotsZOrderChanged = true;
-						}
-					}
-				}
 				
 				if(frame.event && this._armature.hasEventListener(FrameEvent.BONE_FRAME_EVENT)){
 					var frameEvent:FrameEvent = new FrameEvent(FrameEvent.BONE_FRAME_EVENT);

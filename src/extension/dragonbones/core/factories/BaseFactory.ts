@@ -396,13 +396,13 @@ module dragonBones {
 			if(!skinData){
 				return;
 			}
+			armature.armatureData.setSkinData(skinName);
 			var displayList:Array<any> = [];
-			var slotDataList:Array<SlotData> = skinData.slotDataList;
+			var slotDataList:Array<SlotData> = armature.armatureData.slotDataList;
 			var slotData:SlotData;
 			var slot:Slot;
 			var bone:Bone;
 			for(var i:number = 0; i < slotDataList.length; i++){
-				displayList.length = 0;
 				slotData = slotDataList[i];
 				bone = armature.getBone(slotData.parent);
 				if(!bone){
@@ -433,9 +433,9 @@ module dragonBones {
 				//==================================================
 				//如果显示对象有name属性并且name属性可以设置的话，将name设置为与slot同名，dragonBones并不依赖这些属性，只是方便开发者
 
-                for(var key in displayList)
+                for(var j:number = 0,jLen:number = displayList.length; j < jLen; j++)
                 {
-                    var displayObject:any = displayList[key];
+                    var displayObject:any = displayList[j];
                     if(displayObject instanceof Armature){
                         displayObject = (<Armature><any> displayObject).display;
                     }

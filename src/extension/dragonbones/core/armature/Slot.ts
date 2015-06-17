@@ -62,6 +62,8 @@ module dragonBones {
 		
 		//protected var _childArmature:Armature;
 		public _blendMode:string;
+		public _isColorChanged:boolean;
+		public _timelineStateList:Array<SlotTimelineState>
 
 		public constructor(self:Slot){
 			super();
@@ -71,6 +73,7 @@ module dragonBones {
 			}
 			
 			this._displayList = [];
+			this._timelineStateList = [];
 			this._currentDisplayIndex = -1;
 			
 			this._originZOrder = 0;
@@ -114,7 +117,27 @@ module dragonBones {
 			this._currentDisplay = null;
 			//_childArmature = null;
 		}
-		
+
+		private sortState(state1:SlotTimelineState, state2:SlotTimelineState):number{
+			return state1._animationState.layer < state2._animationState.layer?-1:1;
+		}
+
+		/** @private */
+		public _addState(timelineState:SlotTimelineState):void{
+			if(this._timelineStateList.indexOf(timelineState) < 0){
+				this._timelineStateList.push(timelineState);
+				this._timelineStateList.sort(this.sortState);
+			}
+		}
+
+		/** @private */
+		public _removeState(timelineState:SlotTimelineState):void{
+			var index:number = this._timelineStateList.indexOf(timelineState);
+			if(index >= 0){
+				this._timelineStateList.splice(index, 1);
+			}
+		}
+
 //骨架装配
 		/** @private */
 		public setArmature(value:Armature):void{
@@ -324,7 +347,8 @@ module dragonBones {
         }
 
         /**
-         * 不推荐的 API. 使用 display 属性代替
+         * Unrecommended API. Please use .display = instead.
+         * @returns {any}
          */
         public setDisplay(value:any):void
         {
@@ -450,7 +474,8 @@ module dragonBones {
 			aMultiplier:number,
 			rMultiplier:number,
 			gMultiplier:number,
-			bMultiplier:number
+			bMultiplier:number,
+			colorChanged:boolean = false
 		):void{
             this._colorTransform.alphaOffset = aOffset;
             this._colorTransform.redOffset = rOffset;
@@ -460,15 +485,45 @@ module dragonBones {
             this._colorTransform.redMultiplier = rMultiplier;
             this._colorTransform.greenMultiplier = gMultiplier;
             this._colorTransform.blueMultiplier = bMultiplier;
+			this._isColorChanged = colorChanged;
 		}
-		
+
 		/**
 		 * @private
 		 * Update the blend mode of the display object.
 		 * @param value The blend mode to use. 
 		 */
 		public _updateDisplayBlendMode(value:string):void{
-			throw new Error(egret.getString(4001));
+			throw new Error("Abstract method needs to be implemented in subclass!");
+		}
+
+		/** @private When bone timeline enter a key frame, call this func*/
+		public _arriveAtFrame(frame:Frame, timelineState:SlotTimelineState, animationState:AnimationState, isCross:boolean):void{
+			var displayControl:boolean = animationState.displayControl;
+
+			if(displayControl){
+				var slotFrame:SlotFrame = <SlotFrame><any> frame;
+				var displayIndex:number = slotFrame.displayIndex;
+				var childSlot:Slot;
+				this._changeDisplay(displayIndex);
+				this._updateDisplayVisible(slotFrame.visible);
+
+				if(displayIndex >= 0)
+				{
+					if(!isNaN(slotFrame.zOrder) && slotFrame.zOrder != this._tweenZOrder)
+					{
+						this._tweenZOrder = slotFrame.zOrder;
+						this._armature._slotsZOrderChanged = true;
+					}
+				}
+				//[TODO]currently there is only gotoAndPlay belongs to frame action. In future, there will be more.
+				//后续会扩展更多的action，目前只有gotoAndPlay的含义
+				if(frame.action) {
+					if(this.childArmature){
+						this.childArmature.animation.gotoAndPlay(frame.action);
+					}
+				}
+			}
 		}
 	}
 }

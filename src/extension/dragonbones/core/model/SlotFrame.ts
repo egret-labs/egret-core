@@ -29,50 +29,67 @@
 
 
 module dragonBones {
+
 	/**
-	 * @class dragonBones.Frame
+	 * @class dragonBones.SlotFrame
+	 * @extends dragonBones.Frame
 	 * @classdesc
-	 *关键帧数据
+	 * 插槽的关键帧数据，包含
+	 * 插槽的显示序号，可见度，zOrder，colorTransform数据
 	 */
-	export class Frame{
+	export class SlotFrame extends Frame{
 		/**
-		 *位置
-		 * @member {number} dragonBones.Frame#position
+		 * NaN:no tween, 10:auto tween, [-1, 0):ease in, 0:line easing, (0, 1]:ease out, (1, 2]:ease in out
+		 * 缓动值，
+		 * 当值为NaN时，没有缓动
+		 * 当值为10时，为自动
+		 * 当值为[-1,0)时，为缓进
+		 * 当值为0时，为线性缓动
+		 * 当值为(0, 1]时，为缓出
+		 * 当值为(1, 2]时，为缓进缓出
+		 * @member {number} dragonBones.TransformFrame#tweenEasing
 		 */
-		public position:number = 0;
-		/**
-		 *持续时间
-		 * @member {number} dragonBones.Frame#duration
-		 */
-		public duration:number = 0;
-		/**
-		 *帧标签
-		 * @member {string} dragonBones.Frame#action
-		 */
-		public action:string;
-		/**
-		 *帧事件
-		 * @member {string} dragonBones.Frame#event
-		 */
-		public event:string;
-		/**
-		 *帧声音
-		 * @member {string} dragonBones.Frame#sound
-		 */
-		public sound:string;
+		public tweenEasing:number;
 
 		/**
-		 *构造函数
+		 *绑定到该插槽的显示序号，当插槽有多个显示对象时，指定显示哪一个显示对象
+		 * @member {number} dragonBones.SlotFrame#displayIndex
+		 */
+		public displayIndex:number = 0;
+		/**
+		 *是否可见
+		 * @member {boolean} dragonBones.SlotFrame#visible
+		 */
+		public visible:boolean;
+		/**
+		 *绑定到该插槽的zOrder值
+		 * @member {number} dragonBones.SlotFrame#zOrder
+		 */
+		public zOrder:number;
+		/**
+		 *绑定到插槽的颜色transform，颜色的transform可以表示颜色在红蓝绿透明四个通道的变化
+		 * @member {dragonBones.ColorTransform} dragonBones.SlotFrame#color
+		 */
+		public color:ColorTransform;
+		
+		/**
+		 *构造函数，实例化一个SlotFrame
 		 */
 		public constructor(){
-			this.position = 0;
-			this.duration = 0;
+			super();
+			
+			this.tweenEasing = 10;
+			this.displayIndex = 0;
+			this.visible = true;
+			this.zOrder = NaN;
 		}
-
+		
 		/**
 		 *释放资源
 		 */
 		public dispose():void{
+			super.dispose();
+			this.color = null;
 		}
 	}
 }
