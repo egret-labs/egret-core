@@ -82,35 +82,54 @@ module egret {
             return this.ua;
         }
 
-        private header:string = "";
+        private header:string = null;
 
         /**
          * 获取当前浏览器对应style类型
          * @type {string}
          */
-        public getTrans(type:string):string {
-            if (this.header == "") {
-                this.header = this.getHeader();
+        public getTrans(style:string, judge:boolean = false):string {
+            var header:string = "";
+
+            if (judge) {
+                header = this.getHeader(style);
+            }
+            else {
+                if (this.header == null) {
+                    this.header = this.getHeader("transform");
+                }
+                header = this.header;
             }
 
-            return this.header + type.substring(1, type.length);
+            if (header == "") {
+                return style;
+            }
+
+            return header + style.charAt(0).toUpperCase() + style.substring(1, style.length);
         }
 
         /**
          * 获取当前浏览器的类型
          * @returns {string}
          */
-        private getHeader():string {
-            var tempStyle = document.createElement('div').style;
-            var transArr:Array<string> = ["t", "webkitT", "msT", "MozT", "OT"];
-            for (var i:number = 0; i < transArr.length; i++) {
-                var transform:string = transArr[i] + 'ransform';
+        private getHeader(style:string):string {
+            var divStyles = document.createElement('div').style;
 
-                if (transform in tempStyle)
-                    return transArr[i];
+            if (style in divStyles) {
+                return "";
             }
 
-            return transArr[0];
+            style = style.charAt(0).toUpperCase() + style.substring(1, style.length);
+            var transArr:Array<string> = ["webkit", "ms", "Moz", "O"];
+            for (var i:number = 0; i < transArr.length; i++) {
+                var tempStyle:string = transArr[i] + style;
+
+                if (tempStyle in divStyles) {
+                    return transArr[i];
+                }
+            }
+
+            return "";
         }
 
 
