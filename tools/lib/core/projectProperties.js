@@ -96,6 +96,22 @@ function getModuleConfigByModuleName(moduleName) {
             return path.join(moduleConfig.prefix,moduleConfig.source,item);
         })
     }
+
+    var self = this;
+
+    moduleConfig.getDependencyList = function () {
+        var tsList = [];
+        //如果有依赖，则需要将依赖的库.d.ts（已生成在项目中）文件也放入到list中
+        var dependencyList = this.dependence;
+        if (dependencyList) {
+            for (var i = 0; i < dependencyList.length; i++) {
+                var depModuleName = dependencyList[i];
+                tsList.push(depModuleName + ".d.ts");
+            }
+        }
+        return tsList;
+    }
+
     return moduleConfig;
 }
 
