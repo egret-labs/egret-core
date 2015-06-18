@@ -44,17 +44,8 @@ function Main(){
         context.stage = new egret.Stage();
         var scaleMode = egret.MainContext.deviceType == egret.MainContext.DEVICE_MOBILE ? egret.StageScaleMode.SHOW_ALL : egret.StageScaleMode.NO_SCALE;
         context.stage.scaleMode = scaleMode;
+        context.rendererContext = new egret.HTML5CanvasRenderer();
 
-        //WebGL is a Egret's beta property. It's off by default.
-        //WebGL是egret的Beta特性，默认关闭
-        var rendererType = 0;
-        if (rendererType == 1) {// egret.WebGLUtils.checkCanUseWebGL()) {
-            console.log("Use WebGL mode");
-            context.rendererContext = new egret.WebGLRenderer();
-        }
-        else {
-            context.rendererContext = new egret.HTML5CanvasRenderer();
-        }
 
         egret.MainContext.instance.rendererContext.texture_scale_factor = 1;
         context.run();
