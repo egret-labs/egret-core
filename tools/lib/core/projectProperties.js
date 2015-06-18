@@ -58,11 +58,11 @@ function init(name){
 function initConfigJson() {
     for (var key in modules) {
         var module = modules[key];
-        modulesConfig[key] = initModuleConfig(module["name"]);
+        modulesConfig[key] = getModuleConfigByModuleName(module["name"]);
     }
 }
 
-function initModuleConfig(moduleName) {
+function getModuleConfigByModuleName(moduleName) {
     var moduleJsonPath;
 
     var modulePath = getModulePath(moduleName);
@@ -86,6 +86,16 @@ function initModuleConfig(moduleName) {
         moduleConfig.prefix = path.join(projectName, modulePath);
     }
 
+    //写入语言包文件
+    if(moduleConfig.name == "core") {
+        moduleConfig.file_list.unshift("egret/i18n/" + globals.getLanguageInfo() + ".ts");
+    }
+
+    moduleConfig.getAbsoluteFilePath = function (){
+        return moduleConfig.file_list.map( function(item){
+            return path.join(moduleConfig.prefix,moduleConfig.source,item);
+        })
+    }
     return moduleConfig;
 }
 
@@ -174,7 +184,7 @@ function hasKeys(obj, keys) {
 }
 
 function getModuleDetailConfig(name) {
-    var moduleConfig = initModuleConfig(name);
+    var moduleConfig = getModuleConfigByModuleName(name);
     var jsList = moduleConfig.file_list;
 
     for (var i = 0; i < jsList.length; i++) {
@@ -238,3 +248,5 @@ exports.getModulePath = getModulePath;
 exports.getModuleConfig = getModuleConfig;
 exports.getProjectPath = getProjectPath;
 exports.getModulesDts = getModulesDts;
+
+exports.getModuleConfigByModuleName = getModuleConfigByModuleName;

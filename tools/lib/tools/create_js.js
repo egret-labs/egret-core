@@ -11,7 +11,25 @@ var projectProperties = require("../core/projectProperties.js");
 var global = require("../core/globals");
 
 
-function run(dir, args, opts) {
+function run(dir, args, opts){
+    var currDir = globals.joinEgretDir(dir, args[0]);
+    globals.setShowDebugLog();
+    compileModule("gui");
+
+}
+
+
+function compileModule(moduleName){
+    var moduleConfig = projectProperties.getModuleConfigByModuleName(moduleName);
+    var moduleFileList = moduleConfig.getAbsoluteFilePath();
+    var compiler = require("./egret_compiler.js");
+    var cmd = moduleFileList.join(" ") + " --out " + moduleConfig.name + ".js" + " -t ES5"
+    compiler.compile( function (){
+
+    },cmd);
+}
+
+function run1(dir, args, opts) {
     var currDir = globals.joinEgretDir(dir, args[0]);
     globals.checkVersion(currDir);
     globals.setShowDebugLog();
