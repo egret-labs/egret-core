@@ -46,7 +46,7 @@ module egret.web {
          * @method egret.Sound#play
          * @param loop {boolean} 是否循环播放，默认为false
          */
-        public _play(type?:string):void {
+        public $play(type?:string):void {
             this.removeListeners();
 
             if (Html5Capatibility._System_OS != SystemOSType.WPHONE) {
@@ -93,7 +93,7 @@ module egret.web {
                 this.removeListeners();
 
                 if (this._loop && !this.paused)
-                    this._play();
+                    this.$play();
             }
 
         }
@@ -104,7 +104,7 @@ module egret.web {
          * 暂停声音
          * @method egret.Sound#pause
          */
-        public _pause():void {
+        public $pause():void {
             this.paused = true;
             this._audio.pause();
         }
@@ -113,7 +113,7 @@ module egret.web {
          * 重新加载声音
          * @method egret.Sound#load
          */
-        public _load():void {
+        public $load():void {
             this._audio.load();
         }
 
@@ -138,7 +138,7 @@ module egret.web {
          * @param type 事件类型
          * @param listener 监听函数
          */
-        public _addEventListener(type:string, listener:Function, useCapture:boolean = false):void {
+        public $addEventListener(type:string, listener:Function, useCapture:boolean = false):void {
             if (type == "ended") {
                 this._onEndedCall = listener;
                 return;
@@ -166,7 +166,7 @@ module egret.web {
          * @param type 事件类型
          * @param listener 监听函数
          */
-        public _removeEventListener(type:string, listener:Function, useCapture:boolean = false):void {
+        public $removeEventListener(type:string, listener:Function, useCapture:boolean = false):void {
             if (type == "ended") {
                 this._onEndedCall = null;
                 return;
@@ -185,11 +185,11 @@ module egret.web {
             }
         }
 
-        public _preload(type:string, callback:Function = null, thisObj:any = null):void {
+        public $preload(type:string, callback:Function = null, thisObj:any = null):void {
             egret.callLater(callback, thisObj);
         }
 
-        public _destroy():void {
+        public $destroy():void {
 
         }
 
@@ -199,26 +199,26 @@ module egret.web {
          * 获取当前音量值
          * @returns number
          */
-        public _getVolume():number {
+        public $getVolume():number {
             return this._volume;
         }
 
-        public _setVolume(value:number):void {
+        public $setVolume(value:number):void {
             this._volume = Math.max(0, Math.min(value, 1));
             this._audio.volume = this._volume;
         }
 
-        public _setLoop(value:boolean):void {
+        public $setLoop(value:boolean):void {
             this._loop = value;
         }
 
         private _startTime:number = 0;
 
-        public _getCurrentTime():number {
+        public $getCurrentTime():number {
             return this._audio.currentTime;
         }
 
-        public _setCurrentTime(value:number):void {
+        public $setCurrentTime(value:number):void {
             this._startTime = value;
         }
 

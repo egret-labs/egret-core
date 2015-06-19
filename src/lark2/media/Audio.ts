@@ -31,24 +31,24 @@
 //////////////////////////////////////////////////////////////////////////////////////
 module egret {
     export interface Audio {
-        _setCurrentTime(value:number):void;
-        _getCurrentTime():number;
+        $setCurrentTime(value:number):void;
+        $getCurrentTime():number;
 
-        _setVolume(value:number):void;
-        _getVolume():number;
+        $setVolume(value:number):void;
+        $getVolume():number;
 
-        _setLoop(value:boolean):void;
+        $setLoop(value:boolean):void;
 
-        _play(type?:string):void;
-        _pause():void;
-        _load():void;
+        $play(type?:string):void;
+        $pause():void;
+        $load():void;
 
-        _preload(type:string, callback?:Function, thisObj?:any):void;
+        $preload(type:string, callback?:Function, thisObj?:any):void;
 
-        _addEventListener(type:string, listener:Function, useCapture?:boolean):void;
-        _removeEventListener(type:string, listener:Function, useCapture?:boolean):void;
+        $addEventListener(type:string, listener:Function, useCapture?:boolean):void;
+        $removeEventListener(type:string, listener:Function, useCapture?:boolean):void;
 
-        _destroy():void;
+        $destroy():void;
 
         $loadByUrl(url:string, callback:(code:number)=>void):void;
     }

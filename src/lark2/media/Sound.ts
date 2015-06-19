@@ -81,7 +81,7 @@ module egret {
          * @returns {number}
          */
         public get position():number {
-            return this.audio ? Math.floor(this.audio._getCurrentTime() * 1000) : 0;
+            return this.audio ? Math.floor(this.audio.$getCurrentTime() * 1000) : 0;
         }
 
         /**
@@ -94,9 +94,9 @@ module egret {
             if (!sound) {
                 return;
             }
-            sound._setCurrentTime(position / 1000);
-            sound._setLoop(loop);
-            sound._play(this.type);
+            sound.$setCurrentTime(position / 1000);
+            sound.$setLoop(loop);
+            sound.$play(this.type);
         }
 
         private _pauseTime:number = 0;
@@ -110,8 +110,8 @@ module egret {
                 return;
             }
             this._pauseTime = 0;
-            sound._setCurrentTime(0);
-            sound._pause();
+            sound.$setCurrentTime(0);
+            sound.$pause();
         }
 
         /**
@@ -122,8 +122,8 @@ module egret {
             if (!sound) {
                 return;
             }
-            this._pauseTime = sound._getCurrentTime();
-            sound._pause();
+            this._pauseTime = sound.$getCurrentTime();
+            sound.$pause();
         }
 
         /**
@@ -135,9 +135,9 @@ module egret {
             if (!sound) {
                 return;
             }
-            sound._setCurrentTime(this._pauseTime);
+            sound.$setCurrentTime(this._pauseTime);
             this._pauseTime = 0;
-            sound._play(this.type);
+            sound.$play(this.type);
         }
 
         /**
@@ -148,7 +148,7 @@ module egret {
             if (!sound) {
                 return;
             }
-            sound._load();
+            sound.$load();
         }
 
         private _listeners:Array<any> = [];
@@ -188,7 +188,7 @@ module egret {
                 this._listeners.push({type: type, func: func});
 
                 var virtualType = self.getVirtualType(type);
-                this.audio._addEventListener(virtualType, func, false);
+                this.audio.$addEventListener(virtualType, func, false);
             }
         }
 
@@ -216,7 +216,7 @@ module egret {
                         self._listeners.splice(i, 1);
 
                         var virtualType = self.getVirtualType(type);
-                        self.audio._removeEventListener(virtualType, bin.func, false);
+                        self.audio.$removeEventListener(virtualType, bin.func, false);
                         break;
                     }
                 }
@@ -242,11 +242,11 @@ module egret {
             if (!sound) {
                 return;
             }
-            sound._setVolume(Math.max(0, Math.min(value, 1)));
+            sound.$setVolume(Math.max(0, Math.min(value, 1)));
         }
 
         public get volume():number {
-            return this.audio ? this.audio._getVolume() : 0;
+            return this.audio ? this.audio.$getVolume() : 0;
         }
 
         /**
@@ -279,7 +279,7 @@ module egret {
         public preload(type:string, callback:Function = null, thisObj:any = null):void {
             this.type = type;
 
-            this.audio._preload(type, callback, thisObj);
+            this.audio.$preload(type, callback, thisObj);
         }
 
         public _setAudio(value:Audio):void {
@@ -291,7 +291,7 @@ module egret {
          * native中使用，html5里为空实现
          */
         public destroy():void {
-            this.audio._destroy();
+            this.audio.$destroy();
         }
     }
 }

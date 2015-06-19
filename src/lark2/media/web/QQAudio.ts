@@ -57,7 +57,7 @@ module egret.web {
          * @method egret.Sound#play
          * @param loop {boolean} 是否循环播放，默认为false
          */
-        public _play(type?:string):void {
+        public $play(type?:string):void {
             this._type = type;
             if (type == egret.Sound.EFFECT) {
                 QZAppExternal.playLocalSound(
@@ -82,7 +82,7 @@ module egret.web {
          * 暂停声音
          * @method egret.Sound#pause
          */
-        public _pause():void {
+        public $pause():void {
             if (this._type == egret.Sound.EFFECT) {
                 QZAppExternal.stopSound();
             }
@@ -96,7 +96,7 @@ module egret.web {
          * @param type 事件类型
          * @param listener 监听函数
          */
-        public _addEventListener(type:string, listener:Function, useCapture:boolean = false):void {
+        public $addEventListener(type:string, listener:Function, useCapture:boolean = false):void {
 
         }
 
@@ -105,7 +105,7 @@ module egret.web {
          * @param type 事件类型
          * @param listener 监听函数
          */
-        public _removeEventListener(type:string, listener:Function, useCapture:boolean = false):void {
+        public $removeEventListener(type:string, listener:Function, useCapture:boolean = false):void {
 
         }
 
@@ -113,10 +113,10 @@ module egret.web {
          * 重新加载声音
          * @method egret.Sound#load
          */
-        public _load():void {
+        public $load():void {
         }
 
-        public _preload(type:string, callback:Function = null, thisObj:any = null):void {
+        public $preload(type:string, callback:Function = null, thisObj:any = null):void {
             egret.callLater(callback, thisObj);
         }
 
@@ -130,28 +130,28 @@ module egret.web {
          * 获取当前音量值
          * @returns number
          */
-        public _getVolume():number {
+        public $getVolume():number {
             return 1;
         }
 
-        public _setVolume(value:number) {
+        public $setVolume(value:number) {
         }
 
-        public _setLoop(value:boolean):void {
+        public $setLoop(value:boolean):void {
             this._loop = value;
         }
 
         private _currentTime:number = 0;
 
-        public _getCurrentTime():number {
+        public $getCurrentTime():number {
             return 0;
         }
 
-        public _setCurrentTime(value:number) {
+        public $setCurrentTime(value:number) {
             this._currentTime = value;
         }
 
-        public _destroy():void {
+        public $destroy():void {
 
         }
 
