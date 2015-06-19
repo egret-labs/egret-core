@@ -38,7 +38,7 @@ module egret {
         /**
          * MovieClip数据
          */
-        public _mcData:any = null;
+        $mcData:any = null;
 
         /**
          * 总帧数
@@ -77,10 +77,10 @@ module egret {
             super();
         }
 
-        public _init(mcData:any, textureData:any, spriteSheet:SpriteSheet) {
+        $init(mcData:any, textureData:any, spriteSheet:SpriteSheet) {
             this.textureData = textureData;
             this.spriteSheet = spriteSheet;
-            this._setMCData(mcData);
+            this.setMCData(mcData);
         }
 
         /**
@@ -123,21 +123,21 @@ module egret {
             return texture;
         }
 
-        public _isDataValid():boolean {
+        $isDataValid():boolean {
             return this.frames.length > 0;
         }
 
-        public _isTextureValid():boolean {
+        $isTextureValid():boolean {
             return this.textureData != null && this.spriteSheet != null;
         }
 
-        public _fillMCData(mcData:any):void {
+        $fillMCData(mcData:any):void {
             this.frameRate = mcData["frameRate"] || 24;
-            this._fillFramesData(mcData.frames);
-            this._fillFrameLabelsData(mcData.labels);
+            this.fillFramesData(mcData.frames);
+            this.fillFrameLabelsData(mcData.labels);
         }
 
-        private _fillFramesData(framesData:any[]):void {
+        private fillFramesData(framesData:any[]):void {
             var frames:any[] = this.frames;
             var length:number = framesData ? framesData.length : 0;
             var keyFramePosition:number;
@@ -157,7 +157,7 @@ module egret {
             this.numFrames = frames.length;
         }
 
-        private _fillFrameLabelsData(frameLabelsData:any[]):void {
+        private fillFrameLabelsData(frameLabelsData:any[]):void {
             if (frameLabelsData) {
                 var length:number = frameLabelsData.length;
                 if (length > 0) {
@@ -175,20 +175,20 @@ module egret {
          * @member {any} egret.MovieClip#dataSource
          */
         public set mcData(value:MovieClipData) {
-            this._setMCData(value);
+            this.setMCData(value);
         }
 
         public get mcData():MovieClipData {
-            return this._mcData;
+            return this.$mcData;
         }
 
-        private _setMCData(value:MovieClipData) {
-            if (this._mcData == value) {
+        private setMCData(value:MovieClipData) {
+            if (this.$mcData == value) {
                 return;
             }
-            this._mcData = value;
+            this.$mcData = value;
             if (value) {
-                this._fillMCData(value);
+                this.$fillMCData(value);
             }
         }
     }

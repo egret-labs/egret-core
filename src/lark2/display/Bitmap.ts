@@ -164,7 +164,16 @@ module egret {
             var bitmapData = this.$bitmapData;
             if (bitmapData) {
                 context.imageSmoothingEnabled = this.$smoothing;
-                context.drawImage(bitmapData._bitmapData,0,0);
+
+                var offsetX:number = Math.round(bitmapData._offsetX);
+                var offsetY:number = Math.round(bitmapData._offsetY);
+                var bitmapWidth:number = bitmapData._bitmapWidth || bitmapData._textureWidth;
+                var bitmapHeight:number = bitmapData._bitmapHeight || bitmapData._textureHeight;
+                var destW:number = Math.round(bitmapWidth);
+                var destH:number = Math.round(bitmapHeight);
+
+                context.drawImage(bitmapData._bitmapData, bitmapData._bitmapX, bitmapData._bitmapY,
+                    bitmapWidth, bitmapHeight, offsetX, offsetY, destW, destH);
             }
         }
     }

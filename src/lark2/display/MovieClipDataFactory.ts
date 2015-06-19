@@ -40,9 +40,9 @@ module egret {
          * @member {boolean} egret.MovieClipDataFactory#enableCache
          */
         public enableCache:boolean = true;
-        public _mcDataSet:any;
-        public _spriteSheet:SpriteSheet;
-        public _mcDataCache:any = {};
+        $mcDataSet:any;
+        $spriteSheet:SpriteSheet;
+        $mcDataCache:any = {};
 
         /**
          * 创建一个 egret.MovieClipDataFactory 对象
@@ -51,7 +51,7 @@ module egret {
          */
         constructor(movieClipDataSet?:any, texture?:Texture) {
             super();
-            this._mcDataSet = movieClipDataSet;
+            this.$mcDataSet = movieClipDataSet;
             this.setTexture(texture);
         }
 
@@ -59,8 +59,8 @@ module egret {
          * 清空缓存
          * @method egret.MovieClipDataFactory#clearCache
          */
-        public clearCache():void {
-            this._mcDataCache = {};
+        public clearCache():void{
+            this.$mcDataCache = {};
         }
 
         /**
@@ -69,38 +69,38 @@ module egret {
          * @param movieClipName {string} MovieClip名字. 可选参数，默认为"", 相当于取第一个MovieClip数据
          * @returns {MovieClipData} 生成的MovieClipData对象
          */
-        public generateMovieClipData(movieClipName:string = ""):MovieClipData {
-            if (movieClipName == "") {
-                if (this._mcDataSet) {
-                    for (movieClipName in this._mcDataSet.mc) {
+        public generateMovieClipData(movieClipName:string=""):MovieClipData {
+            if(movieClipName == ""){
+                if(this.$mcDataSet){
+                    for(movieClipName in this.$mcDataSet.mc){
                         break;
                     }
                 }
             }
-            if (movieClipName == "") {
+            if(movieClipName == ""){
                 return null;
             }
-            var output:MovieClipData = this._findFromCache(movieClipName, this._mcDataCache);
+            var output:MovieClipData = this.findFromCache(movieClipName, this.$mcDataCache);
             if (!output) {
                 output = new MovieClipData();
-                this._fillData(movieClipName, output, this._mcDataCache);
+                this.fillData(movieClipName, output, this.$mcDataCache);
             }
             return output;
         }
 
-        private _findFromCache(movieClipName:string, cache:any):any {
-            if (this.enableCache && cache[movieClipName]) {
+        private findFromCache(movieClipName:string, cache:any):any{
+            if(this.enableCache && cache[movieClipName]) {
                 return cache[movieClipName];
             }
             return null;
         }
 
-        private _fillData(movieClipName:string, movieClip:MovieClipData, cache:any):void {
-            if (this._mcDataSet) {
-                var mcData = this._mcDataSet.mc[movieClipName];
+        private fillData(movieClipName:string, movieClip:MovieClipData, cache:any):void{
+            if(this.$mcDataSet){
+                var mcData = this.$mcDataSet.mc[movieClipName];
                 if (mcData) {
-                    movieClip._init(mcData, this._mcDataSet.res, this._spriteSheet);
-                    if (this.enableCache) {
+                    movieClip.$init(mcData, this.$mcDataSet.res, this.$spriteSheet);
+                    if(this.enableCache){
                         cache[movieClipName] = movieClip;
                     }
                 }
@@ -111,19 +111,19 @@ module egret {
          * MovieClip数据集
          * @member {any} egret.MovieClipDataFactory#mcDataSet
          */
-        public get mcDataSet():any {
-            return this._mcDataSet;
+        public get mcDataSet():any{
+            return this.$mcDataSet;
         }
 
-        public set mcDataSet(value:any) {
-            this._mcDataSet = value;
+        public set mcDataSet(value:any){
+            this.$mcDataSet = value;
         }
 
         /**
          * MovieClip需要使用的纹理图
          * @member {Texture} egret.MovieClipDataFactory#texture
          */
-        public set texture(value:Texture) {
+        public set texture(value:Texture){
             this.setTexture(value);
         }
 
@@ -131,12 +131,12 @@ module egret {
          * 由纹理图生成的精灵表
          * @member {SpriteSheet} egret.MovieClipDataFactory#spriteSheet
          */
-        public get spriteSheet():SpriteSheet {
-            return this._spriteSheet;
+        public get spriteSheet():SpriteSheet{
+            return this.$spriteSheet;
         }
 
-        private setTexture(value:Texture):void {
-            this._spriteSheet = value ? new SpriteSheet(value) : null;
+        private setTexture(value:Texture):void{
+            this.$spriteSheet = value ? new SpriteSheet(value) : null;
         }
     }
 }
