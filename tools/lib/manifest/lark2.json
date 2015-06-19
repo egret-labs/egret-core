@@ -42,6 +42,15 @@
         "lark2/display/Shape.ts",
         "lark2/display/Sprite.ts",
         "lark2/display/Stage.ts",
+
+        "lark2/display/FrameLabel.ts",
+        "lark2/display/MovieClipData.ts",
+        "lark2/display/MovieClipDataFactory.ts",
+        "lark2/display/MovieClip.ts",
+        "lark2/display/SpriteSheet.ts",
+
+
+
         "lark2/geom/Matrix.ts",
         "lark2/geom/Point.ts",
         "lark2/geom/Rectangle.ts",
@@ -77,6 +86,10 @@
         "lark2/text/TextInput.ts",
         "lark2/text/TextMeasurer.ts",
         "lark2/text/VerticalAlign.ts",
+
+
+
+
         "lark2/web/CanvasFactory.ts",
         "lark2/web/LarkWeb.ts",
         "lark2/web/WebBitmapData.ts",

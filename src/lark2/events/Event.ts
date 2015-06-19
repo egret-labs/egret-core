@@ -200,6 +200,20 @@ module egret {
 
         /**
          * @language en_US
+         * Emitted when loop completed.
+         * @version Lark 1.0
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 循环完成
+         * @version Lark 1.0
+         * @platform Web,Native
+         */
+        public static LOOP_COMPLETE:string = "loopComplete";
+
+        /**
+         * @language en_US
          * Emitted when the net request is failed.
          * @version Lark 1.0
          * @platform Web,Native
