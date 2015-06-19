@@ -237,10 +237,10 @@ module egret {
          * @private
          * Ticker以60FPS频率刷新此方法
          */
-        $update(timeStamp:number):boolean {
+        $update(advancedTime:number):boolean {
             this.lastCount -= 1000;
             if(this.lastCount>0){
-                return;
+                return false;
             }
             this.lastCount += this.updateInterval;
             this._currentCount++;
@@ -250,6 +250,7 @@ module egret {
                 this.stop();
                 TimerEvent.emitTimerEvent(this,TimerEvent.TIMER_COMPLETE);
             }
+            return true;
         }
     }
 

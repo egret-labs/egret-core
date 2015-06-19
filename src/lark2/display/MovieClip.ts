@@ -101,7 +101,7 @@ module egret {
 
         private _initFrame():void {
             if (this.$movieClipData.$isTextureValid()) {
-                this.$advanceFrame();
+                this.advanceFrame();
                 this.constructFrame();
             }
         }
@@ -166,7 +166,7 @@ module egret {
          * @param ignoreCase {boolean} 是否忽略大小写，可选参数，默认false
          * @returns {egret.FrameLabel} FrameLabel对象
          */
-        $getFrameLabelByName(labelName:string, ignoreCase:boolean = false):FrameLabel {
+        private getFrameLabelByName(labelName:string, ignoreCase:boolean = false):FrameLabel {
             if (ignoreCase) {
                 labelName = labelName.toLowerCase();
             }
@@ -189,7 +189,7 @@ module egret {
          * @param frame {number} 帧序号
          * @returns {egret.FrameLabel} FrameLabel对象
          */
-        $getFrameLabelByFrame(frame:number):FrameLabel {
+        private getFrameLabelByFrame(frame:number):FrameLabel {
             var frameLabels = this.frameLabels;
             if (frameLabels) {
                 var outputFramelabel:FrameLabel = null;
@@ -209,7 +209,7 @@ module egret {
          * @param frame {number} 帧序号
          * @returns {egret.FrameLabel} FrameLabel对象
          */
-        $getFrameLabelForFrame(frame:number):FrameLabel {
+        private getFrameLabelForFrame(frame:number):FrameLabel {
             var outputFrameLabel:FrameLabel = null;
             var tempFrameLabel:FrameLabel = null;
             var frameLabels = this.frameLabels;
@@ -295,7 +295,7 @@ module egret {
         private gotoFrame(frame:any):void {
             var frameNum:number;
             if (typeof frame === "string") {
-                frameNum = this.$getFrameLabelByName(frame).frame;
+                frameNum = this.getFrameLabelByName(frame).frame;
             } else {
                 frameNum = parseInt(frame + '', 10);
                 if (<any>frameNum != frame) {
@@ -313,16 +313,14 @@ module egret {
             }
 
             this.$nextFrameNum = frameNum;
-            this.$advanceFrame();
+            this.advanceFrame();
             this.constructFrame();
             this.handlePendingEvent();
         }
 
         private lastTime:number = 0;
 
-        private advanceTime(runningTime:number):boolean {
-            var advancedTime = runningTime - this.lastTime;
-            this.lastTime = runningTime;
+        private advanceTime(advancedTime:number):boolean {
             var self = this;
             var frameIntervalTime:number = self.frameIntervalTime;
             var currentTime = self.passedTime + advancedTime;
@@ -354,7 +352,7 @@ module egret {
                         }
                     }
                 }
-                self.$advanceFrame();
+                self.advanceFrame();
             }
             self.constructFrame();
             self.handlePendingEvent();
@@ -362,7 +360,7 @@ module egret {
             return true;
         }
 
-        $advanceFrame():void {
+        private advanceFrame():void {
             this.$currentFrameNum = this.$nextFrameNum;
         }
 
@@ -427,7 +425,7 @@ module egret {
          * @member {number} egret.MovieClip#currentFrame
          */
         public get currentFrameLabel():string {
-            var label = this.$getFrameLabelByFrame(this.$currentFrameNum);
+            var label = this.getFrameLabelByFrame(this.$currentFrameNum);
             return label && label.name;
         }
 
@@ -436,7 +434,7 @@ module egret {
          * @member {number} egret.MovieClip#currentFrame
          */
         public get currentLabel():string {
-            var label:FrameLabel = this.$getFrameLabelForFrame(this.$currentFrameNum);
+            var label:FrameLabel = this.getFrameLabelForFrame(this.$currentFrameNum);
             return label ? label.name : null;
         }
 

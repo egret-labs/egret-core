@@ -32,7 +32,6 @@ module egret {
     var setTimeoutCache:any = {};
     var setTimeoutIndex:number = 0;
 
-    var setTimeoutLastTime:number = 0;
     var setTimeoutCount:number = 0;
     /**
      * 在指定的延迟（以毫秒为单位）后运行指定的函数。
@@ -49,8 +48,6 @@ module egret {
         setTimeoutCount++;
         if (setTimeoutCount == 1) {
             sys.$ticker.$startTick(timeoutUpdate, null);
-
-            setTimeoutLastTime = egret.getTimer();
         }
 
         setTimeoutIndex++;
@@ -75,10 +72,7 @@ module egret {
 
     }
 
-    function timeoutUpdate(runTime:number):boolean {
-        var dt = runTime - setTimeoutLastTime;
-        setTimeoutLastTime = runTime;
-
+    function timeoutUpdate(dt:number):boolean {
         for (var key in setTimeoutCache) {
             var data = setTimeoutCache[key];
             data.delay -= dt;

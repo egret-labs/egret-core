@@ -2,7 +2,6 @@ module egret {
     var setIntervalCache:any = {};
     var setIntervalIndex:number = 0;
 
-    var setIntervalLastTime:number = 0;
     var setIntervalCount:number = 0;
 
     /**
@@ -20,8 +19,6 @@ module egret {
         setIntervalCount++;
         if (setIntervalCount == 1) {
             sys.$ticker.$startTick(intervalUpdate, null);
-
-            setIntervalLastTime = egret.getTimer();
         }
         setIntervalIndex++;
         setIntervalCache[setIntervalIndex] = data;
@@ -44,24 +41,14 @@ module egret {
         }
     }
 
-    function intervalUpdate(runTime:number):boolean {
-        var dt = runTime - setIntervalLastTime;
-        setIntervalLastTime = runTime;
-
-        var hasListener:boolean = false;
+    function intervalUpdate(dt:number):boolean {
         for (var key in setIntervalCache) {
-            hasListener = true;
-
             var data = setIntervalCache[key];
             data.delay -= dt;
             if (data.delay <= 0) {
                 data.delay = data.originDelay;
                 data.listener.apply(data.thisObject, data.params);
             }
-        }
-
-        if (!hasListener) {
-            sys.$ticker.$stopTick(intervalUpdate, null);
         }
 
         return true;

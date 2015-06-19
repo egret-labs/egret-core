@@ -51,7 +51,7 @@ module egret.sys {
      */
     export class Ticker {
 
-
+        private lastTime:number = 0;
         /**
          * @private
          */
@@ -59,7 +59,7 @@ module egret.sys {
             if (DEBUG && $ticker) {
                 $error(1008, "egret.sys.Ticker");
             }
-            egret.$START_TIME = Date.now();
+            egret.$START_TIME = this.lastTime = Date.now();
         }
 
         /**
@@ -203,8 +203,11 @@ module egret.sys {
             var length = callBackList.length;
             var requestRenderingFlag = $requestRenderingFlag;
             var timeStamp = egret.getTimer();
+            var advancedTime:number = timeStamp - this.lastTime;
+            this.lastTime = timeStamp;
+
             for (var i = 0; i < length; i++) {
-                if (callBackList[i].call(thisObjectList[i], timeStamp)) {
+                if (callBackList[i].call(thisObjectList[i], advancedTime)) {
                     requestRenderingFlag = true;
                 }
 
