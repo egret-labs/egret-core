@@ -256,7 +256,7 @@ module egret.web {
             element.style.top = "0px";
             element.style.border = "none";
             element.style.padding = "2px 0";
-            element.style[getPrefixStyleName("transformOrigin")] = "0% 0% 0px";
+            element.style[egret.web.getPrefixStyleName("transformOrigin")] = "0% 0% 0px";
         }
 
         /**
@@ -333,7 +333,7 @@ module egret.web {
             setElementStyle("display", "block");
             setElementStyle("width", textInput.width + "px");
             setElementStyle("height", textInput.height + "px");
-            setElementStyle(getPrefixStyleName('transform'), 'matrix(' + [matrix.a, matrix.b, matrix.c, matrix.d, 0, 0].join(",") + ')');
+            setElementStyle(egret.web.getPrefixStyleName('transform'), 'matrix(' + [matrix.a, matrix.b, matrix.c, matrix.d, 0, 0].join(",") + ')');
 
             setTimeout(()=> {
                 htmlInput.style.opacity = '1';
@@ -385,39 +385,4 @@ module egret.web {
             this.lastSelectActive = direction == 'forward' ? end : start;
         }
     }
-
-
-    /**
-     * @private
-     */
-    var $CurrentPrefix:string = null;
-
-    /**
-     * @private
-     */
-    function getPrefixStyleName(name:string):string {
-        if ($CurrentPrefix == null)
-            $CurrentPrefix = getPrefix();
-        return $CurrentPrefix + name.charAt(0).toUpperCase() + name.substr(1);
-    }
-
-    /**
-     * @private
-     */
-    function getPrefix():string {
-        var tempStyle = document.createElement('div').style;
-        var prefix = "";
-        var transArr:Array<string> = ["t", "webkitT", "msT", "MozT", "OT"];
-
-        for (var i:number = 0; i < transArr.length; i++) {
-            var transform:string = transArr[i] + 'ransform';
-
-            if (transform in tempStyle) {
-                prefix = transArr[i]
-            }
-        }
-
-        return prefix.substr(0, prefix.length - 1);
-    }
-
 }

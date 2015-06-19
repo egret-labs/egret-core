@@ -134,4 +134,55 @@ module egret.web {
     }
 
     Html5Capatibility._init();
+
+
+    /**
+     * @private
+     */
+    var currentPrefix:string = null;
+
+    /**
+     * @private
+     */
+    export function getPrefixStyleName(name:string, element?:any):string {
+        var header:string = "";
+
+        if (element != null) {
+            header = getPrefix(name, element);
+        }
+        else {
+            if (currentPrefix == null) {
+                var tempStyle = document.createElement('div').style;
+                currentPrefix = getPrefix("transform", tempStyle);
+            }
+            header = currentPrefix;
+        }
+
+        if (header == "") {
+            return name;
+        }
+
+        return header + name.charAt(0).toUpperCase() + name.substring(1, name.length);
+    }
+
+    /**
+     * @private
+     */
+    function getPrefix(name:string, element:any):string {
+        if (name in element) {
+            return "";
+        }
+
+        name = name.charAt(0).toUpperCase() + name.substring(1, name.length);
+        var transArr:Array<string> = ["webkit", "ms", "Moz", "O"];
+        for (var i:number = 0; i < transArr.length; i++) {
+            var tempStyle:string = transArr[i] + name;
+
+            if (tempStyle in element) {
+                return transArr[i];
+            }
+        }
+
+        return "";
+    }
 }
