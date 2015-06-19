@@ -121,6 +121,32 @@ module egret {
         }
 
         /**
+         * 由该点的 x 和 y 坐标确定的 Rectangle 对象左上角的位置。
+         * @member {number} egret.Rectangle#topLeft
+         */
+        public get topLeft():Point {
+            return new Point(this.left, this.top);
+        }
+
+        public set topLeft(value:Point) {
+            this.top = value.y;
+            this.left = value.x;
+        }
+
+        /**
+         * 由 right 和 bottom 属性的值确定的 Rectangle 对象的右下角的位置。
+         * @member {number} egret.Rectangle#bottomRight
+         */
+        public get bottomRight():Point {
+            return new Point(this.right, this.bottom);
+        }
+
+        public set bottomRight(value:Point) {
+            this.bottom = value.y;
+            this.right = value.x;
+        }
+
+        /**
          * 举行类初始化赋值，开发者尽量调用此方法复用Rectangle对象，而不是每次需要的时候都重新创建
          * @method egret.Rectangle#initialize
          * @param x {number} 矩形的x轴
