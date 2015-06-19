@@ -26,7 +26,7 @@ function run(dir, args, opts){
 
 
         function(callback){
-            copyTemplate(callback,projectPath)
+            copyTemplate(callback)
         },
 
         function(callback){
@@ -39,14 +39,42 @@ function run(dir, args, opts){
 
         function(callback){
             compileModule(callback,"dragonbones");
+        },
+        function(callback){
+            clean(callback);
+        },
+
+        function(callback){
+            compress(callback,"egret");
+        },
+        function(callback){
+            compress(callback,"gui");
+        },
+        function(callback){
+            compress(callback,"dragonbones");
         }
     ])
 }
 
+function compress(callback,moduleName){
+    var closureCompiler = require("../core/closureCompiler");
+    closureCompiler.compilerSingleFile([path.join(projectPath,moduleName + ".js")],path.join(projectPath,moduleName + ".min.js"),path.join(projectPath,"temp.js"),callback);
 
-function copyTemplate(callback,projectPath){
+}
+
+
+function copyTemplate(callback){
 
     copyFileDir(projectPath, "tools/templates/javascript/empty");
+    callback();
+}
+
+function clean(callback){
+    file.remove(path.join(projectPath,"core.d.ts"));
+    file.remove(path.join(projectPath,"gui.d.ts"));
+    file.remove(path.join(projectPath,"dragonbones.d.ts"));
+    file.copy(path.join(projectPath,"core.js"),path.join(projectPath,"egret.js"))
+    file.remove(path.join(projectPath,"core.js"));
     callback();
 }
 
@@ -62,6 +90,10 @@ function compileModule(callback,moduleName){
 
     if (moduleName == "core"){
         var appendModule = projectProperties.getModuleConfigByModuleName("html5");
+        var appendModuleFileList = appendModule.getAbsoluteFilePath();
+        moduleFileList = moduleFileList.concat(appendModuleFileList);
+
+        var appendModule = projectProperties.getModuleConfigByModuleName("res");
         var appendModuleFileList = appendModule.getAbsoluteFilePath();
         moduleFileList = moduleFileList.concat(appendModuleFileList);
     }
