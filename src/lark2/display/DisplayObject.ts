@@ -160,7 +160,11 @@ module egret {
         matrix,
         invertedConcatenatedMatrix,
         bounds,
-        contentBounds
+        contentBounds,
+        anchorX,
+        anchorY,
+        anchorOffsetX,
+        anchorOffsetY,
     }
 
     /**
@@ -233,7 +237,11 @@ module egret {
                 6: new Matrix(),     //matrix,
                 7: new Matrix(),     //invertedConcatenatedMatrix,
                 8: new Rectangle(),  //bounds,
-                9: new Rectangle()  //contentBounds
+                9: new Rectangle(),  //contentBounds
+                10: 0,               //anchorX,
+                11: 0,               //anchorY,
+                12: 0,               //anchorOffsetX,
+                13: 0                //anchorOffsetY,
             };
         }
 
@@ -898,6 +906,137 @@ module egret {
             values[Keys.scaleX] = bounds.width / baseWidth;
             this.invalidateMatrix();
         }
+
+
+        /**
+         * @language en_US
+         * X represents the object of which is the anchor.
+         * @default 0
+         * @version Lark 1.0
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 表示从对象绝对锚点X。
+         * @default 0
+         * @version Lark 1.0
+         * @platform Web,Native
+         */
+        public get anchorOffsetX():number {
+            return this.$DisplayObject[Keys.anchorOffsetX];
+        }
+
+        public set anchorOffsetX(value:number) {
+            this.$setAnchorOffsetX(value);
+        }
+
+        $setAnchorOffsetX(value:number):boolean {
+            value = +value || 0;
+            if (value === this.$DisplayObject[Keys.anchorOffsetX]) {
+                return false;
+            }
+            this.$DisplayObject[Keys.anchorOffsetX] = value;
+            this.invalidatePosition();
+            return true;
+        }
+
+        /**
+         * @language en_US
+         * Y represents the object of which is the anchor.
+         * @default 0
+         * @version Lark 1.0
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 表示从对象绝对锚点Y。
+         * @default 0
+         * @version Lark 1.0
+         * @platform Web,Native
+         */
+        public get anchorOffsetY():number {
+            return this.$DisplayObject[Keys.anchorOffsetY];
+        }
+
+        public set anchorOffsetY(value:number) {
+            this.$setAnchorOffsetY(value);
+        }
+
+        $setAnchorOffsetY(value:number):boolean {
+            value = +value || 0;
+            if (value === this.$DisplayObject[Keys.anchorOffsetY]) {
+                return false;
+            }
+            this.$DisplayObject[Keys.anchorOffsetY] = value;
+            this.invalidatePosition();
+            return true;
+        }
+
+        /**
+         * @language en_US
+         * X represents the object relative to the anchor.
+         * @default 0
+         * @version Lark 1.0
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 表示从对象相对锚点X。
+         * @default 0
+         * @version Lark 1.0
+         * @platform Web,Native
+         */
+        public get anchorX():number {
+            return this.$DisplayObject[Keys.anchorX];
+        }
+
+        public set anchorX(value:number) {
+            this.$setAnchorX(value);
+        }
+
+        public $setAnchorX(value:number):boolean {
+            value = +value || 0;
+            if (value === this.$DisplayObject[Keys.anchorX]) {
+                return false;
+            }
+            this.$DisplayObject[Keys.anchorX] = value;
+            this.invalidatePosition();
+            return true;
+        }
+
+
+        /**
+         * @language en_US
+         * Y represents the object relative to the anchor.
+         * @default 0
+         * @version Lark 1.0
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 表示从对象相对锚点Y。
+         * @default 0
+         * @version Lark 1.0
+         * @platform Web,Native
+         */
+        public get anchorY():number {
+            return this.$DisplayObject[Keys.anchorY];
+        }
+
+        public set anchorY(value:number) {
+            this.$setAnchorY(value);
+        }
+
+        public $setAnchorY(value:number):boolean {
+            value = +value || 0;
+            if (value === this.$DisplayObject[Keys.anchorY]) {
+                return false;
+            }
+            this.$DisplayObject[Keys.anchorY] = value;
+            this.invalidatePosition();
+            return true;
+        }
+
 
         /**
          * @private
