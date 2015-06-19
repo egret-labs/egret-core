@@ -27,7 +27,10 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 
-//var HTMLVideoElement = HTMLVideoElement || HTMLDivElement;
+// There is no HTMLDivElement in webkit for air
+if (window['HTMLVideoElement'] == undefined) {
+    window['HTMLVideoElement'] = HTMLDivElement;
+}
 module egret.web {
 
     registerClass(HTMLImageElement,Types.BitmapData);
