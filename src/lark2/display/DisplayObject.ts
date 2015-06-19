@@ -546,16 +546,25 @@ module egret {
          * 获得这个显示对象以及它所有父级对象的连接矩阵。
          */
         $getConcatenatedMatrix():Matrix {
+            var renderMatrix = this.$renderMatrix;
             if (this.$hasFlags(sys.DisplayObjectFlags.InvalidConcatenatedMatrix)) {
                 if (this.$parent) {
                     this.$parent.$getConcatenatedMatrix().$preMultiplyInto(this.$getMatrix(),
-                        this.$renderMatrix);
+                        renderMatrix);
                     var rect = this.$scrollRect;
                     if (rect) {
-                        this.$renderMatrix.$preMultiplyInto($TempMatrix.setTo(1, 0, 0, 1, -rect.x, -rect.y), this.$renderMatrix)
+                        var clipRect = this.$clipRect;
+                        clipRect.setTo(0, 0, rect.width, rect.height);
+                        renderMatrix.$transformBounds(clipRect);
+                        var parentClipRect = this.$parentClipRect;
+                        if (parentClipRect) {
+                            clipRect.$intersectInPlace(parentClipRect);
+                        }
+                        renderMatrix.$preMultiplyInto($TempMatrix.setTo(1, 0, 0, 1, -rect.x, -rect.y), renderMatrix);
+
                     }
                 } else {
-                    this.$renderMatrix.copyFrom(this.$getMatrix());
+                    renderMatrix.copyFrom(this.$getMatrix());
                 }
                 if (this.$displayList) {
                     this.$displayList.$renderRegion.moved = true;
@@ -565,7 +574,7 @@ module egret {
                 }
                 this.$removeFlags(sys.DisplayObjectFlags.InvalidConcatenatedMatrix);
             }
-            return this.$renderMatrix;
+            return renderMatrix;
         }
 
         /**
@@ -1301,16 +1310,39 @@ module egret {
             if (!value && !this.$scrollRect) {
                 return;
             }
+            var changed = false;
             if (value) {
                 if (!this.$scrollRect) {
+                    changed = true;
+                    this.$clipRect = new egret.Rectangle();
                     this.$scrollRect = new egret.Rectangle();
                 }
                 this.$scrollRect.copyFrom(value);
             }
             else {
+                changed = true;
+                this.$clipRect = null;
                 this.$scrollRect = null;
             }
+            if (changed) {
+                this.$scrollRectChanged();
+            }
             this.invalidatePosition();
+        }
+
+        /**
+         * @private
+         * 自身在舞台上的裁剪区域
+         */
+        $clipRect:Rectangle = null;
+        /**
+         * @private
+         * 父级容器在舞台上的裁剪区域
+         */
+        $parentClipRect:Rectangle = null;
+
+        $scrollRectChanged():void {
+
         }
 
         /**
@@ -1636,7 +1668,8 @@ module egret {
                 return false;
             }
             region.moved = false;
-            region.updateRegion(bounds, matrix);
+            var clipRect = this.$clipRect || this.$parentClipRect;
+            region.updateRegion(bounds, matrix, clipRect);
             return true;
         }
 
@@ -1817,13 +1850,13 @@ module egret {
          */
         $emitPropagationEvent(event:Event, list:DisplayObject[], targetIndex:number):void {
             var length = list.length;
-            var captureIndex = targetIndex-1;
+            var captureIndex = targetIndex - 1;
             for (var i = 0; i < length; i++) {
                 var currentTarget = list[i];
                 event.$currentTarget = currentTarget;
                 if (i < captureIndex)
                     event.$eventPhase = EventPhase.CAPTURING_PHASE;
-                else if (i == targetIndex||i==captureIndex)
+                else if (i == targetIndex || i == captureIndex)
                     event.$eventPhase = EventPhase.AT_TARGET;
                 else
                     event.$eventPhase = EventPhase.BUBBLING_PHASE;
@@ -1853,8 +1886,8 @@ module egret {
 
     registerClass(DisplayObject, Types.DisplayObject);
 
-    if(DEBUG){
-        egret.$markReadOnly(DisplayObject.prototype,"parent");
-        egret.$markReadOnly(DisplayObject.prototype,"stage");
+    if (DEBUG) {
+        egret.$markReadOnly(DisplayObject.prototype, "parent");
+        egret.$markReadOnly(DisplayObject.prototype, "stage");
     }
 }

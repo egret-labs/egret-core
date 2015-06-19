@@ -27,6 +27,7 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 
+//var HTMLVideoElement = HTMLVideoElement || HTMLDivElement;
 module egret.web {
 
     registerClass(HTMLImageElement,Types.BitmapData);

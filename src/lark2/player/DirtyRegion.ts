@@ -94,6 +94,9 @@ module egret.sys {
          * 添加一个脏矩形区域，返回是否添加成功，当矩形为空或者在屏幕之外时返回false。
          */
         public addRegion(target:Region):boolean {
+            if (this.clipRectChanged) {
+                return true;
+            }
             var minX = target.minX, minY = target.minY, maxX = target.maxX, maxY = target.maxY;
             if (DEBUG) {
                 if (isF(minX) || isF(minY) || isF(maxX) || isF(maxY)) {
@@ -116,9 +119,6 @@ module egret.sys {
             }
             if (minX >= maxX || minY >= maxY) {
                 return false;
-            }
-            if (this.clipRectChanged) {
-                return true;
             }
             var dirtyList = this.dirtyList;
             var region:Region = Region.create();

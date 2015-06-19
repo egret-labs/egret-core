@@ -203,7 +203,7 @@ module egret.sys {
         /**
          * @private
          */
-        public updateRegion(bounds:Rectangle, matrix:Matrix):void {
+        public updateRegion(bounds:Rectangle, matrix:Matrix, clipRect:Rectangle):void {
             var m = matrix;
             var a = m.a;
             var b = m.b;
@@ -215,12 +215,13 @@ module egret.sys {
             var y = bounds.y;
             var xMax = x + bounds.width;
             var yMax = y + bounds.height;
+            var minX:number, minY:number, maxX:number, maxY:number;
             //优化，通常情况下不缩放旋转的对象占多数，直接加上偏移量即可。
             if (a === 1.0 && b === 0.0 && c === 0.0 && d === 1.0) {
-                this.minX = Math.floor(x + tx) - 1;
-                this.minY = Math.floor(y + ty) - 1;
-                this.maxX = Math.ceil(xMax + tx) + 1;
-                this.maxY = Math.ceil(yMax + ty) + 1;
+                minX = Math.floor(x + tx) - 1;
+                minY = Math.floor(y + ty) - 1;
+                maxX = Math.ceil(xMax + tx) + 1;
+                maxY = Math.ceil(yMax + ty) + 1;
             }
             else {
                 var x0 = a * x + c * y + tx;
@@ -245,8 +246,8 @@ module egret.sys {
                     x3 = tmp;
                 }
 
-                this.minX = Math.floor(x0 < x2 ? x0 : x2) - 1;
-                this.maxX = Math.ceil(x1 > x3 ? x1 : x3) + 1;
+                minX = Math.floor(x0 < x2 ? x0 : x2) - 1;
+                maxX = Math.ceil(x1 > x3 ? x1 : x3) + 1;
 
                 if (y0 > y1) {
                     tmp = y0;
@@ -259,10 +260,37 @@ module egret.sys {
                     y3 = tmp;
                 }
 
-                this.minY = Math.floor(y0 < y2 ? y0 : y2) - 1;
-                this.maxY = Math.ceil(y1 > y3 ? y1 : y3) + 1;
+                minY = Math.floor(y0 < y2 ? y0 : y2) - 1;
+                maxY = Math.ceil(y1 > y3 ? y1 : y3) + 1;
             }
-            this.updateArea();
+            if (clipRect) {
+                var clipMinX = clipRect.x;
+                var clipMaxX = clipMinX + clipRect.width;
+                var clipMinY = clipRect.y;
+                var clipMaxY = clipMinY + clipRect.height;
+                if (minX < clipMinX) {
+                    minX = clipMinX;
+                }
+                if (minY < clipMinY) {
+                    minY = clipMinY;
+                }
+                if (maxX > clipMaxX) {
+                    maxX = clipMaxX;
+                }
+                if (maxY > clipMaxY) {
+                    maxY = clipMaxY;
+                }
+                if (minX >= maxX || minY >= maxY) {
+                    minX = minY = maxX = maxY = 0;
+                }
+            }
+            this.minX = minX;
+            this.minY = minY;
+            this.maxX = maxX;
+            this.maxY = maxY;
+            this.width = maxX - minX;
+            this.height = maxY - minY;
+            this.area = this.width * this.height;
         }
     }
 }

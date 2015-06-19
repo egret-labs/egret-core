@@ -123,14 +123,19 @@ module egret.web {
                         break;
                     }
                 }
-                Object.defineProperty(context, "imageSmoothingEnabled", {
-                    get: function () {
-                        return this[key];
-                    },
-                    set: function (value) {
-                        this[key] = value;
-                    }
-                });
+                try {
+                    Object.defineProperty(context, "imageSmoothingEnabled", {
+                        get: function () {
+                            return this[key];
+                        },
+                        set: function (value) {
+                            this[key] = value;
+                        }
+                    });
+                }
+                catch (e) {
+                    context["imageSmoothingEnabled"] = context[key];
+                }
             }
             return <sys.Surface><any>canvas;
         }

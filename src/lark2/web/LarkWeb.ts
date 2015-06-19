@@ -45,7 +45,7 @@ module egret.web {
             var webScreen = <WebScreen>container["egret-screen"];
             var webText = <WebTextAdapter>container["egret-text-layer"];
             webScreen.updateScreenSize(player,webTouch,webText);
-    }
+        }
     }
 
     /**
@@ -135,24 +135,32 @@ module egret.web {
         }
     }
 
-    egret.assert = console.assert.bind(console);
-    egret.warn = console.warn.bind(console);
-    egret.error = console.error.bind(console);
-    if(DEBUG){
-    egret.log = function(){
-        if(DEBUG){
-            var length = arguments.length;
-            var info = "";
-            for(var i=0;i<length;i++){
-                info += arguments[i]+" ";
-            }
-            sys.$logToFPS(info);
+    function toArray(argument){
+        var args = [];
+        for(var i=0;i<argument.length;i++){
+            args.push(argument[i]);
         }
-        console.log.apply(console,arguments);
+        return args;
     }
+
+    egret.warn = () => console.warn.apply(console,toArray(arguments));
+    egret.error = () => console.error.apply(console,toArray(arguments));
+    egret.assert = () => console.assert.apply(console,toArray(arguments));
+    if(DEBUG){
+        egret.log = function(){
+            if(DEBUG){
+                var length = arguments.length;
+                var info = "";
+                for(var i=0;i<length;i++){
+                    info += arguments[i]+" ";
+                }
+                sys.$logToFPS(info);
+            }
+            console.log.apply(console,toArray(arguments));
+        }
     }
     else{
-        egret.log = console.log.bind(console);
+        egret.log = ()=>console.log.apply(console,toArray(arguments));
     }
     //window.addEventListener("load", runLark);
     //window.addEventListener("resize",updateScreenSize);

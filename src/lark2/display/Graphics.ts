@@ -1006,44 +1006,45 @@ module egret {
         return map;
     }
 
-    export module sys {
-        /**
-         * @private
-         */
-        export interface GraphicsCommand {
-            /**
-             * @private
-             */
-            type:number;
-            /**
-             * @private
-             */
-            arguments:any[];
-        }
+}
 
+module egret.sys {
+    /**
+     * @private
+     */
+    export interface GraphicsCommand {
         /**
          * @private
          */
-        export const enum GraphicsCommandType {
-            miterLimit,
-            lineCap,
-            lineJoin,
-            lineWidth,
-            strokeStyle,
-            fillStyle,
-            arc,
-            quadraticCurveTo,
-            lineTo,
-            fill,
-            closePath,
-            rect,
-            moveTo,
-            fillRect,
-            bezierCurveTo,
-            stroke,
-            strokeRect,
-            beginPath,
-            arcTo
-        }
+            type:number;
+        /**
+         * @private
+         */
+        arguments:any[];
+    }
+
+    /**
+     * @private
+     */
+    export const enum GraphicsCommandType {
+        miterLimit,
+        lineCap,
+        lineJoin,
+        lineWidth,
+        strokeStyle,
+        fillStyle,
+        arc,
+        quadraticCurveTo,
+        lineTo,
+        fill,
+        closePath,
+        rect,
+        moveTo,
+        fillRect,
+        bezierCurveTo,
+        stroke,
+        strokeRect,
+        beginPath,
+        arcTo
     }
 }

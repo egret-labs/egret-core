@@ -30,8 +30,8 @@
 module egret.sys {
 
     var displayListPool:DisplayList[] = [];
-
-    var blendModes = ["source-over","lighter","destination-out"];
+    var blendModes = ["source-over", "lighter", "destination-out"];
+    var defaultCompositeOp = "source-over";
 
     /**
      * @private
@@ -124,7 +124,8 @@ module egret.sys {
                 return false;
             }
             region.moved = false;
-            region.updateRegion(bounds, this.$renderMatrix);
+            var clipRect = target.$clipRect || target.$parentClipRect
+            region.updateRegion(bounds, this.$renderMatrix, clipRect);
             return true;
         }
 
@@ -144,8 +145,8 @@ module egret.sys {
 
         /**
          * @private
-         * 
-         * @param context 
+         *
+         * @param context
          */
         $render(context:RenderContext):void {
             var data = this.surface;
@@ -168,7 +169,7 @@ module egret.sys {
         /**
          * @private
          */
-        private drawToStage:boolean = false;
+        private rootMatrix:Matrix = new Matrix();
 
         /**
          * @private
@@ -182,7 +183,7 @@ module egret.sys {
          */
         public setClipRect(width:number, height:number):void {
             this.dirtyRegion.setClipRect(width, height);
-            this.drawToStage = true;//只有舞台画布才能设置ClipRect
+            this.rootMatrix = null;//只有舞台画布才能设置ClipRect
             var surface = this.renderContext.surface;
             surface.width = width;
             surface.height = height;
@@ -249,7 +250,7 @@ module egret.sys {
                     }
                 }
                 var moved = node.$update();
-                if (node.$renderAlpha > 0&&(moved || !node.$isDirty)) {
+                if (node.$renderAlpha > 0 && (moved || !node.$isDirty)) {
                     if (dirtyRegion.addRegion(region)) {
                         node.$isDirty = true;
                     }
@@ -264,7 +265,7 @@ module egret.sys {
          * 绘制根节点显示对象到目标画布，返回draw的次数。
          */
         public drawToSurface():number {
-            if (!this.drawToStage) {//对非舞台画布要根据目标显示对象尺寸改变而改变。
+            if (this.rootMatrix) {//对非舞台画布要根据目标显示对象尺寸改变而改变。
                 this.changeSurfaceSize();
             }
             var context = this.renderContext;
@@ -281,7 +282,7 @@ module egret.sys {
             }
             context.clip();
             //绘制显示对象
-            var drawCalls = this.drawDisplayObject(this.root, context, dirtyList, this.drawToStage, null, null);
+            var drawCalls = this.drawDisplayObject(this.root, context, dirtyList, this.rootMatrix, null, null);
             //清除脏矩形区域
             context.restore();
             this.dirtyRegion.clear();
@@ -294,7 +295,7 @@ module egret.sys {
          * 绘制一个显示对象
          */
         private drawDisplayObject(displayObject:DisplayObject, context:RenderContext, dirtyList:egret.sys.Region[],
-                                  drawToStage:boolean, displayList:DisplayList, clipRegion:Region):number {
+                                  rootMatrix:Matrix, displayList:DisplayList, clipRegion:Region):number {
             var drawCalls = 0;
             var node:Renderable;
             var globalAlpha:number;
@@ -327,15 +328,14 @@ module egret.sys {
                     drawCalls++;
                     context.globalAlpha = globalAlpha;
                     var m = node.$renderMatrix;
-                    if (drawToStage) {//绘制到舞台上时，所有矩阵都是绝对的，不需要调用transform()叠加。
-                        context.setTransform(m.a, m.b, m.c, m.d, m.tx, m.ty);
-                        node.$render(context);
-                    }
-                    else {
-                        context.save();
+                    if (rootMatrix) {
                         context.transform(m.a, m.b, m.c, m.d, m.tx, m.ty);
                         node.$render(context);
-                        context.restore();
+                        context.setTransform(rootMatrix.a, rootMatrix.b, rootMatrix.c, rootMatrix.d, rootMatrix.tx, rootMatrix.ty);
+                    }
+                    else {//绘制到舞台上时，所有矩阵都是绝对的，不需要调用transform()叠加。
+                        context.setTransform(m.a, m.b, m.c, m.d, m.tx, m.ty);
+                        node.$render(context);
                     }
                     node.$isDirty = false;
                 }
@@ -348,21 +348,21 @@ module egret.sys {
                 var length = children.length;
                 for (var i = 0; i < length; i++) {
                     var child = children[i];
-                    if (!child.$visible||child.$alpha<=0||child.$maskedObject) {
+                    if (!child.$visible || child.$alpha <= 0 || child.$maskedObject) {
                         continue;
                     }
-                    if (child.$scrollRect||child.$mask) {
-                        drawCalls += this.drawWidthClip(child, context, dirtyList, drawToStage,clipRegion);
+                    if (child.$blendMode !== 0 || child.$mask) {
+                        drawCalls += this.drawWithClip(child, context, dirtyList, rootMatrix, clipRegion);
                     }
-                    else if(child.$blendMode!==0){
-                        drawCalls += this.drawWidthBlendMode(child,context,dirtyList,drawToStage,clipRegion);
+                    else if (child.$scrollRect) {
+                        drawCalls += this.drawWithScrollRect(child, context, dirtyList, rootMatrix, clipRegion);
                     }
                     else {
-                        if(DEBUG&&child["isFPS"]){
-                            this.drawDisplayObject(child, context, dirtyList, drawToStage, child.$displayList, clipRegion);
+                        if (DEBUG && child["isFPS"]) {
+                            this.drawDisplayObject(child, context, dirtyList, rootMatrix, child.$displayList, clipRegion);
                         }
-                        else{
-                            drawCalls += this.drawDisplayObject(child, context, dirtyList, drawToStage, child.$displayList, clipRegion);
+                        else {
+                            drawCalls += this.drawDisplayObject(child, context, dirtyList, rootMatrix, child.$displayList, clipRegion);
                         }
                     }
                 }
@@ -373,77 +373,146 @@ module egret.sys {
         /**
          * @private
          */
-        private drawWidthBlendMode(displayObject:DisplayObject, context:RenderContext, dirtyList:egret.sys.Region[],
-                              drawToStage:boolean,clipRegion:Region):number {
+        private drawWithClip(displayObject:DisplayObject, context:RenderContext, dirtyList:egret.sys.Region[],
+                             rootMatrix:Matrix, clipRegion:Region):number {
             var drawCalls = 0;
-            var region:Region;
-            var bounds = displayObject.$getOriginalBounds();
-            if(!bounds.isEmpty()){
-                region = Region.create();
-                region.updateRegion(bounds,displayObject.$getConcatenatedMatrix());
-            }
-            if(!region||(clipRegion&&!clipRegion.intersects(region))){
-                return drawCalls;
-            }
-            var displayContext = this.createRenderContext(region.width,region.height);
-            if(!displayContext){//RenderContext创建失败，放弃绘制遮罩。
-                drawCalls += this.drawDisplayObject(displayObject, context, dirtyList, drawToStage, displayObject.$displayList, clipRegion);
-                Region.release(region);
-                return drawCalls;
-            }
-            displayContext.setTransform(1,0,0,1,-region.minX,-region.minY);
-            drawCalls += this.drawDisplayObject(displayObject, displayContext, dirtyList, false, displayObject.$displayList, region);
-            if(drawCalls>0){
-                drawCalls++;
-                var defaultCompositeOp = "source-over";
+            var hasBlendMode = (displayObject.$blendMode !== 0);
+            if (hasBlendMode) {
                 var compositeOp = blendModes[displayObject.$blendMode];
-                if(!compositeOp){
+                if (!compositeOp) {
                     compositeOp = defaultCompositeOp;
                 }
-                context.globalCompositeOperation = compositeOp;
-                this.drawWidthSurface(context,displayContext.surface,drawToStage,region.minX,region.minY);
-                context.globalCompositeOperation = defaultCompositeOp;
             }
-            surfaceFactory.release(displayContext.surface);
-            Region.release(region);
-            return drawCalls;
-        }
-        /**
-         * @private
-         */
-        private drawWidthClip(displayObject:DisplayObject, context:RenderContext, dirtyList:egret.sys.Region[],
-                              drawToStage:boolean,clipRegion:Region):number {
-            var drawCalls = 0;
+
             var scrollRect = displayObject.$scrollRect;
             var mask = displayObject.$mask;
 
             //计算scrollRect和mask的clip区域是否需要绘制，不需要就直接返回，跳过所有子项的遍历。
             var maskRegion:Region;
             var displayMatrix = displayObject.$getConcatenatedMatrix();
-            if(mask){
+            if (mask) {
                 var bounds = mask.$getOriginalBounds();
-                if(!bounds.isEmpty()){
-                    maskRegion = Region.create();
-                    maskRegion.updateRegion(bounds,mask.$getConcatenatedMatrix());
-                }
+                maskRegion = Region.create();
+                maskRegion.updateRegion(bounds, mask.$getConcatenatedMatrix(), null);
             }
             var region:Region;
-            if(scrollRect&&!scrollRect.isEmpty()){
+            if (scrollRect) {
                 region = Region.create();
-                region.updateRegion(scrollRect, displayMatrix);
+                region.updateRegion(scrollRect, displayMatrix, null);
             }
-            if(!region&&!maskRegion){
-                return drawCalls;
-            }
-            if(region&&maskRegion){
+            if (region && maskRegion) {
                 region.intersect(maskRegion);
                 Region.release(maskRegion);
             }
-            else if(!region){
+            else if (!region && maskRegion) {
                 region = maskRegion;
             }
+            if (region) {
+                if(region.isEmpty() || (clipRegion && !clipRegion.intersects(region))){
+                    Region.release(region);
+                    return drawCalls;
+                }
+            }
+            else{
+                region = Region.create();
+                bounds = displayObject.$getOriginalBounds();
+                region.updateRegion(bounds, displayObject.$getConcatenatedMatrix(), null);
+            }
+            var found = false;
+            var l = dirtyList.length;
+            for (var j = 0; j < l; j++) {
+                if (region.intersects(dirtyList[j])) {
+                    found = true;
+                    break;
+                }
+            }
+            if (!found) {
+                Region.release(region);
+                return drawCalls;
+            }
 
-            if(region.isEmpty()||(clipRegion&&!clipRegion.intersects(region))){
+            //绘制显示对象自身，若有scrollRect，应用clip
+            var displayContext = this.createRenderContext(region.width, region.height);
+            if (!displayContext) {//RenderContext创建失败，放弃绘制遮罩。
+                drawCalls += this.drawDisplayObject(displayObject, context, dirtyList, rootMatrix, displayObject.$displayList, clipRegion);
+                Region.release(region);
+                return drawCalls;
+            }
+            if (scrollRect) {
+                var m = displayMatrix;
+                displayContext.setTransform(m.a, m.b, m.c, m.d, m.tx - region.minX, m.ty - region.minY);
+                displayContext.beginPath();
+                displayContext.rect(scrollRect.x, scrollRect.y, scrollRect.width, scrollRect.height);
+                displayContext.clip();
+            }
+            displayContext.setTransform(1, 0, 0, 1, -region.minX, -region.minY);
+            var rootM = Matrix.create().setTo(1, 0, 0, 1, -region.minX, -region.minY);
+            drawCalls += this.drawDisplayObject(displayObject, displayContext, dirtyList, rootM, displayObject.$displayList, region);
+            Matrix.release(rootM);
+            //绘制遮罩
+            if (mask) {
+                var maskContext = this.createRenderContext(region.width, region.height);
+                if (!maskContext) {//RenderContext创建失败，放弃绘制遮罩。
+                    drawCalls += this.drawDisplayObject(displayObject, context, dirtyList, rootMatrix, displayObject.$displayList, clipRegion);
+                    surfaceFactory.release(displayContext.surface);
+                    Region.release(region);
+                    return drawCalls;
+                }
+                maskContext.setTransform(1, 0, 0, 1, -region.minX, -region.minY);
+                rootM = Matrix.create().setTo(1, 0, 0, 1, -region.minX, -region.minY);
+                var calls = this.drawDisplayObject(mask, maskContext, dirtyList, rootM, mask.$displayList, region);
+                Matrix.release(rootM);
+                if (calls > 0) {
+                    drawCalls += calls;
+                    displayContext.globalCompositeOperation = "destination-in";
+                    displayContext.setTransform(1, 0, 0, 1, 0, 0);
+                    displayContext.globalAlpha = 1;
+                    displayContext.drawImage(maskContext.surface, 0, 0);
+                }
+                surfaceFactory.release(maskContext.surface);
+            }
+
+
+            //绘制结果到屏幕
+            if (drawCalls > 0) {
+                drawCalls++;
+                if (hasBlendMode) {
+                    context.globalCompositeOperation = compositeOp;
+                }
+
+                if (rootMatrix) {
+                    context.translate(region.minX, region.minY)
+                    context.drawImage(displayContext.surface, 0, 0);
+                    context.setTransform(rootMatrix.a, rootMatrix.b, rootMatrix.c, rootMatrix.d, rootMatrix.tx, rootMatrix.ty);
+                }
+                else {//绘制到舞台上时，所有矩阵都是绝对的，不需要调用transform()叠加。
+                    context.setTransform(1, 0, 0, 1, region.minX, region.minY);
+                    context.drawImage(displayContext.surface, 0, 0);
+                }
+
+                if (hasBlendMode) {
+                    context.globalCompositeOperation = defaultCompositeOp;
+                }
+            }
+            surfaceFactory.release(displayContext.surface);
+            Region.release(region);
+            return drawCalls;
+        }
+
+        /**
+         * @private
+         */
+        private drawWithScrollRect(displayObject:DisplayObject, context:RenderContext, dirtyList:egret.sys.Region[],
+                                   rootMatrix:Matrix, clipRegion:Region):number {
+            var drawCalls = 0;
+            var scrollRect = displayObject.$scrollRect;
+
+            var m = displayObject.$getConcatenatedMatrix();
+            var region:Region = Region.create();
+            if (!scrollRect.isEmpty()) {
+                region.updateRegion(scrollRect, m, null);
+            }
+            if (region.isEmpty() || (clipRegion && !clipRegion.intersects(region))) {
                 Region.release(region);
                 return drawCalls;
             }
@@ -455,55 +524,20 @@ module egret.sys {
                     break;
                 }
             }
-            if(!found){
+            if (!found) {
                 Region.release(region);
                 return drawCalls;
             }
 
-            //绘制显示对象自身，若有scrollRect，应用clip
-            var displayContext = this.createRenderContext(region.width,region.height);
-            if(!displayContext){//RenderContext创建失败，放弃绘制遮罩。
-                drawCalls += this.drawDisplayObject(displayObject, context, dirtyList, drawToStage, displayObject.$displayList, clipRegion);
-                Region.release(region);
-                return drawCalls;
-            }
-            if(scrollRect){
-                var m = displayMatrix;
-                displayContext.setTransform(m.a, m.b, m.c, m.d, m.tx-region.minX, m.ty-region.minY);
-                displayContext.beginPath();
-                displayContext.rect(scrollRect.x,scrollRect.y,scrollRect.width,scrollRect.height);
-                displayContext.clip();
-            }
-            displayContext.setTransform(1,0,0,1,-region.minX,-region.minY);
-            drawCalls += this.drawDisplayObject(displayObject, displayContext, dirtyList, false, displayObject.$displayList, region);
-            //绘制遮罩
-            if(mask){
-                var maskContext = this.createRenderContext(region.width,region.height);
-                if(!maskContext){//RenderContext创建失败，放弃绘制遮罩。
-                    drawCalls += this.drawDisplayObject(displayObject, context, dirtyList, drawToStage, displayObject.$displayList, clipRegion);
-                    surfaceFactory.release(displayContext.surface);
-                    Region.release(region);
-                    return drawCalls;
-                }
-                maskContext.setTransform(1,0,0,1,-region.minX,-region.minY);
-                var calls = this.drawDisplayObject(mask, maskContext, dirtyList, false, mask.$displayList, region);
-                if(calls>0){
-                    drawCalls += calls;
-                    displayContext.globalCompositeOperation = "destination-in";
-                    displayContext.setTransform(1,0,0,1,0,0);
-                    displayContext.globalAlpha = 1;
-                    displayContext.drawImage(maskContext.surface,0,0);
-                }
-                surfaceFactory.release(maskContext.surface);
-            }
+            //绘制显示对象自身
+            context.save();
+            context.setTransform(m.a, m.b, m.c, m.d, m.tx, m.ty);
+            context.beginPath();
+            context.rect(scrollRect.x, scrollRect.y, scrollRect.width, scrollRect.height);
+            context.clip();
+            drawCalls += this.drawDisplayObject(displayObject, context, dirtyList, rootMatrix, displayObject.$displayList, region);
+            context.restore();
 
-
-            //绘制结果到屏幕
-            if(drawCalls>0){
-                drawCalls++;
-                this.drawWidthSurface(context,displayContext.surface,drawToStage,region.minX,region.minY);
-            }
-            surfaceFactory.release(displayContext.surface);
             Region.release(region);
             return drawCalls;
         }
@@ -511,30 +545,14 @@ module egret.sys {
         /**
          * @private
          */
-        private createRenderContext(width:number,height:number):RenderContext{
+        private createRenderContext(width:number, height:number):RenderContext {
             var surface = surfaceFactory.create(true);
-            if(!surface){
+            if (!surface) {
                 return null;
             }
-            surface.width = Math.max(257,width);
-            surface.height = Math.max(257,height);
+            surface.width = Math.max(257, width);
+            surface.height = Math.max(257, height);
             return surface.renderContext;
-        }
-
-        /**
-         * @private
-         */
-        private drawWidthSurface(context:RenderContext,surface:Surface,drawToStage:boolean,offsetX:number,offsetY:number):void{
-            if (drawToStage) {//绘制到舞台上时，所有矩阵都是绝对的，不需要调用transform()叠加。
-                context.setTransform(1, 0, 0, 1, offsetX, offsetY);
-                context.drawImage(surface,0,0);
-            }
-            else {
-                context.save();
-                context.translate(offsetX, offsetY)
-                context.drawImage(surface,0,0);
-                context.restore();
-            }
         }
 
         /**
@@ -576,6 +594,7 @@ module egret.sys {
                 oldSurface.width = 1;
             }
             var m = root.$getInvertedConcatenatedMatrix();
+            this.rootMatrix.setTo(m.a, m.b, m.c, m.d, m.tx - bounds.x, m.ty - bounds.y);
             this.renderContext.setTransform(m.a, m.b, m.c, m.d, m.tx - bounds.x, m.ty - bounds.y);
         }
 
