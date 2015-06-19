@@ -87,8 +87,12 @@
         "lark2/text/TextMeasurer.ts",
         "lark2/text/VerticalAlign.ts",
 
-
-
+        "lark2/filters/BitmapFilterQuality.ts",
+        "lark2/filters/Filter.ts",
+        "lark2/filters/GlowFilter.ts",
+        "lark2/filters/BlurFilter.ts",
+        "lark2/filters/ColorMatrixFilter.ts",
+        "lark2/filters/DropShadowFilter.ts",
 
         "lark2/web/CanvasFactory.ts",
         "lark2/web/LarkWeb.ts",
