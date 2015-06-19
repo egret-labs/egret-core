@@ -117,7 +117,7 @@ module egret.web {
             this._audio.load();
         }
 
-        public _setAudio(audio):void {
+        public $setAudio(audio):void {
             this._audio = audio;
         }
 
@@ -235,7 +235,7 @@ module egret.web {
                 audio.removeEventListener('canplaythrough', soundPreloadCanplayHandler, false);
                 audio.removeEventListener("error", soundPreloadErrorHandler, false);
 
-                self._setAudio(audio);
+                self.$setAudio(audio);
 
 
                 callback(0);

@@ -99,7 +99,7 @@ module egret {
             sound.$play(this.type);
         }
 
-        private _pauseTime:number = 0;
+        private pauseTime:number = 0;
 
         /**
          * 声音停止播放
@@ -109,7 +109,7 @@ module egret {
             if (!sound) {
                 return;
             }
-            this._pauseTime = 0;
+            this.pauseTime = 0;
             sound.$setCurrentTime(0);
             sound.$pause();
         }
@@ -122,7 +122,7 @@ module egret {
             if (!sound) {
                 return;
             }
-            this._pauseTime = sound.$getCurrentTime();
+            this.pauseTime = sound.$getCurrentTime();
             sound.$pause();
         }
 
@@ -135,8 +135,8 @@ module egret {
             if (!sound) {
                 return;
             }
-            sound.$setCurrentTime(this._pauseTime);
-            this._pauseTime = 0;
+            sound.$setCurrentTime(this.pauseTime);
+            this.pauseTime = 0;
             sound.$play(this.type);
         }
 
@@ -151,7 +151,7 @@ module egret {
             sound.$load();
         }
 
-        private _listeners:Array<any> = [];
+        private listeners:Array<any> = [];
 
         /**
          * 添加事件监听
@@ -185,7 +185,7 @@ module egret {
                     };
                 }
 
-                this._listeners.push({type: type, func: func});
+                this.listeners.push({type: type, func: func});
 
                 var virtualType = self.getVirtualType(type);
                 this.audio.$addEventListener(virtualType, func, false);
@@ -210,10 +210,10 @@ module egret {
 
             var eventMap:any = this.$getEventMap();
             if (!eventMap || !eventMap[type] || eventMap[type].length == 0) {
-                for (var i = 0; i < self._listeners.length; i++) {
-                    var bin = self._listeners[i];
+                for (var i = 0; i < self.listeners.length; i++) {
+                    var bin = self.listeners[i];
                     if (bin.type == type) {
-                        self._listeners.splice(i, 1);
+                        self.listeners.splice(i, 1);
 
                         var virtualType = self.getVirtualType(type);
                         self.audio.$removeEventListener(virtualType, bin.func, false);
@@ -282,7 +282,7 @@ module egret {
             this.audio.$preload(type, callback, thisObj);
         }
 
-        public _setAudio(value:Audio):void {
+        public $setAudio(value:Audio):void {
             this.audio = value;
         }
 

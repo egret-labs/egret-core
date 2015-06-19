@@ -126,7 +126,7 @@ module egret.web {
                     return;
                 }
                 var sound = new Sound();
-                sound._setAudio(audio);
+                sound.$setAudio(audio);
                 loader.data = sound;
                 $callAsync(Event.dispatchEvent, Event, loader, Event.COMPLETE);
             });
