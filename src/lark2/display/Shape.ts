@@ -62,7 +62,7 @@ module egret {
         public constructor() {
             super();
             this.$graphics = new Graphics();
-            this.$graphics.$targetDisplay = this;
+            this.$graphics.$renderContext.$targetDisplay = this;
             this.$renderRegion = new sys.Region();
             this.pixelHitTest = true;
         }

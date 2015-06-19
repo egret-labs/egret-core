@@ -175,7 +175,14 @@ module egret {
          * @version Lark 1.0
          * @platform Web,Native
          */
-        IDisplayObjectContainer = 22
+        IDisplayObjectContainer = 22,
+
+        /**
+         * @copy egret.Graphics
+         * @version Lark 1.0
+         * @platform Web,Native
+         */
+        GraphicsRenderContext = 23,
 
     }
 }

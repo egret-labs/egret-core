@@ -27,1024 +27,293 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 
+
 module egret {
 
-    var PI = Math.PI;
-    var HalfPI = PI / 2;
-    var PacPI = PI + HalfPI;
-    var TwoPI = PI * 2;
-    var vector = {x: 0, y: 0};
-    var vector1 = {x: 0, y: 0};
-    var vector3 = {x: 0, y: 0};
-
     /**
-     * @private
-     * 格式化弧线角度的值
-     */
-    function clampAngle(value):number {
-        value %= PI * 2;
-        if (value < 0) {
-            value += PI * 2;
-        }
-        return value;
-    }
-
-    /**
-     * @private
-     * 两个点距离
-     */
-    function distance(x1:number, y1:number, x2:number, y2:number):number {
-        return Math.sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1));
-    }
-
-    /**
-     * @private
-     * 取两点之间的向量
-     */
-    function getVector(x1:number, y1:number, x2:number, y2:number, v:Vector):void {
-        var l = distance(x1, y1, x2, y2);
-        v.x = (x2 - x1) / l;
-        v.y = (y2 - y1) / l;
-    }
-
-    /**
-     * @private
-     */
-    interface Vector {
-        x: number;
-        y: number;
-    }
-
-    /**
-     * @language en_US
-     * The Graphics class contains a set of methods that you can use to create a vector shape. the Shape object that support
-     * drawing includes a graphics property that is a Graphics object. The following are among those helper functions provided
-     * @see egret.Shape
-     * @version Lark 1.0
-     * @platform Web,Native
-     */
-    /**
-     * @language zh_CN
-     * Graphics 类包含一组可用来创建矢量形状的方法。Shape是支持矢量绘制的显示对象。它含有一个 graphics 属性，该属性是一个 Graphics 对象。
-     * @see egret.Shape
-     * @version Lark 1.0
-     * @platform Web,Native
+     * @class egret.Graphics
+     * @classdesc
+     * Graphics 类包含一组可用来创建矢量形状的方法。支持绘制的显示对象包括 Sprite 和 Shape 对象。这些类中的每一个类都包括 graphics 属性，该属性是一个 Graphics 对象。
+     * 以下是为便于使用而提供的一些辅助函数：drawRect()、drawRoundRect()、drawCircle() 和 drawEllipse()。
+     * @link http://docs.egret-labs.org/post/manual/graphics/drawrect.html  绘制矩形
      */
     export class Graphics extends HashObject {
 
-        /**
-         * @language en_US
-         * creates a radial gradient given by the coordinates of the two circles represented by the parameters.
-         * This method returns a radial GraphicsGradient.
-         * @param x0 The x axis of the coordinate of the start circle.
-         * @param y0 The y axis of the coordinate of the start circle.
-         * @param r0 The radius of the start circle.
-         * @param x1 The x axis of the coordinate of the end circle.
-         * @param y1 The y axis of the coordinate of the end circle.
-         * @param r1 The radius of the end circle.
-         * @see egret.GraphicsGradient
-         * @version Lark 1.0
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 根据参数确定的两个圆的坐标，创建一个放射性渐变。该方法返回一个放射性的 GraphicsGradient。
-         * @param x0 开始圆形的 x 轴坐标。
-         * @param y0 开始圆形的 y 轴坐标。
-         * @param r0 开始圆形的半径。
-         * @param x1 结束圆形的 x 轴坐标。
-         * @param y1 结束圆形的 y 轴坐标。
-         * @param r1 结束圆形的半径。
-         * @see egret.GraphicsGradient
-         * @version Lark 1.0
-         * @platform Web,Native
-         */
-        public static createRadialGradient(x0:number, y0:number, r0:number, x1:number, y1:number, r1:number):GraphicsGradient {
-            return sys.sharedRenderContext.createRadialGradient(x0, y0, r0, x1, y1, r1);
-        }
+        public $renderContext:GraphicsRenderContext = null;
+        private strokeStyleColor:string = null;
+        private fillStyleColor:string = null;
+        public _dirty:boolean = false;
+        private lineX:number = 0;
+        private lineY:number = 0;
 
-        /**
-         * @language en_US
-         * reates a gradient along the line given by the coordinates represented by the parameters.This method returns a linear GraphicsGradient.
-         * @see egret.GraphicsGradient
-         * @param x0 The x axis of the coordinate of the start point.
-         * @param y0 The y axis of the coordinate of the start point.
-         * @param x1 The x axis of the coordinate of the end point.
-         * @param y1 The y axis of the coordinate of the end point.
-         * @version Lark 1.0
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 创建一个沿参数坐标指定的直线的渐变。该方法返回一个线性的 GraphicsGradient 对象。
-         * @param x0 起点的 x 轴坐标。
-         * @param y0 起点的 y 轴坐标。
-         * @param x1 终点的 x 轴坐标。
-         * @param y1 终点的 y 轴坐标。
-         * @see egret.GraphicsGradient
-         * @version Lark 1.0
-         * @platform Web,Native
-         */
-        public static createLinearGradient(x0:number, y0:number, x1:number, y1:number):GraphicsGradient {
-            return sys.sharedRenderContext.createLinearGradient(x0, y0, x1, y1);
-        }
-
-        /**
-         * @language en_US
-         * creates a pattern using the specified image (BitmapData). It repeats the source in the directions specified by
-         * the repetition argument. This method returns a GraphicsPattern.
-         * @param bitmapData A BitmapData instance to be used as image to repeat.
-         * @param repetition  indicating how to repeat the image. Possible values are:
-         * "repeat" (both directions),
-         * "repeat-x" (horizontal only),
-         * "repeat-y" (vertical only), or
-         * "no-repeat" (neither).
-         * @see egret.GraphicsPattern
-         * @version Lark 1.0
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 基于指定的源图象(BitmapData)创建一个模板，通过repetition参数指定源图像在什么方向上进行重复，返回一个GraphicsPattern对象。
-         * @param bitmapData 做为重复图像源的 BitmapData 对象。
-         * @param repetition 指定如何重复图像。
-         * 可能的值有："repeat" (两个方向重复),"repeat-x" (仅水平方向重复),"repeat-y" (仅垂直方向重复),"no-repeat" (不重复).
-         * @see egret.GraphicsPattern
-         * @version Lark 1.0
-         * @platform Web,Native
-         */
-        public static createPattern(bitmapData:BitmapData, repetition:string):GraphicsPattern {
-            return sys.sharedRenderContext.createPattern(bitmapData, repetition);
-        }
-
-        /**
-         * @private
-         */
-        public constructor() {
+        constructor() {
             super();
-            this.reset();
-        }
 
-        /**
-         * @private
-         */
-        private _fillStyle:any;
-
-        /**
-         * @language en_US
-         * specifies the color or style to use inside shapes.
-         * @default "#000000"
-         * @version Lark 1.0
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 设置要在图形内部填充的颜色或样式
-         * @default "#000000"
-         * @version Lark 1.0
-         * @platform Web,Native
-         */
-        public get fillStyle():any {
-            return this._fillStyle;
-        }
-
-        public set fillStyle(value:any) {
-            this._fillStyle = value;
-            this.pushCommand(sys.GraphicsCommandType.fillStyle, arguments);
-        }
-
-        /**
-         * @private
-         */
-        private _lineWidth:number;
-
-        /**
-         * @language en_US
-         * sets the thickness of lines in pixels.
-         * setting zero, negative, Infinity and NaN values are ignored
-         * @default 1
-         * @version Lark 1.0
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 设置线条粗细，以像素为单位。设置为0，负数，Infinity 或 NaN 将会被忽略。
-         * @default 1
-         * @version Lark 1.0
-         * @platform Web,Native
-         */
-        public get lineWidth():number {
-            return this._lineWidth;
-        }
-
-        public set lineWidth(value:number) {
-            this._lineWidth = value;
-            this.pushCommand(sys.GraphicsCommandType.lineWidth, arguments);
-        }
-
-        /**
-         * @private
-         */
-        private _lineCap:string;
-
-        /**
-         * @language en_US
-         * determines how the end points of every line are drawn. There are three possible values for this property and those are:<br/>
-         * <ul>
-         * <li>"butt": The ends of lines are squared off at the endpoints.</li>
-         * <li>"round": The ends of lines are rounded.</li>
-         * <li>"square": The ends of lines are squared off by adding a box with an equal width and half the height of the line's thickness.</li>
-         * </ul>
-         * @default "butt"
-         * @version Lark 1.0
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 指定如何绘制每一条线段末端的属性。有3个可能的值，分别是：<br/>
-         * <ul>
-         * <li>"butt": 线段末端以方形结束。</li>
-         * <li>"round": 线段末端以圆形结束。</li>
-         * <li>"square": 线段末端以方形结束，但是增加了一个宽度和线段相同，高度是线段厚度一半的矩形区域。</li>
-         * </ul>
-         * @default "butt"
-         * @version Lark 1.0
-         * @platform Web,Native
-         */
-        public get lineCap():string {
-            return this._lineCap;
-        }
-
-        public set lineCap(value:string) {
-            this._lineCap = value;
-            this.pushCommand(sys.GraphicsCommandType.lineCap, arguments);
-        }
-
-        /**
-         * @private
-         */
-        private _strokeStyle:any;
-
-        /**
-         * @language en_US
-         * specifies the color or style to use for the lines around shapes.
-         * @default "#000000"
-         * @version Lark 1.0
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 设置要在图形边线填充的颜色或样式
-         * @default "#000000"
-         * @version Lark 1.0
-         * @platform Web,Native
-         */
-        public get strokeStyle():any {
-            return this._strokeStyle;
-        }
-
-        public set strokeStyle(value:any) {
-            this._strokeStyle = value;
-            this.pushCommand(sys.GraphicsCommandType.strokeStyle, arguments);
-        }
-
-        /**
-         * @private
-         */
-        private _lineJoin:string;
-
-        /**
-         * @language en_US
-         * specifies the type of joint appearance used at angles.There are three possible values for this property and those are:<br/>
-         * <ul>
-         * <li>"round": Rounds off the corners of a shape by filling an additional sector of disc centered at the common endpoint
-         * of connected segments. The radius for these rounded corners is equal to the line width.</li>
-         * <li>"bevel": Fills an additional triangular area between the common endpoint of connected segments, and the separate
-         * outside rectangular corners of each segment.</li>
-         * <li>"miter": Connected segments are joined by extending their outside edges to connect at a single point, with the
-         * effect of filling an additional lozenge-shaped area. This setting is effected by the miterLimit property.</li>
-         * </ul>
-         * @default "miter"
-         * @version Lark 1.0
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 指定用于拐角的连接外观的类型,有3个可能的值，分别是：<br/>
-         * <ul>
-         * <li>"round": 圆角连接</li>
-         * <li>"bevel": 斜角连接。</li>
-         * <li>"miter": 尖角连接。当使用尖角模式时，还可以同时使用 miterLimit 参数限制尖角的长度。</li>
-         * </ul>
-         * @default "miter"
-         * @version Lark 1.0
-         * @platform Web,Native
-         */
-        public get lineJoin():string {
-            return this._lineJoin;
-        }
-
-        public set lineJoin(value:string) {
-            this._lineJoin = value;
-            this.pushCommand(sys.GraphicsCommandType.lineJoin, arguments);
-        }
-
-        /**
-         * @private
-         */
-        private _miterLimit:number;
-
-        /**
-         * @language en_US
-         * A number that indicates the limit at which a miter is cut off.
-         * @default 10
-         * @version Lark 1.0
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 用于表示剪切斜接的极限值的数字。
-         * @default 10
-         * @version Lark 1.0
-         * @platform Web,Native
-         */
-        public get miterLimit():number {
-            return this._miterLimit;
-        }
-
-        public set miterLimit(value:number) {
-            this._miterLimit = value;
-            this.pushCommand(sys.GraphicsCommandType.miterLimit, arguments);
-        }
-
-
-        /**
-         * @language en_US
-         * adds an arc to the path which is centered at (x, y) position with radius r starting at startAngle and ending
-         * at endAngle going in the given direction by anticlockwise (defaulting to clockwise).
-         * @param x The x coordinate of the arc's center.
-         * @param y The y coordinate of the arc's center.
-         * @param radius The arc's radius.
-         * @param startAngle The angle at which the arc starts, measured clockwise from the positive x axis and expressed in radians.
-         * @param endAngle The angle at which the arc ends, measured clockwise from the positive x axis and expressed in radians.
-         * @param anticlockwise if true, causes the arc to be drawn counter-clockwise between the two angles. By default it is drawn clockwise.
-         * @version Lark 1.0
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 绘制一段圆弧路径。圆弧路径的圆心在 (x, y) 位置，半径为 r ，根据anticlockwise （默认为顺时针）指定的方向从 startAngle 开始绘制，到 endAngle 结束。
-         * @param x 圆弧中心（圆心）的 x 轴坐标。
-         * @param y 圆弧中心（圆心）的 y 轴坐标。
-         * @param radius 圆弧的半径。
-         * @param startAngle 圆弧的起始点， x轴方向开始计算，单位以弧度表示。
-         * @param endAngle 圆弧的重点， 单位以弧度表示。
-         * @param anticlockwise 如果为 true，逆时针绘制圆弧，反之，顺时针绘制。
-         * @version Lark 1.0
-         * @platform Web,Native
-         */
-        public arc(x:number, y:number, radius:number, startAngle:number, endAngle:number, anticlockwise?:boolean):void {
-            this.pushCommand(sys.GraphicsCommandType.arc, arguments);
-            if (radius < 0) {
-                return;
-            }
-            if (anticlockwise) {
-                var temp = endAngle;
-                endAngle = startAngle;
-                startAngle = temp;
-            }
-            this.arcBounds(x, y, radius, startAngle, endAngle);
-        }
-
-        /**
-         * @private
-         * 测量圆弧的矩形大小
-         */
-        private arcBounds(x:number, y:number, radius:number, startAngle:number, endAngle:number):void {
-            startAngle = clampAngle(startAngle);
-            endAngle = clampAngle(endAngle);
-            if (Math.abs(startAngle - endAngle) < 0.01) {
-                this.extendByPoint(x - radius, y - radius);
-                this.extendByPoint(x + radius, y + radius);
-                return;
-            }
-            var offset = 0;
-            if (startAngle > endAngle) {
-                offset = TwoPI;
-                endAngle += offset;
-            }
-            var startX = Math.cos(startAngle) * radius;
-            var endX = Math.cos(endAngle) * radius;
-            var xMin = Math.min(startX, endX);
-            var xMax = Math.max(startX, endX);
-            if (startAngle <= (PI + offset) && endAngle >= (PI + offset)) {
-                xMin = -radius;
-            }
-            if (startAngle <= offset && endAngle >= offset) {
-                xMax = radius;
-            }
-            var startY = Math.sin(startAngle) * radius;
-            var endY = Math.sin(endAngle) * radius;
-            var yMin = Math.min(startY, endY);
-            var yMax = Math.max(startY, endY);
-            if (startAngle <= (PacPI + offset) && endAngle >= (PacPI + offset)) {
-                yMin = -radius;
-            }
-            if (startAngle <= (HalfPI + offset) && endAngle >= (HalfPI + offset)) {
-                yMax = radius;
-            }
-            this.extendByPoint(xMin + x, yMin + y);
-            this.extendByPoint(xMax + x, yMax + y);
-        }
-
-        /**
-         * @language en_US
-         * adds a quadratic Bézier curve to the path. It requires two points. The first point is a control point and the
-         * second one is the end point. The starting point is the last point in the current path, which can be changed using
-         * moveTo() before creating the quadratic Bézier curve.
-         * @param cpx The x axis of the coordinate for the control point.
-         * @param cpy The y axis of the coordinate for the control point.
-         * @param x The x axis of the coordinate for the end point.
-         * @param y The y axis of the coordinate for the end point.
-         * @version Lark 1.0
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 绘制一段二次贝塞尔曲线路径。它需要2个点。 第一个点是控制点，第二个点是终点。 起始点是当前路径最新的点，当创建二次贝赛尔曲线之前，可以使用 moveTo() 方法进行改变。
-         * @param cpx 控制点的 x 轴坐标。
-         * @param cpy 控制点的 y 轴坐标。
-         * @param x 终点的 x 轴坐标。
-         * @param y 终点的 y 轴坐标。
-         * @version Lark 1.0
-         * @platform Web,Native
-         */
-        public quadraticCurveTo(cpx:number, cpy:number, x:number, y:number):void {
-            this.pushCommand(sys.GraphicsCommandType.quadraticCurveTo, arguments);
-            this.checkMoveTo();
-            this.extendByPoint(cpx, cpy);
-            this.extendByPoint(x, y);
-        }
-
-        /**
-         * @language en_US
-         * adds a cubic Bézier curve to the path. It requires three points. The first two points are control points and
-         * the third one is the end point. The starting point is the last point in the current path, which can be changed
-         * using moveTo() before creating the Bézier curve.
-         * @param cp1x The x axis of the coordinate for the first control point.
-         * @param cp1y The y axis of the coordinate for first control point.
-         * @param cp2x The x axis of the coordinate for the second control point.
-         * @param cp2y The y axis of the coordinate for the second control point.
-         * @param x The x axis of the coordinate for the end point.
-         * @param y The y axis of the coordinate for the end point.
-         * @version Lark 1.0
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 绘制一段三次贝赛尔曲线路径。该方法需要三个点。 第一、第二个点是控制点，第三个点是结束点。起始点是当前路径的最后一个点，
-         * 绘制贝赛尔曲线前，可以通过调用 moveTo() 进行修改。
-         * @param cp1x 第一个控制点的 x 轴坐标。
-         * @param cp1y 第一个控制点的 y 轴坐标。
-         * @param cp2x 第二个控制点的 x 轴坐标。
-         * @param cp2y 第二个控制点的 y 轴坐标。
-         * @param x 结束点的 x 轴坐标。
-         * @param y 结束点的 y 轴坐标。
-         * @version Lark 1.0
-         * @platform Web,Native
-         */
-        public bezierCurveTo(cp1x:number, cp1y:number, cp2x:number, cp2y:number, x:number, y:number):void {
-            this.pushCommand(sys.GraphicsCommandType.bezierCurveTo, arguments);
-            this.checkMoveTo();
-            this.extendByPoint(cp1x, cp1y);
-            this.extendByPoint(cp2x, cp2y);
-            this.extendByPoint(x, y);
-        }
-
-
-        /**
-         * @language en_US
-         * connects the last point in the sub-path to the x, y coordinates with a straight line
-         * @param x The x axis of the coordinate for the end of the line.
-         * @param y The y axis of the coordinate for the end of the line.
-         * @version Lark 1.0
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 使用直线连接子路径的终点到x，y坐标。
-         * @param x 直线终点的 x 轴坐标。
-         * @param y 直线终点的 y 轴坐标。
-         * @version Lark 1.0
-         * @platform Web,Native
-         */
-        public lineTo(x:number, y:number):void {
-            this.pushCommand(sys.GraphicsCommandType.lineTo, arguments);
-            this.checkMoveTo();
-            this.extendByPoint(x, y);
-        }
-
-        /**
-         * @language en_US
-         * fills the current or given path with the current fill style using the non-zero or even-odd winding rule.
-         * @param fillRule The algorithm by which to determine if a point is inside a path or outside a path. Possible values:
-         * "nonzero": The non-zero winding rule, which is the default rule.
-         * "evenodd": The even-odd winding rule.
-         * @version Lark 1.0
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 根据当前的填充样式，填充当前或已存在的路径的方法。采取非零环绕或者奇偶环绕规则。
-         * @param fillRule 一种算法，决定点是在路径内还是在路径外。允许的值：
-         * "nonzero": 非零环绕规则， 默认的规则。
-         * "evenodd": 奇偶环绕规则。
-         * @version Lark 1.0
-         * @platform Web,Native
-         */
-        public fill(fillRule?:string):void {
-            this.pushCommand(sys.GraphicsCommandType.fill, arguments);
-            this.hasFill = true;
-        }
-
-        /**
-         * @language en_US
-         * causes the point of the pen to move back to the start of the current sub-path. It tries to add a straight line
-         * (but does not actually draw it) from the current point to the start. If the shape has already been closed or
-         * has only one point, this function does nothing.
-         * @version Lark 1.0
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 使笔点返回到当前子路径的起始点。它尝试从当前点到起始点绘制一条直线。如果图形已经是封闭的或者只有一个点，那么此方法不会做任何操作。
-         * @version Lark 1.0
-         * @platform Web,Native
-         */
-        public closePath():void {
-            this.pushCommand(sys.GraphicsCommandType.closePath, arguments);
-        }
-
-        /**
-         * @language en_US
-         * creates a path for a rectangle at position (x, y) with a size that is determined by width and height. Those
-         * four points are connected by straight lines and the sub-path is marked as closed, so that you can fill or stroke this rectangle.
-         * @param x The x axis of the coordinate for the rectangle starting point.
-         * @param y The y axis of the coordinate for the rectangle starting point.
-         * @param w The rectangle's width.
-         * @param h The rectangle's height.
-         * @version Lark 1.0
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 创建一段矩形路径，矩形的起点位置是 (x, y) ，尺寸为 width 和 height。矩形的4个点通过直线连接，子路径做为闭合的标记，所以你可以填充或者描边矩形。
-         * @param x 矩形起点的 x 轴坐标。
-         * @param y 矩形起点的 y 轴坐标。
-         * @param width 矩形的宽度。
-         * @param height 矩形的高度。
-         * @version Lark 1.0
-         * @platform Web,Native
-         */
-        public rect(x:number, y:number, width:number, height:number):void {
-            this.pushCommand(sys.GraphicsCommandType.rect, arguments);
-            this.extendByPoint(x, y);
-            this.extendByPoint(x + width, y + height);
-        }
-
-        /**
-         * @language en_US
-         * moves the starting point of a new sub-path to the (x, y) coordinates.
-         * @param x The x axis of the point.
-         * @param y The y axis of the point.
-         * @version Lark 1.0
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 将一个新的子路径的起始点移动到(x，y)坐标
-         * @param x 点的 x 轴
-         * @param y 点的 y 轴
-         * @version Lark 1.0
-         * @platform Web,Native
-         */
-        public moveTo(x:number, y:number):void {
-            this.pushCommand(sys.GraphicsCommandType.moveTo, arguments);
-            this.moveToX = x;
-            this.moveToY = y;
-            this.hasMoved = true;
-        }
-
-        /**
-         * @language en_US
-         * draws a filled rectangle at (x, y) position whose size is determined by width and height and whose style is
-         * determined by the fillStyle attribute.
-         * @param x The x axis of the coordinate for the rectangle starting point.
-         * @param y The y axis of the coordinate for the rectangle starting point.
-         * @param w The rectangle's width.
-         * @param h The rectangle's height.
-         * @version Lark 1.0
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 绘制一个填充矩形。矩形的起点在 (x, y) 位置，矩形的尺寸是 width 和 height ，fillStyle 属性决定矩形的样式。
-         * @param x 矩形起始点的 x 轴坐标。
-         * @param y 矩形起始点的 y 轴坐标。
-         * @param width 矩形的宽度。
-         * @param height 矩形的高度。
-         * @version Lark 1.0
-         * @platform Web,Native
-         */
-        public fillRect(x:number, y:number, width:number, height:number):void {
-            this.pushCommand(sys.GraphicsCommandType.fillRect, arguments);
-            this.extendByPoint(x, y);
-            this.extendByPoint(x + width, y + height);
-            this.hasFill = true;
-        }
-
-        /**
-         * @language en_US
-         * strokes the current or given path with the current stroke style.
-         * @version Lark 1.0
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 根据当前的画线样式，绘制当前或已经存在的路径的方法。
-         * @version Lark 1.0
-         * @platform Web,Native
-         */
-        public stroke():void {
-            this.pushCommand(sys.GraphicsCommandType.stroke, arguments);
-            this.hasStroke = true;
-        }
-
-        /**
-         * @language en_US
-         * paints a rectangle which has a starting point at (x, y) and has a w width and an h height onto the surface,
-         * using the current stroke style.
-         * @param x The x axis of the coordinate for the rectangle starting point.
-         * @param y The y axis of the coordinate for the rectangle starting point.
-         * @param w The rectangle's width.
-         * @param h The rectangle's height.
-         * @version Lark 1.0
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 使用当前的绘画样式，描绘一个起点在 (x, y) 、宽度为 w 、高度为 h 的矩形的方法。
-         * @param x 矩形起点的 x 轴坐标。
-         * @param y 矩形起点的 y 轴坐标。
-         * @param width 矩形的宽度。
-         * @param height 矩形的高度。
-         * @version Lark 1.0
-         * @platform Web,Native
-         */
-        public strokeRect(x:number, y:number, width:number, height:number):void {
-            this.pushCommand(sys.GraphicsCommandType.strokeRect, arguments);
-            this.hasStroke = true;
-            this.extendByPoint(x, y);
-            this.extendByPoint(x + width, y + height);
-        }
-
-        /**
-         * @language en_US
-         * starts a new path by emptying the list of sub-paths. Call this method when you want to create a new path.
-         * @version Lark 1.0
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 清空子路径列表开始一个新路径。 当你想创建一个新的路径时，调用此方法。
-         * @version Lark 1.0
-         * @platform Web,Native
-         */
-        public beginPath():void {
-            this.pushCommand(sys.GraphicsCommandType.beginPath, arguments);
-            this.hasMoved = false;
-            this.moveToX = 0x8000000;
-            this.moveToY = 0x8000000;
-        }
-
-        /**
-         * @language en_US
-         * adds an arc to the path with the given control points and radius, connected to the previous point by a straight line.
-         * @param x1 The x axis of the coordinate for the first control point.
-         * @param y1 The y axis of the coordinate for the first control point.
-         * @param x2 The x axis of the coordinate for the second control point.
-         * @param y2 The y axis of the coordinate for the second control point.
-         * @param radius The arc's radius.
-         * @version Lark 1.0
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 根据控制点和半径绘制一段圆弧路径，使用直线连接前一个点。
-         * @param x1 第一个控制点的 x 轴坐标。
-         * @param y1 第一个控制点的 y 轴坐标。
-         * @param x2 第二个控制点的 x 轴坐标。
-         * @param y2 第二个控制点的 y 轴坐标。
-         * @param radius 圆弧的半径。
-         * @version Lark 1.0
-         * @platform Web,Native
-         */
-        public arcTo(x1:number, y1:number, x2:number, y2:number, radius:number):void {
-            this.pushCommand(sys.GraphicsCommandType.arcTo, arguments);
-            if (this.moveToX === 0x8000000) {//没有调用过moveTo()方法
-                return;
-            }
-            this.checkMoveTo();
-
-            getVector(this.moveToX, this.moveToY, x1, y1, vector1);
-            getVector(x2, y2, x1, y1, vector3);
-            //角平分线
-            vector.x = vector1.x + vector3.x;
-            vector.y = vector1.y + vector3.y;
-            //角平分向量归1
-            getVector(vector.x, vector.y, 0, 0, vector);
-            //向量夹角
-            var cross = vector1.x * vector.x + vector1.y * vector.y;
-            var l1 = distance(vector1.x, vector1.y, 0, 0);
-            var l2 = distance(vector.x, vector.y, 0, 0);
-            var cos = cross / (l1 * l2);
-            var a = Math.acos(cos);
-
-            var l = radius / Math.sin(a);
-            //圆心
-            var centerX = x1 + vector.x * l;
-            var centerY = y1 + vector.y * l;
-            var L10 = radius / Math.tan(a);
-            var x10 = x1 + vector1.x * L10;
-            var y10 = y1 + vector1.y * L10;
-            var x12 = x1 + vector3.x * L10;
-            var y12 = y1 + vector3.y * L10;
-
-            getVector(centerX, centerY, x10, y10, vector);
-            var startAngle = Math.atan2(vector.y, vector.x);
-            getVector(centerX, centerY, x12, y12, vector);
-            var endAngle = Math.atan2(vector.y, vector.x);
-            var offset = endAngle - startAngle;
-            offset = clampAngle(offset);
-            if (offset > PI) {
-                var temp = endAngle;
-                endAngle = startAngle;
-                startAngle = temp;
-            }
-            this.arcBounds(centerX, centerY, radius, startAngle, endAngle);
-        }
-
-        /**
-         * @language en_US
-         * Clears the graphics that were drawn to this Graphics object, and resets fill and line style settings.
-         * @version Lark 1.0
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 清除绘制到此 Graphics 对象的图形，并重置填充和线条样式设置。
-         * @version Lark 1.0
-         * @platform Web,Native
-         */
-        public clear():void {
-            this.reset();
-            this.$commands.length = 0;
-            this.$targetDisplay.$invalidateContentBounds();
-        }
-
-        /**
-         * @private
-         */
-        private isFirst:boolean;
-        /**
-         * @private
-         */
-        private minX:number;
-        /**
-         * @private
-         */
-        private minY:number;
-        /**
-         * @private
-         */
-        private maxX:number;
-        /**
-         * @private
-         */
-        private maxY:number;
-        /**
-         * @private
-         */
-        private hasMoved:boolean;
-        /**
-         * @private
-         */
-        private moveToX:number;
-        /**
-         * @private
-         */
-        private moveToY:number;
-        /**
-         * @private
-         */
-        private hasStroke:boolean;
-        /**
-         * @private
-         */
-        private hasFill:boolean;
-
-
-        /**
-         * @private
-         *
-         */
-        private reset():void {
-            this._fillStyle = "#000000";
-            this._lineCap = "butt";
-            this._lineJoin = "miter";
-            this._lineWidth = 1;
-            this._miterLimit = 10;
-            this._strokeStyle = "#000000";
-            this.hasMoved = false;
-            this.minX = 0;
-            this.minY = 0;
-            this.maxX = 0;
-            this.maxY = 0;
-            this.isFirst = true;
-            this.moveToX = 0x8000000;
-            this.moveToY = 0x8000000;
-            this.hasStroke = false;
-            this.hasFill = false;
-        }
-
-        /**
-         * @private
-         * 目标显示对象
-         */
-        $targetDisplay:DisplayObject;
-        /**
-         * @private
-         * 绘图命令列表
-         */
-        $commands:sys.GraphicsCommand[] = [];
-
-        /**
-         * @private
-         */
-        private pushCommand(graphicsType:number, args:any):void {
-            this.$commands.push({type: graphicsType, arguments: args});
-            this.$targetDisplay.$invalidateContentBounds();
-        }
-
-        /**
-         * @private
-         */
-        private checkMoveTo():void {
-            if (this.hasMoved) {
-                this.hasMoved = false;
-                this.extendByPoint(this.moveToX, this.moveToY);
-            }
-        }
-
-        /**
-         * @private
-         */
-        private extendByPoint(x:number, y:number):void {
-            if (this.isFirst) {
-                this.isFirst = false;
-                this.maxX = this.minX = x;
-                this.maxY = this.minY = y;
-            }
-            else {
-                this.minX = Math.min(this.minX, x);
-                this.minY = Math.min(this.minY, y);
-                this.maxX = Math.max(this.maxX, x);
-                this.maxY = Math.max(this.maxY, y);
-            }
+            this.$renderContext = new GraphicsRenderContext();
         }
 
         /**
          * @private
          */
         $measureContentBounds(bounds:Rectangle):void {
-            if (!this.hasFill && !this.hasStroke) {
-                bounds.setEmpty();
-                return;
-            }
-            if (this.hasStroke) {
-                var lineWidth = this._lineWidth;
-                var half = lineWidth * 0.5;
-            }
-            else {
-                half = lineWidth = 0;
-            }
-            bounds.setTo(this.minX - half, this.minY - half, this.maxX - this.minX + lineWidth, this.maxY - this.minY + lineWidth);
+            this.$renderContext.$measureContentBounds(bounds);
         }
 
         /**
          * @private
          */
         $render(context:sys.RenderContext):void {
-            context.save();
-            context.fillStyle = "#000000";
-            context.lineCap = "butt";
-            context.lineJoin = "miter";
-            context.lineWidth = 1;
-            context.miterLimit = 10;
-            context.strokeStyle = "#000000";
-            context.beginPath();//清理之前的缓存的路径
-            var map = context["graphicsMap"];
-            if (!map) {
-                map = mapGraphicsFunction(context);
-            }
-            var commands = this.$commands;
-            var length = commands.length;
-            for (var i = 0; i < length; i++) {
-                var command = commands[i];
-                map[command.type].apply(context, command.arguments);
-            }
-            context.restore();
+            this.$renderContext.$render(context);
         }
-    }
 
-    registerClass(Graphics, Types.Graphics);
 
-    function mapGraphicsFunction(context:sys.RenderContext):any {
-        var map = context["graphicsMap"] = {};
-        map[sys.GraphicsCommandType.arc] = context.arc;
-        map[sys.GraphicsCommandType.arcTo] = context.arcTo;
-        map[sys.GraphicsCommandType.beginPath] = context.beginPath;
-        map[sys.GraphicsCommandType.bezierCurveTo] = context.bezierCurveTo;
-        map[sys.GraphicsCommandType.closePath] = context.closePath;
-        map[sys.GraphicsCommandType.fill] = context.fill;
-        map[sys.GraphicsCommandType.fillRect] = context.fillRect;
-        map[sys.GraphicsCommandType.lineTo] = context.lineTo;
-        map[sys.GraphicsCommandType.moveTo] = context.moveTo;
-        map[sys.GraphicsCommandType.quadraticCurveTo] = context.quadraticCurveTo;
-        map[sys.GraphicsCommandType.rect] = context.rect;
-        map[sys.GraphicsCommandType.stroke] = context.stroke;
-        map[sys.GraphicsCommandType.strokeRect] = context.strokeRect;
-
-        map[sys.GraphicsCommandType.lineWidth] = function (value) {
-            context.lineWidth = value
-        };
-        map[sys.GraphicsCommandType.miterLimit] = function (value) {
-            context.miterLimit = value
-        };
-        map[sys.GraphicsCommandType.fillStyle] = function (value) {
-            context.fillStyle = value
-        };
-        map[sys.GraphicsCommandType.lineCap] = function (value) {
-            context.lineCap = value
-        };
-        map[sys.GraphicsCommandType.lineJoin] = function (value) {
-            context.lineJoin = value
-        };
-        map[sys.GraphicsCommandType.strokeStyle] = function (value) {
-            context.strokeStyle = value
-        };
-        return map;
-    }
-
-}
-
-module egret.sys {
-    /**
-     * @private
-     */
-    export interface GraphicsCommand {
         /**
-         * @private
+         * 指定一种简单的单一颜色填充，在绘制时该填充将在随后对其他 Graphics 方法（如 lineTo() 或 drawCircle()）的调用中使用。
+         * 调用 clear() 方法会清除填充。
+         * @method egret.Graphics#beginFill
+         * @param color {number} 填充的颜色
+         * @param alpha {number} 填充的 Alpha 值
          */
-            type:number;
-        /**
-         * @private
-         */
-        arguments:any[];
-    }
+        public beginFill(color:number, alpha:number = 1):void {
+            this.fillStyleColor = this._parseColor(color, alpha);
 
-    /**
-     * @private
-     */
-    export const enum GraphicsCommandType {
-        miterLimit,
-        lineCap,
-        lineJoin,
-        lineWidth,
-        strokeStyle,
-        fillStyle,
-        arc,
-        quadraticCurveTo,
-        lineTo,
-        fill,
-        closePath,
-        rect,
-        moveTo,
-        fillRect,
-        bezierCurveTo,
-        stroke,
-        strokeRect,
-        beginPath,
-        arcTo
+            this._setStyle(this.fillStyleColor);
+        }
+
+        public _parseColor(color:number, alpha:number):string {
+            var _colorBlue = color & 0x0000FF;
+            var _colorGreen = (color & 0x00ff00) >> 8;
+            var _colorRed = color >> 16;
+            return "rgba(" + _colorRed + "," + _colorGreen + "," + _colorBlue + "," + alpha + ")";
+        }
+
+        private _setStyle(colorStr:string):void {
+            this.$renderContext.fillStyle = colorStr;
+            this.$renderContext.beginPath();
+        }
+
+        /**
+         * 绘制一个矩形
+         * @method egret.Graphics#drawRect
+         * @param x {number} 圆心相对于父显示对象注册点的 x 位置（以像素为单位）。
+         * @param y {number} 相对于父显示对象注册点的圆心的 y 位置（以像素为单位）。
+         * @param width {number} 矩形的宽度（以像素为单位）。
+         * @param height {number} 矩形的高度（以像素为单位）。
+         */
+        public drawRect(x:number, y:number, width:number, height:number):void {
+            this.$renderContext.beginPath();
+            this.$renderContext.rect(x, y, width, height);
+            this.$renderContext.closePath();
+        }
+
+        /**
+         * 绘制一个圆。
+         * @method egret.Graphics#drawCircle
+         * @param x {number} 圆心相对于父显示对象注册点的 x 位置（以像素为单位）。
+         * @param y {number} 相对于父显示对象注册点的圆心的 y 位置（以像素为单位）。
+         * @param r {number} 圆的半径（以像素为单位）。
+         */
+        public drawCircle(x:number, y:number, r:number):void {
+            this.$renderContext.beginPath();
+            this.$renderContext.arc(x, y, r, 0, Math.PI * 2);
+            this.$renderContext.closePath();
+        }
+
+        /**
+         * 绘制一个圆角矩形
+         * @method egret.Graphics#drawRoundRect
+         * @param x {number} 圆心相对于父显示对象注册点的 x 位置（以像素为单位）。
+         * @param y {number} 相对于父显示对象注册点的圆心的 y 位置（以像素为单位）。
+         * @param width {number} 矩形的宽度（以像素为单位）。
+         * @param height {number} 矩形的高度（以像素为单位）。
+         * @param ellipseWidth {number} 用于绘制圆角的椭圆的宽度（以像素为单位）。
+         * @param ellipseHeight {number} 用于绘制圆角的椭圆的高度（以像素为单位）。 （可选）如果未指定值，则默认值与为 ellipseWidth 参数提供的值相匹配。
+         */
+        public drawRoundRect(x:number, y:number, width:number, height:number, ellipseWidth:number, ellipseHeight?:number):void {
+            var _x:number = x;//控制X偏移
+            var _y:number = y;//控制Y偏移
+            var _w:number = width;
+            var _h:number = height;
+            var _ew:number = ellipseWidth / 2;
+            var _eh:number = ellipseHeight ? ellipseHeight / 2 : _ew;
+            var right:number = _x + _w;
+            var bottom:number = _y + _h;
+            var ax:number = right;
+            var ay:number = bottom - _eh;
+
+            this.$renderContext.beginPath();
+            this.$renderContext.moveTo(ax, ay);
+            this.$renderContext.quadraticCurveTo(right, bottom, right - _ew, bottom);
+            this.$renderContext.lineTo(_x + _ew, bottom);
+            this.$renderContext.quadraticCurveTo(_x, bottom, _x, bottom - _eh);
+            this.$renderContext.lineTo(_x, _y + _eh);
+            this.$renderContext.quadraticCurveTo(_x, _y, _x + _ew, _y);
+            this.$renderContext.lineTo(right - _ew, _y);
+            this.$renderContext.quadraticCurveTo(right, _y, right, _y + _eh);
+            this.$renderContext.lineTo(ax, ay);
+            this.$renderContext.closePath();
+        }
+
+        /**
+         * 绘制一个椭圆。
+         * @method egret.Graphics#drawEllipse
+         * @param x {number} 一个表示相对于父显示对象注册点的水平位置的数字（以像素为单位）。
+         * @param y {number} 一个表示相对于父显示对象注册点的垂直位置的数字（以像素为单位）。
+         * @param width {number} 矩形的宽度（以像素为单位）。
+         * @param height {number} 矩形的高度（以像素为单位）。
+         */
+        public drawEllipse(x:number, y:number, width:number, height:number):void {
+            var _x:number = x + width / 2;//控制X偏移
+            var _y:number = y + height / 2;//控制Y偏移
+            var r:number = (width > height) ? width : height;//选宽高较大者做为arc半径参数
+            var ratioX:number = width / r;//横轴缩放比率
+            var ratioY:number = height / r;//纵轴缩放比率
+            r /= 2;
+            this.$renderContext.scale(ratioX, ratioY);//进行缩放(均匀压缩)
+            this.$renderContext.beginPath();
+            this.$renderContext.arc(_x / ratioX, _y / ratioY, r, 0, 2 * Math.PI);
+            this.$renderContext.closePath();
+            this.$renderContext.scale(1 / ratioX, 1 / ratioY);//缩放回去
+        }
+
+        /**
+         * 指定一种线条样式以用于随后对 lineTo() 或 drawCircle() 等 Graphics 方法的调用。
+         * @method egret.Graphics#lineStyle
+         * @param thickness {number} 一个整数，以点为单位表示线条的粗细，有效值为 0 到 255。如果未指定数字，或者未定义该参数，则不绘制线条。如果传递的值小于 0，则默认值为 0。值 0 表示极细的粗细；最大粗细为 255。如果传递的值大于 255，则默认值为 255。
+         * @param color {number} 线条的十六进制颜色值（例如，红色为 0xFF0000，蓝色为 0x0000FF 等）。如果未指明值，则默认值为 0x000000（黑色）。可选。
+         * @param alpha {number} 表示线条颜色的 Alpha 值的数字；有效值为 0 到 1。如果未指明值，则默认值为 1（纯色）。如果值小于 0，则默认值为 0。如果值大于 1，则默认值为 1。
+         * @param pixelHinting {boolean} 布尔型值，指定是否提示笔触采用完整像素。它同时影响曲线锚点的位置以及线条笔触大小本身。在 pixelHinting 设置为 true 的情况下，线条宽度会调整到完整像素宽度。在 pixelHinting 设置为 false 的情况下，对于曲线和直线可能会出现脱节。
+         * @param scaleMode {string} 用于指定要使用的比例模式
+         * @param caps {string} 用于指定线条末端处端点类型的 CapsStyle 类的值。
+         * @param joints {string} 指定用于拐角的连接外观的类型。
+         * @param miterLimit {number} 用于表示剪切斜接的极限值的数字。
+         */
+        public lineStyle(thickness:number = NaN, color:number = 0, alpha:number = 1.0, pixelHinting:boolean = false, scaleMode:string = "normal", caps:string = null, joints:string = null, miterLimit:number = 3):void {
+            if (this.strokeStyleColor) {
+                this._createEndLineCommand();
+            }
+
+            this.strokeStyleColor = this._parseColor(color, alpha);
+
+            this.moveTo(this.lineX, this.lineY);
+
+            this.$renderContext.lineWidth = thickness;
+            this.$renderContext.strokeStyle = this.strokeStyleColor;
+            this.$renderContext.beginPath();
+
+        }
+
+        /**
+         * 使用当前线条样式绘制一条从当前绘图位置开始到 (x, y) 结束的直线；当前绘图位置随后会设置为 (x, y)。
+         * @method egret.Graphics#lineTo
+         * @param x {number} 一个表示相对于父显示对象注册点的水平位置的数字（以像素为单位）。
+         * @param y {number} 一个表示相对于父显示对象注册点的垂直位置的数字（以像素为单位）。
+         */
+        public lineTo(x:number, y:number):void {
+            this.lineX = x;
+            this.lineY = y;
+
+            this.$renderContext.lineTo(x, y);
+        }
+
+        /**
+         * 使用当前线条样式和由 (controlX, controlY) 指定的控制点绘制一条从当前绘图位置开始到 (anchorX, anchorY) 结束的二次贝塞尔曲线。当前绘图位置随后设置为 (anchorX, anchorY)。
+         * 如果在调用 moveTo() 方法之前调用了 curveTo() 方法，则当前绘图位置的默认值为 (0, 0)。如果缺少任何一个参数，则此方法将失败，并且当前绘图位置不改变。
+         * 绘制的曲线是二次贝塞尔曲线。二次贝塞尔曲线包含两个锚点和一个控制点。该曲线内插这两个锚点，并向控制点弯曲。
+         * @method egret.Graphics#curveTo
+         * @param controlX {number} 一个数字，指定控制点相对于父显示对象注册点的水平位置。
+         * @param controlY {number} 一个数字，指定控制点相对于父显示对象注册点的垂直位置。
+         * @param anchorX {number} 一个数字，指定下一个锚点相对于父显示对象注册点的水平位置。
+         * @param anchorY {number} 一个数字，指定下一个锚点相对于父显示对象注册点的垂直位置。
+         */
+        public curveTo(controlX:number, controlY:number, anchorX:number, anchorY:number):void {
+            this.lineX = anchorX;
+            this.lineY = anchorY;
+
+            this.$renderContext.quadraticCurveTo(controlX, controlY, anchorX, anchorY);
+        }
+
+        /**
+         * 从当前绘图位置到指定的锚点绘制一条三次贝塞尔曲线。三次贝塞尔曲线由两个锚点和两个控制点组成。该曲线内插这两个锚点，并向两个控制点弯曲。
+         * @method egret.Graphics#curveTo
+         * @param controlX1 {number} 指定首个控制点相对于父显示对象的注册点的水平位置。
+         * @param controlY1 {number} 指定首个控制点相对于父显示对象的注册点的垂直位置。
+         * @param controlX2 {number} 指定第二个控制点相对于父显示对象的注册点的水平位置。
+         * @param controlY2 {number} 指定第二个控制点相对于父显示对象的注册点的垂直位置。
+         * @param anchorX {number} 指定锚点相对于父显示对象的注册点的水平位置。
+         * @param anchorY {number} 指定锚点相对于父显示对象的注册点的垂直位置。
+         */
+        public cubicCurveTo(controlX1:number, controlY1:number, controlX2:number, controlY2:number, anchorX:number, anchorY:number):void {
+            this.lineX = anchorX;
+            this.lineY = anchorY;
+
+            this.$renderContext.bezierCurveTo(controlX1, controlY1, controlX2, controlY2, anchorX, anchorY);
+        }
+
+        /**
+         * 将当前绘图位置移动到 (x, y)。如果缺少任何一个参数，则此方法将失败，并且当前绘图位置不改变。
+         * @method egret.Graphics#moveTo
+         * @param x {number} 一个表示相对于父显示对象注册点的水平位置的数字（以像素为单位）。
+         * @param y {number} 一个表示相对于父显示对象注册点的垂直位置的数字（以像素为单位）。
+         */
+        public moveTo(x:number, y:number):void {
+            this.lineX = x;
+            this.lineY = y;
+            this.$renderContext.moveTo(x, y);
+        }
+
+        /**
+         * 清除绘制到此 Graphics 对象的图形，并重置填充和线条样式设置。
+         * @method egret.Graphics#clear
+         */
+        public clear():void {
+            this.lineX = 0;
+            this.lineY = 0;
+            this.strokeStyleColor = null;
+            this.fillStyleColor = null;
+            this._minX = 0;
+            this._minY = 0;
+            this._maxX = 0;
+            this._maxY = 0;
+            this._firstCheck = true;
+            this._dirty = true;
+        }
+
+        /**
+         * 对从上一次调用 beginFill()方法之后添加的直线和曲线应用填充。
+         * @method egret.Graphics#endFill
+         */
+        public endFill():void {
+            if (this.fillStyleColor != null) {
+                this._fill();
+                this.fillStyleColor = null;
+            }
+        }
+
+        private _createEndFillCommand():void {
+            this.$renderContext.fill();
+            this.$renderContext.closePath();
+        }
+
+        private _fill():void {
+            if (this.fillStyleColor) {
+                this._createEndFillCommand();
+            }
+            if (this.strokeStyleColor) {
+                this._createEndLineCommand();
+            }
+        }
+
+        private _createEndLineCommand():void {
+            this.$renderContext.stroke();
+            this.$renderContext.closePath();
+        }
+
+        private _firstCheck:boolean = true;
+        private _minX:number = 0;
+        private _minY:number = 0;
+        private _maxX:number = 0;
+        private _maxY:number = 0;
+
     }
 }
