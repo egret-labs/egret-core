@@ -71,6 +71,19 @@ module egret {
         public height:number;
 
         /**
+         * 矩形左上角的 x 坐标。
+         * @member {number} egret.Rectangle#left
+         */
+        public get left(): number {
+            return this.x;
+        }
+
+        public set left(value: number) {
+            this.width += this.x - value;
+            this.x = value;
+        }
+
+        /**
          * x 和 width 属性的和。
          * @member {number} egret.Rectangle#right
          */
@@ -80,6 +93,19 @@ module egret {
 
         public set right(value:number) {
             this.width = value - this.x;
+        }
+
+        /**
+         * 矩形左上角的 y 坐标。
+         * @member {number} egret.Rectangle#top
+         */
+        public get top(): number {
+            return this.y;
+        }
+
+        public set top(value: number) {
+            this.height += this.y - value;
+            this.y = value;
         }
 
         /**
