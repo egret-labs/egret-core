@@ -428,11 +428,100 @@ module egret {
 
         /**
          * 将源 Matrix 对象中的所有矩阵数据复制到调用方 Matrix 对象中。
-         * @method egret.Matrix#copyForm
+         * @method egret.Matrix#copyFrom
          * @param sourceMatrix {egret.Matrix} 要从中复制数据的 Matrix 对象
          */
-        public copyForm(sourceMatrix:Matrix):void {
+        public copyFrom(sourceMatrix:Matrix):void {
             this.identityMatrix(sourceMatrix);
+        }
+
+
+
+        /**
+         * 返回一个新的 Matrix 对象，它是此矩阵的克隆，带有与所含对象完全相同的副本。
+         * @method egret.Matrix#clone
+         * @returns {Matrix} 一个 Matrix 对象
+         */
+        public clone():Matrix {
+            return new Matrix(this.a, this.b, this.c, this.d, this.tx, this.ty);
+        }
+
+        /**
+         * 将某个矩阵与当前矩阵连接，从而将这两个矩阵的几何效果有效地结合在一起。
+         * @method egret.Matrix#concat
+         * @param m {egret.Matrix} 要连接到源矩阵的矩阵
+         */
+        public concat(m:Matrix):void {
+            var a1:number = this.a;
+            var b1:number = this.b;
+            var c1:number = this.c;
+            var d1:number = this.d;
+            var tx1:number = this.tx;
+            var ty1:number = this.ty;
+            var a2:number = m.a;
+            var b2:number = m.b;
+            var c2:number = m.c;
+            var d2:number = m.d;
+            var tx2:number = m.tx;
+            var ty2:number = m.ty;
+            var a = a1 * a2;
+            var b = 0;
+            var c = 0;
+            var d = d1 * d2;
+            var tx = tx1 * a2 + tx2;
+            var ty = ty1 * d2 + ty2;
+
+            if (b1 != 0 || c1 != 0 || b2 != 0 || c2 != 0) {
+                a += b1 * c2;
+                d += c1 * b2;
+                b += a1 * b2 + b1 * d2;
+                c += c1 * a2 + d1 * c2;
+                tx += ty1 * c2;
+                ty += tx1 * b2;
+            }
+
+            this.a = a;
+            this.b = b;
+            this.c = c;
+            this.d = d;
+            this.tx = tx;
+            this.ty = ty;
+        }
+
+        /**
+         * 如果给定预转换坐标空间中的点，则此方法返回发生转换后该点的坐标。
+         * 与使用 transformPoint() 方法应用的标准转换不同，deltaTransformPoint() 方法的转换不考虑转换参数 tx 和 ty。
+         * @method egret.Matrix#deltaTransformPoint
+         * @param point {egret.Point} 想要获得其矩阵转换结果的点
+         * @returns {egret.Point} 由应用矩阵转换所产生的点
+         */
+        public deltaTransformPoint(point:egret.Point):egret.Point {
+            var self = this;
+            var x = self.a * point.x + self.c * point.y;
+            var y = self.b * point.x + self.d * point.y;
+            return new egret.Point(x, y);
+        }
+
+        /**
+         * 返回将 Matrix 对象表示的几何转换应用于指定点所产生的结果。
+         * @method egret.Matrix#transformPoint
+         * @param point {egret.Point} 想要获得其矩阵转换结果的点
+         * @returns {egret.Point} 由应用矩阵转换所产生的点
+         */
+        public transformPoint(point:egret.Point):egret.Point {
+            var self = this;
+            var x:number = self.a * point.x + self.c * point.y + self.tx;
+            var y:number = self.b * point.x + self.d * point.y + self.ty;
+            return new egret.Point(x, y);
+        }
+
+        /**
+         * 返回列出该 Matrix 对象属性的文本值。
+         * @method egret.Matrix#toString
+         * @returns {egret.Point} 一个字符串，它包含 Matrix 对象的属性值：a、b、c、d、tx 和 ty。
+         */
+        public toString():string {
+            return "(a=" + this.a + ", b=" + this.b + ", c=" + this.c + ", d=" + this.d + ", tx=" + this.tx + ", ty=" + this.ty + ")";
         }
     }
 }
