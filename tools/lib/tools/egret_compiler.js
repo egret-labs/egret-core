@@ -6,15 +6,15 @@
 var file = require("../core/file.js");
 
 
-function typeScriptCompiler(quitFunc,cmd, tscLibUrl) {
+function typeScriptCompiler(callback,cmd) {
     file.save("tsc_config_temp.txt", cmd);//todo performance-optimize
     var TypeScript = require('../core/typescript/tsc.js');
 
     TypeScript.exit = function(){
-        setTimeout(quitFunc,1,arguments[0])
+        setTimeout(callback,1,arguments[0])
     }
 //    var timer = new Date().getTime();
-    TypeScript.executeCommandLine(["@tsc_config_temp.txt"], tscLibUrl);
+    TypeScript.executeCommandLine(["@tsc_config_temp.txt"], exports.defaultTscLib);
 //    console.log (new Date().getTime() - timer)
 
 //    if (isQuickMode()) {//快速构建，去掉类型检查阶段
@@ -49,3 +49,4 @@ function getLastConstructor(classDecl) {
 }
 
 exports.compile = typeScriptCompiler;
+exports.defaultTscLib = null;
