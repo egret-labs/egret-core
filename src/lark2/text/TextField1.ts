@@ -931,7 +931,9 @@ module egret {
                 bounds.setEmpty();
             }
             else {
-                bounds.setTo(0, 0, this.$TextField[sys.TextKeys.textWidth], TextFieldUtils._getTextHeight(self));
+                var w:number = this.$TextField[sys.TextKeys.textFieldWidth] != NONE ? this.$TextField[sys.TextKeys.textFieldWidth] : this.$TextField[sys.TextKeys.textWidth];
+                var h:number = this.$TextField[sys.TextKeys.textFieldHeight] != NONE ? this.$TextField[sys.TextKeys.textFieldHeight] : TextFieldUtils._getTextHeight(self);
+                bounds.setTo(0, 0, w, h);
             }
         }
 

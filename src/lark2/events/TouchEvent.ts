@@ -338,6 +338,12 @@ module egret {
             Event.release(event);
             return result;
         }
+
+        protected clean():void {
+            super.clean();
+            this.localPoint = null;
+        }
+
     }
 
     registerClass(TouchEvent, Types.TouchEvent);
