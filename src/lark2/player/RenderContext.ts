@@ -134,6 +134,8 @@ module egret.sys {
          */
         font: string;
 
+        strokeText(text, x, y, maxWidth);
+
         /**
          * @private
          * 绘制一段圆弧路径。圆弧路径的圆心在 (x, y) 位置，半径为 r ，根据anticlockwise （默认为顺时针）指定的方向从 startAngle 开始绘制，到 endAngle 结束。

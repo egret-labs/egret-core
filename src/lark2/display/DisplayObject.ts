@@ -845,7 +845,7 @@ module egret {
          * @private
          * 设置显示宽度
          */
-        $setWidth(value:number) {
+        $setWidth(value:number):void {
             value = +value || 0;
             if (value < 0) {
                 return;
@@ -897,7 +897,7 @@ module egret {
          * @private
          * 设置显示高度
          */
-        $setHeight(value:number) {
+        $setHeight(value:number):void {
             value = +value || 0;
             if (value < 0) {
                 return;

@@ -29,107 +29,7 @@
 
 module egret.sys {
 
-    /**
-     * @private
-     */
-    export const enum TextKeys {
-        /**
-         * @private
-         */
-        fontSize,
-        /**
-         * @private
-         */
-        lineSpacing,
-        /**
-         * @private
-         */
-        textColor,
-        /**
-         * @private
-         */
-        textFieldWidth,
-        /**
-         * @private
-         */
-        textFieldHeight,
-        /**
-         * @private
-         */
-        textWidth,
-        /**
-         * @private
-         */
-        textHeight,
-        /**
-         * @private
-         */
-        textDrawWidth,
-        /**
-         * @private
-         */
-        fontFamily,
-        /**
-         * @private
-         */
-        textAlign,
-        /**
-         * @private
-         */
-        verticalAlign,
-        /**
-         * @private
-         */
-        colorString,
-        /**
-         * @private
-         */
-        fontString,
-        /**
-         * @private
-         */
-        text,
-        /**
-         * @private
-         */
-        measuredWidths,
-        /**
-         * @private
-         */
-        bold,
-        /**
-         * @private
-         */
-        italic,
-        /**
-         * @private
-         */
-        fontStringChanged,
-        /**
-         * @private
-         */
-        textLinesChanged,
-        /**
-         * @private
-         */
-        wordWrap,
-        /**
-         * @private
-         */
-        displayAsPassword,
-        /**
-         * @private
-         */
-        maxChars,
-        /**
-         * @private
-         */
-        selectionActivePosition,
-        /**
-         * @private
-         */
-        selectionAnchorPosition
-    }
+
 }
 
 module egret {
@@ -188,7 +88,7 @@ module egret {
                 8: "sans-serif",   //fontFamily
                 9: "left",         //textAlign
                 10: "top",         //verticalAlign
-                11: "#000000",     //colorString
+                11: "#000000",     //textColorString
                 12: "",            //fontString
                 13: "",            //text
                 14: [],            //measuredWidths
@@ -447,7 +347,7 @@ module egret {
                 return;
             }
             values[sys.TextKeys.textColor] = value;
-            values[sys.TextKeys.colorString] = sys.toColorString(value);
+            values[sys.TextKeys.textColorString] = sys.toColorString(value);
             this.$invalidate();
         }
 
@@ -661,7 +561,7 @@ module egret {
             context.textAlign = "left";
             context.textBaseline = "middle";
             context.font = this.getFontString();
-            context.fillStyle = values[sys.TextKeys.colorString];
+            context.fillStyle = values[sys.TextKeys.textColorString];
             var length = lines.length;
             var lineHeight = values[sys.TextKeys.fontSize];
             var halfLineHeight = lineHeight * 0.5;
@@ -863,45 +763,4 @@ module egret {
     }
 
     registerClass(TextField, Types.TextField);
-}
-
-
-module egret.sys {
-
-    /**
-     * @private
-     * 返回格式化的字体样式文本
-     */
-    export function toFontString(style:{fontFamily?:string;fontSize?:number;bold?:boolean;italic?:boolean}):string {
-        var font = "";
-        if (style.italic)
-            font += "italic ";
-        if (style.bold)
-            font += "bold ";
-        font += (style.fontSize || 12) + "px ";
-        font += (style.fontFamily || "sans-serif");
-        return font;
-    }
-
-    /**
-     * @private
-     * 返回字符串形式的颜色值
-     */
-    export function toColorString(value:number):string {
-        if (value < 0)
-            value = 0;
-        if (value > 16777215)
-            value = 16777215;
-        var color = value.toString(16).toUpperCase();
-        while (color.length < 6) {
-            color = "0" + color;
-        }
-        return "#" + color;
-    }
-
-    if(DEBUG){
-        egret.$markReadOnly(TextField.prototype,"numLines");
-        egret.$markReadOnly(TextField.prototype,"textWidth");
-        egret.$markReadOnly(TextField.prototype,"textWidth");
-    }
 }
