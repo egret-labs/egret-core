@@ -88,6 +88,9 @@
         "lark2/text/TextMeasurer.ts",
         "lark2/text/VerticalAlign.ts",
 
+        "lark2/text/BitmapFont.ts",
+        "lark2/text/BitmapText.ts",
+
         "lark2/filters/BitmapFilterQuality.ts",
         "lark2/filters/Filter.ts",
         "lark2/filters/GlowFilter.ts",
