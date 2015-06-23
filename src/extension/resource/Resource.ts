@@ -167,7 +167,7 @@ module RES {
      * @param priority {number} 事件侦听器的优先级。优先级由一个带符号的 32 位整数指定。数字越大，优先级越高。优先级为 n 的所有侦听器会在
      * 优先级为 n -1 的侦听器之前得到处理。如果两个或更多个侦听器共享相同的优先级，则按照它们的添加顺序进行处理。默认优先级为 0。
      */
-    export function addEventListener(type:string, listener:Function, thisObject:any, useCapture:boolean = false, priority:number = 0):void {
+    export function addEventListener(type:string, listener:(event:egret.Event)=>void, thisObject:any, useCapture:boolean = false, priority:number = 0):void {
         instance.addEventListener(type,listener,thisObject,useCapture,priority);
     }
     /**
@@ -178,7 +178,7 @@ module RES {
      * @param thisObject {any} 侦听函数绑定的this对象
      * @param useCapture {boolean} 是否使用捕获，这个属性只在显示列表中生效。
      */
-    export function removeEventListener(type:string, listener:Function,thisObject:any,useCapture:boolean = false):void {
+    export function removeEventListener(type:string, listener:(event:egret.Event)=>void,thisObject:any,useCapture:boolean = false):void {
         instance.removeEventListener(type,listener,thisObject,useCapture);
     }
 

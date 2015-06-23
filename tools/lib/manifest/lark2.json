@@ -5,10 +5,14 @@
     "file_list": [
         "lark2/utils/extends.ts",
         "Defines.debug.ts",
+        "lark2/utils/HashObject.ts",
+        "lark2/utils/ByteArray.ts",
         "lark2/utils/getDefinitionByName.ts",
+        "lark2/utils/getQualifiedClassName.ts",
+        "lark2/utils/Injector.ts",
+        "lark2/utils/Recycler.ts",
         "lark2/utils/getTimer.ts",
         "lark2/utils/is.ts",
-        "lark2/utils/HashObject.ts",
         "lark2/utils/NONE.ts",
         "lark2/utils/registerClass.ts",
         "lark2/utils/startTick.ts",
@@ -87,6 +91,9 @@
         "lark2/text/TextInput.ts",
         "lark2/text/TextMeasurer.ts",
         "lark2/text/VerticalAlign.ts",
+
+        "lark2/text/ITextElement.ts",
+        "lark2/text/HtmlTextParser.ts",
 
         "lark2/text/BitmapFont.ts",
         "lark2/text/BitmapText.ts",

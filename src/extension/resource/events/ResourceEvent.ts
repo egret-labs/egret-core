@@ -108,14 +108,15 @@ module RES {
 		 * @param itemsTotal {number} 
          */
         public static dispatchResourceEvent(target:egret.IEventDispatcher,type:string,
-                                                    groupName:string="",resItem:ResourceItem=null,itemsLoaded:number=0,itemsTotal:number=0):void{
-            var eventClass:any = ResourceEvent;
-            var props:any = egret.Event._getPropertyData(eventClass);
-            props.groupName = groupName;
-            props.resItem = resItem;
-            props.itemsLoaded = itemsLoaded;
-            props.itemsTotal = itemsTotal;
-            egret.Event._dispatchByTarget(eventClass,target,type,props);
+                                                    groupName:string="",resItem:ResourceItem=null,itemsLoaded:number=0,itemsTotal:number=0):boolean{
+			var event:ResourceEvent = egret.Event.create(ResourceEvent, type);
+			event.groupName = groupName;
+			event.resItem = resItem;
+			event.itemsLoaded = itemsLoaded;
+			event.itemsTotal = itemsTotal;
+			var result = target.dispatchEvent(event);
+			egret.Event.release(event);
+			return result;
         }
 	}
 }
