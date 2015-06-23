@@ -96,4 +96,5 @@ module egret {
             this.socket.close();
         }
     }
+    ISocket = HTML5WebSocket;
 }

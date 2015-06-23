@@ -98,4 +98,6 @@ module egret {
         }
 
     }
+
+    ISocket = HTML5WebSocket;
 }

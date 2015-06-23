@@ -62,12 +62,7 @@ module egret {
             this._writeMessage = "";
             this._readMessage = "";
 
-            if (MainContext.runtimeType == MainContext.RUNTIME_HTML5) {
-                this.socket = new HTML5WebSocket();
-            }
-            else {
-                this.socket = new NativeSocket();
-            }
+            this.socket = new egret.ISocket();
             this.socket.addCallBacks(this.onConnect, this.onClose, this.onSocketData, this.onError, this);
         }
 
