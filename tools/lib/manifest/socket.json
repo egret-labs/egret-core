@@ -1,7 +1,7 @@
 {
     "name": "socket",
     "dependence": ["lark2"],
-    "output":"core/extension/socket",
+    "output":"lark2/extension/socket",
     "source":"src/extension/socket",
     "file_list": [
         "ISocket.ts",
