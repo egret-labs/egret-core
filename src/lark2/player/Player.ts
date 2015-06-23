@@ -165,14 +165,11 @@ module egret.sys {
             if (DEBUG && (this.showFPS || this.showLog)) {
                 this.stage.addChild(this.fpsDisplay);
             }
-
             this.callLaters();
-
+            this.callLaterAsyncs();
             var stage = this.stage;
             var t = egret.getTimer();
             var dirtyList = stage.$displayList.updateDirtyRegions();
-
-            this.callLaterAsyncs();
 
             var t1 = egret.getTimer();
             var drawCalls = 0;
