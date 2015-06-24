@@ -89,7 +89,7 @@ module egret.web {
 
             var style = canvas.style;
             style.cursor = "default";
-            style.margin = "0 auto";
+            style.margin = "0";
             style.position = "absolute";
             style.top = "0";
             style.bottom = "0";
@@ -105,7 +105,7 @@ module egret.web {
          * @private
          * 更新播放器视口尺寸
          */
-        public updateScreenSize(player:sys.Player, webTouch:WebTouchHandler,webText:WebTextAdapter):void {
+        public updateScreenSize(player:sys.Player, webTouch:WebTouchHandler,webText:WebTextAdapter, webInput:HTMLInput):void {
             var canvas = this.canvas;
             if(canvas['userTyping'])
                 return;
@@ -124,11 +124,16 @@ module egret.web {
             }
             canvas.style.width = displayWidth + "px";
             canvas.style.height = displayHeight + "px";
+            canvas.style.top = (screenRect.height - displayHeight) / 2 + "px";
+            canvas.style.left = (screenRect.width - displayWidth) / 2 + "px";
             player.updateStageSize(stageWidth, stageHeight);
             var scalex = displayWidth / stageWidth,
                 scaley = displayHeight / stageHeight;
-            webTouch.updateScaleMode(scalex,scaley);
-            webText.updateScaleMode(scalex, scaley,(screenRect.width-displayWidth)/2,0);
+            webTouch.updateScaleMode(scalex, scaley);
+            webText.updateScaleMode(scalex, scaley, (screenRect.width - displayWidth) / 2, (screenRect.height - displayHeight) / 2);
+
+
+            webInput.$updateSize();
         }
     }
 }

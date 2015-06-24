@@ -353,7 +353,7 @@ module egret {
         private invalidatePosition():void {
             this.$invalidateTransform();
             this.$propagateFlagsDown(sys.DisplayObjectFlags.InvalidConcatenatedMatrix |
-                sys.DisplayObjectFlags.InvalidInvertedConcatenatedMatrix);
+            sys.DisplayObjectFlags.InvalidInvertedConcatenatedMatrix);
             if (this.$parent) {
                 this.$parent.$propagateFlagsUp(sys.DisplayObjectFlags.InvalidBounds);
             }
@@ -563,6 +563,17 @@ module egret {
                         renderMatrix.$preMultiplyInto($TempMatrix.setTo(1, 0, 0, 1, -rect.x, -rect.y), renderMatrix);
 
                     }
+
+                    var values = this.$DisplayObject;
+                    var bounds = this.$getContentBounds();
+
+                    if (values[Keys.anchorOffsetX] != 0 || values[Keys.anchorOffsetY] != 0) {
+                        renderMatrix.$preMultiplyInto($TempMatrix.setTo(1, 0, 0, 1, -values[Keys.anchorOffsetX], -values[Keys.anchorOffsetY]), renderMatrix);
+                    }
+                    else if (values[Keys.anchorX] != 0 || values[Keys.anchorY] != 0) {
+                        renderMatrix.$preMultiplyInto($TempMatrix.setTo(1, 0, 0, 1, -values[Keys.anchorX] * bounds.width, -values[Keys.anchorY] * bounds.height), renderMatrix);
+                    }
+
                 } else {
                     renderMatrix.copyFrom(this.$getMatrix());
                 }

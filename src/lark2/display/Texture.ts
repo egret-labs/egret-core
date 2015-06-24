@@ -139,12 +139,6 @@ module egret {
         public dispose():void {
             egret.ImageLoader.disposeBitmapData(this._bitmapData);
         }
-
-        public _clone():Texture {
-            var texture = new Texture();
-            texture._bitmapData = this._bitmapData;
-            return texture;
-        }
     }
 }
 

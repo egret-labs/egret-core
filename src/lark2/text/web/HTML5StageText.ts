@@ -118,7 +118,7 @@ module egret {
             //标记当前点击其他地方关闭
             this._isNeesHide = true;
 
-            if (egret.web.Html5Capatibility._System_OS == egret.web.SystemOSType.IOS) {//ios
+            if (this.htmlInput && egret.web.Html5Capatibility._System_OS == egret.web.SystemOSType.IOS) {//ios
                 this.htmlInput.disconnectStageText(this);
             }
         }
@@ -239,35 +239,31 @@ module egret.web {
         public _scaleX:number = 1;
         public _scaleY:number = 1;
 
+        public $updateSize():void {
+            var stageW = this.canvas.width;
+            var stageH = this.canvas.height;
+            var screenW = this.canvas.style.width.split("px")[0];
+            var screenH = this.canvas.style.height.split("px")[0];
+
+            this._scaleX = screenW / stageW;
+            this._scaleY = screenH / stageH;
+
+            this.StageDelegateDiv.style.left = this.canvas.style.left;
+            this.StageDelegateDiv.style.top = this.canvas.style.top;
+        }
+
+        private StageDelegateDiv;
+        private canvas;
         public _initStageDelegateDiv(container, canvas):any {
+            this.canvas = canvas;
             var self = this;
-            var stageDelegateDiv = container["text-container-div"];
+            var stageDelegateDiv;
             if (!stageDelegateDiv) {
                 stageDelegateDiv = document.createElement("div");
+                this.StageDelegateDiv = stageDelegateDiv;
                 stageDelegateDiv.id = "StageDelegateDiv";
                 container.appendChild(stageDelegateDiv);
                 self.initValue(stageDelegateDiv);
-                container["text-container-div"] = stageDelegateDiv;
-
-                container.addEventListener("resize", function () {
-                    console.log("sdfsfsasflj");
-                });
-
-                var stageW = canvas.width;
-                var stageH = canvas.height;
-                var screenW = canvas.style.width.split("px")[0];
-                var screenH = canvas.style.height.split("px")[0];
-
-                self._scaleX = screenW / stageW;
-                self._scaleY = screenH / stageH;
-
-                var box = canvas.getBoundingClientRect();
-                console.dir(box);
-                //var left = box.left + window.pageXOffset;
-                //var top = box.top + window.pageYOffset - doc.clientTop;
-
-
-
 
                 self._inputDIV = document.createElement("div");
                 self.initValue(self._inputDIV);
@@ -280,7 +276,7 @@ module egret.web {
                 self._inputDIV.style[egret.web.getPrefixStyleName("transformOrigin")] = "0% 0% 0px";
                 stageDelegateDiv.appendChild(self._inputDIV);
 
-                canvas.addEventListener("click", function (e) {
+                container.addEventListener("click", function (e) {
                     if (self._needShow) {
                         self._needShow = false;
 
@@ -437,6 +433,7 @@ module egret.web {
         var stageHash = textfield.stage?textfield.stage.$hashCode:0;
         return stageToTextLayerMap[stageHash];
     }
+
     /**
      * @private
      */
