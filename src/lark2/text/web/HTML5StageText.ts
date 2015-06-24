@@ -390,6 +390,7 @@ module egret.web {
             if (self._stageText) {
                 self._stageText._onDisconnect();
                 self._stageText = null;
+                this.canvas['userTyping'] = false;
             }
         }
 
@@ -399,13 +400,14 @@ module egret.web {
 
             self._stageText = stageText;
 
+            this.canvas['userTyping'] = true;
+
             if (self._stageText._multiline) {
                 self._inputElement = self._multiElement;
             }
             else {
                 self._inputElement = self._simpleElement;
             }
-
 
             var otherElement;
             if (self._simpleElement == self._inputElement) {
