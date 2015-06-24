@@ -1860,7 +1860,7 @@ module egret {
                     event.$eventPhase = EventPhase.AT_TARGET;
                 else
                     event.$eventPhase = EventPhase.BUBBLING_PHASE;
-                currentTarget.$notifyListener(event);
+                currentTarget.$notifyListener(event, i < targetIndex);
                 if (event.$isPropagationStopped || event.$isPropagationImmediateStopped) {
                     return;
                 }
