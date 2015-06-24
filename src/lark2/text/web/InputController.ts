@@ -42,13 +42,12 @@ module egret {
 
         public init(text:TextField1):void {
             this._text = text;
-            this.stageText = egret.StageText.create();
-            this.stageText._setTextField(this._text);
+            this.stageText = new egret.StageText();
+            this.stageText.$setTextField(this._text);
         }
 
         public _addStageText():void {
-            this.stageText._add();
-            this.stageText._addListeners();
+            this.stageText.$addToStage();
 
             this.stageText.addEventListener("updateText", this.updateTextHandler, this);
             this._text.addEventListener(egret.TouchEvent.TOUCH_BEGIN, this.onMouseDownHandler, this);
@@ -59,9 +58,7 @@ module egret {
         }
 
         public _removeStageText():void {
-            this.stageText._remove();
-            this.stageText._removeListeners();
-            this.stageText._removeInput();
+            this.stageText.$removeFromStage();
 
             this.stageText.removeEventListener("updateText", this.updateTextHandler, this);
             this._text.removeEventListener(egret.TouchEvent.TOUCH_BEGIN, this.onMouseDownHandler, this);
@@ -72,11 +69,11 @@ module egret {
         }
 
         public _getText():string {
-            return this.stageText._getText();
+            return this.stageText.$getText();
         }
 
         public _setText(value:string) {
-            this.stageText._setText(value);
+            this.stageText.$setText(value);
         }
 
         private focusHandler(event:Event):void {
@@ -112,15 +109,12 @@ module egret {
             this._isFocus = true;
 
             //强制更新输入框位置
-            this.stageText._show(this._text.$TextField[egret.sys.TextKeys.multiline], this._text.size, this._text.width, this._text.height);
-
-            var point = this._text.localToGlobal(0, 0);
-            this.stageText._initElement(point.x, point.y, self._text.$renderMatrix.a, self._text.$renderMatrix.d);
+            this.stageText.$show();
         }
 
         //未点中文本
         private onStageDownHandler(event:TouchEvent) {
-            this.stageText._hide();
+            this.stageText.$hide();
         }
 
         private updateTextHandler(event:Event):void {
@@ -131,28 +125,29 @@ module egret {
         }
 
         private resetText():void {
-            this._text._setBaseText(this.stageText._getText());
+            this._text._setBaseText(this.stageText.$getText());
         }
 
         public _hideInput():void {
-            this.stageText._removeInput();
+            this.stageText.$removeFromStage();
         }
 
-        public _updateTransform():void {//
+        private _updateTransform():void {//
             if (!this._text.$visible && this.stageText) {
                 this._hideInput();
             }
         }
 
         public _updateProperties():void {
-            if (!this._isFocus) {
+            if (this._isFocus) {
+                //整体修改
+                this.stageText.$resetStageText();
                 this._updateTransform();
                 return;
             }
 
             var stage:egret.Stage = this._text.$stage;
             if (stage == null) {
-                this.stageText._setVisible(false);
             }
             else {
                 var item:DisplayObject = this._text;
@@ -167,16 +162,12 @@ module egret {
                     }
                     visible = item.$visible;
                 }
-                this.stageText._setVisible(visible);
             }
 
-            this.stageText._setMultiline(this._text.$TextField[egret.sys.TextKeys.multiline]);
-
-            this.stageText._setTextType(this._text.$TextField[egret.sys.TextKeys.displayAsPassword] ? "password" :  "text");
-            this.stageText._setText(this._text.$TextField[egret.sys.TextKeys.text]);
+            this.stageText.$setText(this._text.$TextField[egret.sys.TextKeys.text]);
 
             //整体修改
-            this.stageText._resetStageText();
+            this.stageText.$resetStageText();
 
             this._updateTransform();
         }

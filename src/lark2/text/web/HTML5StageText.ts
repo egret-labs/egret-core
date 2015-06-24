@@ -26,14 +26,14 @@
 //  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 //////////////////////////////////////////////////////////////////////////////////////
-module egret {
+module egret.web {
 
     /**
      * @classdesc
      * @extends egret.StageText
      * @private
      */
-    export class HTML5StageText extends StageText {
+    export class HTML5StageText extends EventDispatcher implements StageText {
 
         private htmlInput:egret.web.HTMLInput;
         constructor() {
@@ -41,9 +41,9 @@ module egret {
 
         }
 
-        public _setTextField(textfield:egret.TextField1):void {
-            this._textfield = textfield;
-
+        $textfield:egret.TextField1;
+        $setTextField(textfield:egret.TextField1):void {
+            this.$textfield = textfield;
         }
 
         private _isNeedShow:boolean = false;
@@ -53,10 +53,19 @@ module egret {
         private _gscaleX:number = 0;
         private _gscaleY:number = 0;
 
-        public _initElement(x:number, y:number, cX:number, cY:number):void {
+        $addToStage():void {
+            this.htmlInput = egret.web.$getTextAdapter(this.$textfield);
+        }
 
-            var scaleX = this.htmlInput._scaleX;//egret.StageDelegate.getInstance().getScaleX();
-            var scaleY = this.htmlInput._scaleY;//egret.StageDelegate.getInstance().getScaleY();
+        private _initElement():void {
+            var point = this.$textfield.localToGlobal(0, 0);
+            var x = point.x;
+            var y = point.y;
+            var cX = this.$textfield.$renderMatrix.a;
+            var cY = this.$textfield.$renderMatrix.d;
+
+            var scaleX = this.htmlInput.$scaleX;
+            var scaleY = this.htmlInput.$scaleY;
 
             this.inputDiv.style.left = x * scaleX + "px";
             this.inputDiv.style.top = y * scaleY + "px";
@@ -65,10 +74,7 @@ module egret {
             this._gscaleY = scaleY * cY;
         }
 
-        public _show(multiline:boolean, size:number, width:number, height:number):void {
-            this.htmlInput = egret.web.$getTextAdapter(this._textfield);
-
-            this._multiline = multiline;
+        $show():void {
             if (!this.htmlInput.isCurrentStageText(this)) {
                 this.inputElement = this.htmlInput.getInputElement(this);
 
@@ -82,6 +88,8 @@ module egret {
 
             //标记当前文本被选中
             this._isNeedShow = true;
+
+            this._initElement();
         }
 
         private onBlurHandler():void {
@@ -92,16 +100,16 @@ module egret {
         private executeShow():void {
             var self = this;
             //打开
-            this.inputElement.value = this._getText();
+            this.inputElement.value = this.$getText();
 
             if (this.inputElement.onblur == null) {
                 this.inputElement.onblur = this.onBlurHandler.bind(this);
             }
 
-            this._resetStageText();
+            this.$resetStageText();
 
-            if (this._textfield.maxChars > 0) {
-                this.inputElement.setAttribute("maxlength", this._textfield.maxChars);
+            if (this.$textfield.maxChars > 0) {
+                this.inputElement.setAttribute("maxlength", this.$textfield.maxChars);
             }
             else {
                 this.inputElement.removeAttribute("maxlength");
@@ -114,7 +122,7 @@ module egret {
 
         private _isNeesHide:boolean = false;
 
-        public _hide():void {
+        $hide():void {
             //标记当前点击其他地方关闭
             this._isNeesHide = true;
 
@@ -125,14 +133,14 @@ module egret {
 
         private textValue:string = "";
 
-        public _getText():string {
+        $getText():string {
             if (!this.textValue) {
                 this.textValue = "";
             }
             return this.textValue;
         }
 
-        public _setText(value:string):void {
+        $setText(value:string):void {
             this.textValue = value;
 
             this.resetText();
@@ -180,7 +188,7 @@ module egret {
             }
         }
 
-        public _removeInput():void {
+        $removeFromStage():void {
             if (this.inputElement) {
                 this.htmlInput.disconnectStageText(this);
             }
@@ -190,9 +198,9 @@ module egret {
          * 修改位置
          * @private
          */
-        public _resetStageText():void {
+        $resetStageText():void {
             if (this.inputElement) {
-                var textfield:egret.TextField1 = this._textfield;
+                var textfield:egret.TextField1 = this.$textfield;
                 this.setElementStyle("fontFamily", textfield.fontFamily);
                 this.setElementStyle("fontStyle", textfield.italic ? "italic" : "normal");
                 this.setElementStyle("fontWeight", textfield.bold ? "bold" : "normal");
@@ -206,6 +214,8 @@ module egret {
             }
         }
     }
+
+    StageText = HTML5StageText;
 }
 
 module egret.web {
@@ -236,17 +246,17 @@ module egret.web {
 
         public _needShow:boolean = false;
 
-        public _scaleX:number = 1;
-        public _scaleY:number = 1;
+        $scaleX:number = 1;
+        $scaleY:number = 1;
 
-        public $updateSize():void {
+        $updateSize():void {
             var stageW = this.canvas.width;
             var stageH = this.canvas.height;
             var screenW = this.canvas.style.width.split("px")[0];
             var screenH = this.canvas.style.height.split("px")[0];
 
-            this._scaleX = screenW / stageW;
-            this._scaleY = screenH / stageH;
+            this.$scaleX = screenW / stageW;
+            this.$scaleY = screenH / stageH;
 
             this.StageDelegateDiv.style.left = this.canvas.style.left;
             this.StageDelegateDiv.style.top = this.canvas.style.top;
@@ -276,7 +286,7 @@ module egret.web {
                 self._inputDIV.style[egret.web.getPrefixStyleName("transformOrigin")] = "0% 0% 0px";
                 stageDelegateDiv.appendChild(self._inputDIV);
 
-                container.addEventListener("click", function (e) {
+                this.canvas.addEventListener("click", function (e) {
                     if (self._needShow) {
                         self._needShow = false;
 
@@ -402,7 +412,7 @@ module egret.web {
 
             this.canvas['userTyping'] = true;
 
-            if (self._stageText._multiline) {
+            if (self._stageText.$textfield.multiline) {
                 self._inputElement = self._multiElement;
             }
             else {
@@ -444,7 +454,3 @@ module egret.web {
         stageToTextLayerMap[stage.$hashCode] = adapter;
     }
 }
-
-egret.StageText.create = function () {
-    return new egret.HTML5StageText();
-};

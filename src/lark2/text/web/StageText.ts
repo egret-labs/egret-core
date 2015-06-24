@@ -29,101 +29,22 @@
 
 
 module egret {
+    export interface StageText extends EventDispatcher {
+        $textfield:egret.TextField1;
+        $setTextField(textfield:egret.TextField1):void;
 
-    /**
-     * @classdesc
-     * @extends egret.EventDispatcher
-     * @private
-     */
-    export class StageText extends EventDispatcher {
+        $resetStageText():void;
 
-        constructor() {
-            super();
+        $getText():string;
+        $setText(value:string):void;
 
-        }
+        $show():void;
+        $hide():void;
 
-        public _textfield:egret.TextField1;
-        public _setTextField(textfield:egret.TextField1):void {
-            this._textfield = textfield;
-        }
-
-        /**
-         * @returns {string}
-         */
-        public _getText():string {
-            return null;
-        }
-
-        /**
-         * @param value {string}
-         */
-        public _setText(value:string):void {
-
-        }
-
-        /**
-         * @param type {string}
-         */
-        public _setTextType(type:string):void {
-
-        }
-
-        public _show(multiline:boolean, size:number, width:number, height:number):void {
-
-        }
-
-        public _add():void {
-
-        }
-
-        public _remove():void {
-
-        }
-
-        public _hide():void {
-
-        }
-
-        public _addListeners():void {
-
-        }
-
-        public _removeListeners():void {
-
-        }
-
-        public _size:number = 30;
-
-        public _color:string = "#FFFFFF";
-
-        public _verticalAlign:string = "top";
-
-        public _visible:boolean = false;
-        public _setVisible(value:boolean):void {
-            this._visible = value;
-        }
-
-
-        public _multiline:boolean = false;
-        public _setMultiline(value:boolean):void {
-            this._multiline = value;
-        }
-
-        public _resetStageText():void {
-
-        }
-
-        public _initElement(x:number, y:number, cX:number, cY:number):void {
-
-        }
-
-        public _removeInput():void {
-
-        }
-
-        public static create():StageText {
-            return null;
-        }
+        $addToStage():void;
+        $removeFromStage():void;
 
     }
+
+    export var StageText:{new():StageText};
 }

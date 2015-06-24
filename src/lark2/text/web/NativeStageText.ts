@@ -248,7 +248,7 @@ module egret {
             };
         }
 
-        public _show(multiline:boolean, size:number, width:number, height:number):void {
+        public _show():void {
             var self = this;
             egret_native.EGT_getTextEditerContentText = function () {
                 return self._getText();

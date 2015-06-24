@@ -87,7 +87,7 @@ module egret.web {
         private addMouseListener():void {
             this.canvas.addEventListener("mousedown", this.onTouchBegin);
             this.canvas.addEventListener("mousemove", this.onTouchMove);
-            window.addEventListener("mouseup", this.onTouchEnd);
+            this.canvas.addEventListener("mouseup", this.onTouchEnd);
         }
 
         /**
