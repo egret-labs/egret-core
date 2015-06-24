@@ -59,8 +59,8 @@
 
 
         "lark2/display/ScrollView.ts",
-        "lark2/display/TouchScroll.ts",
-        "lark2/display/Animation.ts",
+        "lark2/display/scroll/TouchScroll.ts",
+        "lark2/display/scroll/AnimationScroll.ts",
 
         "lark2/geom/Matrix.ts",
         "lark2/geom/Point.ts",

@@ -96,9 +96,13 @@ module egret.sys {
             this.updateFunction = updateFunction;
             this.endFunction = endFunction;
             this.target = target;
-            this.animation = new sys.Animation(this.onScrollingUpdate, this);
+            this.animation = new sys.AnimationScroll(this.onScrollingUpdate, this);
             this.animation.endFunction = this.finishScrolling;
             this.animation.easerFunction = easeOut;
+        }
+
+        public $setSpeed(speed:number):void {
+            this.animation.$setSpeed(speed);
         }
 
         /**
@@ -151,7 +155,7 @@ module egret.sys {
          * @private
          * 停止触摸时继续滚动的动画实例
          */
-        private animation:sys.Animation;
+        private animation:sys.AnimationScroll;
 
         /**
          * @private
@@ -277,7 +281,7 @@ module egret.sys {
          * 
          * @param animation 
          */
-        private finishScrolling(animation?:Animation):void {
+        private finishScrolling(animation?:AnimationScroll):void {
             var hsp = this.currentScrollPos;
             var maxHsp = this.maxScrollPos;
             var hspTo = hsp;
@@ -311,7 +315,7 @@ module egret.sys {
          * @private
          * 更新水平滚动位置
          */
-        private onScrollingUpdate(animation:Animation):void {
+        private onScrollingUpdate(animation:AnimationScroll):void {
             this.currentScrollPos = animation.currentValue;
             this.updateFunction.call(this.target,animation.currentValue);
         }

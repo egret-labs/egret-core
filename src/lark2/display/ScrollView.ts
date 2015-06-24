@@ -515,6 +515,24 @@ module egret {
         }
 
         /**
+         * 滚动速度，这个值为需要的速度与默认速度的比值。
+         * 取值范围为 scrollSpeed > 0 赋值为 2 时，速度是默认速度的 2 倍
+         * @member {number} egret.ScrollView#scrollSpeed
+         */
+        public $scrollSpeed: number = 1;
+        public get scrollSpeed():number {
+            return this.$scrollSpeed;
+        }
+        public set scrollSpeed(value: number) {
+            if (value == this.$scrollSpeed)
+                return;
+            this.$scrollSpeed = value;
+
+            this.$ScrollView[Keys.touchScrollH].$setSpeed(value);
+            this.$ScrollView[Keys.touchScrollV].$setSpeed(value);
+        }
+
+        /**
          * 获取或设置水平滚动位置,
          * @member {number} egret.ScrollView#scrollLeft
          * @returns {number}

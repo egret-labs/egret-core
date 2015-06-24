@@ -45,11 +45,11 @@ module egret.sys {
      * @private
      * 数值缓动工具类
      */
-    export class Animation {
+    export class AnimationScroll {
         /**
          * @private
          */
-        public constructor(updateFunction:(animation:Animation)=>void, thisObject:any) {
+        public constructor(updateFunction:(animation:AnimationScroll)=>void, thisObject:any) {
             this.updateFunction = updateFunction;
             this.thisObject = thisObject;
         }
@@ -77,6 +77,10 @@ module egret.sys {
          */
         public duration:number = 500;
 
+        public $setSpeed(speed:number):void {
+            this.duration = Math.round(500 / speed);
+        }
+
         /**
          * @private
          * 动画到当前时间对应的值。
@@ -103,7 +107,7 @@ module egret.sys {
          * @private
          * 动画播放结束时的回调函数
          */
-        public endFunction:(animation:Animation) => void = null;
+        public endFunction:(animation:AnimationScroll) => void = null;
 
         /**
          * @private
