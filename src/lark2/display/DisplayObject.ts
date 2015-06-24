@@ -1307,6 +1307,10 @@ module egret {
         }
 
         public set scrollRect(value:Rectangle) {
+            this.$setScrollRect(value);
+        }
+
+        $setScrollRect(value:Rectangle):void {
             if (!value && !this.$scrollRect) {
                 return;
             }

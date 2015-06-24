@@ -178,11 +178,18 @@ module egret {
         IDisplayObjectContainer = 22,
 
         /**
-         * @copy egret.Graphics
+         * @copy egret.GraGraphicsRenderContextphics
          * @version Lark 1.0
          * @platform Web,Native
          */
         GraphicsRenderContext = 23,
+
+        /**
+         * @copy egret.ScrollView
+         * @version Lark 1.0
+         * @platform Web,Native
+         */
+        ScrollView = 24,
 
     }
 }

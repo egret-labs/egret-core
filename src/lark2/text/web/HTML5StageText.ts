@@ -227,12 +227,9 @@ module egret.web {
         }
 
         private initValue(dom:any):void {
-            dom.style.margin = "0px auto";
             dom.style.position = "absolute";
             dom.style.left = "0px";
             dom.style.top = "0px";
-            dom.style.bottom = "0px";
-            dom.style.right = "0px";
             dom.style.border = "none";
             dom.style.padding = "0";
         }
