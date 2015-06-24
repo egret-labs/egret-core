@@ -140,6 +140,17 @@ module egret {
             return this._stageHeight;
         }
 
+        private _frameRate:number = 60;
+
+        public get frameRate():number{
+            return this._frameRate;
+        }
+
+        public set frameRate(value:number) {
+            this._frameRate = value;
+            MainContext.instance.deviceContext.setFrameRate(value);
+        }
+
         /**
          * @member egret.Stage#hitTest
          * @see egret.DisplayObject#hitTest

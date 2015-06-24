@@ -50,29 +50,22 @@ module egret {
          */
         public constructor(public frameRate:number = 60) {
             super();
+            HTML5DeviceContext.requestAnimationFrame = window["requestAnimationFrame"] ||
+                window["webkitRequestAnimationFrame"] ||
+                window["mozRequestAnimationFrame"] ||
+                window["oRequestAnimationFrame"] ||
+                window["msRequestAnimationFrame"];
 
-            HTML5DeviceContext.countTime = 0;
-            if ((60 % frameRate) == 0) {
-                HTML5DeviceContext.countTime = 60 / frameRate - 1;
-
-                HTML5DeviceContext.requestAnimationFrame = window["requestAnimationFrame"] ||
-                    window["webkitRequestAnimationFrame"] ||
-                    window["mozRequestAnimationFrame"] ||
-                    window["oRequestAnimationFrame"] ||
-                    window["msRequestAnimationFrame"];
-
-                HTML5DeviceContext.cancelAnimationFrame = window["cancelAnimationFrame"] ||
-                    window["msCancelAnimationFrame"] ||
-                    window["mozCancelAnimationFrame"] ||
-                    window["webkitCancelAnimationFrame"] ||
-                    window["oCancelAnimationFrame"] ||
-                    window["cancelRequestAnimationFrame"] ||
-                    window["msCancelRequestAnimationFrame"] ||
-                    window["mozCancelRequestAnimationFrame"] ||
-                    window["oCancelRequestAnimationFrame"] ||
-                    window["webkitCancelRequestAnimationFrame"];
-
-            }
+            HTML5DeviceContext.cancelAnimationFrame = window["cancelAnimationFrame"] ||
+                window["msCancelAnimationFrame"] ||
+                window["mozCancelAnimationFrame"] ||
+                window["webkitCancelAnimationFrame"] ||
+                window["oCancelAnimationFrame"] ||
+                window["cancelRequestAnimationFrame"] ||
+                window["msCancelRequestAnimationFrame"] ||
+                window["mozCancelRequestAnimationFrame"] ||
+                window["oCancelRequestAnimationFrame"] ||
+                window["webkitCancelRequestAnimationFrame"];
 
             if (!HTML5DeviceContext.requestAnimationFrame) {
                 HTML5DeviceContext.requestAnimationFrame = function (callback) {
@@ -89,6 +82,13 @@ module egret {
 
             HTML5DeviceContext.instance = this;
             this.registerListener();
+        }
+
+
+        public setFrameRate(frameRate){
+            if ((60 % frameRate) == 0) {
+                HTML5DeviceContext.countTime = 60 / frameRate - 1;
+            }
         }
 
         static requestAnimationFrame:Function = null;

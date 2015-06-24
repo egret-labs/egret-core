@@ -45,6 +45,8 @@ declare module egret_native {
      */
     function executeMainLoop(callback:Function, thisObject:any):void;
 
+    function setFrameRate(frameRate:number):void;
+
     function pauseApp():void;
 
     function resumeApp():void;

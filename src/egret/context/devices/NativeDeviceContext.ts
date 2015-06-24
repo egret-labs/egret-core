@@ -65,6 +65,10 @@ module egret {
         private onEnterFrame(advancedTime:number):void {
             this.callback.call(this.thisObject, advancedTime);
         }
+
+        public setFrameRate(frameRate){
+            egret_native.setFrameRate(frameRate);
+        }
     }
 }
 
