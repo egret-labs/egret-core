@@ -87,6 +87,8 @@ module egret.web {
         var webTouch = new WebTouchHandler(touch, canvas);
         var webText = new WebTextAdapter(container,stage,canvas);
         var player = new egret.sys.Player(surface.renderContext, stage, entryClassName);
+
+
         if(DEBUG){
             var showPaintRect = container.getAttribute("data-show-paint-rect")=="true";
             player.showPaintRect(showPaintRect);
@@ -107,6 +109,9 @@ module egret.web {
         container["egret-screen"] = webScreen;
         container["egret-text-layer"] = webText;
         webScreen.updateScreenSize(player,webTouch,webText);
+
+        egret.web.$cacheTextAdapter(new egret.web.HTMLInput(), stage, container, canvas);
+
         player.start();
     }
 

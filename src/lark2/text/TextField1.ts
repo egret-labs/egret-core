@@ -233,6 +233,10 @@ module egret {
          */
         $TextField:Object;
 
+        private isInput():boolean {
+            return this.$TextField[sys.TextKeys.type] == TextFieldType.INPUT;
+        }
+
         /**
          * @language en_US
          * The name of the font to use, or a comma-separated list of font names.
@@ -523,7 +527,7 @@ module egret {
             this.$invalidateContentBounds();
         }
 
-        //private _inputUtils:InputController = null;
+        private _inputUtils:InputController = null;
 
         /**
          * 文本字段的类型。
@@ -546,23 +550,26 @@ module egret {
                         this.$setHeight(30);
                     }
 
+                    this.$setTouchEnabled(true);
+
                     //创建stageText
-                    //if (this._inputUtils == null) {
-                    //    this._inputUtils = new egret.InputController();
-                    //}
-                    //
-                    //this._inputUtils.init(this);
+                    if (this._inputUtils == null) {
+                        this._inputUtils = new egret.InputController();
+                    }
+
+                    this._inputUtils.init(this);
                     this.$invalidateContentBounds();
 
                     if (this.$stage) {
-                        //this._inputUtils._addStageText();
+                        this._inputUtils._addStageText();
                     }
                 }
                 else {
-                    //if (this._inputUtils) {
-                    //    this._inputUtils._removeStageText();
-                    //    this._inputUtils = null;
-                    //}
+                    if (this._inputUtils) {
+                        this._inputUtils._removeStageText();
+                        this._inputUtils = null;
+                    }
+                    this.$setTouchEnabled(false);
                 }
             }
         }
@@ -577,7 +584,7 @@ module egret {
 
         public _getText():string {
             if (this.$TextField[sys.TextKeys.type] == egret.TextFieldType.INPUT) {
-                //return this._inputUtils._getText();
+                return this._inputUtils._getText();
             }
 
             return this.$TextField[sys.TextKeys.text];
@@ -617,9 +624,9 @@ module egret {
                 value = "";
             }
             this._setBaseText(value);
-            //if (this._inputUtils) {
-            //    this._inputUtils._setText(this.$TextField[sys.TextKeys.text]);
-            //}
+            if (this._inputUtils) {
+                this._inputUtils._setText(this.$TextField[sys.TextKeys.text]);
+            }
         }
 
         public get displayAsPassword():boolean {
@@ -899,7 +906,7 @@ module egret {
             this._removeEvent();
 
             if (this.$TextField[sys.TextKeys.type] == TextFieldType.INPUT) {
-                //this._inputUtils._removeStageText();
+                this._inputUtils._removeStageText();
             }
         }
 
@@ -909,7 +916,7 @@ module egret {
             this._addEvent();
 
             if (this.$TextField[sys.TextKeys.type] == TextFieldType.INPUT) {
-                //this._inputUtils._addStageText();
+                this._inputUtils._addStageText();
             }
         }
 
@@ -944,6 +951,16 @@ module egret {
         $render(renderContext:sys.RenderContext):void {
             if (this._bgGraphics)
                 this._bgGraphics.$render(renderContext);
+
+            if (this.$TextField[sys.TextKeys.type] == TextFieldType.INPUT) {
+                this._inputUtils._updateProperties();
+                if (this._isTyping) {
+                    return;
+                }
+            }
+            else if (this.$TextField[sys.TextKeys.textFieldWidth] == 0) {
+                return;
+            }
 
             this.drawText(renderContext);
         }

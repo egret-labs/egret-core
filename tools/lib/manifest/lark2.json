@@ -35,6 +35,7 @@
         "lark2/events/IOErrorEvent.ts",
         "lark2/events/SoundEvent.ts",
         "lark2/events/TextEvent.ts",
+        "lark2/events/FocusEvent.ts",
         "lark2/display/BlendMode.ts",
         "lark2/display/DisplayObject.ts",
         "lark2/display/Bitmap.ts",
@@ -96,6 +97,9 @@
         "lark2/text/TextMeasurer.ts",
         "lark2/text/VerticalAlign.ts",
         "lark2/text/TextFieldUtils.ts",
+        "lark2/text/web/StageText.ts",
+        "lark2/text/web/HTML5StageText.ts",
+        "lark2/text/web/InputController.ts",
 
         "lark2/text/ITextElement.ts",
         "lark2/text/HtmlTextParser.ts",
