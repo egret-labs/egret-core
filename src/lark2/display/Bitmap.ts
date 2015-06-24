@@ -103,6 +103,14 @@ module egret {
         }
 
         /**
+         * 确定位图填充尺寸的方式。
+         * 设置为 BitmapFillMode.REPEAT时，位图将重复以填充区域；BitmapFillMode.SCALE时，位图将拉伸以填充区域。
+         * 默认值：BitmapFillMode.SCALE。
+         * @member {string} egret.Bitmap#fillMode
+         */
+        public fillMode:string = "scale";
+
+        /**
          * @private
          */
         $setBitmapData(value:Texture):void{
@@ -172,9 +180,37 @@ module egret {
                 var destW:number = Math.round(bitmapWidth);
                 var destH:number = Math.round(bitmapHeight);
 
-                context.drawImage(bitmapData._bitmapData, bitmapData._bitmapX, bitmapData._bitmapY,
-                    bitmapWidth, bitmapHeight, offsetX, offsetY, destW, destH);
+                if (this.fillMode == egret.BitmapFillMode.SCALE) {
+                    context.drawImage(bitmapData._bitmapData, bitmapData._bitmapX, bitmapData._bitmapY,
+                        bitmapWidth, bitmapHeight, offsetX, offsetY, destW, destH);
+                }
+                else {
+                    this.drawRepeat(context, bitmapData._bitmapData, bitmapData._bitmapX, bitmapData._bitmapY,
+                        bitmapWidth, bitmapHeight, offsetX, offsetY, destW, destH, this.fillMode);
+                }
             }
+        }
+
+        private drawRepeat(context:sys.RenderContext, bitmapData, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, repeat):void {
+            if (this['pattern'] === undefined) {
+                var texture_scale_factor = 1;
+                var tempImage:BitmapData = bitmapData;
+                if (bitmapData.width != sourceWidth || bitmapData.height != sourceHeight || texture_scale_factor != 1) {
+                    var tempCanvas = sys.surfaceFactory.create(true);
+                    tempCanvas.width = sourceWidth * texture_scale_factor;
+                    tempCanvas.height = sourceHeight * texture_scale_factor;
+
+                    tempCanvas.renderContext.drawImage(bitmapData, sourceX, sourceY, sourceWidth, sourceHeight, 0, 0, sourceWidth * texture_scale_factor, sourceHeight * texture_scale_factor);
+                    tempImage = tempCanvas;
+                }
+                var pat = context.createPattern(tempImage, repeat);
+                this['pattern'] = pat;
+            }
+            var pattern = this['pattern'];
+            context.fillStyle = pattern;
+            context.translate(destX, destY);
+            context.fillRect(0, 0, destWidth, destHeight);
+            context.translate(-destX, -destY);
         }
     }
 

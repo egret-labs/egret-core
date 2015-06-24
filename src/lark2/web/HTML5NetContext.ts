@@ -38,9 +38,12 @@ module egret.web {
     export class HTML5NetContext extends HashObject implements NetContext{
 
         public _versionCtr:egret.IVersionController;
+
+        private _imageLoader:egret.ImageLoader;
         public constructor() {
             super();
-            Texture.createBitmapData = Texture._createBitmapDataForCanvasAndWebGl;
+
+            this._imageLoader = new egret.ImageLoader();
         }
 
         public initVersion(versionCtr:egret.IVersionController):void {
@@ -159,7 +162,8 @@ module egret.web {
 
         private loadTexture(loader:URLLoader):void {
             var virtualUrl:string = this.getVirtualUrl(loader._request.url);
-            Texture.createBitmapData(virtualUrl, function (code:number, bitmapData:HTMLImageElement) {
+
+            this._imageLoader.load(virtualUrl, function (code:number, bitmapData:HTMLImageElement) {
                 if (code != 0) {
                     IOErrorEvent.dispatchIOErrorEvent(loader);
                     return;

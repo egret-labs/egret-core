@@ -39,6 +39,7 @@
         "lark2/display/BlendMode.ts",
         "lark2/display/DisplayObject.ts",
         "lark2/display/Bitmap.ts",
+        "lark2/display/BitmapFillMode.ts",
         "lark2/display/Texture.ts",
         "lark2/display/BitmapData.ts",
         "lark2/display/IDisplayObjectContainer.ts",
@@ -75,6 +76,10 @@
         "lark2/net/URLLoader.ts",
         "lark2/net/NetContext.ts",
         "lark2/net/IVersionController.ts",
+
+        "lark2/net/BaseImageLoader.ts",
+        "lark2/net/ImageLoader.ts",
+        "lark2/net/WebImageLoader.ts",
 
         "lark2/player/DirtyRegion.ts",
         "lark2/player/DisplayList.ts",
