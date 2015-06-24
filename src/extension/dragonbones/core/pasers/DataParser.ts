@@ -199,6 +199,7 @@ module dragonBones {
 			slotData.name = slotObject[ConstValues.A_NAME];
 			slotData.parent = slotObject[ConstValues.A_PARENT];
 			slotData.zOrder = DataParser.getNumber(slotObject,ConstValues.A_Z_ORDER,0)||0;
+			slotData.displayIndex = DataParser.getNumber(slotObject,ConstValues.A_DISPLAY_INDEX,0);
 			slotData.blendMode = slotObject[ConstValues.A_BLENDMODE];
 			return slotData;
 		}

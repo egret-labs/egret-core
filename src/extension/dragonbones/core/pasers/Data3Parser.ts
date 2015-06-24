@@ -171,7 +171,7 @@ module dragonBones {
 			slotData.zOrder = <number><any> (slotObject[ConstValues.A_Z_ORDER]);
             slotData.zOrder = Data3Parser.getNumber(slotObject,ConstValues.A_Z_ORDER,0)||0;
 			slotData.blendMode = slotObject[ConstValues.A_BLENDMODE];
-			
+			slotData.displayIndex = 0;
 			return slotData;
 		}
 		

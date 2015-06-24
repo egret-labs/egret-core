@@ -451,7 +451,7 @@ module dragonBones {
 				//==================================================
 				
 				slot.displayList = displayList;
-				slot._changeDisplay(0);
+				slot._changeDisplay(slotData.displayIndex);
 			}
 		}
 		
