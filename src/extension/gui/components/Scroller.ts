@@ -156,37 +156,35 @@ module egret.gui {
             }
         }
 
-
         /**
          * 垂直滚动条显示策略，参见ScrollPolicy类定义的常量。
          * @member egret.gui.Scroller#verticalScrollPolicy
          */
         public get verticalScrollPolicy(): string {
-            return (<egret.ScrollView><any>this).verticalScrollPolicy;
+            return (<egret.ScrollView><any>this).$getVerticalScrollPolicy();
         }
 
         public set verticalScrollPolicy(value: string) {
-            if (value == (<egret.ScrollView><any>this).verticalScrollPolicy)
+            if (value == (<egret.ScrollView><any>this).$getVerticalScrollPolicy())
                 return;
-            (<egret.ScrollView><any>this).verticalScrollPolicy = value;
+            (<egret.ScrollView><any>this).$setVerticalScrollPolicy(value);
             this._checkVbar();
-            (<egret.ScrollView><any>this).verticalScrollPolicy = value;
+            (<egret.ScrollView><any>this).$setVerticalScrollPolicy(value);
         }
-
 
         /**
          * 水平滚动条显示策略，参见ScrollPolicy类定义的常量。
          * @member egret.gui.Scroller#horizontalScrollPolicy
          */
         public get horizontalScrollPolicy(): string {
-            return (<egret.ScrollView><any>this).horizontalScrollPolicy;
+            return (<egret.ScrollView><any>this).$getHorizontalScrollPolicy();
         }
         public set horizontalScrollPolicy(value: string) {
-            if (value == (<egret.ScrollView><any>this).horizontalScrollPolicy)
+            if (value == (<egret.ScrollView><any>this).$getHorizontalScrollPolicy())
                 return;
-            (<egret.ScrollView><any>this).horizontalScrollPolicy = value;
+            (<egret.ScrollView><any>this).$setHorizontalScrollPolicy(value);
             this._checkHbar();
-            (<egret.ScrollView><any>this).horizontalScrollPolicy = value;
+            (<egret.ScrollView><any>this).$setHorizontalScrollPolicy(value);
         }
 
 

@@ -68,6 +68,7 @@ module egret.gui {
                 var chain:any = {};
                 UIComponent.prototypeCanSet = (chain.__proto__ !== undefined);
             }
+            this.$renderRegion = new sys.Region();
         }
 
         /**

@@ -24,6 +24,7 @@
         "lark2/utils/setTimeout.ts",
         "lark2/utils/setInterval.ts",
         "lark2/utils/Logger.ts",
+        "lark2/utils/hasDefinition.ts",
         "lark2/events/IEventDispatcher.ts",
         "lark2/events/EventDispatcher.ts",
         "lark2/utils/Timer.ts",

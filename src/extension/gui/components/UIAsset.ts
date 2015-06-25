@@ -48,6 +48,8 @@ module egret.gui {
             if(source){
                 this.source = source;
             }
+			this.$renderRegion = new sys.Region();
+
             this.autoScale = autoScale;
 		}
 

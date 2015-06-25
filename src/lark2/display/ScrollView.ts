@@ -198,7 +198,16 @@ module egret {
         }
 
         public set verticalScrollPolicy(value:string) {
+            this.$setVerticalScrollPolicy(value);
+        }
+
+        $setVerticalScrollPolicy(value:string):boolean {
             this.$ScrollView[Keys.scrollPolicyV] = value;
+            return true;
+        }
+
+        $getVerticalScrollPolicy():string {
+            return this.$ScrollView[Keys.scrollPolicyV];
         }
 
         /**
@@ -233,7 +242,16 @@ module egret {
         }
 
         public set horizontalScrollPolicy(value:string) {
+            this.$setHorizontalScrollPolicy(value);
+        }
+
+        $setHorizontalScrollPolicy(value:string):boolean {
             this.$ScrollView[Keys.scrollPolicyH] = value;
+            return true;
+        }
+
+        $getHorizontalScrollPolicy():string {
+            return this.$ScrollView[Keys.scrollPolicyH];
         }
 
         $getHorizontalCanScroll():boolean {
@@ -284,7 +302,7 @@ module egret {
             if (viewport) {
                 this.addEventListener(egret.TouchEvent.TOUCH_BEGIN, this.onTouchBeginCapture, this, true);
                 this.addEventListener(egret.TouchEvent.TOUCH_END, this.onTouchEndCapture, this, true);
-                this.addChildAt(viewport, 0);
+                super.addChildAt(viewport, 0);
             }
         }
 
@@ -302,10 +320,10 @@ module egret {
          */
         $uninstallViewport():void {
             var viewport = this.$viewport;
-            if (viewport) {
+            if (viewport && viewport.parent == this) {
                 this.removeEventListener(egret.TouchEvent.TOUCH_BEGIN, this.onTouchBeginCapture, this, true);
                 this.removeEventListener(egret.TouchEvent.TOUCH_END, this.onTouchEndCapture, this, true);
-                this.removeChild(viewport);
+                super.removeChild(viewport);
             }
         }
 
