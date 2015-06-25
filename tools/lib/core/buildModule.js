@@ -23,7 +23,7 @@ function getModuleFileList(moduleConfig) {
         return item.indexOf(".js") == -1;
     });
     if (tsList.length == 0) {
-        globals.exit(1307, moduleConfig.name);
+        //globals.exit(1307, moduleConfig.name);
     }
     return tsList;
 }
