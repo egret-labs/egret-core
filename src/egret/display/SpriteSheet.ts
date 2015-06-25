@@ -113,8 +113,9 @@ module egret {
             if (typeof textureHeight === "undefined") {
                 textureHeight = offsetY + bitmapHeight;
             }
-            var texture:Texture = this.texture._clone();
-            var scale = egret.MainContext.instance.rendererContext._texture_scale_factor;
+            var texture:Texture = new egret.Texture();
+            texture._bitmapData = this.texture._bitmapData;
+            var scale = 1;
             texture._bitmapX = this._bitmapX + bitmapX;
             texture._bitmapY = this._bitmapY + bitmapY;
             texture._bitmapWidth = bitmapWidth * scale;

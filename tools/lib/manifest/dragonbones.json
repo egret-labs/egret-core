@@ -1,7 +1,7 @@
 {
     "name": "dragonbones",
-    "dependence": ["lark2"],
-    "output":"lark2/extension/dragonbones",
+    "dependence": ["core"],
+    "output":"core/extension/dragonbones",
     "source":"src/extension/dragonbones",
     "file_list": [
 

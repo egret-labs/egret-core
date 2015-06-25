@@ -34,29 +34,29 @@ module egret {
         /**
          * @private
          */
-        public _matrix:Array<number> = [];
-        private _matrix2:Array<number> = [];
+        public $matrix:Array<number> = [];
+        private matrix2:Array<number> = [];
 
         constructor(matrix:Array<number> = null) {
             super();
             this.type = "colorTransform";
-            this._setMatrix(matrix);
+            this.setMatrix(matrix);
         }
 
         public get matrix():Array<number> {
             for (var i = 0; i < 20; i++) {
-                this._matrix2[i] = this._matrix[i];
+                this.matrix2[i] = this.$matrix[i];
             }
-            return this._matrix2;
+            return this.matrix2;
         }
 
         public set matrix(value:Array<number>) {
-            this._setMatrix(value);
+            this.setMatrix(value);
         }
 
-        private _setMatrix(value:Array<number>):void {
+        private setMatrix(value:Array<number>):void {
             for (var i = 0; i < 20; i++) {
-                this._matrix[i] = (value && value[i]) || 0;
+                this.$matrix[i] = (value && value[i]) || 0;
             }
         }
     }

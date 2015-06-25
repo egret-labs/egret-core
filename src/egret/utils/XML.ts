@@ -29,172 +29,194 @@
 
 module egret {
     /**
-	 * @class egret.XML
-     * @classdesc
-     * XML文件解析工具，它将XML文件解析为标准的JSON对象返回。
-     * 用法类似JSON.parse(),传入一个XML字符串给XML.parse()，将能得到一个标准JSON对象。
-     * 示例：
-     *      <root value="abc">
-     *          <item value="item0"/>
-     *          <item value="item1"/>
-     *      </root>
-     * 将解析为:
-     *      {
-     *          "name": "root",
-     *          "$value": "abc",
-     *          "children": [
-     *              {"name": "item", "$value": "item0"},
-     *              {"name": "item", "$value": "item1"}
-     *          ]
-     *      }
-     * 其中XML上的属性节点都使用$+"属性名"的方式表示,子节点都存放在children属性的列表里，name表示节点名称。
+     * @language en_US
+     * The XMLNode class is the base class for all xml node.
+     * @version Lark 1.0
+     * @platform Web,Native
      */
-    export class XML {
-
+    /**
+     * @language zh_CN
+     * XML节点基类
+     * @version Lark 1.0
+     * @platform Web,Native
+     */
+    export interface XMLNode {
         /**
-         * 解析一个XML字符串为JSON对象。
-		 * @method egret.XML.parse
-         * @param value {string} 要解析的XML字符串。
-		 * @returns {any}
+         * @language en_US
+         * a integer representing the type of the node, 1：XML，2：XMLAttribute，3：XMLText
+         * @version Lark 1.0
+         * @platform Web,Native
          */
-        public static parse(value:string):any{
-            var xmlDoc = SAXParser.getInstance().parserXML(value);
-            if(!xmlDoc||!xmlDoc.childNodes){
-                return null;
-            }
-            var length:number = xmlDoc.childNodes.length;
-            var found:boolean = false;
-            for(var i:number=0;i<length;i++){
-                var node:any = xmlDoc.childNodes[i];
-                if(node.nodeType == 1){
-                    found = true;
-                    break;
-                }
-            }
-            if(!found){
-                return null;
-            }
-            var xml:any = XML.parseNode(node);
-            return xml;
-        }
-
-        private static parseNode(node:any):any{
-            if(!node||node.nodeType != 1){
-                return null;
-            }
-            var xml:any = {};
-            xml.localName = node.localName;
-            xml.name = node.nodeName;
-            if(node.namespaceURI)
-                xml.namespace = node.namespaceURI;
-            if(node.prefix)
-                xml.prefix = node.prefix;
-            var attributes:any = node.attributes;
-            var length:number = attributes.length;
-            for(var i:number=0;i<length;i++){
-                var attrib:any = attributes[i];
-                var key:string = attrib.name;
-                if (key.indexOf("xmlns:") == 0) {
-                    continue;
-                }
-                xml["$"+key] = attrib.value;
-            }
-            var children:any = node.childNodes;
-            length = children.length;
-            for(i=0;i<length;i++){
-                var childNode:any = children[i];
-                var childXML:any = XML.parseNode(childNode);
-                if(childXML){
-                    if(!xml.children){
-                        xml.children = [];
-                    }
-                    childXML.parent = xml;
-                    xml.children.push(childXML);
-                }
-            }
-            if(!xml.children){
-                var text:string = node.textContent.trim();
-                if(text){
-                    xml.text = text;
-                }
-            }
-            return xml;
-        }
         /**
-         * 查找xml上符合节点路径的所有子节点。
-		 * @method egret.XML.findChildren
-         * @param xml {any} 要查找的XML节点。
-         * @param path {string} 子节点路径，例如"item.node"
-         * @param result {egret.Array<any>} 可选参数，传入一个数组用于存储查找的结果。这样做能避免重复创建对象。
-		 * @returns {any}
+         * @language zh_CN
+         * 节点类型，1：XML，2：XMLAttribute，3：XMLText
+         * @version Lark 1.0
+         * @platform Web,Native
          */
-        public static findChildren(xml:any,path:string,result?:Array<any>):Array<any>{
-            if(!result){
-                result = [];
-            }
-            else{
-                result.length = 0;
-            }
-            XML.findByPath(xml,path,result);
-            return result;
-        }
-
-		/**
-		 * @method egret.XML.findByPath
-		 * @param xml {any} 
-		 * @param path {string} 
-		 * @param result {egret.Array<any>} 
-		 */
-        public static findByPath(xml:any,path:string,result:Array<any>):void{
-            var index:number = path.indexOf(".");
-            var key:string;
-            var end:boolean;
-            if(index==-1){
-                key = path;
-                end = true;
-            }
-            else{
-                key = path.substring(0,index);
-                path = path.substring(index+1);
-                end = false;
-            }
-            var children:Array<any> = xml.children;
-            if(!children){
-                return;
-            }
-            var length:number = children.length;
-            for(var i:number=0;i<length;i++){
-                var child:any = children[i];
-                if(child.localName==key){
-                    if(end){
-                        result.push(child);
-                    }
-                    else{
-                        XML.findByPath(child,path,result);
-                    }
-                }
-            }
-        }
+        nodeType:number;
         /**
-         * 获取一个XML节点上的所有属性名列表
-		 * @method egret.XML.getAttributes
-         * @param xml {any} 要查找的XML节点。
-         * @param result {egret.Array<any>} 可选参数，传入一个数组用于存储查找的结果。这样做能避免重复创建对象。
-		 * @returns {string}
+         * @language en_US
+         * the parent node of this xml node.
+         * @version Lark 1.0
+         * @platform Web,Native
          */
-        public static getAttributes(xml:any,result?:Array<any>):Array<string>{
-            if(!result){
-                result = [];
-            }
-            else{
-                result.length = 0;
-            }
-            for(var key in xml){
-                if(key.charAt(0)=="$"){
-                    result.push(key.substring(1));
-                }
-            }
-            return result;
-        }
+        /**
+         * @language zh_CN
+         * 节点所属的父级节点
+         * @version Lark 1.0
+         * @platform Web,Native
+         */
+        parent: XML;
     }
+
+    /**
+     * @language en_US
+     * The XML class contains properties for working with XML objects.
+     * @version Lark 1.0
+     * @platform Web,Native
+     */
+    /**
+     * @language zh_CN
+     * XML 类包含用于处理 XML 对象的属性。
+     * @version Lark 1.0
+     * @platform Web,Native
+     */
+    export interface XML extends XMLNode {
+        /**
+         * @language en_US
+         * the attributes of this xml node.
+         * @version Lark 1.0
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 当前节点上的属性列表
+         * @version Lark 1.0
+         * @platform Web,Native
+         */
+        attributes:any;
+        /**
+         * @language en_US
+         * the children of the xml node.
+         * @version Lark 1.0
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 当前节点的子节点列表
+         * @version Lark 1.0
+         * @platform Web,Native
+         */
+        children:XMLNode[];
+        /**
+         * @language en_US
+         * the full name of this xml node. For example,the name of <s:Button/> is "s:Button".
+         * @version Lark 1.0
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 节点完整名称。例如节点 <s:Button/> 的 name 为："s:Button"
+         * @version Lark 1.0
+         * @platform Web,Native
+         */
+        name:string;
+        /**
+         * @language en_US
+         * thie namesapce prefix of this xml node.For example,the prefix of <s:Button/> is "s".
+         * @version Lark 1.0
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 节点的命名空间前缀。例如节点 <s:Button/> 的 prefix 为：s
+         * @version Lark 1.0
+         * @platform Web,Native
+         */
+        prefix: string;
+        /**
+         * @language en_US
+         * the local name of this xml node. For example,the local name of <s:Button/> is "Button".
+         * @version Lark 1.0
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 节点的本地名称。例如节点 <s:Button/> 的 localName 为：Button
+         * @version Lark 1.0
+         * @platform Web,Native
+         */
+        localName:string;
+        /**
+         * @language en_US
+         * the namesapce uri of this xml node.For example,the namespace uri of <s:Skin xmlns:s="http://ns.egret.com/swan"/> is "http://ns.egret.com/swan".
+         * @version Lark 1.0
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 节点的命名空间地址。例如节点 <s:Skin xmlns:s="http://ns.egret.com/swan"/> 的 namespace 为： http://ns.egret.com/swan
+         * @version Lark 1.0
+         * @platform Web,Native
+         */
+        namespace: string;
+    }
+
+    /**
+     * @language en_US
+     * The XMLText class represents a string node in the XML.
+     * @version Lark 1.0
+     * @platform Web,Native
+     */
+    /**
+     * @language zh_CN
+     * XMLText 类表示在XML中的文本节点
+     * @version Lark 1.0
+     * @platform Web,Native
+     */
+    export interface XMLText extends XMLNode {
+        /**
+         * @language en_US
+         * the text content
+         * @version Lark 1.0
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 文本内容
+         * @version Lark 1.0
+         * @platform Web,Native
+         */
+        text:string;
+    }
+
+    /**
+     * @language en_US
+     * The XML class contains properties for working with XML objects.
+     * @version Lark 1.0
+     * @platform Web,Native
+     */
+    /**
+     * @language zh_CN
+     * XML 类包含用于处理 XML 对象的属性。
+     * @version Lark 1.0
+     * @platform Web,Native
+     */
+    export var XML:{
+        /**
+         * @language en_US
+         * parses a text to XML instance.
+         * @param text the text to be parsed.
+         * @version Lark 1.0
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 解析字符串为XML对象
+         * @param text 要解析的XML对象。
+         * @version Lark 1.0
+         * @platform Web,Native
+         */
+        parse(text:string):XML;
+    };
 }

@@ -51,7 +51,19 @@ module egret {
          */
         public constructor(type:string, bubbles:boolean = false, cancelable:boolean = false) {
             super(type, bubbles, cancelable);
+        }
 
+        /**
+         * 使用指定的EventDispatcher对象来抛出Event事件对象。抛出的对象将会缓存在对象池上，供下次循环复用。
+         * @method egret.IOErrorEvent.dispatchIOErrorEvent
+         * @param target {egret.IEventDispatcher} 派发事件目标
+         * @param status {number} 由服务器返回的 HTTP 状态代码
+         */
+        public static dispatchSoundEvent(target:IEventDispatcher, type:string):boolean {
+            var event:SoundEvent = Event.create(SoundEvent, type);
+            var result = target.dispatchEvent(event);
+            Event.release(event);
+            return result;
         }
     }
 }

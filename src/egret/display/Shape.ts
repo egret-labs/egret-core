@@ -31,51 +31,80 @@
 module egret {
 
     /**
-     * @class egret.Shape
-     * @classdesc 此类用于使用 Egret 绘图应用程序编程接口 (API) 创建简单形状。Shape 类包括 graphics 属性，该属性使您可以从 Graphics 类访问方法。
-     * @link http://docs.egret-labs.org/demo/shape.html Shape绘制矢量图
+     * @language en_US
+     * This class is used to create lightweight shapes using the drawing application program interface (API). The Shape
+     * class includes a graphics property, which lets you access methods from the Graphics class.
+     * @see egret.Graphics
+     * @version Lark 1.0
+     * @platform Web,Native
      */
-    export class Shape extends egret.DisplayObject {
+    /**
+     * @language zh_CN
+     * 此类用于使用绘图应用程序编程接口 (API) 创建简单形状。Shape 类含有 graphics 属性，通过该属性您可以访问各种矢量绘图方法。
+     * @see egret.Graphics
+     * @version Lark 1.0
+     * @platform Web,Native
+     */
+    export class Shape extends DisplayObject {
 
         /**
-         * 创建一个 egret.Shape 对象
+         * @language en_US
+         * Creates a new Shape object.
+         * @version Lark 1.0
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 创建一个 Shape 对象
+         * @version Lark 1.0
+         * @platform Web,Native
          */
         public constructor() {
             super();
+            this.$graphics = new Graphics();
+            this.$graphics.$renderContext.$targetDisplay = this;
+            this.$renderRegion = new sys.Region();
+            this.pixelHitTest = true;
         }
-
-        private _graphics:Graphics = null;
 
         /**
-         * 获取 Shape 中的 Graphics 对象。
-         * @member {egret.Graphics} egret.Shape#graphics
+         * @private
          */
-        public get graphics():Graphics{
-            if(!this._graphics){
-                this._graphics = new Graphics();
-                this.needDraw = true;
-            }
-            return this._graphics;
+        $graphics:Graphics;
+        /**
+         * @language en_US
+         * [read-only] Specifies the Graphics object belonging to this Shape object, where vector drawing commands can occur.
+         * @version Lark 1.0
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * [只读] 获取 Shape 中的 Graphics 对象。可通过此对象执行矢量绘图命令。
+         * @version Lark 1.0
+         * @platform Web,Native
+         */
+        public get graphics():Graphics {
+            return this.$graphics;
         }
 
-        public _draw(renderContext:RendererContext):void {
-            if(this._graphics && this._graphics._dirty) {
-                this._setCacheDirty();
-            }
-            super._draw(renderContext);
+        /**
+         * @private
+         */
+        $measureContentBounds(bounds:Rectangle):void {
+            this.$graphics.$measureContentBounds(bounds);
         }
 
-        public _render(renderContext:RendererContext):void {
-            if(this._graphics)
-                this._graphics._draw(renderContext);
+        /**
+         * @private
+         */
+        $render(context:sys.RenderContext):void {
+            this.$graphics.$render(context);
         }
+    }
 
-        public _measureBounds():egret.Rectangle {
-            var graphics:Graphics = this._graphics;
-            if(!graphics){
-                return super._measureBounds();
-            }
-            return graphics._measureBounds();
-        }
+    registerClass(Shape, Types.Shape);
+
+    if (DEBUG) {
+        egret.$markReadOnly(Shape.prototype, "graphics");
     }
 }

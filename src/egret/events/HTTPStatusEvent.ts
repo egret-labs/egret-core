@@ -73,12 +73,12 @@ module egret {
          * @param target {egret.IEventDispatcher} 派发事件目标
          * @param status {number} 由服务器返回的 HTTP 状态代码
          */
-        public static dispatchHTTPStatusEvent(target:IEventDispatcher, status:number):void {
-            if (HTTPStatusEvent.httpStatusEvent == null) {
-                HTTPStatusEvent.httpStatusEvent = new HTTPStatusEvent(HTTPStatusEvent.HTTP_STATUS);
-            }
-            HTTPStatusEvent.httpStatusEvent._status = status;
-            target.dispatchEvent(HTTPStatusEvent.httpStatusEvent);
+        public static dispatchHTTPStatusEvent(target:IEventDispatcher, status:number):boolean {
+            var event:HTTPStatusEvent = Event.create(HTTPStatusEvent, HTTPStatusEvent.HTTP_STATUS);
+            event._status = status;
+            var result = target.dispatchEvent(event);
+            Event.release(event);
+            return result;
         }
     }
 }

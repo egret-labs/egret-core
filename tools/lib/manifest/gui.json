@@ -1,8 +1,8 @@
 {
     "name":"gui",
-    "dependence":["lark2"],
+    "dependence":["core"],
     "decouple":"true",
-    "output":"lark2/extension/gui",
+    "output":"core/extension/gui",
     "source":"src/extension/gui",
     "file_list":
     [

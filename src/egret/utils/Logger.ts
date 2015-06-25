@@ -171,7 +171,7 @@ module egret {
     }
 
     export function getString(id:number, ...args):string {
-        var message = egret.egret_string_code[id];
+        var message = egret.$locale_strings[id];
         if (message) {
             var length = args.length;
             for (var i = 0; i < length; i++) {

@@ -1,6 +1,8 @@
 module egret {
-    var __setInterval__cache:any = {};
-    var __setInterval__index:number = 0;
+    var setIntervalCache:any = {};
+    var setIntervalIndex:number = 0;
+
+    var setIntervalCount:number = 0;
 
     /**
      * 在指定的延迟（以毫秒为单位）后运行指定的函数。
@@ -13,12 +15,14 @@ module egret {
      */
     export function setInterval(listener:Function, thisObject:any, delay:number, ...args):number {
         var data = {listener: listener, thisObject: thisObject, delay: delay, originDelay: delay, params: args};
-        if (__setInterval__index == 0) {
-            Ticker.getInstance().register(intervalUpdate, null);
+
+        setIntervalCount++;
+        if (setIntervalCount == 1) {
+            sys.$ticker.$startTick(intervalUpdate, null);
         }
-        __setInterval__index++;
-        __setInterval__cache[__setInterval__index] = data;
-        return __setInterval__index;
+        setIntervalIndex++;
+        setIntervalCache[setIntervalIndex] = data;
+        return setIntervalIndex;
     }
 
     /**
@@ -27,17 +31,26 @@ module egret {
      * @param key {number} egret.setInterval所返回的索引
      */
     export function clearInterval(key:number):void {
-        delete __setInterval__cache[key];
+        if (setIntervalCache[key]) {
+            setIntervalCount--;
+
+            delete setIntervalCache[key];
+            if (setIntervalCount == 0) {
+                sys.$ticker.$stopTick(intervalUpdate, null);
+            }
+        }
     }
 
-    function intervalUpdate(dt:number):void {
-        for (var key in __setInterval__cache) {
-            var data = __setInterval__cache[key];
+    function intervalUpdate(dt:number):boolean {
+        for (var key in setIntervalCache) {
+            var data = setIntervalCache[key];
             data.delay -= dt;
             if (data.delay <= 0) {
                 data.delay = data.originDelay;
                 data.listener.apply(data.thisObject, data.params);
             }
         }
+
+        return true;
     }
 }

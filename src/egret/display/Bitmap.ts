@@ -27,56 +27,80 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 
-
 module egret {
-	/**
-	 * @class egret.Bitmap
-	 * @classdesc
-     * Bitmap 类表示用于表示位图图像的显示对象。这些图像可以是使用 Bitmap() 构造函数创建的图像。
-     * 利用 Bitmap() 构造函数，可以创建包含对 Texture 对象的引用的 Bitmap 对象。创建了 Bitmap 对象后，使用父 DisplayObjectContainer 实例的 addChild() 或 addChildAt() 方法将位图放在显示列表中。
-     * 一个 Bitmap 对象可在若干 Bitmap 对象之中共享其 Texture 引用，与转换属性或旋转属性无关。由于能够创建引用相同 Texture 对象的多个 Bitmap 对象，因此，多个显示对象可以使用相同的复杂 Texture 对象，而不会因为每个显示对象实例使用一个 Texture 对象而产生内存开销。
-     * @link http://docs.egret-labs.org/post/manual/bitmap/createbitmap.html 创建位图
-	 * @extends egret.DisplayObject
-	 */
+    /**
+     * @language en_US
+     * The Bitmap class represents display objects that represent bitmap images.
+     * The Bitmap() constructor allows you to create a Bitmap object that contains a reference to a BitmapData object.
+     * After you create a Bitmap object, use the addChild() or addChildAt() method of the parent DisplayObjectContainer
+     * instance to place the bitmap on the display list.A Bitmap object can share its BitmapData reference among several
+     * Bitmap objects, independent of translation or rotation properties. Because you can create multiple Bitmap objects
+     * that reference the same BitmapData object, multiple display objects can use the same complex BitmapData object
+     * without incurring the memory overhead of a BitmapData object for each display object instance.
+     *
+     * @see egret.BitmapData
+     * @version Lark 1.0
+     * @platform Web,Native
+     */
+    /**
+     * @language zh_CN
+     * Bitmap 类表示用于显示位图图片的显示对象。
+     * 利用 Bitmap() 构造函数，可以创建包含对 BitmapData 对象引用的 Bitmap 对象。创建了 Bitmap 对象后，
+     * 使用父级 DisplayObjectContainer 实例的 addChild() 或 addChildAt() 方法可以将位图放在显示列表中。
+     * 一个 Bitmap 对象可在若干 Bitmap 对象之中共享其 BitmapData 引用，与缩放或旋转属性无关。
+     * 由于能够创建引用相同 BitmapData 对象的多个 Bitmap 对象，因此，多个显示对象可以使用相同的 BitmapData 对象，
+     * 而不会因为每个显示对象实例使用一个 BitmapData 对象而产生额外内存开销。
+     *
+     * @see egret.BitmapData
+     * @version Lark 1.0
+     * @platform Web,Native
+     */
     export class Bitmap extends DisplayObject {
 
-        private static renderFilter:RenderFilter = RenderFilter.getInstance();
-
         /**
-         * 初始化 Bitmap 对象以引用指定的 Texture 对象
-         * @param texture {Texture} 纹理
+         * @language en_US
+         * Initializes a Bitmap object to refer to the specified BitmapData object.
+         * @param bitmapData The BitmapData object being referenced.
+         * @version Lark 1.0
+         * @platform Web,Native
          */
-        public constructor(texture?:Texture) {
+        /**
+         * @language zh_CN
+         * 创建一个引用指定 BitmapData 实例的 Bitmap 对象
+         * @param bitmapData 被引用的 BitmapData 实例
+         * @version Lark 1.0
+         * @platform Web,Native
+         */
+        public constructor(bitmapData?:Texture) {
             super();
-            if(texture){
-                this._texture = texture;
-                this._setSizeDirty();
-            }
-            this.needDraw = true;
+            this.$renderRegion = new sys.Region();
+            this.texture = bitmapData;
         }
 
-        private _texture:Texture = null;
         /**
-         * 渲染纹理
-		 * @member {egret.Texture} egret.Bitmap#texture
+         * @private
+         */
+        $bitmapData:Texture;
+
+        /**
+         * @language en_US
+         * bitmapData The BitmapData object being referenced.
+         * @version Lark 1.0
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 被引用的 BitmapData 对象。
+         * @version Lark 1.0
+         * @platform Web,Native
          */
         public get texture():Texture{
-            return this._texture;
+            return this.$bitmapData;
         }
 
         public set texture(value:Texture){
-            if(value==this._texture){
-                return;
-            }
-            this._setSizeDirty();
-            this._texture = value;
+            this.$setBitmapData(value);
         }
-        /**
-         * 矩形区域，它定义位图对象的九个缩放区域。此属性仅当fillMode为BitmapFillMode.SCALE时有效。
-         * scale9Grid的x、y、width、height分别代表九宫图中中间那块的左上点的x、y以及中间方块的宽高。
-         * @member {egret.Rectangle} egret.Bitmap#scale9Grid
-         */
-        public scale9Grid:Rectangle = null;
 
         /**
          * 确定位图填充尺寸的方式。
@@ -86,159 +110,109 @@ module egret {
          */
         public fillMode:string = "scale";
 
-        public _render(renderContext:RendererContext):void {
-            var texture = this._texture;
-            if (!texture) {
-                this._texture_to_render = null;
-                return;
-            }
-            this._texture_to_render = texture;
-            var destW:number = this._DO_Props_._hasWidthSet?this._DO_Props_._explicitWidth:texture._textureWidth;
-            var destH:number = this._DO_Props_._hasHeightSet?this._DO_Props_._explicitHeight:texture._textureHeight;
-            Bitmap._drawBitmap(renderContext,destW,destH,this);
-        }
-
-        public static _drawBitmap(renderContext:RendererContext,destW:number, destH:number,thisObject:any):void{
-            var texture = thisObject._texture_to_render;
-            if(!texture){
-                return;
-            }
-            var textureWidth:number = texture._textureWidth;
-            var textureHeight:number = texture._textureHeight;
-            if(thisObject.fillMode=="scale"){
-                var s9g:Rectangle = thisObject.scale9Grid||texture["scale9Grid"];
-                if (s9g&&textureWidth - s9g.width < destW && textureHeight - s9g.height < destH) {
-                    Bitmap.drawScale9GridImage(renderContext, thisObject, s9g, destW, destH);
-                }
-                else{
-                    var offsetX:number = texture._offsetX;
-                    var offsetY:number = texture._offsetY;
-                    var bitmapWidth:number = texture._bitmapWidth||textureWidth;
-                    var bitmapHeight:number = texture._bitmapHeight||textureHeight;
-                    var scaleX:number = destW/textureWidth;
-                    offsetX = Math.round(offsetX*scaleX);
-                    destW = Math.round(bitmapWidth*scaleX);
-                    var scaleY:number = destH/textureHeight;
-                    offsetY = Math.round(offsetY*scaleY);
-                    destH = Math.round(bitmapHeight*scaleY);
-                    Bitmap.renderFilter.drawImage(renderContext, thisObject, texture._bitmapX, texture._bitmapY,
-                        bitmapWidth, bitmapHeight, offsetX, offsetY, destW,destH);
-                }
-            }
-            else{
-                Bitmap.drawRepeatImage(renderContext, thisObject, destW, destH, thisObject.fillMode);
-            }
-        }
-
         /**
-         * 绘制平铺位图
-         */
-        private static drawRepeatImage(renderContext:RendererContext, data:RenderData, destWidth:number, destHeight:number,repeat:string):void {
-            var texture:Texture = data._texture_to_render;
-            if (!texture) {
-                return;
-            }
-            var textureWidth:number = texture._textureWidth;
-            var textureHeight:number = texture._textureHeight;
-            var sourceX:number = texture._bitmapX;
-            var sourceY:number = texture._bitmapY;
-            var sourceWidth:number = texture._bitmapWidth||textureWidth;
-            var sourceHeight:number = texture._bitmapHeight||textureHeight;
-            var destX:number = texture._offsetX;
-            var destY:number = texture._offsetY;
-
-            var renderFilter:RenderFilter = RenderFilter.getInstance();
-            renderFilter.drawImage(renderContext, data, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight,repeat);
-        }
-
-        /**
-         * 绘制九宫格位图
-         */
-        private static drawScale9GridImage(renderContext:RendererContext, data:RenderData, scale9Grid:Rectangle,
-                                   destWidth:number, destHeight:number):void {
-            var texture_scale_factor = egret.MainContext.instance.rendererContext._texture_scale_factor;
-            var texture:Texture = data._texture_to_render;
-            if (!texture || !scale9Grid) {
-                return;
-            }
-            var textureWidth:number = texture._textureWidth;
-            var textureHeight:number = texture._textureHeight;
-            var sourceX:number = texture._bitmapX;
-            var sourceY:number = texture._bitmapY;
-            var sourceWidth:number = texture._bitmapWidth||textureWidth;
-            var sourceHeight:number = texture._bitmapHeight||textureHeight;
-
-            destWidth -= textureWidth-sourceWidth;
-            destHeight -= textureHeight-sourceHeight;
-
-            if (renderContext.drawImageScale9(texture, sourceX, sourceY, sourceWidth, sourceHeight, texture._offsetX, texture._offsetY, destWidth, destHeight, scale9Grid)) {
-                return;
-            }
-
-            var destX:number = texture._offsetX / texture_scale_factor;
-            var destY:number = texture._offsetY / texture_scale_factor;
-
-            var renderFilter:RenderFilter = RenderFilter.getInstance();
-
-            var s9g:Rectangle = Rectangle.identity.initialize(
-                    scale9Grid.x - Math.round(destX), scale9Grid.y - Math.round(destX),
-                scale9Grid.width, scale9Grid.height);
-            var roundedDrawX:number = Math.round(destX);
-            var roundedDrawY:number = Math.round(destY);
-
-            //防止空心的情况出现。
-            if (s9g.y == s9g.bottom) {
-                if (s9g.bottom < sourceHeight)
-                    s9g.bottom++;
-                else
-                    s9g.y--;
-            }
-            if (s9g.x == s9g.right) {
-                if (s9g.right < sourceWidth)
-                    s9g.right++;
-                else
-                    s9g.x--;
-            }
-
-            var sourceX2:number = sourceX + s9g.x / texture_scale_factor;
-            var sourceX3:number = sourceX + s9g.right / texture_scale_factor;
-            var sourceRightW:number = sourceWidth - s9g.right;
-            var sourceY2:number = sourceY + s9g.y / texture_scale_factor;
-            var sourceY3:number = sourceY + s9g.bottom / texture_scale_factor;
-            var sourceBottomH:number = sourceHeight - s9g.bottom;
-
-            var destX1:number = roundedDrawX + s9g.x;
-            var destY1:number = roundedDrawY + s9g.y;
-            var destScaleGridBottom:number = destHeight - (sourceHeight - s9g.bottom);
-            var destScaleGridRight:number = destWidth - (sourceWidth - s9g.right);
-
-            renderFilter.drawImage(renderContext, data, sourceX, sourceY, s9g.x, s9g.y, roundedDrawX, roundedDrawY, s9g.x, s9g.y);
-            renderFilter.drawImage(renderContext, data, sourceX2, sourceY, s9g.width, s9g.y, destX1, roundedDrawY, destScaleGridRight - s9g.x, s9g.y);
-            renderFilter.drawImage(renderContext, data, sourceX3, sourceY, sourceRightW, s9g.y, roundedDrawX + destScaleGridRight, roundedDrawY, destWidth - destScaleGridRight, s9g.y);
-            renderFilter.drawImage(renderContext, data, sourceX, sourceY2, s9g.x, s9g.height, roundedDrawX, destY1, s9g.x, destScaleGridBottom - s9g.y);
-            renderFilter.drawImage(renderContext, data, sourceX2, sourceY2, s9g.width, s9g.height, destX1, destY1, destScaleGridRight - s9g.x, destScaleGridBottom - s9g.y);
-            renderFilter.drawImage(renderContext, data, sourceX3, sourceY2, sourceRightW, s9g.height, roundedDrawX + destScaleGridRight, destY1, destWidth - destScaleGridRight, destScaleGridBottom - s9g.y);
-            renderFilter.drawImage(renderContext, data, sourceX, sourceY3, s9g.x, sourceBottomH, roundedDrawX, roundedDrawY+destScaleGridBottom, s9g.x, destHeight - destScaleGridBottom);
-            renderFilter.drawImage(renderContext, data, sourceX2, sourceY3, s9g.width, sourceBottomH, destX1, roundedDrawY+destScaleGridBottom, destScaleGridRight - s9g.x, destHeight - destScaleGridBottom);
-            renderFilter.drawImage(renderContext, data, sourceX3, sourceY3, sourceRightW, sourceBottomH, roundedDrawX + destScaleGridRight, roundedDrawY+destScaleGridBottom, destWidth - destScaleGridRight, destHeight - destScaleGridBottom);
-        }
-
-        /**
-         * @see egret.DisplayObject.measureBounds
-         * @returns {egret.Rectangle}
          * @private
          */
-        public _measureBounds():egret.Rectangle {
-            var texture:Texture = this._texture;
-            if(!texture){
-                return super._measureBounds();
+        $setBitmapData(value:Texture):void{
+            if(value==this.$bitmapData){
+                return;
             }
-            //点击区域要包含原图中得透明区域，所以xy均返回0
-            var x:number = 0;//texture._offsetX;
-            var y:number = 0;//texture._offsetY;
-            var w:number = texture._textureWidth;
-            var h:number = texture._textureHeight;
-            return Rectangle.identity.initialize(x,y, w, h);
+            this.$bitmapData = value;
+            this.$invalidateContentBounds();
+        }
+
+        /**
+         * @private
+         */
+        $smoothing:boolean = true;
+        /**
+         * @language en_US
+         * Whether or not the bitmap is smoothed when scaled.
+         * @default true。
+         * @version Lark 1.0
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 控制在缩放时是否对位图进行平滑处理。
+         * @default true。
+         * @version Lark 1.0
+         * @platform Web,Native
+         */
+        public get smoothing():boolean{
+            return this.$smoothing;
+        }
+
+        public set smoothing(value:boolean) {
+            value = !!value;
+            if(value===this.$smoothing){
+                return;
+            }
+            this.$smoothing = value;
+            this.$invalidate();
+        }
+
+        /**
+         * @private
+         */
+        $measureContentBounds(bounds:Rectangle):void {
+            var bitmapData = this.$bitmapData;
+            if(bitmapData){
+                bounds.setTo(0,0,bitmapData._textureWidth,bitmapData._textureHeight);
+            }
+            else{
+                bounds.setEmpty();
+            }
+        }
+
+        /**
+         * @private
+         */
+        $render(context:sys.RenderContext):void{
+            var bitmapData = this.$bitmapData;
+            if (bitmapData) {
+                context.imageSmoothingEnabled = this.$smoothing;
+
+                var offsetX:number = Math.round(bitmapData._offsetX);
+                var offsetY:number = Math.round(bitmapData._offsetY);
+                var bitmapWidth:number = bitmapData._bitmapWidth || bitmapData._textureWidth;
+                var bitmapHeight:number = bitmapData._bitmapHeight || bitmapData._textureHeight;
+                var destW:number = Math.round(bitmapWidth);
+                var destH:number = Math.round(bitmapHeight);
+
+                if (this.fillMode == egret.BitmapFillMode.SCALE) {
+                    context.drawImage(bitmapData._bitmapData, bitmapData._bitmapX, bitmapData._bitmapY,
+                        bitmapWidth, bitmapHeight, offsetX, offsetY, destW, destH);
+                }
+                else {
+                    this.drawRepeat(context, bitmapData._bitmapData, bitmapData._bitmapX, bitmapData._bitmapY,
+                        bitmapWidth, bitmapHeight, offsetX, offsetY, destW, destH, this.fillMode);
+                }
+            }
+        }
+
+        private drawRepeat(context:sys.RenderContext, bitmapData, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, repeat):void {
+            if (this['pattern'] === undefined) {
+                var texture_scale_factor = 1;
+                var tempImage:BitmapData = bitmapData;
+                if (bitmapData.width != sourceWidth || bitmapData.height != sourceHeight || texture_scale_factor != 1) {
+                    var tempCanvas = sys.surfaceFactory.create(true);
+                    tempCanvas.width = sourceWidth * texture_scale_factor;
+                    tempCanvas.height = sourceHeight * texture_scale_factor;
+
+                    tempCanvas.renderContext.drawImage(bitmapData, sourceX, sourceY, sourceWidth, sourceHeight, 0, 0, sourceWidth * texture_scale_factor, sourceHeight * texture_scale_factor);
+                    tempImage = tempCanvas;
+                }
+                var pat = context.createPattern(tempImage, repeat);
+                this['pattern'] = pat;
+            }
+            var pattern = this['pattern'];
+            context.fillStyle = pattern;
+            context.translate(destX, destY);
+            context.fillRect(0, 0, destWidth, destHeight);
+            context.translate(-destX, -destY);
         }
     }
+
+    registerClass(Bitmap,Types.Bitmap);
 }

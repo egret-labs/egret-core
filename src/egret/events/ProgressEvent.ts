@@ -80,8 +80,13 @@ module egret {
          * @param bytesLoaded {number} 加载的项数或字节数
          * @param bytesTotal {number} 加载的总项数或总字节数
          */
-        public static dispatchProgressEvent(target:IEventDispatcher, type:string, bytesLoaded:number = 0, bytesTotal:number = 0):void {
-            Event._dispatchByTarget(ProgressEvent, target, type, {"bytesLoaded":bytesLoaded, "bytesTotal":bytesTotal});
+        public static dispatchProgressEvent(target:IEventDispatcher, type:string, bytesLoaded:number = 0, bytesTotal:number = 0):boolean {
+            var event:ProgressEvent = Event.create(ProgressEvent, type);
+            event.bytesLoaded = bytesLoaded;
+            event.bytesTotal = bytesTotal;
+            var result = target.dispatchEvent(event);
+            Event.release(event);
+            return result;
         }
     }
 }

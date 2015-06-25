@@ -1,7 +1,7 @@
 {
     "name": "res",
-    "dependence": ["lark2"],
-    "output": "lark2/extension/resource",
+    "dependence": ["core"],
+    "output": "core/extension/resource",
     "source": "src/extension/resource",
     "file_list": [
         "events/ResourceEvent.ts",

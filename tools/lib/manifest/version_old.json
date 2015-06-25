@@ -1,7 +1,7 @@
 {
     "name": "version_old",
-    "dependence": ["lark2"],
-    "output": "lark2/extension/oldVersion",
+    "dependence": ["core"],
+    "output": "core/extension/oldVersion",
     "source": "src/extension/oldVersion",
     "file_list": [
     ]

@@ -27,35 +27,46 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 
+
 module egret {
 
-    var __getDefinitionByName__cache:Object = {};
     /**
-     * 返回 name 参数指定的类的类对象引用。
-	 * @method egret.getDefinitionByName
-     * @param name {string} 类的名称。
-	 * @returns {any}
-     * @example
-     * egret.getDefinitionByName("egret.DisplayObject") //返回 DisplayObject类定义
+     * @private
      */
-    export function getDefinitionByName(name:string):any{
-        if(!name)
+    var getDefinitionByNameCache = {};
+
+    /**
+     * @language en_US
+     * Returns a reference to the class object of the class specified by the name parameter.
+     * @param name The name of a class.
+     * @version Lark 1.0
+     * @platform Web,Native
+     */
+    /**
+     * @language zh_CN
+     * 返回 name 参数指定的类的类对象引用。
+     * @param name 类的名称。
+     * @version Lark 1.0
+     * @platform Web,Native
+     */
+    export function getDefinitionByName(name:string):any {
+        if (!name)
             return null;
-        var definition:any = __getDefinitionByName__cache[name];
-        if(definition){
+        var definition = getDefinitionByNameCache[name];
+        if (definition) {
             return definition;
         }
-        var paths:Array<string> = name.split(".");
-        var length:number = paths.length;
+        var paths = name.split(".");
+        var length = paths.length;
         definition = __global;
-        for(var i:number=0;i<length;i++){
-            var path:string = paths[i];
+        for (var i = 0; i < length; i++) {
+            var path = paths[i];
             definition = definition[path];
-            if(!definition){
+            if (!definition) {
                 return null;
             }
         }
-        __getDefinitionByName__cache[name] = definition;
+        getDefinitionByNameCache[name] = definition;
         return definition;
     }
 }

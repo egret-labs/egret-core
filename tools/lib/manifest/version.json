@@ -1,7 +1,7 @@
 {
     "name": "version",
-    "dependence": ["lark2"],
-    "output": "lark2/extension/version",
+    "dependence": ["core"],
+    "output": "core/extension/version",
     "source": "src/extension/version",
     "file_list": [
         "DefaultLoadingView.ts",

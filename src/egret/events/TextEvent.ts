@@ -64,11 +64,13 @@ module egret {
          * @param type  事件类型
          * @param text  TextEvent对象的text赋值
          */
-        public static dispatchTextEvent(target:IEventDispatcher, type:string, text:string):void {
-            var eventClass:any = TextEvent;
-            var props:any = Event._getPropertyData(eventClass);
-            props.text = text;
-            Event._dispatchByTarget(eventClass, target, type, props);
+        public static dispatchTextEvent(target:IEventDispatcher, type:string, text:string):boolean {
+            var event:TextEvent = Event.create(TextEvent, type);
+            event.text = text;
+            var result = target.dispatchEvent(event);
+            Event.release(event);
+            return result;
+
         }
     }
 }

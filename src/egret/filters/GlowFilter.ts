@@ -36,9 +36,9 @@ module egret {
      * @private
      */
     export class GlowFilter extends Filter {
-        public _red:number;
-        public _green:number;
-        public _blue:number;
+        public $red:number;
+        public $green:number;
+        public $blue:number;
         /**
          * 初始化 GlowFilter 对象
          * @method egret.GlowFilter#constructor
@@ -55,9 +55,9 @@ module egret {
             super();
             this.type = "glow";
 
-            this._blue = color & 0x0000FF;
-            this._green = (color & 0x00ff00) >> 8;
-            this._red = color >> 16;
+            this.$blue = color & 0x0000FF;
+            this.$green = (color & 0x00ff00) >> 8;
+            this.$red = color >> 16;
         }
     }
 }

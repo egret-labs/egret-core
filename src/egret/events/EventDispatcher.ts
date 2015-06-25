@@ -29,178 +29,193 @@
 
 
 module egret {
+
     /**
-     *
-     * @class egret.EventDispatcher
-     * @classdesc
-     * EventDispatcher 是 Egret 的事件派发器类，负责进行事件的发送和侦听。
-     *
+     * @private
+     */
+    const enum Keys{
+        eventTarget,
+        eventsMap,
+        captureEventsMap,
+        notifyLevel
+    }
+
+
+    var ONCE_EVENT_LIST:egret.sys.EventBin[] = [];
+
+    /**
+     * @language en_US
+     * The EventDispatcher class is the base class for all classes that dispatchEvent events. The EventDispatcher class implements
+     * the IEventDispatcher interface and is the base class for the DisplayObject class. The EventDispatcher class allows
+     * any object on the display list to be an event target and as such, to use the methods of the IEventDispatcher interface.
+     * Event targets are an important part of the Lark event model. The event target serves as the focal point for how events
+     * flow through the display list hierarchy. When an event such as a touch tap, Lark emits an event object into the
+     * event flow from the root of the display list. The event object then makes its way through the display list until it
+     * reaches the event target, at which point it begins its return trip through the display list. This round-trip journey
+     * to the event target is conceptually divided into three phases: <br/>
+     * the capture phase comprises the journey from the root to the last node before the event target's node, the target
+     * phase comprises only the event target node, and the bubbling phase comprises any subsequent nodes encountered on
+     * the return trip to the root of the display list. In general, the easiest way for a user-defined class to gain event
+     * emitting capabilities is to extend EventDispatcher. If this is impossible (that is, if the class is already extending
+     * another class), you can instead implement the IEventDispatcher interface, create an EventDispatcher member, and write simple
+     * hooks to route calls into the aggregated EventDispatcher.
+     * @see egret.IEventDispatcher
+     * @version Lark 1.0
+     * @platform Web,Native
+     */
+    /**
+     * @language zh_CN
+     * EventDispatcher 是 Lark 的事件派发器类，负责进行事件的发送和侦听。
      * 事件目标是事件如何通过显示列表层次结构这一问题的焦点。当发生鼠标单击、触摸或按键等事件时，
-     * 引擎会将事件对象调度到从显示列表根开始的事件流中。然后该事件对象在显示列表中前进，直到到达事件目标，
+     * 框架会将事件对象调度到从显示列表根开始的事件流中。然后该事件对象在显示列表中前进，直到到达事件目标，
      * 然后从这一点开始其在显示列表中的回程。在概念上，到事件目标的此往返行程被划分为三个阶段：
      * 捕获阶段包括从根到事件目标节点之前的最后一个节点的行程，目标阶段仅包括事件目标节点，冒泡阶段包括回程上遇到的任何后续节点到显示列表的根。
-     * @link http://docs.egret-labs.org/post/manual/event/eventlistener.html 事件侦听器
+     * 通常，使用户定义的类能够调度事件的最简单方法是扩展 EventDispatcher。如果无法扩展（即，如果该类已经扩展了另一个类），则可以实现
+     * IEventDispatcher 接口，创建 EventDispatcher 成员，并编写一些简单的映射，将调用连接到聚合的 EventDispatcher 中。
+     * @see egret.IEventDispatcher
+     * @version Lark 1.0
+     * @platform Web,Native
      */
     export class EventDispatcher extends HashObject implements IEventDispatcher {
 
         /**
-         * EventDispatcher 类是可调度事件的所有类的基类。
-         * EventDispatcher 类实现 IEventDispatcher 接口 ，并且是 DisplayObject 类的基类。
-         * EventDispatcher 类允许显示列表上的任何对象都是一个事件目标，同样允许使用 IEventDispatcher 接口的方法。
+         * @language en_US
+         * create an instance of the EventDispatcher class.
+         * @param target The target object for events emitted to the EventDispatcher object. This parameter is used when
+         * the EventDispatcher instance is aggregated by a class that implements IEventDispatcher; it is necessary so that the
+         * containing object can be the target for events. Do not use this parameter in simple cases in which a class extends EventDispatcher.
+         * @version Lark 1.0
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 创建一个 EventDispatcher 类的实例
+         * @param target 此 EventDispatcher 所抛出事件对象的 target 指向。此参数主要用于一个实现了 IEventDispatcher 接口的自定义类，
+         * 以便抛出的事件对象的 target 属性可以指向自定义类自身。请勿在直接继承 EventDispatcher 的情况下使用此参数。
+         * @version Lark 1.0
+         * @platform Web,Native
          */
         public constructor(target:IEventDispatcher = null) {
             super();
-            if (target) {
-                this._eventTarget = target;
-            }
-            else {
-                this._eventTarget = this;
-            }
-
+            this.$EventDispatcher = {
+                0: target ? target : this,
+                1: {},
+                2: {},
+                3: 0
+            };
         }
 
         /**
-         * 事件抛出对象
-         */
-        private _eventTarget:IEventDispatcher = null;
-        /**
-         * 引擎内部调用
          * @private
          */
-        public _eventsMap:Object = null;
-        /**
-         * 引擎内部调用
-         * @private
-         */
-        public _captureEventsMap:Object = null;
+        $EventDispatcher:Object;
+
+        $getEventMap(useCapture?:boolean) {
+            var values = this.$EventDispatcher;
+            var eventMap:any = useCapture ? values[Keys.captureEventsMap] : values[Keys.eventsMap];
+            return eventMap;
+        }
 
         /**
-         * 添加事件侦听器
-         * @method egret.EventDispatcher#addEventListener
-         * @param type {string} 事件的类型。
-         * @param listener {Function} 处理事件的侦听器函数。此函数必须接受 Event 对象作为其唯一的参数，并且不能返回任何结果，
-         * 如下面的示例所示： function(evt:Event):void 函数可以有任何名称。
-         * @param thisObject {any} 侦听函数绑定的this对象
-         * @param useCapture {boolean} 确定侦听器是运行于捕获阶段还是运行于目标和冒泡阶段。如果将 useCapture 设置为 true，
-         * 则侦听器只在捕获阶段处理事件，而不在目标或冒泡阶段处理事件。如果 useCapture 为 false，则侦听器只在目标或冒泡阶段处理事件。
-         * 要在所有三个阶段都侦听事件，请调用 addEventListener 两次：一次将 useCapture 设置为 true，一次将 useCapture 设置为 false。
-         * @param  priority {number} 事件侦听器的优先级。优先级由一个带符号的 32 位整数指定。数字越大，优先级越高。优先级为 n 的所有侦听器会在
-         * 优先级为 n -1 的侦听器之前得到处理。如果两个或更多个侦听器共享相同的优先级，则按照它们的添加顺序进行处理。默认优先级为 0。
+         * @inheritDoc
+         * @version Lark 1.0
+         * @platform Web,Native
          */
-        public addEventListener(type:string, listener:Function, thisObject:any, useCapture:boolean = false, priority:number = 0):void {
-            if (typeof useCapture === "undefined") {
-                useCapture = false;
+        public addEventListener(type:string, listener:(event:Event)=>void, thisObject:any, useCapture?:boolean, priority?:number):void {
+            this.$addListener(type, listener, thisObject, useCapture, priority);
+        }
+
+        /**
+         * @inheritDoc
+         * @version Lark 1.0
+         * @platform Web,Native
+         */
+        public once(type:string, listener:(event:Event)=>void, thisObject:any, useCapture?:boolean, priority?:number):void {
+            this.$addListener(type, listener, thisObject, useCapture, priority, true);
+        }
+
+        /**
+         * @private
+         */
+        $addListener(type:string, listener:(event:Event)=>void, thisObject:any, useCapture?:boolean, priority?:number, emitOnce?:boolean):void {
+            if (DEBUG && !listener) {
+                $error(1003, "listener");
             }
-            if (typeof priority === "undefined") {
-                priority = 0;
-            }
-            if (!listener) {
-                Logger.fatalWithErrorId(1010);
-            }
-            var eventMap:Object;
-            if (useCapture) {
-                if (!this._captureEventsMap)
-                    this._captureEventsMap = {};
-                eventMap = this._captureEventsMap;
-            }
-            else {
-                if (!this._eventsMap)
-                    this._eventsMap = {};
-                eventMap = this._eventsMap;
-            }
-            var list:Array<any> = eventMap[type];
+            var values = this.$EventDispatcher;
+            var eventMap:any = useCapture ? values[Keys.captureEventsMap] : values[Keys.eventsMap];
+            var list:egret.sys.EventBin[] = eventMap[type];
             if (!list) {
                 list = eventMap[type] = [];
             }
-            this._insertEventBin(list, listener, thisObject, priority)
-        }
-
-        /**
-         * 在一个事件列表中按优先级插入事件对象
-         */
-        public _insertEventBin(list:Array<any>, listener:Function, thisObject:any, priority:number, display = undefined):boolean {
-            var insertIndex:number = -1;
-            var length:number = list.length;
-            for (var i:number = 0; i < length; i++) {
-                var bin:any = list[i];
-                if (bin.listener == listener && bin.thisObject == thisObject && bin.display == display) {
-                    return false;
+            else if (values[Keys.notifyLevel] !== 0) {
+                eventMap[type] = list = list.concat();
+            }
+            priority = +priority | 0;
+            var insertIndex = -1;
+            var length = list.length;
+            for (var i = 0; i < length; i++) {
+                var bin = list[i];
+                if (bin.listener === listener && bin.thisObject === thisObject && bin.target === this) {
+                    return;
                 }
-                if (insertIndex == -1 && bin.priority < priority) {
+                if (insertIndex === -1 && bin.priority < priority) {
                     insertIndex = i;
                 }
             }
-            var eventBin:any = {listener: listener, thisObject: thisObject, priority: priority};
-            if(display) {
-                eventBin.display = display;
-            }
-            if (insertIndex != -1) {
+            var eventBin:sys.EventBin = {
+                type: type, listener: listener, thisObject: thisObject, priority: priority,
+                target: this, useCapture: useCapture, emitOnce: !!emitOnce
+            };
+            if (insertIndex !== -1) {
                 list.splice(insertIndex, 0, eventBin);
             }
             else {
                 list.push(eventBin);
             }
-            return true;
         }
 
         /**
-         * 移除事件侦听器
-         * @method egret.EventDispatcher#removeEventListener
-         * @param type {string} 事件名
-         * @param listener {Function} 侦听函数
-         * @param thisObject {any} 侦听函数绑定的this对象
-         * @param useCapture {boolean} 是否使用捕获，这个属性只在显示列表中生效。
+         * @inheritDoc
+         * @version Lark 1.0
+         * @platform Web,Native
          */
-        public removeEventListener(type:string, listener:Function, thisObject:any, useCapture:boolean = false):void {
+        public removeEventListener(type:string, listener:(event:Event)=>void, thisObject:any, useCapture?:boolean):void {
 
-            var eventMap:Object = useCapture ? this._captureEventsMap : this._eventsMap;
-            if (!eventMap)
-                return;
-            var list:Array<any> = eventMap[type];
+            var values = this.$EventDispatcher;
+            var eventMap:Object = useCapture ? values[Keys.captureEventsMap] : values[Keys.eventsMap];
+            var list:egret.sys.EventBin[] = eventMap[type];
             if (!list) {
                 return;
             }
-            this._removeEventBin(list, listener, thisObject);
-            if (list.length == 0) {
-                delete eventMap[type];
+            if (values[Keys.notifyLevel] !== 0) {
+                eventMap[type] = list = list.concat();
             }
-        }
-
-        /**
-         * 在一个事件列表中按优先级插入事件对象
-         */
-        public _removeEventBin(list:Array<any>, listener:Function, thisObject:any, display = undefined, fromIdx:number = 0):boolean {
-            var length:number = list.length;
-            for (var i:number = fromIdx; i < length; i++) {
-                var bin:any = list[i];
-                if (bin.listener == listener && bin.thisObject == thisObject && bin.display == display) {
+            var length = list.length;
+            for (var i = 0; i < length; i++) {
+                var bin = list[i];
+                if (bin.listener === listener && bin.thisObject === thisObject && bin.target === this) {
                     list.splice(i, 1);
-                    return true;
+                    break;
                 }
             }
-            return false;
+            if (list.length == 0) {
+                eventMap[type] = null;
+            }
         }
-
         /**
-         * 检测是否存在监听器
-         * @method egret.EventDispatcher#hasEventListener
-         * @param type {string} 事件类型
-         * @returns {boolean}
-         * @stable A
+         * @inheritDoc
+         * @version Lark 1.0
+         * @platform Web,Native
          */
         public hasEventListener(type:string):boolean {
-            return !!(this._eventsMap && this._eventsMap[type] ||
-                this._captureEventsMap && this._captureEventsMap[type]);
+            var values = this.$EventDispatcher;
+            return (values[Keys.eventsMap][type] || values[Keys.captureEventsMap][type]);
         }
 
         /**
-         * 检查是否用此 EventDispatcher 对象或其任何始祖为指定事件类型注册了事件侦听器。将指定类型的事件调度给此
-         * EventDispatcher 对象或其任一后代时，如果在事件流的任何阶段触发了事件侦听器，则此方法返回 true。
-         * hasEventListener() 与 willTrigger() 方法的区别是：hasEventListener() 只检查它所属的对象，
-         * 而 willTrigger() 方法检查整个事件流以查找由 type 参数指定的事件。
-         * @method egret.EventDispatcher#willTrigger
-         * @param type {string} 事件类型
-         * @returns {boolean} 是否注册过监听器，如果注册过返回true，反之返回false
+         * @inheritDoc
+         * @version Lark 1.0
+         * @platform Web,Native
          */
         public willTrigger(type:string):boolean {
             return this.hasEventListener(type);
@@ -208,52 +223,103 @@ module egret {
 
 
         /**
-         * 将事件分派到事件流中。事件目标是对其调用 dispatchEvent() 方法的 EventDispatcher 对象。
-         * @method egret.EventDispatcher#dispatchEvent
-         * @param event {egret.Event} 调度到事件流中的 Event 对象。如果正在重新分派事件，则会自动创建此事件的一个克隆。 在调度了事件后，其 _eventTarget 属性将无法更改，因此您必须创建此事件的一个新副本以能够重新调度。
-         * @returns {boolean} 如果成功调度了事件，则值为 true。值 false 表示失败或对事件调用了 preventDefault()。
+         * @inheritDoc
+         * @version Lark 1.0
+         * @platform Web,Native
          */
         public dispatchEvent(event:Event):boolean {
-            event._reset();
-            event._target = this._eventTarget;
-            event._currentTarget = this._eventTarget;
-            return this._notifyListener(event);
-        }
-
-        public _notifyListener(event:Event):boolean {
-            var eventMap:Object = event._eventPhase == 1 ? this._captureEventsMap : this._eventsMap;
-            if (!eventMap) {
-                return true;
-            }
-            var list:Array<any> = eventMap[event._type];
-
-            if (!list) {
-                return true;
-            }
-            var length:number = list.length;
-            if (length == 0) {
-                return true;
-            }
-            list = list.concat();
-            for (var i:number = 0; i < length; i++) {
-                var eventBin:any = list[i];
-                eventBin.listener.call(eventBin.thisObject, event);
-                if (event._isPropagationImmediateStopped) {
-                    break;
-                }
-            }
-            return !event._isDefaultPrevented;
+            event.$target = event.$currentTarget = this.$EventDispatcher[Keys.eventTarget];
+            return this.$notifyListener(event, false);
         }
 
         /**
-         * 派发一个包含了特定参数的事件到所有注册了特定类型侦听器的对象中。 这个方法使用了一个内部的事件对象池因避免重复的分配导致的额外开销。
-         * @method egret.EventDispatcher#dispatchEventWith
-         * @param type {string} 事件类型
-         * @param bubbles {boolean} 是否冒泡，默认false
-         * @param data {any}附加数据(可选)
+         * @private
          */
-        public dispatchEventWith(type:string, bubbles:boolean = false, data?:Object):void {
-            Event.dispatchEvent(this, type, bubbles, data);
+        $notifyListener(event:Event,capturePhase:boolean):boolean {
+            var values = this.$EventDispatcher;
+            var eventMap:Object = capturePhase ? values[Keys.captureEventsMap] : values[Keys.eventsMap];
+            var list:egret.sys.EventBin[] = eventMap[event.$type];
+            if (!list) {
+                return true;
+            }
+            var length = list.length;
+            if (length === 0) {
+                return true;
+            }
+            var onceList = ONCE_EVENT_LIST;
+            //做个标记，防止外部修改原始数组导致遍历错误。这里不直接调用list.concat()因为emit()方法调用通常比on()等方法频繁。
+            values[Keys.notifyLevel]++;
+            for (var i = 0; i < length; i++) {
+                var eventBin = list[i];
+                eventBin.listener.call(eventBin.thisObject, event);
+                if (eventBin.emitOnce) {
+                    onceList.push(eventBin);
+                }
+                if (event.$isPropagationImmediateStopped) {
+                    break;
+                }
+            }
+            values[Keys.notifyLevel]--;
+            while (onceList.length) {
+                eventBin = onceList.pop();
+                eventBin.target.removeEventListener(eventBin.type, eventBin.listener, eventBin.thisObject, eventBin.useCapture);
+            }
+            return !event.$isDefaultPrevented;
         }
+
+        /**
+         * @inheritDoc
+         * @version Lark 1.0
+         * @platform Web,Native
+         */
+        public dispatchEventWith(type:string, bubbles?:boolean, cancelable?:boolean, data?:any):boolean {
+            if (bubbles || this.hasEventListener(type)) {
+                var event:Event = Event.create(Event, type, bubbles, cancelable);
+                event.data = data;
+                var result = this.dispatchEvent(event);
+                Event.release(event);
+                return result;
+            }
+            return true;
+        }
+    }
+
+    registerClass(EventDispatcher, Types.EventDispatcher, [Types.IEventDispatcher]);
+}
+
+module egret.sys {
+    /**
+     * @private
+     * 事件信息对象
+     */
+    export interface EventBin {
+        /**
+         * @private
+         */
+        type:string;
+        /**
+         * @private
+         */
+        listener: (event:Event)=>void;
+        /**
+         * @private
+         */
+        thisObject:any;
+        /**
+         * @private
+         */
+        priority:number;
+        /**
+         * @private
+         */
+        target:IEventDispatcher;
+        /**
+         * @private
+         */
+        useCapture:boolean;
+        /**
+         * @private
+         */
+        emitOnce:boolean;
     }
 }

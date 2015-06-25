@@ -30,27 +30,57 @@
 module egret {
 
     /**
-	 * @class egret.EventPhase
-	 * @classdesc
-     * EventPhase 类可为 Event 类的 eventPhase 属性提供值。
-     * @link http://docs.egret-labs.org/post/manual/event/eventflow.html 事件的执行流程
+     * @language en_US
+     * The EventPhase class provides values for the eventPhase property of the Event class.
+     * @version Lark 1.0
+     * @platform Web,Native
      */
-    export class EventPhase{
+    /**
+     * @language zh_CN
+     * EventPhase 可为 Event 类的 eventPhase 属性提供值。
+     * @version Lark 1.0
+     * @platform Web,Native
+     */
+    export const enum EventPhase{
 
         /**
-         * 捕获阶段，是事件流的第一个阶段。
-		 * @constant {number} egret.EventPhase.CAPTURING_PHASE
+         * @language en_US
+         * The capturing phase, which is the first phase of the event flow.
+         * @version Lark 1.0
+         * @platform Web,Native
          */
-        public static CAPTURING_PHASE:number = 1;
         /**
+         * @language zh_CN
+         * 捕获阶段。
+         * @version Lark 1.0
+         * @platform Web,Native
+         */
+        CAPTURING_PHASE = 1,
+        /**
+         * @language en_US
+         * The target phase, which is the second phase of the event flow.
+         * @version Lark 1.0
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
          * 目标阶段，是事件流的第二个阶段。
-		 * @constant {number} egret.EventPhase.AT_TARGET
+         * @version Lark 1.0
+         * @platform Web,Native
          */
-        public static AT_TARGET:number = 2;
+        AT_TARGET = 2,
         /**
-         * 冒泡阶段，是事件流的第三个阶段。
-		 * @constant {number} egret.EventPhase.BUBBLING_PHASE
+         * @language en_US
+         * The bubbling phase, which is the third phase of the event flow.
+         * @version Lark 1.0
+         * @platform Web,Native
          */
-        public static BUBBLING_PHASE:number = 3;
+        /**
+         * @language zh_CN
+         * 冒泡阶段。
+         * @version Lark 1.0
+         * @platform Web,Native
+         */
+        BUBBLING_PHASE = 3
     }
 }

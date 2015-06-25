@@ -58,9 +58,11 @@ module egret {
 		 * @method egret.IOErrorEvent.dispatchIOErrorEvent
 		 * @param target {egret.IEventDispatcher} 派发事件目标
          */
-        public static dispatchIOErrorEvent(target:IEventDispatcher):void{
-            var eventClass:any = IOErrorEvent;
-            Event._dispatchByTarget(eventClass,target,IOErrorEvent.IO_ERROR);
+        public static dispatchIOErrorEvent(target:IEventDispatcher):boolean {
+            var event:IOErrorEvent = Event.create(IOErrorEvent, IOErrorEvent.IO_ERROR);
+            var result = target.dispatchEvent(event);
+            Event.release(event);
+            return result;
         }
     }
 }

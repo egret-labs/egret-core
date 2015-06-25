@@ -35,118 +35,130 @@ module egret {
      * @extends egret.DisplayObject
      * @link http://docs.egret-labs.org/post/manual/displaycon/movieclip.html  MovieClip序列帧动画
      */
-    export class MovieClip extends DisplayObject{
+    export class MovieClip extends DisplayObject {
 
-        private _isAddedToStage:boolean = false;
-    //Render Property
-        private static renderFilter:RenderFilter = RenderFilter.getInstance();
-        public _textureToRender:Texture = null;
+        //Render Property
+        $bitmapData:Texture = null;
 
-    //Data Property
-        public _movieClipData:MovieClipData = null;
-        private _frames:any[] = null;
-        private _totalFrames:number = 0;
-        public _frameLabels:any[] = null;
-        private _frameIntervalTime:number = 0;
-        public _eventPool:string[] = null;
+        //Data Property
+        $movieClipData:MovieClipData = null;
 
-    //Animation Property
-        private _isPlaying:boolean = false;
-        private _isStopped:boolean = true;
-        private _playTimes:number = 0;
+        private frames:any[] = null;
+        $totalFrames:number = 0;
+        public frameLabels:any[] = null;
+        private frameIntervalTime:number = 0;
+        $eventPool:string[] = null;
 
-        public _currentFrameNum:number = 0;
-        public _nextFrameNum:number = 0;
-        private _displayedKeyFrameNum:number = 0;
+        //Animation Property
+        $isPlaying:boolean = false;
+        private isStopped:boolean = true;
+        private playTimes:number = 0;
 
-        private _passedTime:number = 0;
+        $currentFrameNum:number = 0;
+        $nextFrameNum:number = 0;
 
-    //Construct Function
+        private displayedKeyFrameNum:number = 0;
+
+        private passedTime:number = 0;
+
+        //Construct Function
 
         /**
          * 创建新的 MovieClip 实例。创建 MovieClip 之后，调用舞台上的显示对象容器的addElement方法。
          * @method egret.MovieClip#constructor
-         * @param movieClipData {MovieClipData} 被引用的 MovieClipData 对象
+         * @param movieClipData {movieClipData} 被引用的 movieClipData 对象
          */
         constructor(movieClipData?:MovieClipData) {
             super();
-            this._setMovieClipData(movieClipData);
-            this.needDraw = true;
+            this.$renderRegion = new sys.Region();
+
+            this.setMovieClipData(movieClipData);
         }
 
-        public _init(){
-            this._reset();
-            var movieClipData:MovieClipData = this._movieClipData;
-            if(movieClipData && movieClipData._isDataValid()){
-                this._frames = movieClipData.frames;
-                this._totalFrames = movieClipData.numFrames;
-                this._frameLabels = movieClipData.labels;
-                this._frameIntervalTime = 1000 / movieClipData.frameRate;
+        $init() {
+            this.$reset();
+            var movieClipData:MovieClipData = this.$movieClipData;
+            if (movieClipData && movieClipData.$isDataValid()) {
+                this.frames = movieClipData.frames;
+                this.$totalFrames = movieClipData.numFrames;
+                this.frameLabels = movieClipData.labels;
+                this.frameIntervalTime = 1000 / movieClipData.frameRate;
                 this._initFrame();
             }
         }
 
-        public _reset():void{
-            this._frames = null;
-            this._playTimes = 0;
-            this._isPlaying = false;
+        $reset():void {
+            this.frames = null;
+            this.playTimes = 0;
+            this.$isPlaying = false;
             this.setIsStopped(true);
-            this._currentFrameNum = 0;
-            this._nextFrameNum = 1;
-            this._displayedKeyFrameNum = 0;
-            this._passedTime = 0;
-            this._eventPool = [];
+            this.$currentFrameNum = 0;
+            this.$nextFrameNum = 1;
+            this.displayedKeyFrameNum = 0;
+            this.passedTime = 0;
+            this.$eventPool = [];
         }
 
-        private _initFrame():void{
-            if(this._movieClipData._isTextureValid()){
-                this._advanceFrame();
-                this._constructFrame();
+        private _initFrame():void {
+            if (this.$movieClipData.$isTextureValid()) {
+                this.advanceFrame();
+                this.constructFrame();
             }
         }
 
-        public _render(renderContext:RendererContext):void {
-            var texture = this._textureToRender;
-            this._texture_to_render = texture;
+
+        /**
+         * @private
+         */
+        $render(context:sys.RenderContext):void {
+            var texture = this.$bitmapData;
             if (texture) {
+                context.imageSmoothingEnabled = false;
+
                 var offsetX:number = Math.round(texture._offsetX);
                 var offsetY:number = Math.round(texture._offsetY);
-                var bitmapWidth:number = texture._bitmapWidth||texture._textureWidth;
-                var bitmapHeight:number = texture._bitmapHeight||texture._textureHeight;
+                var bitmapWidth:number = texture._bitmapWidth || texture._textureWidth;
+                var bitmapHeight:number = texture._bitmapHeight || texture._textureHeight;
                 var destW:number = Math.round(bitmapWidth);
                 var destH:number = Math.round(bitmapHeight);
-                MovieClip.renderFilter.drawImage(renderContext, this, texture._bitmapX, texture._bitmapY,
-                    bitmapWidth, bitmapHeight, offsetX, offsetY, destW,destH);
+
+                context.drawImage(texture._bitmapData, texture._bitmapX, texture._bitmapY,
+                    bitmapWidth, bitmapHeight, offsetX, offsetY, destW, destH);
             }
         }
 
-        public _measureBounds():egret.Rectangle {
-            var texture:Texture = this._textureToRender;
-            if(!texture){
-                return super._measureBounds();
+        /**
+         * @private
+         */
+        $measureContentBounds(bounds:Rectangle):void {
+            var texture = this.$bitmapData;
+            if (texture) {
+                var x:number = texture._offsetX;
+                var y:number = texture._offsetY;
+                var w:number = texture._textureWidth;
+                var h:number = texture._textureHeight;
+
+                bounds.setTo(x, y, w, h);
             }
-            var x:number = texture._offsetX;
-            var y:number = texture._offsetY;
-            var w:number = texture._textureWidth;
-            var h:number = texture._textureHeight;
-            return Rectangle.identity.initialize(x,y, w, h);
+            else {
+                bounds.setEmpty();
+            }
         }
 
-        public _onAddToStage():void {
-            super._onAddToStage();
-            this._isAddedToStage = true;
-            if(this._isPlaying && this._totalFrames>1){
+        $onAddToStage(stage:Stage, nestLevel:number):void {
+            super.$onAddToStage(stage, nestLevel);
+
+            if (this.$isPlaying && this.$totalFrames > 1) {
                 this.setIsStopped(false);
             }
         }
 
-        public _onRemoveFromStage():void {
-            super._onRemoveFromStage();
-            this._isAddedToStage = false;
+        $onRemoveFromStage():void {
+            super.$onRemoveFromStage();
             this.setIsStopped(true);
         }
 
-    //Data Function
+        //Data Function
         /**
          * 返回帧标签为指定字符串的FrameLabel对象
          * @method egret.MovieClip#getFrameLabelByName
@@ -154,12 +166,12 @@ module egret {
          * @param ignoreCase {boolean} 是否忽略大小写，可选参数，默认false
          * @returns {egret.FrameLabel} FrameLabel对象
          */
-        public _getFrameLabelByName(labelName: string, ignoreCase: boolean = false): FrameLabel {
+        private getFrameLabelByName(labelName:string, ignoreCase:boolean = false):FrameLabel {
             if (ignoreCase) {
                 labelName = labelName.toLowerCase();
             }
-            var frameLabels = this._frameLabels;
-            if(frameLabels){
+            var frameLabels = this.frameLabels;
+            if (frameLabels) {
                 var outputFramelabel:FrameLabel = null;
                 for (var i = 0; i < frameLabels.length; i++) {
                     outputFramelabel = frameLabels[i];
@@ -177,9 +189,9 @@ module egret {
          * @param frame {number} 帧序号
          * @returns {egret.FrameLabel} FrameLabel对象
          */
-        public _getFrameLabelByFrame(frame: number): FrameLabel {
-            var frameLabels = this._frameLabels;
-            if(frameLabels){
+        private getFrameLabelByFrame(frame:number):FrameLabel {
+            var frameLabels = this.frameLabels;
+            if (frameLabels) {
                 var outputFramelabel:FrameLabel = null;
                 for (var i = 0; i < frameLabels.length; i++) {
                     outputFramelabel = frameLabels[i];
@@ -197,11 +209,11 @@ module egret {
          * @param frame {number} 帧序号
          * @returns {egret.FrameLabel} FrameLabel对象
          */
-        public _getFrameLabelForFrame(frame: number): FrameLabel{
+        private getFrameLabelForFrame(frame:number):FrameLabel {
             var outputFrameLabel:FrameLabel = null;
             var tempFrameLabel:FrameLabel = null;
-            var frameLabels = this._frameLabels;
-            if(frameLabels){
+            var frameLabels = this.frameLabels;
+            if (frameLabels) {
                 for (var i = 0; i < frameLabels.length; i++) {
                     tempFrameLabel = frameLabels[i];
                     if (tempFrameLabel.frame > frame) {
@@ -213,17 +225,17 @@ module egret {
             return outputFrameLabel;
         }
 
-    //Animation Function
+        //Animation Function
 
         /**
          * 继续播放当前动画
          * @method egret.MovieClip#play
          * @param playTimes {number} 播放次数。 参数为整数，可选参数，>=1：设定播放次数，<0：循环播放，默认值 0：不改变播放次数(MovieClip初始播放次数设置为1)，
          */
-        public play(playTimes:number = 0): void {
-            this._isPlaying = true;
+        public play(playTimes:number = 0):void {
+            this.$isPlaying = true;
             this.setPlayTimes(playTimes);
-            if (this._totalFrames > 1 && this._isAddedToStage) {
+            if (this.$totalFrames > 1 && this.$stage) {
                 this.setIsStopped(false);
             }
         }
@@ -232,8 +244,8 @@ module egret {
          * 暂停播放动画
          * @method egret.MovieClip#stop
          */
-        public stop(): void {
-            this._isPlaying = false;
+        public stop():void {
+            this.$isPlaying = false;
             this.setIsStopped(true);
         }
 
@@ -241,16 +253,16 @@ module egret {
          * 将播放头移到前一帧并停止
          * @method egret.MovieClip#prevFrame
          */
-        public prevFrame(): void {
-            this.gotoAndStop(this._currentFrameNum - 1);
+        public prevFrame():void {
+            this.gotoAndStop(this.$currentFrameNum - 1);
         }
 
         /**
          * 跳到后一帧并停止
          * @method egret.MovieClip#prevFrame
          */
-        public nextFrame(): void {
-            this.gotoAndStop(this._currentFrameNum + 1);
+        public nextFrame():void {
+            this.gotoAndStop(this.$currentFrameNum + 1);
         }
 
         /**
@@ -259,12 +271,12 @@ module egret {
          * @param frame {any} 指定帧的帧号或帧标签
          * @param playTimes {number} 播放次数。 参数为整数，可选参数，>=1：设定播放次数，<0：循环播放，默认值 0：不改变播放次数，
          */
-        public gotoAndPlay(frame: any, playTimes:number = 0): void{
+        public gotoAndPlay(frame:any, playTimes:number = 0):void {
             if (arguments.length === 0 || arguments.length > 2) {
                 throw new Error(getString(1022, "MovieClip.gotoAndPlay()"));
             }
             this.play(playTimes);
-            this._gotoFrame(frame);
+            this.gotoFrame(frame);
         }
 
         /**
@@ -272,152 +284,157 @@ module egret {
          * @method egret.MovieClip#gotoAndPlay
          * @param frame {any} 指定帧的帧号或帧标签
          */
-        public gotoAndStop(frame: any): void {
+        public gotoAndStop(frame:any):void {
             if (arguments.length != 1) {
                 throw new Error(getString(1022, "MovieClip.gotoAndStop()"));
             }
             this.stop();
-            this._gotoFrame(frame);
+            this.gotoFrame(frame);
         }
 
-        private _gotoFrame(frame:any): void
-        {
+        private gotoFrame(frame:any):void {
             var frameNum:number;
-            if(typeof frame === "string"){
-                frameNum = this._getFrameLabelByName(frame).frame;
-            }else{
-                frameNum = parseInt(frame+'', 10);
-                if(<any>frameNum != frame)
-                {
+            if (typeof frame === "string") {
+                frameNum = this.getFrameLabelByName(frame).frame;
+            } else {
+                frameNum = parseInt(frame + '', 10);
+                if (<any>frameNum != frame) {
                     throw new Error(getString(1022, "Frame Label Not Found"));
                 }
             }
 
             if (frameNum < 1) {
                 frameNum = 1;
-            } else if (frameNum > this._totalFrames) {
-                frameNum = this._totalFrames;
+            } else if (frameNum > this.$totalFrames) {
+                frameNum = this.$totalFrames;
             }
-            if (frameNum === this._nextFrameNum) {
+            if (frameNum === this.$nextFrameNum) {
                 return;
             }
 
-            this._nextFrameNum = frameNum;
-            this._advanceFrame();
-            this._constructFrame();
-            this._handlePendingEvent();
+            this.$nextFrameNum = frameNum;
+            this.advanceFrame();
+            this.constructFrame();
+            this.handlePendingEvent();
         }
 
-        private _advanceTime(advancedTime:number):void{
+        private lastTime:number = 0;
+
+        private advanceTime(advancedTime:number):boolean {
             var self = this;
-            var frameIntervalTime:number = self._frameIntervalTime;
-            var currentTime = self._passedTime + advancedTime;
-            self._passedTime = currentTime % frameIntervalTime;
+            var frameIntervalTime:number = self.frameIntervalTime;
+            var currentTime = self.passedTime + advancedTime;
+            self.passedTime = currentTime % frameIntervalTime;
 
             var num:number = currentTime / frameIntervalTime;
-            if(num < 1){
-                return;
+            if (num < 1) {
+                return false;
             }
-            while(num >= 1) {
+            while (num >= 1) {
                 num--;
-                self._nextFrameNum++;
-                if(self._nextFrameNum > self._totalFrames){
-                    if(self._playTimes == -1){
-                        self._eventPool.push(Event.LOOP_COMPLETE);
-                        self._nextFrameNum = 1;
+                self.$nextFrameNum++;
+                if (self.$nextFrameNum > self.$totalFrames) {
+                    if (self.playTimes == -1) {
+                        self.$eventPool.push(Event.LOOP_COMPLETE);
+                        self.$nextFrameNum = 1;
                     }
-                    else{
-                        self._playTimes--;
-                        if(self._playTimes > 0){
-                            self._eventPool.push(Event.LOOP_COMPLETE);
-                            self._nextFrameNum = 1;
+                    else {
+                        self.playTimes--;
+                        if (self.playTimes > 0) {
+                            self.$eventPool.push(Event.LOOP_COMPLETE);
+                            self.$nextFrameNum = 1;
                         }
-                        else{
-                            self._nextFrameNum = self._totalFrames;
-                            self._eventPool.push(Event.COMPLETE);
+                        else {
+                            self.$nextFrameNum = self.$totalFrames;
+                            self.$eventPool.push(Event.COMPLETE);
                             self.stop();
                             break;
                         }
                     }
                 }
-                self._advanceFrame();
+                self.advanceFrame();
             }
-            self._constructFrame();
-            self._handlePendingEvent();
-            self._setDirty();
+            self.constructFrame();
+            self.handlePendingEvent();
+
+            return true;
         }
 
-        public _advanceFrame(): void{
-            this._currentFrameNum = this._nextFrameNum;
+        private advanceFrame():void {
+            this.$currentFrameNum = this.$nextFrameNum;
         }
 
-        private _constructFrame() {
-            var currentFrameNum:number = this._currentFrameNum;
-            if(this._displayedKeyFrameNum == currentFrameNum){
+        private constructFrame() {
+            var currentFrameNum:number = this.$currentFrameNum;
+            if (this.displayedKeyFrameNum == currentFrameNum) {
                 return;
             }
-            this._textureToRender = this._movieClipData.getTextureByFrame(currentFrameNum);
-            this._DO_Props_._sizeDirty = true;
-            this._displayedKeyFrameNum = currentFrameNum;
+            this.$bitmapData = this.$movieClipData.getTextureByFrame(currentFrameNum);
+
+            this.$invalidateContentBounds();
+
+            this.displayedKeyFrameNum = currentFrameNum;
         }
 
-        private _handlePendingEvent():void{
-            if(this._eventPool.length != 0) {
-                this._eventPool.reverse();
-                var eventPool:any[] = this._eventPool;
+        private handlePendingEvent():void {
+            if (this.$eventPool.length != 0) {
+                this.$eventPool.reverse();
+                var eventPool:any[] = this.$eventPool;
                 var length:number = eventPool.length;
                 var isComplete:boolean = false;
                 var isLoopComplete:boolean = false;
 
                 for (var i = 0; i < length; i++) {
                     var event:string = eventPool.pop();
-                    if(event == Event.LOOP_COMPLETE){
+                    if (event == Event.LOOP_COMPLETE) {
                         isLoopComplete = true;
-                    }else if(event == Event.COMPLETE){
+                    } else if (event == Event.COMPLETE) {
                         isComplete = true;
-                    }else{
+                    } else {
                         this.dispatchEventWith(event);
                     }
                 }
 
-                if(isLoopComplete){
+                if (isLoopComplete) {
                     this.dispatchEventWith(Event.LOOP_COMPLETE);
                 }
-                if(isComplete){
+                if (isComplete) {
                     this.dispatchEventWith(Event.COMPLETE);
                 }
             }
         }
 
-    //Properties
+        //Properties
         /**
          * MovieClip 实例中帧的总数
-         * @member {number} egret.MovieClip#totalFrames
          */
-        public get totalFrames():number{
-            return this._totalFrames;
+        public get totalFrames():number {
+            return this.$totalFrames;
         }
+
         /**
          * MovieClip 实例当前播放的帧的序号
          * @member {number} egret.MovieClip#currentFrame
          */
-        public get currentFrame():number{
-            return this._currentFrameNum;
+        public get currentFrame():number {
+            return this.$currentFrameNum;
         }
+
         /**
          * MovieClip 实例当前播放的帧的标签。如果当前帧没有标签，则 currentFrameLabel返回null。
          * @member {number} egret.MovieClip#currentFrame
          */
-        public get currentFrameLabel(): string {
-            var label = this._getFrameLabelByFrame(this._currentFrameNum);
+        public get currentFrameLabel():string {
+            var label = this.getFrameLabelByFrame(this.$currentFrameNum);
             return label && label.name;
         }
+
         /**
          * 当前播放的帧对应的标签，如果当前帧没有标签，则currentLabel返回包含标签的先前帧的标签。如果当前帧和先前帧都不包含标签，currentLabel返回null。
          * @member {number} egret.MovieClip#currentFrame
          */
-        public get currentLabel(): string {
-            var label: FrameLabel = this._getFrameLabelForFrame(this._currentFrameNum);
+        public get currentLabel():string {
+            var label:FrameLabel = this.getFrameLabelForFrame(this.$currentFrameNum);
             return label ? label.name : null;
         }
 
@@ -425,62 +442,63 @@ module egret {
          * MovieClip 实例的帧频
          * @member {number} egret.MovieClip#frameRate
          */
-        public get frameRate():number{
-            return this.movieClipData.frameRate;
+        public get frameRate():number {
+            return this.$movieClipData.frameRate;
         }
 
-        public set frameRate(value:number){
-            if(value == this._movieClipData.frameRate){
+        public set frameRate(value:number) {
+            if (value == this.$movieClipData.frameRate) {
                 return;
             }
-            this._movieClipData.frameRate = value;
-            this._frameIntervalTime = 1000 / this._movieClipData.frameRate;
+            this.$movieClipData.frameRate = value;
+            this.frameIntervalTime = 1000 / this.$movieClipData.frameRate;
         }
 
         /**
          * MovieClip 实例当前是否正在播放
-         * @member {boolean} egret.MovieClip#isPlaying
          */
-        public get isPlaying(): boolean {
-            return this._isPlaying;
+        public get isPlaying():boolean {
+            return this.$isPlaying;
         }
 
         /**
          * MovieClip数据源
-         * @member {any} egret.MovieClip#movieClipData
          */
-        public set movieClipData(value:MovieClipData){
-            this._setMovieClipData(value);
-        }
-        public get movieClipData():MovieClipData{
-            return this._movieClipData;
+        public set movieClipData(value:MovieClipData) {
+            this.setMovieClipData(value);
         }
 
-        private _setMovieClipData(value:MovieClipData){
-            if(this._movieClipData == value){
+        public get movieClipData():MovieClipData {
+            return this.$movieClipData;
+        }
+
+        private setMovieClipData(value:MovieClipData) {
+            if (this.$movieClipData == value) {
                 return;
             }
-            this._movieClipData = value;
-            this._init();
+            this.$movieClipData = value;
+            this.$init();
         }
 
-        private setPlayTimes(value:number){
-            if(value < 0 || value >= 1){
-                this._playTimes = value < 0 ? -1 : Math.floor(value);
+        private setPlayTimes(value:number) {
+            if (value < 0 || value >= 1) {
+                this.playTimes = value < 0 ? -1 : Math.floor(value);
             }
         }
 
-        private setIsStopped(value:boolean){
-            if(this._isStopped == value) {
+        private setIsStopped(value:boolean) {
+            if (this.isStopped == value) {
                 return;
             }
-            this._isStopped = value;
-            if(value){
-                this._playTimes = 0;
-                Ticker.getInstance().unregister(this._advanceTime, this);
-            }else{
-                this._playTimes = this._playTimes == 0 ? 1 : this._playTimes;
-                Ticker.getInstance().register(this._advanceTime, this);
+            this.isStopped = value;
+            if (value) {
+                this.playTimes = 0;
+
+                stopTick(this.advanceTime, this);
+            } else {
+                this.playTimes = this.playTimes == 0 ? 1 : this.playTimes;
+                startTick(this.advanceTime, this);
+                this.lastTime = egret.getTimer();
             }
         }
     }

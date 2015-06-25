@@ -34,11 +34,11 @@ module egret {
      * @extends egret.HashObject
      * @link http://docs.egret-labs.org/post/manual/displaycon/movieclip.html MovieClip序列帧动画
      */
-    export class MovieClipData extends HashObject{
+    export class MovieClipData extends HashObject {
         /**
          * MovieClip数据
          */
-        public _mcData:any = null;
+        $mcData:any = null;
 
         /**
          * 总帧数
@@ -77,10 +77,10 @@ module egret {
             super();
         }
 
-        public _init(mcData:any, textureData:any, spriteSheet:SpriteSheet){
+        $init(mcData:any, textureData:any, spriteSheet:SpriteSheet) {
             this.textureData = textureData;
             this.spriteSheet = spriteSheet;
-            this._setMCData(mcData);
+            this.setMCData(mcData);
         }
 
         /**
@@ -89,9 +89,9 @@ module egret {
          * @param frame {number} 帧序号
          * @returns {any} 帧数据对象
          */
-        public getKeyFrameData(frame:number):any{
+        public getKeyFrameData(frame:number):any {
             var outputFrameData = this.frames[frame - 1];
-            if(outputFrameData.frame){
+            if (outputFrameData.frame) {
                 outputFrameData = this.frames[outputFrameData.frame - 1];
             }
             return outputFrameData;
@@ -103,9 +103,9 @@ module egret {
          * @param frame {number} 帧序号
          * @returns {egret.Texture} Texture对象
          */
-        public getTextureByFrame(frame:number):Texture{
+        public getTextureByFrame(frame:number):Texture {
             var frameData = this.getKeyFrameData(frame);
-            if(frameData.res){
+            if (frameData.res) {
                 var outputTexture:Texture = this.getTextureByResName(frameData.res);
                 outputTexture._offsetX = frameData.x | 0;
                 outputTexture._offsetY = frameData.y | 0;
@@ -114,7 +114,7 @@ module egret {
             return null;
         }
 
-        private getTextureByResName(resName:string):Texture{
+        private getTextureByResName(resName:string):Texture {
             var texture = this.spriteSheet.getTexture(resName);
             if (!texture) {
                 var textureData = this.textureData[resName];
@@ -123,32 +123,33 @@ module egret {
             return texture;
         }
 
-        public _isDataValid():boolean{
+        $isDataValid():boolean {
             return this.frames.length > 0;
         }
-        public _isTextureValid():boolean{
+
+        $isTextureValid():boolean {
             return this.textureData != null && this.spriteSheet != null;
         }
 
-        public _fillMCData(mcData:any):void{
+        $fillMCData(mcData:any):void {
             this.frameRate = mcData["frameRate"] || 24;
-            this._fillFramesData(mcData.frames);
-            this._fillFrameLabelsData(mcData.labels);
+            this.fillFramesData(mcData.frames);
+            this.fillFrameLabelsData(mcData.labels);
         }
 
-        private _fillFramesData(framesData:any[]):void{
+        private fillFramesData(framesData:any[]):void {
             var frames:any[] = this.frames;
             var length:number = framesData ? framesData.length : 0;
             var keyFramePosition:number;
-            for(var i=0; i < length; i++){
+            for (var i = 0; i < length; i++) {
                 var frameData:any = framesData[i];
                 frames.push(frameData);
-                if(frameData.duration){
+                if (frameData.duration) {
                     var duration:number = parseInt(frameData.duration);
-                    if(duration > 1){
+                    if (duration > 1) {
                         keyFramePosition = frames.length;
-                        for(var j=1; j < duration; j++){
-                            frames.push({"frame":keyFramePosition})
+                        for (var j = 1; j < duration; j++) {
+                            frames.push({"frame": keyFramePosition})
                         }
                     }
                 }
@@ -156,12 +157,12 @@ module egret {
             this.numFrames = frames.length;
         }
 
-        private _fillFrameLabelsData(frameLabelsData:any[]):void{
-            if(frameLabelsData){
+        private fillFrameLabelsData(frameLabelsData:any[]):void {
+            if (frameLabelsData) {
                 var length:number = frameLabelsData.length;
-                if(length > 0){
+                if (length > 0) {
                     this.labels = [];
-                    for(var i=0; i < length; i++){
+                    for (var i = 0; i < length; i++) {
                         var label:any = frameLabelsData[i];
                         this.labels.push(new FrameLabel(label.name, label.frame));
                     }
@@ -173,20 +174,21 @@ module egret {
          * MovieClip数据源
          * @member {any} egret.MovieClip#dataSource
          */
-        public set mcData(value:MovieClipData){
-            this._setMCData(value);
-        }
-        public get mcData():MovieClipData{
-            return this._mcData;
+        public set mcData(value:MovieClipData) {
+            this.setMCData(value);
         }
 
-        private _setMCData(value:MovieClipData){
-            if(this._mcData == value){
+        public get mcData():MovieClipData {
+            return this.$mcData;
+        }
+
+        private setMCData(value:MovieClipData) {
+            if (this.$mcData == value) {
                 return;
             }
-            this._mcData = value;
-            if(value){
-                this._fillMCData(value);
+            this.$mcData = value;
+            if (value) {
+                this.$fillMCData(value);
             }
         }
     }

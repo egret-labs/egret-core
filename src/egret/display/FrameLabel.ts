@@ -30,13 +30,11 @@
 
 module egret {
 
-    export class FrameLabel extends EventDispatcher
-    {
-        private _name: string;
-        private _frame: number /*int*/;
+    export class FrameLabel extends EventDispatcher {
+        private _name:string;
+        private _frame:number /*int*/;
 
-        constructor (name: string, frame: number /*int*/)
-        {
+        constructor(name:string, frame:number /*int*/) {
             super();
             this._name = name;
             this._frame = frame | 0;
@@ -46,7 +44,7 @@ module egret {
          * 标签名
          * @member {string} egret.FrameLabel#name
          */
-        public get name(): string {
+        public get name():string {
             return this._name;
         }
 
@@ -54,7 +52,7 @@ module egret {
          * 标签所在帧序号
          * @member {number} egret.FrameLabel#frame
          */
-        public get frame(): number /*int*/ {
+        public get frame():number /*int*/ {
             return this._frame;
         }
 

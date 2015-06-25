@@ -29,9 +29,10 @@
 
 module egret {
 
-    var __setTimeout__cache:any = {};
-    var __setTimeout__index:number = 0;
+    var setTimeoutCache:any = {};
+    var setTimeoutIndex:number = 0;
 
+    var setTimeoutCount:number = 0;
     /**
      * 在指定的延迟（以毫秒为单位）后运行指定的函数。
 	 * @method egret.setTimeout
@@ -43,12 +44,15 @@ module egret {
      */
     export function setTimeout(listener:Function, thisObject:any, delay:number, ...args):number {
         var data = {listener: listener, thisObject: thisObject, delay: delay, params: args};
-        if (__setTimeout__index == 0) {
-            Ticker.getInstance().register(timeoutUpdate, null);
+
+        setTimeoutCount++;
+        if (setTimeoutCount == 1) {
+            sys.$ticker.$startTick(timeoutUpdate, null);
         }
-        __setTimeout__index++;
-        __setTimeout__cache[__setTimeout__index] = data;
-        return __setTimeout__index;
+
+        setTimeoutIndex++;
+        setTimeoutCache[setTimeoutIndex] = data;
+        return setTimeoutIndex;
     }
 
     /**
@@ -57,17 +61,28 @@ module egret {
      * @param key {number} egret.setTimeout所返回的索引
      */
     export function clearTimeout(key:number):void {
-        delete __setTimeout__cache[key];
+        if (setTimeoutCache[key]) {
+            setTimeoutCount--;
+            delete setTimeoutCache[key];
+
+            if (setTimeoutCount == 0) {
+                sys.$ticker.$stopTick(timeoutUpdate, null);
+            }
+        }
+
     }
 
-    function timeoutUpdate(dt:number):void {
-        for (var key in __setTimeout__cache) {
-            var data = __setTimeout__cache[key];
+    function timeoutUpdate(dt:number):boolean {
+        for (var key in setTimeoutCache) {
+            var data = setTimeoutCache[key];
             data.delay -= dt;
             if (data.delay <= 0) {
                 data.listener.apply(data.thisObject, data.params);
-                delete __setTimeout__cache[key];
+
+                clearTimeout(key);
             }
         }
+
+        return true;
     }
 }
