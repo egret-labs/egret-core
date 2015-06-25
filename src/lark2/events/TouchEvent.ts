@@ -133,6 +133,16 @@ module egret {
         public static TOUCH_RELEASE_OUTSIDE:string = "touchReleaseOutside";
 
         /**
+         * @deprecated
+         */
+        public static TOUCH_ROLL_OUT:string = "touchRollOut";
+
+        /**
+         * @deprecated
+         */
+        public static TOUCH_ROLL_OVER:string = "touchRollOver";
+
+        /**
          * @language en_US
          * Creates an Event object that contains information about touch events.
          * @param type  The type of the event, accessible as Event.type.
@@ -292,6 +302,11 @@ module egret {
             sys.$requestRenderingFlag = true;
         }
 
+        /**
+         * 表示触摸已按下 (true) 还是未按下 (false)。
+         * @member {boolean} egret.TouchEvent#touchDown
+         */
+        public touchDown:boolean = false;
         /**
          * @language en_US
          * uses a specified target to dispatchEvent an event. Using this method can reduce the number of

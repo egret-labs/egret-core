@@ -141,7 +141,7 @@ module egret.gui {
 		 * @param useCapture {boolean} 
 		 * @param priority {number} 
 		 */		
-		public static addEventListener(type:string,listener:Function,thisObject:any,useCapture:boolean = false,priority:number = 0):void{
+		public static addEventListener(type:string,listener:(event:Event)=>void,thisObject:any,useCapture:boolean = false,priority:number = 0):void{
 			PopUpManager.getImpl().addEventListener(type,listener,thisObject,useCapture,priority);
 		}
 		/**
@@ -152,7 +152,7 @@ module egret.gui {
 		 * @param thisObject {any} 
 		 * @param useCapture {boolean} 
 		 */	
-		public static removeEventListener(type:string,listener:Function,thisObject:any,useCapture:boolean = false):void{
+		public static removeEventListener(type:string,listener:(event:Event)=>void,thisObject:any,useCapture:boolean = false):void{
 			PopUpManager.getImpl().removeEventListener(type,listener,thisObject,useCapture);
 		}
 	}

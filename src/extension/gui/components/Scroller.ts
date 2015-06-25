@@ -52,47 +52,47 @@ module egret.gui {
         }
 
         public setContent(content: IViewport) {
-            (<egret.ScrollView><any>this)._content = <egret.DisplayObject><any>content;
-            (<egret.ScrollView><any>this)._removeEvents();
-            (<egret.ScrollView><any>this)._addEvents();
-            (<egret.ScrollView><any>this)._ScrV_Props_._scrollLeft = content.horizontalScrollPosition;
-            (<egret.ScrollView><any>this)._ScrV_Props_._scrollTop = content.verticalScrollPosition;
+            (<egret.ScrollView><any>this).$viewport = <egret.DisplayObject><any>content;
+            (<egret.ScrollView><any>this).$uninstallViewport();
+            (<egret.ScrollView><any>this).$installViewport();
+            (<egret.ScrollView><any>this).scrollLeft = content.horizontalScrollPosition;
+            (<egret.ScrollView><any>this).scrollTop = content.verticalScrollPosition;
         }
 
         public _updateContentPosition(): void {
-            var content: IViewport = <any>(<egret.ScrollView><any>this)._content;
-            content.horizontalScrollPosition = (<egret.ScrollView><any>this)._ScrV_Props_._scrollLeft;
-            content.verticalScrollPosition = (<egret.ScrollView><any>this)._ScrV_Props_._scrollTop;
-            content.setLayoutBoundsSize(this._UIC_Props_._width, this._UIC_Props_._height);
+            var content: IViewport = <any>(<egret.ScrollView><any>this).$viewport;
+            content.horizontalScrollPosition = (<egret.ScrollView><any>this).scrollLeft;
+            content.verticalScrollPosition = (<egret.ScrollView><any>this).scrollTop;
+            content.setLayoutBoundsSize(this._UIC_Props_._uiWidth, this._UIC_Props_._uiHeight);
             this.dispatchEvent(new Event(Event.CHANGE));
         }
 
         public getMaxScrollLeft(): number {
-            var content: IViewport = <any>(<egret.ScrollView><any>this)._content;
+            var content: IViewport = <any>(<egret.ScrollView><any>this).$viewport;
             var max = content.contentWidth - content.width;
             var min = (<UIComponent><any>content).initialized ? 0 : (content.horizontalScrollPosition || 0);
             return Math.max(max, min);
         }
         public getMaxScrollTop(): number {
-            var content: IViewport = <any>(<egret.ScrollView><any>this)._content;
+            var content: IViewport = <any>(<egret.ScrollView><any>this).$viewport;
             var max = content.contentHeight - content.height;
             var min = (<UIComponent><any>content).initialized ? 0 : (content.verticalScrollPosition || 0);
             return Math.max(max, min);
         }
         public _getContentWidth(): number {
-            return (<any>(<egret.ScrollView><any>this)._content).contentWidth;
+            return (<any>(<egret.ScrollView><any>this).$viewport).contentWidth;
         }
         public _getContentHeight(): number {
-            return (<any>(<egret.ScrollView><any>this)._content).contentHeight;
+            return (<any>(<egret.ScrollView><any>this).$viewport).contentHeight;
         }
 
         public _onScrollStarted(): void {
-            ScrollView.prototype._onScrollStarted.call(this);
-            UIEvent.dispatchUIEvent(this, UIEvent.CHANGE_START);
+            //ScrollView.prototype._onScrollStarted.call(this);
+            //UIEvent.dispatchUIEvent(this, UIEvent.CHANGE_START);
         }
         public _onScrollFinished(): void {
-            ScrollView.prototype._onScrollFinished.call(this);
-            UIEvent.dispatchUIEvent(this, UIEvent.CHANGE_END);
+            //ScrollView.prototype._onScrollFinished.call(this);
+            //UIEvent.dispatchUIEvent(this, UIEvent.CHANGE_END);
         }
 
         /**
@@ -121,8 +121,8 @@ module egret.gui {
          */
         public updateDisplayList(unscaledWidth: number, unscaledHeight: number): void {
             this.viewport && this.viewport.setLayoutBoundsSize(unscaledWidth, unscaledHeight);
-            (<egret.ScrollView><any>this)._checkScrollPolicy();
-            if ((<egret.ScrollView><any>this)._ScrV_Props_._horizontalScrollPolicy != "off") {
+            (<egret.ScrollView><any>this).$checkScrollPolicy();
+            if ((<egret.ScrollView><any>this).horizontalScrollPolicy != "off") {
                 var pos = this.viewport.horizontalScrollPosition;
                 var maxPos = (<egret.ScrollView><any>this).getMaxScrollLeft();
                 var pos = Math.min(pos, maxPos);
@@ -130,15 +130,15 @@ module egret.gui {
                 var hbar = this.horizontalScrollBar;
                 if (hbar) {
                     hbar._setViewportMetric(unscaledWidth, this._Scr_Props_._viewport.contentWidth);
-                    hbar._setWidth(unscaledWidth - (hbar.left || 0) - (hbar.right || 0));
+                    hbar.$setWidth(unscaledWidth - (hbar.left || 0) - (hbar.right || 0));
                     hbar.x = hbar.left || 0;
                     hbar.y = unscaledHeight - this.horizontalScrollBar.layoutBoundsHeight;
-                    hbar.visible = (<egret.ScrollView><any>this)._ScrV_Props_._horizontalScrollPolicy == ScrollPolicy.ON || (<egret.ScrollView><any>this)._ScrV_Props_._hCanScroll;
+                    hbar.visible = (<egret.ScrollView><any>this).horizontalScrollPolicy == ScrollPolicy.ON || (<egret.ScrollView><any>this).$getHorizontalCanScroll();
                     if (this._Scr_Props_._autoHideScrollBars)
                         hbar.alpha = 0;
                 }
             }
-            if ((<egret.ScrollView><any>this)._ScrV_Props_._verticalScrollPolicy != "off") {
+            if ((<egret.ScrollView><any>this).verticalScrollPolicy != "off") {
                 var pos = this.viewport.verticalScrollPosition;
                 var maxPos = (<egret.ScrollView><any>this).getMaxScrollTop();
                 pos = Math.min(pos, maxPos);
@@ -146,10 +146,10 @@ module egret.gui {
                 var vbar = this.verticalScrollBar;
                 if (vbar) {
                     vbar._setViewportMetric(unscaledHeight, this._Scr_Props_._viewport.contentHeight);
-                    vbar._setHeight(unscaledHeight - (vbar.top || 0) - (vbar.bottom || 0));
+                    vbar.$setHeight(unscaledHeight - (vbar.top || 0) - (vbar.bottom || 0));
                     vbar.y = vbar.top || 0;
                     vbar.x = unscaledWidth - this.verticalScrollBar.layoutBoundsWidth;
-                    vbar.visible = (<egret.ScrollView><any>this)._ScrV_Props_._verticalScrollPolicy == ScrollPolicy.ON || (<egret.ScrollView><any>this)._ScrV_Props_._vCanScroll;
+                    vbar.visible = (<egret.ScrollView><any>this).verticalScrollPolicy == ScrollPolicy.ON || (<egret.ScrollView><any>this).$getVerticalCanScroll();
                     if (this._Scr_Props_._autoHideScrollBars)
                         vbar.alpha = 0;
                 }
@@ -162,13 +162,13 @@ module egret.gui {
          * @member egret.gui.Scroller#verticalScrollPolicy
          */
         public get verticalScrollPolicy(): string {
-            return (<egret.ScrollView><any>this)._ScrV_Props_._verticalScrollPolicy;
+            return (<egret.ScrollView><any>this).verticalScrollPolicy;
         }
 
         public set verticalScrollPolicy(value: string) {
-            if (value == (<egret.ScrollView><any>this)._ScrV_Props_._verticalScrollPolicy)
+            if (value == (<egret.ScrollView><any>this).verticalScrollPolicy)
                 return;
-            (<egret.ScrollView><any>this)._ScrV_Props_._verticalScrollPolicy = value;
+            (<egret.ScrollView><any>this).verticalScrollPolicy = value;
             this._checkVbar();
             (<egret.ScrollView><any>this).verticalScrollPolicy = value;
         }
@@ -179,12 +179,12 @@ module egret.gui {
          * @member egret.gui.Scroller#horizontalScrollPolicy
          */
         public get horizontalScrollPolicy(): string {
-            return (<egret.ScrollView><any>this)._ScrV_Props_._horizontalScrollPolicy;
+            return (<egret.ScrollView><any>this).horizontalScrollPolicy;
         }
         public set horizontalScrollPolicy(value: string) {
-            if (value == (<egret.ScrollView><any>this)._ScrV_Props_._horizontalScrollPolicy)
+            if (value == (<egret.ScrollView><any>this).horizontalScrollPolicy)
                 return;
-            (<egret.ScrollView><any>this)._ScrV_Props_._horizontalScrollPolicy = value;
+            (<egret.ScrollView><any>this).horizontalScrollPolicy = value;
             this._checkHbar();
             (<egret.ScrollView><any>this).horizontalScrollPolicy = value;
         }
@@ -288,7 +288,7 @@ module egret.gui {
          * @param duration {number} 
          */
         public throwHorizontally(hspTo: number, duration: number= 500): void {
-            (<egret.ScrollView><any>this).setScrollLeft(hspTo, duration);
+            //(<egret.ScrollView><any>this).setScrollLeft(hspTo, duration);
         }
         /**
          * 缓动到垂直滚动位置
@@ -297,7 +297,7 @@ module egret.gui {
          * @param duration {number} 
          */
         public throwVertically(vspTo: number, duration: number= 500): void {
-            (<egret.ScrollView><any>this).setScrollTop(vspTo, duration);
+            //(<egret.ScrollView><any>this).setScrollTop(vspTo, duration);
         }
 
         /**
@@ -571,7 +571,7 @@ module egret.gui {
          * @private
          */
         public _checkHbar(): void {
-            if ((<egret.ScrollView><any>this)._ScrV_Props_._horizontalScrollPolicy == "off") {
+            if ((<egret.ScrollView><any>this).horizontalScrollPolicy == "off") {
                 this._uninstallHorizontalScrollBar();
                 return;
             }
@@ -591,7 +591,7 @@ module egret.gui {
          * @private
          */
         public _checkVbar(): void {
-            if ((<egret.ScrollView><any>this)._ScrV_Props_._verticalScrollPolicy == "off") {
+            if ((<egret.ScrollView><any>this).verticalScrollPolicy == "off") {
                 this._uninstallVerticalScrollBar();
                 return;
             }
@@ -669,12 +669,12 @@ module egret.gui {
         private vBarChanged(e: Event): void {
             this.setViewportVScrollPosition(this.verticalScrollBar.getPosition());
         }
-        public hitTest(x: number, y: number, ignoreTouchEnabled: boolean = false): DisplayObject {
-            var childTouched = super.hitTest(x, y, ignoreTouchEnabled);
+        public hitTest(x: number, y: number): DisplayObject {
+            var childTouched = super.hitTest(x, y);
             if (childTouched)
                 return childTouched;
 
-            if (!this._DO_Props_._visible || (!ignoreTouchEnabled && !this._DO_Props_._touchEnabled)) {
+            if (!this.$visible) {
                 return null;
             }
             if (0 <= x && x < this.width && 0 <= y && y < this.height) {

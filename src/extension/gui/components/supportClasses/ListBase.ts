@@ -457,14 +457,15 @@ module egret.gui {
 		 * @param item {any} 
 		 * @returns {string}
 		 */
-		public itemToLabel(item:any):string{
+		public itemToLabel(item1:any):string{
+			var item:any = item1;
 			if (this._labelFunction != null)
 				return this._labelFunction(item);
 			
 			if (typeof(item) == "string")
 				return <string> item;
 			
-			if (item instanceof XML){
+			/*if (item instanceof XML){
 				try{
 					if (item[this.labelField].length() != 0)
 						item = item[this.labelField];
@@ -472,7 +473,7 @@ module egret.gui {
 				catch(e){
 				}
 			}
-			else if (item instanceof Object){
+			else */if (item instanceof Object){
 				try{
 					if (item[this.labelField] != null)
 						item = item[this.labelField];

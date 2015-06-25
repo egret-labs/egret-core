@@ -300,12 +300,12 @@ module egret.gui {
 				return;
 			this._autoMouseEnabled = value;
 			if(this._autoMouseEnabled){
-				this._touchChildren = this.enabled ? this.explicitMouseChildren : false;
-				this._DO_Props_._touchEnabled  = this.enabled ? this.explicitMouseEnabled  : false;
+				this.touchChildren = this.enabled ? this.explicitMouseChildren : false;
+				this.touchEnabled  = this.enabled ? this.explicitMouseEnabled  : false;
 			}
 			else{
-				this._touchChildren = this.explicitMouseChildren;
-                this._DO_Props_._touchEnabled  = this.explicitMouseEnabled;
+				this.touchChildren = this.explicitMouseChildren;
+                this.touchEnabled  = this.explicitMouseEnabled;
 			}
 		}
 		
@@ -318,14 +318,14 @@ module egret.gui {
 		 * @member egret.gui.SkinnableComponent#touchChildren
 		 */
         public get touchChildren():boolean{
-            return this._touchChildren;
+            return this.$getTouchChildren();
         }
 		/**
 		 * @inheritDoc
 		 */		
 		public set touchChildren(value:boolean){
 			if(this.enabled)
-				this._touchChildren = value;
+				this.$setTouchChildren(value);
 			this.explicitMouseChildren = value;
 		}
 		/**
@@ -337,14 +337,14 @@ module egret.gui {
 		 * @member egret.gui.SkinnableComponent#touchEnabled
 		 */
         public get touchEnabled():boolean{
-            return this._DO_Props_._touchEnabled;
+            return this.$getTouchEnabled();
         }
 		/**
 		 * @inheritDoc
 		 */	
 		public set touchEnabled(value:boolean){
 			if(this.enabled)
-				this._DO_Props_._touchEnabled = value;
+				this.$setTouchEnabled(value);
 			this.explicitMouseEnabled = value;
 		}
 
@@ -358,16 +358,16 @@ module egret.gui {
 		 * @inheritDoc
 		 */
 		public set enabled(value:boolean){
-			this._setEnabled(value);
+			this.$setEnabled(value);
 		}
 
-        public _setEnabled(value:boolean):void{
+        public $setEnabled(value:boolean):void{
             if(this._UIC_Props_._enabled==value)
                 return;
             this._UIC_Props_._enabled = value;
             if(this._autoMouseEnabled){
-                this._touchChildren = value ? this.explicitMouseChildren : false;
-                this._DO_Props_._touchEnabled  = value ? this.explicitMouseEnabled  : false;
+                this.touchChildren = value ? this.explicitMouseChildren : false;
+                this.touchEnabled  = value ? this.explicitMouseEnabled  : false;
             }
             this.invalidateSkinState();
         }

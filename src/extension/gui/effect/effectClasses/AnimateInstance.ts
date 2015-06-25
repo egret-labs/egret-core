@@ -375,13 +375,13 @@ module egret.gui {
             this.finishEffect();
         }
 
-        public addEventListener(type:string, listener:Function, thisObject:any, useCapture:boolean = false, priority:number = 0):void {
+        public addEventListener(type:string, listener:(event:Event)=>void, thisObject:any, useCapture:boolean = false, priority:number = 0):void {
             super.addEventListener(type, listener, thisObject, useCapture, priority);
             if (type == EffectEvent.EFFECT_UPDATE)
                 ++this.numUpdateListeners;
         }
 
-        public removeEventListener(type:string, listener:Function, useCapture:boolean=false):void{
+        public removeEventListener(type:string, listener:(event:Event)=>void, useCapture:boolean=false):void{
             super.removeEventListener(type, listener,this, useCapture);
             if (type == EffectEvent.EFFECT_UPDATE)
                 --this.numUpdateListeners;

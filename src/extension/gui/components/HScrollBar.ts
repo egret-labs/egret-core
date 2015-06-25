@@ -126,7 +126,7 @@ module egret.gui {
             var thumbPos: Point = this.track.localToGlobal(thumbPosTrackX, 0);
             var thumbPosX: number = thumbPos.x;
             var thumbPosY: number = thumbPos.y;
-            var thumbPosParentX: number = this.thumb.parent.globalToLocal(thumbPosX, thumbPosY, Point.identity).x;
+            var thumbPosParentX: number = this.thumb.parent.globalToLocal(thumbPosX, thumbPosY, egret.$TempPoint).x;
             this.thumb.setLayoutBoundsPosition(Math.round(thumbPosParentX), this.thumb.layoutBoundsY);
             if (thumbWidth != oldThumbWidth)
                 this.thumb.setLayoutBoundsSize(thumbWidth, this.thumb.layoutBoundsHeight);

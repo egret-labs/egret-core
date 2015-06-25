@@ -165,6 +165,8 @@ module egret {
         anchorY,
         anchorOffsetX,
         anchorOffsetY,
+        explicitWidth,
+        explicitHeight,
     }
 
     /**
@@ -241,7 +243,9 @@ module egret {
                 10: 0,               //anchorX,
                 11: 0,               //anchorY,
                 12: 0,               //anchorOffsetX,
-                13: 0                //anchorOffsetY,
+                13: 0,                //anchorOffsetY,
+                14: NONE,           //explicitWidth,
+                15: NONE            //explicitHeight,
             };
         }
 
@@ -723,11 +727,15 @@ module egret {
          * @platform Web,Native
          */
         public get scaleX():number {
-            return this.$DisplayObject[Keys.scaleX];
+            return this.$getScaleX();
         }
 
         public set scaleX(value:number) {
             this.$setScaleX(value);
+        }
+
+        $getScaleX():number {
+            return this.$DisplayObject[Keys.scaleX];
         }
 
         /**
@@ -763,11 +771,15 @@ module egret {
          * @platform Web,Native
          */
         public get scaleY():number {
-            return this.$DisplayObject[Keys.scaleY];
+            return this.$getScaleY();
         }
 
         public set scaleY(value:number) {
             this.$setScaleY(value);
+        }
+
+        $getScaleY():number {
+            return this.$DisplayObject[Keys.scaleY];
         }
 
         /**
@@ -847,6 +859,10 @@ module egret {
             return this.$getTransformedBounds(this.$parent, $TempRectangle).width;
         }
 
+        $getExplicitWidth():number {
+            return this.$DisplayObject[Keys.explicitWidth];
+        }
+
         public set width(value:number) {
             this.$setWidth(value);
         }
@@ -856,6 +872,8 @@ module egret {
          * 设置显示宽度
          */
         $setWidth(value:number):void {
+            this.$DisplayObject[Keys.explicitWidth] = isNaN(value) ? NONE : value;
+
             value = +value || 0;
             if (value < 0) {
                 return;
@@ -899,6 +917,10 @@ module egret {
             return this.$getTransformedBounds(this.$parent, $TempRectangle).height;
         }
 
+        $getExplicitHeight():number {
+            return this.$DisplayObject[Keys.explicitHeight];
+        }
+
         public set height(value:number) {
             this.$setHeight(value);
         }
@@ -908,6 +930,8 @@ module egret {
          * 设置显示高度
          */
         $setHeight(value:number):void {
+            this.$DisplayObject[Keys.explicitHeight] = isNaN(value) ? NONE : value;
+
             value = +value || 0;
             if (value < 0) {
                 return;
@@ -1233,11 +1257,15 @@ module egret {
          * @platform Web,Native
          */
         public get touchEnabled():boolean {
-            return this.$hasFlags(sys.DisplayObjectFlags.TouchEnabled);
+            return this.$getTouchEnabled();
         }
 
         public set touchEnabled(value:boolean) {
             this.$setTouchEnabled(value);
+        }
+
+        $getTouchEnabled():boolean {
+            return this.$hasFlags(sys.DisplayObjectFlags.TouchEnabled);
         }
 
         /**

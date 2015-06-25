@@ -248,8 +248,8 @@ module egret.gui {
 
             var availableWidth:number;
 
-            if (!isNaN(this.explicitWidth))
-                availableWidth = this.explicitWidth;
+            if ((availableWidth = this.$getExplicitWidth()) != NONE) {
+            }
             else if (this.maxWidth!=10000)
                 availableWidth = this.maxWidth;
 
@@ -262,7 +262,7 @@ module egret.gui {
         private isSpecialCase():boolean{
             return this._maxDisplayedLines!=1&&
                 (!isNaN(this.percentWidth) || (!isNaN(this.left) && !isNaN(this.right))) &&
-                isNaN(this.explicitHeight) &&
+                this.$getExplicitHeight() == NONE &&
                 isNaN(this.percentHeight);
         }
 
@@ -287,12 +287,12 @@ module egret.gui {
             this._textField.height = NaN;
             if (!isNaN(w)){
                 this._textField.width = w - paddingL - paddingR;
-                this.measuredWidth = Math.ceil(this._textField.measuredWidth);
-                this.measuredHeight = Math.ceil(this._textField.measuredHeight);
+                this.measuredWidth = Math.ceil(this._textField.width);
+                this.measuredHeight = Math.ceil(this._textField.height);
             }
             else{
-                this.measuredWidth = Math.ceil(this._textField.measuredWidth);
-                this.measuredHeight = Math.ceil(this._textField.measuredHeight);
+                this.measuredWidth = Math.ceil(this._textField.width);
+                this.measuredHeight = Math.ceil(this._textField.height);
             }
 
             if(this._maxDisplayedLines>0&&this._textField.numLines>this._maxDisplayedLines){

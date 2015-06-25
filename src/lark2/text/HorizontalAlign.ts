@@ -86,5 +86,20 @@ module egret {
          */
         public static CENTER: string = "center";
 
+        /**
+         * 水平两端对齐
+         * 注意：TextFiled不支持此对齐方式。
+         * @constant egret.HorizontalAlign.JUSTIFY
+         */
+        public static JUSTIFY:string = "justify";
+
+        /**
+         * 相对于容器对子项进行内容对齐。这会将所有子项的大小统一调整为容器的"内容宽度"。
+         * 容器的"内容宽度"是最大子项的大小,如果所有子项都小于容器的宽度，则会将所有子项的大小调整为容器的宽度。
+         * 注意：TextFiled不支持此对齐方式。
+         * @constant egret.HorizontalAlign.CONTENT_JUSTIFY
+         */
+        public static CONTENT_JUSTIFY:string = "contentJustify";
+
     }
 }

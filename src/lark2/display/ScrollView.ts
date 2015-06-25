@@ -236,25 +236,51 @@ module egret {
             this.$ScrollView[Keys.scrollPolicyH] = value;
         }
 
-        private viewport:DisplayObject;
+        $getHorizontalCanScroll():boolean {
+            return this.$ScrollView[Keys.horizontalCanScroll];
+        }
+
+        $getVerticalCanScroll():boolean {
+            return this.$ScrollView[Keys.verticalCanScroll];
+        }
+
+        $checkScrollPolicy():boolean {
+            var hpolicy = this.$ScrollView[Keys.scrollPolicyH];
+            var hCanScroll = this.checkScrollPolicy2(hpolicy, this._getContentWidth(), this.width);
+            this.$ScrollView[Keys.horizontalCanScroll] = hCanScroll;
+            var vpolicy = this.$ScrollView[Keys.scrollPolicyV];
+            var vCanScroll = this.checkScrollPolicy2(vpolicy, this._getContentHeight(), this.height);
+            this.$ScrollView[Keys.verticalCanScroll] = vCanScroll;
+            return hCanScroll || vCanScroll;
+        }
+
+        private checkScrollPolicy2(policy: string, contentLength, viewLength):boolean {
+            if (policy == "on")
+                return true;
+            if (policy == "off")
+                return false;
+            return contentLength > viewLength;
+        }
+
+        $viewport:DisplayObject;
         public setContent(value: egret.DisplayObject): void {
             var values = this.$ScrollView;
             if (value == values[Keys.viewport])
                 return;
 
-            this.uninstallViewport();
+            this.$uninstallViewport();
             values[Keys.viewport] = value;
-            this.viewport = value;
+            this.$viewport = value;
 
-            this.installViewport();
+            this.$installViewport();
         }
 
         /**
          * @private
          * 安装并初始化视域组件
          */
-        private installViewport():void {
-            var viewport = this.viewport;
+        $installViewport():void {
+            var viewport = this.$viewport;
             if (viewport) {
                 this.addEventListener(egret.TouchEvent.TOUCH_BEGIN, this.onTouchBeginCapture, this, true);
                 this.addEventListener(egret.TouchEvent.TOUCH_END, this.onTouchEndCapture, this, true);
@@ -267,15 +293,15 @@ module egret {
          * @method egret.ScrollView#removeContent
          */
         public removeContent():void {
-            this.uninstallViewport();
+            this.$uninstallViewport();
         }
 
         /**
          * @private
          * 卸载视域组件
          */
-        private uninstallViewport():void {
-            var viewport = this.viewport;
+        $uninstallViewport():void {
+            var viewport = this.$viewport;
             if (viewport) {
                 this.removeEventListener(egret.TouchEvent.TOUCH_BEGIN, this.onTouchBeginCapture, this, true);
                 this.removeEventListener(egret.TouchEvent.TOUCH_END, this.onTouchEndCapture, this, true);
@@ -372,10 +398,10 @@ module egret {
         }
 
         public _getContentWidth():number {
-            return this.viewport.width;
+            return this.$viewport.width;
         }
         public _getContentHeight(): number {
-            return this.viewport.height;
+            return this.$viewport.height;
         }
         public getMaxScrollLeft(): number {
             var max = this._getContentWidth() - this.width;
@@ -612,7 +638,7 @@ module egret {
 
             this.scrollerRect.x = this.scrollHPos;
             this.$setScrollRect(this.scrollerRect);
-            //this.viewport.scrollRect.x = -scrollPos;
+            //this.$viewport.scrollRect.x = -scrollPos;
         }
 
         /**
@@ -625,7 +651,7 @@ module egret {
 
             this.scrollerRect.y = this.scrollVPos;
             this.$setScrollRect(this.scrollerRect);
-            //this.viewport.y = -scrollPos;
+            //this.$viewport.y = -scrollPos;
         }
 
         /**

@@ -79,12 +79,13 @@ module egret.gui {
          * @method egret.gui.ElementExistenceEvent.dispatchElementExistenceEvent
          */
         public static dispatchElementExistenceEvent(target:IEventDispatcher,type:string,
-                                                    element:IVisualElement = null,index:number = -1):void{
-            var eventClass:any = ElementExistenceEvent;
-            var props:any = Event._getPropertyData(eventClass);
-            props.element = element;
-            props.index = index;
-            Event._dispatchByTarget(eventClass,target,type,props);
+                                                    element:IVisualElement = null,index:number = -1):boolean{
+			var event:ElementExistenceEvent = Event.create(ElementExistenceEvent, type);
+			event.element = element;
+			event.index = index;
+			var result = target.dispatchEvent(event);
+			Event.release(event);
+			return result;
         }
 	}
 	

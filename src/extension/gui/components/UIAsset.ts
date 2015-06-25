@@ -90,7 +90,7 @@ module egret.gui {
 				this.sourceChanged = true;
 			}
 
-            this._setSizeDirty();
+            this.$invalidateContentBounds();
 		}
         
         public _content: any = null;
@@ -161,24 +161,22 @@ module egret.gui {
             var oldContent:any = this._content;
             this._content = content;
             if(this._content instanceof Texture){
-                this._texture_to_render = content;
 				this._contentIsTexture = true;
             }
             else{
-                this._texture_to_render = null;
 				this._contentIsTexture = false;
             }
             if(oldContent!==content) {
                 if(oldContent instanceof DisplayObject){
 					if((<DisplayObject> oldContent).parent==this){
-						(<DisplayObject> oldContent)._sizeChangeCallBack = null;
-						(<DisplayObject> oldContent)._sizeChangeCallTarget = null;
+						//(<DisplayObject> oldContent)._sizeChangeCallBack = null;
+						//(<DisplayObject> oldContent)._sizeChangeCallTarget = null;
 						this._removeFromDisplayList(<DisplayObject> oldContent);
 					}
                 }
                 if(content instanceof  DisplayObject){
-					(<DisplayObject> content)._sizeChangeCallBack = this.invalidateSize;
-					(<DisplayObject> content)._sizeChangeCallTarget = this;
+					//(<DisplayObject> content)._sizeChangeCallBack = this.invalidateSize;
+					//(<DisplayObject> content)._sizeChangeCallTarget = this;
                     this._addToDisplayListAt(<DisplayObject> content,0);
                 }
             }
@@ -238,50 +236,56 @@ module egret.gui {
 					content.height = unscaledHeight/content.scaleY;
 				}
 			}
-            this._setSizeDirty();
+            this.$invalidateContentBounds();
 		}
 
 		/**
-		 *
-		 * @param renderContext
 		 * @private
 		 */
-        public _render(renderContext:RendererContext):void {
-            if(this._contentIsTexture){
-                var texture:Texture = <Texture> this._content;
-                var w:number;
-                var h:number;
-                if(this.autoScale){
-                    w = this._UIC_Props_._width;
-                    h = this._UIC_Props_._height;
-                }
-                else{
-                    w = texture._textureWidth;
-                    h = texture._textureHeight;
-                }
-				this._texture_to_render = texture;
-                Bitmap._drawBitmap(renderContext,w,h,this);
-            }
-            super._render(renderContext);
-        }
+		$render(context:sys.RenderContext):void{
+			if (this._contentIsTexture) {
+				var bitmapData = <Texture> this._content;
+				context.imageSmoothingEnabled = false;
+				var destW:number;
+				var destH:number;
+				if(this.autoScale){
+					destW = this._UIC_Props_._uiWidth;
+					destH = this._UIC_Props_._uiHeight;
+				}
+				else{
+					destW = bitmapData._textureWidth;
+					destH = bitmapData._textureHeight;
+				}
 
-        /**
-         * @returns {Rectangle}
-         * @private
-         */
-        public _measureBounds():egret.Rectangle {
-            if(this._contentIsTexture){
-                var texture:Texture = <Texture> this._content;
-                var textureW:number = texture._textureWidth;
-                var textureH:number = texture._textureHeight;
-                var w:number = this.width;
-                var h:number = this.height;
-                var x:number = Math.floor(texture._offsetX*w/textureW);
-                var y:number = Math.floor(texture._offsetY*h/textureH);
-                return Rectangle.identity.initialize(x,y, w, h);
-            }
-            return super._measureBounds();
-        }
+				var offsetX:number = Math.round(bitmapData._offsetX);
+				var offsetY:number = Math.round(bitmapData._offsetY);
+				var bitmapWidth:number = bitmapData._bitmapWidth || bitmapData._textureWidth;
+				var bitmapHeight:number = bitmapData._bitmapHeight || bitmapData._textureHeight;
+
+				context.drawImage(bitmapData._bitmapData, bitmapData._bitmapX, bitmapData._bitmapY,
+					bitmapWidth, bitmapHeight, offsetX, offsetY, destW, destH);
+			}
+			super.$render(context);
+		}
+		/**
+		 * @private
+		 */
+		$measureContentBounds(bounds:Rectangle):void {
+			if(this._contentIsTexture){
+				var texture:Texture = <Texture> this._content;
+				var textureW:number = texture._textureWidth;
+				var textureH:number = texture._textureHeight;
+				var w:number = this.width;
+				var h:number = this.height;
+				var x:number = Math.floor(texture._offsetX*w/textureW);
+				var y:number = Math.floor(texture._offsetY*h/textureH);
+
+				bounds.setTo(0,0,w,h);
+			}
+			else{
+				super.$measureChildBounds(bounds);
+			}
+		}
 
 		/**
 		 * 此方法不支持

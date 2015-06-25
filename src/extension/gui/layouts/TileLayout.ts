@@ -426,7 +426,7 @@ module egret.gui {
 			var measuredWidth:number = 0;
 			var measuredHeight:number = 0;
 			
-			this.calculateRowAndColumn(this.target.explicitWidth,this.target.explicitHeight);
+			this.calculateRowAndColumn(this.target.$getExplicitWidth(),this.target.$getExplicitHeight());
 			var columnCount:number = this._requestedColumnCount>0 ? this._requestedColumnCount: this._columnCount;
 			var rowCount:number = this._requestedRowCount>0 ? this._requestedRowCount : this._rowCount;
 			var horizontalGap:number = isNaN(this._horizontalGap)?0:this._horizontalGap;

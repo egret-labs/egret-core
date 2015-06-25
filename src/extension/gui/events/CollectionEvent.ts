@@ -101,15 +101,17 @@ module egret.gui {
          * @method egret.gui.CollectionEvent.dispatchCollectionEvent
          */
         public static dispatchCollectionEvent(target:IEventDispatcher,type:string,kind:string = null, location:number = -1,
-                                             oldLocation:number = -1, items:Array<any> = null,oldItems:Array<any>=null):void{
-            var eventClass:any = CollectionEvent;
-            var props:any = Event._getPropertyData(eventClass);
-            props.kind = kind;
-            props.location = location;
-            props.oldLocation = oldLocation;
-            props.items = items;
-            props.oldItems = oldItems;
-            Event._dispatchByTarget(eventClass,target,type,props);
+                                             oldLocation:number = -1, items:Array<any> = null,oldItems:Array<any>=null):boolean{
+
+            var event:CollectionEvent = Event.create(CollectionEvent, type);
+            event.kind = kind;
+            event.location = location;
+            event.oldLocation = oldLocation;
+            event.items = items;
+            event.oldItems = oldItems;
+            var result = target.dispatchEvent(event);
+            Event.release(event);
+            return result;
         }
     }
 }

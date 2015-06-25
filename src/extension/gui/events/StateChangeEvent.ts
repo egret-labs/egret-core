@@ -86,12 +86,13 @@ module egret.gui {
          * @method egret.gui.StateChangeEvent.dispatchStateChangeEvent
          */
         public static dispatchStateChangeEvent(target:IEventDispatcher,type:string,
-                                               oldState:string = null,newState:string = null):void{
-            var eventClass:any = StateChangeEvent;
-            var props:any = Event._getPropertyData(eventClass);
-            props.oldState = oldState;
-            props.newState = newState;
-            Event._dispatchByTarget(eventClass,target,type,props);
+                                               oldState:string = null,newState:string = null):boolean{
+			var event:StateChangeEvent = Event.create(StateChangeEvent, type);
+			event.oldState = oldState;
+			event.newState = newState;
+			var result = target.dispatchEvent(event);
+			Event.release(event);
+			return result;
         }
 	}
 	

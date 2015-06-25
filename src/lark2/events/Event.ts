@@ -279,6 +279,13 @@ module egret {
         public static CONNECT:string = "connect";
 
 
+        /**
+         * Event.LEAVE_STAGE 常量定义 leaveStage 事件对象的 type 属性的值。
+         * @constant {string} egret.Event.CONNECT
+         */
+        public static LEAVE_STAGE:string = "leaveStage";
+
+
 
         /**
          * @language en_US

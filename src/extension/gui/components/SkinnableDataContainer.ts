@@ -296,7 +296,7 @@ module egret.gui {
 		 * @param useCapture {boolean} 
 		 * @param priority {number} 
 		 */
-		public addEventListener(type:string, listener:Function,thisObject:any,  useCapture:boolean=false, priority:number=0) : void{
+		public addEventListener(type:string, listener:(event:Event)=>void,thisObject:any,  useCapture:boolean=false, priority:number=0) : void{
 			super.addEventListener(type, listener,thisObject, useCapture, priority);
 			
 			if (type == RendererExistenceEvent.RENDERER_ADD && this.dataGroup){
@@ -318,7 +318,7 @@ module egret.gui {
 		 * @param thisObject {any} 
 		 * @param useCapture {boolean} 
 		 */
-		public removeEventListener(type:string, listener:Function, thisObject:any, useCapture:boolean=false) : void{
+		public removeEventListener(type:string, listener:(event:Event)=>void, thisObject:any, useCapture:boolean=false) : void{
 			super.removeEventListener(type, listener,thisObject, useCapture);
 			
 			if (type == RendererExistenceEvent.RENDERER_ADD && this.dataGroup){

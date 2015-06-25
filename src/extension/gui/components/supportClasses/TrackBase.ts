@@ -280,7 +280,7 @@ module egret.gui {
 			UIGlobals.stage.addEventListener(Event.LEAVE_STAGE,this.stage_mouseUpHandler,this);
 			this.addEventListener(Event.ENTER_FRAME,this.onEnterFrame,this);
 			
-			var clickOffset:Point = this.thumb.globalToLocal(event.stageX, event.stageY,Point.identity);
+			var clickOffset:Point = this.thumb.globalToLocal(event.stageX, event.stageY,egret.$TempPoint);
             this._clickOffsetX = clickOffset.x;
             this._clickOffsetY = clickOffset.y;
 
@@ -309,7 +309,7 @@ module egret.gui {
 		public updateWhenMouseMove():void{
 			if(!this.track)
 				return;
-			var p:Point = this.track.globalToLocal(this._moveStageX, this._moveStageY,Point.identity);
+			var p:Point = this.track.globalToLocal(this._moveStageX, this._moveStageY,egret.$TempPoint);
 			var newValue:number = this.pointToValue(p.x - this._clickOffsetX, p.y - this._clickOffsetY);
 			newValue = this.nearestValidValue(newValue, this.snapInterval);
 			
@@ -402,9 +402,8 @@ module egret.gui {
 
                 var mousePoint:Point = (<DisplayObject> (event.target)).localToGlobal(mEvent.localX, mEvent.localY);
 
-                TouchEvent.dispatchTouchEvent(this,
-                    TouchEvent.TOUCH_TAP,mEvent.touchPointID,mousePoint.x,mousePoint.y,
-                    mEvent.ctrlKey,mEvent.altKey,mEvent.shiftKey,mEvent.touchDown);
+                TouchEvent.emitTouchEvent(this,
+                    TouchEvent.TOUCH_TAP, false, false,mousePoint.x,mousePoint.y ,mEvent.touchPointID);
 			}
 			
 			this.mouseDownTarget = null;

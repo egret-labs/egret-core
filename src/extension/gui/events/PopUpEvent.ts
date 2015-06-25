@@ -84,12 +84,13 @@ module egret.gui {
          * @method egret.gui.PopUpEvent.dispatchPopUpEvent
          */
         public static dispatchPopUpEvent(target:IEventDispatcher,type:string,
-                                         popUp:IVisualElement=null,modal:boolean = false):void{
-            var eventClass:any = PopUpEvent;
-            var props:any = Event._getPropertyData(eventClass);
-            props.popUp = popUp;
-            props.modal = modal;
-            Event._dispatchByTarget(eventClass,target,type,props);
+                                         popUp:IVisualElement=null,modal:boolean = false):boolean{
+			var event:PopUpEvent = Event.create(PopUpEvent, HTTPStatusEvent.HTTP_STATUS);
+			event.popUp = popUp;
+			event.modal = modal;
+			var result = target.dispatchEvent(event);
+			Event.release(event);
+			return result;
         }
 	}
 }

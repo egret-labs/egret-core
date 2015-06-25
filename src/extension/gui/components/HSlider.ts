@@ -74,11 +74,11 @@ module egret.gui {
 			var thumbPos:Point = this.track.localToGlobal(thumbPosTrackX, 0);
             var thumbPosX:number = thumbPos.x;
             var thumbPosY:number = thumbPos.y;
-			var thumbPosParentX:number = this.thumb.parent.globalToLocal(thumbPosX,thumbPosY,Point.identity).x;
+			var thumbPosParentX:number = this.thumb.parent.globalToLocal(thumbPosX,thumbPosY,egret.$TempPoint).x;
 			
 			this.thumb.setLayoutBoundsPosition(Math.round(thumbPosParentX), this.thumb.layoutBoundsY);
 			if(this.showTrackHighlight&&this.trackHighlight&&this.trackHighlight.parent){
-				var trackHighlightX:number = this.trackHighlight.parent.globalToLocal(thumbPosX,thumbPosY,Point.identity).x-thumbPosTrackX;
+				var trackHighlightX:number = this.trackHighlight.parent.globalToLocal(thumbPosX,thumbPosY,egret.$TempPoint).x-thumbPosTrackX;
 				this.trackHighlight.x = Math.round(trackHighlightX);
 				this.trackHighlight.width = Math.round(thumbPosTrackX);
 			}

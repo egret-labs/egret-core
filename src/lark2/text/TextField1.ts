@@ -579,10 +579,10 @@ module egret {
         }
 
         public get text():string {
-            return this._getText();
+            return this.$getText();
         }
 
-        public _getText():string {
+        public $getText():string {
             if (this.$TextField[sys.TextKeys.type] == egret.TextFieldType.INPUT) {
                 return this._inputUtils._getText();
             }
@@ -595,7 +595,7 @@ module egret {
          * @member {string} egret.TextField#text
          */
         public set text(value:string) {
-            this._setText(value);
+            this.$setText(value);
         }
 
         public _setBaseText(value:string):void {
@@ -619,7 +619,7 @@ module egret {
             }
         }
 
-        public _setText(value:string):void {
+        $setText(value:string):void {
             if (value == null) {
                 value = "";
             }
@@ -759,6 +759,14 @@ module egret {
 
         public get caretIndex():number {
             return 0;
+        }
+
+        public $setSelection(beginIndex:number, endIndex:number) {
+
+        }
+
+        $getLineHeight():number {
+            return this.$TextField[sys.TextKeys.lineSpacing] + this.$TextField[sys.TextKeys.fontSize];
         }
 
         /**

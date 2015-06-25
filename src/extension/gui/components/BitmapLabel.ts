@@ -347,8 +347,8 @@ module egret.gui {
 
             var availableWidth:number;
 
-            if (!isNaN(this.explicitWidth))
-                availableWidth = this.explicitWidth;
+            if ((availableWidth = this.$getExplicitWidth()) != NONE) {
+            }
             else if (this.maxWidth != 10000)
                 availableWidth = this.maxWidth;
 
@@ -360,7 +360,7 @@ module egret.gui {
          */
         private isSpecialCase():boolean {
             return (!isNaN(this.percentWidth) || (!isNaN(this.left) && !isNaN(this.right))) &&
-                isNaN(this.explicitHeight) &&
+                this.$getExplicitWidth() == NONE &&
                 isNaN(this.percentHeight);
         }
 
@@ -389,12 +389,12 @@ module egret.gui {
             this._bitmapText.height = NaN;
             if (!isNaN(w)) {
                 this._bitmapText.width = w - paddingL - paddingR;
-                this.measuredWidth = Math.ceil(this._bitmapText.measuredWidth);
-                this.measuredHeight = Math.ceil(this._bitmapText.measuredHeight);
+                this.measuredWidth = Math.ceil(this._bitmapText.width);
+                this.measuredHeight = Math.ceil(this._bitmapText.height);
             }
             else {
-                this.measuredWidth = Math.ceil(this._bitmapText.measuredWidth);
-                this.measuredHeight = Math.ceil(this._bitmapText.measuredHeight);
+                this.measuredWidth = Math.ceil(this._bitmapText.width);
+                this.measuredHeight = Math.ceil(this._bitmapText.height);
             }
             this.measuredWidth += paddingL + paddingR;
             this.measuredHeight += paddingT + paddingB;

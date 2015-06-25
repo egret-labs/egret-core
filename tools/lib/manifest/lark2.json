@@ -5,6 +5,7 @@
     "file_list": [
         "lark2/utils/extends.ts",
         "Defines.debug.ts",
+        "lark2/utils/NumberUtils.ts",
         "lark2/utils/HashObject.ts",
         "lark2/utils/ByteArray.ts",
         "lark2/utils/getDefinitionByName.ts",

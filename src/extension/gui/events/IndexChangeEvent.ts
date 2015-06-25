@@ -85,11 +85,12 @@ module egret.gui {
          */
         public static dispatchIndexChangeEvent(target:IEventDispatcher,type:string,
                                                oldIndex:number = -1,newIndex:number = -1,cancelable:boolean = false):boolean{
-            var eventClass:any = IndexChangeEvent;
-            var props:any = Event._getPropertyData(eventClass);
-            props.oldIndex = oldIndex;
-            props.newIndex = newIndex;
-            return Event._dispatchByTarget(eventClass,target,type,props,false,cancelable);
+			var event:IndexChangeEvent = Event.create(IndexChangeEvent, type);
+			event.oldIndex = oldIndex;
+			event.newIndex = newIndex;
+			var result = target.dispatchEvent(event);
+			Event.release(event);
+			return result;
         }
 	}
 }

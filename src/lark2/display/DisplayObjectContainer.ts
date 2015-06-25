@@ -488,6 +488,10 @@ module egret {
          * @platform Web,Native
          */
         public get touchChildren():boolean {
+            return this.$getTouchChildren();
+        }
+
+        $getTouchChildren():boolean {
             return this.$hasFlags(sys.DisplayObjectFlags.TouchChildren);
         }
 
