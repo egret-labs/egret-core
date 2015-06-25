@@ -94,7 +94,7 @@ function rename_app(app_path, template_path, app_data) {
 
 function run_unzip(app_path, template_path, app_data) {
     var template_zip_path = path.join(template_path, app_data["template"]["zip"]);
-    var cmd = "unzip -q " + template_zip_path + " -d " + app_path;
+    var cmd = "unzip -q " + globals.addQuotes(template_zip_path) + " -d " + globals.addQuotes(app_path);
 
     console.log(cmd);
 
