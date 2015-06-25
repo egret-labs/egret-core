@@ -45,4 +45,10 @@ module egret {
 
         getVirtualUrl(url:string):string;
     }
+
+    export interface VersionController extends IVersionController {
+
+    }
+
+    export var VersionController:{new():VersionController};
 }

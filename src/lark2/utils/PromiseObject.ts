@@ -28,35 +28,60 @@
 //////////////////////////////////////////////////////////////////////////////////////
 
 module egret {
-
     /**
      * @private
      */
-    export class DefaultLoadingView extends DisplayObjectContainer implements ILoadingView{
+    export class PromiseObject {
+        private static promiseObjectList = [];
 
-        private textField;
+        public onSuccessFunc:Function = null;
+        public onSuccessThisObject:any = null;
+        public onErrorFunc:Function = null;
+        public onErrorThisObject:any = null;
+        public downloadingSizeFunc:Function = null;
+        public downloadingSizeThisObject:any = null;
+
         constructor() {
-            super();
 
         }
 
-        init():void {
-            this.textField = new egret.TextField();
-            this.addChild(this.textField);
-            this.textField.y = this.stage.stageHeight / 2;
-            this.textField.x = this.stage.stageWidth / 2;
-            this.textField.textAlign = "center";
-            this.textField.anchorX = this.textField.anchorY = 0.5;
+        public static create() {
+            if (PromiseObject.promiseObjectList.length) {
+                return PromiseObject.promiseObjectList.pop();
+            }
+            else {
+                return new egret.PromiseObject();
+            }
         }
 
-        setProgress(current, total):void {
-            console.log("egret_native  " + Math.round(current / 1024) + "KB / " + Math.round(total / 1024) + "KB");
-            this.textField.text = "Loading Resource..." + Math.round(current / 1024) + "KB / " + Math.round(total / 1024) + "KB";
-
+        private onSuccess(...args):void {
+            if (this.onSuccessFunc) {
+                this.onSuccessFunc.apply(this.onSuccessThisObject, args);
+            }
+            this.destroy();
         }
 
-        loadError():void {
-            this.textField.text = "Resource loading failed，please check the network connection and exit back into the game！";
+        private onError(...args):void {
+            if (this.onErrorFunc) {
+                this.onErrorFunc.apply(this.onErrorThisObject, args);
+            }
+            this.destroy();
+        }
+
+        private downloadingSize(...args):void {
+            if (this.downloadingSizeFunc) {
+                this.downloadingSizeFunc.apply(this.downloadingSizeThisObject, args);
+            }
+        }
+
+        private destroy() {
+            this.onSuccessFunc = undefined;
+            this.onSuccessThisObject = undefined;
+            this.onErrorFunc = undefined;
+            this.onErrorThisObject = undefined;
+            this.downloadingSizeFunc = undefined;
+            this.downloadingSizeThisObject = undefined;
+            PromiseObject.promiseObjectList.push(this);
         }
     }
 }

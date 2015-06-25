@@ -1,12 +1,11 @@
 {
     "name": "version",
-    "dependence": ["core","html5","native"],
-    "output": "core/extension/version",
+    "dependence": ["lark2"],
+    "output": "lark2/extension/version",
     "source": "src/extension/version",
     "file_list": [
         "DefaultLoadingView.ts",
         "ILoadingView.ts",
-        "Html5VersionController.ts",
-        "NativeVersionController.ts"
+        "Html5VersionController.ts"
     ]
 }

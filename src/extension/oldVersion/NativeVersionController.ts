@@ -30,7 +30,7 @@ module egret {
     /**
      * @private
      */
-    export class NativeVersionController extends egret.EventDispatcher implements IVersionController {
+    export class NativeVersionController extends egret.EventDispatcher implements VersionController {
 
         public constructor() {
             super();
@@ -382,4 +382,6 @@ module egret {
             return url;
         }
     }
+
+    VersionController = NativeVersionController;
 }

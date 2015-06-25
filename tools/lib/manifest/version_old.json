@@ -1,9 +1,8 @@
 {
     "name": "version_old",
-    "dependence": ["core","native"],
-    "output": "core/extension/oldVersion",
+    "dependence": ["lark2"],
+    "output": "lark2/extension/oldVersion",
     "source": "src/extension/oldVersion",
     "file_list": [
-        "NativeVersionController.ts"
     ]
 }

@@ -26,37 +26,65 @@
 //  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 //////////////////////////////////////////////////////////////////////////////////////
-
 module egret {
-
     /**
      * @private
      */
-    export class DefaultLoadingView extends DisplayObjectContainer implements ILoadingView{
+    export class NativeResourceLoader extends egret.EventDispatcher{
 
-        private textField;
-        constructor() {
-            super();
+        private _downCount:number = 0;
+        private _path:string = null;
+        private _bytesTotal:number = 0;
 
+        public load(path:string, bytesTotal:number):void {
+            this._downCount = 0;
+            this._path = path;
+            this._bytesTotal = bytesTotal;
+
+            this.reload();
         }
 
-        init():void {
-            this.textField = new egret.TextField();
-            this.addChild(this.textField);
-            this.textField.y = this.stage.stageHeight / 2;
-            this.textField.x = this.stage.stageWidth / 2;
-            this.textField.textAlign = "center";
-            this.textField.anchorX = this.textField.anchorY = 0.5;
+        private reload():void {
+            if (this._downCount >= 3) {
+                this.downloadFileError();
+                return;
+            }
+
+            //if (egret_native.isRecordExists(this._path)) {//卡里
+            //    this.loadOver();
+            //    return;
+            //}
+            //else if (egret_native.isFileExists(this._path)){
+            //    this.loadOver();
+            //    return;
+            //}
+            //else {
+            this._downCount++;
+            var promise = egret.PromiseObject.create();
+            var self = this;
+            promise.onSuccessFunc = function () {
+                self.loadOver();
+            };
+            promise.onErrorFunc = function () {
+                self.reload();
+            };
+            promise.downloadingSizeFunc = function (bytesLoaded:number) {
+                self.downloadingProgress(bytesLoaded);
+            };
+            egret_native.download(this._path, this._path, promise);
+            //}
         }
 
-        setProgress(current, total):void {
-            console.log("egret_native  " + Math.round(current / 1024) + "KB / " + Math.round(total / 1024) + "KB");
-            this.textField.text = "Loading Resource..." + Math.round(current / 1024) + "KB / " + Math.round(total / 1024) + "KB";
-
+        private downloadingProgress(bytesLoaded:number) {
+            egret.ProgressEvent.dispatchProgressEvent(this, egret.ProgressEvent.PROGRESS, bytesLoaded, this._bytesTotal);
         }
 
-        loadError():void {
-            this.textField.text = "Resource loading failed，please check the network connection and exit back into the game！";
+        private downloadFileError() {
+            this.dispatchEvent(new egret.Event(egret.IOErrorEvent.IO_ERROR));
+        }
+
+        private loadOver() {
+            this.dispatchEvent(new egret.Event(egret.Event.COMPLETE));
         }
     }
 }
