@@ -514,9 +514,6 @@ module egret {
 
         public set matrix(value:Matrix) {
             this.$setMatrix(value);
-            if (value) {
-                this.$DisplayObject[Keys.matrix].copyFrom(value);
-            }
         }
 
         /**

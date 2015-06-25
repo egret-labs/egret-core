@@ -74,7 +74,7 @@ module egret {
         public constructor(bitmapData?:Texture) {
             super();
             this.$renderRegion = new sys.Region();
-            this.bitmapData = bitmapData;
+            this.texture = bitmapData;
         }
 
         /**
@@ -94,11 +94,11 @@ module egret {
          * @version Lark 1.0
          * @platform Web,Native
          */
-        public get bitmapData():Texture{
+        public get texture():Texture{
             return this.$bitmapData;
         }
 
-        public set bitmapData(value:Texture){
+        public set texture(value:Texture){
             this.$setBitmapData(value);
         }
 
