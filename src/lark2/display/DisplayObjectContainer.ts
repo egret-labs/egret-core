@@ -102,7 +102,7 @@ module egret {
             if (child.$parent == this)
                 index--;
 
-            return this.doAddChild(child, index);
+            return this.$doAddChild(child, index);
         }
 
 
@@ -119,13 +119,13 @@ module egret {
                     index--;
                 }
             }
-            return this.doAddChild(child, index);
+            return this.$doAddChild(child, index);
         }
 
         /**
          * @private
          */
-        private doAddChild(child:DisplayObject, index:number):DisplayObject {
+        $doAddChild(child:DisplayObject, index:number, notifyListeners:boolean = true):DisplayObject {
             if (DEBUG) {
                 if (child == this) {
                     $error(1005);
@@ -152,12 +152,14 @@ module egret {
                 child.$onAddToStage(stage, this.$nestLevel + 1);
 
             }
-            child.dispatchEventWith(Event.ADDED, true);
+            if (notifyListeners) {
+                child.dispatchEventWith(Event.ADDED, true);
+            }
             if (stage) {
                 var list = DisplayObjectContainer.$EVENT_ADD_TO_STAGE_LIST;
                 while (list.length) {
                     var childAddToStage = list.shift();
-                    if (childAddToStage.$stage) {
+                    if (childAddToStage.$stage && notifyListeners) {
                         childAddToStage.dispatchEventWith(Event.ADDED_TO_STAGE);
                     }
                 }
@@ -238,7 +240,7 @@ module egret {
         public removeChild(child:DisplayObject):DisplayObject {
             var index = this.$children.indexOf(child);
             if (index >= 0) {
-                return this.doRemoveChild(index);
+                return this.$doRemoveChild(index);
             }
             else {
                 DEBUG && $error(1006);
@@ -254,7 +256,7 @@ module egret {
         public removeChildAt(index:number):DisplayObject {
             index = +index | 0;
             if (index >= 0 && index < this.$children.length) {
-                return this.doRemoveChild(index);
+                return this.$doRemoveChild(index);
             }
             else {
                 DEBUG && $error(1007);
@@ -265,19 +267,23 @@ module egret {
         /**
          * @private
          */
-        private doRemoveChild(index:number):DisplayObject {
+         $doRemoveChild(index:number, notifyListeners:boolean = true):DisplayObject {
             index = +index | 0;
             var children = this.$children;
             var child:DisplayObject = children[index];
             this.$childRemoved(child, index);
-            child.dispatchEventWith(Event.REMOVED, true);
+            if (notifyListeners) {
+                child.dispatchEventWith(Event.REMOVED, true);
+            }
 
             if (this.$stage) {//在舞台上
                 child.$onRemoveFromStage();
                 var list = DisplayObjectContainer.$EVENT_REMOVE_FROM_STAGE_LIST
                 while (list.length > 0) {
                     var childAddToStage = list.shift();
-                    childAddToStage.dispatchEventWith(Event.REMOVED_FROM_STAGE);
+                    if (notifyListeners) {
+                        childAddToStage.dispatchEventWith(Event.REMOVED_FROM_STAGE);
+                    }
                     childAddToStage.$stage = null;
                 }
             }
@@ -392,7 +398,7 @@ module egret {
         public removeChildren():void {
             var children = this.$children;
             for (var i:number = children.length - 1; i >= 0; i--) {
-                this.doRemoveChild(i);
+                this.$doRemoveChild(i);
             }
         }
 
