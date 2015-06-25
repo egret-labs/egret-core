@@ -117,6 +117,9 @@
         "egret/text/BitmapFont.ts",
         "egret/text/BitmapText.ts",
 
+        "egret/tween/Tween.ts",
+        "egret/tween/Ease.ts",
+
         "egret/filters/BitmapFilterQuality.ts",
         "egret/filters/Filter.ts",
         "egret/filters/GlowFilter.ts",
