@@ -520,7 +520,7 @@ module egret {
          * @private
          * 设置矩阵
          */
-        $setMatrix(matrix:Matrix):void {
+        $setMatrix(matrix:Matrix, useProperties:boolean = true):void {
             var values = this.$DisplayObject;
             var m = values[Keys.matrix];
             if (m.equals(matrix)) {
@@ -528,11 +528,13 @@ module egret {
             }
 
             m.copyFrom(matrix);
-            values[Keys.scaleX] = m.$getScaleX();
-            values[Keys.scaleY] = m.$getScaleY();
-            values[Keys.skewX] = matrix.$getSkewX();
-            values[Keys.skewY] = matrix.$getSkewY();
-            values[Keys.rotation] = clampRotation(values[Keys.skewY] * 180 / Math.PI);
+            if (useProperties) {
+                values[Keys.scaleX] = m.$getScaleX();
+                values[Keys.scaleY] = m.$getScaleY();
+                values[Keys.skewX] = matrix.$getSkewX();
+                values[Keys.skewY] = matrix.$getSkewY();
+                values[Keys.rotation] = clampRotation(values[Keys.skewY] * 180 / Math.PI);
+            }
             this.$removeFlags(sys.DisplayObjectFlags.InvalidMatrix);
             this.invalidatePosition();
         }
