@@ -263,9 +263,13 @@ module egret.gui {
 				var offsetY:number = Math.round(bitmapData._offsetY);
 				var bitmapWidth:number = bitmapData._bitmapWidth || bitmapData._textureWidth;
 				var bitmapHeight:number = bitmapData._bitmapHeight || bitmapData._textureHeight;
-
-				context.drawImage(bitmapData._bitmapData, bitmapData._bitmapX, bitmapData._bitmapY,
-					bitmapWidth, bitmapHeight, offsetX, offsetY, destW, destH);
+				if (this.scale9Grid) {
+					Bitmap.$drawScale9GridImage(context, bitmapData, this.scale9Grid, this.$getExplicitWidth(), this.$getExplicitHeight());
+				}
+				else {
+					context.drawImage(bitmapData._bitmapData, bitmapData._bitmapX, bitmapData._bitmapY,
+						bitmapWidth, bitmapHeight, offsetX, offsetY, destW, destH);
+				}
 			}
 			super.$render(context);
 		}
