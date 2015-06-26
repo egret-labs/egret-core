@@ -141,5 +141,22 @@ module dragonBones {
                 this._egretDisplay.blendMode = value;
             }
         }
+
+        public _calculateRelativeParentTransform():void
+        {
+            this._global.scaleX = this._origin.scaleX * this._offset.scaleX;
+            this._global.scaleY = this._origin.scaleY * this._offset.scaleY;
+            this._global.skewX = this._origin.skewX + this._offset.skewX;
+            this._global.skewY = this._origin.skewY + this._offset.skewY;
+            this._global.x = this._origin.x + this._offset.x + this._parent._tweenPivot.x;
+            this._global.y = this._origin.y + this._offset.y + this._parent._tweenPivot.y;
+
+
+            if(EgretTextureAtlas.rotatedDic[this._displayDataList[this._currentDisplayIndex].name] == 1)
+            {
+                this._global.skewX -= 1.57;
+                this._global.skewY -= 1.57;
+            }
+        }
     }
 }

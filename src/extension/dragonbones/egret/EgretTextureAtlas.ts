@@ -52,6 +52,7 @@ module dragonBones {
          */
         public spriteSheet:egret.SpriteSheet;
         private _textureDatas:any = {};
+        public static rotatedDic:any = {};
 
         /**
          * 创建一个新的EgretTextureAtlas实例
@@ -77,6 +78,10 @@ module dragonBones {
                 var data:TextureData = this._textureDatas[fullName];
                 if(data) {
                     result = this.spriteSheet.createTexture(fullName, data.region.x, data.region.y, data.region.width, data.region.height);
+                }
+                if(data.rotated)
+                {
+                    EgretTextureAtlas.rotatedDic[fullName] = 1;
                 }
             }
             return result;
