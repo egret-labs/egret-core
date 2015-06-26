@@ -29,6 +29,14 @@
 
 module egret {
     /**
+     * @private
+     */
+    const enum Keys {
+        explicitBitmapWidth,
+        explicitBitmapHeight,
+    }
+
+    /**
      * @language en_US
      * The Bitmap class represents display objects that represent bitmap images.
      * The Bitmap() constructor allows you to create a Bitmap object that contains a reference to a BitmapData object.
@@ -39,7 +47,7 @@ module egret {
      * without incurring the memory overhead of a BitmapData object for each display object instance.
      *
      * @see egret.BitmapData
-     * @version Lark 1.0
+     * @version egret 1.0
      * @platform Web,Native
      */
     /**
@@ -52,7 +60,7 @@ module egret {
      * 而不会因为每个显示对象实例使用一个 BitmapData 对象而产生额外内存开销。
      *
      * @see egret.BitmapData
-     * @version Lark 1.0
+     * @version egret 1.0
      * @platform Web,Native
      */
     export class Bitmap extends DisplayObject {
@@ -61,21 +69,28 @@ module egret {
          * @language en_US
          * Initializes a Bitmap object to refer to the specified BitmapData object.
          * @param bitmapData The BitmapData object being referenced.
-         * @version Lark 1.0
+         * @version egret 1.0
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 创建一个引用指定 BitmapData 实例的 Bitmap 对象
          * @param bitmapData 被引用的 BitmapData 实例
-         * @version Lark 1.0
+         * @version egret 1.0
          * @platform Web,Native
          */
         public constructor(bitmapData?:Texture) {
             super();
             this.$renderRegion = new sys.Region();
+            this.$Bitmap = {
+                0: NONE, //explicitBitmapWidth,
+                1: NONE  //explicitBitmapHeight,
+            };
+
             this.texture = bitmapData;
         }
+
+        $Bitmap:Object;
 
         /**
          * @private
@@ -85,22 +100,56 @@ module egret {
         /**
          * @language en_US
          * bitmapData The BitmapData object being referenced.
-         * @version Lark 1.0
+         * @version egret 1.0
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 被引用的 BitmapData 对象。
-         * @version Lark 1.0
+         * @version egret 1.0
          * @platform Web,Native
          */
-        public get texture():Texture{
+        public get texture():Texture {
             return this.$bitmapData;
         }
 
-        public set texture(value:Texture){
+        public set texture(value:Texture) {
             this.$setBitmapData(value);
         }
+
+        /**
+         * @private
+         */
+        private _scale9Grid:egret.Rectangle = null;
+
+        /**
+         * @language en_US
+         * Represent a Rectangle Area that the 9 scale area of Image.
+         * Notice: This property is valid only when <code>fillMode</code>
+         * is <code>BitmapFillMode.SCALE</code>.
+         *
+         * @version Lark 1.0
+         * @version Swan 1.0
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 矩形区域，它定义素材对象的九个缩放区域。
+         * 注意:此属性仅在<code>fillMode</code>为<code>BitmapFillMode.SCALE</code>时有效。
+         *
+         * @version Lark 1.0
+         * @version Swan 1.0
+         * @platform Web,Native
+         */
+        public get scale9Grid():egret.Rectangle {
+            return this._scale9Grid;
+        }
+
+        public set scale9Grid(value:egret.Rectangle) {
+            this._scale9Grid = value;
+            this.$invalidateContentBounds();
+        }
+
 
         /**
          * 确定位图填充尺寸的方式。
@@ -113,8 +162,8 @@ module egret {
         /**
          * @private
          */
-        $setBitmapData(value:Texture):void{
-            if(value==this.$bitmapData){
+        $setBitmapData(value:Texture):void {
+            if (value == this.$bitmapData) {
                 return;
             }
             this.$bitmapData = value;
@@ -129,27 +178,47 @@ module egret {
          * @language en_US
          * Whether or not the bitmap is smoothed when scaled.
          * @default true。
-         * @version Lark 1.0
+         * @version egret 1.0
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 控制在缩放时是否对位图进行平滑处理。
          * @default true。
-         * @version Lark 1.0
+         * @version egret 1.0
          * @platform Web,Native
          */
-        public get smoothing():boolean{
+        public get smoothing():boolean {
             return this.$smoothing;
         }
 
         public set smoothing(value:boolean) {
             value = !!value;
-            if(value===this.$smoothing){
+            if (value === this.$smoothing) {
                 return;
             }
             this.$smoothing = value;
             this.$invalidate();
+        }
+
+
+        $setWidth(value:number):void {
+            value = +value || 0;
+            var values = this.$Bitmap;
+            if (value < 0 || value === values[Keys.explicitBitmapWidth]) {
+                return;
+            }
+            values[Keys.explicitBitmapWidth] = value;
+            this.$invalidateContentBounds();
+        }
+
+        $setHeight(value:number):void {
+            value = +value || 0;
+            var values = this.$Bitmap;
+            if (value < 0 || value === values[Keys.explicitBitmapHeight]) {
+                return;
+            }
+            values[Keys.explicitBitmapHeight] = value;
         }
 
         /**
@@ -157,10 +226,12 @@ module egret {
          */
         $measureContentBounds(bounds:Rectangle):void {
             var bitmapData = this.$bitmapData;
-            if(bitmapData){
-                bounds.setTo(0,0,bitmapData._textureWidth,bitmapData._textureHeight);
+            if (bitmapData) {
+                var w:number = this.$Bitmap[Keys.explicitBitmapWidth] != NONE ? this.$Bitmap[Keys.explicitBitmapWidth] : (bitmapData._bitmapWidth || bitmapData._textureWidth);
+                var h:number = this.$Bitmap[Keys.explicitBitmapHeight] != NONE ? this.$Bitmap[Keys.explicitBitmapHeight] : (bitmapData._bitmapHeight || bitmapData._textureHeight);
+                bounds.setTo(0, 0, w, h);
             }
-            else{
+            else {
                 bounds.setEmpty();
             }
         }
@@ -168,7 +239,7 @@ module egret {
         /**
          * @private
          */
-        $render(context:sys.RenderContext):void{
+        $render(context:sys.RenderContext):void {
             var bitmapData = this.$bitmapData;
             if (bitmapData) {
                 context.imageSmoothingEnabled = this.$smoothing;
@@ -177,42 +248,107 @@ module egret {
                 var offsetY:number = Math.round(bitmapData._offsetY);
                 var bitmapWidth:number = bitmapData._bitmapWidth || bitmapData._textureWidth;
                 var bitmapHeight:number = bitmapData._bitmapHeight || bitmapData._textureHeight;
-                var destW:number = Math.round(bitmapWidth);
-                var destH:number = Math.round(bitmapHeight);
 
-                if (this.fillMode == egret.BitmapFillMode.SCALE) {
+                var destW:number = this.$Bitmap[Keys.explicitBitmapWidth] != NONE ? this.$Bitmap[Keys.explicitBitmapWidth] : (bitmapData._bitmapWidth || bitmapData._textureWidth);
+                var destH:number = this.$Bitmap[Keys.explicitBitmapHeight] != NONE ? this.$Bitmap[Keys.explicitBitmapHeight] : (bitmapData._bitmapHeight || bitmapData._textureHeight);
+
+                if (this.scale9Grid) {
+                    Bitmap.$drawScale9GridImage(context, bitmapData, this.scale9Grid, destW, destH);
+                }
+                else if (this.fillMode == egret.BitmapFillMode.SCALE) {
                     context.drawImage(bitmapData._bitmapData, bitmapData._bitmapX, bitmapData._bitmapY,
                         bitmapWidth, bitmapHeight, offsetX, offsetY, destW, destH);
                 }
                 else {
-                    this.drawRepeat(context, bitmapData._bitmapData, bitmapData._bitmapX, bitmapData._bitmapY,
-                        bitmapWidth, bitmapHeight, offsetX, offsetY, destW, destH, this.fillMode);
+
+                    var pattern = context.createPattern(bitmapData._bitmapData, "repeat");
+                    context.beginPath();
+                    context.rect(0, 0, destW, destH);
+                    context.fillStyle = pattern;
+                    context.fill();
                 }
             }
         }
 
-        private drawRepeat(context:sys.RenderContext, bitmapData, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, repeat):void {
-            if (this['pattern'] === undefined) {
-                var texture_scale_factor = 1;
-                var tempImage:BitmapData = bitmapData;
-                if (bitmapData.width != sourceWidth || bitmapData.height != sourceHeight || texture_scale_factor != 1) {
-                    var tempCanvas = sys.surfaceFactory.create(true);
-                    tempCanvas.width = sourceWidth * texture_scale_factor;
-                    tempCanvas.height = sourceHeight * texture_scale_factor;
+        /**
+         * @private
+         * 绘制九宫格位图
+         */
+        static $drawScale9GridImage(context:egret.sys.RenderContext, texture:egret.Texture,
+                                    scale9Grid:egret.Rectangle, surfaceWidth?:number, surfaceHeight?:number):void {
+            var image:egret.BitmapData = texture._bitmapData
+            var imageWidth:number = texture._bitmapWidth || texture._textureWidth;
+            var imageHeight:number = texture._bitmapHeight || texture._textureHeight;
 
-                    tempCanvas.renderContext.drawImage(bitmapData, sourceX, sourceY, sourceWidth, sourceHeight, 0, 0, sourceWidth * texture_scale_factor, sourceHeight * texture_scale_factor);
-                    tempImage = tempCanvas;
+            var sourceW0 = scale9Grid.x;
+            var sourceH0 = scale9Grid.y;
+            var sourceW1 = scale9Grid.width;
+            var sourceH1 = scale9Grid.height;
+
+            //防止空心的情况出现。
+            if (sourceH1 == 0) {
+                sourceH1 = 1;
+                if (sourceH0 >= imageHeight) {
+                    sourceH0--;
                 }
-                var pat = context.createPattern(tempImage, repeat);
-                this['pattern'] = pat;
             }
-            var pattern = this['pattern'];
-            context.fillStyle = pattern;
-            context.translate(destX, destY);
-            context.fillRect(0, 0, destWidth, destHeight);
-            context.translate(-destX, -destY);
+            if (sourceW1 == 0) {
+                sourceW1 = 1;
+                if (sourceW0 >= imageWidth) {
+                    sourceW0--;
+                }
+            }
+            var sourceX0 = 0;
+            var sourceX1 = sourceX0 + sourceW0;
+            var sourceX2 = sourceX1 + sourceW1;
+            var sourceW2 = imageWidth - sourceW0 - sourceW1;
+
+            var sourceY0 = 0;
+            var sourceY1 = sourceY0 + sourceH0;
+            var sourceY2 = sourceY1 + sourceH1;
+            var sourceH2 = imageHeight - sourceH0 - sourceH1;
+
+            if (sourceW0 + sourceW2 > surfaceWidth || sourceH0 + sourceH2 > surfaceHeight) {
+                context.drawImage(image, 0, 0, surfaceWidth, surfaceHeight);
+                return;
+            }
+
+            var targetX0 = 0;
+            var targetX1 = targetX0 + sourceW0;
+            var targetX2 = targetX0 + surfaceWidth - sourceW2;
+            var targetW1 = surfaceWidth - sourceW0 - sourceW2;
+
+            var targetY0 = 0;
+            var targetY1 = targetY0 + sourceH0;
+            var targetY2 = targetY0 + surfaceHeight - sourceH2;
+            var targetH1 = surfaceHeight - sourceH0 - sourceH2;
+
+            //
+            //             x0     x1     x2
+            //          y0 +------+------+------+
+            //             |      |      |      | h0
+            //             |      |      |      |
+            //          y1 +------+------+------+
+            //             |      |      |      | h1
+            //             |      |      |      |
+            //          y2 +------+------+------+
+            //             |      |      |      | h2
+            //             |      |      |      |
+            //             +------+------+------+
+            //                w0     w1     w2
+            //
+
+            context.drawImage(image, sourceX0, sourceY0, sourceW0, sourceH0, targetX0, targetY0, sourceW0, sourceH0);
+            context.drawImage(image, sourceX1, sourceY0, sourceW1, sourceH0, targetX1, targetY0, targetW1, sourceH0);
+            context.drawImage(image, sourceX2, sourceY0, sourceW2, sourceH0, targetX2, targetY0, sourceW2, sourceH0);
+            context.drawImage(image, sourceX0, sourceY1, sourceW0, sourceH1, targetX0, targetY1, sourceW0, targetH1);
+            context.drawImage(image, sourceX1, sourceY1, sourceW1, sourceH1, targetX1, targetY1, targetW1, targetH1);
+            context.drawImage(image, sourceX2, sourceY1, sourceW2, sourceH1, targetX2, targetY1, sourceW2, targetH1);
+            context.drawImage(image, sourceX0, sourceY2, sourceW0, sourceH2, targetX0, targetY2, sourceW0, sourceH2);
+            context.drawImage(image, sourceX1, sourceY2, sourceW1, sourceH2, targetX1, targetY2, targetW1, sourceH2);
+            context.drawImage(image, sourceX2, sourceY2, sourceW2, sourceH2, targetX2, targetY2, sourceW2, sourceH2);
         }
     }
 
-    registerClass(Bitmap,Types.Bitmap);
+    registerClass(Bitmap, Types.Bitmap);
 }

@@ -816,6 +816,10 @@ module egret {
          * @platform Web,Native
          */
         public get rotation():number {
+            return this.$getRotation();
+        }
+
+        $getRotation():number {
             return this.$DisplayObject[Keys.rotation];
         }
 
