@@ -236,7 +236,7 @@ module egret.gui {
             if(this._UIC_Props_._invalidatePropertiesFlag)
                 this.validateProperties();
             if (this.isSpecialCase()){
-                if (isNaN(this.lastUnscaledWidth)){
+                if (isNaN(this.lastUnscaledWidth) || isNone(this.lastUnscaledWidth)){
                     this._UIC_Props_._oldPreferWidth = NaN;
                     this._UIC_Props_._oldPreferHeight = NaN;
                 }
@@ -248,7 +248,8 @@ module egret.gui {
 
             var availableWidth:number;
 
-            if ((availableWidth = this.$getExplicitWidth()) != NONE) {
+            if (!isNone(this.$getExplicitWidth())) {
+                availableWidth = this.$getExplicitWidth();
             }
             else if (this.maxWidth!=10000)
                 availableWidth = this.maxWidth;
@@ -262,7 +263,7 @@ module egret.gui {
         private isSpecialCase():boolean{
             return this._maxDisplayedLines!=1&&
                 (!isNaN(this.percentWidth) || (!isNaN(this.left) && !isNaN(this.right))) &&
-                this.$getExplicitHeight() == NONE &&
+                isNone(this.$getExplicitHeight()) &&
                 isNaN(this.percentHeight);
         }
 
@@ -283,8 +284,8 @@ module egret.gui {
             var paddingT:number = isNaN(this._paddingTop)?padding:this._paddingTop;
             var paddingB:number = isNaN(this._paddingBottom)?padding:this._paddingBottom;
 
-            this._textField.width = NaN;
-            this._textField.height = NaN;
+            this._textField.width = egret.NONE;
+            this._textField.height = egret.NONE;
             if (!isNaN(w)){
                 this._textField.width = w - paddingL - paddingR;
                 this.measuredWidth = Math.ceil(this._textField.width);

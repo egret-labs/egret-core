@@ -227,8 +227,8 @@ module egret {
         $measureContentBounds(bounds:Rectangle):void {
             var bitmapData = this.$bitmapData;
             if (bitmapData) {
-                var w:number = this.$Bitmap[Keys.explicitBitmapWidth] != NONE ? this.$Bitmap[Keys.explicitBitmapWidth] : (bitmapData._bitmapWidth || bitmapData._textureWidth);
-                var h:number = this.$Bitmap[Keys.explicitBitmapHeight] != NONE ? this.$Bitmap[Keys.explicitBitmapHeight] : (bitmapData._bitmapHeight || bitmapData._textureHeight);
+                var w:number = !isNone(this.$Bitmap[Keys.explicitBitmapWidth]) ? this.$Bitmap[Keys.explicitBitmapWidth] : (bitmapData._bitmapWidth || bitmapData._textureWidth);
+                var h:number = !isNone(this.$Bitmap[Keys.explicitBitmapHeight]) ? this.$Bitmap[Keys.explicitBitmapHeight] : (bitmapData._bitmapHeight || bitmapData._textureHeight);
                 bounds.setTo(0, 0, w, h);
             }
             else {
@@ -249,8 +249,8 @@ module egret {
                 var bitmapWidth:number = bitmapData._bitmapWidth || bitmapData._textureWidth;
                 var bitmapHeight:number = bitmapData._bitmapHeight || bitmapData._textureHeight;
 
-                var destW:number = this.$Bitmap[Keys.explicitBitmapWidth] != NONE ? this.$Bitmap[Keys.explicitBitmapWidth] : (bitmapData._bitmapWidth || bitmapData._textureWidth);
-                var destH:number = this.$Bitmap[Keys.explicitBitmapHeight] != NONE ? this.$Bitmap[Keys.explicitBitmapHeight] : (bitmapData._bitmapHeight || bitmapData._textureHeight);
+                var destW:number = !isNone(this.$Bitmap[Keys.explicitBitmapWidth]) ? this.$Bitmap[Keys.explicitBitmapWidth] : (bitmapData._bitmapWidth || bitmapData._textureWidth);
+                var destH:number = !isNone(this.$Bitmap[Keys.explicitBitmapHeight]) ? this.$Bitmap[Keys.explicitBitmapHeight] : (bitmapData._bitmapHeight || bitmapData._textureHeight);
 
                 if (this.scale9Grid) {
                     Bitmap.$drawScale9GridImage(context, bitmapData, this.scale9Grid, destW, destH);
@@ -298,12 +298,12 @@ module egret {
                     sourceW0--;
                 }
             }
-            var sourceX0 = 0;
+            var sourceX0 = texture._bitmapX;
             var sourceX1 = sourceX0 + sourceW0;
             var sourceX2 = sourceX1 + sourceW1;
             var sourceW2 = imageWidth - sourceW0 - sourceW1;
 
-            var sourceY0 = 0;
+            var sourceY0 = texture._bitmapY;
             var sourceY1 = sourceY0 + sourceH0;
             var sourceY2 = sourceY1 + sourceH1;
             var sourceH2 = imageHeight - sourceH0 - sourceH1;

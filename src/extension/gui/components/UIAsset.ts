@@ -263,8 +263,9 @@ module egret.gui {
 				var offsetY:number = Math.round(bitmapData._offsetY);
 				var bitmapWidth:number = bitmapData._bitmapWidth || bitmapData._textureWidth;
 				var bitmapHeight:number = bitmapData._bitmapHeight || bitmapData._textureHeight;
-				if (this.scale9Grid) {
-					Bitmap.$drawScale9GridImage(context, bitmapData, this.scale9Grid, this.$getExplicitWidth(), this.$getExplicitHeight());
+				var scale9Grid = this.scale9Grid || bitmapData["scale9Grid"];
+				if (scale9Grid ) {
+					Bitmap.$drawScale9GridImage(context, bitmapData, scale9Grid, destW, destH);
 				}
 				else {
 					context.drawImage(bitmapData._bitmapData, bitmapData._bitmapX, bitmapData._bitmapY,
@@ -279,14 +280,30 @@ module egret.gui {
 		$measureContentBounds(bounds:Rectangle):void {
 			if(this._contentIsTexture){
 				var texture:Texture = <Texture> this._content;
-				var textureW:number = texture._textureWidth;
-				var textureH:number = texture._textureHeight;
-				var w:number = this.width;
-				var h:number = this.height;
-				var x:number = Math.floor(texture._offsetX*w/textureW);
-				var y:number = Math.floor(texture._offsetY*h/textureH);
+				//var textureW:number = texture._textureWidth;
+				//var textureH:number = texture._textureHeight;
+				//var w:number = this.width;
+				//var h:number = this.height;
+				//var x:number = Math.floor(texture._offsetX*w/textureW);
+				//var y:number = Math.floor(texture._offsetY*h/textureH);
+				//bounds.setTo(0,0,w,h);
 
-				bounds.setTo(0,0,w,h);
+				var w = NONE;
+				var h = NONE;
+				if(this.autoScale){
+					w = this.$getExplicitWidth();
+					h = this.$getExplicitHeight();
+				}
+
+				if (isNone(w)) {
+					w = texture._textureWidth;
+				}
+				if (isNone(h)) {
+					h = texture._textureHeight;
+				}
+
+				bounds.setTo(0, 0, w, h);
+
 			}
 			else{
 				super.$measureChildBounds(bounds);

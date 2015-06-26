@@ -543,10 +543,10 @@ module egret {
             if (this.$TextField[sys.TextKeys.type] != value) {
                 this.$TextField[sys.TextKeys.type] = value;
                 if (value == TextFieldType.INPUT) {//input，如果没有设置过宽高，则设置默认值为100，30
-                    if (this.$TextField[sys.TextKeys.textFieldWidth] == NONE) {
+                    if (isNone(this.$TextField[sys.TextKeys.textFieldWidth])) {
                         this.$setWidth(100);
                     }
-                    if (this.$TextField[sys.TextKeys.textFieldHeight] == NONE) {
+                    if (isNone(this.$TextField[sys.TextKeys.textFieldHeight])) {
                         this.$setHeight(30);
                     }
 
@@ -946,8 +946,8 @@ module egret {
                 bounds.setEmpty();
             }
             else {
-                var w:number = this.$TextField[sys.TextKeys.textFieldWidth] != NONE ? this.$TextField[sys.TextKeys.textFieldWidth] : this.$TextField[sys.TextKeys.textWidth];
-                var h:number = this.$TextField[sys.TextKeys.textFieldHeight] != NONE ? this.$TextField[sys.TextKeys.textFieldHeight] : TextFieldUtils._getTextHeight(self);
+                var w:number = !isNone(this.$TextField[sys.TextKeys.textFieldWidth]) ? this.$TextField[sys.TextKeys.textFieldWidth] : this.$TextField[sys.TextKeys.textWidth];
+                var h:number = !isNone(this.$TextField[sys.TextKeys.textFieldHeight]) ? this.$TextField[sys.TextKeys.textFieldHeight] : TextFieldUtils._getTextHeight(self);
                 bounds.setTo(0, 0, w, h);
             }
         }
@@ -1066,7 +1066,7 @@ module egret {
 
             var textFieldWidth:number = this.$TextField[sys.TextKeys.textFieldWidth];
             //宽度被设置为0
-            if (textFieldWidth != NONE && textFieldWidth == 0) {
+            if (!isNone(textFieldWidth) && textFieldWidth == 0) {
                 this.$TextField[sys.TextKeys.numLines] = 0;
                 return [{width: 0, height: 0, charNum: 0, elements: [], hasNextLine: false}];
             }
@@ -1116,7 +1116,7 @@ module egret {
                             setupFont(renderContext, self, element.style);
                         }
                         var w:number = renderContext.measureText(textArr[j]).width;
-                        if (textFieldWidth == NONE) {//没有设置过宽
+                        if (isNone(textFieldWidth)) {//没有设置过宽
                             lineW += w;
                             lineCharNum += textArr[j].length;
                             lineElement.elements.push(<egret.IWTextElement>{
@@ -1224,14 +1224,14 @@ module egret {
                 return;
             }
 
-            var maxWidth:number = this.$TextField[sys.TextKeys.textFieldWidth] != NONE ? this.$TextField[sys.TextKeys.textFieldWidth] : this.$TextField[sys.TextKeys.textWidth];
+            var maxWidth:number = !isNone(this.$TextField[sys.TextKeys.textFieldWidth]) ? this.$TextField[sys.TextKeys.textFieldWidth] : this.$TextField[sys.TextKeys.textWidth];
             var textHeight:number = TextFieldUtils._getTextHeight(self);
 
             var drawY:number = 0;
             var startLine:number = TextFieldUtils._getStartLine(self);
 
             var textFieldHeight:number = this.$TextField[sys.TextKeys.textFieldHeight];
-            if (textFieldHeight != NONE && textFieldHeight > textHeight) {
+            if (!isNone(textFieldHeight) && textFieldHeight > textHeight) {
                 var valign:number = TextFieldUtils._getValign(self);
                 drawY += valign * (textFieldHeight - textHeight);
             }
@@ -1247,7 +1247,7 @@ module egret {
                     if (this.$TextField[sys.TextKeys.type] == egret.TextFieldType.INPUT && !this.$TextField[sys.TextKeys.multiline]) {
                         break;
                     }
-                    if (textFieldHeight != NONE && drawY > textFieldHeight) {
+                    if (!isNone(textFieldHeight) && drawY > textFieldHeight) {
                         break;
                     }
                 }

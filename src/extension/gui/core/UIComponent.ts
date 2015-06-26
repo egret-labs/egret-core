@@ -879,7 +879,8 @@ module egret.gui {
                 if (this._UIC_Props_._layoutWidthExplicitlySet) {
                     unscaledWidth = this._UIC_Props_._uiWidth;
                 }
-                else if ((unscaledWidth = this.$getExplicitWidth()) != NONE) {
+                else if (!isNone(this.$getExplicitWidth())) {
+                    unscaledWidth = this.$getExplicitWidth()
                 }
                 else {
                     unscaledWidth = this.measuredWidth;
@@ -887,7 +888,8 @@ module egret.gui {
                 if (this._UIC_Props_._layoutHeightExplicitlySet) {
                     unscaledHeight = this._UIC_Props_._uiHeight;
                 }
-                else if ((unscaledHeight = this.$getExplicitHeight()) != NONE) {
+                else if (!isNone(this.$getExplicitHeight())) {
+                    unscaledHeight = this.$getExplicitHeight();
                 }
                 else {
                     unscaledHeight = this.measuredHeight;
@@ -939,7 +941,7 @@ module egret.gui {
          * 是否可以跳过测量尺寸阶段,返回true则不执行measure()方法
          */
         public canSkipMeasurement():boolean {
-            return this.$getExplicitWidth() != NONE && this.$getExplicitHeight() != NONE;
+            return !isNone(this.$getExplicitWidth()) && !isNone(this.$getExplicitHeight());
         }
 
         /**
@@ -1189,7 +1191,7 @@ module egret.gui {
          * @member egret.gui.UIComponent#preferredHeight
          */
         public get preferredHeight():number {
-            var h:number = this.$getExplicitHeight() != NONE ? this.$getExplicitHeight() : this._UIC_Props_._measuredHeight;
+            var h:number = !isNone(this.$getExplicitHeight()) ? this.$getExplicitHeight() : this._UIC_Props_._measuredHeight;
             var scaleY:number = this.$getScaleY();
             if (scaleY < 0) {
                 scaleY = -scaleY;
@@ -1249,7 +1251,7 @@ module egret.gui {
             if (this._UIC_Props_._layoutWidthExplicitlySet) {
                 w = this._UIC_Props_._uiWidth;
             }
-            else if ((w = this.$getExplicitWidth()) != NONE) {
+            else if (!isNone(w = this.$getExplicitWidth())) {
             }
             else {
                 w = this._UIC_Props_._measuredWidth;
@@ -1271,7 +1273,7 @@ module egret.gui {
             if (this._UIC_Props_._layoutHeightExplicitlySet) {
                 h = this._UIC_Props_._uiHeight;
             }
-            else if ((h = this.$getExplicitHeight()) != NONE) {
+            else if (!isNone(h = this.$getExplicitHeight())) {
             }
             else {
                 h = this._UIC_Props_._measuredHeight;

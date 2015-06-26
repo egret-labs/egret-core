@@ -283,7 +283,7 @@ module egret {
             var emptyHeight:number = bitmapFont._getFirstCharHeight();
             var emptyWidth:number = Math.ceil(emptyHeight * BitmapText.EMPTY_FACTOR);
             var yPos:number = 0;
-            var hasSetHeight:boolean = self.$BitmapText[Keys.textFieldHeight] != NONE;
+            var hasSetHeight:boolean = !isNone(self.$BitmapText[Keys.textFieldHeight]);
             var textFieldHeight:number = self.$BitmapText[Keys.textFieldHeight];
             var lineHeights:Array<number> = self._lineHeights;
             for (var i:number = 0; i < length; i++) {
@@ -357,7 +357,7 @@ module egret {
             var textHeight:number = 0;
             var textStartX:number = 0;
             var textStartY:number = 0;
-            var hasWidthSet:boolean = self.$BitmapText[Keys.textFieldWidth] != NONE;
+            var hasWidthSet:boolean = !isNone(self.$BitmapText[Keys.textFieldWidth]);
             var textFieldWidth:number = self.$BitmapText[Keys.textFieldWidth];
             var bitmapFont:BitmapFont = self.$BitmapText[Keys.font];
             var emptyHeight:number = bitmapFont._getFirstCharHeight();
