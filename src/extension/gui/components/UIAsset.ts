@@ -280,19 +280,11 @@ module egret.gui {
 		$measureContentBounds(bounds:Rectangle):void {
 			if(this._contentIsTexture){
 				var texture:Texture = <Texture> this._content;
-				//var textureW:number = texture._textureWidth;
-				//var textureH:number = texture._textureHeight;
-				//var w:number = this.width;
-				//var h:number = this.height;
-				//var x:number = Math.floor(texture._offsetX*w/textureW);
-				//var y:number = Math.floor(texture._offsetY*h/textureH);
-				//bounds.setTo(0,0,w,h);
-
 				var w = NONE;
 				var h = NONE;
 				if(this.autoScale){
-					w = this.$getExplicitWidth();
-					h = this.$getExplicitHeight();
+					w = this._UIC_Props_._uiWidth == 10000 ? this.$getExplicitWidth() : this._UIC_Props_._uiWidth;
+					h = this._UIC_Props_._uiHeight == 10000 ? this.$getExplicitHeight() : this._UIC_Props_._uiHeight;
 				}
 
 				if (isNone(w)) {

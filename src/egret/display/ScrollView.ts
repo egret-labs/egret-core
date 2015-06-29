@@ -156,7 +156,7 @@ module egret {
                 12: null           //viewport
             };
 
-            this.scrollRect = this.scrollerRect;
+            this.$setScrollRect(this.scrollerRect);
 
             this.touchEnabled = true;
         }
@@ -656,7 +656,6 @@ module egret {
 
             this.scrollerRect.x = this.scrollHPos;
             this.$setScrollRect(this.scrollerRect);
-            //this.$viewport.scrollRect.x = -scrollPos;
         }
 
         /**

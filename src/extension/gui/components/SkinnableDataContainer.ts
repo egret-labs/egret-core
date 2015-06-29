@@ -113,6 +113,8 @@ module egret.gui {
                 this.dataGroup.dataProvider = value;
                 this._dataGroupProperties.dataProvider = true;
             }
+
+			this.$invalidateContentBounds();
         }
 		
 		/**

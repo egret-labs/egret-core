@@ -165,7 +165,7 @@ module egret.gui {
             this._clipAndEnableScrolling = value;
             if (this._clipAndEnableScrolling){
                 this.scrollRect = new Rectangle(this._horizontalScrollPosition,
-                    this._verticalScrollPosition, this.width, this.height);
+                    this._verticalScrollPosition, 400, 800);
             }
             else{
                 this.scrollRect = null;

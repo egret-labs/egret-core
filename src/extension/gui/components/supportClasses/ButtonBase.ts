@@ -328,6 +328,7 @@ module egret.gui {
                     //if(InteractionMode.mode==InteractionMode.TOUCH)
                     //    this.hovered = true;
 					this.mouseCaptured = true;
+						this.hovered = true;
 					break;
 				}
 
@@ -375,6 +376,7 @@ module egret.gui {
 				return;
 
 			this.mouseCaptured = false;
+			this.hovered = false;
 		}
 
 		/**

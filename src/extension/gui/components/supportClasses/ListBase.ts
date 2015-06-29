@@ -84,6 +84,7 @@ module egret.gui {
 
             super._setDataProvider(value);
             this.invalidateProperties();
+			this.$invalidateContentBounds();
         }
 
         /**

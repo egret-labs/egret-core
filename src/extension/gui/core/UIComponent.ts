@@ -68,7 +68,7 @@ module egret.gui {
                 var chain:any = {};
                 UIComponent.prototypeCanSet = (chain.__proto__ !== undefined);
             }
-            this.$renderRegion = new sys.Region();
+            //this.$renderRegion = new sys.Region();
         }
 
         /**
@@ -584,6 +584,7 @@ module egret.gui {
          */
         public get width():number {
             return this._UIC_Props_._uiWidth;
+            //return isNone(this.$getExplicitWidth()) ? super.$getWidth() : this._UIC_Props_._uiWidth;
         }
 
 
@@ -612,6 +613,7 @@ module egret.gui {
          */
         public get height():number {
             return this._UIC_Props_._uiHeight;
+            //return isNone(this.$getExplicitHeight()) ? super.$getHeight() : this._UIC_Props_._uiHeight;
         }
 
         $setScaleX(value:number):boolean {
@@ -1179,7 +1181,7 @@ module egret.gui {
          * @member egret.gui.UIComponent#preferredWidth
          */
         public get preferredWidth():number {
-            var w:number = this.$getExplicitWidth() ? this.$getExplicitWidth() : this._UIC_Props_._measuredWidth;
+            var w:number = !isNone(this.$getExplicitWidth()) ? this.$getExplicitWidth() : this._UIC_Props_._measuredWidth;
             var scaleX:number = this.$getScaleX();
             if (scaleX < 0) {
                 scaleX = -scaleX;
