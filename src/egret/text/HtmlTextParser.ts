@@ -139,7 +139,7 @@ module egret {
                         next = value.length;
                     }
 
-                    this.addProperty(info, title.substring(0, title.length - 1).trim(), value);
+                    this.addProperty(info, title.substring(0, title.length - 1).trim(), value.trim());
 
                     str = str.substring(next).trim();
                 }
