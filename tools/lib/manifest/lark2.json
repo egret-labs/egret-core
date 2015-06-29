@@ -102,7 +102,7 @@
         "egret/text/HorizontalAlign.ts",
         "egret/text/TextFieldType.ts",
         "egret/text/TextField.ts",
-        "egret/text/TextField1.ts",
+        "egret/text/TextField.ts",
         "egret/text/TextInput.ts",
         "egret/text/TextMeasurer.ts",
         "egret/text/VerticalAlign.ts",

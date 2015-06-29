@@ -43,9 +43,8 @@ module egret.web {
             var player = <sys.Player>container["egret-player"];
             var webTouch = <WebTouchHandler>container["egret-touch"];
             var webScreen = <WebScreen>container["egret-screen"];
-            var webText = <WebTextAdapter>container["egret-text-layer"];
             var webInput = <egret.web.HTMLInput>container["egret-input"];
-            webScreen.updateScreenSize(player,webTouch,webText, webInput);
+            webScreen.updateScreenSize(player,webTouch, webInput);
         }
     }
 
@@ -86,7 +85,6 @@ module egret.web {
         var stage = new egret.Stage();
         var touch = new egret.sys.TouchHandler(stage);
         var webTouch = new WebTouchHandler(touch, canvas);
-        var webText = new WebTextAdapter(container,stage,canvas);
         var player = new egret.sys.Player(surface.renderContext, stage, entryClassName);
         var webInput = new HTMLInput();
 
@@ -108,12 +106,11 @@ module egret.web {
         container["egret-player"] = player;
         container["egret-touch"] = webTouch;
         container["egret-screen"] = webScreen;
-        container["egret-text-layer"] = webText;
         container["egret-input"] = webInput;
 
         egret.web.$cacheTextAdapter(webInput, stage, container, canvas);
 
-        webScreen.updateScreenSize(player,webTouch,webText, webInput);
+        webScreen.updateScreenSize(player,webTouch, webInput);
 
         player.start();
     }

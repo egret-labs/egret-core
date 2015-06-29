@@ -30,8 +30,8 @@
 
 module egret {
     export interface StageText extends EventDispatcher {
-        $textfield:egret.TextField1;
-        $setTextField(textfield:egret.TextField1):void;
+        $textfield:egret.TextField;
+        $setTextField(textfield:egret.TextField):void;
 
         $resetStageText():void;
 

@@ -33,14 +33,14 @@ module egret {
     export class InputController extends HashObject {
         private stageText:egret.StageText;
 
-        private _text:TextField1 = null;
+        private _text:TextField = null;
 
         private _isFocus:boolean = false;
         public constructor() {
             super();
         }
 
-        public init(text:TextField1):void {
+        public init(text:TextField):void {
             this._text = text;
             this.stageText = new egret.StageText();
             this.stageText.$setTextField(this._text);

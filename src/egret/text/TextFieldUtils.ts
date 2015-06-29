@@ -40,7 +40,7 @@ module egret {
          * @returns {number} 行数，从0开始
          * @private
          */
-        public static _getStartLine(textfield:egret.TextField1):number {
+        public static _getStartLine(textfield:egret.TextField):number {
             var textHeight:number = TextFieldUtils._getTextHeight(textfield);
             var startLine:number = 0;
             var textFieldHeight:number = textfield.$TextField[sys.TextKeys.textFieldHeight];
@@ -68,7 +68,7 @@ module egret {
          * @returns {number} 水平比例
          * @private
          */
-        public static _getHalign(textfield:egret.TextField1):number {
+        public static _getHalign(textfield:egret.TextField):number {
             var lineArr:Array<egret.ILineElement>  = textfield._getLinesArr();
             var halign:number = 0;
             if (textfield.$TextField[sys.TextKeys.textAlign] == HorizontalAlign.CENTER) {
@@ -85,7 +85,7 @@ module egret {
             return halign;
         }
 
-        public static _getTextHeight(textfield:egret.TextField1):number {
+        public static _getTextHeight(textfield:egret.TextField):number {
             var textHeight:number = (egret.TextFieldType.INPUT == textfield.$TextField[sys.TextKeys.type]
                 && !textfield.$TextField[sys.TextKeys.multiline]) ? textfield.$TextField[sys.TextKeys.fontSize] : (textfield.$TextField[sys.TextKeys.textHeight] + (textfield.$TextField[sys.TextKeys.numLines] - 1) * textfield.$TextField[sys.TextKeys.lineSpacing]);
             return textHeight;
@@ -97,7 +97,7 @@ module egret {
          * @returns {number} 垂直比例
          * @private
          */
-        public static _getValign(textfield:egret.TextField1):number{
+        public static _getValign(textfield:egret.TextField):number{
             var textHeight:number = TextFieldUtils._getTextHeight(textfield);
             if (textfield.$TextField[sys.TextKeys.type] == egret.TextFieldType.INPUT) {
                 if (textfield.$TextField[sys.TextKeys.multiline]) {
@@ -128,7 +128,7 @@ module egret {
          * @returns 文本单项
          * @private
          */
-        public static _getTextElement(textfield:egret.TextField1, x:number, y:number):ITextElement {
+        public static _getTextElement(textfield:egret.TextField, x:number, y:number):ITextElement {
             var hitTextEle:IHitTextElement = TextFieldUtils._getHit(textfield, x, y);
 
             var lineArr:Array<egret.ILineElement>  = textfield._getLinesArr();
@@ -146,7 +146,7 @@ module egret {
          * @returns 文本点击块
          * @private
          */
-        public static _getHit(textfield:egret.TextField1, x:number, y:number):IHitTextElement {
+        public static _getHit(textfield:egret.TextField, x:number, y:number):IHitTextElement {
             var lineArr:Array<egret.ILineElement>  = textfield._getLinesArr();
             if (textfield.$TextField[sys.TextKeys.textFieldWidth] == 0) {//文本可点击区域
                 return null;
@@ -207,7 +207,7 @@ module egret {
          * @returns {number} 显示的行数
          * @private
          */
-        public static _getScrollNum(textfield:egret.TextField1):number {
+        public static _getScrollNum(textfield:egret.TextField):number {
             var scrollNum:number = 1;
             if (textfield.$TextField[sys.TextKeys.multiline]) {
                 var height = textfield.height;

@@ -41,8 +41,8 @@ module egret.web {
 
         }
 
-        $textfield:egret.TextField1;
-        $setTextField(textfield:egret.TextField1):void {
+        $textfield:egret.TextField;
+        $setTextField(textfield:egret.TextField):void {
             this.$textfield = textfield;
         }
 
@@ -200,7 +200,7 @@ module egret.web {
          */
         $resetStageText():void {
             if (this.inputElement) {
-                var textfield:egret.TextField1 = this.$textfield;
+                var textfield:egret.TextField = this.$textfield;
                 this.setElementStyle("fontFamily", textfield.fontFamily);
                 this.setElementStyle("fontStyle", textfield.italic ? "italic" : "normal");
                 this.setElementStyle("fontWeight", textfield.bold ? "bold" : "normal");
@@ -441,7 +441,7 @@ module egret.web {
      * @private
      * 获取
      */
-    export function $getTextAdapter(textfield:TextField1):HTMLInput{
+    export function $getTextAdapter(textfield:TextField):HTMLInput{
         var stageHash = textfield.stage?textfield.stage.$hashCode:0;
         return stageToTextLayerMap[stageHash];
     }

@@ -59,9 +59,9 @@ module egret.gui {
 		public static DEFAULT_MEASURED_HEIGHT:number = 22;
 
 		/**
-		 * 呈示此文本的内部 TextField1
+		 * 呈示此文本的内部 TextField
 		 */
-        public _textField: TextField1 = null;
+        public _textField: TextField = null;
 
 		private allStyleChanged:boolean = false;
 
@@ -436,7 +436,7 @@ module egret.gui {
 
 		public _createTextField():void
 		{
-			this._textField = new TextField1;
+			this._textField = new TextField;
 			this._textField.fontFamily = this.fontFamily;
 			this._textField.size = this.size;
 			this._textField.textAlign = this.textAlign;

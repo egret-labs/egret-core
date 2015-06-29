@@ -28,52 +28,167 @@
 //////////////////////////////////////////////////////////////////////////////////////
 
 module egret.sys {
-
-
+    /**
+     * @private
+     */
+    export const enum TextKeys {
+        /**
+         * @private
+         */
+        fontSize,
+        /**
+         * @private
+         */
+        lineSpacing,
+        /**
+         * @private
+         */
+        textColor,
+        /**
+         * @private
+         */
+        textFieldWidth,
+        /**
+         * @private
+         */
+        textFieldHeight,
+        /**
+         * @private
+         */
+        textWidth,
+        /**
+         * @private
+         */
+        textHeight,
+        /**
+         * @private
+         */
+        textDrawWidth,
+        /**
+         * @private
+         */
+        fontFamily,
+        /**
+         * @private
+         */
+        textAlign,
+        /**
+         * @private
+         */
+        verticalAlign,
+        /**
+         * @private
+         */
+        textColorString,
+        /**
+         * @private
+         */
+        fontString,
+        /**
+         * @private
+         */
+        text,
+        /**
+         * @private
+         */
+        measuredWidths,
+        /**
+         * @private
+         */
+        bold,
+        /**
+         * @private
+         */
+        italic,
+        /**
+         * @private
+         */
+        fontStringChanged,
+        /**
+         * @private
+         */
+        textLinesChanged,
+        /**
+         * @private
+         */
+        wordWrap,
+        /**
+         * @private
+         */
+        displayAsPassword,
+        /**
+         * @private
+         */
+        maxChars,
+        /**
+         * @private
+         */
+        selectionActivePosition,
+        /**
+         * @private
+         */
+        selectionAnchorPosition,
+        /**
+         * @private
+         */
+        type,
+        /**
+         * @private
+         */
+        strokeColor,
+        /**
+         * @private
+         */
+        strokeColorString,
+        /**
+         * @private
+         */
+        stroke,
+        /**
+         * @private
+         */
+        scrollV,
+        /**
+         * @private
+         */
+        numLines,
+        /**
+         * @private
+         */
+        multiline,
+        /**
+         * @private
+         */
+        border,
+        /**
+         * @private
+         */
+        borderColor,
+        /**
+         * @private
+         */
+        background,
+        /**
+         * @private
+         */
+        backgroundColor
+    }
 }
 
 module egret {
-
     /**
-     * @language en_US
-     * The TextField class is used to create display objects for text display. You can use the methods and properties of
-     * the TextField class to manipulate it.<br/>
-     * In TextField, three character sequences are recognized as explicit line breaks: CR ("\r"), LF ("\n"), and CR+LF ("\r\n").<br/>
-     * If you don't specify any kind of width for a TextField, then the longest line, as determined by these explicit line
-     * breaks, determines the width of the TextField.<br/>
-     * If you do specify some kind of width, then the specified text is word-wrapped at the right edge of the component's
-     * bounds, because the default value of the wordWrap is true. If the text extends below the bottom of the component, it is clipped.<br/>
-     * To disable this automatic wrapping, set the wordWrap to false. Then lines are broken only where the text contains
-     * an explicit line break, and the ends of lines extending past the right edge is clipped.
-     * @see egret.TextInput
-     * @version Lark 1.0
-     * @platform Web,Native
-     */
-    /**
-     * @language zh_CN
-     * TextField 类用于创建显示对象以显示文本。可以使用 TextField 类的方法和属性对文本字段进行操作。<br/>
-     * 在 TextField 中，将以下三个字符序列识别为显式换行符：CR（“\r”）、LF（“\n”）和 CR+LF（“\r\n”）。<br/>
-     * 如果没有为 TextField 指定宽度，则由这些显式换行符确定的最长行确定 TextField 的宽度。<br/>
-     * 如果指定了某个宽度，则指定文本将在组件边界的右边缘换行，因为 wordWrap 的默认值为 true。如果文本扩展到低于组件底部，则将被剪切。<br/>
-     * 要禁用此自动换行，请将 wordWrap 设置为 false。这样的话，只有 text 包含显式换行符时才会换行，且将剪切超过右边缘的行尾。
-     * @see egret.TextInput
-     * @version Lark 1.0
-     * @platform Web,Native
+     * @class egret.TextField
+     * @classdesc
+     * TextField是egret的文本渲染类，采用浏览器/设备的API进行渲染，在不同的浏览器/设备中由于字体渲染方式不一，可能会有渲染差异
+     * 如果开发者希望所有平台完全无差异，请使用BitmapText
+     * @extends egret.DisplayObject
+     * @link http://docs.egret-labs.org/post/manual/text/createtext.html 创建文本
      */
     export class TextField extends DisplayObject {
-        /**
-         * @language en_US
-         * Creates a new TextField instance.
-         * @version Lark 1.0
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 创建一个TextField对象
-         * @version Lark 1.0
-         * @platform Web,Native
-         */
-        public constructor(text?:string) {
+
+        public static default_fontFamily:string = "Arial";
+
+        constructor() {
             super();
             this.$renderRegion = new sys.Region();
             this.$TextField = {
@@ -98,15 +213,29 @@ module egret {
                 18: false,         //textLinesChanged,
                 19: true,          //wordWrap
                 20: false,         //displayAsPassword
-                21: 0              //maxChars
+                21: 0,              //maxChars
+                22: TextFieldType.DYNAMIC,              //type
+                23: 0xFFFFFF,              //strokeColor
+                24: "#FFFFFF",              //strokeColorString
+                25: 0,              //stroke
+                26: -1,              //scrollV
+                27: 0,              //numLines
+                28: false,              //multiline
+                29: false,              //border
+                30: 0x000000,              //borderColor
+                31: false,              //background
+                32: 0xffffff              //backgroundColor
             };
-            this.text = text;
         }
 
         /**
          * @private
          */
         $TextField:Object;
+
+        private isInput():boolean {
+            return this.$TextField[sys.TextKeys.type] == TextFieldType.INPUT;
+        }
 
         /**
          * @language en_US
@@ -149,6 +278,20 @@ module egret {
          * @version Lark 1.0
          * @platform Web,Native
          */
+        public get size():number {
+            return this.$TextField[sys.TextKeys.fontSize];
+        }
+
+        public set size(value:number) {
+            value = +value || 0;
+            var values = this.$TextField;
+            if (values[sys.TextKeys.fontSize] === value) {
+                return;
+            }
+            values[sys.TextKeys.fontSize] = value;
+            this.invalidateFontString();
+        }
+
         public get fontSize():number {
             return this.$TextField[sys.TextKeys.fontSize];
         }
@@ -221,7 +364,7 @@ module egret {
 
         /**
          * @private
-         * 
+         *
          */
         private invalidateFontString():void {
             this.$TextField[sys.TextKeys.fontStringChanged] = true;
@@ -244,14 +387,14 @@ module egret {
         /**
          * @language en_US
          * Horizontal alignment of text.
-         * @default：egret.HorizontalAlign.LEFT
+         * @default：lark.HorizontalAlign.LEFT
          * @version Lark 1.0
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 文本的水平对齐方式。
-         * @default：egret.HorizontalAlign.LEFT
+         * @default：lark.HorizontalAlign.LEFT
          * @version Lark 1.0
          * @platform Web,Native
          */
@@ -271,14 +414,14 @@ module egret {
         /**
          * @language en_US
          * Vertical alignment of text.
-         * @default：egret.VerticalAlign.TOP
+         * @default：lark.VerticalAlign.TOP
          * @version Lark 1.0
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 文字的垂直对齐方式。
-         * @default：egret.VerticalAlign.TOP
+         * @default：lark.VerticalAlign.TOP
          * @version Lark 1.0
          * @platform Web,Native
          */
@@ -377,115 +520,283 @@ module egret {
             if (value === values[sys.TextKeys.wordWrap]) {
                 return;
             }
-            if(values[sys.TextKeys.displayAsPassword]){
+            if (values[sys.TextKeys.displayAsPassword]) {
                 return;
             }
             values[sys.TextKeys.wordWrap] = value;
             this.$invalidateContentBounds();
         }
 
+        private _inputUtils:InputController = null;
+
         /**
-         * @language en_US
-         * A string to display in the text field.
-         * @version Lark 1.0
-         * @platform Web,Native
+         * 文本字段的类型。
+         * 以下 TextFieldType 常量中的任一个：TextFieldType.DYNAMIC（指定用户无法编辑的动态文本字段），或 TextFieldType.INPUT（指定用户可以编辑的输入文本字段）。
+         * 默认值为 dynamic。
+         * @member {string} egret.TextField#type
          */
-        /**
-         * @language zh_CN
-         * 要显示的文本内容
-         * @version Lark 1.0
-         * @platform Web,Native
-         */
+        public set type(value:string) {
+            this._setType(value);
+        }
+
+        public _setType(value:string):void {
+            if (this.$TextField[sys.TextKeys.type] != value) {
+                this.$TextField[sys.TextKeys.type] = value;
+                if (value == TextFieldType.INPUT) {//input，如果没有设置过宽高，则设置默认值为100，30
+                    if (isNone(this.$TextField[sys.TextKeys.textFieldWidth])) {
+                        this.$setWidth(100);
+                    }
+                    if (isNone(this.$TextField[sys.TextKeys.textFieldHeight])) {
+                        this.$setHeight(30);
+                    }
+
+                    this.$setTouchEnabled(true);
+
+                    //创建stageText
+                    if (this._inputUtils == null) {
+                        this._inputUtils = new egret.InputController();
+                    }
+
+                    this._inputUtils.init(this);
+                    this.$invalidateContentBounds();
+
+                    if (this.$stage) {
+                        this._inputUtils._addStageText();
+                    }
+                }
+                else {
+                    if (this._inputUtils) {
+                        this._inputUtils._removeStageText();
+                        this._inputUtils = null;
+                    }
+                    this.$setTouchEnabled(false);
+                }
+            }
+        }
+
+        public get type():string {
+            return this.$TextField[sys.TextKeys.type];
+        }
+
         public get text():string {
+            return this.$getText();
+        }
+
+        public $getText():string {
+            if (this.$TextField[sys.TextKeys.type] == egret.TextFieldType.INPUT) {
+                return this._inputUtils._getText();
+            }
+
             return this.$TextField[sys.TextKeys.text];
         }
 
+        /**
+         * 作为文本字段中当前文本的字符串
+         * @member {string} egret.TextField#text
+         */
         public set text(value:string) {
-            if(value===null||value===undefined){
-                value = "";
-            }
-            value = value + "";
             this.$setText(value);
         }
 
+        public _setBaseText(value:string):void {
+            if (value == null) {
+                value = "";
+            }
+
+            this._isFlow = false;
+            if (this.$TextField[sys.TextKeys.text] != value) {
+                this.$invalidateContentBounds();
+                this.$TextField[sys.TextKeys.text] = value;
+                var text:string = "";
+                if (this.$TextField[sys.TextKeys.displayAsPassword]) {
+                    text = this.changeToPassText(value);
+                }
+                else {
+                    text = value;
+                }
+
+                this.setMiddleStyle([<egret.ITextElement>{text: text}]);
+            }
+        }
+
+        $setText(value:string):void {
+            if (value == null) {
+                value = "";
+            }
+            this._setBaseText(value);
+            if (this._inputUtils) {
+                this._inputUtils._setText(this.$TextField[sys.TextKeys.text]);
+            }
+        }
+
+        public get displayAsPassword():boolean {
+            return this.$TextField[sys.TextKeys.displayAsPassword];
+        }
+
         /**
-         * @private
+         * 指定文本字段是否是密码文本字段。
+         * 如果此属性的值为 true，则文本字段被视为密码文本字段，并使用星号而不是实际字符来隐藏输入的字符。如果为 false，则不会将文本字段视为密码文本字段。
+         * 默认值为 false。
+         * @member {boolean} egret.TextInput#displayAsPassword
          */
-        $setText(value:string):void{
-            var values = this.$TextField;
-            if (value == values[sys.TextKeys.text])
-                return;
-            values[sys.TextKeys.text] = value;
+        public set displayAsPassword(value:boolean) {
+            this._setDisplayAsPassword(value);
+        }
+
+        public _setDisplayAsPassword(value:boolean):void {
+            var self = this;
+            if (this.$TextField[sys.TextKeys.displayAsPassword] != value) {
+                this.$TextField[sys.TextKeys.displayAsPassword] = value;
+                this.$invalidateContentBounds();
+
+                var text:string = "";
+                if (value) {
+                    text = this.changeToPassText(this.$TextField[sys.TextKeys.text]);
+                }
+                else {
+                    text = this.$TextField[sys.TextKeys.text];
+                }
+
+                this.setMiddleStyle([<egret.ITextElement>{text: text}]);
+            }
+        }
+
+        public get strokeColor():number {
+            return this.$TextField[sys.TextKeys.strokeColor];
+        }
+
+        /**
+         * 表示文本的描边颜色。
+         * 包含三个 8 位 RGB 颜色成分的数字；例如，0xFF0000 为红色，0x00FF00 为绿色。
+         * 默认值为 0x000000。
+         * @member {number} egret.TextField#strokeColor
+         */
+        public set strokeColor(value:number) {
+            this._setStrokeColor(value);
+        }
+
+        public _setStrokeColor(value:number):void {
+            if (this.$TextField[sys.TextKeys.strokeColor] != value) {
+                this.$invalidateContentBounds();
+                this.$TextField[sys.TextKeys.strokeColor] = value;
+                this.$TextField[sys.TextKeys.strokeColorString] = toColorString(value);
+            }
+        }
+
+
+        public get stroke():number {
+            return this.$TextField[sys.TextKeys.stroke];
+        }
+
+        /**
+         * 表示描边宽度。
+         * 0为没有描边。
+         * 默认值为 0。
+         * @member {number} egret.TextField#stroke
+         */
+        public set stroke(value:number) {
+            this._setStroke(value);
+        }
+
+        public _setStroke(value:number):void {
+            if (this.$TextField[sys.TextKeys.stroke] != value) {
+                this.$invalidateContentBounds();
+                this.$TextField[sys.TextKeys.stroke] = value;
+            }
+        }
+
+        public get maxChars():number {
+            return this.$TextField[sys.TextKeys.maxChars];
+        }
+
+        /**
+         * 文本字段中最多可包含的字符数（即用户输入的字符数）。
+         * 脚本可以插入比 maxChars 允许的字符数更多的文本；maxChars 属性仅表示用户可以输入多少文本。如果此属性的值为 0，则用户可以输入无限数量的文本。
+         * 默认值为 0。
+         */
+        public set maxChars(value:number) {
+            this._setMaxChars(value);
+        }
+
+        public _setMaxChars(value:number):void {
+            if (this.$TextField[sys.TextKeys.maxChars] != value) {
+                this.$TextField[sys.TextKeys.maxChars] = value;
+            }
+        }
+
+        /**
+         * 文本在文本字段中的垂直位置。scrollV 属性可帮助用户定位到长篇文章的特定段落，还可用于创建滚动文本字段。
+         * 垂直滚动的单位是行，而水平滚动的单位是像素。
+         * 如果显示的第一行是文本字段中的第一行，则 scrollV 设置为 1（而非 0）。
+         * @param value
+         */
+        public set scrollV(value:number) {
+            this.$TextField[sys.TextKeys.scrollV] = Math.max(value, 1);
+
             this.$invalidateContentBounds();
         }
 
+        public get scrollV():number {
+            return Math.min(Math.max(this.$TextField[sys.TextKeys.scrollV], 1), this.maxScrollV);
+        }
+
         /**
-         * @private
+         * scrollV 的最大值
+         * @returns {number}
          */
-        private textLines:string[] = [];
+        public get maxScrollV():number {
+            this._getLinesArr();
+            return Math.max(this.$TextField[sys.TextKeys.numLines] - TextFieldUtils._getScrollNum(this) + 1, 1);
+        }
+
+        public get selectionBeginIndex():number {
+            return 0;
+        }
+
+        public get selectionEndIndex():number {
+            return 0;
+        }
+
+        public get caretIndex():number {
+            return 0;
+        }
+
+        public $setSelection(beginIndex:number, endIndex:number) {
+
+        }
+
+        $getLineHeight():number {
+            return this.$TextField[sys.TextKeys.lineSpacing] + this.$TextField[sys.TextKeys.fontSize];
+        }
+
         /**
-         * @language en_US
-         * [read-only] Defines the number of text lines in a multiline text field. If wordWrap property is set to true, the number of
-         * lines increases when text wraps.
-         * @version Lark 1.0
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * [只读] 定义多行文本字段中的文本行数。如果 wordWrap 属性设置为 true，则在文本自动换行时会增加行数。
-         * @version Lark 1.0
-         * @platform Web,Native
+         * 文本行数。
+         * @member {number} egret.TextField#numLines
          */
         public get numLines():number {
-            return this.textLines.length;
+            return this.$TextField[sys.TextKeys.numLines];
         }
 
         /**
-         * @language en_US
-         * [read-only] The width of the text in pixels.
-         * @version Lark 1.0
-         * @platform Web,Native
+         * 表示字段是否为多行文本字段。注意，此属性仅在type为TextFieldType.INPUT时才有效。
+         * 如果值为 true，则文本字段为多行文本字段；如果值为 false，则文本字段为单行文本字段。在类型为 TextFieldType.INPUT 的字段中，multiline 值将确定 Enter 键是否创建新行（如果值为 false，则将忽略 Enter 键）。
+         * 默认值为 false。
+         * @member {boolean} egret.TextField#multiline
          */
-        /**
-         * @language zh_CN
-         * [只读] 文本内容宽度
-         * @version Lark 1.0
-         * @platform Web,Native
-         */
-        public get textWidth():number {
-            this.updateTextLines();
-            return this.$TextField[sys.TextKeys.textWidth];
+        public set multiline(value:boolean) {
+            this._setMultiline(value);
         }
 
-        /**
-         * @language en_US
-         * [read-only] The height of the text in pixels.
-         * @version Lark 1.0
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * [只读] 文本内容高度
-         * @version Lark 1.0
-         * @platform Web,Native
-         */
-        public get textHeight():number {
-            this.updateTextLines();
-            return this.$TextField[sys.TextKeys.textHeight];
+        public _setMultiline(value:boolean):void {
+            this.$TextField[sys.TextKeys.multiline] = value;
+            this.$invalidateContentBounds();
         }
 
-        /**
-         * @private
-         */
-        $getWidth():number {
-            var w = this.$TextField[sys.TextKeys.textFieldWidth];
-            return isNone(w) ? this.$getContentBounds().width : w;
+        public get multiline():boolean {
+            return this.$TextField[sys.TextKeys.multiline];
         }
 
-        /**
-         * @private
-         */
-        $setWidth(value:number) {
+        $setWidth(value:number):void {
             value = +value || 0;
             var values = this.$TextField;
             if (value < 0 || value === values[sys.TextKeys.textFieldWidth]) {
@@ -493,27 +804,128 @@ module egret {
             }
             values[sys.TextKeys.textFieldWidth] = value;
             this.$invalidateContentBounds();
+
+            this.fillBackground();
         }
 
-        /**
-         * @private
-         */
-        $getHeight():number {
-            var h = this.$TextField[sys.TextKeys.textFieldHeight];
-            return isNone(h) ? this.$getContentBounds().height : h;
-        }
-
-        /**
-         * @private
-         */
-        $setHeight(value:number) {
+        $setHeight(value:number):void {
             value = +value || 0;
             var values = this.$TextField;
             if (value < 0 || value === values[sys.TextKeys.textFieldHeight]) {
                 return;
             }
             values[sys.TextKeys.textFieldHeight] = value;
-            this.$invalidateContentBounds();
+
+            this.fillBackground();
+        }
+
+        private _bgGraphics:Graphics = null;
+
+        /**
+         * 指定文本字段是否具有边框。
+         * 如果为 true，则文本字段具有边框。如果为 false，则文本字段没有边框。
+         * 使用 borderColor 属性来设置边框颜色。
+         * 默认值为 false。
+         * @member {boolean} egret.TextField#border
+         */
+        public set border(value:boolean) {
+            this.$TextField[sys.TextKeys.border] = value;
+            this.fillBackground();
+        }
+
+        public get border():boolean {
+            return this.$TextField[sys.TextKeys.border];
+        }
+
+        /**
+         * 文本字段边框的颜色。默认值为 0x000000（黑色）。
+         * 即使当前没有边框，也可检索或设置此属性，但只有当文本字段已将 border 属性设置为 true 时，才可以看到颜色。
+         * @member {number} egret.TextField#borderColor
+         */
+        public set borderColor(value:number) {
+            this.$TextField[sys.TextKeys.borderColor] = value;
+            this.fillBackground();
+        }
+
+        public get borderColor():number {
+            return this.$TextField[sys.TextKeys.borderColor];
+        }
+
+        /**
+         * 指定文本字段是否具有背景填充。
+         * 如果为 true，则文本字段具有背景填充。如果为 false，则文本字段没有背景填充。
+         * 使用 backgroundColor 属性来设置文本字段的背景颜色。
+         * 默认值为 false。
+         * @member {boolean} egret.TextField#background
+         */
+        public set background(value:boolean) {
+            this.$TextField[sys.TextKeys.background] = value;
+            this.fillBackground();
+        }
+
+        public get background():boolean {
+            return this.$TextField[sys.TextKeys.background];
+        }
+
+        /**
+         * 文本字段背景的颜色。默认值为 0xFFFFFF（白色）。
+         * 即使当前没有背景，也可检索或设置此属性，但只有当文本字段已将 background 属性设置为 true 时，才可以看到颜色。
+         * @member {number} egret.TextField#backgroundColor
+         */
+        public set backgroundColor(value:number) {
+            this.$TextField[sys.TextKeys.backgroundColor] = value;
+            this.fillBackground();
+        }
+
+        public get backgroundColor():number {
+            return this.$TextField[sys.TextKeys.backgroundColor];
+        }
+
+        private fillBackground():void {
+            var self = this;
+            var graphics:egret.Graphics = self._bgGraphics;
+            if (graphics) {
+                graphics.clear();
+            }
+            if (this.$TextField[sys.TextKeys.background] || this.$TextField[sys.TextKeys.border]) {
+                if (graphics == null) {
+                    graphics = self._bgGraphics = new egret.Graphics();
+                    this._bgGraphics.$renderContext.$targetDisplay = this;
+                }
+                if (this.$TextField[sys.TextKeys.background]) {
+                    graphics.beginFill(this.$TextField[sys.TextKeys.backgroundColor], 1);
+                }
+                if (this.$TextField[sys.TextKeys.border]) {
+                    graphics.lineStyle(1, this.$TextField[sys.TextKeys.borderColor]);
+                }
+                graphics.drawRect(0, 0, self.$getWidth(), self.$getHeight());
+                graphics.endFill();
+            }
+        }
+
+        public setFocus() {
+            //todo:
+            Logger.warningWithErrorId(1013);
+        }
+
+        public $onRemoveFromStage():void {
+            super.$onRemoveFromStage();
+
+            this._removeEvent();
+
+            if (this.$TextField[sys.TextKeys.type] == TextFieldType.INPUT) {
+                this._inputUtils._removeStageText();
+            }
+        }
+
+        public $onAddToStage(stage:Stage, nestLevel:number):void {
+            super.$onAddToStage(stage, nestLevel);
+
+            this._addEvent();
+
+            if (this.$TextField[sys.TextKeys.type] == TextFieldType.INPUT) {
+                this._inputUtils._addStageText();
+            }
         }
 
         /**
@@ -528,239 +940,453 @@ module egret {
          * @private
          */
         $measureContentBounds(bounds:Rectangle):void {
-            this.updateTextLines();
-            var values = this.$TextField;
-            var height:number;
-            if (isNone(values[sys.TextKeys.textFieldHeight])) {
-                height = values[sys.TextKeys.textHeight];
+            var self = this;
+            this._getLinesArr();
+            if (this.$TextField[sys.TextKeys.textWidth] == 0) {
+                bounds.setEmpty();
             }
             else {
-                height = values[sys.TextKeys.textFieldHeight];
-                var lineHeight = values[sys.TextKeys.fontSize] + 4;
-                if (height < lineHeight) {
-                    height = lineHeight;
-                }
+                var w:number = !isNone(this.$TextField[sys.TextKeys.textFieldWidth]) ? this.$TextField[sys.TextKeys.textFieldWidth] : this.$TextField[sys.TextKeys.textWidth];
+                var h:number = !isNone(this.$TextField[sys.TextKeys.textFieldHeight]) ? this.$TextField[sys.TextKeys.textFieldHeight] : TextFieldUtils._getTextHeight(self);
+                bounds.setTo(0, 0, w, h);
             }
-            var width = isNone(values[sys.TextKeys.textFieldWidth]) ?
-                values[sys.TextKeys.textWidth] : values[sys.TextKeys.textFieldWidth];
-            if (width < values[sys.TextKeys.textDrawWidth]) {
-                width = values[sys.TextKeys.textDrawWidth];
-            }
-            bounds.setTo(0, 0, width, height);
         }
 
         /**
-         * @private
+         * @see egret.DisplayObject._render
+         * @param renderContext
          */
-        $render(context:sys.RenderContext):void {
-            var lines = this.updateTextLines();
-            if (!lines) {
+        $render(renderContext:sys.RenderContext):void {
+            if (this._bgGraphics)
+                this._bgGraphics.$render(renderContext);
+
+            if (this.$TextField[sys.TextKeys.type] == TextFieldType.INPUT) {
+                this._inputUtils._updateProperties();
+                if (this._isTyping) {
+                    return;
+                }
+            }
+            else if (this.$TextField[sys.TextKeys.textFieldWidth] == 0) {
                 return;
             }
-            var values = this.$TextField;
-            context.textAlign = "left";
-            context.textBaseline = "middle";
-            context.font = this.getFontString();
-            context.fillStyle = values[sys.TextKeys.textColorString];
-            var length = lines.length;
-            var lineHeight = values[sys.TextKeys.fontSize];
-            var halfLineHeight = lineHeight * 0.5;
-            var drawY = halfLineHeight + 2;
-            var vGap = lineHeight + values[sys.TextKeys.lineSpacing];
 
-            var textHeight = values[sys.TextKeys.textHeight];
-            var hasHeightSet = !isNone(values[sys.TextKeys.textFieldHeight]);
-            var explicitHeight = hasHeightSet ? values[sys.TextKeys.textFieldHeight] : Number.POSITIVE_INFINITY;
-            if (hasHeightSet && textHeight < explicitHeight) {
-                var vAlign = 0;
-                if (values[sys.TextKeys.verticalAlign] == VerticalAlign.MIDDLE)
-                    vAlign = 0.5;
-                else if (values[sys.TextKeys.verticalAlign] == VerticalAlign.BOTTOM)
-                    vAlign = 1;
-                drawY += vAlign * (explicitHeight - textHeight);
+            this.drawText(renderContext);
+        }
+
+        private _isFlow:boolean = false;
+
+        /**
+         * 设置富文本
+         * @param textArr 富文本数据
+         */
+        public set textFlow(textArr:Array<egret.ITextElement>) {
+            var self = this;
+            this._isFlow = true;
+            var text:string = "";
+            if (textArr == null)
+                textArr = [];
+            for (var i:number = 0; i < textArr.length; i++) {
+                var element:egret.ITextElement = textArr[i];
+                text += element.text;
             }
-            drawY = Math.round(drawY);
-            var hAlign = 0;
-            if (values[sys.TextKeys.textAlign] == HorizontalAlign.CENTER) {
-                hAlign = 0.5;
-            }
-            else if (values[sys.TextKeys.textAlign] == HorizontalAlign.RIGHT) {
-                hAlign = 1;
-            }
-            var measuredWidths = values[sys.TextKeys.measuredWidths];
-            var maxWidth:number;
-            if (isNone(values[sys.TextKeys.textFieldWidth])) {
-                maxWidth = values[sys.TextKeys.textWidth];
+
+            if (this.$TextField[sys.TextKeys.displayAsPassword]) {
+                this._setBaseText(text);
             }
             else {
-                maxWidth = values[sys.TextKeys.textFieldWidth];
-            }
-            var maxYPos = explicitHeight - 2;
-            for (var i = 0; i < length; i++) {
-                var line = lines[i];
-                var measureW = measuredWidths[i];
-                var drawX = Math.round((maxWidth - measureW) * hAlign);
-                if (drawX < 0) {
-                    drawX = 0;
-                }
-                if (drawY + halfLineHeight <= maxYPos || i === 0) {
-                    context.fillText(line, drawX, drawY);
-                }
-                drawY += vGap;
+                this.$TextField[sys.TextKeys.text] = text;
+                this.setMiddleStyle(textArr);
             }
         }
 
-        /**
-         * @private
-         */
-        private updateTextLines():string[] {
+        public get textFlow():Array<egret.ITextElement> {
+            return this._textArr;
+        }
 
-            var values = this.$TextField;
-            if (!values[sys.TextKeys.textLinesChanged]) {
-                return this.textLines;
-            }
-
-            this.textLines.length = 0;
-            var measuredWidths = values[sys.TextKeys.measuredWidths];
-            measuredWidths.length = 0;
-            values[sys.TextKeys.textWidth] = 0;
-            values[sys.TextKeys.textHeight] = 0;
-            var textFieldWidth = values[sys.TextKeys.textFieldWidth];
-
-            var text:string = values[sys.TextKeys.text];
-            if (!text || textFieldWidth === 0) {
-                return null;
-            }
-
-            var displayAsPassword = values[sys.TextKeys.displayAsPassword];
-            if(displayAsPassword){
-                var textLength = text.length;
-                var asterisks = "";
-                for(var i=0;i<textLength;i++){
-                    asterisks+="•";
+        private changeToPassText(text:string):string {
+            if (this.$TextField[sys.TextKeys.displayAsPassword]) {
+                var passText:string = "";
+                for (var i:number = 0, num = text.length; i < num; i++) {
+                    switch (text.charAt(i)) {
+                        case '\n' :
+                            passText += "\n";
+                            break;
+                        case '\r' :
+                            break;
+                        default :
+                            passText += '*';
+                    }
                 }
-                text = asterisks;
+                return passText;
+            }
+            return text;
+        }
+
+        private _textArr:Array<egret.ITextElement> = [];
+        private _isArrayChanged:boolean = false;
+
+        private setMiddleStyle(textArr:Array<egret.ITextElement>):void {
+            this._isArrayChanged = true;
+            this._textArr = textArr;
+            this.$invalidateContentBounds();
+        }
+
+        public get textWidth():number {
+            return this.$TextField[sys.TextKeys.textWidth];
+        }
+
+        public get textHeight():number {
+            return TextFieldUtils._getTextHeight(this);
+        }
+
+        public appendText(text:string):void {
+            this.appendElement(<egret.ITextElement>{text: text});
+        }
+
+        public appendElement(element:egret.ITextElement):void {
+            this._textArr.push(element);
+            this.setMiddleStyle(this._textArr);
+        }
+
+        private _linesArr:Array<egret.ILineElement> = [];
+
+        public _getLinesArr():Array<egret.ILineElement> {
+            var self = this;
+            if (!self._isArrayChanged) {
+                return self._linesArr;
             }
 
-            var hasWidthSet = !isNone(textFieldWidth);
-            var font = this.getFontString();
-            var lines = text.split(/(?:\r\n|\r|\n)/);
-            var length = lines.length;
-            var maxWidth = 0;
-            var drawWidth = 0;
-            var index:number;
-            if (hasWidthSet && values[sys.TextKeys.wordWrap]) {
-                for (var i = 0; i < length; i++) {
-                    var line = lines[i];
-                    var measureW = TextMeasurer.measureText(line, font);
-                    if (measureW > textFieldWidth) {
-                        var newLine = "";
-                        var lineWidth = 0;
-                        var words = this.$splitWords(line);
-                        var len = words.length;
-                        for (var j = 0; j < len; j++) {
-                            var word = words[j];
-                            measureW = TextMeasurer.measureText(word, font);
-                            if (lineWidth + measureW > textFieldWidth) {
+            self._isArrayChanged = false;
+            var text2Arr:Array<egret.ITextElement> = self._textArr;
+            var renderContext = sys.sharedRenderContext;
 
-                                if (lineWidth === 0) {
-                                    index = getMaxIndex(word, textFieldWidth, font);
-                                    words.splice(j + 1, 0, word.substring(index));
-                                    word = word.substring(0, index);
-                                    measureW = TextMeasurer.measureText(word, font);
-                                    lines.splice(i, 0, word);
-                                    measuredWidths[i] = measureW;
-                                    len++;
-                                    if (maxWidth < measureW) {
-                                        maxWidth = measureW;
-                                    }
-                                    measureW = 0;
-                                    word = "";
-                                }
-                                else {
-                                    lines.splice(i, 0, newLine);
-                                    measuredWidths[i] = lineWidth;
-                                    if (maxWidth < lineWidth) {
-                                        maxWidth = lineWidth;
-                                    }
-                                    newLine = "";
-                                    lineWidth = 0;
-                                    if (measureW > textFieldWidth) {
-                                        measureW = 0;
-                                        word = "";
-                                        j--;
-                                    }
-                                }
-                                i++;
-                                length++;
-                            }
-                            lineWidth += measureW;
-                            newLine += word;
-                        }
-                        lines[i] = newLine;
-                        measuredWidths[i] = lineWidth;
+            self._linesArr.length = 0;
+            this.$TextField[sys.TextKeys.textHeight] = 0;
+            this.$TextField[sys.TextKeys.textWidth] = 0;
+
+            var textFieldWidth:number = this.$TextField[sys.TextKeys.textFieldWidth];
+            //宽度被设置为0
+            if (!isNone(textFieldWidth) && textFieldWidth == 0) {
+                this.$TextField[sys.TextKeys.numLines] = 0;
+                return [{width: 0, height: 0, charNum: 0, elements: [], hasNextLine: false}];
+            }
+
+            if (!self._isFlow) {
+                setupFont(renderContext, self);
+            }
+
+            var linesArr:Array<egret.ILineElement> = self._linesArr;
+            var lineW:number = 0;
+            var lineCharNum:number = 0;
+            var lineH:number = 0;
+            var lineCount:number = 0;
+            var lineElement:egret.ILineElement;
+
+            for (var i:number = 0, text2ArrLength:number = text2Arr.length; i < text2ArrLength; i++) {
+                var element:egret.ITextElement = text2Arr[i];
+                element.style = element.style || <egret.ITextStyle>{};
+
+                var text:string = element.text.toString();
+                var textArr:Array<string> = text.split(/(?:\r\n|\r|\n)/);
+
+                for (var j:number = 0, textArrLength:number = textArr.length; j < textArrLength; j++) {
+                    if (linesArr[lineCount] == null) {
+                        lineElement = {width: 0, height: 0, elements: [], charNum: 0, hasNextLine: false};
+                        linesArr[lineCount] = lineElement;
+                        lineW = 0;
+                        lineH = 0;
+                        lineCharNum = 0;
+                    }
+
+                    if (this.$TextField[sys.TextKeys.type] == egret.TextFieldType.INPUT) {
+                        lineH = this.$TextField[sys.TextKeys.fontSize];
                     }
                     else {
-                        measuredWidths[i] = measureW;
-                        if (maxWidth < measureW) {
-                            maxWidth = measureW;
+                        lineH = Math.max(lineH, element.style.size || this.$TextField[sys.TextKeys.fontSize]);
+                    }
+
+                    var isNextLine:boolean = true;
+                    if (textArr[j] == "") {
+                        if (j == textArrLength - 1) {
+                            isNextLine = false;
                         }
                     }
-                }
-                drawWidth = Math.max(drawWidth, maxWidth);
-            }
-            else {
-                for (i = 0; i < length; i++) {
-                    line = lines[i];
-                    measureW = TextMeasurer.measureText(line, font);
-                    if (hasWidthSet && measureW > textFieldWidth) {
-                        index = getMaxIndex(line, textFieldWidth, font);
-                        line = lines[i] = line.substring(0, index);
-                        drawWidth = Math.max(drawWidth, TextMeasurer.measureText(line, font));
+                    else {
+                        if (self._isFlow) {
+                            setupFont(renderContext, self, element.style);
+                        }
+                        var w:number = renderContext.measureText(textArr[j]).width;
+                        if (isNone(textFieldWidth)) {//没有设置过宽
+                            lineW += w;
+                            lineCharNum += textArr[j].length;
+                            lineElement.elements.push(<egret.IWTextElement>{
+                                width: w,
+                                text: textArr[j],
+                                style: element.style
+                            });
+
+                            if (j == textArrLength - 1) {
+                                isNextLine = false;
+                            }
+                        }
+                        else {
+                            if (lineW + w <= textFieldWidth) {//在设置范围内
+                                lineElement.elements.push(<egret.IWTextElement>{
+                                    width: w,
+                                    text: textArr[j],
+                                    style: element.style
+                                });
+                                lineW += w;
+                                lineCharNum += textArr[j].length;
+
+                                if (j == textArrLength - 1) {
+                                    isNextLine = false;
+                                }
+                            }
+                            else {
+                                var k:number = 0;
+                                var ww:number = 0;
+                                var word:string = textArr[j];
+                                var wl:number = word.length;
+                                for (; k < wl; k++) {
+                                    w = renderContext.measureText(word.charAt(k)).width;
+                                    if (lineW + w > textFieldWidth && lineW + k != 0) {
+                                        break;
+                                    }
+                                    ww += w;
+                                    lineW += w;
+                                    lineCharNum += 1;
+                                }
+
+                                if (k > 0) {
+                                    lineElement.elements.push(<egret.IWTextElement>{
+                                        width: ww,
+                                        text: word.substring(0, k),
+                                        style: element.style
+                                    });
+                                    textArr[j] = word.substring(k);
+                                }
+
+                                j--;
+                                isNextLine = false;
+                            }
+                        }
                     }
-                    measuredWidths[i] = measureW;
-                    if (maxWidth < measureW) {
-                        maxWidth = measureW;
+
+                    if (isNextLine) {
+                        lineCharNum++;
+                        lineElement.hasNextLine = true;
                     }
+
+                    if (j < textArr.length - 1) {//非最后一个
+                        lineElement.width = lineW;
+                        lineElement.height = lineH;
+                        lineElement.charNum = lineCharNum;
+                        this.$TextField[sys.TextKeys.textWidth] = Math.max(this.$TextField[sys.TextKeys.textWidth], lineW);
+                        this.$TextField[sys.TextKeys.textHeight] += lineH;
+
+                        //if (self._type == TextFieldType.INPUT && !self._multiline) {
+                        //    self._numLines = linesArr.length;
+                        //    return linesArr;
+                        //}
+                        lineCount++;
+                    }
+
+
+                }
+
+                if (i == text2Arr.length - 1 && lineElement) {
+                    lineElement.width = lineW;
+                    lineElement.height = lineH;
+                    lineElement.charNum = lineCharNum;
+                    this.$TextField[sys.TextKeys.textWidth] = Math.max(this.$TextField[sys.TextKeys.textWidth], lineW);
+                    this.$TextField[sys.TextKeys.textHeight] += lineH;
                 }
             }
-            values[sys.TextKeys.textDrawWidth] = drawWidth;
-            values[sys.TextKeys.textWidth] = Math.ceil(maxWidth);
-            //由于Canvas不提供文本行高测量功能，这里以字号为默认行高测量，并在顶部和底部各留2像素边距防止文本截断。
-            values[sys.TextKeys.textHeight] = Math.ceil(lines.length * (values[sys.TextKeys.fontSize] +
-                values[sys.TextKeys.lineSpacing]) - values[sys.TextKeys.lineSpacing] + 4);
-            this.textLines = lines;
-            return lines;
+
+            this.$TextField[sys.TextKeys.numLines] = linesArr.length;
+            return linesArr;
         }
+
+        public _isTyping:boolean = false;
 
         /**
          * @private
+         * @param renderContext
+         * @returns {Rectangle}
          */
-        protected $splitWords(line:string):string[] {
-            return line.split(/\b/);
+        private drawText(renderContext:sys.RenderContext):void {
+            var self = this;
+
+            //先算出需要的数值
+            var lines:Array<egret.ILineElement> = self._getLinesArr();
+            if (this.$TextField[sys.TextKeys.textWidth] == 0) {
+                return;
+            }
+
+            var maxWidth:number = !isNone(this.$TextField[sys.TextKeys.textFieldWidth]) ? this.$TextField[sys.TextKeys.textFieldWidth] : this.$TextField[sys.TextKeys.textWidth];
+            var textHeight:number = TextFieldUtils._getTextHeight(self);
+
+            var drawY:number = 0;
+            var startLine:number = TextFieldUtils._getStartLine(self);
+
+            var textFieldHeight:number = this.$TextField[sys.TextKeys.textFieldHeight];
+            if (!isNone(textFieldHeight) && textFieldHeight > textHeight) {
+                var valign:number = TextFieldUtils._getValign(self);
+                drawY += valign * (textFieldHeight - textHeight);
+            }
+            drawY = Math.round(drawY);
+            var halign:number = TextFieldUtils._getHalign(self);
+
+            var drawX:number = 0;
+            for (var i:number = startLine, numLinesLength:number = this.$TextField[sys.TextKeys.numLines]; i < numLinesLength; i++) {
+                var line:egret.ILineElement = lines[i];
+                var h:number = line.height;
+                drawY += h / 2;
+                if (i != startLine) {
+                    if (this.$TextField[sys.TextKeys.type] == egret.TextFieldType.INPUT && !this.$TextField[sys.TextKeys.multiline]) {
+                        break;
+                    }
+                    if (!isNone(textFieldHeight) && drawY > textFieldHeight) {
+                        break;
+                    }
+                }
+
+                drawX = Math.round((maxWidth - line.width) * halign);
+                for (var j:number = 0, elementsLength:number = line.elements.length; j < elementsLength; j++) {
+                    var element:egret.IWTextElement = line.elements[j];
+                    var size:number = element.style.size || this.$TextField[sys.TextKeys.fontSize];
+
+                    drawText(renderContext, self, element.text, drawX, drawY + (h - size) / 2, element.width, element.style);
+                    drawX += element.width;
+                }
+                drawY += h / 2 + this.$TextField[sys.TextKeys.lineSpacing];
+            }
         }
 
+        //增加点击事件
+        private _addEvent():void {
+            this.addEventListener(egret.TouchEvent.TOUCH_TAP, this.onTapHandler, this);
+        }
+
+        //释放点击事件
+        private _removeEvent():void {
+            this.removeEventListener(egret.TouchEvent.TOUCH_TAP, this.onTapHandler, this);
+        }
+
+        //处理富文本中有href的
+        private onTapHandler(e:egret.TouchEvent):void {
+            if (this.$TextField[sys.TextKeys.type] == egret.TextFieldType.INPUT) {
+                return;
+            }
+            var ele:ITextElement = TextFieldUtils._getTextElement(this, e.localX, e.localY);
+            if (ele == null) {
+                return;
+            }
+            var style:egret.ITextStyle = ele.style;
+
+            if (style && style.href) {
+                if (style.href.match(/^event:/)) {
+                    var type:string = style.href.match(/^event:/)[0];
+                    egret.TextEvent.dispatchTextEvent(this, egret.TextEvent.LINK, style.href.substring(type.length));
+                }
+                else {
+
+                }
+            }
+        }
+    }
+
+    function drawText(renderContext:sys.RenderContext, textfield:egret.TextField, text:string, x:number, y:number, maxWidth:number, style:egret.ITextStyle = null) {
+        setupFont(renderContext, textfield, style);
+        style = style || <egret.ITextStyle>{};
+
+        var textColor:string;
+        if (style.textColor != null) {
+            textColor = toColorString(style.textColor);
+        }
+        else {
+            textColor = textfield.$TextField[sys.TextKeys.textColorString];
+        }
+
+        var strokeColor:string;
+        if (style.strokeColor != null) {
+            strokeColor = toColorString(style.strokeColor);
+        }
+        else {
+            strokeColor = textfield.$TextField[sys.TextKeys.strokeColorString];
+        }
+
+        var outline;
+        if (style.stroke != null) {
+            outline = style.stroke;
+        }
+        else {
+            outline = textfield.$TextField[sys.TextKeys.stroke];
+        }
+
+        renderContext.fillStyle = textColor;
+        renderContext.strokeStyle = strokeColor;
+        if (outline) {
+            renderContext.lineWidth = outline * 2;
+            renderContext.strokeText(text, x, y, maxWidth || 0xFFFF);
+        }
+        renderContext.fillText(text, x, y, maxWidth || 0xFFFF);
+    }
+
+    function setupFont(renderContext:sys.RenderContext, textField:TextField, style:egret.ITextStyle = null):void {
+        style = style || <egret.ITextStyle>{};
+        var italic:boolean = style.italic == null ? textField.$TextField[sys.TextKeys.italic] : style.italic;
+        var bold:boolean = style.bold == null ? textField.$TextField[sys.TextKeys.bold] : style.bold;
+        var size:number = style.size == null ? textField.$TextField[sys.TextKeys.fontSize] : style.size;
+        var fontFamily:string = style.fontFamily == null ? textField.$TextField[sys.TextKeys.fontFamily] : style.fontFamily;
+        var font:string = italic ? "italic " : "normal ";
+        font += bold ? "bold " : "normal ";
+        font += size + "px " + fontFamily;
+        renderContext.font = font;
+        renderContext.textAlign = "left";
+        renderContext.textBaseline = "middle";
+    }
+
+}
+
+
+module egret.sys {
+
+    /**
+     * @private
+     * 返回格式化的字体样式文本
+     */
+    export function toFontString(style:{fontFamily?:string;fontSize?:number;bold?:boolean;italic?:boolean}):string {
+        var font = "";
+        if (style.italic)
+            font += "italic ";
+        if (style.bold)
+            font += "bold ";
+        font += (style.fontSize || 12) + "px ";
+        font += (style.fontFamily || "sans-serif");
+        return font;
     }
 
     /**
      * @private
-     * 返回不超过最大宽度的字符结束索引(不包括)。
+     * 返回字符串形式的颜色值
      */
-    function getMaxIndex(text:string, maxWidth:number, font:string):number {
-        var lineWidth = 0;
-        var length = text.length;
-        var index:number;
-        for (var i = 0; i < length; i++) {
-            var word = text.charAt(i);
-            var measureW = TextMeasurer.measureText(word, font);
-            if (lineWidth + measureW > maxWidth) {
-                index = i;
-                break;
-            }
-            lineWidth += measureW;
+    export function toColorString(value:number):string {
+        if (value < 0)
+            value = 0;
+        if (value > 16777215)
+            value = 16777215;
+        var color = value.toString(16).toUpperCase();
+        while (color.length < 6) {
+            color = "0" + color;
         }
-        return index == 0 ? 1 : index;
+        return "#" + color;
     }
 
-    registerClass(TextField, Types.TextField);
+    if(DEBUG){
+        egret.$markReadOnly(TextField.prototype,"numLines");
+        egret.$markReadOnly(TextField.prototype,"textWidth");
+        egret.$markReadOnly(TextField.prototype,"textWidth");
+    }
 }

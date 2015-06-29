@@ -105,7 +105,7 @@ module egret.web {
          * @private
          * 更新播放器视口尺寸
          */
-        public updateScreenSize(player:sys.Player, webTouch:WebTouchHandler,webText:WebTextAdapter, webInput:HTMLInput):void {
+        public updateScreenSize(player:sys.Player, webTouch:WebTouchHandler, webInput:HTMLInput):void {
             var canvas = this.canvas;
             if(canvas['userTyping'])
                 return;
@@ -130,8 +130,6 @@ module egret.web {
             var scalex = displayWidth / stageWidth,
                 scaley = displayHeight / stageHeight;
             webTouch.updateScaleMode(scalex, scaley);
-            webText.updateScaleMode(scalex, scaley, (screenRect.width - displayWidth) / 2, (screenRect.height - displayHeight) / 2);
-
 
             webInput.$updateSize();
         }
