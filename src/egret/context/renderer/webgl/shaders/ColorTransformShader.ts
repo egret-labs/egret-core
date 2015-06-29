@@ -46,7 +46,7 @@ module egret {
                 "if(texColor.a != 0.0){\n" +
                     "locColor += colorAdd;\n" +
                 "}\n" +
-                "gl_FragColor = vec4(locColor.rgb*locColor.a,locColor.a);\n" +
+                "gl_FragColor = vColor*vec4(locColor.rgb*locColor.a,locColor.a);\n" +
             "}";
 
         public uniforms = {
