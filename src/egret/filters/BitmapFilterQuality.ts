@@ -27,20 +27,23 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 
-module egret.BitmapFilterQuality {
-    /**
-     * 定义低品质滤镜设置
-     * @private
-     */
-    export var LOW:number = 1;
-    /**
-     * 定义中等品质滤镜设置
-     * @private
-     */
-    export var MEDIUM:number = 2;
-    /**
-     * 定义高品质滤镜设置
-     * @private
-     */
-    export var HIGH:number = 3;
+
+module egret {
+    export const enum BitmapFilterQuality {
+        /**
+         * 定义低品质滤镜设置
+         * @private
+         */
+        LOW = 1,
+        /**
+         * 定义中等品质滤镜设置
+         * @private
+         */
+        MEDIUM = 2,
+        /**
+         * 定义高品质滤镜设置
+         * @private
+         */
+        HIGH = 3
+    }
 }
