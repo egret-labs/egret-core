@@ -63,6 +63,15 @@ module egret.gui {
             super.$render(context);
         }
 
+        /**
+         * @private
+         */
+        $measureContentBounds(bounds:Rectangle):void {
+            if (this.$graphics) {
+                this.$graphics.$measureContentBounds(bounds);
+            }
+        }
+
         private _fillColor:number = 0xFFFFFF;
         /**
          * 填充颜色
