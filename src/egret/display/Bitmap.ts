@@ -47,7 +47,6 @@ module egret {
      * without incurring the memory overhead of a texture object for each display object instance.
      *
      * @see egret.Texture
-     * @version egret 1.0
      */
     /**
      * @language zh_CN
@@ -59,7 +58,6 @@ module egret {
      * 而不会因为每个显示对象实例使用一个 texture 对象而产生额外内存开销。
      *
      * @see egret.Texture
-     * @version egret 1.0
      */
     export class Bitmap extends DisplayObject {
 
@@ -67,13 +65,11 @@ module egret {
          * @language en_US
          * Initializes a Bitmap object to refer to the specified BitmapData object.
          * @param bitmapData The BitmapData object being referenced.
-         * @version egret 1.0
          */
         /**
          * @language zh_CN
          * 创建一个引用指定 BitmapData 实例的 Bitmap 对象
          * @param bitmapData 被引用的 BitmapData 实例
-         * @version egret 1.0
          */
         public constructor(bitmapData?:Texture) {
             super();
@@ -96,12 +92,10 @@ module egret {
         /**
          * @language en_US
          * bitmapData The Texture object being referenced.
-         * @version egret 1.0
          */
         /**
          * @language zh_CN
          * 被引用的 Texture 对象。
-         * @version egret 1.0
          */
         public get texture():Texture {
             return this.$bitmapData;
@@ -171,13 +165,11 @@ module egret {
          * @language en_US
          * Whether or not the bitmap is smoothed when scaled.
          * @default true。
-         * @version egret 1.0
          */
         /**
          * @language zh_CN
          * 控制在缩放时是否对位图进行平滑处理。
          * @default true。
-         * @version egret 1.0
          */
         public get smoothing():boolean {
             return this.$smoothing;
