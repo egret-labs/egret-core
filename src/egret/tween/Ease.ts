@@ -30,6 +30,12 @@
 
 module egret {
     /**
+     * @language en_US
+     * Easing function set. Different easing functions are used to make an animation proceed according to the corresponding equation
+     * @link http://bbs.egret-labs.org/thread-392-1-1.html Tween and Ease
+     */
+    /**
+     * @language zh_CN
      * 缓动函数集合，使用不同的缓动函数使得动画按照对应的方程进行
      * @link http://bbs.egret-labs.org/thread-392-1-1.html Tween和Ease
      */
