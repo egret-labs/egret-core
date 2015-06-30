@@ -1392,9 +1392,40 @@ module egret {
          * @param resultRect 一个用于存储结果的可复用Rectangle实例，传入此参数能够减少内部创建对象的次数，从而获得更高的运行性能。
          * @returns 定义与 targetCoordinateSpace 对象坐标系统相关的显示对象面积的矩形。
          */
-        public getBounds(targetCoordinateSpace:DisplayObject, resultRect?:Rectangle):Rectangle {
+        public getRelativeBounds(targetCoordinateSpace:DisplayObject, resultRect?:Rectangle):Rectangle {
             targetCoordinateSpace = targetCoordinateSpace || this;
             return this.$getTransformedBounds(targetCoordinateSpace, resultRect);
+        }
+
+        /**
+         * @language en_US
+         * Obtain measurement boundary of display object
+         * @param resultRect {Rectangle} Optional. It is used to import Rectangle object for saving results, preventing duplicate object creation.
+         * @param calculateAnchor {boolean} Optional. It is used to determine whether to calculate anchor point.
+         * @returns {Rectangle}
+         */
+        /**
+         * @language zh_CN
+         * 获取显示对象的测量边界
+         * @param resultRect {Rectangle} 可选参数，传入用于保存结果的Rectangle对象，避免重复创建对象。
+         * @param calculateAnchor {boolean} 可选参数，是否会计算锚点。
+         * @returns {Rectangle}
+         */
+        public getBounds(resultRect?:Rectangle, calculateAnchor:boolean = true):egret.Rectangle {
+            resultRect = this.$getTransformedBounds(this, resultRect);
+            if (calculateAnchor) {
+                var values = this.$DisplayObject;
+                if (values[Keys.anchorOffsetX] != 0 || values[Keys.anchorOffsetY] != 0) {
+                    resultRect.x -= values[Keys.anchorOffsetX];
+                    resultRect.y -= values[Keys.anchorOffsetY];
+                }
+                else if (values[Keys.anchorX] != 0 || values[Keys.anchorY] != 0) {
+                    resultRect.x -= values[Keys.anchorX] * resultRect.width;
+                    resultRect.y -= values[Keys.anchorY] * resultRect.height;
+                }
+            }
+
+            return resultRect;
         }
 
         /**
