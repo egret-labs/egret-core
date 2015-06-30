@@ -31,11 +31,25 @@
 module egret {
 
     /**
+     * @language en_US
+     * When a user clicks a hyperlink rich text object dispatches TextEvent object. Text Event Type: TextEvent.LINK.
+     */
+    /**
+     * @language zh_CN
      * 用户在富文本中单击超链接时，对象将调度 TextEvent 对象。文本事件类型：TextEvent.LINK。
      */
     export class TextEvent extends Event {
 
         /**
+         * @language en_US
+         * TextEvent create an object that contains information about text events.
+         * @param type Type of event, you can access the TextEvent.type.
+         * @param bubbles Determines whether the Event object participates in the bubbling stage of the event flow. The default value is false.
+         * @param cancelable Determine whether the Event object can be canceled. The default value is false.
+         * @param text One or more characters of text entered by the user. Event listeners can access this information through the text property.
+         */
+        /**
+         * @language zh_CN
          * 创建一个 TextEvent 对象，其中包含有关文本事件的信息。
          * @param type 事件的类型，可以作为 TextEvent.type 访问。
          * @param bubbles 确定 Event 对象是否参与事件流的冒泡阶段。默认值为 false。
@@ -49,16 +63,34 @@ module egret {
         }
 
         /**
+         * @language en_US
+         * It defines the value of the type property of a link event object.
+         */
+        /**
+         * @language zh_CN
          * 定义 link 事件对象的 type 属性值。
          */
         public static LINK:string = "link";
 
         /**
-         * 在 textInput 事件中，由用户输入的字符或字符序列。
+         * @language en_US
+         * In TextEvent.LINK event, event corresponding string.
+         */
+        /**
+         * @language zh_CN
+         * 在 TextEvent.LINK 事件中，event对应的字符串。
          */
         public text:string;
 
         /**
+         * @language en_US
+         * EventDispatcher object using the specified event object thrown TextEvent. The objects will be thrown in the object cache pool for the next round robin.
+         * @param type  The type of the event, accessible as Event.type.
+         * @param bubbles  Determines whether the Event object participates in the bubbling stage of the event flow. The default value is false.
+         * @param text  Text TextEvent object assignment
+         */
+        /**
+         * @language zh_CN
          * 使用指定的EventDispatcher对象来抛出TextEvent事件对象。抛出的对象将会缓存在对象池上，供下次循环复用。
          * @param target 派发事件目标
          * @param type  事件类型

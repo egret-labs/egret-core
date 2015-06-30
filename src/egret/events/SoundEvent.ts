@@ -27,37 +27,62 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 module egret {
+
     /**
-     * @class egret.SoundEvent
-     * @classdesc
+     * @language en_US
+     * Sound-related events.
+     * An event: SoundEvent.SOUND_COMPLETE
+     */
+    /**
+     * @language zh_CN
      * 声音相关事件。
      * 有事件：SoundEvent.SOUND_COMPLETE
      */
     export class SoundEvent extends egret.Event {
 
         /**
+         * @language en_US
+         * The sound has finished playing scheduling.
+         */
+        /**
+         * @language zh_CN
          * 在声音完成播放后调度。
-         * @constant {string} egret.SoundEvent.SOUND_COMPLETE
          */
         public static SOUND_COMPLETE:string = "soundComplete";
 
         /**
-         * 创建一个 egret.SoundEvent 对象
-         * @param type {string} 事件类型
-         * @param bubbles {boolean}
-         * @param cancelable {boolean}
-         * @param bytesLoaded {number}
-         * @param bytesTotal {number}
+         * @language en_US
+         * Creates an Event object to pass as a parameter to event listeners.
+         * @param type  The type of the event, accessible as Event.type.
+         * @param bubbles  Determines whether the Event object participates in the bubbling stage of the event flow. The default value is false.
+         * @param cancelable Determines whether the Event object can be canceled. The default values is false.
+         * @version Lark 1.0
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 创建一个作为参数传递给事件侦听器的 Event 对象。
+         * @param type  事件的类型，可以作为 Event.type 访问。
+         * @param bubbles  确定 Event 对象是否参与事件流的冒泡阶段。默认值为 false。
+         * @param cancelable 确定是否可以取消 Event 对象。默认值为 false。
+         * @version Lark 1.0
+         * @platform Web,Native
          */
         public constructor(type:string, bubbles:boolean = false, cancelable:boolean = false) {
             super(type, bubbles, cancelable);
         }
 
         /**
+         * @language en_US
+         * EventDispatcher object using the specified event object thrown Event. The objects will be thrown in the object cache pool for the next round robin.
+         * @param target {egret.IEventDispatcher} Distribute event target
+         * @param type  The type of the event, accessible as Event.type.
+         */
+        /**
+         * @language zh_CN
          * 使用指定的EventDispatcher对象来抛出Event事件对象。抛出的对象将会缓存在对象池上，供下次循环复用。
-         * @method egret.IOErrorEvent.dispatchIOErrorEvent
          * @param target {egret.IEventDispatcher} 派发事件目标
-         * @param status {number} 由服务器返回的 HTTP 状态代码
+         * @param type  事件的类型，可以作为 Event.type 访问。
          */
         public static dispatchSoundEvent(target:IEventDispatcher, type:string):boolean {
             var event:SoundEvent = Event.create(SoundEvent, type);
