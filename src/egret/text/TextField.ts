@@ -1052,7 +1052,6 @@ module egret {
          * 设置富文本
          */
         public set textFlow(textArr:Array<egret.ITextElement>) {
-            var self = this;
             this._isFlow = true;
             var text:string = "";
             if (textArr == null)
@@ -1138,8 +1137,18 @@ module egret {
          * @param element
          */
         public appendElement(element:egret.ITextElement):void {
-            this._textArr.push(element);
-            this.setMiddleStyle(this._textArr);
+            this._isFlow = true;
+            var text:string = this.$TextField[sys.TextKeys.text] + element.text;
+
+            if (this.$TextField[sys.TextKeys.displayAsPassword]) {
+                this._setBaseText(text);
+            }
+            else {
+                this.$TextField[sys.TextKeys.text] = text;
+
+                this._textArr.push(element);
+                this.setMiddleStyle(this._textArr);
+            }
         }
 
         private _linesArr:Array<egret.ILineElement> = [];
