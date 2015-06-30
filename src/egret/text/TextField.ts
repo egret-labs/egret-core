@@ -778,8 +778,20 @@ module egret {
         }
 
         public appendElement(element:egret.ITextElement):void {
-            this._textArr.push(element);
-            this.setMiddleStyle(this._textArr);
+            var self = this;
+            var properties:egret.TextFieldProperties = self._TF_Props_;
+
+            var text:string = properties._text + element.text;
+
+            if (properties._displayAsPassword) {
+                self._setBaseText(text);
+            }
+            else {
+                properties._text = text;
+
+                self._textArr.push(element);
+                self.setMiddleStyle(self._textArr);
+            }
         }
 
         private _linesArr:Array<egret.ILineElement> = [];
