@@ -31,9 +31,6 @@
 module egret {
 
     /**
-     * @class egret.NetContext
-     * @classdesc
-     * @extends egret.HashObject
      * @private
      */
     export interface NetContext extends HashObject {
@@ -43,6 +40,9 @@ module egret {
         getChangeList():Array<any>;
     }
 
+    /**
+     * @private
+     */
     export var NetContext:{new():NetContext};
 
 

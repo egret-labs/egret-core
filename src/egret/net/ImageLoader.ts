@@ -30,6 +30,7 @@
 module egret {
 
     /**
+     * @private
      * @language en_US
      * The Loader class is used to load image (JPG, PNG, or GIF) files. Use the load() method to initiate loading.
      * The loaded image data is in the data property of ImageLoader.
@@ -40,6 +41,7 @@ module egret {
      * @platform Web,Native
      */
     /**
+     * @private
      * @language zh_CN
      * ImageLoader 类可用于加载图像（JPG、PNG 或 GIF）文件。使用 load() 方法来启动加载。被加载的图像对象数据将存储在 ImageLoader.data 属性上 。
      * @event lark.Event.COMPLETE 加载完成
@@ -54,12 +56,14 @@ module egret {
     }
 
     /**
+     * @private
      * @language en_US
      * Creates a ImageLoader object
      * @version Lark 1.0
      * @platform Web,Native
      */
     /**
+     * @private
      * @language zh_CN
      * 创建一个 ImageLoader 实例
      * @version Lark 1.0

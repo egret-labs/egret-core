@@ -111,7 +111,7 @@ module egret {
          * @param type 事件的类型。
          * @param listener 处理事件的侦听器函数。此函数必须接受 Event 对象作为其唯一的参数，并且不能返回任何结果，
          * 如下面的示例所示： function(evt:Event):void 函数可以有任何名称。
-         * @param listener 侦听函数绑定的this对象
+         * @param thisObject 侦听函数绑定的this对象
          * @param useCapture 确定侦听器是运行于捕获阶段还是运行于冒泡阶段。如果将 useCapture 设置为 true，
          * 则侦听器只在捕获阶段处理事件，而不在冒泡阶段处理事件。如果 useCapture 为 false，则侦听器只在冒泡阶段处理事件。
          * 要在两个阶段都侦听事件，请调用 on() 两次：一次将 useCapture 设置为 true，一次将 useCapture 设置为 false。

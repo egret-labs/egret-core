@@ -28,10 +28,19 @@
 //////////////////////////////////////////////////////////////////////////////////////
 
 module egret.web {
-
+    /**
+     * @private
+     * @param functionName
+     * @param value
+     */
     function call(functionName:string, value:string):void {
     }
 
+    /**
+     * @private
+     * @param functionName
+     * @param listener
+     */
     function addCallback(functionName:string, listener:(value)=>void):void {
     }
 

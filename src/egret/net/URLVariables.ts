@@ -31,8 +31,13 @@
 module egret {
 
     /**
-     * @class egret.URLVariables
-     * @classdesc
+     * @language en_US
+     * The URLVariables class allows you to transfer variables between an application and a server.
+     * Use URLVariables objects with methods of the URLLoader class and the data property of the URLRequest class.
+     * @link http://docs.egret-labs.org/post/manual/net/senddata.html Send the request with parameters
+     */
+    /**
+     * @language zh_CN
      * 使用 URLVariables 类可以在应用程序和服务器之间传输变量。
      * 将 URLVariables 对象与 URLLoader 类的方法、URLRequest 类的 data 属性一起使用。
      * @link http://docs.egret-labs.org/post/manual/net/senddata.html 发送带参数的请求
@@ -40,8 +45,13 @@ module egret {
     export class URLVariables extends HashObject {
 
         /**
+         * @language en_US
+         * Create an egret.URLVariable object
+         * @param source {String} A URL-encoded string containing name/value pairs.
+         */
+        /**
+         * @language zh_CN
          * 创建一个 egret.URLVariables 对象
-         * @method egret.URLVariables#constructor
          * @param source {String} 包含名称/值对的 URL 编码的字符串。
          */
         public constructor(source:string = null) {
@@ -52,14 +62,23 @@ module egret {
         }
 
         /**
+         * @language en_US
+         * Key-value pair data object saved in this URLVariables object
+         */
+        /**
+         * @language zh_CN
          * 此 URLVariables 储存的键值对数据对象。
-         * @member egret.URLVariables#variables
          */
         public variables:Object = null;
 
         /**
+         * @language en_US
+         * Convert the variable string into the property of this URLVariables.variables object.
+         * @param source {string}
+         */
+        /**
+         * @language zh_CN
          * 将变量字符串转换为此 URLVariables.variables 对象的属性。
-         * @method egret.URLVariables#decode
          * @param source {string}
          */
         public decode(source:string):void {
@@ -88,8 +107,12 @@ module egret {
         }
 
         /**
+         * @language en_US
+         * Return a string containing all enumerable variables using  the MIME content encoding format : application/x-www-form-urlencoded.
+         */
+        /**
+         * @language zh_CN
          * 以 MIME 内容编码格式 application/x-www-form-urlencoded 返回包含所有可枚举变量的字符串。
-         * @method egret.URLVariables#toString
          */
         public toString():string {
             if (!this.variables) {

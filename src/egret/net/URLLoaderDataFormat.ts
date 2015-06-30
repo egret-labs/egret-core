@@ -30,39 +30,64 @@
 module egret {
 
 	/**
-	 * @class egret.URLLoaderDataFormat
-	 * @classdesc URLLoaderDataFormat 类提供了一些用于指定如何接收已下载数据的值。
-     * @link http://docs.egret-labs.org/post/manual/net/netformat.html 读取不同数据格式
+     * @language en_US
+	 * The URLLoaderDataFormat class provides values that specify how downloaded data is received.
+     * @see http://docs.egret-labs.org/post/manual/net/netformat.html Read different data format
+	 */
+	/**
+     * @language zh_CN
+	 * URLLoaderDataFormat 类提供了一些用于指定如何接收已下载数据的值。
+     * @see http://docs.egret-labs.org/post/manual/net/netformat.html 读取不同数据格式
 	 */
     export class URLLoaderDataFormat {
 
 		/**
+         * @language en_US
+         * Specify that downloaded data is received as raw binary data.
+		 */
+		/**
+         * @language zh_CN
          * 指定以原始二进制数据形式接收下载的数据。
-		 * @constant {string} egret.URLLoaderDataFormat.BINARY
 		 */
         public static BINARY:string = "binary";
 
 		/**
+         * @language en_US
+         * Specify that downloaded data is received as text.
+		 */
+		/**
+         * @language zh_CN
          * 指定以文本形式接收已下载的数据。
-		 * @constant {string} egret.URLLoaderDataFormat.TEXT
 		 */
         public static TEXT:string = "text";
 
 		/**
+         * @language en_US
+         * Specify that downloaded data is received as URL-encoded variables.
+		 */
+		/**
+         * @language zh_CN
          * 指定以 URL 编码变量形式接收下载的数据。
-		 * @constant {string} egret.URLLoaderDataFormat.VARIABLES
 		 */
         public static VARIABLES:string = "variables";
 
 		/**
+         * @language en_US
+         * Specify that downloaded data is received as bitmap texture.
+		 */
+		/**
+         * @language zh_CN
          * 指定以位图纹理形式接收已下载的数据。
-		 * @constant {string} egret.URLLoaderDataFormat.TEXTURE
 		 */
         public static TEXTURE:string = "texture";
 
         /**
+         * @language en_US
+         * Specify that downloaded data is received as sound.
+         */
+        /**
+         * @language zh_CN
          * 指定以声音形式接收已下载的数据。
-         * @constant {string} egret.URLLoaderDataFormat.SOUND
          */
         public static SOUND:string = "sound";
 

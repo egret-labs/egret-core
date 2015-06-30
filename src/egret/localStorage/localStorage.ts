@@ -31,15 +31,27 @@
 module egret.localStorage {
 
     /**
+     * @language en_US
+     * Read data
+     * @param key {string} Name of the key to be read
+     */
+    /**
+     * @language zh_CN
      * 读取数据
-     * @method egret.localStorage.getItem
      * @param key {string} 要读取的键名称
      */
     export var getItem:(key:string)=>string;
 
     /**
+     * @language en_US
+     * Save data
+     * @param key {string} Name of the key to be saved
+     * @param value {string} Value to be saved
+     * @returns {boolean} Whether data is saved successfully
+     */
+    /**
+     * @language zh_CN
      * 保存数据
-     * @method egret.localStorage.setItem
      * @param key {string} 要保存的键名称
      * @param value {string} 要保存的值
      * @returns {boolean} 数据保存是否成功
@@ -47,15 +59,24 @@ module egret.localStorage {
     export var setItem:(key:string, value:string)=>boolean;
 
     /**
+     * @language en_US
+     * Delete data
+     * @param key {string} Name of the key to be deleted
+     */
+    /**
+     * @language zh_CN
      * 删除数据
-     * @method egret.localStorage.removeItem
      * @param key {string} 要删除的键名称
      */
     export var removeItem:(key:string)=>void;
 
     /**
+     * @language en_US
+     * Clear all data
+     */
+    /**
+     * @language zh_CN
      * 将所有数据清空
-     * @method egret.localStorage.clear
      */
     export var clear:()=>void;
 }

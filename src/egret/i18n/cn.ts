@@ -1,8 +1,13 @@
 module egret {
+
+    $locale_strings = $locale_strings || {};
+    $locale_strings["zh_CN"] = $locale_strings["zh_CN"] || {};
+    var egret_string_code = $locale_strings["zh_CN"];
+
     /**
      * @private
      */
-    export var egret_string_code = {};
+    //export var egret_string_code = {};
     egret_string_code[-1] = "不存在的stringId:{0}";
     egret_string_code[1000] = "Browser.isMobile接口参数已经变更，请尽快调整用法为 egret.MainContext.deviceType == egret.MainContext.DEVICE_MOBILE";
     egret_string_code[1001] = "该方法目前不应传入 resolutionPolicy 参数，请在 docs/1.0_Final_ReleaseNote中查看如何升级";

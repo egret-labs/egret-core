@@ -29,6 +29,11 @@
 module egret.native {
     var callBackDic = {};
 
+    /**
+     * @private
+     * @param functionName
+     * @param value
+     */
     function call(functionName:string, value:string):void {
         var data:any = {};
         data.functionName = functionName;
@@ -36,10 +41,19 @@ module egret.native {
         egret_native.sendInfoToPlugin(JSON.stringify(data));
     }
 
+    /**
+     * @private
+     * @param functionName
+     * @param listener
+     */
     function addCallback(functionName:string, listener:(value)=>void):void {
         callBackDic[functionName] = listener;
     }
 
+    /**
+     * @private
+     * @param info
+     */
     function onReceivedPluginInfo(info:string):void {
         var data = JSON.parse(info);
         var functionName = data.functionName;

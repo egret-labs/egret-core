@@ -31,16 +31,25 @@
 module egret {
 
     /**
-     * @class egret.URLRequest
-     * @classdesc URLRequest 类可捕获单个 HTTP 请求中的所有信息。
-     * @extends egret.HashObject
+     * @language en_US
+     * The URLRequest class captures all of the information in a single HTTP request.
+     * @link http://docs.egret-labs.org/post/manual/net/createconnect.html Build communication request
+     */
+    /**
+     * @language zh_CN
+     * URLRequest 类可捕获单个 HTTP 请求中的所有信息。
      * @link http://docs.egret-labs.org/post/manual/net/createconnect.html 构建通信请求
      */
     export class URLRequest extends HashObject {
 
         /**
+         * @language en_US
+         * Create an egret.URLRequest object
+         * @param url {string} Addresses for URL requests
+         */
+        /**
+         * @language zh_CN
          * 创建一个 egret.URLRequest 对象
-         * @method egret.URLRequest#constructor
          * @param url {string} 进行网络请求的地址
          */
         public constructor(url:string = null) {
@@ -49,6 +58,17 @@ module egret {
         }
 
         /**
+         * @language en_US
+         * An object contains data to be transmitted with the URL request.
+         * This property is used in conjunction with the method property.  When the value of method is GET, the value of data is appended to the value of URLRequest.url, using HTTP query-string syntax.
+         * When the method value is POST (or any value other than GET), the value of data is transmitted in the body of the HTTP request.
+         * The URLRequest API supports  binary POST, URL-encoded variables, as well as strings. The data object can be a ByteArray, URLVariables, or String object. The way in which the data is used depends on the type of object used: If the object is a ByteArray object, the binary data of the ByteArray object is used as POST data. For GET, data of ByteArray type is not supported.
+         * If the object is a URLVariables object and the method is POST, then the variables are encoded using x-www-form-urlencoded format and the resulting string is used as POST data.
+         * If the object is a URLVariables object and the method is GET, the URLVariables object will define variables to be sent with the URLRequest object.
+         * Otherwise, the object is converted into a string, and the string is used as the POST or GET data.
+         */
+        /**
+         * @language zh_CN
          * 一个对象，它包含将随 URL 请求一起传输的数据。
          * 该属性与 method 属性配合使用。当 method 值为 GET 时，将使用 HTTP 查询字符串语法将 data 值追加到 URLRequest.url 值。
          * 当 method 值为 POST（或 GET 之外的任何值）时，将在 HTTP 请求体中传输 data 值。
@@ -58,27 +78,40 @@ module egret {
          * 如果该对象是 URLVariables 对象，并且该方法是 POST，则使用 x-www-form-urlencoded 格式对变量进行编码，并且生成的字符串会用作 POST 数据。
          * 如果该对象是 URLVariables 对象，并且该方法是 GET，则 URLVariables 对象将定义要随 URLRequest 对象一起发送的变量。
          * 否则，该对象会转换为字符串，并且该字符串会用作 POST 或 GET 数据。
-         * @member {any} egret.URLRequest#data
          */
         public data:any = null;
 
         /**
+         * @language en_US
+         * Request method, valid values are URLRequestMethod.GET or URLRequestMethod.POST.
+         */
+        /**
+         * @language zh_CN
          * 请求方式，有效值为URLRequestMethod.GET 或 URLRequestMethod.POST。
-         * @member {string} egret.URLRequest#method
          */
         public method:string = URLRequestMethod.GET;
 
         /**
+         * @language en_US
+         * The requested URL.
+         */
+        /**
+         * @language zh_CN
          * 所请求的 URL。
-         * @member {string} egret.URLRequest#url
          */
         public url:string = "";
 
         /**
+         * @language en_US
+         * The array of HTTP request headers to be appended to the HTTP request. The array is composed of URLRequestHeader objects.
+         * Each object in the array must be a URLRequestHeader object that contains a name string and a value string.
+         * Because of browser compatibility, this property has not been achieved in html5
+         */
+        /**
+         * @language zh_CN
          * 要追加到 HTTP 请求的 HTTP 请求标头的数组。该数组由 URLRequestHeader 对象组成。
          * 数组中的每一对象必须是包含一个名称字符串和一个值字符串的 URLRequestHeader 对象。
          * 由于浏览器兼容性原因，该属性在 html5 中并未实现
-         * @member {Array} egret.URLRequest#requestHeaders
          */
         public requestHeaders:Array<URLRequestHeader>;
     }

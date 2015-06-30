@@ -1,8 +1,14 @@
 module egret {
+
+    $locale_strings = $locale_strings || {};
+    $locale_strings["en_US"] = $locale_strings["en_US"] || {};
+    var egret_string_code = $locale_strings["en_US"];
+
+
     /**
      * @private
      */
-    export var egret_string_code = {};
+    //export var egret_string_code = {};
     egret_string_code[-1] = "non-existent errorId:{0}";
     egret_string_code[1000] = "Browser.isMobile interface parameter has been modified，please change the method t o egret.MainContext.deviceType == egret.MainContext.DEVICE_MOBILE";
     egret_string_code[1001] = "This method should not pass in the argument fo resolutionPolicy, please check docs/1.0_Final_ReleaseNotex`x to learn how to upgrade.";

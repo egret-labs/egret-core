@@ -30,6 +30,9 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 module egret {
+    /**
+     * @private
+     */
     export interface Audio {
         $setCurrentTime(value:number):void;
         $getCurrentTime():number;
@@ -53,5 +56,8 @@ module egret {
         $loadByUrl(url:string, callback:(code:number)=>void):void;
     }
 
+    /**
+     * @private
+     */
     export var Audio:{new():Audio};
 }

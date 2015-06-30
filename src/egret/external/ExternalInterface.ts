@@ -28,13 +28,40 @@
 //////////////////////////////////////////////////////////////////////////////////////
 
 module egret {
+    /**
+     * @language en_US
+     * h5 and native interaction.
+     * @see http://edn.egret.com/cn/index.php?g=&m=article&a=index&id=167&terms1_id=25&terms2_id=39 Android between language communication within the project
+     */
+    /**
+     * @language zh_CN
+     * h5与native交互。
+     * @see http://edn.egret.com/cn/index.php?g=&m=article&a=index&id=167&terms1_id=25&terms2_id=39 Android项目内的语言间通讯
+     */
     export interface ExternalInterface {
 
     }
 
     export var ExternalInterface: {
+
+        /**
+         * @language en_US
+         * Call functionName, and the value passed to the native.
+         */
+        /**
+         * @language zh_CN
+         * 调用 functionName，并将value传入到native中。
+         */
         call(functionName:string, value:string):void;
 
+        /**
+         * @language en_US
+         * FunctionName callback listener, you need to have to call functionName this field in native rather than such a call.
+         */
+        /**
+         * @language zh_CN
+         * 监听 functionName 回调，需要在native中有调用 functionName 这个字段，而不是 此类的call。
+         */
         addCallback(functionName:string, listener:(value)=>void):void
     };
 }
