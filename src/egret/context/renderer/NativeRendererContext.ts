@@ -383,6 +383,14 @@ module egret {
             }
 
         }
+
+        //public createLinearGradient(x0:number, y0:number, x1:number, y1:number):CanvasGradient {
+        //    return egret_native.rastergl.createLinearGradient(x0, y0, x1, y1);
+        //}
+        //
+        //public createRadialGradient(x0:number, y0:number, r0:number, x1:number, y1:number, r1:number):CanvasGradient {
+        //    return egret_native.rastergl.createRadialGradient(x0, y0, r0, x1, y1, r1);
+        //}
     }
 }
 
@@ -546,3 +554,24 @@ if (egret_native.rastergl) {
 else {
     egret_native_graphics.init();
 }
+
+//var originNativeFill = egret_native.rastergl.fill;
+//egret_native.rastergl.fill = function () {
+//    var style = egret.Graphics._currentFillStyle;
+//    if (!(typeof style == "string")) {
+//        var matrix:egret.Matrix = style["matrix"];
+//        if (matrix) {
+//            egret_native.rastergl.transform(matrix.a, matrix.b, matrix.c, matrix.d, matrix.tx, matrix.ty);
+//            originNativeFill.call(egret_native.rastergl);
+//            var context = egret.MainContext.instance.rendererContext;
+//            egret_native.Graphics.setTransform(context._matrixA, context._matrixB, context._matrixC, context._matrixD, context._matrixTx, context._matrixTy);
+//        }
+//    }
+//    else {
+//        originNativeFill.call(egret_native.rastergl);
+//    }
+//};
+
+egret.Graphics.prototype.beginGradientFill = function (type:string, colors:Array<number>, alphas:Array<number>, ratios:Array<number>, matrix:egret.Matrix = null) {
+
+};

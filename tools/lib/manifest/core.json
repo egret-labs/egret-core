@@ -63,6 +63,7 @@
         "egret/display/BitmapFillMode.ts",
         "egret/display/Bitmap.ts",
         "egret/text/BitmapText.ts",
+        "egret/display/GradientType.ts",
         "egret/display/Graphics.ts",
         "egret/display/Shape.ts",
         "egret/display/Sprite.ts",
