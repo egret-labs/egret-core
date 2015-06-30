@@ -30,9 +30,15 @@
 module egret {
 
     /**
+     * @language en_US
+     * Transfer number to color character string
+	 * @param value {number} color value ,such as 0xffffff
+	 * @returns {string} Color character string, for example, #ffffff.
+     */
+    /**
+     * @language zh_CN
      * 转换数字为颜色字符串
-	 * @method egret.toColorString
-	 * @param value {number} 
+	 * @param value {number} 颜色值，例如 0xffffff
 	 * @returns {string} 颜色字符串，例如"#ffffff"。
      */
     export function toColorString(value:number):string{

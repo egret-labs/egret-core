@@ -32,9 +32,17 @@ module egret {
     export var $callLaterFunctionList:Array<any> = [];
     export var $callLaterThisList:Array<any> = [];
     export var $callLaterArgsList:Array<any> = [];
+
     /**
+     * @language en_US
+     * Delay the function to run unless screen is redrawn.
+     * @param method {Function} The function to be delayed to run
+     * @param thisObject {any} this reference of callback function
+     * @param ...args {any} Function parameter list
+     */
+    /**
+     * @language zh_CN
      * 延迟函数到屏幕重绘前执行。
-	 * @method egret.callLater
      * @param method {Function} 要延迟执行的函数
      * @param thisObject {any} 回调函数的this引用
      * @param ...args {any} 函数参数列表
@@ -54,6 +62,7 @@ module egret {
      * @param method {Function} 要异步调用的函数
      * @param thisObject {any} 函数的this引用
      * @param ...args {any} 函数参数列表
+     * @private
      */
     export function $callAsync(method:Function,thisObject:any,...args):void
     {

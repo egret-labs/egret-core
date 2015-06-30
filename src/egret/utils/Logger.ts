@@ -29,11 +29,12 @@
 
 module egret {
     /**
-     * @class egret.Logger
-     * @classdesc
+     * @language en_US
+     * Logger is an entrance for the log processing module of the engine
+     */
+    /**
+     * @language zh_CN
      * Logger是引擎的日志处理模块入口
-     * @stable B 目前Logger的接口设计没有问题，但是考虑到跨平台，需要将其改为一个Context，并且允许开发者自由扩展以实现自身游戏的日志分析收集需求
-     * todo:GitHub文档，如何利用日志帮助游戏持续改进
      */
     export class Logger {
         public static ALL:string = "all";
@@ -86,7 +87,6 @@ module egret {
 
         /**
          * 表示出现了致命错误，开发者必须修复错误
-         * @method egret.Logger.fatal
          * @param actionCode {string} 错误信息
          * @param value {Object} 错误描述信息
          */
@@ -96,8 +96,14 @@ module egret {
         }
 
         /**
+         * @language en_US
+         * Record normal Log information
+         * @param actionCode {string} Error information
+         * @param value {Object} Error description
+         */
+        /**
+         * @language zh_CN
          * 记录正常的Log信息
-         * @method egret.Logger.info
          * @param actionCode {string} 错误信息
          * @param value {Object} 错误描述信息
          */
@@ -107,7 +113,6 @@ module egret {
 
         /**
          * 记录可能会出现问题的Log信息
-         * @method egret.Logger.warning
          * @param actionCode {string} 错误信息
          * @param value {Object} 错误描述信息
          */

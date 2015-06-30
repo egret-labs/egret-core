@@ -34,8 +34,17 @@ module egret {
 
     var setTimeoutCount:number = 0;
     /**
+     * @language en_US
+     * Run the designated function in specified delay (in milliseconds).
+     * @param listener {Function} Listener function
+     * @param thisObject {any} this object
+     * @param delay {number} Delay time, in milliseconds
+     * @param ...args {any} Parameter list
+	 * @returns {number} Return index which can be used for clearTimeout
+     */
+    /**
+     * @language zh_CN
      * 在指定的延迟（以毫秒为单位）后运行指定的函数。
-	 * @method egret.setTimeout
      * @param listener {Function} 侦听函数
      * @param thisObject {any} this对象
      * @param delay {number} 延迟时间，以毫秒为单位
@@ -56,8 +65,13 @@ module egret {
     }
 
     /**
+     * @language en_US
+     * Function run after the specified delay is cleared.
+     * @param key {number} Index that egret.setTimeout returns
+     */
+    /**
+     * @language zh_CN
      * 清除指定延迟后运行的函数。
-	 * @method egret.clearTimeout
      * @param key {number} egret.setTimeout所返回的索引
      */
     export function clearTimeout(key:number):void {

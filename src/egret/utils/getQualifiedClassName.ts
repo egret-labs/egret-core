@@ -29,8 +29,16 @@
 
 module egret {
     /**
-     * 返回一个对象的完全限定名<br/>
-	 * @method egret.getQualifiedClassName
+     * @language en_US
+     * Return the fully qualified class name of an object
+     * @param value {any} The object for which a fully qualified class name is desired. Any TypeScript / JavaScript value may be passed to this method including all available TypeScript / JavaScript types, object instances, primitive types such as number, and class objects."
+	 * @returns {string}
+     * @example
+     *  egret.getQualifiedClassName(egret.DisplayObject) //return "egret.DisplayObject"
+     */
+    /**
+     * @language zh_CN
+     * 返回一个对象的完全限定名
      * @param value {any} 需要完全限定类名称的对象，可以将任何 TypeScript / JavaScript值传递给此方法，包括所有可用的TypeScript / JavaScript类型、对象实例、原始类型（如number）和类对象
 	 * @returns {string}
      * @example
@@ -52,10 +60,16 @@ module egret {
         return className;
     }
 
-    
-     /**
-     * 返回一个对象的父类完全限定名<br/>
-     * @method egret.getQualifiedSuperclassName
+    /** @language en_US
+     * Return the parent fully qualified class name of an object
+     * @param value {any} The object for which a parent class is desired. Any TypeScript / JavaScript value may be passed to this method including all available TypeScript / JavaScript types, object instances, primitive types such as number, and class objects.
+     * @returns {Function}
+     * @example
+     *  egret.getQualifiedSuperclassName(egret.DisplayObjectContainer) //return "egret.DisplayObject"
+     */
+    /**
+     * @language zh_CN
+     * 返回一个对象的父类完全限定名
      * @param value {any} 需要取得父类的对象，可以将任何 TypeScript / JavaScript值传递给此方法，包括所有可用的TypeScript / JavaScript类型、对象实例、原始类型（如number）和类对象
      * @returns {Function}
      * @example

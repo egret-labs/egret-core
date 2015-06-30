@@ -37,6 +37,13 @@ module egret {
         }
 
         /**
+         * @language en_US
+         * Obtain the approximate sin value of the corresponding angle value
+         * @param value {number} Angle value
+         * @returns {number} sin value
+         */
+        /**
+         * @language zh_CN
          * 得到对应角度值的sin近似值
          * @param value {number} 角度值
          * @returns {number} sin值
@@ -69,6 +76,13 @@ module egret {
         }
 
         /**
+         * @language en_US
+         * Obtain the approximate cos value of the corresponding angle value
+         * @param value {number} Angle value
+         * @returns {number} cos value
+         */
+        /**
+         * @language zh_CN
          * 得到对应角度值的cos近似值
          * @param value {number} 角度值
          * @returns {number} cos值

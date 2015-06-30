@@ -30,16 +30,23 @@
 
 module egret {
     /**
-	 * @class egret.Recycler
-	 * @classdesc
+     * @language en_US
+     * Tool class for object cache repeat use, which can be used to construct an object pool. Objects are automatically recycled after a certain duration.
+     */
+    /**
+     * @language zh_CN
      * 对象缓存复用工具类，可用于构建对象池，一段时间后会自动回收对象。
-	 * @extends egret.HashObject
      */
     export class Recycler extends HashObject{
 
 		/**
+         * @language en_US
+         * Create an egret.Recycler object
+		 * @param autoDisposeTime {number} Number of frames when objects are destroyed automatically. Default value: 300
+		 */
+		/**
+         * @language zh_CN
          * 创建一个 egret.Recycler 对象
-		 * @method egret.Recycler#constructor
 		 * @param autoDisposeTime {number} 多少帧后自动销毁对象，默认值300
 		 */
         public constructor(autoDisposeTime:number = 300){
@@ -69,15 +76,24 @@ module egret {
 
         private _length:number = 0;
         /**
+         * @language en_US
+         * Number of cached objects"
+         */
+        /**
+         * @language zh_CN
          * 缓存的对象数量
-		 * @member {number} egret.Recycler#length
          */
         public get length():number{
             return this._length;
         }
         /**
+         * @language en_US
+         * Cache an object for repeat use
+         * @param object {any} The object to be cached
+         */
+        /**
+         * @language zh_CN
          * 缓存一个对象以复用
-		 * @method egret.Recycler#push
          * @param object {any} 需要缓存的对象
          */
         public push(object:any):void{
@@ -96,8 +112,13 @@ module egret {
             }
         }
         /**
+         * @language en_US
+         * Obtain a cached object
+		 * @returns {any} The obtained cached object
+         */
+        /**
+         * @language zh_CN
          * 获取一个缓存的对象
-		 * @method egret.Recycler#pop
 		 * @returns {any} 获得的缓存对象
          */
         public pop():any{
@@ -107,8 +128,12 @@ module egret {
             return this.objectPool.pop();
         }
         /**
+         * @language en_US
+         * Immediately clear all cached objects.
+         */
+        /**
+         * @language zh_CN
          * 立即清空所有缓存的对象。
-		 * @method egret.Recycler#dispose
          */
         public dispose():void{
             if(this._length>0){
