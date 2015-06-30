@@ -27,13 +27,108 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 
+module egret {
+    export class Ticker extends EventDispatcher {
+        public constructor(){
+            super();
+            if (Ticker.instance != null) {
+                if (DEBUG) {
+                    egret.Logger.fatalWithErrorId(1033);
+                }
+            }
+        }
+
+        private _timeScale:number = 1;
+        private _paused:boolean = false;
+
+        /**
+         * @deprecated
+         */
+        public run():void {
+            if (DEBUG) {
+                egret.Logger.fatalWithErrorId(1033);
+            }
+        }
+
+        /**
+         * 注册帧回调事件，同一函数的重复监听会被忽略。
+         * @method egret.Ticker#register
+         * @param listener {Function} 帧回调函数,参数返回上一帧和这帧的间隔时间。示例：onEnterFrame(frameTime:number):void
+         * @param thisObject {any} 帧回调函数的this对象
+         * @param priority {number} 事件优先级，开发者请勿传递 Number.NEGATIVE_INFINITY 和 Number.POSITIVE_INFINITY
+         */
+        public register(callBack:(advancedTime:number)=>boolean, thisObject:any, priority:number = 0):void {
+            sys.$ticker.$startTick(callBack, thisObject);
+        }
+
+        /**
+         * 取消侦听enterFrame事件
+         * @method egret.Ticker#unregister
+         * @param listener {Function} 事件侦听函数
+         * @param thisObject {any} 侦听函数的this对象
+         */
+        public unregister(callBack:(advancedTime:number)=>boolean, thisObject:any):void {
+            sys.$ticker.$stopTick(callBack, thisObject);
+        }
+
+        /**
+         * @deprecated
+         */
+        public setTimeScale():void {
+            if (DEBUG) {
+                egret.Logger.fatalWithErrorId(1033);
+            }
+        }
+
+        /**
+         * @deprecated
+         */
+        public getTimeScale():void {
+            if (DEBUG) {
+                egret.Logger.fatalWithErrorId(1033);
+            }
+        }
+
+        /**
+         * @deprecated
+         */
+        public pause():void {
+            if (DEBUG) {
+                egret.Logger.fatalWithErrorId(1033);
+            }
+        }
+
+        /**
+         * @deprecated
+         */
+        public resume():void {
+            if (DEBUG) {
+                egret.Logger.fatalWithErrorId(1033);
+            }
+        }
+
+        private static instance:egret.Ticker;
+
+        /**
+         * @method egret.Ticker.getInstance
+         * @returns {Ticker}
+         */
+        public static getInstance():egret.Ticker {
+            if (Ticker.instance == null) {
+                Ticker.instance = new Ticker();
+            }
+            return Ticker.instance;
+        }
+    }
+}
+
 module egret.sys {
 
     /**
      * @private
      * 心跳计时器单例
      */
-    export var $ticker:Ticker;
+    export var $ticker:SystemTicker;
     /**
      * @private
      * 是否要广播Event.RENDER事件的标志。
@@ -49,7 +144,7 @@ module egret.sys {
      * @private
      * Lark心跳计时器
      */
-    export class Ticker {
+    export class SystemTicker {
 
         private lastTime:number = 0;
         /**
@@ -57,7 +152,7 @@ module egret.sys {
          */
         public constructor() {
             if (DEBUG && $ticker) {
-                $error(1008, "egret.sys.Ticker");
+                $error(1008, "egret.sys.SystemTicker");
             }
             egret.$START_TIME = this.lastTime = Date.now();
         }
@@ -110,7 +205,7 @@ module egret.sys {
         /**
          * @private
          */
-        $startTick(callBack:(timeStamp:number)=>boolean, thisObject:any):void {
+        $startTick(callBack:(advancedTime:number)=>boolean, thisObject:any):void {
             var index = this.getTickIndex(callBack, thisObject);
             if (index != -1) {
                 return;

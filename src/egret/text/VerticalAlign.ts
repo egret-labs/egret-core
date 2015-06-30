@@ -87,17 +87,28 @@ module egret {
         public static MIDDLE:string = "middle";
 
         /**
+         * @language en_US
+         * Vertical alignment with both edges
+         * Note: TextFiled does not support this alignment method."
+         */
+        /**
+         * @language zh_CN
          * 垂直两端对齐
          * 注意：TextFiled不支持此对齐方式。
-         * @constant egret.VerticalAlign.JUSTIFY
          */
         public static JUSTIFY:string = "justify";
 
         /**
+         * @language en_US
+         * Align the content of the child items, relative to the container. This operation will adjust uniformly the size of all the child items to be the Content Height \" of the container \".
+         * The Content Height \" of the container \" is the size of the max. child item. If the size of all child items are less than the height of the container, they will be adjusted to the height of the container.
+         * Note: TextFiled does not support this alignment method.
+         */
+        /**
+         * @language zh_CN
          * 相对于容器对子项进行内容对齐。这会将所有子项的大小统一调整为容器的"内容高度"。
          * 容器的"内容高度"是最大子项的大小,如果所有子项都小于容器的高度，则会将所有子项的大小调整为容器的高度。
          * 注意：TextFiled不支持此对齐方式。
-         * @constant egret.VerticalAlign.CONTENT_JUSTIFY
          */
         public static CONTENT_JUSTIFY:string = "contentJustify";
     }

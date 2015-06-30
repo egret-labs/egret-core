@@ -53,7 +53,7 @@ module egret.web {
      * 网页加载完成，实例化页面中定义的Larksys标签
      */
     export function runLark():void {
-        var ticker = egret.sys.$ticker = new sys.Ticker();
+        var ticker = egret.sys.$ticker = new sys.SystemTicker();
         startTicker(ticker);
         var surfaceFactory = new CanvasFactory();
         sys.surfaceFactory = surfaceFactory;
@@ -119,7 +119,7 @@ module egret.web {
      * @private
      * 启动心跳计时器。
      */
-    function startTicker(ticker:egret.sys.Ticker):void {
+    function startTicker(ticker:egret.sys.SystemTicker):void {
         var requestAnimationFrame =
             window["requestAnimationFrame"] ||
             window["webkitRequestAnimationFrame"] ||

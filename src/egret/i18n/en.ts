@@ -43,6 +43,7 @@ module egret {
     egret_string_code[1030] = "This API has deprecated";
     egret_string_code[1031] = "setVolume is deprecated,use this.volume = value instead";
     egret_string_code[1032] = "getVolume is deprecated,use this.volume instead";
+    egret_string_code[1033] = "This method has been abandoned.";
 
     egret_string_code[2000] = "RES.createGroup() passed in non-existed key value in configuration: {0}";
     egret_string_code[2001] = "RES loaded non-existed or empty resource group:\"{0}\"";

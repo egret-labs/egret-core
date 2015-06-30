@@ -42,6 +42,7 @@ module egret {
     egret_string_code[1030] = "该API已废弃";
     egret_string_code[1031] = "setVolume已废弃，请使用this.volume = value代替";
     egret_string_code[1032] = "getVolume已废弃，请使用this.volume代替";
+    egret_string_code[1033] = "此方法已被废弃。";
 
     egret_string_code[2000] = "RES.createGroup()传入了配置中不存在的键值: {0}";
     egret_string_code[2001] = "RES加载了不存在或空的资源组:\"{0}\"";

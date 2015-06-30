@@ -101,7 +101,6 @@
         "egret/text/HorizontalAlign.ts",
         "egret/text/TextFieldType.ts",
         "egret/text/TextField.ts",
-        "egret/text/TextMeasurer.ts",
         "egret/text/VerticalAlign.ts",
         "egret/text/TextFieldUtils.ts",
         "egret/text/web/StageText.ts",

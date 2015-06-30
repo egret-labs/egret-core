@@ -66,14 +66,21 @@ module egret {
     }
 
     /**
-     * @classdesc
-     * @class egret.BitmapText
+     * @language en_US
+     * Bitmap font adopts the Bitmap+SpriteSheet mode to render text.
+     */
+    /**
+     * @language zh_CN
      * 位图字体采用了Bitmap+SpriteSheet的方式来渲染文字。
-     * @extends egret.DisplayObject
      */
     export class BitmapText extends DisplayObject {
 
         /**
+         * @language en_US
+         * Create an egret.BitmapText object
+         */
+        /**
+         * @language zh_CN
          * 创建一个 egret.BitmapText 对象
          */
         public constructor() {

@@ -95,7 +95,7 @@
         "egret/player/Surface.ts",
         "egret/player/SurfaceFactory.ts",
         "egret/player/TextAdapter.ts",
-        "egret/player/Ticker.ts",
+        "egret/player/SystemTicker.ts",
         "egret/player/TouchHandler.ts",
         "egret/system/Capabilities.ts",
         "egret/system/Console.ts",

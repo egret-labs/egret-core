@@ -28,12 +28,19 @@
 //////////////////////////////////////////////////////////////////////////////////////
 
 module egret.web {
+
+    /**
+     * @private
+     */
     export class AudioType {
         static QQ_AUDIO:number = 1;
         static WEB_AUDIO:number = 2;
         static HTML5_AUDIO:number = 3;
     }
 
+    /**
+     * @private
+     */
     export class SystemOSType {
         static WPHONE:number = 1;
         static IOS:number = 2;
@@ -67,15 +74,23 @@ module egret.web {
             var ua:string = navigator.userAgent.toLowerCase();
             Html5Capatibility.ua = ua;
 
+            egret.Capabilities.$isMobile = (ua.indexOf('mobile') != -1 || ua.indexOf('android') != -1);
+
+
             Html5Capatibility._canUseBlob = false;
 
             Html5Capatibility._audioType = AudioType.HTML5_AUDIO;
             Html5Capatibility._AudioClass = egret.web.Html5Audio;
 
+
             if (ua.indexOf("windows phone") >= 0) {//wphone windows
                 Html5Capatibility._System_OS = SystemOSType.WPHONE;
+
+                egret.Capabilities.$os = "Windows Phone";
             }
             else if (ua.indexOf("android") >= 0) {//android
+                egret.Capabilities.$os = "Android";
+
                 Html5Capatibility._System_OS = SystemOSType.ADNROID;
                 if (window.hasOwnProperty("QZAppExternal") && ua.indexOf("qzone") >= 0) {
                     Html5Capatibility._audioType = AudioType.QQ_AUDIO;
@@ -98,12 +113,22 @@ module egret.web {
                 }
             }
             else if (ua.indexOf("iphone") >= 0 || ua.indexOf("ipad") >= 0 || ua.indexOf("ipod") >= 0) {//ios
+                egret.Capabilities.$os = "iOS";
+
                 Html5Capatibility._System_OS = SystemOSType.IOS;
                 if (Html5Capatibility.getIOSVersion() >= 7) {
                     Html5Capatibility._canUseBlob = true;
 
                     Html5Capatibility._AudioClass = egret.web.WebAudio;
                     Html5Capatibility._audioType = AudioType.WEB_AUDIO;
+                }
+            }
+            else{
+                if(ua.indexOf("windows nt")!= -1){
+                    egret.Capabilities.$os = "Windows PC";
+                }
+                else if(ua.indexOf("mac os")!= -1){
+                    egret.Capabilities.$os = "Mac OS";
                 }
             }
 
@@ -130,6 +155,27 @@ module egret.web {
         private static getIOSVersion():number {
             var value = Html5Capatibility.ua.toLowerCase().match(/cpu [^\d]*\d.*like mac os x/)[0];
             return parseInt(value.match(/\d(_\d)*/)[0]) || 0;
+        }
+
+        /**
+         * @private
+         *
+         */
+        private static checkHtml5Support() {
+            var geolocation = 'geolocation' in navigator;
+            var orientation = 'DeviceOrientationEvent' in window;
+            var motion = 'DeviceMotionEvent' in window;
+
+            egret.Capabilities.$hasGeolocation = geolocation;
+            egret.Capabilities.$hasMotion = motion;
+            egret.Capabilities.$hasOrientation = orientation;
+
+            var language = (navigator.language || navigator.browserLanguage).toLowerCase();
+            var strings = language.split("-");
+            if (strings.length > 1) {
+                strings[1] = strings[1].toUpperCase();
+            }
+            egret.Capabilities.$language = strings.join("-");
         }
     }
 

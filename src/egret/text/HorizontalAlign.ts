@@ -87,6 +87,13 @@ module egret {
         public static CENTER: string = "center";
 
         /**
+         * @language en_US
+         * Horizontal alignment with both edges
+         * Note: TextFiled does not support this alignment method.
+         * @constant egret.HorizontalAlign.JUSTIFY
+         */
+        /**
+         * @language zh_CN
          * 水平两端对齐
          * 注意：TextFiled不支持此对齐方式。
          * @constant egret.HorizontalAlign.JUSTIFY
@@ -94,6 +101,14 @@ module egret {
         public static JUSTIFY:string = "justify";
 
         /**
+         * @language en_US
+         * Align the content of the child items, relative to the container. This operation will adjust uniformly the size of all the child items to be the Content Width \" of the container \".
+         * The Content Width \" of the container \" is the size of the max. child item. If the size of all child items are less than the width of the container, they will be adjusted to the width of the container.
+         * Note: TextFiled does not support this alignment method.
+         * @constant egret.HorizontalAlign.CONTENT_JUSTIFY
+         */
+        /**
+         * @language zh_CN
          * 相对于容器对子项进行内容对齐。这会将所有子项的大小统一调整为容器的"内容宽度"。
          * 容器的"内容宽度"是最大子项的大小,如果所有子项都小于容器的宽度，则会将所有子项的大小调整为容器的宽度。
          * 注意：TextFiled不支持此对齐方式。

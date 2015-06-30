@@ -30,17 +30,27 @@
 
 module egret {
     /**
-     * @classdesc
-     * @class egret.BitmapFont
+     * @language en_US
+     * Bitmap font, texture set of a font. It is generally used as the value of the BitmapText.font attribute.
+     * @see http://bbs.egret-labs.org/thread-918-1-1.html TextureMerger
+     * @see http://bbs.egret-labs.org/forum.php?mod=viewthread&tid=251 Text(Containing the specific usage of the bitmap font )
+     */
+    /**
+     * @language zh_CN
      * 位图字体,是一个字体的纹理集，通常作为BitmapText.font属性的值。
-     * @link
-     * http://bbs.egret-labs.org/thread-918-1-1.html TextureMerger
-     * http://bbs.egret-labs.org/forum.php?mod=viewthread&tid=251 文本(含位图字体具体用法)
-     * @extends egret.SpriteSheet
+     * @see http://bbs.egret-labs.org/thread-918-1-1.html TextureMerger
+     * @see http://bbs.egret-labs.org/forum.php?mod=viewthread&tid=251 文本(含位图字体具体用法)
      */
     export class BitmapFont extends SpriteSheet {
 
         /**
+         * @language en_US
+         * Create an egret.BitmapFont object
+         * @param texture {egret.Texture} Texture set
+         * @param config {any} Configure data
+         */
+        /**
+         * @language zh_CN
          * 创建一个 egret.BitmapFont 对象
          * @param texture {egret.Texture} 纹理集
          * @param config {any} 配置数据
@@ -61,9 +71,15 @@ module egret {
         private charList:any;
 
         /**
+         * @language en_US
+         * Obtain corresponding texture through the name attribute
+         * @param name {string} name Attribute
+         * @returns {egret.Texture}
+         */
+        /**
+         * @language zh_CN
          * 通过 name 属性获取对应纹理
          * @param name {string} name属性
-         * @method egret.BitmapFont#getTexture
          * @returns {egret.Texture}
          */
         public getTexture(name:string):Texture {

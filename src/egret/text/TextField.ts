@@ -177,11 +177,19 @@ module egret.sys {
 
 module egret {
     /**
-     * @class egret.TextField
-     * @classdesc
+     * @language en_US
+     * TextField is the text rendering class of egret. It conducts rendering by using the browser / device API. Due to different ways of font rendering in different browsers / devices, there may be differences in the rendering
+     * If developers expect  no differences among all platforms, please use BitmapText
+     * @link http://docs.egret-labs.org/post/manual/text/createtext.html Create Text
+     *
+     * @event egret.Event.CHANGE Dispatched when entering text user input。
+     * @event egret.FocusEvent.FOCUS_IN Dispatched after the focus to enter text.
+     * @event egret.FocusEvent.FOCUS_OUT Enter the text loses focus after dispatch.
+     */
+    /**
+     * @language zh_CN
      * TextField是egret的文本渲染类，采用浏览器/设备的API进行渲染，在不同的浏览器/设备中由于字体渲染方式不一，可能会有渲染差异
      * 如果开发者希望所有平台完全无差异，请使用BitmapText
-     * @extends egret.DisplayObject
      * @link http://docs.egret-labs.org/post/manual/text/createtext.html 创建文本
      *
      * @event egret.Event.CHANGE 输入文本有用户输入时调度。
@@ -296,10 +304,16 @@ module egret {
             this.invalidateFontString();
         }
 
+        /**
+         * @private
+         */
         public get fontSize():number {
             return this.$TextField[sys.TextKeys.fontSize];
         }
 
+        /**
+         * @private
+         */
         public set fontSize(value:number) {
             //value = +value || 0;
             var values = this.$TextField;
@@ -534,10 +548,16 @@ module egret {
         private _inputUtils:InputController = null;
 
         /**
+         * @language en_US
+         * Type of the text field.
+         * Any one of the following TextFieldType constants: TextFieldType.DYNAMIC (specifies the dynamic text field that users can not edit), or TextFieldType.INPUT (specifies the dynamic text field that users can edit).
+         * @default egret.TextFieldType.DYNAMIC
+         */
+        /**
+         * @language zh_CN
          * 文本字段的类型。
          * 以下 TextFieldType 常量中的任一个：TextFieldType.DYNAMIC（指定用户无法编辑的动态文本字段），或 TextFieldType.INPUT（指定用户可以编辑的输入文本字段）。
-         * 默认值为 dynamic。
-         * @member {string} egret.TextField#type
+         * @default egret.TextFieldType.DYNAMIC
          */
         public set type(value:string) {
             this._setType(value);
@@ -595,8 +615,12 @@ module egret {
         }
 
         /**
+         * @language en_US
+         * Serve as a string of the current text field in the text
+         */
+        /**
+         * @language zh_CN
          * 作为文本字段中当前文本的字符串
-         * @member {string} egret.TextField#text
          */
         public set text(value:string) {
             this.$setText(value);
@@ -638,10 +662,16 @@ module egret {
         }
 
         /**
+         * @language en_US
+         * Specify whether the text field is a password text field.
+         * Specify whether the text field is a password text field. If the value of this property is true, the text field is treated as a password text field and hides the input characters using asterisks instead of the actual characters. If false, the text field is not treated as a password text field.
+         * @default false
+         */
+        /**
+         * @language zh_CN
          * 指定文本字段是否是密码文本字段。
          * 如果此属性的值为 true，则文本字段被视为密码文本字段，并使用星号而不是实际字符来隐藏输入的字符。如果为 false，则不会将文本字段视为密码文本字段。
-         * 默认值为 false。
-         * @member {boolean} egret.TextInput#displayAsPassword
+         * @default false
          */
         public set displayAsPassword(value:boolean) {
             this._setDisplayAsPassword(value);
@@ -670,10 +700,16 @@ module egret {
         }
 
         /**
+         * @language en_US
+         * Represent the stroke color of the text.
+         * Contain three 8-bit numbers with RGB color components; for example, 0xFF0000 is red, 0x00FF00 is green.
+         * @default 0x000000
+         */
+        /**
+         * @language zh_CN
          * 表示文本的描边颜色。
          * 包含三个 8 位 RGB 颜色成分的数字；例如，0xFF0000 为红色，0x00FF00 为绿色。
-         * 默认值为 0x000000。
-         * @member {number} egret.TextField#strokeColor
+         * @default 0x000000
          */
         public set strokeColor(value:number) {
             this._setStrokeColor(value);
@@ -693,10 +729,16 @@ module egret {
         }
 
         /**
+         * @language en_US
+         * Indicate the stroke width.
+         * 0 means no stroke.
+         * @default 0
+         */
+        /**
+         * @language zh_CN
          * 表示描边宽度。
          * 0为没有描边。
-         * 默认值为 0。
-         * @member {number} egret.TextField#stroke
+         * @default 0
          */
         public set stroke(value:number) {
             this._setStroke(value);
@@ -714,9 +756,16 @@ module egret {
         }
 
         /**
+         * @language en_US
+         * The maximum number of characters that the text field can contain, as entered by a user. \n A script can insert more text than maxChars allows; the maxChars property indicates only how much text a user can enter. If the value of this property is 0, a user can enter an unlimited amount of text.
+         * The default value is 0.
+         * @default 0
+         */
+        /**
+         * @language zh_CN
          * 文本字段中最多可包含的字符数（即用户输入的字符数）。
          * 脚本可以插入比 maxChars 允许的字符数更多的文本；maxChars 属性仅表示用户可以输入多少文本。如果此属性的值为 0，则用户可以输入无限数量的文本。
-         * 默认值为 0。
+         * @default 0
          */
         public set maxChars(value:number) {
             this._setMaxChars(value);
@@ -729,10 +778,16 @@ module egret {
         }
 
         /**
+         * @language en_US
+         * Vertical position of text in a text field. scrollV property helps users locate specific passages in a long article, and create scrolling text fields.
+         * Vertically scrolling units are lines, and horizontal scrolling unit is pixels.
+         * If the first displayed line is the first line in the text field, scrollV is set to 1 (instead of 0).
+         */
+        /**
+         * @language zh_CN
          * 文本在文本字段中的垂直位置。scrollV 属性可帮助用户定位到长篇文章的特定段落，还可用于创建滚动文本字段。
          * 垂直滚动的单位是行，而水平滚动的单位是像素。
          * 如果显示的第一行是文本字段中的第一行，则 scrollV 设置为 1（而非 0）。
-         * @param value
          */
         public set scrollV(value:number) {
             this.$TextField[sys.TextKeys.scrollV] = Math.max(value, 1);
@@ -745,8 +800,12 @@ module egret {
         }
 
         /**
+         * @language en_US
+         * The maximum value of scrollV
+         */
+        /**
+         * @language zh_CN
          * scrollV 的最大值
-         * @returns {number}
          */
         public get maxScrollV():number {
             this._getLinesArr();
@@ -774,18 +833,28 @@ module egret {
         }
 
         /**
+         * @language en_US
+         * Number of lines of text.
+         */
+        /**
+         * @language zh_CN
          * 文本行数。
-         * @member {number} egret.TextField#numLines
          */
         public get numLines():number {
             return this.$TextField[sys.TextKeys.numLines];
         }
 
         /**
+         * @language en_US
+         * Indicate whether field is a multiline text field. Note that this property is valid only when the type is TextFieldType.INPUT.
+         * If the value is true, the text field is multiline; if the value is false, the text field is a single-line text field. In a field of type TextFieldType.INPUT, the multiline value determines whether the Enter key creates a new line (a value of false, and the Enter key is ignored).
+         * @default false
+         */
+        /**
+         * @language zh_CN
          * 表示字段是否为多行文本字段。注意，此属性仅在type为TextFieldType.INPUT时才有效。
          * 如果值为 true，则文本字段为多行文本字段；如果值为 false，则文本字段为单行文本字段。在类型为 TextFieldType.INPUT 的字段中，multiline 值将确定 Enter 键是否创建新行（如果值为 false，则将忽略 Enter 键）。
-         * 默认值为 false。
-         * @member {boolean} egret.TextField#multiline
+         * @default false
          */
         public set multiline(value:boolean) {
             this._setMultiline(value);
@@ -826,11 +895,18 @@ module egret {
         private _bgGraphics:Graphics = null;
 
         /**
+         * @language en_US
+         * Specifies whether the text field has a border.
+         * If true, the text field has a border. If false, the text field has no border.
+         * Use borderColor property to set the border color.
+         * @default false
+         */
+        /**
+         * @language zh_CN
          * 指定文本字段是否具有边框。
          * 如果为 true，则文本字段具有边框。如果为 false，则文本字段没有边框。
          * 使用 borderColor 属性来设置边框颜色。
-         * 默认值为 false。
-         * @member {boolean} egret.TextField#border
+         * @default false
          */
         public set border(value:boolean) {
             this.$TextField[sys.TextKeys.border] = value;
@@ -842,9 +918,16 @@ module egret {
         }
 
         /**
-         * 文本字段边框的颜色。默认值为 0x000000（黑色）。
+         * @language en_US
+         * The color of the text field border.
+         * Even currently is no border can be retrieved or set this property, but only if the text field has the border property is set to true, the color is visible.
+         * @default 0x000000
+         */
+        /**
+         * @language zh_CN
+         * 文本字段边框的颜色。
          * 即使当前没有边框，也可检索或设置此属性，但只有当文本字段已将 border 属性设置为 true 时，才可以看到颜色。
-         * @member {number} egret.TextField#borderColor
+         * @default 0x000000
          */
         public set borderColor(value:number) {
             this.$TextField[sys.TextKeys.borderColor] = value;
@@ -856,11 +939,18 @@ module egret {
         }
 
         /**
+         * @language en_US
+         * Specifies whether the text field has a background fill.
+         * If true, the text field has a background fill. If false, the text field has no background fill.
+         * Use the backgroundColor property to set the background color of the text field.
+         * @default false
+         */
+        /**
+         * @language zh_CN
          * 指定文本字段是否具有背景填充。
          * 如果为 true，则文本字段具有背景填充。如果为 false，则文本字段没有背景填充。
          * 使用 backgroundColor 属性来设置文本字段的背景颜色。
-         * 默认值为 false。
-         * @member {boolean} egret.TextField#background
+         * @default false
          */
         public set background(value:boolean) {
             this.$TextField[sys.TextKeys.background] = value;
@@ -872,9 +962,16 @@ module egret {
         }
 
         /**
-         * 文本字段背景的颜色。默认值为 0xFFFFFF（白色）。
+         * @language en_US
+         * Color of the text field background.
+         * Even currently is no background, can be retrieved or set this property, but only if the text field has the background property set to true, the color is visible.
+         * @default 0xFFFFFF
+         */
+        /**
+         * @language zh_CN
+         * 文本字段背景的颜色。
          * 即使当前没有背景，也可检索或设置此属性，但只有当文本字段已将 background 属性设置为 true 时，才可以看到颜色。
-         * @member {number} egret.TextField#backgroundColor
+         * @default 0xFFFFFF
          */
         public set backgroundColor(value:number) {
             this.$TextField[sys.TextKeys.backgroundColor] = value;
@@ -907,6 +1004,9 @@ module egret {
             }
         }
 
+        /**
+         * @private
+         */
         public setFocus() {
             //todo:
             Logger.warningWithErrorId(1013);
@@ -980,8 +1080,12 @@ module egret {
         private _isFlow:boolean = false;
 
         /**
+         * @language en_US
+         * Set rich text
+         */
+        /**
+         * @language zh_CN
          * 设置富文本
-         * @param textArr 富文本数据
          */
         public set textFlow(textArr:Array<egret.ITextElement>) {
             var self = this;
@@ -1034,19 +1138,41 @@ module egret {
             this._textArr = textArr;
             this.$invalidateContentBounds();
         }
-
+        /**
+         * @language en_US
+         * Get the text measured width
+         */
+        /**
+         * @language zh_CN
+         * 获取文本测量宽度
+         */
         public get textWidth():number {
             return this.$TextField[sys.TextKeys.textWidth];
         }
-
+        /**
+         * @language en_US
+         * Get Text measuring height
+         */
+        /**
+         * @language zh_CN
+         * 获取文本测量高度
+         */
         public get textHeight():number {
             return TextFieldUtils._getTextHeight(this);
         }
 
+        /**
+         * @private
+         * @param text
+         */
         public appendText(text:string):void {
             this.appendElement(<egret.ITextElement>{text: text});
         }
 
+        /**
+         * @private
+         * @param element
+         */
         public appendElement(element:egret.ITextElement):void {
             this._textArr.push(element);
             this.setMiddleStyle(this._textArr);
