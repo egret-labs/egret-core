@@ -41,12 +41,12 @@ module egret {
      * The Bitmap class represents display objects that represent bitmap images.
      * The Bitmap() constructor allows you to create a Bitmap object that contains a reference to a BitmapData object.
      * After you create a Bitmap object, use the addChild() or addChildAt() method of the parent DisplayObjectContainer
-     * instance to place the bitmap on the display list.A Bitmap object can share its BitmapData reference among several
+     * instance to place the bitmap on the display list.A Bitmap object can share its texture reference among several
      * Bitmap objects, independent of translation or rotation properties. Because you can create multiple Bitmap objects
-     * that reference the same BitmapData object, multiple display objects can use the same complex BitmapData object
-     * without incurring the memory overhead of a BitmapData object for each display object instance.
+     * that reference the same texture object, multiple display objects can use the same complex texture object
+     * without incurring the memory overhead of a texture object for each display object instance.
      *
-     * @see egret.BitmapData
+     * @see egret.Texture
      * @version egret 1.0
      * @platform Web,Native
      */
@@ -55,11 +55,11 @@ module egret {
      * Bitmap 类表示用于显示位图图片的显示对象。
      * 利用 Bitmap() 构造函数，可以创建包含对 BitmapData 对象引用的 Bitmap 对象。创建了 Bitmap 对象后，
      * 使用父级 DisplayObjectContainer 实例的 addChild() 或 addChildAt() 方法可以将位图放在显示列表中。
-     * 一个 Bitmap 对象可在若干 Bitmap 对象之中共享其 BitmapData 引用，与缩放或旋转属性无关。
-     * 由于能够创建引用相同 BitmapData 对象的多个 Bitmap 对象，因此，多个显示对象可以使用相同的 BitmapData 对象，
-     * 而不会因为每个显示对象实例使用一个 BitmapData 对象而产生额外内存开销。
+     * 一个 Bitmap 对象可在若干 Bitmap 对象之中共享其 texture 引用，与缩放或旋转属性无关。
+     * 由于能够创建引用相同 texture 对象的多个 Bitmap 对象，因此，多个显示对象可以使用相同的 texture 对象，
+     * 而不会因为每个显示对象实例使用一个 texture 对象而产生额外内存开销。
      *
-     * @see egret.BitmapData
+     * @see egret.Texture
      * @version egret 1.0
      * @platform Web,Native
      */
@@ -99,13 +99,13 @@ module egret {
 
         /**
          * @language en_US
-         * bitmapData The BitmapData object being referenced.
+         * bitmapData The Texture object being referenced.
          * @version egret 1.0
          * @platform Web,Native
          */
         /**
          * @language zh_CN
-         * 被引用的 BitmapData 对象。
+         * 被引用的 Texture 对象。
          * @version egret 1.0
          * @platform Web,Native
          */
@@ -152,10 +152,15 @@ module egret {
 
 
         /**
+         * @language en_USDetermine the bitmap fill mode for size.
+         * When BitmapFillMode.REPEAT is set, area is filled in repeat mode; when BitmapFillMode.SCALE is set, area is filled in scale mode.
+         * @default egret.BitmapFillMode.SCALE
+         */
+        /**
+         * @language zh_CN
          * 确定位图填充尺寸的方式。
          * 设置为 BitmapFillMode.REPEAT时，位图将重复以填充区域；BitmapFillMode.SCALE时，位图将拉伸以填充区域。
-         * 默认值：BitmapFillMode.SCALE。
-         * @member {string} egret.Bitmap#fillMode
+         * @default egret.BitmapFillMode.SCALE
          */
         public fillMode:string = "scale";
 
@@ -200,7 +205,6 @@ module egret {
             this.$smoothing = value;
             this.$invalidate();
         }
-
 
         $setWidth(value:number):void {
             //value = +value || 0;

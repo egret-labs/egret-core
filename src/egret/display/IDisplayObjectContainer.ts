@@ -29,6 +29,7 @@
 
 module egret {
     /**
+     * @private
      * @language en_US
      * The DisplayObjectContainer class is the base class for all objects that can serve as display object containers on
      * the display list. The display list manages all objects displayed in the runtime. Use the DisplayObjectContainer
@@ -40,6 +41,7 @@ module egret {
      * @platform Web,Native
      */
     /**
+     * @private
      * @language zh_CN
      * DisplayObjectContainer 接口定义显示列表中的显示对象容器。该显示列表管理运行时中显示的所有对象。使用 DisplayObjectContainer
      * 排列显示列表中的显示对象。每个 DisplayObjectContainer 对象都有自己的子级列表，用于组织对象的 Z 轴顺序。Z 轴顺序是由前至后的顺序，

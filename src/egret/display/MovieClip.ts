@@ -30,9 +30,7 @@
 module egret {
 
     /**
-     * @class egret.MovieClip
      * @classdesc 影片剪辑，可以通过影片剪辑播放序列帧动画。MovieClip 类从以下类继承而来：DisplayObject 和 EventDispatcher。不同于 DisplayObject 对象，MovieClip 对象拥有一个时间轴。
-     * @extends egret.DisplayObject
      * @link http://docs.egret-labs.org/post/manual/displaycon/movieclip.html  MovieClip序列帧动画
      */
     export class MovieClip extends DisplayObject {
@@ -65,7 +63,6 @@ module egret {
 
         /**
          * 创建新的 MovieClip 实例。创建 MovieClip 之后，调用舞台上的显示对象容器的addElement方法。
-         * @method egret.MovieClip#constructor
          * @param movieClipData {movieClipData} 被引用的 movieClipData 对象
          */
         constructor(movieClipData?:MovieClipData) {
@@ -161,7 +158,6 @@ module egret {
         //Data Function
         /**
          * 返回帧标签为指定字符串的FrameLabel对象
-         * @method egret.MovieClip#getFrameLabelByName
          * @param labelName {string} 帧标签名
          * @param ignoreCase {boolean} 是否忽略大小写，可选参数，默认false
          * @returns {egret.FrameLabel} FrameLabel对象
@@ -185,7 +181,6 @@ module egret {
 
         /**
          * 返回指定序号的帧的FrameLabel对象
-         * @method egret.MovieClip#getFrameLabelByFrame
          * @param frame {number} 帧序号
          * @returns {egret.FrameLabel} FrameLabel对象
          */
@@ -229,7 +224,6 @@ module egret {
 
         /**
          * 继续播放当前动画
-         * @method egret.MovieClip#play
          * @param playTimes {number} 播放次数。 参数为整数，可选参数，>=1：设定播放次数，<0：循环播放，默认值 0：不改变播放次数(MovieClip初始播放次数设置为1)，
          */
         public play(playTimes:number = 0):void {
@@ -242,7 +236,6 @@ module egret {
 
         /**
          * 暂停播放动画
-         * @method egret.MovieClip#stop
          */
         public stop():void {
             this.$isPlaying = false;
@@ -251,7 +244,6 @@ module egret {
 
         /**
          * 将播放头移到前一帧并停止
-         * @method egret.MovieClip#prevFrame
          */
         public prevFrame():void {
             this.gotoAndStop(this.$currentFrameNum - 1);
@@ -259,7 +251,6 @@ module egret {
 
         /**
          * 跳到后一帧并停止
-         * @method egret.MovieClip#prevFrame
          */
         public nextFrame():void {
             this.gotoAndStop(this.$currentFrameNum + 1);
@@ -267,7 +258,6 @@ module egret {
 
         /**
          * 将播放头移到指定帧并播放
-         * @method egret.MovieClip#gotoAndPlay
          * @param frame {any} 指定帧的帧号或帧标签
          * @param playTimes {number} 播放次数。 参数为整数，可选参数，>=1：设定播放次数，<0：循环播放，默认值 0：不改变播放次数，
          */
@@ -281,7 +271,6 @@ module egret {
 
         /**
          * 将播放头移到指定帧并停止
-         * @method egret.MovieClip#gotoAndPlay
          * @param frame {any} 指定帧的帧号或帧标签
          */
         public gotoAndStop(frame:any):void {
@@ -414,7 +403,6 @@ module egret {
 
         /**
          * MovieClip 实例当前播放的帧的序号
-         * @member {number} egret.MovieClip#currentFrame
          */
         public get currentFrame():number {
             return this.$currentFrameNum;
@@ -422,7 +410,6 @@ module egret {
 
         /**
          * MovieClip 实例当前播放的帧的标签。如果当前帧没有标签，则 currentFrameLabel返回null。
-         * @member {number} egret.MovieClip#currentFrame
          */
         public get currentFrameLabel():string {
             var label = this.getFrameLabelByFrame(this.$currentFrameNum);
@@ -431,7 +418,6 @@ module egret {
 
         /**
          * 当前播放的帧对应的标签，如果当前帧没有标签，则currentLabel返回包含标签的先前帧的标签。如果当前帧和先前帧都不包含标签，currentLabel返回null。
-         * @member {number} egret.MovieClip#currentFrame
          */
         public get currentLabel():string {
             var label:FrameLabel = this.getFrameLabelForFrame(this.$currentFrameNum);
@@ -440,7 +426,6 @@ module egret {
 
         /**
          * MovieClip 实例的帧频
-         * @member {number} egret.MovieClip#frameRate
          */
         public get frameRate():number {
             return this.$movieClipData.frameRate;

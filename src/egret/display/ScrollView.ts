@@ -50,47 +50,14 @@ module egret {
     }
     /**
      * @language en_US
-     * The ScrollView component displays a single scrollable component,
-     * called a viewport, and horizontal and vertical scroll bars.
-     * The viewport must implement the IViewport interface.
-     * <p>The Group components implement the IViewport interface
-     * and can be used as the children of the ScrollView control,
-     * as the following example shows:</p>
-     * <code>
-     *       <s:ScrollView width="100" height="100">
-     *           <s:Group>
-     *               <s:Image width="300" height="400" source="assets/logo.jpg"/>
-     *           </s:Group>
-     *       </s:ScrollView>
-     * </code>
-     * <p>The size of the Image control is set larger than that of its parent Group container.
-     * By default, the child extends past the boundaries of the parent container.
-     * Rather than allow the child to extend past the boundaries of the parent container,
-     * the ScrollView specifies to clip the child to the boundaries and display scroll bars.</p>
-     *
-     * @event swan.UIEvent.CHANGE_START Emitted when the scroll position is going to change
-     * @event swan.UIEvent.CHANGE_END Emitted when the scroll position changed complete
-     *
+     * ScrollView is an auxiliary class for sliding which passes a display object to the constructor function. In the specified size range, display objects beyond the range can be displayed. And they can be dragged randomly within this range.
      * @version egret 1.0
      * @version Swan 1.0
      * @platform Web,Native
      */
     /**
      * @language zh_CN
-     * ScrollView 组件显示一个称为视域的单个可滚动组件，以及水平滚动条和垂直滚动条。该视域必须实现 IViewport 接口。
-     * <p>Group 组件实现 IViewport 接口，且可以用作 ScrollView 控件的子代，如下例所示：</p>
-     * <code>
-     *       <s:ScrollView width="100" height="100">
-     *           <s:Group>
-     *               <s:Image width="300" height="400" source="assets/logo.jpg"/>
-     *           </s:Group>
-     *       </s:ScrollView>
-     * </code>
-     * Image 控件的大小比其父 Group 容器设置得大。默认情况下，子代超过父容器的边界。
-     * ScrollView 会指定将子代剪切到边界并显示滚动条，而不是让子代超过父容器的边界。
-     *
-     * @event swan.UIEvent.CHANGE_START 滚动位置改变开始
-     * @event swan.UIEvent.CHANGE_END 滚动位置改变结束
+     * ScrollView 是用于滑动的辅助类，将一个显示对象传入构造函数即可。可以在指定的尺寸范围内显示超过该范围的显示对象。并可以在此范围内随意拖动。
      * @version egret 1.0
      * @version Swan 1.0
      * @platform Web,Native
@@ -168,29 +135,18 @@ module egret {
 
         /**
          * @language en_US
-         * Indicates under what conditions the vertical scroll bar is displayed.
-         * <p><code>ScrollPolicy.ON</code> - the scroll bar is always displayed.</p>
-         * <p><code>ScrollPolicy.OFF</code> - the scroll bar is never displayed.</p>
-         * <p><code>ScrollPolicy.AUTO</code> - the scroll bar is displayed when
-         *  the viewport's contentHeight is larger than its height.
-         *
-         * @default ScrollPolicy.AUTO
+         * Display policy of vertical scrollbar, on/off/auto.
+         * @default auto
          *
          * @version egret 1.0
-         * @version Swan 1.0
          * @platform Web,Native
          */
         /**
          * @language zh_CN
-         * 指示在哪些条件下会显示垂直滑动条。
-         * <p><code>ScrollPolicy.ON</code> - 始终显示滚动条。</p>
-         * <p><code>ScrollPolicy.OFF</code> - 从不显示滚动条。</p>
-         * <p><code>ScrollPolicy.AUTO</code> - 当视域的 contentHeight 大于其自身的高度时显示滚动条。</p>
-         *
-         * @default ScrollPolicy.AUTO
+         * 垂直滚动条显示策略，on/off/auto。
+         * @default auto
          *
          * @version egret 1.0
-         * @version Swan 1.0
          * @platform Web,Native
          */
         public get verticalScrollPolicy():string {
@@ -212,29 +168,16 @@ module egret {
 
         /**
          * @language en_US
-         * Indicates under what conditions the horizontal scroll bar is displayed.
-         * <p><code>ScrollPolicy.ON</code> - the scroll bar is always displayed.</p>
-         * <p><code>ScrollPolicy.OFF</code> - the scroll bar is never displayed.</p>
-         * <p><code>ScrollPolicy.AUTO</code> - the scroll bar is displayed when
-         *  the viewport's contentWidth is larger than its width.
-         *
-         * @default ScrollPolicy.AUTO
-         *
+         * Display policy of horizontal scrollbar, on/off/auto.
+         * @default auto
          * @version egret 1.0
-         * @version Swan 1.0
          * @platform Web,Native
          */
         /**
          * @language zh_CN
-         * 指示在哪些条件下会显示水平滑动条。
-         * <p><code>ScrollPolicy.ON</code> - 始终显示滚动条。</p>
-         * <p><code>ScrollPolicy.OFF</code> - 从不显示滚动条。</p>
-         * <p><code>ScrollPolicy.AUTO</code> - 当视域的 contentWidth 大于其自身的宽度时显示滚动条。</p>
-         *
-         * @default ScrollPolicy.AUTO
-         *
+         * 水平滚动条显示策略，on/off/auto。
+         * @default auto
          * @version egret 1.0
-         * @version Swan 1.0
          * @platform Web,Native
          */
         public get horizontalScrollPolicy():string {
@@ -307,8 +250,12 @@ module egret {
         }
 
         /**
+         * @language en_US
+         * Remove the scrolled object
+         */
+        /**
+         * @language zh_CN
          * 移除滚动的对象
-         * @method egret.ScrollView#removeContent
          */
         public removeContent():void {
             this.$uninstallViewport();
@@ -558,12 +505,17 @@ module egret {
             }
         }
 
+        public $scrollSpeed: number = 1;
         /**
+         * @language en_US
+         * Scroll speed, which is the ratio between the desired speed and the default speed.
+         * The value range is scrollSpeed > 0. When the value is 2, the scroll speed is two times of the default speed.
+         */
+        /**
+         * @language zh_CN
          * 滚动速度，这个值为需要的速度与默认速度的比值。
          * 取值范围为 scrollSpeed > 0 赋值为 2 时，速度是默认速度的 2 倍
-         * @member {number} egret.ScrollView#scrollSpeed
          */
-        public $scrollSpeed: number = 1;
         public get scrollSpeed():number {
             return this.$scrollSpeed;
         }
@@ -577,9 +529,12 @@ module egret {
         }
 
         /**
-         * 获取或设置水平滚动位置,
-         * @member {number} egret.ScrollView#scrollLeft
-         * @returns {number}
+         * @language en_US
+         * Obtain or set the horizontal scroll position
+         */
+        /**
+         * @language zh_CN
+         * 获取或设置水平滚动位置
          */
         public get scrollLeft():number {
             return this.scrollerRect.x;
@@ -592,9 +547,12 @@ module egret {
         }
 
         /**
-         * 获取或设置垂直滚动位置,
-         * @member {number} egret.ScrollView#scrollTop
-         * @returns {number}
+         * @language en_US
+         * Obtain or set the vertical scroll position
+         */
+        /**
+         * @language zh_CN
+         * 获取或设置垂直滚动位置
          */
         public get scrollTop():number {
             return this.scrollerRect.y;
@@ -607,8 +565,15 @@ module egret {
         }
 
         /**
+         * @language en_US
+         * Set scroll position
+         * @param top {number} Vertical scroll position
+         * @param left {number} Horizontal scroll position
+         * @param isOffset {boolean} Optional. The default setting is false. Whether to increase the amount of scrolling, for example, top = 1 indicates scrolling up by one pixel
+         */
+        /**
+         * @language zh_CN
          * 设置滚动位置
-         * @method egret.ScrollView#setScrollPosition
          * @param top {number} 垂直滚动位置
          * @param left {number} 水平滚动位置
          * @param isOffset {boolean} 可选参数，默认是false，是否是滚动增加量，如 top=1 代表往上滚动1像素

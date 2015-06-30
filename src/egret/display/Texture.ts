@@ -31,18 +31,31 @@
 module egret {
 
     /**
-     * @class egret.Texture
-     * @classdesc 纹理类是对不同平台不同的图片资源的封装
+     * @language en_US
+     * The Texture class encapsulates different image resources on different platforms.
+     * In HTML5, resource is an HTMLElement object
+     * In OpenGL / WebGL, resource is a texture ID obtained after the GPU is submitted
+     * The Texture class encapsulates the details implemented on the underlayer. Developers just need to focus on interfaces
+     * @see http://docs.egret-labs.org/post/manual/bitmap/textures.html The use of texture packs
+     * @see http://docs.egret-labs.org/post/manual/loader/getres.html Several ways of access to resources
+     */
+    /**
+     * @language zh_CN
+     * 纹理类是对不同平台不同的图片资源的封装
      * 在HTML5中，资源是一个HTMLElement对象
      * 在OpenGL / WebGL中，资源是一个提交GPU后获取的纹理id
      * Texture类封装了这些底层实现的细节，开发者只需要关心接口即可
-     * @link
-        * http://docs.egret-labs.org/post/manual/bitmap/textures.html 纹理集的使用
-     * http://docs.egret-labs.org/post/manual/loader/getres.html 获取资源的几种方式
+     * @see http://docs.egret-labs.org/post/manual/bitmap/textures.html 纹理集的使用
+     * @see http://docs.egret-labs.org/post/manual/loader/getres.html 获取资源的几种方式
      */
     export class Texture extends HashObject {
 
         /**
+         * @language en_US
+         * Create an egret.Texture object
+         */
+        /**
+         * @language zh_CN
          * 创建一个 egret.Texture 对象
          */
         public constructor() {
@@ -81,8 +94,12 @@ module egret {
         public _textureWidth:number = 0;
 
         /**
+         * @language en_US
+         * Texture width
+         */
+        /**
+         * @language zh_CN
          * 纹理宽度
-         * @member {number} egret.Texture#textureWidth
          */
         public get textureWidth():number {
             return this._textureWidth;
@@ -94,8 +111,12 @@ module egret {
         public _textureHeight:number = 0;
 
         /**
+         * @language en_US
+         * Texture height
+         */
+        /**
+         * @language zh_CN
          * 纹理高度
-         * @member {number} egret.Texture#textureHeight
          */
         public get textureHeight():number {
             return this._textureHeight;
@@ -125,8 +146,15 @@ module egret {
         }
 
         /**
+         * @language en_US
+         * Obtain the color value of a pixel point
+         * @param x {number} The x coordinate of a pixel point
+         * @param y {number} The y coordinate of a pixel point
+         * @returns {number} Color value of a specified pixel point
+         */
+        /**
+         * @language zh_CN
          * 获取某一点像素的颜色值
-         * @method egret.Texture#getPixel32
          * @param x {number} 像素点的X轴坐标
          * @param y {number} 像素点的Y轴坐标
          * @returns {number} 指定像素点的颜色值
@@ -136,6 +164,14 @@ module egret {
             return result.data;
         }
 
+        /**
+         * @language en_US
+         * dispose texture
+         */
+        /**
+         * @language zh_CN
+         * 释放纹理
+         */
         public dispose():void {
             egret.ImageLoader.disposeBitmapData(this._bitmapData);
         }

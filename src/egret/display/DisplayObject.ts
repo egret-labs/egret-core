@@ -1755,21 +1755,39 @@ module egret {
         }
 
         /**
-         * 检测指定坐标是否在显示对象内
+         * @language en_US
+         * Check whether the specified coordinate is located in the display object.
+         * @method egret.DisplayObject#hitTest
+         * @param x {number} Check x coordinate
+         * @param y {number} Check y coordinate
+         * @returns {*} If display object overlaps or crosses with the specified point, return this object; otherwise, return null.
+         */
+
+        /**
+         * @language zh_CN
+         * 检测指定坐标是否在显示对象内。
          * @method egret.DisplayObject#hitTest
          * @param x {number} 检测坐标的x轴
          * @param y {number} 检测坐标的y轴
-         * @param ignoreTouchEnabled {boolean} 是否忽略 touchEnabled 属性
-         * @returns {*}
+         * @returns {*} 如果显示对象与指定的点重叠或相交，则为返回该对象；否则为null。
          */
         public hitTest(x:number, y:number):DisplayObject {
             return this.$hitTest(x, y, false);
         }
 
         /**
+         * @language en_US
+         * Calculate the display object to determine whether it overlaps or crosses with the points specified by the x and y parameters. The x and y parameters specify the points in the coordinates of the stage, rather than the points in the display object container that contains display objects (except the situation where the display object container is a stage).
+         * Note: Don't use accurate pixel collision detection on a large number of objects. Otherwise, this will cause serious performance deterioration.
+         * @param x {number}  x coordinate of the object to be tested.
+         * @param y {number}  y coordinate of the object to be tested.
+         * @param shapeFlag {boolean} Whether to check the actual pixel of object (true) or check that of border (false).
+         * @returns {boolean} If display object overlaps or crosses with the specified point, it is true; otherwise, it is false.
+         */
+        /**
+         * @language zh_CN
          * 计算显示对象，以确定它是否与 x 和 y 参数指定的点重叠或相交。x 和 y 参数指定舞台的坐标空间中的点，而不是包含显示对象的显示对象容器中的点（除非显示对象容器是舞台）。
          * 注意，不要在大量物体中使用精确碰撞像素检测，这回带来巨大的性能开销
-         * @method egret.DisplayObject#hitTestPoint
          * @param x {number}  要测试的此对象的 x 坐标。
          * @param y {number}  要测试的此对象的 y 坐标。
          * @param shapeFlag {boolean} 是检查对象 (true) 的实际像素，还是检查边框 (false) 的实际像素。

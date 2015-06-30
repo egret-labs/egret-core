@@ -31,8 +31,13 @@
 module egret {
 
     /**
-     * @class egret.Graphics
-     * @classdesc
+     * @language en_US
+     * The Graphics class contains a set of methods for creating vector shape. Display objects that support drawing include Sprite and Shape objects. Each class in these classes includes the graphics attribute that is a Graphics object.
+     * The following auxiliary functions are provided for ease of use: drawRect(), drawRoundRect(), drawCircle(), and drawEllipse().
+     * @link http://docs.egret-labs.org/post/manual/graphics/drawrect.html  Draw Rectangle
+     */
+    /**
+     * @language zh_CN
      * Graphics 类包含一组可用来创建矢量形状的方法。支持绘制的显示对象包括 Sprite 和 Shape 对象。这些类中的每一个类都包括 graphics 属性，该属性是一个 Graphics 对象。
      * 以下是为便于使用而提供的一些辅助函数：drawRect()、drawRoundRect()、drawCircle() 和 drawEllipse()。
      * @link http://docs.egret-labs.org/post/manual/graphics/drawrect.html  绘制矩形
@@ -68,9 +73,16 @@ module egret {
 
 
         /**
+         * @language en_US
+         * Specify a simple single color fill that will be used for subsequent calls to other Graphics methods (for example, lineTo() and drawCircle()) when drawing.
+         * Calling the clear() method will clear the fill.
+         * @param color {number} Filled color
+         * @param alpha {number} Filled Alpha value
+         */
+        /**
+         * @language zh_CN
          * 指定一种简单的单一颜色填充，在绘制时该填充将在随后对其他 Graphics 方法（如 lineTo() 或 drawCircle()）的调用中使用。
          * 调用 clear() 方法会清除填充。
-         * @method egret.Graphics#beginFill
          * @param color {number} 填充的颜色
          * @param alpha {number} 填充的 Alpha 值
          */
@@ -93,8 +105,16 @@ module egret {
         }
 
         /**
+         * @language en_US
+         * Draw a rectangle
+         * @param x {number} x position of the center, relative to the registration point of the parent display object (in pixels).
+         * @param y {number} y position of the center, relative to the registration point of the parent display object (in pixels).
+         * @param width {number} Width of the rectangle (in pixels).
+         * @param height {number} Height of the rectangle (in pixels).
+         */
+        /**
+         * @language zh_CN
          * 绘制一个矩形
-         * @method egret.Graphics#drawRect
          * @param x {number} 圆心相对于父显示对象注册点的 x 位置（以像素为单位）。
          * @param y {number} 相对于父显示对象注册点的圆心的 y 位置（以像素为单位）。
          * @param width {number} 矩形的宽度（以像素为单位）。
@@ -107,8 +127,15 @@ module egret {
         }
 
         /**
+         * @language en_US
+         * Draw a circle.
+         * @param x {number} x position of the center, relative to the registration point of the parent display object (in pixels).
+         * @param y {number} y position of the center, relative to the registration point of the parent display object (in pixels).
+         * @param r {number} Radius of the circle (in pixels).
+         */
+        /**
+         * @language zh_CN
          * 绘制一个圆。
-         * @method egret.Graphics#drawCircle
          * @param x {number} 圆心相对于父显示对象注册点的 x 位置（以像素为单位）。
          * @param y {number} 相对于父显示对象注册点的圆心的 y 位置（以像素为单位）。
          * @param r {number} 圆的半径（以像素为单位）。
@@ -120,8 +147,18 @@ module egret {
         }
 
         /**
-         * 绘制一个圆角矩形
-         * @method egret.Graphics#drawRoundRect
+         * @language en_US
+         * Draw a rectangle with rounded corners.
+         * @param x {number} x position of the center, relative to the registration point of the parent display object (in pixels).
+         * @param y {number} y position of the center, relative to the registration point of the parent display object (in pixels).
+         * @param width {number} Width of the rectangle (in pixels).
+         * @param height {number} Height of the rectangle (in pixels).
+         * @param ellipseWidth {number} Width used to draw an ellipse with rounded corners (in pixels).
+         * @param ellipseHeight {number} Height used to draw an ellipse with rounded corners (in pixels). (Optional) If no value is specified, the default value matches the value of the ellipseWidth parameter.
+         */
+        /**
+         * @language zh_CN
+         * 绘制一个圆角矩形。
          * @param x {number} 圆心相对于父显示对象注册点的 x 位置（以像素为单位）。
          * @param y {number} 相对于父显示对象注册点的圆心的 y 位置（以像素为单位）。
          * @param width {number} 矩形的宽度（以像素为单位）。
@@ -155,8 +192,16 @@ module egret {
         }
 
         /**
+         * @language en_US
+         * Draw an ellipse.
+         * @param x {number} A number indicating the horizontal position, relative to the registration point of the parent display object (in pixels).
+         * @param y {number} A number indicating the vertical position, relative to the registration point of the parent display object (in pixels).
+         * @param width {number} Width of the rectangle (in pixels).
+         * @param height {number} Height of the rectangle (in pixels).
+         */
+        /**
+         * @language zh_CN
          * 绘制一个椭圆。
-         * @method egret.Graphics#drawEllipse
          * @param x {number} 一个表示相对于父显示对象注册点的水平位置的数字（以像素为单位）。
          * @param y {number} 一个表示相对于父显示对象注册点的垂直位置的数字（以像素为单位）。
          * @param width {number} 矩形的宽度（以像素为单位）。
@@ -177,8 +222,20 @@ module egret {
         }
 
         /**
+         * @language en_US
+         * Specify a line style that will be used for subsequent calls to Graphics methods such as lineTo() and drawCircle().
+         * @param thickness {number} An integer, indicating the thickness of the line in points. Valid values are 0 to 255. If a number is not specified, or if the parameter is undefined, a line is not drawn. If a value less than 0 is passed, the default value is 0. Value 0 indicates hairline thickness; the maximum thickness is 255. If a value greater than 255 is passed, the default value is 255.
+         * @param color {number} A hexadecimal color value of the line (for example, red is 0xFF0000, and blue is 0x0000FF, etc.). If no value is specified, the default value is 0x000000 (black). Optional.
+         * @param alpha {number} Indicates Alpha value of the line's color. Valid values are 0 to 1. If no value is specified, the default value is 1 (solid). If the value is less than 0, the default value is 0. If the value is greater than 1, the default value is 1.
+         * @param pixelHinting {boolean} A boolean value that specifies whether to hint strokes to full pixels. This affects both the position of anchors of a curve and the line stroke size itself. With pixelHinting set to true, the line width is adjusted to full pixel width. With pixelHinting set to false, disjoints can appear for curves and straight lines.
+         * @param scaleMode {string} Specifies the scale mode to be used
+         * @param caps {string} Specifies the value of the CapsStyle class of the endpoint type at the end of the line.
+         * @param joints {string} Specifies the type of joint appearance of corner.
+         * @param miterLimit {number} Indicates the limit number of cut miter.
+         */
+        /**
+         * @language zh_CN
          * 指定一种线条样式以用于随后对 lineTo() 或 drawCircle() 等 Graphics 方法的调用。
-         * @method egret.Graphics#lineStyle
          * @param thickness {number} 一个整数，以点为单位表示线条的粗细，有效值为 0 到 255。如果未指定数字，或者未定义该参数，则不绘制线条。如果传递的值小于 0，则默认值为 0。值 0 表示极细的粗细；最大粗细为 255。如果传递的值大于 255，则默认值为 255。
          * @param color {number} 线条的十六进制颜色值（例如，红色为 0xFF0000，蓝色为 0x0000FF 等）。如果未指明值，则默认值为 0x000000（黑色）。可选。
          * @param alpha {number} 表示线条颜色的 Alpha 值的数字；有效值为 0 到 1。如果未指明值，则默认值为 1（纯色）。如果值小于 0，则默认值为 0。如果值大于 1，则默认值为 1。
@@ -204,8 +261,14 @@ module egret {
         }
 
         /**
+         * @language en_US
+         * Draw a straight line from the current drawing position to (x, y) using the current line style; the current drawing position is then set to (x, y).
+         * @param x {number} A number indicating the horizontal position, relative to the registration point of the parent display object (in pixels).
+         * @param y {number} A number indicating the vertical position, relative to the registration point of the parent display object (in pixels).
+         */
+        /**
+         * @language zh_CN
          * 使用当前线条样式绘制一条从当前绘图位置开始到 (x, y) 结束的直线；当前绘图位置随后会设置为 (x, y)。
-         * @method egret.Graphics#lineTo
          * @param x {number} 一个表示相对于父显示对象注册点的水平位置的数字（以像素为单位）。
          * @param y {number} 一个表示相对于父显示对象注册点的垂直位置的数字（以像素为单位）。
          */
@@ -217,10 +280,20 @@ module egret {
         }
 
         /**
+         * @language en_US
+         * Draw a quadratic Bezier curve from the current drawing position to (anchorX, anchorY) using the current line style according to the control points specified by (controlX, controlY). The current drawing position is then set to (anchorX, anchorY).
+         * If the curveTo() method is called before the moveTo() method, the default value of the current drawing position is (0, 0). If any of these parameters is missed, calling this method will fail and the current drawing position keeps unchanged.
+         * The drawn curve is a quadratic Bezier curve. A quadratic Bezier curve contains two anchor points and one control point. The curve interpolates the two anchor points and bends to the control point.
+         * @param controlX {number} A number indicating the horizontal position of the control point, relative to the registration point of the parent display object.
+         * @param controlY {number} A number indicating the vertical position of the control point, relative to the registration point of the parent display object.
+         * @param anchorX {number} A number indicating the horizontal position of the next anchor point, relative to the registration point of the parent display object.
+         * @param anchorY {number} A number indicating the vertical position of the next anchor point, relative to the registration point of the parent display object.
+         */
+        /**
+         * @language zh_CN
          * 使用当前线条样式和由 (controlX, controlY) 指定的控制点绘制一条从当前绘图位置开始到 (anchorX, anchorY) 结束的二次贝塞尔曲线。当前绘图位置随后设置为 (anchorX, anchorY)。
          * 如果在调用 moveTo() 方法之前调用了 curveTo() 方法，则当前绘图位置的默认值为 (0, 0)。如果缺少任何一个参数，则此方法将失败，并且当前绘图位置不改变。
          * 绘制的曲线是二次贝塞尔曲线。二次贝塞尔曲线包含两个锚点和一个控制点。该曲线内插这两个锚点，并向控制点弯曲。
-         * @method egret.Graphics#curveTo
          * @param controlX {number} 一个数字，指定控制点相对于父显示对象注册点的水平位置。
          * @param controlY {number} 一个数字，指定控制点相对于父显示对象注册点的垂直位置。
          * @param anchorX {number} 一个数字，指定下一个锚点相对于父显示对象注册点的水平位置。
@@ -234,8 +307,18 @@ module egret {
         }
 
         /**
+         * @language en_US
+         * Draws a cubic Bezier curve from the current drawing position to the specified anchor. Cubic Bezier curves consist of two anchor points and two control points. The curve interpolates the two anchor points and two control points to the curve.
+         * @param controlX1 {number} Specifies the first control point relative to the registration point of the parent display the horizontal position of the object.
+         * @param controlY1 {number} Specifies the first control point relative to the registration point of the parent display the vertical position of the object.
+         * @param controlX2 {number} Specify the second control point relative to the registration point of the parent display the horizontal position of the object.
+         * @param controlY2 {number} Specify the second control point relative to the registration point of the parent display the vertical position of the object.
+         * @param anchorX {number} Specifies the anchor point relative to the registration point of the parent display the horizontal position of the object.
+         * @param anchorY {number} Specifies the anchor point relative to the registration point of the parent display the vertical position of the object.
+         */
+        /**
+         * @language zh_CN
          * 从当前绘图位置到指定的锚点绘制一条三次贝塞尔曲线。三次贝塞尔曲线由两个锚点和两个控制点组成。该曲线内插这两个锚点，并向两个控制点弯曲。
-         * @method egret.Graphics#curveTo
          * @param controlX1 {number} 指定首个控制点相对于父显示对象的注册点的水平位置。
          * @param controlY1 {number} 指定首个控制点相对于父显示对象的注册点的垂直位置。
          * @param controlX2 {number} 指定第二个控制点相对于父显示对象的注册点的水平位置。
@@ -251,8 +334,14 @@ module egret {
         }
 
         /**
+         * @language en_US
+         * Move the current drawing position to (x, y). If any of these parameters is missed, calling this method will fail and the current drawing position keeps unchanged.
+         * @param x {number} A number indicating the horizontal position, relative to the registration point of the parent display object (in pixels).
+         * @param y {number} A number indicating the vertical position, relative to the registration point of the parent display object (in pixels).
+         */
+        /**
+         * @language zh_CN
          * 将当前绘图位置移动到 (x, y)。如果缺少任何一个参数，则此方法将失败，并且当前绘图位置不改变。
-         * @method egret.Graphics#moveTo
          * @param x {number} 一个表示相对于父显示对象注册点的水平位置的数字（以像素为单位）。
          * @param y {number} 一个表示相对于父显示对象注册点的垂直位置的数字（以像素为单位）。
          */
@@ -263,8 +352,12 @@ module egret {
         }
 
         /**
+         * @language en_US
+         * Clear graphics that are drawn to this Graphics object, and reset fill and line style settings.
+         */
+        /**
+         * @language zh_CN
          * 清除绘制到此 Graphics 对象的图形，并重置填充和线条样式设置。
-         * @method egret.Graphics#clear
          */
         public clear():void {
             this.lineX = 0;
@@ -280,8 +373,12 @@ module egret {
         }
 
         /**
+         * @language en_US
+         * Apply fill to the lines and curves added after the previous calling to the beginFill() method.
+         */
+        /**
+         * @language zh_CN
          * 对从上一次调用 beginFill()方法之后添加的直线和曲线应用填充。
-         * @method egret.Graphics#endFill
          */
         public endFill():void {
             if (this.fillStyleColor != null) {

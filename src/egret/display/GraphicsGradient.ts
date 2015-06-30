@@ -30,6 +30,7 @@
 module egret {
 
     /**
+     * @private
      * @language en_US
      * The GraphicsGradient interface represents an opaque object describing a gradient. It is returned by the static methods
      * Graphics.createLinearGradient() or Graphics.createRadialGradient().
@@ -40,6 +41,7 @@ module egret {
      * @platform Web,Native
      */
     /**
+     * @private
      * @language zh_CN
      * GraphicsGradient 接口表示描述渐变的不透明对象。通过 Graphics.createLinearGradient() 或 Graphics.createRadialGradient() 等静态方法的返回值得到.
      * @see egret.Graphics#createLinearGradient()

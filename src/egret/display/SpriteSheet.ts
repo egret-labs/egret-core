@@ -31,8 +31,17 @@
 module egret {
 
     /**
-     * @class egret.SpriteSheet
-     * @classdesc SpriteSheet 是一张由多个子位图拼接而成的集合位图，它包含多个 Texture 对象。
+     * @language en_US
+     * SpriteSheet is a mosaic of multiple sub-bitmaps, comprising a plurality of Texture objects.
+     * Each Texture object shares the set bitmap of SpriteSheet, but it points to its different areas.
+     * On WebGL / OpenGL, this operation can significantly improve performance.
+     * At the same time, SpriteSheet can carry out material integration easily to reduce the number of HTTP requests
+     * For specification of the SpriteSheet format, see the document https://github.com/egret-labs/egret-core/wiki/Egret-SpriteSheet-Specification
+     * @link http://docs.egret-labs.org/post/manual/bitmap/textures.html The use of texture packs
+     */
+    /**
+     * @language zh_CN
+     * SpriteSheet 是一张由多个子位图拼接而成的集合位图，它包含多个 Texture 对象。
      * 每一个 Texture 都共享 SpriteSheet 的集合位图，但是指向它的不同的区域。
      * 在WebGL / OpenGL上，这种做法可以显著提升性能
      * 同时，SpriteSheet可以很方便的进行素材整合，降低HTTP请求数量
@@ -41,9 +50,13 @@ module egret {
      */
     export class SpriteSheet extends HashObject {
 
-
-
         /**
+         * @language en_US
+         * Create an egret.SpriteSheet object
+         * @param texture {Texture} Texture
+         */
+        /**
+         * @language zh_CN
          * 创建一个 egret.SpriteSheet 对象
          * @param texture {Texture} 纹理
          */
@@ -83,8 +96,14 @@ module egret {
         public _textureMap:Object = {};
 
         /**
+         * @language en_US
+         * Obtain a cached Texture object according to the specified texture name
+         * @param name {string} Cache the name of this Texture object
+         * @returns {egret.Texture} The Texture object
+         */
+        /**
+         * @language zh_CN
          * 根据指定纹理名称获取一个缓存的 Texture 对象
-         * @method egret.SpriteSheet#getTexture
          * @param name {string} 缓存这个 Texture 对象所使用的名称
          * @returns {egret.Texture} Texture 对象
          */
@@ -93,8 +112,22 @@ module egret {
         }
 
         /**
+         * @language en_US
+         * Create a new Texture object for the specified area on SpriteSheet and cache it
+         * @param name {string} Cache the name of this Texture object. If the name already exists, the previous Texture object will be overwrited.
+         * @param bitmapX {number} Starting coordinate x of texture area on bitmapData
+         * @param bitmapY {number} Starting coordinate y of texture area on bitmapData
+         * @param bitmapWidth {number} Width of texture area on bitmapData
+         * @param bitmapHeight {number} Height of texture area on bitmapData
+         * @param offsetX {number} Starting point x for a non-transparent area of the original bitmap
+         * @param offsetY {number} Starting point y for a non-transparent area of the original bitmap
+         * @param textureWidth {number} Width of the original bitmap. If it is not passed, use the bitmapWidth  value.
+         * @param textureHeight {number} Height of the original bitmap. If it is not passed, use the bitmapHeight value.
+         * @returns {egret.Texture} The created Texture object
+         */
+        /**
+         * @language zh_CN
          * 为 SpriteSheet 上的指定区域创建一个新的 Texture 对象并缓存它
-         * @method egret.SpriteSheet#createTexture
          * @param name {string} 缓存这个 Texture 对象所使用的名称，如果名称已存在，将会覆盖之前的 Texture 对象
          * @param bitmapX {number} 纹理区域在 bitmapData 上的起始坐标x
          * @param bitmapY {number} 纹理区域在 bitmapData 上的起始坐标y
@@ -130,6 +163,14 @@ module egret {
             return texture;
         }
 
+        /**
+         * @language en_US
+         * dispose texture
+         */
+        /**
+         * @language zh_CN
+         * 释放纹理
+         */
         public dispose():void {
             if(this.texture) {
                 this.texture.dispose();

@@ -29,15 +29,12 @@
 
 module egret {
     /**
-     * @class egret.MovieClipDataFactory
      * @classdesc 使用 MovieClipDataFactory 类，可以生成 MovieClipData 对象用于创建MovieClip
-     * @extends egret.EventDispatcher
      * @link http://docs.egret-labs.org/post/manual/displaycon/movieclip.html MovieClip序列帧动画
      */
     export class MovieClipDataFactory extends EventDispatcher {
         /**
          * 是否开启缓存
-         * @member {boolean} egret.MovieClipDataFactory#enableCache
          */
         public enableCache:boolean = true;
         $mcDataSet:any;
@@ -57,7 +54,6 @@ module egret {
 
         /**
          * 清空缓存
-         * @method egret.MovieClipDataFactory#clearCache
          */
         public clearCache():void{
             this.$mcDataCache = {};
@@ -65,7 +61,6 @@ module egret {
 
         /**
          * 根据名字生成一个MovieClipData实例。可以用于创建MovieClip。
-         * @method egret.MovieClipDataFactory#generateMovieClipData
          * @param movieClipName {string} MovieClip名字. 可选参数，默认为"", 相当于取第一个MovieClip数据
          * @returns {MovieClipData} 生成的MovieClipData对象
          */
@@ -109,7 +104,6 @@ module egret {
 
         /**
          * MovieClip数据集
-         * @member {any} egret.MovieClipDataFactory#mcDataSet
          */
         public get mcDataSet():any{
             return this.$mcDataSet;
@@ -121,7 +115,6 @@ module egret {
 
         /**
          * MovieClip需要使用的纹理图
-         * @member {Texture} egret.MovieClipDataFactory#texture
          */
         public set texture(value:Texture){
             this.setTexture(value);
@@ -129,7 +122,6 @@ module egret {
 
         /**
          * 由纹理图生成的精灵表
-         * @member {SpriteSheet} egret.MovieClipDataFactory#spriteSheet
          */
         public get spriteSheet():SpriteSheet{
             return this.$spriteSheet;

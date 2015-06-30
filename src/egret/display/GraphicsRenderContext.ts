@@ -76,6 +76,7 @@ module egret {
     }
 
     /**
+     * @private
      * @language en_US
      * The Graphics class contains a set of methods that you can use to create a vector shape. the Shape object that support
      * drawing includes a graphics property that is a Graphics object. The following are among those helper functions provided
@@ -84,6 +85,7 @@ module egret {
      * @platform Web,Native
      */
     /**
+     * @private
      * @language zh_CN
      * Graphics 类包含一组可用来创建矢量形状的方法。Shape是支持矢量绘制的显示对象。它含有一个 graphics 属性，该属性是一个 Graphics 对象。
      * @see egret.Shape

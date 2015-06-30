@@ -62,7 +62,8 @@ module egret {
      */
     export function isNone(value:number):boolean{
         //return value===NONE;
-        return isNaN(value);
+        value = +value;
+        return value !== value;
     }
 
     export function isUndefined(value:any):boolean {

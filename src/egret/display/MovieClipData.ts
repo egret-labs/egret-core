@@ -29,9 +29,7 @@
 
 module egret {
     /**
-     * @class egret.MovieClipData
      * @classdesc 使用 MovieClipData 类，您可以创建 MovieClip 对象和处理 MovieClip 对象的数据。MovieClipData 一般由MovieClipDataFactory生成
-     * @extends egret.HashObject
      * @link http://docs.egret-labs.org/post/manual/displaycon/movieclip.html MovieClip序列帧动画
      */
     export class MovieClipData extends HashObject {
@@ -85,7 +83,6 @@ module egret {
 
         /**
          * 根据指定帧序号获取该帧对应的关键帧数据
-         * @method egret.MovieClipData#getKeyFrameData
          * @param frame {number} 帧序号
          * @returns {any} 帧数据对象
          */
@@ -99,7 +96,6 @@ module egret {
 
         /**
          * 根据指定帧序号获取该帧对应的Texture对象
-         * @method egret.MovieClipData#getTextureByFrame
          * @param frame {number} 帧序号
          * @returns {egret.Texture} Texture对象
          */
@@ -172,7 +168,6 @@ module egret {
 
         /**
          * MovieClip数据源
-         * @member {any} egret.MovieClip#dataSource
          */
         public set mcData(value:MovieClipData) {
             this.setMCData(value);

@@ -41,24 +41,36 @@ module egret {
         }
 
         /**
+         * @language en_US
+         * Frame number
+         */
+        /**
+         * @language zh_CN
          * 标签名
-         * @member {string} egret.FrameLabel#name
          */
         public get name():string {
             return this._name;
         }
 
         /**
+         * @language en_US
+         * Frame serial number of the label
+         */
+        /**
+         * @language zh_CN
          * 标签所在帧序号
-         * @member {number} egret.FrameLabel#frame
          */
         public get frame():number /*int*/ {
             return this._frame;
         }
 
         /**
+         * @language en_US
+         * Duplicate the current frame label object
+         */
+        /**
+         * @language zh_CN
          * 复制当前帧标签对象
-         * @method egret.FrameLabel#clone
          */
         public clone() {
             return new FrameLabel(this._name, this._frame);
