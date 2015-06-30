@@ -1517,6 +1517,6 @@ module egret.sys {
     if(DEBUG){
         egret.$markReadOnly(TextField.prototype,"numLines");
         egret.$markReadOnly(TextField.prototype,"textWidth");
-        egret.$markReadOnly(TextField.prototype,"textWidth");
+        egret.$markReadOnly(TextField.prototype,"textHeight");
     }
 }

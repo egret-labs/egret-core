@@ -148,9 +148,10 @@ module egret.web {
         return args;
     }
 
-    egret.warn = () => console.warn.apply(console,toArray(arguments));
-    egret.error = () => console.error.apply(console,toArray(arguments));
-    egret.assert = () => console.assert.apply(console,toArray(arguments));
+    egret.warn = function () { console.warn.apply(console, toArray(arguments)) };
+    egret.error = function () { console.error.apply(console, toArray(arguments)) };
+    egret.assert = function () { console.assert.apply(console, toArray(arguments)) };
+
     if(DEBUG){
         egret.log = function(){
             if(DEBUG){
@@ -165,7 +166,7 @@ module egret.web {
         }
     }
     else{
-        egret.log = ()=>console.log.apply(console,toArray(arguments));
+        egret.log = function () { console.log.apply(console, toArray(arguments)) };
     }
     //window.addEventListener("load", runLark);
     //window.addEventListener("resize",updateScreenSize);
