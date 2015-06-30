@@ -367,7 +367,7 @@ module egret.sys {
 
         function showPaintRect(value:boolean):void {
             value = !!value;
-            if (this._showPaintRect === value) {
+            if (this._showPaintRect == value) {
                 return;
             }
             this._showPaintRect = value;

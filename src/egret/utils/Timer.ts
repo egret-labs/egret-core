@@ -97,11 +97,11 @@ module egret {
             return this._delay;
         }
         public set delay(value:number){
-            value = +value||0;
+            //value = +value||0;
             if(value<1){
                 value = 1;
             }
-            if(this._delay===value){
+            if(this._delay==value){
                 return;
             }
             this._delay = value;

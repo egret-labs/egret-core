@@ -182,7 +182,7 @@ module egret {
 
                 lineH += textfield.$TextField[sys.TextKeys.lineSpacing];
             }
-            if(line === 0) {
+            if(line == 0) {
                 return null;
             }
             var lineElement:egret.ILineElement = lineArr[line - 1];

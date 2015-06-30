@@ -107,10 +107,10 @@ module egret {
          * @returns {egret.Texture} 创建的 Texture 对象
          */
         public createTexture(name:string, bitmapX:number, bitmapY:number, bitmapWidth:number, bitmapHeight:number, offsetX:number = 0, offsetY:number = 0, textureWidth?:number, textureHeight?:number):Texture {
-            if (typeof textureWidth === "undefined") {
+            if (egret.isUndefined(textureWidth)) {
                 textureWidth = offsetX + bitmapWidth;
             }
-            if (typeof textureHeight === "undefined") {
+            if (egret.isUndefined(textureHeight)) {
                 textureHeight = offsetY + bitmapHeight;
             }
             var texture:Texture = new egret.Texture();

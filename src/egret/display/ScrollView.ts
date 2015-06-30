@@ -404,7 +404,7 @@ module egret {
             var targetIndex = list.length * 0.5;
             var startIndex = -1;
             for (var i = 0; i < length; i++) {
-                if (list[i] === viewport) {
+                if (list[i] == viewport) {
                     startIndex = i;
                     break;
                 }
@@ -714,8 +714,8 @@ module egret {
          * @private
          */
         $setWidth(value:number) {
-            value = +value || 0;
-            if (value < 0 || value === this._scrollerWidth) {
+            //value = +value || 0;
+            if (value < 0 || value == this._scrollerWidth) {
                 return;
             }
             this._scrollerWidth = value;
@@ -738,8 +738,8 @@ module egret {
          * @private
          */
         $setHeight(value:number) {
-            value = +value || 0;
-            if (value < 0 || value === this._scrollerHeight) {
+            //value = +value || 0;
+            if (value < 0 || value == this._scrollerHeight) {
                 return;
             }
             this._scrollerHeight = value;

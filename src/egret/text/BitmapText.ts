@@ -115,7 +115,7 @@ module egret {
         }
 
         public set text(value:string) {
-            if(value===null||value===undefined){
+            if(value==null){
                 value = "";
             }
             value = value + "";
@@ -145,9 +145,9 @@ module egret {
          * @private
          */
         $setWidth(value:number) {
-            value = +value || 0;
+            //value = +value || 0;
             var values = this.$BitmapText;
-            if (value < 0 || value === values[Keys.textFieldWidth]) {
+            if (value < 0 || value == values[Keys.textFieldWidth]) {
                 return;
             }
             values[Keys.textFieldWidth] = value;
@@ -174,9 +174,9 @@ module egret {
          * @private
          */
         $setHeight(value:number) {
-            value = +value || 0;
+            //value = +value || 0;
             var values = this.$BitmapText;
-            if (value < 0 || value === values[Keys.textFieldHeight]) {
+            if (value < 0 || value == values[Keys.textFieldHeight]) {
                 return;
             }
             values[Keys.textFieldHeight] = value;
@@ -232,9 +232,9 @@ module egret {
         }
 
         public set lineSpacing(value:number) {
-            value = +value || 0;
+            //value = +value || 0;
             var values = this.$BitmapText;
-            if (values[Keys.lineSpacing] === value)
+            if (values[Keys.lineSpacing] == value)
                 return;
             values[Keys.lineSpacing] = value;
             this.$invalidateContentBounds();
@@ -259,9 +259,9 @@ module egret {
         }
 
         public set letterSpacing(value:number) {
-            value = +value || 0;
+            //value = +value || 0;
             var values = this.$BitmapText;
-            if (values[Keys.letterSpacing] === value)
+            if (values[Keys.letterSpacing] == value)
                 return;
             values[Keys.letterSpacing] = value;
             this.$invalidateContentBounds();

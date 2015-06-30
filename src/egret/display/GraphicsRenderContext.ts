@@ -727,8 +727,8 @@ module egret {
         public beginPath():void {
             this.pushCommand(sys.GraphicsCommandType.beginPath, arguments);
             this.hasMoved = false;
-            this.moveToX = 0x8000000;
-            this.moveToY = 0x8000000;
+            this.moveToX = egret.NONE;
+            this.moveToY = egret.NONE;
         }
 
         /**
@@ -755,7 +755,7 @@ module egret {
          */
         public arcTo(x1:number, y1:number, x2:number, y2:number, radius:number):void {
             this.pushCommand(sys.GraphicsCommandType.arcTo, arguments);
-            if (this.moveToX === 0x8000000) {//没有调用过moveTo()方法
+            if (egret.isNone(this.moveToX)) {//没有调用过moveTo()方法
                 return;
             }
             this.checkMoveTo();
@@ -875,8 +875,8 @@ module egret {
             this.maxX = 0;
             this.maxY = 0;
             this.isFirst = true;
-            this.moveToX = 0x8000000;
-            this.moveToY = 0x8000000;
+            this.moveToX = egret.NONE;
+            this.moveToY = egret.NONE;
             this.hasStroke = false;
             this.hasFill = false;
         }

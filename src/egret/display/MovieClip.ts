@@ -175,7 +175,7 @@ module egret {
                 var outputFramelabel:FrameLabel = null;
                 for (var i = 0; i < frameLabels.length; i++) {
                     outputFramelabel = frameLabels[i];
-                    if (ignoreCase ? outputFramelabel.name.toLowerCase() === labelName : outputFramelabel.name === labelName) {
+                    if (ignoreCase ? outputFramelabel.name.toLowerCase() == labelName : outputFramelabel.name == labelName) {
                         return outputFramelabel;
                     }
                 }
@@ -195,7 +195,7 @@ module egret {
                 var outputFramelabel:FrameLabel = null;
                 for (var i = 0; i < frameLabels.length; i++) {
                     outputFramelabel = frameLabels[i];
-                    if (outputFramelabel.frame === frame) {
+                    if (outputFramelabel.frame == frame) {
                         return outputFramelabel;
                     }
                 }
@@ -272,7 +272,7 @@ module egret {
          * @param playTimes {number} 播放次数。 参数为整数，可选参数，>=1：设定播放次数，<0：循环播放，默认值 0：不改变播放次数，
          */
         public gotoAndPlay(frame:any, playTimes:number = 0):void {
-            if (arguments.length === 0 || arguments.length > 2) {
+            if (arguments.length == 0 || arguments.length > 2) {
                 throw new Error(getString(1022, "MovieClip.gotoAndPlay()"));
             }
             this.play(playTimes);
@@ -308,7 +308,7 @@ module egret {
             } else if (frameNum > this.$totalFrames) {
                 frameNum = this.$totalFrames;
             }
-            if (frameNum === this.$nextFrameNum) {
+            if (frameNum == this.$nextFrameNum) {
                 return;
             }
 

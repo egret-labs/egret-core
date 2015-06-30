@@ -386,9 +386,9 @@ module egret {
             var d = this.d;
             var tx = this.tx;
             var ty = this.ty;
-            if (b === 0 && c === 0) {
+            if (b == 0 && c == 0) {
                 target.b = target.c = 0;
-                if(a===0||d===0){
+                if(a==0||d==0){
                     target.a = target.d = target.tx = target.ty = 0;
                 }
                 else{
@@ -401,7 +401,7 @@ module egret {
                 return;
             }
             var determinant = a * d - b * c;
-            if (determinant === 0) {
+            if (determinant == 0) {
                 target.identity();
                 return;
             }
@@ -584,9 +584,9 @@ module egret {
          * @platform Web,Native
          */
         public equals(other:Matrix):boolean {
-            return this.a === other.a && this.b === other.b &&
-                this.c === other.c && this.d === other.d &&
-                this.tx === other.tx && this.ty === other.ty;
+            return this.a == other.a && this.b == other.b &&
+                this.c == other.c && this.d == other.d &&
+                this.tx == other.tx && this.ty == other.ty;
         }
 
         /**
@@ -657,7 +657,7 @@ module egret {
          */
         $getScaleX():number {
             var m = this;
-            if (m.a === 1 && m.b === 0) {
+            if (m.a == 1 && m.b == 0) {
                 return 1;
             }
             var result = Math.sqrt(m.a * m.a + m.b * m.b);
@@ -669,7 +669,7 @@ module egret {
          */
         $getScaleY():number {
             var m = this;
-            if (m.c === 0 && m.d === 1) {
+            if (m.c == 0 && m.d == 1) {
                 return 1;
             }
             var result = Math.sqrt(m.c * m.c + m.d * m.d);
@@ -694,7 +694,7 @@ module egret {
          * @private
          */
         $updateScaleAndRotation(scaleX:number, scaleY:number, skewX:number, skewY:number) {
-            if ((skewX === 0 || skewX === TwoPI) && (skewY === 0 || skewY === TwoPI)) {
+            if ((skewX == 0 || skewX == TwoPI) && (skewY == 0 || skewY == TwoPI)) {
                 this.a = scaleX;
                 this.b = this.c = 0;
                 this.d = scaleY;
@@ -703,7 +703,7 @@ module egret {
 
             var u = cos(skewX);
             var v = sin(skewX);
-            if (skewX === skewY) {
+            if (skewX == skewY) {
                 this.a = u * scaleX;
                 this.b = v * scaleX;
             } else {

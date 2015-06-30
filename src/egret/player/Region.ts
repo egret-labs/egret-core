@@ -217,7 +217,7 @@ module egret.sys {
             var yMax = y + bounds.height;
             var minX:number, minY:number, maxX:number, maxY:number;
             //优化，通常情况下不缩放旋转的对象占多数，直接加上偏移量即可。
-            if (a === 1.0 && b === 0.0 && c === 0.0 && d === 1.0) {
+            if (a == 1.0 && b == 0.0 && c == 0.0 && d == 1.0) {
                 minX = Math.floor(x + tx) - 1;
                 minY = Math.floor(y + ty) - 1;
                 maxX = Math.ceil(xMax + tx) + 1;

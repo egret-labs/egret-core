@@ -400,7 +400,7 @@ module egret {
         private _appendQueueProps(o):any {
             var arr, oldValue, i, l, injectProps;
             for (var n in o) {
-                if (this._initQueueProps[n] === undefined) {
+                if (egret.isUndefined(this._initQueueProps[n])) {
                     oldValue = this._target[n];
                     //设置plugins
                     if (arr = Tween._plugins[n]) {

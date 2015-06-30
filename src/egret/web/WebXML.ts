@@ -137,7 +137,7 @@ module egret.web {
         var length = xmlDoc.childNodes.length;
         for (var i = 0; i < length; i++) {
             var node = xmlDoc.childNodes[i];
-            if (node.nodeType === 1) {
+            if (node.nodeType == 1) {
                 return parseNode(node, null);
             }
         }
@@ -159,7 +159,7 @@ module egret.web {
         for (var i = 0; i < length; i++) {
             var attributeNode = nodeAttributes[i];
             var name = attributeNode.name;
-            if (name.indexOf("xmlns:") === 0) {
+            if (name.indexOf("xmlns:") == 0) {
                 continue;
             }
             attributes[name] = attributeNode.value;
@@ -171,10 +171,10 @@ module egret.web {
             var childNode = childNodes[i];
             var nodeType = childNode.nodeType;
             var childXML:any = null;
-            if (nodeType === 1) {
+            if (nodeType == 1) {
                 childXML = parseNode(childNode, xml);
             }
-            else if (nodeType === 3) {
+            else if (nodeType == 3) {
                 var text = childNode.textContent.trim();
                 if (text) {
                     childXML = new XMLText(text, xml);

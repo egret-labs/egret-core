@@ -610,7 +610,7 @@ module egret {
 
             this.validateBuffer(ByteArray.SIZE_OF_UINT16 + length);
 
-            this.data.setUint16(this.position, length, this.endian === Endian.LITTLE_ENDIAN);
+            this.data.setUint16(this.position, length, this.endian == Endian.LITTLE_ENDIAN);
             this.position += ByteArray.SIZE_OF_UINT16;
             this._writeUint8Array(utf8bytes, false);
         }
@@ -722,15 +722,15 @@ module egret {
 
                 var _byte = data[pos++];
 
-                if (_byte === this.EOF_byte) {
-                    if (utf8_bytes_needed !== 0) {
+                if (_byte == this.EOF_byte) {
+                    if (utf8_bytes_needed != 0) {
                         code_point = this.decoderError(fatal);
                     } else {
                         code_point = this.EOF_code_point;
                     }
                 } else {
 
-                    if (utf8_bytes_needed === 0) {
+                    if (utf8_bytes_needed == 0) {
                         if (this.inRange(_byte, 0x00, 0x7F)) {
                             code_point = _byte;
                         } else {
@@ -831,7 +831,7 @@ module egret {
                 } else if (this.inRange(c, 0xDC00, 0xDFFF)) {
                     cps.push(0xFFFD);
                 } else { // (inRange(c, 0xD800, 0xDBFF))
-                    if (i === n - 1) {
+                    if (i == n - 1) {
                         cps.push(0xFFFD);
                     } else {
                         var d = string.charCodeAt(i + 1);

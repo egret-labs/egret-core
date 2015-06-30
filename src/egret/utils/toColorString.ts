@@ -36,7 +36,7 @@ module egret {
 	 * @returns {string} 颜色字符串，例如"#ffffff"。
      */
     export function toColorString(value:number):string{
-        value = +value || 0;
+        //value = +value || 0;
 
         if(value > 16777215)
             value = 16777215;

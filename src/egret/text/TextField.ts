@@ -287,9 +287,9 @@ module egret {
         }
 
         public set size(value:number) {
-            value = +value || 0;
+            //value = +value || 0;
             var values = this.$TextField;
-            if (values[sys.TextKeys.fontSize] === value) {
+            if (values[sys.TextKeys.fontSize] == value) {
                 return;
             }
             values[sys.TextKeys.fontSize] = value;
@@ -301,9 +301,9 @@ module egret {
         }
 
         public set fontSize(value:number) {
-            value = +value || 0;
+            //value = +value || 0;
             var values = this.$TextField;
-            if (values[sys.TextKeys.fontSize] === value) {
+            if (values[sys.TextKeys.fontSize] == value) {
                 return;
             }
             values[sys.TextKeys.fontSize] = value;
@@ -331,7 +331,7 @@ module egret {
         public set bold(value:boolean) {
             value = !!value;
             var values = this.$TextField;
-            if (value === values[sys.TextKeys.bold]) {
+            if (value == values[sys.TextKeys.bold]) {
                 return;
             }
             values[sys.TextKeys.bold] = value;
@@ -359,7 +359,7 @@ module egret {
         public set italic(value:boolean) {
             value = !!value;
             var values = this.$TextField;
-            if (value === values[sys.TextKeys.italic]) {
+            if (value == values[sys.TextKeys.italic]) {
                 return;
             }
             values[sys.TextKeys.italic] = value;
@@ -461,9 +461,9 @@ module egret {
         }
 
         public set lineSpacing(value:number) {
-            value = +value || 0;
+            //value = +value || 0;
             var values = this.$TextField;
-            if (values[sys.TextKeys.lineSpacing] === value)
+            if (values[sys.TextKeys.lineSpacing] == value)
                 return;
             values[sys.TextKeys.lineSpacing] = value;
             this.$invalidateContentBounds();
@@ -488,9 +488,9 @@ module egret {
         }
 
         public set textColor(value:number) {
-            value = +value | 0;
+            //value = +value | 0;
             var values = this.$TextField;
-            if (values[sys.TextKeys.textColor] === value) {
+            if (values[sys.TextKeys.textColor] == value) {
                 return;
             }
             values[sys.TextKeys.textColor] = value;
@@ -521,7 +521,7 @@ module egret {
         public set wordWrap(value:boolean) {
             value = !!value;
             var values = this.$TextField;
-            if (value === values[sys.TextKeys.wordWrap]) {
+            if (value == values[sys.TextKeys.wordWrap]) {
                 return;
             }
             if (values[sys.TextKeys.displayAsPassword]) {
@@ -801,9 +801,9 @@ module egret {
         }
 
         $setWidth(value:number):void {
-            value = +value || 0;
+            //value = +value || 0;
             var values = this.$TextField;
-            if (value < 0 || value === values[sys.TextKeys.textFieldWidth]) {
+            if (value < 0 || value == values[sys.TextKeys.textFieldWidth]) {
                 return;
             }
             values[sys.TextKeys.textFieldWidth] = value;
@@ -813,9 +813,9 @@ module egret {
         }
 
         $setHeight(value:number):void {
-            value = +value || 0;
+            //value = +value || 0;
             var values = this.$TextField;
-            if (value < 0 || value === values[sys.TextKeys.textFieldHeight]) {
+            if (value < 0 || value == values[sys.TextKeys.textFieldHeight]) {
                 return;
             }
             values[sys.TextKeys.textFieldHeight] = value;

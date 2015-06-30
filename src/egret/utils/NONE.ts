@@ -44,7 +44,7 @@ module egret {
      * @version Lark 1.0
      * @platform Web,Native
      */
-    export var NONE = 0x8000000;
+    export var NONE = NaN;//0x8000000;
 
     /**
      * @language en_US
@@ -61,6 +61,11 @@ module egret {
      * @platform Web,Native
      */
     export function isNone(value:number):boolean{
-        return value===NONE;
+        //return value===NONE;
+        return isNaN(value);
+    }
+
+    export function isUndefined(value:any):boolean {
+        return typeof value === "undefined";
     }
 }

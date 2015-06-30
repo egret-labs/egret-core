@@ -307,7 +307,7 @@ module egret {
          * 是否含有指定的所有标志量
          */
         $hasFlags(flags:number):boolean {
-            return (this.$displayFlags & flags) === flags;
+            return (this.$displayFlags & flags) == flags;
         }
 
         /**
@@ -646,9 +646,9 @@ module egret {
          * 设置x坐标
          */
         $setX(value:number):boolean {
-            value = +value || 0;
+            //value = +value || 0;
             var m = this.$DisplayObject[Keys.matrix];
-            if (value === m.tx) {
+            if (value == m.tx) {
                 return false;
             }
             m.tx = value;
@@ -698,9 +698,9 @@ module egret {
          * 设置y坐标
          */
         $setY(value:number):boolean {
-            value = +value || 0;
+            //value = +value || 0;
             var m = this.$DisplayObject[Keys.matrix];
-            if (value === m.ty) {
+            if (value == m.ty) {
                 return false;
             }
             m.ty = value;
@@ -743,9 +743,9 @@ module egret {
          * 设置水平缩放值
          */
         $setScaleX(value:number):boolean {
-            value = +value || 0;
+            //value = +value || 0;
             var values = this.$DisplayObject;
-            if (value === values[Keys.scaleX]) {
+            if (value == values[Keys.scaleX]) {
                 return false;
             }
             values[Keys.scaleX] = value;
@@ -787,8 +787,8 @@ module egret {
          * 设置垂直缩放值
          */
         $setScaleY(value:number):boolean {
-            value = +value || 0;
-            if (value === this.$DisplayObject[Keys.scaleY]) {
+            //value = +value || 0;
+            if (value == this.$DisplayObject[Keys.scaleY]) {
                 return false;
             }
             this.$DisplayObject[Keys.scaleY] = value;
@@ -824,10 +824,10 @@ module egret {
         }
 
         public set rotation(value:number) {
-            value = +value || 0;
+            //value = +value || 0;
             value = clampRotation(value);
             var values = this.$DisplayObject;
-            if (value === values[Keys.rotation]) {
+            if (value == values[Keys.rotation]) {
                 return;
             }
             var delta = value - values[Keys.rotation];
@@ -878,7 +878,6 @@ module egret {
         $setWidth(value:number):void {
             this.$DisplayObject[Keys.explicitWidth] = isNaN(value) ? NONE : value;
 
-            value = +value || 0;
             if (value < 0) {
                 return;
             }
@@ -936,7 +935,7 @@ module egret {
         $setHeight(value:number):void {
             this.$DisplayObject[Keys.explicitHeight] = isNaN(value) ? NONE : value;
 
-            value = +value || 0;
+            //value = +value || 0;
             if (value < 0) {
                 return;
             }
@@ -978,8 +977,8 @@ module egret {
         }
 
         $setAnchorOffsetX(value:number):boolean {
-            value = +value || 0;
-            if (value === this.$DisplayObject[Keys.anchorOffsetX]) {
+            //value = +value || 0;
+            if (value == this.$DisplayObject[Keys.anchorOffsetX]) {
                 return false;
             }
             this.$DisplayObject[Keys.anchorOffsetX] = value;
@@ -1010,8 +1009,8 @@ module egret {
         }
 
         $setAnchorOffsetY(value:number):boolean {
-            value = +value || 0;
-            if (value === this.$DisplayObject[Keys.anchorOffsetY]) {
+            //value = +value || 0;
+            if (value == this.$DisplayObject[Keys.anchorOffsetY]) {
                 return false;
             }
             this.$DisplayObject[Keys.anchorOffsetY] = value;
@@ -1042,8 +1041,8 @@ module egret {
         }
 
         public $setAnchorX(value:number):boolean {
-            value = +value || 0;
-            if (value === this.$DisplayObject[Keys.anchorX]) {
+            //value = +value || 0;
+            if (value == this.$DisplayObject[Keys.anchorX]) {
                 return false;
             }
             this.$DisplayObject[Keys.anchorX] = value;
@@ -1075,8 +1074,8 @@ module egret {
         }
 
         public $setAnchorY(value:number):boolean {
-            value = +value || 0;
-            if (value === this.$DisplayObject[Keys.anchorY]) {
+            //value = +value || 0;
+            if (value == this.$DisplayObject[Keys.anchorY]) {
                 return false;
             }
             this.$DisplayObject[Keys.anchorY] = value;
@@ -1111,7 +1110,7 @@ module egret {
 
         public set visible(value:boolean) {
             value = !!value;
-            if (value === this.$visible) {
+            if (value == this.$visible) {
                 return;
             }
             this.$visible = value;
@@ -1154,7 +1153,7 @@ module egret {
             value = !!value;
             this.$toggleFlags(sys.DisplayObjectFlags.CacheAsBitmap, value);
             var hasDisplayList = !!this.$displayList;
-            if (hasDisplayList === value) {
+            if (hasDisplayList == value) {
                 return;
             }
             if (value) {
@@ -1211,8 +1210,8 @@ module egret {
         }
 
         public set alpha(value:number) {
-            value = +value || 0;
-            if (value === this.$alpha) {
+            //value = +value || 0;
+            if (value == this.$alpha) {
                 return;
             }
             this.$alpha = value;
@@ -1421,7 +1420,7 @@ module egret {
 
         public set blendMode(value:string) {
             var mode = sys.blendModeToNumber(value);
-            if (mode === this.$blendMode) {
+            if (mode == this.$blendMode) {
                 return;
             }
             this.$blendMode = mode;
@@ -1465,7 +1464,7 @@ module egret {
         }
 
         public set mask(value:DisplayObject) {
-            if (value === this.$mask || value === this) {
+            if (value == this.$mask || value == this) {
                 return;
             }
             if (value) {
@@ -1511,7 +1510,7 @@ module egret {
                 resultRect = new Rectangle();
             }
             resultRect.copyFrom(bounds);
-            if (targetCoordinateSpace === this || resultRect.isEmpty()) {
+            if (targetCoordinateSpace == this || resultRect.isEmpty()) {
                 return resultRect;
             }
             var m:Matrix;
@@ -1785,7 +1784,7 @@ module egret {
          */
         private hitTestPixel(localX:number, localY:number):DisplayObject {
             var alpha = this.$getConcatenatedAlpha();
-            if (alpha === 0) {
+            if (alpha == 0) {
                 return null;
             }
             var context:sys.RenderContext;
@@ -1802,7 +1801,7 @@ module egret {
                 this.$render(context);
                 data = context.getImageData(1, 1, 1, 1).data;
             }
-            if (data[3] === 0) {
+            if (data[3] == 0) {
                 return null;
             }
             return this;

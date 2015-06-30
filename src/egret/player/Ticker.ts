@@ -140,7 +140,7 @@ module egret.sys {
             var callBackList = this.callBackList;
             var thisObjectList = this.thisObjectList;
             for (var i = callBackList.length - 1; i >= 0; i--) {
-                if (callBackList[i] === callBack &&
+                if (callBackList[i] == callBack &&
                     thisObjectList[i] == thisObject) {//这里不能用===，因为有可能传入undefined和null.
                     return i;
                 }
@@ -173,11 +173,11 @@ module egret.sys {
          * 设置全局帧率
          */
         $setFrameRate(value:number):void {
-            value = +value || 0;
+            //value = +value || 0;
             if (value <= 0) {
                 return;
             }
-            if (this.$frameRate === value) {
+            if (this.$frameRate == value) {
                 return;
             }
             this.$frameRate = value;
@@ -251,7 +251,7 @@ module egret.sys {
         private broadcastEnterFrame():void {
             var list = DisplayObject.$enterFrameCallBackList;
             var length = list.length;
-            if (length === 0) {
+            if (length == 0) {
                 return;
             }
             list = list.concat();
@@ -267,7 +267,7 @@ module egret.sys {
         private broadcastRender():void {
             var list = DisplayObject.$renderCallBackList;
             var length = list.length;
-            if (length === 0) {
+            if (length == 0) {
                 return;
             }
             list = list.concat();

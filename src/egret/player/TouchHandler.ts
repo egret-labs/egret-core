@@ -96,7 +96,7 @@ module egret.sys {
          * @param touchPointID 分配给触摸点的唯一标识号
          */
         public onTouchMove(x:number, y:number, touchPointID:number):void {
-            if (this.lastTouchX === x && this.lastTouchY === y) {
+            if (this.lastTouchX == x && this.lastTouchY == y) {
                 return;
             }
             this.lastTouchX = x;
@@ -118,7 +118,7 @@ module egret.sys {
             this.touchDownTarget[touchPointID] = -1;
             TouchEvent.emitTouchEvent(target, TouchEvent.TOUCH_END, true, true, x, y, touchPointID);
             target = this.findTarget(x, y);
-            if (oldTargetCode === target.$hashCode) {
+            if (oldTargetCode == target.$hashCode) {
                 TouchEvent.emitTouchEvent(target, TouchEvent.TOUCH_TAP, true, true, x, y, touchPointID);
             }
             else {

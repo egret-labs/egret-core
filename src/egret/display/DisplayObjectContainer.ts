@@ -115,7 +115,7 @@ module egret {
             index = +index | 0;
             if (index < 0 || index >= this.$children.length) {
                 index = this.$children.length;
-                if (child.$parent === this) {
+                if (child.$parent == this) {
                     index--;
                 }
             }
@@ -373,7 +373,7 @@ module egret {
                 index2 = index1;
                 index1 = temp;
             }
-            else if (index1 === index2) {
+            else if (index1 == index2) {
                 return;
             }
             var list:Array<DisplayObject> = this.$children;
@@ -455,13 +455,13 @@ module egret {
         $measureChildBounds(bounds:Rectangle):void {
             var children = this.$children;
             var length = children.length;
-            if (length === 0) {
+            if (length == 0) {
                 return;
             }
             var xMin = 0, xMax = 0, yMin = 0, yMax = 0;
             var found:boolean = false;
             for (var i = -1; i < length; i++) {
-                var childBounds = i === -1 ? bounds : children[i].$getTransformedBounds(this, $TempRectangle);
+                var childBounds = i == -1 ? bounds : children[i].$getTransformedBounds(this, $TempRectangle);
                 if (childBounds.isEmpty()) {
                     continue;
                 }

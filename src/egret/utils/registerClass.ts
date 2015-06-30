@@ -79,7 +79,7 @@ module egret {
             if(!classDefinition.prototype){
                 $error(1012,"classDefinition")
             }
-            if(classFlag===void 0){
+            if(egret.isUndefined(classFlag)){
                 $error(1003, "classFlag");
             }
         }

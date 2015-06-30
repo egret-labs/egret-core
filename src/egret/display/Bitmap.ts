@@ -194,7 +194,7 @@ module egret {
 
         public set smoothing(value:boolean) {
             value = !!value;
-            if (value === this.$smoothing) {
+            if (value == this.$smoothing) {
                 return;
             }
             this.$smoothing = value;
@@ -203,9 +203,9 @@ module egret {
 
 
         $setWidth(value:number):void {
-            value = +value || 0;
+            //value = +value || 0;
             var values = this.$Bitmap;
-            if (value < 0 || value === values[Keys.explicitBitmapWidth]) {
+            if (value < 0 || value == values[Keys.explicitBitmapWidth]) {
                 return;
             }
             values[Keys.explicitBitmapWidth] = value;
@@ -213,9 +213,9 @@ module egret {
         }
 
         $setHeight(value:number):void {
-            value = +value || 0;
+            //value = +value || 0;
             var values = this.$Bitmap;
-            if (value < 0 || value === values[Keys.explicitBitmapHeight]) {
+            if (value < 0 || value == values[Keys.explicitBitmapHeight]) {
                 return;
             }
             values[Keys.explicitBitmapHeight] = value;

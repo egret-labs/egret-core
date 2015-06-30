@@ -109,13 +109,13 @@ module egret.web {
             context.drawImage = function (image:HTMLElement, offsetX:number, offsetY:number, width?:number,
                                           height?:number, surfaceOffsetX?:number, surfaceOffsetY?:number,
                                           surfaceImageWidth?:number, surfaceImageHeight?:number):void {
-                if (!image || image["width"] === 0 || image["height"] === 0) {//屏蔽IE下对绘制空canvas的报错。
+                if (!image || image["width"] == 0 || image["height"] == 0) {//屏蔽IE下对绘制空canvas的报错。
                     return;
                 }
                 drawImage.apply(context, arguments);
             };
 
-            if (context["imageSmoothingEnabled"]===void 0) {
+            if (egret.isUndefined(context["imageSmoothingEnabled"])) {
                 var keys = ["webkitImageSmoothingEnabled", "mozImageSmoothingEnabled", "msImageSmoothingEnabled"];
                 for (var i = keys.length - 1; i >= 0; i--) {
                     var key = keys[i];
