@@ -1137,7 +1137,6 @@ module egret {
          * @param element
          */
         public appendElement(element:egret.ITextElement):void {
-            this._isFlow = true;
             var text:string = this.$TextField[sys.TextKeys.text] + element.text;
 
             if (this.$TextField[sys.TextKeys.displayAsPassword]) {
