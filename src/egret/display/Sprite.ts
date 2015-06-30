@@ -31,28 +31,20 @@ module egret {
     /**
      * @language en_US
      * The Sprite class is a basic display list building block: a display list node that can contain children.
-     * @version Lark 1.0
-     * @platform Web,Native
      */
     /**
      * @language zh_CN
      * Sprite 类是基本显示列表构造块：一个可包含子项的显示列表节点。
-     * @version Lark 1.0
-     * @platform Web,Native
      */
     export class Sprite extends DisplayObjectContainer implements IDisplayObjectContainer {
 
         /**
          * @language en_US
          * Creates a new Sprite instance.
-         * @version Lark 1.0
-         * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 实例化一个容器
-         * @version Lark 1.0
-         * @platform Web,Native
          */
         public constructor() {
             super();
@@ -69,14 +61,10 @@ module egret {
         /**
          * @language en_US
          * [read-only] Specifies the Graphics object belonging to this Shape object, where vector drawing commands can occur.
-         * @version Lark 1.0
-         * @platform Web,Native
          */
         /**
          * @language zh_CN
          * [只读] 获取 Shape 中的 Graphics 对象。可通过此对象执行矢量绘图命令。
-         * @version Lark 1.0
-         * @platform Web,Native
          */
         public get graphics():Graphics {
             return this.$graphics;

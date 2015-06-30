@@ -34,43 +34,31 @@ module egret {
      * @language en_US
      * A Timer object emits a TimerEvent objects whenever the Timer object reaches the interval specified by the Timer.delay property.
      * @see egret.Timer
-     * @version Lark 1.0
-     * @platform Web,Native
      */
     /**
      * @language zh_CN
      * 每当 Timer 对象达到由 Timer.delay 属性指定的间隔时，Timer 对象即会调度 TimerEvent 对象。
      * @see egret.Timer
-     * @version Lark 1.0
-     * @platform Web,Native
      */
     export class TimerEvent extends Event {
 
         /**
          * @language en_US
          * Emitted whenever a Timer object reaches an interval specified according to the Timer.delay property.
-         * @version Lark 1.0
-         * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 每当 Timer 对象达到根据 Timer.delay 属性指定的间隔时调度。
-         * @version Lark 1.0
-         * @platform Web,Native
          */
         public static TIMER:string = "timer";
 
         /**
          * @language en_US
          * Emitted whenever it has completed the number of requests set by Timer.repeatCount.
-         * @version Lark 1.0
-         * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 每当它完成 Timer.repeatCount 设置的请求数后调度。
-         * @version Lark 1.0
-         * @platform Web,Native
          */
         public static TIMER_COMPLETE:string = "timerComplete";
 
@@ -82,8 +70,6 @@ module egret {
          * the inherited bubbles property.
          * @param cancelable Determines whether the Event object can be canceled. Event listeners can access this information
          * through the inherited cancelable property.
-         * @version Lark 1.0
-         * @platform Web,Native
          */
         /**
          * @language zh_CN
@@ -91,8 +77,6 @@ module egret {
          * @param type 事件的类型。事件侦听器可以通过继承的 type 属性访问此信息。
          * @param bubbles 确定 Event 对象是否冒泡。事件侦听器可以通过继承的 bubbles 属性访问此信息。
          * @param cancelable 确定是否可以取消 Event 对象。事件侦听器可以通过继承的 cancelable 属性访问此信息。
-         * @version Lark 1.0
-         * @platform Web,Native
          */
         public constructor(type:string, bubbles?:boolean, cancelable?:boolean) {
             super(type, bubbles, cancelable);
@@ -116,8 +100,6 @@ module egret {
          *    moveTimer.addEventListener(TimerEvent.TIMER,onTimer);
          *    moveTimer.start();
          * </code>
-         * @version Lark 1.0
-         * @platform Web,Native
          */
         /**
          * @language zh_CN
@@ -137,8 +119,6 @@ module egret {
          *    moveTimer.addEventListener(TimerEvent.TIMER,onTimer);
          *    moveTimer.start();
          * </code>
-         * @version Lark 1.0
-         * @platform Web,Native
          */
         public updateAfterEvent():void {
             sys.$requestRenderingFlag = true;
@@ -156,8 +136,6 @@ module egret {
          * through the inherited cancelable property.
          * @see egret.Event.create()
          * @see egret.Event.release()
-         * @version Lark 1.0
-         * @platform Web,Native
          */
         /**
          * @language zh_CN
@@ -168,8 +146,6 @@ module egret {
          * @param cancelable 确定是否可以取消 Event 对象。事件侦听器可以通过继承的 cancelable 属性访问此信息。
          * @see egret.Event.create()
          * @see egret.Event.release()
-         * @version Lark 1.0
-         * @platform Web,Native
          */
         public static emitTimerEvent(target:IEventDispatcher, type:string, bubbles?:boolean, cancelable?:boolean):boolean {
             var event = Event.create(TimerEvent, type, bubbles, cancelable);

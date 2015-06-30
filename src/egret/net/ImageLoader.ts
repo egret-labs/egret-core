@@ -37,8 +37,6 @@ module egret {
      * @event lark.Event.COMPLETE Emitted when the net request is complete.
      * @event lark.Event.IO_ERROR Emitted when the net request is failed.
      * @see lark.HttpRequest
-     * @version Lark 1.0
-     * @platform Web,Native
      */
     /**
      * @private
@@ -47,8 +45,6 @@ module egret {
      * @event lark.Event.COMPLETE 加载完成
      * @event lark.Event.IO_ERROR 加载失败
      * @see lark.HttpRequest
-     * @version Lark 1.0
-     * @platform Web,Native
      */
     export interface ImageLoader extends BaseImageLoader {
         load(url:string, callback:(code:number, bitmapData:any)=>void):void;
@@ -59,15 +55,11 @@ module egret {
      * @private
      * @language en_US
      * Creates a ImageLoader object
-     * @version Lark 1.0
-     * @platform Web,Native
      */
     /**
      * @private
      * @language zh_CN
      * 创建一个 ImageLoader 实例
-     * @version Lark 1.0
-     * @platform Web,Native
      */
     export var ImageLoader:{
         new():ImageLoader;

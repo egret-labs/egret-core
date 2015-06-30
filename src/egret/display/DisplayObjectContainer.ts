@@ -31,14 +31,10 @@ module egret {
     /**
      * @language en_US
      * The DisplayObjectContainer class is a basic display list building block: a display list node that can contain children.
-     * @version Lark 1.0
-     * @platform Web,Native
      */
     /**
      * @language zh_CN
      * DisplayObjectContainer 类是基本显示列表构造块：一个可包含子项的显示列表节点。
-     * @version Lark 1.0
-     * @platform Web,Native
      */
     export class DisplayObjectContainer extends DisplayObject implements IDisplayObjectContainer {
 
@@ -54,14 +50,10 @@ module egret {
         /**
          * @language en_US
          * Creates a new DisplayObjectContainer instance.
-         * @version Lark 1.0
-         * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 实例化一个容器
-         * @version Lark 1.0
-         * @platform Web,Native
          */
         public constructor() {
             super();
@@ -84,8 +76,6 @@ module egret {
 
         /**
          * @inheritDoc
-         * @version Lark 1.0
-         * @platform Web,Native
          */
         public get numChildren():number {
             return this.$children.length;
@@ -93,8 +83,6 @@ module egret {
 
         /**
          * @inheritDoc
-         * @version Lark 1.0
-         * @platform Web,Native
          */
         public addChild(child:DisplayObject):DisplayObject {
             var index:number = this.$children.length;
@@ -108,8 +96,6 @@ module egret {
 
         /**
          * @inheritDoc
-         * @version Lark 1.0
-         * @platform Web,Native
          */
         public addChildAt(child:DisplayObject, index:number):DisplayObject {
             index = +index | 0;
@@ -176,8 +162,6 @@ module egret {
 
         /**
          * @inheritDoc
-         * @version Lark 1.0
-         * @platform Web,Native
          */
         public contains(child:DisplayObject):boolean {
             while (child) {
@@ -191,8 +175,6 @@ module egret {
 
         /**
          * @inheritDoc
-         * @version Lark 1.0
-         * @platform Web,Native
          */
         public getChildAt(index:number):DisplayObject {
             index = +index | 0;
@@ -207,8 +189,6 @@ module egret {
 
         /**
          * @inheritDoc
-         * @version Lark 1.0
-         * @platform Web,Native
          */
         public getChildIndex(child:DisplayObject):number {
             return this.$children.indexOf(child);
@@ -216,8 +196,6 @@ module egret {
 
         /**
          * @inheritDoc
-         * @version Lark 1.0
-         * @platform Web,Native
          */
         public getChildByName(name:string):DisplayObject {
             var children = this.$children;
@@ -234,8 +212,6 @@ module egret {
 
         /**
          * @inheritDoc
-         * @version Lark 1.0
-         * @platform Web,Native
          */
         public removeChild(child:DisplayObject):DisplayObject {
             var index = this.$children.indexOf(child);
@@ -250,8 +226,6 @@ module egret {
 
         /**
          * @inheritDoc
-         * @version Lark 1.0
-         * @platform Web,Native
          */
         public removeChildAt(index:number):DisplayObject {
             index = +index | 0;
@@ -299,8 +273,6 @@ module egret {
 
         /**
          * @inheritDoc
-         * @version Lark 1.0
-         * @platform Web,Native
          */
         public setChildIndex(child:DisplayObject, index:number):void {
             index = +index | 0;
@@ -333,8 +305,6 @@ module egret {
 
         /**
          * @inheritDoc
-         * @version Lark 1.0
-         * @platform Web,Native
          */
         public swapChildrenAt(index1:number, index2:number):void {
             index1 = +index1 | 0;
@@ -350,8 +320,6 @@ module egret {
 
         /**
          * @inheritDoc
-         * @version Lark 1.0
-         * @platform Web,Native
          */
         public swapChildren(child1:DisplayObject, child2:DisplayObject):void {
             var index1 = this.$children.indexOf(child1);
@@ -392,8 +360,6 @@ module egret {
 
         /**
          * @inheritDoc
-         * @version Lark 1.0
-         * @platform Web,Native
          */
         public removeChildren():void {
             var children = this.$children;
@@ -484,8 +450,6 @@ module egret {
 
         /**
          * @inheritDoc
-         * @version Lark 1.0
-         * @platform Web,Native
          */
         public get touchChildren():boolean {
             return this.$getTouchChildren();

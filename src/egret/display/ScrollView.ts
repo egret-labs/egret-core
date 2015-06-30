@@ -52,15 +52,11 @@ module egret {
      * @language en_US
      * ScrollView is an auxiliary class for sliding which passes a display object to the constructor function. In the specified size range, display objects beyond the range can be displayed. And they can be dragged randomly within this range.
      * @version egret 1.0
-     * @version Swan 1.0
-     * @platform Web,Native
      */
     /**
      * @language zh_CN
      * ScrollView 是用于滑动的辅助类，将一个显示对象传入构造函数即可。可以在指定的尺寸范围内显示超过该范围的显示对象。并可以在此范围内随意拖动。
      * @version egret 1.0
-     * @version Swan 1.0
-     * @platform Web,Native
      */
     export class ScrollView extends egret.DisplayObjectContainer {
 
@@ -72,8 +68,6 @@ module egret {
          * @default 5
          *
          * @version egret 1.0
-         * @version Swan 1.0
-         * @platform Web,Native
          */
         /**
          * @language zh_CN
@@ -82,8 +76,6 @@ module egret {
          * @default 5
          *
          * @version egret 1.0
-         * @version Swan 1.0
-         * @platform Web,Native
          */
         public static scrollThreshold:number = 5;
 
@@ -92,16 +84,12 @@ module egret {
          * Constructor.
          *
          * @version egret 1.0
-         * @version Swan 1.0
-         * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 构造函数。
          *
          * @version egret 1.0
-         * @version Swan 1.0
-         * @platform Web,Native
          */
         public constructor() {
             super();
@@ -139,7 +127,6 @@ module egret {
          * @default auto
          *
          * @version egret 1.0
-         * @platform Web,Native
          */
         /**
          * @language zh_CN
@@ -147,7 +134,6 @@ module egret {
          * @default auto
          *
          * @version egret 1.0
-         * @platform Web,Native
          */
         public get verticalScrollPolicy():string {
             return this.$ScrollView[Keys.scrollPolicyV];
@@ -171,14 +157,12 @@ module egret {
          * Display policy of horizontal scrollbar, on/off/auto.
          * @default auto
          * @version egret 1.0
-         * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 水平滚动条显示策略，on/off/auto。
          * @default auto
          * @version egret 1.0
-         * @platform Web,Native
          */
         public get horizontalScrollPolicy():string {
             return this.$ScrollView[Keys.scrollPolicyH];

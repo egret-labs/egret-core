@@ -46,8 +46,6 @@ module egret {
      * @param classDefinition the class definition to be registered.
      * @param classFlag  a unique identification number of the specific class
      * @param interfaceFlags a list of unique identification numbers of the specific interfaces.
-     * @version Lark 1.0
-     * @platform Web,Native
      */
     /**
      * @language zh_CN
@@ -68,8 +66,6 @@ module egret {
      * @param classDefinition 要注册的类定义。
      * @param classFlag 要注册的类对应的枚举值。
      * @param interfaceFlags 要注册的类所实现的接口的枚举值列表。
-     * @version Lark 1.0
-     * @platform Web,Native
      */
     export function registerClass(classDefinition:any,classFlag:number,interfaceFlags?:number[]):void{
         if (DEBUG) {

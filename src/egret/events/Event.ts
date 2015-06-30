@@ -43,8 +43,6 @@ module egret {
      * preventDefault() method. You can also make the current event listener the last one to process an event by calling
      * the stopPropagation() or stopImmediatePropagation() method.
      * @see egret.EventDispatcher
-     * @version Lark 1.0
-     * @platform Web,Native
      */
     /**
      * @language zh_CN
@@ -55,118 +53,84 @@ module egret {
      * 事件侦听器函数中使用以影响事件对象的行为。某些事件有关联的默认行为，通过调用 preventDefault() 方法，您的事件侦听器可以取消此行为。
      * 可以通过调用 stopPropagation() 或 stopImmediatePropagation() 方法，将当前事件侦听器作为处理事件的最后一个事件侦听器。
      * @see egret.EventDispatcher
-     * @version Lark 1.0
-     * @platform Web,Native
      */
     export class Event extends HashObject {
         /**
          * @language en_US
          * Emitted when a display object is added to the on stage display list, either directly or through the addition
          * of a sub tree in which the display object is contained.
-         * @version Lark 1.0
-         * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 在将显示对象直接添加到舞台显示列表或将包含显示对象的子树添加至舞台显示列表中时调度。
-         * @version Lark 1.0
-         * @platform Web,Native
          */
         public static ADDED_TO_STAGE:string = "addedToStage";
         /**
          * @language en_US
          * Emitted when a display object is about to be removed from the display list, either directly or through the removal
          * of a sub tree in which the display object is contained.
-         * @version Lark 1.0
-         * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 在从显示列表中直接删除显示对象或删除包含显示对象的子树时调度。
-         * @version Lark 1.0
-         * @platform Web,Native
          */
         public static REMOVED_FROM_STAGE:string = "removedFromStage";
         /**
          * @language en_US
          * Emitted when a display object is added to the display list.
-         * @version Lark 1.0
-         * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 将显示对象添加到显示列表中时调度。
-         * @version Lark 1.0
-         * @platform Web,Native
          */
         public static ADDED:string = "added";
         /**
          * @language en_US
          * Emitted when a display object is about to be removed from the display list.
-         * @version Lark 1.0
-         * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 将要从显示列表中删除显示对象时调度。
-         * @version Lark 1.0
-         * @platform Web,Native
          */
         public static REMOVED:string = "removed";
         /**
          * @language en_US
          * [broadcast event] Emitted when the playhead is entering a new frame.
-         * @version Lark 1.0
-         * @platform Web,Native
          */
         /**
          * @language zh_CN
          * [广播事件] 进入新的一帧,监听此事件将会在下一帧开始时触发一次回调。这是一个广播事件，可以在任何一个显示对象上监听，无论它是否在显示列表中。
-         * @version Lark 1.0
-         * @platform Web,Native
          */
         public static ENTER_FRAME:string = "enterFrame";
         /**
          * @language en_US
          * Emitted when the display list is about to be updated and rendered.
          * Note: Every time you want to receive a render event,you must call the stage.invalidate() method.
-         * @version Lark 1.0
-         * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 渲染事件，监听此事件将会在本帧末即将开始渲染的前一刻触发回调，这是一个广播事件，可以在任何一个显示对象上监听，无论它是否在显示列表中。
          * 注意：每次您希望 Lark 发送 Event.RENDER 事件时，都必须调用 stage.invalidate() 方法，由于每帧只会触发一次屏幕刷新，
          * 若在 Event.RENDER 回调函数执行期间再次调用stage.invalidate()，将会被忽略。
-         * @version Lark 1.0
-         * @platform Web,Native
          */
         public static RENDER:string = "render";
         /**
          * @language en_US
          * Emitted when the size of stage or UIComponent is changed.
-         * @version Lark 1.0
-         * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 舞台尺寸或UI组件尺寸发生改变
-         * @version Lark 1.0
-         * @platform Web,Native
          */
         public static RESIZE:string = "resize";
 
         /**
          * @language en_US
          * Emitted when the value or selection of a property is chaned.
-         * @version Lark 1.0
-         * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 属性值或状态发生改变。通常是按钮的选中状态，或者列表的选中项索引改变。
-         * @version Lark 1.0
-         * @platform Web,Native
          */
         public static CHANGE:string = "change";
 
@@ -174,94 +138,66 @@ module egret {
          * @language en_US
          * Emitted when the value or selection of a property is going to change.you can cancel this by calling the
          * preventDefault() method.
-         * @version Lark 1.0
-         * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 属性值或状态即将发生改变,通常是按钮的选中状态，或者列表的选中项索引改变。可以通过调用 preventDefault() 方法阻止索引发生更改。
-         * @version Lark 1.0
-         * @platform Web,Native
          */
         public static CHANGING:string = "changing";
         /**
          * @language en_US
          * Emitted when the net request is complete.
-         * @version Lark 1.0
-         * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 网络请求加载完成
-         * @version Lark 1.0
-         * @platform Web,Native
          */
         public static COMPLETE:string = "complete";
 
         /**
          * @language en_US
          * Emitted when loop completed.
-         * @version Lark 1.0
-         * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 循环完成
-         * @version Lark 1.0
-         * @platform Web,Native
          */
         public static LOOP_COMPLETE:string = "loopComplete";
 
         /**
          * @language en_US
          * Emitted when the net request is failed.
-         * @version Lark 1.0
-         * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 网络请求加载失败
-         * @version Lark 1.0
-         * @platform Web,Native
          */
         public static IO_ERROR:string = "ioError";
         /**
          * @language en_US
          * Emitted when the TextInput instance gets focus.
-         * @version Lark 1.0
-         * @platform Web,Native
          */
         /**
          * @language zh_CN
          * TextInput实例获得焦点
-         * @version Lark 1.0
-         * @platform Web,Native
          */
         public static FOCUS_IN:string = "focusIn";
         /**
          * @language en_US
          * Emitted when the TextInput instance loses focus.
-         * @version Lark 1.0
-         * @platform Web,Native
          */
         /**
          * @language zh_CN
          * TextInput实例失去焦点
-         * @version Lark 1.0
-         * @platform Web,Native
          */
         public static FOCUS_OUT:string = "focusOut";
         /**
          * @language en_US
          * Emitted when the playback is ended.
-         * @version Lark 1.0
-         * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 动画声音等播放完成
-         * @version Lark 1.0
-         * @platform Web,Native
          */
         public static ENDED:string = "ended";
 
@@ -294,8 +230,6 @@ module egret {
          * @param bubbles  Determines whether the Event object participates in the bubbling stage of the event flow. The default value is false.
          * @param cancelable Determines whether the Event object can be canceled. The default values is false.
          * @param data the optional data associated with this event
-         * @version Lark 1.0
-         * @platform Web,Native
          */
         /**
          * @language zh_CN
@@ -304,8 +238,6 @@ module egret {
          * @param bubbles  确定 Event 对象是否参与事件流的冒泡阶段。默认值为 false。
          * @param cancelable 确定是否可以取消 Event 对象。默认值为 false。
          * @param data 与此事件对象关联的可选数据。
-         * @version Lark 1.0
-         * @platform Web,Native
          */
         public constructor(type:string, bubbles?:boolean, cancelable?:boolean, data?:any) {
             super();
@@ -318,14 +250,10 @@ module egret {
         /**
          * @language en_US
          * the optional data associated with this event
-         * @version Lark 1.0
-         * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 与此事件对象关联的可选数据。
-         * @version Lark 1.0
-         * @platform Web,Native
          */
         public data:any;
 
@@ -337,14 +265,10 @@ module egret {
         /**
          * @language en_US
          * [read-only] The type of event. The type is case-sensitive.
-         * @version Lark 1.0
-         * @platform Web,Native
          */
         /**
          * @language zh_CN
          * [只读] 事件的类型。类型区分大小写。
-         * @version Lark 1.0
-         * @platform Web,Native
          */
         public get type():string {
             return this.$type;
@@ -358,14 +282,10 @@ module egret {
         /**
          * @language en_US
          * [read-only] Indicates whether an event is a bubbling event.
-         * @version Lark 1.0
-         * @platform Web,Native
          */
         /**
          * @language zh_CN
          * [只读] 表示事件是否为冒泡事件。如果事件可以冒泡，则此值为 true；否则为 false。
-         * @version Lark 1.0
-         * @platform Web,Native
          */
         public get bubbles():boolean {
             return this.$bubbles;
@@ -380,15 +300,11 @@ module egret {
          * [read-only] Indicates whether the behavior associated with the event can be prevented. If the behavior can be
          * canceled, this value is true; otherwise it is false.
          * @see #preventDefault()
-         * @version Lark 1.0
-         * @platform Web,Native
          */
         /**
          * @language zh_CN
          * [只读] 表示是否可以阻止与事件相关联的行为。如果可以取消该行为，则此值为 true；否则为 false。
          * @see #preventDefault()
-         * @version Lark 1.0
-         * @platform Web,Native
          */
         public get cancelable():boolean {
             return this.$cancelable;
@@ -406,8 +322,6 @@ module egret {
          * The target phase (EventPhase.AT_TARGET)
          * The bubbling phase (EventPhase.BUBBLING_PHASE).
          * @see egret.EventPhase
-         * @version Lark 1.0
-         * @platform Web,Native
          */
         /**
          * @language zh_CN
@@ -416,8 +330,6 @@ module egret {
          * 目标阶段 (EventPhase.AT_TARGET)。
          * 冒泡阶段 (EventPhase.BUBBLING_PHASE)。
          * @see egret.EventPhase
-         * @version Lark 1.0
-         * @platform Web,Native
          */
         public get eventPhase():number {
             return this.$eventPhase;
@@ -433,15 +345,11 @@ module egret {
          * [read-only] The object that is actively processing the Event object with an event listener. For example, if a
          * user clicks an OK button, the current target could be the node containing that button or one of its ancestors
          * that has registered an event listener for that event.
-         * @version Lark 1.0
-         * @platform Web,Native
          */
         /**
          * @language zh_CN
          * [只读] 当前正在使用某个事件侦听器处理 Event 对象的对象。例如，如果用户单击“确定”按钮，
          * 则当前目标可以是包含该按钮的节点，也可以是它的已为该事件注册了事件侦听器的始祖之一。
-         * @version Lark 1.0
-         * @platform Web,Native
          */
         public get currentTarget():any {
             return this.$currentTarget;
@@ -456,14 +364,10 @@ module egret {
          * @language en_US
          * [read-only] The event target. This property contains the target node. For example, if a user clicks an OK button,
          * the target node is the display list node containing that button.
-         * @version Lark 1.0
-         * @platform Web,Native
          */
         /**
          * @language zh_CN
          * [只读] 事件目标。此属性包含目标节点。例如，如果用户单击“确定”按钮，则目标节点就是包含该按钮的显示列表节点。
-         * @version Lark 1.0
-         * @platform Web,Native
          */
         public get target():any {
             return this.$target;
@@ -480,16 +384,12 @@ module egret {
          * called, returns true; otherwise, returns false.
          * @returns If preventDefault() has been called, returns true; otherwise, returns false.
          * @see #preventDefault()
-         * @version Lark 1.0
-         * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 检查是否已对事件调用 preventDefault() 方法。
          * @returns 如果已调用 preventDefault() 方法，则返回 true；否则返回 false。
          * @see #preventDefault()
-         * @version Lark 1.0
-         * @platform Web,Native
          */
         public isDefaultPrevented():boolean {
             return this.$isDefaultPrevented;
@@ -506,8 +406,6 @@ module egret {
          * otherwise, preventDefault() has no effect.
          * @see #cancelable
          * @see #isDefaultPrevented
-         * @version Lark 1.0
-         * @platform Web,Native
          */
         /**
          * @language zh_CN
@@ -518,8 +416,6 @@ module egret {
          * 则可以使用 preventDefault() 来取消事件；否则，preventDefault() 无效。
          * @see #cancelable
          * @see #isDefaultPrevented
-         * @version Lark 1.0
-         * @platform Web,Native
          */
         public preventDefault():void {
             if (this.$cancelable)
@@ -540,8 +436,6 @@ module egret {
          * Note: This method does not cancel the behavior associated with this event; see preventDefault() for that functionality.
          * @see #stopImmediatePropagation()
          * @see #preventDefault()
-         * @version Lark 1.0
-         * @platform Web,Native
          */
         /**
          * @language zh_CN
@@ -551,8 +445,6 @@ module egret {
          * 注意：此方法不会取消与此事件相关联的行为；有关此功能的信息，请参阅 preventDefault()。
          * @see #stopImmediatePropagation()
          * @see #preventDefault()
-         * @version Lark 1.0
-         * @platform Web,Native
          */
         public stopPropagation():void {
             if (this.$bubbles)
@@ -572,8 +464,6 @@ module egret {
          * Note: This method does not cancel the behavior associated with this event; see preventDefault() for that functionality.
          * @see #stopPropagation()
          * @see #preventDefault()
-         * @version Lark 1.0
-         * @platform Web,Native
          */
         /**
          * @language zh_CN
@@ -582,8 +472,6 @@ module egret {
          * 注意：此方法不会取消与此事件相关联的行为；有关此功能的信息，请参阅 preventDefault()。
          * @see #stopPropagation()
          * @see #preventDefault()
-         * @version Lark 1.0
-         * @platform Web,Native
          */
         public stopImmediatePropagation():void {
             if (this.$bubbles)
@@ -597,8 +485,6 @@ module egret {
          * objects are cleaned. if not,it may cause memory leaking.
          * @see egret.Event.create()
          * @see egret.Event.release()
-         * @version Lark 1.0
-         * @platform Web,Native
          */
         /**
          * @language zh_CN
@@ -606,8 +492,6 @@ module egret {
          * 若此自定义事件的实例设计为可以循环复用的，为了避免引起内存泄露，自定义事件需要覆盖此方法来确保实例被缓存前断开对外部对象的一切引用。
          * @see egret.Event.create()
          * @see egret.Event.release()
-         * @version Lark 1.0
-         * @platform Web,Native
          */
         protected clean():void {
             this.data = this.$target = this.$currentTarget = null;
@@ -655,8 +539,6 @@ module egret {
          *    this.dispatchEvent(event);
          *    Event.release(event);
          * </code>
-         * @version Lark 1.0
-         * @platform Web,Native
          */
         /**
          * @language zh_CN
@@ -671,8 +553,6 @@ module egret {
          *    Event.release(event);
          * </code>
          * @see #clean()
-         * @version Lark 1.0
-         * @platform Web,Native
          */
         public static create<T extends Event>(EventClass:{new (type:string, bubbles?:boolean, cancelable?:boolean): T;eventPool?:Event[]},
                                               type:string, bubbles?:boolean, cancelable?:boolean):T {
@@ -709,8 +589,6 @@ module egret {
          *    Event.release(event);
          * </code>
          * @see #clean()
-         * @version Lark 1.0
-         * @platform Web,Native
          */
         /**
          * @language zh_CN
@@ -725,8 +603,6 @@ module egret {
          *    Event.release(event);
          * </code>
          * @see #clean()
-         * @version Lark 1.0
-         * @platform Web,Native
          */
         public static release(event:Event):void {
             event.clean();

@@ -46,16 +46,12 @@ module egret.native {
         /**
          * @private
          * @inheritDoc
-         * @version Lark 1.0
-         * @platform Web,Native
          */
         width: number;
 
         /**
          * @private
          * @inheritDoc
-         * @version Lark 1.0
-         * @platform Web,Native
          */
         height: number;
     }

@@ -42,7 +42,6 @@ module egret {
      * containing the target node in the display list) receive notification of a touch event, use EventDispatcher.addEventListener()
      * on the ancestor node with the type parameter set to the specific touch event you want to detect.
      *
-     * @version Lark 1.0
      * @platform Web,Runtime,Native
      */
     /**
@@ -54,7 +53,6 @@ module egret {
      * 此对象称为目标节点。要使目标节点的祖代（祖代是一个包含显示列表中所有目标节点的对象，从舞台到目标节点的父节点均包括在内）
      * 接收触摸事件的通知，请对祖代节点使用 EventDispatcher.on() 并将 type 参数设置为要检测的特定触摸事件。
      *
-     * @version Lark 1.0
      * @platform Web,Runtime,Native
      */
     export class TouchEvent extends Event {
@@ -62,13 +60,11 @@ module egret {
         /**
          * @language en_US
          * Emitted when the user touches the device, and is continuously dispatched until the point of contact is removed.
-         * @version Lark 1.0
          * @platform Web,Runtime,Native
          */
         /**
          * @language zh_CN
          * 当用户触碰设备时进行调度，而且会连续调度，直到接触点被删除。
-         * @version Lark 1.0
          * @platform Web,Runtime,Native
          */
         public static TOUCH_MOVE:string = "touchMove";
@@ -76,13 +72,11 @@ module egret {
         /**
          * @language en_US
          * Emitted when the user first contacts a touch-enabled device (such as touches a finger to a mobile phone or tablet with a touch screen).
-         * @version Lark 1.0
          * @platform Web,Runtime,Native
          */
         /**
          * @language zh_CN
          * 当用户第一次触摸启用触摸的设备时（例如，用手指触摸配有触摸屏的移动电话或平板电脑）调度。
-         * @version Lark 1.0
          * @platform Web,Runtime,Native
          */
         public static TOUCH_BEGIN:string = "touchBegin";
@@ -91,13 +85,11 @@ module egret {
          * @language en_US
          * Emitted when the user removes contact with a touch-enabled device (such as lifts a finger off a mobile phone
          * or tablet with a touch screen).
-         * @version Lark 1.0
          * @platform Web,Runtime,Native
          */
         /**
          * @language zh_CN
          * 当用户移除与启用触摸的设备的接触时（例如，将手指从配有触摸屏的移动电话或平板电脑上抬起）调度。
-         * @version Lark 1.0
          * @platform Web,Runtime,Native
          */
         public static TOUCH_END:string = "touchEnd";
@@ -106,13 +98,11 @@ module egret {
          * @language en_US
          * Emitted when the user lifts the point of contact over the same DisplayObject instance on which the contact
          * was initiated on a touch-enabled device.
-         * @version Lark 1.0
          * @platform Web,Runtime,Native
          */
         /**
          * @language zh_CN
          * 当用户在触摸设备上与开始触摸的同一 DisplayObject 实例上抬起接触点时调度。
-         * @version Lark 1.0
          * @platform Web,Runtime,Native
          */
         public static TOUCH_TAP:string = "touchTap";
@@ -121,13 +111,11 @@ module egret {
          * Emitted when the user lifts the point of contact over the different DisplayObject instance on which the contact
          * was initiated on a touch-enabled device (such as presses and releases a finger from a single point over a display
          * object on a mobile phone or tablet with a touch screen).
-         * @version Lark 1.0
          * @platform Web,Runtime,Native
          */
         /**
          * @language zh_CN
          * 当用户在触摸设备上与开始触摸的不同 DisplayObject 实例上抬起接触点时调度。
-         * @version Lark 1.0
          * @platform Web,Runtime,Native
          */
         public static TOUCH_RELEASE_OUTSIDE:string = "touchReleaseOutside";
@@ -151,7 +139,6 @@ module egret {
          * @param stageX The horizontal coordinate at which the event occurred in global Stage coordinates.
          * @param stageY The vertical coordinate at which the event occurred in global Stage coordinates.
          * @param touchPointID A unique identification number assigned to the touch point.
-         * @version Lark 1.0
          * @platform Web,Runtime,Native
          */
         /**
@@ -163,7 +150,6 @@ module egret {
          * @param stageX 事件发生点在全局舞台坐标系中的水平坐标
          * @param stageY 事件发生点在全局舞台坐标系中的垂直坐标
          * @param touchPointID 分配给触摸点的唯一标识号
-         * @version Lark 1.0
          * @platform Web,Runtime,Native
          */
         public constructor(type:string, bubbles?:boolean, cancelable?:boolean, stageX?:number,
@@ -189,13 +175,11 @@ module egret {
         /**
          * @language en_US
          * The horizontal coordinate at which the event occurred in global Stage coordinates.
-         * @version Lark 1.0
          * @platform Web,Runtime,Native
          */
         /**
          * @language zh_CN
          * 事件发生点在全局舞台坐标中的水平坐标。
-         * @version Lark 1.0
          * @platform Web,Runtime,Native
          */
         public get stageX():number {
@@ -210,13 +194,11 @@ module egret {
         /**
          * @language en_US
          * The vertical coordinate at which the event occurred in global Stage coordinates.
-         * @version Lark 1.0
          * @platform Web,Runtime,Native
          */
         /**
          * @language zh_CN
          * 事件发生点在全局舞台坐标中的垂直坐标。
-         * @version Lark 1.0
          * @platform Web,Runtime,Native
          */
         public get stageY():number {
@@ -243,13 +225,11 @@ module egret {
         /**
          * @language en_US
          * The horizontal coordinate at which the event occurred relative to the display object.
-         * @version Lark 1.0
          * @platform Web,Runtime,Native
          */
         /**
          * @language zh_CN
          * 事件发生点相对于所属显示对象的水平坐标。
-         * @version Lark 1.0
          * @platform Web,Runtime,Native
          */
         public get localX():number {
@@ -259,13 +239,11 @@ module egret {
         /**
          * @language en_US
          * The vertical coordinate at which the event occurred relative to the display object.
-         * @version Lark 1.0
          * @platform Web,Runtime,Native
          */
         /**
          * @language zh_CN
          * 事件发生点相对于所属显示对象的垂直坐标。
-         * @version Lark 1.0
          * @platform Web,Runtime,Native
          */
         public get localY():number {
@@ -275,13 +253,11 @@ module egret {
         /**
          * @language en_US
          * A unique identification number assigned to the touch point.
-         * @version Lark 1.0
          * @platform Web,Runtime,Native
          */
         /**
          * @language zh_CN
          * 分配给触摸点的唯一标识号
-         * @version Lark 1.0
          * @platform Web,Runtime,Native
          */
         public touchPointID:number;
@@ -289,14 +265,10 @@ module egret {
         /**
          * @language en_US
          * Instructs Lark runtime to render after processing of this event completes, if the display list has been modified.
-         * @version Lark 1.0
-         * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 如果已修改显示列表，调用此方法将会忽略帧频限制，在此事件处理完成后立即重绘屏幕。
-         * @version Lark 1.0
-         * @platform Web,Native
          */
         public updateAfterEvent():void {
             sys.$requestRenderingFlag = true;
@@ -322,7 +294,6 @@ module egret {
          * @see egret.Event.create()
          * @see egret.Event.release()
          *
-         * @version Lark 1.0
          * @platform Web,Runtime,Native
          */
         /**
@@ -339,7 +310,6 @@ module egret {
          * @see egret.Event.create()
          * @see egret.Event.release()
          *
-         * @version Lark 1.0
          * @platform Web,Runtime,Native
          */
         public static emitTouchEvent(target:IEventDispatcher, type:string, bubbles?:boolean, cancelable?:boolean,

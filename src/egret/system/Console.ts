@@ -35,8 +35,6 @@ declare module egret {
      * @param assertion Any boolean expression. If the assertion is false, the message will get written to the console.
      * @param message the message written to the console
      * @param optionalParams the extra messages written to the console
-     * @version Lark 1.0
-     * @platform Web,Native
      */
     /**
      * @language zh_CN
@@ -44,8 +42,6 @@ declare module egret {
      * @param assertion 一个 boolean 表达式，若结果为false，则抛出错误并输出信息。
      * @param message 要输出到控制台的信息
      * @param optionalParams 要输出到控制台的额外可选信息
-     * @version Lark 1.0
-     * @platform Web,Native
      */
     function assert(assertion?:boolean, message?:string, ...optionalParams:any[]):void;
     /**
@@ -53,16 +49,12 @@ declare module egret {
      * Writes a warning message to the console.
      * @param message the message written to the console
      * @param optionalParams the extra messages written to the console
-     * @version Lark 1.0
-     * @platform Web,Native
      */
     /**
      * @language zh_CN
      * 输出一个警告信息到控制台。
      * @param message 要输出到控制台的信息
      * @param optionalParams 要输出到控制台的额外信息
-     * @version Lark 1.0
-     * @platform Web,Native
      */
     function warn(message?:any, ...optionalParams:any[]):void;
     /**
@@ -70,16 +62,12 @@ declare module egret {
      * Writes an error message to the console.
      * @param message the message written to the console
      * @param optionalParams the extra messages written to the console
-     * @version Lark 1.0
-     * @platform Web,Native
      */
     /**
      * @language zh_CN
      * 输出一个错误信息到控制台。
      * @param message 要输出到控制台的信息
      * @param optionalParams 要输出到控制台的额外信息
-     * @version Lark 1.0
-     * @platform Web,Native
      */
     function error(message?:any, ...optionalParams:any[]): void;
     /**
@@ -87,16 +75,12 @@ declare module egret {
      * Writes an message to the console.
      * @param message the message written to the console
      * @param optionalParams the extra messages written to the console
-     * @version Lark 1.0
-     * @platform Web,Native
      */
     /**
      * @language zh_CN
      * 输出一个日志信息到控制台。
      * @param message 要输出到控制台的信息
      * @param optionalParams 要输出到控制台的额外信息
-     * @version Lark 1.0
-     * @platform Web,Native
      */
     function log(message?:any, ...optionalParams:any[]):void;
 }

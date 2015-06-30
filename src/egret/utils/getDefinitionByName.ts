@@ -39,15 +39,11 @@ module egret {
      * @language en_US
      * Returns a reference to the class object of the class specified by the name parameter.
      * @param name The name of a class.
-     * @version Lark 1.0
-     * @platform Web,Native
      */
     /**
      * @language zh_CN
      * 返回 name 参数指定的类的类对象引用。
      * @param name 类的名称。
-     * @version Lark 1.0
-     * @platform Web,Native
      */
     export function getDefinitionByName(name:string):any {
         if (!name)

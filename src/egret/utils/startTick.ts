@@ -37,8 +37,6 @@ module egret {
      * since the Lark framework was initialized. If the return value of this method is true, it will force Lark runtime
      * to render after processing of this method completes.
      * @param thisObject the call back method's "this"
-     * @version Lark 1.0
-     * @platform Web,Native
      */
     /**
      * @language zh_CN
@@ -46,8 +44,6 @@ module egret {
      * @param callBack 要执行的回调方法。参数 timeStamp 表示从启动Lark框架开始经过的时间(毫秒)。
      * 若回调方法返回值为true，其作用与TimerEvent.updateAfterEvent()类似，将会忽略帧频限制，在此方法处理完成后立即重绘屏幕。
      * @param thisObject 回调方法的this对象引用。
-     * @version Lark 1.0
-     * @platform Web,Native
      */
     export function startTick(callBack:(advancedTime:number)=>boolean,thisObject:any):void {
         if (DEBUG && !callBack) {

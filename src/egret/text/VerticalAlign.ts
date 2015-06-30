@@ -32,57 +32,41 @@ module egret {
      * @language en_US
      * The VerticalAlign class defines the possible values for the vertical alignment.
      * @see egret.TextField#verticalAlign
-     * @version Lark 1.0
-     * @platform Web,Native
      */
     /**
      * @language zh_CN
      * VerticalAlign 类为垂直对齐方式定义可能的值。
      * @see egret.TextField#verticalAlign
-     * @version Lark 1.0
-     * @platform Web,Native
      */
     export class VerticalAlign{
 
         /**
          * @language en_US
          * Vertically align content to the top of the container.
-         * @version Lark 1.0
-         * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 将内容与容器的顶部对齐。
-         * @version Lark 1.0
-         * @platform Web,Native
          */
         public static TOP:string = "top";
 
         /**
          * @language en_US
          * Vertically align content to the bottom of the container.
-         * @version Lark 1.0
-         * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 将内容与容器的底部对齐。
-         * @version Lark 1.0
-         * @platform Web,Native
          */
         public static BOTTOM:string = "bottom";
 
         /**
          * @language en_US
          * Vertically align content in the middle of the container.
-         * @version Lark 1.0
-         * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 在容器的垂直中心对齐内容。
-         * @version Lark 1.0
-         * @platform Web,Native
          */
         public static MIDDLE:string = "middle";
 

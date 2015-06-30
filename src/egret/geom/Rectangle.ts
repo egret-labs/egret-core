@@ -39,8 +39,6 @@ module egret {
      * one property has no effect on the others. However, the right and bottom properties are integrally related to those
      * four properties. For example, if you change the value of the right property, the value of the width property changes;
      * if you change the bottom property, the value of the height property changes.
-     * @version Lark 1.0
-     * @platform Web,Native
      */
     /**
      * @language zh_CN
@@ -48,22 +46,16 @@ module egret {
      * Rectangle 类的 x、y、width 和 height 属性相互独立；更改一个属性的值不会影响其他属性。
      * 但是，right 和 bottom 属性与这四个属性是整体相关的。例如，如果更改 right 属性的值，则 width
      * 属性的值将发生变化；如果更改 bottom 属性，则 height 属性的值将发生变化。
-     * @version Lark 1.0
-     * @platform Web,Native
      */
     export class Rectangle extends HashObject {
 
         /**
          * @language en_US
          * Releases a rectangle instance to the object pool.
-         * @version Lark 1.0
-         * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 释放一个Rectangle实例到对象池
-         * @version Lark 1.0
-         * @platform Web,Native
          */
         public static release(rect:Rectangle):void {
             if (!rect) {
@@ -75,14 +67,10 @@ module egret {
         /**
          * @language en_US
          * get a rectangle instance from the object pool or create a new one.
-         * @version Lark 1.0
-         * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 从对象池中取出或创建一个新的Rectangle对象。
-         * @version Lark 1.0
-         * @platform Web,Native
          */
         public static create():Rectangle {
             var rect = rectanglePool.pop();
@@ -100,8 +88,6 @@ module egret {
          * @param y The y coordinate of the top-left corner of the rectangle.
          * @param width The width of the rectangle, in pixels.
          * @param height The height of the rectangle, in pixels.
-         * @version Lark 1.0
-         * @platform Web,Native
          */
         /**
          * @language zh_CN
@@ -110,8 +96,6 @@ module egret {
          * @param y 矩形左上角的 y 坐标。
          * @param width 矩形的宽度（以像素为单位）。
          * @param height 矩形的高度（以像素为单位）。
-         * @version Lark 1.0
-         * @platform Web,Native
          */
         public constructor(x:number = 0, y:number = 0, width:number = 0, height:number = 0) {
             super();
@@ -125,74 +109,54 @@ module egret {
          * @language en_US
          * The x coordinate of the top-left corner of the rectangle.
          * @default 0
-         * @version Lark 1.0
-         * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 矩形左上角的 x 坐标。
          * @default 0
-         * @version Lark 1.0
-         * @platform Web,Native
          */
         public x:number;
         /**
          * @language en_US
          * The y coordinate of the top-left corner of the rectangle.
          * @default 0
-         * @version Lark 1.0
-         * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 矩形左上角的 y 坐标。
          * @default 0
-         * @version Lark 1.0
-         * @platform Web,Native
          */
         public y:number;
         /**
          * @language en_US
          * The width of the rectangle, in pixels.
          * @default 0
-         * @version Lark 1.0
-         * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 矩形的宽度（以像素为单位）。
          * @default 0
-         * @version Lark 1.0
-         * @platform Web,Native
          */
         public width:number;
         /**
          * @language en_US
          * 矩形的高度（以像素为单位）。
          * @default 0
-         * @version Lark 1.0
-         * @platform Web,Native
          */
         /**
          * @language zh_CN
          * The height of the rectangle, in pixels.
          * @default 0
-         * @version Lark 1.0
-         * @platform Web,Native
          */
         public height:number;
 
         /**
          * @language en_US
          * The sum of the x and width properties.
-         * @version Lark 1.0
-         * @platform Web,Native
          */
         /**
          * @language zh_CN
          * x 和 width 属性的和。
-         * @version Lark 1.0
-         * @platform Web,Native
          */
         public get right():number {
             return this.x + this.width;
@@ -205,14 +169,10 @@ module egret {
         /**
          * @language en_US
          * The sum of the y and height properties.
-         * @version Lark 1.0
-         * @platform Web,Native
          */
         /**
          * @language zh_CN
          * y 和 height 属性的和。
-         * @version Lark 1.0
-         * @platform Web,Native
          */
         public get bottom():number {
             return this.y + this.height;
@@ -228,15 +188,11 @@ module egret {
          * no effect on the y and height properties. However it does affect the width property, whereas changing the x value
          * does not affect the width property.
          * The value of the left property is equal to the value of the x property.
-         * @version Lark 1.0
-         * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 矩形左上角的 x 坐标。更改 Rectangle 对象的 left 属性对 y 和 height 属性没有影响。但是，它会影响 width 属性，而更改 x 值不会影响 width 属性。
          * left 属性的值等于 x 属性的值。
-         * @version Lark 1.0
-         * @platform Web,Native
          */
         public get left():number {
             return this.x;
@@ -253,15 +209,11 @@ module egret {
          * no effect on the x and width properties. However it does affect the height property, whereas changing the y
          * value does not affect the height property.<br/>
          * The value of the top property is equal to the value of the y property.
-         * @version Lark 1.0
-         * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 矩形左上角的 y 坐标。更改 Rectangle 对象的 top 属性对 x 和 width 属性没有影响。但是，它会影响 height 属性，而更改 y 值不会影响 height 属性。<br/>
          * top 属性的值等于 y 属性的值。
-         * @version Lark 1.0
-         * @platform Web,Native
          */
         public get top():number {
             return this.y;
@@ -276,15 +228,11 @@ module egret {
          * @language en_US
          * Copies all of rectangle data from the source Rectangle object into the calling Rectangle object.
          * @param sourceRect The Rectangle object from which to copy the data.
-         * @version Lark 1.0
-         * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 将源 Rectangle 对象中的所有矩形数据复制到调用方 Rectangle 对象中。
          * @param sourceRect 要从中复制数据的 Rectangle 对象。
-         * @version Lark 1.0
-         * @platform Web,Native
          */
         public copyFrom(sourceRect:Rectangle):Rectangle {
             this.x = sourceRect.x;
@@ -301,8 +249,6 @@ module egret {
          * @param y The y coordinate of the top-left corner of the rectangle.
          * @param width The width of the rectangle, in pixels.
          * @param height The height of the rectangle, in pixels.
-         * @version Lark 1.0
-         * @platform Web,Native
          */
         /**
          * @language zh_CN
@@ -311,8 +257,6 @@ module egret {
          * @param y 矩形左上角的 y 坐标。
          * @param width 矩形的宽度（以像素为单位）。
          * @param height 矩形的高度（以像素为单位）。
-         * @version Lark 1.0
-         * @platform Web,Native
          */
         public setTo(x:number, y:number, width:number, height:number):Rectangle {
             this.x = x;
@@ -328,8 +272,6 @@ module egret {
          * @param x The x coordinate (horizontal position) of the point.
          * @param y The y coordinate (vertical position) of the point.
          * @returns A value of true if the Rectangle object contains the specified point; otherwise false.
-         * @version Lark 1.0
-         * @platform Web,Native
          */
         /**
          * @language zh_CN
@@ -337,8 +279,6 @@ module egret {
          * @param x 检测点的x轴
          * @param y 检测点的y轴
          * @returns 如果检测点位于矩形内，返回true，否则，返回false
-         * @version Lark 1.0
-         * @platform Web,Native
          */
         public contains(x:number, y:number):boolean {
             return this.x <= x &&
@@ -355,8 +295,6 @@ module egret {
          * @param toIntersect The Rectangle object to compare against to see if it intersects with this Rectangle object.
          * @returns A Rectangle object that equals the area of intersection. If the rectangles do not intersect, this method
          * returns an empty Rectangle object; that is, a rectangle with its x, y, width, and height properties set to 0.
-         * @version Lark 1.0
-         * @platform Web,Native
          */
         /**
          * @language zh_CN
@@ -365,8 +303,6 @@ module egret {
          * @param toIntersect 要对照比较以查看其是否与此 Rectangle 对象相交的 Rectangle 对象。
          * @returns 等于交集区域的 Rectangle 对象。如果该矩形不相交，则此方法返回一个空的 Rectangle 对象；即，其 x、y、width 和
          * height 属性均设置为 0 的矩形。
-         * @version Lark 1.0
-         * @platform Web,Native
          */
         public intersection(toIntersect: Rectangle): Rectangle {
             return this.clone().$intersectInPlace(toIntersect);
@@ -401,8 +337,6 @@ module egret {
          * intersects with this Rectangle object.
          * @param toIntersect The Rectangle object to compare against this Rectangle object.
          * @returns A value of true if the specified object intersects with this Rectangle object; otherwise false.
-         * @version Lark 1.0
-         * @platform Web,Native
          */
         /**
          * @language zh_CN
@@ -410,8 +344,6 @@ module egret {
          * 对象的 x、y、width 和 height 属性，以查看它是否与此 Rectangle 对象相交。
          * @param toIntersect 要与此 Rectangle 对象比较的 Rectangle 对象。
          * @returns 如果两个矩形相交，返回true，否则返回false
-         * @version Lark 1.0
-         * @platform Web,Native
          */
         public intersects(toIntersect:Rectangle):boolean {
             return Math.max(this.x, toIntersect.x) <= Math.min(this.right, toIntersect.right)
@@ -422,15 +354,11 @@ module egret {
          * @language en_US
          * Determines whether or not this Rectangle object is empty.
          * @returns A value of true if the Rectangle object's width or height is less than or equal to 0; otherwise false.
-         * @version Lark 1.0
-         * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 确定此 Rectangle 对象是否为空。
          * @returns 如果 Rectangle 对象的宽度或高度小于等于 0，则返回 true 值，否则返回 false。
-         * @version Lark 1.0
-         * @platform Web,Native
          */
         public isEmpty():boolean {
             return this.width <= 0 || this.height <= 0;
@@ -439,14 +367,10 @@ module egret {
         /**
          * @language en_US
          * Sets all of the Rectangle object's properties to 0. A Rectangle object is empty if its width or height is less than or equal to 0.
-         * @version Lark 1.0
-         * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 将 Rectangle 对象的所有属性设置为 0。
-         * @version Lark 1.0
-         * @platform Web,Native
          */
         public setEmpty():void {
             this.x = 0;
@@ -459,15 +383,11 @@ module egret {
          * @language en_US
          * Returns a new Rectangle object with the same values for the x, y, width, and height properties as the original Rectangle object.
          * @returns A new Rectangle object with the same values for the x, y, width, and height properties as the original Rectangle object.
-         * @version Lark 1.0
-         * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 返回一个新的 Rectangle 对象，其 x、y、width 和 height 属性的值与原始 Rectangle 对象的对应值相同。
          * @returns 新的 Rectangle 对象，其 x、y、width 和 height 属性的值与原始 Rectangle 对象的对应值相同。
-         * @version Lark 1.0
-         * @platform Web,Native
          */
         public clone():Rectangle {
             return new Rectangle(this.x, this.y, this.width, this.height);

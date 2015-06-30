@@ -33,56 +33,40 @@ module egret {
      * @language en_US
      * The HorizontalAlign class defines the possible values for the horizontal alignment.
      * @see egret.TextField#textAlign
-     * @version Lark 1.0
-     * @platform Web,Native
      */
     /**
      * @language zh_CN
      * HorizontalAlign 类为水平对齐方式定义可能的值。
      * @see egret.TextField#textAlign
-     * @version Lark 1.0
-     * @platform Web,Native
      */
     export class HorizontalAlign{
         /**
          * @language en_US
          * Horizontally align content to the left of the container.
-         * @version Lark 1.0
-         * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 将内容与容器的左侧对齐。
-         * @version Lark 1.0
-         * @platform Web,Native
          */
         public static LEFT:string = "left";
 
         /**
          * @language en_US
          * Horizontally align content to the right of the container.
-         * @version Lark 1.0
-         * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 将内容与容器的右侧对齐。
-         * @version Lark 1.0
-         * @platform Web,Native
          */
         public static RIGHT:string = "right";
 
         /**
          * @language en_US
          * Horizontally align content in the center of the container.
-         * @version Lark 1.0
-         * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 在容器的水平中心对齐内容。
-         * @version Lark 1.0
-         * @platform Web,Native
          */
         public static CENTER: string = "center";
 

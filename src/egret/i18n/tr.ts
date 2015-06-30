@@ -48,8 +48,6 @@ module egret.sys {
      * @param code 要查询的字符串代码
      * @param args 替换字符串中{0}标志的参数列表
      * @returns 返回拼接后的字符串
-     * @version Lark 1.0
-     * @platform Web,Native
      */
     export function tr(code:number,...args):string{
         var text = $locale_strings[$language][code];

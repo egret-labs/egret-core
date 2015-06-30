@@ -37,8 +37,6 @@ module egret {
      * @see egret.Graphics#createLinearGradient()
      * @see egret.Graphics#createRadialGradient()
      * @see egret.Shape
-     * @version Lark 1.0
-     * @platform Web,Native
      */
     /**
      * @private
@@ -47,8 +45,6 @@ module egret {
      * @see egret.Graphics#createLinearGradient()
      * @see egret.Graphics#createRadialGradient()
      * @see egret.Shape
-     * @version Lark 1.0
-     * @platform Web,Native
      */
     export interface GraphicsGradient {
         /**
@@ -57,16 +53,12 @@ module egret {
          * error is thrown, if the color can't be parsed as a color, an error is thrown.
          * @param offset the value between 0 and 1.
          * @param color the color to add.
-         * @version Lark 1.0
-         * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 添加一个由偏移值和颜色值指定的断点到渐变。如果偏移值不在0到1之间，将抛出错误，如果 color 不能被解析为有效的颜色值，也将抛出错误。
          * @param offset 0到1之间的值
          * @param color 要设置颜色值。
-         * @version Lark 1.0
-         * @platform Web,Native
          */
         addColorStop(offset:number, color:string): void;
     }

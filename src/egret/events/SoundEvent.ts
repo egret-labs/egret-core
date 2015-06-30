@@ -56,8 +56,6 @@ module egret {
          * @param type  The type of the event, accessible as Event.type.
          * @param bubbles  Determines whether the Event object participates in the bubbling stage of the event flow. The default value is false.
          * @param cancelable Determines whether the Event object can be canceled. The default values is false.
-         * @version Lark 1.0
-         * @platform Web,Native
          */
         /**
          * @language zh_CN
@@ -65,8 +63,6 @@ module egret {
          * @param type  事件的类型，可以作为 Event.type 访问。
          * @param bubbles  确定 Event 对象是否参与事件流的冒泡阶段。默认值为 false。
          * @param cancelable 确定是否可以取消 Event 对象。默认值为 false。
-         * @version Lark 1.0
-         * @platform Web,Native
          */
         public constructor(type:string, bubbles:boolean = false, cancelable:boolean = false) {
             super(type, bubbles, cancelable);

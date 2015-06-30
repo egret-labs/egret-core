@@ -108,14 +108,10 @@ module egret {
         /**
          * @language en_US
          * A string to display in the text field.
-         * @version Lark 1.0
-         * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 要显示的文本内容
-         * @version Lark 1.0
-         * @platform Web,Native
          */
         public get text():string {
             return this.$BitmapText[Keys.text];
@@ -194,15 +190,11 @@ module egret {
          * @language en_US
          * The name of the font to use, or a comma-separated list of font names.
          * @default "sans-serif"
-         * @version Lark 1.0
-         * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 要使用的字体的名称或用逗号分隔的字体名称列表。
          * @default "sans-serif"
-         * @version Lark 1.0
-         * @platform Web,Native
          */
         public get font():BitmapFont {
             return this.$BitmapText[Keys.font];
@@ -224,15 +216,11 @@ module egret {
          * @language en_US
          * An integer representing the amount of vertical space between lines.
          * @default 0
-         * @version Lark 1.0
-         * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 一个整数，表示行与行之间的垂直间距量
          * @default 0
-         * @version Lark 1.0
-         * @platform Web,Native
          */
         public get lineSpacing():number {
             return this.$BitmapText[Keys.lineSpacing];
@@ -251,15 +239,11 @@ module egret {
          * @language en_US
          * An integer representing the amount of vertical space between lines.
          * @default 0
-         * @version Lark 1.0
-         * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 一个整数，表示行与行之间的垂直间距量
          * @default 0
-         * @version Lark 1.0
-         * @platform Web,Native
          */
         public get letterSpacing():number {
             return this.$BitmapText[Keys.letterSpacing];

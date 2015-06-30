@@ -48,7 +48,6 @@ module egret {
      *
      * @see egret.Texture
      * @version egret 1.0
-     * @platform Web,Native
      */
     /**
      * @language zh_CN
@@ -61,7 +60,6 @@ module egret {
      *
      * @see egret.Texture
      * @version egret 1.0
-     * @platform Web,Native
      */
     export class Bitmap extends DisplayObject {
 
@@ -70,14 +68,12 @@ module egret {
          * Initializes a Bitmap object to refer to the specified BitmapData object.
          * @param bitmapData The BitmapData object being referenced.
          * @version egret 1.0
-         * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 创建一个引用指定 BitmapData 实例的 Bitmap 对象
          * @param bitmapData 被引用的 BitmapData 实例
          * @version egret 1.0
-         * @platform Web,Native
          */
         public constructor(bitmapData?:Texture) {
             super();
@@ -101,13 +97,11 @@ module egret {
          * @language en_US
          * bitmapData The Texture object being referenced.
          * @version egret 1.0
-         * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 被引用的 Texture 对象。
          * @version egret 1.0
-         * @platform Web,Native
          */
         public get texture():Texture {
             return this.$bitmapData;
@@ -128,18 +122,12 @@ module egret {
          * Notice: This property is valid only when <code>fillMode</code>
          * is <code>BitmapFillMode.SCALE</code>.
          *
-         * @version Lark 1.0
-         * @version Swan 1.0
-         * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 矩形区域，它定义素材对象的九个缩放区域。
          * 注意:此属性仅在<code>fillMode</code>为<code>BitmapFillMode.SCALE</code>时有效。
          *
-         * @version Lark 1.0
-         * @version Swan 1.0
-         * @platform Web,Native
          */
         public get scale9Grid():egret.Rectangle {
             return this._scale9Grid;
@@ -184,14 +172,12 @@ module egret {
          * Whether or not the bitmap is smoothed when scaled.
          * @default true。
          * @version egret 1.0
-         * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 控制在缩放时是否对位图进行平滑处理。
          * @default true。
          * @version egret 1.0
-         * @platform Web,Native
          */
         public get smoothing():boolean {
             return this.$smoothing;

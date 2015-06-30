@@ -32,14 +32,10 @@ module egret {
     /**
      * @language en_US
      * The Capabilities class provides properties that describe the system and runtime that are hosting the application.
-     * @version Lark 1.0
-     * @platform Web,Native
      */
     /**
      * @language zh_CN
      * Capabilities 类提供一些属性，这些属性描述了承载应用程序的系统和运行时。
-     * @version Lark 1.0
-     * @platform Web,Native
      */
     export class Capabilities {
 
@@ -60,8 +56,6 @@ module egret {
          * <li>Japanese      ja</li>
          * <li>Korean        ko</li>
          * </ul>
-         * @version Lark 1.0
-         * @platform Web,Native
          */
         /**
          * @language zh_CN
@@ -75,8 +69,6 @@ module egret {
          * <li>日语      ja</li>
          * <li>韩语      ko</li>
          * </ul>
-         * @version Lark 1.0
-         * @platform Web,Native
          */
         public static get language():string{
             return Capabilities.$language;
@@ -90,14 +82,10 @@ module egret {
         /**
          * @language en_US
          * Specifies whether the system is running in a mobile device.(such as a mobile phone or tablet)
-         * @version Lark 1.0
-         * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 表示程序内容是否运行在移动设备中（例如移动电话或平板电脑）。
-         * @version Lark 1.0
-         * @platform Web,Native
          */
         public static get isMobile():boolean{
             return Capabilities.$isMobile;
@@ -119,8 +107,6 @@ module egret {
          * <li>Mac Desktop       "Mac OS"</li>
          * <li>Unknown OS        "Unknown"</li>
          * </ul>
-         * @version Lark 1.0
-         * @platform Web,Native
          */
         /**
          * @language zh_CN
@@ -133,8 +119,6 @@ module egret {
          * <li>苹果桌面操作系统     "Mac OS"</li>
          * <li>未知操作系统        "Unknown"</li>
          * </ul>
-         * @version Lark 1.0
-         * @platform Web,Native
          */
         public static get os():string{
             return Capabilities.$os;
@@ -149,14 +133,10 @@ module egret {
         /**
          * @language en_US
          * Specifies whether the system supports the geolocation services
-         * @version Lark 1.0
-         * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 指示系统是否支持地理位置服务
-         * @version Lark 1.0
-         * @platform Web,Native
          */
         public static get hasGeolocation(): boolean {
             return Capabilities.$hasGeolocation;
@@ -171,14 +151,10 @@ module egret {
         /**
          * @language en_US
          * Specifies whether the system supports detecting the device orientation.
-         * @version Lark 1.0
-         * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 指示系统是否支持检测设备方向
-         * @version Lark 1.0
-         * @platform Web,Native
          */
         public static get hasOrientation(): boolean {
             return Capabilities.$hasOrientation;
@@ -193,14 +169,10 @@ module egret {
         /**
          * @language en_US
          * Specifies whether the system supports the motion Sensor
-         * @version Lark 1.0
-         * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 指示系统是否支持运动传感器
-         * @version Lark 1.0
-         * @platform Web,Native
          */
         public static get hasMotion(): boolean {
             return Capabilities.$hasMotion;

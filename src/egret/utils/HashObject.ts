@@ -39,28 +39,20 @@ module egret {
      * @language en_US
      * The HashObject class is the base class for all objects in the Lark framework.The HashObject
      * class includes a hashCode property, which is a unique identification number of the instance.
-     * @version Lark 1.0
-     * @platform Web,Native
      */
     /**
      * @language zh_CN
      * Lark顶级对象。框架内所有对象的基类，为对象实例提供唯一的hashCode值。
-     * @version Lark 1.0
-     * @platform Web,Native
      */
     export class HashObject {
 
         /**
          * @language en_US
          * Initializes a HashObject
-         * @version Lark 1.0
-         * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 创建一个 HashObject 对象
-         * @version Lark 1.0
-         * @platform Web,Native
          */
         public constructor() {
             this.$hashCode = $hashCount++;
@@ -73,14 +65,10 @@ module egret {
         /**
          * @language en_US
          * a unique identification number assigned to this instance.
-         * @version Lark 1.0
-         * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 返回此对象唯一的哈希值,用于唯一确定一个对象。hashCode为大于等于1的整数。
-         * @version Lark 1.0
-         * @platform Web,Native
          */
         public get hashCode():number {
             return this.$hashCode;

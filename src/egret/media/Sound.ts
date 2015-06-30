@@ -36,8 +36,6 @@ module egret {
      * More detailed control of the sound is performed through the SoundChannel
      *
      * @event egret.Event.COMPLETE Emit when the audio resource is loaded and ready to play
-     * @version Lark 1.0
-     * @platform Web,Native
      * @event egret.SoundEvent.SOUND_COMPLETE 在声音完成播放后调度。
      */
     /**
@@ -46,8 +44,6 @@ module egret {
      * 可通过 SoundChannel 对声音执行更精细的控制，如控制音量和监控播放进度。
      *
      * @event egret.Event.COMPLETE 音频加载完成时抛出
-     * @version Lark 1.0
-     * @platform Web,Native
      * @event egret.SoundEvent.SOUND_COMPLETE 在声音完成播放后调度。
      */
     export class Sound extends egret.EventDispatcher {
@@ -123,16 +119,12 @@ module egret {
          * Generates a new SoundChannel object to play back the sound.
          * @param loop Defines should play the audio again when the audio is ended. (default = false)
          * @param position The initial position in Millisecond at which playback should start, (default = 0)
-         * @version Lark 1.0
-         * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 生成一个新的 SoundChannel 对象来播放该声音。此方法返回 SoundChannel 对象，访问该对象可停止声音调整音量。
          * @param loop 是否需要循环播放，默认值是 false
          * @param position 应开始播放的初始位置（以毫秒为单位），默认值是 0
-         * @version Lark 1.0
-         * @platform Web,Native
          */
         public play(loop:boolean = false, position:number = 0):void {
             var sound = this.audio;
@@ -228,7 +220,6 @@ module egret {
          * its only parameter and must return nothing, as this example shows: function(evt:Event):void  The function can
          * have any name.
          * @param thisObject the listener function's "this"
-         * @version Lark 1.0
          * @platform h5
          */
         /**
@@ -238,7 +229,6 @@ module egret {
          * @param listener 处理事件的侦听器函数。此函数必须接受 Event 对象作为其唯一的参数，并且不能返回任何结果，
          * 如下面的示例所示： function(evt:Event):void 函数可以有任何名称。
          * @param thisObject 侦听函数绑定的this对象
-         * @version Lark 1.0
          * @platform h5
          */
         public addEventListener(type:string, listener:(event:Event)=>void, thisObject:any):void {

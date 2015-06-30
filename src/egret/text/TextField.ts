@@ -253,15 +253,11 @@ module egret {
          * @language en_US
          * The name of the font to use, or a comma-separated list of font names.
          * @default "sans-serif"
-         * @version Lark 1.0
-         * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 要使用的字体的名称或用逗号分隔的字体名称列表。
          * @default "sans-serif"
-         * @version Lark 1.0
-         * @platform Web,Native
          */
         public get fontFamily():string {
             return this.$TextField[sys.TextKeys.fontFamily];
@@ -280,15 +276,11 @@ module egret {
          * @language en_US
          * The size in pixels of text
          * @default 30
-         * @version Lark 1.0
-         * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 文本的字号大小。
          * @default 30
-         * @version Lark 1.0
-         * @platform Web,Native
          */
         public get size():number {
             return this.$TextField[sys.TextKeys.fontSize];
@@ -328,15 +320,11 @@ module egret {
          * @language en_US
          * Specifies whether the text is boldface.
          * @default false
-         * @version Lark 1.0
-         * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 是否显示为粗体。
          * @default false
-         * @version Lark 1.0
-         * @platform Web,Native
          */
         public get bold():boolean {
             return this.$TextField[sys.TextKeys.bold];
@@ -356,15 +344,11 @@ module egret {
          * @language en_US
          * Determines whether the text is italic font.
          * @default false
-         * @version Lark 1.0
-         * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 是否显示为斜体。
          * @default false
-         * @version Lark 1.0
-         * @platform Web,Native
          */
         public get italic():boolean {
             return this.$TextField[sys.TextKeys.italic];
@@ -406,15 +390,11 @@ module egret {
          * @language en_US
          * Horizontal alignment of text.
          * @default：lark.HorizontalAlign.LEFT
-         * @version Lark 1.0
-         * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 文本的水平对齐方式。
          * @default：lark.HorizontalAlign.LEFT
-         * @version Lark 1.0
-         * @platform Web,Native
          */
         public get textAlign():string {
             return this.$TextField[sys.TextKeys.textAlign];
@@ -433,15 +413,11 @@ module egret {
          * @language en_US
          * Vertical alignment of text.
          * @default：lark.VerticalAlign.TOP
-         * @version Lark 1.0
-         * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 文字的垂直对齐方式。
          * @default：lark.VerticalAlign.TOP
-         * @version Lark 1.0
-         * @platform Web,Native
          */
         public get verticalAlign():string {
             return this.$TextField[sys.TextKeys.verticalAlign];
@@ -460,15 +436,11 @@ module egret {
          * @language en_US
          * An integer representing the amount of vertical space between lines.
          * @default 0
-         * @version Lark 1.0
-         * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 一个整数，表示行与行之间的垂直间距量
          * @default 0
-         * @version Lark 1.0
-         * @platform Web,Native
          */
         public get lineSpacing():number {
             return this.$TextField[sys.TextKeys.lineSpacing];
@@ -487,15 +459,11 @@ module egret {
          * @language en_US
          * Color of the text.
          * @default 0x000000
-         * @version Lark 1.0
-         * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 文本颜色
          * @default 0x000000
-         * @version Lark 1.0
-         * @platform Web,Native
          */
         public get textColor():number {
             return this.$TextField[sys.TextKeys.textColor];
@@ -517,16 +485,12 @@ module egret {
          * A Boolean value that indicates whether the text field has word wrap. If the value of wordWrap is true, the text
          * field has word wrap; if the value is false, the text field does not have word wrap.
          * @default true
-         * @version Lark 1.0
-         * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 一个布尔值，表示文本字段是否自动换行。如果 wordWrap 的值为 true，则该文本字段自动换行；
          * 如果值为 false，则该文本字段不自动换行,如果同时显式设置过宽度，超出宽度的部分将被截断。
          * @default true
-         * @version Lark 1.0
-         * @platform Web,Native
          */
         public get wordWrap():boolean {
             return this.$TextField[sys.TextKeys.wordWrap];
