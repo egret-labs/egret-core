@@ -809,7 +809,10 @@ module egret {
 
         $setSkewX(value:number):void {
             //value = +value || 0;
+
             value = clampRotation(value);
+            value = value / 180 * Math.PI;
+
             var values = this.$DisplayObject;
             if (value == values[Keys.skewX]) {
                 return;
@@ -834,6 +837,8 @@ module egret {
         $setSkewY(value:number):void {
             //value = +value || 0;
             value = clampRotation(value);
+            value = value / 180 * Math.PI;
+
             var values = this.$DisplayObject;
             if (value == values[Keys.skewY]) {
                 return;
