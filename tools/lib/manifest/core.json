@@ -119,6 +119,7 @@
 
         "egret/system/MainContext.ts",
         "egret/localStorage/localStorage.ts",
+        "egret/localStorage/web/WebLocalStorage.ts",
         "egret/external/ExternalInterface.ts",
 
         "egret/filters/BitmapFilterQuality.ts",

@@ -111,21 +111,21 @@ module egret {
         /**
          * @inheritDoc
          */
-        public addEventListener(type:string, listener:(event:Event)=>void, thisObject:any, useCapture?:boolean, priority?:number):void {
+        public addEventListener(type:string, listener:Function, thisObject:any, useCapture?:boolean, priority?:number):void {
             this.$addListener(type, listener, thisObject, useCapture, priority);
         }
 
         /**
          * @inheritDoc
          */
-        public once(type:string, listener:(event:Event)=>void, thisObject:any, useCapture?:boolean, priority?:number):void {
+        public once(type:string, listener:Function, thisObject:any, useCapture?:boolean, priority?:number):void {
             this.$addListener(type, listener, thisObject, useCapture, priority, true);
         }
 
         /**
          * @private
          */
-        $addListener(type:string, listener:(event:Event)=>void, thisObject:any, useCapture?:boolean, priority?:number, emitOnce?:boolean):void {
+        $addListener(type:string, listener:Function, thisObject:any, useCapture?:boolean, priority?:number, emitOnce?:boolean):void {
             if (DEBUG && !listener) {
                 $error(1003, "listener");
             }
@@ -165,7 +165,7 @@ module egret {
         /**
          * @inheritDoc
          */
-        public removeEventListener(type:string, listener:(event:Event)=>void, thisObject:any, useCapture?:boolean):void {
+        public removeEventListener(type:string, listener:Function, thisObject:any, useCapture?:boolean):void {
 
             var values = this.$EventDispatcher;
             var eventMap:Object = useCapture ? values[Keys.captureEventsMap] : values[Keys.eventsMap];
@@ -278,7 +278,7 @@ module egret.sys {
         /**
          * @private
          */
-        listener: (event:Event)=>void;
+        listener: Function;
         /**
          * @private
          */

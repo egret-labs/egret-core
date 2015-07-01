@@ -114,7 +114,7 @@ module egret {
          * @see #once()
          * @see #removeListener()
          */
-        addEventListener(type:string, listener:(event:Event)=>void, thisObject:any, useCapture?:boolean, priority?:number):void;
+        addEventListener(type:string, listener:Function, thisObject:any, useCapture?:boolean, priority?:number):void;
         /**
          * @language en_US
          * Registers an event listener object with an EventDispatcher object so that the listener receives notification of an
@@ -151,7 +151,7 @@ module egret {
          * @see #on()
          * @see #removeListener()
          */
-        once(type:string, listener:(event:Event)=>void, thisObject:any, useCapture?:boolean, priority?:number):void;
+        once(type:string, listener:Function, thisObject:any, useCapture?:boolean, priority?:number):void;
         /**
          * @language en_US
          * Removes a listener from the EventDispatcher object. If there is no matching listener registered with the
@@ -172,7 +172,7 @@ module egret {
          * @param useCapture 指出是为捕获阶段还是为冒泡阶段注册了侦听器。如果为捕获阶段以及冒泡阶段注册了侦听器，则需要对
          * removeListener() 进行两次调用才能将这两个侦听器删除：一次调用将 useCapture 设置为 true，另一次调用将 useCapture 设置为 false。。
          */
-        removeEventListener(type:string, listener:(event:Event)=>void, thisObject:any, useCapture?:boolean):void;
+        removeEventListener(type:string, listener:Function, thisObject:any, useCapture?:boolean):void;
 
         /**
          * @language en_US

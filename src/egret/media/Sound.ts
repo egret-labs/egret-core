@@ -231,7 +231,7 @@ module egret {
          * @param thisObject 侦听函数绑定的this对象
          * @platform h5
          */
-        public addEventListener(type:string, listener:(event:Event)=>void, thisObject:any):void {
+        public addEventListener(type:string, listener:Function, thisObject:any):void {
             super.addEventListener(type, listener, thisObject);
 
             var self = this;
@@ -282,7 +282,7 @@ module egret {
          * 如下面的示例所示： function(evt:Event):void 函数可以有任何名称。
          * @param thisObject 侦听函数绑定的this对象
          */
-        public removeEventListener(type:string, listener:(event:Event)=>void, thisObject:any):void {
+        public removeEventListener(type:string, listener:Function, thisObject:any):void {
             super.removeEventListener(type, listener, thisObject);
 
             var self = this;

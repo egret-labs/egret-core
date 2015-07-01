@@ -879,6 +879,7 @@ module egret {
         $setWidth(value:number):void {
             this.$DisplayObject[Keys.explicitWidth] = isNaN(value) ? NONE : value;
 
+            //value = +value || 0;
             if (value < 0) {
                 return;
             }
@@ -1179,6 +1180,10 @@ module egret {
         }
 
         public set alpha(value:number) {
+            this.$setAlpha(value);
+        }
+
+        $setAlpha(value:number):void {
             //value = +value || 0;
             if (value == this.$alpha) {
                 return;
@@ -1805,7 +1810,7 @@ module egret {
         /**
          * @private
          */
-        $addListener(type:string, listener:(event:Event)=>void, thisObject:any, useCapture?:boolean, priority?:number, emitOnce?:boolean):void {
+        $addListener(type:string, listener:Function, thisObject:any, useCapture?:boolean, priority?:number, emitOnce?:boolean):void {
             super.$addListener(type, listener, thisObject, useCapture, priority, emitOnce);
             var isEnterFrame = (type == Event.ENTER_FRAME);
             if (isEnterFrame || type == Event.RENDER) {
@@ -1819,7 +1824,7 @@ module egret {
         /**
          * @inheritDoc
          */
-        public removeEventListener(type:string, listener:(event:Event)=>void, thisObject:any, useCapture?:boolean):void {
+        public removeEventListener(type:string, listener:Function, thisObject:any, useCapture?:boolean):void {
             super.removeEventListener(type, listener, thisObject, useCapture);
             var isEnterFrame:boolean = (type == Event.ENTER_FRAME);
             if ((isEnterFrame || type == Event.RENDER) && !this.hasEventListener(type)) {

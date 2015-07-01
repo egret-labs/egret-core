@@ -834,7 +834,7 @@ module egret {
         }
 
         $setWidth(value:number):void {
-            //value = +value || 0;
+            value = +value;
             var values = this.$TextField;
             if (value < 0 || value == values[sys.TextKeys.textFieldWidth]) {
                 return;
@@ -846,7 +846,7 @@ module egret {
         }
 
         $setHeight(value:number):void {
-            //value = +value || 0;
+            value = +value;
             var values = this.$TextField;
             if (value < 0 || value == values[sys.TextKeys.textFieldHeight]) {
                 return;
