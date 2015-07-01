@@ -224,31 +224,36 @@ module egret {
         $render(context:sys.RenderContext):void {
             var bitmapData = this.$bitmapData;
             if (bitmapData) {
-                context.imageSmoothingEnabled = this.$smoothing;
-
-                var offsetX:number = Math.round(bitmapData._offsetX);
-                var offsetY:number = Math.round(bitmapData._offsetY);
-                var bitmapWidth:number = bitmapData._bitmapWidth || bitmapData._textureWidth;
-                var bitmapHeight:number = bitmapData._bitmapHeight || bitmapData._textureHeight;
-
                 var destW:number = !isNone(this.$Bitmap[Keys.explicitBitmapWidth]) ? this.$Bitmap[Keys.explicitBitmapWidth] : (bitmapData._bitmapWidth || bitmapData._textureWidth);
                 var destH:number = !isNone(this.$Bitmap[Keys.explicitBitmapHeight]) ? this.$Bitmap[Keys.explicitBitmapHeight] : (bitmapData._bitmapHeight || bitmapData._textureHeight);
 
-                if (this.scale9Grid) {
-                    Bitmap.$drawScale9GridImage(context, bitmapData, this.scale9Grid, destW, destH);
-                }
-                else if (this.fillMode == egret.BitmapFillMode.SCALE) {
-                    context.drawImage(bitmapData._bitmapData, bitmapData._bitmapX, bitmapData._bitmapY,
-                        bitmapWidth, bitmapHeight, offsetX, offsetY, destW, destH);
-                }
-                else {
+                Bitmap.$drawImage(context, this.$bitmapData, destW, destH, this.scale9Grid, this.fillMode, this.$smoothing);
+            }
+        }
 
-                    var pattern = context.createPattern(bitmapData._bitmapData, "repeat");
-                    context.beginPath();
-                    context.rect(0, 0, destW, destH);
-                    context.fillStyle = pattern;
-                    context.fill();
-                }
+        static $drawImage(context:sys.RenderContext, texture:egret.Texture, destW:number, destH:number, scale9Grid:egret.Rectangle, fillMode:string, smoothing:boolean):void {
+            var bitmapData = texture;
+            context.imageSmoothingEnabled = smoothing;
+
+            var offsetX:number = Math.round(bitmapData._offsetX);
+            var offsetY:number = Math.round(bitmapData._offsetY);
+            var bitmapWidth:number = bitmapData._bitmapWidth || bitmapData._textureWidth;
+            var bitmapHeight:number = bitmapData._bitmapHeight || bitmapData._textureHeight;
+
+            if (scale9Grid) {
+                Bitmap.$drawScale9GridImage(context, bitmapData, scale9Grid, destW, destH);
+            }
+            else if (fillMode == egret.BitmapFillMode.SCALE) {
+                context.drawImage(bitmapData._bitmapData, bitmapData._bitmapX, bitmapData._bitmapY,
+                    bitmapWidth, bitmapHeight, offsetX, offsetY, destW, destH);
+            }
+            else {
+
+                var pattern = context.createPattern(bitmapData._bitmapData, "repeat");
+                context.beginPath();
+                context.rect(0, 0, destW, destH);
+                context.fillStyle = pattern;
+                context.fill();
             }
         }
 
@@ -256,7 +261,7 @@ module egret {
          * @private
          * 绘制九宫格位图
          */
-        static $drawScale9GridImage(context:egret.sys.RenderContext, texture:egret.Texture,
+        private static $drawScale9GridImage(context:egret.sys.RenderContext, texture:egret.Texture,
                                     scale9Grid:egret.Rectangle, surfaceWidth?:number, surfaceHeight?:number):void {
             var image:egret.BitmapData = texture._bitmapData
             var imageWidth:number = texture._bitmapWidth || texture._textureWidth;

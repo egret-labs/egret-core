@@ -259,18 +259,20 @@ module egret.gui {
 					destH = bitmapData._textureHeight;
 				}
 
-				var offsetX:number = Math.round(bitmapData._offsetX);
-				var offsetY:number = Math.round(bitmapData._offsetY);
-				var bitmapWidth:number = bitmapData._bitmapWidth || bitmapData._textureWidth;
-				var bitmapHeight:number = bitmapData._bitmapHeight || bitmapData._textureHeight;
-				var scale9Grid = this.scale9Grid || bitmapData["scale9Grid"];
-				if (scale9Grid ) {
-					Bitmap.$drawScale9GridImage(context, bitmapData, scale9Grid, destW, destH);
-				}
-				else {
-					context.drawImage(bitmapData._bitmapData, bitmapData._bitmapX, bitmapData._bitmapY,
-						bitmapWidth, bitmapHeight, offsetX, offsetY, destW, destH);
-				}
+				Bitmap.$drawImage(context, bitmapData, destW, destH, this.scale9Grid || bitmapData["scale9Grid"], this.fillMode, true);
+
+				//var offsetX:number = Math.round(bitmapData._offsetX);
+				//var offsetY:number = Math.round(bitmapData._offsetY);
+				//var bitmapWidth:number = bitmapData._bitmapWidth || bitmapData._textureWidth;
+				//var bitmapHeight:number = bitmapData._bitmapHeight || bitmapData._textureHeight;
+				//var scale9Grid = this.scale9Grid || bitmapData["scale9Grid"];
+				//if (scale9Grid ) {
+				//	Bitmap.$drawScale9GridImage(context, bitmapData, scale9Grid, destW, destH);
+				//}
+				//else {
+				//	context.drawImage(bitmapData._bitmapData, bitmapData._bitmapX, bitmapData._bitmapY,
+				//		bitmapWidth, bitmapHeight, offsetX, offsetY, destW, destH);
+				//}
 			}
 			super.$render(context);
 		}
