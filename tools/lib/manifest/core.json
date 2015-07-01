@@ -25,6 +25,7 @@
         "egret/utils/setInterval.ts",
         "egret/utils/Logger.ts",
         "egret/utils/hasDefinition.ts",
+        "egret/utils/getOption.ts",
         "egret/events/IEventDispatcher.ts",
         "egret/events/EventDispatcher.ts",
         "egret/utils/Timer.ts",
@@ -115,6 +116,10 @@
 
         "egret/tween/Tween.ts",
         "egret/tween/Ease.ts",
+
+        "egret/system/MainContext.ts",
+        "egret/localStorage/localStorage.ts",
+        "egret/external/ExternalInterface.ts",
 
         "egret/filters/BitmapFilterQuality.ts",
         "egret/filters/Filter.ts",

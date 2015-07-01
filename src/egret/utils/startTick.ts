@@ -45,7 +45,7 @@ module egret {
      * 若回调方法返回值为true，其作用与TimerEvent.updateAfterEvent()类似，将会忽略帧频限制，在此方法处理完成后立即重绘屏幕。
      * @param thisObject 回调方法的this对象引用。
      */
-    export function startTick(callBack:(advancedTime:number)=>boolean,thisObject:any):void {
+    export function startTick(callBack:Function,thisObject:any):void {
         if (DEBUG && !callBack) {
             $error(1003, "callBack");
         }

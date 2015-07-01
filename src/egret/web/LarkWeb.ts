@@ -86,6 +86,9 @@ module egret.web {
         var touch = new egret.sys.TouchHandler(stage);
         var webTouch = new WebTouchHandler(touch, canvas);
         var player = new egret.sys.Player(surface.renderContext, stage, entryClassName);
+
+        egret.MainContext.instance.stage = stage;
+
         var webInput = new HTMLInput();
 
         if(DEBUG){

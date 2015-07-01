@@ -203,6 +203,18 @@ module egret {
 
 
         /**
+         * 游戏激活
+         * @constant {string} egret.Event.ACTIVATE
+         */
+        public static ACTIVATE:string = "activate";
+
+        /**
+         * 取消激活
+         * @constant {string} egret.Event.DEACTIVATE
+         */
+        public static DEACTIVATE:string = "deactivate";
+
+        /**
          * Event.CLOSE 常量定义 close 事件对象的 type 属性的值。
          * @constant {string} egret.Event.CLOSE
          */

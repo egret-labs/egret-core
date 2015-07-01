@@ -262,7 +262,7 @@ module egret.sys {
          * @param timeStamp 
          * @returns 
          */
-        private onTick(dt:number):boolean {
+        private onTick(dt:number):void {
             var timeOffset = dt;
             if (timeOffset > 0) {
                 var previousVelocity = this.previousVelocity;
@@ -273,7 +273,6 @@ module egret.sys {
                 this.velocity = (this.currentPosition - this.previousPosition) / timeOffset;
                 this.previousPosition = this.currentPosition;
             }
-            return true;
         }
 
         /**

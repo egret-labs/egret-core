@@ -204,7 +204,7 @@ module egret {
         $update(advancedTime:number):boolean {
             this.lastCount -= 1000;
             if(this.lastCount>0){
-                return false;
+                return true;
             }
             this.lastCount += this.updateInterval;
             this._currentCount++;
@@ -214,7 +214,7 @@ module egret {
                 this.stop();
                 TimerEvent.emitTimerEvent(this,TimerEvent.TIMER_COMPLETE);
             }
-            return true;
+            return false;
         }
     }
 

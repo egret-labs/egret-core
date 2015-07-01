@@ -55,7 +55,7 @@ module egret {
         }
     }
 
-    function intervalUpdate(dt:number):boolean {
+    function intervalUpdate(dt:number):void {
         for (var key in setIntervalCache) {
             var data = setIntervalCache[key];
             data.delay -= dt;
@@ -64,7 +64,5 @@ module egret {
                 data.listener.apply(data.thisObject, data.params);
             }
         }
-
-        return true;
     }
 }

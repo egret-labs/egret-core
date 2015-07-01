@@ -172,7 +172,7 @@ module egret {
             }
         }
 
-        private static tick(delta, paused = false):boolean {
+        private static tick(delta, paused = false):void {
             var tweens:Tween[] = Tween._tweens.concat();
             for (var i = tweens.length - 1; i >= 0; i--) {
                 var tween:Tween = tweens[i];
@@ -181,7 +181,6 @@ module egret {
                 }
                 tween.tick(tween._useTicks ? 1 : delta);
             }
-            return true;
         }
 
         private static _register(tween:Tween, value:boolean):void {

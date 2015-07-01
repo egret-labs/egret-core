@@ -57,7 +57,7 @@ module egret {
          * @param thisObject {any} 帧回调函数的this对象
          * @param priority {number} 事件优先级，开发者请勿传递 Number.NEGATIVE_INFINITY 和 Number.POSITIVE_INFINITY
          */
-        public register(callBack:(advancedTime:number)=>boolean, thisObject:any, priority:number = 0):void {
+        public register(callBack:Function, thisObject:any, priority:number = 0):void {
             sys.$ticker.$startTick(callBack, thisObject);
         }
 
@@ -67,14 +67,14 @@ module egret {
          * @param listener {Function} 事件侦听函数
          * @param thisObject {any} 侦听函数的this对象
          */
-        public unregister(callBack:(advancedTime:number)=>boolean, thisObject:any):void {
+        public unregister(callBack:Function, thisObject:any):void {
             sys.$ticker.$stopTick(callBack, thisObject);
         }
 
         /**
          * @deprecated
          */
-        public setTimeScale():void {
+        public setTimeScale(scale:number):void {
             if (DEBUG) {
                 egret.Logger.fatalWithErrorId(1033);
             }
@@ -205,7 +205,7 @@ module egret.sys {
         /**
          * @private
          */
-        $startTick(callBack:(advancedTime:number)=>boolean, thisObject:any):void {
+        $startTick(callBack:Function, thisObject:any):void {
             var index = this.getTickIndex(callBack, thisObject);
             if (index != -1) {
                 return;
@@ -218,7 +218,7 @@ module egret.sys {
         /**
          * @private
          */
-        $stopTick(callBack:(timeStamp:number)=>boolean, thisObject:any):void {
+        $stopTick(callBack:Function, thisObject:any):void {
             var index = this.getTickIndex(callBack, thisObject);
             if (index == -1) {
                 return;
@@ -231,7 +231,7 @@ module egret.sys {
         /**
          * @private
          */
-        private getTickIndex(callBack:(timeStamp:number)=>boolean, thisObject:any):number {
+        private getTickIndex(callBack:Function, thisObject:any):number {
             var callBackList = this.callBackList;
             var thisObjectList = this.thisObjectList;
             for (var i = callBackList.length - 1; i >= 0; i--) {
@@ -302,7 +302,7 @@ module egret.sys {
             this.lastTime = timeStamp;
 
             for (var i = 0; i < length; i++) {
-                if (callBackList[i].call(thisObjectList[i], advancedTime)) {
+                if (!callBackList[i].call(thisObjectList[i], advancedTime)) {
                     requestRenderingFlag = true;
                 }
 

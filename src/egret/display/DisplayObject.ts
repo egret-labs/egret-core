@@ -795,6 +795,55 @@ module egret {
         }
 
         /**
+         * 表示DisplayObject的x方向斜切
+         * @member {number} egret.DisplayObject#skewX
+         * @default 0
+         */
+        public get skewX():number {
+            return this.$DisplayObject[Keys.skewX];
+        }
+
+        public set skewX(value:number) {
+            this.$setSkewX(value);
+        }
+
+        $setSkewX(value:number):void {
+            //value = +value || 0;
+            value = clampRotation(value);
+            var values = this.$DisplayObject;
+            if (value == values[Keys.skewX]) {
+                return;
+            }
+            values[Keys.skewX] = value;
+            this.invalidateMatrix();
+        }
+
+        /**
+         * 表示DisplayObject的y方向斜切
+         * @member {number} egret.DisplayObject#skewY
+         * @default 0
+         */
+        public get skewY():number {
+            return this.$DisplayObject[Keys.skewY];
+        }
+
+        public set skewY(value:number) {
+            this.$setSkewY(value);
+        }
+
+        $setSkewY(value:number):void {
+            //value = +value || 0;
+            value = clampRotation(value);
+            var values = this.$DisplayObject;
+            if (value == values[Keys.skewY]) {
+                return;
+            }
+            values[Keys.skewY] = value;
+            this.invalidateMatrix();
+
+        }
+
+        /**
          * @language en_US
          * Indicates the width of the display object, in pixels. The width is calculated based on the bounds of the content
          * of the display object. When you set the width property, the scaleX property is adjusted accordingly.

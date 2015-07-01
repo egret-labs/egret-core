@@ -86,7 +86,7 @@ module egret {
 
     }
 
-    function timeoutUpdate(dt:number):boolean {
+    function timeoutUpdate(dt:number):void {
         for (var key in setTimeoutCache) {
             var data = setTimeoutCache[key];
             data.delay -= dt;
@@ -96,7 +96,5 @@ module egret {
                 clearTimeout(key);
             }
         }
-
-        return true;
     }
 }

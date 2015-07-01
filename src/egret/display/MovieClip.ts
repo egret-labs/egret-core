@@ -317,7 +317,7 @@ module egret {
 
             var num:number = currentTime / frameIntervalTime;
             if (num < 1) {
-                return false;
+                return true;
             }
             while (num >= 1) {
                 num--;
@@ -346,7 +346,7 @@ module egret {
             self.constructFrame();
             self.handlePendingEvent();
 
-            return true;
+            return false;
         }
 
         private advanceFrame():void {
