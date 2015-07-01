@@ -239,6 +239,7 @@ module egret.gui {
                     rect.y = this._verticalScrollPosition;
                     rect.width = w;
                     rect.height = h;
+                    this.scrollRect = rect;
                 }
                 else{
                     this.scrollRect = new Rectangle(this._horizontalScrollPosition,

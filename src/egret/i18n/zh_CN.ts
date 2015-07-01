@@ -45,4 +45,5 @@ module egret {
     locale_strings[1010] = "属性 {0} 是只读的";
     locale_strings[1011] = "流错误。URL: {0}";
     locale_strings[1012] = "参数 {0} 的类型必须为 Class。";
+    locale_strings[1013] = "变量赋值为NaN，请查看代码！";
 }

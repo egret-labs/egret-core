@@ -44,5 +44,6 @@ module egret {
     locale_strings[1010] = "the property \"{0}\" is readonly";
     locale_strings[1011] = "Stream Error. URL: {0}";
     locale_strings[1012] = "The type of parameter {0} must be Class.";
+    locale_strings[1013] = "Variable assignment is NaN, please see the code!";
 
 }

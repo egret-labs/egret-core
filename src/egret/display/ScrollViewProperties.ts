@@ -27,47 +27,30 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 
+
 module egret {
     /**
-     * @language en_US
-     * A special member of the number data type that represents a value that is "not set".
-     * For example,if you set the width property of TextField to egret.NONE,which will cancel the explicit setting of this
-     * property and refresh the line breaks of the TextField.<br/>
-     * Because the isNaN() method has some serious performance problems, Lark uses egret.NONE to replace NaN.
+     * @private
      */
-    /**
-     * @language zh_CN
-     * 空数字。通常用于标识一个数值属性未被外部显式设置。例如对 TextField.width 赋值NONE，将会取消之前显式设置的宽度，从而让TextFiled自动测量一个合适的宽度。
-     * 框架内不直接使用NaN，是因为isNaN()方法有严重的性能问题。使用 isNone() 来作为显式设置的判断依据能获得非常高的运行性能。
-     */
-    export var NONE = NaN;//0x8000000;
+    export class ScrollViewProperties {
+        public _verticalScrollPolicy: string = "auto";
+        public _horizontalScrollPolicy: string = "auto";
+        public _scrollLeft = 0;
+        public _scrollTop: number = 0;
 
-    /**
-     * @language en_US
-     * Returns true if the value is egret.NONE(not set).
-     * @param value A numeric value or mathematical expression to evaluate.
-     */
-    /**
-     * @language zh_CN
-     * 判断数字是否为NONE
-     * @param value 要判断的数字
-     */
-    export function isNone(value:number):boolean{
-        return isNaN(value);
-        //value = +value;
-        //return value !== value;
-    }
+        public _hCanScroll:boolean = false;
+        public _vCanScroll:boolean = false;
 
-    export function isUndefined(value:any):boolean {
-        return typeof value === "undefined";
-    }
+        public _lastTouchPosition: egret.Point = new Point(0, 0);
+        public _touchStartPosition: egret.Point = new Point(0, 0);
+        public _scrollStarted: boolean = false;
+        public _lastTouchTime: number = 0;
+        public _lastTouchEvent: TouchEvent = null;
+        public _velocitys: Array<{ x: number; y: number }> = [];
+        public _isHTweenPlaying: boolean = false;
+        public _isVTweenPlaying: boolean = false;
+        public _hScrollTween: Tween = null;
+        public _vScrollTween: Tween = null;
 
-    export function getNumber(value:number):number {
-        if (DEBUG) {
-            if (isNaN(value)) {
-                egret.sys.tr(1013);
-            }
-        }
-        return +value || 0;;
     }
 }

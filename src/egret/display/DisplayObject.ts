@@ -618,7 +618,7 @@ module egret {
          * 设置x坐标
          */
         $setX(value:number):boolean {
-            //value = +value || 0;
+            value = egret.getNumber(value);
             var m = this.$DisplayObject[Keys.matrix];
             if (value == m.tx) {
                 return false;
@@ -666,7 +666,7 @@ module egret {
          * 设置y坐标
          */
         $setY(value:number):boolean {
-            //value = +value || 0;
+            value = egret.getNumber(value);
             var m = this.$DisplayObject[Keys.matrix];
             if (value == m.ty) {
                 return false;
@@ -707,7 +707,7 @@ module egret {
          * 设置水平缩放值
          */
         $setScaleX(value:number):boolean {
-            //value = +value || 0;
+            value = egret.getNumber(value);
             var values = this.$DisplayObject;
             if (value == values[Keys.scaleX]) {
                 return false;
@@ -747,7 +747,7 @@ module egret {
          * 设置垂直缩放值
          */
         $setScaleY(value:number):boolean {
-            //value = +value || 0;
+            value = egret.getNumber(value);
             if (value == this.$DisplayObject[Keys.scaleY]) {
                 return false;
             }
@@ -780,7 +780,7 @@ module egret {
         }
 
         public set rotation(value:number) {
-            //value = +value || 0;
+            value = egret.getNumber(value);
             value = clampRotation(value);
             var values = this.$DisplayObject;
             if (value == values[Keys.rotation]) {
@@ -808,7 +808,7 @@ module egret {
         }
 
         $setSkewX(value:number):void {
-            //value = +value || 0;
+            value = egret.getNumber(value);
 
             value = clampRotation(value);
             value = value / 180 * Math.PI;
@@ -835,7 +835,8 @@ module egret {
         }
 
         $setSkewY(value:number):void {
-            //value = +value || 0;
+            value = egret.getNumber(value);
+
             value = clampRotation(value);
             value = value / 180 * Math.PI;
 
@@ -884,21 +885,24 @@ module egret {
         $setWidth(value:number):void {
             this.$DisplayObject[Keys.explicitWidth] = isNaN(value) ? NONE : value;
 
-            //value = +value || 0;
+            value = +value;
             if (value < 0) {
                 return;
             }
-            var values = this.$DisplayObject;
-            var originalBounds = this.$getOriginalBounds();
-            var bounds = this.$getTransformedBounds(this.$parent, $TempRectangle);
-            var angle = values[Keys.rotation] / 180 * Math.PI;
-            var baseWidth = originalBounds.$getBaseWidth(angle);
-            if (!baseWidth) {
-                return;
+
+            if (false) {
+                var values = this.$DisplayObject;
+                var originalBounds = this.$getOriginalBounds();
+                var bounds = this.$getTransformedBounds(this.$parent, $TempRectangle);
+                var angle = values[Keys.rotation] / 180 * Math.PI;
+                var baseWidth = originalBounds.$getBaseWidth(angle);
+                if (!baseWidth) {
+                    return;
+                }
+                var baseHeight = originalBounds.$getBaseHeight(angle);
+                values[Keys.scaleY] = bounds.height / baseHeight;
+                values[Keys.scaleX] = value / baseWidth;
             }
-            var baseHeight = originalBounds.$getBaseHeight(angle);
-            values[Keys.scaleY] = bounds.height / baseHeight;
-            values[Keys.scaleX] = value / baseWidth;
             this.invalidateMatrix();
         }
 
@@ -938,21 +942,24 @@ module egret {
         $setHeight(value:number):void {
             this.$DisplayObject[Keys.explicitHeight] = isNaN(value) ? NONE : value;
 
-            //value = +value || 0;
+            value = +value;
             if (value < 0) {
                 return;
             }
-            var values = this.$DisplayObject;
-            var originalBounds = this.$getOriginalBounds();
-            var bounds = this.$getTransformedBounds(this.$parent, $TempRectangle);
-            var angle = values[Keys.rotation] / 180 * Math.PI;
-            var baseHeight = originalBounds.$getBaseHeight(angle);
-            if (!baseHeight) {
-                return;
+
+            if (false) {
+                var values = this.$DisplayObject;
+                var originalBounds = this.$getOriginalBounds();
+                var bounds = this.$getTransformedBounds(this.$parent, $TempRectangle);
+                var angle = values[Keys.rotation] / 180 * Math.PI;
+                var baseHeight = originalBounds.$getBaseHeight(angle);
+                if (!baseHeight) {
+                    return;
+                }
+                var baseWidth = originalBounds.$getBaseWidth(angle);
+                values[Keys.scaleY] = value / baseHeight;
+                values[Keys.scaleX] = bounds.width / baseWidth;
             }
-            var baseWidth = originalBounds.$getBaseWidth(angle);
-            values[Keys.scaleY] = value / baseHeight;
-            values[Keys.scaleX] = bounds.width / baseWidth;
             this.invalidateMatrix();
         }
 
@@ -976,7 +983,7 @@ module egret {
         }
 
         $setAnchorOffsetX(value:number):boolean {
-            //value = +value || 0;
+            value = egret.getNumber(value);
             if (value == this.$DisplayObject[Keys.anchorOffsetX]) {
                 return false;
             }
@@ -1004,7 +1011,7 @@ module egret {
         }
 
         $setAnchorOffsetY(value:number):boolean {
-            //value = +value || 0;
+            value = egret.getNumber(value);
             if (value == this.$DisplayObject[Keys.anchorOffsetY]) {
                 return false;
             }
@@ -1032,7 +1039,7 @@ module egret {
         }
 
         public $setAnchorX(value:number):boolean {
-            //value = +value || 0;
+            value = egret.getNumber(value);
             if (value == this.$DisplayObject[Keys.anchorX]) {
                 return false;
             }
@@ -1061,7 +1068,7 @@ module egret {
         }
 
         public $setAnchorY(value:number):boolean {
-            //value = +value || 0;
+            value = egret.getNumber(value);
             if (value == this.$DisplayObject[Keys.anchorY]) {
                 return false;
             }
@@ -1189,7 +1196,7 @@ module egret {
         }
 
         $setAlpha(value:number):void {
-            //value = +value || 0;
+            value = egret.getNumber(value);
             if (value == this.$alpha) {
                 return;
             }
@@ -1612,7 +1619,12 @@ module egret {
          * @param bounds 测量结果存储在这个矩形对象内
          */
         $measureContentBounds(bounds:Rectangle):void {
-
+            if (!isNone(this.$getExplicitWidth()) || !isNone(this.$getExplicitHeight())) {
+                this.$DisplayObject[Keys.contentBounds] = bounds;
+                var w:number = !isNone(this.$getExplicitWidth()) ? this.$getExplicitWidth() : 0;
+                var h:number = !isNone(this.$getExplicitHeight()) ? this.$getExplicitHeight() : 0;
+                bounds.setTo(0, 0, w, h);
+            }
         }
 
         /**
@@ -1772,7 +1784,7 @@ module egret {
          * @returns {boolean} 如果显示对象与指定的点重叠或相交，则为 true；否则为 false。
          */
         public hitTestPoint(x:number, y:number, shapeFlag?:boolean):boolean {
-            return this.$hitTest(x, y, shapeFlag) == this;
+            return !!this.$hitTest(x, y, shapeFlag);
         }
 
         /**

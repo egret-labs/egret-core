@@ -29,167 +29,220 @@
 
 
 module egret {
-
     /**
-     * @private
-     */
-    const enum Keys {
-        scrollPolicyV,
-        scrollPolicyH,
-        autoHideTimer,
-        touchStartX,
-        touchStartY,
-        touchMoved,
-        horizontalCanScroll,
-        verticalCanScroll,
-        touchScrollH,
-        touchScrollV,
-        delayTouchTimer,
-        delayTouchEvent,
-        viewport
-    }
-    /**
-     * @language en_US
-     * ScrollView is an auxiliary class for sliding which passes a display object to the constructor function. In the specified size range, display objects beyond the range can be displayed. And they can be dragged randomly within this range.
-     */
-    /**
-     * @language zh_CN
+     * @class egret.ScrollView
+     * @classdesc
      * ScrollView 是用于滑动的辅助类，将一个显示对象传入构造函数即可。可以在指定的尺寸范围内显示超过该范围的显示对象。并可以在此范围内随意拖动。
+     * @extends egret.DisplayObjectContainer
      */
-    export class ScrollView extends egret.DisplayObjectContainer {
+    export class ScrollView extends DisplayObjectContainer {
+
+        public _ScrV_Props_:ScrollViewProperties;
 
         /**
-         * @language en_US
-         * The threshold value(in pixels) trigger the rolling.
-         * when the touch points deviate from the initial touch point than this value will trigger the rolling.
-         *
-         * @default 5
-         *
+         * 开始滚动的阈值，当触摸点偏离初始触摸点的距离超过这个值时才会触发滚动
+         * @member {number} egret.ScrollView#scrollBeginThreshold
          */
-        /**
-         * @language zh_CN
-         * 开始触发滚动的阈值（以像素为单位），当触摸点偏离初始触摸点的距离超过这个值时才会触发滚动。
-         *
-         * @default 5
-         *
-         */
-        public static scrollThreshold:number = 5;
+        public scrollBeginThreshold: number = 10;
+
 
         /**
-         * @language en_US
-         * Constructor.
-         *
+         * 滚动速度，这个值为需要的速度与默认速度的比值。
+         * 取值范围为 scrollSpeed > 0 赋值为 2 时，速度是默认速度的 2 倍
+         * @member {number} egret.ScrollView#scrollSpeed
          */
+        public scrollSpeed: number = 1;
         /**
-         * @language zh_CN
-         * 构造函数。
-         *
+         * 创建一个 egret.ScrollView 对象
+         * @method egret.ScrollView#constructor
+         * @param content {egret.DisplayObject} 需要滚动的对象
          */
-        public constructor() {
+        constructor(content: DisplayObject = null) {
             super();
-            var touchScrollH = new sys.TouchScroll(this.horizontalUpdateHandler, this.horizontalEndHandler, this);
-            var touchScrollV = new sys.TouchScroll(this.verticalUpdateHandler, this.verticalEndHanlder, this);
-            this.$ScrollView = {
-                0: "auto",          //scrollPolicyV,
-                1: "auto",          //scrollPolicyH,
-                2: null,            //autoHideTimer,
-                3: 0,               //touchStartX,
-                4: 0,               //touchStartY,
-                5: false,           //touchMoved,
-                6: false,           //horizontalCanScroll,
-                7: false,           //verticalCanScroll,
-                8: touchScrollH,    //touchScrollH,
-                9: touchScrollV,    //touchScrollV
-                10: null,           //delayTouchTimer,
-                11: null,           //delayTouchEvent
-                12: null           //viewport
-            };
-
-            this.$setScrollRect(this.scrollerRect);
-
             this.touchEnabled = true;
+            this._ScrV_Props_ = new egret.ScrollViewProperties();
+            if (content) {
+                this.setContent(content);
+            }
+        }
+        public _content: DisplayObject = null;
+        /**
+         * 设置需要滚动的对象
+         * @method egret.ScrollView#setContent
+         * @param content {egret.DisplayObject} 需要滚动的对象
+         */
+        public setContent(content: DisplayObject):void {
+            if (this._content === content)
+                return;
+            this.removeContent();
+            if (content) {
+                this._content = content;
+                super.addChild(content);
+                this._addEvents();
+            }
         }
 
         /**
-         * @private
+         * 移除滚动的对象
+         * @method egret.ScrollView#removeContent
          */
-        $ScrollView:Object;
+        public removeContent():void {
+            if (this._content) {
+                this._removeEvents();
+                super.removeChildAt(0);
+            }
+            this._content = null;
+        }
 
         /**
-         * @language en_US
-         * Display policy of vertical scrollbar, on/off/auto.
-         * @default auto
-         *
-         */
-        /**
-         * @language zh_CN
          * 垂直滚动条显示策略，on/off/auto。
-         * @default auto
-         *
+         * @member egret.ScrollView#verticalScrollPolicy
          */
-        public get verticalScrollPolicy():string {
-            return this.$ScrollView[Keys.scrollPolicyV];
+        public get verticalScrollPolicy(): string {
+            return this._ScrV_Props_._verticalScrollPolicy;
         }
 
-        public set verticalScrollPolicy(value:string) {
-            this.$setVerticalScrollPolicy(value);
+        public set verticalScrollPolicy(value: string) {
+            if (value == this._ScrV_Props_._verticalScrollPolicy)
+                return;
+            this._ScrV_Props_._verticalScrollPolicy = value;
         }
 
-        $setVerticalScrollPolicy(value:string):boolean {
-            this.$ScrollView[Keys.scrollPolicyV] = value;
-            return true;
-        }
-
-        $getVerticalScrollPolicy():string {
-            return this.$ScrollView[Keys.scrollPolicyV];
-        }
 
         /**
-         * @language en_US
-         * Display policy of horizontal scrollbar, on/off/auto.
-         * @default auto
-         */
-        /**
-         * @language zh_CN
          * 水平滚动条显示策略，on/off/auto。
-         * @default auto
+         * @member egret.ScrollView#horizontalScrollPolicy
          */
-        public get horizontalScrollPolicy():string {
-            return this.$ScrollView[Keys.scrollPolicyH];
+        public get horizontalScrollPolicy(): string {
+            return this._ScrV_Props_._horizontalScrollPolicy;
+        }
+        public set horizontalScrollPolicy(value: string) {
+            if (value == this._ScrV_Props_._horizontalScrollPolicy)
+                return;
+            this._ScrV_Props_._horizontalScrollPolicy = value;
         }
 
-        public set horizontalScrollPolicy(value:string) {
-            this.$setHorizontalScrollPolicy(value);
+        /**
+         * 获取或设置水平滚动位置,
+         * @member {number} egret.ScrollView#scrollLeft
+         * @returns {number}
+         */
+        public get scrollLeft():number {
+            return this._ScrV_Props_._scrollLeft;
+        }
+        public set scrollLeft(value: number) {
+            if (value == this._ScrV_Props_._scrollLeft)
+                return;
+            this._ScrV_Props_._scrollLeft = value;
+            this._validatePosition(false, true);
+            this._updateContentPosition();
         }
 
-        $setHorizontalScrollPolicy(value:string):boolean {
-            this.$ScrollView[Keys.scrollPolicyH] = value;
-            return true;
+        /**
+         * 获取或设置垂直滚动位置,
+         * @member {number} egret.ScrollView#scrollTop
+         * @returns {number}
+         */
+        public get scrollTop():number {
+            return this._ScrV_Props_._scrollTop;
+        }
+        public set scrollTop(value: number) {
+            if (value == this._ScrV_Props_._scrollTop)
+                return;
+            this._ScrV_Props_._scrollTop = value;
+            this._validatePosition(true, false);
+            this._updateContentPosition();
         }
 
-        $getHorizontalScrollPolicy():string {
-            return this.$ScrollView[Keys.scrollPolicyH];
+        /**
+         * 设置滚动位置
+         * @method egret.ScrollView#setScrollPosition
+         * @param top {number} 垂直滚动位置
+         * @param left {number} 水平滚动位置
+         * @param isOffset {boolean} 可选参数，默认是false，是否是滚动增加量，如 top=1 代表往上滚动1像素
+         */
+        public setScrollPosition(top: number, left: number, isOffset: boolean = false): void {
+            if (isOffset && top == 0 && left == 0)
+                return;
+            if (!isOffset && this._ScrV_Props_._scrollTop == top
+                && this._ScrV_Props_._scrollLeft == left)
+                return;
+            if (isOffset) {
+                var isEdgeV = this._isOnTheEdge(true);
+                var isEdgeH = this._isOnTheEdge(false);
+                this._ScrV_Props_._scrollTop += isEdgeV ? top / 2 : top;
+                this._ScrV_Props_._scrollLeft += isEdgeH ? left / 2 : left;
+            }
+            else {
+                this._ScrV_Props_._scrollTop = top;
+                this._ScrV_Props_._scrollLeft = left;
+            }
+            this._validatePosition(true, true);
+            this._updateContentPosition();
         }
 
-        $getHorizontalCanScroll():boolean {
-            return this.$ScrollView[Keys.horizontalCanScroll];
+        private _isOnTheEdge(isVertical=true):boolean {
+            var top = this._ScrV_Props_._scrollTop,
+                left = this._ScrV_Props_._scrollLeft;
+            if (isVertical)
+                return top < 0 || top > this.getMaxScrollTop();
+            else
+                return left < 0 || left > this.getMaxScrollLeft();
         }
 
-        $getVerticalCanScroll():boolean {
-            return this.$ScrollView[Keys.verticalCanScroll];
+        private _validatePosition(top = false,left = false):void {
+            if (top) {
+                var height = this.height;
+                var contentHeight = this._getContentHeight();
+                this._ScrV_Props_._scrollTop = Math.max(this._ScrV_Props_._scrollTop, (0 - height) / 2);
+                this._ScrV_Props_._scrollTop = Math.min(this._ScrV_Props_._scrollTop, contentHeight > height ? (contentHeight - height / 2) : height / 2);
+            }
+            if (left) {
+                var width = this.width;
+                var contentWidth = this._getContentWidth();
+                this._ScrV_Props_._scrollLeft = Math.max(this._ScrV_Props_._scrollLeft, (0 - width) / 2);
+                this._ScrV_Props_._scrollLeft = Math.min(this._ScrV_Props_._scrollLeft, contentWidth > width ? (contentWidth - width / 2) : width / 2);
+            }
         }
 
-        $checkScrollPolicy():boolean {
-            var hpolicy = this.$ScrollView[Keys.scrollPolicyH];
-            var hCanScroll = this.checkScrollPolicy2(hpolicy, this._getContentWidth(), this.width);
-            this.$ScrollView[Keys.horizontalCanScroll] = hCanScroll;
-            var vpolicy = this.$ScrollView[Keys.scrollPolicyV];
-            var vCanScroll = this.checkScrollPolicy2(vpolicy, this._getContentHeight(), this.height);
-            this.$ScrollView[Keys.verticalCanScroll] = vCanScroll;
+        /**
+         * @inheritDoc
+         */
+        public $setWidth(value: number): void {
+            if (this.$getExplicitWidth() == value) {
+                return;
+            }
+
+            super.$setWidth(value);
+            this._updateContentPosition();
+        }
+        /**
+         * @inheritDoc
+         */
+        public $setHeight(value: number): void {
+            if (this.$getExplicitHeight() == value)
+                return;
+            super.$setHeight(value);
+            this._updateContentPosition();
+        }
+        public _updateContentPosition():void {
+            var size = this.getBounds(egret.$TempRectangle);
+            var height = size.height;
+            var width = size.width;
+            //这里将坐标取整，避免有些浏览器精度低产生“黑线”问题
+            this.scrollRect = new Rectangle(Math.round(this._ScrV_Props_._scrollLeft), Math.round(this._ScrV_Props_._scrollTop), width, height);
+            this.dispatchEvent(new Event(Event.CHANGE));
+        }
+        public _checkScrollPolicy():boolean {
+            var hpolicy = this._ScrV_Props_._horizontalScrollPolicy;
+            var hCanScroll = this.__checkScrollPolicy(hpolicy, this._getContentWidth(), this.width);
+            this._ScrV_Props_._hCanScroll = hCanScroll;
+            var vpolicy = this._ScrV_Props_._verticalScrollPolicy;
+            var vCanScroll = this.__checkScrollPolicy(vpolicy, this._getContentHeight(), this.height);
+            this._ScrV_Props_._vCanScroll = vCanScroll;
             return hCanScroll || vCanScroll;
         }
-
-        private checkScrollPolicy2(policy: string, contentLength, viewLength):boolean {
+        private __checkScrollPolicy(policy: string, contentLength, viewLength):boolean {
             if (policy == "on")
                 return true;
             if (policy == "off")
@@ -197,135 +250,92 @@ module egret {
             return contentLength > viewLength;
         }
 
-        $viewport:DisplayObject;
-        public setContent(value: egret.DisplayObject): void {
-            var values = this.$ScrollView;
-            if (value == values[Keys.viewport])
+
+        public _addEvents(): void {
+            this.addEventListener(TouchEvent.TOUCH_BEGIN, this._onTouchBegin, this);
+            this.addEventListener(TouchEvent.TOUCH_BEGIN, this._onTouchBeginCapture, this, true);
+            this.addEventListener(TouchEvent.TOUCH_END, this._onTouchEndCapture, this, true);
+        }
+
+        public _removeEvents(): void {
+            this.removeEventListener(TouchEvent.TOUCH_BEGIN, this._onTouchBegin, this);
+            this.removeEventListener(TouchEvent.TOUCH_BEGIN, this._onTouchBeginCapture, this, true);
+            this.removeEventListener(TouchEvent.TOUCH_END, this._onTouchEndCapture, this, true);
+        }
+
+        public _onTouchBegin(e: TouchEvent):void {
+            if (e.$isDefaultPrevented) {
                 return;
-
-            this.$uninstallViewport();
-            values[Keys.viewport] = value;
-            this.$viewport = value;
-
-            this.$installViewport();
-        }
-
-        /**
-         * @private
-         * 安装并初始化视域组件
-         */
-        $installViewport():void {
-            var viewport = this.$viewport;
-            if (viewport) {
-                this.addEventListener(egret.TouchEvent.TOUCH_BEGIN, this.onTouchBeginCapture, this, true);
-                this.addEventListener(egret.TouchEvent.TOUCH_END, this.onTouchEndCapture, this, true);
-                super.addChildAt(viewport, 0);
             }
-        }
-
-        /**
-         * @language en_US
-         * Remove the scrolled object
-         */
-        /**
-         * @language zh_CN
-         * 移除滚动的对象
-         */
-        public removeContent():void {
-            this.$uninstallViewport();
-        }
-
-        /**
-         * @private
-         * 卸载视域组件
-         */
-        $uninstallViewport():void {
-            var viewport = this.$viewport;
-            if (viewport && viewport.parent == this) {
-                this.removeEventListener(egret.TouchEvent.TOUCH_BEGIN, this.onTouchBeginCapture, this, true);
-                this.removeEventListener(egret.TouchEvent.TOUCH_END, this.onTouchEndCapture, this, true);
-                super.removeChild(viewport);
+            var canScroll: boolean = this._checkScrollPolicy();
+            if (!canScroll) {
+                return;
             }
-        }
-
-        /**
-         * @private
-         * 
-         * @param event 
-         */
-        private onTouchEndCapture(event:egret.TouchEvent):void {
-            if (this.$ScrollView[Keys.delayTouchEvent]) {
-                this.delayEmitEvent(event);
+            this._ScrV_Props_._touchStartPosition.x = e.stageX;
+            this._ScrV_Props_._touchStartPosition.y = e.stageY;
+            if (this._ScrV_Props_._isHTweenPlaying || this._ScrV_Props_._isVTweenPlaying) {
+                this._onScrollFinished();
             }
-        }
+            this.stage.addEventListener(TouchEvent.TOUCH_MOVE, this._onTouchMove, this);
+            this.stage.addEventListener(TouchEvent.TOUCH_END, this._onTouchEnd, this);
+            this.stage.addEventListener(TouchEvent.LEAVE_STAGE, this._onTouchEnd, this);
+            this.addEventListener(Event.ENTER_FRAME, this._onEnterFrame, this);
 
-        /**
-         * @private
-         * 若这个Scroller可以滚动，阻止当前事件，延迟100ms再抛出。
-         */
-        private onTouchBeginCapture(event:egret.TouchEvent):void {
-            var canScroll:boolean = this.checkScrollPolicy();
+            this._logTouchEvent(e);
+            e.preventDefault();
+        }
+        private delayTouchBeginEvent: TouchEvent = null;
+        private touchBeginTimer: Timer = null;
+        public _onTouchBeginCapture(event: TouchEvent):void {
+            var canScroll: boolean = this._checkScrollPolicy();
             if (!canScroll) {
                 return;
             }
 
-            var target:egret.DisplayObject = event.target;
+            var target: DisplayObject = event.target;
             while (target != this) {
-                if (target instanceof ScrollView) {
-                    canScroll = (<ScrollView><any> target).checkScrollPolicy();
+                if ("_checkScrollPolicy" in target) {
+                    canScroll = (<ScrollView><any> target)._checkScrollPolicy();
                     if (canScroll) {
                         return;
                     }
                 }
-                target = target.$parent;
-            }
-            this.delayEmitEvent(event);
-            this.onTouchBegin(event);
-        }
-
-        /**
-         * @private
-         * 
-         * @param event 
-         */
-        private delayEmitEvent(event:egret.TouchEvent):void {
-            var values = this.$ScrollView;
-            if (values[Keys.delayTouchEvent]) {
-                this.onDelayTouchEventTimer();
+                target = target.parent;
             }
             event.stopPropagation();
-            var touchEvent:egret.TouchEvent = egret.Event.create(egret.TouchEvent, event.$type, event.$bubbles, event.$cancelable);
-            touchEvent.$setTo(event.$stageX, event.$stageY, event.touchPointID);
-            touchEvent.$target = event.$target;
-            values[Keys.delayTouchEvent] = touchEvent;
-            if (!values[Keys.delayTouchTimer]) {
-                values[Keys.delayTouchTimer] = new egret.Timer(100, 1);
-                values[Keys.delayTouchTimer].addEventListener(egret.TimerEvent.TIMER_COMPLETE, this.onDelayTouchEventTimer, this);
+            var evt: TouchEvent = this.cloneTouchEvent(event);
+            this.delayTouchBeginEvent = evt;
+            if (!this.touchBeginTimer) {
+                this.touchBeginTimer = new egret.Timer(100, 1);
+                this.touchBeginTimer.addEventListener(TimerEvent.TIMER_COMPLETE, this._onTouchBeginTimer, this);
             }
-            values[Keys.delayTouchTimer].start();
+            this.touchBeginTimer.start();
+            this._onTouchBegin(event);
         }
 
-        /**
-         * @private
-         * 
-         * @param e 
-         */
-        private onDelayTouchEventTimer(e?:egret.TimerEvent):void {
-            var values = this.$ScrollView;
-            values[Keys.delayTouchTimer].stop();
-            var event = values[Keys.delayTouchEvent];
-            values[Keys.delayTouchEvent] = null;
-            var viewport = values[Keys.viewport];
-            if (!viewport) {
+        private _onTouchEndCapture(event: TouchEvent): void {
+            if (!this.delayTouchBeginEvent) {
                 return;
             }
+            this._onTouchBeginTimer();
+        }
+        private _onTouchBeginTimer():void {
+            this.touchBeginTimer.stop();
+            var event: TouchEvent = this.delayTouchBeginEvent;
+            this.delayTouchBeginEvent = null;
+            //Dispatch event only if the scroll view is still on the stage
+            if(this.stage)
+                this.dispatchPropagationEvent(event);
+        }
+
+        private dispatchPropagationEvent(event: TouchEvent): void {
             var target:egret.DisplayObject = event.$target;
             var list = this.$getPropagationList(target);
             var length = list.length;
             var targetIndex = list.length * 0.5;
             var startIndex = -1;
             for (var i = 0; i < length; i++) {
-                if (list[i] == viewport) {
+                if (list[i] === this._content) {
                     startIndex = i;
                     break;
                 }
@@ -336,11 +346,84 @@ module egret {
             egret.Event.release(event);
         }
 
+        public _onTouchMove(event: TouchEvent): void {
+            if (this._ScrV_Props_._lastTouchPosition.x == event.stageX && this._ScrV_Props_._lastTouchPosition.y == event.stageY)
+                return;
+            if (!this._ScrV_Props_._scrollStarted) {
+                var x = event.stageX - this._ScrV_Props_._touchStartPosition.x,
+                    y = event.stageY - this._ScrV_Props_._touchStartPosition.y;
+                var distance = Math.sqrt(x * x + y * y);
+                if (distance < this.scrollBeginThreshold) {
+                    this._logTouchEvent(event);
+                    return;
+                }
+            }
+            this._ScrV_Props_._scrollStarted = true;
+            if (this.delayTouchBeginEvent) {
+                this.delayTouchBeginEvent = null;
+                this.touchBeginTimer.stop();
+            }
+            this.touchChildren = false;
+            var offset = this._getPointChange(event);
+            this.setScrollPosition(offset.y, offset.x, true);
+            this._calcVelocitys(event);
+            this._logTouchEvent(event);
+        }
+
+        public _onTouchEnd(event: TouchEvent): void {
+            this.touchChildren = true;
+            this._ScrV_Props_._scrollStarted = false;
+            egret.MainContext.instance.stage.removeEventListener(TouchEvent.TOUCH_MOVE, this._onTouchMove, this);
+            egret.MainContext.instance.stage.removeEventListener(TouchEvent.TOUCH_END, this._onTouchEnd, this);
+            egret.MainContext.instance.stage.removeEventListener(TouchEvent.LEAVE_STAGE, this._onTouchEnd, this);
+            this.removeEventListener(Event.ENTER_FRAME, this._onEnterFrame, this);
+
+            this._moveAfterTouchEnd();
+        }
+
+
+        public _onEnterFrame(event: Event): void {
+            var time = getTimer();
+            if (time - this._ScrV_Props_._lastTouchTime > 100 && time - this._ScrV_Props_._lastTouchTime < 300) {
+                this._calcVelocitys(this._ScrV_Props_._lastTouchEvent);
+            }
+        }
+
+        private _logTouchEvent(e: TouchEvent): void {
+            this._ScrV_Props_._lastTouchPosition.x = e.stageX;
+            this._ScrV_Props_._lastTouchPosition.y = e.stageY;
+            this._ScrV_Props_._lastTouchEvent = this.cloneTouchEvent(e);
+            this._ScrV_Props_._lastTouchTime = egret.getTimer();
+        }
+
+        private _getPointChange(e: TouchEvent): { x: number; y: number } {
+            return {
+                x: this._ScrV_Props_._hCanScroll === false ? 0 : (this._ScrV_Props_._lastTouchPosition.x - e.stageX),
+                y: this._ScrV_Props_._vCanScroll === false ? 0 : (this._ScrV_Props_._lastTouchPosition.y - e.stageY)
+            };
+        }
+
+        private _calcVelocitys(e: TouchEvent): void {
+            var time = getTimer();
+            if (this._ScrV_Props_._lastTouchTime == 0) {
+                this._ScrV_Props_._lastTouchTime = time;
+                return;
+            }
+            var change = this._getPointChange(e);
+            var timeoffset = time - this._ScrV_Props_._lastTouchTime;
+            change.x /= timeoffset;
+            change.y /= timeoffset;
+            this._ScrV_Props_._velocitys.push(change);
+            if (this._ScrV_Props_._velocitys.length > 5)
+                this._ScrV_Props_._velocitys.shift();
+            this._ScrV_Props_._lastTouchPosition.x = e.stageX;
+            this._ScrV_Props_._lastTouchPosition.y = e.stageY;
+        }
         public _getContentWidth():number {
-            return this.$viewport.width;
+            return this._content.$getExplicitWidth() || this._content.width;
         }
         public _getContentHeight(): number {
-            return this.$viewport.height;
+            return this._content.$getExplicitHeight() || this._content.height;
         }
         public getMaxScrollLeft(): number {
             var max = this._getContentWidth() - this.width;
@@ -350,354 +433,211 @@ module egret {
             var max = this._getContentHeight() - this.height;
             return Math.max(0, max);
         }
+        private static weight = [1, 1.33, 1.66, 2, 2.33];
+        private _moveAfterTouchEnd():void {
+            if (this._ScrV_Props_._velocitys.length == 0)
+                return;
+            var sum = { x: 0, y: 0 }, totalW = 0;
+            for (var i = 0; i < this._ScrV_Props_._velocitys.length; i++) {
+                var v = this._ScrV_Props_._velocitys[i];
+                var w = ScrollView.weight[i];
+                sum.x += v.x * w;
+                sum.y += v.y * w;
+                totalW += w;
+            }
+            this._ScrV_Props_._velocitys.length = 0;
 
-        /**
-         * @private
-         * 检查当前滚动策略，若有一个方向可以滚动，返回true。
-         */
-        private checkScrollPolicy():boolean {
-            var values = this.$ScrollView;
-            var hCanScroll:boolean;
-            switch (values[Keys.scrollPolicyH]) {
-                case "auto":
-                    if (this._getContentWidth() > this.width) {
-                        hCanScroll = true;
+            if (this.scrollSpeed <= 0)
+                this.scrollSpeed = 1;
+            var x = sum.x / totalW * this.scrollSpeed, y = sum.y / totalW * this.scrollSpeed;
+            var pixelsPerMSX = Math.abs(x), pixelsPerMSY = Math.abs(y);
+            var maxLeft = this.getMaxScrollLeft();
+            var maxTop = this.getMaxScrollTop();
+            var datax = pixelsPerMSX > 0.02 ? this.getAnimationDatas(x, this._ScrV_Props_._scrollLeft, maxLeft) : { position: this._ScrV_Props_._scrollLeft,duration:1};
+            var datay = pixelsPerMSY > 0.02 ? this.getAnimationDatas(y, this._ScrV_Props_._scrollTop, maxTop) : { position: this._ScrV_Props_._scrollTop, duration: 1 };
+            this.setScrollLeft(datax.position, datax.duration);
+            this.setScrollTop(datay.position, datay.duration);
+        }
+
+        public _onTweenFinished(tw: Tween) {
+            if (tw == this._ScrV_Props_._vScrollTween)
+                this._ScrV_Props_._isVTweenPlaying = false;
+            if (tw == this._ScrV_Props_._hScrollTween)
+                this._ScrV_Props_._isHTweenPlaying = false;
+            if (this._ScrV_Props_._isHTweenPlaying == false && this._ScrV_Props_._isVTweenPlaying == false) {
+                this._onScrollFinished();
+            }
+        }
+
+        public _onScrollStarted(): void {
+
+        }
+
+        public _onScrollFinished(): void {
+            Tween.removeTweens(this);
+            this._ScrV_Props_._hScrollTween = null;
+            this._ScrV_Props_._vScrollTween = null;
+            this._ScrV_Props_._isHTweenPlaying = false;
+            this._ScrV_Props_._isVTweenPlaying = false
+            this.dispatchEvent(new Event(Event.COMPLETE));
+        }
+        public setScrollTop(scrollTop: number, duration: number = 0): egret.Tween {
+            var finalPosition = Math.min(this.getMaxScrollTop(), Math.max(scrollTop, 0));
+            if (duration == 0) {
+                this.scrollTop = finalPosition;
+                return null;
+            }
+            var vtween = egret.Tween.get(this).to({ scrollTop: scrollTop }, duration, egret.Ease.quartOut);
+            if (finalPosition != scrollTop) {
+                vtween.to({ scrollTop: finalPosition }, 300, egret.Ease.quintOut);
+            }
+            this._ScrV_Props_._isVTweenPlaying = true;
+            this._ScrV_Props_._vScrollTween = vtween;
+            vtween.call(this._onTweenFinished, this, [vtween]);
+            if(!this._ScrV_Props_._isHTweenPlaying)
+                this._onScrollStarted();
+            return vtween;
+        }
+        public setScrollLeft(scrollLeft: number, duration: number = 0): egret.Tween {
+            var finalPosition = Math.min(this.getMaxScrollLeft(), Math.max(scrollLeft, 0));
+            if (duration == 0) {
+                this.scrollLeft = finalPosition;
+                return null;
+            }
+            var htween = egret.Tween.get(this).to({ scrollLeft: scrollLeft }, duration, egret.Ease.quartOut);
+            if (finalPosition != scrollLeft) {
+                htween.to({ scrollLeft: finalPosition }, 300, egret.Ease.quintOut);
+            }
+            this._ScrV_Props_._isHTweenPlaying = true;
+            this._ScrV_Props_._hScrollTween = htween;
+            htween.call(this._onTweenFinished, this, [htween]);
+            if (!this._ScrV_Props_._isVTweenPlaying)
+                this._onScrollStarted();
+            return htween;
+        }
+
+        private getAnimationDatas(pixelsPerMS: number, curPos: number, maxPos: number): { position: number; duration: number } {
+            var absPixelsPerMS: number = Math.abs(pixelsPerMS);
+            var extraFricition: number = 0.95;
+            var duration: number = 0;
+            var friction: number = 0.998;
+            var minVelocity: number = 0.02;
+            var posTo: number = curPos + pixelsPerMS * 500;
+            if (posTo < 0 || posTo > maxPos) {
+                posTo = curPos;
+                while (Math.abs(pixelsPerMS)!=Infinity && Math.abs(pixelsPerMS) > minVelocity) {
+                    posTo += pixelsPerMS;
+                    if (posTo < 0 || posTo > maxPos) {
+                        pixelsPerMS *= friction * extraFricition;
                     }
                     else {
-                        hCanScroll = false;
+                        pixelsPerMS *= friction;
                     }
-                    break;
-                case "on":
-                    hCanScroll = true;
-                    break;
-                case "off":
-                    hCanScroll = false;
-                    break;
-            }
-            values[Keys.horizontalCanScroll] = hCanScroll;
-
-            var vCanScroll:boolean;
-            switch (values[Keys.scrollPolicyV]) {
-                case "auto":
-                    if (this._getContentHeight() > this.height) {
-                        vCanScroll = true;
-                    }
-                    else {
-                        vCanScroll = false;
-                    }
-                    break;
-                case "on":
-                    vCanScroll = true;
-                    break;
-                case "off":
-                    vCanScroll = false;
-                    break;
-            }
-            values[Keys.verticalCanScroll] = vCanScroll;
-            return hCanScroll || vCanScroll;
-        }
-
-        /**
-         * @private
-         * @param event
-         */
-        private onTouchBegin(event:egret.TouchEvent):void {
-            if (event.isDefaultPrevented()) {
-                return;
-            }
-            if (!this.checkScrollPolicy()) {
-                return;
-            }
-            var values = this.$ScrollView;
-            values[Keys.touchScrollV].stop();
-            values[Keys.touchScrollH].stop();
-            var viewport = values[Keys.viewport];
-            values[Keys.touchStartX] = event.$stageX;
-            values[Keys.touchStartY] = event.$stageY;
-
-            if (values[Keys.horizontalCanScroll]) {
-                values[Keys.touchScrollH].start(event.$stageX, this.scrollHPos,
-                    this._getContentWidth() - this.width);
-            }
-            if (values[Keys.verticalCanScroll]) {
-                values[Keys.touchScrollV].start(event.$stageY, this.scrollVPos,
-                    this._getContentHeight() - this.height);
-            }
-            var stage = this.$stage;
-            stage.addEventListener(egret.TouchEvent.TOUCH_MOVE, this.onTouchMove, this);
-            stage.addEventListener(egret.TouchEvent.TOUCH_END, this.onTouchEnd, this);
-            event.preventDefault();
-        }
-
-        /**
-         * @private
-         * 
-         * @param event 
-         */
-        private onTouchMove(event:egret.TouchEvent):void {
-            var values = this.$ScrollView;
-            if (!values[Keys.touchMoved]) {
-                if (Math.abs(values[Keys.touchStartX] - event.$stageX) < ScrollView.scrollThreshold &&
-                    Math.abs(values[Keys.touchStartY] - event.$stageY) < ScrollView.scrollThreshold) {
-                    return;
+                    duration++;
                 }
-                values[Keys.touchMoved] = true;
-                if(values[Keys.autoHideTimer]){
-                    values[Keys.autoHideTimer].reset();
-                }
-            }
-            if (values[Keys.delayTouchEvent]) {
-                values[Keys.delayTouchEvent] = null;
-                values[Keys.delayTouchTimer].stop();
-            }
-            if (values[Keys.horizontalCanScroll]) {
-                values[Keys.touchScrollH].update(event.$stageX, this.getMaxScrollLeft());
-            }
-            if (values[Keys.verticalCanScroll]) {
-                values[Keys.touchScrollV].update(event.$stageY, this.getMaxScrollTop());
-            }
-        }
-
-
-        /**
-         * @private
-         * 
-         * @param event 
-         */
-        private onTouchEnd(event:egret.Event):void {
-            var values = this.$ScrollView;
-            values[Keys.touchMoved] = false;
-            var stage:egret.Stage = event.$currentTarget;
-            stage.removeEventListener(egret.TouchEvent.TOUCH_MOVE, this.onTouchMove, this);
-            stage.removeEventListener(egret.TouchEvent.TOUCH_END, this.onTouchEnd, this);
-
-            if (values[Keys.horizontalCanScroll]) {
-                values[Keys.touchScrollH].finish(this.scrollHPos, this.getMaxScrollLeft());
-            }
-            if (values[Keys.verticalCanScroll]) {
-                values[Keys.touchScrollV].finish(this.scrollVPos, this.getMaxScrollTop());
-            }
-        }
-
-        public $scrollSpeed: number = 1;
-        /**
-         * @language en_US
-         * Scroll speed, which is the ratio between the desired speed and the default speed.
-         * The value range is scrollSpeed > 0. When the value is 2, the scroll speed is two times of the default speed.
-         */
-        /**
-         * @language zh_CN
-         * 滚动速度，这个值为需要的速度与默认速度的比值。
-         * 取值范围为 scrollSpeed > 0 赋值为 2 时，速度是默认速度的 2 倍
-         */
-        public get scrollSpeed():number {
-            return this.$scrollSpeed;
-        }
-        public set scrollSpeed(value: number) {
-            if (value == this.$scrollSpeed)
-                return;
-            this.$scrollSpeed = value;
-
-            this.$ScrollView[Keys.touchScrollH].$setSpeed(value);
-            this.$ScrollView[Keys.touchScrollV].$setSpeed(value);
-        }
-
-        /**
-         * @language en_US
-         * Obtain or set the horizontal scroll position
-         */
-        /**
-         * @language zh_CN
-         * 获取或设置水平滚动位置
-         */
-        public get scrollLeft():number {
-            return this.scrollerRect.x;
-        }
-        public set scrollLeft(value: number) {
-            if (value == this.scrollerRect.x)
-                return;
-            this.scrollerRect.x = value;
-            this.$setScrollRect(this.scrollerRect);
-        }
-
-        /**
-         * @language en_US
-         * Obtain or set the vertical scroll position
-         */
-        /**
-         * @language zh_CN
-         * 获取或设置垂直滚动位置
-         */
-        public get scrollTop():number {
-            return this.scrollerRect.y;
-        }
-        public set scrollTop(value: number) {
-            if (value == this.scrollerRect.y)
-                return;
-            this.scrollerRect.y = value;
-            this.$setScrollRect(this.scrollerRect);
-        }
-
-        /**
-         * @language en_US
-         * Set scroll position
-         * @param top {number} Vertical scroll position
-         * @param left {number} Horizontal scroll position
-         * @param isOffset {boolean} Optional. The default setting is false. Whether to increase the amount of scrolling, for example, top = 1 indicates scrolling up by one pixel
-         */
-        /**
-         * @language zh_CN
-         * 设置滚动位置
-         * @param top {number} 垂直滚动位置
-         * @param left {number} 水平滚动位置
-         * @param isOffset {boolean} 可选参数，默认是false，是否是滚动增加量，如 top=1 代表往上滚动1像素
-         */
-        public setScrollPosition(top: number, left: number, isOffset: boolean = false): void {
-            if (isOffset && top == 0 && left == 0)
-                return;
-            if (!isOffset && this.scrollerRect.y == top
-                && this.scrollerRect.x == left)
-                return;
-            if (isOffset) {
-                var isEdgeV = this._isOnTheEdge(true);
-                var isEdgeH = this._isOnTheEdge(false);
-                this.scrollerRect.y += isEdgeV ? top / 2 : top;
-                this.scrollerRect.x += isEdgeH ? left / 2 : left;
             }
             else {
-                this.scrollerRect.y = top;
-                this.scrollerRect.x = left;
+                duration = - Math.log(minVelocity / absPixelsPerMS) * 500;
             }
 
-            this.$setScrollRect(this.scrollerRect);
+            var result = {
+                position: Math.min(maxPos + 50, Math.max(posTo, -50)),//允许越界50px
+                duration: duration
+            };
+            return result;
+        }
+        private cloneTouchEvent(event: TouchEvent): TouchEvent {
+            var evt: TouchEvent = new TouchEvent(event.type, event.bubbles, event.cancelable);
+            evt.touchPointID = event.touchPointID
+            evt.$stageX = event.stageX;
+            evt.$stageY = event.stageY;
+            //evt.ctrlKey = event.ctrlKey;
+            //evt.altKey = event.altKey;
+            //evt.shiftKey = event.shiftKey;
+            evt.touchDown = event.touchDown;
+            evt.$isDefaultPrevented = false;
+            evt.$target = event.target;
+            return evt;
         }
 
-        private _isOnTheEdge(isVertical=true):boolean {
-            var top = this.scrollerRect.y,
-                left = this.scrollerRect.x;
-            if (isVertical)
-                return top < 0 || top > this.getMaxScrollTop();
-            else
-                return left < 0 || left > this.getMaxScrollLeft();
-        }
-
-
-        private scrollHPos:number = 0;
-        private scrollVPos:number = 0;
-        private scrollerRect:Rectangle = new egret.Rectangle();
-        /**
-         * @private
-         * 
-         * @param scrollPos 
-         */
-        private horizontalUpdateHandler(scrollPos:number):void {
-            this.scrollHPos = scrollPos;
-
-            this.scrollerRect.x = this.scrollHPos;
-            this.$setScrollRect(this.scrollerRect);
+        private throwNotSupportedError(): void {
+            throw new Error(getString(1023));
         }
 
         /**
-         * @private
-         * 
-         * @param scrollPos 
+         * @method egret.ScrollView#addChild
+         * @deprecated
+         * @param child {DisplayObject}
+         * @returns {DisplayObject}
          */
-        private verticalUpdateHandler(scrollPos:number):void {
-            this.scrollVPos = scrollPos;
-
-            this.scrollerRect.y = this.scrollVPos;
-            this.$setScrollRect(this.scrollerRect);
-            //this.$viewport.y = -scrollPos;
+        public addChild(child: DisplayObject): DisplayObject {
+            this.throwNotSupportedError();
+            return null;
         }
-
         /**
-         * @private
-         * 
+         * @method egret.ScrollView#addChildAt
+         * @deprecated
+         * @param child {DisplayObject}
+         * @param index {number}
+         * @returns {DisplayObject}
          */
-        private horizontalEndHandler():void {
-            if(!this.$ScrollView[Keys.touchScrollV].isPlaying()){
-                this.onChangeEnd();
-            }
+        public addChildAt(child: DisplayObject, index: number): DisplayObject {
+            this.throwNotSupportedError();
+            return null;
         }
-
         /**
-         * @private
-         * 
+         * @method egret.ScrollView#removeChild
+         * @deprecated
+         * @param child {DisplayObject}
+         * @returns {DisplayObject}
          */
-        private verticalEndHanlder():void {
-            if(!this.$ScrollView[Keys.touchScrollH].isPlaying()){
-                this.onChangeEnd();
-            }
+        public removeChild(child: DisplayObject): DisplayObject {
+            this.throwNotSupportedError();
+            return null;
         }
-
         /**
-         * @private
-         * 
+         * @method egret.ScrollView#removeChildAt
+         * @deprecated
+         * @param index {number}
+         * @returns {DisplayObject}
          */
-        private onChangeEnd():void{
-
+        public removeChildAt(index: number): DisplayObject {
+            this.throwNotSupportedError();
+            return null;
         }
-
-
-        private _scrollerWidth:number = NONE;
-        private _scrollerHeight:number = NONE;
         /**
-         * @private
+         * @method egret.ScrollView#setChildIndex
+         * @deprecated
+         * @param child {DisplayObject}
+         * @param index {number}
          */
-        $getWidth():number {
-            var w = this._scrollerWidth;
-            return isNone(w) ? this.$getContentBounds().width : w;
+        public setChildIndex(child: DisplayObject, index: number): void {
+            this.throwNotSupportedError();
         }
-
         /**
-         * @private
+         * @method egret.ScrollView#swapChildren
+         * @deprecated
+         * @param child1 {DisplayObject}
+         * @param child2 {DisplayObject}
          */
-        $setWidth(value:number) {
-            //value = +value || 0;
-            if (value < 0 || value == this._scrollerWidth) {
-                return;
-            }
-            this._scrollerWidth = value;
-
-            this.scrollerRect.width = value;
-            this.$setScrollRect(this.scrollerRect);
-
-            this.$invalidateContentBounds();
+        public swapChildren(child1: DisplayObject, child2: DisplayObject): void {
+            this.throwNotSupportedError();
         }
-
         /**
-         * @private
+         * @method egret.ScrollView#swapChildrenAt
+         * @deprecated
+         * @param index1 {number}
+         * @param index2 {number}
          */
-        $getHeight():number {
-            var h = this._scrollerHeight;
-            return isNone(h) ? this.$getContentBounds().height : h;
+        public swapChildrenAt(index1: number, index2: number): void {
+            this.throwNotSupportedError();
         }
 
-        /**
-         * @private
-         */
-        $setHeight(value:number) {
-            //value = +value || 0;
-            if (value < 0 || value == this._scrollerHeight) {
-                return;
-            }
-            this._scrollerHeight = value;
-
-            this.scrollerRect.height = value;
-            this.$setScrollRect(this.scrollerRect);
-
-            this.$invalidateContentBounds();
+        public hitTest(x: number, y: number, ignoreTouchEnabled: boolean = false): DisplayObject {
+            var childTouched = super.hitTest(x, y);
+            if (childTouched)
+                return childTouched;
+            return DisplayObject.prototype.hitTest.call(this, x, y, ignoreTouchEnabled);
         }
-
-        /**
-         * @private
-         */
-        $measureContentBounds(bounds:Rectangle):void {
-
-            bounds.setTo(0, 0, this._scrollerWidth, this._scrollerHeight);
-        }
-
     }
-
-    egret.registerClass(ScrollView, egret.Types.ScrollView);
 }
