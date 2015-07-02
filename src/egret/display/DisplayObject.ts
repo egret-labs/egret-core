@@ -963,6 +963,24 @@ module egret {
             this.invalidateMatrix();
         }
 
+        
+        /**
+         * 测量宽度
+         * @returns {number}
+         * @member {egret.Rectangle} egret.DisplayObject#measuredWidth
+         */
+        public get measuredWidth():number {
+            return this.$getOriginalBounds().width;
+        }
+
+        /**
+         * 测量高度
+         * @returns {number}
+         * @member {egret.Rectangle} egret.DisplayObject#measuredWidth
+         */
+        public get measuredHeight():number {
+            return this.$getOriginalBounds().height;
+        }
 
         /**
          * @language en_US
