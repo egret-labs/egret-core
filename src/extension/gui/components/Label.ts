@@ -236,7 +236,7 @@ module egret.gui {
             if(this._UIC_Props_._invalidatePropertiesFlag)
                 this.validateProperties();
             if (this.isSpecialCase()){
-                if (isNaN(this.lastUnscaledWidth) || isNone(this.lastUnscaledWidth)){
+                if (isNaN(this.lastUnscaledWidth)){
                     this._UIC_Props_._oldPreferWidth = NaN;
                     this._UIC_Props_._oldPreferHeight = NaN;
                 }
@@ -248,9 +248,8 @@ module egret.gui {
 
             var availableWidth:number;
 
-            if (!isNone(this.$getExplicitWidth())) {
+            if (!isNaN(this.$getExplicitWidth()))
                 availableWidth = this.$getExplicitWidth();
-            }
             else if (this.maxWidth!=10000)
                 availableWidth = this.maxWidth;
 
@@ -263,7 +262,7 @@ module egret.gui {
         private isSpecialCase():boolean{
             return this._maxDisplayedLines!=1&&
                 (!isNaN(this.percentWidth) || (!isNaN(this.left) && !isNaN(this.right))) &&
-                isNone(this.$getExplicitHeight()) &&
+                isNaN(this.$getExplicitHeight()) &&
                 isNaN(this.percentHeight);
         }
 
@@ -274,7 +273,7 @@ module egret.gui {
             if(this._textChanged){
                 this._textField.text = this._text;
             }
-            if (this._textFlowChanged) { 
+            if (this._textFlowChanged) {
                 this._textField.textFlow = this._textFlow;
             }
 
@@ -284,16 +283,16 @@ module egret.gui {
             var paddingT:number = isNaN(this._paddingTop)?padding:this._paddingTop;
             var paddingB:number = isNaN(this._paddingBottom)?padding:this._paddingBottom;
 
-            this._textField.width = egret.NONE;
-            this._textField.height = egret.NONE;
+            this._textField.width = NaN;
+            this._textField.height = NaN;
             if (!isNaN(w)){
                 this._textField.width = w - paddingL - paddingR;
-                this.measuredWidth = Math.ceil(this._textField.width);
-                this.measuredHeight = Math.ceil(this._textField.height);
+                this.measuredWidth = Math.ceil(this._textField.measuredWidth);
+                this.measuredHeight = Math.ceil(this._textField.measuredHeight);
             }
             else{
-                this.measuredWidth = Math.ceil(this._textField.width);
-                this.measuredHeight = Math.ceil(this._textField.height);
+                this.measuredWidth = Math.ceil(this._textField.measuredWidth);
+                this.measuredHeight = Math.ceil(this._textField.measuredHeight);
             }
 
             if(this._maxDisplayedLines>0&&this._textField.numLines>this._maxDisplayedLines){
