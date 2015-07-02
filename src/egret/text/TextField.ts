@@ -1097,10 +1097,9 @@ module egret {
         }
 
         private _textArr:Array<egret.ITextElement> = [];
-        private _isArrayChanged:boolean = false;
 
         private setMiddleStyle(textArr:Array<egret.ITextElement>):void {
-            this._isArrayChanged = true;
+            this.$TextField[sys.TextKeys.textLinesChanged] = true;
             this._textArr = textArr;
             this.$invalidateContentBounds();
         }
@@ -1157,11 +1156,11 @@ module egret {
 
         public _getLinesArr():Array<egret.ILineElement> {
             var self = this;
-            if (!self._isArrayChanged) {
+            if (!self.$TextField[sys.TextKeys.textLinesChanged]) {
                 return self._linesArr;
             }
 
-            self._isArrayChanged = false;
+            self.$TextField[sys.TextKeys.textLinesChanged] = false;
             var text2Arr:Array<egret.ITextElement> = self._textArr;
             var renderContext = sys.sharedRenderContext;
 
