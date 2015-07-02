@@ -300,7 +300,7 @@ module egret.gui {
 
 			}
 			else{
-				super.$measureChildBounds(bounds);
+				super.$measureContentBounds(bounds);
 			}
 		}
 
