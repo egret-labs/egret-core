@@ -995,11 +995,13 @@ module egret {
         }
 
         /**********************/
-         * @private
         /*  PRIVATE METHODS   */
-         * @private
         /**********************/
+        /**
          * @private
+         * @param len
+         * @param needReplace
+         */
         private validateBuffer(len:number, needReplace:boolean = false):void {
             this.write_position = len > this.write_position ? len : this.write_position;
             len += this._position;
