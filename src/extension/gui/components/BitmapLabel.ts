@@ -106,7 +106,6 @@ module egret.gui {
         /**
          * 字符之间的距离
          * @default 0
-         * @version 1.7.2
          * @param value
          */
         public set letterSpacing(value:number) {
@@ -131,7 +130,6 @@ module egret.gui {
         /**
          * 行与行之间的距离
          * @default 0
-         * @version 1.7.2
          * @param value
          */
         public set lineSpacing(value:number) {

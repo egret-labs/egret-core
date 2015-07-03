@@ -101,13 +101,11 @@ module egret {
         /**
          * @language en_US
          * When playing sound, position property indicates the location of the sound file that is currently playing (in milliseconds).
-         * @platform h5
          * @returns {number}
          */
         /**
          * @language zh_CN
          * 当播放声音时，position 属性表示声音文件中当前播放的位置（以毫秒为单位）。
-         * @platform h5
          * @returns {number}
          */
         public get position():number {
@@ -176,12 +174,10 @@ module egret {
         /**
          * @language en_US
          * Continue playback from the last pause position
-         * @platform h5
          */
         /**
          * @language zh_CN
          * 继续从上次暂停的位置播放
-         * @platform h5
          */
         public resume():void {
             var sound = this.audio;
@@ -220,7 +216,6 @@ module egret {
          * its only parameter and must return nothing, as this example shows: function(evt:Event):void  The function can
          * have any name.
          * @param thisObject the listener function's "this"
-         * @platform h5
          */
         /**
          * @language zh_CN
@@ -229,7 +224,6 @@ module egret {
          * @param listener 处理事件的侦听器函数。此函数必须接受 Event 对象作为其唯一的参数，并且不能返回任何结果，
          * 如下面的示例所示： function(evt:Event):void 函数可以有任何名称。
          * @param thisObject 侦听函数绑定的this对象
-         * @platform h5
          */
         public addEventListener(type:string, listener:Function, thisObject:any):void {
             super.addEventListener(type, listener, thisObject);
@@ -266,7 +260,6 @@ module egret {
         /**
          * @language en_US
          * Remove Event Listeners
-         * @platform h5
          * @param type The type of event.
          * @param listener The listener function that processes the event. This function must accept an event object as
          * its only parameter and must return nothing, as this example shows: function(evt:Event):void  The function can
@@ -276,7 +269,6 @@ module egret {
         /**
          * @language zh_CN
          * 移除事件监听
-         * @platform h5
          * @param type 事件的类型。
          * @param listener 处理事件的侦听器函数。此函数必须接受 Event 对象作为其唯一的参数，并且不能返回任何结果，
          * 如下面的示例所示： function(evt:Event):void 函数可以有任何名称。
@@ -318,12 +310,10 @@ module egret {
         /**
          * @language en_US
          * The volume, ranging from 0 (silent) to 1 (full volume).
-         * @platform h5
          */
         /**
          * @language zh_CN
          * 音量范围从 0（静音）至 1（最大音量）。
-         * @platform h5
          */
         public set volume(value:number) {
             var sound = this.audio;
