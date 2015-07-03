@@ -185,7 +185,7 @@ module egret.sys {
             this.previousTime = egret.getTimer();
             this.previousPosition = this.currentPosition = touchPoint;
             this.offsetPoint = scrollValue + touchPoint;
-            egret.startTick(this.onTick, this);
+            egret.sys.$ticker.$startTick(this.onTick, this);
         }
 
         /**

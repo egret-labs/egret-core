@@ -133,7 +133,7 @@ module egret.sys {
             this.currentValue = 0;
             this.startTime = 0;
             this.doInterval(0);
-            egret.startTick(this.doInterval,this);
+            egret.sys.$ticker.$startTick(this.doInterval,this);
         }
 
         /**

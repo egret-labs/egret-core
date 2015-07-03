@@ -479,10 +479,10 @@ module egret {
             if (value) {
                 this.playTimes = 0;
 
-                stopTick(this.advanceTime, this);
+                sys.$ticker.$stopTick(this.advanceTime, this);
             } else {
                 this.playTimes = this.playTimes == 0 ? 1 : this.playTimes;
-                startTick(this.advanceTime, this);
+                sys.$ticker.$startTick(this.advanceTime, this);
                 this.lastTime = egret.getTimer();
             }
         }

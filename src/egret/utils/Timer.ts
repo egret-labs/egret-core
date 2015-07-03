@@ -168,7 +168,7 @@ module egret {
         public start() {
             if(this._running)
                 return;
-            startTick(this.$update,this);
+            sys.$ticker.$startTick(this.$update,this);
             this._running = true;
         }
 

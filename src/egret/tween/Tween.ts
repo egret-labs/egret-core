@@ -192,7 +192,7 @@ module egret {
                 }
                 tweens.push(tween);
                 if (!Tween._inited) {
-                    egret.startTick(Tween.tick, null);
+                    sys.$ticker.$startTick(Tween.tick, null);
                     Tween._inited = true;
                 }
             } else {

@@ -28,6 +28,9 @@
 //////////////////////////////////////////////////////////////////////////////////////
 
 module egret.web {
+    /**
+     * @private
+     */
     export class WebHideHandler extends HashObject {
         private stage:egret.Stage;
         constructor(stage:egret.Stage) {
