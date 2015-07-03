@@ -86,6 +86,7 @@ module egret.web {
         var touch = new egret.sys.TouchHandler(stage);
         var webTouch = new WebTouchHandler(touch, canvas);
         var player = new egret.sys.Player(surface.renderContext, stage, entryClassName);
+        var webHide = new egret.web.WebHideHandler(stage);
 
         egret.MainContext.instance.stage = stage;
 
@@ -110,6 +111,7 @@ module egret.web {
         container["egret-touch"] = webTouch;
         container["egret-screen"] = webScreen;
         container["egret-input"] = webInput;
+        container["egret-hide"] = webHide;
 
         egret.web.$cacheTextAdapter(webInput, stage, container, canvas);
 

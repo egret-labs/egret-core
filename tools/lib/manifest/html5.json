@@ -1,8 +1,31 @@
 {
     "name": "html5",
     "dependence": ["core"],
-    "output":"core/egret/context",
-    "source":"src/egret/context",
+    "source":"src",
+    "output":"core",
     "file_list": [
+
+        "egret/text/web/StageText.ts",
+        "egret/text/web/HTML5StageText.ts",
+        "egret/text/web/InputController.ts",
+
+        "egret/localStorage/web/WebLocalStorage.ts",
+
+        "egret/web/CanvasFactory.ts",
+        "egret/web/LarkWeb.ts",
+        "egret/web/WebBitmapData.ts",
+        "egret/web/WebCapability.ts",
+        "egret/web/WebScreen.ts",
+        "egret/web/WebTouchHandler.ts",
+        "egret/web/WebXML.ts",
+        "egret/web/HTML5NetContext.ts",
+        "egret/web/WebHideHandler.ts",
+        "egret/web/WebImageLoader.ts",
+
+        "egret/media/web/Html5Audio.ts",
+        "egret/media/web/QQAudio.ts",
+        "egret/media/web/WebAudio.ts",
+
+        "egret/web/Html5Capatibility.ts"
     ]
 }

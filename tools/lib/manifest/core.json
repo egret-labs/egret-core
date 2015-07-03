@@ -83,8 +83,6 @@
 
         "egret/net/BaseImageLoader.ts",
         "egret/net/ImageLoader.ts",
-        "egret/net/WebImageLoader.ts",
-
         "egret/player/DirtyRegion.ts",
         "egret/player/DisplayList.ts",
         "egret/player/IScreenAdapter.ts",
@@ -105,9 +103,6 @@
         "egret/text/TextField.ts",
         "egret/text/VerticalAlign.ts",
         "egret/text/TextFieldUtils.ts",
-        "egret/text/web/StageText.ts",
-        "egret/text/web/HTML5StageText.ts",
-        "egret/text/web/InputController.ts",
 
         "egret/text/ITextElement.ts",
         "egret/text/HtmlTextParser.ts",
@@ -120,7 +115,6 @@
 
         "egret/system/MainContext.ts",
         "egret/localStorage/localStorage.ts",
-        "egret/localStorage/web/WebLocalStorage.ts",
         "egret/external/ExternalInterface.ts",
 
         "egret/filters/BitmapFilterQuality.ts",
@@ -130,22 +124,9 @@
         "egret/filters/ColorMatrixFilter.ts",
         "egret/filters/DropShadowFilter.ts",
 
-        "egret/web/CanvasFactory.ts",
-        "egret/web/LarkWeb.ts",
-        "egret/web/WebBitmapData.ts",
-        "egret/web/WebCapability.ts",
-        "egret/web/WebScreen.ts",
-        "egret/web/WebTouchHandler.ts",
-        "egret/web/WebXML.ts",
-        "egret/web/HTML5NetContext.ts",
-
         "egret/media/Audio.ts",
         "egret/media/Sound.ts",
-        "egret/media/web/Html5Audio.ts",
-        "egret/media/web/QQAudio.ts",
-        "egret/media/web/WebAudio.ts",
 
-        "egret/web/Html5Capatibility.ts",
         "egret/Types.ts"
     ]
 }
