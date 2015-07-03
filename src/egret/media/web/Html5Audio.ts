@@ -32,16 +32,24 @@ module egret.web {
      */
     export class Html5Audio implements Audio {
         /**
+         * @private
          * audio音频对象
          * @member {any} egret.Sound#audio
          */
         constructor() {
         }
 
+        /**
+         * @private
+         */
         private _audio;
+        /**
+         * @private
+         */
         private _loop:boolean = false;
 
         /**
+         * @private
          * 播放声音
          * @method egret.Sound#play
          * @param loop {boolean} 是否循环播放，默认为false
@@ -82,6 +90,10 @@ module egret.web {
             }
         }
 
+        /**
+         * @private
+         * 
+         */
         private clear():void {
             try {
                 this._audio.pause();
@@ -98,9 +110,13 @@ module egret.web {
 
         }
 
+        /**
+         * @private
+         */
         private paused:boolean = true;
 
         /**
+         * @private
          * 暂停声音
          * @method egret.Sound#pause
          */
@@ -110,6 +126,7 @@ module egret.web {
         }
 
         /**
+         * @private
          * 重新加载声音
          * @method egret.Sound#load
          */
@@ -117,10 +134,19 @@ module egret.web {
             this._audio.load();
         }
 
+        /**
+         * @private
+         * 
+         * @param audio 
+         */
         public $setAudio(audio):void {
             this._audio = audio;
         }
 
+        /**
+         * @private
+         * 
+         */
         private initStart():void {
             var self = this;
             for (var i = 0; i < self._listeners.length; i++) {
@@ -129,11 +155,18 @@ module egret.web {
             }
         }
 
+        /**
+         * @private
+         */
         private _listeners:Array<any> = [];
 
+        /**
+         * @private
+         */
         private _onEndedCall:Function = null;
 
         /**
+         * @private
          * 添加事件监听
          * @param type 事件类型
          * @param listener 监听函数
@@ -150,6 +183,10 @@ module egret.web {
             }
         }
 
+        /**
+         * @private
+         * 
+         */
         private removeListeners():void {
             var self = this;
             for (var i = 0; i < self._listeners.length; i++) {
@@ -162,6 +199,7 @@ module egret.web {
         }
 
         /**
+         * @private
          * 移除事件监听
          * @param type 事件类型
          * @param listener 监听函数
@@ -185,17 +223,32 @@ module egret.web {
             }
         }
 
+        /**
+         * @private
+         * 
+         * @param type 
+         * @param callback 
+         * @param thisObj 
+         */
         public $preload(type:string, callback:Function = null, thisObj:any = null):void {
             egret.callLater(callback, thisObj);
         }
 
+        /**
+         * @private
+         * 
+         */
         public $destroy():void {
 
         }
 
+        /**
+         * @private
+         */
         private _volume:number = 1;
 
         /**
+         * @private
          * 获取当前音量值
          * @returns number
          */
@@ -203,25 +256,54 @@ module egret.web {
             return this._volume;
         }
 
+        /**
+         * @private
+         * 
+         * @param value 
+         */
         public $setVolume(value:number):void {
             this._volume = Math.max(0, Math.min(value, 1));
             this._audio.volume = this._volume;
         }
 
+        /**
+         * @private
+         * 
+         * @param value 
+         */
         public $setLoop(value:boolean):void {
             this._loop = value;
         }
 
+        /**
+         * @private
+         */
         private _startTime:number = 0;
 
+        /**
+         * @private
+         * 
+         * @returns 
+         */
         public $getCurrentTime():number {
             return this._audio.currentTime;
         }
 
+        /**
+         * @private
+         * 
+         * @param value 
+         */
         public $setCurrentTime(value:number):void {
             this._startTime = value;
         }
 
+        /**
+         * @private
+         * 
+         * @param virtualUrl 
+         * @param callback 
+         */
         public $loadByUrl(virtualUrl:string, callback:(code:number)=>void):void {
             var audio = new window["Audio"](virtualUrl);
             audio["$timeoutId"] = egret.setTimeout(soundPreloadCanplayHandler, this, 100);

@@ -37,19 +37,38 @@ module egret.web {
      */
     export class HTML5NetContext extends HashObject implements NetContext{
 
+        /**
+         * @private
+         */
         public _versionCtr:egret.IVersionController;
 
+        /**
+         * @private
+         */
         private _imageLoader:egret.ImageLoader;
+        /**
+         * @private
+         */
         public constructor() {
             super();
 
             this._imageLoader = new egret.ImageLoader();
         }
 
+        /**
+         * @private
+         * 
+         * @param versionCtr 
+         */
         public initVersion(versionCtr:egret.IVersionController):void {
             this._versionCtr = versionCtr;
         }
 
+        /**
+         * @private
+         * 
+         * @param loader 
+         */
         public proceed(loader:URLLoader):void {
             var self = this;
             if (loader.dataFormat == URLLoaderDataFormat.TEXTURE) {
@@ -120,6 +139,11 @@ module egret.web {
             }
         }
 
+        /**
+         * @private
+         * 
+         * @param loader 
+         */
         private loadSound(loader:URLLoader):void {
             var virtualUrl:string = this.getVirtualUrl(loader._request.url);
             var audio = new egret.Audio();
@@ -135,6 +159,11 @@ module egret.web {
             });
         }
 
+        /**
+         * @private
+         * 
+         * @returns 
+         */
         private getXHR():any {
             if (window["XMLHttpRequest"]) {
                 return new window["XMLHttpRequest"]();
@@ -143,6 +172,12 @@ module egret.web {
             }
         }
 
+        /**
+         * @private
+         * 
+         * @param xhr 
+         * @param responseType 
+         */
         private setResponseType(xhr:XMLHttpRequest, responseType:string):void {
             switch (responseType) {
                 case URLLoaderDataFormat.TEXT:
@@ -160,6 +195,11 @@ module egret.web {
             }
         }
 
+        /**
+         * @private
+         * 
+         * @param loader 
+         */
         private loadTexture(loader:URLLoader):void {
             var virtualUrl:string = this.getVirtualUrl(loader._request.url);
 
@@ -175,11 +215,17 @@ module egret.web {
             })
         }
 
+        /**
+         * @private
+         * 
+         * @returns 
+         */
         public getChangeList():Array<any> {
             return [];
         }
 
         /**
+         * @private
          * 获取虚拟url
          * @param url
          * @returns {string}

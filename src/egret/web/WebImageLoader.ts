@@ -35,6 +35,12 @@ module egret.web {
      */
     export class WebImageLoader extends BaseImageLoader {
 
+        /**
+         * @private
+         * 
+         * @param url 
+         * @param callback 
+         */
         public load(url:string, callback:(code:number, bitmapData:any)=>void):void {
             var self = this;
             var bitmapData:HTMLImageElement = BaseImageLoader._bitmapDataFactory[url];
@@ -89,6 +95,11 @@ module egret.web {
             }
         }
 
+        /**
+         * @private
+         * 
+         * @param bitmapData 
+         */
         public static disposeBitmapData(bitmapData:any):void {
             WebImageLoader.deleteWebGLTexture(bitmapData);
             bitmapData.onload = null;
@@ -99,6 +110,11 @@ module egret.web {
             console.log("_disposeForCanvas");
         }
 
+        /**
+         * @private
+         * 
+         * @param bitmapData 
+         */
         private static deleteWebGLTexture(bitmapData:any):void {
             if (bitmapData) {
                 var webGLTexture = bitmapData.webGLTexture;

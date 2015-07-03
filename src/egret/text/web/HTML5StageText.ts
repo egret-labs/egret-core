@@ -35,28 +35,65 @@ module egret.web {
      */
     export class HTML5StageText extends EventDispatcher implements StageText {
 
+        /**
+         * @private
+         */
         private htmlInput:egret.web.HTMLInput;
+        /**
+         * @private
+         */
         constructor() {
             super();
 
         }
 
+        /**
+         * @private
+         */
         $textfield:egret.TextField;
+        /**
+         * @private
+         * 
+         * @param textfield 
+         */
         $setTextField(textfield:egret.TextField):void {
             this.$textfield = textfield;
         }
 
+        /**
+         * @private
+         */
         private _isNeedShow:boolean = false;
+        /**
+         * @private
+         */
         private inputElement:any = null;
+        /**
+         * @private
+         */
         private inputDiv:any = null;
 
+        /**
+         * @private
+         */
         private _gscaleX:number = 0;
+        /**
+         * @private
+         */
         private _gscaleY:number = 0;
 
+        /**
+         * @private
+         * 
+         */
         $addToStage():void {
             this.htmlInput = egret.web.$getTextAdapter(this.$textfield);
         }
 
+        /**
+         * @private
+         * 
+         */
         private _initElement():void {
             var point = this.$textfield.localToGlobal(0, 0);
             var x = point.x;
@@ -74,6 +111,10 @@ module egret.web {
             this._gscaleY = scaleY * cY;
         }
 
+        /**
+         * @private
+         * 
+         */
         $show():void {
             if (!this.htmlInput.isCurrentStageText(this)) {
                 this.inputElement = this.htmlInput.getInputElement(this);
@@ -92,11 +133,19 @@ module egret.web {
             this._initElement();
         }
 
+        /**
+         * @private
+         * 
+         */
         private onBlurHandler():void {
             this.htmlInput.clearInputElement();
             window.scrollTo(0, 0);
         }
 
+        /**
+         * @private
+         * 
+         */
         private executeShow():void {
             var self = this;
             //打开
@@ -120,8 +169,15 @@ module egret.web {
             this.inputElement.focus();
         }
 
+        /**
+         * @private
+         */
         private _isNeesHide:boolean = false;
 
+        /**
+         * @private
+         * 
+         */
         $hide():void {
             //标记当前点击其他地方关闭
             this._isNeesHide = true;
@@ -131,8 +187,16 @@ module egret.web {
             }
         }
 
+        /**
+         * @private
+         */
         private textValue:string = "";
 
+        /**
+         * @private
+         * 
+         * @returns 
+         */
         $getText():string {
             if (!this.textValue) {
                 this.textValue = "";
@@ -140,18 +204,31 @@ module egret.web {
             return this.textValue;
         }
 
+        /**
+         * @private
+         * 
+         * @param value 
+         */
         $setText(value:string):void {
             this.textValue = value;
 
             this.resetText();
         }
 
+        /**
+         * @private
+         * 
+         */
         private resetText():void {
             if (this.inputElement) {
                 this.inputElement.value = this.textValue;
             }
         }
 
+        /**
+         * @private
+         * 
+         */
         public _onInput():void {
             var self = this;
             self.textValue = self.inputElement.value;
@@ -159,6 +236,11 @@ module egret.web {
             egret.Event.dispatchEvent(self, "updateText", false);
         }
 
+        /**
+         * @private
+         * 
+         * @param e 
+         */
         public _onClickHandler(e):void {
             if (this._isNeedShow) {
                 e.stopImmediatePropagation();
@@ -171,14 +253,27 @@ module egret.web {
             }
         }
 
+        /**
+         * @private
+         * 
+         */
         public _onDisconnect():void {
             this.inputElement = null;
 
             this.dispatchEvent(new egret.Event("blur"));
         }
 
+        /**
+         * @private
+         */
         private _styleInfoes:Object = {};
 
+        /**
+         * @private
+         * 
+         * @param style 
+         * @param value 
+         */
         private setElementStyle(style:string, value:any):void {
             if (this.inputElement) {
                 if (this._styleInfoes[style] != value) {
@@ -188,6 +283,10 @@ module egret.web {
             }
         }
 
+        /**
+         * @private
+         * 
+         */
         $removeFromStage():void {
             if (this.inputElement) {
                 this.htmlInput.disconnectStageText(this);
@@ -219,23 +318,57 @@ module egret.web {
 }
 
 module egret.web {
+    /**
+     * @private
+     */
     export class HTMLInput {
+        /**
+         * @private
+         */
         private _stageText:HTML5StageText;
 
+        /**
+         * @private
+         */
         private _simpleElement:any;
+        /**
+         * @private
+         */
         private _multiElement:any;
 
+        /**
+         * @private
+         */
         private _inputElement:any;
+        /**
+         * @private
+         */
         public _inputDIV:any;
 
+        /**
+         * @private
+         * 
+         * @returns 
+         */
         public isInputOn():boolean {
             return this._stageText != null;
         }
 
+        /**
+         * @private
+         * 
+         * @param stageText 
+         * @returns 
+         */
         public isCurrentStageText(stageText):boolean {
             return this._stageText == stageText;
         }
 
+        /**
+         * @private
+         * 
+         * @param dom 
+         */
         private initValue(dom:any):void {
             dom.style.position = "absolute";
             dom.style.left = "0px";
@@ -244,11 +377,24 @@ module egret.web {
             dom.style.padding = "0";
         }
 
+        /**
+         * @private
+         */
         public _needShow:boolean = false;
 
+        /**
+         * @private
+         */
         $scaleX:number = 1;
+        /**
+         * @private
+         */
         $scaleY:number = 1;
 
+        /**
+         * @private
+         * 
+         */
         $updateSize():void {
             var stageW = this.canvas.width;
             var stageH = this.canvas.height;
@@ -262,8 +408,21 @@ module egret.web {
             this.StageDelegateDiv.style.top = this.canvas.style.top;
         }
 
+        /**
+         * @private
+         */
         private StageDelegateDiv;
+        /**
+         * @private
+         */
         private canvas;
+        /**
+         * @private
+         * 
+         * @param container 
+         * @param canvas 
+         * @returns 
+         */
         public _initStageDelegateDiv(container, canvas):any {
             this.canvas = canvas;
             var self = this;
@@ -351,6 +510,10 @@ module egret.web {
             };
         }
 
+        /**
+         * @private
+         * 
+         */
         public show():void {
             var self = this;
             var inputElement = self._inputElement;
@@ -360,6 +523,11 @@ module egret.web {
             }, self);
         }
 
+        /**
+         * @private
+         * 
+         * @param stageText 
+         */
         public disconnectStageText(stageText):void {
             if (this._stageText == null || this._stageText == stageText) {
                 this.clearInputElement();
@@ -370,6 +538,10 @@ module egret.web {
             }
         }
 
+        /**
+         * @private
+         * 
+         */
         public clearInputElement():void {
             var self = this;
             if (self._inputElement) {
@@ -404,6 +576,12 @@ module egret.web {
             }
         }
 
+        /**
+         * @private
+         * 
+         * @param stageText 
+         * @returns 
+         */
         public getInputElement(stageText):any {
             var self = this;
             self.clearInputElement();

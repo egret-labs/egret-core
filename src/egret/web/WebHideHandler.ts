@@ -32,7 +32,13 @@ module egret.web {
      * @private
      */
     export class WebHideHandler extends HashObject {
+        /**
+         * @private
+         */
         private stage:egret.Stage;
+        /**
+         * @private
+         */
         constructor(stage:egret.Stage) {
             super();
             this.stage = stage;
@@ -40,7 +46,14 @@ module egret.web {
             this.registerListener();
         }
 
+        /**
+         * @private
+         */
         private isActivate:boolean = true;
+        /**
+         * @private
+         * 
+         */
         private registerListener():void {
             var self = this;
             //失去焦点

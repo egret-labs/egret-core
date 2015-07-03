@@ -31,6 +31,8 @@
 module egret {
     /**
      * @private
+     * @version Egret 2.0
+     * @platform Web,Native
      */
     export class TextFieldUtils {
 
@@ -85,6 +87,12 @@ module egret {
             return halign;
         }
 
+        /**
+         * @private
+         * 
+         * @param textfield 
+         * @returns 
+         */
         public static _getTextHeight(textfield:egret.TextField):number {
             var textHeight:number = (egret.TextFieldType.INPUT == textfield.$TextField[sys.TextKeys.type]
                 && !textfield.$TextField[sys.TextKeys.multiline]) ? textfield.$TextField[sys.TextKeys.fontSize] : (textfield.$TextField[sys.TextKeys.textHeight] + (textfield.$TextField[sys.TextKeys.numLines] - 1) * textfield.$TextField[sys.TextKeys.lineSpacing]);

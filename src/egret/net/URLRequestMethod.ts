@@ -34,32 +34,44 @@ module egret {
 	 * The URLRequestMethod class provides values that specify whether the
      * URLRequest object should use the POST method or the GET method when sending data to a server.
      * @link http://docs.egret-labs.org/post/manual/net/postget.html POST与GET
+     * @version Egret 2.0
+     * @platform Web,Native
 	 */
 	/**
      * @language zh_CN
 	 * URLRequestMethod 类提供了一些值，这些值可指定在将数据发送到服务器时，
      * URLRequest 对象应使用 POST 方法还是 GET 方法。
      * @link http://docs.egret-labs.org/post/manual/net/postget.html POST与GET
+     * @version Egret 2.0
+     * @platform Web,Native
 	 */
     export class URLRequestMethod {
 
 		/**
          * @language en_US
          * Specify that the URLRequest object is a GET.
+         * @version Egret 2.0
+         * @platform Web,Native
 		 */
 		/**
          * @language zh_CN
          * 表示 URLRequest 对象是一个 GET。
+         * @version Egret 2.0
+         * @platform Web,Native
 		 */
         public static GET:string = "get";
 
 		/**
          * @language en_US
          * Specify that the URLRequest object is a POST.
+         * @version Egret 2.0
+         * @platform Web,Native
 		 */
 		/**
          * @language zh_CN
          * 表示 URLRequest 对象是一个 POST。
+         * @version Egret 2.0
+         * @platform Web,Native
 		 */
         public static POST:string = "post";
     }

@@ -34,6 +34,8 @@ module egret {
      * @method egret.getOption
      * @param key {string} 参数key
      * @private
+     * @version Egret 2.0
+     * @platform Web,Native
      */
     export function getOption(key:string):string {
         if (window.hasOwnProperty("location")) {

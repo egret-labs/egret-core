@@ -37,6 +37,8 @@ module egret {
      *
      * @event egret.Event.COMPLETE Emit when the audio resource is loaded and ready to play
      * @event egret.SoundEvent.SOUND_COMPLETE 在声音完成播放后调度。
+     * @version Egret 2.0
+     * @platform Web,Native
      */
     /**
      * @language zh_CN
@@ -45,42 +47,57 @@ module egret {
      *
      * @event egret.Event.COMPLETE 音频加载完成时抛出
      * @event egret.SoundEvent.SOUND_COMPLETE 在声音完成播放后调度。
+     * @version Egret 2.0
+     * @platform Web,Native
      */
     export class Sound extends egret.EventDispatcher {
 
         /**
          * @language en_US
          * Background music
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 背景音乐
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         public static MUSIC:string = "music";
 
         /**
          * @language en_US
          * EFFECT
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 音效
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         public static EFFECT:string = "effect";
 
         /**
          * @language en_US
          * Create egret.Sound objects
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 创建 egret.Sound 对象
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         constructor() {
             super();
         }
 
         /**
+         * @private
          * audio音频对象
          * @member {any} egret.Sound#audio
          */
@@ -90,11 +107,15 @@ module egret {
          * @language en_US
          * Type, default is egret.Sound.EFFECT.
          * In the native and runtime environment, while only play a background music, sound length so as not to be too long.
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 类型，默认为 egret.Sound.EFFECT。
          * 在 native 和 runtime 环境下，背景音乐同时只能播放一个，音效长度尽量不要太长。
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         public type:string = Sound.EFFECT;
 
@@ -102,11 +123,15 @@ module egret {
          * @language en_US
          * When playing sound, position property indicates the location of the sound file that is currently playing (in milliseconds).
          * @returns {number}
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 当播放声音时，position 属性表示声音文件中当前播放的位置（以毫秒为单位）。
          * @returns {number}
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         public get position():number {
             return this.audio ? Math.floor(this.audio.$getCurrentTime() * 1000) : 0;
@@ -117,12 +142,16 @@ module egret {
          * Generates a new SoundChannel object to play back the sound.
          * @param loop Defines should play the audio again when the audio is ended. (default = false)
          * @param position The initial position in Millisecond at which playback should start, (default = 0)
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 生成一个新的 SoundChannel 对象来播放该声音。此方法返回 SoundChannel 对象，访问该对象可停止声音调整音量。
          * @param loop 是否需要循环播放，默认值是 false
          * @param position 应开始播放的初始位置（以毫秒为单位），默认值是 0
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         public play(loop:boolean = false, position:number = 0):void {
             var sound = this.audio;
@@ -134,15 +163,22 @@ module egret {
             sound.$play(this.type);
         }
 
+        /**
+         * @private
+         */
         private pauseTime:number = 0;
 
         /**
          * @language en_US
          * Sound stops playing
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 声音停止播放
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         public stop():void {
             var sound = this.audio;
@@ -157,10 +193,14 @@ module egret {
         /**
          * @language en_US
          * Pause sound
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 暂停声音
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         public pause():void {
             var sound = this.audio;
@@ -174,10 +214,14 @@ module egret {
         /**
          * @language en_US
          * Continue playback from the last pause position
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 继续从上次暂停的位置播放
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         public resume():void {
             var sound = this.audio;
@@ -192,10 +236,14 @@ module egret {
         /**
          * @language en_US
          * Reload sound
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 重新加载声音
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         public load():void {
             var sound = this.audio;
@@ -205,6 +253,9 @@ module egret {
             sound.$load();
         }
 
+        /**
+         * @private
+         */
         private listeners:Array<any> = [];
 
 
@@ -216,6 +267,8 @@ module egret {
          * its only parameter and must return nothing, as this example shows: function(evt:Event):void  The function can
          * have any name.
          * @param thisObject the listener function's "this"
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         /**
          * @language zh_CN
@@ -224,6 +277,8 @@ module egret {
          * @param listener 处理事件的侦听器函数。此函数必须接受 Event 对象作为其唯一的参数，并且不能返回任何结果，
          * 如下面的示例所示： function(evt:Event):void 函数可以有任何名称。
          * @param thisObject 侦听函数绑定的this对象
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         public addEventListener(type:string, listener:Function, thisObject:any):void {
             super.addEventListener(type, listener, thisObject);
@@ -265,6 +320,8 @@ module egret {
          * its only parameter and must return nothing, as this example shows: function(evt:Event):void  The function can
          * have any name.
          * @param thisObject the listener function's "this"
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         /**
          * @language zh_CN
@@ -273,6 +330,8 @@ module egret {
          * @param listener 处理事件的侦听器函数。此函数必须接受 Event 对象作为其唯一的参数，并且不能返回任何结果，
          * 如下面的示例所示： function(evt:Event):void 函数可以有任何名称。
          * @param thisObject 侦听函数绑定的this对象
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         public removeEventListener(type:string, listener:Function, thisObject:any):void {
             super.removeEventListener(type, listener, thisObject);
@@ -298,6 +357,12 @@ module egret {
             }
         }
 
+        /**
+         * @private
+         * 
+         * @param type 
+         * @returns 
+         */
         private getVirtualType(type:string):string {
             switch (type) {
                 case egret.SoundEvent.SOUND_COMPLETE:
@@ -323,6 +388,10 @@ module egret {
             sound.$setVolume(Math.max(0, Math.min(value, 1)));
         }
 
+        /**
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
         public get volume():number {
             return this.audio ? this.audio.$getVolume() : 0;
         }
@@ -334,6 +403,8 @@ module egret {
          * @param type Sound Type
          * @param callback callback
          * @param thisObj Listener function to bind this object
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         /**
          * @language zh_CN
@@ -342,6 +413,8 @@ module egret {
          * @param type 声音类型
          * @param callback 回调函数
          * @param thisObj 侦听函数绑定的this对象
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         public preload(type:string, callback:Function = null, thisObj:any = null):void {
             this.type = type;
@@ -349,6 +422,11 @@ module egret {
             this.audio.$preload(type, callback, thisObj);
         }
 
+        /**
+         * @private
+         * 
+         * @param value 
+         */
         public $setAudio(value:Audio):void {
             this.audio = value;
         }
@@ -357,11 +435,15 @@ module egret {
          * @language en_US
          * The current audio release
          * the use of native, html5 in empty achieve
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 释放当前音频
          * native中使用，html5里为空实现
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         public destroy():void {
             this.audio.$destroy();

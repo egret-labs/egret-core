@@ -29,8 +29,17 @@
 
 module egret {
 
+    /**
+     * @private
+     */
     export var $callLaterFunctionList:Array<any> = [];
+    /**
+     * @private
+     */
     export var $callLaterThisList:Array<any> = [];
+    /**
+     * @private
+     */
     export var $callLaterArgsList:Array<any> = [];
 
     /**
@@ -39,6 +48,8 @@ module egret {
      * @param method {Function} The function to be delayed to run
      * @param thisObject {any} this reference of callback function
      * @param ...args {any} Function parameter list
+     * @version Egret 2.0
+     * @platform Web,Native
      */
     /**
      * @language zh_CN
@@ -46,6 +57,8 @@ module egret {
      * @param method {Function} 要延迟执行的函数
      * @param thisObject {any} 回调函数的this引用
      * @param ...args {any} 函数参数列表
+     * @version Egret 2.0
+     * @platform Web,Native
      */
     export function callLater(method:Function,thisObject:any,...args):void
     {
@@ -54,8 +67,17 @@ module egret {
         $callLaterArgsList.push(args);
     }
 
+    /**
+     * @private
+     */
     export var $callAsyncFunctionList:Array<any> = [];
+    /**
+     * @private
+     */
     export var $callAsyncThisList:Array<any> = [];
+    /**
+     * @private
+     */
     export var $callAsyncArgsList:Array<any> = [];
     /**
      * 异步调用函数

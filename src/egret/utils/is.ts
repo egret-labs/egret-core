@@ -43,6 +43,8 @@ module egret {
      *     egret.log(egret.is(instance,egret.Types.Bitmap))  //false
      * </code>
      * @see egret.registerClass()
+     * @version Egret 2.0
+     * @platform Web,Native
      */
     /**
      * @language zh_CN
@@ -58,6 +60,8 @@ module egret {
      *     egret.log(egret.is(instance,egret.Types.Bitmap))  //false
      * </code>
      * @see egret.registerClass()
+     * @version Egret 2.0
+     * @platform Web,Native
      */
     export function is(instance:any, typeFlag:number):boolean {
         if (!instance || typeof instance != "object") {

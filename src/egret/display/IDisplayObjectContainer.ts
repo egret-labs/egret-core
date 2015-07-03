@@ -37,6 +37,8 @@ module egret {
      * for organizing the z-order of the objects. The z-order is the front-to-back order that determines which object is
      * drawn in front, which is behind, and so on.
      * @see egret.DisplayObject
+     * @version Egret 2.0
+     * @platform Web,Native
      */
     /**
      * @private
@@ -45,16 +47,22 @@ module egret {
      * 排列显示列表中的显示对象。每个 DisplayObjectContainer 对象都有自己的子级列表，用于组织对象的 Z 轴顺序。Z 轴顺序是由前至后的顺序，
      * 可确定哪个对象绘制在前，哪个对象绘制在后等。
      * @see egret.DisplayObject
+     * @version Egret 2.0
+     * @platform Web,Native
      */
     export interface IDisplayObjectContainer extends DisplayObject {
 
         /**
          * @language en_US
          * [read-only] Returns the number of children of this object.
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         /**
          * @language zh_CN
          * [只读] 返回此对象的子项数目。
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         numChildren:number;
 
@@ -67,6 +75,8 @@ module egret {
          * @param child The DisplayObject instance to add as a child of this DisplayObjectContainer instance.
          * @returns 在 child The DisplayObject instance that you pass in the child parameter.
          * @see #addChildAt()
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         /**
          * @language zh_CN
@@ -75,6 +85,8 @@ module egret {
          * @param child 要作为该 DisplayObjectContainer 实例的子项添加的 DisplayObject 实例。
          * @returns 在 child 参数中传递的 DisplayObject 实例。
          * @see #addChildAt()
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         addChild(child:DisplayObject):DisplayObject;
 
@@ -89,6 +101,8 @@ module egret {
          * the child object that exists at that position and all higher positions are moved up one position in the child list.
          * @returns The DisplayObject instance that you pass in the child parameter.
          * @see #addChild()
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         /**
          * @language zh_CN
@@ -98,6 +112,8 @@ module egret {
          * @param index 添加该子项的索引位置。 如果指定当前占用的索引位置，则该位置以及所有更高位置上的子对象会在子级列表中上移一个位置。
          * @returns 在 child 参数中传递的 DisplayObject 实例。
          * @see #addChild()
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         addChildAt(child:DisplayObject, index:number):DisplayObject;
 
@@ -108,6 +124,8 @@ module egret {
          * great-grandchildren, and so on each return true.
          * @param child The child object to test.
          * @returns true if the child object is a child of the DisplayObjectContainer or the container itself; otherwise false.
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         /**
          * @language zh_CN
@@ -115,6 +133,8 @@ module egret {
          * 孙项、曾孙项等，每项都返回 true。
          * @param child 要测试的子对象。
          * @returns 如果指定的显示对象为 DisplayObjectContainer 该实例本身，则返回true，如果指定的显示对象为当前实例子项，则返回false。
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         contains(child:DisplayObject):boolean;
 
@@ -124,6 +144,8 @@ module egret {
          * @param index The index position of the child object.
          * @returns The child display object at the specified index position.
          * @see #getChildByName()
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         /**
          * @language zh_CN
@@ -131,6 +153,8 @@ module egret {
          * @param index 子对象的索引位置。
          * @returns 位于指定索引位置处的子显示对象。
          * @see #getChildByName()
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         getChildAt(index:number):DisplayObject;
 
@@ -139,11 +163,15 @@ module egret {
          * Returns the index position of a child DisplayObject instance.
          * @param child The DisplayObject instance to identify.
          * @returns The index position of the child display object to identify.
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 返回 DisplayObject 的 child 实例的索引位置。
          * @returns 要查找的子显示对象的索引位置。
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         getChildIndex(child:DisplayObject):number;
 
@@ -157,6 +185,8 @@ module egret {
          * @returns The child display object with the specified name.
          * @see #getChildAt()
          * @see egret.DisplayObject#name
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         /**
          * @language zh_CN
@@ -166,6 +196,8 @@ module egret {
          * @returns 具有指定名称的子显示对象。
          * @see #getChildAt()
          * @see egret.DisplayObject#name
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         getChildByName(name:string):DisplayObject;
 
@@ -178,6 +210,8 @@ module egret {
          * @param child The DisplayObject instance to remove.
          * @returns The DisplayObject instance that you pass in the child parameter.
          * @see #removeChildAt()
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         /**
          * @language zh_CN
@@ -186,6 +220,8 @@ module egret {
          * @param child 要删除的 DisplayObject 实例。
          * @returns 在 child 参数中传递的 DisplayObject 实例。
          * @see #removeChildAt()
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         removeChild(child:DisplayObject):DisplayObject;
 
@@ -197,6 +233,8 @@ module egret {
          * @param index The child index of the DisplayObject to remove.
          * @returns The DisplayObject instance that was removed.
          * @see #removeChild()
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         /**
          * @language zh_CN
@@ -205,6 +243,8 @@ module egret {
          * @param index 要删除的 DisplayObject 的子索引。
          * @returns 已删除的 DisplayObject 实例。
          * @see #removeChild()
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         removeChildAt(index:number):DisplayObject;
 
@@ -215,6 +255,8 @@ module egret {
          * @param index The resulting index number for the child display object.
          * @see #addChildAt()
          * @see #getChildAt()
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         /**
          * @language zh_CN
@@ -223,6 +265,8 @@ module egret {
          * @param index 生成的 child 显示对象的索引编号。当新的索引编号小于0或大于已有子元件数量时，新加入的DisplayObject对象将会放置于最上层。
          * @see #addChildAt()
          * @see #getChildAt()
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         setChildIndex(child:DisplayObject, index:number):void;
 
@@ -233,6 +277,8 @@ module egret {
          * @param index1 The index position of the first child object.
          * @param index2 The index position of the second child object.
          * @see #swapChildren()
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         /**
          * @language zh_CN
@@ -240,6 +286,8 @@ module egret {
          * @param index1 第一个子对象的索引位置。
          * @param index2 第二个子对象的索引位置。
          * @see #swapChildren()
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         swapChildrenAt(index1:number, index2:number):void;
 
@@ -250,6 +298,8 @@ module egret {
          * @param child1 The first child object.
          * @param child2 The second child object.
          * @see #swapChildrenAt()
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         /**
          * @language zh_CN
@@ -257,6 +307,8 @@ module egret {
          * @param child1 第一个子对象。
          * @param child2 第二个子对象。
          * @see #swapChildrenAt()
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         swapChildren(child1:DisplayObject, child2:DisplayObject):void;
 
@@ -266,12 +318,16 @@ module egret {
          * property of the removed children is set to null , and the objects are garbage collected if no other references to the children exist.
          * @see #removeChild()
          * @see #removeChildAt()
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 从 DisplayObjectContainer 实例的子级列表中删除所有 child DisplayObject 实例。
          * @see #removeChild()
          * @see #removeChildAt()
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         removeChildren():void;
 
@@ -280,11 +336,15 @@ module egret {
          * Determines whether or not the children of the object are touch, or user input device, enabled. If an object is
          * enabled, a user can interact with it by using a touch or user input device.
          * @default true
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 确定对象的子级是否支持触摸或用户输入设备。如果对象支持触摸或用户输入设备，用户可以通过使用触摸或用户输入设备与之交互。
          * @default true
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         touchChildren:boolean;
 

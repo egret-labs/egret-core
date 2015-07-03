@@ -34,12 +34,16 @@ module egret{
      * The GraphicsPattern interface represents an opaque object describing a pattern, based on a BitmapData,
      * created by the Graphics.createPattern() method.
      * @see egret.Graphics#createPattern()
+     * @version Egret 2.0
+     * @platform Web,Native
      */
     /**
      * @private
      * @language zh_CN
      * GraphicsPattern 接口表示描述一个模板（基于BitmapData）的不透明对象，通过 Graphics.createPattern() 静态方法创建.
      * @see egret.Graphics#createPattern()
+     * @version Egret 2.0
+     * @platform Web,Native
      */
     export interface GraphicsPattern{
 

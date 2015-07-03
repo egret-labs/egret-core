@@ -32,16 +32,24 @@ module egret {
      * @language en_US
      * h5 and native interaction.
      * @see http://edn.egret.com/cn/index.php?g=&m=article&a=index&id=167&terms1_id=25&terms2_id=39 Android between language communication within the project
+     * @version Egret 2.0
+     * @platform Web,Native
      */
     /**
      * @language zh_CN
      * h5与native交互。
      * @see http://edn.egret.com/cn/index.php?g=&m=article&a=index&id=167&terms1_id=25&terms2_id=39 Android项目内的语言间通讯
+     * @version Egret 2.0
+     * @platform Web,Native
      */
     export interface ExternalInterface {
 
     }
 
+    /**
+     * @version Egret 2.0
+     * @platform Web,Native
+     */
     export var ExternalInterface: {
 
         /**

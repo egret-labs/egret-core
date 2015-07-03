@@ -35,22 +35,48 @@ module egret {
      * The Graphics class contains a set of methods for creating vector shape. Display objects that support drawing include Sprite and Shape objects. Each class in these classes includes the graphics attribute that is a Graphics object.
      * The following auxiliary functions are provided for ease of use: drawRect(), drawRoundRect(), drawCircle(), and drawEllipse().
      * @link http://docs.egret-labs.org/post/manual/graphics/drawrect.html  Draw Rectangle
+     * @version Egret 2.0
+     * @platform Web,Native
      */
     /**
      * @language zh_CN
      * Graphics 类包含一组可用来创建矢量形状的方法。支持绘制的显示对象包括 Sprite 和 Shape 对象。这些类中的每一个类都包括 graphics 属性，该属性是一个 Graphics 对象。
      * 以下是为便于使用而提供的一些辅助函数：drawRect()、drawRoundRect()、drawCircle() 和 drawEllipse()。
      * @link http://docs.egret-labs.org/post/manual/graphics/drawrect.html  绘制矩形
+     * @version Egret 2.0
+     * @platform Web,Native
      */
     export class Graphics extends HashObject {
 
+        /**
+         * @private
+         */
         public $renderContext:GraphicsRenderContext = null;
+        /**
+         * @private
+         */
         private strokeStyleColor:string = null;
+        /**
+         * @private
+         */
         private fillStyleColor:string = null;
+        /**
+         * @private
+         */
         public _dirty:boolean = false;
+        /**
+         * @private
+         */
         private lineX:number = 0;
+        /**
+         * @private
+         */
         private lineY:number = 0;
 
+        /**
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
         constructor() {
             super();
 
@@ -78,6 +104,8 @@ module egret {
          * Calling the clear() method will clear the fill.
          * @param color {number} Filled color
          * @param alpha {number} Filled Alpha value
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         /**
          * @language zh_CN
@@ -85,6 +113,8 @@ module egret {
          * 调用 clear() 方法会清除填充。
          * @param color {number} 填充的颜色
          * @param alpha {number} 填充的 Alpha 值
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         public beginFill(color:number, alpha:number = 1):void {
             this.fillStyleColor = this._parseColor(color, alpha);
@@ -92,6 +122,13 @@ module egret {
             this._setStyle(this.fillStyleColor);
         }
 
+        /**
+         * @private
+         * 
+         * @param color 
+         * @param alpha 
+         * @returns 
+         */
         public _parseColor(color:number, alpha:number):string {
             var _colorBlue = color & 0x0000FF;
             var _colorGreen = (color & 0x00ff00) >> 8;
@@ -99,6 +136,11 @@ module egret {
             return "rgba(" + _colorRed + "," + _colorGreen + "," + _colorBlue + "," + alpha + ")";
         }
 
+        /**
+         * @private
+         * 
+         * @param colorStr 
+         */
         private _setStyle(colorStr:string):void {
             this.$renderContext.fillStyle = colorStr;
             this.$renderContext.beginPath();
@@ -111,6 +153,8 @@ module egret {
          * @param y {number} y position of the center, relative to the registration point of the parent display object (in pixels).
          * @param width {number} Width of the rectangle (in pixels).
          * @param height {number} Height of the rectangle (in pixels).
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         /**
          * @language zh_CN
@@ -119,6 +163,8 @@ module egret {
          * @param y {number} 相对于父显示对象注册点的圆心的 y 位置（以像素为单位）。
          * @param width {number} 矩形的宽度（以像素为单位）。
          * @param height {number} 矩形的高度（以像素为单位）。
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         public drawRect(x:number, y:number, width:number, height:number):void {
             this.$renderContext.beginPath();
@@ -132,6 +178,8 @@ module egret {
          * @param x {number} x position of the center, relative to the registration point of the parent display object (in pixels).
          * @param y {number} y position of the center, relative to the registration point of the parent display object (in pixels).
          * @param r {number} Radius of the circle (in pixels).
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         /**
          * @language zh_CN
@@ -139,6 +187,8 @@ module egret {
          * @param x {number} 圆心相对于父显示对象注册点的 x 位置（以像素为单位）。
          * @param y {number} 相对于父显示对象注册点的圆心的 y 位置（以像素为单位）。
          * @param r {number} 圆的半径（以像素为单位）。
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         public drawCircle(x:number, y:number, r:number):void {
             this.$renderContext.beginPath();
@@ -155,6 +205,8 @@ module egret {
          * @param height {number} Height of the rectangle (in pixels).
          * @param ellipseWidth {number} Width used to draw an ellipse with rounded corners (in pixels).
          * @param ellipseHeight {number} Height used to draw an ellipse with rounded corners (in pixels). (Optional) If no value is specified, the default value matches the value of the ellipseWidth parameter.
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         /**
          * @language zh_CN
@@ -165,6 +217,8 @@ module egret {
          * @param height {number} 矩形的高度（以像素为单位）。
          * @param ellipseWidth {number} 用于绘制圆角的椭圆的宽度（以像素为单位）。
          * @param ellipseHeight {number} 用于绘制圆角的椭圆的高度（以像素为单位）。 （可选）如果未指定值，则默认值与为 ellipseWidth 参数提供的值相匹配。
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         public drawRoundRect(x:number, y:number, width:number, height:number, ellipseWidth:number, ellipseHeight?:number):void {
             var _x:number = x;//控制X偏移
@@ -198,6 +252,8 @@ module egret {
          * @param y {number} A number indicating the vertical position, relative to the registration point of the parent display object (in pixels).
          * @param width {number} Width of the rectangle (in pixels).
          * @param height {number} Height of the rectangle (in pixels).
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         /**
          * @language zh_CN
@@ -206,6 +262,8 @@ module egret {
          * @param y {number} 一个表示相对于父显示对象注册点的垂直位置的数字（以像素为单位）。
          * @param width {number} 矩形的宽度（以像素为单位）。
          * @param height {number} 矩形的高度（以像素为单位）。
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         public drawEllipse(x:number, y:number, width:number, height:number):void {
             var _x:number = x + width / 2;//控制X偏移
@@ -232,6 +290,8 @@ module egret {
          * @param caps {string} Specifies the value of the CapsStyle class of the endpoint type at the end of the line.
          * @param joints {string} Specifies the type of joint appearance of corner.
          * @param miterLimit {number} Indicates the limit number of cut miter.
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         /**
          * @language zh_CN
@@ -244,6 +304,8 @@ module egret {
          * @param caps {string} 用于指定线条末端处端点类型的 CapsStyle 类的值。
          * @param joints {string} 指定用于拐角的连接外观的类型。
          * @param miterLimit {number} 用于表示剪切斜接的极限值的数字。
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         public lineStyle(thickness:number = NaN, color:number = 0, alpha:number = 1.0, pixelHinting:boolean = false, scaleMode:string = "normal", caps:string = null, joints:string = null, miterLimit:number = 3):void {
             if (this.strokeStyleColor) {
@@ -265,12 +327,16 @@ module egret {
          * Draw a straight line from the current drawing position to (x, y) using the current line style; the current drawing position is then set to (x, y).
          * @param x {number} A number indicating the horizontal position, relative to the registration point of the parent display object (in pixels).
          * @param y {number} A number indicating the vertical position, relative to the registration point of the parent display object (in pixels).
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 使用当前线条样式绘制一条从当前绘图位置开始到 (x, y) 结束的直线；当前绘图位置随后会设置为 (x, y)。
          * @param x {number} 一个表示相对于父显示对象注册点的水平位置的数字（以像素为单位）。
          * @param y {number} 一个表示相对于父显示对象注册点的垂直位置的数字（以像素为单位）。
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         public lineTo(x:number, y:number):void {
             this.lineX = x;
@@ -288,6 +354,8 @@ module egret {
          * @param controlY {number} A number indicating the vertical position of the control point, relative to the registration point of the parent display object.
          * @param anchorX {number} A number indicating the horizontal position of the next anchor point, relative to the registration point of the parent display object.
          * @param anchorY {number} A number indicating the vertical position of the next anchor point, relative to the registration point of the parent display object.
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         /**
          * @language zh_CN
@@ -298,6 +366,8 @@ module egret {
          * @param controlY {number} 一个数字，指定控制点相对于父显示对象注册点的垂直位置。
          * @param anchorX {number} 一个数字，指定下一个锚点相对于父显示对象注册点的水平位置。
          * @param anchorY {number} 一个数字，指定下一个锚点相对于父显示对象注册点的垂直位置。
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         public curveTo(controlX:number, controlY:number, anchorX:number, anchorY:number):void {
             this.lineX = anchorX;
@@ -315,6 +385,8 @@ module egret {
          * @param controlY2 {number} Specify the second control point relative to the registration point of the parent display the vertical position of the object.
          * @param anchorX {number} Specifies the anchor point relative to the registration point of the parent display the horizontal position of the object.
          * @param anchorY {number} Specifies the anchor point relative to the registration point of the parent display the vertical position of the object.
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         /**
          * @language zh_CN
@@ -325,6 +397,8 @@ module egret {
          * @param controlY2 {number} 指定第二个控制点相对于父显示对象的注册点的垂直位置。
          * @param anchorX {number} 指定锚点相对于父显示对象的注册点的水平位置。
          * @param anchorY {number} 指定锚点相对于父显示对象的注册点的垂直位置。
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         public cubicCurveTo(controlX1:number, controlY1:number, controlX2:number, controlY2:number, anchorX:number, anchorY:number):void {
             this.lineX = anchorX;
@@ -338,12 +412,16 @@ module egret {
          * Move the current drawing position to (x, y). If any of these parameters is missed, calling this method will fail and the current drawing position keeps unchanged.
          * @param x {number} A number indicating the horizontal position, relative to the registration point of the parent display object (in pixels).
          * @param y {number} A number indicating the vertical position, relative to the registration point of the parent display object (in pixels).
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 将当前绘图位置移动到 (x, y)。如果缺少任何一个参数，则此方法将失败，并且当前绘图位置不改变。
          * @param x {number} 一个表示相对于父显示对象注册点的水平位置的数字（以像素为单位）。
          * @param y {number} 一个表示相对于父显示对象注册点的垂直位置的数字（以像素为单位）。
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         public moveTo(x:number, y:number):void {
             this.lineX = x;
@@ -354,10 +432,14 @@ module egret {
         /**
          * @language en_US
          * Clear graphics that are drawn to this Graphics object, and reset fill and line style settings.
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 清除绘制到此 Graphics 对象的图形，并重置填充和线条样式设置。
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         public clear():void {
             this.lineX = 0;
@@ -375,10 +457,14 @@ module egret {
         /**
          * @language en_US
          * Apply fill to the lines and curves added after the previous calling to the beginFill() method.
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 对从上一次调用 beginFill()方法之后添加的直线和曲线应用填充。
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         public endFill():void {
             if (this.fillStyleColor != null) {
@@ -387,11 +473,19 @@ module egret {
             }
         }
 
+        /**
+         * @private
+         * 
+         */
         private _createEndFillCommand():void {
             this.$renderContext.fill();
             this.$renderContext.closePath();
         }
 
+        /**
+         * @private
+         * 
+         */
         private _fill():void {
             if (this.fillStyleColor) {
                 this._createEndFillCommand();
@@ -401,15 +495,34 @@ module egret {
             }
         }
 
+        /**
+         * @private
+         * 
+         */
         private _createEndLineCommand():void {
             this.$renderContext.stroke();
             this.$renderContext.closePath();
         }
 
+        /**
+         * @private
+         */
         private _firstCheck:boolean = true;
+        /**
+         * @private
+         */
         private _minX:number = 0;
+        /**
+         * @private
+         */
         private _minY:number = 0;
+        /**
+         * @private
+         */
         private _maxX:number = 0;
+        /**
+         * @private
+         */
         private _maxY:number = 0;
 
     }

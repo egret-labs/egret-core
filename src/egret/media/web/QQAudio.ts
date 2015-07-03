@@ -45,14 +45,24 @@ module egret.web {
      */
     export class QQAudio implements Audio {
 
+        /**
+         * @private
+         */
         constructor() {
         }
 
+        /**
+         * @private
+         */
         private _loop:boolean = false;
 
+        /**
+         * @private
+         */
         private _type:string;
 
         /**
+         * @private
          * 播放声音
          * @method egret.Sound#play
          * @param loop {boolean} 是否循环播放，默认为false
@@ -79,6 +89,7 @@ module egret.web {
         }
 
         /**
+         * @private
          * 暂停声音
          * @method egret.Sound#pause
          */
@@ -92,6 +103,7 @@ module egret.web {
         }
 
         /**
+         * @private
          * 添加事件监听
          * @param type 事件类型
          * @param listener 监听函数
@@ -101,6 +113,7 @@ module egret.web {
         }
 
         /**s
+         * @private
          * 移除事件监听
          * @param type 事件类型
          * @param listener 监听函数
@@ -110,23 +123,40 @@ module egret.web {
         }
 
         /**
+         * @private
          * 重新加载声音
          * @method egret.Sound#load
          */
         public $load():void {
         }
 
+        /**
+         * @private
+         * 
+         * @param type 
+         * @param callback 
+         * @param thisObj 
+         */
         public $preload(type:string, callback:Function = null, thisObj:any = null):void {
             egret.callLater(callback, thisObj);
         }
 
+        /**
+         * @private
+         */
         private _path:string;
 
+        /**
+         * @private
+         * 
+         * @param path 
+         */
         public _setPath(path:string):void {
             this._path = path;
         }
 
         /**
+         * @private
          * 获取当前音量值
          * @returns number
          */
@@ -134,27 +164,60 @@ module egret.web {
             return 1;
         }
 
+        /**
+         * @private
+         * 
+         * @param value 
+         */
         public $setVolume(value:number) {
         }
 
+        /**
+         * @private
+         * 
+         * @param value 
+         */
         public $setLoop(value:boolean):void {
             this._loop = value;
         }
 
+        /**
+         * @private
+         */
         private _currentTime:number = 0;
 
+        /**
+         * @private
+         * 
+         * @returns 
+         */
         public $getCurrentTime():number {
             return 0;
         }
 
+        /**
+         * @private
+         * 
+         * @param value 
+         */
         public $setCurrentTime(value:number) {
             this._currentTime = value;
         }
 
+        /**
+         * @private
+         * 
+         */
         public $destroy():void {
 
         }
 
+        /**
+         * @private
+         * 
+         * @param virtualUrl 
+         * @param callback 
+         */
         public $loadByUrl(virtualUrl:string, callback:(code:number)=>void):void {
             console.log("loadQQAudio");
 

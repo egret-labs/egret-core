@@ -31,25 +31,75 @@
 module egret {
     /**
      * @private
+     * @version Egret 2.0
+     * @platform Web,Native
      */
     export class ScrollViewProperties {
+        /**
+         * @private
+         */
         public _verticalScrollPolicy: string = "auto";
+        /**
+         * @private
+         */
         public _horizontalScrollPolicy: string = "auto";
+        /**
+         * @private
+         */
         public _scrollLeft = 0;
+        /**
+         * @private
+         */
         public _scrollTop: number = 0;
 
+        /**
+         * @private
+         */
         public _hCanScroll:boolean = false;
+        /**
+         * @private
+         */
         public _vCanScroll:boolean = false;
 
+        /**
+         * @private
+         */
         public _lastTouchPosition: egret.Point = new Point(0, 0);
+        /**
+         * @private
+         */
         public _touchStartPosition: egret.Point = new Point(0, 0);
+        /**
+         * @private
+         */
         public _scrollStarted: boolean = false;
+        /**
+         * @private
+         */
         public _lastTouchTime: number = 0;
+        /**
+         * @private
+         */
         public _lastTouchEvent: TouchEvent = null;
+        /**
+         * @private
+         */
         public _velocitys: Array<{ x: number; y: number }> = [];
+        /**
+         * @private
+         */
         public _isHTweenPlaying: boolean = false;
+        /**
+         * @private
+         */
         public _isVTweenPlaying: boolean = false;
+        /**
+         * @private
+         */
         public _hScrollTween: Tween = null;
+        /**
+         * @private
+         */
         public _vScrollTween: Tween = null;
 
     }

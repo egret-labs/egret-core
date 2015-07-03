@@ -32,20 +32,42 @@ module egret {
 
     /**
      * @private
+     * @version Egret 2.0
+     * @platform Web,Native
      */
     export interface NetContext extends HashObject {
 
+        /**
+         * 
+         * @param loader 
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
         proceed(loader:URLLoader):void;
 
+        /**
+         * 
+         * @returns 
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
         getChangeList():Array<any>;
     }
 
     /**
      * @private
+     * @version Egret 2.0
+     * @platform Web,Native
      */
     export var NetContext:{new():NetContext};
 
 
+    /**
+     * @private
+     * 
+     * @param request 
+     * @returns 
+     */
     export function $getUrl(request:URLRequest):string {
         var url:string = request.url;
         //get请求没有设置参数，而是设置URLVariables的情况

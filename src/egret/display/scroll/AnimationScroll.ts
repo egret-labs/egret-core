@@ -77,6 +77,11 @@ module egret.sys {
          */
         public duration:number = 500;
 
+        /**
+         * @private
+         * 
+         * @param speed 
+         */
         public $setSpeed(speed:number):void {
             this.duration = Math.round(500 / speed);
         }

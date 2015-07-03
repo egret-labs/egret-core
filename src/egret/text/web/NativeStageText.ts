@@ -34,19 +34,43 @@ module egret {
      * @classdesc
      * @extends egret.StageText
      * @private
+     * @version Egret 2.0
+     * @platform Web,Native
      */
     export class NativeStageText extends StageText {
 
+        /**
+         * @private
+         */
         private textValue:string = "";
 
+        /**
+         * @private
+         */
         private tf:egret.TextField;
 
+        /**
+         * @private
+         */
         private container:egret.DisplayObjectContainer;
+        /**
+         * @private
+         */
         private textBg:egret.Shape;
+        /**
+         * @private
+         */
         private textBorder:egret.Shape;
 
+        /**
+         * @private
+         */
         private textType:string = null;
 
+        /**
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
         constructor() {
             super();
             this.tf = new egret.TextField();
@@ -59,6 +83,10 @@ module egret {
             this.textValue = "";
         }
 
+        /**
+         * @private
+         * 
+         */
         private createText():void {
             var container:egret.DisplayObjectContainer = this.container;
             var stage:egret.Stage = egret.MainContext.instance.stage;
@@ -116,6 +144,11 @@ module egret {
             this.textBorder.graphics.endFill();
         }
 
+        /**
+         * @private
+         * 
+         * @returns 
+         */
         public _getText():string {
             if (!this.textValue) {
                 this.textValue = "";
@@ -123,22 +156,41 @@ module egret {
             return this.textValue;
         }
 
+        /**
+         * @private
+         * 
+         * @param value 
+         */
         public _setText(value:string):void {
             this.textValue = value;
 
             this.resetText();
         }
 
+        /**
+         * @private
+         * 
+         * @param type 
+         */
         public _setTextType(type:string):void {
             this.textType = type;
 
             this.resetText();
         }
 
+        /**
+         * @private
+         * 
+         * @returns 
+         */
         public _getTextType():string {
             return this.textType;
         }
 
+        /**
+         * @private
+         * 
+         */
         private resetText():void {
             if (this.textType == "password") {
                 var passwordStr = "";
@@ -167,6 +219,9 @@ module egret {
             this.tf.y = h - maxH + 15;
         }
 
+        /**
+         * @private
+         */
         private isFinishDown:boolean = false;
         //全屏键盘
         private showScreenKeyboard():void {
@@ -202,6 +257,10 @@ module egret {
             };
         }
 
+        /**
+         * @private
+         * 
+         */
         private showPartKeyboard():void {
             var container:egret.DisplayObjectContainer = this.container;
             var stage:egret.Stage = egret.MainContext.instance.stage;
@@ -248,6 +307,10 @@ module egret {
             };
         }
 
+        /**
+         * @private
+         * 
+         */
         public _show():void {
             var self = this;
             egret_native.EGT_getTextEditerContentText = function () {
@@ -271,6 +334,10 @@ module egret {
             egret_native.TextInputOp.setKeybordOpen(true);
         }
 
+        /**
+         * @private
+         * 
+         */
         public _remove():void {
             var container = this.container;
             if (container && container.parent) {
@@ -278,6 +345,10 @@ module egret {
             }
         }
 
+        /**
+         * @private
+         * 
+         */
         public _hide():void {
             this._remove();
             this.dispatchEvent(new egret.Event("blur"));

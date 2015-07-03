@@ -30,21 +30,59 @@
 module egret {
     /**
      * @private
+     * @version Egret 2.0
+     * @platform Web,Native
      */
     export class PromiseObject {
+        /**
+         * @private
+         */
         private static promiseObjectList = [];
 
+        /**
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
         public onSuccessFunc:Function = null;
+        /**
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
         public onSuccessThisObject:any = null;
+        /**
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
         public onErrorFunc:Function = null;
+        /**
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
         public onErrorThisObject:any = null;
+        /**
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
         public downloadingSizeFunc:Function = null;
+        /**
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
         public downloadingSizeThisObject:any = null;
 
+        /**
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
         constructor() {
 
         }
 
+        /**
+         * 
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
         public static create() {
             if (PromiseObject.promiseObjectList.length) {
                 return PromiseObject.promiseObjectList.pop();
@@ -54,6 +92,11 @@ module egret {
             }
         }
 
+        /**
+         * @private
+         * 
+         * @param args 
+         */
         private onSuccess(...args):void {
             if (this.onSuccessFunc) {
                 this.onSuccessFunc.apply(this.onSuccessThisObject, args);
@@ -61,6 +104,11 @@ module egret {
             this.destroy();
         }
 
+        /**
+         * @private
+         * 
+         * @param args 
+         */
         private onError(...args):void {
             if (this.onErrorFunc) {
                 this.onErrorFunc.apply(this.onErrorThisObject, args);
@@ -68,12 +116,21 @@ module egret {
             this.destroy();
         }
 
+        /**
+         * @private
+         * 
+         * @param args 
+         */
         private downloadingSize(...args):void {
             if (this.downloadingSizeFunc) {
                 this.downloadingSizeFunc.apply(this.downloadingSizeThisObject, args);
             }
         }
 
+        /**
+         * @private
+         * 
+         */
         private destroy() {
             this.onSuccessFunc = undefined;
             this.onSuccessThisObject = undefined;

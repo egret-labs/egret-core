@@ -33,6 +33,9 @@ module egret.native {
      * 呈现最终绘图结果的画布
      */
     export class NativeSurface extends egret.HashObject implements egret.sys.Surface{
+        /**
+         * @private
+         */
         constructor() {
             super();
         }

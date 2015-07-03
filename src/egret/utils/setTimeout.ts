@@ -41,6 +41,8 @@ module egret {
      * @param delay {number} Delay time, in milliseconds
      * @param ...args {any} Parameter list
 	 * @returns {number} Return index which can be used for clearTimeout
+     * @version Egret 2.0
+     * @platform Web,Native
      */
     /**
      * @language zh_CN
@@ -50,6 +52,8 @@ module egret {
      * @param delay {number} 延迟时间，以毫秒为单位
      * @param ...args {any} 参数列表
 	 * @returns {number} 返回索引，可以用于 clearTimeout
+     * @version Egret 2.0
+     * @platform Web,Native
      */
     export function setTimeout(listener:Function, thisObject:any, delay:number, ...args):number {
         var data = {listener: listener, thisObject: thisObject, delay: delay, params: args};
@@ -68,11 +72,15 @@ module egret {
      * @language en_US
      * Function run after the specified delay is cleared.
      * @param key {number} Index that egret.setTimeout returns
+     * @version Egret 2.0
+     * @platform Web,Native
      */
     /**
      * @language zh_CN
      * 清除指定延迟后运行的函数。
      * @param key {number} egret.setTimeout所返回的索引
+     * @version Egret 2.0
+     * @platform Web,Native
      */
     export function clearTimeout(key:number):void {
         if (setTimeoutCache[key]) {
@@ -86,6 +94,11 @@ module egret {
 
     }
 
+    /**
+     * @private
+     * 
+     * @param dt 
+     */
     function timeoutUpdate(dt:number):void {
         for (var key in setTimeoutCache) {
             var data = setTimeoutCache[key];

@@ -101,6 +101,11 @@ module egret.sys {
             this.animation.easerFunction = easeOut;
         }
 
+        /**
+         * @private
+         * 
+         * @param speed 
+         */
         public $setSpeed(speed:number):void {
             this.animation.$setSpeed(speed);
         }

@@ -33,13 +33,18 @@ module egret {
     /**
 	 * @language en_US
      * Injector
+	 * @version Egret 2.0
+	 * @platform Web,Native
      */
     /**
 	 * @language zh_CN
      * 注入器
+	 * @version Egret 2.0
+	 * @platform Web,Native
      */
 	export class Injector{
 		/**
+		 * @private
 		 * 储存类的映射规则
 		 */		
 		private static mapClassDic:any = {};
@@ -50,6 +55,8 @@ module egret {
 		 * @param whenAskedFor {any} whenAskedFor passes class definition or fully qualified name of the class as the key to map.
 		 * @param instantiateClass {any} instantiateClass passes the class as a value to be mapped, and its constructor function must be empty. If not empty, use Injector.mapValue () method to directly inject the instance.
 		 * @param named {string} named, optional parameter. When the same class serves as the key to map multiple rules, this parameter can be imported to distinguish different mappings. Import the same parameters when calling getInstance () method.
+		 * @version Egret 2.0
+		 * @platform Web,Native
 		 */
 		/**
 		 * @language zh_CN
@@ -57,6 +64,8 @@ module egret {
 		 * @param whenAskedFor {any} whenAskedFor 传递类定义或类完全限定名作为需要映射的键。
 		 * @param instantiateClass {any} instantiateClass 传递类作为需要映射的值，它的构造函数必须为空。若不为空，请使用Injector.mapValue()方法直接注入实例。
 		 * @param named {string} named 可选参数，在同一个类作为键需要映射多条规则时，可以传入此参数区分不同的映射。在调用getInstance()方法时要传入同样的参数。
+		 * @version Egret 2.0
+		 * @platform Web,Native
 		 */
 		public static mapClass(whenAskedFor:any,instantiateClass:any,named:string=""):void{
 			var requestName:string = this.getKey(whenAskedFor)+"#"+named;
@@ -64,6 +73,7 @@ module egret {
 		}
 		
 		/**
+		 * @private
 		 * 获取完全限定类名
 		 */		
 		private static getKey(hostComponentKey:any):string{
@@ -72,6 +82,9 @@ module egret {
 			return getQualifiedClassName(hostComponentKey);
 		}
 		
+		/**
+		 * @private
+		 */
 		private static mapValueDic:any = {};
 		
 		/**
@@ -80,6 +93,8 @@ module egret {
 		 * @param whenAskedFor {any} Pass class definition or fully qualified name of the class as the key to map.
 		 * @param useValue {any} Pass object instance as a value to be mapped.
 		 * @param named {string} Optional. When the same class serves as the key to map multiple rules, this parameter can be imported to distinguish different mappings. Import the same parameters when calling getInstance () method.
+		 * @version Egret 2.0
+		 * @platform Web,Native
 		 */
 		/**
 		 * @language zh_CN
@@ -87,6 +102,8 @@ module egret {
 		 * @param whenAskedFor {any} 传递类定义或类的完全限定名作为需要映射的键。
 		 * @param useValue {any} 传递对象实例作为需要映射的值。
 		 * @param named {string} 可选参数，在同一个类作为键需要映射多条规则时，可以传入此参数区分不同的映射。在调用getInstance()方法时要传入同样的参数。
+		 * @version Egret 2.0
+		 * @platform Web,Native
 		 */
 		public static mapValue(whenAskedFor:any,useValue:any,named:string=""):void{
 			var requestName:string = this.getKey(whenAskedFor)+"#"+named;
@@ -99,6 +116,8 @@ module egret {
 		 * @param whenAskedFor {any} Pass class definition or fully qualified name of the class as the key to map.
 		 * @param named {string} Optional. When the same class serves as the key to map multiple rules, this parameter can be imported to distinguish different mappings.
 		 * @returns {boolean} Whether there is any specified mapping rule
+		 * @version Egret 2.0
+		 * @platform Web,Native
 		 */
 		/**
 		 * @language zh_CN
@@ -106,6 +125,8 @@ module egret {
 		 * @param whenAskedFor {any} 传递类定义或类的完全限定名作为需要映射的键。
 		 * @param named {string} 可选参数，在同一个类作为键需要映射多条规则时，可以传入此参数区分不同的映射。
 		 * @returns {boolean} 指定的映射规则是否存在
+		 * @version Egret 2.0
+		 * @platform Web,Native
 		 */
 		public static hasMapRule(whenAskedFor:any,named:string=""):boolean{
 			var requestName:string = this.getKey(whenAskedFor)+"#"+named;
@@ -120,6 +141,8 @@ module egret {
 		 * @param clazz {any} Class definition or fully qualified name of the class
 		 * @param named {string} Optional. If this value is set when calling mapClass () mapping, the same character string needs to be import ed in order to obtain the corresponding singleton
 		 * @returns {any} Get a singleton mapped by the specified class
+		 * @version Egret 2.0
+		 * @platform Web,Native
 		 */
 		/**
 		 * @language zh_CN
@@ -127,6 +150,8 @@ module egret {
 		 * @param clazz {any} 类定义或类的完全限定名
 		 * @param named {string} 可选参数，若在调用mapClass()映射时设置了这个值，则要传入同样的字符串才能获取对应的单例
 		 * @returns {any} 获取指定类映射的单例
+		 * @version Egret 2.0
+		 * @platform Web,Native
 		 */
 		public static getInstance(clazz:any,named:string=""):any{
 			var requestName:string = this.getKey(clazz)+"#"+named;

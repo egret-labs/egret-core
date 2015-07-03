@@ -38,6 +38,8 @@ module egret {
      * and the red, green, and blue (ARGB) values of the pixel. (For ARGB values, the most significant byte represents the
      * alpha channel value, followed by red, green, and blue.)
      * @see egret.Bitmap
+     * @version Egret 2.0
+     * @platform Web,Native
      */
     /**
      * @language zh_CN
@@ -46,24 +48,34 @@ module egret {
      * 每个 32 位整数都是四个 8 位通道值（从 0 到 255）的组合，这些值描述像素的 Alpha 透明度以及红色、绿色、蓝色 (ARGB) 值。
      * （对于 ARGB 值，最高有效字节代表 Alpha 通道值，其后的有效字节分别代表红色、绿色和蓝色通道值。）
      * @see egret.Bitmap
+     * @version Egret 2.0
+     * @platform Web,Native
      */
     export interface BitmapData extends HashObject{
         /**
          * @language en_US
          * [read-only] The width of the bitmap image in pixels.
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         /**
          * @language zh_CN
          * [只读] 位图图像的宽度，以像素为单位。
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         width: number;
         /**
          * @language en_US
          * [read-only] The height of the bitmap image in pixels.
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         /**
          * @language zh_CN
          * [只读] 位图图像的高度，以像素为单位。
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         height: number;
     }

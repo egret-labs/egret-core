@@ -32,32 +32,105 @@
 module egret {
     /**
      * @private
+     * @version Egret 2.0
+     * @platform Web,Native
      */
     export interface Audio {
+        /**
+         * @private
+         * 
+         * @param value 
+         */
         $setCurrentTime(value:number):void;
+        /**
+         * @private
+         * 
+         * @returns 
+         */
         $getCurrentTime():number;
 
+        /**
+         * @private
+         * 
+         * @param value 
+         */
         $setVolume(value:number):void;
+        /**
+         * @private
+         * 
+         * @returns 
+         */
         $getVolume():number;
 
+        /**
+         * @private
+         * 
+         * @param value 
+         */
         $setLoop(value:boolean):void;
 
+        /**
+         * @private
+         * 
+         * @param type 
+         */
         $play(type?:string):void;
+        /**
+         * @private
+         * 
+         */
         $pause():void;
+        /**
+         * @private
+         * 
+         */
         $load():void;
 
+        /**
+         * @private
+         * 
+         * @param type 
+         * @param callback 
+         * @param thisObj 
+         */
         $preload(type:string, callback?:Function, thisObj?:any):void;
 
+        /**
+         * @private
+         * 
+         * @param type 
+         * @param listener 
+         * @param useCapture 
+         */
         $addEventListener(type:string, listener:Function, useCapture?:boolean):void;
+        /**
+         * @private
+         * 
+         * @param type 
+         * @param listener 
+         * @param useCapture 
+         */
         $removeEventListener(type:string, listener:Function, useCapture?:boolean):void;
 
+        /**
+         * @private
+         * 
+         */
         $destroy():void;
 
+        /**
+         * @private
+         * 
+         * @param url 
+         * @param callback 
+         */
         $loadByUrl(url:string, callback:(code:number)=>void):void;
     }
 
     /**
      * @private
+     * @version Egret 2.0
+     * @platform Web,Native
      */
     export var Audio:{new():Audio};
 }

@@ -81,12 +81,16 @@ module egret {
      * The Graphics class contains a set of methods that you can use to create a vector shape. the Shape object that support
      * drawing includes a graphics property that is a Graphics object. The following are among those helper functions provided
      * @see egret.Shape
+     * @version Egret 2.0
+     * @platform Web,Native
      */
     /**
      * @private
      * @language zh_CN
      * Graphics 类包含一组可用来创建矢量形状的方法。Shape是支持矢量绘制的显示对象。它含有一个 graphics 属性，该属性是一个 Graphics 对象。
      * @see egret.Shape
+     * @version Egret 2.0
+     * @platform Web,Native
      */
     export class GraphicsRenderContext extends HashObject {
 
@@ -101,6 +105,8 @@ module egret {
          * @param y1 The y axis of the coordinate of the end circle.
          * @param r1 The radius of the end circle.
          * @see egret.GraphicsGradient
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         /**
          * @language zh_CN
@@ -112,6 +118,8 @@ module egret {
          * @param y1 结束圆形的 y 轴坐标。
          * @param r1 结束圆形的半径。
          * @see egret.GraphicsGradient
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         public static createRadialGradient(x0:number, y0:number, r0:number, x1:number, y1:number, r1:number):GraphicsGradient {
             return sys.sharedRenderContext.createRadialGradient(x0, y0, r0, x1, y1, r1);
@@ -125,6 +133,8 @@ module egret {
          * @param y0 The y axis of the coordinate of the start point.
          * @param x1 The x axis of the coordinate of the end point.
          * @param y1 The y axis of the coordinate of the end point.
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         /**
          * @language zh_CN
@@ -134,6 +144,8 @@ module egret {
          * @param x1 终点的 x 轴坐标。
          * @param y1 终点的 y 轴坐标。
          * @see egret.GraphicsGradient
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         public static createLinearGradient(x0:number, y0:number, x1:number, y1:number):GraphicsGradient {
             return sys.sharedRenderContext.createLinearGradient(x0, y0, x1, y1);
@@ -150,6 +162,8 @@ module egret {
          * "repeat-y" (vertical only), or
          * "no-repeat" (neither).
          * @see egret.GraphicsPattern
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         /**
          * @language zh_CN
@@ -158,6 +172,8 @@ module egret {
          * @param repetition 指定如何重复图像。
          * 可能的值有："repeat" (两个方向重复),"repeat-x" (仅水平方向重复),"repeat-y" (仅垂直方向重复),"no-repeat" (不重复).
          * @see egret.GraphicsPattern
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         public static createPattern(bitmapData:BitmapData, repetition:string):GraphicsPattern {
             return sys.sharedRenderContext.createPattern(bitmapData, repetition);
@@ -165,6 +181,8 @@ module egret {
 
         /**
          * @private
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         public constructor() {
             super();
@@ -180,11 +198,15 @@ module egret {
          * @language en_US
          * specifies the color or style to use inside shapes.
          * @default "#000000"
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 设置要在图形内部填充的颜色或样式
          * @default "#000000"
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         public get fillStyle():any {
             return this._fillStyle;
@@ -205,11 +227,15 @@ module egret {
          * sets the thickness of lines in pixels.
          * setting zero, negative, Infinity and NaN values are ignored
          * @default 1
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 设置线条粗细，以像素为单位。设置为0，负数，Infinity 或 NaN 将会被忽略。
          * @default 1
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         public get lineWidth():number {
             return this._lineWidth;
@@ -234,6 +260,8 @@ module egret {
          * <li>"square": The ends of lines are squared off by adding a box with an equal width and half the height of the line's thickness.</li>
          * </ul>
          * @default "butt"
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         /**
          * @language zh_CN
@@ -244,6 +272,8 @@ module egret {
          * <li>"square": 线段末端以方形结束，但是增加了一个宽度和线段相同，高度是线段厚度一半的矩形区域。</li>
          * </ul>
          * @default "butt"
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         public get lineCap():string {
             return this._lineCap;
@@ -263,11 +293,15 @@ module egret {
          * @language en_US
          * specifies the color or style to use for the lines around shapes.
          * @default "#000000"
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 设置要在图形边线填充的颜色或样式
          * @default "#000000"
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         public get strokeStyle():any {
             return this._strokeStyle;
@@ -295,6 +329,8 @@ module egret {
          * effect of filling an additional lozenge-shaped area. This setting is effected by the miterLimit property.</li>
          * </ul>
          * @default "miter"
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         /**
          * @language zh_CN
@@ -305,6 +341,8 @@ module egret {
          * <li>"miter": 尖角连接。当使用尖角模式时，还可以同时使用 miterLimit 参数限制尖角的长度。</li>
          * </ul>
          * @default "miter"
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         public get lineJoin():string {
             return this._lineJoin;
@@ -324,11 +362,15 @@ module egret {
          * @language en_US
          * A number that indicates the limit at which a miter is cut off.
          * @default 10
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 用于表示剪切斜接的极限值的数字。
          * @default 10
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         public get miterLimit():number {
             return this._miterLimit;
@@ -340,6 +382,13 @@ module egret {
         }
 
 
+        /**
+         * 
+         * @param x0 
+         * @param y0 
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
         public scale(x0:number, y0:number):void {
             this.pushCommand(sys.GraphicsCommandType.scale, arguments);
         }
@@ -354,6 +403,8 @@ module egret {
          * @param startAngle The angle at which the arc starts, measured clockwise from the positive x axis and expressed in radians.
          * @param endAngle The angle at which the arc ends, measured clockwise from the positive x axis and expressed in radians.
          * @param anticlockwise if true, causes the arc to be drawn counter-clockwise between the two angles. By default it is drawn clockwise.
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         /**
          * @language zh_CN
@@ -364,6 +415,8 @@ module egret {
          * @param startAngle 圆弧的起始点， x轴方向开始计算，单位以弧度表示。
          * @param endAngle 圆弧的重点， 单位以弧度表示。
          * @param anticlockwise 如果为 true，逆时针绘制圆弧，反之，顺时针绘制。
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         public arc(x:number, y:number, radius:number, startAngle:number, endAngle:number, anticlockwise?:boolean):void {
             this.pushCommand(sys.GraphicsCommandType.arc, arguments);
@@ -428,6 +481,8 @@ module egret {
          * @param cpy The y axis of the coordinate for the control point.
          * @param x The x axis of the coordinate for the end point.
          * @param y The y axis of the coordinate for the end point.
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         /**
          * @language zh_CN
@@ -436,6 +491,8 @@ module egret {
          * @param cpy 控制点的 y 轴坐标。
          * @param x 终点的 x 轴坐标。
          * @param y 终点的 y 轴坐标。
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         public quadraticCurveTo(cpx:number, cpy:number, x:number, y:number):void {
             this.pushCommand(sys.GraphicsCommandType.quadraticCurveTo, arguments);
@@ -455,6 +512,8 @@ module egret {
          * @param cp2y The y axis of the coordinate for the second control point.
          * @param x The x axis of the coordinate for the end point.
          * @param y The y axis of the coordinate for the end point.
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         /**
          * @language zh_CN
@@ -466,6 +525,8 @@ module egret {
          * @param cp2y 第二个控制点的 y 轴坐标。
          * @param x 结束点的 x 轴坐标。
          * @param y 结束点的 y 轴坐标。
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         public bezierCurveTo(cp1x:number, cp1y:number, cp2x:number, cp2y:number, x:number, y:number):void {
             this.pushCommand(sys.GraphicsCommandType.bezierCurveTo, arguments);
@@ -481,12 +542,16 @@ module egret {
          * connects the last point in the sub-path to the x, y coordinates with a straight line
          * @param x The x axis of the coordinate for the end of the line.
          * @param y The y axis of the coordinate for the end of the line.
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 使用直线连接子路径的终点到x，y坐标。
          * @param x 直线终点的 x 轴坐标。
          * @param y 直线终点的 y 轴坐标。
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         public lineTo(x:number, y:number):void {
             this.pushCommand(sys.GraphicsCommandType.lineTo, arguments);
@@ -500,6 +565,8 @@ module egret {
          * @param fillRule The algorithm by which to determine if a point is inside a path or outside a path. Possible values:
          * "nonzero": The non-zero winding rule, which is the default rule.
          * "evenodd": The even-odd winding rule.
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         /**
          * @language zh_CN
@@ -507,6 +574,8 @@ module egret {
          * @param fillRule 一种算法，决定点是在路径内还是在路径外。允许的值：
          * "nonzero": 非零环绕规则， 默认的规则。
          * "evenodd": 奇偶环绕规则。
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         public fill(fillRule?:string):void {
             this.pushCommand(sys.GraphicsCommandType.fill, arguments);
@@ -518,10 +587,14 @@ module egret {
          * causes the point of the pen to move back to the start of the current sub-path. It tries to add a straight line
          * (but does not actually draw it) from the current point to the start. If the shape has already been closed or
          * has only one point, this function does nothing.
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 使笔点返回到当前子路径的起始点。它尝试从当前点到起始点绘制一条直线。如果图形已经是封闭的或者只有一个点，那么此方法不会做任何操作。
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         public closePath():void {
             this.pushCommand(sys.GraphicsCommandType.closePath, arguments);
@@ -535,6 +608,8 @@ module egret {
          * @param y The y axis of the coordinate for the rectangle starting point.
          * @param w The rectangle's width.
          * @param h The rectangle's height.
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         /**
          * @language zh_CN
@@ -543,6 +618,8 @@ module egret {
          * @param y 矩形起点的 y 轴坐标。
          * @param width 矩形的宽度。
          * @param height 矩形的高度。
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         public rect(x:number, y:number, width:number, height:number):void {
             this.pushCommand(sys.GraphicsCommandType.rect, arguments);
@@ -555,12 +632,16 @@ module egret {
          * moves the starting point of a new sub-path to the (x, y) coordinates.
          * @param x The x axis of the point.
          * @param y The y axis of the point.
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 将一个新的子路径的起始点移动到(x，y)坐标
          * @param x 点的 x 轴
          * @param y 点的 y 轴
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         public moveTo(x:number, y:number):void {
             this.pushCommand(sys.GraphicsCommandType.moveTo, arguments);
@@ -577,6 +658,8 @@ module egret {
          * @param y The y axis of the coordinate for the rectangle starting point.
          * @param w The rectangle's width.
          * @param h The rectangle's height.
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         /**
          * @language zh_CN
@@ -585,6 +668,8 @@ module egret {
          * @param y 矩形起始点的 y 轴坐标。
          * @param width 矩形的宽度。
          * @param height 矩形的高度。
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         public fillRect(x:number, y:number, width:number, height:number):void {
             this.pushCommand(sys.GraphicsCommandType.fillRect, arguments);
@@ -596,10 +681,14 @@ module egret {
         /**
          * @language en_US
          * strokes the current or given path with the current stroke style.
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 根据当前的画线样式，绘制当前或已经存在的路径的方法。
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         public stroke():void {
             this.pushCommand(sys.GraphicsCommandType.stroke, arguments);
@@ -614,6 +703,8 @@ module egret {
          * @param y The y axis of the coordinate for the rectangle starting point.
          * @param w The rectangle's width.
          * @param h The rectangle's height.
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         /**
          * @language zh_CN
@@ -622,6 +713,8 @@ module egret {
          * @param y 矩形起点的 y 轴坐标。
          * @param width 矩形的宽度。
          * @param height 矩形的高度。
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         public strokeRect(x:number, y:number, width:number, height:number):void {
             this.pushCommand(sys.GraphicsCommandType.strokeRect, arguments);
@@ -633,10 +726,14 @@ module egret {
         /**
          * @language en_US
          * starts a new path by emptying the list of sub-paths. Call this method when you want to create a new path.
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 清空子路径列表开始一个新路径。 当你想创建一个新的路径时，调用此方法。
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         public beginPath():void {
             this.pushCommand(sys.GraphicsCommandType.beginPath, arguments);
@@ -653,6 +750,8 @@ module egret {
          * @param x2 The x axis of the coordinate for the second control point.
          * @param y2 The y axis of the coordinate for the second control point.
          * @param radius The arc's radius.
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         /**
          * @language zh_CN
@@ -662,6 +761,8 @@ module egret {
          * @param x2 第二个控制点的 x 轴坐标。
          * @param y2 第二个控制点的 y 轴坐标。
          * @param radius 圆弧的半径。
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         public arcTo(x1:number, y1:number, x2:number, y2:number, radius:number):void {
             this.pushCommand(sys.GraphicsCommandType.arcTo, arguments);
@@ -711,10 +812,14 @@ module egret {
         /**
          * @language en_US
          * Clears the graphics that were drawn to this Graphics object, and resets fill and line style settings.
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 清除绘制到此 Graphics 对象的图形，并重置填充和线条样式设置。
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         public clear():void {
             this.reset();
@@ -879,6 +984,12 @@ module egret {
 
     registerClass(GraphicsRenderContext, Types.GraphicsRenderContext);
 
+    /**
+     * @private
+     * 
+     * @param context 
+     * @returns 
+     */
     function mapGraphicsFunction(context:sys.RenderContext):any {
         var map = context["graphicsMap"] = {};
         map[sys.GraphicsCommandType.arc] = context.arc;
@@ -938,25 +1049,85 @@ module egret.sys {
      * @private
      */
     export const enum GraphicsCommandType {
+        /**
+         * @private
+         */
         miterLimit,
+        /**
+         * @private
+         */
         lineCap,
+        /**
+         * @private
+         */
         lineJoin,
+        /**
+         * @private
+         */
         lineWidth,
+        /**
+         * @private
+         */
         strokeStyle,
+        /**
+         * @private
+         */
         fillStyle,
+        /**
+         * @private
+         */
         arc,
+        /**
+         * @private
+         */
         quadraticCurveTo,
+        /**
+         * @private
+         */
         lineTo,
+        /**
+         * @private
+         */
         fill,
+        /**
+         * @private
+         */
         closePath,
+        /**
+         * @private
+         */
         rect,
+        /**
+         * @private
+         */
         moveTo,
+        /**
+         * @private
+         */
         fillRect,
+        /**
+         * @private
+         */
         bezierCurveTo,
+        /**
+         * @private
+         */
         stroke,
+        /**
+         * @private
+         */
         strokeRect,
+        /**
+         * @private
+         */
         beginPath,
+        /**
+         * @private
+         */
         arcTo,
+        /**
+         * @private
+         */
         scale
     }
 }

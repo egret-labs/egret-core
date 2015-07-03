@@ -35,6 +35,8 @@ module egret {
 	 * @returns {string}
      * @example
      *  egret.getQualifiedClassName(egret.DisplayObject) //return "egret.DisplayObject"
+     * @version Egret 2.0
+     * @platform Web,Native
      */
     /**
      * @language zh_CN
@@ -43,6 +45,8 @@ module egret {
 	 * @returns {string}
      * @example
      *  egret.getQualifiedClassName(egret.DisplayObject) //返回 "egret.DisplayObject"
+     * @version Egret 2.0
+     * @platform Web,Native
      */
     export function getQualifiedClassName(value:any):string {
         var prototype: any = value.prototype ? value.prototype : Object.getPrototypeOf(value);
@@ -66,6 +70,8 @@ module egret {
      * @returns {Function}
      * @example
      *  egret.getQualifiedSuperclassName(egret.DisplayObjectContainer) //return "egret.DisplayObject"
+     * @version Egret 2.0
+     * @platform Web,Native
      */
     /**
      * @language zh_CN
@@ -74,6 +80,8 @@ module egret {
      * @returns {Function}
      * @example
      *  egret.getQualifiedSuperclassName(egret.DisplayObjectContainer) //返回 "egret.DisplayObject"
+     * @version Egret 2.0
+     * @platform Web,Native
      */
     export function getQualifiedSuperclassName(value: any):string {
         var prototype: any = value.prototype ? value.prototype : Object.getPrototypeOf(value);

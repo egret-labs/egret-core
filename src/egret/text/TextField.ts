@@ -185,6 +185,8 @@ module egret {
      * @event egret.Event.CHANGE Dispatched when entering text user input。
      * @event egret.FocusEvent.FOCUS_IN Dispatched after the focus to enter text.
      * @event egret.FocusEvent.FOCUS_OUT Enter the text loses focus after dispatch.
+     * @version Egret 2.0
+     * @platform Web,Native
      */
     /**
      * @language zh_CN
@@ -195,11 +197,21 @@ module egret {
      * @event egret.Event.CHANGE 输入文本有用户输入时调度。
      * @event egret.FocusEvent.FOCUS_IN 聚焦输入文本后调度。
      * @event egret.FocusEvent.FOCUS_OUT 输入文本失去焦点后调度。
+     * @version Egret 2.0
+     * @platform Web,Native
      */
     export class TextField extends DisplayObject {
 
+        /**
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
         public static default_fontFamily:string = "Arial";
 
+        /**
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
         constructor() {
             super();
             this.$renderRegion = new sys.Region();
@@ -245,6 +257,11 @@ module egret {
          */
         $TextField:Object;
 
+        /**
+         * @private
+         * 
+         * @returns 
+         */
         private isInput():boolean {
             return this.$TextField[sys.TextKeys.type] == TextFieldType.INPUT;
         }
@@ -253,11 +270,15 @@ module egret {
          * @language en_US
          * The name of the font to use, or a comma-separated list of font names.
          * @default "sans-serif"
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 要使用的字体的名称或用逗号分隔的字体名称列表。
          * @default "sans-serif"
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         public get fontFamily():string {
             return this.$TextField[sys.TextKeys.fontFamily];
@@ -276,11 +297,15 @@ module egret {
          * @language en_US
          * The size in pixels of text
          * @default 30
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 文本的字号大小。
          * @default 30
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         public get size():number {
             return this.$TextField[sys.TextKeys.fontSize];
@@ -299,6 +324,8 @@ module egret {
 
         /**
          * @private
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         public get fontSize():number {
             return this.$TextField[sys.TextKeys.fontSize];
@@ -322,11 +349,15 @@ module egret {
          * @language en_US
          * Specifies whether the text is boldface.
          * @default false
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 是否显示为粗体。
          * @default false
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         public get bold():boolean {
             return this.$TextField[sys.TextKeys.bold];
@@ -346,11 +377,15 @@ module egret {
          * @language en_US
          * Determines whether the text is italic font.
          * @default false
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 是否显示为斜体。
          * @default false
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         public get italic():boolean {
             return this.$TextField[sys.TextKeys.italic];
@@ -392,11 +427,15 @@ module egret {
          * @language en_US
          * Horizontal alignment of text.
          * @default：lark.HorizontalAlign.LEFT
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 文本的水平对齐方式。
          * @default：lark.HorizontalAlign.LEFT
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         public get textAlign():string {
             return this.$TextField[sys.TextKeys.textAlign];
@@ -415,11 +454,15 @@ module egret {
          * @language en_US
          * Vertical alignment of text.
          * @default：lark.VerticalAlign.TOP
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 文字的垂直对齐方式。
          * @default：lark.VerticalAlign.TOP
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         public get verticalAlign():string {
             return this.$TextField[sys.TextKeys.verticalAlign];
@@ -438,11 +481,15 @@ module egret {
          * @language en_US
          * An integer representing the amount of vertical space between lines.
          * @default 0
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 一个整数，表示行与行之间的垂直间距量
          * @default 0
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         public get lineSpacing():number {
             return this.$TextField[sys.TextKeys.lineSpacing];
@@ -462,11 +509,15 @@ module egret {
          * @language en_US
          * Color of the text.
          * @default 0x000000
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 文本颜色
          * @default 0x000000
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         public get textColor():number {
             return this.$TextField[sys.TextKeys.textColor];
@@ -488,12 +539,16 @@ module egret {
          * A Boolean value that indicates whether the text field has word wrap. If the value of wordWrap is true, the text
          * field has word wrap; if the value is false, the text field does not have word wrap.
          * @default true
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 一个布尔值，表示文本字段是否自动换行。如果 wordWrap 的值为 true，则该文本字段自动换行；
          * 如果值为 false，则该文本字段不自动换行,如果同时显式设置过宽度，超出宽度的部分将被截断。
          * @default true
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         public get wordWrap():boolean {
             return this.$TextField[sys.TextKeys.wordWrap];
@@ -512,6 +567,9 @@ module egret {
             this.$invalidateContentBounds();
         }
 
+        /**
+         * @private
+         */
         private _inputUtils:InputController = null;
 
         /**
@@ -530,6 +588,11 @@ module egret {
             this._setType(value);
         }
 
+        /**
+         * @private
+         * 
+         * @param value 
+         */
         public _setType(value:string):void {
             if (this.$TextField[sys.TextKeys.type] != value) {
                 this.$TextField[sys.TextKeys.type] = value;
@@ -565,14 +628,27 @@ module egret {
             }
         }
 
+        /**
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
         public get type():string {
             return this.$TextField[sys.TextKeys.type];
         }
 
+        /**
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
         public get text():string {
             return this.$getText();
         }
 
+        /**
+         * @private
+         * 
+         * @returns 
+         */
         public $getText():string {
             if (this.$TextField[sys.TextKeys.type] == egret.TextFieldType.INPUT) {
                 return this._inputUtils._getText();
@@ -593,6 +669,11 @@ module egret {
             this.$setText(value);
         }
 
+        /**
+         * @private
+         * 
+         * @param value 
+         */
         public _setBaseText(value:string):void {
             if (value == null) {
                 value = "";
@@ -614,6 +695,11 @@ module egret {
             }
         }
 
+        /**
+         * @private
+         * 
+         * @param value 
+         */
         $setText(value:string):void {
             if (value == null) {
                 value = "";
@@ -624,6 +710,10 @@ module egret {
             }
         }
 
+        /**
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
         public get displayAsPassword():boolean {
             return this.$TextField[sys.TextKeys.displayAsPassword];
         }
@@ -644,6 +734,11 @@ module egret {
             this._setDisplayAsPassword(value);
         }
 
+        /**
+         * @private
+         * 
+         * @param value 
+         */
         public _setDisplayAsPassword(value:boolean):void {
             var self = this;
             if (this.$TextField[sys.TextKeys.displayAsPassword] != value) {
@@ -662,6 +757,10 @@ module egret {
             }
         }
 
+        /**
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
         public get strokeColor():number {
             return this.$TextField[sys.TextKeys.strokeColor];
         }
@@ -682,6 +781,11 @@ module egret {
             this._setStrokeColor(value);
         }
 
+        /**
+         * @private
+         * 
+         * @param value 
+         */
         public _setStrokeColor(value:number):void {
             if (this.$TextField[sys.TextKeys.strokeColor] != value) {
                 this.$invalidateContentBounds();
@@ -691,6 +795,10 @@ module egret {
         }
 
 
+        /**
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
         public get stroke():number {
             return this.$TextField[sys.TextKeys.stroke];
         }
@@ -711,6 +819,11 @@ module egret {
             this._setStroke(value);
         }
 
+        /**
+         * @private
+         * 
+         * @param value 
+         */
         public _setStroke(value:number):void {
             if (this.$TextField[sys.TextKeys.stroke] != value) {
                 this.$invalidateContentBounds();
@@ -718,6 +831,10 @@ module egret {
             }
         }
 
+        /**
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
         public get maxChars():number {
             return this.$TextField[sys.TextKeys.maxChars];
         }
@@ -738,6 +855,11 @@ module egret {
             this._setMaxChars(value);
         }
 
+        /**
+         * @private
+         * 
+         * @param value 
+         */
         public _setMaxChars(value:number):void {
             if (this.$TextField[sys.TextKeys.maxChars] != value) {
                 this.$TextField[sys.TextKeys.maxChars] = value;
@@ -762,6 +884,10 @@ module egret {
             this.$invalidateContentBounds();
         }
 
+        /**
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
         public get scrollV():number {
             return Math.min(Math.max(this.$TextField[sys.TextKeys.scrollV], 1), this.maxScrollV);
         }
@@ -769,32 +895,59 @@ module egret {
         /**
          * @language en_US
          * The maximum value of scrollV
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         /**
          * @language zh_CN
          * scrollV 的最大值
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         public get maxScrollV():number {
             this._getLinesArr();
             return Math.max(this.$TextField[sys.TextKeys.numLines] - TextFieldUtils._getScrollNum(this) + 1, 1);
         }
 
+        /**
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
         public get selectionBeginIndex():number {
             return 0;
         }
 
+        /**
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
         public get selectionEndIndex():number {
             return 0;
         }
 
+        /**
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
         public get caretIndex():number {
             return 0;
         }
 
+        /**
+         * @private
+         * 
+         * @param beginIndex 
+         * @param endIndex 
+         */
         public $setSelection(beginIndex:number, endIndex:number) {
 
         }
 
+        /**
+         * @private
+         * 
+         * @returns 
+         */
         $getLineHeight():number {
             return this.$TextField[sys.TextKeys.lineSpacing] + this.$TextField[sys.TextKeys.fontSize];
         }
@@ -802,10 +955,14 @@ module egret {
         /**
          * @language en_US
          * Number of lines of text.
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 文本行数。
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         public get numLines():number {
             return this.$TextField[sys.TextKeys.numLines];
@@ -827,15 +984,29 @@ module egret {
             this._setMultiline(value);
         }
 
+        /**
+         * @private
+         * 
+         * @param value 
+         */
         public _setMultiline(value:boolean):void {
             this.$TextField[sys.TextKeys.multiline] = value;
             this.$invalidateContentBounds();
         }
 
+        /**
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
         public get multiline():boolean {
             return this.$TextField[sys.TextKeys.multiline];
         }
 
+        /**
+         * @private
+         * 
+         * @param value 
+         */
         $setWidth(value:number):void {
             value = +value;
             var values = this.$TextField;
@@ -848,6 +1019,11 @@ module egret {
             this.fillBackground();
         }
 
+        /**
+         * @private
+         * 
+         * @param value 
+         */
         $setHeight(value:number):void {
             value = +value;
             var values = this.$TextField;
@@ -859,6 +1035,9 @@ module egret {
             this.fillBackground();
         }
 
+        /**
+         * @private
+         */
         private _bgGraphics:Graphics = null;
 
         /**
@@ -880,6 +1059,10 @@ module egret {
             this.fillBackground();
         }
 
+        /**
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
         public get border():boolean {
             return this.$TextField[sys.TextKeys.border];
         }
@@ -901,6 +1084,10 @@ module egret {
             this.fillBackground();
         }
 
+        /**
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
         public get borderColor():number {
             return this.$TextField[sys.TextKeys.borderColor];
         }
@@ -924,6 +1111,10 @@ module egret {
             this.fillBackground();
         }
 
+        /**
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
         public get background():boolean {
             return this.$TextField[sys.TextKeys.background];
         }
@@ -945,10 +1136,18 @@ module egret {
             this.fillBackground();
         }
 
+        /**
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
         public get backgroundColor():number {
             return this.$TextField[sys.TextKeys.backgroundColor];
         }
 
+        /**
+         * @private
+         * 
+         */
         private fillBackground():void {
             var self = this;
             var graphics:egret.Graphics = self._bgGraphics;
@@ -973,12 +1172,18 @@ module egret {
 
         /**
          * @private
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         public setFocus() {
             //todo:
             Logger.warningWithErrorId(1013);
         }
 
+        /**
+         * @private
+         * 
+         */
         public $onRemoveFromStage():void {
             super.$onRemoveFromStage();
 
@@ -989,6 +1194,12 @@ module egret {
             }
         }
 
+        /**
+         * @private
+         * 
+         * @param stage 
+         * @param nestLevel 
+         */
         public $onAddToStage(stage:Stage, nestLevel:number):void {
             super.$onAddToStage(stage, nestLevel);
 
@@ -1024,6 +1235,7 @@ module egret {
         }
 
         /**
+         * @private
          * @see egret.DisplayObject._render
          * @param renderContext
          */
@@ -1044,6 +1256,9 @@ module egret {
             this.drawText(renderContext);
         }
 
+        /**
+         * @private
+         */
         private _isFlow:boolean = false;
 
         /**
@@ -1073,10 +1288,20 @@ module egret {
             }
         }
 
+        /**
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
         public get textFlow():Array<egret.ITextElement> {
             return this._textArr;
         }
 
+        /**
+         * @private
+         * 
+         * @param text 
+         * @returns 
+         */
         private changeToPassText(text:string):string {
             if (this.$TextField[sys.TextKeys.displayAsPassword]) {
                 var passText:string = "";
@@ -1096,8 +1321,16 @@ module egret {
             return text;
         }
 
+        /**
+         * @private
+         */
         private _textArr:Array<egret.ITextElement> = [];
 
+        /**
+         * @private
+         * 
+         * @param textArr 
+         */
         private setMiddleStyle(textArr:Array<egret.ITextElement>):void {
             this.$TextField[sys.TextKeys.textLinesChanged] = true;
             this._textArr = textArr;
@@ -1106,10 +1339,14 @@ module egret {
         /**
          * @language en_US
          * Get the text measured width
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 获取文本测量宽度
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         public get textWidth():number {
             return this.$TextField[sys.TextKeys.textWidth];
@@ -1117,10 +1354,14 @@ module egret {
         /**
          * @language en_US
          * Get Text measuring height
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 获取文本测量高度
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         public get textHeight():number {
             return TextFieldUtils._getTextHeight(this);
@@ -1129,6 +1370,8 @@ module egret {
         /**
          * @private
          * @param text
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         public appendText(text:string):void {
             this.appendElement(<egret.ITextElement>{text: text});
@@ -1137,6 +1380,8 @@ module egret {
         /**
          * @private
          * @param element
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         public appendElement(element:egret.ITextElement):void {
             var text:string = this.$TextField[sys.TextKeys.text] + element.text;
@@ -1152,8 +1397,16 @@ module egret {
             }
         }
 
+        /**
+         * @private
+         */
         private _linesArr:Array<egret.ILineElement> = [];
 
+        /**
+         * @private
+         * 
+         * @returns 
+         */
         public _getLinesArr():Array<egret.ILineElement> {
             var self = this;
             if (!self.$TextField[sys.TextKeys.textLinesChanged]) {
@@ -1312,6 +1565,9 @@ module egret {
             return linesArr;
         }
 
+        /**
+         * @private
+         */
         public _isTyping:boolean = false;
 
         /**
@@ -1401,6 +1657,17 @@ module egret {
         }
     }
 
+    /**
+     * @private
+     * 
+     * @param renderContext 
+     * @param textfield 
+     * @param text 
+     * @param x 
+     * @param y 
+     * @param maxWidth 
+     * @param style 
+     */
     function drawText(renderContext:sys.RenderContext, textfield:egret.TextField, text:string, x:number, y:number, maxWidth:number, style:egret.ITextStyle = null) {
         setupFont(renderContext, textfield, style);
         style = style || <egret.ITextStyle>{};
@@ -1438,6 +1705,13 @@ module egret {
         renderContext.fillText(text, x, y, maxWidth || 0xFFFF);
     }
 
+    /**
+     * @private
+     * 
+     * @param renderContext 
+     * @param textField 
+     * @param style 
+     */
     function setupFont(renderContext:sys.RenderContext, textField:TextField, style:egret.ITextStyle = null):void {
         style = style || <egret.ITextStyle>{};
         var italic:boolean = style.italic == null ? textField.$TextField[sys.TextKeys.italic] : style.italic;

@@ -34,12 +34,16 @@ module egret {
      * Bitmap font, texture set of a font. It is generally used as the value of the BitmapText.font attribute.
      * @see http://bbs.egret-labs.org/thread-918-1-1.html TextureMerger
      * @see http://bbs.egret-labs.org/forum.php?mod=viewthread&tid=251 Text(Containing the specific usage of the bitmap font )
+     * @version Egret 2.0
+     * @platform Web,Native
      */
     /**
      * @language zh_CN
      * 位图字体,是一个字体的纹理集，通常作为BitmapText.font属性的值。
      * @see http://bbs.egret-labs.org/thread-918-1-1.html TextureMerger
      * @see http://bbs.egret-labs.org/forum.php?mod=viewthread&tid=251 文本(含位图字体具体用法)
+     * @version Egret 2.0
+     * @platform Web,Native
      */
     export class BitmapFont extends SpriteSheet {
 
@@ -48,12 +52,16 @@ module egret {
          * Create an egret.BitmapFont object
          * @param texture {egret.Texture} Texture set
          * @param config {any} Configure data
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 创建一个 egret.BitmapFont 对象
          * @param texture {egret.Texture} 纹理集
          * @param config {any} 配置数据
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         public constructor(texture:Texture, config:any) {
             super(texture);
@@ -68,6 +76,9 @@ module egret {
             }
         }
 
+        /**
+         * @private
+         */
         private charList:any;
 
         /**
@@ -75,12 +86,16 @@ module egret {
          * Obtain corresponding texture through the name attribute
          * @param name {string} name Attribute
          * @returns {egret.Texture}
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 通过 name 属性获取对应纹理
          * @param name {string} name属性
          * @returns {egret.Texture}
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         public getTexture(name:string):Texture {
             var texture:Texture = this._textureMap[name];
@@ -95,8 +110,16 @@ module egret {
             return texture;
         }
 
+        /**
+         * @private
+         */
         private firstCharHeight:number = 0;
 
+        /**
+         * @private
+         * 
+         * @returns 
+         */
         public _getFirstCharHeight():number{
             if(this.firstCharHeight==0){
                 for(var str in this.charList){
@@ -125,6 +148,12 @@ module egret {
             return this.firstCharHeight;
         }
 
+        /**
+         * @private
+         * 
+         * @param fntText 
+         * @returns 
+         */
         private parseConfig(fntText:string):any {
             fntText = fntText.split("\r\n").join("\n");
             var lines:Array<string> = fntText.split("\n");
@@ -146,6 +175,13 @@ module egret {
             return chars;
         }
 
+        /**
+         * @private
+         * 
+         * @param configText 
+         * @param key 
+         * @returns 
+         */
         private getConfigByKey(configText:string, key:string):number {
             var itemConfigTextList = configText.split(" ");
             for (var i = 0 , length = itemConfigTextList.length; i < length; i++) {

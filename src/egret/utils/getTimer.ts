@@ -39,11 +39,15 @@ module egret {
      * @language en_US
      * Used to compute relative time.this method returns the number of milliseconds since the Lark framework was initialized
      * @returns The number of milliseconds since the Lark framework was initialized
+     * @version Egret 2.0
+     * @platform Web,Native
      */
     /**
      * @language zh_CN
      * 用于计算相对时间。此方法返回自启动 Lark 框架以来经过的毫秒数。
      * @returns 启动 Lark 框架以来经过的毫秒数。
+     * @version Egret 2.0
+     * @platform Web,Native
      */
     export function getTimer():number {
         return Date.now() - $START_TIME;

@@ -30,10 +30,24 @@
 
 module egret {
 
+    /**
+     * @version Egret 2.0
+     * @platform Web,Native
+     */
     export class FrameLabel extends EventDispatcher {
+        /**
+         * @private
+         */
         private _name:string;
+        /**
+         * @private
+         */
         private _frame:number /*int*/;
 
+        /**
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
         constructor(name:string, frame:number /*int*/) {
             super();
             this._name = name;
@@ -43,10 +57,14 @@ module egret {
         /**
          * @language en_US
          * Frame number
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 标签名
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         public get name():string {
             return this._name;
@@ -55,10 +73,14 @@ module egret {
         /**
          * @language en_US
          * Frame serial number of the label
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 标签所在帧序号
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         public get frame():number /*int*/ {
             return this._frame;
@@ -67,10 +89,14 @@ module egret {
         /**
          * @language en_US
          * Duplicate the current frame label object
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 复制当前帧标签对象
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         public clone() {
             return new FrameLabel(this._name, this._frame);

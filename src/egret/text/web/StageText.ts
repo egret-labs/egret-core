@@ -29,22 +29,68 @@
 
 
 module egret {
+    /**
+     * @version Egret 2.0
+     * @platform Web,Native
+     */
     export interface StageText extends EventDispatcher {
+        /**
+         * @private
+         */
         $textfield:egret.TextField;
+        /**
+         * @private
+         * 
+         * @param textfield 
+         */
         $setTextField(textfield:egret.TextField):void;
 
+        /**
+         * @private
+         * 
+         */
         $resetStageText():void;
 
+        /**
+         * @private
+         * 
+         * @returns 
+         */
         $getText():string;
+        /**
+         * @private
+         * 
+         * @param value 
+         */
         $setText(value:string):void;
 
+        /**
+         * @private
+         * 
+         */
         $show():void;
+        /**
+         * @private
+         * 
+         */
         $hide():void;
 
+        /**
+         * @private
+         * 
+         */
         $addToStage():void;
+        /**
+         * @private
+         * 
+         */
         $removeFromStage():void;
 
     }
 
+    /**
+     * @version Egret 2.0
+     * @platform Web,Native
+     */
     export var StageText:{new():StageText};
 }

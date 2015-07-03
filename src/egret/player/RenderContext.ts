@@ -134,6 +134,14 @@ module egret.sys {
          */
         font: string;
 
+        /**
+         * @private
+         * 
+         * @param text 
+         * @param x 
+         * @param y 
+         * @param maxWidth 
+         */
         strokeText(text, x, y, maxWidth);
 
         /**

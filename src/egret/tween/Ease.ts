@@ -33,17 +33,32 @@ module egret {
      * @language en_US
      * Easing function set. Different easing functions are used to make an animation proceed according to the corresponding equation
      * @link http://bbs.egret-labs.org/thread-392-1-1.html Tween and Ease
+     * @version Egret 2.0
+     * @platform Web,Native
      */
     /**
      * @language zh_CN
      * 缓动函数集合，使用不同的缓动函数使得动画按照对应的方程进行
      * @link http://bbs.egret-labs.org/thread-392-1-1.html Tween和Ease
+     * @version Egret 2.0
+     * @platform Web,Native
      */
     export class Ease {
+        /**
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
         constructor() {
             egret.Logger.fatalWithErrorId(1014);
         }
 
+        /**
+         * 
+         * @param amount 
+         * @returns 
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
         public static get(amount):Function {
             if (amount < -1) {
                 amount = -1;
@@ -62,18 +77,39 @@ module egret {
             }
         }
 
+        /**
+         * 
+         * @param pow 
+         * @returns 
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
         public static getPowIn(pow):Function {
             return function (t) {
                 return Math.pow(t, pow);
             }
         }
 
+        /**
+         * 
+         * @param pow 
+         * @returns 
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
         public static getPowOut(pow):Function {
             return function (t) {
                 return 1 - Math.pow(1 - t, pow);
             }
         }
 
+        /**
+         * 
+         * @param pow 
+         * @returns 
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
         public static getPowInOut(pow):Function {
             return function (t) {
                 if ((t *= 2) < 1) return 0.5 * Math.pow(t, pow);
@@ -81,47 +117,145 @@ module egret {
             }
         }
 
+        /**
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
         public static quadIn = Ease.getPowIn(2);
+        /**
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
         public static quadOut = Ease.getPowOut(2);
+        /**
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
         public static quadInOut = Ease.getPowInOut(2);
+        /**
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
         public static cubicIn = Ease.getPowIn(3);
+        /**
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
         public static cubicOut = Ease.getPowOut(3);
+        /**
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
         public static cubicInOut = Ease.getPowInOut(3);
+        /**
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
         public static quartIn = Ease.getPowIn(4);
+        /**
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
         public static quartOut = Ease.getPowOut(4);
+        /**
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
         public static quartInOut = Ease.getPowInOut(4);
+        /**
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
         public static quintIn = Ease.getPowIn(5);
+        /**
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
         public static quintOut = Ease.getPowOut(5);
+        /**
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
         public static quintInOut = Ease.getPowInOut(5);
 
+        /**
+         * 
+         * @param t 
+         * @returns 
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
         public static sineIn(t):number {
             return 1 - Math.cos(t * Math.PI / 2);
         }
 
+        /**
+         * 
+         * @param t 
+         * @returns 
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
         public static sineOut(t):number {
             return Math.sin(t * Math.PI / 2);
         }
 
+        /**
+         * 
+         * @param t 
+         * @returns 
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
         public static sineInOut(t):number {
             return -0.5 * (Math.cos(Math.PI * t) - 1)
         }
 
+        /**
+         * 
+         * @param amount 
+         * @returns 
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
         public static getBackIn(amount):Function {
             return function (t) {
                 return t * t * ((amount + 1) * t - amount);
             }
         }
 
+        /**
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
         public static backIn = Ease.getBackIn(1.7);
 
+        /**
+         * 
+         * @param amount 
+         * @returns 
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
         public static getBackOut(amount):Function {
             return function (t) {
                 return (--t * t * ((amount + 1) * t + amount) + 1);
             }
         }
 
+        /**
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
         public static backOut = Ease.getBackOut(1.7);
 
+        /**
+         * 
+         * @param amount 
+         * @returns 
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
         public static getBackInOut(amount):Function {
             amount *= 1.525;
             return function (t) {
@@ -130,16 +264,41 @@ module egret {
             }
         }
 
+        /**
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
         public static backInOut = Ease.getBackInOut(1.7);
 
+        /**
+         * 
+         * @param t 
+         * @returns 
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
         public static circIn(t):number {
             return -(Math.sqrt(1 - t * t) - 1);
         }
 
+        /**
+         * 
+         * @param t 
+         * @returns 
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
         public static circOut(t):number {
             return Math.sqrt(1 - (--t) * t);
         }
 
+        /**
+         * 
+         * @param t 
+         * @returns 
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
         public static circInOut(t):number {
             if ((t *= 2) < 1) {
                 return -0.5 * (Math.sqrt(1 - t * t) - 1);
@@ -147,10 +306,24 @@ module egret {
             return 0.5 * (Math.sqrt(1 - (t -= 2) * t) + 1);
         }
 
+        /**
+         * 
+         * @param t 
+         * @returns 
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
         public static bounceIn(t):number {
             return 1 - Ease.bounceOut(1 - t);
         }
 
+        /**
+         * 
+         * @param t 
+         * @returns 
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
         public static bounceOut(t):number {
             if (t < 1 / 2.75) {
                 return (7.5625 * t * t);
@@ -163,11 +336,26 @@ module egret {
             }
         }
 
+        /**
+         * 
+         * @param t 
+         * @returns 
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
         public static bounceInOut(t):number {
             if (t < 0.5) return Ease.bounceIn(t * 2) * .5;
             return Ease.bounceOut(t * 2 - 1) * 0.5 + 0.5;
         }
 
+        /**
+         * 
+         * @param amplitude 
+         * @param period 
+         * @returns 
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
         public static getElasticIn(amplitude, period):Function {
             var pi2 = Math.PI * 2;
             return function (t) {
@@ -177,8 +365,20 @@ module egret {
             }
         }
 
+        /**
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
         public static elasticIn = Ease.getElasticIn(1, 0.3);
 
+        /**
+         * 
+         * @param amplitude 
+         * @param period 
+         * @returns 
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
         public static getElasticOut(amplitude, period):Function {
             var pi2 = Math.PI * 2;
             return function (t) {
@@ -188,8 +388,20 @@ module egret {
             }
         }
 
+        /**
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
         public static elasticOut = Ease.getElasticOut(1, 0.3);
 
+        /**
+         * 
+         * @param amplitude 
+         * @param period 
+         * @returns 
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
         public static getElasticInOut(amplitude, period):Function {
             var pi2 = Math.PI * 2;
             return function (t) {
@@ -199,6 +411,10 @@ module egret {
             }
         }
 
+        /**
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
         public static elasticInOut = Ease.getElasticInOut(1, 0.3 * 1.5);
     }
 }

@@ -27,10 +27,23 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 module egret.localStorage.web {
+    /**
+     * @private
+     * 
+     * @param key 
+     * @returns 
+     */
     function getItem(key:string):string {
         return window.localStorage.getItem(key);
     }
 
+    /**
+     * @private
+     * 
+     * @param key 
+     * @param value 
+     * @returns 
+     */
     function setItem(key:string, value:string):boolean {
         try{
             window.localStorage.setItem(key, value);
@@ -42,10 +55,19 @@ module egret.localStorage.web {
         }
     }
 
+    /**
+     * @private
+     * 
+     * @param key 
+     */
     function removeItem(key:string):void {
         window.localStorage.removeItem(key);
     }
 
+    /**
+     * @private
+     * 
+     */
     function clear():void {
         window.localStorage.clear();
     }

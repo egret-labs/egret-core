@@ -29,13 +29,31 @@
 module egret {
     /**
      * @private
+     * @version Egret 2.0
+     * @platform Web,Native
      */
     export class NativeResourceLoader extends egret.EventDispatcher{
 
+        /**
+         * @private
+         */
         private _downCount:number = 0;
+        /**
+         * @private
+         */
         private _path:string = null;
+        /**
+         * @private
+         */
         private _bytesTotal:number = 0;
 
+        /**
+         * 
+         * @param path 
+         * @param bytesTotal 
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
         public load(path:string, bytesTotal:number):void {
             this._downCount = 0;
             this._path = path;
@@ -44,6 +62,10 @@ module egret {
             this.reload();
         }
 
+        /**
+         * @private
+         * 
+         */
         private reload():void {
             if (this._downCount >= 3) {
                 this.downloadFileError();
@@ -75,14 +97,27 @@ module egret {
             //}
         }
 
+        /**
+         * @private
+         * 
+         * @param bytesLoaded 
+         */
         private downloadingProgress(bytesLoaded:number) {
             egret.ProgressEvent.dispatchProgressEvent(this, egret.ProgressEvent.PROGRESS, bytesLoaded, this._bytesTotal);
         }
 
+        /**
+         * @private
+         * 
+         */
         private downloadFileError() {
             this.dispatchEvent(new egret.Event(egret.IOErrorEvent.IO_ERROR));
         }
 
+        /**
+         * @private
+         * 
+         */
         private loadOver() {
             this.dispatchEvent(new egret.Event(egret.Event.COMPLETE));
         }

@@ -35,6 +35,12 @@ module egret.web {
      */
     export class NativeImageLoader extends BaseImageLoader {
 
+        /**
+         * @private
+         * 
+         * @param url 
+         * @param callback 
+         */
         public load(url:string, callback:(code:number, bitmapData:any)=>void):void {
             var self = this;
             //console.log("_createBitmapDataForNative:" + url);
@@ -77,6 +83,10 @@ module egret.web {
             //}
         }
 
+        /**
+         * @private
+         * 
+         */
         public static _disposeForNative():void {
             var bitmapData = this._bitmapData;
             bitmapData.dispose();

@@ -29,23 +29,48 @@
 module egret {
     /**
      * @private
+     * @version Egret 2.0
+     * @platform Web,Native
      */
     export class InputController extends HashObject {
+        /**
+         * @private
+         */
         private stageText:egret.StageText;
 
+        /**
+         * @private
+         */
         private _text:TextField = null;
 
+        /**
+         * @private
+         */
         private _isFocus:boolean = false;
+        /**
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
         public constructor() {
             super();
         }
 
+        /**
+         * 
+         * @param text 
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
         public init(text:TextField):void {
             this._text = text;
             this.stageText = new egret.StageText();
             this.stageText.$setTextField(this._text);
         }
 
+        /**
+         * @private
+         * 
+         */
         public _addStageText():void {
             this.stageText.$addToStage();
 
@@ -57,6 +82,10 @@ module egret {
             this.stageText.addEventListener("focus", this.focusHandler, this);
         }
 
+        /**
+         * @private
+         * 
+         */
         public _removeStageText():void {
             this.stageText.$removeFromStage();
 
@@ -68,14 +97,29 @@ module egret {
             this.stageText.removeEventListener("focus", this.focusHandler, this);
         }
 
+        /**
+         * @private
+         * 
+         * @returns 
+         */
         public _getText():string {
             return this.stageText.$getText();
         }
 
+        /**
+         * @private
+         * 
+         * @param value 
+         */
         public _setText(value:string) {
             this.stageText.$setText(value);
         }
 
+        /**
+         * @private
+         * 
+         * @param event 
+         */
         private focusHandler(event:Event):void {
             //不再显示竖线，并且输入框显示最开始
             this._isFocus = true;
@@ -85,6 +129,11 @@ module egret {
             this._text.dispatchEvent(new egret.FocusEvent(egret.FocusEvent.FOCUS_IN));
         }
 
+        /**
+         * @private
+         * 
+         * @param event 
+         */
         private blurHandler(event:Event):void {
             //不再显示竖线，并且输入框显示最开始
             this._isFocus = false;
@@ -117,6 +166,11 @@ module egret {
             this.stageText.$hide();
         }
 
+        /**
+         * @private
+         * 
+         * @param event 
+         */
         private updateTextHandler(event:Event):void {
             this.resetText();
 
@@ -124,20 +178,36 @@ module egret {
             this._text.dispatchEvent(new egret.Event(egret.Event.CHANGE));
         }
 
+        /**
+         * @private
+         * 
+         */
         private resetText():void {
             this._text._setBaseText(this.stageText.$getText());
         }
 
+        /**
+         * @private
+         * 
+         */
         public _hideInput():void {
             this.stageText.$removeFromStage();
         }
 
+        /**
+         * @private
+         * 
+         */
         private _updateTransform():void {//
             if (!this._text.$visible && this.stageText) {
                 this._hideInput();
             }
         }
 
+        /**
+         * @private
+         * 
+         */
         public _updateProperties():void {
             if (this._isFocus) {
                 //整体修改

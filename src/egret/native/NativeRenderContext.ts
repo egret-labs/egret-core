@@ -27,27 +27,39 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 module egret {
+    /**
+     * @version Egret 2.0
+     * @platform Web,Native
+     */
     export class NativeRenderContext implements egret.sys.RenderContext {
 
         /**
          * @private
          * 与绘图上线文关联的画布实例
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         surface:egret.sys.Surface;
         /**
          * @private
          * 设置新图像如何绘制到已有的图像上的规制
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         globalCompositeOperation: string;
         /**
          * @private
          * 设置接下来绘图填充的整体透明度
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         globalAlpha: number;
         /**
          * @private
          * 用于表示剪切斜接的极限值的数字。
          * @default 10
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         miterLimit: number;
         /**
@@ -59,6 +71,8 @@ module egret {
          * <li>"square": 线段末端以方形结束，但是增加了一个宽度和线段相同，高度是线段厚度一半的矩形区域。</li>
          * </ul>
          * @default "butt"
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         lineCap: string;
         /**
@@ -70,30 +84,40 @@ module egret {
          * <li>"miter": 尖角连接。当使用尖角模式时，还可以同时使用 miterLimit 参数限制尖角的长度。</li>
          * </ul>
          * @default "miter"
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         lineJoin: string;
         /**
          * @private
          * 设置线条粗细，以像素为单位。设置为0，负数，Infinity 或 NaN 将会被忽略。
          * @default 1
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         lineWidth: number;
         /**
          * @private
          * 设置要在图形边线填充的颜色或样式
          * @default "#000000"
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         strokeStyle: any;
         /**
          * @private
          * 设置要在图形内部填充的颜色或样式
          * @default "#000000"
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         fillStyle: any;
         /**
          * @private
          * 控制在缩放时是否对位图进行平滑处理。
          * @default true
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         imageSmoothingEnabled: boolean;
         /**
@@ -107,6 +131,8 @@ module egret {
          * <li>"end" 文本对齐界线结束的地方 （对于从左向右阅读的语言使用右对齐，对从右向左的阅读的语言使用左对齐）。</li>
          * </ul>
          * @default "start"
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         textAlign: string;
         /**
@@ -121,11 +147,15 @@ module egret {
          * <li>"bottom" 文本基线在文本块的底部。 与 ideographic 基线的区别在于 ideographic 基线不需要考虑下行字母。</li>
          * </ul>
          * @default "alphabetic"
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         textBaseline: string;
         /**
          * @private
          * 当前的字体样式
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         font: string;
 
@@ -138,6 +168,8 @@ module egret {
          * @param startAngle 圆弧的起始点， x轴方向开始计算，单位以弧度表示。
          * @param endAngle 圆弧的重点， 单位以弧度表示。
          * @param anticlockwise 如果为 true，逆时针绘制圆弧，反之，顺时针绘制。
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         public arc(x:number, y:number, radius:number, startAngle:number, endAngle:number, anticlockwise?:boolean): void {
 
@@ -150,6 +182,8 @@ module egret {
          * @param cpy 控制点的 y 轴坐标。
          * @param x 终点的 x 轴坐标。
          * @param y 终点的 y 轴坐标。
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         quadraticCurveTo(cpx:number, cpy:number, x:number, y:number): void {
 
@@ -159,6 +193,8 @@ module egret {
          * 使用直线连接子路径的终点到x，y坐标。
          * @param x 直线终点的 x 轴坐标。
          * @param y 直线终点的 y 轴坐标。
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         lineTo(x:number, y:number): void {
 
@@ -169,6 +205,8 @@ module egret {
          * @param fillRule 一种算法，决定点是在路径内还是在路径外。允许的值：
          * "nonzero": 非零环绕规则， 默认的规则。
          * "evenodd": 奇偶环绕规则。
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         fill(fillRule?:string): void {
 
@@ -176,6 +214,8 @@ module egret {
         /**
          * @private
          * 使笔点返回到当前子路径的起始点。它尝试从当前点到起始点绘制一条直线。如果图形已经是封闭的或者只有一个点，那么此方法不会做任何操作。
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         closePath(): void {
 
@@ -187,6 +227,8 @@ module egret {
          * @param y 矩形起点的 y 轴坐标。
          * @param width 矩形的宽度。
          * @param height 矩形的高度。
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         rect(x:number, y:number, w:number, h:number): void {
 
@@ -196,6 +238,8 @@ module egret {
          * 将一个新的子路径的起始点移动到(x，y)坐标
          * @param x 点的 x 轴
          * @param y 点的 y 轴
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         moveTo(x:number, y:number): void {
 
@@ -207,6 +251,8 @@ module egret {
          * @param y 矩形起始点的 y 轴坐标。
          * @param width 矩形的宽度。
          * @param height 矩形的高度。
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         fillRect(x:number, y:number, w:number, h:number): void {
 
@@ -221,6 +267,8 @@ module egret {
          * @param cp2y 第二个控制点的 y 轴坐标。
          * @param x 结束点的 x 轴坐标。
          * @param y 结束点的 y 轴坐标。
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         bezierCurveTo(cp1x:number, cp1y:number, cp2x:number, cp2y:number, x:number, y:number): void {
 
@@ -228,6 +276,8 @@ module egret {
         /**
          * @private
          * 根据当前的画线样式，绘制当前或已经存在的路径的方法。
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         stroke(): void {
 
@@ -239,6 +289,8 @@ module egret {
          * @param y 矩形起点的 y 轴坐标。
          * @param width 矩形的宽度。
          * @param height 矩形的高度。
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         strokeRect(x:number, y:number, w:number, h:number): void {
 
@@ -246,6 +298,8 @@ module egret {
         /**
          * @private
          * 清空子路径列表开始一个新路径。 当你想创建一个新的路径时，调用此方法。
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         beginPath(): void {
 
@@ -258,6 +312,8 @@ module egret {
          * @param x2 第二个控制点的 x 轴坐标。
          * @param y2 第二个控制点的 y 轴坐标。
          * @param radius 圆弧的半径。
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         arcTo(x1:number, y1:number, x2:number, y2:number, radius:number): void {
 
@@ -272,6 +328,8 @@ module egret {
          * @param d 垂直缩放。
          * @param tx 水平移动。
          * @param ty 垂直移动。
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         transform(a:number, b:number, c:number, d:number, tx:number, ty:number): void {
 
@@ -281,6 +339,8 @@ module egret {
          * 通过在网格中移动 surface 和 surface 原点 x 水平方向、原点 y 垂直方向，添加平移变换
          * @param x 水平移动。
          * @param y 垂直移动。
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         translate(x:number, y:number): void {
 
@@ -290,6 +350,8 @@ module egret {
          * 根据 x 水平方向和 y 垂直方向，为 surface 单位添加缩放变换。
          * @param x 水平方向的缩放因子。
          * @param y 垂直方向的缩放因子。
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         scale(x:number, y:number): void {
 
@@ -298,6 +360,8 @@ module egret {
          * @private
          * 在变换矩阵中增加旋转，角度变量表示一个顺时针旋转角度并且用弧度表示。
          * @param angle 顺时针旋转的弧度。
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         rotate(angle:number): void {
 
@@ -306,6 +370,8 @@ module egret {
         /**
          * @private
          * 恢复到最近的绘制样式状态，此状态是通过 save() 保存到”状态栈“中最新的元素。
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         restore(): void {
 
@@ -313,6 +379,8 @@ module egret {
         /**
          * @private
          * 使用栈保存当前的绘画样式状态，你可以使用 restore() 恢复任何改变。
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         save(): void {
 
@@ -320,6 +388,8 @@ module egret {
         /**
          * @private
          * 从当前路径创建一个剪切路径。在  clip() 调用之后，绘制的所有信息只会出现在剪切路径内部。
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         clip(fillRule?:string): void {
 
@@ -331,6 +401,8 @@ module egret {
          * @param y 矩形起点的 y 轴坐标。
          * @param width 矩形的宽度。
          * @param height 矩形的高度。
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         clearRect(x:number, y:number, width:number, height:number): void {
 
@@ -344,6 +416,8 @@ module egret {
          * @param d 垂直缩放。
          * @param tx 水平移动。
          * @param ty 垂直移动。
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         setTransform(a:number, b:number, c:number, d:number, tx:number, ty:number): void {
 
@@ -355,6 +429,8 @@ module egret {
          * @param y0 起点的 y 轴坐标。
          * @param x1 终点的 x 轴坐标。
          * @param y1 终点的 y 轴坐标。
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         createLinearGradient(x0:number, y0:number, x1:number, y1:number): GraphicsGradient {
 
@@ -368,6 +444,8 @@ module egret {
          * @param x1 结束圆形的 x 轴坐标。
          * @param y1 结束圆形的 y 轴坐标。
          * @param r1 结束圆形的半径。
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         createRadialGradient(x0:number, y0:number, r0:number, x1:number, y1:number, r1:number): GraphicsGradient{
 
@@ -376,6 +454,8 @@ module egret {
         /**
          * @private
          * 在(x,y)位置绘制（填充）文本。
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         fillText(text:string, x:number, y:number, maxWidth?:number): void {
 
@@ -383,6 +463,8 @@ module egret {
         /**
          * @private
          * 测量指定文本宽度，返回 TextMetrics 对象。
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         measureText(text:string): TextMetrics {
             return {width:egret_native.Label.getTextSize(text)[0]};
@@ -391,6 +473,8 @@ module egret {
          * @private
          * 注意：如果要对绘制的图片进行缩放，出于性能优化考虑，系统不会主动去每次重置imageSmoothingEnabled属性，因此您在调用drawImage()方法前请务必
          * 确保 imageSmoothingEnabled 已被重置为正常的值，否则有可能沿用上个显示对象绘制过程留下的值。
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         drawImage(image:BitmapData, offsetX:number, offsetY:number, width?:number, height?:number,
                   surfaceOffsetX?:number, surfaceOffsetY?:number, surfaceImageWidth?:number, surfaceImageHeight?:number):void {
@@ -408,6 +492,8 @@ module egret {
          * @param bitmapData 做为重复图像源的 BitmapData 对象。
          * @param repetition 指定如何重复图像。
          * 可能的值有："repeat" (两个方向重复),"repeat-x" (仅水平方向重复),"repeat-y" (仅垂直方向重复),"no-repeat" (不重复).
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         createPattern(image:BitmapData, repetition:string): GraphicsPattern {
 
@@ -415,6 +501,8 @@ module egret {
         /**
          * @private
          * 返回一个 ImageData 对象，用来描述canvas区域隐含的像素数据，这个区域通过矩形表示，起始点为(sx, sy)、宽为sw、高为sh。
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         getImageData(sx:number, sy:number, sw:number, sh:number): ImageData {
             return {width:sw, height:sh, data:[]}

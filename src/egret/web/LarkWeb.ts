@@ -151,6 +151,11 @@ module egret.web {
         return value !== value;
     };
 
+    /**
+     * @private
+     * 
+     * @param argument 
+     */
     function toArray(argument){
         var args = [];
         for(var i=0;i<argument.length;i++){

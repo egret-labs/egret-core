@@ -30,8 +30,19 @@
 module egret {
 
 
+    /**
+     * @version Egret 2.0
+     * @platform Web,Native
+     */
     export class NumberUtils {
 
+        /**
+         * 
+         * @param value 
+         * @returns 
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
         public static isNumber(value:any):boolean {
             return typeof(value) === "number" && !isNaN(value);
         }
@@ -41,12 +52,16 @@ module egret {
          * Obtain the approximate sin value of the corresponding angle value
          * @param value {number} Angle value
          * @returns {number} sin value
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 得到对应角度值的sin近似值
          * @param value {number} 角度值
          * @returns {number} sin值
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         public static sin(value:number):number {
             var valueFloor:number = Math.floor(value);
@@ -57,6 +72,12 @@ module egret {
             return (value - valueFloor) * resultCeil + (valueCeil - value) * resultFloor;
         }
 
+        /**
+         * @private
+         * 
+         * @param value 
+         * @returns 
+         */
         private static sinInt(value:number):number
         {
             value = value % 360;
@@ -80,12 +101,16 @@ module egret {
          * Obtain the approximate cos value of the corresponding angle value
          * @param value {number} Angle value
          * @returns {number} cos value
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 得到对应角度值的cos近似值
          * @param value {number} 角度值
          * @returns {number} cos值
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         public static cos(value:number):number {
             var valueFloor:number = Math.floor(value);
@@ -96,6 +121,12 @@ module egret {
             return (value - valueFloor) * resultCeil + (valueCeil - value) * resultFloor;
         }
 
+        /**
+         * @private
+         * 
+         * @param value 
+         * @returns 
+         */
         private static cosInt(value:number):number
         {
             value = value % 360;

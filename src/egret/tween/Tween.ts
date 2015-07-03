@@ -33,11 +33,15 @@ module egret {
      * @language en_US
      * Tween is the animation easing class of Egret
      * @link http://docs.egret-labs.org/post/manual/anim/tween.html Tween缓动动画
+     * @version Egret 2.0
+     * @platform Web,Native
 	 */
 	/**
      * @language zh_CN
      * Tween是Egret的动画缓动类
      * @link http://docs.egret-labs.org/post/manual/anim/tween.html Tween ease animation
+     * @version Egret 2.0
+     * @platform Web,Native
 	 */
     export class Tween extends EventDispatcher {
 		/**
@@ -59,26 +63,86 @@ module egret {
 		 */
         private static REVERSE = 2;
 
+        /**
+         * @private
+         */
         private static _tweens:Tween[] = [];
+        /**
+         * @private
+         */
         private static IGNORE = {};
+        /**
+         * @private
+         */
         private static _plugins = {};
+        /**
+         * @private
+         */
         private static _inited = false;
 
+        /**
+         * @private
+         */
         private _target:any = null;
+        /**
+         * @private
+         */
         private _useTicks:boolean = false;
+        /**
+         * @private
+         */
         private ignoreGlobalPause:boolean = false;
+        /**
+         * @private
+         */
         private loop:boolean = false;
+        /**
+         * @private
+         */
         private pluginData = null;
+        /**
+         * @private
+         */
         private _curQueueProps;
+        /**
+         * @private
+         */
         private _initQueueProps;
+        /**
+         * @private
+         */
         private _steps:any[] = null;
+        /**
+         * @private
+         */
         private _actions:any[] = null;
+        /**
+         * @private
+         */
         private paused:boolean = false;
+        /**
+         * @private
+         */
         private duration:number = 0;
+        /**
+         * @private
+         */
         private _prevPos:number = -1;
+        /**
+         * @private
+         */
         private position:number = null;
+        /**
+         * @private
+         */
         private _prevPosition:number = 0;
+        /**
+         * @private
+         */
         private _stepPosition:number = 0;
+        /**
+         * @private
+         */
         private passive:boolean = false;
 
 		/**
@@ -88,6 +152,8 @@ module egret {
          * @param props {any} Parameters, such as: {loop: true}
          * @param pluginData {any} Write realized
          * @param override {boolean} Whether to remove the object before adding a tween, the default value false
+         * @version Egret 2.0
+         * @platform Web,Native
 		 */
 		/**
          * @language zh_CN
@@ -96,6 +162,8 @@ module egret {
          * @param props {any} 参数，例如：{loop:true}
          * @param pluginData {any} 暂未实现
          * @param override {boolean} 是否移除对象之前添加的tween，默认值false
+         * @version Egret 2.0
+         * @platform Web,Native
 		 */
         public static get(target:any, props:any = null, pluginData:any = null, override:boolean = false):Tween {
             if (override) {
@@ -108,11 +176,15 @@ module egret {
          * @language en_US
          * Delete all Tween animations from an object
 		 * @param target The object whose Tween to be deleted
+         * @version Egret 2.0
+         * @platform Web,Native
 		 */
 		/**
          * @language zh_CN
          * 删除一个对象上的全部 Tween 动画
 		 * @param target  需要移除 Tween 的对象
+         * @version Egret 2.0
+         * @platform Web,Native
 		 */
         public static removeTweens(target:any):void {
             if (!target.tween_count) {
@@ -132,11 +204,15 @@ module egret {
          * @language en_US
          * Pause all Tween animations of a certain object
          * @param target The object whose Tween to be paused
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 暂停某个对象的所有 Tween
          * @param target 要暂停 Tween 的对象
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         public static pauseTweens(target:any):void {
             if (!target.tween_count) {
@@ -154,11 +230,15 @@ module egret {
          * @language en_US
          * Resume playing all easing of a certain object
          * @param target The object whose Tween to be resumed
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 继续播放某个对象的所有缓动
          * @param target 要继续播放 Tween 的对象
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         public static resumeTweens(target:any):void {
             if (!target.tween_count) {
@@ -172,6 +252,12 @@ module egret {
             }
         }
 
+        /**
+         * @private
+         * 
+         * @param delta 
+         * @param paused 
+         */
         private static tick(delta, paused = false):void {
             var tweens:Tween[] = Tween._tweens.concat();
             for (var i = tweens.length - 1; i >= 0; i--) {
@@ -183,6 +269,12 @@ module egret {
             }
         }
 
+        /**
+         * @private
+         * 
+         * @param tween 
+         * @param value 
+         */
         private static _register(tween:Tween, value:boolean):void {
             var target:any = tween._target;
             var tweens:Tween[] = Tween._tweens;
@@ -212,10 +304,14 @@ module egret {
 		/**
          * @language en_US
          * Delete all Tween
+         * @version Egret 2.0
+         * @platform Web,Native
 		 */
 		/**
          * @language zh_CN
          * 删除所有 Tween
+         * @version Egret 2.0
+         * @platform Web,Native
 		 */
         public static removeAllTweens():void {
             var tweens:Tween[] = Tween._tweens;
@@ -230,12 +326,21 @@ module egret {
         /**
          * 创建一个 egret.Tween 对象
          * @private
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         constructor(target:any, props:any, pluginData:any) {
             super();
             this.initialize(target, props, pluginData);
         }
 
+        /**
+         * @private
+         * 
+         * @param target 
+         * @param props 
+         * @param pluginData 
+         */
         private initialize(target:any, props:any, pluginData:any):void {
             this._target = target;
             if (props) {
@@ -264,6 +369,13 @@ module egret {
             }
         }
 
+        /**
+         * @private
+         * 
+         * @param value 
+         * @param actionsMode 
+         * @returns 
+         */
         private setPosition(value:number, actionsMode:number = 1):boolean {
             if (value < 0) {
                 value = 0;
@@ -328,6 +440,13 @@ module egret {
             return end;
         }
 
+        /**
+         * @private
+         * 
+         * @param startPos 
+         * @param endPos 
+         * @param includeStart 
+         */
         private _runActions(startPos:number, endPos:number, includeStart:boolean = false) {
             var sPos:number = startPos;
             var ePos:number = endPos;
@@ -350,6 +469,12 @@ module egret {
             }
         }
 
+        /**
+         * @private
+         * 
+         * @param step 
+         * @param ratio 
+         */
         private _updateTargetProps(step:any, ratio:number) {
             var p0, p1, v, v0, v1, arr;
             if (!step && ratio == 1) {
@@ -406,12 +531,16 @@ module egret {
          * Whether setting is paused
 		 * @param value {boolean} Whether to pause
 		 * @returns Tween object itself
+         * @version Egret 2.0
+         * @platform Web,Native
 		 */
 		/**
          * @language zh_CN
          * 设置是否暂停
 		 * @param value {boolean} 是否暂停
 		 * @returns Tween对象本身
+         * @version Egret 2.0
+         * @platform Web,Native
 		 */
         public setPaused(value:boolean):Tween {
             this.paused = value;
@@ -419,6 +548,12 @@ module egret {
             return this;
         }
 
+        /**
+         * @private
+         * 
+         * @param props 
+         * @returns 
+         */
         private _cloneProps(props):any {
             var o = {};
             for (var n in props) {
@@ -427,6 +562,12 @@ module egret {
             return o;
         }
 
+        /**
+         * @private
+         * 
+         * @param o 
+         * @returns 
+         */
         private _addStep(o):Tween {
             if (o.d > 0) {
                 this._steps.push(o);
@@ -436,6 +577,12 @@ module egret {
             return this;
         }
 
+        /**
+         * @private
+         * 
+         * @param o 
+         * @returns 
+         */
         private _appendQueueProps(o):any {
             var arr, oldValue, i, l, injectProps;
             for (var n in o) {
@@ -471,12 +618,24 @@ module egret {
             return this._curQueueProps;
         }
 
+        /**
+         * @private
+         * 
+         * @param o 
+         * @returns 
+         */
         private _addAction(o):Tween {
             o.t = this.duration;
             this._actions.push(o);
             return this;
         }
 
+        /**
+         * @private
+         * 
+         * @param props 
+         * @param o 
+         */
         private _set(props, o):void {
             for (var n in props) {
                 o[n] = props[n];
@@ -489,6 +648,8 @@ module egret {
 		 * @param duration {number} Waiting time, in milliseconds
 		 * @param passive {boolean} Whether properties are updated during the waiting time
 		 * @returns Tween object itself
+         * @version Egret 2.0
+         * @platform Web,Native
 		 */
 		/**
          * @language zh_CN
@@ -496,6 +657,8 @@ module egret {
 		 * @param duration {number} 要等待的时间，以毫秒为单位
 		 * @param passive {boolean} 等待期间属性是否会更新
 		 * @returns Tween对象本身
+         * @version Egret 2.0
+         * @platform Web,Native
 		 */
         public wait(duration:number, passive?:boolean):Tween {
             if (duration == null || duration <= 0) {
@@ -512,6 +675,8 @@ module egret {
 		 * @param duration {number} Duration
 		 * @param ease {egret.Ease} Easing algorithm
 		 * @returns {egret.Tween} Tween object itself
+         * @version Egret 2.0
+         * @platform Web,Native
 		 */
 		/**
          * @language zh_CN
@@ -520,6 +685,8 @@ module egret {
 		 * @param duration {number} 持续时间
 		 * @param ease {egret.Ease} 缓动算法
 		 * @returns {egret.Tween} Tween对象本身
+         * @version Egret 2.0
+         * @platform Web,Native
 		 */
         public to(props, duration?:number, ease:Function = undefined):Tween {
             if (isNaN(duration) || duration < 0) {
@@ -535,6 +702,8 @@ module egret {
 		 * @param thisObj {any} this action scope of the callback method
 		 * @param params {Array<any>} Parameter of the callback method
 		 * @returns {egret.Tween} Tween object itself
+         * @version Egret 2.0
+         * @platform Web,Native
 		 */
 		/**
          * @language zh_CN
@@ -543,11 +712,21 @@ module egret {
 		 * @param thisObj {any} 回调方法this作用域
 		 * @param params {Array<any>} 回调方法参数
 		 * @returns {egret.Tween} Tween对象本身
+         * @version Egret 2.0
+         * @platform Web,Native
 		 */
         public call(callback:Function, thisObj:any = undefined, params:Array<any> = undefined):Tween {
             return this._addAction({f: callback, p: params ? params : [], o: thisObj ? thisObj : this._target});
         }
 
+        /**
+         * 
+         * @param props 
+         * @param target 
+         * @returns 
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
         public set(props, target = null):Tween {
             return this._addAction({f: this._set, o: this, p: [props, target ? target : this._target]});
         }
@@ -557,12 +736,16 @@ module egret {
          * Execute
 		 * @param tween {egret.Tween} The Tween object to be operated. Default: this
 		 * @returns {egret.Tween} Tween object itself
+         * @version Egret 2.0
+         * @platform Web,Native
 		 */
 		/**
          * @language zh_CN
          * 执行
 		 * @param tween {egret.Tween} 需要操作的 Tween 对象，默认this
 		 * @returns {egret.Tween} Tween对象本身
+         * @version Egret 2.0
+         * @platform Web,Native
 		 */
         public play(tween?:Tween):Tween {
             if (!tween) {
@@ -576,12 +759,16 @@ module egret {
          * Pause
 		 * @param tween {egret.Tween} The Tween object to be operated. Default: this
 		 * @returns {egret.Tween} Tween object itself
+         * @version Egret 2.0
+         * @platform Web,Native
 		 */
 		/**
          * @language zh_CN
          * 暂停
 		 * @param tween {egret.Tween} 需要操作的 Tween 对象，默认this
 		 * @returns {egret.Tween} Tween对象本身
+         * @version Egret 2.0
+         * @platform Web,Native
 		 */
         public pause(tween?:Tween):Tween {
             if (!tween) {
@@ -594,6 +781,8 @@ module egret {
 		 * @method egret.Tween#tick
 		 * @param delta {number}
          * @private
+         * @version Egret 2.0
+         * @platform Web,Native
 		 */
         public tick(delta:number):void {
             if (this.paused) {

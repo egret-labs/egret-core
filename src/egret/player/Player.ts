@@ -198,6 +198,10 @@ module egret.sys {
             }
         }
 
+        /**
+         * @private
+         * 
+         */
         private callLaters():void {
             if ($callLaterFunctionList.length > 0) {
                 var functionList:Array<any> = $callLaterFunctionList;
@@ -220,6 +224,10 @@ module egret.sys {
 
         }
 
+        /**
+         * @private
+         * 
+         */
         private callLaterAsyncs():void {
             if($callAsyncFunctionList.length > 0) {
                 var locCallAsyncFunctionList = $callAsyncFunctionList;

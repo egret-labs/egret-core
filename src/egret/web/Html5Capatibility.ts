@@ -33,8 +33,17 @@ module egret.web {
      * @private
      */
     export class AudioType {
+        /**
+         * @private
+         */
         static QQ_AUDIO:number = 1;
+        /**
+         * @private
+         */
         static WEB_AUDIO:number = 2;
+        /**
+         * @private
+         */
         static HTML5_AUDIO:number = 3;
     }
 
@@ -42,8 +51,17 @@ module egret.web {
      * @private
      */
     export class SystemOSType {
+        /**
+         * @private
+         */
         static WPHONE:number = 1;
+        /**
+         * @private
+         */
         static IOS:number = 2;
+        /**
+         * @private
+         */
         static ADNROID:number = 3;
     }
 
@@ -57,19 +75,38 @@ module egret.web {
 
         //当前浏览器版本是否支持webaudio
         public static _audioType:number = 0;
+        /**
+         * @private
+         */
         public static _AudioClass;
 
 
+        /**
+         * @private
+         */
         public static _QQRootPath:string = "";
 
+        /**
+         * @private
+         */
         public static _System_OS:number = 0;
 
+        /**
+         * @private
+         */
         constructor() {
             super();
         }
 
+        /**
+         * @private
+         */
         private static ua:string = "";
 
+        /**
+         * @private
+         * 
+         */
         public static _init():void {
             var ua:string = navigator.userAgent.toLowerCase();
             Html5Capatibility.ua = ua;
@@ -149,6 +186,7 @@ module egret.web {
         }
 
         /**
+         * @private
          * 获取ios版本
          * @returns {string}
          */

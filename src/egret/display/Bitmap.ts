@@ -47,6 +47,8 @@ module egret {
      * without incurring the memory overhead of a texture object for each display object instance.
      *
      * @see egret.Texture
+     * @version Egret 2.0
+     * @platform Web,Native
      */
     /**
      * @language zh_CN
@@ -58,6 +60,8 @@ module egret {
      * 而不会因为每个显示对象实例使用一个 texture 对象而产生额外内存开销。
      *
      * @see egret.Texture
+     * @version Egret 2.0
+     * @platform Web,Native
      */
     export class Bitmap extends DisplayObject {
 
@@ -65,11 +69,15 @@ module egret {
          * @language en_US
          * Initializes a Bitmap object to refer to the specified BitmapData object.
          * @param bitmapData The BitmapData object being referenced.
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 创建一个引用指定 BitmapData 实例的 Bitmap 对象
          * @param bitmapData 被引用的 BitmapData 实例
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         public constructor(bitmapData?:Texture) {
             super();
@@ -82,6 +90,9 @@ module egret {
             this.texture = bitmapData;
         }
 
+        /**
+         * @private
+         */
         $Bitmap:Object;
 
         /**
@@ -92,10 +103,14 @@ module egret {
         /**
          * @language en_US
          * bitmapData The Texture object being referenced.
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 被引用的 Texture 对象。
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         public get texture():Texture {
             return this.$bitmapData;
@@ -116,12 +131,16 @@ module egret {
          * Notice: This property is valid only when <code>fillMode</code>
          * is <code>BitmapFillMode.SCALE</code>.
          *
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 矩形区域，它定义素材对象的九个缩放区域。
          * 注意:此属性仅在<code>fillMode</code>为<code>BitmapFillMode.SCALE</code>时有效。
          *
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         public get scale9Grid():egret.Rectangle {
             return this._scale9Grid;
@@ -137,12 +156,16 @@ module egret {
          * @language en_USDetermine the bitmap fill mode for size.
          * When BitmapFillMode.REPEAT is set, area is filled in repeat mode; when BitmapFillMode.SCALE is set, area is filled in scale mode.
          * @default egret.BitmapFillMode.SCALE
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 确定位图填充尺寸的方式。
          * 设置为 BitmapFillMode.REPEAT时，位图将重复以填充区域；BitmapFillMode.SCALE时，位图将拉伸以填充区域。
          * @default egret.BitmapFillMode.SCALE
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         public fillMode:string = "scale";
 
@@ -165,11 +188,15 @@ module egret {
          * @language en_US
          * Whether or not the bitmap is smoothed when scaled.
          * @default true。
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 控制在缩放时是否对位图进行平滑处理。
          * @default true。
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         public get smoothing():boolean {
             return this.$smoothing;
@@ -184,6 +211,11 @@ module egret {
             this.$invalidate();
         }
 
+        /**
+         * @private
+         * 
+         * @param value 
+         */
         $setWidth(value:number):void {
             //value = +value || 0;
             var values = this.$Bitmap;
@@ -194,6 +226,11 @@ module egret {
             this.$invalidateContentBounds();
         }
 
+        /**
+         * @private
+         * 
+         * @param value 
+         */
         $setHeight(value:number):void {
             //value = +value || 0;
             var values = this.$Bitmap;
@@ -231,6 +268,17 @@ module egret {
             }
         }
 
+        /**
+         * @private
+         * 
+         * @param context 
+         * @param texture 
+         * @param destW 
+         * @param destH 
+         * @param scale9Grid 
+         * @param fillMode 
+         * @param smoothing 
+         */
         static $drawImage(context:sys.RenderContext, texture:egret.Texture, destW:number, destH:number, scale9Grid:egret.Rectangle, fillMode:string, smoothing:boolean):void {
             var bitmapData = texture;
             context.imageSmoothingEnabled = smoothing;

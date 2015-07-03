@@ -51,10 +51,14 @@ module egret {
     /**
      * @language en_US
      * ScrollView is an auxiliary class for sliding which passes a display object to the constructor function. In the specified size range, display objects beyond the range can be displayed. And they can be dragged randomly within this range.
+     * @version Egret 2.0
+     * @platform Web,Native
      */
     /**
      * @language zh_CN
      * ScrollView 是用于滑动的辅助类，将一个显示对象传入构造函数即可。可以在指定的尺寸范围内显示超过该范围的显示对象。并可以在此范围内随意拖动。
+     * @version Egret 2.0
+     * @platform Web,Native
      */
     export class ScrollView extends egret.DisplayObjectContainer {
 
@@ -65,6 +69,8 @@ module egret {
          *
          * @default 5
          *
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         /**
          * @language zh_CN
@@ -72,6 +78,8 @@ module egret {
          *
          * @default 5
          *
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         public static scrollThreshold:number = 5;
 
@@ -79,11 +87,15 @@ module egret {
          * @language en_US
          * Constructor.
          *
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 构造函数。
          *
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         public constructor() {
             super();
@@ -118,12 +130,16 @@ module egret {
          * Display policy of vertical scrollbar, on/off/auto.
          * @default auto
          *
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 垂直滚动条显示策略，on/off/auto。
          * @default auto
          *
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         public get verticalScrollPolicy():string {
             return this.$ScrollView[Keys.scrollPolicyV];
@@ -133,11 +149,22 @@ module egret {
             this.$setVerticalScrollPolicy(value);
         }
 
+        /**
+         * @private
+         * 
+         * @param value 
+         * @returns 
+         */
         $setVerticalScrollPolicy(value:string):boolean {
             this.$ScrollView[Keys.scrollPolicyV] = value;
             return true;
         }
 
+        /**
+         * @private
+         * 
+         * @returns 
+         */
         $getVerticalScrollPolicy():string {
             return this.$ScrollView[Keys.scrollPolicyV];
         }
@@ -146,11 +173,15 @@ module egret {
          * @language en_US
          * Display policy of horizontal scrollbar, on/off/auto.
          * @default auto
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 水平滚动条显示策略，on/off/auto。
          * @default auto
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         public get horizontalScrollPolicy():string {
             return this.$ScrollView[Keys.scrollPolicyH];
@@ -160,23 +191,49 @@ module egret {
             this.$setHorizontalScrollPolicy(value);
         }
 
+        /**
+         * @private
+         * 
+         * @param value 
+         * @returns 
+         */
         $setHorizontalScrollPolicy(value:string):boolean {
             this.$ScrollView[Keys.scrollPolicyH] = value;
             return true;
         }
 
+        /**
+         * @private
+         * 
+         * @returns 
+         */
         $getHorizontalScrollPolicy():string {
             return this.$ScrollView[Keys.scrollPolicyH];
         }
 
+        /**
+         * @private
+         * 
+         * @returns 
+         */
         $getHorizontalCanScroll():boolean {
             return this.$ScrollView[Keys.horizontalCanScroll];
         }
 
+        /**
+         * @private
+         * 
+         * @returns 
+         */
         $getVerticalCanScroll():boolean {
             return this.$ScrollView[Keys.verticalCanScroll];
         }
 
+        /**
+         * @private
+         * 
+         * @returns 
+         */
         $checkScrollPolicy():boolean {
             var hpolicy = this.$ScrollView[Keys.scrollPolicyH];
             var hCanScroll = this.checkScrollPolicy2(hpolicy, this._getContentWidth(), this.width);
@@ -187,6 +244,14 @@ module egret {
             return hCanScroll || vCanScroll;
         }
 
+        /**
+         * @private
+         * 
+         * @param policy 
+         * @param contentLength 
+         * @param viewLength 
+         * @returns 
+         */
         private checkScrollPolicy2(policy: string, contentLength, viewLength):boolean {
             if (policy == "on")
                 return true;
@@ -195,7 +260,17 @@ module egret {
             return contentLength > viewLength;
         }
 
+        /**
+         * @private
+         */
         $viewport:DisplayObject;
+        /**
+         * 
+         * @param value 
+         * @returns 
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
         public setContent(value: egret.DisplayObject): void {
             var values = this.$ScrollView;
             if (value == values[Keys.viewport])
@@ -224,10 +299,14 @@ module egret {
         /**
          * @language en_US
          * Remove the scrolled object
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 移除滚动的对象
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         public removeContent():void {
             this.$uninstallViewport();
@@ -336,16 +415,38 @@ module egret {
             egret.Event.release(event);
         }
 
+        /**
+         * @private
+         * 
+         * @returns 
+         */
         public _getContentWidth():number {
             return this.$viewport.width;
         }
+        /**
+         * @private
+         * 
+         * @returns 
+         */
         public _getContentHeight(): number {
             return this.$viewport.height;
         }
+        /**
+         * 
+         * @returns 
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
         public getMaxScrollLeft(): number {
             var max = this._getContentWidth() - this.width;
             return Math.max(0, max);
         }
+        /**
+         * 
+         * @returns 
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
         public getMaxScrollTop(): number {
             var max = this._getContentHeight() - this.height;
             return Math.max(0, max);
@@ -479,16 +580,23 @@ module egret {
             }
         }
 
+        /**
+         * @private
+         */
         public $scrollSpeed: number = 1;
         /**
          * @language en_US
          * Scroll speed, which is the ratio between the desired speed and the default speed.
          * The value range is scrollSpeed > 0. When the value is 2, the scroll speed is two times of the default speed.
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 滚动速度，这个值为需要的速度与默认速度的比值。
          * 取值范围为 scrollSpeed > 0 赋值为 2 时，速度是默认速度的 2 倍
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         public get scrollSpeed():number {
             return this.$scrollSpeed;
@@ -505,10 +613,14 @@ module egret {
         /**
          * @language en_US
          * Obtain or set the horizontal scroll position
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 获取或设置水平滚动位置
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         public get scrollLeft():number {
             return this.scrollerRect.x;
@@ -522,6 +634,11 @@ module egret {
             this.setChildRect(this.scrollerRect);
         }
 
+        /**
+         * @private
+         * 
+         * @param rect 
+         */
         private setChildRect(rect:egret.Rectangle):void {
             this.$viewport.$setScrollRect(this.scrollerRect);
         }
@@ -529,10 +646,14 @@ module egret {
         /**
          * @language en_US
          * Obtain or set the vertical scroll position
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 获取或设置垂直滚动位置
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         public get scrollTop():number {
             return this.scrollerRect.y;
@@ -550,6 +671,8 @@ module egret {
          * @param top {number} Vertical scroll position
          * @param left {number} Horizontal scroll position
          * @param isOffset {boolean} Optional. The default setting is false. Whether to increase the amount of scrolling, for example, top = 1 indicates scrolling up by one pixel
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         /**
          * @language zh_CN
@@ -557,6 +680,8 @@ module egret {
          * @param top {number} 垂直滚动位置
          * @param left {number} 水平滚动位置
          * @param isOffset {boolean} 可选参数，默认是false，是否是滚动增加量，如 top=1 代表往上滚动1像素
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         public setScrollPosition(top: number, left: number, isOffset: boolean = false): void {
             if (isOffset && top == 0 && left == 0)
@@ -578,6 +703,12 @@ module egret {
             this.setChildRect(this.scrollerRect);
         }
 
+        /**
+         * @private
+         * 
+         * @param isVertical 
+         * @returns 
+         */
         private _isOnTheEdge(isVertical=true):boolean {
             var top = this.scrollerRect.y,
                 left = this.scrollerRect.x;
@@ -588,8 +719,17 @@ module egret {
         }
 
 
+        /**
+         * @private
+         */
         private scrollHPos:number = 0;
+        /**
+         * @private
+         */
         private scrollVPos:number = 0;
+        /**
+         * @private
+         */
         private scrollerRect:Rectangle = new egret.Rectangle();
         /**
          * @private
@@ -645,7 +785,13 @@ module egret {
         }
 
 
+        /**
+         * @private
+         */
         private _scrollerWidth:number = NONE;
+        /**
+         * @private
+         */
         private _scrollerHeight:number = NONE;
         /**
          * @private

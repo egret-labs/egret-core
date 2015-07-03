@@ -30,25 +30,62 @@
 module egret {
     /**
      * @private
+     * @version Egret 2.0
+     * @platform Web,Native
      */
     export interface IVersionController {
+        /**
+         * 
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
         fetchVersion():void;
 
+        /**
+         * 
+         * @param url 
+         * @returns 
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
         checkIsNewVersion(url:string):boolean;
+        /**
+         * 
+         * @param url 
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
         saveVersion(url:string):void;
 
         /**
          * 获取所有有变化的文件
          * @returns {Array<string>}
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         getChangeList():Array<string>;
 
+        /**
+         * 
+         * @param url 
+         * @returns 
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
         getVirtualUrl(url:string):string;
     }
 
+    /**
+     * @version Egret 2.0
+     * @platform Web,Native
+     */
     export interface VersionController extends IVersionController {
 
     }
 
+    /**
+     * @version Egret 2.0
+     * @platform Web,Native
+     */
     export var VersionController:{new():VersionController};
 }

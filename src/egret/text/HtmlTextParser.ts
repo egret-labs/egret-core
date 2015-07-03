@@ -32,19 +32,34 @@ module egret {
      * @language en_US
      * Convert the text in html format to the object that can be assigned to the egret.TextField#textFlow property
      * @link http://docs.egret-labs.org/jkdoc/manual-text-multiformat.html Text mixed in a variety of style
+     * @version Egret 2.0
+     * @platform Web,Native
      */
     /**
      * @language zh_CN
      * 将html格式文本转换为可赋值给 egret.TextField#textFlow 属性的对象
      * @link http://docs.egret-labs.org/jkdoc/manual-text-multiformat.html 多种样式文本混合
+     * @version Egret 2.0
+     * @platform Web,Native
      */
     export class HtmlTextParser{
 
+        /**
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
         constructor () {
             this.initReplaceArr();
         }
 
+        /**
+         * @private
+         */
         private _replaceArr:Array<any> = [];
+        /**
+         * @private
+         * 
+         */
         private initReplaceArr():void {
             this._replaceArr = [];
             this._replaceArr.push([/&lt;/g, "<"]);
@@ -53,6 +68,12 @@ module egret {
             this._replaceArr.push([/&quot;/g, "\""]);
             this._replaceArr.push([/&apos;/g, "\'"]);
         }
+        /**
+         * @private
+         * 
+         * @param value 
+         * @returns 
+         */
         private replaceSpecial(value:string):string {
             for (var i = 0; i < this._replaceArr.length; i++) {
                 var k = this._replaceArr[i][0];
@@ -63,6 +84,9 @@ module egret {
             return value;
         }
 
+        /**
+         * @private
+         */
         private resutlArr:Array<egret.ITextElement> = [];
 
         /**
@@ -70,12 +94,16 @@ module egret {
          * Convert the text in html format to the object that can be assigned to the egret.TextField#textFlow property
          * @param htmltext {string} Text in html
          * @returns {Array<egret.ITextElement>} 可赋值给 egret.TextField#textFlow Object that can be assigned to the egret.TextField#textFlow property
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 将html格式文本转换为可赋值给 egret.TextField#textFlow 属性的对象
          * @param htmltext {string} html文本
          * @returns {Array<egret.ITextElement>} 可赋值给 egret.TextField#textFlow 属性的对象
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         public parser(htmltext:string):Array<egret.ITextElement> {
             this.stackArray = [];
@@ -107,6 +135,11 @@ module egret {
             return this.resutlArr;
         }
 
+        /**
+         * @private
+         * 
+         * @param value 
+         */
         private addToResultArr(value:string):void {
             if (value == "") {
                 return;
@@ -159,10 +192,22 @@ module egret {
             return info;
         }
 
+        /**
+         * @private
+         * 
+         * @returns 
+         */
         private getHeadReg():RegExp {
             return /^(color|textcolor|strokecolor|stroke|b|bold|i|italic|size|fontfamily|href)(\s)*=/;
         }
 
+        /**
+         * @private
+         * 
+         * @param info 
+         * @param head 
+         * @param value 
+         */
         private addProperty(info:egret.ITextStyle, head:string, value:string):void {
 
             switch (head.toLowerCase()) {
@@ -198,8 +243,16 @@ module egret {
             }
         }
 
+        /**
+         * @private
+         */
         private stackArray:Array<egret.ITextStyle>;
 
+        /**
+         * @private
+         * 
+         * @param infoStr 
+         */
         private addToArray(infoStr:string):void {
             var info:egret.ITextStyle = this.changeStringToObject(infoStr);
 

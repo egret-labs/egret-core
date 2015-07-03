@@ -31,50 +31,74 @@ module egret {
     /**
      * @classdesc 使用 MovieClipData 类，您可以创建 MovieClip 对象和处理 MovieClip 对象的数据。MovieClipData 一般由MovieClipDataFactory生成
      * @link http://docs.egret-labs.org/post/manual/displaycon/movieclip.html MovieClip序列帧动画
+     * @version Egret 2.0
+     * @platform Web,Native
      */
     export class MovieClipData extends HashObject {
         /**
+         * @private
          * MovieClip数据
          */
         $mcData:any = null;
 
         /**
          * 总帧数
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         public numFrames:number = 1;
 
         /**
          * 帧数据列表
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         public frames:any[] = [];
 
         /**
          * 帧标签列表
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         public labels:any[] = null;
 
         /**
          * 帧率
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         public frameRate:number = 0;
 
         /**
          * 纹理数据
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         public textureData:any = null;
 
         /**
          * 纹理集
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         public spriteSheet:SpriteSheet = null;
 
         /**
          * 创建一个 egret.MovieClipData 对象
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         constructor() {
             super();
         }
 
+        /**
+         * @private
+         * 
+         * @param mcData 
+         * @param textureData 
+         * @param spriteSheet 
+         */
         $init(mcData:any, textureData:any, spriteSheet:SpriteSheet) {
             this.textureData = textureData;
             this.spriteSheet = spriteSheet;
@@ -85,6 +109,8 @@ module egret {
          * 根据指定帧序号获取该帧对应的关键帧数据
          * @param frame {number} 帧序号
          * @returns {any} 帧数据对象
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         public getKeyFrameData(frame:number):any {
             var outputFrameData = this.frames[frame - 1];
@@ -98,6 +124,8 @@ module egret {
          * 根据指定帧序号获取该帧对应的Texture对象
          * @param frame {number} 帧序号
          * @returns {egret.Texture} Texture对象
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         public getTextureByFrame(frame:number):Texture {
             var frameData = this.getKeyFrameData(frame);
@@ -110,6 +138,12 @@ module egret {
             return null;
         }
 
+        /**
+         * @private
+         * 
+         * @param resName 
+         * @returns 
+         */
         private getTextureByResName(resName:string):Texture {
             var texture = this.spriteSheet.getTexture(resName);
             if (!texture) {
@@ -119,20 +153,40 @@ module egret {
             return texture;
         }
 
+        /**
+         * @private
+         * 
+         * @returns 
+         */
         $isDataValid():boolean {
             return this.frames.length > 0;
         }
 
+        /**
+         * @private
+         * 
+         * @returns 
+         */
         $isTextureValid():boolean {
             return this.textureData != null && this.spriteSheet != null;
         }
 
+        /**
+         * @private
+         * 
+         * @param mcData 
+         */
         $fillMCData(mcData:any):void {
             this.frameRate = mcData["frameRate"] || 24;
             this.fillFramesData(mcData.frames);
             this.fillFrameLabelsData(mcData.labels);
         }
 
+        /**
+         * @private
+         * 
+         * @param framesData 
+         */
         private fillFramesData(framesData:any[]):void {
             var frames:any[] = this.frames;
             var length:number = framesData ? framesData.length : 0;
@@ -153,6 +207,11 @@ module egret {
             this.numFrames = frames.length;
         }
 
+        /**
+         * @private
+         * 
+         * @param frameLabelsData 
+         */
         private fillFrameLabelsData(frameLabelsData:any[]):void {
             if (frameLabelsData) {
                 var length:number = frameLabelsData.length;
@@ -173,10 +232,19 @@ module egret {
             this.setMCData(value);
         }
 
+        /**
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
         public get mcData():MovieClipData {
             return this.$mcData;
         }
 
+        /**
+         * @private
+         * 
+         * @param value 
+         */
         private setMCData(value:MovieClipData) {
             if (this.$mcData == value) {
                 return;

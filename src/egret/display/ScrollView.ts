@@ -34,14 +34,21 @@ module egret {
      * @classdesc
      * ScrollView 是用于滑动的辅助类，将一个显示对象传入构造函数即可。可以在指定的尺寸范围内显示超过该范围的显示对象。并可以在此范围内随意拖动。
      * @extends egret.DisplayObjectContainer
+     * @version Egret 2.0
+     * @platform Web,Native
      */
     export class ScrollView extends DisplayObjectContainer {
 
+        /**
+         * @private
+         */
         public _ScrV_Props_:ScrollViewProperties;
 
         /**
          * 开始滚动的阈值，当触摸点偏离初始触摸点的距离超过这个值时才会触发滚动
          * @member {number} egret.ScrollView#scrollBeginThreshold
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         public scrollBeginThreshold: number = 10;
 
@@ -50,12 +57,16 @@ module egret {
          * 滚动速度，这个值为需要的速度与默认速度的比值。
          * 取值范围为 scrollSpeed > 0 赋值为 2 时，速度是默认速度的 2 倍
          * @member {number} egret.ScrollView#scrollSpeed
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         public scrollSpeed: number = 1;
         /**
          * 创建一个 egret.ScrollView 对象
          * @method egret.ScrollView#constructor
          * @param content {egret.DisplayObject} 需要滚动的对象
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         constructor(content: DisplayObject = null) {
             super();
@@ -65,11 +76,16 @@ module egret {
                 this.setContent(content);
             }
         }
+        /**
+         * @private
+         */
         public _content: DisplayObject = null;
         /**
          * 设置需要滚动的对象
          * @method egret.ScrollView#setContent
          * @param content {egret.DisplayObject} 需要滚动的对象
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         public setContent(content: DisplayObject):void {
             if (this._content === content)
@@ -85,6 +101,8 @@ module egret {
         /**
          * 移除滚动的对象
          * @method egret.ScrollView#removeContent
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         public removeContent():void {
             if (this._content) {
@@ -97,6 +115,8 @@ module egret {
         /**
          * 垂直滚动条显示策略，on/off/auto。
          * @member egret.ScrollView#verticalScrollPolicy
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         public get verticalScrollPolicy(): string {
             return this._ScrV_Props_._verticalScrollPolicy;
@@ -112,6 +132,8 @@ module egret {
         /**
          * 水平滚动条显示策略，on/off/auto。
          * @member egret.ScrollView#horizontalScrollPolicy
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         public get horizontalScrollPolicy(): string {
             return this._ScrV_Props_._horizontalScrollPolicy;
@@ -126,6 +148,8 @@ module egret {
          * 获取或设置水平滚动位置,
          * @member {number} egret.ScrollView#scrollLeft
          * @returns {number}
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         public get scrollLeft():number {
             return this._ScrV_Props_._scrollLeft;
@@ -142,6 +166,8 @@ module egret {
          * 获取或设置垂直滚动位置,
          * @member {number} egret.ScrollView#scrollTop
          * @returns {number}
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         public get scrollTop():number {
             return this._ScrV_Props_._scrollTop;
@@ -160,6 +186,8 @@ module egret {
          * @param top {number} 垂直滚动位置
          * @param left {number} 水平滚动位置
          * @param isOffset {boolean} 可选参数，默认是false，是否是滚动增加量，如 top=1 代表往上滚动1像素
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         public setScrollPosition(top: number, left: number, isOffset: boolean = false): void {
             if (isOffset && top == 0 && left == 0)
@@ -181,6 +209,12 @@ module egret {
             this._updateContentPosition();
         }
 
+        /**
+         * @private
+         * 
+         * @param isVertical 
+         * @returns 
+         */
         private _isOnTheEdge(isVertical=true):boolean {
             var top = this._ScrV_Props_._scrollTop,
                 left = this._ScrV_Props_._scrollLeft;
@@ -190,6 +224,12 @@ module egret {
                 return left < 0 || left > this.getMaxScrollLeft();
         }
 
+        /**
+         * @private
+         * 
+         * @param top 
+         * @param left 
+         */
         private _validatePosition(top = false,left = false):void {
             if (top) {
                 var height = this.height;
@@ -206,6 +246,7 @@ module egret {
         }
 
         /**
+         * @private
          * @inheritDoc
          */
         public $setWidth(value: number): void {
@@ -217,6 +258,7 @@ module egret {
             this._updateContentPosition();
         }
         /**
+         * @private
          * @inheritDoc
          */
         public $setHeight(value: number): void {
@@ -225,6 +267,10 @@ module egret {
             super.$setHeight(value);
             this._updateContentPosition();
         }
+        /**
+         * @private
+         * 
+         */
         public _updateContentPosition():void {
             var size = this.getBounds(egret.$TempRectangle);
             var height = size.height;
@@ -233,6 +279,11 @@ module egret {
             this.scrollRect = new Rectangle(Math.round(this._ScrV_Props_._scrollLeft), Math.round(this._ScrV_Props_._scrollTop), width, height);
             this.dispatchEvent(new Event(Event.CHANGE));
         }
+        /**
+         * @private
+         * 
+         * @returns 
+         */
         public _checkScrollPolicy():boolean {
             var hpolicy = this._ScrV_Props_._horizontalScrollPolicy;
             var hCanScroll = this.__checkScrollPolicy(hpolicy, this._getContentWidth(), this.width);
@@ -242,6 +293,14 @@ module egret {
             this._ScrV_Props_._vCanScroll = vCanScroll;
             return hCanScroll || vCanScroll;
         }
+        /**
+         * @private
+         * 
+         * @param policy 
+         * @param contentLength 
+         * @param viewLength 
+         * @returns 
+         */
         private __checkScrollPolicy(policy: string, contentLength, viewLength):boolean {
             if (policy == "on")
                 return true;
@@ -251,18 +310,33 @@ module egret {
         }
 
 
+        /**
+         * @private
+         * 
+         * @returns 
+         */
         public _addEvents(): void {
             this.addEventListener(TouchEvent.TOUCH_BEGIN, this._onTouchBegin, this);
             this.addEventListener(TouchEvent.TOUCH_BEGIN, this._onTouchBeginCapture, this, true);
             this.addEventListener(TouchEvent.TOUCH_END, this._onTouchEndCapture, this, true);
         }
 
+        /**
+         * @private
+         * 
+         * @returns 
+         */
         public _removeEvents(): void {
             this.removeEventListener(TouchEvent.TOUCH_BEGIN, this._onTouchBegin, this);
             this.removeEventListener(TouchEvent.TOUCH_BEGIN, this._onTouchBeginCapture, this, true);
             this.removeEventListener(TouchEvent.TOUCH_END, this._onTouchEndCapture, this, true);
         }
 
+        /**
+         * @private
+         * 
+         * @param e 
+         */
         public _onTouchBegin(e: TouchEvent):void {
             if (e.$isDefaultPrevented) {
                 return;
@@ -284,8 +358,19 @@ module egret {
             this._logTouchEvent(e);
             e.preventDefault();
         }
+        /**
+         * @private
+         */
         private delayTouchBeginEvent: TouchEvent = null;
+        /**
+         * @private
+         */
         private touchBeginTimer: Timer = null;
+        /**
+         * @private
+         * 
+         * @param event 
+         */
         public _onTouchBeginCapture(event: TouchEvent):void {
             var canScroll: boolean = this._checkScrollPolicy();
             if (!canScroll) {
@@ -313,12 +398,22 @@ module egret {
             this._onTouchBegin(event);
         }
 
+        /**
+         * @private
+         * 
+         * @param event 
+         * @returns 
+         */
         private _onTouchEndCapture(event: TouchEvent): void {
             if (!this.delayTouchBeginEvent) {
                 return;
             }
             this._onTouchBeginTimer();
         }
+        /**
+         * @private
+         * 
+         */
         private _onTouchBeginTimer():void {
             this.touchBeginTimer.stop();
             var event: TouchEvent = this.delayTouchBeginEvent;
@@ -328,6 +423,12 @@ module egret {
                 this.dispatchPropagationEvent(event);
         }
 
+        /**
+         * @private
+         * 
+         * @param event 
+         * @returns 
+         */
         private dispatchPropagationEvent(event: TouchEvent): void {
             var target:egret.DisplayObject = event.$target;
             var list = this.$getPropagationList(target);
@@ -346,6 +447,12 @@ module egret {
             egret.Event.release(event);
         }
 
+        /**
+         * @private
+         * 
+         * @param event 
+         * @returns 
+         */
         public _onTouchMove(event: TouchEvent): void {
             if (this._ScrV_Props_._lastTouchPosition.x == event.stageX && this._ScrV_Props_._lastTouchPosition.y == event.stageY)
                 return;
@@ -370,6 +477,12 @@ module egret {
             this._logTouchEvent(event);
         }
 
+        /**
+         * @private
+         * 
+         * @param event 
+         * @returns 
+         */
         public _onTouchEnd(event: TouchEvent): void {
             this.touchChildren = true;
             this._ScrV_Props_._scrollStarted = false;
@@ -382,6 +495,12 @@ module egret {
         }
 
 
+        /**
+         * @private
+         * 
+         * @param event 
+         * @returns 
+         */
         public _onEnterFrame(event: Event): void {
             var time = getTimer();
             if (time - this._ScrV_Props_._lastTouchTime > 100 && time - this._ScrV_Props_._lastTouchTime < 300) {
@@ -389,6 +508,12 @@ module egret {
             }
         }
 
+        /**
+         * @private
+         * 
+         * @param e 
+         * @returns 
+         */
         private _logTouchEvent(e: TouchEvent): void {
             this._ScrV_Props_._lastTouchPosition.x = e.stageX;
             this._ScrV_Props_._lastTouchPosition.y = e.stageY;
@@ -396,6 +521,12 @@ module egret {
             this._ScrV_Props_._lastTouchTime = egret.getTimer();
         }
 
+        /**
+         * @private
+         * 
+         * @param e 
+         * @returns 
+         */
         private _getPointChange(e: TouchEvent): { x: number; y: number } {
             return {
                 x: this._ScrV_Props_._hCanScroll === false ? 0 : (this._ScrV_Props_._lastTouchPosition.x - e.stageX),
@@ -403,6 +534,12 @@ module egret {
             };
         }
 
+        /**
+         * @private
+         * 
+         * @param e 
+         * @returns 
+         */
         private _calcVelocitys(e: TouchEvent): void {
             var time = getTimer();
             if (this._ScrV_Props_._lastTouchTime == 0) {
@@ -419,21 +556,50 @@ module egret {
             this._ScrV_Props_._lastTouchPosition.x = e.stageX;
             this._ScrV_Props_._lastTouchPosition.y = e.stageY;
         }
+        /**
+         * @private
+         * 
+         * @returns 
+         */
         public _getContentWidth():number {
             return this._content.$getExplicitWidth() || this._content.width;
         }
+        /**
+         * @private
+         * 
+         * @returns 
+         */
         public _getContentHeight(): number {
             return this._content.$getExplicitHeight() || this._content.height;
         }
+        /**
+         * 
+         * @returns 
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
         public getMaxScrollLeft(): number {
             var max = this._getContentWidth() - this.width;
             return Math.max(0, max);
         }
+        /**
+         * 
+         * @returns 
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
         public getMaxScrollTop(): number {
             var max = this._getContentHeight() - this.height;
             return Math.max(0, max);
         }
+        /**
+         * @private
+         */
         private static weight = [1, 1.33, 1.66, 2, 2.33];
+        /**
+         * @private
+         * 
+         */
         private _moveAfterTouchEnd():void {
             if (this._ScrV_Props_._velocitys.length == 0)
                 return;
@@ -459,6 +625,11 @@ module egret {
             this.setScrollTop(datay.position, datay.duration);
         }
 
+        /**
+         * @private
+         * 
+         * @param tw 
+         */
         public _onTweenFinished(tw: Tween) {
             if (tw == this._ScrV_Props_._vScrollTween)
                 this._ScrV_Props_._isVTweenPlaying = false;
@@ -469,10 +640,20 @@ module egret {
             }
         }
 
+        /**
+         * @private
+         * 
+         * @returns 
+         */
         public _onScrollStarted(): void {
 
         }
 
+        /**
+         * @private
+         * 
+         * @returns 
+         */
         public _onScrollFinished(): void {
             Tween.removeTweens(this);
             this._ScrV_Props_._hScrollTween = null;
@@ -481,6 +662,14 @@ module egret {
             this._ScrV_Props_._isVTweenPlaying = false
             this.dispatchEvent(new Event(Event.COMPLETE));
         }
+        /**
+         * 
+         * @param scrollTop 
+         * @param duration 
+         * @returns 
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
         public setScrollTop(scrollTop: number, duration: number = 0): egret.Tween {
             var finalPosition = Math.min(this.getMaxScrollTop(), Math.max(scrollTop, 0));
             if (duration == 0) {
@@ -498,6 +687,14 @@ module egret {
                 this._onScrollStarted();
             return vtween;
         }
+        /**
+         * 
+         * @param scrollLeft 
+         * @param duration 
+         * @returns 
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
         public setScrollLeft(scrollLeft: number, duration: number = 0): egret.Tween {
             var finalPosition = Math.min(this.getMaxScrollLeft(), Math.max(scrollLeft, 0));
             if (duration == 0) {
@@ -516,6 +713,14 @@ module egret {
             return htween;
         }
 
+        /**
+         * @private
+         * 
+         * @param pixelsPerMS 
+         * @param curPos 
+         * @param maxPos 
+         * @returns 
+         */
         private getAnimationDatas(pixelsPerMS: number, curPos: number, maxPos: number): { position: number; duration: number } {
             var absPixelsPerMS: number = Math.abs(pixelsPerMS);
             var extraFricition: number = 0.95;
@@ -546,6 +751,12 @@ module egret {
             };
             return result;
         }
+        /**
+         * @private
+         * 
+         * @param event 
+         * @returns 
+         */
         private cloneTouchEvent(event: TouchEvent): TouchEvent {
             var evt: TouchEvent = new TouchEvent(event.type, event.bubbles, event.cancelable);
             evt.touchPointID = event.touchPointID
@@ -560,6 +771,11 @@ module egret {
             return evt;
         }
 
+        /**
+         * @private
+         * 
+         * @returns 
+         */
         private throwNotSupportedError(): void {
             throw new Error(getString(1023));
         }
@@ -569,6 +785,8 @@ module egret {
          * @deprecated
          * @param child {DisplayObject}
          * @returns {DisplayObject}
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         public addChild(child: DisplayObject): DisplayObject {
             this.throwNotSupportedError();
@@ -580,6 +798,8 @@ module egret {
          * @param child {DisplayObject}
          * @param index {number}
          * @returns {DisplayObject}
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         public addChildAt(child: DisplayObject, index: number): DisplayObject {
             this.throwNotSupportedError();
@@ -590,6 +810,8 @@ module egret {
          * @deprecated
          * @param child {DisplayObject}
          * @returns {DisplayObject}
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         public removeChild(child: DisplayObject): DisplayObject {
             this.throwNotSupportedError();
@@ -600,6 +822,8 @@ module egret {
          * @deprecated
          * @param index {number}
          * @returns {DisplayObject}
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         public removeChildAt(index: number): DisplayObject {
             this.throwNotSupportedError();
@@ -610,6 +834,8 @@ module egret {
          * @deprecated
          * @param child {DisplayObject}
          * @param index {number}
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         public setChildIndex(child: DisplayObject, index: number): void {
             this.throwNotSupportedError();
@@ -619,6 +845,8 @@ module egret {
          * @deprecated
          * @param child1 {DisplayObject}
          * @param child2 {DisplayObject}
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         public swapChildren(child1: DisplayObject, child2: DisplayObject): void {
             this.throwNotSupportedError();
@@ -628,11 +856,22 @@ module egret {
          * @deprecated
          * @param index1 {number}
          * @param index2 {number}
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         public swapChildrenAt(index1: number, index2: number): void {
             this.throwNotSupportedError();
         }
 
+        /**
+         * 
+         * @param x 
+         * @param y 
+         * @param ignoreTouchEnabled 
+         * @returns 
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
         public hitTest(x: number, y: number, ignoreTouchEnabled: boolean = false): DisplayObject {
             var childTouched = super.hitTest(x, y);
             if (childTouched)

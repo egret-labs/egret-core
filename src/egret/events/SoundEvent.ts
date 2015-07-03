@@ -32,21 +32,29 @@ module egret {
      * @language en_US
      * Sound-related events.
      * An event: SoundEvent.SOUND_COMPLETE
+     * @version Egret 2.0
+     * @platform Web,Native
      */
     /**
      * @language zh_CN
      * 声音相关事件。
      * 有事件：SoundEvent.SOUND_COMPLETE
+     * @version Egret 2.0
+     * @platform Web,Native
      */
     export class SoundEvent extends egret.Event {
 
         /**
          * @language en_US
          * The sound has finished playing scheduling.
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 在声音完成播放后调度。
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         public static SOUND_COMPLETE:string = "soundComplete";
 
@@ -56,6 +64,8 @@ module egret {
          * @param type  The type of the event, accessible as Event.type.
          * @param bubbles  Determines whether the Event object participates in the bubbling stage of the event flow. The default value is false.
          * @param cancelable Determines whether the Event object can be canceled. The default values is false.
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         /**
          * @language zh_CN
@@ -63,6 +73,8 @@ module egret {
          * @param type  事件的类型，可以作为 Event.type 访问。
          * @param bubbles  确定 Event 对象是否参与事件流的冒泡阶段。默认值为 false。
          * @param cancelable 确定是否可以取消 Event 对象。默认值为 false。
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         public constructor(type:string, bubbles:boolean = false, cancelable:boolean = false) {
             super(type, bubbles, cancelable);
@@ -73,12 +85,16 @@ module egret {
          * EventDispatcher object using the specified event object thrown Event. The objects will be thrown in the object cache pool for the next round robin.
          * @param target {egret.IEventDispatcher} Distribute event target
          * @param type  The type of the event, accessible as Event.type.
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 使用指定的EventDispatcher对象来抛出Event事件对象。抛出的对象将会缓存在对象池上，供下次循环复用。
          * @param target {egret.IEventDispatcher} 派发事件目标
          * @param type  事件的类型，可以作为 Event.type 访问。
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         public static dispatchSoundEvent(target:IEventDispatcher, type:string):boolean {
             var event:SoundEvent = Event.create(SoundEvent, type);

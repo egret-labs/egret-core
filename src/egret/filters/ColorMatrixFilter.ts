@@ -29,20 +29,33 @@
 module egret {
     /**
      * @private
+     * @version Egret 2.0
+     * @platform Web,Native
      */
     export class ColorMatrixFilter extends Filter {
         /**
          * @private
          */
         public $matrix:Array<number> = [];
+        /**
+         * @private
+         */
         private matrix2:Array<number> = [];
 
+        /**
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
         constructor(matrix:Array<number> = null) {
             super();
             this.type = "colorTransform";
             this.setMatrix(matrix);
         }
 
+        /**
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
         public get matrix():Array<number> {
             for (var i = 0; i < 20; i++) {
                 this.matrix2[i] = this.$matrix[i];
@@ -54,6 +67,11 @@ module egret {
             this.setMatrix(value);
         }
 
+        /**
+         * @private
+         * 
+         * @param value 
+         */
         private setMatrix(value:Array<number>):void {
             for (var i = 0; i < 20; i++) {
                 this.$matrix[i] = (value && value[i]) || 0;

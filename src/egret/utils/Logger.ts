@@ -31,23 +31,56 @@ module egret {
     /**
      * @language en_US
      * Logger is an entrance for the log processing module of the engine
+     * @version Egret 2.0
+     * @platform Web,Native
      */
     /**
      * @language zh_CN
      * Logger是引擎的日志处理模块入口
+     * @version Egret 2.0
+     * @platform Web,Native
      */
     export class Logger {
+        /**
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
         public static ALL:string = "all";
+        /**
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
         public static DEBUG:string = "debug";
+        /**
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
         public static INFO:string = "info";
+        /**
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
         public static WARN:string = "warn";
+        /**
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
         public static ERROR:string ="error";
+        /**
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
         public static OFF:string = "off";
 
+        /**
+         * @private
+         */
         private static logFuncs:Object;
         /**
          * @private
          * @param logType
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         public static openLogByType(logType:string):void {
             if (Logger.logFuncs == null) {
@@ -86,6 +119,7 @@ module egret {
         }
 
         /**
+         * @private
          * 表示出现了致命错误，开发者必须修复错误
          * @param actionCode {string} 错误信息
          * @param value {Object} 错误描述信息
@@ -100,18 +134,23 @@ module egret {
          * Record normal Log information
          * @param actionCode {string} Error information
          * @param value {Object} Error description
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 记录正常的Log信息
          * @param actionCode {string} 错误信息
          * @param value {Object} 错误描述信息
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         public static info(actionCode:string, value:Object = null) {
             egret.Logger.traceToConsole("Info", actionCode, value);
         }
 
         /**
+         * @private
          * 记录可能会出现问题的Log信息
          * @param actionCode {string} 错误信息
          * @param value {Object} 错误描述信息
@@ -120,6 +159,13 @@ module egret {
             egret.Logger.traceToConsole("Warning", actionCode, value);
         }
 
+        /**
+         * 
+         * @param errorId 
+         * @param args 
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
         public static fatalWithErrorId(errorId:number, ...args) {
             args.unshift(errorId);
             var actionCode = getString.apply(null, args);
@@ -131,6 +177,13 @@ module egret {
             }
         }
 
+        /**
+         * 
+         * @param errorId 
+         * @param args 
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
         public static infoWithErrorId(errorId:number, ...args) {
             args.unshift(errorId);
             var actionCode = getString.apply(null, args);
@@ -142,6 +195,13 @@ module egret {
             }
         }
 
+        /**
+         * 
+         * @param errorId 
+         * @param args 
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
         public static warningWithErrorId(errorId:number, ...args) {
             args.unshift(errorId);
             var actionCode = getString.apply(null, args);
@@ -175,6 +235,14 @@ module egret {
         }
     }
 
+    /**
+     * 
+     * @param id 
+     * @param args 
+     * @returns 
+     * @version Egret 2.0
+     * @platform Web,Native
+     */
     export function getString(id:number, ...args):string {
         var message = egret.$locale_strings[id];
         if (message) {
