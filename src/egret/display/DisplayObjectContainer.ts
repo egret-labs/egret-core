@@ -128,7 +128,8 @@ module egret {
             }
 
             if (host) {
-                host.removeChild(child);
+                var lastIdx:number = host.$children.indexOf(child);
+                host.$doRemoveChild(lastIdx);
             }
 
             this.$children.splice(index, 0, child);
