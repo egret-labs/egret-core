@@ -474,6 +474,23 @@ module egret {
         }
 
         /**
+         * 确定由此 Rectangle 对象定义的矩形区域内是否包含指定的点。
+         * 此方法与 Rectangle.contains() 方法类似，只不过它采用 Point 对象作为参数。
+         * @method egret.Rectangle#containsPoint
+         * @param point {egret.Point} 包含点对象
+         * @returns {boolean} 如果包含，返回true，否则返回false
+         */
+        public containsPoint(point:Point):boolean {
+            if (this.x < point.x
+                && this.x + this.width > point.x
+                && this.y < point.y
+                && this.y + this.height > point.y) {
+                return true;
+            }
+            return false;
+        }
+
+        /**
          * @private
          */
         $getBaseWidth(angle:number):number {
