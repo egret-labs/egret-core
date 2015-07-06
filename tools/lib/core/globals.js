@@ -46,6 +46,12 @@ function getLanguageInfo() {
     if(!i18n) {
         i18n = "zh_CN";
     }
+    else if(i18n == "en") {
+        i18n = "en-US";
+    }
+    else {
+        i18n = "zh_CN";
+    }
     return i18n;
 }
 

@@ -61,11 +61,8 @@
         "egret/display/MovieClip.ts",
         "egret/display/SpriteSheet.ts",
 
-
         "egret/display/ScrollView.ts",
         "egret/display/ScrollViewProperties.ts",
-        "egret/display/scroll/TouchScroll.ts",
-        "egret/display/scroll/AnimationScroll.ts",
 
         "egret/geom/Matrix.ts",
         "egret/geom/Point.ts",
