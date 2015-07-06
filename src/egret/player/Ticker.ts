@@ -47,26 +47,6 @@ module egret {
         }
 
         /**
-         * @private
-         */
-        private _timeScale:number = 1;
-        /**
-         * @private
-         */
-        private _paused:boolean = false;
-
-        /**
-         * @deprecated
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        public run():void {
-            if (DEBUG) {
-                egret.Logger.fatalWithErrorId(1033);
-            }
-        }
-
-        /**
          * 注册帧回调事件，同一函数的重复监听会被忽略。
          * @method egret.Ticker#register
          * @param listener {Function} 帧回调函数,参数返回上一帧和这帧的间隔时间。示例：onEnterFrame(frameTime:number):void
@@ -89,50 +69,6 @@ module egret {
          */
         public unregister(callBack:Function, thisObject:any):void {
             sys.$ticker.$stopTick(callBack, thisObject);
-        }
-
-        /**
-         * @deprecated
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        public setTimeScale(scale:number):void {
-            if (DEBUG) {
-                egret.Logger.fatalWithErrorId(1033);
-            }
-        }
-
-        /**
-         * @deprecated
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        public getTimeScale():void {
-            if (DEBUG) {
-                egret.Logger.fatalWithErrorId(1033);
-            }
-        }
-
-        /**
-         * @deprecated
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        public pause():void {
-            if (DEBUG) {
-                egret.Logger.fatalWithErrorId(1033);
-            }
-        }
-
-        /**
-         * @deprecated
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        public resume():void {
-            if (DEBUG) {
-                egret.Logger.fatalWithErrorId(1033);
-            }
         }
 
         /**

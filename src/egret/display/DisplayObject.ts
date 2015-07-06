@@ -1875,31 +1875,6 @@ module egret {
 
         /**
          * @language en_US
-         * Check whether the specified coordinate is located in the display object.
-         * @method egret.DisplayObject#hitTest
-         * @param x {number} Check x coordinate
-         * @param y {number} Check y coordinate
-         * @returns {*} If display object overlaps or crosses with the specified point, return this object; otherwise, return null.
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-
-        /**
-         * @language zh_CN
-         * 检测指定坐标是否在显示对象内。
-         * @method egret.DisplayObject#hitTest
-         * @param x {number} 检测坐标的x轴
-         * @param y {number} 检测坐标的y轴
-         * @returns {*} 如果显示对象与指定的点重叠或相交，则为返回该对象；否则为null。
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        public hitTest(x:number, y:number):DisplayObject {
-            return this.$hitTest(x, y, false);
-        }
-
-        /**
-         * @language en_US
          * Calculate the display object to determine whether it overlaps or crosses with the points specified by the x and y parameters. The x and y parameters specify the points in the coordinates of the stage, rather than the points in the display object container that contains display objects (except the situation where the display object container is a stage).
          * Note: Don't use accurate pixel collision detection on a large number of objects. Otherwise, this will cause serious performance deterioration.
          * @param x {number}  x coordinate of the object to be tested.
