@@ -140,13 +140,13 @@ module egret {
 
         /**
          * @language en_US
-         * [read-only] The length of the line segment from (0,0) to this point.
+         * The length of the line segment from (0,0) to this point.
          * @version Egret 2.0
          * @platform Web,Native
          */
         /**
          * @language zh_CN
-         * [只读] 从 (0,0) 到此点的线段长度。
+         * 从 (0,0) 到此点的线段长度。
          * @version Egret 2.0
          * @platform Web,Native
          */

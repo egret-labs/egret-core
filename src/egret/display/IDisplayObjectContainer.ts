@@ -54,13 +54,13 @@ module egret {
 
         /**
          * @language en_US
-         * [read-only] Returns the number of children of this object.
+         * Returns the number of children of this object.
          * @version Egret 2.0
          * @platform Web,Native
          */
         /**
          * @language zh_CN
-         * [只读] 返回此对象的子项数目。
+         * 返回此对象的子项数目。
          * @version Egret 2.0
          * @platform Web,Native
          */

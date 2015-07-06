@@ -358,13 +358,13 @@ module egret {
 
         /**
          * @language en_US
-         * [read-only] The type of event. The type is case-sensitive.
+         * The type of event. The type is case-sensitive.
          * @version Egret 2.0
          * @platform Web,Native
          */
         /**
          * @language zh_CN
-         * [只读] 事件的类型。类型区分大小写。
+         * 事件的类型。类型区分大小写。
          * @version Egret 2.0
          * @platform Web,Native
          */
@@ -379,13 +379,13 @@ module egret {
 
         /**
          * @language en_US
-         * [read-only] Indicates whether an event is a bubbling event.
+         * Indicates whether an event is a bubbling event.
          * @version Egret 2.0
          * @platform Web,Native
          */
         /**
          * @language zh_CN
-         * [只读] 表示事件是否为冒泡事件。如果事件可以冒泡，则此值为 true；否则为 false。
+         * 表示事件是否为冒泡事件。如果事件可以冒泡，则此值为 true；否则为 false。
          * @version Egret 2.0
          * @platform Web,Native
          */
@@ -399,7 +399,7 @@ module egret {
         $cancelable:boolean;
         /**
          * @language en_US
-         * [read-only] Indicates whether the behavior associated with the event can be prevented. If the behavior can be
+         * Indicates whether the behavior associated with the event can be prevented. If the behavior can be
          * canceled, this value is true; otherwise it is false.
          * @see #preventDefault()
          * @version Egret 2.0
@@ -407,7 +407,7 @@ module egret {
          */
         /**
          * @language zh_CN
-         * [只读] 表示是否可以阻止与事件相关联的行为。如果可以取消该行为，则此值为 true；否则为 false。
+         * 表示是否可以阻止与事件相关联的行为。如果可以取消该行为，则此值为 true；否则为 false。
          * @see #preventDefault()
          * @version Egret 2.0
          * @platform Web,Native
@@ -423,7 +423,7 @@ module egret {
 
         /**
          * @language en_US
-         * [read-only] The current phase in the event flow. This property can contain the following numeric values:
+         * The current phase in the event flow. This property can contain the following numeric values:
          * The capture phase (EventPhase.CAPTURING_PHASE).
          * The target phase (EventPhase.AT_TARGET)
          * The bubbling phase (EventPhase.BUBBLING_PHASE).
@@ -433,7 +433,7 @@ module egret {
          */
         /**
          * @language zh_CN
-         * [只读] 事件流中的当前阶段。此属性可以包含以下数值：
+         * 事件流中的当前阶段。此属性可以包含以下数值：
          * 捕获阶段 (EventPhase.CAPTURING_PHASE)。
          * 目标阶段 (EventPhase.AT_TARGET)。
          * 冒泡阶段 (EventPhase.BUBBLING_PHASE)。
@@ -452,7 +452,7 @@ module egret {
 
         /**
          * @language en_US
-         * [read-only] The object that is actively processing the Event object with an event listener. For example, if a
+         * The object that is actively processing the Event object with an event listener. For example, if a
          * user clicks an OK button, the current target could be the node containing that button or one of its ancestors
          * that has registered an event listener for that event.
          * @version Egret 2.0
@@ -460,7 +460,7 @@ module egret {
          */
         /**
          * @language zh_CN
-         * [只读] 当前正在使用某个事件侦听器处理 Event 对象的对象。例如，如果用户单击“确定”按钮，
+         * 当前正在使用某个事件侦听器处理 Event 对象的对象。例如，如果用户单击“确定”按钮，
          * 则当前目标可以是包含该按钮的节点，也可以是它的已为该事件注册了事件侦听器的始祖之一。
          * @version Egret 2.0
          * @platform Web,Native
@@ -476,14 +476,14 @@ module egret {
 
         /**
          * @language en_US
-         * [read-only] The event target. This property contains the target node. For example, if a user clicks an OK button,
+         * The event target. This property contains the target node. For example, if a user clicks an OK button,
          * the target node is the display list node containing that button.
          * @version Egret 2.0
          * @platform Web,Native
          */
         /**
          * @language zh_CN
-         * [只读] 事件目标。此属性包含目标节点。例如，如果用户单击“确定”按钮，则目标节点就是包含该按钮的显示列表节点。
+         * 事件目标。此属性包含目标节点。例如，如果用户单击“确定”按钮，则目标节点就是包含该按钮的显示列表节点。
          * @version Egret 2.0
          * @platform Web,Native
          */

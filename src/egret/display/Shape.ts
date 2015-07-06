@@ -73,13 +73,13 @@ module egret {
         $graphics:Graphics;
         /**
          * @language en_US
-         * [read-only] Specifies the Graphics object belonging to this Shape object, where vector drawing commands can occur.
+         * Specifies the Graphics object belonging to this Shape object, where vector drawing commands can occur.
          * @version Egret 2.0
          * @platform Web,Native
          */
         /**
          * @language zh_CN
-         * [只读] 获取 Shape 中的 Graphics 对象。可通过此对象执行矢量绘图命令。
+         * 获取 Shape 中的 Graphics 对象。可通过此对象执行矢量绘图命令。
          * @version Egret 2.0
          * @platform Web,Native
          */
