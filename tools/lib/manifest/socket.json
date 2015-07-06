@@ -6,6 +6,6 @@
     "file_list": [
         "ISocket.ts",
         "web/HTML5WebSocket.ts",
-        "native/WebSocket.ts"
+        "WebSocket.ts"
     ]
 }
