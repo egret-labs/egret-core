@@ -43,46 +43,69 @@
 //  console.log("release");
 //
 
-declare var DEBUG:boolean;
-declare var RELEASE:boolean;
+declare
+var DEBUG:boolean;
+declare
+var RELEASE:boolean;
 
 this["DEBUG"] = true;
 this["RELEASE"] = false;
 
 module egret {
-    export declare function $error(code:number,...params:any[]):void;
-    export declare function $warn(code:number,...params:any[]):void;
-    export declare function $markReadOnly(instance:any,property:string):void;
+    export declare function $error(code:number, ...params:any[]):void;
 
-    function _error(code:number,...params:any[]):void{
-        var text:string = egret.sys.tr.apply(null,arguments);
-        if(DEBUG){
-            egret.sys.$logToFPS("Error #"+code+": "+text)
+    export declare function $warn(code:number, ...params:any[]):void;
+
+    export declare function $markReadOnly(instance:any, property:string):void;
+    export declare function $markCannotUse(instance:any, property:string, defaultVale:any):void;
+
+    function _error(code:number, ...params:any[]):void {
+        var text:string = egret.sys.tr.apply(null, arguments);
+        if (DEBUG) {
+            egret.sys.$logToFPS("Error #" + code + ": " + text)
         }
-        throw new Error("#"+code+": "+text);//使用这种方式报错能够终止后续代码继续运行
+        throw new Error("#" + code + ": " + text);//使用这种方式报错能够终止后续代码继续运行
     }
+
     egret.$error = _error;
 
-    function _warn (code:number,...params:any[]):void{
-        var text:string = egret.sys.tr.apply(null,arguments);
-        if(DEBUG){
-            egret.sys.$logToFPS("Warning #"+code+": "+text)
+    function _warn(code:number, ...params:any[]):void {
+        var text:string = egret.sys.tr.apply(null, arguments);
+        if (DEBUG) {
+            egret.sys.$logToFPS("Warning #" + code + ": " + text)
         }
-        egret.warn("Warning #"+code+": "+text);
+        egret.warn("Warning #" + code + ": " + text);
     }
+
     egret.$warn = _warn;
 
-    function _markReadOnly(instance:any,property:string):void{
+    function _markReadOnly(instance:any, property:string):void {
         var data:PropertyDescriptor = Object.getOwnPropertyDescriptor(instance, property);
         if (data == null) {
             console.log(instance)
+            return;
         }
-        data.set = function(value:any){
-            egret.$warn(1010,property);
+        data.set = function (value:any) {
+            egret.$warn(1010, property);
         };
         Object.defineProperty(instance, property, data);
     }
 
     egret.$markReadOnly = _markReadOnly;
+
+    function markCannotUse(instance:any, property:string, defaultValue:any):void {
+        Object.defineProperty(instance.prototype, property, {
+            get: function () {
+                egret.$warn(1009, getQualifiedClassName(instance), property);
+                return defaultValue;
+            },
+            set: function (value) {
+                $error(1009, getQualifiedClassName(instance), property);
+            },
+            enumerable: true,
+            configurable: true
+        });
+    }
+    egret.$markCannotUse = markCannotUse;
 }
 

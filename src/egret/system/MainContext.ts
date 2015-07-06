@@ -106,23 +106,6 @@ module egret {
         public static DEVICE_MOBILE:string = "native";
 
         /**
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        public static runtimeType:string;
-
-        /**
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        public static RUNTIME_HTML5:string = "runtimeHtml5";
-        /**
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        public static RUNTIME_NATIVE:string = "runtimeNative";
-
-        /**
          * 游戏启动，开启主循环，参考Flash的滑动跑道模型
          * @method egret.MainContext#run
          * @version Egret 2.0
@@ -167,9 +150,7 @@ var testRuntimeType = function () {
     return false;
 };
 
-egret.MainContext.instance = new egret.MainContext();
 egret.MainContext.deviceType = testDeviceType() ? egret.MainContext.DEVICE_MOBILE : egret.MainContext.DEVICE_PC;
-egret.MainContext.runtimeType = testRuntimeType() ? egret.MainContext.RUNTIME_HTML5 : egret.MainContext.RUNTIME_NATIVE;
 
 
 delete testDeviceType;

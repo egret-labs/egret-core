@@ -200,148 +200,19 @@ module egret {
 
     if(DEBUG){
 
-        Object.defineProperty(Stage.prototype, "alpha", {
-            get: function () {
-                return 1;
-            },
-            set: function (value) {
-                $error(1009);
-            },
-            enumerable: true,
-            configurable: true
-        });
-
-        Object.defineProperty(Stage.prototype, "visible", {
-            get: function () {
-                return true;
-            },
-            set: function (value) {
-                $error(1009);
-            },
-            enumerable: true,
-            configurable: true
-        });
-
-        Object.defineProperty(Stage.prototype, "x", {
-            get: function () {
-                return 0;
-            },
-            set: function (value) {
-                $error(1009);
-            },
-            enumerable: true,
-            configurable: true
-        });
-
-        Object.defineProperty(Stage.prototype, "y", {
-            get: function () {
-                return 0;
-            },
-            set: function (value) {
-                $error(1009);
-            },
-            enumerable: true,
-            configurable: true
-        });
-
-        Object.defineProperty(Stage.prototype, "scaleX", {
-            get: function () {
-                return 1;
-            },
-            set: function (value) {
-                $error(1009);
-            },
-            enumerable: true,
-            configurable: true
-        });
-
-        Object.defineProperty(Stage.prototype, "scaleY", {
-            get: function () {
-                return 1;
-            },
-            set: function (value) {
-                $error(1009);
-            },
-            enumerable: true,
-            configurable: true
-        });
-
-        Object.defineProperty(Stage.prototype, "rotation", {
-            get: function () {
-                return 0;
-            },
-            set: function (value) {
-                $error(1009);
-            },
-            enumerable: true,
-            configurable: true
-        });
-
-        Object.defineProperty(Stage.prototype, "cacheAsBitmap", {
-            get: function () {
-                return false;
-            },
-            set: function (value) {
-                $error(1009);
-            },
-            enumerable: true,
-            configurable: true
-        });
-
-        Object.defineProperty(Stage.prototype, "scrollRect", {
-            get: function () {
-                return null;
-            },
-            set: function (value) {
-                $error(1009);
-            },
-            enumerable: true,
-            configurable: true
-        });
-
-        Object.defineProperty(Stage.prototype, "filters", {
-            get: function () {
-                return null;
-            },
-            set: function (value) {
-                $error(1009);
-            },
-            enumerable: true,
-            configurable: true
-        });
-
-        Object.defineProperty(Stage.prototype, "blendMode", {
-            get: function () {
-                return null;
-            },
-            set: function (value) {
-                $error(1009);
-            },
-            enumerable: true,
-            configurable: true
-        });
-
-        Object.defineProperty(Stage.prototype, "matrix", {
-            get: function () {
-                return this.$getMatrix();
-            },
-            set: function (value) {
-                $error(1009);
-            },
-            enumerable: true,
-            configurable: true
-        });
-
-        Object.defineProperty(Stage.prototype, "touchEnabled", {
-            get: function () {
-                return true;
-            },
-            set: function (value) {
-                $error(1009);
-            },
-            enumerable: true,
-            configurable: true
-        });
+        egret.$markCannotUse(Stage, "alpha", 1);
+        egret.$markCannotUse(Stage, "visible", true);
+        egret.$markCannotUse(Stage, "x", 0);
+        egret.$markCannotUse(Stage, "y", 0);
+        egret.$markCannotUse(Stage, "scaleX", 1);
+        egret.$markCannotUse(Stage, "scaleY", 1);
+        egret.$markCannotUse(Stage, "rotation", 0);
+        egret.$markCannotUse(Stage, "cacheAsBitmap", false);
+        egret.$markCannotUse(Stage, "scrollRect", null);
+        egret.$markCannotUse(Stage, "filters", null);
+        egret.$markCannotUse(Stage, "blendMode", null);
+        egret.$markCannotUse(Stage, "touchEnabled", true);
+        egret.$markCannotUse(Stage, "matrix", null);
     }
     registerClass(Stage,Types.Stage);
     if(DEBUG){

@@ -44,7 +44,7 @@ function getPackageJsonConfig() {
 function getLanguageInfo() {
     var i18n = getPackageJsonConfig().i18n;
     if(!i18n) {
-        i18n = "cn";
+        i18n = "zh_CN";
     }
     return i18n;
 }

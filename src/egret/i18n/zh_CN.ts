@@ -1,38 +1,14 @@
-//////////////////////////////////////////////////////////////////////////////////////
-//
-//  Copyright (c) 2014-2015, Egret Technology Inc.
-//  All rights reserved.
-//  Redistribution and use in source and binary forms, with or without
-//  modification, are permitted provided that the following conditions are met:
-//
-//     * Redistributions of source code must retain the above copyright
-//       notice, this list of conditions and the following disclaimer.
-//     * Redistributions in binary form must reproduce the above copyright
-//       notice, this list of conditions and the following disclaimer in the
-//       documentation and/or other materials provided with the distribution.
-//     * Neither the name of the Egret nor the
-//       names of its contributors may be used to endorse or promote products
-//       derived from this software without specific prior written permission.
-//
-//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
-//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
-//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
-//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
-//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
-//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
-//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
-//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
-//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-//
-//////////////////////////////////////////////////////////////////////////////////////
-
 module egret {
 
     $locale_strings = $locale_strings || {};
     $locale_strings["zh_CN"] = $locale_strings["zh_CN"] || {};
     var locale_strings = $locale_strings["zh_CN"];
-    
+
+    /**
+     * @private
+     */
+        //export var locale_strings = {};
+
     locale_strings[1001] = "找不到Lark入口类: {0}。";
     locale_strings[1002] = "Lark入口类 {0} 必须继承自lark.DisplayObject。";
     locale_strings[1003] = "参数 {0} 不能为 null。";
@@ -41,9 +17,36 @@ module egret {
     locale_strings[1006] = "提供的 DisplayObject 必须是调用者的子级。";
     locale_strings[1007] = "为参数指定的索引不在范围内。";
     locale_strings[1008] = "实例化单例出错，不允许实例化多个 {0} 对象。";
-    locale_strings[1009] = "Stage 类不实现此属性或方法。";
+    locale_strings[1009] = "类 {0} 不可以使用属性 {1}";
     locale_strings[1010] = "属性 {0} 是只读的";
     locale_strings[1011] = "流错误。URL: {0}";
     locale_strings[1012] = "参数 {0} 的类型必须为 Class。";
     locale_strings[1013] = "变量赋值为NaN，请查看代码！";
+
+    locale_strings[2000] = "RES.createGroup()传入了配置中不存在的键值: {0}";
+    locale_strings[2001] = "RES加载了不存在或空的资源组:\"{0}\"";
+
+    locale_strings[3000] = "主题配置文件加载失败: {0}";
+    locale_strings[3001] = "找不到主题中所配置的皮肤类名: {0}";
+    locale_strings[3002] = "索引:\"{0}\"超出集合元素索引范围";
+    locale_strings[3003] = "在此组件中不可用，若此组件为容器类，请使用";
+    locale_strings[3004] = "addChild(){0}addElement()代替";
+    locale_strings[3005] = "addChildAt(){0}addElementAt()代替";
+    locale_strings[3006] = "removeChild(){0}removeElement()代替";
+    locale_strings[3007] = "removeChildAt(){0}removeElementAt()代替";
+    locale_strings[3008] = "setChildIndex(){0}setElementIndex()代替";
+    locale_strings[3009] = "swapChildren(){0}swapElements()代替";
+    locale_strings[3010] = "swapChildrenAt(){0}swapElementsAt()代替";
+    locale_strings[3011] = "索引:\"{0}\"超出可视元素索引范围";
+    locale_strings[3012] = "此方法在Scroller组件内不可用!";
+    locale_strings[3013] = "UIStage是GUI根容器，只能有一个此实例在显示列表中！";
+
+    locale_strings[4000] = "An Bone cannot be added as a child to itself or one of its children (or children's children, etc.)";
+    locale_strings[4001] = "Abstract class can not be instantiated!";
+    locale_strings[4002] = "Unnamed data!";
+    locale_strings[4003] = "Nonsupport version!";
+
+    locale_strings[3100] = "当前浏览器不支持WebSocket";
+    locale_strings[3101] = "请先连接WebSocket";
+    locale_strings[3102] = "请先设置type为二进制类型";
 }
