@@ -130,7 +130,7 @@ module egret {
                 if (child == this) {
                     $error(1005);
                 }
-                else if (is(child, Types.DisplayObjectContainer) && (<DisplayObjectContainer>child).contains(this)) {
+                else if ((child instanceof egret.DisplayObjectContainer) && (<DisplayObjectContainer>child).contains(this)) {
                     $error(1004);
                 }
             }
