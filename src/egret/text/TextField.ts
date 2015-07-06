@@ -322,28 +322,28 @@ module egret {
             this.invalidateFontString();
         }
 
-        /**
-         * @private
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        public get fontSize():number {
-            return this.$TextField[sys.TextKeys.fontSize];
-        }
-
-        /**
-         * @private
-         */
-        public set fontSize(value:number) {
-            value = egret.getNumber(value);
-
-            var values = this.$TextField;
-            if (values[sys.TextKeys.fontSize] == value) {
-                return;
-            }
-            values[sys.TextKeys.fontSize] = value;
-            this.invalidateFontString();
-        }
+        ///**
+        // * @private
+        // * @version Egret 2.0
+        // * @platform Web,Native
+        // */
+        //public get fontSize():number {
+        //    return this.$TextField[sys.TextKeys.fontSize];
+        //}
+        //
+        ///**
+        // * @private
+        // */
+        //public set fontSize(value:number) {
+        //    value = egret.getNumber(value);
+        //
+        //    var values = this.$TextField;
+        //    if (values[sys.TextKeys.fontSize] == value) {
+        //        return;
+        //    }
+        //    values[sys.TextKeys.fontSize] = value;
+        //    this.invalidateFontString();
+        //}
 
         /**
          * @language en_US

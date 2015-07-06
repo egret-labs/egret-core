@@ -97,9 +97,10 @@ module egret.web {
             player.showPaintRect(showPaintRect);
             var showFPS = container.getAttribute("data-show-fps")=="true";
             var showLog = container.getAttribute("data-show-log")=="true";
+            var fpsStyles = container.getAttribute("data-show-fps-style");
             var logFilter = container.getAttribute("data-log-filter");
             if(showFPS||showLog){
-                player.displayFPS(showFPS,showLog,logFilter);
+                player.displayFPS(showFPS,showLog,logFilter,fpsStyles);
             }
             var language = navigator.language || navigator.browserLanguage || "en_US";
             language = language.replace("-", "_");

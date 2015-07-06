@@ -273,7 +273,7 @@ module egret.sys {
          * @private
          * 显示FPS，仅在DEBUG模式下有效。
          */
-        public displayFPS:(showFPS:boolean, showLog:boolean, logFilter:string)=>void;
+        public displayFPS:(showFPS:boolean, showLog:boolean, logFilter:string, fpsStyles:Object)=>void;
         /**
          * @private
          */
@@ -333,7 +333,7 @@ module egret.sys {
         updateInfo(info:string):void;
     }
 
-    declare var FPS:{new (stage:Stage, showFPS:boolean, showLog:boolean, logFilter:string):FPS};
+    declare var FPS:{new (stage:Stage, showFPS:boolean, showLog:boolean, logFilter:string, styles:Object):FPS};
 
     /**
      * @private
@@ -349,6 +349,7 @@ module egret.sys {
 
         var infoLines:string[] = [];
         var fpsDisplay:FPS;
+        var fpsStyle:Object;
 
         $logToFPS = function (info:string):void {
             if (!fpsDisplay) {
@@ -358,12 +359,18 @@ module egret.sys {
             fpsDisplay.updateInfo(info);
         }
 
-        function displayFPS(showFPS:boolean, showLog:boolean, logFilter:string):void {
+        function displayFPS(showFPS:boolean, showLog:boolean, logFilter:string, styles:Object):void {
+            fpsStyle = isUndefined(styles) ? {} : styles;
             showLog = !!showLog;
             this.showFPS = !!showFPS;
             this.showLog = showLog;
             if (!this.fpsDisplay) {
-                fpsDisplay = this.fpsDisplay = new FPS(this.stage, showFPS, showLog, logFilter);
+                var x = isUndefined(styles["x"]) ? 0 : styles["x"];
+                var y = isUndefined(styles["y"]) ? 0 : styles["y"];
+                fpsDisplay = this.fpsDisplay = new FPS(this.stage, showFPS, showLog, logFilter, styles);
+                fpsDisplay.x = x;
+                fpsDisplay.y = y;
+
                 var length = infoLines.length;
                 for (var i = 0; i < length; i++) {
                     fpsDisplay.updateInfo(infoLines[i]);
@@ -444,7 +451,7 @@ module egret.sys {
          */
         FPS = (function (_super):FPS {
             __extends(FPSImpl, _super);
-            function FPSImpl(stage, showFPS, showLog, logFilter) {
+            function FPSImpl(stage, showFPS, showLog, logFilter, styles:Object) {
                 _super.call(this);
                 this["isFPS"] = true;
                 this.infoLines = [];
@@ -458,6 +465,7 @@ module egret.sys {
                 this.logFilter = logFilter;
                 this.touchChildren = false;
                 this.touchEnabled = false;
+                this.styles = styles;
                 this.createDisplay();
                 try {
                     var logFilterRegExp = logFilter ? new RegExp(logFilter) : null;
@@ -476,20 +484,20 @@ module egret.sys {
                 this.shape = new egret.Shape();
                 this.addChild(this.shape);
                 var textField = new egret.TextField();
-                textField.fontSize = 24;
+                textField.size = egret.isUndefined(this.styles["size"]) ? 24 : this.styles["size"];
                 this.addChild(textField);
                 this.textField = textField;
-                textField.textColor = 0x00c200;
+                textField.textColor = egret.isUndefined(this.styles["textColor"]) ? 0x00c200 : this.styles["textColor"];
                 textField.fontFamily = "monospace";
                 textField.x = 10;
                 textField.y = 10;
                 var textField = new egret.TextField();
                 this.infoText = textField;
                 this.addChild(textField);
-                textField.textColor = 0xb0b0b0;
+                textField.textColor = egret.isUndefined(this.styles["textColor"]) ? 0xb0b0b0 : this.styles["textColor"];
                 textField.fontFamily = "monospace";
                 textField.x = 10;
-                textField.fontSize = 12;
+                textField.size = egret.isUndefined(this.styles["size"]) ? 12 : this.styles["size"] / 2;
                 textField.y = 10;
             };
             FPSImpl.prototype.update = function (drawCalls, dirtyRatio) {
