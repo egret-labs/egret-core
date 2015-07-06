@@ -196,22 +196,5 @@ module egret.gui {
             g.endFill();
         }
 
-        /**
-         * 碰撞检测
-         * @param x
-         * @param y
-         * @param ignoreTouchEnabled
-         * @returns {*}
-         */
-        public hitTest(x:number, y:number):DisplayObject {
-            var result:DisplayObject = super.hitTest(x, y);
-            if (result) {
-                return result;
-            }
-            else if (this.$graphics) {
-                return DisplayObject.prototype.hitTest.call(this, x, y);
-            }
-            return null;
-        }
     }
 }

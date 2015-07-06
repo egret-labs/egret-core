@@ -863,20 +863,5 @@ module egret {
             this.throwNotSupportedError();
         }
 
-        /**
-         * 
-         * @param x 
-         * @param y 
-         * @param ignoreTouchEnabled 
-         * @returns 
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        public hitTest(x: number, y: number, ignoreTouchEnabled: boolean = false): DisplayObject {
-            var childTouched = super.hitTest(x, y);
-            if (childTouched)
-                return childTouched;
-            return DisplayObject.prototype.hitTest.call(this, x, y, ignoreTouchEnabled);
-        }
     }
 }
