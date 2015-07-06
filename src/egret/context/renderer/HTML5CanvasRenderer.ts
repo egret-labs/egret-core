@@ -678,7 +678,8 @@ CanvasRenderingContext2D.prototype.fill = function () {
         if (matrix) {
             this.transform(matrix.a, matrix.b, matrix.c, matrix.d, matrix.tx, matrix.ty);
             originCanvas2DFill.call(this);
-            var context = egret.MainContext.instance.rendererContext;
+            var context = <egret.HTML5CanvasRenderer>egret.MainContext.instance.rendererContext;
+            context._transformTx = context._transformTy = 0;
             this.setTransform(context._matrixA, context._matrixB, context._matrixC, context._matrixD, context._matrixTx, context._matrixTy);
         }
     }
