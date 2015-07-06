@@ -46,29 +46,33 @@ module egret {
 
     }
 
-    /**
-     * @version Egret 2.0
-     * @platform Web,Native
-     */
     export var ExternalInterface: {
 
         /**
          * @language en_US
          * Call functionName, and the value passed to the native.
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 调用 functionName，并将value传入到native中。
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         call(functionName:string, value:string):void;
 
         /**
          * @language en_US
          * FunctionName callback listener, you need to have to call functionName this field in native rather than such a call.
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 监听 functionName 回调，需要在native中有调用 functionName 这个字段，而不是 此类的call。
+         * @version Egret 2.0
+         * @platform Web,Native
          */
         addCallback(functionName:string, listener:(value)=>void):void
     };

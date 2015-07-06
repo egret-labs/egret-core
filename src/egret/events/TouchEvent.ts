@@ -359,17 +359,6 @@ module egret {
             Event.release(event);
             return result;
         }
-
-        /**
-         * 
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        protected clean():void {
-            super.clean();
-            this.localPoint = null;
-        }
-
     }
 
     registerClass(TouchEvent, Types.TouchEvent);
