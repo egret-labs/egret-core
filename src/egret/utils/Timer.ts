@@ -38,6 +38,9 @@ module egret {
      * 根据 Egret 的帧速率或运行时环境（可用内存和其他因素），运行时调度事件的间隔可能稍有不同。
 	 * @extends egret.EventDispatcher
      * @link http://docs.egret-labs.org/post/manual/timer/timer.html Timer计时器
+     *
+     * @event egret.TimerEvent.TIMER 每当 Timer 对象达到根据 Timer.delay 属性指定的间隔时调度。
+     * @event egret.TimerEvent.TIMER_COMPLETE 每当它完成 Timer.repeatCount 设置的请求数后调度。
 	 */
     export class Timer extends EventDispatcher {
 

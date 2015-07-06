@@ -36,6 +36,8 @@ module egret {
      * 如果开发者希望所有平台完全无差异，请使用BitmapText
      * @extends egret.DisplayObject
      * @link http://docs.egret-labs.org/post/manual/text/createtext.html 创建文本
+     *
+     * @event egret.TextEvent.LINK 点击链接后调度。
      */
     export class TextField extends DisplayObject {
 
