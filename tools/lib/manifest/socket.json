@@ -5,7 +5,7 @@
     "source":"src/extension/socket",
     "file_list": [
         "ISocket.ts",
-        "HTML5WebSocket.ts",
-        "WebSocket.ts"
+        "web/HTML5WebSocket.ts",
+        "native/WebSocket.ts"
     ]
 }
