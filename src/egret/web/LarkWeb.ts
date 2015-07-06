@@ -97,10 +97,18 @@ module egret.web {
             player.showPaintRect(showPaintRect);
             var showFPS = container.getAttribute("data-show-fps")=="true";
             var showLog = container.getAttribute("data-show-log")=="true";
-            var fpsStyles = container.getAttribute("data-show-fps-style");
+
             var logFilter = container.getAttribute("data-log-filter");
             if(showFPS||showLog){
-                player.displayFPS(showFPS,showLog,logFilter,fpsStyles);
+                var styleStr = container.getAttribute("data-show-fps-style") || "";
+                var stylesArr = styleStr.split(",");
+                var styles = {};
+                for (var i = 0; i < stylesArr.length; i++) {
+                    var tempStyleArr = stylesArr[i].split(":");
+                    styles[tempStyleArr[0]] = tempStyleArr[1];
+                }
+
+                player.displayFPS(showFPS,showLog,logFilter,styles);
             }
             var language = navigator.language || navigator.browserLanguage || "en_US";
             language = language.replace("-", "_");
