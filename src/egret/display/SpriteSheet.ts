@@ -37,7 +37,7 @@ module egret {
      * On WebGL / OpenGL, this operation can significantly improve performance.
      * At the same time, SpriteSheet can carry out material integration easily to reduce the number of HTTP requests
      * For specification of the SpriteSheet format, see the document https://github.com/egret-labs/egret-core/wiki/Egret-SpriteSheet-Specification
-     * @link http://docs.egret-labs.org/post/manual/bitmap/textures.html The use of texture packs
+     * @see http://docs.egret-labs.org/post/manual/bitmap/textures.html The use of texture packs
      * @version Egret 2.0
      * @platform Web,Native
      */
@@ -48,7 +48,7 @@ module egret {
      * 在WebGL / OpenGL上，这种做法可以显著提升性能
      * 同时，SpriteSheet可以很方便的进行素材整合，降低HTTP请求数量
      * SpriteSheet 格式的具体规范可以参见此文档  https://github.com/egret-labs/egret-core/wiki/Egret-SpriteSheet-Specification
-     * @link http://docs.egret-labs.org/post/manual/bitmap/textures.html 纹理集的使用
+     * @see http://docs.egret-labs.org/post/manual/bitmap/textures.html 纹理集的使用
      * @version Egret 2.0
      * @platform Web,Native
      */

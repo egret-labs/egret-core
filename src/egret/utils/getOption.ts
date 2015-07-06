@@ -29,6 +29,17 @@
 
 module egret {
     /**
+     * @language en_US
+     * Get browser or Runtime parameters, returns an empty string if not set
+     * Get the url parameter corresponds to the browser, access to the corresponding parameter in the Runtime setOption
+     * @method egret.getOption
+     * @param key {string} Parameters key
+     * @private
+     * @version Egret 2.0
+     * @platform Web,Native
+     */
+    /**
+     * @language zh_CN
      * 获取浏览器或者Runtime参数，如果没有设置返回空字符串
      * 在浏览器中相当于获取url中参数，在Runtime获取对应setOption参数
      * @method egret.getOption
@@ -37,7 +48,7 @@ module egret {
      * @version Egret 2.0
      * @platform Web,Native
      */
-    export function getOption(key:string):string {
+    export function getOption(key:string):string {//todo native暂未实现
         if (window.hasOwnProperty("location")) {
             var search = location.search;
             if (search == "") {

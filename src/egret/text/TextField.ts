@@ -180,7 +180,7 @@ module egret {
      * @language en_US
      * TextField is the text rendering class of egret. It conducts rendering by using the browser / device API. Due to different ways of font rendering in different browsers / devices, there may be differences in the rendering
      * If developers expect  no differences among all platforms, please use BitmapText
-     * @link http://docs.egret-labs.org/post/manual/text/createtext.html Create Text
+     * @see http://docs.egret-labs.org/post/manual/text/createtext.html Create Text
      *
      * @event egret.Event.CHANGE Dispatched when entering text user input。
      * @event egret.FocusEvent.FOCUS_IN Dispatched after the focus to enter text.
@@ -192,7 +192,7 @@ module egret {
      * @language zh_CN
      * TextField是egret的文本渲染类，采用浏览器/设备的API进行渲染，在不同的浏览器/设备中由于字体渲染方式不一，可能会有渲染差异
      * 如果开发者希望所有平台完全无差异，请使用BitmapText
-     * @link http://docs.egret-labs.org/post/manual/text/createtext.html 创建文本
+     * @see http://docs.egret-labs.org/post/manual/text/createtext.html 创建文本
      *
      * @event egret.Event.CHANGE 输入文本有用户输入时调度。
      * @event egret.FocusEvent.FOCUS_IN 聚焦输入文本后调度。

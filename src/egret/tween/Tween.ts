@@ -32,14 +32,14 @@ module egret {
 	/**
      * @language en_US
      * Tween is the animation easing class of Egret
-     * @link http://docs.egret-labs.org/post/manual/anim/tween.html Tween缓动动画
+     * @see http://docs.egret-labs.org/post/manual/anim/tween.html Tween缓动动画
      * @version Egret 2.0
      * @platform Web,Native
 	 */
 	/**
      * @language zh_CN
      * Tween是Egret的动画缓动类
-     * @link http://docs.egret-labs.org/post/manual/anim/tween.html Tween ease animation
+     * @see http://docs.egret-labs.org/post/manual/anim/tween.html Tween ease animation
      * @version Egret 2.0
      * @platform Web,Native
 	 */

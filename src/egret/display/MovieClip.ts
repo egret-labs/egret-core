@@ -31,7 +31,7 @@ module egret {
 
     /**
      * @classdesc 影片剪辑，可以通过影片剪辑播放序列帧动画。MovieClip 类从以下类继承而来：DisplayObject 和 EventDispatcher。不同于 DisplayObject 对象，MovieClip 对象拥有一个时间轴。
-     * @link http://docs.egret-labs.org/post/manual/displaycon/movieclip.html  MovieClip序列帧动画
+     * @see http://docs.egret-labs.org/post/manual/displaycon/movieclip.html  MovieClip序列帧动画
      * @version Egret 2.0
      * @platform Web,Native
      */

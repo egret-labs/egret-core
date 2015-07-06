@@ -99,14 +99,14 @@ module egret {
     /**
      * @language en_US
      * Used to build the basic structure of text with a variety of mixed styles, mainly for setting textFlow property
-     * @link http://docs.egret-labs.org/jkdoc/manual-text-multiformat.html Text mixed in a variety of style
+     * @see http://docs.egret-labs.org/jkdoc/manual-text-multiformat.html Text mixed in a variety of style
      * @version Egret 2.0
      * @platform Web,Native
      */
     /**
      * @language zh_CN
      * 用于建立多种样式混合文本的基本结构，主要用于设置 textFlow 属性
-     * @link http://docs.egret-labs.org/jkdoc/manual-text-multiformat.html 多种样式文本混合
+     * @see http://docs.egret-labs.org/jkdoc/manual-text-multiformat.html 多种样式文本混合
      * @version Egret 2.0
      * @platform Web,Native
      */

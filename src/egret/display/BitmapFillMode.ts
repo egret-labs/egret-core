@@ -33,7 +33,7 @@ module egret {
      * @language en_US
      * The BitmapFillMode class defines the image fill mode of Bitmap.
      * The BitmapFillMode class defines a pattern enumeration for adjusting size. These patterns determine how Bitmap fill the size designated by the layout system.
-     * @link http://docs.egret-labs.org/post/manual/bitmap/bitmapfillmode.html Texture filling way
+     * @see http://docs.egret-labs.org/post/manual/bitmap/bitmapfillmode.html Texture filling way
      * @version Egret 2.0
      * @platform Web,Native
      */
@@ -41,7 +41,7 @@ module egret {
      * @language zh_CN
      * BitmapFillMode 类定义Bitmap的图像填充方式。
      * BitmapFillMode 类定义了调整大小模式的一个枚举，这些模式确定 Bitmap 如何填充由布局系统指定的尺寸。
-     * @link http://docs.egret-labs.org/post/manual/bitmap/bitmapfillmode.html 纹理的填充方式
+     * @see http://docs.egret-labs.org/post/manual/bitmap/bitmapfillmode.html 纹理的填充方式
      * @version Egret 2.0
      * @platform Web,Native
      */
