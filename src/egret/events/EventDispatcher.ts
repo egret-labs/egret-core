@@ -277,9 +277,9 @@ module egret {
          * @version Egret 2.0
          * @platform Web,Native
          */
-        public dispatchEventWith(type:string, bubbles?:boolean, cancelable?:boolean, data?:any):boolean {
+        public dispatchEventWith(type:string, bubbles?:boolean, data?:any):boolean {
             if (bubbles || this.hasEventListener(type)) {
-                var event:Event = Event.create(Event, type, bubbles, cancelable);
+                var event:Event = Event.create(Event, type, bubbles);
                 event.data = data;
                 var result = this.dispatchEvent(event);
                 Event.release(event);
