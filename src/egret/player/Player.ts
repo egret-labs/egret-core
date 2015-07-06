@@ -124,7 +124,7 @@ module egret.sys {
             if (rootClass) {
                 var rootContainer:any = new rootClass();
                 this.root = rootContainer;
-                if (is(rootContainer, Types.DisplayObject)) {
+                if (rootContainer instanceof egret.DisplayObject) {
                     this.stage.addChild(rootContainer);
                 }
                 else {

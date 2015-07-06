@@ -214,7 +214,7 @@ module egret {
          */
         public hasEventListener(type:string):boolean {
             var values = this.$EventDispatcher;
-            return (values[Keys.eventsMap][type] || values[Keys.captureEventsMap][type]);
+            return !!(values[Keys.eventsMap][type] || values[Keys.captureEventsMap][type]);
         }
 
         /**
