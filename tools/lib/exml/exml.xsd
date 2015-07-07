@@ -2414,6 +2414,8 @@
     <xs:attribute name="autoHideScrollBars" type="xs:boolean"/>
     <xs:attribute name="horizontalScrollBar" type="xs:string"/>
     <xs:attribute name="horizontalScrollPolicy" type="egret.gui.ScrollPolicy"/>
+    <xs:attribute name="scrollBeginThreshold" type="xs:decimal"/>
+    <xs:attribute name="scrollSpeed" type="xs:decimal"/>
     <xs:attribute name="verticalScrollBar" type="xs:string"/>
     <xs:attribute name="verticalScrollPolicy" type="egret.gui.ScrollPolicy"/>
     <xs:attribute name="viewport" type="xs:string"/>
@@ -2453,6 +2455,8 @@
       <xs:element name="autoHideScrollBars" type="boolean"/>
       <xs:element name="horizontalScrollBar" type="egret.gui.HScrollBar"/>
       <xs:element name="horizontalScrollPolicy" type="string"/>
+      <xs:element name="scrollBeginThreshold" type="number"/>
+      <xs:element name="scrollSpeed" type="number"/>
       <xs:element name="verticalScrollBar" type="egret.gui.VScrollBar"/>
       <xs:element name="verticalScrollPolicy" type="string"/>
       <xs:element name="viewport" type="egret.gui.IViewport"/>
