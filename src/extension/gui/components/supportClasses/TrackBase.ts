@@ -402,8 +402,8 @@ module egret.gui {
 
                 var mousePoint:Point = (<DisplayObject> (event.target)).localToGlobal(mEvent.localX, mEvent.localY);
 
-                TouchEvent.emitTouchEvent(this,
-                    TouchEvent.TOUCH_TAP, false, false,mousePoint.x,mousePoint.y ,mEvent.touchPointID);
+                TouchEvent.dispatchTouchEvent(this,
+                    TouchEvent.TOUCH_TAP, false, false,mousePoint.x,mousePoint.y ,mEvent.touchPointID,mEvent.touchDown);
 			}
 			
 			this.mouseDownTarget = null;

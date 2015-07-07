@@ -48,12 +48,16 @@ module egret.sys {
      */
     export class TouchHandler extends HashObject {
 
+        private maxTouches:number = 0;
+        private useTouchesCount:number = 0;
+
         /**
          * @private
          */
-        public constructor(stage:Stage) {
+        public constructor(stage:Stage, maxTouches:number) {
             super();
             this.stage = stage;
+            this.maxTouches = maxTouches;
         }
 
         /**
@@ -74,9 +78,20 @@ module egret.sys {
          * @param touchPointID 分配给触摸点的唯一标识号
          */
         public onTouchBegin(x:number, y:number, touchPointID:number):void {
+
+            if (this.useTouchesCount >= this.maxTouches) {
+                return;
+            }
+
+            this.lastTouchX = x;
+            this.lastTouchY = y;
+
             var target = this.findTarget(x, y);
-            this.touchDownTarget[touchPointID] = target.$hashCode;
-            TouchEvent.emitTouchEvent(target, TouchEvent.TOUCH_BEGIN, true, true, x, y, touchPointID);
+            if (this.touchDownTarget[touchPointID] == null) {
+                this.touchDownTarget[touchPointID] = target.$hashCode;
+                this.useTouchesCount++;
+            }
+            TouchEvent.dispatchTouchEvent(target, TouchEvent.TOUCH_BEGIN, true, true, x, y, touchPointID, true);
         }
 
         /**
@@ -96,13 +111,19 @@ module egret.sys {
          * @param touchPointID 分配给触摸点的唯一标识号
          */
         public onTouchMove(x:number, y:number, touchPointID:number):void {
+            if (this.touchDownTarget[touchPointID] == null) {
+                return;
+            }
+
             if (this.lastTouchX == x && this.lastTouchY == y) {
                 return;
             }
+
             this.lastTouchX = x;
             this.lastTouchY = y;
+
             var target = this.findTarget(x, y);
-            TouchEvent.emitTouchEvent(target, TouchEvent.TOUCH_MOVE, true, true, x, y, touchPointID);
+            TouchEvent.dispatchTouchEvent(target, TouchEvent.TOUCH_MOVE, true, true, x, y, touchPointID, true);
         }
 
         /**
@@ -113,16 +134,22 @@ module egret.sys {
          * @param touchPointID 分配给触摸点的唯一标识号
          */
         public onTouchEnd(x:number, y:number, touchPointID:number):void {
+            if (this.touchDownTarget[touchPointID] == null) {
+                return;
+            }
+
             var target = this.findTarget(x, y);
             var oldTargetCode = this.touchDownTarget[touchPointID];
-            this.touchDownTarget[touchPointID] = -1;
-            TouchEvent.emitTouchEvent(target, TouchEvent.TOUCH_END, true, true, x, y, touchPointID);
+            delete this.touchDownTarget[touchPointID];
+            this.useTouchesCount--;
+
+            TouchEvent.dispatchTouchEvent(target, TouchEvent.TOUCH_END, true, true, x, y, touchPointID, false);
             target = this.findTarget(x, y);
             if (oldTargetCode == target.$hashCode) {
-                TouchEvent.emitTouchEvent(target, TouchEvent.TOUCH_TAP, true, true, x, y, touchPointID);
+                TouchEvent.dispatchTouchEvent(target, TouchEvent.TOUCH_TAP, true, true, x, y, touchPointID, false);
             }
             else {
-                TouchEvent.emitTouchEvent(target, TouchEvent.TOUCH_RELEASE_OUTSIDE, true, true, x, y, touchPointID);
+                TouchEvent.dispatchTouchEvent(target, TouchEvent.TOUCH_RELEASE_OUTSIDE, true, true, x, y, touchPointID, false);
             }
         }
 

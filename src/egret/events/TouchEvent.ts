@@ -307,8 +307,14 @@ module egret {
         }
 
         /**
+         * @language en_US
+         * Whether the touch is pressed (true) or not pressed (false).
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
          * 表示触摸已按下 (true) 还是未按下 (false)。
-         * @member {boolean} egret.TouchEvent#touchDown
          * @version Egret 2.0
          * @platform Web,Native
          */
@@ -348,13 +354,14 @@ module egret {
          * @version Egret 2.0
          * @platform Web,Native
          */
-        public static emitTouchEvent(target:IEventDispatcher, type:string, bubbles?:boolean, cancelable?:boolean,
-                                     stageX?:number, stageY?:number, touchPointID?:number):boolean {
+        public static dispatchTouchEvent(target:IEventDispatcher, type:string, bubbles?:boolean, cancelable?:boolean,
+                                     stageX?:number, stageY?:number, touchPointID?:number, touchDown:boolean = false):boolean {
             if (!bubbles && !target.hasEventListener(type)) {
                 return true;
             }
-            var event = Event.create(TouchEvent, type, bubbles, cancelable);
+            var event:TouchEvent = Event.create(TouchEvent, type, bubbles, cancelable);
             event.$setTo(stageX, stageY, touchPointID);
+            event.touchDown = touchDown;
             var result = target.dispatchEvent(event);
             Event.release(event);
             return result;
@@ -363,10 +370,10 @@ module egret {
 
     registerClass(TouchEvent, Types.TouchEvent);
 
-    if(DEBUG){
-        egret.$markReadOnly(TouchEvent.prototype,"stageX");
-        egret.$markReadOnly(TouchEvent.prototype,"stageY");
-        egret.$markReadOnly(TouchEvent.prototype,"localX");
-        egret.$markReadOnly(TouchEvent.prototype,"localY");
+    if (DEBUG) {
+        egret.$markReadOnly(TouchEvent.prototype, "stageX");
+        egret.$markReadOnly(TouchEvent.prototype, "stageY");
+        egret.$markReadOnly(TouchEvent.prototype, "localX");
+        egret.$markReadOnly(TouchEvent.prototype, "localY");
     }
 }
