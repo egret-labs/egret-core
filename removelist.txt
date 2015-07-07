@@ -1,1 +1,66 @@
-Ticker:
+与lark不一样的：
+
+ticker 回调不需要返回boolean，并且返回的函数参数为时间片
+
+event事件回调写法    Function  (event:Event)=>void
+
+
+未加入的功能:
+
+texture_scale_factor
+
+renderTexture
+滤镜
+
+webGL
+
+
+
+废弃
+target-densitydpi=device-dpi
+
+DisplayObject
+explicitWidth explicitHeight measuredHeight measuredWidth
+needDraw
+
+hitTest 请使用 hitTestPoint 实现
+
+anchorX anchorY
+
+Stage
+changeSize
+
+Ticker
+run
+setTimeScale
+getTimeScale
+pause
+resume
+
+
+Event
+ctrlKey altKey shiftKey
+
+
+不一样
+TouchEvent
+dispatchTouchEvent    target:IEventDispatcher,type:string,touchPointID:number = 0, stageX:number = 0, stageY:number = 0, ctrlKey:boolean=false,altKey:boolean=false,shiftKey:boolean=false,touchDown:boolean=false
+                      target:IEventDispatcher, type:string, bubbles?:boolean, cancelable?:boolean, stageX?:number, stageY?:number, touchPointID?:number, touchDown:boolean = false
+
+mask 类型： 从 Rectangle 到 DisplayObject(需要放入到显示列表中)
+
+TouchEvent localX localY  请使用 stageX  stageY实现
+
+
+fps 设置 egret.Profiler.getInstance().run();
+    html设置 data-show-fps="true" data-show-fps-style="x:0,y:600,size:50,textColor:0xff0000"
+
+屏幕适配
+NO_BORDER  ---》FIXED_WIDTH   FIXED_HEIGHT
+
+新增加一种 全新的  NO_BORDER
+
+
+问题
+
+多指触摸
