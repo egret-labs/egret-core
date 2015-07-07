@@ -197,7 +197,7 @@ module egret {
             return this.implMap[interfaceName];
         }
 
-        private _scaleMode:string = "";
+        $scaleMode:string = "";
         /**
          * @language en_US
          * A StageScaleMode class that specifies which scale mode to use. The following are valid values:<br/>
@@ -223,15 +223,15 @@ module egret {
          * </ul>
          */
         public get scaleMode():string{
-            return this._scaleMode;
+            return this.$scaleMode;
         }
 
         public set scaleMode(value:string){
-            if (this._scaleMode != value){
-                this._scaleMode = value;
+            if (this.$scaleMode != value){
+                this.$scaleMode = value;
 
                 if (this.modeCallBack) {
-                    this.modeCallBack(this._scaleMode);
+                    this.modeCallBack(this.$scaleMode);
                 }
             }
         }

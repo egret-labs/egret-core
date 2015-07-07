@@ -85,19 +85,21 @@ module egret.web {
         var canvas = <HTMLCanvasElement><any>surface;
         var webScreen = new WebScreen(container,canvas,scaleMode,contentWidth,contentHeight, orientation);
         var stage = new egret.Stage();
-        stage.$addScaleModeCall(function (newScaleMode) {
-            container.setAttribute("data-scale-mode", newScaleMode);
-            webScreen.$changeScaleMode(newScaleMode);
-            updateScreenSize();
-        });
+        stage.$scaleMode = scaleMode;
+
         var touch = new egret.sys.TouchHandler(stage, maxTouches);
         var webTouch = new WebTouchHandler(touch, canvas);
         var player = new egret.sys.Player(surface.renderContext, stage, entryClassName);
         var webHide = new egret.web.WebHideHandler(stage);
+        var webInput = new HTMLInput();
+
+        stage.$addScaleModeCall(function (newScaleMode) {
+            container.setAttribute("data-scale-mode", newScaleMode);
+            webScreen.$changeScaleMode(newScaleMode);
+            webScreen.updateScreenSize(player,webTouch, webInput);
+        });
 
         egret.MainContext.instance.stage = stage;
-
-        var webInput = new HTMLInput();
 
         if(DEBUG){
             var showPaintRect = container.getAttribute("data-show-paint-rect")=="true";
