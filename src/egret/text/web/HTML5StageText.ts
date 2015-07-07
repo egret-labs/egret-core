@@ -406,6 +406,10 @@ module egret.web {
 
             this.StageDelegateDiv.style.left = this.canvas.style.left;
             this.StageDelegateDiv.style.top = this.canvas.style.top;
+
+            var transformKey = egret.web.getPrefixStyleName("transform");
+            this.StageDelegateDiv.style[transformKey] = this.canvas.style[transformKey];
+            this.StageDelegateDiv.style[egret.web.getPrefixStyleName("transformOrigin")] = "0% 0% 0px";
         }
 
         /**

@@ -135,19 +135,32 @@ module egret.web {
             if (canvas.height !== stageHeight) {
                 canvas.height = stageHeight;
             }
+            canvas.style[egret.web.getPrefixStyleName("transformOrigin")] = "0% 0% 0px";
             canvas.style.width = displayWidth + "px";
             canvas.style.height = displayHeight + "px";
             canvas.style.top = (screenRect.height - displayHeight) / 2 + "px";
             canvas.style.left = (screenRect.width - displayWidth) / 2 + "px";
             var rotation = 0;
             if (shouldRotate) {
-                if (this.orientation == sys.OrientationMode.LANDSCAPE)
+                if (this.orientation == sys.OrientationMode.LANDSCAPE) {//
                     rotation = 90;
-                else
+                    canvas.style.top = (screenRect.height - displayWidth) / 2  + "px";
+                    canvas.style.left = (screenRect.width + displayHeight) / 2  + "px";
+                }
+                else {
                     rotation = -90;
+                    canvas.style.top = (screenRect.height + displayWidth) / 2  + "px";
+                    canvas.style.left = (screenRect.width - displayHeight) / 2  + "px";
+                }
             }
-            var transform = `rotate(${ rotation }deg)`;
+            else {
+                var h = (screenRect.height - displayHeight) / 2;
+                var w = (screenRect.width - displayWidth) / 2;
+                canvas.style.top = h + "px";
+                canvas.style.left = w  + "px";
+            }
 
+            var transform = `rotate(${ rotation }deg)`;
             canvas.style[egret.web.getPrefixStyleName("transform")] = transform;
             player.updateStageSize(stageWidth, stageHeight);
             var scalex = displayWidth / stageWidth,
