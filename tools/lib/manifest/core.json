@@ -80,6 +80,7 @@
 
         "egret/net/BaseImageLoader.ts",
         "egret/net/ImageLoader.ts",
+        "egret/player/OrientationMode.ts",
         "egret/player/DirtyRegion.ts",
         "egret/player/DisplayList.ts",
         "egret/player/IScreenAdapter.ts",
