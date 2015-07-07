@@ -88,7 +88,7 @@
         "egret/player/Region.ts",
         "egret/player/Renderable.ts",
         "egret/player/RenderContext.ts",
-        "egret/player/ScaleMode.ts",
+        "egret/player/StageScaleMode.ts",
         "egret/player/ScreenAdapter.ts",
         "egret/player/Surface.ts",
         "egret/player/SurfaceFactory.ts",

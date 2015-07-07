@@ -66,15 +66,15 @@ module egret.sys {
             var scaleX = (screenWidth / stageWidth) || 0;
             var scaleY = (screenHeight / stageHeight) || 0;
             switch (scaleMode) {
-                case ScaleMode.EXACT_FIT:
+                case StageScaleMode.EXACT_FIT:
                     break;
-                case ScaleMode.FIXED_HEIGHT:
+                case StageScaleMode.FIXED_HEIGHT:
                     stageWidth = Math.round(screenWidth / scaleY);
                     break;
-                case ScaleMode.FIXED_WIDTH:
+                case StageScaleMode.FIXED_WIDTH:
                     stageHeight = Math.round(screenHeight / scaleX);
                     break;
-                case ScaleMode.NO_BORDER:
+                case StageScaleMode.NO_BORDER:
                     if (scaleX > scaleY) {
                         displayHeight = Math.round(stageHeight * scaleX);
                     }
@@ -82,7 +82,7 @@ module egret.sys {
                         displayWidth = Math.round(stageWidth * scaleY);
                     }
                     break;
-                case ScaleMode.SHOW_ALL:
+                case StageScaleMode.SHOW_ALL:
                     if (scaleX > scaleY) {
                         displayWidth = Math.round(stageWidth * scaleY);
                     }
