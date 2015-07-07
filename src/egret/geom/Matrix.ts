@@ -436,7 +436,6 @@ module egret {
         }
 
 
-
         /**
          * 返回一个新的 Matrix 对象，它是此矩阵的克隆，带有与所含对象完全相同的副本。
          * @method egret.Matrix#clone
@@ -522,6 +521,49 @@ module egret {
          */
         public toString():string {
             return "(a=" + this.a + ", b=" + this.b + ", c=" + this.c + ", d=" + this.d + ", tx=" + this.tx + ", ty=" + this.ty + ")";
+        }
+
+        /**
+         * 包括用于缩放、旋转和转换的参数。当应用于矩阵时，该方法会基于这些参数设置矩阵的值。
+         * @method egret.Matrix#createBox
+         * @param scaleX {number} 水平缩放所用的系数
+         * @param scaleY {number} 垂直缩放所用的系数
+         * @param rotation {number} 旋转量（以弧度为单位）
+         * @param tx {number} 沿 x 轴向右平移（移动）的像素数
+         * @param ty {number} 沿 y 轴向下平移（移动）的像素数
+         */
+        public createBox(scaleX:number, scaleY:number, rotation:number = 0, tx:number = 0, ty:number = 0):void {
+            var self = this;
+            if (rotation !== 0) {
+                rotation = rotation / egret.Matrix.DEG_TO_RAD;
+                var u = egret.NumberUtils.cos(rotation);
+                var v = egret.NumberUtils.sin(rotation);
+                self.a = u * scaleX;
+                self.b = v * scaleY;
+                self.c = -v * scaleX;
+                self.d = u * scaleY;
+            } else {
+                self.a = scaleX;
+                self.b = 0;
+                self.c = 0;
+                self.d = scaleY;
+            }
+            self.tx = tx;
+            self.ty = ty;
+        }
+
+        /**
+         * 创建 Graphics 类的 beginGradientFill() 和 lineGradientStyle() 方法所需的矩阵的特定样式。
+         * 宽度和高度被缩放为 scaleX/scaleY 对，而 tx/ty 值偏移了宽度和高度的一半。
+         * @method egret.Matrix#createGradientBox
+         * @param width {number} 渐变框的宽度
+         * @param height {number} 渐变框的高度
+         * @param rotation {number} 旋转量（以弧度为单位）
+         * @param tx {number} 沿 x 轴向右平移的距离（以像素为单位）。此值将偏移 width 参数的一半
+         * @param ty {number} 沿 y 轴向下平移的距离（以像素为单位）。此值将偏移 height 参数的一半
+         */
+        public createGradientBox(width:number, height:number, rotation:number = 0, tx:number = 0, ty:number = 0):void {
+            this.createBox(width / 1638.4, height / 1638.4, rotation, tx + width / 2, ty + height / 2);
         }
     }
 }

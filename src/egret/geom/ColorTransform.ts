@@ -206,5 +206,36 @@ module egret {
             this._blueMultiplier = colorTransform._blueMultiplier;
             this._blueOffset = colorTransform._blueOffset;
         }
+
+        /**
+         * 将 second 参数指定的 ColorTransform 对象与当前 ColorTransform 对象连接，并将当前对象设置为结果，即两个颜色转换的相加组合
+         * @method egret.ColorTransform#concat
+         * @param second {egret.ColorTransform} 要与当前 ColorTransform 对象合并的 ColorTransform 对象
+         */
+        public concat(second:egret.ColorTransform):void {
+            this._redMultiplier *= second._redMultiplier;
+            this._greenMultiplier *= second._greenMultiplier;
+            this._blueMultiplier *= second._blueMultiplier;
+            this._alphaMultiplier *= second._alphaMultiplier;
+            this._redOffset += second._redOffset;
+            this._greenOffset += second._greenOffset;
+            this._blueOffset += second._blueOffset;
+            this._alphaOffset += second._alphaOffset;
+        }
+
+        /**
+         * 设置字符串格式并将其返回，该字符串描述 ColorTransform 对象的所有属性
+         * @method egret.ColorTransform#toString
+         */
+        public toString():string {
+            return "(redMultiplier=" + this._redMultiplier +
+                ", greenMultiplier=" + this._greenMultiplier +
+                ", blueMultiplier=" + this._blueMultiplier +
+                ", alphaMultiplier=" + this._alphaMultiplier +
+                ", redOffset=" + this._redOffset +
+                ", greenOffset=" + this._greenOffset +
+                ", blueOffset=" + this._blueOffset +
+                ", alphaOffset=" + this._alphaOffset + ")";
+        }
     }
 }
