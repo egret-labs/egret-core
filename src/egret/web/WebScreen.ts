@@ -70,6 +70,9 @@ module egret.web {
          * 缩放模式,默认值为sys.ScaleMode.NO_SCALE。请参考sys.ScaleMode中定义的值,若设置的值不是sys.ScaleMode中的值，将会默认采用sys.ScaleMode.NO_SCALE。
          */
         private scaleMode:string;
+        $changeScaleMode(value:string):void {
+            this.scaleMode = value;
+        }
 
         /**
          * @private

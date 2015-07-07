@@ -196,6 +196,55 @@ module egret {
         public getImplementation(interfaceName:string):any {
             return this.implMap[interfaceName];
         }
+
+        private _scaleMode:string = "";
+        /**
+         * @language en_US
+         * A StageScaleMode class that specifies which scale mode to use. The following are valid values:<br/>
+         * <ul>
+         * <li>StageScaleMode.EXACT_FIT -- The entire application be visible in the specified area without trying to preserve the original aspect ratio. Distortion can occur, the application may be stretched or compressed.</li>
+         * <li>StageScaleMode.SHOW_ALL -- The entire application is visible in the specified area without distortion while maintaining the application of the original aspect ratio. Applications may display border.</li>
+         * <li>StageScaleMode.NO_SCALE -- The size of the entire application is fixed, so that even if the size of the player window changes, it remains unchanged. If the player window is smaller than the content, it may do some trimming.</li>
+         * <li>StageScaleMode.NO_BORDER -- Keep the original aspect ratio scaling application content, after scaling a narrow direction of application content to fill the viewport players on both sides in the other direction may exceed the viewport and the player is cut.</li>
+         * <li>StageScaleMode.FIXED_WIDTH -- Keep the original aspect ratio scaling application content, after scaling application content in the horizontal and vertical directions to fill the viewport player, but only to keep the contents of the original application constant width, height may change.</li>
+         * <li>StageScaleMode.FIXED_HEIGHT -- Keep the original aspect ratio scaling application content, after scaling application content in the horizontal and vertical directions to fill the viewport player, but only to keep the contents of the original application constant height, width may change.</li>
+         * </ul>
+         */
+        /**
+         * @language zh_CN
+         * 一个 StageScaleMode 类中指定要使用哪种缩放模式的值。以下是有效值：<br/>
+         * <ul>
+         * <li>StageScaleMode.EXACT_FIT -- 整个应用程序在指定区域中可见，但不尝试保持原始高宽比。可能会发生扭曲，应用程序可能会拉伸或压缩显示。</li>
+         * <li>StageScaleMode.SHOW_ALL -- 整个应用程序在指定区域中可见，且不发生扭曲，同时保持应用程序的原始高宽比。应用程序的可能会显示边框。</li>
+         * <li>StageScaleMode.NO_SCALE -- 整个应用程序的大小固定，因此，即使播放器窗口的大小更改，它也会保持不变。如果播放器窗口比内容小，则可能进行一些裁切。</li>
+         * <li>StageScaleMode.NO_BORDER -- 保持原始宽高比缩放应用程序内容，缩放后应用程序内容的较窄方向填满播放器视口，另一个方向的两侧可能会超出播放器视口而被裁切。</li>
+         * <li>StageScaleMode.FIXED_WIDTH -- 保持原始宽高比缩放应用程序内容，缩放后应用程序内容在水平和垂直方向都填满播放器视口，但只保持应用程序内容的原始宽度不变，高度可能会改变。</li>
+         * <li>StageScaleMode.FIXED_HEIGHT -- 保持原始宽高比缩放应用程序内容，缩放后应用程序内容在水平和垂直方向都填满播放器视口，但只保持应用程序内容的原始高度不变，宽度可能会改变。</li>
+         * </ul>
+         */
+        public get scaleMode():string{
+            return this._scaleMode;
+        }
+
+        public set scaleMode(value:string){
+            if (this._scaleMode != value){
+                this._scaleMode = value;
+
+                if (this.modeCallBack) {
+                    this.modeCallBack(this._scaleMode);
+                }
+            }
+        }
+
+        private modeCallBack:Function;
+        /**
+         * @private
+         * @param callback
+         */
+        $addScaleModeCall(callback:Function):void {
+            this.modeCallBack = callback;
+        }
+
     }
 
     if(DEBUG){

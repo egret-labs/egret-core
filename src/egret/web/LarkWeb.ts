@@ -85,6 +85,11 @@ module egret.web {
         var canvas = <HTMLCanvasElement><any>surface;
         var webScreen = new WebScreen(container,canvas,scaleMode,contentWidth,contentHeight, orientation);
         var stage = new egret.Stage();
+        stage.$addScaleModeCall(function (newScaleMode) {
+            container.setAttribute("data-scale-mode", newScaleMode);
+            webScreen.$changeScaleMode(newScaleMode);
+            updateScreenSize();
+        });
         var touch = new egret.sys.TouchHandler(stage, maxTouches);
         var webTouch = new WebTouchHandler(touch, canvas);
         var player = new egret.sys.Player(surface.renderContext, stage, entryClassName);
