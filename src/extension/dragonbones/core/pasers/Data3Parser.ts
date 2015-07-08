@@ -271,7 +271,7 @@ module dragonBones {
 			outputFrame.visible = !Data3Parser.getBoolean(frameObject, ConstValues.A_HIDE, false);
 
 			//NaN:no tween, 10:auto tween, [-1, 0):ease in, 0:line easing, (0, 1]:ease out, (1, 2]:ease in out
-			outputFrame.tweenEasing = Data3Parser.getNumber(frameObject, ConstValues.A_TWEEN_EASING, 10) || 10;
+			outputFrame.tweenEasing = Data3Parser.getNumber(frameObject, ConstValues.A_TWEEN_EASING, 10);
 			outputFrame.displayIndex = Math.floor(Data3Parser.getNumber(frameObject, ConstValues.A_DISPLAY_INDEX, 0)|| 0);
 
 			//如果为NaN，则说明没有改变过zOrder
@@ -315,7 +315,7 @@ module dragonBones {
 			outputFrame.visible = !Data3Parser.getBoolean(frameObject, ConstValues.A_HIDE, false);
 			
 			//NaN:no tween, 10:auto tween, [-1, 0):ease in, 0:line easing, (0, 1]:ease out, (1, 2]:ease in out
-			outputFrame.tweenEasing = Data3Parser.getNumber(frameObject, ConstValues.A_TWEEN_EASING, 10) || 10;
+			outputFrame.tweenEasing = Data3Parser.getNumber(frameObject, ConstValues.A_TWEEN_EASING, 10);
 			outputFrame.tweenRotate = Math.floor(Data3Parser.getNumber(frameObject, ConstValues.A_TWEEN_ROTATE, 0) || 0);
 			outputFrame.tweenScale = Data3Parser.getBoolean(frameObject, ConstValues.A_TWEEN_SCALE, true);
 			//outputFrame.displayIndex = Math.floor(Data3Parser.getNumber(frameObject, ConstValues.A_DISPLAY_INDEX, 0)|| 0);
