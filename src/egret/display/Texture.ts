@@ -29,7 +29,7 @@
 
 
 module egret {
-
+    export var $TextureScaleFactor:number = 1;
     /**
      * @language en_US
      * The Texture class encapsulates different image resources on different platforms.
@@ -121,6 +121,10 @@ module egret {
          * @platform Web,Native
          */
         public get textureWidth():number {
+            return this.$getTextureWidth();
+        }
+
+        $getTextureWidth():number {
             return this._textureWidth;
         }
 
@@ -143,7 +147,19 @@ module egret {
          * @platform Web,Native
          */
         public get textureHeight():number {
+            return this.$getTextureHeight();
+        }
+
+        $getTextureHeight():number {
             return this._textureHeight;
+        }
+
+        $getDestW():number {
+            return this._bitmapWidth * $TextureScaleFactor;
+        }
+
+        $getDestH():number {
+            return this._bitmapHeight * $TextureScaleFactor;
         }
 
         /**
@@ -168,14 +184,15 @@ module egret {
          * @param value 
          */
         public _setBitmapData(value:any) {
-            var scale = 1;
+            var scale = $TextureScaleFactor;
             this._bitmapData = value;
             this._sourceWidth = value.width;
             this._sourceHeight = value.height;
+            this._bitmapWidth = this._sourceWidth;
+            this._bitmapHeight = this._sourceHeight;
             this._textureWidth = this._sourceWidth * scale;
             this._textureHeight = this._sourceHeight * scale;
-            this._bitmapWidth = this._textureWidth;
-            this._bitmapHeight = this._textureHeight;
+
             this._offsetX = this._offsetY = this._bitmapX = this._bitmapY = 0;
         }
 
