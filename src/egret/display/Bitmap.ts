@@ -299,9 +299,9 @@ module egret {
                 var tempImage:egret.BitmapData = bitmapData._bitmapData;
                 if (tempImage.width != bitmapWidth || tempImage.height != bitmapHeight || egret.$TextureScaleFactor != 1) {
                     var tempCanvas = egret.sys.surfaceFactory.create(true);
-                    tempCanvas.width = bitmapWidth * egret.$TextureScaleFactor;
-                    tempCanvas.height = bitmapHeight * egret.$TextureScaleFactor;
-                    tempCanvas.renderContext.drawImage(tempImage, bitmapData._bitmapX, bitmapData._bitmapY, bitmapWidth, bitmapHeight, 0, 0, bitmapWidth * egret.$TextureScaleFactor, bitmapHeight * egret.$TextureScaleFactor);
+                    tempCanvas.width = bitmapData._textureWidth;
+                    tempCanvas.height = bitmapData._textureHeight;
+                    tempCanvas.renderContext.drawImage(tempImage, bitmapData._bitmapX, bitmapData._bitmapY, bitmapWidth, bitmapHeight, offsetX, offsetY, bitmapWidth * egret.$TextureScaleFactor, bitmapHeight * egret.$TextureScaleFactor);
                     tempImage = tempCanvas;
                 }
 
