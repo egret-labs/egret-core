@@ -261,8 +261,8 @@ module egret {
         $render(context:sys.RenderContext):void {
             var bitmapData = this.$bitmapData;
             if (bitmapData) {
-                var destW:number = !isNone(this.$Bitmap[Keys.explicitBitmapWidth]) ? this.$Bitmap[Keys.explicitBitmapWidth] : (bitmapData._textureWidth);
-                var destH:number = !isNone(this.$Bitmap[Keys.explicitBitmapHeight]) ? this.$Bitmap[Keys.explicitBitmapHeight] : (bitmapData._textureHeight);
+                var destW:number = !isNone(this.$Bitmap[Keys.explicitBitmapWidth]) ? this.$Bitmap[Keys.explicitBitmapWidth] : (bitmapData.$getTextureWidth());
+                var destH:number = !isNone(this.$Bitmap[Keys.explicitBitmapHeight]) ? this.$Bitmap[Keys.explicitBitmapHeight] : (bitmapData.$getTextureHeight());
 
                 Bitmap.$drawImage(context, bitmapData, destW, destH, this.scale9Grid, this.fillMode, this.$smoothing);
             }
@@ -293,15 +293,16 @@ module egret {
             }
             else if (fillMode == egret.BitmapFillMode.SCALE) {
                 context.drawImage(bitmapData._bitmapData, bitmapData._bitmapX, bitmapData._bitmapY,
-                    bitmapWidth, bitmapHeight, offsetX, offsetY, bitmapData.$getDestW(), bitmapData.$getDestH());
+                    bitmapWidth, bitmapHeight, offsetX, offsetY, bitmapData.$getScaleBitmapWidth(), bitmapData.$getScaleBitmapHeight());
             }
             else {
                 var tempImage:egret.BitmapData = bitmapData._bitmapData;
+                var tempCanvas;
                 if (tempImage.width != bitmapWidth || tempImage.height != bitmapHeight || egret.$TextureScaleFactor != 1) {
-                    var tempCanvas = egret.sys.surfaceFactory.create(true);
-                    tempCanvas.width = bitmapData._textureWidth;
-                    tempCanvas.height = bitmapData._textureHeight;
-                    tempCanvas.renderContext.drawImage(tempImage, bitmapData._bitmapX, bitmapData._bitmapY, bitmapWidth, bitmapHeight, offsetX, offsetY, bitmapWidth * egret.$TextureScaleFactor, bitmapHeight * egret.$TextureScaleFactor);
+                    tempCanvas = egret.sys.surfaceFactory.create(true);
+                    tempCanvas.width = bitmapData.$getTextureWidth();
+                    tempCanvas.height = bitmapData.$getTextureHeight();
+                    tempCanvas.renderContext.drawImage(tempImage, bitmapData._bitmapX, bitmapData._bitmapY, bitmapWidth, bitmapHeight, offsetX, offsetY, bitmapData.$getScaleBitmapWidth(), bitmapData.$getScaleBitmapHeight());
                     tempImage = tempCanvas;
                 }
 
@@ -310,6 +311,10 @@ module egret {
                 context.rect(0, 0, destW, destH);
                 context.fillStyle = pattern;
                 context.fill();
+
+                if (tempCanvas) {
+                    egret.sys.surfaceFactory.release(tempCanvas);
+                }
             }
         }
 
@@ -323,8 +328,8 @@ module egret {
             var imageWidth:number = texture._bitmapWidth;
             var imageHeight:number = texture._bitmapHeight;
 
-            surfaceWidth = surfaceWidth - (texture._textureWidth - texture._bitmapWidth * $TextureScaleFactor);
-            surfaceHeight = surfaceHeight - (texture._textureHeight - texture._bitmapHeight * $TextureScaleFactor);
+            surfaceWidth = surfaceWidth - (texture.$getTextureWidth() - texture.$getScaleBitmapWidth());
+            surfaceHeight = surfaceHeight - (texture.$getTextureHeight() - texture.$getScaleBitmapHeight());
 
 
             var targetW0 = scale9Grid.x - texture._offsetX;

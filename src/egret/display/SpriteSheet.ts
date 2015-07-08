@@ -71,23 +71,11 @@ module egret {
         public constructor(texture:Texture) {
             super();
             this.texture = texture;
-            this._sourceWidth = texture._sourceWidth;
-            this._sourceHeight = texture._sourceHeight;
 
             this._bitmapX = texture._bitmapX - texture._offsetX;
             this._bitmapY = texture._bitmapY - texture._offsetY;
         }
 
-        /**
-         * @private
-         * 表示bitmapData.width
-         */
-        private _sourceWidth:number = 0;
-        /**
-         * @private
-         * 表示bitmapData.height
-         */
-        private _sourceHeight:number = 0;
         /**
          * @private
          * 表示这个SpriteSheet的位图区域在bitmapData上的起始位置x。
@@ -170,19 +158,8 @@ module egret {
             }
             var texture:Texture = new egret.Texture();
             texture._bitmapData = this.texture._bitmapData;
-            var scale = $TextureScaleFactor;
-            texture._bitmapX = this._bitmapX + bitmapX;
-            texture._bitmapY = this._bitmapY + bitmapY;
-            texture._bitmapWidth = bitmapWidth;
-            texture._bitmapHeight = bitmapHeight;
+            texture.$setData(bitmapX, bitmapY, bitmapWidth, bitmapHeight, offsetX, offsetY, textureWidth, textureHeight, this.texture._sourceWidth, this.texture._sourceHeight);
 
-            texture._offsetX = offsetX * scale;
-            texture._offsetY = offsetY * scale;
-            texture._textureWidth = textureWidth * scale;
-            texture._textureHeight = textureHeight * scale;
-
-            texture._sourceWidth = this._sourceWidth;
-            texture._sourceHeight = this._sourceHeight;
             this._textureMap[name] = texture;
             return texture;
         }

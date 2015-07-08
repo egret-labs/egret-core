@@ -164,10 +164,10 @@ module egret {
 
                 var offsetX:number = Math.round(texture._offsetX);
                 var offsetY:number = Math.round(texture._offsetY);
-                var bitmapWidth:number = texture._bitmapWidth || texture._textureWidth;
-                var bitmapHeight:number = texture._bitmapHeight || texture._textureHeight;
-                var destW:number = Math.round(bitmapWidth);
-                var destH:number = Math.round(bitmapHeight);
+                var bitmapWidth:number = texture._bitmapWidth;
+                var bitmapHeight:number = texture._bitmapHeight;
+                var destW:number = Math.round(texture.$getScaleBitmapWidth());
+                var destH:number = Math.round(texture.$getScaleBitmapHeight());
 
                 context.drawImage(texture._bitmapData, texture._bitmapX, texture._bitmapY,
                     bitmapWidth, bitmapHeight, offsetX, offsetY, destW, destH);
@@ -182,8 +182,8 @@ module egret {
             if (texture) {
                 var x:number = texture._offsetX;
                 var y:number = texture._offsetY;
-                var w:number = texture._textureWidth;
-                var h:number = texture._textureHeight;
+                var w:number = texture.$getTextureWidth();
+                var h:number = texture.$getTextureHeight();
 
                 bounds.setTo(x, y, w, h);
             }

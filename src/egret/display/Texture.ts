@@ -106,7 +106,7 @@ module egret {
          * @private
          * 纹理宽度
          */
-        public _textureWidth:number = 0;
+        private _textureWidth:number = 0;
 
         /**
          * @language en_US
@@ -132,7 +132,7 @@ module egret {
          * @private
          * 纹理高度
          */
-        public _textureHeight:number = 0;
+        private _textureHeight:number = 0;
 
         /**
          * @language en_US
@@ -154,11 +154,11 @@ module egret {
             return this._textureHeight;
         }
 
-        $getDestW():number {
+        $getScaleBitmapWidth():number {
             return this._bitmapWidth * $TextureScaleFactor;
         }
 
-        $getDestH():number {
+        $getScaleBitmapHeight():number {
             return this._bitmapHeight * $TextureScaleFactor;
         }
 
@@ -184,16 +184,42 @@ module egret {
          * @param value 
          */
         public _setBitmapData(value:any) {
-            var scale = $TextureScaleFactor;
             this._bitmapData = value;
-            this._sourceWidth = value.width;
-            this._sourceHeight = value.height;
-            this._bitmapWidth = this._sourceWidth;
-            this._bitmapHeight = this._sourceHeight;
-            this._textureWidth = this._sourceWidth * scale;
-            this._textureHeight = this._sourceHeight * scale;
 
-            this._offsetX = this._offsetY = this._bitmapX = this._bitmapY = 0;
+            var w = value.width;
+            var h = value.height;
+            this.$setData(0, 0, w, h, 0, 0, w, h, w, h);
+        }
+
+        /**
+         * @private
+         * 设置Texture数据
+         * @param bitmapX
+         * @param bitmapY
+         * @param bitmapWidth
+         * @param bitmapHeight
+         * @param offsetX
+         * @param offsetY
+         * @param textureWidth
+         * @param textureHeight
+         * @param sourceWidth
+         * @param sourceHeight
+         */
+        public $setData(bitmapX:number, bitmapY:number, bitmapWidth:number, bitmapHeight:number, offsetX:number, offsetY:number,
+                        textureWidth:number, textureHeight:number, sourceWidth:number, sourceHeight:number):void {
+            var scale = $TextureScaleFactor;
+            this._bitmapX = this._bitmapX + bitmapX;
+            this._bitmapY = this._bitmapY + bitmapY;
+            this._bitmapWidth = bitmapWidth;
+            this._bitmapHeight = bitmapHeight;
+
+            this._offsetX = offsetX * scale;
+            this._offsetY = offsetY * scale;
+            this._textureWidth = textureWidth * scale;
+            this._textureHeight = textureHeight * scale;
+
+            this._sourceWidth = sourceWidth;
+            this._sourceHeight = sourceHeight;
         }
 
         /**

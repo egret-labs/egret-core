@@ -213,8 +213,8 @@ module egret.gui {
                 }
             }
             else if(this._contentIsTexture){
-                this.measuredWidth = (<Texture> content)._textureWidth;
-                this.measuredHeight = (<Texture> content)._textureHeight;
+                this.measuredWidth = (<Texture> content).$getTextureWidth();
+                this.measuredHeight = (<Texture> content).$getTextureHeight();
             }
 		}
         /**
@@ -255,8 +255,8 @@ module egret.gui {
 					destH = this._UIC_Props_._uiHeight;
 				}
 				else{
-					destW = bitmapData._textureWidth;
-					destH = bitmapData._textureHeight;
+					destW = bitmapData.$getTextureWidth();
+					destH = bitmapData.$getTextureHeight();
 				}
 
 				Bitmap.$drawImage(context, bitmapData, destW, destH, this.scale9Grid || bitmapData["scale9Grid"], this.fillMode, true);
@@ -290,10 +290,10 @@ module egret.gui {
 				}
 
 				if (isNone(w)) {
-					w = texture._textureWidth;
+					w = texture.$getTextureWidth();
 				}
 				if (isNone(h)) {
-					h = texture._textureHeight;
+					h = texture.$getTextureHeight();
 				}
 
 				bounds.setTo(0, 0, w, h);

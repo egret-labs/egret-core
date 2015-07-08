@@ -328,13 +328,13 @@ module egret {
                         }
                         continue;
                     }
-                    var bitmapWidth:number = texture._bitmapWidth || texture._textureWidth;
-                    var bitmapHeight:number = texture._bitmapHeight || texture._textureHeight;
+                    var bitmapWidth:number = texture._bitmapWidth;
+                    var bitmapHeight:number = texture._bitmapHeight;
 
                     context.drawImage(texture._bitmapData, texture._bitmapX, texture._bitmapY,
-                        bitmapWidth, bitmapHeight, xPos + texture._offsetX, yPos + texture._offsetY, bitmapWidth, bitmapHeight);
+                        bitmapWidth, bitmapHeight, xPos + texture._offsetX, yPos + texture._offsetY, texture.$getScaleBitmapWidth(), texture.$getScaleBitmapHeight());
 
-                    xPos += texture._textureWidth + self.$BitmapText[Keys.letterSpacing];
+                    xPos += texture.$getTextureWidth() + self.$BitmapText[Keys.letterSpacing];
                 }
                 yPos += lineHeight + self.$BitmapText[Keys.lineSpacing];
             }
@@ -442,8 +442,8 @@ module egret {
                         }
                     }
                     else {
-                        texureWidth = texture._textureWidth;
-                        textureHeight = texture._textureHeight;
+                        texureWidth = texture.$getTextureWidth();
+                        textureHeight = texture.$getTextureHeight();
                         offsetX = texture._offsetX;
                         offsetY = texture._offsetY;
                     }
