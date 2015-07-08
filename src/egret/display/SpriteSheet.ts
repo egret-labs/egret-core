@@ -158,7 +158,7 @@ module egret {
             }
             var texture:Texture = new egret.Texture();
             texture._bitmapData = this.texture._bitmapData;
-            texture.$setData(bitmapX, bitmapY, bitmapWidth, bitmapHeight, offsetX, offsetY, textureWidth, textureHeight, this.texture._sourceWidth, this.texture._sourceHeight);
+            texture.$setData(this._bitmapX + bitmapX, this._bitmapY + bitmapY, bitmapWidth, bitmapHeight, offsetX, offsetY, textureWidth, textureHeight, this.texture._sourceWidth, this.texture._sourceHeight);
 
             this._textureMap[name] = texture;
             return texture;
