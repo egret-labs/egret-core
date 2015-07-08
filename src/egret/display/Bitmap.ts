@@ -296,8 +296,16 @@ module egret {
                     bitmapWidth, bitmapHeight, offsetX, offsetY, bitmapData.$getDestW(), bitmapData.$getDestH());
             }
             else {
+                var tempImage:egret.BitmapData = bitmapData._bitmapData;
+                if (tempImage.width != bitmapWidth || tempImage.height != bitmapHeight || egret.$TextureScaleFactor != 1) {
+                    var tempCanvas = egret.sys.surfaceFactory.create(true);
+                    tempCanvas.width = bitmapWidth * egret.$TextureScaleFactor;
+                    tempCanvas.height = bitmapHeight * egret.$TextureScaleFactor;
+                    tempCanvas.renderContext.drawImage(tempImage, bitmapData._bitmapX, bitmapData._bitmapY, bitmapWidth, bitmapHeight, 0, 0, bitmapWidth * egret.$TextureScaleFactor, bitmapHeight * egret.$TextureScaleFactor);
+                    tempImage = tempCanvas;
+                }
 
-                var pattern = context.createPattern(bitmapData._bitmapData, "repeat");
+                var pattern = context.createPattern(tempImage, "repeat");
                 context.beginPath();
                 context.rect(0, 0, destW, destH);
                 context.fillStyle = pattern;
