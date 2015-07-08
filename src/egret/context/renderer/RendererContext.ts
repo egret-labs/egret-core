@@ -46,6 +46,13 @@ module egret {
          */
         public renderCost:number = 0;
 
+        public _matrixA:number;
+        public _matrixB:number;
+        public _matrixC:number;
+        public _matrixD:number;
+        public _matrixTx:number;
+        public _matrixTy:number;
+
         /**
          * 绘制纹理的缩放比率，默认值为1
          * @member egret.RendererContext#texture_scale_factor
@@ -78,7 +85,7 @@ module egret {
         public constructor() {
             super();
             this.profiler = Profiler.getInstance();
-            if(!RendererContext.blendModesForGL) {
+            if (!RendererContext.blendModesForGL) {
                 RendererContext.initBlendMode();
             }
         }
@@ -116,7 +123,7 @@ module egret {
          * @param destWidth {any}
          * @param destHeigh {any}
          */
-        public drawImage(texture: Texture, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, repeat="no-repeat") {
+        public drawImage(texture:Texture, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, repeat = "no-repeat") {
             this.profiler.onDrawImage();
         }
 
@@ -133,7 +140,7 @@ module egret {
          * @param destWidth {any}
          * @param destHeigh {any}
          */
-        public drawImageScale9(texture: Texture, sourceX, sourceY, sourceWidth, sourceHeight, offX, offY, destWidth, destHeight, rect):boolean {
+        public drawImageScale9(texture:Texture, sourceX, sourceY, sourceWidth, sourceHeight, offX, offY, destWidth, destHeight, rect):boolean {
             return false;
         }
 
@@ -215,6 +222,14 @@ module egret {
 
         }
 
+        public createLinearGradient(x0:number, y0:number, x1:number, y1:number):CanvasGradient {
+            return null;
+        }
+
+        public createRadialGradient(x0:number, y0:number, r0:number, x1:number, y1:number, r1:number):CanvasGradient {
+            return null;
+        }
+
         public setGlobalFilters(filterData:Array<Filter>):void {
 
         }
@@ -246,7 +261,7 @@ module egret {
          * @param override {boolean} 是否覆盖
          */
         public static registerBlendModeForGL(key:string, src:number, dst:number, override?:boolean):void {
-            if(RendererContext.blendModesForGL[key] && !override) {
+            if (RendererContext.blendModesForGL[key] && !override) {
                 egret.Logger.warningWithErrorId(1005, key);
             }
             else {

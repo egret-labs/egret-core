@@ -36,6 +36,8 @@ module egret {
      * 如果开发者希望所有平台完全无差异，请使用BitmapText
      * @extends egret.DisplayObject
      * @link http://docs.egret-labs.org/post/manual/text/createtext.html 创建文本
+     *
+     * @event egret.TextEvent.LINK 点击链接后调度。
      */
     export class TextField extends DisplayObject {
 
@@ -778,8 +780,20 @@ module egret {
         }
 
         public appendElement(element:egret.ITextElement):void {
-            this._textArr.push(element);
-            this.setMiddleStyle(this._textArr);
+            var self = this;
+            var properties:egret.TextFieldProperties = self._TF_Props_;
+
+            var text:string = properties._text + element.text;
+
+            if (properties._displayAsPassword) {
+                self._setBaseText(text);
+            }
+            else {
+                properties._text = text;
+
+                self._textArr.push(element);
+                self.setMiddleStyle(self._textArr);
+            }
         }
 
         private _linesArr:Array<egret.ILineElement> = [];

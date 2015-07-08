@@ -43,13 +43,6 @@ module egret {
          */
         private canvasContext:CanvasRenderingContext2D;
 
-        private _matrixA:number;
-        private _matrixB:number;
-        private _matrixC:number;
-        private _matrixD:number;
-        private _matrixTx:number;
-        private _matrixTy:number;
-
         public _transformTx:number;
         public _transformTy:number;
 
@@ -346,6 +339,14 @@ module egret {
             this.drawCanvasContext.lineTo(Math.round(x2 + this._transformTx), Math.round(y2 + this._transformTy));
             this.drawCanvasContext.closePath();
             this.drawCanvasContext.stroke();
+        }
+
+        public createLinearGradient(x0:number, y0:number, x1:number, y1:number):CanvasGradient {
+            return this.drawCanvasContext.createLinearGradient(x0, y0, x1, y1);
+        }
+
+        public createRadialGradient(x0:number, y0:number, r0:number, x1:number, y1:number, r1:number):CanvasGradient {
+            return this.drawCanvasContext.createRadialGradient(x0, y0, r0, x1, y1, r1);
         }
     }
 }
@@ -666,5 +667,23 @@ egret.Graphics.prototype._endDraw = function (renderContext:egret.HTML5CanvasRen
     var _transformTy = renderContext._transformTy;
     if (_transformTx != 0 || _transformTy != 0) {
         self._renderContext.translate(-_transformTx, -_transformTy);
+    }
+};
+
+var originCanvas2DFill = CanvasRenderingContext2D.prototype.fill;
+CanvasRenderingContext2D.prototype.fill = function () {
+    var style = this.fillStyle;
+    if (!(typeof style == "string")) {
+        var matrix:egret.Matrix = style["matrix"];
+        if (matrix) {
+            this.transform(matrix.a, matrix.b, matrix.c, matrix.d, matrix.tx, matrix.ty);
+            originCanvas2DFill.call(this);
+            var context = <egret.HTML5CanvasRenderer>egret.MainContext.instance.rendererContext;
+            context._transformTx = context._transformTy = 0;
+            this.setTransform(context._matrixA, context._matrixB, context._matrixC, context._matrixD, context._matrixTx, context._matrixTy);
+        }
+    }
+    else {
+        originCanvas2DFill.call(this);
     }
 };

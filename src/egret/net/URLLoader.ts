@@ -39,6 +39,8 @@ module egret {
      * 通过 bytesLoaded 和 bytesTotal 属性以及已调度的事件，可以监视下载进度。
 	 * @extends egret.EventDispatcher
      * @link http://docs.egret-labs.org/post/manual/net/createconnect.html 构建通信请求
+     *
+     * @event egret.Event.COMPLETE 加载完成后调度。
 	 */
     export class URLLoader extends EventDispatcher {
 

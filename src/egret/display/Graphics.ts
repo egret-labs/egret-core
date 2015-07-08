@@ -39,10 +39,17 @@ module egret {
      */
     export class Graphics {
 
+        /**
+         * 记录下当前fillStyle以便实现渐变色时候获取
+         * 注：当前没有考虑save和restore的情况
+         * @private
+         */
+        public static _currentFillStyle:any;
+
         public _renderContext:RenderContext = null;
         private commandQueue:Array<Command> = null;
-        private strokeStyleColor:string = null;
-        private fillStyleColor:string = null;
+        private strokeStyle:any = null;
+        private fillStyle:any = null;
         public _dirty:boolean = false;
         private lineX:number = 0;
         private lineY:number = 0;
@@ -61,8 +68,8 @@ module egret {
          * @param alpha {number} 填充的 Alpha 值
          */
         public beginFill(color:number, alpha:number = 1):void {
-            this.fillStyleColor = this._parseColor(color, alpha);
-            this._pushCommand(new Command(this._setStyle, this, [this.fillStyleColor]));
+            this.fillStyle = this._parseColor(color, alpha);
+            this._pushCommand(new Command(this._setStyle, this, [this.fillStyle]));
         }
 
         public _parseColor(color:number, alpha:number):string {
@@ -72,9 +79,59 @@ module egret {
             return "rgba(" + _colorRed + "," + _colorGreen + "," + _colorBlue + "," + alpha + ")";
         }
 
-        private _setStyle(colorStr:string):void {
-            this._renderContext.fillStyle = colorStr;
+        private _setStyle(fillStyle:any):void {
+            egret.Graphics._currentFillStyle = fillStyle;
+            this._renderContext.fillStyle = fillStyle;
             this._renderContext.beginPath();
+        }
+
+        /**
+         * 指定一种简单的单一颜色填充，在绘制时该填充将在随后对其他 Graphics 方法（如 lineTo() 或 drawCircle()）的调用中使用。
+         * 调用 clear() 方法会清除填充。
+         * 注：该方法目前仅支持H5 Canvas
+         * @method egret.Graphics#beginFill
+         * @param type {string} 用于指定要使用哪种渐变类型的 GradientType 类的值：GradientType.LINEAR 或 GradientType.RADIAL。
+         * @param colors {Array} 渐变中使用的 RGB 十六进制颜色值的数组（例如，红色为 0xFF0000，蓝色为 0x0000FF，等等）。对于每种颜色，请在 alphas 和 ratios 参数中指定对应值。
+         * @param alphas {Array} colors 数组中对应颜色的 alpha 值数组。
+         * @param ratios {Array} 颜色分布比率的数组。
+         * @param matrix {egret.Matrix} 一个由 egret.Matrix 类定义的转换矩阵。egret.Matrix 类包括 createGradientBox() 方法，通过该方法可以方便地设置矩阵，以便与 beginGradientFill() 方法一起使用
+         */
+        public beginGradientFill(type:string, colors:Array<number>, alphas:Array<number>, ratios:Array<number>, matrix:egret.Matrix = null):void {
+            var gradient = this.getGradient(type, colors, alphas, ratios, matrix);
+            this.fillStyle = gradient;
+            this._pushCommand(new Command(this._setStyle, this, [gradient]));
+        }
+
+        private getGradient(type:string, colors:Array<number>, alphas:Array<number>, ratios:Array<number>, matrix:egret.Matrix):CanvasGradient {
+            var context = egret.MainContext.instance.rendererContext;
+            var m = new egret.Matrix();
+            if (matrix) {
+                m.a = matrix.a * 819.2;
+                m.b = matrix.b * 819.2;
+                m.c = matrix.c * 819.2;
+                m.d = matrix.d * 819.2;
+                m.tx = matrix.tx;
+                m.ty = matrix.ty;
+            }
+            else {
+                //默认值
+                m.a = 100;
+                m.d = 100;
+            }
+            var gradient;
+            if (type == GradientType.LINEAR) {
+                gradient = context.createLinearGradient(-1, 0, 1, 0);
+            }
+            else {
+                gradient = context.createRadialGradient(0, 0, 0, 0, 0, 1);
+            }
+            //todo colors alphas ratios数量不一致情况处理
+            var l = colors.length;
+            for (var i = 0; i < l; i++) {
+                gradient.addColorStop(ratios[i] / 255, this._parseColor(colors[i], alphas[i]));
+            }
+            gradient["matrix"] = m;
+            return gradient;
         }
 
         /**
@@ -96,7 +153,6 @@ module egret {
                     [x, y, width, height]
                 )
             );
-            //this._fill();
             this._checkRect(x, y, width, height);
         }
 
@@ -118,7 +174,6 @@ module egret {
                 this,
                 [x, y, r]
             ));
-            //this._fill();
             this._checkRect(x - r, y - r, 2 * r, 2 * r);
         }
 
@@ -163,7 +218,6 @@ module egret {
                     [x, y, width, height, ellipseWidth, ellipseHeight]
                 )
             );
-            //this._fill();
             this._checkRect(x, y, width, height);
         }
 
@@ -194,7 +248,6 @@ module egret {
                 this,
                 [x, y, width, height]
             ));
-            //this._fill();
             this._checkRect(x, y, width, height);
         }
 
@@ -211,12 +264,12 @@ module egret {
          * @param miterLimit {number} 用于表示剪切斜接的极限值的数字。
          */
         public lineStyle(thickness:number = NaN, color:number = 0, alpha:number = 1.0, pixelHinting:boolean = false, scaleMode:string = "normal", caps:string = null, joints:string = null, miterLimit:number = 3):void {
-            if (this.strokeStyleColor) {
+            if (this.strokeStyle) {
                 this._createEndLineCommand();
                 this._pushCommand(this._endLineCommand);
             }
 
-            this.strokeStyleColor = this._parseColor(color, alpha);
+            this.strokeStyle = this._parseColor(color, alpha);
 
             this._pushCommand(new Command(
                 function (lineWidth, strokeStyle) {
@@ -225,7 +278,7 @@ module egret {
                     this._renderContext.beginPath();
                 },
                 this,
-                [thickness, this.strokeStyleColor]
+                [thickness, this.strokeStyle]
             ));
 
             this.moveTo(this.lineX, this.lineY);
@@ -328,8 +381,8 @@ module egret {
             this.commandQueue.length = 0;
             this.lineX = 0;
             this.lineY = 0;
-            this.strokeStyleColor = null;
-            this.fillStyleColor = null;
+            this.strokeStyle = null;
+            this.fillStyle = null;
             this._minX = 0;
             this._minY = 0;
             this._maxX = 0;
@@ -343,9 +396,9 @@ module egret {
          * @method egret.Graphics#endFill
          */
         public endFill():void {
-            if (this.fillStyleColor != null) {
+            if (this.fillStyle != null) {
                 this._fill();
-                this.fillStyleColor = null;
+                this.fillStyle = null;
             }
         }
 
@@ -375,12 +428,12 @@ module egret {
                 var command:Command = this.commandQueue[i];
                 command.method.apply(command.thisObject, command.args);
             }
-            if (this.fillStyleColor) {
+            if (this.fillStyle) {
                 this._createEndFillCommand();
                 command = this._endFillCommand;
                 command.method.apply(command.thisObject, command.args);
             }
-            if (this.strokeStyleColor) {
+            if (this.strokeStyle) {
                 this._createEndLineCommand();
                 command = this._endLineCommand;
                 command.method.apply(command.thisObject, command.args);
@@ -454,11 +507,11 @@ module egret {
         }
 
         private _fill():void {
-            if (this.fillStyleColor) {
+            if (this.fillStyle) {
                 this._createEndFillCommand();
                 this._pushCommand(this._endFillCommand);
             }
-            if (this.strokeStyleColor) {
+            if (this.strokeStyle) {
                 this._createEndLineCommand();
                 this._pushCommand(this._endLineCommand);
             }

@@ -50,6 +50,17 @@ module egret.gui {
 
             this._Scr_Props_ = new egret.gui.ScrollerProperties();
         }
+        /**
+         * 开始滚动的阈值，当触摸点偏离初始触摸点的距离超过这个值时才会触发滚动
+         */
+        public scrollBeginThreshold: number = 10;
+
+
+        /**
+         * 滚动速度，这个值为需要的速度与默认速度的比值。
+         * 取值范围为 scrollSpeed > 0 赋值为 2 时，速度是默认速度的 2 倍
+         */
+        public scrollSpeed: number = 1;
 
         public setContent(content: IViewport) {
             (<egret.ScrollView><any>this)._content = <egret.DisplayObject><any>content;

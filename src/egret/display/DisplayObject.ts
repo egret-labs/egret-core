@@ -43,6 +43,13 @@ module egret {
      * _draw();
      * getBounds();
      * @link http://docs.egret-labs.org/post/manual/displayobj/aboutdisplayobj.html 显示对象的基本概念
+     *
+     * @event egret.Event.ADDED 将显示对象添加到显示列表中时调度。
+     * @event egret.Event.ADDED_TO_STAGE 在将显示对象直接添加到舞台显示列表或将包含显示对象的子树添加至舞台显示列表中时调度。
+     * @event egret.Event.REMOVED 将要从显示列表中删除显示对象时调度。
+     * @event egret.Event.REMOVED_FROM_STAGE 在从显示列表中直接删除显示对象或删除包含显示对象的子树时调度。
+     * @event egret.Event.ENTER_FRAME [广播事件] 播放头进入新帧时调度。
+     * @event egret.Event.RENDER [广播事件] 将要更新和呈现显示列表时调度。
      */
     export class DisplayObject extends EventDispatcher implements RenderData {
 

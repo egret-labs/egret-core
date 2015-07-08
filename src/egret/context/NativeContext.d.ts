@@ -262,6 +262,10 @@ declare module egret_native {
 
         function restore():void;
 
+        function createLinearGradient(x0:number, y0:number, x1:number, y1:number):CanvasGradient;
+
+        function createRadialGradient(x0:number, y0:number, r0:number, x1:number, y1:number, r1:number):CanvasGradient;
+
         export var lineWidth:number;
         export var strokeStyle:any;
         export var fillStyle:any;

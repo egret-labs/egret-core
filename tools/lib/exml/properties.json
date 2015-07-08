@@ -624,6 +624,8 @@
 		"horizontalScrollBar":"egret.gui.HScrollBar",
 		"horizontalScrollPolicy":"string",
 		"implements":["egret.gui.IVisualElementContainer"],
+	  	"scrollBeginThreshold":"number",
+	  	"scrollSpeed":"number",
 		"super":"egret.gui.SkinnableComponent",
 		"verticalScrollBar":"egret.gui.VScrollBar",
 		"verticalScrollPolicy":"string",
