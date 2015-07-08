@@ -131,7 +131,6 @@ module egret {
                 gradient.addColorStop(ratios[i] / 255, this._parseColor(colors[i], alphas[i]));
             }
             gradient["matrix"] = m;
-            console.log(gradient["matrix"] + "---------");
             return gradient;
         }
 
