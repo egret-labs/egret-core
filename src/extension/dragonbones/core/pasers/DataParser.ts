@@ -95,7 +95,7 @@ module dragonBones {
                 version.toString() != DragonBones.PARENT_COORDINATE_DATA_VERSION &&
 				version.toString() != "2.3")
             {
-                throw new Error(egret.getString(4003));
+				egret.$error(4003);
             }
 			else if(version.toString() == DragonBones.PARENT_COORDINATE_DATA_VERSION||
 					 version.toString() == "2.3")

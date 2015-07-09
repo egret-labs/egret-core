@@ -163,7 +163,7 @@ if (!Function.prototype.bind) {
     Function.prototype.bind = function (oThis) {
         if (typeof this !== "function") {
             // closest thing possible to the ECMAScript 5 internal IsCallable function
-            throw new TypeError(egret.getString(1029));
+            egret.$error(1029);
         }
 
         var aArgs = Array.prototype.slice.call(arguments, 1),

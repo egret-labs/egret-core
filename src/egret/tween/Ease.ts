@@ -49,7 +49,7 @@ module egret {
          * @platform Web,Native
          */
         constructor() {
-            egret.Logger.fatalWithErrorId(1014);
+            egret.$error(1014);
         }
 
         /**

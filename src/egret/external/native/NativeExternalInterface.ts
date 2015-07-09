@@ -63,7 +63,7 @@ module egret.native {
             listener.call(null, value);
         }
         else {
-            egret.Logger.warningWithErrorId(1004, functionName);
+            egret.$warn(1004, functionName);
         }
     }
 

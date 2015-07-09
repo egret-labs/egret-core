@@ -35,7 +35,7 @@ module egret {
 
         constructor() {
             if (!window["WebSocket"]) {
-                egret.Logger.fatalWithErrorId(3100);
+                egret.$error(3100);
             }
         }
 

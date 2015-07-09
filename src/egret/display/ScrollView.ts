@@ -777,7 +777,7 @@ module egret {
          * @returns 
          */
         private throwNotSupportedError(): void {
-            throw new Error(getString(1023));
+            egret.$error(1023);
         }
 
         /**

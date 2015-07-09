@@ -990,7 +990,7 @@ module egret {
             if (this.data.byteLength > 0 && this._position + len <= this.data.byteLength) {
                 return true;
             } else {
-                throw getString(1025);
+                egret.$error(1025);
             }
         }
 
@@ -1156,7 +1156,7 @@ module egret {
          * @param code_point 
          */
         private encoderError(code_point) {
-            throw getString(1026, code_point);
+            egret.$error(1026, code_point);
         }
 
         /**
@@ -1168,7 +1168,7 @@ module egret {
          */
         private decoderError(fatal, opt_code_point?):number {
             if (fatal) {
-                throw getString(1027);
+                egret.$error(1027);
             }
             return opt_code_point || 0xFFFD;
         }

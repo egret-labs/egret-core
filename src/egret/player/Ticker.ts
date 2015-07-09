@@ -41,7 +41,7 @@ module egret {
             super();
             if (Ticker.instance != null) {
                 if (DEBUG) {
-                    egret.Logger.fatalWithErrorId(1033);
+                    egret.$error(1033);
                 }
             }
         }

@@ -1177,7 +1177,7 @@ module egret {
          */
         public setFocus() {
             //todo:
-            Logger.warningWithErrorId(1013);
+            egret.$warn(1013);
         }
 
         /**

@@ -464,7 +464,8 @@ module egret.gui {
          * @returns {DisplayObject}
          */
         public addChild(child:DisplayObject):DisplayObject{
-            throw(new Error(getString(3004, getString(3003))));
+            egret.$error(3004, egret.sys.tr(3003));
+            return null;
         }
         /**
          *  不支持此方法
@@ -475,7 +476,8 @@ module egret.gui {
          * @returns {DisplayObject}
          */
         public addChildAt(child:DisplayObject, index:number):DisplayObject{
-            throw(new Error(getString(3005, getString(3003))));
+            egret.$error(3005, egret.sys.tr(3003));
+            return null;
         }
         /**
          *  不支持此方法
@@ -485,7 +487,8 @@ module egret.gui {
          * @returns {DisplayObject}
          */
         public removeChild(child:DisplayObject):DisplayObject{
-            throw(new Error(getString(3006, getString(3003))));
+            egret.$error(3006, egret.sys.tr(3003));
+            return null;
         }
         /**
          *  不支持此方法
@@ -495,7 +498,8 @@ module egret.gui {
          * @returns {DisplayObject}
          */
         public removeChildAt(index:number):DisplayObject{
-            throw(new Error(getString(3007, getString(3003))));
+            egret.$error(3007, egret.sys.tr(3003));
+            return null;
         }
         /**
          *  不支持此方法
@@ -505,7 +509,7 @@ module egret.gui {
          * @param index {number}
          */
         public setChildIndex(child:DisplayObject, index:number):void{
-            throw(new Error(getString(3008, getString(3003))));
+            egret.$error(3008, egret.sys.tr(3003));
         }
         /**
          *  不支持此方法
@@ -515,7 +519,7 @@ module egret.gui {
          * @param child2 {DisplayObject}
          */
         public swapChildren(child1:DisplayObject, child2:DisplayObject):void{
-            throw(new Error(getString(3009, getString(3003))));
+            egret.$error(3009, egret.sys.tr(3003));
         }
         /**
          *  不支持此方法
@@ -525,7 +529,7 @@ module egret.gui {
          * @param index2 {number}
          */
         public swapChildrenAt(index1:number, index2:number):void{
-            throw(new Error(getString(3010, getString(3003))));
+            egret.$error(3010, egret.sys.tr(3003));
         }
     }
 }

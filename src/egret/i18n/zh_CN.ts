@@ -4,11 +4,7 @@ module egret {
     $locale_strings["zh_CN"] = $locale_strings["zh_CN"] || {};
     var locale_strings = $locale_strings["zh_CN"];
 
-    /**
-     * @private
-     */
-        //export var locale_strings = {};
-
+    //core
     locale_strings[1001] = "找不到Lark入口类: {0}。";
     locale_strings[1002] = "Lark入口类 {0} 必须继承自lark.DisplayObject。";
     locale_strings[1003] = "参数 {0} 不能为 null。";
@@ -24,9 +20,19 @@ module egret {
     locale_strings[1013] = "变量赋值为NaN，请查看代码！";
     locale_strings[1014] = "类 {0} 常量 {1} 是只读的";
 
+    locale_strings[1022] = "{0} ArgumentError";
+    locale_strings[1023] = "此方法在ScrollView内不可用!";
+    locale_strings[1025] = "遇到文件尾";
+    locale_strings[1026] = "EncodingError! The code point {0} could not be encoded.";
+    locale_strings[1027] = "DecodingError";
+    locale_strings[1028] = "调用了未配置的注入规则:{0}。 请先在项目初始化里配置指定的注入规则，再调用对应单例。";
+    locale_strings[1029] = "Function.prototype.bind - what is trying to be bound is not callable";
+
+    //RES
     locale_strings[2000] = "RES.createGroup()传入了配置中不存在的键值: {0}";
     locale_strings[2001] = "RES加载了不存在或空的资源组:\"{0}\"";
 
+    //gui
     locale_strings[3000] = "主题配置文件加载失败: {0}";
     locale_strings[3001] = "找不到主题中所配置的皮肤类名: {0}";
     locale_strings[3002] = "索引:\"{0}\"超出集合元素索引范围";
@@ -42,12 +48,15 @@ module egret {
     locale_strings[3012] = "此方法在Scroller组件内不可用!";
     locale_strings[3013] = "UIStage是GUI根容器，只能有一个此实例在显示列表中！";
 
+    //socket
+    locale_strings[3100] = "当前浏览器不支持WebSocket";
+    locale_strings[3101] = "请先连接WebSocket";
+    locale_strings[3102] = "请先设置type为二进制类型";
+
+    //db
     locale_strings[4000] = "An Bone cannot be added as a child to itself or one of its children (or children's children, etc.)";
     locale_strings[4001] = "Abstract class can not be instantiated!";
     locale_strings[4002] = "Unnamed data!";
     locale_strings[4003] = "Nonsupport version!";
 
-    locale_strings[3100] = "当前浏览器不支持WebSocket";
-    locale_strings[3101] = "请先连接WebSocket";
-    locale_strings[3102] = "请先设置type为二进制类型";
 }

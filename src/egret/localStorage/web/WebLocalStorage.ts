@@ -50,7 +50,7 @@ module egret.localStorage.web {
             return true;
         }
         catch(e){
-            egret.Logger.infoWithErrorId(1018, key, value);
+            egret.$warn(1018, key, value);
             return false;
         }
     }

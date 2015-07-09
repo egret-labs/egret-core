@@ -61,7 +61,7 @@ module egret.gui {
          * @deprecated
          */
         public set trackAlpha(value: number) {
-            Logger.warningWithErrorId(1016, "VScrollBar.trackAlpha");
+            egret.$warn(1016, "VScrollBar.trackAlpha");
         }
 
         public get thumbAlpha(): number {
@@ -72,7 +72,7 @@ module egret.gui {
          * @deprecated
          */
         public set thumbAlpha(value: number) {
-            Logger.warningWithErrorId(1016, "VScrollBar.thumbAlpha");
+            egret.$warn(1016, "VScrollBar.thumbAlpha");
         }
 
         public setPosition(value: number) {

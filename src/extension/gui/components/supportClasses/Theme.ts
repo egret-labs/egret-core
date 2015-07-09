@@ -65,14 +65,14 @@ module egret.gui {
                 this.skinMap = data.skins;
             }
             catch (e){
-                egret.Logger.warningWithErrorId(1017, loader._request.url, loader.data);
+                egret.$warn(1017, loader._request.url, loader.data);
             }
             this.handleDelyList();
         }
 
         private onLoadError(event:IOErrorEvent):void{
             var loader:egret.URLLoader = <egret.URLLoader> (event.target);
-            egret.Logger.warningWithErrorId(3000, loader._request.url);
+            egret.$warn(3000, loader._request.url);
             this.handleDelyList();
         }
 
@@ -129,7 +129,7 @@ module egret.gui {
             }
             var skinClass:any = egret.getDefinitionByName(skinName);
             if(!skinClass){
-                egret.Logger.warningWithErrorId(3001, skinName);
+                egret.$warn(3001, skinName);
                 return null;
             }
             return new skinClass();

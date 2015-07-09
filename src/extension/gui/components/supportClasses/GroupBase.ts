@@ -335,7 +335,6 @@ module egret.gui {
          * 返回指定索引处的可视元素。
 		 * @method egret.gui.GroupBase#getElementAt
          * @param index {number} 要检索的元素的索引。
-         * @throws RangeError 如果在子列表中不存在该索引位置。
 		 * @returns {IVisualElement}
          */
         public getElementAt(index:number):IVisualElement{
