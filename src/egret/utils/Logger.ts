@@ -77,12 +77,21 @@ module egret {
          */
         private static logFuncs:Object;
         /**
-         * @private
-         * @param logType
+         * 设置当前需要开启的log级别。级别等级分别为：ALL < DEBUG < INFO < WARN < ERROR < OFF
+         *
+         * <ul>
+         * <li>Logger.ALL -- 所有等级的log都可以打印出来。</li>
+         * <li>Logger.DEBUG -- 可以打印debug、info、log、warn、error。</li>
+         * <li>Logger.INFO -- 可以打印info、log、warn、error。</li>
+         * <li>Logger.WARN -- 可以打印warn、error。</li>
+         * <li>Logger.ERROR -- 可以打印error。</li>
+         * <li>Logger.OFF -- 全部关闭。</li>
+         * </ul>
+         * @param logType 从这个等级开始打印。
          * @version Egret 2.0
          * @platform Web,Native
          */
-        public static openLogByType(logType:string):void {
+        public static set logLevel(logType:string) {
             if (Logger.logFuncs == null) {
                 Logger.logFuncs = { "error":console.error,
                                     "debug":console.debug,
@@ -106,6 +115,7 @@ module egret {
 
             switch (logType) {
                 case Logger.ALL:
+                case Logger.DEBUG:
                     console.debug = Logger.logFuncs["debug"];
                 case Logger.INFO:
                     console.log = Logger.logFuncs["log"];
