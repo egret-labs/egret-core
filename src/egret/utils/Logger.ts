@@ -65,7 +65,7 @@ module egret {
          * @version Egret 2.0
          * @platform Web,Native
          */
-        public static ERROR:string ="error";
+        public static ERROR:string = "error";
         /**
          * @version Egret 2.0
          * @platform Web,Native
@@ -77,6 +77,23 @@ module egret {
          */
         private static logFuncs:Object;
         /**
+         * @language en_US
+         * Set the current need to open the log level. Grade level are: ALL <DEBUG <INFO <WARN <ERROR <OFF
+         *
+         * <Ul>
+         * <Li> Logger.ALL - all levels of log can be printed out. </ li>
+         * <Li> Logger.DEBUG - print debug, info, log, warn, error. </ li>
+         * <Li> Logger.INFO - print info, log, warn, error. </ li>
+         * <Li> Logger.WARN - can print warn, error. </ li>
+         * <Li> Logger.ERROR - You can print error. </ li>
+         * <Li> Logger.OFF - all closed. </ li>
+         * </ Ul>
+         *param LogType from this level to start printing.
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
          * 设置当前需要开启的log级别。级别等级分别为：ALL < DEBUG < INFO < WARN < ERROR < OFF
          *
          * <ul>
@@ -93,24 +110,31 @@ module egret {
          */
         public static set logLevel(logType:string) {
             if (Logger.logFuncs == null) {
-                Logger.logFuncs = { "error":console.error,
-                                    "debug":console.debug,
-                                    "warn":console.warn,
-                                    "info":console.info,
-                                    "log":console.log
-                                  };
-             }
+                Logger.logFuncs = {
+                    "error": console.error,
+                    "debug": console.debug,
+                    "warn": console.warn,
+                    "info": console.info,
+                    "log": console.log
+                };
+            }
             switch (logType) {
                 case Logger.OFF:
-                    console.error = function () {};
+                    console.error = function () {
+                    };
                 case Logger.ERROR:
-                    console.warn = function () {};
+                    console.warn = function () {
+                    };
                 case Logger.WARN:
-                    console.info = function () {};
-                    console.log = function () {};
+                    console.info = function () {
+                    };
+                    console.log = function () {
+                    };
                 case Logger.INFO:
-                    console.debug = function () {};
-                default : break;
+                    console.debug = function () {
+                    };
+                default :
+                    break;
             }
 
             switch (logType) {
@@ -124,7 +148,8 @@ module egret {
                     console.warn = Logger.logFuncs["warn"];
                 case Logger.ERROR:
                     console.error = Logger.logFuncs["error"];
-                default : break;
+                default :
+                    break;
             }
         }
     }
