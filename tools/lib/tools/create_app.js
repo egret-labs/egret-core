@@ -49,6 +49,10 @@ function run(dir, args, opts) {
     properties["native"][platform + "_path"] = path.relative(projectPath, nativePath);
     file.save(path.join(projectPath, "egretProperties.json"), JSON.stringify(properties, null, "\t"));
 
+    //修改文件
+    var fileModify = require("../core/fileAutoChange");
+    fileModify.modifyNativeRequire(projectPath, false, true);
+
     //拷贝项目到native工程中
     var cpFiles = require("../core/copyProjectFiles.js");
     cpFiles.copyFilesToNative(projectPath, nativePath, platform, properties["native"]["path_ignore"] || []);
