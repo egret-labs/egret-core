@@ -682,6 +682,9 @@ CanvasRenderingContext2D.prototype.fill = function () {
             context._transformTx = context._transformTy = 0;
             this.setTransform(context._matrixA, context._matrixB, context._matrixC, context._matrixD, context._matrixTx, context._matrixTy);
         }
+        else {
+            originCanvas2DFill.call(this);
+        }
     }
     else {
         originCanvas2DFill.call(this);
