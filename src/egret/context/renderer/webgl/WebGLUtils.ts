@@ -41,7 +41,7 @@ module egret {
             gl.linkProgram(shaderProgram);
 
             if (!gl.getProgramParameter(shaderProgram, gl.LINK_STATUS)) {
-                egret.Logger.infoWithErrorId(1020);
+                $warn(1020);
             }
             return shaderProgram;
         }

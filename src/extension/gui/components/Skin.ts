@@ -251,7 +251,7 @@ module egret.gui {
                 maxIndex++;
 
             if (index < 0 || index > maxIndex)
-                throw new RangeError(getString(3011, index));
+                $error(3011, index);
         }
         /**
          * 将可视元素添加到此容器中

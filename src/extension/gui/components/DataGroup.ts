@@ -913,7 +913,8 @@ module egret.gui {
 		 * @returns {DisplayObject}
 		 */		
 		public addChild(child:DisplayObject):DisplayObject{
-			throw(new Error(getString(3004, getString(3003))));
+			$error(3004, getString(3003));
+			return null;
 		}
 		/**
 		 * 将一个 DisplayObject 子实例添加到该 DisplayObjectContainer 实例中
@@ -924,7 +925,8 @@ module egret.gui {
 		 * @returns {DisplayObject}
 		 */		
 		public addChildAt(child:DisplayObject, index:number):DisplayObject{
-			throw(new Error(getString(3005, getString(3003))));
+			$error(3005, getString(3003));
+			return null;
 		}
 		/**
 		 * 从 DisplayObjectContainer 实例的子列表中删除指定的 child DisplayObject 实例
@@ -934,7 +936,8 @@ module egret.gui {
 		 * @returns {DisplayObject}
 		 */		
 		public removeChild(child:DisplayObject):DisplayObject{
-			throw(new Error(getString(3006, getString(3003))));
+			$error(3006, getString(3003));
+			return null;
 		}
 		/**
 		 * 从 DisplayObjectContainer 的子列表中指定的 index 位置删除子 DisplayObject
@@ -944,7 +947,8 @@ module egret.gui {
 		 * @returns {DisplayObject}
 		 */		
 		public removeChildAt(index:number):DisplayObject{
-			throw(new Error(getString(3007, getString(3003))));
+			$error(3007, getString(3003));
+			return null;
 		}
 		/**
 		 * 更改现有子项在显示对象容器中的位置
@@ -954,7 +958,8 @@ module egret.gui {
 		 * @param index {number} 
 		 */		
 		public setChildIndex(child:DisplayObject, index:number):void{
-			throw(new Error(getString(3008, getString(3003))));
+			$error(3008, getString(3003));
+			return null;
 		}
 		/**
 		 * 交换两个指定子对象的 Z 轴顺序（从前到后顺序）
@@ -964,7 +969,7 @@ module egret.gui {
 		 * @param child2 {DisplayObject} 
 		 */		
 		public swapChildren(child1:DisplayObject, child2:DisplayObject):void{
-			throw(new Error(getString(3009, getString(3003))));
+			$error(3009, getString(3003));
 		}
 		/**
 		 * 在子级列表中两个指定的索引位置，交换子对象的 Z 轴顺序（前后顺序）
@@ -974,7 +979,7 @@ module egret.gui {
 		 * @param index2 {number} 
 		 */		
 		public swapChildrenAt(index1:number, index2:number):void{
-			throw(new Error(getString(3010, getString(3003))));
+			$error(3010, getString(3003));
 		}
 		
 	}

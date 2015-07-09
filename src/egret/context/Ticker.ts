@@ -37,7 +37,7 @@ module egret {
         public constructor(){
             super();
             if (Ticker.instance != null) {
-                egret.Logger.fatalWithErrorId(1002);
+                $error(1002);
             }
         }
 
@@ -116,7 +116,7 @@ module egret {
          * @deprecated
          */
         public setTimeout(listener:Function, thisObject, delay:number, ...parameters):void {
-            Logger.warningWithErrorId(1003);
+            $warn(1003);
             egret.setTimeout.apply(null, [listener,thisObject,delay].concat(parameters));
         }
 

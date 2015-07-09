@@ -55,7 +55,7 @@ module egret.gui {
          * @deprecated
          */
         public set trackAlpha(value:number){
-            Logger.warningWithErrorId(1016, "HScrollBar.trackAlpha");
+            $warn(1016, "HScrollBar.trackAlpha");
         }
 
         public get trackAlpha():number {
@@ -66,7 +66,7 @@ module egret.gui {
          * @deprecated
          */
         public set thumbAlpha(value: number) {
-            Logger.warningWithErrorId(1016, "HScrollBar.thumbAlpha");
+            $warn(1016, "HScrollBar.thumbAlpha");
         }
 
         public get thumbAlpha():number {

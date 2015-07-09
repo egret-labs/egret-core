@@ -84,7 +84,7 @@ module egret {
             }
 
             if (xmlDoc == null) {
-                egret.Logger.infoWithErrorId(1015);
+                $warn(1015);
             }
             return xmlDoc;
         }

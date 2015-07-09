@@ -35,7 +35,7 @@ module egret {
      */
     export class Ease {
         constructor() {
-            egret.Logger.fatalWithErrorId(1014);
+            $error(1014);
         }
 
         public static get(amount):Function {

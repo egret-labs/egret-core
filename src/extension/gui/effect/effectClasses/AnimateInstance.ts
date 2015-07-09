@@ -478,7 +478,7 @@ module egret.gui {
                         this.isStyleMap[property] = true;
                     }
                     catch (err){
-                        throw new Error("propNotPropOrStyle"); 
+                        $error(3014);
                     }
                 }            
             }

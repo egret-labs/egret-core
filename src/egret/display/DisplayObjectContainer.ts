@@ -90,7 +90,7 @@ module egret {
         private doSetChildIndex(child:DisplayObject, index:number):void {
             var lastIdx = this._children.indexOf(child);
             if (lastIdx < 0) {
-                egret.Logger.fatalWithErrorId(1006);
+                $error(1006);
             }
             //从原来的位置删除
             this._children.splice(lastIdx, 1);
@@ -136,7 +136,7 @@ module egret {
                 return child;
 
             if (index < 0 || index > this._children.length) {
-                egret.Logger.fatalWithErrorId(1007);
+                $error(1007);
                 return child;
             }
 
@@ -185,7 +185,7 @@ module egret {
                 return this._doRemoveChild(index);
             }
             else {
-                egret.Logger.fatalWithErrorId(1008);
+                $error(1008);
                 return null;
             }
         }
@@ -201,7 +201,7 @@ module egret {
                 return this._doRemoveChild(index);
             }
             else {
-                egret.Logger.fatalWithErrorId(1007);
+                $error(1007);
                 return null;
             }
         }
@@ -244,7 +244,7 @@ module egret {
                 return this._children[index];
             }
             else {
-                egret.Logger.fatalWithErrorId(1007);
+                $error(1007);
                 return null;
             }
         }
@@ -276,7 +276,7 @@ module egret {
                 this._swapChildrenAt(index1, index2);
             }
             else {
-                egret.Logger.fatalWithErrorId(1007);
+                $error(1007);
             }
 
         }
@@ -291,7 +291,7 @@ module egret {
             var index1:number = this._children.indexOf(child1);
             var index2:number = this._children.indexOf(child2);
             if (index1 == -1 || index2 == -1) {
-                egret.Logger.fatalWithErrorId(1008);
+                $error(1008);
             }
             else {
                 this._swapChildrenAt(index1, index2);

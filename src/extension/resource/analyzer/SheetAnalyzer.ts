@@ -104,7 +104,7 @@ module RES {
                 config = JSON.parse(str);
             }
             catch (e){
-                egret.Logger.warningWithErrorId(1017, resItem.url, data);
+                egret.$warn(1017, resItem.url, data);
             }
             if(config){
                 this.sheetMap[name] = config;

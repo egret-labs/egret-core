@@ -51,7 +51,7 @@ module egret {
          * @returns {boolean}
          */
         public get isMobile():boolean {
-            Logger.warningWithErrorId(1000);
+            $warn(1000);
             return egret.MainContext.deviceType == egret.MainContext.DEVICE_MOBILE;
         }
 

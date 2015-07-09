@@ -252,7 +252,7 @@ module egret {
          * @param value 值需大于0 小于等于 1
          */
         public setVolume(value:number):void {
-            Logger.warningWithErrorId(1031);
+            $warn(1031);
             this.volume = value;
         }
 
@@ -262,7 +262,7 @@ module egret {
          * @returns number
          */
         public getVolume():number {
-            Logger.warningWithErrorId(1032);
+            $warn(1032);
             return this.volume;
         }
 

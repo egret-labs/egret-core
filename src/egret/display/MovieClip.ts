@@ -261,7 +261,7 @@ module egret {
          */
         public gotoAndPlay(frame: any, playTimes:number = 0): void{
             if (arguments.length === 0 || arguments.length > 2) {
-                throw new Error(getString(1022, "MovieClip.gotoAndPlay()"));
+                $error(1022, "MovieClip.gotoAndPlay()");
             }
             this.play(playTimes);
             this._gotoFrame(frame);
@@ -274,7 +274,7 @@ module egret {
          */
         public gotoAndStop(frame: any): void {
             if (arguments.length != 1) {
-                throw new Error(getString(1022, "MovieClip.gotoAndStop()"));
+                $error(1022, "MovieClip.gotoAndStop()");
             }
             this.stop();
             this._gotoFrame(frame);
@@ -289,7 +289,7 @@ module egret {
                 frameNum = parseInt(frame+'', 10);
                 if(<any>frameNum != frame)
                 {
-                    throw new Error(getString(1022, "Frame Label Not Found"));
+                    $error(1022, "Frame Label Not Found");
                 }
             }
 

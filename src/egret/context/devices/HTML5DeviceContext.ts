@@ -244,7 +244,7 @@ module egret_html5_localStorage {
             return true;
         }
         catch(e){
-            egret.Logger.infoWithErrorId(1018, key, value);
+            egret.$warn(1018, key, value);
             return false;
         }
     }

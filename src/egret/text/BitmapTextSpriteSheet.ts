@@ -38,7 +38,7 @@ module egret {
 
         public constructor(texture:Texture, fntText:string) {
             super(texture,fntText);
-            egret.Logger.warningWithErrorId(1012);
+            $warn(1012);
         }
     }
 }

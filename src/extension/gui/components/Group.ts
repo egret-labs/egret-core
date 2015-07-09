@@ -150,7 +150,7 @@ module egret.gui {
 				maxIndex++;
 			
 			if (index < 0 || index > maxIndex)
-				throw new RangeError(getString(3011, index));
+				$error(3011, index);
 		}
 		/**
 		 * 将可视元素添加到此容器中
@@ -357,7 +357,8 @@ module egret.gui {
 		 * @returns {DisplayObject}
 		 */		
 		public addChild(child:DisplayObject):DisplayObject{
-			throw(new Error(getString(3004, getString(3003))));
+			$error(3004, getString(3003));
+			return null;
 		}
 		/**
 		 * 将可视元素添加到此容器中
@@ -367,7 +368,8 @@ module egret.gui {
 		 * @returns {DisplayObject}
 		 */		
 		public addChildAt(child:DisplayObject, index:number):DisplayObject{
-			throw(new Error(getString(3005, getString(3003))));
+			$error(3005, getString(3003));
+			return null;
 		}
 		/**从此容器的子列表中删除指定的可视元素
 		 * @deprecated
@@ -375,7 +377,8 @@ module egret.gui {
 		 * @returns {DisplayObject}
 		 */		
 		public removeChild(child:DisplayObject):DisplayObject{
-			throw(new Error(getString(3006, getString(3003))));
+			$error(3006, getString(3003));
+			return null;
 		}
 		/**
 		 * 从此容器的子列表中删除指定的可视元素
@@ -385,7 +388,8 @@ module egret.gui {
 		 * @returns {DisplayObject}
 		 */		
 		public removeChildAt(index:number):DisplayObject{
-			throw(new Error(getString(3007, getString(3003))));
+			$error(3007, getString(3003));
+			return null;
 		}
 		/**
 		 * 在可视容器中更改现有可视元素的位置
@@ -394,7 +398,7 @@ module egret.gui {
 		 * @param index {number} 
 		 */		
 		public setChildIndex(child:DisplayObject, index:number):void{
-			throw(new Error(getString(3008, getString(3003))));
+			$error(3008, getString(3003));
 		}
 		/**
 		 * 交换两个指定可视元素的索引
@@ -403,7 +407,7 @@ module egret.gui {
 		 * @param child2 {DisplayObject} 
 		 */		
 		public swapChildren(child1:DisplayObject, child2:DisplayObject):void{
-			throw(new Error(getString(3009, getString(3003))));
+			$error(3009, getString(3003));
 		}
 		/**
 		 * 交换容器中位于两个指定索引位置的可视元素
@@ -413,7 +417,7 @@ module egret.gui {
 		 * @param index2 {number} 
 		 */		
 		public swapChildrenAt(index1:number, index2:number):void{
-			throw(new Error(getString(3010, getString(3003))));
+			$error(3010, getString(3003));
 		}
 	}
 }

@@ -455,7 +455,7 @@ module egret {
                 }
             }
             if (!gl) {
-                throw new Error(getString(1021));
+                $error(1021);
             }
             WebGLRenderer.glID++;
             this.glID = WebGLRenderer.glID;

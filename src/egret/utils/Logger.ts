@@ -90,7 +90,7 @@ module egret {
          * @param actionCode {string} 错误信息
          * @param value {Object} 错误描述信息
          */
-        private static fatal(actionCode:string, value:Object = null) {
+        public static fatal(actionCode:string, value:Object = null) {
             egret.Logger.traceToConsole("Fatal", actionCode, value);
             throw new Error(egret.Logger.getTraceCode("Fatal", actionCode, value));
         }
@@ -111,41 +111,8 @@ module egret {
          * @param actionCode {string} 错误信息
          * @param value {Object} 错误描述信息
          */
-        private static warning(actionCode:string, value:Object = null) {
+        public static warning(actionCode:string, value:Object = null) {
             egret.Logger.traceToConsole("Warning", actionCode, value);
-        }
-
-        public static fatalWithErrorId(errorId:number, ...args) {
-            args.unshift(errorId);
-            var actionCode = getString.apply(null, args);
-            if (actionCode) {
-                Logger.fatal(actionCode);
-            }
-            else {
-                Logger.warning(getString(-1, errorId));
-            }
-        }
-
-        public static infoWithErrorId(errorId:number, ...args) {
-            args.unshift(errorId);
-            var actionCode = getString.apply(null, args);
-            if (actionCode) {
-                Logger.info(actionCode);
-            }
-            else {
-                Logger.warning(getString(-1, errorId));
-            }
-        }
-
-        public static warningWithErrorId(errorId:number, ...args) {
-            args.unshift(errorId);
-            var actionCode = getString.apply(null, args);
-            if (actionCode) {
-                Logger.warning(actionCode);
-            }
-            else {
-                Logger.warning(getString(-1, errorId));
-            }
         }
 
         /**
@@ -179,5 +146,27 @@ module egret {
             }
         }
         return message;
+    }
+
+    export function $error(code:number, ...args):void {
+        args.unshift(code);
+        var actionCode = getString.apply(null, args);
+        if (actionCode) {
+            Logger.fatal(actionCode);
+        }
+        else {
+            Logger.warning(getString(-1, code));
+        }
+    }
+
+    export function $warn(code:number, ...args):void {
+        args.unshift(code);
+        var actionCode = getString.apply(null, args);
+        if (actionCode) {
+            Logger.fatal(actionCode);
+        }
+        else {
+            Logger.warning(getString(-1, code));
+        }
     }
 }

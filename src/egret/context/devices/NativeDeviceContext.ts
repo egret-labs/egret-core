@@ -95,7 +95,7 @@ module egret_native_external_interface {
             listener.call(null, value);
         }
         else {
-            egret.Logger.warningWithErrorId(1004, functionName);
+            egret.$warn(1004, functionName);
         }
     }
 
@@ -123,7 +123,7 @@ module egret_native_localStorage {
             return true;
         }
         catch (e) {
-            egret.Logger.infoWithErrorId(1018, key, value);
+            egret.$warn(1018, key, value);
             return false;
         }
     }

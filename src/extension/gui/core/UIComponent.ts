@@ -388,7 +388,7 @@ module egret.gui {
 				return child;
 			}
 			else {
-				egret.Logger.fatalWithErrorId(1008);
+				$error(1008);
 				return null;
 			}
 		}
@@ -403,7 +403,7 @@ module egret.gui {
 				return child;
 			}
 			else {
-				egret.Logger.fatalWithErrorId(1007);
+				$error(1007);
 				return null;
 			}
 		}

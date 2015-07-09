@@ -649,7 +649,7 @@ module egret {
             if (this.data.byteLength > 0 && this._position + len <= this.data.byteLength) {
                 return true;
             } else {
-                throw getString(1025);
+                $error(1025);
             }
         }
 
@@ -798,12 +798,12 @@ module egret {
         }
 
         private encoderError(code_point) {
-            throw getString(1026, code_point);
+            $error(1026, code_point);
         }
 
         private decoderError(fatal, opt_code_point?):number {
             if (fatal) {
-                throw getString(1027);
+                $error(1027);
             }
             return opt_code_point || 0xFFFD;
         }

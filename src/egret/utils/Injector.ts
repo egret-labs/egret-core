@@ -107,7 +107,7 @@ module egret {
 				delete this.mapClassDic[requestName];
 				return instance;
 			}
-			throw new Error(getString(1028, requestName));
+			$error(1028, requestName);
 		}
 	}
 }

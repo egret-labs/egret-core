@@ -90,7 +90,7 @@ module egret {
             this._designWidth = width;
             this._designHeight = height;
             if (arguments[2]) {
-                Logger.warningWithErrorId(1001);
+                $warn(1001);
                 var resolutionPolicy:ResolutionPolicy = arguments[2];
                 this._setResolutionPolicy(resolutionPolicy);
             }

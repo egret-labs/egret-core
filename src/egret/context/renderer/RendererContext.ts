@@ -262,7 +262,7 @@ module egret {
          */
         public static registerBlendModeForGL(key:string, src:number, dst:number, override?:boolean):void {
             if (RendererContext.blendModesForGL[key] && !override) {
-                egret.Logger.warningWithErrorId(1005, key);
+                $warn(1005, key);
             }
             else {
                 RendererContext.blendModesForGL[key] = [src, dst];

@@ -606,7 +606,7 @@ module egret {
 
         public setFocus() {
             //todo:
-            Logger.warningWithErrorId(1013);
+            $warn(1013);
         }
 
         public _TF_Props_:TextFieldProperties;

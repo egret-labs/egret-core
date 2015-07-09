@@ -95,7 +95,7 @@ module egret {
                 priority = 0;
             }
             if (!listener) {
-                Logger.fatalWithErrorId(1010);
+                $error(1010);
             }
             var eventMap:Object;
             if (useCapture) {

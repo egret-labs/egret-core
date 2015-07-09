@@ -119,7 +119,7 @@ module egret {
          */
         public flush():void {
             if (!this._connected) {
-                egret.Logger.warningWithErrorId(3101);
+                egret.$warn(3101);
                 return;
             }
             if (this._writeMessage) {
@@ -143,7 +143,7 @@ module egret {
          */
         public writeUTF(message:string):void {
             if (!this._connected) {
-                egret.Logger.warningWithErrorId(3101);
+                egret.$warn(3101);
                 return;
             }
             if (this._type == WebSocket.TYPE_BINARY) {
@@ -197,11 +197,11 @@ module egret {
          */
         public writeBytes(bytes:ByteArray, offset:number = 0, length:number = 0):void {
             if (!this._connected) {
-                egret.Logger.warningWithErrorId(3101);
+                egret.$warn(3101);
                 return;
             }
             if (!this._writeByte) {
-                egret.Logger.warningWithErrorId(3102);
+                egret.$warn(3102);
                 return;
             }
             this._bytesWrite = true;
@@ -218,7 +218,7 @@ module egret {
          */
         public readBytes(bytes:ByteArray, offset:number = 0, length:number = 0):void {
             if (!this._readByte) {
-                egret.Logger.warningWithErrorId(3102);
+                egret.$warn(3102);
                 return;
             }
             this._readByte.position = 0;

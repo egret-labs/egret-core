@@ -578,7 +578,7 @@ module egret {
         }
 
         private throwNotSupportedError(): void {
-            throw new Error(getString(1023));
+            $error(1023);
         }
 
         /**
