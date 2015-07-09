@@ -239,7 +239,7 @@ module egret {
     registerClass(Point,Types.Point);
 
     if(DEBUG){
-        $markReadOnly(Point.prototype,"length")
+        $markReadOnly(Point,"length")
     }
     /**
      * @private

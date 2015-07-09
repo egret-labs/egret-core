@@ -265,7 +265,7 @@ module egret {
     }
     registerClass(Stage,Types.Stage);
     if(DEBUG){
-        egret.$markReadOnly(Stage.prototype,"stageWidth");
-        egret.$markReadOnly(Stage.prototype,"stageHeight");
+        egret.$markReadOnly(Stage,"stageWidth");
+        egret.$markReadOnly(Stage,"stageHeight");
     }
 }

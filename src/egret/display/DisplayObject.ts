@@ -2052,7 +2052,7 @@ module egret {
     registerClass(DisplayObject, Types.DisplayObject);
 
     if (DEBUG) {
-        egret.$markReadOnly(DisplayObject.prototype, "parent");
-        egret.$markReadOnly(DisplayObject.prototype, "stage");
+        egret.$markReadOnly(DisplayObject, "parent");
+        egret.$markReadOnly(DisplayObject, "stage");
     }
 }

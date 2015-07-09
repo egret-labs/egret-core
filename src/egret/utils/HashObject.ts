@@ -88,6 +88,6 @@ module egret {
     }
 
     if(DEBUG){
-        egret.$markReadOnly(HashObject.prototype,"hashCode");
+        egret.$markReadOnly(HashObject,"hashCode");
     }
 }

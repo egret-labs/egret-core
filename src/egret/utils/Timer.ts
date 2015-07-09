@@ -255,7 +255,7 @@ module egret {
     }
 
     if(DEBUG){
-        egret.$markReadOnly(Timer.prototype,"currentCount");
-        egret.$markReadOnly(Timer.prototype,"running");
+        egret.$markReadOnly(Timer,"currentCount");
+        egret.$markReadOnly(Timer,"running");
     }
 }

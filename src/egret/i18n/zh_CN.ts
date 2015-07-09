@@ -18,10 +18,11 @@ module egret {
     locale_strings[1007] = "为参数指定的索引不在范围内。";
     locale_strings[1008] = "实例化单例出错，不允许实例化多个 {0} 对象。";
     locale_strings[1009] = "类 {0} 不可以使用属性 {1}";
-    locale_strings[1010] = "属性 {0} 是只读的";
+    locale_strings[1010] = "类 {0} 属性 {1} 是只读的";
     locale_strings[1011] = "流错误。URL: {0}";
     locale_strings[1012] = "参数 {0} 的类型必须为 Class。";
     locale_strings[1013] = "变量赋值为NaN，请查看代码！";
+    locale_strings[1014] = "类 {0} 常量 {1} 是只读的";
 
     locale_strings[2000] = "RES.createGroup()传入了配置中不存在的键值: {0}";
     locale_strings[2001] = "RES加载了不存在或空的资源组:\"{0}\"";

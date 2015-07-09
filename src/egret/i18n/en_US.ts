@@ -17,10 +17,11 @@ module egret {
     locale_strings[1007] = "An index specified for a parameter was out of range.";
     locale_strings[1008] = "Instantiate singleton error，singleton class {0} can not create multiple instances.";
     locale_strings[1009] = "the Class {0} cannot use the property \"{1}\"";
-    locale_strings[1010] = "the property \"{0}\" is readonly";
+    locale_strings[1010] = "the property \"{1}\" of the Class \"{0}\" is readonly";
     locale_strings[1011] = "Stream Error. URL: {0}";
     locale_strings[1012] = "The type of parameter {0} must be Class.";
     locale_strings[1013] = "Variable assignment is NaN, please see the code!";
+    locale_strings[1014] = "the constant \"{1}\" of the Class \"{0}\" is read-only";
 
     locale_strings[2000] = "RES.createGroup() passed in non-existed key value in configuration: {0}";
     locale_strings[2001] = "RES loaded non-existed or empty resource group:\"{0}\"";

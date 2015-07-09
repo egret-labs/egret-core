@@ -769,11 +769,11 @@ module egret {
     registerClass(Event, Types.Event);
 
     if (DEBUG) {
-        egret.$markReadOnly(Event.prototype, "type");
-        egret.$markReadOnly(Event.prototype, "bubbles");
-        egret.$markReadOnly(Event.prototype, "cancelable");
-        egret.$markReadOnly(Event.prototype, "eventPhase");
-        egret.$markReadOnly(Event.prototype, "currentTarget");
-        egret.$markReadOnly(Event.prototype, "target");
+        egret.$markReadOnly(Event, "type");
+        egret.$markReadOnly(Event, "bubbles");
+        egret.$markReadOnly(Event, "cancelable");
+        egret.$markReadOnly(Event, "eventPhase");
+        egret.$markReadOnly(Event, "currentTarget");
+        egret.$markReadOnly(Event, "target");
     }
 }

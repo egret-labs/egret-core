@@ -1763,8 +1763,8 @@ module egret.sys {
     }
 
     if(DEBUG){
-        egret.$markReadOnly(TextField.prototype,"numLines");
-        egret.$markReadOnly(TextField.prototype,"textWidth");
-        egret.$markReadOnly(TextField.prototype,"textHeight");
+        egret.$markReadOnly(TextField,"numLines");
+        egret.$markReadOnly(TextField,"textWidth");
+        egret.$markReadOnly(TextField,"textHeight");
     }
 }

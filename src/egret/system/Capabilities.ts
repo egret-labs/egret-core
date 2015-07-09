@@ -208,12 +208,12 @@ module egret {
     }
 
     if(DEBUG){
-        egret.$markReadOnly(Capabilities,"language");
-        egret.$markReadOnly(Capabilities,"isMobile");
-        egret.$markReadOnly(Capabilities,"hasOrientation");
-        egret.$markReadOnly(Capabilities,"hasMotion");
-        egret.$markReadOnly(Capabilities,"hasGeolocation");
-        egret.$markReadOnly(Capabilities,"os");
+        egret.$markReadOnly(Capabilities,"language", false);
+        egret.$markReadOnly(Capabilities,"isMobile", false);
+        egret.$markReadOnly(Capabilities,"hasOrientation", false);
+        egret.$markReadOnly(Capabilities,"hasMotion", false);
+        egret.$markReadOnly(Capabilities,"hasGeolocation", false);
+        egret.$markReadOnly(Capabilities,"os", false);
     }
 
 }

@@ -56,7 +56,7 @@ module egret {
 
     export declare function $warn(code:number, ...params:any[]):void;
 
-    export declare function $markReadOnly(instance:any, property:string):void;
+    export declare function $markReadOnly(instance:any, property:string, isProperty?:boolean):void;
     export declare function $markCannotUse(instance:any, property:string, defaultVale:any):void;
 
     function _error(code:number, ...params:any[]):void {
@@ -79,14 +79,19 @@ module egret {
 
     egret.$warn = _warn;
 
-    function _markReadOnly(instance:any, property:string):void {
+    function _markReadOnly(instance:any, property:string, isProperty:boolean = true):void {
         var data:PropertyDescriptor = Object.getOwnPropertyDescriptor(instance, property);
         if (data == null) {
             console.log(instance)
             return;
         }
         data.set = function (value:any) {
-            egret.$warn(1010, property);
+            if (isProperty) {
+                egret.$warn(1010, getQualifiedClassName(instance), property);
+            }
+            else {
+                egret.$warn(1014, getQualifiedClassName(instance), property);
+            }
         };
         Object.defineProperty(instance, property, data);
     }
