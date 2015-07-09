@@ -245,6 +245,25 @@ module egret {
             this.modeCallBack = callback;
         }
 
+        /**
+         * @language en_US
+         * Draw texture zoom ratio
+         * @default 1
+         */
+        /**
+         * @language zh_CN
+         * 绘制纹理的缩放比率，默认值为1
+         * @default 1
+         */
+        public get textureScaleFactor():number {
+            return egret.$TextureScaleFactor;
+        }
+
+        public set textureScaleFactor(value:number) {
+            egret.$TextureScaleFactor = value;
+        }
+
+
     }
 
     if(DEBUG){

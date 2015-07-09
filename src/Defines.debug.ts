@@ -80,9 +80,9 @@ module egret {
     egret.$warn = _warn;
 
     function _markReadOnly(instance:any, property:string, isProperty:boolean = true):void {
-        var data:PropertyDescriptor = Object.getOwnPropertyDescriptor(instance, property);
+        var data:PropertyDescriptor = Object.getOwnPropertyDescriptor(instance.prototype, property);
         if (data == null) {
-            console.log(instance)
+            console.log(instance);
             return;
         }
         data.set = function (value:any) {
@@ -93,7 +93,7 @@ module egret {
                 egret.$warn(1014, getQualifiedClassName(instance), property);
             }
         };
-        Object.defineProperty(instance, property, data);
+        Object.defineProperty(instance.prototype, property, data);
     }
 
     egret.$markReadOnly = _markReadOnly;

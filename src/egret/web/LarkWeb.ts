@@ -81,11 +81,13 @@ module egret.web {
         var scaleMode = container.getAttribute("data-scale-mode");
         var orientation = container.getAttribute("data-orientation") || egret.sys.OrientationMode.NOT_SET;
         var maxTouches = +container.getAttribute("data-multi-fingered") || 2;
+        var textureScaleFactor = +container.getAttribute("texture-scale-factor") || 1;
         var surface = egret.sys.surfaceFactory.create();
         var canvas = <HTMLCanvasElement><any>surface;
         var webScreen = new WebScreen(container,canvas,scaleMode,contentWidth,contentHeight, orientation);
         var stage = new egret.Stage();
         stage.$scaleMode = scaleMode;
+        stage.textureScaleFactor = textureScaleFactor;
 
         var touch = new egret.sys.TouchHandler(stage, maxTouches);
         var webTouch = new WebTouchHandler(touch, canvas);
