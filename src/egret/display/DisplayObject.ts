@@ -121,7 +121,8 @@ module egret.sys {
          * @private
          * 显示对象初始化时的标志量
          */
-        InitFlags = DisplayObjectFlags.TouchEnabled |
+        InitFlags =
+            //DisplayObjectFlags.TouchEnabled |
             DisplayObjectFlags.TouchChildren |
             DisplayObjectFlags.InvalidConcatenatedMatrix |
             DisplayObjectFlags.InvalidInvertedConcatenatedMatrix |
@@ -935,7 +936,9 @@ module egret {
          * 获取显示宽度
          */
         $getWidth():number {
-            return this.$getTransformedBounds(this.$parent, $TempRectangle).width;
+            return isNone(this.$getExplicitWidth()) ? this.$getTransformedBounds(this.$parent, $TempRectangle).width : this.$getExplicitWidth();
+
+            //return this.$getTransformedBounds(this.$parent, $TempRectangle).width;
         }
 
         /**
@@ -1001,7 +1004,9 @@ module egret {
          * 获取显示高度
          */
         $getHeight():number {
-            return this.$getTransformedBounds(this.$parent, $TempRectangle).height;
+            return isNone(this.$getExplicitHeight()) ? this.$getTransformedBounds(this.$parent, $TempRectangle).height : this.$getExplicitHeight();
+
+            //return this.$getTransformedBounds(this.$parent, $TempRectangle).height;
         }
 
         /**
