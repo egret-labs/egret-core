@@ -227,7 +227,7 @@ module egret {
                 8: "sans-serif",   //fontFamily
                 9: "left",         //textAlign
                 10: "top",         //verticalAlign
-                11: "#000000",     //textColorString
+                11: "#ffffff",     //textColorString
                 12: "",            //fontString
                 13: "",            //text
                 14: [],            //measuredWidths
@@ -239,8 +239,8 @@ module egret {
                 20: false,         //displayAsPassword
                 21: 0,              //maxChars
                 22: TextFieldType.DYNAMIC,              //type
-                23: 0xFFFFFF,              //strokeColor
-                24: "#FFFFFF",              //strokeColorString
+                23: 0x000000,              //strokeColor
+                24: "#000000",              //strokeColorString
                 25: 0,              //stroke
                 26: -1,              //scrollV
                 27: 0,              //numLines
