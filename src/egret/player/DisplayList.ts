@@ -94,12 +94,12 @@ module egret.sys {
         $renderAlpha:number = 1;
         /**
          * @private
-         * 在舞台上的矩阵对象
+         * 相对于显示列表根节点或位图缓存根节点的矩阵对象
          */
-        $renderMatrix:Matrix;
+        $renderMatrix:Matrix = new Matrix();
         /**
          * @private
-         * 在舞台上的显示区域
+         * 在显示列表根节点或位图缓存根节点上的显示区域
          */
         $renderRegion:Region = new Region();
 
@@ -111,21 +111,31 @@ module egret.sys {
             var target = this.root;
             target.$removeFlagsUp(DisplayObjectFlags.Dirty);
             this.$renderAlpha = target.$getConcatenatedAlpha();
-            this.$renderMatrix = target.$getConcatenatedMatrix();
+            //必须在访问moved属性前调用以下两个方法，因为moved属性在以下两个方法内重置。
+            var concatenatedMatrix = target.$getConcatenatedMatrix();
             var bounds = target.$getOriginalBounds();
+            var displayList = target.$parentDisplayList;
+            var region = this.$renderRegion;
             if (this.needRedraw) {
                 this.updateDirtyRegions();
             }
-            if (!target.$stage) {
+            if(!displayList){
+                region.setTo(0,0,0,0);
+                region.moved = false;
                 return false;
             }
-            var region = this.$renderRegion;
+
             if (!region.moved) {
                 return false;
             }
             region.moved = false;
-            var clipRect = target.$clipRect || target.$parentClipRect
-            region.updateRegion(bounds, this.$renderMatrix, clipRect);
+            var matrix = this.$renderMatrix;
+            matrix.copyFrom(concatenatedMatrix);
+            var root = displayList.root;
+            if(root!==target.$stage){
+                root.$getInvertedConcatenatedMatrix().$preMultiplyInto(matrix, matrix);
+            }
+            region.updateRegion(bounds, matrix);
             return true;
         }
 
@@ -265,13 +275,17 @@ module egret.sys {
          * 绘制根节点显示对象到目标画布，返回draw的次数。
          */
         public drawToSurface():number {
-            if (this.rootMatrix) {//对非舞台画布要根据目标显示对象尺寸改变而改变。
+            var m = this.rootMatrix;
+            if (m) {//对非舞台画布要根据目标显示对象尺寸改变而改变。
                 this.changeSurfaceSize();
             }
             var context = this.renderContext;
             //绘制脏矩形区域
             context.save();
             context.beginPath();
+            if(m){
+                context.setTransform(1,0,0,1,-this.offsetX,-this.offsetY);
+            }
             var dirtyList = this.dirtyList;
             this.dirtyList = null;
             var length = dirtyList.length;
@@ -281,8 +295,11 @@ module egret.sys {
                 context.rect(region.minX, region.minY, region.width, region.height);
             }
             context.clip();
+            if(m){
+                context.setTransform(m.a, m.b, m.c, m.d, m.tx, m.ty);
+            }
             //绘制显示对象
-            var drawCalls = this.drawDisplayObject(this.root, context, dirtyList, this.rootMatrix, null, null);
+            var drawCalls = this.drawDisplayObject(this.root, context, dirtyList, m, null, null);
             //清除脏矩形区域
             context.restore();
             this.dirtyRegion.clear();
@@ -389,16 +406,30 @@ module egret.sys {
 
             //计算scrollRect和mask的clip区域是否需要绘制，不需要就直接返回，跳过所有子项的遍历。
             var maskRegion:Region;
-            var displayMatrix = displayObject.$getConcatenatedMatrix();
+            var displayMatrix = Matrix.create();
+            displayMatrix.copyFrom(displayObject.$getConcatenatedMatrix());
+            var root = displayObject.$parentDisplayList.root;
+            var invertedMatrix:Matrix;
+            if(root!==displayObject.$stage){
+                invertedMatrix = root.$getInvertedConcatenatedMatrix();
+                invertedMatrix.$preMultiplyInto(displayMatrix,displayMatrix);
+            }
+
             if (mask) {
                 var bounds = mask.$getOriginalBounds();
                 maskRegion = Region.create();
-                maskRegion.updateRegion(bounds, mask.$getConcatenatedMatrix(), null);
+                var m = Matrix.create();
+                m.copyFrom(mask.$getConcatenatedMatrix());
+                if(invertedMatrix){
+                    invertedMatrix.$preMultiplyInto(m,m);
+                }
+                maskRegion.updateRegion(bounds, m);
+                Matrix.release(m);
             }
             var region:Region;
             if (scrollRect) {
                 region = Region.create();
-                region.updateRegion(scrollRect, displayMatrix, null);
+                region.updateRegion(scrollRect, displayMatrix);
             }
             if (region && maskRegion) {
                 region.intersect(maskRegion);
@@ -410,13 +441,14 @@ module egret.sys {
             if (region) {
                 if(region.isEmpty() || (clipRegion && !clipRegion.intersects(region))){
                     Region.release(region);
+                    Matrix.release(displayMatrix);
                     return drawCalls;
                 }
             }
             else{
                 region = Region.create();
                 bounds = displayObject.$getOriginalBounds();
-                region.updateRegion(bounds, displayObject.$getConcatenatedMatrix(), null);
+                region.updateRegion(bounds, displayObject.$getConcatenatedMatrix());
             }
             var found = false;
             var l = dirtyList.length;
@@ -428,6 +460,7 @@ module egret.sys {
             }
             if (!found) {
                 Region.release(region);
+                Matrix.release(displayMatrix);
                 return drawCalls;
             }
 
@@ -436,6 +469,7 @@ module egret.sys {
             if (!displayContext) {//RenderContext创建失败，放弃绘制遮罩。
                 drawCalls += this.drawDisplayObject(displayObject, context, dirtyList, rootMatrix, displayObject.$displayList, clipRegion);
                 Region.release(region);
+                Matrix.release(displayMatrix);
                 return drawCalls;
             }
             if (scrollRect) {
@@ -456,6 +490,7 @@ module egret.sys {
                     drawCalls += this.drawDisplayObject(displayObject, context, dirtyList, rootMatrix, displayObject.$displayList, clipRegion);
                     surfaceFactory.release(displayContext.surface);
                     Region.release(region);
+                    Matrix.release(displayMatrix);
                     return drawCalls;
                 }
                 maskContext.setTransform(1, 0, 0, 1, -region.minX, -region.minY);
@@ -496,6 +531,7 @@ module egret.sys {
             }
             surfaceFactory.release(displayContext.surface);
             Region.release(region);
+            Matrix.release(displayMatrix);
             return drawCalls;
         }
 
@@ -507,14 +543,19 @@ module egret.sys {
             var drawCalls = 0;
             var scrollRect = displayObject.$scrollRect ? displayObject.$scrollRect : displayObject.$maskRect;
 
-
-            var m = displayObject.$getConcatenatedMatrix();
+            var m = Matrix.create();
+            m.copyFrom(displayObject.$getConcatenatedMatrix());
+            var root = displayObject.$parentDisplayList.root;
+            if(root!==displayObject.$stage){
+                root.$getInvertedConcatenatedMatrix().$preMultiplyInto(m,m)
+            }
             var region:Region = Region.create();
             if (!scrollRect.isEmpty()) {
-                region.updateRegion(scrollRect, m, null);
+                region.updateRegion(scrollRect, m);
             }
             if (region.isEmpty() || (clipRegion && !clipRegion.intersects(region))) {
                 Region.release(region);
+                Matrix.release(m);
                 return drawCalls;
             }
             var found = false;
@@ -527,19 +568,24 @@ module egret.sys {
             }
             if (!found) {
                 Region.release(region);
+                Matrix.release(m);
                 return drawCalls;
             }
 
             //绘制显示对象自身
             context.save();
-            context.setTransform(m.a, m.b, m.c, m.d, m.tx, m.ty);
+            context.setTransform(m.a, m.b, m.c, m.d, m.tx-this.offsetX, m.ty-this.offsetY);
             context.beginPath();
             context.rect(scrollRect.x, scrollRect.y, scrollRect.width, scrollRect.height);
             context.clip();
+            if(rootMatrix){
+                context.setTransform(rootMatrix.a, rootMatrix.b, rootMatrix.c, rootMatrix.d, rootMatrix.tx, rootMatrix.ty);
+            }
             drawCalls += this.drawDisplayObject(displayObject, context, dirtyList, rootMatrix, displayObject.$displayList, region);
             context.restore();
 
             Region.release(region);
+            Matrix.release(m);
             return drawCalls;
         }
 
@@ -558,8 +604,9 @@ module egret.sys {
 
         /**
          * @private
+         * 表示目标Surface首次被使用。
          */
-        private sizeChanged:boolean = false;
+        private sizeChanged:boolean = true;
 
         /**
          * @private
@@ -574,12 +621,12 @@ module egret.sys {
             this.offsetY = bounds.y;
             var oldContext = this.renderContext;
             var oldSurface = oldContext.surface;
-            if (!this.sizeChanged) {
-                this.sizeChanged = true;
+            if (this.sizeChanged) {
+                this.sizeChanged = false;
                 oldSurface.width = bounds.width;
                 oldSurface.height = bounds.height;
             }
-            else if (bounds.width !== oldSurface.width || bounds.height !== oldSurface.height) {
+            else {
                 var newContext = sys.sharedRenderContext;
                 var newSurface = newContext.surface;
                 sys.sharedRenderContext = oldContext;
@@ -594,9 +641,8 @@ module egret.sys {
                 oldSurface.height = 1;
                 oldSurface.width = 1;
             }
-            var m = root.$getInvertedConcatenatedMatrix();
-            this.rootMatrix.setTo(m.a, m.b, m.c, m.d, m.tx - bounds.x, m.ty - bounds.y);
-            this.renderContext.setTransform(m.a, m.b, m.c, m.d, m.tx - bounds.x, m.ty - bounds.y);
+            this.rootMatrix.setTo(1, 0, 0, 1, - bounds.x, - bounds.y);
+            this.renderContext.setTransform(1, 0, 0, 1, - bounds.x, - bounds.y);
         }
 
     }

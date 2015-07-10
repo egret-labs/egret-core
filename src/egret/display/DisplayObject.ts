@@ -121,7 +121,8 @@ module egret.sys {
          * @private
          * 显示对象初始化时的标志量
          */
-        InitFlags = DisplayObjectFlags.TouchEnabled |
+        InitFlags =
+            //DisplayObjectFlags.TouchEnabled |
             DisplayObjectFlags.TouchChildren |
             DisplayObjectFlags.InvalidConcatenatedMatrix |
             DisplayObjectFlags.InvalidInvertedConcatenatedMatrix |
@@ -158,6 +159,7 @@ module egret {
         rotation,
         name,
         matrix,
+        concatenatedMatrix,
         invertedConcatenatedMatrix,
         bounds,
         contentBounds,
@@ -235,13 +237,14 @@ module egret {
                 4: 0,                //rotation
                 5: "",               //name
                 6: new Matrix(),     //matrix,
-                7: new Matrix(),     //invertedConcatenatedMatrix,
-                8: new Rectangle(),  //bounds,
-                9: new Rectangle(),  //contentBounds
-                10: 0,               //anchorOffsetX,
-                11: 0,                //anchorOffsetY,
-                12: NONE,           //explicitWidth,
-                13: NONE            //explicitHeight,
+                7: new Matrix(),     //concatenatedMatrix,
+                8: new Matrix(),     //invertedConcatenatedMatrix,
+                9: new Rectangle(),  //bounds,
+                10: new Rectangle(),  //contentBounds
+                11: 0,               //anchorOffsetX,
+                12: 0,                //anchorOffsetY,
+                13: NONE,           //explicitWidth,
+                14: NONE            //explicitHeight,
             };
         }
 
@@ -545,31 +548,18 @@ module egret {
          * 获得这个显示对象以及它所有父级对象的连接矩阵。
          */
         $getConcatenatedMatrix():Matrix {
-            var renderMatrix = this.$renderMatrix;
+            var matrix = this.$DisplayObject[Keys.concatenatedMatrix];
             if (this.$hasFlags(sys.DisplayObjectFlags.InvalidConcatenatedMatrix)) {
                 if (this.$parent) {
                     this.$parent.$getConcatenatedMatrix().$preMultiplyInto(this.$getMatrix(),
-                        renderMatrix);
+                        matrix);
                     var rect = this.$scrollRect;
                     if (rect) {
-                        var clipRect = this.$clipRect;
-                        clipRect.setTo(0, 0, rect.width, rect.height);
-                        renderMatrix.$transformBounds(clipRect);
-                        var parentClipRect = this.$parentClipRect;
-                        if (parentClipRect) {
-                            clipRect.$intersectInPlace(parentClipRect);
-                        }
-                        renderMatrix.$preMultiplyInto($TempMatrix.setTo(1, 0, 0, 1, -rect.x, -rect.y), renderMatrix);
+                        matrix.$preMultiplyInto($TempMatrix.setTo(1, 0, 0, 1, -rect.x, -rect.y), matrix);
 
                     }
-
-                    var values = this.$DisplayObject;
-                    if (values[Keys.anchorOffsetX] != 0 || values[Keys.anchorOffsetY] != 0) {
-                        renderMatrix.$preMultiplyInto($TempMatrix.setTo(1, 0, 0, 1, -values[Keys.anchorOffsetX], -values[Keys.anchorOffsetY]), renderMatrix);
-                    }
-
                 } else {
-                    renderMatrix.copyFrom(this.$getMatrix());
+                    matrix.copyFrom(this.$getMatrix());
                 }
                 if (this.$displayList) {
                     this.$displayList.$renderRegion.moved = true;
@@ -579,7 +569,7 @@ module egret {
                 }
                 this.$removeFlags(sys.DisplayObjectFlags.InvalidConcatenatedMatrix);
             }
-            return renderMatrix;
+            return matrix;
         }
 
         /**
@@ -935,6 +925,8 @@ module egret {
          * 获取显示宽度
          */
         $getWidth():number {
+            //return isNone(this.$getExplicitWidth()) ? this.$getTransformedBounds(this.$parent, $TempRectangle).width : this.$getExplicitWidth();
+
             return this.$getTransformedBounds(this.$parent, $TempRectangle).width;
         }
 
@@ -1001,6 +993,8 @@ module egret {
          * 获取显示高度
          */
         $getHeight():number {
+            //return isNone(this.$getExplicitHeight()) ? this.$getTransformedBounds(this.$parent, $TempRectangle).height : this.$getExplicitHeight();
+
             return this.$getTransformedBounds(this.$parent, $TempRectangle).height;
         }
 
@@ -1434,43 +1428,16 @@ module egret {
             if (!value && !this.$scrollRect) {
                 return;
             }
-            var changed = false;
             if (value) {
                 if (!this.$scrollRect) {
-                    changed = true;
-                    this.$clipRect = new egret.Rectangle();
                     this.$scrollRect = new egret.Rectangle();
                 }
                 this.$scrollRect.copyFrom(value);
             }
             else {
-                changed = true;
-                this.$clipRect = null;
                 this.$scrollRect = null;
             }
-            if (changed) {
-                this.$scrollRectChanged();
-            }
             this.invalidatePosition();
-        }
-
-        /**
-         * @private
-         * 自身在舞台上的裁剪区域
-         */
-        $clipRect:Rectangle = null;
-        /**
-         * @private
-         * 父级容器在舞台上的裁剪区域
-         */
-        $parentClipRect:Rectangle = null;
-
-        /**
-         * @private
-         * 
-         */
-        $scrollRectChanged():void {
-
         }
 
         /**
@@ -1829,12 +1796,12 @@ module egret {
         $renderAlpha:number = 1;
         /**
          * @private
-         * 在舞台上的矩阵对象
+         * 相对于显示列表根节点或位图缓存根节点上的矩阵对象
          */
         $renderMatrix:Matrix = new egret.Matrix();
         /**
          * @private
-         * 此显示对象自身（不包括子项）在屏幕上的显示尺寸。
+         * 此显示对象自身（不包括子项）在显示列表根节点或位图缓存根节点上的显示尺寸。
          */
         $renderRegion:sys.Region = null;
 
@@ -1845,19 +1812,28 @@ module egret {
         $update():boolean {
             this.$removeFlagsUp(sys.DisplayObjectFlags.Dirty);
             this.$getConcatenatedAlpha();
-            var matrix = this.$getConcatenatedMatrix();
+            //必须在访问moved属性前调用以下两个方法，因为moved属性在以下两个方法内重置。
+            var concatenatedMatrix = this.$getConcatenatedMatrix();
             var bounds = this.$getContentBounds();
-            var stage = this.$stage;
-            if (!stage) {
+            var displayList = this.$displayList||this.$parentDisplayList;
+            var region = this.$renderRegion;
+            if(!displayList){
+                region.setTo(0,0,0,0);
+                region.moved = false;
                 return false;
             }
-            var region = this.$renderRegion;
             if (!region.moved) {
                 return false;
             }
             region.moved = false;
-            var clipRect = this.$clipRect || this.$parentClipRect;
-            region.updateRegion(bounds, matrix, clipRect);
+            var matrix = this.$renderMatrix;
+            matrix.copyFrom(concatenatedMatrix);
+            var root = displayList.root;
+            if(root!==this.$stage){
+                root.$getInvertedConcatenatedMatrix().$preMultiplyInto(matrix, matrix);
+            }
+            region.updateRegion(bounds, matrix);
+
             return true;
         }
 

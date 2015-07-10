@@ -167,8 +167,6 @@ module egret {
             }
             var displayList = this.$displayList || this.$parentDisplayList;
             this.assignParentDisplayList(child, displayList, displayList);
-            var clipRect = this.$clipRect||this.$parentClipRect;
-            this.assignParentClipRect(child,clipRect);
             child.$propagateFlagsDown(sys.DisplayObjectFlags.DownOnAddedOrRemoved);
             this.$propagateFlagsUp(sys.DisplayObjectFlags.InvalidBounds);
             this.$childAdded(child, index);
@@ -290,7 +288,6 @@ module egret {
             }
             var displayList = this.$displayList || this.$parentDisplayList;
             this.assignParentDisplayList(child, displayList, null);
-            this.assignParentClipRect(child,null);
             child.$propagateFlagsDown(sys.DisplayObjectFlags.DownOnAddedOrRemoved);
             child.$setParent(null);
             children.splice(index, 1);
@@ -595,34 +592,6 @@ module egret {
                 }
             }
         }
-
-        /**
-         * @private
-         */
-        $scrollRectChanged():void{
-            var clipRect = this.$clipRect||this.$parentClipRect;
-            var children = this.$children;
-            for (var i = children.length - 1; i >= 0; i--) {
-                this.assignParentClipRect(children[i], clipRect);
-            }
-        }
-
-        /**
-         * @private
-         */
-        private assignParentClipRect(child:DisplayObject, parentClipRect:Rectangle):void {
-            child.$parentClipRect = parentClipRect;
-            if(child.$clipRect||child.$displayList){
-                return;
-            }
-            var children = child.$children;
-            if (children) {
-                for (var i = children.length - 1; i >= 0; i--) {
-                    this.assignParentClipRect(children[i], parentClipRect);
-                }
-            }
-        }
-
 
         /**
          * @private

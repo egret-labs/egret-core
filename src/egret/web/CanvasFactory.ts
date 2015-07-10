@@ -57,6 +57,7 @@ module egret.web {
             var surface = (useOnce || surfacePool.length > 3) ? surfacePool.pop() : null;
             if (!surface) {
                 var canvas:HTMLCanvasElement = document.createElement("canvas");
+                canvas.width = canvas.height = 1;
                 if (isQQBrowser && !this.testCanvasValid(canvas)) {
                     warn("failed to create canvas!");
                     return null;
