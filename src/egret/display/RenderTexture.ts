@@ -123,12 +123,12 @@ module egret {
             if (mask) {
                 var bounds = mask.$getOriginalBounds();
                 maskRegion = sys.Region.create();
-                maskRegion.updateRegion(bounds, mask.$getConcatenatedMatrix(), null);
+                maskRegion.updateRegion(bounds, mask.$getConcatenatedMatrix());
             }
             var region:sys.Region;
             if (scrollRect) {
                 region = sys.Region.create();
-                region.updateRegion(scrollRect, displayMatrix, null);
+                region.updateRegion(scrollRect, displayMatrix);
             }
             if (region && maskRegion) {
                 region.intersect(maskRegion);
@@ -146,7 +146,7 @@ module egret {
             else {
                 region = sys.Region.create();
                 bounds = displayObject.$getOriginalBounds();
-                region.updateRegion(bounds, displayObject.$getConcatenatedMatrix(), null);
+                region.updateRegion(bounds, displayObject.$getConcatenatedMatrix());
             }
 
             //绘制显示对象自身，若有scrollRect，应用clip
@@ -216,7 +216,7 @@ module egret {
             var m = displayObject.$getConcatenatedMatrix();
             var region:sys.Region = sys.Region.create();
             if (!scrollRect.isEmpty()) {
-                region.updateRegion(scrollRect, m, null);
+                region.updateRegion(scrollRect, m);
             }
             if (region.isEmpty()) {
                 sys.Region.release(region);

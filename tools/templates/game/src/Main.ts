@@ -123,28 +123,23 @@ class Main extends egret.DisplayObjectContainer {
         this.addChild(topMask);
 
         var icon:egret.Bitmap = this.createBitmapByName("egretIcon");
-        icon.anchorX = icon.anchorY = 0.5;
         this.addChild(icon);
-        icon.x = stageW / 2;
-        icon.y = stageH / 2 - 60;
         icon.scaleX = 0.55;
         icon.scaleY = 0.55;
+        icon.x = stageW - icon.width >> 1;
+        icon.y = (stageH -icon.height >> 1) - 60;
 
         var colorLabel:egret.TextField = new egret.TextField();
-        colorLabel.x = stageW / 2;
-        colorLabel.y = stageH / 2 + 50;
-        colorLabel.anchorX = colorLabel.anchorY = 0.5;
         colorLabel.textColor = 0xffffff;
         colorLabel.textAlign = "center";
         colorLabel.text = "Hello Egret";
         colorLabel.size = 20;
+        colorLabel.x = stageW - colorLabel.width >> 1;
+        colorLabel.y = (stageH - colorLabel.height >> 1) + 50;
         this.addChild(colorLabel);
 
         var textfield:egret.TextField = new egret.TextField();
-        textfield.anchorX = textfield.anchorY = 0.5;
         this.addChild(textfield);
-        textfield.x = stageW / 2;
-        textfield.y = stageH / 2 + 100;
         textfield.alpha = 0;
 
         this.textfield = textfield;
@@ -205,6 +200,11 @@ class Main extends egret.DisplayObjectContainer {
      */
     private changeDescription(textfield:egret.TextField, textFlow:Array<egret.ITextElement>):void {
         textfield.textFlow = textFlow;
+
+        var stageW:number = this.stage.stageWidth;
+        var stageH:number = this.stage.stageHeight;
+        textfield.x = stageW - textfield.width >> 1;
+        textfield.y = (stageH - textfield.height >> 1) + 100;
     }
 }
 
