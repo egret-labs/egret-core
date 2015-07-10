@@ -213,8 +213,8 @@ module egret {
 
         /**
          * @private
-         * 
-         * @param value 
+         *
+         * @param value
          */
         $setWidth(value:number):void {
             //value = +value || 0;
@@ -223,13 +223,14 @@ module egret {
                 return;
             }
             values[Keys.explicitBitmapWidth] = value;
+
             this.$invalidateContentBounds();
         }
 
         /**
          * @private
-         * 
-         * @param value 
+         *
+         * @param value
          */
         $setHeight(value:number):void {
             //value = +value || 0;
@@ -270,14 +271,14 @@ module egret {
 
         /**
          * @private
-         * 
-         * @param context 
-         * @param texture 
-         * @param destW 
-         * @param destH 
-         * @param scale9Grid 
-         * @param fillMode 
-         * @param smoothing 
+         *
+         * @param context
+         * @param texture
+         * @param destW
+         * @param destH
+         * @param scale9Grid
+         * @param fillMode
+         * @param smoothing
          */
         static $drawImage(context:sys.RenderContext, texture:egret.Texture, destW:number, destH:number, scale9Grid:egret.Rectangle, fillMode:string, smoothing:boolean):void {
             var bitmapData = texture;
@@ -293,7 +294,7 @@ module egret {
             }
             else if (fillMode == egret.BitmapFillMode.SCALE) {
                 context.drawImage(bitmapData._bitmapData, bitmapData._bitmapX, bitmapData._bitmapY,
-                    bitmapWidth, bitmapHeight, offsetX, offsetY, bitmapData.$getScaleBitmapWidth(), bitmapData.$getScaleBitmapHeight());
+                    bitmapWidth, bitmapHeight, offsetX, offsetY, bitmapData.$getScaleBitmapWidth()/bitmapData.$getTextureWidth() * destW, bitmapData.$getScaleBitmapHeight()/bitmapData.$getTextureHeight() * destH);
             }
             else {
                 var tempImage:egret.BitmapData = bitmapData._bitmapData;
@@ -323,7 +324,7 @@ module egret {
          * 绘制九宫格位图
          */
         private static $drawScale9GridImage(context:egret.sys.RenderContext, texture:egret.Texture,
-                                    scale9Grid:egret.Rectangle, surfaceWidth?:number, surfaceHeight?:number):void {
+                                            scale9Grid:egret.Rectangle, surfaceWidth?:number, surfaceHeight?:number):void {
             var image:egret.BitmapData = texture._bitmapData;
             var imageWidth:number = texture._bitmapWidth;
             var imageHeight:number = texture._bitmapHeight;
