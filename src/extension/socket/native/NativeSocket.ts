@@ -63,6 +63,11 @@ module egret {
             this._bindEvent();
         }
 
+        public connectByUrl(url:string):void {
+            this.socket = new __global["egret_native"]["WebSocket"](url);
+            this._bindEvent();
+        }
+
         private _bindEvent():void {
             var that = this;
             var socket = this.socket;

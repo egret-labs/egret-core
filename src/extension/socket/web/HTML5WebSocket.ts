@@ -64,6 +64,12 @@ module egret {
             this._bindEvent();
         }
 
+        public connectByUrl(url:string):void {
+            this.socket = new window["WebSocket"](url);
+            this.socket.binaryType = "arraybuffer";
+            this._bindEvent();
+        }
+
         private _bindEvent():void {
             var that = this;
             var socket = this.socket;

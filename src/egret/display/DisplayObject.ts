@@ -1412,13 +1412,13 @@ module egret {
          * <code>
          *     var myRectangle:Rectangle = myDisplayObject.scrollRect;
          *     myRectangle.x += 10;
-         *     myDisplayObject.scrollRect = myRectangle;
+         *     myDisplayObject.scrollRect = myRectangle;//设置完scrollRect的x、y、width、height值之后，一定要对myDisplayObject重新赋值scrollRect，不然会出问题。
          * </code>
          * @version Egret 2.0
          * @platform Web,Native
          */
         public get scrollRect():Rectangle {
-            return this.$scrollRect ? this.$scrollRect.clone() : null;
+            return this.$scrollRect ? this.$scrollRect : null;
         }
 
         public set scrollRect(value:Rectangle) {
@@ -1517,6 +1517,14 @@ module egret {
          * Sprite 对象，它必须在显示列表中。<br/>
          * 注意：单个 mask 对象不能用于遮罩多个执行调用的显示对象。在将 mask 分配给第二个显示对象时，会撤消其作为第一个对象的遮罩，
          * 该对象的 mask 属性将变为 null。
+         *
+         * 下面例子为 mask 为 Rectangle 类型对象，这种情况下，修改 mask 的值后，一定要对 myDisplayObject 重新赋值 mask，不然会出问题。
+         * @example 以下代码改变了显示对象 mask 的 x 属性值：
+         * <code>
+         *     var myMask:Rectangle = myDisplayObject.mask;
+         *     myMask.x += 10;
+         *     myDisplayObject.mask = myMask;//设置完 mask 的x、y、width、height值之后，一定要对myDisplayObject重新赋值 mask，不然会出问题。
+         * </code>
          * @version Egret 2.0
          * @platform Web,Native
          */
@@ -1542,10 +1550,7 @@ module egret {
                     this.$maskRect = null;
                 }
                 else {
-                    if (value == this.$maskRect) {
-                        return;
-                    }
-                    this.$maskRect = <Rectangle>value;
+                    this.$setMaskRect(<Rectangle>value);
                     this.$mask = null;
                 }
             }
@@ -1555,6 +1560,22 @@ module egret {
             }
 
             this.$invalidateTransform();
+        }
+
+        $setMaskRect(value:Rectangle):void {
+            if (!value && !this.$maskRect) {
+                return;
+            }
+            if (value) {
+                if (!this.$maskRect) {
+                    this.$maskRect = new egret.Rectangle();
+                }
+                this.$maskRect.copyFrom(value);
+            }
+            else {
+                this.$maskRect = null;
+            }
+            this.invalidatePosition();
         }
 
         /**

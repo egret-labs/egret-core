@@ -56,6 +56,11 @@ module egret {
          */
         connect(host:string, port:number):void;
 
+        /**
+         * 连接
+         * @method egret.ISocket#connect
+         */
+        connectByUrl(url:string):void;
 
         /**
          * @language en_US
