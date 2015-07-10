@@ -79,7 +79,7 @@ module egret.web {
         var contentWidth = +container.getAttribute("data-content-width")||480;
         var contentHeight = +container.getAttribute("data-content-height")||800;
         var scaleMode = container.getAttribute("data-scale-mode");
-        var orientation = container.getAttribute("data-orientation") || egret.sys.OrientationMode.NOT_SET;
+        var orientation = container.getAttribute("data-orientation") || egret.sys.OrientationMode.AUTO;
         var maxTouches = +container.getAttribute("data-multi-fingered") || 2;
         var textureScaleFactor = +container.getAttribute("texture-scale-factor") || 1;
         var surface = egret.sys.surfaceFactory.create();

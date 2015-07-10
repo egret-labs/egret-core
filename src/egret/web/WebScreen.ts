@@ -120,7 +120,7 @@ module egret.web {
                 return;
             var screenRect = this.container.getBoundingClientRect();
             var shouldRotate = false;
-            if (this.orientation != sys.OrientationMode.NOT_SET) {
+            if (this.orientation != sys.OrientationMode.AUTO) {
                 shouldRotate = this.orientation != sys.OrientationMode.PORTRAIT && screenRect.height > screenRect.width
                 || this.orientation == sys.OrientationMode.PORTRAIT && screenRect.width > screenRect.height;
             }
