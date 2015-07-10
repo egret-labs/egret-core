@@ -354,7 +354,7 @@ module egret.sys {
                     if (child.$blendMode !== 0 || child.$mask) {
                         drawCalls += this.drawWithClip(child, context, dirtyList, rootMatrix, clipRegion);
                     }
-                    else if (child.$scrollRect) {
+                    else if (child.$scrollRect || child.$maskRect) {
                         drawCalls += this.drawWithScrollRect(child, context, dirtyList, rootMatrix, clipRegion);
                     }
                     else {
@@ -384,7 +384,7 @@ module egret.sys {
                 }
             }
 
-            var scrollRect = displayObject.$scrollRect;
+            var scrollRect = displayObject.$scrollRect ? displayObject.$scrollRect : displayObject.$maskRect;
             var mask = displayObject.$mask;
 
             //计算scrollRect和mask的clip区域是否需要绘制，不需要就直接返回，跳过所有子项的遍历。
@@ -505,7 +505,8 @@ module egret.sys {
         private drawWithScrollRect(displayObject:DisplayObject, context:RenderContext, dirtyList:egret.sys.Region[],
                                    rootMatrix:Matrix, clipRegion:Region):number {
             var drawCalls = 0;
-            var scrollRect = displayObject.$scrollRect;
+            var scrollRect = displayObject.$scrollRect ? displayObject.$scrollRect : displayObject.$maskRect;
+
 
             var m = displayObject.$getConcatenatedMatrix();
             var region:Region = Region.create();

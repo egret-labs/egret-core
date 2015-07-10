@@ -634,9 +634,12 @@ module egret {
             var m = this.$getInvertedConcatenatedMatrix();
             var localX = m.a * stageX + m.c * stageY + m.tx;
             var localY = m.b * stageX + m.d * stageY + m.ty;
-            if (this.$scrollRect && !this.$scrollRect.contains(localX, localY)) {
+
+            var rect = this.$scrollRect ? this.$scrollRect : this.$maskRect;
+            if (rect && !rect.contains(localX, localY)) {
                 return null;
             }
+
             if (this.$mask && !this.$mask.$hitTest(stageX, stageY, true)) {
                 return null
             }

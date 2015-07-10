@@ -1522,6 +1522,11 @@ module egret {
         $mask:DisplayObject = null;
 
         /**
+         * @private
+         */
+        $maskRect:Rectangle = null;
+
+        /**
          * @language en_US
          * The calling display object is masked by the specified mask object. To ensure that masking works when the Stage
          * is scaled, the mask display object must be in an active part of the display list. The mask object itself is not drawn.
@@ -1542,21 +1547,40 @@ module egret {
          * @version Egret 2.0
          * @platform Web,Native
          */
-        public get mask():DisplayObject {
-            return this.$mask;
+        public get mask():DisplayObject|Rectangle {
+            return this.$mask ? this.$mask : this.$maskRect;
         }
 
-        public set mask(value:DisplayObject) {
-            if (value == this.$mask || value == this) {
+        public set mask(value:DisplayObject|Rectangle) {
+            if (value === this) {
                 return;
             }
             if (value) {
-                if (value.$maskedObject) {
-                    value.$maskedObject.mask = null;
+                if (value instanceof DisplayObject) {
+                    if (value == this.$mask) {
+                        return;
+                    }
+                    if (value.$maskedObject) {
+                        value.$maskedObject.mask = null;
+                    }
+                    value.$maskedObject = this;
+
+                    this.$mask = value;
+                    this.$maskRect = null;
                 }
-                value.$maskedObject = this;
+                else {
+                    if (value == this.$maskRect) {
+                        return;
+                    }
+                    this.$maskRect = <Rectangle>value;
+                    this.$mask = null;
+                }
             }
-            this.$mask = value;
+            else {
+                this.$mask = null;
+                this.$maskRect = null;
+            }
+
             this.$invalidateTransform();
         }
 
@@ -1858,7 +1882,9 @@ module egret {
             var localY = m.b * stageX + m.d * stageY + m.ty;
             if (bounds.contains(localX, localY)) {
                 if (!this.$children) {//容器已经检查过scrollRect和mask，避免重复对遮罩进行碰撞。
-                    if (this.$scrollRect && !this.$scrollRect.contains(localX, localY)) {
+
+                    var rect = this.$scrollRect ? this.$scrollRect : this.$maskRect;
+                    if (rect && !rect.contains(localX, localY)) {
                         return null;
                     }
                     if (this.$mask && !this.$mask.$hitTest(stageX, stageY, true)) {
