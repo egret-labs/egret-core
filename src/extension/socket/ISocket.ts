@@ -36,6 +36,11 @@ module egret {
          * @method egret.ISocket#connect
          */
         connect(host:string, port:number):void;
+        /**
+         * 连接
+         * @method egret.ISocket#connect
+         */
+        connectByUrl(url:string):void;
 
 
         addCallBacks(onConnect:Function, onClose:Function, onSocketData:Function, onError:Function, thisObject:any):void;

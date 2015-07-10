@@ -82,6 +82,14 @@ module egret {
         }
 
         /**
+         * 根据提供的url连接
+         * @param url 全地址。如ws://echo.websocket.org:80
+         */
+        public connectByUrl(url:string):void {
+            this.socket.connectByUrl(url);
+        }
+
+        /**
          * 关闭套接字
          * @method egret.WebSocket#close
          */

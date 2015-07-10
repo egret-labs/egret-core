@@ -29,6 +29,9 @@
 
 
 module egret {
+    /**
+     * @private
+     */
     export const enum BitmapFilterQuality {
         /**
          * 定义低品质滤镜设置

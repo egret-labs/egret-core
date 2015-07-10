@@ -28,12 +28,18 @@
 //////////////////////////////////////////////////////////////////////////////////////
 
 module egret {
+    /**
+     * @private
+     */
     export class AudioType {
         static QQ_AUDIO:number = 1;
         static WEB_AUDIO:number = 2;
         static HTML5_AUDIO:number = 3;
     }
 
+    /**
+     * @private
+     */
     export class SystemOSType {
         static WPHONE:number = 1;
         static IOS:number = 2;

@@ -52,14 +52,15 @@ module egret {
             this.thisObject = thisObject;
         }
 
-        private host:string = "";
-        private port:number = 0;
         public connect(host:string, port:number):void {
-            this.host = host;
-            this.port = port;
-
-            var socketServerUrl = "ws://" + this.host + ":" + this.port;
+            var socketServerUrl = "ws://" + host + ":" + port;
             this.socket = new window["WebSocket"](socketServerUrl);
+            this.socket.binaryType = "arraybuffer";
+            this._bindEvent();
+        }
+
+        public connectByUrl(url:string):void {
+            this.socket = new window["WebSocket"](url);
             this.socket.binaryType = "arraybuffer";
             this._bindEvent();
         }
