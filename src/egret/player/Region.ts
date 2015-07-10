@@ -203,7 +203,7 @@ module egret.sys {
         /**
          * @private
          */
-        public updateRegion(bounds:Rectangle, matrix:Matrix, clipRect:Rectangle):void {
+        public updateRegion(bounds:Rectangle, matrix:Matrix):void {
             var m = matrix;
             var a = m.a;
             var b = m.b;
@@ -262,27 +262,6 @@ module egret.sys {
 
                 minY = Math.floor(y0 < y2 ? y0 : y2) - 1;
                 maxY = Math.ceil(y1 > y3 ? y1 : y3) + 1;
-            }
-            if (clipRect) {
-                var clipMinX = clipRect.x;
-                var clipMaxX = clipMinX + clipRect.width;
-                var clipMinY = clipRect.y;
-                var clipMaxY = clipMinY + clipRect.height;
-                if (minX < clipMinX) {
-                    minX = clipMinX;
-                }
-                if (minY < clipMinY) {
-                    minY = clipMinY;
-                }
-                if (maxX > clipMaxX) {
-                    maxX = clipMaxX;
-                }
-                if (maxY > clipMaxY) {
-                    maxY = clipMaxY;
-                }
-                if (minX >= maxX || minY >= maxY) {
-                    minX = minY = maxX = maxY = 0;
-                }
             }
             this.minX = minX;
             this.minY = minY;

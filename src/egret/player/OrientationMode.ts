@@ -42,11 +42,6 @@ module egret.sys {
         public static AUTO = "auto";
         /**
          * @private
-         * 适配屏幕
-         */
-        public static NOT_SET = "notSet";
-        /**
-         * @private
          * 默认竖屏
          */
         public static PORTRAIT = "portrait";
