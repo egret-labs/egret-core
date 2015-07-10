@@ -47,7 +47,7 @@ TouchEvent
 dispatchTouchEvent    target:IEventDispatcher,type:string,touchPointID:number = 0, stageX:number = 0, stageY:number = 0, ctrlKey:boolean=false,altKey:boolean=false,shiftKey:boolean=false,touchDown:boolean=false
                       target:IEventDispatcher, type:string, bubbles?:boolean, cancelable?:boolean, stageX?:number, stageY?:number, touchPointID?:number, touchDown:boolean = false
 
-mask 类型： 从 Rectangle 到 DisplayObject(需要放入到显示列表中)
+mask 类型： 从 Rectangle 到 同时支持 Rectangle、DisplayObject
 
 TouchEvent localX localY  请使用 stageX  stageY实现
 
