@@ -133,12 +133,17 @@ module egret {
         }
 
         public set text(value:string) {
+            this.$setText(value);
+        }
+
+        public $setText(value:string):void {
             if(value==null){
                 value = "";
             }
             value = value + "";
             this.$setText(value);
         }
+
 
         /**
          * @private
@@ -220,6 +225,10 @@ module egret {
         }
 
         public set font(value:BitmapFont) {
+            this.$setFont(value);
+        }
+
+        $setFont(value:BitmapFont):void {
             var values = this.$BitmapText;
             if (values[Keys.font] == value) {
                 return;
