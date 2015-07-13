@@ -886,24 +886,44 @@ module egret {
                                 var k:number = 0;
                                 var ww:number = 0;
                                 var word:string = textArr[j];
-                                var wl:number = word.length;
+                                if (this._TF_Props_._wordWrap) {
+                                    var words:Array<string> = word.split(/\b/);
+                                }
+                                else {
+                                    words = word.match(/./g);
+                                }
+                                var wl:number = words.length;
+                                var charNum = 0;
                                 for (; k < wl; k++) {
-                                    w = renderContext.measureText(word.charAt(k));
-                                    if (lineW + w > self._DO_Props_._explicitWidth && lineW + k != 0) {
+                                    w = renderContext.measureText(words[k]);
+                                    if (lineW != 0 && lineW + w > self._DO_Props_._explicitWidth && lineW + k != 0) {
                                         break;
                                     }
+                                    charNum += words[k].length;
                                     ww += w;
                                     lineW += w;
-                                    lineCharNum += 1;
+                                    lineCharNum += charNum;
                                 }
 
                                 if (k > 0) {
-                                    lineElement.elements.push(<egret.IWTextElement>{width:ww, text:word.substring(0, k), style:element.style});
-                                    textArr[j] = word.substring(k);
-                                }
+                                    lineElement.elements.push(<egret.IWTextElement>{
+                                        width: ww,
+                                        text: word.substring(0, charNum),
+                                        style: element.style
+                                    });
 
-                                j--;
-                                isNextLine = false;
+                                    var leftWord:string = word.substring(charNum);
+                                    for (var m:number = 0, lwleng = leftWord.length; m < lwleng; m++) {
+                                        if (leftWord.charAt(m) != " ") {
+                                            break;
+                                        }
+                                    }
+                                    textArr[j] = leftWord.substring(m);
+                                }
+                                if (textArr[j] != "") {
+                                    j--;
+                                    isNextLine = false;
+                                }
                             }
                         }
                     }
@@ -941,6 +961,21 @@ module egret {
 
             properties._numLines = linesArr.length;
             return linesArr;
+        }
+
+
+        /**
+         * @private
+         */
+        public get wordWrap():boolean {
+            return this._TF_Props_._wordWrap;
+        }
+
+        /**
+         * @private
+         */
+        public set wordWrap(value:boolean) {
+            this._TF_Props_._wordWrap = value;
         }
 
         public _isTyping:boolean = false;
