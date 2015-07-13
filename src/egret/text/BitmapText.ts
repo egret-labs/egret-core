@@ -136,15 +136,6 @@ module egret {
             this.$setText(value);
         }
 
-        public $setText(value:string):void {
-            if(value==null){
-                value = "";
-            }
-            value = value + "";
-            this.$setText(value);
-        }
-
-
         /**
          * @private
          */
