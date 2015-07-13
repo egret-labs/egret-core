@@ -178,6 +178,11 @@ module egret {
                         value = str.substring(1, next);
                         next += 1;
                     }
+                    else if (str.charAt(0) == "\'") {
+                        var next = str.indexOf("\'", 1);
+                        value = str.substring(1, next);
+                        next += 1;
+                    }
                     else {
                         value = str.match(/(\S)+/)[0];
                         next = value.length;
