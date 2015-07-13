@@ -59,7 +59,7 @@ module egret {
         var data = {listener: listener, thisObject: thisObject, delay: delay, params: args};
 
         setTimeoutCount++;
-        if (setTimeoutCount == 1) {
+        if (setTimeoutCount == 1 && sys.$ticker) {
             sys.$ticker.$startTick(timeoutUpdate, null);
         }
 
@@ -87,7 +87,7 @@ module egret {
             setTimeoutCount--;
             delete setTimeoutCache[key];
 
-            if (setTimeoutCount == 0) {
+            if (setTimeoutCount == 0 && sys.$ticker) {
                 sys.$ticker.$stopTick(timeoutUpdate, null);
             }
         }

@@ -101,9 +101,9 @@ function buildPlatform(needCompileEngine, keepGeneratedTypescript) {
             }
 
             //写入语言包文件
-            url = "core/egret/i18n/" + globals.getLanguageInfo() + ".js";
-            html5List.unshift(url);
-            nativeList.unshift(url);
+            //url = "core/egret/i18n/" + globals.getLanguageInfo() + ".js";
+            //html5List.unshift(url);
+            //nativeList.unshift(url);
 
             file.save(path.join(projectProperties.getProjectPath(), "bin-debug", "lib", "egret_file_list.js"), "var egret_file_list = " + JSON.stringify(html5List, null, "\t") + ";");
             file.save(path.join(projectProperties.getProjectPath(), "bin-debug", "lib", "egret_file_list_native.js"), "var egret_file_list = " + JSON.stringify(nativeList, null, "\t") + ";");
@@ -112,6 +112,12 @@ function buildPlatform(needCompileEngine, keepGeneratedTypescript) {
         });
     }
 
+    if (true) {//修改html文件
+        task.push(function (tempCallback) {//修改egret_file_list.js文件
+            require("../core/modifyHtmls").modify(projectProperties.getProjectPath());
+            tempCallback();
+        });
+    }
 
     var runtime = param.getOption(param.getArgv()["opts"], "--runtime", ["html5", "native"]);
 

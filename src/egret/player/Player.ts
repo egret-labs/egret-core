@@ -409,7 +409,7 @@ module egret.sys {
             }
             var repaintList = this.paintList;
             repaintList.push(list);
-            if (repaintList.length > 20) {
+            if (repaintList.length > 1) {
                 repaintList.shift();
             }
             var context = this.screenDisplayList.renderContext;
@@ -442,7 +442,7 @@ module egret.sys {
          */
         function drawDirtyRect(x:number, y:number, width:number, height:number, context:RenderContext):void {
             context.strokeStyle = 'red';
-            context.lineWidth = 1;
+            context.lineWidth = 5;
             context.strokeRect(x - 0.5, y - 0.5, width, height);
         }
 

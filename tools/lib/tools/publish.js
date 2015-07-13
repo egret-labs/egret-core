@@ -308,7 +308,17 @@ function publishHtml5(opts, versionFile) {
         });
     }
 
-    if (true) {//拷贝其他文件
+    if (true) {//修改html文件
+        task.push(function (tempCallback) {//修改egret_file_list.js文件
+            require("../core/modifyHtmls").modify(projectProperties.getProjectPath(), true);
+
+            file.copy(path.join(projectPath, "index.html"), path.join(releaseOutputPath, "index.html"));
+
+            tempCallback();
+        });
+    }
+
+    if (false) {//拷贝其他文件
         task.push(function (tempCallback) {
             //拷贝
 

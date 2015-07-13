@@ -23,12 +23,12 @@ function build(properties, callback, keepGeneratedTypescript) {
 
 
     //替换入口类
-    var document_class = globals.getDocumentClass(projectPath);
-    if (document_class) {
-        replaceDocumentClass("index.html", document_class, projectPath);
-        replaceDocumentClass("release.html", document_class, projectPath);
-        replaceDocumentClass("native_require.js", document_class, projectPath);
-    }
+    //var document_class = globals.getDocumentClass(projectPath);
+    //if (document_class) {
+    //    replaceDocumentClass("index.html", document_class, projectPath);
+    //    replaceDocumentClass("release.html", document_class, projectPath);
+    //    replaceDocumentClass("native_require.js", document_class, projectPath);
+    //}
 
     //输出路径
     var output = path.join(projectPath, "bin-debug");

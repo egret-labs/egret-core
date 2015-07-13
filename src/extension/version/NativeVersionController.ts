@@ -119,7 +119,7 @@ module egret {
 
         public getVirtualUrl(url:string):string {
             if (this._versionInfo[url]) {
-                return "resource/" + this._versionInfo[url]["v"] + "_" + this._versionInfo[url]["s"];
+                return "resource/" + this._versionInfo[url]["v"].substring(0, 2) + "/" + this._versionInfo[url]["v"] + "_" + this._versionInfo[url]["s"];
             }
             else {
                 return url;
