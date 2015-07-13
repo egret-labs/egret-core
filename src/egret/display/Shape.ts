@@ -33,7 +33,7 @@ module egret {
     /**
      * @class egret.Shape
      * @classdesc 此类用于使用 Egret 绘图应用程序编程接口 (API) 创建简单形状。Shape 类包括 graphics 属性，该属性使您可以从 Graphics 类访问方法。
-     * @link http://docs.egret-labs.org/demo/shape.html Shape绘制矢量图
+     * @see http://edn.egret.com/cn/index.php?g=&m=article&a=index&id=136&terms1_id=25&terms2_id=32 Shape绘制矢量图
      */
     export class Shape extends egret.DisplayObject {
 

@@ -31,10 +31,13 @@ module egret {
     /**
      * @class egret.HtmlTextParser
      * @classdesc 将html格式文本转换为可赋值给 egret.TextField#textFlow 属性的对象
-     * @link http://docs.egret-labs.org/jkdoc/manual-text-multiformat.html 多种样式文本混合
+     * @see http://edn.egret.com/cn/index.php?g=&m=article&a=index&id=146&terms1_id=25&terms2_id=33&t3_id=146 多种样式文本混合
      */
     export class HtmlTextParser{
 
+        /**
+         * 创建一个 egret.HtmlTextParser 对象
+         */
         constructor () {
             this.initReplaceArr();
         }

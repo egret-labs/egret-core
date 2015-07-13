@@ -33,9 +33,8 @@ module egret {
      * @classdesc
      * @class egret.BitmapFont
      * 位图字体,是一个字体的纹理集，通常作为BitmapText.font属性的值。
-     * @link
-     * http://bbs.egret-labs.org/thread-918-1-1.html TextureMerger
-     * http://bbs.egret-labs.org/forum.php?mod=viewthread&tid=251 文本(含位图字体具体用法)
+     * @see http://bbs.egret-labs.org/thread-918-1-1.html TextureMerger
+     * @see http://bbs.egret-labs.org/forum.php?mod=viewthread&tid=251 文本(含位图字体具体用法)
      * @extends egret.SpriteSheet
      */
     export class BitmapFont extends SpriteSheet {

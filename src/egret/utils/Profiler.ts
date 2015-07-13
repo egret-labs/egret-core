@@ -68,6 +68,10 @@ module egret {
 
         public _isRunning:boolean = false;
 
+        /**
+         * 停止Profiler
+         * @method egret.Profiler#stop
+         */
         public stop():void {
             if (!this._isRunning) {
                 return;

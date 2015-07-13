@@ -38,14 +38,13 @@ module egret {
      * URLLoader 对象会先从 URL 中下载所有数据，然后才将数据用于应用程序中的代码。它会发出有关下载进度的通知，
      * 通过 bytesLoaded 和 bytesTotal 属性以及已调度的事件，可以监视下载进度。
 	 * @extends egret.EventDispatcher
-     * @link http://docs.egret-labs.org/post/manual/net/createconnect.html 构建通信请求
-     *
+     * @see http://edn.egret.com/cn/index.php?g=&m=article&a=index&id=160&terms1_id=25&terms2_id=37 构建通信请求
      * @event egret.Event.COMPLETE 加载完成后调度。
 	 */
     export class URLLoader extends EventDispatcher {
 
 		/**
-         * 创建 egret.URLLoader 对象
+         * 创建一个 egret.URLLoader 对象
 		 * @method egret.URLLoader#constructor
 		 * @param request {URLRequest} 一个 URLRequest 对象，指定要下载的 URL。
          * 如果省略该参数，则不开始加载操作。如果已指定参数，则立即开始加载操作

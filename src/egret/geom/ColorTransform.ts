@@ -28,10 +28,31 @@
 //////////////////////////////////////////////////////////////////////////////////////
 module egret {
     /**
+     * @class egret.ColorTransform
+     * @classdesc
+     * 可使用 ColorTransform 类调整显示对象的颜色值。可以将颜色调整或颜色转换应用于所有四种通道：红色、绿色、蓝色和 Alpha 透明度。
+     * 当 ColorTransform 对象应用于显示对象时，将按如下方法为每个颜色通道计算新值：
+     * 新红色值 = (旧红色值 * redMultiplier) + redOffset
+     * 新绿色值 = (旧绿色值 * greenMultiplier) + greenOffset
+     * 新蓝色值 = (旧蓝色值 * blueMultiplier) + blueOffset
+     * 新 Alpha 值 = (旧 Alpha 值 * alphaMultiplier) + alphaOffset
+     * @extends egret.HashObject
      * @private
      */
     export class ColorTransform extends HashObject {
 
+        /**
+         * 创建一个 egret.ColorTransform 对象
+         * @method egret.ColorTransform#constructor
+         * @param redMultiplier {number} 红色乘数的值，在 0 到 1 范围内。
+         * @param greenMultiplier {number} 绿色乘数的值，在 0 到 1 范围内。
+         * @param blueMultiplier {number} 蓝色乘数的值，在 0 到 1 范围内。
+         * @param alphaMultiplier {number} Alpha 透明度乘数的值，在 0 到 1 范围内。
+         * @param redOffset {number} 红色通道值的偏移量，在 -255 到 255 范围内。
+         * @param greenOffset {number} 绿色通道值的偏移量，在 -255 到 255 范围内。
+         * @param blueOffset {number} 蓝色通道值的偏移量，在 -255 到 255 范围内。
+         * @param alphaOffset {number} Alpha 透明度通道值的偏移量，在 -255 到 255 范围内。
+         */
         constructor(redMultiplier:number = 1.0, greenMultiplier:number = 1.0, blueMultiplier:number = 1.0, alphaMultiplier:number = 1.0, redOffset:number = 0, greenOffset:number = 0, blueOffset:number = 0, alphaOffset:number = 0) {
             super();
             this._redMultiplier = redMultiplier;

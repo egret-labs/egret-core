@@ -40,13 +40,13 @@ module egret {
      * Event 类的方法可以在事件侦听器函数中使用以影响事件对象的行为。
      * 某些事件有关联的默认行为，通过调用 preventDefault() 方法，您的事件侦听器可以取消此行为。
      * 可以通过调用 stopPropagation() 或 stopImmediatePropagation() 方法，将当前事件侦听器作为处理事件的最后一个事件侦听器。
-     * @link http://docs.egret-labs.org/post/manual/event/eventclass.html Event类
+     * @see http://edn.egret.com/cn/index.php?g=&m=article&a=index&id=114&terms1_id=25&terms2_id=29 Event类
      */
     export class Event extends HashObject{
 
 
         /**
-         * 创建一个作为参数传递给事件侦听器的 Event 对象。
+         * 创建一个作为参数传递给事件侦听器的 egret.Event 对象。
          * @param type {string} 事件的类型，可以作为 Event.type 访问。
          * @param bubbles {boolean} 确定 Event 对象是否参与事件流的冒泡阶段。默认值为 false。
          * @param cancelable {boolean} 确定是否可以取消 Event 对象。默认值为 false。

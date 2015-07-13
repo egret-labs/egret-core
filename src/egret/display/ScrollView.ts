@@ -442,10 +442,16 @@ module egret {
         public _getContentHeight(): number {
             return this._content.explicitHeight || this._content.height;
         }
+        /**
+         * @private
+         */
         public getMaxScrollLeft(): number {
             var max = this._getContentWidth() - this.width;
             return Math.max(0, max);
         }
+        /**
+         * @private
+         */
         public getMaxScrollTop(): number {
             var max = this._getContentHeight() - this.height;
             return Math.max(0, max);
@@ -498,6 +504,9 @@ module egret {
             this._ScrV_Props_._isVTweenPlaying = false
             this.dispatchEvent(new Event(Event.COMPLETE));
         }
+        /**
+         * @private
+         */
         public setScrollTop(scrollTop: number, duration: number = 0): egret.Tween {
             var finalPosition = Math.min(this.getMaxScrollTop(), Math.max(scrollTop, 0));
             if (duration == 0) {
@@ -515,6 +524,9 @@ module egret {
                 this._onScrollStarted();
             return vtween;
         }
+        /**
+         * @private
+         */
         public setScrollLeft(scrollLeft: number, duration: number = 0): egret.Tween {
             var finalPosition = Math.min(this.getMaxScrollLeft(), Math.max(scrollLeft, 0));
             if (duration == 0) {
@@ -582,6 +594,7 @@ module egret {
         }
 
         /**
+         * @private
          * @method egret.ScrollView#addChild
          * @deprecated
          * @param child {DisplayObject} 
@@ -592,6 +605,7 @@ module egret {
             return null;
         }
         /**
+         * @private
          * @method egret.ScrollView#addChildAt
          * @deprecated
          * @param child {DisplayObject} 
@@ -603,6 +617,7 @@ module egret {
             return null;
         }
         /**
+         * @private
          * @method egret.ScrollView#removeChild
          * @deprecated
          * @param child {DisplayObject} 
@@ -613,6 +628,7 @@ module egret {
             return null;
         }
         /**
+         * @private
          * @method egret.ScrollView#removeChildAt
          * @deprecated
          * @param index {number} 
@@ -623,6 +639,7 @@ module egret {
             return null;
         }
         /**
+         * @private
          * @method egret.ScrollView#setChildIndex
          * @deprecated
          * @param child {DisplayObject} 
@@ -632,6 +649,7 @@ module egret {
             this.throwNotSupportedError();
         }
         /**
+         * @private
          * @method egret.ScrollView#swapChildren
          * @deprecated
          * @param child1 {DisplayObject} 
@@ -641,6 +659,7 @@ module egret {
             this.throwNotSupportedError();
         }
         /**
+         * @private
          * @method egret.ScrollView#swapChildrenAt
          * @deprecated
          * @param index1 {number} 
@@ -650,6 +669,9 @@ module egret {
             this.throwNotSupportedError();
         }
 
+        /**
+         * @inheritDoc
+         */
         public hitTest(x: number, y: number, ignoreTouchEnabled: boolean = false): DisplayObject {
             var childTouched = super.hitTest(x, y, ignoreTouchEnabled);
             if (childTouched)

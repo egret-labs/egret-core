@@ -37,7 +37,7 @@ module egret {
      * 在WebGL / OpenGL上，这种做法可以显著提升性能
      * 同时，SpriteSheet可以很方便的进行素材整合，降低HTTP请求数量
      * SpriteSheet 格式的具体规范可以参见此文档  https://github.com/egret-labs/egret-core/wiki/Egret-SpriteSheet-Specification
-     * @link http://docs.egret-labs.org/post/manual/bitmap/textures.html 纹理集的使用
+     * @see http://edn.egret.com/cn/index.php?g=&m=article&a=index&id=135&terms1_id=25&terms2_id=31 纹理集的使用
      */
     export class SpriteSheet extends HashObject {
 
@@ -129,6 +129,10 @@ module egret {
             return texture;
         }
 
+        /**
+         * 销毁 SpriteSheet 对象所持有的纹理对象
+         * @method egret.SpriteSheet#dispose
+         */
         public dispose():void {
             if(this.texture) {
                 this.texture.dispose();

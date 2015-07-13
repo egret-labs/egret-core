@@ -35,12 +35,15 @@ module egret {
      * TextField是egret的文本渲染类，采用浏览器/设备的API进行渲染，在不同的浏览器/设备中由于字体渲染方式不一，可能会有渲染差异
      * 如果开发者希望所有平台完全无差异，请使用BitmapText
      * @extends egret.DisplayObject
-     * @link http://docs.egret-labs.org/post/manual/text/createtext.html 创建文本
+     * @see http://edn.egret.com/cn/index.php?g=&m=article&a=index&id=141&terms1_id=25&terms2_id=33 创建文本
      *
      * @event egret.TextEvent.LINK 点击链接后调度。
      */
     export class TextField extends DisplayObject {
 
+        /**
+         * @private
+         */
         public static default_fontFamily:string = "Arial";
 
         private isInput():boolean {
@@ -399,6 +402,9 @@ module egret {
             }
         }
 
+        /**
+         * @private
+         */
         public maxWidth;
 
         public get maxChars():number {
@@ -445,12 +451,21 @@ module egret {
             return Math.max(this._TF_Props_._numLines - TextFieldUtils._getScrollNum(this) + 1, 1);
         }
 
+        /**
+         * @private
+         */
         public get selectionBeginIndex():number {
             return 0;
         }
+        /**
+         * @private
+         */
         public get selectionEndIndex():number {
             return 0;
         }
+        /**
+         * @private
+         */
         public get caretIndex():number {
             return 0;
         }
@@ -604,6 +619,9 @@ module egret {
             }
         }
 
+        /**
+         * @private
+         */
         public setFocus() {
             //todo:
             $warn(1013);
@@ -611,6 +629,9 @@ module egret {
 
         public _TF_Props_:TextFieldProperties;
 
+        /**
+         * 创建一个 egret.TextField 对象
+         */
         constructor() {
             super();
             this.needDraw = true;
@@ -767,23 +788,41 @@ module egret {
             this._setSizeDirty();
         }
 
+        /**
+         * 文本的宽度，以像素为单位。
+         * @member {number} egret.TextField#textWidth
+         */
         public get textWidth():number {
             return this._TF_Props_._textMaxWidth;
         }
 
+        /**
+         * 文本的高度，以像素为单位。
+         * @member {number} egret.TextField#textHeight
+         */
         public get textHeight():number {
             return TextFieldUtils._getTextHeight(this);
         }
 
-        public appendText(text:string):void {
-            this.appendElement(<egret.ITextElement>{text:text});
+        /**
+         * 将 newText 参数指定的字符串追加到文本字段的文本的末尾。
+         * @method {number} egret.TextField#appendText
+         * @param newText {string} 要追加到现有文本末尾的字符串
+         */
+        public appendText(newText:string):void {
+            this.appendElement(<egret.ITextElement>{text:newText});
         }
 
-        public appendElement(element:egret.ITextElement):void {
+        /**
+         * 将 newElement 参数指定的文本内容追加到文本字段的文本的末尾。
+         * @method {number} egret.TextField#appendElement
+         * @param newElement {egret.ITextElement} 要追加到现有文本末尾的文本内容
+         */
+        public appendElement(newElement:egret.ITextElement):void {
             var self = this;
             var properties:egret.TextFieldProperties = self._TF_Props_;
 
-            var text:string = properties._text + element.text;
+            var text:string = properties._text + newElement.text;
 
             if (properties._displayAsPassword) {
                 self._setBaseText(text);
@@ -791,7 +830,7 @@ module egret {
             else {
                 properties._text = text;
 
-                self._textArr.push(element);
+                self._textArr.push(newElement);
                 self.setMiddleStyle(self._textArr);
             }
         }

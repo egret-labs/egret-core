@@ -32,8 +32,7 @@ module egret {
     /**
      * @class egret.Sound
      * @classdesc Sound 类允许您在应用程序中使用声音。
-     * @link http://docs.egret-labs.org/post/manual/sound/playsound.html 播放音频
-     *
+     * @see http://edn.egret.com/cn/index.php?g=&m=article&a=index&id=157&terms1_id=25&terms2_id=36 播放音频
      * @event egret.SoundEvent.SOUND_COMPLETE 在声音完成播放后调度。
      */
     export class Sound extends egret.EventDispatcher {
@@ -50,13 +49,14 @@ module egret {
         public static EFFECT:string = "effect";
 
         /**
+         * @private
          * @deprecated
          * @type {string}
          */
         public path:string = "";
 
         /**
-         * 创建 egret.Sound 对象
+         * 创建一个 egret.Sound 对象
          */
         constructor() {
             super();
@@ -247,6 +247,7 @@ module egret {
         }
 
         /**
+         * @private
          * @deprecated
          * 设置音量
          * @param value 值需大于0 小于等于 1
@@ -257,6 +258,7 @@ module egret {
         }
 
         /**
+         * @private
          * @deprecated
          * 获取当前音量值
          * @returns number

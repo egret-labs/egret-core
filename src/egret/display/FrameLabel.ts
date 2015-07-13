@@ -30,6 +30,9 @@
 
 module egret {
 
+    /**
+     * @private
+     */
     export class FrameLabel extends EventDispatcher
     {
         private _name: string;

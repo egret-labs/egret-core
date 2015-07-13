@@ -33,15 +33,17 @@ module egret {
      * egret.WebSocket 类启用代码以建立传输控制协议 (TCP) 套接字连接，用于发送和接收字符串或二进制数据。
      * 要使用 egret.WebSocket 类的方法，请先使用构造函数 new egret.WebSocket 创建一个 egret.WebSocket 对象。
      * 套接字以异步方式传输和接收数据。
-     * @link http://docs.egret-labs.org/jkdoc/manual-net-websocket.html WebSocket
+     * @see http://edn.egret.com/cn/index.php?g=&m=article&a=index&id=164&terms1_id=25&terms2_id=37 WebSocket
      */
     export class WebSocket extends egret.EventDispatcher {
         /**
          * 以字符串格式发送和接收数据
+         * @constant {string} egret.WebSocket.TYPE_STRING
          */
         public static TYPE_STRING:string = "webSocketTypeString";
         /**
          * 以二进制格式发送和接收数据
+         * @constant {string} egret.WebSocket.TYPE_BINARY
          */
         public static TYPE_BINARY:string = "webSocketTypeBinary";
 

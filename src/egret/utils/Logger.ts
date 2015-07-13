@@ -29,11 +29,7 @@
 
 module egret {
     /**
-     * @class egret.Logger
-     * @classdesc
-     * Logger是引擎的日志处理模块入口
-     * @stable B 目前Logger的接口设计没有问题，但是考虑到跨平台，需要将其改为一个Context，并且允许开发者自由扩展以实现自身游戏的日志分析收集需求
-     * todo:GitHub文档，如何利用日志帮助游戏持续改进
+     * @private
      */
     export class Logger {
         public static ALL:string = "all";
@@ -137,6 +133,9 @@ module egret {
         }
     }
 
+    /**
+     * @private
+     */
     export function getString(id:number, ...args):string {
         var message = egret.egret_string_code[id];
         if (message) {
@@ -148,6 +147,9 @@ module egret {
         return message;
     }
 
+    /**
+     * @private
+     */
     export function $error(code:number, ...args):void {
         args.unshift(code);
         var actionCode = getString.apply(null, args);
@@ -159,6 +161,9 @@ module egret {
         }
     }
 
+    /**
+     * @private
+     */
     export function $warn(code:number, ...args):void {
         args.unshift(code);
         var actionCode = getString.apply(null, args);

@@ -142,6 +142,9 @@ module egret {
             this.textLinesChange = true;
         }
 
+        /**
+         * @private
+         */
         public static EMPTY_FACTOR:number = 0.33;
 
         public _render(renderContext:RendererContext):void {

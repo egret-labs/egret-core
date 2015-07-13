@@ -37,10 +37,18 @@ module egret {
      * Rectangle 类的 x、y、width 和 height 属性相互独立；更改一个属性的值不会影响其他属性。
      * 但是，right 和 bottom 属性与这四个属性是整体相关的。例如，如果更改 right 属性的值，则 width 属性的值将发生变化；如果更改 bottom 属性，则 height 属性的值将发生变化。
      * @extends egret.HashObject
-     * @link http://docs.egret-labs.org/post/manual/graphics/drawrect.html 绘制矩形
      */
     export class Rectangle extends HashObject {
 
+        /**
+         * 创建一个 egret.Rectangle 对象。
+         * 其左上角由 x 和 y 参数指定，并具有指定的 width 和 height 参数。如果调用此函数时不使用任何参数，将创建一个 x、y、width 和 height 属性均设置为 0 的矩形。
+         * @method egret.Rectangle#constructor
+         * @param x {number} 矩形左上角的 x 坐标。
+         * @param y {number} 矩形左上角的 y 坐标。
+         * @param width {number} 矩形的宽度（以像素为单位）。
+         * @param height {number} 矩形的高度（以像素为单位）。
+         */
         constructor(x:number = 0, y:number = 0, width:number = 0, height:number = 0) {
             super();
             this.x = x;
@@ -51,12 +59,12 @@ module egret {
 
         /**
          * 矩形左上角的 x 坐标。
-         * @constant {number} egret.Rectangle#x
+         * @member {number} egret.Rectangle#x
          */
         public x:number;
         /**
          * 矩形左上角的 y 坐标。
-         * @constant {number} egret.Rectangle#y
+         * @member {number} egret.Rectangle#y
          */
         public y:number;
         /**
@@ -205,7 +213,7 @@ module egret {
         }
 
         /**
-         * 引擎内部用于函数传递返回值的全局矩形对象，开发者请勿随意修改此对象
+         * 引擎内部用于函数传递返回值的全局 Rectangle 对象，开发者请勿随意修改此对象
          * @member {egret.Rectangle} egret.Rectangle.identity
          */
         public static identity:Rectangle = new Rectangle(0, 0, 0, 0);
