@@ -36,9 +36,8 @@ module egret {
      * 在HTML5中，资源是一个HTMLElement对象
      * 在OpenGL / WebGL中，资源是一个提交GPU后获取的纹理id
      * Texture类封装了这些底层实现的细节，开发者只需要关心接口即可
-     * @link
-        * http://docs.egret-labs.org/post/manual/bitmap/textures.html 纹理集的使用
-     * http://docs.egret-labs.org/post/manual/loader/getres.html 获取资源的几种方式
+     * @see http://edn.egret.com/cn/index.php?g=&m=article&a=index&id=135&terms1_id=25&terms2_id=31 纹理集的使用
+     * @see http://edn.egret.com/cn/index.php?g=&m=article&a=index&id=123&terms1_id=25&terms2_id=30 获取资源的几种方式
      */
     export class Texture extends HashObject {
 

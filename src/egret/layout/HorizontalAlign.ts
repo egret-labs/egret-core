@@ -32,7 +32,7 @@ module egret {
 	/**
 	 * @class egret.HorizontalAlign
 	 * @classdesc 水平对齐方式
-	 * @link http://docs.egret-labs.org/post/manual/text/textlayout.html 文本布局
+	 * @see http://edn.egret.com/cn/index.php?g=&m=article&a=index&id=144&terms1_id=25&terms2_id=33 文本布局
 	 */
 	export class HorizontalAlign{
         /**

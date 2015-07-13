@@ -37,7 +37,6 @@ module egret {
      * Rectangle 类的 x、y、width 和 height 属性相互独立；更改一个属性的值不会影响其他属性。
      * 但是，right 和 bottom 属性与这四个属性是整体相关的。例如，如果更改 right 属性的值，则 width 属性的值将发生变化；如果更改 bottom 属性，则 height 属性的值将发生变化。
      * @extends egret.HashObject
-     * @link http://docs.egret-labs.org/post/manual/graphics/drawrect.html 绘制矩形
      */
     export class Rectangle extends HashObject {
 

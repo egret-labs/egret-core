@@ -33,7 +33,7 @@ module egret {
 	 * @class egret.EventPhase
 	 * @classdesc
      * EventPhase 类可为 Event 类的 eventPhase 属性提供值。
-     * @link http://docs.egret-labs.org/post/manual/event/eventflow.html 事件的执行流程
+     * @see http://edn.egret.com/cn/index.php?g=&m=article&a=index&id=113&terms1_id=25&terms2_id=29 事件的执行流程
      */
     export class EventPhase{
 

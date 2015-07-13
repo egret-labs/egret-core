@@ -35,7 +35,7 @@ module egret {
      * @classdesc
      * Graphics 类包含一组可用来创建矢量形状的方法。支持绘制的显示对象包括 Sprite 和 Shape 对象。这些类中的每一个类都包括 graphics 属性，该属性是一个 Graphics 对象。
      * 以下是为便于使用而提供的一些辅助函数：drawRect()、drawRoundRect()、drawCircle() 和 drawEllipse()。
-     * @link http://docs.egret-labs.org/post/manual/graphics/drawrect.html  绘制矩形
+     * @see http://edn.egret.com/cn/index.php?g=&m=article&a=index&id=136&terms1_id=25&terms2_id=32&t3_id=136  绘制矩形
      */
     export class Graphics {
 

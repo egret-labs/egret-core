@@ -32,8 +32,7 @@ module egret {
     /**
      * @class egret.Sound
      * @classdesc Sound 类允许您在应用程序中使用声音。
-     * @link http://docs.egret-labs.org/post/manual/sound/playsound.html 播放音频
-     *
+     * @see http://edn.egret.com/cn/index.php?g=&m=article&a=index&id=157&terms1_id=25&terms2_id=36 播放音频
      * @event egret.SoundEvent.SOUND_COMPLETE 在声音完成播放后调度。
      */
     export class Sound extends egret.EventDispatcher {
