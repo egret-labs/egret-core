@@ -83,6 +83,9 @@ module egret {
             this._DO_Props_._normalDirty = true;
         }
 
+        /**
+         * @private
+         */
         public getDirty():boolean {
             return this._DO_Props_._normalDirty || this._DO_Props_._sizeDirty;
         }
@@ -1105,6 +1108,9 @@ module egret {
         public static _enterFrameCallBackList:Array<any> = [];
         public static _renderCallBackList:Array<any> = [];
 
+        /**
+         * @inheritDoc
+         */
         public addEventListener(type:string, listener:Function, thisObject:any, useCapture:boolean = false, priority:number = 0):void {
             super.addEventListener(type, listener, thisObject, useCapture, priority);
             var isEnterFrame:boolean = (type == Event.ENTER_FRAME);
@@ -1114,6 +1120,9 @@ module egret {
             }
         }
 
+        /**
+         * @inheritDoc
+         */
         public removeEventListener(type:string, listener:Function, thisObject:any, useCapture:boolean = false):void {
             super.removeEventListener(type, listener, thisObject, useCapture);
             var isEnterFrame:boolean = (type == Event.ENTER_FRAME);
@@ -1123,6 +1132,9 @@ module egret {
             }
         }
 
+        /**
+         * @inheritDoc
+         */
         public dispatchEvent(event:Event):boolean {
             if (!event._bubbles) {
                 return super.dispatchEvent(event);
@@ -1176,6 +1188,9 @@ module egret {
             }
         }
 
+        /**
+         * @inheritDoc
+         */
         public willTrigger(type:string):boolean {
             var parent:DisplayObject = this;
             while (parent) {
@@ -1231,6 +1246,9 @@ module egret {
             this._DO_Privs_._cacheDirty = dirty;
         }
 
+        /**
+         * @private
+         */
         public static getTransformBounds(bounds:egret.Rectangle, mtx:egret.Matrix):egret.Rectangle {
             var x = bounds.x, y = bounds.y;
 //            var x, y;
@@ -1295,6 +1313,9 @@ module egret {
 
         private _transform:Transform;
 
+        /**
+         * @private
+         */
         public get transform():Transform {
             if (!this._transform) {
                 this._transform = new Transform(this);

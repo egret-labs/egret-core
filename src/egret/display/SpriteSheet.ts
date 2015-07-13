@@ -129,6 +129,10 @@ module egret {
             return texture;
         }
 
+        /**
+         * 销毁 SpriteSheet 对象所持有的纹理对象
+         * @method egret.SpriteSheet#dispose
+         */
         public dispose():void {
             if(this.texture) {
                 this.texture.dispose();

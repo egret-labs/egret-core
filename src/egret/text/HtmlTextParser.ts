@@ -35,6 +35,9 @@ module egret {
      */
     export class HtmlTextParser{
 
+        /**
+         * 创建一个 egret.HtmlTextParser 对象
+         */
         constructor () {
             this.initReplaceArr();
         }

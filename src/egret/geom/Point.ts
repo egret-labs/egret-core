@@ -38,6 +38,10 @@ module egret {
      */
     export class Point extends HashObject {
 
+        /**
+         * 引擎内部用于函数传递返回值的全局 Point 对象，开发者请勿随意修改此对象
+         * @member {egret.Point} egret.Point.identity
+         */
         public static identity:Point = new Point(0, 0);
 
         /**

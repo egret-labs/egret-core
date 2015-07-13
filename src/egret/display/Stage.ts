@@ -146,6 +146,11 @@ module egret {
             return this._frameRate;
         }
 
+        /**
+         * 获取并设置舞台的帧速率。帧速率是指每秒显示的帧数。
+         * 注意：需设置为可以被60整除的数
+         * @member {number} egret.Stage#frameRate
+         */
         public set frameRate(value:number) {
             this._frameRate = value;
             MainContext.instance.deviceContext.setFrameRate(value);
@@ -208,10 +213,16 @@ module egret {
             }
         }
 
+        /**
+         * @private
+         */
         public get focus(): DisplayObject {
             return null;
         }
 
+        /**
+         * @private
+         */
         public static SCALE_MODE_ENUM:any = {};
 
         /**

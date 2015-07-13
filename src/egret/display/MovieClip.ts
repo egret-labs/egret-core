@@ -64,7 +64,7 @@ module egret {
     //Construct Function
 
         /**
-         * 创建新的 MovieClip 实例。创建 MovieClip 之后，调用舞台上的显示对象容器的addElement方法。
+         * 创建一个 egret.MovieClip 对象。创建 MovieClip 之后，调用舞台上的显示对象容器的addElement方法。
          * @method egret.MovieClip#constructor
          * @param movieClipData {MovieClipData} 被引用的 MovieClipData 对象
          */

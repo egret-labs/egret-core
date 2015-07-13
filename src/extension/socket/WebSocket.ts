@@ -38,10 +38,12 @@ module egret {
     export class WebSocket extends egret.EventDispatcher {
         /**
          * 以字符串格式发送和接收数据
+         * @constant {string} egret.WebSocket.TYPE_STRING
          */
         public static TYPE_STRING:string = "webSocketTypeString";
         /**
          * 以二进制格式发送和接收数据
+         * @constant {string} egret.WebSocket.TYPE_BINARY
          */
         public static TYPE_BINARY:string = "webSocketTypeBinary";
 

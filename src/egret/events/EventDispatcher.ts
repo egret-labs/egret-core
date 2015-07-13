@@ -44,6 +44,7 @@ module egret {
     export class EventDispatcher extends HashObject implements IEventDispatcher {
 
         /**
+         * 创建一个 egret.EventDispatcher 对象
          * EventDispatcher 类是可调度事件的所有类的基类。
          * EventDispatcher 类实现 IEventDispatcher 接口 ，并且是 DisplayObject 类的基类。
          * EventDispatcher 类允许显示列表上的任何对象都是一个事件目标，同样允许使用 IEventDispatcher 接口的方法。

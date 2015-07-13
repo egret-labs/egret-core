@@ -196,6 +196,9 @@ module egret {
         }
     }
 
+    /**
+     * @private
+     */
     export class HTMLInput {
         private _stageText:HTML5StageText;
 

@@ -45,7 +45,7 @@ module egret {
     export class URLLoader extends EventDispatcher {
 
 		/**
-         * 创建 egret.URLLoader 对象
+         * 创建一个 egret.URLLoader 对象
 		 * @method egret.URLLoader#constructor
 		 * @param request {URLRequest} 一个 URLRequest 对象，指定要下载的 URL。
          * 如果省略该参数，则不开始加载操作。如果已指定参数，则立即开始加载操作

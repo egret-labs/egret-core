@@ -88,8 +88,15 @@ module egret {
          */
         public ty:number;
 
+        /**
+         * 引擎内部用于函数传递返回值的全局 Matrix 对象，开发者请勿随意修改此对象
+         * @member {egret.Matrix} egret.Matrix.identity
+         */
         public static identity:Matrix = new Matrix();
 
+        /**
+         * @private
+         */
         public static DEG_TO_RAD:number = Math.PI / 180;
 
         /**

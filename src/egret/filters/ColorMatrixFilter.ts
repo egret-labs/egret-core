@@ -28,6 +28,10 @@
 //////////////////////////////////////////////////////////////////////////////////////
 module egret {
     /**
+     * @class egret.ColorMatrixFilter
+     * @classdesc
+     * 使用 ColorMatrixFilter 类可以将 4 x 5 矩阵转换应用于输入图像上的每个像素的 RGBA 颜色和 Alpha 值，以生成具有一组新的 RGBA 颜色和 Alpha 值的结果。
+     * @extends egret.Filter
      * @private
      */
     export class ColorMatrixFilter extends Filter {
@@ -37,6 +41,11 @@ module egret {
         public _matrix:Array<number> = [];
         private _matrix2:Array<number> = [];
 
+        /**
+         * 创建一个 egret.ColorMatrixFilter 对象
+         * @method egret.ColorMatrixFilter#constructor
+         * @param matrix {Array<number>} 由 20 个项目（排列成 4 x 5 矩阵）组成的数组。
+         */
         constructor(matrix:Array<number> = null) {
             super();
             this.type = "colorTransform";
@@ -50,6 +59,10 @@ module egret {
             return this._matrix2;
         }
 
+        /**
+         * 由 20 个项目组成的数组，适用于 4 x 5 颜色转换。
+         * @member egret.ColorMatrixFilter#matrix
+         */
         public set matrix(value:Array<number>) {
             this._setMatrix(value);
         }

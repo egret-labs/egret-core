@@ -129,6 +129,9 @@ module egret {
             return Rectangle.identity.initialize(minX, minY, maxX - minX, maxY - minY);
         }
 
+        /**
+         * @inheritDoc
+         */
         public hitTest(x:number, y:number, ignoreTouchEnabled:boolean = false):DisplayObject {
             var result:DisplayObject = super.hitTest(x, y, ignoreTouchEnabled);
             if (result) {

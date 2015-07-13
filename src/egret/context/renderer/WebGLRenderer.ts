@@ -1169,6 +1169,9 @@ module egret_webgl_graphics {
         }
     }
 
+    /**
+     * @private
+     */
     class Command {
 
         constructor(public method:Function, public thisObject:any, public args:Array<any>) {

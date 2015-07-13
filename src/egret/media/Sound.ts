@@ -50,13 +50,14 @@ module egret {
         public static EFFECT:string = "effect";
 
         /**
+         * @private
          * @deprecated
          * @type {string}
          */
         public path:string = "";
 
         /**
-         * 创建 egret.Sound 对象
+         * 创建一个 egret.Sound 对象
          */
         constructor() {
             super();
@@ -247,6 +248,7 @@ module egret {
         }
 
         /**
+         * @private
          * @deprecated
          * 设置音量
          * @param value 值需大于0 小于等于 1
@@ -257,6 +259,7 @@ module egret {
         }
 
         /**
+         * @private
          * @deprecated
          * 获取当前音量值
          * @returns number

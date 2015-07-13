@@ -42,7 +42,7 @@ module egret {
     export class TouchEvent extends Event {
 
         /**
-         * 创建一个 egret.TouchEvent 对象，其中包含有关Touch事件的信息
+         * 创建一个 egret.TouchEvent 对象，其中包含有关Touch事件的信息。
          * @constructor egret.TouchEvent
          * @param type {string} 事件的类型，可以作为 Event.type 访问。
          * @param bubbles {boolean} 确定 Event 对象是否参与事件流的冒泡阶段。默认值为 false。

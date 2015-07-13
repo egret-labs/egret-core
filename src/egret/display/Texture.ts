@@ -136,6 +136,10 @@ module egret {
             return result.data;
         }
 
+        /**
+         * 销毁纹理对象
+         * @method egret.Texture#dispose
+         */
         public dispose():void {
             var bitmapData = this._bitmapData;
             if (bitmapData.dispose) {
@@ -149,6 +153,9 @@ module egret {
             return texture;
         }
 
+        /**
+         * @private
+         */
         public draw(context:any, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, renderType) {
 
         }
@@ -233,6 +240,9 @@ module egret {
             console.log("_disposeForNative");
         }
 
+        /**
+         * @private
+         */
         public static deleteWebGLTexture(texture:Texture):void {
             var bitmapData = texture._bitmapData;
             if (bitmapData) {
@@ -248,6 +258,9 @@ module egret {
             }
         }
 
+        /**
+         * @private
+         */
         public static createBitmapData(url:string, callback:(code:number, bitmapData:any)=>void):void {
 
         }

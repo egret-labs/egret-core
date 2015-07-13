@@ -32,6 +32,9 @@ module egret {
 
     export class NumberUtils {
 
+        /**
+         * @private
+         */
         public static isNumber(value:any):boolean {
             return typeof(value) === "number" && !isNaN(value);
         }

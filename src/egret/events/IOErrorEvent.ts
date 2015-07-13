@@ -38,6 +38,7 @@ module egret {
     export class IOErrorEvent extends Event{
 
 		/**
+         * 定义 ioError 事件对象的 type 属性值。
 		 * @constant {string} egret.IOErrorEvent.IO_ERROR
 		 */
         public static IO_ERROR:string = "ioError";

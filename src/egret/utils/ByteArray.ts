@@ -83,6 +83,10 @@ module egret {
          */
         public endian:string;
 
+        /**
+         * 创建一个 egret.ByteArray 对象以引用指定的 ArrayBuffer 对象
+         * @param buffer {ArrayBuffer} 数据源
+         */
         constructor(buffer?:ArrayBuffer) {
             this._setArrayBuffer(buffer || new ArrayBuffer(this.BUFFER_EXT_SIZE));
             this.endian = Endian.BIG_ENDIAN;
@@ -94,25 +98,9 @@ module egret {
             this._position = 0;
         }
 
-        /**
-         * @deprecated
-         */
-        public setArrayBuffer(buffer:ArrayBuffer):void {
-
-        }
-
-        // getter setter
         public get buffer():ArrayBuffer {
             return this.data.buffer;
         }
-
-        //public get bufferCopy():ArrayBuffer {
-        //    var newarraybuffer = new ArrayBuffer(this.length);
-        //    var view = new Uint8Array(this.data.buffer, 0, this.length);
-        //    var newview = new Uint8Array(newarraybuffer, 0, this.length);
-        //    newview.set(view);      // memcpy
-        //    return newarraybuffer;
-        //}
 
         /**
          * @private
@@ -133,10 +121,9 @@ module egret {
             this.write_position = value.byteLength;
         }
 
-        //public get phyPosition():number {
-        //    return this._position + this.data.byteOffset;
-        //}
-
+        /**
+         * @private
+         */
         public get bufferOffset():number {
             return this.data.byteOffset;
         }
@@ -182,7 +169,10 @@ module egret {
             return this.data.byteLength - this._position;
         }
 
-        //end
+        /**
+         * 清除字节数组的内容，并将 length 和 position 属性重置为 0。
+         * @method egret.ByteArray#clear
+         */
         public clear():void {
             //this._position = 0;
             this._setArrayBuffer(new ArrayBuffer(this.BUFFER_EXT_SIZE));
