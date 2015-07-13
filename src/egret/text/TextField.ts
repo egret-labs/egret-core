@@ -235,7 +235,7 @@ module egret {
                 16: false,         //italic,
                 17: true,          //fontStringChanged,
                 18: false,         //textLinesChanged,
-                19: true,          //wordWrap
+                19: false,          //wordWrap
                 20: false,         //displayAsPassword
                 21: 0,              //maxChars
                 22: TextFieldType.DYNAMIC,              //type
@@ -1504,28 +1504,44 @@ module egret {
                                 var k:number = 0;
                                 var ww:number = 0;
                                 var word:string = textArr[j];
-                                var wl:number = word.length;
+                                if (this.$TextField[sys.TextKeys.wordWrap]) {
+                                    var words:Array<string> = word.split(/\b/);
+                                }
+                                else {
+                                    words = word.match(/./g);
+                                }
+                                var wl:number = words.length;
+                                var charNum = 0;
                                 for (; k < wl; k++) {
-                                    w = renderContext.measureText(word.charAt(k)).width;
-                                    if (lineW + w > textFieldWidth && lineW + k != 0) {
+                                    w = renderContext.measureText(words[k]).width;
+                                    if (lineW != 0 && lineW + w > textFieldWidth && lineW + k != 0) {
                                         break;
                                     }
+                                    charNum += words[k].length;
                                     ww += w;
                                     lineW += w;
-                                    lineCharNum += 1;
+                                    lineCharNum += charNum;
                                 }
 
                                 if (k > 0) {
                                     lineElement.elements.push(<egret.IWTextElement>{
                                         width: ww,
-                                        text: word.substring(0, k),
+                                        text: word.substring(0, charNum),
                                         style: element.style
                                     });
-                                    textArr[j] = word.substring(k);
-                                }
 
-                                j--;
-                                isNextLine = false;
+                                    var leftWord:string = word.substring(charNum);
+                                    for (var m:number = 0, lwleng = leftWord.length; m < lwleng; m++) {
+                                        if (leftWord.charAt(m) != " ") {
+                                            break;
+                                        }
+                                    }
+                                    textArr[j] = leftWord.substring(m);
+                                }
+                                if (textArr[j] != "") {
+                                    j--;
+                                    isNextLine = false;
+                                }
                             }
                         }
                     }
