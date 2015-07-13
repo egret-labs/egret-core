@@ -59,7 +59,11 @@ module dragonBones {
 		 * @member {string} dragonBones.SlotData#blendMode
 		 */
 		public blendMode:string;
-		
+		/**
+		 * 初始的显示图片的序号
+		 * @member {string} dragonBones.SlotData#displayIndex
+		 */
+		public displayIndex:number
 		private _displayDataList:Array<DisplayData>;
 
 		/**

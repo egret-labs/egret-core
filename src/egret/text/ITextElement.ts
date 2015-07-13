@@ -54,7 +54,7 @@ module egret {
 
     /**
      * 用于建立多种样式混合文本的基本结构，主要用于设置 textFlow 属性
-     * @link http://docs.egret-labs.org/jkdoc/manual-text-multiformat.html 多种样式文本混合
+     * @see http://edn.egret.com/cn/index.php?g=&m=article&a=index&id=146&terms1_id=25&terms2_id=33&t3_id=146 多种样式文本混合
      */
     export interface ITextElement {
         text:string;

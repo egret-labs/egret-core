@@ -30,6 +30,7 @@
 module egret {
 
     /**
+     * @private
      * 绘图上下文
      */
     export interface RenderContext {

@@ -36,7 +36,9 @@ module egret {
      * @extends egret.Texture
      */
     export class RenderTexture extends Texture {
-
+        /**
+         * @private
+         */
         public renderContext;
 
         /**
@@ -46,12 +48,18 @@ module egret {
             super();
         }
 
+        /**
+         * @private
+         */
         public init():void {
             this._bitmapData = document.createElement("canvas");
             this._bitmapData["avaliable"] = true;
             this.renderContext = egret.RendererContext.createRendererContext(this._bitmapData);
         }
 
+        /**
+         * @private
+         */
         public static identityRectangle:egret.Rectangle = new egret.Rectangle();
 
         /**
@@ -162,6 +170,9 @@ module egret {
             return true;
         }
 
+        /**
+         * @private
+         */
         public setSize(width:number, height:number):void {
             var cacheCanvas:HTMLCanvasElement = this._bitmapData;
             cacheCanvas.width = width;
@@ -175,14 +186,24 @@ module egret {
             }
         }
 
+        /**
+         * @private
+         */
         public begin():void {
 
         }
 
+        /**
+         * @private
+         */
         public end():void {
 
         }
 
+        /**
+         * 销毁 RenderTexture 对象
+         * @method egret.RenderTexture#dispose
+         */
         public dispose():void {
             if (this._bitmapData) {
                 this._bitmapData = null;
@@ -192,6 +213,9 @@ module egret {
 
         private static _pool:Array<RenderTexture> = [];
 
+        /**
+         * @private
+         */
         public static create():RenderTexture {
             if (RenderTexture._pool.length) {
                 return RenderTexture._pool.pop();
@@ -199,6 +223,9 @@ module egret {
             return new RenderTexture();
         }
 
+        /**
+         * @private
+         */
         public static release(value:RenderTexture):void {
             RenderTexture._pool.push(value);
         }

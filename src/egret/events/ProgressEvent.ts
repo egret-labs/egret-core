@@ -36,11 +36,13 @@ module egret {
     export class ProgressEvent extends egret.Event {
 
         /**
+         * 定义 progress 事件对象的 type 属性值。
          * @constant {string} egret.ProgressEvent.PROGRESS
          */
         public static PROGRESS:string = "progress";
 
         /**
+         * 定义 socketData 事件对象的 type 属性值。
          * @constant {string} egret.ProgressEvent.SOCKET_DATA
          */
         public static SOCKET_DATA:string = "socketData";

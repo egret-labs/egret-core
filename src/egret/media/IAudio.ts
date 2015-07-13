@@ -30,6 +30,9 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 module egret {
+    /**
+     * @private
+     */
     export interface IAudio {
         _setCurrentTime(value:number):void;
         _getCurrentTime():number;

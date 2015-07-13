@@ -28,10 +28,22 @@
 //////////////////////////////////////////////////////////////////////////////////////
 
 module egret {
+    /**
+     * @private
+     */
     export class AudioType {
         static QQ_AUDIO:number = 1;
         static WEB_AUDIO:number = 2;
         static HTML5_AUDIO:number = 3;
+    }
+
+    /**
+     * @private
+     */
+    export class SystemOSType {
+        static WPHONE:number = 1;
+        static IOS:number = 2;
+        static ADNROID:number = 3;
     }
 
     /**
@@ -49,6 +61,8 @@ module egret {
 
         public static _QQRootPath:string = "";
 
+        public static _System_OS:number = 0;
+
         constructor() {
             super();
         }
@@ -64,10 +78,11 @@ module egret {
             Html5Capatibility._audioType = AudioType.HTML5_AUDIO;
             Html5Capatibility._AudioClass = egret.Html5Audio;
 
-            if (ua.indexOf("windows") >= 0) {//wphone windows
-
+            if (ua.indexOf("windows phone") >= 0) {//wphone windows
+                Html5Capatibility._System_OS = SystemOSType.WPHONE;
             }
             else if (ua.indexOf("android") >= 0) {//android
+                Html5Capatibility._System_OS = SystemOSType.ADNROID;
                 if (window.hasOwnProperty("QZAppExternal") && ua.indexOf("qzone") >= 0) {
                     Html5Capatibility._AudioClass = egret.QQAudio;
                     Html5Capatibility._audioType = AudioType.QQ_AUDIO;
@@ -89,11 +104,13 @@ module egret {
                 }
             }
             else if (ua.indexOf("iphone") >= 0 || ua.indexOf("ipad") >= 0 || ua.indexOf("ipod") >= 0) {//ios
+                Html5Capatibility._System_OS = SystemOSType.IOS;
                 if (Html5Capatibility.getIOSVersion() >= 7) {
                     Html5Capatibility._canUseBlob = true;
+                    
+                    Html5Capatibility._AudioClass = egret.WebAudio;
+                    Html5Capatibility._audioType = AudioType.WEB_AUDIO;
                 }
-                Html5Capatibility._AudioClass = egret.WebAudio;
-                Html5Capatibility._audioType = AudioType.WEB_AUDIO;
             }
 
             var winURL = window["URL"] || window["webkitURL"];

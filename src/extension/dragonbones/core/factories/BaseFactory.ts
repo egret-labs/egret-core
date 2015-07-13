@@ -48,7 +48,7 @@ module dragonBones {
 			super();
 			
 			if(self != this){ 
-				throw new Error(egret.getString(4001));
+				egret.$error(4001);
 			}
 		}
 		
@@ -103,7 +103,7 @@ module dragonBones {
 			}
 			name = name || data.name;
 			if(!name){
-				throw new Error(egret.getString(4002));
+				egret.$error(4002);
 			}
             /*
 			if(this.dragonBonesDataDic[name]){
@@ -164,7 +164,7 @@ module dragonBones {
             }
 
 			if(!name){
-				throw new Error(egret.getString(4002));
+				egret.$error(4002);
 			}
             /*
 			if(this.textureAtlasDic[name]){
@@ -451,7 +451,7 @@ module dragonBones {
 				//==================================================
 				
 				slot.displayList = displayList;
-				slot._changeDisplay(0);
+				slot._changeDisplay(slotData.displayIndex);
 			}
 		}
 		

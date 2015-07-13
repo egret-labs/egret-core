@@ -34,7 +34,7 @@ module egret {
      * @class egret.URLRequest
      * @classdesc URLRequest 类可捕获单个 HTTP 请求中的所有信息。
      * @extends egret.HashObject
-     * @link http://docs.egret-labs.org/post/manual/net/createconnect.html 构建通信请求
+     * @see http://edn.egret.com/cn/index.php?g=&m=article&a=index&id=160&terms1_id=25&terms2_id=37 构建通信请求
      */
     export class URLRequest extends HashObject {
 

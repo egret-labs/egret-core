@@ -207,7 +207,7 @@ module dragonBones {
 					while(i--){
 						var tempBone:Bone = boneList[i];
 						if(currentBone.contains(tempBone)){
-							this.addBoneToBoneMask(currentBone.name);
+							this.addBoneToBoneMask(tempBone.name);
 						}
 					}
 				}
@@ -234,7 +234,7 @@ module dragonBones {
 					while(i--){
 						var tempBone:Bone = boneList[i];
 						if(currentBone.contains(tempBone)){
-							this.removeBoneFromBoneMask(currentBone.name);
+							this.removeBoneFromBoneMask(tempBone.name);
 						}
 					}
 				}

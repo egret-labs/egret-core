@@ -49,6 +49,10 @@ function run(dir, args, opts) {
     properties["native"][platform + "_path"] = path.relative(projectPath, nativePath);
     file.save(path.join(projectPath, "egretProperties.json"), JSON.stringify(properties, null, "\t"));
 
+    //修改文件
+    var fileModify = require("../core/fileAutoChange");
+    fileModify.modifyNativeRequire(projectPath, false, true);
+
     //拷贝项目到native工程中
     var cpFiles = require("../core/copyProjectFiles.js");
     cpFiles.copyFilesToNative(projectPath, nativePath, platform, properties["native"]["path_ignore"] || []);
@@ -94,7 +98,7 @@ function rename_app(app_path, template_path, app_data) {
 
 function run_unzip(app_path, template_path, app_data) {
     var template_zip_path = path.join(template_path, app_data["template"]["zip"]);
-    var cmd = "unzip -q " + template_zip_path + " -d " + app_path;
+    var cmd = "unzip -q " + globals.addQuotes(template_zip_path) + " -d " + globals.addQuotes(app_path);
 
     console.log(cmd);
 

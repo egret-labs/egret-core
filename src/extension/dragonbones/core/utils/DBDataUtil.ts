@@ -111,7 +111,7 @@ module dragonBones {
 				if(slotDataList){
                     for(var j:number = 0,jLen:number = slotDataList.length; j < jLen; j++)
                     {
-                        slotData = slotDataList[i];
+                        slotData = slotDataList[j];
                         //找到属于当前Bone的slot(FLash Pro制作的动画一个Bone只包含一个slot)
                         if(slotData.parent == boneData.name){
                             break;

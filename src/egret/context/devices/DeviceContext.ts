@@ -39,27 +39,21 @@ module egret {
     export class DeviceContext extends HashObject{
 
 
-		/**
-		 * @member egret.DeviceContext#frameRate
-		 */
-        public frameRate:number = 60;
 
-		/**
-		 * @method egret.DeviceContext#constructor
-		 */
+
         public constructor(){
             super();
         }
 
-		/**
-		 * @method egret.DeviceContext#executeMainLoop
-		 * @param callback {Function} 
-		 * @param thisObject {any} 
-		 */
         public executeMainLoop(callback:Function,thisObject:any):void {
 
 
         }
+
+        public setFrameRate(frameRate:number):void {
+
+        }
+
 
 
     }

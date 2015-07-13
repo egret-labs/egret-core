@@ -33,15 +33,17 @@ module egret {
      * egret.WebSocket 类启用代码以建立传输控制协议 (TCP) 套接字连接，用于发送和接收字符串或二进制数据。
      * 要使用 egret.WebSocket 类的方法，请先使用构造函数 new egret.WebSocket 创建一个 egret.WebSocket 对象。
      * 套接字以异步方式传输和接收数据。
-     * @link http://docs.egret-labs.org/jkdoc/manual-net-websocket.html WebSocket
+     * @see http://edn.egret.com/cn/index.php?g=&m=article&a=index&id=164&terms1_id=25&terms2_id=37 WebSocket
      */
     export class WebSocket extends egret.EventDispatcher {
         /**
          * 以字符串格式发送和接收数据
+         * @constant {string} egret.WebSocket.TYPE_STRING
          */
         public static TYPE_STRING:string = "webSocketTypeString";
         /**
          * 以二进制格式发送和接收数据
+         * @constant {string} egret.WebSocket.TYPE_BINARY
          */
         public static TYPE_BINARY:string = "webSocketTypeBinary";
 
@@ -55,6 +57,8 @@ module egret {
         /**
          * 创建一个 egret.WebSocket 对象
          * 参数为预留参数，现版本暂不处理，连接地址和端口号在 connect 函数中传入
+         * @param host 要连接到的主机的名称或 IP 地址
+         * @param port 要连接到的端口号
          */
         constructor(host:string = "", port:number = 0) {
             super();
@@ -79,6 +83,14 @@ module egret {
          */
         public connect(host:string, port:number):void {
             this.socket.connect(host, port);
+        }
+
+        /**
+         * 根据提供的url连接
+         * @param url 全地址。如ws://echo.websocket.org:80
+         */
+        public connectByUrl(url:string):void {
+            this.socket.connectByUrl(url);
         }
 
         /**
@@ -119,7 +131,7 @@ module egret {
          */
         public flush():void {
             if (!this._connected) {
-                egret.Logger.warningWithErrorId(3101);
+                egret.$warn(3101);
                 return;
             }
             if (this._writeMessage) {
@@ -143,7 +155,7 @@ module egret {
          */
         public writeUTF(message:string):void {
             if (!this._connected) {
-                egret.Logger.warningWithErrorId(3101);
+                egret.$warn(3101);
                 return;
             }
             if (this._type == WebSocket.TYPE_BINARY) {
@@ -197,11 +209,11 @@ module egret {
          */
         public writeBytes(bytes:ByteArray, offset:number = 0, length:number = 0):void {
             if (!this._connected) {
-                egret.Logger.warningWithErrorId(3101);
+                egret.$warn(3101);
                 return;
             }
             if (!this._writeByte) {
-                egret.Logger.warningWithErrorId(3102);
+                egret.$warn(3102);
                 return;
             }
             this._bytesWrite = true;
@@ -218,7 +230,7 @@ module egret {
          */
         public readBytes(bytes:ByteArray, offset:number = 0, length:number = 0):void {
             if (!this._readByte) {
-                egret.Logger.warningWithErrorId(3102);
+                egret.$warn(3102);
                 return;
             }
             this._readByte.position = 0;

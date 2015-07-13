@@ -47,9 +47,30 @@ module egret {
          * @param loop {boolean} 是否循环播放，默认为false
          */
         public _play(type?:string):void {
-            this.paused = false;
+            this.removeListeners();
 
-            this._audio.load();
+            if (Html5Capatibility._System_OS != SystemOSType.WPHONE) {
+                this._audio = this._audio.cloneNode();
+            }
+            this.paused = false;
+            this._audio.autoplay = true;
+            this._audio.volume = this._volume;
+            //this._audio.load();
+
+            var self = this;
+            var func = function (e) {
+                self._audio.removeEventListener("ended", func);
+
+                if (self._onEndedCall) {
+                    self._onEndedCall.call(null, e);
+                }
+
+                self.clear();
+            };
+            this._audio.addEventListener("ended", func);
+
+            this.initStart();
+
             try {
                 this._audio.currentTime = this._startTime;
             }
@@ -62,9 +83,19 @@ module egret {
         }
 
         private clear():void {
-            this._audio.pause();
-            if (this._loop && !this.paused)
-                this._play();
+            try {
+                this._audio.pause();
+            }
+            catch(e) {
+
+            }
+            finally {
+                this.removeListeners();
+
+                if (this._loop && !this.paused)
+                    this._play();
+            }
+
         }
 
         private paused:boolean = true;
@@ -88,11 +119,6 @@ module egret {
 
         public _setAudio(audio):void {
             this._audio = audio;
-
-            this._audio.onended = ()=> {
-                this.clear();
-            };
-            this.initStart();
         }
 
         private initStart():void {
@@ -105,24 +131,47 @@ module egret {
 
         private _listeners:Array<any> = [];
 
+        private _onEndedCall:Function = null;
+
         /**
          * 添加事件监听
          * @param type 事件类型
          * @param listener 监听函数
          */
         public _addEventListener(type:string, listener:Function, useCapture:boolean = false):void {
+            if (type == "ended") {
+                this._onEndedCall = listener;
+                return;
+            }
+
             this._listeners.push({type: type, listener: listener, useCapture: useCapture});
             if (this._audio) {
                 this._audio.addEventListener(type, listener, useCapture);
             }
         }
 
-        /**s
+        private removeListeners():void {
+            var self = this;
+            for (var i = 0; i < self._listeners.length; i++) {
+                var bin = self._listeners[i];
+
+                if (this._audio) {
+                    this._audio.removeEventListener(bin.type, bin.listener, bin.useCapture);
+                }
+            }
+        }
+
+        /**
          * 移除事件监听
          * @param type 事件类型
          * @param listener 监听函数
          */
         public _removeEventListener(type:string, listener:Function, useCapture:boolean = false):void {
+            if (type == "ended") {
+                this._onEndedCall = null;
+                return;
+            }
+
             var self = this;
             for (var i = 0; i < self._listeners.length; i++) {
                 var bin = self._listeners[i];
@@ -144,16 +193,18 @@ module egret {
 
         }
 
+        private _volume:number = 1;
         /**
          * 获取当前音量值
          * @returns number
          */
         public _getVolume():number {
-            return this._audio.volume;
+            return this._volume;
         }
 
         public _setVolume(value:number):void {
-            this._audio.volume = Math.max(0, Math.min(value, 1));
+            this._volume = Math.max(0, Math.min(value, 1));
+            this._audio.volume = this._volume;
         }
 
         public _setLoop(value:boolean):void {

@@ -90,7 +90,7 @@ module egret {
                     callLater(Event.dispatchEvent, Event, loader, Event.COMPLETE);
                 };
                 promise.onErrorFunc = function (error_code) {
-                    egret.Logger.infoWithErrorId(1019, error_code);
+                    $warn(1019, error_code);
                     IOErrorEvent.dispatchIOErrorEvent(loader);
                 };
                 egret_native.requireHttp(virtualUrl, self.urlData, promise);

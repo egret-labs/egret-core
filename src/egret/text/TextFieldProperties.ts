@@ -81,6 +81,8 @@ module egret {
         public _numLines:number = 0;
         //输入文本是否是多行
         public _multiline:boolean = false;
+        //换行是否按单词换行
+        public _wordWrap:boolean = false;
 
         constructor() {
         }

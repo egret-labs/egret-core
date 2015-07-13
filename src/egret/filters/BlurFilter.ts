@@ -28,9 +28,20 @@
 //////////////////////////////////////////////////////////////////////////////////////
 module egret {
     /**
+     * @class egret.BlurFilter
+     * @classdesc
+     * 可使用 BlurFilter 类将模糊视觉效果应用于显示对象。模糊效果可以柔化图像的细节。
+     * @extends egret.Filter
      * @private
      */
     export class BlurFilter extends Filter {
+
+        /**
+         * 创建一个 egret.BlurFilter 对象
+         * @method egret.BlurFilter#constructor
+         * @param blurX {number} 水平模糊量。有效值为 0 到 255（浮点）。
+         * @param blurY {number} 垂直模糊量。有效值为 0 到 255（浮点）。
+         */
         constructor(public blurX:number, public blurY:number) {
             super();
             this.type = "blur";

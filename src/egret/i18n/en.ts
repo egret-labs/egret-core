@@ -55,11 +55,13 @@ module egret {
     egret_string_code[3011] = "Index:\"{0}\" is out of the visual element index range";
     egret_string_code[3012] = "This method is not available in Scroller component!";
     egret_string_code[3013] = "UIStage is GUI root container, and only one such instant is in the display list！";
+    egret_string_code[3014] = "propNotPropOrStyle";
 
     egret_string_code[4000] = "An Bone cannot be added as a child to itself or one of its children (or children's children, etc.)";
     egret_string_code[4001] = "Abstract class can not be instantiated!";
     egret_string_code[4002] = "Unnamed data!";
     egret_string_code[4003] = "Nonsupport version!";
+    egret_string_code[4004] = "Abstract method needs to be implemented in subclass!";
 
     egret_string_code[3100] = "Current browser does not support WebSocket";
     egret_string_code[3101] = "Please connect Socket firstly";

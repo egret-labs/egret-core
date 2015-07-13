@@ -36,7 +36,7 @@ module egret {
      * * Stage 类代表主绘图区，表示显示 Egret 内容的整个区域。
      * 可以以全局方式访问 Stage 对象(egret.MainContext.instance.stage)。也可以利用 DisplayObject 实例的 stage 属性进行访问。
      * Stage 类具有多个祖代类 -- DisplayObjectContainer、DisplayObject 和 EventDispatcher，属性和方法便是从这些类继承而来的。从这些继承的许多属性和方法不适用于 Stage 对象。
-     * @link http://docs.egret-labs.org/jksubj/scalemode.html 理解Egret中的各种屏幕适配策略并做出选择
+     * @see http://edn.egret.com/cn/index.php?g=&m=article&a=index&id=202&terms1_id=59&terms2_id=69 深入了解屏幕适配
      */
     export class Stage extends DisplayObjectContainer {
 
@@ -113,7 +113,7 @@ module egret {
         private setResolutionPolicy():void{
             var content = Stage.SCALE_MODE_ENUM[this._scaleMode];
             if (!content){
-                throw new Error(getString(1024));
+                $error(1024);
             }
             var container = new egret.EqualToFrame();
             var policy = new egret.ResolutionPolicy(container, content);
@@ -138,6 +138,22 @@ module egret {
          */
         public get stageHeight():number {
             return this._stageHeight;
+        }
+
+        private _frameRate:number = 60;
+
+        public get frameRate():number{
+            return this._frameRate;
+        }
+
+        /**
+         * 获取并设置舞台的帧速率。帧速率是指每秒显示的帧数。
+         * 注意：需设置为可以被60整除的数
+         * @member {number} egret.Stage#frameRate
+         */
+        public set frameRate(value:number) {
+            this._frameRate = value;
+            MainContext.instance.deviceContext.setFrameRate(value);
         }
 
         /**
@@ -197,10 +213,16 @@ module egret {
             }
         }
 
+        /**
+         * @private
+         */
         public get focus(): DisplayObject {
             return null;
         }
 
+        /**
+         * @private
+         */
         public static SCALE_MODE_ENUM:any = {};
 
         /**
@@ -213,7 +235,7 @@ module egret {
          */
         public static registerScaleMode(key:string, value:ContentStrategy, override?:boolean):void {
             if(Stage.SCALE_MODE_ENUM[key] && !override) {
-                egret.Logger.warningWithErrorId(1009, key);
+                $warn(1009, key);
             }
             else {
                 Stage.SCALE_MODE_ENUM[key] = value;

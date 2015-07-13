@@ -455,7 +455,7 @@ module egret {
                 }
             }
             if (!gl) {
-                throw new Error(getString(1021));
+                $error(1021);
             }
             WebGLRenderer.glID++;
             this.glID = WebGLRenderer.glID;
@@ -1095,6 +1095,10 @@ module egret_webgl_graphics {
         this._pushCommand(new Command(this._setStyle, this, [_colorRed, _colorGreen, _colorBlue, alpha]))
     }
 
+    export function beginGradientFill(type:string, colors:Array<number>, alphas:Array<number>, ratios:Array<number>, matrix:egret.Matrix = null):void {
+
+    }
+
     export function drawRect(x:number, y:number, width:number, height:number):void {
         this._pushCommand(new Command(
                 function (data) {
@@ -1165,6 +1169,9 @@ module egret_webgl_graphics {
         }
     }
 
+    /**
+     * @private
+     */
     class Command {
 
         constructor(public method:Function, public thisObject:any, public args:Array<any>) {

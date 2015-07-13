@@ -29,11 +29,7 @@
 
 module egret {
     /**
-     * @class egret.Logger
-     * @classdesc
-     * Logger是引擎的日志处理模块入口
-     * @stable B 目前Logger的接口设计没有问题，但是考虑到跨平台，需要将其改为一个Context，并且允许开发者自由扩展以实现自身游戏的日志分析收集需求
-     * todo:GitHub文档，如何利用日志帮助游戏持续改进
+     * @private
      */
     export class Logger {
         public static ALL:string = "all";
@@ -90,7 +86,7 @@ module egret {
          * @param actionCode {string} 错误信息
          * @param value {Object} 错误描述信息
          */
-        private static fatal(actionCode:string, value:Object = null) {
+        public static fatal(actionCode:string, value:Object = null) {
             egret.Logger.traceToConsole("Fatal", actionCode, value);
             throw new Error(egret.Logger.getTraceCode("Fatal", actionCode, value));
         }
@@ -111,41 +107,8 @@ module egret {
          * @param actionCode {string} 错误信息
          * @param value {Object} 错误描述信息
          */
-        private static warning(actionCode:string, value:Object = null) {
+        public static warning(actionCode:string, value:Object = null) {
             egret.Logger.traceToConsole("Warning", actionCode, value);
-        }
-
-        public static fatalWithErrorId(errorId:number, ...args) {
-            args.unshift(errorId);
-            var actionCode = getString.apply(null, args);
-            if (actionCode) {
-                Logger.fatal(actionCode);
-            }
-            else {
-                Logger.warning(getString(-1, errorId));
-            }
-        }
-
-        public static infoWithErrorId(errorId:number, ...args) {
-            args.unshift(errorId);
-            var actionCode = getString.apply(null, args);
-            if (actionCode) {
-                Logger.info(actionCode);
-            }
-            else {
-                Logger.warning(getString(-1, errorId));
-            }
-        }
-
-        public static warningWithErrorId(errorId:number, ...args) {
-            args.unshift(errorId);
-            var actionCode = getString.apply(null, args);
-            if (actionCode) {
-                Logger.warning(actionCode);
-            }
-            else {
-                Logger.warning(getString(-1, errorId));
-            }
         }
 
         /**
@@ -170,6 +133,9 @@ module egret {
         }
     }
 
+    /**
+     * @private
+     */
     export function getString(id:number, ...args):string {
         var message = egret.egret_string_code[id];
         if (message) {
@@ -179,5 +145,33 @@ module egret {
             }
         }
         return message;
+    }
+
+    /**
+     * @private
+     */
+    export function $error(code:number, ...args):void {
+        args.unshift(code);
+        var actionCode = getString.apply(null, args);
+        if (actionCode) {
+            Logger.fatal(actionCode);
+        }
+        else {
+            Logger.warning(getString(-1, code));
+        }
+    }
+
+    /**
+     * @private
+     */
+    export function $warn(code:number, ...args):void {
+        args.unshift(code);
+        var actionCode = getString.apply(null, args);
+        if (actionCode) {
+            Logger.fatal(actionCode);
+        }
+        else {
+            Logger.warning(getString(-1, code));
+        }
     }
 }

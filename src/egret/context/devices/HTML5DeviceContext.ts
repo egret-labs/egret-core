@@ -44,30 +44,29 @@ module egret {
 
         private static instance:HTML5DeviceContext = null;
 
+        private static countTime = 0;
         /**
          * @method egret.HTML5DeviceContext#constructor
          */
         public constructor(public frameRate:number = 60) {
             super();
-            if (frameRate == 60) {
-                HTML5DeviceContext.requestAnimationFrame = window["requestAnimationFrame"] ||
-                    window["webkitRequestAnimationFrame"] ||
-                    window["mozRequestAnimationFrame"] ||
-                    window["oRequestAnimationFrame"] ||
-                    window["msRequestAnimationFrame"];
+            HTML5DeviceContext.requestAnimationFrame = window["requestAnimationFrame"] ||
+                window["webkitRequestAnimationFrame"] ||
+                window["mozRequestAnimationFrame"] ||
+                window["oRequestAnimationFrame"] ||
+                window["msRequestAnimationFrame"];
 
-                HTML5DeviceContext.cancelAnimationFrame = window["cancelAnimationFrame"] ||
-                    window["msCancelAnimationFrame"] ||
-                    window["mozCancelAnimationFrame"] ||
-                    window["webkitCancelAnimationFrame"] ||
-                    window["oCancelAnimationFrame"] ||
-                    window["cancelRequestAnimationFrame"] ||
-                    window["msCancelRequestAnimationFrame"] ||
-                    window["mozCancelRequestAnimationFrame"] ||
-                    window["oCancelRequestAnimationFrame"] ||
-                    window["webkitCancelRequestAnimationFrame"];
+            HTML5DeviceContext.cancelAnimationFrame = window["cancelAnimationFrame"] ||
+                window["msCancelAnimationFrame"] ||
+                window["mozCancelAnimationFrame"] ||
+                window["webkitCancelAnimationFrame"] ||
+                window["oCancelAnimationFrame"] ||
+                window["cancelRequestAnimationFrame"] ||
+                window["msCancelRequestAnimationFrame"] ||
+                window["mozCancelRequestAnimationFrame"] ||
+                window["oCancelRequestAnimationFrame"] ||
+                window["webkitCancelRequestAnimationFrame"];
 
-            }
             if (!HTML5DeviceContext.requestAnimationFrame) {
                 HTML5DeviceContext.requestAnimationFrame = function (callback) {
                     return window.setTimeout(callback, 1000 / frameRate);
@@ -85,6 +84,13 @@ module egret {
             this.registerListener();
         }
 
+
+        public setFrameRate(frameRate){
+            if ((60 % frameRate) == 0) {
+                HTML5DeviceContext.countTime = 60 / frameRate - 1;
+            }
+        }
+
         static requestAnimationFrame:Function = null;
 
         static cancelAnimationFrame:Function = null;
@@ -95,7 +101,7 @@ module egret {
 
         private _requestAnimationId:number = NaN;
 
-
+        private static count:number = 0;
         private enterFrame():void {
             var context = HTML5DeviceContext.instance;
             var thisObject = HTML5DeviceContext._thisObject;
@@ -103,6 +109,12 @@ module egret {
             var thisTime = egret.getTimer();
             var advancedTime = thisTime - context._time;
             context._requestAnimationId = HTML5DeviceContext.requestAnimationFrame.call(window, HTML5DeviceContext.prototype.enterFrame);
+
+            if (HTML5DeviceContext.count < HTML5DeviceContext.countTime) {
+                HTML5DeviceContext.count++;
+                return;
+            }
+            HTML5DeviceContext.count = 0;
             callback.call(thisObject, advancedTime);
             context._time = thisTime;
 
@@ -190,6 +202,31 @@ module egret {
             if (hidden && visibilityChange) {
                 document.addEventListener(visibilityChange, handleVisibilityChange, false);
             }
+
+
+            var ua = navigator.userAgent;
+            var isWX = /micromessenger/gi.test(ua);
+            var isQQBrowser = /mqq/ig.test(ua);
+            var isQQ = /mobile.*qq/gi.test(ua);
+
+            if (isQQ || isWX) {
+                isQQBrowser = false;
+            }
+            if(isQQBrowser)
+            {
+                var browser = window["browser"] || {};
+                browser.execWebFn =  browser.execWebFn || {};
+                browser.execWebFn.postX5GamePlayerMessage = function(event){
+                    var eventType = event.type;
+                    if (eventType == "app_enter_background"){
+                        onBlurHandler();
+                    }
+                    else if (eventType == "app_enter_foreground"){
+                        onFocusHandler();
+                    }
+                };
+                window["browser"] = browser;
+            }
         }
     }
 
@@ -207,7 +244,7 @@ module egret_html5_localStorage {
             return true;
         }
         catch(e){
-            egret.Logger.infoWithErrorId(1018, key, value);
+            egret.$warn(1018, key, value);
             return false;
         }
     }

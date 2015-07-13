@@ -34,10 +34,13 @@ module egret {
      */
     export class Ticker extends EventDispatcher {
 
+        /**
+         * 创建一个Ticker对象，不可以创建
+         */
         public constructor(){
             super();
             if (Ticker.instance != null) {
-                egret.Logger.fatalWithErrorId(1002);
+                $error(1002);
             }
         }
 
@@ -64,7 +67,6 @@ module egret {
             }
             var frameTime:number = advancedTime * this._timeScale;
 
-            frameTime *= this._timeScale;
             this._callList = this.callBackList.concat();
             this._callIndex = 0;
             for (; this._callIndex < this._callList.length; this._callIndex++) {
@@ -117,12 +119,12 @@ module egret {
          * @deprecated
          */
         public setTimeout(listener:Function, thisObject, delay:number, ...parameters):void {
-            Logger.warningWithErrorId(1003);
+            $warn(1003);
             egret.setTimeout.apply(null, [listener,thisObject,delay].concat(parameters));
         }
 
         /**
-         * @method egret.Ticker#setTimeScale
+         * @deprecated
          * @param timeScale {number}
          */
         public setTimeScale(timeScale:number):void {
@@ -137,6 +139,7 @@ module egret {
         }
 
         /**
+         * 暂停
          * @method egret.Ticker#pause
          */
         public pause():void {
@@ -144,6 +147,7 @@ module egret {
         }
 
         /**
+         * 继续
          * @method egret.Ticker#resume
          */
         public resume():void {
@@ -153,6 +157,7 @@ module egret {
         private static instance:egret.Ticker;
 
         /**
+         * 获取Ticker当前单例
          * @method egret.Ticker.getInstance
          * @returns {Ticker}
          */

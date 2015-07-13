@@ -35,7 +35,7 @@ module egret {
      * Bitmap 类表示用于表示位图图像的显示对象。这些图像可以是使用 Bitmap() 构造函数创建的图像。
      * 利用 Bitmap() 构造函数，可以创建包含对 Texture 对象的引用的 Bitmap 对象。创建了 Bitmap 对象后，使用父 DisplayObjectContainer 实例的 addChild() 或 addChildAt() 方法将位图放在显示列表中。
      * 一个 Bitmap 对象可在若干 Bitmap 对象之中共享其 Texture 引用，与转换属性或旋转属性无关。由于能够创建引用相同 Texture 对象的多个 Bitmap 对象，因此，多个显示对象可以使用相同的复杂 Texture 对象，而不会因为每个显示对象实例使用一个 Texture 对象而产生内存开销。
-     * @link http://docs.egret-labs.org/post/manual/bitmap/createbitmap.html 创建位图
+     * @see http://edn.egret.com/cn/index.php?g=&m=article&a=index&id=132&terms1_id=25&terms2_id=31&t3_id=132 创建位图
 	 * @extends egret.DisplayObject
 	 */
     export class Bitmap extends DisplayObject {
@@ -43,7 +43,7 @@ module egret {
         private static renderFilter:RenderFilter = RenderFilter.getInstance();
 
         /**
-         * 初始化 Bitmap 对象以引用指定的 Texture 对象
+         * 创建一个 egret.Bitmap 对象以引用指定的 Texture 对象
          * @param texture {Texture} 纹理
          */
         public constructor(texture?:Texture) {

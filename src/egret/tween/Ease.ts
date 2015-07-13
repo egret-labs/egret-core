@@ -31,11 +31,11 @@
 module egret {
     /**
      * 缓动函数集合，使用不同的缓动函数使得动画按照对应的方程进行
-     * @link http://bbs.egret-labs.org/thread-392-1-1.html Tween和Ease
+     * @see http://bbs.egret-labs.org/thread-392-1-1.html Tween和Ease
      */
     export class Ease {
         constructor() {
-            egret.Logger.fatalWithErrorId(1014);
+            $error(1014);
         }
 
         public static get(amount):Function {

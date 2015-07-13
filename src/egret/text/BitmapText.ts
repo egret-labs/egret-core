@@ -61,6 +61,10 @@ module egret {
         }
 
         public set text(value:string) {
+            this.$setText(value);
+        }
+
+        $setText(value:string):void {
             if (this._text == value) {
                 return;
             }
@@ -82,6 +86,10 @@ module egret {
         }
 
         public set font(value:BitmapFont) {
+            this.$setFont(value);
+        }
+
+        $setFont(value:BitmapFont):void {
             if (this._font == value)
                 return;
             this._font = value;
@@ -134,6 +142,9 @@ module egret {
             this.textLinesChange = true;
         }
 
+        /**
+         * @private
+         */
         public static EMPTY_FACTOR:number = 0.33;
 
         public _render(renderContext:RendererContext):void {
@@ -165,7 +176,7 @@ module egret {
                             xPos += emptyWidth;
                         }
                         else {
-                            egret.Logger.warningWithErrorId(1011, character);
+                            $warn(1011, character);
                         }
                         continue;
                     }
@@ -247,7 +258,7 @@ module egret {
                             textureHeight = emptyHeight;
                         }
                         else {
-                            egret.Logger.warningWithErrorId(1011, character);
+                            $warn(1011, character);
                             if (isFirstChar) {
                                 isFirstChar = false;
                             }

@@ -46,8 +46,6 @@ module egret {
          * @param type {string} 事件类型
          * @param bubbles {boolean}
          * @param cancelable {boolean}
-         * @param bytesLoaded {number}
-         * @param bytesTotal {number}
          */
         public constructor(type:string, bubbles:boolean = false, cancelable:boolean = false) {
             super(type, bubbles, cancelable);
