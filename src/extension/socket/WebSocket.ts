@@ -55,6 +55,8 @@ module egret {
         /**
          * 创建一个 egret.WebSocket 对象
          * 参数为预留参数，现版本暂不处理，连接地址和端口号在 connect 函数中传入
+         * @param host 要连接到的主机的名称或 IP 地址
+         * @param port 要连接到的端口号
          */
         constructor(host:string = "", port:number = 0) {
             super();

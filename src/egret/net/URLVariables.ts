@@ -60,7 +60,7 @@ module egret {
         /**
          * 将变量字符串转换为此 URLVariables.variables 对象的属性。
          * @method egret.URLVariables#decode
-         * @param source {string}
+         * @param source {string} 包含名称/值对的 URL 编码的字符串。
          */
         public decode(source:string):void {
             if (!this.variables) {

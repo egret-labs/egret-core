@@ -50,10 +50,10 @@ module egret {
 		 * @param touchPointID {number} 分配给触摸点的唯一标识号
 		 * @param stageX {number} 事件发生点在全局舞台坐标中的水平坐标
 		 * @param stageY {number} 事件发生点在全局舞台坐标中的垂直坐标
-		 * @param ctrlKey {boolean} 
-		 * @param altKey {boolean} 
-		 * @param shiftKey {boolean} 
-		 * @param touchDown {boolean} 
+         * @param ctrlKey {boolean} 事件发生时ctrl键是否被按下
+         * @param altKey {boolean} 事件发生时shift键是否被按下
+         * @param shiftKey {boolean} 事件发生时shift键是否被按下
+         * @param touchDown {boolean} 表示触摸是否已按下
          */
         public constructor(type:string, bubbles:boolean = true, cancelable:boolean = true,
                            touchPointID:number = 0, stageX:number = 0, stageY:number = 0,
@@ -98,21 +98,25 @@ module egret {
         public static TOUCH_RELEASE_OUTSIDE:string = "touchReleaseOutside";
 
         /**
+         * 此功能已被废弃
          * @deprecated
          */
         public static TOUCH_ROLL_OUT:string = "touchRollOut";
 
         /**
+         * 此功能已被废弃
          * @deprecated
          */
         public static TOUCH_ROLL_OVER:string = "touchRollOver";
 
         /**
+         * 此功能已被废弃
          * @deprecated
          */
         public static TOUCH_OUT:string = "touchOut";
 
         /**
+         * 此功能已被废弃
          * @deprecated
          */
         public static TOUCH_OVER:string = "touchOver";
@@ -193,10 +197,10 @@ module egret {
 		 * @param touchPointID {number} 分配给触摸点的唯一标识号
 		 * @param stageX {number} 事件发生点在全局舞台坐标中的水平坐标
 		 * @param stageY {number} 事件发生点在全局舞台坐标中的垂直坐标
-		 * @param ctrlKey {boolean} 
-		 * @param altKey {boolean} 
-		 * @param shiftKey {boolean} 
-		 * @param touchDown {boolean} 
+		 * @param ctrlKey {boolean} 事件发生时ctrl键是否被按下
+		 * @param altKey {boolean} 事件发生时shift键是否被按下
+		 * @param shiftKey {boolean} 事件发生时shift键是否被按下
+		 * @param touchDown {boolean} 表示触摸是否已按下
          */
         public static dispatchTouchEvent(target:IEventDispatcher,type:string,touchPointID:number = 0, stageX:number = 0, stageY:number = 0,
                                          ctrlKey:boolean=false,altKey:boolean=false,shiftKey:boolean=false,touchDown:boolean=false):void{

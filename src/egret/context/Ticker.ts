@@ -34,6 +34,9 @@ module egret {
      */
     export class Ticker extends EventDispatcher {
 
+        /**
+         * 创建一个Ticker对象，不可以创建
+         */
         public constructor(){
             super();
             if (Ticker.instance != null) {
@@ -121,7 +124,7 @@ module egret {
         }
 
         /**
-         * @method egret.Ticker#setTimeScale
+         * @deprecated
          * @param timeScale {number}
          */
         public setTimeScale(timeScale:number):void {
@@ -136,6 +139,7 @@ module egret {
         }
 
         /**
+         * 暂停
          * @method egret.Ticker#pause
          */
         public pause():void {
@@ -143,6 +147,7 @@ module egret {
         }
 
         /**
+         * 继续
          * @method egret.Ticker#resume
          */
         public resume():void {
@@ -152,6 +157,7 @@ module egret {
         private static instance:egret.Ticker;
 
         /**
+         * 获取Ticker当前单例
          * @method egret.Ticker.getInstance
          * @returns {Ticker}
          */
