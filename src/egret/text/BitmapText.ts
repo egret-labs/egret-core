@@ -61,6 +61,10 @@ module egret {
         }
 
         public set text(value:string) {
+            this.$setText(value);
+        }
+
+        $setText(value:string):void {
             if (this._text == value) {
                 return;
             }
@@ -82,6 +86,10 @@ module egret {
         }
 
         public set font(value:BitmapFont) {
+            this.$setFont(value);
+        }
+
+        $setFont(value:BitmapFont):void {
             if (this._font == value)
                 return;
             this._font = value;
