@@ -240,8 +240,6 @@ module egret.web {
             canvas.style[egret.web.getPrefixStyleName("transformOrigin")] = "0% 0% 0px";
             canvas.style.width = displayWidth + "px";
             canvas.style.height = displayHeight + "px";
-            canvas.style.top = (screenRect.height - displayHeight) / 2 + "px";
-            canvas.style.left = (screenRect.width - displayWidth) / 2 + "px";
             var rotation = 0;
             if (shouldRotate) {
                 if (option.orientation == sys.OrientationMode.LANDSCAPE) {//
@@ -256,10 +254,8 @@ module egret.web {
                 }
             }
             else {
-                var h = (screenRect.height - displayHeight) / 2;
-                var w = (screenRect.width - displayWidth) / 2;
-                canvas.style.top = h + "px";
-                canvas.style.left = w + "px";
+                canvas.style.top = (screenRect.height - displayHeight) / 2 + "px";
+                canvas.style.left = (screenRect.width - displayWidth) / 2 + "px";
             }
 
             var transform = `rotate(${ rotation }deg)`;
