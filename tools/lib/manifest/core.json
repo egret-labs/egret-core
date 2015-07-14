@@ -47,6 +47,7 @@
         "egret/display/Bitmap.ts",
         "egret/display/BitmapFillMode.ts",
         "egret/display/Texture.ts",
+        "egret/display/RenderTexture.ts",
         "egret/display/BitmapData.ts",
         "egret/display/IDisplayObjectContainer.ts",
         "egret/display/DisplayObjectContainer.ts",

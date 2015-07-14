@@ -43,25 +43,32 @@ module egret {
             c1.addChild(displayObject);
             c1.scaleX = c1.scaleY = scale;
 
-            var scrollRect = new egret.Rectangle();
-            scrollRect.setTo(clipBounds.x, clipBounds.y, clipBounds.width, clipBounds.height);
-            c1.scrollRect = scrollRect;
+            if (clipBounds) {
+                var scrollRect = new egret.Rectangle();
+                scrollRect.setTo(clipBounds.x, clipBounds.y, clipBounds.width, clipBounds.height);
+                c1.scrollRect = scrollRect;
+            }
 
-            var c2 = new egret.DisplayObjectContainer();
-            c2.addChild(c1);
+            var root = new egret.DisplayObjectContainer();
+            root.$displayList = sys.DisplayList.create(root);
+            root.addChild(c1);
 
+            if (displayObject.$renderRegion) {
+                displayObject.$renderRegion.moved = true;
+            }
             displayObject.$update();
+            c1.$displayList = null;
             var bounds = displayObject.getBounds();
             var context = this.createRenderContext(bounds.width * scale, bounds.height * scale);
             if (!context) {
                 return false;
             }
-            var drawCalls = this.drawDisplayObject(c2, context);
+            var drawCalls = this.drawDisplayObject(root, context);
             if (drawCalls == 0) {
                 return false;
             }
             this._setBitmapData(context.surface);
-            if(originParent) {
+            if (originParent) {
                 originParent.addChild(displayObject);
             }
             return true;
