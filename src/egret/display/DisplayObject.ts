@@ -826,6 +826,10 @@ module egret {
         }
 
         public set rotation(value:number) {
+            this.$setRotation(value);
+        }
+
+        $setRotation(value:number):void {
             value = egret.getNumber(value);
             value = clampRotation(value);
             var values = this.$DisplayObject;
@@ -931,7 +935,7 @@ module egret {
          * 获取显示宽度
          */
         $getWidth():number {
-            return isNone(this.$getExplicitWidth()) ? this.$getTransformedBounds(this.$parent, $TempRectangle).width : this.$getExplicitWidth();
+            return isNone(this.$getExplicitWidth()) ? this.$getOriginalBounds().width : this.$getExplicitWidth();
 
             //return this.$getTransformedBounds(this.$parent, $TempRectangle).width;
         }
@@ -999,7 +1003,7 @@ module egret {
          * 获取显示高度
          */
         $getHeight():number {
-            return isNone(this.$getExplicitHeight()) ? this.$getTransformedBounds(this.$parent, $TempRectangle).height : this.$getExplicitHeight();
+            return isNone(this.$getExplicitHeight()) ? this.$getOriginalBounds().height : this.$getExplicitHeight();
 
             //return this.$getTransformedBounds(this.$parent, $TempRectangle).height;
         }

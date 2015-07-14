@@ -243,6 +243,24 @@ module egret {
 
         /**
          * @private
+         * 获取显示宽度
+         */
+        $getWidth():number {
+            var values = this.$Bitmap;
+            return isNone(values[Keys.explicitBitmapWidth]) ? this.$getContentBounds().width : values[Keys.explicitBitmapWidth];
+        }
+
+        /**
+         * @private
+         * 获取显示宽度
+         */
+        $getHeight():number {
+            var values = this.$Bitmap;
+            return isNone(values[Keys.explicitBitmapHeight]) ? this.$getContentBounds().height : values[Keys.explicitBitmapHeight];
+        }
+
+        /**
+         * @private
          */
         $measureContentBounds(bounds:Rectangle):void {
             var bitmapData = this.$bitmapData;
