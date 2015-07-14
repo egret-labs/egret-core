@@ -179,7 +179,7 @@ module egret.sys {
             }
 
             if (DEBUG) {
-                if (this._showPaintRect) {
+                if (triggerByFrame && this._showPaintRect) {
                     this.drawPaintRect(dirtyList);
                 }
                 var t2 = egret.getTimer();
