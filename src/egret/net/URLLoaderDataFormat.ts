@@ -39,6 +39,7 @@ module egret {
 		/**
          * 指定以原始二进制数据形式接收下载的数据。
 		 * @constant {string} egret.URLLoaderDataFormat.BINARY
+         * @platform Web
 		 */
         public static BINARY:string = "binary";
 

@@ -196,6 +196,10 @@ module egret {
                 && Math.max(this.y, toIntersect.y) <= Math.min(this.bottom, toIntersect.bottom);
         }
 
+        /**
+         * 将 Rectangle 对象的所有属性设置为 0。
+         * @method egret.Rectangle#setEmpty
+         */
         public setEmpty():void {
             this.x = 0;
             this.y = 0;

@@ -258,6 +258,7 @@ module egret {
          * 如果值为 true，则文本为斜体；false，则为不使用斜体。
          * 默认值为 false。
          * @member {boolean} egret.TextField#italic
+         * @platform Web
          */
         public set italic(value:boolean) {
             this._setItalic(value);
@@ -280,6 +281,7 @@ module egret {
          * 如果值为 true，则文本为粗体字；false，则为非粗体字。
          * 默认值为 false。
          * @member {boolean} egret.TextField#bold
+         * @platform Web
          */
         public set bold(value:boolean) {
             this._setBold(value);

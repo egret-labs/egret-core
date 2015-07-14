@@ -383,6 +383,9 @@ module egret {
 
         private array;
 
+        /**
+         * @private
+         */
         public toArray(transpose) {
             if (!this.array) {
                 this.array = new Float32Array(9);

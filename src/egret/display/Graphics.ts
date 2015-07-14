@@ -98,6 +98,7 @@ module egret {
          * @param alphas {Array} colors 数组中对应颜色的 alpha 值数组。
          * @param ratios {Array} 颜色分布比率的数组。
          * @param matrix {egret.Matrix} 一个由 egret.Matrix 类定义的转换矩阵。egret.Matrix 类包括 createGradientBox() 方法，通过该方法可以方便地设置矩阵，以便与 beginGradientFill() 方法一起使用
+         * @platform Web
          */
         public beginGradientFill(type:string, colors:Array<number>, alphas:Array<number>, ratios:Array<number>, matrix:egret.Matrix = null):void {
             var gradient = this.getGradient(type, colors, alphas, ratios, matrix);

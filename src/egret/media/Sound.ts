@@ -79,6 +79,7 @@ module egret {
          * 当播放声音时，position 属性表示声音文件中当前播放的位置（以毫秒为单位）。
          * h5支持，native不支持
          * @returns {number}
+         * @platform Web
          */
         public get position():number {
             return this.audio ? Math.floor(this.audio._getCurrentTime() * 1000) : 0;
@@ -129,6 +130,7 @@ module egret {
         /**
          * 继续从上次暂停的位置播放
          * h5支持，native不支持
+         * @platform Web
          */
         public resume():void {
             var sound = this.audio;
@@ -141,7 +143,9 @@ module egret {
         }
 
         /**
+         * @private
          * 重新加载声音
+         * @deprecated
          */
         public load():void {
             var sound = this.audio;
@@ -159,6 +163,7 @@ module egret {
          * @param type 事件类型
          * @param listener 监听函数
          * @param thisObj 侦听函数绑定的this对象
+         * @platform Web
          */
         public addEventListener(type:string, listener:Function, thisObject:any):void {
             super.addEventListener(type, listener, thisObject);
@@ -196,6 +201,7 @@ module egret {
          * @param type 事件类型
          * @param listener 监听函数
          * @param thisObj 侦听函数绑定的this对象
+         * @platform Web
          */
         public removeEventListener(type:string, listener:Function, thisObject:any):void {
             super.removeEventListener(type, listener, thisObject);
@@ -233,6 +239,7 @@ module egret {
          * 音量范围从 0（静音）至 1（最大音量）。
          * h5支持，native不支持
          * @returns number
+         * @platform Web
          */
         public set volume(value:number) {
             var sound = this.audio;

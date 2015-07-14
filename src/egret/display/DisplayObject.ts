@@ -380,7 +380,7 @@ module egret {
          * 表示指定对象的 Alpha 透明度值。
          * 有效值为 0（完全透明）到 1（完全不透明）。alpha 设置为 0 的显示对象是活动的，即使它们不可见。
          * @member {number} egret.DisplayObject#alpha
-         *  @default 1 默认值为 1。
+         * @default 1
          */
         public get alpha():number {
             return this._DO_Props_._alpha;
@@ -969,6 +969,7 @@ module egret {
          * @param y {number}  要测试的此对象的 y 坐标。
          * @param shapeFlag {boolean} 是检查对象 (true) 的实际像素，还是检查边框 (false) 的实际像素。
          * @returns {boolean} 如果显示对象与指定的点重叠或相交，则为 true；否则为 false。
+         * @platform Web
          */
         public hitTestPoint(x:number, y:number, shapeFlag?:boolean):boolean {
             var self = this;

@@ -56,6 +56,7 @@ module egret {
 		 * @method egret.XML.parse
          * @param value {string} 要解析的XML字符串。
 		 * @returns {any} 解析完后的JSON对象
+         * @platform Web
          */
         public static parse(value:string):any{
             var xmlDoc = SAXParser.getInstance().parserXML(value);
@@ -128,6 +129,7 @@ module egret {
          * @param path {string} 子节点路径，例如"item.node"
          * @param result {egret.Array<any>} 可选参数，传入一个数组用于存储查找的结果。这样做能避免重复创建对象。
 		 * @returns {any} 节点路径的所有子节点
+         * @platform Web
          */
         public static findChildren(xml:any,path:string,result?:Array<any>):Array<any>{
             if(!result){
@@ -145,7 +147,8 @@ module egret {
 		 * @method egret.XML.findByPath
 		 * @param xml {any} 
 		 * @param path {string} 
-		 * @param result {egret.Array<any>} 
+		 * @param result {egret.Array<any>}
+         * @platform Web
 		 */
          private static findByPath(xml:any,path:string,result:Array<any>):void{
             var index:number = path.indexOf(".");
@@ -183,6 +186,7 @@ module egret {
          * @param xml {any} 要查找的XML节点。
          * @param result {egret.Array<any>} 可选参数，传入一个数组用于存储查找的结果。这样做能避免重复创建对象。
 		 * @returns {string} 节点上的所有属性名列表
+         * @platform Web
          */
         public static getAttributes(xml:any,result?:Array<any>):Array<string>{
             if(!result){

@@ -74,6 +74,7 @@ module egret {
         /**
          * 是否对图像使用平滑处理
          * 该特性目前只支持Canvas
+         * @platform Web
          */
         public static imageSmoothingEnabled:boolean = true;
 

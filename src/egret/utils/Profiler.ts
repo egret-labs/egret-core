@@ -91,7 +91,7 @@ module egret {
          * 启动Profiler
          * @method egret.Profiler#run
          */
-        public run() {
+        public run():void {
             //todo 加入debug参数
             if (this._txt == null) {
                 this._txt = new TextField();
