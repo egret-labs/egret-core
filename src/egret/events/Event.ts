@@ -157,7 +157,10 @@ module egret {
         public static CONNECT:string = "connect";
 
 
-
+        /**
+         * Event 事件的数据
+         * @member {any} egret.Event.data
+         */
         public data:any = null;
 
         public _type:string = "";

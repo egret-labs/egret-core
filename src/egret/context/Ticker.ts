@@ -126,13 +126,16 @@ module egret {
         /**
          * @deprecated
          * @param timeScale {number}
+         * @private
          */
         public setTimeScale(timeScale:number):void {
             this._timeScale = timeScale;
         }
 
         /**
+         * @deprecated
          * @method egret.Ticker#getTimeScale
+         * @private
          */
         public getTimeScale():number {
             return this._timeScale;

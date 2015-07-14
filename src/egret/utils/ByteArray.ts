@@ -634,6 +634,9 @@ module egret {
             }
         }
 
+        /**
+         * @private
+         */
         public validate(len:number):boolean {
             //len += this.data.byteOffset;
             if (this.data.byteLength > 0 && this._position + len <= this.data.byteLength) {

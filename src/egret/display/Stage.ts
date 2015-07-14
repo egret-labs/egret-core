@@ -162,6 +162,7 @@ module egret {
          * @param x
          * @param y
          * @returns {egret.DisplayObject}
+         * @private
          */
         public hitTest(x, y, ignoreTouchEnabled:boolean = false):DisplayObject {
             if (!this._DO_Props_._touchEnabled) {
