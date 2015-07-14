@@ -52,21 +52,14 @@ module egret {
             this.initReplaceArr();
         }
 
-        /**
-         * @private
-         */
-        private _replaceArr:Array<any> = [];
-        /**
-         * @private
-         * 
-         */
+        private replaceArr:Array<any> = [];
         private initReplaceArr():void {
-            this._replaceArr = [];
-            this._replaceArr.push([/&lt;/g, "<"]);
-            this._replaceArr.push([/&gt;/g, ">"]);
-            this._replaceArr.push([/&amp;/g, "&"]);
-            this._replaceArr.push([/&quot;/g, "\""]);
-            this._replaceArr.push([/&apos;/g, "\'"]);
+            this.replaceArr = [];
+            this.replaceArr.push([/&lt;/g, "<"]);
+            this.replaceArr.push([/&gt;/g, ">"]);
+            this.replaceArr.push([/&amp;/g, "&"]);
+            this.replaceArr.push([/&quot;/g, "\""]);
+            this.replaceArr.push([/&apos;/g, "\'"]);
         }
         /**
          * @private
@@ -75,9 +68,9 @@ module egret {
          * @returns 
          */
         private replaceSpecial(value:string):string {
-            for (var i = 0; i < this._replaceArr.length; i++) {
-                var k = this._replaceArr[i][0];
-                var v = this._replaceArr[i][1];
+            for (var i = 0; i < this.replaceArr.length; i++) {
+                var k = this.replaceArr[i][0];
+                var v = this.replaceArr[i][1];
 
                 value = value.replace(k, v);
             }

@@ -1,65 +1,53 @@
-与lark不一样的：
-
-ticker 回调不需要返回boolean，并且返回的函数参数为时间片
-
-event事件回调写法    Function  (event:Event)=>void
-
-
 未加入的功能:
 
-texture_scale_factor
-
-renderTexture
 滤镜
-
 webGL
 
-
-
 废弃
-target-densitydpi=device-dpi
-
 DisplayObject
-explicitWidth explicitHeight measuredHeight measuredWidth
-needDraw
+去掉属性 explicitWidth explicitHeight measuredHeight measuredWidth needDraw
+去掉相对锚点 anchorX anchorY
+去掉方法hitTest，请使用 hitTestPoint 实现
 
-hitTest 请使用 hitTestPoint 实现
-
-anchorX anchorY
 
 Stage
-changeSize
+去掉方法 changeSize
 
 Ticker
-run
-setTimeScale
-getTimeScale
-pause
-resume
-
+去掉方法 run setTimeScale getTimeScale pause resume
 
 Event
-ctrlKey altKey shiftKey
+去掉属性 ctrlKey altKey shiftKey
 
 
 不一样
 TouchEvent
-dispatchTouchEvent    target:IEventDispatcher,type:string,touchPointID:number = 0, stageX:number = 0, stageY:number = 0, ctrlKey:boolean=false,altKey:boolean=false,shiftKey:boolean=false,touchDown:boolean=false
-                      target:IEventDispatcher, type:string, bubbles?:boolean, cancelable?:boolean, stageX?:number, stageY?:number, touchPointID?:number, touchDown:boolean = false
+dispatchTouchEvent参数不一致
+target:IEventDispatcher,type:string,touchPointID:number = 0, stageX:number = 0, stageY:number = 0, ctrlKey:boolean=false,altKey:boolean=false,shiftKey:boolean=false,touchDown:boolean=false
+target:IEventDispatcher, type:string, bubbles?:boolean, cancelable?:boolean, stageX?:number, stageY?:number, touchPointID?:number, touchDown:boolean = false
 
+localX localY的实现不一致。请使用 stageX  stageY实现
+
+DisplayObject
 mask 类型： 从 Rectangle 到 同时支持 Rectangle、DisplayObject
 
-TouchEvent localX localY  请使用 stageX  stageY实现
 
-
-fps 设置 egret.Profiler.getInstance().run();
+fps 去掉原来的Profiler类，改成直接在html中设置
     html设置 data-show-fps="true" data-show-fps-style="x:0,y:600,size:50,textColor:0xff0000"
 
 屏幕适配
-NO_BORDER  ---》FIXED_WIDTH   FIXED_HEIGHT
-
+可以直接在html中设置，或者直接对stage设置scaleMode
+NO_SCALE
+原来的NO_BORDER 请使用 FIXED_WIDTH或者FIXED_HEIGHT代替
 新增加一种 全新的  NO_BORDER
 
+纹理缩放
+直接在stage中设置textureScaleFactor，并且只会对图片有效果。
+
+不能对容器空白部分进行点击
+
+不能对Stage进行以下设置
+alpha、visible、x、y、scaleX、scaleY、rotation、cacheAsBitmap、scrollRect、filters、blendMode、touchEnabled、matrix
 
 问题
 
