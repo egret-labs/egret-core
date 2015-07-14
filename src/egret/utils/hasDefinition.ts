@@ -36,7 +36,9 @@ module egret {
       * @param name {string} 定义的名称。
 	  * @returns {boolean} 公共定义是否存在
       * @example
-      * egret.hasDefinition("egret.DisplayObject") //返回 true
+      * <pre>
+      *  egret.hasDefinition("egret.DisplayObject") //返回 true
+      * </pre>
       */
     export function hasDefinition(name:string):boolean{
         var definition:any = getDefinitionByName(name);

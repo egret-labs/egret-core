@@ -34,7 +34,9 @@ module egret {
      * @param value {any} 需要完全限定类名称的对象，可以将任何 TypeScript / JavaScript值传递给此方法，包括所有可用的TypeScript / JavaScript类型、对象实例、原始类型（如number）和类对象
 	 * @returns {string}
      * @example
+     * <pre>
      *  egret.getQualifiedClassName(egret.DisplayObject) //返回 "egret.DisplayObject"
+     * </pre>
      */
     export function getQualifiedClassName(value:any):string {
         var prototype: any = value.prototype ? value.prototype : Object.getPrototypeOf(value);
@@ -59,7 +61,9 @@ module egret {
      * @param value {any} 需要取得父类的对象，可以将任何 TypeScript / JavaScript值传递给此方法，包括所有可用的TypeScript / JavaScript类型、对象实例、原始类型（如number）和类对象
      * @returns {Function}
      * @example
+     * <pre>
      *  egret.getQualifiedSuperclassName(egret.DisplayObjectContainer) //返回 "egret.DisplayObject"
+     * </pre>
      */
     export function getQualifiedSuperclassName(value: any):string {
         var prototype: any = value.prototype ? value.prototype : Object.getPrototypeOf(value);
