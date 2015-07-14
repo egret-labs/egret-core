@@ -3,6 +3,10 @@
     "dependence": [],
     "source":"src",
     "file_list": [
+        "egret/i18n/tr.ts",
+        "egret/i18n/en_US.ts",
+        "egret/i18n/zh_CN.ts",
+
         "egret/utils/extends.ts",
         "Defines.debug.ts",
         "egret/utils/NumberUtils.ts",
@@ -67,7 +71,6 @@
         "egret/geom/Matrix.ts",
         "egret/geom/Point.ts",
         "egret/geom/Rectangle.ts",
-        "egret/i18n/tr.ts",
 
         "egret/net/URLRequestMethod.ts",
         "egret/net/URLLoaderDataFormat.ts",

@@ -15,7 +15,7 @@ function getModuleFileList(moduleConfig) {
     var tsList = moduleConfig.file_list.concat();
     //写入语言包文件
     if(moduleConfig.name == "core") {
-        tsList.unshift("egret/i18n/" + globals.getLanguageInfo() + ".ts");
+        //tsList.unshift("egret/i18n/" + globals.getLanguageInfo() + ".ts");
     }
     tsList = tsList.map(function (item) {
         return globals.addQuotes(path.join(moduleConfig.prefix, moduleConfig.source, item));
@@ -58,7 +58,7 @@ function generate(moduleConfig) {
     var tempList = moduleConfig.file_list.concat();
     //写入语言包文件
     if(moduleConfig.name == "core") {
-        tempList.unshift("egret/i18n/" + globals.getLanguageInfo() + ".ts");
+        //tempList.unshift("egret/i18n/" + globals.getLanguageInfo() + ".ts");
     }
 
     var str = "";
