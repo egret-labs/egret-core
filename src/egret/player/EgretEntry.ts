@@ -27,21 +27,23 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 
-egret_h5.startGame = function () {
-
-    egret.web.runLark();
-
-
-    //处理屏幕大小改变
-    //implement for screen size change
-    var resizeTimer = null;
-    var doResize = function () {
-        egret.web.updateScreenSize();
-        resizeTimer = null;
-    };
-    window.onresize = function () {
-        if (resizeTimer == null) {
-            resizeTimer = setTimeout(doResize, 300);
-        }
-    };
-};
+module egret {
+    /**
+     * @language en_US
+     * egret project entry function
+     */
+    /**
+     * @language zh_CN
+     * egret工程入口函数
+     */
+    export declare function runEgret():void;
+    /**
+     * @language en_US
+     * Refresh the screen display
+     */
+    /**
+     * @language zh_CN
+     * 刷新屏幕显示
+     */
+    export declare function updateAllScreens():void;
+}

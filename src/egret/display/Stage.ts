@@ -197,7 +197,13 @@ module egret {
             return this.implMap[interfaceName];
         }
 
-        $scaleMode:string = "";
+        /**
+         * @private
+         * 设备屏幕引用
+         */
+        $screen:egret.sys.Screen;
+
+        $scaleMode:string = egret.StageScaleMode.SHOW_ALL;
         /**
          * @language en_US
          * A StageScaleMode class that specifies which scale mode to use. The following are valid values:<br/>
@@ -209,6 +215,7 @@ module egret {
          * <li>StageScaleMode.FIXED_WIDTH -- Keep the original aspect ratio scaling application content, after scaling application content in the horizontal and vertical directions to fill the viewport player, but only to keep the contents of the original application constant width, height may change.</li>
          * <li>StageScaleMode.FIXED_HEIGHT -- Keep the original aspect ratio scaling application content, after scaling application content in the horizontal and vertical directions to fill the viewport player, but only to keep the contents of the original application constant height, width may change.</li>
          * </ul>
+         * @default egret.StageScaleMode.SHOW_ALL
          */
         /**
          * @language zh_CN
@@ -221,28 +228,18 @@ module egret {
          * <li>StageScaleMode.FIXED_WIDTH -- 保持原始宽高比缩放应用程序内容，缩放后应用程序内容在水平和垂直方向都填满播放器视口，但只保持应用程序内容的原始宽度不变，高度可能会改变。</li>
          * <li>StageScaleMode.FIXED_HEIGHT -- 保持原始宽高比缩放应用程序内容，缩放后应用程序内容在水平和垂直方向都填满播放器视口，但只保持应用程序内容的原始高度不变，宽度可能会改变。</li>
          * </ul>
+         * @default egret.StageScaleMode.SHOW_ALL
          */
         public get scaleMode():string{
             return this.$scaleMode;
         }
 
         public set scaleMode(value:string){
-            if (this.$scaleMode != value){
-                this.$scaleMode = value;
-
-                if (this.modeCallBack) {
-                    this.modeCallBack(this.$scaleMode);
-                }
+            if (this.$scaleMode == value) {
+                return;
             }
-        }
-
-        private modeCallBack:Function;
-        /**
-         * @private
-         * @param callback
-         */
-        $addScaleModeCall(callback:Function):void {
-            this.modeCallBack = callback;
+            this.$scaleMode = value;
+            this.$screen.updateScreenSize();
         }
 
         /**

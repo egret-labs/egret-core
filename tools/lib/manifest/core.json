@@ -1,14 +1,13 @@
 {
     "name": "core",
     "dependence": [],
-    "source":"src",
+    "source": "src",
     "file_list": [
         "egret/i18n/tr.ts",
         "egret/i18n/en_US.ts",
         "egret/i18n/zh_CN.ts",
-
-        "egret/utils/extends.ts",
         "Defines.debug.ts",
+        "egret/utils/extends.ts",
         "egret/utils/NumberUtils.ts",
         "egret/utils/HashObject.ts",
         "egret/utils/ByteArray.ts",
@@ -58,20 +57,16 @@
         "egret/display/Shape.ts",
         "egret/display/Sprite.ts",
         "egret/display/Stage.ts",
-
         "egret/display/FrameLabel.ts",
         "egret/display/MovieClipData.ts",
         "egret/display/MovieClipDataFactory.ts",
         "egret/display/MovieClip.ts",
         "egret/display/SpriteSheet.ts",
-
         "egret/display/ScrollView.ts",
         "egret/display/ScrollViewProperties.ts",
-
         "egret/geom/Matrix.ts",
         "egret/geom/Point.ts",
         "egret/geom/Rectangle.ts",
-
         "egret/net/URLRequestMethod.ts",
         "egret/net/URLLoaderDataFormat.ts",
         "egret/net/URLVariables.ts",
@@ -80,9 +75,10 @@
         "egret/net/URLLoader.ts",
         "egret/net/NetContext.ts",
         "egret/net/IVersionController.ts",
-
         "egret/net/BaseImageLoader.ts",
         "egret/net/ImageLoader.ts",
+        "egret/player/EgretEntry.ts",
+        "egret/player/Screen.ts",
         "egret/player/OrientationMode.ts",
         "egret/player/DirtyRegion.ts",
         "egret/player/DisplayList.ts",
@@ -104,30 +100,23 @@
         "egret/text/TextField.ts",
         "egret/text/VerticalAlign.ts",
         "egret/text/TextFieldUtils.ts",
-
         "egret/text/ITextElement.ts",
         "egret/text/HtmlTextParser.ts",
-
         "egret/text/BitmapFont.ts",
         "egret/text/BitmapText.ts",
-
         "egret/tween/Tween.ts",
         "egret/tween/Ease.ts",
-
         "egret/system/MainContext.ts",
         "egret/localStorage/localStorage.ts",
         "egret/external/ExternalInterface.ts",
-
         "egret/filters/BitmapFilterQuality.ts",
         "egret/filters/Filter.ts",
         "egret/filters/GlowFilter.ts",
         "egret/filters/BlurFilter.ts",
         "egret/filters/ColorMatrixFilter.ts",
         "egret/filters/DropShadowFilter.ts",
-
         "egret/media/Audio.ts",
         "egret/media/Sound.ts",
-
         "egret/Types.ts"
     ]
 }

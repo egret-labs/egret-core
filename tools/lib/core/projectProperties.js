@@ -221,6 +221,42 @@ function getModuleReferenceInfo() {
     return referenceInfo;
 }
 
+function getFileList(moduleConfig) {
+    var configList = moduleConfig["file_list"];
+    var webList = [];
+    var nativeList = [];
+
+    var debugList = [];
+
+    for (var i = 0; i < configList.length; i++) {
+        var item = configList[i];
+        if (typeof item == "string") {
+            webList.push(item);
+            nativeList.push(item);
+        }
+        else {
+            if (item.platform) {
+                if (item.platform == "web") {
+                    webList.push(item.path);
+                }
+                else {
+                    nativeList.push(item.path);
+                }
+            }
+            else {
+                webList.push(item.path);
+                nativeList.push(item.path);
+            }
+
+            if (item.debug != null && item.debug == true) {
+                debugList.push(item.path);
+            }
+        }
+    }
+
+    return {"web": webList, "native": nativeList, "debug": debugList};
+}
+
 exports.getModuleReferenceInfo = getModuleReferenceInfo;
 
 

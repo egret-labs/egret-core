@@ -12,10 +12,10 @@
         "egret/localStorage/web/WebLocalStorage.ts",
 
         "egret/web/CanvasFactory.ts",
-        "egret/web/LarkWeb.ts",
+        "egret/web/EgretWeb.ts",
         "egret/web/WebBitmapData.ts",
         "egret/web/WebCapability.ts",
-        "egret/web/WebScreen.ts",
+        "egret/web/WebPlayer.ts",
         "egret/web/WebTouchHandler.ts",
         "egret/web/WebXML.ts",
         "egret/web/HTML5NetContext.ts",
