@@ -1770,12 +1770,6 @@ module egret {
          * @param bounds 测量结果存储在这个矩形对象内
          */
         $measureContentBounds(bounds:Rectangle):void {
-            if (!isNone(this.$getExplicitWidth()) || !isNone(this.$getExplicitHeight())) {
-                this.$DisplayObject[Keys.contentBounds] = bounds;
-                var w:number = !isNone(this.$getExplicitWidth()) ? this.$getExplicitWidth() : 0;
-                var h:number = !isNone(this.$getExplicitHeight()) ? this.$getExplicitHeight() : 0;
-                bounds.setTo(0, 0, w, h);
-            }
         }
 
         /**

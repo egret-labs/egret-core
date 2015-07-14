@@ -1037,6 +1037,24 @@ module egret {
 
         /**
          * @private
+         * 获取显示宽度
+         */
+        $getWidth():number {
+            var values = this.$TextField;
+            return isNone(values[sys.TextKeys.textFieldWidth]) ? this.$getContentBounds().width : values[sys.TextKeys.textFieldWidth];
+        }
+
+        /**
+         * @private
+         * 获取显示宽度
+         */
+        $getHeight():number {
+            var values = this.$TextField;
+            return isNone(values[sys.TextKeys.textFieldHeight]) ? this.$getContentBounds().height : values[sys.TextKeys.textFieldHeight];
+        }
+
+        /**
+         * @private
          */
         private _bgGraphics:Graphics = null;
 
