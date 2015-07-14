@@ -50,12 +50,12 @@ module egret {
             this.removeListeners();
 
             if (Html5Capatibility._System_OS != SystemOSType.WPHONE) {
-                this._audio = this._audio.cloneNode();
+                //this._audio = this._audio.cloneNode();
+                this._audio.load();
             }
             this.paused = false;
             this._audio.autoplay = true;
             this._audio.volume = this._volume;
-            //this._audio.load();
 
             var self = this;
             var func = function (e) {
