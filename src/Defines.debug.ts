@@ -80,7 +80,7 @@ module egret {
     egret.$warn = _warn;
 
     function _markReadOnly(instance:any, property:string, isProperty:boolean = true):void {
-        var data:PropertyDescriptor = Object.getOwnPropertyDescriptor(instance.prototype, property);
+        var data:PropertyDescriptor = Object.getOwnPropertyDescriptor(isProperty ? instance.prototype : instance, property);
         if (data == null) {
             console.log(instance);
             return;
