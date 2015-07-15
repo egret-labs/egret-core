@@ -238,17 +238,19 @@ module egret {
                 19: false,          //wordWrap
                 20: false,         //displayAsPassword
                 21: 0,              //maxChars
-                22: TextFieldType.DYNAMIC,              //type
-                23: 0x000000,              //strokeColor
-                24: "#000000",              //strokeColorString
-                25: 0,              //stroke
-                26: -1,              //scrollV
-                27: 0,              //numLines
-                28: false,              //multiline
-                29: false,              //border
-                30: 0x000000,              //borderColor
-                31: false,              //background
-                32: 0xffffff              //backgroundColor
+                22: 0, //selectionActivePosition,
+                23: 0, //selectionAnchorPosition,
+                24: TextFieldType.DYNAMIC,              //type
+                25: 0x000000,              //strokeColor
+                26: "#000000",              //strokeColorString
+                27: 0,              //stroke
+                28: -1,              //scrollV
+                29: 0,              //numLines
+                30: false,              //multiline
+                31: false,              //border
+                32: 0x000000,              //borderColor
+                33: false,              //background
+                34: 0xffffff              //backgroundColor
             };
         }
 
