@@ -1,14 +1,14 @@
 /**
  * Created by huanghaiying on 14/12/3.
  */
-var path = require("path");
+var path = require("../core/path");
 var param = require("../core/params_analyze.js");
 var globals = require("../core/globals");
 
 var cp_exec = require('child_process').exec;
 
 function createZipFile(sourcePath, outputFile, call, password) {
-    var compilerPath = path.join(param.getEgretPath(), "tools/lib/zip/EGTZipTool_v1.0.1.jar");
+    var compilerPath = path.join(param.getEgretPath(), "tools/lib/zip/EGTZipTool_v1.0.2.jar");
     compilerPath = globals.addQuotes(compilerPath);
     outputFile = globals.addQuotes(outputFile);
     sourcePath = globals.addQuotes(sourcePath);

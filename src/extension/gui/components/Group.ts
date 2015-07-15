@@ -1,29 +1,31 @@
-/**
- * Copyright (c) 2014,Egret-Labs.org
- * All rights reserved.
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are met:
- *
- *     * Redistributions of source code must retain the above copyright
- *       notice, this list of conditions and the following disclaimer.
- *     * Redistributions in binary form must reproduce the above copyright
- *       notice, this list of conditions and the following disclaimer in the
- *       documentation and/or other materials provided with the distribution.
- *     * Neither the name of the Egret-Labs.org nor the
- *       names of its contributors may be used to endorse or promote products
- *       derived from this software without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY EGRET-LABS.ORG AND CONTRIBUTORS "AS IS" AND ANY
- * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
- * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL EGRET-LABS.ORG AND CONTRIBUTORS BE LIABLE FOR ANY
- * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
- * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
- * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
- * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
- * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */
+//////////////////////////////////////////////////////////////////////////////////////
+//
+//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  All rights reserved.
+//  Redistribution and use in source and binary forms, with or without
+//  modification, are permitted provided that the following conditions are met:
+//
+//     * Redistributions of source code must retain the above copyright
+//       notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above copyright
+//       notice, this list of conditions and the following disclaimer in the
+//       documentation and/or other materials provided with the distribution.
+//     * Neither the name of the Egret nor the
+//       names of its contributors may be used to endorse or promote products
+//       derived from this software without specific prior written permission.
+//
+//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
+//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
+//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
+//////////////////////////////////////////////////////////////////////////////////////
 
 
 module egret.gui {
@@ -148,7 +150,7 @@ module egret.gui {
 				maxIndex++;
 			
 			if (index < 0 || index > maxIndex)
-				throw new RangeError(getString(3011, index));
+				$error(3011, index);
 		}
 		/**
 		 * 将可视元素添加到此容器中
@@ -355,7 +357,8 @@ module egret.gui {
 		 * @returns {DisplayObject}
 		 */		
 		public addChild(child:DisplayObject):DisplayObject{
-			throw(new Error(getString(3004, getString(3003))));
+			$error(3004, getString(3003));
+			return null;
 		}
 		/**
 		 * 将可视元素添加到此容器中
@@ -365,7 +368,8 @@ module egret.gui {
 		 * @returns {DisplayObject}
 		 */		
 		public addChildAt(child:DisplayObject, index:number):DisplayObject{
-			throw(new Error(getString(3005, getString(3003))));
+			$error(3005, getString(3003));
+			return null;
 		}
 		/**从此容器的子列表中删除指定的可视元素
 		 * @deprecated
@@ -373,7 +377,8 @@ module egret.gui {
 		 * @returns {DisplayObject}
 		 */		
 		public removeChild(child:DisplayObject):DisplayObject{
-			throw(new Error(getString(3006, getString(3003))));
+			$error(3006, getString(3003));
+			return null;
 		}
 		/**
 		 * 从此容器的子列表中删除指定的可视元素
@@ -383,7 +388,8 @@ module egret.gui {
 		 * @returns {DisplayObject}
 		 */		
 		public removeChildAt(index:number):DisplayObject{
-			throw(new Error(getString(3007, getString(3003))));
+			$error(3007, getString(3003));
+			return null;
 		}
 		/**
 		 * 在可视容器中更改现有可视元素的位置
@@ -392,7 +398,7 @@ module egret.gui {
 		 * @param index {number} 
 		 */		
 		public setChildIndex(child:DisplayObject, index:number):void{
-			throw(new Error(getString(3008, getString(3003))));
+			$error(3008, getString(3003));
 		}
 		/**
 		 * 交换两个指定可视元素的索引
@@ -401,7 +407,7 @@ module egret.gui {
 		 * @param child2 {DisplayObject} 
 		 */		
 		public swapChildren(child1:DisplayObject, child2:DisplayObject):void{
-			throw(new Error(getString(3009, getString(3003))));
+			$error(3009, getString(3003));
 		}
 		/**
 		 * 交换容器中位于两个指定索引位置的可视元素
@@ -411,7 +417,7 @@ module egret.gui {
 		 * @param index2 {number} 
 		 */		
 		public swapChildrenAt(index1:number, index2:number):void{
-			throw(new Error(getString(3010, getString(3003))));
+			$error(3010, getString(3003));
 		}
 	}
 }

@@ -1,5 +1,5 @@
 var fs = require('fs');
-var path_lib = require("path");
+var path_lib = require("../core/path");
 var charset = "utf-8";
 if (!fs.existsSync)
     fs.existsSync = path_lib.existsSync; // node < 0.8

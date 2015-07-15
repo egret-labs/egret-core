@@ -6,7 +6,7 @@
 var file = require("../core/file.js");
 var param = require("../core/params_analyze.js");
 var code_util = require("../core/code_util.js");
-var path = require("path");
+var path = require("../core/path");
 var globals = require("../core/globals.js");
 var projectConfig = require("../core/projectConfig.js");
 
@@ -15,19 +15,27 @@ var upgradeConfigArr = [
     {"v" : "1.0.3", "func":upgradeTo_1_0_3},
     {"v" : "1.0.4", "func":upgradeTo_1_0_4},
     {"v" : "1.0.5", "func":upgradeTo_1_0_5},
-    {"v" : "1.0.6", "func":upgradeTo_1_0_6},
+    //{"v" : "1.0.6", "func":upgradeTo_1_0_6},
     {"v" : "1.1.0", "func":upgradeTo_1_1_0},
-    {"v" : "1.1.1", "func":upgradeTo_1_1_1},
-    {"v" : "1.1.2", "func":upgradeTo_1_1_2},
-    {"v" : "1.1.3", "func":upgradeTo_1_1_3},
-    {"v" : "1.1.4", "func":upgradeTo_1_1_4},
+    //{"v" : "1.1.1", "func":upgradeTo_1_1_1},
+    //{"v" : "1.1.2", "func":upgradeTo_1_1_2},
+    //{"v" : "1.1.3", "func":upgradeTo_1_1_3},
+    //{"v" : "1.1.4", "func":upgradeTo_1_1_4},
     {"v" : "1.5.0", "func":upgradeTo_1_5_0},
     {"v" : "1.5.1", "func":upgradeTo_1_5_1},
     {"v" : "1.5.2", "func":upgradeTo_1_5_2},
-    {"v" : "1.5.3", "func":upgradeTo_1_5_3},
-    {"v" : "1.5.4", "func":upgradeTo_1_5_4},
+    //{"v" : "1.5.3", "func":upgradeTo_1_5_3},
+    //{"v" : "1.5.4", "func":upgradeTo_1_5_4},
     {"v" : "1.5.5", "func":upgradeTo_1_5_5},
-    {"v" : "1.6.0", "func":upgradeTo_1_6_0}
+    //{"v" : "1.6.0", "func":upgradeTo_1_6_0},
+    //{"v" : "1.6.1", "func":upgradeTo_1_6_1},
+    //{"v" : "1.6.2", "func":upgradeTo_1_6_2},
+    //{"v" : "1.7.0", "func":upgradeTo_1_7_0},
+    //{"v" : "1.7.1", "func":upgradeTo_1_7_1},
+    {"v" : "1.7.2", "func":upgradeTo_1_7_2},
+    {"v" : "1.7.3", "func":upgradeTo_1_7_3},
+    {"v" : "2.0.0", "func":upgradeTo_2_0_0},
+    {"v" : "2.0.1", "func":upgradeTo_2_0_1}
 ];
 
 var currDir;
@@ -119,12 +127,6 @@ function upgradeTo_1_0_5() {
     projectConfig.save();
 }
 
-function upgradeTo_1_0_6(){
-    projectConfig.init(currDir);
-    projectConfig.data.egret_version = "1.0.6";
-    projectConfig.save();
-}
-
 function upgradeTo_1_1_0() {
     globals.log(1704, "1.1.0");
 
@@ -200,34 +202,6 @@ function upgradeTo_1_1_0() {
     open("https://github.com/egret-labs/egret-core/wiki/Egret_Upgrade/upgrade/index.html");
 
     globals.warn(1703);
-}
-
-function upgradeTo_1_1_1(){
-    globals.log(1704, "1.1.1");
-    projectConfig.init(currDir);
-    projectConfig.data.egret_version = "1.1.1";
-    projectConfig.save();
-}
-
-function upgradeTo_1_1_2(){
-    globals.log(1704, "1.1.2");
-    projectConfig.init(currDir);
-    projectConfig.data.egret_version = "1.1.2";
-    projectConfig.save();
-}
-
-function upgradeTo_1_1_3(){
-    globals.log(1704, "1.1.3");
-    projectConfig.init(currDir);
-    projectConfig.data.egret_version = "1.1.3";
-    projectConfig.save();
-}
-
-function upgradeTo_1_1_4(){
-    globals.log(1704, "1.1.4");
-    projectConfig.init(currDir);
-    projectConfig.data.egret_version = "1.1.4";
-    projectConfig.save();
 }
 
 function upgradeTo_1_5_0(){
@@ -307,22 +281,6 @@ function upgradeTo_1_5_2(){
     projectConfig.save();
 }
 
-function upgradeTo_1_5_3(){
-    globals.log(1704, "1.5.3");
-
-    projectConfig.init(currDir);
-    projectConfig.data.egret_version = "1.5.3";
-    projectConfig.save();
-}
-
-function upgradeTo_1_5_4(){
-    globals.log(1704, "1.5.4");
-
-    projectConfig.init(currDir);
-    projectConfig.data.egret_version = "1.5.4";
-    projectConfig.save();
-}
-
 function upgradeTo_1_5_5(){
     globals.log(1704, "1.5.5");
 
@@ -353,11 +311,70 @@ function upgradeTo_1_5_5(){
     projectConfig.save();
 }
 
-function upgradeTo_1_6_0(){
-    globals.log(1704, "1.6.0");
+function upgradeTo_1_7_2() {
+    globals.log(1704, "1.7.2");
 
     projectConfig.init(currDir);
-    projectConfig.data.egret_version = "1.6.0";
+    projectConfig.data.egret_version = "1.7.2";
+    projectConfig.save();
+}
+
+function upgradeTo_1_7_3(){
+    globals.log(1704, "1.7.3");
+
+    var projectDir = currDir;
+    //更新egretProperties.json， 将版本控制变成一个单独的模块，并且将新的版本控制作为默认模块
+    try {
+        var properties = JSON.parse(file.read(path.join(projectDir, "egretProperties.json")));
+
+        var hasRes = false;
+        for (var key in properties.modules) {
+            var module = properties.modules[key];
+            if (module.name == "version" && !module.path) {
+                hasRes = true;
+                break;
+            }
+            else if (module.name == "version_old" && !module.path) {
+                hasRes = true;
+                break;
+            }
+        }
+        if (!hasRes) {
+            properties.modules.splice(1, 0, {"name" : "version_old"});
+        }
+        file.save(path.join(projectDir, "egretProperties.json"), JSON.stringify(properties, null, "\t"));
+    }
+    catch (e) {
+
+    }
+
+    //修改native_require.js
+    var native_require_path = path.join(currDir, "launcher", "native_require.js");
+    if(file.exists(native_require_path)){
+        var fileContent = file.read(native_require_path);
+        fileContent = fileContent.replace(/var(\s)+ctr(\s)*=(\s)*egret.MainContext.instance.netContext._versionCtr.*/,"//版本控制自动修改 请勿更改\n    //This variable is used to load the file judgement, please do not change it\n    var egretNeedVersionCtr = false;\n    if (!egretNeedVersionCtr) {\n        completeCall();\n        return;\n    }\n\n    var ctr = new egret.NativeVersionController();\n    egret.MainContext.instance.netContext.initVersion(ctr);\n");
+        file.save(native_require_path, fileContent);
+    }
+
+
+    projectConfig.init(currDir);
+    projectConfig.data.egret_version = "1.7.3";
+    projectConfig.save();
+}
+
+function upgradeTo_2_0_0() {
+    globals.log(1704, "2.0.0");
+
+    projectConfig.init(currDir);
+    projectConfig.data.egret_version = "2.0.0";
+    projectConfig.save();
+}
+
+function upgradeTo_2_0_1() {
+    globals.log(1704, "2.0.1");
+
+    projectConfig.init(currDir);
+    projectConfig.data.egret_version = "2.0.1";
     projectConfig.save();
 }
 

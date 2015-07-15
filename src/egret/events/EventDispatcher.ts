@@ -1,29 +1,31 @@
-/**
- * Copyright (c) 2014,Egret-Labs.org
- * All rights reserved.
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are met:
- *
- *     * Redistributions of source code must retain the above copyright
- *       notice, this list of conditions and the following disclaimer.
- *     * Redistributions in binary form must reproduce the above copyright
- *       notice, this list of conditions and the following disclaimer in the
- *       documentation and/or other materials provided with the distribution.
- *     * Neither the name of the Egret-Labs.org nor the
- *       names of its contributors may be used to endorse or promote products
- *       derived from this software without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY EGRET-LABS.ORG AND CONTRIBUTORS "AS IS" AND ANY
- * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
- * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL EGRET-LABS.ORG AND CONTRIBUTORS BE LIABLE FOR ANY
- * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
- * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
- * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
- * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
- * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */
+//////////////////////////////////////////////////////////////////////////////////////
+//
+//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  All rights reserved.
+//  Redistribution and use in source and binary forms, with or without
+//  modification, are permitted provided that the following conditions are met:
+//
+//     * Redistributions of source code must retain the above copyright
+//       notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above copyright
+//       notice, this list of conditions and the following disclaimer in the
+//       documentation and/or other materials provided with the distribution.
+//     * Neither the name of the Egret nor the
+//       names of its contributors may be used to endorse or promote products
+//       derived from this software without specific prior written permission.
+//
+//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
+//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
+//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
+//////////////////////////////////////////////////////////////////////////////////////
 
 
 module egret {
@@ -37,11 +39,12 @@ module egret {
      * 引擎会将事件对象调度到从显示列表根开始的事件流中。然后该事件对象在显示列表中前进，直到到达事件目标，
      * 然后从这一点开始其在显示列表中的回程。在概念上，到事件目标的此往返行程被划分为三个阶段：
      * 捕获阶段包括从根到事件目标节点之前的最后一个节点的行程，目标阶段仅包括事件目标节点，冒泡阶段包括回程上遇到的任何后续节点到显示列表的根。
-     * @link http://docs.egret-labs.org/post/manual/event/eventlistener.html 事件侦听器
+     * @see http://edn.egret.com/cn/index.php?g=&m=article&a=index&id=115&terms1_id=25&terms2_id=29 事件侦听器
      */
     export class EventDispatcher extends HashObject implements IEventDispatcher {
 
         /**
+         * 创建一个 egret.EventDispatcher 对象
          * EventDispatcher 类是可调度事件的所有类的基类。
          * EventDispatcher 类实现 IEventDispatcher 接口 ，并且是 DisplayObject 类的基类。
          * EventDispatcher 类允许显示列表上的任何对象都是一个事件目标，同样允许使用 IEventDispatcher 接口的方法。
@@ -93,7 +96,7 @@ module egret {
                 priority = 0;
             }
             if (!listener) {
-                Logger.fatalWithErrorId(1010);
+                $error(1010);
             }
             var eventMap:Object;
             if (useCapture) {
@@ -121,7 +124,7 @@ module egret {
             var length:number = list.length;
             for (var i:number = 0; i < length; i++) {
                 var bin:any = list[i];
-                if (bin.listener === listener && bin.thisObject === thisObject && bin.display === display) {
+                if (bin.listener == listener && bin.thisObject == thisObject && bin.display == display) {
                     return false;
                 }
                 if (insertIndex == -1 && bin.priority < priority) {
@@ -171,7 +174,7 @@ module egret {
             var length:number = list.length;
             for (var i:number = fromIdx; i < length; i++) {
                 var bin:any = list[i];
-                if (bin.listener === listener && bin.thisObject === thisObject && bin.display == display) {
+                if (bin.listener == listener && bin.thisObject == thisObject && bin.display == display) {
                     list.splice(i, 1);
                     return true;
                 }
@@ -187,7 +190,7 @@ module egret {
          * @stable A
          */
         public hasEventListener(type:string):boolean {
-            return (this._eventsMap && this._eventsMap[type] ||
+            return !!(this._eventsMap && this._eventsMap[type] ||
                 this._captureEventsMap && this._captureEventsMap[type]);
         }
 

@@ -1,29 +1,31 @@
-/**
- * Copyright (c) 2014,Egret-Labs.org
- * All rights reserved.
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are met:
- *
- *     * Redistributions of source code must retain the above copyright
- *       notice, this list of conditions and the following disclaimer.
- *     * Redistributions in binary form must reproduce the above copyright
- *       notice, this list of conditions and the following disclaimer in the
- *       documentation and/or other materials provided with the distribution.
- *     * Neither the name of the Egret-Labs.org nor the
- *       names of its contributors may be used to endorse or promote products
- *       derived from this software without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY EGRET-LABS.ORG AND CONTRIBUTORS "AS IS" AND ANY
- * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
- * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL EGRET-LABS.ORG AND CONTRIBUTORS BE LIABLE FOR ANY
- * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
- * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
- * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
- * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
- * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */
+//////////////////////////////////////////////////////////////////////////////////////
+//
+//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  All rights reserved.
+//  Redistribution and use in source and binary forms, with or without
+//  modification, are permitted provided that the following conditions are met:
+//
+//     * Redistributions of source code must retain the above copyright
+//       notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above copyright
+//       notice, this list of conditions and the following disclaimer in the
+//       documentation and/or other materials provided with the distribution.
+//     * Neither the name of the Egret nor the
+//       names of its contributors may be used to endorse or promote products
+//       derived from this software without specific prior written permission.
+//
+//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
+//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
+//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
+//////////////////////////////////////////////////////////////////////////////////////
 
 module egret.gui {
 
@@ -37,9 +39,13 @@ module egret.gui {
 			this.selectable = true;
 		}
         private _selectable: boolean = true;
+        /**
+         * @inheritDoc
+         */
         public get selectable() {
             return this._selectable;
         }
+
         public set selectable(value: boolean) {
             this._selectable = value;
         }
@@ -73,7 +79,7 @@ module egret.gui {
 		 * @inheritDoc
 		 */
 		public get editable():boolean{
-			if(this._enabled)
+			if(this._UIC_Props_._enabled)
 				return this._editable;
 			return this.pendingEditable;
 		}
@@ -81,7 +87,7 @@ module egret.gui {
 		public set editable(value:boolean){
 			if(this._editable==value)
 				return;
-			if(this._enabled){
+			if(this._UIC_Props_._enabled){
 				this._editable = value;
 				this.editableChanged = true;
 				this.invalidateProperties();
@@ -90,16 +96,20 @@ module egret.gui {
 				this.pendingEditable = value;
 			}
 		}
-		
-		/**
-		 * @inheritDoc
-		 */		
+
+        /**
+         * @inheritDoc
+         */
+        public get enabled() {
+            return this._editable;
+        }
+
 		public set enabled(value:boolean){
-			if (value == this._enabled)
+			if (value == this._UIC_Props_._enabled)
 				return;
 			
-            this._enabled = value;
-			if(this._enabled){
+            this._UIC_Props_._enabled = value;
+			if(this._UIC_Props_._enabled){
 				if(this._editable!=this.pendingEditable)
 					this.editableChanged = true;
 				this._editable = this.pendingEditable;
@@ -111,9 +121,6 @@ module egret.gui {
 				this._editable = false;
 			}
 			this.invalidateProperties();
-        }
-        public get enabled() {
-            return this._editable;
         }
 		
 		private _maxChars:number = 0;
@@ -235,7 +242,9 @@ module egret.gui {
 
 		
 		private _contentWidth:number = 0;
-		
+        /**
+         * @inheritDoc
+         */
 		public get contentWidth():number{
 			return this._contentWidth;
 		}
@@ -250,7 +259,9 @@ module egret.gui {
 		}
 		
 		private _contentHeight:number = 0;
-		
+        /**
+         * @inheritDoc
+         */
 		public get contentHeight():number{
 			return this._contentHeight;
 		}
@@ -462,13 +473,14 @@ module egret.gui {
                     //todo:没有文字时的测量
 					var hInLine:number = parseInt(<any>this.heightInLines);
 					var lineHeight:number = 22;
-					if(this._textField._text.length>0){
+					var properties:egret.TextFieldProperties = this._textField._TF_Props_;
+					if(properties._text.length>0){
                         lineHeight = this._textField._getLineHeight();
 					}
 					else{
-						this._textField._text = "M";
+						properties._text = "M";
                         lineHeight = this._textField._getLineHeight();
-						this._textField._text = "";
+						properties._text = "";
 					}
 					this.defaultHeight = hInLine*lineHeight+4;
 				}

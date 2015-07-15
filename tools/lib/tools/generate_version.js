@@ -2,7 +2,7 @@
  * Created by wander on 14-11-4.
  */
 
-var path = require("path");
+var path = require("../core/path");
 var fs = require("fs");
 var param = require("../core/params_analyze.js");
 var globals = require("../core/globals");
@@ -20,6 +20,8 @@ function createManifest(projectPath, outputPath, newCode, ignorePathList){
     var basePath = path.join(outputPath, "base.manifest");
     var versionPath = path.join(outputPath, "version.manifest");
     var codePath = path.join(outputPath, "code.manifest");
+
+    var allPath = path.join(outputPath, "all.manifest");
 
     var oldVersion;
     if(file.exists(basePath)) {
@@ -59,6 +61,7 @@ function createManifest(projectPath, outputPath, newCode, ignorePathList){
 
     var changeVersion = {};
     var currentVersion = {};
+    var allVersion = {};
 
     var length = list.length;
 
@@ -70,7 +73,6 @@ function createManifest(projectPath, outputPath, newCode, ignorePathList){
         var txt = file.read(filePath);
         var txtCrc32 = crc32(txt);
         var savePath = path.relative(projectPath, filePath);
-        savePath = savePath.replace(/(\\\\|\\)/g,"/");
         var crcstr = null;
         if(oldVersion) {
             if(oldVersion[savePath] == undefined || oldVersion[savePath]["v"] != txtCrc32) {
@@ -81,12 +83,17 @@ function createManifest(projectPath, outputPath, newCode, ignorePathList){
             crcstr = txtCrc32;
         }
 
+        allVersion[savePath] = {"v":txtCrc32, "s":fs.statSync(filePath).size};
+
         if (crcstr) {
             changeVersion[savePath] = {"v":crcstr, "s":fs.statSync(filePath).size};
         }
 
         currentVersion[savePath] = 1;
     }
+
+
+    file.save(allPath, JSON.stringify(allVersion));
 
     if (oldVersion == null || oldCode < newCode) {
         var changeStr = JSON.stringify(changeVersion);

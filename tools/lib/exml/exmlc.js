@@ -1,29 +1,31 @@
-/**
- * Copyright (c) 2014,Egret-Labs.org
- * All rights reserved.
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are met:
- *
- *     * Redistributions of source code must retain the above copyright
- *       notice, this list of conditions and the following disclaimer.
- *     * Redistributions in binary form must reproduce the above copyright
- *       notice, this list of conditions and the following disclaimer in the
- *       documentation and/or other materials provided with the distribution.
- *     * Neither the name of the Egret-Labs.org nor the
- *       names of its contributors may be used to endorse or promote products
- *       derived from this software without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY EGRET-LABS.ORG AND CONTRIBUTORS "AS IS" AND ANY
- * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
- * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL EGRET-LABS.ORG AND CONTRIBUTORS BE LIABLE FOR ANY
- * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
- * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
- * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
- * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
- * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */
+//////////////////////////////////////////////////////////////////////////////////////
+//
+//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  All rights reserved.
+//  Redistribution and use in source and binary forms, with or without
+//  modification, are permitted provided that the following conditions are met:
+//
+//     * Redistributions of source code must retain the above copyright
+//       notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above copyright
+//       notice, this list of conditions and the following disclaimer in the
+//       documentation and/or other materials provided with the distribution.
+//     * Neither the name of the Egret nor the
+//       names of its contributors may be used to endorse or promote products
+//       derived from this software without specific prior written permission.
+//
+//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
+//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
+//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
+//////////////////////////////////////////////////////////////////////////////////////
 var __extends = this.__extends || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -194,7 +196,7 @@ var EXMLCompiler = (function () {
         var list = [];
         this.checkDeclarations(this.declarations, list);
         if (list.length > 0) {
-            globals.warn(2101, this.exmlPath, list.join("\n"));
+            globals.exit(2020, this.exmlPath, list.join("\n"));
         }
         if (!this.currentXML.namespace) {
             globals.exit(2017, this.exmlPath, this.toXMLString(this.currentXML));
@@ -349,7 +351,11 @@ var EXMLCompiler = (function () {
         this.addAttributesToCodeBlock(cb, varName, node);
         this.initlizeChildNode(node, cb, varName);
         if (this.delayAssignmentDic[id]) {
-            cb.concat(this.delayAssignmentDic[id]);
+            var length = this.delayAssignmentDic[id].length;
+            for (var i = 0; i < length; i++) {
+                var delaycb = this.delayAssignmentDic[id][i];
+                cb.concat(delaycb);
+            }
         }
         cb.addReturn(varName);
         func.codeBlock = cb;
@@ -443,7 +449,10 @@ var EXMLCompiler = (function () {
                     delayCb.addAssignment("this." + id, "this." + value, key);
                     delayCb.endBlock();
                 }
-                this.delayAssignmentDic[value] = delayCb;
+                if (!this.delayAssignmentDic[value]) {
+                    this.delayAssignmentDic[value] = [];
+                }
+                this.delayAssignmentDic[value].push(delayCb);
                 value = "this." + value;
             }
             if (this.exmlConfig.isStyleProperty(key, className)) {
@@ -526,9 +535,6 @@ var EXMLCompiler = (function () {
                 var item = children[j];
                 childFunc = this.createFuncForNode(item);
                 var childClassName = this.exmlConfig.getClassNameById(item.localName, item.namespace);
-                if (isContainer && !this.exmlConfig.isInstanceOf(childClassName, "egret.gui.IVisualElement")) {
-                    globals.exit(2019, this.exmlPath, this.toXMLString(item));
-                }
                 if (!this.isStateNode(item))
                     values.push(childFunc);
             }
@@ -545,9 +551,6 @@ var EXMLCompiler = (function () {
                             item = firstChild.children[k];
                             childFunc = this.createFuncForNode(item);
                             childClassName = this.exmlConfig.getClassNameById(item.localName, item.namespace);
-                            if (isContainer && !this.exmlConfig.isInstanceOf(childClassName, "egret.gui.IVisualElement")) {
-                                globals.exit(2019, this.exmlPath, this.toXMLString(item));
-                            }
                             if (!this.isStateNode(item))
                                 values.push(childFunc);
                         }
@@ -557,9 +560,6 @@ var EXMLCompiler = (function () {
                 else {
                     childFunc = this.createFuncForNode(firstChild);
                     var childClassName = this.exmlConfig.getClassNameById(firstChild.localName, firstChild.namespace);
-                    if (isContainer && !this.exmlConfig.isInstanceOf(childClassName, "egret.gui.IVisualElement")) {
-                        globals.exit(2019, this.exmlPath, this.toXMLString(firstChild));
-                    }
                     if (!this.isStateNode(firstChild))
                         childFunc = "[" + childFunc + "]";
                     else

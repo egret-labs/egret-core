@@ -1,29 +1,31 @@
-/**
- * Copyright (c) 2014,Egret-Labs.org
- * All rights reserved.
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are met:
- *
- *     * Redistributions of source code must retain the above copyright
- *       notice, this list of conditions and the following disclaimer.
- *     * Redistributions in binary form must reproduce the above copyright
- *       notice, this list of conditions and the following disclaimer in the
- *       documentation and/or other materials provided with the distribution.
- *     * Neither the name of the Egret-Labs.org nor the
- *       names of its contributors may be used to endorse or promote products
- *       derived from this software without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY EGRET-LABS.ORG AND CONTRIBUTORS "AS IS" AND ANY
- * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
- * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL EGRET-LABS.ORG AND CONTRIBUTORS BE LIABLE FOR ANY
- * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
- * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
- * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
- * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
- * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */
+//////////////////////////////////////////////////////////////////////////////////////
+//
+//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  All rights reserved.
+//  Redistribution and use in source and binary forms, with or without
+//  modification, are permitted provided that the following conditions are met:
+//
+//     * Redistributions of source code must retain the above copyright
+//       notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above copyright
+//       notice, this list of conditions and the following disclaimer in the
+//       documentation and/or other materials provided with the distribution.
+//     * Neither the name of the Egret nor the
+//       names of its contributors may be used to endorse or promote products
+//       derived from this software without specific prior written permission.
+//
+//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
+//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
+//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
+//////////////////////////////////////////////////////////////////////////////////////
 
 
 module egret.gui {
@@ -238,7 +240,7 @@ module egret.gui {
 		 * 动画播放过程中触发的更新数值函数
 		 */		
 		private animationUpdateHandler(animation:Animation):void{
-            var rect:Rectangle = (<DisplayObject><any> (this.popUp))._scrollRect;
+            var rect:Rectangle = (<DisplayObject><any> (this.popUp))._DO_Props_._scrollRect;
             var x:number = Math.round(animation.currentValue["x"]);
             var y:number = Math.round(animation.currentValue["y"]);
             if(rect){
@@ -246,12 +248,12 @@ module egret.gui {
                 rect.y = y;
                 rect.width = this.popUp.width;
                 rect.height = this.popUp.height;
+                (<DisplayObject><any> (this.popUp))._setScrollRect(rect);
             }
             else{
-                (<DisplayObject><any> (this.popUp))._scrollRect = new Rectangle(x,y,
+                (<DisplayObject><any> (this.popUp))._DO_Props_._scrollRect = new Rectangle(x,y,
                     this.popUp.width, this.popUp.height)
             }
-			(<DisplayObject><any> (this.popUp))._setScrollRect(rect);
 		}
 		
 		/**
@@ -351,35 +353,35 @@ module egret.gui {
 		/**
 		 * 创建动画轨迹
 		 */		
-		private createMotionPath():Array<any>{
-			var xPath:any = {prop:"x"};
-			var yPath:any = {prop:"y"};
-			var path:Array<any> = [xPath,yPath];
+		private createMotionPath():Array<MotionPath>{
+			var xPath:SimpleMotionPath = new SimpleMotionPath("x");
+			var yPath:SimpleMotionPath = new SimpleMotionPath("y");
+			var path:Array<MotionPath> = [xPath,yPath];
 			switch(this._popUpPosition){
 				case PopUpPosition.TOP_LEFT:
 				case PopUpPosition.CENTER:
 				case PopUpPosition.BELOW:
-					xPath.from = xPath.to = 0;
-					yPath.from = this.popUp.height;
-					yPath.to = 0;
+					xPath.valueFrom = xPath.valueTo = 0;
+					yPath.valueFrom = this.popUp.height;
+					yPath.valueTo = 0;
 					this.valueRange = this.popUp.height;
 					break;
 				case PopUpPosition.ABOVE:
-					xPath.from = xPath.to = 0;
-					yPath.from = -this.popUp.height;
-					yPath.to = 0;
+					xPath.valueFrom = xPath.valueTo = 0;
+					yPath.valueFrom = -this.popUp.height;
+					yPath.valueTo = 0;
 					this.valueRange = this.popUp.height;
 					break;
 				case PopUpPosition.LEFT:
-					yPath.from = yPath.to = 0;
-					xPath.from = -this.popUp.width;
-					xPath.to = 0;
+					yPath.valueFrom = yPath.valueTo = 0;
+					xPath.valueFrom = -this.popUp.width;
+					xPath.valueTo = 0;
 					this.valueRange = this.popUp.width;
 					break;
 				case PopUpPosition.RIGHT:
-					yPath.from = yPath.to = 0;
-					xPath.from = this.popUp.width;
-					xPath.to = 0;
+					yPath.valueFrom = yPath.valueTo = 0;
+					xPath.valueFrom = this.popUp.width;
+					xPath.valueTo = 0;
 					this.valueRange = this.popUp.width;
 					break;    
 				default:
@@ -388,12 +390,12 @@ module egret.gui {
 			}
 			this.valueRange = Math.abs(this.valueRange);
 			if(!this.popUpIsDisplayed){
-				var tempValue:number = xPath.from;
-				xPath.from = xPath.to;
-				xPath.to = tempValue;
-				tempValue = yPath.from;
-				yPath.from = yPath.to;
-				yPath.to = tempValue;
+				var tempValue:number = xPath.valueFrom;
+				xPath.valueFrom = xPath.valueTo;
+				xPath.valueTo = tempValue;
+				tempValue = yPath.valueFrom;
+				yPath.valueFrom = yPath.valueTo;
+				yPath.valueTo = tempValue;
 			}
 			return path;
 		}

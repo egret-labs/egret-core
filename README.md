@@ -1,6 +1,6 @@
 Egret Engine
 ================================================
-Current Version: v1.6.0
+Current Version: v2.0.1
 
 
 Egret Engine is an open source game engine written in Typescript language. The core characteristics of Egret Engine is Open, Efficient and Elegant.
@@ -30,7 +30,7 @@ Platforms:
 
 Tools
 -------------------------
-* [Egret Wing](http://www.egret-labs.org/download/wing-download.html) , Egret GUI Visual Editor
+* [Egret Wing](http://www.egret-labs.org/download/wing-download.html) , Egret IDE.
 * [TS Conversion](http://www.egret-labs.org/download/conversion-tool-download.html) ,AS3-to-TS Code transformation tool
 * [Res Depot](http://www.egret-labs.org/download/restool-download.html) ,Resource configuration and management tool
 * [Texture Merger](http://www.egret-labs.org/download/egret-texturetool-download.html) ,SpriteSheet tool
@@ -40,6 +40,22 @@ Tools
 
 Release Notes
 --------------------
+[Egret 2.0 Release Candidate 2 Release Notes 2015-7-2](/docs/en/2.0_ReleaseCandidate_2_ReleaseNotes.md)
+
+[Egret 2.0 Release Candidate 1 Release Notes 2015-6-18](/docs/en/2.0_ReleaseCandidate_1_ReleaseNotes.md)
+
+[Egret 1.7.3 Release Notes 2015-6-4](/docs/en/1.7.3_ReleaseNotes.md)
+
+[Egret 1.7.2 Release Notes 2015-5-21](/docs/en/1.7.2_ReleaseNotes.md)
+
+[Egret 1.7.1 Release Notes 2015-5-8](/docs/en/1.7.1_ReleaseNotes.md)
+
+[Egret 1.7.0 Release Notes 2015-4-24](/docs/en/1.7.0_ReleaseNotes.md)
+
+[Egret 1.6.2 Release Notes 2015-4-10](/docs/en/1.6.2_ReleaseNotes.md)
+
+[Egret 1.6.1 Release Notes 2015-3-27](/docs/en/1.6.1_ReleaseNotes.md)
+
 [Egret 1.6.0 Release Notes 2015-3-20](/docs/en/1.6.0_ReleaseNotes.md)
 
 [Egret 1.5.5 Release Notes 2015-2-28](/docs/en/1.5.5_ReleaseNotes.md)
@@ -82,7 +98,7 @@ Egret Engine是一款使用JavaScript(TypeScript)编写的HTML5开源免费游�
 
 工具
 -------------------------
-* [Egret Wing](http://www.egret-labs.org/download/wing-download.html) , Egret GUI Visual Editor
+* [Egret Wing](http://www.egret-labs.org/download/wing-download.html) , Egret IDE
 * [TS Conversion](http://www.egret-labs.org/download/conversion-tool-download.html) ,AS3到TS的代码转换工具
 * [Res Depot](http://www.egret-labs.org/download/restool-download.html) ,RES资源模块配置文件管理工具
 * [Texture Merger](http://www.egret-labs.org/download/egret-texturetool-download.html) ,SpriteSheet工具
@@ -94,6 +110,21 @@ Egret Engine是一款使用JavaScript(TypeScript)编写的HTML5开源免费游�
 
 发布说明
 --------------------
+[Egret 2.0 Release Candidate 2 Release Notes 2015-7-2](/docs/cn/2.0_ReleaseCandidate_2_ReleaseNotes.md)
+
+[Egret 2.0 Release Candidate 1 Release Notes 2015-6-18](/docs/cn/2.0_ReleaseCandidate_1_ReleaseNotes.md)
+
+[Egret 1.7.3 Release Notes 2015-6-4](/docs/cn/1.7.3_ReleaseNotes.md)
+
+[Egret 1.7.2 Release Notes 2015-5-21](/docs/cn/1.7.2_ReleaseNotes.md)
+
+[Egret 1.7.1 Release Notes 2015-5-8](/docs/cn/1.7.1_ReleaseNotes.md)
+
+[Egret 1.7.0 Release Notes 2015-4-24](/docs/cn/1.7.0_ReleaseNotes.md)
+
+[Egret 1.6.2 Release Notes 2015-4-10](/docs/cn/1.6.2_ReleaseNotes.md)
+
+[Egret 1.6.1 Release Notes 2015-3-27](/docs/cn/1.6.1_ReleaseNotes.md)
 
 [Egret 1.6.0 Release Notes 2015-3-13](/docs/cn/1.6.0_ReleaseNotes.md)
 
@@ -146,5 +177,5 @@ Egret Engine是一款使用JavaScript(TypeScript)编写的HTML5开源免费游�
 * 开发者论坛: http://bbs.egret-labs.org
 * 开发者群:
   * 1群：141578440 (2000 members capacity / Full)
-  * 2群：397297607 (1000 members capacity / avaliable)
+  * 2群：397297607 (1000 members capacity / Full)
   * 3群：399919028 (1000 members capacity / avaliable)

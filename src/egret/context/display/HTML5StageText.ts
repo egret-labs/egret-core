@@ -1,31 +1,31 @@
-/**
- * Copyright (c) 2014,Egret-Labs.org
- * All rights reserved.
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are met:
- *
- *     * Redistributions of source code must retain the above copyright
- *       notice, this list of conditions and the following disclaimer.
- *     * Redistributions in binary form must reproduce the above copyright
- *       notice, this list of conditions and the following disclaimer in the
- *       documentation and/or other materials provided with the distribution.
- *     * Neither the name of the Egret-Labs.org nor the
- *       names of its contributors may be used to endorse or promote products
- *       derived from this software without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY EGRET-LABS.ORG AND CONTRIBUTORS "AS IS" AND ANY
- * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
- * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL EGRET-LABS.ORG AND CONTRIBUTORS BE LIABLE FOR ANY
- * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
- * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
- * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
- * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
- * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */
-
-
+//////////////////////////////////////////////////////////////////////////////////////
+//
+//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  All rights reserved.
+//  Redistribution and use in source and binary forms, with or without
+//  modification, are permitted provided that the following conditions are met:
+//
+//     * Redistributions of source code must retain the above copyright
+//       notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above copyright
+//       notice, this list of conditions and the following disclaimer in the
+//       documentation and/or other materials provided with the distribution.
+//     * Neither the name of the Egret nor the
+//       names of its contributors may be used to endorse or promote products
+//       derived from this software without specific prior written permission.
+//
+//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
+//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
+//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
+//////////////////////////////////////////////////////////////////////////////////////
 module egret {
 
     /**
@@ -35,285 +35,91 @@ module egret {
      */
     export class HTML5StageText extends StageText {
 
-        private div:any = null;
-        private inputElement:any = null;
-
-        private _shape:egret.Shape;
-
         constructor() {
             super();
+            HTMLInput.getInstance();
+        }
 
+        private _isNeedShow:boolean = false;
+        private inputElement:any = null;
+        private inputDiv:any = null;
+
+
+        private _gscaleX:number = 0;
+        private _gscaleY:number = 0;
+        public _initElement(x:number, y:number, cX:number, cY:number):void {
             var scaleX = egret.StageDelegate.getInstance().getScaleX();
             var scaleY = egret.StageDelegate.getInstance().getScaleY();
 
-            var div = egret.Browser.getInstance().$new("div");
-            div.position.x = 0;
-            div.position.y = 0;
-            div.scale.x = scaleX;
-            div.scale.y = scaleY;
-            div.transforms();
-            div.style[HTML5StageText.getTrans("transformOrigin")] = "0% 0% 0px";
-            this.div = div;
+            this.inputDiv.style.left = x * scaleX + "px";
+            this.inputDiv.style.top = y * scaleY + "px";
 
-            var stage:egret.Stage = egret.MainContext.instance.stage;
-            var stageWidth:number = stage.stageWidth;
-            var stageHeight:number = stage.stageHeight;
-            var shape:egret.Shape = new egret.Shape();
-//            shape.graphics.beginFill(0x000000, .3);
-//            shape.graphics.drawRect(0, 0, stageWidth, stageHeight);
-//            shape.graphics.endFill();
-            shape.width = stageWidth;
-            shape.height = stageHeight;
-            shape.touchEnabled = true;
-
-            this._shape = shape;
-
-            this.getStageDelegateDiv().appendChild(this.div);
+            this._gscaleX = scaleX * cX;
+            this._gscaleY = scaleY * cY;
         }
 
-        private static header:string = "";
+        public _show(multiline:boolean, size:number, width:number, height:number):void {
+            this._multiline = multiline;
+            if (!HTMLInput.getInstance().isCurrentStageText(this)) {
+                this.inputElement = HTMLInput.getInstance().getInputElement(this);
 
-        /**
-         * 获取当前浏览器类型
-         * @type {string}
-         */
-        private static getTrans(type:string):string {
-        if (HTML5StageText.header == "") {
-            HTML5StageText.header = HTML5StageText.getHeader();
-        }
-
-        return HTML5StageText.header + type.substring(1, type.length);
-    }
-
-        /**
-         * 获取当前浏览器的类型
-         * @returns {string}
-         */
-        private static getHeader():string {
-            var tempStyle = document.createElement('div').style;
-            var transArr:Array<string> = ["t", "webkitT", "msT", "MozT", "OT"];
-            for (var i:number = 0; i < transArr.length; i++) {
-                var transform:string = transArr[i] + 'ransform';
-
-                if (transform in tempStyle)
-                    return transArr[i];
-            }
-
-            return transArr[0];
-        }
-
-        private getStageDelegateDiv():any {
-            var stageDelegateDiv = egret.Browser.getInstance().$("#StageDelegateDiv");
-            if (!stageDelegateDiv) {
-                stageDelegateDiv = egret.Browser.getInstance().$new("div");
-                stageDelegateDiv.id = "StageDelegateDiv";
-//                stageDelegateDiv.style.position = "absolute";
-                var container = document.getElementById(egret.StageDelegate.canvas_div_name);
-                container.appendChild(stageDelegateDiv);
-                stageDelegateDiv.transforms();
-            }
-            return stageDelegateDiv;
-        }
-
-        public _setMultiline(value:boolean):void {
-            super._setMultiline(value);
-
-            this.createInput();
-        }
-
-        private callHandler(e):void {
-            e.stopPropagation();
-        }
-
-        public _add():void {
-            if (this.div && this.div.parentNode == null) {
-                this.getStageDelegateDiv().appendChild(this.div);
-            }
-        }
-
-        public _remove():void {
-            if (this._shape && this._shape.parent) {
-                this._shape.parent.removeChild(this._shape);
-            }
-            if (this.div && this.div.parentNode) {
-                this.div.parentNode.removeChild(this.div);
-            }
-        }
-
-        private _hasListeners:boolean = false;
-        public _addListeners():void {
-            if (this.inputElement && !this._hasListeners) {
-                this._hasListeners = true;
-                this.inputElement.addEventListener("mousedown", this.callHandler);
-                this.inputElement.addEventListener("touchstart", this.callHandler);
-                this.inputElement.addEventListener("MSPointerDown", this.callHandler);
-            }
-        }
-
-        public _removeListeners():void {
-            if (this.inputElement && this._hasListeners) {
-                this._hasListeners = false;
-                this.inputElement.removeEventListener("mousedown", this.callHandler);
-                this.inputElement.removeEventListener("touchstart", this.callHandler);
-                this.inputElement.removeEventListener("MSPointerDown", this.callHandler);
-            }
-        }
-
-        private _inputType:string = "";
-        private createInput():void {
-            var type:string = this._multiline ? "textarea" : "input";
-            if (this._inputType == type) {
-                return;
-            }
-
-            this._inputType = type;
-            if (this.inputElement != null) {
-                this._removeListeners();
-                this.div.removeChild(this.inputElement);
-            }
-
-            if (this._multiline) {
-                var inputElement:any = document.createElement("textarea");
-                inputElement.style["resize"] = "none";
+                this.inputDiv = HTMLInput.getInstance()._inputDIV;
             }
             else {
-                inputElement = document.createElement("input");
+                this.inputElement.onblur = null;
             }
-            this._styleInfoes = {};
-            inputElement.type = "text";
-            this.inputElement = inputElement;
-            this.inputElement.value = "";
 
-            this.div.appendChild(inputElement);
+            HTMLInput.getInstance()._needShow = true;
 
-            this._addListeners();
-
-            this.setElementStyle("width", 0 + "px");
-
-            //默认值
-            this.setElementStyle("border", "none");
-            this.setElementStyle("margin", "0");
-            this.setElementStyle("padding", "0");
-            this.setElementStyle("outline", "medium");
-            this.setElementStyle("verticalAlign", "top");
-            this.setElementStyle("wordBreak", "break-all");
-            this.setElementStyle("overflow", "hidden");
+            //标记当前文本被选中
+            this._isNeedShow = true;
         }
 
-        public _open(x:number, y:number, width:number = 160, height:number = 21):void {
-
+        private onBlurHandler():void {
+            HTMLInput.getInstance().clearInputElement();
+            window.scrollTo(0, 0);
         }
 
-        public _setScale(x:number, y:number):void {
-            super._setScale(x, y);
+        private executeShow():void {
+            var self = this;
+            //打开
+            this.inputElement.value = this._getText();
 
-            var scaleX = egret.StageDelegate.getInstance().getScaleX();
-            var scaleY = egret.StageDelegate.getInstance().getScaleY();
-            this.div.scale.x = scaleX * x;
-            this.div.scale.y = scaleY * y;
-            this.div.transforms();
-        }
+            if (this.inputElement.onblur == null) {
+                this.inputElement.onblur = this.onBlurHandler;
+            }
 
-        public changePosition(x:number, y:number):void {
-//            if (this._isShow) {
-            var scaleX = egret.StageDelegate.getInstance().getScaleX();
-            var scaleY = egret.StageDelegate.getInstance().getScaleY();
+            this._resetStageText();
 
-            this.div.position.x = x * scaleX;
-            this.div.position.y = y * scaleY;
-            this.div.transforms();
-//            }
-        }
-
-        private setStyles():void {
-
-            //修改属性
-            this.setElementStyle("fontStyle", this._italic ? "italic" : "normal");
-            this.setElementStyle("fontWeight", this._bold ? "bold" : "normal");
-            this.setElementStyle("textAlign", this._textAlign);
-            this.setElementStyle("fontSize", this._size + "px");
-
-            this.setElementStyle("color", "#000000");
-            this.setElementStyle("width", this._width + "px");
-//            if (this._multiline) {
-                this.setElementStyle("height", this._height + "px");
-//            }
-//            this.setElementStyle("border", "1px solid red");
-            this.setElementStyle("display", "block");
-        }
-
-        private _isShow:boolean = false;
-
-
-        public _show():void {
-            egret.MainContext.instance.stage._changeSizeDispatchFlag = false;
-            if (this._maxChars > 0) {
-                this.inputElement.setAttribute("maxlength", this._maxChars);
+            if (this._textfield._TF_Props_._maxChars > 0) {
+                this.inputElement.setAttribute("maxlength", this._textfield._TF_Props_._maxChars);
             }
             else {
                 this.inputElement.removeAttribute("maxlength");
             }
 
-
-            this._isShow = true;
-            //打开
-            var txt = this._getText();
-            this.inputElement.value = txt;
-            var self = this;
-            this.inputElement.oninput = function () {
-                self.textValue = self.inputElement.value;
-                self.dispatchEvent(new egret.Event("updateText"));
-            };
-            this.setStyles();
+            this.inputElement.selectionStart = this.inputElement.value.length;
+            this.inputElement.selectionEnd = this.inputElement.value.length;
             this.inputElement.focus();
-//            if (this._multiline) {
-            this.inputElement.selectionStart = txt.length;
-            this.inputElement.selectionEnd = txt.length;
-//            }
-
-            if (this._shape && this._shape.parent == null) {
-                egret.MainContext.instance.stage.addChild(this._shape);
-            }
         }
 
+        private _isNeesHide:boolean = false;
         public _hide():void {
-            egret.MainContext.instance.stage._changeSizeDispatchFlag = true;
+            //标记当前点击其他地方关闭
+            this._isNeesHide = true;
 
-            if (this.inputElement == null) {
-                return;
-            }
-            this._isShow = false;
-            this.inputElement.oninput = function () {
-            };
-            this.setElementStyle("border", "none");
-            this.setElementStyle("display", "none");
-            //关闭
-            this.inputElement.value = "";
-            this.setElementStyle("width", 0 + "px");
-
-            window.scrollTo(0, 0);
-
-            var self = this;
-            egret.setTimeout(function () {
-                self.inputElement.blur();
-                window.scrollTo(0, 0);
-            }, this, 50);
-
-            if (this._shape && this._shape.parent) {
-                this._shape.parent.removeChild(this._shape);
+            if (Browser.getInstance().getUserAgent().indexOf("ios") >= 0) {//ios
+                HTMLInput.getInstance().disconnectStageText(this);
             }
         }
 
         private textValue:string = "";
-
-
         public _getText():string {
             if (!this.textValue) {
                 this.textValue = "";
             }
             return this.textValue;
         }
-
 
         public _setText(value:string):void {
             this.textValue = value;
@@ -327,30 +133,283 @@ module egret {
             }
         }
 
-        private _width:number = 0;
-        public _setWidth(value:number):void{
-            this._width = value;
+        public _onInput():void {
+            var self = this;
+            self.textValue = self.inputElement.value;
+
+            egret.Event.dispatchEvent(self, "updateText", false);
         }
 
-        private _height:number = 0;
-        public _setHeight(value:number):void{
-            this._height = value;
+        public _onClickHandler(e):void {
+            if (this._isNeedShow) {
+                e.stopImmediatePropagation();
+                //e.preventDefault();
+                this._isNeedShow = false;
+
+                this.executeShow();
+
+                this.dispatchEvent(new egret.Event("focus"));
+            }
         }
 
+        public _onDisconnect():void {
+            this.inputElement = null;
+
+            this.dispatchEvent(new egret.Event("blur"));
+        }
 
         private _styleInfoes:Object = {};
         private setElementStyle(style:string, value:any):void {
             if (this.inputElement) {
                 if (this._styleInfoes[style] != value) {
                     this.inputElement.style[style] = value;
-                    this._styleInfoes[style] = value;
+                    //this._styleInfoes[style] = value;
                 }
             }
+        }
+
+        public _removeInput():void {
+            if (this.inputElement) {
+                HTMLInput.getInstance().disconnectStageText(this);
+            }
+        }
+
+        /**
+         * 修改位置
+         * @private
+         */
+        public _resetStageText():void {
+            if (this.inputElement) {
+                var textfield:egret.TextField = this._textfield;
+                var propertie:egret.TextFieldProperties = textfield._TF_Props_;
+                this.setElementStyle("fontFamily", propertie._fontFamily);
+                this.setElementStyle("fontStyle", propertie._italic ? "italic" : "normal");
+                this.setElementStyle("fontWeight", propertie._bold ? "bold" : "normal");
+                this.setElementStyle("textAlign", propertie._textAlign);
+                this.setElementStyle("fontSize", propertie._size * this._gscaleY + "px");
+                this.setElementStyle("lineHeight", propertie._size * this._gscaleY + "px");
+                this.setElementStyle("color", propertie._textColorString);
+                this.setElementStyle("width", textfield._getSize(Rectangle.identity).width * this._gscaleX + "px");
+                this.setElementStyle("height", textfield._getSize(Rectangle.identity).height * this._gscaleY + "px");
+                this.setElementStyle("verticalAlign", propertie._verticalAlign);
+            }
+        }
+    }
+
+    /**
+     * @private
+     */
+    export class HTMLInput {
+        private _stageText:HTML5StageText;
+
+        private _simpleElement:any;
+        private _multiElement:any;
+
+        private _inputElement:any;
+        public _inputDIV:any;
+
+        public isInputOn():boolean {
+            return this._stageText != null;
+        }
+
+        public isCurrentStageText(stageText):boolean {
+            return this._stageText == stageText;
+        }
+
+        private initValue(dom:any):void {
+            dom.style.position = "absolute";
+            dom.style.left = "0px";
+            dom.style.top = "0px";
+            dom.style.border = "none";
+            dom.style.padding = "0";
+        }
+
+        public _needShow:boolean = false;
+
+        public _initStageDelegateDiv():any {
+            var self = this;
+            var stageDelegateDiv = egret.Browser.getInstance().$("#StageDelegateDiv");
+            if (!stageDelegateDiv) {
+                stageDelegateDiv = egret.Browser.getInstance().$new("div");
+                stageDelegateDiv.id = "StageDelegateDiv";
+                var container = document.getElementById(egret.StageDelegate.egret_root_div);
+                container.appendChild(stageDelegateDiv);
+
+                self.initValue(stageDelegateDiv);
+
+                stageDelegateDiv.style.width = "0px";
+                stageDelegateDiv.style.height = "0px";
+
+                self._inputDIV = egret.Browser.getInstance().$new("div");
+                self.initValue(self._inputDIV);
+                self._inputDIV.style.width = "0px";
+                self._inputDIV.style.height = "0px";
+
+                self._inputDIV.style.left = 0 + "px";
+                self._inputDIV.style.top = "-100px";
+
+                self._inputDIV.style[Browser.getInstance().getTrans("transformOrigin")] = "0% 0% 0px";
+                stageDelegateDiv.appendChild(self._inputDIV);
+
+                var canvasDiv = document.getElementById(egret.StageDelegate.canvas_div_name);
+                canvasDiv.addEventListener("click", function (e) {
+                    if (self._needShow) {
+                        self._needShow = false;
+
+                        egret.MainContext.instance.stage._changeSizeDispatchFlag = false;
+                        self._stageText._onClickHandler(e);
+
+                        HTMLInput.getInstance().show();
+
+                    }
+                    else {
+                        if (self._inputElement) {
+                            self.clearInputElement();
+                            self._inputElement.blur();
+                            self._inputElement = null;
+                        }
+                    }
+                });
+
+                self.initInputElement(true);
+                self.initInputElement(false);
+            }
+        }
+
+        //初始化输入框
+        private initInputElement(multiline:boolean):void {
+            var self = this;
+
+            //增加1个空的textarea
+            var inputElement:any;
+            if (multiline) {
+                inputElement = document.createElement("textarea");
+                inputElement.style["resize"] = "none";
+                self._multiElement = inputElement;
+                inputElement.id = "egretTextarea";
+            }
+            else {
+                inputElement = document.createElement("input");
+                self._simpleElement = inputElement;
+                inputElement.id = "egretInput";
+            }
+
+            inputElement.type = "text";
+
+            self._inputDIV.appendChild(inputElement);
+            inputElement.setAttribute("tabindex", "-1");
+            inputElement.style.width = "1px";
+            inputElement.style.height = "12px";
+
+            self.initValue(inputElement);
+            inputElement.style.outline = "thin";
+            inputElement.style.background = "none";
+
+            inputElement.style.overflow = "hidden";
+            inputElement.style.wordBreak = "break-all";
+
+            //隐藏输入框
+            inputElement.style.opacity = 0;
+
+            inputElement.oninput = function () {
+                if (self._stageText) {
+                    self._stageText._onInput();
+                }
+            };
+        }
+
+        public show():void {
+            var self = this;
+            var inputElement = self._inputElement;
+            //隐藏输入框
+            egret.__callAsync(function () {
+                inputElement.style.opacity = 1;
+            }, self);
+        }
+
+        public disconnectStageText(stageText):void {
+            if (this._stageText == null || this._stageText == stageText) {
+                this.clearInputElement();
+
+                if (this._inputElement) {
+                    this._inputElement.blur();
+                }
+            }
+        }
+
+        public clearInputElement():void {
+            var self = this;
+            if (self._inputElement) {
+                self._inputElement.value = "";
+
+                self._inputElement.onblur = null;
+
+                self._inputElement.style.width = "1px";
+                self._inputElement.style.height = "12px";
+                self._inputElement.style.left = "0px";
+                self._inputElement.style.top = "0px";
+                self._inputElement.style.opacity = 0;
+
+                var otherElement;
+                if (self._simpleElement == self._inputElement) {
+                    otherElement = self._multiElement;
+                }
+                else {
+                    otherElement = self._simpleElement;
+                }
+                otherElement.style.display = "block";
+
+                self._inputDIV.style.left = 0 + "px";
+                self._inputDIV.style.top = "-100px";
+
+            }
+
+            if (self._stageText) {
+                self._stageText._onDisconnect();
+                self._stageText = null;
+            }
+            egret.MainContext.instance.stage._changeSizeDispatchFlag = true;
+        }
+
+        public getInputElement(stageText):any {
+            var self = this;
+            self.clearInputElement();
+
+            self._stageText = stageText;
+
+            if (self._stageText._multiline) {
+                self._inputElement = self._multiElement;
+            }
+            else {
+                self._inputElement = self._simpleElement;
+            }
+
+
+            var otherElement;
+            if (self._simpleElement == self._inputElement) {
+                otherElement = self._multiElement;
+            }
+            else {
+                otherElement = self._simpleElement;
+            }
+            otherElement.style.display = "none";
+
+            return self._inputElement;
+        }
+
+        private static _instance:HTMLInput;
+
+        public static getInstance():HTMLInput {
+            if (HTMLInput._instance == null) {
+                HTMLInput._instance = new egret.HTMLInput();
+            }
+
+            return HTMLInput._instance;
         }
     }
 }
 
-
-egret.StageText.create = function(){
+egret.StageText.create = function () {
+    egret.HTMLInput.getInstance()._initStageDelegateDiv();
     return new egret.HTML5StageText();
-}
+};

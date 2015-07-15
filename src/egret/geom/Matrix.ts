@@ -1,29 +1,31 @@
-/**
- * Copyright (c) 2014,Egret-Labs.org
- * All rights reserved.
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are met:
- *
- *     * Redistributions of source code must retain the above copyright
- *       notice, this list of conditions and the following disclaimer.
- *     * Redistributions in binary form must reproduce the above copyright
- *       notice, this list of conditions and the following disclaimer in the
- *       documentation and/or other materials provided with the distribution.
- *     * Neither the name of the Egret-Labs.org nor the
- *       names of its contributors may be used to endorse or promote products
- *       derived from this software without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY EGRET-LABS.ORG AND CONTRIBUTORS "AS IS" AND ANY
- * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
- * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL EGRET-LABS.ORG AND CONTRIBUTORS BE LIABLE FOR ANY
- * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
- * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
- * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
- * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
- * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */
+//////////////////////////////////////////////////////////////////////////////////////
+//
+//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  All rights reserved.
+//  Redistribution and use in source and binary forms, with or without
+//  modification, are permitted provided that the following conditions are met:
+//
+//     * Redistributions of source code must retain the above copyright
+//       notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above copyright
+//       notice, this list of conditions and the following disclaimer in the
+//       documentation and/or other materials provided with the distribution.
+//     * Neither the name of the Egret nor the
+//       names of its contributors may be used to endorse or promote products
+//       derived from this software without specific prior written permission.
+//
+//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
+//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
+//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
+//////////////////////////////////////////////////////////////////////////////////////
 
 
 module egret {
@@ -86,8 +88,15 @@ module egret {
          */
         public ty:number;
 
+        /**
+         * 引擎内部用于函数传递返回值的全局 Matrix 对象，开发者请勿随意修改此对象
+         * @member {egret.Matrix} egret.Matrix.identity
+         */
         public static identity:Matrix = new Matrix();
 
+        /**
+         * @private
+         */
         public static DEG_TO_RAD:number = Math.PI / 180;
 
         /**
@@ -374,6 +383,9 @@ module egret {
 
         private array;
 
+        /**
+         * @private
+         */
         public toArray(transpose) {
             if (!this.array) {
                 this.array = new Float32Array(9);
@@ -403,6 +415,165 @@ module egret {
             }
 
             return this.array;
+        }
+
+        /**
+         * 将 Matrix 的成员设置为指定值
+         * @method egret.Matrix#setTo
+         * @param aa {number} 要将 Matrix 设置为的值
+         * @param ba {number} 要将 Matrix 设置为的值
+         * @param ca {number} 要将 Matrix 设置为的值
+         * @param da {number} 要将 Matrix 设置为的值
+         * @param txa {number} 要将 Matrix 设置为的值
+         * @param tya {number} 要将 Matrix 设置为的值
+         */
+        public setTo(aa:number, ba:number, ca:number, da:number, txa:number, tya:number):void {
+            this.a = aa;
+            this.b = ba;
+            this.c = ca;
+            this.d = da;
+            this.tx = txa;
+            this.ty = tya;
+        }
+
+        /**
+         * 将源 Matrix 对象中的所有矩阵数据复制到调用方 Matrix 对象中。
+         * @method egret.Matrix#copyFrom
+         * @param sourceMatrix {egret.Matrix} 要从中复制数据的 Matrix 对象
+         */
+        public copyFrom(sourceMatrix:Matrix):void {
+            this.identityMatrix(sourceMatrix);
+        }
+
+
+        /**
+         * 返回一个新的 Matrix 对象，它是此矩阵的克隆，带有与所含对象完全相同的副本。
+         * @method egret.Matrix#clone
+         * @returns {Matrix} 一个 Matrix 对象
+         */
+        public clone():Matrix {
+            return new Matrix(this.a, this.b, this.c, this.d, this.tx, this.ty);
+        }
+
+        /**
+         * 将某个矩阵与当前矩阵连接，从而将这两个矩阵的几何效果有效地结合在一起。
+         * @method egret.Matrix#concat
+         * @param m {egret.Matrix} 要连接到源矩阵的矩阵
+         */
+        public concat(m:Matrix):void {
+            var a1:number = this.a;
+            var b1:number = this.b;
+            var c1:number = this.c;
+            var d1:number = this.d;
+            var tx1:number = this.tx;
+            var ty1:number = this.ty;
+            var a2:number = m.a;
+            var b2:number = m.b;
+            var c2:number = m.c;
+            var d2:number = m.d;
+            var tx2:number = m.tx;
+            var ty2:number = m.ty;
+            var a = a1 * a2;
+            var b = 0;
+            var c = 0;
+            var d = d1 * d2;
+            var tx = tx1 * a2 + tx2;
+            var ty = ty1 * d2 + ty2;
+
+            if (b1 != 0 || c1 != 0 || b2 != 0 || c2 != 0) {
+                a += b1 * c2;
+                d += c1 * b2;
+                b += a1 * b2 + b1 * d2;
+                c += c1 * a2 + d1 * c2;
+                tx += ty1 * c2;
+                ty += tx1 * b2;
+            }
+
+            this.a = a;
+            this.b = b;
+            this.c = c;
+            this.d = d;
+            this.tx = tx;
+            this.ty = ty;
+        }
+
+        /**
+         * 如果给定预转换坐标空间中的点，则此方法返回发生转换后该点的坐标。
+         * 与使用 transformPoint() 方法应用的标准转换不同，deltaTransformPoint() 方法的转换不考虑转换参数 tx 和 ty。
+         * @method egret.Matrix#deltaTransformPoint
+         * @param point {egret.Point} 想要获得其矩阵转换结果的点
+         * @returns {egret.Point} 由应用矩阵转换所产生的点
+         */
+        public deltaTransformPoint(point:egret.Point):egret.Point {
+            var self = this;
+            var x = self.a * point.x + self.c * point.y;
+            var y = self.b * point.x + self.d * point.y;
+            return new egret.Point(x, y);
+        }
+
+        /**
+         * 返回将 Matrix 对象表示的几何转换应用于指定点所产生的结果。
+         * @method egret.Matrix#transformPoint
+         * @param point {egret.Point} 想要获得其矩阵转换结果的点
+         * @returns {egret.Point} 由应用矩阵转换所产生的点
+         */
+        public transformPoint(point:egret.Point):egret.Point {
+            var self = this;
+            var x:number = self.a * point.x + self.c * point.y + self.tx;
+            var y:number = self.b * point.x + self.d * point.y + self.ty;
+            return new egret.Point(x, y);
+        }
+
+        /**
+         * 返回列出该 Matrix 对象属性的文本值。
+         * @method egret.Matrix#toString
+         * @returns {egret.Point} 一个字符串，它包含 Matrix 对象的属性值：a、b、c、d、tx 和 ty。
+         */
+        public toString():string {
+            return "(a=" + this.a + ", b=" + this.b + ", c=" + this.c + ", d=" + this.d + ", tx=" + this.tx + ", ty=" + this.ty + ")";
+        }
+
+        /**
+         * 包括用于缩放、旋转和转换的参数。当应用于矩阵时，该方法会基于这些参数设置矩阵的值。
+         * @method egret.Matrix#createBox
+         * @param scaleX {number} 水平缩放所用的系数
+         * @param scaleY {number} 垂直缩放所用的系数
+         * @param rotation {number} 旋转量（以弧度为单位）
+         * @param tx {number} 沿 x 轴向右平移（移动）的像素数
+         * @param ty {number} 沿 y 轴向下平移（移动）的像素数
+         */
+        public createBox(scaleX:number, scaleY:number, rotation:number = 0, tx:number = 0, ty:number = 0):void {
+            var self = this;
+            if (rotation !== 0) {
+                rotation = rotation / egret.Matrix.DEG_TO_RAD;
+                var u = egret.NumberUtils.cos(rotation);
+                var v = egret.NumberUtils.sin(rotation);
+                self.a = u * scaleX;
+                self.b = v * scaleY;
+                self.c = -v * scaleX;
+                self.d = u * scaleY;
+            } else {
+                self.a = scaleX;
+                self.b = 0;
+                self.c = 0;
+                self.d = scaleY;
+            }
+            self.tx = tx;
+            self.ty = ty;
+        }
+
+        /**
+         * 创建 Graphics 类的 beginGradientFill() 和 lineGradientStyle() 方法所需的矩阵的特定样式。
+         * 宽度和高度被缩放为 scaleX/scaleY 对，而 tx/ty 值偏移了宽度和高度的一半。
+         * @method egret.Matrix#createGradientBox
+         * @param width {number} 渐变框的宽度
+         * @param height {number} 渐变框的高度
+         * @param rotation {number} 旋转量（以弧度为单位）
+         * @param tx {number} 沿 x 轴向右平移的距离（以像素为单位）。此值将偏移 width 参数的一半
+         * @param ty {number} 沿 y 轴向下平移的距离（以像素为单位）。此值将偏移 height 参数的一半
+         */
+        public createGradientBox(width:number, height:number, rotation:number = 0, tx:number = 0, ty:number = 0):void {
+            this.createBox(width / 1638.4, height / 1638.4, rotation, tx + width / 2, ty + height / 2);
         }
     }
 }

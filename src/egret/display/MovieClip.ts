@@ -1,29 +1,31 @@
-/**
- * Copyright (c) 2014,Egret-Labs.org
- * All rights reserved.
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are met:
- *
- *     * Redistributions of source code must retain the above copyright
- *       notice, this list of conditions and the following disclaimer.
- *     * Redistributions in binary form must reproduce the above copyright
- *       notice, this list of conditions and the following disclaimer in the
- *       documentation and/or other materials provided with the distribution.
- *     * Neither the name of the Egret-Labs.org nor the
- *       names of its contributors may be used to endorse or promote products
- *       derived from this software without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY EGRET-LABS.ORG AND CONTRIBUTORS "AS IS" AND ANY
- * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
- * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL EGRET-LABS.ORG AND CONTRIBUTORS BE LIABLE FOR ANY
- * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
- * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
- * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
- * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
- * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */
+//////////////////////////////////////////////////////////////////////////////////////
+//
+//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  All rights reserved.
+//  Redistribution and use in source and binary forms, with or without
+//  modification, are permitted provided that the following conditions are met:
+//
+//     * Redistributions of source code must retain the above copyright
+//       notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above copyright
+//       notice, this list of conditions and the following disclaimer in the
+//       documentation and/or other materials provided with the distribution.
+//     * Neither the name of the Egret nor the
+//       names of its contributors may be used to endorse or promote products
+//       derived from this software without specific prior written permission.
+//
+//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
+//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
+//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
+//////////////////////////////////////////////////////////////////////////////////////
 
 module egret {
 
@@ -31,14 +33,14 @@ module egret {
      * @class egret.MovieClip
      * @classdesc 影片剪辑，可以通过影片剪辑播放序列帧动画。MovieClip 类从以下类继承而来：DisplayObject 和 EventDispatcher。不同于 DisplayObject 对象，MovieClip 对象拥有一个时间轴。
      * @extends egret.DisplayObject
-     * @link http://docs.egret-labs.org/post/manual/displaycon/movieclip.html  MovieClip序列帧动画
+     * @see http://edn.egret.com/cn/index.php?g=&m=article&a=index&id=151&terms1_id=25&terms2_id=34 MovieClip序列帧动画
      */
     export class MovieClip extends DisplayObject{
 
         private _isAddedToStage:boolean = false;
     //Render Property
         private static renderFilter:RenderFilter = RenderFilter.getInstance();
-        private _textureToRender:Texture = null;
+        public _textureToRender:Texture = null;
 
     //Data Property
         public _movieClipData:MovieClipData = null;
@@ -62,7 +64,7 @@ module egret {
     //Construct Function
 
         /**
-         * 创建新的 MovieClip 实例。创建 MovieClip 之后，调用舞台上的显示对象容器的addElement方法。
+         * 创建一个 egret.MovieClip 对象。创建 MovieClip 之后，调用舞台上的显示对象容器的addElement方法。
          * @method egret.MovieClip#constructor
          * @param movieClipData {MovieClipData} 被引用的 MovieClipData 对象
          */
@@ -259,7 +261,7 @@ module egret {
          */
         public gotoAndPlay(frame: any, playTimes:number = 0): void{
             if (arguments.length === 0 || arguments.length > 2) {
-                throw new Error(getString(1022, "MovieClip.gotoAndPlay()"));
+                $error(1022, "MovieClip.gotoAndPlay()");
             }
             this.play(playTimes);
             this._gotoFrame(frame);
@@ -272,7 +274,7 @@ module egret {
          */
         public gotoAndStop(frame: any): void {
             if (arguments.length != 1) {
-                throw new Error(getString(1022, "MovieClip.gotoAndStop()"));
+                $error(1022, "MovieClip.gotoAndStop()");
             }
             this.stop();
             this._gotoFrame(frame);
@@ -287,7 +289,7 @@ module egret {
                 frameNum = parseInt(frame+'', 10);
                 if(<any>frameNum != frame)
                 {
-                    throw new Error(getString(1022, "Frame Label Not Found"));
+                    $error(1022, "Frame Label Not Found");
                 }
             }
 
@@ -307,9 +309,10 @@ module egret {
         }
 
         private _advanceTime(advancedTime:number):void{
-            var frameIntervalTime:number = this._frameIntervalTime;
-            var currentTime = this._passedTime + advancedTime;
-            this._passedTime = currentTime % frameIntervalTime;
+            var self = this;
+            var frameIntervalTime:number = self._frameIntervalTime;
+            var currentTime = self._passedTime + advancedTime;
+            self._passedTime = currentTime % frameIntervalTime;
 
             var num:number = currentTime / frameIntervalTime;
             if(num < 1){
@@ -317,30 +320,31 @@ module egret {
             }
             while(num >= 1) {
                 num--;
-                this._nextFrameNum++;
-                if(this._nextFrameNum > this._totalFrames){
-                    if(this._playTimes == -1){
-                        this._eventPool.push(Event.LOOP_COMPLETE);
-                        this._nextFrameNum = 1;
+                self._nextFrameNum++;
+                if(self._nextFrameNum > self._totalFrames){
+                    if(self._playTimes == -1){
+                        self._eventPool.push(Event.LOOP_COMPLETE);
+                        self._nextFrameNum = 1;
                     }
                     else{
-                        this._playTimes--;
-                        if(this._playTimes > 0){
-                            this._eventPool.push(Event.LOOP_COMPLETE);
-                            this._nextFrameNum = 1;
+                        self._playTimes--;
+                        if(self._playTimes > 0){
+                            self._eventPool.push(Event.LOOP_COMPLETE);
+                            self._nextFrameNum = 1;
                         }
                         else{
-                            this._nextFrameNum = this._totalFrames;
-                            this._eventPool.push(Event.COMPLETE);
-                            this.stop();
+                            self._nextFrameNum = self._totalFrames;
+                            self._eventPool.push(Event.COMPLETE);
+                            self.stop();
                             break;
                         }
                     }
                 }
-                this._advanceFrame();
+                self._advanceFrame();
             }
-            this._constructFrame();
-            this._handlePendingEvent();
+            self._constructFrame();
+            self._handlePendingEvent();
+            self._setDirty();
         }
 
         public _advanceFrame(): void{
@@ -353,6 +357,7 @@ module egret {
                 return;
             }
             this._textureToRender = this._movieClipData.getTextureByFrame(currentFrameNum);
+            this._DO_Props_._sizeDirty = true;
             this._displayedKeyFrameNum = currentFrameNum;
         }
 
@@ -423,6 +428,7 @@ module egret {
         public get frameRate():number{
             return this.movieClipData.frameRate;
         }
+
         public set frameRate(value:number){
             if(value == this._movieClipData.frameRate){
                 return;

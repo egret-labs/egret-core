@@ -1,29 +1,31 @@
-/**
- * Copyright (c) 2014,Egret-Labs.org
- * All rights reserved.
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are met:
- *
- *     * Redistributions of source code must retain the above copyright
- *       notice, this list of conditions and the following disclaimer.
- *     * Redistributions in binary form must reproduce the above copyright
- *       notice, this list of conditions and the following disclaimer in the
- *       documentation and/or other materials provided with the distribution.
- *     * Neither the name of the Egret-Labs.org nor the
- *       names of its contributors may be used to endorse or promote products
- *       derived from this software without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY EGRET-LABS.ORG AND CONTRIBUTORS "AS IS" AND ANY
- * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
- * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL EGRET-LABS.ORG AND CONTRIBUTORS BE LIABLE FOR ANY
- * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
- * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
- * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
- * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
- * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */
+//////////////////////////////////////////////////////////////////////////////////////
+//
+//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  All rights reserved.
+//  Redistribution and use in source and binary forms, with or without
+//  modification, are permitted provided that the following conditions are met:
+//
+//     * Redistributions of source code must retain the above copyright
+//       notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above copyright
+//       notice, this list of conditions and the following disclaimer in the
+//       documentation and/or other materials provided with the distribution.
+//     * Neither the name of the Egret nor the
+//       names of its contributors may be used to endorse or promote products
+//       derived from this software without specific prior written permission.
+//
+//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
+//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
+//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
+//////////////////////////////////////////////////////////////////////////////////////
 
 
 module egret.gui {
@@ -171,16 +173,17 @@ module egret.gui {
 		 * @method egret.gui.SkinnableComponent#attachSkin
 		 * @param skin {any} 
 		 */		
-		public attachSkin(skin:any):void{
+        public attachSkin(skin: any): void {
+            if (skin && !(skin instanceof DisplayObject))
+                this.skinLayoutEnabled = true;
+            else
+                this.skinLayoutEnabled = false;
+
 			if(skin&&"hostComponent" in skin){
 				var newSkin:ISkin = <ISkin> skin;
 				newSkin.hostComponent = this;
 				this.findSkinParts();
 			}
-			if(skin&&!(skin instanceof DisplayObject))
-				this.skinLayoutEnabled = true;
-			else
-				this.skinLayoutEnabled = false;
 		}
 		/**
 		 * 匹配皮肤和主机组件的公共变量，并完成实例的注入。此方法在附加皮肤时会自动执行一次。
@@ -298,11 +301,11 @@ module egret.gui {
 			this._autoMouseEnabled = value;
 			if(this._autoMouseEnabled){
 				this._touchChildren = this.enabled ? this.explicitMouseChildren : false;
-				this._touchEnabled  = this.enabled ? this.explicitMouseEnabled  : false;
+				this._DO_Props_._touchEnabled  = this.enabled ? this.explicitMouseEnabled  : false;
 			}
 			else{
 				this._touchChildren = this.explicitMouseChildren;
-                this._touchEnabled  = this.explicitMouseEnabled;
+                this._DO_Props_._touchEnabled  = this.explicitMouseEnabled;
 			}
 		}
 		
@@ -334,14 +337,14 @@ module egret.gui {
 		 * @member egret.gui.SkinnableComponent#touchEnabled
 		 */
         public get touchEnabled():boolean{
-            return this._touchEnabled;
+            return this._DO_Props_._touchEnabled;
         }
 		/**
 		 * @inheritDoc
 		 */	
 		public set touchEnabled(value:boolean){
 			if(this.enabled)
-				this._touchEnabled = value;
+				this._DO_Props_._touchEnabled = value;
 			this.explicitMouseEnabled = value;
 		}
 
@@ -349,7 +352,7 @@ module egret.gui {
 		 * @member egret.gui.SkinnableComponent#enabled
          */
         public get enabled():boolean{
-            return this._enabled;
+            return this._UIC_Props_._enabled;
         }
 		/**
 		 * @inheritDoc
@@ -359,12 +362,12 @@ module egret.gui {
 		}
 
         public _setEnabled(value:boolean):void{
-            if(this._enabled==value)
+            if(this._UIC_Props_._enabled==value)
                 return;
-            this._enabled = value;
+            this._UIC_Props_._enabled = value;
             if(this._autoMouseEnabled){
                 this._touchChildren = value ? this.explicitMouseChildren : false;
-                this._touchEnabled  = value ? this.explicitMouseEnabled  : false;
+                this._DO_Props_._touchEnabled  = value ? this.explicitMouseEnabled  : false;
             }
             this.invalidateSkinState();
         }

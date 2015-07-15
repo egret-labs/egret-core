@@ -1,29 +1,31 @@
-/**
- * Copyright (c) 2014,Egret-Labs.org
- * All rights reserved.
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are met:
- *
- *     * Redistributions of source code must retain the above copyright
- *       notice, this list of conditions and the following disclaimer.
- *     * Redistributions in binary form must reproduce the above copyright
- *       notice, this list of conditions and the following disclaimer in the
- *       documentation and/or other materials provided with the distribution.
- *     * Neither the name of the Egret-Labs.org nor the
- *       names of its contributors may be used to endorse or promote products
- *       derived from this software without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY EGRET-LABS.ORG AND CONTRIBUTORS "AS IS" AND ANY
- * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
- * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL EGRET-LABS.ORG AND CONTRIBUTORS BE LIABLE FOR ANY
- * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
- * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
- * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
- * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
- * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */
+//////////////////////////////////////////////////////////////////////////////////////
+//
+//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  All rights reserved.
+//  Redistribution and use in source and binary forms, with or without
+//  modification, are permitted provided that the following conditions are met:
+//
+//     * Redistributions of source code must retain the above copyright
+//       notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above copyright
+//       notice, this list of conditions and the following disclaimer in the
+//       documentation and/or other materials provided with the distribution.
+//     * Neither the name of the Egret nor the
+//       names of its contributors may be used to endorse or promote products
+//       derived from this software without specific prior written permission.
+//
+//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
+//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
+//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
+//////////////////////////////////////////////////////////////////////////////////////
 
 
 module egret {
@@ -49,42 +51,87 @@ module egret {
          * @returns {boolean}
          */
         public get isMobile():boolean {
-            Logger.warningWithErrorId(1000);
+            $warn(1000);
             return egret.MainContext.deviceType == egret.MainContext.DEVICE_MOBILE;
+        }
+
+        /**
+         * 判断是否是ios
+         * @returns {boolean}
+         */
+        public isIOS():boolean {
+            return this.ua.indexOf("windows") < 0 && (this.ua.indexOf("iphone") >= 0 || this.ua.indexOf("ipad") >= 0 || this.ua.indexOf("ipod") >= 0);
+        }
+
+        /**
+         * 获取ios版本
+         * @returns {string}
+         */
+        public getIOSVersion():string {
+            var value = this.ua.toLowerCase().match(/cpu [^\d]*\d.*like mac os x/)[0];
+            return value.match(/\d(_\d)*/)[0];
         }
 
         constructor() {
             super();
             this.ua = navigator.userAgent.toLowerCase();
-            this.trans = this._getTrans();
+            this.trans = this.getTrans("transform");
         }
 
+        public getUserAgent():string {
+            return this.ua;
+        }
 
-        private _getHeader(tempStyle):string {
-            if ("transform" in tempStyle) {
+        private header:string = null;
+
+        /**
+         * 获取当前浏览器对应style类型
+         * @type {string}
+         */
+        public getTrans(style:string, judge:boolean = false):string {
+            var header:string = "";
+
+            if (judge) {
+                header = this.getHeader(style);
+            }
+            else {
+                if (this.header == null) {
+                    this.header = this.getHeader("transform");
+                }
+                header = this.header;
+            }
+
+            if (header == "") {
+                return style;
+            }
+
+            return header + style.charAt(0).toUpperCase() + style.substring(1, style.length);
+        }
+
+        /**
+         * 获取当前浏览器的类型
+         * @returns {string}
+         */
+        private getHeader(style:string):string {
+            var divStyles = document.createElement('div').style;
+
+            if (style in divStyles) {
                 return "";
             }
 
+            style = style.charAt(0).toUpperCase() + style.substring(1, style.length);
             var transArr:Array<string> = ["webkit", "ms", "Moz", "O"];
             for (var i:number = 0; i < transArr.length; i++) {
-                var transform:string = transArr[i] + 'Transform';
-                if (transform in tempStyle)
+                var tempStyle:string = transArr[i] + style;
+
+                if (tempStyle in divStyles) {
                     return transArr[i];
+                }
             }
 
             return "";
         }
 
-
-        private _getTrans():string {
-            var tempStyle = document.createElement('div').style;
-            var _header:string = this._getHeader(tempStyle);
-            var type = "transform";
-            if (_header == "") {
-                return type;
-            }
-            return _header + type.charAt(0).toUpperCase() + type.substr(1);
-        }
 
         public $new(x) {
             return this.$(document.createElement(x));

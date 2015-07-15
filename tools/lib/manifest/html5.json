@@ -6,6 +6,7 @@
     "file_list": [
         "devices/HTML5DeviceContext.ts",
         "renderer/HTML5CanvasRenderer.ts",
+        "renderer/IWebGLTemplate.ts",
         "renderer/WebGLRenderer.ts",
         "renderer/webgl/WebGLUtils.ts",
         "renderer/webgl/shaders/EgretShader.ts",
@@ -15,6 +16,10 @@
         "renderer/webgl/WebGLShaderManager.ts",
         "net/HTML5NetContext.ts",
         "interactive/HTML5TouchContext.ts",
-        "display/HTML5StageText.ts"
+        "display/HTML5StageText.ts",
+        "audio/Html5Audio.ts",
+        "audio/WebAudio.ts",
+        "audio/QQAudio.ts",
+        "Html5Capatibility.ts"
     ]
 }

@@ -1,4 +1,7 @@
 module egret {
+    /**
+     * @private
+     */
     export var egret_string_code = {};
     egret_string_code[-1] = "non-existent errorId:{0}";
     egret_string_code[1000] = "Browser.isMobile interface parameter has been modified，please change the method t o egret.MainContext.deviceType == egret.MainContext.DEVICE_MOBILE";
@@ -13,7 +16,7 @@ module egret {
     egret_string_code[1009] = "Set an adaptor pattern that already exist:{0}";
     egret_string_code[1010] = "addEventListener listener function should not be empty";
     egret_string_code[1011] = "BitmapText cannot find the corresponding texture:\"{0}\"";
-    egret_string_code[1012] = "egret.BitmapTextSpriteSheet has been oboseleted，please us egret.BitmapFont to replace。";
+    egret_string_code[1012] = "egret.BitmapTextSpriteSheet is deprecated，please us egret.BitmapFont to replace。";
     egret_string_code[1013] = "TextField.setFocus is not implemented";
     egret_string_code[1014] = "Ease cannot be instantiated";
     egret_string_code[1015] = "xml not found!";
@@ -31,6 +34,9 @@ module egret {
     egret_string_code[1027] = "DecodingError";
     egret_string_code[1028] = "Called unconfigurated injection rules:{0}。 Please config specified injection rules in the initialization of the project, then call corresponding singleton。";
     egret_string_code[1029] = "Function.prototype.bind - what is trying to be bound is not callable";
+    egret_string_code[1030] = "This API has deprecated";
+    egret_string_code[1031] = "setVolume is deprecated,use this.volume = value instead";
+    egret_string_code[1032] = "getVolume is deprecated,use this.volume instead";
 
     egret_string_code[2000] = "RES.createGroup() passed in non-existed key value in configuration: {0}";
     egret_string_code[2001] = "RES loaded non-existed or empty resource group:\"{0}\"";
@@ -49,11 +55,13 @@ module egret {
     egret_string_code[3011] = "Index:\"{0}\" is out of the visual element index range";
     egret_string_code[3012] = "This method is not available in Scroller component!";
     egret_string_code[3013] = "UIStage is GUI root container, and only one such instant is in the display list！";
+    egret_string_code[3014] = "propNotPropOrStyle";
 
     egret_string_code[4000] = "An Bone cannot be added as a child to itself or one of its children (or children's children, etc.)";
     egret_string_code[4001] = "Abstract class can not be instantiated!";
     egret_string_code[4002] = "Unnamed data!";
     egret_string_code[4003] = "Nonsupport version!";
+    egret_string_code[4004] = "Abstract method needs to be implemented in subclass!";
 
     egret_string_code[3100] = "Current browser does not support WebSocket";
     egret_string_code[3101] = "Please connect Socket firstly";

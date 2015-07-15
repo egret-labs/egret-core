@@ -1,29 +1,31 @@
-/**
- * Copyright (c) 2014,Egret-Labs.org
- * All rights reserved.
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are met:
- *
- *     * Redistributions of source code must retain the above copyright
- *       notice, this list of conditions and the following disclaimer.
- *     * Redistributions in binary form must reproduce the above copyright
- *       notice, this list of conditions and the following disclaimer in the
- *       documentation and/or other materials provided with the distribution.
- *     * Neither the name of the Egret-Labs.org nor the
- *       names of its contributors may be used to endorse or promote products
- *       derived from this software without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY EGRET-LABS.ORG AND CONTRIBUTORS "AS IS" AND ANY
- * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
- * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL EGRET-LABS.ORG AND CONTRIBUTORS BE LIABLE FOR ANY
- * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
- * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
- * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
- * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
- * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */
+//////////////////////////////////////////////////////////////////////////////////////
+//
+//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  All rights reserved.
+//  Redistribution and use in source and binary forms, with or without
+//  modification, are permitted provided that the following conditions are met:
+//
+//     * Redistributions of source code must retain the above copyright
+//       notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above copyright
+//       notice, this list of conditions and the following disclaimer in the
+//       documentation and/or other materials provided with the distribution.
+//     * Neither the name of the Egret nor the
+//       names of its contributors may be used to endorse or promote products
+//       derived from this software without specific prior written permission.
+//
+//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
+//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
+//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
+//////////////////////////////////////////////////////////////////////////////////////
 
 
 module dragonBones {
@@ -91,6 +93,7 @@ module dragonBones {
 		private _totalTime:number = 0; //duration
 		
 		private _currentTime:number = 0;
+        private _lastTime: number = 0;
 		private _currentFrameIndex:number = 0;
 		private _currentFramePosition:number = 0;
 		private _currentFrameDuration:number = 0;
@@ -160,7 +163,6 @@ module dragonBones {
 			this._blendEnabled = false;
 			this._tweenTransform = false;
 			this._tweenScale = false;
-			this._tweenColor = false;
 			this._currentFrameIndex = -1;
 			this._currentTime = -1;
 			this._tweenEasing = NaN;
@@ -279,7 +281,8 @@ module dragonBones {
 			}
 			
 			if(this._currentTime != currentTime){
-				this._currentTime = currentTime;
+				this._lastTime = this._currentTime;
+                this._currentTime = currentTime;
 				
 				var frameList:Array<Frame> = this._timelineData.frameList;
 				var prevFrame:TransformFrame;
@@ -289,8 +292,9 @@ module dragonBones {
 					if(this._currentFrameIndex < 0){
 						this._currentFrameIndex = 0;
 					}
-					else if(this._currentTime < this._currentFramePosition || this._currentTime >= this._currentFramePosition + this._currentFrameDuration){
+					else if(this._currentTime < this._currentFramePosition || this._currentTime >= this._currentFramePosition + this._currentFrameDuration || this._currentTime < this._lastTime){
 						this._currentFrameIndex ++;
+                        this._lastTime = this._currentTime;
 						if(this._currentFrameIndex >= frameList.length){
 							if(this._isComplete){
 								this._currentFrameIndex --;
@@ -432,67 +436,10 @@ module dragonBones {
 					this._tweenTransform = false;
 					this._tweenScale = false;
 				}
-				
-				//color
-				if(currentFrame.color && nextFrame.color){
-					this._durationColor.alphaOffset = nextFrame.color.alphaOffset - currentFrame.color.alphaOffset;
-					this._durationColor.redOffset = nextFrame.color.redOffset - currentFrame.color.redOffset;
-					this._durationColor.greenOffset = nextFrame.color.greenOffset - currentFrame.color.greenOffset;
-					this._durationColor.blueOffset = nextFrame.color.blueOffset - currentFrame.color.blueOffset;
-					
-					this._durationColor.alphaMultiplier = nextFrame.color.alphaMultiplier - currentFrame.color.alphaMultiplier;
-					this._durationColor.redMultiplier = nextFrame.color.redMultiplier - currentFrame.color.redMultiplier;
-					this._durationColor.greenMultiplier = nextFrame.color.greenMultiplier - currentFrame.color.greenMultiplier;
-					this._durationColor.blueMultiplier = nextFrame.color.blueMultiplier - currentFrame.color.blueMultiplier;
-					
-					if(
-						this._durationColor.alphaOffset ||
-						this._durationColor.redOffset ||
-						this._durationColor.greenOffset ||
-						this._durationColor.blueOffset ||
-						this._durationColor.alphaMultiplier ||
-						this._durationColor.redMultiplier ||
-						this._durationColor.greenMultiplier ||
-						this._durationColor.blueMultiplier 
-					){
-						this._tweenColor = true;
-					}
-					else{
-						this._tweenColor = false;
-					}
-				}
-				else if(currentFrame.color){
-					this._tweenColor = true;
-					this._durationColor.alphaOffset = -currentFrame.color.alphaOffset;
-					this._durationColor.redOffset = -currentFrame.color.redOffset;
-					this._durationColor.greenOffset = -currentFrame.color.greenOffset;
-					this._durationColor.blueOffset = -currentFrame.color.blueOffset;
-					
-					this._durationColor.alphaMultiplier = 1 - currentFrame.color.alphaMultiplier;
-					this._durationColor.redMultiplier = 1 - currentFrame.color.redMultiplier;
-					this._durationColor.greenMultiplier = 1 - currentFrame.color.greenMultiplier;
-					this._durationColor.blueMultiplier = 1 - currentFrame.color.blueMultiplier;
-				}
-				else if(nextFrame.color){
-					this._tweenColor = true;
-					this._durationColor.alphaOffset = nextFrame.color.alphaOffset;
-					this._durationColor.redOffset = nextFrame.color.redOffset;
-					this._durationColor.greenOffset = nextFrame.color.greenOffset;
-					this._durationColor.blueOffset = nextFrame.color.blueOffset;
-					
-					this._durationColor.alphaMultiplier = nextFrame.color.alphaMultiplier - 1;
-					this._durationColor.redMultiplier = nextFrame.color.redMultiplier - 1;
-					this._durationColor.greenMultiplier = nextFrame.color.greenMultiplier - 1;
-					this._durationColor.blueMultiplier = nextFrame.color.blueMultiplier - 1;
-				}
-				else{
-					this._tweenColor = false;
-				}
 			}
 			else{
 				this._tweenTransform = false;
 				this._tweenScale = false;
-				this._tweenColor = false;
 			}
 			
 			if(!this._tweenTransform){
@@ -530,26 +477,6 @@ module dragonBones {
 					this._transform.scaleX = this._originTransform.scaleX * currentFrame.transform.scaleX;
 					this._transform.scaleY = this._originTransform.scaleY * currentFrame.transform.scaleY;
 				}
-			}
-			
-			if(!this._tweenColor && this._animationState.displayControl){
-				if(currentFrame.color){
-					this._bone._updateColor(
-						currentFrame.color.alphaOffset,
-						currentFrame.color.redOffset,
-						currentFrame.color.greenOffset,
-						currentFrame.color.blueOffset,
-						currentFrame.color.alphaMultiplier,
-						currentFrame.color.redMultiplier,
-						currentFrame.color.greenMultiplier,
-						currentFrame.color.blueMultiplier,
-						true
-					);
-				}
-				else if(this._bone._isColorChanged){
-					this._bone._updateColor(0, 0, 0, 0, 1, 1, 1, 1, false);
-				}
-				
 			}
 		}
 		
@@ -593,35 +520,6 @@ module dragonBones {
 				}
 				
 				this._bone.invalidUpdate();
-			}
-			
-			if(this._tweenColor && this._animationState.displayControl){
-				if(currentFrame.color){
-					this._bone._updateColor(
-						currentFrame.color.alphaOffset + this._durationColor.alphaOffset * progress,
-						currentFrame.color.redOffset + this._durationColor.redOffset * progress,
-						currentFrame.color.greenOffset + this._durationColor.greenOffset * progress,
-						currentFrame.color.blueOffset + this._durationColor.blueOffset * progress,
-						currentFrame.color.alphaMultiplier + this._durationColor.alphaMultiplier * progress,
-						currentFrame.color.redMultiplier + this._durationColor.redMultiplier * progress,
-						currentFrame.color.greenMultiplier + this._durationColor.greenMultiplier * progress,
-						currentFrame.color.blueMultiplier + this._durationColor.blueMultiplier * progress,
-						true
-					);
-				}
-				else{
-					this._bone._updateColor(
-						this._durationColor.alphaOffset * progress,
-						this._durationColor.redOffset * progress,
-						this._durationColor.greenOffset * progress,
-						this._durationColor.blueOffset * progress,
-						1 + this._durationColor.alphaMultiplier * progress,
-						1 + this._durationColor.redMultiplier * progress,
-						1 + this._durationColor.greenMultiplier * progress,
-						1 + this._durationColor.blueMultiplier * progress,
-						true
-					);
-				}
 			}
 		}
 		
@@ -670,27 +568,7 @@ module dragonBones {
 				}
 				
 				this._bone.invalidUpdate();
-				
-				if(this._animationState.displayControl){
-					if(currentFrame.color){
-						this._bone._updateColor(
-                            currentFrame.color.alphaOffset,
-                            currentFrame.color.redOffset,
-                            currentFrame.color.greenOffset,
-                            currentFrame.color.blueOffset,
-                            currentFrame.color.alphaMultiplier,
-                            currentFrame.color.redMultiplier,
-                            currentFrame.color.greenMultiplier,
-                            currentFrame.color.blueMultiplier,
-                            true);
-					}
-					else if(this._bone._isColorChanged){
-                        this._bone._updateColor(0,0,0,0,1,1,1,1,false);
-					}
-				}
 			}
 		}
-		
-		
 	}
 }

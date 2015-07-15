@@ -1,40 +1,64 @@
-/**
- * Copyright (c) 2014,Egret-Labs.org
- * All rights reserved.
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are met:
- *
- *     * Redistributions of source code must retain the above copyright
- *       notice, this list of conditions and the following disclaimer.
- *     * Redistributions in binary form must reproduce the above copyright
- *       notice, this list of conditions and the following disclaimer in the
- *       documentation and/or other materials provided with the distribution.
- *     * Neither the name of the Egret-Labs.org nor the
- *       names of its contributors may be used to endorse or promote products
- *       derived from this software without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY EGRET-LABS.ORG AND CONTRIBUTORS "AS IS" AND ANY
- * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
- * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL EGRET-LABS.ORG AND CONTRIBUTORS BE LIABLE FOR ANY
- * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
- * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
- * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
- * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
- * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */
+//////////////////////////////////////////////////////////////////////////////////////
+//
+//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  All rights reserved.
+//  Redistribution and use in source and binary forms, with or without
+//  modification, are permitted provided that the following conditions are met:
+//
+//     * Redistributions of source code must retain the above copyright
+//       notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above copyright
+//       notice, this list of conditions and the following disclaimer in the
+//       documentation and/or other materials provided with the distribution.
+//     * Neither the name of the Egret nor the
+//       names of its contributors may be used to endorse or promote products
+//       derived from this software without specific prior written permission.
+//
+//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
+//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
+//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
+//////////////////////////////////////////////////////////////////////////////////////
 module egret {
 
     /**
      * @class egret.HtmlTextParser
      * @classdesc 将html格式文本转换为可赋值给 egret.TextField#textFlow 属性的对象
-     * @link http://docs.egret-labs.org/jkdoc/manual-text-multiformat.html 多种样式文本混合
+     * @see http://edn.egret.com/cn/index.php?g=&m=article&a=index&id=146&terms1_id=25&terms2_id=33&t3_id=146 多种样式文本混合
      */
     export class HtmlTextParser{
 
+        /**
+         * 创建一个 egret.HtmlTextParser 对象
+         */
         constructor () {
+            this.initReplaceArr();
+        }
 
+        private _replaceArr:Array<any> = [];
+        private initReplaceArr():void {
+            this._replaceArr = [];
+            this._replaceArr.push([/&lt;/g, "<"]);
+            this._replaceArr.push([/&gt;/g, ">"]);
+            this._replaceArr.push([/&amp;/g, "&"]);
+            this._replaceArr.push([/&quot;/g, "\""]);
+            this._replaceArr.push([/&apos;/g, "\'"]);
+        }
+        private replaceSpecial(value:string):string {
+            for (var i = 0; i < this._replaceArr.length; i++) {
+                var k = this._replaceArr[i][0];
+                var v = this._replaceArr[i][1];
+
+                value = value.replace(k, v);
+            }
+            return value;
         }
 
         private resutlArr:Array<egret.ITextElement> = [];
@@ -80,20 +104,7 @@ module egret {
                 return;
             }
 
-            var resutlArr:Array<any> = [];
-            resutlArr.push(["&lt;", "<"]);
-            resutlArr.push(["&gt;", ">"]);
-            resutlArr.push(["&amp;", "&"]);
-            resutlArr.push(["&quot;", "\""]);
-            resutlArr.push(["&apos;;", "\'"]);
-
-            for (var i = 0; i < resutlArr.length; i++) {
-                var k = resutlArr[i][0];
-                var v = resutlArr[i][1];
-
-                var reg = new RegExp(k, "g");
-                value.replace(reg, v);
-            }
+            value = this.replaceSpecial(value);
 
             if (this.stackArray.length > 0) {
                 this.resutlArr.push({text:value, style:this.stackArray[this.stackArray.length - 1]})
@@ -105,48 +116,81 @@ module egret {
 
         //将字符数据转成Json数据
         private changeStringToObject(str:string):egret.ITextStyle {
+            str = str.trim();
             var info:any = {};
 
-            var array:Array<any> = str.replace(/( )+/g, " ").split(" ");
+            var header = [];
+            if (str.charAt(0) == "i" || str.charAt(0) == "b")  {
+                this.addProperty(info, str, "true");
+            }
+            else if (header = str.match(/^(font|a)\s/)){
+                str = str.substring(header[0].length).trim();
 
-            for (var i = 0; i < array.length; i++) {
-                this.addProperty(info, array[i]);
+                var next:number = 0;
+                var titles;
+                while (titles = str.match(this.getHeadReg())) {
+                    var title = titles[0];
+                    var value = "";
+                    var str = str.substring(title.length).trim();
+                    if (str.charAt(0) == "\"") {
+                        var next = str.indexOf("\"", 1);
+                        value = str.substring(1, next);
+                        next += 1;
+                    }
+                    else if (str.charAt(0) == "\'") {
+                        var next = str.indexOf("\'", 1);
+                        value = str.substring(1, next);
+                        next += 1;
+                    }
+                    else {
+                        value = str.match(/(\S)+/)[0];
+                        next = value.length;
+                    }
+
+                    this.addProperty(info, title.substring(0, title.length - 1).trim(), value.trim());
+
+                    str = str.substring(next).trim();
+                }
             }
 
             return info;
         }
 
-        private addProperty(info:egret.ITextStyle, prV:string):void {
-            var valueArr:Array<string> = prV.replace(/( )*=( )*/g, "=").split("=");
-            if (valueArr[1]) {
-                valueArr[1] = valueArr[1].replace(/(\"|\')/g, "");
-            }
-            switch (valueArr[0].toLowerCase()) {
+        private getHeadReg():RegExp {
+            return /^(color|textcolor|strokecolor|stroke|b|bold|i|italic|size|fontfamily|href)(\s)*=/;
+        }
+
+        private addProperty(info:egret.ITextStyle, head:string, value:string):void {
+
+            switch (head.toLowerCase()) {
                 case "color" :
-                    valueArr[1] = valueArr[1].replace(/#/, "0x");
-                    info.textColor = parseInt(valueArr[1]);
+                case "textcolor" :
+                    value = value.replace(/#/, "0x");
+                    info.textColor = parseInt(value);
                     break;
                 case "strokecolor" :
-                    valueArr[1] = valueArr[1].replace(/#/, "0x");
-                    info.strokeColor = parseInt(valueArr[1]);
+                    value = value.replace(/#/, "0x");
+                    info.strokeColor = parseInt(value);
                     break;
                 case "stroke" :
-                    info.stroke = parseInt(valueArr[1]);
+                    info.stroke = parseInt(value);
                     break;
                 case "b" :
-                    info.bold = (valueArr[1] || "true") == "true";
+                case "bold" :
+                    info.bold = value == "true";
                     break;
                 case "i" :
-                    info.italic = (valueArr[1] || "true") == "true";
+                case "italic" :
+                    info.italic = value == "true";
                     break;
                 case "size" :
-                    info.size = parseInt(valueArr[1]);
+                    info.size = parseInt(value);
                     break;
                 case "fontfamily" :
-                    info.fontFamily = valueArr[1];
+                    info.fontFamily = value;
                     break;
                 case "href" :
-                    info.href = valueArr[1];
+                    info.href = this.replaceSpecial(value);
                     break;
             }
         }

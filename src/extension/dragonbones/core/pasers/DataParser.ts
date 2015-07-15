@@ -1,29 +1,31 @@
-/**
- * Copyright (c) 2014,Egret-Labs.org
- * All rights reserved.
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are met:
- *
- *     * Redistributions of source code must retain the above copyright
- *       notice, this list of conditions and the following disclaimer.
- *     * Redistributions in binary form must reproduce the above copyright
- *       notice, this list of conditions and the following disclaimer in the
- *       documentation and/or other materials provided with the distribution.
- *     * Neither the name of the Egret-Labs.org nor the
- *       names of its contributors may be used to endorse or promote products
- *       derived from this software without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY EGRET-LABS.ORG AND CONTRIBUTORS "AS IS" AND ANY
- * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
- * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL EGRET-LABS.ORG AND CONTRIBUTORS BE LIABLE FOR ANY
- * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
- * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
- * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
- * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
- * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */
+//////////////////////////////////////////////////////////////////////////////////////
+//
+//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  All rights reserved.
+//  Redistribution and use in source and binary forms, with or without
+//  modification, are permitted provided that the following conditions are met:
+//
+//     * Redistributions of source code must retain the above copyright
+//       notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above copyright
+//       notice, this list of conditions and the following disclaimer in the
+//       documentation and/or other materials provided with the distribution.
+//     * Neither the name of the Egret nor the
+//       names of its contributors may be used to endorse or promote products
+//       derived from this software without specific prior written permission.
+//
+//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
+//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
+//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
+//////////////////////////////////////////////////////////////////////////////////////
 
 
 module dragonBones {
@@ -90,10 +92,16 @@ module dragonBones {
 			var version:string = rawDataToParse[ConstValues.A_VERSION];
             version = version.toString();
             if( version.toString() != DragonBones.DATA_VERSION &&
-                version.toString() != DragonBones.PARENT_COORDINATE_DATA_VERSION)
+                version.toString() != DragonBones.PARENT_COORDINATE_DATA_VERSION &&
+				version.toString() != "2.3")
             {
-                throw new Error(egret.getString(4003));
+                egret.$error(4003);
             }
+			else if(version.toString() == DragonBones.PARENT_COORDINATE_DATA_VERSION||
+					 version.toString() == "2.3")
+			{
+				return Data3Parser.parseDragonBonesData(rawDataToParse);
+			}
 			
 			var frameRate:number = DataParser.getNumber(rawDataToParse, ConstValues.A_FRAME_RATE, 0) || 0;
 			
@@ -124,6 +132,11 @@ module dragonBones {
                 outputArmatureData.addBoneData(DataParser.parseBoneData(boneObject));
             }
 
+			var slotList:any = armatureDataToParse[ConstValues.SLOT];
+			for(var key in slotList){
+				var slotObject:any = slotList[key];
+				outputArmatureData.addSlotData(DataParser.parseSlotData(slotObject));
+			}
             var skinList:any = armatureDataToParse[ConstValues.SKIN];
             for(var key in skinList)
             {
@@ -175,7 +188,7 @@ module dragonBones {
             for(var key in slotList)
             {
                 var slotObject:any = slotList[key];
-                skinData.addSlotData(DataParser.parseSlotData(slotObject));
+                skinData.addSlotData(DataParser.parseSlotDisplayData(slotObject));
             }
 			
 			return skinData;
@@ -185,10 +198,17 @@ module dragonBones {
 			var slotData:SlotData = new SlotData();
 			slotData.name = slotObject[ConstValues.A_NAME];
 			slotData.parent = slotObject[ConstValues.A_PARENT];
-			slotData.zOrder = <number><any> (slotObject[ConstValues.A_Z_ORDER]);
-            slotData.zOrder = DataParser.getNumber(slotObject,ConstValues.A_Z_ORDER,0)||0;
+			slotData.zOrder = DataParser.getNumber(slotObject,ConstValues.A_Z_ORDER,0)||0;
+			slotData.displayIndex = DataParser.getNumber(slotObject,ConstValues.A_DISPLAY_INDEX,0);
 			slotData.blendMode = slotObject[ConstValues.A_BLENDMODE];
+			return slotData;
+		}
 
+		private static parseSlotDisplayData(slotObject:any):SlotData{
+			var slotData:SlotData = new SlotData();
+			slotData.name = slotObject[ConstValues.A_NAME];
+			slotData.parent = slotObject[ConstValues.A_PARENT];
+			slotData.zOrder = DataParser.getNumber(slotObject,ConstValues.A_Z_ORDER,0)||0;
             var displayList:any = slotObject[ConstValues.DISPLAY];
 
             for(var key in displayList) {
@@ -204,7 +224,8 @@ module dragonBones {
 			displayData.name = displayObject[ConstValues.A_NAME];
 			displayData.type = displayObject[ConstValues.A_TYPE];
 			DataParser.parseTransform(displayObject[ConstValues.TRANSFORM], displayData.transform, displayData.pivot);
-			
+			displayData.pivot.x = NaN;
+			displayData.pivot.y = NaN;
 			if(DataParser.tempDragonBonesData!=null){
 				DataParser.tempDragonBonesData.addDisplayData(displayData);
 			}
@@ -218,7 +239,7 @@ module dragonBones {
 			animationData.name = animationObject[ConstValues.A_NAME];
 			animationData.frameRate = frameRate;
 			animationData.duration = Math.round((DataParser.getNumber(animationObject, ConstValues.A_DURATION, 1) || 1) * 1000 / frameRate);
-			animationData.playTimes = DataParser.getNumber(animationObject, ConstValues.A_LOOP, 1);
+			animationData.playTimes = DataParser.getNumber(animationObject, ConstValues.A_PLAY_TIMES, 1);
             animationData.playTimes = animationData.playTimes != NaN ? animationData.playTimes : 1;
 			animationData.fadeTime = DataParser.getNumber(animationObject, ConstValues.A_FADE_IN_TIME, 0) || 0;
 			animationData.scale = DataParser.getNumber(animationObject, ConstValues.A_SCALE, 1) || 0;
@@ -228,26 +249,55 @@ module dragonBones {
 			animationData.autoTween = DataParser.getBoolean(animationObject, ConstValues.A_AUTO_TWEEN, true);
 
             var frameObjectList:Array<any> = animationObject[ConstValues.FRAME];
-            for(var index in frameObjectList)
-            {
-                var frameObject:any = frameObjectList[index];
-                var frame:Frame = DataParser.parseTransformFrame(frameObject, frameRate);
-                animationData.addFrame(frame);
-            }
+			var i:number = 0;
+			var len:number = 0;
+			if(frameObjectList)
+			{
+				for (i = 0, len = frameObjectList.length; i < len; i++)
+				{
+					var frameObject:any = frameObjectList[i];
+					var frame:Frame = DataParser.parseTransformFrame(frameObject, frameRate);
+					animationData.addFrame(frame);
+				}
+			}
 
             DataParser.parseTimeline(animationObject, animationData);
 			
 			var lastFrameDuration:number = animationData.duration;
 
-            var timelineObjectList:Array<any> = animationObject[ConstValues.TIMELINE];
-            for(var index in timelineObjectList) {
-                var timelineObject:any = timelineObjectList[index];
-                var timeline:TransformTimeline = DataParser.parseTransformTimeline(timelineObject, animationData.duration, frameRate);
-                timeline = DataParser.parseTransformTimeline(timelineObject, animationData.duration, frameRate);
-                lastFrameDuration = Math.min(lastFrameDuration, timeline.frameList[timeline.frameList.length - 1].duration);
-                animationData.addTimeline(timeline);
-            }
-			
+            var timelineObjectList:Array<any> = animationObject[ConstValues.BONE];
+			if(timelineObjectList)
+			{
+				for(i = 0,len = timelineObjectList.length; i < len; i++) {
+					var timelineObject:any = timelineObjectList[i];
+					if(timelineObject)
+					{
+						var timeline:TransformTimeline = DataParser.parseTransformTimeline(timelineObject, animationData.duration, frameRate);
+						if(timeline.frameList.length > 0)
+						{
+							lastFrameDuration = Math.min(lastFrameDuration, timeline.frameList[timeline.frameList.length - 1].duration);
+						}
+						animationData.addTimeline(timeline);
+					}
+				}
+			}
+
+			var slotTimelineObjectList:Array<any> = animationObject[ConstValues.SLOT];
+			if(slotTimelineObjectList)
+			{
+				for(i = 0, len = slotTimelineObjectList.length; i < len; i++) {
+					var slotTimelineObject:any = slotTimelineObjectList[i];
+					if(slotTimelineObject){
+						var slotTimeline:SlotTimeline = DataParser.parseSlotTimeline(slotTimelineObject, animationData.duration, frameRate);
+						if(slotTimeline.frameList.length > 0)
+						{
+							lastFrameDuration = Math.min(lastFrameDuration, slotTimeline.frameList[slotTimeline.frameList.length - 1].duration);
+						}
+						animationData.addSlotTimeline(slotTimeline);
+					}
+				}
+			}
+
 			if(animationData.frameList.length > 0){
 				lastFrameDuration = Math.min(lastFrameDuration, animationData.frameList[animationData.frameList.length - 1].duration);
 			}
@@ -278,7 +328,27 @@ module dragonBones {
 			
 			return outputTimeline;
 		}
-		
+
+		private static parseSlotTimeline(timelineObject:any, duration:number, frameRate:number):SlotTimeline{
+			var outputTimeline:SlotTimeline = new SlotTimeline();
+			outputTimeline.name = timelineObject[ConstValues.A_NAME];
+			outputTimeline.scale = DataParser.getNumber(timelineObject, ConstValues.A_SCALE, 1) || 0;
+			outputTimeline.offset = DataParser.getNumber(timelineObject, ConstValues.A_OFFSET, 0) || 0;
+			outputTimeline.duration = duration;
+
+			var frameList:any = timelineObject[ConstValues.FRAME];
+			for(var key in frameList)
+			{
+				var frameObject:any = frameList[key];
+				var frame:SlotFrame = DataParser.parseSlotFrame(frameObject, frameRate);
+				outputTimeline.addFrame(frame);
+			}
+
+			DataParser.parseTimeline(timelineObject, outputTimeline);
+
+			return outputTimeline;
+		}
+
 		private static parseTransformFrame(frameObject:any, frameRate:number):TransformFrame{
 			var outputFrame:TransformFrame = new TransformFrame();
             DataParser.parseFrame(frameObject, outputFrame, frameRate);
@@ -290,10 +360,6 @@ module dragonBones {
 			outputFrame.tweenRotate = Math.floor(DataParser.getNumber(frameObject, ConstValues.A_TWEEN_ROTATE, 0) || 0);
 			outputFrame.tweenScale = DataParser.getBoolean(frameObject, ConstValues.A_TWEEN_SCALE, true);
 			outputFrame.displayIndex = Math.floor(DataParser.getNumber(frameObject, ConstValues.A_DISPLAY_INDEX, 0)|| 0);
-            //outputFrame.blendMode = frameObject[ConstValues.A_BLENDMODE] || "normal";
-
-			//如果为NaN，则说明没有改变过zOrder
-			outputFrame.zOrder = DataParser.getNumber(frameObject, ConstValues.A_Z_ORDER, DataParser.tempDragonBonesData.isGlobal ? NaN : 0);
 			
 			DataParser.parseTransform(frameObject[ConstValues.TRANSFORM], outputFrame.transform, outputFrame.pivot);
             if(DataParser.tempDragonBonesData.isGlobal)//绝对数据
@@ -303,16 +369,33 @@ module dragonBones {
 			
 			outputFrame.scaleOffset.x = DataParser.getNumber(frameObject, ConstValues.A_SCALE_X_OFFSET, 0)||0;
 			outputFrame.scaleOffset.y = DataParser.getNumber(frameObject, ConstValues.A_SCALE_Y_OFFSET, 0)||0;
+
 			
-			var colorTransformObject:any = frameObject[ConstValues.COLOR_TRANSFORM];
+			return outputFrame;
+		}
+
+		private static parseSlotFrame(frameObject:any, frameRate:number):SlotFrame{
+			var outputFrame:SlotFrame = new SlotFrame();
+			DataParser.parseFrame(frameObject, outputFrame, frameRate);
+
+			outputFrame.visible = !DataParser.getBoolean(frameObject, ConstValues.A_HIDE, false);
+
+			//NaN:no tween, 10:auto tween, [-1, 0):ease in, 0:line easing, (0, 1]:ease out, (1, 2]:ease in out
+			outputFrame.tweenEasing = DataParser.getNumber(frameObject, ConstValues.A_TWEEN_EASING, 10);
+			outputFrame.displayIndex = Math.floor(DataParser.getNumber(frameObject, ConstValues.A_DISPLAY_INDEX, 0)|| 0);
+
+			//如果为NaN，则说明没有改变过zOrder
+			outputFrame.zOrder = DataParser.getNumber(frameObject, ConstValues.A_Z_ORDER, DataParser.tempDragonBonesData.isGlobal ? NaN : 0);
+
+			var colorTransformObject:any = frameObject[ConstValues.COLOR];
 			if(colorTransformObject){
 				outputFrame.color = new ColorTransform();
 				DataParser.parseColorTransform(colorTransformObject, outputFrame.color);
 			}
-			
+
 			return outputFrame;
 		}
-		
+
 		private static parseTimeline(timelineObject:any, outputTimeline:Timeline):void{
 			var position:number = 0;
 			var frame:Frame;
@@ -356,18 +439,16 @@ module dragonBones {
 		}
 		
 		private static parseColorTransform(colorTransformObject:any, colorTransform:ColorTransform):void{
-			if(colorTransformObject){
-				if(colorTransform){
-					colorTransform.alphaOffset =DataParser.getNumber(colorTransformObject, ConstValues.A_ALPHA_OFFSET, 0);
-					colorTransform.redOffset = DataParser.getNumber(colorTransformObject, ConstValues.A_RED_OFFSET, 0);
-					colorTransform.greenOffset = DataParser.getNumber(colorTransformObject, ConstValues.A_GREEN_OFFSET, 0);
-					colorTransform.blueOffset = DataParser.getNumber(colorTransformObject, ConstValues.A_BLUE_OFFSET, 0);
-					
-					colorTransform.alphaMultiplier = DataParser.getNumber(colorTransformObject, ConstValues.A_ALPHA_MULTIPLIER, 100) * 0.01;
-					colorTransform.redMultiplier = DataParser.getNumber(colorTransformObject, ConstValues.A_RED_MULTIPLIER, 100) * 0.01;
-					colorTransform.greenMultiplier =DataParser.getNumber(colorTransformObject, ConstValues.A_GREEN_MULTIPLIER, 100) * 0.01;
-					colorTransform.blueMultiplier = DataParser.getNumber(colorTransformObject, ConstValues.A_BLUE_MULTIPLIER, 100) * 0.01;
-				}
+            if(colorTransform){
+				colorTransform.alphaOffset =DataParser.getNumber(colorTransformObject, ConstValues.A_ALPHA_OFFSET, 0);
+				colorTransform.redOffset = DataParser.getNumber(colorTransformObject, ConstValues.A_RED_OFFSET, 0);
+				colorTransform.greenOffset = DataParser.getNumber(colorTransformObject, ConstValues.A_GREEN_OFFSET, 0);
+				colorTransform.blueOffset = DataParser.getNumber(colorTransformObject, ConstValues.A_BLUE_OFFSET, 0);
+				
+				colorTransform.alphaMultiplier = DataParser.getNumber(colorTransformObject, ConstValues.A_ALPHA_MULTIPLIER, 100) * 0.01;
+				colorTransform.redMultiplier = DataParser.getNumber(colorTransformObject, ConstValues.A_RED_MULTIPLIER, 100) * 0.01;
+				colorTransform.greenMultiplier =DataParser.getNumber(colorTransformObject, ConstValues.A_GREEN_MULTIPLIER, 100) * 0.01;
+				colorTransform.blueMultiplier = DataParser.getNumber(colorTransformObject, ConstValues.A_BLUE_MULTIPLIER, 100) * 0.01;
 			}
 		}
 		

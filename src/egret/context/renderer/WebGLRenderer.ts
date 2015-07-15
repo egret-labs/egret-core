@@ -1,29 +1,31 @@
-/**
- * Copyright (c) 2014,Egret-Labs.org
- * All rights reserved.
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are met:
- *
- *     * Redistributions of source code must retain the above copyright
- *       notice, this list of conditions and the following disclaimer.
- *     * Redistributions in binary form must reproduce the above copyright
- *       notice, this list of conditions and the following disclaimer in the
- *       documentation and/or other materials provided with the distribution.
- *     * Neither the name of the Egret-Labs.org nor the
- *       names of its contributors may be used to endorse or promote products
- *       derived from this software without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY EGRET-LABS.ORG AND CONTRIBUTORS "AS IS" AND ANY
- * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
- * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL EGRET-LABS.ORG AND CONTRIBUTORS BE LIABLE FOR ANY
- * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
- * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
- * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
- * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
- * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */
+//////////////////////////////////////////////////////////////////////////////////////
+//
+//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  All rights reserved.
+//  Redistribution and use in source and binary forms, with or without
+//  modification, are permitted provided that the following conditions are met:
+//
+//     * Redistributions of source code must retain the above copyright
+//       notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above copyright
+//       notice, this list of conditions and the following disclaimer in the
+//       documentation and/or other materials provided with the distribution.
+//     * Neither the name of the Egret nor the
+//       names of its contributors may be used to endorse or promote products
+//       derived from this software without specific prior written permission.
+//
+//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
+//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
+//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
+//////////////////////////////////////////////////////////////////////////////////////
 
 module egret {
     /**
@@ -47,8 +49,14 @@ module egret {
         private projectionY:number = NaN;
         private shaderManager:WebGLShaderManager = null;
 
+        private width:number;
+        private height:number;
+
         constructor(canvas?:HTMLCanvasElement) {
             super();
+
+            Texture.prototype.dispose = Texture.prototype._disposeForCanvas;
+
             this.canvas = canvas || this.createCanvas();
             this.canvas.addEventListener("webglcontextlost", this.handleContextLost.bind(this), false);
             this.canvas.addEventListener("webglcontextrestored", this.handleContextRestored.bind(this), false);
@@ -85,7 +93,16 @@ module egret {
         }
 
         public onRenderFinish():void {
-            this._draw();
+            this._drawWebGL();
+        }
+
+        private static initWebGLCanvas():void {
+            if(!RenderTexture["WebGLCanvas"]) {
+                RenderTexture["WebGLCanvas"] = document.createElement("canvas");
+                RenderTexture["WebGLCanvas"]["avaliable"] = true;
+                RenderTexture["WebGLRenderer"] = new egret.WebGLRenderer(RenderTexture["WebGLCanvas"]);
+                RenderTexture["WebGLRenderer"].setAlpha(1);
+            }
         }
 
         private initAll():void {
@@ -94,22 +111,30 @@ module egret {
             }
             WebGLRenderer.isInit = true;
             egret_webgl_graphics.init();
+
+
             egret.TextField.prototype._makeBitmapCache = function () {
-                if (!this.renderTexture) {
-                    this.renderTexture = new egret.RenderTexture();
+                var self:egret.TextField = this;
+                if (!self.renderTexture) {
+                    self.renderTexture = new egret.RenderTexture();
                 }
-                var bounds = this.getBounds(Rectangle.identity);
+                var bounds = self.getBounds(Rectangle.identity);
                 if (bounds.width == 0 || bounds.height == 0) {
-                    this._texture_to_render = null;
+                    self._texture_to_render = null;
                     return false;
                 }
 
-                if (!this._bitmapData) {
-                    this._bitmapData = document.createElement("canvas");
-                    this.renderContext = egret.RendererContext.createRendererContext(this._bitmapData);
+                if (!(<egret.IWebGLTemplate><any>self)._bitmapData) {
+                    (<egret.IWebGLTemplate><any>self)._bitmapData = document.createElement("canvas");
+                    (<egret.IWebGLTemplate><any>self)._bitmapData["avaliable"] = true;
+                    (<egret.IWebGLTemplate><any>self).renderContext = egret.RendererContext.createRendererContext((<egret.IWebGLTemplate><any>self)._bitmapData);
                 }
-                var width = bounds.width;
-                var height = bounds.height;
+                var cacheCanvas:HTMLCanvasElement = (<egret.IWebGLTemplate><any>self)._bitmapData;
+
+                var originalWidth = bounds.width;
+                var originalHeight = bounds.height;
+                var width = originalWidth;
+                var height = originalHeight;
 
                 var texture_scale_factor = egret.MainContext.instance.rendererContext._texture_scale_factor;
                 width /= texture_scale_factor;
@@ -118,89 +143,99 @@ module egret {
                 width = Math.round(width);
                 height = Math.round(height);
 
-                var cacheCanvas:HTMLCanvasElement = this._bitmapData;
                 cacheCanvas.width = width;
                 cacheCanvas.height = height;
                 cacheCanvas.style.width = width + "px";
                 cacheCanvas.style.height = height + "px";
 
-                if (this.renderContext._cacheCanvas) {
-                    this.renderContext._cacheCanvas.width = width;
-                    this.renderContext._cacheCanvas.height = height;
+                if ((<egret.IWebGLTemplate><any>self).renderContext._cacheCanvas) {
+                    (<egret.IWebGLTemplate><any>self).renderContext._cacheCanvas.width = width;
+                    (<egret.IWebGLTemplate><any>self).renderContext._cacheCanvas.height = height;
                 }
 
-                this._worldTransform.identity();
-                this._worldTransform.a = 1 / texture_scale_factor;
-                this._worldTransform.d = 1 / texture_scale_factor;
-                this.renderContext.setTransform(this._worldTransform);
-                this.worldAlpha = 1;
+                self._worldTransform.identity();
+                self._worldTransform.a = 1 / texture_scale_factor;
+                self._worldTransform.d = 1 / texture_scale_factor;
+                (<egret.IWebGLTemplate><any>self).renderContext.setTransform(self._worldTransform);
+                self.worldAlpha = 1;
 
                 var renderFilter = egret.RenderFilter.getInstance();
                 var drawAreaList:Array<Rectangle> = renderFilter._drawAreaList.concat();
                 renderFilter._drawAreaList.length = 0;
-                this.renderContext.clearScreen();
-                this.renderContext.onRenderStart();
-                RendererContext.deleteTexture(this.renderTexture);
-                if (this._colorTransform) {
-                    this.renderContext.setGlobalColorTransform(this._colorTransform.matrix);
+
+                (<egret.IWebGLTemplate><any>self).renderContext.clearScreen();
+                (<egret.IWebGLTemplate><any>self).renderContext.onRenderStart();
+                Texture.deleteWebGLTexture(self.renderTexture);
+                this.renderTexture.dispose();
+                if (self._hasFilters()) {
+                    self._setGlobalFilters((<egret.IWebGLTemplate><any>self).renderContext);
                 }
-                var mask = this.mask || this._scrollRect;
+                var mask = self.mask || self._DO_Props_._scrollRect;
                 if (mask) {
-                    this.renderContext.pushMask(mask);
+                    (<egret.IWebGLTemplate><any>self).renderContext.pushMask(mask);
                 }
-                this._render(this.renderContext);
+                self._render((<egret.IWebGLTemplate><any>self).renderContext);
                 if (mask) {
-                    this.renderContext.popMask();
+                    (<egret.IWebGLTemplate><any>self).renderContext.popMask();
                 }
-                if (this._colorTransform) {
-                    this.renderContext.setGlobalColorTransform(null);
+                if (self._hasFilters()) {
+                    self._removeGlobalFilters((<egret.IWebGLTemplate><any>self).renderContext);
                 }
                 RenderTexture.identityRectangle.width = width;
                 RenderTexture.identityRectangle.height = height;
                 renderFilter.addDrawArea(RenderTexture.identityRectangle);
-                this.renderContext.onRenderFinish();
+                (<egret.IWebGLTemplate><any>self).renderContext.onRenderFinish();
                 renderFilter._drawAreaList = drawAreaList;
 
-                this.renderTexture._bitmapData = this._bitmapData;
-                this.renderTexture._sourceWidth = width;
-                this.renderTexture._sourceHeight = height;
-                this.renderTexture._textureWidth = this.renderTexture._sourceWidth * texture_scale_factor;
-                this.renderTexture._textureHeight = this.renderTexture._sourceHeight * texture_scale_factor;
+                self.renderTexture._bitmapData = (<egret.IWebGLTemplate><any>self)._bitmapData;
+                self.renderTexture._sourceWidth = width;
+                self.renderTexture._sourceHeight = height;
+                self.renderTexture._textureWidth = originalWidth;
+                self.renderTexture._textureHeight = originalHeight;
 
-                this._texture_to_render = this.renderTexture;
+                self._texture_to_render = self.renderTexture;
                 return true;
             };
 
             egret.TextField.prototype._draw = function (renderContext) {
-                var textField:egret.TextField = <egret.TextField>this;
-                if (textField.getDirty()) {
-                    this._texture_to_render = this.renderTexture;
-                    this._cacheAsBitmap = true;
+                var self:egret.TextField = this;
+                var properties:egret.TextFieldProperties = self._TF_Props_;
+                if (properties._type == egret.TextFieldType.INPUT) {
+                    if (self._isTyping) {
+                        return;
+                    }
                 }
-                egret.DisplayObject.prototype._draw.call(textField, renderContext);
+
+                if (self.getDirty()) {
+                    self._texture_to_render = self.renderTexture;
+                    self._DO_Props_._cacheAsBitmap = true;
+                }
+                egret.DisplayObject.prototype._draw.call(self, renderContext);
             };
 
 
             egret.RenderTexture.prototype.init = function () {
-                var o:any = this;
-                o._bitmapData = document.createElement("canvas");
-                o.canvasContext = o._bitmapData.getContext("2d");
-                o._webglBitmapData = document.createElement("canvas");
-                o.renderContext = new egret.WebGLRenderer(o._webglBitmapData);
+                var self:any = this;
+                self._bitmapData = document.createElement("canvas");
+                self._bitmapData["avaliable"] = true;
+                self.canvasContext = self._bitmapData.getContext("2d");
+                //todo 多层嵌套会有隐患
+                WebGLRenderer.initWebGLCanvas();
+                self._webglBitmapData = RenderTexture["WebGLCanvas"];
+                self.renderContext = RenderTexture["WebGLRenderer"];
             };
 
             egret.RenderTexture.prototype.setSize = function (width, height) {
                 var o:any = this;
                 if (o._webglBitmapData) {
-                    var cacheCanvas:HTMLCanvasElement = o._webglBitmapData;
-                    cacheCanvas.width = width;
-                    cacheCanvas.height = height;
-                    cacheCanvas.style.width = width + "px";
-                    cacheCanvas.style.height = height + "px";
-
-                    o.renderContext.projectionX = width / 2;
-                    o.renderContext.projectionY = -height / 2;
-                    o.renderContext.viewportScale = egret.MainContext.instance.rendererContext._texture_scale_factor;
+                    o.renderContext.setSize(width, height);
+                }
+                if(o._bitmapData) {
+                    var canvas = o._bitmapData;
+                    canvas.width = width;
+                    canvas.height = height;
+                    canvas.style.width = width + "px";
+                    canvas.style.height = height + "px";
                 }
             };
 
@@ -210,26 +245,16 @@ module egret {
 
             //todo 如果是文本会有问题
             RenderTexture.prototype.drawToTexture = function (displayObject:egret.DisplayObject, clipBounds?:Rectangle, scale?:number):boolean {
+                var self = this;
                 var bounds = clipBounds || displayObject.getBounds(egret.Rectangle.identity);
                 if (bounds.width == 0 || bounds.height == 0) {
-                    return false;
-                }
-                if (clipBounds && (clipBounds.width == 0 || clipBounds.height == 0)) {
                     return false;
                 }
                 if (typeof scale == "undefined") {
                     scale = 1;
                 }
-                if (!this._bitmapData) {
-                    this._bitmapData = document.createElement("canvas");
-                    this.canvasContext = this._bitmapData.getContext("2d");
-                    //todo 多层嵌套会有隐患
-                    if (!RenderTexture["WebGLCanvas"]) {
-                        RenderTexture["WebGLCanvas"] = document.createElement("canvas");
-                        RenderTexture["WebGLRenderer"] = new egret.WebGLRenderer(RenderTexture["WebGLCanvas"]);
-                    }
-                    this._webglBitmapData = RenderTexture["WebGLCanvas"];
-                    this.renderContext = RenderTexture["WebGLRenderer"];
+                if (!self._bitmapData) {
+                    self.init();
                 }
                 var x = bounds.x;
                 var y = bounds.y;
@@ -240,25 +265,29 @@ module egret {
                 var texture_scale_factor = egret.MainContext.instance.rendererContext._texture_scale_factor;
                 width = Math.round(width);
                 height = Math.round(height);
-                this.setSize(width, height);
-                var cacheCanvas = this._bitmapData;
+                self.setSize(width, height);
+                var cacheCanvas = self._bitmapData;
                 var cacheCanvasWidth = width / texture_scale_factor * scale;
                 var cacheCanvasHeight = height / texture_scale_factor * scale;
                 cacheCanvas.width = cacheCanvasWidth;
                 cacheCanvas.height = cacheCanvasHeight;
                 cacheCanvas.style.width = cacheCanvasWidth + "px";
                 cacheCanvas.style.height = cacheCanvasHeight + "px";
-                this.begin();
+                self.begin();
                 displayObject._worldTransform.identity();
-                var anchorOffsetX = displayObject._anchorOffsetX;
-                var anchorOffsetY = displayObject._anchorOffsetY;
-                if (displayObject._anchorX != 0 || displayObject._anchorY != 0) {
-                    anchorOffsetX = displayObject._anchorX * width;
-                    anchorOffsetY = displayObject._anchorY * height;
+                var anchorOffsetX = displayObject._DO_Props_._anchorOffsetX;
+                var anchorOffsetY = displayObject._DO_Props_._anchorOffsetY;
+                if (displayObject._DO_Props_._anchorX != 0 || displayObject._DO_Props_._anchorY != 0) {
+                    anchorOffsetX = displayObject._DO_Props_._anchorX * width;
+                    anchorOffsetY = displayObject._DO_Props_._anchorY * height;
                 }
-                this._offsetX = x + anchorOffsetX;
-                this._offsetY = y + anchorOffsetY;
-                displayObject._worldTransform.append(1, 0, 0, 1, -this._offsetX, -this._offsetY);
+                self._offsetX = x + anchorOffsetX;
+                self._offsetY = y + anchorOffsetY;
+                displayObject._worldTransform.append(1, 0, 0, 1, -self._offsetX, -self._offsetY);
+                if (clipBounds) {
+                    self._offsetX -= x;
+                    self._offsetY -= y;
+                }
                 displayObject.worldAlpha = 1;
                 var __use_new_draw = MainContext.__use_new_draw;
                 MainContext.__use_new_draw = false;
@@ -269,54 +298,48 @@ module egret {
                         child._updateTransform();
                     }
                 }
-                this.renderContext.setTransform(displayObject._worldTransform);
+                self.renderContext.setTransform(displayObject._worldTransform);
                 var renderFilter = egret.RenderFilter.getInstance();
                 var drawAreaList = renderFilter._drawAreaList.concat();
                 renderFilter._drawAreaList.length = 0;
-                var gl = this.renderContext.gl;
+                var gl = self.renderContext.gl;
                 gl.viewport(0, 0, width, height);
                 gl.bindFramebuffer(gl.FRAMEBUFFER, null);
                 gl.clearColor(0, 0, 0, 0);
                 gl.clear(gl.COLOR_BUFFER_BIT);
-                this.renderContext.onRenderStart();
-                RendererContext.deleteTexture(this);
-                if(displayObject._filter) {
-                    this.renderContext.setGlobalFilter(displayObject._filter);
+                self.renderContext.onRenderStart();
+                Texture.deleteWebGLTexture(self);
+                if (displayObject._hasFilters()) {
+                    displayObject._setGlobalFilters(self.renderContext);
                 }
-                if (displayObject._colorTransform) {
-                    this.renderContext.setGlobalColorTransform(displayObject._colorTransform.matrix);
-                }
-                var mask = displayObject.mask || displayObject._scrollRect;
+                var mask = displayObject.mask || displayObject._DO_Props_._scrollRect;
                 if (mask) {
-                    this.renderContext.pushMask(mask);
+                    self.renderContext.pushMask(mask);
                 }
-                displayObject._render(this.renderContext);
-                this.renderContext["_draw"]();
+                displayObject._render(self.renderContext);
+                self.renderContext["_drawWebGL"]();
                 MainContext.__use_new_draw = __use_new_draw;
                 if (mask) {
-                    this.renderContext.popMask();
+                    self.renderContext.popMask();
                 }
-                if (displayObject._colorTransform) {
-                    this.renderContext.setGlobalColorTransform(null);
-                }
-                if(displayObject._filter) {
-                    this.renderContext.setGlobalFilter(null);
+                if (displayObject._hasFilters()) {
+                    displayObject._removeGlobalFilters(self.renderContext);
                 }
                 egret.RenderTexture.identityRectangle.width = width;
                 egret.RenderTexture.identityRectangle.height = height;
                 renderFilter.addDrawArea(egret.RenderTexture.identityRectangle);
-                this.renderContext.onRenderFinish();
+                self.renderContext.onRenderFinish();
                 renderFilter._drawAreaList = drawAreaList;
 
-                this._sourceWidth = width / texture_scale_factor * scale;
-                this._sourceHeight = height / texture_scale_factor * scale;
-                this._textureWidth = width * scale;
-                this._textureHeight = height * scale;
+                self._sourceWidth = width / texture_scale_factor * scale;
+                self._sourceHeight = height / texture_scale_factor * scale;
+                self._textureWidth = width * scale;
+                self._textureHeight = height * scale;
 
-                this.canvasContext.drawImage(this._webglBitmapData, 0, 0, width, height, 0, 0, this._sourceWidth, this._sourceHeight);
+                self.canvasContext.drawImage(self._webglBitmapData, 0, 0, width, height, 0, 0, self._sourceWidth, self._sourceHeight);
 
                 //测试代码
-                //document.documentElement.appendChild(this._bitmapData);
+                //document.documentElement.appendChild(self._bitmapData);
                 return true;
             };
 
@@ -355,7 +378,7 @@ module egret {
             //        this["graphics_webgl_texture"] = new egret.Texture();
             //    }
             //    this["graphics_webgl_texture"]._setBitmapData(renderContext.html5Canvas);
-            //    RendererContext.deleteTexture(this["graphics_webgl_texture"]);
+            //    RendererContext.deleteTexture(this);
             //    renderContext.setTransform(egret.Matrix.identity.identity());
             //    renderContext.drawImage(this["graphics_webgl_texture"], 0, 0, stageW, stageH, 0, 0, stageW, stageH);
             //    this.canvasContext.restore();
@@ -377,10 +400,16 @@ module egret {
 
         private onResize():void {
             //设置canvas宽高
+            var stageWidth:number = egret.MainContext.instance.stage.stageWidth;
+            var stageHeight:number = egret.MainContext.instance.stage.stageHeight;
+            this.setSize(stageWidth, stageHeight);
+        }
+
+        private setSize(width:number, height:number):void {
             var container = document.getElementById(egret.StageDelegate.canvas_div_name);
             if (this.canvas) {
-                this.canvas.width = egret.MainContext.instance.stage.stageWidth; //stageW
-                this.canvas.height = egret.MainContext.instance.stage.stageHeight; //stageH
+                this.canvas.width =  width;
+                this.canvas.height = height;
                 this.canvas.style.width = container.style.width;
                 this.canvas.style.height = container.style.height;
 //              this.canvas.style.position = "absolute";
@@ -389,11 +418,13 @@ module egret {
                 this.projectionY = -this.canvas.height / 2;
             }
             if (this.html5Canvas) {
-                this.html5Canvas.width = egret.MainContext.instance.stage.stageWidth; //stageW
-                this.html5Canvas.height = egret.MainContext.instance.stage.stageHeight; //stageH
+                this.html5Canvas.width = width;
+                this.html5Canvas.height = height;
                 this.html5Canvas.style.width = container.style.width;
                 this.html5Canvas.style.height = container.style.height;
             }
+            this.width = width;
+            this.height = height;
         }
 
         private contextLost:boolean = false;
@@ -424,7 +455,7 @@ module egret {
                 }
             }
             if (!gl) {
-                throw new Error(getString(1021));
+                $error(1021);
             }
             WebGLRenderer.glID++;
             this.glID = WebGLRenderer.glID;
@@ -465,7 +496,7 @@ module egret {
             gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.indexBuffer);
 
             var shader;
-            if (this.colorTransformMatrix) {
+            if (this.filterType == "colorTransform") {
                 shader = this.shaderManager.colorTransformShader;
             }
             else if (this.filterType == "blur") {
@@ -497,7 +528,7 @@ module egret {
                 gl.clear(gl.COLOR_BUFFER_BIT);
             }
             var stage:Stage = egret.MainContext.instance.stage;
-            gl.viewport(0, 0, stage.stageWidth, stage.stageHeight);
+            gl.viewport(0, 0, this.width, this.height);
             this.renderCost = 0;
         }
 
@@ -510,7 +541,7 @@ module egret {
             if (this.currentBlendMode != blendMode) {
                 var blendModeWebGL = RendererContext.blendModesForGL[blendMode];
                 if (blendModeWebGL) {
-                    this._draw();
+                    this._drawWebGL();
                     this.gl.blendFunc(blendModeWebGL[0], blendModeWebGL[1]);
                     this.currentBlendMode = blendMode;
                 }
@@ -537,15 +568,31 @@ module egret {
             if (this.contextLost) {
                 return;
             }
+            var bitmapData = texture._bitmapData;
+            if (!bitmapData || !bitmapData["avaliable"]) {
+                return;
+            }
             if (repeat !== undefined) {
                 this.drawRepeatImage(texture, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, repeat);
                 return;
             }
+            if (this.filters) {
+                for (var i = 0; i < 1; i++) {
+                    var filter:Filter = this.filters[0];
+                    if (filter.type == "glow") {
+                        this.useGlow(texture, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight);
+                        return;
+                    }
+                }
+            }
+            this._drawImage(texture, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight);
+        }
 
+        private _drawImage(texture:Texture, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight):void {
             this.createWebGLTexture(texture);
             var webGLTexture = texture._bitmapData.webGLTexture[this.glID];
             if (webGLTexture !== this.currentBaseTexture || this.currentBatchSize >= this.size - 1) {
-                this._draw();
+                this._drawWebGL();
                 this.currentBaseTexture = webGLTexture;
             }
 
@@ -631,7 +678,111 @@ module egret {
             this.currentBatchSize++;
         }
 
-        private _draw():void {
+        private useGlow(texture:Texture, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight):void {
+            var filter:DropShadowFilter = <DropShadowFilter>this.filters[0];
+            var distance:number = filter.distance || 0;
+            var angle:number = filter.angle || 0;
+            var distanceX:number = 0;
+            var distanceY:number = 0;
+            if(distance != 0 && angle != 0) {
+                distanceX = Math.ceil(distance * egret.NumberUtils.cos(angle));
+                distanceY = Math.ceil(distance * egret.NumberUtils.sin(angle));
+            }
+            var quality:number = filter.quality;
+            var strength:number = filter.strength;
+            var blurX:number = filter.blurX / 10;
+            var blurY:number = filter.blurY / 10;
+            var offset:number = 10;
+            var textureWidth:number = destWidth + blurX * 2 + offset * 2 + Math.abs(distanceX);
+            var textureHeight:number = destHeight + blurY * 2 + offset * 2 + Math.abs(distanceY);
+
+            WebGLRenderer.initWebGLCanvas();
+            var renderContext:WebGLRenderer = RenderTexture["WebGLRenderer"];
+            var webGLBitmapData = RenderTexture["WebGLCanvas"];
+
+            var renderTextureA:RenderTexture = RenderTexture.create();
+            if(!renderTextureA._bitmapData) {
+                renderTextureA.init();
+            }
+            renderTextureA.setSize(textureWidth, textureHeight);
+            renderTextureA._sourceWidth = textureWidth;
+            renderTextureA._sourceHeight = textureHeight;
+            var renderTextureB:RenderTexture = RenderTexture.create();
+            if(!renderTextureB._bitmapData) {
+                renderTextureB.init();
+            }
+            renderTextureB.setSize(textureWidth, textureHeight);
+            renderTextureB._sourceWidth = textureWidth;
+            renderTextureB._sourceHeight = textureHeight;
+
+            //绘制纯色图
+            renderContext.clearScreen();
+            renderContext.filterType = "colorTransform";
+            renderContext.setGlobalColorTransform([
+                0, 0, 0, 0, filter._red,
+                0, 0, 0, 0, filter._green,
+                0, 0, 0, 0, filter._blue,
+                0, 0, 0, 0, filter.alpha * 255
+            ]);
+            renderContext.setAlpha(1, BlendMode.NORMAL);
+            renderContext.setTransform(new Matrix(1, 0, 0, 1, 0, 0));
+            renderContext.drawImage(texture, sourceX, sourceY, sourceWidth, sourceHeight, blurX + offset, blurY + offset, destWidth, destHeight);
+            renderContext._drawWebGL();
+            renderContext.filterType = null;
+            renderTextureA["canvasContext"].clearRect(0,0,textureWidth, textureHeight);
+            renderTextureA["canvasContext"].drawImage(webGLBitmapData, 0, 0, textureWidth, textureHeight, 0, 0, textureWidth, textureHeight);
+
+            //blur x
+            renderContext.clearScreen();
+            renderContext.setAlpha(1, BlendMode.NORMAL);
+            renderContext.setTransform(new Matrix(1, 0, 0, 1, 0, 0));
+            renderContext.filterType = "blur";
+            renderContext.setBlurData(blurX, 0);
+            Texture.deleteWebGLTexture(renderTextureA);
+            renderContext.drawImage(renderTextureA, blurX, blurY, textureWidth - blurX * 2, textureHeight - blurY * 2, blurX, blurY, textureWidth - blurX * 2, textureHeight - blurY * 2);
+            renderContext._drawWebGL();
+            renderContext.filterType = null;
+            renderTextureB["canvasContext"].clearRect(0,0,textureWidth, textureHeight);
+            renderTextureB["canvasContext"].drawImage(webGLBitmapData, 0, 0, textureWidth, textureHeight, 0, 0, textureWidth, textureHeight);
+
+            //blur y
+            renderContext.clearScreen();
+            renderContext.setAlpha(1, BlendMode.NORMAL);
+            renderContext.setTransform(new Matrix(1, 0, 0, 1, 0, 0));
+            renderContext.filterType = "blur";
+            renderContext.setBlurData(0, blurY);
+            Texture.deleteWebGLTexture(renderTextureB);
+            renderContext.drawImage(renderTextureB, 0, blurY, textureWidth, textureHeight - blurY * 2, 0, blurY + offset / 2, textureWidth, textureHeight - blurY * 2);
+            renderContext._drawWebGL();
+            renderContext.filterType = null;
+            renderTextureA["canvasContext"].clearRect(0,0,textureWidth, textureHeight);
+            renderTextureA["canvasContext"].drawImage(webGLBitmapData, 0, 0, textureWidth, textureHeight, 0, 0, textureWidth, textureHeight);
+
+            //画回B 应用强度
+            renderContext.clearScreen();
+            renderContext.setAlpha(1, BlendMode.NORMAL);
+            renderContext.setTransform(new Matrix(1, 0, 0, 1, 0, 0));
+            Texture.deleteWebGLTexture(renderTextureA);
+            for (var i:number = 0 ; i < quality ; i++) {
+                renderContext.drawImage(renderTextureA, 0, 0, textureWidth, textureHeight, distanceX, distanceY, textureWidth, textureHeight);
+            }
+            renderContext._drawWebGL();
+            //原图
+            renderContext.gl.blendFunc(this.gl.SRC_ALPHA, this.gl.ONE_MINUS_SRC_ALPHA);
+            renderContext.currentBlendMode = null;
+            renderContext.drawImage(texture, sourceX, sourceY, sourceWidth, sourceHeight, destX + blurX + offset, destY + blurY + offset * 1.5, destWidth, destHeight);
+            renderContext._drawWebGL();
+            renderTextureB["canvasContext"].clearRect(0,0,textureWidth, textureHeight);
+            renderTextureB["canvasContext"].drawImage(webGLBitmapData, 0, 0, textureWidth, textureHeight, 0, 0, textureWidth, textureHeight);
+
+            Texture.deleteWebGLTexture(renderTextureB);
+            this._drawImage(renderTextureB, 0, 0, textureWidth, textureHeight, destX - blurX - offset, destY - blurY - offset * 1.5, textureWidth, textureHeight);
+            this._drawWebGL();
+            RenderTexture.release(renderTextureA);
+            RenderTexture.release(renderTextureB);
+        }
+
+        private _drawWebGL():void {
             if (this.currentBatchSize == 0 || this.contextLost) {
                 return;
             }
@@ -674,6 +825,7 @@ module egret {
             if (!bitmapData.webGLTexture[this.glID]) {
                 var gl:any = this.gl;
                 bitmapData.webGLTexture[this.glID] = gl.createTexture();
+                bitmapData.webGLTexture[this.glID].glContext = gl;
                 gl.bindTexture(gl.TEXTURE_2D, bitmapData.webGLTexture[this.glID]);
                 gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, true);
 
@@ -692,7 +844,7 @@ module egret {
         private maskDataFreeList:Array<any> = [];
 
         public pushMask(mask:Rectangle):void {
-            this._draw();
+            this._drawWebGL();
             var gl:any = this.gl;
             if (this.maskList.length == 0) {
                 gl.enable(gl.SCISSOR_TEST);
@@ -743,7 +895,7 @@ module egret {
         }
 
         public popMask():void {
-            this._draw();
+            this._drawWebGL();
             var gl:any = this.gl;
             var maskData = this.maskList.pop();
             this.maskDataFreeList.push(maskData);
@@ -772,9 +924,9 @@ module egret {
 
         private colorTransformMatrix:Array<any> = null;
 
-        public setGlobalColorTransform(colorTransformMatrix:Array<any>):void {
+        private setGlobalColorTransform(colorTransformMatrix:Array<any>):void {
             if (this.colorTransformMatrix != colorTransformMatrix) {
-                this._draw();
+                this._drawWebGL();
                 this.colorTransformMatrix = colorTransformMatrix;
                 if (colorTransformMatrix) {
                     var colorTransformMatrix = colorTransformMatrix.concat();
@@ -788,22 +940,34 @@ module egret {
             }
         }
 
-        public setGlobalFilter(filterData:Filter):void {
-            this._draw();
-            this.setFilterProperties(filterData);
+        private setBlurData(blurX:number, blurY:number):void {
+            var shader:BlurShader = this.shaderManager.blurShader;
+            shader.uniforms.blur.value.x = blurX;
+            shader.uniforms.blur.value.y = blurY;
+        }
+
+        public setGlobalFilters(filtersData:Array<Filter>):void {
+            this._drawWebGL();
+            this.setFilterProperties(filtersData);
         }
 
         private filterType:string = null;
+        private filters:Array<Filter>;
 
-        private setFilterProperties(filterData:Filter):void {
-            if (filterData) {
-                this.filterType = filterData.type;
-                switch (filterData.type) {
-                    case "blur":
-                        var shader:BlurShader = this.shaderManager.blurShader;
-                        shader.uniforms.blur.value.x = (<BlurFilter>filterData).blurX;
-                        shader.uniforms.blur.value.y = (<BlurFilter>filterData).blurY;
-                        break;
+        private setFilterProperties(filtersData:Array<Filter>):void {
+            this.filters = filtersData;
+            if (filtersData && filtersData.length) {
+                for (var i = 0; i < 1; i++) {
+                    var filterData = filtersData[i];
+                    this.filterType = filterData.type;
+                    switch (filterData.type) {
+                        case "blur":
+                            this.setBlurData((<BlurFilter>filterData).blurX, (<BlurFilter>filterData).blurY);
+                            break;
+                        case "colorTransform":
+                            this.setGlobalColorTransform((<ColorMatrixFilter>filterData)._matrix);
+                            break;
+                    }
                 }
             }
             else {
@@ -828,7 +992,7 @@ module egret {
         private graphicsIndexBuffer:any = null;
 
         public renderGraphics(graphics) {
-            this._draw();
+            this._drawWebGL();
             var gl:any = this.gl;
             var shader = this.shaderManager.primitiveShader;
 
@@ -931,6 +1095,10 @@ module egret_webgl_graphics {
         this._pushCommand(new Command(this._setStyle, this, [_colorRed, _colorGreen, _colorBlue, alpha]))
     }
 
+    export function beginGradientFill(type:string, colors:Array<number>, alphas:Array<number>, ratios:Array<number>, matrix:egret.Matrix = null):void {
+
+    }
+
     export function drawRect(x:number, y:number, width:number, height:number):void {
         this._pushCommand(new Command(
                 function (data) {
@@ -941,7 +1109,7 @@ module egret_webgl_graphics {
                 [{x: x, y: y, w: width, h: height}]
             )
         );
-        this.checkRect(x, y, width, height);
+        (<egret.Graphics>this)._checkRect(x, y, width, height);
     }
 
     export function drawCircle(x:number, y:number, r:number):void {
@@ -963,7 +1131,10 @@ module egret_webgl_graphics {
     export function lineTo(x:number, y:number):void {
     }
 
-    export function curveTo(controlX:Number, controlY:Number, anchorX:Number, anchorY:Number):void {
+    export function curveTo(controlX:number, controlY:number, anchorX:number, anchorY:number):void {
+    }
+    export function cubicCurveTo(controlX1:number, controlY1:number, controlX2:number, controlY2:number, anchorX:number, anchorY:number):void {
+
     }
 
     export function moveTo(x:number, y:number):void {
@@ -998,6 +1169,9 @@ module egret_webgl_graphics {
         }
     }
 
+    /**
+     * @private
+     */
     class Command {
 
         constructor(public method:Function, public thisObject:any, public args:Array<any>) {

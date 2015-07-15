@@ -1,29 +1,31 @@
-/**
- * Copyright (c) 2014,Egret-Labs.org
- * All rights reserved.
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are met:
- *
- *     * Redistributions of source code must retain the above copyright
- *       notice, this list of conditions and the following disclaimer.
- *     * Redistributions in binary form must reproduce the above copyright
- *       notice, this list of conditions and the following disclaimer in the
- *       documentation and/or other materials provided with the distribution.
- *     * Neither the name of the Egret-Labs.org nor the
- *       names of its contributors may be used to endorse or promote products
- *       derived from this software without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY EGRET-LABS.ORG AND CONTRIBUTORS "AS IS" AND ANY
- * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
- * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL EGRET-LABS.ORG AND CONTRIBUTORS BE LIABLE FOR ANY
- * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
- * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
- * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
- * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
- * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */
+//////////////////////////////////////////////////////////////////////////////////////
+//
+//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  All rights reserved.
+//  Redistribution and use in source and binary forms, with or without
+//  modification, are permitted provided that the following conditions are met:
+//
+//     * Redistributions of source code must retain the above copyright
+//       notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above copyright
+//       notice, this list of conditions and the following disclaimer in the
+//       documentation and/or other materials provided with the distribution.
+//     * Neither the name of the Egret nor the
+//       names of its contributors may be used to endorse or promote products
+//       derived from this software without specific prior written permission.
+//
+//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
+//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
+//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
+//////////////////////////////////////////////////////////////////////////////////////
 
 
 module egret.gui {
@@ -249,7 +251,7 @@ module egret.gui {
                 maxIndex++;
 
             if (index < 0 || index > maxIndex)
-                throw new RangeError(getString(3011, index));
+                $error(3011, index);
         }
         /**
          * 将可视元素添加到此容器中
@@ -465,6 +467,32 @@ module egret.gui {
         }
 
         /**
+         * 当前的过渡效果
+         */
+        private _currentTransition:Transition;
+        private _transitions:Array<Transition>;
+        /**
+         *  一个 Transition 对象 Array，其中的每个 Transition 对象都定义一组效果，
+         * 用于在视图状态发生更改时播放。
+         */
+        public get transitions():Array<Transition>
+        {
+            return this._transitions;
+        }
+
+        public set transitions(value:Array<Transition>)
+        {
+            this._transitions = value;
+        }
+
+        /**
+         * 播放过渡效果的标志
+         */
+        private playStateTransition:boolean = true;
+        private transitionFromState:string;
+        private transitionToState:string;
+
+        /**
          * 当前视图状态发生改变的标志
          */
         private currentStateChanged:boolean = false;
@@ -527,6 +555,39 @@ module egret.gui {
             if(!destination){
                 this.requestedCurrentState = this.getDefaultState();
             }
+
+            var nextTransition:Transition;
+            if(this.playStateTransition){
+                nextTransition = this.getTransition(this._currentState, this.requestedCurrentState);
+            }
+
+            var prevTransitionFraction:number;
+            var prevTransitionEffect:IEffect;
+
+            if (this._currentTransition){
+                this._currentTransition.effect.removeEventListener(
+                    EffectEvent.EFFECT_END, this.transition_effectEndHandler, this);
+
+                if (nextTransition && this._currentTransition.interruptionBehavior == InterruptionBehavior.STOP){
+                    prevTransitionEffect = this._currentTransition.effect;
+                    prevTransitionEffect.stop();
+                }
+                else{
+                    if (this._currentTransition.autoReverse &&
+                        this.transitionFromState == this.requestedCurrentState &&
+                        this.transitionToState == this._currentState){
+                        if (this._currentTransition.effect.duration == 0)
+                            prevTransitionFraction = 0;
+                        else
+                            prevTransitionFraction =
+                                this._currentTransition.effect.playheadTime /
+                                this.getTotalDuration(this._currentTransition.effect);
+                    }
+                    this._currentTransition.effect.end();
+                }
+                this._currentTransition = null;
+            }
+
             var oldState:string = this._currentState ? this._currentState : "";
             if (this.hasEventListener(StateChangeEvent.CURRENT_STATE_CHANGING)) {
                 StateChangeEvent.dispatchStateChangeEvent(this,
@@ -544,6 +605,39 @@ module egret.gui {
             if (this.hasEventListener(StateChangeEvent.CURRENT_STATE_CHANGE)){
                 StateChangeEvent.dispatchStateChangeEvent(this,StateChangeEvent.CURRENT_STATE_CHANGE,oldState,
                     this._currentState ? this._currentState : "")
+            }
+
+            if (nextTransition){
+                var reverseTransition:boolean =
+                    nextTransition && nextTransition.autoReverse &&
+                    (nextTransition.toState == oldState ||
+                        nextTransition.fromState == this._currentState);
+                UIGlobals._layoutManager.validateNow();
+                this._currentTransition = nextTransition;
+                this.transitionFromState = oldState;
+                this.transitionToState = this._currentState;
+
+                nextTransition.effect.addEventListener(EffectEvent.EFFECT_END, this.transition_effectEndHandler, this);
+                nextTransition.effect.play(null, reverseTransition);
+                if (!isNaN(prevTransitionFraction) && nextTransition.effect.duration != 0){
+                    nextTransition.effect.playheadTime = (1 - prevTransitionFraction) * this.getTotalDuration(nextTransition.effect);
+                }
+            }
+            else
+            {
+                if (this.hasEventListener(StateChangeEvent.STATE_CHANGE_COMPLETE)){
+                    StateChangeEvent.dispatchStateChangeEvent(
+					this, StateChangeEvent.STATE_CHANGE_COMPLETE, oldState, this._currentState);
+                }
+            }
+        }
+
+        private transition_effectEndHandler(event:EffectEvent):void
+        {
+            this._currentTransition = null;
+            if (this.hasEventListener(StateChangeEvent.STATE_CHANGE_COMPLETE)){
+                StateChangeEvent.dispatchStateChangeEvent(
+				this,StateChangeEvent.STATE_CHANGE_COMPLETE, this.transitionFromState, this.transitionToState);
             }
         }
 
@@ -604,6 +698,85 @@ module egret.gui {
                 var state:State = <State> (states[i]);
                 state.initialize(this);
             }
+        }
+
+        /**
+         *  获取两个状态之间的过渡
+         */
+        private getTransition(oldState:string, newState:string):Transition
+        {
+            var result:Transition = null;
+            var priority:number = 0;
+            if (!this.transitions)
+                return null;
+
+            if (!oldState)
+                oldState = "";
+
+            if (!newState)
+                newState = "";
+
+            for (var i:number = 0; i < this.transitions.length; i++){
+                var t:Transition = this.transitions[i];
+                if (t.fromState == "*" && t.toState == "*" && priority < 1){
+                    result = t;
+                    priority = 1;
+                }
+                else if (t.toState == oldState && t.fromState == "*" && t.autoReverse && priority < 2){
+                    result = t;
+                    priority = 2;
+                }
+                else if (t.toState == "*" && t.fromState == newState && t.autoReverse && priority < 3){
+                    result = t;
+                    priority = 3;
+                }
+                else if (t.toState == oldState && t.fromState == newState && t.autoReverse && priority < 4){
+                    result = t;
+                    priority = 4;
+                }
+                else if (t.fromState == oldState && t.toState == "*" && priority < 5){
+                    result = t;
+                    priority = 5;
+                }
+                else if (t.fromState == "*" && t.toState == newState && priority < 6){
+                    result = t;
+                    priority = 6;
+                }
+                else if (t.fromState == oldState && t.toState == newState && priority < 7){
+                    result = t;
+                    priority = 7;
+                    break;
+                }
+            }
+
+            if (result && !result.effect)
+                result = null;
+            return result;
+        }
+
+        /**
+         * 效果的总持续时间
+         */
+        private getTotalDuration(effect:IEffect):number
+        {
+            var duration:number = 0;
+            var effectObj:any = effect;
+            if (effect instanceof CompositeEffect){
+                duration = effectObj.compositeDuration;
+            }
+            else{
+                duration = effect.duration;
+            }
+            var repeatDelay:number = ("repeatDelay" in effect) ?
+                effectObj.repeatDelay : 0;
+            var repeatCount:number = ("repeatCount" in effect) ?
+                effectObj.repeatCount : 0;
+            var startDelay:number = ("startDelay" in effect) ?
+                effectObj.startDelay : 0;
+            duration = duration * repeatCount +
+                (repeatDelay * (repeatCount - 1)) +
+                startDelay;
+            return duration;
         }
         //========================state相关函数===============end=========================
     }

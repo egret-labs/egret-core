@@ -1,17 +1,19 @@
 {
-    "document_class": "Main",
-    "modules": [
-        {
-            "name": "core"
-        },
-        {
-            "name": "res"
-        }
-    ],
-    "native": {
-        "path_ignore": [
-
-        ]
-    },
-    "egret_version":"{version_replace}"
+	"document_class": "Main",
+	"modules": [
+		{
+			"name": "core"
+		},
+		{
+		  	"name": "version_old"
+		},
+		{
+			"name": "res"
+		}
+	],
+	"native": {
+		"path_ignore": [
+		]
+	},
+	"egret_version": "{version_replace}"
 }

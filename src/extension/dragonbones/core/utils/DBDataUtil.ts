@@ -1,29 +1,31 @@
-/**
- * Copyright (c) 2014,Egret-Labs.org
- * All rights reserved.
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are met:
- *
- *     * Redistributions of source code must retain the above copyright
- *       notice, this list of conditions and the following disclaimer.
- *     * Redistributions in binary form must reproduce the above copyright
- *       notice, this list of conditions and the following disclaimer in the
- *       documentation and/or other materials provided with the distribution.
- *     * Neither the name of the Egret-Labs.org nor the
- *       names of its contributors may be used to endorse or promote products
- *       derived from this software without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY EGRET-LABS.ORG AND CONTRIBUTORS "AS IS" AND ANY
- * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
- * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL EGRET-LABS.ORG AND CONTRIBUTORS BE LIABLE FOR ANY
- * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
- * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
- * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
- * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
- * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */
+//////////////////////////////////////////////////////////////////////////////////////
+//
+//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  All rights reserved.
+//  Redistribution and use in source and binary forms, with or without
+//  modification, are permitted provided that the following conditions are met:
+//
+//     * Redistributions of source code must retain the above copyright
+//       notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above copyright
+//       notice, this list of conditions and the following disclaimer in the
+//       documentation and/or other materials provided with the distribution.
+//     * Neither the name of the Egret nor the
+//       names of its contributors may be used to endorse or promote products
+//       derived from this software without specific prior written permission.
+//
+//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
+//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
+//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
+//////////////////////////////////////////////////////////////////////////////////////
 
 
 module dragonBones {
@@ -100,15 +102,16 @@ module dragonBones {
 			for(var i:number = 0;i < boneDataList.length;i ++){
 				var boneData:BoneData = boneDataList[i];
 				var timeline:TransformTimeline = animationData.getTimeline(boneData.name);
-				if(!timeline){
+				var slotTimeline:SlotTimeline = animationData.getSlotTimeline(boneData.name);
+				if(!timeline && !slotTimeline){
 					continue;
 				}
 				
 				var slotData:SlotData = null;
 				if(slotDataList){
-                    for(var key in slotDataList)
+                    for(var j:number = 0,jLen:number = slotDataList.length; j < jLen; j++)
                     {
-                        slotData = slotDataList[key];
+                        slotData = slotDataList[j];
                         //找到属于当前Bone的slot(FLash Pro制作的动画一个Bone只包含一个slot)
                         if(slotData.parent == boneData.name){
                             break;
@@ -117,7 +120,10 @@ module dragonBones {
 				}
 				
 				var frameList:Array<Frame> = timeline.frameList;
-				
+				if(slotTimeline)
+				{
+					var slotFrameList:Array<Frame> = slotTimeline.frameList;
+				}
 				var originTransform:DBTransform = null;
 				var originPivot:Point = null;
 				var prevFrame:TransformFrame = null;
@@ -133,13 +139,7 @@ module dragonBones {
 					frame.transform.skewY -= boneData.transform.skewY;
 					frame.transform.scaleX /= boneData.transform.scaleX;
 					frame.transform.scaleY /= boneData.transform.scaleY;
-					
-					if(!timeline.transformed){
-						if(slotData){
-							frame.zOrder -= slotData.zOrder;
-						}
-					}
-					
+
 					//如果originTransform不存在说明当前帧是第一帧，将当前帧的transform保存至timeline的originTransform
 					if(!originTransform){
 						originTransform = timeline.originTransform;
@@ -197,6 +197,22 @@ module dragonBones {
 						}
 					}
 					prevFrame = frame;
+				}
+				if(slotTimeline && slotFrameList)
+				{
+					frameListLength = slotFrameList.length;
+					for(var j:number = 0;j<frameListLength; j++)
+					{
+						var slotFrame:SlotFrame = <SlotFrame><any> slotFrameList[j];
+						if(!slotTimeline.transformed)
+						{
+							if(slotData)
+							{
+								slotFrame.zOrder -= slotData.zOrder;
+							}
+						}
+					}
+					slotTimeline.transformed = true;
 				}
 				timeline.transformed = true;
 			}

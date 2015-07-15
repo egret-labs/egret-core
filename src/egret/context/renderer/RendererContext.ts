@@ -1,29 +1,31 @@
-/**
- * Copyright (c) 2014,Egret-Labs.org
- * All rights reserved.
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are met:
- *
- *     * Redistributions of source code must retain the above copyright
- *       notice, this list of conditions and the following disclaimer.
- *     * Redistributions in binary form must reproduce the above copyright
- *       notice, this list of conditions and the following disclaimer in the
- *       documentation and/or other materials provided with the distribution.
- *     * Neither the name of the Egret-Labs.org nor the
- *       names of its contributors may be used to endorse or promote products
- *       derived from this software without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY EGRET-LABS.ORG AND CONTRIBUTORS "AS IS" AND ANY
- * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
- * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL EGRET-LABS.ORG AND CONTRIBUTORS BE LIABLE FOR ANY
- * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
- * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
- * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
- * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
- * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */
+//////////////////////////////////////////////////////////////////////////////////////
+//
+//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  All rights reserved.
+//  Redistribution and use in source and binary forms, with or without
+//  modification, are permitted provided that the following conditions are met:
+//
+//     * Redistributions of source code must retain the above copyright
+//       notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above copyright
+//       notice, this list of conditions and the following disclaimer in the
+//       documentation and/or other materials provided with the distribution.
+//     * Neither the name of the Egret nor the
+//       names of its contributors may be used to endorse or promote products
+//       derived from this software without specific prior written permission.
+//
+//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
+//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
+//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
+//////////////////////////////////////////////////////////////////////////////////////
 
 
 module egret {
@@ -43,6 +45,13 @@ module egret {
          * @member egret.RendererContext#renderCost
          */
         public renderCost:number = 0;
+
+        public _matrixA:number;
+        public _matrixB:number;
+        public _matrixC:number;
+        public _matrixD:number;
+        public _matrixTx:number;
+        public _matrixTy:number;
 
         /**
          * 绘制纹理的缩放比率，默认值为1
@@ -65,6 +74,7 @@ module egret {
         /**
          * 是否对图像使用平滑处理
          * 该特性目前只支持Canvas
+         * @platform Web
          */
         public static imageSmoothingEnabled:boolean = true;
 
@@ -76,7 +86,7 @@ module egret {
         public constructor() {
             super();
             this.profiler = Profiler.getInstance();
-            if(!RendererContext.blendModesForGL) {
+            if (!RendererContext.blendModesForGL) {
                 RendererContext.initBlendMode();
             }
         }
@@ -114,7 +124,7 @@ module egret {
          * @param destWidth {any}
          * @param destHeigh {any}
          */
-        public drawImage(texture: Texture, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, repeat="no-repeat") {
+        public drawImage(texture:Texture, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, repeat = "no-repeat") {
             this.profiler.onDrawImage();
         }
 
@@ -131,7 +141,7 @@ module egret {
          * @param destWidth {any}
          * @param destHeigh {any}
          */
-        public drawImageScale9(texture: Texture, sourceX, sourceY, sourceWidth, sourceHeight, offX, offY, destWidth, destHeight, rect):boolean {
+        public drawImageScale9(texture:Texture, sourceX, sourceY, sourceWidth, sourceHeight, offX, offY, destWidth, destHeight, rect):boolean {
             return false;
         }
 
@@ -213,33 +223,25 @@ module egret {
 
         }
 
-        public setGlobalColorTransform(colorTransformMatrix:Array<number>):void {
+        public createLinearGradient(x0:number, y0:number, x1:number, y1:number):CanvasGradient {
+            return null;
+        }
+
+        public createRadialGradient(x0:number, y0:number, r0:number, x1:number, y1:number, r1:number):CanvasGradient {
+            return null;
+        }
+
+        public setGlobalFilters(filterData:Array<Filter>):void {
 
         }
 
-        public setGlobalFilter(filterData:Filter):void {
-
+        public drawCursor(x1:number, y1:number, x2:number, y2:number):void {
         }
 
         public static createRendererContext(canvas:any):RendererContext {
             return null;
         }
 
-        public static deleteTexture(texture:Texture):void {
-            var context = egret.MainContext.instance.rendererContext;
-            var gl:WebGLRenderingContext = context["gl"];
-            var bitmapData = texture._bitmapData;
-            if(bitmapData) {
-                var webGLTexture = bitmapData.webGLTexture;
-                if(webGLTexture && gl) {
-                    for(var key in webGLTexture) {
-                        var glTexture = webGLTexture[key];
-                        gl.deleteTexture(glTexture);
-                    }
-                }
-                bitmapData.webGLTexture = null;
-            }
-        }
 
         public static blendModesForGL:any = null;
 
@@ -260,8 +262,8 @@ module egret {
          * @param override {boolean} 是否覆盖
          */
         public static registerBlendModeForGL(key:string, src:number, dst:number, override?:boolean):void {
-            if(RendererContext.blendModesForGL[key] && !override) {
-                egret.Logger.warningWithErrorId(1005, key);
+            if (RendererContext.blendModesForGL[key] && !override) {
+                $warn(1005, key);
             }
             else {
                 RendererContext.blendModesForGL[key] = [src, dst];

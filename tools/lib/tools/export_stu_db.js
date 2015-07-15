@@ -2,7 +2,7 @@
  * Created by huanghaiying on 14/11/9.
  */
 
-var path = require("path");
+var path = require("../core/path");
 var plist = require('../core/plist');
 var file = require("../core/file");
 var fs = require("fs");

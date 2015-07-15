@@ -1,29 +1,31 @@
-/**
- * Copyright (c) 2014,Egret-Labs.org
- * All rights reserved.
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are met:
- *
- *     * Redistributions of source code must retain the above copyright
- *       notice, this list of conditions and the following disclaimer.
- *     * Redistributions in binary form must reproduce the above copyright
- *       notice, this list of conditions and the following disclaimer in the
- *       documentation and/or other materials provided with the distribution.
- *     * Neither the name of the Egret-Labs.org nor the
- *       names of its contributors may be used to endorse or promote products
- *       derived from this software without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY EGRET-LABS.ORG AND CONTRIBUTORS "AS IS" AND ANY
- * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
- * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL EGRET-LABS.ORG AND CONTRIBUTORS BE LIABLE FOR ANY
- * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
- * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
- * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
- * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
- * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */
+//////////////////////////////////////////////////////////////////////////////////////
+//
+//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  All rights reserved.
+//  Redistribution and use in source and binary forms, with or without
+//  modification, are permitted provided that the following conditions are met:
+//
+//     * Redistributions of source code must retain the above copyright
+//       notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above copyright
+//       notice, this list of conditions and the following disclaimer in the
+//       documentation and/or other materials provided with the distribution.
+//     * Neither the name of the Egret nor the
+//       names of its contributors may be used to endorse or promote products
+//       derived from this software without specific prior written permission.
+//
+//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
+//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
+//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
+//////////////////////////////////////////////////////////////////////////////////////
 
 
 module egret {
@@ -41,6 +43,8 @@ module egret {
          */
         public constructor() {
             super();
+            Texture.prototype.draw = Texture.prototype._drawForNative;
+            Texture.prototype.dispose = Texture.prototype._disposeForNative;
         }
 
 
@@ -87,16 +91,100 @@ module egret {
          * @param repeat {string}
          */
         public drawImage(texture:Texture, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, repeat = undefined) {
-
-            if (repeat !== undefined) {
-                this.drawRepeatImage(texture, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, repeat);
-                return;
+            if (this.filters) {
+                for (var i = 0; i < 1; i++) {
+                    var filter:Filter = this.filters[0];
+                    if (filter.type == "glow") {
+                        this.useGlow(texture, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight);
+                        return;
+                    }
+                }
             }
-            else {
-                egret_native.Graphics.drawImage(texture._bitmapData, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight);
-            }
+            texture.draw(egret_native.Graphics, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, repeat);
 
-            super.drawImage(texture, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight,repeat);
+            super.drawImage(texture, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, repeat);
+        }
+
+        private useGlow(texture:Texture, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight):void {
+            var filter:DropShadowFilter = <DropShadowFilter>this.filters[0];
+            var distance:number = filter.distance || 0;
+            var angle:number = filter.angle || 0;
+            var distanceX:number = 0;
+            var distanceY:number = 0;
+            if(distance != 0 && angle != 0) {
+                distanceX = Math.ceil(distance * egret.NumberUtils.cos(angle));
+                distanceY = Math.ceil(distance * egret.NumberUtils.sin(angle));
+            }
+            var quality:number = filter.quality;
+            var strength:number = filter.strength;
+            var blurX:number = filter.blurX / 10;
+            var blurY:number = filter.blurY / 10;
+            var offset:number = 10;
+            var textureWidth:number = destWidth + blurX * 2 + offset * 2 + Math.abs(distanceX);
+            var textureHeight:number = destHeight + blurY * 2 + offset * 2 + Math.abs(distanceY);
+
+
+            var renderTextureA:RenderTexture = new RenderTexture();
+            renderTextureA.setSize(textureWidth, textureHeight);
+            var renderContextA:RendererContext = renderTextureA.renderContext;
+            var renderTextureB:RenderTexture = new RenderTexture();
+            renderTextureB.setSize(textureWidth, textureHeight);
+            var renderContextB:RendererContext = renderTextureB.renderContext;
+
+            //绘制纯色图
+            renderTextureA.begin();
+            renderContextA.clearScreen();
+            //egret_native.Graphics.clearScreen(0, 255, 0);
+            egret_native.Graphics.setGlobalColorTransformEnabled(true);
+            egret_native.Graphics.setGlobalColorTransform([
+                0, 0, 0, 0, filter._red,
+                0, 0, 0, 0, filter._green,
+                0, 0, 0, 0, filter._blue,
+                0, 0, 0, 0, filter.alpha * 255
+            ]);
+            renderContextA.setAlpha(1, BlendMode.NORMAL);
+            renderContextA.setTransform(new Matrix(1, 0, 0, 1, 0, 0));
+            renderContextA.drawImage(texture, sourceX, sourceY, sourceWidth, sourceHeight, blurX + offset, blurY + offset, destWidth, destHeight);
+            egret_native.Graphics.setGlobalColorTransformEnabled(false);
+            renderTextureA.end();
+
+            //blur x
+            renderTextureB.begin();
+            renderContextB.clearScreen();
+            renderContextB.setAlpha(1, BlendMode.NORMAL);
+            renderContextB.setTransform(new Matrix(1, 0, 0, 1, 0, 0));
+            egret_native.Graphics.setGlobalShader({type: "blur", blurX: blurX, blurY: 0});
+            renderContextB.drawImage(renderTextureA, blurX, blurY, textureWidth - blurX * 2, textureHeight - blurY * 2, blurX, blurY, textureWidth - blurX * 2, textureHeight - blurY * 2);
+            renderTextureB.end();
+
+            ////blur y
+            renderTextureA.begin();
+            renderContextA.clearScreen();
+            renderContextA.setAlpha(1, BlendMode.NORMAL);
+            renderContextA.setTransform(new Matrix(1, 0, 0, 1, 0, 0));
+            egret_native.Graphics.setGlobalShader({type: "blur", blurX: 0, blurY: blurY});
+            renderContextA.drawImage(renderTextureB,  0, blurY, textureWidth, textureHeight - blurY * 2, 0, blurY + offset / 2, textureWidth, textureHeight - blurY * 2);
+            egret_native.Graphics.setGlobalShader(null);
+            renderTextureA.end();
+
+            //画回B 应用强度
+            renderTextureB.begin();
+            renderContextB.clearScreen();
+            renderContextB.setAlpha(1, BlendMode.NORMAL);
+            renderContextB.setTransform(new Matrix(1, 0, 0, 1, 0, 0));
+            for (var i:number = 0 ; i < quality ; i++) {
+                renderContextB.drawImage(renderTextureA, 0, 0, textureWidth, textureHeight, distanceX, distanceY, textureWidth, textureHeight);
+            }
+            //原图
+            egret_native.Graphics.setBlendArg(770, 771);
+            renderContextB.drawImage(texture, sourceX, sourceY, sourceWidth, sourceHeight, destX + blurX + offset, destY + blurY + offset * 1.5, destWidth, destHeight);
+            renderTextureB.end();
+
+            egret_native.Graphics.drawImage(renderTextureB._bitmapData, 0, 0, textureWidth, textureHeight, destX - blurX - offset, destY - blurY - offset * 1.5, textureWidth, textureHeight);
+            renderTextureA.dispose();
+            renderTextureB.dispose();
+
+            egret_native.Graphics.setGlobalShader(null);
         }
 
         /**
@@ -112,7 +200,7 @@ module egret {
          * @param destWidth {any}
          * @param destHeigh {any}
          */
-        public drawImageScale9(texture: Texture, sourceX, sourceY, sourceWidth, sourceHeight, offX, offY, destWidth, destHeight, rect):boolean {
+        public drawImageScale9(texture:Texture, sourceX, sourceY, sourceWidth, sourceHeight, offX, offY, destWidth, destHeight, rect):boolean {
             if (egret_native.Graphics.drawImageScale9 != null) {
                 egret_native.Graphics.drawImageScale9(texture._bitmapData, sourceX, sourceY, sourceWidth, sourceHeight, offX, offY, destWidth, destHeight, rect.x, rect.y, rect.width, rect.height);
                 this._addOneDraw();
@@ -156,8 +244,8 @@ module egret {
          */
         public setAlpha(value:number, blendMode:string) {
             //if (this.currentAlpha != value) {
-                egret_native.Graphics.setGlobalAlpha(value);
-                //this.currentAlpha = value;
+            egret_native.Graphics.setGlobalAlpha(value);
+            //this.currentAlpha = value;
             //}
             this.setBlendMode(blendMode);
         }
@@ -169,11 +257,11 @@ module egret {
                 blendMode = egret.BlendMode.NORMAL;
             }
             //if (this.currentBlendMode != blendMode) {
-                var blendModeArg = RendererContext.blendModesForGL[blendMode];
-                if (blendModeArg) {
-                    egret_native.Graphics.setBlendArg(blendModeArg[0], blendModeArg[1]);
-                    this.currentBlendMode = blendMode;
-                }
+            var blendModeArg = RendererContext.blendModesForGL[blendMode];
+            if (blendModeArg) {
+                egret_native.Graphics.setBlendArg(blendModeArg[0], blendModeArg[1]);
+                this.currentBlendMode = blendMode;
+            }
             //}
         }
 
@@ -184,9 +272,19 @@ module egret {
          */
         public setupFont(textField:TextField, style:egret.ITextStyle = null):void {
             style = style || <egret.ITextStyle>{};
-            var size:number = style["size"] == null ? textField._size : style["size"];
+            var properties:egret.TextFieldProperties = textField._TF_Props_;
+            var size:number = style.size == null ? properties._size : style.size;
 
-            egret_native.Label.createLabel(TextField.default_fontFamily, size, "");
+            var outline;
+            if (style.stroke != null) {
+                outline = style.stroke;
+            }
+            else {
+                outline = properties._stroke;
+            }
+
+
+            egret_native.Label.createLabel(TextField.default_fontFamily, size, "", outline);
         }
 
         /**
@@ -211,32 +309,26 @@ module egret {
         public drawText(textField:egret.TextField, text:string, x:number, y:number, maxWidth:number, style:egret.ITextStyle = null) {
             this.setupFont(textField, style);
             style = style || <egret.ITextStyle>{};
+            var properties:egret.TextFieldProperties = textField._TF_Props_;
 
             var textColor:number;
             if (style.textColor != null) {
                 textColor = style.textColor;
             }
             else {
-                textColor = textField._textColor;
+                textColor = properties._textColor;
             }
 
-            var strokeColor:string;
+            var strokeColor:number;
             if (style.strokeColor != null) {
-                strokeColor = toColorString(style.strokeColor);
+                strokeColor = style.strokeColor;
             }
             else {
-                strokeColor = textField._strokeColorString;
-            }
-
-            var outline;
-            if (style.stroke != null) {
-                outline = style.stroke;
-            }
-            else {
-                outline = textField._stroke;
+                strokeColor = properties._strokeColor;
             }
 
             egret_native.Label.setTextColor(textColor);
+            egret_native.Label.setStrokeColor(strokeColor);
             egret_native.Label.drawText(text, x, y - 2);
 
             super.drawText(textField, text, x, y, maxWidth, style);
@@ -251,19 +343,54 @@ module egret {
         }
 
 
-        public setGlobalColorTransform(colorTransformMatrix:Array<any>):void {
-            if (colorTransformMatrix) {
-                egret_native.Graphics.setGlobalColorTransformEnabled(true);
-                egret_native.Graphics.setGlobalColorTransform(colorTransformMatrix);
+        //public setGlobalColorTransform(colorTransformMatrix:Array<any>):void {
+        //    if (colorTransformMatrix) {
+        //        egret_native.Graphics.setGlobalColorTransformEnabled(true);
+        //        egret_native.Graphics.setGlobalColorTransform(colorTransformMatrix);
+        //    }
+        //    else {
+        //        egret_native.Graphics.setGlobalColorTransformEnabled(false);
+        //    }
+        //}
+
+        private globalColorTransformEnabled = false;
+        private filters:Array<Filter>;
+
+        public setGlobalFilters(filtersData:Array<Filter>):void {
+            this.filters = filtersData;
+            if (filtersData && filtersData.length) {
+                for (var i = 0; i < 1; i++) {
+                    var filter:Filter = filtersData[0];
+                    if (filter.type == "colorTransform") {
+                        var colorTransformMatrix = (<ColorMatrixFilter>filter)._matrix;
+                        if (colorTransformMatrix) {
+                            egret_native.Graphics.setGlobalColorTransformEnabled(true);
+                            egret_native.Graphics.setGlobalColorTransform(colorTransformMatrix);
+                            this.globalColorTransformEnabled = true;
+                        }
+                    }
+                    else if (filter.type == "blur") {
+                        egret_native.Graphics.setGlobalShader(filter);
+                    }
+                }
             }
             else {
-                egret_native.Graphics.setGlobalColorTransformEnabled(false);
+                if (this.globalColorTransformEnabled) {
+                    egret_native.Graphics.setGlobalColorTransformEnabled(false);
+                    this.globalColorTransformEnabled = false;
+                }
+                egret_native.Graphics.setGlobalShader(null);
             }
+
         }
 
-        public setGlobalFilter(filterData:Filter):void {
-            egret_native.Graphics.setGlobalShader(filterData);
-        }
+        //public createLinearGradient(x0:number, y0:number, x1:number, y1:number):CanvasGradient {
+        //    return egret_native.rastergl.createLinearGradient(x0, y0, x1, y1);
+        //}
+        //
+        //public createRadialGradient(x0:number, y0:number, r0:number, x1:number, y1:number, r1:number):CanvasGradient {
+        //    return egret_native.rastergl.createRadialGradient(x0, y0, r0, x1, y1, r1);
+        //}
     }
 }
 
@@ -294,7 +421,7 @@ var egret_native_graphics;
             egret_native.Graphics.lineTo(x, y + height);
             egret_native.Graphics.lineTo(x, y);
         }, this, arguments));
-        this.checkRect(x, y, width, height);
+        this._checkRect(x, y, width, height);
     }
 
     egret_native_graphics.drawRect = drawRect;
@@ -320,15 +447,19 @@ var egret_native_graphics;
             egret_native.Graphics.lineTo(x, y)
 
         }, this, arguments));
-        this.checkPoint(this.lineX, this.lineY);
+        this._checkPoint(this.lineX, this.lineY);
         this.lineX = x;
         this.lineY = y;
-        this.checkPoint(x, y);
+        this._checkPoint(x, y);
     }
 
     egret_native_graphics.lineTo = lineTo;
 
     function curveTo(controlX, controlY, anchorX, anchorY) {
+
+    }
+
+    function cubicCurveTo(controlX1, controlY1, controlX2, controlY2, anchorX, anchorY) {
 
     }
 
@@ -352,6 +483,7 @@ var egret_native_graphics;
         this._maxX = 0;
         this._maxY = 0;
         this._firstCheck = true;
+        this._dirty = true;
     }
 
     egret_native_graphics.clear = clear;
@@ -396,5 +528,50 @@ var egret_native_graphics;
     egret_native_graphics.init = init;
 })(egret_native_graphics || (egret_native_graphics = {}));
 
+if (egret_native.rastergl) {
+    egret.Graphics.prototype._beginDraw = function (renderContext:egret.RendererContext) {
+        var self:egret.Graphics = this;
+        self._renderContext = egret_native.rastergl;
+    };
 
-egret_native_graphics.init();
+    egret.Graphics.prototype._parseColor = function (color:number, alpha:number) {
+        var fill = function (s) {
+            if (s.length < 2) {
+                s = "0" + s;
+            }
+            return s;
+        };
+        var _colorBlue = color & 0x0000FF;
+        var _colorGreen = (color & 0x00ff00) >> 8;
+        var _colorRed = color >> 16;
+        var a = parseInt(<any>(alpha * 255)).toString(16);
+        var r = _colorRed.toString(16);
+        var g = _colorGreen.toString(16);
+        var b = _colorBlue.toString(16);
+        return "#" + fill(a) + fill(r) + fill(g) + fill(b);
+    };
+}
+else {
+    egret_native_graphics.init();
+}
+
+//var originNativeFill = egret_native.rastergl.fill;
+//egret_native.rastergl.fill = function () {
+//    var style = egret.Graphics._currentFillStyle;
+//    if (!(typeof style == "string")) {
+//        var matrix:egret.Matrix = style["matrix"];
+//        if (matrix) {
+//            egret_native.rastergl.transform(matrix.a, matrix.b, matrix.c, matrix.d, matrix.tx, matrix.ty);
+//            originNativeFill.call(egret_native.rastergl);
+//            var context = egret.MainContext.instance.rendererContext;
+//            egret_native.Graphics.setTransform(context._matrixA, context._matrixB, context._matrixC, context._matrixD, context._matrixTx, context._matrixTy);
+//        }
+//    }
+//    else {
+//        originNativeFill.call(egret_native.rastergl);
+//    }
+//};
+
+egret.Graphics.prototype.beginGradientFill = function (type:string, colors:Array<number>, alphas:Array<number>, ratios:Array<number>, matrix:egret.Matrix = null) {
+
+};

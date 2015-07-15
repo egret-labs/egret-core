@@ -1,29 +1,31 @@
-/**
- * Copyright (c) 2014,Egret-Labs.org
- * All rights reserved.
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are met:
- *
- *     * Redistributions of source code must retain the above copyright
- *       notice, this list of conditions and the following disclaimer.
- *     * Redistributions in binary form must reproduce the above copyright
- *       notice, this list of conditions and the following disclaimer in the
- *       documentation and/or other materials provided with the distribution.
- *     * Neither the name of the Egret-Labs.org nor the
- *       names of its contributors may be used to endorse or promote products
- *       derived from this software without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY EGRET-LABS.ORG AND CONTRIBUTORS "AS IS" AND ANY
- * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
- * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL EGRET-LABS.ORG AND CONTRIBUTORS BE LIABLE FOR ANY
- * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
- * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
- * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
- * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
- * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */
+//////////////////////////////////////////////////////////////////////////////////////
+//
+//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  All rights reserved.
+//  Redistribution and use in source and binary forms, with or without
+//  modification, are permitted provided that the following conditions are met:
+//
+//     * Redistributions of source code must retain the above copyright
+//       notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above copyright
+//       notice, this list of conditions and the following disclaimer in the
+//       documentation and/or other materials provided with the distribution.
+//     * Neither the name of the Egret nor the
+//       names of its contributors may be used to endorse or promote products
+//       derived from this software without specific prior written permission.
+//
+//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
+//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
+//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
+//////////////////////////////////////////////////////////////////////////////////////
 
 
 module egret {
@@ -34,7 +36,7 @@ module egret {
      * * Stage 类代表主绘图区，表示显示 Egret 内容的整个区域。
      * 可以以全局方式访问 Stage 对象(egret.MainContext.instance.stage)。也可以利用 DisplayObject 实例的 stage 属性进行访问。
      * Stage 类具有多个祖代类 -- DisplayObjectContainer、DisplayObject 和 EventDispatcher，属性和方法便是从这些类继承而来的。从这些继承的许多属性和方法不适用于 Stage 对象。
-     * @link http://docs.egret-labs.org/jksubj/scalemode.html 理解Egret中的各种屏幕适配策略并做出选择
+     * @see http://edn.egret.com/cn/index.php?g=&m=article&a=index&id=202&terms1_id=59&terms2_id=69 深入了解屏幕适配
      */
     export class Stage extends DisplayObjectContainer {
 
@@ -63,7 +65,7 @@ module egret {
         public constructor(width:number = 480, height:number = 800) {
             super();
             this.touchEnabled = true;
-            this._stage = this;
+            this._DO_Props_._stage = this;
             this._stageWidth = width;
             this._stageHeight = height;
 
@@ -111,7 +113,7 @@ module egret {
         private setResolutionPolicy():void{
             var content = Stage.SCALE_MODE_ENUM[this._scaleMode];
             if (!content){
-                throw new Error(getString(1024));
+                $error(1024);
             }
             var container = new egret.EqualToFrame();
             var policy = new egret.ResolutionPolicy(container, content);
@@ -138,15 +140,32 @@ module egret {
             return this._stageHeight;
         }
 
+        private _frameRate:number = 60;
+
+        public get frameRate():number{
+            return this._frameRate;
+        }
+
+        /**
+         * 获取并设置舞台的帧速率。帧速率是指每秒显示的帧数。
+         * 注意：需设置为可以被60整除的数
+         * @member {number} egret.Stage#frameRate
+         */
+        public set frameRate(value:number) {
+            this._frameRate = value;
+            MainContext.instance.deviceContext.setFrameRate(value);
+        }
+
         /**
          * @member egret.Stage#hitTest
          * @see egret.DisplayObject#hitTest
          * @param x
          * @param y
          * @returns {egret.DisplayObject}
+         * @private
          */
         public hitTest(x, y, ignoreTouchEnabled:boolean = false):DisplayObject {
-            if (!this._touchEnabled) {
+            if (!this._DO_Props_._touchEnabled) {
                 return null;
             }
             var result:DisplayObject;
@@ -158,7 +177,7 @@ module egret {
             for (var i = l - 1; i >= 0; i--) {
                 var child = children[i];
                 var mtx = child._getMatrix();
-                var scrollRect = child._scrollRect;
+                var scrollRect = child.scrollRect;
                 if (scrollRect) {
                     mtx.append(1, 0, 0, 1, -scrollRect.x, -scrollRect.y);
                 }
@@ -166,7 +185,7 @@ module egret {
                 var point = Matrix.transformCoords(mtx, x, y);
                 result = child.hitTest(point.x, point.y, true);
                 if (result) {
-                    if (result._touchEnabled) {
+                    if (result.touchEnabled) {
                         return result;
                     }
                 }
@@ -195,10 +214,16 @@ module egret {
             }
         }
 
+        /**
+         * @private
+         */
         public get focus(): DisplayObject {
             return null;
         }
 
+        /**
+         * @private
+         */
         public static SCALE_MODE_ENUM:any = {};
 
         /**
@@ -211,7 +236,7 @@ module egret {
          */
         public static registerScaleMode(key:string, value:ContentStrategy, override?:boolean):void {
             if(Stage.SCALE_MODE_ENUM[key] && !override) {
-                egret.Logger.warningWithErrorId(1009, key);
+                $warn(1009, key);
             }
             else {
                 Stage.SCALE_MODE_ENUM[key] = value;

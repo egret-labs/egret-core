@@ -18,7 +18,7 @@
  *
  */
 var file = require("../core/file");
-var path = require("path");
+var path = require("../core/path");
 var plist = require('../core/plist');
 
 var totalData = {};

@@ -1,30 +1,31 @@
-/**
- * Copyright (c) 2014,Egret-Labs.org
- * All rights reserved.
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are met:
- *
- *     * Redistributions of source code must retain the above copyright
- *       notice, this list of conditions and the following disclaimer.
- *     * Redistributions in binary form must reproduce the above copyright
- *       notice, this list of conditions and the following disclaimer in the
- *       documentation and/or other materials provided with the distribution.
- *     * Neither the name of the Egret-Labs.org nor the
- *       names of its contributors may be used to endorse or promote products
- *       derived from this software without specific prior written pemission.
- *
- * THIS SOFTWARE IS PROVIDED BY EGRET-LABS.ORG AND CONTRIBUTORS "AS IS" AND ANY
- * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
- * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL EGRET-LABS.ORG AND CONTRIBUTORS BE LIABLE FOR ANY
- * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
- * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
- * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
- * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
- * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */
-
+//////////////////////////////////////////////////////////////////////////////////////
+//
+//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  All rights reserved.
+//  Redistribution and use in source and binary forms, with or without
+//  modification, are permitted provided that the following conditions are met:
+//
+//     * Redistributions of source code must retain the above copyright
+//       notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above copyright
+//       notice, this list of conditions and the following disclaimer in the
+//       documentation and/or other materials provided with the distribution.
+//     * Neither the name of the Egret nor the
+//       names of its contributors may be used to endorse or promote products
+//       derived from this software without specific prior written permission.
+//
+//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
+//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
+//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
+//////////////////////////////////////////////////////////////////////////////////////
 
 module egret {
     /**
@@ -41,75 +42,97 @@ module egret {
      * 不允许重写以下方法
      * _draw();
      * getBounds();
-     * @link http://docs.egret-labs.org/post/manual/displayobj/aboutdisplayobj.html 显示对象的基本概念
+     * @see http://edn.egret.com/cn/index.php?g=&m=article&a=index&id=102&terms1_id=25&terms2_id=27 显示对象的基本概念
+     *
+     * @event egret.Event.ADDED 将显示对象添加到显示列表中时调度。
+     * @event egret.Event.ADDED_TO_STAGE 在将显示对象直接添加到舞台显示列表或将包含显示对象的子树添加至舞台显示列表中时调度。
+     * @event egret.Event.REMOVED 将要从显示列表中删除显示对象时调度。
+     * @event egret.Event.REMOVED_FROM_STAGE 在从显示列表中直接删除显示对象或删除包含显示对象的子树时调度。
+     * @event egret.Event.ENTER_FRAME [广播事件] 播放头进入新帧时调度。
+     * @event egret.Event.RENDER [广播事件] 将要更新和呈现显示列表时调度。
      */
     export class DisplayObject extends EventDispatcher implements RenderData {
 
-        public __hack_local_matrix:any = null;
+        public _DO_Props_:DisplayObjectProperties;
+        private _DO_Privs_:DisplayObjectPrivateProperties;
 
         /**
          * 创建一个 egret.DisplayObject 对象
          */
         public constructor() {
             super();
+
+            this._DO_Props_ = new egret.DisplayObjectProperties();
+            this._DO_Privs_ = new egret.DisplayObjectPrivateProperties();
+
             this._worldTransform = new egret.Matrix();
             this._worldBounds = new egret.Rectangle(0, 0, 0, 0);
-            this._cacheBounds = new egret.Rectangle(0, 0, 0, 0);
+            this._DO_Privs_._cacheBounds = new egret.Rectangle(0, 0, 0, 0);
         }
 
-        public _normalDirty:boolean = true;
+        public _texture_to_render:Texture = null;
+        public _worldTransform:egret.Matrix;
+        public _worldBounds:egret.Rectangle = null;
 
-        public _setDirty():void {
-            this._normalDirty = true;
-        }
-
-        public getDirty():boolean {
-            return this._normalDirty || this._sizeDirty;
-        }
-
-        //对宽高有影响
-        private _sizeDirty:boolean = true;
-
-        public _setParentSizeDirty():void {
-            var parent = this._parent;
-            if (parent && (!(parent._hasWidthSet || parent._hasHeightSet))) {
-                parent._setSizeDirty();
-            }
-        }
-        /**
-         * 尺寸发生改变的回调函数。若此对象被添加到UIAsset里，此函数将被赋值，在尺寸发生改变时通知UIAsset重新测量。
-         */
+        public __hack_local_matrix:any = null;
+        //尺寸发生改变的回调函数。若此对象被添加到UIAsset里，此函数将被赋值，在尺寸发生改变时通知UIAsset重新测量。
         public _sizeChangeCallBack:Function = null;
         public _sizeChangeCallTarget:any = null;
 
+        public _setDirty():void {
+            this._DO_Props_._normalDirty = true;
+        }
+
+        /**
+         * @private
+         */
+        public getDirty():boolean {
+            return this._DO_Props_._normalDirty || this._DO_Props_._sizeDirty;
+        }
+
+
+        public _setParentSizeDirty():void {
+            var parent = this._DO_Props_._parent;
+            if (parent) {
+                if (!(parent._DO_Props_._hasWidthSet || parent._DO_Props_._hasHeightSet)) {
+                    parent._setSizeDirty();
+                }
+                else {
+                    parent._setCacheDirty();
+                }
+            }
+        }
+
         public _setSizeDirty():void {
-            if (this._sizeDirty) {
+            var self = this;
+            var do_props = self._DO_Props_;
+            if (do_props._sizeDirty) {
                 return;
             }
-            this._sizeDirty = true;
+            do_props._sizeDirty = true;
 
             this._setDirty();
             this._setCacheDirty();
             this._setParentSizeDirty();
-            if(this._sizeChangeCallBack!=null){
-                if(this._sizeChangeCallTarget==this._parent){
-                    this._sizeChangeCallBack.call(this._sizeChangeCallTarget);
+            if (self._sizeChangeCallBack != null) {
+                if (self._sizeChangeCallTarget == do_props._parent) {
+                    self._sizeChangeCallBack.call(self._sizeChangeCallTarget);
                 }
-                else{
-                    this._sizeChangeCallBack = null;
-                    this._sizeChangeCallTarget = null;
+                else {
+                    self._sizeChangeCallBack = null;
+                    self._sizeChangeCallTarget = null;
                 }
             }
         }
 
         public _clearDirty():void {
             //todo 这个除了文本的，其他都没有clear过
-            this._normalDirty = false;
+            this._DO_Props_._normalDirty = false;
         }
 
         public _clearSizeDirty():void {
             //todo 最好在enterFrame都重新算一遍
-            this._sizeDirty = false;
+            this._DO_Props_._sizeDirty = false;
         }
 
         /**
@@ -117,11 +140,13 @@ module egret {
          * 通过调用父显示对象容器的 getChildByName() 方法，可以在父显示对象容器的子列表中标识该对象。
          * @member {string} egret.DisplayObject#name
          */
-        public name:string = null;
+        public set name(value:string) {
+            this._DO_Props_._name = value;
+        }
 
-        public _texture_to_render:Texture = null;
-
-        public _parent:DisplayObjectContainer = null;
+        public get name():string {
+            return this._DO_Props_._name;
+        }
 
         /**
          * 表示包含此显示对象的 DisplayObjectContainer 对象。
@@ -129,14 +154,13 @@ module egret {
          * @member {egret.DisplayObjectContainer} egret.DisplayObject#parent
          */
         public get parent():DisplayObjectContainer {
-            return this._parent;
+            return this._DO_Props_._parent;
         }
 
         public _parentChanged(parent:DisplayObjectContainer):void {
-            this._parent = parent;
+            this._DO_Props_._parent = parent;
         }
 
-        public _x:number = 0;
 
         /**
          * 表示 DisplayObject 实例相对于父级 DisplayObjectContainer 本地坐标的 x 坐标。
@@ -144,7 +168,7 @@ module egret {
          * @member {number} egret.DisplayObject#x
          */
         public get x():number {
-            return this._x;
+            return this._DO_Props_._x;
         }
 
         public set x(value:number) {
@@ -152,15 +176,14 @@ module egret {
         }
 
         public _setX(value:number):void {
-            if (NumberUtils.isNumber(value) && this._x != value) {
-                this._x = value;
+            if (NumberUtils.isNumber(value) && this._DO_Props_._x != value) {
+                this._DO_Props_._x = value;
 
                 this._setDirty();
                 this._setParentSizeDirty();
             }
         }
 
-        public _y:number = 0;
 
         /**
          * 表示 DisplayObject 实例相对于父级 DisplayObjectContainer 本地坐标的 y 坐标。
@@ -168,7 +191,7 @@ module egret {
          * @member {number} egret.DisplayObject#y
          */
         public get y():number {
-            return this._y;
+            return this._DO_Props_._y;
         }
 
         public set y(value:number) {
@@ -176,15 +199,14 @@ module egret {
         }
 
         public _setY(value:number):void {
-            if (NumberUtils.isNumber(value) && this._y != value) {
-                this._y = value;
+            if (NumberUtils.isNumber(value) && this._DO_Props_._y != value) {
+                this._DO_Props_._y = value;
 
                 this._setDirty();
                 this._setParentSizeDirty();
             }
         }
 
-        public _scaleX:number = 1;
 
         /**
          * 表示从注册点开始应用的对象的水平缩放比例（百分比）。
@@ -194,19 +216,18 @@ module egret {
          * @default 1
          */
         public get scaleX():number {
-            return this._scaleX;
+            return this._DO_Props_._scaleX;
         }
 
         public set scaleX(value:number) {
-            if (NumberUtils.isNumber(value) && this._scaleX != value) {
-                this._scaleX = value;
+            if (NumberUtils.isNumber(value) && this._DO_Props_._scaleX != value) {
+                this._DO_Props_._scaleX = value;
 
                 this._setDirty();
                 this._setParentSizeDirty();
             }
         }
 
-        public _scaleY:number = 1;
 
         /**
          * 表示从对象注册点开始应用的对象的垂直缩放比例（百分比）。
@@ -216,19 +237,18 @@ module egret {
          * @default 1
          */
         public get scaleY():number {
-            return this._scaleY;
+            return this._DO_Props_._scaleY;
         }
 
         public set scaleY(value:number) {
-            if (NumberUtils.isNumber(value) && this._scaleY != value) {
-                this._scaleY = value;
+            if (NumberUtils.isNumber(value) && this._DO_Props_._scaleY != value) {
+                this._DO_Props_._scaleY = value;
 
                 this._setDirty();
                 this._setParentSizeDirty();
             }
         }
 
-        public _anchorOffsetX:number = 0;
 
         /**
          * 表示从对象绝对锚点X。
@@ -236,19 +256,18 @@ module egret {
          * @default 0
          */
         public get anchorOffsetX():number {
-            return this._anchorOffsetX;
+            return this._DO_Props_._anchorOffsetX;
         }
 
         public set anchorOffsetX(value:number) {
-            if (NumberUtils.isNumber(value) && this._anchorOffsetX != value) {
-                this._anchorOffsetX = value;
+            if (NumberUtils.isNumber(value) && this._DO_Props_._anchorOffsetX != value) {
+                this._DO_Props_._anchorOffsetX = value;
 
                 this._setDirty();
                 this._setParentSizeDirty();
             }
         }
 
-        public _anchorOffsetY:number = 0;
 
         /**
          * 表示从对象绝对锚点Y。
@@ -256,19 +275,18 @@ module egret {
          * @default 0
          */
         public get anchorOffsetY():number {
-            return this._anchorOffsetY;
+            return this._DO_Props_._anchorOffsetY;
         }
 
         public set anchorOffsetY(value:number) {
-            if (NumberUtils.isNumber(value) && this._anchorOffsetY != value) {
-                this._anchorOffsetY = value;
+            if (NumberUtils.isNumber(value) && this._DO_Props_._anchorOffsetY != value) {
+                this._DO_Props_._anchorOffsetY = value;
 
                 this._setDirty();
                 this._setParentSizeDirty();
             }
         }
 
-        public _anchorX:number = 0;
 
         /**
          * 表示从对象相对锚点X。
@@ -276,7 +294,7 @@ module egret {
          * @default 0
          */
         public get anchorX():number {
-            return this._anchorX;
+            return this._DO_Props_._anchorX;
         }
 
         public set anchorX(value:number) {
@@ -284,15 +302,14 @@ module egret {
         }
 
         public _setAnchorX(value:number):void {
-            if (NumberUtils.isNumber(value) && this._anchorX != value) {
-                this._anchorX = value;
+            if (NumberUtils.isNumber(value) && this._DO_Props_._anchorX != value) {
+                this._DO_Props_._anchorX = value;
 
                 this._setDirty();
                 this._setParentSizeDirty();
             }
         }
 
-        public _anchorY:number = 0;
 
         /**
          * 表示从对象相对锚点Y。
@@ -300,7 +317,7 @@ module egret {
          * @default 0
          */
         public get anchorY():number {
-            return this._anchorY;
+            return this._DO_Props_._anchorY;
         }
 
         public set anchorY(value:number) {
@@ -308,15 +325,14 @@ module egret {
         }
 
         public _setAnchorY(value:number):void {
-            if (NumberUtils.isNumber(value) && this._anchorY != value) {
-                this._anchorY = value;
+            if (NumberUtils.isNumber(value) && this._DO_Props_._anchorY != value) {
+                this._DO_Props_._anchorY = value;
 
                 this._setDirty();
                 this._setParentSizeDirty();
             }
         }
 
-        public _visible:boolean = true;
 
         /**
          * 显示对象是否可见。
@@ -325,7 +341,7 @@ module egret {
          * @member {boolean} egret.DisplayObject#visible
          */
         public get visible():boolean {
-            return this._visible;
+            return this._DO_Props_._visible;
         }
 
         public set visible(value:boolean) {
@@ -333,13 +349,12 @@ module egret {
         }
 
         public _setVisible(value:boolean):void {
-            if (this._visible != value) {
-                this._visible = value;
+            if (this._DO_Props_._visible != value) {
+                this._DO_Props_._visible = value;
                 this._setSizeDirty();
             }
         }
 
-        public _rotation:number = 0;
 
         /**
          * 表示 DisplayObject 实例距其原始方向的旋转程度，以度为单位。
@@ -348,40 +363,42 @@ module egret {
          * @default 0 默认值为 0 不旋转。
          */
         public get rotation():number {
-            return this._rotation;
+            return this._DO_Props_._rotation;
         }
 
         public set rotation(value:number) {
-            if (NumberUtils.isNumber(value) && this._rotation != value) {
-                this._rotation = value;
+            if (NumberUtils.isNumber(value) && this._DO_Props_._rotation != value) {
+                this._DO_Props_._rotation = value;
 
                 this._setDirty();
                 this._setParentSizeDirty();
             }
         }
 
-        public _alpha:number = 1;
 
         /**
          * 表示指定对象的 Alpha 透明度值。
          * 有效值为 0（完全透明）到 1（完全不透明）。alpha 设置为 0 的显示对象是活动的，即使它们不可见。
          * @member {number} egret.DisplayObject#alpha
-         *  @default 1 默认值为 1。
+         * @default 1
          */
         public get alpha():number {
-            return this._alpha;
+            return this._DO_Props_._alpha;
         }
 
         public set alpha(value:number) {
-            if (NumberUtils.isNumber(value) && this._alpha != value) {
-                this._alpha = value;
+            this._setAlpha(value);
+        }
+
+        public _setAlpha(value:number):void {
+            if (NumberUtils.isNumber(value) && this._DO_Props_._alpha != value) {
+                this._DO_Props_._alpha = value;
 
                 this._setDirty();
                 this._setCacheDirty();
             }
         }
 
-        public _skewX:number = 0;
 
         /**
          * 表示DisplayObject的x方向斜切
@@ -389,19 +406,18 @@ module egret {
          * @default 0
          */
         public get skewX():number {
-            return this._skewX;
+            return this._DO_Props_._skewX;
         }
 
         public set skewX(value:number) {
-            if (NumberUtils.isNumber(value) && this._skewX != value) {
-                this._skewX = value;
+            if (NumberUtils.isNumber(value) && this._DO_Props_._skewX != value) {
+                this._DO_Props_._skewX = value;
 
                 this._setDirty();
                 this._setParentSizeDirty();
             }
         }
 
-        public _skewY:number = 0;
 
         /**
          * 表示DisplayObject的y方向斜切
@@ -409,19 +425,18 @@ module egret {
          * @default 0
          */
         public get skewY():number {
-            return this._skewY;
+            return this._DO_Props_._skewY;
         }
 
         public set skewY(value:number) {
-            if (NumberUtils.isNumber(value) && this._skewY != value) {
-                this._skewY = value;
+            if (NumberUtils.isNumber(value) && this._DO_Props_._skewY != value) {
+                this._DO_Props_._skewY = value;
 
                 this._setDirty();
                 this._setParentSizeDirty();
             }
         }
 
-        public _touchEnabled:boolean = false;
 
         /**
          * 指定此对象是否接收鼠标/触摸事件
@@ -429,7 +444,7 @@ module egret {
          * @default false 默认为 false 即不可以接收。
          */
         public get touchEnabled():boolean {
-            return this._touchEnabled;
+            return this._DO_Props_._touchEnabled;
         }
 
         public set touchEnabled(value:boolean) {
@@ -437,7 +452,7 @@ module egret {
         }
 
         public _setTouchEnabled(value:boolean):void {
-            this._touchEnabled = value;
+            this._DO_Props_._touchEnabled = value;
         }
 
         /**
@@ -445,16 +460,20 @@ module egret {
          * 内部绘制位图的方法有两种。 如果启用了混合模式或外部剪辑遮罩，则将通过向矢量渲染器添加有位图填充的正方形来绘制位图。 如果尝试将此属性设置为无效值，则运行时会将此值设置为 BlendMode.NORMAL。
          * @member {string} egret.DisplayObject#blendMode
          */
-        public blendMode:string = null;
+        public get blendMode():string {
+            return this._DO_Props_._blendMode;
+        }
 
-        public _scrollRect:Rectangle = null;
+        public set blendMode(value:string) {
+            this._DO_Props_._blendMode = value;
+        }
 
         /**
          * 显示对象的滚动矩形范围。显示对象被裁切为矩形定义的大小，当您更改 scrollRect 对象的 x 和 y 属性时，它会在矩形内滚动。
          *  @member {egret.Rectangle} egret.DisplayObject#scrollRect
          */
         public get scrollRect():Rectangle {
-            return this._scrollRect;
+            return this._DO_Props_._scrollRect;
         }
 
         public set scrollRect(value:Rectangle) {
@@ -462,7 +481,7 @@ module egret {
         }
 
         public _setScrollRect(value:Rectangle):void {
-            this._scrollRect = value;
+            this._DO_Props_._scrollRect = value;
 
             this._setSizeDirty();
         }
@@ -486,24 +505,22 @@ module egret {
             return this._measureBounds().height;
         }
 
-        public _explicitWidth:number = NaN;
 
         /**
          * 显式设置宽度
          * @returns {number}
          */
         public get explicitWidth():number {
-            return this._explicitWidth;
+            return this._DO_Props_._explicitWidth;
         }
 
-        public _explicitHeight:number = NaN;
 
         /**
          * 显式设置高度
          * @returns {number}
          */
         public get explicitHeight():number {
-            return this._explicitHeight;
+            return this._DO_Props_._explicitHeight;
         }
 
         /**
@@ -534,7 +551,6 @@ module egret {
             return this._getSize(Rectangle.identity).height;
         }
 
-        public _hasWidthSet:boolean = false;
 
         public set width(value:number) {
             this._setWidth(value);
@@ -546,11 +562,10 @@ module egret {
         public _setWidth(value:number):void {
             this._setSizeDirty();
             this._setCacheDirty();
-            this._explicitWidth = value;
-            this._hasWidthSet = NumberUtils.isNumber(value);
+            this._DO_Props_._explicitWidth = value;
+            this._DO_Props_._hasWidthSet = NumberUtils.isNumber(value);
         }
 
-        public _hasHeightSet:boolean = false;
 
         public set height(value:number) {
             this._setHeight(value);
@@ -562,8 +577,8 @@ module egret {
         public _setHeight(value:number):void {
             this._setSizeDirty();
             this._setCacheDirty();
-            this._explicitHeight = value;
-            this._hasHeightSet = NumberUtils.isNumber(value);
+            this._DO_Props_._explicitHeight = value;
+            this._DO_Props_._hasHeightSet = NumberUtils.isNumber(value);
         }
 
         /**
@@ -573,14 +588,17 @@ module egret {
          */
         public mask:Rectangle = null;
 
-        public _worldTransform:egret.Matrix;
-        public _worldBounds:egret.Rectangle = null;
         /**
          * @private
          */
-        public worldAlpha:number = 1;
+        public set worldAlpha(value:number) {
+            this._DO_Props_._worldAlpha = value;
+        }
 
-        public _isContainer:boolean = false;
+        public get worldAlpha():number {
+            return this._DO_Props_._worldAlpha;
+        }
+
 
         /**
          * @private
@@ -588,7 +606,7 @@ module egret {
          */
         public _draw(renderContext:RendererContext):void {
             var o = this;
-            if (!o._visible) {
+            if (!o._DO_Props_._visible) {
                 o.destroyCacheBounds();
                 return;
             }
@@ -597,16 +615,13 @@ module egret {
                 o.destroyCacheBounds();
                 return;
             }
-            var isCommandPush = MainContext.__use_new_draw && o._isContainer;
-            if(o._filter && !isCommandPush) {
-                renderContext.setGlobalFilter(o._filter);
-            }
-            if (o._colorTransform && !isCommandPush) {
-                renderContext.setGlobalColorTransform(o._colorTransform.matrix);
+            var isCommandPush = MainContext.__use_new_draw && o._DO_Props_._isContainer;
+            if (o._hasFilters() && !isCommandPush) {
+                this._setGlobalFilters(renderContext);
             }
             renderContext.setAlpha(o.worldAlpha, o.blendMode);
             renderContext.setTransform(o._worldTransform);
-            var mask = o.mask || o._scrollRect;
+            var mask = o.mask || o._DO_Props_._scrollRect;
             if (mask && !isCommandPush) {
                 renderContext.pushMask(mask);
             }
@@ -614,37 +629,68 @@ module egret {
             if (mask && !isCommandPush) {
                 renderContext.popMask();
             }
-            if (o._colorTransform && !isCommandPush) {
-                renderContext.setGlobalColorTransform(null);
-            }
-            if(o._filter && !isCommandPush) {
-                renderContext.setGlobalFilter(null);
+            if (o._hasFilters() && !isCommandPush) {
+                this._removeGlobalFilters(renderContext);
             }
             o.destroyCacheBounds();
         }
 
-        public _setGlobalFilter(renderContext:RendererContext):void {
+        private static color:Array<number> = [
+            1, 0, 0, 0, 0,
+            0, 1, 0, 0, 0,
+            0, 0, 1, 0, 0,
+            0, 0, 0, 1, 0
+        ];
+        private static colorMatrixFilter:ColorMatrixFilter = new ColorMatrixFilter();
+
+        public _setGlobalFilters(renderContext:RendererContext):void {
             var o = this;
-            renderContext.setGlobalFilter(o._filter);
+            var arr;
+            if (o._DO_Props_._filters) {
+                arr = o._DO_Props_._filters.concat();
+            }
+            else {
+                arr = [];
+            }
+            if (this._transform) {
+                var colorTransform = this._transform._colorTransform;
+                var color = DisplayObject.color;
+                color[0] = colorTransform._redMultiplier;
+                color[4] = colorTransform._redOffset;
+                color[6] = colorTransform._greenMultiplier;
+                color[9] = colorTransform._greenOffset;
+                color[12] = colorTransform._blueMultiplier;
+                color[14] = colorTransform._blueOffset;
+                color[18] = colorTransform._alphaMultiplier;
+                color[19] = colorTransform._alphaOffset;
+                DisplayObject.colorMatrixFilter._matrix = color;
+                arr.push(DisplayObject.colorMatrixFilter);
+            }
+            renderContext.setGlobalFilters(arr);
         }
 
-        public _removeGlobalFilter(renderContext:RendererContext):void {
-            renderContext.setGlobalFilter(null);
+        public _removeGlobalFilters(renderContext:RendererContext):void {
+            renderContext.setGlobalFilters(null);
         }
 
-        public _setGlobalColorTransform(renderContext:RendererContext):void {
-            var o = this;
-            renderContext.setGlobalColorTransform(o._colorTransform.matrix);
-        }
-
-        public _removeGlobalColorTransform(renderContext:RendererContext):void {
-            renderContext.setGlobalColorTransform(null);
+        public _hasFilters():boolean {
+            var result:boolean = this._DO_Props_._filters && this._DO_Props_._filters.length > 0;
+            if (this._transform) {
+                var colorTransform = this._transform._colorTransform;
+                if (colorTransform._redMultiplier != 1 || colorTransform._redOffset != 0 ||
+                    colorTransform._greenMultiplier != 1 || colorTransform._greenOffset != 0 ||
+                    colorTransform._blueMultiplier != 1 || colorTransform._blueOffset != 0 ||
+                    colorTransform._alphaMultiplier != 1 || colorTransform._alphaOffset != 0) {
+                    result = true;
+                }
+            }
+            return result;
         }
 
         public _pushMask(renderContext:RendererContext):void {
             var o = this;
             renderContext.setTransform(o._worldTransform);
-            var mask = o.mask || o._scrollRect;
+            var mask = o.mask || o._DO_Props_._scrollRect;
             if (mask) {
                 renderContext.pushMask(mask);
             }
@@ -654,21 +700,21 @@ module egret {
             renderContext.popMask();
         }
 
+
         /**
          * @private
          */
         private drawCacheTexture(renderContext:RendererContext):boolean {
             var display:egret.DisplayObject = this;
-            if (display._cacheAsBitmap == false) {
+            if (display._DO_Props_._cacheAsBitmap == false) {
                 return false;
             }
             var bounds = display.getBounds(Rectangle.identity);
-            var texture_scale_factor = egret.MainContext.instance.rendererContext._texture_scale_factor;
-            if (display._cacheDirty || display._texture_to_render == null ||
-                Math.round(bounds.width) != Math.round(display._texture_to_render._sourceWidth * texture_scale_factor) ||
-                Math.round(bounds.height) != Math.round(display._texture_to_render._sourceHeight * texture_scale_factor)) {
+            if (display._DO_Privs_._cacheDirty || display._texture_to_render == null ||
+                Math.round(bounds.width) - display._texture_to_render._textureWidth >= 1 ||
+                Math.round(bounds.height) - display._texture_to_render._textureHeight >= 1) {
                 var cached = display._makeBitmapCache();
-                display._cacheDirty = !cached;
+                display._DO_Privs_._cacheDirty = !cached;
             }
 
             //没有成功生成cache的情形
@@ -693,7 +739,13 @@ module egret {
          * @public
          * @member {string} egret.DisplayObject#blendMode
          */
-        public needDraw:boolean = false;
+        public set needDraw(value:boolean) {
+            this._DO_Props_._needDraw = value;
+        }
+
+        public get needDraw():boolean {
+            return this._DO_Props_._needDraw;
+        }
 
         /**
          * @private
@@ -701,12 +753,13 @@ module egret {
          */
         public _updateTransform():void {
             var o = this;
-            if (!o._visible) {
+            var do_props = o._DO_Props_;
+            if (!do_props._visible) {
                 return;
             }
             o._calculateWorldTransform();
-            if(MainContext._renderLoopPhase == "updateTransform") {
-                if(o.needDraw || o._texture_to_render || o._cacheAsBitmap) {
+            if (MainContext._renderLoopPhase == "updateTransform") {
+                if (o.needDraw || o._texture_to_render || do_props._cacheAsBitmap) {
                     RenderCommand.push(o._draw, o);
                 }
             }
@@ -718,13 +771,14 @@ module egret {
          */
         public _calculateWorldTransform():void {
             var o = this;
+            var do_props = o._DO_Props_;
             var worldTransform = o._worldTransform;
-            var parent = o._parent;
+            var parent = do_props._parent;
 
             worldTransform.identityMatrix(parent._worldTransform);
             this._getMatrix(worldTransform);
 
-            var scrollRect = this._scrollRect;
+            var scrollRect = do_props._scrollRect;
             if (scrollRect) {
                 worldTransform.append(1, 0, 0, 1, -scrollRect.x, -scrollRect.y);
             }
@@ -733,7 +787,7 @@ module egret {
 //                var bounds:egret.Rectangle = DisplayObject.getTransformBounds(o._getSize(Rectangle.identity), o._worldTransform);
 //                o._worldBounds.initialize(bounds.x, bounds.y, bounds.width, bounds.height);
 //            }
-            o.worldAlpha = parent.worldAlpha * o._alpha;
+            o.worldAlpha = parent.worldAlpha * do_props._alpha;
         }
 
         /**
@@ -744,7 +798,6 @@ module egret {
 
         }
 
-        private _cacheBounds:egret.Rectangle;
 
         /**
          * 获取显示对象的测量边界
@@ -754,32 +807,35 @@ module egret {
          * @returns {Rectangle}
          */
         public getBounds(resultRect?:Rectangle, calculateAnchor:boolean = true):egret.Rectangle {
-//            if (this._cacheBounds.x == 0 && this._cacheBounds.y == 0 && this._cacheBounds.width == 0 && this._cacheBounds.height == 0) {
+
+            var do_props = this._DO_Props_;
+            var do_privs = this._DO_Privs_;
+//            if (do_props._cacheBounds.x == 0 && do_props._cacheBounds.y == 0 && do_props._cacheBounds.width == 0 && do_props._cacheBounds.height == 0) {
             var rect:Rectangle = this._measureBounds();
-            var w:number = this._hasWidthSet ? this._explicitWidth : rect.width;
-            var h:number = this._hasHeightSet ? this._explicitHeight : rect.height;
+            var w:number = do_props._hasWidthSet ? do_props._explicitWidth : rect.width;
+            var h:number = do_props._hasHeightSet ? do_props._explicitHeight : rect.height;
 
             //记录测量宽高
-            this._rectW = rect.width;
-            this._rectH = rect.height;
+            do_privs._rectW = rect.width;
+            do_privs._rectH = rect.height;
             this._clearSizeDirty();
 
             var x:number = rect.x;
             var y:number = rect.y;
             var anchorX = 0, anchorY = 0;
             if (calculateAnchor) {
-                if (this._anchorX != 0 || this._anchorY != 0) {
-                    anchorX = w * this._anchorX;
-                    anchorY = h * this._anchorY;
+                if (do_props._anchorX != 0 || do_props._anchorY != 0) {
+                    anchorX = w * do_props._anchorX;
+                    anchorY = h * do_props._anchorY;
                 }
                 else {
-                    anchorX = this._anchorOffsetX;
-                    anchorY = this._anchorOffsetY;
+                    anchorX = do_props._anchorOffsetX;
+                    anchorY = do_props._anchorOffsetY;
                 }
             }
-            this._cacheBounds.initialize(x - anchorX, y - anchorY, w, h);
+            do_privs._cacheBounds.initialize(x - anchorX, y - anchorY, w, h);
 //            }
-            var result:egret.Rectangle = this._cacheBounds;
+            var result:egret.Rectangle = do_privs._cacheBounds;
             if (!resultRect) {
                 resultRect = new Rectangle();
             }
@@ -787,10 +843,11 @@ module egret {
         }
 
         private destroyCacheBounds():void {
-            this._cacheBounds.x = 0;
-            this._cacheBounds.y = 0;
-            this._cacheBounds.width = 0;
-            this._cacheBounds.height = 0;
+            var do_privs = this._DO_Privs_;
+            do_privs._cacheBounds.x = 0;
+            do_privs._cacheBounds.y = 0;
+            do_privs._cacheBounds.width = 0;
+            do_privs._cacheBounds.height = 0;
         }
 
         /**
@@ -804,18 +861,19 @@ module egret {
             var matrix:Matrix = DisplayObject.identityMatrixForGetConcatenated.identity();
             var o = this;
             while (o != null) {
-                if (o._anchorX != 0 || o._anchorY != 0) {
+                var do_props = o._DO_Props_;
+                if (do_props._anchorX != 0 || do_props._anchorY != 0) {
                     var bounds = o._getSize(Rectangle.identity);
-                    matrix.prependTransform(o._x, o._y, o._scaleX, o._scaleY, o._rotation, o._skewX, o._skewY,
-                        bounds.width * o._anchorX, bounds.height * o._anchorY);
+                    matrix.prependTransform(do_props._x, do_props._y, do_props._scaleX, do_props._scaleY, do_props._rotation, do_props._skewX, do_props._skewY,
+                        bounds.width * do_props._anchorX, bounds.height * do_props._anchorY);
                 }
                 else {
-                    matrix.prependTransform(o._x, o._y, o._scaleX, o._scaleY, o._rotation, o._skewX, o._skewY, o._anchorOffsetX, o._anchorOffsetY);
+                    matrix.prependTransform(do_props._x, do_props._y, do_props._scaleX, do_props._scaleY, do_props._rotation, do_props._skewX, do_props._skewY, do_props._anchorOffsetX, do_props._anchorOffsetY);
                 }
-                if (o._scrollRect) {
-                    matrix.prepend(1, 0, 0, 1, -o._scrollRect.x, -o._scrollRect.y);
+                if (do_props._scrollRect) {
+                    matrix.prepend(1, 0, 0, 1, -do_props._scrollRect.x, -do_props._scrollRect.y);
                 }
-                o = o._parent;
+                o = do_props._parent;
             }
             return matrix;
         }
@@ -869,38 +927,39 @@ module egret {
          * @returns {*}
          */
         public hitTest(x:number, y:number, ignoreTouchEnabled:boolean = false):DisplayObject {
-            if (!this._visible || (!ignoreTouchEnabled && !this._touchEnabled)) {
+            var self = this;
+            var do_props = self._DO_Props_;
+            if (!do_props._visible || (!ignoreTouchEnabled && !do_props._touchEnabled)) {
                 return null;
             }
-            var bound:Rectangle = this.getBounds(Rectangle.identity, false);
+            var bound:Rectangle = self.getBounds(Rectangle.identity, false);
             x -= bound.x;
             y -= bound.y;
             if (0 <= x && x < bound.width && 0 <= y && y < bound.height) {
-                if (this.mask || this._scrollRect) {
-                    if (this._scrollRect
-                        && x > this._scrollRect.x
-                        && y > this._scrollRect.y
-                        && x < this._scrollRect.x + this._scrollRect.width
-                        && y < this._scrollRect.y + this._scrollRect.height) {
-                        return this;
+                if (self.mask || do_props._scrollRect) {
+                    if (do_props._scrollRect
+                        && x > do_props._scrollRect.x
+                        && y > do_props._scrollRect.y
+                        && x < do_props._scrollRect.x + do_props._scrollRect.width
+                        && y < do_props._scrollRect.y + do_props._scrollRect.height) {
+                        return self;
                     }
-                    else if (this.mask
-                        && this.mask.x <= x
-                        && x < this.mask.x + this.mask.width
-                        && this.mask.y <= y
-                        && y < this.mask.y + this.mask.height) {
-                        return this;
+                    else if (self.mask
+                        && self.mask.x <= x
+                        && x < self.mask.x + self.mask.width
+                        && self.mask.y <= y
+                        && y < self.mask.y + self.mask.height) {
+                        return self;
                     }
                     return null;
                 }
-                return this;
+                return self;
             }
             else {
                 return null;
             }
         }
 
-        private _hitTestPointTexture:RenderTexture = null;
 
         /**
          * 计算显示对象，以确定它是否与 x 和 y 参数指定的点重叠或相交。x 和 y 参数指定舞台的坐标空间中的点，而不是包含显示对象的显示对象容器中的点（除非显示对象容器是舞台）。
@@ -910,19 +969,23 @@ module egret {
          * @param y {number}  要测试的此对象的 y 坐标。
          * @param shapeFlag {boolean} 是检查对象 (true) 的实际像素，还是检查边框 (false) 的实际像素。
          * @returns {boolean} 如果显示对象与指定的点重叠或相交，则为 true；否则为 false。
+         * @platform Web
          */
         public hitTestPoint(x:number, y:number, shapeFlag?:boolean):boolean {
-            var p:egret.Point = this.globalToLocal(x, y);
+            var self = this;
+            var do_props = self._DO_Props_;
+            var do_privs = self._DO_Privs_;
+            var p:egret.Point = self.globalToLocal(x, y);
             if (!shapeFlag) {
-                return !!this.hitTest(p.x, p.y, true);
+                return !!self.hitTest(p.x, p.y, true);
             }
             else {
-                if (!this._hitTestPointTexture) {
-                    this._hitTestPointTexture = new RenderTexture();
+                if (!do_privs._hitTestPointTexture) {
+                    do_privs._hitTestPointTexture = new RenderTexture();
                 }
-                var testTexture:Texture = this._hitTestPointTexture;
-                (<RenderTexture>testTexture).drawToTexture(this);
-                var pixelData:number[] = testTexture.getPixel32(p.x - this._hitTestPointTexture._offsetX, p.y - this._hitTestPointTexture._offsetY);
+                var testTexture:Texture = do_privs._hitTestPointTexture;
+                (<RenderTexture>testTexture).drawToTexture(self);
+                var pixelData:number[] = testTexture.getPixel32(p.x - do_privs._hitTestPointTexture._offsetX, p.y - do_privs._hitTestPointTexture._offsetY);
                 if (pixelData[3] != 0) {
                     return true;
                 }
@@ -936,58 +999,61 @@ module egret {
             if (!parentMatrix) {
                 parentMatrix = Matrix.identity.identity();
             }
-
+            var self = this;
+            var do_props = self._DO_Props_;
 
             var anchorX, anchorY;
             var resultPoint = this._getOffsetPoint();
             anchorX = resultPoint.x;
             anchorY = resultPoint.y;
 
-            var matrix = this.__hack_local_matrix;
+            var matrix = self.__hack_local_matrix;
             if (matrix) {
                 parentMatrix.append(matrix.a, matrix.b, matrix.c, matrix.d, matrix.tx, matrix.ty);
                 parentMatrix.append(1, 0, 0, 1, -anchorX, -anchorY);
             }
             else {
-                parentMatrix.appendTransform(this._x, this._y, this._scaleX, this._scaleY, this._rotation,
-                    this._skewX, this._skewY, anchorX, anchorY);
+                parentMatrix.appendTransform(do_props._x, do_props._y, do_props._scaleX, do_props._scaleY, do_props._rotation,
+                    do_props._skewX, do_props._skewY, anchorX, anchorY);
             }
 
             return parentMatrix;
         }
 
         public _getSize(resultRect:Rectangle):Rectangle {
-            if (this._hasHeightSet && this._hasWidthSet) {
+            var self = this;
+            var do_props = self._DO_Props_;
+            if (do_props._hasHeightSet && do_props._hasWidthSet) {
                 this._clearSizeDirty();
-                return resultRect.initialize(0, 0, this._explicitWidth, this._explicitHeight);
+                return resultRect.initialize(0, 0, do_props._explicitWidth, do_props._explicitHeight);
             }
 
             this._measureSize(resultRect);
-            if (this._hasWidthSet){
-                resultRect.width = this._explicitWidth;
+            if (do_props._hasWidthSet) {
+                resultRect.width = do_props._explicitWidth;
             }
-            if (this._hasHeightSet){
-                resultRect.height = this._explicitHeight;
+            if (do_props._hasHeightSet) {
+                resultRect.height = do_props._explicitHeight;
             }
             return resultRect;
         }
-
-        private _rectW:number = 0;
-        private _rectH:number = 0;
 
         /**
          * 测量显示对象坐标与大小
          */
         public _measureSize(resultRect:Rectangle):egret.Rectangle {
-            if (this._sizeDirty) {
+            var self = this;
+            var do_props = self._DO_Props_;
+            var do_privs = self._DO_Privs_;
+            if (do_props._sizeDirty) {
                 resultRect = this._measureBounds();
-                this._rectW = resultRect.width;
-                this._rectH = resultRect.height;
+                do_privs._rectW = resultRect.width;
+                do_privs._rectH = resultRect.height;
                 this._clearSizeDirty();
             }
             else {
-                resultRect.width = this._rectW;
-                resultRect.height = this._rectH;
+                resultRect.width = do_privs._rectW;
+                resultRect.height = do_privs._rectH;
             }
             resultRect.x = 0;
             resultRect.y = 0;
@@ -1005,12 +1071,13 @@ module egret {
 
         public _getOffsetPoint():egret.Point {
             var o = this;
-            var regX = o._anchorOffsetX;
-            var regY = o._anchorOffsetY;
-            if (o._anchorX != 0 || o._anchorY != 0) {
+            var do_props = o._DO_Props_;
+            var regX = do_props._anchorOffsetX;
+            var regY = do_props._anchorOffsetY;
+            if (do_props._anchorX != 0 || do_props._anchorY != 0) {
                 var bounds = o._getSize(Rectangle.identity);
-                regX = o._anchorX * bounds.width;
-                regY = o._anchorY * bounds.height;
+                regX = do_props._anchorX * bounds.width;
+                regY = do_props._anchorY * bounds.height;
             }
             var result = Point.identity;
             result.x = regX;
@@ -1019,7 +1086,7 @@ module egret {
         }
 
         public _onAddToStage():void {
-            this._stage = MainContext.instance.stage;
+            this._DO_Props_._stage = MainContext.instance.stage;
             DisplayObjectContainer.__EVENT__ADD_TO_STAGE_LIST.push(this);
         }
 
@@ -1027,7 +1094,6 @@ module egret {
             DisplayObjectContainer.__EVENT__REMOVE_FROM_STAGE_LIST.push(this);
         }
 
-        public _stage:Stage = null;
 
         /**
          * 显示对象的舞台。
@@ -1037,12 +1103,15 @@ module egret {
          * @returns {egret.Stage}
          */
         public get stage():Stage {
-            return this._stage;
+            return this._DO_Props_._stage;
         }
 
         public static _enterFrameCallBackList:Array<any> = [];
         public static _renderCallBackList:Array<any> = [];
 
+        /**
+         * @inheritDoc
+         */
         public addEventListener(type:string, listener:Function, thisObject:any, useCapture:boolean = false, priority:number = 0):void {
             super.addEventListener(type, listener, thisObject, useCapture, priority);
             var isEnterFrame:boolean = (type == Event.ENTER_FRAME);
@@ -1052,6 +1121,9 @@ module egret {
             }
         }
 
+        /**
+         * @inheritDoc
+         */
         public removeEventListener(type:string, listener:Function, thisObject:any, useCapture:boolean = false):void {
             super.removeEventListener(type, listener, thisObject, useCapture);
             var isEnterFrame:boolean = (type == Event.ENTER_FRAME);
@@ -1061,6 +1133,9 @@ module egret {
             }
         }
 
+        /**
+         * @inheritDoc
+         */
         public dispatchEvent(event:Event):boolean {
             if (!event._bubbles) {
                 return super.dispatchEvent(event);
@@ -1070,7 +1145,7 @@ module egret {
             var target:DisplayObject = this;
             while (target) {
                 list.push(target);
-                target = target._parent;
+                target = target._DO_Props_._parent;
             }
             event._reset();
             this._dispatchPropagationEvent(event, list);
@@ -1114,18 +1189,19 @@ module egret {
             }
         }
 
+        /**
+         * @inheritDoc
+         */
         public willTrigger(type:string):boolean {
             var parent:DisplayObject = this;
             while (parent) {
                 if (parent.hasEventListener(type))
                     return true;
-                parent = parent._parent;
+                parent = parent._DO_Props_._parent;
             }
             return false;
         }
 
-
-        private _cacheAsBitmap:boolean = false;
 
         /**
          * 如果设置为 true，则 egret 运行时将缓存显示对象的内部位图表示形式。此缓存可以提高包含复杂矢量内容的显示对象的性能。
@@ -1134,13 +1210,12 @@ module egret {
          * @member {number} egret.DisplayObject#cacheAsBitmap
          */
         public get cacheAsBitmap():boolean {
-            return this._cacheAsBitmap;
+            return this._DO_Props_._cacheAsBitmap;
         }
 
-        private renderTexture:RenderTexture = null;
 
         public set cacheAsBitmap(bool:boolean) {
-            this._cacheAsBitmap = bool;
+            this._DO_Props_._cacheAsBitmap = bool;
             if (bool) {
                 egret.callLater(this._makeBitmapCache, this);
             }
@@ -1148,6 +1223,11 @@ module egret {
                 this._texture_to_render = null;
             }
         }
+
+        /**
+         * @private
+         */
+        public renderTexture:RenderTexture = null;
 
         public _makeBitmapCache():boolean {
             if (!this.renderTexture) {
@@ -1163,12 +1243,13 @@ module egret {
             return result;
         }
 
-        private _cacheDirty:boolean = false;
-
-        private _setCacheDirty(dirty = true) {
-            this._cacheDirty = dirty;
+        public _setCacheDirty(dirty = true) {
+            this._DO_Privs_._cacheDirty = dirty;
         }
 
+        /**
+         * @private
+         */
         public static getTransformBounds(bounds:egret.Rectangle, mtx:egret.Matrix):egret.Rectangle {
             var x = bounds.x, y = bounds.y;
 //            var x, y;
@@ -1218,48 +1299,30 @@ module egret {
             }
 
             return bounds.initialize(minX, minY, maxX - minX, maxY - minY);
-
         }
 
-
-        /**
-         * beta功能，请勿调用此方法
-         */
-        public _colorTransform:ColorTransform = null;
-
-        public get colorTransform():ColorTransform {
-            return this._colorTransform;
-        }
-
-        public set colorTransform(value:ColorTransform) {
-            this._colorTransform = value;
+        public get filters():Array<Filter> {
+            return this._DO_Props_._filters;
         }
 
         /**
-         * beta功能，请勿调用此方法
+         * @private
          */
-        public _filter:Filter = null;
-
-        public get filter():Filter {
-            return this._filter;
+        public set filters(value:Array<Filter>) {
+            this._DO_Props_._filters = value;
         }
 
-        public set filter(value:Filter) {
-            this._filter = value;
+        private _transform:Transform;
+
+        /**
+         * @private
+         */
+        public get transform():Transform {
+            if (!this._transform) {
+                this._transform = new Transform(this);
+            }
+            return this._transform;
         }
-    }
-
-    /**
-     * @private
-     */
-    export class ColorTransform {
-
-        public matrix:Array<number> = null;
-
-        public updateColor(r:number, g:number, b:number, a:number, addR:number, addG:number, addB:number, addA:number):void {
-            //todo;
-        }
-
     }
 }
 

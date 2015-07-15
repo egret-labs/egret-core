@@ -1,87 +1,82 @@
-/**
- * Copyright (c) 2014,Egret-Labs.org
- * All rights reserved.
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are met:
- *
- *     * Redistributions of source code must retain the above copyright
- *       notice, this list of conditions and the following disclaimer.
- *     * Redistributions in binary form must reproduce the above copyright
- *       notice, this list of conditions and the following disclaimer in the
- *       documentation and/or other materials provided with the distribution.
- *     * Neither the name of the Egret-Labs.org nor the
- *       names of its contributors may be used to endorse or promote products
- *       derived from this software without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY EGRET-LABS.ORG AND CONTRIBUTORS "AS IS" AND ANY
- * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
- * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL EGRET-LABS.ORG AND CONTRIBUTORS BE LIABLE FOR ANY
- * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
- * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
- * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
- * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
- * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */
+//////////////////////////////////////////////////////////////////////////////////////
+//
+//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  All rights reserved.
+//  Redistribution and use in source and binary forms, with or without
+//  modification, are permitted provided that the following conditions are met:
+//
+//     * Redistributions of source code must retain the above copyright
+//       notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above copyright
+//       notice, this list of conditions and the following disclaimer in the
+//       documentation and/or other materials provided with the distribution.
+//     * Neither the name of the Egret nor the
+//       names of its contributors may be used to endorse or promote products
+//       derived from this software without specific prior written permission.
+//
+//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
+//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
+//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
+//////////////////////////////////////////////////////////////////////////////////////
 module egret {
     /**
      * @private
      */
     export class InputController extends HashObject {
         private stageText:egret.StageText;
-        private _isFocus:boolean = false;
 
         private _text:TextField = null;
 
-        private _isFirst:boolean = true;
+        private _isFocus:boolean = false;
         public constructor() {
             super();
-
-            this._isFirst = true;
         }
 
         public init(text:TextField):void {
             this._text = text;
             this.stageText = egret.StageText.create();
-            var point = this._text.localToGlobal();
-            this.stageText._open(point.x, point.y, this._text._explicitWidth, this._text._explicitHeight);
+            this.stageText._setTextField(this._text);
         }
 
         public _addStageText():void {
             if (!this._text._inputEnabled) {
-                this._text._touchEnabled = true;
+                this._text._DO_Props_._touchEnabled = true;
             }
 
             this.stageText._add();
             this.stageText._addListeners();
 
-            this.stageText.addEventListener("blur", this.onBlurHandler, this);
-            this.stageText.addEventListener("focus", this.onFocusHandler, this);
             this.stageText.addEventListener("updateText", this.updateTextHandler, this);
-            this._text.addEventListener(egret.TouchEvent.TOUCH_TAP, this.onMouseDownHandler, this);
-            egret.MainContext.instance.stage.addEventListener(egret.TouchEvent.TOUCH_TAP, this.onStageDownHandler, this);
-            egret.MainContext.instance.stage.addEventListener(egret.Event.RESIZE, this.onResize, this);
+            this._text.addEventListener(egret.TouchEvent.TOUCH_BEGIN, this.onMouseDownHandler, this);
+            egret.MainContext.instance.stage.addEventListener(egret.TouchEvent.TOUCH_BEGIN, this.onStageDownHandler, this);
+
+            this.stageText.addEventListener("blur", this.blurHandler, this);
+            this.stageText.addEventListener("focus", this.focusHandler, this);
         }
 
         public _removeStageText():void {
-            this.stageText._remove();
-            this.stageText._removeListeners();
-
             if (!this._text._inputEnabled) {
-                this._text._touchEnabled = false;
+                this._text._DO_Props_._touchEnabled = false;
             }
 
-            this.stageText.removeEventListener("blur", this.onBlurHandler, this);
-            this.stageText.removeEventListener("focus", this.onFocusHandler, this);
-            this.stageText.removeEventListener("updateText", this.updateTextHandler, this);
-            this._text.removeEventListener(egret.TouchEvent.TOUCH_TAP, this.onMouseDownHandler, this);
-            egret.MainContext.instance.stage.removeEventListener(egret.TouchEvent.TOUCH_TAP, this.onStageDownHandler, this);
-            egret.MainContext.instance.stage.removeEventListener(egret.Event.RESIZE, this.onResize, this);
-        }
+            this.stageText._remove();
+            this.stageText._removeListeners();
+            this.stageText._removeInput();
 
-        private onResize():void {
-            this._isFirst = true;
+            this.stageText.removeEventListener("updateText", this.updateTextHandler, this);
+            this._text.removeEventListener(egret.TouchEvent.TOUCH_BEGIN, this.onMouseDownHandler, this);
+            egret.MainContext.instance.stage.removeEventListener(egret.TouchEvent.TOUCH_BEGIN, this.onStageDownHandler, this);
+
+            this.stageText.removeEventListener("blur", this.blurHandler, this);
+            this.stageText.removeEventListener("focus", this.focusHandler, this);
         }
 
         public _getText():string {
@@ -92,52 +87,51 @@ module egret {
             this.stageText._setText(value);
         }
 
-        private onFocusHandler(event):void {
-            this.hideText();
+        private focusHandler(event:Event):void {
+            //不再显示竖线，并且输入框显示最开始
+            this._isFocus = true;
+            this._text._isTyping = true;
+
+            this._text.dispatchEvent(new egret.FocusEvent(egret.FocusEvent.FOCUS_IN));
         }
 
-        //显示文本
-        private onBlurHandler(event):void {
-            this.showText();
+        private blurHandler(event:Event):void {
+            //不再显示竖线，并且输入框显示最开始
+            this._isFocus = false;
+            this._text._isTyping = false;
+
+            this._text.dispatchEvent(new egret.FocusEvent(egret.FocusEvent.FOCUS_OUT));
         }
 
         //点中文本
         private onMouseDownHandler(event:TouchEvent) {
             event.stopPropagation();
 
-            if (!this._text._visible) {
+            var self = this;
+            if (!this._text._DO_Props_._visible) {
                 return;
             }
+
+            if (this._isFocus) {
+                return;
+            }
+            this._isFocus = true;
+
             //强制更新输入框位置
-            this._isFirst = true;
-            this._updateTransform();
-            this.stageText._show();
+            this.stageText._show(this._text._TF_Props_._multiline, this._text.size, this._text.width, this._text.height);
+
+            var point = this._text.localToGlobal();
+            this.stageText._initElement(point.x, point.y, self._text._worldTransform.a, self._text._worldTransform.d);
         }
 
         //未点中文本
         private onStageDownHandler(event:TouchEvent) {
             this.stageText._hide();
-
-            this.showText();
         }
 
-        private showText():void {
-            if (this._isFocus) {
-                this._isFocus = false;
-
-                this.resetText();
-            }
-        }
-
-        private hideText():void {
-            if (!this._isFocus) {
-                this._text._setBaseText("");
-                this._isFocus = true;
-            }
-        }
-
-        private updateTextHandler(event):void {
+        private updateTextHandler(event:Event):void {
             this.resetText();
+
             //抛出change事件
             this._text.dispatchEvent(new egret.Event(egret.Event.CHANGE));
         }
@@ -146,41 +140,31 @@ module egret {
             this._text._setBaseText(this.stageText._getText());
         }
 
-        public _updateTransform():void {//
-            //todo 等待worldTransform的性能优化完成，合并这块代码
-            var oldTransFormA = this._text._worldTransform.a;
-            var oldTransFormB = this._text._worldTransform.b;
-            var oldTransFormC = this._text._worldTransform.c;
-            var oldTransFormD = this._text._worldTransform.d;
-            var oldTransFormTx = this._text._worldTransform.tx;
-            var oldTransFormTy = this._text._worldTransform.ty;
-            this._text._updateBaseTransform();
-            var newTransForm = this._text._worldTransform;
-            if (this._isFirst || oldTransFormA != newTransForm.a ||
-                oldTransFormB != newTransForm.b ||
-                oldTransFormC != newTransForm.c ||
-                oldTransFormD != newTransForm.d ||
-                oldTransFormTx != newTransForm.tx ||
-                oldTransFormTy != newTransForm.ty) {
-                this._isFirst = false;
-                var point = this._text.localToGlobal();
-                this.stageText.changePosition(point.x, point.y);
+        public _hideInput():void {
+            this.stageText._removeInput();
+        }
 
-                var self = this;
-                egret.callLater(function () {
-                    self.stageText._setScale(self._text._worldTransform.a, self._text._worldTransform.d);
-                }, this);
+        public _updateTransform():void {//
+            this._text._updateBaseTransform();
+
+            if (!this._text._DO_Props_._visible && this.stageText) {
+                this._hideInput();
             }
         }
 
         public _updateProperties():void {
-            var stage:egret.Stage = this._text._stage;
+            if (this._isFocus) {
+                this._updateTransform();
+                return;
+            }
+
+            var stage:egret.Stage = this._text._DO_Props_._stage;
             if (stage == null) {
                 this.stageText._setVisible(false);
             }
             else {
                 var item:DisplayObject = this._text;
-                var visible:boolean = item._visible;
+                var visible:boolean = item._DO_Props_._visible;
                 while (true) {
                     if (!visible) {
                         break;
@@ -189,24 +173,15 @@ module egret {
                     if (item == stage) {
                         break;
                     }
-                    visible = item._visible;
+                    visible = item._DO_Props_._visible;
                 }
                 this.stageText._setVisible(visible);
             }
 
-            this.stageText._setMultiline(this._text._multiline);
-            this.stageText._setMaxChars(this._text._maxChars);
+            this.stageText._setMultiline(this._text._TF_Props_._multiline);
 
-            this.stageText._setSize(this._text._size);
-            this.stageText._setTextColor(this._text._textColorString);
-            this.stageText._setTextFontFamily(this._text._fontFamily);
-            this.stageText._setBold(this._text._bold);
-            this.stageText._setItalic(this._text._italic);
-            this.stageText._setTextAlign(this._text._textAlign);
-            this.stageText._setWidth(this._text._getSize(Rectangle.identity).width);
-            this.stageText._setHeight(this._text._getSize(Rectangle.identity).height);
-            this.stageText._setTextType(this._text._displayAsPassword ? "password" : "text");
-            this.stageText._setText(this._text._text);
+            this.stageText._setTextType(this._text._TF_Props_._displayAsPassword ? "password" :  "text");
+            this.stageText._setText(this._text._TF_Props_._text);
 
             //整体修改
             this.stageText._resetStageText();
