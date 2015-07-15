@@ -13,6 +13,7 @@
         "egret/utils/ByteArray.ts",
         "egret/utils/getDefinitionByName.ts",
         "egret/utils/getQualifiedClassName.ts",
+        "egret/utils/getQualifiedSuperclassName.ts",
         "egret/utils/Injector.ts",
         "egret/utils/Recycler.ts",
         "egret/utils/getTimer.ts",
