@@ -1882,6 +1882,11 @@ module egret {
         /**
          * @private
          */
+        $graphics:Graphics;
+
+        /**
+         * @private
+         */
         $hitTest(stageX:number, stageY:number, shapeFlag?:boolean):DisplayObject {
             if (!this.$renderRegion || !this.$visible) {
                 return null;
@@ -1904,6 +1909,10 @@ module egret {
                 if (shapeFlag || this.$displayFlags & sys.DisplayObjectFlags.PixelHitTest) {
                     return this.hitTestPixel(localX, localY);
                 }
+                if (this.$graphics) {
+                    return this.$graphics.$hitTestPixel(localX, localY);
+                }
+
                 return this;
             }
             return null;

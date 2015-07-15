@@ -47,8 +47,6 @@ module egret.gui {
             this.$renderRegion = new sys.Region();
         }
 
-        private $graphics: Graphics = null;
-
         public get graphics():Graphics {
             if (!this.$graphics) {
                 this.$graphics = new Graphics();

@@ -67,10 +67,6 @@ module egret {
         }
 
         /**
-         * @private
-         */
-        $graphics:Graphics;
-        /**
          * @language en_US
          * Specifies the Graphics object belonging to this Shape object, where vector drawing commands can occur.
          * @version Egret 2.0

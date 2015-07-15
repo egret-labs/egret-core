@@ -97,6 +97,22 @@ module egret {
             this.$renderContext.$render(context);
         }
 
+        /**
+         * @private
+         */
+        $hitTestPixel(localX:number, localY:number):DisplayObject {
+            var context:sys.RenderContext = sys.sharedRenderContext;
+            var data:Uint8Array;
+            context.surface.width = context.surface.height = 3;
+            context.translate(1 - localX, 1 - localY);
+            this.$renderContext.$hitRender(context);
+            data = context.getImageData(1, 1, 1, 1).data;
+
+            if (data[3] == 0) {
+                return null;
+            }
+            return this.$renderContext.$targetDisplay;
+        }
 
         /**
          * @language en_US
