@@ -102,7 +102,7 @@ module egret {
          * @language en_US
          * Instructs Lark runtime to render after processing of this event completes, if the display list has been modified.
          * @example
-         * <code>
+         * <pre>
          *    function onTimer(event:TimerEvent):void {
          *        if (40 < mySp.x && mySp.x < 375) {
          *            mySp.x-= 50;
@@ -115,7 +115,7 @@ module egret {
          *    var moveTimer:Timer=new Timer(50,250);
          *    moveTimer.addEventListener(TimerEvent.TIMER,onTimer);
          *    moveTimer.start();
-         * </code>
+         * </pre>
          * @version Egret 2.0
          * @platform Web,Native
          */
@@ -123,7 +123,7 @@ module egret {
          * @language zh_CN
          * 如果已修改显示列表，调用此方法将会忽略帧频限制，在此事件处理完成后立即重绘屏幕。
          * @example
-         * <code>
+         * <pre>
          *    function onTimer(event:TimerEvent):void {
          *        if (40 < mySp.x && mySp.x < 375) {
          *            mySp.x-= 50;
@@ -136,7 +136,7 @@ module egret {
          *    var moveTimer:Timer=new Timer(50,250);
          *    moveTimer.addEventListener(TimerEvent.TIMER,onTimer);
          *    moveTimer.start();
-         * </code>
+         * </pre>
          * @version Egret 2.0
          * @platform Web,Native
          */

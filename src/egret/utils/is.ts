@@ -36,12 +36,12 @@ module egret {
      * @param typeName the string value representing a specific class or interface.
      * @returns A value of true if the object is a instance of the class or interface specified as the parameter.
      * @example
-     * <code>
+     * <pre>
      *     var instance = new egret.Sprite();
      *     egret.log(egret.is(instance,egret.Types.Sprite))  //true
      *     egret.log(egret.is(instance,egret.Types.DisplayObjectContainer))  //true
      *     egret.log(egret.is(instance,egret.Types.Bitmap))  //false
-     * </code>
+     * </pre>
      * @see egret.registerClass()
      * @version Egret 2.0
      * @platform Web,Native
@@ -53,12 +53,12 @@ module egret {
      * @param typeName 类或接口的完全名称.
      * @returns 返回true表示当前对象是指定类或接口的实例。
      * @example
-     * <code>
+     * <pre>
      *     var instance = new egret.Sprite();
      *     egret.log(egret.is(instance,egret.Types.Sprite))  //true
      *     egret.log(egret.is(instance,egret.Types.DisplayObjectContainer))  //true
      *     egret.log(egret.is(instance,egret.Types.Bitmap))  //false
-     * </code>
+     * </pre>
      * @see egret.registerClass()
      * @version Egret 2.0
      * @platform Web,Native

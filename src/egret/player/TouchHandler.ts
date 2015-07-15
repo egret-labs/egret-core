@@ -29,19 +29,6 @@
 
 module egret.sys {
 
-    var ENTER_LIST:DisplayObject[] = [], LEAVE_LIST:DisplayObject[] = [];
-
-    /**
-     * @private
-     */
-    function getParentList(target:DisplayObject, list):DisplayObject[] {
-        while (target) {
-            list.push(target);
-            target = target.$parent;
-        }
-        return list;
-    }
-
     /**
      * @private
      * 用户交互操作管理器

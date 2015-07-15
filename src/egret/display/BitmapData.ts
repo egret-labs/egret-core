@@ -55,12 +55,14 @@ module egret {
         /**
          * @language en_US
          * The width of the bitmap image in pixels.
+         * @readOnly
          * @version Egret 2.0
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 位图图像的宽度，以像素为单位。
+         * @readOnly
          * @version Egret 2.0
          * @platform Web,Native
          */
@@ -68,12 +70,14 @@ module egret {
         /**
          * @language en_US
          * The height of the bitmap image in pixels.
+         * @readOnly
          * @version Egret 2.0
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 位图图像的高度，以像素为单位。
+         * @readOnly
          * @version Egret 2.0
          * @platform Web,Native
          */

@@ -679,12 +679,12 @@ module egret {
          * Note: If you want to use this method to initialize your custom event object,you must make sure the constructor
          * of your custom event is the same as the constructor of egret.Event.
          * @example
-         * <code>
+         * <pre>
          *    var event = Event.create(Event,type, bubbles);
          *    event.data = data;    //optional,initializes custom data here
          *    this.dispatchEvent(event);
          *    Event.release(event);
-         * </code>
+         * </pre>
          * @version Egret 2.0
          * @platform Web,Native
          */
@@ -694,12 +694,12 @@ module egret {
          * 这一对方法会将事件实例在内部缓存下来供下次循环使用，减少对象的创建次数,从而获得更高的代码运行性能。<br/>
          * 注意：若使用此方法来创建自定义事件的实例，自定义的构造函数参数列表必须跟Event类一致。
          * @example
-         * <code>
+         * <pre>
          *    var event = Event.create(Event,type, bubbles);
          *    event.data = data;  //可选，若指定义事件上需要附加其他参数，可以在获取实例后在此处设置。
          *    this.dispatchEvent(event);
          *    Event.release(event);
-         * </code>
+         * </pre>
          * @see #clean()
          * @version Egret 2.0
          * @platform Web,Native
@@ -732,12 +732,12 @@ module egret {
          * Note: The parameters of this method only accepts an instance created by the Event.create() method.
          * if not,it may throw an error.
          * @example
-         * <code>
+         * <pre>
          *    var event = Event.create(Event,type, bubbles);
          *    event.data = data; //optional,initializes custom data here
          *    this.dispatchEvent(event);
          *    Event.release(event);
-         * </code>
+         * </pre>
          * @see #clean()
          * @version Egret 2.0
          * @platform Web,Native
@@ -748,12 +748,12 @@ module egret {
          * 这一对方法会将事件实例在内部缓存下来供下次循环使用，减少对象的创建次数,从而获得更高的代码运行性能。<br/>
          * 注意：此方法只能传入由Event.create()创建的事件实例，传入非法对象实例可能会导致报错。
          * @example
-         * <code>
+         * <pre>
          *    var event = Event.create(Event,type, bubbles);
          *    event.data = data;   //可选，若指定义事件上需要附加其他参数，可以在获取实例后在此处设置。
          *    this.dispatchEvent(event);
          *    Event.release(event);
-         * </code>
+         * </pre>
          * @see #clean()
          * @version Egret 2.0
          * @platform Web,Native

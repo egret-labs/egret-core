@@ -36,13 +36,13 @@ module egret {
      * Note: The value of the custom class flag or interface Flag must not in the type range of Lark framework (from 1 to 2000)
      * or a third party library referenced to your project,it might result in a type check failure.
      * @example the following code shows how to register the class flag for the EventDispatcher class:
-     * <code>
+     * <pre>
      *      egret.registerClass(egret.EventDispatcher,egret.Types.EventDispatcher,[egret.Types.IEventDispatcher]);
      *      var emitter = new egret.EventDispatcher();
      *      egret.log(egret.is(emitter, egret.Types.IEventDispatcher));  //true。
      *      egret.log(egret.is(emitter, egret.Types.EventDispatcher));   //true。
      *      egret.log(egret.is(emitter, egret.Types.Bitmap));   //false。
-     * </code>
+     * </pre>
      * @param classDefinition the class definition to be registered.
      * @param classFlag  a unique identification number of the specific class
      * @param interfaceFlags a list of unique identification numbers of the specific interfaces.
@@ -54,14 +54,14 @@ module egret {
      * 为一个类定义注册运行时类信息,用此方法往类定义上注册它自身以及所有接口对应的枚举值。
      * 在运行时，这个类的实例将可以使用 egret.is() 方法传入一个枚举值来判断实例类型。
      * @example 以下代码演示了如何为EventEmitter类注册运行时类信息：
-     * <code>
+     * <pre>
      *      //为lark.EventEmitter类注册运行时类信息，由于它实现了IEventEmitter接口，这里应同时传入两个枚举值。
      *      egret.registerClass(egret.EventDispatcher,egret.Types.EventDispatcher,[egret.Types.IEventDispatcher]);
      *      var emitter = new egret.EventDispatcher();
      *      egret.log(egret.is(emitter, egret.Types.IEventDispatcher));  //true。
      *      egret.log(egret.is(emitter, egret.Types.EventDispatcher));   //true。
      *      egret.log(egret.is(emitter, egret.Types.Bitmap));   //false。
-     * </code>
+     * </pre>
      * 注意：传入的自定义枚举数值范围要避免与Lark框架(1~2000的数值)或其他第三方库的数值范围重合,
      * 否则有可能会导致运行时 egret.is() 方法类型判断错误。
      *
