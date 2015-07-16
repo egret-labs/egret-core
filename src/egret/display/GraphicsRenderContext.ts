@@ -880,12 +880,12 @@ module egret {
          *
          */
         private reset():void {
-            this._fillStyle = "#000000";
+            this._fillStyle = null;
             this._lineCap = "butt";
             this._lineJoin = "miter";
             this._lineWidth = 1;
             this._miterLimit = 10;
-            this._strokeStyle = "#000000";
+            this._strokeStyle = null;
             this.hasMoved = false;
             this.minX = 0;
             this.minY = 0;

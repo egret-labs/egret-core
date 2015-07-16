@@ -483,7 +483,7 @@ module egret {
          * @platform Web,Native
          */
         public endFill():void {
-            if (this.fillStyleColor != null) {
+            if (this.fillStyleColor != null || this.strokeStyleColor != null) {
                 this._fill();
                 this.fillStyleColor = null;
             }
