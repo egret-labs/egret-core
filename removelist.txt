@@ -49,6 +49,9 @@ NO_SCALE
 不能对Stage进行以下设置
 alpha、visible、x、y、scaleX、scaleY、rotation、cacheAsBitmap、scrollRect、filters、blendMode、touchEnabled、matrix
 
+多指触摸设置
+TouchContext.maxTouches   --->    stage.maxTouches
+
 问题
 
 多指触摸

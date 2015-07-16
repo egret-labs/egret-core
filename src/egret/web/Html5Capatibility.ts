@@ -80,6 +80,7 @@ module egret.web {
          */
         public static _AudioClass;
 
+        public static _audioMustLoad:boolean = false;
 
         /**
          * @private
@@ -118,14 +119,21 @@ module egret.web {
 
             Html5Capatibility._audioType = AudioType.HTML5_AUDIO;
             Html5Capatibility._AudioClass = egret.web.Html5Audio;
+            Html5Capatibility._audioMustLoad = true;
 
 
             if (ua.indexOf("windows phone") >= 0) {//wphone windows
                 Html5Capatibility._System_OS = SystemOSType.WPHONE;
+                Html5Capatibility._audioMustLoad = false;
 
                 egret.Capabilities.$os = "Windows Phone";
             }
             else if (ua.indexOf("android") >= 0) {//android
+                Html5Capatibility._System_OS = SystemOSType.ADNROID;
+                if (ua.indexOf("ucbrowser") >= 0) {
+                    Html5Capatibility._audioMustLoad = false;
+                }
+                
                 egret.Capabilities.$os = "Android";
 
                 Html5Capatibility._System_OS = SystemOSType.ADNROID;

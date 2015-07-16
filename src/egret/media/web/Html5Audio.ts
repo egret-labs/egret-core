@@ -57,8 +57,7 @@ module egret.web {
         public $play(type?:string):void {
             this.removeListeners();
 
-            if (Html5Capatibility._System_OS != SystemOSType.WPHONE) {
-                //this._audio = this._audio.cloneNode();
+            if (Html5Capatibility._audioMustLoad) {
                 this._audio.load();
             }
             this.paused = false;
