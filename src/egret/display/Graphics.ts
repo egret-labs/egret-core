@@ -86,6 +86,25 @@ module egret {
         /**
          * @private
          */
+        $hitTest(stageX:number, stageY:number):DisplayObject {
+            var target = this.$renderContext.$targetDisplay;
+            var m = target.$getInvertedConcatenatedMatrix();
+            var localX = m.a * stageX + m.c * stageY + m.tx;
+            var localY = m.b * stageX + m.d * stageY + m.ty;
+            var context = sys.sharedRenderContext;
+            context.surface.width = context.surface.height = 3;
+            context.translate(1 - localX, 1 - localY);
+            this.$renderContext.$render(context, true);
+            var data:Uint8Array = context.getImageData(1, 1, 1, 1).data;
+            if (data[3] === 0) {
+                return null;
+            }
+            return target;
+        }
+
+        /**
+         * @private
+         */
         $measureContentBounds(bounds:Rectangle):void {
             this.$renderContext.$measureContentBounds(bounds);
         }
@@ -95,23 +114,6 @@ module egret {
          */
         $render(context:sys.RenderContext):void {
             this.$renderContext.$render(context);
-        }
-
-        /**
-         * @private
-         */
-        $hitTestPixel(localX:number, localY:number):DisplayObject {
-            var context:sys.RenderContext = sys.sharedRenderContext;
-            var data:Uint8Array;
-            context.surface.width = context.surface.height = 3;
-            context.translate(1 - localX, 1 - localY);
-            this.$renderContext.$hitRender(context);
-            data = context.getImageData(1, 1, 1, 1).data;
-
-            if (data[3] == 0) {
-                return null;
-            }
-            return this.$renderContext.$targetDisplay;
         }
 
         /**

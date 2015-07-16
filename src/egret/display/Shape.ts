@@ -67,6 +67,11 @@ module egret {
         }
 
         /**
+         * @private
+         */
+        $graphics:Graphics;
+
+        /**
          * @language en_US
          * Specifies the Graphics object belonging to this Shape object, where vector drawing commands can occur.
          * @version Egret 2.0
@@ -87,6 +92,14 @@ module egret {
          */
         $measureContentBounds(bounds:Rectangle):void {
             this.$graphics.$measureContentBounds(bounds);
+        }
+
+        $hitTest(stageX:number, stageY:number):DisplayObject {
+            var target = super.$hitTest(stageX, stageY);
+            if (target) {
+                target = this.$graphics.$hitTest(stageX, stageY);
+            }
+            return target;
         }
 
         /**

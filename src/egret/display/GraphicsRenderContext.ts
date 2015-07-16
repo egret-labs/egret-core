@@ -965,7 +965,7 @@ module egret {
         /**
          * @private
          */
-        $render(context:sys.RenderContext):void {
+        $render(context:sys.RenderContext, forHitTest?:boolean):void {
             context.save();
             context.fillStyle = "#000000";
             context.lineCap = "butt";
@@ -980,37 +980,20 @@ module egret {
             }
             var commands = this.$commands;
             var length = commands.length;
-            for (var i = 0; i < length; i++) {
-                var command = commands[i];
-                map[command.type].apply(context, command.arguments);
-            }
-            context.restore();
-        }
-
-        /**
-         * @private
-         */
-        $hitRender(context:sys.RenderContext):void {
-            context.save();
-            context.fillStyle = "#000000";
-            context.lineCap = "butt";
-            context.lineJoin = "miter";
-            context.lineWidth = 1;
-            context.miterLimit = 10;
-            context.strokeStyle = "#000000";
-            context.beginPath();//清理之前的缓存的路径
-            var map = context["graphicsMap"];
-            if (!map) {
-                map = mapGraphicsFunction(context);
-            }
-            var commands = this.$commands;
-            var length = commands.length;
-            for (var i = 0; i < length; i++) {
-                var command = commands[i];
-                if (command.type == sys.GraphicsCommandType.fillStyle || command.type == sys.GraphicsCommandType.strokeStyle) {
-                    map[command.type].apply(context, ["rgba(1,1,1,1)"]);
+            if (forHitTest) {
+                for (var i = 0; i < length; i++) {
+                    var command = commands[i];
+                    if (command.type == sys.GraphicsCommandType.fillStyle || command.type == sys.GraphicsCommandType.strokeStyle) {
+                        map[command.type].apply(context, ["rgba(1,1,1,1)"]);
+                    }
+                    else {
+                        map[command.type].apply(context, command.arguments);
+                    }
                 }
-                else {
+            }
+            else {
+                for (var i = 0; i < length; i++) {
+                    var command = commands[i];
                     map[command.type].apply(context, command.arguments);
                 }
             }

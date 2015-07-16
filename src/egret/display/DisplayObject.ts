@@ -39,11 +39,6 @@ module egret.sys {
 
         /**
          * @private
-         * 显示对象是否开启像素级精确碰撞，开启后显示对象的透明区域将可以穿透，Graphics默认开启此功能，。
-         */
-        PixelHitTest = 0x0001,
-        /**
-         * @private
          * 显示对象自身的绘制区域尺寸失效
          */
         InvalidContentBounds = 0x0002,
@@ -77,12 +72,6 @@ module egret.sys {
          * 显示对象祖代的透明度属性失效。
          */
         InvalidConcatenatedAlpha = 0x0040,
-        /**
-         * @private
-         * 显示对象应该被缓存成位图的标志，即使没有设置这个标志，也有可能被缓存成位图，例如含有滤镜的情况。
-         * 而当设置了这个标志，如果内存不足，也会放弃缓存。
-         */
-        CacheAsBitmap = 0x0080,
 
         /**
          * @private
@@ -94,16 +83,6 @@ module egret.sys {
          * 子项中已经全部含有DirtyRender标志，无需继续遍历。
          */
         DirtyChildren = 0x200,
-        /**
-         * @private
-         * 对象自身在舞台上的显示尺寸发生改变。
-         */
-        TouchEnabled = 0x400,
-        /**
-         * @private
-         * 对象自身以及子项在舞台上显示尺寸发生改变。
-         */
-        TouchChildren = 0x800,
         /**
          * @private
          * DirtyRender|DirtyChildren
@@ -122,8 +101,6 @@ module egret.sys {
          * 显示对象初始化时的标志量
          */
         InitFlags =
-            //DisplayObjectFlags.TouchEnabled |
-            DisplayObjectFlags.TouchChildren |
             DisplayObjectFlags.InvalidConcatenatedMatrix |
             DisplayObjectFlags.InvalidInvertedConcatenatedMatrix |
             DisplayObjectFlags.InvalidConcatenatedAlpha |
@@ -163,6 +140,7 @@ module egret {
         invertedConcatenatedMatrix,
         bounds,
         contentBounds,
+        cacheAsBitmap,
         anchorOffsetX,
         anchorOffsetY,
         explicitWidth,
@@ -251,10 +229,11 @@ module egret {
                 8: new Matrix(),     //invertedConcatenatedMatrix,
                 9: new Rectangle(),  //bounds,
                 10: new Rectangle(),  //contentBounds
-                11: 0,               //anchorOffsetX,
-                12: 0,                //anchorOffsetY,
-                13: NONE,           //explicitWidth,
-                14: NONE            //explicitHeight,
+                11: false,  //cacheAsBitmap
+                12: 0,               //anchorOffsetX,
+                13: 0,                //anchorOffsetY,
+                14: NONE,           //explicitWidth,
+                15: NONE            //explicitHeight,
             };
         }
 
@@ -274,18 +253,6 @@ module egret {
          */
         $setFlags(flags:number):void {
             this.$displayFlags |= flags;
-        }
-
-        /**
-         * @private
-         * 开启或关闭一个标志量
-         */
-        $toggleFlags(flags:number, on:boolean):void {
-            if (on) {
-                this.$displayFlags |= flags;
-            } else {
-                this.$displayFlags &= ~flags;
-            }
         }
 
         /**
@@ -1220,12 +1187,12 @@ module egret {
          * @platform Web,Native
          */
         public get cacheAsBitmap():boolean {
-            return this.$hasFlags(sys.DisplayObjectFlags.CacheAsBitmap);
+            return this.$DisplayObject[Keys.cacheAsBitmap];
         }
 
         public set cacheAsBitmap(value:boolean) {
             value = !!value;
-            this.$toggleFlags(sys.DisplayObjectFlags.CacheAsBitmap, value);
+            this.$DisplayObject[Keys.cacheAsBitmap] = value;
             var hasDisplayList = !!this.$displayList;
             if (hasDisplayList == value) {
                 return;
@@ -1320,6 +1287,7 @@ module egret {
             return this.$renderAlpha;
         }
 
+        $touchEnabled:boolean = true;
         /**
          * @language en_US
          * Specifies whether this object receives touch or other user input. The default value is true, which means that
@@ -1356,38 +1324,14 @@ module egret {
          * @returns 
          */
         $getTouchEnabled():boolean {
-            return this.$hasFlags(sys.DisplayObjectFlags.TouchEnabled);
+            return this.$touchEnabled;
         }
 
         /**
          * @private
          */
         $setTouchEnabled(value:boolean):void {
-            this.$toggleFlags(sys.DisplayObjectFlags.TouchEnabled, !!value);
-        }
-
-        /**
-         * @language en_US
-         * Specifies whether this object use precise hit testing by checking the alpha value of each pixel.If pixelHitTest
-         * is set to true,the transparent area of the display object will be touched through.<br/>
-         * Enabling this property will cause certain mount of performance loss. This property is set to true in the Shape class,
-         * while the other is set to false by default.
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 是否开启精确像素碰撞。设置为true显示对象本身的透明区域将能够被穿透，<br/>
-         * 开启此属性将会有一定量的额外性能损耗，Shape等含有矢量图的类默认开启此属性，其他类默认关闭。
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        public get pixelHitTest():boolean {
-            return this.$hasFlags(sys.DisplayObjectFlags.PixelHitTest);
-        }
-
-        public set pixelHitTest(value:boolean) {
-            this.$toggleFlags(sys.DisplayObjectFlags.PixelHitTest, !!value);
+            this.$touchEnabled = value;
         }
 
         /**
@@ -1882,12 +1826,7 @@ module egret {
         /**
          * @private
          */
-        $graphics:Graphics;
-
-        /**
-         * @private
-         */
-        $hitTest(stageX:number, stageY:number, shapeFlag?:boolean):DisplayObject {
+        $hitTest(stageX:number, stageY:number):DisplayObject {
             if (!this.$renderRegion || !this.$visible) {
                 return null;
             }
@@ -1902,17 +1841,10 @@ module egret {
                     if (rect && !rect.contains(localX, localY)) {
                         return null;
                     }
-                    if (this.$mask && !this.$mask.$hitTest(stageX, stageY, true)) {
+                    if (this.$mask && !this.$mask.$hitTest(stageX, stageY)) {
                         return null;
                     }
                 }
-                if (shapeFlag || this.$displayFlags & sys.DisplayObjectFlags.PixelHitTest) {
-                    return this.hitTestPixel(localX, localY);
-                }
-                if (this.$graphics) {
-                    return this.$graphics.$hitTestPixel(localX, localY);
-                }
-
                 return this;
             }
             return null;
@@ -1941,31 +1873,7 @@ module egret {
          * @platform Web,Native
          */
         public hitTestPoint(x:number, y:number, shapeFlag?:boolean):boolean {
-            return !!this.$hitTest(x, y, shapeFlag);
-        }
-
-        /**
-         * @private
-         */
-        private hitTestPixel(localX:number, localY:number):DisplayObject {
-            var context:sys.RenderContext;
-            var data:Uint8Array;
-            var displayList = this.$displayList;
-            if (displayList) {
-                context = displayList.renderContext;
-                data = context.getImageData(localX - displayList.offsetX, localY - displayList.offsetY, 1, 1).data;
-            }
-            else {
-                context = sys.sharedRenderContext;
-                context.surface.width = context.surface.height = 3;
-                context.translate(1 - localX, 1 - localY);
-                this.$render(context);
-                data = context.getImageData(1, 1, 1, 1).data;
-            }
-            if (data[3] == 0) {
-                return null;
-            }
-            return this;
+            return !!this.$hitTest(x, y);
         }
 
         /**

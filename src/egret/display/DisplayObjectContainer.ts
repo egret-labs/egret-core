@@ -480,6 +480,7 @@ module egret {
             bounds.setTo(xMin, yMin, xMax - xMin, yMax - yMin);
         }
 
+        $touchChildren:boolean = true;
         /**
          * @inheritDoc
          * @version Egret 2.0
@@ -495,18 +496,18 @@ module egret {
          * @returns 
          */
         $getTouchChildren():boolean {
-            return this.$hasFlags(sys.DisplayObjectFlags.TouchChildren);
+            return this.$touchChildren;
         }
 
         public set touchChildren(value:boolean) {
-            this.$setTouchChildren(value);
+            this.$setTouchChildren(!!value);
         }
 
         /**
          * @private
          */
         $setTouchChildren(value:boolean):void {
-            this.$toggleFlags(sys.DisplayObjectFlags.TouchChildren, !!value);
+            this.$touchChildren = value;
         }
 
         /**
@@ -596,7 +597,7 @@ module egret {
         /**
          * @private
          */
-        $hitTest(stageX:number, stageY:number, shapeFlag?:boolean):DisplayObject {
+        $hitTest(stageX:number, stageY:number):DisplayObject {
             if (!this.$visible) {
                 return null;
             }
@@ -609,7 +610,7 @@ module egret {
                 return null;
             }
 
-            if (this.$mask && !this.$mask.$hitTest(stageX, stageY, true)) {
+            if (this.$mask && !this.$mask.$hitTest(stageX, stageY)) {
                 return null
             }
             var children = this.$children;
@@ -619,10 +620,10 @@ module egret {
                 if (child.$maskedObject) {
                     continue;
                 }
-                var target = child.$hitTest(stageX, stageY, shapeFlag);
+                var target = child.$hitTest(stageX, stageY);
                 if (target) {
                     found = true;
-                    if(target.$hasFlags(sys.DisplayObjectFlags.TouchEnabled)){
+                    if(target.$touchEnabled){
                         break;
                     }
                     else{
@@ -631,7 +632,7 @@ module egret {
                 }
             }
             if (target) {
-                if (this.$hasFlags(sys.DisplayObjectFlags.TouchChildren)) {
+                if (this.$touchChildren) {
                     return target;
                 }
                 return this;
@@ -639,7 +640,7 @@ module egret {
             if (found) {
                 return this;
             }
-            return super.$hitTest(stageX, stageY, shapeFlag);
+            return super.$hitTest(stageX, stageY);
         }
 
     }

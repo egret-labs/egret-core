@@ -47,6 +47,11 @@ module egret.gui {
             this.$renderRegion = new sys.Region();
         }
 
+        /**
+         * @private
+         */
+        $graphics:Graphics;
+
         public get graphics():Graphics {
             if (!this.$graphics) {
                 this.$graphics = new Graphics();
@@ -59,6 +64,14 @@ module egret.gui {
             if (this.$graphics)
                 this.$graphics.$render(context);
             super.$render(context);
+        }
+
+        $hitTest(stageX:number, stageY:number):DisplayObject {
+            var target = super.$hitTest(stageX, stageY);
+            if (target) {
+                target = this.$graphics.$hitTest(stageX, stageY);
+            }
+            return target;
         }
 
         /**
