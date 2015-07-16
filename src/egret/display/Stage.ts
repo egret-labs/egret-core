@@ -51,7 +51,7 @@ module egret {
      * @version Egret 2.0
      * @platform Web,Native
      */
-    export class Stage extends Sprite {
+    export class Stage extends DisplayObjectContainer {
 
         /**
          * @private
