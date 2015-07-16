@@ -96,6 +96,7 @@ module egret.web {
             var stage = new egret.Stage();
             stage.$screen = this;
             stage.$scaleMode = option.scaleMode;
+            stage.$maxTouches = option.maxTouches;
             stage.frameRate = option.frameRate;
             stage.textureScaleFactor = option.textureScaleFactor;
 
@@ -103,8 +104,7 @@ module egret.web {
             var canvas = <HTMLCanvasElement><any>surface;
             this.attachCanvas(container, canvas);
 
-            var touch = new egret.sys.TouchHandler(stage, option.maxTouches);
-            var webTouch = new WebTouchHandler(touch, canvas);
+            var webTouch = new WebTouchHandler(stage, canvas);
             var player = new egret.sys.Player(surface.renderContext, stage, option.entryClassName);
             var webHide = new egret.web.WebHideHandler(stage);
             var webInput = new HTMLInput();
@@ -127,6 +127,7 @@ module egret.web {
             egret.web.$cacheTextAdapter(webInput, stage, container, canvas);
 
             this.updateScreenSize();
+            this.updateMaxTouches();
             player.start();
 
             egret.MainContext.instance.stage = stage;
@@ -268,6 +269,13 @@ module egret.web {
             this.webInput.$updateSize();
         }
 
+        /**
+         * @private
+         * 更新触摸数量
+         */
+        public updateMaxTouches() {
+            this.webTouchHandler.$updateMaxTouches();
+        }
     }
 
 

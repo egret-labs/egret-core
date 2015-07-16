@@ -37,10 +37,10 @@ module egret.web {
         /**
          * @private
          */
-        public constructor(touch:egret.sys.TouchHandler, canvas:HTMLCanvasElement) {
+        public constructor(stage:egret.Stage, canvas:HTMLCanvasElement) {
             super();
             this.canvas = canvas;
-            this.touch = touch;
+            this.touch = new egret.sys.TouchHandler(stage);
             this.addListeners();
         }
 
@@ -207,6 +207,14 @@ module egret.web {
             this.scaleX = scaleX;
             this.scaleY = scaleY;
             this.rotation = rotation;
+        }
+
+        /**
+         * @private
+         * 更新同时触摸点的数量
+         */
+        public $updateMaxTouches():void {
+            this.touch.$setMaxTouches();
         }
     }
 }

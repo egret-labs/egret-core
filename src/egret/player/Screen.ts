@@ -38,5 +38,11 @@ module egret.sys {
          * 更新屏幕视口尺寸
          */
         updateScreenSize();
+
+        /**
+         * @private
+         * 更新触摸数量
+         */
+        updateMaxTouches();
     }
 }

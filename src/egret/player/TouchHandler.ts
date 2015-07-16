@@ -41,10 +41,17 @@ module egret.sys {
         /**
          * @private
          */
-        public constructor(stage:Stage, maxTouches:number) {
+        public constructor(stage:Stage) {
             super();
             this.stage = stage;
-            this.maxTouches = maxTouches;
+        }
+
+        /**
+         * @private
+         * 设置同时触摸数量
+         */
+        $setMaxTouches():void {
+            this.maxTouches = this.stage.$maxTouches;
         }
 
         /**
