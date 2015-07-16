@@ -292,7 +292,7 @@ module egret {
 
         /**
          * @language en_US
-         * Instructs Lark runtime to render after processing of this event completes, if the display list has been modified.
+         * Instructs Egret runtime to render after processing of this event completes, if the display list has been modified.
          * @version Egret 2.0
          * @platform Web,Native
          */

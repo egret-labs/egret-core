@@ -33,7 +33,7 @@ module egret {
      * A special member of the number data type that represents a value that is "not set".
      * For example,if you set the width property of TextField to egret.NONE,which will cancel the explicit setting of this
      * property and refresh the line breaks of the TextField.<br/>
-     * Because the isNaN() method has some serious performance problems, Lark uses egret.NONE to replace NaN.
+     * Because the isNaN() method has some serious performance problems, Egret uses egret.NONE to replace NaN.
      * @version Egret 2.0
      * @platform Web,Native
      */

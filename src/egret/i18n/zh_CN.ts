@@ -5,8 +5,8 @@ module egret {
     var locale_strings = $locale_strings["zh_CN"];
 
     //core
-    locale_strings[1001] = "找不到Lark入口类: {0}。";
-    locale_strings[1002] = "Lark入口类 {0} 必须继承自lark.DisplayObject。";
+    locale_strings[1001] = "找不到Egret入口类: {0}。";
+    locale_strings[1002] = "Egret入口类 {0} 必须继承自egret.DisplayObject。";
     locale_strings[1003] = "参数 {0} 不能为 null。";
     locale_strings[1004] = "无法将对象添加为它的一个子对象（或子对象的子对象等）的子对象。";
     locale_strings[1005] = "不能将对象添加为其自身的子对象。";

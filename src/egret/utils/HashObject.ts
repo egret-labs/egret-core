@@ -37,14 +37,14 @@ module egret {
 
     /**
      * @language en_US
-     * The HashObject class is the base class for all objects in the Lark framework.The HashObject
+     * The HashObject class is the base class for all objects in the Egret framework.The HashObject
      * class includes a hashCode property, which is a unique identification number of the instance.
      * @version Egret 2.0
      * @platform Web,Native
      */
     /**
      * @language zh_CN
-     * Lark顶级对象。框架内所有对象的基类，为对象实例提供唯一的hashCode值。
+     * Egret顶级对象。框架内所有对象的基类，为对象实例提供唯一的hashCode值。
      * @version Egret 2.0
      * @platform Web,Native
      */

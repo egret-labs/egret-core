@@ -134,16 +134,16 @@ module egret {
 
         /**
          * @language en_US
-         * After you call the invalidate() method, when the display list is next rendered, the Lark runtime sends a render
+         * After you call the invalidate() method, when the display list is next rendered, the Egret runtime sends a render
          * event to each display object that has registered to listen for the render event. You must call the invalidate()
-         * method each time you want the Lark runtime to send render events.
+         * method each time you want the Egret runtime to send render events.
          * @version Egret 2.0
          * @platform Web,Native
          */
         /**
          * @language zh_CN
-         * 调用 invalidate() 方法后，在显示列表下次呈现时，Lark 会向每个已注册侦听 Event.RENDER 事件的显示对象发送一个 Event.RENDER 事件。
-         * 每次您希望 Lark 发送 Event.RENDER 事件时，都必须调用 invalidate() 方法。
+         * 调用 invalidate() 方法后，在显示列表下次呈现时，Egret 会向每个已注册侦听 Event.RENDER 事件的显示对象发送一个 Event.RENDER 事件。
+         * 每次您希望 Egret 发送 Event.RENDER 事件时，都必须调用 invalidate() 方法。
          * @version Egret 2.0
          * @platform Web,Native
          */

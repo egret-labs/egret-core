@@ -37,7 +37,7 @@ module egret.sys {
 
     /**
      * @private
-     * 屏幕适配器默认实现，开发者可以实现自定义规则的屏幕适配器。并在初始化加载时将适配器的实例赋值给lark.sys.screenAdapter上，从而替换掉默认适配器。
+     * 屏幕适配器默认实现，开发者可以实现自定义规则的屏幕适配器。并在初始化加载时将适配器的实例赋值给egret.sys.screenAdapter上，从而替换掉默认适配器。
      */
     export class ScreenAdapter extends HashObject implements IScreenAdapter {
 

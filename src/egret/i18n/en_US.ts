@@ -5,8 +5,8 @@ module egret {
     var locale_strings = $locale_strings["en_US"];
 
     //core
-    locale_strings[1001] = "Could not find Lark entry class: {0}。";
-    locale_strings[1002] = "Lark entry class '{0}' must inherit from egret.DisplayObject.";
+    locale_strings[1001] = "Could not find Egret entry class: {0}。";
+    locale_strings[1002] = "Egret entry class '{0}' must inherit from egret.DisplayObject.";
     locale_strings[1003] = "Parameter {0} must be non-null.";
     locale_strings[1004] = "An object cannot be added as a child to one of it's children (or children's children, etc.).";
     locale_strings[1005] = "An object cannot be added as a child of itself.";

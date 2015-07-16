@@ -111,7 +111,7 @@ module egret.sys {
 
     /**
      * @private
-     * Lark心跳计时器
+     * Egret心跳计时器
      */
     export class SystemTicker {
 
@@ -143,7 +143,7 @@ module egret.sys {
                 return;
             }
             if (DEBUG) {
-                lark_stages.push(player.stage);
+                egret_stages.push(player.stage);
             }
             this.playerList = this.playerList.concat();
             this.playerList.push(player);
@@ -157,8 +157,8 @@ module egret.sys {
             var index = this.playerList.indexOf(player);
             if (index !== -1) {
                 if (DEBUG) {
-                    var i = lark_stages.indexOf(player.stage);
-                    lark_stages.splice(i, 1);
+                    var i = egret_stages.indexOf(player.stage);
+                    egret_stages.splice(i, 1);
                 }
                 this.playerList = this.playerList.concat();
                 this.playerList.splice(index, 1);
@@ -346,5 +346,5 @@ module egret.sys {
 }
 
 if (DEBUG) {
-    var lark_stages:egret.Stage[] = [];
+    var egret_stages:egret.Stage[] = [];
 }

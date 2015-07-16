@@ -48,8 +48,8 @@ module egret {
      * The EventDispatcher class is the base class for all classes that dispatchEvent events. The EventDispatcher class implements
      * the IEventDispatcher interface and is the base class for the DisplayObject class. The EventDispatcher class allows
      * any object on the display list to be an event target and as such, to use the methods of the IEventDispatcher interface.
-     * Event targets are an important part of the Lark event model. The event target serves as the focal point for how events
-     * flow through the display list hierarchy. When an event such as a touch tap, Lark emits an event object into the
+     * Event targets are an important part of the Egret event model. The event target serves as the focal point for how events
+     * flow through the display list hierarchy. When an event such as a touch tap, Egret emits an event object into the
      * event flow from the root of the display list. The event object then makes its way through the display list until it
      * reaches the event target, at which point it begins its return trip through the display list. This round-trip journey
      * to the event target is conceptually divided into three phases: <br/>
@@ -65,7 +65,7 @@ module egret {
      */
     /**
      * @language zh_CN
-     * EventDispatcher 是 Lark 的事件派发器类，负责进行事件的发送和侦听。
+     * EventDispatcher 是 Egret 的事件派发器类，负责进行事件的发送和侦听。
      * 事件目标是事件如何通过显示列表层次结构这一问题的焦点。当发生鼠标单击、触摸或按键等事件时，
      * 框架会将事件对象调度到从显示列表根开始的事件流中。然后该事件对象在显示列表中前进，直到到达事件目标，
      * 然后从这一点开始其在显示列表中的回程。在概念上，到事件目标的此往返行程被划分为三个阶段：

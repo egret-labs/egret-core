@@ -36,7 +36,7 @@ module egret {
      * by the Event class constants, this basic information is sufficient. Other events, however, may require more detailed
      * information. Events associated with a touch tap, for example, need to include additional information about the
      * location of the touch event. You can pass such additional information to event listeners by extending the Event class,
-     * which is what the TouchEvent class does. Lark API defines several Event subclasses for common events that require
+     * which is what the TouchEvent class does. Egret API defines several Event subclasses for common events that require
      * additional information. Events associated with each of the Event subclasses are described in the documentation for
      * each class.The methods of the Event class can be used in event listener functions to affect the behavior of the event
      * object. Some events have an associated default behavior. Your event listener can cancel this behavior by calling the
@@ -51,7 +51,7 @@ module egret {
      * Event 类作为创建事件实例的基类，当发生事件时，Event 实例将作为参数传递给事件侦听器。Event 类的属性包含有关事件的基本信息，例如事件
      * 的类型或者是否可以取消事件的默认行为。对于许多事件（如由 Event 类常量表示的事件），此基本信息就足够了。但其他事件可能需要更详细的信息。
      * 例如，与触摸关联的事件需要包括有关触摸事件的位置信息。您可以通过扩展 Event 类（TouchEvent 类执行的操作）将此类其他信息传递给事件侦听器。
-     * Lark API 为需要其他信息的常见事件定义多个 Event 子类。与每个 Event 子类关联的事件将在每个类的文档中加以介绍。Event 类的方法可以在
+     * Egret API 为需要其他信息的常见事件定义多个 Event 子类。与每个 Event 子类关联的事件将在每个类的文档中加以介绍。Event 类的方法可以在
      * 事件侦听器函数中使用以影响事件对象的行为。某些事件有关联的默认行为，通过调用 preventDefault() 方法，您的事件侦听器可以取消此行为。
      * 可以通过调用 stopPropagation() 或 stopImmediatePropagation() 方法，将当前事件侦听器作为处理事件的最后一个事件侦听器。
      * @see egret.EventDispatcher
@@ -136,7 +136,7 @@ module egret {
         /**
          * @language zh_CN
          * 渲染事件，监听此事件将会在本帧末即将开始渲染的前一刻触发回调，这是一个广播事件，可以在任何一个显示对象上监听，无论它是否在显示列表中。
-         * 注意：每次您希望 Lark 发送 Event.RENDER 事件时，都必须调用 stage.invalidate() 方法，由于每帧只会触发一次屏幕刷新，
+         * 注意：每次您希望 Egret 发送 Event.RENDER 事件时，都必须调用 stage.invalidate() 方法，由于每帧只会触发一次屏幕刷新，
          * 若在 Event.RENDER 回调函数执行期间再次调用stage.invalidate()，将会被忽略。
          * @version Egret 2.0
          * @platform Web,Native

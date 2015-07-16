@@ -1199,7 +1199,7 @@ module egret {
 
         /**
          * @language en_US
-         * If set to true, Lark runtime caches an internal bitmap representation of the display object. This caching can
+         * If set to true, Egret runtime caches an internal bitmap representation of the display object. This caching can
          * increase performance for display objects that contain complex vector content. After you set the cacheAsBitmap
          * property to true, the rendering does not change, however the display object performs pixel snapping automatically.
          * The execution speed can be significantly faster depending on the complexity of the content.The cacheAsBitmap
@@ -1211,7 +1211,7 @@ module egret {
          */
         /**
          * @language zh_CN
-         * 如果设置为 true，则 Lark 运行时将缓存显示对象的内部位图表示形式。此缓存可以提高包含复杂矢量内容的显示对象的性能。
+         * 如果设置为 true，则 Egret 运行时将缓存显示对象的内部位图表示形式。此缓存可以提高包含复杂矢量内容的显示对象的性能。
          * 将 cacheAsBitmap 属性设置为 true 后，呈现并不更改，但是，显示对象将自动执行像素贴紧。执行速度可能会大大加快，
          * 具体取决于显示对象内容的复杂性。最好将 cacheAsBitmap 属性与主要具有静态内容且不频繁缩放或旋转的显示对象一起使用。<br/>
          * 注意：在内存超过上限的情况下，即使将 cacheAsBitmap 属性设置为 true，显示对象也不使用位图缓存。
@@ -1469,7 +1469,7 @@ module egret {
          * @language en_US
          * A value from the BlendMode class that specifies which blend mode to use. Determine how a source image (new one)
          * is drawn on the target image (old one).<br/>
-         * If you attempt to set this property to an invalid value, Lark runtime set the value to BlendMode.NORMAL.
+         * If you attempt to set this property to an invalid value, Egret runtime set the value to BlendMode.NORMAL.
          * @default egret.BlendMode.NORMAL
          * @see egret.BlendMode
          * @version Egret 2.0
@@ -2027,7 +2027,7 @@ module egret {
 
         /**
          * @private
-         * 获取事件流列表。注意：Lark框架的事件流与Flash实现并不一致。
+         * 获取事件流列表。注意：Egret框架的事件流与Flash实现并不一致。
          *
          * 事件流有三个阶段：捕获，目标，冒泡。
          * Flash里默认的的事件监听若不开启useCapture将监听目标和冒泡阶段。若开始capture将只能监听捕获当不包括目标的事件。
@@ -2037,7 +2037,7 @@ module egret {
          * 而HTML里的事件流设置useCapture为true时是能监听到目标阶段的，也就是目标阶段会被触发两次，在捕获和冒泡过程各触发一次。这样可以避免
          * 前面提到的监听捕获无法监听目标本身的问题。
          *
-         * Lark最终采用了HTML里目标节点触发两次的事件流方式。
+         * Egret最终采用了HTML里目标节点触发两次的事件流方式。
          */
         $getPropagationList(target:DisplayObject):DisplayObject[] {
             var list:DisplayObject[] = [];

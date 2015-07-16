@@ -428,14 +428,14 @@ module egret {
         /**
          * @language en_US
          * Horizontal alignment of text.
-         * @default：lark.HorizontalAlign.LEFT
+         * @default：egret.HorizontalAlign.LEFT
          * @version Egret 2.0
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 文本的水平对齐方式。
-         * @default：lark.HorizontalAlign.LEFT
+         * @default：egret.HorizontalAlign.LEFT
          * @version Egret 2.0
          * @platform Web,Native
          */
@@ -455,14 +455,14 @@ module egret {
         /**
          * @language en_US
          * Vertical alignment of text.
-         * @default：lark.VerticalAlign.TOP
+         * @default：egret.VerticalAlign.TOP
          * @version Egret 2.0
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 文字的垂直对齐方式。
-         * @default：lark.VerticalAlign.TOP
+         * @default：egret.VerticalAlign.TOP
          * @version Egret 2.0
          * @platform Web,Native
          */

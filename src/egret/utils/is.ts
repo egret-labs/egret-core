@@ -48,7 +48,7 @@ module egret {
      */
     /**
      * @language zh_CN
-     * 检查指定对象是否为 Lark 框架内指定接口或类或其子类的实例。此方法与使用 instanceOf 关键字相比具有更高的性能，并且能判断接口的实现。
+     * 检查指定对象是否为 Egret 框架内指定接口或类或其子类的实例。此方法与使用 instanceOf 关键字相比具有更高的性能，并且能判断接口的实现。
      * @param instance 要判断的实例。
      * @param typeName 类或接口的完全名称.
      * @returns 返回true表示当前对象是指定类或接口的实例。

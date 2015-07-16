@@ -28,17 +28,17 @@
 //////////////////////////////////////////////////////////////////////////////////////
 
 module egret {
-    //1~1000预留给lark包下的类和接口
+    //1~1000预留给egret包下的类和接口
     /**
      * @language en_US
-     * Provides constant enum values for type checking in the module of Lark. It is usually passed as the parameters of the egret.is() method.
+     * Provides constant enum values for type checking in the module of Egret. It is usually passed as the parameters of the egret.is() method.
      * @see egret.is()
      * @version Egret 2.0
      * @platform Web,Native
      */
     /**
      * @language zh_CN
-     * 为Lark框架内的类或接口定义的枚举值。通常作为实例检查类型 egret.is() 方法的参数。
+     * 为Egret框架内的类或接口定义的枚举值。通常作为实例检查类型 egret.is() 方法的参数。
      * @see egret.is()
      * @version Egret 2.0
      * @platform Web,Native

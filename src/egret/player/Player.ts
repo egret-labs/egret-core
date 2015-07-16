@@ -30,7 +30,7 @@
 module egret.sys {
     /**
      * @private
-     * Lark播放器
+     * Egret播放器
      */
     export class Player extends HashObject {
 

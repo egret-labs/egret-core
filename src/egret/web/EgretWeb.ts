@@ -31,7 +31,7 @@ module egret.web {
 
     /**
      * @private
-     * 刷新所有Lark播放器的显示区域尺寸。仅当使用外部JavaScript代码动态修改了Lark容器大小时，需要手动调用此方法刷新显示区域。
+     * 刷新所有Egret播放器的显示区域尺寸。仅当使用外部JavaScript代码动态修改了Egret容器大小时，需要手动调用此方法刷新显示区域。
      * 当网页尺寸发生改变时此方法会自动被调用。
      */
     function updateAllScreens():void {
@@ -46,7 +46,7 @@ module egret.web {
 
     /**
      * @private
-     * 网页加载完成，实例化页面中定义的Larksys标签
+     * 网页加载完成，实例化页面中定义的Egretsys标签
      */
     function runEgret():void {
         if(DEBUG){

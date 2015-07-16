@@ -32,7 +32,7 @@ module egret {
     /**
      * @language en_US
      * The IEventDispatcher interface defines methods for adding or removing event listeners, checks whether specific types
-     * of event listeners are registered, and emits events. Event targets are an important part of the Lark event model. 
+     * of event listeners are registered, and emits events. Event targets are an important part of the Egret event model.
      * The event target serves as the focal point for how events flow through the display list hierarchy. When an event 
      * such as a touch tap occurs, an event object is emitted into the event flow from the root of the display list.
      * The event object makes a round-trip journey to the event target, which is conceptually divided into three phases: <br/>
@@ -49,7 +49,7 @@ module egret {
     /**
      * @language zh_CN
      * IEventDispatcher 接口定义用于添加或删除事件侦听器的方法，检查是否已注册特定类型的事件侦听器，并调度事件。
-     * 事件目标是 Lark 事件模型的重要组成部分。事件目标是事件如何通过显示列表层次结构这一问题的焦点。当发生触摸轻拍事件时，
+     * 事件目标是 Egret 事件模型的重要组成部分。事件目标是事件如何通过显示列表层次结构这一问题的焦点。当发生触摸轻拍事件时，
      * 会将事件对象调度到从显示列表根开始的事件流中。事件对象进行到事件目标的往返行程，在概念上，此往返行程被划分为三个阶段：<br/>
      * 捕获阶段包括从根到事件目标节点之前的最后一个节点的行程，目标阶段仅包括事件目标节点，冒泡阶段包括到显示列表的根的回程上遇到的任何后续节点。
      * 通常，使用户定义的类能够调度事件的最简单方法是扩展 EventDispatcher。如果无法扩展（即，如果该类已经扩展了另一个类），
