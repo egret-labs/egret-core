@@ -177,7 +177,7 @@ module egret {
          * @platform Web,Native
          */
         public dispose():void {
-            if(this.texture) {
+            if (this.texture) {
                 this.texture.dispose();
             }
         }

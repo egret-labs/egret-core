@@ -308,7 +308,6 @@ module egret {
         public static LEAVE_STAGE:string = "leaveStage";
 
 
-
         /**
          * @language en_US
          * Creates an Event object to pass as a parameter to event listeners.
@@ -651,10 +650,10 @@ module egret {
          * @version Egret 2.0
          * @platform Web,Native
          */
-        public static dispatchEvent(target:IEventDispatcher,type:string,bubbles:boolean=false,data?:any):boolean {
+        public static dispatchEvent(target:IEventDispatcher, type:string, bubbles:boolean = false, data?:any):boolean {
             var event:IOErrorEvent = Event.create(Event, type, bubbles);
             var props:any = Event._getPropertyData(Event);
-            if(data != undefined) {
+            if (data != undefined) {
                 props.data = data;
             }
             var result = target.dispatchEvent(event);
@@ -664,13 +663,13 @@ module egret {
 
         /**
          * @private
-         * 
-         * @param EventClass 
-         * @returns 
+         *
+         * @param EventClass
+         * @returns
          */
-        public static _getPropertyData(EventClass:any):any{
+        public static _getPropertyData(EventClass:any):any {
             var props:any = EventClass._props;
-            if(!props)
+            if (!props)
                 props = EventClass._props = {};
             return props;
         }

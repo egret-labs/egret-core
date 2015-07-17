@@ -374,7 +374,7 @@ module egret {
             }
             else if (fillMode == egret.BitmapFillMode.SCALE) {
                 context.drawImage(bitmapData._bitmapData, bitmapData._bitmapX, bitmapData._bitmapY,
-                    bitmapWidth, bitmapHeight, offsetX, offsetY, bitmapData.$getScaleBitmapWidth()/bitmapData.$getTextureWidth() * destW, bitmapData.$getScaleBitmapHeight()/bitmapData.$getTextureHeight() * destH);
+                    bitmapWidth, bitmapHeight, offsetX, offsetY, bitmapData.$getScaleBitmapWidth() / bitmapData.$getTextureWidth() * destW, bitmapData.$getScaleBitmapHeight() / bitmapData.$getTextureHeight() * destH);
             }
             else {
                 var tempImage:egret.BitmapData = bitmapData._bitmapData;

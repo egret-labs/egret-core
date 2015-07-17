@@ -367,7 +367,7 @@ module egret {
          * @platform Web,Native
          */
         public static dispatchTouchEvent(target:IEventDispatcher, type:string, bubbles?:boolean, cancelable?:boolean,
-                                     stageX?:number, stageY?:number, touchPointID?:number, touchDown:boolean = false):boolean {
+                                         stageX?:number, stageY?:number, touchPointID?:number, touchDown:boolean = false):boolean {
             if (!bubbles && !target.hasEventListener(type)) {
                 return true;
             }

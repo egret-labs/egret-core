@@ -45,7 +45,7 @@ module egret {
      * @version Egret 2.0
      * @platform Web,Native
      */
-    export class BitmapFillMode{
+    export class BitmapFillMode {
 
         /**
          * @language en_US
@@ -73,7 +73,7 @@ module egret {
          * @version Egret 2.0
          * @platform Web,Native
          */
-        public static SCALE: string = "scale";   
+        public static SCALE:string = "scale";
 
     }
 }

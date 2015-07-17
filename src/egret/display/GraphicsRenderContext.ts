@@ -213,7 +213,7 @@ module egret {
         }
 
         public set fillStyle(value:any) {
-            if(typeof value == "number"){
+            if (typeof value == "number") {
                 value = sys.toColorString(value);
             }
             this._fillStyle = value;
@@ -311,7 +311,7 @@ module egret {
         }
 
         public set strokeStyle(value:any) {
-            if(typeof value == "number"){
+            if (typeof value == "number") {
                 value = sys.toColorString(value);
             }
             this._strokeStyle = value;
@@ -389,9 +389,9 @@ module egret {
 
 
         /**
-         * 
-         * @param x0 
-         * @param y0 
+         *
+         * @param x0
+         * @param y0
          * @version Egret 2.0
          * @platform Web,Native
          */
@@ -1005,9 +1005,9 @@ module egret {
 
     /**
      * @private
-     * 
-     * @param context 
-     * @returns 
+     *
+     * @param context
+     * @returns
      */
     function mapGraphicsFunction(context:sys.RenderContext):any {
         var map = context["graphicsMap"] = {};

@@ -72,7 +72,7 @@ module egret {
          * @version Egret 2.0
          * @platform Web,Native
          */
-        public clearCache():void{
+        public clearCache():void {
             this.$mcDataCache = {};
         }
 
@@ -83,15 +83,15 @@ module egret {
          * @version Egret 2.0
          * @platform Web,Native
          */
-        public generateMovieClipData(movieClipName:string=""):MovieClipData {
-            if(movieClipName == ""){
-                if(this.$mcDataSet){
-                    for(movieClipName in this.$mcDataSet.mc){
+        public generateMovieClipData(movieClipName:string = ""):MovieClipData {
+            if (movieClipName == "") {
+                if (this.$mcDataSet) {
+                    for (movieClipName in this.$mcDataSet.mc) {
                         break;
                     }
                 }
             }
-            if(movieClipName == ""){
+            if (movieClipName == "") {
                 return null;
             }
             var output:MovieClipData = this.findFromCache(movieClipName, this.$mcDataCache);
@@ -104,13 +104,13 @@ module egret {
 
         /**
          * @private
-         * 
-         * @param movieClipName 
-         * @param cache 
-         * @returns 
+         *
+         * @param movieClipName
+         * @param cache
+         * @returns
          */
-        private findFromCache(movieClipName:string, cache:any):any{
-            if(this.enableCache && cache[movieClipName]) {
+        private findFromCache(movieClipName:string, cache:any):any {
+            if (this.enableCache && cache[movieClipName]) {
                 return cache[movieClipName];
             }
             return null;
@@ -118,17 +118,17 @@ module egret {
 
         /**
          * @private
-         * 
-         * @param movieClipName 
-         * @param movieClip 
-         * @param cache 
+         *
+         * @param movieClipName
+         * @param movieClip
+         * @param cache
          */
-        private fillData(movieClipName:string, movieClip:MovieClipData, cache:any):void{
-            if(this.$mcDataSet){
+        private fillData(movieClipName:string, movieClip:MovieClipData, cache:any):void {
+            if (this.$mcDataSet) {
                 var mcData = this.$mcDataSet.mc[movieClipName];
                 if (mcData) {
                     movieClip.$init(mcData, this.$mcDataSet.res, this.$spriteSheet);
-                    if(this.enableCache){
+                    if (this.enableCache) {
                         cache[movieClipName] = movieClip;
                     }
                 }
@@ -140,18 +140,18 @@ module egret {
          * @version Egret 2.0
          * @platform Web,Native
          */
-        public get mcDataSet():any{
+        public get mcDataSet():any {
             return this.$mcDataSet;
         }
 
-        public set mcDataSet(value:any){
+        public set mcDataSet(value:any) {
             this.$mcDataSet = value;
         }
 
         /**
          * MovieClip需要使用的纹理图
          */
-        public set texture(value:Texture){
+        public set texture(value:Texture) {
             this.setTexture(value);
         }
 
@@ -160,16 +160,16 @@ module egret {
          * @version Egret 2.0
          * @platform Web,Native
          */
-        public get spriteSheet():SpriteSheet{
+        public get spriteSheet():SpriteSheet {
             return this.$spriteSheet;
         }
 
         /**
          * @private
-         * 
-         * @param value 
+         *
+         * @param value
          */
-        private setTexture(value:Texture):void{
+        private setTexture(value:Texture):void {
             this.$spriteSheet = value ? new SpriteSheet(value) : null;
         }
     }

@@ -51,7 +51,7 @@ module egret {
      * @version Egret 2.0
      * @platform Web,Native
      */
-    export interface BitmapData extends HashObject{
+    export interface BitmapData extends HashObject {
         /**
          * @language en_US
          * The width of the bitmap image in pixels.

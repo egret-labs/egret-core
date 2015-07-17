@@ -27,7 +27,7 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 
-module egret{
+module egret {
     /**
      * @private
      * @language en_US
@@ -45,7 +45,7 @@ module egret{
      * @version Egret 2.0
      * @platform Web,Native
      */
-    export interface GraphicsPattern{
+    export interface GraphicsPattern {
 
     }
 }

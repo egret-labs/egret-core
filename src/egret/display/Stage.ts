@@ -172,7 +172,7 @@ module egret {
          * @version Egret 2.0
          * @platform Web,Native
          */
-        public registerImplementation(interfaceName:string,instance:any):void{
+        public registerImplementation(interfaceName:string, instance:any):void {
             this.implMap[interfaceName] = instance;
         }
 
@@ -230,11 +230,11 @@ module egret {
          * </ul>
          * @default egret.StageScaleMode.SHOW_ALL
          */
-        public get scaleMode():string{
+        public get scaleMode():string {
             return this.$scaleMode;
         }
 
-        public set scaleMode(value:string){
+        public set scaleMode(value:string) {
             if (this.$scaleMode == value) {
                 return;
             }
@@ -271,11 +271,11 @@ module egret {
          * 设置屏幕同时可以触摸的数量。高于这个数量将不会被触发响应。
          * @default 99
          */
-        public get maxTouches():number{
+        public get maxTouches():number {
             return this.$maxTouches;
         }
 
-        public set maxTouches(value:number){
+        public set maxTouches(value:number) {
             if (this.$maxTouches == value) {
                 return;
             }
@@ -285,7 +285,7 @@ module egret {
 
     }
 
-    if(DEBUG){
+    if (DEBUG) {
 
         egret.$markCannotUse(Stage, "alpha", 1);
         egret.$markCannotUse(Stage, "visible", true);
@@ -301,9 +301,9 @@ module egret {
         egret.$markCannotUse(Stage, "touchEnabled", true);
         egret.$markCannotUse(Stage, "matrix", null);
     }
-    registerClass(Stage,Types.Stage);
-    if(DEBUG){
-        egret.$markReadOnly(Stage,"stageWidth");
-        egret.$markReadOnly(Stage,"stageHeight");
+    registerClass(Stage, Types.Stage);
+    if (DEBUG) {
+        egret.$markReadOnly(Stage, "stageWidth");
+        egret.$markReadOnly(Stage, "stageHeight");
     }
 }

@@ -38,11 +38,11 @@ module egret {
         /**
          * @private
          */
-        public _verticalScrollPolicy: string = "auto";
+        public _verticalScrollPolicy:string = "auto";
         /**
          * @private
          */
-        public _horizontalScrollPolicy: string = "auto";
+        public _horizontalScrollPolicy:string = "auto";
         /**
          * @private
          */
@@ -50,7 +50,7 @@ module egret {
         /**
          * @private
          */
-        public _scrollTop: number = 0;
+        public _scrollTop:number = 0;
 
         /**
          * @private
@@ -64,43 +64,43 @@ module egret {
         /**
          * @private
          */
-        public _lastTouchPosition: egret.Point = new Point(0, 0);
+        public _lastTouchPosition:egret.Point = new Point(0, 0);
         /**
          * @private
          */
-        public _touchStartPosition: egret.Point = new Point(0, 0);
+        public _touchStartPosition:egret.Point = new Point(0, 0);
         /**
          * @private
          */
-        public _scrollStarted: boolean = false;
+        public _scrollStarted:boolean = false;
         /**
          * @private
          */
-        public _lastTouchTime: number = 0;
+        public _lastTouchTime:number = 0;
         /**
          * @private
          */
-        public _lastTouchEvent: TouchEvent = null;
+        public _lastTouchEvent:TouchEvent = null;
         /**
          * @private
          */
-        public _velocitys: Array<{ x: number; y: number }> = [];
+        public _velocitys:Array<{ x: number; y: number }> = [];
         /**
          * @private
          */
-        public _isHTweenPlaying: boolean = false;
+        public _isHTweenPlaying:boolean = false;
         /**
          * @private
          */
-        public _isVTweenPlaying: boolean = false;
+        public _isVTweenPlaying:boolean = false;
         /**
          * @private
          */
-        public _hScrollTween: Tween = null;
+        public _hScrollTween:Tween = null;
         /**
          * @private
          */
-        public _vScrollTween: Tween = null;
+        public _vScrollTween:Tween = null;
 
     }
 }

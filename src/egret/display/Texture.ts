@@ -180,8 +180,8 @@ module egret {
 
         /**
          * @private
-         * 
-         * @param value 
+         *
+         * @param value
          */
         public _setBitmapData(value:any) {
             this._bitmapData = value;

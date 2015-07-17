@@ -700,8 +700,8 @@ module egret {
 
         /**
          * @private
-         * 
-         * @returns 
+         *
+         * @returns
          */
         $getScaleX():number {
             return this.$DisplayObject[Keys.scaleX];
@@ -749,8 +749,8 @@ module egret {
 
         /**
          * @private
-         * 
-         * @returns 
+         *
+         * @returns
          */
         $getScaleY():number {
             return this.$DisplayObject[Keys.scaleY];
@@ -795,8 +795,8 @@ module egret {
 
         /**
          * @private
-         * 
-         * @returns 
+         *
+         * @returns
          */
         $getRotation():number {
             return this.$DisplayObject[Keys.rotation];
@@ -838,8 +838,8 @@ module egret {
 
         /**
          * @private
-         * 
-         * @param value 
+         *
+         * @param value
          */
         $setSkewX(value:number):void {
             value = egret.getNumber(value);
@@ -872,8 +872,8 @@ module egret {
 
         /**
          * @private
-         * 
-         * @param value 
+         *
+         * @param value
          */
         $setSkewY(value:number):void {
             value = egret.getNumber(value);
@@ -919,8 +919,8 @@ module egret {
 
         /**
          * @private
-         * 
-         * @returns 
+         *
+         * @returns
          */
         $getExplicitWidth():number {
             return this.$DisplayObject[Keys.explicitWidth];
@@ -987,8 +987,8 @@ module egret {
 
         /**
          * @private
-         * 
-         * @returns 
+         *
+         * @returns
          */
         $getExplicitHeight():number {
             return this.$DisplayObject[Keys.explicitHeight];
@@ -1026,7 +1026,7 @@ module egret {
             this.invalidateMatrix();
         }
 
-        
+
         /**
          * 测量宽度
          * @returns {number}
@@ -1073,9 +1073,9 @@ module egret {
 
         /**
          * @private
-         * 
-         * @param value 
-         * @returns 
+         *
+         * @param value
+         * @returns
          */
         $setAnchorOffsetX(value:number):boolean {
             value = egret.getNumber(value);
@@ -1111,9 +1111,9 @@ module egret {
 
         /**
          * @private
-         * 
-         * @param value 
-         * @returns 
+         *
+         * @param value
+         * @returns
          */
         $setAnchorOffsetY(value:number):boolean {
             value = egret.getNumber(value);
@@ -1256,8 +1256,8 @@ module egret {
 
         /**
          * @private
-         * 
-         * @param value 
+         *
+         * @param value
          */
         $setAlpha(value:number):void {
             value = egret.getNumber(value);
@@ -1320,8 +1320,8 @@ module egret {
 
         /**
          * @private
-         * 
-         * @returns 
+         *
+         * @returns
          */
         $getTouchEnabled():boolean {
             return this.$touchEnabled;
@@ -1385,8 +1385,8 @@ module egret {
 
         /**
          * @private
-         * 
-         * @param value 
+         *
+         * @param value
          */
         $setScrollRect(value:Rectangle):void {
             if (!value && !this.$scrollRect) {
@@ -1794,10 +1794,10 @@ module egret {
             //必须在访问moved属性前调用以下两个方法，因为moved属性在以下两个方法内重置。
             var concatenatedMatrix = this.$getConcatenatedMatrix();
             var bounds = this.$getContentBounds();
-            var displayList = this.$displayList||this.$parentDisplayList;
+            var displayList = this.$displayList || this.$parentDisplayList;
             var region = this.$renderRegion;
-            if(!displayList){
-                region.setTo(0,0,0,0);
+            if (!displayList) {
+                region.setTo(0, 0, 0, 0);
                 region.moved = false;
                 return false;
             }
@@ -1808,7 +1808,7 @@ module egret {
             var matrix = this.$renderMatrix;
             matrix.copyFrom(concatenatedMatrix);
             var root = displayList.root;
-            if(root!==this.$stage){
+            if (root !== this.$stage) {
                 root.$getInvertedConcatenatedMatrix().$preMultiplyInto(matrix, matrix);
             }
             region.updateRegion(bounds, matrix);

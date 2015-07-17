@@ -94,10 +94,10 @@ module egret {
 
         /**
          * @private
-         * 
-         * @param mcData 
-         * @param textureData 
-         * @param spriteSheet 
+         *
+         * @param mcData
+         * @param textureData
+         * @param spriteSheet
          */
         $init(mcData:any, textureData:any, spriteSheet:SpriteSheet) {
             this.textureData = textureData;
@@ -140,9 +140,9 @@ module egret {
 
         /**
          * @private
-         * 
-         * @param resName 
-         * @returns 
+         *
+         * @param resName
+         * @returns
          */
         private getTextureByResName(resName:string):Texture {
             var texture = this.spriteSheet.getTexture(resName);
@@ -155,8 +155,8 @@ module egret {
 
         /**
          * @private
-         * 
-         * @returns 
+         *
+         * @returns
          */
         $isDataValid():boolean {
             return this.frames.length > 0;
@@ -164,8 +164,8 @@ module egret {
 
         /**
          * @private
-         * 
-         * @returns 
+         *
+         * @returns
          */
         $isTextureValid():boolean {
             return this.textureData != null && this.spriteSheet != null;
@@ -173,8 +173,8 @@ module egret {
 
         /**
          * @private
-         * 
-         * @param mcData 
+         *
+         * @param mcData
          */
         $fillMCData(mcData:any):void {
             this.frameRate = mcData["frameRate"] || 24;
@@ -184,8 +184,8 @@ module egret {
 
         /**
          * @private
-         * 
-         * @param framesData 
+         *
+         * @param framesData
          */
         private fillFramesData(framesData:any[]):void {
             var frames:any[] = this.frames;
@@ -209,8 +209,8 @@ module egret {
 
         /**
          * @private
-         * 
-         * @param frameLabelsData 
+         *
+         * @param frameLabelsData
          */
         private fillFrameLabelsData(frameLabelsData:any[]):void {
             if (frameLabelsData) {
@@ -242,8 +242,8 @@ module egret {
 
         /**
          * @private
-         * 
-         * @param value 
+         *
+         * @param value
          */
         private setMCData(value:MovieClipData) {
             if (this.$mcData == value) {

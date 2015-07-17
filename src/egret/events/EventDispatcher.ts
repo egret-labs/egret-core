@@ -112,8 +112,8 @@ module egret {
 
         /**
          * @private
-         * 
-         * @param useCapture 
+         *
+         * @param useCapture
          */
         $getEventMap(useCapture?:boolean) {
             var values = this.$EventDispatcher;
@@ -207,6 +207,7 @@ module egret {
                 eventMap[type] = null;
             }
         }
+
         /**
          * @inheritDoc
          * @version Egret 2.0
@@ -241,7 +242,7 @@ module egret {
         /**
          * @private
          */
-        $notifyListener(event:Event,capturePhase:boolean):boolean {
+        $notifyListener(event:Event, capturePhase:boolean):boolean {
             var values = this.$EventDispatcher;
             var eventMap:Object = capturePhase ? values[Keys.captureEventsMap] : values[Keys.eventsMap];
             var list:egret.sys.EventBin[] = eventMap[event.$type];
@@ -299,9 +300,7 @@ module egret.sys {
      * 事件信息对象
      */
     export interface EventBin {
-        /**
-         * @private
-         */
+
         type:string;
         /**
          * @private

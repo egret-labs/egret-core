@@ -142,10 +142,10 @@ module egret {
 
         /**
          * @private
-         * 
-         * @param color 
-         * @param alpha 
-         * @returns 
+         *
+         * @param color
+         * @param alpha
+         * @returns
          */
         public _parseColor(color:number, alpha:number):string {
             var _colorBlue = color & 0x0000FF;
@@ -156,8 +156,8 @@ module egret {
 
         /**
          * @private
-         * 
-         * @param colorStr 
+         *
+         * @param colorStr
          */
         private _setStyle(colorStr:string):void {
             this.$renderContext.fillStyle = colorStr;
@@ -493,7 +493,7 @@ module egret {
 
         /**
          * @private
-         * 
+         *
          */
         private _createEndFillCommand():void {
             this.$renderContext.fill();
@@ -502,7 +502,7 @@ module egret {
 
         /**
          * @private
-         * 
+         *
          */
         private _fill():void {
             if (this.fillStyleColor) {
@@ -515,7 +515,7 @@ module egret {
 
         /**
          * @private
-         * 
+         *
          */
         private _createEndLineCommand():void {
             this.$renderContext.stroke();

@@ -112,7 +112,7 @@ module egret {
 
         /**
          * @private
-         * 
+         *
          */
         $init() {
             this.$reset();
@@ -128,7 +128,7 @@ module egret {
 
         /**
          * @private
-         * 
+         *
          */
         $reset():void {
             this.frames = null;
@@ -144,7 +144,7 @@ module egret {
 
         /**
          * @private
-         * 
+         *
          */
         private _initFrame():void {
             if (this.$movieClipData.$isTextureValid()) {
@@ -194,9 +194,9 @@ module egret {
 
         /**
          * @private
-         * 
-         * @param stage 
-         * @param nestLevel 
+         *
+         * @param stage
+         * @param nestLevel
          */
         $onAddToStage(stage:Stage, nestLevel:number):void {
             super.$onAddToStage(stage, nestLevel);
@@ -208,7 +208,7 @@ module egret {
 
         /**
          * @private
-         * 
+         *
          */
         $onRemoveFromStage():void {
             super.$onRemoveFromStage();
@@ -358,8 +358,8 @@ module egret {
 
         /**
          * @private
-         * 
-         * @param frame 
+         *
+         * @param frame
          */
         private gotoFrame(frame:any):void {
             var frameNum:number;
@@ -394,9 +394,9 @@ module egret {
 
         /**
          * @private
-         * 
-         * @param advancedTime 
-         * @returns 
+         *
+         * @param advancedTime
+         * @returns
          */
         private advanceTime(advancedTime:number):boolean {
             var self = this;
@@ -440,7 +440,7 @@ module egret {
 
         /**
          * @private
-         * 
+         *
          */
         private advanceFrame():void {
             this.$currentFrameNum = this.$nextFrameNum;
@@ -448,7 +448,7 @@ module egret {
 
         /**
          * @private
-         * 
+         *
          */
         private constructFrame() {
             var currentFrameNum:number = this.$currentFrameNum;
@@ -464,7 +464,7 @@ module egret {
 
         /**
          * @private
-         * 
+         *
          */
         private handlePendingEvent():void {
             if (this.$eventPool.length != 0) {
@@ -576,8 +576,8 @@ module egret {
 
         /**
          * @private
-         * 
-         * @param value 
+         *
+         * @param value
          */
         private setMovieClipData(value:MovieClipData) {
             if (this.$movieClipData == value) {
@@ -589,8 +589,8 @@ module egret {
 
         /**
          * @private
-         * 
-         * @param value 
+         *
+         * @param value
          */
         private setPlayTimes(value:number) {
             if (value < 0 || value >= 1) {
@@ -600,8 +600,8 @@ module egret {
 
         /**
          * @private
-         * 
-         * @param value 
+         *
+         * @param value
          */
         private setIsStopped(value:boolean) {
             if (this.isStopped == value) {
