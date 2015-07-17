@@ -68,5 +68,14 @@ module dragonBones {
             }
             return bitmap;
         }
+
+        public _generateFastArmature():FastArmature {
+            var armature:FastArmature = new FastArmature(new egret.DisplayObjectContainer());
+            return armature;
+        }
+        public _generateFastSlot():FastSlot {
+            var slot:FastSlot = new EgretFastSlot();
+            return slot;
+        }
     }
 }

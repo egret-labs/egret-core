@@ -48,7 +48,7 @@ module dragonBones {
 			super();
 			
 			if(self != this){ 
-				egret.$error(4001);
+				throw new Error(egret.getString(4001));
 			}
 		}
 		
@@ -103,7 +103,7 @@ module dragonBones {
 			}
 			name = name || data.name;
 			if(!name){
-				egret.$error(4002);
+				throw new Error(egret.getString(4002));
 			}
             /*
 			if(this.dragonBonesDataDic[name]){
@@ -164,7 +164,7 @@ module dragonBones {
             }
 
 			if(!name){
-				egret.$error(4002);
+				throw new Error(egret.getString(4002));
 			}
             /*
 			if(this.textureAtlasDic[name]){
@@ -251,6 +251,34 @@ module dragonBones {
 			return this.buildArmatureUsingArmatureDataFromTextureAtlas(dragonBonesData, armatureData, textureAtlas, skinName);
 		}
 
+
+		/**
+		 * 构建fast骨架
+		 * 一般情况下dragonBonesData和textureAtlas是一对一的，通过相同的key对应。
+		 * TO DO 以后会支持一对多的情况
+		 * @param armatureName 骨架的名字
+		 * @param fromDragonBonesDataName 骨架数据的名字 可选参数
+		 * @param fromTextureAtlasName 纹理集的名字 可选参数
+		 * @param skinName 皮肤的名字 可选参数
+		 * @returns {*}
+		 */
+		public buildFastArmature(armatureName:string, fromDragonBonesDataName:string = null, fromTextureAtlasName:string = null, skinName:string = null):FastArmature{
+			var buildArmatureDataPackage:BuildArmatureDataPackage = new BuildArmatureDataPackage();
+			if(this.fillBuildArmatureDataPackageArmatureInfo(armatureName, fromDragonBonesDataName, buildArmatureDataPackage)){
+				this.fillBuildArmatureDataPackageTextureInfo(fromTextureAtlasName, buildArmatureDataPackage);
+			}
+			
+			var dragonBonesData:DragonBonesData = buildArmatureDataPackage.dragonBonesData;
+			var armatureData:ArmatureData = buildArmatureDataPackage.armatureData;
+			var textureAtlas:any = buildArmatureDataPackage.textureAtlas;
+			
+			if(!armatureData || !textureAtlas){
+				return null;
+			}
+			
+			return this.buildFastArmatureUsingArmatureDataFromTextureAtlas(dragonBonesData, armatureData, textureAtlas, skinName);
+		}
+
 		/**
 		 * 用dragonBones数据，骨架数据，纹理集数据来构建骨架
 		 * @param dragonBonesData dragonBones数据
@@ -271,6 +299,30 @@ module dragonBones {
 			this._buildSlots(outputArmature, skinName, textureAtlas);
 			
 			outputArmature.advanceTime(0);
+			return outputArmature;
+		}
+
+		/**
+		 * 用dragonBones数据，骨架数据，纹理集数据来构建骨架
+		 * @param dragonBonesData dragonBones数据
+		 * @param armatureData 骨架数据
+		 * @param textureAtlas 纹理集
+		 * @param skinName 皮肤名称 可选参数
+		 * @returns {Armature}
+		 */
+		public buildFastArmatureUsingArmatureDataFromTextureAtlas(dragonBonesData:DragonBonesData, armatureData:ArmatureData, textureAtlas:any, skinName:string = null):FastArmature{
+			var outputArmature:FastArmature = this._generateFastArmature();
+			outputArmature.name = armatureData.name;
+			outputArmature.__dragonBonesData = dragonBonesData;
+			outputArmature._armatureData = armatureData;
+			outputArmature.animation.animationDataList = armatureData.animationDataList;
+			
+			this._buildFastBones(outputArmature);
+			//TO DO: Support multi textureAtlas case in future
+			this._buildFastSlots(outputArmature, skinName, textureAtlas);
+			
+			outputArmature.advanceTime(0);
+			
 			return outputArmature;
 		}
 
@@ -454,7 +506,78 @@ module dragonBones {
 				slot._changeDisplay(slotData.displayIndex);
 			}
 		}
+
+		public _buildFastBones(armature:FastArmature):void{
+			//按照从属关系的顺序建立
+			var boneDataList:Array<BoneData> = armature.armatureData.boneDataList;
+			
+			var boneData:BoneData;
+			var bone:FastBone;
+			for(var i:number = 0;i < boneDataList.length;i ++){
+				boneData = boneDataList[i];
+				bone = FastBone.initWithBoneData(boneData);
+				armature.addBone(bone, boneData.parent);
+			}
+		}
 		
+		public _buildFastSlots(armature:FastArmature, skinName:string, textureAtlas:any):void{
+		//根据皮肤初始化SlotData的DisplayDataList
+			var skinData:SkinData = armature.armatureData.getSkinData(skinName);
+			if(!skinData){
+				return;
+			}
+			armature.armatureData.setSkinData(skinName);
+			
+			var displayList:Array<any> = [];
+			var slotDataList:Array<SlotData> = armature.armatureData.slotDataList;
+			var slotData:SlotData;
+			var slot:FastSlot;
+			for(var i:number = 0; i < slotDataList.length; i++){
+				displayList.length = 0;
+				slotData = slotDataList[i];
+				slot = this._generateFastSlot();
+				slot.initWithSlotData(slotData);
+				armature.addSlot(slot, slotData.parent);
+				
+				var l:number = slotData.displayDataList.length;
+				while(l--){
+					var displayData:DisplayData = slotData.displayDataList[l];
+					
+					switch(displayData.type){
+						case DisplayData.ARMATURE:
+							var childArmature:FastArmature = this.buildFastArmatureUsingArmatureDataFromTextureAtlas(armature.__dragonBonesData, armature.__dragonBonesData.getArmatureDataByName(displayData.name), textureAtlas, skinName);
+							displayList[l] = childArmature;
+							break;
+						
+						case DisplayData.IMAGE:
+						default:
+							displayList[l] = this._generateDisplay(textureAtlas, displayData.name, displayData.pivot.x, displayData.pivot.y);
+							break;
+						
+					}
+				}
+				//==================================================
+				//如果显示对象有name属性并且name属性可以设置的话，将name设置为与slot同名，dragonBones并不依赖这些属性，只是方便开发者
+				var length1:number = displayList.length;
+				for(var i1:number = 0;i1 < length1;i1++){
+					var displayObject:any = displayList[i1];
+					if(displayObject instanceof Armature){
+						displayObject = (<Armature><any> displayObject).display;
+					}
+					
+					if(displayObject.hasOwnProperty("name")){
+						try{
+							displayObject["name"] = slot.name;
+						}
+						catch(err){
+						}
+					}
+				}
+				//==================================================
+				slot.initDisplayList(displayList.concat());
+				slot._changeDisplayIndex(slotData.displayIndex);
+			}
+		}
 		/**
 		 * @private
 		 * Generates an Armature instance.
@@ -475,6 +598,24 @@ module dragonBones {
 		
 		/**
 		 * @private
+		 * Generates an Armature instance.
+		 * @returns {dragonBones.Armature} Armature An Armature instance.
+		 */
+		public _generateFastArmature():FastArmature{
+			return null;
+		}
+		
+		/**
+		 * @private
+		 * Generates an Slot instance.
+		 * @returns {dragonBones.Slot} Slot An Slot instance.
+		 */
+		public _generateFastSlot():FastSlot{
+			return null;
+		}
+
+		/**
+		 * @private
 		 * Generates a DisplayObject
 		 * @param textureAtlas {any} The TextureAtlas.
 		 * @param fullName {string} A qualified name.
@@ -486,5 +627,12 @@ module dragonBones {
 			return null;
 		}
 		
+	}
+
+	export class BuildArmatureDataPackage{
+		public dragonBonesDataName:string;
+		public dragonBonesData:DragonBonesData;
+		public armatureData:ArmatureData;
+		public textureAtlas:any;
 	}
 }

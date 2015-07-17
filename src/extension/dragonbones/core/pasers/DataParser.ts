@@ -95,7 +95,7 @@ module dragonBones {
                 version.toString() != DragonBones.PARENT_COORDINATE_DATA_VERSION &&
 				version.toString() != "2.3")
             {
-                egret.$error(4003);
+                throw new Error(egret.getString(4003));
             }
 			else if(version.toString() == DragonBones.PARENT_COORDINATE_DATA_VERSION||
 					 version.toString() == "2.3")
@@ -292,8 +292,8 @@ module dragonBones {
 						if(slotTimeline.frameList.length > 0)
 						{
 							lastFrameDuration = Math.min(lastFrameDuration, slotTimeline.frameList[slotTimeline.frameList.length - 1].duration);
+							animationData.addSlotTimeline(slotTimeline);
 						}
-						animationData.addSlotTimeline(slotTimeline);
 					}
 				}
 			}

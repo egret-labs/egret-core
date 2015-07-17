@@ -91,7 +91,7 @@ module dragonBones {
 		 * animationState 的实例.
 		 * @member {dragonBones.AnimationState} dragonBones.AnimationEvent#animationState
 		 */
-		public animationState:AnimationState;
+		public animationState:any;
 		
 		/**
 		 * 配发出事件的骨架

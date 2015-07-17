@@ -141,6 +141,7 @@ module dragonBones {
 					frame.transform.scaleY /= boneData.transform.scaleY;
 
 					//如果originTransform不存在说明当前帧是第一帧，将当前帧的transform保存至timeline的originTransform
+					/*
 					if(!originTransform){
 						originTransform = timeline.originTransform;
 						originTransform.copy(frame.transform);
@@ -157,12 +158,12 @@ module dragonBones {
 					frame.transform.skewY = TransformUtil.formatRadian(frame.transform.skewY - originTransform.skewY);
 					frame.transform.scaleX /= originTransform.scaleX;
 					frame.transform.scaleY /= originTransform.scaleY;
-
+					
 					if(!timeline.transformed){
 						frame.pivot.x -= originPivot.x;
 						frame.pivot.y -= originPivot.y;
 					}
-					
+					*/
 					if(prevFrame){
 						var dLX:number = frame.transform.skewX - prevFrame.transform.skewX;
 						

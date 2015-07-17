@@ -69,7 +69,7 @@ module dragonBones {
 			super();
 			
 			if(self != this){
-				egret.$error(4001);
+				throw new Error(egret.getString(4001));
 			}
 			
 			this._displayList = [];
@@ -414,8 +414,7 @@ module dragonBones {
 		 * @private
 		 */
 		public _getDisplayIndex():number{
-			egret.$error(4001);
-			return null;
+			throw new Error(egret.getString(4001));
 		}
 		
 		/**
@@ -425,7 +424,7 @@ module dragonBones {
 		 * @param index
 		 */
 		public _addDisplayToContainer(container:any, index:number = -1):void{
-			egret.$error(4001);
+			throw new Error(egret.getString(4001));
 		}
 		
 		/**
@@ -433,7 +432,7 @@ module dragonBones {
 		 * remove the original display object from its parent.
 		 */
 		public _removeDisplayFromContainer():void{
-			egret.$error(4001);
+			throw new Error(egret.getString(4001));
 		}
 		
 		/**
@@ -441,7 +440,7 @@ module dragonBones {
 		 * Updates the transform of the slot.
 		 */
 		public _updateTransform():void{
-			egret.$error(4001);
+			throw new Error(egret.getString(4001));
 		}
 		
 		/**
@@ -452,7 +451,7 @@ module dragonBones {
 			 * bone.visible && slot.visible && updateVisible
 			 * this._parent.visible && this._visible && value;
 			 */
-			egret.$error(4001);
+			throw new Error(egret.getString(4001));
 		}
 		
 		/**
@@ -495,7 +494,7 @@ module dragonBones {
 		 * @param value The blend mode to use. 
 		 */
 		public _updateDisplayBlendMode(value:string):void{
-			egret.$error(4004);
+			throw new Error("Abstract method needs to be implemented in subclass!");
 		}
 
 		/** @private When bone timeline enter a key frame, call this func*/
