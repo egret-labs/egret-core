@@ -157,7 +157,7 @@ module egret {
             Logger.fatal(actionCode);
         }
         else {
-            Logger.warning(getString(-1, code));
+            Logger.fatal(getString(-1, code));
         }
     }
 
@@ -168,7 +168,7 @@ module egret {
         args.unshift(code);
         var actionCode = getString.apply(null, args);
         if (actionCode) {
-            Logger.fatal(actionCode);
+            Logger.warning(actionCode);
         }
         else {
             Logger.warning(getString(-1, code));
