@@ -182,15 +182,14 @@ module egret {
                 this.tx -= regX;
                 this.ty -= regY;
             }
+
             if (skewX || skewY) {
-                // TODO: can this be combined into a single prepend operation?
-//                skewX *= Matrix.DEG_TO_RAD;
-//                skewY *= Matrix.DEG_TO_RAD;
-                this.prepend(cos * scaleX, sin * scaleX, -sin * scaleY, cos * scaleY, 0, 0);
-                this.prepend(NumberUtils.cos(skewY), NumberUtils.sin(skewY), -NumberUtils.sin(skewX), NumberUtils.cos(skewX), x, y);
-            } else {
-                this.prepend(cos * scaleX, sin * scaleX, -sin * scaleY, cos * scaleY, x, y);
+                var tanX = NumberUtils.sin(skewX) / NumberUtils.cos(skewX);
+                var tanY = NumberUtils.sin(skewY) / NumberUtils.cos(skewY);
+                this.prepend(1, tanY, tanX, 1, 0, 0);
             }
+
+            this.prepend(cos * scaleX, sin * scaleX, -sin * scaleY, cos * scaleY, x, y);
             return this;
         }
 
@@ -219,14 +218,12 @@ module egret {
                 sin = 0;
             }
 
+            this.append(cos * scaleX, sin * scaleX, -sin * scaleY, cos * scaleY, x, y);
+
             if (skewX || skewY) {
-                // TODO: can this be combined into a single append?
-//                skewX *= Matrix.DEG_TO_RAD;
-//                skewY *= Matrix.DEG_TO_RAD;
-                this.append(NumberUtils.cos(skewY), NumberUtils.sin(skewY), -NumberUtils.sin(skewX), NumberUtils.cos(skewX), x, y);
-                this.append(cos * scaleX, sin * scaleX, -sin * scaleY, cos * scaleY, 0, 0);
-            } else {
-                this.append(cos * scaleX, sin * scaleX, -sin * scaleY, cos * scaleY, x, y);
+                var tanX = NumberUtils.sin(skewX) / NumberUtils.cos(skewX);
+                var tanY = NumberUtils.sin(skewY) / NumberUtils.cos(skewY);
+                this.append(1, tanY, tanX, 1, 0, 0);
             }
 
             if (regX || regY) {
@@ -248,16 +245,7 @@ module egret {
             var cos = Math.cos(angle);
             var sin = Math.sin(angle);
 
-            var a1 = this.a;
-            var c1 = this.c;
-            var tx1 = this.tx;
-
-            this.a = a1 * cos - this.b * sin;
-            this.b = a1 * sin + this.b * cos;
-            this.c = c1 * cos - this.d * sin;
-            this.d = c1 * sin + this.d * cos;
-            this.tx = tx1 * cos - this.ty * sin;
-            this.ty = tx1 * sin + this.ty * cos;
+            this.prepend(cos, sin, -sin, cos, 0, 0);
             return this;
         }
 
@@ -270,9 +258,12 @@ module egret {
          * @returns {egret.Matrix}
          */
         public skew(skewX:number, skewY:number):Matrix {
-//            skewX = skewX * Matrix.DEG_TO_RAD;
-//            skewY = skewY * Matrix.DEG_TO_RAD;
-            this.append(NumberUtils.cos(skewY), NumberUtils.sin(skewY), -NumberUtils.sin(skewX), NumberUtils.cos(skewX), 0, 0);
+            // skewX = skewX * Matrix.DEG_TO_RAD;
+            // skewY = skewY * Matrix.DEG_TO_RAD;
+            var tanX = NumberUtils.sin(skewX) / NumberUtils.cos(skewX);
+            var tanY = NumberUtils.sin(skewY) / NumberUtils.cos(skewY);
+
+            this.prepend(1, tanY, tanX, 1, 0, 0);
             return this;
         }
 
@@ -285,12 +276,7 @@ module egret {
          * @returns {egret.Matrix}
          */
         public scale(x:number, y:number):Matrix {
-            this.a *= x;
-            this.d *= y;
-            this.c *= x;
-            this.b *= y;
-            this.tx *= x;
-            this.ty *= y;
+            this.prepend(x, 0, 0, y, 0, 0);
             return this;
         }
 
