@@ -91,7 +91,7 @@ Release Notes
 文档与教程
 -------------------------
 
-* 访问 [白鹭开发者中心](http://docs.egret-labs.org) 获取 Egret 的文档、教程与 API 文档
+* 访问 [白鹭开发者中心](http://edn.egret.com) 获取 Egret 的文档、教程与 API 文档
 * 访问 [Egret Examples](https://github.com/egret-team/egret-examples) 获取示例项目
 
 第三方库
