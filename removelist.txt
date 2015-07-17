@@ -50,6 +50,4 @@ NO_SCALE
 alpha、visible、x、y、scaleX、scaleY、rotation、cacheAsBitmap、scrollRect、filters、blendMode、touchEnabled、matrix
 
 多指触摸设置
-TouchContext.maxTouches   --->    stage.maxTouches
-
-问题
+TouchContext.maxTouches   --->    stage.maxTouches  默认值也从2改成99

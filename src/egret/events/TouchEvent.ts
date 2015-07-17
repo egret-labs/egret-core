@@ -319,6 +319,13 @@ module egret {
          * @platform Web,Native
          */
         public touchDown:boolean = false;
+
+        protected clean():void {
+            super.clean();
+
+            this.localPoint = null;
+        }
+
         /**
          * @language en_US
          * uses a specified target to dispatchEvent an event. Using this method can reduce the number of
