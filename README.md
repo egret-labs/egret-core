@@ -100,17 +100,17 @@ Release Notes
 -------------------------
 
 * 白鹭引擎提供了一系列开发工具帮助开发者更快速的进行产品开发，其中主要包括
-** Egret Wing， 可视化集成开发环境，支持可视化创建、编辑和管理项目GUI，以及TS代码编写和断点调试。
-** DragonBones，开源免费的移动游戏骨骼动画解决方案
-** Egret Conversion，项目转换工具，支持Flash项目到Egret项目的一键高效转换
-** EgretVS，Visual Studio插件，致力于提高Egret引擎在Visual Studio中的使用体验
-** Egret Lakeshore，免费无需编程的游戏创作工具，通过Lakeshore可以轻松实现自己的游戏创作梦想
-** Egret Feather，粒子编辑器，各个参数的组合塑造千变万化的效果
-** Egret Inspector，Chrome开发者工具插件，能够帮助开发者可视化的调试Egret项目
-** Texture Merger，纹理集打包工具，能批量将零散碎图合并为大图纹理集
-** Res Depot，Egret游戏的可视化资源管理工具，能够轻松高效地管理海量游戏素材和配置文件资源
-** Egret-Android-Support，将基于Egret引擎开发的游戏转换为Android APP的工具。
-** Egret-iOS-Support，将基于Egret引擎开发的游戏转换为iOS APP的工具。
+   * Egret Wing， 可视化集成开发环境，支持可视化创建、编辑和管理项目GUI，以及TS代码编写和断点调试。
+   * DragonBones，开源免费的移动游戏骨骼动画解决方案
+   * Egret Conversion，项目转换工具，支持Flash项目到Egret项目的一键高效转换
+   * EgretVS，Visual Studio插件，致力于提高Egret引擎在Visual Studio中的使用体验
+   * Egret Lakeshore，免费无需编程的游戏创作工具，通过Lakeshore可以轻松实现自己的游戏创作梦想
+   * Egret Feather，粒子编辑器，各个参数的组合塑造千变万化的效果
+   * Egret Inspector，Chrome开发者工具插件，能够帮助开发者可视化的调试Egret项目
+   * Texture Merger，纹理集打包工具，能批量将零散碎图合并为大图纹理集
+   * Res Depot，Egret游戏的可视化资源管理工具，能够轻松高效地管理海量游戏素材和配置文件资源
+   * Egret-Android-Support，将基于Egret引擎开发的游戏转换为Android APP的工具。
+   * Egret-iOS-Support，将基于Egret引擎开发的游戏转换为iOS APP的工具。
 
 发布说明
 --------------------
