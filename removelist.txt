@@ -53,5 +53,3 @@ alpha、visible、x、y、scaleX、scaleY、rotation、cacheAsBitmap、scrollRec
 TouchContext.maxTouches   --->    stage.maxTouches
 
 问题
-
-多指触摸

@@ -260,17 +260,16 @@ module egret {
             egret.$TextureScaleFactor = value;
         }
 
-        $maxTouches:number = 2;
-
+        $maxTouches:number = 99;
         /**
          * @language en_US
          * Set the number of screens can simultaneously touch. Above this amount will not be triggered in response.
-         * @default 2
+         * @default 99
          */
         /**
          * @language zh_CN
          * 设置屏幕同时可以触摸的数量。高于这个数量将不会被触发响应。
-         * @default 2
+         * @default 99
          */
         public get maxTouches():number{
             return this.$maxTouches;
