@@ -1287,7 +1287,7 @@ module egret {
             return this.$renderAlpha;
         }
 
-        $touchEnabled:boolean = true;
+        $touchEnabled:boolean = false;
         /**
          * @language en_US
          * Specifies whether this object receives touch or other user input. The default value is true, which means that

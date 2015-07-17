@@ -287,8 +287,8 @@ module egret.sys {
                 return;
             }
             this.lastCount += this.frameInterval;
-            this.broadcastEnterFrame();
             this.render(true);
+            this.broadcastEnterFrame();
         }
 
         /**
