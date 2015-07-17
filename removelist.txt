@@ -7,11 +7,7 @@ webGL
 DisplayObject
 去掉属性 explicitWidth explicitHeight measuredHeight measuredWidth needDraw
 去掉相对锚点 anchorX anchorY
-去掉方法hitTest，请使用 hitTestPoint 实现
-
-
-Stage
-去掉方法 changeSize
+去掉方法hitTest，如果需要调用hitTest，请使用 hitTestPoint 实现
 
 Ticker
 去掉方法 run setTimeScale getTimeScale pause resume
@@ -26,7 +22,9 @@ dispatchTouchEvent参数不一致
 target:IEventDispatcher,type:string,touchPointID:number = 0, stageX:number = 0, stageY:number = 0, ctrlKey:boolean=false,altKey:boolean=false,shiftKey:boolean=false,touchDown:boolean=false
 target:IEventDispatcher, type:string, bubbles?:boolean, cancelable?:boolean, stageX?:number, stageY?:number, touchPointID?:number, touchDown:boolean = false
 
-localX localY的实现不一致。请使用 stageX  stageY实现
+localX localY的实现不一致。
+localX 不在是相对于currentTarget，而是相对于target，即在一次TouchEvent过程中，localX始终不会变。
+
 
 DisplayObject
 mask 类型： 从 Rectangle 到 同时支持 Rectangle、DisplayObject
@@ -43,6 +41,9 @@ NO_SCALE
 
 纹理缩放
 直接在stage中设置textureScaleFactor，并且只会对图片有效果。
+
+刷新舞台显示
+stage.changeSize  ---- >  egret.updateAllScreens();
 
 不能对容器空白部分进行点击
 

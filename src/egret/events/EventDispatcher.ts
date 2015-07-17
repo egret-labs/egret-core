@@ -233,7 +233,8 @@ module egret {
          * @platform Web,Native
          */
         public dispatchEvent(event:Event):boolean {
-            event.$target = event.$currentTarget = this.$EventDispatcher[Keys.eventTarget];
+            event.$currentTarget = this.$EventDispatcher[Keys.eventTarget];
+            event.$setTarget(event.$currentTarget);
             return this.$notifyListener(event, false);
         }
 
