@@ -310,9 +310,10 @@ function publishHtml5(opts, versionFile) {
 
     if (true) {//修改html文件
         task.push(function (tempCallback) {//修改egret_file_list.js文件
-            require("../core/modifyHtmls").modify(projectProperties.getProjectPath(), true);
-
             file.copy(path.join(projectPath, "index.html"), path.join(releaseOutputPath, "index.html"));
+
+            require("../core/modifyHtmls").modify(releaseOutputPath, true);
+
 
             tempCallback();
         });

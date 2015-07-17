@@ -4,10 +4,11 @@
 var path = require("../core/path");
 var file = require("../core/file.js");
 exports.modify = function (projectPath, isCompiler) {
-    var egretProperties = JSON.parse(file.read(path.join(projectPath, "egretProperties.json")));
-    var document_class = egretProperties["document_class"];
 
     if (!isCompiler) {
+        var egretProperties = JSON.parse(file.read(path.join(projectPath, "egretProperties.json")));
+        var document_class = egretProperties["document_class"];
+
         var egretListcontent = file.read(path.join(projectPath, "bin-debug", "lib", "egret_file_list.js"));
         var egretList = JSON.parse(egretListcontent.substring(egretListcontent.indexOf("["), egretListcontent.indexOf("]") + 1));
         egretList = egretList.map(function(item) {
@@ -37,7 +38,7 @@ exports.modify = function (projectPath, isCompiler) {
 
             //替换文档类
             var reg = /data-entry-class(\s)*=(\s)*"[^"]*"/;
-            if (htmlContent.match(reg)) {
+            if (document_class && htmlContent.match(reg)) {
                 htmlContent = htmlContent.replace(reg, 'data-entry-class="' + document_class + '"');
             }
 
