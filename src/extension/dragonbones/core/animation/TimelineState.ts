@@ -322,7 +322,7 @@ module dragonBones {
 				if(currentFrame){
 					this._bone._arriveAtFrame(currentFrame, this, this._animationState, false);
 					
-					this._blendEnabled = currentFrame.displayIndex >= 0;
+					this._blendEnabled = !isNaN(currentFrame.tweenEasing);
 					if(this._blendEnabled){
 						this.updateToNextFrame(currentPlayTimes);
 					}
