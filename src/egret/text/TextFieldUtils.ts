@@ -46,7 +46,7 @@ module egret {
             var textHeight:number = TextFieldUtils._getTextHeight(textfield);
             var startLine:number = 0;
             var textFieldHeight:number = textfield.$TextField[sys.TextKeys.textFieldHeight];
-            if (!isNone(textFieldHeight)) {//
+            if (!isNaN(textFieldHeight)) {//
                 if (textHeight < textFieldHeight) {//最大高度比需要显示的高度小
 
                 }
@@ -114,7 +114,7 @@ module egret {
                 return 0.5;
             }
             var textFieldHeight:number = textfield.$TextField[sys.TextKeys.textFieldHeight];
-            if (!isNone(textFieldHeight)) {//
+            if (!isNaN(textFieldHeight)) {//
                 if (textHeight < textFieldHeight) {//最大高度比需要显示的高度小
                     var valign:number = 0;
                     if (textfield.$TextField[sys.TextKeys.verticalAlign] == VerticalAlign.MIDDLE)
@@ -164,7 +164,7 @@ module egret {
             var textHeight:number = TextFieldUtils._getTextHeight(textfield);
             var startY:number = 0;
             var textFieldHeight:number = textfield.$TextField[sys.TextKeys.textFieldHeight];
-            if (!isNone(textFieldHeight) && textFieldHeight > textHeight) {
+            if (!isNaN(textFieldHeight) && textFieldHeight > textHeight) {
                 var valign:number = TextFieldUtils._getValign(textfield);
                 startY = valign * (textFieldHeight - textHeight);
                 if (startY != 0) {

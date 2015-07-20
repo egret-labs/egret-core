@@ -282,17 +282,17 @@ module egret.gui {
 		$measureContentBounds(bounds:Rectangle):void {
 			if(this._contentIsTexture){
 				var texture:Texture = <Texture> this._content;
-				var w = NONE;
-				var h = NONE;
+				var w = NaN;
+				var h = NaN;
 				if(this.autoScale){
 					w = this._UIC_Props_._uiWidth == 10000 ? this.$getExplicitWidth() : this._UIC_Props_._uiWidth;
 					h = this._UIC_Props_._uiHeight == 10000 ? this.$getExplicitHeight() : this._UIC_Props_._uiHeight;
 				}
 
-				if (isNone(w)) {
+				if (isNaN(w)) {
 					w = texture.$getTextureWidth();
 				}
-				if (isNone(h)) {
+				if (isNaN(h)) {
 					h = texture.$getTextureHeight();
 				}
 

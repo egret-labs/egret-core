@@ -584,7 +584,7 @@ module egret.gui {
          */
         public get width():number {
             return this._UIC_Props_._uiWidth;
-            //return isNone(this.$getExplicitWidth()) ? super.$getWidth() : this._UIC_Props_._uiWidth;
+            //return isNaN(this.$getExplicitWidth()) ? super.$getWidth() : this._UIC_Props_._uiWidth;
         }
 
 
@@ -613,7 +613,7 @@ module egret.gui {
          */
         public get height():number {
             return this._UIC_Props_._uiHeight;
-            //return isNone(this.$getExplicitHeight()) ? super.$getHeight() : this._UIC_Props_._uiHeight;
+            //return isNaN(this.$getExplicitHeight()) ? super.$getHeight() : this._UIC_Props_._uiHeight;
         }
 
         $setScaleX(value:number):boolean {
@@ -881,7 +881,7 @@ module egret.gui {
                 if (this._UIC_Props_._layoutWidthExplicitlySet) {
                     unscaledWidth = this._UIC_Props_._uiWidth;
                 }
-                else if (!isNone(this.$getExplicitWidth())) {
+                else if (!isNaN(this.$getExplicitWidth())) {
                     unscaledWidth = this.$getExplicitWidth()
                 }
                 else {
@@ -890,7 +890,7 @@ module egret.gui {
                 if (this._UIC_Props_._layoutHeightExplicitlySet) {
                     unscaledHeight = this._UIC_Props_._uiHeight;
                 }
-                else if (!isNone(this.$getExplicitHeight())) {
+                else if (!isNaN(this.$getExplicitHeight())) {
                     unscaledHeight = this.$getExplicitHeight();
                 }
                 else {
@@ -943,7 +943,7 @@ module egret.gui {
          * 是否可以跳过测量尺寸阶段,返回true则不执行measure()方法
          */
         public canSkipMeasurement():boolean {
-            return !isNone(this.$getExplicitWidth()) && !isNone(this.$getExplicitHeight());
+            return !isNaN(this.$getExplicitWidth()) && !isNaN(this.$getExplicitHeight());
         }
 
         /**
@@ -1181,7 +1181,7 @@ module egret.gui {
          * @member egret.gui.UIComponent#preferredWidth
          */
         public get preferredWidth():number {
-            var w:number = !isNone(this.$getExplicitWidth()) ? this.$getExplicitWidth() : this._UIC_Props_._measuredWidth;
+            var w:number = !isNaN(this.$getExplicitWidth()) ? this.$getExplicitWidth() : this._UIC_Props_._measuredWidth;
             var scaleX:number = this.$getScaleX();
             if (scaleX < 0) {
                 scaleX = -scaleX;
@@ -1193,7 +1193,7 @@ module egret.gui {
          * @member egret.gui.UIComponent#preferredHeight
          */
         public get preferredHeight():number {
-            var h:number = !isNone(this.$getExplicitHeight()) ? this.$getExplicitHeight() : this._UIC_Props_._measuredHeight;
+            var h:number = !isNaN(this.$getExplicitHeight()) ? this.$getExplicitHeight() : this._UIC_Props_._measuredHeight;
             var scaleY:number = this.$getScaleY();
             if (scaleY < 0) {
                 scaleY = -scaleY;
@@ -1253,7 +1253,7 @@ module egret.gui {
             if (this._UIC_Props_._layoutWidthExplicitlySet) {
                 w = this._UIC_Props_._uiWidth;
             }
-            else if (!isNone(w = this.$getExplicitWidth())) {
+            else if (!isNaN(w = this.$getExplicitWidth())) {
             }
             else {
                 w = this._UIC_Props_._measuredWidth;
@@ -1275,7 +1275,7 @@ module egret.gui {
             if (this._UIC_Props_._layoutHeightExplicitlySet) {
                 h = this._UIC_Props_._uiHeight;
             }
-            else if (!isNone(h = this.$getExplicitHeight())) {
+            else if (!isNaN(h = this.$getExplicitHeight())) {
             }
             else {
                 h = this._UIC_Props_._measuredHeight;

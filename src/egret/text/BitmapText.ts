@@ -100,8 +100,8 @@ module egret {
 
             this.$renderRegion = new sys.Region();
             this.$BitmapText = {
-                0: NONE,    //textFieldWidth,
-                1: NONE,    //textFieldHeight,
+                0: NaN,    //textFieldWidth,
+                1: NaN,    //textFieldHeight,
                 2: "",      //text,
                 3: 0,       //lineSpacing,
                 4: 0,        //letterSpacing,
@@ -152,7 +152,7 @@ module egret {
          */
         $getWidth():number {
             var w = this.$BitmapText[Keys.textFieldWidth];
-            return isNone(w) ? this.$getContentBounds().width : w;
+            return isNaN(w) ? this.$getContentBounds().width : w;
         }
 
         /**
@@ -181,7 +181,7 @@ module egret {
          */
         $getHeight():number {
             var h = this.$BitmapText[Keys.textFieldHeight];
-            return isNone(h) ? this.$getContentBounds().height : h;
+            return isNaN(h) ? this.$getContentBounds().height : h;
         }
 
         /**
@@ -305,7 +305,7 @@ module egret {
             var emptyHeight:number = bitmapFont._getFirstCharHeight();
             var emptyWidth:number = Math.ceil(emptyHeight * BitmapText.EMPTY_FACTOR);
             var yPos:number = 0;
-            var hasSetHeight:boolean = !isNone(self.$BitmapText[Keys.textFieldHeight]);
+            var hasSetHeight:boolean = !isNaN(self.$BitmapText[Keys.textFieldHeight]);
             var textFieldHeight:number = self.$BitmapText[Keys.textFieldHeight];
             var lineHeights:Array<number> = self._lineHeights;
             for (var i:number = 0; i < length; i++) {
@@ -402,7 +402,7 @@ module egret {
             var textHeight:number = 0;
             var textStartX:number = 0;
             var textStartY:number = 0;
-            var hasWidthSet:boolean = !isNone(self.$BitmapText[Keys.textFieldWidth]);
+            var hasWidthSet:boolean = !isNaN(self.$BitmapText[Keys.textFieldWidth]);
             var textFieldWidth:number = self.$BitmapText[Keys.textFieldWidth];
             var bitmapFont:BitmapFont = self.$BitmapText[Keys.font];
             var emptyHeight:number = bitmapFont._getFirstCharHeight();

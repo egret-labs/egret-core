@@ -83,8 +83,8 @@ module egret {
             super();
             this.$renderRegion = new sys.Region();
             this.$Bitmap = {
-                0: NONE, //explicitBitmapWidth,
-                1: NONE  //explicitBitmapHeight,
+                0: NaN, //explicitBitmapWidth,
+                1: NaN  //explicitBitmapHeight,
             };
 
             this.texture = bitmapData;
@@ -247,7 +247,7 @@ module egret {
          */
         $getWidth():number {
             var values = this.$Bitmap;
-            return isNone(values[Keys.explicitBitmapWidth]) ? this.$getContentBounds().width : values[Keys.explicitBitmapWidth];
+            return isNaN(values[Keys.explicitBitmapWidth]) ? this.$getContentBounds().width : values[Keys.explicitBitmapWidth];
         }
 
         /**
@@ -256,7 +256,7 @@ module egret {
          */
         $getHeight():number {
             var values = this.$Bitmap;
-            return isNone(values[Keys.explicitBitmapHeight]) ? this.$getContentBounds().height : values[Keys.explicitBitmapHeight];
+            return isNaN(values[Keys.explicitBitmapHeight]) ? this.$getContentBounds().height : values[Keys.explicitBitmapHeight];
         }
 
         /**
@@ -265,8 +265,8 @@ module egret {
         $measureContentBounds(bounds:Rectangle):void {
             var bitmapData = this.$bitmapData;
             if (bitmapData) {
-                var w:number = !isNone(this.$Bitmap[Keys.explicitBitmapWidth]) ? this.$Bitmap[Keys.explicitBitmapWidth] : (bitmapData.$getTextureWidth());
-                var h:number = !isNone(this.$Bitmap[Keys.explicitBitmapHeight]) ? this.$Bitmap[Keys.explicitBitmapHeight] : (bitmapData.$getTextureHeight());
+                var w:number = !isNaN(this.$Bitmap[Keys.explicitBitmapWidth]) ? this.$Bitmap[Keys.explicitBitmapWidth] : (bitmapData.$getTextureWidth());
+                var h:number = !isNaN(this.$Bitmap[Keys.explicitBitmapHeight]) ? this.$Bitmap[Keys.explicitBitmapHeight] : (bitmapData.$getTextureHeight());
                 bounds.setTo(0, 0, w, h);
             }
             else {
@@ -280,8 +280,8 @@ module egret {
         $render(context:sys.RenderContext):void {
             var bitmapData = this.$bitmapData;
             if (bitmapData) {
-                var destW:number = !isNone(this.$Bitmap[Keys.explicitBitmapWidth]) ? this.$Bitmap[Keys.explicitBitmapWidth] : (bitmapData.$getTextureWidth());
-                var destH:number = !isNone(this.$Bitmap[Keys.explicitBitmapHeight]) ? this.$Bitmap[Keys.explicitBitmapHeight] : (bitmapData.$getTextureHeight());
+                var destW:number = !isNaN(this.$Bitmap[Keys.explicitBitmapWidth]) ? this.$Bitmap[Keys.explicitBitmapWidth] : (bitmapData.$getTextureWidth());
+                var destH:number = !isNaN(this.$Bitmap[Keys.explicitBitmapHeight]) ? this.$Bitmap[Keys.explicitBitmapHeight] : (bitmapData.$getTextureHeight());
 
                 Bitmap.$drawImage(context, bitmapData, destW, destH, this.scale9Grid, this.fillMode, this.$smoothing);
             }

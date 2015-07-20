@@ -345,7 +345,7 @@ module egret.gui {
 
             var availableWidth:number;
 
-            if (!isNone(this.$getExplicitWidth())) {
+            if (!isNaN(this.$getExplicitWidth())) {
                 availableWidth = this.$getExplicitWidth();
             }
             else if (this.maxWidth != 10000)
@@ -359,7 +359,7 @@ module egret.gui {
          */
         private isSpecialCase():boolean {
             return (!isNaN(this.percentWidth) || (!isNaN(this.left) && !isNaN(this.right))) &&
-                isNone(this.$getExplicitWidth()) &&
+                isNaN(this.$getExplicitWidth()) &&
                 isNaN(this.percentHeight);
         }
 

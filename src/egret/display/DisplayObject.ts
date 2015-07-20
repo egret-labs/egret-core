@@ -232,8 +232,8 @@ module egret {
                 11: false,  //cacheAsBitmap
                 12: 0,               //anchorOffsetX,
                 13: 0,                //anchorOffsetY,
-                14: NONE,           //explicitWidth,
-                15: NONE            //explicitHeight,
+                14: NaN,           //explicitWidth,
+                15: NaN            //explicitHeight,
             };
         }
 
@@ -912,7 +912,7 @@ module egret {
          * 获取显示宽度
          */
         $getWidth():number {
-            return isNone(this.$getExplicitWidth()) ? this.$getOriginalBounds().width : this.$getExplicitWidth();
+            return isNaN(this.$getExplicitWidth()) ? this.$getOriginalBounds().width : this.$getExplicitWidth();
 
             //return this.$getTransformedBounds(this.$parent, $TempRectangle).width;
         }
@@ -935,7 +935,7 @@ module egret {
          * 设置显示宽度
          */
         $setWidth(value:number):void {
-            this.$DisplayObject[Keys.explicitWidth] = isNaN(value) ? NONE : value;
+            this.$DisplayObject[Keys.explicitWidth] = isNaN(value) ? NaN : value;
 
             value = +value;
             if (value < 0) {
@@ -980,7 +980,7 @@ module egret {
          * 获取显示高度
          */
         $getHeight():number {
-            return isNone(this.$getExplicitHeight()) ? this.$getOriginalBounds().height : this.$getExplicitHeight();
+            return isNaN(this.$getExplicitHeight()) ? this.$getOriginalBounds().height : this.$getExplicitHeight();
 
             //return this.$getTransformedBounds(this.$parent, $TempRectangle).height;
         }
@@ -1003,7 +1003,7 @@ module egret {
          * 设置显示高度
          */
         $setHeight(value:number):void {
-            this.$DisplayObject[Keys.explicitHeight] = isNaN(value) ? NONE : value;
+            this.$DisplayObject[Keys.explicitHeight] = isNaN(value) ? NaN : value;
 
             value = +value;
             if (value < 0) {

@@ -219,8 +219,8 @@ module egret {
                 0: 30,             //fontSize
                 1: 0,              //lineSpacing
                 2: 0x000000,       //textColor
-                3: NONE,           //textFieldWidth
-                4: NONE,           //textFieldHeight
+                3: NaN,           //textFieldWidth
+                4: NaN,           //textFieldHeight
                 5: 0,              //textWidth
                 6: 0,              //textHeight
                 7: 0,              //textDrawWidth
@@ -599,10 +599,10 @@ module egret {
             if (this.$TextField[sys.TextKeys.type] != value) {
                 this.$TextField[sys.TextKeys.type] = value;
                 if (value == TextFieldType.INPUT) {//input，如果没有设置过宽高，则设置默认值为100，30
-                    if (isNone(this.$TextField[sys.TextKeys.textFieldWidth])) {
+                    if (isNaN(this.$TextField[sys.TextKeys.textFieldWidth])) {
                         this.$setWidth(100);
                     }
-                    if (isNone(this.$TextField[sys.TextKeys.textFieldHeight])) {
+                    if (isNaN(this.$TextField[sys.TextKeys.textFieldHeight])) {
                         this.$setHeight(30);
                     }
 
@@ -1043,7 +1043,7 @@ module egret {
          */
         $getWidth():number {
             var values = this.$TextField;
-            return isNone(values[sys.TextKeys.textFieldWidth]) ? this.$getContentBounds().width : values[sys.TextKeys.textFieldWidth];
+            return isNaN(values[sys.TextKeys.textFieldWidth]) ? this.$getContentBounds().width : values[sys.TextKeys.textFieldWidth];
         }
 
         /**
@@ -1052,7 +1052,7 @@ module egret {
          */
         $getHeight():number {
             var values = this.$TextField;
-            return isNone(values[sys.TextKeys.textFieldHeight]) ? this.$getContentBounds().height : values[sys.TextKeys.textFieldHeight];
+            return isNaN(values[sys.TextKeys.textFieldHeight]) ? this.$getContentBounds().height : values[sys.TextKeys.textFieldHeight];
         }
 
         /**
@@ -1248,8 +1248,8 @@ module egret {
                 bounds.setEmpty();
             }
             else {
-                var w:number = !isNone(this.$TextField[sys.TextKeys.textFieldWidth]) ? this.$TextField[sys.TextKeys.textFieldWidth] : this.$TextField[sys.TextKeys.textWidth];
-                var h:number = !isNone(this.$TextField[sys.TextKeys.textFieldHeight]) ? this.$TextField[sys.TextKeys.textFieldHeight] : TextFieldUtils._getTextHeight(self);
+                var w:number = !isNaN(this.$TextField[sys.TextKeys.textFieldWidth]) ? this.$TextField[sys.TextKeys.textFieldWidth] : this.$TextField[sys.TextKeys.textWidth];
+                var h:number = !isNaN(this.$TextField[sys.TextKeys.textFieldHeight]) ? this.$TextField[sys.TextKeys.textFieldHeight] : TextFieldUtils._getTextHeight(self);
                 bounds.setTo(0, 0, w, h);
             }
         }
@@ -1443,7 +1443,7 @@ module egret {
 
             var textFieldWidth:number = this.$TextField[sys.TextKeys.textFieldWidth];
             //宽度被设置为0
-            if (!isNone(textFieldWidth) && textFieldWidth == 0) {
+            if (!isNaN(textFieldWidth) && textFieldWidth == 0) {
                 this.$TextField[sys.TextKeys.numLines] = 0;
                 return [{width: 0, height: 0, charNum: 0, elements: [], hasNextLine: false}];
             }
@@ -1493,7 +1493,7 @@ module egret {
                             setupFont(renderContext, self, element.style);
                         }
                         var w:number = renderContext.measureText(textArr[j]).width;
-                        if (isNone(textFieldWidth)) {//没有设置过宽
+                        if (isNaN(textFieldWidth)) {//没有设置过宽
                             lineW += w;
                             lineCharNum += textArr[j].length;
                             lineElement.elements.push(<egret.IWTextElement>{
@@ -1620,14 +1620,14 @@ module egret {
                 return;
             }
 
-            var maxWidth:number = !isNone(this.$TextField[sys.TextKeys.textFieldWidth]) ? this.$TextField[sys.TextKeys.textFieldWidth] : this.$TextField[sys.TextKeys.textWidth];
+            var maxWidth:number = !isNaN(this.$TextField[sys.TextKeys.textFieldWidth]) ? this.$TextField[sys.TextKeys.textFieldWidth] : this.$TextField[sys.TextKeys.textWidth];
             var textHeight:number = TextFieldUtils._getTextHeight(self);
 
             var drawY:number = 0;
             var startLine:number = TextFieldUtils._getStartLine(self);
 
             var textFieldHeight:number = this.$TextField[sys.TextKeys.textFieldHeight];
-            if (!isNone(textFieldHeight) && textFieldHeight > textHeight) {
+            if (!isNaN(textFieldHeight) && textFieldHeight > textHeight) {
                 var valign:number = TextFieldUtils._getValign(self);
                 drawY += valign * (textFieldHeight - textHeight);
             }
@@ -1643,7 +1643,7 @@ module egret {
                     if (this.$TextField[sys.TextKeys.type] == egret.TextFieldType.INPUT && !this.$TextField[sys.TextKeys.multiline]) {
                         break;
                     }
-                    if (!isNone(textFieldHeight) && drawY > textFieldHeight) {
+                    if (!isNaN(textFieldHeight) && drawY > textFieldHeight) {
                         break;
                     }
                 }
