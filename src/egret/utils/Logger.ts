@@ -87,7 +87,7 @@ module egret {
          * @param value {Object} 错误描述信息
          */
         public static fatal(actionCode:string, value:Object = null) {
-            egret.Logger.traceToConsole("Fatal", actionCode, value);
+            //egret.Logger.traceToConsole("Fatal", actionCode, value);
             throw new Error(egret.Logger.getTraceCode("Fatal", actionCode, value));
         }
 
