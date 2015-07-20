@@ -58,13 +58,13 @@ function run(dir, args, opts) {
         var projectName = args[0] ? args[0] : "";
         var projectNamePath = projectName ? projectName + "/" : "";
         if (autoCompile) {
-            var url = "http://" + ip + ":" + PORT + "/" + projectNamePath + "launcher/" + autoCompilerFlag;
+            var url = "http://" + ip + ":" + PORT + "/" + projectNamePath + "" + autoCompilerFlag;
         }
         else if (startCompile) {
-            var url = "http://" + ip + ":" + PORT + "/" + projectNamePath + "launcher/" + startCompileFlag;
+            var url = "http://" + ip + ":" + PORT + "/" + projectNamePath + "" + startCompileFlag;
         }
         else {
-            var url = "http://" + ip + ":" + PORT + "/" + projectNamePath + "launcher/index.html";
+            var url = "http://" + ip + ":" + PORT + "/" + projectNamePath + "index.html";
         }
 
 
