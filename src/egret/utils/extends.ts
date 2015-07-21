@@ -58,21 +58,23 @@ module egret {
      */
     export function superSetter(thisObj:any, type:string, ...values) {
         var cla = Object.getPrototypeOf(thisObj);
-        if (cla["__sets__"] == null) {
-            cla["__sets__"] = {};
+        var seters = cla["__sets__"];
+        if (seters == null) {
+            seters = cla["__sets__"] = {};
         }
 
-        var seters = cla["__sets__"];
-        if (seters[type]) {
-            return seters[type].apply(thisObj, values);
+        var setF = seters[type];
+        if (setF) {
+            return setF.apply(thisObj, values);
         }
 
         var d = Object.getPrototypeOf(cla);
         while (!d.hasOwnProperty(type)) {
             d = Object.getPrototypeOf(d);
         }
-        seters[type] = Object.getOwnPropertyDescriptor(d, type).set;
-        seters[type].apply(thisObj, values);
+        setF = Object.getOwnPropertyDescriptor(d, type).set;
+        seters[type] = setF;
+        setF.apply(thisObj, values);
     }
 
     /**
@@ -95,20 +97,22 @@ module egret {
      */
     export function superGetter(thisObj:any, type:string):any {
         var cla = Object.getPrototypeOf(thisObj);
-        if (cla["__gets__"] == null) {
-            cla["__gets__"] = {};
+        var geters = cla["__gets__"];
+        if (geters == null) {
+            geters = cla["__gets__"] = {};
         }
 
-        var geters = cla["__gets__"];
-        if (geters[type]) {
-            return geters[type].call(thisObj);
+        var getF = geters[type];
+        if (getF) {
+            return getF.call(thisObj);
         }
 
         var d = Object.getPrototypeOf(cla);
         while (!d.hasOwnProperty(type)) {
             d = Object.getPrototypeOf(d);
         }
-        geters[type] = Object.getOwnPropertyDescriptor(d, type).get;
-        return geters[type].call(thisObj);
+        getF = Object.getOwnPropertyDescriptor(d, type).get;
+        geters[type] = getF;
+        return getF.call(thisObj);
     }
 }
