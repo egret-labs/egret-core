@@ -35,8 +35,7 @@ module egret {
 	 * @class egret.URLLoader
 	 * @classdesc
      * URLLoader 类以文本、二进制数据或 URL 编码变量的形式从 URL 下载数据。在下载文本文件、XML 或其他用于动态数据驱动应用程序的信息时，它很有用。
-     * URLLoader 对象会先从 URL 中下载所有数据，然后才将数据用于应用程序中的代码。它会发出有关下载进度的通知，
-     * 通过 bytesLoaded 和 bytesTotal 属性以及已调度的事件，可以监视下载进度。
+     * URLLoader 对象会先从 URL 中下载所有数据，然后才将数据用于应用程序中的代码。
 	 * @extends egret.EventDispatcher
      * @see http://edn.egret.com/cn/index.php?g=&m=article&a=index&id=160&terms1_id=25&terms2_id=37 构建通信请求
      * @event egret.Event.COMPLETE 加载完成后调度。

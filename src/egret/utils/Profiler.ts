@@ -34,7 +34,6 @@ module egret {
      * @classdesc
      * Profiler是egret的性能检测分析类
      * 请使用 egret.Profiler.getInstance().run();打开性能分析显示。
-     * @includeExample egret/utils/example_Profilerr.ts
      */
     export class Profiler {
 

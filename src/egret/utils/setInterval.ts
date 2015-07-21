@@ -10,7 +10,6 @@ module egret {
      * @param delay {number} 延迟时间，以毫秒为单位
      * @param ...args {any} 参数列表
      * @returns {number} 返回索引，可以用于 clearInterval
-     * @includeExample egret/utils/example_setInterval.ts
      */
     export function setInterval(listener:Function, thisObject:any, delay:number, ...args):number {
         var data = {listener: listener, thisObject: thisObject, delay: delay, originDelay: delay, params: args};

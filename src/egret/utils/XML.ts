@@ -52,7 +52,6 @@ module egret {
      *      }
      * </pre>   
      * 其中XML上的属性节点都使用$+"属性名"的方式表示,子节点都存放在children属性的列表里，name表示节点名称。
-     * @includeExample egret/utils/example_XML.ts
      */
     export class XML {
 
