@@ -34,7 +34,7 @@ module egret {
 	 * @method egret.toColorString
 	 * @param value {number} 
 	 * @returns {string} 颜色字符串，例如"#ffffff"。
-     * @includeExample egret/utils/toColorString.ts
+     * @includeExample egret/utils/example_toColorString.ts
      */
     export function toColorString(value:number):string{
         if(isNaN(value)||value < 0)

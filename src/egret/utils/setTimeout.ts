@@ -40,7 +40,7 @@ module egret {
      * @param delay {number} 延迟时间，以毫秒为单位
      * @param ...args {any} 参数列表
 	 * @returns {number} 返回索引，可以用于 clearTimeout
-     * @includeExample egret/utils/setTimeout.ts
+     * @includeExample egret/utils/example_setTimeout.ts
      */
     export function setTimeout(listener:Function, thisObject:any, delay:number, ...args):number {
         var data = {listener: listener, thisObject: thisObject, delay: delay, params: args};
