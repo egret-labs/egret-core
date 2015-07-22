@@ -530,14 +530,10 @@ module egret {
 
         public _setWidth(value:number):void {
             super._setWidth(value);
-
-            this.fillBackground();
         }
 
         public _setHeight(value:number):void {
             super._setHeight(value);
-
-            this.fillBackground();
         }
 
         private _bgGraphics:Graphics = null;
@@ -1001,6 +997,7 @@ module egret {
             }
 
             properties._numLines = linesArr.length;
+            this.fillBackground();
             return linesArr;
         }
 

@@ -80,6 +80,6 @@ module egret {
          * 由于浏览器兼容性原因，该属性在 html5 中并未实现
          * @member {Array} egret.URLRequest#requestHeaders
          */
-        public requestHeaders:Array<URLRequestHeader>;
+        public requestHeaders:Array<URLRequestHeader> = [];
     }
 }
