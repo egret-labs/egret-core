@@ -38,6 +38,7 @@ module egret {
      * 使用此类中定义的事件类型创建事件侦听器。
      * 注意：当对象嵌套在显示列表中时，触摸事件的目标将是显示列表中可见的最深的可能嵌套对象。此对象称为目标节点。要使目标节点的祖代（祖代是一个包含显示列表中所有目标节点的对象，从舞台到目标节点的父节点均包括在内）接收触摸事件的通知，请对祖代节点使用 EventDispatcher.addEventListener() 并将 type 参数设置为要检测的特定触摸事件。
      * @see http://edn.egret.com/cn/index.php?g=&m=article&a=index&id=117&terms1_id=25&terms2_id=29 触摸事件
+     * @includeExample egret/events/TouchEvent.ts
      */
     export class TouchEvent extends Event {
 

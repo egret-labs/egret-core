@@ -43,6 +43,7 @@ module egret {
      * _draw();
      * getBounds();
      * @see http://edn.egret.com/cn/index.php?g=&m=article&a=index&id=102&terms1_id=25&terms2_id=27 显示对象的基本概念
+     * @includeExample egret/display/DisplayObject.ts
      *
      * @event egret.Event.ADDED 将显示对象添加到显示列表中时调度。
      * @event egret.Event.ADDED_TO_STAGE 在将显示对象直接添加到舞台显示列表或将包含显示对象的子树添加至舞台显示列表中时调度。

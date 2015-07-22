@@ -29,6 +29,7 @@
 
 module egret {
     /**
+     * @includeExample egret/context/external/ExternalInterface.ts
      */
     export class ExternalInterface {
 

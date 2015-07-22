@@ -38,6 +38,7 @@ module egret {
      * Texture类封装了这些底层实现的细节，开发者只需要关心接口即可
      * @see http://edn.egret.com/cn/index.php?g=&m=article&a=index&id=135&terms1_id=25&terms2_id=31 纹理集的使用
      * @see http://edn.egret.com/cn/index.php?g=&m=article&a=index&id=123&terms1_id=25&terms2_id=30 获取资源的几种方式
+     * @includeExample egret/display/Texture.ts
      */
     export class Texture extends HashObject {
 

@@ -38,6 +38,7 @@ module egret {
      * 每当 Timer 对象达到由 Timer.delay 属性指定的间隔时，Timer 对象即会调度 TimerEvent 对象。
 	 * @extends egret.Event
      * @see http://edn.egret.com/cn/index.php?g=&m=article&a=index&id=154&terms1_id=25&terms2_id=35 Timer计时器
+     * @includeExample egret/events/TimerEvent.ts
 	 */
     export class TimerEvent extends Event{
 

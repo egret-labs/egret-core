@@ -36,6 +36,7 @@ module egret {
      * @see http://bbs.egret-labs.org/thread-918-1-1.html TextureMerger
      * @see http://bbs.egret-labs.org/forum.php?mod=viewthread&tid=251 文本(含位图字体具体用法)
      * @extends egret.SpriteSheet
+     * @includeExample egret/text/BitmapFont.ts
      */
     export class BitmapFont extends SpriteSheet {
 

@@ -34,6 +34,7 @@ module egret {
      * @classdesc
      * ScrollView 是用于滑动的辅助类，将一个显示对象传入构造函数即可。可以在指定的尺寸范围内显示超过该范围的显示对象。并可以在此范围内随意拖动。
      * @extends egret.DisplayObjectContainer
+     * @includeExample egret/display/ScrollView.ts
      */
     export class ScrollView extends DisplayObjectContainer {
 
