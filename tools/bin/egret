@@ -6,5 +6,12 @@ if(!fs.existsSync(EGRET_PATH)){
     EGRET_PATH = "../../";
 }
 var analysis = require(path.join(EGRET_PATH,"tools/lib/core/params_analyze.js"));
-var check = require(path.join(EGRET_PATH,"tools/lib/core/tool_check.js"));
-check.run(analysis.getArgv());
+
+if (analysis.getArgv().opts["-dirty"]) {
+    require('../scripts/Entry').executeCommandLine();
+
+}
+else {
+    var check = require(path.join(EGRET_PATH,"tools/lib/core/tool_check.js"));
+    check.run(analysis.getArgv());
+}
