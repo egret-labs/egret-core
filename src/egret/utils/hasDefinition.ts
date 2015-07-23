@@ -39,6 +39,7 @@ module egret {
       * <pre>
       *  egret.hasDefinition("egret.DisplayObject") //返回 true
       * </pre>
+      * @includeExample egret/utils/hasDefinition.ts
       */
     export function hasDefinition(name:string):boolean{
         var definition:any = getDefinitionByName(name);

@@ -35,6 +35,7 @@ module egret {
      * Tween是Egret的动画缓动类
 	 * @extends egret.EventDispatcher
      * @see http://edn.egret.com/cn/index.php?g=&m=article&a=index&id=150&terms1_id=25&terms2_id=34 Tween缓动动画
+     * @includeExample egret/tween/Tween.ts
 	 */
     export class Tween extends EventDispatcher {
 		/**

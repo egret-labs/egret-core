@@ -34,6 +34,7 @@ module egret {
 	 * @classdesc
      * 对象缓存复用工具类，可用于构建对象池，一段时间后会自动回收对象。
 	 * @extends egret.HashObject
+     * @includeExample egret/utils/Recycler.ts
      */
     export class Recycler extends HashObject{
 
