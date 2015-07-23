@@ -1017,8 +1017,6 @@ module egret {
             }
             values[sys.TextKeys.textFieldWidth] = value;
             this.$invalidateContentBounds();
-
-            this.fillBackground();
         }
 
         /**
@@ -1033,8 +1031,6 @@ module egret {
                 return;
             }
             values[sys.TextKeys.textFieldHeight] = value;
-
-            this.fillBackground();
         }
 
         /**
@@ -1598,6 +1594,9 @@ module egret {
             }
 
             this.$TextField[sys.TextKeys.numLines] = linesArr.length;
+
+            this.fillBackground();
+
             return linesArr;
         }
 
