@@ -51,6 +51,10 @@ module egret {
      * @event egret.Event.REMOVED_FROM_STAGE 在从显示列表中直接删除显示对象或删除包含显示对象的子树时调度。
      * @event egret.Event.ENTER_FRAME [广播事件] 播放头进入新帧时调度。
      * @event egret.Event.RENDER [广播事件] 将要更新和呈现显示列表时调度。
+     * @event egret.Event.TOUCH_BEGIN [触摸事件] 触摸开始时调度。
+     * @event egret.Event.TOUCH_MOVE [触摸事件] 触摸移动时调度。
+     * @event egret.Event.TOUCH_END [触摸事件] 触摸结束时调度。
+     * @event egret.Event.TOUCH_TAP [触摸事件] 单击时调度。
      */
     export class DisplayObject extends EventDispatcher implements RenderData {
 
