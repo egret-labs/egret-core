@@ -34,7 +34,6 @@ module egret {
      * 字节顺序为 bigEndian（最高有效字节位于最前）或 littleEndian（最低有效字节位于最前）。
      * @class egret.Endian
      * @classdesc
-     * @includeExample egret/utils/ByteArray.ts
      */
     export class Endian {
         /**
@@ -58,6 +57,7 @@ module egret {
      * @classdesc
      * ByteArray 类提供用于优化读取、写入以及处理二进制数据的方法和属性。
      * 注意：ByteArray 类适用于需要在字节层访问数据的高级 开发人员。
+     * @includeExample egret/utils/ByteArray.ts
      */
     export class ByteArray {
         private static SIZE_OF_BOOLEAN:number = 1;
