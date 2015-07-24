@@ -42,6 +42,7 @@ var ShowIPCommand = require('./commands/ShowIPCommand');
 var CompileFilesCommand = require('./commands/CompileFilesCommand');
 var CompressJsonCommand = require('./commands/CompressJsonCommand');
 var CreateManifestCommand = require('./commands/CreateManifestCommand');
+var CCSToDBCommand = require('./commands/CCSToDBCommand');
 var config = require("./lib/ProjectConfig");
 var parser = require("./ParamsParser");
 global.egret = global.egret || {};
@@ -103,6 +104,12 @@ var Entry = (function () {
             case "autocompile":
                 break;
             case "clean":
+                break;
+            case "export_stu_db":
+            case "ccs2db":
+                var ctd = new CCSToDBCommand();
+                ctd.initOptions(parser.getOptions());
+                ctd.execute();
                 break;
             case "manifest":
             case "create_manifest":

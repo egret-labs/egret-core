@@ -419,18 +419,21 @@ export function joinPath(...paths: any[]):string {
     return path;
 }
 
+//合并路径
 export function join(...paths: any[]):string {
     var path = Path.join.apply(null, arguments);
     path = escapePath(path);
     return path;
 }
 
+//获取绝对路径
 export function resolve(...pathSegments: any[]) {
     var path = Path.resolve.apply(null, arguments);
     path = escapePath(path);
     return path;
 }
 
+//获取相对路径 to相对于from的路径
 export function relative(from: string, to: string) {
     var path = Path.relative.apply(null, arguments);
     path = escapePath(path);

@@ -44,6 +44,7 @@ import ShowIPCommand = require('./commands/ShowIPCommand');
 import CompileFilesCommand = require('./commands/CompileFilesCommand');
 import CompressJsonCommand = require('./commands/CompressJsonCommand');
 import CreateManifestCommand = require('./commands/CreateManifestCommand');
+import CCSToDBCommand = require('./commands/CCSToDBCommand');
 
 import config = require("./lib/ProjectConfig");
 import parser = require("./ParamsParser");
@@ -111,6 +112,12 @@ class Entry {
             case "autocompile":
                 break;
             case "clean":
+                break;
+            case "export_stu_db":
+            case "ccs2db":
+                var ctd = new CCSToDBCommand();
+                ctd.initOptions(parser.getOptions());
+                ctd.execute();
                 break;
             case "manifest":
             case "create_manifest":

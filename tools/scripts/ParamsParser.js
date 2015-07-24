@@ -71,7 +71,7 @@ function getCommandName() {
 }
 exports.getCommandName = getCommandName;
 function getNotNeedProjectCmds() {
-    return ["create", "create_app", "zip", "compile", "compress", "help", "showip"];
+    return ["create", "create_app", "zip", "compile", "compress", "help", "showip", "export_stu_db", "ccs2db"];
 }
 exports.getNotNeedProjectCmds = getNotNeedProjectCmds;
 function getCommandArgs() {
@@ -82,7 +82,7 @@ var currDir;
 function setCurrDir() {
     currDir = argv["currDir"];
     var projectName = argv["args"][0];
-    if (argv["name"] == "create" && projectName) {
+    if (getNotNeedProjectCmds().indexOf(getCommandName()) < 0 && projectName) {
         currDir = file.resolve(projectName);
     }
     if (getNotNeedProjectCmds().indexOf(getCommandName()) >= 0) {

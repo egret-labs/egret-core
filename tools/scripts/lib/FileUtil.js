@@ -414,6 +414,7 @@ function joinPath() {
     return path;
 }
 exports.joinPath = joinPath;
+//合并路径
 function join() {
     var paths = [];
     for (var _i = 0; _i < arguments.length; _i++) {
@@ -424,6 +425,7 @@ function join() {
     return path;
 }
 exports.join = join;
+//获取绝对路径
 function resolve() {
     var pathSegments = [];
     for (var _i = 0; _i < arguments.length; _i++) {
@@ -434,6 +436,7 @@ function resolve() {
     return path;
 }
 exports.resolve = resolve;
+//获取相对路径 to相对于from的路径
 function relative(from, to) {
     var path = Path.relative.apply(null, arguments);
     path = escapePath(path);
