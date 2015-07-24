@@ -37,10 +37,12 @@ import InfoCommand = require("./commands/InfoCommand");
 import CheckCMD = require('./commands/CheckCommand');
 import BuildCommand = require('./commands/BuildCommand');
 import StartServerCommand = require('./commands/StartServerCommand');
+import UpgradeCommand = require('./commands/UpgradeCommand');
 import ZipCommand = require('./commands/ZipCommand');
 import ShowIPCommand = require('./commands/ShowIPCommand');
 import CompileFilesCommand = require('./commands/CompileFilesCommand');
 import CompressJsonCommand = require('./commands/CompressJsonCommand');
+import CreateManifestCommand = require('./commands/CreateManifestCommand');
 
 import config = require("./lib/ProjectConfig");
 import parser = require("./ParamsParser");
@@ -54,7 +56,7 @@ export function executeCommandLine():void {
     parser.init();
     var cmdName = parser.getCommandName();
 
-    if (["build", "publish", "startserver"].indexOf(cmdName) >= 0) {
+    if (parser.getNotNeedProjectCmds().indexOf(cmdName) < 0) {
         config.init();
         //检测版本
         var exitCode = new CheckCMD().execute();
@@ -93,7 +95,9 @@ class Entry {
                 var startserver = new StartServerCommand();
                 startserver.execute();
                 break;
-            case "make":
+            case "upgrade":
+                var upgrade = new UpgradeCommand();
+                upgrade.execute();
                 break;
             case "quit":
                 break;
@@ -102,6 +106,12 @@ class Entry {
             case "autocompile":
                 break;
             case "clean":
+                break;
+            case "manifest":
+            case "create_manifest":
+                var manifest = new CreateManifestCommand();
+                manifest.initOptions(parser.getOptions());
+                manifest.execute();
                 break;
             case "zip":
                 var zip = new ZipCommand();

@@ -51,7 +51,15 @@ export function getCompiler(method) {
 }
 
 export function getExmlc() {
-    return require("../lib/exml/exmlc.js");
+    return require("../lib/exml/exmlc");
+}
+
+export function getCodeUtil() {
+    return require("../lib/core/code_util");
+}
+
+export function getOpen() {
+    return require("../lib/core/open");
 }
 
 export function getCreateManifest() {
@@ -122,4 +130,37 @@ function removeInterface(text) {
         }
     }
     return tsText;
+}
+
+export function compressVersion(v1, v2):number {
+    var version1Arr = v1.split(".");
+    var version1_1 = version1Arr[0];
+    var version1_2 = version1Arr[1];
+    var version1_3 = version1Arr[2];
+
+    var version1Arr = v2.split(".");
+    var version2_1 = version1Arr[0];
+    var version2_2 = version1Arr[1];
+    var version2_3 = version1Arr[2];
+    if (version1_1 > version2_1) {
+        return 1
+    }
+    else if (version1_1 < version2_1) {
+        return -1;
+    }
+    else if (version1_2 > version2_2) {
+        return 1;
+    }
+    else if (version1_2 < version2_2) {
+        return -1;
+    }
+    else if (version1_3 > version2_3) {
+        return 1;
+    }
+    else if (version1_3 < version2_3) {
+        return -1;
+    }
+    else {
+        return 0;
+    }
 }
