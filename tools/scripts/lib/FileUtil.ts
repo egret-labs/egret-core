@@ -436,3 +436,9 @@ export function relative(from: string, to: string) {
     path = escapePath(path);
     return path;
 }
+
+export function basename(p: string, ext?: string): string {
+    var path = Path.basename.apply(null, arguments);
+    path = escapePath(path);
+    return path;
+}

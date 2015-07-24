@@ -8,6 +8,7 @@ var CopyFilesCommand = require("./CopyFilesCommand");
 var ChangeEntranceCMD = require("./ChangeEntranceCommand");
 var BuildProjectCommand = require("./BuildProjectCommand");
 var ModifyHtmlsCommand = require("./ModifyHtmlsCommand");
+var FileAutoChangeCommand = require("./FileAutoChangeCommand");
 var BuildCommand = (function () {
     function BuildCommand() {
     }
@@ -102,9 +103,11 @@ var BuildCommand = (function () {
         return 0;
     };
     BuildCommand.prototype.copyFilesToNative = function () {
-        var versionCtr = require("../utils/getVersionCtr").getVersionCtr();
-        //var fileModify = require("../core/fileAutoChange");
-        //fileModify.modifyNativeRequire(projectProperties.getProjectPath(), false, true, versionCtr.getClassName());
+        //修改文件
+        var fileModify = new FileAutoChangeCommand();
+        fileModify.needCompile = false;
+        fileModify.debug = true;
+        fileModify.execute();
         var androidRoot = config.getNativePath("android");
         if (androidRoot != null) {
             var url1 = file.join(androidRoot, "proj.android");

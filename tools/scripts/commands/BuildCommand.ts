@@ -9,6 +9,7 @@ import CopyFilesCommand = require("./CopyFilesCommand");
 import ChangeEntranceCMD = require("./ChangeEntranceCommand");
 import BuildProjectCommand = require("./BuildProjectCommand");
 import ModifyHtmlsCommand = require("./ModifyHtmlsCommand");
+import FileAutoChangeCommand = require("./FileAutoChangeCommand");
 
 class BuildCommand implements egret.Command {
     execute(callback?:(exitCode:number)=>void):number {
@@ -119,9 +120,12 @@ class BuildCommand implements egret.Command {
     }
 
     private copyFilesToNative() {
-        var versionCtr = require("../utils/getVersionCtr").getVersionCtr();
-        //var fileModify = require("../core/fileAutoChange");
-        //fileModify.modifyNativeRequire(projectProperties.getProjectPath(), false, true, versionCtr.getClassName());
+        //修改文件
+        var fileModify = new FileAutoChangeCommand();
+        fileModify.needCompile = false;
+        fileModify.debug = true;
+        fileModify.execute();
+
 
         var androidRoot = config.getNativePath("android");
         if (androidRoot != null) {

@@ -8,6 +8,7 @@ var ZipCMD = require("./ZipCommand");
 var CompressJsonCMD = require("./CompressJsonCommand");
 var ChangeEntranceCMD = require("./ChangeEntranceCommand");
 var CompileFilesCMD = require("./CompileFilesCommand");
+var FileAutoChangeCommand = require("./FileAutoChangeCommand");
 var PublishNativeCommand = (function () {
     function PublishNativeCommand() {
     }
@@ -80,11 +81,18 @@ var PublishNativeCommand = (function () {
                 tempCallback();
             });
         }
+        var nozip = params.hasOption("-nozip");
         if (true) {
             task.push(function (tempCallback) {
                 //拷贝需要zip的文件
                 //拷贝版本控制文件
                 versionCtr.copyZipManifest(releasePath, ziptempPath);
+                //修改文件
+                var fileModify = new FileAutoChangeCommand();
+                fileModify.needCompile = needCompile;
+                fileModify.debug = nozip;
+                fileModify.versonCtrClassName = versionCtr.getClassName();
+                fileModify.execute();
                 file.copy(file.join(projectPath, "launcher", "native_loader.js"), file.join(ziptempPath, "launcher", "native_loader.js"));
                 file.copy(file.join(projectPath, "launcher", "runtime_loader.js"), file.join(ziptempPath, "launcher", "runtime_loader.js"));
                 file.copy(file.join(projectPath, "launcher", "native_require.js"), file.join(ziptempPath, "launcher", "native_require.js"));
@@ -92,7 +100,6 @@ var PublishNativeCommand = (function () {
             });
         }
         //打zip包
-        var nozip = params.hasOption("-nozip");
         if (nozip) {
             task.push(function (tempCallback) {
                 var tempTime = Date.now();

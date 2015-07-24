@@ -29,6 +29,7 @@
 /// <reference path="./lib/types.d.ts" />
 require('./locales/zh_CN');
 var Create = require("./commands/CreateCommand");
+var CreateAppCommand = require("./commands/CreateAppCommand");
 var PublishCommand = require("./commands/PublishCommand");
 var HelpCommand = require("./commands/HelpCommand");
 var InfoCommand = require("./commands/InfoCommand");
@@ -78,6 +79,10 @@ var Entry = (function () {
             case "create":
                 var create = new Create();
                 exitCode = create.execute();
+                break;
+            case "create_app":
+                var createapp = new CreateAppCommand();
+                exitCode = createapp.execute();
                 break;
             case "help":
                 var help = new HelpCommand();

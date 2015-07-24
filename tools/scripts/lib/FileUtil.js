@@ -440,3 +440,9 @@ function relative(from, to) {
     return path;
 }
 exports.relative = relative;
+function basename(p, ext) {
+    var path = Path.basename.apply(null, arguments);
+    path = escapePath(path);
+    return path;
+}
+exports.basename = basename;

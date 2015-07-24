@@ -11,6 +11,7 @@ import ZipCMD = require("./ZipCommand");
 import CompressJsonCMD = require("./CompressJsonCommand");
 import ChangeEntranceCMD = require("./ChangeEntranceCommand");
 import CompileFilesCMD = require("./CompileFilesCommand");
+import FileAutoChangeCommand = require("./FileAutoChangeCommand");
 
 class PublishNativeCommand implements egret.Command {
     execute():number {
@@ -97,12 +98,19 @@ class PublishNativeCommand implements egret.Command {
             });
         }
 
-
+        var nozip = params.hasOption("-nozip");
         if (true) {//拷贝其他需要打到zip包里的文件
             task.push(function (tempCallback) {
                 //拷贝需要zip的文件
                 //拷贝版本控制文件
                 versionCtr.copyZipManifest(releasePath, ziptempPath);
+
+                //修改文件
+                var fileModify = new FileAutoChangeCommand();
+                fileModify.needCompile = needCompile;
+                fileModify.debug = nozip;
+                fileModify.versonCtrClassName = versionCtr.getClassName();
+                fileModify.execute();
 
                 file.copy(file.join(projectPath, "launcher", "native_loader.js"), file.join(ziptempPath, "launcher", "native_loader.js"));
                 file.copy(file.join(projectPath, "launcher", "runtime_loader.js"), file.join(ziptempPath, "launcher", "runtime_loader.js"));
@@ -113,7 +121,6 @@ class PublishNativeCommand implements egret.Command {
         }
 
         //打zip包
-        var nozip = params.hasOption("-nozip");
         if (nozip) {//不需要打zip包
             task.push(function (tempCallback) {
                 var tempTime = Date.now();
